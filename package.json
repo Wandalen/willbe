@@ -9,9 +9,15 @@
     "staging/dwtools/atop/im",
     "production"
   ],
+  "bin": {
+    "im": "staging/dwtools/atop/im/Exec",
+    "will": "staging/dwtools/atop/im/Exec"
+  },
   "scripts": {
     "test": "wtest staging",
-    "make_doc": "./doc.sh"
+    "make_doc": "./doc.sh",
+    "im": "node staging/dwtools/atop/im/Exec",
+    "will": "node staging/dwtools/atop/im/Exec"
   },
   "repository": {
     "type": "git",
