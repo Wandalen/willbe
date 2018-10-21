@@ -80,20 +80,20 @@ function form1()
   let reflector = this;
   let module = reflector.module;
   let inf = reflector.inf;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( arguments.length === 0 );
   _.assert( !reflector.formed );
 
-  _.assert( !!im );
+  _.assert( !!will );
   _.assert( !!module );
   _.assert( !!inf );
   _.assert( !!fileProvider );
   _.assert( !!logger );
-  _.assert( !!im.formed );
+  _.assert( !!will.formed );
   _.assert( !!module.formed );
   _.assert( !!inf.formed );
   _.assert( _.strDefined( reflector.name ) );
@@ -153,10 +153,10 @@ function _inheritForm( o )
   let reflector = this;
   let module = reflector.module;
   let inf = reflector.inf;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( arguments.length === 1 );
   _.assert( reflector.formed === 1 );
@@ -195,10 +195,10 @@ function _inheritFrom( o )
   let reflector = this;
   let module = reflector.module;
   let inf = reflector.inf;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( _.strIs( o.reflectorName ) );
   _.assert( arguments.length === 1 );
@@ -260,10 +260,10 @@ function _reflectMapForm( o )
   let reflector = this;
   let module = reflector.module;
   let inf = reflector.inf;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assertRoutineOptions( _reflectMapForm, arguments );
 
@@ -278,7 +278,7 @@ function _reflectMapForm( o )
     if( module.strGetPrefix( r ) )
     {
       let resolved = module.strResolveMaybe( r );
-      if( !_.errIs( resolved ) && !_.strIs( resolved ) && !( resolved instanceof im.Reflector ) )
+      if( !_.errIs( resolved ) && !_.strIs( resolved ) && !( resolved instanceof will.Reflector ) )
       resolved = _.err( 'Source of reflects map was resolved to unexpected type', _.strTypeOf( resolved ) );
       if( _.errIs( resolved ) )
       throw _.err( 'Failed to form reflector', reflector.name, '\n', resolved );
@@ -287,7 +287,7 @@ function _reflectMapForm( o )
         delete map[ r ];
         map[ resolved ] = dst;
       }
-      else if( resolved instanceof im.Reflector )
+      else if( resolved instanceof will.Reflector )
       {
         delete map[ r ];
         reflector._inheritFrom({ visited : o.visited, reflectorName : resolved.name, defaultDst : dst });
@@ -460,10 +460,10 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = wTools;
 
-/*_.Im[ Self.shortName ] = Self;*/
+/*_.Will[ Self.shortName ] = Self;*/
 _.staticDecalre
 ({
-  prototype : _.Im.prototype,
+  prototype : _.Will.prototype,
   name : Self.shortName,
   value : Self,
 });

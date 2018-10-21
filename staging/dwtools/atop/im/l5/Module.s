@@ -71,7 +71,7 @@ function init( o )
 function unform()
 {
   let module = this;
-  let im = module.im;
+  let will = module.will;
 
   _.assert( arguments.length === 0 );
   _.assert( !!module.formed );
@@ -107,7 +107,7 @@ function unform()
   _.assert( module.inFileArray.length === 0 );
   _.assert( Object.keys( module.inFileWithRoleMap ).length === 0 );
 
-  _.arrayRemoveOnceStrictly( im.moduleArray, module );
+  _.arrayRemoveOnceStrictly( will.moduleArray, module );
 
   /* end */
 
@@ -120,15 +120,15 @@ function unform()
 function form()
 {
   let module = this;
-  let im = module.im;
+  let will = module.will;
 
   _.assert( arguments.length === 0 );
   _.assert( !module.formed );
-  _.assert( !!module.im );
+  _.assert( !!module.will );
 
   /* begin */
 
-  _.arrayAppendOnceStrictly( im.moduleArray, module );
+  _.arrayAppendOnceStrictly( will.moduleArray, module );
 
   module.predefinedForm();
 
@@ -145,14 +145,14 @@ function form()
 function predefinedForm()
 {
   let module = this;
-  let im = module.im;
+  let will = module.will;
 
   _.assert( arguments.length === 0 );
 
-  new im.Step
+  new will.Step
   ({
     name : 'grab',
-    stepRoutine : im.Step.StepRoutineGrab,
+    stepRoutine : will.Step.StepRoutineGrab,
     module : module,
   }).form1();
 
@@ -253,7 +253,7 @@ function exportsFor( name, filter )
 function strSplit( srcStr )
 {
   let module = this;
-  let im = module.im;
+  let will = module.will;
   let splits = _.strIsolateBeginOrNone( srcStr, ':' );
   return splits;
 }
@@ -263,7 +263,7 @@ function strSplit( srcStr )
 function strGetPrefix( srcStr )
 {
   let module = this;
-  let im = module.im;
+  let will = module.will;
   let splits = module.strSplit( srcStr );
   if( !splits[ 0 ] )
   return false;
@@ -277,7 +277,7 @@ function strGetPrefix( srcStr )
 function _strResolve( srcStr )
 {
   let module = this;
-  let im = module.im;
+  let will = module.will;
 
   let result = module._strResolveMaybe( srcStr );
 
@@ -292,7 +292,7 @@ function _strResolve( srcStr )
 function _strResolveMaybe( srcStr )
 {
   let module = this;
-  let im = module.im;
+  let will = module.will;
 
   let result = module._strResolveAct
   ({
@@ -308,7 +308,7 @@ function _strResolveMaybe( srcStr )
 function _strResolveAct( o )
 {
   let module = this;
-  let im = module.im;
+  let will = module.will;
   let result;
 
   _.assertRoutineOptions( _strResolveAct, arguments );
@@ -332,10 +332,10 @@ _strResolveAct.defaults =
 function componentGet( kind, name )
 {
   let module = this;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
   let result;
 
   _.assert( arguments.length === 2 );
@@ -373,7 +373,7 @@ function componentGet( kind, name )
 function info()
 {
   let module = this;
-  let im = module.im;
+  let will = module.will;
   let result = '';
 
   result += module.about.info();
@@ -393,7 +393,7 @@ function info()
 function infoForReflectors( reflectors )
 {
   let module = this;
-  let im = module.im;
+  let will = module.will;
   let result = '';
   reflectors = reflectors || module.reflectorMap;
 
@@ -414,7 +414,7 @@ function infoForReflectors( reflectors )
 function infoForSteps( steps )
 {
   let module = this;
-  let im = module.im;
+  let will = module.will;
   let result = '';
   steps = steps || module.stepMap;
 
@@ -435,7 +435,7 @@ function infoForSteps( steps )
 function infoForBuilds( builds )
 {
   let module = this;
-  let im = module.im;
+  let will = module.will;
   let result = '';
   builds = builds || module.buildMap;
 
@@ -456,7 +456,7 @@ function infoForBuilds( builds )
 function infoForExports( exports )
 {
   let module = this;
-  let im = module.im;
+  let will = module.will;
   let result = '';
   exports = exports || module.buildMap;
 
@@ -496,15 +496,15 @@ let Aggregates =
   buildMap : _.define.own({}),
   exportMap : _.define.own({}),
 
-  about : _.define.ownInstanceOf( _.Im.ParagraphAbout ),
-  execution : _.define.ownInstanceOf( _.Im.ParagraphExecution ),
-  link : _.define.ownInstanceOf( _.Im.ParagraphLink ),
+  about : _.define.ownInstanceOf( _.Will.ParagraphAbout ),
+  execution : _.define.ownInstanceOf( _.Will.ParagraphExecution ),
+  link : _.define.ownInstanceOf( _.Will.ParagraphLink ),
 
 }
 
 let Associates =
 {
-  im : null,
+  will : null,
 }
 
 let Restricts =
@@ -524,9 +524,9 @@ let Forbids =
 
 let Accessor =
 {
-  about : { setter : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.Im.ParagraphAbout }) },
-  execution : { setter : _.accessor.setter.friend({ name : 'execution', friendName : 'module', maker : _.Im.ParagraphExecution }) },
-  link : { setter : _.accessor.setter.friend({ name : 'link', friendName : 'module', maker : _.Im.ParagraphLink }) },
+  about : { setter : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.Will.ParagraphAbout }) },
+  execution : { setter : _.accessor.setter.friend({ name : 'execution', friendName : 'module', maker : _.Will.ParagraphExecution }) },
+  link : { setter : _.accessor.setter.friend({ name : 'link', friendName : 'module', maker : _.Will.ParagraphLink }) },
 }
 
 // --
@@ -592,10 +592,10 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = wTools;
 
-/*_.Im[ Self.shortName ] = Self;*/
+/*_.Will[ Self.shortName ] = Self;*/
 _.staticDecalre
 ({
-  prototype : _.Im.prototype,
+  prototype : _.Will.prototype,
   name : Self.shortName,
   value : Self,
 });

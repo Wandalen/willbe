@@ -153,10 +153,10 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = wTools;
 
-/*_.Im[ Self.shortName ] = Self;*/
+/*_.Will[ Self.shortName ] = Self;*/
 _.staticDecalre
 ({
-  prototype : _.Im.prototype,
+  prototype : _.Will.prototype,
   name : Self.shortName,
   value : Self,
 });

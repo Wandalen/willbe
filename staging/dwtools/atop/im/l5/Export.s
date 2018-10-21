@@ -54,10 +54,10 @@ function unform()
   let exp = this;
   let module = exp.module;
   let inf = exp.inf;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( arguments.length === 0 );
   _.assert( exp.formed );
@@ -83,21 +83,21 @@ function form1()
   let exp = this;
   let module = exp.module;
   let inf = exp.inf;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( arguments.length === 0 );
   _.assert( !exp.formed );
   _.assert( !module.exportMap[ exp.name ] );
   _.assert( !inf || !inf.exportMap[ exp.name ] );
 
-  _.assert( !!im );
+  _.assert( !!will );
   _.assert( !!module );
   _.assert( !!fileProvider );
   _.assert( !!logger );
-  _.assert( !!im.formed );
+  _.assert( !!will.formed );
   _.assert( !inf || !!inf.formed );
   _.assert( _.strDefined( exp.name ) );
 
@@ -139,10 +139,10 @@ function _inheritForm( o )
   let exp = this;
   let module = exp.module;
   let inf = exp.inf;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( arguments.length === 1 );
   _.assert( exp.formed === 1 );
@@ -175,10 +175,10 @@ function _inheritFrom( o )
   let exp = this;
   let module = exp.module;
   let inf = exp.inf;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( _.strIs( o.name ) );
   _.assert( arguments.length === 1 );
@@ -216,10 +216,10 @@ function form3()
   let exp = this;
   let module = exp.module;
   let inf = exp.inf;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( arguments.length === 0 );
   _.assert( exp.formed === 2 );
@@ -352,10 +352,10 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = wTools;
 
-/*_.Im[ Self.shortName ] = Self;*/
+/*_.Will[ Self.shortName ] = Self;*/
 _.staticDecalre
 ({
-  prototype : _.Im.prototype,
+  prototype : _.Will.prototype,
   name : Self.shortName,
   value : Self,
 });

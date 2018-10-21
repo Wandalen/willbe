@@ -74,10 +74,10 @@ function form()
   let outf = this;
   let module = outf.module;
   let exp = outf.export;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
   let con = new _.Consequence().give();
 
   outf.exportPath = path.resolve( module.dirPath, module.strResolve( exp.files ) );
@@ -86,12 +86,12 @@ function form()
 
   _.assert( arguments.length === 0 );
   _.assert( !!module );
-  _.assert( !!im );
+  _.assert( !!will );
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !outf.formed );
   _.assert( module.formed === 1 );
-  _.assert( im.formed === 1 );
+  _.assert( will.formed === 1 );
   _.assert( exp.formed === 3 );
   _.assert( outf.data === null );
 
@@ -122,7 +122,7 @@ function form()
     encoding : 'yaml',
   });
 
-  if( im.verbosity >= 2 )
+  if( will.verbosity >= 2 )
   logger.log( ' + ' + 'Write out file to ' + outf.outFilePath );
 
   if( exp.tar )
@@ -142,7 +142,7 @@ function form()
 
     zip = Tar.create( oo, [ '.' ] );
 
-    if( im.verbosity >= 2 )
+    if( will.verbosity >= 2 )
     logger.log( ' + ' + 'Write out archive ' + path.move( outf.archivePath, outf.exportPath ) );
 
   }
@@ -232,7 +232,7 @@ module[ 'exports' ] = wTools;
 
 _.staticDecalre
 ({
-  prototype : _.Im.prototype,
+  prototype : _.Will.prototype,
   name : Self.shortName,
   value : Self,
 });

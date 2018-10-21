@@ -76,7 +76,7 @@ let Composes =
   outDirPath : '.',
   repository : null,
   bugs : null,
-  im : null,
+  will : null,
   registry : null,
 
 }
@@ -151,7 +151,7 @@ module[ 'exports' ] = wTools;
 
 _.staticDecalre
 ({
-  prototype : _.Im.prototype,
+  prototype : _.Will.prototype,
   name : Self.shortName,
   value : Self,
 });

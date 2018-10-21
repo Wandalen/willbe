@@ -53,10 +53,10 @@ function unform()
 {
   let run = this;
   let module = run.module;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( arguments.length === 0 );
   _.assert( run.formed );
@@ -75,19 +75,19 @@ function form()
 {
   let run = this;
   let module = run.module;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( arguments.length === 0 );
   _.assert( !run.formed );
 
-  _.assert( !!im );
+  _.assert( !!will );
   _.assert( !!module );
   _.assert( !!fileProvider );
   _.assert( !!logger );
-  _.assert( !!im.formed );
+  _.assert( !!will.formed );
   _.assert( !!module.formed );
   _.assert( module.formed >= 1 );
 
@@ -105,10 +105,10 @@ function run( build )
 {
   let run = this;
   let module = run.module;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
   let steps = build.steps;
   let con = new _.Consequence().give();
 
@@ -116,16 +116,16 @@ function run( build )
   _.assert( run.formed === 1 );
   _.assert( build.formed === 3 );
   _.assert( _.arrayIs( steps ) );
-  _.assert( build instanceof im.Build ); 
+  _.assert( build instanceof will.Build ); 
 
   build.stepsEach( function( it )
   {
-    if( it.element instanceof im.Step )
+    if( it.element instanceof will.Step )
     {
       _.assert( _.routineIs( it.element.stepRoutine ), 'Step', it.element.name, 'does not have step routine' );
       con.ifNoErrorThen( () => it.element.stepRoutine( run ) );
     }
-    else if( it.element instanceof im.Build )
+    else if( it.element instanceof will.Build )
     {
       con.ifNoErrorThen( () => run.run( it.element ) );
     }
@@ -215,7 +215,7 @@ module[ 'exports' ] = wTools;
 
 _.staticDecalre
 ({
-  prototype : _.Im.prototype,
+  prototype : _.Will.prototype,
   name : Self.shortName,
   value : Self,
 });

@@ -79,13 +79,13 @@ function form()
 {
   let inf = this;
   let module = inf.module;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( arguments.length === 0 );
-  _.assert( !!im );
+  _.assert( !!will );
   _.assert( module.formed === 1 );
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
@@ -110,20 +110,20 @@ function form1()
 {
   let inf = this;
   let module = inf.module;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( arguments.length === 0 );
   _.assert( inf.formed === 0 );
 
   _.assert( !!module );
-  _.assert( !!im );
+  _.assert( !!will );
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !!module.formed );
-  _.assert( !!im.formed );
+  _.assert( !!will.formed );
 
   /* begin */
 
@@ -147,25 +147,32 @@ function form2()
 {
   let inf = this;
   let module = inf.module;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( inf.formed === 1 );
   _.assert( arguments.length === 0 );
   _.assert( !!module );
-  _.assert( !!im );
+  _.assert( !!will );
   _.assert( !!fileProvider );
   _.assert( !!logger );
-  _.assert( !!im.formed );
+  _.assert( !!will.formed );
   _.assert( !!module.formed );
   _.assert( !!inf.formed );
 
   /* read */
 
   inf.inPathsForm();
-  inf.data = fileProvider.fileConfigRead({ filePath : inf.filePath });
+  try
+  {
+    inf.data = fileProvider.fileConfigRead({ filePath : inf.filePath });
+  }
+  catch( err )
+  {
+    throw _.errLogOnce( _.errBriefly( err ) );
+  }
 
   _.sureMapHasOnly( inf.data, inf.KnownSections );
 
@@ -198,29 +205,25 @@ function form2()
   inf.formed = 2;
 }
 
-form2.defaults =
-{
-  filePath : null,
-  dirPath : null,
-}
-
 //
 
 function inPathsForm()
 {
   let inf = this;
   let module = inf.module;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( arguments.length === 0 );
   _.assert( !!module );
-  _.assert( !!im );
-  _.assert( !!im.formed );
+  _.assert( !!will );
+  _.assert( !!will.formed );
   _.assert( !!module.formed );
   _.assert( !!inf.formed );
+
+  debugger;
 
   if( !inf.filePath )
   {
@@ -240,10 +243,10 @@ function pathsForm( paths )
 {
   let inf = this;
   let module = inf.module;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( _.mapIs( paths ) );
   _.assert( arguments.length === 1 );
@@ -268,10 +271,10 @@ function reflectorsForm( reflectors )
 {
   let inf = this;
   let module = inf.module;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( _.mapIs( reflectors ) );
   _.assert( arguments.length === 1 );
@@ -285,7 +288,7 @@ function reflectorsForm( reflectors )
     o2.name = k;
     try
     {
-      im.Reflector( o2 ).form1();
+      will.Reflector( o2 ).form1();
     }
     catch( err )
     {
@@ -310,10 +313,10 @@ function stepsForm( steps )
 {
   let inf = this;
   let module = inf.module;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( _.mapIs( steps ) );
   _.assert( arguments.length === 1 );
@@ -332,7 +335,7 @@ function stepsForm( steps )
 
     try
     {
-      im.Step( o2 ).form1();
+      will.Step( o2 ).form1();
     }
     catch( err )
     {
@@ -357,10 +360,10 @@ function buildsForm( builds )
 {
   let inf = this;
   let module = inf.module;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( _.mapIs( builds ) );
   _.assert( arguments.length === 1 );
@@ -377,7 +380,7 @@ function buildsForm( builds )
 
     try
     {
-      im.Build( o2 ).form1();
+      will.Build( o2 ).form1();
     }
     catch( err )
     {
@@ -414,10 +417,10 @@ function exportsForm( exports )
 {
   let inf = this;
   let module = inf.module;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( _.mapIs( exports ) );
   _.assert( arguments.length === 1 );
@@ -434,7 +437,7 @@ function exportsForm( exports )
 
     try
     {
-      im.Export( o2 ).form1();
+      will.Export( o2 ).form1();
     }
     catch( err )
     {
@@ -485,10 +488,10 @@ function exists()
 {
   let inf = this;
   let module = inf.module;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   inf.inPathsForm();
 
@@ -610,10 +613,10 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = wTools;
 
-/*_.Im[ Self.shortName ] = Self;*/
+/*_.Will[ Self.shortName ] = Self;*/
 _.staticDecalre
 ({
-  prototype : _.Im.prototype,
+  prototype : _.Will.prototype,
   name : Self.shortName,
   value : Self,
 });

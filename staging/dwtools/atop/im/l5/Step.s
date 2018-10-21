@@ -54,10 +54,10 @@ function unform()
   let step = this;
   let module = step.module;
   let inf = step.inf;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( arguments.length === 0 );
   _.assert( step.formed );
@@ -83,21 +83,21 @@ function form1()
   let step = this;
   let module = step.module;
   let inf = step.inf;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( arguments.length === 0 );
   _.assert( !step.formed );
   _.assert( !module.stepMap[ step.name ] );
   _.assert( !inf || !inf.stepMap[ step.name ] );
 
-  _.assert( !!im );
+  _.assert( !!will );
   _.assert( !!module );
   _.assert( !!fileProvider );
   _.assert( !!logger );
-  _.assert( !!im.formed );
+  _.assert( !!will.formed );
   _.assert( !inf || !!inf.formed );
   _.assert( _.strDefined( step.name ) );
 
@@ -138,10 +138,10 @@ function _inheritForm( o )
   let step = this;
   let module = step.module;
   let inf = step.inf;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( arguments.length === 1 );
   _.assert( step.formed === 1 );
@@ -180,10 +180,10 @@ function _inheritFrom( o )
   let step = this;
   let module = step.module;
   let inf = step.inf;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( _.strIs( o.stepName ) );
   _.assert( arguments.length === 1 );
@@ -236,10 +236,10 @@ function StepRoutineGrab( run )
   let step = this;
   // let build = run.build;
   let module = run.module;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( _.objectIs( step.settings ) );
   _.assert( arguments.length === 1 );
@@ -251,7 +251,7 @@ function StepRoutineGrab( run )
   _.mapSupplement( settings, settings.reflector )
   delete settings.reflector;
 
-  if( im.verbosity >= 2 && im.verbosity <= 3 )
+  if( will.verbosity >= 2 && will.verbosity <= 3 )
   {
     logger.log( 'filesReflect' );
     logger.log( _.toStr( settings.reflectMap, { wrap : 0, multiline : 1, levels : 3 } ) );
@@ -359,10 +359,10 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = wTools;
 
-/*_.Im[ Self.shortName ] = Self;*/
+/*_.Will[ Self.shortName ] = Self;*/
 _.staticDecalre
 ({
-  prototype : _.Im.prototype,
+  prototype : _.Will.prototype,
   name : Self.shortName,
   value : Self,
 });

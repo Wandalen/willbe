@@ -54,10 +54,10 @@ function unform()
   let build = this;
   let module = build.module;
   let inf = build.inf;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( arguments.length === 0 );
   _.assert( build.formed );
@@ -84,22 +84,22 @@ function form1()
   let build = this;
   let module = build.module;
   let inf = build.inf;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( arguments.length === 0 );
   _.assert( !build.formed );
   _.assert( !module.buildMap[ build.name ] );
   _.assert( !inf.buildMap[ build.name ] );
 
-  _.assert( !!im );
+  _.assert( !!will );
   _.assert( !!module );
   _.assert( !!inf );
   _.assert( !!fileProvider );
   _.assert( !!logger );
-  _.assert( !!im.formed );
+  _.assert( !!will.formed );
   _.assert( !!module.formed );
   _.assert( !!inf.formed );
   _.assert( _.strDefined( build.name ) );
@@ -140,10 +140,10 @@ function _inheritForm( o )
   let build = this;
   let module = build.module;
   let inf = build.inf;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( arguments.length === 1 );
   _.assert( build.formed === 1 );
@@ -178,10 +178,10 @@ function _inheritFrom( o )
   let build = this;
   let module = build.module;
   let inf = build.inf;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( _.strIs( o.buildName ) );
   _.assert( arguments.length === 1 );
@@ -220,10 +220,10 @@ function form3()
   let build = this;
   let module = build.module;
   let inf = build.inf;
-  let im = module.im;
-  let fileProvider = im.fileProvider;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = im.logger;
+  let logger = will.logger;
 
   _.assert( arguments.length === 0 );
   _.assert( build.formed === 2 );
@@ -235,12 +235,12 @@ function form3()
     if( it.concurrent )
     return;
     let kind = it.element.constructor.shortName;
-    if( it.element instanceof im.Step )
+    if( it.element instanceof will.Step )
     {
       _.sure( _.routineIs( it.element.stepRoutine ), kind, it.element.name, 'does not have step routine' );
       _.sure( it.element.formed === 2, kind, it.element.name, 'was not formed' );
     }
-    else if( it.element instanceof im.Build )
+    else if( it.element instanceof will.Build )
     {
       _.sure( it.element.formed >= 2, kind, it.element.name, 'was not formed' );
     }
@@ -259,14 +259,14 @@ function form3()
 //   let build = this;
 //   let module = build.module;
 //   let inf = build.inf;
-//   let im = module.im;
+//   let will = module.will;
 //
 //   _.assert( arguments.length === 0 || arguments.length === 1 );
 //
 //   o = o || Object.create( null );
 //   o.module = module;
 //
-//   let run = im.BuildRun( o ).form();
+//   let run = will.BuildRun( o ).form();
 //
 //   return run;
 // }
@@ -278,7 +278,7 @@ function stepsEach( onEach )
   let build = this;
   let module = build.module;
   let inf = build.inf;
-  let im = module.im;
+  let will = module.will;
 
   each( build.steps );
 
@@ -297,7 +297,7 @@ function stepsEach( onEach )
   function inElement( step )
   {
     step = module.strResolve( step );
-    _.assert( step instanceof im.Step || step instanceof im.Build );
+    _.assert( step instanceof will.Step || step instanceof will.Build );
     let it = Object.create( null );
     it.element = step;
     onEach( it );
@@ -436,10 +436,10 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = wTools;
 
-/*_.Im[ Self.shortName ] = Self;*/
+/*_.Will[ Self.shortName ] = Self;*/
 _.staticDecalre
 ({
-  prototype : _.Im.prototype,
+  prototype : _.Will.prototype,
   name : Self.shortName,
   value : Self,
 });

@@ -76,6 +76,7 @@ let Composes =
   name : null,
   description : null,
   version : null,
+  enabled : 1,
   interpreters : null,
   keywords : null,
 
@@ -151,7 +152,7 @@ module[ 'exports' ] = wTools;
 
 _.staticDecalre
 ({
-  prototype : _.Im.prototype,
+  prototype : _.Will.prototype,
   name : Self.shortName,
   value : Self,
 });
