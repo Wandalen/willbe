@@ -6,7 +6,7 @@
   "license": "MIT",
   "main": "staging/dwtools/atop/im/MainTop.s",
   "files": [
-    "staging/dwtools/atop",
+    "staging/dwtools/atop/im",
     "production"
   ],
   "scripts": {
@@ -21,7 +21,20 @@
     "url": "https://github.com/Wandalen/willbe/issues"
   },
   "dependencies": {
-    "wTools": ""
+    "wTools": "",
+    "wCopyable": "",
+    "wLogger": "",
+    "wverbal": "",
+    "wtemplatetreeenvironment": "",
+    "wexternalfundamentals": "",
+    "wFiles": "",
+    "wfilesarchive": "",
+    "wfilestransformers": "",
+    "wstatestorage": "",
+    "wstatesession": "",
+    "wcommandsaggregator": "",
+    "wcommandsconfig": "",
+    "tar": ""
   },
   "devDependencies": {
     "wTesting": "",
