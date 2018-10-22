@@ -97,7 +97,6 @@ function form1()
   _.assert( !!module.formed );
   _.assert( !!inf.formed );
   _.assert( _.strDefined( reflector.name ) );
-  // _.assert( reflector.reflectMap === null || _.objectIs( reflector.reflectMap ) )
 
   /* begin */
 
@@ -116,11 +115,8 @@ function form1()
 
   if( reflector.reflectMap )
   {
-    reflector.reflectMap = _.path.globMapExtend( null, reflector.reflectMap, true );
+    reflector.reflectMap = path.globMapExtend( null, reflector.reflectMap, true );
   }
-
-  // if( reflector.filePath )
-  // reflector.filePath = path.s.resolve( module.dirPath, reflector.filePath );
 
   /* end */
 
@@ -218,20 +214,9 @@ function _inheritFrom( o )
   let extend = _.mapOnly( reflector2, _.mapNulls( reflector ) );
   delete extend.srcFilter;
 
-  // xxx
-
   if( extend.reflectMap )
   {
-    // extend.reflectMap = _.path.globMapExtend( null, extend.reflectMap, o.defaultDst );
-    // debugger;
-    // for( let r in extend.reflectMap )
-    // if( extend.reflectMap[ r ] === true && extend.reflectMap[ r ] !== o.defaultDst )
-    // {
-    //   debugger;
-    //   extend.reflectMap[ r ] = o.defaultDst;
-    // }
-    reflector.reflectMap = _.path.globMapExtend( reflector.reflectMap, extend.reflectMap, o.defaultDst );
-    // debugger;
+    reflector.reflectMap = path.globMapExtend( reflector.reflectMap, extend.reflectMap, o.defaultDst );
   }
 
   reflector.copy( extend );
@@ -273,7 +258,7 @@ function _reflectMapForm( o )
     let dst = map[ r ];
 
     if( !_.boolIs( dst ) )
-    dst = module.strResolve( dst );
+    dst = module.pathResolve( module.strResolve( dst ) );
 
     if( module.strGetPrefix( r ) )
     {
@@ -292,7 +277,7 @@ function _reflectMapForm( o )
         delete map[ r ];
         reflector._inheritFrom({ visited : o.visited, reflectorName : resolved.name, defaultDst : dst });
         _.sure( !!resolved.reflectMap );
-        _.path.globMapExtend( map, resolved.reflectMap, dst );
+        path.globMapExtend( map, resolved.reflectMap, dst );
       }
     }
   }
@@ -311,11 +296,8 @@ function forReflect()
   let reflector = this;
   let result = Object.create( null );
 
+  if( reflector.srcFilter )
   result.srcFilter = reflector.srcFilter.clone();
-
-  // if( reflector.basePath )
-  // result.srcBasePath = reflector.basePath;
-
   result.reflectMap = reflector.reflectMap;
 
   return result;
@@ -327,7 +309,7 @@ function info()
 {
   let reflector = this;
   let result = '';
-  let fields = _.mapOnly( reflector, { description : null, inherit : null, /*filePath : null,*/ srcFilter : null, reflectMap : null } );
+  let fields = _.mapOnly( reflector, { description : null, inherit : null, srcFilter : null, reflectMap : null } );
   fields = _.mapButNulls( fields );
 
   _.assert( !!reflector.formed );
@@ -365,10 +347,6 @@ let Composes =
   description : null,
 
   reflectMap : null,
-
-  // filePath : null,
-  // basePath : null,
-
   srcFilter : null,
   inherit : _.define.own([]),
 
@@ -460,7 +438,6 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = wTools;
 
-/*_.Will[ Self.shortName ] = Self;*/
 _.staticDecalre
 ({
   prototype : _.Will.prototype,

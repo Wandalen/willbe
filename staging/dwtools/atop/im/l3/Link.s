@@ -76,7 +76,7 @@ let Composes =
   outDirPath : '.',
   repository : null,
   bugs : null,
-  will : null,
+  im : null,
   registry : null,
 
 }

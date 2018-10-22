@@ -34,16 +34,16 @@ function finit()
   module.about.finit();
   if( module.execution )
   module.execution.finit();
-  if( module.link )
-  module.link.finit();
+  // if( module.link )
+  // module.link.finit();
   if( module.export )
   module.export.finit();
 
   _.assert( _.instanceIsFinited( module.about ) );
   if( module.execution )
   _.assert( _.instanceIsFinited( module.execution ) );
-  if( module.link )
-  _.assert( _.instanceIsFinited( module.link ) );
+  // if( module.link )
+  // _.assert( _.instanceIsFinited( module.link ) );
   if( module.export )
   _.assert( _.instanceIsFinited( module.export ) );
 
@@ -86,8 +86,6 @@ function unform()
   module.stepMap[ k ].finit()
   for( let k in module.buildMap )
   module.buildMap[ k ].finit()
-
-  debugger;
 
   _.assert( Object.keys( module.submoduleMap ).length === 0 );
   _.assert( Object.keys( module.reflectorMap ).length === 0 );
@@ -160,6 +158,163 @@ function predefinedForm()
 
 //
 
+function inFilesLoad( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.routineOptions( inFilesLoad, arguments );
+
+  /* */
+
+  if( !module.inFileWithRoleMap.single )
+  {
+
+    new will.InFile
+    ({
+      role : 'single',
+      module : module,
+      filePath : path.resolve( module.dirPath, module.prefixPathForRole( 'single' )  ),
+    }).form1();
+
+    if( module.inFileWithRoleMap.single.exists() )
+    module.inFileWithRoleMap.single.form2();
+    else
+    module.inFileWithRoleMap.single.finit();
+
+  }
+
+  if( !module.inFileWithRoleMap.single )
+  {
+
+    new will.InFile
+    ({
+      role : 'single',
+      module : module,
+      filePath : path.resolve( module.dirPath, '..', path.fullName( module.dirPath ) + module.prefixPathForRole( 'single' ) ),
+    }).form1();
+
+    if( module.inFileWithRoleMap.single.exists() )
+    module.inFileWithRoleMap.single.form2();
+    else
+    module.inFileWithRoleMap.single.finit();
+
+  }
+
+  /* */
+
+  if( !module.inFileWithRoleMap.import )
+  {
+    new will.InFile
+    ({
+      role : 'import',
+      module : module,
+      filePath : path.resolve( module.dirPath, module.prefixPathForRole( 'import' )  ),
+    }).form1();
+
+    if( module.inFileWithRoleMap.import.exists() )
+    module.inFileWithRoleMap.import.form2();
+    else
+    module.inFileWithRoleMap.import.finit();
+
+  }
+
+  if( !module.inFileWithRoleMap.import )
+  {
+
+    new will.InFile
+    ({
+      role : 'import',
+      module : module,
+      filePath : path.resolve( module.dirPath, '..', path.fullName( module.dirPath ) + module.prefixPathForRole( 'import' ) ),
+    }).form1();
+
+    if( module.inFileWithRoleMap.import.exists() )
+    module.inFileWithRoleMap.import.form2();
+    else
+    module.inFileWithRoleMap.import.finit();
+
+  }
+
+  /* */
+
+  if( !module.inFileWithRoleMap.export )
+  {
+
+    new will.InFile
+    ({
+      role : 'export',
+      module : module,
+      filePath : path.resolve( module.dirPath, module.prefixPathForRole( 'export' )  ),
+    }).form1();
+
+    if( module.inFileWithRoleMap.export.exists() )
+    module.inFileWithRoleMap.export.form2();
+    else
+    module.inFileWithRoleMap.export.finit();
+
+  }
+
+  if( !module.inFileWithRoleMap.export )
+  {
+
+    new will.InFile
+    ({
+      role : 'export',
+      module : module,
+      filePath : path.resolve( module.dirPath, '..', path.fullName( module.dirPath ) + module.prefixPathForRole( 'export' ) ),
+    }).form1();
+
+    if( module.inFileWithRoleMap.export.exists() )
+    module.inFileWithRoleMap.export.form2();
+    else
+    module.inFileWithRoleMap.export.finit();
+
+  }
+
+  return module;
+}
+
+inFilesLoad.defaults =
+{
+}
+
+//
+
+function prefixPathForRole( role )
+{
+  let module = this;
+  let result = module.prefixPathForRoleMaybe( role );
+
+  _.assert( arguments.length === 1 );
+  _.sure( _.strIs( result ), 'Unknown role', _.strQuote( role ) );
+
+  return result;
+}
+
+//
+
+function prefixPathForRoleMaybe( role )
+{
+  let module = this;
+
+  _.assert( arguments.length === 1 );
+
+  if( role === 'import' )
+  return '.im.in';
+  else if( role === 'export' )
+  return '.ex.in';
+  else if( role === 'single' )
+  return '.in';
+  else return null;
+
+}
+
+//
+
 /*
 iii : implement name glob filtering
 */
@@ -172,7 +327,6 @@ function buildsFor( name, filter )
 
   if( name )
   {
-    debugger;
     if( module.buildMap[ name ] )
     return [ module.buildMap[ name ] ];
     return [];
@@ -184,7 +338,7 @@ function buildsFor( name, filter )
     let ofilter = filter;
     filter = function filter( build, k, c )
     {
-      if( build.settings === null )
+      if( build.settings === null && Object.keys( filter ).length )
       return;
       let satisfied = _.mapSatisfy
       ({
@@ -217,7 +371,6 @@ function exportsFor( name, filter )
 
   if( name )
   {
-    debugger;
     if( module.exportMap[ name ] )
     return [ module.exportMap[ name ] ];
     return [];
@@ -229,7 +382,7 @@ function exportsFor( name, filter )
     let ofilter = filter;
     filter = function filter( exp, k, c )
     {
-      if( exp.settings === null )
+      if( exp.settings === null && Object.keys( filter ).length )
       return;
       let satisfied = _.mapSatisfy
       ({
@@ -248,28 +401,18 @@ function exportsFor( name, filter )
   return exports;
 }
 
-//
+// --
+// resolver
+// --
 
-function strSplit( srcStr )
+function _pathResolve( filePath )
 {
   let module = this;
   let will = module.will;
-  let splits = _.strIsolateBeginOrNone( srcStr, ':' );
-  return splits;
-}
-
-//
-
-function strGetPrefix( srcStr )
-{
-  let module = this;
-  let will = module.will;
-  let splits = module.strSplit( srcStr );
-  if( !splits[ 0 ] )
-  return false;
-  if( !_.arrayHas( module.KnownPrefixes, splits[ 0 ] ) )
-  return false;
-  return splits[ 0 ];
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let result = path.resolve( module.dirPath, filePath );
+  return result;
 }
 
 //
@@ -348,7 +491,7 @@ function componentGet( kind, name )
   if( kind === 'path' )
   {
     result = module.pathMap[ name ];
-    result = path.s.resolve( module.dirPath, result );
+    // result = path.s.resolve( module.dirPath, result );
   }
   else if( kind === 'reflector' )
   result = module.reflectorMap[ name ];
@@ -370,6 +513,32 @@ function componentGet( kind, name )
 
 //
 
+function strSplit( srcStr )
+{
+  let module = this;
+  let will = module.will;
+  let splits = _.strIsolateBeginOrNone( srcStr, ':' );
+  return splits;
+}
+
+//
+
+function strGetPrefix( srcStr )
+{
+  let module = this;
+  let will = module.will;
+  let splits = module.strSplit( srcStr );
+  if( !splits[ 0 ] )
+  return false;
+  if( !_.arrayHas( module.KnownPrefixes, splits[ 0 ] ) )
+  return false;
+  return splits[ 0 ];
+}
+
+// --
+// informer
+// --
+
 function info()
 {
   let module = this;
@@ -378,14 +547,29 @@ function info()
 
   result += module.about.info();
   result += module.execution.info();
-  result += module.link.info();
+  // result += module.link.info();
 
+  result += module.infoForPaths( module.pathMap );
   result += module.infoForReflectors( module.reflectorMap );
   result += module.infoForSteps( module.stepMap );
   result += module.infoForBuilds( module.buildMap );
   result += module.infoForExports( module.exportMap );
 
   return result;
+}
+
+//
+
+function infoForPaths( paths )
+{
+  let module = this;
+  paths = paths || module.pathMap;
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+
+  if( !Object.keys( paths ).length )
+  return '';
+
+  return 'Paths\n' + _.toStr( paths, { wrap : 0, multiline : 1, levels : 2 } ) + '\n\n';
 }
 
 //
@@ -476,11 +660,12 @@ function infoForExports( exports )
 // relations
 // --
 
-let KnownPrefixes = [ 'submodule', 'step', 'path', 'reflector', 'build', 'about', 'execution', 'link', 'export' ];
+let KnownPrefixes = [ 'submodule', 'step', 'path', 'reflector', 'build', 'about', 'execution', 'export' ];
 
 let Composes =
 {
   dirPath : null,
+  verbosity : 0,
 }
 
 let Aggregates =
@@ -498,7 +683,7 @@ let Aggregates =
 
   about : _.define.ownInstanceOf( _.Will.ParagraphAbout ),
   execution : _.define.ownInstanceOf( _.Will.ParagraphExecution ),
-  link : _.define.ownInstanceOf( _.Will.ParagraphLink ),
+  // link : _.define.ownInstanceOf( _.Will.ParagraphLink ),
 
 }
 
@@ -526,7 +711,7 @@ let Accessor =
 {
   about : { setter : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.Will.ParagraphAbout }) },
   execution : { setter : _.accessor.setter.friend({ name : 'execution', friendName : 'module', maker : _.Will.ParagraphExecution }) },
-  link : { setter : _.accessor.setter.friend({ name : 'link', friendName : 'module', maker : _.Will.ParagraphLink }) },
+  // link : { setter : _.accessor.setter.friend({ name : 'link', friendName : 'module', maker : _.Will.ParagraphLink }) },
 }
 
 // --
@@ -544,11 +729,17 @@ let Proto =
   form : form,
   predefinedForm : predefinedForm,
 
+  inFilesLoad : inFilesLoad,
+  prefixPathForRole : prefixPathForRole,
+  prefixPathForRoleMaybe : prefixPathForRoleMaybe,
+
   buildsFor : buildsFor,
   exportsFor : exportsFor,
 
-  strSplit : strSplit,
-  strGetPrefix : strGetPrefix,
+  // resolver
+
+  _pathResolve : _pathResolve,
+  pathResolve : _.routineVectorize_functor( _pathResolve ),
 
   _strResolve : _strResolve,
   strResolve : _.routineVectorize_functor( _strResolve ),
@@ -558,8 +749,13 @@ let Proto =
 
   _strResolveAct : _strResolveAct,
   componentGet : componentGet,
+  strSplit : strSplit,
+  strGetPrefix : strGetPrefix,
+
+  // informer
 
   info : info,
+  infoForPaths : infoForPaths,
   infoForReflectors : infoForReflectors,
   infoForSteps : infoForSteps,
   infoForBuilds : infoForBuilds,

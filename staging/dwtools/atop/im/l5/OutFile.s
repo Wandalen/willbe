@@ -81,8 +81,8 @@ function form()
   let con = new _.Consequence().give();
 
   outf.exportPath = path.resolve( module.dirPath, module.strResolve( exp.files ) );
-  outf.archivePath = path.resolve( module.dirPath, module.link.outDirPath, module.about.name + exp.name + '.out.tgs' );
-  outf.outFilePath = path.resolve( module.dirPath, module.link.outDirPath, module.about.name + exp.name + '.out.yml' );
+  outf.archivePath = path.resolve( module.dirPath, module.pathMap.outDir || '.', module.about.name + exp.name + '.out.tgs' );
+  outf.outFilePath = path.resolve( module.dirPath, module.pathMap.outDir || '.', module.about.name + exp.name + '.out.yml' );
 
   _.assert( arguments.length === 0 );
   _.assert( !!module );

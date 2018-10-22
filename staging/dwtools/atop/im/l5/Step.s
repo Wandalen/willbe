@@ -257,7 +257,7 @@ function StepRoutineGrab( run )
     logger.log( _.toStr( settings.reflectMap, { wrap : 0, multiline : 1, levels : 3 } ) );
   }
 
-  debugger;
+  // debugger;
   let result = fileProvider.filesReflect( settings );
   debugger;
 

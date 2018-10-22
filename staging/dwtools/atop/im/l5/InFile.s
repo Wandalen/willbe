@@ -167,7 +167,11 @@ function form2()
   inf.inPathsForm();
   try
   {
-    inf.data = fileProvider.fileConfigRead({ filePath : inf.filePath });
+    inf.data = fileProvider.fileConfigRead
+    ({
+      filePath : inf.filePath,
+      verbosity : will.verbosity+1,
+    });
   }
   catch( err )
   {
@@ -197,8 +201,9 @@ function form2()
   module.about.copy( inf.data.about );
   if( inf.data.execution )
   module.execution.copy( inf.data.execution );
-  if( inf.data.link )
-  module.link.copy( inf.data.link );
+
+  // if( inf.data.link )
+  // module.link.copy( inf.data.link );
 
   /* */
 
@@ -223,14 +228,12 @@ function inPathsForm()
   _.assert( !!module.formed );
   _.assert( !!inf.formed );
 
-  debugger;
-
   if( !inf.filePath )
   {
     if( !inf.dirPath )
     inf.dirPath = module.dirPath;
     _.assert( _.strIs( inf.dirPath ) );
-    inf.filePath = path.join( inf.dirPath, inf.prefixPathGet() );
+    inf.filePath = path.join( inf.dirPath, module.prefixPathForRole( inf.role ) );
   }
 
   inf.dirPath = path.dir( inf.filePath );
@@ -469,18 +472,18 @@ function exportsForm( exports )
 }
 
 //
-
-function prefixPathGet()
-{
-  let inf = this;
-
-  if( inf.role === 'import' )
-  return '.im.in';
-  else if( inf.role === 'export' )
-  return '.ex.in';
-
-  _.sure( 0, 'Unknown prefix path for role', inf.role );
-}
+//
+// function prefixPathGet()
+// {
+//   let inf = this;
+//
+//   if( inf.role === 'import' )
+//   return '.im.in';
+//   else if( inf.role === 'export' )
+//   return '.ex.in';
+//
+//   _.sure( 0, 'Unknown prefix path for role', inf.role );
+// }
 
 //
 
@@ -515,7 +518,7 @@ let KnownSections =
 
   about : null,
   execution : null,
-  link : null,
+  // link : null,
   export : null,
 
 }
@@ -583,7 +586,7 @@ let Proto =
   buildsForm : buildsForm,
   exportsForm : exportsForm,
 
-  prefixPathGet : prefixPathGet,
+  // prefixPathGet : prefixPathGet,
   exists : exists,
 
   // relation

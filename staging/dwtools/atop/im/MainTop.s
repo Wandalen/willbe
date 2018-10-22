@@ -73,6 +73,7 @@ function commandsMake()
 
     'build' :             { e : _.routineJoin( will, will.commandBuild ),             h : 'Build current module with spesified settings.' },
     'export' :            { e : _.routineJoin( will, will.commandExport ),            h : 'Export selected the module with spesified settings. Save output to output file and archive.' },
+    'with' :              { e : _.routineJoin( will, will.commandWith ),              h : 'Use "with" to select a module' },
 
   }
 
@@ -141,24 +142,10 @@ function _commandList( e, act )
   let logger = will.logger;
   let fileProvider = will.fileProvider;
   let dirPath = fileProvider.path.current();
-  let module = will.Module({ will : will, dirPath : dirPath }).form();
 
-  new will.InFile
-  ({
-    role : 'import',
-    module : module,
-  }).form();
-
-  new will.InFile
-  ({
-    role : 'export',
-    module : module,
-  }).form1();
-
-  if( module.inFileWithRoleMap.export.exists() )
-  module.inFileWithRoleMap.export.form2();
-  else
-  module.inFileWithRoleMap.export.finit();
+  if( !will.currentModule )
+  will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().inFilesLoad();
+  let module = will.currentModule;
 
   act( module );
 
@@ -307,13 +294,9 @@ function commandBuild( e )
   let fileProvider = will.fileProvider;
   let logger = will.logger;
   let dirPath = fileProvider.path.current();
-  let module = will.Module({ will : will, dirPath : dirPath }).form();
-
-  new will.InFile
-  ({
-    role : 'import',
-    module : module,
-  }).form();
+  if( !will.currentModule )
+  will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().inFilesLoad();
+  let module = will.currentModule;
 
   let builds = module.buildsFor( e.subject, e.propertiesMap );
 
@@ -350,19 +333,9 @@ function commandExport( e )
   let fileProvider = will.fileProvider;
   let logger = will.logger;
   let dirPath = fileProvider.path.current();
-  let module = will.Module({ will : will, dirPath : dirPath }).form();
-
-  new will.InFile
-  ({
-    role : 'import',
-    module : module,
-  }).form();
-
-  new will.InFile
-  ({
-    role : 'export',
-    module : module,
-  }).form();
+  if( !will.currentModule )
+  will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().inFilesLoad();
+  let module = will.currentModule;
 
   let exports = module.exportsFor( e.subject, e.propertiesMap );
 
@@ -374,16 +347,6 @@ function commandExport( e )
     throw _.errBriefly( 'To export please specify exactly one export, none satisfies passed arguments' );
     throw _.errBriefly( 'To export please specify exactly one export' );
   }
-
-  // let run = new will.ExportRun({ module : module }).form();
-  //
-  // return run.run( exports[ 0 ] )
-  // .doThen( ( err ) =>
-  // {
-  //   run.finit();
-  //   if( err )
-  //   throw _.errLogOnce( err );
-  // });
 
   let expf = new will.OutFile({ module : module, export : exports[ 0 ] });
 
@@ -398,13 +361,48 @@ function commandExport( e )
 
 }
 
+//
+
+function commandWith( e )
+{
+  let will = this;
+  let ca = e.ca;
+
+  if( !will.formed )
+  will.form();
+
+  if( will.currentModule )
+  will.currentModule.finit();
+
+  _.sure( _.strDefined( e.subject ), 'Expects path to module' )
+
+  let secondCommand, secondSubject, del;
+  [ e.subject, del, secondCommand  ] = _.strIsolateBeginOrAll( e.subject, ' ' );
+  [ secondCommand, del, secondSubject  ] = _.strIsolateBeginOrAll( secondCommand, ' ' );
+
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let dirPath = path.resolve( e.subject );
+  let module = will.currentModule = will.Module({ will : will, dirPath : dirPath })
+  .form()
+  .inFilesLoad();
+
+  return ca.proceedAct
+  ({
+    command : secondCommand,
+    subject : secondSubject,
+    propertiesMap : e.propertiesMap,
+  });
+
+}
+
 // --
 // relations
 // --
 
 let Composes =
 {
-  verbosity : 3,
 }
 
 let Aggregates =
@@ -413,18 +411,11 @@ let Aggregates =
 
 let Associates =
 {
-
-  fileProvider : null,
-  filesGraph : null,
-  logger : null,
-
-  moduleArray : _.define.own([]),
-
+  currentModule : null,
 }
 
 let Restricts =
 {
-  formed : 0,
 }
 
 let Statics =
@@ -464,6 +455,7 @@ let Extend =
 
   commandBuild : commandBuild,
   commandExport : commandExport,
+  commandWith : commandWith,
 
   // relation
 
