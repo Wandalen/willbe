@@ -105,7 +105,7 @@ function unform()
   _.assert( module.inFileArray.length === 0 );
   _.assert( Object.keys( module.inFileWithRoleMap ).length === 0 );
 
-  _.arrayRemoveOnceStrictly( will.moduleArray, module );
+  _.arrayRemoveElementOnceStrictly( will.moduleArray, module );
 
   /* end */
 
@@ -167,6 +167,7 @@ function inFilesLoad( o )
   let logger = will.logger;
 
   _.routineOptions( inFilesLoad, arguments );
+  _.assert( module.inFileArray.length === 0, 'not tested' );
 
   /* */
 
@@ -275,6 +276,8 @@ function inFilesLoad( o )
 
   }
 
+  // _.sure( module.inFileArray.length > 0, 'Found no will file at', _.strQuote( module.dirPath ) );
+
   return module;
 }
 
@@ -319,42 +322,151 @@ function prefixPathForRoleMaybe( role )
 iii : implement name glob filtering
 */
 
+function _select( o )
+{
+  let module = this;
+  let elements;
+
+  if( o.resource === 'build' )
+  elements = module.buildMap;
+  else if( o.resource === 'export' )
+  elements = module.exportMap;
+  else _.assert( 0, 'Unknown kind of resource', _.strQuote( o.resource ) );
+
+  _.routineOptions( _select, arguments );
+  _.assert( arguments.length === 1 );
+  _.assert( o.filter === null || _.routineIs( o.filter ) || _.mapIs( o.filter ) );
+
+  debugger;
+
+  if( o.name )
+  {
+    if( !elements[ o.name ] )
+    return []
+    elements = [ elements[ o.name ] ];
+    if( o.filter === null || Object.keys( o.filter ).length === 0 )
+    return elements;
+  }
+
+  let hasMapFilter = _.objectIs( o.filter ) && Object.keys( o.filter ).length > 0;
+  if( _.routineIs( o.filter ) || hasMapFilter )
+  {
+
+    _.assert( _.objectIs( o.filter ), 'not tested' );
+    _.assert( !o.name, 'not tested' );
+
+    let filter = o.filter;
+
+    if( hasMapFilter )
+    {
+
+      filter = function filter( build, k, c )
+      {
+        if( build.settings === null && Object.keys( o.filter ).length )
+        return;
+        let satisfied = _.mapSatisfy
+        ({
+          template : o.filter,
+          src : build.settings,
+          levels : 1,
+        });
+        if( satisfied )
+        return build;
+      }
+
+    }
+
+    elements = _.mapVals( _.entityFilter( elements, filter ) );
+
+  }
+  else if( _.objectIs( o.filter ) && Object.keys( o.filter ).length === 0 && !o.name )
+  {
+
+    elements = _.mapVals( _.entityFilter( elements, { default : 1 } ) );
+
+  }
+
+  return elements;
+}
+
+_select.defaults =
+{
+  resource : null,
+  name : null,
+  filter : null,
+}
+
+//
+
+/*
+iii : implement name glob filtering
+*/
+
 function buildsFor( name, filter )
 {
   let module = this;
 
   _.assert( arguments.length === 2 );
 
-  if( name )
-  {
-    if( module.buildMap[ name ] )
-    return [ module.buildMap[ name ] ];
-    return [];
-  }
+  return module._select
+  ({
+    resource : 'build',
+    name : name,
+    filter : filter,
+  })
 
-  if( !_.routineIs( filter ) )
-  {
-
-    let ofilter = filter;
-    filter = function filter( build, k, c )
-    {
-      if( build.settings === null && Object.keys( filter ).length )
-      return;
-      let satisfied = _.mapSatisfy
-      ({
-        template : ofilter,
-        src : build.settings,
-        levels : 1,
-      });
-      if( satisfied )
-      return build;
-    }
-
-  }
-
-  let builds = _.mapVals( _.entityFilter( module.buildMap, filter ) );
-
-  return builds;
+  // debugger;
+  //
+  // if( name )
+  // {
+  //   if( !builds[ name ] )
+  //   return []
+  //   builds = [ builds[ name ] ];
+  //   if( filter === null || Object.keys( filter ).length === 0 )
+  //   return builds;
+  // }
+  //
+  // let hasMapFilter = _.objectIs( filter ) && Object.keys( filter ).length > 0;
+  // if( _.routineIs( filter ) || hasMapFilter )
+  // {
+  //
+  //   _.assert( _.objectIs( filter ), 'not tested' );
+  //   _.assert( !name, 'not tested' );
+  //
+  //   if( hasMapFilter )
+  //   {
+  //
+  //     let ofilter = filter;
+  //     filter = function filter( build, k, c )
+  //     {
+  //       if( build.settings === null && Object.keys( filter ).length )
+  //       return;
+  //       let satisfied = _.mapSatisfy
+  //       ({
+  //         template : ofilter,
+  //         src : build.settings,
+  //         levels : 1,
+  //       });
+  //       if( satisfied )
+  //       return build;
+  //     }
+  //
+  //   }
+  //
+  //   builds = _.mapVals( _.entityFilter( builds, filter ) );
+  //
+  // }
+  // else if( _.objectIs( filter ) && Object.keys( filter ).length === 0 && !name )
+  // {
+  //
+  //   _.assert( !name, 'not tested' );
+  //
+  //   filter = { default : 1 };
+  //   builds = _.mapVals( _.entityFilter( builds, filter ) );
+  //
+  // }
+  //
+  // return builds;
 }
 
 //
@@ -369,36 +481,47 @@ function exportsFor( name, filter )
 
   _.assert( arguments.length === 2 );
 
-  if( name )
-  {
-    if( module.exportMap[ name ] )
-    return [ module.exportMap[ name ] ];
-    return [];
-  }
+  return module._select
+  ({
+    resource : 'export',
+    name : name,
+    filter : filter,
+  })
 
-  if( !_.routineIs( filter ) )
-  {
-
-    let ofilter = filter;
-    filter = function filter( exp, k, c )
-    {
-      if( exp.settings === null && Object.keys( filter ).length )
-      return;
-      let satisfied = _.mapSatisfy
-      ({
-        template : ofilter,
-        src : exp.settings,
-        levels : 1,
-      });
-      if( satisfied )
-      return exp;
-    }
-
-  }
-
-  let exports = _.mapVals( _.entityFilter( module.exportMap, filter ) );
-
-  return exports;
+  // let module = this;
+  //
+  // _.assert( arguments.length === 2 );
+  //
+  // if( name )
+  // {
+  //   if( module.exportMap[ name ] )
+  //   return [ module.exportMap[ name ] ];
+  //   return [];
+  // }
+  //
+  // if( !_.routineIs( filter ) )
+  // {
+  //
+  //   let ofilter = filter;
+  //   filter = function filter( exp, k, c )
+  //   {
+  //     if( exp.settings === null && Object.keys( filter ).length )
+  //     return;
+  //     let satisfied = _.mapSatisfy
+  //     ({
+  //       template : ofilter,
+  //       src : exp.settings,
+  //       levels : 1,
+  //     });
+  //     if( satisfied )
+  //     return exp;
+  //   }
+  //
+  // }
+  //
+  // let exports = _.mapVals( _.entityFilter( module.exportMap, filter ) );
+  //
+  // return exports;
 }
 
 // --
@@ -511,7 +634,9 @@ function componentGet( kind, name )
   return result;
 }
 
-//
+// --
+// etc
+// --
 
 function strSplit( srcStr )
 {
@@ -533,6 +658,21 @@ function strGetPrefix( srcStr )
   if( !_.arrayHas( module.KnownPrefixes, splits[ 0 ] ) )
   return false;
   return splits[ 0 ];
+}
+
+//
+
+function DirPathFromInFilePath( inPath )
+{
+  let module = this;
+  _.assert( arguments.length === 1 );
+  let r = /(.*)(?:\.in(?:\.|$).*)/;
+  let parsed = r.exec( inPath );
+  debugger;
+  if( !parsed )
+  return r;
+  else
+  return parsed[ 1 ];
 }
 
 // --
@@ -733,6 +873,7 @@ let Proto =
   prefixPathForRole : prefixPathForRole,
   prefixPathForRoleMaybe : prefixPathForRoleMaybe,
 
+  _select : _select,
   buildsFor : buildsFor,
   exportsFor : exportsFor,
 
@@ -749,8 +890,12 @@ let Proto =
 
   _strResolveAct : _strResolveAct,
   componentGet : componentGet,
+
+  // etc
+
   strSplit : strSplit,
   strGetPrefix : strGetPrefix,
+  DirPathFromInFilePath : DirPathFromInFilePath,
 
   // informer
 

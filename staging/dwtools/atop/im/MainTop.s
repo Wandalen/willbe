@@ -74,6 +74,7 @@ function commandsMake()
     'build' :             { e : _.routineJoin( will, will.commandBuild ),             h : 'Build current module with spesified settings.' },
     'export' :            { e : _.routineJoin( will, will.commandExport ),            h : 'Export selected the module with spesified settings. Save output to output file and archive.' },
     'with' :              { e : _.routineJoin( will, will.commandWith ),              h : 'Use "with" to select a module' },
+    'each' :              { e : _.routineJoin( will, will.commandEach ),              h : 'Use "each" to iterate each module in a directory' },
 
   }
 
@@ -388,12 +389,69 @@ function commandWith( e )
   .form()
   .inFilesLoad();
 
+  if( module.inFileArray.length === 0 )
+  throw _.errBriefly( 'Found no will file near', _.strQuote( module.dirPath ) );
+
   return ca.proceedAct
   ({
     command : secondCommand,
     subject : secondSubject,
     propertiesMap : e.propertiesMap,
   });
+
+}
+
+//
+
+function commandEach( e )
+{
+  let will = this;
+  let ca = e.ca;
+
+  if( !will.formed )
+  will.form();
+
+  if( will.currentModule )
+  will.currentModule.finit();
+
+  _.sure( _.strDefined( e.subject ), 'Expects path to module' )
+
+  let secondCommand, secondSubject, del;
+  [ e.subject, del, secondCommand  ] = _.strIsolateBeginOrAll( e.subject, ' ' );
+  [ secondCommand, del, secondSubject  ] = _.strIsolateBeginOrAll( secondCommand, ' ' );
+
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let dirPath = path.resolve( e.subject );
+
+  let filter = { maskTerminal : { includeAny : /\.in(\.|$)/ } };
+  let files = fileProvider.filesFind({ filePath : dirPath, filter : filter, recursive : 0 });
+  debugger;
+
+  for( let f = 0 ; f < files.length ; f++ )
+  {
+    let file = files[ f ];
+    let dirPath = will.Module.DirPathFromInFilePath( file.absolute );
+
+    if( will.moduleMap[ dirPath ] )
+    continue;
+
+    let module = will.currentModule = will.Module({ will : will, dirPath : dirPath })
+    .form()
+    .inFilesLoad();
+
+    if( module.inFileArray.length === 0 )
+    throw _.errBriefly( 'Found no will file near', _.strQuote( file.absolute ) );
+
+    return ca.proceedAct
+    ({
+      command : secondCommand,
+      subject : secondSubject,
+      propertiesMap : _.mapExtend( null, e.propertiesMap ),
+    });
+
+  }
 
 }
 
@@ -456,6 +514,7 @@ let Extend =
   commandBuild : commandBuild,
   commandExport : commandExport,
   commandWith : commandWith,
+  commandEach : commandEach,
 
   // relation
 

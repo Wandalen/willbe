@@ -59,7 +59,7 @@ function unform()
 
   /* begin */
 
-  _.arrayRemoveOnceStrictly( module.inFileArray, inf );
+  _.arrayRemoveElementOnceStrictly( module.inFileArray, inf );
 
   if( inf.role )
   {

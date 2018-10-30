@@ -58,7 +58,7 @@ function unform()
 
   /* begin */
 
-  // _.arrayRemoveOnceStrictly( module.inFileArray, submodule );
+  // _.arrayRemoveElementOnceStrictly( module.inFileArray, submodule );
 
   /* end */
 

@@ -248,6 +248,8 @@ function form3()
 
   /* end */
 
+  _.assert( build.default === 0 || build.default === 1 );
+
   build.formed = 3;
   return build;
 }
