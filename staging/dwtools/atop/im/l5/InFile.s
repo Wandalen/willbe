@@ -178,7 +178,7 @@ function form2()
     throw _.errLogOnce( _.errBriefly( err ) );
   }
 
-  _.sureMapHasOnly( inf.data, inf.KnownSections );
+  _.sureMapHasOnly( inf.data, inf.KnownSections, () => 'Will file ' + inf.filePath + ' should not have section(s) :' );
 
   /* form */
 
@@ -188,14 +188,13 @@ function form2()
   if( inf.data.reflector )
   inf.reflectorsForm( inf.data.reflector );
 
-  if( inf.data.step )
-  inf.stepsForm( inf.data.step );
+  inf.stepsForm( inf.data.step || {} );
 
   if( inf.data.build )
   inf.buildsForm( inf.data.build );
 
-  if( inf.data.export )
-  inf.exportsForm( inf.data.export );
+  // if( inf.data.export )
+  // inf.exportsForm( inf.data.export );
 
   if( inf.data.about )
   module.about.copy( inf.data.about );
@@ -334,14 +333,22 @@ function stepsForm( steps )
   _.each( steps, ( step, k ) =>
   {
 
+    _.assert( !( step instanceof will.Step ) );
+
     if( _.strIs( step ) )
     step = { filePath : step };
 
+    // step.name = k;
+    // o2.inf = inf;
+    // o2.module = module;
+
     let o2 = _.mapOnly( step, { inherit : null, filePath : null } );
-    o2.settings = _.mapBut( step, o2 );
+    o2.setting = _.mapBut( step, o2 );
     o2.inf = inf;
     o2.module = module;
     o2.name = k;
+
+    // let o2 = step.optionsExport();
 
     try
     {
@@ -423,60 +430,60 @@ function buildsForm( builds )
 
 //
 
-function exportsForm( exports )
-{
-  let inf = this;
-  let module = inf.module;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-
-  _.assert( _.mapIs( exports ) );
-  _.assert( arguments.length === 1 );
-
-  /* form1 */
-
-  _.each( exports, ( exp, k ) =>
-  {
-
-    let o2 = _.mapExtend( null, exp );
-    o2.inf = inf;
-    o2.module = module;
-    o2.name = k;
-
-    try
-    {
-      will.Export( o2 ).form1();
-    }
-    catch( err )
-    {
-      throw _.err( 'Cant form export', _.strQuote( o2.name ), '\n', err );
-    }
-
-  });
-
-  /* form2 */
-
-  for( let s in inf.exportMap )
-  {
-    let exp = inf.exportMap[ s ];
-    _.assert( !!exp.formed );
-    if( exp.formed < 2 )
-    exp.form2();
-  }
-
-  /* form3 */
-
-  for( let s in inf.exportMap )
-  {
-    let exp = inf.exportMap[ s ];
-    _.assert( exp.formed >= 2 );
-    if( exp.formed < 3 )
-    exp.form3();
-  }
-
-}
+// function exportsForm( exports )
+// {
+//   let inf = this;
+//   let module = inf.module;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//
+//   _.assert( _.mapIs( exports ) );
+//   _.assert( arguments.length === 1 );
+//
+//   /* form1 */
+//
+//   _.each( exports, ( exp, k ) =>
+//   {
+//
+//     let o2 = _.mapExtend( null, exp );
+//     o2.inf = inf;
+//     o2.module = module;
+//     o2.name = k;
+//
+//     try
+//     {
+//       will.Build( o2 ).form1();
+//     }
+//     catch( err )
+//     {
+//       throw _.err( 'Cant form export', _.strQuote( o2.name ), '\n', err );
+//     }
+//
+//   });
+//
+//   /* form2 */
+//
+//   for( let s in inf.exportMap )
+//   {
+//     let exp = inf.exportMap[ s ];
+//     _.assert( !!exp.formed );
+//     if( exp.formed < 2 )
+//     exp.form2();
+//   }
+//
+//   /* form3 */
+//
+//   for( let s in inf.exportMap )
+//   {
+//     let exp = inf.exportMap[ s ];
+//     _.assert( exp.formed >= 2 );
+//     if( exp.formed < 3 )
+//     exp.form3();
+//   }
+//
+// }
 
 //
 //
@@ -526,7 +533,7 @@ let KnownSections =
   about : null,
   execution : null,
   // link : null,
-  export : null,
+  // export : null,
 
 }
 
@@ -545,7 +552,7 @@ let Aggregates =
   reflectorMap : _.define.own({}),
   stepMap : _.define.own({}),
   buildMap : _.define.own({}),
-  exportMap : _.define.own({}),
+  // exportMap : _.define.own({}),
 
 }
 
@@ -567,6 +574,7 @@ let Statics =
 
 let Forbids =
 {
+  exportMap : 'exportMap',
 }
 
 // --
@@ -591,7 +599,7 @@ let Proto =
   reflectorsForm : reflectorsForm,
   stepsForm : stepsForm,
   buildsForm : buildsForm,
-  exportsForm : exportsForm,
+  // exportsForm : exportsForm,
 
   // prefixPathGet : prefixPathGet,
   exists : exists,

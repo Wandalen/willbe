@@ -190,10 +190,18 @@ function predefinedForm()
   new will.Step
   ({
     name : 'grab',
-    stepRoutine : will.Step.StepRoutineGrab,
+    stepRoutine : will.Predefined.grabStepRoutine,
     predefined : 1,
     module : module,
-  }).form1();
+  }).form();
+
+  new will.Step
+  ({
+    name : 'export',
+    stepRoutine : will.Predefined.exportStepRoutine,
+    predefined : 1,
+    module : module,
+  }).form();
 
 }
 
@@ -387,13 +395,16 @@ function _select( o )
   let module = this;
   let elements;
 
-  if( o.resource === 'build' )
   elements = module.buildMap;
-  else if( o.resource === 'export' )
-  elements = module.exportMap;
-  else _.assert( 0, 'Unknown kind of resource', _.strQuote( o.resource ) );
+
+  // if( o.resource === 'build' )
+  // elements = module.buildMap;
+  // else if( o.resource === 'export' )
+  // elements = module.exportMap;
+  // else _.assert( 0, 'Unknown kind of resource', _.strQuote( o.resource ) );
 
   _.routineOptions( _select, arguments );
+  _.assert( _.arrayHas( [ 'build', 'export' ], o.resource ) );
   _.assert( arguments.length === 1 );
   _.assert( o.filter === null || _.routineIs( o.filter ) || _.mapIs( o.filter ) );
 
@@ -420,12 +431,12 @@ function _select( o )
 
       filter = function filter( build, k, c )
       {
-        if( build.settings === null && Object.keys( o.filter ).length )
+        if( build.setting === null && Object.keys( o.filter ).length )
         return;
         let satisfied = _.mapSatisfy
         ({
           template : o.filter,
-          src : build.settings,
+          src : build.setting,
           levels : 1,
         });
         if( satisfied )
@@ -444,6 +455,11 @@ function _select( o )
 
   }
 
+  if( o.resource === 'export' )
+  elements = elements.filter( ( element ) => element.setting.export );
+  else if( o.resource === 'build' )
+  elements = elements.filter( ( element ) => !element.setting.export );
+
   return elements;
 }
 
@@ -455,10 +471,6 @@ _select.defaults =
 }
 
 //
-
-/*
-iii : implement name glob filtering
-*/
 
 function buildsFor( name, filter )
 {
@@ -473,65 +485,9 @@ function buildsFor( name, filter )
     filter : filter,
   })
 
-  // debugger;
-  //
-  // if( name )
-  // {
-  //   if( !builds[ name ] )
-  //   return []
-  //   builds = [ builds[ name ] ];
-  //   if( filter === null || Object.keys( filter ).length === 0 )
-  //   return builds;
-  // }
-  //
-  // let hasMapFilter = _.objectIs( filter ) && Object.keys( filter ).length > 0;
-  // if( _.routineIs( filter ) || hasMapFilter )
-  // {
-  //
-  //   _.assert( _.objectIs( filter ), 'not tested' );
-  //   _.assert( !name, 'not tested' );
-  //
-  //   if( hasMapFilter )
-  //   {
-  //
-  //     let ofilter = filter;
-  //     filter = function filter( build, k, c )
-  //     {
-  //       if( build.settings === null && Object.keys( filter ).length )
-  //       return;
-  //       let satisfied = _.mapSatisfy
-  //       ({
-  //         template : ofilter,
-  //         src : build.settings,
-  //         levels : 1,
-  //       });
-  //       if( satisfied )
-  //       return build;
-  //     }
-  //
-  //   }
-  //
-  //   builds = _.mapVals( _.entityFilter( builds, filter ) );
-  //
-  // }
-  // else if( _.objectIs( filter ) && Object.keys( filter ).length === 0 && !name )
-  // {
-  //
-  //   _.assert( !name, 'not tested' );
-  //
-  //   filter = { default : 1 };
-  //   builds = _.mapVals( _.entityFilter( builds, filter ) );
-  //
-  // }
-  //
-  // return builds;
 }
 
 //
-
-/*
-iii : implement name glob filtering
-*/
 
 function exportsFor( name, filter )
 {
@@ -546,40 +502,6 @@ function exportsFor( name, filter )
     filter : filter,
   })
 
-  // let module = this;
-  //
-  // _.assert( arguments.length === 2 );
-  //
-  // if( name )
-  // {
-  //   if( module.exportMap[ name ] )
-  //   return [ module.exportMap[ name ] ];
-  //   return [];
-  // }
-  //
-  // if( !_.routineIs( filter ) )
-  // {
-  //
-  //   let ofilter = filter;
-  //   filter = function filter( exp, k, c )
-  //   {
-  //     if( exp.settings === null && Object.keys( filter ).length )
-  //     return;
-  //     let satisfied = _.mapSatisfy
-  //     ({
-  //       template : ofilter,
-  //       src : exp.settings,
-  //       levels : 1,
-  //     });
-  //     if( satisfied )
-  //     return exp;
-  //   }
-  //
-  // }
-  //
-  // let exports = _.mapVals( _.entityFilter( module.exportMap, filter ) );
-  //
-  // return exports;
 }
 
 // --
@@ -846,15 +768,17 @@ function dataExport()
   let logger = will.logger;
   let result = Object.create( null );
 
+  result.about = module.about.dataExport();
+  result.execution = module.execution.dataExport();
+
+  if( module.exported )
+  result.exported = module.exported.dataExport();
+
   result.path = module.dataExportPaths();
   result.submodule = module.dataExportSubmodules();
   result.reflector = module.dataExportReflectors();
   result.step = module.dataExportSteps();
   result.build = module.dataExportBuilds();
-  result.export = module.dataExportExports();
-
-  result.about = module.about.dataExport();
-  result.execution = module.execution.dataExport();
 
   return result;
 }
@@ -939,21 +863,21 @@ function dataExportBuilds()
 }
 
 //
-
-function dataExportExports()
-{
-  let module = this;
-  let will = module.will;
-  let result = Object.create( null );
-
-  for( let e in module.exportMap )
-  {
-    let element = module.exportMap[ e ];
-    result[ e ] = element.dataExport();
-  }
-
-  return result;
-}
+//
+// function dataExportExports()
+// {
+//   let module = this;
+//   let will = module.will;
+//   let result = Object.create( null );
+//
+//   for( let e in module.exportMap )
+//   {
+//     let element = module.exportMap[ e ];
+//     result[ e ] = element.dataExport();
+//   }
+//
+//   return result;
+// }
 
 // --
 // relations
@@ -978,11 +902,11 @@ let Aggregates =
   reflectorMap : _.define.own({}),
   stepMap : _.define.own({}),
   buildMap : _.define.own({}),
-  exportMap : _.define.own({}),
+  // exportMap : _.define.own({}),
 
   about : _.define.ownInstanceOf( _.Will.ParagraphAbout ),
   execution : _.define.ownInstanceOf( _.Will.ParagraphExecution ),
-  generated : null,
+  exported : null,
 
 }
 
@@ -1005,13 +929,14 @@ let Statics =
 let Forbids =
 {
   name : 'name',
+  exportMap : 'exportMap',
 }
 
 let Accessor =
 {
   about : { setter : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.Will.ParagraphAbout }) },
   execution : { setter : _.accessor.setter.friend({ name : 'execution', friendName : 'module', maker : _.Will.ParagraphExecution }) },
-  generated : { setter : _.accessor.setter.friend({ name : 'generated', friendName : 'module', maker : _.Will.ParagraphGenerated }) },
+  exported : { setter : _.accessor.setter.friend({ name : 'exported', friendName : 'module', maker : _.Will.ParagraphExported }) },
 }
 
 // --
@@ -1076,7 +1001,8 @@ let Proto =
   dataExportReflectors : dataExportReflectors,
   dataExportSteps : dataExportSteps,
   dataExportBuilds : dataExportBuilds,
-  dataExportExports : dataExportExports,
+
+  // dataExportExports : dataExportExports,
 
   // relation
 

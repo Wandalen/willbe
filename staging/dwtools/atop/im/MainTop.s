@@ -71,8 +71,8 @@ function commandsMake()
     'execution list' :    { e : _.routineJoin( will, will.commandExecutionList ),     h : 'List execution scenarios.' },
     'link list' :         { e : _.routineJoin( will, will.commandLinkList ),          h : 'List links to resources associated with the module.' },
 
-    'build' :             { e : _.routineJoin( will, will.commandBuild ),             h : 'Build current module with spesified settings.' },
-    'export' :            { e : _.routineJoin( will, will.commandExport ),            h : 'Export selected the module with spesified settings. Save output to output file and archive.' },
+    'build' :             { e : _.routineJoin( will, will.commandBuild ),             h : 'Build current module with spesified setting.' },
+    'export' :            { e : _.routineJoin( will, will.commandExport ),            h : 'Export selected the module with spesified setting. Save output to output file and archive.' },
     'with' :              { e : _.routineJoin( will, will.commandWith ),              h : 'Use "with" to select a module' },
     'each' :              { e : _.routineJoin( will, will.commandEach ),              h : 'Use "each" to iterate each module in a directory' },
 
@@ -299,7 +299,9 @@ function commandBuild( e )
   will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().inFilesLoad();
   let module = will.currentModule;
 
+  debugger;
   let builds = module.buildsFor( e.subject, e.propertiesMap );
+  debugger;
 
   logger.up();
   if( logger.verbosity >= 2 )
@@ -335,6 +337,7 @@ function commandBuild( e )
     logger.down();
 
   });
+
 }
 
 //
@@ -371,13 +374,14 @@ function commandExport( e )
     throw _.errBriefly( 'To export please specify exactly one export' );
   }
 
-  let expf = new will.OutFile({ module : module, export : exports[ 0 ] });
+  let run = new will.BuildRun({ module : module }).form();
 
-  return expf.form()
+  return run.run( exports[ 0 ] )
   .doThen( ( err ) =>
   {
-    expf.finit();
+    run.finit();
     module.finit();
+
     if( err )
     throw _.errLogOnce( err );
 
@@ -389,6 +393,25 @@ function commandExport( e )
     logger.down();
 
   });
+
+  // let expf = new will.OutFile({ module : module, export : exports[ 0 ] });
+  //
+  // return expf.form()
+  // .doThen( ( err ) =>
+  // {
+  //   expf.finit();
+  //   module.finit();
+  //   if( err )
+  //   throw _.errLogOnce( err );
+  //
+  //   if( logger.verbosity >= 2 )
+  //   {
+  //     logger.log( 'Exported', exports[ 0 ].name );
+  //     logger.log();
+  //   }
+  //   logger.down();
+  //
+  // });
 
 }
 

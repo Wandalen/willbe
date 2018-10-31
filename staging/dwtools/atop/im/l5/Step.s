@@ -36,14 +36,14 @@ function _inheritFrom( o )
 
   _.assert( _.strIs( o.ancestorName ) );
   _.assert( arguments.length === 1 );
-  _.assert( step.formed === 1 );
+  _.assert( step.formed >= 1 ); /* xxx */
   _.assertRoutineOptions( _inheritFrom, arguments );
 
   let step2 = module.stepMap[ o.ancestorName ];
   _.sure( _.objectIs( step2 ), () => 'Step ' + _.strQuote( o.ancestorName ) + ' does not exist' );
   _.assert( !!step2.formed );
 
-  if( step2.formed !== 2 )
+  if( step2.formed < 2 )
   {
     _.sure( !_.arrayHas( o.visited, step2.name ), () => 'Cyclic dependency step ' + _.strQuote( step.name ) + ' of ' + _.strQuote( step2.name ) );
     step2._inheritForm({ visited : o.visited });
@@ -52,8 +52,8 @@ function _inheritFrom( o )
   let extend = _.mapOnly( step2, _.mapNulls( step ) );
   step.copy( extend );
 
-  if( step2.settings )
-  step.settings = _.mapSupplement( step.settings, step2.settings );
+  if( step2.setting )
+  step.setting = _.mapSupplement( step.setting, step2.setting );
 
 }
 
@@ -88,61 +88,92 @@ function form3()
 
   /* end */
 
+  _.assert( _.routineIs( step.stepRoutine ), () => 'Step ' + step.name + ' does not have stepRoutine' );
+
   step.formed = 3;
   return step;
 }
 
 //
 
-let FilesReflect = _.routineForPreAndBody( _.FileProvider.Find.prototype.filesReflect.pre, _.FileProvider.Find.prototype.filesReflect.body );
-
-let defaults = FilesReflect.defaults;
-
-defaults.linking = 'hardlinkMaybe';
-defaults.mandatory = 1;
-defaults.dstRewritingPreserving = 1;
-
-//
-
-function StepRoutineGrab( run )
+function optionsExport()
 {
   let step = this;
-  let module = run.module;
+  let module = step.module;
+  let inf = step.inf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( _.objectIs( step.settings ) );
-  _.assert( arguments.length === 1 );
+  let result = step.dataExprot();
 
-  let settings = _.mapExtend( null, step.settings );
-  settings.reflector = module.strResolve( settings.reflector );
+  let result = _.mapOnly( step, { inherit : null, filePath : null } );
 
-  settings.reflector = settings.reflector.optionsReflectExport();
-  _.mapSupplement( settings, settings.reflector )
-  delete settings.reflector;
+  result.inf = inf;
+  result.module = module;
+  result.name = step.name;
 
-  if( will.verbosity >= 2 && will.verbosity <= 3 )
-  {
-    logger.log( 'filesReflect' );
-    logger.log( _.toStr( settings.reflectMap, { wrap : 0, multiline : 1, levels : 3 } ) );
-  }
-
-  // settings.srcFilter = settings.srcFilter || Object.create( null );
-  // settings.srcFilter.prefixPath = path.join( module.dirPath, settings.srcFilter.prefixPath || '.' );
-  // // settings.srcFilter.basePath = path.join( module.dirPath, settings.srcFilter.basePath || '.' );
-  //
-  // settings.dstFilter = settings.dstFilter || Object.create( null );
-  // settings.dstFilter.prefixPath = path.join( module.dirPath, settings.dstFilter.prefixPath || '.' );
-  // // settings.dstFilter.basePath = path.join( module.dirPath, settings.dstFilter.basePath || '.' );
-
-  debugger;
-  let result = step.FilesReflect.call( fileProvider, settings );
-  debugger;
+  // let o2 = _.mapOnly( step, { inherit : null, filePath : null } );
+  // o2.setting = step.setting;
+  // o2.inf = inf;
+  // o2.module = module;
+  // o2.name = k;
 
   return result;
 }
+
+//
+//
+// let FilesReflect = _.routineForPreAndBody( _.FileProvider.Find.prototype.filesReflect.pre, _.FileProvider.Find.prototype.filesReflect.body );
+//
+// let defaults = FilesReflect.defaults;
+//
+// defaults.linking = 'hardlinkMaybe';
+// defaults.mandatory = 1;
+// defaults.dstRewritingPreserving = 1;
+
+//
+//
+// function StepRoutineGrab( run )
+// {
+//   let step = this;
+//   let module = run.module;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//
+//   _.assert( _.objectIs( step.setting ) );
+//   _.assert( arguments.length === 1 );
+//
+//   let setting = _.mapExtend( null, step.setting );
+//   setting.reflector = module.strResolve( setting.reflector );
+//
+//   setting.reflector = setting.reflector.optionsReflectExport();
+//   _.mapSupplement( setting, setting.reflector )
+//   delete setting.reflector;
+//
+//   if( will.verbosity >= 2 && will.verbosity <= 3 )
+//   {
+//     logger.log( 'filesReflect' );
+//     logger.log( _.toStr( setting.reflectMap, { wrap : 0, multiline : 1, levels : 3 } ) );
+//   }
+//
+//   // setting.srcFilter = setting.srcFilter || Object.create( null );
+//   // setting.srcFilter.prefixPath = path.join( module.dirPath, setting.srcFilter.prefixPath || '.' );
+//   // // setting.srcFilter.basePath = path.join( module.dirPath, setting.srcFilter.basePath || '.' );
+//   //
+//   // setting.dstFilter = setting.dstFilter || Object.create( null );
+//   // setting.dstFilter.prefixPath = path.join( module.dirPath, setting.dstFilter.prefixPath || '.' );
+//   // // setting.dstFilter.basePath = path.join( module.dirPath, setting.dstFilter.basePath || '.' );
+//
+//   debugger;
+//   let result = step.FilesReflect.call( fileProvider, setting );
+//   debugger;
+//
+//   return result;
+// }
 
 // --
 // relations
@@ -152,7 +183,7 @@ let Composes =
 {
 
   description : null,
-  settings : null,
+  setting : null,
   filePath : null,
   inherit : _.define.own([]),
 
@@ -175,8 +206,8 @@ let Restricts =
 
 let Statics =
 {
-  FilesReflect : FilesReflect,
-  StepRoutineGrab : StepRoutineGrab,
+  // FilesReflect : FilesReflect,
+  // StepRoutineGrab : StepRoutineGrab,
   MapName : 'stepMap',
 }
 
@@ -200,6 +231,8 @@ let Proto =
 
   _inheritFrom : _inheritFrom,
   form3 : form3,
+
+  optionsExport : optionsExport,
 
   // relation
 

@@ -116,14 +116,14 @@ function run( build )
   _.assert( run.formed === 1 );
   _.assert( build.formed === 3 );
   _.assert( _.arrayIs( steps ) );
-  _.assert( build instanceof will.Build ); 
+  _.assert( build instanceof will.Build );
 
   build.stepsEach( function( it )
   {
     if( it.element instanceof will.Step )
     {
       _.assert( _.routineIs( it.element.stepRoutine ), 'Step', it.element.name, 'does not have step routine' );
-      con.ifNoErrorThen( () => it.element.stepRoutine( run ) );
+      con.ifNoErrorThen( () => it.element.stepRoutine( run, build ) );
     }
     else if( it.element instanceof will.Build )
     {
@@ -162,7 +162,7 @@ let Statics =
 
 let Forbids =
 {
-  settings : 'settings',
+  setting : 'setting',
 }
 
 let Accessors =

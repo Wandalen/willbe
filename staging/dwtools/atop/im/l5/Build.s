@@ -50,11 +50,11 @@ function _inheritFrom( o )
   }
 
   let extend = _.mapOnly( build2, _.mapNulls( build ) );
-  delete extend.settings;
+  delete extend.setting;
   build.copy( extend );
 
-  if( build2.settings )
-  build.settings = _.mapSupplement( build.settings || null, build2.settings );
+  if( build2.setting )
+  build.setting = _.mapSupplement( build.setting || null, build2.setting );
 
 }
 
@@ -89,7 +89,7 @@ function form3()
     if( it.element instanceof will.Step )
     {
       _.sure( _.routineIs( it.element.stepRoutine ), kind, it.element.name, 'does not have step routine' );
-      _.sure( it.element.formed === 2, kind, it.element.name, 'was not formed' );
+      _.sure( it.element.formed >= 2, kind, it.element.name, 'was not formed' );
     }
     else if( it.element instanceof will.Build )
     {
@@ -122,6 +122,8 @@ function stepsEach( onEach )
 
   function each( step )
   {
+    if( step === null )
+    return;
     if( _.arrayIs( step ) )
     inArray( step )
     else if( _.mapIs( step ) )
@@ -159,6 +161,63 @@ function stepsEach( onEach )
 
 }
 
+//
+
+function exportPathFor()
+{
+  let build = this
+  let module = build.module;
+  let will = module.will;
+  let hub = will.fileProvider;
+  let hd = hub.providersWithProtocolMap.file;
+
+  _.assert( arguments.length === 0 );
+  _.assert( _.strDefined( build.setting.filesPath ), 'Export should have defined path to files {-settings.filesPath-}' );
+
+  return hd.path.resolve( module.dirPath, module.strResolve( build.setting.filesPath ) );
+}
+
+//
+
+function archivePathFor()
+{
+  let build = this
+  let module = build.module;
+  let will = module.will;
+  let hub = will.fileProvider;
+  let hd = hub.providersWithProtocolMap.file;
+  let inExportFile = module.inFileWithRoleMap.export || module.inFileWithRoleMap.single;
+
+  _.assert( arguments.length === 0 );
+  _.assert( _.strDefined( build.name ) );
+  _.assert( inExportFile instanceof will.InFile );
+
+  let outDir = module.pathMap.outDir || hd.path.dir( inExportFile.filePath ) || '.';
+
+  return hd.path.resolve( module.dirPath, outDir, module.about.name + build.name + '.out.tgs' );
+}
+
+//
+
+function outFilePathFor()
+{
+  let build = this
+  let module = build.module;
+  let will = module.will;
+  let hub = will.fileProvider;
+  let hd = hub.providersWithProtocolMap.file;
+  let inExportFile = module.inFileWithRoleMap.export || module.inFileWithRoleMap.single;
+
+  _.assert( arguments.length === 0 );
+  _.assert( _.strDefined( build.name ) );
+  _.assert( inExportFile instanceof will.InFile );
+
+  let outDir = module.pathMap.outDir || hd.path.dir( inExportFile.filePath ) || '.';
+
+  return hd.path.resolve( module.dirPath, outDir, module.about.name + build.name + '.out.yml' );
+}
+
+
 // --
 // relations
 // --
@@ -167,9 +226,12 @@ let Composes =
 {
 
   description : null,
-  default : null,
-  settings : null,
+  setting : null,
   steps : null,
+
+  default : null,
+  // export : 0,
+
   inherit : _.define.own([]),
 
 }
@@ -215,6 +277,10 @@ let Proto =
   form3 : form3,
 
   stepsEach : stepsEach,
+
+  exportPathFor : exportPathFor,
+  archivePathFor : archivePathFor,
+  outFilePathFor : outFilePathFor,
 
   // relation
 
