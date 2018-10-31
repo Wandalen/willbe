@@ -13,7 +13,7 @@ if( typeof module !== 'undefined' )
 
 let _ = wTools;
 let Parent = null;
-let Self = function wImSubmodule( o )
+let Self = function wWillSubmodule( o )
 {
   return _.instanceConstructor( Self, this, arguments );
 }
@@ -106,6 +106,7 @@ let Restricts =
 
 let Statics =
 {
+  MapName : 'submoduleMap',
 }
 
 let Forbids =
@@ -153,7 +154,6 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = wTools;
 
-/*_.Will[ Self.shortName ] = Self;*/
 _.staticDecalre
 ({
   prototype : _.Will.prototype,

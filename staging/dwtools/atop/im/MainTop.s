@@ -163,7 +163,7 @@ function commandList( e )
 
   function act( module )
   {
-    logger.log( module.info() );
+    logger.log( module.infoExport() );
   }
 
   will._commandList( e, act );
@@ -243,7 +243,7 @@ function commandAboutList( e )
 
   function act( module )
   {
-    logger.log( module.about.info() );
+    logger.log( module.about.infoExport() );
   }
 
   will._commandList( e, act );
@@ -259,7 +259,7 @@ function commandExecutionList( e )
 
   function act( module )
   {
-    logger.log( module.execution.info() );
+    logger.log( module.execution.infoExport() );
   }
 
   will._commandList( e, act );
@@ -275,7 +275,7 @@ function commandLinkList( e )
 
   function act( module )
   {
-    logger.log( module.link.info() );
+    logger.log( module.link.infoExport() );
   }
 
   will._commandList( e, act );
@@ -301,7 +301,14 @@ function commandBuild( e )
 
   let builds = module.buildsFor( e.subject, e.propertiesMap );
 
-  logger.log( module.infoForBuilds( builds ) );
+  logger.up();
+  if( logger.verbosity >= 2 )
+  {
+    if( builds.length === 1 )
+    logger.log( 'Building', builds[ 0 ].name );
+    else
+    logger.log( module.infoForBuilds( builds ) );
+  }
 
   if( builds.length !== 1 )
   {
@@ -319,6 +326,14 @@ function commandBuild( e )
     module.finit();
     if( err )
     throw _.errLogOnce( err );
+
+    if( logger.verbosity >= 2 )
+    {
+      logger.log( 'Built', builds[ 0 ].name );
+      logger.log();
+    }
+    logger.down();
+
   });
 }
 
@@ -340,7 +355,14 @@ function commandExport( e )
 
   let exports = module.exportsFor( e.subject, e.propertiesMap );
 
-  logger.log( module.infoForBuilds( exports ) );
+  logger.up();
+  if( logger.verbosity >= 2 )
+  {
+    if( exports.length === 1 )
+    logger.log( 'Exporting', exports[ 0 ].name );
+    else
+    logger.log( module.infoForExports( exports ) );
+  }
 
   if( exports.length !== 1 )
   {
@@ -358,6 +380,14 @@ function commandExport( e )
     module.finit();
     if( err )
     throw _.errLogOnce( err );
+
+    if( logger.verbosity >= 2 )
+    {
+      logger.log( 'Exported', exports[ 0 ].name );
+      logger.log();
+    }
+    logger.down();
+
   });
 
 }
@@ -407,6 +437,7 @@ function commandEach( e )
 {
   let will = this;
   let ca = e.ca;
+  let con = new _.Consequence().give();
 
   if( !will.formed )
   will.form();
@@ -429,30 +460,35 @@ function commandEach( e )
   let files = fileProvider.filesFind({ filePath : dirPath, filter : filter, recursive : 0 });
   debugger;
 
-  for( let f = 0 ; f < files.length ; f++ )
+  for( let f = 0 ; f < files.length ; f++ ) con.ifNoErrorThen( () => /* !!! replace by concurrent */
   {
     let file = files[ f ];
     let dirPath = will.Module.DirPathFromInFilePath( file.absolute );
 
     if( will.moduleMap[ dirPath ] )
-    continue;
+    return;
 
     let module = will.currentModule = will.Module({ will : will, dirPath : dirPath })
     .form()
-    .inFilesLoad();
+    .inFilesLoad()
+    ;
 
     if( module.inFileArray.length === 0 )
     throw _.errBriefly( 'Found no will file near', _.strQuote( file.absolute ) );
 
-    return ca.proceedAct
+    let result = ca.proceedAct
     ({
       command : secondCommand,
       subject : secondSubject,
       propertiesMap : _.mapExtend( null, e.propertiesMap ),
     });
 
-  }
+    debugger;
 
+    return result;
+  });
+
+  return con;
 }
 
 // --

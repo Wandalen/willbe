@@ -9,6 +9,7 @@ if( typeof module !== 'undefined' )
 
   require( './l3/About.s' );
   require( './l3/Execution.s' );
+  require( './l3/Inheritable.s' );
 
   require( './l5/Build.s' );
   require( './l5/BuildRun.s' );

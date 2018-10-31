@@ -13,7 +13,7 @@ if( typeof module !== 'undefined' )
 
 let _ = wTools;
 let Parent = null;
-let Self = function wImBuildRun( o )
+let Self = function wWillBuildRun( o )
 {
   return _.instanceConstructor( Self, this, arguments );
 }

@@ -12,8 +12,8 @@ if( typeof module !== 'undefined' )
 //
 
 let _ = wTools;
-let Parent = null;
-let Self = function wImReflector( o )
+let Parent = _.Will.Inheritable;
+let Self = function wWillReflector( o )
 {
   return _.instanceConstructor( Self, this, arguments );
 }
@@ -23,57 +23,6 @@ Self.shortName = 'Reflector';
 // --
 // inter
 // --
-
-function finit()
-{
-  if( this.formed )
-  this.unform();
-  return _.Copyable.prototype.finit.apply( this, arguments );
-}
-
-//
-
-function init( o )
-{
-  let reflector = this;
-
-  _.assert( arguments.length === 0 || arguments.length === 1 );
-
-  _.instanceInit( reflector );
-  Object.preventExtensions( reflector );
-
-  if( o )
-  reflector.copy( o );
-
-}
-
-//
-
-function unform()
-{
-  let reflector = this;
-  let module = reflector.module;
-  let inf = reflector.inf;
-
-  _.assert( arguments.length === 0 );
-  _.assert( !!reflector.formed );
-  _.assert( module.reflectorMap[ reflector.name ] === reflector );
-  if( inf )
-  _.assert( inf.reflectorMap[ reflector.name ] === reflector );
-
-  /* begin */
-
-  delete module.reflectorMap[ reflector.name ];
-  if( inf )
-  delete inf.reflectorMap[ reflector.name ];
-
-  /* end */
-
-  reflector.formed = 0;
-  return reflector;
-}
-
-//
 
 function form1()
 {
@@ -110,7 +59,7 @@ function form1()
     if( reflector.srcFilter.basePath )
     reflector.srcFilter.basePath = path.s.resolve( module.dirPath, reflector.srcFilter.basePath );
 
-    reflector.srcFilter._formMask();
+    reflector.srcFilter._formComponents();
   }
 
   if( reflector.reflectMap )
@@ -121,24 +70,6 @@ function form1()
   /* end */
 
   reflector.formed = 1;
-  return reflector;
-}
-
-//
-
-function inheritForm()
-{
-  let reflector = this;
-  _.assert( arguments.length === 0 );
-  _.assert( reflector.formed === 1 );
-
-  /* begin */
-
-  reflector._inheritForm({ visited : [] })
-
-  /* end */
-
-  reflector.formed = 2;
   return reflector;
 }
 
@@ -163,9 +94,9 @@ function _inheritForm( o )
 
   _.arrayAppendOnceStrictly( o.visited, reflector.name );
 
-  reflector.inherit.map( ( reflectorName ) =>
+  reflector.inherit.map( ( ancestorName ) =>
   {
-    reflector._inheritFrom({ visited : o.visited, reflectorName : reflectorName, defaultDst : true });
+    reflector._inheritFrom({ visited : o.visited, ancestorName : ancestorName, defaultDst : true });
   });
 
   if( reflector.reflectMap )
@@ -196,13 +127,13 @@ function _inheritFrom( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( _.strIs( o.reflectorName ) );
+  _.assert( _.strIs( o.ancestorName ) );
   _.assert( arguments.length === 1 );
   _.assert( reflector.formed === 1 );
   _.assertRoutineOptions( _inheritFrom, arguments );
 
-  let reflector2 = module.reflectorMap[ o.reflectorName ];
-  _.sure( _.objectIs( reflector2 ), () => 'Reflector ' + _.strQuote( o.reflectorName ) + ' does not exist' );
+  let reflector2 = module.reflectorMap[ o.ancestorName ];
+  _.sure( _.objectIs( reflector2 ), () => 'Reflector ' + _.strQuote( o.ancestorName ) + ' does not exist' );
   _.assert( !!reflector2.formed );
 
   if( reflector2.formed < 2 )
@@ -233,7 +164,7 @@ function _inheritFrom( o )
 
 _inheritFrom.defaults=
 {
-  reflectorName : null,
+  ancestorName : null,
   visited : null,
   defaultDst : true,
 }
@@ -275,7 +206,7 @@ function _reflectMapForm( o )
       else if( resolved instanceof will.Reflector )
       {
         delete map[ r ];
-        reflector._inheritFrom({ visited : o.visited, reflectorName : resolved.name, defaultDst : dst });
+        reflector._inheritFrom({ visited : o.visited, ancestorName : resolved.name, defaultDst : dst });
         _.sure( !!resolved.reflectMap );
         path.globMapExtend( map, resolved.reflectMap, dst );
       }
@@ -291,7 +222,7 @@ _reflectMapForm.defaults =
 
 //
 
-function forReflect()
+function optionsReflectExport()
 {
   let reflector = this;
   let result = Object.create( null );
@@ -305,12 +236,13 @@ function forReflect()
 
 //
 
-function info()
+function infoExport()
 {
   let reflector = this;
   let result = '';
-  let fields = _.mapOnly( reflector, { description : null, inherit : null, srcFilter : null, reflectMap : null } );
-  fields = _.mapButNulls( fields );
+  // let fields = _.mapOnly( reflector, { description : null, inherit : null, srcFilter : null, reflectMap : null } );
+  // fields = _.mapButNulls( fields );
+  let fields = reflector.dataExport();
 
   _.assert( !!reflector.formed );
 
@@ -336,6 +268,19 @@ function info()
   return result;
 }
 
+//
+
+function dataExport()
+{
+  let reflector = this;
+  let fields = Parent.prototype.dataExport.call( reflector );
+  debugger;
+  if( fields.srcFilter )
+  fields.srcFilter = fields.srcFilter.cloneData({ compact : 1 });
+  debugger;
+  return fields;
+}
+
 // --
 // relations
 // --
@@ -343,9 +288,7 @@ function info()
 let Composes =
 {
 
-  name : null,
   description : null,
-
   reflectMap : null,
   srcFilter : null,
   inherit : _.define.own([]),
@@ -354,21 +297,20 @@ let Composes =
 
 let Aggregates =
 {
+  name : null,
 }
 
 let Associates =
 {
-  inf : null,
-  module : null,
 }
 
 let Restricts =
 {
-  formed : 0,
 }
 
 let Statics =
 {
+  MapName : 'reflectorMap',
 }
 
 let Forbids =
@@ -380,8 +322,8 @@ let Forbids =
 
 let Accessors =
 {
-  inherit : { setter : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
   srcFilter : { setter : _.accessor.setter.copyable({ name : 'srcFilter', maker : _.FileRecordFilter }) },
+  inherit : { setter : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
 }
 
 _.assert( _.routineIs( _.FileRecordFilter ) );
@@ -395,20 +337,17 @@ let Proto =
 
   // inter
 
-  finit : finit,
-  init : init,
-  unform : unform,
   form1 : form1,
 
-  inheritForm : inheritForm,
   _inheritForm : _inheritForm,
   _inheritFrom : _inheritFrom,
 
   _reflectMapForm : _reflectMapForm,
 
-  forReflect : forReflect,
+  optionsReflectExport : optionsReflectExport,
 
-  info : info,
+  infoExport : infoExport,
+  dataExport : dataExport,
 
   // relation
 

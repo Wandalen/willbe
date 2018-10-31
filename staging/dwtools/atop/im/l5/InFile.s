@@ -13,7 +13,7 @@ if( typeof module !== 'undefined' )
 
 let _ = wTools;
 let Parent = null;
-let Self = function wImInFile( o )
+let Self = function wWillInFile( o )
 {
   return _.instanceConstructor( Self, this, arguments );
 }
@@ -305,7 +305,7 @@ function reflectorsForm( reflectors )
     let reflector = inf.reflectorMap[ s ];
     _.assert( !!reflector.formed );
     if( reflector.formed < 2 )
-    reflector.inheritForm();
+    reflector.form2();
   }
 
 }
@@ -352,7 +352,7 @@ function stepsForm( steps )
     let step = inf.stepMap[ s ];
     _.assert( !!step.formed );
     if( step.formed < 2 )
-    step.inheritForm();
+    step.form2();
   }
 
 }
@@ -399,7 +399,7 @@ function buildsForm( builds )
     let build = inf.buildMap[ s ];
     _.assert( !!build.formed );
     if( build.formed < 2 )
-    build.inheritForm();
+    build.form2();
   }
 
   /* form3 */
@@ -456,7 +456,7 @@ function exportsForm( exports )
     let exp = inf.exportMap[ s ];
     _.assert( !!exp.formed );
     if( exp.formed < 2 )
-    exp.inheritForm();
+    exp.form2();
   }
 
   /* form3 */
@@ -616,7 +616,6 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = wTools;
 
-/*_.Will[ Self.shortName ] = Self;*/
 _.staticDecalre
 ({
   prototype : _.Will.prototype,

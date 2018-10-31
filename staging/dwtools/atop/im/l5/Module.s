@@ -13,7 +13,7 @@ if( typeof module !== 'undefined' )
 
 let _ = wTools;
 let Parent = null;
-let Self = function wImModule( o )
+let Self = function wWillModule( o )
 {
   return _.instanceConstructor( Self, this, arguments );
 }
@@ -104,8 +104,10 @@ function unform()
 
   _.assert( module.inFileArray.length === 0 );
   _.assert( Object.keys( module.inFileWithRoleMap ).length === 0 );
+  _.assert( will.moduleMap[ module.dirPath ] === module );
 
   _.arrayRemoveElementOnceStrictly( will.moduleArray, module );
+  delete will.moduleMap[ module.dirPath ];
 
   /* end */
 
@@ -121,20 +123,58 @@ function form()
   let will = module.will;
 
   _.assert( arguments.length === 0 );
+
+  module.form1();
+  module.form2();
+
+  return module;
+}
+
+//
+
+function form1()
+{
+  let module = this;
+  let will = module.will;
+
+  _.assert( arguments.length === 0 );
   _.assert( !module.formed );
   _.assert( !!module.will );
+  _.assert( will.moduleMap[ module.dirPath ] === undefined );
 
   /* begin */
 
   _.arrayAppendOnceStrictly( will.moduleArray, module );
-
-  module.predefinedForm();
+  will.moduleMap[ module.dirPath ] = module
 
   /* end */
 
   _.assert( !!module.dirPath );
 
   module.formed = 1;
+  return module;
+}
+
+//
+
+function form2()
+{
+  let module = this;
+  let will = module.will;
+
+  _.assert( arguments.length === 0 );
+  _.assert( module.formed === 1 );
+  _.assert( !!module.will );
+  _.assert( will.moduleMap[ module.dirPath ] === module );
+  _.assert( !!module.dirPath );
+
+  /* begin */
+
+  module.predefinedForm();
+
+  /* end */
+
+  module.formed = 2;
   return module;
 }
 
@@ -156,7 +196,129 @@ function predefinedForm()
 
 }
 
+// --
+// exporter
+// --
+
+function dataExport()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let result = Object.create( null );
+
+  result.path = module.dataExportPaths();
+  result.submodule = module.dataExportSubmodules();
+  result.reflector = module.dataExportReflectors();
+  result.step = module.dataExportSteps();
+  result.build = module.dataExportBuilds();
+  result.export = module.dataExportExports();
+
+  result.about = module.about.dataExport();
+  result.execution = module.execution.dataExport();
+
+  return result;
+}
+
 //
+
+function dataExportPaths()
+{
+  let module = this;
+  let will = module.will;
+  return _.mapExtend( null, module.pathMap );
+}
+
+//
+
+function dataExportSubmodules()
+{
+  let module = this;
+  let will = module.will;
+  let result = Object.create( null );
+
+  for( let e in module.submoduleMap )
+  {
+    let element = module.submoduleMap[ e ];
+    result[ e ] = element.dataExport();
+  }
+
+  return result;
+}
+
+//
+
+function dataExportReflectors()
+{
+  let module = this;
+  let will = module.will;
+  let result = Object.create( null );
+
+  for( let e in module.reflectorMap )
+  {
+    let element = module.reflectorMap[ e ];
+    result[ e ] = element.dataExport();
+  }
+
+  return result;
+}
+
+//
+
+function dataExportSteps()
+{
+  let module = this;
+  let will = module.will;
+  let result = Object.create( null );
+
+  for( let e in module.stepMap )
+  {
+    let element = module.stepMap[ e ];
+    result[ e ] = element.dataExport();
+  }
+
+  return result;
+}
+
+//
+
+function dataExportBuilds()
+{
+  let module = this;
+  let will = module.will;
+  let result = Object.create( null );
+
+  for( let e in module.buildMap )
+  {
+    let element = module.buildMap[ e ];
+    result[ e ] = element.dataExport();
+  }
+
+  return result;
+}
+
+//
+
+function dataExportExports()
+{
+  let module = this;
+  let will = module.will;
+  let result = Object.create( null );
+
+  for( let e in module.exportMap )
+  {
+    let element = module.exportMap[ e ];
+    result[ e ] = element.dataExport();
+  }
+
+  return result;
+}
+
+// --
+// etc
+// --
 
 function inFilesLoad( o )
 {
@@ -318,6 +480,23 @@ function prefixPathForRoleMaybe( role )
 
 //
 
+function DirPathFromInFilePath( inPath )
+{
+  let module = this;
+  _.assert( arguments.length === 1 );
+  let r = /(.*)(?:\.in(?:\.|$).*)/;
+  let parsed = r.exec( inPath );
+
+  if( !parsed )
+  return r;
+  else
+  return parsed[ 1 ];
+}
+
+// --
+// select
+// --
+
 /*
 iii : implement name glob filtering
 */
@@ -336,8 +515,6 @@ function _select( o )
   _.routineOptions( _select, arguments );
   _.assert( arguments.length === 1 );
   _.assert( o.filter === null || _.routineIs( o.filter ) || _.mapIs( o.filter ) );
-
-  debugger;
 
   if( o.name )
   {
@@ -579,7 +756,7 @@ function _strResolveAct( o )
 
   _.assertRoutineOptions( _strResolveAct, arguments );
 
-  let splits = module.strSplit( o.src );
+  let splits = module.StrSplit( o.src );
 
   if( !splits[ 0 ] )
   return o.src;
@@ -634,14 +811,11 @@ function componentGet( kind, name )
   return result;
 }
 
-// --
-// etc
-// --
+//
 
-function strSplit( srcStr )
+function StrSplit( srcStr )
 {
   let module = this;
-  let will = module.will;
   let splits = _.strIsolateBeginOrNone( srcStr, ':' );
   return splits;
 }
@@ -651,8 +825,7 @@ function strSplit( srcStr )
 function strGetPrefix( srcStr )
 {
   let module = this;
-  let will = module.will;
-  let splits = module.strSplit( srcStr );
+  let splits = module.StrSplit( srcStr );
   if( !splits[ 0 ] )
   return false;
   if( !_.arrayHas( module.KnownPrefixes, splits[ 0 ] ) )
@@ -660,47 +833,32 @@ function strGetPrefix( srcStr )
   return splits[ 0 ];
 }
 
-//
-
-function DirPathFromInFilePath( inPath )
-{
-  let module = this;
-  _.assert( arguments.length === 1 );
-  let r = /(.*)(?:\.in(?:\.|$).*)/;
-  let parsed = r.exec( inPath );
-  debugger;
-  if( !parsed )
-  return r;
-  else
-  return parsed[ 1 ];
-}
-
 // --
 // informer
 // --
 
-function info()
+function infoExport()
 {
   let module = this;
   let will = module.will;
   let result = '';
 
-  result += module.about.info();
-  result += module.execution.info();
-  // result += module.link.info();
+  result += module.about.infoExport();
+  result += module.execution.infoExport();
+  // result += module.link.infoExport();
 
-  result += module.infoForPaths( module.pathMap );
-  result += module.infoForReflectors( module.reflectorMap );
-  result += module.infoForSteps( module.stepMap );
-  result += module.infoForBuilds( module.buildMap );
-  result += module.infoForExports( module.exportMap );
+  result += module.infoExportPaths( module.pathMap );
+  result += module.infoExportReflectors( module.reflectorMap );
+  result += module.infoExportSteps( module.stepMap );
+  result += module.infoExportBuilds( module.buildMap );
+  result += module.infoExportExports( module.exportMap );
 
   return result;
 }
 
 //
 
-function infoForPaths( paths )
+function infoExportPaths( paths )
 {
   let module = this;
   paths = paths || module.pathMap;
@@ -714,7 +872,7 @@ function infoForPaths( paths )
 
 //
 
-function infoForReflectors( reflectors )
+function infoExportReflectors( reflectors )
 {
   let module = this;
   let will = module.will;
@@ -726,7 +884,7 @@ function infoForReflectors( reflectors )
   for( let b in reflectors )
   {
     let reflector = reflectors[ b ];
-    result += reflector.info();
+    result += reflector.infoExport();
     result += '\n';
   }
 
@@ -735,7 +893,7 @@ function infoForReflectors( reflectors )
 
 //
 
-function infoForSteps( steps )
+function infoExportSteps( steps )
 {
   let module = this;
   let will = module.will;
@@ -747,7 +905,7 @@ function infoForSteps( steps )
   for( let b in steps )
   {
     let step = steps[ b ];
-    result += step.info();
+    result += step.infoExport();
     result += '\n';
   }
 
@@ -756,7 +914,7 @@ function infoForSteps( steps )
 
 //
 
-function infoForBuilds( builds )
+function infoExportBuilds( builds )
 {
   let module = this;
   let will = module.will;
@@ -768,7 +926,7 @@ function infoForBuilds( builds )
   for( let b in builds )
   {
     let build = builds[ b ];
-    result += build.info();
+    result += build.infoExport();
     result += '\n';
   }
 
@@ -777,7 +935,7 @@ function infoForBuilds( builds )
 
 //
 
-function infoForExports( exports )
+function infoExportExports( exports )
 {
   let module = this;
   let will = module.will;
@@ -789,7 +947,7 @@ function infoForExports( exports )
   for( let e in exports )
   {
     let exp = exports[ e ];
-    result += exp.info();
+    result += exp.infoExport();
     result += '\n';
   }
 
@@ -823,7 +981,6 @@ let Aggregates =
 
   about : _.define.ownInstanceOf( _.Will.ParagraphAbout ),
   execution : _.define.ownInstanceOf( _.Will.ParagraphExecution ),
-  // link : _.define.ownInstanceOf( _.Will.ParagraphLink ),
 
 }
 
@@ -839,6 +996,7 @@ let Restricts =
 
 let Statics =
 {
+  DirPathFromInFilePath : DirPathFromInFilePath,
   KnownPrefixes : KnownPrefixes,
 }
 
@@ -851,7 +1009,6 @@ let Accessor =
 {
   about : { setter : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.Will.ParagraphAbout }) },
   execution : { setter : _.accessor.setter.friend({ name : 'execution', friendName : 'module', maker : _.Will.ParagraphExecution }) },
-  // link : { setter : _.accessor.setter.friend({ name : 'link', friendName : 'module', maker : _.Will.ParagraphLink }) },
 }
 
 // --
@@ -867,11 +1024,28 @@ let Proto =
   init : init,
   unform : unform,
   form : form,
+  form1 : form1,
+  form2 : form2,
   predefinedForm : predefinedForm,
+
+  // exporter
+
+  dataExport : dataExport,
+  dataExportPaths : dataExportPaths,
+  dataExportSubmodules : dataExportSubmodules,
+  dataExportReflectors : dataExportReflectors,
+  dataExportSteps : dataExportSteps,
+  dataExportBuilds : dataExportBuilds,
+  dataExportExports : dataExportExports,
+
+  // etc
 
   inFilesLoad : inFilesLoad,
   prefixPathForRole : prefixPathForRole,
   prefixPathForRoleMaybe : prefixPathForRoleMaybe,
+  DirPathFromInFilePath : DirPathFromInFilePath,
+
+  // select
 
   _select : _select,
   buildsFor : buildsFor,
@@ -891,20 +1065,17 @@ let Proto =
   _strResolveAct : _strResolveAct,
   componentGet : componentGet,
 
-  // etc
-
-  strSplit : strSplit,
+  StrSplit : StrSplit,
   strGetPrefix : strGetPrefix,
-  DirPathFromInFilePath : DirPathFromInFilePath,
 
   // informer
 
-  info : info,
-  infoForPaths : infoForPaths,
-  infoForReflectors : infoForReflectors,
-  infoForSteps : infoForSteps,
-  infoForBuilds : infoForBuilds,
-  infoForExports : infoForExports,
+  infoExport : infoExport,
+  infoExportPaths : infoExportPaths,
+  infoExportReflectors : infoExportReflectors,
+  infoExportSteps : infoExportSteps,
+  infoExportBuilds : infoExportBuilds,
+  infoExportExports : infoExportExports,
 
   // relation
 
@@ -933,7 +1104,6 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = wTools;
 
-/*_.Will[ Self.shortName ] = Self;*/
 _.staticDecalre
 ({
   prototype : _.Will.prototype,

@@ -13,7 +13,7 @@ if( typeof module !== 'undefined' )
 
 let _ = wTools;
 let Parent = null;
-let Self = function wImParagraphAbout( o )
+let Self = function wWillParagraphAbout( o )
 {
   return _.instanceConstructor( Self, this, arguments );
 }
@@ -49,12 +49,11 @@ function init( o )
 
 //
 
-function info()
+function infoExport()
 {
   let about = this;
   let result = '';
-  let fields = _.mapOnly( about, about.Composes );
-  fields = _.mapButNulls( fields );
+  let fields = about.dataExport();
 
   if( Object.keys( fields ).length === 0 )
   return result;
@@ -64,6 +63,16 @@ function info()
   result += '\n';
 
   return result;
+}
+
+//
+
+function dataExport()
+{
+  let about = this;
+  let fields = _.mapOnly( about, about.Composes );
+  fields = _.mapButNulls( fields );
+  return fields;
 }
 
 // --
@@ -120,7 +129,8 @@ let Proto =
   finit : finit,
   init : init,
 
-  info : info,
+  infoExport : infoExport,
+  dataExport : dataExport,
 
   // relation
 

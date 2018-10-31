@@ -12,8 +12,8 @@ if( typeof module !== 'undefined' )
 //
 
 let _ = wTools;
-let Parent = null;
-let Self = function wImBuild( o )
+let Parent = _.Will.Inheritable;
+let Self = function wWillBuild( o )
 {
   return _.instanceConstructor( Self, this, arguments );
 }
@@ -23,155 +23,6 @@ Self.shortName = 'Build';
 // --
 // inter
 // --
-
-function finit()
-{
-  if( this.formed )
-  this.unform();
-  return _.Copyable.prototype.finit.apply( this, arguments );
-}
-
-//
-
-function init( o )
-{
-  let build = this;
-
-  _.assert( arguments.length === 0 || arguments.length === 1 );
-
-  _.instanceInit( build );
-  Object.preventExtensions( build );
-
-  if( o )
-  build.copy( o );
-
-}
-
-//
-
-function unform()
-{
-  let build = this;
-  let module = build.module;
-  let inf = build.inf;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-
-  _.assert( arguments.length === 0 );
-  _.assert( build.formed );
-  _.assert( module.buildMap[ build.name ] === build );
-  if( inf )
-  _.assert( inf.buildMap[ build.name ] === build );
-
-  /* begin */
-
-  delete module.buildMap[ build.name ];
-  if( inf )
-  delete inf.buildMap[ build.name ];
-
-  /* end */
-
-  build.formed = 0;
-  return build;
-}
-
-//
-
-function form1()
-{
-  let build = this;
-  let module = build.module;
-  let inf = build.inf;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-
-  _.assert( arguments.length === 0 );
-  _.assert( !build.formed );
-  _.assert( !module.buildMap[ build.name ] );
-  _.assert( !inf.buildMap[ build.name ] );
-
-  _.assert( !!will );
-  _.assert( !!module );
-  _.assert( !!inf );
-  _.assert( !!fileProvider );
-  _.assert( !!logger );
-  _.assert( !!will.formed );
-  _.assert( !!module.formed );
-  _.assert( !!inf.formed );
-  _.assert( _.strDefined( build.name ) );
-
-  /* begin */
-
-  module.buildMap[ build.name ] = build;
-  inf.buildMap[ build.name ] = build;
-
-  /* end */
-
-  build.formed = 1;
-  return build;
-}
-
-//
-
-function inheritForm()
-{
-  let build = this;
-  _.assert( arguments.length === 0 );
-  _.assert( build.formed === 1 );
-
-  /* begin */
-
-  build._inheritForm({ visited : [] })
-
-  /* end */
-
-  build.formed = 2;
-  return build;
-}
-
-//
-
-function _inheritForm( o )
-{
-  let build = this;
-  let module = build.module;
-  let inf = build.inf;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-
-  _.assert( arguments.length === 1 );
-  _.assert( build.formed === 1 );
-  // _.assert( !build._.assert( step.formed === 1 ); );
-  _.assert( _.arrayIs( build.inherit ) );
-  _.assertRoutineOptions( _inheritForm, arguments );
-
-  /* begin */
-
-  _.arrayAppendOnceStrictly( o.visited, build.name );
-
-  build.inherit.map( ( buildName ) =>
-  {
-    build._inheritFrom({ visited : o.visited, buildName : buildName });
-  });
-
-  /* end */
-
-  build.formed = 2;
-  return build;
-}
-
-_inheritForm.defaults=
-{
-  visited : null,
-}
-
-//
 
 function _inheritFrom( o )
 {
@@ -246,32 +97,15 @@ function form3()
     }
   });
 
-  /* end */
+  build.default = build.default ? 1 : 0;
 
   _.assert( build.default === 0 || build.default === 1 );
+
+  /* end */
 
   build.formed = 3;
   return build;
 }
-
-//
-//
-// function runForm( o )
-// {
-//   let build = this;
-//   let module = build.module;
-//   let inf = build.inf;
-//   let will = module.will;
-//
-//   _.assert( arguments.length === 0 || arguments.length === 1 );
-//
-//   o = o || Object.create( null );
-//   o.module = module;
-//
-//   let run = will.BuildRun( o ).form();
-//
-//   return run;
-// }
 
 //
 
@@ -325,21 +159,6 @@ function stepsEach( onEach )
 
 }
 
-//
-
-function info()
-{
-  let build = this;
-  let result = '';
-  let fields = _.mapOnly( build, { description : null, default : null, settings : null, /*compose : null,*/ steps : null } );
-  fields = _.mapButNulls( fields );
-
-  result += 'Build ' + build.name + '\n';
-  result += _.toStr( fields, { wrap : 0, levels : 4, multiline : 1 } ) + '\n';
-
-  return result;
-}
-
 // --
 // relations
 // --
@@ -347,9 +166,7 @@ function info()
 let Composes =
 {
 
-  name : null,
   description : null,
-
   default : null,
   settings : null,
   steps : null,
@@ -359,27 +176,24 @@ let Composes =
 
 let Aggregates =
 {
+  name : null,
 }
 
 let Associates =
 {
-  module : null,
-  inf : null,
 }
 
 let Restricts =
 {
-  formed : 0,
 }
 
 let Statics =
 {
+  MapName : 'buildMap',
 }
 
 let Forbids =
 {
-  inherited : 'inherited',
-  compose : 'compose',
 }
 
 let Accessors =
@@ -396,19 +210,11 @@ let Proto =
 
   // inter
 
-  finit : finit,
-  init : init,
-
-  unform : unform,
-  form1 : form1,
-  inheritForm : inheritForm,
-  _inheritForm : _inheritForm,
   _inheritFrom : _inheritFrom,
+
   form3 : form3,
 
   stepsEach : stepsEach,
-
-  info : info,
 
   // relation
 
@@ -438,7 +244,6 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = wTools;
 
-/*_.Will[ Self.shortName ] = Self;*/
 _.staticDecalre
 ({
   prototype : _.Will.prototype,
