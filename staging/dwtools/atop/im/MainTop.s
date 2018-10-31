@@ -179,7 +179,7 @@ function commandReflectorsList( e )
 
   function act( module )
   {
-    logger.log( module.infoForReflectors() );
+    logger.log( module.infoExportReflectors() );
   }
 
   will._commandList( e, act );
@@ -195,7 +195,7 @@ function commandStepsList( e )
 
   function act( module )
   {
-    logger.log( module.infoForSteps() );
+    logger.log( module.infoExportSteps() );
   }
 
   will._commandList( e, act );
@@ -211,7 +211,7 @@ function commandBuildsList( e )
 
   function act( module )
   {
-    logger.log( module.infoForBuilds( module.buildsFor( e.subject, e.propertiesMap ) ) );
+    logger.log( module.infoExportBuilds( module.buildsFor( e.subject, e.propertiesMap ) ) );
   }
 
   will._commandList( e, act );
@@ -227,7 +227,7 @@ function commandExportsList( e )
 
   function act( module )
   {
-    logger.log( module.infoForExports( module.exportsFor( e.subject, e.propertiesMap ) ) );
+    logger.log( module.infoExportExports( module.exportsFor( e.subject, e.propertiesMap ) ) );
   }
 
   will._commandList( e, act );
@@ -307,7 +307,7 @@ function commandBuild( e )
     if( builds.length === 1 )
     logger.log( 'Building', builds[ 0 ].name );
     else
-    logger.log( module.infoForBuilds( builds ) );
+    logger.log( module.infoExportBuilds( builds ) );
   }
 
   if( builds.length !== 1 )
@@ -361,7 +361,7 @@ function commandExport( e )
     if( exports.length === 1 )
     logger.log( 'Exporting', exports[ 0 ].name );
     else
-    logger.log( module.infoForExports( exports ) );
+    logger.log( module.infoExportExports( exports ) );
   }
 
   if( exports.length !== 1 )

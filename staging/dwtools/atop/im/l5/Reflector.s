@@ -57,7 +57,8 @@ function form1()
     reflector.srcFilter.hubFileProvider = fileProvider;
 
     if( reflector.srcFilter.basePath )
-    reflector.srcFilter.basePath = path.s.resolve( module.dirPath, reflector.srcFilter.basePath );
+    reflector.srcFilter.basePath = path.s.normalize( reflector.srcFilter.basePath );
+    // reflector.srcFilter.basePath = path.s.normalize( path.s.join( module.dirPath, reflector.srcFilter.basePath ) );
 
     reflector.srcFilter._formComponents();
   }
@@ -171,6 +172,36 @@ _inheritFrom.defaults=
 
 //
 
+function form3()
+{
+  let reflector = this;
+  let module = reflector.module;
+  let inf = reflector.inf;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 0 );
+  _.assert( reflector.formed === 2 );
+
+  /* begin */
+
+  for( let src in reflector.reflectMap )
+  {
+    let dst = reflector.reflectMap[ src ];
+    _.assert( path.s.allAreRelative( src ), () => 'Expects relative path, but relfector ' + reflector.name + ' has ' + src );
+    _.assert( _.boolIs( dst ) || path.s.allAreRelative( dst ), () => 'Expects bool or relative path, but relfector ' + reflector.name + ' has ' + dst );
+  }
+
+  /* end */
+
+  reflector.formed = 3;
+  return reflector;
+}
+
+//
+
 function _reflectMapForm( o )
 {
   let reflector = this;
@@ -183,13 +214,19 @@ function _reflectMapForm( o )
 
   _.assertRoutineOptions( _reflectMapForm, arguments );
 
+  if( reflector.name === 'grab.release' )
+  debugger;
+
   let map = reflector.reflectMap;
   for( let r in map )
   {
     let dst = map[ r ];
 
+    // if( !_.boolIs( dst ) )
+    // dst = module.pathResolve( module.strResolve( dst ) );
+
     if( !_.boolIs( dst ) )
-    dst = module.pathResolve( module.strResolve( dst ) );
+    dst = module.strResolve( dst );
 
     if( module.strGetPrefix( r ) )
     {
@@ -222,16 +259,39 @@ _reflectMapForm.defaults =
 
 //
 
-function optionsReflectExport()
+function optionsReflectExport( o )
 {
   let reflector = this;
+  let module = reflector.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
   let result = Object.create( null );
+
+  o = _.routineOptions( optionsReflectExport, arguments );
 
   if( reflector.srcFilter )
   result.srcFilter = reflector.srcFilter.clone();
   result.reflectMap = reflector.reflectMap;
 
+  result.srcFilter = result.srcFilter || Object.create( null );
+  result.srcFilter.prefixPath = path.resolve( module.dirPath, result.srcFilter.prefixPath || '.' );
+  // result.srcFilter.basePath = path.resolve( module.dirPath, result.srcFilter.basePath || '.' );
+
+  if( o.resolving )
+  if( result.srcFilter.basePath )
+  result.srcFilter.basePath = path.resolve( module.dirPath, result.srcFilter.basePath );
+
+  result.dstFilter = result.dstFilter || Object.create( null );
+  result.dstFilter.prefixPath = path.resolve( module.dirPath, result.dstFilter.prefixPath || '.' );
+  // result.dstFilter.basePath = path.resolve( module.dirPath, result.dstFilter.basePath || '.' );
+
   return result;
+}
+
+optionsReflectExport.defaults =
+{
+  resolving : 0,
 }
 
 //
@@ -240,22 +300,22 @@ function infoExport()
 {
   let reflector = this;
   let result = '';
-  // let fields = _.mapOnly( reflector, { description : null, inherit : null, srcFilter : null, reflectMap : null } );
-  // fields = _.mapButNulls( fields );
   let fields = reflector.dataExport();
 
   _.assert( !!reflector.formed );
 
   let srcFilter;
-  if( fields.srcFilter && _.routineIs( fields.srcFilter.toStr ) )
-  {
-    srcFilter = fields.srcFilter.toStr();
-    delete fields.srcFilter;
-  }
-  else
-  {
-    fields.srcFilter = fields.srcFilter ? fields.srcFilter.hasMask() : fields.srcFilter;
-  }
+
+  // if( fields.srcFilter && _.routineIs( fields.srcFilter.toStr ) )
+  // {
+  //   srcFilter = fields.srcFilter.toStr();
+  //   delete fields.srcFilter;
+  // }
+  // else
+  // {
+  //   debugger;
+  //   fields.srcFilter = fields.srcFilter ? reflector.srcFilter.hasMask() : fields.srcFilter;
+  // }
 
   result += 'Reflector ' + reflector.name;
   result += '\n' + _.toStr( fields, { wrap : 0, levels : 4, multiline : 1 } );
@@ -274,10 +334,15 @@ function dataExport()
 {
   let reflector = this;
   let fields = Parent.prototype.dataExport.call( reflector );
-  debugger;
-  if( fields.srcFilter )
-  fields.srcFilter = fields.srcFilter.cloneData({ compact : 1 });
-  debugger;
+  return fields;
+}
+
+//
+
+function resolvedExport()
+{
+  let reflector = this;
+xxx
   return fields;
 }
 
@@ -341,6 +406,7 @@ let Proto =
 
   _inheritForm : _inheritForm,
   _inheritFrom : _inheritFrom,
+  form3 : form3,
 
   _reflectMapForm : _reflectMapForm,
 
@@ -348,6 +414,7 @@ let Proto =
 
   infoExport : infoExport,
   dataExport : dataExport,
+  resolvedExport : resolvedExport,
 
   // relation
 

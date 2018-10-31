@@ -99,6 +99,7 @@ function form()
   _.assert( will.formed === 1 );
   _.assert( exp.formed === 3 );
   _.assert( outf.data === null );
+  _.assert( module.generated === null );
 
   _.sure( _.strDefined( module.dirPath ), 'Expects directory path of the module' );
   _.sure( _.objectIs( exp.settings ), 'Expects settings of export' );
@@ -111,17 +112,21 @@ function form()
 
   /* begin */
 
-  outf.data = module.dataExport();
+  module.generated = new will.ParagraphGenerated({ module : module });
 
-  outf.data.formatVersion = outf.Version;
-  outf.data.version = module.about.version;
-  outf.data.files = null;
+  module.generated.formatVersion = outf.Version;
+  module.generated.version = module.about.version;
+  module.generated.files = null;
+
+  // outf.data.formatVersion = outf.Version;
+  // outf.data.version = module.about.version;
+  // outf.data.files = null;
 
   // outf.data.importIn = module.inFileWithRoleMap.import ? module.inFileWithRoleMap.import.data : null;
   // outf.data.exportIn = module.inFileWithRoleMap.export ? module.inFileWithRoleMap.export.data : null;
   // outf.data.singleIn = module.inFileWithRoleMap.single ? module.inFileWithRoleMap.single.data : null;
 
-  outf.data.files = hd.filesFind
+  module.generated.files = hd.filesFind
   ({
     recursive : 1,
     includingDirectories : 1,
@@ -135,12 +140,18 @@ function form()
     },
   });
 
+  /* */
+
+  outf.data = module.dataExport();
+
   hd.fileWrite
   ({
     filePath : outf.outFilePath,
     data : outf.data,
     encoding : 'yaml',
   });
+
+  /* */
 
   if( will.verbosity >= 2 )
   logger.log( ' + ' + 'Write out file to ' + outf.outFilePath );

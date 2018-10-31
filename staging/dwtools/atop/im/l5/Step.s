@@ -129,6 +129,14 @@ function StepRoutineGrab( run )
     logger.log( _.toStr( settings.reflectMap, { wrap : 0, multiline : 1, levels : 3 } ) );
   }
 
+  // settings.srcFilter = settings.srcFilter || Object.create( null );
+  // settings.srcFilter.prefixPath = path.join( module.dirPath, settings.srcFilter.prefixPath || '.' );
+  // // settings.srcFilter.basePath = path.join( module.dirPath, settings.srcFilter.basePath || '.' );
+  //
+  // settings.dstFilter = settings.dstFilter || Object.create( null );
+  // settings.dstFilter.prefixPath = path.join( module.dirPath, settings.dstFilter.prefixPath || '.' );
+  // // settings.dstFilter.basePath = path.join( module.dirPath, settings.dstFilter.basePath || '.' );
+
   debugger;
   let result = step.FilesReflect.call( fileProvider, settings );
   debugger;
@@ -154,6 +162,7 @@ let Aggregates =
 {
   name : null,
   stepRoutine : null,
+  predefined : false,
 }
 
 let Associates =

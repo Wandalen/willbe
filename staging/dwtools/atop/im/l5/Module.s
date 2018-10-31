@@ -191,129 +191,10 @@ function predefinedForm()
   ({
     name : 'grab',
     stepRoutine : will.Step.StepRoutineGrab,
+    predefined : 1,
     module : module,
   }).form1();
 
-}
-
-// --
-// exporter
-// --
-
-function dataExport()
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let result = Object.create( null );
-
-  result.path = module.dataExportPaths();
-  result.submodule = module.dataExportSubmodules();
-  result.reflector = module.dataExportReflectors();
-  result.step = module.dataExportSteps();
-  result.build = module.dataExportBuilds();
-  result.export = module.dataExportExports();
-
-  result.about = module.about.dataExport();
-  result.execution = module.execution.dataExport();
-
-  return result;
-}
-
-//
-
-function dataExportPaths()
-{
-  let module = this;
-  let will = module.will;
-  return _.mapExtend( null, module.pathMap );
-}
-
-//
-
-function dataExportSubmodules()
-{
-  let module = this;
-  let will = module.will;
-  let result = Object.create( null );
-
-  for( let e in module.submoduleMap )
-  {
-    let element = module.submoduleMap[ e ];
-    result[ e ] = element.dataExport();
-  }
-
-  return result;
-}
-
-//
-
-function dataExportReflectors()
-{
-  let module = this;
-  let will = module.will;
-  let result = Object.create( null );
-
-  for( let e in module.reflectorMap )
-  {
-    let element = module.reflectorMap[ e ];
-    result[ e ] = element.dataExport();
-  }
-
-  return result;
-}
-
-//
-
-function dataExportSteps()
-{
-  let module = this;
-  let will = module.will;
-  let result = Object.create( null );
-
-  for( let e in module.stepMap )
-  {
-    let element = module.stepMap[ e ];
-    result[ e ] = element.dataExport();
-  }
-
-  return result;
-}
-
-//
-
-function dataExportBuilds()
-{
-  let module = this;
-  let will = module.will;
-  let result = Object.create( null );
-
-  for( let e in module.buildMap )
-  {
-    let element = module.buildMap[ e ];
-    result[ e ] = element.dataExport();
-  }
-
-  return result;
-}
-
-//
-
-function dataExportExports()
-{
-  let module = this;
-  let will = module.will;
-  let result = Object.create( null );
-
-  for( let e in module.exportMap )
-  {
-    let element = module.exportMap[ e ];
-    result[ e ] = element.dataExport();
-  }
-
-  return result;
 }
 
 // --
@@ -834,7 +715,7 @@ function strGetPrefix( srcStr )
 }
 
 // --
-// informer
+// exporter
 // --
 
 function infoExport()
@@ -954,6 +835,126 @@ function infoExportExports( exports )
   return result;
 }
 
+//
+
+function dataExport()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let result = Object.create( null );
+
+  result.path = module.dataExportPaths();
+  result.submodule = module.dataExportSubmodules();
+  result.reflector = module.dataExportReflectors();
+  result.step = module.dataExportSteps();
+  result.build = module.dataExportBuilds();
+  result.export = module.dataExportExports();
+
+  result.about = module.about.dataExport();
+  result.execution = module.execution.dataExport();
+
+  return result;
+}
+
+//
+
+function dataExportPaths()
+{
+  let module = this;
+  let will = module.will;
+  return _.mapExtend( null, module.pathMap );
+}
+
+//
+
+function dataExportSubmodules()
+{
+  let module = this;
+  let will = module.will;
+  let result = Object.create( null );
+
+  for( let e in module.submoduleMap )
+  {
+    let element = module.submoduleMap[ e ];
+    result[ e ] = element.dataExport();
+  }
+
+  return result;
+}
+
+//
+
+function dataExportReflectors()
+{
+  let module = this;
+  let will = module.will;
+  let result = Object.create( null );
+
+  for( let e in module.reflectorMap )
+  {
+    let element = module.reflectorMap[ e ];
+    result[ e ] = element.dataExport();
+  }
+
+  return result;
+}
+
+//
+
+function dataExportSteps()
+{
+  let module = this;
+  let will = module.will;
+  let result = Object.create( null );
+
+  for( let e in module.stepMap )
+  {
+    let element = module.stepMap[ e ];
+    if( element.predefined )
+    continue;
+    result[ e ] = element.dataExport();
+  }
+
+  return result;
+}
+
+//
+
+function dataExportBuilds()
+{
+  let module = this;
+  let will = module.will;
+  let result = Object.create( null );
+
+  for( let e in module.buildMap )
+  {
+    let element = module.buildMap[ e ];
+    result[ e ] = element.dataExport();
+  }
+
+  return result;
+}
+
+//
+
+function dataExportExports()
+{
+  let module = this;
+  let will = module.will;
+  let result = Object.create( null );
+
+  for( let e in module.exportMap )
+  {
+    let element = module.exportMap[ e ];
+    result[ e ] = element.dataExport();
+  }
+
+  return result;
+}
+
 // --
 // relations
 // --
@@ -981,6 +982,7 @@ let Aggregates =
 
   about : _.define.ownInstanceOf( _.Will.ParagraphAbout ),
   execution : _.define.ownInstanceOf( _.Will.ParagraphExecution ),
+  generated : null,
 
 }
 
@@ -1009,6 +1011,7 @@ let Accessor =
 {
   about : { setter : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.Will.ParagraphAbout }) },
   execution : { setter : _.accessor.setter.friend({ name : 'execution', friendName : 'module', maker : _.Will.ParagraphExecution }) },
+  generated : { setter : _.accessor.setter.friend({ name : 'generated', friendName : 'module', maker : _.Will.ParagraphGenerated }) },
 }
 
 // --
@@ -1027,16 +1030,6 @@ let Proto =
   form1 : form1,
   form2 : form2,
   predefinedForm : predefinedForm,
-
-  // exporter
-
-  dataExport : dataExport,
-  dataExportPaths : dataExportPaths,
-  dataExportSubmodules : dataExportSubmodules,
-  dataExportReflectors : dataExportReflectors,
-  dataExportSteps : dataExportSteps,
-  dataExportBuilds : dataExportBuilds,
-  dataExportExports : dataExportExports,
 
   // etc
 
@@ -1068,7 +1061,7 @@ let Proto =
   StrSplit : StrSplit,
   strGetPrefix : strGetPrefix,
 
-  // informer
+  // exporter
 
   infoExport : infoExport,
   infoExportPaths : infoExportPaths,
@@ -1076,6 +1069,14 @@ let Proto =
   infoExportSteps : infoExportSteps,
   infoExportBuilds : infoExportBuilds,
   infoExportExports : infoExportExports,
+
+  dataExport : dataExport,
+  dataExportPaths : dataExportPaths,
+  dataExportSubmodules : dataExportSubmodules,
+  dataExportReflectors : dataExportReflectors,
+  dataExportSteps : dataExportSteps,
+  dataExportBuilds : dataExportBuilds,
+  dataExportExports : dataExportExports,
 
   // relation
 

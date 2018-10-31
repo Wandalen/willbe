@@ -308,6 +308,13 @@ function reflectorsForm( reflectors )
     reflector.form2();
   }
 
+  for( let s in inf.reflectorMap )
+  {
+    let reflector = inf.reflectorMap[ s ];
+    if( reflector.formed < 3 )
+    reflector.form3();
+  }
+
 }
 
 //

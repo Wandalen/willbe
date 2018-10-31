@@ -67,14 +67,20 @@ function infoExport()
 
 //
 
+// function dataExport()
+// {
+//   let about = this;
+//   let fields = _.mapOnly( about, about.Composes );
+//   fields = _.mapButNulls( fields );
+//   return fields;
+// }
+
 function dataExport()
 {
   let about = this;
-  let fields = _.mapOnly( about, about.Composes );
-  fields = _.mapButNulls( fields );
+  let fields = about.cloneData({ compact : 1, copyingAggregates : 0 });
   return fields;
 }
-
 // --
 // relations
 // --

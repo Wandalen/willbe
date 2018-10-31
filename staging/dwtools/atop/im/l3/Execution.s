@@ -69,11 +69,14 @@ function infoExport()
 
 function dataExport()
 {
-  let about = this;
-  let fields = _.mapOnly( about, about.Composes );
-  fields = _.mapButNulls( fields );
-  if( fields.scripts )
-  fields.scripts = _.mapExtend( null, fields.scripts );
+  let execution = this;
+  let fields = execution.cloneData({ compact : 1, copyingAggregates : 0 });
+
+  _.assert( !execution.scripts || execution.scripts !== fields.scripts );
+
+  // if( fields.scripts )
+  // fields.scripts = _.mapExtend( null, fields.scripts );
+
   return fields;
 }
 
