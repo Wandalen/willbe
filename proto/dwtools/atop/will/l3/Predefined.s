@@ -32,7 +32,7 @@ defaults.dstRewritingPreserving = 1;
 
 //
 
-function grabStepRoutine( run )
+function stepRoutineReflect( run )
 {
   let step = this;
   let module = run.module;
@@ -49,7 +49,7 @@ function grabStepRoutine( run )
   let opts = _.mapExtend( null, step.opts );
   opts.reflector = module.strResolve( opts.reflector );
 
-  _.sure( opts.reflector instanceof will.Reflector, 'Step "grab" expects reflector, but got', step.opts )
+  _.sure( opts.reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', step.opts )
 
   opts.reflector = opts.reflector.optionsReflectExport();
   _.mapSupplement( opts, opts.reflector )
@@ -70,7 +70,7 @@ function grabStepRoutine( run )
 
 //
 
-function exportStepRoutine( run, build )
+function stepRoutineExport( run, build )
 {
   let step = this;
   let module = run.module;
@@ -187,8 +187,8 @@ let Extend =
 
   filesReflect : filesReflect,
 
-  grabStepRoutine : grabStepRoutine,
-  exportStepRoutine : exportStepRoutine,
+  stepRoutineReflect : stepRoutineReflect,
+  stepRoutineExport : stepRoutineExport,
 
 
 

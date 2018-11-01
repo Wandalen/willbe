@@ -182,7 +182,7 @@ function form2()
 
 function predefinedForm()
 {
-  let module = this;
+  let module = this; 
   let will = module.will;
 
   _.assert( arguments.length === 0 );
