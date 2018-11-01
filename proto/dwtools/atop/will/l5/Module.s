@@ -182,14 +182,14 @@ function form2()
 
 function predefinedForm()
 {
-  let module = this; 
+  let module = this;
   let will = module.will;
 
   _.assert( arguments.length === 0 );
 
   new will.Step
   ({
-    name : 'grab',
+    name : 'reflect',
     stepRoutine : will.Predefined.stepRoutineReflect,
     predefined : 1,
     module : module,

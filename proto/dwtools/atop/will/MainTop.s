@@ -62,14 +62,13 @@ function commandsMake()
     'help' :              { e : _.routineJoin( will, will.commandHelp ),              h : 'Get help.' },
 
     'list' :              { e : _.routineJoin( will, will.commandList ),              h : 'List information about the current module.' },
+    'paths list' :        { e : _.routineJoin( will, will.commandPathsList ),         h : 'List paths of the current module.' },
     'reflectors list' :   { e : _.routineJoin( will, will.commandReflectorsList ),    h : 'List avaialable reflectors.' },
     'steps list' :        { e : _.routineJoin( will, will.commandStepsList ),         h : 'List avaialable steps.' },
     'builds list' :       { e : _.routineJoin( will, will.commandBuildsList ),        h : 'List avaialable builds.' },
-
     'exports list' :      { e : _.routineJoin( will, will.commandExportsList ),       h : 'List avaialable exports.' },
     'about list' :        { e : _.routineJoin( will, will.commandAboutList ),         h : 'List descriptive information about the module.' },
     'execution list' :    { e : _.routineJoin( will, will.commandExecutionList ),     h : 'List execution scenarios.' },
-    'link list' :         { e : _.routineJoin( will, will.commandLinkList ),          h : 'List links to resources associated with the module.' },
 
     'build' :             { e : _.routineJoin( will, will.commandBuild ),             h : 'Build current module with spesified criterion.' },
     'export' :            { e : _.routineJoin( will, will.commandExport ),            h : 'Export selected the module with spesified criterion. Save output to output file and archive.' },
@@ -173,6 +172,38 @@ function commandList( e )
 
 //
 
+function commandPathsList( e )
+{
+  let will = this;
+
+  function act( module )
+  {
+    logger.log( module.link.infoExport() );
+  }
+
+  will._commandList( e, act );
+
+  return will;
+}
+
+// //
+//
+// function commandLinkList( e )
+// {
+//   let will = this;
+//
+//   function act( module )
+//   {
+//     logger.log( module.link.infoExport() );
+//   }
+//
+//   will._commandList( e, act );
+//
+//   return will;
+// }
+
+//
+
 function commandReflectorsList( e )
 {
   let will = this;
@@ -260,22 +291,6 @@ function commandExecutionList( e )
   function act( module )
   {
     logger.log( module.execution.infoExport() );
-  }
-
-  will._commandList( e, act );
-
-  return will;
-}
-
-//
-
-function commandLinkList( e )
-{
-  let will = this;
-
-  function act( module )
-  {
-    logger.log( module.link.infoExport() );
   }
 
   will._commandList( e, act );
@@ -566,7 +581,6 @@ let Extend =
 
   commandAboutList : commandAboutList,
   commandExecutionList : commandExecutionList,
-  commandLinkList : commandLinkList,
 
   commandBuild : commandBuild,
   commandExport : commandExport,

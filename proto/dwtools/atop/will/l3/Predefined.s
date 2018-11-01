@@ -41,7 +41,6 @@ function stepRoutineReflect( run )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( _.objectIs( step.criterion ) );
   _.assert( _.objectIs( step.opts ) );
   _.assert( !!step.opts.reflector, 'Expects option reflector' );
   _.assert( arguments.length === 2 );
