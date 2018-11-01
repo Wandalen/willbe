@@ -172,9 +172,10 @@ function exportPathFor()
   let hd = hub.providersWithProtocolMap.file;
 
   _.assert( arguments.length === 0 );
-  _.assert( _.strDefined( build.setting.filesPath ), 'Export should have defined path to files {-settings.filesPath-}' );
 
-  return hd.path.resolve( module.dirPath, module.strResolve( build.setting.filesPath ) );
+  _.sure( _.strDefined( build.filesPath ), 'Export should have defined path to files {-filesPath-}' );
+
+  return hd.path.resolve( module.dirPath, module.strResolve( build.filesPath ) );
 }
 
 //
@@ -230,7 +231,8 @@ let Composes =
   steps : null,
 
   default : null,
-  // export : 0,
+  filesPath : null,
+  entryPath : null,
 
   inherit : _.define.own([]),
 

@@ -299,9 +299,7 @@ function commandBuild( e )
   will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().inFilesLoad();
   let module = will.currentModule;
 
-  debugger;
   let builds = module.buildsFor( e.subject, e.propertiesMap );
-  debugger;
 
   logger.up();
   if( logger.verbosity >= 2 )

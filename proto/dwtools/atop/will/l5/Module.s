@@ -358,11 +358,11 @@ function prefixPathForRoleMaybe( role )
   _.assert( arguments.length === 1 );
 
   if( role === 'import' )
-  return '.im.in';
+  return '.im.will';
   else if( role === 'export' )
-  return '.ex.in';
+  return '.ex.will';
   else if( role === 'single' )
-  return '.in';
+  return '.will';
   else return null;
 
 }
@@ -373,13 +373,21 @@ function DirPathFromInFilePath( inPath )
 {
   let module = this;
   _.assert( arguments.length === 1 );
-  let r = /(.*)(?:\.in(?:\.|$).*)/;
+  let r = /(.*)(?:\.will(?:\.|$).*)/;
   let parsed = r.exec( inPath );
 
   if( !parsed )
   return r;
   else
   return parsed[ 1 ];
+}
+
+//
+
+function _nickNameGet()
+{
+  let module = this;
+  return '{ ' + module.constructor.shortName + ' ' + _.strQuote( module.dirPath ) + ' }';
 }
 
 // --
@@ -540,6 +548,9 @@ function _strResolveMaybe( srcStr )
   let module = this;
   let will = module.will;
 
+  if( srcStr === undefined )
+  return _.err( 'Undefined query to resolve' );
+
   let result = module._strResolveAct
   ({
     src : srcStr,
@@ -559,7 +570,7 @@ function _strResolveAct( o )
 
   _.assertRoutineOptions( _strResolveAct, arguments );
 
-  let splits = module.StrSplit( o.src );
+  let splits = module.srSplit( o.src );
 
   if( !splits[ 0 ] )
   return o.src;
@@ -616,10 +627,10 @@ function componentGet( kind, name )
 
 //
 
-function StrSplit( srcStr )
+function srSplit( srcStr )
 {
   let module = this;
-  let splits = _.strIsolateBeginOrNone( srcStr, ':' );
+  let splits = _.strIsolateBeginOrNone( srcStr, '::' );
   return splits;
 }
 
@@ -628,7 +639,7 @@ function StrSplit( srcStr )
 function strGetPrefix( srcStr )
 {
   let module = this;
-  let splits = module.StrSplit( srcStr );
+  let splits = module.srSplit( srcStr );
   if( !splits[ 0 ] )
   return false;
   if( !_.arrayHas( module.KnownPrefixes, splits[ 0 ] ) )
@@ -932,11 +943,12 @@ let Forbids =
   exportMap : 'exportMap',
 }
 
-let Accessor =
+let Accessors =
 {
   about : { setter : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.Will.ParagraphAbout }) },
   execution : { setter : _.accessor.setter.friend({ name : 'execution', friendName : 'module', maker : _.Will.ParagraphExecution }) },
   exported : { setter : _.accessor.setter.friend({ name : 'exported', friendName : 'module', maker : _.Will.ParagraphExported }) },
+  nickName : { getter : _nickNameGet, combining : 'rewrite' },
 }
 
 // --
@@ -983,7 +995,7 @@ let Proto =
   _strResolveAct : _strResolveAct,
   componentGet : componentGet,
 
-  StrSplit : StrSplit,
+  srSplit : srSplit,
   strGetPrefix : strGetPrefix,
 
   // exporter
@@ -1012,10 +1024,9 @@ let Proto =
   Restricts : Restricts,
   Statics : Statics,
   Forbids : Forbids,
+  Accessors : Accessors,
 
 }
-
-//
 
 _.classDeclare
 ({
@@ -1025,8 +1036,6 @@ _.classDeclare
 });
 
 _.Copyable.mixin( Self );
-
-//
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = wTools;

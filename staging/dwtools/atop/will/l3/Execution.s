@@ -1,4 +1,4 @@
-( function _Link_s_( ) {
+( function _Execution_s_( ) {
 
 'use strict';
 
@@ -13,12 +13,12 @@ if( typeof module !== 'undefined' )
 
 let _ = wTools;
 let Parent = null;
-let Self = function wImParagraphLink( o )
+let Self = function wWillParagraphExecution( o )
 {
   return _.instanceConstructor( Self, this, arguments );
 }
 
-Self.shortName = 'ParagraphLink';
+Self.shortName = 'ParagraphExecution';
 
 // --
 // inter
@@ -35,35 +35,49 @@ function finit()
 
 function init( o )
 {
-  let link = this;
+  let execution = this;
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  _.instanceInit( link );
-  Object.preventExtensions( link );
+  _.instanceInit( execution );
+  Object.preventExtensions( execution );
 
   if( o )
-  link.copy( o );
+  execution.copy( o );
 
 }
 
 //
 
-function info()
+function infoExport()
 {
-  let link = this;
+  let execution = this;
   let result = '';
-  let fields = _.mapOnly( link, link.Composes );
-  fields = _.mapButNulls( fields );
+  let fields = execution.dataExport();
 
   if( Object.keys( fields ).length === 0 )
   return result;
 
-  result += 'Link' + '\n';
+  result += 'Execution' + '\n';
   result += _.toStr( fields, { wrap : 0, levels : 4, multiline : 1 } ) + '\n';
   result += '\n';
 
   return result;
+}
+
+//
+
+function dataExport()
+{
+  let execution = this;
+  let fields = execution.cloneData({ compact : 1, copyingAggregates : 0 });
+
+  _.assert( !execution.scripts || execution.scripts !== fields.scripts );
+
+  // if( fields.scripts )
+  // fields.scripts = _.mapExtend( null, fields.scripts );
+
+  return fields;
 }
 
 // --
@@ -73,11 +87,7 @@ function info()
 let Composes =
 {
 
-  outDirPath : '.',
-  repository : null,
-  bugs : null,
-  im : null,
-  registry : null,
+  scripts : null,
 
 }
 
@@ -119,7 +129,8 @@ let Proto =
   finit : finit,
   init : init,
 
-  info : info,
+  infoExport : infoExport,
+  dataExport : dataExport,
 
   // relation
 
