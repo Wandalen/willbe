@@ -3,7 +3,7 @@ about :
 
   name : willbe
   description : Tool to manage modules of modular systems
-  version : 0.3.11
+  version : 0.3.12
   enabled : 1
   interpreters :
   - nodejs >= 6.0.0
@@ -22,30 +22,30 @@ path :
 
   repository : git+https://github.com/Wandalen/willbe.git
   bugs : https://github.com/Wandalen/willbe/issues
-  entry.debug : {path::out.debug}/dwtools/abase/____
-  entry.release : {path::out.release}/dwtools/abase/____
+  entry.debug : '{path::out.debug}/dwtools/abase/____'
+  entry.release : '{path::out.release}/dwtools/abase/____'
 
 build :
 
   .debug.raw.export :
     default : 1
+    filesPath : path::out.debug
+    entryPath : path::entry.debug
     setting :
       debug : 1
       raw : 1
       export : 1
-      filesPath : path::out.debug
-      entryPath : path::entry.debug
     steps :
       - build::.debug
       - step::export
 
   .release.compiled.export :
+    filesPath : path::out.release
+    entryPath : path::entry.release
     setting :
       debug : 0
       raw : 0
       export : 1
-      filesPath : path::out.release
-      entryPath : path::entry.release
     steps :
       - build::.release.compiled
       - step::export
