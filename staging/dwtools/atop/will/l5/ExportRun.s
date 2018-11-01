@@ -167,7 +167,7 @@ xxx
 //
 // let Forbids =
 // {
-//   setting : 'setting',
+//   criterion : 'criterion',
 // }
 //
 // let Accessors =

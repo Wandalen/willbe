@@ -50,11 +50,11 @@ function _inheritFrom( o )
   }
 
   let extend = _.mapOnly( build2, _.mapNulls( build ) );
-  delete extend.setting;
+  delete extend.criterion;
   build.copy( extend );
 
-  if( build2.setting )
-  build.setting = _.mapSupplement( build.setting || null, build2.setting );
+  if( build2.criterion )
+  build.criterion = _.mapSupplement( build.criterion || null, build2.criterion );
 
 }
 
@@ -135,7 +135,7 @@ function stepsEach( onEach )
   function inElement( step )
   {
     step = module.strResolve( step );
-    _.assert( step instanceof will.Step || step instanceof will.Build );
+    _.assert( step instanceof will.Step || step instanceof will.Build, () => 'Cant find step ' + arguments[ 0 ] ); 
     let it = Object.create( null );
     it.element = step;
     onEach( it );
@@ -227,7 +227,7 @@ let Composes =
 {
 
   description : null,
-  setting : null,
+  criterion : null,
   steps : null,
 
   default : null,

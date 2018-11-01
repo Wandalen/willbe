@@ -71,8 +71,8 @@ function commandsMake()
     'execution list' :    { e : _.routineJoin( will, will.commandExecutionList ),     h : 'List execution scenarios.' },
     'link list' :         { e : _.routineJoin( will, will.commandLinkList ),          h : 'List links to resources associated with the module.' },
 
-    'build' :             { e : _.routineJoin( will, will.commandBuild ),             h : 'Build current module with spesified setting.' },
-    'export' :            { e : _.routineJoin( will, will.commandExport ),            h : 'Export selected the module with spesified setting. Save output to output file and archive.' },
+    'build' :             { e : _.routineJoin( will, will.commandBuild ),             h : 'Build current module with spesified criterion.' },
+    'export' :            { e : _.routineJoin( will, will.commandExport ),            h : 'Export selected the module with spesified criterion. Save output to output file and archive.' },
     'with' :              { e : _.routineJoin( will, will.commandWith ),              h : 'Use "with" to select a module' },
     'each' :              { e : _.routineJoin( will, will.commandEach ),              h : 'Use "each" to iterate each module in a directory' },
 

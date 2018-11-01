@@ -219,11 +219,11 @@ _inheritForm.defaults=
 //   }
 //
 //   let extend = _.mapOnly( inheritable2, _.mapNulls( inheritable ) );
-//   delete extend.setting;
+//   delete extend.criterion;
 //   inheritable.copy( extend );
 //
-//   if( inheritable2.setting )
-//   inheritable.setting = _.mapSupplement( inheritable.setting || null, inheritable2.setting );
+//   if( inheritable2.criterion )
+//   inheritable.criterion = _.mapSupplement( inheritable.criterion || null, inheritable2.criterion );
 //
 // }
 //

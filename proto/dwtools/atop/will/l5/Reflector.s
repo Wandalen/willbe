@@ -39,17 +39,17 @@ function form1()
 
   _.assert( !!will );
   _.assert( !!module );
-  _.assert( !!inf );
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !!will.formed );
   _.assert( !!module.formed );
-  _.assert( !!inf.formed );
+  _.assert( !inf || !!inf.formed );
   _.assert( _.strDefined( reflector.name ) );
 
   /* begin */
 
   module.reflectorMap[ reflector.name ] = reflector;
+  if( inf )
   inf.reflectorMap[ reflector.name ] = reflector;
 
   if( reflector.srcFilter )
@@ -342,7 +342,9 @@ function dataExport()
 function resolvedExport()
 {
   let reflector = this;
-xxx
+
+  xxx
+
   return fields;
 }
 
@@ -363,6 +365,7 @@ let Composes =
 let Aggregates =
 {
   name : null,
+  predefined : 0,
 }
 
 let Associates =

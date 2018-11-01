@@ -52,8 +52,8 @@
 //   let extend = _.mapOnly( exp2, _.mapNulls( exp ) );
 //   exp.copy( extend );
 //
-//   if( exp2.setting )
-//   exp.setting = _.mapSupplement( exp.setting, exp2.setting );
+//   if( exp2.criterion )
+//   exp.criterion = _.mapSupplement( exp.criterion, exp2.criterion );
 //
 // }
 //
@@ -159,7 +159,7 @@
 //   default : null,
 //   tar : null,
 //   files : null,
-//   setting : null,
+//   criterion : null,
 //   inherit : _.define.own([]),
 // }
 //

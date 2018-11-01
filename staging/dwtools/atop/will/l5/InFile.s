@@ -342,8 +342,10 @@ function stepsForm( steps )
     // o2.inf = inf;
     // o2.module = module;
 
-    let o2 = _.mapOnly( step, { inherit : null, filePath : null } );
-    o2.setting = _.mapBut( step, o2 );
+    // let o2 = _.mapOnly( step, { inherit : null, filePath : null } );
+    // o2.criterion = _.mapBut( step, o2 );
+
+    let o2 = _.mapExtend( null, step );
     o2.inf = inf;
     o2.module = module;
     o2.name = k;

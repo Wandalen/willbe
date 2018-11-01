@@ -104,7 +104,7 @@
 // //   // _.assert( module.exported === null );
 // //   //
 // //   // _.sure( _.strDefined( module.dirPath ), 'Expects directory path of the module' );
-// //   // _.sure( _.objectIs( exp.setting ), 'Expects setting of export' );
+// //   // _.sure( _.objectIs( exp.criterion ), 'Expects criterion of export' );
 // //   // _.sure( _.strDefined( exp.name ), 'Expects name of export' );
 // //   // _.sure( _.objectIs( module.inFileWithRoleMap.import ) || _.objectIs( module.inFileWithRoleMap.single ), 'Expects import in fine' );
 // //   // _.sure( _.objectIs( module.inFileWithRoleMap.export ) || _.objectIs( module.inFileWithRoleMap.single ), 'Expects export in fine' );

@@ -190,7 +190,7 @@ function predefinedForm()
   new will.Step
   ({
     name : 'grab',
-    stepRoutine : will.Predefined.grabStepRoutine,
+    stepRoutine : will.Predefined.stepRoutineReflect,
     predefined : 1,
     module : module,
   }).form();
@@ -198,10 +198,86 @@ function predefinedForm()
   new will.Step
   ({
     name : 'export',
-    stepRoutine : will.Predefined.exportStepRoutine,
+    stepRoutine : will.Predefined.stepRoutineExport,
     predefined : 1,
     module : module,
   }).form();
+
+  new will.Reflector
+  ({
+    name : '.default.common',
+    srcFilter :
+    {
+      prefixPath : './proto',
+      basePath : '.',
+      maskAll :
+      {
+        excludeAny : [ /(^|\/)-/ ],
+      }
+    },
+    predefined : 1,
+    module : module,
+  }).form1();
+
+  new will.Reflector
+  ({
+    name : '.default.debug',
+    inherit : [ '.default.common' ],
+    srcFilter :
+    {
+      prefixPath : './proto',
+      basePath : '.',
+      maskAll :
+      {
+        excludeAny : [ /\.release($|\.|\/)/i ],
+      }
+    },
+    predefined : 1,
+    module : module,
+  }).form1();
+
+  new will.Reflector
+  ({
+    name : '.default.release',
+    inherit : [ '.default.common' ],
+    srcFilter :
+    {
+      prefixPath : './proto',
+      basePath : '.',
+      maskAll :
+      {
+        excludeAny : [ /\.debug($|\.|\/)/i, /\.test($|\.|\/)/i, /\.experiment($|\.|\/)/i ],
+      }
+    },
+    predefined : 1,
+    module : module,
+  }).form1();
+
+/*
+  .default.common :
+    srcFilter :
+      prefixPath : './proto'
+      basePath : '.'
+      maskAll :
+        excludeAny :
+        - !!js/regexp '/(^|\/)-/'
+
+  .default.debug :
+    inherit : .default.common
+    srcFilter :
+      maskAll :
+        excludeAny :
+        - !!js/regexp '/\.release($|\.|\/)/i'
+
+  .default.release :
+    inherit : .default.common
+    srcFilter :
+      maskAll :
+        excludeAny :
+        - !!js/regexp '/\.debug($|\.|\/)/i'
+        - !!js/regexp '/\.test($|\.|\/)/i'
+        - !!js/regexp '/\.experiment($|\.|\/)/i'
+*/
 
 }
 
@@ -439,12 +515,12 @@ function _select( o )
 
       filter = function filter( build, k, c )
       {
-        if( build.setting === null && Object.keys( o.filter ).length )
+        if( build.criterion === null && Object.keys( o.filter ).length )
         return;
         let satisfied = _.mapSatisfy
         ({
           template : o.filter,
-          src : build.setting,
+          src : build.criterion,
           levels : 1,
         });
         if( satisfied )
@@ -464,9 +540,9 @@ function _select( o )
   }
 
   if( o.resource === 'export' )
-  elements = elements.filter( ( element ) => element.setting.export );
+  elements = elements.filter( ( element ) => element.criterion.export );
   else if( o.resource === 'build' )
-  elements = elements.filter( ( element ) => !element.setting.export );
+  elements = elements.filter( ( element ) => !element.criterion.export );
 
   return elements;
 }
@@ -549,7 +625,10 @@ function _strResolveMaybe( srcStr )
   let will = module.will;
 
   if( srcStr === undefined )
-  return _.err( 'Undefined query to resolve' );
+  {
+    debugger;
+    return _.err( 'Undefined query to resolve' );
+  }
 
   let result = module._strResolveAct
   ({
