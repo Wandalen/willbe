@@ -162,6 +162,7 @@ function commandList( e )
 
   function act( module )
   {
+    let logger = will.logger;
     logger.log( module.infoExport() );
   }
 
@@ -178,7 +179,8 @@ function commandPathsList( e )
 
   function act( module )
   {
-    logger.log( module.link.infoExport() );
+    let logger = will.logger;
+    logger.log( module.infoExportPaths() );
   }
 
   will._commandList( e, act );
@@ -210,6 +212,7 @@ function commandReflectorsList( e )
 
   function act( module )
   {
+    let logger = will.logger;
     logger.log( module.infoExportReflectors() );
   }
 
@@ -226,6 +229,7 @@ function commandStepsList( e )
 
   function act( module )
   {
+    let logger = will.logger;
     logger.log( module.infoExportSteps() );
   }
 
@@ -242,7 +246,14 @@ function commandBuildsList( e )
 
   function act( module )
   {
-    logger.log( module.infoExportBuilds( module.buildsFor( e.subject, e.propertiesMap ) ) );
+    let logger = will.logger;
+    let builds = module.buildsFor
+    ({
+      name : e.subject,
+      criterion : e.propertiesMap,
+      preffering : 'more',
+    });
+    logger.log( module.infoExportBuilds( builds ) );
   }
 
   will._commandList( e, act );
@@ -258,7 +269,14 @@ function commandExportsList( e )
 
   function act( module )
   {
-    logger.log( module.infoExportExports( module.exportsFor( e.subject, e.propertiesMap ) ) );
+    let logger = will.logger;
+    let builds = module.exportsFor
+    ({
+      name : e.subject,
+      criterion : e.propertiesMap,
+      preffering : 'more',
+    });
+    logger.log( module.infoExportExports( builds ) );
   }
 
   will._commandList( e, act );
@@ -274,6 +292,7 @@ function commandAboutList( e )
 
   function act( module )
   {
+    let logger = will.logger;
     logger.log( module.about.infoExport() );
   }
 
@@ -290,6 +309,7 @@ function commandExecutionList( e )
 
   function act( module )
   {
+    let logger = will.logger;
     logger.log( module.execution.infoExport() );
   }
 
@@ -574,11 +594,11 @@ let Extend =
 
   _commandList : _commandList,
   commandList : commandList,
+  commandPathsList : commandPathsList,
   commandReflectorsList : commandReflectorsList,
   commandStepsList : commandStepsList,
   commandBuildsList : commandBuildsList,
   commandExportsList : commandExportsList,
-
   commandAboutList : commandAboutList,
   commandExecutionList : commandExecutionList,
 

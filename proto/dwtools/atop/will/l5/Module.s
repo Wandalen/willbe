@@ -474,52 +474,74 @@ function _nickNameGet()
 iii : implement name glob filtering
 */
 
-function _select( o )
+function _select_pre( routine, args )
+{
+  let module = this;
+
+  _.assert( arguments.length === 2 );
+  _.assert( args.length <= 2 );
+
+  let o;
+  if( args[ 1 ] !== undefined )
+  o = { name : args[ 0 ], criterion : args[ 1 ] }
+  else
+  o = args[ 0 ]
+
+  _.routineOptions( routine, o );
+  _.assert( _.arrayHas( [ 'build', 'export' ], o.resource ) );
+  _.assert( _.arrayHas( [ 'default', 'more' ], o.preffering ) );
+  _.assert( o.criterion === null || _.routineIs( o.criterion ) || _.mapIs( o.criterion ) );
+
+  if( o.preffering === 'default' )
+  o.preffering = 'default';
+
+  return o;
+}
+
+//
+
+function _select_body( o )
 {
   let module = this;
   let elements;
 
   elements = module.buildMap;
 
-  // if( o.resource === 'build' )
-  // elements = module.buildMap;
-  // else if( o.resource === 'export' )
-  // elements = module.exportMap;
-  // else _.assert( 0, 'Unknown kind of resource', _.strQuote( o.resource ) );
-
-  _.routineOptions( _select, arguments );
-  _.assert( _.arrayHas( [ 'build', 'export' ], o.resource ) );
+  _.assertRoutineOptions( _select_body, arguments );
   _.assert( arguments.length === 1 );
-  _.assert( o.filter === null || _.routineIs( o.filter ) || _.mapIs( o.filter ) );
 
   if( o.name )
   {
     if( !elements[ o.name ] )
     return []
     elements = [ elements[ o.name ] ];
-    if( o.filter === null || Object.keys( o.filter ).length === 0 )
+    if( o.criterion === null || Object.keys( o.criterion ).length === 0 )
     return elements;
   }
+  else
+  {
+    elements = _.mapVals( elements );
+  }
 
-  let hasMapFilter = _.objectIs( o.filter ) && Object.keys( o.filter ).length > 0;
-  if( _.routineIs( o.filter ) || hasMapFilter )
+  let hasMapFilter = _.objectIs( o.criterion ) && Object.keys( o.criterion ).length > 0;
+  if( _.routineIs( o.criterion ) || hasMapFilter )
   {
 
-    _.assert( _.objectIs( o.filter ), 'not tested' );
+    _.assert( _.objectIs( o.criterion ), 'not tested' );
     _.assert( !o.name, 'not tested' );
 
-    let filter = o.filter;
+    let filter = o.criterion;
 
     if( hasMapFilter )
     {
 
       filter = function filter( build, k, c )
       {
-        if( build.criterion === null && Object.keys( o.filter ).length )
+        if( build.criterion === null && Object.keys( o.criterion ).length )
         return;
         let satisfied = _.mapSatisfy
         ({
-          template : o.filter,
+          template : o.criterion,
           src : build.criterion,
           levels : 1,
         });
@@ -529,64 +551,49 @@ function _select( o )
 
     }
 
-    elements = _.mapVals( _.entityFilter( elements, filter ) );
+    // elements = _.mapVals( _.entityFilter( elements, filter ) );
+    elements = _.entityFilter( elements, filter );
 
   }
-  else if( _.objectIs( o.filter ) && Object.keys( o.filter ).length === 0 && !o.name )
+  else if( _.objectIs( o.criterion ) && Object.keys( o.criterion ).length === 0 && !o.name && o.preffering === 'default' )
   {
 
-    elements = _.mapVals( _.entityFilter( elements, { default : 1 } ) );
+    // elements = _.mapVals( _.entityFilter( elements, { default : 1 } ) );
+    elements = _.entityFilter( elements, { default : 1 } );
 
   }
 
+  debugger;
+
   if( o.resource === 'export' )
-  elements = elements.filter( ( element ) => element.criterion.export );
+  elements = elements.filter( ( element ) => element.criterion && element.criterion.export );
   else if( o.resource === 'build' )
-  elements = elements.filter( ( element ) => !element.criterion.export );
+  elements = elements.filter( ( element ) => !element.criterion || !element.criterion.export );
 
   return elements;
 }
 
-_select.defaults =
+_select_body.defaults =
 {
   resource : null,
   name : null,
-  filter : null,
+  criterion : null,
+  preffering : 'default',
 }
+
+let _select = _.routineForPreAndBody( _select_pre, _select_body );
 
 //
 
-function buildsFor( name, filter )
-{
-  let module = this;
-
-  _.assert( arguments.length === 2 );
-
-  return module._select
-  ({
-    resource : 'build',
-    name : name,
-    filter : filter,
-  })
-
-}
+let buildsFor = _.routineForPreAndBody( _select_pre, _select_body );
+var defaults = buildsFor.defaults;
+defaults.resource = 'build';
 
 //
 
-function exportsFor( name, filter )
-{
-  let module = this;
-
-  _.assert( arguments.length === 2 );
-
-  return module._select
-  ({
-    resource : 'export',
-    name : name,
-    filter : filter,
-  })
-
-}
+let exportsFor = _.routineForPreAndBody( _select_pre, _select_body );
+var defaults = exportsFor.defaults;
+defaults.resource = 'export';
 
 // --
 // resolver
@@ -743,8 +750,8 @@ function infoExport()
   result += module.infoExportPaths( module.pathMap );
   result += module.infoExportReflectors( module.reflectorMap );
   result += module.infoExportSteps( module.stepMap );
-  result += module.infoExportBuilds( module.buildMap );
-  result += module.infoExportExports( module.exportMap );
+  result += module.infoExportBuilds( module.buildsFor({ preffering : 'more' }) );
+  result += module.infoExportExports( module.exportsFor({ preffering : 'more' }) );
 
   return result;
 }
@@ -798,6 +805,8 @@ function infoExportSteps( steps )
   for( let b in steps )
   {
     let step = steps[ b ];
+    if( step.predefined )
+    continue;
     result += step.infoExport();
     result += '\n';
   }
@@ -816,12 +825,11 @@ function infoExportBuilds( builds )
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  for( let b in builds )
+  _.each( builds, ( build ) =>
   {
-    let build = builds[ b ];
     result += build.infoExport();
     result += '\n';
-  }
+  });
 
   return result;
 }
@@ -837,12 +845,11 @@ function infoExportExports( exports )
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  for( let e in exports )
+  _.each( exports, ( exp ) =>
   {
-    let exp = exports[ e ];
     result += exp.infoExport();
     result += '\n';
-  }
+  });
 
   return result;
 }
