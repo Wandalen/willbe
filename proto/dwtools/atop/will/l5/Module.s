@@ -996,6 +996,7 @@ let Aggregates =
 
   submoduleMap : _.define.own({}),
   pathMap : _.define.own({}),
+  pathObjMap : _.define.own({}),
   reflectorMap : _.define.own({}),
   stepMap : _.define.own({}),
   buildMap : _.define.own({}),

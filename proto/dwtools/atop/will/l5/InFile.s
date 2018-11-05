@@ -256,12 +256,25 @@ function pathsForm( paths )
   _.each( paths, ( path, k ) =>
   {
 
-    _.sure( !inf.pathMap[ k ], () => 'Mod file ' + _.strQuote( inf.dirPath ) + ' already has path ' + _.strQuote( k ) );
-    _.sure( !module.pathMap[ k ], () => 'Module file ' + _.strQuote( module.name ) + ' already has path ' + _.strQuote( k ) );
-    _.sure( _.strIs( path ) );
+    if( _.strIs( path ) || _.arrayIs( path ) )
+    path = { path : path }
+    path.name = k;
 
-    inf.pathMap[ k ] = path;
-    module.pathMap[ k ] = path;
+    try
+    {
+      will.Reflector( path ).form1();
+    }
+    catch( err )
+    {
+      throw _.err( 'Cant form path object', _.strQuote( path.name ), '\n', err );
+    }
+
+    // _.sure( !inf.pathMap[ k ], () => 'Mod file ' + _.strQuote( inf.dirPath ) + ' already has path ' + _.strQuote( k ) );
+    // _.sure( !module.pathMap[ k ], () => 'Module file ' + _.strQuote( module.name ) + ' already has path ' + _.strQuote( k ) );
+    // _.sure( _.strIs( path ) );
+    //
+    // inf.pathMap[ k ] = path;
+    // module.pathMap[ k ] = path;
 
   });
 

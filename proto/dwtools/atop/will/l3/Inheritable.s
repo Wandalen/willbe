@@ -109,12 +109,10 @@ function form1()
   let logger = will.logger;
 
   _.sure( !module[ inheritable.MapName ][ inheritable.name ], () => 'Module ' + module.dirPath + ' already has ' + inheritable.nickName );
+  _.assert( !inf || !inf[ inheritable.MapName ][ inheritable.name ] );
 
   _.assert( arguments.length === 0 );
   _.assert( !inheritable.formed );
-  _.assert( !!module[ inheritable.MapName ] );
-  _.assert( !inf || !inf[ inheritable.MapName ][ inheritable.name ] );
-
   _.assert( !!will );
   _.assert( !!module );
   _.assert( !!fileProvider );

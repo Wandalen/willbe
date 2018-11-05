@@ -17,6 +17,7 @@ if( typeof module !== 'undefined' )
   require( './l5/BuildRun.s' );
   require( './l5/InFile.s' );
   require( './l5/Module.s' );
+  require( './l5/PathObj.s' );
   require( './l5/Reflector.s' );
   require( './l5/Step.s' );
   require( './l5/Submodule.s' );

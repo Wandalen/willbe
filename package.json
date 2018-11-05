@@ -4,18 +4,18 @@
   "description": "Tool to manage modules of modular systems",
   "author": "Kostiantyn Wandalen <wanalen@willbe.so>",
   "license": "MIT",
-  "main": "staging/dwtools/atop/will/MainTop.s",
+  "main": "proto/dwtools/atop/will/MainTop.s",
   "files": [
-    "staging/dwtools/atop/will",
-    "production"
+    "proto/dwtools/atop/will",
+    "proto/dwtools/Tools.s", "production"
   ],
   "bin": {
-    "will": "staging/dwtools/atop/will/Exec"
+    "will": "proto/dwtools/atop/will/Exec"
   },
   "scripts": {
     "test": "wtest staging",
-    "make_doc": "./doc.sh",
-    "will": "node staging/dwtools/atop/will/Exec"
+    "docgen": "wdocgen proto",
+    "will": "node proto/dwtools/atop/will/Exec"
   },
   "repository": {
     "type": "git",
