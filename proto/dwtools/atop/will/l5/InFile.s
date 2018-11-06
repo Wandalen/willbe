@@ -259,10 +259,12 @@ function pathsForm( paths )
     if( _.strIs( path ) || _.arrayIs( path ) )
     path = { path : path }
     path.name = k;
+    path.module = module;
+    path.inf = inf;
 
     try
     {
-      will.Reflector( path ).form1();
+      will.PathObj( path ).form1();
     }
     catch( err )
     {
@@ -493,10 +495,10 @@ let Aggregates =
 
   submoduleMap : _.define.own({}),
   pathMap : _.define.own({}),
+  pathObjMap : _.define.own({}),
   reflectorMap : _.define.own({}),
   stepMap : _.define.own({}),
   buildMap : _.define.own({}),
-  // exportMap : _.define.own({}),
 
 }
 

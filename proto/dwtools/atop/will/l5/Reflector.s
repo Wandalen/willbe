@@ -48,9 +48,9 @@ function form1()
 
   /* begin */
 
-  module.reflectorMap[ reflector.name ] = reflector;
+  module[ reflector.MapName ][ reflector.name ] = reflector;
   if( inf )
-  inf.reflectorMap[ reflector.name ] = reflector;
+  inf[ reflector.MapName ][ reflector.name ] = reflector;
 
   if( reflector.srcFilter )
   {
@@ -133,7 +133,9 @@ function _inheritFrom( o )
   _.assert( reflector.formed === 1 );
   _.assertRoutineOptions( _inheritFrom, arguments );
 
-  let reflector2 = module.reflectorMap[ o.ancestorName ];
+  // let reflector2 = module[ reflector.MapName ][ o.ancestorName ];
+  let reflector2 = module.resolve[ o.ancestorName ];
+
   _.sure( _.objectIs( reflector2 ), () => 'Reflector ' + _.strQuote( o.ancestorName ) + ' does not exist' );
   _.assert( !!reflector2.formed );
 
@@ -358,6 +360,8 @@ let Composes =
   description : null,
   reflectMap : null,
   srcFilter : null,
+  criterion : null,
+  parameter : null,
   inherit : _.define.own([]),
 
 }

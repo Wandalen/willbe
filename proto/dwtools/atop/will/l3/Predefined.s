@@ -22,7 +22,7 @@ let Self = Object.create( null );
 
 //
 
-let filesReflect = _.routineForPreAndBody( _.FileProvider.Find.prototype.filesReflect.pre, _.FileProvider.Find.prototype.filesReflect.body );
+let filesReflect = _.routineFromPreAndBody( _.FileProvider.Find.prototype.filesReflect.pre, _.FileProvider.Find.prototype.filesReflect.body );
 
 let defaults = filesReflect.defaults;
 

@@ -205,10 +205,10 @@ function predefinedForm()
 
   new will.Reflector
   ({
-    name : '.default.common',
+    name : 'default.common',
     srcFilter :
     {
-      prefixPath : './proto',
+      // prefixPath : './proto',
       basePath : '.',
       maskAll :
       {
@@ -221,12 +221,12 @@ function predefinedForm()
 
   new will.Reflector
   ({
-    name : '.default.debug',
-    inherit : [ '.default.common' ],
+    name : 'default.debug',
+    inherit : [ 'default.common' ],
     srcFilter :
     {
-      prefixPath : './proto',
-      basePath : '.',
+      // prefixPath : './proto',
+      // basePath : '.',
       maskAll :
       {
         excludeAny : [ /\.release($|\.|\/)/i ],
@@ -238,12 +238,12 @@ function predefinedForm()
 
   new will.Reflector
   ({
-    name : '.default.release',
-    inherit : [ '.default.common' ],
+    name : 'default.release',
+    inherit : [ 'default.common' ],
     srcFilter :
     {
-      prefixPath : './proto',
-      basePath : '.',
+      // prefixPath : './proto',
+      // basePath : '.',
       maskAll :
       {
         excludeAny : [ /\.debug($|\.|\/)/i, /\.test($|\.|\/)/i, /\.experiment($|\.|\/)/i ],
@@ -581,17 +581,17 @@ _select_body.defaults =
   preffering : 'default',
 }
 
-let _select = _.routineForPreAndBody( _select_pre, _select_body );
+let _select = _.routineFromPreAndBody( _select_pre, _select_body );
 
 //
 
-let buildsFor = _.routineForPreAndBody( _select_pre, _select_body );
+let buildsFor = _.routineFromPreAndBody( _select_pre, _select_body );
 var defaults = buildsFor.defaults;
 defaults.resource = 'build';
 
 //
 
-let exportsFor = _.routineForPreAndBody( _select_pre, _select_body );
+let exportsFor = _.routineFromPreAndBody( _select_pre, _select_body );
 var defaults = exportsFor.defaults;
 defaults.resource = 'export';
 
@@ -1000,7 +1000,6 @@ let Aggregates =
   reflectorMap : _.define.own({}),
   stepMap : _.define.own({}),
   buildMap : _.define.own({}),
-  // exportMap : _.define.own({}),
 
   about : _.define.ownInstanceOf( _.Will.ParagraphAbout ),
   execution : _.define.ownInstanceOf( _.Will.ParagraphExecution ),
