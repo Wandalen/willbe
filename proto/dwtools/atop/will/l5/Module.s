@@ -222,7 +222,7 @@ function predefinedForm()
   new will.Reflector
   ({
     name : 'default.debug',
-    inherit : [ 'default.common' ],
+    // inherit : [ 'default.common' ],
     srcFilter :
     {
       // prefixPath : './proto',
@@ -239,7 +239,7 @@ function predefinedForm()
   new will.Reflector
   ({
     name : 'default.release',
-    inherit : [ 'default.common' ],
+    // inherit : [ 'default.common' ],
     srcFilter :
     {
       // prefixPath : './proto',
@@ -611,12 +611,27 @@ function _pathResolve( filePath )
 
 //
 
-function _strResolve( srcStr )
+function strResolve_pre( routine, args )
+{
+  let o = args[ 0 ];
+  if( _.strIs( o ) )
+  o = { subject : o }
+
+  _.assert( arguments.length === 2 );
+  _.assert( args.length === 1 );
+  _.routineOptions( routine, o );
+
+  return o;
+}
+
+//
+
+function strResolve_body( o )
 {
   let module = this;
   let will = module.will;
 
-  let result = module._strResolveMaybe( srcStr );
+  let result = module.strResolveMaybe.body.call( module, o );
 
   if( _.errIs( result ) )
   throw result;
@@ -624,9 +639,19 @@ function _strResolve( srcStr )
   return result;
 }
 
+strResolve_body.defaults =
+{
+  context : null,
+  subject : null,
+  defaultType : null,
+  must : 0,
+}
+
+let strResolve = _.routineFromPreAndBody( strResolve_pre, strResolve_body );
+
 //
 
-function _strResolveMaybe( srcStr )
+function strResolveMaybe_body( srcStr )
 {
   let module = this;
   let will = module.will;
@@ -646,6 +671,10 @@ function _strResolveMaybe( srcStr )
   return result;
 }
 
+strResolveMaybe_body.defaults = Object.create( strResolve.body.defaults );
+
+let strResolveMaybe = _.routineFromPreAndBody( strResolve_pre, strResolveMaybe_body );
+
 //
 
 function _strResolveAct( o )
@@ -654,21 +683,31 @@ function _strResolveAct( o )
   let will = module.will;
   let result;
 
+  _.assert( _.strIs( o.subject ) );
   _.assertRoutineOptions( _strResolveAct, arguments );
 
-  let splits = module.srSplit( o.src );
+  let splits = module.strSplit( o.subject );
+
+  if( !splits[ 0 ] && !o.defaultType )
+  {
+    splits = [ o.defaultType, '::', o.subject ]
+  }
 
   if( !splits[ 0 ] )
-  return o.src;
+  {
+    if( o.must )
+    return _.ErrorLooking( 'Cant resolve', o.subject );
+    else
+    return o.subject;
+
+  }
 
   return module.componentGet( splits[ 0 ], splits[ 2 ] )
 }
 
-_strResolveAct.defaults =
-{
-  src : null,
-  visited : null,
-}
+var defaults = _strResolveAct.defaults = Object.create( strResolve.defaults )
+
+defaults.visited = null;
 
 //
 
@@ -713,10 +752,11 @@ function componentGet( kind, name )
 
 //
 
-function srSplit( srcStr )
+function strSplit( srcStr )
 {
   let module = this;
-  let splits = _.strIsolateBeginOrNone( srcStr, '::' );
+  // let splits = _.strIsolateBeginOrNone( srcStr, '::' );
+  let splits = _.strSplit( srcStr, '/' );
   return splits;
 }
 
@@ -725,7 +765,7 @@ function srSplit( srcStr )
 function strGetPrefix( srcStr )
 {
   let module = this;
-  let splits = module.srSplit( srcStr );
+  let splits = module.strSplit( srcStr );
   if( !splits[ 0 ] )
   return false;
   if( !_.arrayHas( module.KnownPrefixes, splits[ 0 ] ) )
@@ -1072,16 +1112,16 @@ let Proto =
   _pathResolve : _pathResolve,
   pathResolve : _.routineVectorize_functor( _pathResolve ),
 
-  _strResolve : _strResolve,
-  strResolve : _.routineVectorize_functor( _strResolve ),
+  strResolve : strResolve,
+  strResolve : _.routineVectorize_functor( strResolve ),
 
-  _strResolveMaybe : _strResolveMaybe,
-  strResolveMaybe : _.routineVectorize_functor( _strResolveMaybe ),
+  strResolveMaybe : strResolveMaybe,
+  strResolveMaybe : _.routineVectorize_functor( strResolveMaybe ),
 
   _strResolveAct : _strResolveAct,
   componentGet : componentGet,
 
-  srSplit : srSplit,
+  strSplit : strSplit,
   strGetPrefix : strGetPrefix,
 
   // exporter

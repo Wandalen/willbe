@@ -305,7 +305,7 @@ function reflectorsForm( reflectors )
     o2.name = k;
     try
     {
-      will.Reflector( o2 ).form1();
+      will.Reflector.MakeFroEachCriterion( o2 );
     }
     catch( err )
     {
@@ -314,20 +314,20 @@ function reflectorsForm( reflectors )
 
   });
 
-  // for( let s in inf.reflectorMap )
-  // {
-  //   let reflector = inf.reflectorMap[ s ];
-  //   _.assert( !!reflector.formed );
-  //   if( reflector.formed < 2 )
-  //   reflector.form2();
-  // }
-  //
-  // for( let s in inf.reflectorMap )
-  // {
-  //   let reflector = inf.reflectorMap[ s ];
-  //   if( reflector.formed < 3 )
-  //   reflector.form3();
-  // }
+  for( let s in inf.reflectorMap )
+  {
+    let reflector = inf.reflectorMap[ s ];
+    _.assert( !!reflector.formed );
+    if( reflector.formed < 2 )
+    reflector.form2();
+  }
+
+  for( let s in inf.reflectorMap )
+  {
+    let reflector = inf.reflectorMap[ s ];
+    if( reflector.formed < 3 )
+    reflector.form3();
+  }
 
 }
 

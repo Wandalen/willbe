@@ -136,6 +136,8 @@ function _inheritFrom( o )
   // let reflector2 = module[ reflector.MapName ][ o.ancestorName ];
   let reflector2 = module.resolve[ o.ancestorName ];
 
+xxx
+
   _.sure( _.objectIs( reflector2 ), () => 'Reflector ' + _.strQuote( o.ancestorName ) + ' does not exist' );
   _.assert( !!reflector2.formed );
 

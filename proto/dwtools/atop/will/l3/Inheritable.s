@@ -24,6 +24,32 @@ Self.shortName = 'Inheritable';
 // inter
 // --
 
+//
+
+function MakeFroEachCriterion( o )
+{
+  _.assert( arguments.length === 1 );
+  _.assert( _.mapIs( o ) );
+  _.assert( _.objectIs( o.module ) );
+  _.assert( _.strDefined( o.name ) );
+
+  let result = [];
+  let module = o.module;
+  let will = module.will;
+
+  let samples = _.eachSample( o.criterion, function( criterion, index )
+  {
+    let o2 = _.mapExtend( null, o );
+    o2.criterion = criterion;
+    o2.name = o.name + '.' + index;
+    result.push( will.Reflector( o2 ).form1() );
+  })
+
+  _.assert( samples.length >= 1 );
+
+  return result;
+}
+
 function finit()
 {
   if( this.formed )
@@ -338,6 +364,7 @@ let Restricts =
 
 let Statics =
 {
+  MakeFroEachCriterion : MakeFroEachCriterion,
   MapName : null,
 }
 
@@ -358,6 +385,8 @@ let Proto =
 {
 
   // inter
+
+  MakeFroEachCriterion : MakeFroEachCriterion,
 
   finit : finit,
   init : init,
