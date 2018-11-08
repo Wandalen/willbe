@@ -314,20 +314,20 @@ function reflectorsForm( reflectors )
 
   });
 
-  for( let s in inf.reflectorMap )
-  {
-    let reflector = inf.reflectorMap[ s ];
-    _.assert( !!reflector.formed );
-    if( reflector.formed < 2 )
-    reflector.form2();
-  }
-
-  for( let s in inf.reflectorMap )
-  {
-    let reflector = inf.reflectorMap[ s ];
-    if( reflector.formed < 3 )
-    reflector.form3();
-  }
+  // for( let s in inf.reflectorMap )
+  // {
+  //   let reflector = inf.reflectorMap[ s ];
+  //   _.assert( !!reflector.formed );
+  //   if( reflector.formed < 2 )
+  //   reflector.form2();
+  // }
+  //
+  // for( let s in inf.reflectorMap )
+  // {
+  //   let reflector = inf.reflectorMap[ s ];
+  //   if( reflector.formed < 3 )
+  //   reflector.form3();
+  // }
 
 }
 
@@ -378,13 +378,13 @@ function stepsForm( steps )
 
   });
 
-  for( let s in inf.stepMap )
-  {
-    let step = inf.stepMap[ s ];
-    _.assert( !!step.formed );
-    if( step.formed < 2 )
-    step.form2();
-  }
+  // for( let s in inf.stepMap )
+  // {
+  //   let step = inf.stepMap[ s ];
+  //   _.assert( !!step.formed );
+  //   if( step.formed < 2 )
+  //   step.form2();
+  // }
 
 }
 
@@ -423,25 +423,25 @@ function buildsForm( builds )
 
   });
 
-  /* form2 */
-
-  for( let s in inf.buildMap )
-  {
-    let build = inf.buildMap[ s ];
-    _.assert( !!build.formed );
-    if( build.formed < 2 )
-    build.form2();
-  }
-
-  /* form3 */
-
-  for( let s in inf.buildMap )
-  {
-    let build = inf.buildMap[ s ];
-    _.assert( build.formed >= 2 );
-    if( build.formed < 3 )
-    build.form3();
-  }
+  // /* form2 */
+  //
+  // for( let s in inf.buildMap )
+  // {
+  //   let build = inf.buildMap[ s ];
+  //   _.assert( !!build.formed );
+  //   if( build.formed < 2 )
+  //   build.form2();
+  // }
+  //
+  // /* form3 */
+  //
+  // for( let s in inf.buildMap )
+  // {
+  //   let build = inf.buildMap[ s ];
+  //   _.assert( build.formed >= 2 );
+  //   if( build.formed < 3 )
+  //   build.form3();
+  // }
 
 }
 
