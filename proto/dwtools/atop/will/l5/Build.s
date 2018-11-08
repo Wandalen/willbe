@@ -24,7 +24,7 @@ Self.shortName = 'Build';
 // inter
 // --
 
-function _inheritFrom( o )
+function _inheritSingle( o )
 {
   let build = this;
   let module = build.module;
@@ -37,7 +37,7 @@ function _inheritFrom( o )
   _.assert( _.strIs( o.buildName ) );
   _.assert( arguments.length === 1 );
   _.assert( build.formed === 1 );
-  _.assertRoutineOptions( _inheritFrom, arguments );
+  _.assertRoutineOptions( _inheritSingle, arguments );
 
   let build2 = module.buildMap[ o.buildName ];
   _.sure( _.objectIs( build2 ), () => 'Build ' + _.strQuote( o.buildName ) + ' does not exist' );
@@ -58,7 +58,7 @@ function _inheritFrom( o )
 
 }
 
-_inheritFrom.defaults=
+_inheritSingle.defaults=
 {
   buildName : null,
   visited : null,
@@ -135,7 +135,7 @@ function stepsEach( onEach )
   function inElement( step )
   {
     step = module.strResolve( step );
-    _.assert( step instanceof will.Step || step instanceof will.Build, () => 'Cant find step ' + arguments[ 0 ] ); 
+    _.assert( step instanceof will.Step || step instanceof will.Build, () => 'Cant find step ' + arguments[ 0 ] );
     let it = Object.create( null );
     it.element = step;
     onEach( it );
@@ -274,7 +274,7 @@ let Proto =
 
   // inter
 
-  _inheritFrom : _inheritFrom,
+  _inheritSingle : _inheritSingle,
 
   form3 : form3,
 

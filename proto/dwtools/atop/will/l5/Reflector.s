@@ -76,7 +76,7 @@ function form1()
 
 //
 
-function _inheritForm( o )
+function _inheritMultiple( o )
 {
   let reflector = this;
   let module = reflector.module;
@@ -89,16 +89,19 @@ function _inheritForm( o )
   _.assert( arguments.length === 1 );
   _.assert( reflector.formed === 1 );
   _.assert( _.arrayIs( reflector.inherit ) );
-  _.assertRoutineOptions( _inheritForm, arguments );
+  _.routineOptions( _inheritMultiple, arguments );
 
   /* begin */
 
-  _.arrayAppendOnceStrictly( o.visited, reflector.name );
+  // _.arrayAppendOnceStrictly( o.visited, reflector.name );
+  //
+  // reflector.inherit.map( ( ancestorName ) =>
+  // {
+  //   reflector._inheritSingle({ visited : o.visited, ancestorName : ancestorName, defaultDst : true });
+  // });
 
-  reflector.inherit.map( ( ancestorName ) =>
-  {
-    reflector._inheritFrom({ visited : o.visited, ancestorName : ancestorName, defaultDst : true });
-  });
+  // let o2 = _.mapOnly( o, Parent.prototype._inheritMultiple.defaults );
+  Parent.prototype._inheritMultiple.call( reflector, o );
 
   if( reflector.reflectMap )
   {
@@ -107,18 +110,20 @@ function _inheritForm( o )
 
   /* end */
 
-  reflector.formed = 2;
+  // reflector.formed = 2;
   return reflector;
 }
 
-_inheritForm.defaults=
+_inheritMultiple.defaults=
 {
+  ancestors : null,
   visited : null,
+  defaultDst : null,
 }
 
 //
 
-function _inheritFrom( o )
+function _inheritSingle( o )
 {
   let reflector = this;
   let module = reflector.module;
@@ -128,15 +133,29 @@ function _inheritFrom( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( _.strIs( o.ancestorName ) );
+  _.assert( o.ancestorName instanceof reflector.constructor );
   _.assert( arguments.length === 1 );
   _.assert( reflector.formed === 1 );
-  _.assertRoutineOptions( _inheritFrom, arguments );
+  _.routineOptions( _inheritSingle, arguments );
+
+  let reflector2 = o.ancestorName;
 
   // let reflector2 = module[ reflector.MapName ][ o.ancestorName ];
-  let reflector2 = module.resolve[ o.ancestorName ];
-
-xxx
+  // let reflector2 = module.strResolve({ subject : o.ancestorName, must : 1, defaultType : 'reflector' });
+  //
+  // if( reflector2.length === 1 )
+  // {
+  //   reflector2 = reflector2[ 0 ]
+  // }
+  // else
+  // {
+  //   for( let a = 0 ; a < reflector2.length ; a++ )
+  //   {
+  //     let o2 = _.mapExtend( null, o );
+  //     o2.ancestorName = reflector2[ a ];
+  //     reflector_inheritFrom( o2 );
+  //   }
+  // }
 
   _.sure( _.objectIs( reflector2 ), () => 'Reflector ' + _.strQuote( o.ancestorName ) + ' does not exist' );
   _.assert( !!reflector2.formed );
@@ -167,7 +186,7 @@ xxx
 
 }
 
-_inheritFrom.defaults=
+_inheritSingle.defaults=
 {
   ancestorName : null,
   visited : null,
@@ -247,7 +266,7 @@ function _reflectMapForm( o )
       else if( resolved instanceof will.Reflector )
       {
         delete map[ r ];
-        reflector._inheritFrom({ visited : o.visited, ancestorName : resolved.name, defaultDst : dst });
+        reflector._inheritSingle({ visited : o.visited, ancestorName : resolved.name, defaultDst : dst });
         _.sure( !!resolved.reflectMap );
         path.globMapExtend( map, resolved.reflectMap, dst );
       }
@@ -384,6 +403,7 @@ let Restricts =
 
 let Statics =
 {
+  TypeName : 'reflector',
   MapName : 'reflectorMap',
 }
 
@@ -413,8 +433,9 @@ let Proto =
 
   form1 : form1,
 
-  _inheritForm : _inheritForm,
-  _inheritFrom : _inheritFrom,
+  _inheritMultiple : _inheritMultiple,
+  _inheritSingle : _inheritSingle,
+
   form3 : form3,
 
   _reflectMapForm : _reflectMapForm,

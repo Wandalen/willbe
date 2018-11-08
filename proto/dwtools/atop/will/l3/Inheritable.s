@@ -184,25 +184,18 @@ function _inheritForm( o )
 {
   let inheritable = this;
   let module = inheritable.module;
-  let inf = inheritable.inf;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
 
   _.assert( arguments.length === 1 );
   _.assert( inheritable.formed === 1 );
   _.assert( _.arrayIs( inheritable.inherit ) );
-  _.assertRoutineOptions( _inheritForm, arguments );
-
-  /* begin */
+  _.assert( o.ancestors === undefined );
 
   _.arrayAppendOnceStrictly( o.visited, inheritable.name );
 
-  inheritable.inherit.map( ( ancestorName ) =>
-  {
-    inheritable._inheritFrom({ visited : o.visited, ancestorName : ancestorName });
-  });
+  /* begin */
+
+  o.ancestors = inheritable.inherit;
+  inheritable._inheritMultiple( o );
 
   /* end */
 
@@ -210,14 +203,70 @@ function _inheritForm( o )
   return inheritable;
 }
 
-_inheritForm.defaults=
+//
+
+function _inheritMultiple( o )
 {
+  let inheritable = this;
+  let module = inheritable.module;
+  let inf = inheritable.inf;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  /* begin */
+
+  o.ancestors.map( ( ancestorName ) =>
+  {
+
+    _.assert( _.strIs( inheritable.TypeName ) );
+    _.assert( _.strIs( ancestorName ) );
+
+    let ancestors = module.strResolve
+    ({
+      subject : ancestorName,
+      must : 1,
+      defaultType : inheritable.TypeName,
+    });
+
+    if( ancestors.length === 1 )
+    ancestors = ancestors[ 0 ];
+
+    _.assert( _.arrayIs( ancestors ) || ancestors instanceof inheritable.constructor );
+
+    if( ancestors.length === 1 )
+    {
+      let o2 = _.mapExtend( o );
+      o2.ancestorName = ancestors[ 0 ];
+      inheritable._inheritSingle( o2 );
+    }
+    else
+    {
+      for( let a = 0 ; a < ancestors.length ; a++ )
+      {
+        let o2 = _.mapExtend( o );
+        o2.ancestorName = ancestors[ a ];
+        inheritable._inheritSingle( o2 );
+      }
+    }
+
+  });
+
+  /* end */
+
+  return inheritable;
+}
+
+_inheritMultiple.defaults =
+{
+  ancestors : null,
   visited : null,
 }
 
 //
 //
-// function _inheritFrom( o )
+// function _inheritSingle( o )
 // {
 //   let inheritable = this;
 //   let module = inheritable.module;
@@ -230,7 +279,7 @@ _inheritForm.defaults=
 //   _.assert( _.strIs( o.ancestorName ) );
 //   _.assert( arguments.length === 1 );
 //   _.assert( inheritable.formed === 1 );
-//   _.assertRoutineOptions( _inheritFrom, arguments );
+//   _.assertRoutineOptions( _inheritSingle, arguments );
 //
 //   let inheritable2 = module[ inheritable.MapName ][ o.ancestorName ];
 //   _.sure( _.objectIs( inheritable2 ), () => inheritable.constructor.shortName + ' ' + _.strQuote( o.ancestorName ) + ' does not exist' );
@@ -251,7 +300,7 @@ _inheritForm.defaults=
 //
 // }
 //
-// _inheritFrom.defaults=
+// _inheritSingle.defaults=
 // {
 //   ancestorName : null,
 //   visited : null,
@@ -395,8 +444,10 @@ let Proto =
   form : form,
   form1 : form1,
   form2 : form2,
+
   _inheritForm : _inheritForm,
-  _inheritFrom : null,
+  _inheritMultiple : _inheritMultiple,
+
   form3 : form3,
 
   infoExport : infoExport,

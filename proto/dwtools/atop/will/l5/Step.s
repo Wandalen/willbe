@@ -45,7 +45,7 @@ function init( o )
 
 //
 
-function _inheritFrom( o )
+function _inheritSingle( o )
 {
   let step = this;
   let module = step.module;
@@ -58,7 +58,7 @@ function _inheritFrom( o )
   _.assert( _.strIs( o.ancestorName ) );
   _.assert( arguments.length === 1 );
   _.assert( step.formed >= 1 ); /* xxx */
-  _.assertRoutineOptions( _inheritFrom, arguments );
+  _.assertRoutineOptions( _inheritSingle, arguments );
 
   let step2 = module.stepMap[ o.ancestorName ];
   _.sure( _.objectIs( step2 ), () => 'Step ' + _.strQuote( o.ancestorName ) + ' does not exist' );
@@ -78,7 +78,7 @@ function _inheritFrom( o )
 
 }
 
-_inheritFrom.defaults=
+_inheritSingle.defaults=
 {
   ancestorName : null,
   visited : null,
@@ -199,7 +199,7 @@ let Proto =
   // inter
 
   init : init,
-  _inheritFrom : _inheritFrom,
+  _inheritSingle : _inheritSingle,
   form3 : form3,
 
   optionsExport : optionsExport,

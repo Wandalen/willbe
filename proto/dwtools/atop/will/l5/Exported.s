@@ -24,7 +24,7 @@
 // // inter
 // // --
 //
-// function _inheritFrom( o )
+// function _inheritSingle( o )
 // {
 //   let exp = this;
 //   let module = exp.module;
@@ -37,7 +37,7 @@
 //   _.assert( _.strIs( o.name ) );
 //   _.assert( arguments.length === 1 );
 //   _.assert( exp.formed === 1 );
-//   _.assertRoutineOptions( _inheritFrom, arguments );
+//   _.assertRoutineOptions( _inheritSingle, arguments );
 //
 //   let exp2 = module.exportMap[ o.name ];
 //   _.sure( _.objectIs( exp2 ), () => 'Export ' + _.strQuote( o.name ) + ' does not exist' );
@@ -57,7 +57,7 @@
 //
 // }
 //
-// _inheritFrom.defaults=
+// _inheritSingle.defaults=
 // {
 //   name : null,
 //   visited : null,
@@ -199,7 +199,7 @@
 //
 //   // inter
 //
-//   _inheritFrom : _inheritFrom,
+//   _inheritSingle : _inheritSingle,
 //   form3 : form3,
 //
 //   exportPathFor : exportPathFor,

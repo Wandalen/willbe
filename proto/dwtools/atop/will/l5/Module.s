@@ -611,7 +611,7 @@ function _pathResolve( filePath )
 
 //
 
-function strResolve_pre( routine, args )
+function _strResolve_pre( routine, args )
 {
   let o = args[ 0 ];
   if( _.strIs( o ) )
@@ -626,12 +626,12 @@ function strResolve_pre( routine, args )
 
 //
 
-function strResolve_body( o )
+function _strResolve_body( o )
 {
   let module = this;
   let will = module.will;
 
-  let result = module.strResolveMaybe.body.call( module, o );
+  let result = module._strResolveMaybe.body.call( module, o );
 
   if( _.errIs( result ) )
   throw result;
@@ -639,7 +639,7 @@ function strResolve_body( o )
   return result;
 }
 
-strResolve_body.defaults =
+_strResolve_body.defaults =
 {
   context : null,
   subject : null,
@@ -647,33 +647,26 @@ strResolve_body.defaults =
   must : 0,
 }
 
-let strResolve = _.routineFromPreAndBody( strResolve_pre, strResolve_body );
+let _strResolve = _.routineFromPreAndBody( _strResolve_pre, _strResolve_body );
 
 //
 
-function strResolveMaybe_body( srcStr )
+function _strResolveMaybe_body( o )
 {
   let module = this;
   let will = module.will;
 
-  if( srcStr === undefined )
-  {
-    debugger;
-    return _.err( 'Undefined query to resolve' );
-  }
+  if( !o.visited )
+  o.visited = [];
 
-  let result = module._strResolveAct
-  ({
-    src : srcStr,
-    visited : [],
-  });
+  let result = module._strResolveAct( o );
 
   return result;
 }
 
-strResolveMaybe_body.defaults = Object.create( strResolve.body.defaults );
+_strResolveMaybe_body.defaults = Object.create( _strResolve.body.defaults );
 
-let strResolveMaybe = _.routineFromPreAndBody( strResolve_pre, strResolveMaybe_body );
+let _strResolveMaybe = _.routineFromPreAndBody( _strResolve_pre, _strResolveMaybe_body );
 
 //
 
@@ -683,18 +676,20 @@ function _strResolveAct( o )
   let will = module.will;
   let result;
 
-  _.assert( _.strIs( o.subject ) );
   _.assertRoutineOptions( _strResolveAct, arguments );
+  _.sure( _.strIs( o.subject ), 'Can resolve only string, but got', _.strTypeOf( o.subject ) );
 
-  let splits = module.strSplit( o.subject );
+  debugger;
+  let splits = module.strSplitShort( o.subject );
 
-  if( !splits[ 0 ] && !o.defaultType )
+  if( !splits[ 0 ] && o.defaultType )
   {
     splits = [ o.defaultType, '::', o.subject ]
   }
 
   if( !splits[ 0 ] )
   {
+    debugger;
     if( o.must )
     return _.ErrorLooking( 'Cant resolve', o.subject );
     else
@@ -705,7 +700,7 @@ function _strResolveAct( o )
   return module.componentGet( splits[ 0 ], splits[ 2 ] )
 }
 
-var defaults = _strResolveAct.defaults = Object.create( strResolve.defaults )
+var defaults = _strResolveAct.defaults = Object.create( _strResolve.defaults )
 
 defaults.visited = null;
 
@@ -727,24 +722,34 @@ function componentGet( kind, name )
   if( !kind || !_.arrayHas( module.KnownPrefixes, kind ) )
   return o.src;
 
+  let pool = null;
+
   if( kind === 'path' )
-  {
-    result = module.pathMap[ name ];
-    // result = path.s.resolve( module.dirPath, result );
-  }
+  pool = module.pathMap;
   else if( kind === 'reflector' )
-  result = module.reflectorMap[ name ];
+  pool = module.reflectorMap;
   else if( kind === 'submodule' )
-  result = module.submoduleMap[ name ];
+  pool = module.submoduleMap;
   else if( kind === 'step' )
-  result = module.stepMap[ name ];
+  pool = module.stepMap;
   else if( kind === 'build' )
-  result = module.buildMap[ name ];
+  pool = module.buildMap;
+
+  if( !pool )
+  {
+    debugger;
+    return _.ErrorLooking( 'Unknown type of resource', kind, _.strQuote( name ) );
+  }
+
+  if( pool[ name ] )
+  result = pool[ name ];
+  else
+  result = _.entitySelect( pool, name );
 
   if( result === undefined )
   {
     debugger;
-    result = _.err( kind, _.strQuote( name ), 'was not found' );
+    return _.ErrorLooking( kind, _.strQuote( name ), 'was not found' );
   }
 
   return result;
@@ -752,12 +757,32 @@ function componentGet( kind, name )
 
 //
 
-function strSplit( srcStr )
+function strSplitShort( srcStr )
 {
   let module = this;
-  // let splits = _.strIsolateBeginOrNone( srcStr, '::' );
+  let result = _.strIsolateBeginOrNone( srcStr, '::' );
+  return result;
+}
+
+//
+
+function strSplitLong( srcStr )
+{
+  let module = this;
   let splits = _.strSplit( srcStr, '/' );
-  return splits;
+
+  debugger; xxx
+
+  let result = []
+  for( let s = 0 ; s < splits.length ; s++ )
+  {
+    let split = splits[ s ];
+    if( split === '/' )
+    continue;
+    result.push( module.strSplitShort( split ) );
+  }
+
+  return result;
 }
 
 //
@@ -765,7 +790,7 @@ function strSplit( srcStr )
 function strGetPrefix( srcStr )
 {
   let module = this;
-  let splits = module.strSplit( srcStr );
+  let splits = module.strSplitShort( srcStr );
   if( !splits[ 0 ] )
   return false;
   if( !_.arrayHas( module.KnownPrefixes, splits[ 0 ] ) )
@@ -1112,16 +1137,17 @@ let Proto =
   _pathResolve : _pathResolve,
   pathResolve : _.routineVectorize_functor( _pathResolve ),
 
-  strResolve : strResolve,
-  strResolve : _.routineVectorize_functor( strResolve ),
+  _strResolve : _strResolve,
+  strResolve : _.routineVectorize_functor( _strResolve ),
 
-  strResolveMaybe : strResolveMaybe,
-  strResolveMaybe : _.routineVectorize_functor( strResolveMaybe ),
+  _strResolveMaybe : _strResolveMaybe,
+  strResolveMaybe : _.routineVectorize_functor( _strResolveMaybe ),
 
   _strResolveAct : _strResolveAct,
   componentGet : componentGet,
 
-  strSplit : strSplit,
+  strSplitShort : strSplitShort,
+  strSplitLong : strSplitLong,
   strGetPrefix : strGetPrefix,
 
   // exporter
