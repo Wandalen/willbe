@@ -223,6 +223,8 @@ function _inheritMultiple( o )
     _.assert( _.strIs( inheritable.TypeName ) );
     _.assert( _.strIs( ancestorName ) );
 
+    debugger;
+
     let ancestors = module.strResolve
     ({
       subject : ancestorName,

@@ -679,7 +679,6 @@ function _strResolveAct( o )
   _.assertRoutineOptions( _strResolveAct, arguments );
   _.sure( _.strIs( o.subject ), 'Can resolve only string, but got', _.strTypeOf( o.subject ) );
 
-  debugger;
   let splits = module.strSplitShort( o.subject );
 
   if( !splits[ 0 ] && o.defaultType )
@@ -694,10 +693,9 @@ function _strResolveAct( o )
     return _.ErrorLooking( 'Cant resolve', o.subject );
     else
     return o.subject;
-
   }
 
-  return module.componentGet( splits[ 0 ], splits[ 2 ] )
+  return module.resourceSelect( splits[ 0 ], splits[ 2 ] )
 }
 
 var defaults = _strResolveAct.defaults = Object.create( _strResolve.defaults )
@@ -706,7 +704,7 @@ defaults.visited = null;
 
 //
 
-function componentGet( kind, name )
+function resourceSelect( kind, name )
 {
   let module = this;
   let will = module.will;
@@ -744,7 +742,12 @@ function componentGet( kind, name )
   if( pool[ name ] )
   result = pool[ name ];
   else
-  result = _.entitySelect( pool, name );
+  result = _.select
+  ({
+    container : pool,
+    query : name,
+    onDown : onDown,
+  });
 
   if( result === undefined )
   {
@@ -753,6 +756,24 @@ function componentGet( kind, name )
   }
 
   return result;
+
+  /* */
+
+  function onDown()
+  {
+    let it = this;
+    if( !it.isGlob )
+    return;
+    if(  )
+  }
+
+}
+
+resourceSelect.defaults =
+{
+  kind : kind,
+  name : name,
+
 }
 
 //
@@ -1144,7 +1165,7 @@ let Proto =
   strResolveMaybe : _.routineVectorize_functor( _strResolveMaybe ),
 
   _strResolveAct : _strResolveAct,
-  componentGet : componentGet,
+  resourceSelect : resourceSelect,
 
   strSplitShort : strSplitShort,
   strSplitLong : strSplitLong,
