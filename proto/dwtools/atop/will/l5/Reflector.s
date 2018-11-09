@@ -95,9 +95,9 @@ function _inheritMultiple( o )
 
   // _.arrayAppendOnceStrictly( o.visited, reflector.name );
   //
-  // reflector.inherit.map( ( ancestorName ) =>
+  // reflector.inherit.map( ( ancestor ) =>
   // {
-  //   reflector._inheritSingle({ visited : o.visited, ancestorName : ancestorName, defaultDst : true });
+  //   reflector._inheritSingle({ visited : o.visited, ancestor : ancestor, defaultDst : true });
   // });
 
   // let o2 = _.mapOnly( o, Parent.prototype._inheritMultiple.defaults );
@@ -132,33 +132,17 @@ function _inheritSingle( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+  let reflector2 = o.ancestor;
 
-  _.assert( o.ancestorName instanceof reflector.constructor );
+  // debugger;
+
+  _.routineOptions( _inheritSingle, arguments );
   _.assert( arguments.length === 1 );
   _.assert( reflector.formed === 1 );
-  _.routineOptions( _inheritSingle, arguments );
-
-  let reflector2 = o.ancestorName;
-
-  // let reflector2 = module[ reflector.MapName ][ o.ancestorName ];
-  // let reflector2 = module.strResolve({ subject : o.ancestorName, must : 1, defaultType : 'reflector' });
-  //
-  // if( reflector2.length === 1 )
-  // {
-  //   reflector2 = reflector2[ 0 ]
-  // }
-  // else
-  // {
-  //   for( let a = 0 ; a < reflector2.length ; a++ )
-  //   {
-  //     let o2 = _.mapExtend( null, o );
-  //     o2.ancestorName = reflector2[ a ];
-  //     reflector_inheritFrom( o2 );
-  //   }
-  // }
-
-  _.sure( _.objectIs( reflector2 ), () => 'Reflector ' + _.strQuote( o.ancestorName ) + ' does not exist' );
+  _.assert( reflector2 instanceof reflector.constructor, () => 'Expects reflector, but got', _.strTypeOf( reflector2 ) );
   _.assert( !!reflector2.formed );
+
+  // debugger;
 
   if( reflector2.formed < 2 )
   {
@@ -188,7 +172,7 @@ function _inheritSingle( o )
 
 _inheritSingle.defaults=
 {
-  ancestorName : null,
+  ancestor : null,
   visited : null,
   defaultDst : true,
 }
@@ -245,20 +229,47 @@ function _reflectMapForm( o )
   {
     let dst = map[ r ];
 
-    // if( !_.boolIs( dst ) )
-    // dst = module.pathResolve( module.strResolve( dst ) );
-
     if( !_.boolIs( dst ) )
-    dst = module.strResolve( dst );
-
-    if( module.strGetPrefix( r ) )
     {
-      let resolved = module.strResolveMaybe( r );
-      if( !_.errIs( resolved ) && !_.strIs( resolved ) && !( resolved instanceof will.Reflector ) )
+      dst = module.strResolve
+      ({
+        query : dst,
+        // must : 1,
+        // defaultPool : reflector.PoolName,
+        visited : o.visited,
+        current : reflector,
+      });
+      // debugger;
+    }
+
+    if( !module.strIsResolved( r ) )
+    {
+      let resolved = module.strResolve
+      ({
+        query : r,
+        // must : 1,
+        visited : o.visited,
+        current : reflector,
+        asArray : 1,
+        unwrappingSingle : 1,
+      });
+
+      if( !_.errIs( resolved ) && !_.strIs( resolved ) && !_.arrayIs( resolved ) && !( resolved instanceof will.Reflector ) )
       resolved = _.err( 'Source of reflects map was resolved to unexpected type', _.strTypeOf( resolved ) );
       if( _.errIs( resolved ) )
       throw _.err( 'Failed to form reflector', reflector.name, '\n', resolved );
-      if( _.strIs( resolved ) )
+
+      if( _.arrayIs( resolved ) )
+      {
+        delete map[ r ];
+        for( let p = 0 ; p < resolved.length ; p++ )
+        {
+          let rpath = resolved[ p ];
+          _.assert( _.strIs( rpath ) );
+          map[ rpath ] = dst;
+        }
+      }
+      else if( _.strIs( resolved ) )
       {
         delete map[ r ];
         map[ resolved ] = dst;
@@ -266,10 +277,11 @@ function _reflectMapForm( o )
       else if( resolved instanceof will.Reflector )
       {
         delete map[ r ];
-        reflector._inheritSingle({ visited : o.visited, ancestorName : resolved.name, defaultDst : dst });
+        reflector._inheritSingle({ visited : o.visited, ancestor : resolved.name, defaultDst : dst });
         _.sure( !!resolved.reflectMap );
         path.globMapExtend( map, resolved.reflectMap, dst );
       }
+
     }
   }
 
@@ -403,7 +415,7 @@ let Restricts =
 
 let Statics =
 {
-  TypeName : 'reflector',
+  PoolName : 'reflector',
   MapName : 'reflectorMap',
 }
 

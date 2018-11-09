@@ -348,8 +348,8 @@ function commandBuild( e )
   if( builds.length !== 1 )
   {
     if( builds.length === 0 )
-    throw _.errBriefly( 'To build please specify exactly one build, none satisfies passed arguments' );
-    throw _.errBriefly( 'To build please specify exactly one build' );
+    throw _.errBriefly( 'To build please specify exactly one build scenario, none satisfies passed arguments' );
+    throw _.errBriefly( 'To build please specify exactly one build scenario, ' + builds.length + ' satisfy(s) passed arguments' );
   }
 
   let run = new will.BuildRun({ module : module }).form();

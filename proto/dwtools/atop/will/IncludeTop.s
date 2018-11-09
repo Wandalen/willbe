@@ -22,8 +22,6 @@ if( typeof module !== 'undefined' )
   require( './l5/Step.s' );
   require( './l5/Submodule.s' );
 
-  require( './l6/OutFile.s' );
-
 }
 
 })();

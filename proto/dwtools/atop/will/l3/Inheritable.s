@@ -24,10 +24,10 @@ Self.shortName = 'Inheritable';
 // inter
 // --
 
-//
-
-function MakeFroEachCriterion( o )
+function MakeForEachCriterion( o )
 {
+  let Cls = this;
+
   _.assert( arguments.length === 1 );
   _.assert( _.mapIs( o ) );
   _.assert( _.objectIs( o.module ) );
@@ -36,19 +36,43 @@ function MakeFroEachCriterion( o )
   let result = [];
   let module = o.module;
   let will = module.will;
+  let done = 0;
 
-  let samples = _.eachSample( o.criterion, function( criterion, index )
+  // debugger;
+
+  if( o.criterion && _.mapKeys( o.criterion ).length > 0 )
   {
-    let o2 = _.mapExtend( null, o );
-    o2.criterion = criterion;
-    o2.name = o.name + '.' + index;
-    result.push( will.Reflector( o2 ).form1() );
-  })
+    // let samples = _.eachSample( o.criterion , function( criterion, index )
+    let samples = _.eachSample({ sets : o.criterion });
+    if( samples.length > 1 )
+    for( let index = 0 ; index < samples.length ; index++ )
+    {
+      let criterion = samples[ index ];
+      let o2 = _.mapExtend( null, o );
+      o2.criterion = criterion;
+      o2.name = o.name + '.' + index;
+      result.push( Cls( o2 ).form1() );
+      done += 1;
+    }
+  }
 
-  _.assert( samples.length >= 1 );
+  if( !done )
+  result = [ Cls( o ).form1() ];
+
+  _.assert( result.length >= 1 );
 
   return result;
 }
+
+//
+
+function OptionsFrom( o )
+{
+  _.assert( arguments.length === 1 );
+  return o;
+}
+
+//
 
 function finit()
 {
@@ -174,6 +198,13 @@ function form2()
 
   /* end */
 
+  if( inheritable.criterion )
+  for( let c in inheritable.criterion )
+  {
+    let crit = inheritable.criterion[ c ];
+    _.assert( _.primitiveIs( crit ), () => 'Criterion ' + c + ' of ' + inheritable.nickName + ' should be primitive, but is ' + _.strTypeOf( crit ) );
+  }
+
   inheritable.formed = 2;
   return inheritable;
 }
@@ -190,7 +221,7 @@ function _inheritForm( o )
   _.assert( _.arrayIs( inheritable.inherit ) );
   _.assert( o.ancestors === undefined );
 
-  _.arrayAppendOnceStrictly( o.visited, inheritable.name );
+  _.arrayAppendOnceStrictly( o.visited, inheritable );
 
   /* begin */
 
@@ -198,6 +229,8 @@ function _inheritForm( o )
   inheritable._inheritMultiple( o );
 
   /* end */
+
+  _.arrayRemoveElementOnceStrictly( o.visited, inheritable );
 
   inheritable.formed = 2;
   return inheritable;
@@ -217,38 +250,54 @@ function _inheritMultiple( o )
 
   /* begin */
 
-  o.ancestors.map( ( ancestorName ) =>
+  o.ancestors.map( ( ancestor ) =>
   {
 
-    _.assert( _.strIs( inheritable.TypeName ) );
-    _.assert( _.strIs( ancestorName ) );
+    _.assert( _.strIs( inheritable.PoolName ) );
+    _.assert( _.strIs( ancestor ) );
 
-    debugger;
+    // if( ancestor === 'reflect' )
+    // debugger;
 
     let ancestors = module.strResolve
     ({
-      subject : ancestorName,
-      must : 1,
-      defaultType : inheritable.TypeName,
+      query : ancestor,
+      // must : 1,
+      defaultPool : inheritable.PoolName,
+      visited : o.visited,
+      current : inheritable,
     });
+    // debugger;
+
+    if( _.mapIs( ancestors ) )
+    ancestors = _.mapVals( ancestors );
 
     if( ancestors.length === 1 )
     ancestors = ancestors[ 0 ];
 
     _.assert( _.arrayIs( ancestors ) || ancestors instanceof inheritable.constructor );
 
-    if( ancestors.length === 1 )
+    if( ancestors instanceof inheritable.constructor )
     {
-      let o2 = _.mapExtend( o );
-      o2.ancestorName = ancestors[ 0 ];
+      let o2 = _.mapExtend( null, o );
+      delete o2.ancestors;
+      o2.ancestor = ancestors;
+      inheritable._inheritSingle( o2 );
+    }
+    else if( ancestors.length === 1 )
+    {
+      let o2 = _.mapExtend( null, o );
+      delete o2.ancestors;
+      o2.ancestor = ancestors[ 0 ];
       inheritable._inheritSingle( o2 );
     }
     else
     {
       for( let a = 0 ; a < ancestors.length ; a++ )
       {
-        let o2 = _.mapExtend( o );
-        o2.ancestorName = ancestors[ a ];
+        let o2 = _.mapExtend( null, o );
+        delete o2.ancestors;
+        o2.ancestor = ancestors[ a ];
         inheritable._inheritSingle( o2 );
       }
     }
@@ -278,13 +327,13 @@ _inheritMultiple.defaults =
 //   let path = fileProvider.path;
 //   let logger = will.logger;
 //
-//   _.assert( _.strIs( o.ancestorName ) );
+//   _.assert( _.strIs( o.ancestor ) );
 //   _.assert( arguments.length === 1 );
 //   _.assert( inheritable.formed === 1 );
 //   _.assertRoutineOptions( _inheritSingle, arguments );
 //
-//   let inheritable2 = module[ inheritable.MapName ][ o.ancestorName ];
-//   _.sure( _.objectIs( inheritable2 ), () => inheritable.constructor.shortName + ' ' + _.strQuote( o.ancestorName ) + ' does not exist' );
+//   let inheritable2 = module[ inheritable.MapName ][ o.ancestor ];
+//   _.sure( _.objectIs( inheritable2 ), () => inheritable.constructor.shortName + ' ' + _.strQuote( o.ancestor ) + ' does not exist' );
 //   _.assert( !!inheritable2.formed );
 //
 //   if( inheritable2.formed !== 2 )
@@ -304,7 +353,7 @@ _inheritMultiple.defaults =
 //
 // _inheritSingle.defaults=
 // {
-//   ancestorName : null,
+//   ancestor : null,
 //   visited : null,
 // }
 
@@ -333,6 +382,27 @@ function form3()
 
 //
 
+function criterionSattisfy( criterion2 )
+{
+  let inheritable = this;
+  let criterion1 = inheritable.criterion;
+
+  if( criterion1 === null )
+  return true;
+
+  for( let c in criterion2 )
+  {
+    if( criterion1[ c ] === undefined )
+    continue;
+    if( criterion1[ c ] !== criterion2[ c ] )
+    return false;
+  }
+
+  return true;
+}
+
+//
+
 function infoExport()
 {
   let inheritable = this;
@@ -340,7 +410,7 @@ function infoExport()
   let fields = inheritable.dataExport();
 
   result += inheritable.constructor.shortName + ' ' + inheritable.name + '\n';
-  result += _.toStr( fields, { wrap : 0, levels : 4, multiline : 1 } ) + '\n';
+  result += _.toStr( fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '' } ) + '\n';
 
   return result;
 }
@@ -415,8 +485,11 @@ let Restricts =
 
 let Statics =
 {
-  MakeFroEachCriterion : MakeFroEachCriterion,
+  MakeForEachCriterion : MakeForEachCriterion,
+  OptionsFrom : OptionsFrom,
+
   MapName : null,
+  PoolName : null,
 }
 
 let Forbids =
@@ -437,7 +510,8 @@ let Proto =
 
   // inter
 
-  MakeFroEachCriterion : MakeFroEachCriterion,
+  MakeForEachCriterion : MakeForEachCriterion,
+  OptionsFrom : OptionsFrom,
 
   finit : finit,
   init : init,
@@ -451,6 +525,8 @@ let Proto =
   _inheritMultiple : _inheritMultiple,
 
   form3 : form3,
+
+  criterionSattisfy : criterionSattisfy,
 
   infoExport : infoExport,
   dataExport : dataExport,

@@ -215,6 +215,10 @@ function predefinedForm()
         excludeAny : [ /(^|\/)-/ ],
       }
     },
+    criterion :
+    {
+      predefined : 1,
+    },
     predefined : 1,
     module : module,
   }).form1();
@@ -232,6 +236,11 @@ function predefinedForm()
         excludeAny : [ /\.release($|\.|\/)/i ],
       }
     },
+    criterion :
+    {
+      debug : 1,
+      predefined : 1,
+    },
     predefined : 1,
     module : module,
   }).form1();
@@ -248,6 +257,11 @@ function predefinedForm()
       {
         excludeAny : [ /\.debug($|\.|\/)/i, /\.test($|\.|\/)/i, /\.experiment($|\.|\/)/i ],
       }
+    },
+    criterion :
+    {
+      debug : 0,
+      predefined : 1,
     },
     predefined : 1,
     module : module,
@@ -563,7 +577,7 @@ function _select_body( o )
 
   }
 
-  debugger;
+  // debugger;
 
   if( o.resource === 'export' )
   elements = elements.filter( ( element ) => element.criterion && element.criterion.export );
@@ -599,6 +613,86 @@ defaults.resource = 'export';
 // resolver
 // --
 
+//
+
+function strSplitShort( srcStr )
+{
+  let module = this;
+  _.assert( !_.strHas( srcStr, '/' ) );
+  let result = _.strIsolateBeginOrNone( srcStr, '::' );
+  return result;
+}
+
+//
+
+// function strSplitLong( srcStr )
+// {
+//   let module = this;
+//   let splits = _.strSplit( srcStr, '/' );
+//
+//   debugger; xxx
+//
+//   let result = []
+//   for( let s = 0 ; s < splits.length ; s++ )
+//   {
+//     let split = splits[ s ];
+//     if( split === '/' )
+//     continue;
+//     result.push( module.strSplitShort( split ) );
+//   }
+//
+//   return result;
+// }
+
+//
+
+function _strSplit( o )
+{
+  let module = this;
+  let will = module.will;
+  let result;
+
+  _.assertRoutineOptions( _strSplit, arguments );
+  _.assert( !_.strHas( o.query, '/' ) );
+  _.sure( _.strIs( o.query ), 'Expects string, but got', _.strTypeOf( o.query ) );
+
+  let splits = module.strSplitShort( o.query );
+
+  if( !splits[ 0 ] && o.defaultPool )
+  {
+    splits = [ o.defaultPool, '::', o.query ]
+  }
+
+  return splits;
+}
+
+var defaults = _strSplit.defaults = Object.create( null )
+
+defaults.query = null
+defaults.defaultPool = null;
+
+//
+
+function strGetPrefix( srcStr )
+{
+  let module = this;
+  let splits = module.strSplitShort( srcStr );
+  if( !splits[ 0 ] )
+  return false;
+  if( !_.arrayHas( module.KnownPrefixes, splits[ 0 ] ) )
+  return false;
+  return splits[ 0 ];
+}
+
+//
+
+function strIsResolved( srcStr )
+{
+  return !_.strHas( srcStr, '::' );
+}
+
+//
+
 function _pathResolve( filePath )
 {
   let module = this;
@@ -615,7 +709,7 @@ function _strResolve_pre( routine, args )
 {
   let o = args[ 0 ];
   if( _.strIs( o ) )
-  o = { subject : o }
+  o = { query : o }
 
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
@@ -623,6 +717,61 @@ function _strResolve_pre( routine, args )
 
   return o;
 }
+
+//
+
+function _strResolveMaybe_body( o )
+{
+  let module = this;
+  let will = module.will;
+
+  // if( !o.visited )
+  // o.visited = [];
+
+  let result = module._resourceSelect( o );
+
+  if( o.unwrappingPath && o.hasPath )
+  {
+    _.assert( _.mapIs( result ) || _.objectIs( result ), 'not implemented' );
+    if( _.mapIs( result ) )
+    result = _.filter( result, ( e ) => e instanceof will.PathObj ? e.path : e )
+    else if( result instanceof will.PathObj )
+    result = result.path;
+  }
+
+  if( o.unwrappingSingle )
+  if( _.mapIs( result ) )
+  {
+    if( _.mapKeys( result ).length === 1 )
+    result = _.mapVals( result )[ 0 ];
+  }
+  else if( _.arrayIs( result ) )
+  {
+    if( result.length === 1 )
+    result = result[ 0 ];
+  }
+
+  if( o.asArray && _.mapIs( result ) )
+  result = _.mapVals( result );
+
+  return result;
+}
+
+_strResolveMaybe_body.defaults =
+{
+  // context : null,
+  query : null,
+  defaultPool : null,
+  // must : 0,
+  visited : null,
+  current : null,
+  unwrappingPath : 1,
+  unwrappingSingle : 1,
+  asArray : 1,
+  hasPath : null,
+}
+
+let _strResolveMaybe = _.routineFromPreAndBody( _strResolve_pre, _strResolveMaybe_body );
 
 //
 
@@ -639,72 +788,13 @@ function _strResolve_body( o )
   return result;
 }
 
-_strResolve_body.defaults =
-{
-  context : null,
-  subject : null,
-  defaultType : null,
-  must : 0,
-}
+_strResolve_body.defaults = Object.create( _strResolveMaybe.body.defaults );
 
 let _strResolve = _.routineFromPreAndBody( _strResolve_pre, _strResolve_body );
 
 //
 
-function _strResolveMaybe_body( o )
-{
-  let module = this;
-  let will = module.will;
-
-  if( !o.visited )
-  o.visited = [];
-
-  let result = module._strResolveAct( o );
-
-  return result;
-}
-
-_strResolveMaybe_body.defaults = Object.create( _strResolve.body.defaults );
-
-let _strResolveMaybe = _.routineFromPreAndBody( _strResolve_pre, _strResolveMaybe_body );
-
-//
-
-function _strResolveAct( o )
-{
-  let module = this;
-  let will = module.will;
-  let result;
-
-  _.assertRoutineOptions( _strResolveAct, arguments );
-  _.sure( _.strIs( o.subject ), 'Can resolve only string, but got', _.strTypeOf( o.subject ) );
-
-  let splits = module.strSplitShort( o.subject );
-
-  if( !splits[ 0 ] && o.defaultType )
-  {
-    splits = [ o.defaultType, '::', o.subject ]
-  }
-
-  if( !splits[ 0 ] )
-  {
-    debugger;
-    if( o.must )
-    return _.ErrorLooking( 'Cant resolve', o.subject );
-    else
-    return o.subject;
-  }
-
-  return module.resourceSelect( splits[ 0 ], splits[ 2 ] )
-}
-
-var defaults = _strResolveAct.defaults = Object.create( _strResolve.defaults )
-
-defaults.visited = null;
-
-//
-
-function resourceSelect( kind, name )
+function _resourceSelect( o )
 {
   let module = this;
   let will = module.will;
@@ -713,41 +803,33 @@ function resourceSelect( kind, name )
   let logger = will.logger;
   let result;
 
-  _.assert( arguments.length === 2 );
-  _.assert( _.strIs( kind ) );
-  _.assert( _.strIs( name ) );
+  _.assert( arguments.length === 1 );
+  _.assertRoutineOptions( _resourceSelect, arguments );
 
-  if( !kind || !_.arrayHas( module.KnownPrefixes, kind ) )
-  return o.src;
+  // if( _.strHas( o.query, 'reflect.proto' ) )
+  // debugger;
 
-  let pool = null;
+  try
+  {
 
-  if( kind === 'path' )
-  pool = module.pathMap;
-  else if( kind === 'reflector' )
-  pool = module.reflectorMap;
-  else if( kind === 'submodule' )
-  pool = module.submoduleMap;
-  else if( kind === 'step' )
-  pool = module.stepMap;
-  else if( kind === 'build' )
-  pool = module.buildMap;
+    result = _.select
+    ({
+      container : module,
+      query : o.query,
+      onUpBegin : onUpBegin,
+      onUpEnd : onUpEnd,
+      missingAction : 'error',
+    });
 
-  if( !pool )
+  }
+  catch( err )
   {
     debugger;
-    return _.ErrorLooking( 'Unknown type of resource', kind, _.strQuote( name ) );
+    if( o.current && o.current.nickName )
+    throw _.err( 'Failed to resolve for', o.current.nickName, '\n', err );
+    else
+    throw _.err( err );
   }
-
-  if( pool[ name ] )
-  result = pool[ name ];
-  else
-  result = _.select
-  ({
-    container : pool,
-    query : name,
-    onDown : onDown,
-  });
 
   if( result === undefined )
   {
@@ -759,65 +841,88 @@ function resourceSelect( kind, name )
 
   /* */
 
-  function onDown()
+  function onUpBegin()
   {
     let it = this;
-    if( !it.isGlob )
+
+    if( !it.query )
     return;
-    if(  )
+
+    it.queryParsed = module._strSplit({ query : it.query, defaultPool : o.defaultPool });
+    it.query = it.queryParsed[ 2 ];
+
+    if( it.queryParsed[ 0 ] === 'path' && o.hasPath === null )
+    o.hasPath = true;
+
+    let pool = module.poolFor( it.queryParsed[ 0 ] );
+
+    // if( _.strHas( o.query, 'reflect.proto' ) )
+    // debugger;
+
+    if( !pool )
+    {
+      debugger;
+      throw _.ErrorLooking( 'Unknown type of resource, no pool for such', kind, _.strQuote( name ) );
+    }
+
+    it.src = pool;
   }
 
-}
+  /* */
 
-resourceSelect.defaults =
-{
-  kind : kind,
-  name : name,
-
-}
-
-//
-
-function strSplitShort( srcStr )
-{
-  let module = this;
-  let result = _.strIsolateBeginOrNone( srcStr, '::' );
-  return result;
-}
-
-//
-
-function strSplitLong( srcStr )
-{
-  let module = this;
-  let splits = _.strSplit( srcStr, '/' );
-
-  debugger; xxx
-
-  let result = []
-  for( let s = 0 ; s < splits.length ; s++ )
+  function onUpEnd()
   {
-    let split = splits[ s ];
-    if( split === '/' )
-    continue;
-    result.push( module.strSplitShort( split ) );
+    let it = this;
+
+    if( !it.down || !it.down.isGlob )
+    return;
+
+    // debugger;
+
+    if( o.current && o.current.criterion )
+    {
+      if( !it.src.criterionSattisfy( o.current.criterion ) )
+      {
+        it.looking = false;
+        it.writingDown = false;
+      }
+    }
+
+    // debugger;
   }
 
-  return result;
 }
+
+var defaults = _resourceSelect.defaults = Object.create( _strResolve.defaults )
+
+defaults.visited = null;
 
 //
 
-function strGetPrefix( srcStr )
+function poolFor( kind )
 {
   let module = this;
-  let splits = module.strSplitShort( srcStr );
-  if( !splits[ 0 ] )
-  return false;
-  if( !_.arrayHas( module.KnownPrefixes, splits[ 0 ] ) )
-  return false;
-  return splits[ 0 ];
+  let pool;
+
+  _.assert( arguments.length === 1 );
+
+  if( !kind || !_.arrayHas( module.KnownPrefixes, kind ) )
+  throw _.ErrorLooking( 'Unknown kind of resource, no pool for such', kind );
+
+  if( kind === 'path' )
+  pool = module.pathObjMap;
+  else if( kind === 'reflector' )
+  pool = module.reflectorMap;
+  else if( kind === 'submodule' )
+  pool = module.submoduleMap;
+  else if( kind === 'step' )
+  pool = module.stepMap;
+  else if( kind === 'build' )
+  pool = module.buildMap;
+
+  return pool
 }
+
 
 // --
 // exporter
@@ -1155,6 +1260,12 @@ let Proto =
 
   // resolver
 
+  strSplitShort : strSplitShort,
+  // strSplitLong : strSplitLong,
+  _strSplit : _strSplit,
+  strGetPrefix : strGetPrefix,
+  strIsResolved : strIsResolved,
+
   _pathResolve : _pathResolve,
   pathResolve : _.routineVectorize_functor( _pathResolve ),
 
@@ -1164,12 +1275,9 @@ let Proto =
   _strResolveMaybe : _strResolveMaybe,
   strResolveMaybe : _.routineVectorize_functor( _strResolveMaybe ),
 
-  _strResolveAct : _strResolveAct,
-  resourceSelect : resourceSelect,
-
-  strSplitShort : strSplitShort,
-  strSplitLong : strSplitLong,
-  strGetPrefix : strGetPrefix,
+  // _strResolveAct : _strResolveAct,
+  _resourceSelect : _resourceSelect,
+  poolFor : poolFor,
 
   // exporter
 

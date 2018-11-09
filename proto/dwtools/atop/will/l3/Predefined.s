@@ -46,7 +46,13 @@ function stepRoutineReflect( run )
   _.assert( arguments.length === 2 );
 
   let opts = _.mapExtend( null, step.opts );
-  opts.reflector = module.strResolve( opts.reflector );
+  // opts.reflector = module.strResolve( opts.reflector );
+  opts.reflector = module.strResolve
+  ({
+    query : opts.reflector,
+    defaultPool : 'reflector',
+    current : step,
+  });
 
   _.sure( opts.reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', step.opts )
 
@@ -188,8 +194,6 @@ let Extend =
 
   stepRoutineReflect : stepRoutineReflect,
   stepRoutineExport : stepRoutineExport,
-
-
 
 }
 

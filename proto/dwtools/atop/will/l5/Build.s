@@ -134,7 +134,15 @@ function stepsEach( onEach )
 
   function inElement( step )
   {
-    step = module.strResolve( step );
+    // debugger; xxx
+    // step = module.strResolve( step );
+    step = module.strResolve
+    ({
+      query : step,
+      defaultPool : 'step',
+      current : build,
+    });
+
     _.assert( step instanceof will.Step || step instanceof will.Build, () => 'Cant find step ' + arguments[ 0 ] );
     let it = Object.create( null );
     it.element = step;
@@ -254,6 +262,7 @@ let Restricts =
 let Statics =
 {
   MapName : 'buildMap',
+  PoolName : 'build',
 }
 
 let Forbids =

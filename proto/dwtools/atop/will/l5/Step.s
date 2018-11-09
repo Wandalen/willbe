@@ -55,13 +55,17 @@ function _inheritSingle( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( _.strIs( o.ancestorName ) );
+  if( _.strIs( o.ancestor ) )
+  o.ancestor = module[ step.MapName ][ o.ancestor ];
+
+  _.assert( o.ancestor instanceof step.constructor, () => 'Expects ' + step.constructor.shortName + ' but got ' + _.strTypeOf( o.ancestor ) );
   _.assert( arguments.length === 1 );
   _.assert( step.formed >= 1 ); /* xxx */
   _.assertRoutineOptions( _inheritSingle, arguments );
 
-  let step2 = module.stepMap[ o.ancestorName ];
-  _.sure( _.objectIs( step2 ), () => 'Step ' + _.strQuote( o.ancestorName ) + ' does not exist' );
+  // let step2 = module.stepMap[ o.ancestor ];
+  // _.sure( _.objectIs( step2 ), () => 'Step ' + _.strQuote( o.ancestor ) + ' does not exist' );
+  let step2 = o.ancestor;
   _.assert( !!step2.formed );
 
   if( step2.formed < 2 )
@@ -80,7 +84,7 @@ function _inheritSingle( o )
 
 _inheritSingle.defaults=
 {
-  ancestorName : null,
+  ancestor : null,
   visited : null,
 }
 
@@ -109,7 +113,7 @@ function form3()
 
   /* end */
 
-  _.assert( _.routineIs( step.stepRoutine ), () => 'Step ' + step.name + ' does not have stepRoutine' );
+  _.assert( _.routineIs( step.stepRoutine ), () => step.nickName + ' does not have stepRoutine' );
 
   step.formed = 3;
   return step;
@@ -178,6 +182,7 @@ let Restricts =
 let Statics =
 {
   MapName : 'stepMap',
+  PoolName : 'step',
 }
 
 let Forbids =

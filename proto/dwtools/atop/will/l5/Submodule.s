@@ -107,6 +107,7 @@ let Restricts =
 let Statics =
 {
   MapName : 'submoduleMap',
+  PoolName : 'submodule',
 }
 
 let Forbids =
