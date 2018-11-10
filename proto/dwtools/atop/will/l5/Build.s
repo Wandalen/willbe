@@ -34,13 +34,19 @@ function _inheritSingle( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( _.strIs( o.buildName ) );
+  if( _.strIs( o.ancestor ) )
+  o.ancestor = module[ module.MapName ][ o.ancestor ];
+  let build2 = o.ancestor;
+  _.assert( !!build2.formed );
+  _.assert( o.ancestor instanceof module.constructor, () => 'Expects ' + module.constructor.shortName + ' but got ' + _.strTypeOf( o.ancestor ) );
+
+  // _.assert( _.strIs( o.buildName ) );
   _.assert( arguments.length === 1 );
   _.assert( build.formed === 1 );
   _.assertRoutineOptions( _inheritSingle, arguments );
 
-  let build2 = module.buildMap[ o.buildName ];
-  _.sure( _.objectIs( build2 ), () => 'Build ' + _.strQuote( o.buildName ) + ' does not exist' );
+  // let build2 = module.buildMap[ o.buildName ];
+  // _.sure( _.objectIs( build2 ), () => 'Build ' + _.strQuote( o.buildName ) + ' does not exist' );
   _.assert( !!build2.formed );
 
   if( build2.formed !== 2 )
@@ -97,9 +103,8 @@ function form3()
     }
   });
 
-  build.default = build.default ? 1 : 0;
-
-  _.assert( build.default === 0 || build.default === 1 );
+  if( build.criterion && build.criterion.default !== undefined )
+  build.criterion.default = build.criterion.default ? 1 : 0;
 
   /* end */
 
@@ -238,7 +243,7 @@ let Composes =
   criterion : null,
   steps : null,
 
-  default : null,
+  // default : null,
   filesPath : null,
   entryPath : null,
 

@@ -57,16 +57,16 @@ function _inheritSingle( o )
 
   if( _.strIs( o.ancestor ) )
   o.ancestor = module[ step.MapName ][ o.ancestor ];
-
+  let step2 = o.ancestor;
+  _.assert( !!step2.formed );
   _.assert( o.ancestor instanceof step.constructor, () => 'Expects ' + step.constructor.shortName + ' but got ' + _.strTypeOf( o.ancestor ) );
+
   _.assert( arguments.length === 1 );
   _.assert( step.formed >= 1 ); /* xxx */
   _.assertRoutineOptions( _inheritSingle, arguments );
 
   // let step2 = module.stepMap[ o.ancestor ];
   // _.sure( _.objectIs( step2 ), () => 'Step ' + _.strQuote( o.ancestor ) + ' does not exist' );
-  let step2 = o.ancestor;
-  _.assert( !!step2.formed );
 
   if( step2.formed < 2 )
   {
@@ -119,35 +119,35 @@ function form3()
   return step;
 }
 
+// //
 //
-
-function optionsExport()
-{
-  let step = this;
-  let module = step.module;
-  let inf = step.inf;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-
-  let result = step.dataExprot();
-  // let result = _.mapOnly( step, { inherit : null, filePath : null } );
-
-  result.inf = inf;
-  result.module = module;
-  result.name = step.name;
-
-  // let o2 = _.mapOnly( step, { inherit : null, filePath : null } );
-  // o2.criterion = step.criterion;
-  // o2.inf = inf;
-  // o2.module = module;
-  // o2.name = k;
-
-  xxx
-
-  return result;
-}
+// function optionsExport()
+// {
+//   let step = this;
+//   let module = step.module;
+//   let inf = step.inf;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//
+//   let result = step.dataExprot();
+//   // let result = _.mapOnly( step, { inherit : null, filePath : null } );
+//
+//   result.inf = inf;
+//   result.module = module;
+//   result.name = step.name;
+//
+//   // let o2 = _.mapOnly( step, { inherit : null, filePath : null } );
+//   // o2.criterion = step.criterion;
+//   // o2.inf = inf;
+//   // o2.module = module;
+//   // o2.name = k;
+//
+//   xxx
+//
+//   return result;
+// }
 
 // --
 // relations
@@ -168,7 +168,7 @@ let Aggregates =
 {
   name : null,
   stepRoutine : null,
-  predefined : 0,
+  // predefined : 0,
 }
 
 let Associates =
@@ -207,7 +207,7 @@ let Proto =
   _inheritSingle : _inheritSingle,
   form3 : form3,
 
-  optionsExport : optionsExport,
+  // optionsExport : optionsExport,
 
   // relation
 

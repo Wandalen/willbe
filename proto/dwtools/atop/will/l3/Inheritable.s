@@ -494,6 +494,8 @@ let Statics =
 
 let Forbids =
 {
+  default : 'default',
+  predefined : 'predefined',
 }
 
 let Accessors =

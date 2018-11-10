@@ -191,25 +191,31 @@ function predefinedForm()
   ({
     name : 'reflect',
     stepRoutine : will.Predefined.stepRoutineReflect,
-    predefined : 1,
     module : module,
+    criterion :
+    {
+      predefined : 1,
+    }
   }).form();
 
   new will.Step
   ({
     name : 'export',
     stepRoutine : will.Predefined.stepRoutineExport,
-    predefined : 1,
     module : module,
+    criterion :
+    {
+      predefined : 1,
+    }
   }).form();
 
   new will.Reflector
   ({
-    name : 'default.common',
+    name : 'predefined.common',
     srcFilter :
     {
       // prefixPath : './proto',
-      basePath : '.',
+      // basePath : '.',
       maskAll :
       {
         excludeAny : [ /(^|\/)-/ ],
@@ -219,14 +225,14 @@ function predefinedForm()
     {
       predefined : 1,
     },
-    predefined : 1,
+    // predefined : 1,
     module : module,
   }).form1();
 
   new will.Reflector
   ({
-    name : 'default.debug',
-    // inherit : [ 'default.common' ],
+    name : 'predefined.debug',
+    // inherit : [ 'predefined.common' ],
     srcFilter :
     {
       // prefixPath : './proto',
@@ -241,14 +247,14 @@ function predefinedForm()
       debug : 1,
       predefined : 1,
     },
-    predefined : 1,
+    // predefined : 1,
     module : module,
   }).form1();
 
   new will.Reflector
   ({
-    name : 'default.release',
-    // inherit : [ 'default.common' ],
+    name : 'predefined.release',
+    // inherit : [ 'predefined.common' ],
     srcFilter :
     {
       // prefixPath : './proto',
@@ -263,12 +269,12 @@ function predefinedForm()
       debug : 0,
       predefined : 1,
     },
-    predefined : 1,
+    // predefined : 1,
     module : module,
   }).form1();
 
 /*
-  .default.common :
+  .predefined.common :
     srcFilter :
       prefixPath : './proto'
       basePath : '.'
@@ -276,15 +282,15 @@ function predefinedForm()
         excludeAny :
         - !!js/regexp '/(^|\/)-/'
 
-  .default.debug :
-    inherit : .default.common
+  .predefined.debug :
+    inherit : .predefined.common
     srcFilter :
       maskAll :
         excludeAny :
         - !!js/regexp '/\.release($|\.|\/)/i'
 
-  .default.release :
-    inherit : .default.common
+  .predefined.release :
+    inherit : .predefined.common
     srcFilter :
       maskAll :
         excludeAny :
@@ -311,6 +317,8 @@ function inFilesLoad( o )
   _.assert( module.inFileArray.length === 0, 'not tested' );
 
   /* */
+
+  // debugger;
 
   if( !module.inFileWithRoleMap.single )
   {
@@ -488,7 +496,7 @@ function _nickNameGet()
 iii : implement name glob filtering
 */
 
-function _select_pre( routine, args )
+function _buildsSelect_pre( routine, args )
 {
   let module = this;
 
@@ -514,15 +522,17 @@ function _select_pre( routine, args )
 
 //
 
-function _select_body( o )
+function _buildsSelect_body( o )
 {
   let module = this;
   let elements;
 
   elements = module.buildMap;
 
-  _.assertRoutineOptions( _select_body, arguments );
+  _.assertRoutineOptions( _buildsSelect_body, arguments );
   _.assert( arguments.length === 1 );
+
+  // debugger;
 
   if( o.name )
   {
@@ -544,36 +554,39 @@ function _select_body( o )
     _.assert( _.objectIs( o.criterion ), 'not tested' );
     _.assert( !o.name, 'not tested' );
 
-    let filter = o.criterion;
+    elements = filterWith( elements, o.criterion );
 
-    if( hasMapFilter )
-    {
-
-      filter = function filter( build, k, c )
-      {
-        if( build.criterion === null && Object.keys( o.criterion ).length )
-        return;
-        let satisfied = _.mapSatisfy
-        ({
-          template : o.criterion,
-          src : build.criterion,
-          levels : 1,
-        });
-        if( satisfied )
-        return build;
-      }
-
-    }
-
-    // elements = _.mapVals( _.entityFilter( elements, filter ) );
-    elements = _.entityFilter( elements, filter );
+    // let filter = o.criterion;
+    //
+    // if( hasMapFilter )
+    // {
+    //
+    //   filter = function filter( build, k, c )
+    //   {
+    //     if( build.criterion === null && Object.keys( o.criterion ).length )
+    //     return;
+    //     let satisfied = _.mapSatisfy
+    //     ({
+    //       template : o.criterion,
+    //       src : build.criterion,
+    //       levels : 1,
+    //     });
+    //     if( satisfied )
+    //     return build;
+    //   }
+    //
+    // }
+    //
+    // // elements = _.mapVals( _.entityFilter( elements, filter ) );
+    // elements = _.entityFilter( elements, filter );
 
   }
   else if( _.objectIs( o.criterion ) && Object.keys( o.criterion ).length === 0 && !o.name && o.preffering === 'default' )
   {
 
     // elements = _.mapVals( _.entityFilter( elements, { default : 1 } ) );
-    elements = _.entityFilter( elements, { default : 1 } );
+    // elements = _.entityFilter( elements, { default : 1 } );
+    elements = filterWith( elements, { default : 1 } );
 
   }
 
@@ -585,9 +598,44 @@ function _select_body( o )
   elements = elements.filter( ( element ) => !element.criterion || !element.criterion.export );
 
   return elements;
+
+  /* */
+
+  function filterWith( elements, filter )
+  {
+
+    _.assert( _.objectIs( filter ), 'not tested' );
+    _.assert( !o.name, 'not tested' );
+
+    if( _.objectIs( filter ) && Object.keys( filter ).length > 0 )
+    {
+
+      let template = filter;
+      filter = function filter( build, k, c )
+      {
+        if( build.criterion === null && Object.keys( template ).length )
+        return;
+
+        let satisfied = _.mapSatisfy
+        ({
+          template : template,
+          src : build.criterion,
+          levels : 1,
+        });
+        if( satisfied )
+        return build;
+      }
+
+    }
+
+    elements = _.entityFilter( elements, filter );
+
+    return elements;
+  }
+
 }
 
-_select_body.defaults =
+_buildsSelect_body.defaults =
 {
   resource : null,
   name : null,
@@ -595,18 +643,18 @@ _select_body.defaults =
   preffering : 'default',
 }
 
-let _select = _.routineFromPreAndBody( _select_pre, _select_body );
+let _buildsSelect = _.routineFromPreAndBody( _buildsSelect_pre, _buildsSelect_body );
 
 //
 
-let buildsFor = _.routineFromPreAndBody( _select_pre, _select_body );
-var defaults = buildsFor.defaults;
+let buildsSelect = _.routineFromPreAndBody( _buildsSelect_pre, _buildsSelect_body );
+var defaults = buildsSelect.defaults;
 defaults.resource = 'build';
 
 //
 
-let exportsFor = _.routineFromPreAndBody( _select_pre, _select_body );
-var defaults = exportsFor.defaults;
+let exportsSelect = _.routineFromPreAndBody( _buildsSelect_pre, _buildsSelect_body );
+var defaults = exportsSelect.defaults;
 defaults.resource = 'export';
 
 // --
@@ -941,8 +989,8 @@ function infoExport()
   result += module.infoExportPaths( module.pathMap );
   result += module.infoExportReflectors( module.reflectorMap );
   result += module.infoExportSteps( module.stepMap );
-  result += module.infoExportBuilds( module.buildsFor({ preffering : 'more' }) );
-  result += module.infoExportExports( module.exportsFor({ preffering : 'more' }) );
+  result += module.infoExportBuilds( module.buildsSelect({ preffering : 'more' }) );
+  result += module.infoExportExports( module.exportsSelect({ preffering : 'more' }) );
 
   return result;
 }
@@ -996,7 +1044,7 @@ function infoExportSteps( steps )
   for( let b in steps )
   {
     let step = steps[ b ];
-    if( step.predefined )
+    if( step.criterion && step.criterion.predefined )
     continue;
     result += step.infoExport();
     result += '\n';
@@ -1125,7 +1173,7 @@ function dataExportSteps()
   for( let e in module.stepMap )
   {
     let element = module.stepMap[ e ];
-    if( element.predefined )
+    if( element.criterion && element.criterion.predefined )
     continue;
     result[ e ] = element.dataExport();
   }
@@ -1254,9 +1302,9 @@ let Proto =
 
   // select
 
-  _select : _select,
-  buildsFor : buildsFor,
-  exportsFor : exportsFor,
+  _buildsSelect : _buildsSelect,
+  buildsSelect : buildsSelect,
+  exportsSelect : exportsSelect,
 
   // resolver
 

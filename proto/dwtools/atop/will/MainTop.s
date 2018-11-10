@@ -247,7 +247,7 @@ function commandBuildsList( e )
   function act( module )
   {
     let logger = will.logger;
-    let builds = module.buildsFor
+    let builds = module.buildsSelect
     ({
       name : e.subject,
       criterion : e.propertiesMap,
@@ -270,7 +270,7 @@ function commandExportsList( e )
   function act( module )
   {
     let logger = will.logger;
-    let builds = module.exportsFor
+    let builds = module.exportsSelect
     ({
       name : e.subject,
       criterion : e.propertiesMap,
@@ -334,7 +334,7 @@ function commandBuild( e )
   will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().inFilesLoad();
   let module = will.currentModule;
 
-  let builds = module.buildsFor( e.subject, e.propertiesMap );
+  let builds = module.buildsSelect( e.subject, e.propertiesMap );
 
   logger.up();
   if( logger.verbosity >= 2 )
@@ -389,7 +389,7 @@ function commandExport( e )
   will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().inFilesLoad();
   let module = will.currentModule;
 
-  let exports = module.exportsFor( e.subject, e.propertiesMap );
+  let exports = module.exportsSelect( e.subject, e.propertiesMap );
 
   logger.up();
   if( logger.verbosity >= 2 )
@@ -476,7 +476,7 @@ function commandWith( e )
   .inFilesLoad();
 
   if( module.inFileArray.length === 0 )
-  throw _.errBriefly( 'Found no will file near', _.strQuote( module.dirPath ) );
+  throw _.errBriefly( 'Found no will-file at', _.strQuote( module.dirPath ) );
 
   return ca.proceedAct
   ({
@@ -530,7 +530,7 @@ function commandEach( e )
     ;
 
     if( module.inFileArray.length === 0 )
-    throw _.errBriefly( 'Found no will file near', _.strQuote( file.absolute ) );
+    throw _.errBriefly( 'Found no will-file at', _.strQuote( file.absolute ) );
 
     let result = ca.proceedAct
     ({
