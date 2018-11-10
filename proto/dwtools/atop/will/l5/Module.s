@@ -312,6 +312,7 @@ function inFilesLoad( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+  let loadedOuter = 0;
 
   _.routineOptions( inFilesLoad, arguments );
   _.assert( module.inFileArray.length === 0, 'not tested' );
@@ -327,48 +328,18 @@ function inFilesLoad( o )
     ({
       role : 'single',
       module : module,
-      filePath : path.resolve( module.dirPath, module.prefixPathForRole( 'single' )  ),
-    }).form1();
-
-    if( module.inFileWithRoleMap.single.exists() )
-    module.inFileWithRoleMap.single.form2();
-    else
-    module.inFileWithRoleMap.single.finit();
-
-  }
-
-  if( !module.inFileWithRoleMap.single )
-  {
-
-    new will.InFile
-    ({
-      role : 'single',
-      module : module,
       filePath : path.resolve( module.dirPath, '..', path.fullName( module.dirPath ) + module.prefixPathForRole( 'single' ) ),
     }).form1();
 
     if( module.inFileWithRoleMap.single.exists() )
-    module.inFileWithRoleMap.single.form2();
+    {
+      loadedOuter = 1;
+      module.inFileWithRoleMap.single.form2();
+    }
     else
-    module.inFileWithRoleMap.single.finit();
-
-  }
-
-  /* */
-
-  if( !module.inFileWithRoleMap.import )
-  {
-    new will.InFile
-    ({
-      role : 'import',
-      module : module,
-      filePath : path.resolve( module.dirPath, module.prefixPathForRole( 'import' )  ),
-    }).form1();
-
-    if( module.inFileWithRoleMap.import.exists() )
-    module.inFileWithRoleMap.import.form2();
-    else
-    module.inFileWithRoleMap.import.finit();
+    {
+      module.inFileWithRoleMap.single.finit();
+    }
 
   }
 
@@ -383,9 +354,87 @@ function inFilesLoad( o )
     }).form1();
 
     if( module.inFileWithRoleMap.import.exists() )
-    module.inFileWithRoleMap.import.form2();
+    {
+      loadedOuter = 1;
+      module.inFileWithRoleMap.import.form2();
+    }
     else
-    module.inFileWithRoleMap.import.finit();
+    {
+      module.inFileWithRoleMap.import.finit();
+    }
+
+  }
+
+  if( !module.inFileWithRoleMap.export )
+  {
+
+    new will.InFile
+    ({
+      role : 'export',
+      module : module,
+      filePath : path.resolve( module.dirPath, '..', path.fullName( module.dirPath ) + module.prefixPathForRole( 'export' ) ),
+    }).form1();
+
+    if( module.inFileWithRoleMap.export.exists() )
+    {
+      loadedOuter = 1;
+      module.inFileWithRoleMap.export.form2();
+    }
+    else
+    {
+      module.inFileWithRoleMap.export.finit();
+    }
+
+  }
+
+  /* - */
+
+  if( loadedOuter )
+  return module;
+
+  if( !module.inFileWithRoleMap.single )
+  {
+
+    new will.InFile
+    ({
+      role : 'single',
+      module : module,
+      filePath : path.resolve( module.dirPath, module.prefixPathForRole( 'single' )  ),
+    }).form1();
+
+    if( module.inFileWithRoleMap.single.exists() )
+    {
+      loadedInner = 1;
+      module.inFileWithRoleMap.single.form2();
+    }
+    else
+    {
+      module.inFileWithRoleMap.single.finit();
+    }
+
+  }
+
+  /* */
+
+  if( !module.inFileWithRoleMap.import )
+  {
+
+    new will.InFile
+    ({
+      role : 'import',
+      module : module,
+      filePath : path.resolve( module.dirPath, module.prefixPathForRole( 'import' )  ),
+    }).form1();
+
+    if( module.inFileWithRoleMap.import.exists() )
+    {
+      loadedInner = 1;
+      module.inFileWithRoleMap.import.form2();
+    }
+    else
+    {
+      module.inFileWithRoleMap.import.finit();
+    }
 
   }
 
@@ -402,30 +451,16 @@ function inFilesLoad( o )
     }).form1();
 
     if( module.inFileWithRoleMap.export.exists() )
-    module.inFileWithRoleMap.export.form2();
+    {
+      loadedInner = 1;
+      module.inFileWithRoleMap.export.form2();
+    }
     else
-    module.inFileWithRoleMap.export.finit();
+    {
+      module.inFileWithRoleMap.export.finit();
+    }
 
   }
-
-  if( !module.inFileWithRoleMap.export )
-  {
-
-    new will.InFile
-    ({
-      role : 'export',
-      module : module,
-      filePath : path.resolve( module.dirPath, '..', path.fullName( module.dirPath ) + module.prefixPathForRole( 'export' ) ),
-    }).form1();
-
-    if( module.inFileWithRoleMap.export.exists() )
-    module.inFileWithRoleMap.export.form2();
-    else
-    module.inFileWithRoleMap.export.finit();
-
-  }
-
-  // _.sure( module.inFileArray.length > 0, 'Found no will file at', _.strQuote( module.dirPath ) );
 
   return module;
 }

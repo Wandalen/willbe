@@ -512,8 +512,9 @@ function commandEach( e )
   let logger = will.logger;
   let dirPath = path.resolve( e.subject );
 
-  let filter = { maskTerminal : { includeAny : /\.in(\.|$)/ } };
+  let filter = { maskTerminal : { includeAny : /\.will(\.|$)/ } };
   let files = fileProvider.filesFind({ filePath : dirPath, filter : filter, recursive : 0 });
+
   debugger;
 
   for( let f = 0 ; f < files.length ; f++ ) con.ifNoErrorThen( () => /* !!! replace by concurrent */
