@@ -93,12 +93,18 @@ function _inheritMultiple( o )
 
   /* begin */
 
+  // if( reflector.name === 'download' )
+  // debugger;
+
   Parent.prototype._inheritMultiple.call( reflector, o );
 
   if( reflector.reflectMap )
   {
     reflector._reflectMapForm({ visited : o.visited });
   }
+
+  // if( reflector.name === 'download' )
+  // debugger;
 
   /* end */
 
@@ -223,8 +229,11 @@ function _reflectMapForm( o )
   {
     let dst = map[ r ];
 
+    // if( !_.boolIs( dst ) )
     if( !_.boolIs( dst ) )
     {
+      _.assert( _.strIs( dst ), 'not tested' );
+      if( !module.strIsResolved( dst ) )
       dst = module.strResolve
       ({
         query : dst,
@@ -238,15 +247,21 @@ function _reflectMapForm( o )
 
     if( !module.strIsResolved( r ) )
     {
+      if( r === 'submodule::*/exported::*=1/path::exportedDir*=1' )
+      debugger;
+
       let resolved = module.strResolve
       ({
         query : r,
-        // must : 1,
         visited : o.visited,
         current : reflector,
-        asArray : 1,
+        mapVals : 1,
         unwrappingSingle : 1,
+        flattening : 1,
       });
+
+      if( r === 'submodule::*/exported::*=1/path::exportedDir*=1' )
+      debugger;
 
       if( !_.errIs( resolved ) && !_.strIs( resolved ) && !_.arrayIs( resolved ) && !( resolved instanceof will.Reflector ) )
       resolved = _.err( 'Source of reflects map was resolved to unexpected type', _.strTypeOf( resolved ) );
@@ -255,6 +270,8 @@ function _reflectMapForm( o )
 
       if( _.arrayIs( resolved ) )
       {
+        debugger;
+        resolved = path.s.normalize( resolved );
         delete map[ r ];
         for( let p = 0 ; p < resolved.length ; p++ )
         {
@@ -265,6 +282,7 @@ function _reflectMapForm( o )
       }
       else if( _.strIs( resolved ) )
       {
+        resolved = path.normalize( resolved );
         delete map[ r ];
         map[ resolved ] = dst;
       }
@@ -357,25 +375,25 @@ function infoExport()
   return result;
 }
 
+// //
 //
-
-function dataExport()
-{
-  let reflector = this;
-  let fields = Parent.prototype.dataExport.call( reflector );
-  return fields;
-}
-
+// function dataExport()
+// {
+//   let reflector = this;
+//   let fields = Parent.prototype.dataExport.call( reflector );
+//   return fields;
+// }
 //
-
-function resolvedExport()
-{
-  let reflector = this;
-
-  xxx
-
-  return fields;
-}
+// //
+//
+// function resolvedExport()
+// {
+//   let reflector = this;
+//
+//   xxx
+//
+//   return fields;
+// }
 
 // --
 // relations
@@ -449,8 +467,8 @@ let Proto =
   optionsReflectExport : optionsReflectExport,
 
   infoExport : infoExport,
-  dataExport : dataExport,
-  resolvedExport : resolvedExport,
+  // dataExport : dataExport,
+  // resolvedExport : resolvedExport,
 
   // relation
 

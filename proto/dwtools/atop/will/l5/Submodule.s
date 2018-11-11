@@ -24,64 +24,105 @@ Self.shortName = 'Submodule';
 // inter
 // --
 
-// function finit()
-// {
-//   if( this.formed )
-//   this.unform();
-//   return _.Copyable.prototype.finit.apply( this, arguments );
-// }
+function OptionsFrom( o )
+{
+  _.assert( arguments.length === 1 );
+  if( _.strIs( o ) || _.arrayIs( o ) )
+  return { path : o }
+  return o;
+}
+
 //
-// //
+
+function form3()
+{
+  let submodule = this;
+  let module = submodule.module;
+  let inf = submodule.inf;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 0 );
+  _.assert( submodule.formed === 2 );
+  _.assert( _.strIs( submodule.path ), 'not tested' );
+
+  _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
+
+  /* begin */
+
+  if( !module.supermodule )
+  submodule._load();
+
+  /* end */
+
+  submodule.formed = 3;
+  return submodule;
+}
+
 //
-// function init( o )
-// {
-//   let self = this;
+
+function _load()
+{
+  let submodule = this;
+  let module = submodule.module;
+  let inf = submodule.inf;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 0 );
+  _.assert( submodule.formed === 2 );
+  _.assert( _.strIs( submodule.path ), 'not tested' );
+
+  _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
+
+  /* */
+
+  // debugger;
+  submodule.loadedModule = will.Module
+  ({
+    will : will,
+    dirPath : path.join( module.dirPath, submodule.path ),
+    supermodule : module,
+  }).form();
+
+  // debugger;
+  submodule.loadedModule.willFilesLoad({ isInFile : 0 });
+  // debugger;
+
+  _.sure( submodule.loadedModule.isOpened(), 'Cant find submodule', submodule.name, 'at', submodule.loadedModule.dirPath );
+
+}
+
 //
-//   _.assert( arguments.length === 0 || arguments.length === 1 );
-//
-//   _.instanceInit( self );
-//   Object.preventExtensions( self );
-//
-//   if( o )
-//   self.copy( o );
-//
-// }
-//
-// //
-//
-// function unform()
-// {
-//   let submodule = this;
-//
-//   _.assert( arguments.length === 0 );
-//   _.assert( !!submodule.formed );
-//
-//   /* begin */
-//
-//   // _.arrayRemoveElementOnceStrictly( module.inFileArray, submodule );
-//
-//   /* end */
-//
-//   submodule.formed = 0;
-//   return submodule;
-// }
-//
-// //
-//
-// function form()
-// {
-//   let self = this;
-//
-//   _.assert( arguments.length === 0 );
-//   _.assert( !self.formed );
-//
-//   /* begin */
-//
-//   /* end */
-//
-//   self.formed = 1;
-//   return self;
-// }
+
+function infoExport()
+{
+  let submodule = this;
+  let module = submodule.module;
+  let inf = submodule.inf;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let result = Parent.prototype.infoExport.call( submodule );
+
+  if( submodule.loadedModule )
+  {
+    let module2 = submodule.loadedModule;
+
+    debugger;
+
+    let tab = '  ';
+    result += tab + 'Exported builds : ' + _.toStr( _.mapKeys( module2.exportedMap ) );
+
+  }
+
+  return result;
+}
 
 // --
 // relations
@@ -89,23 +130,31 @@ Self.shortName = 'Submodule';
 
 let Composes =
 {
+
+  path : null,
+  description : null,
+  criterion : null,
+  inherit : _.define.own([]),
+
 }
 
 let Aggregates =
 {
+  name : null,
 }
 
 let Associates =
 {
+  loadedModule : null,
 }
 
 let Restricts =
 {
-  // formed : 0,
 }
 
 let Statics =
 {
+  OptionsFrom : OptionsFrom,
   MapName : 'submoduleMap',
   PoolName : 'submodule',
 }
@@ -123,10 +172,12 @@ let Proto =
 
   // inter
 
-  // finit : finit,
-  // init : init,
-  // unform : unform,
-  // form : form,
+  OptionsFrom : OptionsFrom,
+  form3 : form3,
+
+  _load : _load,
+
+  infoExport : infoExport,
 
   // relation
 

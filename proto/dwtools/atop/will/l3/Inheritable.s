@@ -139,9 +139,14 @@ function form()
   let path = fileProvider.path;
   let logger = will.logger;
 
+  if( inheritable.formed === 0 )
   inheritable.form1();
+  if( inheritable.formed === 1 )
   inheritable.form2();
+  if( inheritable.formed === 2 )
   inheritable.form3();
+
+  _.assert( inheritable.formed === 3 );
 
   return inheritable;
 }
@@ -157,6 +162,9 @@ function form1()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+
+  // if( inheritable.nickName === '{ Step "reflect" }' )
+  // debugger;
 
   _.sure( !module[ inheritable.MapName ][ inheritable.name ], () => 'Module ' + module.dirPath + ' already has ' + inheritable.nickName );
   _.assert( !inf || !inf[ inheritable.MapName ][ inheritable.name ] );

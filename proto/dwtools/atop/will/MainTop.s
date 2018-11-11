@@ -63,6 +63,7 @@ function commandsMake()
 
     'list' :              { e : _.routineJoin( will, will.commandList ),              h : 'List information about the current module.' },
     'paths list' :        { e : _.routineJoin( will, will.commandPathsList ),         h : 'List paths of the current module.' },
+    'submodules list' :   { e : _.routineJoin( will, will.commandSubmodulesList ),    h : 'List submodules of the current module.' },
     'reflectors list' :   { e : _.routineJoin( will, will.commandReflectorsList ),    h : 'List avaialable reflectors.' },
     'steps list' :        { e : _.routineJoin( will, will.commandStepsList ),         h : 'List avaialable steps.' },
     'builds list' :       { e : _.routineJoin( will, will.commandBuildsList ),        h : 'List avaialable builds.' },
@@ -144,7 +145,7 @@ function _commandList( e, act )
   let dirPath = fileProvider.path.current();
 
   if( !will.currentModule )
-  will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().inFilesLoad();
+  will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().willFilesLoad();
   let module = will.currentModule;
 
   act( module );
@@ -188,21 +189,22 @@ function commandPathsList( e )
   return will;
 }
 
-// //
 //
-// function commandLinkList( e )
-// {
-//   let will = this;
-//
-//   function act( module )
-//   {
-//     logger.log( module.link.infoExport() );
-//   }
-//
-//   will._commandList( e, act );
-//
-//   return will;
-// }
+
+function commandSubmodulesList( e )
+{
+  let will = this;
+
+  function act( module )
+  {
+    let logger = will.logger;
+    logger.log( module.infoExportResource( module.submoduleMap ) );
+  }
+
+  will._commandList( e, act );
+
+  return will;
+}
 
 //
 
@@ -213,7 +215,7 @@ function commandReflectorsList( e )
   function act( module )
   {
     let logger = will.logger;
-    logger.log( module.infoExportReflectors() );
+    logger.log( module.infoExportResource( module.reflectorMap ) );
   }
 
   will._commandList( e, act );
@@ -230,7 +232,7 @@ function commandStepsList( e )
   function act( module )
   {
     let logger = will.logger;
-    logger.log( module.infoExportSteps() );
+    logger.log( module.infoExportResource( module.stepMap ) );
   }
 
   will._commandList( e, act );
@@ -253,7 +255,7 @@ function commandBuildsList( e )
       criterion : e.propertiesMap,
       preffering : 'more',
     });
-    logger.log( module.infoExportBuilds( builds ) );
+    logger.log( module.infoExportResource( builds ) );
   }
 
   will._commandList( e, act );
@@ -276,7 +278,7 @@ function commandExportsList( e )
       criterion : e.propertiesMap,
       preffering : 'more',
     });
-    logger.log( module.infoExportExports( builds ) );
+    logger.log( module.infoExportResource( builds ) );
   }
 
   will._commandList( e, act );
@@ -331,7 +333,7 @@ function commandBuild( e )
   let logger = will.logger;
   let dirPath = fileProvider.path.current();
   if( !will.currentModule )
-  will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().inFilesLoad();
+  will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().willFilesLoad();
   let module = will.currentModule;
 
   let builds = module.buildsSelect( e.subject, e.propertiesMap );
@@ -342,7 +344,7 @@ function commandBuild( e )
     if( builds.length === 1 )
     logger.log( 'Building', builds[ 0 ].name );
     else
-    logger.log( module.infoExportBuilds( builds ) );
+    logger.log( module.infoExportResource( builds ) );
   }
 
   if( builds.length !== 1 )
@@ -386,7 +388,7 @@ function commandExport( e )
   let logger = will.logger;
   let dirPath = fileProvider.path.current();
   if( !will.currentModule )
-  will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().inFilesLoad();
+  will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().willFilesLoad();
   let module = will.currentModule;
 
   let exports = module.exportsSelect( e.subject, e.propertiesMap );
@@ -397,7 +399,7 @@ function commandExport( e )
     if( exports.length === 1 )
     logger.log( 'Exporting', exports[ 0 ].name );
     else
-    logger.log( module.infoExportExports( exports ) );
+    logger.log( module.infoExportResource( exports ) );
   }
 
   if( exports.length !== 1 )
@@ -473,10 +475,13 @@ function commandWith( e )
   let dirPath = path.resolve( e.subject );
   let module = will.currentModule = will.Module({ will : will, dirPath : dirPath })
   .form()
-  .inFilesLoad();
+  .willFilesLoad();
 
   if( module.inFileArray.length === 0 )
-  throw _.errBriefly( 'Found no will-file at', _.strQuote( module.dirPath ) );
+  {
+    debugger;
+    throw _.errBriefly( 'Found no will-file at', _.strQuote( module.dirPath ) );
+  }
 
   return ca.proceedAct
   ({
@@ -512,10 +517,15 @@ function commandEach( e )
   let logger = will.logger;
   let dirPath = path.resolve( e.subject );
 
-  let filter = { maskTerminal : { includeAny : /\.will(\.|$)/ } };
-  let files = fileProvider.filesFind({ filePath : dirPath, filter : filter, recursive : 0 });
+  let files = will.willFilesList
+  ({
+    dirPath : dirPath,
+    includingInFiles : 1,
+    includingOutFiles : 0,
+    rerucrsive : 0,
+  });
 
-  debugger;
+  // logger.log( _.select( files, '*/absolute' ) );
 
   for( let f = 0 ; f < files.length ; f++ ) con.ifNoErrorThen( () => /* !!! replace by concurrent */
   {
@@ -527,11 +537,14 @@ function commandEach( e )
 
     let module = will.currentModule = will.Module({ will : will, dirPath : dirPath })
     .form()
-    .inFilesLoad()
+    .willFilesLoad()
     ;
 
     if( module.inFileArray.length === 0 )
-    throw _.errBriefly( 'Found no will-file at', _.strQuote( file.absolute ) );
+    {
+      debugger;
+      throw _.errBriefly( 'Failed load will-file at', _.strQuote( file.absolute ) );
+    }
 
     let result = ca.proceedAct
     ({
@@ -539,8 +552,6 @@ function commandEach( e )
       subject : secondSubject,
       propertiesMap : _.mapExtend( null, e.propertiesMap ),
     });
-
-    debugger;
 
     return result;
   });
@@ -596,6 +607,7 @@ let Extend =
   _commandList : _commandList,
   commandList : commandList,
   commandPathsList : commandPathsList,
+  commandSubmodulesList : commandSubmodulesList,
   commandReflectorsList : commandReflectorsList,
   commandStepsList : commandStepsList,
   commandBuildsList : commandBuildsList,

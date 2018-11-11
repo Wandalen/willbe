@@ -63,8 +63,8 @@ function unform()
 
   if( inf.role )
   {
-    _.assert( module.inFileWithRoleMap[ inf.role ] === inf )
-    delete module.inFileWithRoleMap[ inf.role ];
+    _.assert( module.willFileWithRoleMap[ inf.role ] === inf )
+    delete module.willFileWithRoleMap[ inf.role ];
   }
 
   /* end */
@@ -131,8 +131,8 @@ function form1()
 
   if( inf.role )
   {
-    _.assert( !module.inFileWithRoleMap[ inf.role ], 'Module already has inf file with role', inf.role )
-    module.inFileWithRoleMap[ inf.role ] = inf;
+    _.assert( !module.willFileWithRoleMap[ inf.role ], 'Module already has inf file with role', inf.role )
+    module.willFileWithRoleMap[ inf.role ] = inf;
   }
 
   /* end */
@@ -164,7 +164,8 @@ function form2()
 
   /* read */
 
-  inf.inPathsForm();
+  inf._inPathsForm();
+
   try
   {
     inf.data = fileProvider.fileConfigRead
@@ -182,13 +183,21 @@ function form2()
 
   /* form */
 
+  if( inf.data.format !== undefined && inf.data.format !== inf.FormatVersion )
+  throw _.err( 'Does not support format', inf.data.format, 'supports', inf.FormatVersion );
+
   if( inf.data.about )
   module.about.copy( inf.data.about );
   if( inf.data.execution )
   module.execution.copy( inf.data.execution );
+  if( inf.data.exported )
+  inf._resourcesForm( will.Exported, inf.data.exported );
 
   if( inf.data.path )
   inf._resourcesForm( will.PathObj, inf.data.path );
+
+  if( inf.data.submodule )
+  inf._resourcesForm( will.Submodule, inf.data.submodule );
 
   if( inf.data.reflector )
   inf._resourcesForm( will.Reflector, inf.data.reflector );
@@ -198,9 +207,6 @@ function form2()
   if( inf.data.build )
   inf._resourcesForm( will.Build, inf.data.build );
 
-  if( inf.data.exported )
-  inf._resourcesForm( will.Exported, inf.data.exported );
-
   /* */
 
   inf.formed = 2;
@@ -208,7 +214,7 @@ function form2()
 
 //
 
-function inPathsForm()
+function _inPathsForm()
 {
   let inf = this;
   let module = inf.module;
@@ -294,218 +300,6 @@ function _resourcesForm( Resource, resources )
 
 }
 
-// //
-//
-// function pathsForm( paths )
-// {
-//   let inf = this;
-//   let module = inf.module;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   _.assert( _.mapIs( paths ) );
-//   _.assert( arguments.length === 1 );
-//
-//   _.each( paths, ( path, k ) =>
-//   {
-//
-//     if( _.strIs( path ) || _.arrayIs( path ) )
-//     path = { path : path }
-//     path.name = k;
-//     path.module = module;
-//     path.inf = inf;
-//
-//     try
-//     {
-//       will.PathObj( path ).form1();
-//     }
-//     catch( err )
-//     {
-//       throw _.err( 'Cant form path object', _.strQuote( path.name ), '\n', err );
-//     }
-//
-//   });
-//
-//   for( let s in inf.pathObjMap )
-//   {
-//     let patho = inf.pathObjMap[ s ];
-//     _.assert( !!patho.formed );
-//     if( patho.formed < 2 )
-//     patho.form2();
-//   }
-//
-//   for( let s in inf.pathObjMap )
-//   {
-//     let patho = inf.pathObjMap[ s ];
-//     if( patho.formed < 3 )
-//     patho.form3();
-//   }
-//
-// }
-//
-// //
-//
-// function reflectorsForm( reflectors )
-// {
-//   let inf = this;
-//   let module = inf.module;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   _.assert( _.mapIs( reflectors ) );
-//   _.assert( arguments.length === 1 );
-//
-//   _.each( reflectors, ( reflector, k ) =>
-//   {
-//
-//     let o2 = _.mapExtend( null, reflector );
-//     o2.inf = inf;
-//     o2.module = module;
-//     o2.name = k;
-//     try
-//     {
-//       will.Reflector.MakeForEachCriterion( o2 );
-//     }
-//     catch( err )
-//     {
-//       throw _.err( 'Cant form reflector', _.strQuote( o2.name ), '\n', err );
-//     }
-//
-//   });
-//
-//   for( let s in inf.reflectorMap )
-//   {
-//     let reflector = inf.reflectorMap[ s ];
-//     _.assert( !!reflector.formed );
-//     if( reflector.formed < 2 )
-//     reflector.form2();
-//   }
-//
-//   for( let s in inf.reflectorMap )
-//   {
-//     let reflector = inf.reflectorMap[ s ];
-//     if( reflector.formed < 3 )
-//     reflector.form3();
-//   }
-//
-// }
-//
-// //
-//
-// function stepsForm( steps )
-// {
-//   let inf = this;
-//   let module = inf.module;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   _.assert( _.mapIs( steps ) );
-//   _.assert( arguments.length === 1 );
-//
-//   _.each( steps, ( step, k ) =>
-//   {
-//
-//     _.assert( !( step instanceof will.Step ) );
-//
-//     if( _.strIs( step ) )
-//     step = { filePath : step };
-//
-//     let o2 = _.mapExtend( null, step );
-//     o2.inf = inf;
-//     o2.module = module;
-//     o2.name = k;
-//
-//     try
-//     {
-//       will.Step( o2 ).form1();
-//     }
-//     catch( err )
-//     {
-//       throw _.err( 'Cant form step', _.strQuote( o2.name ), '\n', err );
-//     }
-//
-//   });
-//
-//   for( let s in inf.stepMap )
-//   {
-//     let step = inf.stepMap[ s ];
-//     _.assert( !!step.formed );
-//     if( step.formed < 2 )
-//     step.form2();
-//   }
-//
-//   for( let s in inf.stepMap )
-//   {
-//     let step = inf.stepMap[ s ];
-//     if( step.formed < 3 )
-//     step.form3();
-//   }
-//
-// }
-//
-// //
-//
-// function buildsForm( builds )
-// {
-//   let inf = this;
-//   let module = inf.module;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   _.assert( _.mapIs( builds ) );
-//   _.assert( arguments.length === 1 );
-//
-//   /* form1 */
-//
-//   _.each( builds, ( build, k ) =>
-//   {
-//
-//     let o2 = _.mapExtend( null, build );
-//     o2.inf = inf;
-//     o2.module = module;
-//     o2.name = k;
-//
-//     try
-//     {
-//       will.Build( o2 ).form1();
-//     }
-//     catch( err )
-//     {
-//       throw _.err( 'Cant form build', _.strQuote( o2.name ), '\n', err );
-//     }
-//
-//   });
-//
-//   /* form2 */
-//
-//   for( let s in inf.buildMap )
-//   {
-//     let build = inf.buildMap[ s ];
-//     _.assert( !!build.formed );
-//     if( build.formed < 2 )
-//     build.form2();
-//   }
-//
-//   /* form3 */
-//
-//   for( let s in inf.buildMap )
-//   {
-//     let build = inf.buildMap[ s ];
-//     _.assert( build.formed >= 2 );
-//     if( build.formed < 3 )
-//     build.form3();
-//   }
-//
-// }
-
 //
 
 function exists()
@@ -517,7 +311,7 @@ function exists()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  inf.inPathsForm();
+  inf._inPathsForm();
 
   let r = fileProvider.fileConfigPathGet({ filePath : inf.filePath });
 
@@ -531,16 +325,16 @@ function exists()
 let KnownSections =
 {
 
+  format : null,
+  about : null,
+  execution : null,
+
   submodule : null,
   path : null,
   reflector : null,
   step : null,
   build : null,
-
-  about : null,
-  execution : null,
-  // link : null,
-  // export : null,
+  exported : null,
 
 }
 
@@ -578,6 +372,7 @@ let Restricts =
 let Statics =
 {
   KnownSections : KnownSections,
+  FormatVersion : 'willfile-1.0.0',
 }
 
 let Forbids =
@@ -597,20 +392,11 @@ let Proto =
   init : init,
   unform : unform,
   form : form,
-
   form1 : form1,
   form2 : form2,
-  inPathsForm : inPathsForm,
-
+  _inPathsForm : _inPathsForm,
   _resourcesForm : _resourcesForm,
 
-  // pathsForm : pathsForm,
-  // reflectorsForm : reflectorsForm,
-  // stepsForm : stepsForm,
-  // buildsForm : buildsForm,
-  // exportsForm : exportsForm,
-
-  // prefixPathGet : prefixPathGet,
   exists : exists,
 
   // relation

@@ -24,50 +24,6 @@ Self.shortName = 'Build';
 // inter
 // --
 
-// function _inheritSingle( o )
-// {
-//   let build = this;
-//   let module = build.module;
-//   let inf = build.inf;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   if( _.strIs( o.ancestor ) )
-//   o.ancestor = module[ module.MapName ][ o.ancestor ];
-//
-//   let build2 = o.ancestor;
-//
-//   _.assert( !!build2.formed );
-//   _.assert( o.ancestor instanceof module.constructor, () => 'Expects ' + module.constructor.shortName + ' but got ' + _.strTypeOf( o.ancestor ) );
-//   _.assert( arguments.length === 1 );
-//   _.assert( build.formed === 1 );
-//   _.assertRoutineOptions( _inheritSingle, arguments );
-//   _.assert( !!build2.formed );
-//
-//   if( build2.formed !== 2 )
-//   {
-//     _.sure( !_.arrayHas( o.visited, build2.name ), () => 'Cyclic dependency build ' + _.strQuote( build.name ) + ' of ' + _.strQuote( build2.name ) );
-//     build2._inheritForm({ visited : o.visited });
-//   }
-//
-//   let extend = _.mapOnly( build2, _.mapNulls( build ) );
-//   delete extend.criterion;
-//   build.copy( extend );
-//
-//   build.criterionInherit( build2.criterion );
-//
-// }
-//
-// _inheritSingle.defaults=
-// {
-//   buildName : null,
-//   visited : null,
-// }
-
-//
-
 function form3()
 {
   let build = this;
@@ -135,8 +91,6 @@ function stepsEach( onEach )
 
   function inElement( step )
   {
-    // debugger; xxx
-    // step = module.strResolve( step );
     step = module.strResolve
     ({
       query : step,
@@ -172,33 +126,33 @@ function stepsEach( onEach )
 
 //
 
-function exportFilesPathFor()
+function exportedDirPathFor()
 {
   let build = this
   let module = build.module;
   let will = module.will;
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
-  let inDirPath = module.pathMap.inDir || '.';
+  let inDirPath = module.pathMap.in || '.';
 
   _.assert( arguments.length === 0 );
-  _.sure( _.strDefined( build.filesPath ), 'Export should have defined path to files {-filesPath-}' );
+  _.sure( _.strDefined( build.exportDirPath ), 'Export should have defined path to files {-exportDirPath-}' );
 
-  return hd.path.resolve( module.dirPath, inDirPath, module.strResolve( build.filesPath ) );
+  return hd.path.resolve( module.dirPath, inDirPath, module.strResolve( build.exportDirPath ) );
 }
 
 //
 
-function archivePathFor()
+function archiveFilePathFor()
 {
   let build = this
   let module = build.module;
   let will = module.will;
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
-  let inExportFile = module.inFileWithRoleMap.export || module.inFileWithRoleMap.single;
+  let inExportFile = module.willFileWithRoleMap.export || module.willFileWithRoleMap.single;
   let inFileDirPath = hd.path.dir( inExportFile.filePath )
-  let outDirPath = module.pathMap.outDir || '.';
+  let outDirPath = module.pathMap.out || '.';
 
   _.assert( arguments.length === 0 );
   _.assert( _.strDefined( build.name ) );
@@ -219,15 +173,15 @@ function outFilePathFor()
   let will = module.will;
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
-  let inExportFile = module.inFileWithRoleMap.export || module.inFileWithRoleMap.single;
+  let inExportFile = module.willFileWithRoleMap.export || module.willFileWithRoleMap.single;
   let inFileDirPath = hd.path.dir( inExportFile.filePath )
-  let outDirPath = module.pathMap.outDir || '.';
+  let outDirPath = module.pathMap.out || '.';
 
   _.assert( arguments.length === 0 );
   _.assert( _.strDefined( build.name ) );
   _.assert( inExportFile instanceof will.WillFile );
 
-  let name = _.strJoinPath( [ module.about.name, '.out.yml' ], '.' );
+  let name = _.strJoinPath( [ module.about.name, '.out.will.yml' ], '.' );
   return hd.path.resolve( module.dirPath, outDirPath, name );
 
   // let outDir = module.pathMap.outDir || hd.path.dir( inExportFile.filePath ) || '.';
@@ -247,8 +201,8 @@ let Composes =
   criterion : null,
 
   steps : null,
-  filesPath : null,
-  entryPath : null,
+  exportDirPath : null,
+  // entryPath : null,
 
   inherit : _.define.own([]),
 
@@ -279,7 +233,6 @@ let Forbids =
 
 let Accessors =
 {
-  // inherit : { setter : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
 }
 
 // --
@@ -291,14 +244,12 @@ let Proto =
 
   // inter
 
-  // _inheritSingle : _inheritSingle,
-
   form3 : form3,
 
   stepsEach : stepsEach,
 
-  exportFilesPathFor : exportFilesPathFor,
-  archivePathFor : archivePathFor,
+  exportedDirPathFor : exportedDirPathFor,
+  archiveFilePathFor : archiveFilePathFor,
   outFilePathFor : outFilePathFor,
 
   // relation
