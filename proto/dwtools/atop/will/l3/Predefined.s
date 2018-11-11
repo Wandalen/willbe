@@ -86,7 +86,7 @@ function stepRoutineExport( run, build )
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
 
-  let exportPath = build.exportPathFor();
+  let exportFilesPath = build.exportFilesPathFor();
   let archivePath = build.archivePathFor();
   let outFilePath = build.outFilePathFor();
 
@@ -109,11 +109,11 @@ function stepRoutineExport( run, build )
   _.sure( _.objectIs( module.inFileWithRoleMap.export ) || _.objectIs( module.inFileWithRoleMap.single ), 'Expects export in fine' );
   _.sure( _.strDefined( module.about.name ), 'Expects name of the module defined' );
   _.sure( _.strDefined( module.about.version ), 'Expects the current version of the module defined' );
-  _.sure( hd.fileExists( exportPath ) );
+  _.sure( hd.fileExists( exportFilesPath ) );
 
   /* begin */
 
-  module.exported = new will.ParagraphExported({ module : module });
+  module.exported = new will.Exported({ module : module });
 
   module.exported.formatVersion = will.FormatVersion;
   module.exported.version = module.about.version;
@@ -133,7 +133,7 @@ function stepRoutineExport( run, build )
     includingDirectories : 1,
     includingTerminals : 1,
     outputFormat : 'relative',
-    filePath : exportPath,
+    filePath : exportFilesPath,
     filter :
     {
       maskTransientDirectory : { /*excludeAny : [ /\.git$/, /node_modules$/ ]*/ },
@@ -164,20 +164,20 @@ function stepRoutineExport( run, build )
     if( !Tar )
     Tar = require( 'tar' );
 
-    let oo =
+    let o2 =
     {
       gzip : true,
       sync : 1,
       file : hd.path.nativize( archivePath ),
-      cwd : hd.path.nativize( exportPath ),
+      cwd : hd.path.nativize( exportFilesPath ),
     }
 
     debugger;
-    let zip = Tar.create( oo, [ '.' ] );
+    let zip = Tar.create( o2, [ '.' ] );
     debugger;
 
     if( will.verbosity >= 2 )
-    logger.log( ' + ' + 'Write out archive ' + hd.path.move( archivePath, exportPath ) );
+    logger.log( ' + ' + 'Write out archive ' + hd.path.move( archivePath, exportFilesPath ) );
 
   }
 

@@ -1,4 +1,4 @@
-( function _InFile_s_( ) {
+( function _WillFile_s_( ) {
 
 'use strict';
 
@@ -13,12 +13,12 @@ if( typeof module !== 'undefined' )
 
 let _ = wTools;
 let Parent = null;
-let Self = function wWillInFile( o )
+let Self = function wWillFile( o )
 {
   return _.instanceConstructor( Self, this, arguments );
 }
 
-Self.shortName = 'InFile';
+Self.shortName = 'WillFile';
 
 // --
 // inter
@@ -182,6 +182,11 @@ function form2()
 
   /* form */
 
+  if( inf.data.about )
+  module.about.copy( inf.data.about );
+  if( inf.data.execution )
+  module.execution.copy( inf.data.execution );
+
   if( inf.data.path )
   inf._resourcesForm( will.PathObj, inf.data.path );
 
@@ -193,10 +198,8 @@ function form2()
   if( inf.data.build )
   inf._resourcesForm( will.Build, inf.data.build );
 
-  if( inf.data.about )
-  module.about.copy( inf.data.about );
-  if( inf.data.execution )
-  module.execution.copy( inf.data.execution );
+  if( inf.data.exported )
+  inf._resourcesForm( will.Exported, inf.data.exported );
 
   /* */
 
@@ -557,6 +560,7 @@ let Aggregates =
   reflectorMap : _.define.own({}),
   stepMap : _.define.own({}),
   buildMap : _.define.own({}),
+  exportedMap : _.define.own({}),
 
 }
 
@@ -578,7 +582,6 @@ let Statics =
 
 let Forbids =
 {
-  exportMap : 'exportMap',
 }
 
 // --

@@ -12,7 +12,7 @@ if( typeof module !== 'undefined' )
 //
 
 let _ = wTools;
-let Parent = null;
+let Parent = _.Will.Inheritable;
 let Self = function wWillSubmodule( o )
 {
   return _.instanceConstructor( Self, this, arguments );
@@ -24,64 +24,64 @@ Self.shortName = 'Submodule';
 // inter
 // --
 
-function finit()
-{
-  if( this.formed )
-  this.unform();
-  return _.Copyable.prototype.finit.apply( this, arguments );
-}
-
+// function finit()
+// {
+//   if( this.formed )
+//   this.unform();
+//   return _.Copyable.prototype.finit.apply( this, arguments );
+// }
 //
-
-function init( o )
-{
-  let self = this;
-
-  _.assert( arguments.length === 0 || arguments.length === 1 );
-
-  _.instanceInit( self );
-  Object.preventExtensions( self );
-
-  if( o )
-  self.copy( o );
-
-}
-
+// //
 //
-
-function unform()
-{
-  let submodule = this;
-
-  _.assert( arguments.length === 0 );
-  _.assert( !!submodule.formed );
-
-  /* begin */
-
-  // _.arrayRemoveElementOnceStrictly( module.inFileArray, submodule );
-
-  /* end */
-
-  submodule.formed = 0;
-  return submodule;
-}
-
+// function init( o )
+// {
+//   let self = this;
 //
-
-function form()
-{
-  let self = this;
-
-  _.assert( arguments.length === 0 );
-  _.assert( !self.formed );
-
-  /* begin */
-
-  /* end */
-
-  self.formed = 1;
-  return self;
-}
+//   _.assert( arguments.length === 0 || arguments.length === 1 );
+//
+//   _.instanceInit( self );
+//   Object.preventExtensions( self );
+//
+//   if( o )
+//   self.copy( o );
+//
+// }
+//
+// //
+//
+// function unform()
+// {
+//   let submodule = this;
+//
+//   _.assert( arguments.length === 0 );
+//   _.assert( !!submodule.formed );
+//
+//   /* begin */
+//
+//   // _.arrayRemoveElementOnceStrictly( module.inFileArray, submodule );
+//
+//   /* end */
+//
+//   submodule.formed = 0;
+//   return submodule;
+// }
+//
+// //
+//
+// function form()
+// {
+//   let self = this;
+//
+//   _.assert( arguments.length === 0 );
+//   _.assert( !self.formed );
+//
+//   /* begin */
+//
+//   /* end */
+//
+//   self.formed = 1;
+//   return self;
+// }
 
 // --
 // relations
@@ -101,7 +101,7 @@ let Associates =
 
 let Restricts =
 {
-  formed : 0,
+  // formed : 0,
 }
 
 let Statics =
@@ -123,10 +123,10 @@ let Proto =
 
   // inter
 
-  finit : finit,
-  init : init,
-  unform : unform,
-  form : form,
+  // finit : finit,
+  // init : init,
+  // unform : unform,
+  // form : form,
 
   // relation
 

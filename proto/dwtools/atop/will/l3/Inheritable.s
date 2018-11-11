@@ -316,6 +316,51 @@ _inheritMultiple.defaults =
 }
 
 //
+
+function _inheritSingle( o )
+{
+  let inheritable = this;
+  let module = inheritable.module;
+  let inf = inheritable.inf;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  if( _.strIs( o.ancestor ) )
+  o.ancestor = module[ module.MapName ][ o.ancestor ];
+
+  let inheritable2 = o.ancestor;
+
+  // logger.log( '_inheritSingle', inheritable.name, '<-', inheritable2.name );
+
+  _.assert( !!inheritable2.formed );
+  _.assert( o.ancestor instanceof inheritable.constructor, () => 'Expects ' + inheritable.constructor.shortName + ' but got ' + _.strTypeOf( o.ancestor ) );
+  _.assert( arguments.length === 1 );
+  _.assert( inheritable.formed === 1 );
+  _.assert( !!inheritable2.formed );
+  _.assertRoutineOptions( _inheritSingle, arguments );
+
+  if( inheritable2.formed < 2 )
+  {
+    _.sure( !_.arrayHas( o.visited, inheritable2.name ), () => 'Cyclic dependency ' + inheritable.nickName + ' of ' + inheritable2.nickName );
+    inheritable2._inheritForm({ visited : o.visited });
+  }
+
+  let extend = _.mapOnly( inheritable2, _.mapNulls( inheritable ) );
+  delete extend.criterion;
+  inheritable.copy( extend );
+  inheritable.criterionInherit( inheritable2.criterion );
+
+}
+
+_inheritSingle.defaults=
+{
+  ancestor : null,
+  visited : null,
+}
+
+//
 //
 // function _inheritSingle( o )
 // {
@@ -387,7 +432,15 @@ function criterionSattisfy( criterion2 )
   let inheritable = this;
   let criterion1 = inheritable.criterion;
 
+  _.assert( criterion2 === null || _.mapIs( criterion2 ) );
+  _.assert( arguments.length === 1 );
+
+  if( criterion2 === null )
+  debugger;
+
   if( criterion1 === null )
+  return true;
+  if( criterion2 === null )
   return true;
 
   for( let c in criterion2 )
@@ -399,6 +452,26 @@ function criterionSattisfy( criterion2 )
   }
 
   return true;
+}
+
+//
+
+function criterionInherit( criterion2 )
+{
+  let inheritable = this;
+  let criterion1 = inheritable.criterion;
+
+  _.assert( criterion2 === null || _.mapIs( criterion2 ) );
+  _.assert( arguments.length === 1 );
+
+  if( criterion2 === null )
+  return criterion1
+
+  criterion1 = inheritable.criterion = inheritable.criterion || Object.create( null );
+
+  _.mapSupplement( criterion1, _.mapBut( criterion1, { default : null, predefined : null } ) )
+
+  return criterion1;
 }
 
 //
@@ -501,6 +574,7 @@ let Forbids =
 let Accessors =
 {
   nickName : 'nickName',
+  inherit : { setter : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
 }
 
 // --
@@ -525,10 +599,12 @@ let Proto =
 
   _inheritForm : _inheritForm,
   _inheritMultiple : _inheritMultiple,
+  _inheritSingle : _inheritSingle,
 
   form3 : form3,
 
   criterionSattisfy : criterionSattisfy,
+  criterionInherit : criterionInherit,
 
   infoExport : infoExport,
   dataExport : dataExport,

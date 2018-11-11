@@ -520,7 +520,7 @@ function commandEach( e )
   for( let f = 0 ; f < files.length ; f++ ) con.ifNoErrorThen( () => /* !!! replace by concurrent */
   {
     let file = files[ f ];
-    let dirPath = will.Module.DirPathFromInFilePath( file.absolute );
+    let dirPath = will.Module.DirPathFromWillFilePath( file.absolute );
 
     if( will.moduleMap[ dirPath ] )
     return;

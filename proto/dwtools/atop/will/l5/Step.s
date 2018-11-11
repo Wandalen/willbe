@@ -45,48 +45,48 @@ function init( o )
 
 //
 
-function _inheritSingle( o )
-{
-  let step = this;
-  let module = step.module;
-  let inf = step.inf;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-
-  if( _.strIs( o.ancestor ) )
-  o.ancestor = module[ step.MapName ][ o.ancestor ];
-  let step2 = o.ancestor;
-  _.assert( !!step2.formed );
-  _.assert( o.ancestor instanceof step.constructor, () => 'Expects ' + step.constructor.shortName + ' but got ' + _.strTypeOf( o.ancestor ) );
-
-  _.assert( arguments.length === 1 );
-  _.assert( step.formed >= 1 ); /* xxx */
-  _.assertRoutineOptions( _inheritSingle, arguments );
-
-  // let step2 = module.stepMap[ o.ancestor ];
-  // _.sure( _.objectIs( step2 ), () => 'Step ' + _.strQuote( o.ancestor ) + ' does not exist' );
-
-  if( step2.formed < 2 )
-  {
-    _.sure( !_.arrayHas( o.visited, step2.name ), () => 'Cyclic dependency step ' + _.strQuote( step.name ) + ' of ' + _.strQuote( step2.name ) );
-    step2._inheritForm({ visited : o.visited });
-  }
-
-  let extend = _.mapOnly( step2, _.mapNulls( step ) );
-  step.copy( extend );
-
-  if( step2.criterion )
-  step.criterion = _.mapSupplement( step.criterion, step2.criterion );
-
-}
-
-_inheritSingle.defaults=
-{
-  ancestor : null,
-  visited : null,
-}
+// function _inheritSingle( o )
+// {
+//   let step = this;
+//   let module = step.module;
+//   let inf = step.inf;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//
+//   if( _.strIs( o.ancestor ) )
+//   o.ancestor = module[ step.MapName ][ o.ancestor ];
+//   let step2 = o.ancestor;
+//   _.assert( !!step2.formed );
+//   _.assert( o.ancestor instanceof step.constructor, () => 'Expects ' + step.constructor.shortName + ' but got ' + _.strTypeOf( o.ancestor ) );
+//
+//   _.assert( arguments.length === 1 );
+//   _.assert( step.formed >= 1 ); /* xxx */
+//   _.assertRoutineOptions( _inheritSingle, arguments );
+//
+//   // let step2 = module.stepMap[ o.ancestor ];
+//   // _.sure( _.objectIs( step2 ), () => 'Step ' + _.strQuote( o.ancestor ) + ' does not exist' );
+//
+//   if( step2.formed < 2 )
+//   {
+//     _.sure( !_.arrayHas( o.visited, step2.name ), () => 'Cyclic dependency step ' + _.strQuote( step.name ) + ' of ' + _.strQuote( step2.name ) );
+//     step2._inheritForm({ visited : o.visited });
+//   }
+//
+//   let extend = _.mapOnly( step2, _.mapNulls( step ) );
+//   step.copy( extend );
+//
+//   if( step2.criterion )
+//   step.criterion = _.mapSupplement( step.criterion, step2.criterion );
+//
+// }
+//
+// _inheritSingle.defaults=
+// {
+//   ancestor : null,
+//   visited : null,
+// }
 
 //
 
@@ -191,7 +191,7 @@ let Forbids =
 
 let Accessors =
 {
-  inherit : { setter : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
+  // inherit : { setter : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
 }
 
 // --
@@ -204,7 +204,7 @@ let Proto =
   // inter
 
   init : init,
-  _inheritSingle : _inheritSingle,
+  // _inheritSingle : _inheritSingle,
   form3 : form3,
 
   // optionsExport : optionsExport,

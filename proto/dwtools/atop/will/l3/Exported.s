@@ -12,67 +12,89 @@ if( typeof module !== 'undefined' )
 //
 
 let _ = wTools;
-let Parent = null;
-let Self = function wWillParagraphExported( o )
+let Parent = _.Will.Inheritable;
+let Self = function wWillExported( o )
 {
   return _.instanceConstructor( Self, this, arguments );
 }
 
-Self.shortName = 'ParagraphExported';
+Self.shortName = 'Exported';
 
 // --
 // inter
 // --
 
-function finit()
-{
-  if( this.formed )
-  this.unform();
-  return _.Copyable.prototype.finit.apply( this, arguments );
-}
+// function _inheritSingle( o )
+// {
+//   let exported = this;
+//   let module = exported.module;
+//   let inf = exported.inf;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//
+//   if( _.strIs( o.ancestor ) )
+//   o.ancestor = module[ module.MapName ][ o.ancestor ];
+//
+//   let exported2 = o.ancestor;
+//
+//   _.assert( !!exported2.formed );
+//   _.assert( o.ancestor instanceof module.constructor, () => 'Expects ' + module.constructor.shortName + ' but got ' + _.strTypeOf( o.ancestor ) );
+//   _.assert( arguments.length === 1 );
+//   _.assert( exported.formed === 1 );
+//   _.assertRoutineOptions( _inheritSingle, arguments );
+//   _.assert( !!exported2.formed );
+//
+//   if( exported2.formed !== 2 )
+//   {
+//     _.sure( !_.arrayHas( o.visited, exported2.name ), () => 'Cyclic dependency exported ' + _.strQuote( exported.name ) + ' of ' + _.strQuote( exported2.name ) );
+//     exported2._inheritForm({ visited : o.visited });
+//   }
+//
+//   let extend = _.mapOnly( exported2, _.mapNulls( exported ) );
+//   delete extend.criterion;
+//   exported.copy( extend );
+//
+//   exported.criterionInherit( exported2.criterion );
+//
+//   // if( exported2.criterion )
+//   // exported.criterion = _.mapSupplement( exported.criterion || null, exported2.criterion );
+//
+// }
+//
+// _inheritSingle.defaults=
+// {
+//   exportedName : null,
+//   visited : null,
+// }
 
 //
-
-function init( o )
-{
-  let exported = this;
-
-  _.assert( arguments.length === 0 || arguments.length === 1 );
-
-  _.instanceInit( exported );
-  Object.preventExtensions( exported );
-
-  if( o )
-  exported.copy( o );
-
-}
-
 //
-
-function infoExport()
-{
-  let exported = this;
-  let result = '';
-  let fields = exported.dataExport();
-
-  if( Object.keys( fields ).length === 0 )
-  return result;
-
-  result += exported.constructor.shortName + '\n';
-  result += _.toStr( fields, { wrap : 0, levels : 4, multiline : 1 } ) + '\n';
-  result += '\n';
-
-  return result;
-}
-
+// function infoExport()
+// {
+//   let exported = this;
+//   let result = '';
+//   let fields = exported.dataExport();
 //
-
-function dataExport()
-{
-  let exported = this;
-  let fields = exported.cloneData({ compact : 1, copyingAggregates : 0 });
-  return fields;
-}
+//   if( Object.keys( fields ).length === 0 )
+//   return result;
+//
+//   result += exported.constructor.shortName + '\n';
+//   result += _.toStr( fields, { wrap : 0, levels : 4, multiline : 1 } ) + '\n';
+//   result += '\n';
+//
+//   return result;
+// }
+//
+// //
+//
+// function dataExport()
+// {
+//   let exported = this;
+//   let fields = exported.cloneData({ compact : 1, copyingAggregates : 0 });
+//   return fields;
+// }
 
 // --
 // relations
@@ -100,7 +122,9 @@ let Restricts =
 
 let Statics =
 {
-  formed : 0,
+  // formed : 0,
+  MapName : 'exportedMap',
+  PoolName : 'exported',
 }
 
 let Forbids =
@@ -109,6 +133,7 @@ let Forbids =
 
 let Accessors =
 {
+  // inherit : { setter : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
 }
 
 // --
@@ -120,11 +145,11 @@ let Proto =
 
   // inter
 
-  finit : finit,
-  init : init,
-
-  infoExport : infoExport,
-  dataExport : dataExport,
+  // finit : finit,
+  // init : init,
+  //
+  // infoExport : infoExport,
+  // dataExport : dataExport,
 
   // relation
 

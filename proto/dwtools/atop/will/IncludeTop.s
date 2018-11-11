@@ -9,13 +9,13 @@ if( typeof module !== 'undefined' )
 
   require( './l3/About.s' );
   require( './l3/Execution.s' );
-  require( './l3/Exported.s' );
   require( './l3/Inheritable.s' );
   require( './l3/Predefined.s' );
 
   require( './l5/Build.s' );
   require( './l5/BuildRun.s' );
-  require( './l5/InFile.s' );
+  require( './l5/Exported.s' );
+  require( './l5/WillFile.s' );
   require( './l5/Module.s' );
   require( './l5/PathObj.s' );
   require( './l5/Reflector.s' );

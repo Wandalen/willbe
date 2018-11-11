@@ -24,51 +24,47 @@ Self.shortName = 'Build';
 // inter
 // --
 
-function _inheritSingle( o )
-{
-  let build = this;
-  let module = build.module;
-  let inf = build.inf;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-
-  if( _.strIs( o.ancestor ) )
-  o.ancestor = module[ module.MapName ][ o.ancestor ];
-  let build2 = o.ancestor;
-  _.assert( !!build2.formed );
-  _.assert( o.ancestor instanceof module.constructor, () => 'Expects ' + module.constructor.shortName + ' but got ' + _.strTypeOf( o.ancestor ) );
-
-  // _.assert( _.strIs( o.buildName ) );
-  _.assert( arguments.length === 1 );
-  _.assert( build.formed === 1 );
-  _.assertRoutineOptions( _inheritSingle, arguments );
-
-  // let build2 = module.buildMap[ o.buildName ];
-  // _.sure( _.objectIs( build2 ), () => 'Build ' + _.strQuote( o.buildName ) + ' does not exist' );
-  _.assert( !!build2.formed );
-
-  if( build2.formed !== 2 )
-  {
-    _.sure( !_.arrayHas( o.visited, build2.name ), () => 'Cyclic dependency build ' + _.strQuote( build.name ) + ' of ' + _.strQuote( build2.name ) );
-    build2._inheritForm({ visited : o.visited });
-  }
-
-  let extend = _.mapOnly( build2, _.mapNulls( build ) );
-  delete extend.criterion;
-  build.copy( extend );
-
-  if( build2.criterion )
-  build.criterion = _.mapSupplement( build.criterion || null, build2.criterion );
-
-}
-
-_inheritSingle.defaults=
-{
-  buildName : null,
-  visited : null,
-}
+// function _inheritSingle( o )
+// {
+//   let build = this;
+//   let module = build.module;
+//   let inf = build.inf;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//
+//   if( _.strIs( o.ancestor ) )
+//   o.ancestor = module[ module.MapName ][ o.ancestor ];
+//
+//   let build2 = o.ancestor;
+//
+//   _.assert( !!build2.formed );
+//   _.assert( o.ancestor instanceof module.constructor, () => 'Expects ' + module.constructor.shortName + ' but got ' + _.strTypeOf( o.ancestor ) );
+//   _.assert( arguments.length === 1 );
+//   _.assert( build.formed === 1 );
+//   _.assertRoutineOptions( _inheritSingle, arguments );
+//   _.assert( !!build2.formed );
+//
+//   if( build2.formed !== 2 )
+//   {
+//     _.sure( !_.arrayHas( o.visited, build2.name ), () => 'Cyclic dependency build ' + _.strQuote( build.name ) + ' of ' + _.strQuote( build2.name ) );
+//     build2._inheritForm({ visited : o.visited });
+//   }
+//
+//   let extend = _.mapOnly( build2, _.mapNulls( build ) );
+//   delete extend.criterion;
+//   build.copy( extend );
+//
+//   build.criterionInherit( build2.criterion );
+//
+// }
+//
+// _inheritSingle.defaults=
+// {
+//   buildName : null,
+//   visited : null,
+// }
 
 //
 
@@ -176,7 +172,7 @@ function stepsEach( onEach )
 
 //
 
-function exportPathFor()
+function exportFilesPathFor()
 {
   let build = this
   let module = build.module;
@@ -185,7 +181,6 @@ function exportPathFor()
   let hd = hub.providersWithProtocolMap.file;
 
   _.assert( arguments.length === 0 );
-
   _.sure( _.strDefined( build.filesPath ), 'Export should have defined path to files {-filesPath-}' );
 
   return hd.path.resolve( module.dirPath, module.strResolve( build.filesPath ) );
@@ -204,11 +199,12 @@ function archivePathFor()
 
   _.assert( arguments.length === 0 );
   _.assert( _.strDefined( build.name ) );
-  _.assert( inExportFile instanceof will.InFile );
+  _.assert( inExportFile instanceof will.WillFile );
 
   let outDir = module.pathMap.outDir || hd.path.dir( inExportFile.filePath ) || '.';
+  let name = _.strJoinPath( [ module.about.name, build.name, '.out.tgs' ], '.' );
 
-  return hd.path.resolve( module.dirPath, outDir, module.about.name + build.name + '.out.tgs' );
+  return hd.path.resolve( module.dirPath, outDir, name );
 }
 
 //
@@ -224,11 +220,12 @@ function outFilePathFor()
 
   _.assert( arguments.length === 0 );
   _.assert( _.strDefined( build.name ) );
-  _.assert( inExportFile instanceof will.InFile );
+  _.assert( inExportFile instanceof will.WillFile );
 
   let outDir = module.pathMap.outDir || hd.path.dir( inExportFile.filePath ) || '.';
+  let name = _.strJoinPath( [ module.about.name, '.out.yml' ], '.' );
 
-  return hd.path.resolve( module.dirPath, outDir, module.about.name + build.name + '.out.yml' );
+  return hd.path.resolve( module.dirPath, outDir, name );
 }
 
 
@@ -276,7 +273,7 @@ let Forbids =
 
 let Accessors =
 {
-  inherit : { setter : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
+  // inherit : { setter : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
 }
 
 // --
@@ -288,13 +285,13 @@ let Proto =
 
   // inter
 
-  _inheritSingle : _inheritSingle,
+  // _inheritSingle : _inheritSingle,
 
   form3 : form3,
 
   stepsEach : stepsEach,
 
-  exportPathFor : exportPathFor,
+  exportFilesPathFor : exportFilesPathFor,
   archivePathFor : archivePathFor,
   outFilePathFor : outFilePathFor,
 

@@ -313,6 +313,7 @@ function inFilesLoad( o )
   let path = fileProvider.path;
   let logger = will.logger;
   let loadedOuter = 0;
+  let loadedInner = 0;
 
   _.routineOptions( inFilesLoad, arguments );
   _.assert( module.inFileArray.length === 0, 'not tested' );
@@ -324,7 +325,7 @@ function inFilesLoad( o )
   if( !module.inFileWithRoleMap.single )
   {
 
-    new will.InFile
+    new will.WillFile
     ({
       role : 'single',
       module : module,
@@ -346,7 +347,7 @@ function inFilesLoad( o )
   if( !module.inFileWithRoleMap.import )
   {
 
-    new will.InFile
+    new will.WillFile
     ({
       role : 'import',
       module : module,
@@ -368,7 +369,7 @@ function inFilesLoad( o )
   if( !module.inFileWithRoleMap.export )
   {
 
-    new will.InFile
+    new will.WillFile
     ({
       role : 'export',
       module : module,
@@ -395,7 +396,7 @@ function inFilesLoad( o )
   if( !module.inFileWithRoleMap.single )
   {
 
-    new will.InFile
+    new will.WillFile
     ({
       role : 'single',
       module : module,
@@ -419,7 +420,7 @@ function inFilesLoad( o )
   if( !module.inFileWithRoleMap.import )
   {
 
-    new will.InFile
+    new will.WillFile
     ({
       role : 'import',
       module : module,
@@ -443,7 +444,7 @@ function inFilesLoad( o )
   if( !module.inFileWithRoleMap.export )
   {
 
-    new will.InFile
+    new will.WillFile
     ({
       role : 'export',
       module : module,
@@ -502,7 +503,7 @@ function prefixPathForRoleMaybe( role )
 
 //
 
-function DirPathFromInFilePath( inPath )
+function DirPathFromWillFilePath( inPath )
 {
   let module = this;
   _.assert( arguments.length === 1 );
@@ -1019,13 +1020,18 @@ function infoExport()
 
   result += module.about.infoExport();
   result += module.execution.infoExport();
-  // result += module.link.infoExport();
 
   result += module.infoExportPaths( module.pathMap );
-  result += module.infoExportReflectors( module.reflectorMap );
-  result += module.infoExportSteps( module.stepMap );
-  result += module.infoExportBuilds( module.buildsSelect({ preffering : 'more' }) );
-  result += module.infoExportExports( module.exportsSelect({ preffering : 'more' }) );
+  result += module.infoExportResource( module.reflectorMap );
+  result += module.infoExportResource( module.stepMap );
+  result += module.infoExportResource( module.buildsSelect({ preffering : 'more' }) );
+  result += module.infoExportResource( module.exportsSelect({ preffering : 'more' }) );
+  result += module.infoExportResource( module.exportedMap );
+
+  // result += module.infoExportReflectors( module.reflectorMap );
+  // result += module.infoExportSteps( module.stepMap );
+  // result += module.infoExportBuilds( module.buildsSelect({ preffering : 'more' }) );
+  // result += module.infoExportExports( module.exportsSelect({ preffering : 'more' }) );
 
   return result;
 }
@@ -1046,87 +1052,110 @@ function infoExportPaths( paths )
 
 //
 
-function infoExportReflectors( reflectors )
+function infoExportResource( collection )
 {
   let module = this;
   let will = module.will;
   let result = '';
-  reflectors = reflectors || module.reflectorMap;
+  // steps = steps || module.stepMap;
 
-  _.assert( arguments.length === 0 || arguments.length === 1 );
+  _.assert( arguments.length === 1 );
+  _.assert( _.mapIs( collection ) || _.arrayIs( collection ) );
 
-  for( let b in reflectors )
+  _.each( collection, ( resource, r ) =>
   {
-    let reflector = reflectors[ b ];
-    result += reflector.infoExport();
-    result += '\n';
-  }
-
-  return result;
-}
-
-//
-
-function infoExportSteps( steps )
-{
-  let module = this;
-  let will = module.will;
-  let result = '';
-  steps = steps || module.stepMap;
-
-  _.assert( arguments.length === 0 || arguments.length === 1 );
-
-  for( let b in steps )
-  {
-    let step = steps[ b ];
-    if( step.criterion && step.criterion.predefined )
-    continue;
-    result += step.infoExport();
-    result += '\n';
-  }
-
-  return result;
-}
-
-//
-
-function infoExportBuilds( builds )
-{
-  let module = this;
-  let will = module.will;
-  let result = '';
-  builds = builds || module.buildMap;
-
-  _.assert( arguments.length === 0 || arguments.length === 1 );
-
-  _.each( builds, ( build ) =>
-  {
-    result += build.infoExport();
+    if( resource.criterion && resource.criterion.predefined )
+    return;
+    result += resource.infoExport();
     result += '\n';
   });
 
   return result;
 }
 
+// //
 //
-
-function infoExportExports( exports )
-{
-  let module = this;
-  let will = module.will;
-  let result = '';
-  exports = exports || module.buildMap;
-
-  _.assert( arguments.length === 0 || arguments.length === 1 );
-
-  _.each( exports, ( exp ) =>
-  {
-    result += exp.infoExport();
-    result += '\n';
-  });
-
-  return result;
-}
+// function infoExportReflectors( reflectors )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let result = '';
+//   reflectors = reflectors || module.reflectorMap;
+//
+//   _.assert( arguments.length === 0 || arguments.length === 1 );
+//
+//   for( let b in reflectors )
+//   {
+//     let reflector = reflectors[ b ];
+//     result += reflector.infoExport();
+//     result += '\n';
+//   }
+//
+//   return result;
+// }
+//
+// //
+//
+// function infoExportSteps( steps )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let result = '';
+//   steps = steps || module.stepMap;
+//
+//   _.assert( arguments.length === 0 || arguments.length === 1 );
+//
+//   for( let b in steps )
+//   {
+//     let step = steps[ b ];
+//     if( step.criterion && step.criterion.predefined )
+//     continue;
+//     result += step.infoExport();
+//     result += '\n';
+//   }
+//
+//   return result;
+// }
+//
+// //
+//
+// function infoExportBuilds( builds )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let result = '';
+//   builds = builds || module.buildMap;
+//
+//   _.assert( arguments.length === 0 || arguments.length === 1 );
+//
+//   _.each( builds, ( build ) =>
+//   {
+//     result += build.infoExport();
+//     result += '\n';
+//   });
+//
+//   return result;
+// }
+//
+// //
+//
+// function infoExportExports( exports )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let result = '';
+//   exports = exports || module.buildMap;
+//
+//   _.assert( arguments.length === 0 || arguments.length === 1 );
+//
+//   _.each( exports, ( exp ) =>
+//   {
+//     result += exp.infoExport();
+//     result += '\n';
+//   });
+//
+//   return result;
+// }
 
 //
 
@@ -1142,96 +1171,122 @@ function dataExport()
   result.about = module.about.dataExport();
   result.execution = module.execution.dataExport();
 
-  if( module.exported )
-  result.exported = module.exported.dataExport();
+  // if( module.exported )
+  // result.exported = module.exported.dataExport();
 
-  result.path = module.dataExportPaths();
-  result.submodule = module.dataExportSubmodules();
-  result.reflector = module.dataExportReflectors();
-  result.step = module.dataExportSteps();
-  result.build = module.dataExportBuilds();
+  result.path = module.dataExportResource( module.pathObjMap );
+  result.submodule = module.dataExportResource( module.submoduleMap );
+  result.reflector = module.dataExportResource( module.reflectorMap );
+  result.step = module.dataExportResource( module.stepMap );
+  result.build = module.dataExportResource( module.buildMap );
+  result.exported = module.dataExportResource( module.exportedMap );
 
-  return result;
-}
-
-//
-
-function dataExportPaths()
-{
-  let module = this;
-  let will = module.will;
-  return _.mapExtend( null, module.pathMap );
-}
-
-//
-
-function dataExportSubmodules()
-{
-  let module = this;
-  let will = module.will;
-  let result = Object.create( null );
-
-  for( let e in module.submoduleMap )
-  {
-    let element = module.submoduleMap[ e ];
-    result[ e ] = element.dataExport();
-  }
+  // result.path = module.dataExportPaths();
+  // result.submodule = module.dataExportSubmodules();
+  // result.reflector = module.dataExportReflectors();
+  // result.step = module.dataExportSteps();
+  // result.build = module.dataExportBuilds();
 
   return result;
 }
 
 //
 
-function dataExportReflectors()
+function dataExportResource( collection )
 {
   let module = this;
   let will = module.will;
   let result = Object.create( null );
 
-  for( let e in module.reflectorMap )
+  _.assert( arguments.length === 1 );
+  _.assert( _.mapIs( collection ) || _.arrayIs( collection ) );
+
+  _.each( collection, ( resource, r ) =>
   {
-    let element = module.reflectorMap[ e ];
-    result[ e ] = element.dataExport();
-  }
+    result[ r ] = resource.dataExport();
+  });
 
   return result;
 }
 
+// //
 //
-
-function dataExportSteps()
-{
-  let module = this;
-  let will = module.will;
-  let result = Object.create( null );
-
-  for( let e in module.stepMap )
-  {
-    let element = module.stepMap[ e ];
-    if( element.criterion && element.criterion.predefined )
-    continue;
-    result[ e ] = element.dataExport();
-  }
-
-  return result;
-}
-
+// function dataExportPaths()
+// {
+//   let module = this;
+//   let will = module.will;
+//   return _.mapExtend( null, module.pathMap );
+// }
 //
-
-function dataExportBuilds()
-{
-  let module = this;
-  let will = module.will;
-  let result = Object.create( null );
-
-  for( let e in module.buildMap )
-  {
-    let element = module.buildMap[ e ];
-    result[ e ] = element.dataExport();
-  }
-
-  return result;
-}
+// //
+//
+// function dataExportSubmodules()
+// {
+//   let module = this;
+//   let will = module.will;
+//   let result = Object.create( null );
+//
+//   for( let e in module.submoduleMap )
+//   {
+//     let element = module.submoduleMap[ e ];
+//     result[ e ] = element.dataExport();
+//   }
+//
+//   return result;
+// }
+//
+// //
+//
+// function dataExportReflectors()
+// {
+//   let module = this;
+//   let will = module.will;
+//   let result = Object.create( null );
+//
+//   for( let e in module.reflectorMap )
+//   {
+//     let element = module.reflectorMap[ e ];
+//     result[ e ] = element.dataExport();
+//   }
+//
+//   return result;
+// }
+//
+// //
+//
+// function dataExportSteps()
+// {
+//   let module = this;
+//   let will = module.will;
+//   let result = Object.create( null );
+//
+//   for( let e in module.stepMap )
+//   {
+//     let element = module.stepMap[ e ];
+//     if( element.criterion && element.criterion.predefined )
+//     continue;
+//     result[ e ] = element.dataExport();
+//   }
+//
+//   return result;
+// }
+//
+// //
+//
+// function dataExportBuilds()
+// {
+//   let module = this;
+//   let will = module.will;
+//   let result = Object.create( null );
+//
+//   for( let e in module.buildMap )
+//   {
+//     let element = module.buildMap[ e ];
+//     result[ e ] = element.dataExport();
+//   }
+//
+//   return result;
+// }
 
 //
 //
@@ -1274,10 +1329,11 @@ let Aggregates =
   reflectorMap : _.define.own({}),
   stepMap : _.define.own({}),
   buildMap : _.define.own({}),
+  exportedMap : _.define.own({}),
 
   about : _.define.ownInstanceOf( _.Will.ParagraphAbout ),
   execution : _.define.ownInstanceOf( _.Will.ParagraphExecution ),
-  exported : null,
+  // exported : null,
 
 }
 
@@ -1293,7 +1349,7 @@ let Restricts =
 
 let Statics =
 {
-  DirPathFromInFilePath : DirPathFromInFilePath,
+  DirPathFromWillFilePath : DirPathFromWillFilePath,
   KnownPrefixes : KnownPrefixes,
 }
 
@@ -1301,13 +1357,14 @@ let Forbids =
 {
   name : 'name',
   exportMap : 'exportMap',
+  exported : 'exported',
 }
 
 let Accessors =
 {
   about : { setter : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.Will.ParagraphAbout }) },
   execution : { setter : _.accessor.setter.friend({ name : 'execution', friendName : 'module', maker : _.Will.ParagraphExecution }) },
-  exported : { setter : _.accessor.setter.friend({ name : 'exported', friendName : 'module', maker : _.Will.ParagraphExported }) },
+  // exported : { setter : _.accessor.setter.friend({ name : 'exported', friendName : 'module', maker : _.Will.Exported }) },
   nickName : { getter : _nickNameGet, combining : 'rewrite' },
 }
 
@@ -1333,7 +1390,7 @@ let Proto =
   inFilesLoad : inFilesLoad,
   prefixPathForRole : prefixPathForRole,
   prefixPathForRoleMaybe : prefixPathForRoleMaybe,
-  DirPathFromInFilePath : DirPathFromInFilePath,
+  DirPathFromWillFilePath : DirPathFromWillFilePath,
 
   // select
 
@@ -1366,17 +1423,19 @@ let Proto =
 
   infoExport : infoExport,
   infoExportPaths : infoExportPaths,
-  infoExportReflectors : infoExportReflectors,
-  infoExportSteps : infoExportSteps,
-  infoExportBuilds : infoExportBuilds,
-  infoExportExports : infoExportExports,
+  infoExportResource : infoExportResource,
+  // infoExportReflectors : infoExportReflectors,
+  // infoExportSteps : infoExportSteps,
+  // infoExportBuilds : infoExportBuilds,
+  // infoExportExports : infoExportExports,
 
   dataExport : dataExport,
-  dataExportPaths : dataExportPaths,
-  dataExportSubmodules : dataExportSubmodules,
-  dataExportReflectors : dataExportReflectors,
-  dataExportSteps : dataExportSteps,
-  dataExportBuilds : dataExportBuilds,
+  dataExportResource : dataExportResource,
+  // dataExportPaths : dataExportPaths,
+  // dataExportSubmodules : dataExportSubmodules,
+  // dataExportReflectors : dataExportReflectors,
+  // dataExportSteps : dataExportSteps,
+  // dataExportBuilds : dataExportBuilds,
 
   // dataExportExports : dataExportExports,
 

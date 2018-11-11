@@ -93,14 +93,6 @@ function _inheritMultiple( o )
 
   /* begin */
 
-  // _.arrayAppendOnceStrictly( o.visited, reflector.name );
-  //
-  // reflector.inherit.map( ( ancestor ) =>
-  // {
-  //   reflector._inheritSingle({ visited : o.visited, ancestor : ancestor, defaultDst : true });
-  // });
-
-  // let o2 = _.mapOnly( o, Parent.prototype._inheritMultiple.defaults );
   Parent.prototype._inheritMultiple.call( reflector, o );
 
   if( reflector.reflectMap )
@@ -110,7 +102,6 @@ function _inheritMultiple( o )
 
   /* end */
 
-  // reflector.formed = 2;
   return reflector;
 }
 
@@ -136,7 +127,8 @@ function _inheritSingle( o )
 
   // debugger;
 
-  _.routineOptions( _inheritSingle, arguments );
+  // _.routineOptions( _inheritSingle, arguments );
+  _.assertRoutineOptions( _inheritSingle, arguments );
   _.assert( arguments.length === 1 );
   _.assert( reflector.formed === 1 );
   _.assert( reflector2 instanceof reflector.constructor, () => 'Expects reflector, but got', _.strTypeOf( reflector2 ) );
@@ -152,6 +144,7 @@ function _inheritSingle( o )
 
   let extend = _.mapOnly( reflector2, _.mapNulls( reflector ) );
   delete extend.srcFilter;
+  delete extend.criterion;
 
   if( extend.reflectMap )
   {
@@ -159,6 +152,7 @@ function _inheritSingle( o )
   }
 
   reflector.copy( extend );
+  reflector.criterionInherit( reflector2.criterion );
 
   if( reflector2.srcFilter )
   {
@@ -429,7 +423,7 @@ let Forbids =
 let Accessors =
 {
   srcFilter : { setter : _.accessor.setter.copyable({ name : 'srcFilter', maker : _.FileRecordFilter }) },
-  inherit : { setter : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
+  // inherit : { setter : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
 }
 
 _.assert( _.routineIs( _.FileRecordFilter ) );
