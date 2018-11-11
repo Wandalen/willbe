@@ -100,7 +100,7 @@ function stepRoutineExport( run, build )
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
   // _.assert( outf.data === null );
-  _.assert( module.exported === null );
+  // _.assert( module.exported === null );
 
   _.sure( _.strDefined( module.dirPath ), 'Expects directory path of the module' );
   _.sure( _.objectIs( build.criterion ), 'Expects criterion of export' );
@@ -113,11 +113,22 @@ function stepRoutineExport( run, build )
 
   /* begin */
 
-  module.exported = new will.Exported({ module : module });
+  if( module.exportedMap[ build.name ] )
+  {
+    _.assert( 0, 'not tested' );
+    module.exportedMap[ build.name ].finit();
+    _.assert( module.exportedMap[ build.name ] === undefined );
+  }
 
-  module.exported.formatVersion = will.FormatVersion;
-  module.exported.version = module.about.version;
-  module.exported.files = null;
+  debugger;
+
+  let exported = new will.Exported({ module : module, name : build.name }).form1();
+
+  _.assert( module.exportedMap[ build.name ] === exported );
+
+  exported.formatVersion = will.FormatVersion;
+  exported.version = module.about.version;
+  exported.files = null;
 
   // outf.data.formatVersion = outf.Version;
   // outf.data.version = module.about.version;
@@ -127,7 +138,7 @@ function stepRoutineExport( run, build )
   // outf.data.exportIn = module.inFileWithRoleMap.export ? module.inFileWithRoleMap.export.data : null;
   // outf.data.singleIn = module.inFileWithRoleMap.single ? module.inFileWithRoleMap.single.data : null;
 
-  module.exported.files = hd.filesFind
+  exported.files = hd.filesFind
   ({
     recursive : 1,
     includingDirectories : 1,

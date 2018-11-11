@@ -102,13 +102,21 @@ Self.shortName = 'Exported';
 
 let Composes =
 {
+
+  description : null,
+  criterion : null,
+
   formatVersion : null,
   version : null,
   files : null,
+
+  inherit : _.define.own([]),
+
 }
 
 let Aggregates =
 {
+  name : null,
 }
 
 let Associates =

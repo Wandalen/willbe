@@ -179,11 +179,12 @@ function exportFilesPathFor()
   let will = module.will;
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
+  let inDirPath = module.pathMap.inDir || '.';
 
   _.assert( arguments.length === 0 );
   _.sure( _.strDefined( build.filesPath ), 'Export should have defined path to files {-filesPath-}' );
 
-  return hd.path.resolve( module.dirPath, module.strResolve( build.filesPath ) );
+  return hd.path.resolve( module.dirPath, inDirPath, module.strResolve( build.filesPath ) );
 }
 
 //
@@ -196,15 +197,17 @@ function archivePathFor()
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let inExportFile = module.inFileWithRoleMap.export || module.inFileWithRoleMap.single;
+  let inFileDirPath = hd.path.dir( inExportFile.filePath )
+  let outDirPath = module.pathMap.outDir || '.';
 
   _.assert( arguments.length === 0 );
   _.assert( _.strDefined( build.name ) );
   _.assert( inExportFile instanceof will.WillFile );
 
-  let outDir = module.pathMap.outDir || hd.path.dir( inExportFile.filePath ) || '.';
+  // let outDir = module.pathMap.outDir || hd.path.dir( inExportFile.filePath ) || '.';
   let name = _.strJoinPath( [ module.about.name, build.name, '.out.tgs' ], '.' );
-
-  return hd.path.resolve( module.dirPath, outDir, name );
+  return hd.path.resolve( module.dirPath, outDirPath, name );
+  // return hd.path.resolve( inFileDirPath, module.dirPath, outDir, name );
 }
 
 //
@@ -217,15 +220,19 @@ function outFilePathFor()
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let inExportFile = module.inFileWithRoleMap.export || module.inFileWithRoleMap.single;
+  let inFileDirPath = hd.path.dir( inExportFile.filePath )
+  let outDirPath = module.pathMap.outDir || '.';
 
   _.assert( arguments.length === 0 );
   _.assert( _.strDefined( build.name ) );
   _.assert( inExportFile instanceof will.WillFile );
 
-  let outDir = module.pathMap.outDir || hd.path.dir( inExportFile.filePath ) || '.';
   let name = _.strJoinPath( [ module.about.name, '.out.yml' ], '.' );
+  return hd.path.resolve( module.dirPath, outDirPath, name );
 
-  return hd.path.resolve( module.dirPath, outDir, name );
+  // let outDir = module.pathMap.outDir || hd.path.dir( inExportFile.filePath ) || '.';
+  // let name = _.strJoinPath( [ module.about.name, '.out.yml' ], '.' );
+  // return hd.path.resolve( module.dirPath, outDir, name );
 }
 
 
@@ -238,9 +245,8 @@ let Composes =
 
   description : null,
   criterion : null,
-  steps : null,
 
-  // default : null,
+  steps : null,
   filesPath : null,
   entryPath : null,
 
