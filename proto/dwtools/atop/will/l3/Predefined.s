@@ -10,17 +10,12 @@ if( typeof module !== 'undefined' )
 }
 
 let Tar;
-
-//
-
 let _ = wTools;
 let Self = Object.create( null );
 
 // --
 //
 // --
-
-//
 
 let filesReflect = _.routineFromPreAndBody( _.FileProvider.Find.prototype.filesReflect.pre, _.FileProvider.Find.prototype.filesReflect.body );
 
@@ -84,24 +79,14 @@ function stepRoutineExport( run, build )
   let path = fileProvider.path;
   let logger = will.logger;
   let hub = will.fileProvider;
-  // let hd = hub.providersWithProtocolMap.file;
-
-  // let exportedDirPath = build.exportedDirPathFor();
-  // let archiveFilePath = build.archiveFilePathFor();
-  // let outFilePath = build.outFilePathFor();
-  // let outDirPath = path.dir( outFilePath );
 
   _.assert( arguments.length === 2 );
   _.assert( !!module );
   _.assert( !!will );
-  // _.assert( !!hd );
   _.assert( !!logger );
-  // _.assert( !outf.formed );
   _.assert( module.formed === 2 );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
-  // _.assert( outf.data === null );
-  // _.assert( module.exported === null );
 
   _.sure( _.strDefined( module.dirPath ), 'Expects directory path of the module' );
   _.sure( _.objectIs( build.criterion ), 'Expects criterion of export' );
@@ -110,7 +95,6 @@ function stepRoutineExport( run, build )
   _.sure( _.objectIs( module.willFileWithRoleMap.export ) || _.objectIs( module.willFileWithRoleMap.single ), 'Expects export in fine' );
   _.sure( _.strDefined( module.about.name ), 'Expects name of the module defined' );
   _.sure( _.strDefined( module.about.version ), 'Expects the current version of the module defined' );
-  // _.sure( hd.fileExists( exportedDirPath ) );
 
   /* begin */
 
@@ -126,76 +110,6 @@ function stepRoutineExport( run, build )
   _.assert( module.exportedMap[ build.name ] === exported );
 
   return exported.build();
-
-  // exported.exportedDirPath = path.dot( path.relative( outDirPath, exportedDirPath ) );
-  // exported.archiveFilePath = path.dot( path.relative( outDirPath, archiveFilePath ) );
-  //
-  // // exported.formatVersion = will.FormatVersion;
-  // exported.version = module.about.version;
-  // exported.files = null;
-  //
-  // // outf.data.formatVersion = outf.Version;
-  // // outf.data.version = module.about.version;
-  // // outf.data.files = null;
-  //
-  // // outf.data.importIn = module.willFileWithRoleMap.import ? module.willFileWithRoleMap.import.data : null;
-  // // outf.data.exportIn = module.willFileWithRoleMap.export ? module.willFileWithRoleMap.export.data : null;
-  // // outf.data.singleIn = module.willFileWithRoleMap.single ? module.willFileWithRoleMap.single.data : null;
-  //
-  // exported.files = hd.filesFind
-  // ({
-  //   recursive : 1,
-  //   includingDirectories : 1,
-  //   includingTerminals : 1,
-  //   outputFormat : 'relative',
-  //   filePath : exportedDirPath,
-  //   filter :
-  //   {
-  //     maskTransientDirectory : { /*excludeAny : [ /\.git$/, /node_modules$/ ]*/ },
-  //     basePath : module.dirPath,
-  //   },
-  // });
-  //
-  // /* */
-  //
-  // // outf.data = module.dataExport();
-  // let data = module.dataExport();
-  //
-  // hd.fileWrite
-  // ({
-  //   filePath : outFilePath,
-  //   data : data,
-  //   encoding : 'yaml',
-  // });
-  //
-  // /* */
-  //
-  // if( will.verbosity >= 2 )
-  // logger.log( ' + ' + 'Write out file to ' + outFilePath );
-  //
-  // if( build.criterion.tar === undefined || build.criterion.tar )
-  // {
-  //
-  //   if( !Tar )
-  //   Tar = require( 'tar' );
-  //
-  //   let o2 =
-  //   {
-  //     gzip : true,
-  //     sync : 1,
-  //     file : hd.path.nativize( archiveFilePath ),
-  //     cwd : hd.path.nativize( exportedDirPath ),
-  //   }
-  //
-  //   debugger;
-  //   let zip = Tar.create( o2, [ '.' ] );
-  //   debugger;
-  //
-  //   if( will.verbosity >= 2 )
-  //   logger.log( ' + ' + 'Write out archive ' + hd.path.move( archiveFilePath, exportedDirPath ) );
-  //
-  // }
-
 }
 
 // --

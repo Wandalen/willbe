@@ -132,7 +132,7 @@ function willFilesList( o )
   _.assert( arguments.length === 1 );
   _.routineOptions( willFilesList, o );
   _.assert( !!will.formed );
-  _.assert( !!o.includingInFiles, 'not tested' )
+  // _.assert( !!o.includingInFiles, 'not tested' )
 
   let filter = { maskTerminal : { includeAny : /\.will(\.|$)/, excludeAny : [], includeAll : [] } };
 
@@ -141,12 +141,14 @@ function willFilesList( o )
   if( !o.includingOutFiles )
   filter.maskTerminal.excludeAny.push( /\.out(\.|$)/ )
 
+  // debugger;
   let files = fileProvider.filesFind
   ({
     filePath : o.dirPath,
     filter : filter,
     recursive : o.recursive,
   });
+  // debugger;
 
   return files;
 }

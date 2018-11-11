@@ -522,6 +522,35 @@ willFilesLoad.defaults =
   isInFile : 1,
 }
 
+//
+
+function clean()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let exps = module.exportsSelect();
+
+  for( let e = 0 ; e < exps.length ; e++ )
+  {
+    let exp = exps[ e ];
+    let archiveFilePath = exp.archiveFilePathFor();
+    let outFilePath = exp.outFilePathFor();
+
+    // debugger; xxx
+
+    if( fileProvider.fileExists( archiveFilePath ) )
+    fileProvider.fileDelete({ filePath : archiveFilePath, verbosity : 3, throwing : 0 });
+
+    if( fileProvider.fileExists( outFilePath ) )
+    fileProvider.fileDelete({ filePath : outFilePath, verbosity : 3, throwing : 0 });
+
+  }
+
+  // debugger; xxx
+}
+
 // --
 // etc
 // --
@@ -571,9 +600,9 @@ function _buildsSelect_pre( routine, args )
   if( args[ 1 ] !== undefined )
   o = { name : args[ 0 ], criterion : args[ 1 ] }
   else
-  o = args[ 0 ]
+  o = args[ 0 ];
 
-  _.routineOptions( routine, o );
+  o = _.routineOptions( routine, o );
   _.assert( _.arrayHas( [ 'build', 'export' ], o.resource ) );
   _.assert( _.arrayHas( [ 'default', 'more' ], o.preffering ) );
   _.assert( o.criterion === null || _.routineIs( o.criterion ) || _.mapIs( o.criterion ) );
@@ -1329,6 +1358,8 @@ let Proto =
 
   willFileLoadMaybe : willFileLoadMaybe,
   willFilesLoad : willFilesLoad,
+
+  clean : clean,
 
   // etc
 

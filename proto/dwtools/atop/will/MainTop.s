@@ -71,6 +71,7 @@ function commandsMake()
     'about list' :        { e : _.routineJoin( will, will.commandAboutList ),         h : 'List descriptive information about the module.' },
     'execution list' :    { e : _.routineJoin( will, will.commandExecutionList ),     h : 'List execution scenarios.' },
 
+    'clean' :             { e : _.routineJoin( will, will.commandClean ),             h : 'Clean current module. Delete genrated artifacts.' },
     'build' :             { e : _.routineJoin( will, will.commandBuild ),             h : 'Build current module with spesified criterion.' },
     'export' :            { e : _.routineJoin( will, will.commandExport ),            h : 'Export selected the module with spesified criterion. Save output to output file and archive.' },
     'with' :              { e : _.routineJoin( will, will.commandWith ),              h : 'Use "with" to select a module' },
@@ -318,6 +319,32 @@ function commandExecutionList( e )
   will._commandList( e, act );
 
   return will;
+}
+
+//
+
+function commandClean( e )
+{
+  let will = this;
+
+  if( !will.formed )
+  will.form();
+
+  let fileProvider = will.fileProvider;
+  let logger = will.logger;
+  let dirPath = fileProvider.path.current();
+  if( !will.currentModule )
+  will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().willFilesLoad();
+  let module = will.currentModule;
+
+  logger.up();
+  if( logger.verbosity >= 2 )
+  {
+    logger.log( 'Cleaning', module.nickName );
+  }
+
+  module.clean();
+  logger.down();
 }
 
 //
@@ -615,6 +642,7 @@ let Extend =
   commandAboutList : commandAboutList,
   commandExecutionList : commandExecutionList,
 
+  commandClean : commandClean,
   commandBuild : commandBuild,
   commandExport : commandExport,
   commandWith : commandWith,
