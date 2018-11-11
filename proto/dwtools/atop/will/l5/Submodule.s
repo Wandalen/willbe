@@ -93,7 +93,7 @@ function _load()
   submodule.loadedModule.willFilesLoad({ isInFile : 0 });
   // debugger;
 
-  _.sure( submodule.loadedModule.isOpened(), 'Cant find submodule', submodule.name, 'at', submodule.loadedModule.dirPath );
+  _.sure( submodule.loadedModule.isOpened(), 'Submodule', submodule.name, 'not found at', submodule.loadedModule.dirPath );
 
 }
 

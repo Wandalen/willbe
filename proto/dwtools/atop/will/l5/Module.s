@@ -548,6 +548,10 @@ function clean()
 
   }
 
+  let temp = module.pathMap.temp ? _.arrayAs( module.pathMap.temp ) : [];
+  temp = path.s.resolve( module.dirPath, temp );
+  fileProvider.filesDelete({ filePath : temp, verbosity : 2, throwing : 0 });
+
   // debugger; xxx
 }
 
