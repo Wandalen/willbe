@@ -1,6 +1,6 @@
 {
   "name": "willbe",
-  "version": "0.3.32",
+  "version": "0.3.33",
   "description": "Tool to manage modules of modular systems",
   "author": "Kostiantyn Wandalen <wanalen@willbe.so>",
   "license": "MIT",
@@ -40,7 +40,7 @@
     "wcommandsaggregator": "",
     "wcommandsconfig": "",
     "tar": "",
-    "gitconfiglocal" : ""
+    "gitconfiglocal": ""
   },
   "devDependencies": {
     "wTesting": "",
