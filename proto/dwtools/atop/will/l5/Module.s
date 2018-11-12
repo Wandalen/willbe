@@ -428,13 +428,13 @@ function willFileLoadMaybe( o )
   if( result.exists() )
   {
     result.form2();
-    // logger.log( ' +', 'will file', filePath, );
+    logger.log( ' +', 'will file', filePath, );
     return result;
   }
   else
   {
     result.finit();
-    // logger.log( ' -', 'will file', filePath, );
+    logger.log( ' -', 'will file', filePath, );
     return null;
   }
 
