@@ -40,9 +40,9 @@ function unform()
   let module = patho.module;
   let inf = patho.inf;
 
-  _.assert( module[ patho.MapName ][ patho.name ] === patho.path );
+  _.assert( module[ patho.MapName ][ patho.name ] === patho );
   if( inf )
-  _.assert( inf[ patho.MapName ][ patho.name ] === patho.path );
+  _.assert( inf[ patho.MapName ][ patho.name ] === patho );
 
   Parent.prototype.unform.apply( patho, arguments )
 
