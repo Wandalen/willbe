@@ -37,6 +37,8 @@ function form3()
   _.assert( arguments.length === 0 );
   _.assert( build.formed === 2 );
 
+  // console.log( 'form3', module.nickName, build.nickName );
+
   /* begin */
 
   build.stepsEach( function( it )

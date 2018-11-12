@@ -43,22 +43,22 @@ function form3()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+  let result = submodule;
 
   _.assert( arguments.length === 0 );
   _.assert( submodule.formed === 2 );
   _.assert( _.strIs( submodule.path ), 'not tested' );
-
   _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
 
   /* begin */
 
   if( !module.supermodule )
-  submodule._load();
+  result = submodule._load();
 
   /* end */
 
   submodule.formed = 3;
-  return submodule;
+  return result;
 }
 
 //
@@ -85,6 +85,7 @@ function _load()
   submodule.loadedModule = will.Module
   ({
     will : will,
+    alias : submodule.name,
     dirPath : path.join( module.dirPath, submodule.path ),
     supermodule : module,
   }).form();
@@ -93,8 +94,24 @@ function _load()
   submodule.loadedModule.willFilesLoad({ isInFile : 0 });
   // debugger;
 
-  _.sure( submodule.loadedModule.isOpened(), 'Submodule', submodule.name, 'not found at', submodule.loadedModule.dirPath );
+  submodule.loadedModule.ready.doThen( ( err, arg ) =>
+  {
+    debugger;
+    if( err )
+    throw _.err( 'Failed open', submodule.nickName, 'at', submodule.loadedModule.dirPath, '\n', err );
+    if( !submodule.loadedModule.isOpened() )
+    throw _.err( 'Failed open', submodule.nickName, 'at', submodule.loadedModule.dirPath, '\n' );
+    return arg;
+  });
 
+  // if( !module.supermodule )
+  // debugger;
+  // return _.timeOut( 3000 ).doThen( () =>
+  // {
+  //   // debugger;
+  // });
+
+  return submodule.loadedModule.ready;
 }
 
 //

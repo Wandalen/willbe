@@ -190,26 +190,70 @@ function form2()
   module.about.copy( inf.data.about );
   if( inf.data.execution )
   module.execution.copy( inf.data.execution );
-  if( inf.data.exported )
-  inf._resourcesForm( will.Exported, inf.data.exported );
 
-  if( inf.data.path )
-  inf._resourcesForm( will.PathObj, inf.data.path );
+  let con = _.Consequence().give();
+  // let cons = [];
+
+  /* */
+
+  if( inf.data.exported )
+  inf._resourcesForm1( will.Exported, inf.data.exported );
 
   if( inf.data.submodule )
-  inf._resourcesForm( will.Submodule, inf.data.submodule );
+  inf._resourcesForm1( will.Submodule, inf.data.submodule );
+
+  if( inf.data.path )
+  inf._resourcesForm1( will.PathObj, inf.data.path );
 
   if( inf.data.reflector )
-  inf._resourcesForm( will.Reflector, inf.data.reflector );
+  inf._resourcesForm1( will.Reflector, inf.data.reflector );
 
-  inf._resourcesForm( will.Step, inf.data.step || {} );
+  inf._resourcesForm1( will.Step, inf.data.step || {} );
 
   if( inf.data.build )
-  inf._resourcesForm( will.Build, inf.data.build );
+  inf._resourcesForm1( will.Build, inf.data.build );
+
+  /* */
+
+  if( inf.data.exported )
+  inf._resourcesForm2( will.Exported, inf.data.exported, con );
+
+  // if( !module.supermodule )
+  // debugger;
+
+  if( inf.data.submodule )
+  inf._resourcesForm2( will.Submodule, inf.data.submodule, con );
+
+  // if( !module.supermodule )
+  // debugger;
+
+  if( inf.data.path )
+  inf._resourcesForm2( will.PathObj, inf.data.path, con );
+
+  if( inf.data.reflector )
+  inf._resourcesForm2( will.Reflector, inf.data.reflector, con );
+
+  inf._resourcesForm2( will.Step, inf.data.step || {}, con );
+
+  if( inf.data.build )
+  inf._resourcesForm2( will.Build, inf.data.build, con );
+
+  /* */
+
+  // if( !module.supermodule )
+  // debugger;
+  // con.ifNoErrorThen( function()
+  // {
+  //   // console.log( inf.role );
+  //   // if( !module.supermodule )
+  //   // debugger;
+  // });
 
   /* */
 
   inf.formed = 2;
+
+  return con.split();
 }
 
 //
@@ -244,7 +288,7 @@ function _inPathsForm()
 
 //
 
-function _resourcesForm( Resource, resources )
+function _resourcesForm1( Resource, resources )
 {
   let inf = this;
   let module = inf.module;
@@ -252,6 +296,7 @@ function _resourcesForm( Resource, resources )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+  // let con = _.Consequence().give();
 
   _.assert( _.mapIs( resources ) );
   _.assert( _.constructorIs( Resource ) );
@@ -259,9 +304,6 @@ function _resourcesForm( Resource, resources )
 
   _.each( resources, ( resource, k ) =>
   {
-
-//     if( _.strIs( path ) || _.arrayIs( path ) )
-//     path = { path : path }
 
     if( Resource.OptionsFrom )
     resource = Resource.OptionsFrom( resource );
@@ -281,23 +323,64 @@ function _resourcesForm( Resource, resources )
 
   });
 
-  // debugger; xxx
+}
+
+//
+
+function _resourcesForm2( Resource, resources, con )
+{
+  let inf = this;
+  let module = inf.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  // let con = _.Consequence().give();
+
+  _.assert( _.mapIs( resources ) );
+  _.assert( _.constructorIs( Resource ) );
+  _.assert( arguments.length === 3 );
+
+  // _.each( resources, ( resource, k ) =>
+  // {
+  //
+  //   if( Resource.OptionsFrom )
+  //   resource = Resource.OptionsFrom( resource );
+  //
+  //   let o2 = _.mapExtend( null, resource );
+  //   o2.inf = inf;
+  //   o2.module = module;
+  //   o2.name = k;
+  //   try
+  //   {
+  //     Resource.MakeForEachCriterion( o2 );
+  //   }
+  //   catch( err )
+  //   {
+  //     throw _.err( 'Cant form', Resource.shortName, _.strQuote( o2.name ), '\n', err );
+  //   }
+  //
+  // });
+
+  if( Resource.MapName === 'build' )
+  debugger;
 
   for( let s in inf[ Resource.MapName ] )
   {
     let resource = inf[ Resource.MapName ][ s ];
     _.assert( !!resource.formed );
-    if( resource.formed < 2 )
-    resource.form2();
+    // if( resource.formed < 2 )
+    con.ifNoErrorThen( () => resource.form2() );
   }
 
   for( let s in inf[ Resource.MapName ] )
   {
     let resource = inf[ Resource.MapName ][ s ];
-    if( resource.formed < 3 )
-    resource.form3();
+    // if( resource.formed < 3 )
+    con.ifNoErrorThen( () => resource.form3() );
   }
 
+  // return con;
 }
 
 //
@@ -395,7 +478,8 @@ let Proto =
   form1 : form1,
   form2 : form2,
   _inPathsForm : _inPathsForm,
-  _resourcesForm : _resourcesForm,
+  _resourcesForm1 : _resourcesForm1,
+  _resourcesForm2 : _resourcesForm2,
 
   exists : exists,
 

@@ -137,11 +137,15 @@ function form()
 {
   let module = this;
   let will = module.will;
+  let con = module.formReady;
 
   _.assert( arguments.length === 0 );
+  _.assert( module.formReady.isEmpty() )
+  _.assert( !module.formReady.resourcesHas() )
 
-  module.form1();
-  module.form2();
+  con.give();
+  con.doThen( () => module.form1() );
+  con.doThen( () => module.form2() );
 
   return module;
 }
@@ -166,13 +170,24 @@ function form1()
 
   /* begin */
 
-  _.arrayAppendOnceStrictly( will.moduleArray, module );
-  will.moduleMap[ module.dirPath ] = module
+  // debugger;
+  if( module.downloadRequired() )
+  {
+    return module.download().ifNoErrorThen( () => end() );
+  }
 
-  /* end */
+  return end();
 
-  module.formed = 1;
-  return module;
+  /* */
+
+  function end()
+  {
+    // debugger;
+    _.arrayAppendOnceStrictly( will.moduleArray, module );
+    will.moduleMap[ module.dirPath ] = module
+    module.formed = 1;
+  }
+
 }
 
 //
@@ -195,7 +210,14 @@ function form2()
   /* end */
 
   module.formed = 2;
-  return module;
+
+  // debugger;
+  // return _.timeOut( 3000 ).doThen( () =>
+  // {
+  //   console.log( 'form2', module.nickName );
+  //   debugger;
+  // });
+
 }
 
 //
@@ -296,8 +318,6 @@ function predefinedForm()
 /*
   .predefined.common :
     srcFilter :
-      prefixPath : './proto'
-      basePath : '.'
       maskAll :
         excludeAny :
         - !!js/regexp '/(^|\/)-/'
@@ -427,14 +447,14 @@ function willFileLoadMaybe( o )
 
   if( result.exists() )
   {
-    result.form2();
-    logger.log( ' +', 'will file', filePath, );
+    // return result.form2();
+    // logger.log( ' +', 'will file', filePath, );
     return result;
   }
   else
   {
     result.finit();
-    logger.log( ' -', 'will file', filePath, );
+    // logger.log( ' -', 'will file', filePath, );
     return null;
   }
 
@@ -450,93 +470,174 @@ willFileLoadMaybe.defaults =
 
 //
 
-function willFilesLoad( o )
+function _willFilesLoadMaybe( o )
 {
   let module = this;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let loadedOuter = 0;
-  let loadedInner = 0;
+  let con = _.Consequence().give();
+  // con = module.ready;
 
-  o = _.routineOptions( willFilesLoad, arguments );
+  o = _.routineOptions( _willFilesLoadMaybe, arguments );
+
   _.assert( module.inFileArray.length === 0, 'not tested' );
+  // _.assert( module.ready.isEmpty() )
+  _.assert( !module.ready.resourcesHas() )
 
   /* */
 
+  // !!! handle consequence properly
   // debugger;
 
-  loadedOuter = module.willFileLoadMaybe
+  let files = Object.create( null );
+
+  files.outerSingle = module.willFileLoadMaybe
   ({
     role : 'single',
     dirPath : path.join( '..', path.fullName( module.dirPath ) ),
     isInFile : o.isInFile,
     isInside : 0,
-  }) || loadedOuter;
+  })
 
   if( o.isInFile )
   {
 
-    loadedOuter = module.willFileLoadMaybe
+    files.outerImport = module.willFileLoadMaybe
     ({
       role : 'import',
       dirPath : path.join( '..', path.fullName( module.dirPath ) ),
       isInFile : o.isInFile,
       isInside : 0,
-    }) || loadedOuter;
+    });
 
-    loadedOuter = module.willFileLoadMaybe
+    files.outerExport = module.willFileLoadMaybe
     ({
       role : 'export',
       dirPath : path.join( '..', path.fullName( module.dirPath ) ),
       isInFile : o.isInFile,
       isInside : 0,
-    }) || loadedOuter;
+    });
 
+  }
+
+  if( files.outerSingle || files.outerImport || files.outerExport )
+  {
+    if( files.outerSingle )
+    con.ifNoErrorThen( () => files.outerSingle.form2() );
+    if( files.outerImport )
+    con.ifNoErrorThen( () => files.outerImport.form2() );
+    if( files.outerExport )
+    con.ifNoErrorThen( () => files.outerExport.form2() );
+
+    /* xxx */
+    con.ifNoErrorThen( () =>
+    {
+      _.timeOut( 1, () => module.ready.give() );
+      return;
+    });
+
+    return con.split();
   }
 
   /* - */
 
-  if( loadedOuter )
-  return module;
-
-  loadedInner = module.willFileLoadMaybe
+  files.innerSingle = module.willFileLoadMaybe
   ({
     role : 'single',
     dirPath : '.',
     isInFile : o.isInFile,
     isInside : 1,
-  }) || loadedOuter;
+  });
 
   if( o.isInFile )
   {
 
-    loadedInner = module.willFileLoadMaybe
+    files.innerImport = module.willFileLoadMaybe
     ({
       role : 'import',
       dirPath : '.',
       isInFile : o.isInFile,
       isInside : 1,
-    }) || loadedOuter;
+    });
 
-    loadedInner = module.willFileLoadMaybe
+    files.innerExport = module.willFileLoadMaybe
     ({
       role : 'export',
       dirPath : '.',
       isInFile : o.isInFile,
       isInside : 1,
-    }) || loadedOuter;
+    });
 
   }
 
-  return module;
+  if( files.innerSingle || files.innerImport || files.innerExport )
+  {
+    if( files.innerSingle )
+    con.ifNoErrorThen( () => files.innerSingle.form2() );
+    if( files.innerImport )
+    con.ifNoErrorThen( () => files.innerImport.form2() );
+    if( files.innerExport )
+    con.ifNoErrorThen( () => files.innerExport.form2() );
+
+    con.ifNoErrorThen( () =>
+    {
+      /* xxx */
+      _.timeOut( 1, () => module.ready.give() );
+      return;
+    });
+
+    return con.split();
+  }
+
+  return null;
 }
 
-willFilesLoad.defaults =
+_willFilesLoadMaybe.defaults =
 {
   isInFile : 1,
 }
+
+//
+
+function willFilesLoad()
+{
+  let module = this;
+  let will = module.will;
+
+  // debugger;
+  return module.formReady.ifNoErrorGot( () =>
+  {
+    // debugger;
+    let result = module._willFilesLoadMaybe.apply( this, arguments );
+
+    if( !result )
+    {
+      debugger;
+      throw _.errBriefly( 'Found no .out.will file for', module.nickName, 'at', _.strQuote( module.dirPath ) );
+    }
+
+    _.assert( _.consequenceIs( result ) );
+
+    result.doThen( ( err, arg ) =>
+    {
+      // debugger;
+      if( !err && module.inFileArray.length === 0 )
+      throw _.errLogOnce( 'Cant open', module.nickName, 'at', _.strQuote( module.dirPath ) );
+
+      if( err )
+      throw _.errLogOnce( 'Cant open', module.nickName, 'at', _.strQuote( module.dirPath ), '\n', err );
+
+      return arg;
+    });
+
+    return result;
+  }).split();
+
+}
+
+willFilesLoad.defaults = Object.create( _willFilesLoadMaybe.defaults );
 
 //
 
@@ -571,9 +672,66 @@ function clean()
   // debugger; xxx
 }
 
+//
+
+function downloadRequired()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  let fileProvider2 = fileProvider.providerForPath( module.dirPath );
+  if( fileProvider2.limitedImplementation )
+  return true;
+
+  return false;
+}
+
+//
+
+function download()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( module.formed === 0 );
+  _.assert( _.strDefined( module.dirPath ) );
+  _.assert( _.strDefined( module.alias ) );
+  _.assert( !!module.supermodule );
+
+  module.remotePath = module.dirPath;
+
+  let submodulesDir = module.supermodule.submodulesDirGet();
+
+  module.dirPath = path.join( submodulesDir, module.alias );
+
+  let o2 =
+  {
+    reflectMap : { [ module.remotePath ] : module.dirPath },
+  }
+
+  return will.Predefined.filesReflect.call( fileProvider, o2 );
+}
+
 // --
 // etc
 // --
+
+function submodulesDirGet()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  _.assert( arguments.length === 0 );
+  return path.join( module.dirPath, '.module' );
+}
+
+//
 
 function pathAllocate( name, filePath )
 {
@@ -598,7 +756,13 @@ function pathAllocate( name, filePath )
 function _nickNameGet()
 {
   let module = this;
-  return '{ ' + module.constructor.shortName + ' ' + _.strQuote( module.dirPath ) + ' }';
+  let name = module.alias ? module.alias : null;
+  if( !name && module.about )
+  name = module.about.name;
+  if( !name )
+  name = module.dirPath;
+  return '{ ' + module.constructor.shortName + ' ' + _.strQuote( name ) + ' }';
+  // return '{ ' + module.constructor.shortName + ' ' + _.strQuote( module.dirPath ) + ' }';
 }
 
 // --
@@ -890,15 +1054,16 @@ function _strResolveMaybe_body( o )
 
   let result = module._resourceSelect( o );
 
-  if( o.flattening && _.mapIs( result ) )
-  debugger;
+  // if( o.flattening && _.mapIs( result ) )
+  // debugger;
+
   if( o.flattening && _.mapIs( result ) )
   result = _.mapsFlatten2([ result ]);
 
   if( o.unwrappingPath && o.hasPath )
   {
-    if( o.query === 'submodule::*/exported::*=1/path::exportedDir*=1' )
-    debugger;
+    // if( o.query === 'submodule::*/exported::*=1/path::exportedDir*=1' )
+    // debugger;
     _.assert( _.mapIs( result ) || _.objectIs( result ), 'not implemented' );
     if( _.mapIs( result ) )
     result = _.filter( result, ( e ) => e instanceof will.PathObj ? e.path : e )
@@ -1027,13 +1192,13 @@ function _resourceSelect( o )
 
     if( it.src && it.src instanceof will.Submodule )
     {
-      debugger;
+      // debugger;
       it._inherited.module = it.src.loadedModule;
     }
 
     if( it.src && it.src instanceof will.Exported )
     {
-      debugger;
+      // debugger;
       it._inherited.exported = it.src;
     }
 
@@ -1071,6 +1236,8 @@ function _resourceSelect( o )
   function queryParse()
   {
     let it = this;
+    // debugger;
+    _.assert( !!it._inherited.module );
     let splits = it._inherited.module._strSplit({ query : it.query, defaultPool : o.defaultPool });
 
     it.queryParsed = Object.create( null );
@@ -1298,8 +1465,12 @@ let KnownPrefixes = [ 'submodule', 'step', 'path', 'reflector', 'build', 'about'
 
 let Composes =
 {
+  ready : _.define.ownInstanceOf( _.Consequence ),
+  formReady : _.define.ownInstanceOf( _.Consequence ),
   dirPath : null,
+  remotePath : null,
   verbosity : 0,
+  alias : null,
 }
 
 let Aggregates =
@@ -1377,12 +1548,16 @@ let Proto =
   isOpened : isOpened,
 
   willFileLoadMaybe : willFileLoadMaybe,
+  _willFilesLoadMaybe : _willFilesLoadMaybe,
   willFilesLoad : willFilesLoad,
 
   clean : clean,
+  downloadRequired : downloadRequired,
+  download : download,
 
   // etc
 
+  submodulesDirGet : submodulesDirGet,
   pathAllocate : pathAllocate,
   _nickNameGet : _nickNameGet,
 

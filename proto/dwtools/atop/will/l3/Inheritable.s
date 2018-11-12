@@ -197,8 +197,15 @@ function form1()
 function form2()
 {
   let inheritable = this;
+  let module = inheritable.module;
+
   _.assert( arguments.length === 0 );
   _.assert( inheritable.formed === 1 );
+
+  // console.log( 'form2', module.nickName, inheritable.nickName );
+
+  if( inheritable.nickName === 'release.compiled.export' )
+  debugger;
 
   /* begin */
 

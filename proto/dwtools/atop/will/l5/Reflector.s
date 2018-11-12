@@ -247,8 +247,8 @@ function _reflectMapForm( o )
 
     if( !module.strIsResolved( r ) )
     {
-      if( r === 'submodule::*/exported::*=1/path::exportedDir*=1' )
-      debugger;
+      // if( r === 'submodule::*/exported::*=1/path::exportedDir*=1' )
+      // debugger;
 
       let resolved = module.strResolve
       ({
@@ -260,8 +260,8 @@ function _reflectMapForm( o )
         flattening : 1,
       });
 
-      if( r === 'submodule::*/exported::*=1/path::exportedDir*=1' )
-      debugger;
+      // if( r === 'submodule::*/exported::*=1/path::exportedDir*=1' )
+      // debugger;
 
       if( !_.errIs( resolved ) && !_.strIs( resolved ) && !_.arrayIs( resolved ) && !( resolved instanceof will.Reflector ) )
       resolved = _.err( 'Source of reflects map was resolved to unexpected type', _.strTypeOf( resolved ) );

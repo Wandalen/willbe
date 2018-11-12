@@ -145,15 +145,23 @@ function _commandList( e, act )
   let fileProvider = will.fileProvider;
   let dirPath = fileProvider.path.current();
 
+  // if( !will.currentModule )
+  // will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().willFilesLoad();
+
   if( !will.currentModule )
-  will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().willFilesLoad();
-  let module = will.currentModule;
+  {
+    will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
+    will.currentModule.willFilesLoad();
+  }
 
-  act( module );
+  return will.currentModule.ready.split().ifNoErrorThen( function()
+  {
+    let module = will.currentModule;
+    let result = act( module );
+    module.finit();
+    return result;
+  });
 
-  module.finit();
-
-  return will;
 }
 
 //
@@ -333,18 +341,31 @@ function commandClean( e )
   let fileProvider = will.fileProvider;
   let logger = will.logger;
   let dirPath = fileProvider.path.current();
-  if( !will.currentModule )
-  will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().willFilesLoad();
-  let module = will.currentModule;
 
-  logger.up();
-  if( logger.verbosity >= 2 )
+  // if( !will.currentModule )
+  // will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().willFilesLoad();
+
+  if( !will.currentModule )
   {
-    logger.log( 'Cleaning', module.nickName );
+    will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
+    will.currentModule.willFilesLoad();
   }
 
-  module.clean();
-  logger.down();
+  return will.currentModule.ready.split().ifNoErrorThen( function()
+  {
+    let module = will.currentModule;
+
+    logger.up();
+    if( logger.verbosity >= 2 )
+    {
+      logger.log( 'Cleaning', module.nickName );
+    }
+
+    module.clean();
+    logger.down();
+
+  });
+
 }
 
 //
@@ -359,44 +380,52 @@ function commandBuild( e )
   let fileProvider = will.fileProvider;
   let logger = will.logger;
   let dirPath = fileProvider.path.current();
+
   if( !will.currentModule )
-  will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().willFilesLoad();
-  let module = will.currentModule;
-
-  let builds = module.buildsSelect( e.subject, e.propertiesMap );
-
-  logger.up();
-  if( logger.verbosity >= 2 )
   {
-    if( builds.length === 1 )
-    logger.log( 'Building', builds[ 0 ].name );
-    else
-    logger.log( module.infoExportResource( builds ) );
+    will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
+    will.currentModule.willFilesLoad();
   }
 
-  if( builds.length !== 1 )
+  return will.currentModule.ready.split().ifNoErrorThen( function()
   {
-    if( builds.length === 0 )
-    throw _.errBriefly( 'To build please specify exactly one build scenario, none satisfies passed arguments' );
-    throw _.errBriefly( 'To build please specify exactly one build scenario, ' + builds.length + ' satisfy(s) passed arguments' );
-  }
+    let module = will.currentModule;
+    let builds = module.buildsSelect( e.subject, e.propertiesMap );
 
-  let run = new will.BuildRun({ module : module }).form();
-
-  return run.run( builds[ 0 ] )
-  .doThen( ( err ) =>
-  {
-    run.finit();
-    module.finit();
-    if( err )
-    throw _.errLogOnce( err );
-
+    logger.up();
     if( logger.verbosity >= 2 )
     {
-      logger.log( 'Built', builds[ 0 ].name );
-      logger.log();
+      if( builds.length === 1 )
+      logger.log( 'Building', builds[ 0 ].name );
+      else
+      logger.log( module.infoExportResource( builds ) );
     }
-    logger.down();
+
+    if( builds.length !== 1 )
+    {
+      if( builds.length === 0 )
+      throw _.errBriefly( 'To build please specify exactly one build scenario, none satisfies passed arguments' );
+      throw _.errBriefly( 'To build please specify exactly one build scenario, ' + builds.length + ' satisfy(s) passed arguments' );
+    }
+
+    let run = new will.BuildRun({ module : module }).form();
+
+    return run.run( builds[ 0 ] )
+    .doThen( ( err ) =>
+    {
+      run.finit();
+      module.finit();
+      if( err )
+      throw _.errLogOnce( err );
+
+      if( logger.verbosity >= 2 )
+      {
+        logger.log( 'Built', builds[ 0 ].name );
+        logger.log();
+      }
+      logger.down();
+
+    });
 
   });
 
@@ -414,66 +443,59 @@ function commandExport( e )
   let fileProvider = will.fileProvider;
   let logger = will.logger;
   let dirPath = fileProvider.path.current();
+
+  // if( !will.currentModule )
+  // will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().willFilesLoad();
+
   if( !will.currentModule )
-  will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().willFilesLoad();
-  let module = will.currentModule;
-
-  let exports = module.exportsSelect( e.subject, e.propertiesMap );
-
-  logger.up();
-  if( logger.verbosity >= 2 )
   {
-    if( exports.length === 1 )
-    logger.log( 'Exporting', exports[ 0 ].name );
-    else
-    logger.log( module.infoExportResource( exports ) );
+    will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
+    will.currentModule.willFilesLoad();
   }
 
-  if( exports.length !== 1 )
+  return will.currentModule.ready.split().ifNoErrorThen( function()
   {
-    if( exports.length === 0 )
-    throw _.errBriefly( 'To export please specify exactly one export, none satisfies passed arguments' );
-    throw _.errBriefly( 'To export please specify exactly one export' );
-  }
 
-  let run = new will.BuildRun({ module : module }).form();
+    let module = will.currentModule
+    let exports = module.exportsSelect( e.subject, e.propertiesMap );
 
-  return run.run( exports[ 0 ] )
-  .doThen( ( err ) =>
-  {
-    run.finit();
-    module.finit();
-
-    if( err )
-    throw _.errLogOnce( err );
-
+    logger.up();
     if( logger.verbosity >= 2 )
     {
-      logger.log( 'Exported', exports[ 0 ].name );
-      logger.log();
+      if( exports.length === 1 )
+      logger.log( 'Exporting', exports[ 0 ].name );
+      else
+      logger.log( module.infoExportResource( exports ) );
     }
-    logger.down();
+
+    if( exports.length !== 1 )
+    {
+      if( exports.length === 0 )
+      throw _.errBriefly( 'To export please specify exactly one export, none satisfies passed arguments' );
+      throw _.errBriefly( 'To export please specify exactly one export' );
+    }
+
+    let run = new will.BuildRun({ module : module }).form();
+
+    return run.run( exports[ 0 ] )
+    .doThen( ( err ) =>
+    {
+      run.finit();
+      module.finit();
+
+      if( err )
+      throw _.errLogOnce( err );
+
+      if( logger.verbosity >= 2 )
+      {
+        logger.log( 'Exported', exports[ 0 ].name );
+        logger.log();
+      }
+      logger.down();
+
+    });
 
   });
-
-  // let expf = new will.OutFile({ module : module, export : exports[ 0 ] });
-  //
-  // return expf.form()
-  // .doThen( ( err ) =>
-  // {
-  //   expf.finit();
-  //   module.finit();
-  //   if( err )
-  //   throw _.errLogOnce( err );
-  //
-  //   if( logger.verbosity >= 2 )
-  //   {
-  //     logger.log( 'Exported', exports[ 0 ].name );
-  //     logger.log();
-  //   }
-  //   logger.down();
-  //
-  // });
 
 }
 
@@ -500,21 +522,31 @@ function commandWith( e )
   let path = fileProvider.path;
   let logger = will.logger;
   let dirPath = path.resolve( e.subject );
-  let module = will.currentModule = will.Module({ will : will, dirPath : dirPath })
-  .form()
-  .willFilesLoad();
 
-  if( module.inFileArray.length === 0 )
+  let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
+  will.currentModule.willFilesLoad();
+
+  // let module = will.currentModule = will.Module({ will : will, dirPath : dirPath })
+  // .form()
+  // .willFilesLoad();
+
+  return will.currentModule.ready.split().ifNoErrorThen( function()
   {
-    debugger;
-    throw _.errBriefly( 'Found no will-file at', _.strQuote( module.dirPath ) );
-  }
 
-  return ca.proceedAct
-  ({
-    command : secondCommand,
-    subject : secondSubject,
-    propertiesMap : e.propertiesMap,
+    _.assert( module.inFileArray.length > 0 );
+    // if( module.inFileArray.length === 0 )
+    // {
+    //   debugger;
+    //   throw _.errBriefly( 'Found no will-file at', _.strQuote( module.dirPath ) );
+    // }
+
+    return ca.proceedAct
+    ({
+      command : secondCommand,
+      subject : secondSubject,
+      propertiesMap : e.propertiesMap,
+    });
+
   });
 
 }
@@ -562,22 +594,31 @@ function commandEach( e )
     if( will.moduleMap[ dirPath ] )
     return;
 
-    let module = will.currentModule = will.Module({ will : will, dirPath : dirPath })
-    .form()
-    .willFilesLoad()
-    ;
+    let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
+    will.currentModule.willFilesLoad();
 
-    if( module.inFileArray.length === 0 )
+    // let module = will.currentModule = will.Module({ will : will, dirPath : dirPath })
+    // .form()
+    // .willFilesLoad()
+    // ;
+
+    return will.currentModule.ready.ifNoErrorThen( function()
     {
-      debugger;
-      throw _.errBriefly( 'Failed load will-file at', _.strQuote( file.absolute ) );
-    }
 
-    let result = ca.proceedAct
-    ({
-      command : secondCommand,
-      subject : secondSubject,
-      propertiesMap : _.mapExtend( null, e.propertiesMap ),
+      _.assert( module.inFileArray.length > 0 );
+      // if( module.inFileArray.length === 0 )
+      // {
+      //   debugger;
+      //   throw _.errBriefly( 'Failed load will-file at', _.strQuote( file.absolute ) );
+      // }
+
+      let result = ca.proceedAct
+      ({
+        command : secondCommand,
+        subject : secondSubject,
+        propertiesMap : _.mapExtend( null, e.propertiesMap ),
+      });
+
     });
 
     return result;
