@@ -40,7 +40,7 @@
     "wcommandsaggregator": "",
     "wcommandsconfig": "",
     "tar": "",
-    "gitconfiglocal"
+    "gitconfiglocal" : ""
   },
   "devDependencies": {
     "wTesting": "",
