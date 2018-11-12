@@ -22,6 +22,7 @@ if( typeof module !== 'undefined' )
     require( toolsPath );
   }
 
+
   let _ = _global_.wTools;
 
   _.include( 'wExternalFundamentals' );
