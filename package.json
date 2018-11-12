@@ -39,7 +39,8 @@
     "wstatesession": "",
     "wcommandsaggregator": "",
     "wcommandsconfig": "",
-    "tar": ""
+    "tar": "",
+    "gitconfiglocal"
   },
   "devDependencies": {
     "wTesting": "",
