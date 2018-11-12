@@ -40,10 +40,12 @@ function build()
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
 
+  debugger;
   let exportedDirPath = build.exportedDirPathFor();
   let archiveFilePath = build.archiveFilePathFor();
   let outFilePath = build.outFilePathFor();
   let outDirPath = path.dir( outFilePath );
+  debugger;
 
   _.assert( arguments.length === 0 );
   _.assert( !!module );

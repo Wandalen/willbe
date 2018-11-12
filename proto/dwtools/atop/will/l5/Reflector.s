@@ -270,7 +270,7 @@ function _reflectMapForm( o )
 
       if( _.arrayIs( resolved ) )
       {
-        debugger;
+        // debugger;
         resolved = path.s.normalize( resolved );
         delete map[ r ];
         for( let p = 0 ; p < resolved.length ; p++ )
