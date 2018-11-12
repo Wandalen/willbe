@@ -170,7 +170,9 @@ let Forbids =
 
 let Accessors =
 {
+
   path : { setter : _pathSet },
+
 }
 
 // --
