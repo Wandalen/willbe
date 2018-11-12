@@ -32,20 +32,36 @@ function finit()
   module.unform();
 
   module.about.finit();
-  if( module.execution )
   module.execution.finit();
-  // if( module.link )
-  // module.link.finit();
-  if( module.export )
-  module.export.finit();
+
+  for( let i in module.exportedMap )
+  module.exportedMap[ i ].finit();
+
+  for( let i in module.buildMap )
+  module.buildMap[ i ].finit();
+
+  for( let i in module.stepMap )
+  module.stepMap[ i ].finit();
+
+  for( let i in module.reflectorMap )
+  module.reflectorMap[ i ].finit();
+
+  for( let i in module.pathObjMap )
+  module.pathObjMap[ i ].finit();
+
+  for( let i in module.submoduleMap )
+  module.submoduleMap[ i ].finit();
+
+  for( let i = 0 ; i < module.inFileArray.length ; i++ )
+  module.inFileArray[ i ].finit();
 
   _.assert( _.instanceIsFinited( module.about ) );
   if( module.execution )
   _.assert( _.instanceIsFinited( module.execution ) );
-  // if( module.link )
-  // _.assert( _.instanceIsFinited( module.link ) );
   if( module.export )
   _.assert( _.instanceIsFinited( module.export ) );
+
+  _.assert( module.inFileArray.length === 0 );
 
   return _.Copyable.prototype.finit.apply( module, arguments );
 }
