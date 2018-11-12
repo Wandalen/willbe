@@ -54,12 +54,9 @@ function build()
   _.assert( !!hd );
   _.assert( !!logger );
   _.assert( !!build );
-  // _.assert( !outf.formed );
   _.assert( module.formed === 2 );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
-  // _.assert( outf.data === null );
-  // _.assert( module.exported === null );
   _.assert( exported.criterion === null );
 
   _.sure( _.strDefined( module.dirPath ), 'Expects directory path of the module' );
@@ -73,8 +70,6 @@ function build()
   _.sure( module.pathMap.baseDir === undefined || module.pathMap.baseDir === baseDirPath, 'path::baseDir should not be defined manually' );
 
   /* begin */
-
-  // exported.build();
 
   exported.criterion = _.mapExtend( null, build.criterion );
 
@@ -102,24 +97,8 @@ function build()
     exported.archiveFilePath = null;
   }
 
-  debugger;
-
-  // _.assert( module.pathMap[  ] );
-  // exported.exportedDirPath = path.dot( path.relative( outDirPath, exportedDirPath ) );
-  // exported.archiveFilePath = path.dot( path.relative( outDirPath, archiveFilePath ) );
-
-  // exported.formatVersion = will.FormatVersion;
-
   exported.version = module.about.version;
   exported.files = null;
-
-  // outf.data.formatVersion = outf.Version;
-  // outf.data.version = module.about.version;
-  // outf.data.files = null;
-
-  // outf.data.importIn = module.willFileWithRoleMap.import ? module.willFileWithRoleMap.import.data : null;
-  // outf.data.exportIn = module.willFileWithRoleMap.export ? module.willFileWithRoleMap.export.data : null;
-  // outf.data.singleIn = module.willFileWithRoleMap.single ? module.willFileWithRoleMap.single.data : null;
 
   exported.files = hd.filesFind
   ({
@@ -166,10 +145,7 @@ function build()
       cwd : hd.path.nativize( exportedDirPath ),
     }
 
-    debugger;
     let zip = Tar.create( o2, [ '.' ] );
-    debugger;
-
     if( will.verbosity >= 2 )
     logger.log( ' + ' + 'Write out archive ' + hd.path.move( archiveFilePath, exportedDirPath ) );
 
