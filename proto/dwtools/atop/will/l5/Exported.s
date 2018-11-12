@@ -42,6 +42,7 @@ function build()
 
   debugger;
   let exportedDirPath = build.exportedDirPathFor();
+  let baseDirPath = build.baseDirPathFor();
   let archiveFilePath = build.archiveFilePathFor();
   let outFilePath = build.outFilePathFor();
   let outDirPath = path.dir( outFilePath );
@@ -69,12 +70,18 @@ function build()
   _.sure( _.strDefined( module.about.name ), 'Expects name of the module defined' );
   _.sure( _.strDefined( module.about.version ), 'Expects the current version of the module defined' );
   _.sure( hd.fileExists( exportedDirPath ) );
+  _.sure( module.pathMap.baseDir === undefined || module.pathMap.baseDir === baseDirPath, 'path::baseDir should not be defined manually' );
 
   /* begin */
 
   // exported.build();
 
   exported.criterion = _.mapExtend( null, build.criterion );
+
+  if( !module.pathMap.baseDir )
+  {
+    will.PathObj({ module : module, name : 'baseDir', path : baseDirPath }).form();
+  }
 
   // exported.exportedDirPath = module.pathAllocate( 'exportedDir', path.dot( path.relative( outDirPath, exportedDirPath ) ) );
   exported.exportedDirPath = module.pathAllocate( 'exportedDir', path.dot( path.relative( module.dirPath, exportedDirPath ) ) );

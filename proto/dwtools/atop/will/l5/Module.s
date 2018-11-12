@@ -705,9 +705,12 @@ function download()
 
   module.remotePath = module.dirPath;
 
+  let fileProvider2 = fileProvider.providerForPath( module.dirPath );
   let submodulesDir = module.supermodule.submodulesDirGet();
 
   module.dirPath = path.join( submodulesDir, module.alias );
+
+  let localPath = fileProvider2.pathIsolateGlobalAndLocal( module.remotePath )[ 1 ];
 
   let o2 =
   {

@@ -145,6 +145,27 @@ function exportedDirPathFor()
 
 //
 
+function baseDirPathFor()
+{
+  let build = this
+  let module = build.module;
+  let will = module.will;
+  let hub = will.fileProvider;
+  let hd = hub.providersWithProtocolMap.file;
+  let inDirPath = module.pathMap.in || '.';
+
+  _.assert( arguments.length === 0 );
+
+  // debugger;
+  let outDirPath = hd.path.resolve( module.dirPath, module.pathMap.out );
+  let baseDirPath = hd.path.relative( outDirPath, module.dirPath );
+  // debugger;
+
+  return baseDirPath;
+}
+
+//
+
 function archiveFilePathFor()
 {
   let build = this
@@ -251,6 +272,7 @@ let Proto =
   stepsEach : stepsEach,
 
   exportedDirPathFor : exportedDirPathFor,
+  baseDirPathFor : baseDirPathFor,
   archiveFilePathFor : archiveFilePathFor,
   outFilePathFor : outFilePathFor,
 

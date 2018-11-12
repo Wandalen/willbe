@@ -602,7 +602,7 @@ function commandEach( e )
     // .willFilesLoad()
     // ;
 
-    return will.currentModule.ready.ifNoErrorThen( function()
+    return will.currentModule.ready.split().ifNoErrorThen( function()
     {
 
       _.assert( module.inFileArray.length > 0 );
@@ -619,9 +619,9 @@ function commandEach( e )
         propertiesMap : _.mapExtend( null, e.propertiesMap ),
       });
 
+      return result;
     });
 
-    return result;
   });
 
   return con;
