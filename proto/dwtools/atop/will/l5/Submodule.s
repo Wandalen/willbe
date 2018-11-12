@@ -100,13 +100,6 @@ function _load()
     return arg;
   });
 
-  // if( !module.supermodule )
-  // debugger;
-  // return _.timeOut( 3000 ).doThen( () =>
-  // {
-  //   // debugger;
-  // });
-
   return submodule.loadedModule.ready;
 }
 
