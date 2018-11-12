@@ -231,7 +231,7 @@ function predefinedForm()
 
   new will.Step
   ({
-    name : 'reflect',
+    name : 'predefined.reflect',
     stepRoutine : will.Predefined.stepRoutineReflect,
     module : module,
     criterion :
@@ -712,8 +712,6 @@ function download()
   module.clonePath = path.resolve( submodulesDir, module.alias );
   module.dirPath = path.resolve( module.clonePath, localPath );
 
-  debugger;
-
   let o2 =
   {
     reflectMap : { [ module.remotePath ] : module.clonePath },
@@ -759,8 +757,9 @@ function baseDirPathChange( dirPath )
 
   _.assert( will.moduleMap[ module.dirPath ] === module );
   _.assert( will.moduleMap[ dirPath ] === undefined );
+
   // _.assert( 0, 'not tested' );
-  debugger;
+  // debugger;
 
   delete will.moduleMap[ module.dirPath ];
   module.dirPath = dirPath;
@@ -1049,18 +1048,6 @@ function strIsResolved( srcStr )
 {
   return !_.strHas( srcStr, '::' );
 }
-
-//
-
-// function _pathResolve( filePath )
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let result = path.resolve( module.dirPath, filePath );
-//   return result;
-// }
 
 //
 
@@ -1615,9 +1602,6 @@ let Proto =
   _strSplit : _strSplit,
   strGetPrefix : strGetPrefix,
   strIsResolved : strIsResolved,
-
-  // _pathResolve : _pathResolve,
-  // pathResolve : _.routineVectorize_functor( _pathResolve ),
 
   _strResolve : _strResolve,
   strResolve : _strResolve,

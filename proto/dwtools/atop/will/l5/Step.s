@@ -57,13 +57,34 @@ function form3()
 
   _.assert( arguments.length === 0 );
   _.assert( step.formed === 2 );
+  _.sure( !!step.shell ^ _.routineIs( step.stepRoutine ), 'Step should not have both {shell} and {stepRoutine} fields' );
+  _.sure( step.shell === null || _.strIs( step.shell ) || _.arrayIs( step.shell ) );
 
   /* begin */
 
-  if( step.filePath && !step.stepRoutine )
+  if( step.currentPath )
+  {
+    debugger;
+    step.currentPath = step.inPathResolve( step.currentPath );
+    debugger;
+  }
+
+  if( step.shell && !step.stepRoutine )
   step.stepRoutine = function()
   {
-    _.assert( 0, 'not implemented' );
+    let shell = step.shell;
+    if( _.arrayIs( shell ) )
+    shell = shell.join( '\n' );
+    return _.shell
+    ({
+      path : shell,
+      currentPath : step.currentPath,
+    }).doThen( ( err, arg ) =>
+    {
+      if( err )
+      throw _.errBriefly( err );
+      return arg;
+    });
   }
 
   /* end */
@@ -73,36 +94,6 @@ function form3()
   step.formed = 3;
   return step;
 }
-
-// //
-//
-// function optionsExport()
-// {
-//   let step = this;
-//   let module = step.module;
-//   let inf = step.inf;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   let result = step.dataExprot();
-//   // let result = _.mapOnly( step, { inherit : null, filePath : null } );
-//
-//   result.inf = inf;
-//   result.module = module;
-//   result.name = step.name;
-//
-//   // let o2 = _.mapOnly( step, { inherit : null, filePath : null } );
-//   // o2.criterion = step.criterion;
-//   // o2.inf = inf;
-//   // o2.module = module;
-//   // o2.name = k;
-//
-//   xxx
-//
-//   return result;
-// }
 
 // --
 // relations
@@ -114,7 +105,8 @@ let Composes =
   description : null,
   criterion : null,
   opts : null,
-  filePath : null,
+  shell : null,
+  currentPath : null,
   inherit : _.define.own([]),
 
 }

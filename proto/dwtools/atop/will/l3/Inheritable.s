@@ -277,7 +277,6 @@ function _inheritMultiple( o )
     let ancestors = module.strResolve
     ({
       query : ancestor,
-      // must : 1,
       defaultPool : inheritable.PoolName,
       visited : o.visited,
       current : inheritable,
@@ -548,6 +547,34 @@ function _nickNameGet()
   return '{ ' + inheritable.constructor.shortName + ' ' + _.strQuote( inheritable.name ) + ' }';
 }
 
+//
+
+function _inPathResolve( filePath )
+{
+  let inheritable = this;
+  let module = inheritable.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.strIs( filePath ) );
+
+  if( !module.strIsResolved( filePath ) )
+  filePath = module.strResolve
+  ({
+    query : filePath,
+    defaultPool : 'path',
+    current : inheritable,
+  });
+
+  let result = path.resolve( module.dirPath, ( module.pathMap.in || '.' ), filePath );
+
+  _.assert( _.strIs( filePath ) || _.arrayIs( filePath ) );
+
+  return result;
+}
+
 // --
 // relations
 // --
@@ -626,6 +653,8 @@ let Proto =
   compactField : compactField,
 
   _nickNameGet : _nickNameGet,
+  _inPathResolve : _inPathResolve,
+  inPathResolve : _.routineVectorize_functor( _inPathResolve ),
 
   // relation
 
