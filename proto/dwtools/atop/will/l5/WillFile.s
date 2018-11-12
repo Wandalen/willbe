@@ -186,13 +186,21 @@ function form2()
   if( inf.data.format !== undefined && inf.data.format !== inf.FormatVersion )
   throw _.err( 'Does not support format', inf.data.format, 'supports', inf.FormatVersion );
 
+  if( inf.data.path && inf.data.path.baseDir )
+  {
+    let p = inf.data.path.baseDir;
+    if( _.mapIs( p ) )
+    p = p.path;
+    p = path.join( path.dir( inf.filePath ), p);
+    module.baseDirPathChange( p );
+  }
+
   if( inf.data.about )
   module.about.copy( inf.data.about );
   if( inf.data.execution )
   module.execution.copy( inf.data.execution );
 
   let con = _.Consequence().give();
-  // let cons = [];
 
   /* */
 

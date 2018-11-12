@@ -81,7 +81,6 @@ function _load()
 
   /* */
 
-  // debugger;
   submodule.loadedModule = will.Module
   ({
     will : will,
@@ -90,13 +89,10 @@ function _load()
     supermodule : module,
   }).form();
 
-  // debugger;
   submodule.loadedModule.willFilesLoad({ isInFile : 0 });
-  // debugger;
 
   submodule.loadedModule.ready.doThen( ( err, arg ) =>
   {
-    debugger;
     if( err )
     throw _.err( 'Failed open', submodule.nickName, 'at', submodule.loadedModule.dirPath, '\n', err );
     if( !submodule.loadedModule.isOpened() )

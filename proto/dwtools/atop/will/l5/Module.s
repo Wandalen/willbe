@@ -707,14 +707,16 @@ function download()
 
   let fileProvider2 = fileProvider.providerForPath( module.dirPath );
   let submodulesDir = module.supermodule.submodulesDirGet();
-
-  module.dirPath = path.join( submodulesDir, module.alias );
-
   let localPath = fileProvider2.pathIsolateGlobalAndLocal( module.remotePath )[ 1 ];
+
+  module.clonePath = path.resolve( submodulesDir, module.alias );
+  module.dirPath = path.resolve( module.clonePath, localPath );
+
+  debugger;
 
   let o2 =
   {
-    reflectMap : { [ module.remotePath ] : module.dirPath },
+    reflectMap : { [ module.remotePath ] : module.clonePath },
   }
 
   return will.Predefined.filesReflect.call( fileProvider, o2 );
@@ -732,6 +734,39 @@ function submodulesDirGet()
   let path = fileProvider.path;
   _.assert( arguments.length === 0 );
   return path.join( module.dirPath, '.module' );
+}
+
+//
+
+function baseDirPathChange( dirPath )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  dirPath = path.normalize( dirPath );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.strDefined( dirPath ) );
+  _.assert( path.isAbsolute( dirPath ) );
+  _.assert( module.formed === 2 );
+  _.assert( path.isNormalized( dirPath ) );
+  _.assert( path.isNormalized( module.dirPath ) );
+
+  if( module.dirPath === dirPath )
+  return module;
+
+  _.assert( will.moduleMap[ module.dirPath ] === module );
+  _.assert( will.moduleMap[ dirPath ] === undefined );
+  // _.assert( 0, 'not tested' );
+  debugger;
+
+  delete will.moduleMap[ module.dirPath ];
+  module.dirPath = dirPath;
+  will.moduleMap[ module.dirPath ] = module;
+
+  return module;
 }
 
 //
@@ -1471,6 +1506,7 @@ let Composes =
   ready : _.define.ownInstanceOf( _.Consequence ),
   formReady : _.define.ownInstanceOf( _.Consequence ),
   dirPath : null,
+  clonePath : null,
   remotePath : null,
   verbosity : 0,
   alias : null,
@@ -1561,6 +1597,7 @@ let Proto =
   // etc
 
   submodulesDirGet : submodulesDirGet,
+  baseDirPathChange : baseDirPathChange,
   pathAllocate : pathAllocate,
   _nickNameGet : _nickNameGet,
 

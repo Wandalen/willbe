@@ -130,7 +130,7 @@ function build()
     filePath : exportedDirPath,
     filter :
     {
-      maskTransientDirectory : { /*excludeAny : [ /\.git$/, /node_modules$/ ]*/ },
+      maskTransientDirectory : { excludeAny : [ /\.git$/, /node_modules$/ ] },
       basePath : exportedDirPath,
     },
   });
