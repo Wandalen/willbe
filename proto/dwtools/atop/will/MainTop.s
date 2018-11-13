@@ -597,20 +597,10 @@ function commandEach( e )
     let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
     will.currentModule.willFilesLoad();
 
-    // let module = will.currentModule = will.Module({ will : will, dirPath : dirPath })
-    // .form()
-    // .willFilesLoad()
-    // ;
-
     return will.currentModule.ready.split().ifNoErrorThen( function()
     {
 
       _.assert( module.inFileArray.length > 0 );
-      // if( module.inFileArray.length === 0 )
-      // {
-      //   debugger;
-      //   throw _.errBriefly( 'Failed load will-file at', _.strQuote( file.absolute ) );
-      // }
 
       let result = ca.proceedAct
       ({
