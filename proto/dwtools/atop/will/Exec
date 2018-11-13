@@ -1,6 +1,18 @@
 #! /usr/bin/env node
-let Self = require( './MainTop.s' );
-if( typeof module !== 'undefined' && module !== null )
-module[ 'exports' ] = Self;
-if( !module.parent )
-Self.Exec();
+
+if( typeof module !== 'undefined' )
+{
+  let _ = require( '../../Tools.s' );
+  _.include( 'wFiles' );
+  _.include( 'wExternalFundamentals' );
+}
+
+let _ = wTools;
+let shell = _.shellNodePassingThrough( _.path.join( __dirname, 'MainTop.s' ) );
+
+// #! /usr/bin/env node
+// let Self = require( './MainTop.s' );
+// if( typeof module !== 'undefined' && module !== null )
+// module[ 'exports' ] = Self;
+// if( !module.parent )
+// Self.Exec();

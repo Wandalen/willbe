@@ -113,8 +113,8 @@ function stepRoutineExport( run, build )
   _.sure( _.strDefined( module.dirPath ), 'Expects directory path of the module' );
   _.sure( _.objectIs( build.criterion ), 'Expects criterion of export' );
   _.sure( _.strDefined( build.name ), 'Expects name of export' );
-  _.sure( _.objectIs( module.willFileWithRoleMap.import ) || _.objectIs( module.willFileWithRoleMap.single ), 'Expects import in fine' );
-  _.sure( _.objectIs( module.willFileWithRoleMap.export ) || _.objectIs( module.willFileWithRoleMap.single ), 'Expects export in fine' );
+  _.sure( _.objectIs( module.willFileWithRoleMap.import ) || _.objectIs( module.willFileWithRoleMap.single ), 'Expects import-in file' );
+  _.sure( _.objectIs( module.willFileWithRoleMap.export ) || _.objectIs( module.willFileWithRoleMap.single ), 'Expects export-in file' );
   _.sure( _.strDefined( module.about.name ), 'Expects name of the module defined' );
   _.sure( _.strDefined( module.about.version ), 'Expects the current version of the module defined' );
 
