@@ -597,6 +597,7 @@ function commandEach( e )
     let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
     will.currentModule.willFilesLoad();
 
+
     return will.currentModule.ready.split().ifNoErrorThen( function()
     {
 
