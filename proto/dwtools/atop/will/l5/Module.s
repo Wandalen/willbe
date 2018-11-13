@@ -231,6 +231,17 @@ function predefinedForm()
 
   new will.Step
   ({
+    name : 'predefined.delete',
+    stepRoutine : will.Predefined.stepRoutineDelete,
+    module : module,
+    criterion :
+    {
+      predefined : 1,
+    }
+  }).form();
+
+  new will.Step
+  ({
     name : 'predefined.reflect',
     stepRoutine : will.Predefined.stepRoutineReflect,
     module : module,

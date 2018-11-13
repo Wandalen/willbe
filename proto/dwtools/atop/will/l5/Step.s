@@ -126,6 +126,7 @@ let Composes =
   opts : null,
   shell : null,
   currentPath : null,
+  filePath : null,
   js : null,
   inherit : _.define.own([]),
 

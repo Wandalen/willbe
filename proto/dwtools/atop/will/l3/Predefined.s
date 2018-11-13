@@ -27,6 +27,28 @@ defaults.dstRewritingPreserving = 1;
 
 //
 
+function stepRoutineDelete( run )
+{
+  let step = this;
+  let module = run.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( _.objectIs( step.opts ) );
+  _.assert( arguments.length === 2 );
+
+  // debugger;
+  let filePath = step.inPathResolve( step.filePath );
+  // console.log( 'filesDelete', filePath );
+  // debugger;
+  _.sure( _.strCount( filePath, '/' ) > 3, () => 'Are you sure you want to delete ' + filePath + '?' );
+  return fileProvider.filesDelete({ filePath : filePath, verbosity : 1 });
+}
+
+//
+
 function stepRoutineReflect( run )
 {
   let step = this;
@@ -121,6 +143,7 @@ let Extend =
 
   filesReflect : filesReflect,
 
+  stepRoutineDelete : stepRoutineDelete,
   stepRoutineReflect : stepRoutineReflect,
   stepRoutineExport : stepRoutineExport,
 
