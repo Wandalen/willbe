@@ -57,34 +57,53 @@ function form3()
 
   _.assert( arguments.length === 0 );
   _.assert( step.formed === 2 );
-  _.sure( !!step.shell ^ _.routineIs( step.stepRoutine ), 'Step should not have both {shell} and {stepRoutine} fields' );
+  _.sure( !!step.shell ^ !!step.js ^ _.routineIs( step.stepRoutine ), 'Step should have only {-shell-} or {-js-} or {-stepRoutine-} fields' );
   _.sure( step.shell === null || _.strIs( step.shell ) || _.arrayIs( step.shell ) );
+  _.sure( step.js === null || _.strIs( step.js ) );
 
   /* begin */
 
   if( step.currentPath )
-  {
-    debugger;
-    step.currentPath = step.inPathResolve( step.currentPath );
-    debugger;
-  }
+  step.currentPath = step.inPathResolve( step.currentPath );
 
-  if( step.shell && !step.stepRoutine )
-  step.stepRoutine = function()
+  if( !step.stepRoutine )
   {
-    let shell = step.shell;
-    if( _.arrayIs( shell ) )
-    shell = shell.join( '\n' );
-    return _.shell
-    ({
-      path : shell,
-      currentPath : step.currentPath,
-    }).doThen( ( err, arg ) =>
+
+    if( step.shell )
+    step.stepRoutine = function()
     {
-      if( err )
-      throw _.errBriefly( err );
-      return arg;
-    });
+      let shell = step.shell;
+      if( _.arrayIs( shell ) )
+      shell = shell.join( '\n' );
+      return _.shell
+      ({
+        path : shell,
+        currentPath : step.currentPath,
+      }).doThen( ( err, arg ) =>
+      {
+        if( err )
+        throw _.errBriefly( err );
+        return arg;
+      });
+    }
+    else if( step.js )
+    {
+      try
+      {
+        // debugger;
+        if( _.strBegins( step.js, '.' ) )
+        step.js = fileProvider.providersWithProtocolMap.hd.path.nativize( step.inPathResolve( step.js ) );
+        step.stepRoutine = require( step.js );
+        if( !_.routineIs( step.stepRoutine ) )
+        throw _.err( 'JS file should return function, but got', _.strTypeOf( step.stepRoutine ) );
+      }
+      catch( err )
+      {
+        debugger;
+        throw _.err( 'Failed to open JS file', _.strQuote( step.js ), '\n', err );
+      }
+    }
+
   }
 
   /* end */
@@ -107,6 +126,7 @@ let Composes =
   opts : null,
   shell : null,
   currentPath : null,
+  js : null,
   inherit : _.define.own([]),
 
 }
