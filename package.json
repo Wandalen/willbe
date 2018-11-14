@@ -11,12 +11,12 @@
     "production"
   ],
   "bin": {
-    "will": "proto/dwtools/atop/will/Exec"
+    "will": "proto/dwtools/atop/will/Exec2"
   },
   "scripts": {
     "test": "wtest staging",
     "docgen": "wdocgen proto",
-    "will": "node --expose-gc --stack-trace-limit=999 --max_old_space_size=17054896128 proto/dwtools/atop/will/Exec"
+    "will": "node proto/dwtools/atop/will/Exec2"
   },
   "repository": {
     "type": "git",
