@@ -11,7 +11,7 @@
     "production"
   ],
   "bin": {
-    "will": "node --expose-gc --stack-trace-limit=999 --max_old_space_size=17054896128 proto/dwtools/atop/will/Exec"
+    "will": "proto/dwtools/atop/will/Exec"
   },
   "scripts": {
     "test": "wtest staging",
