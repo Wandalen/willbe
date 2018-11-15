@@ -103,7 +103,7 @@ function build()
   exported.files = hd.filesFind
   ({
     recursive : 1,
-    includingDirectories : 1,
+    includingDirs : 1,
     includingTerminals : 1,
     outputFormat : 'relative',
     filePath : exportedDirPath,
