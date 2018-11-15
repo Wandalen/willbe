@@ -147,7 +147,7 @@ function build()
 
     let zip = Tar.create( o2, [ '.' ] );
     if( will.verbosity >= 2 )
-    logger.log( ' + ' + 'Write out archive ' + hd.path.move( archiveFilePath, exportedDirPath ) );
+    logger.log( ' + ' + 'Write out archive ' + hd.path.moveReport( archiveFilePath, exportedDirPath ) );
 
   }
 
