@@ -515,6 +515,10 @@ function infoExport()
 function dataExport()
 {
   let inheritable = this;
+
+  // if( inheritable.constructor.shortName === 'Exported' )
+  // debugger;
+
   let fields = inheritable.cloneData({ compact : 1, copyingAggregates : 0 });
   delete fields.name;
   return fields;
@@ -543,7 +547,16 @@ function compactField( it )
 function _nickNameGet()
 {
   let inheritable = this;
+  return inheritable.refName;
   return '→ ' + inheritable.constructor.shortName + ' ' + _.strQuote( inheritable.name ) + ' ←';
+}
+
+//
+
+function _refNameGet()
+{
+  let inheritable = this;
+  return inheritable.PoolName + '::' + _.strQuote( inheritable.name );
 }
 
 //
@@ -614,7 +627,8 @@ let Forbids =
 
 let Accessors =
 {
-  nickName : 'nickName',
+  nickName : { getter : _nickNameGet, readOnly : 1 },
+  refName : { getter : _refNameGet, readOnly : 1 },
   inherit : { setter : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
 }
 
@@ -652,6 +666,7 @@ let Proto =
   compactField : compactField,
 
   _nickNameGet : _nickNameGet,
+  _refNameGet : _refNameGet,
   _inPathResolve : _inPathResolve,
   inPathResolve : _.routineVectorize_functor( _inPathResolve ),
 

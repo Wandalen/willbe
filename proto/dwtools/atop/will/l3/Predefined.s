@@ -122,8 +122,6 @@ function stepRoutineExport( frame )
 
   _.assert( arguments.length === 1 );
 
-  debugger; 
-
   /* begin */
 
   if( module.exportedMap[ build.name ] )

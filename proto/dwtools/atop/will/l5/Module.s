@@ -1482,20 +1482,20 @@ function baseDirPathChange( dirPath )
 
 //
 
-function pathAllocate( name, filePath )
+function pathAllocate( name )
 {
   let module = this;
   let will = module.will;
 
-  _.assert( arguments.length === 2 );
+  _.assert( arguments.length === 1 );
   _.assert( _.strIs( name ) );
-  _.assert( _.strIs( filePath ) );
+  // _.assert( _.strIs( filePath ) );
 
   _.assert( module.pathMap[ name ] === undefined, 'not implemented' );
 
   let name2 = name + '.0';
 
-  let patho = will.PathObj({ module : module, name : name2, path : filePath }).form1();
+  let patho = will.PathObj({ module : module, name : name2/*, path : filePath*/ }).form1();
 
   return patho;
 }

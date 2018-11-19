@@ -78,9 +78,6 @@ function form1()
   if( willf )
   willf.pathMap[ patho.name ] = patho.path;
 
-  _.sure( _.strIs( patho.path ) || _.arrayIs( patho.path ), 'Path resource should have "path" field' );
-  // _.assert( _.strIs( patho.path ), 'not tested' );
-
   return patho;
 }
 
@@ -105,7 +102,6 @@ function form3()
   /* end */
 
   _.sure( _.strIs( patho.path ) || _.arrayIs( patho.path ), 'Path resource should have "path" field' );
-  // _.assert( _.strIs( patho.path ), 'not tested' );
 
   patho.formed = 3;
   return patho;
@@ -123,11 +119,26 @@ function _pathSet( src )
   if( _.arrayLike( src ) )
   src = _.arraySlice( src );
 
-  debugger; xxx
+  if( patho.path )
+  debugger;
+  // if( src )
+  // debugger;
+
+  if( module && patho.name )
+  {
+    // debugger;
+    _.assert( module.pathMap[ patho.name ] === patho.path );
+    delete module.pathMap[ patho.name ];
+  }
 
   patho[ pathSymbol ] = src;
+
   if( module && patho.name )
-  module.pathMap[ patho.name ] = src;
+  {
+    // debugger;
+    _.assert( module.pathMap[ patho.name ] === undefined );
+    module.pathMap[ patho.name ] = patho.path;
+  }
 
 }
 

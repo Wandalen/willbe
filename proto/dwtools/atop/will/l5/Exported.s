@@ -84,31 +84,37 @@ function build( frame )
     will.PathObj({ module : module, name : 'baseDir', path : baseDirPath }).form();
   }
 
-  debugger;
+  /* exportedDirPath */
 
-  exported.exportedDirPath = module.pathAllocate( 'exportedDir', path.dot( path.relative( module.dirPath, exportedDirPath ) ) );
+  exported.exportedDirPath = module.pathAllocate( 'exportedDir' );
+  exported.exportedDirPath.path = path.dot( path.relative( module.dirPath, exportedDirPath ) );
   exported.exportedDirPath.criterion = _.mapExtend( null, exported.criterion );
   exported.exportedDirPath.form();
-  exported.exportedDirPath = 'path::' + exported.exportedDirPath.name;
+  exported.exportedDirPath = exported.exportedDirPath.refName;
 
-  debugger; xxx
+  /* archiveFilePath */
 
   if( exported.criterion.tar === undefined || exported.criterion.tar )
   {
-    exported.archiveFilePath = module.pathAllocate( 'archiveFile', path.dot( path.relative( module.dirPath, archiveFilePath ) ) );
+    exported.archiveFilePath = module.pathAllocate( 'archiveFile' );
+    exported.archiveFilePath.path = path.dot( path.relative( module.dirPath, archiveFilePath ) );
     exported.archiveFilePath.criterion = _.mapExtend( null, exported.criterion );
     exported.archiveFilePath.form();
-    exported.archiveFilePath = 'path::' + exported.archiveFilePath.name;
+    exported.archiveFilePath = exported.archiveFilePath.refName;
   }
   else
   {
     exported.archiveFilePath = null;
   }
 
-  exported.version = module.about.version;
-  exported.files = null;
+  /* exportedFilesPath */
 
-  exported.files = hd.filesFind
+  exported.exportedFilesPath = module.pathAllocate( 'exportedFiles' );
+  exported.exportedFilesPath.criterion = _.mapExtend( null, exported.criterion );
+
+  debugger;
+
+  exported.exportedFilesPath.path = hd.filesFind
   ({
     recursive : 1,
     includingDirs : 1,
@@ -122,9 +128,13 @@ function build( frame )
     },
   });
 
+  exported.exportedFilesPath.form();
+  exported.exportedFilesPath = exported.exportedFilesPath.refName;
+
   /* */
 
-  // outf.data = module.dataExport();
+  exported.version = module.about.version;
+
   let data = module.dataExport();
 
   hd.fileWrite
@@ -139,7 +149,7 @@ function build( frame )
   if( will.verbosity >= 2 )
   logger.log( ' + ' + 'Write out file to ' + outFilePath );
 
-  if( exported.criterion.tar === undefined || exported.criterion.tar )
+  if( opts.tar === undefined || opts.tar )
   {
 
     if( !Tar )
