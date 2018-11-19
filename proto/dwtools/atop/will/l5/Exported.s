@@ -84,15 +84,17 @@ function build( frame )
     will.PathObj({ module : module, name : 'baseDir', path : baseDirPath }).form();
   }
 
-  // exported.exportedDirPath = module.pathAllocate( 'exportedDir', path.dot( path.relative( outDirPath, exportedDirPath ) ) );
+  debugger;
+
   exported.exportedDirPath = module.pathAllocate( 'exportedDir', path.dot( path.relative( module.dirPath, exportedDirPath ) ) );
   exported.exportedDirPath.criterion = _.mapExtend( null, exported.criterion );
   exported.exportedDirPath.form();
   exported.exportedDirPath = 'path::' + exported.exportedDirPath.name;
 
+  debugger; xxx
+
   if( exported.criterion.tar === undefined || exported.criterion.tar )
   {
-    // exported.archiveFilePath = module.pathAllocate( 'archiveFile', path.dot( path.relative( outDirPath, archiveFilePath ) ) );
     exported.archiveFilePath = module.pathAllocate( 'archiveFile', path.dot( path.relative( module.dirPath, archiveFilePath ) ) );
     exported.archiveFilePath.criterion = _.mapExtend( null, exported.criterion );
     exported.archiveFilePath.form();
