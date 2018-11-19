@@ -28,28 +28,20 @@ Self.shortName = 'Exported';
 
 //
 
-function build( frame, opts )
+function build( frame )
 {
   let exported = this;
   let module = exported.module;
   let will = module.will;
   let build = module.buildMap[ exported.name ];
+  let opts = frame.opts
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
 
-  debugger;
-  // let exportedDirPath = build.exportedDirPathFor();
-  let exportedDirPath = frame.resource.inPathResolve( frame.resource.export );
-  let baseDirPath = build.baseDirPathFor();
-  let archiveFilePath = build.archiveFilePathFor();
-  let outFilePath = build.outFilePathFor();
-  let outDirPath = path.dir( outFilePath );
-  debugger;
-
-  _.assert( arguments.length === 2 );
+  _.assert( arguments.length === 1 );
   _.assert( !!module );
   _.assert( !!will );
   _.assert( !!hd );
@@ -59,7 +51,19 @@ function build( frame, opts )
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
   _.assert( exported.criterion === null );
-  _.assert( _.strIs( exportedDirPath ) );
+  _.assert( exported.criterion === null );
+  _.assert( _.strDefined( opts.export ), () => step.nickName + ' should have options option export, path to directory to export or reflector' )
+
+  debugger;
+  // let exportedDirPath = build.exportedDirPathFor();
+  let exportedDirPath = frame.resource.inPathResolve( opts.export );
+  let baseDirPath = build.baseDirPathFor();
+  let archiveFilePath = build.archiveFilePathFor();
+  let outFilePath = build.outFilePathFor();
+  let outDirPath = path.dir( outFilePath );
+  debugger;
+
+  _.assert( _.strIs( exportedDirPath ), 'not implemented' );
 
   _.sure( _.strDefined( module.dirPath ), 'Expects directory path of the module' );
   _.sure( _.objectIs( build.criterion ), 'Expects criterion of export' );
