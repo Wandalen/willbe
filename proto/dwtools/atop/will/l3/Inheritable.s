@@ -534,6 +534,7 @@ function dataExport()
   // debugger;
 
   let fields = inheritable.cloneData({ compact : 1, copyingAggregates : 0 });
+
   delete fields.name;
   return fields;
 }
@@ -575,7 +576,7 @@ function _refNameGet()
 
 //
 
-function _strResolve( src )
+function _strResolve_body( o )
 {
   let inheritable = this;
   let module = inheritable.module;
@@ -584,24 +585,32 @@ function _strResolve( src )
   let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
-  _.assert( _.strIs( src ) );
 
-  let resolved = src;
-  if( !module.strIsResolved( resolved ) )
-  resolved = module.strResolve
-  ({
-    query : resolved,
-    defaultPool : 'path',
-    current : inheritable,
-  });
+  // let resolved = src;
+  // if( !module.strIsResolved( resolved ) )
+
+  if( o.current === null )
+  o.current = inheritable;
+  else
+  _.assert( 0, 'not tested' );
+
+  // debugger;
+  let resolved = module.strResolve( o );
+  // debugger;
 
   // let result = path.resolve( module.dirPath, ( module.pathMap.in || '.' ), resolved );
   // _.assert( _.strIs( resolved ) || _.arrayIs( resolved ) );
 
-  return result;
+  return resolved;
 }
 
+_strResolve_body.defaults = Object.create( _.Will.Module.prototype._strResolve.defaults );
+
+let _strResolve = _.routineFromPreAndBody( _.Will.Module.prototype.strResolve.pre, _strResolve_body );
+
 //
+
+/* !!! it should be shortcut for _strResolve */
 
 function _inPathResolve( filePath )
 {
@@ -710,6 +719,10 @@ let Proto =
 
   _nickNameGet : _nickNameGet,
   _refNameGet : _refNameGet,
+
+  _strResolve : _strResolve,
+  strResolve : _strResolve,
+  // inPathResolve : _.routineVectorize_functor( _inPathResolve ),
 
   _inPathResolve : _inPathResolve,
   inPathResolve : _.routineVectorize_functor( _inPathResolve ),

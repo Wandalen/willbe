@@ -135,7 +135,7 @@ function stepRoutineExport( frame )
 
   _.assert( module.exportedMap[ build.name ] === exported );
 
-  return exported.build( frame );
+  return exported.proceed( frame );
 }
 
 stepRoutineExport.stepOptions =

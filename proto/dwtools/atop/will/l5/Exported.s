@@ -26,36 +26,14 @@ Self.shortName = 'Exported';
 // inter
 // --
 
-function exportedReflectorGet()
+function exportedReflectorGet( exportSelector )
 {
   let exported = this;
   let module = exported.module;
   let will = module.will;
-  let build = module.buildMap[ exported.name ];
-  let opts = frame.opts
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let hub = will.fileProvider;
-  let hd = hub.providersWithProtocolMap.file;
-
-  // debugger;
-  //
-  // let exportedDirPath = frame.resource.strResolve( opts.export );
-  //
-  // x
-
-}
-
-//
-
-function build( frame )
-{
-  let exported = this;
-  let module = exported.module;
-  let will = module.will;
-  let build = module.buildMap[ exported.name ];
-  let opts = frame.opts
+  let build = exported.build;
+  let step = exported.step;
+  // let opts = frame.opts
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
@@ -73,12 +51,105 @@ function build( frame )
   _.assert( build.formed === 3 );
   _.assert( exported.criterion === null );
   _.assert( exported.criterion === null );
+  _.assert( step instanceof will.Step );
+  _.assert( build instanceof will.Build );
+
+  // debugger;
+  let exp = step.strResolve( exportSelector );
+  // debugger;
+
+  if( exp instanceof will.Reflector )
+  {
+
+    _.assert( exp.formed === 3 );
+    _.assert( exp.srcFilter.formed === 1 );
+
+    let result = exp.dataExport();
+
+    result.srcFilter = exp.srcFilter.clone();
+    _.assert( result.srcFilter !== exp.srcFilter );
+    _.assert( result.srcFilter.prefixPath === null );
+    // debugger;
+    result.srcFilter.prefixPath = module.dirPath;
+
+    let filter2 =
+    {
+      maskTransientDirectory : { excludeAny : [ /\.git$/, /node_modules$/ ] },
+      // basePath : exportedDirPath,
+    }
+
+    result.srcFilter.and( filter2 ).pathsExtend( filter2 );
+
+    result.srcFilter.inFilePath = result.reflectMap;
+
+    result.srcFilter._formBasePath();
+    // debugger;
+
+    return result;
+  }
+  else
+  {
+    let result = Object.create( null );
+    debugger;
+    result.srcFilter = fileProvider.recordFilter();
+
+    result.srcFilter.basePath = exp;
+    result.srcFilter.inFilePath = exp;
+
+    result.srcFilter._formBasePath();
+
+    _.assert( 0 );
+
+    return result;
+  }
+
+  return exp;
+}
+
+//
+
+function proceed( frame )
+{
+  let exported = this;
+  let module = exported.module;
+  let will = module.will;
+  let build = module.buildMap[ exported.name ];
+  let opts = frame.opts
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let hub = will.fileProvider;
+  let hd = hub.providersWithProtocolMap.file;
+  let step = frame.resource;
+
+  _.assert( arguments.length === 1 );
+  _.assert( !!module );
+  _.assert( !!will );
+  _.assert( !!hd );
+  _.assert( !!logger );
+  _.assert( !!build );
+  _.assert( module.formed === 3 );
+  _.assert( will.formed === 1 );
+  _.assert( build.formed === 3 );
+  _.assert( exported.criterion === null );
+  _.assert( exported.criterion === null );
+  _.assert( step instanceof will.Step );
+  _.assert( build instanceof will.Build );
   _.assert( _.strDefined( opts.export ), () => step.nickName + ' should have options option export, path to directory to export or reflector' )
 
-  debugger;
-  let exportedDirPath = frame.resource.inPathResolve( opts.export );
+  exported.step = step;
+  exported.build = build;
 
-  // let exportedReflector = exported.exportedReflectorGet();
+  // debugger;
+  // let exportedDirPath = frame.resource.inPathResolve( opts.export );
+  let exportedReflector = exported.exportedReflectorGet( opts.export );
+  _.assert( _.mapIs( exportedReflector ) );
+  _.assert( exportedReflector.srcFilter.formed === 3 );
+  _.assert( _.mapIs( exportedReflector.srcFilter.basePath ) );
+  _.assert( _.mapKeys( exportedReflector.srcFilter.basePath ).length === 1 );
+  _.assert( _.strIs( exportedReflector.srcFilter.stemPath ) );
+  // let exportedDirPath = _.mapVals( exportedReflector.srcFilter.basePath )[ 0 ];
+  let exportedDirPath = exportedReflector.srcFilter.stemPath;
 
   let baseDirPath = build.baseDirPathFor();
   let archiveFilePath = build.archiveFilePathFor();
@@ -135,7 +206,16 @@ function build( frame )
   exported.exportedFilesPath = module.pathAllocate( 'exportedFiles' );
   exported.exportedFilesPath.criterion = _.mapExtend( null, exported.criterion );
 
+  // let reflector = exportedReflectorGet.optionsReflectExport();
   debugger;
+
+  // let filter2 =
+  // {
+  //   maskTransientDirectory : { excludeAny : [ /\.git$/, /node_modules$/ ] },
+  //   // basePath : exportedDirPath,
+  // }
+  //
+  // exportedReflector.srcFilter.and( filter2 ).pathsExtend( filter2 );
 
   exported.exportedFilesPath.path = hd.filesFind
   ({
@@ -144,11 +224,12 @@ function build( frame )
     includingTerminals : 1,
     outputFormat : 'relative',
     filePath : exportedDirPath,
-    filter :
-    {
-      maskTransientDirectory : { excludeAny : [ /\.git$/, /node_modules$/ ] },
-      basePath : exportedDirPath,
-    },
+    filter : exportedReflector.srcFilter,
+    // filter :
+    // {
+    //   maskTransientDirectory : { excludeAny : [ /\.git$/, /node_modules$/ ] },
+    //   basePath : exportedDirPath,
+    // },
   });
 
   exported.exportedFilesPath.form();
@@ -223,6 +304,8 @@ let Aggregates =
 
 let Associates =
 {
+  step : null,
+  build : null,
   module : null,
 }
 
@@ -256,7 +339,7 @@ let Proto =
 
   exportedReflectorGet : exportedReflectorGet,
 
-  build : build,
+  proceed : proceed,
 
   // relation
 

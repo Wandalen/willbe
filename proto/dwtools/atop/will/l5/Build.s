@@ -166,7 +166,7 @@ function run( frame )
 
 //
 
-function build( o )
+function proceed( o )
 {
   let build = this;
   let module = build.module;
@@ -183,7 +183,7 @@ function build( o )
     resource : build,
   }).form();
 
-  o = _.routineOptions( build.build, arguments );
+  o = _.routineOptions( build.proceed, arguments );
 
   logPre();
 
@@ -230,7 +230,7 @@ function build( o )
 
 }
 
-build.defaults =
+proceed.defaults =
 {
 }
 
@@ -373,7 +373,7 @@ let Proto =
 
   stepsEach : stepsEach,
   run : run,
-  build : build,
+  proceed : proceed,
   isExport : isExport,
 
   // exportedDirPathFor : exportedDirPathFor,

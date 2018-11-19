@@ -1500,6 +1500,28 @@ function pathAllocate( name )
   return patho;
 }
 
+//
+
+function inPathGet()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  return path.s.resolve( module.dirPath, ( module.pathMap.in || '.' ) );
+}
+
+//
+
+function outPathGet()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  return path.s.resolve( module.dirPath, ( module.pathMap.out || '.' ) );
+}
+
 // --
 // accessor
 // --
@@ -1744,9 +1766,10 @@ function _strResolve_pre( routine, args )
   if( _.strIs( o ) )
   o = { query : o }
 
+  _.routineOptions( routine, o );
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
-  _.routineOptions( routine, o );
+  _.assert( _.arrayHas( [ null, 'in', 'out' ], o.resolvingPath ) );
 
   return o;
 }
@@ -1757,6 +1780,8 @@ function _strResolveMaybe_body( o )
 {
   let module = this;
   let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
 
   if( o.currentModule === null )
   o.currentModule = module;
@@ -1766,8 +1791,29 @@ function _strResolveMaybe_body( o )
 
   let result = module._resourceSelect( o );
 
+  if( _.errIs( result ) )
+  return result;
+
   // if( o.flattening && _.mapIs( result ) )
   // debugger;
+
+  if( o.resolvingPath )
+  {
+    if( result instanceof will.PathObj )
+    {
+      result = pathResolve( result );
+    }
+    else if( _.arrayIs( result ) )
+    {
+      let r = [];
+      for( let r = 0 ; r < result.length ; r++ )
+      if( result instanceof will.PathObj )
+      r[ r ] = pathResolve( result[ r ] );
+      else
+      r[ r ] = result[ r ];
+      result = r;
+    }
+  }
 
   if( o.flattening && _.mapIs( result ) )
   result = _.mapsFlatten2([ result ]);
@@ -1799,6 +1845,20 @@ function _strResolveMaybe_body( o )
   result = _.mapVals( result );
 
   return result;
+
+  /*  */
+
+  function pathResolve( patho )
+  {
+    _.assert( patho instanceof will.PathObj );
+    if( o.resolvingPath === 'in' )
+    return path.s.resolve( module.dirPath, ( module.pathMap.in || '.' ), patho.path );
+    else if( o.resolvingPath === 'out' )
+    return path.s.resolve( module.dirPath, ( module.pathMap.out || '.' ), patho.path );
+    else
+    return patho.path;
+  }
+
 }
 
 _strResolveMaybe_body.defaults =
@@ -1808,6 +1868,7 @@ _strResolveMaybe_body.defaults =
   visited : null,
   current : null,
   currentModule : null,
+  resolvingPath : null,
   unwrappingPath : 1,
   unwrappingSingle : 1,
   mapVals : 1,
@@ -2177,6 +2238,7 @@ let KnownPrefixes = [ 'submodule', 'step', 'path', 'reflector', 'build', 'about'
 
 let Composes =
 {
+
   dirPath : null,
   clonePath : null,
   remotePath : null,
@@ -2187,6 +2249,7 @@ let Composes =
 
   verbosity : 0,
   alias : null,
+
 }
 
 let Aggregates =
@@ -2250,6 +2313,8 @@ let Accessors =
   about : { setter : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.Will.ParagraphAbout }) },
   execution : { setter : _.accessor.setter.friend({ name : 'execution', friendName : 'module', maker : _.Will.ParagraphExecution }) },
   nickName : { getter : _nickNameGet, combining : 'rewrite' },
+  inPath : { getter : inPathGet, readOnly : 1 },
+  outPath : { getter : outPathGet, readOnly : 1 },
 }
 
 // --
@@ -2320,6 +2385,8 @@ let Proto =
 
   baseDirPathChange : baseDirPathChange,
   pathAllocate : pathAllocate,
+  inPathGet : inPathGet,
+  outPathGet : outPathGet,
 
   // accessor
 

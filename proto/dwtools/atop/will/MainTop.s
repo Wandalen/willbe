@@ -530,7 +530,7 @@ function commandBuild( e )
     }
 
     let build = builds[ 0 ];
-    return build.build()
+    return build.proceed()
   });
 }
 
@@ -558,7 +558,7 @@ function commandExport( e )
     }
 
     let build = builds[ 0 ];
-    return build.build()
+    return build.proceed()
   });
 
   // xxx
