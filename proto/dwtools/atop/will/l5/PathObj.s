@@ -123,9 +123,12 @@ function _pathSet( src )
   if( _.arrayLike( src ) )
   src = _.arraySlice( src );
 
+  debugger; xxx
+
   patho[ pathSymbol ] = src;
   if( module && patho.name )
-  moduke.pathMap[ patho.name ] = src;
+  module.pathMap[ patho.name ] = src;
+
 }
 
 // --
