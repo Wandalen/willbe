@@ -26,6 +26,27 @@ Self.shortName = 'Exported';
 // inter
 // --
 
+function exportedReflectorGet()
+{
+  let exported = this;
+  let module = exported.module;
+  let will = module.will;
+  let build = module.buildMap[ exported.name ];
+  let opts = frame.opts
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let hub = will.fileProvider;
+  let hd = hub.providersWithProtocolMap.file;
+
+  // debugger;
+  //
+  // let exportedDirPath = frame.resource.strResolve( opts.export );
+  //
+  // x
+
+}
+
 //
 
 function build( frame )
@@ -55,8 +76,10 @@ function build( frame )
   _.assert( _.strDefined( opts.export ), () => step.nickName + ' should have options option export, path to directory to export or reflector' )
 
   debugger;
-  // let exportedDirPath = build.exportedDirPathFor();
   let exportedDirPath = frame.resource.inPathResolve( opts.export );
+
+  // let exportedReflector = exported.exportedReflectorGet();
+
   let baseDirPath = build.baseDirPathFor();
   let archiveFilePath = build.archiveFilePathFor();
   let outFilePath = build.outFilePathFor();
@@ -230,6 +253,8 @@ let Proto =
 {
 
   // inter
+
+  exportedReflectorGet : exportedReflectorGet,
 
   build : build,
 

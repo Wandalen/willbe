@@ -245,23 +245,6 @@ function isExport()
 }
 
 //
-//
-// function exportedDirPathFor( opts )
-// {
-//   let build = this
-//   let module = build.module;
-//   let will = module.will;
-//   let hub = will.fileProvider;
-//   let hd = hub.providersWithProtocolMap.file;
-//   let inDirPath = module.pathMap.in || '.';
-//
-//   _.assert( arguments.length === 1 );
-//   _.sure( _.strDefined( opts.exportDirPath ), 'Export should have defined path to files {-exportDirPath-}' );
-//
-//   return hd.path.resolve( module.dirPath, inDirPath, module.strResolve( opts.exportDirPath ) );
-// }
-
-//
 
 function baseDirPathFor()
 {

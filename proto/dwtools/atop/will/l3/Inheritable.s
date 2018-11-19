@@ -99,6 +99,20 @@ function init( o )
 
 //
 
+function copy( o )
+{
+  let inheritable = this;
+  _.assert( _.objectIs( o ) );
+  _.assert( arguments.length === 1 );
+
+  if( o.name !== undefined )
+  inheritable.name = o.name;
+
+  return _.Copyable.prototype.copy.call( inheritable, o );
+}
+
+//
+
 function unform()
 {
   let inheritable = this;
@@ -561,6 +575,34 @@ function _refNameGet()
 
 //
 
+function _strResolve( src )
+{
+  let inheritable = this;
+  let module = inheritable.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.strIs( src ) );
+
+  let resolved = src;
+  if( !module.strIsResolved( resolved ) )
+  resolved = module.strResolve
+  ({
+    query : resolved,
+    defaultPool : 'path',
+    current : inheritable,
+  });
+
+  // let result = path.resolve( module.dirPath, ( module.pathMap.in || '.' ), resolved );
+  // _.assert( _.strIs( resolved ) || _.arrayIs( resolved ) );
+
+  return result;
+}
+
+//
+
 function _inPathResolve( filePath )
 {
   let inheritable = this;
@@ -646,6 +688,7 @@ let Proto =
 
   finit : finit,
   init : init,
+  copy : copy,
 
   unform : unform,
   form : form,
@@ -667,6 +710,7 @@ let Proto =
 
   _nickNameGet : _nickNameGet,
   _refNameGet : _refNameGet,
+
   _inPathResolve : _inPathResolve,
   inPathResolve : _.routineVectorize_functor( _inPathResolve ),
 
