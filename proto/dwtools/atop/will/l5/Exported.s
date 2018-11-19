@@ -28,7 +28,7 @@ Self.shortName = 'Exported';
 
 //
 
-function build()
+function build( frame, opts )
 {
   let exported = this;
   let module = exported.module;
@@ -41,31 +41,33 @@ function build()
   let hd = hub.providersWithProtocolMap.file;
 
   debugger;
-  let exportedDirPath = build.exportedDirPathFor();
+  // let exportedDirPath = build.exportedDirPathFor();
+  let exportedDirPath = frame.resource.inPathResolve( frame.resource.export );
   let baseDirPath = build.baseDirPathFor();
   let archiveFilePath = build.archiveFilePathFor();
   let outFilePath = build.outFilePathFor();
   let outDirPath = path.dir( outFilePath );
   debugger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 2 );
   _.assert( !!module );
   _.assert( !!will );
   _.assert( !!hd );
   _.assert( !!logger );
   _.assert( !!build );
-  _.assert( module.formed === 2 );
+  _.assert( module.formed === 3 );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
   _.assert( exported.criterion === null );
+  _.assert( _.strIs( exportedDirPath ) );
 
   _.sure( _.strDefined( module.dirPath ), 'Expects directory path of the module' );
   _.sure( _.objectIs( build.criterion ), 'Expects criterion of export' );
   _.sure( _.strDefined( build.name ), 'Expects name of export' );
   _.sure( _.objectIs( module.willFileWithRoleMap.import ) || _.objectIs( module.willFileWithRoleMap.single ), 'Expects import in fine' );
   _.sure( _.objectIs( module.willFileWithRoleMap.export ) || _.objectIs( module.willFileWithRoleMap.single ), 'Expects export in fine' );
-  _.sure( _.strDefined( module.about.name ), 'Expects name of the module defined' );
-  _.sure( _.strDefined( module.about.version ), 'Expects the current version of the module defined' );
+  _.sure( _.strDefined( module.about.name ), 'Expects defined name of the module' );
+  _.sure( _.strDefined( module.about.version ), 'Expects defined current version of the module' );
   _.sure( hd.fileExists( exportedDirPath ) );
   _.sure( module.pathMap.baseDir === undefined || module.pathMap.baseDir === baseDirPath, 'path::baseDir should not be defined manually' );
 
@@ -151,6 +153,7 @@ function build()
 
   }
 
+  return exported;
 }
 
 // --
@@ -163,13 +166,14 @@ let Composes =
   version : null,
 
   exportedDirPath : null,
+  exportedFilesPath : null,
   archiveFilePath : null,
 
   description : null,
   criterion : null,
 
   inherit : _.define.own([]),
-  files : null,
+  // files : null,
 
 }
 
@@ -195,6 +199,7 @@ let Statics =
 
 let Forbids =
 {
+  files : 'files',
 }
 
 let Accessors =

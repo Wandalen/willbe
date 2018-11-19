@@ -28,7 +28,7 @@ function form1()
 {
   let reflector = this;
   let module = reflector.module;
-  let inf = reflector.inf;
+  let willf = reflector.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -42,15 +42,15 @@ function form1()
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !!will.formed );
-  _.assert( !!module.formed );
-  _.assert( !inf || !!inf.formed );
+  _.assert( module.formed >= 2 );
+  _.assert( !willf || !!willf.formed );
   _.assert( _.strDefined( reflector.name ) );
 
   /* begin */
 
   module[ reflector.MapName ][ reflector.name ] = reflector;
-  if( inf )
-  inf[ reflector.MapName ][ reflector.name ] = reflector;
+  if( willf )
+  willf[ reflector.MapName ][ reflector.name ] = reflector;
 
   if( reflector.srcFilter )
   {
@@ -80,7 +80,7 @@ function _inheritMultiple( o )
 {
   let reflector = this;
   let module = reflector.module;
-  let inf = reflector.inf;
+  let willf = reflector.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -124,7 +124,7 @@ function _inheritSingle( o )
 {
   let reflector = this;
   let module = reflector.module;
-  let inf = reflector.inf;
+  let willf = reflector.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -183,7 +183,7 @@ function form3()
 {
   let reflector = this;
   let module = reflector.module;
-  let inf = reflector.inf;
+  let willf = reflector.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -213,7 +213,7 @@ function _reflectMapForm( o )
 {
   let reflector = this;
   let module = reflector.module;
-  let inf = reflector.inf;
+  let willf = reflector.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;

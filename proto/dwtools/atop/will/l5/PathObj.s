@@ -38,21 +38,21 @@ function unform()
 {
   let patho = this;
   let module = patho.module;
-  let inf = patho.inf;
+  let willf = patho.willf;
 
   _.assert( module[ patho.MapName ][ patho.name ] === patho );
-  if( inf )
-  _.assert( inf[ patho.MapName ][ patho.name ] === patho );
+  if( willf )
+  _.assert( willf[ patho.MapName ][ patho.name ] === patho );
 
   Parent.prototype.unform.apply( patho, arguments )
 
   delete module[ patho.MapName ][ patho.name ];
-  if( inf )
-  delete inf[ patho.MapName ][ patho.name ];
+  if( willf )
+  delete willf[ patho.MapName ][ patho.name ];
 
   delete module.pathMap[ patho.name ];
-  if( inf )
-  delete inf.pathMap[ patho.name ];
+  if( willf )
+  delete willf.pathMap[ patho.name ];
 
   return patho;
 }
@@ -63,20 +63,20 @@ function form1()
 {
   let patho = this;
   let module = patho.module;
-  let inf = patho.inf;
+  let willf = patho.willf;
 
   _.sure( !module[ patho.MapName ][ patho.name ], () => 'Module ' + module.dirPath + ' already has ' + patho.nickName );
-  _.assert( !inf || !inf[ patho.MapName ][ patho.name ] );
+  _.assert( !willf || !willf[ patho.MapName ][ patho.name ] );
 
   Parent.prototype.form1.apply( patho, arguments )
 
   module[ patho.MapName ][ patho.name ] = patho;
-  if( inf )
-  inf[ patho.MapName ][ patho.name ] = patho;
+  if( willf )
+  willf[ patho.MapName ][ patho.name ] = patho;
 
   module.pathMap[ patho.name ] = patho.path;
-  if( inf )
-  inf.pathMap[ patho.name ] = patho.path;
+  if( willf )
+  willf.pathMap[ patho.name ] = patho.path;
 
   _.sure( _.strIs( patho.path ) || _.arrayIs( patho.path ), 'Path resource should have "path" field' );
   // _.assert( _.strIs( patho.path ), 'not tested' );
@@ -90,7 +90,7 @@ function form3()
 {
   let patho = this;
   let module = patho.module;
-  let inf = patho.inf;
+  let willf = patho.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;

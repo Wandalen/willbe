@@ -28,7 +28,6 @@ function form3()
 {
   let build = this;
   let module = build.module;
-  let inf = build.inf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -41,21 +40,21 @@ function form3()
 
   /* begin */
 
-  build.stepsEach( function( it )
-  {
-    if( it.concurrent )
-    return;
-    let kind = it.element.constructor.shortName;
-    if( it.element instanceof will.Step )
-    {
-      _.sure( _.routineIs( it.element.stepRoutine ), kind, it.element.name, 'does not have step routine' );
-      _.sure( it.element.formed >= 2, kind, it.element.name, 'was not formed' );
-    }
-    else if( it.element instanceof will.Build )
-    {
-      _.sure( it.element.formed >= 2, kind, it.element.name, 'was not formed' );
-    }
-  });
+  // build.stepsEach( function( it )
+  // {
+  //   if( it.concurrent )
+  //   return;
+  //   let kind = it.element.constructor.shortName;
+  //   if( it.element instanceof will.Step )
+  //   {
+  //     _.sure( _.routineIs( it.element.stepRoutine ), kind, it.element.name, 'does not have step routine' );
+  //     _.sure( it.element.formed >= 2, kind, it.element.name, 'was not formed' );
+  //   }
+  //   else if( it.element instanceof will.Build )
+  //   {
+  //     _.sure( it.element.formed >= 2, kind, it.element.name, 'was not formed' );
+  //   }
+  // });
 
   if( build.criterion && build.criterion.default !== undefined )
   build.criterion.default = build.criterion.default ? 1 : 0;
@@ -72,7 +71,6 @@ function stepsEach( onEach )
 {
   let build = this;
   let module = build.module;
-  let inf = build.inf;
   let will = module.will;
 
   each( build.steps );
@@ -128,20 +126,140 @@ function stepsEach( onEach )
 
 //
 
-function exportedDirPathFor()
+function run( frame )
 {
-  let build = this
+  let build = this;
+  let resource = frame.resource;
+  let module = frame.module;
+  let will = module.will;
+  let logger = will.logger;
+  let con = new _.Consequence().give( null );
+
+  _.assert( arguments.length === 1 );
+  _.assert( !!module );
+  _.assert( !!will );
+  _.assert( !!logger );
+  _.assert( module.formed === 3 );
+  _.assert( will.formed === 1 );
+  _.assert( build.formed === 3 );
+  _.assert( resource.formed === 3 );
+  _.assert( resource === build );
+  _.assert( frame.build === build );
+
+  build.stepsEach( function( it )
+  {
+    let frame2 = frame.cloneUp( it.element );
+    _.assert( frame2.formed === 1 );
+    con.ifNoErrorThen( ( arg ) => it.element.form() );
+    con.ifNoErrorThen( ( arg ) => it.element.run( frame2 ) );
+    con.doThen( ( err, arg ) =>
+    {
+      frame2.finit();
+      if( err )
+      throw err;
+      return arg;
+    });
+  });
+
+  return con;
+}
+
+//
+
+function build( o )
+{
+  let build = this;
   let module = build.module;
   let will = module.will;
-  let hub = will.fileProvider;
-  let hd = hub.providersWithProtocolMap.file;
-  let inDirPath = module.pathMap.in || '.';
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let isExport = build.isExport();
 
-  _.assert( arguments.length === 0 );
-  _.sure( _.strDefined( build.exportDirPath ), 'Export should have defined path to files {-exportDirPath-}' );
+  let frame = new will.BuildFrame
+  ({
+    module : module,
+    build : build,
+    resource : build,
+  }).form();
 
-  return hd.path.resolve( module.dirPath, inDirPath, module.strResolve( build.exportDirPath ) );
+  o = _.routineOptions( build.build, arguments );
+
+  logPre();
+
+  return frame.run()
+  .doThen( ( err, arg ) =>
+  {
+    frame.finit();
+    if( err )
+    throw _.errLogOnce( err );
+
+    logPost();
+
+    return arg;
+  });
+
+  /* */
+
+  function logPre()
+  {
+    logger.up();
+    // debugger;
+    if( logger.verbosity >= 2 )
+    {
+      // if( builds.length === 1 )
+      logger.log( isExport ? 'Exporting' : 'Building', build.name );
+      // else
+      // logger.log( module.infoExportResource( builds ) );
+    }
+  }
+
+  /* */
+
+  function logPost()
+  {
+
+    if( logger.verbosity >= 2 )
+    {
+      logger.log( isExport ? 'Exported' : 'Built', build.name );
+      logger.log();
+    }
+    logger.down();
+
+  }
+
 }
+
+build.defaults =
+{
+}
+
+//
+
+function isExport()
+{
+  let build = this;
+  if( !build.criterion )
+  return false;
+  return !!build.criterion.export;
+}
+
+//
+//
+// function exportedDirPathFor( opts )
+// {
+//   let build = this
+//   let module = build.module;
+//   let will = module.will;
+//   let hub = will.fileProvider;
+//   let hd = hub.providersWithProtocolMap.file;
+//   let inDirPath = module.pathMap.in || '.';
+//
+//   _.assert( arguments.length === 1 );
+//   _.sure( _.strDefined( opts.exportDirPath ), 'Export should have defined path to files {-exportDirPath-}' );
+//
+//   return hd.path.resolve( module.dirPath, inDirPath, module.strResolve( opts.exportDirPath ) );
+// }
 
 //
 
@@ -224,7 +342,7 @@ let Composes =
   criterion : null,
 
   steps : null,
-  exportDirPath : null,
+  // exportDirPath : null,
   // entryPath : null,
 
   inherit : _.define.own([]),
@@ -252,6 +370,7 @@ let Statics =
 
 let Forbids =
 {
+  exportDirPath : 'exportDirPath',
 }
 
 let Accessors =
@@ -270,8 +389,11 @@ let Proto =
   form3 : form3,
 
   stepsEach : stepsEach,
+  run : run,
+  build : build,
+  isExport : isExport,
 
-  exportedDirPathFor : exportedDirPathFor,
+  // exportedDirPathFor : exportedDirPathFor,
   baseDirPathFor : baseDirPathFor,
   archiveFilePathFor : archiveFilePathFor,
   outFilePathFor : outFilePathFor,

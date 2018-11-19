@@ -39,8 +39,16 @@ function init( o )
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
+  let logger = will.logger = new _.Logger({ output : _global_.logger, name : 'will' });
+
+  // debugger;
+
   _.instanceInit( will );
   Object.preventExtensions( will );
+
+  _.assert( logger === will.logger );
+
+  // debugger;
 
   if( o )
   will.copy( o );
@@ -70,6 +78,9 @@ function form()
 {
   let will = this;
 
+  if( will.formed >= 1 )
+  return will;
+
   will.formAssociates();
 
   _.assert( arguments.length === 0 );
@@ -92,9 +103,17 @@ function formAssociates()
 
   _.assert( arguments.length === 0 );
   _.assert( !will.formed );
+  _.assert( !!logger );
 
-  if( !will.logger )
-  logger = will.logger = new _.Logger({ output : _global_.logger });
+  // if( !will.logger )
+  // logger = will.logger = new _.Logger({ output : _global_.logger, name : 'will' });
+  // debugger;
+
+  // logger.log( 'experiment1' );
+
+  // logger.verbosity = will.verbosity;
+
+  _.assert( logger.verbosity === will.verbosity );
 
   // if( !will.fileProvider )
   // will.fileProvider = _.FileProvider.Default();
@@ -116,6 +135,44 @@ function formAssociates()
   if( !will.filesGraph )
   will.filesGraph = _.FilesGraph({ fileProvider : will.fileProvider });
 
+  let logger2 = new _.Logger({ output : logger, name : 'will.providers' });
+
+  // debugger;
+  // will.fileProvider.logger = _.Logger({ output : will.logger });
+  will.fileProvider.logger = logger2;
+  for( var f in will.fileProvider.providersWithProtocolMap )
+  {
+    let fileProvider = will.fileProvider.providersWithProtocolMap[ f ];
+    fileProvider.logger = logger2;
+  }
+
+  // logger.log( 'experiment2' );
+
+  // _.assert( will.fileProvider.logger === will.logger );
+  _.assert( will.fileProvider.logger === logger2 );
+  _.assert( logger.verbosity === will.verbosity );
+  _.assert( will.fileProvider.logger !== will.logger );
+
+  // debugger;
+  will._verbosityChange();
+  // debugger;
+  _.assert( logger2.verbosity <= logger.verbosity );
+}
+
+//
+
+function _verbosityChange()
+{
+  let will = this;
+
+  _.assert( arguments.length === 0 );
+  _.assert( !will.fileProvider || will.fileProvider.logger !== will.logger );
+
+  // debugger;
+
+  if( will.fileProvider )
+  will.fileProvider.verbosity = will.verbosity-2;
+
 }
 
 //
@@ -132,7 +189,6 @@ function willFilesList( o )
   _.assert( arguments.length === 1 );
   _.routineOptions( willFilesList, o );
   _.assert( !!will.formed );
-  // _.assert( !!o.includingInFiles, 'not tested' )
 
   let filter = { maskTerminal : { includeAny : /\.will(\.|$)/, excludeAny : [], includeAll : [] } };
 
@@ -145,8 +201,8 @@ function willFilesList( o )
   let files = fileProvider.filesFind
   ({
     filePath : o.dirPath,
-    filter : filter,
     recursive : o.recursive,
+    filter : filter,
   });
   // debugger;
 
@@ -161,7 +217,6 @@ willFilesList.defaults =
   rerucrsive : 0,
 }
 
-
 // --
 // relations
 // --
@@ -169,6 +224,7 @@ willFilesList.defaults =
 let Composes =
 {
   verbosity : 3,
+  verboseStaging : 0,
 }
 
 let Aggregates =
@@ -194,7 +250,6 @@ let Restricts =
 
 let Statics =
 {
-  // FormatVersion : '1.0.0',
 }
 
 let Forbids =
@@ -215,6 +270,8 @@ let Extend =
   unform : unform,
   form : form,
   formAssociates : formAssociates,
+
+  _verbosityChange : _verbosityChange,
 
   willFilesList : willFilesList,
 

@@ -27,96 +27,102 @@ defaults.dstRewritingPreserving = 1;
 
 //
 
-function stepRoutineDelete( run )
+function stepRoutineDelete( frame )
 {
   let step = this;
-  let module = run.module;
+  let module = frame.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( _.objectIs( step.opts ) );
-  _.assert( arguments.length === 2 );
+  _.assert( arguments.length === 1 );
 
-  // debugger;
-  let filePath = step.inPathResolve( step.filePath );
-  // console.log( 'filesDelete', filePath );
-  // debugger;
-  _.sure( _.strCount( filePath, '/' ) > 3, () => 'Are you sure you want to delete ' + filePath + '?' );
-  return fileProvider.filesDelete({ filePath : filePath, verbosity : 1 });
+  let filePath = step.inPathResolve( frame.opts.filePath );
+  return fileProvider.filesDelete({ filePath : filePath, verbosity : will.verbosity >= 2 ? 2 : 0 });
+}
+
+stepRoutineDelete.stepOptions =
+{
+  filePath : null,
 }
 
 //
 
-function stepRoutineReflect( run )
+function stepRoutineReflect( frame )
 {
   let step = this;
-  let module = run.module;
+  let module = frame.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( _.objectIs( step.opts ) );
-  _.assert( !!step.opts.reflector, 'Expects option reflector' );
-  _.assert( arguments.length === 2 );
+  _.assert( !!frame.opts.reflector, 'Expects option reflector' );
+  _.assert( step.formed === 3 );
+  _.assert( arguments.length === 1 );
 
-  let opts = _.mapExtend( null, step.opts );
-  // opts.reflector = module.strResolve( opts.reflector );
-  opts.reflector = module.strResolve
+  // if( step.opts.reflector )
+  // {
+  //   let reflectors = module.strResolve
+  //   ({
+  //     query :  step.opts.reflector,
+  //     defaultPool : 'reflector',
+  //     current : step,
+  //     unwrappingSingle : 0,
+  //   });
+  //   _.assert( _.arrayIs( reflectors ) );
+  //   for( let r = 0 ; r < reflectors.length ; r++ )
+  //   reflectors[ r ].form();
+  // }
+
+  frame.opts.reflector = module.strResolve
   ({
-    query : opts.reflector,
+    query : frame.opts.reflector,
     defaultPool : 'reflector',
     current : step,
   });
 
-  _.sure( opts.reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', step.opts )
+  frame.opts.reflector.form();
 
-  opts.reflector = opts.reflector.optionsReflectExport();
-  _.mapSupplement( opts, opts.reflector )
-  delete opts.reflector;
+  _.sure( frame.opts.reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strTypeOf( frame.opts.reflector ) )
+  _.assert( frame.opts.reflector.formed === 3, () => frame.opts.reflector.nickName + ' is not formed' );
 
-  if( will.verbosity >= 2 && will.verbosity <= 3 )
-  {
-    logger.log( 'filesReflect' );
-    logger.log( _.toStr( opts.reflectMap, { wrap : 0, multiline : 1, levels : 3 } ) );
-  }
+  frame.opts.reflector = frame.opts.reflector.optionsReflectExport();
+  _.mapSupplement( frame.opts, frame.opts.reflector )
+  delete frame.opts.reflector;
 
-  // debugger;
-  let result = will.Predefined.filesReflect.call( fileProvider, opts );
-  // debugger;
+  // if( will.verbosity >= 2 && will.verbosity <= 3 )
+  // {
+  //   logger.log( ' + Files reflecting...' );
+  //   logger.log( _.toStr( frame.opts.reflectMap, { wrap : 0, multiline : 1, levels : 3 } ) );
+  // }
+
+  frame.opts.verbosity = will.verbosity >= 2 ? 2 : 0;
+
+  let result = will.Predefined.filesReflect.call( fileProvider, frame.opts );
 
   return result;
 }
 
+stepRoutineReflect.stepOptions =
+{
+  reflector : null,
+}
+
 //
 
-function stepRoutineExport( run, build )
+function stepRoutineExport( frame )
 {
   let step = this;
-  let module = run.module;
+  let build = frame.build;
+  let module = frame.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
   let logger = will.logger;
-  let hub = will.fileProvider;
 
-  _.assert( arguments.length === 2 );
-  _.assert( !!module );
-  _.assert( !!will );
-  _.assert( !!logger );
-  _.assert( module.formed === 2 );
-  _.assert( will.formed === 1 );
-  _.assert( build.formed === 3 );
+  _.assert( arguments.length === 1 );
 
-  _.sure( _.strDefined( module.dirPath ), 'Expects directory path of the module' );
-  _.sure( _.objectIs( build.criterion ), 'Expects criterion of export' );
-  _.sure( _.strDefined( build.name ), 'Expects name of export' );
-  _.sure( _.objectIs( module.willFileWithRoleMap.import ) || _.objectIs( module.willFileWithRoleMap.single ), 'Expects import-in file' );
-  _.sure( _.objectIs( module.willFileWithRoleMap.export ) || _.objectIs( module.willFileWithRoleMap.single ), 'Expects export-in file' );
-  _.sure( _.strDefined( module.about.name ), 'Expects name of the module defined' );
-  _.sure( _.strDefined( module.about.version ), 'Expects the current version of the module defined' );
+  debugger; 
 
   /* begin */
 
@@ -131,7 +137,81 @@ function stepRoutineExport( run, build )
 
   _.assert( module.exportedMap[ build.name ] === exported );
 
-  return exported.build();
+  return exported.build( frame );
+}
+
+stepRoutineExport.stepOptions =
+{
+  export : null,
+  tar : 1,
+}
+
+//
+
+function stepRoutineSubmodulesDownload( frame )
+{
+  let step = this;
+  let module = frame.module;
+
+  _.assert( arguments.length === 1 );
+  _.assert( !!module );
+
+  return module.submodulesDownload();
+}
+
+stepRoutineSubmodulesDownload.stepOptions =
+{
+}
+
+//
+
+function stepRoutineSubmodulesUpgrade( frame )
+{
+  let step = this;
+  let module = frame.module;
+
+  _.assert( arguments.length === 1 );
+  _.assert( !!module );
+
+  return module.submodulesUpgrade();
+}
+
+stepRoutineSubmodulesUpgrade.stepOptions =
+{
+}
+
+//
+
+function stepRoutineSubmodulesClean( frame )
+{
+  let step = this;
+  let module = frame.module;
+
+  _.assert( arguments.length === 1 );
+  _.assert( !!module );
+
+  return module.submodulesClean();
+}
+
+stepRoutineSubmodulesClean.stepOptions =
+{
+}
+
+//
+
+function stepRoutineClean( frame )
+{
+  let step = this;
+  let module = frame.module;
+
+  _.assert( arguments.length === 1 );
+  _.assert( !!module );
+
+  return module.clean();
+}
+
+stepRoutineClean.stepOptions =
+{
 }
 
 // --
@@ -146,6 +226,12 @@ let Extend =
   stepRoutineDelete : stepRoutineDelete,
   stepRoutineReflect : stepRoutineReflect,
   stepRoutineExport : stepRoutineExport,
+
+  stepRoutineSubmodulesDownload : stepRoutineSubmodulesDownload,
+  stepRoutineSubmodulesUpgrade : stepRoutineSubmodulesUpgrade,
+  stepRoutineSubmodulesClean : stepRoutineSubmodulesClean,
+
+  stepRoutineClean : stepRoutineClean,
 
 }
 

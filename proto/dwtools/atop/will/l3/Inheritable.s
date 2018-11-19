@@ -103,7 +103,7 @@ function unform()
 {
   let inheritable = this;
   let module = inheritable.module;
-  let inf = inheritable.inf;
+  let willf = inheritable.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -112,14 +112,14 @@ function unform()
   _.assert( arguments.length === 0 );
   _.assert( inheritable.formed );
   _.assert( module[ inheritable.MapName ][ inheritable.name ] === inheritable );
-  if( inf )
-  _.assert( inf[ inheritable.MapName ][ inheritable.name ] === inheritable );
+  if( willf )
+  _.assert( willf[ inheritable.MapName ][ inheritable.name ] === inheritable );
 
   /* begin */
 
   delete module[ inheritable.MapName ][ inheritable.name ];
-  if( inf )
-  delete inf[ inheritable.MapName ][ inheritable.name ];
+  if( willf )
+  delete willf[ inheritable.MapName ][ inheritable.name ];
 
   /* end */
 
@@ -133,7 +133,7 @@ function form()
 {
   let inheritable = this;
   let module = inheritable.module;
-  let inf = inheritable.inf;
+  let willf = inheritable.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -157,7 +157,7 @@ function form1()
 {
   let inheritable = this;
   let module = inheritable.module;
-  let inf = inheritable.inf;
+  let willf = inheritable.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -167,7 +167,7 @@ function form1()
   // debugger;
 
   _.sure( !module[ inheritable.MapName ][ inheritable.name ], () => 'Module ' + module.dirPath + ' already has ' + inheritable.nickName );
-  _.assert( !inf || !inf[ inheritable.MapName ][ inheritable.name ] );
+  _.assert( !willf || !willf[ inheritable.MapName ][ inheritable.name ] );
 
   _.assert( arguments.length === 0 );
   _.assert( !inheritable.formed );
@@ -176,15 +176,15 @@ function form1()
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !!will.formed );
-  _.assert( !!module.formed );
-  _.assert( !inf || !!inf.formed );
+  _.assert( module.formed >= 2 );
+  _.assert( !willf || !!willf.formed );
   _.assert( _.strDefined( inheritable.name ) );
 
   /* begin */
 
   module[ inheritable.MapName ][ inheritable.name ] = inheritable;
-  if( inf )
-  inf[ inheritable.MapName ][ inheritable.name ] = inheritable;
+  if( willf )
+  willf[ inheritable.MapName ][ inheritable.name ] = inheritable;
 
   /* end */
 
@@ -198,6 +198,9 @@ function form2()
 {
   let inheritable = this;
   let module = inheritable.module;
+
+  if( inheritable.formed >= 2 )
+  return inheritable;
 
   _.assert( arguments.length === 0 );
   _.assert( inheritable.formed === 1 );
@@ -257,7 +260,7 @@ function _inheritMultiple( o )
 {
   let inheritable = this;
   let module = inheritable.module;
-  let inf = inheritable.inf;
+  let willf = inheritable.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -271,9 +274,6 @@ function _inheritMultiple( o )
     _.assert( _.strIs( inheritable.PoolName ) );
     _.assert( _.strIs( ancestor ) );
 
-    // if( ancestor === 'reflect' )
-    // debugger;
-
     let ancestors = module.strResolve
     ({
       query : ancestor,
@@ -281,7 +281,6 @@ function _inheritMultiple( o )
       visited : o.visited,
       current : inheritable,
     });
-    // debugger;
 
     if( _.mapIs( ancestors ) )
     ancestors = _.mapVals( ancestors );
@@ -335,7 +334,7 @@ function _inheritSingle( o )
 {
   let inheritable = this;
   let module = inheritable.module;
-  let inf = inheritable.inf;
+  let willf = inheritable.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -380,7 +379,7 @@ _inheritSingle.defaults=
 // {
 //   let inheritable = this;
 //   let module = inheritable.module;
-//   let inf = inheritable.inf;
+//   let willf = inheritable.willf;
 //   let will = module.will;
 //   let fileProvider = will.fileProvider;
 //   let path = fileProvider.path;
@@ -422,7 +421,7 @@ function form3()
 {
   let inheritable = this;
   let module = inheritable.module;
-  let inf = inheritable.inf;
+  let willf = inheritable.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -544,7 +543,7 @@ function compactField( it )
 function _nickNameGet()
 {
   let inheritable = this;
-  return '{ ' + inheritable.constructor.shortName + ' ' + _.strQuote( inheritable.name ) + ' }';
+  return '→ ' + inheritable.constructor.shortName + ' ' + _.strQuote( inheritable.name ) + ' ←';
 }
 
 //
@@ -590,7 +589,7 @@ let Aggregates =
 let Associates =
 {
   module : null,
-  inf : null,
+  willf : null,
 }
 
 let Restricts =

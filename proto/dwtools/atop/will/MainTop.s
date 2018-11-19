@@ -46,6 +46,44 @@ function exec()
 
 //
 
+function moduleOnReady( onReady )
+{
+  let will = this.form();
+  let fileProvider = will.fileProvider;
+  let logger = will.logger;
+  let dirPath = fileProvider.path.current();
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.routineIs( onReady ) );
+
+  if( !will.currentModule )
+  {
+    will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
+    will.currentModule.willFilesFind();
+    will.currentModule.willFilesOpen();
+    will.currentModule.resourcesForm();
+  }
+
+  return will.currentModule.ready.split().ifNoErrorThen( function( arg )
+  {
+    let module = will.currentModule;
+    let result = onReady( module );
+    _.assert( result !== undefined );
+    return result;
+  })
+  .doThen( ( err, arg ) =>
+  {
+    _.diagnosticBeep();
+    will.currentModule.finit();
+    if( err )
+    throw _.errLogOnce( err );
+    return arg;
+  });
+
+}
+
+//
+
 function commandsMake()
 {
   let will = this;
@@ -59,32 +97,45 @@ function commandsMake()
   let commands =
   {
 
-    'help' :              { e : _.routineJoin( will, will.commandHelp ),              h : 'Get help.' },
+    'help' :                    { e : _.routineJoin( will, will.commandHelp ),                  h : 'Get help.' },
 
-    'list' :              { e : _.routineJoin( will, will.commandList ),              h : 'List information about the current module.' },
-    'paths list' :        { e : _.routineJoin( will, will.commandPathsList ),         h : 'List paths of the current module.' },
-    'submodules list' :   { e : _.routineJoin( will, will.commandSubmodulesList ),    h : 'List submodules of the current module.' },
-    'reflectors list' :   { e : _.routineJoin( will, will.commandReflectorsList ),    h : 'List avaialable reflectors.' },
-    'steps list' :        { e : _.routineJoin( will, will.commandStepsList ),         h : 'List avaialable steps.' },
-    'builds list' :       { e : _.routineJoin( will, will.commandBuildsList ),        h : 'List avaialable builds.' },
-    'exports list' :      { e : _.routineJoin( will, will.commandExportsList ),       h : 'List avaialable exports.' },
-    'about list' :        { e : _.routineJoin( will, will.commandAboutList ),         h : 'List descriptive information about the module.' },
-    'execution list' :    { e : _.routineJoin( will, will.commandExecutionList ),     h : 'List execution scenarios.' },
+    'list' :                    { e : _.routineJoin( will, will.commandList ),                  h : 'List information about the current module.' },
+    'paths list' :              { e : _.routineJoin( will, will.commandPathsList ),             h : 'List paths of the current module.' },
+    'submodules list' :         { e : _.routineJoin( will, will.commandSubmodulesList ),        h : 'List submodules of the current module.' },
+    'reflectors list' :         { e : _.routineJoin( will, will.commandReflectorsList ),        h : 'List avaialable reflectors.' },
+    'steps list' :              { e : _.routineJoin( will, will.commandStepsList ),             h : 'List avaialable steps.' },
+    'builds list' :             { e : _.routineJoin( will, will.commandBuildsList ),            h : 'List avaialable builds.' },
+    'exports list' :            { e : _.routineJoin( will, will.commandExportsList ),           h : 'List avaialable exports.' },
+    'about list' :              { e : _.routineJoin( will, will.commandAboutList ),             h : 'List descriptive information about the module.' },
+    'execution list' :          { e : _.routineJoin( will, will.commandExecutionList ),         h : 'List execution scenarios.' },
 
-    'clean' :             { e : _.routineJoin( will, will.commandClean ),             h : 'Clean current module. Delete genrated artifacts.' },
-    'build' :             { e : _.routineJoin( will, will.commandBuild ),             h : 'Build current module with spesified criterion.' },
-    'export' :            { e : _.routineJoin( will, will.commandExport ),            h : 'Export selected the module with spesified criterion. Save output to output file and archive.' },
-    'with' :              { e : _.routineJoin( will, will.commandWith ),              h : 'Use "with" to select a module' },
-    'each' :              { e : _.routineJoin( will, will.commandEach ),              h : 'Use "each" to iterate each module in a directory' },
+    'submodules download' :     { e : _.routineJoin( will, will.commandSubmodulesDownload ),    h : 'Download each submodule if such was not downloaded so far.' },
+    'submodules upgrade' :      { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),     h : 'Upgrade each submodule, checking for available updates for such.' },
+    'submodules clean' :        { e : _.routineJoin( will, will.commandSubmodulesClean ),       h : 'Delete all downloaded submodules.' },
+
+    'clean' :                   { e : _.routineJoin( will, will.commandClean ),                 h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
+    'clean what' :              { e : _.routineJoin( will, will.commandCleanWhat ),             h : 'Find out which files will be deleted by clean command.' },
+    'build' :                   { e : _.routineJoin( will, will.commandBuild ),                 h : 'Build current module with spesified criterion.' },
+    'export' :                  { e : _.routineJoin( will, will.commandExport ),                h : 'Export selected the module with spesified criterion. Save output to output file and archive.' },
+    'with' :                    { e : _.routineJoin( will, will.commandWith ),                  h : 'Use "with" to select a module.' },
+    'each' :                    { e : _.routineJoin( will, will.commandEach ),                  h : 'Use "each" to iterate each module in a directory.' },
 
   }
 
+  // debugger;
   var ca = _.CommandsAggregator
   ({
     basePath : fileProvider.path.current(),
     commands : commands,
     commandPrefix : 'node ',
+    logger : will.logger,
   })
+  // debugger;
+
+  _.assert( ca.logger === will.logger );
+  _.assert( ca.verbosity === will.verbosity );
+
+  // debugger;
 
   //will._commandsConfigAdd( ca );
 
@@ -138,29 +189,43 @@ function _commandList( e, act )
 
   _.assert( arguments.length === 2 );
 
-  if( !will.formed )
-  will.form();
-
-  let logger = will.logger;
-  let fileProvider = will.fileProvider;
-  let dirPath = fileProvider.path.current();
-
-  // if( !will.currentModule )
-  // will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().willFilesLoad();
-
-  if( !will.currentModule )
+  return will.moduleOnReady( function( module )
   {
-    will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
-    will.currentModule.willFilesLoad();
-  }
-
-  return will.currentModule.ready.split().ifNoErrorThen( function()
-  {
-    let module = will.currentModule;
-    let result = act( module );
-    module.finit();
-    return result;
+    return act( module ) || null;
   });
+
+  // if( !will.formed )
+  // will.form();
+  //
+  // let logger = will.logger;
+  // let fileProvider = will.fileProvider;
+  // let dirPath = fileProvider.path.current();
+  //
+  // // if( !will.currentModule )
+  // // will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().willFilesFind();
+  //
+  // if( !will.currentModule )
+  // {
+  //   will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
+  //   will.currentModule.willFilesFind();
+  //   will.currentModule.willFilesOpen();
+  //   will.currentModule.resourcesForm();
+  // }
+  //
+  // return will.currentModule.ready.split().ifNoErrorThen( function( arg )
+  // {
+  //   logger.log();
+  //   let result = act( will.currentModule );
+  //   return result || null;
+  // })
+  // .doThen( function( err, arg )
+  // {
+  //   if( err )
+  //   throw _.errLogOnce( err );
+  //   if( will.currentModule )
+  //   will.currentModule.finit();
+  //   return arg;
+  // });
 
 }
 
@@ -176,9 +241,7 @@ function commandList( e )
     logger.log( module.infoExport() );
   }
 
-  will._commandList( e, act );
-
-  return will;
+  return will._commandList( e, act );
 }
 
 //
@@ -193,9 +256,7 @@ function commandPathsList( e )
     logger.log( module.infoExportPaths() );
   }
 
-  will._commandList( e, act );
-
-  return will;
+  return will._commandList( e, act );
 }
 
 //
@@ -210,9 +271,7 @@ function commandSubmodulesList( e )
     logger.log( module.infoExportResource( module.submoduleMap ) );
   }
 
-  will._commandList( e, act );
-
-  return will;
+  return will._commandList( e, act );
 }
 
 //
@@ -227,9 +286,7 @@ function commandReflectorsList( e )
     logger.log( module.infoExportResource( module.reflectorMap ) );
   }
 
-  will._commandList( e, act );
-
-  return will;
+  return will._commandList( e, act );
 }
 
 //
@@ -244,9 +301,7 @@ function commandStepsList( e )
     logger.log( module.infoExportResource( module.stepMap ) );
   }
 
-  will._commandList( e, act );
-
-  return will;
+  return will._commandList( e, act );
 }
 
 //
@@ -331,40 +386,123 @@ function commandExecutionList( e )
 
 //
 
+function commandSubmodulesDownload( e )
+{
+  let will = this;
+  return will.moduleOnReady( function( module )
+  {
+    return module.submodulesDownload();
+  });
+}
+
+//
+
+function commandSubmodulesUpgrade( e )
+{
+  let will = this;
+  return will.moduleOnReady( function( module )
+  {
+    return module.submodulesUpgrade();
+  });
+}
+
+//
+
+function commandSubmodulesClean( e )
+{
+  let will = this;
+  return will.moduleOnReady( function( module )
+  {
+    return module.submodulesClean();
+  });
+}
+
+//
+
 function commandClean( e )
 {
   let will = this;
 
-  if( !will.formed )
-  will.form();
-
-  let fileProvider = will.fileProvider;
-  let logger = will.logger;
-  let dirPath = fileProvider.path.current();
-
-  // if( !will.currentModule )
-  // will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().willFilesLoad();
-
-  if( !will.currentModule )
+  return will.moduleOnReady( function( module )
   {
-    will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
-    will.currentModule.willFilesLoad();
-  }
-
-  return will.currentModule.ready.split().ifNoErrorThen( function()
-  {
-    let module = will.currentModule;
-
-    logger.up();
-    if( logger.verbosity >= 2 )
-    {
-      logger.log( 'Cleaning', module.nickName );
-    }
-
-    module.clean();
-    logger.down();
-
+    let logger = will.logger;
+    return module.clean();
   });
+
+  // if( !will.formed )
+  // will.form();
+  //
+  // let fileProvider = will.fileProvider;
+  // let logger = will.logger;
+  // let dirPath = fileProvider.path.current();
+  //
+  // if( !will.currentModule )
+  // {
+  //   will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
+  //   will.currentModule.willFilesFind();
+  // }
+  //
+  // return will.currentModule.ready.split().ifNoErrorThen( function( arg )
+  // {
+  //   let module = will.currentModule;
+  //
+  //   logger.up();
+  //   if( logger.verbosity >= 2 )
+  //   {
+  //     logger.log( 'Cleaning', module.nickName );
+  //   }
+  //
+  //   module.clean();
+  //   logger.down();
+  //
+  //   return arg;
+  // });
+
+}
+
+//
+
+function commandCleanWhat( e )
+{
+  let will = this;
+
+  return will.moduleOnReady( function( module )
+  {
+    let filesPath = module.cleanWhat();
+    logger.log();
+    logger.log( _.toStr( filesPath, { multiline : 1, wrap : 0, levels : 2 } ) );
+    logger.log( 'Clean will delete ' + filesPath.length + ' file(s)' );
+    return filesPath;
+  });
+
+  // if( !will.formed )
+  // will.form();
+  //
+  // let fileProvider = will.fileProvider;
+  // let logger = will.logger;
+  // let dirPath = fileProvider.path.current();
+  //
+  // if( !will.currentModule )
+  // {
+  //   will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
+  //   will.currentModule.willFilesFind();
+  // }
+  //
+  // return will.currentModule.ready.split().ifNoErrorThen( function( arg )
+  // {
+  //   let module = will.currentModule;
+  //
+  //   logger.up();
+  //   if( logger.verbosity >= 2 )
+  //   {
+  //     logger.log( 'Cleaning', module.nickName );
+  //   }
+  //
+  //   module.clean();
+  //   logger.down();
+  //
+  //   return arg;
+  // });
 
 }
 
@@ -373,32 +511,15 @@ function commandClean( e )
 function commandBuild( e )
 {
   let will = this;
-
-  if( !will.formed )
-  will.form();
-
-  let fileProvider = will.fileProvider;
-  let logger = will.logger;
-  let dirPath = fileProvider.path.current();
-
-  if( !will.currentModule )
+  return will.moduleOnReady( function( module )
   {
-    will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
-    will.currentModule.willFilesLoad();
-  }
-
-  return will.currentModule.ready.split().ifNoErrorThen( function()
-  {
-    let module = will.currentModule;
     let builds = module.buildsSelect( e.subject, e.propertiesMap );
 
-    logger.up();
-    if( logger.verbosity >= 2 )
+    if( logger.verbosity >= 2 && builds.length > 1 )
     {
-      if( builds.length === 1 )
-      logger.log( 'Building', builds[ 0 ].name );
-      else
+      logger.up();
       logger.log( module.infoExportResource( builds ) );
+      logger.down();
     }
 
     if( builds.length !== 1 )
@@ -408,27 +529,9 @@ function commandBuild( e )
       throw _.errBriefly( 'To build please specify exactly one build scenario, ' + builds.length + ' satisfy(s) passed arguments' );
     }
 
-    let run = new will.BuildRun({ module : module }).form();
-
-    return run.run( builds[ 0 ] )
-    .doThen( ( err ) =>
-    {
-      run.finit();
-      module.finit();
-      if( err )
-      throw _.errLogOnce( err );
-
-      if( logger.verbosity >= 2 )
-      {
-        logger.log( 'Built', builds[ 0 ].name );
-        logger.log();
-      }
-      logger.down();
-
-    });
-
+    let build = builds[ 0 ];
+    return build.build()
   });
-
 }
 
 //
@@ -436,66 +539,91 @@ function commandBuild( e )
 function commandExport( e )
 {
   let will = this;
-
-  if( !will.formed )
-  will.form();
-
-  let fileProvider = will.fileProvider;
-  let logger = will.logger;
-  let dirPath = fileProvider.path.current();
-
-  // if( !will.currentModule )
-  // will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().willFilesLoad();
-
-  if( !will.currentModule )
+  return will.moduleOnReady( function( module )
   {
-    will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
-    will.currentModule.willFilesLoad();
-  }
+    let builds = module.exportsSelect( e.subject, e.propertiesMap );
 
-  return will.currentModule.ready.split().ifNoErrorThen( function()
-  {
-
-    let module = will.currentModule
-    let exports = module.exportsSelect( e.subject, e.propertiesMap );
-
-    logger.up();
-    if( logger.verbosity >= 2 )
+    if( logger.verbosity >= 2 && builds.length > 1 )
     {
-      if( exports.length === 1 )
-      logger.log( 'Exporting', exports[ 0 ].name );
-      else
-      logger.log( module.infoExportResource( exports ) );
-    }
-
-    if( exports.length !== 1 )
-    {
-      if( exports.length === 0 )
-      throw _.errBriefly( 'To export please specify exactly one export, none satisfies passed arguments' );
-      throw _.errBriefly( 'To export please specify exactly one export' );
-    }
-
-    let run = new will.BuildRun({ module : module }).form();
-
-    return run.run( exports[ 0 ] )
-    .doThen( ( err ) =>
-    {
-      run.finit();
-      module.finit();
-
-      if( err )
-      throw _.errLogOnce( err );
-
-      if( logger.verbosity >= 2 )
-      {
-        logger.log( 'Exported', exports[ 0 ].name );
-        logger.log();
-      }
+      logger.up();
+      logger.log( module.infoExportResource( builds ) );
       logger.down();
+    }
 
-    });
+    if( builds.length !== 1 )
+    {
+      if( builds.length === 0 )
+      throw _.errBriefly( 'To export please specify exactly one export scenario, none satisfies passed arguments' );
+      throw _.errBriefly( 'To export please specify exactly one export scenario, ' + builds.length + ' satisfy(s) passed arguments' );
+    }
 
+    let build = builds[ 0 ];
+    return build.build()
   });
+
+  // xxx
+  //
+  // let will = this;
+  //
+  // if( !will.formed )
+  // will.form();
+  //
+  // let fileProvider = will.fileProvider;
+  // let logger = will.logger;
+  // let dirPath = fileProvider.path.current();
+  //
+  // // if( !will.currentModule )
+  // // will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().willFilesFind();
+  //
+  // if( !will.currentModule )
+  // {
+  //   will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
+  //   will.currentModule.willFilesFind();
+  // }
+  //
+  // return will.currentModule.ready.split().ifNoErrorThen( function( arg )
+  // {
+  //
+  //   let module = will.currentModule
+  //   let exports = module.exportsSelect( e.subject, e.propertiesMap );
+  //
+  //   logger.up();
+  //   if( logger.verbosity >= 2 )
+  //   {
+  //     if( exports.length === 1 )
+  //     logger.log( 'Exporting', exports[ 0 ].name );
+  //     else
+  //     logger.log( module.infoExportResource( exports ) );
+  //   }
+  //
+  //   if( exports.length !== 1 )
+  //   {
+  //     if( exports.length === 0 )
+  //     throw _.errBriefly( 'To export please specify exactly one export, none satisfies passed arguments' );
+  //     throw _.errBriefly( 'To export please specify exactly one export' );
+  //   }
+  //
+  //   let run = new will.BuildFrame({ module : module }).form();
+  //
+  //   return run.run( exports[ 0 ] )
+  //   .doThen( ( err ) =>
+  //   {
+  //     run.finit();
+  //     module.finit();
+  //
+  //     if( err )
+  //     throw _.errLogOnce( err );
+  //
+  //     if( logger.verbosity >= 2 )
+  //     {
+  //       logger.log( 'Exported', exports[ 0 ].name );
+  //       logger.log();
+  //     }
+  //     logger.down();
+  //
+  //   });
+  //
+  // });
 
 }
 
@@ -524,22 +652,12 @@ function commandWith( e )
   let dirPath = path.resolve( e.subject );
 
   let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
-  will.currentModule.willFilesLoad();
+  will.currentModule.willFilesFind();
 
-  // let module = will.currentModule = will.Module({ will : will, dirPath : dirPath })
-  // .form()
-  // .willFilesLoad();
-
-  return will.currentModule.ready.split().ifNoErrorThen( function()
+  return will.currentModule.ready.split().ifNoErrorThen( function( arg )
   {
 
-    _.assert( module.inFileArray.length > 0 );
-    // if( module.inFileArray.length === 0 )
-    // {
-    //   debugger;
-    //   throw _.errBriefly( 'Found no will-file at', _.strQuote( module.dirPath ) );
-    // }
-
+    _.assert( module.willFileArray.length > 0 );
     return ca.proceedAct
     ({
       command : secondCommand,
@@ -557,7 +675,7 @@ function commandEach( e )
 {
   let will = this;
   let ca = e.ca;
-  let con = new _.Consequence().give();
+  let con = new _.Consequence().give( null );
 
   if( !will.formed )
   will.form();
@@ -584,9 +702,7 @@ function commandEach( e )
     rerucrsive : 0,
   });
 
-  // logger.log( _.select( files, '*/absolute' ) );
-
-  for( let f = 0 ; f < files.length ; f++ ) con.ifNoErrorThen( () => /* !!! replace by concurrent */
+  for( let f = 0 ; f < files.length ; f++ ) con.ifNoErrorThen( ( arg ) => /* !!! replace by concurrent */
   {
     let file = files[ f ];
     let dirPath = will.Module.DirPathFromWillFilePath( file.absolute );
@@ -595,13 +711,11 @@ function commandEach( e )
     return;
 
     let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
-    will.currentModule.willFilesLoad();
+    will.currentModule.willFilesFind();
 
-
-    return will.currentModule.ready.split().ifNoErrorThen( function()
+    return will.currentModule.ready.split().ifNoErrorThen( function( arg )
     {
-
-      _.assert( module.inFileArray.length > 0 );
+      _.assert( module.willFileArray.length > 0 );
 
       let result = ca.proceedAct
       ({
@@ -659,6 +773,7 @@ let Extend =
 
   Exec : Exec,
   exec : exec,
+  moduleOnReady : moduleOnReady,
 
   commandsMake : commandsMake,
   commandHelp : commandHelp,
@@ -674,7 +789,12 @@ let Extend =
   commandAboutList : commandAboutList,
   commandExecutionList : commandExecutionList,
 
+  commandSubmodulesDownload : commandSubmodulesDownload,
+  commandSubmodulesUpgrade : commandSubmodulesUpgrade,
+  commandSubmodulesClean : commandSubmodulesClean,
+
   commandClean : commandClean,
+  commandCleanWhat : commandCleanWhat,
   commandBuild : commandBuild,
   commandExport : commandExport,
   commandWith : commandWith,

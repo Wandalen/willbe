@@ -35,15 +35,15 @@ function finit()
 
 function init( o )
 {
-  let inf = this;
+  let willf = this;
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  _.instanceInit( inf );
-  Object.preventExtensions( inf );
+  _.instanceInit( willf );
+  Object.preventExtensions( willf );
 
   if( o )
-  inf.copy( o );
+  willf.copy( o );
 
 }
 
@@ -51,126 +51,126 @@ function init( o )
 
 function unform()
 {
-  let inf = this;
-  let module = inf.module;
+  let willf = this;
+  let module = willf.module;
 
   _.assert( arguments.length === 0 );
-  _.assert( !!inf.formed );
+  _.assert( !!willf.formed );
 
   /* begin */
 
-  _.arrayRemoveElementOnceStrictly( module.inFileArray, inf );
+  _.arrayRemoveElementOnceStrictly( module.willFileArray, willf );
 
-  if( inf.role )
+  if( willf.role )
   {
-    _.assert( module.willFileWithRoleMap[ inf.role ] === inf )
-    delete module.willFileWithRoleMap[ inf.role ];
+    _.assert( module.willFileWithRoleMap[ willf.role ] === willf )
+    delete module.willFileWithRoleMap[ willf.role ];
   }
 
   /* end */
 
-  inf.formed = 0;
-  return inf;
+  willf.formed = 0;
+  return willf;
 }
 
 //
 
 function form()
 {
-  let inf = this;
-  let module = inf.module;
+  let willf = this;
+  let module = willf.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
+  debugger; xxx
+
   _.assert( arguments.length === 0 );
   _.assert( !!will );
-  _.assert( module.formed === 1 );
+  _.assert( module.formed === 3 );
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  if( inf.formed === 0 )
-  inf.form1();
+  if( willf.formed === 0 )
+  willf.form1();
 
-  _.assert( inf.formed === 1 );
+  _.assert( willf.formed === 1 );
 
-  inf.form2();
+  if( willf.formed === 1 )
+  willf.open();
 
-  if( !inf.formed )
-  return inf;
+  _.assert( willf.formed === 2 );
 
-  _.assert( inf.formed === 2 );
-
-  return inf;
+  return willf;
 }
 
 //
 
 function form1()
 {
-  let inf = this;
-  let module = inf.module;
+  let willf = this;
+  let module = willf.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0 );
-  _.assert( inf.formed === 0 );
+  _.assert( willf.formed === 0 );
 
   _.assert( !!module );
   _.assert( !!will );
   _.assert( !!fileProvider );
   _.assert( !!logger );
-  _.assert( !!module.formed );
+  _.assert( module.formed === 3 );
   _.assert( !!will.formed );
 
   /* begin */
 
-  _.arrayAppendOnceStrictly( module.inFileArray, inf );
+  _.arrayAppendOnceStrictly( module.willFileArray, willf );
 
-  if( inf.role )
+  if( willf.role )
   {
-    _.assert( !module.willFileWithRoleMap[ inf.role ], 'Module already has inf file with role', inf.role )
-    module.willFileWithRoleMap[ inf.role ] = inf;
+    _.assert( !module.willFileWithRoleMap[ willf.role ], 'Module already has willf file with role', willf.role )
+    module.willFileWithRoleMap[ willf.role ] = willf;
   }
 
   /* end */
 
-  inf.formed = 1;
-  return inf;
+  willf.formed = 1;
+  return willf;
 }
 
 //
 
-function form2()
+function open()
 {
-  let inf = this;
-  let module = inf.module;
+  let willf = this;
+  let module = willf.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( inf.formed === 1 );
+  _.assert( willf.formed === 1 );
   _.assert( arguments.length === 0 );
   _.assert( !!module );
   _.assert( !!will );
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !!will.formed );
-  _.assert( !!module.formed );
-  _.assert( !!inf.formed );
+  _.assert( module.formed === 3 );
+  _.assert( !!willf.formed );
 
   /* read */
 
-  inf._inPathsForm();
+  willf._inPathsForm();
 
   try
   {
-    inf.data = fileProvider.fileConfigRead
+    willf.data = fileProvider.fileConfigRead
     ({
-      filePath : inf.filePath,
+      filePath : willf.filePath,
       verbosity : will.verbosity+1,
     });
   }
@@ -179,132 +179,136 @@ function form2()
     throw _.errLogOnce( _.errBriefly( err ) );
   }
 
-  _.sureMapHasOnly( inf.data, inf.KnownSections, () => 'Will file ' + inf.filePath + ' should not have section(s) :' );
+  _.sureMapHasOnly( willf.data, willf.KnownSections, () => 'Will file ' + willf.filePath + ' should not have section(s) :' );
 
   /* form */
 
-  if( inf.data.format !== undefined && inf.data.format !== inf.FormatVersion )
-  throw _.err( 'Does not support format', inf.data.format, 'supports', inf.FormatVersion );
+  if( willf.data.format !== undefined && willf.data.format !== willf.FormatVersion )
+  throw _.err( 'Does not support format', willf.data.format, 'supports', willf.FormatVersion );
 
-  if( inf.data.path && inf.data.path.baseDir )
+  if( willf.data.path && willf.data.path.baseDir )
   {
-    let p = inf.data.path.baseDir;
+    let p = willf.data.path.baseDir;
     if( _.mapIs( p ) )
     p = p.path;
-    p = path.join( path.dir( inf.filePath ), p);
+    p = path.join( path.dir( willf.filePath ), p);
     module.baseDirPathChange( p );
   }
 
-  if( inf.data.about )
-  module.about.copy( inf.data.about );
-  if( inf.data.execution )
-  module.execution.copy( inf.data.execution );
+  if( willf.data.about )
+  module.about.copy( willf.data.about );
+  if( willf.data.execution )
+  module.execution.copy( willf.data.execution );
 
-  let con = _.Consequence().give();
-
-  /* */
-
-  if( inf.data.exported )
-  inf._resourcesForm1( will.Exported, inf.data.exported );
-
-  if( inf.data.submodule )
-  inf._resourcesForm1( will.Submodule, inf.data.submodule );
-
-  if( inf.data.path )
-  inf._resourcesForm1( will.PathObj, inf.data.path );
-
-  if( inf.data.reflector )
-  inf._resourcesForm1( will.Reflector, inf.data.reflector );
-
-  inf._resourcesForm1( will.Step, inf.data.step || {} );
-
-  if( inf.data.build )
-  inf._resourcesForm1( will.Build, inf.data.build );
+  let con = _.Consequence().give( null );
 
   /* */
 
-  if( inf.data.exported )
-  inf._resourcesForm2( will.Exported, inf.data.exported, con );
+  if( willf.data.exported )
+  willf._resourcesMake( will.Exported, willf.data.exported );
 
-  // if( !module.supermodule )
-  // debugger;
+  if( willf.data.submodule )
+  willf._resourcesMake( will.Submodule, willf.data.submodule );
 
-  if( inf.data.submodule )
-  inf._resourcesForm2( will.Submodule, inf.data.submodule, con );
+  if( willf.data.path )
+  willf._resourcesMake( will.PathObj, willf.data.path );
 
-  // if( !module.supermodule )
-  // debugger;
+  if( willf.data.reflector )
+  willf._resourcesMake( will.Reflector, willf.data.reflector );
 
-  if( inf.data.path )
-  inf._resourcesForm2( will.PathObj, inf.data.path, con );
+  willf._resourcesMake( will.Step, willf.data.step || {} );
 
-  if( inf.data.reflector )
-  inf._resourcesForm2( will.Reflector, inf.data.reflector, con );
+  if( willf.data.build )
+  willf._resourcesMake( will.Build, willf.data.build );
 
-  inf._resourcesForm2( will.Step, inf.data.step || {}, con );
+  willf.formed = 2;
 
-  if( inf.data.build )
-  inf._resourcesForm2( will.Build, inf.data.build, con );
+  return true;
 
-  /* */
-
-  // if( !module.supermodule )
-  // debugger;
-  // con.ifNoErrorThen( function()
+  // /* */
+  //
+  // if( willf.data.submodule )
+  // willf._resourcesForm3( will.Submodule, willf.data.submodule, con );
+  //
+  // /* */
+  //
+  // con.doThen( ( arg, err ) =>
   // {
-  //   // console.log( inf.role );
-  //   // if( !module.supermodule )
-  //   // debugger;
+  //   if( !module.supermodule )
+  //   debugger;
+  //   if( err )
+  //   throw err;
+  //   willf.formed = 2;
+  //   return arg;
   // });
-
-  /* */
-
-  inf.formed = 2;
-
-  return con.split();
+  //
+  // return con.split();
 }
+
+// //
+//
+// function form3()
+// {
+//   let willf = this;
+//   let module = willf.module;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//
+//   _.assert( willf.formed === 2 );
+//   _.assert( arguments.length === 0 );
+//   _.assert( !!module );
+//   _.assert( !!will );
+//   _.assert( !!fileProvider );
+//   _.assert( !!logger );
+//   _.assert( !!will.formed );
+//   _.assert( !!module.formed );
+//   _.assert( !!willf.formed );
+//
+//   let con = _.Consequence().give( null );
+//
+//   /* */
+//
+//   if( willf.data.exported )
+//   willf._resourcesForm3( will.Exported, willf.data.exported, con );
+//
+//   if( willf.data.path )
+//   willf._resourcesForm3( will.PathObj, willf.data.path, con );
+//
+//   if( willf.data.reflector )
+//   willf._resourcesForm3( will.Reflector, willf.data.reflector, con );
+//
+//   willf._resourcesForm3( will.Step, willf.data.step || {}, con );
+//
+//   if( willf.data.build )
+//   willf._resourcesForm3( will.Build, willf.data.build, con );
+//
+//   /* */
+//
+//   con.doThen( ( arg, err ) =>
+//   {
+//     debugger;
+//     if( err )
+//     throw err;
+//     willf.formed = 3;
+//     return arg;
+//   });
+//
+//   return con.split();
+// }
 
 //
 
-function _inPathsForm()
+function _resourcesMake( Resource, resources )
 {
-  let inf = this;
-  let module = inf.module;
+  let willf = this;
+  let module = willf.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-
-  _.assert( arguments.length === 0 );
-  _.assert( !!module );
-  _.assert( !!will );
-  _.assert( !!will.formed );
-  _.assert( !!module.formed );
-  _.assert( !!inf.formed );
-
-  if( !inf.filePath )
-  {
-    if( !inf.dirPath )
-    inf.dirPath = module.dirPath;
-    _.assert( _.strIs( inf.dirPath ) );
-    inf.filePath = path.join( inf.dirPath, module.prefixPathForRole( inf.role ) );
-  }
-
-  inf.dirPath = path.dir( inf.filePath );
-
-}
-
-//
-
-function _resourcesForm1( Resource, resources )
-{
-  let inf = this;
-  let module = inf.module;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  // let con = _.Consequence().give();
+  // let con = _.Consequence().give( null );
 
   _.assert( _.mapIs( resources ) );
   _.assert( _.constructorIs( Resource ) );
@@ -317,7 +321,7 @@ function _resourcesForm1( Resource, resources )
     resource = Resource.OptionsFrom( resource );
 
     let o2 = _.mapExtend( null, resource );
-    o2.inf = inf;
+    o2.willf = willf;
     o2.module = module;
     o2.name = k;
     try
@@ -333,78 +337,108 @@ function _resourcesForm1( Resource, resources )
 
 }
 
+// //
+//
+// function _resourcesForm3( Resource, resources, con )
+// {
+//   let willf = this;
+//   let module = willf.module;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//   // let con = _.Consequence().give( null );
+//
+//   _.assert( _.mapIs( resources ) );
+//   _.assert( _.constructorIs( Resource ) );
+//   _.assert( arguments.length === 3 );
+//
+//   // _.each( resources, ( resource, k ) =>
+//   // {
+//   //
+//   //   if( Resource.OptionsFrom )
+//   //   resource = Resource.OptionsFrom( resource );
+//   //
+//   //   let o2 = _.mapExtend( null, resource );
+//   //   o2.willf = willf;
+//   //   o2.module = module;
+//   //   o2.name = k;
+//   //   try
+//   //   {
+//   //     Resource.MakeForEachCriterion( o2 );
+//   //   }
+//   //   catch( err )
+//   //   {
+//   //     throw _.err( 'Cant form', Resource.shortName, _.strQuote( o2.name ), '\n', err );
+//   //   }
+//   //
+//   // });
+//
+//   if( Resource.MapName === 'build' )
+//   debugger;
+//
+//   for( let s in willf[ Resource.MapName ] )
+//   {
+//     let resource = willf[ Resource.MapName ][ s ];
+//     _.assert( !!resource.formed );
+//     // if( resource.formed < 2 )
+//     con.ifNoErrorThen( ( arg/*aaa*/ ) => resource.open() );
+//   }
+//
+//   for( let s in willf[ Resource.MapName ] )
+//   {
+//     let resource = willf[ Resource.MapName ][ s ];
+//     // if( resource.formed < 3 )
+//     con.ifNoErrorThen( ( arg/*aaa*/ ) => resource.form3() );
+//   }
+//
+//   // return con;
+// }
+
 //
 
-function _resourcesForm2( Resource, resources, con )
+function _inPathsForm()
 {
-  let inf = this;
-  let module = inf.module;
+  let willf = this;
+  let module = willf.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  // let con = _.Consequence().give();
 
-  _.assert( _.mapIs( resources ) );
-  _.assert( _.constructorIs( Resource ) );
-  _.assert( arguments.length === 3 );
+  _.assert( arguments.length === 0 );
+  _.assert( !!module );
+  _.assert( !!will );
+  _.assert( !!will.formed );
+  _.assert( module.formed === 3 );
+  _.assert( !!willf.formed );
 
-  // _.each( resources, ( resource, k ) =>
-  // {
-  //
-  //   if( Resource.OptionsFrom )
-  //   resource = Resource.OptionsFrom( resource );
-  //
-  //   let o2 = _.mapExtend( null, resource );
-  //   o2.inf = inf;
-  //   o2.module = module;
-  //   o2.name = k;
-  //   try
-  //   {
-  //     Resource.MakeForEachCriterion( o2 );
-  //   }
-  //   catch( err )
-  //   {
-  //     throw _.err( 'Cant form', Resource.shortName, _.strQuote( o2.name ), '\n', err );
-  //   }
-  //
-  // });
-
-  if( Resource.MapName === 'build' )
-  debugger;
-
-  for( let s in inf[ Resource.MapName ] )
+  if( !willf.filePath )
   {
-    let resource = inf[ Resource.MapName ][ s ];
-    _.assert( !!resource.formed );
-    // if( resource.formed < 2 )
-    con.ifNoErrorThen( () => resource.form2() );
+    if( !willf.dirPath )
+    willf.dirPath = module.dirPath;
+    _.assert( _.strIs( willf.dirPath ) );
+    willf.filePath = path.join( willf.dirPath, module.prefixPathForRole( willf.role ) );
   }
 
-  for( let s in inf[ Resource.MapName ] )
-  {
-    let resource = inf[ Resource.MapName ][ s ];
-    // if( resource.formed < 3 )
-    con.ifNoErrorThen( () => resource.form3() );
-  }
+  willf.dirPath = path.dir( willf.filePath );
 
-  // return con;
 }
 
 //
 
 function exists()
 {
-  let inf = this;
-  let module = inf.module;
+  let willf = this;
+  let module = willf.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
-  inf._inPathsForm();
+  willf._inPathsForm();
 
-  let r = fileProvider.fileConfigPathGet({ filePath : inf.filePath });
+  let r = fileProvider.fileConfigPathGet({ filePath : willf.filePath });
 
   return !!r;
 }
@@ -484,11 +518,14 @@ let Proto =
   unform : unform,
   form : form,
   form1 : form1,
-  form2 : form2,
-  _inPathsForm : _inPathsForm,
-  _resourcesForm1 : _resourcesForm1,
-  _resourcesForm2 : _resourcesForm2,
+  open : open,
 
+  // form3 : form3,
+
+  _resourcesMake : _resourcesMake,
+  // _resourcesForm3 : _resourcesForm3,
+
+  _inPathsForm : _inPathsForm,
   exists : exists,
 
   // relation

@@ -1,4 +1,4 @@
-( function _BuildRun_s_( ) {
+( function _BuildFrame_s_( ) {
 
 'use strict';
 
@@ -13,12 +13,12 @@ if( typeof module !== 'undefined' )
 
 let _ = wTools;
 let Parent = null;
-let Self = function wWillBuildRun( o )
+let Self = function wWillBuildFrame( o )
 {
   return _.instanceConstructor( Self, this, arguments );
 }
 
-Self.shortName = 'BuildRun';
+Self.shortName = 'BuildFrame';
 
 // --
 // inter
@@ -28,22 +28,22 @@ function finit()
 {
   if( this.formed )
   this.unform();
-  return _.Copyable.prototype.finit.apply( this, arguments );
+  // return _.Copyable.prototype.finit.apply( this, arguments );
 }
 
 //
 
 function init( o )
 {
-  let run = this;
+  let frame = this;
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  _.instanceInit( run );
-  Object.preventExtensions( run );
+  _.instanceInit( frame );
+  Object.preventExtensions( frame );
 
   if( o )
-  run.copy( o );
+  frame.copy( o );
 
 }
 
@@ -51,87 +51,122 @@ function init( o )
 
 function unform()
 {
-  let run = this;
-  let module = run.module;
+  let frame = this;
+  let module = frame.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0 );
-  _.assert( run.formed );
+  _.assert( frame.formed );
 
   /* begin */
 
   /* end */
 
-  run.formed = 0;
-  return run;
+  // frame.formed = 0;
+  return frame;
 }
 
 //
 
 function form()
 {
-  let run = this;
-  let module = run.module;
+  let frame = this;
+  let module = frame.module;
+  let build = frame.build;
+  let resource = frame.resource;
+  let down = frame.down;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0 );
-  _.assert( !run.formed );
-
+  _.assert( !frame.formed );
   _.assert( !!will );
   _.assert( !!module );
+  _.assert( module.formed === 3 );
+  _.assert( build instanceof will.Build );
+  _.assert( _.arrayIs( build.steps ) );
+  _.assert( !!resource );
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !!will.formed );
-  _.assert( !!module.formed );
+  _.assert( down === null || down instanceof Self );
   _.assert( module.formed >= 1 );
 
   /* begin */
 
+  if( resource instanceof will.Step )
+  {
+
+    frame.opts = _.mapExtend( null, resource.opts )
+    if( resource.opts && resource.stepRoutine.stepOptions )
+    _.routineOptions( resource.stepRoutine, frame.opts, resource.stepRoutine.stepOptions );
+
+  }
+
   /* end */
 
-  run.formed = 1;
-  return run;
+  frame.formed = 1;
+  Object.freeze( frame );
+  return frame;
 }
 
 //
 
-function run( build )
+function run()
 {
-  let run = this;
-  let module = run.module;
+  let frame = this;
+  let module = frame.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+  let build = frame.build;
+  let resource = frame.resource;
   let steps = build.steps;
-  let con = new _.Consequence().give();
+  let con = new _.Consequence().give( null );
 
-  _.assert( arguments.length === 1 );
-  _.assert( run.formed === 1 );
-  _.assert( build.formed === 3 );
-  _.assert( _.arrayIs( steps ) );
-  _.assert( build instanceof will.Build );
+  _.assert( arguments.length === 0 );
+  _.assert( frame.formed === 1 );
 
-  build.stepsEach( function( it )
+  con.ifNoErrorThen( () => resource.form() );
+  con.ifNoErrorThen( ( arg ) =>
   {
-    if( it.element instanceof will.Step )
-    {
-      _.assert( _.routineIs( it.element.stepRoutine ), 'Step', it.element.name, 'does not have step routine' );
-      con.ifNoErrorThen( () => it.element.stepRoutine( run, build ) );
-    }
-    else if( it.element instanceof will.Build )
-    {
-      con.ifNoErrorThen( () => run.run( it.element ) );
-    }
+    _.assert( resource.formed === 3 )
+    return arg;
   });
 
+  con.ifNoErrorThen( () => resource.run( frame ) );
+
   return con;
+}
+
+//
+
+function cloneUp( resource2 )
+{
+  let frame = this;
+  let module = frame.module;
+  let will = module.will;
+  let logger = will.logger;
+  let build = frame.build;
+  let resource = frame.resource;
+
+  _.assert( arguments.length === 1 );
+  _.assert( frame.formed === 1 );
+
+  let build2 = resource2 instanceof will.Build ? resource2 : build;
+  let frame2 = frame.cloneExtending({ resource : resource2, build : build2, down : frame });
+
+  _.assert( frame2.resource === resource2 );
+
+  frame2.form();
+
+  return frame2;
 }
 
 // --
@@ -149,6 +184,11 @@ let Aggregates =
 let Associates =
 {
   module : null,
+  down : null,
+  build : null,
+  resource : null,
+  opts : null,
+  context : null,
 }
 
 let Restricts =
@@ -162,7 +202,6 @@ let Statics =
 
 let Forbids =
 {
-  criterion : 'criterion',
 }
 
 let Accessors =
@@ -182,8 +221,9 @@ let Proto =
   init : init,
   unform : unform,
   form : form,
-
   run : run,
+
+  cloneUp : cloneUp,
 
   // relation
 
