@@ -225,104 +225,86 @@ function predefinedForm()
 {
   let module = this;
   let will = module.will;
+  let Predefined = will.Predefined;
 
   _.assert( arguments.length === 0 );
 
-  new will.Step
+  step
   ({
     name : 'predefined.delete',
-    stepRoutine : will.Predefined.stepRoutineDelete,
-    module : module,
-    criterion :
-    {
-      predefined : 1,
-    }
-  }).form();
+    stepRoutine : Predefined.stepRoutineDelete,
+  })
 
-  new will.Step
+  step
   ({
     name : 'predefined.reflect',
-    stepRoutine : will.Predefined.stepRoutineReflect,
-    module : module,
-    criterion :
-    {
-      predefined : 1,
-    }
-  }).form();
+    stepRoutine : Predefined.stepRoutineReflect,
+  })
 
-  new will.Step
+  step
+  ({
+    name : 'predefined.js',
+    stepRoutine : Predefined.stepRoutineJs,
+  })
+
+  step
+  ({
+    name : 'predefined.shell',
+    stepRoutine : Predefined.stepRoutineShell,
+  })
+
+  step
   ({
     name : 'submodules.download',
-    stepRoutine : will.Predefined.stepRoutineSubmodulesDownload,
-    module : module,
-    criterion :
-    {
-      predefined : 1,
-    }
-  }).form();
+    stepRoutine : Predefined.stepRoutineSubmodulesDownload,
+  })
 
-  new will.Step
+  step
   ({
     name : 'submodules.upgrade',
-    stepRoutine : will.Predefined.stepRoutineSubmodulesUpgrade,
-    module : module,
-    criterion :
-    {
-      predefined : 1,
-    }
-  }).form();
+    stepRoutine : Predefined.stepRoutineSubmodulesUpgrade,
+  })
 
-  new will.Step
+  step
   ({
     name : 'submodules.clean',
-    stepRoutine : will.Predefined.stepRoutineSubmodulesClean,
-    module : module,
-    criterion :
-    {
-      predefined : 1,
-    }
-  }).form();
+    stepRoutine : Predefined.stepRoutineSubmodulesClean,
+  })
 
-  new will.Step
+  step
   ({
     name : 'clean',
-    stepRoutine : will.Predefined.stepRoutineClean,
-    module : module,
-    criterion :
-    {
-      predefined : 1,
-    }
-  }).form();
+    stepRoutine : Predefined.stepRoutineClean,
+  })
 
-  new will.Step
+  step
   ({
     name : 'export',
-    stepRoutine : will.Predefined.stepRoutineExport,
-    module : module,
-    criterion :
-    {
-      predefined : 1,
-    }
-  }).form();
+    stepRoutine : Predefined.stepRoutineExport,
+  })
 
-  new will.Reflector
+  reflector
   ({
     name : 'predefined.common',
     srcFilter :
     {
       maskAll :
       {
-        excludeAny : [ /(^|\/)-/ ],
+        excludeAny :
+        [
+          /(\W|^)node_modules(\W|$)/,
+          /\.unique$/,
+          /\.git$/,
+          /\.svn$/,
+          /\.hg$/,
+          /\.DS_Store$/,
+          /(^|\/)-/,
+        ],
       }
     },
-    criterion :
-    {
-      predefined : 1,
-    },
-    module : module,
-  }).form1();
+  })
 
-  new will.Reflector
+  reflector
   ({
     name : 'predefined.debug',
     srcFilter :
@@ -332,15 +314,9 @@ function predefinedForm()
         excludeAny : [ /\.release($|\.|\/)/i ],
       }
     },
-    criterion :
-    {
-      debug : 1,
-      predefined : 1,
-    },
-    module : module,
-  }).form1();
+  })
 
-  new will.Reflector
+  reflector
   ({
     name : 'predefined.release',
     srcFilter :
@@ -350,13 +326,7 @@ function predefinedForm()
         excludeAny : [ /\.debug($|\.|\/)/i, /\.test($|\.|\/)/i, /\.experiment($|\.|\/)/i ],
       }
     },
-    criterion :
-    {
-      debug : 0,
-      predefined : 1,
-    },
-    module : module,
-  }).form1();
+  })
 
 /*
   .predefined.common :
@@ -381,6 +351,42 @@ function predefinedForm()
         - !!js/regexp '/\.test($|\.|\/)/i'
         - !!js/regexp '/\.experiment($|\.|\/)/i'
 */
+
+  /* - */
+
+  function step( o )
+  {
+    let defaults =
+    {
+      module : module,
+      criterion :
+      {
+        predefined : 1,
+      }
+    }
+
+    _.assert( arguments.length === 1 );
+    _.mapExtend( o, defaults )
+
+    return new will.Step( o ).form1();
+  }
+
+  function reflector( o )
+  {
+    let defaults =
+    {
+      module : module,
+      criterion :
+      {
+        predefined : 1,
+      }
+    }
+
+    _.assert( arguments.length === 1 );
+    _.mapExtend( o, defaults )
+
+    return new will.Reflector( o ).form1();
+  }
 
 }
 
@@ -488,6 +494,7 @@ function clean()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let filePaths = module.cleanWhat.apply( module, arguments );
+  let time = _.timeNow();
 
   for( let f = filePaths.length-1 ; f >= 0 ; f-- )
   {
@@ -497,7 +504,7 @@ function clean()
   }
 
   if( logger.verbosity >= 2 )
-  logger.log( ' - Clean deleted ' + filePaths.length + ' file(s)' );
+  logger.log( ' - Clean deleted ' + filePaths.length + ' file(s) in ' + _.timeSpent( time ) );
 
   return filePaths;
 }
@@ -746,9 +753,9 @@ function willFilesFind()
     {
       // debugger;
       if( module.supermodule )
-      throw _.err( 'Found no .out.will file for', module.nickName, 'at', _.strQuote( module.dirPath ) );
+      throw _.errBriefly( 'Found no .out.will file for', module.nickName, 'at', _.strQuote( module.dirPath ) );
       else
-      throw _.err( 'Found no', module.nickName, 'at', _.strQuote( module.dirPath ) );
+      throw _.errBriefly( 'Found no', module.nickName, 'at', _.strQuote( module.dirPath ) );
     }
 
     result = _.Consequence.From( result );
@@ -757,10 +764,10 @@ function willFilesFind()
     result.doThen( ( err, arg ) =>
     {
       if( !err && module.willFileArray.length === 0 )
-      throw _.errLogOnce( 'Found no', module.nickName, 'at', _.strQuote( module.dirPath ) );
+      throw _.errLogOnce( 'No will files', module.nickName, 'at', _.strQuote( module.dirPath ) );
 
       if( err )
-      throw _.errLogOnce( 'Found no', module.nickName, 'at', _.strQuote( module.dirPath ), '\n', err );
+      throw _.errLogOnce( 'Error looking for will files for', module.nickName, 'at', _.strQuote( module.dirPath ), '\n', err );
 
       return arg;
     });
@@ -1595,7 +1602,8 @@ function _nickNameGet()
   name = module.about.name;
   if( !name )
   name = module.dirPath;
-  return '→ ' + module.constructor.shortName + ' ' + _.strQuote( name ) + ' ←';
+  return module.constructor.shortName + '::' + name;
+  // return '→ ' + module.constructor.shortName + ' ' + _.strQuote( name ) + ' ←';
 }
 
 // --
@@ -2440,8 +2448,8 @@ let Proto =
 
   // etc
 
-  clean,
   cleanWhat,
+  clean,
 
   // opener
 

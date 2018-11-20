@@ -35,10 +35,11 @@ function stepRoutineDelete( frame )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+  let opts = frame.opts;
 
   _.assert( arguments.length === 1 );
 
-  let filePath = step.inPathResolve( frame.opts.filePath );
+  let filePath = step.inPathResolve( opts.filePath );
   return fileProvider.filesDelete({ filePath : filePath, verbosity : will.verbosity >= 2 ? 2 : 0 });
 }
 
@@ -57,51 +58,37 @@ function stepRoutineReflect( frame )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+  let opts = frame.opts;
 
-  _.assert( !!frame.opts.reflector, 'Expects option reflector' );
-  _.assert( step.formed === 3 );
+  _.assert( !!opts.reflector, 'Expects option reflector' );
   _.assert( arguments.length === 1 );
 
-  // if( step.opts.reflector )
-  // {
-  //   let reflectors = module.resolve
-  //   ({
-  //     query :  step.opts.reflector,
-  //     defaultPool : 'reflector',
-  //     current : step,
-  //     unwrappingSingle : 0,
-  //   });
-  //   _.assert( _.arrayIs( reflectors ) );
-  //   for( let r = 0 ; r < reflectors.length ; r++ )
-  //   reflectors[ r ].form();
-  // }
-
-  frame.opts.reflector = module.resolve
+  opts.reflector = module.resolve
   ({
-    query : frame.opts.reflector,
+    query : opts.reflector,
     defaultPool : 'reflector',
     current : step,
   });
 
-  frame.opts.reflector.form();
+  opts.reflector.form();
 
-  _.sure( frame.opts.reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strTypeOf( frame.opts.reflector ) )
-  _.assert( frame.opts.reflector.formed === 3, () => frame.opts.reflector.nickName + ' is not formed' );
+  _.sure( opts.reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strTypeOf( opts.reflector ) )
+  _.assert( opts.reflector.formed === 3, () => opts.reflector.nickName + ' is not formed' );
 
-  frame.opts.reflector = frame.opts.reflector.optionsReflectExport();
-  _.mapSupplement( frame.opts, frame.opts.reflector )
-  delete frame.opts.reflector;
+  opts.reflector = opts.reflector.optionsReflectExport();
+  _.mapSupplement( opts, opts.reflector )
+  delete opts.reflector;
 
   if( will.verbosity >= 4 )
   {
     logger.log( ' + Files reflecting...' );
-    logger.log( _.toStr( frame.opts.reflectMap, { wrap : 0, multiline : 1, levels : 3 } ) );
+    logger.log( _.toStr( opts.reflectMap, { wrap : 0, multiline : 1, levels : 3 } ) );
   }
 
-  if( frame.opts.verbosity === null )
-  frame.opts.verbosity = _.numberClamp( will.verbosity - 2, 0, 9 );
+  if( opts.verbosity === null )
+  opts.verbosity = _.numberClamp( will.verbosity - 2, 0, 9 );
 
-  let result = will.Predefined.filesReflect.call( fileProvider, frame.opts );
+  let result = will.Predefined.filesReflect.call( fileProvider, opts );
 
   return result;
 }
@@ -114,36 +101,113 @@ stepRoutineReflect.stepOptions =
 
 //
 
-function stepRoutineExport( frame )
+function stepRoutineJs( frame )
 {
   let step = this;
-  let build = frame.build;
   let module = frame.module;
   let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
   let logger = will.logger;
+  let opts = frame.opts;
 
   _.assert( arguments.length === 1 );
 
-  /* begin */
+  // _.sure( !!opts.shell ^ !!opts.js ^ _.routineIs( step.stepRoutine ), 'Step should have only {-shell-} or {-js-} or {-stepRoutine-} fields' );
+  _.sure( opts.js === null || _.strIs( opts.js ) );
 
-  if( module.exportedMap[ build.name ] )
+  /* */
+
+  try
   {
-    _.assert( 0, 'not tested' );
-    module.exportedMap[ build.name ].finit();
-    _.assert( module.exportedMap[ build.name ] === undefined );
+    // debugger;
+    // if( _.strBegins( opts.js, '.' ) )
+    opts.js = step.inPathResolve({ query : opts.js, prefixlessAction : 'resolved' });
+    opts.routine = require( fileProvider.providersWithProtocolMap.hd.path.nativize( opts.js ) );
+    if( !_.routineIs( opts.routine ) )
+    throw _.err( 'JS file should return function, but got', _.strTypeOf( opts.routine ) );
+  }
+  catch( err )
+  {
+    debugger;
+    throw _.err( 'Failed to open JS file', _.strQuote( opts.js ), '\n', err );
   }
 
-  let exported = new will.Exported({ module : module, name : build.name }).form1();
+  /* */
 
-  _.assert( module.exportedMap[ build.name ] === exported );
+  try
+  {
+    let result = opts.routine( frame );
+    return result || null;
+  }
+  catch( err )
+  {
+    throw _.err( 'Failed to execute JS file', _.strQuote( opts.js ), '\n', err );
+  }
 
-  return exported.proceed( frame );
 }
 
-stepRoutineExport.stepOptions =
+stepRoutineJs.stepOptions =
 {
-  export : null,
-  tar : 1,
+  js : null,
+}
+
+stepRoutineJs.uniqueOptions =
+{
+  js : null,
+}
+
+//
+
+function stepRoutineShell( frame )
+{
+  let step = this;
+  let module = frame.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = frame.opts;
+
+  _.assert( arguments.length === 1 );
+
+  // _.sure( !!opts.shell ^ !!opts.js ^ _.routineIs( step.stepRoutine ), 'Step should have only {-shell-} or {-js-} or {-stepRoutine-} fields' );
+  // _.sure( opts.js === null || _.strIs( opts.js ) );
+  _.sure( opts.shell === null || _.strIs( opts.shell ) || _.arrayIs( opts.shell ) );
+
+  /* */
+
+  if( opts.currentPath )
+  opts.currentPath = step.inPathResolve({ query : opts.currentPath, prefixlessAction : 'resolved' });
+  _.sure( opts.currentPath === null || _.strIs( opts.currentPath ), 'Current path should be string if defined' );
+
+  /* */
+
+  // if( _.arrayIs( opts.shell ) )
+  // opts.shell = opts.shell.join( '\n' );
+
+  return _.shell
+  ({
+    path : opts.shell,
+    currentPath : opts.currentPath,
+  }).doThen( ( err, arg ) =>
+  {
+    if( err )
+    throw _.errBriefly( 'Failed to shell', step.nickName, '\n', err );
+    return arg;
+  });
+
+}
+
+stepRoutineShell.stepOptions =
+{
+  shell : null,
+  currentPath : null,
+}
+
+stepRoutineShell.uniqueOptions =
+{
+  shell : null,
 }
 
 //
@@ -214,6 +278,40 @@ stepRoutineClean.stepOptions =
 {
 }
 
+//
+
+function stepRoutineExport( frame )
+{
+  let step = this;
+  let build = frame.build;
+  let module = frame.module;
+  let will = module.will;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 1 );
+
+  /* begin */
+
+  if( module.exportedMap[ build.name ] )
+  {
+    _.assert( 0, 'not tested' );
+    module.exportedMap[ build.name ].finit();
+    _.assert( module.exportedMap[ build.name ] === undefined );
+  }
+
+  let exported = new will.Exported({ module : module, name : build.name }).form1();
+
+  _.assert( module.exportedMap[ build.name ] === exported );
+
+  return exported.proceed( frame );
+}
+
+stepRoutineExport.stepOptions =
+{
+  export : null,
+  tar : 1,
+}
+
 // --
 // declare
 // --
@@ -221,17 +319,19 @@ stepRoutineClean.stepOptions =
 let Extend =
 {
 
-  filesReflect : filesReflect,
+  filesReflect,
 
-  stepRoutineDelete : stepRoutineDelete,
-  stepRoutineReflect : stepRoutineReflect,
-  stepRoutineExport : stepRoutineExport,
+  stepRoutineDelete,
+  stepRoutineReflect,
+  stepRoutineJs,
+  stepRoutineShell,
 
-  stepRoutineSubmodulesDownload : stepRoutineSubmodulesDownload,
-  stepRoutineSubmodulesUpgrade : stepRoutineSubmodulesUpgrade,
-  stepRoutineSubmodulesClean : stepRoutineSubmodulesClean,
+  stepRoutineSubmodulesDownload,
+  stepRoutineSubmodulesUpgrade,
+  stepRoutineSubmodulesClean,
 
-  stepRoutineClean : stepRoutineClean,
+  stepRoutineClean,
+  stepRoutineExport,
 
 }
 

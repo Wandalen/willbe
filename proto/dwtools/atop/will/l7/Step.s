@@ -45,6 +45,59 @@ function init( o )
 
 //
 
+function form2()
+{
+  let step = this;
+  let module = step.module;
+
+  if( step.formed >= 2 )
+  return step;
+
+  _.assert( arguments.length === 0 );
+  _.assert( step.formed === 1 );
+  _.assert( _.objectIs( step.opts ) || step.opts === null );
+
+  /* */
+
+  // step.opts = step.opts || Object.create( null );
+  // if( step.name === 'custom.js' )
+  // debugger;
+
+  if( step.inherit.length === 0 && step.opts )
+  for( let s in module.stepMap )
+  {
+    let step2 = module.stepMap[ s ];
+
+    if( !step2.criterion || !step2.criterion.predefined )
+    continue;
+    if( step2.formed < 2 )
+    continue;
+    if( step2.uniqueOptions === null )
+    continue;
+
+    _.assert( _.objectIs( step2.uniqueOptions ) );
+
+    if( _.mapKeys( _.mapOnly( step.opts, step2.uniqueOptions ) ).length )
+    {
+      step.inherit.push( step2.name );
+    }
+
+    if( step.inherit.length > 1 )
+    throw _.err
+    (
+      'Cant deduce inherit of', step.nickName, '\n',
+      'Because several steps have unique options', _.mapKeys( _.mapOnly( step.opts, step2.uniqueOptions ) )
+    );
+
+  }
+
+  /* */
+
+  return Parent.prototype.form2.call( step );
+}
+
+//
+
 function form3()
 {
   let step = this;
@@ -126,13 +179,12 @@ function form3()
 
   // stepRoutineExport.stepOptions
 
-  _.assert( _.routineIs( step.stepRoutine ), () => step.nickName + ' does not have {- stepRoutine -}' );
+  _.assert( _.routineIs( step.stepRoutine ), () => step.nickName + ' does not have {- stepRoutine -}. Failed to deduce it, try specifying "inherit" field explicitly' );
   _.assert( step.stepRoutine.stepOptions !== undefined, () => 'Field {- stepRoutine -} of ' + step.nickName + ' deos not have defined {- stepOptions -}' );
 
   if( step.opts && step.stepRoutine.stepOptions )
   {
     _.sureMapHasOnly( step.opts, step.stepRoutine.stepOptions, () => step.nickName + ' should not have options' );
-    // _.mapComplement( step.opts );
   }
 
   /* end */
@@ -184,22 +236,19 @@ function run( frame )
   return result;
 }
 
-// //
-//
-// function formAndRun( run )
-// {
-//   let step = this;
-//
-//   // debugger;
-//   let c = step.form();
-//   // debugger;
-//
-//   return _.Consequence.From( c ).doThen( () =>
-//   {
-//     _.assert( _.routineIs( step.stepRoutine ), () => step.nickName + ' does not have step routine' );
-//     return step.stepRoutine( run );
-//   });
-// }
+// --
+// accessor
+// --
+
+function uniqueOptionsGet()
+{
+  let step = this;
+
+  if( !step.stepRoutine )
+  return null;
+
+  return step.stepRoutine.uniqueOptions || null;
+}
 
 // --
 // relations
@@ -251,6 +300,7 @@ let Forbids =
 
 let Accessors =
 {
+  uniqueOptions : { getter : uniqueOptionsGet, readOnly : 1 },
 }
 
 // --
@@ -262,21 +312,24 @@ let Proto =
 
   // inter
 
-  init : init,
-  form3 : form3,
+  init,
+  form2,
+  form3,
+  run,
 
-  run : run,
-  // formAndRun : formAndRun,
+  // accessor
+
+  uniqueOptionsGet,
 
   // relation
 
-  Composes : Composes,
-  Aggregates : Aggregates,
-  Associates : Associates,
-  Restricts : Restricts,
-  Statics : Statics,
-  Forbids : Forbids,
-  Accessors : Accessors,
+  Composes,
+  Aggregates,
+  Associates,
+  Restricts,
+  Statics,
+  Forbids,
+  Accessors,
 
 }
 

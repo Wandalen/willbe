@@ -219,23 +219,13 @@ function form2()
   _.assert( arguments.length === 0 );
   _.assert( inheritable.formed === 1 );
 
-  // console.log( 'form2', module.nickName, inheritable.nickName );
-
-  if( inheritable.nickName === 'release.compiled.export' )
-  debugger;
-
   /* begin */
 
   inheritable._inheritForm({ visited : [] })
 
   /* end */
 
-  if( inheritable.criterion )
-  for( let c in inheritable.criterion )
-  {
-    let crit = inheritable.criterion[ c ];
-    _.assert( _.primitiveIs( crit ), () => 'Criterion ' + c + ' of ' + inheritable.nickName + ' should be primitive, but is ' + _.strTypeOf( crit ) );
-  }
+  inheritable.criterionValidate();
 
   inheritable.formed = 2;
   return inheritable;
@@ -264,7 +254,7 @@ function _inheritForm( o )
 
   _.arrayRemoveElementOnceStrictly( o.visited, inheritable );
 
-  inheritable.formed = 2;
+  // inheritable.formed = 2;
   return inheritable;
 }
 
@@ -374,7 +364,9 @@ function _inheritSingle( o )
     inheritable2._inheritForm({ visited : o.visited });
   }
 
-  let extend = _.mapOnly( inheritable2, _.mapNulls( inheritable ) );
+  // let extend = _.mapOnly( inheritable2, _.mapNulls( inheritable ) );
+
+  let extend = _.mapOnly( inheritable2, _.mapNulls( inheritable.dataExport({ compact : 0, copyingAggregates : 1 }) ) );
   delete extend.criterion;
   inheritable.copy( extend );
   inheritable.criterionInherit( inheritable2.criterion );
@@ -456,6 +448,21 @@ function form3()
 // criterion
 // --
 
+function criterionValidate()
+{
+  let inheritable = this;
+
+  if( inheritable.criterion )
+  for( let c in inheritable.criterion )
+  {
+    let crit = inheritable.criterion[ c ];
+    _.sure( _.primitiveIs( crit ), () => 'Criterion ' + c + ' of ' + inheritable.nickName + ' should be primitive, but is ' + _.strTypeOf( crit ) );
+  }
+
+}
+
+//
+
 function criterionSattisfy( criterion2 )
 {
   let inheritable = this;
@@ -521,26 +528,22 @@ function infoExport()
 
 //
 
-// function dataExport()
-// {
-//   let inheritable = this;
-//   let fields = _.mapOnlyComplementing( inheritable, inheritable.Composes );
-//   fields = _.mapButNulls( fields );
-//   delete fields.name;
-//   return fields;
-// }
-
 function dataExport()
 {
   let inheritable = this;
 
-  // if( inheritable.nickName === 'reflector::exported.0' )
-  // debugger;
+  let o = _.routineOptions( dataExport, arguments );
 
-  let fields = inheritable.cloneData({ compact : 1, copyingAggregates : 0 });
+  let fields = inheritable.cloneData( o );
 
   delete fields.name;
   return fields;
+}
+
+dataExport.defaults =
+{
+  compact : 1,
+  copyingAggregates : 0,
 }
 
 //
@@ -584,7 +587,7 @@ function _refNameGet()
 // resolver
 // --
 
-function _resolve_body( o )
+function resolve_body( o )
 {
   let inheritable = this;
   let module = inheritable.module;
@@ -612,15 +615,13 @@ function _resolve_body( o )
   return resolved;
 }
 
-_resolve_body.defaults = Object.create( _.Will.Module.prototype._resolve.defaults );
+resolve_body.defaults = Object.create( _.Will.Module.prototype.resolve.defaults );
 
-let _resolve = _.routineFromPreAndBody( _.Will.Module.prototype.resolve.pre, _resolve_body );
+let resolve = _.routineFromPreAndBody( _.Will.Module.prototype.resolve.pre, resolve_body );
 
 //
 
-/* !!! it should be shortcut for _resolve */
-
-function inPathResolve( filePath )
+function inPathResolve_body( o )
 {
   let inheritable = this;
   let module = inheritable.module;
@@ -629,39 +630,29 @@ function inPathResolve( filePath )
   let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
-  _.assert( _.strIs( filePath ) );
+  _.assert( _.strIs( o.query ) );
+  _.assertRoutineOptions( inPathResolve_body, arguments );
 
-  if( module.strIsResolved( filePath ) )
-  debugger;
-  // if( module.strIsResolved( filePath ) )
-  // _.assert( 0, 'not tested' );
+  let result = inheritable.resolve( o );
 
-  let result = inheritable.resolve
-  ({
-    query : filePath,
-    defaultPool : 'path',
-    prefixlessAction : 'throw',
-    // prefixlessAction : 'resolved',
-    resolvingPath : 'in',
-  });
-
-  // if( !module.strIsResolved( filePath ) )
-  // filePath = module.resolve
   // ({
-  //   query : filePath,
+  //   query : o.query,
   //   defaultPool : 'path',
-  //   current : inheritable,
+  //   prefixlessAction : 'throw',
+  //   // prefixlessAction : 'resolved',
+  //   resolvingPath : 'in',
   // });
-  //
-  // let result = path.resolve( module.dirPath, ( module.pathMap.in || '.' ), filePath );
-
-  _.assert( _.strIs( filePath ) || _.strsAre( filePath ) );
-
-  if( module.strIsResolved( filePath ) )
-  debugger;
 
   return result;
 }
+
+var defaults = inPathResolve_body.defaults = Object.create( resolve.defaults );
+
+defaults.defaultPool = 'path';
+defaults.prefixlessAction = 'throw';
+defaults.resolvingPath = 'in';
+
+let inPathResolve = _.routineFromPreAndBody( resolve.pre, inPathResolve_body );
 
 // --
 // relations
@@ -737,6 +728,7 @@ let Proto =
 
   // criterion
 
+  criterionValidate,
   criterionSattisfy,
   criterionInherit,
 
@@ -753,8 +745,8 @@ let Proto =
 
   // resolver
 
-  _resolve,
-  resolve : _resolve,
+  resolve,
+  // resolve : resolve,
   // inPathResolve : _.routineVectorize_functor( _inPathResolve ),
 
   inPathResolve,

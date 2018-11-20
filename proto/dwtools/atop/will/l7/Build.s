@@ -205,13 +205,10 @@ function proceed( o )
   function logPre()
   {
     logger.up();
-    // debugger;
     if( logger.verbosity >= 2 )
     {
-      // if( builds.length === 1 )
+      logger.log();
       logger.log( isExport ? 'Exporting' : 'Building', build.name );
-      // else
-      // logger.log( module.infoExportResource( builds ) );
     }
   }
 

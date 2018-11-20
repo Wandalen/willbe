@@ -82,7 +82,11 @@ function moduleOnReady( onReady )
       will.currentModule = null;
     }
     if( err )
-    throw _.errLogOnce( err );
+    {
+      if( !will.topCommand )
+      _.appExitCode( -1 );
+      throw _.errLogOnce( err );
+    }
     return arg;
   });
 
@@ -577,9 +581,15 @@ function commandWith( e )
   })
   .doThen( ( err, arg ) =>
   {
+    debugger;
+    let isTop = will.topCommand === commandWith;
     will.done( commandWith );
     if( err )
-    throw _.errLogOnce( err );
+    {
+      if( isTop )
+      _.appExitCode( -1 );
+      throw _.errLogOnce( err );
+    }
     return arg;
   });
 
@@ -650,23 +660,32 @@ function commandEach( e )
 
       return r;
     })
-    .doThen( ( err, arg ) =>
-    {
-      module.finit();
-      if( module === will.currentModule )
-      will.currentModule = null;
-      if( err )
-      throw _.errLogOnce( err );
-      return arg;
-    });
+    // .doThen( ( err, arg ) =>
+    // {
+    //   module.finit();
+    //   if( module === will.currentModule )
+    //   will.currentModule = null;
+    //   if( err )
+    //   {
+    //     if( will.topCommand === commandWith )
+    //     _.appExitCode( -1 );
+    //     throw _.errLogOnce( err );
+    //   }
+    //   return arg;
+    // });
 
   });
 
   con.doThen( ( err, arg ) =>
   {
+    let isTop = will.topCommand === commandEach;
     will.done( commandEach );
     if( err )
-    throw _.errLogOnce( err );
+    {
+      if( isTop )
+      _.appExitCode( -1 );
+      throw _.errLogOnce( err );
+    }
     return arg;
   });
 
