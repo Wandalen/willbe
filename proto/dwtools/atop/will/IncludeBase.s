@@ -21,6 +21,7 @@ if( typeof module !== 'undefined' )
   _.include( 'wStateSession' );
   _.include( 'wCommandsAggregator' );
   _.include( 'wCommandsConfig' );
+  _.include( 'wNameMapper' );
 
 }
 

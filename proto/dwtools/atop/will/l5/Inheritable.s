@@ -288,7 +288,7 @@ function _inheritMultiple( o )
     _.assert( _.strIs( inheritable.PoolName ) );
     _.assert( _.strIs( ancestor ) );
 
-    let ancestors = module.strResolve
+    let ancestors = module.resolve
     ({
       query : ancestor,
       defaultPool : inheritable.PoolName,
@@ -452,7 +452,9 @@ function form3()
   return inheritable;
 }
 
-//
+// --
+// criterion
+// --
 
 function criterionSattisfy( criterion2 )
 {
@@ -501,7 +503,9 @@ function criterionInherit( criterion2 )
   return criterion1;
 }
 
-//
+// --
+// export
+// --
 
 function infoExport()
 {
@@ -530,7 +534,7 @@ function dataExport()
 {
   let inheritable = this;
 
-  // if( inheritable.constructor.shortName === 'Exported' )
+  // if( inheritable.nickName === 'reflector::exported.0' )
   // debugger;
 
   let fields = inheritable.cloneData({ compact : 1, copyingAggregates : 0 });
@@ -557,7 +561,9 @@ function compactField( it )
   return it.dst;
 }
 
-//
+// --
+// accessor
+// --
 
 function _nickNameGet()
 {
@@ -571,12 +577,14 @@ function _nickNameGet()
 function _refNameGet()
 {
   let inheritable = this;
-  return inheritable.PoolName + '::' + _.strQuote( inheritable.name );
+  return inheritable.PoolName + '::' + inheritable.name;
 }
 
-//
+// --
+// resolver
+// --
 
-function _strResolve_body( o )
+function _resolve_body( o )
 {
   let inheritable = this;
   let module = inheritable.module;
@@ -595,7 +603,7 @@ function _strResolve_body( o )
   _.assert( 0, 'not tested' );
 
   // debugger;
-  let resolved = module.strResolve( o );
+  let resolved = module.resolve( o );
   // debugger;
 
   // let result = path.resolve( module.dirPath, ( module.pathMap.in || '.' ), resolved );
@@ -604,15 +612,15 @@ function _strResolve_body( o )
   return resolved;
 }
 
-_strResolve_body.defaults = Object.create( _.Will.Module.prototype._strResolve.defaults );
+_resolve_body.defaults = Object.create( _.Will.Module.prototype._resolve.defaults );
 
-let _strResolve = _.routineFromPreAndBody( _.Will.Module.prototype.strResolve.pre, _strResolve_body );
+let _resolve = _.routineFromPreAndBody( _.Will.Module.prototype.resolve.pre, _resolve_body );
 
 //
 
-/* !!! it should be shortcut for _strResolve */
+/* !!! it should be shortcut for _resolve */
 
-function _inPathResolve( filePath )
+function inPathResolve( filePath )
 {
   let inheritable = this;
   let module = inheritable.module;
@@ -623,17 +631,32 @@ function _inPathResolve( filePath )
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( filePath ) );
 
-  if( !module.strIsResolved( filePath ) )
-  filePath = module.strResolve
+  if( module.strIsResolved( filePath ) )
+  debugger;
+  if( module.strIsResolved( filePath ) )
+  _.assert( 0, 'not tested' );
+
+  let result = inheritable.resolve
   ({
     query : filePath,
     defaultPool : 'path',
-    current : inheritable,
+    resolvingPath : 'in',
   });
 
-  let result = path.resolve( module.dirPath, ( module.pathMap.in || '.' ), filePath );
+  // if( !module.strIsResolved( filePath ) )
+  // filePath = module.resolve
+  // ({
+  //   query : filePath,
+  //   defaultPool : 'path',
+  //   current : inheritable,
+  // });
+  //
+  // let result = path.resolve( module.dirPath, ( module.pathMap.in || '.' ), filePath );
 
-  _.assert( _.strIs( filePath ) || _.arrayIs( filePath ) );
+  _.assert( _.strIs( filePath ) || _.strsAre( filePath ) );
+
+  if( module.strIsResolved( filePath ) )
+  debugger;
 
   return result;
 }
@@ -692,50 +715,59 @@ let Proto =
 
   // inter
 
-  MakeForEachCriterion : MakeForEachCriterion,
-  OptionsFrom : OptionsFrom,
+  MakeForEachCriterion,
+  OptionsFrom,
 
-  finit : finit,
-  init : init,
-  copy : copy,
+  finit,
+  init,
+  copy,
 
-  unform : unform,
-  form : form,
-  form1 : form1,
-  form2 : form2,
+  unform,
+  form,
+  form1,
+  form2,
 
-  _inheritForm : _inheritForm,
-  _inheritMultiple : _inheritMultiple,
-  _inheritSingle : _inheritSingle,
+  _inheritForm,
+  _inheritMultiple,
+  _inheritSingle,
 
-  form3 : form3,
+  form3,
 
-  criterionSattisfy : criterionSattisfy,
-  criterionInherit : criterionInherit,
+  // criterion
 
-  infoExport : infoExport,
-  dataExport : dataExport,
-  compactField : compactField,
+  criterionSattisfy,
+  criterionInherit,
 
-  _nickNameGet : _nickNameGet,
-  _refNameGet : _refNameGet,
+  // export
 
-  _strResolve : _strResolve,
-  strResolve : _strResolve,
+  infoExport,
+  dataExport,
+  compactField,
+
+  // accessor
+
+  _nickNameGet,
+  _refNameGet,
+
+  // resolver
+
+  _resolve,
+  resolve : _resolve,
   // inPathResolve : _.routineVectorize_functor( _inPathResolve ),
 
-  _inPathResolve : _inPathResolve,
-  inPathResolve : _.routineVectorize_functor( _inPathResolve ),
+  inPathResolve,
+  // _inPathResolve : _inPathResolve,
+  // inPathResolve : _.routineVectorize_functor( _inPathResolve ),
 
   // relation
 
-  Composes : Composes,
-  Aggregates : Aggregates,
-  Associates : Associates,
-  Restricts : Restricts,
-  Statics : Statics,
-  Forbids : Forbids,
-  Accessors : Accessors,
+  Composes,
+  Aggregates,
+  Associates,
+  Restricts,
+  Statics,
+  Forbids,
+  Accessors,
 
 }
 

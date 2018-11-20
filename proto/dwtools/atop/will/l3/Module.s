@@ -1435,6 +1435,86 @@ function _resourcesFormAct( Resource, con )
 
 }
 
+//
+
+function resourceClassForKind( resourceKind )
+{
+  let module = this;
+  let will = module.will;
+  let result = will[ will.ResourceKindToClassName.forKey( resourceKind ) ];
+
+  _.assert( arguments.length === 1 );
+  _.sure( _.routineIs( result ), () => 'Cant find class for resource kind ' + _.strQuote( resourceKind ) );
+
+  return result;
+}
+
+//
+
+function resourceMapForKind( resourceKind )
+{
+  let module = this;
+  let will = module.will;
+  let result;
+
+  // debugger;
+
+  if( resourceKind === 'export' )
+  result = module.buildMap;
+  else
+  result = module[ will.ResourceKindToMapName.forKey( resourceKind ) ];
+
+  _.assert( arguments.length === 1 );
+  _.sure( _.objectIs( result ), () => 'Cant find resource map for resource kind ' + _.strQuote( resourceKind ) );
+
+  return result;
+}
+
+//
+
+function resourceAllocate( resourceKind, resourceName )
+{
+  let module = this;
+  let will = module.will;
+
+  _.assert( arguments.length === 2 );
+  _.assert( _.strIs( resourceName ) );
+
+  // _.assert( module.pathMap[ resourceName ] === undefined, 'not implemented' );
+  // let resourceName2 = resourceName + '.0';
+
+  let resourceName2 = module.resourceAllocateName( resourceKind, resourceName );
+  let cls = module.resourceClassForKind( resourceKind );
+  let patho = new cls({ module : module, name : resourceName2 }).form1();
+
+  return patho;
+}
+
+//
+
+function resourceAllocateName( resourceKind, resourceName )
+{
+  let module = this;
+  let will = module.will;
+
+  _.assert( arguments.length === 2 );
+  _.assert( _.strIs( resourceName ) );
+  // _.assert( module.pathMap[ resourceName ] === undefined, 'not implemented' );
+
+  let map = module.resourceMapForKind( resourceKind );
+  let counter = 0;
+  let resourceName2;
+
+  do
+  {
+    resourceName2 = resourceName + '.' + counter;
+    counter += 1;
+  }
+  while( map[ resourceName2 ] !== undefined );
+
+  return resourceName2;
+}
+
 // --
 // path
 // --
@@ -1478,26 +1558,6 @@ function baseDirPathChange( dirPath )
   will.moduleMap[ module.dirPath ] = module;
 
   return module;
-}
-
-//
-
-function pathAllocate( name )
-{
-  let module = this;
-  let will = module.will;
-
-  _.assert( arguments.length === 1 );
-  _.assert( _.strIs( name ) );
-  // _.assert( _.strIs( filePath ) );
-
-  _.assert( module.pathMap[ name ] === undefined, 'not implemented' );
-
-  let name2 = name + '.0';
-
-  let patho = will.PathObj({ module : module, name : name2/*, path : filePath*/ }).form1();
-
-  return patho;
 }
 
 //
@@ -1746,7 +1806,7 @@ function strGetPrefix( srcStr )
   let splits = module.strSplitShort( srcStr );
   if( !splits[ 0 ] )
   return false;
-  if( !_.arrayHas( module.KnownPrefixes, splits[ 0 ] ) )
+  if( !_.arrayHas( will.ResourceKinds, splits[ 0 ] ) )
   return false;
   return splits[ 0 ];
 }
@@ -1760,7 +1820,7 @@ function strIsResolved( srcStr )
 
 //
 
-function _strResolve_pre( routine, args )
+function _resolve_pre( routine, args )
 {
   let o = args[ 0 ];
   if( _.strIs( o ) )
@@ -1776,7 +1836,7 @@ function _strResolve_pre( routine, args )
 
 //
 
-function _strResolveMaybe_body( o )
+function _resolveMaybe_body( o )
 {
   let module = this;
   let will = module.will;
@@ -1789,7 +1849,7 @@ function _strResolveMaybe_body( o )
   // if( !o.visited )
   // o.visited = [];
 
-  let result = module._resourceSelect( o );
+  let result = module._resolveSelect( o );
 
   if( _.errIs( result ) )
   return result;
@@ -1822,8 +1882,10 @@ function _strResolveMaybe_body( o )
   {
     // if( o.query === 'submodule::*/exported::*=1/path::exportedDir*=1' )
     // debugger;
-    _.assert( _.mapIs( result ) || _.objectIs( result ), 'not implemented' );
-    if( _.mapIs( result ) )
+    // if( _.arrayIs( result ) )
+    // debugger;
+    _.assert( _.mapIs( result ) || _.objectIs( result ) || _.arrayIs( result ) );
+    if( _.mapIs( result ) || _.arrayIs( result ) )
     result = _.filter( result, ( e ) => e instanceof will.PathObj ? e.path : e )
     else if( result instanceof will.PathObj )
     result = result.path;
@@ -1861,7 +1923,7 @@ function _strResolveMaybe_body( o )
 
 }
 
-_strResolveMaybe_body.defaults =
+_resolveMaybe_body.defaults =
 {
   query : null,
   defaultPool : null,
@@ -1876,17 +1938,17 @@ _strResolveMaybe_body.defaults =
   hasPath : null,
 }
 
-let _strResolveMaybe = _.routineFromPreAndBody( _strResolve_pre, _strResolveMaybe_body );
+let _resolveMaybe = _.routineFromPreAndBody( _resolve_pre, _resolveMaybe_body );
 
 //
 
-function _strResolve_body( o )
+function _resolve_body( o )
 {
   let module = this;
   let will = module.will;
   let current = o.current;
 
-  let result = module._strResolveMaybe.body.call( module, o );
+  let result = module._resolveMaybe.body.call( module, o );
 
   if( _.errIs( result ) )
   {
@@ -1897,13 +1959,13 @@ function _strResolve_body( o )
   return result;
 }
 
-_strResolve_body.defaults = Object.create( _strResolveMaybe.body.defaults );
+_resolve_body.defaults = Object.create( _resolveMaybe.body.defaults );
 
-let _strResolve = _.routineFromPreAndBody( _strResolve_pre, _strResolve_body );
+let _resolve = _.routineFromPreAndBody( _resolve_pre, _resolve_body );
 
 //
 
-function _resourceSelect( o )
+function _resolveSelect( o )
 {
   let module = this;
   let will = module.will;
@@ -1914,7 +1976,7 @@ function _resourceSelect( o )
   let current = o.current;
 
   _.assert( arguments.length === 1 );
-  _.assertRoutineOptions( _resourceSelect, arguments );
+  _.assertRoutineOptions( _resolveSelect, arguments );
   _.assert( o.currentModule instanceof will.Module );
 
   // if( _.strHas( o.query, 'reflect.proto' ) )
@@ -1981,7 +2043,8 @@ function _resourceSelect( o )
     if( kind === 'path' && o.hasPath === null )
     o.hasPath = true;
 
-    let pool = it._inherited.module.poolFor( kind );
+    let pool = it._inherited.module.resourceMapForKind( kind );
+    // debugger;
 
     if( !pool )
     {
@@ -2089,41 +2152,40 @@ function _resourceSelect( o )
 
 }
 
-var defaults = _resourceSelect.defaults = Object.create( _strResolve.defaults )
+var defaults = _resolveSelect.defaults = Object.create( _resolve.defaults )
 
 defaults.visited = null;
 
 //
 
-function poolFor( kind )
-{
-  let module = this;
-  let pool;
-
-  _.assert( arguments.length === 1 );
-
-  if( !kind || !_.arrayHas( module.KnownPrefixes, kind ) )
-  {
-    debugger;
-    throw _.ErrorLooking( 'Unknown kind of resource, no pool for resource', _.toStrShort( kind ) );
-  }
-
-  if( kind === 'path' )
-  pool = module.pathObjMap;
-  else if( kind === 'reflector' )
-  pool = module.reflectorMap;
-  else if( kind === 'submodule' )
-  pool = module.submoduleMap;
-  else if( kind === 'step' )
-  pool = module.stepMap;
-  else if( kind === 'build' )
-  pool = module.buildMap;
-  else if( kind === 'exported' )
-  pool = module.exportedMap;
-
-  return pool
-}
-
+// function poolFor( kind )
+// {
+//   let module = this;
+//   let pool;
+//
+//   _.assert( arguments.length === 1 );
+//
+//   if( !kind || !_.arrayHas( will.ResourceKinds, kind ) )
+//   {
+//     debugger;
+//     throw _.ErrorLooking( 'Unknown kind of resource, no pool for resource', _.toStrShort( kind ) );
+//   }
+//
+//   if( kind === 'path' )
+//   pool = module.pathObjMap;
+//   else if( kind === 'reflector' )
+//   pool = module.reflectorMap;
+//   else if( kind === 'submodule' )
+//   pool = module.submoduleMap;
+//   else if( kind === 'step' )
+//   pool = module.stepMap;
+//   else if( kind === 'build' )
+//   pool = module.buildMap;
+//   else if( kind === 'exported' )
+//   pool = module.exportedMap;
+//
+//   return pool
+// }
 
 // --
 // exporter
@@ -2234,8 +2296,6 @@ function dataExportResource( collection )
 // relations
 // --
 
-let KnownPrefixes = [ 'submodule', 'step', 'path', 'reflector', 'build', 'about', 'execution', 'exported' ];
-
 let Composes =
 {
 
@@ -2297,7 +2357,6 @@ let Restricts =
 let Statics =
 {
   DirPathFromWillFilePath : DirPathFromWillFilePath,
-  KnownPrefixes : KnownPrefixes,
 }
 
 let Forbids =
@@ -2326,116 +2385,120 @@ let Proto =
 
   // inter
 
-  finit : finit,
-  init : init,
-  unform : unform,
-  form : form,
-  form1 : form1,
-  form2 : form2,
-  predefinedForm : predefinedForm,
+  finit,
+  init,
+  unform,
+  form,
+  form1,
+  form2,
+  predefinedForm,
 
   // etc
 
-  clean : clean,
-  cleanWhat : cleanWhat,
+  clean,
+  cleanWhat,
 
   // opener
 
-  DirPathFromWillFilePath : DirPathFromWillFilePath,
-  prefixPathForRole : prefixPathForRole,
-  prefixPathForRoleMaybe : prefixPathForRoleMaybe,
+  DirPathFromWillFilePath,
+  prefixPathForRole,
+  prefixPathForRoleMaybe,
 
-  _willFileFindMaybe : _willFileFindMaybe,
-  _willFilesFindMaybe : _willFilesFindMaybe,
-  willFilesFind : willFilesFind,
+  _willFileFindMaybe,
+  _willFilesFindMaybe,
+  willFilesFind,
 
-  willFilesOpen : willFilesOpen,
-  _willFilesOpen : _willFilesOpen,
+  willFilesOpen,
+  _willFilesOpen,
 
   // submodule
 
-  submodulesCloneDirGet : submodulesCloneDirGet,
+  submodulesCloneDirGet,
 
-  submodulesAreDownloaded : submodulesAreDownloaded,
-  _submodulesDownload : _submodulesDownload,
-  submodulesDownload : submodulesDownload,
-  submodulesUpgrade : submodulesUpgrade,
-  submodulesClean : submodulesClean,
+  submodulesAreDownloaded,
+  _submodulesDownload,
+  submodulesDownload,
+  submodulesUpgrade,
+  submodulesClean,
 
   // remote
 
-  remoteIsRemote : remoteIsRemote,
-  remoteIsDownloaded : remoteIsDownloaded,
-  remoteIsUpToDate : remoteIsUpToDate,
+  remoteIsRemote,
+  remoteIsDownloaded,
+  remoteIsUpToDate,
 
-  remoteForm : remoteForm,
-  remoteFormAct : remoteFormAct,
-  _remoteDownload : _remoteDownload,
-  remoteDownload : remoteDownload,
-  remoteUpgrade : remoteUpgrade,
+  remoteForm,
+  remoteFormAct,
+  _remoteDownload,
+  remoteDownload,
+  remoteUpgrade,
 
   // resource
 
-  resourcesForm : resourcesForm,
-  _resourcesSubmodulesForm : _resourcesSubmodulesForm,
-  _resourcesForm : _resourcesForm,
-  _resourcesFormAct : _resourcesFormAct,
+  resourcesForm,
+  _resourcesSubmodulesForm,
+  _resourcesForm,
+  _resourcesFormAct,
+
+  resourceClassForKind,
+  resourceMapForKind,
+  resourceAllocate,
+  resourceAllocateName,
 
   // path
 
-  baseDirPathChange : baseDirPathChange,
-  pathAllocate : pathAllocate,
-  inPathGet : inPathGet,
-  outPathGet : outPathGet,
+  baseDirPathChange,
+  inPathGet,
+  outPathGet,
 
   // accessor
 
-  _nickNameGet : _nickNameGet,
+  _nickNameGet,
 
   // selector
 
-  _buildsSelect : _buildsSelect,
-  buildsSelect : buildsSelect,
-  exportsSelect : exportsSelect,
+  _buildsSelect,
+  buildsSelect,
+  exportsSelect,
 
   // resolver
 
-  errResolving : errResolving,
+  errResolving,
 
-  strSplitShort : strSplitShort,
-  _strSplit : _strSplit,
-  strGetPrefix : strGetPrefix,
-  strIsResolved : strIsResolved,
+  strSplitShort,
+  _strSplit,
+  strGetPrefix,
+  strIsResolved,
 
-  _strResolve : _strResolve,
-  strResolve : _strResolve,
-  // strResolve : _.routineVectorize_functor( _strResolve ),
+  _resolve,
+  resolve : _resolve,
+  // resolve : _.routineVectorize_functor( _resolve ),
 
-  _strResolveMaybe : _strResolveMaybe,
-  strResolveMaybe : _strResolveMaybe,
-  // strResolveMaybe : _.routineVectorize_functor( _strResolveMaybe ),
+  _resolveMaybe,
+  resolveMaybe : _resolveMaybe,
+  // resolveMaybe : _.routineVectorize_functor( _resolveMaybe ),
 
-  _resourceSelect : _resourceSelect,
-  poolFor : poolFor,
+  _resolveSelect,
+  // poolFor : poolFor,
 
   // exporter
 
-  infoExport : infoExport,
-  infoExportPaths : infoExportPaths,
-  infoExportResource : infoExportResource,
+  infoExport,
+  infoExportPaths,
+  infoExportResource,
 
-  dataExport : dataExport,
-  dataExportResource : dataExportResource,
+  dataExport,
+  dataExportResource,
 
   // relation
 
-  Composes : Composes,
-  Aggregates : Aggregates,
-  Associates : Associates,
-  Restricts : Restricts,
-  Statics : Statics,
-  Forbids : Forbids,
-  Accessors : Accessors,
+  Composes,
+  Aggregates,
+  Associates,
+  Restricts,
+  Statics,
+  Forbids,
+  Accessors,
 
 }
 

@@ -91,7 +91,7 @@ function stepsEach( onEach )
 
   function inElement( step )
   {
-    step = module.strResolve
+    step = module.resolve
     ({
       query : step,
       defaultPool : 'step',

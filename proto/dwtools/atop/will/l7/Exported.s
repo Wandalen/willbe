@@ -26,14 +26,13 @@ Self.shortName = 'Exported';
 // inter
 // --
 
-function exportedReflectorGet( exportSelector )
+function exportedReflectorMake( exportSelector )
 {
   let exported = this;
   let module = exported.module;
   let will = module.will;
   let build = exported.build;
   let step = exported.step;
-  // let opts = frame.opts
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
@@ -49,61 +48,96 @@ function exportedReflectorGet( exportSelector )
   _.assert( module.formed === 3 );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
-  _.assert( exported.criterion === null );
-  _.assert( exported.criterion === null );
+  _.assert( _.objectIs( exported.criterion ) );
   _.assert( step instanceof will.Step );
   _.assert( build instanceof will.Build );
+  _.assert( exported.exportedReflector === null );
+  _.assert( exported.exportedDirPath === null );
 
-  // debugger;
-  let exp = step.strResolve( exportSelector );
-  // debugger;
+  let exp = step.resolve( exportSelector );
+  let result;
 
   if( exp instanceof will.Reflector )
   {
 
     _.assert( exp.formed === 3 );
     _.assert( exp.srcFilter.formed === 1 );
+    _.sure( !!exp.reflectMap, () => exp.nickName + ' should have reflectMap' );
 
-    let result = exp.dataExport();
+    result = exp.cloneExtending({ name : module.resourceAllocateName( 'reflector', 'exported' ) });
+    result.criterion = _.mapExtend( null, exported.criterion );
 
-    result.srcFilter = exp.srcFilter.clone();
     _.assert( result.srcFilter !== exp.srcFilter );
     _.assert( result.srcFilter.prefixPath === null );
-    // debugger;
-    result.srcFilter.prefixPath = module.dirPath;
 
     let filter2 =
     {
-      maskTransientDirectory : { excludeAny : [ /\.git$/, /node_modules$/ ] },
-      // basePath : exportedDirPath,
+      // maskTransientDirectory : { excludeAny : [ /\.git$/, /node_modules$/ ] },
     }
 
     result.srcFilter.and( filter2 ).pathsExtend( filter2 );
-
     result.srcFilter.inFilePath = result.reflectMap;
 
-    result.srcFilter._formBasePath();
-    // debugger;
-
-    return result;
   }
-  else
+  else if( _.arrayIs( exp ) )
   {
-    let result = Object.create( null );
-    debugger;
-    result.srcFilter = fileProvider.recordFilter();
+    let commonPath = path.common.apply( path, exp );
 
-    result.srcFilter.basePath = exp;
+    _.assert( path.isRelative( commonPath ) );
+
+    result = module.resourceAllocate( 'reflector', 'exported' );
+    result.reflectMap = Object.create( null );
+    for( let p = 0 ; p < exp.length ; p++ )
+    result.reflectMap[ exp[ p ] ] = true;
+
+    result.srcFilter = fileProvider.recordFilter();
+    result.srcFilter.basePath = commonPath;
+    result.srcFilter.inFilePath = result.reflectMap;
+
+  }
+  else if( _.strIs( exp ) )
+  {
+
+    result = module.resourceAllocate( 'reflector', 'exported' );
+    result.reflectMap = { [ exp ] : true };
+
+    result.srcFilter = fileProvider.recordFilter();
     result.srcFilter.inFilePath = exp;
 
-    result.srcFilter._formBasePath();
-
-    _.assert( 0 );
-
-    return result;
   }
+  else _.assert( 0 );
 
-  return exp;
+  result.form();
+
+  exported.exportedReflector = result;
+
+  _.assert( result.srcFilter.prefixPath === null );
+  _.assert( result instanceof will.Reflector );
+
+  let exportedReflector = result.dataExport();
+  exportedReflector.srcFilter = result.srcFilter.clone();
+  exportedReflector.srcFilter.prefixPath = module.dirPath;
+  exportedReflector.srcFilter._formBasePath();
+
+  _.assert( _.mapIs( exportedReflector ) );
+  _.assert( exportedReflector.srcFilter.formed === 3 );
+  _.assert( _.mapIs( exportedReflector.srcFilter.basePath ) );
+  _.sure
+  (
+    exportedReflector.srcFilter.basePaths.length === 1,
+    () => 'Source filter of ' + result.nickName + ' for ' + exportSelector + ' should have single-path reflect map or defined base path'
+  );
+
+  /* exportedDirPath */
+
+  let exportedDirPath = exportedReflector.srcFilter.basePaths[ 0 ];
+
+  exported.exportedDirPath = module.resourceAllocate( 'path', 'exportedDir' );
+  exported.exportedDirPath.path = path.dot( path.relative( module.dirPath, exportedDirPath ) );
+  exported.exportedDirPath.criterion = _.mapExtend( null, exported.criterion );
+  exported.exportedDirPath.form();
+
+  return exportedReflector;
 }
 
 //
@@ -132,32 +166,25 @@ function proceed( frame )
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
   _.assert( exported.criterion === null );
-  _.assert( exported.criterion === null );
   _.assert( step instanceof will.Step );
   _.assert( build instanceof will.Build );
   _.assert( _.strDefined( opts.export ), () => step.nickName + ' should have options option export, path to directory to export or reflector' )
 
   exported.step = step;
   exported.build = build;
+  exported.criterion = _.mapExtend( null, build.criterion );
+  exported.version = module.about.version;
 
-  // debugger;
-  // let exportedDirPath = frame.resource.inPathResolve( opts.export );
-  let exportedReflector = exported.exportedReflectorGet( opts.export );
-  _.assert( _.mapIs( exportedReflector ) );
-  _.assert( exportedReflector.srcFilter.formed === 3 );
-  _.assert( _.mapIs( exportedReflector.srcFilter.basePath ) );
-  _.assert( _.mapKeys( exportedReflector.srcFilter.basePath ).length === 1 );
-  _.assert( _.strIs( exportedReflector.srcFilter.stemPath ) );
-  // let exportedDirPath = _.mapVals( exportedReflector.srcFilter.basePath )[ 0 ];
-  let exportedDirPath = exportedReflector.srcFilter.stemPath;
-
+  let exportedReflector = exported.exportedReflectorMake( opts.export );
+  let exportedDirPath = path.s.resolve( module.dirPath, exported.exportedDirPath.path );
   let baseDirPath = build.baseDirPathFor();
   let archiveFilePath = build.archiveFilePathFor();
   let outFilePath = build.outFilePathFor();
   let outDirPath = path.dir( outFilePath );
-  debugger;
 
-  _.assert( _.strIs( exportedDirPath ), 'not implemented' );
+  _.assert( _.strIs( exportedDirPath ) );
+  _.assert( _.mapIs( exportedReflector ) );
+  _.assert( exportedReflector.srcFilter.formed === 3 );
 
   _.sure( _.strDefined( module.dirPath ), 'Expects directory path of the module' );
   _.sure( _.objectIs( build.criterion ), 'Expects criterion of export' );
@@ -171,26 +198,24 @@ function proceed( frame )
 
   /* begin */
 
-  exported.criterion = _.mapExtend( null, build.criterion );
-
   if( !module.pathMap.baseDir )
   {
     will.PathObj({ module : module, name : 'baseDir', path : baseDirPath }).form();
   }
 
+  /* exportedReflector */
+
+  exported.exportedReflector = exported.exportedReflector.refName;
+
   /* exportedDirPath */
 
-  exported.exportedDirPath = module.pathAllocate( 'exportedDir' );
-  exported.exportedDirPath.path = path.dot( path.relative( module.dirPath, exportedDirPath ) );
-  exported.exportedDirPath.criterion = _.mapExtend( null, exported.criterion );
-  exported.exportedDirPath.form();
   exported.exportedDirPath = exported.exportedDirPath.refName;
 
   /* archiveFilePath */
 
-  if( exported.criterion.tar === undefined || exported.criterion.tar )
+  if( opts.tar === undefined || opts.tar )
   {
-    exported.archiveFilePath = module.pathAllocate( 'archiveFile' );
+    exported.archiveFilePath = module.resourceAllocate( 'path', 'archiveFile' );
     exported.archiveFilePath.path = path.dot( path.relative( module.dirPath, archiveFilePath ) );
     exported.archiveFilePath.criterion = _.mapExtend( null, exported.criterion );
     exported.archiveFilePath.form();
@@ -203,41 +228,34 @@ function proceed( frame )
 
   /* exportedFilesPath */
 
-  exported.exportedFilesPath = module.pathAllocate( 'exportedFiles' );
+  exported.exportedFilesPath = module.resourceAllocate( 'path', 'exportedFiles' );
   exported.exportedFilesPath.criterion = _.mapExtend( null, exported.criterion );
 
-  // let reflector = exportedReflectorGet.optionsReflectExport();
   debugger;
 
-  // let filter2 =
-  // {
-  //   maskTransientDirectory : { excludeAny : [ /\.git$/, /node_modules$/ ] },
-  //   // basePath : exportedDirPath,
-  // }
-  //
-  // exportedReflector.srcFilter.and( filter2 ).pathsExtend( filter2 );
-
-  exported.exportedFilesPath.path = hd.filesFind
+  let exportedFilesPath = exported.exportedFilesPath.path = hd.filesFind
   ({
     recursive : 1,
     includingDirs : 1,
     includingTerminals : 1,
+    mandatory : 0,
     outputFormat : 'relative',
-    filePath : exportedDirPath,
+    // filePath : exportedDirPath,
     filter : exportedReflector.srcFilter,
-    // filter :
-    // {
-    //   maskTransientDirectory : { excludeAny : [ /\.git$/, /node_modules$/ ] },
-    //   basePath : exportedDirPath,
-    // },
   });
 
+  _.sure
+  (
+    exported.exportedFilesPath.path.length > 0,
+    () => 'No file found at ' + path.commonReport( exportedReflector.srcFilter.stemPath ) + ', cant export ' + opts.export,
+  );
   exported.exportedFilesPath.form();
   exported.exportedFilesPath = exported.exportedFilesPath.refName;
 
-  /* */
+  if( will.verbosity >= 3 )
+  logger.log( 'Exported', exportedFilesPath.length, 'files' );
 
-  exported.version = module.about.version;
+  /* */
 
   let data = module.dataExport();
 
@@ -250,7 +268,7 @@ function proceed( frame )
 
   /* */
 
-  if( will.verbosity >= 2 )
+  if( will.verbosity >= 3 )
   logger.log( ' + ' + 'Write out file to ' + outFilePath );
 
   if( opts.tar === undefined || opts.tar )
@@ -268,7 +286,7 @@ function proceed( frame )
     }
 
     let zip = Tar.create( o2, [ '.' ] );
-    if( will.verbosity >= 2 )
+    if( will.verbosity >= 3 )
     logger.log( ' + ' + 'Write out archive ' + hd.path.moveReport( archiveFilePath, exportedDirPath ) );
 
   }
@@ -285,6 +303,7 @@ let Composes =
 
   version : null,
 
+  exportedReflector : null,
   exportedDirPath : null,
   exportedFilesPath : null,
   archiveFilePath : null,
@@ -337,7 +356,7 @@ let Proto =
 
   // inter
 
-  exportedReflectorGet : exportedReflectorGet,
+  exportedReflectorMake : exportedReflectorMake,
 
   proceed : proceed,
 

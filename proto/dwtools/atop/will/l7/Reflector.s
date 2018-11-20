@@ -60,6 +60,7 @@ function form1()
     reflector.srcFilter.basePath = path.s.normalize( reflector.srcFilter.basePath );
     // reflector.srcFilter.basePath = path.s.normalize( path.s.join( module.dirPath, reflector.srcFilter.basePath ) );
 
+    if( !reflector.srcFilter.formed )
     reflector.srcFilter._formComponents();
   }
 
@@ -144,7 +145,7 @@ function _inheritSingle( o )
 
   if( reflector2.formed < 2 )
   {
-    _.sure( !_.arrayHas( o.visited, reflector2.name ), () => 'Cyclic dependency reflector ' + _.strQuote( reflector.name ) + ' of ' + _.strQuote( reflector2.name ) );
+    _.sure( !_.arrayHas( o.visited, reflector2.name ), () => 'Cyclic dependency ' + reflector.nickName + ' of ' + reflector2.nickName );
     reflector2._inheritForm({ visited : o.visited });
   }
 
@@ -197,8 +198,39 @@ function form3()
   for( let src in reflector.reflectMap )
   {
     let dst = reflector.reflectMap[ src ];
-    // _.assert( path.s.allAreRelative( src ), () => 'Expects relative path, but ' + reflector.nickName + ' has ' + src );
-    _.assert( _.boolIs( dst ) || path.s.allAreRelative( dst ), () => 'Expects bool or relative path, but relfector ' + reflector.name + ' has ' + dst );
+    _.assert( path.s.allAreRelative( src ), () => 'Expects relative path, but ' + reflector.nickName + ' has ' + src );
+    _.assert( _.boolIs( dst ) || path.s.allAreRelative( dst ), () => 'Expects bool or relative path, but ' + reflector.nickName + ' has ' + dst );
+  }
+
+  if( reflector.srcFilter )
+  {
+    let p;
+    p = reflector.srcFilter.prefixPath;
+    _.assert
+    (
+      p === null || path.s.allAreRelative( p ),
+      () => 'Expects relative paths, but ' + reflector.nickName + ' has prefixPath ' + _.toStr( p )
+    );
+    p = reflector.srcFilter.postfixPath;
+    _.assert
+    (
+      p === null || path.s.allAreRelative( p ),
+      () => 'Expects relative paths, but ' + reflector.nickName + ' has postfixPath ' + _.toStr( p )
+    );
+    p = reflector.srcFilter.basePath;
+    if( _.mapIs( p ) )
+    p = _.mapVals( reflector.srcFilter.basePath );
+    _.assert
+    (
+      p === null || path.s.allAreRelative( p ),
+      () => 'Expects relative paths, but ' + reflector.nickName + ' has basePath ' + _.toStr( p )
+    );
+    p = reflector.srcFilter.stemPath;
+    _.assert
+    (
+      p === null || path.s.allAreRelative( p ),
+      () => 'Expects relative paths, but ' + reflector.nickName + ' has stemPath ' + _.toStr( p )
+    );
   }
 
   /* end */
@@ -234,7 +266,7 @@ function _reflectMapForm( o )
     {
       _.assert( _.strIs( dst ), 'not tested' );
       if( !module.strIsResolved( dst ) )
-      dst = module.strResolve
+      dst = module.resolve
       ({
         query : dst,
         // must : 1,
@@ -250,7 +282,7 @@ function _reflectMapForm( o )
       // if( r === 'submodule::*/exported::*=1/path::exportedDir*=1' )
       // debugger;
 
-      let resolved = module.strResolve
+      let resolved = module.resolve
       ({
         query : r,
         visited : o.visited,
@@ -266,7 +298,7 @@ function _reflectMapForm( o )
       if( !_.errIs( resolved ) && !_.strIs( resolved ) && !_.arrayIs( resolved ) && !( resolved instanceof will.Reflector ) )
       resolved = _.err( 'Source of reflects map was resolved to unexpected type', _.strTypeOf( resolved ) );
       if( _.errIs( resolved ) )
-      throw _.err( 'Failed to form reflector', reflector.name, '\n', resolved );
+      throw _.err( 'Failed to form ', reflector.nickName, '\n', resolved );
 
       if( _.arrayIs( resolved ) )
       {
@@ -353,18 +385,7 @@ function infoExport()
 
   let srcFilter;
 
-  // if( fields.srcFilter && _.routineIs( fields.srcFilter.toStr ) )
-  // {
-  //   srcFilter = fields.srcFilter.toStr();
-  //   delete fields.srcFilter;
-  // }
-  // else
-  // {
-  //   debugger;
-  //   fields.srcFilter = fields.srcFilter ? reflector.srcFilter.hasMask() : fields.srcFilter;
-  // }
-
-  result += 'Reflector ' + reflector.name;
+  result += reflector.nickName;
   result += '\n' + _.toStr( fields, { wrap : 0, levels : 4, multiline : 1 } );
 
   if( srcFilter )
@@ -374,26 +395,6 @@ function infoExport()
 
   return result;
 }
-
-// //
-//
-// function dataExport()
-// {
-//   let reflector = this;
-//   let fields = Parent.prototype.dataExport.call( reflector );
-//   return fields;
-// }
-//
-// //
-//
-// function resolvedExport()
-// {
-//   let reflector = this;
-//
-//   xxx
-//
-//   return fields;
-// }
 
 // --
 // relations
@@ -440,7 +441,7 @@ let Forbids =
 
 let Accessors =
 {
-  srcFilter : { setter : _.accessor.setter.copyable({ name : 'srcFilter', maker : _.FileRecordFilter }) },
+  srcFilter : { setter : _.accessor.setter.copyable({ name : 'srcFilter', maker : _.routineJoin( _.FileRecordFilter, _.FileRecordFilter.Clone ) }) },
   // inherit : { setter : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
 }
 

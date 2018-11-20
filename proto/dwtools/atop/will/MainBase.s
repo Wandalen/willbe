@@ -221,6 +221,34 @@ willFilesList.defaults =
 // relations
 // --
 
+var ResourceKindToClassName = new _.NameMapper({ leftName : 'resource kind', rightName : 'resource class name' }).set
+({
+
+  'submodule' : 'Submodule',
+  'step' : 'Step',
+  'path' : 'PathObj',
+  'reflector' : 'Reflector',
+  'build' : 'Build',
+  'about' : 'About',
+  'execution' : 'Execution',
+  'exported' : 'Exported',
+
+});
+
+var ResourceKindToMapName = new _.NameMapper({ leftName : 'resource kind', rightName : 'resource map name' }).set
+({
+
+  'submodule' : 'submoduleMap',
+  'step' : 'stepMap',
+  'path' : 'pathObjMap',
+  'reflector' : 'reflectorMap',
+  'build' : 'buildMap',
+  'exported' : 'exportedMap',
+
+});
+
+let ResourceKinds = [ 'submodule', 'step', 'path', 'reflector', 'build', 'about', 'execution', 'exported' ];
+
 let Composes =
 {
   verbosity : 3,
@@ -250,6 +278,9 @@ let Restricts =
 
 let Statics =
 {
+  ResourceKindToClassName : ResourceKindToClassName,
+  ResourceKindToMapName : ResourceKindToMapName,
+  ResourceKinds : ResourceKinds,
 }
 
 let Forbids =

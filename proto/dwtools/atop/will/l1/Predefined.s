@@ -64,7 +64,7 @@ function stepRoutineReflect( frame )
 
   // if( step.opts.reflector )
   // {
-  //   let reflectors = module.strResolve
+  //   let reflectors = module.resolve
   //   ({
   //     query :  step.opts.reflector,
   //     defaultPool : 'reflector',
@@ -76,7 +76,7 @@ function stepRoutineReflect( frame )
   //   reflectors[ r ].form();
   // }
 
-  frame.opts.reflector = module.strResolve
+  frame.opts.reflector = module.resolve
   ({
     query : frame.opts.reflector,
     defaultPool : 'reflector',
@@ -92,11 +92,11 @@ function stepRoutineReflect( frame )
   _.mapSupplement( frame.opts, frame.opts.reflector )
   delete frame.opts.reflector;
 
-  // if( will.verbosity >= 2 && will.verbosity <= 3 )
-  // {
-  //   logger.log( ' + Files reflecting...' );
-  //   logger.log( _.toStr( frame.opts.reflectMap, { wrap : 0, multiline : 1, levels : 3 } ) );
-  // }
+  if( will.verbosity >= 4 )
+  {
+    logger.log( ' + Files reflecting...' );
+    logger.log( _.toStr( frame.opts.reflectMap, { wrap : 0, multiline : 1, levels : 3 } ) );
+  }
 
   frame.opts.verbosity = will.verbosity >= 2 ? 2 : 0;
 

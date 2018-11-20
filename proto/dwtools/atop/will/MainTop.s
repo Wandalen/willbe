@@ -50,6 +50,7 @@ function moduleOnReady( onReady )
 {
   let will = this.form();
   let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
   let logger = will.logger;
   let dirPath = fileProvider.path.current();
 
@@ -560,77 +561,64 @@ function commandExport( e )
     let build = builds[ 0 ];
     return build.proceed()
   });
-
-  // xxx
-  //
-  // let will = this;
-  //
-  // if( !will.formed )
-  // will.form();
-  //
-  // let fileProvider = will.fileProvider;
-  // let logger = will.logger;
-  // let dirPath = fileProvider.path.current();
-  //
-  // // if( !will.currentModule )
-  // // will.currentModule = will.Module({ will : will, dirPath : dirPath }).form().willFilesFind();
-  //
-  // if( !will.currentModule )
-  // {
-  //   will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
-  //   will.currentModule.willFilesFind();
-  // }
-  //
-  // return will.currentModule.ready.split().ifNoErrorThen( function( arg )
-  // {
-  //
-  //   let module = will.currentModule
-  //   let exports = module.exportsSelect( e.subject, e.propertiesMap );
-  //
-  //   logger.up();
-  //   if( logger.verbosity >= 2 )
-  //   {
-  //     if( exports.length === 1 )
-  //     logger.log( 'Exporting', exports[ 0 ].name );
-  //     else
-  //     logger.log( module.infoExportResource( exports ) );
-  //   }
-  //
-  //   if( exports.length !== 1 )
-  //   {
-  //     if( exports.length === 0 )
-  //     throw _.errBriefly( 'To export please specify exactly one export, none satisfies passed arguments' );
-  //     throw _.errBriefly( 'To export please specify exactly one export' );
-  //   }
-  //
-  //   let run = new will.BuildFrame({ module : module }).form();
-  //
-  //   return run.run( exports[ 0 ] )
-  //   .doThen( ( err ) =>
-  //   {
-  //     run.finit();
-  //     module.finit();
-  //
-  //     if( err )
-  //     throw _.errLogOnce( err );
-  //
-  //     if( logger.verbosity >= 2 )
-  //     {
-  //       logger.log( 'Exported', exports[ 0 ].name );
-  //       logger.log();
-  //     }
-  //     logger.down();
-  //
-  //   });
-  //
-  // });
-
 }
 
 //
 
 function commandWith( e )
 {
+  let will = this.form();
+  let ca = e.ca;
+  let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
+  let logger = will.logger;
+
+  if( will.currentModule )
+  {
+    will.currentModule.finit();
+    will.currentModule = null;
+  }
+
+  _.sure( _.strDefined( e.subject ), 'Expects path to module' )
+  _.assert( arguments.length === 1 );
+
+  let isolated = ca.isolateSecond( e.subject );
+
+  // let secondCommand, secondSubject, del;
+  // [ e.subject, del, secondCommand  ] = _.strIsolateBeginOrAll( e.subject, ' ' );
+  // [ secondCommand, del, secondSubject  ] = _.strIsolateBeginOrAll( secondCommand, ' ' );
+
+  let dirPath = path.resolve( isolated.subject );
+
+  will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
+  will.currentModule.willFilesFind();
+  will.currentModule.willFilesOpen();
+  will.currentModule.resourcesForm();
+
+  return will.currentModule.ready.split().ifNoErrorThen( function( arg )
+  {
+
+    _.assert( module.willFileArray.length > 0 );
+
+    return ca.proceedAct
+    ({
+      command : isolated.secondCommand,
+      subject : isolated.secondSubject,
+      propertiesMap : e.propertiesMap,
+    });
+
+  })
+  .doThen( ( err, arg ) =>
+  {
+    // _.diagnosticBeep();
+    // will.currentModule.finit();
+    if( err )
+    throw _.errLogOnce( err );
+    return arg;
+  });
+
+
+/*
   let will = this;
   let ca = e.ca;
 
@@ -666,6 +654,7 @@ function commandWith( e )
     });
 
   });
+*/
 
 }
 
@@ -681,7 +670,10 @@ function commandEach( e )
   will.form();
 
   if( will.currentModule )
-  will.currentModule.finit();
+  {
+    will.currentModule.finit();
+    will.currentModule = null;
+  }
 
   _.sure( _.strDefined( e.subject ), 'Expects path to module' )
 

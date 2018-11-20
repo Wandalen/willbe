@@ -69,7 +69,7 @@ function form3()
 
   // if( step.opts.reflector )
   // {
-  //   let reflectors = module.strResolve
+  //   let reflectors = module.resolve
   //   ({
   //     query :  step.opts.reflector,
   //     defaultPool : 'reflector',
