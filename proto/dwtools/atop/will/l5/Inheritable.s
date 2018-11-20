@@ -20,6 +20,7 @@ let Self = function wWillInheritable( o )
 
 Self.shortName = 'Inheritable';
 
+
 // --
 // inter
 // --
