@@ -175,6 +175,7 @@ function proceed( o )
   let path = fileProvider.path;
   let logger = will.logger;
   let isExport = build.isExport();
+  let time = _.timeNow();
 
   let frame = new will.BuildFrame
   ({
@@ -219,9 +220,9 @@ function proceed( o )
   function logPost()
   {
 
-    if( logger.verbosity >= 2 )
+    if( logger.verbosity >= 2 && !isExport )
     {
-      logger.log( isExport ? 'Exported' : 'Built', build.name );
+      logger.log( ( isExport ? 'Exported' : 'Built' ), build.name, 'in', _.timeSpent( time ) );
       logger.log();
     }
     logger.down();

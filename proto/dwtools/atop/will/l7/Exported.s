@@ -155,6 +155,7 @@ function proceed( frame )
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let step = frame.resource;
+  let time = _.timeNow();
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
@@ -239,6 +240,7 @@ function proceed( frame )
     includingDirs : 1,
     includingTerminals : 1,
     mandatory : 0,
+    verbosity : 0,
     outputFormat : 'relative',
     // filePath : exportedDirPath,
     filter : exportedReflector.srcFilter,
@@ -251,9 +253,6 @@ function proceed( frame )
   );
   exported.exportedFilesPath.form();
   exported.exportedFilesPath = exported.exportedFilesPath.refName;
-
-  if( will.verbosity >= 3 )
-  logger.log( 'Exported', exportedFilesPath.length, 'files' );
 
   /* */
 
@@ -290,6 +289,9 @@ function proceed( frame )
     logger.log( ' + ' + 'Write out archive ' + hd.path.moveReport( archiveFilePath, exportedDirPath ) );
 
   }
+
+  if( will.verbosity >= 3 )
+  logger.log( 'Exported', exported.name, 'with', exportedFilesPath.length, 'files', 'in', _.timeSpent( time ) );
 
   return exported;
 }

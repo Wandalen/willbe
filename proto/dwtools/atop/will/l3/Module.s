@@ -1884,7 +1884,7 @@ function _resolveMaybe_body( o )
     // debugger;
     // if( _.arrayIs( result ) )
     // debugger;
-    _.assert( _.mapIs( result ) || _.objectIs( result ) || _.arrayIs( result ) );
+    _.assert( _.mapIs( result ) || _.objectIs( result ) || _.arrayIs( result ) || _.strIs( result ) );
     if( _.mapIs( result ) || _.arrayIs( result ) )
     result = _.filter( result, ( e ) => e instanceof will.PathObj ? e.path : e )
     else if( result instanceof will.PathObj )
