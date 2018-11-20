@@ -460,6 +460,7 @@ function cleanWhat( o )
       recursive : 1,
       includingDirs : 1,
       includingTerminals : 1,
+      maskPreset : 0,
       outputFormat : 'absolute',
     });
 
@@ -1749,9 +1750,9 @@ function errResolving( o )
   let module = this;
   _.routineOptions( errResolving, arguments );
   if( o.current && o.current.nickName )
-  throw _.err( 'Failed to resolve', _.strQuote( o.query ), 'for', o.current.nickName, 'in', module.nickName, '\n', o.err );
+  return _.err( 'Failed to resolve', _.strQuote( o.query ), 'for', o.current.nickName, 'in', module.nickName, '\n', o.err );
   else
-  throw _.err( 'Failed to resolve', _.strQuote( o.query ), 'in', module.nickName, '\n', o.err );
+  return _.err( 'Failed to resolve', _.strQuote( o.query ), 'in', module.nickName, '\n', o.err );
 }
 
 errResolving.defaults =
@@ -1830,6 +1831,7 @@ function _resolve_pre( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
   _.assert( _.arrayHas( [ null, 'in', 'out' ], o.resolvingPath ) );
+  _.assert( _.arrayHas( [ 'default', 'resolved', 'throw', 'error' ], o.prefixlessAction ) );
 
   return o;
 }
@@ -1851,6 +1853,13 @@ function _resolveMaybe_body( o )
 
   let result = module._resolveSelect( o );
 
+  if( result === undefined )
+  {
+    debugger;
+    // result = _.ErrorLooking( kind, _.strQuote( name ), 'was not found' );
+    result = module.errResolving({ query : o.query, current : o.current, err : _.ErrorLooking( o.query, 'was not found' ) })
+  }
+
   if( _.errIs( result ) )
   return result;
 
@@ -1859,19 +1868,19 @@ function _resolveMaybe_body( o )
 
   if( o.resolvingPath )
   {
-    if( result instanceof will.PathObj )
+    if( result instanceof will.PathObj || _.strIs( result ) )
     {
       result = pathResolve( result );
     }
     else if( _.arrayIs( result ) )
     {
-      let r = [];
+      let result2 = [];
       for( let r = 0 ; r < result.length ; r++ )
-      if( result instanceof will.PathObj )
-      r[ r ] = pathResolve( result[ r ] );
+      if( result[ r ] instanceof will.PathObj || _.strIs( result[ r ] ) )
+      result2[ r ] = pathResolve( result[ r ] );
       else
-      r[ r ] = result[ r ];
-      result = r;
+      result2[ r ] = result[ r ];
+      result = result2;
     }
   }
 
@@ -1910,16 +1919,29 @@ function _resolveMaybe_body( o )
 
   /*  */
 
-  function pathResolve( patho )
+  function pathResolve( p )
   {
-    _.assert( patho instanceof will.PathObj );
+    if( p instanceof will.PathObj )
+    p = p.path;
+    _.assert( _.arrayIs( p ) || _.strIs( p ) );
     if( o.resolvingPath === 'in' )
-    return path.s.resolve( module.dirPath, ( module.pathMap.in || '.' ), patho.path );
+    return path.s.resolve( module.dirPath, ( module.pathMap.in || '.' ), p );
     else if( o.resolvingPath === 'out' )
-    return path.s.resolve( module.dirPath, ( module.pathMap.out || '.' ), patho.path );
+    return path.s.resolve( module.dirPath, ( module.pathMap.out || '.' ), p );
     else
-    return patho.path;
+    return p;
   }
+
+  // function pathResolve( patho )
+  // {
+  //   _.assert( patho instanceof will.PathObj );
+  //   if( o.resolvingPath === 'in' )
+  //   return path.s.resolve( module.dirPath, ( module.pathMap.in || '.' ), patho.path );
+  //   else if( o.resolvingPath === 'out' )
+  //   return path.s.resolve( module.dirPath, ( module.pathMap.out || '.' ), patho.path );
+  //   else
+  //   return patho.path;
+  // }
 
 }
 
@@ -1927,6 +1949,7 @@ _resolveMaybe_body.defaults =
 {
   query : null,
   defaultPool : null,
+  prefixlessAction : 'default',
   visited : null,
   current : null,
   currentModule : null,
@@ -1982,6 +2005,28 @@ function _resolveSelect( o )
   // if( _.strHas( o.query, 'reflect.proto' ) )
   // debugger;
 
+  /* */
+
+  if( module.strIsResolved( o.query ) )
+  {
+    if( o.prefixlessAction === 'default' )
+    {
+    }
+    else if( o.prefixlessAction === 'throw' || o.prefixlessAction === 'error' )
+    {
+      let err = module.errResolving({ query : o.query, current : current, err : _.ErrorLooking( 'Resource selector should have prefix' ) });
+      if( o.prefixlessAction === 'throw' )
+      throw err;
+    }
+    else if( o.prefixlessAction === 'resolved' )
+    {
+      return o.query;
+    }
+    else _.assert( 0 );
+  }
+
+  /* */
+
   try
   {
 
@@ -2006,11 +2051,11 @@ function _resolveSelect( o )
     throw module.errResolving({ query : o.query, current : current, err : err });
   }
 
-  if( result === undefined )
-  {
-    debugger;
-    return _.ErrorLooking( kind, _.strQuote( name ), 'was not found' );
-  }
+  // if( result === undefined )
+  // {
+  //   debugger;
+  //   return _.ErrorLooking( kind, _.strQuote( name ), 'was not found' );
+  // }
 
   return result;
 

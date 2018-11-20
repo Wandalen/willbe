@@ -101,7 +101,11 @@ function form3()
   /* end */
 
   _.sure( _.strIs( patho.path ) || _.arrayIs( patho.path ), 'Path resource should have "path" field' );
-  _.assert( path.s.allAreRelative( patho.path ), () => patho.nickName + ' should not have absolute paths, but have ' + _.toStr( patho.path ) );
+  _.assert
+  (
+    _.all( patho.path, ( p ) => path.isRelative( p ) || path.isGlobal( p ) ), 
+    () => patho.nickName + ' should not have absolute paths, but have ' + _.toStr( patho.path )
+  );
 
   patho.formed = 3;
   return patho;

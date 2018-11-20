@@ -98,7 +98,8 @@ function stepRoutineReflect( frame )
     logger.log( _.toStr( frame.opts.reflectMap, { wrap : 0, multiline : 1, levels : 3 } ) );
   }
 
-  frame.opts.verbosity = will.verbosity >= 2 ? 2 : 0;
+  if( frame.opts.verbosity === null )
+  frame.opts.verbosity = _.numberClamp( will.verbosity - 2, 0, 9 );
 
   let result = will.Predefined.filesReflect.call( fileProvider, frame.opts );
 
@@ -108,6 +109,7 @@ function stepRoutineReflect( frame )
 stepRoutineReflect.stepOptions =
 {
   reflector : null,
+  verbosity : null,
 }
 
 //

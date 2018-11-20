@@ -198,8 +198,20 @@ function form3()
   for( let src in reflector.reflectMap )
   {
     let dst = reflector.reflectMap[ src ];
-    _.assert( path.s.allAreRelative( src ), () => 'Expects relative path, but ' + reflector.nickName + ' has ' + src );
-    _.assert( _.boolIs( dst ) || path.s.allAreRelative( dst ), () => 'Expects bool or relative path, but ' + reflector.nickName + ' has ' + dst );
+
+    _.assert
+    (
+      _.all( src, ( p ) => path.isRelative( p ) || path.isGlobal( p ) ),
+      () => 'Expects relative or global path, but ' + reflector.nickName + ' has ' + src
+    );
+
+    _.assert
+    (
+      // _.boolIs( dst ) || path.s.allAreRelative( dst ),
+      _.all( dst, ( p ) => _.boolIs( p ) || path.isRelative( p ) || path.isGlobal( p ) ),
+      () => 'Expects bool, relative or global path, but ' + reflector.nickName + ' has ' + dst
+    );
+
   }
 
   if( reflector.srcFilter )

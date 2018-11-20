@@ -603,7 +603,7 @@ function _resolve_body( o )
   _.assert( 0, 'not tested' );
 
   // debugger;
-  let resolved = module.resolve( o );
+  let resolved = module.resolve.body.call( module, o );
   // debugger;
 
   // let result = path.resolve( module.dirPath, ( module.pathMap.in || '.' ), resolved );
@@ -633,13 +633,15 @@ function inPathResolve( filePath )
 
   if( module.strIsResolved( filePath ) )
   debugger;
-  if( module.strIsResolved( filePath ) )
-  _.assert( 0, 'not tested' );
+  // if( module.strIsResolved( filePath ) )
+  // _.assert( 0, 'not tested' );
 
   let result = inheritable.resolve
   ({
     query : filePath,
     defaultPool : 'path',
+    prefixlessAction : 'throw',
+    // prefixlessAction : 'resolved',
     resolvingPath : 'in',
   });
 
