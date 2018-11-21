@@ -1,0 +1,452 @@
+format: willfile-1.0.0
+about:
+  name: willbe
+  description: Tool to manage modules of modular systems
+  version: 0.3.72
+  enabled: 1
+  interpreters:
+    - nodejs >= 6.0.0
+    - chrome >= 60.0.0
+    - firefox >= 60.0.0
+  keywords:
+    - wTools
+execution:
+  scripts:
+    test: wtest staging
+    docgen: wdocgen staging
+path:
+  proto:
+    path: ./proto
+  in:
+    path: .
+  out:
+    path: out
+  out.debug:
+    path: ./out.debug
+    criterion:
+      debug: 1
+  out.release:
+    path: ./out.release
+    criterion:
+      debug: 0
+  repository:
+    path: 'git+https://github.com/Wandalen/willbe.git'
+  bugs:
+    path: 'https://github.com/Wandalen/willbe/issues'
+  exportedDir.0:
+    path: ./proto
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+  baseDir:
+    path: ..
+  exportedFiles.0:
+    path:
+      - .
+      - ./dwtools
+      - ./dwtools/Tools.s
+      - ./dwtools/abase
+      - ./dwtools/amid
+      - ./dwtools/atop
+      - ./dwtools/atop/-will
+      - ./dwtools/atop/-will/Exec
+      - ./dwtools/atop/-will/Exec2
+      - ./dwtools/atop/-will/IncludeBase.s
+      - ./dwtools/atop/-will/IncludeTop.s
+      - ./dwtools/atop/-will/MainBase.s
+      - ./dwtools/atop/-will/MainTop.s
+      - ./dwtools/atop/-will/l3
+      - ./dwtools/atop/-will/l3/About.s
+      - ./dwtools/atop/-will/l3/BuildFrame.s
+      - ./dwtools/atop/-will/l3/Execution.s
+      - ./dwtools/atop/-will/l3/Inheritable.s
+      - ./dwtools/atop/-will/l3/Predefined.s
+      - ./dwtools/atop/-will/l3/Stager.s
+      - ./dwtools/atop/-will/l5
+      - ./dwtools/atop/-will/l5/Build.s
+      - ./dwtools/atop/-will/l5/Exported.s
+      - ./dwtools/atop/-will/l5/Module.s
+      - ./dwtools/atop/-will/l5/PathObj.s
+      - ./dwtools/atop/-will/l5/Reflector.s
+      - ./dwtools/atop/-will/l5/Step.s
+      - ./dwtools/atop/-will/l5/Submodule.s
+      - ./dwtools/atop/-will/l5/WillFile.s
+      - ./dwtools/atop/-will/l6
+      - ./dwtools/atop/will
+      - ./dwtools/atop/will/Exec
+      - ./dwtools/atop/will/Exec2
+      - ./dwtools/atop/will/IncludeBase.s
+      - ./dwtools/atop/will/IncludeTop.s
+      - ./dwtools/atop/will/MainBase.s
+      - ./dwtools/atop/will/MainTop.s
+      - ./dwtools/atop/will/l1
+      - ./dwtools/atop/will/l1/About.s
+      - ./dwtools/atop/will/l1/BuildFrame.s
+      - ./dwtools/atop/will/l1/Execution.s
+      - ./dwtools/atop/will/l1/Predefined.s
+      - ./dwtools/atop/will/l3
+      - ./dwtools/atop/will/l3/Module.s
+      - ./dwtools/atop/will/l3/Stager.s
+      - ./dwtools/atop/will/l5
+      - ./dwtools/atop/will/l5/Inheritable.s
+      - ./dwtools/atop/will/l7
+      - ./dwtools/atop/will/l7/Build.s
+      - ./dwtools/atop/will/l7/Exported.s
+      - ./dwtools/atop/will/l7/PathObj.s
+      - ./dwtools/atop/will/l7/Reflector.s
+      - ./dwtools/atop/will/l7/Step.s
+      - ./dwtools/atop/will/l7/Submodule.s
+      - ./dwtools/atop/will/l7/WillFile.s
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+  exportedTerminals.0:
+    path:
+      - ./dwtools/Tools.s
+      - ./dwtools/atop/-will/Exec
+      - ./dwtools/atop/-will/Exec2
+      - ./dwtools/atop/-will/IncludeBase.s
+      - ./dwtools/atop/-will/IncludeTop.s
+      - ./dwtools/atop/-will/MainBase.s
+      - ./dwtools/atop/-will/MainTop.s
+      - ./dwtools/atop/-will/l3/About.s
+      - ./dwtools/atop/-will/l3/BuildFrame.s
+      - ./dwtools/atop/-will/l3/Execution.s
+      - ./dwtools/atop/-will/l3/Inheritable.s
+      - ./dwtools/atop/-will/l3/Predefined.s
+      - ./dwtools/atop/-will/l3/Stager.s
+      - ./dwtools/atop/-will/l5/Build.s
+      - ./dwtools/atop/-will/l5/Exported.s
+      - ./dwtools/atop/-will/l5/Module.s
+      - ./dwtools/atop/-will/l5/PathObj.s
+      - ./dwtools/atop/-will/l5/Reflector.s
+      - ./dwtools/atop/-will/l5/Step.s
+      - ./dwtools/atop/-will/l5/Submodule.s
+      - ./dwtools/atop/-will/l5/WillFile.s
+      - ./dwtools/atop/will/Exec
+      - ./dwtools/atop/will/Exec2
+      - ./dwtools/atop/will/IncludeBase.s
+      - ./dwtools/atop/will/IncludeTop.s
+      - ./dwtools/atop/will/MainBase.s
+      - ./dwtools/atop/will/MainTop.s
+      - ./dwtools/atop/will/l1/About.s
+      - ./dwtools/atop/will/l1/BuildFrame.s
+      - ./dwtools/atop/will/l1/Execution.s
+      - ./dwtools/atop/will/l1/Predefined.s
+      - ./dwtools/atop/will/l3/Module.s
+      - ./dwtools/atop/will/l3/Stager.s
+      - ./dwtools/atop/will/l5/Inheritable.s
+      - ./dwtools/atop/will/l7/Build.s
+      - ./dwtools/atop/will/l7/Exported.s
+      - ./dwtools/atop/will/l7/PathObj.s
+      - ./dwtools/atop/will/l7/Reflector.s
+      - ./dwtools/atop/will/l7/Step.s
+      - ./dwtools/atop/will/l7/Submodule.s
+      - ./dwtools/atop/will/l7/WillFile.s
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+submodule: {}
+reflector:
+  reflect.proto.0:
+    reflectMap:
+      ./proto: ./out.release
+    srcFilter:
+      maskAll:
+        excludeAny:
+          - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
+          - !<tag:yaml.org,2002:js/regexp> /\.unique$/
+          - !<tag:yaml.org,2002:js/regexp> /\.git$/
+          - !<tag:yaml.org,2002:js/regexp> /\.svn$/
+          - !<tag:yaml.org,2002:js/regexp> /\.hg$/
+          - !<tag:yaml.org,2002:js/regexp> /\.DS_Store$/
+          - !<tag:yaml.org,2002:js/regexp> /(^|\/)-/
+          - !<tag:yaml.org,2002:js/regexp> /\.release($|\.|\/)/i
+          - !<tag:yaml.org,2002:js/regexp> /\.debug($|\.|\/)/i
+          - !<tag:yaml.org,2002:js/regexp> /\.test($|\.|\/)/i
+          - !<tag:yaml.org,2002:js/regexp> /\.experiment($|\.|\/)/i
+      prefixPath: .
+    dstFilter:
+      prefixPath: .
+    criterion:
+      debug: 0
+    inherit:
+      - predefined.*
+  reflect.proto.1:
+    reflectMap:
+      ./proto: ./out.debug
+    srcFilter:
+      maskAll:
+        excludeAny:
+          - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
+          - !<tag:yaml.org,2002:js/regexp> /\.unique$/
+          - !<tag:yaml.org,2002:js/regexp> /\.git$/
+          - !<tag:yaml.org,2002:js/regexp> /\.svn$/
+          - !<tag:yaml.org,2002:js/regexp> /\.hg$/
+          - !<tag:yaml.org,2002:js/regexp> /\.DS_Store$/
+          - !<tag:yaml.org,2002:js/regexp> /(^|\/)-/
+          - !<tag:yaml.org,2002:js/regexp> /\.release($|\.|\/)/i
+          - !<tag:yaml.org,2002:js/regexp> /\.debug($|\.|\/)/i
+          - !<tag:yaml.org,2002:js/regexp> /\.test($|\.|\/)/i
+          - !<tag:yaml.org,2002:js/regexp> /\.experiment($|\.|\/)/i
+      prefixPath: .
+    dstFilter:
+      prefixPath: .
+    criterion:
+      debug: 1
+    inherit:
+      - predefined.*
+  reflect.submodules:
+    srcFilter:
+      maskAll:
+        excludeAny:
+          - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
+          - !<tag:yaml.org,2002:js/regexp> /\.unique$/
+          - !<tag:yaml.org,2002:js/regexp> /\.git$/
+          - !<tag:yaml.org,2002:js/regexp> /\.svn$/
+          - !<tag:yaml.org,2002:js/regexp> /\.hg$/
+          - !<tag:yaml.org,2002:js/regexp> /\.DS_Store$/
+          - !<tag:yaml.org,2002:js/regexp> /(^|\/)-/
+          - !<tag:yaml.org,2002:js/regexp> /\.release($|\.|\/)/i
+          - !<tag:yaml.org,2002:js/regexp> /\.debug($|\.|\/)/i
+          - !<tag:yaml.org,2002:js/regexp> /\.test($|\.|\/)/i
+          - !<tag:yaml.org,2002:js/regexp> /\.experiment($|\.|\/)/i
+      prefixPath: .
+    dstFilter:
+      prefixPath: .
+    criterion:
+      debug: 1
+    inherit:
+      - predefined.*
+  exported.0:
+    reflectMap:
+      ./proto: true
+    srcFilter:
+      prefixPath: .
+    dstFilter:
+      prefixPath: .
+  exportedFiles.0:
+    recursive: 0
+    reflectMap:
+      ./dwtools/Tools.s: true
+      ./dwtools/atop/-will/Exec: true
+      ./dwtools/atop/-will/Exec2: true
+      ./dwtools/atop/-will/IncludeBase.s: true
+      ./dwtools/atop/-will/IncludeTop.s: true
+      ./dwtools/atop/-will/MainBase.s: true
+      ./dwtools/atop/-will/MainTop.s: true
+      ./dwtools/atop/-will/l3/About.s: true
+      ./dwtools/atop/-will/l3/BuildFrame.s: true
+      ./dwtools/atop/-will/l3/Execution.s: true
+      ./dwtools/atop/-will/l3/Inheritable.s: true
+      ./dwtools/atop/-will/l3/Predefined.s: true
+      ./dwtools/atop/-will/l3/Stager.s: true
+      ./dwtools/atop/-will/l5/Build.s: true
+      ./dwtools/atop/-will/l5/Exported.s: true
+      ./dwtools/atop/-will/l5/Module.s: true
+      ./dwtools/atop/-will/l5/PathObj.s: true
+      ./dwtools/atop/-will/l5/Reflector.s: true
+      ./dwtools/atop/-will/l5/Step.s: true
+      ./dwtools/atop/-will/l5/Submodule.s: true
+      ./dwtools/atop/-will/l5/WillFile.s: true
+      ./dwtools/atop/will/Exec: true
+      ./dwtools/atop/will/Exec2: true
+      ./dwtools/atop/will/IncludeBase.s: true
+      ./dwtools/atop/will/IncludeTop.s: true
+      ./dwtools/atop/will/MainBase.s: true
+      ./dwtools/atop/will/MainTop.s: true
+      ./dwtools/atop/will/l1/About.s: true
+      ./dwtools/atop/will/l1/BuildFrame.s: true
+      ./dwtools/atop/will/l1/Execution.s: true
+      ./dwtools/atop/will/l1/Predefined.s: true
+      ./dwtools/atop/will/l3/Module.s: true
+      ./dwtools/atop/will/l3/Stager.s: true
+      ./dwtools/atop/will/l5/Inheritable.s: true
+      ./dwtools/atop/will/l7/Build.s: true
+      ./dwtools/atop/will/l7/Exported.s: true
+      ./dwtools/atop/will/l7/PathObj.s: true
+      ./dwtools/atop/will/l7/Reflector.s: true
+      ./dwtools/atop/will/l7/Step.s: true
+      ./dwtools/atop/will/l7/Submodule.s: true
+      ./dwtools/atop/will/l7/WillFile.s: true
+    srcFilter:
+      basePath: ./proto
+      prefixPath: proto
+    dstFilter:
+      basePath: .
+      prefixPath: .
+step:
+  reflect.proto.0:
+    criterion:
+      debug: 0
+      raw: 0
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
+    inherit:
+      - predefined.reflect
+  reflect.proto.1:
+    criterion:
+      debug: 1
+      raw: 0
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
+    inherit:
+      - predefined.reflect
+  reflect.proto.2:
+    criterion:
+      debug: 0
+      raw: 1
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
+    inherit:
+      - predefined.reflect
+  reflect.proto.3:
+    criterion:
+      debug: 1
+      raw: 1
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
+    inherit:
+      - predefined.reflect
+  reflect.submodules.0:
+    criterion:
+      debug: 1
+      raw: 0
+    opts:
+      reflector: 'reflector::reflect.submodules*=1'
+    inherit:
+      - predefined.reflect
+  reflect.submodules.1:
+    criterion:
+      debug: 1
+      raw: 1
+    opts:
+      reflector: 'reflector::reflect.submodules*=1'
+    inherit:
+      - predefined.reflect
+  export.proto:
+    criterion:
+      debug: 1
+      proto: 1
+    opts:
+      export: 'path::proto'
+      tar: 0
+    inherit:
+      - export
+build:
+  debug.raw:
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+    steps:
+      - 'step::reflect.proto.*=1'
+  debug.compiled:
+    criterion:
+      debug: 1
+      raw: 0
+    steps:
+      - 'step::reflect.proto.*=1'
+  release.raw:
+    criterion:
+      debug: 0
+      raw: 1
+    steps:
+      - 'step::reflect.proto.*=1'
+  release.compiled:
+    criterion:
+      debug: 0
+      raw: 0
+    steps:
+      - 'step::reflect.proto.*=1'
+  all:
+    steps:
+      - 'build::debug.raw'
+      - 'build::release.compiled'
+  proto.export:
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+    steps:
+      - 'build::debug.raw'
+      - 'step::export.proto'
+exported:
+  proto.export:
+    version: 0.3.72
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+    exportedReflector: 'reflector::exported.0'
+    exportedFilesReflector: 'reflector::exportedFiles.0'
+    exportedDirPath: 'path::exportedDir.0'
+    exportedFilesPath: 'path::exportedFiles.0'
+    exportedTerminalsPath:
+      path:
+        - ./dwtools/Tools.s
+        - ./dwtools/atop/-will/Exec
+        - ./dwtools/atop/-will/Exec2
+        - ./dwtools/atop/-will/IncludeBase.s
+        - ./dwtools/atop/-will/IncludeTop.s
+        - ./dwtools/atop/-will/MainBase.s
+        - ./dwtools/atop/-will/MainTop.s
+        - ./dwtools/atop/-will/l3/About.s
+        - ./dwtools/atop/-will/l3/BuildFrame.s
+        - ./dwtools/atop/-will/l3/Execution.s
+        - ./dwtools/atop/-will/l3/Inheritable.s
+        - ./dwtools/atop/-will/l3/Predefined.s
+        - ./dwtools/atop/-will/l3/Stager.s
+        - ./dwtools/atop/-will/l5/Build.s
+        - ./dwtools/atop/-will/l5/Exported.s
+        - ./dwtools/atop/-will/l5/Module.s
+        - ./dwtools/atop/-will/l5/PathObj.s
+        - ./dwtools/atop/-will/l5/Reflector.s
+        - ./dwtools/atop/-will/l5/Step.s
+        - ./dwtools/atop/-will/l5/Submodule.s
+        - ./dwtools/atop/-will/l5/WillFile.s
+        - ./dwtools/atop/will/Exec
+        - ./dwtools/atop/will/Exec2
+        - ./dwtools/atop/will/IncludeBase.s
+        - ./dwtools/atop/will/IncludeTop.s
+        - ./dwtools/atop/will/MainBase.s
+        - ./dwtools/atop/will/MainTop.s
+        - ./dwtools/atop/will/l1/About.s
+        - ./dwtools/atop/will/l1/BuildFrame.s
+        - ./dwtools/atop/will/l1/Execution.s
+        - ./dwtools/atop/will/l1/Predefined.s
+        - ./dwtools/atop/will/l3/Module.s
+        - ./dwtools/atop/will/l3/Stager.s
+        - ./dwtools/atop/will/l5/Inheritable.s
+        - ./dwtools/atop/will/l7/Build.s
+        - ./dwtools/atop/will/l7/Exported.s
+        - ./dwtools/atop/will/l7/PathObj.s
+        - ./dwtools/atop/will/l7/Reflector.s
+        - ./dwtools/atop/will/l7/Step.s
+        - ./dwtools/atop/will/l7/Submodule.s
+        - ./dwtools/atop/will/l7/WillFile.s
+      criterion:
+        default: 1
+        debug: 1
+        raw: 1
+        proto: 1
+        export: 1
+        tar: 1
