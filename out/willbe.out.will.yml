@@ -2,7 +2,7 @@ format: willfile-1.0.0
 about:
   name: willbe
   description: Tool to manage modules of modular systems
-  version: 0.3.72
+  version: 0.3.73
   enabled: 1
   interpreters:
     - nodejs >= 6.0.0
@@ -388,7 +388,7 @@ build:
       - 'step::export.proto'
 exported:
   proto.export:
-    version: 0.3.72
+    version: 0.3.73
     criterion:
       default: 1
       debug: 1
