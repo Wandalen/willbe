@@ -158,20 +158,17 @@ function commandsMake()
 
   }
 
-  // debugger;
-  var ca = _.CommandsAggregator
+  let ca = _.CommandsAggregator
   ({
     basePath : fileProvider.path.current(),
     commands : commands,
     commandPrefix : 'node ',
     logger : will.logger,
   })
-  // debugger;
 
   _.assert( ca.logger === will.logger );
+  debugger;
   _.assert( ca.verbosity === will.verbosity );
-
-  // debugger;
 
   //will._commandsConfigAdd( ca );
 
