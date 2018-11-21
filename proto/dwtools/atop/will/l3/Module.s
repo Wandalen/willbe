@@ -2170,10 +2170,9 @@ function _resolveSelect( o )
 
         // debugger;
 
-        eit.key = it.key + '.' + eit.key;
-
-        it.down.writeToDown.apply( it.down, arguments );
-        it.writingDown = false;
+        // eit.key = it.key + '.' + eit.key;
+        // it.down.writeToDown.apply( it.down, arguments );
+        // it.writingDown = false;
 
         // return writeToDownOriginal.apply( this, arguments );
 

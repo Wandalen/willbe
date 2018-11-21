@@ -279,13 +279,18 @@ function _inheritMultiple( o )
     _.assert( _.strIs( inheritable.PoolName ) );
     _.assert( _.strIs( ancestor ) );
 
+    if( inheritable.nickName === 'reflector::reflect.submodules' )
+    debugger;
     let ancestors = module.resolve
     ({
       query : ancestor,
       defaultPool : inheritable.PoolName,
       visited : o.visited,
       current : inheritable,
+      flattening : 1,
     });
+    if( inheritable.nickName === 'reflector::reflect.submodules' )
+    debugger;
 
     if( _.mapIs( ancestors ) )
     ancestors = _.mapVals( ancestors );
