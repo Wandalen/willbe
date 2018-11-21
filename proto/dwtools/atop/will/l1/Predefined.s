@@ -64,6 +64,8 @@ function stepRoutineReflect( frame )
   _.assert( !!opts.reflector, 'Expects option reflector' );
   _.assert( arguments.length === 1 );
 
+  // debugger;
+
   opts.reflector = module.resolve
   ({
     query : opts.reflector,
@@ -76,7 +78,10 @@ function stepRoutineReflect( frame )
   _.sure( opts.reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strTypeOf( opts.reflector ) )
   _.assert( opts.reflector.formed === 3, () => opts.reflector.nickName + ' is not formed' );
 
+  // debugger;
   opts.reflector = opts.reflector.optionsReflectExport();
+  // debugger;
+
   _.mapSupplement( opts, opts.reflector )
   delete opts.reflector;
 
@@ -89,7 +94,15 @@ function stepRoutineReflect( frame )
   if( opts.verbosity === null )
   opts.verbosity = _.numberClamp( will.verbosity - 2, 0, 9 );
 
+  // opts.writing = 0;
+
+  debugger;
   let result = will.Predefined.filesReflect.call( fileProvider, opts );
+
+  if( will.verbosity >= 5 )
+  {
+    logger.log( _.toStr( _.select( result, '*/src/absolute' ), { levels : 2, wrap : 0 } ) );
+  }
 
   return result;
 }

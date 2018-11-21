@@ -52,16 +52,29 @@ function form1()
   if( willf )
   willf[ reflector.MapName ][ reflector.name ] = reflector;
 
+  reflector.srcFilter = reflector.srcFilter || {};
+
   if( reflector.srcFilter )
   {
     reflector.srcFilter.hubFileProvider = fileProvider;
-
     if( reflector.srcFilter.basePath )
     reflector.srcFilter.basePath = path.s.normalize( reflector.srcFilter.basePath );
     // reflector.srcFilter.basePath = path.s.normalize( path.s.join( module.dirPath, reflector.srcFilter.basePath ) );
-
     if( !reflector.srcFilter.formed )
     reflector.srcFilter._formComponents();
+  }
+
+  reflector.dstFilter = reflector.dstFilter || {};
+
+  if( reflector.dstFilter )
+  {
+    reflector.dstFilter.hubFileProvider = fileProvider;
+
+    if( reflector.dstFilter.basePath )
+    reflector.dstFilter.basePath = path.s.normalize( reflector.dstFilter.basePath );
+    // reflector.dstFilter.basePath = path.s.normalize( path.s.join( module.dirPath, reflector.dstFilter.basePath ) );
+    if( !reflector.dstFilter.formed )
+    reflector.dstFilter._formComponents();
   }
 
   if( reflector.reflectMap )
@@ -73,6 +86,39 @@ function form1()
 
   reflector.formed = 1;
   return reflector;
+}
+
+//
+
+function form2()
+{
+  let reflector = this;
+  let module = reflector.module;
+  let willf = reflector.willf;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  /* filters */
+
+  reflector.srcFilter = reflector.srcFilter || {};
+  if( reflector.srcFilter.basePath )
+  reflector.srcFilter.basePath = reflector.resolve({ prefixlessAction : 'resolved', query : reflector.srcFilter.basePath });
+  if( reflector.srcFilter.prefixPath )
+  reflector.srcFilter.prefixPath = reflector.resolve({ prefixlessAction : 'resolved', query : reflector.srcFilter.prefixPath });
+  if( reflector.srcFilter.prefixPath )
+  reflector.srcFilter.prefixPath = path.resolve( module.inPath, reflector.srcFilter.prefixPath || '.' );
+
+  reflector.dstFilter = reflector.dstFilter || {};
+  if( reflector.dstFilter.basePath )
+  reflector.dstFilter.basePath = reflector.resolve({ prefixlessAction : 'resolved', query : reflector.dstFilter.basePath });
+  if( reflector.dstFilter.prefixPath )
+  reflector.dstFilter.prefixPath = reflector.resolve({ prefixlessAction : 'resolved', query : reflector.dstFilter.prefixPath });
+  if( reflector.dstFilter.prefixPath )
+  reflector.dstFilter.prefixPath = path.resolve( module.inPath, reflector.dstFilter.prefixPath || '.' );
+
+  return Parent.prototype.form2.apply( reflector, arguments );
 }
 
 //
@@ -132,8 +178,6 @@ function _inheritSingle( o )
   let logger = will.logger;
   let reflector2 = o.ancestor;
 
-  // debugger;
-
   // _.routineOptions( _inheritSingle, arguments );
   _.assertRoutineOptions( _inheritSingle, arguments );
   _.assert( arguments.length === 1 );
@@ -151,6 +195,7 @@ function _inheritSingle( o )
 
   let extend = _.mapOnly( reflector2, _.mapNulls( reflector ) );
   delete extend.srcFilter;
+  delete extend.dstFilter;
   delete extend.criterion;
 
   if( extend.reflectMap )
@@ -161,13 +206,27 @@ function _inheritSingle( o )
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
 
+  // if( reflector.nickName === 'reflector::reflect.submodules' )
+  // debugger;
+
   if( reflector2.srcFilter )
   {
     if( reflector.srcFilter )
-    reflector.srcFilter.and( reflector2.srcFilter ).pathsExtend( reflector2.srcFilter );
+    reflector.srcFilter.and( reflector2.srcFilter ).pathsInherit( reflector2.srcFilter );
     else
     reflector.srcFilter = reflector2.srcFilter.clone();
   }
+
+  if( reflector2.dstFilter )
+  {
+    if( reflector.dstFilter )
+    reflector.dstFilter.and( reflector2.dstFilter ).pathsInherit( reflector2.dstFilter );
+    else
+    reflector.dstFilter = reflector2.dstFilter.clone();
+  }
+
+  // if( reflector.nickName === 'reflector::reflect.submodules' )
+  // debugger;
 
 }
 
@@ -193,7 +252,26 @@ function form3()
   _.assert( arguments.length === 0 );
   _.assert( reflector.formed === 2 );
 
-  /* begin */
+  // if( reflector.nickName === 'reflector::reflect.submodules' )
+  // debugger;
+
+  /* filters */
+
+  reflector.srcFilter = reflector.srcFilter || {};
+  if( reflector.srcFilter.basePath )
+  reflector.srcFilter.basePath = reflector.resolve({ prefixlessAction : 'resolved', query : reflector.srcFilter.basePath });
+  if( reflector.srcFilter.prefixPath )
+  reflector.srcFilter.prefixPath = reflector.resolve({ prefixlessAction : 'resolved', query : reflector.srcFilter.prefixPath });
+  reflector.srcFilter.prefixPath = path.resolve( module.inPath, reflector.srcFilter.prefixPath || '.' );
+
+  reflector.dstFilter = reflector.dstFilter || {};
+  if( reflector.dstFilter.basePath )
+  reflector.dstFilter.basePath = reflector.resolve({ prefixlessAction : 'resolved', query : reflector.dstFilter.basePath });
+  if( reflector.dstFilter.prefixPath )
+  reflector.dstFilter.prefixPath = reflector.resolve({ prefixlessAction : 'resolved', query : reflector.dstFilter.prefixPath });
+  reflector.dstFilter.prefixPath = path.resolve( module.inPath, reflector.dstFilter.prefixPath || '.' );
+
+  /* */
 
   for( let src in reflector.reflectMap )
   {
@@ -217,18 +295,20 @@ function form3()
   if( reflector.srcFilter )
   {
     let p;
-    p = reflector.srcFilter.prefixPath;
-    _.assert
-    (
-      p === null || path.s.allAreRelative( p ),
-      () => 'Expects relative paths, but ' + reflector.nickName + ' has prefixPath ' + _.toStr( p )
-    );
-    p = reflector.srcFilter.postfixPath;
-    _.assert
-    (
-      p === null || path.s.allAreRelative( p ),
-      () => 'Expects relative paths, but ' + reflector.nickName + ' has postfixPath ' + _.toStr( p )
-    );
+
+    // p = reflector.srcFilter.prefixPath;
+    // _.assert
+    // (
+    //   p === null || path.s.allAreRelative( p ),
+    //   () => 'Expects relative paths, but ' + reflector.nickName + ' has prefixPath ' + _.toStr( p )
+    // );
+    // p = reflector.srcFilter.postfixPath;
+    // _.assert
+    // (
+    //   p === null || path.s.allAreRelative( p ),
+    //   () => 'Expects relative paths, but ' + reflector.nickName + ' has postfixPath ' + _.toStr( p )
+    // );
+
     p = reflector.srcFilter.basePath;
     if( _.mapIs( p ) )
     p = _.mapVals( reflector.srcFilter.basePath );
@@ -281,7 +361,7 @@ function _reflectMapForm( o )
     {
       _.assert( _.strIs( dst ), 'not tested' );
       if( !module.strIsResolved( dst ) )
-      dst = module.resolve
+      dst = reflector.resolve
       ({
         query : dst,
         // must : 1,
@@ -297,7 +377,7 @@ function _reflectMapForm( o )
       // if( r === 'submodule::*/exported::*=1/path::exportedDir*=1' )
       // debugger;
 
-      let resolved = module.resolve
+      let resolved = reflector.resolve
       ({
         query : r,
         visited : o.visited,
@@ -349,7 +429,8 @@ function _reflectMapForm( o )
       else if( resolved instanceof will.Reflector )
       {
         delete map[ r ];
-        reflector._inheritSingle({ visited : o.visited, ancestor : resolved.name, defaultDst : dst });
+        debugger;
+        reflector._inheritSingle({ visited : o.visited, ancestor : resolved, defaultDst : dst });
         _.sure( !!resolved.reflectMap );
         path.globMapExtend( map, resolved.reflectMap, dst );
       }
@@ -377,24 +458,30 @@ function optionsReflectExport( o )
 
   o = _.routineOptions( optionsReflectExport, arguments );
 
+  result.reflectMap = reflector.reflectMap;
+  result.recursive = reflector.recursive === null ? true : !!reflector.recursive;
+
+  /* */
+
   if( reflector.srcFilter )
   result.srcFilter = reflector.srcFilter.clone();
-  result.reflectMap = reflector.reflectMap;
-
   result.srcFilter = result.srcFilter || Object.create( null );
   result.srcFilter.prefixPath = path.resolve( module.dirPath, result.srcFilter.prefixPath || '.' );
-  // result.srcFilter.basePath = path.resolve( module.dirPath, result.srcFilter.basePath || '.' );
-
   if( o.resolving )
   if( result.srcFilter.basePath )
   result.srcFilter.basePath = path.resolve( module.dirPath, result.srcFilter.basePath );
 
+  if( reflector.dstFilter )
+  result.dstFilter = reflector.dstFilter.clone();
   result.dstFilter = result.dstFilter || Object.create( null );
   result.dstFilter.prefixPath = path.resolve( module.dirPath, result.dstFilter.prefixPath || '.' );
-  // result.dstFilter.basePath = path.resolve( module.dirPath, result.dstFilter.basePath || '.' );
+  if( o.resolving )
+  if( result.dstFilter.basePath )
+  result.dstFilter.basePath = path.resolve( module.dirPath, result.dstFilter.basePath );
 
-  debugger;
-  result.recursive = reflector.recursive === null ? true : !!reflector.recursive;
+  // result.dstFilter = result.dstFilter || Object.create( null );
+  // result.dstFilter.prefixPath = path.resolve( module.dirPath, result.dstFilter.prefixPath || '.' );
+  // // result.dstFilter.basePath = path.resolve( module.dirPath, result.dstFilter.basePath || '.' );
 
   return result;
 }
@@ -414,17 +501,44 @@ function infoExport()
 
   _.assert( !!reflector.formed );
 
-  let srcFilter;
+  // let srcFilter;
 
   result += reflector.nickName;
   result += '\n' + _.toStr( fields, { wrap : 0, levels : 4, multiline : 1 } );
 
-  if( srcFilter )
-  result += '\n' + _.strIndentation( 'srcFilter : ' + srcFilter, '  ' );
+  // if( srcFilter )
+  // result += '\n' + _.strIndentation( 'srcFilter : ' + srcFilter, '  ' );
 
   result += '\n';
 
   return result;
+}
+
+//
+
+function dataExport()
+{
+  let reflector = this;
+  let module = reflector.module;
+  let willf = reflector.willf;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let result = Parent.prototype.dataExport.apply( this, arguments );
+
+  if( result.srcFilter && result.srcFilter.prefixPath && path.isAbsolute( result.srcFilter.prefixPath ) )
+  result.srcFilter.prefixPath = path.relative( module.inPath, result.srcFilter.prefixPath );
+
+  if( result.dstFilter && result.dstFilter.prefixPath && path.isAbsolute( result.dstFilter.prefixPath ) )
+  result.dstFilter.prefixPath = path.relative( module.inPath, result.dstFilter.prefixPath );
+
+  return result;
+}
+
+dataExport.defaults =
+{
+  compact : 1,
+  copyingAggregates : 0,
 }
 
 // --
@@ -435,12 +549,12 @@ let Composes =
 {
 
   description : null,
-  reflectMap : null,
   recursive : null,
+  reflectMap : null,
   srcFilter : null,
+  dstFilter : null,
   criterion : null,
 
-  // parameter : null,
   inherit : _.define.own([]),
 
 }
@@ -448,7 +562,6 @@ let Composes =
 let Aggregates =
 {
   name : null,
-  // predefined : 0,
 }
 
 let Associates =
@@ -476,6 +589,7 @@ let Forbids =
 let Accessors =
 {
   srcFilter : { setter : _.accessor.setter.copyable({ name : 'srcFilter', maker : _.routineJoin( _.FileRecordFilter, _.FileRecordFilter.Clone ) }) },
+  dstFilter : { setter : _.accessor.setter.copyable({ name : 'dstFilter', maker : _.routineJoin( _.FileRecordFilter, _.FileRecordFilter.Clone ) }) },
   // inherit : { setter : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
 }
 
@@ -491,6 +605,7 @@ let Proto =
   // inter
 
   form1 : form1,
+  form2 : form2,
 
   _inheritMultiple : _inheritMultiple,
   _inheritSingle : _inheritSingle,
@@ -502,7 +617,7 @@ let Proto =
   optionsReflectExport : optionsReflectExport,
 
   infoExport : infoExport,
-  // dataExport : dataExport,
+  dataExport : dataExport,
   // resolvedExport : resolvedExport,
 
   // relation

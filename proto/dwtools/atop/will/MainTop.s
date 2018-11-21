@@ -105,11 +105,23 @@ function done( command )
   _.assert( arguments.length === 1 );
   _.assert( will.formed === 1 );
 
-  if( will.topCommand === command )
+  try
   {
-    _.diagnosticBeep();
-    if( will.currentModule )
-    will.currentModule.finit();
+
+    if( will.topCommand === command )
+    {
+      _.diagnosticBeep();
+      if( will.currentModule )
+      will.currentModule.finit();
+      will.currentModule = null;
+      will.topCommand = null;
+      return true;
+    }
+
+  }
+  catch( err )
+  {
+    _.errLogOnce( err );
     will.currentModule = null;
     will.topCommand = null;
     return true;
@@ -628,6 +640,12 @@ function commandEach( e )
   {
     let file = files[ f ];
     let dirPath = will.Module.DirPathFromWillFilePath( file.absolute );
+
+    if( will.currentModule )
+    {
+      will.currentModule.finit();
+      will.currentModule = null;
+    }
 
     if( will.moduleMap[ dirPath ] )
     return;

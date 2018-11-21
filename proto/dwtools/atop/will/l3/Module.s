@@ -2189,14 +2189,36 @@ function _resolveSelect( o )
   {
     let it = this;
 
-    if( !it.query )
+    if( !it.query && it._inherited.exported && it.result )
     {
+      // debugger;
 
-      if( it._inherited.exported && it.result && it.result instanceof will.PathObj )
+      if( it.result instanceof will.Reflector )
       {
-        // debugger;
         let m = it._inherited.module;
-        it.result = path.s.join( m.dirPath, it.result.path );
+        // let reflector = it.result.clone();
+        let reflector = it.result;
+        // _.assert( it.result.srcFilter !== reflector.srcFilter || it.result.srcFilter === null );
+
+        // reflector.srcFilter = reflector.srcFilter || {};
+        // _.assert( reflector.srcFilter.prefixPath === null );
+        // reflector.srcFilter.prefixPath = m.inPath;
+
+        // reflector.dstFilter = reflector.dstFilter || {};
+        // reflector.dstFilter.prefixPath = null;
+        // _.assert( reflector.dstFilter.prefixPath === null );
+        // reflector.dstFilter.prefixPath = m.dirPath;
+
+        // reflector.formed = 2;
+        _.assert( reflector.inherit.length === 0 );
+        reflector.form();
+        it.result = reflector;
+        // debugger;
+      }
+      else if( it.result instanceof will.PathObj )
+      {
+        let m = it._inherited.module;
+        it.result = path.s.join( m.inPath, it.result.path );
       }
 
     }

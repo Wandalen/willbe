@@ -597,14 +597,18 @@ function resolve_body( o )
   let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
+  _.assert( o.current === null || o.current === inheritable )
 
   // let resolved = src;
   // if( !module.strIsResolved( resolved ) )
 
-  if( o.current === null )
+  // if( o.current !== null )
+  // debugger;
+
+  // if( o.current === null )
   o.current = inheritable;
-  else
-  _.assert( 0, 'not tested' );
+  // else
+  // _.assert( 0, 'not tested' );
 
   // debugger;
   let resolved = module.resolve.body.call( module, o );
