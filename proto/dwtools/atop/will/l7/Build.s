@@ -150,8 +150,9 @@ function run( frame )
   {
     let frame2 = frame.cloneUp( it.element );
     _.assert( frame2.formed === 1 );
-    con.ifNoErrorThen( ( arg ) => it.element.form() );
-    con.ifNoErrorThen( ( arg ) => it.element.run( frame2 ) );
+    // con.ifNoErrorThen( ( arg ) => it.element.form() );
+    con.ifNoErrorThen( ( arg ) => frame2.run() );
+    // con.ifNoErrorThen( ( arg ) => it.element.run( frame2 ) );
     con.doThen( ( err, arg ) =>
     {
       frame2.finit();

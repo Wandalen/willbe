@@ -38,6 +38,7 @@ function stepRoutineDelete( frame )
   let opts = frame.opts;
 
   _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
 
   let filePath = step.inPathResolve( opts.filePath );
   return fileProvider.filesDelete({ filePath : filePath, verbosity : will.verbosity >= 2 ? 2 : 0 });

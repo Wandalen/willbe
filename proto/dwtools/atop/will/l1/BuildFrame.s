@@ -99,14 +99,17 @@ function form()
 
   /* begin */
 
-  if( resource instanceof will.Step )
-  {
+  frame.opts = Object.create( null );
 
-    frame.opts = _.mapExtend( null, resource.opts )
-    if( resource.opts && resource.stepRoutine.stepOptions )
-    _.routineOptions( resource.stepRoutine, frame.opts, resource.stepRoutine.stepOptions );
-
-  }
+  // if( resource instanceof will.Step )
+  // {
+  //
+  //   frame.opts = _.mapExtend( null, resource.opts );
+  //   debugger;
+  //   if( resource.opts && resource.stepRoutine.stepOptions )
+  //   _.routineOptions( resource.stepRoutine, frame.opts, resource.stepRoutine.stepOptions );
+  //
+  // }
 
   /* end */
 
@@ -134,6 +137,26 @@ function run()
   _.assert( frame.formed === 1 );
 
   con.ifNoErrorThen( () => resource.form() );
+
+  con.ifNoErrorThen( ( arg ) =>
+  {
+
+    _.assert( resource.formed === 3 );
+
+    // if( resource instanceof will.Step )
+    // {
+    //
+    //   _.assert( _.routineIs( resource.stepRoutine ) );
+    //   frame.opts = _.mapExtend( null, resource.opts );
+    //   debugger;
+    //   if( resource.opts && resource.stepRoutine.stepOptions )
+    //   _.routineOptions( resource.stepRoutine, frame.opts, resource.stepRoutine.stepOptions );
+    //
+    // }
+
+    return arg;
+  });
+
   con.ifNoErrorThen( ( arg ) =>
   {
     _.assert( resource.formed === 3 )

@@ -220,9 +220,15 @@ function run( frame )
     _.assert( module.formed === 3 );
     _.assert( will.formed === 1 );
     _.assert( build.formed === 3 );
-    _.assert( resource.formed === 3 );
+    _.assert( step.formed === 3 );
     _.assert( resource === step );
+    _.assert( _.objectIs( frame.opts ) );
     _.assert( _.routineIs( step.stepRoutine ), () => step.nickName + ' does not have step routine' );
+
+    // debugger;
+    _.mapExtend( frame.opts, step.opts );
+    if( step.opts && step.stepRoutine.stepOptions )
+    _.routineOptions( step.stepRoutine, frame.opts, step.stepRoutine.stepOptions );
 
     result = step.stepRoutine( frame );
 

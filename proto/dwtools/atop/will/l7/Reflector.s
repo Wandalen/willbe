@@ -268,6 +268,9 @@ function _reflectMapForm( o )
   // if( reflector.name === 'grab.release' )
   // debugger;
 
+  if( reflector.nickName === 'reflector::reflect.submodules' )
+  debugger;
+
   let map = reflector.reflectMap;
   for( let r in map )
   {
@@ -316,17 +319,30 @@ function _reflectMapForm( o )
       {
         // debugger;
         resolved = path.s.normalize( resolved );
+
         delete map[ r ];
         for( let p = 0 ; p < resolved.length ; p++ )
         {
           let rpath = resolved[ p ];
           _.assert( _.strIs( rpath ) );
+
+          if( path.isAbsolute( rpath ) && !path.isGlobal( rpath ) )
+          debugger;
+          if( path.isAbsolute( rpath ) && !path.isGlobal( rpath ) )
+          rpath = path.s.relative( module.dirPath, rpath );
+
           map[ rpath ] = dst;
         }
       }
       else if( _.strIs( resolved ) )
       {
         resolved = path.normalize( resolved );
+
+        if( path.isAbsolute( resolved ) && !path.isGlobal( resolved ) )
+        debugger;
+        if( path.isAbsolute( resolved ) && !path.isGlobal( resolved ) )
+        resolved = path.s.relative( module.dirPath, resolved );
+
         delete map[ r ];
         map[ resolved ] = dst;
       }

@@ -167,7 +167,6 @@ function commandsMake()
   })
 
   _.assert( ca.logger === will.logger );
-  debugger;
   _.assert( ca.verbosity === will.verbosity );
 
   //will._commandsConfigAdd( ca );
