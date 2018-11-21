@@ -64,7 +64,7 @@ function exportedReflectorMake( exportSelector )
     _.assert( exp.srcFilter.formed === 1 );
     _.sure( !!exp.reflectMap, () => exp.nickName + ' should have reflectMap' );
 
-    result = exp.cloneExtending({ name : module.resourceAllocateName( 'reflector', 'exported' ) });
+    result = exp.cloneExtending({ name : module.resourceNameAllocate( 'reflector', 'exported' ) });
     result.criterion = _.mapExtend( null, exported.criterion );
 
     _.assert( result.srcFilter !== exp.srcFilter );
@@ -204,14 +204,6 @@ function proceed( frame )
     will.PathObj({ module : module, name : 'baseDir', path : baseDirPath }).form();
   }
 
-  /* exportedReflector */
-
-  exported.exportedReflector = exported.exportedReflector.refName;
-
-  /* exportedDirPath */
-
-  exported.exportedDirPath = exported.exportedDirPath.refName;
-
   /* archiveFilePath */
 
   if( opts.tar === undefined || opts.tar )
@@ -220,7 +212,6 @@ function proceed( frame )
     exported.archiveFilePath.path = path.dot( path.relative( module.dirPath, archiveFilePath ) );
     exported.archiveFilePath.criterion = _.mapExtend( null, exported.criterion );
     exported.archiveFilePath.form();
-    exported.archiveFilePath = exported.archiveFilePath.refName;
   }
   else
   {
@@ -252,7 +243,27 @@ function proceed( frame )
     () => 'No file found at ' + path.commonReport( exportedReflector.srcFilter.stemPath ) + ', cant export ' + opts.export,
   );
   exported.exportedFilesPath.form();
+
+  /* */
+
+  debugger;
+  let exportedFilesReflector = exported.exportedFilesReflector = exported.exportedReflector.cloneExtending({ name : module.resourceNameAllocate( 'reflector', 'exportedFiles' ) });
+  if( exportedFilesReflector.srcFilter )
+  exportedFilesReflector.srcFilter.filteringEmpty();
+  // exportedFilesReflector.reflectMap = path.globMapExtend( null, resolved.reflectMap, true );
+  exportedFilesReflector.reflectMap = { [ exported.exportedFilesPath.refName ] : true }
+  exportedFilesReflector.recursive = 0;
+  exportedFilesReflector.form();
+  debugger;
+
+  /* */
+
+  exported.exportedFilesReflector = exported.exportedFilesReflector.refName;
+  exported.exportedReflector = exported.exportedReflector.refName;
+  exported.exportedDirPath = exported.exportedDirPath.refName;
   exported.exportedFilesPath = exported.exportedFilesPath.refName;
+  if( exported.archiveFilePath )
+  exported.archiveFilePath = exported.archiveFilePath.refName;
 
   /* */
 
@@ -304,17 +315,16 @@ let Composes =
 {
 
   version : null,
+  description : null,
+  criterion : null,
+  inherit : _.define.own([]),
 
   exportedReflector : null,
+  exportedFilesReflector : null,
+
   exportedDirPath : null,
   exportedFilesPath : null,
   archiveFilePath : null,
-
-  description : null,
-  criterion : null,
-
-  inherit : _.define.own([]),
-  // files : null,
 
 }
 

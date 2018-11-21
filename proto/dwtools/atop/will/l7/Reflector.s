@@ -268,8 +268,8 @@ function _reflectMapForm( o )
   // if( reflector.name === 'grab.release' )
   // debugger;
 
-  if( reflector.nickName === 'reflector::reflect.submodules' )
-  debugger;
+  // if( reflector.nickName === 'reflector::reflect.submodules' )
+  // debugger;
 
   let map = reflector.reflectMap;
   for( let r in map )
@@ -338,8 +338,8 @@ function _reflectMapForm( o )
       {
         resolved = path.normalize( resolved );
 
-        if( path.isAbsolute( resolved ) && !path.isGlobal( resolved ) )
-        debugger;
+        // if( path.isAbsolute( resolved ) && !path.isGlobal( resolved ) )
+        // debugger;
         if( path.isAbsolute( resolved ) && !path.isGlobal( resolved ) )
         resolved = path.s.relative( module.dirPath, resolved );
 
@@ -393,6 +393,9 @@ function optionsReflectExport( o )
   result.dstFilter.prefixPath = path.resolve( module.dirPath, result.dstFilter.prefixPath || '.' );
   // result.dstFilter.basePath = path.resolve( module.dirPath, result.dstFilter.basePath || '.' );
 
+  debugger;
+  result.recursive = reflector.recursive === null ? true : !!reflector.recursive;
+
   return result;
 }
 
@@ -433,9 +436,11 @@ let Composes =
 
   description : null,
   reflectMap : null,
+  recursive : null,
   srcFilter : null,
   criterion : null,
-  parameter : null,
+
+  // parameter : null,
   inherit : _.define.own([]),
 
 }
@@ -465,6 +470,7 @@ let Forbids =
   inherited : 'inherited',
   filePath : 'filePath',
   filter : 'filter',
+  parameter : 'parameter',
 }
 
 let Accessors =

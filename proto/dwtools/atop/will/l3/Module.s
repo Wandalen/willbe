@@ -1491,7 +1491,7 @@ function resourceAllocate( resourceKind, resourceName )
   // _.assert( module.pathMap[ resourceName ] === undefined, 'not implemented' );
   // let resourceName2 = resourceName + '.0';
 
-  let resourceName2 = module.resourceAllocateName( resourceKind, resourceName );
+  let resourceName2 = module.resourceNameAllocate( resourceKind, resourceName );
   let cls = module.resourceClassForKind( resourceKind );
   let patho = new cls({ module : module, name : resourceName2 }).form1();
 
@@ -1500,7 +1500,7 @@ function resourceAllocate( resourceKind, resourceName )
 
 //
 
-function resourceAllocateName( resourceKind, resourceName )
+function resourceNameAllocate( resourceKind, resourceName )
 {
   let module = this;
   let will = module.will;
@@ -2496,7 +2496,7 @@ let Proto =
   resourceClassForKind,
   resourceMapForKind,
   resourceAllocate,
-  resourceAllocateName,
+  resourceNameAllocate,
 
   // path
 
