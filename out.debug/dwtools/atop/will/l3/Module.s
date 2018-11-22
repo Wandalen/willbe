@@ -93,6 +93,15 @@ function init( o )
     verbosity : will.verbosity && will.verboseStaging,
   });
 
+  module.ready.then( ( err, arg ) =>
+  {
+    if( err )
+    module.errors.push( err );
+    if( err )
+    throw err;
+    return arg;
+  });
+
 }
 
 //
@@ -412,7 +421,7 @@ function cleanWhat( o )
     ({
       verbosity : 0,
       allowingMissing : 1,
-      recursive : 1,
+      recursive : '2',
       includingDirs : 1,
       includingTerminals : 1,
       outputFormat : 'absolute',
@@ -463,7 +472,7 @@ function cleanWhat( o )
       filePath : temp,
       verbosity : 0,
       allowingMissing : 1,
-      recursive : 1,
+      recursive : '2',
       includingDirs : 1,
       includingTerminals : 1,
       maskPreset : 0,
@@ -557,6 +566,14 @@ function prefixPathForRoleMaybe( role )
   return '.will';
   else return null;
 
+}
+
+//
+
+function isOpened()
+{
+  let module = this;
+  return module.willFileArray.length > 0;
 }
 
 //
@@ -1177,10 +1194,10 @@ function remoteFormAct()
   module.clonePath = path.resolve( submodulesDir, module.alias );
   module.dirPath = path.resolve( module.clonePath, localPath );
 
-  let o2 =
-  {
-    reflectMap : { [ module.remotePath ] : module.clonePath },
-  }
+  // let o2 =
+  // {
+  //   reflectMap : { [ module.remotePath ] : module.clonePath },
+  // }
 
   module.isDownloaded = !!module.remoteIsDownloaded();
 
@@ -2413,6 +2430,7 @@ let Associates =
 
 let Restricts =
 {
+  errors : _.define.own([]),
   stager : null,
 
   formed : 0,
@@ -2477,6 +2495,7 @@ let Proto =
   DirPathFromWillFilePath,
   prefixPathForRole,
   prefixPathForRoleMaybe,
+  isOpened,
 
   _willFileFindMaybe,
   _willFilesFindMaybe,

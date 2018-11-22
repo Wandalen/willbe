@@ -97,7 +97,7 @@ function _load()
   submodule.loadedModule.willFilesFindReady.doThen( ( err, arg ) =>
   {
     if( err )
-    throw _.errAttend( 'Failed to open submodule', submodule.nickName, 'at', submodule.loadedModule.dirPath, '\n', err );
+    throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.loadedModule.dirPath ), '\n', err );
     return arg;
   });
 
@@ -106,9 +106,24 @@ function _load()
     if( err )
     {
       if( will.verbosity >= 3 )
-      logger.error( ' ! ' + submodule.nickName + ' was not opened' );
-      if( will.verbosity >= 5 )
-      _.errLogOnce( err );
+      logger.error( ' ! Fail to open ' + submodule.nickName + '' );
+      // debugger;
+      // logger.log( 'xxx1' );
+      if( will.verbosity >= 5 || !submodule.loadedModule || submodule.loadedModule.isOpened() )
+      {
+        debugger;
+        if( will.verbosity < 5 )
+        _.errLogOnce( _.errBriefly( err ) );
+        else
+        _.errLogOnce( err );
+      }
+      else
+      {
+        // debugger;
+        _.errAttend( err );
+      }
+      // logger.log( 'xxx2' );
+      // _.assert( !submodule.loadedModule.isOpened() );
     }
     return arg || null;
   });

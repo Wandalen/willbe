@@ -62,21 +62,22 @@ function exportedReflectorMake( exportSelector )
 
     _.assert( exp.formed === 3 );
     _.assert( exp.srcFilter.formed === 1 );
-    _.sure( !!exp.reflectMap, () => exp.nickName + ' should have reflectMap' );
+    _.sure( !!exp.filePath, () => exp.nickName + ' should have filePath' );
 
     result = exp.cloneExtending({ name : module.resourceNameAllocate( 'reflector', 'exported' ) });
     result.criterion = _.mapExtend( null, exported.criterion );
 
     _.assert( result.srcFilter !== exp.srcFilter );
-    _.assert( result.srcFilter.prefixPath === null );
+    _.assert( result.srcFilter.prefixPath === null || result.srcFilter.prefixPath === module.inPath );
+    result.srcFilter.prefixPath = null;
 
     let filter2 =
     {
       // maskTransientDirectory : { excludeAny : [ /\.git$/, /node_modules$/ ] },
     }
 
-    result.srcFilter.and( filter2 ).pathsExtend( filter2 );
-    result.srcFilter.inFilePath = result.reflectMap;
+    result.srcFilter.and( filter2 ).pathsInherit( filter2 );
+    result.srcFilter.inFilePath = result.filePath;
 
   }
   else if( _.arrayIs( exp ) )
@@ -86,22 +87,22 @@ function exportedReflectorMake( exportSelector )
     _.assert( path.isRelative( commonPath ) );
 
     result = module.resourceAllocate( 'reflector', 'exported' );
-    result.reflectMap = Object.create( null );
+    result.filePath = Object.create( null );
     for( let p = 0 ; p < exp.length ; p++ )
-    result.reflectMap[ exp[ p ] ] = true;
+    result.filePath[ exp[ p ] ] = true;
 
-    result.srcFilter = fileProvider.recordFilter();
+    // result.srcFilter = fileProvider.recordFilter();
     result.srcFilter.basePath = commonPath;
-    result.srcFilter.inFilePath = result.reflectMap;
+    result.srcFilter.inFilePath = result.filePath;
 
   }
   else if( _.strIs( exp ) )
   {
 
     result = module.resourceAllocate( 'reflector', 'exported' );
-    result.reflectMap = { [ exp ] : true };
+    result.filePath = { [ exp ] : true };
 
-    result.srcFilter = fileProvider.recordFilter();
+    // result.srcFilter = fileProvider.recordFilter();
     result.srcFilter.inFilePath = exp;
 
   }
@@ -232,7 +233,7 @@ function proceed( frame )
 
   let exportedFilesPath = hd.filesFind
   ({
-    recursive : 1,
+    recursive : '2',
     includingDirs : 1,
     includingTerminals : 1,
     mandatory : 0,
@@ -243,10 +244,10 @@ function proceed( frame )
     filter : exportedReflector.srcFilter,
   });
 
-  debugger;
+  // debugger;
   let exportedTerminalsPath = exported.exportedTerminalsPath.path = _.filter( exportedFilesPath, ( r ) => r.isTerminal ? r.relative : undefined );
   exportedFilesPath = exported.exportedFilesPath.path = _.filter( exportedFilesPath, ( r ) => r.relative );
-  debugger;
+  // debugger;
 
   _.sure
   (
@@ -257,23 +258,25 @@ function proceed( frame )
 
   /* */
 
-  debugger;
+  // debugger;
   let exportedFilesReflector = exported.exportedFilesReflector = exported.exportedReflector.cloneExtending({ name : module.resourceNameAllocate( 'reflector', 'exportedFiles' ) });
-  debugger;
+  // debugger;
 
-  exportedFilesReflector.srcFilter = exportedFilesReflector.srcFilter || {};
-  _.assert( exportedFilesReflector.srcFilter.basePath === null );
+  // exportedFilesReflector.srcFilter = exportedFilesReflector.srcFilter || {};
+  _.assert( exportedFilesReflector.srcFilter.basePath === exported.exportedDirPath.path || exportedFilesReflector.srcFilter.basePath === null );
   exportedFilesReflector.srcFilter.filteringEmpty();
+  _.assert( exportedFilesReflector.srcFilter.basePath === exported.exportedDirPath.path || exportedFilesReflector.srcFilter.basePath === null );
+  _.assert( exportedFilesReflector.srcFilter.prefixPath === module.inPath || exportedFilesReflector.srcFilter.prefixPath === null );
+
   exportedFilesReflector.srcFilter.basePath = exported.exportedDirPath.refName;
   exportedFilesReflector.srcFilter.prefixPath = exported.exportedDirPath.refName;
 
-  exportedFilesReflector.dstFilter = exportedFilesReflector.dstFilter || {};
+  // exportedFilesReflector.dstFilter = exportedFilesReflector.dstFilter || {};
   _.assert( exportedFilesReflector.dstFilter.basePath === null );
   exportedFilesReflector.dstFilter.filteringEmpty();
   exportedFilesReflector.dstFilter.basePath = '.';
 
-  // exportedFilesReflector.reflectMap = path.globMapExtend( null, resolved.reflectMap, true );
-  exportedFilesReflector.reflectMap = { [ exported.exportedTerminalsPath.refName ] : true }
+  exportedFilesReflector.filePath = { [ exported.exportedTerminalsPath.refName ] : true }
   exportedFilesReflector.recursive = 0;
   exportedFilesReflector.form();
   debugger;

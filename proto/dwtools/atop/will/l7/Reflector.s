@@ -24,6 +24,24 @@ Self.shortName = 'Reflector';
 // inter
 // --
 
+function init( o )
+{
+  let reflector = this;
+
+  _.assert( o && o.module );
+
+  let module = o.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+
+  reflector.srcFilter = fileProvider.recordFilter();
+  reflector.dstFilter = fileProvider.recordFilter();
+
+  return Parent.prototype.init.apply( reflector, arguments );
+}
+
+//
+
 function form1()
 {
   let reflector = this;
@@ -77,9 +95,9 @@ function form1()
     reflector.dstFilter._formComponents();
   }
 
-  if( reflector.reflectMap )
+  if( reflector.filePath )
   {
-    reflector.reflectMap = path.globMapExtend( null, reflector.reflectMap, true );
+    reflector.filePath = path.globMapExtend( null, reflector.filePath, true );
   }
 
   /* end */
@@ -145,7 +163,7 @@ function _inheritMultiple( o )
 
   Parent.prototype._inheritMultiple.call( reflector, o );
 
-  if( reflector.reflectMap )
+  if( reflector.filePath )
   {
     reflector._reflectMapForm({ visited : o.visited });
   }
@@ -162,7 +180,7 @@ _inheritMultiple.defaults=
 {
   ancestors : null,
   visited : null,
-  defaultDst : null,
+  defaultDst : true,
 }
 
 //
@@ -194,13 +212,16 @@ function _inheritSingle( o )
   }
 
   let extend = _.mapOnly( reflector2, _.mapNulls( reflector ) );
+
   delete extend.srcFilter;
   delete extend.dstFilter;
   delete extend.criterion;
+  delete extend.filePath;
 
-  if( extend.reflectMap )
+  if( reflector2.filePath )
   {
-    reflector.reflectMap = path.globMapExtend( reflector.reflectMap, extend.reflectMap, o.defaultDst );
+    _.assert( reflector.filePath === null || __.mapIs( reflector.filePath ), 'not tested' );
+    reflector.filePath = path.globMapExtend( reflector.filePath, reflector2.filePath, o.defaultDst );
   }
 
   reflector.copy( extend );
@@ -273,57 +294,7 @@ function form3()
 
   /* */
 
-  for( let src in reflector.reflectMap )
-  {
-    let dst = reflector.reflectMap[ src ];
-
-    _.assert
-    (
-      _.all( src, ( p ) => path.isRelative( p ) || path.isGlobal( p ) ),
-      () => 'Expects relative or global path, but ' + reflector.nickName + ' has ' + src
-    );
-
-    _.assert
-    (
-      // _.boolIs( dst ) || path.s.allAreRelative( dst ),
-      _.all( dst, ( p ) => _.boolIs( p ) || path.isRelative( p ) || path.isGlobal( p ) ),
-      () => 'Expects bool, relative or global path, but ' + reflector.nickName + ' has ' + dst
-    );
-
-  }
-
-  if( reflector.srcFilter )
-  {
-    let p;
-
-    // p = reflector.srcFilter.prefixPath;
-    // _.assert
-    // (
-    //   p === null || path.s.allAreRelative( p ),
-    //   () => 'Expects relative paths, but ' + reflector.nickName + ' has prefixPath ' + _.toStr( p )
-    // );
-    // p = reflector.srcFilter.postfixPath;
-    // _.assert
-    // (
-    //   p === null || path.s.allAreRelative( p ),
-    //   () => 'Expects relative paths, but ' + reflector.nickName + ' has postfixPath ' + _.toStr( p )
-    // );
-
-    p = reflector.srcFilter.basePath;
-    if( _.mapIs( p ) )
-    p = _.mapVals( reflector.srcFilter.basePath );
-    _.assert
-    (
-      p === null || path.s.allAreRelative( p ),
-      () => 'Expects relative paths, but ' + reflector.nickName + ' has basePath ' + _.toStr( p )
-    );
-    p = reflector.srcFilter.stemPath;
-    _.assert
-    (
-      p === null || path.s.allAreRelative( p ),
-      () => 'Expects relative paths, but ' + reflector.nickName + ' has stemPath ' + _.toStr( p )
-    );
-  }
+  reflector.sureRelativeOrGlobal();
 
   /* end */
 
@@ -351,7 +322,7 @@ function _reflectMapForm( o )
   // if( reflector.nickName === 'reflector::reflect.submodules' )
   // debugger;
 
-  let map = reflector.reflectMap;
+  let map = reflector.filePath;
   for( let r in map )
   {
     let dst = map[ r ];
@@ -431,8 +402,8 @@ function _reflectMapForm( o )
         delete map[ r ];
         debugger;
         reflector._inheritSingle({ visited : o.visited, ancestor : resolved, defaultDst : dst });
-        _.sure( !!resolved.reflectMap );
-        path.globMapExtend( map, resolved.reflectMap, dst );
+        _.sure( !!resolved.filePath );
+        path.globMapExtend( map, resolved.filePath, dst );
       }
 
     }
@@ -443,6 +414,107 @@ function _reflectMapForm( o )
 _reflectMapForm.defaults =
 {
   visited : null,
+}
+
+//
+
+function sureRelativeOrGlobal( o )
+{
+  let reflector = this;
+
+  o = _.routineOptions( sureRelativeOrGlobal, arguments );
+  _.assert( reflector.srcFilter instanceof _.FileRecordFilter );
+  _.assert( reflector.dstFilter instanceof _.FileRecordFilter );
+  _.assert( reflector.srcFilter.inFilePath === reflector.filePath );
+
+  if( !reflector.srcFilter.sureRelativeOrGlobal( o ) )
+  return false;
+
+  if( !reflector.dstFilter.sureRelativeOrGlobal( o ) )
+  return false;
+
+  return true;
+
+  // _.assert( reflector.filePath === null || _.mapIs( reflector.filePath ), 'not impelemented' );
+  //
+  // if( o.filePath && reflector.filePath )
+  // for( let src in reflector.filePath )
+  // {
+  //   let dst = reflector.filePath[ src ];
+  //
+  //   _.assert
+  //   (
+  //     _.all( src, ( p ) => path.isRelative( p ) || path.isGlobal( p ) ),
+  //     () => 'Expects relative or global path, but ' + reflector.nickName + ' has ' + src
+  //   );
+  //
+  //   _.assert
+  //   (
+  //     // _.boolIs( dst ) || path.s.allAreRelative( dst ),
+  //     _.all( dst, ( p ) => _.boolIs( p ) || path.isRelative( p ) || path.isGlobal( p ) ),
+  //     () => 'Expects bool, relative or global path, but ' + reflector.nickName + ' has ' + dst
+  //   );
+  //
+  // }
+  //
+  // if( reflector.srcFilter )
+  // reflector.srcFilter.sureRelativeOrGlobal( o );
+  //
+  // if( reflector.dstFilter )
+  // reflector.dstFilter.sureRelativeOrGlobal( o );
+
+  return true;
+}
+
+sureRelativeOrGlobal.defaults =
+{
+  fixes : 0,
+  basePath : 1,
+  stemPath : 1,
+  filePath : 1,
+}
+
+//
+
+function isRelativeOrGlobal( o )
+{
+  let reflector = this;
+
+  o = _.routineOptions( isRelativeOrGlobal, arguments );
+
+  // _.assert( reflector.filePath === null || _.mapIs( reflector.filePath ), 'not impelemented' );
+  _.assert( reflector.srcFilter instanceof _.FileRecordFilter );
+  _.assert( reflector.dstFilter instanceof _.FileRecordFilter );
+  _.assert( reflector.srcFilter.inFilePath === reflector.filePath );
+
+  // if( reflector.filePath )
+  // reflector.srcFilter.inFilePath = reflector.filePath;
+
+  if( !reflector.srcFilter.isRelativeOrGlobal( o ) )
+  return false;
+
+  if( !reflector.dstFilter.isRelativeOrGlobal( o ) )
+  return false;
+
+  return true;
+}
+
+isRelativeOrGlobal.defaults =
+{
+  fixes : 0,
+  basePath : 1,
+  stemPath : 1,
+  filePath : 1,
+}
+
+//
+
+function relative()
+{
+  let reflector = this;
+
+  xxx
+
 }
 
 //
@@ -458,7 +530,7 @@ function optionsReflectExport( o )
 
   o = _.routineOptions( optionsReflectExport, arguments );
 
-  result.reflectMap = reflector.reflectMap;
+  result.reflectMap = reflector.filePath;
   result.recursive = reflector.recursive === null ? true : !!reflector.recursive;
 
   /* */
@@ -541,6 +613,28 @@ dataExport.defaults =
   copyingAggregates : 0,
 }
 
+//
+
+function filePathGet()
+{
+  let reflector = this;
+  if( !reflector.srcFilter )
+  return null;
+  return reflector.srcFilter.inFilePath;
+}
+
+//
+
+function filePathSet( src )
+{
+  let reflector = this;
+  if( !reflector.srcFilter && src === null )
+  return src;
+  _.assert( _.objectIs( reflector.srcFilter ), 'Reflector should have srcFilter to set filePath' );
+  reflector.srcFilter.inFilePath = _.entityShallowClone( src );
+  return reflector.srcFilter.inFilePath;
+}
+
 // --
 // relations
 // --
@@ -550,7 +644,7 @@ let Composes =
 
   description : null,
   recursive : null,
-  reflectMap : null,
+  filePath : null,
   srcFilter : null,
   dstFilter : null,
   criterion : null,
@@ -581,16 +675,16 @@ let Statics =
 let Forbids =
 {
   inherited : 'inherited',
-  filePath : 'filePath',
   filter : 'filter',
   parameter : 'parameter',
+  reflectMap : 'reflectMap',
 }
 
 let Accessors =
 {
+  filePath : { setter : filePathSet, getter : filePathGet },
   srcFilter : { setter : _.accessor.setter.copyable({ name : 'srcFilter', maker : _.routineJoin( _.FileRecordFilter, _.FileRecordFilter.Clone ) }) },
   dstFilter : { setter : _.accessor.setter.copyable({ name : 'dstFilter', maker : _.routineJoin( _.FileRecordFilter, _.FileRecordFilter.Clone ) }) },
-  // inherit : { setter : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
 }
 
 _.assert( _.routineIs( _.FileRecordFilter ) );
@@ -604,31 +698,39 @@ let Proto =
 
   // inter
 
-  form1 : form1,
-  form2 : form2,
+  init,
+  form1,
+  form2,
 
-  _inheritMultiple : _inheritMultiple,
-  _inheritSingle : _inheritSingle,
+  _inheritMultiple,
+  _inheritSingle,
 
-  form3 : form3,
+  form3,
 
-  _reflectMapForm : _reflectMapForm,
+  _reflectMapForm,
 
-  optionsReflectExport : optionsReflectExport,
+  sureRelativeOrGlobal,
+  isRelativeOrGlobal,
+  relative,
 
-  infoExport : infoExport,
-  dataExport : dataExport,
-  // resolvedExport : resolvedExport,
+  optionsReflectExport,
+  infoExport,
+  dataExport,
+
+  // accessor
+
+  filePathGet,
+  filePathSet,
 
   // relation
 
-  Composes : Composes,
-  Aggregates : Aggregates,
-  Associates : Associates,
-  Restricts : Restricts,
-  Statics : Statics,
-  Forbids : Forbids,
-  Accessors : Accessors,
+  Composes,
+  Aggregates,
+  Associates,
+  Restricts,
+  Statics,
+  Forbids,
+  Accessors,
 
 }
 

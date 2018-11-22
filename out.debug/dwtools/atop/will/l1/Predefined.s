@@ -66,29 +66,31 @@ function stepRoutineReflect( frame )
 
   // debugger;
 
-  opts.reflector = module.resolve
+  let reflector = module.resolve
   ({
     query : opts.reflector,
     defaultPool : 'reflector',
     current : step,
   });
 
-  opts.reflector.form();
+  delete opts.reflector ;
 
-  _.sure( opts.reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strTypeOf( opts.reflector ) )
-  _.assert( opts.reflector.formed === 3, () => opts.reflector.nickName + ' is not formed' );
+  reflector.form();
+
+  _.sure( reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strTypeOf( reflector ) )
+  _.assert( reflector.formed === 3, () => reflector.nickName + ' is not formed' );
 
   // debugger;
-  opts.reflector = opts.reflector.optionsReflectExport();
+  reflector = reflector.optionsReflectExport();
   // debugger;
 
-  _.mapSupplement( opts, opts.reflector )
-  delete opts.reflector;
+  _.mapSupplement( opts, reflector )
+  // delete opts.reflector;
 
   if( will.verbosity >= 4 )
   {
     logger.log( ' + Files reflecting...' );
-    logger.log( _.toStr( opts.reflectMap, { wrap : 0, multiline : 1, levels : 3 } ) );
+    // logger.log( _.toStr( opts.reflectMap, { wrap : 0, multiline : 1, levels : 3 } ) );
   }
 
   if( opts.verbosity === null )

@@ -1,9 +1,9 @@
 
 about :
 
-  name : willbe
-  description : 'Tool to manage modules of modular systems'
-  version : 0.3.73
+  name : "willbe"
+  description : "Tool to manage modules of modular systems"
+  version : "0.3.75"
   enabled : 1
   interpreters :
   - nodejs >= 6.0.0
