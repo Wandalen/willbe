@@ -27,41 +27,29 @@ Self.shortName = 'Module';
 function finit()
 {
   let module = this;
+  let will = module.will;
 
+  debugger;
   if( module.formed )
   module.unform();
-
+  debugger;
   module.about.finit();
+  debugger;
   module.execution.finit();
 
-  for( let i in module.exportedMap )
-  module.exportedMap[ i ].finit();
-
-  for( let i in module.buildMap )
-  module.buildMap[ i ].finit();
-
-  for( let i in module.stepMap )
-  module.stepMap[ i ].finit();
-
-  for( let i in module.reflectorMap )
-  module.reflectorMap[ i ].finit();
-
-  for( let i in module.pathObjMap )
-  module.pathObjMap[ i ].finit();
-
-  for( let i in module.submoduleMap )
-  module.submoduleMap[ i ].finit();
-
-  for( let i = 0 ; i < module.willFileArray.length ; i++ )
-  module.willFileArray[ i ].finit();
-
   _.assert( _.instanceIsFinited( module.about ) );
-  if( module.execution )
   _.assert( _.instanceIsFinited( module.execution ) );
-  if( module.export )
-  _.assert( _.instanceIsFinited( module.export ) );
+
+  _.assert( Object.keys( module.exportedMap ).length === 0 );
+  _.assert( Object.keys( module.buildMap ).length === 0 );
+  _.assert( Object.keys( module.stepMap ).length === 0 );
+  _.assert( Object.keys( module.reflectorMap ).length === 0 );
+  _.assert( Object.keys( module.pathObjMap ).length === 0 );
+  _.assert( Object.keys( module.submoduleMap ).length === 0 );
 
   _.assert( module.willFileArray.length === 0 );
+  _.assert( Object.keys( module.willFileWithRoleMap ).length === 0 );
+  _.assert( will.moduleMap[ module.dirPath ] === undefined );
 
   return _.Copyable.prototype.finit.apply( module, arguments );
 }
@@ -76,6 +64,11 @@ function init( o )
 
   _.instanceInit( module );
   Object.preventExtensions( module );
+
+  module.Counter += 1;
+  module.id = module.Counter;
+
+  // debugger;
 
   if( o )
   module.copy( o );
@@ -114,21 +107,44 @@ function unform()
   _.assert( arguments.length === 0 );
   _.assert( !!module.formed );
 
+  if( module.associatedSubmodule )
+  {
+    _.assert( module.associatedSubmodule.loadedModule === module );
+    module.associatedSubmodule.loadedModule = null;
+    module.associatedSubmodule.finit();
+  }
+
   /* begin */
 
-  for( let k in module.submoduleMap )
-  module.submoduleMap[ k ].finit()
-  for( let k in module.reflectorMap )
-  module.reflectorMap[ k ].finit()
-  for( let k in module.stepMap )
-  module.stepMap[ k ].finit()
-  for( let k in module.buildMap )
-  module.buildMap[ k ].finit()
+  for( let i in module.exportedMap )
+  module.exportedMap[ i ].finit();
+  for( let i in module.buildMap )
+  module.buildMap[ i ].finit();
+  for( let i in module.stepMap )
+  module.stepMap[ i ].finit();
+  for( let i in module.reflectorMap )
+  module.reflectorMap[ i ].finit();
+  for( let i in module.pathObjMap )
+  module.pathObjMap[ i ].finit();
+  for( let i in module.submoduleMap )
+  module.submoduleMap[ i ].finit();
 
-  _.assert( Object.keys( module.submoduleMap ).length === 0 );
-  _.assert( Object.keys( module.reflectorMap ).length === 0 );
-  _.assert( Object.keys( module.stepMap ).length === 0 );
+  // for( let k in module.submoduleMap )
+  // module.submoduleMap[ k ].finit()
+  // for( let k in module.reflectorMap )
+  // module.reflectorMap[ k ].finit()
+  // for( let k in module.stepMap )
+  // module.stepMap[ k ].finit()
+  // for( let k in module.buildMap )
+  // module.buildMap[ k ].finit()
+  // debugger;
+
+  _.assert( Object.keys( module.exportedMap ).length === 0 );
   _.assert( Object.keys( module.buildMap ).length === 0 );
+  _.assert( Object.keys( module.stepMap ).length === 0 );
+  _.assert( Object.keys( module.reflectorMap ).length === 0 );
+  _.assert( Object.keys( module.pathObjMap ).length === 0 );
+  _.assert( Object.keys( module.submoduleMap ).length === 0 );
 
   for( let i = module.willFileArray.length-1 ; i >= 0 ; i-- )
   {
@@ -142,10 +158,13 @@ function unform()
 
   _.assert( module.willFileArray.length === 0 );
   _.assert( Object.keys( module.willFileWithRoleMap ).length === 0 );
+  debugger;
   _.assert( will.moduleMap[ module.dirPath ] === module );
-
-  _.arrayRemoveElementOnceStrictly( will.moduleArray, module );
+  _.assert( will.moduleMap[ module.remotePath ] === module || will.moduleMap[ module.remotePath ] === undefined );
   delete will.moduleMap[ module.dirPath ];
+  delete will.moduleMap[ module.remotePath ];
+  _.assert( will.moduleMap[ module.dirPath ] === undefined );
+  _.arrayRemoveElementOnceStrictly( will.moduleArray, module );
 
   /* end */
 
@@ -166,6 +185,14 @@ function form()
 
   con.ifNoErrorThen( () => module.form1() );
   con.ifNoErrorThen( () => module.form2() );
+  con.then( ( err, arg ) =>
+  {
+    if( err )
+    module.formReady.error( err );
+    if( err )
+    throw err;
+    return arg;
+  });
 
   return module;
 }
@@ -1337,6 +1364,9 @@ function resourcesForm()
 
     return con;
   })
+  // .doThen( module.ready ) // make possible !!!
+  // .doThen( () => _.timeOut( 1, () => module.ready.give( err, arg ) ) )
+  // .timeOut( () => module.ready )
   .doThen( ( err, arg ) =>
   {
     _.timeOut( 1, () => module.ready.give( err, arg ) );
@@ -2426,10 +2456,12 @@ let Associates =
 {
   will : null,
   supermodule : null,
+  associatedSubmodule : null,
 }
 
 let Restricts =
 {
+  id : null,
   errors : _.define.own([]),
   stager : null,
 
@@ -2449,6 +2481,7 @@ let Restricts =
 let Statics =
 {
   DirPathFromWillFilePath : DirPathFromWillFilePath,
+  Counter : 0,
 }
 
 let Forbids =
@@ -2456,6 +2489,7 @@ let Forbids =
   name : 'name',
   exportMap : 'exportMap',
   exported : 'exported',
+  export : 'export',
   downloaded : 'downloaded',
 }
 

@@ -218,11 +218,11 @@ function _inheritSingle( o )
   delete extend.criterion;
   delete extend.filePath;
 
-  if( reflector2.filePath )
-  {
-    _.assert( reflector.filePath === null || __.mapIs( reflector.filePath ), 'not tested' );
-    reflector.filePath = path.globMapExtend( reflector.filePath, reflector2.filePath, o.defaultDst );
-  }
+  // if( reflector2.filePath )
+  // {
+  //   _.assert( reflector.filePath === null || __.mapIs( reflector.filePath ), 'not tested' );
+  //   reflector.filePath = path.globMapExtend( reflector.filePath, reflector2.filePath, o.defaultDst );
+  // }
 
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
@@ -230,13 +230,15 @@ function _inheritSingle( o )
   // if( reflector.nickName === 'reflector::reflect.submodules' )
   // debugger;
 
-  if( reflector2.srcFilter )
-  {
-    if( reflector.srcFilter )
-    reflector.srcFilter.and( reflector2.srcFilter ).pathsInherit( reflector2.srcFilter );
-    else
-    reflector.srcFilter = reflector2.srcFilter.clone();
-  }
+  let srcFilter2 = reflector2.srcFilter;
+  srcFilter2 = fileProvider.recordFilter( srcFilter2 );
+  if( reflector2.filePath )
+  srcFilter2.inFilePath = reflector2.filePath;
+
+  // if( reflector.srcFilter )
+  reflector.srcFilter.and( reflector2.srcFilter ).pathsInherit( reflector2.srcFilter );
+  // else
+  // reflector.srcFilter = reflector2.srcFilter.clone();
 
   if( reflector2.dstFilter )
   {
@@ -245,8 +247,7 @@ function _inheritSingle( o )
     else
     reflector.dstFilter = reflector2.dstFilter.clone();
   }
-
-  // if( reflector.nickName === 'reflector::reflect.submodules' )
+   // if( reflector.nickName === 'reflector::reflect.submodules' )
   // debugger;
 
 }

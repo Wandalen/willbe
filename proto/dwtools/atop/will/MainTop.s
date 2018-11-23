@@ -57,6 +57,8 @@ function moduleOnReady( onReady )
   _.assert( arguments.length === 1 );
   _.assert( _.routineIs( onReady ) );
 
+  debugger;
+
   let module = will.currentModule;
   if( !module )
   {
@@ -68,25 +70,35 @@ function moduleOnReady( onReady )
 
   return module.ready.split().ifNoErrorThen( function( arg )
   {
+    debugger;
     let result = onReady( module );
     _.assert( result !== undefined );
     return result;
   })
-  .doThen( ( err, arg ) =>
+  .then( ( err, arg ) =>
   {
+    debugger;
     if( !will.topCommand )
     {
       _.diagnosticBeep();
-      module.finit();
       if( module === will.currentModule )
       will.currentModule = null;
+      module.finit();
     }
+    if( err )
+    throw err;
+    return arg;
+  })
+  .then( ( err, arg ) =>
+  {
+    debugger;
     if( err )
     {
       if( !will.topCommand )
       _.appExitCode( -1 );
       throw _.errLogOnce( err );
     }
+    debugger;
     return arg;
   });
 
@@ -674,19 +686,6 @@ function commandEach( e )
 
       return r;
     })
-    // .doThen( ( err, arg ) =>
-    // {
-    //   module.finit();
-    //   if( module === will.currentModule )
-    //   will.currentModule = null;
-    //   if( err )
-    //   {
-    //     if( will.topCommand === commandWith )
-    //     _.appExitCode( -1 );
-    //     throw _.errLogOnce( err );
-    //   }
-    //   return arg;
-    // });
 
   });
 

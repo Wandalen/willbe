@@ -34,6 +34,23 @@ function OptionsFrom( o )
 
 //
 
+function unform()
+{
+  let submodule = this;
+  let module = submodule.module;
+
+  if( submodule.loadedModule )
+  {
+    _.assert( submodule.loadedModule.associatedSubmodule === submodule )
+    submodule.loadedModule.associatedSubmodule = null;
+    submodule.loadedModule.finit();
+  }
+
+  return Parent.prototype.unform.call( submodule );
+}
+
+//
+
 function form3()
 {
   let submodule = this;
@@ -76,8 +93,8 @@ function _load()
 
   _.assert( arguments.length === 0 );
   _.assert( submodule.formed === 2 );
+  _.assert( submodule.loadedModule === null );
   _.assert( _.strIs( submodule.path ), 'not tested' );
-
   _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
 
   /* */
@@ -88,6 +105,7 @@ function _load()
     alias : submodule.name,
     dirPath : path.join( module.dirPath, submodule.path ),
     supermodule : module,
+    associatedSubmodule : submodule,
   }).form();
 
   submodule.loadedModule.willFilesFind({ isInFile : 0 });
@@ -133,55 +151,18 @@ function _load()
   return submodule.loadedModule.ready;
 }
 
-// //
 //
-// function downloadRequired()
-// {
-//   let submodule = this;
-//   let module = submodule.module;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//
-//   let fileProvider2 = fileProvider.providerForPath( module.dirPath );
-//   if( fileProvider2.limitedImplementation )
-//   return true;
-//
-//   return false;
-// }
-//
-// //
-//
-// function download()
-// {
-//   let submodule = this;
-//   let module = submodule.module;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   _.assert( module.formed === 0 );
-//   _.assert( _.strDefined( module.dirPath ) );
-//   _.assert( _.strDefined( module.alias ) );
-//   _.assert( !!module.supermodule );
-//
-//   module.remotePath = module.dirPath;
-//
-//   let fileProvider2 = fileProvider.providerForPath( module.dirPath );
-//   let submodulesDir = module.supermodule.submodulesCloneDirGet();
-//   let localPath = fileProvider2.pathIsolateGlobalAndLocal( module.remotePath )[ 1 ];
-//
-//   module.clonePath = path.resolve( submodulesDir, module.alias );
-//   module.dirPath = path.resolve( module.clonePath, localPath );
-//
-//   let o2 =
-//   {
-//     reflectMap : { [ module.remotePath ] : module.clonePath },
-//   }
-//
-//   return will.Predefined.filesReflect.call( fileProvider, o2 );
-// }
+
+function isDownloadedGet()
+{
+  let submodule = this;
+  let module = submodule.module;
+
+  if( !submodule.loadedModule )
+  return false;
+
+  return submodule.loadedModule.isDownloaded;
+}
 
 //
 
@@ -194,11 +175,13 @@ function infoExport()
   let path = fileProvider.path;
   let logger = will.logger;
   let result = Parent.prototype.infoExport.call( submodule );
+  let tab = '  ';
+
+  result += tab + 'isDownloaded : ' + _.toStr( submodule.isDownloaded ) + '\n';
 
   if( submodule.loadedModule )
   {
-    let module2 = submodule.loadedModule;
-    let tab = '  ';
+    let module2 = submodule.loadedModule
     result += tab + 'Exported builds : ' + _.toStr( _.mapKeys( module2.exportedMap ) );
   }
 
@@ -240,6 +223,11 @@ let Statics =
   PoolName : 'submodule',
 }
 
+let Accessors =
+{
+  isDownloaded : { getter : isDownloadedGet, readOnly : 1 },
+}
+
 let Forbids =
 {
 }
@@ -253,24 +241,25 @@ let Proto =
 
   // inter
 
-  OptionsFrom : OptionsFrom,
-  form3 : form3,
+  OptionsFrom,
+  unform,
+  form3,
 
-  _load : _load,
+  _load,
 
-  // downloadRequired : downloadRequired,
-  // download : download,
+  isDownloadedGet,
 
-  infoExport : infoExport,
+  infoExport,
 
   // relation
 
-  Composes : Composes,
-  Aggregates : Aggregates,
-  Associates : Associates,
-  Restricts : Restricts,
-  Statics : Statics,
-  Forbids : Forbids,
+  Composes,
+  Aggregates,
+  Associates,
+  Restricts,
+  Statics,
+  Accessors,
+  Forbids,
 
 }
 
