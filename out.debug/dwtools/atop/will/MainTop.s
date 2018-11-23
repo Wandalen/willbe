@@ -57,7 +57,7 @@ function moduleOnReady( onReady )
   _.assert( arguments.length === 1 );
   _.assert( _.routineIs( onReady ) );
 
-  debugger;
+  // debugger;
 
   let module = will.currentModule;
   if( !module )
@@ -70,14 +70,14 @@ function moduleOnReady( onReady )
 
   return module.ready.split().ifNoErrorThen( function( arg )
   {
-    debugger;
+    // debugger;
     let result = onReady( module );
     _.assert( result !== undefined );
     return result;
   })
   .then( ( err, arg ) =>
   {
-    debugger;
+    // debugger;
     if( !will.topCommand )
     {
       _.diagnosticBeep();
@@ -91,7 +91,7 @@ function moduleOnReady( onReady )
   })
   .then( ( err, arg ) =>
   {
-    debugger;
+    // debugger;
     if( err )
     {
       if( !will.topCommand )
