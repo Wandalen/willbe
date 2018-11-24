@@ -203,6 +203,13 @@ function _inheritSingle( o )
   _.assert( reflector2 instanceof reflector.constructor, () => 'Expects reflector, but got', _.strTypeOf( reflector2 ) );
   _.assert( !!reflector2.formed );
 
+  _.assert( reflector.srcFilter instanceof _.FileRecordFilter );
+  _.assert( reflector.dstFilter instanceof _.FileRecordFilter );
+  _.assert( reflector2.srcFilter instanceof _.FileRecordFilter );
+  _.assert( reflector2.dstFilter instanceof _.FileRecordFilter );
+  _.assert( _.entityIdentical( reflector.srcFilter.inFilePath, reflector.filePath ) );
+  _.assert( _.entityIdentical( reflector2.srcFilter.inFilePath, reflector2.filePath ) );
+
   // debugger;
 
   if( reflector2.formed < 2 )
@@ -230,24 +237,34 @@ function _inheritSingle( o )
   // if( reflector.nickName === 'reflector::reflect.submodules' )
   // debugger;
 
-  let srcFilter2 = reflector2.srcFilter;
-  srcFilter2 = fileProvider.recordFilter( srcFilter2 );
-  if( reflector2.filePath )
-  srcFilter2.inFilePath = reflector2.filePath;
+  // let srcFilter2 = reflector2.srcFilter;
+  // srcFilter2 = fileProvider.recordFilter( srcFilter2 );
+
+  // if( reflector2.filePath )
+  // srcFilter2.inFilePath = reflector2.filePath;
 
   // if( reflector.srcFilter )
+
   reflector.srcFilter.and( reflector2.srcFilter ).pathsInherit( reflector2.srcFilter );
+
   // else
   // reflector.srcFilter = reflector2.srcFilter.clone();
 
-  if( reflector2.dstFilter )
+  // if( reflector2.dstFilter )
+  // {
+  //   if( reflector.dstFilter )
+
+  if( _.mapIs( reflector.filePath ) )
   {
-    if( reflector.dstFilter )
-    reflector.dstFilter.and( reflector2.dstFilter ).pathsInherit( reflector2.dstFilter );
-    else
-    reflector.dstFilter = reflector2.dstFilter.clone();
+    reflector.dstFilter.inFilePath = _.mapVals( reflector.filePath );
   }
-   // if( reflector.nickName === 'reflector::reflect.submodules' )
+
+  reflector.dstFilter.and( reflector2.dstFilter ).pathsInherit( reflector2.dstFilter );
+
+  //   else
+  //   reflector.dstFilter = reflector2.dstFilter.clone();
+  // }
+  // if( reflector.nickName === 'reflector::reflect.submodules' )
   // debugger;
 
 }

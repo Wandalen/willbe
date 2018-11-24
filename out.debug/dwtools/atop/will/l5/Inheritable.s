@@ -289,8 +289,8 @@ function _inheritMultiple( o )
       current : inheritable,
       flattening : 1,
     });
-    if( inheritable.nickName === 'reflector::reflect.submodules' )
-    debugger;
+    // if( inheritable.nickName === 'reflector::reflect.submodules' )
+    // debugger;
 
     if( _.mapIs( ancestors ) )
     ancestors = _.mapVals( ancestors );

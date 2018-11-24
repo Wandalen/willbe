@@ -529,8 +529,8 @@ function clean()
   let logger = will.logger;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let filePaths = module.cleanWhat.apply( module, arguments );
   let time = _.timeNow();
+  let filePaths = module.cleanWhat.apply( module, arguments );
 
   for( let f = filePaths.length-1 ; f >= 0 ; f-- )
   {
