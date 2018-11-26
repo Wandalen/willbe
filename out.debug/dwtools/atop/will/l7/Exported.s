@@ -269,7 +269,8 @@ function proceed( frame )
   _.assert( exportedFilesReflector.srcFilter.prefixPath === module.inPath || exportedFilesReflector.srcFilter.prefixPath === null );
 
   exportedFilesReflector.srcFilter.basePath = exported.exportedDirPath.refName;
-  exportedFilesReflector.srcFilter.prefixPath = exported.exportedDirPath.refName;
+  // exportedFilesReflector.srcFilter.prefixPath = exported.exportedDirPath.refName;
+  exportedFilesReflector.srcFilter.prefixPath = '.';
 
   // exportedFilesReflector.dstFilter = exportedFilesReflector.dstFilter || {};
   _.assert( exportedFilesReflector.dstFilter.basePath === null );

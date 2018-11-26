@@ -1653,6 +1653,18 @@ function _nickNameGet()
   // return '→ ' + module.constructor.shortName + ' ' + _.strQuote( name ) + ' ←';
 }
 
+//
+
+function _absoluteNameGet()
+{
+  let module = this;
+  let supermodule = module.supermodule;
+  if( supermodule )
+  return supermodule.nickName + ' / ' + module.nickName;
+  else
+  return module.nickName;
+}
+
 // --
 // selector
 // --
@@ -1837,7 +1849,7 @@ function _strSplit( o )
 
   _.assertRoutineOptions( _strSplit, arguments );
   _.assert( !_.strHas( o.query, '/' ) );
-  _.sure( _.strIs( o.query ), 'Expects string, but got', _.strTypeOf( o.query ) );
+  _.sure( _.strIs( o.query ), 'Expects string, but got', _.strType( o.query ) );
 
   let splits = module.strSplitShort( o.query );
 
@@ -2497,7 +2509,8 @@ let Accessors =
 {
   about : { setter : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.Will.ParagraphAbout }) },
   execution : { setter : _.accessor.setter.friend({ name : 'execution', friendName : 'module', maker : _.Will.ParagraphExecution }) },
-  nickName : { getter : _nickNameGet, combining : 'rewrite' },
+  nickName : { getter : _nickNameGet, combining : 'rewrite', readOnly : 1 },
+  absoluteName : { getter : _absoluteNameGet, readOnly : 1 },
   inPath : { getter : inPathGet, readOnly : 1 },
   outPath : { getter : outPathGet, readOnly : 1 },
 }

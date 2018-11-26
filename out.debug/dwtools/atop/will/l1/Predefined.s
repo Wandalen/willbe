@@ -77,7 +77,7 @@ function stepRoutineReflect( frame )
 
   reflector.form();
 
-  _.sure( reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strTypeOf( reflector ) )
+  _.sure( reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strType( reflector ) )
   _.assert( reflector.formed === 3, () => reflector.nickName + ' is not formed' );
 
   // debugger;
@@ -141,7 +141,7 @@ function stepRoutineJs( frame )
     opts.js = step.inPathResolve({ query : opts.js, prefixlessAction : 'resolved' });
     opts.routine = require( fileProvider.providersWithProtocolMap.hd.path.nativize( opts.js ) );
     if( !_.routineIs( opts.routine ) )
-    throw _.err( 'JS file should return function, but got', _.strTypeOf( opts.routine ) );
+    throw _.err( 'JS file should return function, but got', _.strType( opts.routine ) );
   }
   catch( err )
   {

@@ -358,7 +358,7 @@ function _inheritSingle( o )
   // logger.log( '_inheritSingle', inheritable.name, '<-', inheritable2.name );
 
   _.assert( !!inheritable2.formed );
-  _.assert( o.ancestor instanceof inheritable.constructor, () => 'Expects ' + inheritable.constructor.shortName + ' but got ' + _.strTypeOf( o.ancestor ) );
+  _.assert( o.ancestor instanceof inheritable.constructor, () => 'Expects ' + inheritable.constructor.shortName + ' but got ' + _.strType( o.ancestor ) );
   _.assert( arguments.length === 1 );
   _.assert( inheritable.formed === 1 );
   _.assert( !!inheritable2.formed );
@@ -462,7 +462,7 @@ function criterionValidate()
   for( let c in inheritable.criterion )
   {
     let crit = inheritable.criterion[ c ];
-    _.sure( _.primitiveIs( crit ), () => 'Criterion ' + c + ' of ' + inheritable.nickName + ' should be primitive, but is ' + _.strTypeOf( crit ) );
+    _.sure( _.primitiveIs( crit ), () => 'Criterion ' + c + ' of ' + inheritable.nickName + ' should be primitive, but is ' + _.strType( crit ) );
   }
 
 }
@@ -578,7 +578,7 @@ function _nickNameGet()
 {
   let inheritable = this;
   return inheritable.refName;
-  return '→ ' + inheritable.constructor.shortName + ' ' + _.strQuote( inheritable.name ) + ' ←';
+  // return '→ ' + inheritable.constructor.shortName + ' ' + _.strQuote( inheritable.name ) + ' ←';
 }
 
 //
@@ -587,6 +587,15 @@ function _refNameGet()
 {
   let inheritable = this;
   return inheritable.PoolName + '::' + inheritable.name;
+}
+
+//
+
+function _absoluteNameGet()
+{
+  let inheritable = this;
+  let module = inheritable.module;
+  return module.absoluteName + ' / ' + inheritable.nickName;
 }
 
 // --
@@ -706,6 +715,7 @@ let Accessors =
 {
   nickName : { getter : _nickNameGet, readOnly : 1 },
   refName : { getter : _refNameGet, readOnly : 1 },
+  absoluteName : { getter : _absoluteNameGet, readOnly : 1 },
   inherit : { setter : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
 }
 
@@ -752,6 +762,7 @@ let Proto =
 
   _nickNameGet,
   _refNameGet,
+  _absoluteNameGet,
 
   // resolver
 

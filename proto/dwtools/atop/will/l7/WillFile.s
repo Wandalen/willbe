@@ -184,7 +184,7 @@ function open()
   /* form */
 
   if( willf.data.format !== undefined && willf.data.format !== willf.FormatVersion )
-  throw _.err( 'Does not support format', willf.data.format, 'supports', willf.FormatVersion );
+  throw _.err( 'Does not support format', willf.data.format + ',', 'supports only', willf.FormatVersion );
 
   if( willf.data.path && willf.data.path.baseDir )
   {

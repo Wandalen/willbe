@@ -166,7 +166,7 @@ function form3()
   //       step.js = fileProvider.providersWithProtocolMap.hd.path.nativize( step.inPathResolve( step.js ) );
   //       step.stepRoutine = require( step.js );
   //       if( !_.routineIs( step.stepRoutine ) )
-  //       throw _.err( 'JS file should return function, but got', _.strTypeOf( step.stepRoutine ) );
+  //       throw _.err( 'JS file should return function, but got', _.strType( step.stepRoutine ) );
   //     }
   //     catch( err )
   //     {
