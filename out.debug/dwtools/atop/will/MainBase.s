@@ -251,7 +251,7 @@ let ResourceKinds = [ 'submodule', 'step', 'path', 'reflector', 'build', 'about'
 
 let Composes =
 {
-  verbosity : 5,
+  verbosity : 3,
   verboseStaging : 0,
 }
 

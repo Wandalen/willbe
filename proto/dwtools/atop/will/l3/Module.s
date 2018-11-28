@@ -279,6 +279,18 @@ function predefinedForm()
 
   step
   ({
+    name : 'graph.begin',
+    stepRoutine : Predefined.stepRoutineGraphBegin,
+  })
+
+  step
+  ({
+    name : 'graph.end',
+    stepRoutine : Predefined.stepRoutineGraphEnd,
+  })
+
+  step
+  ({
     name : 'predefined.js',
     stepRoutine : Predefined.stepRoutineJs,
   })

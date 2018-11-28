@@ -98,7 +98,7 @@ function stepRoutineReflect( frame )
 
   // opts.writing = 0;
 
-  debugger;
+  // debugger;
   let result = will.Predefined.filesReflect.call( fileProvider, opts );
 
   if( will.verbosity >= 5 )
@@ -113,6 +113,56 @@ stepRoutineReflect.stepOptions =
 {
   reflector : null,
   verbosity : null,
+}
+
+//
+
+function stepRoutineGraphBegin( frame )
+{
+  let step = this;
+  let module = frame.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = frame.opts;
+
+  _.assert( arguments.length === 1 );
+
+  /* */
+
+  logger.log( 'stepRoutineGraphBegin' );
+
+  return null;
+}
+
+stepRoutineGraphBegin.stepOptions =
+{
+}
+
+//
+
+function stepRoutineGraphEnd( frame )
+{
+  let step = this;
+  let module = frame.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = frame.opts;
+
+  _.assert( arguments.length === 1 );
+
+  /* */
+
+  logger.log( 'stepRoutineGraphEnd' );
+
+  return null;
+}
+
+stepRoutineGraphEnd.stepOptions =
+{
 }
 
 //
@@ -186,9 +236,6 @@ function stepRoutineShell( frame )
   let opts = frame.opts;
 
   _.assert( arguments.length === 1 );
-
-  // _.sure( !!opts.shell ^ !!opts.js ^ _.routineIs( step.stepRoutine ), 'Step should have only {-shell-} or {-js-} or {-stepRoutine-} fields' );
-  // _.sure( opts.js === null || _.strIs( opts.js ) );
   _.sure( opts.shell === null || _.strIs( opts.shell ) || _.arrayIs( opts.shell ) );
 
   /* */
@@ -198,9 +245,6 @@ function stepRoutineShell( frame )
   _.sure( opts.currentPath === null || _.strIs( opts.currentPath ), 'Current path should be string if defined' );
 
   /* */
-
-  // if( _.arrayIs( opts.shell ) )
-  // opts.shell = opts.shell.join( '\n' );
 
   return _.shell
   ({
@@ -339,6 +383,8 @@ let Extend =
 
   stepRoutineDelete,
   stepRoutineReflect,
+  stepRoutineGraphBegin,
+  stepRoutineGraphEnd,
   stepRoutineJs,
   stepRoutineShell,
 

@@ -214,20 +214,20 @@ function _inheritSingle( o )
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
 
-  if( reflector.absoluteName === 'Module::encore.wtools.base / reflector::reflect.submodules' ) debugger;
+  // if( reflector.absoluteName === 'Module::encore.wtools.base / reflector::reflect.submodules' )
+  // debugger;
 
   reflector.srcFilter.and( reflector2.srcFilter ).pathsInherit( reflector2.srcFilter );
 
   if( _.mapIs( reflector.filePath ) )
   {
-    reflector.dstFilter.inFilePath = _.longRemoveDuplicates( _.mapVals( reflector.filePath ) ); // xxx
-
-    reflector.dstFilter.inFilePath = reflector.dstFilter.inFilePath.filter( ( e ) => e === false ? false : true )
-
-    // if( _.mapVals( reflector.filePath ).length > 1 )
-    // debugger;
-
+    // reflector.dstFilter.inFilePath = _.longRemoveDuplicates( _.mapVals( reflector.filePath ) );
+    // reflector.dstFilter.inFilePath = reflector.dstFilter.inFilePath.filter( ( e ) => e === false ? false : true )
   }
+
+  // logger.log( '_inheritSingle', reflector.nickName, '<-', reflector2.nickName );
+  if( reflector.nickName === 'reflector::reflect.submodules' )
+  debugger;
 
   reflector.dstFilter.and( reflector2.dstFilter ).pathsInherit( reflector2.dstFilter );
 

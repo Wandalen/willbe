@@ -281,8 +281,8 @@ reflector:
       ./dwtools/atop/will/l7/Submodule.s: true
       ./dwtools/atop/will/l7/WillFile.s: true
     srcFilter:
-      basePath: ./proto
-      prefixPath: .
+      basePath: .
+      prefixPath: proto
     dstFilter:
       basePath: .
       prefixPath: .
