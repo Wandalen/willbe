@@ -14,7 +14,7 @@
     "will": "proto/dwtools/atop/will/Exec2"
   },
   "scripts": {
-    "test": "wtest staging",
+    "test": "wtest proto",
     "docgen": "wdocgen proto",
     "will": "node proto/dwtools/atop/will/Exec2"
   },
