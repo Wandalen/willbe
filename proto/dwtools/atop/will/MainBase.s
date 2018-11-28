@@ -133,7 +133,7 @@ function formAssociates()
   }
 
   if( !will.filesGraph )
-  will.filesGraph = _.FilesGraph({ fileProvider : will.fileProvider });
+  will.filesGraph = _.FilesGraphOld({ fileProvider : will.fileProvider });
 
   let logger2 = new _.Logger({ output : logger, name : 'will.providers' });
 
