@@ -96,6 +96,7 @@ function stepRoutineReflect( frame )
   if( opts.verbosity === null )
   opts.verbosity = _.numberClamp( will.verbosity - 2, 0, 9 );
 
+
   // opts.writing = 0;
 
   // debugger;
