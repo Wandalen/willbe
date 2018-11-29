@@ -362,6 +362,10 @@ function predefinedForm()
         excludeAny : [ /\.release($|\.|\/)/i ],
       }
     },
+    criterion :
+    {
+      debug : 1,
+    },
   })
 
   reflector
@@ -373,6 +377,10 @@ function predefinedForm()
       {
         excludeAny : [ /\.debug($|\.|\/)/i, /\.test($|\.|\/)/i, /\.experiment($|\.|\/)/i ],
       }
+    },
+    criterion :
+    {
+      debug : 0,
     },
   })
 
@@ -414,7 +422,10 @@ function predefinedForm()
     }
 
     _.assert( arguments.length === 1 );
-    _.mapExtend( o, defaults )
+    _.mapComplement( o, defaults );
+    _.mapComplement( o.criterion, defaults.criterion );
+
+    _.assert( o.criterion !== defaults.criterion );
 
     return new will.Step( o ).form1();
   }
@@ -431,7 +442,10 @@ function predefinedForm()
     }
 
     _.assert( arguments.length === 1 );
-    _.mapExtend( o, defaults )
+    _.mapComplement( o, defaults );
+    _.mapComplement( o.criterion, defaults.criterion );
+
+    _.assert( o.criterion !== defaults.criterion );
 
     return new will.Reflector( o ).form1();
   }
