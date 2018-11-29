@@ -85,6 +85,11 @@ path:
       - ./dwtools/atop/will.test/modules/single/.im.will.yml
       - ./dwtools/atop/will.test/modules/single/proto
       - ./dwtools/atop/will.test/modules/single/proto/Single.s
+      - ./dwtools/atop/will.test/modules/submodules
+      - ./dwtools/atop/will.test/modules/submodules/.ex.will.yml
+      - ./dwtools/atop/will.test/modules/submodules/.im.will.yml
+      - ./dwtools/atop/will.test/modules/submodules/proto
+      - ./dwtools/atop/will.test/modules/submodules/proto/WithSubmodules.s
     criterion:
       default: 1
       debug: 1
@@ -119,6 +124,9 @@ path:
       - ./dwtools/atop/will.test/modules/single/.ex.will.yml
       - ./dwtools/atop/will.test/modules/single/.im.will.yml
       - ./dwtools/atop/will.test/modules/single/proto/Single.s
+      - ./dwtools/atop/will.test/modules/submodules/.ex.will.yml
+      - ./dwtools/atop/will.test/modules/submodules/.im.will.yml
+      - ./dwtools/atop/will.test/modules/submodules/proto/WithSubmodules.s
     criterion:
       default: 1
       debug: 1
@@ -232,6 +240,9 @@ reflector:
       ./dwtools/atop/will.test/modules/single/.ex.will.yml: true
       ./dwtools/atop/will.test/modules/single/.im.will.yml: true
       ./dwtools/atop/will.test/modules/single/proto/Single.s: true
+      ./dwtools/atop/will.test/modules/submodules/.ex.will.yml: true
+      ./dwtools/atop/will.test/modules/submodules/.im.will.yml: true
+      ./dwtools/atop/will.test/modules/submodules/proto/WithSubmodules.s: true
     srcFilter:
       basePath: .
       prefixPath: proto
@@ -378,6 +389,9 @@ exported:
         - ./dwtools/atop/will.test/modules/single/.ex.will.yml
         - ./dwtools/atop/will.test/modules/single/.im.will.yml
         - ./dwtools/atop/will.test/modules/single/proto/Single.s
+        - ./dwtools/atop/will.test/modules/submodules/.ex.will.yml
+        - ./dwtools/atop/will.test/modules/submodules/.im.will.yml
+        - ./dwtools/atop/will.test/modules/submodules/proto/WithSubmodules.s
       criterion:
         default: 1
         debug: 1
