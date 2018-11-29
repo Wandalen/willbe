@@ -350,7 +350,7 @@ function predefinedForm()
         ],
       }
     },
-  })
+  });
 
   reflector
   ({
@@ -366,7 +366,7 @@ function predefinedForm()
     {
       debug : 1,
     },
-  })
+  });
 
   reflector
   ({
@@ -382,7 +382,7 @@ function predefinedForm()
     {
       debug : 0,
     },
-  })
+  });
 
 /*
   .predefined.common :
@@ -421,11 +421,13 @@ function predefinedForm()
       }
     }
 
-    _.assert( arguments.length === 1 );
-    _.mapComplement( o, defaults );
-    _.mapComplement( o.criterion, defaults.criterion );
+    o.criterion = o.criterion || Object.create( null );
+
+    _.mapSupplement( o, defaults );
+    _.mapSupplement( o.criterion, defaults.criterion );
 
     _.assert( o.criterion !== defaults.criterion );
+    _.assert( arguments.length === 1 );
 
     return new will.Step( o ).form1();
   }
@@ -441,11 +443,13 @@ function predefinedForm()
       }
     }
 
-    _.assert( arguments.length === 1 );
-    _.mapComplement( o, defaults );
-    _.mapComplement( o.criterion, defaults.criterion );
+    o.criterion = o.criterion || Object.create( null );
+
+    _.mapSupplement( o, defaults );
+    _.mapSupplement( o.criterion, defaults.criterion );
 
     _.assert( o.criterion !== defaults.criterion );
+    _.assert( arguments.length === 1 );
 
     return new will.Reflector( o ).form1();
   }
