@@ -941,7 +941,7 @@ function _willFilesOpen()
 // submodule
 // --
 
-function submodulesAreDownloaded()
+function submodulesAllAreDownloaded()
 {
   let module = this;
   let will = module.will;
@@ -956,6 +956,29 @@ function submodulesAreDownloaded()
     if( !submodule )
     return false;
     if( !submodule.isDownloaded )
+    return false;
+  }
+
+  return true;
+}
+
+//
+
+function submodulesNoneHasError()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( !module.supermodule );
+
+  for( let n in module.submoduleMap )
+  {
+    let submodule = module.submoduleMap[ n ].loadedModule;
+    if( !submodule )
+    continue;
+    if( submodule.errors.length )
     return false;
   }
 
@@ -1125,15 +1148,11 @@ function remoteIsDownloaded()
   let fileProvider2 = fileProvider.providerForPath( module.remotePath );
   _.assert( !!fileProvider2.limitedImplementation );
 
-  // let result = fileProvider.resolvedIsDir( module.clonePath ) && fileProvider.dirRead( module.clonePath ).length > 0
-
   let result = fileProvider2.isDownloaded
   ({
     remotePath : module.remotePath,
     localPath : module.clonePath,
   });
-
-  // return end( result );
 
   if( !result )
   return end( result );
@@ -1151,7 +1170,6 @@ function remoteIsDownloaded()
 
   function end( result )
   {
-    // _.assert( _.boolIs( result ) );
     module.isDownloaded = !!result;
     return result;
   }
@@ -1355,7 +1373,6 @@ function remoteUpgrade()
 // resource
 // --
 
-
 function resourcesForm()
 {
   let module = this;
@@ -1372,8 +1389,11 @@ function resourcesForm()
   {
     let con = new _.Consequence().give( null );
 
+    // if( !module.supermodule )
     // debugger;
-    if( !module.supermodule && module.submodulesAreDownloaded() )
+
+    if( !module.supermodule )
+    if( module.submodulesAllAreDownloaded() && module.submodulesNoneHasError() )
     {
 
       con.ifNoErrorThen( () => module._resourcesForm() );
@@ -1387,7 +1407,6 @@ function resourcesForm()
     }
     else
     {
-      if( !module.supermodule )
       if( will.verbosity === 2 )
       logger.error( ' ! One or more submodules of ' + module.nickName + ' were not downloaded!'  );
     }
@@ -1405,7 +1424,6 @@ function resourcesForm()
     {
       if( will.verbosity && will.verboseStaging )
       console.log( ' s', module.nickName, 'resourcesFormed', 'failed' );
-      // debugger;
       module.resourcesFormReady.error( err );
       throw err;
     }
@@ -1679,7 +1697,8 @@ function _nickNameGet()
   name = module.about.name;
   if( !name )
   name = module.dirPath;
-  return module.constructor.shortName + '::' + name;
+  return 'module' + '::' + name;
+  // return module.constructor.shortName + '::' + name;
   // return '→ ' + module.constructor.shortName + ' ' + _.strQuote( name ) + ' ←';
 }
 
@@ -2585,7 +2604,9 @@ let Proto =
 
   submodulesCloneDirGet,
 
-  submodulesAreDownloaded,
+  submodulesAllAreDownloaded,
+  submodulesNoneHasError,
+
   _submodulesDownload,
   submodulesDownload,
   submodulesUpgrade,

@@ -125,11 +125,8 @@ function _load()
     {
       if( will.verbosity >= 3 )
       logger.error( ' ! Fail to open ' + submodule.nickName + '' );
-      // debugger;
-      // logger.log( 'xxx1' );
       if( will.verbosity >= 5 || !submodule.loadedModule || submodule.loadedModule.isOpened() )
       {
-        debugger;
         if( will.verbosity < 5 )
         _.errLogOnce( _.errBriefly( err ) );
         else
@@ -137,11 +134,8 @@ function _load()
       }
       else
       {
-        // debugger;
         _.errAttend( err );
       }
-      // logger.log( 'xxx2' );
-      // _.assert( !submodule.loadedModule.isOpened() );
     }
     return arg || null;
   });
