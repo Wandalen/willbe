@@ -373,6 +373,11 @@ stepRoutineExport.stepOptions =
   tar : 1,
 }
 
+stepRoutineExport.uniqueOptions =
+{
+  export : null,
+}
+
 // --
 // declare
 // --
