@@ -124,7 +124,7 @@ function _load()
     if( err )
     {
       if( will.verbosity >= 3 )
-      logger.error( ' ! Fail to open ' + submodule.nickName + '' );
+      logger.error( ' ! Fail to open ' + submodule.nickName + ', try to download it' );
       if( will.verbosity >= 5 || !submodule.loadedModule || submodule.loadedModule.isOpened() )
       {
         if( will.verbosity < 5 )
