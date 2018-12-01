@@ -15,7 +15,7 @@ if( typeof module !== 'undefined' )
 
   _.include( 'wFiles' );
   _.include( 'wFilesArchive' );
-  _.include( 'wFilesTransformers' );
+  _.include( 'wFilesEncoders' );
 
   _.include( 'wStateStorage' );
   _.include( 'wStateSession' );

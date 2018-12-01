@@ -440,7 +440,7 @@ function exists()
 
   let r = fileProvider.fileConfigPathGet({ filePath : willf.filePath });
 
-  return !!r;
+  return !!r && !!r.length;
 }
 
 // --
