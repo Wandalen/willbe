@@ -405,7 +405,7 @@ sureRelativeOrGlobal.defaults =
 {
   fixes : 0,
   basePath : 1,
-  stemPath : 1,
+  // stemPath : 1,
   filePath : 1,
 }
 
@@ -434,7 +434,7 @@ isRelativeOrGlobal.defaults =
 {
   fixes : 0,
   basePath : 1,
-  stemPath : 1,
+  // stemPath : 1,
   filePath : 1,
 }
 
