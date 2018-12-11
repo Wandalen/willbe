@@ -1,4 +1,4 @@
-( function _Typing_test_s_( ) {
+( function _Will_test_s_( ) {
 
 'use strict';
 
@@ -6,9 +6,10 @@ if( typeof module !== 'undefined' )
 {
   let _ = require( '../../Tools.s' );
 
-  _.include( 'wTesting' );
-  _.include( 'wExternalFundamentals' )
-  _.include( 'wFiles' )
+  _.include( 'wTesting' );;
+  _.include( 'wExternalFundamentals' );
+  _.include( 'wFiles' );
+
 }
 
 var _global = _global_;
