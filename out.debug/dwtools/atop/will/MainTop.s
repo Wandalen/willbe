@@ -80,6 +80,7 @@ function moduleOnReady( onReady )
     // debugger;
     if( !will.topCommand )
     {
+      if( will.beeping )
       _.diagnosticBeep();
       if( module === will.currentModule )
       will.currentModule = null;
@@ -122,6 +123,7 @@ function done( command )
 
     if( will.topCommand === command )
     {
+      if( will.beeping )
       _.diagnosticBeep();
       if( will.currentModule )
       will.currentModule.finit();
@@ -158,6 +160,7 @@ function commandsMake()
   {
 
     'help' :                    { e : _.routineJoin( will, will.commandHelp ),                  h : 'Get help.' },
+    'set' :                     { e : _.routineJoin( will, will.commandSet ),                   h : 'Command set.' },
 
     'list' :                    { e : _.routineJoin( will, will.commandList ),                  h : 'List information about the current module.' },
     'paths list' :              { e : _.routineJoin( will, will.commandPathsList ),             h : 'List paths of the current module.' },
@@ -205,9 +208,9 @@ function commandsMake()
 
 function commandHelp( e )
 {
-  let self = this;
+  let will = this;
   let ca = e.ca;
-  let logger = self.logger;
+  let logger = will.logger;
 
   ca._commandHelp( e );
 
@@ -215,6 +218,41 @@ function commandHelp( e )
   {
     logger.log( 'Use ' + logger.colorFormat( '"will .help"', 'code' ) + ' to get help' );
   }
+
+}
+
+//
+
+function commandSet( e )
+{
+  let will = this;
+  let ca = e.ca;
+  let logger = will.logger;
+
+  // logger.log( e.propertiesMap ); debugger;
+
+  let namesMap =
+  {
+    v : 'verbosity',
+    verbosity : 'verbosity',
+    beeping : 'beeping',
+  }
+
+  _.appArgsReadTo
+  ({
+    dst : will,
+    propertiesMap : e.propertiesMap,
+    namesMap : namesMap,
+  });
+
+  // appArgsReadTo.defaults =
+  // {
+  //   dst : null,
+  //   propertiesMap : null,
+  //   namesMap : null,
+  //   removing : 1,
+  //   only : 1,
+  // }
 
 }
 
@@ -460,6 +498,10 @@ function commandBuild( e )
   return will.moduleOnReady( function( module )
   {
     let builds = module.buildsSelect( e.subject, e.propertiesMap );
+    let logger = will.logger;
+
+    // logger.log( 'logger.verbosity', logger.verbosity );
+    // logger.log( 'will.verbosity', will.verbosity );
 
     if( logger.verbosity >= 2 && builds.length > 1 )
     {
@@ -671,6 +713,7 @@ function commandEach( e )
 
 let Composes =
 {
+  beeping : 1,
 }
 
 let Aggregates =
@@ -712,6 +755,7 @@ let Extend =
 
   commandsMake,
   commandHelp,
+  commandSet,
 
   _commandList,
   commandList,

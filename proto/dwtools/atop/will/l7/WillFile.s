@@ -171,7 +171,7 @@ function open()
     willf.data = fileProvider.fileConfigRead
     ({
       filePath : willf.filePath,
-      verbosity : will.verbosity+1,
+      verbosity : will.verbosity-1,
     });
   }
   catch( err )
@@ -224,79 +224,7 @@ function open()
   willf.formed = 2;
 
   return true;
-
-  // /* */
-  //
-  // if( willf.data.submodule )
-  // willf._resourcesForm3( will.Submodule, willf.data.submodule, con );
-  //
-  // /* */
-  //
-  // con.doThen( ( arg, err ) =>
-  // {
-  //   if( !module.supermodule )
-  //   debugger;
-  //   if( err )
-  //   throw err;
-  //   willf.formed = 2;
-  //   return arg;
-  // });
-  //
-  // return con.split();
 }
-
-// //
-//
-// function form3()
-// {
-//   let willf = this;
-//   let module = willf.module;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   _.assert( willf.formed === 2 );
-//   _.assert( arguments.length === 0 );
-//   _.assert( !!module );
-//   _.assert( !!will );
-//   _.assert( !!fileProvider );
-//   _.assert( !!logger );
-//   _.assert( !!will.formed );
-//   _.assert( !!module.formed );
-//   _.assert( !!willf.formed );
-//
-//   let con = _.Consequence().give( null );
-//
-//   /* */
-//
-//   if( willf.data.exported )
-//   willf._resourcesForm3( will.Exported, willf.data.exported, con );
-//
-//   if( willf.data.path )
-//   willf._resourcesForm3( will.PathObj, willf.data.path, con );
-//
-//   if( willf.data.reflector )
-//   willf._resourcesForm3( will.Reflector, willf.data.reflector, con );
-//
-//   willf._resourcesForm3( will.Step, willf.data.step || {}, con );
-//
-//   if( willf.data.build )
-//   willf._resourcesForm3( will.Build, willf.data.build, con );
-//
-//   /* */
-//
-//   con.doThen( ( arg, err ) =>
-//   {
-//     debugger;
-//     if( err )
-//     throw err;
-//     willf.formed = 3;
-//     return arg;
-//   });
-//
-//   return con.split();
-// }
 
 //
 
@@ -308,7 +236,6 @@ function _resourcesMake( Resource, resources )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  // let con = _.Consequence().give( null );
 
   _.assert( _.mapIs( resources ) );
   _.assert( _.constructorIs( Resource ) );
@@ -336,64 +263,6 @@ function _resourcesMake( Resource, resources )
   });
 
 }
-
-// //
-//
-// function _resourcesForm3( Resource, resources, con )
-// {
-//   let willf = this;
-//   let module = willf.module;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//   // let con = _.Consequence().give( null );
-//
-//   _.assert( _.mapIs( resources ) );
-//   _.assert( _.constructorIs( Resource ) );
-//   _.assert( arguments.length === 3 );
-//
-//   // _.each( resources, ( resource, k ) =>
-//   // {
-//   //
-//   //   if( Resource.OptionsFrom )
-//   //   resource = Resource.OptionsFrom( resource );
-//   //
-//   //   let o2 = _.mapExtend( null, resource );
-//   //   o2.willf = willf;
-//   //   o2.module = module;
-//   //   o2.name = k;
-//   //   try
-//   //   {
-//   //     Resource.MakeForEachCriterion( o2 );
-//   //   }
-//   //   catch( err )
-//   //   {
-//   //     throw _.err( 'Cant form', Resource.shortName, _.strQuote( o2.name ), '\n', err );
-//   //   }
-//   //
-//   // });
-//
-//   if( Resource.MapName === 'build' )
-//   debugger;
-//
-//   for( let s in willf[ Resource.MapName ] )
-//   {
-//     let resource = willf[ Resource.MapName ][ s ];
-//     _.assert( !!resource.formed );
-//     // if( resource.formed < 2 )
-//     con.ifNoErrorThen( ( arg/*aaa*/ ) => resource.open() );
-//   }
-//
-//   for( let s in willf[ Resource.MapName ] )
-//   {
-//     let resource = willf[ Resource.MapName ][ s ];
-//     // if( resource.formed < 3 )
-//     con.ifNoErrorThen( ( arg/*aaa*/ ) => resource.form3() );
-//   }
-//
-//   // return con;
-// }
 
 //
 
@@ -513,29 +382,29 @@ let Proto =
 
   // inter
 
-  finit : finit,
-  init : init,
-  unform : unform,
-  form : form,
-  form1 : form1,
-  open : open,
+  finit,
+  init,
+  unform,
+  form,
+  form1,
+  open,
 
-  // form3 : form3,
+  // form3,
 
-  _resourcesMake : _resourcesMake,
-  // _resourcesForm3 : _resourcesForm3,
+  _resourcesMake,
+  // _resourcesForm3,
 
-  _inPathsForm : _inPathsForm,
-  exists : exists,
+  _inPathsForm,
+  exists,
 
   // relation
 
-  Composes : Composes,
-  Aggregates : Aggregates,
-  Associates : Associates,
-  Restricts : Restricts,
-  Statics : Statics,
-  Forbids : Forbids,
+  Composes,
+  Aggregates,
+  Associates,
+  Restricts,
+  Statics,
+  Forbids,
 
 }
 

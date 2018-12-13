@@ -279,24 +279,24 @@ let Extend =
 
   // inter
 
-  finit : finit,
-  init : init,
-  unform : unform,
-  form : form,
-  formAssociates : formAssociates,
+  finit,
+  init,
+  unform,
+  form,
+  formAssociates,
 
-  _verbosityChange : _verbosityChange,
+  _verbosityChange,
 
-  willFilesList : willFilesList,
+  willFilesList,
 
   // relation
 
-  Composes : Composes,
-  Aggregates : Aggregates,
-  Associates : Associates,
-  Restricts : Restricts,
-  Statics : Statics,
-  Forbids : Forbids,
+  Composes,
+  Aggregates,
+  Associates,
+  Restricts,
+  Statics,
+  Forbids,
 
 }
 

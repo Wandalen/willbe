@@ -41,7 +41,11 @@ function stepRoutineDelete( frame )
   _.assert( _.objectIs( opts ) );
 
   let filePath = step.inPathResolve( opts.filePath );
-  return fileProvider.filesDelete({ filePath : filePath, verbosity : will.verbosity >= 2 ? 2 : 0 });
+  return fileProvider.filesDelete
+  ({
+    filePath : filePath,
+    verbosity : will.verbosity >= 2 ? 2 : 0,
+  });
 }
 
 stepRoutineDelete.stepOptions =
@@ -64,8 +68,6 @@ function stepRoutineReflect( frame )
   _.assert( !!opts.reflector, 'Expects option reflector' );
   _.assert( arguments.length === 1 );
 
-  // debugger;
-
   let reflector = module.resolve
   ({
     query : opts.reflector,
@@ -80,26 +82,19 @@ function stepRoutineReflect( frame )
   _.sure( reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strType( reflector ) )
   _.assert( reflector.formed === 3, () => reflector.nickName + ' is not formed' );
 
-  // debugger;
   reflector = reflector.optionsReflectExport();
-  // debugger;
 
   _.mapSupplement( opts, reflector )
-  // delete opts.reflector;
 
   if( will.verbosity >= 4 )
   {
-    logger.log( ' + Files reflecting...' );
+    logger.log( ' + Reflecting...' );
     // logger.log( _.toStr( opts.reflectMap, { wrap : 0, multiline : 1, levels : 3 } ) );
   }
 
   if( opts.verbosity === null )
-  opts.verbosity = _.numberClamp( will.verbosity - 2, 0, 9 );
+  opts.verbosity = _.numberClamp( will.verbosity - 1, 0, 9 ) ? 2 : 0;
 
-
-  // opts.writing = 0;
-
-  // debugger;
   let result = will.Predefined.filesReflect.call( fileProvider, opts );
 
   if( will.verbosity >= 5 )
@@ -180,15 +175,12 @@ function stepRoutineJs( frame )
 
   _.assert( arguments.length === 1 );
 
-  // _.sure( !!opts.shell ^ !!opts.js ^ _.routineIs( step.stepRoutine ), 'Step should have only {-shell-} or {-js-} or {-stepRoutine-} fields' );
   _.sure( opts.js === null || _.strIs( opts.js ) );
 
   /* */
 
   try
   {
-    // debugger;
-    // if( _.strBegins( opts.js, '.' ) )
     opts.js = step.inPathResolve({ query : opts.js, prefixlessAction : 'resolved' });
     opts.routine = require( fileProvider.providersWithProtocolMap.hd.path.nativize( opts.js ) );
     if( !_.routineIs( opts.routine ) )
@@ -251,7 +243,9 @@ function stepRoutineShell( frame )
   ({
     path : opts.shell,
     currentPath : opts.currentPath,
-  }).doThen( ( err, arg ) =>
+    verbosity : will.verbosity - 1,
+  })
+  .doThen( ( err, arg ) =>
   {
     if( err )
     throw _.errBriefly( 'Failed to shell', step.nickName, '\n', err );
