@@ -104,31 +104,20 @@ function formAssociates()
   _.assert( arguments.length === 0 );
   _.assert( !will.formed );
   _.assert( !!logger );
-
-  // if( !will.logger )
-  // logger = will.logger = new _.Logger({ output : _global_.logger, name : 'will' });
-  // debugger;
-
-  // logger.log( 'experiment1' );
-
-  // logger.verbosity = will.verbosity;
-
   _.assert( logger.verbosity === will.verbosity );
-
-  // if( !will.fileProvider )
-  // will.fileProvider = _.FileProvider.Default();
 
   if( !will.fileProvider )
   {
 
-    will.fileProvider = _.FileProvider.Hub({ providers : [] });
+    let hub = _.FileProvider.Hub({ providers : [] });
+    will.fileProvider = hub;
 
-    _.FileProvider.Git().providerRegisterTo( will.fileProvider );
-    _.FileProvider.Npm().providerRegisterTo( will.fileProvider );
+    _.FileProvider.Git().providerRegisterTo( hub );
+    _.FileProvider.Npm().providerRegisterTo( hub );
 
     let defaultProvider = _.FileProvider.Default();
-    defaultProvider.providerRegisterTo( will.fileProvider );
-    will.fileProvider.defaultProvider = defaultProvider;
+    defaultProvider.providerRegisterTo( hub );
+    hub.defaultProvider = defaultProvider;
 
   }
 
@@ -137,8 +126,6 @@ function formAssociates()
 
   let logger2 = new _.Logger({ output : logger, name : 'will.providers' });
 
-  // debugger;
-  // will.fileProvider.logger = _.Logger({ output : will.logger });
   will.fileProvider.logger = logger2;
   for( var f in will.fileProvider.providersWithProtocolMap )
   {
@@ -146,16 +133,12 @@ function formAssociates()
     fileProvider.logger = logger2;
   }
 
-  // logger.log( 'experiment2' );
-
-  // _.assert( will.fileProvider.logger === will.logger );
   _.assert( will.fileProvider.logger === logger2 );
   _.assert( logger.verbosity === will.verbosity );
   _.assert( will.fileProvider.logger !== will.logger );
 
-  // debugger;
   will._verbosityChange();
-  // debugger;
+
   _.assert( logger2.verbosity <= logger.verbosity );
 }
 

@@ -98,7 +98,7 @@ function moduleOnReady( onReady )
       _.appExitCode( -1 );
       throw _.errLogOnce( err );
     }
-    debugger;
+    // debugger;
     return arg;
   });
 
@@ -217,25 +217,6 @@ function commandHelp( e )
   }
 
 }
-
-//
-//
-// function commandHelp( e )
-// {
-//   let will = this;
-//   let fileProvider = will.fileProvider;
-//   let logger = will.logger;
-//
-//   logger.log();
-//   logger.log( e.ca.vocabulary.helpForSubjectAsString( '' ) );
-//   logger.log();
-//
-//   //logger.log( 'Use ' + logger.colorFormat( '"will .init confPath:./conf" actionsPath:./actions', 'code' ) + ' to init the module' );
-//   logger.log( 'Use ' + logger.colorFormat( '"will .help"', 'code' ) + ' to get help' );
-//   // logger.log( 'Use ' + logger.colorFormat( '"will"', 'code' ) + '' );
-//
-//   return will;
-// }
 
 //
 
@@ -469,35 +450,6 @@ function commandCleanWhat( e )
     return filesPath;
   });
 
-  // if( !will.formed )
-  // will.form();
-  //
-  // let fileProvider = will.fileProvider;
-  // let logger = will.logger;
-  // let dirPath = fileProvider.path.current();
-  //
-  // if( !will.currentModule )
-  // {
-  //   will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
-  //   will.currentModule.willFilesFind();
-  // }
-  //
-  // return will.currentModule.ready.split().ifNoErrorThen( function( arg )
-  // {
-  //   let module = will.currentModule;
-  //
-  //   logger.up();
-  //   if( logger.verbosity >= 2 )
-  //   {
-  //     logger.log( 'Cleaning', module.nickName );
-  //   }
-  //
-  //   module.clean();
-  //   logger.down();
-  //
-  //   return arg;
-  // });
-
 }
 
 //
@@ -591,7 +543,7 @@ function commandWith( e )
 
     _.assert( module.willFileArray.length > 0 );
 
-    return ca.proceedAct
+    return ca.proceedCommand
     ({
       command : isolated.secondCommand,
       subject : isolated.secondSubject,
@@ -648,10 +600,19 @@ function commandEach( e )
     rerucrsive : 0,
   });
 
+  let dirPaths = Object.create( null );
+
   for( let f = 0 ; f < files.length ; f++ ) con.ifNoErrorThen( ( arg ) => /* !!! replace by concurrent, maybe */
   {
     let file = files[ f ];
+
+    debugger;
+
     let dirPath = will.Module.DirPathFromWillFilePath( file.absolute );
+
+    if( dirPaths[ dirPath ] )
+    return true;
+    dirPaths[ dirPath ] = 1;
 
     if( will.currentModule )
     {
@@ -660,10 +621,7 @@ function commandEach( e )
     }
 
     if( will.moduleMap[ dirPath ] )
-    return;
-
-    // let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
-    // module.willFilesFind();
+    return true;
 
     let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
     module.willFilesFind();
@@ -675,7 +633,8 @@ function commandEach( e )
 
       _.assert( module.willFileArray.length > 0 );
 
-      let r = ca.proceedAct
+      debugger;
+      let r = ca.proceedCommand
       ({
         command : isolated.secondCommand,
         subject : isolated.secondSubject,
@@ -691,6 +650,7 @@ function commandEach( e )
 
   con.doThen( ( err, arg ) =>
   {
+    debugger;
     let isTop = will.topCommand === commandEach;
     will.done( commandEach );
     if( err )
@@ -704,69 +664,6 @@ function commandEach( e )
 
   return con;
 }
-
-// {
-//   let will = this;
-//   let ca = e.ca;
-//   let con = new _.Consequence().give( null );
-//
-//   if( !will.formed )
-//   will.form();
-//
-//   if( will.currentModule )
-//   {
-//     will.currentModule.finit();
-//     will.currentModule = null;
-//   }
-//
-//   _.sure( _.strDefined( e.subject ), 'Expects path to module' )
-//
-//   let secondCommand, secondSubject, del;
-//   [ e.subject, del, secondCommand  ] = _.strIsolateBeginOrAll( e.subject, ' ' );
-//   [ secondCommand, del, secondSubject  ] = _.strIsolateBeginOrAll( secondCommand, ' ' );
-//
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//   let dirPath = path.resolve( e.subject );
-//
-//   let files = will.willFilesList
-//   ({
-//     dirPath : dirPath,
-//     includingInFiles : 1,
-//     includingOutFiles : 0,
-//     rerucrsive : 0,
-//   });
-//
-//   for( let f = 0 ; f < files.length ; f++ ) con.ifNoErrorThen( ( arg ) => /* !!! replace by concurrent */
-//   {
-//     let file = files[ f ];
-//     let dirPath = will.Module.DirPathFromWillFilePath( file.absolute );
-//
-//     if( will.moduleMap[ dirPath ] )
-//     return;
-//
-//     let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
-//     will.currentModule.willFilesFind();
-//
-//     return will.currentModule.ready.split().ifNoErrorThen( function( arg )
-//     {
-//       _.assert( module.willFileArray.length > 0 );
-//
-//       let result = ca.proceedAct
-//       ({
-//         command : secondCommand,
-//         subject : secondSubject,
-//         propertiesMap : _.mapExtend( null, e.propertiesMap ),
-//       });
-//
-//       return result;
-//     });
-//
-//   });
-//
-//   return con;
-// }
 
 // --
 // relations

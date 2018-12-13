@@ -32,9 +32,7 @@ function finit()
   debugger;
   if( module.formed )
   module.unform();
-  debugger;
   module.about.finit();
-  debugger;
   module.execution.finit();
 
   _.assert( _.instanceIsFinited( module.about ) );
@@ -158,7 +156,6 @@ function unform()
 
   _.assert( module.willFileArray.length === 0 );
   _.assert( Object.keys( module.willFileWithRoleMap ).length === 0 );
-  debugger;
   _.assert( will.moduleMap[ module.dirPath ] === module );
   _.assert( will.moduleMap[ module.remotePath ] === module || will.moduleMap[ module.remotePath ] === undefined );
   delete will.moduleMap[ module.dirPath ];
@@ -584,14 +581,21 @@ clean.defaults = Object.create( cleanWhat.defaults );
 function DirPathFromWillFilePath( inPath )
 {
   let module = this;
-  _.assert( arguments.length === 1 );
-  let r = /(.*)(?:\.will(?:\.|$).*)/;
-  let parsed = r.exec( inPath );
+  let result = inPath;
 
-  if( !parsed )
-  return r;
-  else
-  return parsed[ 1 ];
+  _.assert( arguments.length === 1 );
+
+  let r1 = /(.*)(?:\.will(?:\.|$).*)/;
+  let parsed = r1.exec( inPath );
+  if( parsed )
+  result = parsed[ 1 ];
+
+  let r2 = /(.*)(?:\.(?:im|ex))/;
+  let parsed2 = r2.exec( inPath );
+  if( parsed2 )
+  result = parsed2[ 1 ];
+
+  return result;
 }
 
 //
