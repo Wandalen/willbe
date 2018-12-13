@@ -648,7 +648,7 @@ function commandEach( e )
   {
     let file = files[ f ];
 
-    debugger;
+    // debugger;
 
     let dirPath = will.Module.DirPathFromWillFilePath( file.absolute );
 
@@ -675,7 +675,7 @@ function commandEach( e )
 
       _.assert( module.willFileArray.length > 0 );
 
-      debugger;
+      // debugger;
       let r = ca.proceedCommand
       ({
         command : isolated.secondCommand,

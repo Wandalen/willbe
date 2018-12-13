@@ -93,14 +93,19 @@ function stepRoutineReflect( frame )
   }
 
   if( opts.verbosity === null )
-  opts.verbosity = _.numberClamp( will.verbosity - 1, 0, 9 ) ? 2 : 0;
+  {
+    if( opts.verbosity >= 5 )
+    opts.verbosity = 5;
+    else if( will.verbosity >= 2 )
+    opts.verbosity = 2;
+  }
 
   let result = will.Predefined.filesReflect.call( fileProvider, opts );
 
-  if( will.verbosity >= 5 )
-  {
-    logger.log( _.toStr( _.select( result, '*/src/absolute' ), { levels : 2, wrap : 0 } ) );
-  }
+  // if( will.verbosity >= 5 )
+  // {
+  //   logger.log( _.toStr( _.select( result, '*/src/absolute' ), { levels : 2, wrap : 0 } ) );
+  // }
 
   return result;
 }
