@@ -93,12 +93,7 @@ function stepRoutineReflect( frame )
   }
 
   if( opts.verbosity === null )
-  {
-    if( opts.verbosity >= 5 )
-    opts.verbosity = 5;
-    else if( will.verbosity >= 2 )
-    opts.verbosity = 2;
-  }
+  opts.verbosity = will.verbosity-1;
 
   let result = will.Predefined.filesReflect.call( fileProvider, opts );
 

@@ -948,7 +948,7 @@ function withSubmodules( test )
   return con;
 }
 
-withSubmodules.timeOut = 60000;
+withSubmodules.timeOut = 200000;
 
 //
 
