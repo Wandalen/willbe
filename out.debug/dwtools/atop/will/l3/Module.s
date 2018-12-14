@@ -888,18 +888,18 @@ function willFilesOpen()
   {
     return module._willFilesOpen();
   })
-  // .doThen( ( err, arg ) =>
-  // {
-  //   if( err )
-  //   {
-  //     if( will.verbosity && will.verboseStaging )
-  //     console.log( ' s', module.nickName, 'willFilesOpened', 'failed' );
-  //     // debugger;
-  //     module.willFilesOpenReady.error( err );
-  //     throw err;
-  //   }
-  //   return arg;
-  // });
+  .doThen( ( err, arg ) =>
+  {
+    if( err )
+    {
+      if( will.verbosity && will.verboseStaging )
+      console.log( ' s', module.nickName, 'willFilesOpened', 'failed' );
+      // debugger;
+      module.willFilesOpenReady.error( err );
+      throw err;
+    }
+    return arg;
+  });
 
   return module.willFilesFindReady.split();
 }
@@ -938,17 +938,17 @@ function _willFilesOpen()
     module.stager.stage( 'willFilesOpened', 2 );
     return arg;
   })
-  .doThen( ( err, arg ) =>
-  {
-    if( err )
-    {
-      if( will.verbosity && will.verboseStaging )
-      console.log( ' s', module.nickName, 'willFilesOpened', 'failed' );
-      module.willFilesOpenReady.error( err );
-      throw err;
-    }
-    return arg;
-  })
+  // .doThen( ( err, arg ) =>
+  // {
+  //   if( err )
+  //   {
+  //     if( will.verbosity && will.verboseStaging )
+  //     console.log( ' s', module.nickName, 'willFilesOpened', 'failed' );
+  //     module.willFilesOpenReady.error( err );
+  //     throw err;
+  //   }
+  //   return arg;
+  // })
   ;
 
   return con.split();
@@ -967,6 +967,8 @@ function resourcesFormSkip()
   let logger = will.logger;
 
   _.assert( arguments.length === 0 );
+
+  // logger.log( module.nickName, 'resourcesFormSkip' );
 
   if( module.resourcesFormed > 0 )
   return module.willFilesOpenReady.split();
@@ -1002,6 +1004,8 @@ function resourcesForm()
   let logger = will.logger;
 
   _.assert( arguments.length === 0 );
+
+  // logger.log( module.nickName, 'resourcesForm' );
 
   module.stager.stage( 'resourcesFormed', 1 );
 
@@ -1343,9 +1347,8 @@ function _submodulesDownload( o )
       //   if( !submodule.isDownloaded )
       //   downloadedNumber += 1;
       // }
-      return submodule
-      ._remoteDownload({ upgrading : o.upgrading })
-      .ifNoErrorThen( ( arg ) =>
+      let r = _.Consequence.From( submodule._remoteDownload({ upgrading : o.upgrading }) );
+      return r.ifNoErrorThen( ( arg ) =>
       {
 
         _.assert( _.boolIs( arg ) );
