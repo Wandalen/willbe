@@ -888,18 +888,18 @@ function willFilesOpen()
   {
     return module._willFilesOpen();
   })
-  .doThen( ( err, arg ) =>
-  {
-    if( err )
-    {
-      if( will.verbosity && will.verboseStaging )
-      console.log( ' s', module.nickName, 'willFilesOpened', 'failed' );
-      // debugger;
-      module.willFilesOpenReady.error( err );
-      throw err;
-    }
-    return arg;
-  });
+  // .doThen( ( err, arg ) =>
+  // {
+  //   if( err )
+  //   {
+  //     if( will.verbosity && will.verboseStaging )
+  //     console.log( ' s', module.nickName, 'willFilesOpened', 'failed' );
+  //     // debugger;
+  //     module.willFilesOpenReady.error( err );
+  //     throw err;
+  //   }
+  //   return arg;
+  // });
 
   return module.willFilesFindReady.split();
 }
@@ -931,14 +931,311 @@ function _willFilesOpen()
 
   }
 
-  con.ifNoErrorThen( ( arg ) => module._resourcesSubmodulesForm() );
-  con.ifNoErrorThen( ( arg ) =>
+  con
+  .ifNoErrorThen( ( arg ) => module._resourcesSubmodulesForm() )
+  .ifNoErrorThen( ( arg ) =>
   {
     module.stager.stage( 'willFilesOpened', 2 );
+    return arg;
+  })
+  .doThen( ( err, arg ) =>
+  {
+    if( err )
+    {
+      if( will.verbosity && will.verboseStaging )
+      console.log( ' s', module.nickName, 'willFilesOpened', 'failed' );
+      module.willFilesOpenReady.error( err );
+      throw err;
+    }
+    return arg;
+  })
+  ;
+
+  return con.split();
+}
+
+// --
+// resource
+// --
+
+function resourcesFormSkip()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 0 );
+
+  if( module.resourcesFormed > 0 )
+  return module.willFilesOpenReady.split();
+
+  // module.stager.stage( 'resourcesFormed', 1 );
+
+  module.willFilesOpenReady
+  .doThen( ( err, arg ) =>
+  {
+    _.timeOut( 1, () => module.ready.give( err, arg ) );
+    _.assert( !module.ready.resourcesHas() );
+    if( err )
+    {
+      if( will.verbosity && will.verboseStaging )
+      console.log( ' s', module.nickName, 'resourcesFormSkip', 'failed' );
+      module.resourcesFormReady.error( err );
+      throw err;
+    }
+    return arg;
+  });
+
+  return module.willFilesOpenReady.split();
+}
+
+//
+
+function resourcesForm()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 0 );
+
+  module.stager.stage( 'resourcesFormed', 1 );
+
+  module.willFilesOpenReady.ifNoErrorThen( ( arg ) =>
+  {
+    let con = new _.Consequence().give( null );
+
+    // if( !module.supermodule )
+    // debugger;
+
+    if( !module.supermodule )
+    if( module.submodulesAllAreDownloaded() && module.submodulesNoneHasError() )
+    {
+
+      con.ifNoErrorThen( () => module._resourcesForm() );
+
+      con.ifNoErrorThen( ( arg ) =>
+      {
+        module.stager.stage( 'resourcesFormed', 2 );
+        return arg;
+      });
+
+    }
+    else
+    {
+      if( will.verbosity === 2 )
+      logger.error( ' ! One or more submodules of ' + module.nickName + ' were not downloaded!'  );
+    }
+
+    return con;
+  })
+  // .doThen( module.ready ) // make possible !!!
+  // .doThen( () => _.timeOut( 1, () => module.ready.give( err, arg ) ) )
+  // .timeOut( () => module.ready )
+  .doThen( ( err, arg ) =>
+  {
+    _.timeOut( 1, () => module.ready.give( err, arg ) );
+    _.assert( !module.ready.resourcesHas() );
+    if( err )
+    {
+      if( will.verbosity && will.verboseStaging )
+      console.log( ' s', module.nickName, 'resourcesFormed', 'failed' );
+      module.resourcesFormReady.error( err );
+      throw err;
+    }
+    return arg;
+  });
+
+  return module.willFilesOpenReady.split();
+}
+
+//
+
+function _resourcesSubmodulesForm()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 0 );
+  _.assert( !!module );
+  _.assert( !!will );
+  _.assert( !!fileProvider );
+  _.assert( !!logger );
+  _.assert( !!will.formed );
+  _.assert( !!module.formed );
+
+  let con = _.Consequence().give( null );
+
+  /* */
+
+  module._resourcesFormAct( will.Submodule, con );
+
+  /* */
+
+  con.doThen( ( err, arg ) =>
+  {
+    if( err )
+    throw err;
     return arg;
   });
 
   return con.split();
+}
+
+//
+
+function _resourcesForm()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 0 );
+  _.assert( !!module );
+  _.assert( !!will );
+  _.assert( !!fileProvider );
+  _.assert( !!logger );
+  _.assert( !!will.formed );
+  _.assert( !!module.formed );
+
+  let con = _.Consequence().give( null );
+
+  /* */
+
+  module._resourcesFormAct( will.Submodule, con );
+  module._resourcesFormAct( will.Exported, con );
+  module._resourcesFormAct( will.PathObj, con );
+  module._resourcesFormAct( will.Reflector, con );
+  module._resourcesFormAct( will.Step, con );
+  module._resourcesFormAct( will.Build, con );
+
+  /* */
+
+  con.doThen( ( err, arg ) =>
+  {
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  return con.split();
+}
+
+//
+
+function _resourcesFormAct( Resource, con )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( _.constructorIs( Resource ) );
+  _.assert( arguments.length === 2 );
+
+  for( let s in module[ Resource.MapName ] )
+  {
+    let resource = module[ Resource.MapName ][ s ];
+    _.assert( !!resource.formed );
+    con.ifNoErrorThen( ( arg ) => resource.form2() );
+  }
+
+  for( let s in module[ Resource.MapName ] )
+  {
+    let resource = module[ Resource.MapName ][ s ];
+    con.ifNoErrorThen( ( arg ) => resource.form3() );
+  }
+
+}
+
+//
+
+function resourceClassForKind( resourceKind )
+{
+  let module = this;
+  let will = module.will;
+  let result = will[ will.ResourceKindToClassName.forKey( resourceKind ) ];
+
+  _.assert( arguments.length === 1 );
+  _.sure( _.routineIs( result ), () => 'Cant find class for resource kind ' + _.strQuote( resourceKind ) );
+
+  return result;
+}
+
+//
+
+function resourceMapForKind( resourceKind )
+{
+  let module = this;
+  let will = module.will;
+  let result;
+
+  // debugger;
+
+  if( resourceKind === 'export' )
+  result = module.buildMap;
+  else
+  result = module[ will.ResourceKindToMapName.forKey( resourceKind ) ];
+
+  _.assert( arguments.length === 1 );
+  _.sure( _.objectIs( result ), () => 'Cant find resource map for resource kind ' + _.strQuote( resourceKind ) );
+
+  return result;
+}
+
+//
+
+function resourceAllocate( resourceKind, resourceName )
+{
+  let module = this;
+  let will = module.will;
+
+  _.assert( arguments.length === 2 );
+  _.assert( _.strIs( resourceName ) );
+
+  // _.assert( module.pathMap[ resourceName ] === undefined, 'not implemented' );
+  // let resourceName2 = resourceName + '.0';
+
+  let resourceName2 = module.resourceNameAllocate( resourceKind, resourceName );
+  let cls = module.resourceClassForKind( resourceKind );
+  let patho = new cls({ module : module, name : resourceName2 }).form1();
+
+  return patho;
+}
+
+//
+
+function resourceNameAllocate( resourceKind, resourceName )
+{
+  let module = this;
+  let will = module.will;
+
+  _.assert( arguments.length === 2 );
+  _.assert( _.strIs( resourceName ) );
+  // _.assert( module.pathMap[ resourceName ] === undefined, 'not implemented' );
+
+  let map = module.resourceMapForKind( resourceKind );
+  let counter = 0;
+  let resourceName2;
+
+  do
+  {
+    resourceName2 = resourceName + '.' + counter;
+    counter += 1;
+  }
+  while( map[ resourceName2 ] !== undefined );
+
+  return resourceName2;
 }
 
 // --
@@ -1014,32 +1311,49 @@ function _submodulesDownload( o )
   {
     let submodule = module.submoduleMap[ n ].loadedModule;
     _.assert( !!submodule && submodule.formed === 3 );
+
     if( !submodule.isRemote )
     continue;
 
-    con.ifNoErrorThen( () =>
-    {
-      if( o.upgrading && submodule.isDownloaded )
-      return submodule.remoteIsUpToDate()
-      return null;
-    });
+    // debugger;
+    // if( !o.upgrading )
+    // con.ifNoErrorThen( () =>
+    // {
+    //   if( o.upgrading && submodule.isDownloaded )
+    //   return submodule.remoteIsUpToDate()
+    //   return null;
+    // });
 
     con.ifNoErrorThen( () =>
     {
+
+      if( !submodule.isDownloaded )
+      downloadedNumber += 1;
+
       remoteNumber += 1;
-      if( o.upgrading )
+      // if( o.upgrading )
+      // {
+      //   if( !submodule.isDownloaded )
+      //   downloadedNumber += 1;
+      //   else if( !submodule.isUpToDate )
+      //   downloadedNumber += 1;
+      // }
+      // else
+      // {
+      //   if( !submodule.isDownloaded )
+      //   downloadedNumber += 1;
+      // }
+      return submodule
+      ._remoteDownload({ upgrading : o.upgrading })
+      .ifNoErrorThen( ( arg ) =>
       {
-        if( !submodule.isDownloaded )
+
+        _.assert( _.boolIs( arg ) );
+        if( o.upgrading && arg )
         downloadedNumber += 1;
-        else if( !submodule.isUpToDate )
-        downloadedNumber += 1;
-      }
-      else
-      {
-        if( !submodule.isDownloaded )
-        downloadedNumber += 1;
-      }
-      return submodule._remoteDownload({ upgrading : o.upgrading });
+
+        return arg;
+      });
     });
 
   }
@@ -1320,6 +1634,7 @@ function _remoteDownload( o )
   {
     reflectMap : { [ module.remotePath ] : module.clonePath },
     verbosity : 0,
+    extra : { fetching : 0 },
   }
 
   return con
@@ -1330,12 +1645,8 @@ function _remoteDownload( o )
     return arg;
   })
   .ifNoErrorThen( () => will.Predefined.filesReflect.call( fileProvider, o2 ) )
-  // .ifNoErrorThen( () => module.remoteIsDownloaded() )
-  // .ifNoErrorThen( () => module.remoteIsUpToDate() )
   .ifNoErrorThen( ( arg ) =>
   {
-    // _.assert( module.isUpToDate, () => Module.nickName + ' still is not up to date ' + module.clonePath );
-    // _.assert( module.isDownloaded, () => Module.nickName + ' still is not downloaded ' + module.clonePath );
     module.isUpToDate = true;
     module.isDownloaded = true;
     return arg;
@@ -1346,8 +1657,9 @@ function _remoteDownload( o )
     throw _.err( 'Failed to', ( o.upgrading ? 'upgrade' : 'download' ), module.nickName, '\n', err );
     if( will.verbosity >= 3 && !wasUpToDate )
     logger.log( ' + ' + module.nickName + ' was ' + ( o.upgrading ? 'upgraded' : 'downloaded' ) + ' in ' + _.timeSpent( time ) );
-    return arg;
+    return !wasUpToDate;
   });
+
 }
 
 _remoteDownload.defaults =
@@ -1371,255 +1683,6 @@ function remoteUpgrade()
   let module = this;
   let will = module.will;
   return module._remoteDownload({ upgrading : 1 });
-}
-
-// --
-// resource
-// --
-
-function resourcesForm()
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-
-  _.assert( arguments.length === 0 );
-
-  module.stager.stage( 'resourcesFormed', 1 );
-
-  module.willFilesOpenReady.ifNoErrorThen( ( arg ) =>
-  {
-    let con = new _.Consequence().give( null );
-
-    // if( !module.supermodule )
-    // debugger;
-
-    if( !module.supermodule )
-    if( module.submodulesAllAreDownloaded() && module.submodulesNoneHasError() )
-    {
-
-      con.ifNoErrorThen( () => module._resourcesForm() );
-
-      con.ifNoErrorThen( ( arg ) =>
-      {
-        module.stager.stage( 'resourcesFormed', 2 );
-        return arg;
-      });
-
-    }
-    else
-    {
-      if( will.verbosity === 2 )
-      logger.error( ' ! One or more submodules of ' + module.nickName + ' were not downloaded!'  );
-    }
-
-    return con;
-  })
-  // .doThen( module.ready ) // make possible !!!
-  // .doThen( () => _.timeOut( 1, () => module.ready.give( err, arg ) ) )
-  // .timeOut( () => module.ready )
-  .doThen( ( err, arg ) =>
-  {
-    _.timeOut( 1, () => module.ready.give( err, arg ) );
-    _.assert( !module.ready.resourcesHas() );
-    if( err )
-    {
-      if( will.verbosity && will.verboseStaging )
-      console.log( ' s', module.nickName, 'resourcesFormed', 'failed' );
-      module.resourcesFormReady.error( err );
-      throw err;
-    }
-    return arg;
-  });
-
-  return module.willFilesOpenReady.split();
-}
-
-//
-
-function _resourcesSubmodulesForm()
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-
-  _.assert( arguments.length === 0 );
-  _.assert( !!module );
-  _.assert( !!will );
-  _.assert( !!fileProvider );
-  _.assert( !!logger );
-  _.assert( !!will.formed );
-  _.assert( !!module.formed );
-
-  let con = _.Consequence().give( null );
-
-  /* */
-
-  module._resourcesFormAct( will.Submodule, con );
-
-  /* */
-
-  con.doThen( ( err, arg ) =>
-  {
-    if( err )
-    throw err;
-    return arg;
-  });
-
-  return con.split();
-}
-
-//
-
-function _resourcesForm()
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-
-  _.assert( arguments.length === 0 );
-  _.assert( !!module );
-  _.assert( !!will );
-  _.assert( !!fileProvider );
-  _.assert( !!logger );
-  _.assert( !!will.formed );
-  _.assert( !!module.formed );
-
-  let con = _.Consequence().give( null );
-
-  /* */
-
-  module._resourcesFormAct( will.Submodule, con );
-  module._resourcesFormAct( will.Exported, con );
-  module._resourcesFormAct( will.PathObj, con );
-  module._resourcesFormAct( will.Reflector, con );
-  module._resourcesFormAct( will.Step, con );
-  module._resourcesFormAct( will.Build, con );
-
-  /* */
-
-  con.doThen( ( err, arg ) =>
-  {
-    if( err )
-    throw err;
-    return arg;
-  });
-
-  return con.split();
-}
-
-//
-
-function _resourcesFormAct( Resource, con )
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-
-  _.assert( _.constructorIs( Resource ) );
-  _.assert( arguments.length === 2 );
-
-  for( let s in module[ Resource.MapName ] )
-  {
-    let resource = module[ Resource.MapName ][ s ];
-    _.assert( !!resource.formed );
-    con.ifNoErrorThen( ( arg ) => resource.form2() );
-  }
-
-  for( let s in module[ Resource.MapName ] )
-  {
-    let resource = module[ Resource.MapName ][ s ];
-    con.ifNoErrorThen( ( arg ) => resource.form3() );
-  }
-
-}
-
-//
-
-function resourceClassForKind( resourceKind )
-{
-  let module = this;
-  let will = module.will;
-  let result = will[ will.ResourceKindToClassName.forKey( resourceKind ) ];
-
-  _.assert( arguments.length === 1 );
-  _.sure( _.routineIs( result ), () => 'Cant find class for resource kind ' + _.strQuote( resourceKind ) );
-
-  return result;
-}
-
-//
-
-function resourceMapForKind( resourceKind )
-{
-  let module = this;
-  let will = module.will;
-  let result;
-
-  // debugger;
-
-  if( resourceKind === 'export' )
-  result = module.buildMap;
-  else
-  result = module[ will.ResourceKindToMapName.forKey( resourceKind ) ];
-
-  _.assert( arguments.length === 1 );
-  _.sure( _.objectIs( result ), () => 'Cant find resource map for resource kind ' + _.strQuote( resourceKind ) );
-
-  return result;
-}
-
-//
-
-function resourceAllocate( resourceKind, resourceName )
-{
-  let module = this;
-  let will = module.will;
-
-  _.assert( arguments.length === 2 );
-  _.assert( _.strIs( resourceName ) );
-
-  // _.assert( module.pathMap[ resourceName ] === undefined, 'not implemented' );
-  // let resourceName2 = resourceName + '.0';
-
-  let resourceName2 = module.resourceNameAllocate( resourceKind, resourceName );
-  let cls = module.resourceClassForKind( resourceKind );
-  let patho = new cls({ module : module, name : resourceName2 }).form1();
-
-  return patho;
-}
-
-//
-
-function resourceNameAllocate( resourceKind, resourceName )
-{
-  let module = this;
-  let will = module.will;
-
-  _.assert( arguments.length === 2 );
-  _.assert( _.strIs( resourceName ) );
-  // _.assert( module.pathMap[ resourceName ] === undefined, 'not implemented' );
-
-  let map = module.resourceMapForKind( resourceKind );
-  let counter = 0;
-  let resourceName2;
-
-  do
-  {
-    resourceName2 = resourceName + '.' + counter;
-    counter += 1;
-  }
-  while( map[ resourceName2 ] !== undefined );
-
-  return resourceName2;
 }
 
 // --
@@ -2604,6 +2667,19 @@ let Proto =
   willFilesOpen,
   _willFilesOpen,
 
+  // resource
+
+  resourcesFormSkip,
+  resourcesForm,
+  _resourcesSubmodulesForm,
+  _resourcesForm,
+  _resourcesFormAct,
+
+  resourceClassForKind,
+  resourceMapForKind,
+  resourceAllocate,
+  resourceNameAllocate,
+
   // submodule
 
   submodulesCloneDirGet,
@@ -2627,18 +2703,6 @@ let Proto =
   _remoteDownload,
   remoteDownload,
   remoteUpgrade,
-
-  // resource
-
-  resourcesForm,
-  _resourcesSubmodulesForm,
-  _resourcesForm,
-  _resourcesFormAct,
-
-  resourceClassForKind,
-  resourceMapForKind,
-  resourceAllocate,
-  resourceNameAllocate,
 
   // path
 

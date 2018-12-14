@@ -46,7 +46,7 @@ function exec()
 
 //
 
-function moduleOnReady( onReady )
+function _moduleOnReady( o )
 {
   let will = this.form();
   let fileProvider = will.fileProvider;
@@ -55,7 +55,8 @@ function moduleOnReady( onReady )
   let dirPath = fileProvider.path.current();
 
   _.assert( arguments.length === 1 );
-  _.assert( _.routineIs( onReady ) );
+  _.assert( _.routineIs( o.onReady ) );
+  _.routineOptions( _moduleOnReady, arguments );
 
   // debugger;
 
@@ -65,19 +66,20 @@ function moduleOnReady( onReady )
     module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
     module.willFilesFind();
     module.willFilesOpen();
+    if( o.formingResources )
     module.resourcesForm();
+    else
+    module.resourcesFormSkip();
   }
 
   return module.ready.split().ifNoErrorThen( function( arg )
   {
-    // debugger;
-    let result = onReady( module );
+    let result = o.onReady( module );
     _.assert( result !== undefined );
     return result;
   })
   .then( ( err, arg ) =>
   {
-    // debugger;
     if( !will.topCommand )
     {
       if( will.beeping )
@@ -92,17 +94,47 @@ function moduleOnReady( onReady )
   })
   .then( ( err, arg ) =>
   {
-    // debugger;
     if( err )
     {
       if( !will.topCommand )
       _.appExitCode( -1 );
       throw _.errLogOnce( err );
     }
-    // debugger;
     return arg;
   });
 
+}
+
+_moduleOnReady.defaults =
+{
+  onReady : null,
+  formingResources : null,
+}
+
+//
+
+function moduleOnReady( onReady )
+{
+  let will = this.form();
+  _.assert( arguments.length === 1 );
+  return will._moduleOnReady
+  ({
+    onReady : onReady,
+    formingResources : 1,
+  });
+}
+
+//
+
+function moduleOnReadyNonForming( onReady )
+{
+  let will = this.form();
+  _.assert( arguments.length === 1 );
+  return will._moduleOnReady
+  ({
+    onReady : onReady,
+    formingResources : 0,
+  });
 }
 
 //
@@ -431,7 +463,7 @@ function commandExecutionList( e )
 function commandSubmodulesDownload( e )
 {
   let will = this;
-  return will.moduleOnReady( function( module )
+  return will.moduleOnReadyNonForming( function( module )
   {
     return module.submodulesDownload();
   });
@@ -442,7 +474,7 @@ function commandSubmodulesDownload( e )
 function commandSubmodulesUpgrade( e )
 {
   let will = this;
-  return will.moduleOnReady( function( module )
+  return will.moduleOnReadyNonForming( function( module )
   {
     return module.submodulesUpgrade();
   });
@@ -453,7 +485,7 @@ function commandSubmodulesUpgrade( e )
 function commandSubmodulesClean( e )
 {
   let will = this;
-  return will.moduleOnReady( function( module )
+  return will.moduleOnReadyNonForming( function( module )
   {
     return module.submodulesClean();
   });
@@ -465,7 +497,7 @@ function commandClean( e )
 {
   let will = this;
 
-  return will.moduleOnReady( function( module )
+  return will.moduleOnReadyNonForming( function( module )
   {
     let logger = will.logger;
     return module.clean();
@@ -750,7 +782,9 @@ let Extend =
 
   Exec,
   exec,
+  _moduleOnReady,
   moduleOnReady,
+  moduleOnReadyNonForming,
   done,
 
   commandsMake,
