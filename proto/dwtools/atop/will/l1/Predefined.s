@@ -21,7 +21,7 @@ let filesReflect = _.routineFromPreAndBody( _.FileProvider.Find.prototype.filesR
 
 let defaults = filesReflect.defaults;
 
-defaults.linking = 'hardlinkMaybe';
+defaults.linking = 'hardLinkMaybe';
 defaults.mandatory = 1;
 defaults.dstRewritingPreserving = 1;
 
@@ -245,7 +245,7 @@ function stepRoutineShell( frame )
     currentPath : opts.currentPath,
     verbosity : will.verbosity - 1,
   })
-  .doThen( ( err, arg ) =>
+  .finally( ( err, arg ) =>
   {
     if( err )
     throw _.errBriefly( 'Failed to shell', step.nickName, '\n', err );

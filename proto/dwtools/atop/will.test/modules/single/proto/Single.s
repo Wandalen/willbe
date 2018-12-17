@@ -1,1 +1,1 @@
-console.log( 'Single.s')
+console.log( 'Single.s' );

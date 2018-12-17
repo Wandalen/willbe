@@ -131,7 +131,7 @@ function run()
   let build = frame.build;
   let resource = frame.resource;
   let steps = build.steps;
-  let con = new _.Consequence().give( null );
+  let con = new _.Consequence().take( null );
 
   _.assert( arguments.length === 0 );
   _.assert( frame.formed === 1 );

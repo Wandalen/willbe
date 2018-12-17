@@ -68,26 +68,31 @@ function stage( stageName, number )
     _.assert( object[ self.stageNames[ s ] ] > 0, () => 'For ' + object.nickName + ' states preceding ' + _.strQuote( stageName ) + ' should be greater than zero, but ' + _.strQuote( self.stageNames[ s ] ) + ' is not' );
   }
 
+  // if( Config.debug )
+  // for( let s = stage ; s < l ; s++ )
+  // {
+  //   _.assert( !consequence.resourcesCount(), () => 'Consequences following ' + _.strQuote( self.consequenceNames[ s ] ) + ' should have no resource' );
+  // }
+
   if( Config.debug )
   for( let s = stage+1 ; s < l ; s++ )
   {
     _.assert( object[ self.stageNames[ s ] ] <= 1, () => 'States following ' + _.strQuote( stageName ) + ' should be zero or one, but ' + _.strQuote( self.stageNames[ s ] ) + ' is ' + object[ self.stageNames[ s ] ] );
-    _.assert( !consequence.resourcesHas(), () => 'Consequences following ' + _.strQuote( self.consequenceNames[ s ] ) + ' should have no resource' );
   }
 
   _.assert( arguments.length === 2 );
   _.assert( _.consequenceIs( consequence ) );
   _.assert( stage >= 0, () => 'Unknown stage ' + _.strQuote( stageName ) );
   _.assert( _.numberIs( number ) && number <= self.finals[ stage ], () => 'Stage ' + _.strQuote( stageName ) + ' should be in range ' + _.rangeToStr([ 0, self.finals[ stage ] ]) );
-  _.assert( object[ stageName ]+1 === number, () => 'Stage ' + _.strQuote( stageName ) + ' has value ' + object[ stageName ] + ' so the next value should be ' + object[ stageName ] + 'attempt to set ' + number );
-  _.assert( !consequence.resourcesHas(), () => 'Consequences ' + _.strQuote( self.consequenceNames[ stage ] ) + ' of the current stage ' + _.strQuote( stageName ) + ' should have no resource' );
+  _.assert( object[ stageName ]+1 === number, () => 'Stage ' + _.strQuote( stageName ) + ' has value ' + object[ stageName ] + ' so the next value should be ' + ( object[ stageName ]+1 ) + ' attempt to set ' + number );
+  _.assert( !consequence.resourcesCount(), () => 'Consequences ' + _.strQuote( self.consequenceNames[ stage ] ) + ' of the current stage ' + _.strQuote( stageName ) + ' should have no resource' );
 
   // if( isFinal )
   // if( stageName === 'willFilesOpened' )
   // debugger;
 
   if( isFinal )
-  _.timeOut( 1, () => consequence.give( null ) );
+  _.timeOut( 1, () => consequence.take( null ) );
 
   object[ stageName ] = number;
 
@@ -95,6 +100,23 @@ function stage( stageName, number )
   console.log( ' s', object.nickName, stageName, number );
 
   return isFinal;
+}
+
+//
+
+function infoExport()
+{
+  let self = this;
+  let result = '';
+  for( let n = 0 ; n < self.stageNames.length ; n++ )
+  {
+    let stageName = self.stageNames[ n ];
+    let value = self.object[ stageName ];
+    let consequence = self.object[ self.consequenceNames[ n ] ];
+    let final = self.finals[ n ];
+    result += stageName + ' : ' + value + ' / ' + final + ' - ' + consequence.infoExport({ detailing : 1 }) + '\n';
+  }
+  return result;
 }
 
 // --
@@ -143,18 +165,19 @@ let Proto =
 
   // inter
 
-  init : init,
-  stage : stage,
+  init,
+  stage,
+  infoExport,
 
   // relation
 
-  Composes : Composes,
-  Aggregates : Aggregates,
-  Associates : Associates,
-  Restricts : Restricts,
-  Statics : Statics,
-  Forbids : Forbids,
-  Accessors : Accessors,
+  Composes,
+  Aggregates,
+  Associates,
+  Restricts,
+  Statics,
+  Forbids,
+  Accessors,
 
 }
 

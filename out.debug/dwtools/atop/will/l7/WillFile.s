@@ -200,7 +200,7 @@ function open()
   if( willf.data.execution )
   module.execution.copy( willf.data.execution );
 
-  let con = _.Consequence().give( null );
+  let con = _.Consequence().take( null );
 
   /* */
 

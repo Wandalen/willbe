@@ -113,19 +113,19 @@ function _load()
   submodule.loadedModule.willFilesOpen();
   submodule.loadedModule.resourcesForm();
 
-  submodule.loadedModule.willFilesFindReady.doThen( ( err, arg ) =>
+  submodule.loadedModule.willFilesFindReady.finally( ( err, arg ) =>
   {
     if( err )
     throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.loadedModule.dirPath ), '\n', err );
     return arg;
   });
 
-  submodule.loadedModule.ready.doThen( ( err, arg ) =>
+  submodule.loadedModule.ready.finally( ( err, arg ) =>
   {
     if( err )
     {
       if( will.verbosity >= 3 )
-      logger.error( ' ! Failed to read ' + submodule.nickName + ', try to download it' );
+      logger.error( ' ! Failed to read ' + submodule.nickName + ', try to download it with .submodules.download' );
       if( will.verbosity >= 5 || !submodule.loadedModule || submodule.loadedModule.isOpened() )
       {
         if( will.verbosity < 5 )

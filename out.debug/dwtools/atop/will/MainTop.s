@@ -72,13 +72,13 @@ function _moduleOnReady( o )
     module.resourcesFormSkip();
   }
 
-  return module.ready.split().ifNoErrorThen( function( arg )
+  return module.ready.split().keep( function( arg )
   {
     let result = o.onReady( module );
     _.assert( result !== undefined );
     return result;
   })
-  .then( ( err, arg ) =>
+  .finally( ( err, arg ) =>
   {
     if( !will.topCommand )
     {
@@ -92,7 +92,7 @@ function _moduleOnReady( o )
     throw err;
     return arg;
   })
-  .then( ( err, arg ) =>
+  .finally( ( err, arg ) =>
   {
     if( err )
     {
@@ -511,12 +511,33 @@ function commandCleanWhat( e )
 {
   let will = this;
 
-  return will.moduleOnReady( function( module )
+  return will.moduleOnReadyNonForming( function( module )
   {
+    let time = _.timeNow();
     let filesPath = module.cleanWhat();
+    let logger = will.logger;
     logger.log();
-    logger.log( _.toStr( filesPath, { multiline : 1, wrap : 0, levels : 2 } ) );
-    logger.log( 'Clean will delete ' + filesPath.length + ' file(s)' );
+
+    if( logger.verbosity >= 4 )
+    logger.log( _.toStr( filesPath[ '/' ], { multiline : 1, wrap : 0, levels : 2 } ) );
+
+    if( logger.verbosity >= 2 )
+    {
+      let details = _.filter( filesPath, ( filesPath, basePath ) =>
+      {
+        if( basePath === '/' )
+        return;
+        if( !filesPath.length )
+        return;
+        if( filesPath.length === 1 )
+        return filesPath[ 0 ];
+        return filesPath.length + ' at ' + basePath;
+      });
+      logger.log( _.mapVals( details ).join( '\n' ) );
+    }
+
+    logger.log( 'Clean will delete ' + filesPath[ '/' ].length + ' file(s) in total, found in ' + _.timeSpent( time ) );
+
     return filesPath;
   });
 
@@ -612,7 +633,7 @@ function commandWith( e )
   module.willFilesOpen();
   module.resourcesForm();
 
-  return module.ready.split().ifNoErrorThen( function( arg )
+  return module.ready.split().keep( function( arg )
   {
 
     _.assert( module.willFileArray.length > 0 );
@@ -625,7 +646,7 @@ function commandWith( e )
     });
 
   })
-  .doThen( ( err, arg ) =>
+  .finally( ( err, arg ) =>
   {
     debugger;
     let isTop = will.topCommand === commandWith;
@@ -665,7 +686,7 @@ function commandEach( e )
 
   let isolated = ca.isolateSecond( e.subject );
   let dirPath = path.resolve( isolated.subject );
-  let con = new _.Consequence().give( null );
+  let con = new _.Consequence().take( null );
   let files = will.willFilesList
   ({
     dirPath : dirPath,
@@ -676,7 +697,7 @@ function commandEach( e )
 
   let dirPaths = Object.create( null );
 
-  for( let f = 0 ; f < files.length ; f++ ) con.ifNoErrorThen( ( arg ) => /* !!! replace by concurrent, maybe */
+  for( let f = 0 ; f < files.length ; f++ ) con.keep( ( arg ) => /* !!! replace by concurrent, maybe */
   {
     let file = files[ f ];
 
@@ -702,7 +723,7 @@ function commandEach( e )
     module.willFilesOpen();
     module.resourcesForm();
 
-    return module.ready.split().ifNoErrorThen( function( arg )
+    return module.ready.split().keep( function( arg )
     {
 
       _.assert( module.willFileArray.length > 0 );
@@ -722,7 +743,7 @@ function commandEach( e )
 
   });
 
-  con.doThen( ( err, arg ) =>
+  con.finally( ( err, arg ) =>
   {
     debugger;
     let isTop = will.topCommand === commandEach;

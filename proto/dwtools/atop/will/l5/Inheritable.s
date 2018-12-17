@@ -526,7 +526,7 @@ function infoExport()
   let result = '';
   let fields = inheritable.dataExport();
 
-  result += inheritable.constructor.shortName + ' ' + inheritable.name + '\n';
+  result += inheritable.nickName + '\n';
   result += _.toStr( fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '' } ) + '\n';
 
   return result;

@@ -150,7 +150,7 @@ function form3()
   //     ({
   //       path : shell,
   //       currentPath : step.currentPath,
-  //     }).doThen( ( err, arg ) =>
+  //     }).finally( ( err, arg ) =>
   //     {
   //       if( err )
   //       throw _.errBriefly( err );

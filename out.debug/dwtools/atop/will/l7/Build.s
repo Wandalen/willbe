@@ -133,7 +133,7 @@ function run( frame )
   let module = frame.module;
   let will = module.will;
   let logger = will.logger;
-  let con = new _.Consequence().give( null );
+  let con = new _.Consequence().take( null );
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
@@ -153,7 +153,7 @@ function run( frame )
     // con.ifNoErrorThen( ( arg ) => it.element.form() );
     con.ifNoErrorThen( ( arg ) => frame2.run() );
     // con.ifNoErrorThen( ( arg ) => it.element.run( frame2 ) );
-    con.doThen( ( err, arg ) =>
+    con.finally( ( err, arg ) =>
     {
       frame2.finit();
       if( err )
@@ -190,7 +190,7 @@ function proceed( o )
   logPre();
 
   return frame.run()
-  .doThen( ( err, arg ) =>
+  .finally( ( err, arg ) =>
   {
     frame.finit();
     if( err )
