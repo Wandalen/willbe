@@ -661,7 +661,7 @@ singleModuleExport.timeOut = 15000;
 
 //
 
-function withSubmodules( test )
+function withSubmodulesSimplest( test )
 {
   let self = this;
 
@@ -697,25 +697,38 @@ function withSubmodules( test )
     })
   })
 
-  //
+  return con;
+}
 
-  .keep( () =>
-  {
-    test.case = 'module info'
-    return shell({ args : [ '.paths.list' ] })
-    .ifNoErrorThen( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, `proto : './proto'` ) );
-      test.is( _.strHas( got.output, `in : '.'` ) );
-      test.is( _.strHas( got.output, `out : 'out'` ) );
-      test.is( _.strHas( got.output, `out.debug : './out.debug'` ) );
-      test.is( _.strHas( got.output, `out.release : './out.release'` ) );
-      return null;
-    })
+withSubmodulesSimplest.timeOut = 200000;
+
+//
+
+//
+
+function withSubmodulesList( test )
+{
+  let self = this;
+
+  let singleModuleSrc = _.path.join( self.testModulesDir, 'submodules' );
+  let singleModuleDst = _.path.join( self.testTempDir, test.name );
+  let modulesPath = _.path.join( singleModuleDst, '.module' );
+
+  _.fileProvider.filesReflect({ reflectMap : { [ singleModuleSrc ] : singleModuleDst }  })
+
+  let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
+  willExecPath = _.path.nativize( willExecPath );
+
+  let shell = _.sheller
+  ({
+    path : 'node ' + willExecPath,
+    currentPath : singleModuleDst,
+    outputCollecting : 1
   })
 
+  let con = new _.Consequence().take( null )
 
+  //
 
   .keep( () =>
   {
@@ -724,8 +737,8 @@ function withSubmodules( test )
     .ifNoErrorThen( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, 'Submodule Tools' ) );
-      test.is( _.strHas( got.output, 'Submodule PathFundamentals' ) );
+      test.is( _.strHas( got.output, 'submodule::Tools' ) );
+      test.is( _.strHas( got.output, 'submodule::PathFundamentals' ) );
       return null;
     })
   })
@@ -754,11 +767,11 @@ function withSubmodules( test )
     .ifNoErrorThen( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, 'Step reflect.proto.0' ))
-      test.is( _.strHas( got.output, 'Step reflect.proto.1' ))
-      test.is( _.strHas( got.output, 'Step reflect.proto.2' ))
-      test.is( _.strHas( got.output, 'Step reflect.proto.3' ))
-      test.is( _.strHas( got.output, 'Step export.proto' ))
+      test.is( _.strHas( got.output, 'step::reflect.proto.0' ))
+      test.is( _.strHas( got.output, 'step::reflect.proto.1' ))
+      test.is( _.strHas( got.output, 'step::reflect.proto.2' ))
+      test.is( _.strHas( got.output, 'step::reflect.proto.3' ))
+      test.is( _.strHas( got.output, 'step::export.proto' ))
 
       return null;
     })
@@ -811,7 +824,7 @@ function withSubmodules( test )
     {
       test.identical( got.exitCode, 0 );
 
-      test.is( _.strHas( got.output, `name : 'single'` ));
+      test.is( _.strHas( got.output, `name : 'withSubmodules'` ));
       test.is( _.strHas( got.output, `description : 'Module for testing'` ));
       test.is( _.strHas( got.output, `version : '0.0.1'` ));
       test.is( _.strHas( got.output, `enabled : 1` ));
@@ -841,6 +854,35 @@ function withSubmodules( test )
     })
   })
 
+  return con;
+}
+
+withSubmodulesList.timeOut = 15000;
+
+//
+
+function withSubmodulesSubmodules( test )
+{
+  let self = this;
+
+  let singleModuleSrc = _.path.join( self.testModulesDir, 'submodules' );
+  let singleModuleDst = _.path.join( self.testTempDir, test.name );
+  let modulesPath = _.path.join( singleModuleDst, '.module' );
+
+  _.fileProvider.filesReflect({ reflectMap : { [ singleModuleSrc ] : singleModuleDst }  })
+
+  let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
+  willExecPath = _.path.nativize( willExecPath );
+
+  let shell = _.sheller
+  ({
+    path : 'node ' + willExecPath,
+    currentPath : singleModuleDst,
+    outputCollecting : 1
+  })
+
+  let con = new _.Consequence().take( null )
+
   //
 
   .keep( () =>
@@ -851,7 +893,7 @@ function withSubmodules( test )
     .ifNoErrorThen( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, '2/2 submodule(s) of module::single were downloaded in' ) );
+      test.is( _.strHas( got.output, '2/2 submodule(s) of module::withSubmodules were downloaded in' ) );
 
       var files = _.fileProvider.filesFind({ filePath : modulesPath, recursive : '2', outputFormat : 'relative' })
       test.is( files.length );
@@ -865,7 +907,6 @@ function withSubmodules( test )
   //
 
   .keep( () =>  shell({ args : [ '.submodules.upgrade' ] }) )
-
   .keep( () =>
   {
     test.case = '.submodules.upgrade'
@@ -874,7 +915,7 @@ function withSubmodules( test )
     .ifNoErrorThen( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, '2/2 submodule(s) of module::single were upgraded in' ) );
+      test.is( _.strHas( got.output, '2/2 submodule(s) of module::withSubmodules were upgraded in' ) );
       test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'Tools' ) ) )
       test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'PathFundamentals' ) ) )
       test.is( !_.fileProvider.fileExists( _.path.join( singleModuleDst, 'modules' ) ) )
@@ -914,6 +955,36 @@ function withSubmodules( test )
       return null;
     })
   })
+
+  return con;
+
+}
+
+withSubmodulesSubmodules.timeOut = 15000;
+
+//
+
+function withSubmodulesClean( test )
+{
+  let self = this;
+
+  let singleModuleSrc = _.path.join( self.testModulesDir, 'submodules' );
+  let singleModuleDst = _.path.join( self.testTempDir, test.name );
+  let modulesPath = _.path.join( singleModuleDst, '.module' );
+
+  _.fileProvider.filesReflect({ reflectMap : { [ singleModuleSrc ] : singleModuleDst }  })
+
+  let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
+  willExecPath = _.path.nativize( willExecPath );
+
+  let shell = _.sheller
+  ({
+    path : 'node ' + willExecPath,
+    currentPath : singleModuleDst,
+    outputCollecting : 1
+  })
+
+  let con = new _.Consequence().take( null )
 
   .keep( () =>  shell({ args : [ '.submodules.upgrade' ] }) )
 
@@ -991,6 +1062,59 @@ function withSubmodules( test )
     })
   })
 
+  return con;
+
+}
+
+withSubmodulesClean.timeOut = 35000;
+
+//
+
+function swithSubmodulesBuild( test )
+{
+  let self = this;
+
+  let singleModuleSrc = _.path.join( self.testModulesDir, 'submodules' );
+  let singleModuleDst = _.path.join( self.testTempDir, test.name );
+  let modulesPath = _.path.join( singleModuleDst, '.module' );
+
+  _.fileProvider.filesReflect({ reflectMap : { [ singleModuleSrc ] : singleModuleDst }  })
+
+  let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
+  willExecPath = _.path.nativize( willExecPath );
+
+  let shell = _.sheller
+  ({
+    path : 'node ' + willExecPath,
+    currentPath : singleModuleDst,
+    outputCollecting : 1
+  })
+
+  let con = new _.Consequence().take( null )
+
+  //
+
+  .keep( () =>
+  {
+    test.case = '.build withoud submodules'
+    let buildOutPath = _.path.join( singleModuleDst, 'out.debug' );
+    _.fileProvider.filesDelete( buildOutPath );
+
+    return shell({ args : [ '.build' ] })
+    .finally( ( err, got ) =>
+    {
+      test.is( !!err );
+      var files = _.fileProvider.dirRead( buildOutPath )
+      test.identical( files.length, 1 );
+
+      return null;
+    })
+  })
+
+  //
+
+  .keep( () =>  shell({ args : [ '.submodules.upgrade' ] }) )
+
   .keep( () =>
   {
     test.case = '.build'
@@ -1037,7 +1161,7 @@ function withSubmodules( test )
       args : [ '.build wrong' ]
     }
     return test.shouldThrowError( _.shell( o ) )
-    .keep( ( err, got ) =>
+    .keep( ( got ) =>
     {
       test.is( o.exitCode !== 0 );
       test.is( o.output.length );
@@ -1048,7 +1172,36 @@ function withSubmodules( test )
     })
   })
 
-  // //
+  return con;
+}
+
+swithSubmodulesBuild.timeOut = 35000;
+
+//
+
+function withSubmodulesExport( test )
+{
+  let self = this;
+
+  let singleModuleSrc = _.path.join( self.testModulesDir, 'submodules' );
+  let singleModuleDst = _.path.join( self.testTempDir, test.name );
+  let modulesPath = _.path.join( singleModuleDst, '.module' );
+
+  _.fileProvider.filesReflect({ reflectMap : { [ singleModuleSrc ] : singleModuleDst }  })
+
+  let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
+  willExecPath = _.path.nativize( willExecPath );
+
+  let shell = _.sheller
+  ({
+    path : 'node ' + willExecPath,
+    currentPath : singleModuleDst,
+    outputCollecting : 1
+  })
+
+  let con = new _.Consequence().take( null )
+
+  //
 
   .keep( () =>
   {
@@ -1080,12 +1233,12 @@ function withSubmodules( test )
     })
   })
 
-  //
-
   return con;
 }
 
-withSubmodules.timeOut = 200000;
+withSubmodulesExport.timeOut = 15000;
+
+//
 
 //
 
@@ -1238,7 +1391,12 @@ var Self =
     singleModuleBuild : singleModuleBuild,
     singleModuleExport : singleModuleExport,
 
-    withSubmodules : withSubmodules,
+    withSubmodulesSimplest : withSubmodulesSimplest,
+    withSubmodulesList : withSubmodulesList,
+    withSubmodulesSubmodules : withSubmodulesSubmodules,
+    withSubmodulesClean : withSubmodulesClean,
+    swithSubmodulesBuild : swithSubmodulesBuild,
+    withSubmodulesExport : withSubmodulesExport,
 
     submodulesDownload : submodulesDownload,
 
