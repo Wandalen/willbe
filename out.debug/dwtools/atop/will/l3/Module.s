@@ -476,7 +476,7 @@ function cleanWhat( o )
     let find = fileProvider.filesFinder
     ({
       verbosity : 0,
-      allowingMissing : 1,
+      allowingMissed : 1,
       recursive : '2',
       includingDirs : 1,
       includingTerminals : 1,
@@ -542,7 +542,7 @@ function cleanWhat( o )
       ({
         filePath : filePath,
         verbosity : 0,
-        allowingMissing : 1,
+        allowingMissed : 1,
         recursive : '2',
         includingDirs : 1,
         includingTerminals : 1,
