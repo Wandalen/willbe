@@ -103,7 +103,7 @@ function form3()
   _.sure( _.strIs( patho.path ) || _.arrayIs( patho.path ), 'Path resource should have "path" field' );
   _.assert
   (
-    _.all( patho.path, ( p ) => path.isRelative( p ) || path.isGlobal( p ) ), 
+    _.all( patho.path, ( p ) => path.isRelative( p ) || path.isGlobal( p ) ),
     () => patho.nickName + ' should not have absolute paths, but have ' + _.toStr( patho.path )
   );
 
@@ -202,21 +202,21 @@ let Proto =
 
   // inter
 
-  OptionsFrom : OptionsFrom,
+  OptionsFrom,
 
-  unform : unform,
-  form1 : form1,
-  form3 : form3,
+  unform,
+  form1,
+  form3,
 
   // relation
 
-  Composes : Composes,
-  Aggregates : Aggregates,
-  Associates : Associates,
-  Restricts : Restricts,
-  Statics : Statics,
-  Forbids : Forbids,
-  Accessors : Accessors,
+  Composes,
+  Aggregates,
+  Associates,
+  Restricts,
+  Statics,
+  Forbids,
+  Accessors,
 
 }
 

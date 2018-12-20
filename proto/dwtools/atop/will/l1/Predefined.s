@@ -77,6 +77,7 @@ function stepRoutineReflect( frame )
 
   delete opts.reflector ;
 
+  debugger;
   reflector.form();
 
   _.sure( reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strType( reflector ) )

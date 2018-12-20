@@ -180,8 +180,8 @@ function form()
   _.assert( arguments.length === 0 );
   _.assert( !module.formReady.resourcesCount() )
 
-  con.ifNoErrorThen( () => module.form1() );
-  con.ifNoErrorThen( () => module.form2() );
+  con.keep( () => module.form1() );
+  con.keep( () => module.form2() );
   con.finally( ( err, arg ) =>
   {
     if( err )
@@ -669,6 +669,14 @@ function stateResetError()
   let logger = will.logger;
   let resettingReady = 0;
 
+  if( module.formReady.errorsCount() )
+  {
+    _.assert( module.formed === 1 );
+    module.formed = 0;
+    module.formReady.got( 1 );
+    resettingReady = 1;
+  }
+
   if( module.willFilesFindReady.errorsCount() )
   {
     _.assert( module.willFilesFound === 1 );
@@ -879,15 +887,15 @@ function willFilesFind()
   let will = module.will;
   let logger = will.logger;
 
-  debugger;
+  // debugger;
   module.stager.stage( 'willFilesFound', 1 );
 
-  module.formReady
+  return module.formReady.split()
   .ifNoErrorGot( () =>
   {
-    debugger;
+    // debugger;
     let result = module._willFilesFindMaybe({ isInFile : !module.supermodule });
-    debugger;
+    // debugger;
 
     if( !result )
     {
@@ -900,7 +908,7 @@ function willFilesFind()
     result = _.Consequence.From( result );
     _.assert( _.consequenceIs( result ) );
 
-    result.finally( ( err, arg ) =>
+    result.finally( function( err, arg )
     {
       if( !err && module.willFileArray.length === 0 )
       throw _.errLogOnce( 'No will files', module.nickName, 'at', _.strQuote( module.dirPath ) );
@@ -913,19 +921,18 @@ function willFilesFind()
 
     return result;
   })
-  .finally( ( err, arg ) =>
+  .finallyGive( function( err, arg )
   {
     if( err )
     {
       if( will.verbosity && will.verboseStaging )
-      console.log( ' s', module.nickName, 'willFilesFound', 'failed' );
+      console.log( ' !s', module.nickName, 'willFilesFound', 'failed' );
       module.willFilesFindReady.error( err );
-      // throw err;
+      throw err;
     }
-    return arg || null;
+    return arg;
   });
 
-  return module.formReady.split();
 }
 
 willFilesFind.defaults = Object.create( _willFilesFindMaybe.defaults );
@@ -944,23 +951,22 @@ function willFilesOpen()
 
   module.stager.stage( 'willFilesOpened', 1 );
 
-  module.willFilesFindReady.ifNoErrorThen( ( arg ) =>
+  return module.willFilesFindReady.split().keep( ( arg ) =>
   {
     return module._willFilesOpen();
   })
   .finally( ( err, arg ) =>
   {
+    // debugger;
     if( err )
     {
       if( will.verbosity && will.verboseStaging )
-      console.log( ' s', module.nickName, 'willFilesOpened', 'failed' );
+      console.log( ' !s', module.nickName, 'willFilesOpened', 'failed' );
       module.willFilesOpenReady.error( err );
       throw err;
     }
     return arg;
   });
-
-  return module.willFilesFindReady.split();
 }
 
 //
@@ -986,13 +992,13 @@ function _willFilesOpen()
     if( willFile.formed === 2 )
     continue;
 
-    con.ifNoErrorThen( ( arg ) => willFile.open() );
+    con.keep( ( arg ) => willFile.open() );
 
   }
 
   con
-  .ifNoErrorThen( ( arg ) => module._resourcesSubmodulesForm() )
-  .ifNoErrorThen( ( arg ) =>
+  .keep( ( arg ) => module._resourcesSubmodulesForm() )
+  .keep( ( arg ) =>
   {
     module.stager.stage( 'willFilesOpened', 2 );
     return arg;
@@ -1003,7 +1009,7 @@ function _willFilesOpen()
   //   if( err )
   //   {
   //     if( will.verbosity && will.verboseStaging )
-  //     console.log( ' s', module.nickName, 'willFilesOpened', 'failed' );
+  //     console.log( ' !s', module.nickName, 'willFilesOpened', 'failed' );
   //     module.willFilesOpenReady.error( err );
   //     throw err;
   //   }
@@ -1028,6 +1034,8 @@ function resourcesFormSkip()
 
   _.assert( arguments.length === 0 );
 
+  debugger;
+
   // logger.log( module.nickName, 'resourcesFormSkip' );
 
   if( module.resourcesFormed > 0 )
@@ -1038,12 +1046,13 @@ function resourcesFormSkip()
   module.willFilesOpenReady
   .finally( ( err, arg ) =>
   {
-    _.timeOut( 1, () => module.ready.take( err, arg ) );
+    // _.timeOut( 1, () => module.ready.take( err, arg ) );
+    module.ready.takeSoon( err, arg );
     _.assert( !module.ready.resourcesCount() );
     if( err )
     {
       if( will.verbosity && will.verboseStaging )
-      console.log( ' s', module.nickName, 'resourcesFormSkip', 'failed' );
+      console.log( ' !s', module.nickName, 'resourcesFormSkip', 'failed' );
       module.resourcesFormReady.error( err );
       throw err;
     }
@@ -1069,10 +1078,11 @@ function resourcesForm()
 
   module.stager.stage( 'resourcesFormed', 1 );
 
-  module.willFilesOpenReady.ifNoErrorThen( ( arg ) =>
+  return module.willFilesOpenReady.split().keep( ( arg ) =>
   {
     let con = new _.Consequence().take( null );
 
+    // debugger;
     // if( !module.supermodule )
     // debugger;
 
@@ -1080,9 +1090,9 @@ function resourcesForm()
     if( module.submodulesAllAreDownloaded() && module.submodulesNoneHasError() )
     {
 
-      con.ifNoErrorThen( () => module._resourcesForm() );
+      con.keep( () => module._resourcesForm() );
 
-      con.ifNoErrorThen( ( arg ) =>
+      con.keep( ( arg ) =>
       {
         module.stager.stage( 'resourcesFormed', 2 );
         return arg;
@@ -1102,19 +1112,19 @@ function resourcesForm()
   // .timeOut( () => module.ready )
   .finally( ( err, arg ) =>
   {
-    _.timeOut( 1, () => module.ready.take( err, arg ) );
+    // _.timeOut( 1, () => module.ready.take( err, arg ) );
+    module.ready.takeSoon( err, arg );
     _.assert( !module.ready.resourcesCount() );
     if( err )
     {
       if( will.verbosity && will.verboseStaging )
-      console.log( ' s', module.nickName, 'resourcesFormed', 'failed' );
+      console.log( ' !s', module.nickName, 'resourcesFormed', 'failed' );
       module.resourcesFormReady.error( err );
       throw err;
     }
     return arg;
   });
 
-  return module.willFilesOpenReady.split();
 }
 
 //
@@ -1211,13 +1221,13 @@ function _resourcesFormAct( Resource, con )
   {
     let resource = module[ Resource.MapName ][ s ];
     _.assert( !!resource.formed );
-    con.ifNoErrorThen( ( arg ) => resource.form2() );
+    con.keep( ( arg ) => resource.form2() );
   }
 
   for( let s in module[ Resource.MapName ] )
   {
     let resource = module[ Resource.MapName ][ s ];
-    con.ifNoErrorThen( ( arg ) => resource.form3() );
+    con.keep( ( arg ) => resource.form3() );
   }
 
 }
@@ -1379,7 +1389,7 @@ function _submodulesDownload( o )
     if( !submodule.isRemote )
     continue;
 
-    con.ifNoErrorThen( () =>
+    con.keep( () =>
     {
 
       if( !submodule.isDownloaded )
@@ -1388,7 +1398,7 @@ function _submodulesDownload( o )
       remoteNumber += 1;
 
       let r = _.Consequence.From( submodule._remoteDownload( _.mapExtend( null, o ) ) );
-      return r.ifNoErrorThen( ( arg ) =>
+      return r.keep( ( arg ) =>
       {
 
         _.assert( _.boolIs( arg ) );
@@ -1682,21 +1692,21 @@ function _remoteDownload( o )
   }
 
   return con
-  .ifNoErrorThen( () => module.remoteIsUpToDate() )
-  .ifNoErrorThen( ( arg ) =>
+  .keep( () => module.remoteIsUpToDate() )
+  .keep( function( arg )
   {
     wasUpToDate = module.isUpToDate;
     return arg;
   })
-  .ifNoErrorThen( () => will.Predefined.filesReflect.call( fileProvider, o2 ) )
-  .ifNoErrorThen( ( arg ) =>
+  .keep( () => will.Predefined.filesReflect.call( fileProvider, o2 ) )
+  .keep( function( arg )
   {
     module.isUpToDate = true;
     module.isDownloaded = true;
-    if( o.forming )
+    if( o.forming && 0 )
     {
-      debugger;
-      logger.log( module.stager.infoExport() );
+      // debugger;
+      // logger.log( module.stager.infoExport() );
 
       _.assert( module.formed === 3, 'not tested' );
       _.assert( module.willFilesFound === 1, 'not tested' );
@@ -1705,18 +1715,26 @@ function _remoteDownload( o )
 
       module.stateResetError();
 
-      logger.log( module.stager.infoExport() );
+      // logger.log( module.stager.infoExport() );
 
       module.willFilesFind();
       module.willFilesOpen();
-      module.resourcesForm();
+      module.resourcesFormSkip();
+      // module.resourcesForm();
 
       debugger;
-      return module.ready.split();
+      return module.ready
+      .finallyGive( function( err, arg )
+      {
+        debugger;
+        logger.log( module.absoluteName, '_remoteDownload.finally', err, arg );
+        this.take( err, arg );
+      })
+      .split();
     }
     return null;
   })
-  .finally( ( err, arg ) =>
+  .finally( function( err, arg )
   {
     if( err )
     throw _.err( 'Failed to', ( o.upgrading ? 'upgrade' : 'download' ), module.nickName, '\n', err );

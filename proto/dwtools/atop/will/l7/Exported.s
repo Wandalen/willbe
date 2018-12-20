@@ -395,19 +395,19 @@ let Proto =
 
   // inter
 
-  exportedReflectorMake : exportedReflectorMake,
+  exportedReflectorMake,
 
-  proceed : proceed,
+  proceed,
 
   // relation
 
-  Composes : Composes,
-  Aggregates : Aggregates,
-  Associates : Associates,
-  Restricts : Restricts,
-  Statics : Statics,
-  Forbids : Forbids,
-  Accessors : Accessors,
+  Composes,
+  Aggregates,
+  Associates,
+  Restricts,
+  Statics,
+  Forbids,
+  Accessors,
 
 }
 

@@ -36,25 +36,7 @@ function form3()
   _.assert( arguments.length === 0 );
   _.assert( build.formed === 2 );
 
-  // console.log( 'form3', module.nickName, build.nickName );
-
   /* begin */
-
-  // build.stepsEach( function( it )
-  // {
-  //   if( it.concurrent )
-  //   return;
-  //   let kind = it.element.constructor.shortName;
-  //   if( it.element instanceof will.Step )
-  //   {
-  //     _.sure( _.routineIs( it.element.stepRoutine ), kind, it.element.name, 'does not have step routine' );
-  //     _.sure( it.element.formed >= 2, kind, it.element.name, 'was not formed' );
-  //   }
-  //   else if( it.element instanceof will.Build )
-  //   {
-  //     _.sure( it.element.formed >= 2, kind, it.element.name, 'was not formed' );
-  //   }
-  // });
 
   if( build.criterion && build.criterion.default !== undefined )
   build.criterion.default = build.criterion.default ? 1 : 0;
@@ -150,9 +132,7 @@ function run( frame )
   {
     let frame2 = frame.cloneUp( it.element );
     _.assert( frame2.formed === 1 );
-    // con.ifNoErrorThen( ( arg ) => it.element.form() );
-    con.ifNoErrorThen( ( arg ) => frame2.run() );
-    // con.ifNoErrorThen( ( arg ) => it.element.run( frame2 ) );
+    con.keep( ( arg ) => frame2.run() );
     con.finally( ( err, arg ) =>
     {
       frame2.finit();
@@ -368,27 +348,27 @@ let Proto =
 
   // inter
 
-  form3 : form3,
+  form3,
 
-  stepsEach : stepsEach,
-  run : run,
-  proceed : proceed,
-  isExport : isExport,
+  stepsEach,
+  run,
+  proceed,
+  isExport,
 
-  // exportedDirPathFor : exportedDirPathFor,
-  baseDirPathFor : baseDirPathFor,
-  archiveFilePathFor : archiveFilePathFor,
-  outFilePathFor : outFilePathFor,
+  // exportedDirPathFor,
+  baseDirPathFor,
+  archiveFilePathFor,
+  outFilePathFor,
 
   // relation
 
-  Composes : Composes,
-  Aggregates : Aggregates,
-  Associates : Associates,
-  Restricts : Restricts,
-  Statics : Statics,
-  Forbids : Forbids,
-  Accessors : Accessors,
+  Composes,
+  Aggregates,
+  Associates,
+  Restricts,
+  Statics,
+  Forbids,
+  Accessors,
 
 }
 

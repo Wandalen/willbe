@@ -132,21 +132,21 @@ let Proto =
 
   // inter
 
-  finit : finit,
-  init : init,
+  finit,
+  init,
 
-  infoExport : infoExport,
-  dataExport : dataExport,
+  infoExport,
+  dataExport,
 
   // relation
 
-  Composes : Composes,
-  Aggregates : Aggregates,
-  Associates : Associates,
-  Restricts : Restricts,
-  Statics : Statics,
-  Forbids : Forbids,
-  Accessors : Accessors,
+  Composes,
+  Aggregates,
+  Associates,
+  Restricts,
+  Statics,
+  Forbids,
+  Accessors,
 
 }
 

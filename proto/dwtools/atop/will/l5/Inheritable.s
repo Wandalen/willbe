@@ -39,11 +39,8 @@ function MakeForEachCriterion( o )
   let will = module.will;
   let done = 0;
 
-  // debugger;
-
   if( o.criterion && _.mapKeys( o.criterion ).length > 0 )
   {
-    // let samples = _.eachSample( o.criterion , function( criterion, index )
     let samples = _.eachSample({ sets : o.criterion });
     if( samples.length > 1 )
     for( let index = 0 ; index < samples.length ; index++ )
@@ -154,6 +151,9 @@ function form()
   let path = fileProvider.path;
   let logger = will.logger;
 
+  if( inheritable.nickName === 'step::reflect.submodules' )
+  debugger;
+
   if( inheritable.formed === 0 )
   inheritable.form1();
   if( inheritable.formed === 1 )
@@ -178,12 +178,8 @@ function form1()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  // if( inheritable.nickName === '{ Step "reflect" }' )
-  // debugger;
-
   _.sure( !module[ inheritable.MapName ][ inheritable.name ], () => 'Module ' + module.dirPath + ' already has ' + inheritable.nickName );
   _.assert( !willf || !willf[ inheritable.MapName ][ inheritable.name ] );
-
   _.assert( arguments.length === 0 );
   _.assert( !inheritable.formed );
   _.assert( !!will );
@@ -255,7 +251,6 @@ function _inheritForm( o )
 
   _.arrayRemoveElementOnceStrictly( o.visited, inheritable );
 
-  // inheritable.formed = 2;
   return inheritable;
 }
 
@@ -289,8 +284,6 @@ function _inheritMultiple( o )
       current : inheritable,
       flattening : 1,
     });
-    // if( inheritable.nickName === 'reflector::reflect.submodules' )
-    // debugger;
 
     if( _.mapIs( ancestors ) )
     ancestors = _.mapVals( ancestors );
@@ -355,8 +348,6 @@ function _inheritSingle( o )
 
   let inheritable2 = o.ancestor;
 
-  // logger.log( '_inheritSingle', inheritable.name, '<-', inheritable2.name );
-
   _.assert( !!inheritable2.formed );
   _.assert( o.ancestor instanceof inheritable.constructor, () => 'Expects ' + inheritable.constructor.shortName + ' but got ' + _.strType( o.ancestor ) );
   _.assert( arguments.length === 1 );
@@ -370,8 +361,6 @@ function _inheritSingle( o )
     inheritable2._inheritForm({ visited : o.visited });
   }
 
-  // let extend = _.mapOnly( inheritable2, _.mapNulls( inheritable ) );
-
   let extend = _.mapOnly( inheritable2, _.mapNulls( inheritable.dataExport({ compact : 0, copyingAggregates : 1 }) ) );
   delete extend.criterion;
   inheritable.copy( extend );
@@ -384,48 +373,6 @@ _inheritSingle.defaults=
   ancestor : null,
   visited : null,
 }
-
-//
-//
-// function _inheritSingle( o )
-// {
-//   let inheritable = this;
-//   let module = inheritable.module;
-//   let willf = inheritable.willf;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   _.assert( _.strIs( o.ancestor ) );
-//   _.assert( arguments.length === 1 );
-//   _.assert( inheritable.formed === 1 );
-//   _.assertRoutineOptions( _inheritSingle, arguments );
-//
-//   let inheritable2 = module[ inheritable.MapName ][ o.ancestor ];
-//   _.sure( _.objectIs( inheritable2 ), () => inheritable.constructor.shortName + ' ' + _.strQuote( o.ancestor ) + ' does not exist' );
-//   _.assert( !!inheritable2.formed );
-//
-//   if( inheritable2.formed !== 2 )
-//   {
-//     _.sure( !_.arrayHas( o.visited, inheritable2.name ), () => 'Cyclic dependency inheritable ' + _.strQuote( inheritable.name ) + ' of ' + _.strQuote( inheritable2.name ) );
-//     inheritable2._inheritForm({ visited : o.visited });
-//   }
-//
-//   let extend = _.mapOnly( inheritable2, _.mapNulls( inheritable ) );
-//   delete extend.criterion;
-//   inheritable.copy( extend );
-//
-//   if( inheritable2.criterion )
-//   inheritable.criterion = _.mapSupplement( inheritable.criterion || null, inheritable2.criterion );
-//
-// }
-//
-// _inheritSingle.defaults=
-// {
-//   ancestor : null,
-//   visited : null,
-// }
 
 //
 
@@ -613,23 +560,9 @@ function resolve_body( o )
   _.assert( arguments.length === 1 );
   _.assert( o.current === null || o.current === inheritable )
 
-  // let resolved = src;
-  // if( !module.strIsResolved( resolved ) )
-
-  // if( o.current !== null )
-  // debugger;
-
-  // if( o.current === null )
   o.current = inheritable;
-  // else
-  // _.assert( 0, 'not tested' );
 
-  // debugger;
   let resolved = module.resolve.body.call( module, o );
-  // debugger;
-
-  // let result = path.resolve( module.dirPath, ( module.pathMap.in || '.' ), resolved );
-  // _.assert( _.strIs( resolved ) || _.arrayIs( resolved ) );
 
   return resolved;
 }

@@ -92,7 +92,8 @@ function stage( stageName, number )
   // debugger;
 
   if( isFinal )
-  _.timeOut( 1, () => consequence.take( null ) );
+  consequence.takeSoon( null );
+  // _.timeOut( 1, () => consequence.take( null ) );
 
   object[ stageName ] = number;
 
@@ -114,7 +115,10 @@ function infoExport()
     let value = self.object[ stageName ];
     let consequence = self.object[ self.consequenceNames[ n ] ];
     let final = self.finals[ n ];
-    result += stageName + ' : ' + value + ' / ' + final + ' - ' + consequence.infoExport({ detailing : 1 }) + '\n';
+    let failStr = consequence.errorsCount() ? ( ' - ' + 'fail' ) : '';
+    let conStr = consequence.infoExport({ detailing : 1 });
+    let stateStr = value + ' / ' + final;
+    result += stageName + ' : ' + stateStr + ' - ' + conStr + failStr + '\n';
   }
   return result;
 }

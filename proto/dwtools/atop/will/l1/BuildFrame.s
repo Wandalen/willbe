@@ -136,34 +136,15 @@ function run()
   _.assert( arguments.length === 0 );
   _.assert( frame.formed === 1 );
 
-  con.ifNoErrorThen( () => resource.form() );
+  con.keep( () => resource.form() );
 
-  con.ifNoErrorThen( ( arg ) =>
-  {
-
-    _.assert( resource.formed === 3 );
-
-    // if( resource instanceof will.Step )
-    // {
-    //
-    //   _.assert( _.routineIs( resource.stepRoutine ) );
-    //   frame.opts = _.mapExtend( null, resource.opts );
-    //   debugger;
-    //   if( resource.opts && resource.stepRoutine.stepOptions )
-    //   _.routineOptions( resource.stepRoutine, frame.opts, resource.stepRoutine.stepOptions );
-    //
-    // }
-
-    return arg;
-  });
-
-  con.ifNoErrorThen( ( arg ) =>
+  con.keep( ( arg ) =>
   {
     _.assert( resource.formed === 3 )
     return arg;
   });
 
-  con.ifNoErrorThen( () => resource.run( frame ) );
+  con.keep( () => resource.run( frame ) );
 
   return con;
 }
@@ -240,23 +221,23 @@ let Proto =
 
   // inter
 
-  finit : finit,
-  init : init,
-  unform : unform,
-  form : form,
-  run : run,
+  finit,
+  init,
+  unform,
+  form,
+  run,
 
-  cloneUp : cloneUp,
+  cloneUp,
 
   // relation
 
-  Composes : Composes,
-  Aggregates : Aggregates,
-  Associates : Associates,
-  Restricts : Restricts,
-  Statics : Statics,
-  Forbids : Forbids,
-  Accessors : Accessors,
+  Composes,
+  Aggregates,
+  Associates,
+  Restricts,
+  Statics,
+  Forbids,
+  Accessors,
 
 }
 
