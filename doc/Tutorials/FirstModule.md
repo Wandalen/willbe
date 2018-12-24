@@ -1,69 +1,54 @@
-This tutorial shows how to create a module and export it.
+# Making a submodule
+This tutorial shows how to create a module simplest module.
 
-1. Preparation:
+## Module structure
 
-    - Installing "willbe":
-        ```
-        npm install -g willbe
-        ```
-    - Preparing module files:
+A basic module structure looks like this:
+```
+.
+├── * - any amount of files
+├── .will.yml
+```
+.will.yml - config is a [YAML](https://en.wikipedia.org/wiki/YAML) file that describes the module and its behaviour.
 
-        Module consists of files and config( s ).
-        - Create a file in the root of module folder, in this case it will be "Single.js".
-        - Create an empty will config file with name "single.will.yml"
-2. Writing will config file:
+More about [modules](Module.md) and [will files](Will-files.md).
 
-    Will config is a YAML file that describes the module and its behaviour.
+___
 
-  - First of all we need to setup basic information about the module. The most important is a name.
-    Also wee can add fields like description,version, etc. All this kinds of information are stored in block called "about":
+## Creating the module
 
+### Writing will config:
+
+1.  Create an empty will config file with name "first.will.yml"
+2.  Setup basic information about the module in the field "about".
+
+    The most important property is a name. Also wee can add fields like description,version, keywords, etc.
     ``` yaml
     about :
-        name : single
-        description : "Single file module"
+        name : first
+        description : "Out first module"
         version : 0.0.1
-    ```
-  - Module needs to be exported to use it from the other place. Lets setup export scenario:
-
-    ``` yaml
-    path :
-        in : '.'
-        out : '.'
-        export : './Single.js'
-
-    step  :
-        export.single :
-            inherit : export
-            tar : 0
-            export : path::export
-
-    build :
-        export :
-            criterion :
-                default : 1
-                export : 1
-            steps :
-                - export.single
+        keywords :
+            - willbe
     ```
 
-    - path -
-    - step -
-    - build -
+3.  Lets make a request to check that will properly reads our config file.
 
-  - Lets execute some will commands to check that everything works fine.
-    All commands should be executed from the root directory of the module.
-    - Getting info about the module:
-        ```
-        will .about.list
-        ```
-    - Exporting the module:
-        ```
-        will .export
-        ```
-      During export process willbe generates *.out.will.yml file that contains information that is needed to import current module.
-
-Sample of the module can be found in ./doc/Tutorials/modules/single
+All commands should be executed from the root directory of the module.
+- Getting info about the module:
+    ```
+    will .about.list
+    ```
+    willbe should print information from "about" field, like:
+    ```
+    About
+    name : 'first'
+    description : 'Out first module'
+    version : '0.0.1'
+    enabled : 1
+    keywords :
+        'willbe'
+    ```
 
 
 
