@@ -1,0 +1,27 @@
+
+about :
+
+  name : second
+  description : "Second module"
+  version : 0.0.1
+
+path :
+
+  in : '.'
+  out : '.'
+  export : './index.js'
+
+step  :
+  export.module :
+    inherit : export
+    tar : 0
+    export : path::export
+
+build :
+
+  export :
+      criterion :
+        default : 1
+        export : 1
+      steps :
+        - export.module
