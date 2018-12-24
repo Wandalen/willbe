@@ -98,6 +98,8 @@ build :
 
 To launch current( default ) build configuration run:
 
+> Command should be executed from root directory of the module.
+
 ```
 will .build
 ```

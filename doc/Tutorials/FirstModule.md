@@ -34,7 +34,7 @@ ___
 ### Using willbe to get about info:
 Lets make a ".about.list" request to check that will properly reads our config file.
 
-> Command should be executed from root directory.
+> Command should be executed from root directory of the module.
 
 Getting info about the module:
 
