@@ -32,6 +32,7 @@ Now will we extend it to implement build configuration.
 To create build configuration, first we need to learn two new fields: `step` and `build`.
 
 `step` - describes build steps, step can be a shell command or predefined operation, like files reflecting( copying ).
+
 `build`- describes build configurations, build configuration is a sequence of build steps.
 
 More about [build process](Build.md)
