@@ -65,8 +65,10 @@ build :
 ```
 
 `debug` - name of build configuration.
+
 `criterion` - defines criteria which helps to select necessary configuration,step or other component during build process.
 Usage of criterions will be described later.
+
 `steps` - list of steps to execute in current build configuration
 
 ### Launching build configuration:
