@@ -1,5 +1,5 @@
 # Making a submodule
-This tutorial shows how to create a module simplest module.
+This tutorial shows how to create a simplest module.
 
 ## Module structure
 
@@ -41,7 +41,7 @@ Getting info about the module:
 ```
 will .about.list
 ```
-`willbe` should print information from "about" field, like:
+`willbe` should print information from `about` field, like:
 ```
 About
 name : 'first'
