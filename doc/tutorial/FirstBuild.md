@@ -29,13 +29,13 @@ Create `package.json` in root directory with content:
 In previous tutorial we created basic confing with `about` field.
 Current goal is to extend it with a build configuration.
 
-##### First we need to learn two new components of will config:
+#### First we need to learn two new components of will config:
 
 `step` - describes build steps, step can be a shell command or predefined operation, like file(s) reflecting( copying ).
 
 `build` - describes build configurations, [build](../Build.md) configuration is a sequence of build steps.
 
-##### Add new step with name `npm.install`, in this example its execution of shell command:
+#### Add new step with name `npm.install`, in this example its execution of shell command:
 
 ```yaml
 step :
@@ -51,7 +51,7 @@ step :
 
 `shell` - command to execute.
 
-##### Add build configuration:
+#### Add build configuration:
 
 ```yaml
 build :
@@ -100,7 +100,7 @@ build :
 ```
 </details>
 
-##### To launch current( default ) build configuration run:
+#### To launch current( default ) build configuration run:
 
 > Command should be executed from root directory of the module.
 
