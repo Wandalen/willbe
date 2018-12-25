@@ -8,7 +8,6 @@ This tutorial shows how to create build configuration that runs npm to install d
 ├── package.json
 ├── .will.yml
 ```
-___
 
 ## Creating first build configuration
 
@@ -69,7 +68,8 @@ build :
 
 `steps` - list of steps to execute in current build configuration
 
-### Testing build configuration:
+
+## Testing build configuration:
 
 The final version of `.will.yml`:
 
