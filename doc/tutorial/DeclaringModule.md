@@ -9,7 +9,7 @@ A basic module structure looks like this:
 ├── * - any files
 ├── .will.yml
 ```
-`.will.yml` - [will file](Will-files.md) is kind of config file, which describe a [module](Module.md) and how to use it.
+`.will.yml` - [will file](../Will-files.md) is kind of config file, which describe a [module](../Module.md) and how to use it.
 Possible config file formats: YAML, JSON, CSON.
 
 ___

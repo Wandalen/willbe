@@ -1,5 +1,5 @@
 # Creating a build configuration
-In this tutorial we will create build configuration that uses npm to install dependecies.
+This tutorial shows how to create build configuration that runs npm to install dependecies.
 
 ## Module structure
 
@@ -19,41 +19,39 @@ Create `package.json` in root directory with content:
 {
   "name": "second",
   "dependencies": {
-    "wTools": ""
+    "express": ""
   }
 }
 ```
 
 ### Preparing will file:
 
-In previous tutorial we created basic will file with `about` field.
-Now will we extend it to implement build configuration.
+In previous tutorial we created basic confing with `about` field.
+Current goal is to extend it with a build configuration.
 
-To create build configuration, first we need to learn two new fields: `step` and `build`.
+##### First we need to learn two new components of will config:
 
-`step` - describes build steps, step can be a shell command or predefined operation, like files reflecting( copying ).
+`step` - describes build steps, step can be a shell command or predefined operation, like file(s) reflecting( copying ).
 
-`build`- describes build configurations, build configuration is a sequence of build steps.
+`build` - describes build configurations, [build](../Build.md) configuration is a sequence of build steps.
 
-More about [build process](Build.md)
-
-Lets define our first build step with name `npm.install`, in this example it will be execution of shell command:
+##### Add new step with name `npm.install`, in this example its execution of shell command:
 
 ```yaml
 step :
 
   npm.install :
     currentPath : '.'
-    shell : npm i wTools
+    shell : npm install
 ```
 
-`npm.install` - name of the build step.
+`npm.install` - name of the step.
 
 `currentPath` - path to directory from where command will be executed, current working directory in this case.
 
 `shell` - command to execute.
 
-The second step is to add build configuration.
+##### Add build configuration:
 
 ```yaml
 build :
@@ -65,16 +63,18 @@ build :
       - npm.install
 ```
 
-`debug` - name of build configuration.
+`debug` - name of configuration.
 
-`criterion` - defines criteria which helps to select necessary configuration,step or other component during build process.
-Usage of criterions will be described later.
+`criterion` - defines criteria which helps to select necessary configuration,sage of criterions will be described later.
 
 `steps` - list of steps to execute in current build configuration
 
-### Launching build configuration:
+### Testing build configuration:
 
-The final version of `.will.yml` should look like:
+The final version of `.will.yml`:
+
+<details>
+  <summary><u>Click to expand!</u></summary>
 
 ```yaml
 
@@ -88,7 +88,7 @@ step :
 
   npm.install :
     currentPath : '.'
-    shell : npm i wTools
+    shell : npm install
 
 build :
 
@@ -98,8 +98,9 @@ build :
     steps :
       - npm.install
 ```
+</details>
 
-To launch current( default ) build configuration run:
+##### To launch current( default ) build configuration run:
 
 > Command should be executed from root directory of the module.
 
@@ -107,17 +108,14 @@ To launch current( default ) build configuration run:
 will .build
 ```
 
-Dependecies defined in `package.json` will be installed. `willbe` should print output, like:
+Dependecies defined in `package.json` will be installed:
 
 ```
   Building debug
- > npm i wTools
+    > npm install
+  added 48 packages from 36 contributors and audited 121 packages in 2.302s
 
-+ wTools@0.8.389
-added 1 package from 3 contributors and audited 1 package in 1.215s
-found 0 vulnerabilities
-
-  Built debug in 1.595s
+  Built debug in 2.875s
 ```
 ---
 [Back to main page](../README.md)
