@@ -1725,7 +1725,7 @@ function _remoteDownload( o )
       .finallyGive( function( err, arg )
       {
         // debugger;
-        logger.log( module.absoluteName, '_remoteDownload.finally', err, arg );
+        // logger.log( module.absoluteName, '_remoteDownload.finally', err, arg );
         this.take( err, arg );
       })
       .split();
@@ -2532,6 +2532,7 @@ function infoExport()
   result += module.execution.infoExport();
 
   result += module.infoExportPaths( module.pathMap );
+  result += module.infoExportResource( module.submoduleMap );
   result += module.infoExportResource( module.reflectorMap );
   result += module.infoExportResource( module.stepMap );
   result += module.infoExportResource( module.buildsSelect({ preffering : 'more' }) );

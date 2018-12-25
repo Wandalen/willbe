@@ -820,7 +820,7 @@ function commandEach( e )
 
 let Composes =
 {
-  beeping : 1,
+  beeping : 0,
 }
 
 let Aggregates =

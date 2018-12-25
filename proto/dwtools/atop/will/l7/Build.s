@@ -258,13 +258,13 @@ function archiveFilePathFor()
   let outDirPath = module.pathMap.out || '.';
 
   _.assert( arguments.length === 0 );
-  _.assert( _.strDefined( build.name ) );
+  _.assert( _.strDefined( build.name ), 'Build should have name' );
+  _.assert( _.strDefined( module.about.name ), 'Module should have name, declare about.name' );
   _.assert( inExportFile instanceof will.WillFile );
 
-  // let outDir = module.pathMap.outDir || hd.path.dir( inExportFile.filePath ) || '.';
   let name = _.strJoinPath( [ module.about.name, build.name, '.out.tgs' ], '.' );
+
   return hd.path.resolve( module.dirPath, outDirPath, name );
-  // return hd.path.resolve( inFileDirPath, module.dirPath, outDir, name );
 }
 
 //
@@ -283,13 +283,11 @@ function outFilePathFor()
   _.assert( arguments.length === 0 );
   _.assert( _.strDefined( build.name ) );
   _.assert( inExportFile instanceof will.WillFile );
+  _.assert( _.strDefined( module.about.name ), 'Module should have name, declare about.name' );
 
   let name = _.strJoinPath( [ module.about.name, '.out.will.yml' ], '.' );
-  return hd.path.resolve( module.dirPath, outDirPath, name );
 
-  // let outDir = module.pathMap.outDir || hd.path.dir( inExportFile.filePath ) || '.';
-  // let name = _.strJoinPath( [ module.about.name, '.out.yml' ], '.' );
-  // return hd.path.resolve( module.dirPath, outDir, name );
+  return hd.path.resolve( module.dirPath, outDirPath, name );
 }
 
 
