@@ -1307,7 +1307,7 @@ function submodulesDownload( test )
     .ifNoErrorThen( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
-      test.is( _.fileProvider.isDir( _.path.join( dirPath, '.module/Tools' ) ) );
+      test.gt( _.fileProvider.dirRead( _.path.join( dirPath, '.module/Tools' ) ).length, 0 );
       test.gt( _.fileProvider.dirRead( _.path.join( dirPath, 'out.debug' ) ).length, 0 );
       return null;
     })
@@ -1320,12 +1320,14 @@ function submodulesDownload( test )
     test.case = 'export'
     _.fileProvider.filesDelete( _.path.join( dirPath, '.module' ) );
     _.fileProvider.filesDelete( _.path.join( dirPath, 'out.debug' ) );
+    _.fileProvider.filesDelete( _.path.join( dirPath, 'out/Download.out.will.yml' ) );
     return shell({ args : [ '.export' ] })
     .ifNoErrorThen( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
-      test.is( _.fileProvider.isDir( _.path.join( dirPath, '.module/Tools' ) ) );
+      test.gt( _.fileProvider.dirRead( _.path.join( dirPath, '.module/Tools' ) ).length, 0 );
       test.gt( _.fileProvider.dirRead( _.path.join( dirPath, 'out.debug' ) ).length, 0 );
+      test.is( _.fileProvider.isTerminal( _.path.join( dirPath, 'out/Download.out.will.yml' ) ) );
       return null;
     })
   })
