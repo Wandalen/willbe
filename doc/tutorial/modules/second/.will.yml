@@ -9,7 +9,7 @@ step :
 
   npm.install :
     currentPath : '.'
-    shell : npm i wTools
+    shell : npm install
 
 build :
 

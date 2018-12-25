@@ -5,3 +5,6 @@
 ```
 $ npm i -g willbe
 ```
+
+---
+[Back to main page](../README.md)
