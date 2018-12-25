@@ -1,4 +1,4 @@
-# Building: Exporting the module
+# Exporting the module
 
 This tutorial shows how to create a module and export it.
 
@@ -36,7 +36,7 @@ In [previous tutorial](FirstBuild.md) we already created simple build configurat
 
 Lets add new export step:
 
-``` yaml
+<!-- ``` yaml
 step  :
     export.single :
         inherit : export
@@ -70,8 +70,10 @@ step  :
         ```
       During export process willbe generates *.out.will.yml file that contains information that is needed to import current module.
 
-Sample of the module can be found in ./doc/Tutorials/modules/single
+Sample of the module can be found in ./doc/Tutorials/modules/single -->
 
+---
+[Back to main page](../README.md)
 
 
 

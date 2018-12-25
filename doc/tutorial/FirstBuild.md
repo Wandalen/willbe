@@ -1,4 +1,4 @@
-# Building: Creating a build configuration
+# Creating a build configuration
 In this tutorial we will create build configuration that uses npm to install dependecies.
 
 ## Module structure
@@ -119,7 +119,8 @@ found 0 vulnerabilities
 
   Built debug in 1.595s
 ```
-
+---
+[Back to main page](../README.md)
 
 
 
