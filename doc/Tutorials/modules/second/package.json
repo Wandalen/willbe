@@ -1,0 +1,6 @@
+{
+  "name": "second",
+  "dependencies": {
+    "wTools": "^0.8.389"
+  }
+}

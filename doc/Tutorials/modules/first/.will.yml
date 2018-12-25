@@ -1,0 +1,6 @@
+ about :
+  name : first
+  description : "Out first module"
+  version : 0.0.1
+  keywords :
+      - willbe
