@@ -20,18 +20,18 @@ var _ = _global_.wTools;
 function onSuiteBegin()
 {
   let self = this;
-  debugger;
-  self.testTempDir = _.path.dirTempOpen( _.path.join( __dirname, '../..'  ), 'Will' );
-  self.testModulesDir = _.path.join( __dirname, 'modules' );
-  debugger;
+  // debugger;
+  self.tempDir = _.path.dirTempOpen( _.path.join( __dirname, '../..'  ), 'Will' );
+  self.staticDirPath = _.path.join( __dirname, 'modules' );
+  // debugger;
 }
 
 function onSuiteEnd()
 {
   let self = this;
   debugger;
-  _.assert( _.strHas( self.testTempDir, '/dwtools/tmp.tmp' ) )
-  _.fileProvider.filesDelete( self.testTempDir );
+  _.assert( _.strHas( self.tempDir, '/dwtools/tmp.tmp' ) )
+  _.fileProvider.filesDelete( self.tempDir );
 }
 
 /*
@@ -64,8 +64,8 @@ function singleModuleSimplest( test )
 {
   let self = this;
 
-  let singleModuleSrc = _.path.join( self.testModulesDir, 'single' );
-  let singleModuleDst = _.path.join( self.testTempDir, test.name );
+  let singleModuleSrc = _.path.join( self.staticDirPath, 'single' );
+  let singleModuleDst = _.path.join( self.tempDir, test.name );
 
   _.fileProvider.filesReflect({ reflectMap : { [ singleModuleSrc ] : singleModuleDst }  })
 
@@ -96,7 +96,7 @@ function singleModuleSimplest( test )
   return con;
 }
 
-singleModuleSimplest.timeOut = 15000;
+singleModuleSimplest.timeOut = 60000;
 
 //
 
@@ -104,8 +104,8 @@ function singleModuleList( test )
 {
   let self = this;
 
-  let singleModuleSrc = _.path.join( self.testModulesDir, 'single' );
-  let singleModuleDst = _.path.join( self.testTempDir, test.name );
+  let singleModuleSrc = _.path.join( self.staticDirPath, 'single' );
+  let singleModuleDst = _.path.join( self.tempDir, test.name );
 
   _.fileProvider.filesReflect({ reflectMap : { [ singleModuleSrc ] : singleModuleDst }  })
 
@@ -121,7 +121,7 @@ function singleModuleList( test )
 
   let con = new _.Consequence().take( null )
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -137,7 +137,7 @@ function singleModuleList( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -169,7 +169,7 @@ function singleModuleList( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -186,7 +186,7 @@ function singleModuleList( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -205,7 +205,7 @@ function singleModuleList( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -224,7 +224,7 @@ function singleModuleList( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -242,7 +242,7 @@ function singleModuleList( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -268,7 +268,7 @@ function singleModuleList( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -285,7 +285,7 @@ function singleModuleList( test )
   return con;
 }
 
-singleModuleList.timeOut = 15000;
+singleModuleList.timeOut = 60000;
 
 //
 
@@ -293,8 +293,8 @@ function singleModuleSubmodules( test )
 {
   let self = this;
 
-  let singleModuleSrc = _.path.join( self.testModulesDir, 'single' );
-  let singleModuleDst = _.path.join( self.testTempDir, test.name );
+  let singleModuleSrc = _.path.join( self.staticDirPath, 'single' );
+  let singleModuleDst = _.path.join( self.tempDir, test.name );
 
   _.fileProvider.filesReflect({ reflectMap : { [ singleModuleSrc ] : singleModuleDst }  })
 
@@ -310,7 +310,7 @@ function singleModuleSubmodules( test )
 
   let con = new _.Consequence().take( null )
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -324,7 +324,7 @@ function singleModuleSubmodules( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -340,7 +340,7 @@ function singleModuleSubmodules( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -356,7 +356,7 @@ function singleModuleSubmodules( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -376,7 +376,7 @@ function singleModuleSubmodules( test )
 
 }
 
-singleModuleSubmodules.timeOut = 15000;
+singleModuleSubmodules.timeOut = 60000;
 
 //
 
@@ -384,8 +384,8 @@ function singleModuleClean( test )
 {
   let self = this;
 
-  let singleModuleSrc = _.path.join( self.testModulesDir, 'single' );
-  let singleModuleDst = _.path.join( self.testTempDir, test.name );
+  let singleModuleSrc = _.path.join( self.staticDirPath, 'single' );
+  let singleModuleDst = _.path.join( self.tempDir, test.name );
 
   _.fileProvider.filesReflect({ reflectMap : { [ singleModuleSrc ] : singleModuleDst }  })
 
@@ -401,7 +401,7 @@ function singleModuleClean( test )
 
   let con = new _.Consequence().take( null )
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -427,7 +427,7 @@ function singleModuleClean( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -455,7 +455,7 @@ function singleModuleClean( test )
 
 }
 
-singleModuleClean.timeOut = 15000;
+singleModuleClean.timeOut = 60000;
 
 //
 
@@ -463,8 +463,8 @@ function singleModuleBuild( test )
 {
   let self = this;
 
-  let singleModuleSrc = _.path.join( self.testModulesDir, 'single' );
-  let singleModuleDst = _.path.join( self.testTempDir, test.name );
+  let singleModuleSrc = _.path.join( self.staticDirPath, 'single' );
+  let singleModuleDst = _.path.join( self.tempDir, test.name );
 
   _.fileProvider.filesReflect({ reflectMap : { [ singleModuleSrc ] : singleModuleDst }  })
 
@@ -520,7 +520,7 @@ function singleModuleBuild( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -542,7 +542,7 @@ function singleModuleBuild( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -573,7 +573,7 @@ function singleModuleBuild( test )
   return con;
 }
 
-singleModuleBuild.timeOut = 15000;
+singleModuleBuild.timeOut = 60000;
 
 //
 
@@ -581,8 +581,8 @@ function singleModuleExport( test )
 {
   let self = this;
 
-  let singleModuleSrc = _.path.join( self.testModulesDir, 'single' );
-  let singleModuleDst = _.path.join( self.testTempDir, test.name );
+  let singleModuleSrc = _.path.join( self.staticDirPath, 'single' );
+  let singleModuleDst = _.path.join( self.tempDir, test.name );
 
   _.fileProvider.filesReflect({ reflectMap : { [ singleModuleSrc ] : singleModuleDst }  })
 
@@ -601,7 +601,7 @@ function singleModuleExport( test )
 
   let con = new _.Consequence().take( null )
 
-  //
+  /* - */
 
   .thenKeep( () =>
   {
@@ -627,7 +627,7 @@ function singleModuleExport( test )
     })
   })
 
-  //
+  /* - */
 
   .thenKeep( () =>
   {
@@ -657,7 +657,7 @@ function singleModuleExport( test )
   return con;
 }
 
-singleModuleExport.timeOut = 15000;
+singleModuleExport.timeOut = 60000;
 
 //
 
@@ -665,8 +665,8 @@ function withSubmodulesSimplest( test )
 {
   let self = this;
 
-  let singleModuleSrc = _.path.join( self.testModulesDir, 'submodules' );
-  let singleModuleDst = _.path.join( self.testTempDir, test.name );
+  let singleModuleSrc = _.path.join( self.staticDirPath, 'submodules' );
+  let singleModuleDst = _.path.join( self.tempDir, test.name );
   let modulesPath = _.path.join( singleModuleDst, '.module' );
 
   _.fileProvider.filesReflect({ reflectMap : { [ singleModuleSrc ] : singleModuleDst }  })
@@ -704,14 +704,12 @@ withSubmodulesSimplest.timeOut = 200000;
 
 //
 
-//
-
 function withSubmodulesList( test )
 {
   let self = this;
 
-  let singleModuleSrc = _.path.join( self.testModulesDir, 'submodules' );
-  let singleModuleDst = _.path.join( self.testTempDir, test.name );
+  let singleModuleSrc = _.path.join( self.staticDirPath, 'submodules' );
+  let singleModuleDst = _.path.join( self.tempDir, test.name );
   let modulesPath = _.path.join( singleModuleDst, '.module' );
 
   _.fileProvider.filesReflect({ reflectMap : { [ singleModuleSrc ] : singleModuleDst }  })
@@ -728,7 +726,7 @@ function withSubmodulesList( test )
 
   let con = new _.Consequence().take( null )
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -743,7 +741,7 @@ function withSubmodulesList( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -758,7 +756,7 @@ function withSubmodulesList( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -777,7 +775,7 @@ function withSubmodulesList( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -796,7 +794,7 @@ function withSubmodulesList( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -814,7 +812,7 @@ function withSubmodulesList( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -840,7 +838,7 @@ function withSubmodulesList( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -857,7 +855,7 @@ function withSubmodulesList( test )
   return con;
 }
 
-withSubmodulesList.timeOut = 15000;
+withSubmodulesList.timeOut = 60000;
 
 //
 
@@ -865,8 +863,8 @@ function withSubmodulesSubmodules( test )
 {
   let self = this;
 
-  let singleModuleSrc = _.path.join( self.testModulesDir, 'submodules' );
-  let singleModuleDst = _.path.join( self.testTempDir, test.name );
+  let singleModuleSrc = _.path.join( self.staticDirPath, 'submodules' );
+  let singleModuleDst = _.path.join( self.tempDir, test.name );
   let modulesPath = _.path.join( singleModuleDst, '.module' );
 
   _.fileProvider.filesReflect({ reflectMap : { [ singleModuleSrc ] : singleModuleDst }  })
@@ -881,9 +879,11 @@ function withSubmodulesSubmodules( test )
     outputCollecting : 1
   })
 
+  /* */
+
   let con = new _.Consequence().take( null )
 
-  //
+  /* */
 
   .keep( () =>
   {
@@ -904,7 +904,7 @@ function withSubmodulesSubmodules( test )
     })
   })
 
-  //
+  /* */
 
   .keep( () =>  shell({ args : [ '.submodules.upgrade' ] }) )
   .keep( () =>
@@ -930,7 +930,7 @@ function withSubmodulesSubmodules( test )
     })
   })
 
-  //
+  /* */
 
   .keep( () =>
   {
@@ -956,11 +956,12 @@ function withSubmodulesSubmodules( test )
     })
   })
 
-  return con;
+  /* */
 
+  return con;
 }
 
-withSubmodulesSubmodules.timeOut = 15000;
+withSubmodulesSubmodules.timeOut = 60000;
 
 //
 
@@ -968,8 +969,8 @@ function withSubmodulesClean( test )
 {
   let self = this;
 
-  let singleModuleSrc = _.path.join( self.testModulesDir, 'submodules' );
-  let singleModuleDst = _.path.join( self.testTempDir, test.name );
+  let singleModuleSrc = _.path.join( self.staticDirPath, 'submodules' );
+  let singleModuleDst = _.path.join( self.tempDir, test.name );
   let modulesPath = _.path.join( singleModuleDst, '.module' );
 
   _.fileProvider.filesReflect({ reflectMap : { [ singleModuleSrc ] : singleModuleDst }  })
@@ -988,7 +989,7 @@ function withSubmodulesClean( test )
 
   .keep( () =>  shell({ args : [ '.submodules.upgrade' ] }) )
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -1025,7 +1026,7 @@ function withSubmodulesClean( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -1074,8 +1075,8 @@ function swithSubmodulesBuild( test )
 {
   let self = this;
 
-  let singleModuleSrc = _.path.join( self.testModulesDir, 'submodules' );
-  let singleModuleDst = _.path.join( self.testTempDir, test.name );
+  let singleModuleSrc = _.path.join( self.staticDirPath, 'submodules' );
+  let singleModuleDst = _.path.join( self.tempDir, test.name );
   let modulesPath = _.path.join( singleModuleDst, '.module' );
 
   _.fileProvider.filesReflect({ reflectMap : { [ singleModuleSrc ] : singleModuleDst }  })
@@ -1092,7 +1093,7 @@ function swithSubmodulesBuild( test )
 
   let con = new _.Consequence().take( null )
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -1111,7 +1112,7 @@ function swithSubmodulesBuild( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>  shell({ args : [ '.submodules.upgrade' ] }) )
 
@@ -1144,7 +1145,7 @@ function swithSubmodulesBuild( test )
     })
   })
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -1183,8 +1184,8 @@ function withSubmodulesExport( test )
 {
   let self = this;
 
-  let singleModuleSrc = _.path.join( self.testModulesDir, 'submodules' );
-  let singleModuleDst = _.path.join( self.testTempDir, test.name );
+  let singleModuleSrc = _.path.join( self.staticDirPath, 'submodules' );
+  let singleModuleDst = _.path.join( self.tempDir, test.name );
   let modulesPath = _.path.join( singleModuleDst, '.module' );
 
   _.fileProvider.filesReflect({ reflectMap : { [ singleModuleSrc ] : singleModuleDst }  })
@@ -1201,7 +1202,7 @@ function withSubmodulesExport( test )
 
   let con = new _.Consequence().take( null )
 
-  //
+  /* - */
 
   .keep( () =>
   {
@@ -1236,9 +1237,7 @@ function withSubmodulesExport( test )
   return con;
 }
 
-withSubmodulesExport.timeOut = 15000;
-
-//
+withSubmodulesExport.timeOut = 60000;
 
 //
 
@@ -1246,85 +1245,16 @@ function submodulesDownload( test )
 {
   let self = this;
 
-//   let filesTree =
-//   {
-//
-//     proto :
-//     {
-//       'Simple.js' : //
-// `
-// console.log( 'Single.s' );
-// `
-//     },
-//
-//     '.will.yml' : //
-// `
-//
-// path :
-//
-//   proto : './proto'
-//   in : '.'
-//   out : 'out'
-//   out.debug :
-//     path : './out.debug'
-//
-// reflector :
-//
-//   reflect.proto :
-//     inherit : predefined.*
-//     filePath :
-//       path::proto : path::out.*=1
-//
-// step :
-//
-//   reflect.proto :
-//     inherit : predefined.reflect
-//     reflector :
-//       reflector::reflect.proto*=1
-//
-//   export.proto :
-//     inherit : export
-//     export : path::proto
-//     tar : 0
-//     criterion :
-//       debug : 1
-//       proto : 1
-//
-// build :
-//
-//   debug.raw :
-//     criterion :
-//       default : 1
-//       debug : 1
-//       raw : 1
-//     steps :
-//       - step::reflect.proto.*=1
-//
-//   proto.export :
-//     criterion :
-//       default : 1
-//       debug : 1
-//       raw : 1
-//       proto : 1
-//       export : 1
-//       tar : 1
-//     steps :
-//       - build::debug.raw
-//       - step::export.proto
-//
-// `,
-
-  let Extract = new _.FileProvider.Extract({ filesTree : filesTree })
-
-  let singleModuleSrc = _.path.join( self.testModulesDir, 'single' );
-  let singleModuleDst = _.path.join( self.testTempDir, test.name );
+  let originaDirPath = _.path.join( self.staticDirPath, 'download' );
+  let dirPath = _.path.join( self.tempDir, test.name );
 
   debugger;
-  _.fileProvider.filesReflect({ reflectMap : { [ singleModuleSrc ] : singleModuleDst }  })
+  _.fileProvider.filesReflect({ reflectMap : { [ originaDirPath ] : dirPath }  })
+  _.fileProvider.filesDelete( _.pathJoin( dirPath, '.module' ) );
+  _.fileProvider.filesDelete( _.pathJoin( dirPath, 'out.debug' ) );
   debugger;
 
-  let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
-  willExecPath = _.path.nativize( willExecPath );
+  let willExecPath = _.path.nativize( _.path.join( __dirname, '../will/Exec2' ) );
 
   let shell = _.sheller
   ({
@@ -1377,28 +1307,28 @@ var Self =
 
   context :
   {
-    testTempDir : null,
-    testModulesDir : null
+    tempDir : null,
+    staticDirPath : null
   },
 
   tests :
   {
 
-    singleModuleSimplest : singleModuleSimplest,
-    singleModuleList : singleModuleList,
-    singleModuleSubmodules : singleModuleSubmodules,
-    singleModuleClean : singleModuleClean,
-    singleModuleBuild : singleModuleBuild,
-    singleModuleExport : singleModuleExport,
+    singleModuleSimplest,
+    singleModuleList,
+    singleModuleSubmodules,
+    singleModuleClean,
+    singleModuleBuild,
+    singleModuleExport,
 
-    withSubmodulesSimplest : withSubmodulesSimplest,
-    withSubmodulesList : withSubmodulesList,
-    withSubmodulesSubmodules : withSubmodulesSubmodules,
-    withSubmodulesClean : withSubmodulesClean,
-    swithSubmodulesBuild : swithSubmodulesBuild,
-    withSubmodulesExport : withSubmodulesExport,
+    withSubmodulesSimplest,
+    withSubmodulesList,
+    withSubmodulesSubmodules,
+    withSubmodulesClean,
+    swithSubmodulesBuild,
+    withSubmodulesExport,
 
-    submodulesDownload : submodulesDownload,
+    submodulesDownload,
 
   }
 

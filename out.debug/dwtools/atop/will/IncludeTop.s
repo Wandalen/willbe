@@ -13,7 +13,7 @@ if( typeof module !== 'undefined' )
   require( './l1/Predefined.s' );
 
   require( './l3/Module.s' );
-  require( './l3/Stager.s' );
+  // require( './l3/Stager.s' );
 
   require( './l5/Inheritable.s' );
 

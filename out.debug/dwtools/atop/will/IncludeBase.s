@@ -23,6 +23,8 @@ if( typeof module !== 'undefined' )
   _.include( 'wCommandsConfig' );
   _.include( 'wNameMapper' );
 
+  _.include( 'wStager' );
+
 }
 
 })();

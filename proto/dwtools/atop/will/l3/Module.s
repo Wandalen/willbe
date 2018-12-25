@@ -891,11 +891,9 @@ function willFilesFind()
   module.stager.stage( 'willFilesFound', 1 );
 
   return module.formReady.split()
-  .ifNoErrorGot( () =>
+  .thenKeep( () =>
   {
-    // debugger;
     let result = module._willFilesFindMaybe({ isInFile : !module.supermodule });
-    // debugger;
 
     if( !result )
     {
@@ -1703,7 +1701,7 @@ function _remoteDownload( o )
   {
     module.isUpToDate = true;
     module.isDownloaded = true;
-    if( o.forming && 0 )
+    if( o.forming && 1 )
     {
       // debugger;
       // logger.log( module.stager.infoExport() );
@@ -1722,11 +1720,11 @@ function _remoteDownload( o )
       module.resourcesFormSkip();
       // module.resourcesForm();
 
-      debugger;
+      // debugger;
       return module.ready
       .finallyGive( function( err, arg )
       {
-        debugger;
+        // debugger;
         logger.log( module.absoluteName, '_remoteDownload.finally', err, arg );
         this.take( err, arg );
       })
@@ -1734,7 +1732,7 @@ function _remoteDownload( o )
     }
     return null;
   })
-  .finally( function( err, arg )
+  .finallyKeep( function( err, arg )
   {
     if( err )
     throw _.err( 'Failed to', ( o.upgrading ? 'upgrade' : 'download' ), module.nickName, '\n', err );

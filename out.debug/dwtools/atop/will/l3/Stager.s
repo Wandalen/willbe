@@ -2,10 +2,18 @@
 
 'use strict';
 
+/**
+  @module Tools/mid/Stager - Class to organize states of an object.
+*/
+
+/**
+ * @file Stager.s.
+ */
+
 if( typeof self !== 'undefined' )
 {
 
-  let _ = require( '../../Tools.s' );
+  let _ = require( '../../../Tools.s' );
 
   _.include( 'wCopyable' );
 

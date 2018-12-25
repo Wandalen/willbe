@@ -58,6 +58,9 @@ function _moduleOnReady( o )
   _.assert( _.routineIs( o.onReady ) );
   _.routineOptions( _moduleOnReady, arguments );
 
+  if( !will.topCommand )
+  will.topCommand = o.onReady;
+
   // debugger;
 
   let module = will.currentModule;
@@ -78,30 +81,34 @@ function _moduleOnReady( o )
     _.assert( result !== undefined );
     return result;
   })
-  .finally( ( err, arg ) =>
-  {
-    if( !will.topCommand )
-    {
-      if( will.beeping )
-      _.diagnosticBeep();
-      if( module === will.currentModule )
-      will.currentModule = null;
-      module.finit();
-    }
-    if( err )
-    throw err;
-    return arg;
-  })
-  .finally( ( err, arg ) =>
-  {
-    if( err )
-    {
-      if( !will.topCommand )
-      _.appExitCode( -1 );
-      throw _.errLogOnce( err );
-    }
-    return arg;
-  });
+  .finally( ( err, arg ) => will.moduleDone({ error : err || null, command : will.topCommand }) )
+  ;
+
+  // .finally( ( err, arg ) =>
+  // {
+  //   xxx
+  //   if( !will.topCommand )
+  //   {
+  //     if( will.beeping )
+  //     _.diagnosticBeep();
+  //     if( module === will.currentModule )
+  //     will.currentModule = null;
+  //     module.finit();
+  //   }
+  //   if( err )
+  //   throw err;
+  //   return arg;
+  // })
+  // .finally( ( err, arg ) =>
+  // {
+  //   if( err )
+  //   {
+  //     if( !will.topCommand )
+  //     _.appExitCode( -1 );
+  //     throw _.errLogOnce( err );
+  //   }
+  //   return arg;
+  // });
 
 }
 
@@ -139,41 +146,87 @@ function moduleOnReadyNonForming( onReady )
 
 //
 
-function done( command )
+function moduleDone( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
 
-  _.assert( _.routineIs( command ) );
+  _.assertRoutineOptions( moduleDone, arguments );
+  _.assert( _.routineIs( o.command ) );
+  _.assert( _.routineIs( will.topCommand ) );
   _.assert( arguments.length === 1 );
   _.assert( will.formed === 1 );
+
+  if( o.err )
+  {
+    _.appExitCode( -1 );
+    _.errLogOnce( o.err );
+  }
 
   try
   {
 
-    if( will.topCommand === command )
+    if( will.topCommand === o.command )
     {
       if( will.beeping )
       _.diagnosticBeep();
-      if( will.currentModule )
-      will.currentModule.finit();
       will.currentModule = null;
       will.topCommand = null;
+      let currentModule = will.currentModule;
+      if( currentModule )
+      currentModule.finit();
+      debugger;
+      _.procedure.terminationBegin();
       return true;
     }
 
   }
   catch( err )
   {
+    _.appExitCode( -1 );
     _.errLogOnce( err );
     will.currentModule = null;
     will.topCommand = null;
     return true;
   }
 
+/*
+  .finally( ( err, arg ) =>
+  {
+    xxx
+    if( !will.topCommand )
+    {
+      if( will.beeping )
+      _.diagnosticBeep();
+      if( module === will.currentModule )
+      will.currentModule = null;
+      module.finit();
+    }
+    if( err )
+    throw err;
+    return arg;
+  })
+  .finally( ( err, arg ) =>
+  {
+    if( err )
+    {
+      if( !will.topCommand )
+      _.appExitCode( -1 );
+      throw _.errLogOnce( err );
+    }
+    return arg;
+  });
+*/
+
   return false;
+}
+
+moduleDone.defaults =
+{
+  error : null,
+  command : null,
 }
 
 //
@@ -649,12 +702,12 @@ function commandWith( e )
   .finally( ( err, arg ) =>
   {
     debugger;
-    let isTop = will.topCommand === commandWith;
-    will.done( commandWith );
+    // let isTop = will.topCommand === commandWith;
+    will.moduleDone({ error : err || null, command : commandWith });
     if( err )
     {
-      if( isTop )
-      _.appExitCode( -1 );
+      // if( isTop )
+      // _.appExitCode( -1 );
       throw _.errLogOnce( err );
     }
     return arg;
@@ -746,12 +799,13 @@ function commandEach( e )
   con.finally( ( err, arg ) =>
   {
     debugger;
-    let isTop = will.topCommand === commandEach;
-    will.done( commandEach );
+    // let isTop = will.topCommand === commandEach;
+    // will.moduleDone( commandEach );
+    will.moduleDone({ error : err || null, command : commandEach });
     if( err )
     {
-      if( isTop )
-      _.appExitCode( -1 );
+      // if( isTop )
+      // _.appExitCode( -1 );
       throw _.errLogOnce( err );
     }
     return arg;
@@ -806,7 +860,7 @@ let Extend =
   _moduleOnReady,
   moduleOnReady,
   moduleOnReadyNonForming,
-  done,
+  moduleDone,
 
   commandsMake,
   commandHelp,
