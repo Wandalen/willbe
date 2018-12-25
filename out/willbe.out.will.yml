@@ -67,7 +67,6 @@ path:
       - ./dwtools/atop/will/l1/Predefined.s
       - ./dwtools/atop/will/l3
       - ./dwtools/atop/will/l3/Module.s
-      - ./dwtools/atop/will/l3/Stager.s
       - ./dwtools/atop/will/l5
       - ./dwtools/atop/will/l5/Inheritable.s
       - ./dwtools/atop/will/l7
@@ -91,40 +90,6 @@ path:
       - ./dwtools/atop/will.test/modules/submodules/.im.will.yml
       - ./dwtools/atop/will.test/modules/submodules/proto
       - ./dwtools/atop/will.test/modules/submodules/proto/WithSubmodules.s
-      - ./dwtools/tmp.tmp
-      - ./dwtools/tmp.tmp/Will
-      - ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb
-      - ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/singleModule
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/singleModule/.ex.will.yml
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/singleModule/.im.will.yml
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/singleModule/proto
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/singleModule/proto/Single.s
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.ex.will.yml
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.im.will.yml
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.module
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.module/Tools
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.module/Tools/.git
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.module/Tools/.git/objects
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.module/Tools/.git/objects/pack
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.module/Tools/.git/objects/pack/pack-837ea9b6983011a28724ec0f43b947228e3797e9.idx
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.module/Tools/.git/objects/pack/pack-837ea9b6983011a28724ec0f43b947228e3797e9.keep
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.module/Tools/.git/objects/pack/pack-837ea9b6983011a28724ec0f43b947228e3797e9.pack
     criterion:
       default: 1
       debug: 1
@@ -147,7 +112,6 @@ path:
       - ./dwtools/atop/will/l1/Execution.s
       - ./dwtools/atop/will/l1/Predefined.s
       - ./dwtools/atop/will/l3/Module.s
-      - ./dwtools/atop/will/l3/Stager.s
       - ./dwtools/atop/will/l5/Inheritable.s
       - ./dwtools/atop/will/l7/Build.s
       - ./dwtools/atop/will/l7/Exported.s
@@ -163,22 +127,6 @@ path:
       - ./dwtools/atop/will.test/modules/submodules/.ex.will.yml
       - ./dwtools/atop/will.test/modules/submodules/.im.will.yml
       - ./dwtools/atop/will.test/modules/submodules/proto/WithSubmodules.s
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/singleModule/.ex.will.yml
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/singleModule/.im.will.yml
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/singleModule/proto/Single.s
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.ex.will.yml
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.im.will.yml
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.module/Tools/.git/objects/pack/pack-837ea9b6983011a28724ec0f43b947228e3797e9.idx
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.module/Tools/.git/objects/pack/pack-837ea9b6983011a28724ec0f43b947228e3797e9.keep
-      - >-
-        ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.module/Tools/.git/objects/pack/pack-837ea9b6983011a28724ec0f43b947228e3797e9.pack
     criterion:
       default: 1
       debug: 1
@@ -273,7 +221,6 @@ reflector:
       ./dwtools/atop/will/l1/Execution.s: true
       ./dwtools/atop/will/l1/Predefined.s: true
       ./dwtools/atop/will/l3/Module.s: true
-      ./dwtools/atop/will/l3/Stager.s: true
       ./dwtools/atop/will/l5/Inheritable.s: true
       ./dwtools/atop/will/l7/Build.s: true
       ./dwtools/atop/will/l7/Exported.s: true
@@ -289,14 +236,6 @@ reflector:
       ./dwtools/atop/will.test/modules/submodules/.ex.will.yml: true
       ./dwtools/atop/will.test/modules/submodules/.im.will.yml: true
       ./dwtools/atop/will.test/modules/submodules/proto/WithSubmodules.s: true
-      ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/singleModule/.ex.will.yml: true
-      ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/singleModule/.im.will.yml: true
-      ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/singleModule/proto/Single.s: true
-      ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.ex.will.yml: true
-      ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.im.will.yml: true
-      ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.module/Tools/.git/objects/pack/pack-837ea9b6983011a28724ec0f43b947228e3797e9.idx: true
-      ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.module/Tools/.git/objects/pack/pack-837ea9b6983011a28724ec0f43b947228e3797e9.keep: true
-      ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.module/Tools/.git/objects/pack/pack-837ea9b6983011a28724ec0f43b947228e3797e9.pack: true
     srcFilter:
       basePath: .
       prefixPath: proto
@@ -432,7 +371,6 @@ exported:
         - ./dwtools/atop/will/l1/Execution.s
         - ./dwtools/atop/will/l1/Predefined.s
         - ./dwtools/atop/will/l3/Module.s
-        - ./dwtools/atop/will/l3/Stager.s
         - ./dwtools/atop/will/l5/Inheritable.s
         - ./dwtools/atop/will/l7/Build.s
         - ./dwtools/atop/will/l7/Exported.s
@@ -448,22 +386,6 @@ exported:
         - ./dwtools/atop/will.test/modules/submodules/.ex.will.yml
         - ./dwtools/atop/will.test/modules/submodules/.im.will.yml
         - ./dwtools/atop/will.test/modules/submodules/proto/WithSubmodules.s
-        - >-
-          ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/singleModule/.ex.will.yml
-        - >-
-          ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/singleModule/.im.will.yml
-        - >-
-          ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/singleModule/proto/Single.s
-        - >-
-          ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.ex.will.yml
-        - >-
-          ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.im.will.yml
-        - >-
-          ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.module/Tools/.git/objects/pack/pack-837ea9b6983011a28724ec0f43b947228e3797e9.idx
-        - >-
-          ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.module/Tools/.git/objects/pack/pack-837ea9b6983011a28724ec0f43b947228e3797e9.keep
-        - >-
-          ./dwtools/tmp.tmp/Will/ba9b0e68-a922-6201-306e-d28c36e3fbdb/withSubmodules/.module/Tools/.git/objects/pack/pack-837ea9b6983011a28724ec0f43b947228e3797e9.pack
       criterion:
         default: 1
         debug: 1
