@@ -1,7 +1,7 @@
 ### Tutorials
 
 * [Getting Set Up](GettingSetUp.md)
-* [Declaring a module](FirstModule.md)
+* [Declaring a module](DeclaringModule.md)
 * [Listing properties of a module](ListingProperties.md)
 * [Creating a build configuration](FirstBuild.md)
 * [Exporting the module](Exporting.md)
