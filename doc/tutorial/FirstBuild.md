@@ -34,7 +34,9 @@ Current goal is to extend it with a build configuration.
 
 `build` - describes build configurations, [build](../Build.md) configuration is a sequence of build steps.
 
-#### Add new step with name `npm.install`, in this example its execution of shell command:
+#### Add build step:
+
+This step executes a shell command: `npm install`.
 
 ```yaml
 step :
