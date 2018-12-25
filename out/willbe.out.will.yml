@@ -79,17 +79,21 @@ path:
       - ./dwtools/atop/will/l7/WillFile.s
       - ./dwtools/atop/will.test
       - ./dwtools/atop/will.test/Will.test.s
-      - ./dwtools/atop/will.test/modules
-      - ./dwtools/atop/will.test/modules/single
-      - ./dwtools/atop/will.test/modules/single/.ex.will.yml
-      - ./dwtools/atop/will.test/modules/single/.im.will.yml
-      - ./dwtools/atop/will.test/modules/single/proto
-      - ./dwtools/atop/will.test/modules/single/proto/Single.s
-      - ./dwtools/atop/will.test/modules/submodules
-      - ./dwtools/atop/will.test/modules/submodules/.ex.will.yml
-      - ./dwtools/atop/will.test/modules/submodules/.im.will.yml
-      - ./dwtools/atop/will.test/modules/submodules/proto
-      - ./dwtools/atop/will.test/modules/submodules/proto/WithSubmodules.s
+      - ./dwtools/atop/will.test/asset
+      - ./dwtools/atop/will.test/asset/download
+      - ./dwtools/atop/will.test/asset/download/.will.yml
+      - ./dwtools/atop/will.test/asset/download/proto
+      - ./dwtools/atop/will.test/asset/download/proto/Simple.js
+      - ./dwtools/atop/will.test/asset/single
+      - ./dwtools/atop/will.test/asset/single/.ex.will.yml
+      - ./dwtools/atop/will.test/asset/single/.im.will.yml
+      - ./dwtools/atop/will.test/asset/single/proto
+      - ./dwtools/atop/will.test/asset/single/proto/Single.s
+      - ./dwtools/atop/will.test/asset/submodules
+      - ./dwtools/atop/will.test/asset/submodules/.ex.will.yml
+      - ./dwtools/atop/will.test/asset/submodules/.im.will.yml
+      - ./dwtools/atop/will.test/asset/submodules/proto
+      - ./dwtools/atop/will.test/asset/submodules/proto/WithSubmodules.s
     criterion:
       default: 1
       debug: 1
@@ -121,12 +125,14 @@ path:
       - ./dwtools/atop/will/l7/Submodule.s
       - ./dwtools/atop/will/l7/WillFile.s
       - ./dwtools/atop/will.test/Will.test.s
-      - ./dwtools/atop/will.test/modules/single/.ex.will.yml
-      - ./dwtools/atop/will.test/modules/single/.im.will.yml
-      - ./dwtools/atop/will.test/modules/single/proto/Single.s
-      - ./dwtools/atop/will.test/modules/submodules/.ex.will.yml
-      - ./dwtools/atop/will.test/modules/submodules/.im.will.yml
-      - ./dwtools/atop/will.test/modules/submodules/proto/WithSubmodules.s
+      - ./dwtools/atop/will.test/asset/download/.will.yml
+      - ./dwtools/atop/will.test/asset/download/proto/Simple.js
+      - ./dwtools/atop/will.test/asset/single/.ex.will.yml
+      - ./dwtools/atop/will.test/asset/single/.im.will.yml
+      - ./dwtools/atop/will.test/asset/single/proto/Single.s
+      - ./dwtools/atop/will.test/asset/submodules/.ex.will.yml
+      - ./dwtools/atop/will.test/asset/submodules/.im.will.yml
+      - ./dwtools/atop/will.test/asset/submodules/proto/WithSubmodules.s
     criterion:
       default: 1
       debug: 1
@@ -230,12 +236,14 @@ reflector:
       ./dwtools/atop/will/l7/Submodule.s: true
       ./dwtools/atop/will/l7/WillFile.s: true
       ./dwtools/atop/will.test/Will.test.s: true
-      ./dwtools/atop/will.test/modules/single/.ex.will.yml: true
-      ./dwtools/atop/will.test/modules/single/.im.will.yml: true
-      ./dwtools/atop/will.test/modules/single/proto/Single.s: true
-      ./dwtools/atop/will.test/modules/submodules/.ex.will.yml: true
-      ./dwtools/atop/will.test/modules/submodules/.im.will.yml: true
-      ./dwtools/atop/will.test/modules/submodules/proto/WithSubmodules.s: true
+      ./dwtools/atop/will.test/asset/download/.will.yml: true
+      ./dwtools/atop/will.test/asset/download/proto/Simple.js: true
+      ./dwtools/atop/will.test/asset/single/.ex.will.yml: true
+      ./dwtools/atop/will.test/asset/single/.im.will.yml: true
+      ./dwtools/atop/will.test/asset/single/proto/Single.s: true
+      ./dwtools/atop/will.test/asset/submodules/.ex.will.yml: true
+      ./dwtools/atop/will.test/asset/submodules/.im.will.yml: true
+      ./dwtools/atop/will.test/asset/submodules/proto/WithSubmodules.s: true
     srcFilter:
       basePath: .
       prefixPath: proto
@@ -380,12 +388,14 @@ exported:
         - ./dwtools/atop/will/l7/Submodule.s
         - ./dwtools/atop/will/l7/WillFile.s
         - ./dwtools/atop/will.test/Will.test.s
-        - ./dwtools/atop/will.test/modules/single/.ex.will.yml
-        - ./dwtools/atop/will.test/modules/single/.im.will.yml
-        - ./dwtools/atop/will.test/modules/single/proto/Single.s
-        - ./dwtools/atop/will.test/modules/submodules/.ex.will.yml
-        - ./dwtools/atop/will.test/modules/submodules/.im.will.yml
-        - ./dwtools/atop/will.test/modules/submodules/proto/WithSubmodules.s
+        - ./dwtools/atop/will.test/asset/download/.will.yml
+        - ./dwtools/atop/will.test/asset/download/proto/Simple.js
+        - ./dwtools/atop/will.test/asset/single/.ex.will.yml
+        - ./dwtools/atop/will.test/asset/single/.im.will.yml
+        - ./dwtools/atop/will.test/asset/single/proto/Single.s
+        - ./dwtools/atop/will.test/asset/submodules/.ex.will.yml
+        - ./dwtools/atop/will.test/asset/submodules/.im.will.yml
+        - ./dwtools/atop/will.test/asset/submodules/proto/WithSubmodules.s
       criterion:
         default: 1
         debug: 1
