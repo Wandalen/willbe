@@ -1,17 +1,16 @@
 # Making a submodule
-This tutorial shows how to create a simplest module.
+This tutorial shows how to create a trivial module.
 
 ## Module structure
 
 A basic module structure looks like this:
 ```
 .
-├── * - any amount of files
+├── * - any files
 ├── .will.yml
 ```
-`.will.yml` - config is a [YAML](https://en.wikipedia.org/wiki/YAML) file that describes the module and its behaviour.
-
-More about [modules](Module.md) and [will files](Will-files.md).
+`.will.yml` - [will file](Will-files.md) is kind of config file, which describe a [module](Module.md) and how to use the module.
+Possible config file formats: YAML,JSON,CSON.
 
 ___
 
