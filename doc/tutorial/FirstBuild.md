@@ -119,8 +119,8 @@ Dependecies defined in `package.json` will be installed:
 
   Built debug in 2.875s
 ```
----
-[Back to main page](../README.md)
+#
+[Back to content](../README.md)
 
 
 

@@ -72,8 +72,8 @@ step  :
 
 Sample of the module can be found in ./doc/Tutorials/modules/single -->
 
----
-[Back to main page](../README.md)
+#
+[Back to content](../README.md)
 
 
 
