@@ -85,7 +85,7 @@ function singleModuleSimplest( test )
   {
     test.case = 'simple run without args'
     return shell()
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( got.output.length );
@@ -127,7 +127,7 @@ function singleModuleList( test )
   {
     test.case = 'list'
     return shell({ args : [ '.list' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, `name : 'single'` ) );
@@ -143,7 +143,7 @@ function singleModuleList( test )
   {
     test.case = 'module info'
     return shell({ args : [ '.paths.list' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, `proto : './proto'` ) );
@@ -161,7 +161,7 @@ function singleModuleList( test )
   {
     test.case = 'submodules list'
     return shell({ args : [ '.submodules.list' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( got.output.length );
@@ -175,7 +175,7 @@ function singleModuleList( test )
   {
     test.case = 'reflectors.list'
     return shell({ args : [ '.reflectors.list' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'reflector::reflect.proto.0' ))
@@ -192,7 +192,7 @@ function singleModuleList( test )
   {
     test.case = 'steps.list'
     return shell({ args : [ '.steps.list' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'step::reflect.proto.0' ))
@@ -211,7 +211,7 @@ function singleModuleList( test )
   {
     test.case = '.builds.list'
     return shell({ args : [ '.builds.list' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'build::debug.raw' ));
@@ -230,7 +230,7 @@ function singleModuleList( test )
   {
     test.case = '.exports.list'
     return shell({ args : [ '.exports.list' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'build::proto.export' ));
@@ -248,7 +248,7 @@ function singleModuleList( test )
   {
     test.case = '.about.list'
     return shell({ args : [ '.about.list' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
 
@@ -274,7 +274,7 @@ function singleModuleList( test )
   {
     test.case = '.execution.list'
     return shell({ args : [ '.execution.list' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( got.output.length );
@@ -316,7 +316,7 @@ function singleModuleSubmodules( test )
   {
     test.case = '.submodules.download'
     return shell({ args : [ '.submodules.download' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, '0/0 submodule(s) of module::single were downloaded in' ) );
@@ -330,7 +330,7 @@ function singleModuleSubmodules( test )
   {
     test.case = '.submodules.download'
     return shell({ args : [ '.submodules.download' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, '0/0 submodule(s) of module::single were downloaded in' ) );
@@ -346,7 +346,7 @@ function singleModuleSubmodules( test )
   {
     test.case = '.submodules.upgrade'
     return shell({ args : [ '.submodules.upgrade' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, '0/0 submodule(s) of module::single were upgraded in' ) );
@@ -362,7 +362,7 @@ function singleModuleSubmodules( test )
   {
     test.case = '.submodules.clean'
     return shell({ args : [ '.submodules.clean' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'Clean deleted 0 file(s) in' ) );
@@ -413,10 +413,10 @@ function singleModuleClean( test )
       outputCollecting : 1,
       args : [ '.build' ]
     })
-    .ifNoErrorThen( () =>
+    .thenKeep( () =>
     {
       return shell({ args : [ '.clean' ] })
-      .ifNoErrorThen( ( got ) =>
+      .thenKeep( ( got ) =>
       {
         test.identical( got.exitCode, 0 );
         test.is( _.strHas( got.output, 'Clean deleted 0 file(s) in' ) );
@@ -439,10 +439,10 @@ function singleModuleClean( test )
       outputCollecting : 1,
       args : [ '.build' ]
     })
-    .ifNoErrorThen( () =>
+    .thenKeep( () =>
     {
       return shell({ args : [ '.clean.what' ] })
-      .ifNoErrorThen( ( got ) =>
+      .thenKeep( ( got ) =>
       {
         test.identical( got.exitCode, 0 );
         test.is( _.strHas( got.output, 'Clean will delete 0 file(s)' ) );
@@ -486,7 +486,7 @@ function singleModuleBuild( test )
     let buildOutPath = _.path.join( dirPath, 'out.debug' );
     _.fileProvider.filesDelete( buildOutPath );
     return shell({ args : [ '.build' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'Building debug.raw' ) );
@@ -506,7 +506,7 @@ function singleModuleBuild( test )
     let buildOutPath = _.path.join( dirPath, 'out.debug' );
     _.fileProvider.filesDelete( buildOutPath );
     return shell({ args : [ '.build debug.raw' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'Building debug.raw' ) );
@@ -528,7 +528,7 @@ function singleModuleBuild( test )
     let buildOutPath = _.path.join( dirPath, 'out.release' );
     _.fileProvider.filesDelete( buildOutPath );
     return shell({ args : [ '.build release.raw' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'Building release.raw' ) );
@@ -611,7 +611,7 @@ function singleModuleExport( test )
     _.fileProvider.filesDelete( buildOutPath );
     _.fileProvider.filesDelete( exportPath );
     return shell({ args : [ '.export' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, '+ Reflect 2 files' ) );
@@ -637,7 +637,7 @@ function singleModuleExport( test )
     _.fileProvider.filesDelete( buildOutPath );
     _.fileProvider.filesDelete( exportPath );
     return shell({ args : [ '.export proto.export' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'Exporting proto.export' ) );
@@ -687,7 +687,7 @@ function withSubmodulesSimplest( test )
   {
     test.case = 'module info'
     return shell({ args : [ '.list' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, `name : 'withSubmodules'` ) );
@@ -732,7 +732,7 @@ function withSubmodulesList( test )
   {
     test.case = 'submodules list'
     return shell({ args : [ '.submodules.list' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'submodule::Tools' ) );
@@ -747,7 +747,7 @@ function withSubmodulesList( test )
   {
     test.case = 'reflectors.list'
     return shell({ args : [ '.reflectors.list' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'reflector::reflect.proto.0' ))
@@ -762,7 +762,7 @@ function withSubmodulesList( test )
   {
     test.case = 'steps.list'
     return shell({ args : [ '.steps.list' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'step::reflect.proto.0' ))
@@ -781,7 +781,7 @@ function withSubmodulesList( test )
   {
     test.case = '.builds.list'
     return shell({ args : [ '.builds.list' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'build::debug.raw' ));
@@ -800,7 +800,7 @@ function withSubmodulesList( test )
   {
     test.case = '.exports.list'
     return shell({ args : [ '.exports.list' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'build::proto.export' ));
@@ -818,7 +818,7 @@ function withSubmodulesList( test )
   {
     test.case = '.about.list'
     return shell({ args : [ '.about.list' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
 
@@ -844,7 +844,7 @@ function withSubmodulesList( test )
   {
     test.case = '.execution.list'
     return shell({ args : [ '.execution.list' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( got.output.length );
@@ -890,7 +890,7 @@ function withSubmodulesSubmodules( test )
     test.case = '.submodules.download';
     _.fileProvider.filesDelete( modulesPath );
     return shell({ args : [ '.submodules.download' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, '2/2 submodule(s) of module::withSubmodules were downloaded in' ) );
@@ -912,7 +912,7 @@ function withSubmodulesSubmodules( test )
     test.case = '.submodules.upgrade'
 
     return shell({ args : [ '.submodules.upgrade' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, '2/2 submodule(s) of module::withSubmodules were upgraded in' ) );
@@ -946,7 +946,7 @@ function withSubmodulesSubmodules( test )
     });
 
     return shell({ args : [ '.submodules.clean' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, `${files.length}` ) );
@@ -1011,12 +1011,12 @@ function withSubmodulesClean( test )
       outputCollecting : 1,
       args : [ '.build' ]
     })
-    .ifNoErrorThen( () =>
+    .thenKeep( () =>
     {
       test.is( files.length > 100 );
       return shell({ args : [ '.clean' ] })
     })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'Clean deleted' ) );
@@ -1048,12 +1048,12 @@ function withSubmodulesClean( test )
       outputCollecting : 1,
       args : [ '.build' ]
     })
-    .ifNoErrorThen( () =>
+    .thenKeep( () =>
     {
       test.is( files.length > 100 );
       return shell({ args : [ '.clean.what' ] })
     })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, files.length ) );
@@ -1123,7 +1123,7 @@ function swithSubmodulesBuild( test )
     _.fileProvider.filesDelete( buildOutPath );
 
     return shell({ args : [ '.build' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
 
@@ -1212,7 +1212,7 @@ function withSubmodulesExport( test )
     _.fileProvider.filesDelete( buildOutPath );
     _.fileProvider.filesDelete( exportPath );
     return shell({ args : [ '.export' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'Exporting proto.export' ) );
@@ -1272,7 +1272,7 @@ function submodulesDownload( test )
   {
     test.case = 'simple run without args'
     return shell()
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.is( got.output.length );
@@ -1286,7 +1286,7 @@ function submodulesDownload( test )
   {
     test.case = 'list'
     return shell({ args : [ '.list' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       debugger;
@@ -1304,7 +1304,7 @@ function submodulesDownload( test )
     _.fileProvider.filesDelete( _.path.join( dirPath, '.module' ) );
     _.fileProvider.filesDelete( _.path.join( dirPath, 'out.debug' ) );
     return shell({ args : [ '.build' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.gt( _.fileProvider.dirRead( _.path.join( dirPath, '.module/Tools' ) ).length, 0 );
@@ -1322,7 +1322,7 @@ function submodulesDownload( test )
     _.fileProvider.filesDelete( _.path.join( dirPath, 'out.debug' ) );
     _.fileProvider.filesDelete( _.path.join( dirPath, 'out/Download.out.will.yml' ) );
     return shell({ args : [ '.export' ] })
-    .ifNoErrorThen( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
       test.gt( _.fileProvider.dirRead( _.path.join( dirPath, '.module/Tools' ) ).length, 0 );
@@ -1337,7 +1337,7 @@ function submodulesDownload( test )
   return ready;
 }
 
-submodulesDownload.timeOut = 60000;
+submodulesDownload.timeOut = 150000;
 
 //
 
