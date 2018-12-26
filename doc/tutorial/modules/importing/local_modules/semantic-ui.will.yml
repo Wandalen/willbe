@@ -1,0 +1,23 @@
+about :
+
+  name : semantic-ui
+  version : 2.0.7
+
+path :
+
+  out : '..'
+  export : '.'
+
+step  :
+  export.semantic :
+      inherit : export
+      tar : 0
+      export : path::export
+
+build :
+  export :
+      criterion :
+          default : 1
+          export : 1
+      steps :
+          - export.semantic

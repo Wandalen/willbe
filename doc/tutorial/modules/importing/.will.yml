@@ -1,0 +1,10 @@
+about :
+
+  name : main
+  version : 0.0.1
+  description : 'Imports semantic-ui'
+
+submodule :
+
+  semantic-ui : ./local_modules/semantic-ui
+
