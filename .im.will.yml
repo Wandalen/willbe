@@ -33,6 +33,10 @@ reflector :
 
 step :
 
+  clean.out.debug :
+    inherit : predefined.delete
+    filePath : path::out.debug
+
   reflect.proto :
     inherit : predefined.reflect
     reflector :
@@ -57,6 +61,7 @@ build :
       debug : 1
       raw : 1
     steps :
+      - clean.out.debug
       - step::reflect.proto.*=1
       # - step::reflect.submodules*=1
 
@@ -85,4 +90,3 @@ build :
     steps :
       - build::debug.raw
       - build::release.compiled
-
