@@ -10,7 +10,7 @@
  * @file Stager.s.
  */
 
-if( typeof module !== 'undefined' ) 
+if( typeof module !== 'undefined' )
 {
 
   let _ = require( '../../../Tools.s' );
@@ -202,8 +202,7 @@ _.classDeclare
 
 _.Copyable.mixin( Self );
 _[ Self.shortName ] = Self;
-
-if( typeof self !== 'undefined' && self !== null )
-self[ 'exports' ] = wTools;
+if( typeof module !== 'undefined' && module !== null )
+module[ 'exports' ] = wTools;
 
 })();
