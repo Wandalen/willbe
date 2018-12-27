@@ -253,6 +253,11 @@ reflector:
       basePath: .
       prefixPath: .
 step:
+  clean.out.debug:
+    opts:
+      filePath: 'path::out.debug'
+    inherit:
+      - predefined.delete
   reflect.proto.0:
     criterion:
       debug: 0
@@ -317,6 +322,7 @@ build:
       debug: 1
       raw: 1
     steps:
+      - clean.out.debug
       - 'step::reflect.proto.*=1'
   debug.compiled:
     criterion:
