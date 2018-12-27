@@ -1,6 +1,6 @@
 # Installation of willbe
 
-##### Install package via npm
+##### Install the package via npm:
 
 ```
 $ npm i -g willbe
