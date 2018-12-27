@@ -510,6 +510,8 @@ function cleanWhat( o )
       let archiveFilePath = exp.archiveFilePathFor();
       let outFilePath = exp.outFilePathFor();
 
+      // fileProvider.deletingEmptyDirs
+
       if( fileProvider.fileExists( archiveFilePath ) )
       {
         _.arrayFlattenOnce( filePaths, archiveFilePath );

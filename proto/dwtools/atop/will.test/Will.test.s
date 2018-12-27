@@ -1337,7 +1337,7 @@ function submodulesDownload( test )
   return ready;
 }
 
-submodulesDownload.timeOut = 150000;
+submodulesDownload.timeOut = 30000;
 
 //
 
