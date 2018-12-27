@@ -94,6 +94,8 @@ path:
       - ./dwtools/atop/will.test/asset/submodules/.im.will.yml
       - ./dwtools/atop/will.test/asset/submodules/proto
       - ./dwtools/atop/will.test/asset/submodules/proto/WithSubmodules.s
+      - ./dwtools/tmp.tmp
+      - ./dwtools/tmp.tmp/Will
     criterion:
       default: 1
       debug: 1
