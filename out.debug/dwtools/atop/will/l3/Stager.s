@@ -10,7 +10,7 @@
  * @file Stager.s.
  */
 
-if( typeof self !== 'undefined' )
+if( typeof module !== 'undefined' ) 
 {
 
   let _ = require( '../../../Tools.s' );

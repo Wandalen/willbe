@@ -44,8 +44,7 @@
     "gitconfiglocal": ""
   },
   "devDependencies": {
-    "wTesting": "",
-    "willbe": "."
+    "wTesting": ""
   },
   "keywords": [
     "wTools"
