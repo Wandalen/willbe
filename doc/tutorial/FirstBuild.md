@@ -1,5 +1,5 @@
 # Creating a build configuration
-This tutorial shows how to create a build configuration that runs npm to install dependecies.
+This tutorial shows how to create a build configuration that runs npm to install dependencies.
 
 ## Module structure
 

@@ -72,7 +72,7 @@ will .help
   .exports.list - List available exports.
   .about.list - List descriptive information about the module.
   .execution.list - List execution scenarios.
-  .submodules.download - Download each submodule, if such was not downloaded so far.
+  .submodules.download - Download each submodule, if such was not downloaded yet.
   .submodules.upgrade - Upgrade each submodule, checking for available updates for such.
   .submodules.clean - Delete all downloaded submodules.
   .clean - Clean current module: delete generated artifacts, temp files and downloaded submodules.
