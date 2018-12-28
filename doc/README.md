@@ -8,7 +8,7 @@
 
 ### Tutorials
 
-* [Getting Set Up](tutorial/GettingSetUp.md)
+* [Setting Up](tutorial/SettingUp.md)
 * [Declaring a module](tutorial/DeclaringModule.md)
 * [Listing properties of a module](tutorial/ListingProperties.md)
 * [Creating a build configuration](tutorial/FirstBuild.md)
@@ -17,4 +17,5 @@
 * [Declaring local submodules](tutorial/LocalSubmodules.md)
 * [Importing remote submodules](tutorial/RemoteSubmodules.md)
 * [Creating reflectors and steps](tutorial/ReflectorsAndSteps.md)
+* [Creating reflectors using criteria](tutorial/Criteria.md)
 * [Declaring a multi-config module](tutorial/MultiConfigModule.md)
