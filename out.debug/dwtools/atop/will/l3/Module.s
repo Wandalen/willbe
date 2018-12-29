@@ -473,8 +473,11 @@ function cleanWhat( o )
   if( o.cleaningSubmodules )
   {
 
-    let find = fileProvider.filesFinder
+    let submodulesCloneDirPath = module.submodulesCloneDirGet();
+    // let found = find( submodulesCloneDirPath );
+    let found = fileProvider.filesDelete
     ({
+      filePath : submodulesCloneDirPath,
       verbosity : 0,
       allowingMissed : 1,
       recursive : '2',
@@ -482,20 +485,14 @@ function cleanWhat( o )
       includingTerminals : 1,
       resolvingSoftLink : 0,
       resolvingTextLink : 0,
-      outputFormat : 'absolute',
+      // outputFormat : 'absolute',
       maskPreset : 0,
+      writing : 0,
     });
 
-    let submodulesCloneDirPath = module.submodulesCloneDirGet();
-    let found = find( submodulesCloneDirPath );
+    filePaths = _.select( filePaths, '*/absolute' );
     _.arrayFlattenOnce( filePaths, found );
     result[ submodulesCloneDirPath ] = found;
-
-    // debugger;
-    // let found = find( '/c/pro/web/Port' );
-    // _.arrayFlattenOnce( filePaths, found );
-    // result[ '/c/pro/web/Port' ] = found;
-    // debugger;
 
   }
 
@@ -540,7 +537,7 @@ function cleanWhat( o )
     {
       let filePath = temp[ p ];
 
-      let found = fileProvider.filesFind
+      let found = fileProvider.filesDelete
       ({
         filePath : filePath,
         verbosity : 0,
@@ -549,9 +546,11 @@ function cleanWhat( o )
         includingDirs : 1,
         includingTerminals : 1,
         maskPreset : 0,
-        outputFormat : 'absolute',
+        // outputFormat : 'absolute',
+        writing : 0,
       });
 
+      filePaths = _.select( filePaths, '*/absolute' );
       _.arrayFlattenOnce( filePaths, found );
       result[ filePath ] = found;
     }

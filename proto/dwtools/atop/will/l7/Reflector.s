@@ -79,7 +79,7 @@ function form1()
     reflector.srcFilter.basePath = path.s.normalize( reflector.srcFilter.basePath );
     // reflector.srcFilter.basePath = path.s.normalize( path.s.join( module.dirPath, reflector.srcFilter.basePath ) );
     if( !reflector.srcFilter.formed )
-    reflector.srcFilter._formComponents();
+    reflector.srcFilter._formAssociations();
   }
 
   reflector.dstFilter = reflector.dstFilter || {};
@@ -92,7 +92,7 @@ function form1()
     reflector.dstFilter.basePath = path.s.normalize( reflector.dstFilter.basePath );
     // reflector.dstFilter.basePath = path.s.normalize( path.s.join( module.dirPath, reflector.dstFilter.basePath ) );
     if( !reflector.dstFilter.formed )
-    reflector.dstFilter._formComponents();
+    reflector.dstFilter._formAssociations();
   }
 
   if( reflector.filePath )

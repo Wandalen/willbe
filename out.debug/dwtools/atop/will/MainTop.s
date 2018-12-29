@@ -582,8 +582,8 @@ function commandCleanWhat( e )
         return;
         if( !filesPath.length )
         return;
-        if( filesPath.length === 1 )
-        return filesPath[ 0 ];
+        // if( filesPath.length === 1 )
+        // return filesPath[ 0 ];
         return filesPath.length + ' at ' + basePath;
       });
       logger.log( _.mapVals( details ).join( '\n' ) );
