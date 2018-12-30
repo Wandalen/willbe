@@ -485,12 +485,12 @@ function cleanWhat( o )
       includingTerminals : 1,
       resolvingSoftLink : 0,
       resolvingTextLink : 0,
-      // outputFormat : 'absolute',
+      outputFormat : 'absolute',
       maskPreset : 0,
       writing : 0,
     });
 
-    filePaths = _.select( filePaths, '*/absolute' );
+    // filePaths = _.select( filePaths, '*/absolute' );
     _.arrayFlattenOnce( filePaths, found );
     result[ submodulesCloneDirPath ] = found;
 
@@ -509,17 +509,33 @@ function cleanWhat( o )
 
       // fileProvider.deletingEmptyDirs
 
-      if( fileProvider.fileExists( archiveFilePath ) )
-      {
-        _.arrayFlattenOnce( filePaths, archiveFilePath );
-        result[ archiveFilePath ] = [ archiveFilePath ];
-      }
+      let found = fileProvider.filesDelete
+      ({
+        filePath : [ archiveFilePath, outFilePath ],
+        verbosity : 0,
+        allowingMissed : 1,
+        recursive : '2',
+        includingDirs : 1,
+        includingTerminals : 1,
+        maskPreset : 0,
+        outputFormat : 'absolute',
+        writing : 0,
+      });
 
-      if( fileProvider.fileExists( outFilePath ) )
-      {
-        _.arrayFlattenOnce( filePaths, outFilePath );
-        result[ outFilePath ] = [ outFilePath ];
-      }
+      _.arrayFlattenOnce( filePaths, found );
+      result[ filePath ] = found;
+
+      // if( fileProvider.fileExists( archiveFilePath ) )
+      // {
+      //   _.arrayFlattenOnce( filePaths, archiveFilePath );
+      //   result[ archiveFilePath ] = [ archiveFilePath ];
+      // }
+      //
+      // if( fileProvider.fileExists( outFilePath ) )
+      // {
+      //   _.arrayFlattenOnce( filePaths, outFilePath );
+      //   result[ outFilePath ] = [ outFilePath ];
+      // }
 
     }
 
@@ -546,11 +562,11 @@ function cleanWhat( o )
         includingDirs : 1,
         includingTerminals : 1,
         maskPreset : 0,
-        // outputFormat : 'absolute',
+        outputFormat : 'absolute',
         writing : 0,
       });
 
-      filePaths = _.select( filePaths, '*/absolute' );
+      // filePaths = _.select( filePaths, '*/absolute' );
       _.arrayFlattenOnce( filePaths, found );
       result[ filePath ] = found;
     }
