@@ -474,25 +474,7 @@ function cleanWhat( o )
   {
 
     let submodulesCloneDirPath = module.submodulesCloneDirGet();
-    // let found = find( submodulesCloneDirPath );
-    let found = fileProvider.filesDelete
-    ({
-      filePath : submodulesCloneDirPath,
-      verbosity : 0,
-      allowingMissed : 1,
-      recursive : '2',
-      includingDirs : 1,
-      includingTerminals : 1,
-      resolvingSoftLink : 0,
-      resolvingTextLink : 0,
-      outputFormat : 'absolute',
-      maskPreset : 0,
-      writing : 0,
-    });
-
-    // filePaths = _.select( filePaths, '*/absolute' );
-    _.arrayFlattenOnce( filePaths, found );
-    result[ submodulesCloneDirPath ] = found;
+    find( submodulesCloneDirPath );
 
   }
 
@@ -507,35 +489,7 @@ function cleanWhat( o )
       let archiveFilePath = exp.archiveFilePathFor();
       let outFilePath = exp.outFilePathFor();
 
-      // fileProvider.deletingEmptyDirs
-
-      let found = fileProvider.filesDelete
-      ({
-        filePath : [ archiveFilePath, outFilePath ],
-        verbosity : 0,
-        allowingMissed : 1,
-        recursive : '2',
-        includingDirs : 1,
-        includingTerminals : 1,
-        maskPreset : 0,
-        outputFormat : 'absolute',
-        writing : 0,
-      });
-
-      _.arrayFlattenOnce( filePaths, found );
-      result[ filePath ] = found;
-
-      // if( fileProvider.fileExists( archiveFilePath ) )
-      // {
-      //   _.arrayFlattenOnce( filePaths, archiveFilePath );
-      //   result[ archiveFilePath ] = [ archiveFilePath ];
-      // }
-      //
-      // if( fileProvider.fileExists( outFilePath ) )
-      // {
-      //   _.arrayFlattenOnce( filePaths, outFilePath );
-      //   result[ outFilePath ] = [ outFilePath ];
-      // }
+      find( [ archiveFilePath, outFilePath ] );
 
     }
 
@@ -553,27 +507,45 @@ function cleanWhat( o )
     {
       let filePath = temp[ p ];
 
-      let found = fileProvider.filesDelete
-      ({
-        filePath : filePath,
-        verbosity : 0,
-        allowingMissed : 1,
-        recursive : '2',
-        includingDirs : 1,
-        includingTerminals : 1,
-        maskPreset : 0,
-        outputFormat : 'absolute',
-        writing : 0,
-      });
+      find( filePath );
 
-      // filePaths = _.select( filePaths, '*/absolute' );
-      _.arrayFlattenOnce( filePaths, found );
-      result[ filePath ] = found;
     }
 
   }
 
   return result;
+
+  /* - */
+
+  function find( filePath )
+  {
+
+    let found = fileProvider.filesDelete
+    ({
+      filePath : filePath,
+      verbosity : 0,
+      allowingMissed : 1,
+      recursive : 2,
+      includingDirs : 1,
+      includingTerminals : 1,
+      maskPreset : 0,
+      outputFormat : 'absolute',
+      writing : 0,
+      deletingEmptyDirs : 1,
+    });
+
+    found = _.arrayFlattenOnce( found );
+    if( found.length )
+    {
+      _.arrayFlattenOnce( filePaths, found );
+      if( !result[ found[ 0 ] ] )
+      result[ found[ 0 ] ] = found;
+      else
+      _.arrayFlattenOnce( result[ found[ 0 ] ], found );
+    }
+
+  }
+
 }
 
 cleanWhat.defaults =
@@ -605,7 +577,7 @@ function clean()
   }
 
   if( logger.verbosity >= 2 )
-  logger.log( ' - Clean deleted ' + filePaths.length + ' file(s) in ' + _.timeSpent( time ) );
+  logger.log( ' - Clean deleted ' + filePaths[ '/' ].length + ' file(s) in ' + _.timeSpent( time ) );
 
   return filePaths;
 }
@@ -1914,14 +1886,14 @@ function _buildsSelect_pre( routine, args )
 
 //
 
-function _buildsSelect_body( o )
+function buildsSelect_body( o )
 {
   let module = this;
   let elements;
 
   elements = module.buildMap;
 
-  _.assertRoutineOptions( _buildsSelect_body, arguments );
+  _.assertRoutineOptions( buildsSelect_body, arguments );
   _.assert( arguments.length === 1 );
 
   // debugger;
@@ -1988,6 +1960,7 @@ function _buildsSelect_body( o )
           src : build.criterion,
           levels : 1,
         });
+
         if( satisfied )
         return build;
       }
@@ -2001,7 +1974,7 @@ function _buildsSelect_body( o )
 
 }
 
-_buildsSelect_body.defaults =
+buildsSelect_body.defaults =
 {
   resource : null,
   name : null,
@@ -2009,17 +1982,17 @@ _buildsSelect_body.defaults =
   preffering : 'default',
 }
 
-let _buildsSelect = _.routineFromPreAndBody( _buildsSelect_pre, _buildsSelect_body );
+let _buildsSelect = _.routineFromPreAndBody( _buildsSelect_pre, buildsSelect_body );
 
 //
 
-let buildsSelect = _.routineFromPreAndBody( _buildsSelect_pre, _buildsSelect_body );
+let buildsSelect = _.routineFromPreAndBody( _buildsSelect_pre, buildsSelect_body );
 var defaults = buildsSelect.defaults;
 defaults.resource = 'build';
 
 //
 
-let exportsSelect = _.routineFromPreAndBody( _buildsSelect_pre, _buildsSelect_body );
+let exportsSelect = _.routineFromPreAndBody( _buildsSelect_pre, buildsSelect_body );
 var defaults = exportsSelect.defaults;
 defaults.resource = 'export';
 

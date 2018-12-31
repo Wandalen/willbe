@@ -541,9 +541,9 @@ function optionsReflectExport( o )
   result.reflectMap = reflector.filePath;
   result.recursive = reflector.recursive === null ? 2 : reflector.recursive;
   if( result.recursive === 1 )
-  result.recursive = '1';
+  result.recursive = 1;
   if( result.recursive === 2 )
-  result.recursive = '2';
+  result.recursive = 2;
 
   /* */
 

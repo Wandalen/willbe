@@ -153,16 +153,18 @@ function moduleDone( o )
   let path = will.fileProvider.path;
   let logger = will.logger;
 
+  console.log( 'moduleDone' ); debugger;
+
   _.assertRoutineOptions( moduleDone, arguments );
   _.assert( _.routineIs( o.command ) );
   _.assert( _.routineIs( will.topCommand ) );
   _.assert( arguments.length === 1 );
   _.assert( will.formed === 1 );
 
-  if( o.err )
+  if( o.error )
   {
     _.appExitCode( -1 );
-    _.errLogOnce( o.err );
+    _.errLogOnce( o.error );
   }
 
   try
@@ -606,9 +608,6 @@ function commandBuild( e )
     let builds = module.buildsSelect( e.subject, e.propertiesMap );
     let logger = will.logger;
 
-    // logger.log( 'logger.verbosity', logger.verbosity );
-    // logger.log( 'will.verbosity', will.verbosity );
-
     if( logger.verbosity >= 2 && builds.length > 1 )
     {
       logger.up();
@@ -619,6 +618,9 @@ function commandBuild( e )
     if( builds.length !== 1 )
     {
       if( builds.length === 0 )
+      if( e.subject )
+      throw _.errBriefly( 'To build please specify exactly one build scenario, build scenario ' + _.strQuote( e.subject ) + ' does not exist' );
+      else
       throw _.errBriefly( 'To build please specify exactly one build scenario, none satisfies passed arguments' );
       throw _.errBriefly( 'To build please specify exactly one build scenario, ' + builds.length + ' satisfy(s) passed arguments' );
     }

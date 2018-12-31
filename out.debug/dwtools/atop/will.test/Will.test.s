@@ -96,7 +96,7 @@ function singleModuleSimplest( test )
   return ready;
 }
 
-singleModuleSimplest.timeOut = 60000;
+singleModuleSimplest.timeOut = 150000;
 
 //
 
@@ -285,7 +285,7 @@ function singleModuleList( test )
   return ready;
 }
 
-singleModuleList.timeOut = 60000;
+singleModuleList.timeOut = 150000;
 
 //
 
@@ -376,7 +376,7 @@ function singleModuleSubmodules( test )
 
 }
 
-singleModuleSubmodules.timeOut = 60000;
+singleModuleSubmodules.timeOut = 150000;
 
 //
 
@@ -455,21 +455,19 @@ function singleModuleClean( test )
 
 }
 
-singleModuleClean.timeOut = 60000;
+singleModuleClean.timeOut = 150000;
 
 //
 
 function singleModuleBuild( test )
 {
   let self = this;
-
   let originaDirPath = _.path.join( self.assetDirPath, 'single' );
   let dirPath = _.path.join( self.tempDir, test.name );
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originaDirPath ] : dirPath }  })
-
   let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
   willExecPath = _.path.nativize( willExecPath );
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originaDirPath ] : dirPath }  })
 
   let shell = _.sheller
   ({
@@ -479,6 +477,8 @@ function singleModuleBuild( test )
   })
 
   let ready = new _.Consequence().take( null )
+
+  /* - */
 
   .keep( () =>
   {
@@ -493,12 +493,14 @@ function singleModuleBuild( test )
       test.is( _.strHas( got.output, 'Reflect 2 files to' ) );
       test.is( _.strHas( got.output, 'Built debug.raw in' ) );
 
-      var files = _.fileProvider.filesFind({ filePath : buildOutPath, recursive : '2', outputFormat : 'relative' })
+      var files = _.fileProvider.filesFind({ filePath : buildOutPath, recursive : 2, outputFormat : 'relative' })
       test.identical( files, [ './Single.s' ] );
 
       return null;
     })
   })
+
+  /* - */
 
   .keep( () =>
   {
@@ -513,7 +515,7 @@ function singleModuleBuild( test )
       test.is( _.strHas( got.output, 'Reflect 2 files to' ) );
       test.is( _.strHas( got.output, 'Built debug.raw in' ) );
 
-      var files = _.fileProvider.filesFind({ filePath : buildOutPath, recursive : '2', outputFormat : 'relative' })
+      var files = _.fileProvider.filesFind({ filePath : buildOutPath, recursive : 2, outputFormat : 'relative' })
       test.identical( files, [ './Single.s' ] );
 
       return null;
@@ -535,7 +537,7 @@ function singleModuleBuild( test )
       test.is( _.strHas( got.output, 'Reflect 2 files to' ) );
       test.is( _.strHas( got.output, 'Built release.raw in' ) );
 
-      var files = _.fileProvider.filesFind({ filePath : buildOutPath, recursive : '2', outputFormat : 'relative' })
+      var files = _.fileProvider.filesFind({ filePath : buildOutPath, recursive : 2, outputFormat : 'relative' })
       test.identical( files, [ './Single.s' ] );
 
       return null;
@@ -556,7 +558,7 @@ function singleModuleBuild( test )
       path : 'node ' + willExecPath,
       currentPath : dirPath,
       outputCollecting : 1,
-      args : [ '.build wrong' ]
+      args : [ '.build wrong' ],
     }
     return test.shouldThrowError( _.shell( o ) )
     .keep( ( got ) =>
@@ -570,10 +572,12 @@ function singleModuleBuild( test )
     })
   })
 
+  /* - */
+
   return ready;
 }
 
-singleModuleBuild.timeOut = 60000;
+singleModuleBuild.timeOut = 150000;
 
 //
 
@@ -618,9 +622,9 @@ function singleModuleExport( test )
       test.is( _.strHas( got.output, '+ Write out file to' ) );
       test.is( _.strHas( got.output, 'Exported proto.export with 2 files in' ) );
 
-      var files = _.fileProvider.filesFind({ filePath : buildOutPath, recursive : '2', outputFormat : 'relative' })
+      var files = _.fileProvider.filesFind({ filePath : buildOutPath, recursive : 2, outputFormat : 'relative' })
       test.identical( files, [ './Single.s' ] );
-      var files = _.fileProvider.filesFind({ filePath : exportPath, recursive : '2', outputFormat : 'relative' })
+      var files = _.fileProvider.filesFind({ filePath : exportPath, recursive : 2, outputFormat : 'relative' })
       test.identical( files, [ './single.out.will.yml' ] );
 
       return null;
@@ -644,9 +648,9 @@ function singleModuleExport( test )
       test.is( _.strHas( got.output, 'Reflect 2 files to' ) );
       test.is( _.strHas( got.output, 'Exported proto.export with 2 files' ) );
 
-      var files = _.fileProvider.filesFind({ filePath : buildOutPath, recursive : '2', outputFormat : 'relative' })
+      var files = _.fileProvider.filesFind({ filePath : buildOutPath, recursive : 2, outputFormat : 'relative' })
       test.identical( files, [ './Single.s' ] );
-      var files = _.fileProvider.filesFind({ filePath : exportPath, recursive : '2', outputFormat : 'relative' })
+      var files = _.fileProvider.filesFind({ filePath : exportPath, recursive : 2, outputFormat : 'relative' })
       test.identical( files, [ './single.out.will.yml' ] );
 
       return null;
@@ -657,7 +661,7 @@ function singleModuleExport( test )
   return ready;
 }
 
-singleModuleExport.timeOut = 60000;
+singleModuleExport.timeOut = 150000;
 
 //
 
@@ -855,7 +859,7 @@ function withSubmodulesList( test )
   return ready;
 }
 
-withSubmodulesList.timeOut = 60000;
+withSubmodulesList.timeOut = 150000;
 
 //
 
@@ -885,28 +889,28 @@ function withSubmodulesSubmodules( test )
 
   /* */
 
-  .keep( () =>
-  {
-    test.case = '.submodules.download';
-    _.fileProvider.filesDelete( modulesPath );
-    return shell({ args : [ '.submodules.download' ] })
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, '2/2 submodule(s) of module::withSubmodules were downloaded in' ) );
-
-      var files = _.fileProvider.filesFind({ filePath : modulesPath, recursive : '2', outputFormat : 'relative' })
-      test.is( files.length );
-
-      test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'Tools' ) ) )
-      test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'PathFundamentals' ) ) )
-      return null;
-    })
-  })
+  // .keep( () =>
+  // {
+  //   test.case = '.submodules.download';
+  //   _.fileProvider.filesDelete( modulesPath );
+  //   return shell({ args : [ '.submodules.download' ] })
+  //   .thenKeep( ( got ) =>
+  //   {
+  //     test.identical( got.exitCode, 0 );
+  //     test.is( _.strHas( got.output, '2/2 submodule(s) of module::withSubmodules were downloaded in' ) );
+  //
+  //     var files = _.fileProvider.filesFind({ filePath : modulesPath, recursive : 2, outputFormat : 'relative' })
+  //     test.is( files.length );
+  //
+  //     test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'Tools' ) ) )
+  //     test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'PathFundamentals' ) ) )
+  //     return null;
+  //   })
+  // })
 
   /* */
 
-  .keep( () =>  shell({ args : [ '.submodules.upgrade' ] }) )
+  .keep( () => shell({ args : [ '.submodules.upgrade' ] }) )
   .keep( () =>
   {
     test.case = '.submodules.upgrade'
@@ -920,10 +924,10 @@ function withSubmodulesSubmodules( test )
       test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'PathFundamentals' ) ) )
       test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) )
 
-      var files = _.fileProvider.filesFind({ filePath : _.path.join( modulesPath, 'Tools' ), recursive : '2', outputFormat : 'relative' })
+      var files = _.fileProvider.filesFind({ filePath : _.path.join( modulesPath, 'Tools' ), recursive : 2, outputFormat : 'relative' })
       test.is( files.length );
 
-      var files = _.fileProvider.filesFind({ filePath : _.path.join( modulesPath, 'PathFundamentals' ), recursive : '2', outputFormat : 'relative' })
+      var files = _.fileProvider.filesFind({ filePath : _.path.join( modulesPath, 'PathFundamentals' ), recursive : 2, outputFormat : 'relative' })
       test.is( files.length );
 
       return null;
@@ -932,36 +936,36 @@ function withSubmodulesSubmodules( test )
 
   /* */
 
-  .keep( () =>
-  {
-    test.case = '.submodules.clean';
-
-    let files = _.fileProvider.filesFind
-    ({
-      filePath : modulesPath,
-      recursive : '2',
-      includingDirs : 1,
-      includingTerminals : 1,
-      includingTransient : 1
-    });
-
-    return shell({ args : [ '.submodules.clean' ] })
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, `${files.length}` ) );
-      test.is( !_.fileProvider.fileExists( _.path.join( dirPath, '.module' ) ) )
-      test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) )
-      return null;
-    })
-  })
+  // .keep( () =>
+  // {
+  //   test.case = '.submodules.clean';
+  //
+  //   let files = _.fileProvider.filesFind
+  //   ({
+  //     filePath : modulesPath,
+  //     recursive : 2,
+  //     includingDirs : 1,
+  //     includingTerminals : 1,
+  //     includingTransient : 1
+  //   });
+  //
+  //   return shell({ args : [ '.submodules.clean' ] })
+  //   .thenKeep( ( got ) =>
+  //   {
+  //     test.identical( got.exitCode, 0 );
+  //     test.is( _.strHas( got.output, `${files.length}` ) );
+  //     test.is( !_.fileProvider.fileExists( _.path.join( dirPath, '.module' ) ) )
+  //     test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) )
+  //     return null;
+  //   })
+  // })
 
   /* */
 
   return ready;
 }
 
-withSubmodulesSubmodules.timeOut = 60000;
+withSubmodulesSubmodules.timeOut = 150000;
 
 //
 
@@ -998,7 +1002,7 @@ function withSubmodulesClean( test )
     let files = _.fileProvider.filesFind
     ({
       filePath : modulesPath,
-      recursive : '2',
+      recursive : 2,
       includingTerminals : 1,
       includingDirs : 1,
       includingTransient : 1
@@ -1035,7 +1039,7 @@ function withSubmodulesClean( test )
     let files = _.fileProvider.filesFind
     ({
       filePath : modulesPath,
-      recursive : '2',
+      recursive : 2,
       includingTerminals : 1,
       includingDirs : 1,
       includingTransient : 1
@@ -1071,7 +1075,7 @@ withSubmodulesClean.timeOut = 35000;
 
 //
 
-function swithSubmodulesBuild( test )
+function withSubmodulesBuild( test )
 {
   let self = this;
 
@@ -1133,7 +1137,7 @@ function swithSubmodulesBuild( test )
       var files = _.fileProvider.filesFind
       ({
         filePath : buildOutPath,
-        recursive : '2',
+        recursive : 2,
         includingDirs : 1,
         includingTerminals : 1,
         includingTransient : 1,
@@ -1176,7 +1180,7 @@ function swithSubmodulesBuild( test )
   return ready;
 }
 
-swithSubmodulesBuild.timeOut = 35000;
+withSubmodulesBuild.timeOut = 35000;
 
 //
 
@@ -1197,7 +1201,7 @@ function withSubmodulesExport( test )
   ({
     path : 'node ' + willExecPath,
     currentPath : dirPath,
-    outputCollecting : 1
+    outputCollecting : 1,
   })
 
   let ready = new _.Consequence().take( null )
@@ -1220,14 +1224,14 @@ function withSubmodulesExport( test )
       var files = _.fileProvider.filesFind
       ({
         filePath : buildOutPath,
-        recursive : '2',
+        recursive : 2,
         includingDirs : 1,
         includingTerminals : 1,
         includingTransient : 1,
       });
       test.is( files.length > 10 );
 
-      var files = _.fileProvider.filesFind({ filePath : exportPath, recursive : '2', outputFormat : 'relative' })
+      var files = _.fileProvider.filesFind({ filePath : exportPath, recursive : 2, outputFormat : 'relative' })
       test.identical( files, [ './withSubmodules.out.will.yml' ] );
 
       return null;
@@ -1237,7 +1241,7 @@ function withSubmodulesExport( test )
   return ready;
 }
 
-withSubmodulesExport.timeOut = 60000;
+withSubmodulesExport.timeOut = 150000;
 
 //
 
@@ -1337,7 +1341,7 @@ function submodulesDownload( test )
   return ready;
 }
 
-submodulesDownload.timeOut = 30000;
+submodulesDownload.timeOut = 150000;
 
 //
 
@@ -1370,7 +1374,7 @@ var Self =
     withSubmodulesList,
     withSubmodulesSubmodules,
     withSubmodulesClean,
-    swithSubmodulesBuild,
+    withSubmodulesBuild,
     withSubmodulesExport,
 
     submodulesDownload,
