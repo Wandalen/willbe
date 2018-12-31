@@ -1696,9 +1696,9 @@ function _remoteDownload( o )
       // logger.log( module.stager.infoExport() );
 
       _.assert( module.formed === 3, 'not tested' );
-      _.assert( module.willFilesFound === 1, 'not tested' );
-      _.assert( module.willFilesOpened === 1, 'not tested' );
-      _.assert( module.resourcesFormed === 1, 'not tested' );
+      // _.assert( module.willFilesFound === 1, 'not tested' );
+      // _.assert( module.willFilesOpened === 1, 'not tested' );
+      // _.assert( module.resourcesFormed === 1, 'not tested' );
 
       module.stateResetError();
 
