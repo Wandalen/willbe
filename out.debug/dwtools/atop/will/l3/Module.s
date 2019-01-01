@@ -80,7 +80,7 @@ function init( o )
     object : module,
     stageNames : [ 'formed', 'willFilesFound', 'willFilesOpened', 'resourcesFormed' ],
     consequenceNames : [ 'formReady', 'willFilesFindReady', 'willFilesOpenReady', 'resourcesFormReady' ],
-    finals : [ 3, 2, 2, 2 ],
+    finals : [ 3, 3, 3, 3 ],
     verbosity : will.verbosity && will.verboseStaging,
   });
 
@@ -127,16 +127,6 @@ function unform()
   for( let i in module.submoduleMap )
   module.submoduleMap[ i ].finit();
 
-  // for( let k in module.submoduleMap )
-  // module.submoduleMap[ k ].finit()
-  // for( let k in module.reflectorMap )
-  // module.reflectorMap[ k ].finit()
-  // for( let k in module.stepMap )
-  // module.stepMap[ k ].finit()
-  // for( let k in module.buildMap )
-  // module.buildMap[ k ].finit()
-  // debugger;
-
   _.assert( Object.keys( module.exportedMap ).length === 0 );
   _.assert( Object.keys( module.buildMap ).length === 0 );
   _.assert( Object.keys( module.stepMap ).length === 0 );
@@ -151,7 +141,7 @@ function unform()
     _.assert( Object.keys( willf.reflectorMap ).length === 0 );
     _.assert( Object.keys( willf.stepMap ).length === 0 );
     _.assert( Object.keys( willf.buildMap ).length === 0 );
-    willf.finit()
+    willf.finit();
   }
 
   _.assert( module.willFileArray.length === 0 );
@@ -668,25 +658,25 @@ function stateResetError()
 
   if( module.willFilesFindReady.errorsCount() )
   {
-    _.assert( module.willFilesFound === 1 );
+    _.assert( module.willFilesFound < 3 );
     module.willFilesFound = 0;
-    module.willFilesFindReady.got( 1 );
+    module.willFilesFindReady.resourcesCancel();
     resettingReady = 1;
   }
 
   if( module.willFilesOpenReady.errorsCount() )
   {
-    _.assert( module.willFilesOpened === 1 );
+    _.assert( module.willFilesOpened < 3 );
     module.willFilesOpened = 0;
-    module.willFilesOpenReady.got( 1 );
+    module.willFilesOpenReady.resourcesCancel();
     resettingReady = 1;
   }
 
   if( module.resourcesFormReady.errorsCount() )
   {
-    _.assert( module.resourcesFormed === 1 );
+    _.assert( module.resourcesFormed < 3 );
     module.resourcesFormed = 0;
-    module.resourcesFormReady.got( 1 );
+    module.resourcesFormReady.resourcesCancel();
     resettingReady = 1;
   }
 
@@ -819,7 +809,7 @@ function _willFilesFindMaybe( o )
 
   if( files.outerSingle || files.outerImport || files.outerExport )
   {
-    module.stager.stage( 'willFilesFound', 2 );
+    module.stager.stage( 'willFilesFound', 3 );
     return true;
   }
 
@@ -856,7 +846,7 @@ function _willFilesFindMaybe( o )
 
   if( files.innerSingle || files.innerImport || files.innerExport )
   {
-    module.stager.stage( 'willFilesFound', 2 );
+    module.stager.stage( 'willFilesFound', 3 );
     return true;
   }
 
@@ -876,12 +866,16 @@ function willFilesFind()
   let will = module.will;
   let logger = will.logger;
 
-  // debugger;
+  if( module.willFilesFound > 0 )
+  return module.willFilesFindReady;
+
   module.stager.stage( 'willFilesFound', 1 );
 
   return module.formReady.split()
   .thenKeep( () =>
   {
+    module.stager.stage( 'willFilesFound', 2 );
+
     let result = module._willFilesFindMaybe({ isInFile : !module.supermodule });
 
     if( !result )
@@ -936,10 +930,14 @@ function willFilesOpen()
 
   _.assert( arguments.length === 0 );
 
+  if( module.willFilesOpened > 0 )
+  return module.willFilesOpenReady;
+
   module.stager.stage( 'willFilesOpened', 1 );
 
   return module.willFilesFindReady.split().keep( ( arg ) =>
   {
+    module.stager.stage( 'willFilesOpened', 2 );
     return module._willFilesOpen();
   })
   .finally( ( err, arg ) =>
@@ -987,7 +985,7 @@ function _willFilesOpen()
   .keep( ( arg ) => module._resourcesSubmodulesForm() )
   .keep( ( arg ) =>
   {
-    module.stager.stage( 'willFilesOpened', 2 );
+    module.stager.stage( 'willFilesOpened', 3 );
     return arg;
   })
   // xxx
@@ -1023,17 +1021,12 @@ function resourcesFormSkip()
 
   debugger;
 
-  // logger.log( module.nickName, 'resourcesFormSkip' );
-
   if( module.resourcesFormed > 0 )
-  return module.willFilesOpenReady.split();
+  return module.resourcesFormReady;
 
-  // module.stager.stage( 'resourcesFormed', 1 );
-
-  module.willFilesOpenReady
+  module.willFilesOpenReady // xxx
   .finally( ( err, arg ) =>
   {
-    // _.timeOut( 1, () => module.ready.take( err, arg ) );
     module.ready.takeSoon( err, arg );
     _.assert( !module.ready.resourcesCount() );
     if( err )
@@ -1061,17 +1054,13 @@ function resourcesForm()
 
   _.assert( arguments.length === 0 );
 
-  // logger.log( module.nickName, 'resourcesForm' );
-
   module.stager.stage( 'resourcesFormed', 1 );
 
   return module.willFilesOpenReady.split().keep( ( arg ) =>
   {
     let con = new _.Consequence().take( null );
 
-    // debugger;
-    // if( !module.supermodule )
-    // debugger;
+    module.stager.stage( 'resourcesFormed', 2 );
 
     if( !module.supermodule )
     if( module.submodulesAllAreDownloaded() && module.submodulesNoneHasError() )
@@ -1081,7 +1070,7 @@ function resourcesForm()
 
       con.keep( ( arg ) =>
       {
-        module.stager.stage( 'resourcesFormed', 2 );
+        module.stager.stage( 'resourcesFormed', 3 );
         return arg;
       });
 
@@ -1094,12 +1083,8 @@ function resourcesForm()
 
     return con;
   })
-  // .finally( module.ready ) // make possible !!!
-  // .finally( () => _.timeOut( 1, () => module.ready.take( err, arg ) ) )
-  // .timeOut( () => module.ready )
   .finally( ( err, arg ) =>
   {
-    // _.timeOut( 1, () => module.ready.take( err, arg ) );
     module.ready.takeSoon( err, arg );
     _.assert( !module.ready.resourcesCount() );
     if( err )
@@ -1379,8 +1364,8 @@ function _submodulesDownload( o )
     con.keep( () =>
     {
 
-      if( !submodule.isDownloaded )
-      downloadedNumber += 1;
+      // if( !submodule.isDownloaded )
+      // downloadedNumber += 1;
 
       remoteNumber += 1;
 
@@ -1700,6 +1685,7 @@ function _remoteDownload( o )
       // _.assert( module.willFilesOpened === 1, 'not tested' );
       // _.assert( module.resourcesFormed === 1, 'not tested' );
 
+      if( module.resourcesFormReady.errorsCount() )
       module.stateResetError();
 
       // logger.log( module.stager.infoExport() );

@@ -153,7 +153,7 @@ function moduleDone( o )
   let path = will.fileProvider.path;
   let logger = will.logger;
 
-  console.log( 'moduleDone' ); debugger;
+  // console.log( 'moduleDone' ); debugger;
 
   _.assertRoutineOptions( moduleDone, arguments );
   _.assert( _.routineIs( o.command ) );
