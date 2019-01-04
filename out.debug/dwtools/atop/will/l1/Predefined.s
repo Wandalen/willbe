@@ -64,6 +64,7 @@ function stepRoutineReflect( frame )
   let path = fileProvider.path;
   let logger = will.logger;
   let opts = frame.opts;
+  let time = _.timeNow();
 
   _.assert( !!opts.reflector, 'Expects option reflector' );
   _.assert( arguments.length === 1 );
@@ -95,6 +96,8 @@ function stepRoutineReflect( frame )
 
   if( opts.verbosity === null )
   opts.verbosity = will.verbosity-1;
+  let verbosity = opts.verbosity;
+  opts.verbosity = 0;
 
   let result = will.Predefined.filesReflect.call( fileProvider, opts );
 
@@ -102,6 +105,15 @@ function stepRoutineReflect( frame )
   // {
   //   logger.log( _.toStr( _.select( result, '*/src/absolute' ), { levels : 2, wrap : 0 } ) );
   // }
+
+  if( verbosity >= 1 )
+  {
+    let srcFilter = opts.srcFilter.clone().form();
+    let dstFilter = opts.dstFilter.clone().form();
+    let src = srcFilter.srcPathCommon();
+    let dst = dstFilter.dstPathCommon();
+    logger.log( ' + ' + step.name + ' reflected ' + opts.result.length + ' files ' + path.moveReport( dst, src ) + ' in ' + _.timeSpent( time ) );
+  }
 
   return result;
 }

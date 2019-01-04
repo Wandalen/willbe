@@ -538,7 +538,7 @@ function optionsReflectExport( o )
 
   o = _.routineOptions( optionsReflectExport, arguments );
 
-  result.reflectMap = reflector.filePath;
+  // result.reflectMap = reflector.filePath;
   result.recursive = reflector.recursive === null ? 2 : reflector.recursive;
   if( result.recursive === 1 )
   result.recursive = 1;
@@ -699,7 +699,7 @@ _.assert( _.routineIs( _.FileRecordFilter ) );
 // declare
 // --
 
-let Proto =
+let Extend =
 {
 
   // inter
@@ -749,7 +749,7 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Proto,
+  extend : Extend,
 });
 
 _.Copyable.mixin( Self );
