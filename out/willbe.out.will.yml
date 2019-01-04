@@ -137,6 +137,8 @@ reflector:
     filePath:
       ./proto: ./out.release
     srcFilter:
+      filePath:
+        ./proto: ./out.release
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -160,6 +162,8 @@ reflector:
     filePath:
       ./proto: ./out.debug
     srcFilter:
+      filePath:
+        ./proto: ./out.debug
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -199,6 +203,7 @@ reflector:
   exported.0:
     filePath: ./proto
     srcFilter:
+      filePath: ./proto
       prefixPath: .
     dstFilter:
       prefixPath: .
@@ -230,6 +235,31 @@ reflector:
       ./dwtools/atop/will.test/asset/single/proto/Single.s: true
       ./dwtools/atop/will.test/asset/submodules/proto/WithSubmodules.s: true
     srcFilter:
+      filePath:
+        ./dwtools/Tools.s: true
+        ./dwtools/atop/will/Exec: true
+        ./dwtools/atop/will/Exec2: true
+        ./dwtools/atop/will/IncludeBase.s: true
+        ./dwtools/atop/will/IncludeTop.s: true
+        ./dwtools/atop/will/MainBase.s: true
+        ./dwtools/atop/will/MainTop.s: true
+        ./dwtools/atop/will/l1/About.s: true
+        ./dwtools/atop/will/l1/BuildFrame.s: true
+        ./dwtools/atop/will/l1/Execution.s: true
+        ./dwtools/atop/will/l1/Predefined.s: true
+        ./dwtools/atop/will/l3/Module.s: true
+        ./dwtools/atop/will/l5/Inheritable.s: true
+        ./dwtools/atop/will/l7/Build.s: true
+        ./dwtools/atop/will/l7/Exported.s: true
+        ./dwtools/atop/will/l7/PathObj.s: true
+        ./dwtools/atop/will/l7/Reflector.s: true
+        ./dwtools/atop/will/l7/Step.s: true
+        ./dwtools/atop/will/l7/Submodule.s: true
+        ./dwtools/atop/will/l7/WillFile.s: true
+        ./dwtools/atop/will.test/Will.test.s: true
+        ./dwtools/atop/will.test/asset/download/proto/Simple.js: true
+        ./dwtools/atop/will.test/asset/single/proto/Single.s: true
+        ./dwtools/atop/will.test/asset/submodules/proto/WithSubmodules.s: true
       basePath: .
       prefixPath: proto
     dstFilter:
