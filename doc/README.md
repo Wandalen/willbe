@@ -13,7 +13,6 @@
 * [Listing properties of a module](tutorial/ListingProperties.md)
 * [Creating a build configuration](tutorial/FirstBuild.md)
 * [Exporting the module](tutorial/Exporting.md)
-* [Importing the module](tutorial/Importing.md)
 * [Declaring local submodules](tutorial/LocalSubmodules.md)
 * [Importing remote submodules](tutorial/RemoteSubmodules.md)
 * [Creating reflectors and steps](tutorial/ReflectorsAndSteps.md)

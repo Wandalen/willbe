@@ -1,12 +1,12 @@
 # Using Criteria
-This tutorial shows how to use critera to modify the behaviour of reflecting a file.
+This tutorial shows how to use critera to modify the behaviour of a build process.
 
 ## Module structure
 
 ```
 .
-├── fileToReflectOne
-├── fileToReflectTwo
+├── fileToReflectA
+├── fileToReflectB
 ├── .will.yml
 ```
 
@@ -14,12 +14,13 @@ This tutorial shows how to use critera to modify the behaviour of reflecting a f
 
 ### Preparing the will file:
 
-In this tutorial we are going to create two reflectors with a different criterion value, to show how it modifies the
-behaviour of the routine, and how to use criteria. Our objective will be to copy one or two files, depending on the
-criterion value. We will call it `copyAll`, where, if it equals 0 only one file will be copied, and if it equals 1 both files
-will be copied.
+In this tutorial we are going to create two reflectors with a criterion, in order to show how the criterion value modifies the
+behaviour of the routine.
 
 #### Create a base will config for the module:
+
+Our objective will be to copy one or two files, depending on the criterion value. Therefore, we need to set paths
+for each file:
 
 <details>
   <summary><u>Click to expand!</u></summary>
@@ -33,16 +34,16 @@ about :
 
 path :
 
-  proto : './proto'
-  protoTwo : './protoTwo'
+  proto : './fileA'
+  protoTwo : './fileB'
   in : '.'
   out : 'out'
   out.debug :
-    path : './out.debug'
+    path : './out.debugA'
     criterion :
       debug : 1
   out.debugTwo :
-    path : './out.debugTwo'
+    path : './out.debugB'
     criterion :
       debug : 1
 
@@ -57,9 +58,10 @@ The section `path` defines paths that are used in the current module:
 
 #### Add the reflectors:
 
-Let´s create now the two reflectors:
+We will call our criterion: `copyAll`. Where, if it equals 0, only one file will be copied, and if it equals 1 both files
+will be copied. Let´s create now the two reflectors:
 
-  - the first one copies only one file, and the criterion `copyAll` is equal to 0..
+  - the first one copies only one file, and the criterion `copyAll` is equal to 0.
 
   - the second one copies two files, and the criterion `copyAll` is equal to 1.
 
@@ -86,7 +88,7 @@ reflector :
 ```
 </details>
 
-`criterion` - defines the value of the `copyAll` criterion.
+`criterion` - defines the criterion `copyAll`.
 
 `path::proto` and `path::protoTwo` - paths to the files that will be copied.
 
@@ -183,16 +185,16 @@ about :
 
 path :
 
-  proto : './proto'
-  protoTwo : './protoTwo'
+  proto : './fileA'
+  protoTwo : './fileB'
   in : '.'
   out : 'out'
   out.debug :
-    path : './out.debug'
+    path : './out.debugA'
     criterion :
       debug : 1
   out.debugTwo :
-    path : './out.debugTwo'
+    path : './out.debugB'
     criterion :
       debug : 1
 
