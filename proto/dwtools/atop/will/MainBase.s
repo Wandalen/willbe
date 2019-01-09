@@ -110,14 +110,17 @@ function formAssociates()
   {
 
     let hub = _.FileProvider.Hub({ providers : [] });
-    will.fileProvider = hub;
 
     _.FileProvider.Git().providerRegisterTo( hub );
     _.FileProvider.Npm().providerRegisterTo( hub );
 
     let defaultProvider = _.FileProvider.Default();
-    defaultProvider.providerRegisterTo( hub );
-    hub.defaultProvider = defaultProvider;
+    let image = _.FileFilter.Image({ originalFileProvider : defaultProvider });
+    let archive = new _.FilesGraphArchive({ imageFileProvider : image });
+    image.providerRegisterTo( hub );
+    hub.defaultProvider = image;
+
+    will.fileProvider = hub;
 
   }
 

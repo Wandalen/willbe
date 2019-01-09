@@ -266,14 +266,14 @@ function predefinedForm()
 
   step
   ({
-    name : 'graph.begin',
-    stepRoutine : Predefined.stepRoutineGraphBegin,
+    name : 'timelapse.begin',
+    stepRoutine : Predefined.stepRoutineTimelapseBegin,
   })
 
   step
   ({
-    name : 'graph.end',
-    stepRoutine : Predefined.stepRoutineGraphEnd,
+    name : 'timelapse.end',
+    stepRoutine : Predefined.stepRoutineTimelapseEnd,
   })
 
   step
@@ -1356,7 +1356,7 @@ function _submodulesDownload( o )
   for( let n in module.submoduleMap )
   {
     let submodule = module.submoduleMap[ n ].loadedModule;
-    _.assert( !!submodule && submodule.formed === 3 );
+    _.assert( !!submodule && submodule.formed === 3, 'Submodule', ( submodule ? submodule.nickName : n ), 'was not formed' );
 
     if( !submodule.isRemote )
     continue;

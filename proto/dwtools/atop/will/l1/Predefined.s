@@ -126,7 +126,7 @@ stepRoutineReflect.stepOptions =
 
 //
 
-function stepRoutineGraphBegin( frame )
+function stepRoutineTimelapseBegin( frame )
 {
   let step = this;
   let module = frame.module;
@@ -140,18 +140,19 @@ function stepRoutineGraphBegin( frame )
 
   /* */
 
-  logger.log( 'stepRoutineGraphBegin' );
+  logger.log( 'Timelapse begin' );
+  fileProvider.providersWithProtocolMap.hd.archive.timelapseBegin();
 
   return null;
 }
 
-stepRoutineGraphBegin.stepOptions =
+stepRoutineTimelapseBegin.stepOptions =
 {
 }
 
 //
 
-function stepRoutineGraphEnd( frame )
+function stepRoutineTimelapseEnd( frame )
 {
   let step = this;
   let module = frame.module;
@@ -165,12 +166,13 @@ function stepRoutineGraphEnd( frame )
 
   /* */
 
-  logger.log( 'stepRoutineGraphEnd' );
+  logger.log( 'Timelapse end' );
+  fileProvider.providersWithProtocolMap.hd.archive.timelapseEnd();
 
   return null;
 }
 
-stepRoutineGraphEnd.stepOptions =
+stepRoutineTimelapseEnd.stepOptions =
 {
 }
 
@@ -396,8 +398,8 @@ let Extend =
 
   stepRoutineDelete,
   stepRoutineReflect,
-  stepRoutineGraphBegin,
-  stepRoutineGraphEnd,
+  stepRoutineTimelapseBegin,
+  stepRoutineTimelapseEnd,
   stepRoutineJs,
   stepRoutineShell,
 
