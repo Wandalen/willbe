@@ -41,6 +41,14 @@ function stepRoutineDelete( frame )
   _.assert( _.objectIs( opts ) );
 
   let filePath = step.inPathResolve( opts.filePath );
+
+  if( filePath instanceof will.Reflector )
+  {
+    debugger;
+    filePath = filePath.optionsForFindExport();
+    debugger;
+  }
+
   return fileProvider.filesDelete
   ({
     filePath : filePath,
@@ -84,7 +92,7 @@ function stepRoutineReflect( frame )
   _.sure( reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strType( reflector ) )
   _.assert( reflector.formed === 3, () => reflector.nickName + ' is not formed' );
 
-  reflector = reflector.optionsReflectExport();
+  reflector = reflector.optionsForReflectExport();
 
   _.mapSupplement( opts, reflector )
 

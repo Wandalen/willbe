@@ -527,7 +527,7 @@ pathsResolve.defaults =
 
 //
 
-function optionsReflectExport( o )
+function optionsForFindExport( o )
 {
   let reflector = this;
   let module = reflector.module;
@@ -536,7 +536,34 @@ function optionsReflectExport( o )
   let path = fileProvider.path;
   let result = Object.create( null );
 
-  o = _.routineOptions( optionsReflectExport, arguments );
+  o = _.routineOptions( optionsForReflectExport, arguments );
+
+  debugger;
+  _.assert( reflector.dstFilter === null || reflector.dstFilter.isEmpty() );
+
+  if( reflector.srcFilter )
+  result.filter = reflector.srcFilter.clone();
+  result.filter = result.filter || Object.create( null );
+  result.filter.prefixPath = path.resolve( module.dirPath, result.filter.prefixPath || '.' );
+  if( o.resolving )
+  if( result.filter.basePath )
+  result.filter.basePath = path.resolve( module.dirPath, result.filter.basePath );
+
+  return result;
+}
+
+//
+
+function optionsForReflectExport( o )
+{
+  let reflector = this;
+  let module = reflector.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let result = Object.create( null );
+
+  o = _.routineOptions( optionsForReflectExport, arguments );
 
   // result.reflectMap = reflector.filePath;
   result.recursive = reflector.recursive === null ? 2 : reflector.recursive;
@@ -570,7 +597,7 @@ function optionsReflectExport( o )
   return result;
 }
 
-optionsReflectExport.defaults =
+optionsForReflectExport.defaults =
 {
   resolving : 0,
 }
@@ -722,7 +749,8 @@ let Extend =
 
   // exporter
 
-  optionsReflectExport,
+  optionsForFindExport,
+  optionsForReflectExport,
   infoExport,
   dataExport,
 
