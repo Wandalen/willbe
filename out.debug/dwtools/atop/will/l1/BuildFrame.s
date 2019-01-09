@@ -255,7 +255,7 @@ _.Copyable.mixin( Self );
 //
 
 if( typeof module !== 'undefined' && module !== null )
-module[ 'exports' ] = wTools;
+module[ 'exports' ] = /**/_global_.wTools;
 
 _.staticDecalre
 ({
