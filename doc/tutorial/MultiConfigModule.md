@@ -67,8 +67,9 @@ Instead of installing the npm dependencies, it will output some text in the cons
 
 ### Writing the import build configuration:
 
-In this tutorial, we want to show that sections defined in the opposite will configuration file are available everywhere. In this particular case, sections
-defined in our `.ex.will` file will also be available for the `.im.will file` ( and the other way around ). Therefore, there is no need to duplicate sections
+In this tutorial, we want to show that sections defined in the opposite will configuration file are available everywhere.
+
+In this particular case, sections defined in our `.ex.will` file will also be available for the `.im.will file` ( and the other way around ). Therefore, there is no need to duplicate sections
 like the `about` section.
 
 The final version of the `.im.will.yml` file would be:
