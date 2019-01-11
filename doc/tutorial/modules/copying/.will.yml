@@ -1,0 +1,38 @@
+about :
+
+  name : 'copying'
+  description : 'Reflect a file'
+  version : 0.0.0
+
+path :
+
+  proto : './proto'
+  in : '.'
+  out : 'out'
+  out.debug : './out.debug'
+
+reflector :
+  reflect.proto :
+    inherit : predefined.*
+    criterion :
+      debug : 1
+    filePath :
+      path::proto : path::out.debug
+
+step :
+
+  reflect.proto :
+    inherit : predefined.reflect
+    reflector :
+      reflector::reflect.proto
+    criterion :
+      debug : 1
+
+build :
+
+  debug :
+    criterion :
+      default : 1
+      debug : 1
+    steps :
+      - step::reflect.proto

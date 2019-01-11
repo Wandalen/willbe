@@ -1,0 +1,72 @@
+about :
+
+  name : criteria
+  description : "Use of criteria"
+  version : 0.0.0
+
+path :
+
+  proto : './fileA'
+  protoTwo : './fileB'
+  in : '.'
+  out : 'out'
+  out.debug :
+    path : './out.debugA'
+    criterion :
+      debug : 1
+  out.debugTwo :
+    path : './out.debugB'
+    criterion :
+      debug : 1
+
+reflector :
+
+  reflect.proto :
+    inherit : predefined.*
+    criterion :
+      copyAll : 0
+    filePath :
+      path::proto : path::out.debug
+
+  reflect.protoTwo :
+    inherit : predefined.*
+    criterion :
+      copyAll : 1
+    filePath :
+      path::protoTwo : path::out.debugTwo
+      path::proto : path::out.debug
+
+step :
+
+  reflect.proto :
+    inherit : predefined.reflect
+    reflector :
+      reflector::reflect.proto
+    criterion :
+      debug : 1
+      copyAll : 0
+
+  reflect.protoTwo :
+    inherit : predefined.reflect
+    reflector :
+      reflector::reflect.protoTwo
+    criterion :
+      debug : 1
+      copyAll : 1
+
+build :
+
+  debug.one :
+    criterion :
+      default : 1
+      debug : 1
+      copyAll : 0
+    steps :
+      - step::reflect.proto
+
+  debug.all :
+    criterion :
+      debug : 1
+      copyAll : 1
+    steps :
+      - step::reflect.protoTwo
