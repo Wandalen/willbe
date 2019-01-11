@@ -1,6 +1,6 @@
 # Declaring local submodules
 
-This tutorial shows how declare local module for a external project.
+This tutorial shows how to declare a local module for an external project.
 
 ## Module structure
 
@@ -14,16 +14,16 @@ This tutorial shows how declare local module for a external project.
 
 ## Local module
 
-In this tutorial we will use  as external project.
+In this tutorial, we will use Semantic-UI as external project.
 
 ### Project files
 
-1. Create directory for local modules with name `local_modules` and project directory `local_modules/semantic-ui`.
-2. Prepare project files, in out case it will be files from [Semantic-UI](https://github.com/Semantic-Org/Semantic-UI-CSS).
+1. Create a directory for the local modules with the name `local_modules`, and a project directory `local_modules/semantic-ui`.
+2. Prepare the project files, in our case we will use files from [Semantic-UI](https://github.com/Semantic-Org/Semantic-UI-CSS).
 
-### Preparing will file for local module
+### Preparing will file for the local module
 
-Create config file inside of `local_modules` directory with name `semantic-ui.will.yml`:
+Create a config file inside the `local_modules` directory, with name `semantic-ui.will.yml`:
 
 ```yaml
 
@@ -54,7 +54,7 @@ build :
 
 ## Exporting
 
-> Command should be executed from root directory of main module
+> Command should be executed from the root directory of the main module
 
 Run `will .each local_modules .export`:
 ```
@@ -62,11 +62,11 @@ Exporting export
    + Write out file to .../local_modules/semantic-ui.out.will.yml
   Exported export with 175 files in 0.175s
 ```
-During export process willbe generates `local_modules/semantic-ui.out.will.yml` file that contains information needed to import the module.
+During the export process, willbe generates a `local_modules/semantic-ui.out.will.yml` file that contains information needed to import the module.
 
 ## Importing
 
-Create config file for main module with name `.will.yml`:
+Create a config file for the main module, with the name `.will.yml`:
 
 ```yaml
 
@@ -83,7 +83,7 @@ submodule :
 
 `submodule` - declares list of [submodules](../Submodules.md), which can be local or remote.
 
-For local submodules declaration looks like:
+For local submodules, declaration looks like:
 
     module_name : local_modules_dir/module_name
 
@@ -91,7 +91,7 @@ For local submodules declaration looks like:
 
 ## Checking results
 
-Run `will .submodules.list` check that `semantic-ui` module is imported:
+Run `will .submodules.list` and check that the `semantic-ui` module is imported:
 
 ```
 Request ".submodules.list"
@@ -103,12 +103,7 @@ submodule::semantic-ui
   Exported builds : [ 'export' ]
 ```
 
-In next tutorials we will learn how to use imported module in build process.
+In the next tutorials, we will learn how to use the imported module in a build process.
 
 #
 [Back to content](../README.md)
-
-
-
-
-

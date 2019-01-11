@@ -9,8 +9,8 @@ A basic module structure looks like this:
 ├── * - any files
 ├── .will.yml
 ```
-`.will.yml` - [will file](../Will-files.md) is kind of config file, which describe a [module](../Module.md) and how to use it.
-Possible config file formats: YAML, JSON, CSON.
+`.will.yml` - [will file](../Will-files.md) is kind of a configuration file, which describes a [module](../Module.md) and how to use it.
+Possible config file formats are: YAML, JSON, CSON.
 
 ___
 
@@ -21,7 +21,7 @@ ___
 1.  Create an empty will file: `.will.yml`.
 2.  Add basic information about the module in the field `about`:
 
-    The most important property is a `name`. Also possible properties are: description,version, keywords, etc.
+    The most important property is the `name`. Also, possible properties are: description, version, keywords, etc.
     ``` yaml
     about :
         name : first
@@ -34,12 +34,12 @@ ___
 
 ### Using willbe to get info about the module:
 
-> Command should be executed from root directory of the module.
+> The command should be executed from the root directory of the module.
 
 ```
 will .about.list
 ```
-`willbe` should print information from `about` field, like:
+`willbe` should print information from the `about` field, like:
 ```
 About
 name : 'first'
@@ -52,7 +52,3 @@ keywords :
 
 #
 [Back to content](../README.md)
-
-
-
-

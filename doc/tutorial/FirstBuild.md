@@ -1,5 +1,5 @@
 # Creating a build configuration
-This tutorial shows how to create build configuration that runs npm to install dependecies.
+This tutorial shows how to create a build configuration that runs npm to install dependencies.
 
 ## Module structure
 
@@ -9,11 +9,11 @@ This tutorial shows how to create build configuration that runs npm to install d
 ├── .will.yml
 ```
 
-## Creating first build configuration
+## Creating our first build configuration
 
-### Preparing package.json:
+### Preparing the package.json file:
 
-Create `package.json` in root directory with content:
+Create a `package.json` file in the root directory, with content:
 ``` json
 {
   "name": "second",
@@ -23,20 +23,20 @@ Create `package.json` in root directory with content:
 }
 ```
 
-### Preparing will file:
+### Preparing the will file:
 
-In previous tutorial we created basic confing with `about` field.
-Current goal is to extend it with a build configuration.
+In the previous tutorials, we created a basic configuration with the `about` field.
+Our current goal is to extend it with a build configuration.
 
-#### First we need to learn two new components of will config:
+#### First we need to learn about two new components of the will config:
 
-`step` - describes build steps, step can be a shell command or predefined operation, like file(s) reflecting( copying ).
+`step` - describes the build steps: a step can be a shell command or predefined operation, like file(s) reflecting( copying ).
 
-`build` - describes build configurations, [build](../Build.md) configuration is a sequence of build steps.
+`build` - describes the build configuration: a [build](../Build.md) configuration is a sequence of build steps.
 
-#### Add build step:
+#### Add a build step:
 
-This step executes a shell command: `npm install`.
+This step executes the shell command: `npm install`.
 
 ```yaml
 step :
@@ -48,11 +48,11 @@ step :
 
 `npm.install` - name of the step.
 
-`currentPath` - path to directory from where command will be executed, current working directory in this case.
+`currentPath` - path to the directory from where the command will be executed, current working directory in this case.
 
 `shell` - command to execute.
 
-#### Add build configuration:
+#### Add a build configuration:
 
 ```yaml
 build :
@@ -64,16 +64,16 @@ build :
       - npm.install
 ```
 
-`debug` - name of configuration.
+`debug` - name of the configuration.
 
-`criterion` - defines criteria which helps to select necessary configuration,sage of criterions will be described later.
+`criterion` - defines criteria which help to select the necessary configuration, sage of criterions will be described later.
 
-`steps` - list of steps to execute in current build configuration
+`steps` - list of steps to execute in the current build configuration.
 
 
-## Testing build configuration:
+## Testing the build configuration:
 
-The final version of `.will.yml`:
+The final version of the `.will.yml` file would be:
 
 <details>
   <summary><u>Click to expand!</u></summary>
@@ -102,15 +102,15 @@ build :
 ```
 </details>
 
-#### To launch current( default ) build configuration run:
+#### To launch the current ( default ) build configuration, run:
 
-> Command should be executed from root directory of the module.
+> Command should be executed from the root directory of the module.
 
 ```
 will .build
 ```
 
-Dependecies defined in `package.json` will be installed:
+Dependecies defined in the `package.json` will be installed:
 
 ```
   Building debug
@@ -121,9 +121,3 @@ Dependecies defined in `package.json` will be installed:
 ```
 #
 [Back to content](../README.md)
-
-
-
-
-
-

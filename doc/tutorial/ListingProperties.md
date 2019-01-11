@@ -49,7 +49,7 @@ build :
 
 ## Listing properties:
 
-> Commands should be executed from root directory of the module.
+> Commands should be executed from the root directory of the module.
 
 #### List of available commands:
 
@@ -62,7 +62,7 @@ will .help
 
 ```
   .help - Get help.
-  .set - Command set.
+  .set - Set a command.
   .list - List information about the current module.
   .paths.list - List paths of the current module.
   .submodules.list - List submodules of the current module.
@@ -72,19 +72,19 @@ will .help
   .exports.list - List available exports.
   .about.list - List descriptive information about the module.
   .execution.list - List execution scenarios.
-  .submodules.download - Download each submodule if such was not downloaded so far.
+  .submodules.download - Download each submodule, if such was not downloaded yet.
   .submodules.upgrade - Upgrade each submodule, checking for available updates for such.
   .submodules.clean - Delete all downloaded submodules.
-  .clean - Clean current module. Delete genrated artifacts, temp files and downloaded submodules.
-  .clean.what - Find out which files will be deleted by clean command.
-  .build - Build current module with spesified criterion.
-  .export - Export selected the module with spesified criterion. Save output to output file and archive.
+  .clean - Clean current module: delete generated artifacts, temp files and downloaded submodules.
+  .clean.what - Find out which files will be deleted by the clean command.
+  .build - Build the current module with the specified criterion.
+  .export - Export the selected module with specified criterion. Save output to output file and archive.
   .with - Use "with" to select a module.
-  .each - Use "each" to iterate each module in a directory.
+  .each - Use "each" to iterate over each module in a directory.
 ```
 </details>
 
-#### List information about current module
+#### List information about the current module
 
 ```
 will .list
@@ -121,7 +121,7 @@ build::export
 ```
 </details>
 
-#### List specific property
+#### List a specific property
 
 
 
@@ -164,9 +164,3 @@ step::export.proto
 
 
 [Back to content](../README.md)
-
-
-
-
-
-
