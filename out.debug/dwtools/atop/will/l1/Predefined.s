@@ -42,18 +42,20 @@ function stepRoutineDelete( frame )
 
   let filePath = step.inPathResolve( opts.filePath );
 
-  if( filePath instanceof will.Reflector )
+  let o2 =
   {
-    debugger;
-    filePath = filePath.optionsForFindExport();
-    debugger;
-  }
-
-  return fileProvider.filesDelete
-  ({
     filePath : filePath,
     verbosity : will.verbosity >= 2 ? 2 : 0,
-  });
+  }
+
+  if( filePath instanceof will.Reflector )
+  {
+    delete o2.filePath;
+    let o3 = filePath.optionsForFindExport();
+    _.mapExtend( o2, o3 );
+  }
+
+  return fileProvider.filesDelete( o2 );
 }
 
 stepRoutineDelete.stepOptions =

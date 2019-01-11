@@ -538,8 +538,7 @@ function optionsForFindExport( o )
 
   o = _.routineOptions( optionsForReflectExport, arguments );
 
-  debugger;
-  _.assert( reflector.dstFilter === null || reflector.dstFilter.isEmpty() );
+  _.assert( reflector.dstFilter === null || !reflector.dstFilter.hasFiltering() );
 
   if( reflector.srcFilter )
   result.filter = reflector.srcFilter.clone();
