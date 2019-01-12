@@ -124,6 +124,7 @@ function _load()
   {
     if( err )
     {
+      debugger;
       if( will.verbosity >= 3 )
       logger.error( ' ! Failed to read ' + submodule.nickName + ', try to download it with .submodules.download' );
       if( will.verbosity >= 5 || !submodule.loadedModule || submodule.loadedModule.isOpened() )

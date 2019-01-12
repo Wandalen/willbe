@@ -168,11 +168,13 @@ function open()
 
   try
   {
+    // debugger;
     willf.data = fileProvider.fileConfigRead
     ({
       filePath : willf.filePath,
-      verbosity : will.verbosity-1,
+      verbosity : will.verbosity-2,
     });
+    // debugger;
   }
   catch( err )
   {
@@ -204,22 +206,22 @@ function open()
 
   /* */
 
-  if( willf.data.exported )
-  willf._resourcesMake( will.Exported, willf.data.exported );
+  // if( willf.data.exported )
+  willf._resourcesMake( will.Exported, willf.data.exported || {} );
 
-  if( willf.data.submodule )
-  willf._resourcesMake( will.Submodule, willf.data.submodule );
+  // if( willf.data.submodule )
+  willf._resourcesMake( will.Submodule, willf.data.submodule || {} );
 
-  if( willf.data.path )
-  willf._resourcesMake( will.PathObj, willf.data.path );
+  // if( willf.data.path )
+  willf._resourcesMake( will.PathObj, willf.data.path || {} );
 
-  if( willf.data.reflector )
-  willf._resourcesMake( will.Reflector, willf.data.reflector );
+  // if( willf.data.reflector )
+  willf._resourcesMake( will.Reflector, willf.data.reflector || {} );
 
   willf._resourcesMake( will.Step, willf.data.step || {} );
 
-  if( willf.data.build )
-  willf._resourcesMake( will.Build, willf.data.build );
+  // if( willf.data.build )
+  willf._resourcesMake( will.Build, willf.data.build || {} );
 
   willf.formed = 2;
 

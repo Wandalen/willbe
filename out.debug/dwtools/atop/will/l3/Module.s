@@ -968,6 +968,14 @@ function _willFilesOpen()
   _.assert( arguments.length === 0 );
   _.sure( !!_.mapKeys( module.willFileWithRoleMap ).length && !!module.willFileArray.length, () => 'Found no will file at ' + _.strQuote( module.dirPath ) );
 
+  if( !module.supermodule )
+  logger.up();
+
+  // if( !module.supermodule )
+  // logger.log( 'x' )
+
+  /* */
+
   for( let i = 0 ; i < module.willFileArray.length ; i++ )
   {
     let willFile = module.willFileArray[ i ];
@@ -981,19 +989,59 @@ function _willFilesOpen()
 
   }
 
+  /* */
+
   con
   .keep( ( arg ) => module._resourcesSubmodulesForm() )
   .keep( ( arg ) =>
   {
-    debugger;
-    if( !module.supermodule )
-    {
-      let opened = _.mapVals( module.submoduleMap );
-      logger.log( ' . Read', opened.length, 'submodules in', _.timeSpent( time ) );
-    }
     module.stager.stage( 'willFilesOpened', 3 );
     return arg;
   })
+
+  con.finally( ( err, arg ) =>
+  {
+    if( !module.supermodule )
+    {
+      logger.down();
+      if( !err )
+      {
+        let total = module.willFileArray.length;
+        let opened = _.mapVals( module.submoduleMap );
+
+        debugger;
+        for( let i = 0 ; i < opened.length ; i++ )
+        if( opened[ i ].loadedModule )
+        total += opened[ i ].loadedModule.willFileArray.length;
+        debugger;
+
+        logger.log( ' . Read', total, 'will-files in', _.timeSpent( time ) );
+      }
+    }
+    if( err )
+    throw _.err( err );
+    return arg;
+  });
+
+  return con.split();
+}
+
+//
+
+function _willFilesOpenCached()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let con = new _.Consequence().take( null );
+  let time = _.timeNow();
+
+  _.assert( arguments.length === 0 );
+  _.sure( !!_.mapKeys( module.willFileWithRoleMap ).length && !!module.willFileArray.length, () => 'Found no will file at ' + _.strQuote( module.dirPath ) );
+
+  xxx
 
   return con.split();
 }
@@ -1049,7 +1097,8 @@ function resourcesForm()
 
   module.stager.stage( 'resourcesFormed', 1 );
 
-  return module.willFilesOpenReady.split().keep( ( arg ) =>
+  return module.willFilesOpenReady
+  .split().keep( ( arg ) =>
   {
     let con = new _.Consequence().take( null );
 
@@ -2717,6 +2766,7 @@ let Proto =
 
   willFilesOpen,
   _willFilesOpen,
+  _willFilesOpenCached,
 
   // resource
 
