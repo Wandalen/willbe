@@ -942,7 +942,6 @@ function willFilesOpen()
   })
   .finally( ( err, arg ) =>
   {
-    // debugger;
     if( err )
     {
       if( will.verbosity && will.verboseStaging )
@@ -964,6 +963,7 @@ function _willFilesOpen()
   let path = fileProvider.path;
   let logger = will.logger;
   let con = new _.Consequence().take( null );
+  let time = _.timeNow();
 
   _.assert( arguments.length === 0 );
   _.sure( !!_.mapKeys( module.willFileWithRoleMap ).length && !!module.willFileArray.length, () => 'Found no will file at ' + _.strQuote( module.dirPath ) );
@@ -985,22 +985,15 @@ function _willFilesOpen()
   .keep( ( arg ) => module._resourcesSubmodulesForm() )
   .keep( ( arg ) =>
   {
+    debugger;
+    if( !module.supermodule )
+    {
+      let opened = _.mapVals( module.submoduleMap );
+      logger.log( ' . Read', opened.length, 'submodules in', _.timeSpent( time ) );
+    }
     module.stager.stage( 'willFilesOpened', 3 );
     return arg;
   })
-  // xxx
-  // .finally( ( err, arg ) =>
-  // {
-  //   if( err )
-  //   {
-  //     if( will.verbosity && will.verboseStaging )
-  //     console.log( ' !s', module.nickName, 'willFilesOpened', 'failed' );
-  //     module.willFilesOpenReady.error( err );
-  //     throw err;
-  //   }
-  //   return arg;
-  // })
-  ;
 
   return con.split();
 }
@@ -1363,9 +1356,6 @@ function _submodulesDownload( o )
 
     con.keep( () =>
     {
-
-      // if( !submodule.isDownloaded )
-      // downloadedNumber += 1;
 
       remoteNumber += 1;
 
