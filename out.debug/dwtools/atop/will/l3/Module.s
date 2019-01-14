@@ -1009,11 +1009,9 @@ function _willFilesOpen()
         let total = module.willFileArray.length;
         let opened = _.mapVals( module.submoduleMap );
 
-        debugger;
         for( let i = 0 ; i < opened.length ; i++ )
         if( opened[ i ].loadedModule )
         total += opened[ i ].loadedModule.willFileArray.length;
-        debugger;
 
         logger.log( ' . Read', total, 'will-files in', _.timeSpent( time ) );
       }
@@ -1060,13 +1058,11 @@ function resourcesFormSkip()
 
   _.assert( arguments.length === 0 );
 
-  debugger;
-
   if( module.resourcesFormed > 0 )
   return module.resourcesFormReady;
 
-  module.willFilesOpenReady // xxx
-  .finally( ( err, arg ) =>
+  return module.willFilesOpenReady
+  .split().finally( ( err, arg ) =>
   {
     module.ready.takeSoon( err, arg );
     _.assert( !module.ready.resourcesCount() );
@@ -1079,8 +1075,6 @@ function resourcesFormSkip()
     }
     return arg;
   });
-
-  return module.willFilesOpenReady.split();
 }
 
 //
@@ -1575,10 +1569,12 @@ function remoteIsUpToDate()
 
   _.assert( !!fileProvider2.limitedImplementation );
 
+  debugger;
   let result = fileProvider2.isUpToDate
   ({
     remotePath : module.remotePath,
     localPath : module.clonePath,
+    verbosity : will.verbosity - 3,
   });
 
   if( !result )

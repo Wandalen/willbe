@@ -154,8 +154,6 @@ function _verbosityChange()
   _.assert( arguments.length === 0 );
   _.assert( !will.fileProvider || will.fileProvider.logger !== will.logger );
 
-  // debugger;
-
   if( will.fileProvider )
   will.fileProvider.verbosity = will.verbosity-2;
 
