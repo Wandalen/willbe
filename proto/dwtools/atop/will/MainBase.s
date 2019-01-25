@@ -111,9 +111,6 @@ function formAssociates()
 
     let hub = _.FileProvider.Hub({ providers : [] });
 
-    debugger;
-    let git = _.FileProvider.Git(); // xxx
-    debugger;
     _.FileProvider.Git().providerRegisterTo( hub );
     _.FileProvider.Npm().providerRegisterTo( hub );
 
