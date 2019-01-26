@@ -97,7 +97,7 @@ function form1()
 
   if( reflector.filePath )
   {
-    reflector.filePath = path.globMapExtend( null, reflector.filePath, true );
+    reflector.filePath = path.fileMapExtend( null, reflector.filePath, true );
   }
 
   /* end */
@@ -356,7 +356,7 @@ function _reflectMapForm( o )
         debugger;
         reflector._inheritSingle({ visited : o.visited, ancestor : resolved, defaultDst : dst });
         _.sure( !!resolved.filePath );
-        path.globMapExtend( map, resolved.filePath, dst );
+        path.fileMapExtend( map, resolved.filePath, dst );
       }
 
     }
