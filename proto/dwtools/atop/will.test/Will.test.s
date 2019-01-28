@@ -64,10 +64,10 @@ function singleModuleSimplest( test )
 {
   let self = this;
 
-  let originaDirPath = _.path.join( self.assetDirPath, 'single' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'single' );
   let dirPath = _.path.join( self.tempDir, test.name );
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originaDirPath ] : dirPath }  })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath }  })
 
   let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
   willExecPath = _.path.nativize( willExecPath );
@@ -96,7 +96,7 @@ function singleModuleSimplest( test )
   return ready;
 }
 
-singleModuleSimplest.timeOut = 150000;
+singleModuleSimplest.timeOut = 130000;
 
 //
 
@@ -104,10 +104,10 @@ function singleModuleList( test )
 {
   let self = this;
 
-  let originaDirPath = _.path.join( self.assetDirPath, 'single' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'single' );
   let dirPath = _.path.join( self.tempDir, test.name );
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originaDirPath ] : dirPath }  })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath }  })
 
   let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
   willExecPath = _.path.nativize( willExecPath );
@@ -285,7 +285,7 @@ function singleModuleList( test )
   return ready;
 }
 
-singleModuleList.timeOut = 150000;
+singleModuleList.timeOut = 130000;
 
 //
 
@@ -293,10 +293,10 @@ function singleModuleSubmodules( test )
 {
   let self = this;
 
-  let originaDirPath = _.path.join( self.assetDirPath, 'single' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'single' );
   let dirPath = _.path.join( self.tempDir, test.name );
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originaDirPath ] : dirPath }  })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath }  })
 
   let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
   willExecPath = _.path.nativize( willExecPath );
@@ -376,7 +376,7 @@ function singleModuleSubmodules( test )
 
 }
 
-singleModuleSubmodules.timeOut = 150000;
+singleModuleSubmodules.timeOut = 130000;
 
 //
 
@@ -384,10 +384,10 @@ function singleModuleClean( test )
 {
   let self = this;
 
-  let originaDirPath = _.path.join( self.assetDirPath, 'single' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'single' );
   let dirPath = _.path.join( self.tempDir, test.name );
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originaDirPath ] : dirPath }  })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath }  })
 
   let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
   willExecPath = _.path.nativize( willExecPath );
@@ -455,19 +455,19 @@ function singleModuleClean( test )
 
 }
 
-singleModuleClean.timeOut = 150000;
+singleModuleClean.timeOut = 130000;
 
 //
 
 function singleModuleBuild( test )
 {
   let self = this;
-  let originaDirPath = _.path.join( self.assetDirPath, 'single' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'single' );
   let dirPath = _.path.join( self.tempDir, test.name );
   let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
   willExecPath = _.path.nativize( willExecPath );
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originaDirPath ] : dirPath }  })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath }  })
 
   let shell = _.sheller
   ({
@@ -488,9 +488,10 @@ function singleModuleBuild( test )
     return shell({ args : [ '.build' ] })
     .thenKeep( ( got ) =>
     {
+      debugger;
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'Building debug.raw' ) );
-      test.is( _.strHas( got.output, 'Reflect 2 files to' ) );
+      test.is( _.strHas( got.output, 'reflected 2 files' ) );
       test.is( _.strHas( got.output, 'Built debug.raw in' ) );
 
       var files = _.fileProvider.filesFind({ filePath : buildOutPath, recursive : 2, outputFormat : 'relative' })
@@ -512,7 +513,7 @@ function singleModuleBuild( test )
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'Building debug.raw' ) );
-      test.is( _.strHas( got.output, 'Reflect 2 files to' ) );
+      test.is( _.strHas( got.output, 'reflected 2 files' ) );
       test.is( _.strHas( got.output, 'Built debug.raw in' ) );
 
       var files = _.fileProvider.filesFind({ filePath : buildOutPath, recursive : 2, outputFormat : 'relative' })
@@ -534,7 +535,7 @@ function singleModuleBuild( test )
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'Building release.raw' ) );
-      test.is( _.strHas( got.output, 'Reflect 2 files to' ) );
+      test.is( _.strHas( got.output, 'reflected 2 files' ) );
       test.is( _.strHas( got.output, 'Built release.raw in' ) );
 
       var files = _.fileProvider.filesFind({ filePath : buildOutPath, recursive : 2, outputFormat : 'relative' })
@@ -577,7 +578,7 @@ function singleModuleBuild( test )
   return ready;
 }
 
-singleModuleBuild.timeOut = 150000;
+singleModuleBuild.timeOut = 130000;
 
 //
 
@@ -585,10 +586,10 @@ function singleModuleExport( test )
 {
   let self = this;
 
-  let originaDirPath = _.path.join( self.assetDirPath, 'single' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'single' );
   let dirPath = _.path.join( self.tempDir, test.name );
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originaDirPath ] : dirPath }  })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath }  })
 
   let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
   willExecPath = _.path.nativize( willExecPath );
@@ -618,7 +619,7 @@ function singleModuleExport( test )
     .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, '+ Reflect 2 files' ) );
+      test.is( _.strHas( got.output, 'reflected 2 files' ) );
       test.is( _.strHas( got.output, '+ Write out file to' ) );
       test.is( _.strHas( got.output, 'Exported proto.export with 2 files in' ) );
 
@@ -645,7 +646,7 @@ function singleModuleExport( test )
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'Exporting proto.export' ) );
-      test.is( _.strHas( got.output, 'Reflect 2 files to' ) );
+      test.is( _.strHas( got.output, 'reflected 2 files' ) );
       test.is( _.strHas( got.output, 'Exported proto.export with 2 files' ) );
 
       var files = _.fileProvider.filesFind({ filePath : buildOutPath, recursive : 2, outputFormat : 'relative' })
@@ -661,7 +662,7 @@ function singleModuleExport( test )
   return ready;
 }
 
-singleModuleExport.timeOut = 150000;
+singleModuleExport.timeOut = 130000;
 
 //
 
@@ -669,11 +670,11 @@ function withSubmodulesSimplest( test )
 {
   let self = this;
 
-  let originaDirPath = _.path.join( self.assetDirPath, 'submodules' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let dirPath = _.path.join( self.tempDir, test.name );
   let modulesPath = _.path.join( dirPath, '.module' );
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originaDirPath ] : dirPath }  })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath }  })
 
   let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
   willExecPath = _.path.nativize( willExecPath );
@@ -712,11 +713,11 @@ function withSubmodulesList( test )
 {
   let self = this;
 
-  let originaDirPath = _.path.join( self.assetDirPath, 'submodules' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let dirPath = _.path.join( self.tempDir, test.name );
   let modulesPath = _.path.join( dirPath, '.module' );
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originaDirPath ] : dirPath }  })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath }  })
 
   let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
   willExecPath = _.path.nativize( willExecPath );
@@ -859,7 +860,7 @@ function withSubmodulesList( test )
   return ready;
 }
 
-withSubmodulesList.timeOut = 150000;
+withSubmodulesList.timeOut = 130000;
 
 //
 
@@ -867,11 +868,11 @@ function withSubmodulesSubmodules( test )
 {
   let self = this;
 
-  let originaDirPath = _.path.join( self.assetDirPath, 'submodules' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let dirPath = _.path.join( self.tempDir, test.name );
   let modulesPath = _.path.join( dirPath, '.module' );
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originaDirPath ] : dirPath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath } });
 
   let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
   willExecPath = _.path.nativize( willExecPath );
@@ -965,19 +966,18 @@ function withSubmodulesSubmodules( test )
   return ready;
 }
 
-withSubmodulesSubmodules.timeOut = 150000;
+withSubmodulesSubmodules.timeOut = 130000;
 
 //
 
 function withSubmodulesClean( test )
 {
   let self = this;
-
-  let originaDirPath = _.path.join( self.assetDirPath, 'submodules' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let dirPath = _.path.join( self.tempDir, test.name );
   let modulesPath = _.path.join( dirPath, '.module' );
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originaDirPath ] : dirPath }  })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath }  })
 
   let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
   willExecPath = _.path.nativize( willExecPath );
@@ -1081,7 +1081,7 @@ function withSubmodulesClean( test )
   return ready;
 }
 
-withSubmodulesClean.timeOut = 150000;
+withSubmodulesClean.timeOut = 130000;
 
 //
 
@@ -1089,11 +1089,11 @@ function withSubmodulesBuild( test )
 {
   let self = this;
 
-  let originaDirPath = _.path.join( self.assetDirPath, 'submodules' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let dirPath = _.path.join( self.tempDir, test.name );
   let modulesPath = _.path.join( dirPath, '.module' );
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originaDirPath ] : dirPath }  })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath }  })
 
   let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
   willExecPath = _.path.nativize( willExecPath );
@@ -1206,7 +1206,7 @@ function withSubmodulesBuild( test )
   return ready;
 }
 
-withSubmodulesBuild.timeOut = 150000;
+withSubmodulesBuild.timeOut = 130000;
 
 //
 
@@ -1214,11 +1214,11 @@ function withSubmodulesExport( test )
 {
   let self = this;
 
-  let originaDirPath = _.path.join( self.assetDirPath, 'submodules' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let dirPath = _.path.join( self.tempDir, test.name );
   let modulesPath = _.path.join( dirPath, '.module' );
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originaDirPath ] : dirPath }  })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath }  })
 
   let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
   willExecPath = _.path.nativize( willExecPath );
@@ -1267,7 +1267,7 @@ function withSubmodulesExport( test )
   return ready;
 }
 
-withSubmodulesExport.timeOut = 150000;
+withSubmodulesExport.timeOut = 130000;
 
 //
 
@@ -1275,11 +1275,11 @@ function submodulesDownload( test )
 {
   let self = this;
 
-  let originaDirPath = _.path.join( self.assetDirPath, 'download' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'download' );
   let dirPath = _.path.join( self.tempDir, test.name );
 
   // debugger;
-  _.fileProvider.filesReflect({ reflectMap : { [ originaDirPath ] : dirPath }  })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath }  })
   _.fileProvider.filesDelete( _.path.join( dirPath, '.module' ) );
   _.fileProvider.filesDelete( _.path.join( dirPath, 'out.debug' ) );
   // debugger;
@@ -1367,7 +1367,7 @@ function submodulesDownload( test )
   return ready;
 }
 
-submodulesDownload.timeOut = 150000;
+submodulesDownload.timeOut = 130000;
 
 //
 

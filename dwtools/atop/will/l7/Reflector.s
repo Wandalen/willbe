@@ -226,8 +226,8 @@ function _inheritSingle( o )
   }
 
   // logger.log( '_inheritSingle', reflector.nickName, '<-', reflector2.nickName );
-  if( reflector.nickName === 'reflector::reflect.submodules' )
-  debugger;
+  // if( reflector.nickName === 'reflector::reflect.submodules' )
+  // debugger;
 
   reflector.dstFilter.and( reflector2.dstFilter ).pathsInherit( reflector2.dstFilter );
 
