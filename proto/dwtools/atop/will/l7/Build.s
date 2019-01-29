@@ -156,6 +156,7 @@ function proceed( o )
   let path = fileProvider.path;
   let logger = will.logger;
   let isExport = build.isExport();
+  debugger;
   let time = _.timeNow();
 
   let frame = new will.BuildFrame
@@ -198,7 +199,8 @@ function proceed( o )
   function logPost()
   {
 
-    if( logger.verbosity >= 2 && !isExport )
+    debugger;
+    if( logger.verbosity >= 2 /*&& !isExport*/ )
     {
       logger.log( ( isExport ? 'Exported' : 'Built' ), build.name, 'in', _.timeSpent( time ) );
       logger.log();
@@ -384,7 +386,7 @@ _.Copyable.mixin( Self );
 //
 
 if( typeof module !== 'undefined' && module !== null )
-module[ 'exports' ] = /**/_global_.wTools;
+module[ 'exports' ] = _global_.wTools;
 
 _.staticDecalre
 ({

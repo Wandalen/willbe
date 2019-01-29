@@ -57,7 +57,7 @@ function exportedReflectorMake( exportSelector )
   let exp = step.resolve( exportSelector );
   let result;
 
-  debugger;
+  // debugger;
 
   if( exp instanceof will.Reflector )
   {
@@ -107,9 +107,9 @@ function exportedReflectorMake( exportSelector )
   }
   else _.assert( 0 );
 
-  debugger;
+  // debugger;
   result.form();
-  debugger;
+  // debugger;
 
   exported.exportedReflector = result;
 
@@ -275,7 +275,7 @@ function proceed( frame )
   exportedFilesReflector.srcFilter.prefixPath = exported.exportedDirPath.refName;
   // exportedFilesReflector.srcFilter.prefixPath = '.';
 
-  debugger;
+  // debugger;
   // exportedFilesReflector.dstFilter = exportedFilesReflector.dstFilter || {};
   _.assert( exportedFilesReflector.dstFilter.basePath === null );
   exportedFilesReflector.dstFilter.filteringEmpty();
@@ -286,7 +286,7 @@ function proceed( frame )
 
   _.assert( exportedFilesReflector.dstFilter.prefixPath === null );
   _.assert( exportedFilesReflector.dstFilter.basePath === null );
-  debugger;
+  // debugger;
 
   /* */
 
@@ -334,7 +334,7 @@ function proceed( frame )
   }
 
   if( will.verbosity >= 3 )
-  logger.log( 'Exported', exported.name, 'with', exportedFilesPath.length, 'files', 'in', _.timeSpent( time ) );
+  logger.log( ' + Exported', exported.name, 'with', exportedFilesPath.length, 'files', 'in', _.timeSpent( time ) );
 
   return exported;
 }
@@ -431,7 +431,7 @@ _.Copyable.mixin( Self );
 //
 
 if( typeof module !== 'undefined' && module !== null )
-module[ 'exports' ] = /**/_global_.wTools;
+module[ 'exports' ] = _global_.wTools;
 
 _.staticDecalre
 ({

@@ -29,7 +29,6 @@ function finit()
   let module = this;
   let will = module.will;
 
-  debugger;
   if( module.formed )
   module.unform();
   module.about.finit();
@@ -65,8 +64,6 @@ function init( o )
 
   module.Counter += 1;
   module.id = module.Counter;
-
-  // debugger;
 
   if( o )
   module.copy( o );
@@ -737,13 +734,11 @@ function _willFileFindMaybe( o )
 
   if( result.exists() )
   {
-    // logger.log( ' +', 'will file', filePath, );
     return result;
   }
   else
   {
     result.finit();
-    // logger.log( ' -', 'will file', filePath, );
     return null;
   }
 
@@ -846,6 +841,20 @@ function _willFilesFindMaybe( o )
 
   if( files.innerSingle || files.innerImport || files.innerExport )
   {
+
+    debugger;
+    for( let w = 0 ; w < module.willFileArray.length ; w++ )
+    {
+      let willFile = module.willFileArray[ w ];
+      let name = path.name( willFile.filePath );
+      name = _.strRemoveBegin( name, '.im' );
+      name = _.strRemoveBegin( name, '.ex' );
+      _.assert( module.configName === null || module.configName === name, 'Name of will files should be the same, something wrong' );
+      if( name )
+      module.configName = name;
+    }
+    debugger;
+
     module.stager.stage( 'willFilesFound', 3 );
     return true;
   }
@@ -1026,7 +1035,7 @@ function _willFilesOpen()
 
 //
 
-function _willFilesOpenCached()
+function _willFilesCacheOpen()
 {
   let module = this;
   let will = module.will;
@@ -1042,6 +1051,82 @@ function _willFilesOpenCached()
   xxx
 
   return con.split();
+}
+
+//
+
+function _willFilesCacheSave()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let result = Object.create( null );
+
+  _.assert( arguments.length === 0 );
+  _.assert( _.strIs( module.about.name ) );
+
+  result.format = 'willstate-1.0.0';
+  result.time = _.timeNow();
+  // result.regexp = /xxx/;
+  result.willFiles = module._willFilesExport();
+
+  debugger;
+  let filePath = module.dirPath + '/' + ( module.configName || '' ) + '.will.state.json';
+  debugger;
+
+  fileProvider.fileWrite({ filePath : filePath, data : result, encoding : 'json.min' });
+
+  return result;
+}
+
+//
+
+function _willFilesExport()
+{
+  let module = this;
+  let will = module.will;
+  let result = Object.create( null );
+
+  module.willFileEach( handeWillFile );
+
+  return result;
+
+  function handeWillFile( willFile )
+  {
+    _.assert( _.objectIs( willFile.data ) );
+    result[ willFile.filePath ] = willFile.data;
+  }
+}
+
+//
+
+function willFileEach( onEach )
+{
+  let module = this;
+  let will = module.will;
+
+  for( let w = 0 ; w < module.willFileArray.length ; w++ )
+  {
+    let willFile = module.willFileArray[ w ];
+    onEach( willFile )
+  }
+
+  for( let s in module.submoduleMap )
+  {
+    let submodule = module.submoduleMap[ s ];
+    if( !submodule.loadedModule )
+    continue;
+
+    for( let w = 0 ; w < submodule.loadedModule.willFileArray.length ; w++ )
+    {
+      let willFile = submodule.loadedModule.willFileArray[ w ];
+      onEach( willFile )
+    }
+
+  }
+
 }
 
 // --
@@ -1107,6 +1192,8 @@ function resourcesForm()
       con.keep( ( arg ) =>
       {
         module.stager.stage( 'resourcesFormed', 3 );
+        if( !module.supermodule )
+        module._willFilesCacheSave();
         return arg;
       });
 
@@ -1261,8 +1348,6 @@ function resourceMapForKind( resourceKind )
   let module = this;
   let will = module.will;
   let result;
-
-  // debugger;
 
   if( resourceKind === 'export' )
   result = module.buildMap;
@@ -1569,7 +1654,6 @@ function remoteIsUpToDate()
 
   _.assert( !!fileProvider2.limitedImplementation );
 
-  debugger;
   let result = fileProvider2.isUpToDate
   ({
     remotePath : module.remotePath,
@@ -1712,30 +1796,19 @@ function _remoteDownload( o )
     module.isDownloaded = true;
     if( o.forming && 1 )
     {
-      // debugger;
-      // logger.log( module.stager.infoExport() );
-
       _.assert( module.formed === 3, 'not tested' );
-      // _.assert( module.willFilesFound === 1, 'not tested' );
-      // _.assert( module.willFilesOpened === 1, 'not tested' );
-      // _.assert( module.resourcesFormed === 1, 'not tested' );
 
       if( module.resourcesFormReady.errorsCount() )
       module.stateResetError();
-
-      // logger.log( module.stager.infoExport() );
 
       module.willFilesFind();
       module.willFilesOpen();
       module.resourcesFormSkip();
       // module.resourcesForm();
 
-      // debugger;
       return module.ready
       .finallyGive( function( err, arg )
       {
-        // debugger;
-        // logger.log( module.absoluteName, '_remoteDownload.finally', err, arg );
         this.take( err, arg );
       })
       .split();
@@ -1917,8 +1990,6 @@ function buildsSelect_body( o )
   _.assertRoutineOptions( buildsSelect_body, arguments );
   _.assert( arguments.length === 1 );
 
-  // debugger;
-
   if( o.name )
   {
     if( !elements[ o.name ] )
@@ -1948,8 +2019,6 @@ function buildsSelect_body( o )
     elements = filterWith( elements, { default : 1 } );
 
   }
-
-  // debugger;
 
   if( o.resource === 'export' )
   elements = elements.filter( ( element ) => element.criterion && element.criterion.export );
@@ -2124,23 +2193,16 @@ function _resolveMaybe_body( o )
   if( o.currentModule === null )
   o.currentModule = module;
 
-  // if( !o.visited )
-  // o.visited = [];
-
   let result = module._resolveSelect( o );
 
   if( result === undefined )
   {
     debugger;
-    // result = _.ErrorLooking( kind, _.strQuote( name ), 'was not found' );
     result = module.errResolving({ query : o.query, current : o.current, err : _.ErrorLooking( o.query, 'was not found' ) })
   }
 
   if( _.errIs( result ) )
   return result;
-
-  // if( o.flattening && _.mapIs( result ) )
-  // debugger;
 
   if( o.resolvingPath )
   {
@@ -2165,10 +2227,6 @@ function _resolveMaybe_body( o )
 
   if( o.unwrappingPath && o.hasPath )
   {
-    // if( o.query === 'submodule::*/exported::*=1/path::exportedDir*=1' )
-    // debugger;
-    // if( _.arrayIs( result ) )
-    // debugger;
     _.assert( _.mapIs( result ) || _.objectIs( result ) || _.arrayIs( result ) || _.strIs( result ) );
     if( _.mapIs( result ) || _.arrayIs( result ) )
     result = _.filter( result, ( e ) => e instanceof will.PathObj ? e.path : e )
@@ -2278,9 +2336,6 @@ function _resolveSelect( o )
   _.assertRoutineOptions( _resolveSelect, arguments );
   _.assert( o.currentModule instanceof will.Module );
 
-  // if( _.strHas( o.query, 'reflect.proto' ) )
-  // debugger;
-
   /* */
 
   if( module.strIsResolved( o.query ) )
@@ -2327,12 +2382,6 @@ function _resolveSelect( o )
     throw module.errResolving({ query : o.query, current : current, err : err });
   }
 
-  // if( result === undefined )
-  // {
-  //   debugger;
-  //   return _.ErrorLooking( kind, _.strQuote( name ), 'was not found' );
-  // }
-
   return result;
 
   /* */
@@ -2348,13 +2397,11 @@ function _resolveSelect( o )
 
     if( it.src && it.src instanceof will.Submodule )
     {
-      // debugger;
       it._inherited.module = it.src.loadedModule;
     }
 
     if( it.src && it.src instanceof will.Exported )
     {
-      // debugger;
       it._inherited.exported = it.src;
     }
 
@@ -2365,7 +2412,6 @@ function _resolveSelect( o )
     o.hasPath = true;
 
     let pool = it._inherited.module.resourceMapForKind( kind );
-    // debugger;
 
     if( !pool )
     {
@@ -2393,7 +2439,6 @@ function _resolveSelect( o )
   function queryParse()
   {
     let it = this;
-    // debugger;
     _.assert( !!it._inherited.module );
     let splits = it._inherited.module._strSplit({ query : it.query, defaultPool : o.defaultPool });
 
@@ -2589,6 +2634,7 @@ let Composes =
   dirPath : null,
   clonePath : null,
   remotePath : null,
+  configName : null,
 
   isRemote : null,
   isDownloaded : null,
@@ -2706,7 +2752,10 @@ let Proto =
 
   willFilesOpen,
   _willFilesOpen,
-  _willFilesOpenCached,
+  _willFilesCacheOpen,
+  _willFilesCacheSave,
+  _willFilesExport,
+  willFileEach,
 
   // resource
 
@@ -2772,14 +2821,11 @@ let Proto =
 
   _resolve,
   resolve : _resolve,
-  // resolve : _.routineVectorize_functor( _resolve ),
 
   _resolveMaybe,
   resolveMaybe : _resolveMaybe,
-  // resolveMaybe : _.routineVectorize_functor( _resolveMaybe ),
 
   _resolveSelect,
-  // poolFor : poolFor,
 
   // exporter
 
@@ -2812,7 +2858,7 @@ _.classDeclare
 _.Copyable.mixin( Self );
 
 if( typeof module !== 'undefined' && module !== null )
-module[ 'exports' ] = /**/_global_.wTools;
+module[ 'exports' ] = _global_.wTools;
 
 _.staticDecalre
 ({
