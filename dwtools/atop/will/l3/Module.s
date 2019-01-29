@@ -2430,20 +2430,10 @@ function _resolveSelect( o )
 
     if( it.down && it.queryParsed && it.queryParsed.kind === 'exported' )
     {
-      // debugger;
       let writeToDownOriginal = it.writeToDown;
       it.writeToDown = function writeThrough( eit )
       {
         let r = writeToDownOriginal.apply( this, arguments );
-
-        // debugger;
-
-        // eit.key = it.key + '.' + eit.key;
-        // it.down.writeToDown.apply( it.down, arguments );
-        // it.writingDown = false;
-
-        // return writeToDownOriginal.apply( this, arguments );
-
         return r;
       }
     }
@@ -2458,29 +2448,14 @@ function _resolveSelect( o )
 
     if( !it.query && it._inherited.exported && it.result )
     {
-      // debugger;
 
       if( it.result instanceof will.Reflector )
       {
         let m = it._inherited.module;
-        // let reflector = it.result.clone();
         let reflector = it.result;
-        // _.assert( it.result.srcFilter !== reflector.srcFilter || it.result.srcFilter === null );
-
-        // reflector.srcFilter = reflector.srcFilter || {};
-        // _.assert( reflector.srcFilter.prefixPath === null );
-        // reflector.srcFilter.prefixPath = m.inPath;
-
-        // reflector.dstFilter = reflector.dstFilter || {};
-        // reflector.dstFilter.prefixPath = null;
-        // _.assert( reflector.dstFilter.prefixPath === null );
-        // reflector.dstFilter.prefixPath = m.dirPath;
-
-        // reflector.formed = 2;
         _.assert( reflector.inherit.length === 0 );
         reflector.form();
         it.result = reflector;
-        // debugger;
       }
       else if( it.result instanceof will.PathObj )
       {
@@ -2497,37 +2472,6 @@ function _resolveSelect( o )
 var defaults = _resolveSelect.defaults = Object.create( _resolve.defaults )
 
 defaults.visited = null;
-
-//
-
-// function poolFor( kind )
-// {
-//   let module = this;
-//   let pool;
-//
-//   _.assert( arguments.length === 1 );
-//
-//   if( !kind || !_.arrayHas( will.ResourceKinds, kind ) )
-//   {
-//     debugger;
-//     throw _.ErrorLooking( 'Unknown kind of resource, no pool for resource', _.toStrShort( kind ) );
-//   }
-//
-//   if( kind === 'path' )
-//   pool = module.pathObjMap;
-//   else if( kind === 'reflector' )
-//   pool = module.reflectorMap;
-//   else if( kind === 'submodule' )
-//   pool = module.submoduleMap;
-//   else if( kind === 'step' )
-//   pool = module.stepMap;
-//   else if( kind === 'build' )
-//   pool = module.buildMap;
-//   else if( kind === 'exported' )
-//   pool = module.exportedMap;
-//
-//   return pool
-// }
 
 // --
 // exporter

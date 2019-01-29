@@ -37,7 +37,12 @@ function init( o )
   reflector.srcFilter = fileProvider.recordFilter();
   reflector.dstFilter = fileProvider.recordFilter();
 
-  return Parent.prototype.init.apply( reflector, arguments );
+  let result = Parent.prototype.init.apply( reflector, arguments );
+
+  // if( reflector.absoluteName === 'module::withSubmodules / module::Tools / reflector::exportedFiles.0' )
+  // debugger;
+
+  return result;
 }
 
 //
@@ -196,8 +201,6 @@ function _inheritSingle( o )
   _.assert( _.entityIdentical( reflector.srcFilter.inFilePath, reflector.filePath ) );
   _.assert( _.entityIdentical( reflector2.srcFilter.inFilePath, reflector2.filePath ) );
 
-  // debugger;
-
   if( reflector2.formed < 2 )
   {
     _.sure( !_.arrayHas( o.visited, reflector2.name ), () => 'Cyclic dependency ' + reflector.nickName + ' of ' + reflector2.nickName );
@@ -214,8 +217,8 @@ function _inheritSingle( o )
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
 
-  // if( reflector.absoluteName === 'Module::encore.wtools.base / reflector::reflect.submodules' )
-  // debugger;
+  if( reflector.absoluteName === 'Module::encore.wtools.base / reflector::reflect.submodules' )
+  debugger;
 
   reflector.srcFilter.and( reflector2.srcFilter ).pathsInherit( reflector2.srcFilter );
 
@@ -255,17 +258,20 @@ function form3()
   _.assert( arguments.length === 0 );
   _.assert( reflector.formed === 2 );
 
-  // console.log( reflector.absoluteName, 'form3' );
-  // if( module.nickName === 'Module::encore.wtools.base' && !reflector.criterion.predefined ) debugger;
+  // if( reflector.absoluteName === 'module::withSubmodules / module::Tools / reflector::exportedFiles.0' )
+  // debugger;
+
+  if( reflector.absoluteName === 'module::withSubmodules / reflector::reflect.submodules' )
+  debugger;
 
   /* begin */
 
-  // if( module.nickName === 'Module::encore.wtools.base' && !reflector.criterion.predefined ) debugger;
-  reflector.pathsResolve({ addingPrefix : 1 });
-  // if( module.nickName === 'Module::encore.wtools.base' && !reflector.criterion.predefined ) debugger;
+  reflector.pathsResolve({ addingSrcPrefix : 1 });
   reflector.relative();
-  // if( module.nickName === 'Module::encore.wtools.base' && !reflector.criterion.predefined ) debugger;
   reflector.sureRelativeOrGlobal();
+
+  _.assert( path.isAbsolute( reflector.srcFilter.prefixPath ) );
+  // _.assert( path.isAbsolute( reflector.dstFilter.prefixPath ) );
 
   /* end */
 
@@ -452,31 +458,37 @@ function relative()
   _.assert( arguments.length === 0 );
   _.assert( reflector.srcFilter.postfixPath === null, 'not implemented' );
   _.assert( reflector.dstFilter.postfixPath === null, 'not implemented' );
-  _.assert( path.isAbsolute( reflector.srcFilter.prefixPath ) );
-  _.assert( path.isAbsolute( reflector.dstFilter.prefixPath ) );
 
   prefixPath = reflector.srcFilter.prefixPath;
-  if( reflector.srcFilter.basePath )
-  reflector.srcFilter.basePath = path.filter( reflector.srcFilter.basePath, relative );
-  if( reflector.srcFilter.inFilePath )
-  reflector.srcFilter.inFilePath = path.filter( reflector.srcFilter.inFilePath, relative );
-  if( reflector.srcFilter.stemPath )
-  reflector.srcFilter.stemPath = path.filter( reflector.srcFilter.stemPath, relative );
+
+  if( prefixPath )
+  {
+    _.assert( path.isAbsolute( reflector.srcFilter.prefixPath ) );
+    if( reflector.srcFilter.basePath )
+    reflector.srcFilter.basePath = path.filter( reflector.srcFilter.basePath, relative );
+    if( reflector.srcFilter.inFilePath )
+    reflector.srcFilter.inFilePath = path.filter( reflector.srcFilter.inFilePath, relative );
+    if( reflector.srcFilter.stemPath )
+    reflector.srcFilter.stemPath = path.filter( reflector.srcFilter.stemPath, relative );
+  }
 
   prefixPath = reflector.dstFilter.prefixPath;
-  if( reflector.dstFilter.basePath )
-  reflector.dstFilter.basePath = path.filter( reflector.dstFilter.basePath, relative );
-  if( reflector.dstFilter.inFilePath )
-  reflector.dstFilter.inFilePath = path.filter( reflector.dstFilter.inFilePath, relative );
-  if( reflector.dstFilter.stemPath )
-  reflector.dstFilter.stemPath = path.filter( reflector.dstFilter.stemPath, relative );
+
+  if( prefixPath )
+  {
+    _.assert( path.isAbsolute( reflector.dstFilter.prefixPath ) );
+    if( reflector.dstFilter.basePath )
+    reflector.dstFilter.basePath = path.filter( reflector.dstFilter.basePath, relative );
+    if( reflector.dstFilter.inFilePath )
+    reflector.dstFilter.inFilePath = path.filter( reflector.dstFilter.inFilePath, relative );
+    if( reflector.dstFilter.stemPath )
+    reflector.dstFilter.stemPath = path.filter( reflector.dstFilter.stemPath, relative );
+  }
 
   /* */
 
   function relative( filePath )
   {
-    // if( _.strIs( filePath ) && path.isAbsolute( filePath ) )
-    // debugger;
     if( _.strIs( filePath ) && path.isAbsolute( filePath ) )
     return path.relative( prefixPath, filePath );
     else
@@ -501,15 +513,18 @@ function pathsResolve( o )
   reflector.srcFilter.basePath = path.filter( reflector.srcFilter.basePath, resolve );
   if( reflector.srcFilter.prefixPath )
   reflector.srcFilter.prefixPath = resolve( reflector.srcFilter.prefixPath );
-  if( reflector.srcFilter.prefixPath || o.addingPrefix )
+  if( reflector.srcFilter.prefixPath || o.addingSrcPrefix )
   reflector.srcFilter.prefixPath = path.resolve( module.inPath, reflector.srcFilter.prefixPath || '.' );
 
   if( reflector.dstFilter.basePath )
   reflector.dstFilter.basePath = path.filter( reflector.dstFilter.basePath, resolve );
   if( reflector.dstFilter.prefixPath )
   reflector.dstFilter.prefixPath = resolve( reflector.dstFilter.prefixPath );
-  if( reflector.dstFilter.prefixPath || o.addingPrefix )
+
+  if( reflector.dstFilter.prefixPath || o.addingDstPrefix )
   reflector.dstFilter.prefixPath = path.resolve( module.inPath, reflector.dstFilter.prefixPath || '.' );
+  else if( reflector.dstFilter.filePath )
+  reflector.dstFilter.prefixPath = path.common( reflector.dstFilter.filePath );
 
   /* */
 
@@ -522,7 +537,8 @@ function pathsResolve( o )
 
 pathsResolve.defaults =
 {
-  addingPrefix : 0,
+  addingSrcPrefix : 0,
+  addingDstPrefix : 0,
 }
 
 //

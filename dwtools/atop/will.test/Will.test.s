@@ -977,7 +977,7 @@ function withSubmodulesClean( test )
   let dirPath = _.path.join( self.tempDir, test.name );
   let modulesPath = _.path.join( dirPath, '.module' );
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath }  })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath } });
 
   let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
   willExecPath = _.path.nativize( willExecPath );
@@ -1125,6 +1125,7 @@ function withSubmodulesBuild( test )
     test.is( !err );
     let buildOutPath = _.path.join( dirPath, 'out.debug' );
     var files = _.fileProvider.dirRead( buildOutPath );
+    debugger;
     test.identical( files.length, 2 );
     return null;
   })
@@ -1132,7 +1133,6 @@ function withSubmodulesBuild( test )
   /* - */
 
   shell({ args : [ '.submodules.upgrade' ] })
-
   .thenKeep( () =>
   {
     test.case = '.build'

@@ -20,7 +20,6 @@ let Self = function wWillInheritable( o )
 
 Self.shortName = 'Inheritable';
 
-
 // --
 // inter
 // --
@@ -151,8 +150,8 @@ function form()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  if( inheritable.nickName === 'step::reflect.submodules' )
-  debugger;
+  // if( inheritable.absoluteName === 'module::withSubmodules / module::Tools / reflector::exportedFiles.0' )
+  // debugger;
 
   if( inheritable.formed === 0 )
   inheritable.form1();
@@ -274,8 +273,8 @@ function _inheritMultiple( o )
     _.assert( _.strIs( inheritable.PoolName ) );
     _.assert( _.strIs( ancestor ) );
 
-    if( inheritable.nickName === 'reflector::reflect.submodules' )
-    debugger;
+    // if( inheritable.nickName === 'reflector::reflect.submodules' )
+    // debugger;
     let ancestors = module.resolve
     ({
       query : ancestor,
