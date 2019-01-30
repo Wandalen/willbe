@@ -842,7 +842,6 @@ function _willFilesFindMaybe( o )
   if( files.innerSingle || files.innerImport || files.innerExport )
   {
 
-    debugger;
     for( let w = 0 ; w < module.willFileArray.length ; w++ )
     {
       let willFile = module.willFileArray[ w ];
@@ -853,7 +852,6 @@ function _willFilesFindMaybe( o )
       if( name )
       module.configName = name;
     }
-    debugger;
 
     module.stager.stage( 'willFilesFound', 3 );
     return true;
@@ -1072,11 +1070,10 @@ function _willFilesCacheSave()
   // result.regexp = /xxx/;
   result.willFiles = module._willFilesExport();
 
-  debugger;
+  // debugger;
   let filePath = module.dirPath + '/' + ( module.configName || '' ) + '.will.state.json';
-  debugger;
-
-  fileProvider.fileWrite({ filePath : filePath, data : result, encoding : 'json.min' });
+  // debugger;
+  // fileProvider.fileWrite({ filePath : filePath, data : result, encoding : 'json.min' });
 
   return result;
 }
@@ -1980,21 +1977,22 @@ function _buildsSelect_pre( routine, args )
 
 //
 
-function buildsSelect_body( o )
+function _buildsSelect_body( o )
 {
   let module = this;
-  let elements;
+  let elements = module.buildMap;
 
-  elements = module.buildMap;
-
-  _.assertRoutineOptions( buildsSelect_body, arguments );
+  _.assertRoutineOptions( _buildsSelect_body, arguments );
   _.assert( arguments.length === 1 );
 
   if( o.name )
   {
-    if( !elements[ o.name ] )
+    elements = _.mapVals( _.path.globFilterKeys( elements, o.name ) );
+    if( !elements.length )
     return []
-    elements = [ elements[ o.name ] ];
+    // if( !elements[ o.name ] )
+    // return []
+    // elements = [ elements[ o.name ] ];
     if( o.criterion === null || Object.keys( o.criterion ).length === 0 )
     return elements;
   }
@@ -2064,7 +2062,7 @@ function buildsSelect_body( o )
 
 }
 
-buildsSelect_body.defaults =
+_buildsSelect_body.defaults =
 {
   resource : null,
   name : null,
@@ -2072,17 +2070,17 @@ buildsSelect_body.defaults =
   preffering : 'default',
 }
 
-let _buildsSelect = _.routineFromPreAndBody( _buildsSelect_pre, buildsSelect_body );
+let _buildsSelect = _.routineFromPreAndBody( _buildsSelect_pre, _buildsSelect_body );
 
 //
 
-let buildsSelect = _.routineFromPreAndBody( _buildsSelect_pre, buildsSelect_body );
+let buildsSelect = _.routineFromPreAndBody( _buildsSelect_pre, _buildsSelect_body );
 var defaults = buildsSelect.defaults;
 defaults.resource = 'build';
 
 //
 
-let exportsSelect = _.routineFromPreAndBody( _buildsSelect_pre, buildsSelect_body );
+let exportsSelect = _.routineFromPreAndBody( _buildsSelect_pre, _buildsSelect_body );
 var defaults = exportsSelect.defaults;
 defaults.resource = 'export';
 

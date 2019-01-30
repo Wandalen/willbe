@@ -153,8 +153,6 @@ function moduleDone( o )
   let path = will.fileProvider.path;
   let logger = will.logger;
 
-  // console.log( 'moduleDone' ); debugger;
-
   _.assertRoutineOptions( moduleDone, arguments );
   _.assert( _.routineIs( o.command ) );
   _.assert( _.routineIs( will.topCommand ) );
@@ -179,7 +177,6 @@ function moduleDone( o )
       let currentModule = will.currentModule;
       if( currentModule )
       currentModule.finit();
-      // debugger;
       _.procedure.terminationBegin();
       return true;
     }
@@ -194,34 +191,6 @@ function moduleDone( o )
     return true;
   }
 
-/*
-  .finally( ( err, arg ) =>
-  {
-    xxx
-    if( !will.topCommand )
-    {
-      if( will.beeping )
-      _.diagnosticBeep();
-      if( module === will.currentModule )
-      will.currentModule = null;
-      module.finit();
-    }
-    if( err )
-    throw err;
-    return arg;
-  })
-  .finally( ( err, arg ) =>
-  {
-    if( err )
-    {
-      if( !will.topCommand )
-      _.appExitCode( -1 );
-      throw _.errLogOnce( err );
-    }
-    return arg;
-  });
-*/
-
   return false;
 }
 
@@ -229,6 +198,26 @@ moduleDone.defaults =
 {
   error : null,
   command : null,
+}
+
+//
+
+function errTooMany( elements, what )
+{
+  let will = this;
+
+  if( elements.length !== 1 )
+  {
+    debugger;
+    if( elements.length === 0 )
+    if( e.subject )
+    return _.errBriefly( 'Please specify exactly one ' + what + ', ' + what + ' ' + _.strQuote( e.subject ) + ' does not exist' );
+    else
+    return _.errBriefly( 'Please specify exactly one ' + what + ', none satisfies passed arguments' );
+    return _.errBriefly( 'Please specify exactly one ' + what + ', ' + elements.length + ' satisfy(s)' + '\nFound : ' + _.strQuote( _.select( elements, '*/name' ) ) );
+  }
+
+  return false;
 }
 
 //
@@ -616,14 +605,7 @@ function commandBuild( e )
     }
 
     if( builds.length !== 1 )
-    {
-      if( builds.length === 0 )
-      if( e.subject )
-      throw _.errBriefly( 'To build please specify exactly one build scenario, build scenario ' + _.strQuote( e.subject ) + ' does not exist' );
-      else
-      throw _.errBriefly( 'To build please specify exactly one build scenario, none satisfies passed arguments' );
-      throw _.errBriefly( 'To build please specify exactly one build scenario, ' + builds.length + ' satisfy(s) passed arguments' );
-    }
+    throw errTooMany( builds, 'build scenario' );
 
     let build = builds[ 0 ];
     return build.proceed()
@@ -647,11 +629,14 @@ function commandExport( e )
     }
 
     if( builds.length !== 1 )
-    {
-      if( builds.length === 0 )
-      throw _.errBriefly( 'To export please specify exactly one export scenario, none satisfies passed arguments' );
-      throw _.errBriefly( 'To export please specify exactly one export scenario, ' + builds.length + ' satisfy(s) passed arguments' );
-    }
+    throw errTooMany( builds, 'export scenario' );
+
+    // if( builds.length !== 1 )
+    // {
+    //   if( builds.length === 0 )
+    //   throw _.errBriefly( 'To export please specify exactly one export scenario, none satisfies passed arguments' );
+    //   throw _.errBriefly( 'To export please specify exactly one export scenario, ' + builds.length + ' satisfy(s) passed arguments' );
+    // }
 
     let build = builds[ 0 ];
     return build.proceed()
@@ -704,12 +689,9 @@ function commandWith( e )
   .finally( ( err, arg ) =>
   {
     debugger;
-    // let isTop = will.topCommand === commandWith;
     will.moduleDone({ error : err || null, command : commandWith });
     if( err )
     {
-      // if( isTop )
-      // _.appExitCode( -1 );
       throw _.errLogOnce( err );
     }
     return arg;
@@ -801,13 +783,9 @@ function commandEach( e )
   con.finally( ( err, arg ) =>
   {
     debugger;
-    // let isTop = will.topCommand === commandEach;
-    // will.moduleDone( commandEach );
     will.moduleDone({ error : err || null, command : commandEach });
     if( err )
     {
-      // if( isTop )
-      // _.appExitCode( -1 );
       throw _.errLogOnce( err );
     }
     return arg;
@@ -863,6 +841,7 @@ let Extend =
   moduleOnReady,
   moduleOnReadyNonForming,
   moduleDone,
+  errTooMany,
 
   commandsMake,
   commandHelp,
