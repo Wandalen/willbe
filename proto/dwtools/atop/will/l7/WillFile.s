@@ -188,14 +188,40 @@ function open()
   if( willf.data.format !== undefined && willf.data.format !== willf.FormatVersion )
   throw _.err( 'Does not support format', willf.data.format + ',', 'supports only', willf.FormatVersion );
 
-  if( willf.data.path && willf.data.path.baseDir )
+  /* */
+
+  // if( 0 )
+  if( willf.module.supermodule )
   {
-    let p = willf.data.path.baseDir;
-    if( _.mapIs( p ) )
-    p = p.path;
-    p = path.join( path.dir( willf.filePath ), p);
-    module.baseDirPathChange( p );
+
+    // debugger;
+    let outPath = willf.data.path.out;
+    if( _.mapIs( outPath ) )
+    outPath = outPath.path;
+
+    outPath = path.relative( outPath, '.' );
+    let dirPath = path.join( willf.dirPath, outPath );
+    module.dirPathSet( dirPath );
+
   }
+
+  _.assert( willf.dirPath === path.dir( willf.filePath ) );
+  // _.assert( !willf.data.path || !willf.data.path.baseDir, 'Will file should have no path::baseDir' ); // xxx : uncomment
+
+  /* */
+
+  // if( 0 )
+  // if( willf.data.path && willf.data.path.baseDir )
+  // {
+  //   debugger;
+  //   let p = willf.data.path.baseDir;
+  //   if( _.mapIs( p ) )
+  //   p = p.path;
+  //   p = path.join( path.dir( willf.filePath ), p );
+  //   module.dirPathSet( p );
+  // }
+
+  /* */
 
   if( willf.data.about )
   module.about.copy( willf.data.about );

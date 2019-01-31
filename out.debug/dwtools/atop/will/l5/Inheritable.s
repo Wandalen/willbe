@@ -36,7 +36,7 @@ function MakeForEachCriterion( o )
   let result = [];
   let module = o.module;
   let will = module.will;
-  let done = 0;
+  let counter = 0;
 
   if( o.criterion && _.mapKeys( o.criterion ).length > 0 )
   {
@@ -46,14 +46,24 @@ function MakeForEachCriterion( o )
     {
       let criterion = samples[ index ];
       let o2 = _.mapExtend( null, o );
+      let postfix = [];
+
+      for( let c in criterion )
+      if( criterion[ c ] )
+      postfix.push( c );
+
+      // if( o.name === 'export' )
+      // debugger;
+
       o2.criterion = criterion;
-      o2.name = o.name + '.' + index;
+      o2.name = o.name + ( postfix.length ? ( '.' + postfix.join( '.' ) ) : '' );
+      // o2.name = o.name + '.' + index;
       result.push( Cls( o2 ).form1() );
-      done += 1;
+      counter += 1;
     }
   }
 
-  if( !done )
+  if( !counter )
   result = [ Cls( o ).form1() ];
 
   _.assert( result.length >= 1 );
@@ -462,6 +472,36 @@ function criterionInherit( criterion2 )
   return criterion1;
 }
 
+//
+
+function criterionVariable( inheritables )
+{
+  let inheritable = this;
+
+  inheritables = _.arrayAs( inheritables );
+
+  _.arrayAppendOnce( inheritables, inheritable )
+
+  let any = _.mapExtend( null, inheritables[ 0 ].criterion );
+  let all = _.mapExtend( null, inheritables[ 0 ].criterion );
+
+  for( let i = 1 ; i < inheritables.length ; i++ )
+  {
+    let criterion2 = inheritables[ i ].criterion;
+
+    _.mapExtend( any, criterion2 );
+
+    for( let c in all )
+    if( criterion2[ c ] != all[ c ] )
+    delete all[ c ];
+
+  }
+
+  let result = _.mapBut( inheritable.criterion, all );
+
+  return result;
+}
+
 // --
 // export
 // --
@@ -683,6 +723,7 @@ let Proto =
   criterionValidate,
   criterionSattisfy,
   criterionInherit,
+  criterionVariable,
 
   // export
 

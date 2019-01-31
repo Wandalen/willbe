@@ -223,26 +223,26 @@ function isExport()
   return !!build.criterion.export;
 }
 
+// //
 //
-
-function baseDirPathFor()
-{
-  let build = this
-  let module = build.module;
-  let will = module.will;
-  let hub = will.fileProvider;
-  let hd = hub.providersWithProtocolMap.file;
-  let inDirPath = module.pathMap.in || '.';
-
-  _.assert( arguments.length === 0 );
-
-  // debugger;
-  let outDirPath = hd.path.resolve( module.dirPath, module.pathMap.out );
-  let baseDirPath = hd.path.relative( outDirPath, module.dirPath );
-  // debugger;
-
-  return baseDirPath;
-}
+// function baseDirPathFor()
+// {
+//   let build = this
+//   let module = build.module;
+//   let will = module.will;
+//   let hub = will.fileProvider;
+//   let hd = hub.providersWithProtocolMap.file;
+//   let inDirPath = module.pathMap.in || '.';
+//
+//   _.assert( arguments.length === 0 );
+//
+//   let outDirPath = hd.path.resolve( module.dirPath, module.pathMap.out );
+//   let baseDirPath = hd.path.relative( outDirPath, module.dirPath );
+//
+//   debugger;
+//
+//   return baseDirPath;
+// }
 
 //
 
@@ -262,7 +262,15 @@ function archiveFilePathFor()
   _.assert( _.strDefined( module.about.name ), 'Module should have name, declare about.name' );
   _.assert( inExportFile instanceof will.WillFile );
 
-  let name = _.strJoinPath( [ module.about.name, build.name, '.out.tgs' ], '.' );
+  let exports = module.exportsSelect();
+  let criterions = build.criterionVariable( exports );
+
+  for( let c in criterions )
+  if( !criterions[ c ] )
+  delete criterions[ c ];
+
+  let name = _.strJoinPath( [ module.about.name, _.mapKeys( criterions ).join( '-' ), '.out.tgs' ], '.' );
+  // let name = _.strJoinPath( [ module.about.name, build.name, '.out.tgs' ], '.' );
 
   return hd.path.resolve( module.dirPath, outDirPath, name );
 }
@@ -354,7 +362,7 @@ let Proto =
   isExport,
 
   // exportedDirPathFor,
-  baseDirPathFor,
+  // baseDirPathFor,
   archiveFilePathFor,
   outFilePathFor,
 

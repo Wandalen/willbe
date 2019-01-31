@@ -1863,7 +1863,7 @@ function submodulesCloneDirGet()
 
 //
 
-function baseDirPathChange( dirPath )
+function dirPathSet( dirPath )
 {
   let module = this;
   let will = module.will;
@@ -2794,7 +2794,7 @@ let Proto =
 
   // path
 
-  baseDirPathChange,
+  dirPathSet,
   inPathGet,
   outPathGet,
 

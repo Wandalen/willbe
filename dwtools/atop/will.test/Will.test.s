@@ -1274,7 +1274,6 @@ withSubmodulesExport.timeOut = 130000;
 function submodulesDownload( test )
 {
   let self = this;
-
   let originalDirPath = _.path.join( self.assetDirPath, 'download' );
   let dirPath = _.path.join( self.tempDir, test.name );
 
