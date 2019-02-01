@@ -178,10 +178,10 @@ function singleModuleList( test )
     .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, 'reflector::reflect.proto.0' ))
-      test.is( _.strHas( got.output, `./proto : './out.release'` ))
-      test.is( _.strHas( got.output, `reflector::reflect.proto.1` ))
-      test.is( _.strHas( got.output, ` ./proto : './out.debug'` ))
+      test.is( _.strHas( got.output, 'reflector::reflect.proto.' ) );
+      test.is( _.strHas( got.output, `./proto : './out.release'` ) );
+      test.is( _.strHas( got.output, `reflector::reflect.proto.debug` ) );
+      test.is( _.strHas( got.output, ` ./proto : './out.debug'` ) );
       return null;
     })
   })
@@ -195,10 +195,10 @@ function singleModuleList( test )
     .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, 'step::reflect.proto.0' ))
-      test.is( _.strHas( got.output, 'step::reflect.proto.1' ))
-      test.is( _.strHas( got.output, 'step::reflect.proto.2' ))
-      test.is( _.strHas( got.output, 'step::reflect.proto.3' ))
+      test.is( _.strHas( got.output, 'step::reflect.proto.' ))
+      test.is( _.strHas( got.output, 'step::reflect.proto.debug' ))
+      test.is( _.strHas( got.output, 'step::reflect.proto.raw' ))
+      test.is( _.strHas( got.output, 'step::reflect.proto.debug.raw' ))
       test.is( _.strHas( got.output, 'step::export.proto' ))
 
       return null;
@@ -755,8 +755,8 @@ function withSubmodulesList( test )
     .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, 'reflector::reflect.proto.0' ))
-      test.is( _.strHas( got.output, `reflector::reflect.proto.1` ))
+      test.is( _.strHas( got.output, 'reflector::reflect.proto.' ))
+      test.is( _.strHas( got.output, `reflector::reflect.proto.debug` ))
       return null;
     })
   })
@@ -770,10 +770,10 @@ function withSubmodulesList( test )
     .thenKeep( ( got ) =>
     {
       test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, 'step::reflect.proto.0' ))
-      test.is( _.strHas( got.output, 'step::reflect.proto.1' ))
-      test.is( _.strHas( got.output, 'step::reflect.proto.2' ))
-      test.is( _.strHas( got.output, 'step::reflect.proto.3' ))
+      test.is( _.strHas( got.output, 'step::reflect.proto.' ))
+      test.is( _.strHas( got.output, 'step::reflect.proto.debug' ))
+      test.is( _.strHas( got.output, 'step::reflect.proto.raw' ))
+      test.is( _.strHas( got.output, 'step::reflect.proto.debug.raw' ))
       test.is( _.strHas( got.output, 'step::export.proto' ))
 
       return null;

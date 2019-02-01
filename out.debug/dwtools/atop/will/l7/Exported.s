@@ -77,11 +77,7 @@ function proceedExportedReflectors( exportSelector )
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
-  // let fileProvider = will.fileProvider;
-  // let path = fileProvider.path;
   let logger = will.logger;
-  // let hub = will.fileProvider;
-  // let hd = hub.providersWithProtocolMap.file;
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
@@ -158,24 +154,29 @@ function proceedExportedReflectors( exportSelector )
   _.assert( path.isAbsolute( exportedReflector.srcFilter.prefixPath ) );
   _.assert( exportedReflector instanceof will.Reflector );
 
+  // exportedReflector.srcFilter._formBasePath();
+
   /* exportedReflectorData */
 
-  let exportedReflectorData = exported.exportedReflectorData = exportedReflector.dataExport();
-  exportedReflectorData.srcFilter = exportedReflector.srcFilter.clone();
-  exportedReflectorData.srcFilter._formBasePath();
+  // let exportedReflectorData = exported.exportedReflectorData = exportedReflector.dataExport();
+  // exportedReflectorData.srcFilter = exportedReflector.srcFilter.clone();
+  // exportedReflectorData.srcFilter._formBasePath();
 
-  _.assert( _.mapIs( exportedReflectorData ) );
-  _.assert( exportedReflectorData.srcFilter.formed === 3 );
-  _.assert( _.mapIs( exportedReflectorData.srcFilter.basePath ) );
+  let srcFilter = exported.srcFilter = exportedReflector.srcFilter.clone();
+  srcFilter._formBasePath();
+
+  // _.assert( _.mapIs( exportedReflectorData ) );
+  _.assert( srcFilter.formed === 3 );
+  _.assert( _.mapIs( srcFilter.basePath ) );
   _.sure
   (
-    exportedReflectorData.srcFilter.basePaths.length === 1,
-    () => 'Source filter of ' + exportedReflectorData.nickName + ' for ' + exportSelector + ' should have single-path reflect map or defined base path'
+    srcFilter.basePaths.length === 1,
+    () => 'Source filter for ' + exported.nickName + ' for ' + exportSelector + ' should have single-path reflect map or defined base path'
   );
 
   /* exportedDirPath */
 
-  let exportedDirPath = exportedReflectorData.srcFilter.basePaths[ 0 ];
+  let exportedDirPath = srcFilter.basePaths[ 0 ];
 
   exported.exportedDirPath = module.resourceAllocate( 'path', 'exportedDir' );
   exported.exportedDirPath.path = path.dot( path.relative( module.dirPath, exportedDirPath ) );
@@ -218,7 +219,7 @@ function proceedExportedFilesReflector()
     mandatory : 0,
     verbosity : 0,
     outputFormat : 'record',
-    filter : exported.exportedReflectorData.srcFilter,
+    filter : exported.srcFilter.clone(),
   });
 
   // let exportedTerminalsPath = exported.exportedTerminalsPath.path = _.filter( exportedFilesPath, ( r ) => r.isTerminal ? r.relative : undefined );
@@ -228,7 +229,7 @@ function proceedExportedFilesReflector()
   _.sure
   (
     exported.exportedFilesPath.path.length > 0,
-    () => 'No file found at ' + path.commonReport( exported.exportedReflectorData.srcFilter.stemPath )
+    () => 'No file found at ' + path.commonReport( exported.srcFilter.stemPath )
     // + ', cant export ' + opts.export,
     + ', cant export ' + exported.build.name,
   );
@@ -302,8 +303,6 @@ function proceedArchive( enabled )
 
   let exportedDirPath = path.s.resolve( module.dirPath, exported.exportedDirPath.path );
 
-  debugger;
-
   hd.dirMake( path.dir( archiveFilePath ) );
 
   _.sure( hd.fileExists( exportedDirPath ) );
@@ -323,7 +322,7 @@ function proceedArchive( enabled )
   /* */
 
   // if( exported.archiveFilePath )
-  exported.archiveFilePath = exported.archiveFilePath.refName;
+  // exported.archiveFilePath = exported.archiveFilePath.refName;
 
 }
 
@@ -409,6 +408,7 @@ function proceed( frame )
   exported.proceedExportedReflectors( opts.export );
   exported.proceedExportedFilesReflector();
   exported.proceedArchive( opts.tar === undefined || opts.tar );
+
   exported.proceedOutFile();
 
   /* log */
@@ -418,12 +418,12 @@ function proceed( frame )
 
   /* ref names */
 
-  exported.exportedFilesReflector = exported.exportedFilesReflector.refName;
-  exported.exportedReflector = exported.exportedReflector.refName;
-  exported.exportedDirPath = exported.exportedDirPath.refName;
-  exported.exportedFilesPath = exported.exportedFilesPath.refName;
-  if( _.objectIs( exported.archiveFilePath ) )
-  exported.archiveFilePath = exported.archiveFilePath.refName;
+  // exported.exportedFilesReflector = exported.exportedFilesReflector.refName;
+  // exported.exportedReflector = exported.exportedReflector.refName;
+  // exported.exportedDirPath = exported.exportedDirPath.refName;
+  // exported.exportedFilesPath = exported.exportedFilesPath.refName;
+  // if( _.objectIs( exported.archiveFilePath ) )
+  // exported.archiveFilePath = exported.archiveFilePath.refName;
 
   return exported;
 }
@@ -441,7 +441,6 @@ let Composes =
   inherit : _.define.own([]),
 
   exportedReflector : null,
-  exportedReflectorData : null,
   exportedFilesReflector : null,
 
   exportedDirPath : null,
@@ -464,6 +463,9 @@ let Associates =
 
 let Restricts =
 {
+  srcFilter : null,
+  // exportedReflectorData : null,
+  // exportedDirPathData : null,
 }
 
 let Statics =
