@@ -2,7 +2,7 @@ format: willfile-1.0.0
 about:
   name: willbe
   description: Tool to manage modules of modular systems
-  version: 0.3.133
+  version: 0.3.135
   enabled: 1
   interpreters:
     - nodejs >= 6.0.0
@@ -97,7 +97,7 @@ path:
       public: 1
 submodule: {}
 reflector:
-  reflect.proto:
+  reflect.proto.:
     filePath:
       ./proto: ./out.release
     srcFilter:
@@ -255,7 +255,7 @@ reflector:
       basePath: .
       prefixPath: proto
 step:
-  clean.out:
+  clean.out.:
     criterion:
       debug: 0
     opts:
@@ -269,7 +269,7 @@ step:
       filePath: 'path::out.debug'
     inherit:
       - predefined.delete
-  reflect.proto:
+  reflect.proto.:
     criterion:
       debug: 0
       raw: 0
@@ -301,7 +301,7 @@ step:
       reflector: 'reflector::reflect.proto.*=1'
     inherit:
       - predefined.reflect
-  reflect.submodules.debug:
+  reflect.submodules.:
     criterion:
       debug: 1
       raw: 0
@@ -309,7 +309,7 @@ step:
       reflector: 'reflector::reflect.submodules*=1'
     inherit:
       - predefined.reflect
-  reflect.submodules.debug.raw:
+  reflect.submodules.raw:
     criterion:
       debug: 1
       raw: 1
@@ -374,7 +374,7 @@ build:
       - 'step::export.proto'
 exported:
   proto.export:
-    version: 0.3.133
+    version: 0.3.135
     criterion:
       default: 1
       debug: 1
@@ -383,178 +383,7 @@ exported:
       export: 1
       tar: 1
       public: 1
-    exportedReflector:
-      filePath: ./proto
-      srcFilter:
-        filePath: ./proto
-        prefixPath: /C/pro/web/Port/package/willbe
-    exportedReflectorData:
-      filePath: ./proto
-      srcFilter:
-        filePath: /C/pro/web/Port/package/willbe/proto
-        maskAll:
-          excludeAny:
-            - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
-            - !<tag:yaml.org,2002:js/regexp> /\.unique$/
-            - !<tag:yaml.org,2002:js/regexp> /\.git$/
-            - !<tag:yaml.org,2002:js/regexp> /\.svn$/
-            - !<tag:yaml.org,2002:js/regexp> /\.hg$/
-            - !<tag:yaml.org,2002:js/regexp> /\.tmp($|\/)/
-            - !<tag:yaml.org,2002:js/regexp> /\.DS_Store$/
-            - !<tag:yaml.org,2002:js/regexp> /(^|\/)\.(?!$|\/|\.)/
-            - !<tag:yaml.org,2002:js/regexp> /(^|\/)-/
-        basePath:
-          /C/pro/web/Port/package/willbe/proto: /C/pro/web/Port/package/willbe/proto
-    exportedFilesReflector:
-      recursive: 0
-      filePath:
-        .: true
-        ./dwtools: true
-        ./dwtools/Tools.s: true
-        ./dwtools/abase: true
-        ./dwtools/amid: true
-        ./dwtools/atop: true
-        ./dwtools/atop/will: true
-        ./dwtools/atop/will/Exec: true
-        ./dwtools/atop/will/Exec2: true
-        ./dwtools/atop/will/IncludeBase.s: true
-        ./dwtools/atop/will/IncludeTop.s: true
-        ./dwtools/atop/will/MainBase.s: true
-        ./dwtools/atop/will/MainTop.s: true
-        ./dwtools/atop/will/l1: true
-        ./dwtools/atop/will/l1/About.s: true
-        ./dwtools/atop/will/l1/BuildFrame.s: true
-        ./dwtools/atop/will/l1/Execution.s: true
-        ./dwtools/atop/will/l1/Predefined.s: true
-        ./dwtools/atop/will/l3: true
-        ./dwtools/atop/will/l3/Module.s: true
-        ./dwtools/atop/will/l5: true
-        ./dwtools/atop/will/l5/Inheritable.s: true
-        ./dwtools/atop/will/l7: true
-        ./dwtools/atop/will/l7/Build.s: true
-        ./dwtools/atop/will/l7/Exported.s: true
-        ./dwtools/atop/will/l7/PathObj.s: true
-        ./dwtools/atop/will/l7/Reflector.s: true
-        ./dwtools/atop/will/l7/Step.s: true
-        ./dwtools/atop/will/l7/Submodule.s: true
-        ./dwtools/atop/will/l7/WillFile.s: true
-        ./dwtools/atop/will.test: true
-        ./dwtools/atop/will.test/Will.test.s: true
-        ./dwtools/atop/will.test/asset: true
-        ./dwtools/atop/will.test/asset/download: true
-        ./dwtools/atop/will.test/asset/download/proto: true
-        ./dwtools/atop/will.test/asset/download/proto/Simple.js: true
-        ./dwtools/atop/will.test/asset/single: true
-        ./dwtools/atop/will.test/asset/single/proto: true
-        ./dwtools/atop/will.test/asset/single/proto/Single.s: true
-        ./dwtools/atop/will.test/asset/submodules: true
-        ./dwtools/atop/will.test/asset/submodules/proto: true
-        ./dwtools/atop/will.test/asset/submodules/proto/WithSubmodules.s: true
-      srcFilter:
-        filePath:
-          .: true
-          ./dwtools: true
-          ./dwtools/Tools.s: true
-          ./dwtools/abase: true
-          ./dwtools/amid: true
-          ./dwtools/atop: true
-          ./dwtools/atop/will: true
-          ./dwtools/atop/will/Exec: true
-          ./dwtools/atop/will/Exec2: true
-          ./dwtools/atop/will/IncludeBase.s: true
-          ./dwtools/atop/will/IncludeTop.s: true
-          ./dwtools/atop/will/MainBase.s: true
-          ./dwtools/atop/will/MainTop.s: true
-          ./dwtools/atop/will/l1: true
-          ./dwtools/atop/will/l1/About.s: true
-          ./dwtools/atop/will/l1/BuildFrame.s: true
-          ./dwtools/atop/will/l1/Execution.s: true
-          ./dwtools/atop/will/l1/Predefined.s: true
-          ./dwtools/atop/will/l3: true
-          ./dwtools/atop/will/l3/Module.s: true
-          ./dwtools/atop/will/l5: true
-          ./dwtools/atop/will/l5/Inheritable.s: true
-          ./dwtools/atop/will/l7: true
-          ./dwtools/atop/will/l7/Build.s: true
-          ./dwtools/atop/will/l7/Exported.s: true
-          ./dwtools/atop/will/l7/PathObj.s: true
-          ./dwtools/atop/will/l7/Reflector.s: true
-          ./dwtools/atop/will/l7/Step.s: true
-          ./dwtools/atop/will/l7/Submodule.s: true
-          ./dwtools/atop/will/l7/WillFile.s: true
-          ./dwtools/atop/will.test: true
-          ./dwtools/atop/will.test/Will.test.s: true
-          ./dwtools/atop/will.test/asset: true
-          ./dwtools/atop/will.test/asset/download: true
-          ./dwtools/atop/will.test/asset/download/proto: true
-          ./dwtools/atop/will.test/asset/download/proto/Simple.js: true
-          ./dwtools/atop/will.test/asset/single: true
-          ./dwtools/atop/will.test/asset/single/proto: true
-          ./dwtools/atop/will.test/asset/single/proto/Single.s: true
-          ./dwtools/atop/will.test/asset/submodules: true
-          ./dwtools/atop/will.test/asset/submodules/proto: true
-          ./dwtools/atop/will.test/asset/submodules/proto/WithSubmodules.s: true
-        basePath: .
-        prefixPath: /C/pro/web/Port/package/willbe/proto
-    exportedDirPath:
-      path: ./proto
-      criterion:
-        default: 1
-        debug: 1
-        raw: 1
-        proto: 1
-        export: 1
-        tar: 1
-        public: 1
-    exportedFilesPath:
-      path:
-        - .
-        - ./dwtools
-        - ./dwtools/Tools.s
-        - ./dwtools/abase
-        - ./dwtools/amid
-        - ./dwtools/atop
-        - ./dwtools/atop/will
-        - ./dwtools/atop/will/Exec
-        - ./dwtools/atop/will/Exec2
-        - ./dwtools/atop/will/IncludeBase.s
-        - ./dwtools/atop/will/IncludeTop.s
-        - ./dwtools/atop/will/MainBase.s
-        - ./dwtools/atop/will/MainTop.s
-        - ./dwtools/atop/will/l1
-        - ./dwtools/atop/will/l1/About.s
-        - ./dwtools/atop/will/l1/BuildFrame.s
-        - ./dwtools/atop/will/l1/Execution.s
-        - ./dwtools/atop/will/l1/Predefined.s
-        - ./dwtools/atop/will/l3
-        - ./dwtools/atop/will/l3/Module.s
-        - ./dwtools/atop/will/l5
-        - ./dwtools/atop/will/l5/Inheritable.s
-        - ./dwtools/atop/will/l7
-        - ./dwtools/atop/will/l7/Build.s
-        - ./dwtools/atop/will/l7/Exported.s
-        - ./dwtools/atop/will/l7/PathObj.s
-        - ./dwtools/atop/will/l7/Reflector.s
-        - ./dwtools/atop/will/l7/Step.s
-        - ./dwtools/atop/will/l7/Submodule.s
-        - ./dwtools/atop/will/l7/WillFile.s
-        - ./dwtools/atop/will.test
-        - ./dwtools/atop/will.test/Will.test.s
-        - ./dwtools/atop/will.test/asset
-        - ./dwtools/atop/will.test/asset/download
-        - ./dwtools/atop/will.test/asset/download/proto
-        - ./dwtools/atop/will.test/asset/download/proto/Simple.js
-        - ./dwtools/atop/will.test/asset/single
-        - ./dwtools/atop/will.test/asset/single/proto
-        - ./dwtools/atop/will.test/asset/single/proto/Single.s
-        - ./dwtools/atop/will.test/asset/submodules
-        - ./dwtools/atop/will.test/asset/submodules/proto
-        - ./dwtools/atop/will.test/asset/submodules/proto/WithSubmodules.s
-      criterion:
-        default: 1
-        debug: 1
-        raw: 1
-        proto: 1
-        export: 1
-        tar: 1
-        public: 1
+    exportedReflector: 'reflector::exported.0'
+    exportedFilesReflector: 'reflector::exportedFiles.0'
+    exportedDirPath: 'path::exportedDir.0'
+    exportedFilesPath: 'path::exportedFiles.0'
