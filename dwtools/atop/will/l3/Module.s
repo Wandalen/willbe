@@ -2646,8 +2646,8 @@ let Composes =
 let Aggregates =
 {
 
-  about : _.define.ownInstanceOf( _.Will.ParagraphAbout ),
-  execution : _.define.ownInstanceOf( _.Will.ParagraphExecution ),
+  about : _.define.instanceOf( _.Will.ParagraphAbout ),
+  execution : _.define.instanceOf( _.Will.ParagraphExecution ),
 
   submoduleMap : _.define.own({}),
   pathMap : _.define.own({}),
