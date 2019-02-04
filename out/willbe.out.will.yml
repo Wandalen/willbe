@@ -2,7 +2,7 @@ format: willfile-1.0.0
 about:
   name: willbe
   description: Tool to manage modules of modular systems
-  version: 0.3.135
+  version: 0.3.137
   enabled: 1
   interpreters:
     - nodejs >= 6.0.0
@@ -33,7 +33,7 @@ path:
     path: 'git+https://github.com/Wandalen/willbe.git'
   bugs:
     path: 'https://github.com/Wandalen/willbe/issues'
-  exportedDir.0:
+  exportedDir.proto.export:
     path: ./proto
     criterion:
       default: 1
@@ -43,7 +43,7 @@ path:
       export: 1
       tar: 1
       public: 1
-  exportedFiles.0:
+  exportedFiles.proto.export:
     path:
       - .
       - ./dwtools
@@ -98,8 +98,6 @@ path:
 submodule: {}
 reflector:
   reflect.proto.:
-    filePath:
-      ./proto: ./out.release
     srcFilter:
       filePath:
         ./proto: ./out.release
@@ -121,8 +119,6 @@ reflector:
     inherit:
       - predefined.*
   reflect.proto.debug:
-    filePath:
-      ./proto: ./out.debug
     srcFilter:
       filePath:
         ./proto: ./out.debug
@@ -158,56 +154,12 @@ reflector:
       debug: 1
     inherit:
       - predefined.*
-  exported.0:
-    filePath: ./proto
+  exported.proto.export:
     srcFilter:
       filePath: ./proto
       prefixPath: .
-  exportedFiles.0:
+  exportedFiles.proto.export:
     recursive: 0
-    filePath:
-      .: true
-      ./dwtools: true
-      ./dwtools/Tools.s: true
-      ./dwtools/abase: true
-      ./dwtools/amid: true
-      ./dwtools/atop: true
-      ./dwtools/atop/will: true
-      ./dwtools/atop/will/Exec: true
-      ./dwtools/atop/will/Exec2: true
-      ./dwtools/atop/will/IncludeBase.s: true
-      ./dwtools/atop/will/IncludeTop.s: true
-      ./dwtools/atop/will/MainBase.s: true
-      ./dwtools/atop/will/MainTop.s: true
-      ./dwtools/atop/will/l1: true
-      ./dwtools/atop/will/l1/About.s: true
-      ./dwtools/atop/will/l1/BuildFrame.s: true
-      ./dwtools/atop/will/l1/Execution.s: true
-      ./dwtools/atop/will/l1/Predefined.s: true
-      ./dwtools/atop/will/l3: true
-      ./dwtools/atop/will/l3/Module.s: true
-      ./dwtools/atop/will/l5: true
-      ./dwtools/atop/will/l5/Inheritable.s: true
-      ./dwtools/atop/will/l7: true
-      ./dwtools/atop/will/l7/Build.s: true
-      ./dwtools/atop/will/l7/Exported.s: true
-      ./dwtools/atop/will/l7/PathObj.s: true
-      ./dwtools/atop/will/l7/Reflector.s: true
-      ./dwtools/atop/will/l7/Step.s: true
-      ./dwtools/atop/will/l7/Submodule.s: true
-      ./dwtools/atop/will/l7/WillFile.s: true
-      ./dwtools/atop/will.test: true
-      ./dwtools/atop/will.test/Will.test.s: true
-      ./dwtools/atop/will.test/asset: true
-      ./dwtools/atop/will.test/asset/download: true
-      ./dwtools/atop/will.test/asset/download/proto: true
-      ./dwtools/atop/will.test/asset/download/proto/Simple.js: true
-      ./dwtools/atop/will.test/asset/single: true
-      ./dwtools/atop/will.test/asset/single/proto: true
-      ./dwtools/atop/will.test/asset/single/proto/Single.s: true
-      ./dwtools/atop/will.test/asset/submodules: true
-      ./dwtools/atop/will.test/asset/submodules/proto: true
-      ./dwtools/atop/will.test/asset/submodules/proto/WithSubmodules.s: true
     srcFilter:
       filePath:
         .: true
@@ -374,7 +326,7 @@ build:
       - 'step::export.proto'
 exported:
   proto.export:
-    version: 0.3.135
+    version: 0.3.137
     criterion:
       default: 1
       debug: 1
@@ -383,7 +335,7 @@ exported:
       export: 1
       tar: 1
       public: 1
-    exportedReflector: 'reflector::exported.0'
-    exportedFilesReflector: 'reflector::exportedFiles.0'
-    exportedDirPath: 'path::exportedDir.0'
-    exportedFilesPath: 'path::exportedFiles.0'
+    exportedReflector: 'reflector::exported.proto.export'
+    exportedFilesReflector: 'reflector::exportedFiles.proto.export'
+    exportedDirPath: 'path::exportedDir.proto.export'
+    exportedFilesPath: 'path::exportedFiles.proto.export'
