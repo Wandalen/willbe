@@ -644,7 +644,11 @@ function dataExport()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
+
+  _.assert( reflector.srcFilter instanceof _.FileRecordFilter );
+
   let result = Parent.prototype.dataExport.apply( this, arguments );
+  delete result.filePath;
 
   if( result.srcFilter && result.srcFilter.prefixPath && path.isAbsolute( result.srcFilter.prefixPath ) )
   result.srcFilter.prefixPath = path.relative( module.inPath, result.srcFilter.prefixPath );

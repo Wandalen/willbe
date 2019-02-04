@@ -54,8 +54,8 @@ function MakeForEachCriterion( o )
       if( vcriterion[ c ] )
       postfix.push( c );
 
-      if( o.name === 'export' ) // xxx
-      debugger;
+      // if( o.name === 'export' ) // xxx
+      // debugger;
 
       o2.criterion = criterion;
       o2.name = o.name + '.' + ( postfix.length ? postfix.join( '.' ) : '' );

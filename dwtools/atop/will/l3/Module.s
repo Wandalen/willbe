@@ -1367,9 +1367,6 @@ function resourceAllocate( resourceKind, resourceName )
   _.assert( arguments.length === 2 );
   _.assert( _.strIs( resourceName ) );
 
-  // _.assert( module.pathMap[ resourceName ] === undefined, 'not implemented' );
-  // let resourceName2 = resourceName + '.0';
-
   let resourceName2 = module.resourceNameAllocate( resourceKind, resourceName );
   let cls = module.resourceClassForKind( resourceKind );
   let patho = new cls({ module : module, name : resourceName2 }).form1();
@@ -1386,9 +1383,12 @@ function resourceNameAllocate( resourceKind, resourceName )
 
   _.assert( arguments.length === 2 );
   _.assert( _.strIs( resourceName ) );
-  // _.assert( module.pathMap[ resourceName ] === undefined, 'not implemented' );
 
   let map = module.resourceMapForKind( resourceKind );
+
+  if( map[ resourceName ] === undefined )
+  return resourceName;
+
   let counter = 0;
   let resourceName2;
 

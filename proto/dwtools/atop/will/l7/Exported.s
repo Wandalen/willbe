@@ -35,10 +35,6 @@ function verify()
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
-  // let fileProvider = will.fileProvider;
-  // let hub = will.fileProvider;
-  // let hd = hub.providersWithProtocolMap.file;
-  // let path = hub.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0 );
@@ -52,8 +48,6 @@ function verify()
   _.assert( build.formed === 3 );
   _.assert( exported.criterion === null );
   _.assert( build instanceof will.Build );
-  // _.assert( step instanceof will.Step );
-  // _.assert( _.strDefined( opts.export ), () => step.nickName + ' should have options option export, path to directory to export or reflector' )
 
   _.sure( _.strDefined( module.dirPath ), 'Expects directory path of the module' );
   _.sure( _.objectIs( build.criterion ), 'Expects criterion of export' );
@@ -62,6 +56,38 @@ function verify()
   _.sure( _.objectIs( module.willFileWithRoleMap.export ) || _.objectIs( module.willFileWithRoleMap.single ), 'Expects export in fine' );
   _.sure( _.strDefined( module.about.name ), 'Expects defined name of the module' );
   _.sure( _.strDefined( module.about.version ), 'Expects defined version of the module' );
+
+}
+
+//
+
+function readExported()
+{
+  let exported = this;
+  let module = exported.module;
+  let will = module.will;
+  let build = module.buildMap[ exported.name ];
+  let hub = will.fileProvider;
+  let hd = hub.providersWithProtocolMap.file;
+  let path = hub.path;
+  let logger = will.logger;
+
+  let outFilePath = build.outFilePathFor();
+
+  debugger;
+
+  let read = fileProvider.fileConfigRead
+  ({
+    filePath : outFilePath,
+    verbosity : will.verbosity-2,
+  });
+
+  debugger;
+
+  if( !read.exported || !Object.keys( read.exported ) )
+  return;
+
+  debugger;
 
 }
 
@@ -97,6 +123,8 @@ function proceedExportedReflectors( exportSelector )
   let exp = step.resolve( exportSelector );
   let exportedReflector;
 
+  /* */
+
   if( exp instanceof will.Reflector )
   {
 
@@ -104,7 +132,7 @@ function proceedExportedReflectors( exportSelector )
     _.assert( exp.srcFilter.formed === 1 );
     _.sure( !!exp.filePath, () => exp.nickName + ' should have filePath' );
 
-    exportedReflector = exp.cloneExtending({ name : module.resourceNameAllocate( 'reflector', 'exported' ) });
+    exportedReflector = exp.cloneExtending({ name : module.resourceNameAllocate( 'reflector', 'exported.' + exported.name ) });
     exportedReflector.criterion = _.mapExtend( null, exported.criterion );
 
     _.assert( exportedReflector.srcFilter !== exp.srcFilter );
@@ -126,7 +154,7 @@ function proceedExportedReflectors( exportSelector )
 
     _.assert( path.isRelative( commonPath ) );
 
-    exportedReflector = module.resourceAllocate( 'reflector', 'exported' );
+    exportedReflector = module.resourceAllocate( 'reflector', 'exported.' + exported.name );
     exportedReflector.filePath = Object.create( null );
     for( let p = 0 ; p < exp.length ; p++ )
     exportedReflector.filePath[ exp[ p ] ] = true;
@@ -138,7 +166,7 @@ function proceedExportedReflectors( exportSelector )
   else if( _.strIs( exp ) )
   {
 
-    exportedReflector = module.resourceAllocate( 'reflector', 'exported' );
+    exportedReflector = module.resourceAllocate( 'reflector', 'exported.' + exported.name );
     exportedReflector.filePath = { [ exp ] : true };
     exportedReflector.srcFilter.inFilePath = exp;
 
@@ -154,18 +182,11 @@ function proceedExportedReflectors( exportSelector )
   _.assert( path.isAbsolute( exportedReflector.srcFilter.prefixPath ) );
   _.assert( exportedReflector instanceof will.Reflector );
 
-  // exportedReflector.srcFilter._formBasePath();
-
-  /* exportedReflectorData */
-
-  // let exportedReflectorData = exported.exportedReflectorData = exportedReflector.dataExport();
-  // exportedReflectorData.srcFilter = exportedReflector.srcFilter.clone();
-  // exportedReflectorData.srcFilter._formBasePath();
+  /* srcFilter */
 
   let srcFilter = exported.srcFilter = exportedReflector.srcFilter.clone();
   srcFilter._formBasePath();
 
-  // _.assert( _.mapIs( exportedReflectorData ) );
   _.assert( srcFilter.formed === 3 );
   _.assert( _.mapIs( srcFilter.basePath ) );
   _.sure
@@ -178,12 +199,11 @@ function proceedExportedReflectors( exportSelector )
 
   let exportedDirPath = srcFilter.basePaths[ 0 ];
 
-  exported.exportedDirPath = module.resourceAllocate( 'path', 'exportedDir' );
+  exported.exportedDirPath = module.resourceAllocate( 'path', 'exportedDir.' + exported.name );
   exported.exportedDirPath.path = path.dot( path.relative( module.dirPath, exportedDirPath ) );
   exported.exportedDirPath.criterion = _.mapExtend( null, exported.criterion );
   exported.exportedDirPath.form();
 
-  // return exportedReflectorData;
 }
 
 //
@@ -193,21 +213,14 @@ function proceedExportedFilesReflector()
   let exported = this;
   let module = exported.module;
   let will = module.will;
-  // let hub = will.fileProvider;
-  // let fileProvider = will.fileProvider;
-  // let path = fileProvider.path;
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
-  // let hd = hub.providersWithProtocolMap.file;
 
   /* exportedFilesPath */
 
-  exported.exportedFilesPath = module.resourceAllocate( 'path', 'exportedFiles' );
+  exported.exportedFilesPath = module.resourceAllocate( 'path', 'exportedFiles.' + exported.name );
   exported.exportedFilesPath.criterion = _.mapExtend( null, exported.criterion );
-
-  // exported.exportedTerminalsPath = module.resourceAllocate( 'path', 'exportedTerminals' );
-  // exported.exportedTerminalsPath.criterion = _.mapExtend( null, exported.criterion );
 
   /* */
 
@@ -222,15 +235,12 @@ function proceedExportedFilesReflector()
     filter : exported.srcFilter.clone(),
   });
 
-  // let exportedTerminalsPath = exported.exportedTerminalsPath.path = _.filter( exportedFilesPath, ( r ) => r.isTerminal ? r.relative : undefined );
   exportedFilesPath = exported.exportedFilesPath.path = _.filter( exportedFilesPath, ( r ) => r.relative );
 
-  // debugger;
   _.sure
   (
     exported.exportedFilesPath.path.length > 0,
     () => 'No file found at ' + path.commonReport( exported.srcFilter.stemPath )
-    // + ', cant export ' + opts.export,
     + ', cant export ' + exported.build.name,
   );
 
@@ -238,7 +248,7 @@ function proceedExportedFilesReflector()
 
   /* exportedFilesReflector */
 
-  let exportedFilesReflector = exported.exportedFilesReflector = exported.exportedReflector.cloneExtending({ name : module.resourceNameAllocate( 'reflector', 'exportedFiles' ) });
+  let exportedFilesReflector = exported.exportedFilesReflector = exported.exportedReflector.cloneExtending({ name : module.resourceNameAllocate( 'reflector', 'exportedFiles.' + exported.name ) });
 
   _.assert( exportedFilesReflector.srcFilter.basePath === exported.exportedDirPath.path || exportedFilesReflector.srcFilter.basePath === null );
   exportedFilesReflector.srcFilter.filteringClear();
@@ -250,7 +260,6 @@ function proceedExportedFilesReflector()
 
   _.assert( exportedFilesReflector.dstFilter.basePath === null );
   exportedFilesReflector.dstFilter.filteringClear();
-  // exportedFilesReflector.filePath = { [ exported.exportedTerminalsPath.refName ] : true }
   exportedFilesReflector.filePath = { [ exported.exportedFilesPath.refName ] : true }
   exportedFilesReflector.recursive = 0;
   exportedFilesReflector.form();
@@ -270,10 +279,6 @@ function proceedArchive( enabled )
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
-  // let hub = will.fileProvider;
-  // let fileProvider = will.fileProvider;
-  // let path = fileProvider.path;
-  // let hd = hub.providersWithProtocolMap.file;
   let logger = will.logger;
   let build = module.buildMap[ exported.name ];
 
@@ -289,12 +294,10 @@ function proceedArchive( enabled )
   }
 
   let archiveFilePath = build.archiveFilePathFor();
-  exported.archiveFilePath = module.resourceAllocate( 'path', 'archiveFile' );
+  exported.archiveFilePath = module.resourceAllocate( 'path', 'archiveFile.' + exported.name );
   exported.archiveFilePath.path = path.dot( path.relative( module.dirPath, archiveFilePath ) );
   exported.archiveFilePath.criterion = _.mapExtend( null, exported.criterion );
   exported.archiveFilePath.form();
-
-
 
   /* */
 
@@ -336,18 +339,10 @@ function proceedOutFile()
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
-  // let hub = will.fileProvider;
-  // let fileProvider = will.fileProvider;
-  // let path = fileProvider.path;
-  // let hd = hub.providersWithProtocolMap.file;
   let logger = will.logger;
   let build = module.buildMap[ exported.name ];
 
   let outFilePath = build.outFilePathFor();
-  let outDirPath = path.dir( outFilePath );
-
-  // exported.proceedOutFile();
-
   let data = module.dataExport();
 
   hd.fileWrite
@@ -374,11 +369,7 @@ function proceed( frame )
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
-  // let fileProvider = will.fileProvider;
-  // let path = fileProvider.path;
   let logger = will.logger;
-  // let hub = will.fileProvider;
-  // let hd = hub.providersWithProtocolMap.file;
   let step = frame.resource;
   let time = _.timeNow();
 
@@ -464,8 +455,6 @@ let Associates =
 let Restricts =
 {
   srcFilter : null,
-  // exportedReflectorData : null,
-  // exportedDirPathData : null,
 }
 
 let Statics =
@@ -493,6 +482,7 @@ let Proto =
   // inter
 
   verify,
+  readExported,
   proceedExportedReflectors,
   proceedExportedFilesReflector,
   proceedArchive,

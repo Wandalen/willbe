@@ -168,13 +168,11 @@ function open()
 
   try
   {
-    // debugger;
     willf.data = fileProvider.fileConfigRead
     ({
       filePath : willf.filePath,
       verbosity : will.verbosity-2,
     });
-    // debugger;
   }
   catch( err )
   {
