@@ -24,13 +24,6 @@ reflector :
     filePath :
       path::proto : path::out.*=1
 
-  # reflect.submodules :
-  #   inherit : predefined.*
-  #   criterion :
-  #     debug : 1
-  #   filePath :
-  #     submodule::*/exported::*=1/path::exportedDir*=1 : path::out.*=1
-
 step :
 
   reflect.proto :
@@ -41,14 +34,6 @@ step :
       debug : [ 0,1 ]
       raw : [ 0,1 ]
 
-  # reflect.submodules :
-  #   inherit : predefined.reflect
-  #   reflector :
-  #     reflector::reflect.submodules*=1
-  #   criterion :
-  #     debug : 1
-  #     raw : [ 0,1 ]
-
 build :
 
   debug.raw :
@@ -58,7 +43,6 @@ build :
       raw : 1
     steps :
       - step::reflect.proto.*=1
-      # - step::reflect.submodules*=1
 
   debug.compiled :
     criterion :
@@ -85,4 +69,3 @@ build :
     steps :
       - build::debug.raw
       - build::release.compiled
-

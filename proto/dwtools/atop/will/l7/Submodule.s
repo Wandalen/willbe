@@ -108,16 +108,13 @@ function _load()
     associatedSubmodule : submodule,
   }).form();
 
-  // debugger;
   submodule.loadedModule.willFilesFind({ isInFile : 0 });
   submodule.loadedModule.willFilesOpen();
   submodule.loadedModule.submodulesSkip();
   submodule.loadedModule.resourcesForm();
-  // debugger;
 
   submodule.loadedModule.willFilesFindReady.finally( ( err, arg ) =>
   {
-    // debugger;
     if( err )
     throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.loadedModule.dirPath ), '\n', err );
     return arg;
@@ -125,12 +122,10 @@ function _load()
 
   submodule.loadedModule.ready.finally( ( err, arg ) =>
   {
-    // debugger;
     if( err )
     {
-      debugger;
       if( will.verbosity >= 3 )
-      logger.error( ' ! Failed to read ' + submodule.nickName + ', try to download it with .submodules.download' );
+      logger.error( ' ! Failed to read ' + submodule.nickName + ', try to download it with .submodules.download or even clean it before downloading with .clean' );
       if( will.verbosity >= 5 || !submodule.loadedModule || submodule.loadedModule.isOpened() )
       {
         if( will.verbosity < 5 )
@@ -142,6 +137,7 @@ function _load()
       {
         _.errAttend( err );
       }
+      // throw err; // xxx
     }
     return arg || null;
   });

@@ -68,7 +68,7 @@ build :
       raw : 1
     steps :
       # - graph.begin
-      # - submodules.download
+      - submodules.download
       - delete.out.debug
       - reflect.proto.*=1
       - reflect.submodules*=1

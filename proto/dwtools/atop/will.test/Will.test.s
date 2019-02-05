@@ -864,7 +864,7 @@ withSubmodulesList.timeOut = 130000;
 
 //
 
-function withSubmodulesSubmodules( test )
+function withSubmodulesDownload( test )
 {
   let self = this;
 
@@ -897,8 +897,8 @@ function withSubmodulesSubmodules( test )
     return shell({ args : [ '.submodules.download' ] })
     .thenKeep( ( got ) =>
     {
-      test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, '0/2 submodule(s) of module::withSubmodules were downloaded in' ) );
+      test.identical( got.exitCode, 0 ); debugger;
+      test.is( _.strHas( got.output, '2/2 submodule(s) of module::withSubmodules were downloaded in' ) );
 
       var files = _.fileProvider.filesFind({ filePath : modulesPath, recursive : 2, outputFormat : 'relative' })
       test.is( files.length );
@@ -955,8 +955,8 @@ function withSubmodulesSubmodules( test )
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, `${files.length}` ) );
-      test.is( !_.fileProvider.fileExists( _.path.join( dirPath, '.module' ) ) )
-      test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) )
+      test.is( !_.fileProvider.fileExists( _.path.join( dirPath, '.module' ) ) ); /* xxx : phantom problem ? */
+      test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) );
       return null;
     })
   })
@@ -966,7 +966,7 @@ function withSubmodulesSubmodules( test )
   return ready;
 }
 
-withSubmodulesSubmodules.timeOut = 130000;
+withSubmodulesDownload.timeOut = 130000;
 
 //
 
@@ -1071,8 +1071,8 @@ function withSubmodulesClean( test )
     test.case = '.clean';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( dirPath, '.module' ) ) )
-    test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( dirPath, '.module' ) ) ); /* filesDelete issue? */
+    test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) );
     return null;
   })
 
@@ -1274,14 +1274,12 @@ withSubmodulesExport.timeOut = 130000;
 function submodulesDownload( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'download' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download' );
   let dirPath = _.path.join( self.tempDir, test.name );
 
-  // debugger;
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath }  })
   _.fileProvider.filesDelete( _.path.join( dirPath, '.module' ) );
   _.fileProvider.filesDelete( _.path.join( dirPath, 'out.debug' ) );
-  // debugger;
 
   let willExecPath = _.path.nativize( _.path.join( __dirname, '../will/Exec2' ) );
 
@@ -1370,6 +1368,336 @@ submodulesDownload.timeOut = 130000;
 
 //
 
+function submodulesBrokenClean1( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-broken-1' );
+  let dirPath = _.path.join( self.tempDir, test.name );
+  let modulesPath = _.path.join( dirPath, '.module' );
+  let exportPath = _.path.join( dirPath, 'out' );
+  let buildOutPath = _.path.join( dirPath, 'out.debug' );
+
+  let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
+  willExecPath = _.path.nativize( willExecPath );
+
+  test.description = 'should handle currputed will-file properly';
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    path : 'node ' + willExecPath,
+    currentPath : dirPath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  /* - */
+
+  _.fileProvider.filesDelete( dirPath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath } });
+
+  ready
+
+  /* - */
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.clean ';
+
+    let files = _.fileProvider.filesFind
+    ({
+      filePath : modulesPath,
+      recursive : 2,
+      includingTerminals : 1,
+      includingDirs : 1,
+      includingTransient : 1
+    })
+
+    test.identical( files.length, 4 );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.clean.what' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.clean.what';
+
+    let files = _.fileProvider.filesFind
+    ({
+      filePath : modulesPath,
+      recursive : 2,
+      includingTerminals : 1,
+      includingDirs : 1,
+      includingTransient : 1,
+      allowingMissed : 0,
+    });
+
+    test.identical( files.length, 4 );
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, String( files.length ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( dirPath, '.module' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.clean' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.clean';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Clean deleted' ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( dirPath, '.module' ) ) ); /* filesDelete issue? */
+    test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) );
+    return null;
+  })
+
+  /* */
+
+  shell({ args : [ '.export' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.export';
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Exporting proto.export' ) );
+
+    var files = _.fileProvider.filesFind
+    ({
+      filePath : buildOutPath,
+      recursive : 2,
+      includingDirs : 1,
+      includingTerminals : 1,
+      includingTransient : 1,
+    });
+    test.is( files.length > 10 );
+
+    var files = _.fileProvider.filesFind({ filePath : exportPath, recursive : 2, outputFormat : 'relative' })
+    test.identical( files, [ './withSubmodules.out.will.yml' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+
+    _.fileProvider.filesDelete( dirPath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath } });
+
+    return null;
+  });
+
+  /* */
+
+  shell({ args : [ '.export' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.export';
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Exporting proto.export' ) );
+
+    var files = _.fileProvider.filesFind
+    ({
+      filePath : buildOutPath,
+      recursive : 2,
+      includingDirs : 1,
+      includingTerminals : 1,
+      includingTransient : 1,
+    });
+    test.is( files.length > 10 );
+
+    var files = _.fileProvider.filesFind({ filePath : exportPath, recursive : 2, outputFormat : 'relative' })
+    test.identical( files, [ './withSubmodules.out.will.yml' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+submodulesBrokenClean1.timeOut = 130000;
+
+//
+
+function submodulesBrokenClean2( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-broken-2' );
+  let dirPath = _.path.join( self.tempDir, test.name );
+  let modulesPath = _.path.join( dirPath, '.module' );
+  let exportPath = _.path.join( dirPath, 'out' );
+  let buildOutPath = _.path.join( dirPath, 'out.debug' );
+
+  test.description = 'should handle currputed will-file properly';
+
+  let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
+  willExecPath = _.path.nativize( willExecPath );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    path : 'node ' + willExecPath,
+    currentPath : dirPath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  /* - */
+
+  _.fileProvider.filesDelete( dirPath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath } });
+
+  ready
+
+  /* - */
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.clean ';
+
+    let files = _.fileProvider.filesFind
+    ({
+      filePath : modulesPath,
+      recursive : 2,
+      includingTerminals : 1,
+      includingDirs : 1,
+      includingTransient : 1
+    })
+
+    test.identical( files.length, 4 );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.clean.what' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.clean.what';
+
+    let files = _.fileProvider.filesFind
+    ({
+      filePath : modulesPath,
+      recursive : 2,
+      includingTerminals : 1,
+      includingDirs : 1,
+      includingTransient : 1,
+      allowingMissed : 0,
+    });
+
+    test.identical( files.length, 4 );
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, String( files.length ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( dirPath, '.module' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.clean' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.clean';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Clean deleted' ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( dirPath, '.module' ) ) ); /* filesDelete issue? */
+    test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) );
+    return null;
+  })
+
+  /* */
+
+  shell({ args : [ '.export' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.export';
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Exporting proto.export' ) );
+
+    var files = _.fileProvider.filesFind
+    ({
+      filePath : buildOutPath,
+      recursive : 2,
+      includingDirs : 1,
+      includingTerminals : 1,
+      includingTransient : 1,
+    });
+    test.is( files.length > 10 );
+
+    var files = _.fileProvider.filesFind({ filePath : exportPath, recursive : 2, outputFormat : 'relative' })
+    test.identical( files, [ './withSubmodules.out.will.yml' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+
+    _.fileProvider.filesDelete( dirPath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath } });
+
+    return null;
+  });
+
+  /* */
+
+  shell({ args : [ '.export' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.export';
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Exporting proto.export' ) );
+
+    var files = _.fileProvider.filesFind
+    ({
+      filePath : buildOutPath,
+      recursive : 2,
+      includingDirs : 1,
+      includingTerminals : 1,
+      includingTransient : 1,
+    });
+    test.is( files.length > 10 );
+
+    var files = _.fileProvider.filesFind({ filePath : exportPath, recursive : 2, outputFormat : 'relative' })
+    test.identical( files, [ './withSubmodules.out.will.yml' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+submodulesBrokenClean2.timeOut = 130000;
+
+//
+
 var Self =
 {
 
@@ -1397,12 +1725,15 @@ var Self =
 
     withSubmodulesSimplest,
     withSubmodulesList,
-    withSubmodulesSubmodules,
+    withSubmodulesDownload,
     withSubmodulesClean,
     withSubmodulesBuild,
     withSubmodulesExport,
 
     submodulesDownload,
+
+    submodulesBrokenClean1,
+    submodulesBrokenClean2,
 
   }
 

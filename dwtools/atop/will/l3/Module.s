@@ -1579,7 +1579,8 @@ function _submodulesDownload( o )
       {
 
         _.assert( _.boolIs( arg ) ); debugger;
-        if( o.upgrading && arg )
+        // if( o.upgrading && arg )
+        if( arg )
         downloadedNumber += 1;
 
         return arg;
@@ -1952,7 +1953,7 @@ function _remoteDownload( o )
   let o2 =
   {
     reflectMap : { [ module.remotePath ] : module.clonePath },
-    verbosity : 0,
+    verbosity : will.verbosity - 5,
     extra : { fetching : 0 },
   }
 
@@ -1961,6 +1962,10 @@ function _remoteDownload( o )
   .keep( function( arg )
   {
     wasUpToDate = module.isUpToDate;
+    debugger;
+    /* delete downloaded module if it has critical error */
+    if( module.willFilesOpenReady.errorsCount() )
+    fileProvider.filesDelete({ filePath : module.clonePath, throwing : 0, sync : 1 });
     return arg;
   })
   .keep( () => will.Predefined.filesReflect.call( fileProvider, o2 ) )
@@ -1972,7 +1977,6 @@ function _remoteDownload( o )
     {
       _.assert( module.formed === 3, 'not tested' );
 
-      debugger;
       if( module.resourcesFormReady.errorsCount() )
       module.stateResetError();
 
