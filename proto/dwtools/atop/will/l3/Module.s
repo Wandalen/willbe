@@ -555,6 +555,7 @@ function clean()
   let time = _.timeNow();
   let filePaths = module.cleanWhat.apply( module, arguments );
 
+  debugger;
   _.assert( _.arrayIs( filePaths[ '/' ] ) );
 
   for( let f = filePaths[ '/' ].length-1 ; f >= 0 ; f-- )
@@ -729,7 +730,7 @@ function willFilesSelect( filePaths )
 
   });
 
-  if( result.length )
+  // if( result.length )
   module.stager.stage( 'willFilesFound', 3 );
 
   return result;
@@ -1006,9 +1007,8 @@ function willFilesOpen()
 
   return module.willFilesFindReady.split().keep( ( arg ) =>
   {
-
-    if( module.supermodule )
-    debugger;
+    // if( module.supermodule )
+    // debugger;
 
     module.stager.stage( 'willFilesOpened', 2 );
     return module._willFilesOpen();
@@ -1220,7 +1220,7 @@ function resourcesFormSkip()
   return module.submodulesFormReady
   .split().finally( ( err, arg ) =>
   {
-    debugger;
+    // debugger; // xxx
     module.ready.takeSoon( err, arg );
     _.assert( !module.ready.resourcesCount() );
     if( err )
@@ -1255,8 +1255,8 @@ function resourcesForm()
   .split().keep( ( arg ) =>
   {
 
-    if( module.supermodule )
-    debugger;
+    // if( module.supermodule )
+    // debugger;
 
     let con = new _.Consequence().take( null );
 

@@ -108,12 +108,12 @@ function _load()
     associatedSubmodule : submodule,
   }).form();
 
-  debugger;
+  // debugger;
   submodule.loadedModule.willFilesFind({ isInFile : 0 });
   submodule.loadedModule.willFilesOpen();
   submodule.loadedModule.submodulesSkip();
   submodule.loadedModule.resourcesForm();
-  debugger;
+  // debugger;
 
   submodule.loadedModule.willFilesFindReady.finally( ( err, arg ) =>
   {
@@ -125,7 +125,7 @@ function _load()
 
   submodule.loadedModule.ready.finally( ( err, arg ) =>
   {
-    debugger;
+    // debugger;
     if( err )
     {
       debugger;

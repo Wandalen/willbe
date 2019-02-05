@@ -76,13 +76,12 @@ function readExported()
 
   debugger; return; xxx
 
-  debugger;
   let module2 = will.Module({ will : will, dirPath : path.dir( outFilePath ) }).form();
+  debugger;
   module2.willFilesSelect( outFilePath );
   debugger;
   let con = module2.willFilesOpen();
   // module2.resourcesForm();
-  debugger;
 
 /*
   debugger;
@@ -98,16 +97,17 @@ function readExported()
 */
 
   debugger;
-
   con.finally( ( err, arg ) =>
   {
+    debugger;
     module2.finit();
     if( err )
     throw err;
     return arg;
   });
 
-  return con;
+  debugger;
+  return con.deasync();
 }
 
 //
