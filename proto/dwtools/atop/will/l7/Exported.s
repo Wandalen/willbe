@@ -43,7 +43,7 @@ function verify()
   _.assert( !!hd );
   _.assert( !!logger );
   _.assert( !!build );
-  _.assert( module.formed === 3 );
+  _.assert( module.preformed === 3 );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
   _.assert( exported.criterion === null );
@@ -130,7 +130,7 @@ function proceedExportedReflectors( exportSelector )
   _.assert( !!hd );
   _.assert( !!logger );
   _.assert( !!build );
-  _.assert( module.formed === 3 );
+  _.assert( module.preformed === 3 );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
   _.assert( _.objectIs( exported.criterion ) );

@@ -87,7 +87,7 @@ function form()
   _.assert( !frame.formed );
   _.assert( !!will );
   _.assert( !!module );
-  _.assert( module.formed === 3 );
+  _.assert( module.preformed === 3 );
   _.assert( build instanceof will.Build );
   _.assert( _.arrayIs( build.steps ) );
   _.assert( !!resource );
@@ -95,7 +95,7 @@ function form()
   _.assert( !!logger );
   _.assert( !!will.formed );
   _.assert( down === null || down instanceof Self );
-  _.assert( module.formed >= 1 );
+  _.assert( module.preformed >= 1 );
 
   /* begin */
 

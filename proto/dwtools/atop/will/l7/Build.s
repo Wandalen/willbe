@@ -121,7 +121,7 @@ function run( frame )
   _.assert( !!module );
   _.assert( !!will );
   _.assert( !!logger );
-  _.assert( module.formed === 3 );
+  _.assert( module.preformed === 3 );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
   _.assert( resource.formed === 3 );

@@ -199,7 +199,7 @@ function form1()
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !!will.formed );
-  _.assert( module.formed >= 2 );
+  _.assert( module.preformed >= 2 );
   _.assert( !willf || !!willf.formed );
   _.assert( _.strDefined( inheritable.name ) );
 

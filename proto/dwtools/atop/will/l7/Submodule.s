@@ -137,14 +137,20 @@ function _load()
       {
         _.errAttend( err );
       }
-      // throw err; // xxx
+      // debugger;
+      throw err;
     }
     return arg || null;
   });
 
   /* */
 
-  return submodule.loadedModule.ready;
+  return submodule.loadedModule.ready.split().finally( ( err, arg ) =>
+  {
+    // debugger;
+    return null;
+  });
+
 }
 
 //
