@@ -74,21 +74,40 @@ function readExported()
 
   let outFilePath = build.outFilePathFor();
 
+  debugger; return; xxx
+
+  debugger;
+  let module2 = will.Module({ will : will, dirPath : path.dir( outFilePath ) }).form();
+  module2.willFilesSelect( outFilePath );
+  debugger;
+  let con = module2.willFilesOpen();
+  // module2.resourcesForm();
   debugger;
 
-  let read = fileProvider.fileConfigRead
+/*
+  debugger;
+  let read = hub.fileConfigRead
   ({
     filePath : outFilePath,
     verbosity : will.verbosity-2,
   });
-
   debugger;
 
   if( !read.exported || !Object.keys( read.exported ) )
   return;
+*/
 
   debugger;
 
+  con.finally( ( err, arg ) =>
+  {
+    module2.finit();
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  return con;
 }
 
 //
@@ -396,6 +415,7 @@ function proceed( frame )
 
   /* */
 
+  exported.readExported();
   exported.proceedExportedReflectors( opts.export );
   exported.proceedExportedFilesReflector();
   exported.proceedArchive( opts.tar === undefined || opts.tar );

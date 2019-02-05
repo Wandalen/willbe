@@ -71,7 +71,6 @@ function form3()
 
   /* begin */
 
-  // debugger;
   if( !module.supermodule )
   result = submodule._load();
 
@@ -109,12 +108,16 @@ function _load()
     associatedSubmodule : submodule,
   }).form();
 
+  debugger;
   submodule.loadedModule.willFilesFind({ isInFile : 0 });
   submodule.loadedModule.willFilesOpen();
+  submodule.loadedModule.submodulesSkip();
   submodule.loadedModule.resourcesForm();
+  debugger;
 
   submodule.loadedModule.willFilesFindReady.finally( ( err, arg ) =>
   {
+    // debugger;
     if( err )
     throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.loadedModule.dirPath ), '\n', err );
     return arg;
@@ -122,6 +125,7 @@ function _load()
 
   submodule.loadedModule.ready.finally( ( err, arg ) =>
   {
+    debugger;
     if( err )
     {
       debugger;

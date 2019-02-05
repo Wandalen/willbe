@@ -566,7 +566,7 @@ function compactField( it )
 
   if( it.src instanceof Self )
   {
-    debugger;
+    // debugger;
     _.assert( inheritable instanceof will.Exported, 'not tested' );
     it.dst = it.src.nickName;
     return it.dst;

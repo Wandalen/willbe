@@ -75,20 +75,21 @@ function init( o )
   module.stager = new _.Stager
   ({
     object : module,
-    stageNames : [ 'formed', 'willFilesFound', 'willFilesOpened', 'resourcesFormed' ],
-    consequenceNames : [ 'formReady', 'willFilesFindReady', 'willFilesOpenReady', 'resourcesFormReady' ],
-    finals : [ 3, 3, 3, 3 ],
-    verbosity : will.verbosity && will.verboseStaging,
+    stageNames : [ 'formed', 'willFilesFound', 'willFilesOpened', 'submodulesFormed', 'resourcesFormed' ],
+    consequenceNames : [ 'formReady', 'willFilesFindReady', 'willFilesOpenReady', 'submodulesFormReady', 'resourcesFormReady' ],
+    finals : [ 3, 3, 3, 3, 3 ],
+    verbosity : Math.min( will.verbosity, will.verboseStaging ),
   });
 
-  module.ready.finally( ( err, arg ) =>
-  {
-    if( err )
-    module.errors.push( err );
-    if( err )
-    throw err;
-    return arg;
-  });
+  // module.ready.finally( ( err, arg ) =>
+  // {
+  //   if( err )
+  //   {
+  //     module.errors.push( err );
+  //     // throw _.errLogOnce( err );
+  //   }
+  //   return arg;
+  // });
 
 }
 
@@ -669,6 +670,14 @@ function stateResetError()
     resettingReady = 1;
   }
 
+  if( module.submodulesFormReady.errorsCount() )
+  {
+    _.assert( module.submodulesFormed < 3 );
+    module.submodulesFormed = 0;
+    module.submodulesFormReady.resourcesCancel();
+    resettingReady = 1;
+  }
+
   if( module.resourcesFormReady.errorsCount() )
   {
     _.assert( module.resourcesFormed < 3 );
@@ -686,6 +695,48 @@ function stateResetError()
 
 //
 
+function willFilesSelect( filePaths )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let result = [];
+
+  filePaths = _.arrayAs( filePaths );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.strsAreAll( filePaths ) );
+
+  module.stager.stage( 'willFilesFound', 1 );
+  module.stager.stage( 'willFilesFound', 2 );
+
+  filePaths.forEach( ( filePath ) =>
+  {
+
+    let willFile = new will.WillFile
+    ({
+      role : 'single',
+      filePath : filePath,
+      module : module,
+    }).form1();
+
+    if( !willFile.exists() )
+    willFile.finit();
+    else
+    result.push( willFile );
+
+  });
+
+  if( result.length )
+  module.stager.stage( 'willFilesFound', 3 );
+
+  return result;
+}
+
+//
+
 function _willFileFindMaybe( o )
 {
   let module = this;
@@ -695,9 +746,11 @@ function _willFileFindMaybe( o )
   let logger = will.logger;
 
   _.routineOptions( _willFileFindMaybe, arguments );
+
   _.assert( _.strDefined( o.role ) );
   _.assert( !module.willFilesFindReady.resourcesCount() );
   _.assert( !module.willFilesOpenReady.resourcesCount() );
+  _.assert( !module.submodulesFormReady.resourcesCount() );
   _.assert( !module.resourcesFormReady.resourcesCount() );
 
   if( module.willFileWithRoleMap[ o.role ] )
@@ -767,6 +820,7 @@ function _willFilesFindMaybe( o )
   _.assert( module.willFileArray.length === 0, 'not tested' );
   _.assert( !module.willFilesFindReady.resourcesCount() );
   _.assert( !module.willFilesOpenReady.resourcesCount() );
+  _.assert( !module.submodulesFormReady.resourcesCount() );
   _.assert( !module.resourcesFormReady.resourcesCount() );
 
   /* */
@@ -887,6 +941,7 @@ function willFilesFind()
 
     if( !result )
     {
+      debugger;
       if( module.supermodule )
       throw _.errBriefly( 'Found no .out.will file for', module.nickName, 'at', _.strQuote( module.dirPath ) );
       else
@@ -909,14 +964,18 @@ function willFilesFind()
 
     return result;
   })
-  .finallyGive( function( err, arg )
+  // .finallyGive( function( err, arg )
+  .finallyKeep( function( err, arg )
   {
+    // if( module.supermodule ) // xxx
+    // debugger;
     if( err )
     {
-      if( will.verbosity && will.verboseStaging )
-      console.log( ' !s', module.nickName, 'willFilesFound', 'failed' );
-      module.willFilesFindReady.error( err );
-      throw err;
+      throw module.stager.stageError( 'willFilesFound', err );
+      // if( will.verbosity && will.verboseStaging )
+      // console.log( ' !s', module.nickName, 'willFilesFound', 'failed' );
+      // module.willFilesFindReady.error( err );
+      // throw err;
     }
     return arg;
   });
@@ -942,19 +1001,34 @@ function willFilesOpen()
 
   module.stager.stage( 'willFilesOpened', 1 );
 
+  // if( module.supermodule )
+  // debugger;
+
   return module.willFilesFindReady.split().keep( ( arg ) =>
   {
+
+    if( module.supermodule )
+    debugger;
+
     module.stager.stage( 'willFilesOpened', 2 );
     return module._willFilesOpen();
   })
   .finally( ( err, arg ) =>
   {
+
+    // if( module.supermodule )
+    // debugger;
+
+    if( !err )
+    module.stager.stage( 'willFilesOpened', 3 );
     if( err )
     {
-      if( will.verbosity && will.verboseStaging )
-      console.log( ' !s', module.nickName, 'willFilesOpened', 'failed' );
-      module.willFilesOpenReady.error( err );
-      throw err;
+      // debugger;
+      throw module.stager.stageError( 'willFilesOpened', err );
+      // if( will.verbosity && will.verboseStaging )
+      // console.log( ' !s', module.nickName, 'willFilesOpened', 'failed' );
+      // module.willFilesOpenReady.error( err );
+      // throw err;
     }
     return arg;
   });
@@ -998,13 +1072,13 @@ function _willFilesOpen()
 
   /* */
 
-  con
-  .keep( ( arg ) => module._resourcesSubmodulesForm() )
-  .keep( ( arg ) =>
-  {
-    module.stager.stage( 'willFilesOpened', 3 );
-    return arg;
-  })
+  // con
+  // .keep( ( arg ) => module._resourcesSubmodulesForm() )
+  // .keep( ( arg ) =>
+  // {
+  //   module.stager.stage( 'willFilesOpened', 3 );
+  //   return arg;
+  // })
 
   con.finally( ( err, arg ) =>
   {
@@ -1143,20 +1217,23 @@ function resourcesFormSkip()
   if( module.resourcesFormed > 0 )
   return module.resourcesFormReady;
 
-  return module.willFilesOpenReady
+  return module.submodulesFormReady
   .split().finally( ( err, arg ) =>
   {
+    debugger;
     module.ready.takeSoon( err, arg );
     _.assert( !module.ready.resourcesCount() );
     if( err )
     {
-      if( will.verbosity && will.verboseStaging )
-      console.log( ' !s', module.nickName, 'resourcesFormSkip', 'failed' );
-      module.resourcesFormReady.error( err );
-      throw err;
+      throw module.stager.stageError( 'resourcesFormed', err );
+      // if( will.verbosity && will.verboseStaging )
+      // console.log( ' !s', module.nickName, 'resourcesFormSkip', 'failed' );
+      // module.resourcesFormReady.error( err );
+      // throw err;
     }
     return arg;
   });
+
 }
 
 //
@@ -1173,9 +1250,14 @@ function resourcesForm()
 
   module.stager.stage( 'resourcesFormed', 1 );
 
-  return module.willFilesOpenReady
+  // return module.willFilesOpenReady
+  return module.submodulesFormReady
   .split().keep( ( arg ) =>
   {
+
+    if( module.supermodule )
+    debugger;
+
     let con = new _.Consequence().take( null );
 
     module.stager.stage( 'resourcesFormed', 2 );
@@ -1205,15 +1287,21 @@ function resourcesForm()
   })
   .finally( ( err, arg ) =>
   {
+
+    // if( module.supermodule )
+    // debugger;
+
     module.ready.takeSoon( err, arg );
     _.assert( !module.ready.resourcesCount() );
     if( err )
     {
-      if( will.verbosity && will.verboseStaging )
-      console.log( ' !s', module.nickName, 'resourcesFormed', 'failed' );
-      module.resourcesFormReady.error( err );
-      throw err;
+      throw module.stager.stageError( 'resourcesFormed', err );
+      // if( will.verbosity && will.verboseStaging )
+      // console.log( ' !s', module.nickName, 'resourcesFormed', 'failed' );
+      // module.resourcesFormReady.error( err );
+      // throw err;
     }
+
     return arg;
   });
 
@@ -1245,8 +1333,10 @@ function _resourcesSubmodulesForm()
 
   /* */
 
+  // debugger;
   con.finally( ( err, arg ) =>
   {
+    // debugger;
     if( err )
     throw err;
     return arg;
@@ -1488,7 +1578,7 @@ function _submodulesDownload( o )
       return r.keep( ( arg ) =>
       {
 
-        _.assert( _.boolIs( arg ) );
+        _.assert( _.boolIs( arg ) ); debugger;
         if( o.upgrading && arg )
         downloadedNumber += 1;
 
@@ -1504,6 +1594,7 @@ function _submodulesDownload( o )
     if( err )
     throw _.err( 'Failed to', ( o.upgrading ? 'upgrade' : 'download' ), 'submodules of', module.nickName, '\n', err );
     logger.rbegin({ verbosity : -2 });
+    debugger;
     logger.log( ' + ' + downloadedNumber + /*'/' + remoteNumber +*/ '/' + totalNumber + ' submodule(s) of ' + module.nickName + ' were ' + ( o.upgrading ? 'upgraded' : 'downloaded' ) + ' in ' + _.timeSpent( time ) );
     logger.rend({ verbosity : -2 });
     return arg;
@@ -1563,6 +1654,92 @@ function submodulesClean()
   });
 
   return result;
+}
+
+//
+
+function submodulesSkip()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 0 );
+
+  if( module.submodulesFormed > 0 )
+  return module.submodulesFormReady;
+
+  module.stager.stage( 'submodulesFormed', 1 );
+
+  return module.willFilesOpenReady.split().finally( ( err, arg ) =>
+  {
+    // if( module.supermodule )
+    // debugger;
+
+    if( !err )
+    {
+      module.stager.stage( 'submodulesFormed', 2 );
+      module.stager.stage( 'submodulesFormed', 3 );
+    }
+
+    if( err )
+    {
+      // debugger;
+      throw module.stager.stageError( 'submodulesFormed', err );
+      // if( will.verbosity && will.verboseStaging )
+      // console.log( ' !s', module.nickName, 'submodulesFormed', 'failed' );
+      // module.submodulesFormReady.error( err );
+      // throw err;
+    }
+
+    // if( err )
+    // throw err;
+
+    return arg;
+  });
+
+}
+
+//
+
+function submodulesForm()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 0 );
+
+  if( module.submodulesFormed > 0 )
+  return module.submodulesFormReady;
+
+  module.stager.stage( 'submodulesFormed', 1 );
+
+  return module.willFilesOpenReady.split().keep( ( arg ) =>
+  {
+    module.stager.stage( 'submodulesFormed', 2 );
+    return module._resourcesSubmodulesForm();
+  })
+  .finally( ( err, arg ) =>
+  {
+    if( module.supermodule )
+    debugger;
+    if( !err )
+    module.stager.stage( 'submodulesFormed', 3 );
+    if( err )
+    {
+      throw module.stager.stageError( 'submodulesFormed', err );
+      // if( will.verbosity && will.verboseStaging )
+      // console.log( ' !s', module.nickName, 'submodulesFormed', 'failed' );
+      // module.submodulesFormReady.error( err );
+      // throw err;
+    }
+    return arg;
+  });
 }
 
 // --
@@ -1795,13 +1972,14 @@ function _remoteDownload( o )
     {
       _.assert( module.formed === 3, 'not tested' );
 
+      debugger;
       if( module.resourcesFormReady.errorsCount() )
       module.stateResetError();
 
       module.willFilesFind();
       module.willFilesOpen();
+      module.submodulesSkip();
       module.resourcesFormSkip();
-      // module.resourcesForm();
 
       return module.ready
       .finallyGive( function( err, arg )
@@ -2678,11 +2856,13 @@ let Restricts =
   formed : 0,
   willFilesFound : 0,
   willFilesOpened : 0,
+  submodulesFormed : 0,
   resourcesFormed : 0,
 
   formReady : _.define.own( _.Consequence({ resourceLimit : 1, tag : 'formReady' }) ),
   willFilesFindReady : _.define.own( _.Consequence({ resourceLimit : 1, tag : 'willFilesFindReady' }) ),
   willFilesOpenReady : _.define.own( _.Consequence({ resourceLimit : 1, tag : 'willFilesOpenReady' }) ),
+  submodulesFormReady : _.define.own( _.Consequence({ resourceLimit : 1, tag : 'submodulesFormReady' }) ),
   resourcesFormReady : _.define.own( _.Consequence({ resourceLimit : 1, tag : 'resourcesFormReady' }) ),
 
   ready : _.define.own( _.Consequence({ resourceLimit : 1, tag : 'ready' }) ),
@@ -2744,6 +2924,7 @@ let Proto =
 
   stateResetError,
 
+  willFilesSelect,
   _willFileFindMaybe,
   _willFilesFindMaybe,
   willFilesFind,
@@ -2779,6 +2960,9 @@ let Proto =
   submodulesDownload,
   submodulesUpgrade,
   submodulesClean,
+
+  submodulesSkip,
+  submodulesForm,
 
   // remote
 

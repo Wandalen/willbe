@@ -415,11 +415,7 @@ let Proto =
   form1,
   open,
 
-  // form3,
-
   _resourcesMake,
-  // _resourcesForm3,
-
   _inPathsForm,
   exists,
 

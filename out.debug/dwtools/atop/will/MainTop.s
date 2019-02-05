@@ -69,6 +69,7 @@ function _moduleOnReady( o )
     module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
     module.willFilesFind();
     module.willFilesOpen();
+    module.submodulesForm();
     if( o.formingResources )
     module.resourcesForm();
     else
@@ -671,6 +672,7 @@ function commandWith( e )
   let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
   module.willFilesFind();
   module.willFilesOpen();
+  module.submodulesForm();
   module.resourcesForm();
 
   return module.ready.split().keep( function( arg )
@@ -738,8 +740,6 @@ function commandEach( e )
   {
     let file = files[ f ];
 
-    // debugger;
-
     let dirPath = will.Module.DirPathFromWillFilePath( file.absolute );
 
     if( dirPaths[ dirPath ] )
@@ -758,6 +758,7 @@ function commandEach( e )
     let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
     module.willFilesFind();
     module.willFilesOpen();
+    module.submodulesForm();
     module.resourcesForm();
 
     return module.ready.split().keep( function( arg )
@@ -765,7 +766,6 @@ function commandEach( e )
 
       _.assert( module.willFileArray.length > 0 );
 
-      // debugger;
       let r = ca.proceedCommand
       ({
         command : isolated.secondCommand,
