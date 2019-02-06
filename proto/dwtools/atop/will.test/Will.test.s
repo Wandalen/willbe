@@ -620,7 +620,7 @@ function singleModuleExport( test )
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'reflected 2 files' ) );
-      test.is( _.strHas( got.output, '+ Write out file to' ) );
+      test.is( _.strHas( got.output, '+ Write out file' ) );
       test.is( _.strHas( got.output, 'Exported proto.export with 2 files in' ) );
 
       var files = _.fileProvider.filesFind({ filePath : buildOutPath, recursive : 2, outputFormat : 'relative' })
@@ -1814,6 +1814,416 @@ submodulesBrokenClean2.timeOut = 130000;
 
 //
 
+function multipleExports( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
+  let dirPath = _.path.join( self.tempDir, test.name );
+  let modulesPath = _.path.join( dirPath, '.module' );
+  let exportPath = _.path.join( dirPath, 'out' );
+  let outWillPath = _.path.join( exportPath, 'multiple-exports.out.will.yml' );
+  // let buildOutPath = _.path.join( dirPath, 'out.debug' );
+
+  let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
+  willExecPath = _.path.nativize( willExecPath );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    path : 'node ' + willExecPath,
+    currentPath : dirPath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  let find = _.fileProvider.filesFinder
+  ({
+    recursive : 2,
+    includingTerminals : 1,
+    includingDirs : 1,
+    includingTransient : 1,
+    allowingMissed : 0,
+    outputFormat : 'relative',
+  });
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.export debug:1';
+
+    _.fileProvider.filesDelete( dirPath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath } });
+    _.fileProvider.filesDelete( exportPath );
+
+    return null;
+  })
+
+  shell({ args : [ '.export debug:1' ] })
+
+  .thenKeep( ( got ) =>
+  {
+
+    var files = find( exportPath );
+    test.identical( files, [ '.', './multiple-exports.debug.out.tgs', './multiple-exports.out.will.yml' ] );
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, String( files.length ) ) );
+    test.is( _.strHas( got.output, 'Read 2 will-files in' ) );
+    test.is( _.strHas( got.output, 'Exported export.debug in' ) );
+    test.is( _.strHas( got.output, 'Write out archive' ) );
+    test.is( _.strHas( got.output, 'Write out will-file' ) );
+    test.is( _.strHas( got.output, 'multiple-exports.debug.out.tgs' ) );
+    test.is( _.strHas( got.output, 'out/multiple-exports.out.will.yml' ) );
+
+    var outfile = _.fileProvider.fileConfigRead( outWillPath );
+    var exported =
+    {
+      'export.debug' :
+      {
+        version : '0.0.1',
+        criterion :
+        {
+          default : 1,
+          debug : 1,
+          raw : 1,
+          export : 1
+        },
+        exportedReflector : 'reflector::exported.export.debug',
+        exportedFilesReflector : 'reflector::exportedFiles.export.debug',
+        exportedDirPath : 'path::exportedDir.export.debug',
+        exportedFilesPath : 'path::exportedFiles.export.debug',
+        archiveFilePath : 'path::archiveFile.export.debug'
+      }
+    }
+
+    test.identical( outfile.exported, exported );
+
+    var exportedReflector =
+    {
+      srcFilter : { filePath : { './out.debug' : true }, prefixPath : '.' },
+      criterion :
+      {
+        default : 1,
+        debug : 1,
+        raw : 1,
+        export : 1
+      }
+    }
+    test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
+
+    var exportedReflectorFiles =
+    {
+      recursive : 0,
+      srcFilter :
+      {
+        filePath : { '.' : true, './File.debug.js' : true },
+        basePath : '.',
+        prefixPath : 'out.debug'
+      },
+      criterion :
+      {
+        default : 1,
+        debug : 1,
+        raw : 1,
+        export : 1
+      }
+    }
+
+    test.identical( outfile.reflector[ 'exportedFiles.export.debug' ], exportedReflectorFiles );
+
+    let outfilePath =
+    {
+      proto : { path : './proto' },
+      in : { path : '.' },
+      out : { path : 'out' },
+      'out.debug' :
+      {
+        path : './out.debug',
+        criterion : { debug : 1 }
+      },
+      'out.release' :
+      {
+        path : './out.release',
+        criterion : { debug : 0 }
+      },
+      'exportedDir.export.debug' :
+      {
+        path : './out.debug',
+        criterion :
+        {
+          default : 1,
+          debug : 1,
+          raw : 1,
+          export : 1
+        }
+      },
+      'exportedFiles.export.debug' :
+      {
+        path : [ '.', './File.debug.js' ],
+        criterion :
+        {
+          default : 1,
+          debug : 1,
+          raw : 1,
+          export : 1
+        }
+      },
+      'archiveFile.export.debug' :
+      {
+        path : './out/multiple-exports.debug.out.tgs',
+        criterion :
+        {
+          default : 1,
+          debug : 1,
+          raw : 1,
+          export : 1
+        }
+      }
+    }
+
+    test.identical( outfile.path, outfilePath );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.export debug:1';
+
+    _.fileProvider.filesDelete( dirPath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath } });
+    _.fileProvider.filesDelete( exportPath );
+
+    return null;
+  })
+
+  shell({ args : [ '.export debug:1' ] })
+  shell({ args : [ '.export debug:0' ] })
+  shell({ args : [ '.export debug:0' ] })
+
+  .thenKeep( ( got ) =>
+  {
+
+    var files = find( exportPath );
+    test.identical( files, [ '.', './multiple-exports.debug.out.tgs', './multiple-exports.out.tgs', './multiple-exports.out.will.yml' ] );
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, String( files.length ) ) );
+    test.is( _.strHas( got.output, 'Read 2 will-files in' ) );
+    test.is( _.strHas( got.output, 'Exported export. in' ) );
+    test.is( _.strHas( got.output, 'Write out archive' ) );
+    test.is( _.strHas( got.output, 'Write out will-file' ) );
+    test.is( _.strHas( got.output, 'multiple-exports.out.tgs' ) );
+    test.is( _.strHas( got.output, 'out/multiple-exports.out.will.yml' ) );
+
+    var outfile = _.fileProvider.fileConfigRead( outWillPath );
+    var exported =
+    {
+      'export.debug' :
+      {
+        version : '0.0.1',
+        criterion :
+        {
+          default : 1,
+          debug : 1,
+          raw : 1,
+          export : 1
+        },
+        exportedReflector : 'reflector::exported.export.debug',
+        exportedFilesReflector : 'reflector::exportedFiles.export.debug',
+        exportedDirPath : 'path::exportedDir.export.debug',
+        exportedFilesPath : 'path::exportedFiles.export.debug',
+        archiveFilePath : 'path::archiveFile.export.debug'
+      },
+      'export.' :
+      {
+        version : '0.0.1',
+        criterion :
+        {
+          default : 1,
+          debug : 0,
+          raw : 1,
+          export : 1
+        },
+        exportedReflector : 'reflector::exported.export.',
+        exportedFilesReflector : 'reflector::exportedFiles.export.',
+        exportedDirPath : 'path::exportedDir.export.',
+        exportedFilesPath : 'path::exportedFiles.export.',
+        archiveFilePath : 'path::archiveFile.export.'
+      },
+    }
+
+    test.identical( outfile.exported, exported );
+
+    var exportedReflector =
+    {
+      srcFilter : { filePath : { './out.debug' : true }, prefixPath : '.' },
+      criterion :
+      {
+        default : 1,
+        debug : 1,
+        raw : 1,
+        export : 1
+      }
+    }
+    test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
+
+    var exportedReflector =
+    {
+      srcFilter : { filePath : { './out.release' : true }, prefixPath : '.' },
+      criterion :
+      {
+        default : 1,
+        debug : 0,
+        raw : 1,
+        export : 1
+      }
+    }
+    test.identical( outfile.reflector[ 'exported.export.' ], exportedReflector );
+
+    var exportedReflectorFiles =
+    {
+      recursive : 0,
+      srcFilter :
+      {
+        filePath : { '.' : true, './File.debug.js' : true },
+        basePath : '.',
+        prefixPath : 'out.debug'
+      },
+      criterion :
+      {
+        default : 1,
+        debug : 1,
+        raw : 1,
+        export : 1
+      }
+    }
+
+    test.identical( outfile.reflector[ 'exportedFiles.export.debug' ], exportedReflectorFiles );
+
+    var exportedReflectorFiles =
+    {
+      recursive : 0,
+      srcFilter :
+      {
+        filePath : { '.' : true, './File.release.js' : true },
+        basePath : '.',
+        prefixPath : 'out.release'
+      },
+      criterion :
+      {
+        default : 1,
+        debug : 0,
+        raw : 1,
+        export : 1
+      }
+    }
+
+    test.identical( outfile.reflector[ 'exportedFiles.export.' ], exportedReflectorFiles );
+
+    let outfilePath =
+    {
+      proto : { path : './proto' },
+      in : { path : '.' },
+      out : { path : 'out' },
+      'out.debug' :
+      {
+        path : './out.debug',
+        criterion : { debug : 1 }
+      },
+      'out.release' :
+      {
+        path : './out.release',
+        criterion : { debug : 0 }
+      },
+      'exportedDir.export.debug' :
+      {
+        path : './out.debug',
+        criterion :
+        {
+          default : 1,
+          debug : 1,
+          raw : 1,
+          export : 1
+        }
+      },
+      'exportedFiles.export.debug' :
+      {
+        path : [ '.', './File.debug.js' ],
+        criterion :
+        {
+          default : 1,
+          debug : 1,
+          raw : 1,
+          export : 1
+        }
+      },
+      'archiveFile.export.debug' :
+      {
+        path : './out/multiple-exports.debug.out.tgs',
+        criterion :
+        {
+          default : 1,
+          debug : 1,
+          raw : 1,
+          export : 1
+        }
+      },
+      'exportedDir.export.' :
+      {
+        path : './out.release',
+        criterion :
+        {
+          default : 1,
+          debug : 0,
+          raw : 1,
+          export : 1
+        }
+      },
+      'exportedFiles.export.' :
+      {
+        path : [ '.', './File.release.js' ],
+        criterion :
+        {
+          default : 1,
+          debug : 0,
+          raw : 1,
+          export : 1
+        }
+      },
+      'archiveFile.export.' :
+      {
+        path : './out/multiple-exports.out.tgs',
+        criterion :
+        {
+          default : 1,
+          debug : 0,
+          raw : 1,
+          export : 1
+        }
+      }
+    }
+
+    test.identical( outfile.path, outfilePath );
+
+    debugger;
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+multipleExports.timeOut = 130000;
+
+//
+
 var Self =
 {
 
@@ -1850,6 +2260,8 @@ var Self =
 
     submodulesBrokenClean1,
     submodulesBrokenClean2,
+
+    multipleExports,
 
   }
 

@@ -293,7 +293,7 @@ let Restricts =
 let Statics =
 {
   MapName : 'stepMap',
-  PoolName : 'step',
+  KindName : 'step',
 }
 
 let Forbids =

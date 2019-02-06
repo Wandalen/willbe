@@ -95,105 +95,106 @@ function finit()
 
 function init( o )
 {
-  let /**/resource = this;
+  let resource = this;
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  _.instanceInit( /**/resource );
-  Object.preventExtensions( /**/resource );
+  _.instanceInit( resource );
+  Object.preventExtensions( resource );
 
   if( o )
-  /**/resource.copy( o );
+  resource.copy( o );
 
+  return resource;
 }
 
 //
 
 function copy( o )
 {
-  let /**/resource = this;
+  let resource = this;
   _.assert( _.objectIs( o ) );
   _.assert( arguments.length === 1 );
 
   if( o.name !== undefined )
-  /**/resource.name = o.name;
+  resource.name = o.name;
 
-  return _.Copyable.prototype.copy.call( /**/resource, o );
+  return _.Copyable.prototype.copy.call( resource, o );
 }
 
 //
 
 function unform()
 {
-  let /**/resource = this;
-  let module = /**/resource.module;
-  let willf = /**/resource.willf;
+  let resource = this;
+  let module = resource.module;
+  let willf = resource.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0 );
-  _.assert( /**/resource.formed );
-  _.assert( module[ /**/resource.MapName ][ /**/resource.name ] === /**/resource );
+  _.assert( resource.formed );
+  _.assert( module[ resource.MapName ][ resource.name ] === resource );
   if( willf )
-  _.assert( willf[ /**/resource.MapName ][ /**/resource.name ] === /**/resource );
+  _.assert( willf[ resource.MapName ][ resource.name ] === resource );
 
   /* begin */
 
-  delete module[ /**/resource.MapName ][ /**/resource.name ];
+  delete module[ resource.MapName ][ resource.name ];
   if( willf )
-  delete willf[ /**/resource.MapName ][ /**/resource.name ];
+  delete willf[ resource.MapName ][ resource.name ];
 
   /* end */
 
-  /**/resource.formed = 0;
-  return /**/resource;
+  resource.formed = 0;
+  return resource;
 }
 
 //
 
 function form()
 {
-  let /**/resource = this;
-  let module = /**/resource.module;
-  let willf = /**/resource.willf;
+  let resource = this;
+  let module = resource.module;
+  let willf = resource.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
-  // if( /**/resource.absoluteName === 'module::withSubmodules / module::Tools / reflector::exportedFiles.0' )
+  // if( resource.absoluteName === 'module::withSubmodules / module::Tools / reflector::exportedFiles.0' )
   // debugger;
 
-  if( /**/resource.formed === 0 )
-  /**/resource.form1();
-  if( /**/resource.formed === 1 )
-  /**/resource.form2();
-  if( /**/resource.formed === 2 )
-  /**/resource.form3();
+  if( resource.formed === 0 )
+  resource.form1();
+  if( resource.formed === 1 )
+  resource.form2();
+  if( resource.formed === 2 )
+  resource.form3();
 
-  _.assert( /**/resource.formed === 3 );
+  _.assert( resource.formed === 3 );
 
-  return /**/resource;
+  return resource;
 }
 
 //
 
 function form1()
 {
-  let /**/resource = this;
-  let module = /**/resource.module;
-  let willf = /**/resource.willf;
+  let resource = this;
+  let module = resource.module;
+  let willf = resource.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.sure( !module[ /**/resource.MapName ][ /**/resource.name ], () => 'Module ' + module.dirPath + ' already has ' + /**/resource.nickName );
-  _.assert( !willf || !willf[ /**/resource.MapName ][ /**/resource.name ] );
+  _.sure( !module[ resource.MapName ][ resource.name ], () => 'Module ' + module.dirPath + ' already has ' + resource.nickName );
+  _.assert( !willf || !willf[ resource.MapName ][ resource.name ] );
   _.assert( arguments.length === 0 );
-  _.assert( !/**/resource.formed );
+  _.assert( !resource.formed );
   _.assert( !!will );
   _.assert( !!module );
   _.assert( !!fileProvider );
@@ -201,78 +202,78 @@ function form1()
   _.assert( !!will.formed );
   _.assert( module.preformed >= 2 );
   _.assert( !willf || !!willf.formed );
-  _.assert( _.strDefined( /**/resource.name ) );
+  _.assert( _.strDefined( resource.name ) );
 
   /* begin */
 
-  module[ /**/resource.MapName ][ /**/resource.name ] = /**/resource;
+  module[ resource.MapName ][ resource.name ] = resource;
   if( willf )
-  willf[ /**/resource.MapName ][ /**/resource.name ] = /**/resource;
+  willf[ resource.MapName ][ resource.name ] = resource;
 
   /* end */
 
-  /**/resource.formed = 1;
-  return /**/resource;
+  resource.formed = 1;
+  return resource;
 }
 
 //
 
 function form2()
 {
-  let /**/resource = this;
-  let module = /**/resource.module;
+  let resource = this;
+  let module = resource.module;
 
-  if( /**/resource.formed >= 2 )
-  return /**/resource;
+  if( resource.formed >= 2 )
+  return resource;
 
   _.assert( arguments.length === 0 );
-  _.assert( /**/resource.formed === 1 );
+  _.assert( resource.formed === 1 );
 
   /* begin */
 
-  /**/resource._inheritForm({ visited : [] })
+  resource._inheritForm({ visited : [] })
 
   /* end */
 
-  /**/resource.criterionValidate();
+  resource.criterionValidate();
 
-  /**/resource.formed = 2;
-  return /**/resource;
+  resource.formed = 2;
+  return resource;
 }
 
 //
 
 function _inheritForm( o )
 {
-  let /**/resource = this;
-  let module = /**/resource.module;
+  let resource = this;
+  let module = resource.module;
 
   _.assert( arguments.length === 1 );
-  _.assert( /**/resource.formed === 1 );
-  _.assert( _.arrayIs( /**/resource.inherit ) );
+  _.assert( resource.formed === 1 );
+  _.assert( _.arrayIs( resource.inherit ) );
   _.assert( o.ancestors === undefined );
 
-  _.arrayAppendOnceStrictly( o.visited, /**/resource );
+  _.arrayAppendOnceStrictly( o.visited, resource );
 
   /* begin */
 
-  o.ancestors = /**/resource.inherit;
-  /**/resource._inheritMultiple( o );
+  o.ancestors = resource.inherit;
+  resource._inheritMultiple( o );
 
   /* end */
 
-  _.arrayRemoveElementOnceStrictly( o.visited, /**/resource );
+  _.arrayRemoveElementOnceStrictly( o.visited, resource );
 
-  return /**/resource;
+  return resource;
 }
 
 //
 
 function _inheritMultiple( o )
 {
-  let /**/resource = this;
-  let module = /**/resource.module;
-  let willf = /**/resource.willf;
+  let resource = this;
+  let module = resource.module;
+  let willf = resource.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -283,17 +284,17 @@ function _inheritMultiple( o )
   o.ancestors.map( ( ancestor ) =>
   {
 
-    _.assert( _.strIs( /**/resource.PoolName ) );
+    _.assert( _.strIs( resource.KindName ) );
     _.assert( _.strIs( ancestor ) );
 
-    // if( /**/resource.nickName === 'reflector::reflect.submodules' )
+    // if( resource.nickName === 'reflector::reflect.submodules' )
     // debugger;
     let ancestors = module.resolve
     ({
       query : ancestor,
-      defaultPool : /**/resource.PoolName,
+      defaultPool : resource.KindName,
       visited : o.visited,
-      current : /**/resource,
+      current : resource,
       flattening : 1,
     });
 
@@ -303,21 +304,21 @@ function _inheritMultiple( o )
     if( ancestors.length === 1 )
     ancestors = ancestors[ 0 ];
 
-    _.assert( _.arrayIs( ancestors ) || ancestors instanceof /**/resource.constructor );
+    _.assert( _.arrayIs( ancestors ) || ancestors instanceof resource.constructor );
 
-    if( ancestors instanceof /**/resource.constructor )
+    if( ancestors instanceof resource.constructor )
     {
       let o2 = _.mapExtend( null, o );
       delete o2.ancestors;
       o2.ancestor = ancestors;
-      /**/resource._inheritSingle( o2 );
+      resource._inheritSingle( o2 );
     }
     else if( ancestors.length === 1 )
     {
       let o2 = _.mapExtend( null, o );
       delete o2.ancestors;
       o2.ancestor = ancestors[ 0 ];
-      /**/resource._inheritSingle( o2 );
+      resource._inheritSingle( o2 );
     }
     else
     {
@@ -326,7 +327,7 @@ function _inheritMultiple( o )
         let o2 = _.mapExtend( null, o );
         delete o2.ancestors;
         o2.ancestor = ancestors[ a ];
-        /**/resource._inheritSingle( o2 );
+        resource._inheritSingle( o2 );
       }
     }
 
@@ -334,7 +335,7 @@ function _inheritMultiple( o )
 
   /* end */
 
-  return /**/resource;
+  return resource;
 }
 
 _inheritMultiple.defaults =
@@ -347,9 +348,9 @@ _inheritMultiple.defaults =
 
 function _inheritSingle( o )
 {
-  let /**/resource = this;
-  let module = /**/resource.module;
-  let willf = /**/resource.willf;
+  let resource = this;
+  let module = resource.module;
+  let willf = resource.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -358,25 +359,25 @@ function _inheritSingle( o )
   if( _.strIs( o.ancestor ) )
   o.ancestor = module[ module.MapName ][ o.ancestor ];
 
-  let /**/resource2 = o.ancestor;
+  let resource2 = o.ancestor;
 
-  _.assert( !!/**/resource2.formed );
-  _.assert( o.ancestor instanceof /**/resource.constructor, () => 'Expects ' + /**/resource.constructor.shortName + ' but got ' + _.strType( o.ancestor ) );
+  _.assert( !!resource2.formed );
+  _.assert( o.ancestor instanceof resource.constructor, () => 'Expects ' + resource.constructor.shortName + ' but got ' + _.strType( o.ancestor ) );
   _.assert( arguments.length === 1 );
-  _.assert( /**/resource.formed === 1 );
-  _.assert( !!/**/resource2.formed );
+  _.assert( resource.formed === 1 );
+  _.assert( !!resource2.formed );
   _.assertRoutineOptions( _inheritSingle, arguments );
 
-  if( /**/resource2.formed < 2 )
+  if( resource2.formed < 2 )
   {
-    _.sure( !_.arrayHas( o.visited, /**/resource2.name ), () => 'Cyclic dependency ' + /**/resource.nickName + ' of ' + /**/resource2.nickName );
-    /**/resource2._inheritForm({ visited : o.visited });
+    _.sure( !_.arrayHas( o.visited, resource2.name ), () => 'Cyclic dependency ' + resource.nickName + ' of ' + resource2.nickName );
+    resource2._inheritForm({ visited : o.visited });
   }
 
-  let extend = _.mapOnly( /**/resource2, _.mapNulls( /**/resource.dataExport({ compact : 0, copyingAggregates : 1 }) ) );
+  let extend = _.mapOnly( resource2, _.mapNulls( resource.dataExport({ compact : 0, copyingAggregates : 1 }) ) );
   delete extend.criterion;
-  /**/resource.copy( extend );
-  /**/resource.criterionInherit( /**/resource2.criterion );
+  resource.copy( extend );
+  resource.criterionInherit( resource2.criterion );
 
 }
 
@@ -390,23 +391,23 @@ _inheritSingle.defaults=
 
 function form3()
 {
-  let /**/resource = this;
-  let module = /**/resource.module;
-  let willf = /**/resource.willf;
+  let resource = this;
+  let module = resource.module;
+  let willf = resource.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0 );
-  _.assert( /**/resource.formed === 2 );
+  _.assert( resource.formed === 2 );
 
   /* begin */
 
   /* end */
 
-  /**/resource.formed = 3;
-  return /**/resource;
+  resource.formed = 3;
+  return resource;
 }
 
 // --
@@ -415,13 +416,13 @@ function form3()
 
 function criterionValidate()
 {
-  let /**/resource = this;
+  let resource = this;
 
-  if( /**/resource.criterion )
-  for( let c in /**/resource.criterion )
+  if( resource.criterion )
+  for( let c in resource.criterion )
   {
-    let crit = /**/resource.criterion[ c ];
-    _.sure( _.primitiveIs( crit ), () => 'Criterion ' + c + ' of ' + /**/resource.nickName + ' should be primitive, but is ' + _.strType( crit ) );
+    let crit = resource.criterion[ c ];
+    _.sure( _.primitiveIs( crit ), () => 'Criterion ' + c + ' of ' + resource.nickName + ' should be primitive, but is ' + _.strType( crit ) );
   }
 
 }
@@ -430,8 +431,8 @@ function criterionValidate()
 
 function criterionSattisfy( criterion2 )
 {
-  let /**/resource = this;
-  let criterion1 = /**/resource.criterion;
+  let resource = this;
+  let criterion1 = resource.criterion;
 
   _.assert( criterion2 === null || _.mapIs( criterion2 ) );
   _.assert( arguments.length === 1 );
@@ -459,8 +460,8 @@ function criterionSattisfy( criterion2 )
 
 function criterionInherit( criterion2 )
 {
-  let /**/resource = this;
-  let criterion1 = /**/resource.criterion;
+  let resource = this;
+  let criterion1 = resource.criterion;
 
   _.assert( criterion2 === null || _.mapIs( criterion2 ) );
   _.assert( arguments.length === 1 );
@@ -468,7 +469,7 @@ function criterionInherit( criterion2 )
   if( criterion2 === null )
   return criterion1
 
-  criterion1 = /**/resource.criterion = /**/resource.criterion || Object.create( null );
+  criterion1 = resource.criterion = resource.criterion || Object.create( null );
 
   _.mapSupplement( criterion1, _.mapBut( criterion1, { default : null, predefined : null } ) )
 
@@ -479,12 +480,12 @@ function criterionInherit( criterion2 )
 
 function criterionVariable( criterions, criterion )
 {
-  let /**/resource = this;
+  let resource = this;
 
   if( !criterion )
-  criterion = /**/resource.criterion;
+  criterion = resource.criterion;
 
-  return /**/resource.CriterionVariable( criterions, criterion );
+  return resource.CriterionVariable( criterions, criterion );
 }
 
 //
@@ -526,11 +527,11 @@ function CriterionVariable( criterions, criterion )
 
 function infoExport()
 {
-  let /**/resource = this;
+  let resource = this;
   let result = '';
-  let fields = /**/resource.dataExport();
+  let fields = resource.dataExport();
 
-  result += /**/resource.nickName + '\n';
+  result += resource.nickName + '\n';
   result += _.toStr( fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '' } ) + '\n';
 
   return result;
@@ -540,11 +541,11 @@ function infoExport()
 
 function dataExport()
 {
-  let /**/resource = this;
+  let resource = this;
 
   let o = _.routineOptions( dataExport, arguments );
 
-  let fields = /**/resource.cloneData( o );
+  let fields = resource.cloneData( o );
 
   delete fields.name;
   return fields;
@@ -560,14 +561,14 @@ dataExport.defaults =
 
 function compactField( it )
 {
-  let /**/resource = this;
-  let module = /**/resource.module;
+  let resource = this;
+  let module = resource.module;
   let will = module.will;
 
   if( it.src instanceof Self )
   {
     // debugger;
-    _.assert( /**/resource instanceof will.Exported, 'not tested' );
+    _.assert( resource instanceof will.Exported, 'not tested' );
     it.dst = it.src.nickName;
     return it.dst;
   }
@@ -593,26 +594,26 @@ function compactField( it )
 
 function _nickNameGet()
 {
-  let /**/resource = this;
-  return /**/resource.refName;
-  // return '→ ' + /**/resource.constructor.shortName + ' ' + _.strQuote( /**/resource.name ) + ' ←';
+  let resource = this;
+  return resource.refName;
+  // return '→ ' + resource.constructor.shortName + ' ' + _.strQuote( resource.name ) + ' ←';
 }
 
 //
 
 function _refNameGet()
 {
-  let /**/resource = this;
-  return /**/resource.PoolName + '::' + /**/resource.name;
+  let resource = this;
+  return resource.KindName + '::' + resource.name;
 }
 
 //
 
 function _absoluteNameGet()
 {
-  let /**/resource = this;
-  let module = /**/resource.module;
-  return module.absoluteName + ' / ' + /**/resource.nickName;
+  let resource = this;
+  let module = resource.module;
+  return module.absoluteName + ' / ' + resource.nickName;
 }
 
 // --
@@ -621,16 +622,16 @@ function _absoluteNameGet()
 
 function resolve_body( o )
 {
-  let /**/resource = this;
-  let module = /**/resource.module;
+  let resource = this;
+  let module = resource.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
-  _.assert( o.current === null || o.current === /**/resource )
+  _.assert( o.current === null || o.current === resource )
 
-  o.current = /**/resource;
+  o.current = resource;
 
   let resolved = module.resolve.body.call( module, o );
 
@@ -645,8 +646,8 @@ let resolve = _.routineFromPreAndBody( _.Will.Module.prototype.resolve.pre, reso
 
 function inPathResolve_body( o )
 {
-  let /**/resource = this;
-  let module = /**/resource.module;
+  let resource = this;
+  let module = resource.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -655,7 +656,7 @@ function inPathResolve_body( o )
   _.assert( _.strIs( o.query ) );
   _.assertRoutineOptions( inPathResolve_body, arguments );
 
-  let result = /**/resource.resolve( o );
+  let result = resource.resolve( o );
 
   // ({
   //   query : o.query,
@@ -706,7 +707,7 @@ let Statics =
   CriterionVariable,
 
   MapName : null,
-  PoolName : null,
+  KindName : null,
 }
 
 let Forbids =

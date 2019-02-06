@@ -1765,7 +1765,7 @@ function resourcesFormSkip()
   return module.stager.stageSkip( 'resourcesFormed' )
   .tap( ( err, arg ) =>
   {
-    debugger;
+    // debugger;
     _.assert( !module.ready.resourcesCount() );
     module.ready.takeSoon( err, arg );
     _.assert( !module.ready.resourcesCount() );
@@ -1986,6 +1986,7 @@ function resourceNameAllocate( resourceKind, resourceName )
   let will = module.will;
 
   _.assert( arguments.length === 2 );
+  _.assert( _.strIs( resourceKind ) );
   _.assert( _.strIs( resourceName ) );
 
   let map = module.resourceMapForKind( resourceKind );
@@ -1993,8 +1994,12 @@ function resourceNameAllocate( resourceKind, resourceName )
   if( map[ resourceName ] === undefined )
   return resourceName;
 
-  let counter = 0;
+  let counter = 1;
   let resourceName2;
+
+  let ends = /\.\d+$/;
+  if( ends.test( resourceName ) )
+  resourceName = resourceName.replace( ends, '' );
 
   do
   {
@@ -2423,17 +2428,6 @@ function _resolveMaybe_body( o )
     return p;
   }
 
-  // function pathResolve( patho )
-  // {
-  //   _.assert( patho instanceof will.PathObj );
-  //   if( o.resolvingPath === 'in' )
-  //   return path.s.resolve( module.dirPath, ( module.pathMap.in || '.' ), patho.path );
-  //   else if( o.resolvingPath === 'out' )
-  //   return path.s.resolve( module.dirPath, ( module.pathMap.out || '.' ), patho.path );
-  //   else
-  //   return patho.path;
-  // }
-
 }
 
 _resolveMaybe_body.defaults =
@@ -2783,13 +2777,51 @@ function dataExportResource( collection )
 
 //
 
-function resourceImport( resource )
+function resourceImport( resource2 )
 {
   let module = this;
   let will = module.will;
+  let module2 = resource2.module;
 
-  debugger; xxx
+  _.assert( module instanceof will.Module );
+  _.assert( module2 instanceof will.Module );
+  _.assert( resource2 instanceof will.Resource );
 
+  let resourceData = resource2.dataExport();
+
+  debugger;
+
+  for( let k in resourceData )
+  {
+    let value = resourceData[ k ];
+
+    if( _.strIs( value ) )
+    value = module2.resolveMaybe
+    ({
+      query : value,
+      prefixlessAction : 'resolved',
+      unwrappingPath : 0,
+    });
+
+    if( _.instanceIsStandard( value ) )
+    {
+      let subresource = module.resourceImport( value );
+      value = subresource.nickName;
+    }
+
+    resourceData[ k ] = value;
+  }
+
+  resourceData.module = module;
+  resourceData.name = module.resourceNameAllocate( resource2.KindName, resource2.name )
+
+  debugger;
+
+  let resource = new resource2.Self( resourceData );
+  resource.form1();
+  _.assert( module.resolve({ query : resource.nickName, unwrappingPath : 0 }) === resource );
+
+  return resource;
 }
 
 // --

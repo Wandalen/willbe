@@ -74,18 +74,20 @@ function readExported()
 
   let outFilePath = build.outFilePathFor();
 
-  debugger; return; xxx
+  // debugger; return; xxx
 
   let module2 = will.Module({ will : will, dirPath : path.dir( outFilePath ) }).form();
   let willFiles = module2.willFilesSelect( outFilePath );
   let willFile = willFiles[ 0 ];
-  _.assert( willFiles.length === 1 );
 
-  if( !willFile.exists() )
+  if( !willFiles.length )
   {
     module2.finit();
     return;
   }
+
+  _.assert( willFiles.length === 1 );
+  _.assert( willFile.exists() );
 
   module2.willFilesOpen();
   module2.submodulesFormSkip();
@@ -93,18 +95,18 @@ function readExported()
 
   con.finally( ( err, arg ) =>
   {
-    debugger;
     if( willFile.data && willFile.data.exported )
     for( let exportedName in willFile.data.exported )
     {
-      logger.log( exportedName );
-      let exported = module2.exportedMap[ exportedName ];
-      _.assert( exported instanceof Self );
-      debugger;
-      module.resourceImport( exported );
-      debugger;
+      // logger.log( exportedName );
+      // debugger;
+      if( exportedName === exported.name )
+      continue;
+      let exported2 = module2.exportedMap[ exportedName ];
+      _.assert( exported2 instanceof Self );
+      module.resourceImport( exported2 );
     }
-    debugger;
+    // debugger;
 
     module2.finit();
     if( err )
@@ -112,9 +114,7 @@ function readExported()
     return arg;
   });
 
-  debugger;
   let result = con.toResource();
-  debugger;
   return result;
 }
 
@@ -160,7 +160,6 @@ function proceedExportedReflectors( exportSelector )
     _.sure( !!exp.filePath, () => exp.nickName + ' should have filePath' );
 
     exportedReflector = exp.cloneExtending({ name : module.resourceNameAllocate( 'reflector', 'exported.' + exported.name ) });
-    exportedReflector.criterion = _.mapExtend( null, exported.criterion );
 
     _.assert( exportedReflector.srcFilter !== exp.srcFilter );
     _.assert( exportedReflector.srcFilter.prefixPath === null || exportedReflector.srcFilter.prefixPath === module.inPath );
@@ -182,28 +181,33 @@ function proceedExportedReflectors( exportSelector )
     _.assert( path.isRelative( commonPath ) );
 
     exportedReflector = module.resourceAllocate( 'reflector', 'exported.' + exported.name );
-    exportedReflector.filePath = Object.create( null );
+    exportedReflector.srcFilter.filePath = Object.create( null );
     for( let p = 0 ; p < exp.length ; p++ )
-    exportedReflector.filePath[ exp[ p ] ] = true;
-
+    {
+      _.assert( !_.strHas( exp[ p ], '::' ) );
+      exportedReflector.srcFilter.filePath[ exp[ p ] ] = true;
+    }
     exportedReflector.srcFilter.basePath = commonPath;
-    exportedReflector.srcFilter.inFilePath = exportedReflector.filePath;
+    // exportedReflector.srcFilter.inFilePath = exportedReflector.filePath;
 
   }
   else if( _.strIs( exp ) )
   {
 
+    _.assert( !_.strHas( exp, '::' ) );
     exportedReflector = module.resourceAllocate( 'reflector', 'exported.' + exported.name );
-    exportedReflector.filePath = { [ exp ] : true };
-    exportedReflector.srcFilter.inFilePath = exp;
+    exportedReflector.srcFilter.filePath = exp;
 
   }
   else _.assert( 0 );
 
+  debugger;
+  exportedReflector.criterion = _.mapExtend( null, exported.criterion );
   exportedReflector.form();
-
   exported.exportedReflector = exportedReflector;
+  debugger;
 
+  _.assert( _.mapIs( exportedReflector.criterion ) );
   _.assert( exportedReflector.dstFilter.prefixPath === null );
   _.assert( exportedReflector.dstFilter.basePath === null );
   _.assert( path.isAbsolute( exportedReflector.srcFilter.prefixPath ) );
@@ -277,6 +281,7 @@ function proceedExportedFilesReflector()
 
   let exportedFilesReflector = exported.exportedFilesReflector = exported.exportedReflector.cloneExtending({ name : module.resourceNameAllocate( 'reflector', 'exportedFiles.' + exported.name ) });
 
+  _.assert( _.objectIs( exportedFilesReflector.criterion ) );
   _.assert( exportedFilesReflector.srcFilter.basePath === exported.exportedDirPath.path || exportedFilesReflector.srcFilter.basePath === null );
   exportedFilesReflector.srcFilter.filteringClear();
   _.assert( exportedFilesReflector.srcFilter.basePath === exported.exportedDirPath.path || exportedFilesReflector.srcFilter.basePath === null );
@@ -380,7 +385,7 @@ function proceedOutFile()
   });
 
   if( will.verbosity >= 3 )
-  logger.log( ' + ' + 'Write out file to ' + outFilePath );
+  logger.log( ' + ' + 'Write out will-file ' + outFilePath );
 
 }
 
@@ -447,6 +452,22 @@ function proceed( frame )
   return exported;
 }
 
+// //
+//
+// function exportedDirPathSet( src )
+// {
+//   let exported = this;
+//   let module = exported.module;
+//   let will = module.will;
+//
+//   _.assert( src === null || _.strIs( src ) || src instanceof will.Resource );
+//   _.assert( !_.strIs( src ) || !_.strHas( src, '::' ), 'Referencing is not tested' );
+//
+//   if( _.strIs( src ) )
+//
+//   return src;
+// }
+
 // --
 // relations
 // --
@@ -488,7 +509,7 @@ let Restricts =
 let Statics =
 {
   MapName : 'exportedMap',
-  PoolName : 'exported',
+  KindName : 'exported',
 }
 
 let Forbids =
@@ -498,6 +519,7 @@ let Forbids =
 
 let Accessors =
 {
+  // exportedDirPath : {},
 }
 
 // --
@@ -516,6 +538,8 @@ let Proto =
   proceedArchive,
   proceedOutFile,
   proceed,
+
+  // exportedDirPathGet,
 
   // relation
 

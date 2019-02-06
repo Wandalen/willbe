@@ -220,7 +220,7 @@ let Statics =
 {
   OptionsFrom : OptionsFrom,
   MapName : 'submoduleMap',
-  PoolName : 'submodule',
+  KindName : 'submodule',
 }
 
 let Accessors =

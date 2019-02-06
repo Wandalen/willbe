@@ -333,7 +333,7 @@ let Restricts =
 let Statics =
 {
   MapName : 'buildMap',
-  PoolName : 'build',
+  KindName : 'build',
 }
 
 let Forbids =

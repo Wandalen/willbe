@@ -179,7 +179,7 @@ let Statics =
 {
   OptionsFrom : OptionsFrom,
   MapName : 'pathObjMap',
-  PoolName : 'path',
+  KindName : 'path',
 }
 
 let Forbids =

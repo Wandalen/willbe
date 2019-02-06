@@ -69,6 +69,9 @@ function form1()
   _.assert( !willf || !!willf.formed );
   _.assert( _.strDefined( reflector.name ) );
 
+  if( _.strHas( reflector.name, 'exported.export.' ) )
+  debugger;
+
   /* begin */
 
   module[ reflector.MapName ][ reflector.name ] = reflector;
@@ -100,10 +103,8 @@ function form1()
     reflector.dstFilter._formAssociations();
   }
 
-  if( reflector.filePath )
-  {
-    reflector.filePath = path.fileMapExtend( null, reflector.filePath, true );
-  }
+  // if( reflector.filePath )
+  // reflector.filePath = path.fileMapExtend( null, reflector.filePath, true );
 
   /* end */
 
@@ -123,16 +124,17 @@ function form2()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  // console.log( reflector.absoluteName, 'form2' );
-  // if( module.nickName === 'Module::encore.wtools.base' && !reflector.criterion.predefined ) debugger;
+  if( _.strHas( reflector.name, 'exported.export.' ) )
+  debugger;
 
   /* filters */
+
+  if( reflector.filePath )
+  reflector.filePath = path.fileMapExtend( null, reflector.filePath, true );
 
   reflector.pathsResolve();
 
   let result = Parent.prototype.form2.apply( reflector, arguments );
-
-  // if( module.nickName === 'Module::encore.wtools.base' && !reflector.criterion.predefined ) debugger;
 
   return result;
 }
@@ -201,6 +203,9 @@ function _inheritSingle( o )
   _.assert( _.entityIdentical( reflector.srcFilter.inFilePath, reflector.filePath ) );
   _.assert( _.entityIdentical( reflector2.srcFilter.inFilePath, reflector2.filePath ) );
 
+  if( _.strHas( reflector.name, 'exported.export.' ) )
+  debugger;
+
   if( reflector2.formed < 2 )
   {
     _.sure( !_.arrayHas( o.visited, reflector2.name ), () => 'Cyclic dependency ' + reflector.nickName + ' of ' + reflector2.nickName );
@@ -216,9 +221,6 @@ function _inheritSingle( o )
 
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
-
-  if( reflector.absoluteName === 'Module::encore.wtools.base / reflector::reflect.submodules' )
-  debugger;
 
   reflector.srcFilter.and( reflector2.srcFilter ).pathsInherit( reflector2.srcFilter );
 
@@ -440,7 +442,6 @@ isRelativeOrGlobal.defaults =
 {
   fixes : 0,
   basePath : 1,
-  // stemPath : 1,
   filePath : 1,
 }
 
@@ -520,7 +521,6 @@ function pathsResolve( o )
   reflector.dstFilter.basePath = path.filter( reflector.dstFilter.basePath, resolve );
   if( reflector.dstFilter.prefixPath )
   reflector.dstFilter.prefixPath = resolve( reflector.dstFilter.prefixPath );
-
   if( reflector.dstFilter.prefixPath || o.addingDstPrefix )
   reflector.dstFilter.prefixPath = path.resolve( module.inPath, reflector.dstFilter.prefixPath || '.' );
   else if( reflector.dstFilter.filePath )
@@ -720,7 +720,7 @@ let Restricts =
 
 let Statics =
 {
-  PoolName : 'reflector',
+  KindName : 'reflector',
   MapName : 'reflectorMap',
 }
 
