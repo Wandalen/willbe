@@ -1367,6 +1367,9 @@ function submodulesFormSkip()
 
   _.assert( arguments.length === 0 );
 
+  if( module.submodulesFormed > 0 )
+  return module.stager.stageConsequence( 'submodulesFormed' );
+
   return module.stager.stageSkip( 'submodulesFormed' );
 
   // if( module.submodulesFormed > 0 )
@@ -1688,13 +1691,15 @@ function _remoteDownload( o )
     {
       _.assert( module.preformed === 3, 'not tested' );
 
-      if( module.resourcesFormReady.errorsCount() )
+      // debugger;
+      if( module.resourcesFormReady.errorsCount() || module.ready.errorsCount() )
       module.stateResetError();
 
       module.willFilesFind();
       module.willFilesOpen();
       module.submodulesFormSkip();
       module.resourcesFormSkip();
+      // debugger;
 
       return module.ready
       .finallyGive( function( err, arg )
@@ -1754,9 +1759,13 @@ function resourcesFormSkip()
 
   _.assert( arguments.length === 0 );
 
+  if( module.resourcesFormed > 0 )
+  return module.stager.stageConsequence( 'resourcesFormed' );
+
   return module.stager.stageSkip( 'resourcesFormed' )
   .tap( ( err, arg ) =>
   {
+    debugger;
     _.assert( !module.ready.resourcesCount() );
     module.ready.takeSoon( err, arg );
     _.assert( !module.ready.resourcesCount() );
@@ -2772,6 +2781,17 @@ function dataExportResource( collection )
   return result;
 }
 
+//
+
+function resourceImport( resource )
+{
+  let module = this;
+  let will = module.will;
+
+  debugger; xxx
+
+}
+
 // --
 // relations
 // --
@@ -2992,6 +3012,8 @@ let Proto =
 
   dataExport,
   dataExportResource,
+
+  resourceImport,
 
   // relation
 

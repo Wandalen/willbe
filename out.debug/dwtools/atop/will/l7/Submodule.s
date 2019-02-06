@@ -12,7 +12,7 @@ if( typeof module !== 'undefined' )
 //
 
 let _ = wTools;
-let Parent = _.Will.Inheritable;
+let Parent = _.Will.Resource;
 let Self = function wWillSubmodule( o )
 {
   return _.instanceConstructor( Self, this, arguments );

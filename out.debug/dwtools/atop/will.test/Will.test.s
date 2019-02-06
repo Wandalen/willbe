@@ -81,7 +81,7 @@ function singleModuleSimplest( test )
 
   let ready = new _.Consequence().take( null )
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = 'simple run without args'
     return shell()
@@ -123,7 +123,7 @@ function singleModuleList( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = 'list'
     return shell({ args : [ '.list' ] })
@@ -139,7 +139,7 @@ function singleModuleList( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = 'module info'
     return shell({ args : [ '.paths.list' ] })
@@ -157,7 +157,7 @@ function singleModuleList( test )
 
 
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = 'submodules list'
     return shell({ args : [ '.submodules.list' ] })
@@ -171,7 +171,7 @@ function singleModuleList( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = 'reflectors.list'
     return shell({ args : [ '.reflectors.list' ] })
@@ -188,7 +188,7 @@ function singleModuleList( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = 'steps.list'
     return shell({ args : [ '.steps.list' ] })
@@ -207,7 +207,7 @@ function singleModuleList( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.builds.list'
     return shell({ args : [ '.builds.list' ] })
@@ -226,7 +226,7 @@ function singleModuleList( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.exports.list'
     return shell({ args : [ '.exports.list' ] })
@@ -244,7 +244,7 @@ function singleModuleList( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.about.list'
     return shell({ args : [ '.about.list' ] })
@@ -270,7 +270,7 @@ function singleModuleList( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.execution.list'
     return shell({ args : [ '.execution.list' ] })
@@ -312,7 +312,7 @@ function singleModuleSubmodules( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.submodules.download'
     return shell({ args : [ '.submodules.download' ] })
@@ -326,7 +326,7 @@ function singleModuleSubmodules( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.submodules.download'
     return shell({ args : [ '.submodules.download' ] })
@@ -342,7 +342,7 @@ function singleModuleSubmodules( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.submodules.upgrade'
     return shell({ args : [ '.submodules.upgrade' ] })
@@ -358,7 +358,7 @@ function singleModuleSubmodules( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.submodules.clean';
     return shell({ args : [ '.submodules.clean' ] })
@@ -403,7 +403,7 @@ function singleModuleClean( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.clean '
     return _.shell
@@ -429,7 +429,7 @@ function singleModuleClean( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.clean.what '
     return _.shell
@@ -480,7 +480,7 @@ function singleModuleBuild( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.build'
     let buildOutPath = _.path.join( dirPath, 'out.debug' );
@@ -503,7 +503,7 @@ function singleModuleBuild( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.build debug.raw'
     let buildOutPath = _.path.join( dirPath, 'out.debug' );
@@ -525,7 +525,7 @@ function singleModuleBuild( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.build release.raw'
     let buildOutPath = _.path.join( dirPath, 'out.release' );
@@ -547,7 +547,7 @@ function singleModuleBuild( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.build wrong'
     let buildOutDebugPath = _.path.join( dirPath, 'out.debug' );
@@ -562,7 +562,7 @@ function singleModuleBuild( test )
       args : [ '.build wrong' ],
     }
     return test.shouldThrowError( _.shell( o ) )
-    .keep( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.is( o.exitCode !== 0 );
       test.is( o.output.length );
@@ -688,7 +688,7 @@ function withSubmodulesSimplest( test )
 
   let ready = new _.Consequence().take( null )
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = 'module info'
     return shell({ args : [ '.list' ] })
@@ -733,7 +733,7 @@ function withSubmodulesList( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = 'submodules list'
     return shell({ args : [ '.submodules.list' ] })
@@ -748,7 +748,7 @@ function withSubmodulesList( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = 'reflectors.list'
     return shell({ args : [ '.reflectors.list' ] })
@@ -763,7 +763,7 @@ function withSubmodulesList( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = 'steps.list'
     return shell({ args : [ '.steps.list' ] })
@@ -782,7 +782,7 @@ function withSubmodulesList( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.builds.list'
     return shell({ args : [ '.builds.list' ] })
@@ -801,7 +801,7 @@ function withSubmodulesList( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.exports.list'
     return shell({ args : [ '.exports.list' ] })
@@ -819,7 +819,7 @@ function withSubmodulesList( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.about.list'
     return shell({ args : [ '.about.list' ] })
@@ -845,7 +845,7 @@ function withSubmodulesList( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.execution.list'
     return shell({ args : [ '.execution.list' ] })
@@ -877,71 +877,131 @@ function withSubmodulesDownload( test )
   let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
   willExecPath = _.path.nativize( willExecPath );
 
+  let ready = new _.Consequence().take( null )
   let shell = _.sheller
   ({
     path : 'node ' + willExecPath,
     currentPath : dirPath,
-    outputCollecting : 1
+    outputCollecting : 1,
+    ready : ready,
   })
 
   /* */
 
-  let ready = new _.Consequence().take( null )
+  ready
 
   /* */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
-    test.case = '.submodules.download';
+    test.case = '.submodules.download - first time';
     _.fileProvider.filesDelete( modulesPath );
-    return shell({ args : [ '.submodules.download' ] })
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 ); debugger;
-      test.is( _.strHas( got.output, '2/2 submodule(s) of module::withSubmodules were downloaded in' ) );
-
-      var files = _.fileProvider.filesFind({ filePath : modulesPath, recursive : 2, outputFormat : 'relative' })
-      test.is( files.length );
-
-      test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'Tools' ) ) )
-      test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'PathFundamentals' ) ) )
-      return null;
-    })
+    return null;
   })
 
-  /* */
-
-  .keep( () => shell({ args : [ '.submodules.upgrade' ] }) )
-  .keep( () =>
+  shell({ args : [ '.submodules.download' ] })
+  .thenKeep( ( got ) =>
   {
-    test.case = '.submodules.upgrade'
+    test.identical( got.exitCode, 0 ); debugger;
+    test.is( _.strHas( got.output, '2/2 submodule(s) of module::withSubmodules were downloaded in' ) );
 
-    return shell({ args : [ '.submodules.upgrade' ] })
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, '0/2 submodule(s) of module::withSubmodules were upgraded in' ) );
-      test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'Tools' ) ) )
-      test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'PathFundamentals' ) ) )
-      test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) )
+    var files = _.fileProvider.filesFind({ filePath : modulesPath, recursive : 2, outputFormat : 'relative' })
+    test.is( files.length );
 
-      var files = _.fileProvider.filesFind({ filePath : _.path.join( modulesPath, 'Tools' ), recursive : 2, outputFormat : 'relative' })
-      test.is( files.length );
-
-      var files = _.fileProvider.filesFind({ filePath : _.path.join( modulesPath, 'PathFundamentals' ), recursive : 2, outputFormat : 'relative' })
-      test.is( files.length );
-
-      return null;
-    })
+    test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'Tools' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'PathFundamentals' ) ) )
+    return null;
   })
 
   /* */
 
-  .keep( () =>
+  .thenKeep( () =>
+  {
+    test.case = '.submodules.download - again';
+    return null;
+  })
+  shell({ args : [ '.submodules.download' ] })
+  .thenKeep( ( got ) =>
+  {
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '0/2 submodule(s) of module::withSubmodules were downloaded in' ) );
+    test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'Tools' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'PathFundamentals' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) )
+
+    var files = _.fileProvider.filesFind({ filePath : _.path.join( modulesPath, 'Tools' ), recursive : 2, outputFormat : 'relative' })
+    test.is( files.length );
+
+    var files = _.fileProvider.filesFind({ filePath : _.path.join( modulesPath, 'PathFundamentals' ), recursive : 2, outputFormat : 'relative' })
+    test.is( files.length );
+
+    return null;
+  })
+
+  /* */
+
+  .thenKeep( () =>
+  {
+    test.case = '.submodules.upgrade - first time';
+    _.fileProvider.filesDelete( modulesPath );
+    return null;
+  })
+  shell({ args : [ '.submodules.upgrade' ] })
+  .thenKeep( ( got ) =>
+  {
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '2/2 submodule(s) of module::withSubmodules were upgraded in' ) );
+    test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'Tools' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'PathFundamentals' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) )
+
+    var files = _.fileProvider.filesFind({ filePath : _.path.join( modulesPath, 'Tools' ), recursive : 2, outputFormat : 'relative' })
+    test.is( files.length );
+
+    var files = _.fileProvider.filesFind({ filePath : _.path.join( modulesPath, 'PathFundamentals' ), recursive : 2, outputFormat : 'relative' })
+    test.is( files.length );
+
+    return null;
+  })
+
+  /* */
+
+  .thenKeep( () =>
+  {
+    test.case = '.submodules.upgrade - again';
+    return null;
+  })
+  shell({ args : [ '.submodules.upgrade' ] })
+  .thenKeep( ( got ) =>
+  {
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '0/2 submodule(s) of module::withSubmodules were upgraded in' ) );
+    test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'Tools' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'PathFundamentals' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) )
+
+    var files = _.fileProvider.filesFind({ filePath : _.path.join( modulesPath, 'Tools' ), recursive : 2, outputFormat : 'relative' })
+    test.is( files.length );
+
+    var files = _.fileProvider.filesFind({ filePath : _.path.join( modulesPath, 'PathFundamentals' ), recursive : 2, outputFormat : 'relative' })
+    test.is( files.length );
+
+    return null;
+  })
+
+  /* */
+
+  var files;
+
+  ready
+  .thenKeep( () =>
   {
     test.case = '.submodules.clean';
 
-    let files = _.fileProvider.filesFind
+    files = _.fileProvider.filesFind
     ({
       filePath : modulesPath,
       recursive : 2,
@@ -950,15 +1010,20 @@ function withSubmodulesDownload( test )
       includingTransient : 1
     });
 
-    return shell({ args : [ '.submodules.clean' ] })
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, `${files.length}` ) );
-      test.is( !_.fileProvider.fileExists( _.path.join( dirPath, '.module' ) ) ); /* xxx : phantom problem ? */
-      test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) );
-      return null;
-    })
+    return files;
+  })
+
+  shell({ args : [ '.submodules.clean' ] })
+
+  .thenKeep( ( got ) =>
+  {
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `${files.length}` ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( dirPath, '.module' ) ) ); /* xxx : phantom problem ? */
+    test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) );
+
+    return null;
   })
 
   /* */
@@ -1078,7 +1143,7 @@ function withSubmodulesClean( test )
   /* */
 
   shell({ args : [ '.submodules.upgrade' ] })
-  .keep( ( got ) =>
+  .thenKeep( ( got ) =>
   {
     test.case = '.submodules.upgrade'
     test.identical( got.exitCode, 0 );
@@ -1099,7 +1164,7 @@ function withSubmodulesClean( test )
 
   var files;
   ready
-  .keep( () =>
+  .thenKeep( () =>
   {
 
     files = _.fileProvider.filesFind
@@ -1117,7 +1182,7 @@ function withSubmodulesClean( test )
   /* */
 
   shell({ args : [ '.submodules.clean' ] })
-  .keep( ( got ) =>
+  .thenKeep( ( got ) =>
   {
     test.case = '.submodules.clean';
     test.identical( got.exitCode, 0 );
@@ -1242,7 +1307,7 @@ function withSubmodulesBuild( test )
     let buildOutReleasePath = _.path.join( dirPath, 'out.release' );
 
     return test.shouldThrowError( _.shell( o ) )
-    .keep( ( got ) =>
+    .thenKeep( ( got ) =>
     {
       test.is( o.exitCode !== 0 );
       test.is( o.output.length );
@@ -1285,7 +1350,7 @@ function withSubmodulesExport( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = '.export'
     let buildOutPath = _.path.join( dirPath, 'out.debug' );
@@ -1346,7 +1411,7 @@ function submodulesDownload( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = 'simple run without args'
     return shell()
@@ -1360,7 +1425,7 @@ function submodulesDownload( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = 'list'
     return shell({ args : [ '.list' ] })
@@ -1376,7 +1441,7 @@ function submodulesDownload( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = 'build'
     _.fileProvider.filesDelete( _.path.join( dirPath, '.module' ) );
@@ -1393,7 +1458,7 @@ function submodulesDownload( test )
 
   /* - */
 
-  .keep( () =>
+  .thenKeep( () =>
   {
     test.case = 'export'
     _.fileProvider.filesDelete( _.path.join( dirPath, '.module' ) );

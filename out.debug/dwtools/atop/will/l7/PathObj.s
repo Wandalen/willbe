@@ -12,7 +12,7 @@ if( typeof module !== 'undefined' )
 // xxx
 
 let _ = wTools;
-let Parent = _.Will.Inheritable;
+let Parent = _.Will.Resource;
 let Self = function wWillPathObj( o )
 {
   return _.instanceConstructor( Self, this, arguments );

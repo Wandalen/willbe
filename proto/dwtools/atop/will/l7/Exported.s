@@ -14,7 +14,7 @@ let Tar;
 //
 
 let _ = wTools;
-let Parent = _.Will.Inheritable;
+let Parent = _.Will.Resource;
 let Self = function wWillExported( o )
 {
   return _.instanceConstructor( Self, this, arguments );
@@ -77,13 +77,33 @@ function readExported()
   debugger; return; xxx
 
   let module2 = will.Module({ will : will, dirPath : path.dir( outFilePath ) }).form();
-  module2.willFilesSelect( outFilePath );
+  let willFiles = module2.willFilesSelect( outFilePath );
+  let willFile = willFiles[ 0 ];
+  _.assert( willFiles.length === 1 );
+
+  if( !willFile.exists() )
+  {
+    module2.finit();
+    return;
+  }
+
   module2.willFilesOpen();
   module2.submodulesFormSkip();
   let con = module2.resourcesFormSkip();
 
   con.finally( ( err, arg ) =>
   {
+    debugger;
+    if( willFile.data && willFile.data.exported )
+    for( let exportedName in willFile.data.exported )
+    {
+      logger.log( exportedName );
+      let exported = module2.exportedMap[ exportedName ];
+      _.assert( exported instanceof Self );
+      debugger;
+      module.resourceImport( exported );
+      debugger;
+    }
     debugger;
 
     module2.finit();

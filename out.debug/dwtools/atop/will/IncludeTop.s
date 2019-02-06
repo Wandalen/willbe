@@ -15,7 +15,7 @@ if( typeof module !== 'undefined' )
   require( './l3/Module.s' );
   // require( './l3/Stager.s' );
 
-  require( './l5/Inheritable.s' );
+  require( './l5/Resource.s' );
 
   require( './l7/Build.s' );
   require( './l7/Exported.s' );
