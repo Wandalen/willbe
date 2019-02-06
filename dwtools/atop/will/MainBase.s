@@ -287,7 +287,6 @@ let Extend =
   formAssociates,
 
   _verbosityChange,
-
   willFilesList,
 
   // relation
@@ -320,10 +319,6 @@ module[ 'exports' ] = Self;
 _global_[ Self.name ] = wTools[ Self.shortName ] = Self;
 
 if( typeof module !== 'undefined' )
-{
-
-  require( './IncludeTop.s' );
-
-}
+require( './IncludeTop.s' );
 
 })();

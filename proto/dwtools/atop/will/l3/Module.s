@@ -946,9 +946,7 @@ function willFilesFind()
   return module.stager.stageConsequence( 'willFilesFound' );
   module.stager.stageState( 'willFilesFound', 1 );
 
-  // debugger;
-  // return module.preformRady.split()
-  module.stager.stageConsequence( 'willFilesFound', -1 ).split()
+  return module.stager.stageConsequence( 'willFilesFound', -1 ).split()
   .thenKeep( () =>
   {
     module.stager.stageState( 'willFilesFound', 2 );
@@ -1010,7 +1008,7 @@ function willFilesOpen()
 
   /* */
 
-  module.stager.stageConsequence( 'willFilesOpened', -1 ).split()
+  return module.stager.stageConsequence( 'willFilesOpened', -1 ).split()
   .keep( ( arg ) =>
   {
     module.stager.stageState( 'willFilesOpened', 2 );
@@ -1369,23 +1367,25 @@ function submodulesSkip()
 
   _.assert( arguments.length === 0 );
 
-  if( module.submodulesFormed > 0 )
-  return module.stager.stageConsequence( 'submodulesFormed' );
-  module.stager.stageState( 'submodulesFormed', 1 );
+  return module.stager.stageSkip( 'submodulesFormed' );
 
-  module.stager.stageConsequence( 'submodulesFormed', -1 ).split()
-  .finally( ( err, arg ) =>
-  {
-
-    module.stager.stageState( 'submodulesFormed', 2 );
-
-    if( err )
-    throw module.stager.stageError( 'submodulesFormed', err );
-    else
-    module.stager.stageState( 'submodulesFormed', 3 );
-
-    return arg;
-  });
+  // if( module.submodulesFormed > 0 )
+  // return module.stager.stageConsequence( 'submodulesFormed' );
+  // module.stager.stageState( 'submodulesFormed', 1 );
+  //
+  // return module.stager.stageConsequence( 'submodulesFormed', -1 ).split()
+  // .finally( ( err, arg ) =>
+  // {
+  //
+  //   module.stager.stageState( 'submodulesFormed', 2 );
+  //
+  //   if( err )
+  //   throw module.stager.stageError( 'submodulesFormed', err );
+  //   else
+  //   module.stager.stageState( 'submodulesFormed', 3 );
+  //
+  //   return arg;
+  // });
 
 }
 
@@ -1405,7 +1405,7 @@ function submodulesForm()
   return module.stager.stageConsequence( 'submodulesFormed' );
   module.stager.stageState( 'submodulesFormed', 1 );
 
-  module.stager.stageConsequence( 'submodulesFormed', -1 ).split()
+  return module.stager.stageConsequence( 'submodulesFormed', -1 ).split()
   .keep( ( arg ) =>
   {
     module.stager.stageState( 'submodulesFormed', 2 );
@@ -1754,27 +1754,35 @@ function resourcesFormSkip()
 
   _.assert( arguments.length === 0 );
 
-  if( module.resourcesFormed > 0 )
-  return module.stager.stageConsequence( 'resourcesFormed' );
-  module.stager.stageState( 'resourcesFormed', 1 );
-
-  module.stager.stageConsequence( 'resourcesFormed', -1 ).split()
-  .finally( ( err, arg ) =>
+  return module.stager.stageSkip( 'resourcesFormed' )
+  .tap( ( err, arg ) =>
   {
-
     _.assert( !module.ready.resourcesCount() );
     module.ready.takeSoon( err, arg );
     _.assert( !module.ready.resourcesCount() );
-
-    module.stager.stageState( 'resourcesFormed', 2 );
-
-    if( err )
-    throw module.stager.stageError( 'resourcesFormed', err );
-    else
-    module.stager.stageState( 'resourcesFormed', 3 );
-
-    return arg;
   });
+
+  // if( module.resourcesFormed > 0 )
+  // return module.stager.stageConsequence( 'resourcesFormed' );
+  // module.stager.stageState( 'resourcesFormed', 1 );
+  //
+  // return module.stager.stageConsequence( 'resourcesFormed', -1 ).split()
+  // .finally( ( err, arg ) =>
+  // {
+  //
+  //   _.assert( !module.ready.resourcesCount() );
+  //   module.ready.takeSoon( err, arg );
+  //   _.assert( !module.ready.resourcesCount() );
+  //
+  //   module.stager.stageState( 'resourcesFormed', 2 );
+  //
+  //   if( err )
+  //   throw module.stager.stageError( 'resourcesFormed', err );
+  //   else
+  //   module.stager.stageState( 'resourcesFormed', 3 );
+  //
+  //   return arg;
+  // });
 
 }
 
@@ -1794,7 +1802,7 @@ function resourcesForm()
   return module.stager.stageConsequence( 'resourcesFormed' );
   module.stager.stageState( 'resourcesFormed', 1 );
 
-  module.stager.stageConsequence( 'resourcesFormed', -1 ).split()
+  return module.stager.stageConsequence( 'resourcesFormed', -1 ).split()
   .keep( ( arg ) =>
   {
 
@@ -1810,7 +1818,7 @@ function resourcesForm()
 
       con.keep( ( arg ) =>
       {
-        module.stager.stageState( 'resourcesFormed', 3 );
+        // module.stager.stageState( 'resourcesFormed', 3 );
         if( !module.supermodule )
         module._willFilesCacheSave();
         return arg;

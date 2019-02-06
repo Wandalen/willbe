@@ -125,7 +125,7 @@ function _load()
     if( err )
     {
       if( will.verbosity >= 3 )
-      logger.error( ' ! Failed to read ' + submodule.nickName + ', try to download it with .submodules.download or even clean it before downloading with .clean' );
+      logger.error( ' ! Failed to read ' + submodule.nickName + ', try to download it with .submodules.download or even clean it before downloading' );
       if( will.verbosity >= 5 || !submodule.loadedModule || submodule.loadedModule.isOpened() )
       {
         if( will.verbosity < 5 )
@@ -137,7 +137,6 @@ function _load()
       {
         _.errAttend( err );
       }
-      // debugger;
       throw err;
     }
     return arg || null;
@@ -147,7 +146,6 @@ function _load()
 
   return submodule.loadedModule.ready.split().finally( ( err, arg ) =>
   {
-    // debugger;
     return null;
   });
 

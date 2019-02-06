@@ -360,7 +360,7 @@ function singleModuleSubmodules( test )
 
   .keep( () =>
   {
-    test.case = '.submodules.clean'
+    test.case = '.submodules.clean';
     return shell({ args : [ '.submodules.clean' ] })
     .thenKeep( ( got ) =>
     {
@@ -1065,13 +1065,64 @@ function withSubmodulesClean( test )
   })
 
   shell({ args : [ '.clean' ] })
-
   .thenKeep( ( got ) =>
   {
     test.case = '.clean';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted' ) );
     test.is( !_.fileProvider.fileExists( _.path.join( dirPath, '.module' ) ) ); /* filesDelete issue? */
+    test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) );
+    return null;
+  })
+
+  /* */
+
+  shell({ args : [ '.submodules.upgrade' ] })
+  .keep( ( got ) =>
+  {
+    test.case = '.submodules.upgrade'
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'Tools' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'PathFundamentals' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) )
+
+    var files = _.fileProvider.filesFind({ filePath : _.path.join( modulesPath, 'Tools' ), recursive : 2, outputFormat : 'relative' })
+    test.is( files.length );
+
+    var files = _.fileProvider.filesFind({ filePath : _.path.join( modulesPath, 'PathFundamentals' ), recursive : 2, outputFormat : 'relative' })
+    test.is( files.length );
+
+    return null;
+  })
+
+  /* */
+
+  var files;
+  ready
+  .keep( () =>
+  {
+
+    files = _.fileProvider.filesFind
+    ({
+      filePath : modulesPath,
+      recursive : 2,
+      includingDirs : 1,
+      includingTerminals : 1,
+      includingTransient : 1
+    });
+
+    return null;
+  })
+
+  /* */
+
+  shell({ args : [ '.submodules.clean' ] })
+  .keep( ( got ) =>
+  {
+    test.case = '.submodules.clean';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `${files.length}` ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( dirPath, '.module' ) ) ); /* xxx : phantom problem ? */
     test.is( !_.fileProvider.fileExists( _.path.join( dirPath, 'modules' ) ) );
     return null;
   })
