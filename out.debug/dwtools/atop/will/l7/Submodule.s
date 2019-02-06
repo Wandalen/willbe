@@ -110,7 +110,7 @@ function _load()
 
   submodule.loadedModule.willFilesFind({ isInFile : 0 });
   submodule.loadedModule.willFilesOpen();
-  submodule.loadedModule.submodulesSkip();
+  submodule.loadedModule.submodulesFormSkip();
   submodule.loadedModule.resourcesForm();
 
   submodule.loadedModule.willFilesFindReady.finally( ( err, arg ) =>

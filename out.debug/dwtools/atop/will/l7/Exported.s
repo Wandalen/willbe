@@ -79,26 +79,13 @@ function readExported()
   let module2 = will.Module({ will : will, dirPath : path.dir( outFilePath ) }).form();
   module2.willFilesSelect( outFilePath );
   module2.willFilesOpen();
-  module2.submodulesSkip();
-  let con = module2.resourcesForm();
+  module2.submodulesFormSkip();
+  let con = module2.resourcesFormSkip();
 
-/*
-  debugger;
-  let read = hub.fileConfigRead
-  ({
-    filePath : outFilePath,
-    verbosity : will.verbosity-2,
-  });
-  debugger;
-
-  if( !read.exported || !Object.keys( read.exported ) )
-  return;
-*/
-
-  debugger;
   con.finally( ( err, arg ) =>
   {
     debugger;
+
     module2.finit();
     if( err )
     throw err;

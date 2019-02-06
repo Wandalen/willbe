@@ -1357,7 +1357,7 @@ function submodulesClean()
 
 //
 
-function submodulesSkip()
+function submodulesFormSkip()
 {
   let module = this;
   let will = module.will;
@@ -1693,7 +1693,7 @@ function _remoteDownload( o )
 
       module.willFilesFind();
       module.willFilesOpen();
-      module.submodulesSkip();
+      module.submodulesFormSkip();
       module.resourcesFormSkip();
 
       return module.ready
@@ -2923,7 +2923,7 @@ let Proto =
   submodulesUpgrade,
   submodulesClean,
 
-  submodulesSkip,
+  submodulesFormSkip,
   submodulesForm,
   _submodulesForm,
 
