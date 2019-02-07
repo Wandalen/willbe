@@ -98,15 +98,12 @@ function readExported()
     if( willFile.data && willFile.data.exported )
     for( let exportedName in willFile.data.exported )
     {
-      // logger.log( exportedName );
-      // debugger;
       if( exportedName === exported.name )
       continue;
       let exported2 = module2.exportedMap[ exportedName ];
       _.assert( exported2 instanceof Self );
       module.resourceImport( exported2 );
     }
-    // debugger;
 
     module2.finit();
     if( err )

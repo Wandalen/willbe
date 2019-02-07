@@ -1822,7 +1822,6 @@ function multipleExports( test )
   let modulesPath = _.path.join( dirPath, '.module' );
   let exportPath = _.path.join( dirPath, 'out' );
   let outWillPath = _.path.join( exportPath, 'multiple-exports.out.will.yml' );
-  // let buildOutPath = _.path.join( dirPath, 'out.debug' );
 
   let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
   willExecPath = _.path.nativize( willExecPath );
@@ -2224,6 +2223,75 @@ multipleExports.timeOut = 130000;
 
 //
 
+function multipleExportsImport( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
+  let dirPath = _.path.join( self.tempDir, test.name );
+  let modulesPath = _.path.join( dirPath, '.module' );
+  let exportPath = _.path.join( dirPath, 'out' );
+  let outWillPath = _.path.join( exportPath, 'multiple-exports.out.will.yml' );
+
+  let willExecPath = _.path.join( _.path.normalize( __dirname ), '../will/Exec2' );
+  willExecPath = _.path.nativize( willExecPath );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    path : 'node ' + willExecPath,
+    currentPath : dirPath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  let find = _.fileProvider.filesFinder
+  ({
+    recursive : 2,
+    includingTerminals : 1,
+    includingDirs : 1,
+    includingTransient : 1,
+    allowingMissed : 0,
+    outputFormat : 'relative',
+  });
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.export debug:1';
+
+    _.fileProvider.filesDelete( dirPath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : dirPath } });
+    _.fileProvider.filesDelete( exportPath );
+
+    return null;
+  })
+
+  shell({ args : [ '.export debug:0' ] })
+  shell({ args : [ '.export debug:1' ] })
+
+  .thenKeep( ( got ) =>
+  {
+
+    var files = find( exportPath );
+    test.identical( files, [ '.', './multiple-exports.debug.out.tgs', './multiple-exports.out.tgs', './multiple-exports.out.will.yml' ] );
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, String( files.length ) ) );
+
+    debugger;
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+multipleExportsImport.timeOut = 130000;
+
+//
+
 var Self =
 {
 
@@ -2262,6 +2330,7 @@ var Self =
     submodulesBrokenClean2,
 
     multipleExports,
+    multipleExportsImport,
 
   }
 
