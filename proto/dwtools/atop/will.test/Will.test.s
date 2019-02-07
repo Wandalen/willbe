@@ -620,7 +620,7 @@ function singleModuleExport( test )
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'reflected 2 files' ) );
-      test.is( _.strHas( got.output, '+ Write out file' ) );
+      test.is( _.strHas( got.output, '+ Write out will-file' ) );
       test.is( _.strHas( got.output, 'Exported proto.export with 2 files in' ) );
 
       var files = _.fileProvider.filesFind({ filePath : buildOutPath, recursive : 2, outputFormat : 'relative' })
