@@ -147,6 +147,55 @@ function formAssociates()
 
 //
 
+function moduleMake( o )
+{
+  let will = this.form();
+  let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
+  let logger = will.logger;
+
+  if( _.strIs( o ) )
+  o = { dirPath : o }
+  o.dirPath = o.dirPath || fileProvider.path.current();
+
+  _.assert( arguments.length === 1 );
+  _.routineOptions( moduleMake, o );
+
+  if( !o.module )
+  {
+    o.module = will.Module({ will : will, dirPath : o.dirPath }).preform();
+  }
+
+  _.assert( o.module.dirPath === o.dirPath );
+
+  o.module.willFilesFind();
+  o.module.willFilesOpen();
+
+  o.module.submodulesForm();
+
+  if( o.forming )
+  {
+    // o.module.submodulesForm();
+    o.module.resourcesForm();
+  }
+  else
+  {
+    // o.module.submodulesFormSkip();
+    o.module.resourcesFormSkip();
+  }
+
+  return o.module;
+}
+
+moduleMake.defaults =
+{
+  module : null,
+  dirPath : null,
+  forming : null,
+}
+
+//
+
 function _verbosityChange()
 {
   let will = this;
@@ -286,6 +335,8 @@ let Extend =
   form,
   formAssociates,
 
+  moduleMake,
+
   _verbosityChange,
   willFilesList,
 
@@ -316,7 +367,7 @@ _.Verbal.mixin( Self );
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;
-_global_[ Self.name ] = wTools[ Self.shortName ] = Self;
+wTools[ Self.shortName ] = Self;
 
 if( typeof module !== 'undefined' )
 require( './IncludeTop.s' );

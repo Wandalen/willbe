@@ -94,8 +94,3 @@ build :
       raw : 0
     steps :
       - reflect.proto.*=1
-
-  all :
-    steps :
-      - build::debug.raw
-      - build::release.compiled

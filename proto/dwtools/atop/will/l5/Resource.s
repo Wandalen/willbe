@@ -658,24 +658,39 @@ function inPathResolve_body( o )
 
   let result = resource.resolve( o );
 
-  // ({
-  //   query : o.query,
-  //   defaultPool : 'path',
-  //   prefixlessAction : 'throw',
-  //   // prefixlessAction : 'resolved',
-  //   resolvingPath : 'in',
-  // });
-
   return result;
 }
 
 var defaults = inPathResolve_body.defaults = Object.create( resolve.defaults );
-
 defaults.defaultPool = 'path';
 defaults.prefixlessAction = 'throw';
 defaults.resolvingPath = 'in';
 
 let inPathResolve = _.routineFromPreAndBody( resolve.pre, inPathResolve_body );
+
+//
+
+function reflectorResolve_body( o )
+{
+  let resource = this;
+  let module = resource.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( arguments.length === 1 );
+  _.assert( o.current === null || o.current === resource )
+
+  o.current = resource;
+
+  let resolved = module.reflectorResolve.body.call( module, o );
+
+  return resolved;
+}
+
+reflectorResolve_body.defaults = Object.create( _.Will.Module.prototype.reflectorResolve.defaults );
+
+let reflectorResolve = _.routineFromPreAndBody( _.Will.Module.prototype.reflectorResolve.pre, reflectorResolve_body );
 
 // --
 // relations
@@ -774,12 +789,8 @@ let Proto =
   // resolver
 
   resolve,
-  // resolve : resolve,
-  // inPathResolve : _.routineVectorize_functor( _inPathResolve ),
-
   inPathResolve,
-  // _inPathResolve : _inPathResolve,
-  // inPathResolve : _.routineVectorize_functor( _inPathResolve ),
+  reflectorResolve,
 
   // relation
 

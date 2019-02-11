@@ -1,14 +1,13 @@
 
 about :
 
-  name : "submodule"
+  name : "super"
   description : "Module for testing"
   version : "0.0.1"
 
 step :
 
   export :
-    inherit : predefined.export
     export : path::out.*=1
     tar : 1
     criterion :
@@ -23,5 +22,5 @@ build :
       raw : 1
       export : 1
     steps :
-      - build::*=1.raw
+      - build::*=1
       - step::export*=1

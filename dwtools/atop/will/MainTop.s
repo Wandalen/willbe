@@ -58,65 +58,53 @@ function _moduleOnReady( o )
   _.assert( _.routineIs( o.onReady ) );
   _.routineOptions( _moduleOnReady, arguments );
 
+  // if( !will.topCommand )
+  // will.topCommand = o.onReady;
+  //
+  // let module = will.currentModule;
+  // if( !module )
+  // {
+  //   module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).preform();
+  //   module.willFilesFind();
+  //   module.willFilesOpen();
+  //   if( o.forming )
+  //   {
+  //     module.submodulesForm();
+  //     module.resourcesForm();
+  //   }
+  //   else
+  //   {
+  //     module.submodulesFormSkip();
+  //     module.resourcesFormSkip();
+  //   }
+  // }
+
   if( !will.topCommand )
   will.topCommand = o.onReady;
 
-  // debugger;
-
   let module = will.currentModule;
   if( !module )
-  {
-    module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
-    module.willFilesFind();
-    module.willFilesOpen();
-    module.submodulesForm();
-    if( o.formingResources )
-    module.resourcesForm();
-    else
-    module.resourcesFormSkip();
-  }
+  module = will.currentModule = will.moduleMake
+  ({
+    dirPath : dirPath,
+    forming : o.forming,
+  });
 
-  return module.ready.split().keep( function( arg )
+  return will.currentModule.ready.split().keep( function( arg )
   {
     let result = o.onReady( module );
     _.assert( result !== undefined );
     return result;
   })
-  .finally( ( err, arg ) => will.moduleDone({ error : err || null, command : will.topCommand }) )
+  .finally( ( err, arg ) => will.moduleDone({ error : err || null, command : o.onReady }) )
   ;
-
-  // .finally( ( err, arg ) =>
-  // {
-  //   xxx
-  //   if( !will.topCommand )
-  //   {
-  //     if( will.beeping )
-  //     _.diagnosticBeep();
-  //     if( module === will.currentModule )
-  //     will.currentModule = null;
-  //     module.finit();
-  //   }
-  //   if( err )
-  //   throw err;
-  //   return arg;
-  // })
-  // .finally( ( err, arg ) =>
-  // {
-  //   if( err )
-  //   {
-  //     if( !will.topCommand )
-  //     _.appExitCode( -1 );
-  //     throw _.errLogOnce( err );
-  //   }
-  //   return arg;
-  // });
 
 }
 
 _moduleOnReady.defaults =
 {
   onReady : null,
-  formingResources : null,
+  forming : null,
 }
 
 //
@@ -128,7 +116,7 @@ function moduleOnReady( onReady )
   return will._moduleOnReady
   ({
     onReady : onReady,
-    formingResources : 1,
+    forming : 1,
   });
 }
 
@@ -141,7 +129,7 @@ function moduleOnReadyNonForming( onReady )
   return will._moduleOnReady
   ({
     onReady : onReady,
-    formingResources : 0,
+    forming : 0,
   });
 }
 
@@ -211,10 +199,10 @@ function errTooMany( elements, what )
   {
     debugger;
     if( elements.length === 0 )
-    if( e.subject )
-    return _.errBriefly( 'Please specify exactly one ' + what + ', ' + what + ' ' + _.strQuote( e.subject ) + ' does not exist' );
-    else
+    // return _.errBriefly( 'Please specify exactly one ' + what + ', ' + what + ' ' + _.strQuote( e.subject ) + ' does not exist' );
+    // else
     return _.errBriefly( 'Please specify exactly one ' + what + ', none satisfies passed arguments' );
+    else
     return _.errBriefly( 'Please specify exactly one ' + what + ', ' + elements.length + ' satisfy(s)' + '\nFound : ' + _.strQuote( _.select( elements, '*/name' ) ) );
   }
 
@@ -669,7 +657,7 @@ function commandWith( e )
   let isolated = ca.isolateSecond( e.subject );
   let dirPath = path.resolve( isolated.subject );
 
-  let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
+  let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).preform();
   module.willFilesFind();
   module.willFilesOpen();
   module.submodulesForm();
@@ -690,12 +678,9 @@ function commandWith( e )
   })
   .finally( ( err, arg ) =>
   {
-    debugger;
     will.moduleDone({ error : err || null, command : commandWith });
     if( err )
-    {
-      throw _.errLogOnce( err );
-    }
+    throw _.errLogOnce( err );
     return arg;
   });
 
@@ -755,7 +740,7 @@ function commandEach( e )
     if( will.moduleMap[ dirPath ] )
     return true;
 
-    let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).form();
+    let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).preform();
     module.willFilesFind();
     module.willFilesOpen();
     module.submodulesForm();
@@ -837,6 +822,7 @@ let Extend =
 
   Exec,
   exec,
+
   _moduleOnReady,
   moduleOnReady,
   moduleOnReadyNonForming,
@@ -899,7 +885,7 @@ _.classExtend
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;
-_global_[ Self.name ] = wTools[ Self.shortName ] = Self;
+wTools[ Self.shortName ] = Self;
 
 if( !module.parent )
 Self.Exec();

@@ -69,8 +69,8 @@ function form1()
   _.assert( !willf || !!willf.formed );
   _.assert( _.strDefined( reflector.name ) );
 
-  if( _.strHas( reflector.name, 'exported.export.' ) )
-  debugger;
+  // if( _.strHas( reflector.name, 'exported.export.' ) )
+  // debugger;
 
   /* begin */
 
@@ -124,8 +124,8 @@ function form2()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  if( _.strHas( reflector.name, 'exported.export.' ) )
-  debugger;
+  // if( _.strHas( reflector.name, 'exported.export.' ) )
+  // debugger;
 
   /* filters */
 
@@ -200,11 +200,11 @@ function _inheritSingle( o )
   _.assert( reflector.dstFilter instanceof _.FileRecordFilter );
   _.assert( reflector2.srcFilter instanceof _.FileRecordFilter );
   _.assert( reflector2.dstFilter instanceof _.FileRecordFilter );
-  _.assert( _.entityIdentical( reflector.srcFilter.inFilePath, reflector.filePath ) );
-  _.assert( _.entityIdentical( reflector2.srcFilter.inFilePath, reflector2.filePath ) );
+  _.assert( _.entityIdentical( reflector.srcFilter.filePath, reflector.filePath ) );
+  _.assert( _.entityIdentical( reflector2.srcFilter.filePath, reflector2.filePath ) );
 
-  if( _.strHas( reflector.name, 'exported.export.' ) )
-  debugger;
+  // if( _.strHas( reflector.name, 'exported.export.' ) )
+  // debugger;
 
   if( reflector2.formed < 2 )
   {
@@ -226,8 +226,8 @@ function _inheritSingle( o )
 
   if( _.mapIs( reflector.filePath ) )
   {
-    // reflector.dstFilter.inFilePath = _.longRemoveDuplicates( _.mapVals( reflector.filePath ) );
-    // reflector.dstFilter.inFilePath = reflector.dstFilter.inFilePath.filter( ( e ) => e === false ? false : true )
+    // reflector.dstFilter.filePath = _.longRemoveDuplicates( _.mapVals( reflector.filePath ) );
+    // reflector.dstFilter.filePath = reflector.dstFilter.filePath.filter( ( e ) => e === false ? false : true )
   }
 
   // logger.log( '_inheritSingle', reflector.nickName, '<-', reflector2.nickName );
@@ -262,9 +262,8 @@ function form3()
 
   // if( reflector.absoluteName === 'module::withSubmodules / module::Tools / reflector::exportedFiles.0' )
   // debugger;
-
-  if( reflector.absoluteName === 'module::withSubmodules / reflector::reflect.submodules' )
-  debugger;
+  // if( reflector.absoluteName === 'module::withSubmodules / reflector::reflect.submodules' )
+  // debugger;
 
   /* begin */
 
@@ -386,7 +385,7 @@ function sureRelativeOrGlobal( o )
   o = _.routineOptions( sureRelativeOrGlobal, arguments );
   _.assert( reflector.srcFilter instanceof _.FileRecordFilter );
   _.assert( reflector.dstFilter instanceof _.FileRecordFilter );
-  _.assert( reflector.srcFilter.inFilePath === reflector.filePath );
+  _.assert( reflector.srcFilter.filePath === reflector.filePath );
 
   try
   {
@@ -427,7 +426,7 @@ function isRelativeOrGlobal( o )
 
   _.assert( reflector.srcFilter instanceof _.FileRecordFilter );
   _.assert( reflector.dstFilter instanceof _.FileRecordFilter );
-  _.assert( reflector.srcFilter.inFilePath === reflector.filePath );
+  _.assert( reflector.srcFilter.filePath === reflector.filePath );
 
   if( !reflector.srcFilter.isRelativeOrGlobal( o ) )
   return false;
@@ -467,10 +466,10 @@ function relative()
     _.assert( path.isAbsolute( reflector.srcFilter.prefixPath ) );
     if( reflector.srcFilter.basePath )
     reflector.srcFilter.basePath = path.filter( reflector.srcFilter.basePath, relative );
-    if( reflector.srcFilter.inFilePath )
-    reflector.srcFilter.inFilePath = path.filter( reflector.srcFilter.inFilePath, relative );
-    if( reflector.srcFilter.stemPath )
-    reflector.srcFilter.stemPath = path.filter( reflector.srcFilter.stemPath, relative );
+    if( reflector.srcFilter.filePath )
+    reflector.srcFilter.filePath = path.filter( reflector.srcFilter.filePath, relative );
+    if( reflector.srcFilter.filePath )
+    reflector.srcFilter.filePath = path.filter( reflector.srcFilter.filePath, relative );
   }
 
   prefixPath = reflector.dstFilter.prefixPath;
@@ -480,10 +479,10 @@ function relative()
     _.assert( path.isAbsolute( reflector.dstFilter.prefixPath ) );
     if( reflector.dstFilter.basePath )
     reflector.dstFilter.basePath = path.filter( reflector.dstFilter.basePath, relative );
-    if( reflector.dstFilter.inFilePath )
-    reflector.dstFilter.inFilePath = path.filter( reflector.dstFilter.inFilePath, relative );
-    if( reflector.dstFilter.stemPath )
-    reflector.dstFilter.stemPath = path.filter( reflector.dstFilter.stemPath, relative );
+    if( reflector.dstFilter.filePath )
+    reflector.dstFilter.filePath = path.filter( reflector.dstFilter.filePath, relative );
+    if( reflector.dstFilter.filePath )
+    reflector.dstFilter.filePath = path.filter( reflector.dstFilter.filePath, relative );
   }
 
   /* */
@@ -552,7 +551,7 @@ function optionsForFindExport( o )
   let path = fileProvider.path;
   let result = Object.create( null );
 
-  o = _.routineOptions( optionsForReflectExport, arguments );
+  o = _.routineOptions( optionsForFindExport, arguments );
 
   _.assert( reflector.dstFilter === null || !reflector.dstFilter.hasFiltering() );
 
@@ -565,6 +564,11 @@ function optionsForFindExport( o )
   result.filter.basePath = path.resolve( module.dirPath, result.filter.basePath );
 
   return result;
+}
+
+optionsForFindExport.defaults =
+{
+  resolving : 0,
 }
 
 //
@@ -672,7 +676,7 @@ function filePathGet()
   let reflector = this;
   if( !reflector.srcFilter )
   return null;
-  return reflector.srcFilter.inFilePath;
+  return reflector.srcFilter.filePath;
 }
 
 //
@@ -683,8 +687,8 @@ function filePathSet( src )
   if( !reflector.srcFilter && src === null )
   return src;
   _.assert( _.objectIs( reflector.srcFilter ), 'Reflector should have srcFilter to set filePath' );
-  reflector.srcFilter.inFilePath = _.entityShallowClone( src );
-  return reflector.srcFilter.inFilePath;
+  reflector.srcFilter.filePath = _.entityShallowClone( src );
+  return reflector.srcFilter.filePath;
 }
 
 // --

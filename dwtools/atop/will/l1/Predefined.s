@@ -79,19 +79,23 @@ function stepRoutineReflect( frame )
   _.assert( !!opts.reflector, 'Expects option reflector' );
   _.assert( arguments.length === 1 );
 
-  let reflector = module.resolve
-  ({
-    query : opts.reflector,
-    defaultPool : 'reflector',
-    current : step,
-  });
+  let reflector = step.reflectorResolve( opts.reflector );
 
-  delete opts.reflector ;
-
-  reflector.form();
+  // let reflector = module.resolve
+  // ({
+  //   query : opts.reflector,
+  //   defaultPool : 'reflector',
+  //   current : step,
+  // });
+  //
+  // delete opts.reflector ;
+  //
+  // reflector.form();
 
   _.sure( reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strType( reflector ) )
   _.assert( reflector.formed === 3, () => reflector.nickName + ' is not formed' );
+
+  delete opts.reflector ;
 
   reflector = reflector.optionsForReflectExport();
 
@@ -117,8 +121,11 @@ function stepRoutineReflect( frame )
 
   if( verbosity >= 1 )
   {
-    let srcFilter = opts.srcFilter.clone().form();
-    let dstFilter = opts.dstFilter.clone().form();
+    let dstFilter = opts.dstFilter.clone();
+    let srcFilter = opts.srcFilter.clone().useDestination( dstFilter ).form();
+    debugger;
+    dstFilter.form();
+
     let src = srcFilter.srcPathCommon();
     let dst = dstFilter.dstPathCommon();
     logger.log( ' + ' + step.name + ' reflected ' + opts.result.length + ' files ' + path.moveReport( dst, src ) + ' in ' + _.timeSpent( time ) );
@@ -291,6 +298,74 @@ stepRoutineShell.uniqueOptions =
 
 //
 
+function stepRoutineConcatJs( frame )
+{
+  let step = this;
+  let module = frame.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = frame.opts;
+
+  _.assert( arguments.length === 1 );
+
+  debugger;
+  let reflector = step.reflectorResolve( opts.reflector );
+  delete opts.reflector ;
+  _.mapSupplement( opts, reflector.optionsForReflectExport() )
+  // _.mapSupplement( opts, reflector.optionsForFindExport() )
+  // debugger; xxx
+
+  _.include( 'wTranspilationStrategy' );
+
+  let ts = new _.TranspilationStrategy().form();
+  let session = ts.session
+  ({
+    inputPath : __filename,
+    outputPath : outputPath,
+  });
+
+  return session.form().proceed()
+  .finally( ( err, arg ) =>
+  {
+    debugger;
+    if( err )
+    throw _.errLogOnce( err );
+    return arg;
+  });
+
+  // /* */
+  //
+  // return _.shell
+  // ({
+  //   path : opts.shell,
+  //   currentPath : opts.currentPath,
+  //   verbosity : will.verbosity - 1,
+  // })
+  // .finally( ( err, arg ) =>
+  // {
+  //   if( err )
+  //   throw _.errBriefly( 'Failed to shell', step.nickName, '\n', err );
+  //   return arg;
+  // });
+
+}
+
+stepRoutineConcatJs.stepOptions =
+{
+  reflector : null,
+  // shell : null,
+  // currentPath : null,
+}
+
+stepRoutineConcatJs.uniqueOptions =
+{
+  // shell : null,
+}
+
+//
+
 function stepRoutineSubmodulesDownload( frame )
 {
   let step = this;
@@ -412,6 +487,8 @@ let Extend =
 
   stepRoutineJs,
   stepRoutineShell,
+
+  stepRoutineConcatJs,
 
   stepRoutineSubmodulesDownload,
   stepRoutineSubmodulesUpgrade,

@@ -159,7 +159,7 @@ function unform()
 
 //
 
-function form()
+function preform()
 {
   let module = this;
   let will = module.will;
@@ -174,8 +174,8 @@ function form()
   module.stager.stageState( 'preformed', 1 );
   module.stager.stageState( 'preformed', 2 );
 
-  con.keep( () => module.form1() );
-  con.keep( () => module.form2() );
+  con.keep( () => module.preform1() );
+  con.keep( () => module.preform2() );
   con.finally( ( err, arg ) =>
   {
     if( err )
@@ -190,7 +190,7 @@ function form()
 
 //
 
-function form1()
+function preform1()
 {
   let module = this;
   let will = module.will;
@@ -221,7 +221,7 @@ function form1()
 
 //
 
-function form2()
+function preform2()
 {
   let module = this;
   let will = module.will;
@@ -287,6 +287,12 @@ function predefinedForm()
   ({
     name : 'predefined.shell',
     stepRoutine : Predefined.stepRoutineShell,
+  })
+
+  step
+  ({
+    name : 'predefined.concat.js',
+    stepRoutine : Predefined.stepRoutineConcatJs,
   })
 
   step
@@ -473,6 +479,7 @@ function cleanWhat( o )
 
   if( o.cleaningOut )
   {
+    let files = [];
 
     for( let e = 0 ; e < exps.length ; e++ )
     {
@@ -480,10 +487,11 @@ function cleanWhat( o )
       let archiveFilePath = exp.archiveFilePathFor();
       let outFilePath = exp.outFilePathFor();
 
-      find( [ archiveFilePath, outFilePath ] );
+      _.arrayAppendArrayOnce( files, [ archiveFilePath, outFilePath ] );
 
     }
 
+    find( files );
   }
 
   /* temp dir */
@@ -504,12 +512,17 @@ function cleanWhat( o )
 
   }
 
+  filePaths.sort();
+
   return result;
 
   /* - */
 
   function find( filePath )
   {
+
+    // debugger;
+    let commonPath = path.detrail( path.common( filePath ) );
 
     let found = fileProvider.filesDelete
     ({
@@ -526,14 +539,30 @@ function cleanWhat( o )
     });
 
     found = _.arrayFlattenOnce( found );
+
     if( found.length )
+    _.arrayFlattenOnce( filePaths, found );
+
+    if( found.length )
+    for( let p in result )
     {
-      _.arrayFlattenOnce( filePaths, found );
-      if( !result[ found[ 0 ] ] )
-      result[ found[ 0 ] ] = found;
+      if( !_.strHas( commonPath, p ) )
+      continue;
+      if( p === '/' )
+      continue;
+      if( !result[ commonPath ] )
+      result[ commonPath ] = found;
       else
-      _.arrayFlattenOnce( result[ found[ 0 ] ], found );
+      _.arrayFlattenOnce( result[ commonPath ], found );
+      found = [];
+      break;
     }
+
+    if( found.length )
+    if( !result[ commonPath ] )
+    result[ commonPath ] = found;
+    else
+    _.arrayFlattenOnce( result[ commonPath ], found );
 
   }
 
@@ -556,22 +585,22 @@ function clean()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let time = _.timeNow();
-  let filePaths = module.cleanWhat.apply( module, arguments );
+  let files = module.cleanWhat.apply( module, arguments );
 
   debugger;
-  _.assert( _.arrayIs( filePaths[ '/' ] ) );
+  _.assert( _.arrayIs( files[ '/' ] ) );
 
-  for( let f = filePaths[ '/' ].length-1 ; f >= 0 ; f-- )
+  for( let f = files[ '/' ].length-1 ; f >= 0 ; f-- )
   {
-    let filePath = filePaths[ '/' ][ f ];
+    let filePath = files[ '/' ][ f ];
     _.assert( path.isAbsolute( filePath ) );
     fileProvider.fileDelete({ filePath : filePath, verbosity : 1, throwing : 0 });
   }
 
   if( logger.verbosity >= 2 )
-  logger.log( ' - Clean deleted ' + filePaths[ '/' ].length + ' file(s) in ' + _.timeSpent( time ) );
+  logger.log( ' - Clean deleted ' + files[ '/' ].length + ' file(s) in ' + _.timeSpent( time ) );
 
-  return filePaths;
+  return files;
 }
 
 clean.defaults = Object.create( cleanWhat.defaults );
@@ -954,7 +983,7 @@ function willFilesFind()
     let result = module._willFilesFindMaybe({ isInFile : !module.supermodule });
     if( !result )
     {
-      debugger;
+      // debugger;
       if( module.supermodule )
       throw _.errBriefly( 'Found no .out.will file for', module.nickName, 'at', _.strQuote( module.dirPath ) );
       else
@@ -1263,6 +1292,7 @@ function _submodulesDownload( o )
   for( let n in module.submoduleMap )
   {
     let submodule = module.submoduleMap[ n ].loadedModule;
+    // debugger;
     _.assert( !!submodule && submodule.preformed === 3, 'Submodule', ( submodule ? submodule.nickName : n ), 'was not preformed' );
 
     if( !submodule.isRemote )
@@ -2252,6 +2282,53 @@ defaults.resource = 'export';
 // resolver
 // --
 
+function reflectorResolve_pre( routine, args )
+{
+  let o = args[ 0 ];
+  if( _.strIs( o ) )
+  o = { query : o }
+
+  _.routineOptions( routine, o );
+  _.assert( arguments.length === 2 );
+  _.assert( args.length === 1 );
+
+  return o;
+}
+
+//
+
+function reflectorResolve_body( o )
+{
+  let module = this;
+  let will = module.will;
+
+  let reflector = module.resolve
+  ({
+    query : o.query,
+    defaultPool : 'reflector',
+    current : o.current,
+  });
+
+  // delete opts.reflector ;
+
+  reflector.form();
+
+  _.sure( reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strType( reflector ) )
+  _.assert( reflector.formed === 3, () => reflector.nickName + ' is not formed' );
+
+  return reflector;
+}
+
+reflectorResolve_body.defaults =
+{
+  query : null,
+  current : null,
+}
+
+let reflectorResolve = _.routineFromPreAndBody( reflectorResolve_pre, reflectorResolve_body );
+
+//
+
 function errResolving( o )
 {
   let module = this;
@@ -2355,12 +2432,20 @@ function _resolveMaybe_body( o )
   if( o.currentModule === null )
   o.currentModule = module;
 
-  let result = module._resolveSelect( o );
+  if( o.criterion === null && o.current && o.current.criterion )
+  o.criterion = o.current.criterion;
+
+  let result = module._resolveAct( o );
 
   if( result === undefined )
   {
     debugger;
-    result = module.errResolving({ query : o.query, current : o.current, err : _.ErrorLooking( o.query, 'was not found' ) })
+    result = module.errResolving
+    ({
+      query : o.query,
+      current : o.current,
+      err : _.ErrorLooking( o.query, 'was not found' ),
+    })
   }
 
   if( _.errIs( result ) )
@@ -2413,7 +2498,7 @@ function _resolveMaybe_body( o )
 
   return result;
 
-  /*  */
+  /* - */
 
   function pathResolve( p )
   {
@@ -2437,6 +2522,7 @@ _resolveMaybe_body.defaults =
   prefixlessAction : 'default',
   visited : null,
   current : null,
+  criterion : null,
   currentModule : null,
   resolvingPath : null,
   unwrappingPath : 1,
@@ -2455,13 +2541,17 @@ function _resolve_body( o )
   let module = this;
   let will = module.will;
   let current = o.current;
-
   let result = module._resolveMaybe.body.call( module, o );
 
   if( _.errIs( result ) )
   {
     debugger;
-    throw module.errResolving({ query : o.query, current : current, err : result });
+    throw module.errResolving
+    ({
+      query : o.query,
+      current : current,
+      err : result,
+    });
   }
 
   return result;
@@ -2473,7 +2563,7 @@ let _resolve = _.routineFromPreAndBody( _resolve_pre, _resolve_body );
 
 //
 
-function _resolveSelect( o )
+function _resolveAct( o )
 {
   let module = this;
   let will = module.will;
@@ -2484,7 +2574,7 @@ function _resolveSelect( o )
   let current = o.current;
 
   _.assert( arguments.length === 1 );
-  _.assertRoutineOptions( _resolveSelect, arguments );
+  _.assertRoutineOptions( _resolveAct, arguments );
   _.assert( o.currentModule instanceof will.Module );
 
   /* */
@@ -2496,7 +2586,12 @@ function _resolveSelect( o )
     }
     else if( o.prefixlessAction === 'throw' || o.prefixlessAction === 'error' )
     {
-      let err = module.errResolving({ query : o.query, current : current, err : _.ErrorLooking( 'Resource selector should have prefix' ) });
+      let err = module.errResolving
+      ({
+        query : o.query,
+        current : current,
+        err : _.ErrorLooking( 'Resource selector should have prefix' ),
+      });
       if( o.prefixlessAction === 'throw' )
       throw err;
     }
@@ -2509,6 +2604,9 @@ function _resolveSelect( o )
 
   /* */
 
+  // if( o.query === 'submodule::*/exported::*=1/reflector::exportedFiles*=1' )
+  // debugger;
+
   try
   {
 
@@ -2519,19 +2617,31 @@ function _resolveSelect( o )
       onUpBegin : onUpBegin,
       onUpEnd : onUpEnd,
       missingAction : 'error',
-      _inherited :
+      _current :
       {
         module : o.currentModule,
         exported : null,
-      }
+      },
+      _extend :
+      {
+        resolveOptions : o,
+      },
     });
 
   }
   catch( err )
   {
     debugger;
-    throw module.errResolving({ query : o.query, current : current, err : err });
+    throw module.errResolving
+    ({
+      query : o.query,
+      current : current,
+      err : err,
+    });
   }
+
+  // if( o.query === 'submodule::*/exported::*=1/reflector::exportedFiles*=1' )
+  // debugger;
 
   return result;
 
@@ -2541,36 +2651,20 @@ function _resolveSelect( o )
   {
     let it = this;
 
-    if( !it.query )
-    {
-      return;
-    }
+    inheritsUpdate.call( it );
+    globCriterionFilter.call( it );
 
-    if( it.src && it.src instanceof will.Submodule )
-    {
-      it._inherited.module = it.src.loadedModule;
-    }
+    if( !it.writingDown )
+    return;
 
-    if( it.src && it.src instanceof will.Exported )
-    {
-      it._inherited.exported = it.src;
-    }
+    /*
+    resourceMapSelect, stateUpdate should go after queryParse
+    */
 
     queryParse.call( it );
+    resourceMapSelect.call( it );
+    stateUpdate.call( it );
 
-    let kind = it.queryParsed.kind
-    if( kind === 'path' && o.hasPath === null )
-    o.hasPath = true;
-
-    let pool = it._inherited.module.resourceMapForKind( kind );
-
-    if( !pool )
-    {
-      debugger;
-      throw _.ErrorLooking( 'Unknown type of resource, no pool for such resource', _.strQuote( it.queryParsed.full ) );
-    }
-
-    it.src = pool;
   }
 
   /* */
@@ -2580,23 +2674,22 @@ function _resolveSelect( o )
     let it = this;
 
     exportedWriteThrough.call( it );
-    globCriterionFilter.call( it );
     exportedPathResolve.call( it );
+    currentExclude.call( it );
 
   }
 
   /* */
 
-  function queryParse()
+  function inheritsUpdate()
   {
     let it = this;
-    _.assert( !!it._inherited.module );
-    let splits = it._inherited.module._strSplit({ query : it.query, defaultPool : o.defaultPool });
 
-    it.queryParsed = Object.create( null );
-    it.queryParsed.full = splits.join( '' );
-    it.queryParsed.kind = splits[ 0 ];
-    it.query = it.queryParsed.name = splits[ 2 ];
+    if( it.src && it.src instanceof will.Submodule )
+    it._current.module = it.src.loadedModule;
+
+    if( it.src && it.src instanceof will.Exported )
+    it._current.exported = it.src;
 
   }
 
@@ -2607,13 +2700,75 @@ function _resolveSelect( o )
     let it = this;
 
     if( it.down && it.down.isGlob )
-    if( o.current && o.current.criterion && it.src && it.src.criterionSattisfy )
+    if(  o.criterion && it.src && it.src.criterionSattisfy )
     {
-      if( !it.src.criterionSattisfy( o.current.criterion ) )
+
+      if( !it.src.criterionSattisfy( o.criterion ) )
       {
         it.looking = false;
         it.writingDown = false;
       }
+
+    }
+
+  }
+
+  /* */
+
+  function queryParse()
+  {
+    let it = this;
+
+    if( !it.query )
+    return;
+
+    _.assert( !!it._current.module );
+
+    let splits = it._current.module._strSplit({ query : it.query, defaultPool : o.defaultPool });
+
+    it.queryParsed = Object.create( null );
+    it.queryParsed.full = splits.join( '' );
+    it.queryParsed.kind = splits[ 0 ];
+    it.query = it.queryParsed.name = splits[ 2 ];
+
+  }
+
+  /* */
+
+  function resourceMapSelect()
+  {
+    let it = this;
+
+    if( !it.query )
+    return;
+
+    let kind = it.queryParsed.kind;
+
+    let pool = it._current.module.resourceMapForKind( kind );
+
+    if( !pool )
+    {
+      debugger;
+      throw _.ErrorLooking( 'Unknown type of resource, no pool for such resource', _.strQuote( it.queryParsed.full ) );
+    }
+
+    it.src = pool;
+
+  }
+
+  /* */
+
+  function stateUpdate()
+  {
+    let it = this;
+
+    if( it.queryParsed )
+    {
+
+      let kind = it.queryParsed.kind
+      if( kind === 'path' && o.hasPath === null )
+      o.hasPath = true;
+
     }
 
   }
@@ -2642,12 +2797,14 @@ function _resolveSelect( o )
   {
     let it = this;
 
-    if( !it.query && it._inherited.exported && it.result )
+    if( !it.query && it._current.exported && it.result )
     {
+
+      // debugger;
 
       if( it.result instanceof will.Reflector )
       {
-        let m = it._inherited.module;
+        let m = it._current.module;
         let reflector = it.result;
         _.assert( reflector.inherit.length === 0 );
         reflector.form();
@@ -2655,7 +2812,7 @@ function _resolveSelect( o )
       }
       else if( it.result instanceof will.PathObj )
       {
-        let m = it._inherited.module;
+        let m = it._current.module;
         it.result = path.s.join( m.inPath, it.result.path );
       }
 
@@ -2663,9 +2820,24 @@ function _resolveSelect( o )
 
   }
 
+  /* */
+
+  function currentExclude()
+  {
+    let it = this;
+
+    if( it.src === o.current && it.down )
+    {
+      debugger;
+      it.looking = false;
+      it.writingDown = false;
+    }
+
+  }
+
 }
 
-var defaults = _resolveSelect.defaults = Object.create( _resolve.defaults )
+var defaults = _resolveAct.defaults = Object.create( _resolve.defaults )
 
 defaults.visited = null;
 
@@ -2789,7 +2961,7 @@ function resourceImport( resource2 )
 
   let resourceData = resource2.dataExport();
 
-  debugger;
+  // debugger;
 
   for( let k in resourceData )
   {
@@ -2815,7 +2987,7 @@ function resourceImport( resource2 )
   resourceData.module = module;
   resourceData.name = module.resourceNameAllocate( resource2.KindName, resource2.name )
 
-  debugger;
+  // debugger;
 
   let resource = new resource2.Self( resourceData );
   resource.form1();
@@ -2932,9 +3104,9 @@ let Proto =
   finit,
   init,
   unform,
-  form,
-  form1,
-  form2,
+  preform,
+  preform1,
+  preform2,
   predefinedForm,
 
   // etc
@@ -3021,6 +3193,7 @@ let Proto =
 
   // resolver
 
+  reflectorResolve,
   errResolving,
 
   strSplitShort,
@@ -3029,12 +3202,12 @@ let Proto =
   strIsResolved,
 
   _resolve,
-  resolve : _resolve,
+  resolve : _resolve, /* tests required */
 
   _resolveMaybe,
   resolveMaybe : _resolveMaybe,
 
-  _resolveSelect,
+  _resolveAct,
 
   // exporter
 
