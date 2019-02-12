@@ -40,7 +40,6 @@ step :
     export : path::doc
     tar : 0
     criterion :
-      debug : 1
       doc : 1
 
 build :
@@ -60,7 +59,6 @@ build :
 
   doc.export :
     criterion :
-      debug : 1
       export : 1
       doc : 1
     steps :
