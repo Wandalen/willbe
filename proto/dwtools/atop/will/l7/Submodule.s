@@ -106,7 +106,7 @@ function _load()
     dirPath : path.join( module.dirPath, submodule.path ),
     supermodule : module,
     associatedSubmodule : submodule,
-  }).form();
+  }).preform();
 
   submodule.loadedModule.willFilesFind({ isInFile : 0 });
   submodule.loadedModule.willFilesOpen();

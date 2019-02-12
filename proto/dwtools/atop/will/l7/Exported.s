@@ -76,7 +76,7 @@ function readExported()
 
   // debugger; return; xxx
 
-  let module2 = will.Module({ will : will, dirPath : path.dir( outFilePath ) }).form();
+  let module2 = will.Module({ will : will, dirPath : path.dir( outFilePath ) }).preform();
   let willFiles = module2.willFilesSelect( outFilePath );
   let willFile = willFiles[ 0 ];
 
@@ -89,30 +89,38 @@ function readExported()
   _.assert( willFiles.length === 1 );
   _.assert( willFile.exists() );
 
-  module2.willFilesOpen();
-  module2.submodulesFormSkip();
-  let con = module2.resourcesFormSkip();
-
-  con.finally( ( err, arg ) =>
+  try
   {
-    if( willFile.data && willFile.data.exported )
-    for( let exportedName in willFile.data.exported )
+
+    module2.willFilesOpen();
+    module2.submodulesFormSkip();
+    let con = module2.resourcesFormSkip();
+
+    con.finally( ( err, arg ) =>
     {
-      if( exportedName === exported.name )
-      continue;
-      let exported2 = module2.exportedMap[ exportedName ];
-      _.assert( exported2 instanceof Self );
-      module.resourceImport( exported2 );
-    }
+      if( willFile.data && willFile.data.exported )
+      for( let exportedName in willFile.data.exported )
+      {
+        if( exportedName === exported.name )
+        continue;
+        let exported2 = module2.exportedMap[ exportedName ];
+        _.assert( exported2 instanceof Self );
+        module.resourceImport( exported2 );
+      }
 
-    module2.finit();
-    if( err )
-    throw err;
-    return arg;
-  });
+      module2.finit();
+      if( err )
+      throw err;
+      return arg;
+    });
 
-  let result = con.toResource();
-  return result;
+    let result = con.toResource();
+    return result;
+  }
+  catch( err )
+  {
+    _.errLogOnce( _.errBriefly( err ) );
+  }
 }
 
 //
@@ -168,7 +176,7 @@ function proceedExportedReflectors( exportSelector )
     }
 
     exportedReflector.srcFilter.and( filter2 ).pathsInherit( filter2 );
-    exportedReflector.srcFilter.inFilePath = exportedReflector.filePath;
+    exportedReflector.srcFilter.filePath = exportedReflector.filePath;
 
   }
   else if( _.arrayIs( exp ) )
@@ -185,7 +193,6 @@ function proceedExportedReflectors( exportSelector )
       exportedReflector.srcFilter.filePath[ exp[ p ] ] = true;
     }
     exportedReflector.srcFilter.basePath = commonPath;
-    // exportedReflector.srcFilter.inFilePath = exportedReflector.filePath;
 
   }
   else if( _.strIs( exp ) )
@@ -198,11 +205,11 @@ function proceedExportedReflectors( exportSelector )
   }
   else _.assert( 0 );
 
-  debugger;
+  // debugger;
   exportedReflector.criterion = _.mapExtend( null, exported.criterion );
   exportedReflector.form();
   exported.exportedReflector = exportedReflector;
-  debugger;
+  // debugger;
 
   _.assert( _.mapIs( exportedReflector.criterion ) );
   _.assert( exportedReflector.dstFilter.prefixPath === null );
@@ -228,7 +235,7 @@ function proceedExportedReflectors( exportSelector )
   let exportedDirPath = srcFilter.basePaths[ 0 ];
 
   exported.exportedDirPath = module.resourceAllocate( 'path', 'exportedDir.' + exported.name );
-  exported.exportedDirPath.path = path.dot( path.relative( module.dirPath, exportedDirPath ) );
+  exported.exportedDirPath.path = path.dot( path.relative( module.dirPath, exportedDirPath ) ); // xxx
   exported.exportedDirPath.criterion = _.mapExtend( null, exported.criterion );
   exported.exportedDirPath.form();
 
@@ -252,23 +259,39 @@ function proceedExportedFilesReflector()
 
   /* */
 
-  let exportedFilesPath = hd.filesFind
-  ({
-    recursive : 2,
-    includingDirs : 1,
-    includingTerminals : 1,
-    mandatory : 0,
-    verbosity : 0,
-    outputFormat : 'record',
-    filter : exported.srcFilter.clone(),
-  });
+  let exportedFilesPath;
+  try
+  {
 
-  exportedFilesPath = exported.exportedFilesPath.path = _.filter( exportedFilesPath, ( r ) => r.relative );
+    exportedFilesPath = hd.filesFind
+    ({
+      recursive : 2,
+      includingDirs : 1,
+      includingTerminals : 1,
+      mandatory : 0,
+      verbosity : 0,
+      outputFormat : 'record',
+      filter : exported.srcFilter.clone(),
+    });
+
+  }
+  catch( err )
+  {
+    throw _.err( 'Cant collect files for export\n', err );
+  }
+
+  exportedFilesPath = _.filter( exportedFilesPath, ( r ) => r.absolute );
+
+  debugger;
+
+  exported.exportedFilesPath.path = path.s.relative( module.dirPath, exportedFilesPath );
+
+  // exported.exportedFilesPath.path = _.filter( exportedFilesPath, ( r ) => r.relative );
 
   _.sure
   (
     exported.exportedFilesPath.path.length > 0,
-    () => 'No file found at ' + path.commonReport( exported.srcFilter.stemPath )
+    () => 'No file found at ' + path.commonReport( exported.srcFilter.filePath )
     + ', cant export ' + exported.build.name,
   );
 
@@ -289,7 +312,8 @@ function proceedExportedFilesReflector()
 
   _.assert( exportedFilesReflector.dstFilter.basePath === null );
   exportedFilesReflector.dstFilter.filteringClear();
-  exportedFilesReflector.filePath = { [ exported.exportedFilesPath.refName ] : true }
+  // exportedFilesReflector.filePath = { [ exported.exportedFilesPath.refName ] : true }
+  exportedFilesReflector.filePath = path.fileMapExtend( null, exportedFilesPath );
   exportedFilesReflector.recursive = 0;
   exportedFilesReflector.form();
 
@@ -414,15 +438,6 @@ function proceed( frame )
   exported.criterion = _.mapExtend( null, build.criterion );
   exported.version = module.about.version;
 
-  // /* baseDir */
-  //
-  // let baseDirPath = build.baseDirPathFor();
-  // _.sure( module.pathMap.baseDir === undefined || module.pathMap.baseDir === baseDirPath, 'path::baseDir should not be defined manually' );
-  // if( !module.pathMap.baseDir )
-  // {
-  //   will.PathObj({ module : module, name : 'baseDir', path : baseDirPath }).form();
-  // }
-
   /* */
 
   exported.readExported();
@@ -448,22 +463,6 @@ function proceed( frame )
 
   return exported;
 }
-
-// //
-//
-// function exportedDirPathSet( src )
-// {
-//   let exported = this;
-//   let module = exported.module;
-//   let will = module.will;
-//
-//   _.assert( src === null || _.strIs( src ) || src instanceof will.Resource );
-//   _.assert( !_.strIs( src ) || !_.strHas( src, '::' ), 'Referencing is not tested' );
-//
-//   if( _.strIs( src ) )
-//
-//   return src;
-// }
 
 // --
 // relations
@@ -516,7 +515,6 @@ let Forbids =
 
 let Accessors =
 {
-  // exportedDirPath : {},
 }
 
 // --
@@ -535,8 +533,6 @@ let Proto =
   proceedArchive,
   proceedOutFile,
   proceed,
-
-  // exportedDirPathGet,
 
   // relation
 
