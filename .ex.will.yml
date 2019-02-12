@@ -62,5 +62,5 @@ build :
       export : 1
       doc : 1
     steps :
-      - step::export.doc
+      - step::export.doc*=1
 
