@@ -7,7 +7,7 @@ about :
 
 step :
 
-  export :
+  export.default :
     inherit : predefined.export
     export : path::out.*=1
     tar : 1
@@ -31,7 +31,7 @@ build :
       export : 1
     steps :
       - build::*=1.raw
-      - step::export*=1
+      - step::export.default*=1
 
   doc.export :
     criterion :
