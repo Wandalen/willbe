@@ -2448,8 +2448,8 @@ function multipleExportsImportProblem( test )
     return null;
   })
 
-  shell({ args : [ '.export doc.export' ] })
-  shell({ args : [ '.export export.debug' ] })
+  shell({ args : [ '.with . .export doc.export' ] })
+  shell({ args : [ '.with . .export export.debug' ] })
   shell({ args : [ '.with super .build doc:1' ] })
 
   .thenKeep( ( got ) =>
