@@ -1,0 +1,41 @@
+
+about :
+
+  name : "submodule"
+  description : "Module for testing"
+  version : "0.0.1"
+
+step :
+
+  export.default :
+    inherit : predefined.export
+    export : path::out.*=1
+    tar : 1
+    criterion :
+      debug : [ 0,1 ]
+
+  export.doc :
+    inherit : predefined.export
+    export : path::doc
+    tar : 0
+    criterion :
+      doc : 1
+
+build :
+
+  export :
+    criterion :
+      default : 1
+      debug : [ 0,1 ]
+      raw : 1
+      export : 1
+    steps :
+      - build::*=1.raw
+      - step::export.default*=1
+
+  doc.export :
+    criterion :
+      export : 1
+      doc : 1
+    steps :
+      - step::export.doc*=1
