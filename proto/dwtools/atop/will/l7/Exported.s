@@ -73,9 +73,6 @@ function readExported()
   let logger = will.logger;
 
   let outFilePath = build.outFilePathFor();
-
-  // debugger; return; xxx
-
   let module2 = will.Module({ will : will, dirPath : path.dir( outFilePath ) }).preform();
   let willFiles = module2.willFilesSelect( outFilePath );
   let willFile = willFiles[ 0 ];
@@ -96,7 +93,8 @@ function readExported()
     module2.submodulesFormSkip();
     let con = module2.resourcesFormSkip();
 
-    con.finally( ( err, arg ) =>
+    con
+    .thenKeep( ( arg ) =>
     {
       if( willFile.data && willFile.data.exported )
       for( let exportedName in willFile.data.exported )
@@ -107,12 +105,23 @@ function readExported()
         _.assert( exported2 instanceof Self );
         module.resourceImport( exported2 );
       }
-
-      module2.finit();
-      if( err )
-      throw err;
       return arg;
-    });
+    })
+    .finallyKeep( ( err, arg ) =>
+    {
+      try
+      {
+        module2.finit();
+      }
+      catch( err2 )
+      {
+        _.errLogOnce( err2 );
+      }
+      if( err )
+      throw _.errLogOnce( _.errBriefly( err ) );
+      return arg;
+    })
+    ;
 
     let result = con.toResource();
     return result;
@@ -121,6 +130,7 @@ function readExported()
   {
     _.errLogOnce( _.errBriefly( err ) );
   }
+
 }
 
 //

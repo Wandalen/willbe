@@ -1816,16 +1816,6 @@ function multipleExports( test )
     ready : ready,
   });
 
-  // let find = _.fileProvider.filesFinder
-  // ({
-  //   recursive : 2,
-  //   includingTerminals : 1,
-  //   includingDirs : 1,
-  //   includingTransient : 1,
-  //   allowingMissed : 1,
-  //   outputFormat : 'relative',
-  // });
-
   /* - */
 
   ready
@@ -2414,6 +2404,115 @@ multipleExportsImport.timeOut = 130000;
 
 //
 
+function multipleExportsBroken( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports-broken' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulesPath = _.path.join( routinePath, '.module' );
+  let outPath = _.path.join( routinePath, 'out' );
+  let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
+  let willExecPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec2' ) );
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    path : 'node ' + willExecPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  });
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.export debug:1';
+
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+    return null;
+  })
+
+  shell({ args : [ '.export debug:1' ] })
+
+  .thenKeep( ( got ) =>
+  {
+
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js' ] );
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.fileExists( _.path.join( outPath, 'debug' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( outPath, 'release' ) ) );
+
+    test.is( _.strHas( got.output, 'submodule.debug.out.tgs' ) );
+    test.is( _.strHas( got.output, 'out/submodule.out.will.yml' ) );
+
+    var outfile = _.fileProvider.fileConfigRead( outWillPath );
+    var exported =
+    {
+      'export.debug' :
+      {
+        version : '0.0.1',
+        criterion :
+        {
+          default : 1,
+          debug : 1,
+          raw : 1,
+          export : 1
+        },
+        exportedReflector : 'reflector::exported.export.debug',
+        exportedFilesReflector : 'reflector::exportedFiles.export.debug',
+        exportedDirPath : 'path::exportedDir.export.debug',
+        exportedFilesPath : 'path::exportedFiles.export.debug',
+        archiveFilePath : 'path::archiveFile.export.debug'
+      }
+    }
+
+    test.identical( outfile.exported, exported );
+
+    var exportedReflector =
+    {
+      srcFilter : { filePath : { './out/debug' : true }, prefixPath : '.' },
+      criterion :
+      {
+        default : 1,
+        debug : 1,
+        raw : 1,
+        export : 1
+      }
+    }
+    test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
+
+    var exportedReflectorFiles =
+    {
+      recursive : 0,
+      srcFilter :
+      {
+        filePath : { '.' : true, 'File.debug.js' : true },
+        basePath : '.',
+        prefixPath : 'out/debug'
+      },
+      criterion :
+      {
+        default : 1,
+        debug : 1,
+        raw : 1,
+        export : 1
+      }
+    }
+
+    test.identical( outfile.reflector[ 'exportedFiles.export.debug' ], exportedReflectorFiles );
+
+    return null;
+  })
+
+  return ready;
+}
+
+//
+
 var Self =
 {
 
@@ -2452,6 +2551,7 @@ var Self =
 
     multipleExports,
     multipleExportsImport,
+    multipleExportsBroken,
 
   }
 

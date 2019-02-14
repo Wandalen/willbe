@@ -37,9 +37,12 @@ function init( o )
   reflector.srcFilter = fileProvider.recordFilter();
   reflector.dstFilter = fileProvider.recordFilter();
 
+  // if( reflector.nickName === 'reflector::reflect.submodules' )
+  // debugger;
+
   let result = Parent.prototype.init.apply( reflector, arguments );
 
-  // if( reflector.absoluteName === 'module::withSubmodules / module::Tools / reflector::exportedFiles.0' )
+  // if( reflector.nickName === 'reflector::reflect.submodules' )
   // debugger;
 
   return result;
@@ -92,6 +95,9 @@ function form1()
 
   reflector.dstFilter = reflector.dstFilter || {};
 
+  // if( reflector.nickName === 'reflector::reflect.submodules' )
+  // debugger;
+
   if( reflector.dstFilter )
   {
     reflector.dstFilter.hubFileProvider = fileProvider;
@@ -125,6 +131,9 @@ function form2()
   let logger = will.logger;
 
   // if( _.strHas( reflector.name, 'exported.export.' ) )
+  // debugger;
+
+  // if( reflector.nickName === 'reflector::reflect.submodules' )
   // debugger;
 
   /* filters */
@@ -260,9 +269,7 @@ function form3()
   _.assert( arguments.length === 0 );
   _.assert( reflector.formed === 2 );
 
-  // if( reflector.absoluteName === 'module::withSubmodules / module::Tools / reflector::exportedFiles.0' )
-  // debugger;
-  // if( reflector.absoluteName === 'module::withSubmodules / reflector::reflect.submodules' )
+  // if( reflector.nickName === 'reflector::reflect.submodules' )
   // debugger;
 
   /* begin */
@@ -275,6 +282,9 @@ function form3()
   // _.assert( path.isAbsolute( reflector.dstFilter.prefixPath ) );
 
   /* end */
+
+  // if( reflector.nickName === 'reflector::reflect.submodules' )
+  // debugger;
 
   reflector.formed = 3;
   return reflector;
@@ -552,8 +562,9 @@ function optionsForFindExport( o )
   let result = Object.create( null );
 
   o = _.routineOptions( optionsForFindExport, arguments );
-
   _.assert( reflector.dstFilter === null || !reflector.dstFilter.hasFiltering() );
+
+  result.recursive = reflector.recursive === null ? 2 : reflector.recursive;
 
   if( reflector.srcFilter )
   result.filter = reflector.srcFilter.clone();
@@ -583,13 +594,9 @@ function optionsForReflectExport( o )
   let result = Object.create( null );
 
   o = _.routineOptions( optionsForReflectExport, arguments );
+  _.assert( !o.resolving );
 
-  // result.reflectMap = reflector.filePath;
   result.recursive = reflector.recursive === null ? 2 : reflector.recursive;
-  if( result.recursive === 1 )
-  result.recursive = 1;
-  if( result.recursive === 2 )
-  result.recursive = 2;
 
   /* */
 
@@ -609,9 +616,7 @@ function optionsForReflectExport( o )
   if( result.dstFilter.basePath )
   result.dstFilter.basePath = path.resolve( module.dirPath, result.dstFilter.basePath );
 
-  // result.dstFilter = result.dstFilter || Object.create( null );
-  // result.dstFilter.prefixPath = path.resolve( module.dirPath, result.dstFilter.prefixPath || '.' );
-  // // result.dstFilter.basePath = path.resolve( module.dirPath, result.dstFilter.basePath || '.' );
+  /* */
 
   return result;
 }
