@@ -2513,6 +2513,66 @@ function multipleExportsBroken( test )
 
 //
 
+//
+
+function multipleExportsImportProblem( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports-import' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulesPath = _.path.join( routinePath, '.module' );
+  let outPath = _.path.join( routinePath, 'docs' );
+  let out2Path = _.path.join( routinePath, 'super.out' );
+  let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
+  let willExecPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec2' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    path : 'node ' + willExecPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'export submodule';
+
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesDelete( outPath );
+
+    return null;
+  })
+
+  shell({ args : [ '.with . .export doc.export' ] })
+  shell({ args : [ '.with . .export export.debug' ] })
+  shell({ args : [ '.with super .build doc:1' ] })
+
+  .thenKeep( ( got ) =>
+  {
+
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './file.md' ] );
+    test.identical( got.exitCode, 0 );
+
+    return null;
+  })
+
+
+
+  return ready;
+
+}
+
+multipleExportsImportProblem.timeOut = 130000;
+
+//
+
 var Self =
 {
 
@@ -2552,6 +2612,8 @@ var Self =
     multipleExports,
     multipleExportsImport,
     multipleExportsBroken,
+
+    multipleExportsImportProblem
 
   }
 
