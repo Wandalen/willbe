@@ -123,9 +123,7 @@ function stepRoutineReflect( frame )
   {
     let dstFilter = opts.dstFilter.clone();
     let srcFilter = opts.srcFilter.clone().useDestination( dstFilter ).form();
-    debugger;
     dstFilter.form();
-
     let src = srcFilter.srcPathCommon();
     let dst = dstFilter.dstPathCommon();
     logger.log( ' + ' + step.name + ' reflected ' + opts.result.length + ' files ' + path.moveReport( dst, src ) + ' in ' + _.timeSpent( time ) );
