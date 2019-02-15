@@ -917,9 +917,15 @@ function pathsRelateForGlob( filePath, oldPath, newPath )
   return this.relateForGlob( filePath, oldPath, newPath );
 }
 
-//
+// --
+// path map
+// --
 
-function fileMapExtend( fileMap, filePath, value )
+/*
+qqq : add support of hashes for pathMapExtend, extend tests
+*/
+
+function pathMapExtend( fileMap, filePath, value )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3 );
@@ -991,14 +997,14 @@ function fileMapExtend( fileMap, filePath, value )
       if( ( val === true && value !== false && value !== null ) || ( val === null ) )
       val = value;
 
-      this.fileMapExtend( fileMap, g, val );
+      this.pathMapExtend( fileMap, g, val );
     }
   }
   else if( _.arrayLike( filePath ) )
   {
     for( let g = 0 ; g < filePath.length ; g++ )
     {
-      this.fileMapExtend( fileMap, filePath[ g ], value );
+      this.pathMapExtend( fileMap, filePath[ g ], value );
     }
   }
   else _.assert( 0, 'Expects filePath' );
@@ -1010,7 +1016,34 @@ function fileMapExtend( fileMap, filePath, value )
 
 //
 
-function fileMapGroupByDst( filePath )
+/*
+qqq : make pathMapDstFromSrc, pathMapDstFromDst optimal and add tests
+*/
+
+function pathMapDstFromSrc( fileMap )
+{
+  _.assert( arguments.length === 1 );
+
+  fileMap = this.pathMapExtend( null, fileMap );
+
+  return _.mapVals( fileMap )
+}
+
+//
+
+function pathMapDstFromDst( fileMap )
+{
+  _.assert( arguments.length === 1 );
+
+  if( !_.mapIs( fileMap ) )
+  return _.arrayAs( fileMap )
+
+  return _.mapVals( fileMap )
+}
+
+//
+
+function pathMapGroupByDst( filePath )
 {
   let path = this;
   let result = Object.create( null );
@@ -1063,14 +1096,14 @@ function fileMapGroupByDst( filePath )
 
 //
 
-function fileMapToRegexps( o )
+function pathMapToRegexps( o )
 {
   let path = this;
 
   if( arguments[ 1 ] !== undefined )
   o = { filePath : arguments[ 0 ], basePath : arguments[ 1 ] }
 
-  _.routineOptions( fileMapToRegexps, o );
+  _.routineOptions( pathMapToRegexps, o );
   _.assert( arguments.length === 1 || arguments.length === 2 );
   _.assert( _.mapIs( o.basePath ) );
   _.assert( _.mapIs( o.filePath ) )
@@ -1223,7 +1256,7 @@ function fileMapToRegexps( o )
   return o;
 }
 
-fileMapToRegexps.defaults =
+pathMapToRegexps.defaults =
 {
   filePath : null,
   basePath : null,
@@ -1281,9 +1314,13 @@ let Routines =
   relateForGlob,
   pathsRelateForGlob,
 
-  fileMapExtend,
-  fileMapGroupByDst,
-  fileMapToRegexps,
+  // path map
+
+  pathMapExtend,
+  pathMapDstFromSrc,
+  pathMapDstFromDst,
+  pathMapGroupByDst,
+  pathMapToRegexps,
 
 }
 

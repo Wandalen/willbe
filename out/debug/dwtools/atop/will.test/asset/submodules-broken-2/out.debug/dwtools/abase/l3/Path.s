@@ -1641,6 +1641,8 @@ function _relative( o )
     let relativeIsAbsolute = this.isAbsolute( relative );
     let isAbsoulute = this.isAbsolute( path );
 
+    /* makes common style for relative paths, each should begin from './' */
+
     if( !relativeIsAbsolute && relative !== this._hereStr )
     relative = _.strPrependOnce( relative, this._hereUpStr );
     if( !isAbsoulute && path !== this._hereStr )
@@ -1660,7 +1662,7 @@ function _relative( o )
   _.assert( relative.length > 0 );
   _.assert( path.length > 0 );
 
-  /* */
+  /* extracts common path and checks if its a intermediate dir, otherwise cuts path and repeats the check*/
 
   let common = _.strCommonLeft( relative,path );
 
@@ -1693,27 +1695,33 @@ function _relative( o )
   }
   else
   {
+    /* gets count of up steps required to get to common dir */
     relative = _.strRemoveBegin( relative, common );
     path = _.strRemoveBegin( path, common );
     let count = _.strCount( relative, this._upStr );
-    if( common === this._upStr )
+    if( common === this._upStr ) // one more step if common is root
     count += 1;
 
     if( !_.strBegins( path, this._upStr+this._upStr ) && common !== this._upStr )
     path = _.strRemoveBegin( path, this._upStr );
 
+    /* prepends up steps */
     result = _.strDup( this._downUpStr, count ) + path;
 
+    /* removes redundant slash at the end */
     if( _.strEnds( result, this._upStr ) )
     _.assert( result.length > this._upStr.length );
     result = _.strRemoveEnd( result, this._upStr );
 
   }
 
+  /* makes path relative */
   if( _.strBegins( result, this._upStr + this._upStr ) )
-  result = this._hereStr + result;
+  result = this._hereStr + result; // prepends dot if path begins with empty intermediate dir( '//' )
   else
-  result = _.strRemoveBegin( result, this._upStr );
+  result = _.strRemoveBegin( result, this._upStr ); //removes redundant slash at the begining
+
+  /* checks if result is normalized */
 
   _.assert( result.length > 0 );
   _.assert( !_.strEnds( result, this._upStr ) );

@@ -323,7 +323,7 @@ function proceedExportedFilesReflector()
   _.assert( exportedFilesReflector.dstFilter.basePath === null );
   exportedFilesReflector.dstFilter.filteringClear();
   // exportedFilesReflector.filePath = { [ exported.exportedFilesPath.refName ] : true }
-  exportedFilesReflector.filePath = path.fileMapExtend( null, exportedFilesPath );
+  exportedFilesReflector.filePath = path.pathMapExtend( null, exportedFilesPath );
   exportedFilesReflector.recursive = 0;
   exportedFilesReflector.form();
 

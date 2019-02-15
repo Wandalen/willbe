@@ -110,7 +110,7 @@ function form1()
   }
 
   // if( reflector.filePath )
-  // reflector.filePath = path.fileMapExtend( null, reflector.filePath, true );
+  // reflector.filePath = path.pathMapExtend( null, reflector.filePath, true );
 
   /* end */
 
@@ -139,7 +139,7 @@ function form2()
   /* filters */
 
   if( reflector.filePath )
-  reflector.filePath = path.fileMapExtend( null, reflector.filePath, true );
+  reflector.filePath = path.pathMapExtend( null, reflector.filePath, true );
 
   reflector.pathsResolve();
 
@@ -231,7 +231,13 @@ function _inheritSingle( o )
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
 
+  if( reflector.nickName === 'reflector::reflect.submodules' )
+  debugger;
+
   reflector.srcFilter.and( reflector2.srcFilter ).pathsInherit( reflector2.srcFilter );
+
+  if( reflector.nickName === 'reflector::reflect.submodules' )
+  debugger;
 
   if( _.mapIs( reflector.filePath ) )
   {
@@ -283,8 +289,8 @@ function form3()
 
   /* end */
 
-  // if( reflector.nickName === 'reflector::reflect.submodules' )
-  // debugger;
+  if( reflector.nickName === 'reflector::reflect.submodules' )
+  debugger;
 
   reflector.formed = 3;
   return reflector;
@@ -373,7 +379,7 @@ function _reflectMapForm( o )
         debugger;
         reflector._inheritSingle({ visited : o.visited, ancestor : resolved, defaultDst : dst });
         _.sure( !!resolved.filePath );
-        path.fileMapExtend( map, resolved.filePath, dst );
+        path.pathMapExtend( map, resolved.filePath, dst );
       }
 
     }

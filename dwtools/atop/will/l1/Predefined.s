@@ -122,7 +122,7 @@ function stepRoutineReflect( frame )
   if( verbosity >= 1 )
   {
     let dstFilter = opts.dstFilter.clone();
-    let srcFilter = opts.srcFilter.clone().useDestination( dstFilter ).form();
+    let srcFilter = opts.srcFilter.clone().pairWithDst( dstFilter ).form();
     dstFilter.form();
     let src = srcFilter.srcPathCommon();
     let dst = dstFilter.dstPathCommon();

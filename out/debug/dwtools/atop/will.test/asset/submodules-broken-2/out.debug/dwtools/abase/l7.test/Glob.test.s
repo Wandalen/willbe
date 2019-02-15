@@ -212,7 +212,7 @@ function relateForGlob( test )
 
 //
 
-function fileMapExtend( test )
+function pathMapExtend( test )
 {
   let path = _.path;
 
@@ -224,17 +224,17 @@ function fileMapExtend( test )
 
   test.case = 'src:string';
   var expected = { '/a/b' : true }
-  var got = path.fileMapExtend( null, '/a/b', true );
+  var got = path.pathMapExtend( null, '/a/b', true );
   test.identical( got, expected );
 
   test.case = 'src:array';
   var expected = { '/a/b' : true, '/c/d' : true }
-  var got = path.fileMapExtend( null, [ '/a/b', '/c/d' ], true );
+  var got = path.pathMapExtend( null, [ '/a/b', '/c/d' ], true );
   test.identical( got, expected );
 
   test.case = 'src:map with null';
   var expected = { '/a/b' : true, '/c/d' : true, '/true' : true, '/false' : false }
-  var got = path.fileMapExtend( null, { '/a/b' : null, '/c/d' : null, '/true' : true, '/false' : false }, true );
+  var got = path.pathMapExtend( null, { '/a/b' : null, '/c/d' : null, '/true' : true, '/false' : false }, true );
   test.identical( got, expected );
 
   test.close( 'dst:null' );
@@ -245,17 +245,17 @@ function fileMapExtend( test )
 
   test.case = 'src:string';
   var expected = { '/z' : true, '/a/b' : true }
-  var got = path.fileMapExtend( '/z', '/a/b', true );
+  var got = path.pathMapExtend( '/z', '/a/b', true );
   test.identical( got, expected );
 
   test.case = 'src:array';
   var expected = { '/z' : true, '/a/b' : true, '/c/d' : true }
-  var got = path.fileMapExtend( '/z', [ '/a/b', '/c/d' ], true );
+  var got = path.pathMapExtend( '/z', [ '/a/b', '/c/d' ], true );
   test.identical( got, expected );
 
   test.case = 'src:map with null';
   var expected = { '/z' : true, '/a/b' : true, '/c/d' : true, '/true' : true, '/false' : false }
-  var got = path.fileMapExtend( '/z', { '/a/b' : null, '/c/d' : null, '/true' : true, '/false' : false }, true );
+  var got = path.pathMapExtend( '/z', { '/a/b' : null, '/c/d' : null, '/true' : true, '/false' : false }, true );
   test.identical( got, expected );
 
   test.close( 'dst:string' );
@@ -267,21 +267,21 @@ function fileMapExtend( test )
   test.case = 'src:string';
   var expected = { '/wasTrue' : true, '/wasFalse' : false, '/a/b' : true }
   var dst = { '/wasTrue' : true, '/wasFalse' : false }
-  var got = path.fileMapExtend( dst, '/a/b', true );
+  var got = path.pathMapExtend( dst, '/a/b', true );
   test.identical( got, expected );
   test.is( got === dst );
 
   test.case = 'src:array';
   var expected = { '/wasTrue' : true, '/wasFalse' : false, '/a/b' : true, '/c/d' : true }
   var dst = { '/wasTrue' : true, '/wasFalse' : false }
-  var got = path.fileMapExtend( dst, [ '/a/b', '/c/d' ], true );
+  var got = path.pathMapExtend( dst, [ '/a/b', '/c/d' ], true );
   test.identical( got, expected );
   test.is( got === dst );
 
   test.case = 'src:map with null';
   var expected = { '/wasTrue' : true, '/wasFalse' : false, '/a/b' : true, '/c/d' : true, '/true' : true, '/false' : false }
   var dst = { '/wasTrue' : true, '/wasFalse' : false }
-  var got = path.fileMapExtend( dst, { '/a/b' : null, '/c/d' : null, '/true' : true, '/false' : false }, true );
+  var got = path.pathMapExtend( dst, { '/a/b' : null, '/c/d' : null, '/true' : true, '/false' : false }, true );
   test.identical( got, expected );
   test.is( got === dst );
 
@@ -298,17 +298,17 @@ function fileMapExtend( test )
 
   test.case = 'src:string';
   var expected = { '/a/b' : false }
-  var got = path.fileMapExtend( null, '/a/b', false );
+  var got = path.pathMapExtend( null, '/a/b', false );
   test.identical( got, expected );
 
   test.case = 'src:array';
   var expected = { '/a/b' : false, '/c/d' : false }
-  var got = path.fileMapExtend( null, [ '/a/b', '/c/d' ], false );
+  var got = path.pathMapExtend( null, [ '/a/b', '/c/d' ], false );
   test.identical( got, expected );
 
   test.case = 'src:map with null';
   var expected = { '/a/b' : false, '/c/d' : false, '/true' : true, '/false' : false }
-  var got = path.fileMapExtend( null, { '/a/b' : null, '/c/d' : null, '/true' : true, '/false' : false }, false );
+  var got = path.pathMapExtend( null, { '/a/b' : null, '/c/d' : null, '/true' : true, '/false' : false }, false );
   test.identical( got, expected );
 
   test.close( 'dst:null' );
@@ -319,17 +319,17 @@ function fileMapExtend( test )
 
   test.case = 'src:string';
   var expected = { '/z' : false, '/a/b' : false }
-  var got = path.fileMapExtend( '/z', '/a/b', false );
+  var got = path.pathMapExtend( '/z', '/a/b', false );
   test.identical( got, expected );
 
   test.case = 'src:array';
   var expected = { '/z' : false, '/a/b' : false, '/c/d' : false }
-  var got = path.fileMapExtend( '/z', [ '/a/b', '/c/d' ], false );
+  var got = path.pathMapExtend( '/z', [ '/a/b', '/c/d' ], false );
   test.identical( got, expected );
 
   test.case = 'src:map with null';
   var expected = { '/z' : false, '/a/b' : false, '/c/d' : false, '/true' : true, '/false' : false }
-  var got = path.fileMapExtend( '/z', { '/a/b' : null, '/c/d' : null, '/true' : true, '/false' : false }, false );
+  var got = path.pathMapExtend( '/z', { '/a/b' : null, '/c/d' : null, '/true' : true, '/false' : false }, false );
   test.identical( got, expected );
 
   test.close( 'dst:string' );
@@ -341,21 +341,21 @@ function fileMapExtend( test )
   test.case = 'src:string';
   var expected = { '/wasTrue' : true, '/wasFalse' : false, '/a/b' : false }
   var dst = { '/wasTrue' : true, '/wasFalse' : false }
-  var got = path.fileMapExtend( dst, '/a/b', false );
+  var got = path.pathMapExtend( dst, '/a/b', false );
   test.identical( got, expected );
   test.is( got === dst );
 
   test.case = 'src:array';
   var expected = { '/wasTrue' : true, '/wasFalse' : false, '/a/b' : false, '/c/d' : false }
   var dst = { '/wasTrue' : true, '/wasFalse' : false }
-  var got = path.fileMapExtend( dst, [ '/a/b', '/c/d' ], false );
+  var got = path.pathMapExtend( dst, [ '/a/b', '/c/d' ], false );
   test.identical( got, expected );
   test.is( got === dst );
 
   test.case = 'src:map with null';
   var expected = { '/wasTrue' : true, '/wasFalse' : false, '/a/b' : false, '/c/d' : false, '/true' : true, '/false' : false }
   var dst = { '/wasTrue' : true, '/wasFalse' : false }
-  var got = path.fileMapExtend( dst, { '/a/b' : null, '/c/d' : null, '/true' : true, '/false' : false }, false );
+  var got = path.pathMapExtend( dst, { '/a/b' : null, '/c/d' : null, '/true' : true, '/false' : false }, false );
   test.identical( got, expected );
   test.is( got === dst );
 
@@ -372,17 +372,17 @@ function fileMapExtend( test )
 
   test.case = 'src:string';
   var expected = { '/a/b' : [ '/dst1', '/dst2' ] }
-  var got = path.fileMapExtend( null, '/a/b', [ '/dst1', '/dst2' ] );
+  var got = path.pathMapExtend( null, '/a/b', [ '/dst1', '/dst2' ] );
   test.identical( got, expected );
 
   test.case = 'src:array';
   var expected = { '/a/b' : [ '/dst1', '/dst2' ], '/c/d' : [ '/dst1', '/dst2' ] }
-  var got = path.fileMapExtend( null, [ '/a/b', '/c/d' ], [ '/dst1', '/dst2' ] );
+  var got = path.pathMapExtend( null, [ '/a/b', '/c/d' ], [ '/dst1', '/dst2' ] );
   test.identical( got, expected );
 
   test.case = 'src:map with null';
   var expected = { '/a/b' : [ '/dst1', '/dst2' ], '/c/d' : [ '/dst1', '/dst2' ], '/true' : [ '/dst1', '/dst2' ], '/false' : false }
-  var got = path.fileMapExtend( null, { '/a/b' : null, '/c/d' : null, '/true' : true, '/false' : false }, [ '/dst1', '/dst2' ] );
+  var got = path.pathMapExtend( null, { '/a/b' : null, '/c/d' : null, '/true' : true, '/false' : false }, [ '/dst1', '/dst2' ] );
   test.identical( got, expected );
 
   test.close( 'dst:null' );
@@ -393,17 +393,17 @@ function fileMapExtend( test )
 
   test.case = 'src:string';
   var expected = { '/z' : [ '/dst1', '/dst2' ], '/a/b' : [ '/dst1', '/dst2' ] }
-  var got = path.fileMapExtend( '/z', '/a/b', [ '/dst1', '/dst2' ] );
+  var got = path.pathMapExtend( '/z', '/a/b', [ '/dst1', '/dst2' ] );
   test.identical( got, expected );
 
   test.case = 'src:array';
   var expected = { '/z' : [ '/dst1', '/dst2' ], '/a/b' : [ '/dst1', '/dst2' ], '/c/d' : [ '/dst1', '/dst2' ] }
-  var got = path.fileMapExtend( '/z', [ '/a/b', '/c/d' ], [ '/dst1', '/dst2' ] );
+  var got = path.pathMapExtend( '/z', [ '/a/b', '/c/d' ], [ '/dst1', '/dst2' ] );
   test.identical( got, expected );
 
   test.case = 'src:map with null';
   var expected = { '/z' : [ '/dst1', '/dst2' ], '/a/b' : [ '/dst1', '/dst2' ], '/c/d' : [ '/dst1', '/dst2' ], '/true' : [ '/dst1', '/dst2' ], '/false' : false }
-  var got = path.fileMapExtend( '/z', { '/a/b' : null, '/c/d' : null, '/true' : true, '/false' : false }, [ '/dst1', '/dst2' ] );
+  var got = path.pathMapExtend( '/z', { '/a/b' : null, '/c/d' : null, '/true' : true, '/false' : false }, [ '/dst1', '/dst2' ] );
   test.identical( got, expected );
 
   test.close( 'dst:string' );
@@ -415,21 +415,21 @@ function fileMapExtend( test )
   test.case = 'src:string';
   var expected = { '/wasTrue' : [ '/dst1', '/dst2' ], '/wasFalse' : false, '/a/b' : [ '/dst1', '/dst2' ] }
   var dst = { '/wasTrue' : true, '/wasFalse' : false }
-  var got = path.fileMapExtend( dst, '/a/b', [ '/dst1', '/dst2' ] );
+  var got = path.pathMapExtend( dst, '/a/b', [ '/dst1', '/dst2' ] );
   test.identical( got, expected );
   test.is( got === dst );
 
   test.case = 'src:array';
   var expected = { '/wasTrue' : [ '/dst1', '/dst2' ], '/wasFalse' : false, '/a/b' : [ '/dst1', '/dst2' ], '/c/d' : [ '/dst1', '/dst2' ] }
   var dst = { '/wasTrue' : true, '/wasFalse' : false }
-  var got = path.fileMapExtend( dst, [ '/a/b', '/c/d' ], [ '/dst1', '/dst2' ] );
+  var got = path.pathMapExtend( dst, [ '/a/b', '/c/d' ], [ '/dst1', '/dst2' ] );
   test.identical( got, expected );
   test.is( got === dst );
 
   test.case = 'src:map with null';
   var expected = { '/wasTrue' : [ '/dst1', '/dst2' ], '/wasFalse' : false, '/a/b' : [ '/dst1', '/dst2' ], '/c/d' : [ '/dst1', '/dst2' ], '/true' : [ '/dst1', '/dst2' ], '/false' : false }
   var dst = { '/wasTrue' : true, '/wasFalse' : false }
-  var got = path.fileMapExtend( dst, { '/a/b' : null, '/c/d' : null, '/true' : true, '/false' : false }, [ '/dst1', '/dst2' ] );
+  var got = path.pathMapExtend( dst, { '/a/b' : null, '/c/d' : null, '/true' : true, '/false' : false }, [ '/dst1', '/dst2' ] );
   test.identical( got, expected );
   test.is( got === dst );
 
@@ -984,7 +984,7 @@ var Self =
     fromGlob,
     globToRegexp,
     relateForGlob,
-    fileMapExtend,
+    pathMapExtend,
 
     globFilter,
     globFilterVals,

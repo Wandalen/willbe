@@ -1,16 +1,5 @@
 #! /usr/bin/env node
 
-// #! /usr/bin/env node --expose-gc --stack-trace-limit=999 --max_old_space_size=17054896128
-// if( typeof module !== 'undefined' )
-// {
-//   let _ = require( '../../Tools.s' );
-//   _.include( 'wFiles' );
-//   _.include( 'wExternalFundamentals' );
-// }
-//
-// let _ = wTools;
-// let shell = _.shellNodePassingThrough( _.path.join( __dirname, 'MainTop.s' ) );
-
 let Self = require( './MainTop.s' );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;
