@@ -1,7 +1,7 @@
 
 # willbe [![Build Status](https://travis-ci.org/Wandalen/willbe.svg?branch=master)](https://travis-ci.org/Wandalen/willbe)
 
-Utility to manage modules of modular systems
+Utility to manage modules of complex modular systems.
 
 ## What willbe is and what it is not
 
