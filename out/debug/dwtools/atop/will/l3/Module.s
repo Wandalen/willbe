@@ -1157,6 +1157,9 @@ function _willFilesCacheSave()
   let logger = will.logger;
   let result = Object.create( null );
 
+  if( !module.about )
+  return null;
+
   _.assert( arguments.length === 0 );
   _.assert( _.strIs( module.about.name ) );
 
@@ -2616,6 +2619,7 @@ function _resolveAct( o )
       query : o.query,
       onUpBegin : onUpBegin,
       onUpEnd : onUpEnd,
+      onQuantitativeFail : onQuantitativeFail,
       missingAction : 'error',
       _current :
       {
@@ -2681,6 +2685,33 @@ function _resolveAct( o )
 
   /* */
 
+  function onQuantitativeFail( err )
+  {
+    let it = this;
+    debugger;
+    let result = it.result;
+    if( _.mapIs( result ) )
+    result = _.mapVals( result );
+    if( _.arrayIs( result ) )
+    {
+      let hasNames = 1;
+      result = result.map( ( e ) =>
+      {
+        if( !e.nickName )
+        hasNames = 0;
+        return e.nickName;
+      });
+      if( hasNames )
+      if( result.length )
+      err = _.err( 'Found : ' + result.join( ', ' ), '\n', err );
+      else
+      err = _.err( 'Found nothing', '\n', err );
+    }
+    throw err;
+  }
+
+  /* */
+
   function inheritsUpdate()
   {
     let it = this;
@@ -2698,6 +2729,9 @@ function _resolveAct( o )
   function globCriterionFilter()
   {
     let it = this;
+
+    if( _.strHas( it.path, '/MultipleExports' ) )
+    debugger;
 
     if( it.down && it.down.isGlob )
     if(  o.criterion && it.src && it.src.criterionSattisfy )

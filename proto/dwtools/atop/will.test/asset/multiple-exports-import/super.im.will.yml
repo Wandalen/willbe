@@ -18,7 +18,7 @@ path :
     path : './super.out/release'
     criterion :
       debug : 0
-  docs : 'docs'
+  doc : 'doc'
 
 reflector :
 
@@ -28,13 +28,14 @@ reflector :
       basePath : .
       prefixPath : path::out.*=1
     criterion :
+      doc : 0
       debug : [ 0,1 ]
 
-  reflect.docs :
+  reflect.doc :
     inherit : submodule::*/exported::*=1/reflector::exportedFiles*=1
     dstFilter :
       basePath : .
-      prefixPath : path::docs
+      prefixPath : path::doc
     criterion :
       doc: 1
 
@@ -45,12 +46,13 @@ step :
     reflector :
       reflector::reflect.submodules*=1
     criterion :
+      doc : 0
       debug : [ 0,1 ]
 
-  reflect.docs :
+  reflect.doc :
     inherit : predefined.reflect
     reflector :
-      reflector::reflect.docs*=1
+      reflector::reflect.doc*=1
     criterion :
       doc : 1
 
@@ -60,6 +62,7 @@ build :
     criterion :
       default : 1
       debug : 1
+      doc : 0
     steps :
       - step::submodules.download
       - step::reflect.submodules.*=1
@@ -67,13 +70,13 @@ build :
   release :
     criterion :
       debug : 0
+      doc : 0
     steps :
       - step::submodules.download
       - step::reflect.submodules.*=1
 
-  docs :
+  doc :
     criterion :
       doc : 1
     steps :
-      - step::reflect.docs*=1
-
+      - step::reflect.doc*=1

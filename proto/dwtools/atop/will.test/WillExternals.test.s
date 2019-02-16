@@ -2517,8 +2517,6 @@ function multipleExportsBroken( test )
 
 //
 
-//
-
 function multipleExportsImportProblem( test )
 {
   let self = this;
@@ -2553,7 +2551,7 @@ function multipleExportsImportProblem( test )
     return null;
   })
 
-  shell({ args : [ '.with . .export doc.export' ] })
+  shell({ args : [ '.with . .export export.doc' ] })
   shell({ args : [ '.with . .export export.debug' ] })
   shell({ args : [ '.with super .build doc:1' ] })
 
@@ -2567,10 +2565,7 @@ function multipleExportsImportProblem( test )
     return null;
   })
 
-
-
   return ready;
-
 }
 
 multipleExportsImportProblem.timeOut = 130000;
