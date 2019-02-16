@@ -11,10 +11,7 @@ Willbe is not a replacement of Git, NPM or other utility with narrow purpose. Wi
 
 ## Try out
 ```
-npm install
-node sample/Sample.s
+npm install -g willbe
+cd sample/submodules
+will .build
 ```
-
-
-
-
