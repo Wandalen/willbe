@@ -2683,6 +2683,7 @@ function _resolveAct( o )
     ({
       container : module,
       query : o.query,
+      // onSelectBegin : onSelectBegin,
       onUpBegin : onUpBegin,
       onUpEnd : onUpEnd,
       onQuantitativeFail : onQuantitativeFail,
@@ -2714,6 +2715,36 @@ function _resolveAct( o )
   // debugger;
 
   return result;
+
+  /* */
+
+  // function onSelectBegin( op )
+  // {
+  //
+  //   if( module.strIsResolved( op.query ) )
+  //   {
+  //     if( op.prefixlessAction === 'default' )
+  //     {
+  //     }
+  //     else if( op.prefixlessAction === 'throw' || op.prefixlessAction === 'error' )
+  //     {
+  //       let err = module.errResolving
+  //       ({
+  //         query : op.query,
+  //         current : current,
+  //         err : _.ErrorLooking( 'Resource selector should have prefix' ),
+  //       });
+  //       if( op.prefixlessAction === 'throw' )
+  //       throw err;
+  //     }
+  //     else if( op.prefixlessAction === 'resolved' )
+  //     {
+  //       return op.query;
+  //     }
+  //     else _.assert( 0 );
+  //   }
+  //
+  // }
 
   /* */
 

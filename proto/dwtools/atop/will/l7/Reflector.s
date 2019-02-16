@@ -327,13 +327,15 @@ function _reflectMapForm( o )
 
     if( !_.boolLike( dst ) )
     {
-      _.assert( _.strIs( dst ), 'not tested' );
-      if( !module.strIsResolved( dst ) )
+      // debugger;
+      // _.assert( _.strIs( dst ), 'not tested' );
+      // if( !module.strIsResolved( dst ) )
       dst = reflector.resolve
       ({
         query : dst,
         visited : o.visited,
         current : reflector,
+        prefixlessAction : 'resolved',
       });
     }
 

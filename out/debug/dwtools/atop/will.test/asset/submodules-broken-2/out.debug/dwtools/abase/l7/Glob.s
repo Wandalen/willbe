@@ -972,14 +972,14 @@ function pathMapExtend( fileMap, filePath, value )
     fileMap[ filePath ] = value;
     else if( _.strIs( element ) )
     {
-      if( _.arayIs( value ) )
+      if( _.arrayIs( value ) )
       fileMap[ filePath ] = _.arrayAppend( value.slice(), element );
       else
       fileMap[ filePath ] = [ element, value ];
     }
     else if( _.arrayIs( element ) )
     {
-      if( _.arayIs( value ) )
+      if( _.arrayIs( value ) )
       fileMap[ filePath ] = _.arrayAppendArray( value.slice(), element );
       else
       fileMap[ filePath ].push( value );
