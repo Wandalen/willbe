@@ -9,7 +9,7 @@
 **Resource's inheritability** :: </br>
 **Selector** :: </br>
 **Selector with glob** :: </br>
-**Glob assertion** :: </br>
+**Glob assertion** :: **selector constraint** :: </br>
 **Build** :: </br>
 **Export** :: </br>
 **Step** :: </br>

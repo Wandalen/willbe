@@ -11,5 +11,5 @@ let _ = wTools;
 let shell = _.shellNodePassingThrough
 ({
   path : _.path.join( __dirname, 'MainTop.s' ),
-  verbosity : 1,
+  verbosity : 0,
 });

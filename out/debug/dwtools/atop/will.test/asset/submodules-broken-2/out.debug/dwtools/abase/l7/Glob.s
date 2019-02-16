@@ -533,12 +533,10 @@ function globFilter_body( o )
 
   if( !this.isGlob( o.selector ) )
   {
-    debugger;
     result = _.filter( o.src, ( e, k ) =>
     {
       return o.onEvaluate( e, k, o.src ) === o.selector ? e : undefined;
     });
-    debugger;
   }
   else
   {

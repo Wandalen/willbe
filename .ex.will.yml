@@ -4,7 +4,7 @@ about :
 
   name : "willbe"
   description : "Tool to manage modules of modular systems"
-  version : "0.3.150"
+  version : "0.3.159"
   enabled : 1
   interpreters :
   - nodejs >= 6.0.0
@@ -23,7 +23,6 @@ path :
 
   repository : git+https://github.com/Wandalen/willbe.git
   bugs : https://github.com/Wandalen/willbe/issues
-  doc : 'doc'
 
 step :
 
@@ -34,13 +33,6 @@ step :
     criterion :
       debug : 1
       proto : 1
-
-  export.doc :
-    inherit : predefined.export
-    export : path::doc
-    tar : 0
-    criterion :
-      doc : 1
 
 build :
 
@@ -56,11 +48,4 @@ build :
     steps :
       - build::debug.raw
       - step::export.proto
-
-  doc.export :
-    criterion :
-      export : 1
-      doc : 1
-    steps :
-      - step::export.doc*=1
 

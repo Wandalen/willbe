@@ -52,7 +52,7 @@ submodule:
       git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
 reflector:
   reflect.proto.:
-    srcFilter:
+    src:
       filePath:
         'path::proto': 'path::out.*=1'
     criterion:
@@ -60,7 +60,7 @@ reflector:
     inherit:
       - predefined.*
   reflect.proto.debug:
-    srcFilter:
+    src:
       filePath:
         ./proto: ./out.debug
       maskAll:
@@ -80,7 +80,7 @@ reflector:
       - predefined.*
   reflect.submodules:
     recursive: 0
-    srcFilter:
+    src:
       filePath:
         .module/PathFundamentals/proto: true
         .module/PathFundamentals/proto/dwtools: true
@@ -122,7 +122,7 @@ reflector:
         .module/PathFundamentals/proto/dwtools/amid: .module/PathFundamentals/proto
         .module/PathFundamentals/proto/dwtools/atop: .module/PathFundamentals/proto
       prefixPath: .
-    dstFilter:
+    dst:
       filePath: .
       basePath:
         .: .
@@ -132,12 +132,12 @@ reflector:
     inherit:
       - 'submodule::*/exported::*=1/reflector::exportedFiles*=1'
   exported.proto.export:
-    srcFilter:
+    src:
       filePath: ./proto
       prefixPath: .
   exportedFiles.proto.export:
     recursive: 0
-    srcFilter:
+    src:
       filePath:
         .: true
         ./WithSubmodules.s: true

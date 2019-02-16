@@ -127,7 +127,7 @@ function form3()
   //     query :  step.opts.reflector,
   //     defaultPool : 'reflector',
   //     current : step,
-  //     unwrappingSingle : 0,
+  //     singleUnwrapping : 0,
   //   });
   //   _.assert( _.arrayIs( reflectors ) );
   //   for( let r = 0 ; r < reflectors.length ; r++ )

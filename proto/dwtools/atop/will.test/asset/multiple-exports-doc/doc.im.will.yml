@@ -6,10 +6,8 @@ submodule :
 
 path :
 
-  proto : './proto'
-  temp : '../doc.out'
   in : '..'
-  out : '../doc.out'
+  out : './doc.out'
   out.debug :
     path : './doc.out/debug'
     criterion :
@@ -19,25 +17,23 @@ path :
     criterion :
       debug : 0
   doc : 'doc'
+  proto : './proto'
+  temp : './doc.out'
 
 reflector :
 
   reflect.submodules :
     inherit : submodule::*/exported::*=1/reflector::exportedFiles*=1
-    dstFilter :
-      basePath : .
-      prefixPath : path::out.*=1
+    dst : path::out.*=1
     criterion :
       doc : 0
       debug : [ 0,1 ]
 
   reflect.doc :
     inherit : submodule::*/exported::*=1/reflector::exportedFiles*=1
-    dstFilter :
-      basePath : .
-      prefixPath : path::doc
+    dst : path::out
     criterion :
-      doc: 1
+      doc : 1
 
 step :
 

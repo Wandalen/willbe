@@ -328,7 +328,7 @@ function predefinedForm()
   reflector
   ({
     name : 'predefined.common',
-    srcFilter :
+    src :
     {
       maskAll :
       {
@@ -349,7 +349,7 @@ function predefinedForm()
   reflector
   ({
     name : 'predefined.debug',
-    srcFilter :
+    src :
     {
       maskAll :
       {
@@ -365,7 +365,7 @@ function predefinedForm()
   reflector
   ({
     name : 'predefined.release',
-    srcFilter :
+    src :
     {
       maskAll :
       {
@@ -380,21 +380,21 @@ function predefinedForm()
 
 /*
   .predefined.common :
-    srcFilter :
+    src :
       maskAll :
         excludeAny :
         - !!js/regexp '/(^|\/)-/'
 
   .predefined.debug :
     inherit : .predefined.common
-    srcFilter :
+    src :
       maskAll :
         excludeAny :
         - !!js/regexp '/\.release($|\.|\/)/i'
 
   .predefined.release :
     inherit : .predefined.common
-    srcFilter :
+    src :
       maskAll :
         excludeAny :
         - !!js/regexp '/\.debug($|\.|\/)/i'
@@ -2417,7 +2417,7 @@ function _resolve_pre( routine, args )
   _.routineOptions( routine, o );
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
-  _.assert( _.arrayHas( [ null, 'in', 'out' ], o.resolvingPath ) );
+  _.assert( _.arrayHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ) );
   _.assert( _.arrayHas( [ 'default', 'resolved', 'throw', 'error' ], o.prefixlessAction ) );
 
   return o;
@@ -2432,13 +2432,9 @@ function _resolveMaybe_body( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  if( o.currentModule === null )
-  o.currentModule = module;
-
-  if( o.criterion === null && o.current && o.current.criterion )
-  o.criterion = o.current.criterion;
-
+  // debugger;
   let result = module._resolveAct( o );
+  // debugger;
 
   if( result === undefined )
   {
@@ -2454,50 +2450,16 @@ function _resolveMaybe_body( o )
   if( _.errIs( result ) )
   return result;
 
-  if( o.resolvingPath )
-  {
-    if( result instanceof will.PathObj || _.strIs( result ) )
-    {
-      result = pathResolve( result );
-    }
-    else if( _.arrayIs( result ) )
-    {
-      let result2 = [];
-      for( let r = 0 ; r < result.length ; r++ )
-      if( result[ r ] instanceof will.PathObj || _.strIs( result[ r ] ) )
-      result2[ r ] = pathResolve( result[ r ] );
-      else
-      result2[ r ] = result[ r ];
-      result = result2;
-    }
-  }
+  result = pathsResolve( result );
 
   if( o.flattening && _.mapIs( result ) )
   result = _.mapsFlatten2([ result ]);
 
-  if( o.unwrappingPath && o.hasPath )
-  {
-    _.assert( _.mapIs( result ) || _.objectIs( result ) || _.arrayIs( result ) || _.strIs( result ) );
-    if( _.mapIs( result ) || _.arrayIs( result ) )
-    result = _.filter( result, ( e ) => e instanceof will.PathObj ? e.path : e )
-    else if( result instanceof will.PathObj )
-    result = result.path;
-  }
+  result = pathsUnwrap( result );
+  result = singleUnwrap( result );
+  result = mapValsUnwrap( result );
 
-  if( o.unwrappingSingle )
-  if( _.mapIs( result ) )
-  {
-    if( _.mapKeys( result ).length === 1 )
-    result = _.mapVals( result )[ 0 ];
-  }
-  else if( _.arrayIs( result ) )
-  {
-    if( result.length === 1 )
-    result = result[ 0 ];
-  }
-
-  if( o.mapVals && _.mapIs( result ) )
-  result = _.mapVals( result );
+  _.assert( result !== undefined );
 
   return result;
 
@@ -2505,15 +2467,113 @@ function _resolveMaybe_body( o )
 
   function pathResolve( p )
   {
-    if( p instanceof will.PathObj )
-    p = p.path;
-    _.assert( _.arrayIs( p ) || _.strIs( p ) );
-    if( o.resolvingPath === 'in' )
-    return path.s.resolve( module.dirPath, ( module.pathMap.in || '.' ), p );
-    else if( o.resolvingPath === 'out' )
-    return path.s.resolve( module.dirPath, ( module.pathMap.out || '.' ), p );
-    else
+
+    if( !o.pathResolving )
     return p;
+
+    if( p instanceof will.PathObj )
+    {
+      p = p.clone();
+      p.module = null;
+      p.path = pathResolve( p.path );
+      return p;
+    }
+
+    _.assert( _.arrayIs( p ) || _.strIs( p ) );
+
+    if( o.pathResolving === 'in' )
+    return path.s.resolve( module.dirPath, ( module.pathMap.in || '.' ), p );
+    else if( o.pathResolving === 'out' )
+    return path.s.resolve( module.dirPath, ( module.pathMap.out || '.' ), p );
+
+  }
+
+  /* */
+
+  function pathsResolve( result )
+  {
+
+    // if( !o.pathResolving || !o.pathUnwrapping )
+    // return result;
+
+    if( !o.pathResolving )
+    return result;
+
+    if( result instanceof will.PathObj /*|| _.strIs( result )*/ )
+    {
+      result = pathResolve( result );
+    }
+    else if( _.arrayIs( result ) )
+    {
+      let result2 = [];
+      for( let r = 0 ; r < result.length ; r++ )
+      if( result[ r ] instanceof will.PathObj /*|| _.strIs( result[ r ] )*/ )
+      result2[ r ] = pathResolve( result[ r ] );
+      else
+      result2[ r ] = result[ r ];
+      result = result2;
+    }
+    else if( _.mapIs( result ) )
+    {
+      let result2 = Object.create( null );
+      for( let r in result )
+      if( result[ r ] instanceof will.PathObj /*|| _.strIs( result[ r ] )*/ )
+      result2[ r ] = pathResolve( result[ r ] );
+      else
+      result2[ r ] = result[ r ];
+      result = result2;
+    }
+
+    return result;
+  }
+
+  /* */
+
+  function pathsUnwrap( result )
+  {
+
+    if( !o.pathUnwrapping || !o.hasPath )
+    return result;
+
+    _.assert( _.mapIs( result ) || _.objectIs( result ) || _.arrayIs( result ) || _.strIs( result ) );
+    if( _.mapIs( result ) || _.arrayIs( result ) )
+    result = _.filter( result, ( e ) => e instanceof will.PathObj ? e.path : e )
+    else if( result instanceof will.PathObj )
+    result = result.path;
+
+    return result;
+  }
+
+  /* */
+
+  function singleUnwrap( result )
+  {
+
+    if( !o.singleUnwrapping )
+    return result;
+
+    if( _.mapIs( result ) )
+    {
+      if( _.mapKeys( result ).length === 1 )
+      result = _.mapVals( result )[ 0 ];
+    }
+    else if( _.arrayIs( result ) )
+    {
+      if( result.length === 1 )
+      result = result[ 0 ];
+    }
+
+    return result;
+  }
+
+
+  function mapValsUnwrap( result )
+  {
+
+    if( !o.mapValsUnwrapping || !_.mapIs( result ) )
+    return result;
+
+    return _.mapVals( result );
   }
 
 }
@@ -2527,10 +2587,10 @@ _resolveMaybe_body.defaults =
   current : null,
   criterion : null,
   currentModule : null,
-  resolvingPath : null,
-  unwrappingPath : 1,
-  unwrappingSingle : 1,
-  mapVals : 1,
+  pathResolving : 'in',
+  pathUnwrapping : 1,
+  singleUnwrapping : 1,
+  mapValsUnwrapping : 1,
   flattening : 0,
   hasPath : null,
 }
@@ -2576,9 +2636,15 @@ function _resolveAct( o )
   let result;
   let current = o.current;
 
+  if( o.currentModule === null )
+  o.currentModule = module;
+  if( o.criterion === null && o.current && o.current.criterion )
+  o.criterion = o.current.criterion;
+
   _.assert( arguments.length === 1 );
   _.assertRoutineOptions( _resolveAct, arguments );
   _.assert( o.currentModule instanceof will.Module );
+  _.assert( o.criterion === null || _.mapIs( o.criterion ) );
 
   /* */
 
@@ -2655,6 +2721,9 @@ function _resolveAct( o )
   {
     let it = this;
 
+    // if( _.strHas( it.path, '/MultipleExports' ) )
+    // debugger;
+
     inheritsUpdate.call( it );
     globCriterionFilter.call( it );
 
@@ -2676,6 +2745,9 @@ function _resolveAct( o )
   function onUpEnd()
   {
     let it = this;
+
+    // if( _.strHas( it.path, '/MultipleExports' ) )
+    // debugger;
 
     exportedWriteThrough.call( it );
     exportedPathResolve.call( it );
@@ -2730,8 +2802,8 @@ function _resolveAct( o )
   {
     let it = this;
 
-    if( _.strHas( it.path, '/MultipleExports' ) )
-    debugger;
+    // if( _.strHas( it.path, '/MultipleExports' ) )
+    // debugger;
 
     if( it.down && it.down.isGlob )
     if(  o.criterion && it.src && it.src.criterionSattisfy )
@@ -2862,7 +2934,7 @@ function _resolveAct( o )
 
     if( it.src === o.current && it.down )
     {
-      debugger;
+      // debugger;
       it.looking = false;
       it.writingDown = false;
     }
@@ -2990,7 +3062,7 @@ function resourceImport( resource2 )
   let module2 = resource2.module;
 
   _.assert( module instanceof will.Module );
-  _.assert( module2 instanceof will.Module );
+  _.assert( module2 === null || module2 instanceof will.Module );
   _.assert( resource2 instanceof will.Resource );
 
   let resourceData = resource2.dataExport();
@@ -3001,12 +3073,13 @@ function resourceImport( resource2 )
   {
     let value = resourceData[ k ];
 
-    if( _.strIs( value ) )
+    if( _.strIs( value ) && module2 )
     value = module2.resolveMaybe
     ({
       query : value,
       prefixlessAction : 'resolved',
-      unwrappingPath : 0,
+      pathUnwrapping : 0,
+      pathResolving : 0,
     });
 
     if( _.instanceIsStandard( value ) )
@@ -3021,11 +3094,9 @@ function resourceImport( resource2 )
   resourceData.module = module;
   resourceData.name = module.resourceNameAllocate( resource2.KindName, resource2.name )
 
-  // debugger;
-
   let resource = new resource2.Self( resourceData );
   resource.form1();
-  _.assert( module.resolve({ query : resource.nickName, unwrappingPath : 0 }) === resource );
+  _.assert( module.resolve({ query : resource.nickName, pathUnwrapping : 0, pathResolving : 0 }) === resource );
 
   return resource;
 }

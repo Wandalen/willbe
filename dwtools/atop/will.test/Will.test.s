@@ -184,9 +184,9 @@ function singleModuleList( test )
     {
       test.identical( got.exitCode, 0 );
       test.is( _.strHas( got.output, 'reflector::reflect.proto.' ) );
-      test.is( _.strHas( got.output, `./proto : './out.release'` ) );
+      test.is( _.strHas( got.output, `proto : 'out.release'` ) );
       test.is( _.strHas( got.output, `reflector::reflect.proto.debug` ) );
-      test.is( _.strHas( got.output, ` ./proto : './out.debug'` ) );
+      test.is( _.strHas( got.output, `proto : 'out.debug'` ) );
       return null;
     })
   })
@@ -1875,7 +1875,7 @@ function multipleExports( test )
 
     var exportedReflector =
     {
-      srcFilter : { filePath : { './out/debug' : true }, prefixPath : '.' },
+      src : { filePath : { 'out/debug' : true }, prefixPath : '.' },
       criterion :
       {
         default : 1,
@@ -1889,7 +1889,7 @@ function multipleExports( test )
     var exportedReflectorFiles =
     {
       recursive : 0,
-      srcFilter :
+      src :
       {
         filePath : { '.' : true, 'File.debug.js' : true },
         basePath : '.',
@@ -1995,6 +1995,11 @@ function multipleExports( test )
     test.is( _.strHas( got.output, 'submodule.out.tgs' ) );
     test.is( _.strHas( got.output, 'out/submodule.out.will.yml' ) );
 
+    var outfileData = _.fileProvider.fileRead( outWillPath );
+    test.is( outfileData.length > 1000 );
+    test.is( !_.strHas( outfileData, _.path.join( routinePath, '../..' ) ) );
+    test.is( !_.strHas( outfileData, _.path.nativize( _.path.join( routinePath, '../..' ) ) ) );
+
     var outfile = _.fileProvider.fileConfigRead( outWillPath );
     var exported =
     {
@@ -2036,7 +2041,7 @@ function multipleExports( test )
 
     var exportedReflector =
     {
-      srcFilter : { filePath : { './out/debug' : true }, prefixPath : '.' },
+      src : { filePath : { 'out/debug' : true }, prefixPath : '.' },
       criterion :
       {
         default : 1,
@@ -2049,7 +2054,7 @@ function multipleExports( test )
 
     var exportedReflector =
     {
-      srcFilter : { filePath : { './out/release' : true }, prefixPath : '.' },
+      src : { filePath : { 'out/release' : true }, prefixPath : '.' },
       criterion :
       {
         default : 1,
@@ -2063,7 +2068,7 @@ function multipleExports( test )
     var exportedReflectorFiles =
     {
       recursive : 0,
-      srcFilter :
+      src :
       {
         filePath : { '.' : true, 'File.debug.js' : true },
         basePath : '.',
@@ -2083,7 +2088,7 @@ function multipleExports( test )
     var exportedReflectorFiles =
     {
       recursive : 0,
-      srcFilter :
+      src :
       {
         filePath : { '.' : true, 'File.release.js' : true },
         basePath : '.',
@@ -2217,16 +2222,6 @@ function multipleExportsImport( test )
     outputCollecting : 1,
     ready : ready,
   })
-
-  // let find = _.fileProvider.filesFinder
-  // ({
-  //   recursive : 2,
-  //   includingTerminals : 1,
-  //   includingDirs : 1,
-  //   includingTransient : 1,
-  //   allowingMissed : 1,
-  //   outputFormat : 'relative',
-  // });
 
   /* - */
 
@@ -2478,7 +2473,7 @@ function multipleExportsBroken( test )
 
     var exportedReflector =
     {
-      srcFilter : { filePath : { './out/debug' : true }, prefixPath : '.' },
+      src : { filePath : { 'out/debug' : true }, prefixPath : '.' },
       criterion :
       {
         default : 1,
@@ -2492,7 +2487,7 @@ function multipleExportsBroken( test )
     var exportedReflectorFiles =
     {
       recursive : 0,
-      srcFilter :
+      src :
       {
         filePath : { '.' : true, 'File.debug.js' : true },
         basePath : '.',

@@ -2175,9 +2175,11 @@ function filter( filePath, onEach )
   _.assert( filePath === null || _.strIs( filePath ) || _.arrayIs( filePath ) || _.mapIs( filePath ) );
   _.routineIs( onEach );
 
+  let it = Object.create( null );
+
   if( filePath === null || _.strIs( filePath ) )
   {
-    let r = onEach( filePath );
+    let r = onEach( filePath, it );
     // if( r === undefined )
     // return null;
     return r;
@@ -2187,7 +2189,8 @@ function filter( filePath, onEach )
     let result = [];
     for( let p = 0 ; p < filePath.length ; p++ )
     {
-      let r = onEach( filePath[ p ] );
+      it.index = p;
+      let r = onEach( filePath[ p ], it );
       if( r !== undefined )
       result.push( r );
     }
@@ -2200,8 +2203,12 @@ function filter( filePath, onEach )
     {
       let dst = filePath[ src ];
 
-      let src2 = onEach( src );
-      let dst2 = onEach( dst );
+      it.src = src;
+      it.dst = dst;
+      it.side = 'src';
+      let src2 = onEach( src, it );
+      it.side = 'dst';
+      let dst2 = onEach( dst, it );
 
       if( src2 !== undefined && dst2 !== undefined )
       result[ src2 ] = dst2;

@@ -563,12 +563,11 @@ function compactField( it )
 {
   let resource = this;
   let module = resource.module;
-  let will = module.will;
 
   if( it.src instanceof Self )
   {
     // debugger;
-    _.assert( resource instanceof will.Exported, 'not tested' );
+    _.assert( resource instanceof _.Will.Exported, 'not tested' );
     it.dst = it.src.nickName;
     return it.dst;
   }
@@ -664,7 +663,7 @@ function inPathResolve_body( o )
 var defaults = inPathResolve_body.defaults = Object.create( resolve.defaults );
 defaults.defaultPool = 'path';
 defaults.prefixlessAction = 'throw';
-defaults.resolvingPath = 'in';
+defaults.pathResolving = 'in';
 
 let inPathResolve = _.routineFromPreAndBody( resolve.pre, inPathResolve_body );
 

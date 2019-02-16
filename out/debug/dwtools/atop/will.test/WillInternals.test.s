@@ -71,7 +71,7 @@ function onSuiteEnd()
 
 //
 
-function resolve( test )
+function buildsResolve( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
@@ -81,6 +81,7 @@ function resolve( test )
   let exportPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
   let will = new _.Will;
+  let path = _.fileProvider.path;
 
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -121,14 +122,6 @@ function resolve( test )
     var got = _.select( resolved, '*/name' );
     test.identical( got, expected );
 
-    return null;
-  });
-
-  /* - */
-
-  module.ready.thenKeep( ( arg ) =>
-  {
-
     test.case = 'build::*, current is build::export.'; /* */
 
     var build = module.resolve({ query : 'build::export.' });
@@ -136,7 +129,7 @@ function resolve( test )
     test.identical( build.nickName, 'build::export.' );
     test.identical( build.absoluteName, 'module::super / build::export.' );
 
-    var resolved = module.resolve({ query : 'build::*', current : build, unwrappingSingle : 0 });
+    var resolved = module.resolve({ query : 'build::*', current : build, singleUnwrapping : 0 });
     test.identical( resolved.length, 1 );
 
     var expected = [ 'release' ];
@@ -150,7 +143,7 @@ function resolve( test )
     test.case = 'build::*, current is build::export.debug'; /* */
 
     var build = module.resolve({ query : 'build::export.debug' });
-    var resolved = module.resolve({ query : 'build::*', current : build, unwrappingSingle : 0 });
+    var resolved = module.resolve({ query : 'build::*', current : build, singleUnwrapping : 0 });
     test.identical( resolved.length, 1 );
 
     var expected = [ 'debug' ];
@@ -164,7 +157,7 @@ function resolve( test )
     test.case = 'build::*, current is build::export.debug, short-cut'; /* */
 
     var build = module.resolve({ query : 'build::export.debug' });
-    var resolved = build.resolve({ query : 'build::*', unwrappingSingle : 0 });
+    var resolved = build.resolve({ query : 'build::*', singleUnwrapping : 0 });
     test.identical( resolved.length, 1 );
 
     var expected = [ 'debug' ];
@@ -174,11 +167,284 @@ function resolve( test )
     test.case = 'build::*, current is build::export.debug, short-cut, explicit criterion'; /* */
 
     var build = module.resolve({ query : 'build::export.*', criterion : { debug : 1 } });
-    var resolved = build.resolve({ query : 'build::*', unwrappingSingle : 0, criterion : { debug : 0 } });
+    var resolved = build.resolve({ query : 'build::*', singleUnwrapping : 0, criterion : { debug : 0 } });
     test.identical( resolved.length, 2 );
 
     var expected = [ 'release', 'export.' ];
     var got = _.select( resolved, '*/name' );
+    test.identical( got, expected );
+
+    return null;
+  })
+
+  /* - */
+
+  module.ready.finallyKeep( ( err, arg ) =>
+  {
+
+    debugger;
+    test.is( err === undefined );
+    module.finit();
+
+    if( err )
+    throw err;
+    return arg;
+  });
+  return module.ready.split();
+}
+
+buildsResolve.timeOut = 130000;
+
+//
+
+function pathsResolve( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulePath = _.path.join( routinePath, 'super' );
+  let modulesPath = _.path.join( routinePath, '.module' );
+  let exportPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+  let will = new _.Will;
+  let path = _.fileProvider.path;
+
+  function pin( filePath )
+  {
+    return path.s.join( routinePath, filePath );
+  }
+
+  function pout( filePath )
+  {
+    return path.s.join( routinePath, 'super.out', filePath );
+  }
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( exportPath );
+
+  var module = will.moduleMake( modulePath );
+
+  /* - */
+
+  module.ready.thenKeep( ( arg ) =>
+  {
+
+    test.case = 'path::* - implicit'; /* */
+
+    var resolved = module.resolve({ query : 'path::*' });
+    test.identical( resolved.length, 6 );
+    var expected = path.s.join( routinePath, [ './proto', '../super.out', '..', '../super.out', './super.out/debug', './super.out/release' ] );
+    var got = resolved;
+    test.identical( got, expected );
+
+    test.case = 'path::* - pu:1 mvu:1 pr:in'; /* */
+
+    var resolved = module.resolve
+    ({
+      query : 'path::*',
+      pathUnwrapping : 1,
+      mapValsUnwrapping : 1,
+      pathResolving : 'in',
+    });
+    test.identical( resolved.length, 6 );
+    var expected = path.s.join( routinePath, [ './proto', '../super.out', '..', '../super.out', './super.out/debug', './super.out/release' ] );
+    var got = resolved;
+    test.identical( got, expected );
+
+    test.case = 'path::* - pu:1 mvu:1 pr:out'; /* */
+
+    var resolved = module.resolve
+    ({
+      query : 'path::*',
+      pathUnwrapping : 1,
+      mapValsUnwrapping : 1,
+      pathResolving : 'out',
+    });
+    test.identical( resolved.length, 6 );
+    var expected = path.s.join( routinePath, 'super.out', [ './proto', '../super.out', '..', '../super.out', './super.out/debug', './super.out/release' ] );
+    var got = resolved;
+    test.identical( got, expected );
+
+    test.case = 'path::* - pu:1 mvu:1 pr:null'; /* */
+
+    var resolved = module.resolve
+    ({
+      query : 'path::*',
+      pathUnwrapping : 1,
+      mapValsUnwrapping : 1,
+      pathResolving : null,
+    });
+    test.identical( resolved.length, 6 );
+    var expected = [ './proto', '../super.out', '..', '../super.out', './super.out/debug', './super.out/release' ];
+    var got = resolved;
+    test.identical( got, expected );
+
+    test.case = 'path::* - pu:0 mvu:0 pr:null'; /* */
+
+    var resolved = module.resolve
+    ({
+      query : 'path::*',
+      pathUnwrapping : 0,
+      mapValsUnwrapping : 0,
+      pathResolving : null,
+    });
+    var expected =
+    {
+      'proto' : './proto',
+      'temp' : '../super.out',
+      'in' : '..',
+      'out' : '../super.out',
+      'out.debug' : './super.out/debug',
+      'out.release' : './super.out/release'
+    }
+    var got = _.select( resolved, '*/path' );
+    test.identical( got, expected );
+    _.any( resolved, ( e, k ) => test.is( e === module.pathObjMap[ k ] ) );
+    _.any( resolved, ( e, k ) => test.is( e.module === module ) );
+
+    test.case = 'path::* - pu:0 mvu:0 pr:in'; /* */
+
+    var resolved = module.resolve
+    ({
+      query : 'path::*',
+      pathUnwrapping : 0,
+      mapValsUnwrapping : 0,
+      pathResolving : 'in',
+    });
+    var expected =
+    {
+      'proto' : pin( './proto' ),
+      'temp' : pin( '../super.out' ),
+      'in' : pin( '..' ),
+      'out' : pin( '../super.out' ),
+      'out.debug' : pin( './super.out/debug' ),
+      'out.release' : pin( './super.out/release' ),
+    }
+    var got = _.select( resolved, '*/path' );
+    test.identical( got, expected );
+
+    test.case = 'path::* - pu:0 mvu:0 pr:out'; /* */
+
+    var resolved = module.resolve
+    ({
+      query : 'path::*',
+      pathUnwrapping : 0,
+      mapValsUnwrapping : 0,
+      pathResolving : 'out',
+    });
+    var expected =
+    {
+      'proto' : pout( './proto' ),
+      'temp' : pout( '../super.out' ),
+      'in' : pout( '..' ),
+      'out' : pout( '../super.out' ),
+      'out.debug' : pout( './super.out/debug' ),
+      'out.release' : pout( './super.out/release' ),
+    }
+    var got = _.select( resolved, '*/path' );
+    test.identical( got, expected );
+
+    test.case = 'path::* - pu:1 mvu:0 pr:null'; /* */
+
+    var resolved = module.resolve
+    ({
+      query : 'path::*',
+      pathUnwrapping : 1,
+      mapValsUnwrapping : 0,
+      pathResolving : null,
+    });
+    var expected =
+    {
+      'proto' : './proto',
+      'temp' : '../super.out',
+      'in' : '..',
+      'out' : '../super.out',
+      'out.debug' : './super.out/debug',
+      'out.release' : './super.out/release'
+    }
+    var got = resolved;
+    test.identical( got, expected );
+
+    test.case = 'path::* - pu:1 mvu:0 pr:in'; /* */
+
+    var resolved = module.resolve
+    ({
+      query : 'path::*',
+      pathUnwrapping : 1,
+      mapValsUnwrapping : 0,
+      pathResolving : 'in',
+    });
+    var expected =
+    {
+      'proto' : pin( './proto' ),
+      'temp' : pin( '../super.out' ),
+      'in' : pin( '..' ),
+      'out' : pin( '../super.out' ),
+      'out.debug' : pin( './super.out/debug' ),
+      'out.release' : pin( './super.out/release' ),
+    }
+    var got = resolved;
+    test.identical( got, expected );
+
+    test.case = 'path::* - pu:1 mvu:0 pr:out'; /* */
+
+    var resolved = module.resolve
+    ({
+      query : 'path::*',
+      pathUnwrapping : 1,
+      mapValsUnwrapping : 0,
+      pathResolving : 'out',
+    });
+    var expected =
+    {
+      'proto' : pout( './proto' ),
+      'temp' : pout( '../super.out' ),
+      'in' : pout( '..' ),
+      'out' : pout( '../super.out' ),
+      'out.debug' : pout( './super.out/debug' ),
+      'out.release' : pout( './super.out/release' ),
+    }
+    var got = resolved;
+    test.identical( got, expected );
+
+    test.case = 'path::* - pu:0 mvu:1 pr:null'; /* */
+
+    var resolved = module.resolve
+    ({
+      query : 'path::*',
+      pathUnwrapping : 0,
+      mapValsUnwrapping : 1,
+      pathResolving : null,
+    });
+    var expected = [ './proto', '../super.out', '..', '../super.out', './super.out/debug', './super.out/release' ];
+    var got = _.select( resolved, '*/path' );
+    test.identical( got, expected );
+
+    test.case = 'path::* - pu:0 mvu:1 pr:in'; /* */
+
+    var resolved = module.resolve
+    ({
+      query : 'path::*',
+      pathUnwrapping : 0,
+      mapValsUnwrapping : 1,
+      pathResolving : 'in',
+    });
+    var expected = pin([ './proto', '../super.out', '..', '../super.out', './super.out/debug', './super.out/release' ]);
+    var got = _.select( resolved, '*/path' );
+    test.identical( got, expected );
+
+    test.case = 'path::* - pu:0 mvu:1 pr:out'; /* */
+
+    var resolved = module.resolve
+    ({
+      query : 'path::*',
+      pathUnwrapping : 0,
+      mapValsUnwrapping : 1,
+      pathResolving : 'out',
+    });
+    var expected = pout([ './proto', '../super.out', '..', '../super.out', './super.out/debug', './super.out/release' ]);
+    var got = _.select( resolved, '*/path' );
     test.identical( got, expected );
 
     return null;
@@ -200,7 +466,7 @@ function resolve( test )
   return module.ready.split();
 }
 
-resolve.timeOut = 130000;
+pathsResolve.timeOut = 130000;
 
 //
 
@@ -274,7 +540,8 @@ var Self =
   tests :
   {
 
-    resolve,
+    buildsResolve,
+    pathsResolve,
     simple,
 
   }

@@ -1,1 +1,1 @@
-console.log( 'File.release.js' );
+console.log( 'File1.release.js' );

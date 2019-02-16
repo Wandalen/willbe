@@ -41,7 +41,7 @@ function exec()
   let appArgs = _.appArgs();
   let ca = will.commandsMake();
 
-  return ca.proceedApplicationArguments({ appArgs : appArgs });
+  return ca.performApplicationArguments({ appArgs : appArgs });
 }
 
 //
@@ -597,7 +597,7 @@ function commandBuild( e )
     throw errTooMany( builds, 'build scenario' );
 
     let build = builds[ 0 ];
-    return build.proceed()
+    return build.perform()
   });
 }
 
@@ -628,7 +628,7 @@ function commandExport( e )
     // }
 
     let build = builds[ 0 ];
-    return build.proceed()
+    return build.perform()
   });
 }
 
@@ -668,7 +668,7 @@ function commandWith( e )
 
     _.assert( module.willFileArray.length > 0 );
 
-    return ca.proceedCommand
+    return ca.performCommand
     ({
       command : isolated.secondCommand,
       subject : isolated.secondSubject,
@@ -751,7 +751,7 @@ function commandEach( e )
 
       _.assert( module.willFileArray.length > 0 );
 
-      let r = ca.proceedCommand
+      let r = ca.performCommand
       ({
         command : isolated.secondCommand,
         subject : isolated.secondSubject,

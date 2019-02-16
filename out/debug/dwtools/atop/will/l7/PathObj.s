@@ -123,8 +123,8 @@ function _pathSet( src )
   if( _.arrayLike( src ) )
   src = _.arraySlice( src );
 
-  if( patho.path )
-  debugger;
+  // if( patho.path )
+  // debugger;
   // if( src )
   // debugger;
 

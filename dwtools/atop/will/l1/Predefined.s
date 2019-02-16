@@ -308,23 +308,25 @@ function stepRoutineConcatJs( frame )
 
   _.assert( arguments.length === 1 );
 
-  debugger;
   let reflector = step.reflectorResolve( opts.reflector );
-  delete opts.reflector ;
-  _.mapSupplement( opts, reflector.optionsForReflectExport() )
-  // _.mapSupplement( opts, reflector.optionsForFindExport() )
-  // debugger; xxx
+  let reflectOptions = reflector.optionsForReflectExport();
 
   _.include( 'wTranspilationStrategy' );
 
-  let ts = new _.TranspilationStrategy().form();
-  let session = ts.session
+  debugger;
+
+  let ts = new _.TranspilationStrategy({ logger : logger }).form();
+  let multiple = ts.multiple
   ({
-    inputPath : __filename,
-    outputPath : outputPath,
+    inputPath : reflectOptions.srcFilter,
+    outputPath : reflectOptions.dstFilter,
+    writingTerminalUnderDirectory : 1,
+    totalReporting : 0,
   });
 
-  return session.form().proceed()
+  debugger;
+
+  return multiple.form().perform()
   .finally( ( err, arg ) =>
   {
     debugger;
@@ -332,21 +334,6 @@ function stepRoutineConcatJs( frame )
     throw _.errLogOnce( err );
     return arg;
   });
-
-  // /* */
-  //
-  // return _.shell
-  // ({
-  //   path : opts.shell,
-  //   currentPath : opts.currentPath,
-  //   verbosity : will.verbosity - 1,
-  // })
-  // .finally( ( err, arg ) =>
-  // {
-  //   if( err )
-  //   throw _.errBriefly( 'Failed to shell', step.nickName, '\n', err );
-  //   return arg;
-  // });
 
 }
 
@@ -455,7 +442,7 @@ function stepRoutineExport( frame )
 
   _.assert( module.exportedMap[ build.name ] === exported );
 
-  return exported.proceed( frame );
+  return exported.perform( frame );
 }
 
 stepRoutineExport.stepOptions =
@@ -485,7 +472,6 @@ let Extend =
 
   stepRoutineJs,
   stepRoutineShell,
-
   stepRoutineConcatJs,
 
   stepRoutineSubmodulesDownload,

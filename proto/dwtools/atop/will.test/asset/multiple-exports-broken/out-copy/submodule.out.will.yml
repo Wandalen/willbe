@@ -48,7 +48,7 @@ path:
 submodule: {}
 reflector:
   reflect.proto.:
-    srcFilter:
+    src:
       filePath:
         ./proto: ./out/release
       maskAll:
@@ -69,7 +69,7 @@ reflector:
     inherit:
       - predefined.*
   reflect.proto.debug:
-    srcFilter:
+    src:
       filePath:
         ./proto: ./out/debug
       maskAll:
@@ -88,7 +88,7 @@ reflector:
     inherit:
       - predefined.*
   exported.export.:
-    srcFilter:
+    src:
       filePath:
         ./out/release: true
       prefixPath: .
@@ -99,7 +99,7 @@ reflector:
       export: 1
   exportedFiles.export.:
     recursive: 0
-    srcFilter:
+    src:
       filePath:
         .: true
         File.release.js: true
