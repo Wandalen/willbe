@@ -1157,7 +1157,7 @@ function _willFilesCacheSave()
   let logger = will.logger;
   let result = Object.create( null );
 
-  if( !module.about )
+  if( !module.about || !module.about.name )
   return null;
 
   _.assert( arguments.length === 0 );
