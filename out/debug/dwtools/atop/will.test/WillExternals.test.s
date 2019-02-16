@@ -2517,15 +2517,14 @@ function multipleExportsBroken( test )
 
 //
 
-function multipleExportsImportProblem( test )
+function multipleExportsDoc( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports-import' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports-doc' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulesPath = _.path.join( routinePath, '.module' );
-  let outPath = _.path.join( routinePath, 'docs' );
-  let out2Path = _.path.join( routinePath, 'super.out' );
-  let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
+  let subOutPath = _.path.join( routinePath, 'out' );
+  let supOutPath = _.path.join( routinePath, 'doc.out' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec2' ) );
   let ready = new _.Consequence().take( null );
 
@@ -2546,21 +2545,28 @@ function multipleExportsImportProblem( test )
 
     _.fileProvider.filesDelete( routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    _.fileProvider.filesDelete( outPath );
+    _.fileProvider.filesDelete( subOutPath );
+    _.fileProvider.filesDelete( supOutPath );
 
     return null;
   })
 
+  /* qqq : replace args -> path, maybe */
+
   shell({ args : [ '.with . .export export.doc' ] })
   shell({ args : [ '.with . .export export.debug' ] })
-  shell({ args : [ '.with super .build doc:1' ] })
+  shell({ args : [ '.with . .export export.' ] })
+  shell({ args : [ '.with doc .build doc:1' ] })
 
   .thenKeep( ( got ) =>
   {
-
-    var files = self.find( outPath );
-    test.identical( files, [ '.', './file.md' ] );
     test.identical( got.exitCode, 0 );
+
+    var files = self.find( subOutPath );
+    test.identical( files, [ '.', './submodule.default-debug-raw.out.tgs', './submodule.default-raw.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
+
+    var files = self.find( supOutPath );
+    test.identical( files, [ '.', './file.md' ] );
 
     return null;
   })
@@ -2568,7 +2574,7 @@ function multipleExportsImportProblem( test )
   return ready;
 }
 
-multipleExportsImportProblem.timeOut = 130000;
+multipleExportsDoc.timeOut = 130000;
 
 //
 
@@ -2612,8 +2618,7 @@ var Self =
     multipleExports,
     multipleExportsImport,
     multipleExportsBroken,
-
-    multipleExportsImportProblem
+    multipleExportsDoc
 
   }
 

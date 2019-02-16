@@ -7,15 +7,15 @@ submodule :
 path :
 
   proto : './proto'
-  temp : '../super.out'
+  temp : '../doc.out'
   in : '..'
-  out : '../super.out'
+  out : '../doc.out'
   out.debug :
-    path : './super.out/debug'
+    path : './doc.out/debug'
     criterion :
       debug : 1
   out.release :
-    path : './super.out/release'
+    path : './doc.out/release'
     criterion :
       debug : 0
   doc : 'doc'

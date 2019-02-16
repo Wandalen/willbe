@@ -5,8 +5,8 @@
 - Split will-file
 - Named will-file
 - Resources
--- Kinds
--- Inheritability
+  - Kinds
+  - Inheritability
 - How to list
 - How to use selector
 - How to use selector with glob and assertion

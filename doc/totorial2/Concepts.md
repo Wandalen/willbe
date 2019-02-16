@@ -1,20 +1,20 @@
 # Concepts
 
-Module ::
-Submodule ::
-Supermodule :: 
-Local submodule ::
-Remote submodule ::
-Resource ::
-Resource's inheritability ::
-Selector ::
-Selector with glob ::
-Glob assertion ::
-Build ::
-Export ::
-Step ::
-Path ::
-Reflector ::
-Will-file ::
-Split will-file ::
-Named will-file ::
+**Module**** :: </br>
+**Submodule** :: </br>
+**Supermodule** :: </br>
+**Local submodule** :: </br>
+**Remote submodule** :: </br>
+**Resource** :: </br>
+**Resource's inheritability** :: </br>
+**Selector** :: </br>
+**Selector with glob** :: </br>
+**Glob assertion** :: </br>
+**Build** :: </br>
+**Export** :: </br>
+**Step** :: </br>
+**Path** :: </br>
+**Reflector** :: </br>
+**Will-file** :: </br>
+**Split will-file** :: </br>
+**Named will-file** :: </br>

@@ -76,11 +76,9 @@ function resolve( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let moduleMapth = _.path.join( routinePath, 'super' );
+  let modulePath = _.path.join( routinePath, 'super' );
   let modulesPath = _.path.join( routinePath, '.module' );
   let exportPath = _.path.join( routinePath, 'out' );
-  let outWillPath = _.path.join( exportPath, 'super.out.will.yml' );
-  let willExecPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec2' ) );
   let ready = new _.Consequence().take( null );
   let will = new _.Will;
 
@@ -88,7 +86,7 @@ function resolve( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
   _.fileProvider.filesDelete( exportPath );
 
-  var module = will.moduleMake( moduleMapth );
+  var module = will.moduleMake( modulePath );
 
   /* - */
 
@@ -204,6 +202,56 @@ function resolve( test )
 
 resolve.timeOut = 130000;
 
+//
+
+function simple( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'simple' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulePath = _.path.join( routinePath, '.' );
+  let modulesPath = _.path.join( routinePath, '.module' );
+  let exportPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+  let will = new _.Will;
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( exportPath );
+
+  var module = will.moduleMake( modulePath );
+
+  return module.ready.split().then( () =>
+  {
+
+    var expected = [];
+    var files = self.find( exportPath );
+
+    let builds = module.buildsSelect();
+
+    test.identical( builds.length, 1 );
+
+    let build = builds[ 0 ];
+
+    return build.proceed()
+    .finally( ( err, arg ) =>
+    {
+
+      var expected = [ '.', './debug', './debug/File.js' ];
+      var files = self.find( exportPath );
+      test.identical( files, expected );
+
+      module.finit();
+      if( err )
+      throw err;
+      return arg;
+    });
+
+  });
+}
+
+simple.timeOut = 130000;
+
 // --
 // define class
 // --
@@ -227,6 +275,7 @@ var Self =
   {
 
     resolve,
+    simple,
 
   }
 

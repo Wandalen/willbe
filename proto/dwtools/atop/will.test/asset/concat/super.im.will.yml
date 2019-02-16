@@ -7,18 +7,17 @@ submodule :
 path :
 
   proto : './proto'
-  temp : '../doc.out'
+  temp : '../super.out'
   in : '..'
-  out : '../doc.out'
+  out : '../super.out'
   out.debug :
-    path : './doc.out/debug'
+    path : './super.out/debug'
     criterion :
       debug : 1
   out.release :
-    path : './doc.out/release'
+    path : './super.out/release'
     criterion :
       debug : 0
-  doc : 'doc'
 
 reflector :
 
@@ -28,16 +27,7 @@ reflector :
       basePath : .
       prefixPath : path::out.*=1
     criterion :
-      doc : 0
       debug : [ 0,1 ]
-
-  reflect.doc :
-    inherit : submodule::*/exported::*=1/reflector::exportedFiles*=1
-    dstFilter :
-      basePath : .
-      prefixPath : path::doc
-    criterion :
-      doc: 1
 
 step :
 
@@ -46,15 +36,7 @@ step :
     reflector :
       reflector::reflect.submodules*=1
     criterion :
-      doc : 0
       debug : [ 0,1 ]
-
-  reflect.doc :
-    inherit : predefined.reflect
-    reflector :
-      reflector::reflect.doc*=1
-    criterion :
-      doc : 1
 
 build :
 
@@ -62,7 +44,6 @@ build :
     criterion :
       default : 1
       debug : 1
-      doc : 0
     steps :
       - step::submodules.download
       - step::reflect.submodules.*=1
@@ -70,13 +51,6 @@ build :
   release :
     criterion :
       debug : 0
-      doc : 0
     steps :
       - step::submodules.download
       - step::reflect.submodules.*=1
-
-  doc :
-    criterion :
-      doc : 1
-    steps :
-      - step::reflect.doc*=1
