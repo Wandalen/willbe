@@ -467,6 +467,12 @@ path:
       - proto/dwtools/atop/will.test/WillExternals.test.s
       - proto/dwtools/atop/will.test/WillInternals.test.s
       - proto/dwtools/atop/will.test/asset
+      - proto/dwtools/atop/will.test/asset/concat
+      - proto/dwtools/atop/will.test/asset/concat/super.ex.will.yml
+      - proto/dwtools/atop/will.test/asset/concat/super.im.will.yml
+      - proto/dwtools/atop/will.test/asset/concat/proto
+      - proto/dwtools/atop/will.test/asset/concat/proto/File.debug.js
+      - proto/dwtools/atop/will.test/asset/concat/proto/File.release.js
       - proto/dwtools/atop/will.test/asset/multiple-exports
       - proto/dwtools/atop/will.test/asset/multiple-exports/super.ex.will.yml
       - proto/dwtools/atop/will.test/asset/multiple-exports/super.im.will.yml
@@ -474,6 +480,18 @@ path:
       - proto/dwtools/atop/will.test/asset/multiple-exports/proto/File.debug.js
       - >-
         proto/dwtools/atop/will.test/asset/multiple-exports/proto/File.release.js
+      - proto/dwtools/atop/will.test/asset/multiple-exports-broken
+      - proto/dwtools/atop/will.test/asset/multiple-exports-broken/out
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports-broken/out/submodule.out.will.yml
+      - proto/dwtools/atop/will.test/asset/multiple-exports-broken/out-copy
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports-broken/out-copy/submodule.out.will.yml
+      - proto/dwtools/atop/will.test/asset/multiple-exports-broken/proto
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports-broken/proto/File.debug.js
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports-broken/proto/File.release.js
       - proto/dwtools/atop/will.test/asset/multiple-exports-copy
       - >-
         proto/dwtools/atop/will.test/asset/multiple-exports-copy/super.ex.will.yml
@@ -484,21 +502,20 @@ path:
         proto/dwtools/atop/will.test/asset/multiple-exports-copy/proto/File.debug.js
       - >-
         proto/dwtools/atop/will.test/asset/multiple-exports-copy/proto/File.release.js
-      - proto/dwtools/atop/will.test/asset/multiple-exports-import
+      - proto/dwtools/atop/will.test/asset/multiple-exports-doc
+      - proto/dwtools/atop/will.test/asset/multiple-exports-doc/doc.ex.will.yml
+      - proto/dwtools/atop/will.test/asset/multiple-exports-doc/doc.im.will.yml
+      - proto/dwtools/atop/will.test/asset/multiple-exports-doc/doc
+      - proto/dwtools/atop/will.test/asset/multiple-exports-doc/doc/file.md
+      - proto/dwtools/atop/will.test/asset/multiple-exports-doc/proto
       - >-
-        proto/dwtools/atop/will.test/asset/multiple-exports-import/super.ex.will.yml
+        proto/dwtools/atop/will.test/asset/multiple-exports-doc/proto/File.debug.js
       - >-
-        proto/dwtools/atop/will.test/asset/multiple-exports-import/super.im.will.yml
-      - proto/dwtools/atop/will.test/asset/multiple-exports-import/doc
-      - proto/dwtools/atop/will.test/asset/multiple-exports-import/doc/file.md
-      - proto/dwtools/atop/will.test/asset/multiple-exports-import/proto
-      - >-
-        proto/dwtools/atop/will.test/asset/multiple-exports-import/proto/File.debug.js
-      - >-
-        proto/dwtools/atop/will.test/asset/multiple-exports-import/proto/File.release.js
+        proto/dwtools/atop/will.test/asset/multiple-exports-doc/proto/File.release.js
+      - proto/dwtools/atop/will.test/asset/simple
+      - proto/dwtools/atop/will.test/asset/simple/proto
+      - proto/dwtools/atop/will.test/asset/simple/proto/File.js
       - proto/dwtools/atop/will.test/asset/single
-      - proto/dwtools/atop/will.test/asset/single/out.debug
-      - proto/dwtools/atop/will.test/asset/single/out.debug/Single.s
       - proto/dwtools/atop/will.test/asset/single/proto
       - proto/dwtools/atop/will.test/asset/single/proto/Single.s
       - proto/dwtools/atop/will.test/asset/submodules
@@ -919,29 +936,44 @@ reflector:
         dwtools/atop/will.test/WillExternals.test.s: true
         dwtools/atop/will.test/WillInternals.test.s: true
         dwtools/atop/will.test/asset: true
+        dwtools/atop/will.test/asset/concat: true
+        dwtools/atop/will.test/asset/concat/super.ex.will.yml: true
+        dwtools/atop/will.test/asset/concat/super.im.will.yml: true
+        dwtools/atop/will.test/asset/concat/proto: true
+        dwtools/atop/will.test/asset/concat/proto/File.debug.js: true
+        dwtools/atop/will.test/asset/concat/proto/File.release.js: true
         dwtools/atop/will.test/asset/multiple-exports: true
         dwtools/atop/will.test/asset/multiple-exports/super.ex.will.yml: true
         dwtools/atop/will.test/asset/multiple-exports/super.im.will.yml: true
         dwtools/atop/will.test/asset/multiple-exports/proto: true
         dwtools/atop/will.test/asset/multiple-exports/proto/File.debug.js: true
         dwtools/atop/will.test/asset/multiple-exports/proto/File.release.js: true
+        dwtools/atop/will.test/asset/multiple-exports-broken: true
+        dwtools/atop/will.test/asset/multiple-exports-broken/out: true
+        dwtools/atop/will.test/asset/multiple-exports-broken/out/submodule.out.will.yml: true
+        dwtools/atop/will.test/asset/multiple-exports-broken/out-copy: true
+        dwtools/atop/will.test/asset/multiple-exports-broken/out-copy/submodule.out.will.yml: true
+        dwtools/atop/will.test/asset/multiple-exports-broken/proto: true
+        dwtools/atop/will.test/asset/multiple-exports-broken/proto/File.debug.js: true
+        dwtools/atop/will.test/asset/multiple-exports-broken/proto/File.release.js: true
         dwtools/atop/will.test/asset/multiple-exports-copy: true
         dwtools/atop/will.test/asset/multiple-exports-copy/super.ex.will.yml: true
         dwtools/atop/will.test/asset/multiple-exports-copy/super.im.will.yml: true
         dwtools/atop/will.test/asset/multiple-exports-copy/proto: true
         dwtools/atop/will.test/asset/multiple-exports-copy/proto/File.debug.js: true
         dwtools/atop/will.test/asset/multiple-exports-copy/proto/File.release.js: true
-        dwtools/atop/will.test/asset/multiple-exports-import: true
-        dwtools/atop/will.test/asset/multiple-exports-import/super.ex.will.yml: true
-        dwtools/atop/will.test/asset/multiple-exports-import/super.im.will.yml: true
-        dwtools/atop/will.test/asset/multiple-exports-import/doc: true
-        dwtools/atop/will.test/asset/multiple-exports-import/doc/file.md: true
-        dwtools/atop/will.test/asset/multiple-exports-import/proto: true
-        dwtools/atop/will.test/asset/multiple-exports-import/proto/File.debug.js: true
-        dwtools/atop/will.test/asset/multiple-exports-import/proto/File.release.js: true
+        dwtools/atop/will.test/asset/multiple-exports-doc: true
+        dwtools/atop/will.test/asset/multiple-exports-doc/doc.ex.will.yml: true
+        dwtools/atop/will.test/asset/multiple-exports-doc/doc.im.will.yml: true
+        dwtools/atop/will.test/asset/multiple-exports-doc/doc: true
+        dwtools/atop/will.test/asset/multiple-exports-doc/doc/file.md: true
+        dwtools/atop/will.test/asset/multiple-exports-doc/proto: true
+        dwtools/atop/will.test/asset/multiple-exports-doc/proto/File.debug.js: true
+        dwtools/atop/will.test/asset/multiple-exports-doc/proto/File.release.js: true
+        dwtools/atop/will.test/asset/simple: true
+        dwtools/atop/will.test/asset/simple/proto: true
+        dwtools/atop/will.test/asset/simple/proto/File.js: true
         dwtools/atop/will.test/asset/single: true
-        dwtools/atop/will.test/asset/single/out.debug: true
-        dwtools/atop/will.test/asset/single/out.debug/Single.s: true
         dwtools/atop/will.test/asset/single/proto: true
         dwtools/atop/will.test/asset/single/proto/Single.s: true
         dwtools/atop/will.test/asset/submodules: true
