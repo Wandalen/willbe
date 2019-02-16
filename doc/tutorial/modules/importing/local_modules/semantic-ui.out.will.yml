@@ -373,9 +373,9 @@ submodule: {}
 reflector:
   exported.0:
     filePath: .
-    srcFilter:
+    src:
       prefixPath: .
-    dstFilter:
+    dst:
       prefixPath: .
   exportedFiles.0:
     recursive: 0
@@ -548,10 +548,10 @@ reflector:
       ./themes/default/assets/fonts/outline-icons.woff: true
       ./themes/default/assets/fonts/outline-icons.woff2: true
       ./themes/default/assets/images/flags.png: true
-    srcFilter:
+    src:
       basePath: .
       prefixPath: .
-    dstFilter:
+    dst:
       basePath: .
       prefixPath: .
 step:
