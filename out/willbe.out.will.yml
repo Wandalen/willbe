@@ -2,7 +2,7 @@ format: willfile-1.0.0
 about:
   name: willbe
   description: Tool to manage modules of modular systems
-  version: 0.3.150
+  version: 0.3.159
   enabled: 1
   interpreters:
     - nodejs >= 6.0.0
@@ -15,10 +15,10 @@ execution:
     test: wtest staging
     docgen: wdocgen staging
 path:
-  proto:
-    path: ./proto
   in:
     path: .
+  temp:
+    path: out
   out:
     path: out
   out.debug:
@@ -29,398 +29,12 @@ path:
     path: ./out/release
     criterion:
       debug: 0
+  proto:
+    path: ./proto
   repository:
     path: 'git+https://github.com/Wandalen/willbe.git'
   bugs:
     path: 'https://github.com/Wandalen/willbe/issues'
-  doc:
-    path: doc
-  exportedDir.doc.export:
-    path: ./doc
-    criterion:
-      export: 1
-      doc: 1
-  exportedFiles.doc.export:
-    path:
-      - .
-      - ./Build.md
-      - ./Introduction.md
-      - ./Module.md
-      - ./README.md
-      - ./Submodules.md
-      - ./Will-files.md
-      - ./totorial2
-      - ./totorial2/Concepts.md
-      - ./totorial2/Concepts.urk.md
-      - ./totorial2/ExplicitRequirements.md
-      - ./totorial2/Faq.ukr.md
-      - ./totorial2/Links.md
-      - ./totorial2/Topics.md
-      - ./tutorial
-      - ./tutorial/Criterion.md
-      - ./tutorial/DeclaringModule.md
-      - ./tutorial/Exporting.md
-      - ./tutorial/FirstBuild.md
-      - ./tutorial/ListingResources.md
-      - ./tutorial/LocalSubmodules.md
-      - ./tutorial/README.md
-      - ./tutorial/ReflectorsAndSteps.md
-      - ./tutorial/RemoteSubmodules.md
-      - ./tutorial/SettingUp.md
-      - ./tutorial/SplitModule.md
-      - ./tutorial/modules
-      - ./tutorial/modules/copying
-      - ./tutorial/modules/copying/proto
-      - ./tutorial/modules/criterion
-      - ./tutorial/modules/criterion/fileA
-      - ./tutorial/modules/criterion/fileB
-      - ./tutorial/modules/first
-      - ./tutorial/modules/importing
-      - ./tutorial/modules/importing/local_modules
-      - ./tutorial/modules/importing/local_modules/semantic-ui.out.will.yml
-      - ./tutorial/modules/importing/local_modules/semantic-ui.will.yml
-      - ./tutorial/modules/importing/local_modules/semantic-ui
-      - ./tutorial/modules/importing/local_modules/semantic-ui/LICENSE
-      - ./tutorial/modules/importing/local_modules/semantic-ui/package.js
-      - ./tutorial/modules/importing/local_modules/semantic-ui/package.json
-      - ./tutorial/modules/importing/local_modules/semantic-ui/README.md
-      - ./tutorial/modules/importing/local_modules/semantic-ui/semantic.css
-      - ./tutorial/modules/importing/local_modules/semantic-ui/semantic.js
-      - ./tutorial/modules/importing/local_modules/semantic-ui/semantic.min.css
-      - ./tutorial/modules/importing/local_modules/semantic-ui/semantic.min.js
-      - ./tutorial/modules/importing/local_modules/semantic-ui/components
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/accordion.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/accordion.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/accordion.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/accordion.min.js
-      - ./tutorial/modules/importing/local_modules/semantic-ui/components/ad.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/ad.min.css
-      - ./tutorial/modules/importing/local_modules/semantic-ui/components/api.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/api.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/breadcrumb.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/breadcrumb.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/button.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/button.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/card.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/card.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/checkbox.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/checkbox.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/checkbox.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/checkbox.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/colorize.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/colorize.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/comment.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/comment.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/container.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/container.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/dimmer.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/dimmer.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/dimmer.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/dimmer.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/divider.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/divider.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/dropdown.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/dropdown.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/dropdown.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/dropdown.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/embed.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/embed.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/embed.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/embed.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/feed.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/feed.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/flag.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/flag.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/form.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/form.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/form.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/form.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/grid.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/grid.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/header.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/header.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/icon.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/icon.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/image.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/image.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/input.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/input.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/item.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/item.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/label.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/label.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/list.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/list.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/loader.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/loader.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/menu.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/menu.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/message.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/message.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/modal.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/modal.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/modal.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/modal.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/nag.css
-      - ./tutorial/modules/importing/local_modules/semantic-ui/components/nag.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/nag.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/nag.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/placeholder.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/placeholder.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/popup.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/popup.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/popup.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/popup.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/progress.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/progress.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/progress.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/progress.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/rail.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/rail.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/rating.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/rating.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/rating.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/rating.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/reset.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/reset.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/reveal.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/reveal.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/search.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/search.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/search.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/search.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/segment.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/segment.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/shape.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/shape.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/shape.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/shape.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/sidebar.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/sidebar.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/sidebar.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/sidebar.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/site.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/site.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/site.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/site.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/state.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/state.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/statistic.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/statistic.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/step.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/step.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/sticky.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/sticky.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/sticky.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/sticky.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/tab.css
-      - ./tutorial/modules/importing/local_modules/semantic-ui/components/tab.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/tab.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/tab.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/table.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/table.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/transition.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/transition.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/transition.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/transition.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/video.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/video.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/video.min.css
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/video.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/visibility.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/visibility.min.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/visit.js
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/visit.min.js
-      - ./tutorial/modules/importing/local_modules/semantic-ui/themes
-      - ./tutorial/modules/importing/local_modules/semantic-ui/themes/default
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/brand-icons.eot
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/brand-icons.svg
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/brand-icons.ttf
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/brand-icons.woff
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/brand-icons.woff2
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/icons.eot
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/icons.otf
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/icons.svg
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/icons.ttf
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/icons.woff
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/icons.woff2
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/outline-icons.eot
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/outline-icons.svg
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/outline-icons.ttf
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/outline-icons.woff
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/outline-icons.woff2
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/images
-      - >-
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/images/flags.png
-      - ./tutorial/modules/listing
-      - ./tutorial/modules/second
-      - ./tutorial/modules/second/package.json
-      - ./tutorial/modules/split-files
-      - ./tutorial/modules/split-files/fileToExport
-      - ./tutorial/modules/third
-      - ./tutorial/modules/third/fileToExport
-    criterion:
-      export: 1
-      doc: 1
   exportedDir.proto.export:
     path: ./proto
     criterion:
@@ -594,9 +208,9 @@ path:
 submodule: {}
 reflector:
   reflect.proto.:
-    srcFilter:
+    src:
       filePath:
-        ./proto: ./out/release
+        proto: out/release
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -615,9 +229,9 @@ reflector:
     inherit:
       - predefined.*
   reflect.proto.debug:
-    srcFilter:
+    src:
       filePath:
-        ./proto: ./out/debug
+        proto: out/debug
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -634,7 +248,7 @@ reflector:
     inherit:
       - predefined.*
   reflect.submodules:
-    srcFilter:
+    src:
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -650,245 +264,10 @@ reflector:
       debug: 1
     inherit:
       - predefined.*
-  exported.doc.export:
-    srcFilter:
-      filePath:
-        doc: true
-      prefixPath: .
-    criterion:
-      export: 1
-      doc: 1
-  exportedFiles.doc.export:
-    recursive: 0
-    srcFilter:
-      filePath:
-        .: true
-        ./Build.md: true
-        ./Introduction.md: true
-        ./Module.md: true
-        ./README.md: true
-        ./Submodules.md: true
-        ./Will-files.md: true
-        ./totorial2: true
-        ./totorial2/Concepts.md: true
-        ./totorial2/Concepts.urk.md: true
-        ./totorial2/ExplicitRequirements.md: true
-        ./totorial2/Faq.ukr.md: true
-        ./totorial2/Links.md: true
-        ./totorial2/Topics.md: true
-        ./tutorial: true
-        ./tutorial/Criterion.md: true
-        ./tutorial/DeclaringModule.md: true
-        ./tutorial/Exporting.md: true
-        ./tutorial/FirstBuild.md: true
-        ./tutorial/ListingResources.md: true
-        ./tutorial/LocalSubmodules.md: true
-        ./tutorial/README.md: true
-        ./tutorial/ReflectorsAndSteps.md: true
-        ./tutorial/RemoteSubmodules.md: true
-        ./tutorial/SettingUp.md: true
-        ./tutorial/SplitModule.md: true
-        ./tutorial/modules: true
-        ./tutorial/modules/copying: true
-        ./tutorial/modules/copying/proto: true
-        ./tutorial/modules/criterion: true
-        ./tutorial/modules/criterion/fileA: true
-        ./tutorial/modules/criterion/fileB: true
-        ./tutorial/modules/first: true
-        ./tutorial/modules/importing: true
-        ./tutorial/modules/importing/local_modules: true
-        ./tutorial/modules/importing/local_modules/semantic-ui.out.will.yml: true
-        ./tutorial/modules/importing/local_modules/semantic-ui.will.yml: true
-        ./tutorial/modules/importing/local_modules/semantic-ui: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/LICENSE: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/package.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/package.json: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/README.md: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/semantic.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/semantic.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/semantic.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/semantic.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/accordion.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/accordion.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/accordion.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/accordion.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/ad.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/ad.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/api.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/api.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/breadcrumb.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/breadcrumb.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/button.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/button.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/card.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/card.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/checkbox.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/checkbox.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/checkbox.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/checkbox.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/colorize.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/colorize.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/comment.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/comment.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/container.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/container.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/dimmer.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/dimmer.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/dimmer.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/dimmer.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/divider.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/divider.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/dropdown.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/dropdown.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/dropdown.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/dropdown.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/embed.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/embed.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/embed.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/embed.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/feed.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/feed.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/flag.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/flag.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/form.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/form.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/form.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/form.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/grid.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/grid.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/header.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/header.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/icon.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/icon.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/image.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/image.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/input.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/input.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/item.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/item.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/label.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/label.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/list.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/list.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/loader.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/loader.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/menu.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/menu.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/message.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/message.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/modal.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/modal.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/modal.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/modal.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/nag.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/nag.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/nag.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/nag.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/placeholder.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/placeholder.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/popup.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/popup.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/popup.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/popup.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/progress.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/progress.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/progress.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/progress.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/rail.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/rail.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/rating.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/rating.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/rating.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/rating.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/reset.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/reset.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/reveal.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/reveal.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/search.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/search.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/search.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/search.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/segment.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/segment.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/shape.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/shape.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/shape.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/shape.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/sidebar.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/sidebar.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/sidebar.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/sidebar.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/site.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/site.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/site.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/site.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/state.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/state.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/statistic.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/statistic.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/step.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/step.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/sticky.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/sticky.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/sticky.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/sticky.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/tab.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/tab.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/tab.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/tab.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/table.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/table.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/transition.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/transition.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/transition.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/transition.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/video.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/video.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/video.min.css: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/video.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/visibility.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/visibility.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/visit.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/components/visit.min.js: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/brand-icons.eot: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/brand-icons.svg: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/brand-icons.ttf: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/brand-icons.woff: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/brand-icons.woff2: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/icons.eot: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/icons.otf: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/icons.svg: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/icons.ttf: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/icons.woff: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/icons.woff2: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/outline-icons.eot: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/outline-icons.svg: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/outline-icons.ttf: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/outline-icons.woff: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/fonts/outline-icons.woff2: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/images: true
-        ./tutorial/modules/importing/local_modules/semantic-ui/themes/default/assets/images/flags.png: true
-        ./tutorial/modules/listing: true
-        ./tutorial/modules/second: true
-        ./tutorial/modules/second/package.json: true
-        ./tutorial/modules/split-files: true
-        ./tutorial/modules/split-files/fileToExport: true
-        ./tutorial/modules/third: true
-        ./tutorial/modules/third/fileToExport: true
-      basePath: .
-      prefixPath: doc
-    criterion:
-      export: 1
-      doc: 1
   exported.proto.export:
-    srcFilter:
+    src:
       filePath:
-        ./proto: true
+        proto: true
       prefixPath: .
     criterion:
       default: 1
@@ -900,7 +279,7 @@ reflector:
       public: 1
   exportedFiles.proto.export:
     recursive: 0
-    srcFilter:
+    src:
       filePath:
         .: true
         dwtools: true
@@ -1098,14 +477,6 @@ step:
       tar: 0
     inherit:
       - predefined.export
-  export.doc:
-    criterion:
-      doc: 1
-    opts:
-      export: 'path::doc'
-      tar: 0
-    inherit:
-      - predefined.export
 build:
   debug.raw:
     criterion:
@@ -1152,15 +523,9 @@ build:
     steps:
       - 'build::debug.raw'
       - 'step::export.proto'
-  doc.export:
-    criterion:
-      export: 1
-      doc: 1
-    steps:
-      - 'step::export.doc*=1'
 exported:
   proto.export:
-    version: 0.3.150
+    version: 0.3.159
     criterion:
       default: 1
       debug: 1
@@ -1173,12 +538,3 @@ exported:
     exportedFilesReflector: 'reflector::exportedFiles.proto.export'
     exportedDirPath: 'path::exportedDir.proto.export'
     exportedFilesPath: 'path::exportedFiles.proto.export'
-  doc.export:
-    version: 0.3.150
-    criterion:
-      export: 1
-      doc: 1
-    exportedReflector: 'reflector::exported.doc.export'
-    exportedFilesReflector: 'reflector::exportedFiles.doc.export'
-    exportedDirPath: 'path::exportedDir.doc.export'
-    exportedFilesPath: 'path::exportedFiles.doc.export'
