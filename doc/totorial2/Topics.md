@@ -1,7 +1,7 @@
 # Tutorial topics
 
-- [How to use command line interface of will](How to use command line interface of will.md)
-- First will-file
+- [How to use command line interface of will](How_to_use_command_line_interface_of_will_ukr.md)
+- [First will-file](First_will_file.md)
 - Split will-file
 - Named will-file
 - Resources
