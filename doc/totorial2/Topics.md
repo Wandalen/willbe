@@ -2,20 +2,21 @@
 
 - How to use command line interface of will
 - First will-file
-- Split will-file
-- Named will-file
+-
+- Split will-file( mid )
+- Named will-file( mid )
 - Resources
-  - Kinds
+  - Kinds, sections of will-file
   - Inheritability
 - How to list
 - How to use selector
-- How to use selector with glob and assertion
+- How to use selector with glob and assertion ( mid )
 - How to build
 - How to export
 - How to import submodules
 - How to import remote submodules
-- How to use command .with
-- How to use command .each
+- How to use command .with ( mid )
+- How to use command .each ( mid )
 - How to use predefined steps
-- How to use reflector and predefined reflectors
-- Exported section of out will-file
+- How to use reflector and predefined reflectors ( mid )
+- Exported section of out will-file ( mid )
