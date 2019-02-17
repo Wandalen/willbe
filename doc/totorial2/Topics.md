@@ -1,6 +1,6 @@
 # Tutorial topics
 
-- How to use command line interface of will
+- [How to use command line interface of will](How to use command line interface of will.md)
 - First will-file
 - Split will-file
 - Named will-file
