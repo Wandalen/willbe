@@ -1,10 +1,11 @@
 # Tutorial topics
-
-- How to use command line interface of will
-- First will-file
--
-- Split will-file( mid )
-- Named will-file( mid )
+---
+- [Basic concepts and terms](Concepts.urk.md)
+- [Will file structure](WillFileFtructure.md) 
+- [How to use command line interface of will](HowToUseCommandLineInterfaceOfWill.ukr.md)
+- [First will-file](FirstWillFile.md)
+- Split will-file
+- Named will-file
 - Resources
   - Kinds, sections of will-file
   - Inheritability
