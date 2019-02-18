@@ -10,6 +10,7 @@
         параметр_1.2 : значення_1.2
     поле_2 (параметр) : значення
 ```
+
 <a name="about"></a> **About.** Секція will-файлу в якій поміщена основна інформація про модуль.    
 Структура полів секції `about` за замовчуванням:
 
@@ -92,15 +93,17 @@
 | inherit :      | \_.define.own(\[\])      | наслідування збірником. Якщо вже є описана процедура, можливо включити її наслідування; необов'язкове поле          |  
   
 ### <a name="examples"></a> Приклади will-файлів
+
 <details>
   <summary><u>Найпростіший will-файл з функцією встановлення пакетів NodeJS</u></summary>
+
 ```yaml
 
-about :  
+about :
 
-  name : second  
-  description : "Second module"  
-  version : 0.0.1  
+  name : second
+  description : "Second module"
+  version : 0.0.1
 
 step :
 
@@ -115,14 +118,14 @@ build :
       default : 1
     steps :
       - npm.install
-
 ```
-Детальніше в розділі [First will-file](First_will_file.md)  
 </details>
-  
+
+ Детальніше в розділі [First will-file](First_will_file.md) 
   
 <details>
   <summary><u>Will-файл з функцією експорту</u></summary>
+  
 ```yaml
 
 About
@@ -155,6 +158,7 @@ build::export
   
 <details>
   <summary><u>Will-файл з експорту локального модуля</u></summary>
+
 ```yaml
 
 about :
@@ -179,9 +183,9 @@ build :
           default : 1
           export : 1
       steps :
-          - export.semantic
+          - export.semantic  
 ```
+
 </details>
-  
-  
+
 [Повернутись до меню](Topics.md)
