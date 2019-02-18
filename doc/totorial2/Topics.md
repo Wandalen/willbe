@@ -1,8 +1,8 @@
 # Tutorial topics
----
+
 - [Basic concepts and terms](Concepts.urk.md)
-- [Will file structure](WillFileFtructure.md) 
-- [How to use command line interface of will](HowToUseCommandLineInterfaceOfWill.ukr.md)
+- [Will file structure](WillFileFtructure.md)
+- [How to use command line interface of will](CommandLineInterfaceOfWill.ukr.md)
 - [First will-file](FirstWillFile.md)
 - Split will-file
 - Named will-file
