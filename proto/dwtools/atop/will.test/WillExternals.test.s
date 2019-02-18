@@ -42,7 +42,7 @@ function onSuiteEnd()
   let self = this;
   debugger;
   _.assert( _.strHas( self.tempDir, '/dwtools/tmp.tmp' ) )
-  // _.fileProvider.filesDelete( self.tempDir );
+  _.fileProvider.filesDelete( self.tempDir );
 }
 
 /*
@@ -668,6 +668,46 @@ function singleModuleExport( test )
 }
 
 singleModuleExport.timeOut = 130000;
+
+//
+
+function singleModuleWithSpaceTrivial( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'single with space' );
+  let routinePath = _.path.join( self.tempDir, test.name, 'single with space' );
+  let modulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec2' ) );
+
+  let shell = _.sheller
+  ({
+    path : 'node ' + execPath,
+    currentPath : _.path.dir( routinePath ),
+    outputCollecting : 1
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  let ready = new _.Consequence().take( null )
+
+  .thenKeep( () =>
+  {
+    test.case = 'module info'
+    return shell({ args : [ '.with "single with space" .list' ] })
+    .thenKeep( ( got ) =>
+    {
+      test.identical( got.exitCode, 0 );
+      test.is( _.strHas( got.output, `name : 'single with space'` ) );
+      test.is( _.strHas( got.output, `description : 'Module for testing'` ) );
+      test.is( _.strHas( got.output, `version : '0.0.1'` ) );
+      return null;
+    })
+  })
+
+  return ready;
+}
+
+singleModuleExport.timeOut = 30000;
 
 //
 
@@ -2599,6 +2639,7 @@ var Self =
     singleModuleClean,
     singleModuleBuild,
     singleModuleExport,
+    singleModuleWithSpaceTrivial,
 
     withSubmodulesSimplest,
     withSubmodulesList,
