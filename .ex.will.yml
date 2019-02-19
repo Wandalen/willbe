@@ -23,7 +23,6 @@ path :
 
   repository : git+https://github.com/Wandalen/willbe.git
   bugs : https://github.com/Wandalen/willbe/issues
-  doc : './doc'
 
 step :
 
@@ -42,7 +41,6 @@ step :
     tar : 0
     criterion :
       debug : 1
-      proto : 0
       doc : 1
 
 build :
@@ -63,14 +61,9 @@ build :
 
   doc.export :
     criterion :
-      default : 0
-      debug : 1
-      raw : 1
-      proto : 0
-      doc : 1
       export : 1
-      tar : 0
-      public : 1
+      debug : 1
+      doc : 1
     steps :
       - step::export.doc
 

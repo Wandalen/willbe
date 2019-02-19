@@ -1423,6 +1423,67 @@ withSubmodulesExport.timeOut = 130000;
 
 //
 
+function withSubmodulesReflectSubdir( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-reflect-subdir' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulesPath = _.path.join( routinePath, 'module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec2' ) );
+
+  let shell = _.sheller
+  ({
+    path : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  let ready = new _.Consequence().take( null )
+
+  /* - */
+
+  .thenKeep( () =>
+  {
+    test.case = 'setup'
+    return shell({ args : [ '.each module .export' ] })
+    .thenKeep( ( got ) =>
+    {
+      test.identical( got.exitCode, 0 );
+      test.is( _.fileProvider.isTerminal( _.path.join( modulesPath, 'moduleA.out.will.yml' ) ) )
+      return null;
+    })
+  })
+
+  .thenKeep( () =>
+  {
+    test.case = '.build'
+    let buildOutPath = _.path.join( routinePath, 'out/debug' );
+    let outPath = _.path.join( routinePath, 'out' );
+    _.fileProvider.filesDelete( buildOutPath );
+    _.fileProvider.filesDelete( outPath );
+    return shell({ args : [ '.build' ] })
+    .thenKeep( ( got ) =>
+    {
+      test.identical( got.exitCode, 0 );
+
+      test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/debug/moduleA/protoA/SingleA.s' ) ) );
+
+      var files = _.fileProvider.dirRead( outPath );
+      test.identical( files, [ 'debug', 'submodules-reflect-subdir.out.will.yml' ] );
+
+      return null;
+    })
+  })
+
+  return ready;
+}
+
+withSubmodulesReflectSubdir.timeOut = 130000;
+
+//
+
 function submodulesDownload( test )
 {
   let self = this;
@@ -2647,6 +2708,7 @@ var Self =
     withSubmodulesClean,
     withSubmodulesBuild,
     withSubmodulesExport,
+    withSubmodulesReflectSubdir,
 
     submodulesDownload,
     submodulesBrokenClean1,
