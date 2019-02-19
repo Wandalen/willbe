@@ -1484,6 +1484,54 @@ withSubmodulesReflectSubdir.timeOut = 130000;
 
 //
 
+function withSubmodulesGetPath( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-get-path' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulesPath = _.path.join( routinePath, 'module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec2' ) );
+
+  let shell = _.sheller
+  ({
+    path : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  let ready = new _.Consequence().take( null )
+
+  /* - */
+
+  .thenKeep( () =>
+  {
+    test.case = '.build'
+    let buildOutPath = _.path.join( routinePath, 'out/debug' );
+    let outPath = _.path.join( routinePath, 'out' );
+    _.fileProvider.filesDelete( buildOutPath );
+    _.fileProvider.filesDelete( outPath );
+    return shell({ args : [ '.build' ] })
+    .thenKeep( ( got ) =>
+    {
+      test.identical( got.exitCode, 0 );
+
+      var files = self.find( buildOutPath );
+      test.is( files.length );
+
+      return null;
+    })
+  })
+
+  return ready;
+}
+
+withSubmodulesGetPath.timeOut = 30000;
+
+
+//
+
 function submodulesDownload( test )
 {
   let self = this;
@@ -2709,6 +2757,7 @@ var Self =
     withSubmodulesBuild,
     withSubmodulesExport,
     withSubmodulesReflectSubdir,
+    withSubmodulesGetPath,
 
     submodulesDownload,
     submodulesBrokenClean1,
