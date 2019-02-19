@@ -1,6 +1,6 @@
 # Питання
 При введенні `will .clean` отримую наступне
-```bash
+```
 dmytry@dmytry:~/Документы/Intellectual/willbe/sample/submodules$ will .clean
 Request ".clean"
    . Read : /home/dmytry/Документы/Intellectual/willbe/sample/submodules/.will.yml
