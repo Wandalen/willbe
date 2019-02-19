@@ -23,6 +23,7 @@ reflector :
     inherit : predefined.*
     criterion :
       debug : [ 0,1 ]
+      doc : 0
     filePath :
       path::proto : path::out.*=1
 
@@ -30,6 +31,7 @@ reflector :
     inherit : predefined.*
     criterion :
       debug : 1
+      doc : 0
     filePath :
       submodule::*/exported::*=1/path::exportedDir*=1 : path::out.*=1
 
@@ -64,6 +66,7 @@ build :
       default : 1
       debug : 1
       raw : 1
+      doc : 0
     steps :
       - step::clean.out*=1
       - step::reflect.proto.*=1
@@ -73,6 +76,7 @@ build :
     criterion :
       debug : 1
       raw : 0
+      doc : 0
     steps :
       - step::clean.out*=1
       - step::reflect.proto.*=1
@@ -81,6 +85,7 @@ build :
     criterion :
       debug : 0
       raw : 1
+      doc : 0
     steps :
       - step::clean.out*=1
       - step::reflect.proto.*=1
@@ -89,6 +94,7 @@ build :
     criterion :
       debug : 0
       raw : 0
+      doc : 0
     steps :
       - step::clean.out*=1
       - step::reflect.proto.*=1

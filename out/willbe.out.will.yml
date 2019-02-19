@@ -299,6 +299,7 @@ reflector:
       prefixPath: .
     criterion:
       debug: 0
+      doc: 0
     inherit:
       - predefined.*
   reflect.proto.debug:
@@ -318,6 +319,7 @@ reflector:
       prefixPath: .
     criterion:
       debug: 1
+      doc: 0
     inherit:
       - predefined.*
   reflect.submodules:
@@ -335,6 +337,7 @@ reflector:
       prefixPath: .
     criterion:
       debug: 1
+      doc: 0
     inherit:
       - predefined.*
   exported.proto.export:
@@ -645,6 +648,7 @@ build:
       default: 1
       debug: 1
       raw: 1
+      doc: 0
     steps:
       - 'step::clean.out*=1'
       - 'step::reflect.proto.*=1'
@@ -652,6 +656,7 @@ build:
     criterion:
       debug: 1
       raw: 0
+      doc: 0
     steps:
       - 'step::clean.out*=1'
       - 'step::reflect.proto.*=1'
@@ -659,6 +664,7 @@ build:
     criterion:
       debug: 0
       raw: 1
+      doc: 0
     steps:
       - 'step::clean.out*=1'
       - 'step::reflect.proto.*=1'
@@ -666,6 +672,7 @@ build:
     criterion:
       debug: 0
       raw: 0
+      doc: 0
     steps:
       - 'step::clean.out*=1'
       - 'step::reflect.proto.*=1'
