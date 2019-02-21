@@ -1,6 +1,6 @@
 # Як користуватися інтерфейсом командного рядка `willbe`  
 
-У цьому розділі описується використання командного рядку для взаємодії з пакетом `willbe`, застосування команд `.help` та `.list`  
+У цьому розділі описується використання командного рядка для взаємодії з пакетом `willbe`, застосування команд `.help` та `.list`  
 
 </br>
 Спочатку потрібно встановити пакет `willbe`. Для цього введіть в терміналі `npm -g install willbe` (_зверніть увагу_, якщо пакет встановлено локально, то всі описані нижче інструкції мають виконуватись в директорії пакету) Детально про `willbe` і процес інсталяції в [введені](Introduction.md).
@@ -37,10 +37,12 @@ Ambiguity
 ```
 </details>
 
+</br>
 З описом команд можна ознайомитись в мануалі [Інтерфейс командного рядку `willbe`](CommandLineInterfaceOfWill.ukr.md#will-commands).
 
 <a name=".help-command"></a> Скористуємось командою `.help` для виводу довідки про команду. Введіть в консолі: `will .help`.  
-Мабуть не зрозуміло чому отримали такий же список команд. Спробуємо знову, але доповнимо фразу ще однією командою, щоб отримати фразу з синтаксисом: `will .help [команда]`. Тепер введіть в терміналі `will .help .build`, а потім `will .help .builds.list` і порівняйте результати з наведеними нижче.  
+Результат не змінився. Спробуємо знову, але доповнимо фразу ще однією командою, щоб отримати синтаксис: `will .help [команда]`.    
+Тепер введіть в терміналі `will .help .build`, а потім `will .help .builds.list` і порівняйте з лістингами нижче.  
 <details>
   <summary><u>Лістинг `will .help .build`</u></summary>
 
@@ -64,10 +66,8 @@ Request ".help .builds.list"
 </details>
 
 </br>
-<a name="help-to-completion"></a> Користуватись довідкою просто. А що буде якщо ввести неповну фразу `will .help .submodules`? Введіть її та порівняйте:  
-<details>
-  <summary><u>Лістинг команди `will .help .submodules`</u></summary>
-
+<a name="help-completion"></a> Користуватись довідкою просто. А що буде якщо ввести неповну фразу `will .help .submodules`?
+Лістинг команди `will .help .submodules`?
   ```
 [user@user ~]$ will .help .submodules
 Request ".help .submodules"
@@ -78,24 +78,103 @@ Request ".help .submodules"
   .submodules.clean - Delete all downloaded submodules.
 
 ```
-</details>
 
 </br>
 `Willbe` вивів список команд з `submodules`. Це зручно, адже, якщо ви не памятаете повну фразу з командою або бажаєте отримати вичерпний список команд з визначеним словом, достатньо ввести першу частину, а пакет запропонує доповнення.
 
-Перед тим, як піти далі, спробуйте ввести попередні команди, але модифікувавши їх. Замініть '.' на інші знаки такі, як '-' та '\_' або літеру в команді `will .help`.
-Після цього не залишається сумнівів, що перед командами завжди потрібно вводити '.' та правильно вводити фразу.  
+Перед тим, як піти далі, спробуйте отримати довідку про команду `.build`, але модифікувавши '.' на інші знаки, такі, як '-' та '\_' або літеру в команді `will .help`.
+<details>
+  <summary><u>Лістинг `will -help .build`</u></summary>
+
+  ```
+[user@user ~]$ will -help .build
+Illformed request "-help .build"
+
+  .help - Get help.
+  .set - Command set.
+  .list - List information about the current module.
+  .paths.list - List paths of the current module.
+  .submodules.list - List submodules of the current module.
+  .reflectors.list - List avaialable reflectors.
+  .steps.list - List avaialable steps.
+  .builds.list - List avaialable builds.
+  .exports.list - List avaialable exports.
+  .about.list - List descriptive information about the module.
+  .execution.list - List execution scenarios.
+  .submodules.download - Download each submodule if such was not downloaded so far.
+  .submodules.upgrade - Upgrade each submodule, checking for available updates for such.
+  .submodules.clean - Delete all downloaded submodules.
+  .clean - Clean current module. Delete genrated artifacts, temp files and downloaded submodules.
+  .clean.what - Find out which files will be deleted by clean command.
+  .build - Build current module with spesified criterion.
+  .export - Export selected the module with spesified criterion. Save output to output file and archive.
+  .with - Use "with" to select a module.
+  .each - Use "each" to iterate each module in a directory.
+
+```
+</details>
+<details>
+<summary><u>Лістинг `will _help .build`</u></summary>
+
+```
+[user@user ~]$ will -help .build
+Illformed request "-help .build"
+
+.help - Get help.
+.set - Command set.
+.list - List information about the current module.
+.paths.list - List paths of the current module.
+.submodules.list - List submodules of the current module.
+.reflectors.list - List avaialable reflectors.
+.steps.list - List avaialable steps.
+.builds.list - List avaialable builds.
+.exports.list - List avaialable exports.
+.about.list - List descriptive information about the module.
+.execution.list - List execution scenarios.
+.submodules.download - Download each submodule if such was not downloaded so far.
+.submodules.upgrade - Upgrade each submodule, checking for available updates for such.
+.submodules.clean - Delete all downloaded submodules.
+.clean - Clean current module. Delete genrated artifacts, temp files and downloaded submodules.
+.clean.what - Find out which files will be deleted by clean command.
+.build - Build current module with spesified criterion.
+.export - Export selected the module with spesified criterion. Save output to output file and archive.
+.with - Use "with" to select a module.
+.each - Use "each" to iterate each module in a directory.
+
+```
+</details>
+<details>
+  <summary><u>Лістинг команди `will .paths.list`</u></summary>
+
+  ```
+[user@user ~]$ will .held .build
+Request ".held .build"
+------------------------------- unhandled errorr ------------------------------->
+
+ * Application
+Current path : /[path]
+Exec path : /usr/bin/node /usr/lib/node_modules/willbe/proto/dwtools/atop/will/MainTop.s .held .build
+
+Unknown subject ".held"
+Try subject ".help"   
+------------------------------- unhandled errorr -------------------------------<
+
+```
+</details>
+
+Після цього не залишається сумнівів, що перед командами завжди потрібно вводити '.' та вірно вводити фразу.  
 
 ### Команди `*.list`
-Наступним рівнем є використання операцій з [will-файлами](Concepts.urk.md#will-file). Створювати will-файли ми навчимось пізніше, а поки клонуйте Git-репозиторій ['willbe`](https://github.com/Wandalen/willbe) з готовими прикладами.  
+Наступним рівнем є використання операцій з [will-файлами](Concepts.urk.md#will-file). Створювати will-файли ми навчимось пізніше, а поки клонуйте Git-репозиторій ['willbe`](https://github.com/Wandalen/willbe) з готовими прикладами за [посиланням](https://github.com/Wandalen/willbe).  
 
-<a name="list-command"></a> Мабуть, ви звернули увагу на те, що списку доступних команд досить багато таких, які закінчуються на `.list`. Ці команди взаємодіють з [модулем](Concepts.urk.md#module) та виводять інформацію про нього. Якщо ввести будь-яку з команд в директорії, де відсутній файл, то ви отримаєте попередження про відсутність модуля:
+<a name="list-commands"></a> Мабуть, ви звернули увагу на те, що списку доступних команд досить багато таких, які закінчуються на `.list`. Ці команди взаємодіють з [модулем](Concepts.urk.md#module) та виводять інформацію про нього. Якщо ввести будь-яку з команд в директорії, де відсутній файл, то ви отримаєте попередження про його відсутність:
 ```
 [user@user ~]$ will .list
 Request ".list"
 Found no module::/[path] at "/[path]"
 ```
-Тож, відкрийте клонований репозиторій і перейдіть за шляхом './sample/submodules/', де знаходиться файл `.will.yml`  та відкрийте директорію в терміналі (або одразу виконайте `cd [.../willbe/sample/submodules/]`). Після цього введіть `will .paths.list`.
+Тож, відкрийте клонований репозиторій і перейдіть за шляхом './sample/submodules/', де знаходиться файл `.will.yml` та відкрийте директорію в терміналі (або одразу виконайте `cd [.../willbe/sample/submodules/]`). Можливо, його не буде видно, ввімкніть відображення прихованих файлів.
+Після цього введіть `will .paths.list`.
 Після того як на моніторі відобразиться результат, відкрийте файл `.will.yml` з допомогою вашого улюбленого текстового редактора. Порівняйте вміст [секції](Concepts.urk.md#will-file-section) `path` файлу і текст який отримали в терміналі.  
 <details>
   <summary><u>Лістинг команди `will .paths.list`</u></summary>
@@ -233,9 +312,9 @@ About
 
 ### <a name="conclusion"></a> Підсумок
 
-- Ми дізнались, як дізнатись список команд `willbe` та отримати довідку про обрану.
-- Якщо не памятаете повну [фразу](Concepts.ukr.md#prase) з командою або бажаєте отримати вичерпний список команд з визначеним словом, достатньо ввести першу частину, а пакет запропонує доповнення.  
-- Команда `.list` виводить інформацію про [модуль](Concepts.urk.md#module). Для того, щоб зчитати інформацію про обрану [секцію](Concepts.urk.md#will-file-section) `will.yml` використовуйте синтаксис `will [назва секції]s.list`.
+- Ми дізнались, [як отримати список команд `willbe`](ui-intro) та [довідку по обраній](#.help-command).
+- Як користуватись `willbe`, [якщо не памятаете повну фразу або бажаєте отримати вичерпний список команд з визначеним словом](#help-completion).  
+- про команди групи 'list', які [виводять інформацію про секції модуля](#list-commands).
 
 Тепер можемо створити свій [перший will-файл](FirstWillFile.md).
 
