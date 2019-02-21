@@ -327,12 +327,12 @@ function _reflectMapForm( o )
 
     if( !_.boolLike( dst ) )
     {
-      debugger;
+      // debugger;
       // _.assert( _.strIs( dst ), 'not tested' );
       // if( !module.strIsResolved( dst ) )
       dst = reflector.resolve
       ({
-        query : dst,
+        selector : dst,
         visited : o.visited,
         current : reflector,
         prefixlessAction : 'resolved',
@@ -347,7 +347,7 @@ function _reflectMapForm( o )
 
       let resolved = reflector.resolve
       ({
-        query : r,
+        selector : r,
         visited : o.visited,
         current : reflector,
         mapValsUnwrapping : 1,
@@ -599,8 +599,8 @@ function pathsResolve( o )
 
   function resolve( src )
   {
-    return path.filter( src, ( filePath ) => _.strIs( filePath ) ? reflector.resolve({ prefixlessAction : 'resolved', query : filePath }) : filePath );
-    //return reflector.resolve({ prefixlessAction : 'resolved', query : src });
+    return path.filter( src, ( filePath ) => _.strIs( filePath ) ? reflector.resolve({ prefixlessAction : 'resolved', selector : filePath }) : filePath );
+    //return reflector.resolve({ prefixlessAction : 'resolved', selector : src });
   }
 
 }

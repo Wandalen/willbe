@@ -921,8 +921,8 @@ function name( o )
   o = { path : o };
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routineOptions( name, o );
-  _.assert( _.strIs( o.path ), 'Expects strings {-o.path-}' );
+  o = _.routineOptions( name, o );
+  _.assert( o && _.strIs( o.path ), 'Expects strings {-o.path-}' );
 
   let i = o.path.lastIndexOf( '/' );
   if( i !== -1 )
@@ -1340,8 +1340,8 @@ function joinCross()
 
   if( _.arrayHasArray( arguments ) )
   {
-
     let result = [];
+
     let samples = _.eachSample( arguments );
     for( var s = 0 ; s < samples.length ; s++ )
     result.push( this.join.apply( this,samples[ s ] ) );

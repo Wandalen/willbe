@@ -75,7 +75,7 @@ function stepsEach( onEach )
   {
     step = module.resolve
     ({
-      query : step,
+      selector : step,
       defaultPool : 'step',
       current : build,
     });

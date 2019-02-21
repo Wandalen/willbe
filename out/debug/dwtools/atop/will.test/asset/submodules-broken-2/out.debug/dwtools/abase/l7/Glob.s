@@ -533,6 +533,7 @@ function globFilter_body( o )
 
   if( !this.isGlob( o.selector ) )
   {
+    debugger;
     result = _.filter( o.src, ( e, k ) =>
     {
       return o.onEvaluate( e, k, o.src ) === o.selector ? e : undefined;
@@ -540,6 +541,7 @@ function globFilter_body( o )
   }
   else
   {
+    // debugger;
     let regexp = this.globsToRegexp( o.selector );
     result = _.filter( o.src, ( e, k ) =>
     {

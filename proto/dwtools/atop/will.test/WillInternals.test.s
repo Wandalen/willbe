@@ -96,7 +96,7 @@ function buildsResolve( test )
 
     test.case = 'build::*'; /* */
 
-    var resolved = module.resolve({ query : 'build::*' });
+    var resolved = module.resolve({ selector : 'build::*' });
     test.identical( resolved.length, 4 );
 
     var expected = [ 'debug', 'release', 'export.', 'export.debug' ];
@@ -115,7 +115,7 @@ function buildsResolve( test )
 
     test.case = 'build::*, with criterion'; /* */
 
-    var resolved = module.resolve({ query : 'build::*', criterion : { debug : 1 } });
+    var resolved = module.resolve({ selector : 'build::*', criterion : { debug : 1 } });
     test.identical( resolved.length, 2 );
 
     var expected = [ 'debug', 'export.debug' ];
@@ -124,12 +124,12 @@ function buildsResolve( test )
 
     test.case = 'build::*, current is build::export.'; /* */
 
-    var build = module.resolve({ query : 'build::export.' });
+    var build = module.resolve({ selector : 'build::export.' });
     test.is( build instanceof will.Build );
     test.identical( build.nickName, 'build::export.' );
     test.identical( build.absoluteName, 'module::super / build::export.' );
 
-    var resolved = module.resolve({ query : 'build::*', current : build, singleUnwrapping : 0 });
+    var resolved = module.resolve({ selector : 'build::*', current : build, singleUnwrapping : 0 });
     test.identical( resolved.length, 1 );
 
     var expected = [ 'release' ];
@@ -142,8 +142,8 @@ function buildsResolve( test )
 
     test.case = 'build::*, current is build::export.debug'; /* */
 
-    var build = module.resolve({ query : 'build::export.debug' });
-    var resolved = module.resolve({ query : 'build::*', current : build, singleUnwrapping : 0 });
+    var build = module.resolve({ selector : 'build::export.debug' });
+    var resolved = module.resolve({ selector : 'build::*', current : build, singleUnwrapping : 0 });
     test.identical( resolved.length, 1 );
 
     var expected = [ 'debug' ];
@@ -156,8 +156,8 @@ function buildsResolve( test )
 
     test.case = 'build::*, current is build::export.debug, short-cut'; /* */
 
-    var build = module.resolve({ query : 'build::export.debug' });
-    var resolved = build.resolve({ query : 'build::*', singleUnwrapping : 0 });
+    var build = module.resolve({ selector : 'build::export.debug' });
+    var resolved = build.resolve({ selector : 'build::*', singleUnwrapping : 0 });
     test.identical( resolved.length, 1 );
 
     var expected = [ 'debug' ];
@@ -166,8 +166,8 @@ function buildsResolve( test )
 
     test.case = 'build::*, current is build::export.debug, short-cut, explicit criterion'; /* */
 
-    var build = module.resolve({ query : 'build::export.*', criterion : { debug : 1 } });
-    var resolved = build.resolve({ query : 'build::*', singleUnwrapping : 0, criterion : { debug : 0 } });
+    var build = module.resolve({ selector : 'build::export.*', criterion : { debug : 1 } });
+    var resolved = build.resolve({ selector : 'build::*', singleUnwrapping : 0, criterion : { debug : 0 } });
     test.identical( resolved.length, 2 );
 
     var expected = [ 'release', 'export.' ];
@@ -232,7 +232,7 @@ function pathsResolve( test )
 
     test.case = 'path::* - implicit'; /* */
 
-    var resolved = module.resolve({ query : 'path::*' });
+    var resolved = module.resolve({ selector : 'path::*' });
     test.identical( resolved.length, 6 );
     var expected = path.s.join( routinePath, [ './proto', '../super.out', '..', '../super.out', './super.out/debug', './super.out/release' ] );
     var got = resolved;
@@ -242,7 +242,7 @@ function pathsResolve( test )
 
     var resolved = module.resolve
     ({
-      query : 'path::*',
+      selector : 'path::*',
       pathUnwrapping : 1,
       mapValsUnwrapping : 1,
       pathResolving : 'in',
@@ -256,7 +256,7 @@ function pathsResolve( test )
 
     var resolved = module.resolve
     ({
-      query : 'path::*',
+      selector : 'path::*',
       pathUnwrapping : 1,
       mapValsUnwrapping : 1,
       pathResolving : 'out',
@@ -270,7 +270,7 @@ function pathsResolve( test )
 
     var resolved = module.resolve
     ({
-      query : 'path::*',
+      selector : 'path::*',
       pathUnwrapping : 1,
       mapValsUnwrapping : 1,
       pathResolving : null,
@@ -284,7 +284,7 @@ function pathsResolve( test )
 
     var resolved = module.resolve
     ({
-      query : 'path::*',
+      selector : 'path::*',
       pathUnwrapping : 0,
       mapValsUnwrapping : 0,
       pathResolving : null,
@@ -307,7 +307,7 @@ function pathsResolve( test )
 
     var resolved = module.resolve
     ({
-      query : 'path::*',
+      selector : 'path::*',
       pathUnwrapping : 0,
       mapValsUnwrapping : 0,
       pathResolving : 'in',
@@ -328,7 +328,7 @@ function pathsResolve( test )
 
     var resolved = module.resolve
     ({
-      query : 'path::*',
+      selector : 'path::*',
       pathUnwrapping : 0,
       mapValsUnwrapping : 0,
       pathResolving : 'out',
@@ -349,7 +349,7 @@ function pathsResolve( test )
 
     var resolved = module.resolve
     ({
-      query : 'path::*',
+      selector : 'path::*',
       pathUnwrapping : 1,
       mapValsUnwrapping : 0,
       pathResolving : null,
@@ -370,7 +370,7 @@ function pathsResolve( test )
 
     var resolved = module.resolve
     ({
-      query : 'path::*',
+      selector : 'path::*',
       pathUnwrapping : 1,
       mapValsUnwrapping : 0,
       pathResolving : 'in',
@@ -391,7 +391,7 @@ function pathsResolve( test )
 
     var resolved = module.resolve
     ({
-      query : 'path::*',
+      selector : 'path::*',
       pathUnwrapping : 1,
       mapValsUnwrapping : 0,
       pathResolving : 'out',
@@ -412,7 +412,7 @@ function pathsResolve( test )
 
     var resolved = module.resolve
     ({
-      query : 'path::*',
+      selector : 'path::*',
       pathUnwrapping : 0,
       mapValsUnwrapping : 1,
       pathResolving : null,
@@ -425,7 +425,7 @@ function pathsResolve( test )
 
     var resolved = module.resolve
     ({
-      query : 'path::*',
+      selector : 'path::*',
       pathUnwrapping : 0,
       mapValsUnwrapping : 1,
       pathResolving : 'in',
@@ -438,7 +438,7 @@ function pathsResolve( test )
 
     var resolved = module.resolve
     ({
-      query : 'path::*',
+      selector : 'path::*',
       pathUnwrapping : 0,
       mapValsUnwrapping : 1,
       pathResolving : 'out',
@@ -499,7 +499,7 @@ function simple( test )
 
     let build = builds[ 0 ];
 
-    return build.proceed()
+    return build.perform()
     .finally( ( err, arg ) =>
     {
 

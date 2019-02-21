@@ -291,7 +291,7 @@ function _inheritMultiple( o )
     // debugger;
     let ancestors = module.resolve
     ({
-      query : ancestor,
+      selector : ancestor,
       defaultPool : resource.KindName,
       visited : o.visited,
       current : resource,
@@ -652,7 +652,7 @@ function inPathResolve_body( o )
   let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
-  _.assert( _.strIs( o.query ) );
+  _.assert( _.strIs( o.selector ) );
   _.assertRoutineOptions( inPathResolve_body, arguments );
 
   let result = resource.resolve( o );

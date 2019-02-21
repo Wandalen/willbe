@@ -96,7 +96,6 @@ function readExported()
     con
     .thenKeep( ( arg ) =>
     {
-      debugger;
       if( willFile.data && willFile.data.exported )
       for( let exportedName in willFile.data.exported )
       {
@@ -110,7 +109,6 @@ function readExported()
     })
     .finallyKeep( ( err, arg ) =>
     {
-      debugger;
       try
       {
         module2.finit();

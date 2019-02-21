@@ -124,7 +124,7 @@ function form3()
   // {
   //   let reflectors = module.resolve
   //   ({
-  //     query :  step.opts.reflector,
+  //     selector :  step.opts.reflector,
   //     defaultPool : 'reflector',
   //     current : step,
   //     singleUnwrapping : 0,

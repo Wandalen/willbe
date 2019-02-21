@@ -2289,7 +2289,7 @@ function reflectorResolve_pre( routine, args )
 {
   let o = args[ 0 ];
   if( _.strIs( o ) )
-  o = { query : o }
+  o = { selector : o }
 
   _.routineOptions( routine, o );
   _.assert( arguments.length === 2 );
@@ -2307,7 +2307,7 @@ function reflectorResolve_body( o )
 
   let reflector = module.resolve
   ({
-    query : o.query,
+    selector : o.selector,
     defaultPool : 'reflector',
     current : o.current,
   });
@@ -2324,7 +2324,7 @@ function reflectorResolve_body( o )
 
 reflectorResolve_body.defaults =
 {
-  query : null,
+  selector : null,
   current : null,
 }
 
@@ -2337,16 +2337,16 @@ function errResolving( o )
   let module = this;
   _.routineOptions( errResolving, arguments );
   if( o.current && o.current.nickName )
-  return _.err( 'Failed to resolve', _.strQuote( o.query ), 'for', o.current.nickName, 'in', module.nickName, '\n', o.err );
+  return _.err( 'Failed to resolve', _.strQuote( o.selector ), 'for', o.current.nickName, 'in', module.nickName, '\n', o.err );
   else
-  return _.err( 'Failed to resolve', _.strQuote( o.query ), 'in', module.nickName, '\n', o.err );
+  return _.err( 'Failed to resolve', _.strQuote( o.selector ), 'in', module.nickName, '\n', o.err );
 }
 
 errResolving.defaults =
 {
   err : null,
   current : null,
-  query : null,
+  selector : null,
 }
 
 //
@@ -2368,14 +2368,14 @@ function _strSplit( o )
   let result;
 
   _.assertRoutineOptions( _strSplit, arguments );
-  _.assert( !_.strHas( o.query, '/' ) );
-  _.sure( _.strIs( o.query ), 'Expects string, but got', _.strType( o.query ) );
+  _.assert( !_.strHas( o.selector, '/' ) );
+  _.sure( _.strIs( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
 
-  let splits = module.strSplitShort( o.query );
+  let splits = module.strSplitShort( o.selector );
 
   if( !splits[ 0 ] && o.defaultPool )
   {
-    splits = [ o.defaultPool, '::', o.query ]
+    splits = [ o.defaultPool, '::', o.selector ]
   }
 
   return splits;
@@ -2383,7 +2383,7 @@ function _strSplit( o )
 
 var defaults = _strSplit.defaults = Object.create( null )
 
-defaults.query = null
+defaults.selector = null
 defaults.defaultPool = null;
 
 //
@@ -2412,7 +2412,7 @@ function _resolve_pre( routine, args )
 {
   let o = args[ 0 ];
   if( _.strIs( o ) )
-  o = { query : o }
+  o = { selector : o }
 
   _.routineOptions( routine, o );
   _.assert( arguments.length === 2 );
@@ -2441,9 +2441,9 @@ function _resolveMaybe_body( o )
     debugger;
     result = module.errResolving
     ({
-      query : o.query,
+      selector : o.selector,
       current : o.current,
-      err : _.ErrorLooking( o.query, 'was not found' ),
+      err : _.ErrorLooking( o.selector, 'was not found' ),
     })
   }
 
@@ -2580,7 +2580,7 @@ function _resolveMaybe_body( o )
 
 _resolveMaybe_body.defaults =
 {
-  query : null,
+  selector : null,
   defaultPool : null,
   prefixlessAction : 'default',
   visited : null,
@@ -2611,7 +2611,7 @@ function _resolve_body( o )
     debugger;
     throw module.errResolving
     ({
-      query : o.query,
+      selector : o.selector,
       current : current,
       err : result,
     });
@@ -2648,7 +2648,7 @@ function _resolveAct( o )
 
   /* */
 
-  if( module.strIsResolved( o.query ) )
+  if( module.strIsResolved( o.selector ) )
   {
     if( o.prefixlessAction === 'default' )
     {
@@ -2657,7 +2657,7 @@ function _resolveAct( o )
     {
       let err = module.errResolving
       ({
-        query : o.query,
+        selector : o.selector,
         current : current,
         err : _.ErrorLooking( 'Resource selector should have prefix' ),
       });
@@ -2666,14 +2666,14 @@ function _resolveAct( o )
     }
     else if( o.prefixlessAction === 'resolved' )
     {
-      return o.query;
+      return o.selector;
     }
     else _.assert( 0 );
   }
 
   /* */
 
-  // if( o.query === 'submodule::*/exported::*=1/reflector::exportedFiles*=1' )
+  // if( o.selector === 'submodule::*/exported::*=1/reflector::exportedFiles*=1' )
   // debugger;
 
   try
@@ -2681,19 +2681,19 @@ function _resolveAct( o )
 
     result = _.select
     ({
-      container : module,
-      query : o.query,
+      src : module,
+      selector : o.selector,
       // onSelectBegin : onSelectBegin,
       onUpBegin : onUpBegin,
       onUpEnd : onUpEnd,
       onQuantitativeFail : onQuantitativeFail,
       missingAction : 'error',
-      _current :
+      iterationCurrent :
       {
         module : o.currentModule,
         exported : null,
       },
-      _extend :
+      iteratorExtension :
       {
         resolveOptions : o,
       },
@@ -2705,13 +2705,13 @@ function _resolveAct( o )
     debugger;
     throw module.errResolving
     ({
-      query : o.query,
+      selector : o.selector,
       current : current,
       err : err,
     });
   }
 
-  // if( o.query === 'submodule::*/exported::*=1/reflector::exportedFiles*=1' )
+  // if( o.selector === 'submodule::*/exported::*=1/reflector::exportedFiles*=1' )
   // debugger;
 
   return result;
@@ -2721,7 +2721,7 @@ function _resolveAct( o )
   // function onSelectBegin( op )
   // {
   //
-  //   if( module.strIsResolved( op.query ) )
+  //   if( module.strIsResolved( op.selector ) )
   //   {
   //     if( op.prefixlessAction === 'default' )
   //     {
@@ -2730,7 +2730,7 @@ function _resolveAct( o )
   //     {
   //       let err = module.errResolving
   //       ({
-  //         query : op.query,
+  //         selector : op.selector,
   //         current : current,
   //         err : _.ErrorLooking( 'Resource selector should have prefix' ),
   //       });
@@ -2739,7 +2739,7 @@ function _resolveAct( o )
   //     }
   //     else if( op.prefixlessAction === 'resolved' )
   //     {
-  //       return op.query;
+  //       return op.selector;
   //     }
   //     else _.assert( 0 );
   //   }
@@ -2752,13 +2752,12 @@ function _resolveAct( o )
   {
     let it = this;
 
-    // if( _.strHas( it.path, '/MultipleExports' ) )
     // debugger;
 
     inheritsUpdate.call( it );
     globCriterionFilter.call( it );
 
-    if( !it.writingDown )
+    if( !it.dstWritingDown )
     return;
 
     /*
@@ -2792,7 +2791,7 @@ function _resolveAct( o )
   {
     let it = this;
     debugger;
-    let result = it.result;
+    let result = it.dst;
     if( _.mapIs( result ) )
     result = _.mapVals( result );
     if( _.arrayIs( result ) )
@@ -2820,10 +2819,10 @@ function _resolveAct( o )
     let it = this;
 
     if( it.src && it.src instanceof will.Submodule )
-    it._current.module = it.src.loadedModule;
+    it.iterationCurrent.module = it.src.loadedModule;
 
     if( it.src && it.src instanceof will.Exported )
-    it._current.exported = it.src;
+    it.iterationCurrent.exported = it.src;
 
   }
 
@@ -2842,8 +2841,8 @@ function _resolveAct( o )
 
       if( !it.src.criterionSattisfy( o.criterion ) )
       {
-        it.looking = false;
-        it.writingDown = false;
+        it.continue = false;
+        it.dstWritingDown = false;
       }
 
     }
@@ -2856,17 +2855,17 @@ function _resolveAct( o )
   {
     let it = this;
 
-    if( !it.query )
+    if( !it.selector )
     return;
 
-    _.assert( !!it._current.module );
+    _.assert( !!it.iterationCurrent.module );
 
-    let splits = it._current.module._strSplit({ query : it.query, defaultPool : o.defaultPool });
+    let splits = it.iterationCurrent.module._strSplit({ selector : it.selector, defaultPool : o.defaultPool });
 
-    it.queryParsed = Object.create( null );
-    it.queryParsed.full = splits.join( '' );
-    it.queryParsed.kind = splits[ 0 ];
-    it.query = it.queryParsed.name = splits[ 2 ];
+    it.parsedSelector = Object.create( null );
+    it.parsedSelector.full = splits.join( '' );
+    it.parsedSelector.kind = splits[ 0 ];
+    it.selector = it.parsedSelector.name = splits[ 2 ];
 
   }
 
@@ -2876,20 +2875,20 @@ function _resolveAct( o )
   {
     let it = this;
 
-    if( !it.query )
+    if( !it.selector )
     return;
 
-    let kind = it.queryParsed.kind;
-
-    let pool = it._current.module.resourceMapForKind( kind );
+    let kind = it.parsedSelector.kind;
+    let pool = it.iterationCurrent.module.resourceMapForKind( kind );
 
     if( !pool )
     {
       debugger;
-      throw _.ErrorLooking( 'Unknown type of resource, no pool for such resource', _.strQuote( it.queryParsed.full ) );
+      throw _.ErrorLooking( 'Unknown type of resource, no pool for such resource', _.strQuote( it.parsedSelector.full ) );
     }
 
     it.src = pool;
+    it.iterable = it.onWhichIterable( it.src );
 
   }
 
@@ -2899,10 +2898,10 @@ function _resolveAct( o )
   {
     let it = this;
 
-    if( it.queryParsed )
+    if( it.parsedSelector )
     {
 
-      let kind = it.queryParsed.kind
+      let kind = it.parsedSelector.kind
       if( kind === 'path' && o.hasPath === null )
       o.hasPath = true;
 
@@ -2916,12 +2915,12 @@ function _resolveAct( o )
   {
     let it = this;
 
-    if( it.down && it.queryParsed && it.queryParsed.kind === 'exported' )
+    if( it.down && it.parsedSelector && it.parsedSelector.kind === 'exported' )
     {
-      let writeToDownOriginal = it.writeToDown;
-      it.writeToDown = function writeThrough( eit )
+      let dstWriteDownOriginal = it.dstWriteDown;
+      it.dstWriteDown = function writeThrough( eit )
       {
-        let r = writeToDownOriginal.apply( this, arguments );
+        let r = dstWriteDownOriginal.apply( this, arguments );
         return r;
       }
     }
@@ -2934,23 +2933,23 @@ function _resolveAct( o )
   {
     let it = this;
 
-    if( !it.query && it._current.exported && it.result )
+    if( !it.selector && it.iterationCurrent.exported && it.dst )
     {
 
       // debugger;
 
-      if( it.result instanceof will.Reflector )
+      if( it.dst instanceof will.Reflector )
       {
-        let m = it._current.module;
-        let reflector = it.result;
+        let m = it.iterationCurrent.module;
+        let reflector = it.dst;
         _.assert( reflector.inherit.length === 0 );
         reflector.form();
-        it.result = reflector;
+        it.dst = reflector;
       }
-      else if( it.result instanceof will.PathObj )
+      else if( it.dst instanceof will.PathObj )
       {
-        let m = it._current.module;
-        it.result = path.s.join( m.inPath, it.result.path );
+        let m = it.iterationCurrent.module;
+        it.dst = path.s.join( m.inPath, it.dst.path );
       }
 
     }
@@ -2966,8 +2965,8 @@ function _resolveAct( o )
     if( it.src === o.current && it.down )
     {
       // debugger;
-      it.looking = false;
-      it.writingDown = false;
+      it.continue = false;
+      it.dstWritingDown = false;
     }
 
   }
@@ -3107,7 +3106,7 @@ function resourceImport( resource2 )
     if( _.strIs( value ) && module2 )
     value = module2.resolveMaybe
     ({
-      query : value,
+      selector : value,
       prefixlessAction : 'resolved',
       pathUnwrapping : 0,
       pathResolving : 0,
@@ -3127,7 +3126,7 @@ function resourceImport( resource2 )
 
   let resource = new resource2.Self( resourceData );
   resource.form1();
-  _.assert( module.resolve({ query : resource.nickName, pathUnwrapping : 0, pathResolving : 0 }) === resource );
+  _.assert( module.resolve({ selector : resource.nickName, pathUnwrapping : 0, pathResolving : 0 }) === resource );
 
   return resource;
 }
