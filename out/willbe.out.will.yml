@@ -157,40 +157,6 @@ path:
       - proto/dwtools/atop/will.test/asset/submodules-broken-2/out
       - >-
         proto/dwtools/atop/will.test/asset/submodules-broken-2/out/withSubmodules.out.will.yml
-      - proto/dwtools/atop/will.test/asset/submodules-broken-2/out.debug
-      - >-
-        proto/dwtools/atop/will.test/asset/submodules-broken-2/out.debug/WithSubmodules.s
-      - proto/dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools
-      - >-
-        proto/dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/Tools.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase
-      - >-
-        proto/dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l3
-      - >-
-        proto/dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l3/Path.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l3.test
-      - >-
-        proto/dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l3.test/Path.test.html
-      - >-
-        proto/dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l3.test/Path.test.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l4
-      - >-
-        proto/dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l4/Paths.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l4.test
-      - >-
-        proto/dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l4.test/Paths.test.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l7
-      - >-
-        proto/dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l7/Glob.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l7.test
-      - >-
-        proto/dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l7.test/Glob.test.s
       - proto/dwtools/atop/will.test/asset/submodules-broken-2/proto
       - >-
         proto/dwtools/atop/will.test/asset/submodules-broken-2/proto/WithSubmodules.s
@@ -372,24 +338,6 @@ reflector:
         dwtools/atop/will.test/asset/submodules-broken-2/module/PathFundamentals/out/wPathFundamentals.out.will.yml: true
         dwtools/atop/will.test/asset/submodules-broken-2/out: true
         dwtools/atop/will.test/asset/submodules-broken-2/out/withSubmodules.out.will.yml: true
-        dwtools/atop/will.test/asset/submodules-broken-2/out.debug: true
-        dwtools/atop/will.test/asset/submodules-broken-2/out.debug/WithSubmodules.s: true
-        dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools: true
-        dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/Tools.s: true
-        dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase: true
-        dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l3: true
-        dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l3/Path.s: true
-        dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l3.test: true
-        dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l3.test/Path.test.html: true
-        dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l3.test/Path.test.s: true
-        dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l4: true
-        dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l4/Paths.s: true
-        dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l4.test: true
-        dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l4.test/Paths.test.s: true
-        dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l7: true
-        dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l7/Glob.s: true
-        dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l7.test: true
-        dwtools/atop/will.test/asset/submodules-broken-2/out.debug/dwtools/abase/l7.test/Glob.test.s: true
         dwtools/atop/will.test/asset/submodules-broken-2/proto: true
         dwtools/atop/will.test/asset/submodules-broken-2/proto/WithSubmodules.s: true
         dwtools/atop/will.test/asset/submodules-download: true
