@@ -1,18 +1,19 @@
 # Tutorial topics
 
-- How to use command line interface of will
-- First will-file
--
-- Split will-file( mid )
-- Named will-file( mid )
+- [Basic concepts and terms](Concepts.urk.md)
+- [Will file structure](WillFileStructure.md)
+- [Command line interface of will](CommandLineInterfaceOfWill.ukr.md)
+- [How to use command line interface of will](HowToUseCommandLineInterfaceOfWill.ukr.md)
+- [First will-file](FirstWillFile.md)
+- [Exported will-file](ExportedWillFile.md)
+- Split will-file
+- Named will-file
 - Resources
   - Kinds, sections of will-file
   - Inheritability
 - How to list
 - How to use selector
 - How to use selector with glob and assertion ( mid )
-- How to build
-- How to export
 - How to import submodules
 - How to import remote submodules
 - How to use command .with ( mid )
