@@ -37,10 +37,10 @@ Ambiguity
 ```
 </details>
 
-З описом команд можна ознайомитись [тут](CommandLineInterfaceOfWill.ukr.md#will-commands).
+З описом команд можна ознайомитись в мануалі [Інтерфейс командного рядку `willbe`](CommandLineInterfaceOfWill.ukr.md#will-commands).
 
 <a name=".help-command"></a> Скористуємось командою `.help` для виводу довідки про команду. Введіть в консолі: `will .help`.  
-Мабуть не зрозуміло чому отримали такий же список команд. Спробуємо знову, але доповнимо фразу ще однією командою, щоб отримати синтаксис: `will .help [команда]`. Тепер введіть в терміналі `will .help .build`, а потім `will .help .builds.list` і порівняйте результати з наведеними нижче.  
+Мабуть не зрозуміло чому отримали такий же список команд. Спробуємо знову, але доповнимо фразу ще однією командою, щоб отримати фразу з синтаксисом: `will .help [команда]`. Тепер введіть в терміналі `will .help .build`, а потім `will .help .builds.list` і порівняйте результати з наведеними нижче.  
 <details>
   <summary><u>Лістинг `will .help .build`</u></summary>
 
@@ -63,6 +63,7 @@ Request ".help .builds.list"
 ```
 </details>
 
+</br>
 <a name="help-to-completion"></a> Користуватись довідкою просто. А що буде якщо ввести неповну фразу `will .help .submodules`? Введіть її та порівняйте:  
 <details>
   <summary><u>Лістинг команди `will .help .submodules`</u></summary>
@@ -79,13 +80,14 @@ Request ".help .submodules"
 ```
 </details>
 
-`Willbe` запропонував варіанти доповнення. Це зручно, адже, якщо ви не памятаете повну фразу з командою або бажаєте отримати вичерпний список команд з визначеним словом, достатньо ввести першу частину, а пакет запропонує доповнення.
+</br>
+`Willbe` вивів список команд з `submodules`. Це зручно, адже, якщо ви не памятаете повну фразу з командою або бажаєте отримати вичерпний список команд з визначеним словом, достатньо ввести першу частину, а пакет запропонує доповнення.
 
-Перед тим, як піти далі, спробуйте ввести попередні команди, але модифікувавши їх. Замініть літеру в команді `will .help`, а також замість '.' підставте інші знаки такі, як '-' та '\_'.  
+Перед тим, як піти далі, спробуйте ввести попередні команди, але модифікувавши їх. Замініть '.' на інші знаки такі, як '-' та '\_' або літеру в команді `will .help`.
 Після цього не залишається сумнівів, що перед командами завжди потрібно вводити '.' та правильно вводити фразу.  
 
 ### Команди `*.list`
-Наступним рівнем є використання операцій з [will-файлами](Concepts.urk.md#will-file). Створювати will-файли ми навчимось пізніше, а поки клонуйте Git-репозиторій ['willbe`](https://github.com/Wandalen/willbe) з готовими файлами.  
+Наступним рівнем є використання операцій з [will-файлами](Concepts.urk.md#will-file). Створювати will-файли ми навчимось пізніше, а поки клонуйте Git-репозиторій ['willbe`](https://github.com/Wandalen/willbe) з готовими прикладами.  
 
 <a name="list-command"></a> Мабуть, ви звернули увагу на те, що списку доступних команд досить багато таких, які закінчуються на `.list`. Ці команди взаємодіють з [модулем](Concepts.urk.md#module) та виводять інформацію про нього. Якщо ввести будь-яку з команд в директорії, де відсутній файл, то ви отримаєте попередження про відсутність модуля:
 ```
@@ -93,10 +95,8 @@ Request ".help .submodules"
 Request ".list"
 Found no module::/[path] at "/[path]"
 ```
-Тож, відкрийте клонований репозиторій і перейдіть за шляхом './sample/submodules/', де знаходиться файл `will.yml`  та відкрийте директорію в терміналі (або в терміналі виконайте `cd [.../willbe/sample/submodules/]`). Після цього введіть `will .paths.list`.
-Після того як на моніторі відобразиться результат виконання, відкрийте файл `.will.yml` з допомогою вашого улюбленого текстового редактора. Порівняйте вміст секції `path` файлу і текст який отримали в терміналі.  
-
-Якщо вам необхідно дізнатись інформацію з окремої секції модуля, ви можете скористуватись назвою секції додавши закінченя 's'. Тоді, повна команда виглядатиме так `will [назва секції]s.list`. Порівняйте результати виконання команд `will .paths.list` та `will .reflectors.list` для завантаженого `.will.yml` з приведеними нижче.
+Тож, відкрийте клонований репозиторій і перейдіть за шляхом './sample/submodules/', де знаходиться файл `.will.yml`  та відкрийте директорію в терміналі (або одразу виконайте `cd [.../willbe/sample/submodules/]`). Після цього введіть `will .paths.list`.
+Після того як на моніторі відобразиться результат, відкрийте файл `.will.yml` з допомогою вашого улюбленого текстового редактора. Порівняйте вміст [секції](Concepts.urk.md#will-file-section) `path` файлу і текст який отримали в терміналі.  
 <details>
   <summary><u>Лістинг команди `will .paths.list`</u></summary>
 
@@ -105,26 +105,90 @@ Found no module::/[path] at "/[path]"
 Request ".paths.list"
   . Read : /path_to_file/.will.yml
  . Read 1 will-files in 0.080s
- ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
- ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
+...
 Paths
   proto : './proto'
   in : '.'
   out : 'out'
   out.debug : 'out/debug'
 ```
+Секція `path`  
+![path.section](./Images/path.section.png)
+
 </details>
 
+Інформацію окремої секції модуля можливо отримати ввівши фразу `will [назва секції]s.list` (закінчення 's' додається до назв секції, виключення - секція [`about`](WillFileStructure.md#about) без змін).
+Тепер дізнаємось інформацію з секції `submodule`. Порівняйте:
 <details>
-  <summary><u>Лістинг команди `will .reflectors.list`</u></summary>
+  <summary><u>Лістинг `will .submodules.list`</u></summary>
 
   ```
-[user@user ~]$ will .reflectors.list
-Request ".reflectors.list"
-   . Read : /path_to_file/.will.yml
- . Read 1 will-files in 0.077s
+[user@user ~]$ will .submodules.list
+Request ".submodules.list"
+   . Read : /path_to_file/submodules/.will.yml
+ . Read 1 will-files in 0.084s
  ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
  ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
+submodule::Tools
+  path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+  isDownloaded : false
+  Exported builds : []
+submodule::PathFundamentals
+  path : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  isDownloaded : false
+  Exported builds : []
+```
+</details>
+
+Перший рядок після вводу повідомляє, яка команда була введена. Другий вказує операцію, яка була проведена з файлом, а третій - час її виконання.  
+Наступна частина:
+```
+! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
+! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
+```
+Бачимо попередження про помилку зчитування інформації про [підмодулі](Concepts.urk.md#submodule) (submodule) і дається рекомендація завантажити їх з допомогою команди `.submodules.download`,  або спробувати очистити підмодулі перед їх завантаженням.  
+Далі інформація про підмодулі - назва (після Submodule::), шлях (path), статус завантаження (isDownloaded) та експортна конфігурація (Exported builds):
+```
+submodule::Tools
+  path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+  isDownloaded : false
+  Exported builds : []
+submodule::PathFundamentals
+  path : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  isDownloaded : false
+  Exported builds : []
+```
+![submodule.section](./Images/submodule.section.png)
+
+Шляхи і назви співпадають, проте `willbe` вивів додаткову інформацію про статус підмодулів, яка спрощує адміністрування системи.
+
+А щоб дізнатись вичерпну інформацію про модуль введіть фразу `will .list`:
+<details>
+  <summary><u>Лістинг `will .list`</u></summary>
+
+  ```
+[user@user ~]$ will .List
+ . Read : /path_to_file/submodules/.will.yml
+ . Read 1 will-files in 0.068s
+ ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
+ ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
+About
+  enabled : 1
+
+Paths
+  proto : './proto'
+  in : '.'
+  out : 'out'
+  out.debug : 'out/debug'
+
+submodule::Tools
+  path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+  isDownloaded : false
+  Exported builds : []
+submodule::PathFundamentals
+  path : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  isDownloaded : false
+  Exported builds : []
 reflector::reflect.submodules
   dst :
     basePath : '.'
@@ -133,40 +197,45 @@ reflector::reflect.submodules
     debug : 1
   inherit :
     'submodule::*/exported::*=1/reflector::exportedFiles*=1'
+
+step::reflect.submodules
+  opts :
+    reflector : reflector::reflect.submodules*=1
+  inherit :
+    predefined.reflect
+
+step::delete.out.debug
+  opts :
+    filePath : path::out.debug
+  inherit :
+    predefined.delete
+
+build::debug
+  criterion :
+    default : 1
+  steps :
+    submodules.download
+    delete.out.debug
+    reflect.submodules
+
 ```
 </details>
 
-Вони майже ідентичні. Виключення складають декілька рядків. Трохи детальніше їх проаналізуємо.
-```
-Request ".list"
-. Read : /path_to_file/.will.yml
-. Read 1 will-files in 0.096s
-```
-Перший рядок після вводу повідомляє, яка команда була введена. Другий вказує операцію, яка була проведена з файлом, а третій - час її виконання.  
-Наступна частина:
-```
-! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
-! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
-```
-Бачимо попередження про те, що неможливо зчитати інформацію про [підмодулі](Concepts.urk.md#submodule) (submodule). Далі, дається рекомендація завантажити вказані підмодулі з допомогою команди `.submodules.download`,  або спробувати очистити підмодулі перед їх завантаженням. Тобто, ці попередження викликані тим, що модуль `willbe`, не знайшов вказаних [підмодулів](Concepts.urk.md#submodule) в їх власних директоріях.  
-Остання відмінність.
+Проглянувши файл `.will.yml` ви не знайдете секцію `About`:
 ```
 About
- enabled : 1
+  enabled : 1
 ```
-[`About`](WillFileStructure.md#about) - це [секція](Concepts.urk.md#will-file-section) `will`-файлу модуля, яка обов'язково повинна бути присутня. В завантаженому `.will.yml` ця секція не прописана і тому пакет `willbe` автоматично її згенерував з одним параметом за замовчуванням.
-В тексті `will.yml` використовуються секції [`submodule`](WillFileStructure.md#submodule), [`path`](WillFileStructure.md#path), [`reflector`](WillFileStructure.md#reflector), [`step`](WillFileStructure.md#step), [`build`](WillFileStructure.md#build). Детальна інформація про структуру will-файлу знаходиться в розділі ["Will file structure"](WillFileFtructure.md).  
+[`About`](WillFileStructure.md#about) - це обов'язкова [секція](Concepts.urk.md#will-file-section) модуля. В завантаженому `.will.yml` вона відсутня, тому пакет автоматично її згенерував з єдиним параметром за замовчуванням.  
+Детальна інформація про структуру will-файлу знаходиться в розділі ["Will file structure"](WillFileFtructure.md).  
 
-З іншими командами ми познайомимось в наступних уроках.
+А з іншими командами ми познайомимось в наступних уроках.
 
 ### <a name="conclusion"></a> Підсумок
-В цьому розділі ви дізнались про інтерфейс командного рядка пакету [`willbe`](https://github.com/Wandalen/willbe) та навчились використовувати його.
-1. Модифікатор '.' - обов'язковий для правильного виконання команд `willbe`.  
-1. Щоб отримати список доступних команд введіть в терміналі `will .` або `will .help`.  
-1. Для отримання довідки про обрану команду використовуйте синтаксис `will .help [команда]`.
-1. Якщо ви ввели не повну команду, `willbe` запропонує варіанти доповнення.  
-1. Для коректної роботи команд шляху до `will`-файла повинен бути без пробілів.
-1. Команда `.list` виводить інформацію про [модуль](Concepts.urk.md#module). Для того, щоб зчитати інформацію про обрану [секцію](Concepts.urk.md#will-file-section) `will.yml` використовуйте синтаксис `will [назва секції]s.list`.
+
+- Ми дізнались, як дізнатись список команд `willbe` та отримати довідку про обрану.
+- Якщо не памятаете повну [фразу](Concepts.ukr.md#prase) з командою або бажаєте отримати вичерпний список команд з визначеним словом, достатньо ввести першу частину, а пакет запропонує доповнення.  
+- Команда `.list` виводить інформацію про [модуль](Concepts.urk.md#module). Для того, щоб зчитати інформацію про обрану [секцію](Concepts.urk.md#will-file-section) `will.yml` використовуйте синтаксис `will [назва секції]s.list`.
 
 Тепер можемо створити свій [перший will-файл](FirstWillFile.md).
 
