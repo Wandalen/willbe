@@ -1,4 +1,4 @@
-# Команди інтерфейсу командного рядку (CLI) [`willbe`](https://github.com/Wandalen/willbe)
+# Інтерфейс командного рядка [`willbe`](https://github.com/Wandalen/willbe)
 
 Описані команди пакету `willbe` та їх синтаксис
 

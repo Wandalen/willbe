@@ -1,10 +1,10 @@
 # Зміст
 
 ## Туторіали
-- Введеня (Ред.)
-- [Базові концепції та визначення](Concepts.urk.md)
+- Введення (Ред.)
+- [Базові концепції та поняття ](Concepts.urk.md)
 - [Структура will-файла](WillFileComposition.ukr.md)
-- [Як використовувати інтерфейс командного рядка 'willbe'](HowToUseCommandLineInterfaceOfWill.ukr.md)
+- [Як користуватися інтерфейсом командного рядка `willbe`](HowToUseCommandLineInterfaceOfWill.ukr.md)
 - [Перший will-файл](FirstWillFile.ukr.md)
 - [Will-файл експорту модуля](ExportedWillFile.md)
 - Split will-file (Ред.)
@@ -24,6 +24,12 @@
 - Exported section of out will-file ( mid ) (Ред.)
 
 ## Manuals
-- [Базові концепції та визначення](Concepts.urk.md)
+- [Базові концепції та поняття ](Concepts.urk.md)
 - [Структура will-файла](WillFileStructure.ukr.md)
-- [Інтерфейс командного рядка 'willbe'](CommandLineInterfaceOfWill.ukr.md)
+- [Інтерфейс командного рядка `willbe`](CommandLineInterfaceOfWill.ukr.md)
+- [Створення will-файла:]()
+  - Базова конфігурація
+  - Експорт модуля
+  - Іменований підмодуль
+  - Імпорт підмодуля
+  

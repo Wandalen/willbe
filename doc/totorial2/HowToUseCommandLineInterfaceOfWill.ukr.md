@@ -8,9 +8,12 @@
 ### <a name="ui-intro"></a> Знайомство з користувацьким інтерфейсом. Команда `.help`
 _Користувацький інтерфейс_ `willbe` представлено консоллю операційної системи. Тож, відкрийте її та введіть [фразу](Concepts.ukr.md#phrase) `will .`.  
 Після вводу ви отримаєте повний список команд:  
+
 <details>
   <summary><u>Лістинг `will .`</u></summary>
+
   ```
+
 [user@user ~]$ will .  
 Request "."  
 Ambiguity  
@@ -36,9 +39,9 @@ Ambiguity
   .each - Use "each" to iterate each module in a directory.
 
 ```
+
 </details>
 
-</br>
 З описом команд можна ознайомитись в мануалі [Інтерфейс командного рядку `willbe`](CommandLineInterfaceOfWill.ukr.md#will-commands).
 
 <a name=".help-command"></a> Скористуємось командою `.help` для виводу довідки про команду. Введіть в консолі: `will .help`.  
