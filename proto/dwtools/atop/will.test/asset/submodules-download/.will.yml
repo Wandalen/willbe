@@ -24,7 +24,7 @@ reflector :
 
   reflect.submodules :
     inherit : submodule::*/exported::*=1/reflector::exportedFiles*=1
-    dstFilter :
+    dst :
       basePath : .
       prefixPath : path::out.debug
 

@@ -81,7 +81,7 @@ reflector:
   reflect.proto.:
     filePath:
       ./proto: ./out.release
-    srcFilter:
+    src:
       filePath:
         ./proto: ./out.release
       maskAll:
@@ -104,7 +104,7 @@ reflector:
   reflect.proto.debug:
     filePath:
       ./proto: ./out.debug
-    srcFilter:
+    src:
       filePath:
         ./proto: ./out.debug
       maskAll:
@@ -123,7 +123,7 @@ reflector:
     inherit:
       - predefined.*
   reflect.submodules:
-    srcFilter:
+    src:
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -141,7 +141,7 @@ reflector:
       - predefined.*
   exported.0:
     filePath: ./proto
-    srcFilter:
+    src:
       filePath: ./proto
       prefixPath: .
   exportedFiles.0:
@@ -166,7 +166,7 @@ reflector:
       ./dwtools/abase/l7.test/Glob.test.s: true
       ./dwtools/amid: true
       ./dwtools/atop: true
-    srcFilter:
+    src:
       filePath:
         .: true
         ./dwtools: true
