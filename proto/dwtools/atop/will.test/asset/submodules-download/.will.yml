@@ -13,7 +13,7 @@ path :
   in : '.'
   out : 'out'
   out.debug :
-    path : './out.debug'
+    path : './out/debug'
 
 reflector :
 
