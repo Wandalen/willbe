@@ -1,7 +1,9 @@
 # Питання
 <a name="1"></a>
-При введенні `will .clean` отримую наступне
+При введенні 'will .clean' отримую наступне
+
 ```
+
 dmytry@dmytry:~/Документы/Intellectual/willbe/sample/submodules$ will .clean
 Request ".clean"
    . Read : /home/dmytry/Документы/Intellectual/willbe/sample/submodules/.will.yml
@@ -37,7 +39,7 @@ Expects at least one argument
     1206 :   _.assert( uris.length, 'Expects at least one argument' );
     1207 :   _.assert( _.strsAreAll( uris ), 'Expects only strings as arguments' );
 
-	```
+```
 
 Що може бути причиною? В файлі немає розділу? Ви здається не згадували саме про цей розділ.
 
@@ -226,4 +228,4 @@ ErrorLooking
     751 :     let err = _.ErrorLooking
     752 :     (
 
-    ```
+  ```
