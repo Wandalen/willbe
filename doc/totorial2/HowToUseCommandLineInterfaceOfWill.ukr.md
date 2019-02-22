@@ -312,7 +312,7 @@ build::debug
 ```
 About
   enabled : 1
-  
+
 ```
 [`About`](WillFileStructure.ukr.md#about) - це обов'язкова [секція](Concepts.urk.md#will-file-section) модуля. В завантаженому `.will.yml` вона відсутня, тому пакет автоматично її згенерував з єдиним параметром за замовчуванням.  
 Детальна інформація про структуру will-файлу знаходиться в розділі ["Will file structure"](WillFileFtructure.ukr.md).  
@@ -327,4 +327,4 @@ About
 
 Тепер можемо створити свій [перший will-файл](FirstWillFile.ukr.md).
 
-[Повернутись до меню](Topics.md)
+[Повернутись до меню](Topics.ukr.md)
