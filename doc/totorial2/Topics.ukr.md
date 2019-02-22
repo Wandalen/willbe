@@ -1,7 +1,8 @@
 # Зміст
 
+<a name="tutorials"></a>
 ## Туторіали
-- Введення (Ред.)
+- [Введення](Introduction.ukr.md)  
 - [Базові концепції та поняття ](Concepts.urk.md)
 - [Структура will-файла](WillFileComposition.ukr.md)
 - [Як користуватися інтерфейсом командного рядка `willbe`](HowToUseCommandLineInterfaceOfWill.ukr.md)
@@ -23,13 +24,13 @@
 - How to use reflector and predefined reflectors ( mid ) (Ред.)
 - Exported section of out will-file ( mid ) (Ред.)
 
-## Manuals
+<a name="manuals"></a>
+## Керівництво користувача
 - [Базові концепції та поняття ](Concepts.urk.md)
 - [Структура will-файла](WillFileStructure.ukr.md)
 - [Інтерфейс командного рядка `willbe`](CommandLineInterfaceOfWill.ukr.md)
-- [Створення will-файла:]()
+- [Створення will-модуля:](WillFileCreation.md)
   - Базова конфігурація
   - Експорт модуля
   - Іменований підмодуль
   - Імпорт підмодуля
-  

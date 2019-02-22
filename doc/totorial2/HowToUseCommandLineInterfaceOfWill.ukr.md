@@ -51,7 +51,7 @@ Ambiguity
   <summary><u>Лістинг `will .help .build`</u></summary>
 
   ```
-  
+
 [user@user ~]$ will .help .build
 Request ".help .build"
 
@@ -355,7 +355,7 @@ About
 
 - Ми дізнались, [як отримати список команд `willbe`](ui-intro) та [довідку по обраній](#.help-command).
 - Як користуватись `willbe`, [якщо не памятаете повну фразу або бажаєте отримати вичерпний список команд з визначеним словом](#help-completion).  
-- про команди групи 'list', які [виводять інформацію про секції модуля](#list-commands).
+- Про команди групи 'list', які [виводять інформацію про секції модуля](#list-commands).
 
 Тепер можемо створити свій [перший will-файл](FirstWillFile.ukr.md).
 
