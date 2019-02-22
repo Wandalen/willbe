@@ -1,23 +1,19 @@
 # Перший will-файл
 
-В цьому туторіалі описується створення will-файлу та властивості
+В цьому туторіалі описується створення will-файлу
 
 ### <a name="will-file-futures"></a> Визначення та властивості `will`-файла
-Will-файл - особливий вид конфігураційного файлу для побудови складної модульної системи пакетом `willbe`.
+Will-файл - конфігураційний файл для побудови модульної системи пакетом `willbe`.
 Will-файл має наступні властивості:
-- конфігураційні will-файли мають розширення YML;
-- наявні функціональні секції, які описують поведінку модуля, що створюється (about, path, step, reflector, build...);
-- секція `about` обов'язкова;
-- робота з зовнішніми конфігураційними файлами форматів YAML, JSON, CSON.  
+- конфігураційні will-файли мають розширення 'yml', 'json', 'cson';
+- документ складається з секції, які описують поведінку модуля (about, path, step, reflector, build...);
+- секція `about` обов'язкова.  
 
 ### <a name="will-file-creation"></a> Створення will-файла
-Для створення найпростішого will-файла достатньо виконати наступні кроки:
-1. В директорії, де бажаете помістити модуль, створити пустий файл з назвою `.will.yml`.
-1.  Додати опис модуля в секцію  [`about`](WillFileStructure.md#about) (_Зауваження_. Обов'язковим є поле `enabled` з параметром за замовчуванням "1", проте його не потрібно вказувати - пакет автоматично його згенерує. Наступним важливим полем є `name`, яке визначає назву модулю).
-1. Додатково можна заповнити поля: description - опис модулю, version - версія модулю, keywords - ключові слова, interpreters - інтерпретатори, що використовуються.
-
-Приклад найпростішого will-файлу:
-``` yaml
+Для створення першого will-файла виконайте наступні кроки:
+- В директорії, де бажаете помістити модуль, створіть порожній файл з назвою `.will.yml`.
+- Скопіюйте в нього приведений код:
+```yaml
     about :
         name : first
         description : "First module"
@@ -25,13 +21,31 @@ Will-файл має наступні властивості:
         keywords :
             - willbe
 ```
+- Додатково можнете заповнити поле description - опис модулю.
+Після збереження файлу, перевірте конфігурацію виконавши з командного рядка `will .about.list` в кореневій директорії файлу.
+<details>
+  <summary><u>Лістинг `will .about.list`</u></summary>
+  ```
+[user@user ~]$ will .about.list
+Request ".about.list"
+  . Read : /path_to_file/.will.yml
+. Read 1 will-files in 0.109s
+About
+ name : 'first'
+ description : 'First module'
+ version : '0.0.1'
+ enabled : 1
+ keywords :
+   'willbe'
+```
+</details>
 
-Після збереження файлу можливо перевірити конфігурацію за допомогою команди `will .about.list` в директорії файлу.
+Заповнення секції 'about' необов'язкове, проте значно спрощує використання модуля іншими розробниками та адміністування системи в довготривалій перспективі.  
 
 ### <a name="will-module-creation"></a> Створення модуля
-Основним поняттям в пакеті `willbe` є поняття [модулю](Concepts.ukr.md#module). Модуль поєднує `will`-файл та файли описані в ньому.  
-Для створення модуля в створений нами `.will.yml` потрібно додати секції, які будуть описувати файли модуля. Використаємо [`step`](WillFileStructure.md#step) і [`build`](WillFileStructure.md#build). Перший з них описує всі можливі процедури для створення модулю, а другий, основуючись на даних попередніх секцій `.will.yml` створює послідовність виконання дій пакетом `willbe`. Важливо враховувати, що деякі з процедур вже вбудовані в пакет і їх опис в блоці `step` не обов'язковий.
-Додамо до створеного файлу наступні рядки:
+Основним поняттям в пакеті `willbe` є поняття [модулю](Concepts.ukr.md#module). Модуль поєднує `will`-файл та файли, описані в ньому.  
+Для створення модуля в `.will.yml` потрібно додати декілька секції. Використаємо [`step`](WillFileStructure.md#step) і [`build`](WillFileStructure.md#build). Перший з них описує всі можливі процедури для створення модулю, а другий, основуючись на даних попередніх секцій `.will.yml` створює послідовність виконання дій пакетом `willbe`.  
+Додамо до створеного файлу:
 ```yaml
 step :
 
@@ -47,10 +61,8 @@ build :
     steps :
       - npm.install
 ```
-
 <details>
   <summary><u>Повний лістинг файла `.will.yml`</u></summary>
-
 ```yaml
 about :
 
@@ -79,7 +91,7 @@ build :
 <p></p>
 
 В блоці `step` описана процедура з назвою `npm.install`, яка виконується в поточній директорії (`currentPath : '.'`) та використовує команду `npm install` в інтерфейсі командного рядка.
-Секція `build` створює модуль з допомогою процедури `debug` з критерієм за замовчуванням "1" та використовує лише один крок `npm.install` описаного секцією `step`.
+Секція `build` створює модуль з допомогою вбудованої процедури `debug`. Критерій (criterion) - умова виконання процедури, має значення за замовчуванням "1", тобто, ввімкнена.Секція використовує крок `npm.install` описаний секцією `step`.
 
 Щоб протестувати роботу `.will.yml` створимо зовнішній конфігураційний файл `package.json` та помістимо його в директорію файла `.will.yml`:
 ``` json
@@ -99,8 +111,8 @@ build :
 ├── .will.yml
 ```
 
-Після запуску в консолі команди `will .build` в директорії файла `.will.yml` отримаємо готовий модуль з пакетом "express".
-В консолі має бути приблизно такий лог, що свідчить про правильне виконання скрипту:
+Запустіть в консолі команду `will .build` в кореневій директорії файла `.will.yml` і `willbe` створить готовий модуль з NodeJS-пакетом "express".  
+В консолі отримаєте такий лог, що свідчить про правильне виконання скрипту:
 ```
 [user@user ~]$ will .build
 Request ".build"
@@ -117,33 +129,8 @@ found 0 vulnerabilities
 
 ```
 
-**_Будьте уважні._** Для правильного функціонування пакету в шляху до директорії не повинно бути пробільних або спеціальних символів. Можливий лог такого запуску:
-<details>
-  <summary><u>Лог запуску команди '.build' при наявності пробілів в шляху до файла</u></summary>
-
-```
-willbe@willbe:PATH_WITH_SPACES# will .build
-Request ".build"
-   . Read : PATH_WITH_SPACES.will.yml
-   . Read 1 will-files in 0.065s
- ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
- ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
-
-  Building debug
- * Message
-Failed to download submodules of module::PATH_WITH_SPACES
-Failed to download module::Tools
-Failed to form destination filter
-Assertion fails           
-
- * Condensed calls stack
-    at wFileRecordFilter._formFinal (/usr/local/lib/node_modules/willbe/node_modules/wFiles/proto/dwtools/amid/files/l1/FileRecordFilter.s:332:5)
-    etc.
-```
-</details>
-
 ### Підсумок
-В цьому розділі [описано `will`-файл](#will-file-futures) та вказані його основні властивості.
-Створено [найпростіший](#will-file-creation) `will`-файл та додавши блоки секції `step` i `build ` [побудовано перший модуль `willbe`](#will-module-creation).
+- Заповнення [секції `about` `will`-файла](#will-file-futures) є гарною практикою створення `will`-документів.  
+- Пакет `willbe` дозволяє [працювати з конфігураційними фалами NodeJS](#will-module-creation).
 
 [Повернутись до меню](Topics.md)
