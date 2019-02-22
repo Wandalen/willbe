@@ -51,29 +51,34 @@ Ambiguity
   <summary><u>Лістинг `will .help .build`</u></summary>
 
   ```
+  
 [user@user ~]$ will .help .build
 Request ".help .build"
 
   .build - Build current module with spesified criterion.
 
 ```
+
 </details>
 
 <details>
   <summary><u>Лістинг `will .help .builds.list`</u></summary>
 
   ```
+
 [user@user ~]$ will .help .builds.list
 Request ".help .builds.list"
 
   .builds.list - List avaialable builds.
 
 ```
+
 </details>
 
 </br>
 <a name="help-completion"></a> Користуватись довідкою просто. А що буде якщо ввести неповну фразу `will .help .submodules`?
 Лістинг команди `will .help .submodules`?
+
   ```
 [user@user ~]$ will .help .submodules
 Request ".help .submodules"
@@ -93,6 +98,7 @@ Request ".help .submodules"
   <summary><u>Лістинг `will -help .build`</u></summary>
 
   ```
+
 [user@user ~]$ will -help .build
 Illformed request "-help .build"
 
@@ -118,11 +124,14 @@ Illformed request "-help .build"
   .each - Use "each" to iterate each module in a directory.
 
 ```
+
 </details>
+
 <details>
 <summary><u>Лістинг `will _help .build`</u></summary>
 
 ```
+
 [user@user ~]$ will -help .build
 Illformed request "-help .build"
 
@@ -148,11 +157,14 @@ Illformed request "-help .build"
 .each - Use "each" to iterate each module in a directory.
 
 ```
+
 </details>
+
 <details>
   <summary><u>Лістинг команди `will .paths.list`</u></summary>
 
   ```
+
 [user@user ~]$ will .held .build
 Request ".held .build"
 ------------------------------- unhandled errorr ------------------------------->
@@ -166,6 +178,7 @@ Try subject ".help"
 ------------------------------- unhandled errorr -------------------------------<
 
 ```
+
 </details>
 
 Після цього не залишається сумнівів, що перед командами завжди потрібно вводити '.' та вірно вводити фразу.  
@@ -174,12 +187,15 @@ Try subject ".help"
 Наступним рівнем є використання операцій з [will-файлами](Concepts.urk.md#will-file). Створювати will-файли ми навчимось пізніше, а поки клонуйте Git-репозиторій ['willbe`](https://github.com/Wandalen/willbe) з готовими прикладами за [посиланням](https://github.com/Wandalen/willbe).  
 
 <a name="list-commands"></a> Мабуть, ви звернули увагу на те, що списку доступних команд досить багато таких, які закінчуються на `.list`. Ці команди взаємодіють з [модулем](Concepts.urk.md#module) та виводять інформацію про нього. Якщо ввести будь-яку з команд в директорії, де відсутній файл, то ви отримаєте попередження про його відсутність:
+
 ```
+
 [user@user ~]$ will .list
 Request ".list"
 Found no module::/[path] at "/[path]"
 
 ```
+
 Тож, відкрийте клонований репозиторій і перейдіть за шляхом './sample/submodules/', де знаходиться файл `.will.yml` та відкрийте директорію в терміналі (або одразу виконайте `cd [.../willbe/sample/submodules/]`). Можливо, його не буде видно, ввімкніть відображення прихованих файлів.
 Після цього введіть `will .paths.list`.
 Після того як на моніторі відобразиться результат, відкрийте файл `.will.yml` з допомогою вашого улюбленого текстового редактора. Порівняйте вміст [секції](Concepts.urk.md#will-file-section) `path` файлу і текст який отримали в терміналі.  
@@ -199,6 +215,7 @@ Paths
   out.debug : 'out/debug'
 
 ```
+
 Секція `path`  
 ![path.section](./Images/path.section.png)
 
@@ -210,6 +227,7 @@ Paths
   <summary><u>Лістинг `will .submodules.list`</u></summary>
 
   ```
+
 [user@user ~]$ will .submodules.list
 Request ".submodules.list"
    . Read : /path_to_file/submodules/.will.yml
@@ -226,18 +244,24 @@ submodule::PathFundamentals
   Exported builds : []
 
 ```
+
 </details>
 
 Перший рядок після вводу повідомляє, яка команда була введена. Другий вказує операцію, яка була проведена з файлом, а третій - час її виконання.  
 Наступна частина:
+
 ```
+
 ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
 ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
 
 ```
+
 Бачимо попередження про помилку зчитування інформації про [підмодулі](Concepts.urk.md#submodule) (submodule) і дається рекомендація завантажити їх з допомогою команди `.submodules.download`,  або спробувати очистити підмодулі перед їх завантаженням.  
 Далі інформація про підмодулі - назва (після Submodule::), шлях (path), статус завантаження (isDownloaded) та експортна конфігурація (Exported builds):
+
 ```
+
 submodule::Tools
   path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
   isDownloaded : false
@@ -248,6 +272,7 @@ submodule::PathFundamentals
   Exported builds : []
 
 ```
+
 ![submodule.section](./Images/submodule.section.png)
 
 Шляхи і назви співпадають, проте `willbe` вивів додаткову інформацію про статус підмодулів, яка спрощує адміністрування системи.
@@ -257,6 +282,7 @@ submodule::PathFundamentals
   <summary><u>Лістинг `will .list`</u></summary>
 
   ```
+
 [user@user ~]$ will .List
  . Read : /path_to_file/submodules/.will.yml
  . Read 1 will-files in 0.068s
@@ -309,14 +335,17 @@ build::debug
     reflect.submodules
 
 ```
+
 </details>
 
 Проглянувши файл `.will.yml` ви не знайдете секцію `About`:
+
 ```
 About
   enabled : 1
 
 ```
+
 [`About`](WillFileStructure.ukr.md#about) - це обов'язкова [секція](Concepts.urk.md#will-file-section) модуля. В завантаженому `.will.yml` вона відсутня, тому пакет автоматично її згенерував з єдиним параметром за замовчуванням.  
 Детальна інформація про структуру will-файлу знаходиться в розділі ["Will file structure"](WillFileFtructure.ukr.md).  
 
