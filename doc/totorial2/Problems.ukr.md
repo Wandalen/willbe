@@ -42,6 +42,7 @@ Expects at least one argument
 - Я використовував попередній мануал для створення експорту файла. Після багатьох маніпуляцій з файлами лог консолі не змінився. Навіть тоді, коли використав файл з готовим прикладом і змінював `.export` на `build`. В чому причина?   
 
 ```
+
 dmytry@dmytry:~/Документы/UpWork/IntellectualServiceMysnyk/willbe/doc/tutorial/mird$ will .export
 Request ".export"
    . Read : /home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe/doc/tutorial/modules/third/.will.yml
@@ -138,4 +139,5 @@ ErrorLooking
     66 :     // debugger;
     67 :     let err = _.ErrorLooking
     68 :     (
+      
 ```
