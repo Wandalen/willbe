@@ -34,6 +34,7 @@ Ambiguity
   .export - Export selected the module with spesified criterion. Save output to output file and archive.
   .with - Use "with" to select a module.
   .each - Use "each" to iterate each module in a directory.
+
 ```
 </details>
 
@@ -51,6 +52,7 @@ Ambiguity
 Request ".help .build"
 
   .build - Build current module with spesified criterion.
+
 ```
 </details>
 
@@ -62,6 +64,7 @@ Request ".help .build"
 Request ".help .builds.list"
 
   .builds.list - List avaialable builds.
+
 ```
 </details>
 
@@ -172,6 +175,7 @@ Try subject ".help"
 [user@user ~]$ will .list
 Request ".list"
 Found no module::/[path] at "/[path]"
+
 ```
 Тож, відкрийте клонований репозиторій і перейдіть за шляхом './sample/submodules/', де знаходиться файл `.will.yml` та відкрийте директорію в терміналі (або одразу виконайте `cd [.../willbe/sample/submodules/]`). Можливо, його не буде видно, ввімкніть відображення прихованих файлів.
 Після цього введіть `will .paths.list`.
@@ -190,6 +194,7 @@ Paths
   in : '.'
   out : 'out'
   out.debug : 'out/debug'
+
 ```
 Секція `path`  
 ![path.section](./Images/path.section.png)
@@ -216,6 +221,7 @@ submodule::PathFundamentals
   path : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
   isDownloaded : false
   Exported builds : []
+
 ```
 </details>
 
@@ -224,6 +230,7 @@ submodule::PathFundamentals
 ```
 ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
 ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
+
 ```
 Бачимо попередження про помилку зчитування інформації про [підмодулі](Concepts.urk.md#submodule) (submodule) і дається рекомендація завантажити їх з допомогою команди `.submodules.download`,  або спробувати очистити підмодулі перед їх завантаженням.  
 Далі інформація про підмодулі - назва (після Submodule::), шлях (path), статус завантаження (isDownloaded) та експортна конфігурація (Exported builds):
@@ -236,6 +243,7 @@ submodule::PathFundamentals
   path : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
   isDownloaded : false
   Exported builds : []
+
 ```
 ![submodule.section](./Images/submodule.section.png)
 
@@ -304,6 +312,7 @@ build::debug
 ```
 About
   enabled : 1
+  
 ```
 [`About`](WillFileStructure.ukr.md#about) - це обов'язкова [секція](Concepts.urk.md#will-file-section) модуля. В завантаженому `.will.yml` вона відсутня, тому пакет автоматично її згенерував з єдиним параметром за замовчуванням.  
 Детальна інформація про структуру will-файлу знаходиться в розділі ["Will file structure"](WillFileFtructure.ukr.md).  

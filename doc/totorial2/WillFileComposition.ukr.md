@@ -38,18 +38,20 @@ will-file
 
 <a name="execution"></a> **Execution.** Секція will-файлу яка описує варіанти виконання програми створення складної модульної системи (в стадії розробки).
 
-<a name="exported"></a> **Exported.** Описує створення особливого виду will-модуля - нового will-файлу `*.out.will`, який може бути використаний як готове рішення або ж підмодуль складної системи.  
+<a name="exported"></a> **Exported.** Описує створення особливого виду will-модуля - нового will-файлу `*.out.will`, який може бути використаний як підмодуль.  
 
 <a name="build"></a> **Build.** Секція will-файлу яка описує послідовність і умови виконання процедур створення модулю використовуючи значення секцій файлу та вбудованих функцій.  
 
-### Зображення секцій зі складовими
+### Ресурси секцій  
+<a name="resource"></a> Ресурсами вважаються внутрішні поля секцій will-файлу. При цьому ресурс поєднує як назву, так і значення цього поля. Кожна секція має власний набір полів.   
+Розглянемо приклади секцій `will`-файлу:
 <details>
-  <summary><u>Схема секцій will-файлу</u></summary>
-Секція 'path'
+  <summary><u> Будова секцій 'path' та 'submodule' will-файлу</u></summary>
+
 ![path.section.ukr](./Images/path.section.ukr.png)
-Секція 'submodule'
+
+<p> </p>
+
 ![submodule.section.ukr](./Images/submodule.section.ukr.png)
-Секція 'reflector'
-![reflector.section.ukr](./Images/reflector.section.ukr.png)
 
 </details>
