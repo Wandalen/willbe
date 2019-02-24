@@ -188,36 +188,22 @@ function open()
 
   /* */
 
-  // if( 0 )
   if( willf.module.supermodule )
   {
 
-    // debugger;
     let outPath = willf.data.path.out;
     if( _.mapIs( outPath ) )
     outPath = outPath.path;
 
+    debugger; // yyy
+
     outPath = path.relative( outPath, '.' );
     let dirPath = path.join( willf.dirPath, outPath );
-    module.dirPathSet( dirPath );
+    module.filePathSet( module.filePath, dirPath );
 
   }
 
   _.assert( willf.dirPath === path.dir( willf.filePath ) );
-  // _.assert( !willf.data.path || !willf.data.path.baseDir, 'Will file should have no path::baseDir' ); // xxx : uncomment
-
-  /* */
-
-  // if( 0 )
-  // if( willf.data.path && willf.data.path.baseDir )
-  // {
-  //   debugger;
-  //   let p = willf.data.path.baseDir;
-  //   if( _.mapIs( p ) )
-  //   p = p.path;
-  //   p = path.join( path.dir( willf.filePath ), p );
-  //   module.dirPathSet( p );
-  // }
 
   /* */
 
@@ -230,25 +216,14 @@ function open()
 
   /* */
 
-  // if( willf.data.exported )
   willf._resourcesMake( will.Exported, willf.data.exported || {} );
-
-  // if( willf.data.submodule )
   willf._resourcesMake( will.Submodule, willf.data.submodule || {} );
-
-  // if( willf.data.path )
   willf._resourcesMake( will.PathObj, willf.data.path || {} );
-
-  // if( willf.data.reflector )
   willf._resourcesMake( will.Reflector, willf.data.reflector || {} );
-
   willf._resourcesMake( will.Step, willf.data.step || {} );
-
-  // if( willf.data.build )
   willf._resourcesMake( will.Build, willf.data.build || {} );
 
   willf.formed = 2;
-
   return true;
 }
 

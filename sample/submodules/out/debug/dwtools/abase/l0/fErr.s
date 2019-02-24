@@ -2,20 +2,18 @@
 
 'use strict';
 
+/*
+
+!!! implemen error's collectors
+
+*/
+
+let _ObjectToString = Object.prototype.toString;
+let _ObjectHasOwnProperty = Object.hasOwnProperty;
+
 let _global = _global_;
 let _ = _global_.wTools;
 let Self = _global_.wTools;
-
-//
-
-let _ArrayIndexOf = Array.prototype.indexOf;
-let _ArrayLastIndexOf = Array.prototype.lastIndexOf;
-let _ArraySlice = Array.prototype.slice;
-let _ArraySplice = Array.prototype.splice;
-let _FunctionBind = Function.prototype.bind;
-let _ObjectToString = Object.prototype.toString;
-let _ObjectHasOwnProperty = Object.hasOwnProperty;
-let _propertyIsEumerable = Object.propertyIsEnumerable;
 
 // --
 // stub
@@ -93,9 +91,9 @@ function errAttentionRequest( err )
 {
 
   if( arguments.length !== 1 )
-  throw 'errAttentionRequest : Expects one argument';
+  throw Error( 'errAttentionRequest : Expects one argument' );
   if( !_.errIs( err ) )
-  throw 'errAttentionRequest : Expects error as the first argument';
+  throw Error( 'errAttentionRequest : Expects error as the first argument' );
 
   Object.defineProperty( err, 'attended',
   {
@@ -280,7 +278,7 @@ function _err( o )
       }
       else
       {
-        debugger;
+        // debugger;
         stack = _.diagnosticStack( result );
       }
     }
@@ -1174,10 +1172,6 @@ function assert( condition )
   if( Config.debug === false )
   return true;
 
-  // if( !boolLike( condition ) )
-  // debugger;
-
-  // if( !condition || !boolLike( condition ) )
   if( !condition )
   {
     _assertDebugger( condition, arguments );
@@ -1201,7 +1195,7 @@ function assert( condition )
     });
   }
 
-  return;
+  return true;
 
   function boolLike( src )
   {

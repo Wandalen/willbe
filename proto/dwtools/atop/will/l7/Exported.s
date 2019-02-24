@@ -175,22 +175,22 @@ function performExportedReflectors( exportSelector )
   {
 
     _.assert( exp.formed === 3 );
-    _.assert( exp./*srcFilter*/src.formed === 1 );
+    _.assert( exp.src.formed === 1 );
     _.sure( !!exp.filePath, () => exp.nickName + ' should have filePath' );
 
     exportedReflector = exp.cloneExtending({ name : module.resourceNameAllocate( 'reflector', 'exported.' + exported.name ) });
 
-    _.assert( exportedReflector./*srcFilter*/src !== exp./*srcFilter*/src );
-    _.assert( exportedReflector./*srcFilter*/src.prefixPath === null || exportedReflector./*srcFilter*/src.prefixPath === module.inPath );
-    exportedReflector./*srcFilter*/src.prefixPath = null;
+    _.assert( exportedReflector.src !== exp.src );
+    _.assert( exportedReflector.src.prefixPath === null || exportedReflector.src.prefixPath === module.inPath );
+    exportedReflector.src.prefixPath = null;
 
     let filter2 =
     {
       // maskTransientDirectory : { excludeAny : [ /\.git$/, /node_modules$/ ] },
     }
 
-    exportedReflector./*srcFilter*/src.and( filter2 ).pathsInherit( filter2 );
-    exportedReflector./*srcFilter*/src.filePath = exportedReflector.filePath;
+    exportedReflector.src.and( filter2 ).pathsInherit( filter2 );
+    exportedReflector.src.filePath = exportedReflector.filePath;
 
   }
   else if( _.arrayIs( exp ) )
@@ -200,13 +200,13 @@ function performExportedReflectors( exportSelector )
     _.assert( path.isRelative( commonPath ) );
 
     exportedReflector = module.resourceAllocate( 'reflector', 'exported.' + exported.name );
-    exportedReflector./*srcFilter*/src.filePath = Object.create( null );
+    exportedReflector.src.filePath = Object.create( null );
     for( let p = 0 ; p < exp.length ; p++ )
     {
       _.assert( !_.strHas( exp[ p ], '::' ) );
-      exportedReflector./*srcFilter*/src.filePath[ exp[ p ] ] = true;
+      exportedReflector.src.filePath[ exp[ p ] ] = true;
     }
-    exportedReflector./*srcFilter*/src.basePath = commonPath;
+    exportedReflector.src.basePath = commonPath;
 
   }
   else if( _.strIs( exp ) )
@@ -214,7 +214,7 @@ function performExportedReflectors( exportSelector )
 
     _.assert( !_.strHas( exp, '::' ) );
     exportedReflector = module.resourceAllocate( 'reflector', 'exported.' + exported.name );
-    exportedReflector./*srcFilter*/src.filePath = exp;
+    exportedReflector.src.filePath = exp;
 
   }
   else _.assert( 0 );
@@ -228,12 +228,12 @@ function performExportedReflectors( exportSelector )
   _.assert( _.mapIs( exportedReflector.criterion ) );
   _.assert( exportedReflector/*dstFilter*/.dst.prefixPath === null );
   _.assert( exportedReflector/*dstFilter*/.dst.basePath === null );
-  _.assert( path.isAbsolute( exportedReflector/*srcFilter*/.src.prefixPath ) );
+  _.assert( path.isAbsolute( exportedReflector.src.prefixPath ) );
   _.assert( exportedReflector instanceof will.Reflector );
 
   /* srcFilter */
 
-  let srcFilter = exported.srcFilter = exportedReflector/*srcFilter*/.src.clone();
+  let srcFilter = exported.srcFilter = exportedReflector.src.clone();
   srcFilter._formBasePath();
 
   _.assert( srcFilter.formed === 3 );
@@ -316,14 +316,14 @@ function performExportedFilesReflector()
   let exportedFilesReflector = exported.exportedFilesReflector = exported.exportedReflector.cloneExtending({ name : module.resourceNameAllocate( 'reflector', 'exportedFiles.' + exported.name ) });
 
   _.assert( _.objectIs( exportedFilesReflector.criterion ) );
-  _.assert( exportedFilesReflector/*srcFilter*/.src.basePath === exported.exportedDirPath.path || exportedFilesReflector/*srcFilter*/.src.basePath === null );
-  exportedFilesReflector/*srcFilter*/.src.filteringClear();
-  _.assert( exportedFilesReflector/*srcFilter*/.src.basePath === exported.exportedDirPath.path || exportedFilesReflector/*srcFilter*/.src.basePath === null );
-  _.assert( exportedFilesReflector/*srcFilter*/.src.prefixPath === module.inPath || exportedFilesReflector/*srcFilter*/.src.prefixPath === null );
+  _.assert( exportedFilesReflector.src.basePath === exported.exportedDirPath.path || exportedFilesReflector.src.basePath === null );
+  exportedFilesReflector.src.filteringClear();
+  _.assert( exportedFilesReflector.src.basePath === exported.exportedDirPath.path || exportedFilesReflector.src.basePath === null );
+  _.assert( exportedFilesReflector.src.prefixPath === module.inPath || exportedFilesReflector.src.prefixPath === null );
 
   /* base path is really required */
-  exportedFilesReflector/*srcFilter*/.src.basePath = '.';
-  exportedFilesReflector/*srcFilter*/.src.prefixPath = exported.exportedDirPath.refName;
+  exportedFilesReflector.src.basePath = '.';
+  exportedFilesReflector.src.prefixPath = exported.exportedDirPath.refName;
 
   _.assert( exportedFilesReflector/*dstFilter*/.dst.basePath === null );
   exportedFilesReflector/*dstFilter*/.dst.filteringClear();

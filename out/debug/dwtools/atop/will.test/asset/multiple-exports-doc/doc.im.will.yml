@@ -2,11 +2,11 @@
 submodule :
 
   # Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  MultipleExports : ../out/submodule
+  MultipleExports : ./out/submodule
 
 path :
 
-  in : '..'
+  in : '.'
   out : './doc.out'
   out.debug :
     path : './doc.out/debug'

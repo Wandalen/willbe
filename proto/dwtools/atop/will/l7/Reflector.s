@@ -34,8 +34,8 @@ function init( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
 
-  reflector./*srcFilter*/src = fileProvider.recordFilter();
-  reflector./*dstFilter*/dst = fileProvider.recordFilter();
+  reflector.src = fileProvider.recordFilter();
+  reflector.dst = fileProvider.recordFilter();
 
   // if( reflector.nickName === 'reflector::reflect.submodules' )
   // debugger;
@@ -83,34 +83,34 @@ function form1()
   if( willf )
   willf[ reflector.MapName ][ reflector.name ] = reflector;
 
-  reflector./*srcFilter*/src = reflector./*srcFilter*/src || {};
+  reflector.src = reflector.src || {};
 
-  if( reflector./*srcFilter*/src )
+  if( reflector.src )
   {
-    reflector./*srcFilter*/src.hubFileProvider = fileProvider;
-    if( reflector./*srcFilter*/src.basePath )
-    reflector./*srcFilter*/src.basePath = path.s.normalize( reflector./*srcFilter*/src.basePath );
-    // reflector./*srcFilter*/src.basePath = path.s.normalize( path.s.join( module.dirPath, reflector./*srcFilter*/src.basePath ) );
-    if( !reflector./*srcFilter*/src.formed )
-    reflector./*srcFilter*/src._formAssociations();
+    reflector.src.hubFileProvider = fileProvider;
+    if( reflector.src.basePath )
+    reflector.src.basePath = path.s.normalize( reflector.src.basePath );
+    // reflector.src.basePath = path.s.normalize( path.s.join( module.dirPath, reflector.src.basePath ) );
+    if( !reflector.src.formed )
+    reflector.src._formAssociations();
   }
 
-  reflector./*dstFilter*/dst = reflector./*dstFilter*/dst || {};
+  reflector.dst = reflector.dst || {};
 
-  if( reflector./*dstFilter*/dst )
+  if( reflector.dst )
   {
-    reflector./*dstFilter*/dst.hubFileProvider = fileProvider;
+    reflector.dst.hubFileProvider = fileProvider;
 
-    if( reflector./*dstFilter*/dst.basePath )
-    reflector./*dstFilter*/dst.basePath = path.s.normalize( reflector./*dstFilter*/dst.basePath );
-    // reflector./*dstFilter*/dst.basePath = path.s.normalize( path.s.join( module.dirPath, reflector./*dstFilter*/dst.basePath ) );
-    if( !reflector./*dstFilter*/dst.formed )
-    reflector./*dstFilter*/dst._formAssociations();
+    if( reflector.dst.basePath )
+    reflector.dst.basePath = path.s.normalize( reflector.dst.basePath );
+    // reflector.dst.basePath = path.s.normalize( path.s.join( module.dirPath, reflector.dst.basePath ) );
+    if( !reflector.dst.formed )
+    reflector.dst._formAssociations();
   }
 
   // if( reflector.filePath )
   // reflector.filePath = path.pathMapExtend( null, reflector.filePath, true );
-  // if( reflector./*srcFilter*/src.basePath )
+  // if( reflector.src.basePath )
   // debugger;
 
   /* end */
@@ -131,7 +131,7 @@ function form2()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  // if( reflector./*srcFilter*/src.basePath )
+  // if( reflector.src.basePath )
   // debugger;
   // if( reflector.absoluteName === 'module::super / module::MultipleExports / reflector::exportedFiles.export.' )
   // debugger;
@@ -152,7 +152,7 @@ function form2()
   // if( reflector.absoluteName === 'module::super / reflector::reflect.submodules.' )
   // debugger;
 
-  // if( reflector./*srcFilter*/src.basePath )
+  // if( reflector.src.basePath )
   // debugger;
 
   return result;
@@ -224,12 +224,12 @@ function _inheritSingle( o )
   _.assert( reflector2 instanceof reflector.constructor, () => 'Expects reflector, but got', _.strType( reflector2 ) );
   _.assert( !!reflector2.formed );
 
-  _.assert( reflector./*srcFilter*/src instanceof _.FileRecordFilter );
-  _.assert( reflector./*dstFilter*/dst instanceof _.FileRecordFilter );
-  _.assert( reflector2./*srcFilter*/src instanceof _.FileRecordFilter );
-  _.assert( reflector2./*dstFilter*/dst instanceof _.FileRecordFilter );
-  _.assert( _.entityIdentical( reflector./*srcFilter*/src.filePath, reflector.filePath ) );
-  _.assert( _.entityIdentical( reflector2./*srcFilter*/src.filePath, reflector2.filePath ) );
+  _.assert( reflector.src instanceof _.FileRecordFilter );
+  _.assert( reflector.dst instanceof _.FileRecordFilter );
+  _.assert( reflector2.src instanceof _.FileRecordFilter );
+  _.assert( reflector2.dst instanceof _.FileRecordFilter );
+  _.assert( _.entityIdentical( reflector.src.filePath, reflector.filePath ) );
+  _.assert( _.entityIdentical( reflector2.src.filePath, reflector2.filePath ) );
 
   if( reflector2.formed < 2 )
   {
@@ -239,8 +239,8 @@ function _inheritSingle( o )
 
   let extend = _.mapOnly( reflector2, _.mapNulls( reflector ) );
 
-  delete extend./*srcFilter*/src;
-  delete extend./*dstFilter*/dst;
+  delete extend.src;
+  delete extend.dst;
   delete extend.criterion;
   delete extend.filePath;
 
@@ -250,8 +250,8 @@ function _inheritSingle( o )
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
 
-  reflector./*srcFilter*/src.and( reflector2./*srcFilter*/src ).pathsInherit( reflector2./*srcFilter*/src );
-  reflector./*dstFilter*/dst.and( reflector2./*dstFilter*/dst ).pathsInherit( reflector2./*dstFilter*/dst );
+  reflector.src.and( reflector2.src ).pathsInherit( reflector2.src );
+  reflector.dst.and( reflector2.dst ).pathsInherit( reflector2.dst );
 
 }
 
@@ -285,18 +285,18 @@ function form3()
 
   reflector.pathsResolve({ addingSrcPrefix : 1 });
   reflector.relative();
-  reflector./*srcFilter*/src.basePathSimplify();
-  reflector./*dstFilter*/dst.basePathSimplify();
+  reflector.src.basePathSimplify();
+  reflector.dst.basePathSimplify();
   reflector.sureRelativeOrGlobal();
 
-  _.assert( path.isAbsolute( reflector./*srcFilter*/src.prefixPath ) );
+  _.assert( path.isAbsolute( reflector.src.prefixPath ) );
 
   /* end */
 
   // if( reflector.nickName === 'reflector::reflect.submodules' )
   // debugger;
 
-  // if( reflector./*srcFilter*/src.basePath )
+  // if( reflector.src.basePath )
   // debugger;
 
   reflector.formed = 3;
@@ -414,13 +414,13 @@ function sureRelativeOrGlobal( o )
   let reflector = this;
 
   o = _.routineOptions( sureRelativeOrGlobal, arguments );
-  _.assert( reflector./*srcFilter*/src instanceof _.FileRecordFilter );
-  _.assert( reflector./*dstFilter*/dst instanceof _.FileRecordFilter );
-  _.assert( reflector./*srcFilter*/src.filePath === reflector.filePath );
+  _.assert( reflector.src instanceof _.FileRecordFilter );
+  _.assert( reflector.dst instanceof _.FileRecordFilter );
+  _.assert( reflector.src.filePath === reflector.filePath );
 
   try
   {
-    reflector./*srcFilter*/src.sureRelativeOrGlobal( o );
+    reflector.src.sureRelativeOrGlobal( o );
   }
   catch( err )
   {
@@ -429,7 +429,7 @@ function sureRelativeOrGlobal( o )
 
   try
   {
-    reflector./*dstFilter*/dst.sureRelativeOrGlobal( o );
+    reflector.dst.sureRelativeOrGlobal( o );
   }
   catch( err )
   {
@@ -455,14 +455,14 @@ function isRelativeOrGlobal( o )
 
   o = _.routineOptions( isRelativeOrGlobal, arguments );
 
-  _.assert( reflector./*srcFilter*/src instanceof _.FileRecordFilter );
-  _.assert( reflector./*dstFilter*/dst instanceof _.FileRecordFilter );
-  _.assert( reflector./*srcFilter*/src.filePath === reflector.filePath );
+  _.assert( reflector.src instanceof _.FileRecordFilter );
+  _.assert( reflector.dst instanceof _.FileRecordFilter );
+  _.assert( reflector.src.filePath === reflector.filePath );
 
-  if( !reflector./*srcFilter*/src.isRelativeOrGlobal( o ) )
+  if( !reflector.src.isRelativeOrGlobal( o ) )
   return false;
 
-  if( !reflector./*dstFilter*/dst.isRelativeOrGlobal( o ) )
+  if( !reflector.dst.isRelativeOrGlobal( o ) )
   return false;
 
   return true;
@@ -487,33 +487,33 @@ function relative()
   let prefixPath;
 
   _.assert( arguments.length === 0 );
-  _.assert( reflector./*srcFilter*/src.postfixPath === null, 'not implemented' );
-  _.assert( reflector./*dstFilter*/dst.postfixPath === null, 'not implemented' );
+  _.assert( reflector.src.postfixPath === null, 'not implemented' );
+  _.assert( reflector.dst.postfixPath === null, 'not implemented' );
 
-  prefixPath = reflector./*srcFilter*/src.prefixPath;
+  prefixPath = reflector.src.prefixPath;
 
   if( prefixPath )
   {
-    _.assert( path.isAbsolute( reflector./*srcFilter*/src.prefixPath ) );
-    if( reflector./*srcFilter*/src.basePath )
-    reflector./*srcFilter*/src.basePath = path.filter( reflector./*srcFilter*/src.basePath, relative );
-    if( reflector./*srcFilter*/src.filePath )
-    reflector./*srcFilter*/src.filePath = path.filter( reflector./*srcFilter*/src.filePath, relative );
-    if( reflector./*srcFilter*/src.filePath )
-    reflector./*srcFilter*/src.filePath = path.filter( reflector./*srcFilter*/src.filePath, relative );
+    _.assert( path.isAbsolute( reflector.src.prefixPath ) );
+    if( reflector.src.basePath )
+    reflector.src.basePath = path.filter( reflector.src.basePath, relative );
+    if( reflector.src.filePath )
+    reflector.src.filePath = path.filter( reflector.src.filePath, relative );
+    if( reflector.src.filePath )
+    reflector.src.filePath = path.filter( reflector.src.filePath, relative );
   }
 
-  prefixPath = reflector./*dstFilter*/dst.prefixPath;
+  prefixPath = reflector.dst.prefixPath;
 
   if( prefixPath )
   {
-    _.assert( path.isAbsolute( reflector./*dstFilter*/dst.prefixPath ) );
-    if( reflector./*dstFilter*/dst.basePath )
-    reflector./*dstFilter*/dst.basePath = path.filter( reflector./*dstFilter*/dst.basePath, relative );
-    if( reflector./*dstFilter*/dst.filePath )
-    reflector./*dstFilter*/dst.filePath = path.filter( reflector./*dstFilter*/dst.filePath, relative );
-    if( reflector./*dstFilter*/dst.filePath )
-    reflector./*dstFilter*/dst.filePath = path.filter( reflector./*dstFilter*/dst.filePath, relative );
+    _.assert( path.isAbsolute( reflector.dst.prefixPath ) );
+    if( reflector.dst.basePath )
+    reflector.dst.basePath = path.filter( reflector.dst.basePath, relative );
+    if( reflector.dst.filePath )
+    reflector.dst.filePath = path.filter( reflector.dst.filePath, relative );
+    if( reflector.dst.filePath )
+    reflector.dst.filePath = path.filter( reflector.dst.filePath, relative );
   }
 
   /* */
@@ -546,49 +546,49 @@ function pathsResolve( o )
   // if( reflector.absoluteName === 'module::super / module::MultipleExports / reflector::exportedFiles.export.' )
   // debugger;
 
-  // if( reflector./*srcFilter*/src.filePath )
-  // reflector./*srcFilter*/src.filePath = resolve( reflector./*srcFilter*/src.filePath, resolve );
-  if( reflector./*srcFilter*/src.basePath )
-  reflector./*srcFilter*/src.basePath = path.filter( reflector./*srcFilter*/src.basePath, resolve );
-  if( reflector./*srcFilter*/src.prefixPath )
-  reflector./*srcFilter*/src.prefixPath = resolve( reflector./*srcFilter*/src.prefixPath );
-  if( reflector./*srcFilter*/src.prefixPath || o.addingSrcPrefix )
-  reflector./*srcFilter*/src.prefixPath = path.resolve( module.inPath, reflector./*srcFilter*/src.prefixPath || '.' );
+  // if( reflector.src.filePath )
+  // reflector.src.filePath = resolve( reflector.src.filePath, resolve );
+  if( reflector.src.basePath )
+  reflector.src.basePath = path.filter( reflector.src.basePath, resolve );
+  if( reflector.src.prefixPath )
+  reflector.src.prefixPath = resolve( reflector.src.prefixPath );
+  if( reflector.src.prefixPath || o.addingSrcPrefix )
+  reflector.src.prefixPath = path.resolve( module.inPath, reflector.src.prefixPath || '.' );
 
-  if( reflector./*dstFilter*/dst.filePath )
-  reflector./*dstFilter*/dst.filePath = resolve( reflector./*dstFilter*/dst.filePath, resolve );
-  if( reflector./*dstFilter*/dst.basePath )
-  reflector./*dstFilter*/dst.basePath = path.filter( reflector./*dstFilter*/dst.basePath, resolve );
-  if( reflector./*dstFilter*/dst.prefixPath )
-  reflector./*dstFilter*/dst.prefixPath = resolve( reflector./*dstFilter*/dst.prefixPath );
+  if( reflector.dst.filePath )
+  reflector.dst.filePath = resolve( reflector.dst.filePath, resolve );
+  if( reflector.dst.basePath )
+  reflector.dst.basePath = path.filter( reflector.dst.basePath, resolve );
+  if( reflector.dst.prefixPath )
+  reflector.dst.prefixPath = resolve( reflector.dst.prefixPath );
 
-  // if( reflector./*dstFilter*/dst.prefixPath || o.addingDstPrefix )
-  // reflector./*dstFilter*/dst.prefixPath = path.resolve( module.inPath, reflector./*dstFilter*/dst.prefixPath || '.' );
-  // else if( reflector./*dstFilter*/dst.filePath )
-  // reflector./*dstFilter*/dst.prefixPath = path.common( reflector./*dstFilter*/dst.filePath );
+  // if( reflector.dst.prefixPath || o.addingDstPrefix )
+  // reflector.dst.prefixPath = path.resolve( module.inPath, reflector.dst.prefixPath || '.' );
+  // else if( reflector.dst.filePath )
+  // reflector.dst.prefixPath = path.common( reflector.dst.filePath );
 
-  // if( reflector./*dstFilter*/dst.prefixPath )
-  // reflector./*dstFilter*/dst.prefixPath = path.resolve( module.inPath, reflector./*dstFilter*/dst.prefixPath || '.' );
+  // if( reflector.dst.prefixPath )
+  // reflector.dst.prefixPath = path.resolve( module.inPath, reflector.dst.prefixPath || '.' );
   // else
 
   // if( reflector.absoluteName === 'module::super / reflector::reflect.submodules.' )
   // debugger;
 
-  if( reflector./*dstFilter*/dst.filePath && !reflector./*dstFilter*/dst.prefixPath )
-  reflector./*dstFilter*/dst.pathsRelativePrefix();
+  if( reflector.dst.filePath && !reflector.dst.prefixPath )
+  reflector.dst.pathsRelativePrefix();
 
-  // if( reflector./*dstFilter*/dst.filePath && !reflector./*dstFilter*/dst.prefixPath )
+  // if( reflector.dst.filePath && !reflector.dst.prefixPath )
   // {
-  //   reflector./*dstFilter*/dst.prefixPath = path.common( reflector./*dstFilter*/dst.filePath );
-  //   reflector./*dstFilter*/dst.filePath = path.s.relative( reflector./*dstFilter*/dst.prefixPath, reflector./*dstFilter*/dst.filePath );
-  //   if( reflector./*dstFilter*/dst.basePath )
-  //   reflector./*dstFilter*/dst.basePath = path.s.relative( reflector./*dstFilter*/dst.prefixPath, reflector./*dstFilter*/dst.basePath );
+  //   reflector.dst.prefixPath = path.common( reflector.dst.filePath );
+  //   reflector.dst.filePath = path.s.relative( reflector.dst.prefixPath, reflector.dst.filePath );
+  //   if( reflector.dst.basePath )
+  //   reflector.dst.basePath = path.s.relative( reflector.dst.prefixPath, reflector.dst.basePath );
   // }
 
-  if( reflector./*dstFilter*/dst.prefixPath )
-  reflector./*dstFilter*/dst.prefixPath = path.resolve( module.inPath, reflector./*dstFilter*/dst.prefixPath || '.' );
+  if( reflector.dst.prefixPath )
+  reflector.dst.prefixPath = path.resolve( module.inPath, reflector.dst.prefixPath || '.' );
 
-  _.assert( reflector./*dstFilter*/dst.prefixPath === null || path.s.allAreAbsolute( reflector./*dstFilter*/dst.prefixPath ) );
+  _.assert( reflector.dst.prefixPath === null || path.s.allAreAbsolute( reflector.dst.prefixPath ) );
 
   // if( reflector.absoluteName === 'module::super / module::MultipleExports / reflector::exportedFiles.export.' )
   // debugger;
@@ -599,7 +599,15 @@ function pathsResolve( o )
 
   function resolve( src )
   {
-    return path.filter( src, ( filePath ) => _.strIs( filePath ) ? reflector.resolve({ prefixlessAction : 'resolved', selector : filePath }) : filePath );
+    return path.filter( src, ( filePath ) =>
+    {
+      if( filePath === 'submodule::*/path::in*=1' )
+      debugger;
+      if( _.strIs( filePath ) )
+      return reflector.resolve({ prefixlessAction : 'resolved', selector : filePath });
+      else
+      return filePath;
+    });
     //return reflector.resolve({ prefixlessAction : 'resolved', selector : src });
   }
 
@@ -623,12 +631,12 @@ function optionsForFindExport( o )
   let result = Object.create( null );
 
   o = _.routineOptions( optionsForFindExport, arguments );
-  _.assert( reflector./*dstFilter*/dst === null || !reflector./*dstFilter*/dst.hasFiltering() );
+  _.assert( reflector.dst === null || !reflector.dst.hasFiltering() );
 
   result.recursive = reflector.recursive === null ? 2 : reflector.recursive;
 
-  if( reflector./*srcFilter*/src )
-  result.filter = reflector./*srcFilter*/src.clone();
+  if( reflector.src )
+  result.filter = reflector.src.clone();
   result.filter = result.filter || Object.create( null );
   result.filter.prefixPath = path.resolve( module.inPath, result.filter.prefixPath || '.' );
   if( o.resolving )
@@ -661,16 +669,16 @@ function optionsForReflectExport( o )
 
   /* */
 
-  if( reflector./*srcFilter*/src )
-  result.srcFilter = reflector./*srcFilter*/src.clone();
+  if( reflector.src )
+  result.srcFilter = reflector.src.clone();
   result.srcFilter = result.srcFilter || Object.create( null );
   result.srcFilter.prefixPath = path.resolve( module.inPath, result.srcFilter.prefixPath || '.' );
   if( o.resolving )
   if( result.srcFilter.basePath )
   result.srcFilter.basePath = path.resolve( module.inPath, result.srcFilter.basePath );
 
-  if( reflector./*dstFilter*/dst )
-  result.dstFilter = reflector./*dstFilter*/dst.clone();
+  if( reflector.dst )
+  result.dstFilter = reflector.dst.clone();
   result.dstFilter = result.dstFilter || Object.create( null );
   result.dstFilter.prefixPath = path.resolve( module.inPath, result.dstFilter.prefixPath || '.' );
   if( o.resolving )
@@ -715,16 +723,16 @@ function dataExport()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.assert( reflector./*srcFilter*/src instanceof _.FileRecordFilter );
+  _.assert( reflector.src instanceof _.FileRecordFilter );
 
   let result = Parent.prototype.dataExport.apply( this, arguments );
   delete result.filePath;
 
-  if( result./*srcFilter*/src && result./*srcFilter*/src.prefixPath && path.isAbsolute( result./*srcFilter*/src.prefixPath ) )
-  result./*srcFilter*/src.prefixPath = path.relative( module.inPath, result./*srcFilter*/src.prefixPath );
+  if( result.src && result.src.prefixPath && path.isAbsolute( result.src.prefixPath ) )
+  result.src.prefixPath = path.relative( module.inPath, result.src.prefixPath );
 
-  if( result./*dstFilter*/dst && result./*dstFilter*/dst.prefixPath && path.isAbsolute( result./*dstFilter*/dst.prefixPath ) )
-  result./*dstFilter*/dst.prefixPath = path.relative( module.inPath, result./*dstFilter*/dst.prefixPath );
+  if( result.dst && result.dst.prefixPath && path.isAbsolute( result.dst.prefixPath ) )
+  result.dst.prefixPath = path.relative( module.inPath, result.dst.prefixPath );
 
   return result;
 }
@@ -740,9 +748,9 @@ dataExport.defaults =
 function filePathGet()
 {
   let reflector = this;
-  if( !reflector./*srcFilter*/src )
+  if( !reflector.src )
   return null;
-  return reflector./*srcFilter*/src.filePath;
+  return reflector.src.filePath;
 }
 
 //
@@ -750,11 +758,11 @@ function filePathGet()
 function filePathSet( src )
 {
   let reflector = this;
-  if( !reflector./*srcFilter*/src && src === null )
+  if( !reflector.src && src === null )
   return src;
-  _.assert( _.objectIs( reflector./*srcFilter*/src ), 'Reflector should have /*srcFilter*/src to set filePath' );
-  reflector./*srcFilter*/src.filePath = _.entityShallowClone( src );
-  return reflector./*srcFilter*/src.filePath;
+  _.assert( _.objectIs( reflector.src ), 'Reflector should have src to set filePath' );
+  reflector.src.filePath = _.entityShallowClone( src );
+  return reflector.src.filePath;
 }
 
 // --
@@ -767,8 +775,8 @@ let Composes =
   description : null,
   recursive : null,
   filePath : null,
-  /*srcFilter*/src : null,
-  /*dstFilter*/dst : null,
+  src : null,
+  dst : null,
   criterion : null,
 
   inherit : _.define.own([]),
@@ -807,8 +815,8 @@ let Forbids =
 let Accessors =
 {
   filePath : { setter : filePathSet, getter : filePathGet },
-  /*srcFilter*/src : { setter : _.accessor.setter.copyable({ name : 'src', maker : _.routineJoin( _.FileRecordFilter, _.FileRecordFilter.Clone ) }) },
-  /*dstFilter*/dst : { setter : _.accessor.setter.copyable({ name : 'dst', maker : _.routineJoin( _.FileRecordFilter, _.FileRecordFilter.Clone ) }) },
+  src : { setter : _.accessor.setter.copyable({ name : 'src', maker : _.routineJoin( _.FileRecordFilter, _.FileRecordFilter.Clone ) }) },
+  dst : { setter : _.accessor.setter.copyable({ name : 'dst', maker : _.routineJoin( _.FileRecordFilter, _.FileRecordFilter.Clone ) }) },
 }
 
 _.assert( _.routineIs( _.FileRecordFilter ) );

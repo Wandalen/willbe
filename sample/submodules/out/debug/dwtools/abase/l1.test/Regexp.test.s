@@ -15,7 +15,7 @@ var _ = _global_.wTools;
 // routines
 // --
 
-function regexpsAreIdentical( test )
+function regexpIdentical( test )
 {
   var context = this;
 
@@ -24,7 +24,7 @@ function regexpsAreIdentical( test )
   test.case = 'null';
 
   var expected = false;
-  var got = _.regexpsAreIdentical( null, null );
+  var got = _.regexpIdentical( null, null );
   test.identical( got, expected );
 
   /* */
@@ -32,7 +32,7 @@ function regexpsAreIdentical( test )
   test.case = 'null and regexp';
 
   var expected = false;
-  var got = _.regexpsAreIdentical( /x/, null );
+  var got = _.regexpIdentical( /x/, null );
   test.identical( got, expected );
 
   /* */
@@ -40,35 +40,35 @@ function regexpsAreIdentical( test )
   test.case = 'same string';
 
   var expected = false;
-  var got = _.regexpsAreIdentical( 'x','x' );
+  var got = _.regexpIdentical( 'x','x' );
   test.identical( got, expected );
 
   /* */
 
   test.case = 'same regexp';
   var expected = true;
-  var got = _.regexpsAreIdentical( /abc/iy, /abc/yi );
+  var got = _.regexpIdentical( /abc/iy, /abc/yi );
   test.identical( got, expected );
 
   /* */
 
   test.case = 'not identical regexp, different flags';
   var expected = false;
-  var got = _.regexpsAreIdentical( /abc/i, /abc/ );
+  var got = _.regexpIdentical( /abc/i, /abc/ );
   test.identical( got, expected );
 
   /* */
 
   test.case = 'not identical regexp, different source';
   var expected = false;
-  var got = _.regexpsAreIdentical( /abcd/i, /abc/i );
+  var got = _.regexpIdentical( /abcd/i, /abc/i );
   test.identical( got, expected );
 
   /* */
 
   test.case = 'not identical regexp';
   var expected = false;
-  var got = _.regexpsAreIdentical( /abcd/y, /abc/i );
+  var got = _.regexpIdentical( /abcd/y, /abc/i );
   test.identical( got, expected );
 
   /* */
@@ -78,11 +78,11 @@ function regexpsAreIdentical( test )
 
   test.case = 'none argument';
 
-  test.shouldThrowErrorSync( () => _.regexpsAreIdentical() );
+  test.shouldThrowErrorSync( () => _.regexpIdentical() );
 
   test.case = 'too many arguments';
 
-  test.shouldThrowErrorSync( () => _.regexpsAreIdentical( /abc/i, /def/i, /a/i ) );
+  test.shouldThrowErrorSync( () => _.regexpIdentical( /abc/i, /def/i, /a/i ) );
 
 }
 
@@ -1721,7 +1721,7 @@ var Self =
   tests :
   {
 
-    regexpsAreIdentical : regexpsAreIdentical,
+    regexpIdentical : regexpIdentical,
 
     regexpsSources : regexpsSources,
     regexpsJoin : regexpsJoin,

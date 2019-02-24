@@ -99,16 +99,17 @@ function _load()
 
   /* */
 
+  debugger;
   submodule.loadedModule = will.Module
   ({
     will : will,
     alias : submodule.name,
-    dirPath : path.join( module.dirPath, submodule.path ),
+    filePath : path.join( module.dirPath, submodule.path ),
     supermodule : module,
     associatedSubmodule : submodule,
   }).preform();
 
-  submodule.loadedModule.willFilesFind({ isInFile : 0 });
+  submodule.loadedModule.willFilesFind({ isOutFile : 1 });
   submodule.loadedModule.willFilesOpen();
   submodule.loadedModule.submodulesFormSkip();
   submodule.loadedModule.resourcesForm();

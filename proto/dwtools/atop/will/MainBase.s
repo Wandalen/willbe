@@ -318,6 +318,7 @@ let Statics =
 
 let Forbids =
 {
+  // moduleMap : 'moduleMap',
 }
 
 // --

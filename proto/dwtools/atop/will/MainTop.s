@@ -655,9 +655,9 @@ function commandWith( e )
   will.topCommand = commandWith;
 
   let isolated = ca.isolateSecond( e.subject );
-  let dirPath = path.resolve( isolated.subject );
+  let filePath = path.resolve( isolated.subject );
 
-  let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).preform();
+  let module = will.currentModule = will.Module({ will : will, filePath : filePath }).preform();
   module.willFilesFind();
   module.willFilesOpen();
   module.submodulesForm();

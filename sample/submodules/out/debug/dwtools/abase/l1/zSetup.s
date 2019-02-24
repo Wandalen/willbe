@@ -16,7 +16,7 @@ function _setupUnhandledErrorHandler1()
   if( !_global._setupUnhandledErrorHandlerDone )
   {
     debugger;
-    throw 'setup0 should be called first';
+    throw Error( 'setup0 should be called first' );
   }
 
   if( _global._setupUnhandledErrorHandlerDone > 1 )

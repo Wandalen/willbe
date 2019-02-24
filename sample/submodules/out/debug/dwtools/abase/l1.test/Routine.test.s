@@ -461,100 +461,6 @@ function routineSeal(test)
 
 //
 
-function routinesCall( test )
-{
-
-  var value1 = 'result1';
-  var value2 = 4;
-  var value3 = 5;
-
-  function function1()
-  {
-    return value1;
-  }
-
-  function function2()
-  {
-    return value2;
-  }
-
-  function function3()
-  {
-    return value3;
-  }
-
-  function function5(x, y)
-  {
-    return x + y * this.k;
-  }
-
-  var function4 = testFunction3
-  var function6 = testFunction4;
-
-  var expected1 = [ value1 ],
-    expected2 = [ value2 + value3 + context3.k ],
-    expected3 = [ value1, value2, value3 ],
-    expected4 =
-    [
-      value2 + value3 + context3.k,
-      value2 + value3 * context3.k,
-      context3
-    ];
-
-  test.case = 'call single function without arguments and context';
-  debugger;
-  var got = _.routinesCall( function1 );
-  debugger;
-  test.identical( got, expected1 );
-
-  test.case = 'call single function with context and arguments';
-  var got = _.routinesCall( context3, testFunction3, [value2, value3] );
-  test.identical( got, expected2 );
-
-  test.case = 'call functions without context and arguments';
-  var got = _.routinesCall( [ function1, function2, function3 ] );
-  test.identical( got, expected3 );
-
-  test.case = 'call functions with context and arguments';
-  var got = _.routinesCall( context3, [ function4, function5, function6 ], [value2, value3] );
-  test.identical( got, expected4 );
-
-  if( !Config.debug )
-  return;
-
-  test.case = 'missed argument';
-  test.shouldThrowError( function()
-  {
-    _.routinesCall();
-  });
-
-  test.case = 'extra argument';
-  test.shouldThrowError( function()
-  {
-    _.routinesCall(
-      context3,
-      [ function1, function2, function3 ],
-      [ function4, function5, function6 ],
-      [value2, value3]
-    );
-  });
-
-  test.case = 'passed non callable object';
-  test.shouldThrowError( function()
-  {
-    _.routinesCall( null );
-  });
-
-  test.case = 'passed arguments as primitive value (no wrapped into array)';
-  test.shouldThrowError( function()
-  {
-     _.routinesCall( context3, testFunction3, value2 )
-  });
-
-}
-
-//
-
 function routinesCompose( test )
 {
 
@@ -1635,7 +1541,6 @@ var Self =
     constructorJoin,
     routineJoin,
     routineSeal,
-    routinesCall,
 
     routinesCompose,
     routinesComposeAll,

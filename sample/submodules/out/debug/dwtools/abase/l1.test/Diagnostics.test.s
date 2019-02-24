@@ -203,13 +203,13 @@ function errLog( test )
 
 function assert( test )
 {
-  var err,
-    msg1 = 'short error description',
-    rgMsg1 = new RegExp( msg1 );
+  var err;
+  var msg1 = 'short error description';
+  var rgMsg1 = new RegExp( msg1 );
 
   test.case = 'assert successful condition';
   var got = _.assert( 5 === 5 );
-  test.identical( got, undefined );
+  test.identical( got, true );
 
   test.case = 'passed failure condition : should generates exception';
   try

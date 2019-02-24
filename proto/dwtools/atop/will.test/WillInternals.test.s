@@ -227,11 +227,41 @@ function pathsResolve( test )
 
   /* - */
 
+  // module.ready.thenKeep( ( arg ) =>
+  // {
+  //
+  //   test.case = 'resolved, .';
+  //   var resolved = module.resolve({ prefixlessAction : 'resolved', selector : '.' })
+  //   var expected = '.';
+  //   test.identical( resolved, expected );
+  //
+  //   return null;
+  // })
+
+  module.ready.thenKeep( ( arg ) =>
+  {
+
+    test.case = 'path::in*=1, pathResolving : 0';
+    var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'path::in*=1', pathResolving : 0 })
+    var expected = '..';
+    test.identical( resolved, expected );
+
+    test.case = 'path::in*=1';
+    var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'path::in*=1' })
+    var expected = routinePath;
+    test.identical( resolved, expected );
+
+    return null;
+  })
+
+  return module.ready; xxx
+
+  /* - */
+
   module.ready.thenKeep( ( arg ) =>
   {
 
     test.case = 'path::* - implicit'; /* */
-
     var resolved = module.resolve({ selector : 'path::*' });
     test.identical( resolved.length, 6 );
     var expected = path.s.join( routinePath, [ './proto', '../super.out', '..', '../super.out', './super.out/debug', './super.out/release' ] );
@@ -239,7 +269,6 @@ function pathsResolve( test )
     test.identical( got, expected );
 
     test.case = 'path::* - pu:1 mvu:1 pr:in'; /* */
-
     var resolved = module.resolve
     ({
       selector : 'path::*',
@@ -253,7 +282,6 @@ function pathsResolve( test )
     test.identical( got, expected );
 
     test.case = 'path::* - pu:1 mvu:1 pr:out'; /* */
-
     var resolved = module.resolve
     ({
       selector : 'path::*',
@@ -267,7 +295,6 @@ function pathsResolve( test )
     test.identical( got, expected );
 
     test.case = 'path::* - pu:1 mvu:1 pr:null'; /* */
-
     var resolved = module.resolve
     ({
       selector : 'path::*',
@@ -281,7 +308,6 @@ function pathsResolve( test )
     test.identical( got, expected );
 
     test.case = 'path::* - pu:0 mvu:0 pr:null'; /* */
-
     var resolved = module.resolve
     ({
       selector : 'path::*',
@@ -304,7 +330,6 @@ function pathsResolve( test )
     _.any( resolved, ( e, k ) => test.is( e.module === module ) );
 
     test.case = 'path::* - pu:0 mvu:0 pr:in'; /* */
-
     var resolved = module.resolve
     ({
       selector : 'path::*',
@@ -325,7 +350,6 @@ function pathsResolve( test )
     test.identical( got, expected );
 
     test.case = 'path::* - pu:0 mvu:0 pr:out'; /* */
-
     var resolved = module.resolve
     ({
       selector : 'path::*',
@@ -346,7 +370,6 @@ function pathsResolve( test )
     test.identical( got, expected );
 
     test.case = 'path::* - pu:1 mvu:0 pr:null'; /* */
-
     var resolved = module.resolve
     ({
       selector : 'path::*',
@@ -367,7 +390,6 @@ function pathsResolve( test )
     test.identical( got, expected );
 
     test.case = 'path::* - pu:1 mvu:0 pr:in'; /* */
-
     var resolved = module.resolve
     ({
       selector : 'path::*',
@@ -388,7 +410,6 @@ function pathsResolve( test )
     test.identical( got, expected );
 
     test.case = 'path::* - pu:1 mvu:0 pr:out'; /* */
-
     var resolved = module.resolve
     ({
       selector : 'path::*',
@@ -409,7 +430,6 @@ function pathsResolve( test )
     test.identical( got, expected );
 
     test.case = 'path::* - pu:0 mvu:1 pr:null'; /* */
-
     var resolved = module.resolve
     ({
       selector : 'path::*',
@@ -422,7 +442,6 @@ function pathsResolve( test )
     test.identical( got, expected );
 
     test.case = 'path::* - pu:0 mvu:1 pr:in'; /* */
-
     var resolved = module.resolve
     ({
       selector : 'path::*',
@@ -435,7 +454,6 @@ function pathsResolve( test )
     test.identical( got, expected );
 
     test.case = 'path::* - pu:0 mvu:1 pr:out'; /* */
-
     var resolved = module.resolve
     ({
       selector : 'path::*',

@@ -58,7 +58,7 @@ let _floor = Math.floor;
 //
 // //
 //
-// function regexpsAreIdentical( src1,src2 )
+// function regexpIdentical( src1,src2 )
 // {
 //   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 //
@@ -216,10 +216,10 @@ let regexpsEscape = null;
  *
  * @example
  * wTools.regexpFrom( 'Hello. How are you?' ); // /Hello\. How are you\?/
- * @param {String} src - string or regexp
+ * @param {RegexpLike} src - string or regexp
  * @returns {String} Regexp
  * @throws {Error} Throw error with message 'unknown type of expression, expects regexp or string, but got' error
- if src not string or regexp
+ if src not string-like ( string or regexp )
  * @function regexpFrom
  * @memberof wTools
  */

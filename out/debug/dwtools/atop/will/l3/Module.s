@@ -46,7 +46,7 @@ function finit()
 
   _.assert( module.willFileArray.length === 0 );
   _.assert( Object.keys( module.willFileWithRoleMap ).length === 0 );
-  _.assert( will.moduleMap[ module.dirPath ] === undefined );
+  _.assert( will.moduleMap[ module.filePath ] === undefined );
 
   return _.Copyable.prototype.finit.apply( module, arguments );
 }
@@ -80,16 +80,6 @@ function init( o )
     finals : [ 3, 3, 3, 3, 3, 1 ],
     verbosity : Math.max( Math.min( will.verbosity, will.verboseStaging ), will.verbosity - 6 ),
   });
-
-  // module.ready.finally( ( err, arg ) =>
-  // {
-  //   if( err )
-  //   {
-  //     module.errors.push( err );
-  //     // throw _.errLogOnce( err );
-  //   }
-  //   return arg;
-  // });
 
 }
 
@@ -142,13 +132,16 @@ function unform()
     willf.finit();
   }
 
+  debugger;
+
   _.assert( module.willFileArray.length === 0 );
   _.assert( Object.keys( module.willFileWithRoleMap ).length === 0 );
-  _.assert( will.moduleMap[ module.dirPath ] === module );
-  _.assert( will.moduleMap[ module.remotePath ] === module || will.moduleMap[ module.remotePath ] === undefined );
-  delete will.moduleMap[ module.dirPath ];
-  delete will.moduleMap[ module.remotePath ];
-  _.assert( will.moduleMap[ module.dirPath ] === undefined );
+  _.assert( will.moduleMap[ module.filePath ] === module );
+  // _.assert( will.moduleMap[ module.remotePath ] === module || will.moduleMap[ module.remotePath ] === undefined );
+  _.assert( will.moduleMap[ module.remotePath ] === undefined );
+  delete will.moduleMap[ module.filePath ];
+  // delete will.moduleMap[ module.remotePath ];
+  _.assert( will.moduleMap[ module.filePath ] === undefined );
   _.arrayRemoveElementOnceStrictly( will.moduleArray, module );
 
   /* end */
@@ -198,23 +191,38 @@ function preform1()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( !!module.dirPath );
   _.assert( arguments.length === 0 );
+  // _.assert( !module.dirPath );
   _.assert( !!module.will );
+  _.assert( _.strIs( module.filePath ) || _.strIs( module.dirPath ), 'Expects filePath or dirPath' );
 
-  module.dirPath = path.normalize( module.dirPath );
+  // let filePath = module.filePath;
+  // module.filePath = null;
 
-  if( will.moduleMap[ module.dirPath ] !== undefined )
-  {
-    debugger;
-    throw _.err( 'Module at ' + _.strQuote( module.dirPath ) + ' were defined more than once!' );
-  }
+  if( module.filePath === null )
+  module.filePath = module.dirPath;
+  if( module.dirPath === null )
+  module.dirPath = module.filePath;
+
+  module._filePathSet( module.filePath, module.dirPath );
+
+  // module.filePath = path.normalize( module.dirPath );
+  // module.dirPath = path.normalize( module.dirPath );
+  //
+  // if( will.moduleMap[ module.filePath ] !== undefined )
+  // {
+  //   debugger;
+  //   throw _.err( 'Module at ' + _.strQuote( module.dirPath ) + ' were defined more than once!' );
+  // }
 
   /* */
 
   _.arrayAppendOnceStrictly( will.moduleArray, module );
-  _.sure( !will.moduleMap[ module.dirPath ], () => 'Module at ' + _.strQuote( module.dirPath ) + ' already exists!' );
-  will.moduleMap[ module.dirPath ] = module;
+  _.assert( will.moduleMap[ module.filePath ] === module );
+
+  // _.sure( !will.moduleMap[ module.filePath ], () => 'Module ' + _.strQuote( module.dirPath ) + ' already exists!' );
+  //
+  // will.moduleMap[ module.filePath ] = module;
 
   return module;
 }
@@ -229,8 +237,9 @@ function preform2()
   _.assert( arguments.length === 0 );
   _.assert( module.preformed === 2 );
   _.assert( !!module.will );
-  _.assert( will.moduleMap[ module.dirPath ] === module );
+  _.assert( will.moduleMap[ module.filePath ] === module );
   _.assert( !!module.dirPath );
+  _.assert( !!module.filePath );
 
   /* begin */
 
@@ -800,24 +809,44 @@ function _willFileFindMaybe( o )
   if( module.willFileWithRoleMap[ o.role ] )
   return null;
 
+  // let dirPath = module.dirPath;
+  // if( o.isNamed )
+  // dirPath = path.resolve( dirPath, '..' );
+
   let filePath;
-  if( o.isInFile )
+  if( o.isOutFile )
   {
-    if( o.isInside )
+
+    debugger;
+    // let name = _.strJoinPath( [ o.dirPath, '.out', module.prefixPathForRole( o.role ) ], '.' );
+    // filePath = path.resolve( module.dirPath, name );
+
+    if( o.isNamed )
+    {
+      let name = _.strJoinPath( [ o.dirPath, '.out', module.prefixPathForRole( o.role ) ], '.' );
+      filePath = path.resolve( module.dirPath, '..', name );
+    }
+    else
+    {
+      let name = _.strJoinPath( [ o.dirPath, '.out', module.prefixPathForRole( o.role ) ], '.' );
+      filePath = path.resolve( module.dirPath, name );
+    }
+
+  }
+  else
+  {
+
+    if( o.isNamed )
+    {
+      let name = _.strJoinPath( [ o.dirPath, module.prefixPathForRole( o.role ) ], '.' );
+      filePath = path.resolve( module.dirPath, '..', name );
+    }
+    else
     {
       let name = module.prefixPathForRole( o.role );
       filePath = path.resolve( module.dirPath, o.dirPath, name );
     }
-    else
-    {
-      let name = _.strJoinPath( [ o.dirPath, module.prefixPathForRole( o.role ) ], '.' );
-      filePath = path.resolve( module.dirPath, name );
-    }
-  }
-  else
-  {
-    let name = _.strJoinPath( [ o.dirPath, '.out', module.prefixPathForRole( o.role ) ], '.' );
-    filePath = path.resolve( module.dirPath, name );
+
   }
 
   new will.WillFile
@@ -845,8 +874,8 @@ _willFileFindMaybe.defaults =
 {
   role : null,
   dirPath : null,
-  isInFile : 1,
-  isInside : 1,
+  isOutFile : 0,
+  isNamed : 0,
 }
 
 //
@@ -869,76 +898,101 @@ function _willFilesFindMaybe( o )
 
   /* */
 
-  let files = Object.create( null );
+  let files = Object.create( null ); debugger;
+  let fullName = path.fullName( path.parse( module.filePath ).localPath );
 
-  files.outerSingle = module._willFileFindMaybe
+  files.namedSingle = module._willFileFindMaybe
   ({
     role : 'single',
-    dirPath : path.join( '..', path.fullName( module.dirPath ) ),
-    isInFile : o.isInFile,
-    isInside : 0,
+    // dirPath : path.join( '..', path.fullName( module.dirPath ) ), // yyy
+    dirPath : path.join( '.', fullName ),
+    isOutFile : o.isOutFile,
+    isNamed : 1,
   })
 
-  if( o.isInFile )
+  if( !o.isOutFile )
   {
 
-    files.outerImport = module._willFileFindMaybe
+    files.namedImport = module._willFileFindMaybe
     ({
       role : 'import',
-      dirPath : path.join( '..', path.fullName( module.dirPath ) ),
-      isInFile : o.isInFile,
-      isInside : 0,
+      // dirPath : path.join( '..', path.fullName( module.dirPath ) ), // yyy
+      dirPath : path.join( '.', fullName ),
+      isOutFile : o.isOutFile,
+      isNamed : 1,
     });
 
-    files.outerExport = module._willFileFindMaybe
+    files.namedExport = module._willFileFindMaybe
     ({
       role : 'export',
-      dirPath : path.join( '..', path.fullName( module.dirPath ) ),
-      isInFile : o.isInFile,
-      isInside : 0,
+      // dirPath : path.join( '..', path.fullName( module.dirPath ) ), // yyy
+      dirPath : path.join( '.', fullName ),
+      isOutFile : o.isOutFile,
+      isNamed : 1,
     });
 
   }
 
-  if( files.outerSingle || files.outerImport || files.outerExport )
+  if( files.namedSingle || files.namedImport || files.namedExport )
   {
+    let filePaths = [];
+    if( files.namedSingle )
+    filePaths.push( files.namedSingle.filePath );
+    if( files.namedImport )
+    filePaths.push( files.namedImport.filePath );
+    if( files.namedExport )
+    filePaths.push( files.namedExport.filePath );
+
+    let filePath = _.strCommonLeft.apply( _, filePaths );
+    module.filePathSet( filePath, path.dir( filePath ) );
+
     // module.stager.stageState( 'willFilesFound', 3 );
     return true;
   }
 
   /* - */
 
-  files.innerSingle = module._willFileFindMaybe
+  files.anonSingle = module._willFileFindMaybe
   ({
     role : 'single',
     dirPath : '.',
-    isInFile : o.isInFile,
-    isInside : 1,
+    isOutFile : o.isOutFile,
+    isNamed : 0,
   });
 
-  if( o.isInFile )
+  if( !o.isOutFile )
   {
 
-    files.innerImport = module._willFileFindMaybe
+    files.anonImport = module._willFileFindMaybe
     ({
       role : 'import',
       dirPath : '.',
-      isInFile : o.isInFile,
-      isInside : 1,
+      isOutFile : o.isOutFile,
+      isNamed : 0,
     });
 
-    files.innerExport = module._willFileFindMaybe
+    files.anonExport = module._willFileFindMaybe
     ({
       role : 'export',
       dirPath : '.',
-      isInFile : o.isInFile,
-      isInside : 1,
+      isOutFile : o.isOutFile,
+      isNamed : 0,
     });
 
   }
 
-  if( files.innerSingle || files.innerImport || files.innerExport )
+  if( files.anonSingle || files.anonImport || files.anonExport )
   {
+    let filePaths = [];
+    if( files.anonSingle )
+    filePaths.push( files.anonSingle.filePath );
+    if( files.anonImport )
+    filePaths.push( files.anonImport.filePath );
+    if( files.anonExport )
+    filePaths.push( files.anonExport.filePath );
+
+    let filePath = _.strCommonLeft.apply( _, filePaths );
+    module.filePathSet( filePath, path.dir( filePath ) );
 
     for( let w = 0 ; w < module.willFileArray.length ; w++ )
     {
@@ -960,7 +1014,7 @@ function _willFilesFindMaybe( o )
 
 _willFilesFindMaybe.defaults =
 {
-  isInFile : 1,
+  isOutFile : 0,
 }
 
 //
@@ -980,7 +1034,7 @@ function willFilesFind()
   {
     module.stager.stageState( 'willFilesFound', 2 );
 
-    let result = module._willFilesFindMaybe({ isInFile : !module.supermodule });
+    let result = module._willFilesFindMaybe({ isOutFile : !!module.supermodule });
     if( !result )
     {
       // debugger;
@@ -1069,6 +1123,8 @@ function _willFilesOpen()
 
   _.assert( arguments.length === 0 );
   _.sure( !!_.mapKeys( module.willFileWithRoleMap ).length && !!module.willFileArray.length, () => 'Found no will file at ' + _.strQuote( module.dirPath ) );
+
+  // logger.log( 'dirPath' + ' : ' + module.dirPath );
 
   if( !module.supermodule )
   logger.up();
@@ -1660,10 +1716,10 @@ function remoteFormAct()
   module.dirPath = path.resolve( module.clonePath, localPath );
   module.isDownloaded = !!module.remoteIsDownloaded();
 
-  _.assert( will.moduleMap[ module.remotePath ] === module );
-  _.sure( will.moduleMap[ module.dirPath ] === undefined, () => 'Module at ' + _.strQuote( module.dirPath ) + ' already exists' );
-
-   will.moduleMap[ module.dirPath ] = module;
+  _.assert( will.moduleMap[ module.filePath ] === module );
+  // _.assert( will.moduleMap[ module.remotePath ] === module ); // yyy
+  // _.sure( will.moduleMap[ module.filePath ] === undefined, () => 'Module at ' + _.strQuote( module.dirPath ) + ' already exists' ); // yyy
+   // will.moduleMap[ module.dirPath ] = module;
 
   return module;
 }
@@ -2060,31 +2116,94 @@ function submodulesCloneDirGet()
 
 //
 
-function dirPathSet( dirPath )
+function filePathSet( filePath, dirPath )
 {
   let module = this;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
+  let logger = will.logger;
 
+  filePath = path.normalize( filePath );
   dirPath = path.normalize( dirPath );
+  // let dirPath = path.dir( filePath );
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 2 );
+  // _.assert( _.strDefined( dirPath ) );
+  // _.assert( path.isAbsolute( dirPath ) );
+  _.assert( module.preformed === 3 );
+  // _.assert( path.isNormalized( dirPath ) );
+  // _.assert( path.isNormalized( module.dirPath ) );
+
+  // debugger;
+
+  // if( module.filePath === filePath )
+  // return module;
+
+  _.assert( will.moduleMap[ module.filePath ] === module );
+  _.assert( will.moduleMap[ filePath ] === module || will.moduleMap[ filePath ] === undefined );
+
+  // module.dirPath = null;
+  // module.filePath = null;
+
+  delete will.moduleMap[ module.filePath ];
+
+  module._filePathSet( filePath, dirPath );
+
+  // delete will.moduleMap[ module.filePath ];
+  // module.dirPath = dirPath;
+  // module.filePath = filePath;
+  // will.moduleMap[ module.filePath ] = module;
+  //
+  // logger.log( 'filePathSet' + ' : ' + module.filePath );
+
+  return module;
+}
+
+//
+
+function _filePathSet( filePath, dirPath )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  filePath = path.normalize( filePath );
+  dirPath = path.normalize( dirPath );
+  // let dirPath = path.dir( filePath );
+
+  _.assert( arguments.length === 2 );
   _.assert( _.strDefined( dirPath ) );
   _.assert( path.isAbsolute( dirPath ) );
-  _.assert( module.preformed === 3 );
   _.assert( path.isNormalized( dirPath ) );
-  _.assert( path.isNormalized( module.dirPath ) );
+  _.assert( _.strDefined( filePath ) );
+  _.assert( path.isAbsolute( filePath ) );
+  _.assert( path.isNormalized( filePath ) );
+  // _.assert( module.dirPath === null );
+  // _.assert( module.filePath === null );
 
-  if( module.dirPath === dirPath )
-  return module;
+  // if( module.filePath === filePath )
+  // return module;
+  // _.assert( will.moduleMap[ module.filePath ] === module );
+  // _.assert( will.moduleMap[ filePath ] === undefined );
 
-  _.assert( will.moduleMap[ module.dirPath ] === module );
-  _.assert( will.moduleMap[ dirPath ] === undefined );
+  if( will.moduleMap[ filePath ] !== undefined && will.moduleMap[ filePath ] !== module )
+  {
+    debugger;
+    throw _.err( 'Module at ' + _.strQuote( filePath ) + ' were defined more than once!' );
+  }
 
-  delete will.moduleMap[ module.dirPath ];
   module.dirPath = dirPath;
-  will.moduleMap[ module.dirPath ] = module;
+  module.filePath = filePath;
+
+  if( module.filePath )
+  will.moduleMap[ module.filePath ] = module;
+
+  // logger.log( 'dirPath' + ' : ' + module.dirPath );
+  // logger.log( 'filePath' + ' : ' + module.filePath );
+  // debugger;
 
   return module;
 }
@@ -2408,7 +2527,7 @@ function strIsResolved( srcStr )
 
 //
 
-function _resolve_pre( routine, args )
+function resolve_pre( routine, args )
 {
   let o = args[ 0 ];
   if( _.strIs( o ) )
@@ -2418,23 +2537,209 @@ function _resolve_pre( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
   _.assert( _.arrayHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ) );
+  _.assert( _.arrayHas( [ 'undefine', 'throw', 'error' ], o.missingAction ), 'Unknown missing action', o.missingAction );
   _.assert( _.arrayHas( [ 'default', 'resolved', 'throw', 'error' ], o.prefixlessAction ) );
 
   return o;
 }
 
+// //
+//
+// function _resolveMaybe_body( o )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//
+//   // debugger;
+//   let result = module._resolveAct( o );
+//   // debugger;
+//
+//   if( result === undefined )
+//   {
+//     debugger;
+//     result = module.errResolving
+//     ({
+//       selector : o.selector,
+//       current : o.current,
+//       err : _.ErrorLooking( o.selector, 'was not found' ),
+//     })
+//   }
+//
+//   if( _.errIs( result ) )
+//   return result;
+//
+//   result = pathsResolve( result );
+//
+//   if( o.flattening && _.mapIs( result ) )
+//   result = _.mapsFlatten2([ result ]);
+//
+//   result = pathsUnwrap( result );
+//   result = singleUnwrap( result );
+//   result = mapValsUnwrap( result );
+//
+//   _.assert( result !== undefined );
+//
+//   return result;
+//
+//   /* - */
+//
+//   function pathResolve( p )
+//   {
+//
+//     if( !o.pathResolving )
+//     return p;
+//
+//     if( p instanceof will.PathObj )
+//     {
+//       p = p.clone();
+//       p.module = null;
+//       p.path = pathResolve( p.path );
+//       return p;
+//     }
+//
+//     _.assert( _.arrayIs( p ) || _.strIs( p ) );
+//
+//     if( o.pathResolving === 'in' )
+//     return path.s.resolve( module.dirPath, ( module.pathMap.in || '.' ), p );
+//     else if( o.pathResolving === 'out' )
+//     return path.s.resolve( module.dirPath, ( module.pathMap.out || '.' ), p );
+//
+//   }
+//
+//   /* */
+//
+//   function pathsResolve( result )
+//   {
+//
+//     // if( !o.pathResolving || !o.pathUnwrapping )
+//     // return result;
+//
+//     if( !o.pathResolving )
+//     return result;
+//
+//     if( result instanceof will.PathObj /*|| _.strIs( result )*/ )
+//     {
+//       result = pathResolve( result );
+//     }
+//     else if( _.arrayIs( result ) )
+//     {
+//       let result2 = [];
+//       for( let r = 0 ; r < result.length ; r++ )
+//       if( result[ r ] instanceof will.PathObj /*|| _.strIs( result[ r ] )*/ )
+//       result2[ r ] = pathResolve( result[ r ] );
+//       else
+//       result2[ r ] = result[ r ];
+//       result = result2;
+//     }
+//     else if( _.mapIs( result ) )
+//     {
+//       let result2 = Object.create( null );
+//       for( let r in result )
+//       if( result[ r ] instanceof will.PathObj /*|| _.strIs( result[ r ] )*/ )
+//       result2[ r ] = pathResolve( result[ r ] );
+//       else
+//       result2[ r ] = result[ r ];
+//       result = result2;
+//     }
+//
+//     return result;
+//   }
+//
+//   /* */
+//
+//   function pathsUnwrap( result )
+//   {
+//
+//     if( !o.pathUnwrapping || !o.hasPath )
+//     return result;
+//
+//     _.assert( _.mapIs( result ) || _.objectIs( result ) || _.arrayIs( result ) || _.strIs( result ) );
+//     if( _.mapIs( result ) || _.arrayIs( result ) )
+//     result = _.filter( result, ( e ) => e instanceof will.PathObj ? e.path : e )
+//     else if( result instanceof will.PathObj )
+//     result = result.path;
+//
+//     return result;
+//   }
+//
+//   /* */
+//
+//   function singleUnwrap( result )
+//   {
+//
+//     if( !o.singleUnwrapping )
+//     return result;
+//
+//     if( _.mapIs( result ) )
+//     {
+//       if( _.mapKeys( result ).length === 1 )
+//       result = _.mapVals( result )[ 0 ];
+//     }
+//     else if( _.arrayIs( result ) )
+//     {
+//       if( result.length === 1 )
+//       result = result[ 0 ];
+//     }
+//
+//     return result;
+//   }
+//
+//
+//   function mapValsUnwrap( result )
+//   {
+//
+//     if( !o.mapValsUnwrapping || !_.mapIs( result ) )
+//     return result;
+//
+//     return _.mapVals( result );
+//   }
+//
+// }
+//
+// _resolveMaybe_body.defaults =
+// {
+//   selector : null,
+//   defaultPool : null,
+//   // prefixlessAction : 'default',
+//   prefixlessAction : 'resolved',
+//   visited : null,
+//   current : null,
+//   criterion : null,
+//   currentModule : null,
+//   pathResolving : 'in',
+//   pathUnwrapping : 1,
+//   singleUnwrapping : 1,
+//   mapValsUnwrapping : 1,
+//   flattening : 0,
+//   hasPath : null,
+// }
+//
+// let _resolveMaybe = _.routineFromPreAndBody( resolve_pre, _resolveMaybe_body );
+
 //
 
-function _resolveMaybe_body( o )
+function resolve_body( o )
 {
   let module = this;
   let will = module.will;
+  let current = o.current;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
+
+  // _.assert( o.missingAction === 'throw', 'not tested' );
+
+  // if( o.missingAction === 'throw' )
+  // debugger;
+  // if( o.missingAction !== 'throw' )
+  // debugger;
 
   // debugger;
   let result = module._resolveAct( o );
   // debugger;
+
+  // _.assert( _.arrayHas( [ 'undefine', 'throw', 'error' ], o.missingAction ), 'Unknown missing action', o.missingAction );
 
   if( result === undefined )
   {
@@ -2448,7 +2753,21 @@ function _resolveMaybe_body( o )
   }
 
   if( _.errIs( result ) )
-  return result;
+  {
+    debugger;
+    if( o.missingAction === 'undefine' )
+    return;
+    let err = module.errResolving
+    ({
+      selector : o.selector,
+      current : o.current,
+      err : result,
+    });
+    if( o.missingAction === 'throw' )
+    throw err;
+    else
+    return err;
+  }
 
   result = pathsResolve( result );
 
@@ -2460,6 +2779,10 @@ function _resolveMaybe_body( o )
   result = mapValsUnwrap( result );
 
   _.assert( result !== undefined );
+
+  // return result;
+  //
+  // let result = module._resolveMaybe.body.call( module, o );
 
   return result;
 
@@ -2578,11 +2901,15 @@ function _resolveMaybe_body( o )
 
 }
 
-_resolveMaybe_body.defaults =
+// resolve_body.defaults = Object.create( _resolveMaybe.body.defaults );
+
+resolve_body.defaults =
 {
   selector : null,
   defaultPool : null,
   prefixlessAction : 'default',
+  // prefixlessAction : 'resolved',
+  missingAction : 'throw',
   visited : null,
   current : null,
   criterion : null,
@@ -2595,34 +2922,11 @@ _resolveMaybe_body.defaults =
   hasPath : null,
 }
 
-let _resolveMaybe = _.routineFromPreAndBody( _resolve_pre, _resolveMaybe_body );
+let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
+let resolveMaybe = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
-//
-
-function _resolve_body( o )
-{
-  let module = this;
-  let will = module.will;
-  let current = o.current;
-  let result = module._resolveMaybe.body.call( module, o );
-
-  if( _.errIs( result ) )
-  {
-    debugger;
-    throw module.errResolving
-    ({
-      selector : o.selector,
-      current : current,
-      err : result,
-    });
-  }
-
-  return result;
-}
-
-_resolve_body.defaults = Object.create( _resolveMaybe.body.defaults );
-
-let _resolve = _.routineFromPreAndBody( _resolve_pre, _resolve_body );
+var defaults = resolveMaybe.defaults;
+defaults.missingAction = 'undefine';
 
 //
 
@@ -2648,33 +2952,31 @@ function _resolveAct( o )
 
   /* */
 
-  if( module.strIsResolved( o.selector ) )
-  {
-    if( o.prefixlessAction === 'default' )
-    {
-    }
-    else if( o.prefixlessAction === 'throw' || o.prefixlessAction === 'error' )
-    {
-      let err = module.errResolving
-      ({
-        selector : o.selector,
-        current : current,
-        err : _.ErrorLooking( 'Resource selector should have prefix' ),
-      });
-      if( o.prefixlessAction === 'throw' )
-      throw err;
-    }
-    else if( o.prefixlessAction === 'resolved' )
-    {
-      return o.selector;
-    }
-    else _.assert( 0 );
-  }
+  // if( module.strIsResolved( o.selector ) )
+  // {
+  //   if( o.prefixlessAction === 'default' )
+  //   {
+  //   }
+  //   else if( o.prefixlessAction === 'throw' || o.prefixlessAction === 'error' )
+  //   {
+  //     let err = module.errResolving
+  //     ({
+  //       selector : o.selector,
+  //       current : current,
+  //       err : _.ErrorLooking( 'Resource selector should have prefix' ),
+  //     });
+  //     if( o.prefixlessAction === 'throw' )
+  //     throw err;
+  //     return err;
+  //   }
+  //   else if( o.prefixlessAction === 'resolved' )
+  //   {
+  //     return o.selector;
+  //   }
+  //   else _.assert( 0 );
+  // }
 
   /* */
-
-  // if( o.selector === 'submodule::*/exported::*=1/reflector::exportedFiles*=1' )
-  // debugger;
 
   try
   {
@@ -2683,7 +2985,7 @@ function _resolveAct( o )
     ({
       src : module,
       selector : o.selector,
-      // onSelectBegin : onSelectBegin,
+      onSelector : onSelector,
       onUpBegin : onUpBegin,
       onUpEnd : onUpEnd,
       onQuantitativeFail : onQuantitativeFail,
@@ -2711,40 +3013,52 @@ function _resolveAct( o )
     });
   }
 
-  // if( o.selector === 'submodule::*/exported::*=1/reflector::exportedFiles*=1' )
-  // debugger;
-
   return result;
 
   /* */
 
-  // function onSelectBegin( op )
-  // {
-  //
-  //   if( module.strIsResolved( op.selector ) )
-  //   {
-  //     if( op.prefixlessAction === 'default' )
-  //     {
-  //     }
-  //     else if( op.prefixlessAction === 'throw' || op.prefixlessAction === 'error' )
-  //     {
-  //       let err = module.errResolving
-  //       ({
-  //         selector : op.selector,
-  //         current : current,
-  //         err : _.ErrorLooking( 'Resource selector should have prefix' ),
-  //       });
-  //       if( op.prefixlessAction === 'throw' )
-  //       throw err;
-  //     }
-  //     else if( op.prefixlessAction === 'resolved' )
-  //     {
-  //       return op.selector;
-  //     }
-  //     else _.assert( 0 );
-  //   }
-  //
-  // }
+  function onSelector( selector )
+  {
+    let it = this;
+
+    if( !_.strIs( selector ) )
+    return;
+
+    if( !module.strIsResolved( selector ) )
+    return selector;
+
+    if( o.prefixlessAction === 'default' )
+    {
+      // debugger;
+      // return o.d
+      return selector;
+    }
+    else if( o.prefixlessAction === 'throw' || o.prefixlessAction === 'error' )
+    {
+      it.iterator.continue = false;
+      let err = module.errResolving
+      ({
+        selector : selector,
+        current : current,
+        err : _.ErrorLooking( 'Resource selector should have prefix' ),
+      });
+      debugger;
+      if( op.prefixlessAction === 'throw' )
+      throw err;
+      debugger;
+      it.dst = err;
+      return;
+    }
+    else if( o.prefixlessAction === 'resolved' )
+    {
+      // debugger;
+      // return selector;
+      return;
+    }
+    else _.assert( 0 );
+
+    // return selector
+  }
 
   /* */
 
@@ -2888,7 +3202,7 @@ function _resolveAct( o )
     }
 
     it.src = pool;
-    it.iterable = it.onWhichIterable( it.src );
+    it.iterable = it.onIterable( it.src );
 
   }
 
@@ -2973,7 +3287,7 @@ function _resolveAct( o )
 
 }
 
-var defaults = _resolveAct.defaults = Object.create( _resolve.defaults )
+var defaults = _resolveAct.defaults = Object.create( resolve.defaults )
 
 defaults.visited = null;
 
@@ -3138,6 +3452,7 @@ function resourceImport( resource2 )
 let Composes =
 {
 
+  filePath : null,
   dirPath : null,
   clonePath : null,
   remotePath : null,
@@ -3312,7 +3627,8 @@ let Proto =
 
   // path
 
-  dirPathSet,
+  filePathSet,
+  _filePathSet,
   inPathGet,
   outPathGet,
 
@@ -3336,11 +3652,8 @@ let Proto =
   strGetPrefix,
   strIsResolved,
 
-  _resolve,
-  resolve : _resolve, /* tests required */
-
-  _resolveMaybe,
-  resolveMaybe : _resolveMaybe,
+  resolve,
+  resolveMaybe,
 
   _resolveAct,
 

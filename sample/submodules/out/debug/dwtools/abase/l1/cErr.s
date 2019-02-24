@@ -139,7 +139,7 @@ function diagnosticLocation( o )
   for( let e in o )
   {
     if( diagnosticLocation.defaults[ e ] === undefined )
-    throw 'Unknown option ' + e;
+    throw Error( 'Unknown option ' + e );
   }
 
   for( let e in diagnosticLocation.defaults )
@@ -149,10 +149,10 @@ function diagnosticLocation( o )
   }
 
   if( !( arguments.length === 0 || arguments.length === 1 ) )
-  throw 'Expects single argument or none';
+  throw Error( 'Expects single argument or none' );
 
   if( !( _.objectIs( o ) ) )
-  throw 'Expects options map';
+  throw Error( 'Expects options map' );
 
   // _.routineOptions( diagnosticLocation,o );
   // _.assert( arguments.length === 0 || arguments.length === 1 );
@@ -724,10 +724,10 @@ function diagnosticStackCondense( stack )
 {
 
   if( arguments.length !== 1 )
-  throw 'Expects single arguments';
+  throw Error( 'Expects single arguments' );
 
   if( !_.strIs( stack ) )
-  throw 'Expects string';
+  throw Error( 'Expects string' );
 
   stack = stack.split( '\n' );
 

@@ -38,7 +38,16 @@ function strIs( src )
   return result;
 }
 
+//
 
+function strLike( src )
+{
+  if( _.strIs( src ) )
+  return true;
+  if( _.regexpIs( src ) )
+  return true;
+  return false
+}
 
 //
 
@@ -81,104 +90,23 @@ function strsAreNotEmpty( src )
   return false;
 }
 
-//
+// --
+// converter
+// --
 
-/**
-  * Return type of src.
-  * @example
-      let str = _.strType( 'testing' );
-  * @param {*} src
-  * @return {string}
-  * string name of type src
-  * @function strType
-  * @memberof wTools
-  */
-
-function strType( src )
+function toStr( src, opts )
 {
+  let result = '';
 
-  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.assert( arguments.length === 1 || arguments.length === 2 );
 
-  if( !_.primitiveIs( src ) )
-  if( src.constructor && src.constructor.name )
-  return src.constructor.name;
-
-  let result = _.strPrimitiveTypeOf( src );
-
-  if( result === 'Object' )
-  {
-    if( Object.getPrototypeOf( src ) === null )
-    result = 'Map:Pure';
-    else if( src.__proto__ !== Object.__proto__ )
-    result = 'Object:Special';
-  }
+  result = _.str( src );
 
   return result;
 }
 
-//
-
-/**
-  * Return primitive type of src.
-  * @example
-      let str = _.strPrimitiveTypeOf( 'testing' );
-  * @param {*} src
-  * @return {string}
-  * string name of type src
-  * @function strPrimitiveTypeOf
-  * @memberof wTools
-  */
-
-function strPrimitiveTypeOf( src )
-{
-
-  let name = _ObjectToString.call( src );
-  let result = /\[(\w+) (\w+)\]/.exec( name );
-
-  if( !result )
-  throw _.err( 'strType :','unknown type',name );
-  return result[ 2 ];
-}
-
-//
-
-function strQuote( o )
-{
-
-  if( !_.mapIs( o ) )
-  o = { src : o };
-
-  if( o.quote === undefined || o.quote === null )
-  o.quote = strQuote.defaults.quote;
-
-  _.assertMapHasOnly( o, strQuote.defaults );
-  _.assert( arguments.length === 1, 'Expects single argument' );
-
-  if( _.arrayIs( o.src ) )
-  {
-    let result = [];
-    for( let s = 0 ; s < o.src.length ; s++ )
-    result.push( _.strQuote({ src : o.src[ s ], quote : o.quote }) );
-    return result;
-  }
-
-  let src = o.src;
-
-  if( !_.primitiveIs( src ) )
-  src = _.toStr( src );
-
-  _.assert( _.primitiveIs( src ) );
-
-  let result = o.quote + String( src ) + o.quote;
-
-  return result;
-}
-
-strQuote.defaults =
-{
-  src : null,
-  quote : '"',
-}
+toStr.fields = toStr;
+toStr.routines = toStr;
 
 //
 
@@ -223,37 +151,186 @@ function str()
 
 //
 
-function toStr( src, opts )
+function strShort( src )
 {
   let result = '';
 
-  _.assert( arguments.length === 1 || arguments.length === 2 );
+  _.assert( arguments.length === 1, 'Expects exactly one argument' );
 
-  result = _.str( src );
+  try
+  {
+
+    if( _.primitiveIs( src ) )
+    {
+      return String( src );
+    }
+    else if( _.vectorIs( src ) )
+    {
+      result += '[ Vecotr with ' + src.length + ' elements' + ' ]';
+    }
+    else if( src && !_.objectIs( src ) && _.numberIs( src.length ) )
+    {
+      result += '[ ' + _.strType( src ) + ' with ' + src.length + ' elements ]';
+    }
+    else if( _.objectIs( src ) || _.objectLike( src ) )
+    {
+      result += '[ ' + _.strType( src ) + ' with ' + _.entityLength( src ) + ' elements' + ' ]';
+    }
+    else if( src instanceof Date )
+    {
+      result += src.toISOString();
+    }
+    else
+    {
+      result += String( src );
+    }
+
+  }
+  catch( err )
+  {
+    throw err;
+  }
 
   return result;
 }
 
-toStr.fields = toStr;
-toStr.routines = toStr;
+//
+
+function strPrimitive( src )
+{
+  let result = '';
+
+  _.assert( arguments.length === 1, 'Expects exactly one argument' );
+
+  if( src === null || src === undefined )
+  return;
+
+  if( _.primitiveIs( src ) )
+  return String( src );
+
+  return;
+}
 
 //
 
-function _strFirst( src, ent )
+/**
+  * Return type of src.
+  * @example
+      let str = _.strType( 'testing' );
+  * @param {*} src
+  * @return {string}
+  * string name of type src
+  * @function strType
+  * @memberof wTools
+  */
+
+function strType( src )
+{
+
+  _.assert( arguments.length === 1, 'Expects single argument' );
+
+  if( !_.primitiveIs( src ) )
+  if( src.constructor && src.constructor.name )
+  return src.constructor.name;
+
+  let result = _.strPrimitiveType( src );
+
+  if( result === 'Object' )
+  {
+    if( Object.getPrototypeOf( src ) === null )
+    result = 'Map:Pure';
+    else if( src.__proto__ !== Object.__proto__ )
+    result = 'Object:Special';
+  }
+
+  return result;
+}
+
+//
+
+/**
+  * Return primitive type of src.
+  * @example
+      let str = _.strPrimitiveType( 'testing' );
+  * @param {*} src
+  * @return {string}
+  * string name of type src
+  * @function strPrimitiveType
+  * @memberof wTools
+  */
+
+function strPrimitiveType( src )
+{
+
+  let name = _ObjectToString.call( src );
+  let result = /\[(\w+) (\w+)\]/.exec( name );
+
+  if( !result )
+  throw _.err( 'strType :', 'unknown type', name );
+  return result[ 2 ];
+}
+
+// --
+// decorator
+// --
+
+function strQuote( o )
+{
+
+  if( !_.mapIs( o ) )
+  o = { src : o };
+
+  if( o.quote === undefined || o.quote === null )
+  o.quote = strQuote.defaults.quote;
+
+  _.assertMapHasOnly( o, strQuote.defaults );
+  _.assert( arguments.length === 1, 'Expects single argument' );
+
+  if( _.arrayIs( o.src ) )
+  {
+    let result = [];
+    for( let s = 0 ; s < o.src.length ; s++ )
+    result.push( _.strQuote({ src : o.src[ s ], quote : o.quote }) );
+    return result;
+  }
+
+  let src = o.src;
+
+  if( !_.primitiveIs( src ) )
+  src = _.toStr( src );
+
+  _.assert( _.primitiveIs( src ) );
+
+  let result = o.quote + String( src ) + o.quote;
+
+  return result;
+}
+
+strQuote.defaults =
+{
+  src : null,
+  quote : '"',
+}
+
+// --
+//
+// --
+
+function _strFirstSingle( src, ins )
 {
 
   _.assert( arguments.length === 2 );
   _.assert( _.strIs( src ) );
 
-  ent = _.arrayAs( ent );
+  ins = _.arrayAs( ins );
 
   let result = Object.create( null );
   result.index = src.length;
   result.entry = undefined;
 
-  for( let k = 0, len = ent.length ; k < len ; k++ )
+  for( let k = 0, len = ins.length ; k < len ; k++ )
   {
-    let entry = ent[ k ];
+    let entry = ins[ k ];
     if( _.strIs( entry ) )
     {
       let found = src.indexOf( entry );
@@ -272,7 +349,7 @@ function _strFirst( src, ent )
         result.entry = found[ 0 ];
       }
     }
-    else _.assert( 0, 'Expects string or regexp' );
+    else _.assert( 0, 'Expects string-like ( string or regexp )' );
   }
 
   return result;
@@ -280,7 +357,7 @@ function _strFirst( src, ent )
 
 //
 
-function strFirst( src, ent )
+function strFirst( src, ins )
 {
 
   _.assert( arguments.length === 2 );
@@ -289,12 +366,12 @@ function strFirst( src, ent )
   {
     let result = [];
     for( let s = 0 ; s < src.length ; s++ )
-    result[ s ] = _._strFirst( src[ s ], ent );
+    result[ s ] = _._strFirstSingle( src[ s ], ins );
     return result;
   }
   else
   {
-    return _._strFirst( src, ent );
+    return _._strFirstSingle( src, ins );
   }
 
 }
@@ -317,21 +394,21 @@ aaa_bbb_bb|b|_ccc_ccc
 
 */
 
-function _strLast( src, ent )
+function _strLastSingle( src, ins )
 {
 
   _.assert( arguments.length === 2 );
   _.assert( _.strIs( src ) );
 
-  ent = _.arrayAs( ent );
+  ins = _.arrayAs( ins );
 
   let result = Object.create( null );
   result.index = -1;
   result.entry = undefined;
 
-  for( let k = 0, len = ent.length ; k < len ; k++ )
+  for( let k = 0, len = ins.length ; k < len ; k++ )
   {
-    let entry = ent[ k ];
+    let entry = ins[ k ];
     if( _.strIs( entry ) )
     {
       let found = src.lastIndexOf( entry );
@@ -397,7 +474,7 @@ function _strLast( src, ent )
       }
 
     }
-    else _.assert( 0, 'Expects string or regexp' );
+    else _.assert( 0, 'Expects string-like ( string or regexp )' );
   }
 
   return result;
@@ -405,7 +482,7 @@ function _strLast( src, ent )
 
 //
 
-function strLast( src, ent )
+function strLast( src, ins )
 {
 
   _.assert( arguments.length === 2 );
@@ -414,12 +491,12 @@ function strLast( src, ent )
   {
     let result = [];
     for( let s = 0 ; s < src.length ; s++ )
-    result[ s ] = _._strLast( src[ s ], ent );
+    result[ s ] = _._strLastSingle( src[ s ], ins );
     return result;
   }
   else
   {
-    return _._strLast( src, ent );
+    return _._strLastSingle( src, ins );
   }
 
 }
@@ -451,7 +528,92 @@ function _strCutOff_pre( routine, args )
 
 //
 
-function _strBeginOf( src,begin )
+function strEquivalent( src1, src2 )
+{
+  let strIs1 = _.strIs( src1 );
+  let strIs2 = _.strIs( src2 );
+
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+
+  if( !strIs1 && strIs2 )
+  return _.strEquivalent( src2, src1 );
+
+  _.assert( _.strLike( src1 ), 'Expects string-like ( string or regexp )' );
+  _.assert( _.strLike( src1 ), 'Expects string-like ( string or regexp )' );
+
+  if( strIs1 && strIs2 )
+  {
+    return src1 === src2;
+  }
+  else if( strIs1 )
+  {
+    debugger;
+    let matched = src2.exec( src1 );
+    debugger;
+    if( !matched )
+    return false;
+    if( matched[ 0 ].length !== src1.length )
+    return false;
+    return true;
+  }
+  else
+  {
+    return _.regexpIdentical( src1, src2 );
+  }
+
+  return false;
+}
+
+//
+
+function strsEquivalent( src1, src2 )
+{
+
+  _.assert( _.strIs( src1 ) || _.regexpIs( src1 ) || _.longIs( src1 ), 'Expects string/regexp or array of strings/regexps {-src1-}' );
+  _.assert( _.strIs( src2 ) || _.regexpIs( src2 ) || _.longIs( src2 ), 'Expects string/regexp or array of strings/regexps {-src2-}' );
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+
+  let isLong1 = _.longIs( src1 );
+  let isLong2 = _.longIs( src2 );
+
+  if( isLong1 && isLong2 )
+  {
+    _.assert( src1.length === src2.length );
+    for( let i = 0, len = src1.length ; i < len; i++ )
+    {
+      let result = [];
+      result[ i ] = _.strEquivalent( src1[ i ], src2[ i ] );
+      return result;
+    }
+  }
+  else if( !isLong1 && isLong2 )
+  {
+    for( let i = 0, len = src2.length ; i < len; i++ )
+    {
+      let result = [];
+      result[ i ] = _.strEquivalent( src1, src2[ i ] );
+      return result;
+    }
+  }
+  else if( isLong1 && !isLong2 )
+  {
+    for( let i = 0, len = src1.length ; i < len; i++ )
+    {
+      let result = [];
+      result[ i ] = _.strEquivalent( src1[ i ], src2 );
+      return result;
+    }
+  }
+  else
+  {
+    return _.strEquivalent( src1[ i ], src2 );
+  }
+
+}
+
+//
+
+function _strBeginOf( src, begin )
 {
 
   _.assert( _.strIs( src ), 'Expects string' );
@@ -459,7 +621,7 @@ function _strBeginOf( src,begin )
 
   if( _.strIs( begin ) )
   {
-    if( src.lastIndexOf( begin,0 ) === 0 )
+    if( src.lastIndexOf( begin, 0 ) === 0 )
     return begin;
   }
   else if( _.regexpIs( begin ) )
@@ -468,7 +630,7 @@ function _strBeginOf( src,begin )
     if( matched && matched.index === 0 )
     return matched[ 0 ];
   }
-  else _.assert( 0,'Expects string or regexp' );
+  else _.assert( 0, 'Expects string-like ( string or regexp )' );
 
   return false;
 }
@@ -489,14 +651,14 @@ function _strEndOf( src, end )
   else if( _.regexpIs( end ) )
   {
     // let matched = end.exec( src );
-    let newEnd = RegExp( end.toString().slice(1,-1) + '$' );
+    let newEnd = RegExp( end.toString().slice(1, -1) + '$' );
     let matched = newEnd.exec( src );
     debugger;
     //if( matched && matched.index === 0 )
     if( matched && matched.index + matched[ 0 ].length === src.length )
     return matched[ 0 ];
   }
-  else _.assert( 0, 'Expects string or regexp' );
+  else _.assert( 0, 'Expects string-like ( string or regexp )' );
 
   return false;
 }
@@ -509,11 +671,11 @@ function _strEndOf( src, end )
   * @param { String } begin - String to find at begin of source.
   *
   * @example
-  * let scr = _.strBegins( "abc","a" );
+  * let scr = _.strBegins( "abc", "a" );
   * // returns true
   *
   * @example
-  * let scr = _.strBegins( "abc","b" );
+  * let scr = _.strBegins( "abc", "b" );
   * // returns false
   *
   * @returns { Boolean } Returns true if param( begin ) is match with first chars of param( src ), otherwise returns false.
@@ -526,8 +688,8 @@ function _strEndOf( src, end )
 function strBegins( src, begin )
 {
 
-  _.assert( _.strIs( src ),'Expects string {-src-}' );
-  _.assert( _.strIs( begin ) || _.regexpIs( begin ) || _.longIs( begin ),'Expects string/regexp or array of strings/regexps {-begin-}' );
+  _.assert( _.strIs( src ), 'Expects string {-src-}' );
+  _.assert( _.strIs( begin ) || _.regexpIs( begin ) || _.longIs( begin ), 'Expects string/regexp or array of strings/regexps {-begin-}' );
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
   if( !_.longIs( begin ) )
@@ -554,11 +716,11 @@ function strBegins( src, begin )
   * @param { String } end - String to find at end of source.
   *
   * @example
-  * let scr = _.strEnds( "abc","c" );
+  * let scr = _.strEnds( "abc", "c" );
   * // returns true
   *
   * @example
-  * let scr = _.strEnds( "abc","b" );
+  * let scr = _.strEnds( "abc", "b" );
   * // returns false
   *
   * @return { Boolean } Returns true if param( end ) is match with last chars of param( src ), otherwise returns false.
@@ -571,8 +733,8 @@ function strBegins( src, begin )
 function strEnds( src, end )
 {
 
-  _.assert( _.strIs( src ),'Expects string {-src-}' );
-  _.assert( _.strIs( end ) || _.regexpIs( end ) || _.longIs( end ),'Expects string/regexp or array of strings/regexps {-end-}' );
+  _.assert( _.strIs( src ), 'Expects string {-src-}' );
+  _.assert( _.strIs( end ) || _.regexpIs( end ) || _.longIs( end ), 'Expects string/regexp or array of strings/regexps {-end-}' );
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
   if( !_.longIs( end ) )
@@ -618,8 +780,8 @@ function strEnds( src, end )
 function strBeginOf( src, begin )
 {
 
-  _.assert( _.strIs( src ),'Expects string {-src-}' );
-  _.assert( _.strIs( begin ) || _.regexpIs( begin ) || _.longIs( begin ),'Expects string/regexp or array of strings/regexps {-begin-}' );
+  _.assert( _.strIs( src ), 'Expects string {-src-}' );
+  _.assert( _.strIs( begin ) || _.regexpIs( begin ) || _.longIs( begin ), 'Expects string/regexp or array of strings/regexps {-begin-}' );
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
 
@@ -670,8 +832,8 @@ function strBeginOf( src, begin )
 function strEndOf( src, end )
 {
 
-  _.assert( _.strIs( src ),'Expects string {-src-}' );
-  _.assert( _.strIs( end ) || _.regexpIs( end ) || _.longIs( end ),'Expects string/regexp or array of strings/regexps {-end-}' );
+  _.assert( _.strIs( src ), 'Expects string {-src-}' );
+  _.assert( _.strIs( end ) || _.regexpIs( end ) || _.longIs( end ), 'Expects string/regexp or array of strings/regexps {-end-}' );
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
   debugger;
@@ -795,11 +957,11 @@ function strOutsideOf( src, begin, end )
  *
  * @example
  * //returns mple
- * _.strRemoveBegin( 'example','exa' );
+ * _.strRemoveBegin( 'example', 'exa' );
  *
  * @example
  * //returns example
- * _.strRemoveBegin( 'example','abc' );
+ * _.strRemoveBegin( 'example', 'abc' );
  *
  * @function strRemoveBegin
  * @throws { Exception } Throws a exception if( src ) is not a String.
@@ -809,7 +971,7 @@ function strOutsideOf( src, begin, end )
  *
  */
 
-function strRemoveBegin( src,begin )
+function strRemoveBegin( src, begin )
 {
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
   _.assert( _.strIs( src ), 'Expects string {-src-}' );
@@ -833,11 +995,11 @@ function strRemoveBegin( src,begin )
  *
  * @example
  * //returns examp
- * _.strRemoveEnd( 'example','le' );
+ * _.strRemoveEnd( 'example', 'le' );
  *
  * @example
  * //returns example
- * _.strRemoveEnd( 'example','abc' );
+ * _.strRemoveEnd( 'example', 'abc' );
  *
  * @function strRemoveEnd
  * @throws { Exception } Throws a exception if( src ) is not a String.
@@ -861,6 +1023,8 @@ function strRemoveEnd( src, end )
   return result;
 }
 
+//
+
 /**
 * Finds substring or regexp ( insStr ) first occurrence from the source string ( srcStr ) and removes it.
 * Returns original string if source( src ) does not have occurrence of ( insStr ).
@@ -871,11 +1035,11 @@ function strRemoveEnd( src, end )
 *
 * @example
 * //returns ource tring
-* _.strRemove( 'source string','s' );
+* _.strRemove( 'source string', 's' );
 *
 * @example
 * //returns example
-* _.strRemove( 'example','s' );
+* _.strRemove( 'example', 's' );
 *
 * @function strRemove
 * @throws { Exception } Throws a exception if( srcStr ) is not a String.
@@ -904,7 +1068,7 @@ function strRemove( srcStr, insStr )
 function strReplaceBegin( src, begin, ins )
 {
   _.assert( arguments.length === 3, 'Expects exactly three arguments' );
-  _.assert( _.strIs( ins ),'Expects {-ins-} as string' );
+  _.assert( _.strIs( ins ), 'Expects {-ins-} as string' );
   _.assert( _.strIs( src ) );
 
   let result = src;
@@ -922,7 +1086,7 @@ function strReplaceBegin( src, begin, ins )
 function strReplaceEnd( src, end, ins )
 {
   _.assert( arguments.length === 3, 'Expects exactly three arguments' );
-  _.assert( _.strIs( ins ),'Expects {-ins-} as string' );
+  _.assert( _.strIs( ins ), 'Expects {-ins-} as string' );
   _.assert( _.strIs( src ) );
 
   let result = src;
@@ -968,23 +1132,39 @@ let Routines =
 {
 
   strIs,
+  strLike,
   strsAreAll,
   strDefined,
   strsAreNotEmpty,
 
-  strType,
-  strPrimitiveTypeOf,
-  strQuote,
+  // converter
 
-  str,
   toStr,
   toStrShort : toStr,
   strFrom : toStr,
 
-  _strFirst,
+  str,
+  strShort,
+  strPrimitive,
+  strType,
+  strPrimitiveType,
+
+  // decorator
+
+  strQuote,
+
+  //
+
+  _strFirstSingle,
   strFirst,
-  _strLast,
+  _strLastSingle,
   strLast,
+
+  strEquivalent,
+  strsEquivalent : _.vectorize( strEquivalent, 2 ),
+  strsEquivalentAll : _.vectorizeAll( strEquivalent, 2 ),
+  strsEquivalentAny : _.vectorizeAny( strEquivalent, 2 ),
+  strsEquivalentNone : _.vectorizeNone( strEquivalent, 2 ),
 
   _strBeginOf,
   _strEndOf,
@@ -998,14 +1178,13 @@ let Routines =
   strInsideOf,
   strOutsideOf,
 
+  strRemoveBegin,
+  strRemoveEnd,
+  strRemove,
 
-  strRemoveBegin : strRemoveBegin,
-  strRemoveEnd : strRemoveEnd,
-  strRemove : strRemove,
-
-  strReplaceBegin : strReplaceBegin,
-  strReplaceEnd : strReplaceEnd,
-  strReplace : strReplace,
+  strReplaceBegin,
+  strReplaceEnd,
+  strReplace,
 
 }
 

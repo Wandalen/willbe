@@ -6,14 +6,7 @@ let _global = _global_;
 let _ = _global_.wTools;
 let Self = _global_.wTools;
 
-let _ArrayIndexOf = Array.prototype.indexOf;
-let _ArrayLastIndexOf = Array.prototype.lastIndexOf;
-let _ArraySlice = Array.prototype.slice;
-let _ArraySplice = Array.prototype.splice;
-let _FunctionBind = Function.prototype.bind;
 let _ObjectToString = Object.prototype.toString;
-let _ObjectHasOwnProperty = Object.hasOwnProperty;
-let _propertyIsEumerable = Object.propertyIsEnumerable;
 let _ceil = Math.ceil;
 let _floor = Math.floor;
 
@@ -58,7 +51,7 @@ function regexpsLike( srcs )
 
 //
 
-function regexpsAreIdentical( src1, src2 )
+function regexpIdentical( src1, src2 )
 {
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
@@ -66,6 +59,13 @@ function regexpsAreIdentical( src1, src2 )
   return false;
 
   return src1.source === src2.source && src1.flags === src2.flags;
+}
+
+//
+
+function regexpEquivalent( src1, src2 )
+{
+  return _.strEquivalent( src1, src2 );
 }
 
 //
@@ -209,7 +209,8 @@ let Routines =
   regexpObjectIs,
   regexpLike,
   regexpsLike,
-  regexpsAreIdentical,
+  regexpIdentical,
+  regexpEquivalent,
 
   _regexpTest,
   regexpTest,
