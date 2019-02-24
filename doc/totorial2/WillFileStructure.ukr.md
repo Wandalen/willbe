@@ -1,10 +1,12 @@
-# Структура will-файлу
+# Структура will-файла
 
-В туторіалі описано структуру функціональних секцій `will`-файлу та приведено приклади їх застосування
+Описується структура секцій `will`-файлу та приведено приклади їх застосування
 
 `Will`-файл - конфігураційний файл для побудови [will-модулю](Concepts.ukr.md#module). Може мати розширення '.yml', '.json', '.cson'. `Will`-документ скадається з заголовків та [ресурсів](Concepts.ukr.md#resource) (полів). Заголовоки першого рівня в will-документі - [секції](Concepts.ukr.md#will-file-section) - описують окремі функціональності модуля.  
-Структура секцій will-файлу:  
+Структура секцій will-файлу:
+
 ```
+
 .will.yml
     ├── about
     ├── submodule
@@ -102,11 +104,19 @@
 ### Зображення секцій зі складовими
 <details>
   <summary><u>Схема секцій will-файлу</u></summary>
-Секція 'path'
+<p> </p>
+<p>Секція 'path'</p>
+
 ![path.section.ukr](./Images/path.section.ukr.png)
-Секція 'submodule'
+
+<p> </p>
+<p>Секція 'submodule'</p>
+
 ![submodule.section.ukr](./Images/submodule.section.ukr.png)
-Секція 'reflector'
+
+<p> </p>
+<p>Секція 'reflector'</p>
+
 ![reflector.section.ukr](./Images/reflector.section.ukr.png)
 
 </details>
@@ -212,4 +222,4 @@ build :
 [Секція `about`](#about) має визначену структуру і повинна бути присутня в `will`-файлі. Якщо не описати цю секцію, `willbe` автоматично згенерує її з єдиним встановленим параметом.  
 Приведено [декілька конфігурацій](#examples) `will`-файлів.
 
-[Повернутись до меню](Topics.md)
+[Повернутись до меню](Topics.ukr.md)

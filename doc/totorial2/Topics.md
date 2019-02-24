@@ -1,11 +1,11 @@
-# Tutorial topics
+# Topics
 
+## Tutorials
 - Introduction (Ред.)
 - [Basic concepts and terms](Concepts.urk.md)
-- [Will file structure](WillFileStructure.md)
-- [Command line interface of will](CommandLineInterfaceOfWill.ukr.md)
+- [Will file structure](WillFileComposition.ukr.md)
 - [How to use command line interface of will](HowToUseCommandLineInterfaceOfWill.ukr.md)
-- [First will-file](FirstWillFile.md)
+- [First will-file](FirstWillFile.ukr.md)
 - [Exported will-file](ExportedWillFile.md)
 - Split will-file (Ред.)
 - Named will-file (Ред.)
@@ -22,3 +22,8 @@
 - How to use predefined steps (Ред.)
 - How to use reflector and predefined reflectors ( mid ) (Ред.)
 - Exported section of out will-file ( mid ) (Ред.)
+
+## Manuals
+- [Basic concepts and terms](Concepts.urk.md)
+- [Will file structure](WillFileStructure.ukr.md)
+- [Command line interface of will](CommandLineInterfaceOfWill.ukr.md)
