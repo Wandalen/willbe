@@ -202,7 +202,7 @@ path:
       - proto/dwtools/atop/will.test/asset/single with space
       - proto/dwtools/atop/will.test/asset/single with space/proto
       - proto/dwtools/atop/will.test/asset/single with space/proto/Single.s
-      - proto/dwtools/atop/will.test/asset/step-shell-broken
+      - proto/dwtools/atop/will.test/asset/step-shell
       - proto/dwtools/atop/will.test/asset/submodules
       - proto/dwtools/atop/will.test/asset/submodules/proto
       - proto/dwtools/atop/will.test/asset/submodules/proto/WithSubmodules.s
@@ -466,7 +466,7 @@ reflector:
         dwtools/atop/will.test/asset/single with space: true
         dwtools/atop/will.test/asset/single with space/proto: true
         dwtools/atop/will.test/asset/single with space/proto/Single.s: true
-        dwtools/atop/will.test/asset/step-shell-broken: true
+        dwtools/atop/will.test/asset/step-shell: true
         dwtools/atop/will.test/asset/submodules: true
         dwtools/atop/will.test/asset/submodules/proto: true
         dwtools/atop/will.test/asset/submodules/proto/WithSubmodules.s: true
