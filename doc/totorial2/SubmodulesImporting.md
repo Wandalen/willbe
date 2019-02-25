@@ -50,6 +50,7 @@ About
 [`Will`-модуль](Concepts.ukr.md#module) є базовою одиницею пакету. Він поєднує `will`-файл та описані в ньому файли.  
 
 Перш ніж створювати власні сценарії, навчимось використовувати готові рішення в вигляді підмодулів. Для цього запишемо в секцію `submodule`
+
 ```yaml
 
 submodule :
@@ -58,8 +59,9 @@ submodule :
 
 ```
 
-Об'єднавши її з попередньою секцією матимемо доступ до операцій з підмодулями.
-<details>
+Об'єднавши її з попередньою секцією матимемо доступ до операцій з підмодулями.  
+
+<details>  
   <summary><u>Файл `.will.yml`</u></summary>
 
 ```yaml
@@ -83,6 +85,7 @@ submodule :
 <p> </p>
 Тепер в `submodule` поміщений один ресурс з назвою _'WTools'_, який має шлях _'git+https:///github.com/Wandalen/wTools.git/out/wTools#master'_. Опис шляху свідчить про використання підмодуля з _GitHub_-у.  
 Скориставшись знайомою з попереднього туторіалу командою `will. submodules.list`, отримаємо знайомі рядки (тут і далі, текст лістинга команди, що не включено в туторіал позначений '...'):
+
 ```
 ...
  ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
