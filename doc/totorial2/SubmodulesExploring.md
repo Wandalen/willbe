@@ -49,7 +49,8 @@ Request ".submodules.clean"
  . Read 1 will-files in 0.082s
  . Read : /path_to_file/.module/WTools/out/wTools.out.will.yml
  ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
- - Clean deleted 252 file(s) in 0.907s  
+ - Clean deleted 252 file(s) in 0.907s
+
 ```
 
 Після `.submodules.download` структура модуля матиме вигляд:
@@ -59,11 +60,13 @@ Request ".submodules.clean"
 |   ├──WTools
 |   └──PathFundamentals
 └── .will.yml
+
 ```  
 
 При складанні власного модуля, де використовуються зовнішні підмодулі, зручніше внести в секцію `build` кроки операцій з підмодулями.  
 Додайте в `.will.yml` наступний фрагмент:
 ```yaml
+
 build :
 
   submodules.download:
@@ -124,6 +127,7 @@ Request ".build"
      + module::PathFundamentals was downloaded in 1.424s
    + 2/2 submodule(s) of module::first were downloaded in 14.259s
   Built submodules.download in 14.300s
+  
 ```
 
 Інформації про статус модулів відсутня

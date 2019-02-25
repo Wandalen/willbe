@@ -26,6 +26,7 @@ Will-файл має наступні властивості:
 Після збереження файлу, перевірте конфігурацію виконавши з командного рядка `will .about.list` в кореневій директорії файлу.
 <details>
   <summary><u>Лістинг `will .about.list`</u></summary>
+
   ```
 [user@user ~]$ will .about.list
 Request ".about.list"
@@ -38,7 +39,9 @@ About
  enabled : 1
  keywords :
    'willbe'
+
 ```
+
 </details>
 
 Заповнення секції _'about'_ необов'язкове, проте значно спрощує використання модуля іншими розробниками та адміністування системи в довготривалій перспективі.  
@@ -103,6 +106,7 @@ Request ".submodules.download"
 ```
 
 `Willbe` завантажив один підмодуль. Перевіримо вивід команди `.submodules.list`:
+
 ```
 ...
  . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
@@ -111,8 +115,10 @@ Request ".submodules.download"
   Exported builds : [ 'proto.export' ]
 
 ```
+
 В кореневій директорії файла `.will.yml` має з'явитись каталог з назвою `.module`. Відкривши його ви знайдете підмодуль `WTools` з його власними файлами.  
 Додамо ще один підмодуль в `.will.yml` та знову виконаємо `will .submodules.list`:
+
 ```
 PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
 
