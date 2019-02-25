@@ -200,7 +200,7 @@ buildsResolve.timeOut = 130000;
 function pathsResolve( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'import-in' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, 'super' );
   let modulesPath = _.path.join( routinePath, '.module' );
@@ -227,66 +227,32 @@ function pathsResolve( test )
 
   /* - */
 
-  // module.ready.thenKeep( ( arg ) =>
-  // {
-  //
-  //   test.case = 'resolved, .';
-  //   var resolved = module.resolve({ prefixlessAction : 'resolved', selector : '.' })
-  //   var expected = '.';
-  //   test.identical( resolved, expected );
-  //
-  //   return null;
-  // })
-
   module.ready.thenKeep( ( arg ) =>
   {
 
-    // test.case = 'path::in*=1, pathResolving : 0';
-    // var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'path::in*=1', pathResolving : 0 })
-    // var expected = '.';
-    // test.identical( resolved, expected );
-    //
-    // test.case = 'path::in*=1';
-    // var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'path::in*=1' })
-    // var expected = routinePath;
-    // test.identical( resolved, expected );
-
-    test.case = 'submodule::*/path::in*=1, pathResolving : 0';
-    var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'submodule::*/path::in*=1', pathResolving : 0 })
+    test.case = 'resolved, .';
+    var resolved = module.resolve({ prefixlessAction : 'resolved', selector : '.' })
     var expected = '.';
     test.identical( resolved, expected );
-
-    /* - */
-
-    test.open( 'pathResolving : 0' );
-
-    test.open( 'flattening : 1' );
-
-    test.open( 'flattening : 1' );
-
-    test.case = 'submodule::*/path::in*=1, pathResolving : 0';
-    var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'submodule::*/path::in*=1', pathResolving : 0, flattening : 1 })
-    var expected = '.';
-    test.identical( resolved, expected );
-
-    test.close( 'flattening : 1' );
-
-    test.close( 'flattening : 1' );
-
-    test.close( 'pathResolving : 0' );
-
-/*
-  pathResolving : 1
-  pathUnwrapping : 1,
-  singleUnwrapping : 1,
-  mapValsUnwrapping : 1,
-  flattening : 1,
-*/
 
     return null;
   })
 
-  return module.ready; xxx
+  module.ready.thenKeep( ( arg ) =>
+  {
+
+    test.case = 'path::in*=1, pathResolving : 0';
+    var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'path::in*=1', pathResolving : 0 })
+    var expected = '.';
+    test.identical( resolved, expected );
+
+    test.case = 'path::in*=1';
+    var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'path::in*=1' })
+    var expected = routinePath;
+    test.identical( resolved, expected );
+
+    return null;
+  })
 
   /* - */
 

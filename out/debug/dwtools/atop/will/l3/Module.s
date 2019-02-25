@@ -1014,8 +1014,9 @@ function _willFilesFindMaybe( o )
     {
       let willFile = module.willFileArray[ w ];
       let name = path.name( willFile.filePath );
-      name = _.strRemoveBegin( name, '.im' );
-      name = _.strRemoveBegin( name, '.ex' );
+      name = _.strRemoveEnd( name, '.will' );
+      name = _.strRemoveEnd( name, '.im' );
+      name = _.strRemoveEnd( name, '.ex' );
       _.assert( module.configName === null || module.configName === name, 'Name of will files should be the same, something wrong' );
       if( name )
       module.configName = name;
