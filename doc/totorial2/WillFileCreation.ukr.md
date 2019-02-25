@@ -87,7 +87,7 @@ submodule :
       path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
       criterion :
         default : 1
-   # inherit : some inherited parameter
+    #inherit : some inherited parameter
 
 ```
 
@@ -119,7 +119,7 @@ path :
     path : '.'
     criterion :
        debug : 1
-  # inherit : some inherited parameter
+   #inherit : some inherited parameter
 
 ```
 
