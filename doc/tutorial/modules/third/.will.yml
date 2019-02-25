@@ -6,12 +6,13 @@ about :
   version : 0.0.1
 
 path :
+  int : '.'
   out : '.'
   fileToExport : './fileToExport'
 
 step  :
   export.single :
-      inherit : export
+      inherit : predefined.export
       tar : 0
       export : path::fileToExport
 
