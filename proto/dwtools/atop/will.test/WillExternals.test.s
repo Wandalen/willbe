@@ -752,6 +752,63 @@ function singleStep( test )
 
 singleStep.timeOut = 30000;
 
+//
+
+function singleDownloadRepository( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'single-reflect-repositoty' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulesPath = _.path.join( routinePath, 'module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec2' ) );
+
+  let shell = _.sheller
+  ({
+    path : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  let ready = new _.Consequence().take( null )
+
+  .thenKeep( () =>
+  {
+    test.case = '.build download1'
+    let downloadPath = _.path.join( routinePath, 'wPathFundamentals' );
+    _.fileProvider.filesDelete( downloadPath );
+    return shell({ args : [ '.build download1' ] })
+    .thenKeep( ( got ) =>
+    {
+      var files = self.find( downloadPath );
+      test.is( files.length > 10 );
+      test.identical( got.exitCode, 0 );
+      return null;
+    })
+  })
+
+  //
+
+  .thenKeep( () =>
+  {
+    test.case = '.build download2'
+    let downloadPath = _.path.join( routinePath, 'wPathFundamentals' );
+    _.fileProvider.filesDelete( downloadPath );
+    return shell({ args : [ '.build download2' ] })
+    .thenKeep( ( got ) =>
+    {
+      var files = self.find( downloadPath );
+      test.is( files.length > 10 );
+      test.identical( got.exitCode, 0 );
+      return null;
+    })
+  })
+
+  return ready;
+}
+
+singleDownloadRepository.timeOut = 30000;
 
 //
 
@@ -2752,6 +2809,7 @@ var Self =
     singleModuleExport,
     singleModuleWithSpaceTrivial,
     singleStep,
+    singleDownloadRepository,
 
     submodulesSimplest,
     submodulesList,
