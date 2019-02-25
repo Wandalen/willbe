@@ -52,32 +52,11 @@ function _moduleOnReady( o )
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
-  let dirPath = fileProvider.path.current();
+  let filePath = fileProvider.path.current();
 
   _.assert( arguments.length === 1 );
   _.assert( _.routineIs( o.onReady ) );
   _.routineOptions( _moduleOnReady, arguments );
-
-  // if( !will.topCommand )
-  // will.topCommand = o.onReady;
-  //
-  // let module = will.currentModule;
-  // if( !module )
-  // {
-  //   module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).preform();
-  //   module.willFilesFind();
-  //   module.willFilesOpen();
-  //   if( o.forming )
-  //   {
-  //     module.submodulesForm();
-  //     module.resourcesForm();
-  //   }
-  //   else
-  //   {
-  //     module.submodulesFormSkip();
-  //     module.resourcesFormSkip();
-  //   }
-  // }
 
   if( !will.topCommand )
   will.topCommand = o.onReady;
@@ -86,7 +65,7 @@ function _moduleOnReady( o )
   if( !module )
   module = will.currentModule = will.moduleMake
   ({
-    dirPath : dirPath,
+    filePath : filePath,
     forming : o.forming,
   });
 
@@ -709,11 +688,11 @@ function commandEach( e )
   will.topCommand = commandEach;
 
   let isolated = ca.isolateSecond( e.subject );
-  let dirPath = path.resolve( isolated.subject );
+  let filePath = path.resolve( isolated.subject );
   let con = new _.Consequence().take( null );
   let files = will.willFilesList
   ({
-    dirPath : dirPath,
+    filePath : filePath,
     includingInFiles : 1,
     includingOutFiles : 0,
     rerucrsive : 0,
@@ -725,6 +704,7 @@ function commandEach( e )
   {
     let file = files[ f ];
 
+    debugger; xxx
     let dirPath = will.Module.DirPathFromWillFilePath( file.absolute );
 
     if( dirPaths[ dirPath ] )
@@ -740,7 +720,7 @@ function commandEach( e )
     if( will.moduleMap[ dirPath ] )
     return true;
 
-    let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).preform();
+    let module = will.currentModule = will.Module({ will : will, filePath : dirPath }).preform();
     module.willFilesFind();
     module.willFilesOpen();
     module.submodulesForm();

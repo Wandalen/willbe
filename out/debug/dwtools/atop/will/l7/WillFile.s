@@ -188,14 +188,14 @@ function open()
 
   /* */
 
-  if( willf.module.supermodule )
+  if( willf.module.supermodule && willf.data.path && willf.data.path.out )
   {
 
     let outPath = willf.data.path.out;
     if( _.mapIs( outPath ) )
     outPath = outPath.path;
 
-    debugger; // yyy
+    // debugger; // yyy
 
     outPath = path.relative( outPath, '.' );
     let dirPath = path.join( willf.dirPath, outPath );

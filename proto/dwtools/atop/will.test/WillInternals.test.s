@@ -200,7 +200,7 @@ buildsResolve.timeOut = 130000;
 function pathsResolve( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'import-in' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, 'super' );
   let modulesPath = _.path.join( routinePath, '.module' );
@@ -241,15 +241,47 @@ function pathsResolve( test )
   module.ready.thenKeep( ( arg ) =>
   {
 
-    test.case = 'path::in*=1, pathResolving : 0';
-    var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'path::in*=1', pathResolving : 0 })
-    var expected = '..';
+    // test.case = 'path::in*=1, pathResolving : 0';
+    // var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'path::in*=1', pathResolving : 0 })
+    // var expected = '.';
+    // test.identical( resolved, expected );
+    //
+    // test.case = 'path::in*=1';
+    // var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'path::in*=1' })
+    // var expected = routinePath;
+    // test.identical( resolved, expected );
+
+    test.case = 'submodule::*/path::in*=1, pathResolving : 0';
+    var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'submodule::*/path::in*=1', pathResolving : 0 })
+    var expected = '.';
     test.identical( resolved, expected );
 
-    test.case = 'path::in*=1';
-    var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'path::in*=1' })
-    var expected = routinePath;
+    /* - */
+
+    test.open( 'pathResolving : 0' );
+
+    test.open( 'flattening : 1' );
+
+    test.open( 'flattening : 1' );
+
+    test.case = 'submodule::*/path::in*=1, pathResolving : 0';
+    var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'submodule::*/path::in*=1', pathResolving : 0, flattening : 1 })
+    var expected = '.';
     test.identical( resolved, expected );
+
+    test.close( 'flattening : 1' );
+
+    test.close( 'flattening : 1' );
+
+    test.close( 'pathResolving : 0' );
+
+/*
+  pathResolving : 1
+  pathUnwrapping : 1,
+  singleUnwrapping : 1,
+  mapValsUnwrapping : 1,
+  flattening : 1,
+*/
 
     return null;
   })
@@ -488,6 +520,234 @@ pathsResolve.timeOut = 130000;
 
 //
 
+function pathsResolveSubmodule( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'import-in' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulePath = _.path.join( routinePath, 'super' );
+  let modulesPath = _.path.join( routinePath, '.module' );
+  let exportPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+  let will = new _.Will;
+  let path = _.fileProvider.path;
+
+  function pin( filePath )
+  {
+    return path.s.join( routinePath, filePath );
+  }
+
+  function pout( filePath )
+  {
+    return path.s.join( routinePath, 'super.out', filePath );
+  }
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( exportPath );
+
+  var module = will.moduleMake( modulePath );
+
+  module.ready.thenKeep( ( arg ) =>
+  {
+
+    test.case = 'submodule::*/path::in*=1, pathResolving : 0';
+    var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'submodule::*/path::in*=1', pathResolving : 0 })
+    var expected = '.';
+    test.identical( resolved, expected );
+
+/*
+  pathUnwrapping : 1,
+  pathResolving : 0,
+  flattening : 1,
+  singleUnwrapping : 1,
+  mapValsUnwrapping : 1,
+*/
+
+    /* - */
+
+    test.open( 'pathUnwrapping : 1' );
+
+    test.open( 'pathResolving : 0' );
+
+    test.open( 'flattening : 1' );
+
+    test.open( 'singleUnwrapping : 1' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 1,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 1,
+    });
+    var expected = '.';
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 1,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 0,
+    });
+    var expected = '.';
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 1' );
+    test.open( 'singleUnwrapping : 0' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 1,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 1,
+    });
+    var expected = [ '.' ];
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 1,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 0,
+    });
+    var expected = { 'MultipleExports.in' : '.' };
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 0' );
+
+    test.close( 'flattening : 1' );
+    test.open( 'flattening : 0' );
+
+    test.open( 'singleUnwrapping : 1' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 0,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 1,
+    });
+    var expected =
+    {
+      'MultipleExports' : { 'in' : '.' }
+    }
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 0,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 0,
+    });
+    var expected = { 'MultipleExports' : { 'in' : '.' } };
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 1' );
+    test.open( 'singleUnwrapping : 0' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 0,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 1,
+    });
+    var expected = { 'MultipleExports' : { 'in' : '.' } };
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 1,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 0,
+    });
+    var expected = { 'MultipleExports.in' : '.' };
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 0' );
+
+    test.close( 'flattening : 0' );
+
+    test.close( 'pathResolving : 0' );
+
+    test.close( 'pathUnwrapping : 1' );
+
+    debugger;
+
+    return null;
+  })
+
+  /* - */
+
+  module.ready.finallyKeep( ( err, arg ) =>
+  {
+
+    debugger;
+    test.is( err === undefined );
+    module.finit();
+
+    if( err )
+    throw err;
+    return arg;
+  });
+  return module.ready.split();
+}
+
+pathsResolveSubmodule.timeOut = 130000;
+
+//
+
 function simple( test )
 {
   let self = this;
@@ -560,6 +820,7 @@ var Self =
 
     buildsResolve,
     pathsResolve,
+    pathsResolveSubmodule,
     simple,
 
   }

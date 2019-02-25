@@ -155,18 +155,19 @@ function moduleMake( o )
   let logger = will.logger;
 
   if( _.strIs( o ) )
-  o = { dirPath : o }
-  o.dirPath = o.dirPath || fileProvider.path.current();
+  o = { filePath : o }
+  o.filePath = o.filePath || fileProvider.path.current();
 
   _.assert( arguments.length === 1 );
   _.routineOptions( moduleMake, o );
 
   if( !o.module )
   {
-    o.module = will.Module({ will : will, dirPath : o.dirPath }).preform();
+    o.module = will.Module({ will : will, filePath : o.filePath }).preform();
   }
 
-  _.assert( o.module.dirPath === o.dirPath );
+  // debugger; xxx
+  // _.assert( o.module.dirPath === o.dirPath );
 
   o.module.willFilesFind();
   o.module.willFilesOpen();
@@ -190,7 +191,7 @@ function moduleMake( o )
 moduleMake.defaults =
 {
   module : null,
-  dirPath : null,
+  filePath : null,
   forming : null,
 }
 

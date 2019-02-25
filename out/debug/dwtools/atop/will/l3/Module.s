@@ -806,6 +806,10 @@ function _willFileFindMaybe( o )
   _.assert( !module.submodulesFormReady.resourcesCount() );
   _.assert( !module.resourcesFormReady.resourcesCount() );
 
+  let namePath = '.';
+  if( o.isNamed )
+  namePath = path.fullName( path.parse( module.filePath ).localPath );
+
   if( module.willFileWithRoleMap[ o.role ] )
   return null;
 
@@ -817,20 +821,31 @@ function _willFileFindMaybe( o )
   if( o.isOutFile )
   {
 
-    debugger;
-    // let name = _.strJoinPath( [ o.dirPath, '.out', module.prefixPathForRole( o.role ) ], '.' );
+    // debugger;
+    // let name = _.strJoinPath( [ namePath, '.out', module.prefixPathForRole( o.role ) ], '.' );
     // filePath = path.resolve( module.dirPath, name );
 
     if( o.isNamed )
     {
-      let name = _.strJoinPath( [ o.dirPath, '.out', module.prefixPathForRole( o.role ) ], '.' );
+      let name = _.strJoinPath( [ namePath, '.out', module.prefixPathForRole( o.role ) ], '.' );
       filePath = path.resolve( module.dirPath, '..', name );
     }
     else
     {
-      let name = _.strJoinPath( [ o.dirPath, '.out', module.prefixPathForRole( o.role ) ], '.' );
+      let name = _.strJoinPath( [ namePath, '.out', module.prefixPathForRole( o.role ) ], '.' );
       filePath = path.resolve( module.dirPath, name );
     }
+
+    // if( o.isNamed )
+    // {
+    //   let name = _.strJoinPath( [ namePath, module.prefixPathForRole( o.role ) ], '.' );
+    //   filePath = path.resolve( module.dirPath, '..', name );
+    // }
+    // else
+    // {
+    //   let name = _.strJoinPath( [ namePath, module.prefixPathForRole( o.role ) ], '.' );
+    //   filePath = path.resolve( module.dirPath, name );
+    // }
 
   }
   else
@@ -838,16 +853,19 @@ function _willFileFindMaybe( o )
 
     if( o.isNamed )
     {
-      let name = _.strJoinPath( [ o.dirPath, module.prefixPathForRole( o.role ) ], '.' );
+      let name = _.strJoinPath( [ namePath, module.prefixPathForRole( o.role ) ], '.' );
       filePath = path.resolve( module.dirPath, '..', name );
     }
     else
     {
       let name = module.prefixPathForRole( o.role );
-      filePath = path.resolve( module.dirPath, o.dirPath, name );
+      filePath = path.resolve( module.dirPath, namePath, name );
     }
 
   }
+
+  if( will.verbosity >= 4 || 0 )
+  logger.log( 'Trying to open', filePath );
 
   new will.WillFile
   ({
@@ -873,7 +891,7 @@ function _willFileFindMaybe( o )
 _willFileFindMaybe.defaults =
 {
   role : null,
-  dirPath : null,
+  // dirPath : null,
   isOutFile : 0,
   isNamed : 0,
 }
@@ -898,102 +916,100 @@ function _willFilesFindMaybe( o )
 
   /* */
 
-  let files = Object.create( null ); debugger;
-  let fullName = path.fullName( path.parse( module.filePath ).localPath );
+  let roles = [ 'single', 'import', 'export' ];
+  let files = Object.create( null );
+  let filePaths;
 
-  files.namedSingle = module._willFileFindMaybe
-  ({
-    role : 'single',
-    // dirPath : path.join( '..', path.fullName( module.dirPath ) ), // yyy
-    dirPath : path.join( '.', fullName ),
-    isOutFile : o.isOutFile,
-    isNamed : 1,
-  })
+  debugger;
 
-  if( !o.isOutFile )
+  /* */
+
+  for( let r = 0 ; r < roles.length ; r++ )
   {
-
-    files.namedImport = module._willFileFindMaybe
+    let role = roles[ r ];
+    files[ role ] = module._willFileFindMaybe
     ({
-      role : 'import',
-      // dirPath : path.join( '..', path.fullName( module.dirPath ) ), // yyy
-      dirPath : path.join( '.', fullName ),
+      role : role,
       isOutFile : o.isOutFile,
       isNamed : 1,
-    });
+    })
+  }
 
-    files.namedExport = module._willFileFindMaybe
+  filePaths = filePathsGet( files );
+  if( filePaths.length )
+  {
+    namedNameDeduce();
+    return end( filePaths );
+  }
+
+  /* */
+
+  for( let r = 0 ; r < roles.length ; r++ )
+  {
+    let role = roles[ r ];
+    files[ role ] = module._willFileFindMaybe
     ({
-      role : 'export',
-      // dirPath : path.join( '..', path.fullName( module.dirPath ) ), // yyy
-      dirPath : path.join( '.', fullName ),
+      role : role,
       isOutFile : o.isOutFile,
+      isNamed : 0,
+    })
+  }
+
+  filePaths = filePathsGet( files );
+  if( filePaths.length )
+  {
+    notNamedNameDeduce();
+    return end( filePaths );
+  }
+
+  /* */
+
+  for( let r = 0 ; r < roles.length ; r++ )
+  {
+    let role = roles[ r ];
+    files[ role ] = module._willFileFindMaybe
+    ({
+      role : role,
+      isOutFile : !o.isOutFile,
       isNamed : 1,
-    });
-
+    })
   }
 
-  if( files.namedSingle || files.namedImport || files.namedExport )
+  filePaths = filePathsGet( files );
+  if( filePaths.length )
   {
-    let filePaths = [];
-    if( files.namedSingle )
-    filePaths.push( files.namedSingle.filePath );
-    if( files.namedImport )
-    filePaths.push( files.namedImport.filePath );
-    if( files.namedExport )
-    filePaths.push( files.namedExport.filePath );
-
-    let filePath = _.strCommonLeft.apply( _, filePaths );
-    module.filePathSet( filePath, path.dir( filePath ) );
-
-    // module.stager.stageState( 'willFilesFound', 3 );
-    return true;
+    namedNameDeduce();
+    return end( filePaths );
   }
 
-  /* - */
+  /* */
 
-  files.anonSingle = module._willFileFindMaybe
-  ({
-    role : 'single',
-    dirPath : '.',
-    isOutFile : o.isOutFile,
-    isNamed : 0,
-  });
-
-  if( !o.isOutFile )
+  for( let r = 0 ; r < roles.length ; r++ )
   {
-
-    files.anonImport = module._willFileFindMaybe
+    let role = roles[ r ];
+    files[ role ] = module._willFileFindMaybe
     ({
-      role : 'import',
-      dirPath : '.',
-      isOutFile : o.isOutFile,
+      role : role,
+      isOutFile : !o.isOutFile,
       isNamed : 0,
-    });
-
-    files.anonExport = module._willFileFindMaybe
-    ({
-      role : 'export',
-      dirPath : '.',
-      isOutFile : o.isOutFile,
-      isNamed : 0,
-    });
-
+    })
   }
 
-  if( files.anonSingle || files.anonImport || files.anonExport )
+  filePaths = filePathsGet( files );
+  if( filePaths.length )
   {
-    let filePaths = [];
-    if( files.anonSingle )
-    filePaths.push( files.anonSingle.filePath );
-    if( files.anonImport )
-    filePaths.push( files.anonImport.filePath );
-    if( files.anonExport )
-    filePaths.push( files.anonExport.filePath );
+    notNamedNameDeduce();
+    return end( filePaths );
+  }
 
-    let filePath = _.strCommonLeft.apply( _, filePaths );
-    module.filePathSet( filePath, path.dir( filePath ) );
+  debugger;
+  return null;
 
+  /* */
+
+  function namedNameDeduce()
+  {
+    debugger;
     for( let w = 0 ; w < module.willFileArray.length ; w++ )
     {
       let willFile = module.willFileArray[ w ];
@@ -1004,12 +1020,40 @@ function _willFilesFindMaybe( o )
       if( name )
       module.configName = name;
     }
+  }
 
-    // module.stager.stageState( 'willFilesFound', 3 );
+  /* */
+
+  function notNamedNameDeduce()
+  {
+    module.configName = path.fullName( path.dir( filePaths[ 0 ] ) );
+  }
+
+  /* - */
+
+  function filePathsGet()
+  {
+    let filePaths = [];
+    if( files.single )
+    filePaths.push( files.single.filePath );
+    if( files.import )
+    filePaths.push( files.import.filePath );
+    if( files.export )
+    filePaths.push( files.export.filePath );
+    return filePaths;
+  }
+
+  /* */
+
+  function end( filePaths )
+  {
+    let filePath = _.strCommonLeft.apply( _, filePaths );
+    debugger;
+    module.filePathSet( filePath, path.dir( filePath ) );
+    _.assert( filePaths.length > 0 );
     return true;
   }
 
-  return null;
 }
 
 _willFilesFindMaybe.defaults =
@@ -1035,6 +1079,13 @@ function willFilesFind()
     module.stager.stageState( 'willFilesFound', 2 );
 
     let result = module._willFilesFindMaybe({ isOutFile : !!module.supermodule });
+
+    // let result = false;
+    // if( !result )
+    // result = module._willFilesFindMaybe({ isOutFile : !!module.supermodule });
+    // if( !result )
+    // result = module._willFilesFindMaybe({ isOutFile : !module.supermodule });
+
     if( !result )
     {
       // debugger;
@@ -1129,9 +1180,6 @@ function _willFilesOpen()
   if( !module.supermodule )
   logger.up();
 
-  // if( !module.supermodule )
-  // logger.log( 'x' )
-
   /* */
 
   for( let i = 0 ; i < module.willFileArray.length ; i++ )
@@ -1148,14 +1196,6 @@ function _willFilesOpen()
   }
 
   /* */
-
-  // con
-  // .keep( ( arg ) => module._submodulesForm() )
-  // .keep( ( arg ) =>
-  // {
-  //   module.stager.stageState( 'willFilesOpened', 3 );
-  //   return arg;
-  // })
 
   con.finally( ( err, arg ) =>
   {
@@ -2543,181 +2583,6 @@ function resolve_pre( routine, args )
   return o;
 }
 
-// //
-//
-// function _resolveMaybe_body( o )
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//
-//   // debugger;
-//   let result = module._resolveAct( o );
-//   // debugger;
-//
-//   if( result === undefined )
-//   {
-//     debugger;
-//     result = module.errResolving
-//     ({
-//       selector : o.selector,
-//       current : o.current,
-//       err : _.ErrorLooking( o.selector, 'was not found' ),
-//     })
-//   }
-//
-//   if( _.errIs( result ) )
-//   return result;
-//
-//   result = pathsResolve( result );
-//
-//   if( o.flattening && _.mapIs( result ) )
-//   result = _.mapsFlatten2([ result ]);
-//
-//   result = pathsUnwrap( result );
-//   result = singleUnwrap( result );
-//   result = mapValsUnwrap( result );
-//
-//   _.assert( result !== undefined );
-//
-//   return result;
-//
-//   /* - */
-//
-//   function pathResolve( p )
-//   {
-//
-//     if( !o.pathResolving )
-//     return p;
-//
-//     if( p instanceof will.PathObj )
-//     {
-//       p = p.clone();
-//       p.module = null;
-//       p.path = pathResolve( p.path );
-//       return p;
-//     }
-//
-//     _.assert( _.arrayIs( p ) || _.strIs( p ) );
-//
-//     if( o.pathResolving === 'in' )
-//     return path.s.resolve( module.dirPath, ( module.pathMap.in || '.' ), p );
-//     else if( o.pathResolving === 'out' )
-//     return path.s.resolve( module.dirPath, ( module.pathMap.out || '.' ), p );
-//
-//   }
-//
-//   /* */
-//
-//   function pathsResolve( result )
-//   {
-//
-//     // if( !o.pathResolving || !o.pathUnwrapping )
-//     // return result;
-//
-//     if( !o.pathResolving )
-//     return result;
-//
-//     if( result instanceof will.PathObj /*|| _.strIs( result )*/ )
-//     {
-//       result = pathResolve( result );
-//     }
-//     else if( _.arrayIs( result ) )
-//     {
-//       let result2 = [];
-//       for( let r = 0 ; r < result.length ; r++ )
-//       if( result[ r ] instanceof will.PathObj /*|| _.strIs( result[ r ] )*/ )
-//       result2[ r ] = pathResolve( result[ r ] );
-//       else
-//       result2[ r ] = result[ r ];
-//       result = result2;
-//     }
-//     else if( _.mapIs( result ) )
-//     {
-//       let result2 = Object.create( null );
-//       for( let r in result )
-//       if( result[ r ] instanceof will.PathObj /*|| _.strIs( result[ r ] )*/ )
-//       result2[ r ] = pathResolve( result[ r ] );
-//       else
-//       result2[ r ] = result[ r ];
-//       result = result2;
-//     }
-//
-//     return result;
-//   }
-//
-//   /* */
-//
-//   function pathsUnwrap( result )
-//   {
-//
-//     if( !o.pathUnwrapping || !o.hasPath )
-//     return result;
-//
-//     _.assert( _.mapIs( result ) || _.objectIs( result ) || _.arrayIs( result ) || _.strIs( result ) );
-//     if( _.mapIs( result ) || _.arrayIs( result ) )
-//     result = _.filter( result, ( e ) => e instanceof will.PathObj ? e.path : e )
-//     else if( result instanceof will.PathObj )
-//     result = result.path;
-//
-//     return result;
-//   }
-//
-//   /* */
-//
-//   function singleUnwrap( result )
-//   {
-//
-//     if( !o.singleUnwrapping )
-//     return result;
-//
-//     if( _.mapIs( result ) )
-//     {
-//       if( _.mapKeys( result ).length === 1 )
-//       result = _.mapVals( result )[ 0 ];
-//     }
-//     else if( _.arrayIs( result ) )
-//     {
-//       if( result.length === 1 )
-//       result = result[ 0 ];
-//     }
-//
-//     return result;
-//   }
-//
-//
-//   function mapValsUnwrap( result )
-//   {
-//
-//     if( !o.mapValsUnwrapping || !_.mapIs( result ) )
-//     return result;
-//
-//     return _.mapVals( result );
-//   }
-//
-// }
-//
-// _resolveMaybe_body.defaults =
-// {
-//   selector : null,
-//   defaultPool : null,
-//   // prefixlessAction : 'default',
-//   prefixlessAction : 'resolved',
-//   visited : null,
-//   current : null,
-//   criterion : null,
-//   currentModule : null,
-//   pathResolving : 'in',
-//   pathUnwrapping : 1,
-//   singleUnwrapping : 1,
-//   mapValsUnwrapping : 1,
-//   flattening : 0,
-//   hasPath : null,
-// }
-//
-// let _resolveMaybe = _.routineFromPreAndBody( resolve_pre, _resolveMaybe_body );
-
 //
 
 function resolve_body( o )
@@ -2728,18 +2593,8 @@ function resolve_body( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  // _.assert( o.missingAction === 'throw', 'not tested' );
-
-  // if( o.missingAction === 'throw' )
-  // debugger;
-  // if( o.missingAction !== 'throw' )
-  // debugger;
-
   // debugger;
   let result = module._resolveAct( o );
-  // debugger;
-
-  // _.assert( _.arrayHas( [ 'undefine', 'throw', 'error' ], o.missingAction ), 'Unknown missing action', o.missingAction );
 
   if( result === undefined )
   {
@@ -2769,20 +2624,15 @@ function resolve_body( o )
     return err;
   }
 
+  // debugger;
+
   result = pathsResolve( result );
-
-  if( o.flattening && _.mapIs( result ) )
-  result = _.mapsFlatten2([ result ]);
-
-  result = pathsUnwrap( result );
-  result = singleUnwrap( result );
+  result = mapsFlatten( result );
   result = mapValsUnwrap( result );
+  result = singleUnwrap( result );
+  result = pathsUnwrap( result );
 
   _.assert( result !== undefined );
-
-  // return result;
-  //
-  // let result = module._resolveMaybe.body.call( module, o );
 
   return result;
 
@@ -2855,12 +2705,13 @@ function resolve_body( o )
   function pathsUnwrap( result )
   {
 
+    debugger;
     if( !o.pathUnwrapping || !o.hasPath )
     return result;
 
     _.assert( _.mapIs( result ) || _.objectIs( result ) || _.arrayIs( result ) || _.strIs( result ) );
     if( _.mapIs( result ) || _.arrayIs( result ) )
-    result = _.filter( result, ( e ) => e instanceof will.PathObj ? e.path : e )
+    result = _.filter( result, ( e ) => pathsUnwrap( e ) )
     else if( result instanceof will.PathObj )
     result = result.path;
 
@@ -2873,6 +2724,9 @@ function resolve_body( o )
   {
 
     if( !o.singleUnwrapping )
+    return result;
+
+    if( !_.all( result, ( e ) => _.instanceIs( e ) ) )
     return result;
 
     if( _.mapIs( result ) )
@@ -2889,19 +2743,25 @@ function resolve_body( o )
     return result;
   }
 
+  //
+
+  function mapsFlatten( result )
+  {
+    if( o.flattening && _.mapIs( result ) )
+    result = _.mapsFlatten2([ result ]);
+    return result;
+  }
+
+  //
 
   function mapValsUnwrap( result )
   {
-
-    if( !o.mapValsUnwrapping || !_.mapIs( result ) )
+    if( !o.mapValsUnwrapping || !_.mapIs( result ) || !_.all( result, ( e ) => _.instanceIs( e ) ) )
     return result;
-
     return _.mapVals( result );
   }
 
 }
-
-// resolve_body.defaults = Object.create( _resolveMaybe.body.defaults );
 
 resolve_body.defaults =
 {
@@ -2918,7 +2778,7 @@ resolve_body.defaults =
   pathUnwrapping : 1,
   singleUnwrapping : 1,
   mapValsUnwrapping : 1,
-  flattening : 0,
+  flattening : 1,
   hasPath : null,
 }
 

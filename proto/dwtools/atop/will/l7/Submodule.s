@@ -99,7 +99,7 @@ function _load()
 
   /* */
 
-  debugger;
+  // debugger;
   submodule.loadedModule = will.Module
   ({
     will : will,
@@ -121,10 +121,12 @@ function _load()
     return arg;
   });
 
+  // debugger;
   submodule.loadedModule.ready.finally( ( err, arg ) =>
   {
     if( err )
     {
+      debugger;
       if( will.verbosity >= 3 )
       logger.error( ' ! Failed to read ' + submodule.nickName + ', try to download it with .submodules.download or even clean it before downloading' );
       if( will.verbosity >= 5 || !submodule.loadedModule || submodule.loadedModule.isOpened() )
