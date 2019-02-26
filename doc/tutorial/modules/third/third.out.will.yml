@@ -1,0 +1,69 @@
+format: willfile-1.0.0
+about:
+  name: third
+  description: Third module
+  version: 0.0.1
+  enabled: 1
+execution: {}
+path:
+  int:
+    path: .
+  out:
+    path: .
+  fileToExport:
+    path: ./fileToExport
+  exportedDir.export:
+    path: ./fileToExport
+    criterion:
+      default: 1
+      export: 1
+  exportedFiles.export:
+    path:
+      - fileToExport
+    criterion:
+      default: 1
+      export: 1
+submodule: {}
+reflector:
+  exported.export:
+    src:
+      filePath:
+        fileToExport: true
+      prefixPath: .
+    criterion:
+      default: 1
+      export: 1
+  exportedFiles.export:
+    recursive: 0
+    src:
+      filePath:
+        .: true
+      basePath: .
+      prefixPath: fileToExport
+    criterion:
+      default: 1
+      export: 1
+step:
+  export.single:
+    opts:
+      tar: 0
+      export: 'path::fileToExport'
+    inherit:
+      - predefined.export
+build:
+  export:
+    criterion:
+      default: 1
+      export: 1
+    steps:
+      - export.single
+exported:
+  export:
+    version: 0.0.1
+    criterion:
+      default: 1
+      export: 1
+    exportedReflector: 'reflector::exported.export'
+    exportedFilesReflector: 'reflector::exportedFiles.export'
+    exportedDirPath: 'path::exportedDir.export'
+    exportedFilesPath: 'path::exportedFiles.export'

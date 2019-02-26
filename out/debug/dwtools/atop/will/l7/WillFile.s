@@ -188,20 +188,20 @@ function open()
 
   /* */
 
-  if( willf.module.supermodule && willf.data.path && willf.data.path.out )
-  {
-
-    let outPath = willf.data.path.out;
-    if( _.mapIs( outPath ) )
-    outPath = outPath.path;
-
-    // debugger; // yyy
-
-    outPath = path.relative( outPath, '.' );
-    let dirPath = path.join( willf.dirPath, outPath );
-    module.filePathSet( module.filePath, dirPath );
-
-  }
+  // if( willf.module.supermodule && willf.data.path && willf.data.path.out )
+  // {
+  //
+  //   let outPath = willf.data.path.out;
+  //   if( _.mapIs( outPath ) )
+  //   outPath = outPath.path;
+  //
+  //   // debugger; // yyy
+  //
+  //   outPath = path.relative( outPath, '.' );
+  //   let dirPath = path.join( willf.dirPath, outPath );
+  //   module.filePathSet( module.filePath, dirPath );
+  //
+  // }
 
   _.assert( willf.dirPath === path.dir( willf.filePath ) );
 
@@ -218,7 +218,7 @@ function open()
 
   willf._resourcesMake( will.Exported, willf.data.exported || {} );
   willf._resourcesMake( will.Submodule, willf.data.submodule || {} );
-  willf._resourcesMake( will.PathObj, willf.data.path || {} );
+  willf._resourcesMake( will.PathResource, willf.data.path || {} );
   willf._resourcesMake( will.Reflector, willf.data.reflector || {} );
   willf._resourcesMake( will.Step, willf.data.step || {} );
   willf._resourcesMake( will.Build, willf.data.build || {} );
@@ -345,7 +345,7 @@ let Aggregates =
 
   submoduleMap : _.define.own({}),
   pathMap : _.define.own({}),
-  pathObjMap : _.define.own({}),
+  pathResourceMap : _.define.own({}),
   reflectorMap : _.define.own({}),
   stepMap : _.define.own({}),
   buildMap : _.define.own({}),
@@ -355,12 +355,17 @@ let Aggregates =
 
 let Associates =
 {
-  module : null,
   data : null,
+}
+
+let Medials =
+{
+  module : null,
 }
 
 let Restricts =
 {
+  module : null,
   formed : 0,
 }
 
@@ -399,6 +404,7 @@ let Proto =
   Composes,
   Aggregates,
   Associates,
+  Medials,
   Restricts,
   Statics,
   Forbids,

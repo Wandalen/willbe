@@ -9,6 +9,16 @@ if( typeof module !== 'undefined' )
 
 }
 
+/*
+
+= Orientation
+
+- Willbe prepends all relative paths by path::in. path::out and path::temp prepended by path::in as well.
+- Willbe prepends path::in by module.dirPath, a directory which has the will-file.
+- Only difference between generated out-will-files and manually written will-file is section exported. out-will-files has such section, manually written will-file does not.
+
+*/
+
 //
 
 let _ = wTools;
@@ -260,7 +270,7 @@ var ResourceKindToClassName = new _.NameMapper({ leftName : 'resource kind', rig
 
   'submodule' : 'Submodule',
   'step' : 'Step',
-  'path' : 'PathObj',
+  'path' : 'PathResource',
   'reflector' : 'Reflector',
   'build' : 'Build',
   'about' : 'About',
@@ -274,7 +284,7 @@ var ResourceKindToMapName = new _.NameMapper({ leftName : 'resource kind', right
 
   'submodule' : 'submoduleMap',
   'step' : 'stepMap',
-  'path' : 'pathObjMap',
+  'path' : 'pathResourceMap',
   'reflector' : 'reflectorMap',
   'build' : 'buildMap',
   'exported' : 'exportedMap',

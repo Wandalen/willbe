@@ -12,7 +12,6 @@ path :
 
 step  :
   export.single :
-      inherit : predefined.export
       tar : 0
       export : path::fileToExport
 
