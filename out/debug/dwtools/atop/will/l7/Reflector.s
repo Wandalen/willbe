@@ -62,20 +62,14 @@ function form1()
 
   _.assert( arguments.length === 0 );
   _.assert( !reflector.formed );
-
   _.assert( !!will );
   _.assert( !!module );
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !!will.formed );
-  _.assert( module.preformed >= 2 );
+  // _.assert( module.preformed >= 2 );
   _.assert( !willf || !!willf.formed );
   _.assert( _.strDefined( reflector.name ) );
-
-  // if( reflector.absoluteName === 'module::super / module::MultipleExports / reflector::exportedFiles.export.' )
-  // debugger;
-  // if( reflector.absoluteName === 'module::super / reflector::reflect.submodules.' )
-  // debugger;
 
   /* begin */
 
@@ -90,7 +84,6 @@ function form1()
     reflector.src.hubFileProvider = fileProvider;
     if( reflector.src.basePath )
     reflector.src.basePath = path.s.normalize( reflector.src.basePath );
-    // reflector.src.basePath = path.s.normalize( path.s.join( module.dirPath, reflector.src.basePath ) );
     if( !reflector.src.formed )
     reflector.src._formAssociations();
   }
@@ -103,15 +96,9 @@ function form1()
 
     if( reflector.dst.basePath )
     reflector.dst.basePath = path.s.normalize( reflector.dst.basePath );
-    // reflector.dst.basePath = path.s.normalize( path.s.join( module.dirPath, reflector.dst.basePath ) );
     if( !reflector.dst.formed )
     reflector.dst._formAssociations();
   }
-
-  // if( reflector.filePath )
-  // reflector.filePath = path.pathMapExtend( null, reflector.filePath, true );
-  // if( reflector.src.basePath )
-  // debugger;
 
   /* end */
 
@@ -131,11 +118,7 @@ function form2()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  // if( reflector.src.basePath )
-  // debugger;
   // if( reflector.absoluteName === 'module::super / module::MultipleExports / reflector::exportedFiles.export.' )
-  // debugger;
-  // if( reflector.absoluteName === 'module::super / reflector::reflect.submodules.' )
   // debugger;
 
   /* filters */
@@ -146,14 +129,6 @@ function form2()
   reflector.pathsResolve();
 
   let result = Parent.prototype.form2.apply( reflector, arguments );
-
-  // if( reflector.absoluteName === 'module::super / module::MultipleExports / reflector::exportedFiles.export.' )
-  // debugger;
-  // if( reflector.absoluteName === 'module::super / reflector::reflect.submodules.' )
-  // debugger;
-
-  // if( reflector.src.basePath )
-  // debugger;
 
   return result;
 }
@@ -175,18 +150,7 @@ function _inheritMultiple( o )
   _.assert( _.arrayIs( reflector.inherit ) );
   _.routineOptions( _inheritMultiple, arguments );
 
-  // if( reflector.absoluteName === 'module::super / reflector::reflect.submodules.' )
-  // debugger;
-
-  /* begin */
-
-  // if( reflector.absoluteName === 'module::super / reflector::reflect.submodules.' )
-  // debugger;
-
   Parent.prototype._inheritMultiple.call( reflector, o );
-
-  // if( reflector.absoluteName === 'module::super / reflector::reflect.submodules.' )
-  // debugger;
 
   if( reflector.filePath )
   {
@@ -223,7 +187,6 @@ function _inheritSingle( o )
   _.assert( reflector.formed === 1 );
   _.assert( reflector2 instanceof reflector.constructor, () => 'Expects reflector, but got', _.strType( reflector2 ) );
   _.assert( !!reflector2.formed );
-
   _.assert( reflector.src instanceof _.FileRecordFilter );
   _.assert( reflector.dst instanceof _.FileRecordFilter );
   _.assert( reflector2.src instanceof _.FileRecordFilter );
@@ -244,14 +207,17 @@ function _inheritSingle( o )
   delete extend.criterion;
   delete extend.filePath;
 
-  // if( reflector.absoluteName === 'module::super / reflector::reflect.submodules.' )
-  // debugger;
-
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
 
+  // if( reflector.absoluteName === 'module::super / reflector::reflect.submodules.' )
+  // debugger;
+
   reflector.src.and( reflector2.src ).pathsInherit( reflector2.src );
   reflector.dst.and( reflector2.dst ).pathsInherit( reflector2.dst );
+
+  // if( reflector.absoluteName === 'module::super / reflector::reflect.submodules.' )
+  // debugger;
 
 }
 
@@ -277,8 +243,7 @@ function form3()
   _.assert( arguments.length === 0 );
   _.assert( reflector.formed === 2 );
 
-  // if( reflector.absoluteName === 'module::super / reflector::reflect.submodules.' )
-  // debugger;
+  // if( reflector.absoluteName === 'module::super / module::MultipleExports / reflector::exportedFiles.export.' )
   // debugger;
 
   /* begin */
@@ -292,12 +257,6 @@ function form3()
   _.assert( path.isAbsolute( reflector.src.prefixPath ) );
 
   /* end */
-
-  // if( reflector.nickName === 'reflector::reflect.submodules' )
-  // debugger;
-
-  // if( reflector.src.basePath )
-  // debugger;
 
   reflector.formed = 3;
   return reflector;
@@ -322,14 +281,8 @@ function _reflectMapForm( o )
   {
     let dst = map[ r ];
 
-    // if( reflector.absoluteName === 'module::super / reflector::reflect.submodules.' )
-    // debugger;
-
     if( !_.boolLike( dst ) )
     {
-      // debugger;
-      // _.assert( _.strIs( dst ), 'not tested' );
-      // if( !module.strIsResolved( dst ) )
       dst = reflector.resolve
       ({
         selector : dst,
@@ -338,9 +291,6 @@ function _reflectMapForm( o )
         prefixlessAction : 'resolved',
       });
     }
-
-    // if( reflector.absoluteName === 'module::super / reflector::reflect.submodules.' )
-    // debugger;
 
     if( !module.strIsResolved( r ) )
     {
@@ -540,14 +490,6 @@ function pathsResolve( o )
 
   o = _.routineOptions( pathsResolve, arguments );
 
-  // _.assert( !!o.addingSrcPrefix );
-  _.assert( !o.addingDstPrefix );
-
-  // if( reflector.absoluteName === 'module::super / module::MultipleExports / reflector::exportedFiles.export.' )
-  // debugger;
-
-  // if( reflector.src.filePath )
-  // reflector.src.filePath = resolve( reflector.src.filePath, resolve );
   if( reflector.src.basePath )
   reflector.src.basePath = path.filter( reflector.src.basePath, resolve );
   if( reflector.src.prefixPath )
@@ -562,38 +504,13 @@ function pathsResolve( o )
   if( reflector.dst.prefixPath )
   reflector.dst.prefixPath = resolve( reflector.dst.prefixPath );
 
-  // if( reflector.dst.prefixPath || o.addingDstPrefix )
-  // reflector.dst.prefixPath = path.resolve( module.inPath, reflector.dst.prefixPath || '.' );
-  // else if( reflector.dst.filePath )
-  // reflector.dst.prefixPath = path.common( reflector.dst.filePath );
-
-  // if( reflector.dst.prefixPath )
-  // reflector.dst.prefixPath = path.resolve( module.inPath, reflector.dst.prefixPath || '.' );
-  // else
-
-  // if( reflector.absoluteName === 'module::super / reflector::reflect.submodules.' )
-  // debugger;
-
   if( reflector.dst.filePath && !reflector.dst.prefixPath )
   reflector.dst.pathsRelativePrefix();
-
-  // if( reflector.dst.filePath && !reflector.dst.prefixPath )
-  // {
-  //   reflector.dst.prefixPath = path.common( reflector.dst.filePath );
-  //   reflector.dst.filePath = path.s.relative( reflector.dst.prefixPath, reflector.dst.filePath );
-  //   if( reflector.dst.basePath )
-  //   reflector.dst.basePath = path.s.relative( reflector.dst.prefixPath, reflector.dst.basePath );
-  // }
 
   if( reflector.dst.prefixPath )
   reflector.dst.prefixPath = path.resolve( module.inPath, reflector.dst.prefixPath || '.' );
 
   _.assert( reflector.dst.prefixPath === null || path.s.allAreAbsolute( reflector.dst.prefixPath ) );
-
-  // if( reflector.absoluteName === 'module::super / module::MultipleExports / reflector::exportedFiles.export.' )
-  // debugger;
-  // if( reflector.absoluteName === 'module::super / reflector::reflect.submodules.' )
-  // debugger;
 
   /* */
 
@@ -601,14 +518,11 @@ function pathsResolve( o )
   {
     return path.filter( src, ( filePath ) =>
     {
-      if( filePath === 'submodule::*/path::in*=1' )
-      debugger;
       if( _.strIs( filePath ) )
       return reflector.resolve({ prefixlessAction : 'resolved', selector : filePath });
       else
       return filePath;
     });
-    //return reflector.resolve({ prefixlessAction : 'resolved', selector : src });
   }
 
 }
@@ -616,7 +530,6 @@ function pathsResolve( o )
 pathsResolve.defaults =
 {
   addingSrcPrefix : 0,
-  addingDstPrefix : 0,
 }
 
 //

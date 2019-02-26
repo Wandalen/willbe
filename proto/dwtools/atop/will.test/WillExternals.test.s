@@ -2163,7 +2163,7 @@ function multipleExports( test )
     {
       proto : { path : './proto' },
       temp : { path : 'out' },
-      in : { path : '.' },
+      in : { path : '..' },
       out : { path : 'out' },
       'out.debug' :
       {
@@ -2362,7 +2362,7 @@ function multipleExports( test )
     {
       proto : { path : './proto' },
       temp : { path : 'out' },
-      in : { path : '.' },
+      in : { path : '..' },
       out : { path : 'out' },
       'out.debug' :
       {

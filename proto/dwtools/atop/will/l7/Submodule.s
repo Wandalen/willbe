@@ -41,8 +41,8 @@ function unform()
 
   if( submodule.loadedModule )
   {
-    _.assert( submodule.loadedModule.associatedSubmodule === submodule )
-    submodule.loadedModule.associatedSubmodule = null;
+    _.assert( submodule.loadedModule.associatedSubmoduleResource === submodule )
+    submodule.loadedModule.associatedSubmoduleResource = null;
     submodule.loadedModule.finit();
   }
 
@@ -106,7 +106,7 @@ function _load()
     alias : submodule.name,
     filePath : path.join( module.dirPath, submodule.path ),
     supermodule : module,
-    associatedSubmodule : submodule,
+    associatedSubmoduleResource : submodule,
   }).preform();
 
   submodule.loadedModule.willFilesFind({ isOutFile : 1 });
@@ -212,11 +212,11 @@ let Aggregates =
 
 let Associates =
 {
-  loadedModule : null,
 }
 
 let Restricts =
 {
+  loadedModule : null,
 }
 
 let Statics =

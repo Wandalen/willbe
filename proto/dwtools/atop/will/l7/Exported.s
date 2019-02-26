@@ -219,15 +219,13 @@ function performExportedReflectors( exportSelector )
   }
   else _.assert( 0 );
 
-  // debugger;
   exportedReflector.criterion = _.mapExtend( null, exported.criterion );
   exportedReflector.form();
   exported.exportedReflector = exportedReflector;
-  // debugger;
 
   _.assert( _.mapIs( exportedReflector.criterion ) );
-  _.assert( exportedReflector/*dstFilter*/.dst.prefixPath === null );
-  _.assert( exportedReflector/*dstFilter*/.dst.basePath === null );
+  _.assert( exportedReflector.dst.prefixPath === null );
+  _.assert( exportedReflector.dst.basePath === null );
   _.assert( path.isAbsolute( exportedReflector.src.prefixPath ) );
   _.assert( exportedReflector instanceof will.Reflector );
 
@@ -298,8 +296,6 @@ function performExportedFilesReflector()
 
   exported.exportedFilesPath.path = path.s.relative( module.dirPath, exportedFilesPath );
 
-  // exported.exportedFilesPath.path = _.filter( exportedFilesPath, ( r ) => r.relative );
-
   _.sure
   (
     exported.exportedFilesPath.path.length > 0,
@@ -307,13 +303,17 @@ function performExportedFilesReflector()
     + ', cant export ' + exported.build.name,
   );
 
-  // debugger;
   exported.exportedFilesPath.form();
-  // debugger;
 
   /* exportedFilesReflector */
 
-  let exportedFilesReflector = exported.exportedFilesReflector = exported.exportedReflector.cloneExtending({ name : module.resourceNameAllocate( 'reflector', 'exportedFiles.' + exported.name ) });
+  if( !exported.exportedFilesReflector )
+  exported.exportedFilesReflector = exported.exportedReflector.cloneExtending
+  ({
+    name : module.resourceNameAllocate( 'reflector', 'exportedFiles.' + exported.name ),
+    module : module,
+  });
+  let exportedFilesReflector = exported.exportedFilesReflector;
 
   _.assert( _.objectIs( exportedFilesReflector.criterion ) );
   _.assert( exportedFilesReflector.src.basePath === exported.exportedDirPath.path || exportedFilesReflector.src.basePath === null );
@@ -325,15 +325,14 @@ function performExportedFilesReflector()
   exportedFilesReflector.src.basePath = '.';
   exportedFilesReflector.src.prefixPath = exported.exportedDirPath.refName;
 
-  _.assert( exportedFilesReflector/*dstFilter*/.dst.basePath === null );
-  exportedFilesReflector/*dstFilter*/.dst.filteringClear();
-  // exportedFilesReflector.filePath = { [ exported.exportedFilesPath.refName ] : true }
+  _.assert( exportedFilesReflector.dst.basePath === null );
+  exportedFilesReflector.dst.filteringClear();
   exportedFilesReflector.filePath = path.pathMapExtend( null, exportedFilesPath );
   exportedFilesReflector.recursive = 0;
   exportedFilesReflector.form();
 
-  _.assert( exportedFilesReflector/*dstFilter*/.dst.prefixPath === null );
-  _.assert( exportedFilesReflector/*dstFilter*/.dst.basePath === null );
+  _.assert( exportedFilesReflector.dst.prefixPath === null );
+  _.assert( exportedFilesReflector.dst.basePath === null );
 
 }
 
@@ -399,7 +398,7 @@ function performArchive( enabled )
 
 //
 
-function performOutFile()
+function performWriteOutFile()
 {
   let exported = this;
   let module = exported.module;
@@ -410,8 +409,16 @@ function performOutFile()
   let logger = will.logger;
   let build = module.buildMap[ exported.name ];
 
+  let module2 = module.cloneExtending({ dirPath : module.outPath });
+  let inPathResource = module2.resourceObtain( 'path', 'in' );
+  let outPathResource = module2.resourceObtain( 'path', 'out' );
+
+  inPathResource.path = path.relative( module.outPath, module.dirPath );
+
   let outFilePath = build.outFilePathFor();
-  let data = module.dataExport();
+  let data = module2.dataExport();
+
+  module2.finit();
 
   hd.fileWrite
   ({
@@ -460,7 +467,7 @@ function perform( frame )
   exported.performExportedFilesReflector();
   exported.performArchive( opts.tar === undefined || opts.tar );
 
-  exported.performOutFile();
+  exported.performWriteOutFile();
 
   /* log */
 
@@ -509,7 +516,7 @@ let Associates =
 {
   step : null,
   build : null,
-  module : null,
+  // module : null,
 }
 
 let Restricts =
@@ -547,7 +554,7 @@ let Proto =
   performExportedReflectors,
   performExportedFilesReflector,
   performArchive,
-  performOutFile,
+  performWriteOutFile,
   perform,
 
   // relation

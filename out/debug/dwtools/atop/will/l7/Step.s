@@ -35,8 +35,11 @@ function init( o )
 
   if( o )
   {
-    o.opts = _.mapBut( o, step.constructor.fieldsOfCopyableGroups );
-    _.mapDelete( o, o.opts );
+    if( _.mapIs( o ) )
+    {
+      o.opts = _.mapBut( o, step.constructor.FieldsOfInputGroups );
+      _.mapDelete( o, o.opts );
+    }
     if( o )
     step.copy( o );
   }

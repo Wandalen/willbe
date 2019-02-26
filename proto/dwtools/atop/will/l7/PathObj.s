@@ -1,4 +1,4 @@
-( function _PathObj_s_( ) {
+( function _PathResource_s_( ) {
 
 'use strict';
 
@@ -9,16 +9,14 @@ if( typeof module !== 'undefined' )
 
 }
 
-// xxx
-
 let _ = wTools;
 let Parent = _.Will.Resource;
-let Self = function wWillPathObj( o )
+let Self = function wWillPathResource( o )
 {
   return _.instanceConstructor( Self, this, arguments );
 }
 
-Self.shortName = 'PathObj';
+Self.shortName = 'PathResource';
 
 // --
 // inter
@@ -36,112 +34,112 @@ function OptionsFrom( o )
 
 function unform()
 {
-  let patho = this;
-  let module = patho.module;
-  let willf = patho.willf;
+  let pathResource = this;
+  let module = pathResource.module;
+  let willf = pathResource.willf;
 
-  _.assert( module[ patho.MapName ][ patho.name ] === patho );
+  _.assert( module[ pathResource.MapName ][ pathResource.name ] === pathResource );
   if( willf )
-  _.assert( willf[ patho.MapName ][ patho.name ] === patho );
+  _.assert( willf[ pathResource.MapName ][ pathResource.name ] === pathResource );
 
-  Parent.prototype.unform.apply( patho, arguments )
+  Parent.prototype.unform.apply( pathResource, arguments )
 
-  delete module[ patho.MapName ][ patho.name ];
+  delete module[ pathResource.MapName ][ pathResource.name ];
   if( willf )
-  delete willf[ patho.MapName ][ patho.name ];
+  delete willf[ pathResource.MapName ][ pathResource.name ];
 
-  delete module.pathMap[ patho.name ];
+  delete module.pathMap[ pathResource.name ];
   if( willf )
-  delete willf.pathMap[ patho.name ];
+  delete willf.pathMap[ pathResource.name ];
 
-  return patho;
+  return pathResource;
 }
 
 //
 
 function form1()
 {
-  let patho = this;
-  let module = patho.module;
-  let willf = patho.willf;
+  let pathResource = this;
+  let module = pathResource.module;
+  let willf = pathResource.willf;
 
-  _.sure( !module[ patho.MapName ][ patho.name ], () => 'Module ' + module.dirPath + ' already has ' + patho.nickName );
-  _.assert( !willf || !willf[ patho.MapName ][ patho.name ] );
+  _.sure( !module[ pathResource.MapName ][ pathResource.name ], () => 'Module ' + module.dirPath + ' already has ' + pathResource.nickName );
+  _.assert( !willf || !willf[ pathResource.MapName ][ pathResource.name ] );
 
-  Parent.prototype.form1.apply( patho, arguments )
+  Parent.prototype.form1.apply( pathResource, arguments )
 
-  module[ patho.MapName ][ patho.name ] = patho;
+  module[ pathResource.MapName ][ pathResource.name ] = pathResource;
   if( willf )
-  willf[ patho.MapName ][ patho.name ] = patho;
+  willf[ pathResource.MapName ][ pathResource.name ] = pathResource;
 
-  module.pathMap[ patho.name ] = patho.path;
+  module.pathMap[ pathResource.name ] = pathResource.path;
   if( willf )
-  willf.pathMap[ patho.name ] = patho.path;
+  willf.pathMap[ pathResource.name ] = pathResource.path;
 
-  return patho;
+  return pathResource;
 }
 
 //
 
 function form3()
 {
-  let patho = this;
-  let module = patho.module;
-  let willf = patho.willf;
+  let pathResource = this;
+  let module = pathResource.module;
+  let willf = pathResource.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0 );
-  _.assert( patho.formed === 2 );
+  _.assert( pathResource.formed === 2 );
 
   /* begin */
 
   /* end */
 
-  _.sure( _.strIs( patho.path ) || _.arrayIs( patho.path ), 'Path resource should have "path" field' );
+  _.sure( _.strIs( pathResource.path ) || _.arrayIs( pathResource.path ), 'Path resource should have "path" field' );
   _.assert
   (
-    _.all( patho.path, ( p ) => path.isRelative( p ) || path.isGlobal( p ) ),
-    () => patho.nickName + ' should not have absolute paths, but have ' + _.toStr( patho.path )
+    _.all( pathResource.path, ( p ) => path.isRelative( p ) || path.isGlobal( p ) ),
+    () => pathResource.nickName + ' should not have absolute paths, but have ' + _.toStr( pathResource.path )
   );
 
-  patho.formed = 3;
-  return patho;
+  pathResource.formed = 3;
+  return pathResource;
 }
 
 //
 
 function _pathSet( src )
 {
-  let patho = this;
-  let module = patho.module;
+  let pathResource = this;
+  let module = pathResource.module;
 
   _.assert( src === null || _.strIs( src ) || _.arrayLike( src ) );
 
   if( _.arrayLike( src ) )
   src = _.arraySlice( src );
 
-  // if( patho.path )
+  // if( pathResource.path )
   // debugger;
   // if( src )
   // debugger;
 
-  if( module && patho.name )
+  if( module && pathResource.name )
   {
     // debugger;
-    _.assert( module.pathMap[ patho.name ] === patho.path );
-    delete module.pathMap[ patho.name ];
+    _.assert( module.pathMap[ pathResource.name ] === pathResource.path );
+    delete module.pathMap[ pathResource.name ];
   }
 
-  patho[ pathSymbol ] = src;
+  pathResource[ pathSymbol ] = src;
 
-  if( module && patho.name )
+  if( module && pathResource.name )
   {
     // debugger;
-    _.assert( module.pathMap[ patho.name ] === undefined );
-    module.pathMap[ patho.name ] = patho.path;
+    _.assert( module.pathMap[ pathResource.name ] === undefined );
+    module.pathMap[ pathResource.name ] = pathResource.path;
   }
 
 }
@@ -178,7 +176,7 @@ let Restricts =
 let Statics =
 {
   OptionsFrom : OptionsFrom,
-  MapName : 'pathObjMap',
+  MapName : 'pathResourceMap',
   KindName : 'path',
 }
 

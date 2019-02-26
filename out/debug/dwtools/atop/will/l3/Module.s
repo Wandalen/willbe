@@ -29,7 +29,7 @@ function finit()
   let module = this;
   let will = module.will;
 
-  if( module.preformed )
+  // if( module.preformed )
   module.unform();
   module.about.finit();
   module.execution.finit();
@@ -41,12 +41,13 @@ function finit()
   _.assert( Object.keys( module.buildMap ).length === 0 );
   _.assert( Object.keys( module.stepMap ).length === 0 );
   _.assert( Object.keys( module.reflectorMap ).length === 0 );
-  _.assert( Object.keys( module.pathObjMap ).length === 0 );
+  _.assert( Object.keys( module.pathResourceMap ).length === 0 );
   _.assert( Object.keys( module.submoduleMap ).length === 0 );
 
   _.assert( module.willFileArray.length === 0 );
   _.assert( Object.keys( module.willFileWithRoleMap ).length === 0 );
-  _.assert( will.moduleMap[ module.filePath ] === undefined );
+  _.assert( will.moduleMap[ module.filePath ] !== module );
+  _.assert( !_.arrayHas( will.moduleArray, module ) );
 
   return _.Copyable.prototype.finit.apply( module, arguments );
 }
@@ -65,11 +66,7 @@ function init( o )
   module.Counter += 1;
   module.id = module.Counter;
 
-  if( o )
-  module.copy( o );
-
-  let will = module.will;
-
+  let will = o.will;
   _.assert( !!will );
 
   module.stager = new _.Stager
@@ -81,6 +78,21 @@ function init( o )
     verbosity : Math.max( Math.min( will.verbosity, will.verboseStaging ), will.verbosity - 6 ),
   });
 
+  if( o )
+  module.copy( o );
+
+}
+
+//
+
+function copy( o )
+{
+  let module = this;
+
+  if( o && o.will )
+  module.will = o.will;
+
+  return _.Copyable.prototype.copy.apply( module, arguments );
 }
 
 //
@@ -91,13 +103,13 @@ function unform()
   let will = module.will;
 
   _.assert( arguments.length === 0 );
-  _.assert( !!module.preformed );
+  // _.assert( !!module.preformed );
 
-  if( module.associatedSubmodule )
+  if( module.associatedSubmoduleResource )
   {
-    _.assert( module.associatedSubmodule.loadedModule === module );
-    module.associatedSubmodule.loadedModule = null;
-    module.associatedSubmodule.finit();
+    _.assert( module.associatedSubmoduleResource.loadedModule === module );
+    module.associatedSubmoduleResource.loadedModule = null;
+    module.associatedSubmoduleResource.finit();
   }
 
   /* begin */
@@ -110,8 +122,8 @@ function unform()
   module.stepMap[ i ].finit();
   for( let i in module.reflectorMap )
   module.reflectorMap[ i ].finit();
-  for( let i in module.pathObjMap )
-  module.pathObjMap[ i ].finit();
+  for( let i in module.pathResourceMap )
+  module.pathResourceMap[ i ].finit();
   for( let i in module.submoduleMap )
   module.submoduleMap[ i ].finit();
 
@@ -119,7 +131,7 @@ function unform()
   _.assert( Object.keys( module.buildMap ).length === 0 );
   _.assert( Object.keys( module.stepMap ).length === 0 );
   _.assert( Object.keys( module.reflectorMap ).length === 0 );
-  _.assert( Object.keys( module.pathObjMap ).length === 0 );
+  _.assert( Object.keys( module.pathResourceMap ).length === 0 );
   _.assert( Object.keys( module.submoduleMap ).length === 0 );
 
   for( let i = module.willFileArray.length-1 ; i >= 0 ; i-- )
@@ -132,17 +144,19 @@ function unform()
     willf.finit();
   }
 
-  debugger;
-
   _.assert( module.willFileArray.length === 0 );
   _.assert( Object.keys( module.willFileWithRoleMap ).length === 0 );
-  _.assert( will.moduleMap[ module.filePath ] === module );
-  // _.assert( will.moduleMap[ module.remotePath ] === module || will.moduleMap[ module.remotePath ] === undefined );
   _.assert( will.moduleMap[ module.remotePath ] === undefined );
-  delete will.moduleMap[ module.filePath ];
-  // delete will.moduleMap[ module.remotePath ];
-  _.assert( will.moduleMap[ module.filePath ] === undefined );
-  _.arrayRemoveElementOnceStrictly( will.moduleArray, module );
+
+  if( module.preformed )
+  {
+    _.assert( will.moduleMap[ module.filePath ] === module );
+    delete will.moduleMap[ module.filePath ];
+    _.arrayRemoveElementOnceStrictly( will.moduleArray, module );
+  }
+
+  _.assert( will.moduleMap[ module.filePath ] !== module );
+  _.assert( !_.arrayHas( will.moduleArray, module ) );
 
   /* end */
 
@@ -192,12 +206,8 @@ function preform1()
   let logger = will.logger;
 
   _.assert( arguments.length === 0 );
-  // _.assert( !module.dirPath );
   _.assert( !!module.will );
   _.assert( _.strIs( module.filePath ) || _.strIs( module.dirPath ), 'Expects filePath or dirPath' );
-
-  // let filePath = module.filePath;
-  // module.filePath = null;
 
   if( module.filePath === null )
   module.filePath = module.dirPath;
@@ -206,23 +216,10 @@ function preform1()
 
   module._filePathSet( module.filePath, module.dirPath );
 
-  // module.filePath = path.normalize( module.dirPath );
-  // module.dirPath = path.normalize( module.dirPath );
-  //
-  // if( will.moduleMap[ module.filePath ] !== undefined )
-  // {
-  //   debugger;
-  //   throw _.err( 'Module at ' + _.strQuote( module.dirPath ) + ' were defined more than once!' );
-  // }
-
   /* */
 
   _.arrayAppendOnceStrictly( will.moduleArray, module );
   _.assert( will.moduleMap[ module.filePath ] === module );
-
-  // _.sure( !will.moduleMap[ module.filePath ], () => 'Module ' + _.strQuote( module.dirPath ) + ' already exists!' );
-  //
-  // will.moduleMap[ module.filePath ] = module;
 
   return module;
 }
@@ -241,14 +238,9 @@ function preform2()
   _.assert( !!module.dirPath );
   _.assert( !!module.filePath );
 
-  /* begin */
-
   module.predefinedForm();
   module.remoteForm();
 
-  /* end */
-
-  // module.stager.stageState( 'preformed', 3 );
   return module;
 }
 
@@ -415,6 +407,9 @@ function predefinedForm()
 
   function step( o )
   {
+    if( module.stepMap[ o.name ] )
+    return module.stepMap[ o.name ].form1();
+
     let defaults =
     {
       module : module,
@@ -437,6 +432,9 @@ function predefinedForm()
 
   function reflector( o )
   {
+    if( module.reflectorMap[ o.name ] )
+    return module.reflectorMap[ o.name ].form1();
+
     let defaults =
     {
       module : module,
@@ -808,7 +806,7 @@ function _willFileFindMaybe( o )
 
   let namePath = '.';
   if( o.isNamed )
-  namePath = path.fullName( path.parse( module.filePath ).localPath );
+  namePath = path.fullName( path.parse( module.filePath ).longPath );
 
   if( module.willFileWithRoleMap[ o.role ] )
   return null;
@@ -920,8 +918,6 @@ function _willFilesFindMaybe( o )
   let files = Object.create( null );
   let filePaths;
 
-  debugger;
-
   /* */
 
   for( let r = 0 ; r < roles.length ; r++ )
@@ -1009,7 +1005,6 @@ function _willFilesFindMaybe( o )
 
   function namedNameDeduce()
   {
-    debugger;
     for( let w = 0 ; w < module.willFileArray.length ; w++ )
     {
       let willFile = module.willFileArray[ w ];
@@ -1049,7 +1044,6 @@ function _willFilesFindMaybe( o )
   function end( filePaths )
   {
     let filePath = _.strCommonLeft.apply( _, filePaths );
-    debugger;
     module.filePathSet( filePath, path.dir( filePath ) );
     _.assert( filePaths.length > 0 );
     return true;
@@ -2013,7 +2007,7 @@ function _resourcesForm()
 
   module._resourcesFormAct( will.Submodule, con );
   module._resourcesFormAct( will.Exported, con );
-  module._resourcesFormAct( will.PathObj, con );
+  module._resourcesFormAct( will.PathResource, con );
   module._resourcesFormAct( will.Reflector, con );
   module._resourcesFormAct( will.Step, con );
   module._resourcesFormAct( will.Build, con );
@@ -2093,6 +2087,30 @@ function resourceMapForKind( resourceKind )
 
 //
 
+function resourceObtain( resourceKind, resourceName )
+{
+  let module = this;
+  let will = module.will;
+
+  _.assert( arguments.length === 2 );
+  _.assert( _.strIs( resourceName ) );
+
+  let resource = module.resolve
+  ({
+    selector : resourceKind + '::' + resourceName,
+    pathResolving : 0,
+    pathUnwrapping : 0,
+  });
+  if( !resource )
+  resource = module.resourceAllocate( resourceKind, resourceName );
+
+  _.assert( resource instanceof will.Resource );
+
+  return resource;
+}
+
+//
+
 function resourceAllocate( resourceKind, resourceName )
 {
   let module = this;
@@ -2103,9 +2121,9 @@ function resourceAllocate( resourceKind, resourceName )
 
   let resourceName2 = module.resourceNameAllocate( resourceKind, resourceName );
   let cls = module.resourceClassForKind( resourceKind );
-  let patho = new cls({ module : module, name : resourceName2 }).form1();
+  let resource = new cls({ module : module, name : resourceName2 }).form1();
 
-  return patho;
+  return resource;
 }
 
 //
@@ -2268,7 +2286,7 @@ function outPathGet()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  return path.s.resolve( module.dirPath, ( module.pathMap.out || '.' ) );
+  return path.s.resolve( module.dirPath, ( module.pathMap.in || '.' ), ( module.pathMap.out || '.' ) );
 }
 
 // --
@@ -2577,9 +2595,9 @@ function resolve_pre( routine, args )
   _.routineOptions( routine, o );
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
-  _.assert( _.arrayHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ) );
-  _.assert( _.arrayHas( [ 'undefine', 'throw', 'error' ], o.missingAction ), 'Unknown missing action', o.missingAction );
-  _.assert( _.arrayHas( [ 'default', 'resolved', 'throw', 'error' ], o.prefixlessAction ) );
+  _.assert( _.arrayHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ), 'Unknown value of option path resolving', o.pathResolving );
+  _.assert( _.arrayHas( [ 'undefine', 'throw', 'error' ], o.missingAction ), 'Unknown value of option missing action', o.missingAction );
+  _.assert( _.arrayHas( [ 'default', 'resolved', 'throw', 'error' ], o.prefixlessAction ), 'Unknown value of option prefixless action', o.prefixlessAction );
 
   return o;
 }
@@ -2625,9 +2643,6 @@ function resolve_body( o )
     return err;
   }
 
-  // debugger;
-
-  result = pathsResolve( result );
   result = mapsFlatten( result );
   result = mapValsUnwrap( result );
   result = singleUnwrap( result );
@@ -2639,81 +2654,16 @@ function resolve_body( o )
 
   /* - */
 
-  function pathResolve( p )
-  {
-
-    if( !o.pathResolving )
-    return p;
-
-    if( p instanceof will.PathObj )
-    {
-      p = p.clone();
-      p.module = null;
-      p.path = pathResolve( p.path );
-      return p;
-    }
-
-    _.assert( _.arrayIs( p ) || _.strIs( p ) );
-
-    if( o.pathResolving === 'in' )
-    return path.s.resolve( module.dirPath, ( module.pathMap.in || '.' ), p );
-    else if( o.pathResolving === 'out' )
-    return path.s.resolve( module.dirPath, ( module.pathMap.out || '.' ), p );
-
-  }
-
-  /* */
-
-  function pathsResolve( result )
-  {
-
-    // if( !o.pathResolving || !o.pathUnwrapping )
-    // return result;
-
-    if( !o.pathResolving )
-    return result;
-
-    if( result instanceof will.PathObj /*|| _.strIs( result )*/ )
-    {
-      result = pathResolve( result );
-    }
-    else if( _.arrayIs( result ) )
-    {
-      let result2 = [];
-      for( let r = 0 ; r < result.length ; r++ )
-      if( result[ r ] instanceof will.PathObj /*|| _.strIs( result[ r ] )*/ )
-      result2[ r ] = pathResolve( result[ r ] );
-      else
-      result2[ r ] = result[ r ];
-      result = result2;
-    }
-    else if( _.mapIs( result ) )
-    {
-      let result2 = Object.create( null );
-      for( let r in result )
-      if( result[ r ] instanceof will.PathObj /*|| _.strIs( result[ r ] )*/ )
-      result2[ r ] = pathResolve( result[ r ] );
-      else
-      result2[ r ] = result[ r ];
-      result = result2;
-    }
-
-    return result;
-  }
-
-  /* */
-
   function pathsUnwrap( result )
   {
 
-    debugger;
     if( !o.pathUnwrapping || !o.hasPath )
     return result;
 
     _.assert( _.mapIs( result ) || _.objectIs( result ) || _.arrayIs( result ) || _.strIs( result ) );
     if( _.mapIs( result ) || _.arrayIs( result ) )
     result = _.filter( result, ( e ) => pathsUnwrap( e ) )
-    else if( result instanceof will.PathObj )
+    else if( result instanceof will.PathResource )
     result = result.path;
 
     return result;
@@ -2813,32 +2763,6 @@ function _resolveAct( o )
 
   /* */
 
-  // if( module.strIsResolved( o.selector ) )
-  // {
-  //   if( o.prefixlessAction === 'default' )
-  //   {
-  //   }
-  //   else if( o.prefixlessAction === 'throw' || o.prefixlessAction === 'error' )
-  //   {
-  //     let err = module.errResolving
-  //     ({
-  //       selector : o.selector,
-  //       current : current,
-  //       err : _.ErrorLooking( 'Resource selector should have prefix' ),
-  //     });
-  //     if( o.prefixlessAction === 'throw' )
-  //     throw err;
-  //     return err;
-  //   }
-  //   else if( o.prefixlessAction === 'resolved' )
-  //   {
-  //     return o.selector;
-  //   }
-  //   else _.assert( 0 );
-  // }
-
-  /* */
-
   try
   {
 
@@ -2851,6 +2775,7 @@ function _resolveAct( o )
       onUpEnd : onUpEnd,
       onQuantitativeFail : onQuantitativeFail,
       missingAction : 'error',
+      // recursive : Infinity, // xxx
       iterationCurrent :
       {
         module : o.currentModule,
@@ -2890,8 +2815,6 @@ function _resolveAct( o )
 
     if( o.prefixlessAction === 'default' )
     {
-      // debugger;
-      // return o.d
       return selector;
     }
     else if( o.prefixlessAction === 'throw' || o.prefixlessAction === 'error' )
@@ -2957,6 +2880,7 @@ function _resolveAct( o )
     exportedWriteThrough.call( it );
     exportedPathResolve.call( it );
     currentExclude.call( it );
+    pathsResolve.call( it );
 
   }
 
@@ -3121,7 +3045,7 @@ function _resolveAct( o )
         reflector.form();
         it.dst = reflector;
       }
-      else if( it.dst instanceof will.PathObj )
+      else if( it.dst instanceof will.PathResource )
       {
         let m = it.iterationCurrent.module;
         it.dst = path.s.join( m.inPath, it.dst.path );
@@ -3138,11 +3062,36 @@ function _resolveAct( o )
     let it = this;
 
     if( it.src === o.current && it.down )
-    {
-      // debugger;
-      it.continue = false;
-      it.dstWritingDown = false;
-    }
+    it.dstWritingDown = false;
+
+  }
+
+  /* */
+
+  function pathsResolve()
+  {
+    let it = this;
+    let module2 = it.iterationCurrent.module;
+
+    if( !o.pathResolving )
+    return;
+    if( !it.dstWritingDown )
+    return;
+    if( !( it.dst instanceof will.PathResource ) )
+    return;
+
+    it.dst = it.dst.clone();
+    it.dst.module = null;
+
+    _.assert( _.arrayIs( it.dst.path ) || _.strIs( it.dst.path ) );
+
+    let prefixPath = '.';
+    if( o.pathResolving === 'in' && it.dst.name !== 'in' )
+    prefixPath = module2.pathMap.in;
+    else if( o.pathResolving === 'out' && it.dst.name !== 'out' )
+    prefixPath = module2.pathMap.out;
+
+    it.dst.path = path.s.resolve( module2.dirPath, prefixPath, it.dst.path );
 
   }
 
@@ -3227,7 +3176,7 @@ function dataExport()
   result.about = module.about.dataExport();
   result.execution = module.execution.dataExport();
 
-  result.path = module.dataExportResource( module.pathObjMap );
+  result.path = module.dataExportResource( module.pathResourceMap );
   result.submodule = module.dataExportResource( module.submoduleMap );
   result.reflector = module.dataExportResource( module.reflectorMap );
   result.step = module.dataExportResource( module.stepMap );
@@ -3306,6 +3255,68 @@ function resourceImport( resource2 )
   return resource;
 }
 
+//
+
+function ResourceSetter_functor( op )
+{
+  _.routineOptions( ResourceSetter_functor, arguments );
+
+  let resourceName = op.resourceName;
+  let mapName = op.mapName;
+  let mapSymbol = Symbol.for( mapName );
+
+  return function resourceSet( resourceMap2 )
+  {
+    let module = this;
+    let resourceMap = module[ mapSymbol ] = module[ mapSymbol ] || Object.create( null );
+
+    _.assert( arguments.length === 1 );
+    _.assert( _.mapIs( resourceMap ) );
+    _.assert( _.mapIs( resourceMap2 ) );
+
+    for( let m in resourceMap )
+    {
+      debugger;
+      let resource = resourceMap[ m ];
+      _.assert( _.instanceIs( resource ) );
+      _.assert( resource.module === module );
+      resource.finit();
+    }
+
+    _.assert( _.mapKeys( resourceMap ).length === 0 );
+
+    if( resourceMap2 === null )
+    return resourceMap;
+
+    for( let m in resourceMap2 )
+    {
+      let resource = resourceMap2[ m ];
+
+      // if( !module.preformed )
+      // module.preform();
+
+      _.assert( module.preformed === 0 );
+      _.assert( _.instanceIs( resource ) );
+      _.assert( resource.module !== module );
+
+      if( resource.module !== null )
+      resource = resource.clone();
+      _.assert( resource.module === null );
+      resource.module = module;
+      resource.form1();
+    }
+
+    return resourceMap;
+  }
+
+}
+
+ResourceSetter_functor.defaults =
+{
+  resourceName : null,
+  mapName : null,
+}
+
 // --
 // relations
 // --
@@ -3335,15 +3346,11 @@ let Aggregates =
   execution : _.define.instanceOf( _.Will.ParagraphExecution ),
 
   submoduleMap : _.define.own({}),
-  pathMap : _.define.own({}),
-  pathObjMap : _.define.own({}),
+  pathResourceMap : _.define.own({}),
   reflectorMap : _.define.own({}),
   stepMap : _.define.own({}),
   buildMap : _.define.own({}),
   exportedMap : _.define.own({}),
-
-  willFileArray : _.define.own([]),
-  willFileWithRoleMap : _.define.own({}),
 
 }
 
@@ -3351,14 +3358,19 @@ let Associates =
 {
   will : null,
   supermodule : null,
-  associatedSubmodule : null,
+  associatedSubmoduleResource : null,
 }
 
 let Restricts =
 {
+
   id : null,
   errors : _.define.own([]),
   stager : null,
+
+  willFileArray : _.define.own([]),
+  willFileWithRoleMap : _.define.own({}),
+  pathMap : _.define.own({}),
 
   preformed : 0,
   willFilesFound : 0,
@@ -3378,7 +3390,8 @@ let Restricts =
 
 let Statics =
 {
-  DirPathFromWillFilePath : DirPathFromWillFilePath,
+  ResourceSetter_functor,
+  DirPathFromWillFilePath, // xxx
   Counter : 0,
 }
 
@@ -3395,12 +3408,24 @@ let Forbids =
 
 let Accessors =
 {
+
   about : { setter : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.Will.ParagraphAbout }) },
   execution : { setter : _.accessor.setter.friend({ name : 'execution', friendName : 'module', maker : _.Will.ParagraphExecution }) },
+
+  submoduleMap : { setter : ResourceSetter_functor({ resourceName : 'Submodule', mapName : 'submoduleMap' }) },
+  pathResourceMap : { setter : ResourceSetter_functor({ resourceName : 'PathResource', mapName : 'pathResourceMap' }) },
+  reflectorMap : { setter : ResourceSetter_functor({ resourceName : 'Reflector', mapName : 'reflectorMap' }) },
+  stepMap : { setter : ResourceSetter_functor({ resourceName : 'Step', mapName : 'stepMap' }) },
+  buildMap : { setter : ResourceSetter_functor({ resourceName : 'Build', mapName : 'buildMap' }) },
+  exportedMap : { setter : ResourceSetter_functor({ resourceName : 'Exported', mapName : 'exportedMap' }) },
+
+
+
   nickName : { getter : _nickNameGet, combining : 'rewrite', readOnly : 1 },
   absoluteName : { getter : _absoluteNameGet, readOnly : 1 },
   inPath : { getter : inPathGet, readOnly : 1 },
   outPath : { getter : outPathGet, readOnly : 1 },
+
 }
 
 // --
@@ -3414,6 +3439,7 @@ let Proto =
 
   finit,
   init,
+  copy,
   unform,
   preform,
   preform1,
@@ -3483,6 +3509,7 @@ let Proto =
 
   resourceClassForKind,
   resourceMapForKind,
+  resourceObtain,
   resourceAllocate,
   resourceNameAllocate,
 
