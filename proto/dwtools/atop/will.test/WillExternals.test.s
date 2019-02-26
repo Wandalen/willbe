@@ -671,6 +671,50 @@ singleModuleExport.timeOut = 130000;
 
 //
 
+function singleModuleExportToRoot( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'single-out-to-root' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec2' ) );
+
+  let shell = _.sheller
+  ({
+    path : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  let ready = new _.Consequence().take( null )
+
+  /* - */
+
+  .thenKeep( () =>
+  {
+    test.case = '.export'
+    return shell({ args : [ '.export' ] })
+    .thenKeep( ( got ) =>
+    {
+      test.identical( got.exitCode, 0 );
+      test.is( _.strHas( got.output, 'Exporting proto.export' ) );
+      test.is( _.strHas( got.output, '+ Write out will-file' ) );
+      test.is( _.strHas( got.output, 'Exported proto.export with 2 files in' ) );
+
+      test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'single-out-to-root.out.will.yml' ) ) )
+
+      return null;
+    })
+  })
+
+  return ready;
+}
+
+singleModuleExportToRoot.timeOut = 130000;
+
+//
+
 function singleModuleWithSpaceTrivial( test )
 {
   let self = this;
@@ -2807,6 +2851,7 @@ var Self =
     singleModuleClean,
     singleModuleBuild,
     singleModuleExport,
+    singleModuleExportToRoot,
     singleModuleWithSpaceTrivial,
     singleStep,
     singleDownloadRepository,

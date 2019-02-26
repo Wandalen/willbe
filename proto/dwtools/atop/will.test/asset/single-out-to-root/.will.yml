@@ -1,0 +1,30 @@
+
+about :
+
+  name : "single-out-to-root"
+  description : "Module for testing"
+  version : "0.0.1"
+  enabled : 1
+
+path :
+
+  proto : './proto'
+  in : '.'
+  out : '.'
+
+step :
+
+  export.proto :
+    inherit : predefined.export
+    export : path::proto
+    tar : 0
+
+build :
+
+  proto.export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - step::export.proto
+
