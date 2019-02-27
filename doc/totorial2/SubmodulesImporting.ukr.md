@@ -79,7 +79,8 @@ Request ".submodules.download"
 В кореневій директорії файла `.will.yml` має з'явитись каталог `.module`. Відкривши його ви знайдете підмодуль `WTools` з його власними файлами.  
 Додамо ще один підмодуль в `.will.yml` та знову виконаємо `will .submodules.list`:
 
-```
+```yaml
+
 PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
 
 ```
