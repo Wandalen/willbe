@@ -7,7 +7,9 @@
 - [Структура will-файла](WillFileComposition.ukr.md)
 - [Як користуватися інтерфейсом командного рядка `willbe`](HowToUseCommandLineInterfaceOfWill.ukr.md)
 - [Перший will-файл](FirstWillFile.ukr.md)
-- [Will-файл експорту модуля](ExportedWillFile.md)
+- Будування модуля
+- ...
+- [Will-файл експорту модуля](ExportedWillFile.md) -> Експортування модуля
 - Split will-file (Ред.)
 - Named will-file (Ред.)
 - Resources (Ред.)
