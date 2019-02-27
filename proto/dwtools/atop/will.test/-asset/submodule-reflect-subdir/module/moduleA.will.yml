@@ -1,15 +1,16 @@
 about :
 
-  name : moduleA
+  name : submodule
   version : 0.0.1
 
 path :
 
   out : '..'
-  export : '.'
+  export : 'proto'
 
 step  :
-  export.moduleA :
+
+  export.submodule :
     inherit : predefined.export
     export : path::export
     tar : 0
@@ -20,4 +21,4 @@ build :
         default : 1
         export : 1
     steps :
-        - export.moduleA
+        - export.submodule

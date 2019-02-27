@@ -223,27 +223,6 @@ function isExport()
   return !!build.criterion.export;
 }
 
-// //
-//
-// function baseDirPathFor()
-// {
-//   let build = this
-//   let module = build.module;
-//   let will = module.will;
-//   let hub = will.fileProvider;
-//   let hd = hub.providersWithProtocolMap.file;
-//   let inDirPath = module.pathMap.in || '.';
-//
-//   _.assert( arguments.length === 0 );
-//
-//   let outDirPath = hd.path.resolve( module.dirPath, module.pathMap.out );
-//   let baseDirPath = hd.path.relative( outDirPath, module.dirPath );
-//
-//   debugger;
-//
-//   return baseDirPath;
-// }
-
 //
 
 function archiveFilePathFor()
@@ -255,7 +234,7 @@ function archiveFilePathFor()
   let hd = hub.providersWithProtocolMap.file;
   let inExportFile = module.willFileWithRoleMap.export || module.willFileWithRoleMap.single;
   let inFileDirPath = hd.path.dir( inExportFile.filePath )
-  let outDirPath = module.pathMap.out || '.';
+  // let outDirPath = module.pathMap.out || '.';
 
   _.assert( arguments.length === 0 );
   _.assert( _.strDefined( build.name ), 'Build should have name' );
@@ -272,7 +251,9 @@ function archiveFilePathFor()
   let name = _.strJoinPath( [ module.about.name, _.mapKeys( criterions ).join( '-' ), '.out.tgs' ], '.' );
   // let name = _.strJoinPath( [ module.about.name, build.name, '.out.tgs' ], '.' );
 
-  return hd.path.resolve( module.dirPath, outDirPath, name );
+  debugger;
+
+  return hd.path.resolve( module.outPath, name );
 }
 
 //
@@ -286,7 +267,7 @@ function outFilePathFor()
   let hd = hub.providersWithProtocolMap.file;
   let inExportFile = module.willFileWithRoleMap.export || module.willFileWithRoleMap.single;
   let inFileDirPath = hd.path.dir( inExportFile.filePath )
-  let outDirPath = module.pathMap.out || '.';
+  // let outDirPath = module.pathMap.out || '.';
 
   _.assert( arguments.length === 0 );
   _.assert( _.strDefined( build.name ) );
@@ -295,7 +276,9 @@ function outFilePathFor()
 
   let name = _.strJoinPath( [ module.about.name, '.out.will.yml' ], '.' );
 
-  return hd.path.resolve( module.dirPath, outDirPath, name );
+  debugger;
+
+  return hd.path.resolve( module.outPath, name );
 }
 
 

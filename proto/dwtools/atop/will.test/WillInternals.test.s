@@ -2,6 +2,12 @@
 
 'use strict';
 
+/*
+
+!!! add test routine openning out-will-file
+
+*/
+
 if( typeof module !== 'undefined' )
 {
   let _ = require( '../../Tools.s' );
@@ -40,7 +46,6 @@ function onSuiteBegin()
 function onSuiteEnd()
 {
   let self = this;
-  debugger;
   _.assert( _.strHas( self.tempDir, '/dwtools/tmp.tmp' ) )
   _.fileProvider.filesDelete( self.tempDir );
 }
@@ -48,6 +53,414 @@ function onSuiteEnd()
 // --
 // tests
 // --
+
+function buildSimple( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'simple' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulePath = _.path.join( routinePath, '.' );
+  let modulesPath = _.path.join( routinePath, '.module' );
+  let exportPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+  let will = new _.Will;
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( exportPath );
+
+  var module = will.moduleMake({ filePath : modulePath });
+
+  return module.ready.split().then( () =>
+  {
+
+    var expected = [];
+    var files = self.find( exportPath );
+
+    let builds = module.buildsSelect();
+
+    test.identical( builds.length, 1 );
+
+    let build = builds[ 0 ];
+
+    return build.perform()
+    .finally( ( err, arg ) =>
+    {
+
+      var expected = [ '.', './debug', './debug/File.js' ];
+      var files = self.find( exportPath );
+      test.identical( files, expected );
+
+      module.finit();
+      if( err )
+      throw err;
+      return arg;
+    });
+
+  });
+}
+
+buildSimple.timeOut = 30000;
+
+//
+
+function makeNamed( test )
+{
+  let self = this;
+  let assetName = 'import-in/super';
+  let originalDirPath = _.path.join( self.assetDirPath, 'import-in' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulePath = _.path.join( routinePath, 'super' );
+  let ready = new _.Consequence().take( null );
+  let will = new _.Will;
+  let path = _.fileProvider.path;
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  var module1 = will.moduleMake({ filePath : modulePath });
+  var module2 = will.moduleMake({ dirPath : modulePath });
+
+  /* - */
+
+  module1.ready.thenKeep( ( arg ) =>
+  {
+    debugger;
+    test.case = 'opened filePath : ' + assetName;
+    check( module1 );
+    return null;
+  })
+
+  /* - */
+
+  module1.ready.finallyKeep( ( err, arg ) =>
+  {
+    debugger;
+    test.case = 'opened filePath : ' + assetName;
+    test.is( err === undefined );
+    module1.finit();
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  /* - */
+
+  module2.ready.thenKeep( ( arg ) =>
+  {
+    debugger;
+    test.case = 'opened dirPath : ' + assetName;
+    check( module2 );
+    return null;
+  })
+
+  /* - */
+
+  module2.ready.finallyKeep( ( err, arg ) =>
+  {
+    debugger;
+    test.case = 'opened dirPath : ' + assetName;
+    test.is( err === undefined );
+    module2.finit();
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  return _.Consequence.AndTake([ module1.ready, module2.ready ])
+  .finallyKeep( ( err, arg ) =>
+  {
+    debugger;
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  /* - */
+
+  function check( module )
+  {
+
+    let pathMap =
+    {
+      'proto' : './proto',
+      'temp' : './super.out',
+      'in' : '.',
+      'out' : './super.out',
+      'out.debug' : './super.out/debug',
+      'out.release' : './super.out/release'
+    }
+
+    test.identical( module.nickName, 'module::super' );
+    test.identical( module.absoluteName, 'module::super' );
+    test.identical( module.inPath, routinePath );
+    test.identical( module.outPath, routinePath + '/super.out' );
+    test.identical( module.dirPath, routinePath );
+    test.identical( module.filePath, routinePath + '/super' );
+    test.identical( module.configName, 'super' );
+
+    test.is( !!module.about );
+    test.identical( module.about.name, 'super' );
+    test.is( !!module.execution );
+
+    test.identical( module.pathMap, pathMap );
+    test.identical( module.willFileArray.length, 2 );
+    test.identical( _.mapKeys( module.willFileWithRoleMap ), [ 'import', 'export' ] );
+    test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
+    test.identical( _.mapKeys( module.pathResourceMap ), [ 'proto', 'temp', 'in', 'out', 'out.debug', 'out.release' ] );
+    test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.submodules.', 'reflect.submodules.debug' ] );
+    test.identical( _.mapKeys( module.stepMap ), [ 'predefined.delete', 'predefined.reflect', 'timelapse.begin', 'timelapse.end', 'predefined.js', 'predefined.shell', 'predefined.concat.js', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'predefined.export', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
+    test.identical( _.mapKeys( module.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
+    test.identical( _.mapKeys( module.exportedMap ), [] );
+
+  }
+
+}
+
+makeNamed.timeOut = 30000;
+
+//
+
+function makeAnon( test )
+{
+  let self = this;
+  let assetName = 'import-in/.';
+  let originalDirPath = _.path.join( self.assetDirPath, 'import-in' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulePath = _.path.join( routinePath, '' );
+  let ready = new _.Consequence().take( null );
+  let will = new _.Will;
+  let path = _.fileProvider.path;
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  var module1 = will.moduleMake({ filePath : modulePath });
+  var module2 = will.moduleMake({ dirPath : modulePath });
+
+  /* - */
+
+  module1.ready.thenKeep( ( arg ) =>
+  {
+    debugger;
+    test.case = 'opened filePath : ' + assetName;
+    check( module1 );
+    return null;
+  })
+
+  /* - */
+
+  module1.ready.finallyKeep( ( err, arg ) =>
+  {
+    debugger;
+    test.case = 'opened filePath : ' + assetName;
+    test.is( err === undefined );
+    module1.finit();
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  /* - */
+
+  module2.ready.thenKeep( ( arg ) =>
+  {
+    debugger;
+    test.case = 'opened dirPath : ' + assetName;
+    check( module2 );
+    return null;
+  })
+
+  /* - */
+
+  module2.ready.finallyKeep( ( err, arg ) =>
+  {
+    debugger;
+    test.case = 'opened dirPath : ' + assetName;
+    test.is( err === undefined );
+    module2.finit();
+    if( err )
+    throw err;
+    return arg;
+  });
+
+
+  return _.Consequence.AndTake([ module1.ready, module2.ready ])
+  .finallyKeep( ( err, arg ) =>
+  {
+    debugger;
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  /* - */
+
+  function check( module )
+  {
+
+    let pathMap =
+    {
+      'proto' : '.',
+      'in' : 'proto',
+      'out' : '../out',
+      'out.debug' : '../out/debug',
+      'out.release' : '../out/release'
+    }
+
+    test.identical( module.nickName, 'module::submodule' );
+    test.identical( module.absoluteName, 'module::submodule' );
+    test.identical( module.inPath, routinePath + '/proto' );
+    test.identical( module.outPath, routinePath + '/out' );
+    test.identical( module.dirPath, routinePath );
+    test.identical( module.filePath, routinePath + '/' );
+    test.identical( module.configName, 'makeAnon' );
+
+    test.is( !!module.about );
+    test.identical( module.about.name, 'submodule' );
+    test.is( !!module.execution );
+
+    test.identical( module.pathMap, pathMap );
+    test.identical( module.willFileArray.length, 2 );
+    test.identical( _.mapKeys( module.willFileWithRoleMap ), [ 'import', 'export' ] );
+    test.identical( _.mapKeys( module.submoduleMap ), [] );
+    test.identical( _.mapKeys( module.pathResourceMap ), [ 'proto', 'in', 'out', 'out.debug', 'out.release' ] );
+    test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.proto.', 'reflect.proto.debug' ] );
+    test.identical( _.mapKeys( module.stepMap ), [ 'predefined.delete', 'predefined.reflect', 'timelapse.begin', 'timelapse.end', 'predefined.js', 'predefined.shell', 'predefined.concat.js', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'predefined.export', 'reflect.proto.', 'reflect.proto.debug', 'reflect.proto.raw', 'reflect.proto.debug.raw', 'export.', 'export.debug' ] );
+    test.identical( _.mapKeys( module.buildMap ), [ 'debug.raw', 'debug.compiled', 'release.raw', 'release.compiled', 'export.', 'export.debug' ] );
+    test.identical( _.mapKeys( module.exportedMap ), [] );
+
+  }
+
+}
+
+makeAnon.timeOut = 30000;
+
+//
+
+function makeOutNamed( test )
+{
+  let self = this;
+  let assetName = 'import-in/super.out/super';
+  let originalDirPath = _.path.join( self.assetDirPath, 'import-in' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let moduleDirPath = _.path.join( routinePath, 'super.out' );
+  let moduleFilePath = _.path.join( routinePath, 'super.out/super' );
+  let ready = new _.Consequence().take( null );
+  let will = new _.Will;
+  let path = _.fileProvider.path;
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  var module1 = will.moduleMake({ filePath : moduleFilePath });
+  var module2 = will.moduleMake({ dirPath : moduleFilePath });
+
+  /* - */
+
+  module1.ready.thenKeep( ( arg ) =>
+  {
+    debugger;
+    test.case = 'opened filePath : ' + assetName;
+    check( module1 );
+    return null;
+  })
+
+  /* - */
+
+  module1.ready.finallyKeep( ( err, arg ) =>
+  {
+    debugger;
+    test.case = 'opened filePath : ' + assetName;
+    test.is( err === undefined );
+    module1.finit();
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  /* - */
+
+  module2.ready.thenKeep( ( arg ) =>
+  {
+    debugger;
+    test.case = 'opened dirPath : ' + assetName;
+    check( module2 );
+    return null;
+  })
+
+  /* - */
+
+  module2.ready.finallyKeep( ( err, arg ) =>
+  {
+    debugger;
+    test.case = 'opened dirPath : ' + assetName;
+    test.is( err === undefined );
+    module2.finit();
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  return _.Consequence.AndTake([ module1.ready, module2.ready ])
+  .finallyKeep( ( err, arg ) =>
+  {
+    debugger;
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  /* - */
+
+  function check( module )
+  {
+
+    let pathMap =
+    {
+      'proto' : './proto',
+      'temp' : './super.out',
+      'out' : './super.out',
+      'out.debug' : './super.out/debug',
+      'out.release' : './super.out/release',
+      'in' : '..',
+      'exportedDir.export.debug' : './super.out/debug',
+      'exportedFiles.export.debug' : [ 'super.out/debug', 'super.out/debug/File.debug.js', 'super.out/debug/File.release.js' ],
+      'archiveFile.export.debug' : './super.out/super.debug.out.tgs',
+      'exportedDir.export.' : './super.out/release',
+      'exportedFiles.export.' : [ 'super.out/release', 'super.out/release/File.debug.js', 'super.out/release/File.release.js' ],
+      'archiveFile.export.' : './super.out/super.out.tgs'
+    }
+
+    test.identical( module.nickName, 'module::super' );
+    test.identical( module.absoluteName, 'module::super' );
+    test.identical( module.inPath, routinePath );
+    test.identical( module.outPath, routinePath + '/super.out' );
+    test.identical( module.dirPath, routinePath + '/super.out' );
+    test.identical( module.filePath, routinePath + '/super.out/super.out' );
+    test.identical( module.configName, 'super.out' );
+
+    test.is( !!module.about );
+    test.identical( module.about.name, 'super' );
+    test.is( !!module.execution );
+
+    test.identical( module.pathMap, pathMap );
+    test.identical( module.willFileArray.length, 1 );
+    test.identical( _.mapKeys( module.willFileWithRoleMap ), [ 'single' ] );
+    test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
+    test.identical( _.mapKeys( module.pathResourceMap ), [ 'proto', 'temp', 'in', 'out', 'out.debug', 'out.release', 'exportedDir.export.debug', 'exportedFiles.export.debug', 'archiveFile.export.debug', 'exportedDir.export.', 'exportedFiles.export.', 'archiveFile.export.' ] );
+    test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.debug', 'exportedFiles.export.debug', 'exported.export.', 'exportedFiles.export.' ] );
+    test.identical( _.mapKeys( module.stepMap ), [ 'predefined.delete', 'predefined.reflect', 'timelapse.begin', 'timelapse.end', 'predefined.js', 'predefined.shell', 'predefined.concat.js', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'predefined.export', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
+    test.identical( _.mapKeys( module.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
+    test.identical( _.mapKeys( module.exportedMap ), [ 'export.', 'export.debug' ] );
+
+  }
+
+}
+
+makeOutNamed.timeOut = 30000;
+
+//
 
 function clone( test )
 {
@@ -92,7 +505,7 @@ function clone( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
   _.fileProvider.filesDelete( exportPath );
 
-  var module = will.moduleMake( modulePath );
+  var module = will.moduleMake({ filePath : modulePath });
   var module2;
 
   /* - */
@@ -173,7 +586,7 @@ function buildsResolve( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
   _.fileProvider.filesDelete( exportPath );
 
-  var module = will.moduleMake( modulePath );
+  var module = will.moduleMake({ filePath : modulePath });
 
   /* - */
 
@@ -309,7 +722,7 @@ function pathsResolve( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
   _.fileProvider.filesDelete( exportPath );
 
-  var module = will.moduleMake( modulePath );
+  var module = will.moduleMake({ filePath : modulePath });
 
   /* - */
 
@@ -572,7 +985,7 @@ pathsResolve.timeOut = 130000;
 
 //
 
-function pathsResolveSubmodule( test )
+function pathsResolveImportIn( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'import-in' );
@@ -598,16 +1011,39 @@ function pathsResolveSubmodule( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
   _.fileProvider.filesDelete( exportPath );
 
-  var module = will.moduleMake( modulePath );
+  var module = will.moduleMake({ filePath : modulePath });
 
   module.ready.thenKeep( ( arg ) =>
   {
 
-    // xxx
-    // test.case = 'submodule::*/path::in*=1, pathResolving : 0';
-    // var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'submodule::*/path::in*=1', pathResolving : 0 })
-    // var expected = 'proto';
-    // test.identical( resolved, expected );
+    test.case = 'submodule::*/path::in*=1, default';
+    var resolved = module.resolve( 'submodule::*/path::in*=1' )
+    var expected = pin( 'proto' );
+    test.identical( resolved, expected );
+
+    test.case = 'submodule::*/path::in*=1, pathResolving : 0';
+    var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'submodule::*/path::in*=1', pathResolving : 0 })
+    var expected = 'proto';
+    test.identical( resolved, expected );
+
+    test.case = 'submodule::*/path::in*=1, strange case';
+    var resolved = module.resolve
+    ({
+      selector : 'submodule::*/path::in*=1',
+      mapValsUnwrapping : 1,
+      singleUnwrapping : 1,
+      flattening : 1,
+    });
+    var expected = pin( 'proto' );
+    test.identical( resolved, expected );
+
+    // "submodule::*/exported::*=1/path::exportedDir*=1"
+
+    return null;
+  });
+
+  module.ready.thenKeep( ( arg ) =>
+  {
 
 /*
   pathUnwrapping : 1,
@@ -690,7 +1126,7 @@ function pathsResolveSubmodule( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'MultipleExports.in' : 'proto' };
+    var expected = { 'MultipleExports/in' : 'proto' };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -848,7 +1284,7 @@ function pathsResolveSubmodule( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'MultipleExports.in' : pin( 'proto' ) };
+    var expected = { 'MultipleExports/in' : pin( 'proto' ) };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -941,11 +1377,9 @@ function pathsResolveSubmodule( test )
 
     test.close( 'in' );
 
-    // xxx
-
     /* - */
 
-    test.open( 'temp' );
+    test.open( 'proto' );
 
     test.open( 'pathUnwrapping : 1' );
 
@@ -956,33 +1390,33 @@ function pathsResolveSubmodule( test )
     test.open( 'singleUnwrapping : 1' );
 
     test.open( 'mapValsUnwrapping : 1' );
-    test.case = 'submodule::*/path::temp*=1';
+    test.case = 'submodule::*/path::proto*=1';
     var resolved = module.resolve
     ({
       prefixlessAction : 'resolved',
-      selector : 'submodule::*/path::temp*=1',
+      selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
       flattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected = '../out';
+    var expected = '.';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
-    test.case = 'submodule::*/path::temp*=1';
+    test.case = 'submodule::*/path::proto*=1';
     var resolved = module.resolve
     ({
       prefixlessAction : 'resolved',
-      selector : 'submodule::*/path::temp*=1',
+      selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
       flattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = '../out';
+    var expected = '.';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -990,33 +1424,33 @@ function pathsResolveSubmodule( test )
     test.open( 'singleUnwrapping : 0' );
 
     test.open( 'mapValsUnwrapping : 1' );
-    test.case = 'submodule::*/path::temp*=1';
+    test.case = 'submodule::*/path::proto*=1';
     var resolved = module.resolve
     ({
       prefixlessAction : 'resolved',
-      selector : 'submodule::*/path::temp*=1',
+      selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
       flattening : 1,
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = [ '../out' ];
+    var expected = [ '.' ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
-    test.case = 'submodule::*/path::temp*=1';
+    test.case = 'submodule::*/path::proto*=1';
     var resolved = module.resolve
     ({
       prefixlessAction : 'resolved',
-      selector : 'submodule::*/path::temp*=1',
+      selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
       flattening : 1,
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'MultipleExports.temp' : '../out' };
+    var expected = { 'MultipleExports/proto' : '.' };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -1029,11 +1463,11 @@ function pathsResolveSubmodule( test )
 
     test.open( 'mapValsUnwrapping : 1' );
 
-    test.case = 'submodule::*/path::temp*=1';
+    test.case = 'submodule::*/path::proto*=1';
     var resolved = module.resolve
     ({
       prefixlessAction : 'resolved',
-      selector : 'submodule::*/path::temp*=1',
+      selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
       flattening : 0,
@@ -1042,23 +1476,23 @@ function pathsResolveSubmodule( test )
     });
     var expected =
     {
-      'MultipleExports' : { 'temp' : '../out' }
+      'MultipleExports' : { 'proto' : '.' }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
-    test.case = 'submodule::*/path::temp*=1';
+    test.case = 'submodule::*/path::proto*=1';
     var resolved = module.resolve
     ({
       prefixlessAction : 'resolved',
-      selector : 'submodule::*/path::temp*=1',
+      selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
       flattening : 0,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'MultipleExports' : { 'temp' : '../out' } };
+    var expected = { 'MultipleExports' : { 'proto' : '.' } };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -1066,26 +1500,26 @@ function pathsResolveSubmodule( test )
     test.open( 'singleUnwrapping : 0' );
 
     test.open( 'mapValsUnwrapping : 1' );
-    test.case = 'submodule::*/path::temp*=1';
+    test.case = 'submodule::*/path::proto*=1';
     var resolved = module.resolve
     ({
       prefixlessAction : 'resolved',
-      selector : 'submodule::*/path::temp*=1',
+      selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
       flattening : 0,
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = { 'MultipleExports' : { 'temp' : '../out' } };
+    var expected = { 'MultipleExports' : { 'proto' : '.' } };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
-    test.case = 'submodule::*/path::temp*=1';
+    test.case = 'submodule::*/path::proto*=1';
     var resolved = module.resolve
     ({
       prefixlessAction : 'resolved',
-      selector : 'submodule::*/path::temp*=1',
+      selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
       flattening : 0,
@@ -1094,7 +1528,7 @@ function pathsResolveSubmodule( test )
     });
     var expected =
     {
-      'MultipleExports' : { 'temp' : '../out' }
+      'MultipleExports' : { 'proto' : '.' }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
@@ -1112,35 +1546,35 @@ function pathsResolveSubmodule( test )
     test.open( 'singleUnwrapping : 1' );
 
     test.open( 'mapValsUnwrapping : 1' );
-    test.case = 'submodule::*/path::temp*=1';
+    test.case = 'submodule::*/path::proto*=1';
 
     var resolved = module.resolve
     ({
       prefixlessAction : 'resolved',
-      selector : 'submodule::*/path::temp*=1',
+      selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
       flattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected = pin( 'out' );
+    var expected = pin( 'proto' );
     test.identical( resolved, expected );
 
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
-    test.case = 'submodule::*/path::temp*=1';
+    test.case = 'submodule::*/path::proto*=1';
     var resolved = module.resolve
     ({
       prefixlessAction : 'resolved',
-      selector : 'submodule::*/path::temp*=1',
+      selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
       flattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = pin( 'out' );
+    var expected = pin( 'proto' );
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -1148,33 +1582,33 @@ function pathsResolveSubmodule( test )
     test.open( 'singleUnwrapping : 0' );
 
     test.open( 'mapValsUnwrapping : 1' );
-    test.case = 'submodule::*/path::temp*=1';
+    test.case = 'submodule::*/path::proto*=1';
     var resolved = module.resolve
     ({
       prefixlessAction : 'resolved',
-      selector : 'submodule::*/path::temp*=1',
+      selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
       flattening : 1,
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = [ pin( 'out' ) ];
+    var expected = [ pin( 'proto' ) ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
-    test.case = 'submodule::*/path::temp*=1';
+    test.case = 'submodule::*/path::proto*=1';
     var resolved = module.resolve
     ({
       prefixlessAction : 'resolved',
-      selector : 'submodule::*/path::temp*=1',
+      selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
       flattening : 1,
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'MultipleExports.temp' : pin( 'out' ) };
+    var expected = { 'MultipleExports/proto' : pin( 'proto' ) };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -1187,11 +1621,11 @@ function pathsResolveSubmodule( test )
 
     test.open( 'mapValsUnwrapping : 1' );
 
-    test.case = 'submodule::*/path::temp*=1';
+    test.case = 'submodule::*/path::proto*=1';
     var resolved = module.resolve
     ({
       prefixlessAction : 'resolved',
-      selector : 'submodule::*/path::temp*=1',
+      selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
       flattening : 0,
@@ -1200,23 +1634,23 @@ function pathsResolveSubmodule( test )
     });
     var expected =
     {
-      'MultipleExports' : { 'temp' : pin( 'out' ) }
+      'MultipleExports' : { 'proto' : pin( 'proto' ) }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
-    test.case = 'submodule::*/path::temp*=1';
+    test.case = 'submodule::*/path::proto*=1';
     var resolved = module.resolve
     ({
       prefixlessAction : 'resolved',
-      selector : 'submodule::*/path::temp*=1',
+      selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
       flattening : 0,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'MultipleExports' : { 'temp' : pin( 'out' ) } };
+    var expected = { 'MultipleExports' : { 'proto' : pin( 'proto' ) } };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -1224,26 +1658,26 @@ function pathsResolveSubmodule( test )
     test.open( 'singleUnwrapping : 0' );
 
     test.open( 'mapValsUnwrapping : 1' );
-    test.case = 'submodule::*/path::temp*=1';
+    test.case = 'submodule::*/path::proto*=1';
     var resolved = module.resolve
     ({
       prefixlessAction : 'resolved',
-      selector : 'submodule::*/path::temp*=1',
+      selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
       flattening : 0,
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = { 'MultipleExports' : { 'temp' : pin( 'out' ) } };
+    var expected = { 'MultipleExports' : { 'proto' : pin( 'proto' ) } };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
-    test.case = 'submodule::*/path::temp*=1';
+    test.case = 'submodule::*/path::proto*=1';
     var resolved = module.resolve
     ({
       prefixlessAction : 'resolved',
-      selector : 'submodule::*/path::temp*=1',
+      selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
       flattening : 0,
@@ -1252,7 +1686,7 @@ function pathsResolveSubmodule( test )
     });
     var expected =
     {
-      'MultipleExports' : { 'temp' : pin( 'out' ) }
+      'MultipleExports' : { 'proto' : pin( 'proto' ) }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
@@ -1265,9 +1699,7 @@ function pathsResolveSubmodule( test )
 
     test.close( 'pathUnwrapping : 1' );
 
-    test.close( 'temp' );
-
-    // xxx
+    test.close( 'proto' );
 
     debugger;
     return null;
@@ -1289,57 +1721,781 @@ function pathsResolveSubmodule( test )
   return module.ready.split();
 }
 
-pathsResolveSubmodule.timeOut = 130000;
+pathsResolveImportIn.timeOut = 130000;
 
 //
 
-function simple( test )
+function pathsResolveOutFileOfExports( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'simple' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports-exported' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulePath = _.path.join( routinePath, '.' );
-  let modulesPath = _.path.join( routinePath, '.module' );
-  let exportPath = _.path.join( routinePath, 'out' );
+  let modulePath = _.path.join( routinePath, 'super.out/super' );
   let ready = new _.Consequence().take( null );
   let will = new _.Will;
+  let path = _.fileProvider.path;
+
+  function pin( filePath )
+  {
+    return path.s.join( routinePath, filePath );
+  }
+
+  function pout( filePath )
+  {
+    return path.s.join( routinePath, 'out', filePath );
+  }
 
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-  _.fileProvider.filesDelete( exportPath );
 
-  var module = will.moduleMake( modulePath );
+  var module = will.moduleMake({ filePath : modulePath });
 
-  return module.ready.split().then( () =>
+  module.ready.thenKeep( ( arg ) =>
   {
 
-    var expected = [];
-    var files = self.find( exportPath );
+    test.open( 'without export' );
 
-    let builds = module.buildsSelect();
+    test.case = 'submodule::*/path::in*=1, default';
+    var resolved = module.resolve( 'submodule::*/path::in*=1' )
+    var expected = pin( '.' );
+    test.identical( resolved, expected );
 
-    test.identical( builds.length, 1 );
+    test.case = 'submodule::*/path::in*=1, pathResolving : 0';
+    var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'submodule::*/path::in*=1', pathResolving : 0 })
+    var expected = '..';
+    test.identical( resolved, expected );
 
-    let build = builds[ 0 ];
-
-    return build.perform()
-    .finally( ( err, arg ) =>
-    {
-
-      var expected = [ '.', './debug', './debug/File.js' ];
-      var files = self.find( exportPath );
-      test.identical( files, expected );
-
-      module.finit();
-      if( err )
-      throw err;
-      return arg;
+    test.case = 'submodule::*/path::in*=1, strange case';
+    var resolved = module.resolve
+    ({
+      selector : 'submodule::*/path::in*=1',
+      mapValsUnwrapping : 1,
+      singleUnwrapping : 1,
+      flattening : 1,
     });
+    var expected = pin( '.' );
+    test.identical( resolved, expected );
 
+    test.close( 'without export' );
+
+    /* - */
+
+    test.open( 'with export' );
+
+    test.case = 'submodule::*/exported::*=1debug/path::in*=1, default';
+    var resolved = module.resolve( 'submodule::*/exported::*=1debug/path::in*=1' );
+    var expected = pin( '.' );
+    test.identical( resolved, expected );
+
+    test.case = 'submodule::*/exported::*=1debug/path::in*=1, pathResolving : 0';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/exported::*=1debug/path::in*=1',
+      pathResolving : 0,
+    })
+    var expected = '..';
+    test.identical( resolved, expected );
+
+    test.case = 'submodule::*/exported::*=1debug/path::in*=1, strange case';
+    var resolved = module.resolve
+    ({
+      selector : 'submodule::*/exported::*=1debug/path::in*=1',
+      mapValsUnwrapping : 1,
+      singleUnwrapping : 1,
+      flattening : 1,
+    });
+    var expected = pin( '.' );
+    test.identical( resolved, expected );
+
+    test.close( 'with export' );
+
+    // "submodule::*/exported::*=1debug/path::exportedDir*=1"
+
+    return null;
   });
+
+  module.ready.thenKeep( ( arg ) =>
+  {
+
+/*
+  pathUnwrapping : 1,
+  pathResolving : 0,
+  flattening : 1,
+  singleUnwrapping : 1,
+  mapValsUnwrapping : 1,
+*/
+
+    /* - */
+
+    test.open( 'in' );
+
+    test.open( 'pathUnwrapping : 1' );
+
+    test.open( 'pathResolving : 0' );
+
+    test.open( 'flattening : 1' );
+
+    test.open( 'singleUnwrapping : 1' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 1,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 1,
+    });
+    var expected = '..';
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 1,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 0,
+    });
+    var expected = '..';
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 1' );
+    test.open( 'singleUnwrapping : 0' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 1,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 1,
+    });
+    var expected = [ '..' ];
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 1,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 0,
+    });
+    var expected = { 'MultipleExports/in' : '..' };
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 0' );
+
+    test.close( 'flattening : 1' );
+    test.open( 'flattening : 0' );
+
+    test.open( 'singleUnwrapping : 1' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 0,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 1,
+    });
+    var expected =
+    {
+      'MultipleExports' : { 'in' : '..' }
+    }
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 0,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 0,
+    });
+    var expected = { 'MultipleExports' : { 'in' : '..' } };
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 1' );
+    test.open( 'singleUnwrapping : 0' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 0,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 1,
+    });
+    var expected = { 'MultipleExports' : { 'in' : '..' } };
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 0,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 0,
+    });
+    var expected =
+    {
+      'MultipleExports' : { 'in' : '..' }
+    }
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 0' );
+
+    test.close( 'flattening : 0' );
+
+    test.close( 'pathResolving : 0' );
+
+    test.open( 'pathResolving : in' );
+
+    test.open( 'flattening : 1' );
+
+    test.open( 'singleUnwrapping : 1' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+    test.case = 'submodule::*/path::in*=1';
+
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 'in',
+      flattening : 1,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 1,
+    });
+    var expected = pin( '.' );
+    test.identical( resolved, expected );
+
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 'in',
+      flattening : 1,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 0,
+    });
+    var expected = pin( '.' );
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 1' );
+    test.open( 'singleUnwrapping : 0' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 'in',
+      flattening : 1,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 1,
+    });
+    var expected = [ pin( '.' ) ];
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 'in',
+      flattening : 1,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 0,
+    });
+    var expected = { 'MultipleExports/in' : pin( '.' ) };
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 0' );
+
+    test.close( 'flattening : 1' );
+    test.open( 'flattening : 0' );
+
+    test.open( 'singleUnwrapping : 1' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 'in',
+      flattening : 0,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 1,
+    });
+    var expected =
+    {
+      'MultipleExports' : { 'in' : pin( '.' ) }
+    }
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 'in',
+      flattening : 0,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 0,
+    });
+    var expected = { 'MultipleExports' : { 'in' : pin( '.' ) } };
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 1' );
+    test.open( 'singleUnwrapping : 0' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 'in',
+      flattening : 0,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 1,
+    });
+    var expected = { 'MultipleExports' : { 'in' : pin( '.' ) } };
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::in*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::in*=1',
+      pathUnwrapping : 1,
+      pathResolving : 'in',
+      flattening : 0,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 0,
+    });
+    var expected =
+    {
+      'MultipleExports' : { 'in' : pin( '.' ) }
+    }
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 0' );
+
+    test.close( 'flattening : 0' );
+
+    test.close( 'pathResolving : in' );
+
+    test.close( 'pathUnwrapping : 1' );
+
+    test.close( 'in' );
+
+    /* - */
+
+    test.open( 'proto' );
+
+    test.open( 'pathUnwrapping : 1' );
+
+    test.open( 'pathResolving : 0' );
+
+    test.open( 'flattening : 1' );
+
+    test.open( 'singleUnwrapping : 1' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+    test.case = 'submodule::*/path::proto*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::proto*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 1,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 1,
+    });
+    var expected = './proto';
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::proto*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::proto*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 1,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 0,
+    });
+    var expected = './proto';
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 1' );
+    test.open( 'singleUnwrapping : 0' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+    test.case = 'submodule::*/path::proto*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::proto*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 1,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 1,
+    });
+    var expected = [ './proto' ];
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::proto*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::proto*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 1,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 0,
+    });
+    var expected = { 'MultipleExports/proto' : './proto' };
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 0' );
+
+    test.close( 'flattening : 1' );
+    test.open( 'flattening : 0' );
+
+    test.open( 'singleUnwrapping : 1' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+
+    test.case = 'submodule::*/path::proto*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::proto*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 0,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 1,
+    });
+    var expected =
+    {
+      'MultipleExports' : { 'proto' : './proto' }
+    }
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::proto*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::proto*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 0,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 0,
+    });
+    var expected = { 'MultipleExports' : { 'proto' : './proto' } };
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 1' );
+    test.open( 'singleUnwrapping : 0' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+    test.case = 'submodule::*/path::proto*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::proto*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 0,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 1,
+    });
+    var expected = { 'MultipleExports' : { 'proto' : './proto' } };
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::proto*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::proto*=1',
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      flattening : 0,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 0,
+    });
+    var expected =
+    {
+      'MultipleExports' : { 'proto' : './proto' }
+    }
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 0' );
+
+    test.close( 'flattening : 0' );
+
+    test.close( 'pathResolving : 0' );
+
+    test.open( 'pathResolving : in' );
+
+    test.open( 'flattening : 1' );
+
+    test.open( 'singleUnwrapping : 1' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+    test.case = 'submodule::*/path::proto*=1';
+
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::proto*=1',
+      pathUnwrapping : 1,
+      pathResolving : 'in',
+      flattening : 1,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 1,
+    });
+    var expected = pin( 'proto' );
+    test.identical( resolved, expected );
+
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::proto*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::proto*=1',
+      pathUnwrapping : 1,
+      pathResolving : 'in',
+      flattening : 1,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 0,
+    });
+    var expected = pin( 'proto' );
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 1' );
+    test.open( 'singleUnwrapping : 0' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+    test.case = 'submodule::*/path::proto*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::proto*=1',
+      pathUnwrapping : 1,
+      pathResolving : 'in',
+      flattening : 1,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 1,
+    });
+    var expected = [ pin( 'proto' ) ];
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::proto*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::proto*=1',
+      pathUnwrapping : 1,
+      pathResolving : 'in',
+      flattening : 1,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 0,
+    });
+    var expected = { 'MultipleExports/proto' : pin( 'proto' ) };
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 0' );
+
+    test.close( 'flattening : 1' );
+    test.open( 'flattening : 0' );
+
+    test.open( 'singleUnwrapping : 1' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+
+    test.case = 'submodule::*/path::proto*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::proto*=1',
+      pathUnwrapping : 1,
+      pathResolving : 'in',
+      flattening : 0,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 1,
+    });
+    var expected =
+    {
+      'MultipleExports' : { 'proto' : pin( 'proto' ) }
+    }
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::proto*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::proto*=1',
+      pathUnwrapping : 1,
+      pathResolving : 'in',
+      flattening : 0,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 0,
+    });
+    var expected = { 'MultipleExports' : { 'proto' : pin( 'proto' ) } };
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 1' );
+    test.open( 'singleUnwrapping : 0' );
+
+    test.open( 'mapValsUnwrapping : 1' );
+    test.case = 'submodule::*/path::proto*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::proto*=1',
+      pathUnwrapping : 1,
+      pathResolving : 'in',
+      flattening : 0,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 1,
+    });
+    var expected = { 'MultipleExports' : { 'proto' : pin( 'proto' ) } };
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 1' );
+    test.open( 'mapValsUnwrapping : 0' );
+    test.case = 'submodule::*/path::proto*=1';
+    var resolved = module.resolve
+    ({
+      prefixlessAction : 'resolved',
+      selector : 'submodule::*/path::proto*=1',
+      pathUnwrapping : 1,
+      pathResolving : 'in',
+      flattening : 0,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 0,
+    });
+    var expected =
+    {
+      'MultipleExports' : { 'proto' : pin( 'proto' ) }
+    }
+    test.identical( resolved, expected );
+    test.close( 'mapValsUnwrapping : 0' );
+
+    test.close( 'singleUnwrapping : 0' );
+
+    test.close( 'flattening : 0' );
+
+    test.close( 'pathResolving : in' );
+
+    test.close( 'pathUnwrapping : 1' );
+
+    test.close( 'proto' );
+
+    debugger;
+    return null;
+  })
+
+  /* - */
+
+  module.ready.finallyKeep( ( err, arg ) =>
+  {
+
+    debugger;
+    test.is( err === undefined );
+    module.finit();
+
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  return module.ready.split();
 }
 
-simple.timeOut = 130000;
+pathsResolveOutFileOfExports.timeOut = 130000;
 
 // --
 // define class
@@ -1363,11 +2519,16 @@ var Self =
   tests :
   {
 
+    buildSimple,
+    makeNamed,
+    makeAnon,
+    makeOutNamed,
     clone,
+
     buildsResolve,
     pathsResolve,
-    pathsResolveSubmodule,
-    simple,
+    pathsResolveImportIn,
+    pathsResolveOutFileOfExports,
 
   }
 
@@ -1381,4 +2542,4 @@ Self = wTestSuite( Self );
 if( typeof module !== 'undefined' && !module.parent )
 wTester.test( Self.name );
 
-})( );
+})();

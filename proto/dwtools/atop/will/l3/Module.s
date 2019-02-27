@@ -46,7 +46,8 @@ function finit()
 
   _.assert( module.willFileArray.length === 0 );
   _.assert( Object.keys( module.willFileWithRoleMap ).length === 0 );
-  _.assert( will.moduleMap[ module.filePath ] !== module );
+  // _.assert( will.moduleMap[ module.filePath ] !== module );
+  _.assert( will.moduleMap[ module.id ] !== module );
   _.assert( !_.arrayHas( will.moduleArray, module ) );
 
   return _.Copyable.prototype.finit.apply( module, arguments );
@@ -150,12 +151,16 @@ function unform()
 
   if( module.preformed )
   {
-    _.assert( will.moduleMap[ module.filePath ] === module );
-    delete will.moduleMap[ module.filePath ];
+    // _.assert( will.moduleMap[ module.filePath ] === module );
+    // if( will.moduleMap[ module.filePath ] === module );
+    // delete will.moduleMap[ module.filePath ];
+    if( will.moduleMap[ module.id ] === module );
+    delete will.moduleMap[ module.id ];
     _.arrayRemoveElementOnceStrictly( will.moduleArray, module );
   }
 
   _.assert( will.moduleMap[ module.filePath ] !== module );
+  _.assert( will.moduleMap[ module.id ] !== module );
   _.assert( !_.arrayHas( will.moduleArray, module ) );
 
   /* end */
@@ -211,15 +216,18 @@ function preform1()
 
   if( module.filePath === null )
   module.filePath = module.dirPath;
-  if( module.dirPath === null )
-  module.dirPath = module.filePath;
+  // if( module.dirPath === null )
+  // module.dirPath = module.filePath;
 
   module._filePathSet( module.filePath, module.dirPath );
 
   /* */
 
+  _.assert( module.id > 0 );
+  will.moduleMap[ module.id ] = module;
   _.arrayAppendOnceStrictly( will.moduleArray, module );
-  _.assert( will.moduleMap[ module.filePath ] === module );
+  // _.assert( will.moduleMap[ module.filePath ] === module );
+  _.assert( will.moduleMap[ module.id ] === module );
 
   return module;
 }
@@ -234,8 +242,9 @@ function preform2()
   _.assert( arguments.length === 0 );
   _.assert( module.preformed === 2 );
   _.assert( !!module.will );
-  _.assert( will.moduleMap[ module.filePath ] === module );
-  _.assert( !!module.dirPath );
+  // _.assert( will.moduleMap[ module.filePath ] === module );
+  _.assert( will.moduleMap[ module.id ] === module );
+  _.assert( module.dirPath === null || _.strDefined( module.dirPath ) ); // xxx
   _.assert( !!module.filePath );
 
   module.predefinedForm();
@@ -616,24 +625,39 @@ clean.defaults = Object.create( cleanWhat.defaults );
 // opener
 // --
 
-function DirPathFromWillFilePath( inPath )
+function DirPathFromFilePaths( filePaths )
 {
   let module = this;
-  let result = inPath;
 
+  filePaths = _.arrayAs( filePaths );
+
+  _.assert( _.strsAreAll( filePaths ) );
   _.assert( arguments.length === 1 );
 
-  let r1 = /(.*)(?:\.will(?:\.|$).*)/;
-  let parsed = r1.exec( inPath );
-  if( parsed )
-  result = parsed[ 1 ];
+  filePaths = filePaths.map( ( filePath ) =>
+  {
+    filePath = _.path.normalizeTolerant( filePath );
 
-  let r2 = /(.*)(?:\.(?:im|ex))/;
-  let parsed2 = r2.exec( inPath );
-  if( parsed2 )
-  result = parsed2[ 1 ];
+    let r1 = /(.*)(?:\.will(?:\.|$))[^\/]*$/;
+    let parsed1 = r1.exec( filePath );
+    if( parsed1 )
+    filePath = parsed1[ 1 ];
 
-  return result;
+    let r2 = /(.*)(?:\.(?:im|ex)(?:\.|$))[^\/]*$/;
+    let parsed2 = r2.exec( filePath );
+    if( parsed2 )
+    filePath = parsed2[ 1 ];
+
+    // if( parsed1 || parsed2 )
+    // if( _.strEnds( filePath, '/' ) )
+    // filePath = filePath + '.';
+
+    return filePath;
+  });
+
+  let filePath = _.strCommonLeft.apply( _, filePaths );
+  _.assert( filePath.length > 0 );
+  return filePath;
 }
 
 //
@@ -804,6 +828,7 @@ function _willFileFindMaybe( o )
   _.assert( !module.submodulesFormReady.resourcesCount() );
   _.assert( !module.resourcesFormReady.resourcesCount() );
 
+  let dirPath = module.dirPath || path.dir( module.filePath );
   let namePath = '.';
   if( o.isNamed )
   namePath = path.fullName( path.parse( module.filePath ).longPath );
@@ -811,39 +836,25 @@ function _willFileFindMaybe( o )
   if( module.willFileWithRoleMap[ o.role ] )
   return null;
 
-  // let dirPath = module.dirPath;
-  // if( o.isNamed )
-  // dirPath = path.resolve( dirPath, '..' );
-
   let filePath;
   if( o.isOutFile )
   {
 
-    // debugger;
-    // let name = _.strJoinPath( [ namePath, '.out', module.prefixPathForRole( o.role ) ], '.' );
-    // filePath = path.resolve( module.dirPath, name );
-
     if( o.isNamed )
     {
+
+      if( module.dirPath )
+      dirPath = path.dir( module.dirPath );
+      else
+      dirPath = path.dir( module.filePath );
       let name = _.strJoinPath( [ namePath, '.out', module.prefixPathForRole( o.role ) ], '.' );
-      filePath = path.resolve( module.dirPath, '..', name );
+      filePath = path.resolve( dirPath, '.', name );
     }
     else
     {
       let name = _.strJoinPath( [ namePath, '.out', module.prefixPathForRole( o.role ) ], '.' );
-      filePath = path.resolve( module.dirPath, name );
+      filePath = path.resolve( dirPath, name );
     }
-
-    // if( o.isNamed )
-    // {
-    //   let name = _.strJoinPath( [ namePath, module.prefixPathForRole( o.role ) ], '.' );
-    //   filePath = path.resolve( module.dirPath, '..', name );
-    // }
-    // else
-    // {
-    //   let name = _.strJoinPath( [ namePath, module.prefixPathForRole( o.role ) ], '.' );
-    //   filePath = path.resolve( module.dirPath, name );
-    // }
 
   }
   else
@@ -851,19 +862,33 @@ function _willFileFindMaybe( o )
 
     if( o.isNamed )
     {
+      if( module.dirPath )
+      dirPath = path.dir( module.dirPath );
+      else
+      dirPath = path.dir( module.filePath );
+
       let name = _.strJoinPath( [ namePath, module.prefixPathForRole( o.role ) ], '.' );
-      filePath = path.resolve( module.dirPath, '..', name );
+      filePath = path.resolve( dirPath, '.', name );
     }
     else
     {
+
+      if( module.dirPath )
+      dirPath = module.dirPath;
+      else
+      dirPath = module.filePath;
+
       let name = module.prefixPathForRole( o.role );
-      filePath = path.resolve( module.dirPath, namePath, name );
+      filePath = path.resolve( dirPath, namePath, name );
+
     }
 
   }
 
   if( will.verbosity >= 4 || 0 )
   logger.log( 'Trying to open', filePath );
+
+  _.assert( module.willFileWithRoleMap[ o.role ] === undefined )
 
   new will.WillFile
   ({
@@ -889,7 +914,6 @@ function _willFileFindMaybe( o )
 _willFileFindMaybe.defaults =
 {
   role : null,
-  // dirPath : null,
   isOutFile : 0,
   isNamed : 0,
 }
@@ -903,6 +927,7 @@ function _willFilesFindMaybe( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+  let filePaths;
 
   o = _.routineOptions( _willFilesFindMaybe, arguments );
 
@@ -912,11 +937,42 @@ function _willFilesFindMaybe( o )
   _.assert( !module.submodulesFormReady.resourcesCount() );
   _.assert( !module.resourcesFormReady.resourcesCount() );
 
+  /* specific terminal file */
+
+  if( module.filePath && fileProvider.resolvedIsTerminal( module.filePath ) )
+  {
+
+    _.assert( module.willFileWithRoleMap.single === undefined )
+
+    new will.WillFile
+    ({
+      role : 'single',
+      filePath : module.filePath,
+      module : module,
+    }).form1();
+
+    let willf = module.willFileWithRoleMap.single;
+
+    if( willf.exists() )
+    {
+      filePaths = [ module.filePath ];
+      namedNameDeduce();
+      return end( filePaths );
+    }
+    else
+    {
+      debugger;
+      willf.finit();
+    }
+
+  }
+
   /* */
 
   let roles = [ 'single', 'import', 'export' ];
   let files = Object.create( null );
-  let filePaths;
+
+  // debugger; // yyy
 
   /* */
 
@@ -1043,9 +1099,8 @@ function _willFilesFindMaybe( o )
 
   function end( filePaths )
   {
-    let filePath = _.strCommonLeft.apply( _, filePaths );
+    let filePath = module.DirPathFromFilePaths( filePaths );
     module.filePathSet( filePath, path.dir( filePath ) );
-    _.assert( filePaths.length > 0 );
     return true;
   }
 
@@ -1075,19 +1130,12 @@ function willFilesFind()
 
     let result = module._willFilesFindMaybe({ isOutFile : !!module.supermodule });
 
-    // let result = false;
-    // if( !result )
-    // result = module._willFilesFindMaybe({ isOutFile : !!module.supermodule });
-    // if( !result )
-    // result = module._willFilesFindMaybe({ isOutFile : !module.supermodule });
-
     if( !result )
     {
-      // debugger;
       if( module.supermodule )
-      throw _.errBriefly( 'Found no .out.will file for', module.nickName, 'at', _.strQuote( module.dirPath ) );
+      throw _.errBriefly( 'Found no .out.will file for',  module.supermodule.nickName, 'at', _.strQuote( module.filePath || module.dirPath ) );
       else
-      throw _.errBriefly( 'Found no', module.nickName, 'at', _.strQuote( module.dirPath ) );
+      throw _.errBriefly( 'Found no will-file at', _.strQuote( module.filePath || module.dirPath ) );
     }
 
     result = _.Consequence.From( result );
@@ -1597,7 +1645,7 @@ function remoteIsRemote()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  let fileProvider2 = fileProvider.providerForPath( module.dirPath );
+  let fileProvider2 = fileProvider.providerForPath( module.filePath );
   if( fileProvider2.limitedImplementation )
   return end( true );
 
@@ -1622,7 +1670,7 @@ function remoteIsDownloaded()
   let path = fileProvider.path;
 
   _.assert( _.strDefined( module.clonePath ) );
-  _.assert( _.strDefined( module.dirPath ) );
+  _.assert( _.strDefined( module.filePath ) );
   _.assert( module.isRemote === true );
 
   let fileProvider2 = fileProvider.providerForPath( module.remotePath );
@@ -1665,7 +1713,7 @@ function remoteIsUpToDate()
   let path = fileProvider.path;
 
   _.assert( _.strDefined( module.clonePath ) );
-  _.assert( _.strDefined( module.dirPath ) );
+  _.assert( _.strDefined( module.filePath ) );
   _.assert( module.isRemote === true );
 
   let fileProvider2 = fileProvider.providerForPath( module.remotePath );
@@ -1711,7 +1759,7 @@ function remoteForm()
   let logger = will.logger;
 
   _.assert( module.preformed === 2 );
-  _.assert( _.strDefined( module.dirPath ) );
+  _.assert( _.strDefined( module.filePath ) );
 
   module.isRemote = module.remoteIsRemote();
 
@@ -1738,20 +1786,23 @@ function remoteFormAct()
   let logger = will.logger;
 
   _.assert( module.preformed === 2 );
-  _.assert( _.strDefined( module.dirPath ) );
+  _.assert( _.strDefined( module.filePath ) );
   _.assert( _.strDefined( module.alias ) );
   _.assert( !!module.supermodule );
 
-  let fileProvider2 = fileProvider.providerForPath( module.dirPath );
+  let fileProvider2 = fileProvider.providerForPath( module.filePath );
   let submodulesDir = module.supermodule.submodulesCloneDirGet();
-  let localPath = fileProvider2.pathIsolateGlobalAndLocal( module.dirPath )[ 1 ];
+  let localPath = fileProvider2.pathIsolateGlobalAndLocal( module.filePath )[ 1 ];
 
-  module.remotePath = module.dirPath;
+  debugger;
+  module.remotePath = module.filePath;
   module.clonePath = path.resolve( submodulesDir, module.alias );
   module.dirPath = path.resolve( module.clonePath, localPath );
+  module.filePath = module.dirPath;
   module.isDownloaded = !!module.remoteIsDownloaded();
 
-  _.assert( will.moduleMap[ module.filePath ] === module );
+  _.assert( will.moduleMap[ module.id ] === module );
+  // _.assert( will.moduleMap[ module.filePath ] === module );
   // _.assert( will.moduleMap[ module.remotePath ] === module ); // yyy
   // _.sure( will.moduleMap[ module.filePath ] === undefined, () => 'Module at ' + _.strQuote( module.dirPath ) + ' already exists' ); // yyy
    // will.moduleMap[ module.dirPath ] = module;
@@ -1775,7 +1826,7 @@ function _remoteDownload( o )
   _.routineOptions( _remoteDownload, o );
   _.assert( arguments.length === 1 );
   _.assert( module.preformed === 3 );
-  _.assert( _.strDefined( module.dirPath ) );
+  _.assert( _.strDefined( module.filePath ) );
   _.assert( _.strDefined( module.alias ) );
   _.assert( _.strDefined( module.remotePath ) );
   _.assert( _.strDefined( module.clonePath ) );
@@ -2100,6 +2151,7 @@ function resourceObtain( resourceKind, resourceName )
     selector : resourceKind + '::' + resourceName,
     pathResolving : 0,
     pathUnwrapping : 0,
+    missingAction : 'undefine',
   });
   if( !resource )
   resource = module.resourceAllocate( resourceKind, resourceName );
@@ -2183,38 +2235,18 @@ function filePathSet( filePath, dirPath )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  filePath = path.normalize( filePath );
+  filePath = path.normalizeTolerant( filePath );
   dirPath = path.normalize( dirPath );
-  // let dirPath = path.dir( filePath );
 
   _.assert( arguments.length === 2 );
-  // _.assert( _.strDefined( dirPath ) );
-  // _.assert( path.isAbsolute( dirPath ) );
   _.assert( module.preformed === 3 );
-  // _.assert( path.isNormalized( dirPath ) );
-  // _.assert( path.isNormalized( module.dirPath ) );
-
-  // debugger;
-
-  // if( module.filePath === filePath )
-  // return module;
-
-  _.assert( will.moduleMap[ module.filePath ] === module );
-  _.assert( will.moduleMap[ filePath ] === module || will.moduleMap[ filePath ] === undefined );
-
-  // module.dirPath = null;
-  // module.filePath = null;
-
-  delete will.moduleMap[ module.filePath ];
-
-  module._filePathSet( filePath, dirPath );
+  // _.assert( will.moduleMap[ module.filePath ] === module );
+  _.assert( will.moduleMap[ module.id ] === module );
+  // _.assert( will.moduleMap[ filePath ] === module || will.moduleMap[ filePath ] === undefined );
 
   // delete will.moduleMap[ module.filePath ];
-  // module.dirPath = dirPath;
-  // module.filePath = filePath;
-  // will.moduleMap[ module.filePath ] = module;
-  //
-  // logger.log( 'filePathSet' + ' : ' + module.filePath );
+
+  module._filePathSet( filePath, dirPath );
 
   return module;
 }
@@ -2229,36 +2261,36 @@ function _filePathSet( filePath, dirPath )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  filePath = path.normalize( filePath );
+  if( filePath )
+  filePath = path.normalizeTolerant( filePath );
+  if( dirPath )
   dirPath = path.normalize( dirPath );
-  // let dirPath = path.dir( filePath );
 
   _.assert( arguments.length === 2 );
-  _.assert( _.strDefined( dirPath ) );
-  _.assert( path.isAbsolute( dirPath ) );
-  _.assert( path.isNormalized( dirPath ) );
+  _.assert( dirPath === null || _.strDefined( dirPath ) );
+  _.assert( dirPath === null || path.isAbsolute( dirPath ) );
+  _.assert( dirPath === null || path.isNormalized( dirPath ) );
   _.assert( _.strDefined( filePath ) );
   _.assert( path.isAbsolute( filePath ) );
-  _.assert( path.isNormalized( filePath ) );
-  // _.assert( module.dirPath === null );
-  // _.assert( module.filePath === null );
+  // _.assert( path.isNormalized( filePath ) );
 
-  // if( module.filePath === filePath )
-  // return module;
-  // _.assert( will.moduleMap[ module.filePath ] === module );
-  // _.assert( will.moduleMap[ filePath ] === undefined );
+  // if( will.moduleMap[ id ] !== undefined && will.moduleMap[ id ] !== module )
+  // {
+  //   debugger;
+  //   throw _.err( 'Module with id ' + _.strQuote( id ) + ' were defined more than once!' );
+  // }
 
-  if( will.moduleMap[ filePath ] !== undefined && will.moduleMap[ filePath ] !== module )
-  {
-    debugger;
-    throw _.err( 'Module at ' + _.strQuote( filePath ) + ' were defined more than once!' );
-  }
+  // if( will.moduleMap[ filePath ] !== undefined && will.moduleMap[ filePath ] !== module )
+  // {
+  //   debugger;
+  //   throw _.err( 'Module at ' + _.strQuote( filePath ) + ' were defined more than once!' );
+  // }
 
   module.dirPath = dirPath;
   module.filePath = filePath;
 
-  if( module.filePath )
-  will.moduleMap[ module.filePath ] = module;
+  // if( module.filePath )
+  // will.moduleMap[ module.filePath ] = module;
 
   // logger.log( 'dirPath' + ' : ' + module.dirPath );
   // logger.log( 'filePath' + ' : ' + module.filePath );
@@ -2488,6 +2520,7 @@ function reflectorResolve_body( o )
     selector : o.selector,
     defaultPool : 'reflector',
     current : o.current,
+    pathResolving : 0,
   });
 
   // delete opts.reflector ;
@@ -2614,6 +2647,7 @@ function resolve_body( o )
 
   // debugger;
   let result = module._resolveAct( o );
+  // debugger;
 
   if( result === undefined )
   {
@@ -2707,7 +2741,7 @@ function resolve_body( o )
 
   function mapValsUnwrap( result )
   {
-    if( !o.mapValsUnwrapping || !_.mapIs( result ) || !_.all( result, ( e ) => _.instanceIs( e ) ) )
+    if( !o.mapValsUnwrapping || !_.mapIs( result ) || !_.all( result, ( e ) => _.instanceIs( e ) || _.primitiveIs( e ) ) )
     return result;
     return _.mapVals( result );
   }
@@ -2874,8 +2908,12 @@ function _resolveAct( o )
   {
     let it = this;
 
+    // debugger;
     // if( _.strHas( it.path, '/MultipleExports' ) )
     // debugger;
+
+    if( it.path === '/MultipleExports/export.debug/in' )
+    debugger;
 
     exportedWriteThrough.call( it );
     exportedPathResolve.call( it );
@@ -2889,7 +2927,9 @@ function _resolveAct( o )
   function onQuantitativeFail( err )
   {
     let it = this;
+
     debugger;
+
     let result = it.dst;
     if( _.mapIs( result ) )
     result = _.mapVals( result );
@@ -2908,6 +2948,7 @@ function _resolveAct( o )
       else
       err = _.err( 'Found nothing', '\n', err );
     }
+
     throw err;
   }
 
@@ -3032,26 +3073,24 @@ function _resolveAct( o )
   {
     let it = this;
 
-    if( !it.selector && it.iterationCurrent.exported && it.dst )
-    {
-
-      // debugger;
-
-      if( it.dst instanceof will.Reflector )
-      {
-        let m = it.iterationCurrent.module;
-        let reflector = it.dst;
-        _.assert( reflector.inherit.length === 0 );
-        reflector.form();
-        it.dst = reflector;
-      }
-      else if( it.dst instanceof will.PathResource )
-      {
-        let m = it.iterationCurrent.module;
-        it.dst = path.s.join( m.inPath, it.dst.path );
-      }
-
-    }
+    // if( !it.selector && it.iterationCurrent.exported && it.dst )
+    // {
+    //
+    //   if( it.dst instanceof will.Reflector )
+    //   {
+    //     let module2 = it.iterationCurrent.module;
+    //     let reflector = it.dst;
+    //     _.assert( reflector.inherit.length === 0 );
+    //     reflector.form();
+    //     it.dst = reflector;
+    //   }
+    //   else if( it.dst instanceof will.PathResource )
+    //   {
+    //     let module2 = it.iterationCurrent.module;
+    //     it.dst = path.s.join( module2.inPath, it.dst.path );
+    //   }
+    //
+    // }
 
   }
 
@@ -3077,8 +3116,33 @@ function _resolveAct( o )
     return;
     if( !it.dstWritingDown )
     return;
+
+    // if( !( it.dst instanceof will.PathResource ) )
+    // return;
+
+    if( it.dst instanceof will.Reflector )
+    {
+      debugger;
+      let module2 = it.iterationCurrent.module;
+      let reflector = it.dst;
+      _.assert( reflector.inherit.length === 0 );
+      if( it.dst.src.hasSomePath() )
+      it.dst.src.prefixPath = path.s.join( module2.inPath, it.dst.src.prefixPath || '.' );
+      if( it.dst.dst.hasSomePath() )
+      it.dst.dst.prefixPath = path.s.join( module2.inPath, it.dst.dst.prefixPath || '.' );
+      // reflector.form();
+      // it.dst = reflector;
+      return;
+    }
+
     if( !( it.dst instanceof will.PathResource ) )
     return;
+
+    // if( it.dst instanceof will.PathResource )
+    // {
+    //   let module2 = it.iterationCurrent.module;
+    //   it.dst = path.s.join( module2.inPath, it.dst.path );
+    // }
 
     it.dst = it.dst.clone();
     it.dst.module = null;
@@ -3087,9 +3151,9 @@ function _resolveAct( o )
 
     let prefixPath = '.';
     if( o.pathResolving === 'in' && it.dst.name !== 'in' )
-    prefixPath = module2.pathMap.in;
+    prefixPath = module2.pathMap.in || '.';
     else if( o.pathResolving === 'out' && it.dst.name !== 'out' )
-    prefixPath = module2.pathMap.out;
+    prefixPath = module2.pathMap.out || '.';
 
     it.dst.path = path.s.resolve( module2.dirPath, prefixPath, it.dst.path );
 
@@ -3391,7 +3455,7 @@ let Restricts =
 let Statics =
 {
   ResourceSetter_functor,
-  DirPathFromWillFilePath, // xxx
+  DirPathFromFilePaths,
   Counter : 0,
 }
 
@@ -3453,7 +3517,7 @@ let Proto =
 
   // opener
 
-  DirPathFromWillFilePath,
+  DirPathFromFilePaths,
   prefixPathForRole,
   prefixPathForRoleMaybe,
   isOpened,
