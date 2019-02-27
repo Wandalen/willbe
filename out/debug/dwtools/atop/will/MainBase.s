@@ -9,6 +9,16 @@ if( typeof module !== 'undefined' )
 
 }
 
+/*
+
+= Orientations
+
+- Willbe prepends all relative paths by path::in. path::out and path::temp prepended by path::in as well.
+- Willbe prepends path::in by module.dirPath, a directory which has the will-file.
+- Only difference between generated out-will-files and manually written will-file is section exported. out-will-files has such section, manually written will-file does not.
+
+*/
+
 //
 
 let _ = wTools;
@@ -154,19 +164,25 @@ function moduleMake( o )
   let path = will.fileProvider.path;
   let logger = will.logger;
 
-  if( _.strIs( o ) )
-  o = { dirPath : o }
-  o.dirPath = o.dirPath || fileProvider.path.current();
+  // if( _.strIs( o ) )
+  // o = { filePath : o }
 
   _.assert( arguments.length === 1 );
-  _.routineOptions( moduleMake, o );
+  o = _.routineOptions( moduleMake, arguments );
+
+  if( !o.filePath && !o.dirPath )
+  o.dirPath = o.dirPath || fileProvider.path.current();
 
   if( !o.module )
   {
-    o.module = will.Module({ will : will, dirPath : o.dirPath }).preform();
+    o.module = will.Module({ will : will, filePath : o.filePath, dirPath : o.dirPath }).preform();
   }
 
+  _.assert( o.module.filePath === o.filePath || o.module.filePath === o.dirPath );
   _.assert( o.module.dirPath === o.dirPath );
+
+  // debugger; xxx
+  // _.assert( o.module.dirPath === o.dirPath );
 
   o.module.willFilesFind();
   o.module.willFilesOpen();
@@ -190,6 +206,7 @@ function moduleMake( o )
 moduleMake.defaults =
 {
   module : null,
+  filePath : null,
   dirPath : null,
   forming : null,
 }
@@ -246,7 +263,7 @@ willFilesList.defaults =
 {
   dirPath : null,
   includingInFiles : 1,
-  includingOutFiles : 0,
+  includingOutFiles : 1,
   rerucrsive : 0,
 }
 
@@ -259,7 +276,7 @@ var ResourceKindToClassName = new _.NameMapper({ leftName : 'resource kind', rig
 
   'submodule' : 'Submodule',
   'step' : 'Step',
-  'path' : 'PathObj',
+  'path' : 'PathResource',
   'reflector' : 'Reflector',
   'build' : 'Build',
   'about' : 'About',
@@ -273,7 +290,7 @@ var ResourceKindToMapName = new _.NameMapper({ leftName : 'resource kind', right
 
   'submodule' : 'submoduleMap',
   'step' : 'stepMap',
-  'path' : 'pathObjMap',
+  'path' : 'pathResourceMap',
   'reflector' : 'reflectorMap',
   'build' : 'buildMap',
   'exported' : 'exportedMap',
@@ -318,6 +335,7 @@ let Statics =
 
 let Forbids =
 {
+  // moduleMap : 'moduleMap',
 }
 
 // --

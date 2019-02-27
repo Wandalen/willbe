@@ -41,8 +41,8 @@ function unform()
 
   if( submodule.loadedModule )
   {
-    _.assert( submodule.loadedModule.associatedSubmodule === submodule )
-    submodule.loadedModule.associatedSubmodule = null;
+    _.assert( submodule.loadedModule.associatedSubmoduleResource === submodule )
+    submodule.loadedModule.associatedSubmoduleResource = null;
     submodule.loadedModule.finit();
   }
 
@@ -99,16 +99,17 @@ function _load()
 
   /* */
 
+  // debugger;
   submodule.loadedModule = will.Module
   ({
     will : will,
     alias : submodule.name,
-    dirPath : path.join( module.dirPath, submodule.path ),
+    filePath : path.join( module.inPath, submodule.path ),
     supermodule : module,
-    associatedSubmodule : submodule,
+    associatedSubmoduleResource : submodule,
   }).preform();
 
-  submodule.loadedModule.willFilesFind({ isInFile : 0 });
+  submodule.loadedModule.willFilesFind({ isOutFile : 1 });
   submodule.loadedModule.willFilesOpen();
   submodule.loadedModule.submodulesFormSkip();
   submodule.loadedModule.resourcesForm();
@@ -120,10 +121,12 @@ function _load()
     return arg;
   });
 
+  // debugger;
   submodule.loadedModule.ready.finally( ( err, arg ) =>
   {
     if( err )
     {
+      debugger;
       if( will.verbosity >= 3 )
       logger.error( ' ! Failed to read ' + submodule.nickName + ', try to download it with .submodules.download or even clean it before downloading' );
       if( will.verbosity >= 5 || !submodule.loadedModule || submodule.loadedModule.isOpened() )
@@ -209,11 +212,11 @@ let Aggregates =
 
 let Associates =
 {
-  loadedModule : null,
 }
 
 let Restricts =
 {
+  loadedModule : null,
 }
 
 let Statics =

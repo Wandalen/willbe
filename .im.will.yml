@@ -15,6 +15,7 @@ path :
     path : './out/release'
     criterion :
       debug : 0
+  doc : './doc'
   proto : './proto'
 
 reflector :
@@ -97,5 +98,3 @@ build :
     steps :
       - build::debug.raw
       - build::release.compiled
-
-

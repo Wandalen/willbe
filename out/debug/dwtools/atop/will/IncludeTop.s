@@ -20,7 +20,7 @@ if( typeof module !== 'undefined' )
   require( './l7/Build.s' );
   require( './l7/Exported.s' );
   require( './l7/WillFile.s' );
-  require( './l7/PathObj.s' );
+  require( './l7/PathResource.s' );
   require( './l7/Reflector.s' );
   require( './l7/Step.s' );
   require( './l7/Submodule.s' );

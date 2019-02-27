@@ -4,7 +4,7 @@ about :
 
   name : "willbe"
   description : "Tool to manage modules of modular systems"
-  version : "0.3.159"
+  version : "0.3.166"
   enabled : 1
   interpreters :
   - nodejs >= 6.0.0
@@ -33,6 +33,15 @@ step :
     criterion :
       debug : 1
       proto : 1
+      doc : 0
+
+  export.doc :
+    inherit : predefined.export
+    export : path::doc
+    tar : 0
+    criterion :
+      debug : 1
+      doc : 1
 
 build :
 
@@ -42,10 +51,19 @@ build :
       debug : 1
       raw : 1
       proto : 1
+      doc : 0
       export : 1
       tar : 1
       public : 1
     steps :
       - build::debug.raw
       - step::export.proto
+
+  doc.export :
+    criterion :
+      export : 1
+      debug : 1
+      doc : 1
+    steps :
+      - step::export.doc
 

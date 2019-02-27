@@ -29,7 +29,7 @@ function finit()
   let module = this;
   let will = module.will;
 
-  if( module.preformed )
+  // if( module.preformed )
   module.unform();
   module.about.finit();
   module.execution.finit();
@@ -41,12 +41,14 @@ function finit()
   _.assert( Object.keys( module.buildMap ).length === 0 );
   _.assert( Object.keys( module.stepMap ).length === 0 );
   _.assert( Object.keys( module.reflectorMap ).length === 0 );
-  _.assert( Object.keys( module.pathObjMap ).length === 0 );
+  _.assert( Object.keys( module.pathResourceMap ).length === 0 );
   _.assert( Object.keys( module.submoduleMap ).length === 0 );
 
   _.assert( module.willFileArray.length === 0 );
   _.assert( Object.keys( module.willFileWithRoleMap ).length === 0 );
-  _.assert( will.moduleMap[ module.dirPath ] === undefined );
+  // _.assert( will.moduleMap[ module.filePath ] !== module );
+  _.assert( will.moduleMap[ module.id ] !== module );
+  _.assert( !_.arrayHas( will.moduleArray, module ) );
 
   return _.Copyable.prototype.finit.apply( module, arguments );
 }
@@ -65,11 +67,7 @@ function init( o )
   module.Counter += 1;
   module.id = module.Counter;
 
-  if( o )
-  module.copy( o );
-
-  let will = module.will;
-
+  let will = o.will;
   _.assert( !!will );
 
   module.stager = new _.Stager
@@ -81,16 +79,21 @@ function init( o )
     verbosity : Math.max( Math.min( will.verbosity, will.verboseStaging ), will.verbosity - 6 ),
   });
 
-  // module.ready.finally( ( err, arg ) =>
-  // {
-  //   if( err )
-  //   {
-  //     module.errors.push( err );
-  //     // throw _.errLogOnce( err );
-  //   }
-  //   return arg;
-  // });
+  if( o )
+  module.copy( o );
 
+}
+
+//
+
+function copy( o )
+{
+  let module = this;
+
+  if( o && o.will )
+  module.will = o.will;
+
+  return _.Copyable.prototype.copy.apply( module, arguments );
 }
 
 //
@@ -101,13 +104,13 @@ function unform()
   let will = module.will;
 
   _.assert( arguments.length === 0 );
-  _.assert( !!module.preformed );
+  // _.assert( !!module.preformed );
 
-  if( module.associatedSubmodule )
+  if( module.associatedSubmoduleResource )
   {
-    _.assert( module.associatedSubmodule.loadedModule === module );
-    module.associatedSubmodule.loadedModule = null;
-    module.associatedSubmodule.finit();
+    _.assert( module.associatedSubmoduleResource.loadedModule === module );
+    module.associatedSubmoduleResource.loadedModule = null;
+    module.associatedSubmoduleResource.finit();
   }
 
   /* begin */
@@ -120,8 +123,8 @@ function unform()
   module.stepMap[ i ].finit();
   for( let i in module.reflectorMap )
   module.reflectorMap[ i ].finit();
-  for( let i in module.pathObjMap )
-  module.pathObjMap[ i ].finit();
+  for( let i in module.pathResourceMap )
+  module.pathResourceMap[ i ].finit();
   for( let i in module.submoduleMap )
   module.submoduleMap[ i ].finit();
 
@@ -129,7 +132,7 @@ function unform()
   _.assert( Object.keys( module.buildMap ).length === 0 );
   _.assert( Object.keys( module.stepMap ).length === 0 );
   _.assert( Object.keys( module.reflectorMap ).length === 0 );
-  _.assert( Object.keys( module.pathObjMap ).length === 0 );
+  _.assert( Object.keys( module.pathResourceMap ).length === 0 );
   _.assert( Object.keys( module.submoduleMap ).length === 0 );
 
   for( let i = module.willFileArray.length-1 ; i >= 0 ; i-- )
@@ -144,12 +147,21 @@ function unform()
 
   _.assert( module.willFileArray.length === 0 );
   _.assert( Object.keys( module.willFileWithRoleMap ).length === 0 );
-  _.assert( will.moduleMap[ module.dirPath ] === module );
-  _.assert( will.moduleMap[ module.remotePath ] === module || will.moduleMap[ module.remotePath ] === undefined );
-  delete will.moduleMap[ module.dirPath ];
-  delete will.moduleMap[ module.remotePath ];
-  _.assert( will.moduleMap[ module.dirPath ] === undefined );
-  _.arrayRemoveElementOnceStrictly( will.moduleArray, module );
+  _.assert( will.moduleMap[ module.remotePath ] === undefined );
+
+  if( module.preformed )
+  {
+    // _.assert( will.moduleMap[ module.filePath ] === module );
+    // if( will.moduleMap[ module.filePath ] === module );
+    // delete will.moduleMap[ module.filePath ];
+    if( will.moduleMap[ module.id ] === module );
+    delete will.moduleMap[ module.id ];
+    _.arrayRemoveElementOnceStrictly( will.moduleArray, module );
+  }
+
+  _.assert( will.moduleMap[ module.filePath ] !== module );
+  _.assert( will.moduleMap[ module.id ] !== module );
+  _.assert( !_.arrayHas( will.moduleArray, module ) );
 
   /* end */
 
@@ -198,23 +210,24 @@ function preform1()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( !!module.dirPath );
   _.assert( arguments.length === 0 );
   _.assert( !!module.will );
+  _.assert( _.strIs( module.filePath ) || _.strIs( module.dirPath ), 'Expects filePath or dirPath' );
 
-  module.dirPath = path.normalize( module.dirPath );
+  if( module.filePath === null )
+  module.filePath = module.dirPath;
+  // if( module.dirPath === null )
+  // module.dirPath = module.filePath;
 
-  if( will.moduleMap[ module.dirPath ] !== undefined )
-  {
-    debugger;
-    throw _.err( 'Module at ' + _.strQuote( module.dirPath ) + ' were defined more than once!' );
-  }
+  module._filePathSet( module.filePath, module.dirPath );
 
   /* */
 
+  _.assert( module.id > 0 );
+  will.moduleMap[ module.id ] = module;
   _.arrayAppendOnceStrictly( will.moduleArray, module );
-  _.sure( !will.moduleMap[ module.dirPath ], () => 'Module at ' + _.strQuote( module.dirPath ) + ' already exists!' );
-  will.moduleMap[ module.dirPath ] = module;
+  // _.assert( will.moduleMap[ module.filePath ] === module );
+  _.assert( will.moduleMap[ module.id ] === module );
 
   return module;
 }
@@ -229,17 +242,14 @@ function preform2()
   _.assert( arguments.length === 0 );
   _.assert( module.preformed === 2 );
   _.assert( !!module.will );
-  _.assert( will.moduleMap[ module.dirPath ] === module );
-  _.assert( !!module.dirPath );
-
-  /* begin */
+  // _.assert( will.moduleMap[ module.filePath ] === module );
+  _.assert( will.moduleMap[ module.id ] === module );
+  _.assert( module.dirPath === null || _.strDefined( module.dirPath ) ); // xxx
+  _.assert( !!module.filePath );
 
   module.predefinedForm();
   module.remoteForm();
 
-  /* end */
-
-  // module.stager.stageState( 'preformed', 3 );
   return module;
 }
 
@@ -406,6 +416,9 @@ function predefinedForm()
 
   function step( o )
   {
+    if( module.stepMap[ o.name ] )
+    return module.stepMap[ o.name ].form1();
+
     let defaults =
     {
       module : module,
@@ -428,6 +441,9 @@ function predefinedForm()
 
   function reflector( o )
   {
+    if( module.reflectorMap[ o.name ] )
+    return module.reflectorMap[ o.name ].form1();
+
     let defaults =
     {
       module : module,
@@ -609,24 +625,39 @@ clean.defaults = Object.create( cleanWhat.defaults );
 // opener
 // --
 
-function DirPathFromWillFilePath( inPath )
+function DirPathFromFilePaths( filePaths )
 {
   let module = this;
-  let result = inPath;
 
+  filePaths = _.arrayAs( filePaths );
+
+  _.assert( _.strsAreAll( filePaths ) );
   _.assert( arguments.length === 1 );
 
-  let r1 = /(.*)(?:\.will(?:\.|$).*)/;
-  let parsed = r1.exec( inPath );
-  if( parsed )
-  result = parsed[ 1 ];
+  filePaths = filePaths.map( ( filePath ) =>
+  {
+    filePath = _.path.normalizeTolerant( filePath );
 
-  let r2 = /(.*)(?:\.(?:im|ex))/;
-  let parsed2 = r2.exec( inPath );
-  if( parsed2 )
-  result = parsed2[ 1 ];
+    let r1 = /(.*)(?:\.will(?:\.|$))[^\/]*$/;
+    let parsed1 = r1.exec( filePath );
+    if( parsed1 )
+    filePath = parsed1[ 1 ];
 
-  return result;
+    let r2 = /(.*)(?:\.(?:im|ex)(?:\.|$))[^\/]*$/;
+    let parsed2 = r2.exec( filePath );
+    if( parsed2 )
+    filePath = parsed2[ 1 ];
+
+    // if( parsed1 || parsed2 )
+    // if( _.strEnds( filePath, '/' ) )
+    // filePath = filePath + '.';
+
+    return filePath;
+  });
+
+  let filePath = _.strCommonLeft.apply( _, filePaths );
+  _.assert( filePath.length > 0 );
+  return filePath;
 }
 
 //
@@ -797,28 +828,67 @@ function _willFileFindMaybe( o )
   _.assert( !module.submodulesFormReady.resourcesCount() );
   _.assert( !module.resourcesFormReady.resourcesCount() );
 
+  let dirPath = module.dirPath || path.dir( module.filePath );
+  let namePath = '.';
+  if( o.isNamed )
+  namePath = path.fullName( path.parse( module.filePath ).longPath );
+
   if( module.willFileWithRoleMap[ o.role ] )
   return null;
 
   let filePath;
-  if( o.isInFile )
+  if( o.isOutFile )
   {
-    if( o.isInside )
+
+    if( o.isNamed )
     {
-      let name = module.prefixPathForRole( o.role );
-      filePath = path.resolve( module.dirPath, o.dirPath, name );
+
+      if( module.dirPath )
+      dirPath = path.dir( module.dirPath );
+      else
+      dirPath = path.dir( module.filePath );
+      let name = _.strJoinPath( [ namePath, '.out', module.prefixPathForRole( o.role ) ], '.' );
+      filePath = path.resolve( dirPath, '.', name );
     }
     else
     {
-      let name = _.strJoinPath( [ o.dirPath, module.prefixPathForRole( o.role ) ], '.' );
-      filePath = path.resolve( module.dirPath, name );
+      let name = _.strJoinPath( [ namePath, '.out', module.prefixPathForRole( o.role ) ], '.' );
+      filePath = path.resolve( dirPath, name );
     }
+
   }
   else
   {
-    let name = _.strJoinPath( [ o.dirPath, '.out', module.prefixPathForRole( o.role ) ], '.' );
-    filePath = path.resolve( module.dirPath, name );
+
+    if( o.isNamed )
+    {
+      if( module.dirPath )
+      dirPath = path.dir( module.dirPath );
+      else
+      dirPath = path.dir( module.filePath );
+
+      let name = _.strJoinPath( [ namePath, module.prefixPathForRole( o.role ) ], '.' );
+      filePath = path.resolve( dirPath, '.', name );
+    }
+    else
+    {
+
+      if( module.dirPath )
+      dirPath = module.dirPath;
+      else
+      dirPath = module.filePath;
+
+      let name = module.prefixPathForRole( o.role );
+      filePath = path.resolve( dirPath, namePath, name );
+
+    }
+
   }
+
+  if( will.verbosity >= 4 || 0 )
+  logger.log( 'Trying to open', filePath );
+
+  _.assert( module.willFileWithRoleMap[ o.role ] === undefined )
 
   new will.WillFile
   ({
@@ -844,9 +914,8 @@ function _willFileFindMaybe( o )
 _willFileFindMaybe.defaults =
 {
   role : null,
-  dirPath : null,
-  isInFile : 1,
-  isInside : 1,
+  isOutFile : 0,
+  isNamed : 0,
 }
 
 //
@@ -858,6 +927,7 @@ function _willFilesFindMaybe( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+  let filePaths;
 
   o = _.routineOptions( _willFilesFindMaybe, arguments );
 
@@ -867,100 +937,178 @@ function _willFilesFindMaybe( o )
   _.assert( !module.submodulesFormReady.resourcesCount() );
   _.assert( !module.resourcesFormReady.resourcesCount() );
 
+  /* specific terminal file */
+
+  if( module.filePath && fileProvider.resolvedIsTerminal( module.filePath ) )
+  {
+
+    _.assert( module.willFileWithRoleMap.single === undefined )
+
+    new will.WillFile
+    ({
+      role : 'single',
+      filePath : module.filePath,
+      module : module,
+    }).form1();
+
+    let willf = module.willFileWithRoleMap.single;
+
+    if( willf.exists() )
+    {
+      filePaths = [ module.filePath ];
+      namedNameDeduce();
+      return end( filePaths );
+    }
+    else
+    {
+      debugger;
+      willf.finit();
+    }
+
+  }
+
   /* */
 
+  let roles = [ 'single', 'import', 'export' ];
   let files = Object.create( null );
 
-  files.outerSingle = module._willFileFindMaybe
-  ({
-    role : 'single',
-    dirPath : path.join( '..', path.fullName( module.dirPath ) ),
-    isInFile : o.isInFile,
-    isInside : 0,
-  })
+  // debugger; // yyy
 
-  if( o.isInFile )
+  /* */
+
+  for( let r = 0 ; r < roles.length ; r++ )
   {
-
-    files.outerImport = module._willFileFindMaybe
+    let role = roles[ r ];
+    files[ role ] = module._willFileFindMaybe
     ({
-      role : 'import',
-      dirPath : path.join( '..', path.fullName( module.dirPath ) ),
-      isInFile : o.isInFile,
-      isInside : 0,
-    });
-
-    files.outerExport = module._willFileFindMaybe
-    ({
-      role : 'export',
-      dirPath : path.join( '..', path.fullName( module.dirPath ) ),
-      isInFile : o.isInFile,
-      isInside : 0,
-    });
-
+      role : role,
+      isOutFile : o.isOutFile,
+      isNamed : 1,
+    })
   }
 
-  if( files.outerSingle || files.outerImport || files.outerExport )
+  filePaths = filePathsGet( files );
+  if( filePaths.length )
   {
-    // module.stager.stageState( 'willFilesFound', 3 );
-    return true;
+    namedNameDeduce();
+    return end( filePaths );
   }
 
-  /* - */
+  /* */
 
-  files.innerSingle = module._willFileFindMaybe
-  ({
-    role : 'single',
-    dirPath : '.',
-    isInFile : o.isInFile,
-    isInside : 1,
-  });
-
-  if( o.isInFile )
+  for( let r = 0 ; r < roles.length ; r++ )
   {
-
-    files.innerImport = module._willFileFindMaybe
+    let role = roles[ r ];
+    files[ role ] = module._willFileFindMaybe
     ({
-      role : 'import',
-      dirPath : '.',
-      isInFile : o.isInFile,
-      isInside : 1,
-    });
-
-    files.innerExport = module._willFileFindMaybe
-    ({
-      role : 'export',
-      dirPath : '.',
-      isInFile : o.isInFile,
-      isInside : 1,
-    });
-
+      role : role,
+      isOutFile : o.isOutFile,
+      isNamed : 0,
+    })
   }
 
-  if( files.innerSingle || files.innerImport || files.innerExport )
+  filePaths = filePathsGet( files );
+  if( filePaths.length )
   {
+    notNamedNameDeduce();
+    return end( filePaths );
+  }
 
+  /* */
+
+  for( let r = 0 ; r < roles.length ; r++ )
+  {
+    let role = roles[ r ];
+    files[ role ] = module._willFileFindMaybe
+    ({
+      role : role,
+      isOutFile : !o.isOutFile,
+      isNamed : 1,
+    })
+  }
+
+  filePaths = filePathsGet( files );
+  if( filePaths.length )
+  {
+    namedNameDeduce();
+    return end( filePaths );
+  }
+
+  /* */
+
+  for( let r = 0 ; r < roles.length ; r++ )
+  {
+    let role = roles[ r ];
+    files[ role ] = module._willFileFindMaybe
+    ({
+      role : role,
+      isOutFile : !o.isOutFile,
+      isNamed : 0,
+    })
+  }
+
+  filePaths = filePathsGet( files );
+  if( filePaths.length )
+  {
+    notNamedNameDeduce();
+    return end( filePaths );
+  }
+
+  debugger;
+  return null;
+
+  /* */
+
+  function namedNameDeduce()
+  {
     for( let w = 0 ; w < module.willFileArray.length ; w++ )
     {
       let willFile = module.willFileArray[ w ];
       let name = path.name( willFile.filePath );
-      name = _.strRemoveBegin( name, '.im' );
-      name = _.strRemoveBegin( name, '.ex' );
+      name = _.strRemoveEnd( name, '.will' );
+      name = _.strRemoveEnd( name, '.im' );
+      name = _.strRemoveEnd( name, '.ex' );
       _.assert( module.configName === null || module.configName === name, 'Name of will files should be the same, something wrong' );
       if( name )
       module.configName = name;
     }
+  }
 
-    // module.stager.stageState( 'willFilesFound', 3 );
+  /* */
+
+  function notNamedNameDeduce()
+  {
+    module.configName = path.fullName( path.dir( filePaths[ 0 ] ) );
+  }
+
+  /* - */
+
+  function filePathsGet()
+  {
+    let filePaths = [];
+    if( files.single )
+    filePaths.push( files.single.filePath );
+    if( files.import )
+    filePaths.push( files.import.filePath );
+    if( files.export )
+    filePaths.push( files.export.filePath );
+    return filePaths;
+  }
+
+  /* */
+
+  function end( filePaths )
+  {
+    let filePath = module.DirPathFromFilePaths( filePaths );
+    module.filePathSet( filePath, path.dir( filePath ) );
     return true;
   }
 
-  return null;
 }
 
 _willFilesFindMaybe.defaults =
 {
-  isInFile : 1,
+  isOutFile : 0,
 }
 
 //
@@ -980,14 +1128,14 @@ function willFilesFind()
   {
     module.stager.stageState( 'willFilesFound', 2 );
 
-    let result = module._willFilesFindMaybe({ isInFile : !module.supermodule });
+    let result = module._willFilesFindMaybe({ isOutFile : !!module.supermodule });
+
     if( !result )
     {
-      // debugger;
       if( module.supermodule )
-      throw _.errBriefly( 'Found no .out.will file for', module.nickName, 'at', _.strQuote( module.dirPath ) );
+      throw _.errBriefly( 'Found no .out.will file for',  module.supermodule.nickName, 'at', _.strQuote( module.filePath || module.dirPath ) );
       else
-      throw _.errBriefly( 'Found no', module.nickName, 'at', _.strQuote( module.dirPath ) );
+      throw _.errBriefly( 'Found no will-file at', _.strQuote( module.filePath || module.dirPath ) );
     }
 
     result = _.Consequence.From( result );
@@ -1070,11 +1218,10 @@ function _willFilesOpen()
   _.assert( arguments.length === 0 );
   _.sure( !!_.mapKeys( module.willFileWithRoleMap ).length && !!module.willFileArray.length, () => 'Found no will file at ' + _.strQuote( module.dirPath ) );
 
+  // logger.log( 'dirPath' + ' : ' + module.dirPath );
+
   if( !module.supermodule )
   logger.up();
-
-  // if( !module.supermodule )
-  // logger.log( 'x' )
 
   /* */
 
@@ -1092,14 +1239,6 @@ function _willFilesOpen()
   }
 
   /* */
-
-  // con
-  // .keep( ( arg ) => module._submodulesForm() )
-  // .keep( ( arg ) =>
-  // {
-  //   module.stager.stageState( 'willFilesOpened', 3 );
-  //   return arg;
-  // })
 
   con.finally( ( err, arg ) =>
   {
@@ -1506,7 +1645,7 @@ function remoteIsRemote()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  let fileProvider2 = fileProvider.providerForPath( module.dirPath );
+  let fileProvider2 = fileProvider.providerForPath( module.filePath );
   if( fileProvider2.limitedImplementation )
   return end( true );
 
@@ -1531,7 +1670,7 @@ function remoteIsDownloaded()
   let path = fileProvider.path;
 
   _.assert( _.strDefined( module.clonePath ) );
-  _.assert( _.strDefined( module.dirPath ) );
+  _.assert( _.strDefined( module.filePath ) );
   _.assert( module.isRemote === true );
 
   let fileProvider2 = fileProvider.providerForPath( module.remotePath );
@@ -1574,7 +1713,7 @@ function remoteIsUpToDate()
   let path = fileProvider.path;
 
   _.assert( _.strDefined( module.clonePath ) );
-  _.assert( _.strDefined( module.dirPath ) );
+  _.assert( _.strDefined( module.filePath ) );
   _.assert( module.isRemote === true );
 
   let fileProvider2 = fileProvider.providerForPath( module.remotePath );
@@ -1620,7 +1759,7 @@ function remoteForm()
   let logger = will.logger;
 
   _.assert( module.preformed === 2 );
-  _.assert( _.strDefined( module.dirPath ) );
+  _.assert( _.strDefined( module.filePath ) );
 
   module.isRemote = module.remoteIsRemote();
 
@@ -1647,23 +1786,26 @@ function remoteFormAct()
   let logger = will.logger;
 
   _.assert( module.preformed === 2 );
-  _.assert( _.strDefined( module.dirPath ) );
+  _.assert( _.strDefined( module.filePath ) );
   _.assert( _.strDefined( module.alias ) );
   _.assert( !!module.supermodule );
 
-  let fileProvider2 = fileProvider.providerForPath( module.dirPath );
+  let fileProvider2 = fileProvider.providerForPath( module.filePath );
   let submodulesDir = module.supermodule.submodulesCloneDirGet();
-  let localPath = fileProvider2.pathIsolateGlobalAndLocal( module.dirPath )[ 1 ];
+  let localPath = fileProvider2.pathIsolateGlobalAndLocal( module.filePath )[ 1 ];
 
-  module.remotePath = module.dirPath;
+  debugger;
+  module.remotePath = module.filePath;
   module.clonePath = path.resolve( submodulesDir, module.alias );
   module.dirPath = path.resolve( module.clonePath, localPath );
+  module.filePath = module.dirPath;
   module.isDownloaded = !!module.remoteIsDownloaded();
 
-  _.assert( will.moduleMap[ module.remotePath ] === module );
-  _.sure( will.moduleMap[ module.dirPath ] === undefined, () => 'Module at ' + _.strQuote( module.dirPath ) + ' already exists' );
-
-   will.moduleMap[ module.dirPath ] = module;
+  _.assert( will.moduleMap[ module.id ] === module );
+  // _.assert( will.moduleMap[ module.filePath ] === module );
+  // _.assert( will.moduleMap[ module.remotePath ] === module ); // yyy
+  // _.sure( will.moduleMap[ module.filePath ] === undefined, () => 'Module at ' + _.strQuote( module.dirPath ) + ' already exists' ); // yyy
+   // will.moduleMap[ module.dirPath ] = module;
 
   return module;
 }
@@ -1684,7 +1826,7 @@ function _remoteDownload( o )
   _.routineOptions( _remoteDownload, o );
   _.assert( arguments.length === 1 );
   _.assert( module.preformed === 3 );
-  _.assert( _.strDefined( module.dirPath ) );
+  _.assert( _.strDefined( module.filePath ) );
   _.assert( _.strDefined( module.alias ) );
   _.assert( _.strDefined( module.remotePath ) );
   _.assert( _.strDefined( module.clonePath ) );
@@ -1916,7 +2058,7 @@ function _resourcesForm()
 
   module._resourcesFormAct( will.Submodule, con );
   module._resourcesFormAct( will.Exported, con );
-  module._resourcesFormAct( will.PathObj, con );
+  module._resourcesFormAct( will.PathResource, con );
   module._resourcesFormAct( will.Reflector, con );
   module._resourcesFormAct( will.Step, con );
   module._resourcesFormAct( will.Build, con );
@@ -1996,6 +2138,31 @@ function resourceMapForKind( resourceKind )
 
 //
 
+function resourceObtain( resourceKind, resourceName )
+{
+  let module = this;
+  let will = module.will;
+
+  _.assert( arguments.length === 2 );
+  _.assert( _.strIs( resourceName ) );
+
+  let resource = module.resolve
+  ({
+    selector : resourceKind + '::' + resourceName,
+    pathResolving : 0,
+    pathUnwrapping : 0,
+    missingAction : 'undefine',
+  });
+  if( !resource )
+  resource = module.resourceAllocate( resourceKind, resourceName );
+
+  _.assert( resource instanceof will.Resource );
+
+  return resource;
+}
+
+//
+
 function resourceAllocate( resourceKind, resourceName )
 {
   let module = this;
@@ -2006,9 +2173,9 @@ function resourceAllocate( resourceKind, resourceName )
 
   let resourceName2 = module.resourceNameAllocate( resourceKind, resourceName );
   let cls = module.resourceClassForKind( resourceKind );
-  let patho = new cls({ module : module, name : resourceName2 }).form1();
+  let resource = new cls({ module : module, name : resourceName2 }).form1();
 
-  return patho;
+  return resource;
 }
 
 //
@@ -2060,31 +2227,74 @@ function submodulesCloneDirGet()
 
 //
 
-function dirPathSet( dirPath )
+function filePathSet( filePath, dirPath )
 {
   let module = this;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
+  let logger = will.logger;
 
+  filePath = path.normalizeTolerant( filePath );
   dirPath = path.normalize( dirPath );
 
-  _.assert( arguments.length === 1 );
-  _.assert( _.strDefined( dirPath ) );
-  _.assert( path.isAbsolute( dirPath ) );
+  _.assert( arguments.length === 2 );
   _.assert( module.preformed === 3 );
-  _.assert( path.isNormalized( dirPath ) );
-  _.assert( path.isNormalized( module.dirPath ) );
+  // _.assert( will.moduleMap[ module.filePath ] === module );
+  _.assert( will.moduleMap[ module.id ] === module );
+  // _.assert( will.moduleMap[ filePath ] === module || will.moduleMap[ filePath ] === undefined );
 
-  if( module.dirPath === dirPath )
+  // delete will.moduleMap[ module.filePath ];
+
+  module._filePathSet( filePath, dirPath );
+
   return module;
+}
 
-  _.assert( will.moduleMap[ module.dirPath ] === module );
-  _.assert( will.moduleMap[ dirPath ] === undefined );
+//
 
-  delete will.moduleMap[ module.dirPath ];
+function _filePathSet( filePath, dirPath )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  if( filePath )
+  filePath = path.normalizeTolerant( filePath );
+  if( dirPath )
+  dirPath = path.normalize( dirPath );
+
+  _.assert( arguments.length === 2 );
+  _.assert( dirPath === null || _.strDefined( dirPath ) );
+  _.assert( dirPath === null || path.isAbsolute( dirPath ) );
+  _.assert( dirPath === null || path.isNormalized( dirPath ) );
+  _.assert( _.strDefined( filePath ) );
+  _.assert( path.isAbsolute( filePath ) );
+  // _.assert( path.isNormalized( filePath ) );
+
+  // if( will.moduleMap[ id ] !== undefined && will.moduleMap[ id ] !== module )
+  // {
+  //   debugger;
+  //   throw _.err( 'Module with id ' + _.strQuote( id ) + ' were defined more than once!' );
+  // }
+
+  // if( will.moduleMap[ filePath ] !== undefined && will.moduleMap[ filePath ] !== module )
+  // {
+  //   debugger;
+  //   throw _.err( 'Module at ' + _.strQuote( filePath ) + ' were defined more than once!' );
+  // }
+
   module.dirPath = dirPath;
-  will.moduleMap[ module.dirPath ] = module;
+  module.filePath = filePath;
+
+  // if( module.filePath )
+  // will.moduleMap[ module.filePath ] = module;
+
+  // logger.log( 'dirPath' + ' : ' + module.dirPath );
+  // logger.log( 'filePath' + ' : ' + module.filePath );
+  // debugger;
 
   return module;
 }
@@ -2108,7 +2318,7 @@ function outPathGet()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  return path.s.resolve( module.dirPath, ( module.pathMap.out || '.' ) );
+  return path.s.resolve( module.dirPath, ( module.pathMap.in || '.' ), ( module.pathMap.out || '.' ) );
 }
 
 // --
@@ -2289,7 +2499,7 @@ function reflectorResolve_pre( routine, args )
 {
   let o = args[ 0 ];
   if( _.strIs( o ) )
-  o = { query : o }
+  o = { selector : o }
 
   _.routineOptions( routine, o );
   _.assert( arguments.length === 2 );
@@ -2307,9 +2517,10 @@ function reflectorResolve_body( o )
 
   let reflector = module.resolve
   ({
-    query : o.query,
+    selector : o.selector,
     defaultPool : 'reflector',
     current : o.current,
+    pathResolving : 0,
   });
 
   // delete opts.reflector ;
@@ -2324,7 +2535,7 @@ function reflectorResolve_body( o )
 
 reflectorResolve_body.defaults =
 {
-  query : null,
+  selector : null,
   current : null,
 }
 
@@ -2337,16 +2548,16 @@ function errResolving( o )
   let module = this;
   _.routineOptions( errResolving, arguments );
   if( o.current && o.current.nickName )
-  return _.err( 'Failed to resolve', _.strQuote( o.query ), 'for', o.current.nickName, 'in', module.nickName, '\n', o.err );
+  return _.err( 'Failed to resolve', _.strQuote( o.selector ), 'for', o.current.nickName, 'in', module.nickName, '\n', o.err );
   else
-  return _.err( 'Failed to resolve', _.strQuote( o.query ), 'in', module.nickName, '\n', o.err );
+  return _.err( 'Failed to resolve', _.strQuote( o.selector ), 'in', module.nickName, '\n', o.err );
 }
 
 errResolving.defaults =
 {
   err : null,
   current : null,
-  query : null,
+  selector : null,
 }
 
 //
@@ -2368,14 +2579,14 @@ function _strSplit( o )
   let result;
 
   _.assertRoutineOptions( _strSplit, arguments );
-  _.assert( !_.strHas( o.query, '/' ) );
-  _.sure( _.strIs( o.query ), 'Expects string, but got', _.strType( o.query ) );
+  _.assert( !_.strHas( o.selector, '/' ) );
+  _.sure( _.strIs( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
 
-  let splits = module.strSplitShort( o.query );
+  let splits = module.strSplitShort( o.selector );
 
   if( !splits[ 0 ] && o.defaultPool )
   {
-    splits = [ o.defaultPool, '::', o.query ]
+    splits = [ o.defaultPool, '::', o.selector ]
   }
 
   return splits;
@@ -2383,7 +2594,7 @@ function _strSplit( o )
 
 var defaults = _strSplit.defaults = Object.create( null )
 
-defaults.query = null
+defaults.selector = null
 defaults.defaultPool = null;
 
 //
@@ -2408,27 +2619,29 @@ function strIsResolved( srcStr )
 
 //
 
-function _resolve_pre( routine, args )
+function resolve_pre( routine, args )
 {
   let o = args[ 0 ];
   if( _.strIs( o ) )
-  o = { query : o }
+  o = { selector : o }
 
   _.routineOptions( routine, o );
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
-  _.assert( _.arrayHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ) );
-  _.assert( _.arrayHas( [ 'default', 'resolved', 'throw', 'error' ], o.prefixlessAction ) );
+  _.assert( _.arrayHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ), 'Unknown value of option path resolving', o.pathResolving );
+  _.assert( _.arrayHas( [ 'undefine', 'throw', 'error' ], o.missingAction ), 'Unknown value of option missing action', o.missingAction );
+  _.assert( _.arrayHas( [ 'default', 'resolved', 'throw', 'error' ], o.prefixlessAction ), 'Unknown value of option prefixless action', o.prefixlessAction );
 
   return o;
 }
 
 //
 
-function _resolveMaybe_body( o )
+function resolve_body( o )
 {
   let module = this;
   let will = module.will;
+  let current = o.current;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
@@ -2441,93 +2654,39 @@ function _resolveMaybe_body( o )
     debugger;
     result = module.errResolving
     ({
-      query : o.query,
+      selector : o.selector,
       current : o.current,
-      err : _.ErrorLooking( o.query, 'was not found' ),
+      err : _.ErrorLooking( o.selector, 'was not found' ),
     })
   }
 
   if( _.errIs( result ) )
-  return result;
+  {
+    debugger;
+    if( o.missingAction === 'undefine' )
+    return;
+    let err = module.errResolving
+    ({
+      selector : o.selector,
+      current : o.current,
+      err : result,
+    });
+    if( o.missingAction === 'throw' )
+    throw err;
+    else
+    return err;
+  }
 
-  result = pathsResolve( result );
-
-  if( o.flattening && _.mapIs( result ) )
-  result = _.mapsFlatten2([ result ]);
-
-  result = pathsUnwrap( result );
-  result = singleUnwrap( result );
+  result = mapsFlatten( result );
   result = mapValsUnwrap( result );
+  result = singleUnwrap( result );
+  result = pathsUnwrap( result );
 
   _.assert( result !== undefined );
 
   return result;
 
   /* - */
-
-  function pathResolve( p )
-  {
-
-    if( !o.pathResolving )
-    return p;
-
-    if( p instanceof will.PathObj )
-    {
-      p = p.clone();
-      p.module = null;
-      p.path = pathResolve( p.path );
-      return p;
-    }
-
-    _.assert( _.arrayIs( p ) || _.strIs( p ) );
-
-    if( o.pathResolving === 'in' )
-    return path.s.resolve( module.dirPath, ( module.pathMap.in || '.' ), p );
-    else if( o.pathResolving === 'out' )
-    return path.s.resolve( module.dirPath, ( module.pathMap.out || '.' ), p );
-
-  }
-
-  /* */
-
-  function pathsResolve( result )
-  {
-
-    // if( !o.pathResolving || !o.pathUnwrapping )
-    // return result;
-
-    if( !o.pathResolving )
-    return result;
-
-    if( result instanceof will.PathObj /*|| _.strIs( result )*/ )
-    {
-      result = pathResolve( result );
-    }
-    else if( _.arrayIs( result ) )
-    {
-      let result2 = [];
-      for( let r = 0 ; r < result.length ; r++ )
-      if( result[ r ] instanceof will.PathObj /*|| _.strIs( result[ r ] )*/ )
-      result2[ r ] = pathResolve( result[ r ] );
-      else
-      result2[ r ] = result[ r ];
-      result = result2;
-    }
-    else if( _.mapIs( result ) )
-    {
-      let result2 = Object.create( null );
-      for( let r in result )
-      if( result[ r ] instanceof will.PathObj /*|| _.strIs( result[ r ] )*/ )
-      result2[ r ] = pathResolve( result[ r ] );
-      else
-      result2[ r ] = result[ r ];
-      result = result2;
-    }
-
-    return result;
-  }
-
-  /* */
 
   function pathsUnwrap( result )
   {
@@ -2537,8 +2696,8 @@ function _resolveMaybe_body( o )
 
     _.assert( _.mapIs( result ) || _.objectIs( result ) || _.arrayIs( result ) || _.strIs( result ) );
     if( _.mapIs( result ) || _.arrayIs( result ) )
-    result = _.filter( result, ( e ) => e instanceof will.PathObj ? e.path : e )
-    else if( result instanceof will.PathObj )
+    result = _.filter( result, ( e ) => pathsUnwrap( e ) )
+    else if( result instanceof will.PathResource )
     result = result.path;
 
     return result;
@@ -2550,6 +2709,9 @@ function _resolveMaybe_body( o )
   {
 
     if( !o.singleUnwrapping )
+    return result;
+
+    if( !_.all( result, ( e ) => _.instanceIs( e ) ) )
     return result;
 
     if( _.mapIs( result ) )
@@ -2566,23 +2728,33 @@ function _resolveMaybe_body( o )
     return result;
   }
 
+  //
+
+  function mapsFlatten( result )
+  {
+    if( o.flattening && _.mapIs( result ) )
+    result = _.mapsFlatten2([ result ]);
+    return result;
+  }
+
+  //
 
   function mapValsUnwrap( result )
   {
-
-    if( !o.mapValsUnwrapping || !_.mapIs( result ) )
+    if( !o.mapValsUnwrapping || !_.mapIs( result ) || !_.all( result, ( e ) => _.instanceIs( e ) || _.primitiveIs( e ) ) )
     return result;
-
     return _.mapVals( result );
   }
 
 }
 
-_resolveMaybe_body.defaults =
+resolve_body.defaults =
 {
-  query : null,
+  selector : null,
   defaultPool : null,
   prefixlessAction : 'default',
+  // prefixlessAction : 'resolved',
+  missingAction : 'throw',
   visited : null,
   current : null,
   criterion : null,
@@ -2591,38 +2763,15 @@ _resolveMaybe_body.defaults =
   pathUnwrapping : 1,
   singleUnwrapping : 1,
   mapValsUnwrapping : 1,
-  flattening : 0,
+  flattening : 1,
   hasPath : null,
 }
 
-let _resolveMaybe = _.routineFromPreAndBody( _resolve_pre, _resolveMaybe_body );
+let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
+let resolveMaybe = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
-//
-
-function _resolve_body( o )
-{
-  let module = this;
-  let will = module.will;
-  let current = o.current;
-  let result = module._resolveMaybe.body.call( module, o );
-
-  if( _.errIs( result ) )
-  {
-    debugger;
-    throw module.errResolving
-    ({
-      query : o.query,
-      current : current,
-      err : result,
-    });
-  }
-
-  return result;
-}
-
-_resolve_body.defaults = Object.create( _resolveMaybe.body.defaults );
-
-let _resolve = _.routineFromPreAndBody( _resolve_pre, _resolve_body );
+var defaults = resolveMaybe.defaults;
+defaults.missingAction = 'undefine';
 
 //
 
@@ -2648,52 +2797,25 @@ function _resolveAct( o )
 
   /* */
 
-  if( module.strIsResolved( o.query ) )
-  {
-    if( o.prefixlessAction === 'default' )
-    {
-    }
-    else if( o.prefixlessAction === 'throw' || o.prefixlessAction === 'error' )
-    {
-      let err = module.errResolving
-      ({
-        query : o.query,
-        current : current,
-        err : _.ErrorLooking( 'Resource selector should have prefix' ),
-      });
-      if( o.prefixlessAction === 'throw' )
-      throw err;
-    }
-    else if( o.prefixlessAction === 'resolved' )
-    {
-      return o.query;
-    }
-    else _.assert( 0 );
-  }
-
-  /* */
-
-  // if( o.query === 'submodule::*/exported::*=1/reflector::exportedFiles*=1' )
-  // debugger;
-
   try
   {
 
     result = _.select
     ({
-      container : module,
-      query : o.query,
-      // onSelectBegin : onSelectBegin,
+      src : module,
+      selector : o.selector,
+      onSelector : onSelector,
       onUpBegin : onUpBegin,
       onUpEnd : onUpEnd,
       onQuantitativeFail : onQuantitativeFail,
       missingAction : 'error',
-      _current :
+      // recursive : Infinity, // xxx
+      iterationCurrent :
       {
         module : o.currentModule,
         exported : null,
       },
-      _extend :
+      iteratorExtension :
       {
         resolveOptions : o,
       },
@@ -2705,46 +2827,56 @@ function _resolveAct( o )
     debugger;
     throw module.errResolving
     ({
-      query : o.query,
+      selector : o.selector,
       current : current,
       err : err,
     });
   }
 
-  // if( o.query === 'submodule::*/exported::*=1/reflector::exportedFiles*=1' )
-  // debugger;
-
   return result;
 
   /* */
 
-  // function onSelectBegin( op )
-  // {
-  //
-  //   if( module.strIsResolved( op.query ) )
-  //   {
-  //     if( op.prefixlessAction === 'default' )
-  //     {
-  //     }
-  //     else if( op.prefixlessAction === 'throw' || op.prefixlessAction === 'error' )
-  //     {
-  //       let err = module.errResolving
-  //       ({
-  //         query : op.query,
-  //         current : current,
-  //         err : _.ErrorLooking( 'Resource selector should have prefix' ),
-  //       });
-  //       if( op.prefixlessAction === 'throw' )
-  //       throw err;
-  //     }
-  //     else if( op.prefixlessAction === 'resolved' )
-  //     {
-  //       return op.query;
-  //     }
-  //     else _.assert( 0 );
-  //   }
-  //
-  // }
+  function onSelector( selector )
+  {
+    let it = this;
+
+    if( !_.strIs( selector ) )
+    return;
+
+    if( !module.strIsResolved( selector ) )
+    return selector;
+
+    if( o.prefixlessAction === 'default' )
+    {
+      return selector;
+    }
+    else if( o.prefixlessAction === 'throw' || o.prefixlessAction === 'error' )
+    {
+      it.iterator.continue = false;
+      let err = module.errResolving
+      ({
+        selector : selector,
+        current : current,
+        err : _.ErrorLooking( 'Resource selector should have prefix' ),
+      });
+      debugger;
+      if( op.prefixlessAction === 'throw' )
+      throw err;
+      debugger;
+      it.dst = err;
+      return;
+    }
+    else if( o.prefixlessAction === 'resolved' )
+    {
+      // debugger;
+      // return selector;
+      return;
+    }
+    else _.assert( 0 );
+
+    // return selector
+  }
 
   /* */
 
@@ -2752,13 +2884,12 @@ function _resolveAct( o )
   {
     let it = this;
 
-    // if( _.strHas( it.path, '/MultipleExports' ) )
     // debugger;
 
     inheritsUpdate.call( it );
     globCriterionFilter.call( it );
 
-    if( !it.writingDown )
+    if( !it.dstWritingDown )
     return;
 
     /*
@@ -2777,12 +2908,17 @@ function _resolveAct( o )
   {
     let it = this;
 
+    // debugger;
     // if( _.strHas( it.path, '/MultipleExports' ) )
     // debugger;
+
+    if( it.path === '/MultipleExports/export.debug/in' )
+    debugger;
 
     exportedWriteThrough.call( it );
     exportedPathResolve.call( it );
     currentExclude.call( it );
+    pathsResolve.call( it );
 
   }
 
@@ -2791,8 +2927,10 @@ function _resolveAct( o )
   function onQuantitativeFail( err )
   {
     let it = this;
+
     debugger;
-    let result = it.result;
+
+    let result = it.dst;
     if( _.mapIs( result ) )
     result = _.mapVals( result );
     if( _.arrayIs( result ) )
@@ -2810,6 +2948,7 @@ function _resolveAct( o )
       else
       err = _.err( 'Found nothing', '\n', err );
     }
+
     throw err;
   }
 
@@ -2820,10 +2959,10 @@ function _resolveAct( o )
     let it = this;
 
     if( it.src && it.src instanceof will.Submodule )
-    it._current.module = it.src.loadedModule;
+    it.iterationCurrent.module = it.src.loadedModule;
 
     if( it.src && it.src instanceof will.Exported )
-    it._current.exported = it.src;
+    it.iterationCurrent.exported = it.src;
 
   }
 
@@ -2842,8 +2981,8 @@ function _resolveAct( o )
 
       if( !it.src.criterionSattisfy( o.criterion ) )
       {
-        it.looking = false;
-        it.writingDown = false;
+        it.continue = false;
+        it.dstWritingDown = false;
       }
 
     }
@@ -2856,17 +2995,17 @@ function _resolveAct( o )
   {
     let it = this;
 
-    if( !it.query )
+    if( !it.selector )
     return;
 
-    _.assert( !!it._current.module );
+    _.assert( !!it.iterationCurrent.module );
 
-    let splits = it._current.module._strSplit({ query : it.query, defaultPool : o.defaultPool });
+    let splits = it.iterationCurrent.module._strSplit({ selector : it.selector, defaultPool : o.defaultPool });
 
-    it.queryParsed = Object.create( null );
-    it.queryParsed.full = splits.join( '' );
-    it.queryParsed.kind = splits[ 0 ];
-    it.query = it.queryParsed.name = splits[ 2 ];
+    it.parsedSelector = Object.create( null );
+    it.parsedSelector.full = splits.join( '' );
+    it.parsedSelector.kind = splits[ 0 ];
+    it.selector = it.parsedSelector.name = splits[ 2 ];
 
   }
 
@@ -2876,20 +3015,20 @@ function _resolveAct( o )
   {
     let it = this;
 
-    if( !it.query )
+    if( !it.selector )
     return;
 
-    let kind = it.queryParsed.kind;
-
-    let pool = it._current.module.resourceMapForKind( kind );
+    let kind = it.parsedSelector.kind;
+    let pool = it.iterationCurrent.module.resourceMapForKind( kind );
 
     if( !pool )
     {
       debugger;
-      throw _.ErrorLooking( 'Unknown type of resource, no pool for such resource', _.strQuote( it.queryParsed.full ) );
+      throw _.ErrorLooking( 'Unknown type of resource, no pool for such resource', _.strQuote( it.parsedSelector.full ) );
     }
 
     it.src = pool;
+    it.iterable = it.onIterable( it.src );
 
   }
 
@@ -2899,10 +3038,10 @@ function _resolveAct( o )
   {
     let it = this;
 
-    if( it.queryParsed )
+    if( it.parsedSelector )
     {
 
-      let kind = it.queryParsed.kind
+      let kind = it.parsedSelector.kind
       if( kind === 'path' && o.hasPath === null )
       o.hasPath = true;
 
@@ -2916,12 +3055,12 @@ function _resolveAct( o )
   {
     let it = this;
 
-    if( it.down && it.queryParsed && it.queryParsed.kind === 'exported' )
+    if( it.down && it.parsedSelector && it.parsedSelector.kind === 'exported' )
     {
-      let writeToDownOriginal = it.writeToDown;
-      it.writeToDown = function writeThrough( eit )
+      let dstWriteDownOriginal = it.dstWriteDown;
+      it.dstWriteDown = function writeThrough( eit )
       {
-        let r = writeToDownOriginal.apply( this, arguments );
+        let r = dstWriteDownOriginal.apply( this, arguments );
         return r;
       }
     }
@@ -2934,26 +3073,24 @@ function _resolveAct( o )
   {
     let it = this;
 
-    if( !it.query && it._current.exported && it.result )
-    {
-
-      // debugger;
-
-      if( it.result instanceof will.Reflector )
-      {
-        let m = it._current.module;
-        let reflector = it.result;
-        _.assert( reflector.inherit.length === 0 );
-        reflector.form();
-        it.result = reflector;
-      }
-      else if( it.result instanceof will.PathObj )
-      {
-        let m = it._current.module;
-        it.result = path.s.join( m.inPath, it.result.path );
-      }
-
-    }
+    // if( !it.selector && it.iterationCurrent.exported && it.dst )
+    // {
+    //
+    //   if( it.dst instanceof will.Reflector )
+    //   {
+    //     let module2 = it.iterationCurrent.module;
+    //     let reflector = it.dst;
+    //     _.assert( reflector.inherit.length === 0 );
+    //     reflector.form();
+    //     it.dst = reflector;
+    //   }
+    //   else if( it.dst instanceof will.PathResource )
+    //   {
+    //     let module2 = it.iterationCurrent.module;
+    //     it.dst = path.s.join( module2.inPath, it.dst.path );
+    //   }
+    //
+    // }
 
   }
 
@@ -2964,17 +3101,67 @@ function _resolveAct( o )
     let it = this;
 
     if( it.src === o.current && it.down )
+    it.dstWritingDown = false;
+
+  }
+
+  /* */
+
+  function pathsResolve()
+  {
+    let it = this;
+    let module2 = it.iterationCurrent.module;
+
+    if( !o.pathResolving )
+    return;
+    if( !it.dstWritingDown )
+    return;
+
+    // if( !( it.dst instanceof will.PathResource ) )
+    // return;
+
+    if( it.dst instanceof will.Reflector )
     {
-      // debugger;
-      it.looking = false;
-      it.writingDown = false;
+      debugger;
+      let module2 = it.iterationCurrent.module;
+      let reflector = it.dst;
+      _.assert( reflector.inherit.length === 0 );
+      if( it.dst.src.hasSomePath() )
+      it.dst.src.prefixPath = path.s.join( module2.inPath, it.dst.src.prefixPath || '.' );
+      if( it.dst.dst.hasSomePath() )
+      it.dst.dst.prefixPath = path.s.join( module2.inPath, it.dst.dst.prefixPath || '.' );
+      // reflector.form();
+      // it.dst = reflector;
+      return;
     }
+
+    if( !( it.dst instanceof will.PathResource ) )
+    return;
+
+    // if( it.dst instanceof will.PathResource )
+    // {
+    //   let module2 = it.iterationCurrent.module;
+    //   it.dst = path.s.join( module2.inPath, it.dst.path );
+    // }
+
+    it.dst = it.dst.clone();
+    it.dst.module = null;
+
+    _.assert( _.arrayIs( it.dst.path ) || _.strIs( it.dst.path ) );
+
+    let prefixPath = '.';
+    if( o.pathResolving === 'in' && it.dst.name !== 'in' )
+    prefixPath = module2.pathMap.in || '.';
+    else if( o.pathResolving === 'out' && it.dst.name !== 'out' )
+    prefixPath = module2.pathMap.out || '.';
+
+    it.dst.path = path.s.resolve( module2.dirPath, prefixPath, it.dst.path );
 
   }
 
 }
 
-var defaults = _resolveAct.defaults = Object.create( _resolve.defaults )
+var defaults = _resolveAct.defaults = Object.create( resolve.defaults )
 
 defaults.visited = null;
 
@@ -3053,7 +3240,7 @@ function dataExport()
   result.about = module.about.dataExport();
   result.execution = module.execution.dataExport();
 
-  result.path = module.dataExportResource( module.pathObjMap );
+  result.path = module.dataExportResource( module.pathResourceMap );
   result.submodule = module.dataExportResource( module.submoduleMap );
   result.reflector = module.dataExportResource( module.reflectorMap );
   result.step = module.dataExportResource( module.stepMap );
@@ -3107,7 +3294,7 @@ function resourceImport( resource2 )
     if( _.strIs( value ) && module2 )
     value = module2.resolveMaybe
     ({
-      query : value,
+      selector : value,
       prefixlessAction : 'resolved',
       pathUnwrapping : 0,
       pathResolving : 0,
@@ -3127,9 +3314,71 @@ function resourceImport( resource2 )
 
   let resource = new resource2.Self( resourceData );
   resource.form1();
-  _.assert( module.resolve({ query : resource.nickName, pathUnwrapping : 0, pathResolving : 0 }) === resource );
+  _.assert( module.resolve({ selector : resource.nickName, pathUnwrapping : 0, pathResolving : 0 }) === resource );
 
   return resource;
+}
+
+//
+
+function ResourceSetter_functor( op )
+{
+  _.routineOptions( ResourceSetter_functor, arguments );
+
+  let resourceName = op.resourceName;
+  let mapName = op.mapName;
+  let mapSymbol = Symbol.for( mapName );
+
+  return function resourceSet( resourceMap2 )
+  {
+    let module = this;
+    let resourceMap = module[ mapSymbol ] = module[ mapSymbol ] || Object.create( null );
+
+    _.assert( arguments.length === 1 );
+    _.assert( _.mapIs( resourceMap ) );
+    _.assert( _.mapIs( resourceMap2 ) );
+
+    for( let m in resourceMap )
+    {
+      debugger;
+      let resource = resourceMap[ m ];
+      _.assert( _.instanceIs( resource ) );
+      _.assert( resource.module === module );
+      resource.finit();
+    }
+
+    _.assert( _.mapKeys( resourceMap ).length === 0 );
+
+    if( resourceMap2 === null )
+    return resourceMap;
+
+    for( let m in resourceMap2 )
+    {
+      let resource = resourceMap2[ m ];
+
+      // if( !module.preformed )
+      // module.preform();
+
+      _.assert( module.preformed === 0 );
+      _.assert( _.instanceIs( resource ) );
+      _.assert( resource.module !== module );
+
+      if( resource.module !== null )
+      resource = resource.clone();
+      _.assert( resource.module === null );
+      resource.module = module;
+      resource.form1();
+    }
+
+    return resourceMap;
+  }
+
+}
+
+ResourceSetter_functor.defaults =
+{
+  resourceName : null,
+  mapName : null,
 }
 
 // --
@@ -3139,6 +3388,7 @@ function resourceImport( resource2 )
 let Composes =
 {
 
+  filePath : null,
   dirPath : null,
   clonePath : null,
   remotePath : null,
@@ -3160,15 +3410,11 @@ let Aggregates =
   execution : _.define.instanceOf( _.Will.ParagraphExecution ),
 
   submoduleMap : _.define.own({}),
-  pathMap : _.define.own({}),
-  pathObjMap : _.define.own({}),
+  pathResourceMap : _.define.own({}),
   reflectorMap : _.define.own({}),
   stepMap : _.define.own({}),
   buildMap : _.define.own({}),
   exportedMap : _.define.own({}),
-
-  willFileArray : _.define.own([]),
-  willFileWithRoleMap : _.define.own({}),
 
 }
 
@@ -3176,14 +3422,19 @@ let Associates =
 {
   will : null,
   supermodule : null,
-  associatedSubmodule : null,
+  associatedSubmoduleResource : null,
 }
 
 let Restricts =
 {
+
   id : null,
   errors : _.define.own([]),
   stager : null,
+
+  willFileArray : _.define.own([]),
+  willFileWithRoleMap : _.define.own({}),
+  pathMap : _.define.own({}),
 
   preformed : 0,
   willFilesFound : 0,
@@ -3203,7 +3454,8 @@ let Restricts =
 
 let Statics =
 {
-  DirPathFromWillFilePath : DirPathFromWillFilePath,
+  ResourceSetter_functor,
+  DirPathFromFilePaths,
   Counter : 0,
 }
 
@@ -3220,12 +3472,24 @@ let Forbids =
 
 let Accessors =
 {
+
   about : { setter : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.Will.ParagraphAbout }) },
   execution : { setter : _.accessor.setter.friend({ name : 'execution', friendName : 'module', maker : _.Will.ParagraphExecution }) },
+
+  submoduleMap : { setter : ResourceSetter_functor({ resourceName : 'Submodule', mapName : 'submoduleMap' }) },
+  pathResourceMap : { setter : ResourceSetter_functor({ resourceName : 'PathResource', mapName : 'pathResourceMap' }) },
+  reflectorMap : { setter : ResourceSetter_functor({ resourceName : 'Reflector', mapName : 'reflectorMap' }) },
+  stepMap : { setter : ResourceSetter_functor({ resourceName : 'Step', mapName : 'stepMap' }) },
+  buildMap : { setter : ResourceSetter_functor({ resourceName : 'Build', mapName : 'buildMap' }) },
+  exportedMap : { setter : ResourceSetter_functor({ resourceName : 'Exported', mapName : 'exportedMap' }) },
+
+
+
   nickName : { getter : _nickNameGet, combining : 'rewrite', readOnly : 1 },
   absoluteName : { getter : _absoluteNameGet, readOnly : 1 },
   inPath : { getter : inPathGet, readOnly : 1 },
   outPath : { getter : outPathGet, readOnly : 1 },
+
 }
 
 // --
@@ -3239,6 +3503,7 @@ let Proto =
 
   finit,
   init,
+  copy,
   unform,
   preform,
   preform1,
@@ -3252,7 +3517,7 @@ let Proto =
 
   // opener
 
-  DirPathFromWillFilePath,
+  DirPathFromFilePaths,
   prefixPathForRole,
   prefixPathForRoleMaybe,
   isOpened,
@@ -3308,12 +3573,14 @@ let Proto =
 
   resourceClassForKind,
   resourceMapForKind,
+  resourceObtain,
   resourceAllocate,
   resourceNameAllocate,
 
   // path
 
-  dirPathSet,
+  filePathSet,
+  _filePathSet,
   inPathGet,
   outPathGet,
 
@@ -3337,11 +3604,8 @@ let Proto =
   strGetPrefix,
   strIsResolved,
 
-  _resolve,
-  resolve : _resolve, /* tests required */
-
-  _resolveMaybe,
-  resolveMaybe : _resolveMaybe,
+  resolve,
+  resolveMaybe,
 
   _resolveAct,
 

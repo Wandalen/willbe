@@ -35,8 +35,11 @@ function init( o )
 
   if( o )
   {
-    o.opts = _.mapBut( o, step.constructor.fieldsOfCopyableGroups );
-    _.mapDelete( o, o.opts );
+    if( _.mapIs( o ) )
+    {
+      o.opts = _.mapBut( o, step.constructor.FieldsOfInputGroups );
+      _.mapDelete( o, o.opts );
+    }
     if( o )
     step.copy( o );
   }
@@ -59,35 +62,41 @@ function form2()
 
   /* */
 
-  // step.opts = step.opts || Object.create( null );
-  // if( step.name === 'custom.js' )
-  // debugger;
-
   if( step.inherit.length === 0 && step.opts )
-  for( let s in module.stepMap )
+  if( !step.criterion || !step.criterion.predefined )
   {
-    let step2 = module.stepMap[ s ];
 
-    if( !step2.criterion || !step2.criterion.predefined )
-    continue;
-    if( step2.formed < 2 )
-    continue;
-    if( step2.uniqueOptions === null )
-    continue;
-
-    _.assert( _.objectIs( step2.uniqueOptions ) );
-
-    if( _.mapKeys( _.mapOnly( step.opts, step2.uniqueOptions ) ).length )
+    for( let s in module.stepMap )
     {
-      step.inherit.push( step2.name );
-    }
+      let step2 = module.stepMap[ s ];
 
-    if( step.inherit.length > 1 )
-    throw _.err
-    (
-      'Cant deduce inherit of', step.nickName, '\n',
-      'Because several steps have unique options', _.mapKeys( _.mapOnly( step.opts, step2.uniqueOptions ) )
-    );
+      if( !step2.criterion || !step2.criterion.predefined )
+      continue;
+      // if( step2.formed < 2 )
+      // continue;
+      if( step2.uniqueOptions === null )
+      continue;
+      if( step === step2 )
+      continue;
+
+      step2.form2();
+
+      _.assert( step2.formed >= 2 );
+      _.assert( _.objectIs( step2.uniqueOptions ) );
+
+      if( _.mapKeys( _.mapOnly( step.opts, step2.uniqueOptions ) ).length )
+      {
+        step.inherit.push( step2.name );
+      }
+
+      if( step.inherit.length > 1 )
+      throw _.err
+      (
+        'Cant deduce ancestors of', step.nickName, ' to inherit them\n',
+        'Several steps have such unique options', _.mapKeys( _.mapOnly( step.opts, step2.uniqueOptions ) )
+      );
+
+    }
 
   }
 
@@ -113,72 +122,6 @@ function form3()
 
   _.assert( arguments.length === 0 );
   _.assert( step.formed === 2 );
-
-  // _.sure( !!step.shell ^ !!step.js ^ _.routineIs( step.stepRoutine ), 'Step should have only {-shell-} or {-js-} or {-stepRoutine-} fields' );
-  // _.sure( step.shell === null || _.strIs( step.shell ) || _.arrayIs( step.shell ) );
-  // _.sure( step.js === null || _.strIs( step.js ) );
-
-  /* begin */
-
-  // if( step.opts.reflector )
-  // {
-  //   let reflectors = module.resolve
-  //   ({
-  //     query :  step.opts.reflector,
-  //     defaultPool : 'reflector',
-  //     current : step,
-  //     singleUnwrapping : 0,
-  //   });
-  //   _.assert( _.arrayIs( reflectors ) );
-  //   for( let r = 0 ; r < reflectors.length ; r++ )
-  //   reflectors[ r ].form();
-  // }
-
-  // if( step.currentPath )
-  // step.currentPath = step.inPathResolve( step.currentPath );
-  //
-  // if( !step.stepRoutine )
-  // {
-  //
-  //   if( step.shell )
-  //   step.stepRoutine = function()
-  //   {
-  //     let shell = step.shell;
-  //     if( _.arrayIs( shell ) )
-  //     shell = shell.join( '\n' );
-  //     return _.shell
-  //     ({
-  //       path : shell,
-  //       currentPath : step.currentPath,
-  //     }).finally( ( err, arg ) =>
-  //     {
-  //       if( err )
-  //       throw _.errBriefly( err );
-  //       return arg;
-  //     });
-  //   }
-  //   else if( step.js )
-  //   {
-  //     try
-  //     {
-  //       // debugger;
-  //       if( _.strBegins( step.js, '.' ) )
-  //       step.js = fileProvider.providersWithProtocolMap.hd.path.nativize( step.inPathResolve( step.js ) );
-  //       step.stepRoutine = require( step.js );
-  //       if( !_.routineIs( step.stepRoutine ) )
-  //       throw _.err( 'JS file should return function, but got', _.strType( step.stepRoutine ) );
-  //     }
-  //     catch( err )
-  //     {
-  //       debugger;
-  //       throw _.err( 'Failed to open JS file', _.strQuote( step.js ), '\n', err );
-  //     }
-  //   }
-  //
-  // }
-
-  // stepRoutineExport.stepOptions
-
   _.assert( _.routineIs( step.stepRoutine ), () => step.nickName + ' does not have {- stepRoutine -}. Failed to deduce it, try specifying "inherit" field explicitly' );
   _.assert( step.stepRoutine.stepOptions !== undefined, () => 'Field {- stepRoutine -} of ' + step.nickName + ' deos not have defined {- stepOptions -}' );
 
@@ -186,10 +129,6 @@ function form3()
   {
     _.sureMapHasOnly( step.opts, step.stepRoutine.stepOptions, () => step.nickName + ' should not have options' );
   }
-
-  /* end */
-
-  _.assert( _.routineIs( step.stepRoutine ), () => step.nickName + ' does not have stepRoutine' );
 
   step.formed = 3;
   return step;
@@ -225,7 +164,6 @@ function run( frame )
     _.assert( _.objectIs( frame.opts ) );
     _.assert( _.routineIs( step.stepRoutine ), () => step.nickName + ' does not have step routine' );
 
-    // debugger;
     _.mapExtend( frame.opts, step.opts );
     if( step.opts && step.stepRoutine.stepOptions )
     _.routineOptions( step.stepRoutine, frame.opts, step.stepRoutine.stepOptions );
@@ -233,6 +171,7 @@ function run( frame )
     result = step.stepRoutine( frame );
 
     _.assert( result !== undefined, 'Step should return something' );
+
   }
   catch( err )
   {
@@ -266,11 +205,6 @@ let Composes =
   description : null,
   criterion : null,
   opts : null,
-
-  // shell : null,
-  // currentPath : null,
-  // filePath : null,
-  // js : null,
 
   inherit : _.define.own([]),
 

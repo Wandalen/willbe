@@ -2,14 +2,14 @@
 submodule :
 
   # Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  MultipleExports : ../out/submodule
+  MultipleExports : ./out/submodule
 
 path :
 
   proto : './proto'
-  temp : '../super.out'
-  in : '..'
-  out : '../super.out'
+  temp : './super.out'
+  in : '.'
+  out : './super.out'
   out.debug :
     path : './super.out/debug'
     criterion :
