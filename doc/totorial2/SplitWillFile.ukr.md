@@ -2,9 +2,10 @@
 
 В туторіалі розглядається створення розділених `will`-файлів
 
-### Структура розділеного модуля
+### <a name="split-file-structure"></a> Структура розділеного модуля
 При створенні модуля виникають ситуації, коли потрібно створити експорт-модуль після того, як система уже налагоджено. Це можливо зробити, модифікувавши `.will.yml`, проте `willbe` дозволяє одночасно працювати з окремими файлами на імпорт та експорт (умовно названі `im.will.yml` та `ex.will.yml`).
 Тому, структура модуля з розділеними `will`-файлами матиме вигляд:
+
 ```
 .
 ├── fileToExport
@@ -14,8 +15,8 @@
 ```
 
 
-### Конфігурація для експорту  
-В попередньому туторіалі ми [створили експорт модуля](ExportedWillFile.ukr.md). Використаємо його конфігураційний файл перейменувавши в `.ex.will.yml`. Також, створимо відповідний `fileToExport`-файл в кореневій директорії `.ex.will.yml`.
+### <a name="export-configuration"></a> Конфігурація для експорту  
+В попередньому туторіалі ми [створили експорт модуля](ExportedWillFile.ukr.md). Використаємо його конфігураційний файл перейменувавши в `.ex.will.yml`. Також, створимо відповідний `fileToExport`-файл в кореневій директорії `.ex.will.yml`.  
 Остаточна версія `.ex.will.yml`:
 
 <details>
@@ -24,7 +25,7 @@
 ```yaml
 about :
 
-  name : splited-config ex
+  name : splited-config-ex
   description : "Splited module config : export"
   version : 0.0.1
 
@@ -51,10 +52,10 @@ build :
 </details>
 
 
-### Створення конфігурації імпорту  
+### <a name="import-configuration"></a> Створення конфігурації імпорту  
 В туторіалі ["Використання оболонки операційної системи в `will`-файлі"](ShellUsingByWillbe.ukr.md) ми використовували командний рядок оболонки для встановлення залежностей NodeJS. З невеликими змінами можемо повторно використати конфігураційний файл, попередньо перейменувавши його в `.im.will.yml`. Зміна полягає в використанні команди `echo .im.will.yml executed`. Оскільки команда не встановлює пакети NodeJS, то створювати файл _'package.json'_ теж не потрібно.
 
-В цьому туторіалі ми хочемо показати, що ресурси секції визначені в одному з `will`-файлів доступні в другому (власне, у всіх `will`-файлах директорії). Тому, для створеного `.im.will` не потрібно дублювати секцію `about` з `ex.will`, а лише додати власні ресурси.
+Важливою рисою `willbe` є есурси секції визначені в одному з `will`-файлів доступні в другому (власне, у всіх `will`-файлах директорії). Тому, для створеного `.im.will` не потрібно дублювати секцію `about` з `ex.will`, а лише додати власні ресурси.
 Тому файл `im.will.yml` матиме вигляд:
 
 <details>
@@ -80,55 +81,52 @@ build :
 
 </details>
 
-### Testing the build configurations:
+### <a name="executions"></a> Створення модуля з розділеними `will`-файлами
 
-  Let´s see now the outputs when executing our will files:
+> Команди виконуються в кореневій директорії модуля
 
-### To export the module, run:
+<a name="export-command"></a>
 
-> Command should be executed from the root directory of the module.
+Запустимо команду експорту `.export`:
 
 ```
-will .export
-```
-Output:
-```
+[user@user ~]$ will .export
 Request ".export"
- . Read : /D/work/willbe/.im.will.yml
- . Read : /D/work/willbe/.ex.will.yml
+   . Read : /path_to_file/.im.will.yml
+   . Read : /path_to_file/.ex.will.yml
+ . Read 2 will-files in 0.123s
 
   Exporting export
-   + Write out file to ...doc/tutorial/modules/multi-config/multi-config ex.out.will.yml
-  Exported export with 1 files in 0.149s
-```
-During the export process, willbe generates an ex.out.will.yml file that contains information needed to import the module.
-
-.im.will.yml is read but not executed.
-
-### To launch the current ( default ) build configuration, run:
-
-> Command should be executed from the root directory of the module.
+   + Write out will-file /path_to_file/out/splited-config-ex.out.will.yml
+   + Exported export with 1 files in 0.341s
+  Exported export in 0.388s
 
 ```
-will .build
-```
 
-Output:
+`Willbe` експортував `splited-config-ex.out.will.yml` в директорію `out`. При цьому файл `.im.will.yml` був прочитаний, але не виконувався.
+
+<a name="build-command"></a>
+
+Тепер введемо фразу `will .build`:
 
 ```
+[user@user ~]$ will .build
 Request ".build"
- . Read : /D/work/willbe/.im.will.yml
- . Read : /D/work/willbe/.ex.will.yml
+   . Read : /path_to_file/.im.will.yml
+   . Read : /path_to_file/.ex.will.yml
+ . Read 2 will-files in 0.104s
 
   Building debug
  > echo .im.will.yml executed
 .im.will.yml executed
-  Built debug in 0.125s
+  Built debug in 0.100s
+
 ```
 
-We can see that the shell command is read and executed.
+`Willbe` також зчитав обидва файли, але виконувалась команда в `im.will.yml`, яка вивела рядок _'.im.will.yml executed'_.
 
-In this tutorial, we have divided our will file into two files, and executed one at a time.
 
-#
-[Back to content](../README.md)
+> В туторіалі показано як `willbe` одночасно використовує ресурси розділених `will`-файлів модуля, але по черзі виконує операції [експорту](#export-command) та [імпорту](#build-command).
+
+[Наступний туторіал](SubmodulesImporting.md)   
+[Повернутись до меню](Topics.ukr.md)
