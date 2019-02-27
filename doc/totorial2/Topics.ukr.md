@@ -20,7 +20,7 @@
 - How to import submodules (Ред.)
 - How to import remote submodules (Ред.)
 - How to use predefined steps (Ред.)
-
+- ... advanced ...
 - How to use selector with glob and assertion ( mid ) (Ред.)
 - How to use reflector and predefined reflectors ( mid ) (Ред.)
 - Exported section of out will-file ( mid ) (Ред.)
