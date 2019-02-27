@@ -77,28 +77,27 @@ function singleModuleSimplest( test )
   let originalDirPath = _.path.join( self.assetDirPath, 'single' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec2' ) );
+  let ready = new _.Consequence().take( null )
 
   let shell = _.sheller
   ({
     path : 'node ' + execPath,
     currentPath : routinePath,
-    outputCollecting : 1
+    outputCollecting : 1,
+    ready : ready
   })
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
 
-  let ready = new _.Consequence().take( null )
+  test.case = 'simple run without args'
 
-  .thenKeep( () =>
+  shell()
+
+  .thenKeep( ( got ) =>
   {
-    test.case = 'simple run without args'
-    return shell()
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
-      test.is( got.output.length );
-      return null;
-    })
+    test.identical( got.exitCode, 0 );
+    test.is( got.output.length );
+    return null;
   })
 
   return ready;
@@ -114,177 +113,162 @@ function singleModuleList( test )
   let originalDirPath = _.path.join( self.assetDirPath, 'single' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec2' ) );
+  let ready = new _.Consequence().take( null )
 
   let shell = _.sheller
   ({
     path : 'node ' + execPath,
     currentPath : routinePath,
-    outputCollecting : 1
+    outputCollecting : 1,
+    ready : ready
   })
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
 
-  let ready = new _.Consequence().take( null )
 
   /* - */
 
-  .thenKeep( () =>
+
+  shell({ args : [ '.list' ] })
+
+  .thenKeep( ( got ) =>
   {
-    test.case = 'list'
-    return shell({ args : [ '.list' ] })
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, `name : 'single'` ) );
-      test.is( _.strHas( got.output, `description : 'Module for testing'` ) );
-      test.is( _.strHas( got.output, `version : '0.0.1'` ) );
-      return null;
-    })
+    test.case = 'list';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `name : 'single'` ) );
+    test.is( _.strHas( got.output, `description : 'Module for testing'` ) );
+    test.is( _.strHas( got.output, `version : '0.0.1'` ) );
+    return null;
   })
 
   /* - */
 
-  .thenKeep( () =>
+
+  shell({ args : [ '.paths.list' ] })
+
+  .thenKeep( ( got ) =>
   {
     test.case = 'module info'
-    return shell({ args : [ '.paths.list' ] })
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, `proto : './proto'` ) );
-      test.is( _.strHas( got.output, `in : '.'` ) );
-      test.is( _.strHas( got.output, `out : 'out'` ) );
-      test.is( _.strHas( got.output, `out.debug : './out/debug'` ) ); debugger;
-      test.is( _.strHas( got.output, `out.release : './out/release'` ) );
-      return null;
-    })
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `proto : './proto'` ) );
+    test.is( _.strHas( got.output, `in : '.'` ) );
+    test.is( _.strHas( got.output, `out : 'out'` ) );
+    test.is( _.strHas( got.output, `out.debug : './out/debug'` ) ); debugger;
+    test.is( _.strHas( got.output, `out.release : './out/release'` ) );
+    return null;
   })
 
 
+  shell({ args : [ '.submodules.list' ] })
 
-  .thenKeep( () =>
+  .thenKeep( ( got ) =>
   {
     test.case = 'submodules list'
-    return shell({ args : [ '.submodules.list' ] })
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
-      test.is( got.output.length );
-      return null;
-    })
+    test.identical( got.exitCode, 0 );
+    test.is( got.output.length );
+    return null;
   })
 
   /* - */
 
-  .thenKeep( () =>
+  shell({ args : [ '.reflectors.list' ] })
+
+  .thenKeep( ( got ) =>
   {
     test.case = 'reflectors.list'
-    return shell({ args : [ '.reflectors.list' ] })
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, 'reflector::reflect.proto.' ) );
-      test.is( _.strHas( got.output, `proto : 'out/release'` ) );
-      test.is( _.strHas( got.output, `reflector::reflect.proto.debug` ) );
-      test.is( _.strHas( got.output, `proto : 'out/debug'` ) );
-      return null;
-    })
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflector::reflect.proto.' ) );
+    test.is( _.strHas( got.output, `proto : 'out/release'` ) );
+    test.is( _.strHas( got.output, `reflector::reflect.proto.debug` ) );
+    test.is( _.strHas( got.output, `proto : 'out/debug'` ) );
+    return null;
   })
 
   /* - */
 
-  .thenKeep( () =>
+  shell({ args : [ '.steps.list' ] })
+
+  .thenKeep( ( got ) =>
   {
     test.case = 'steps.list'
-    return shell({ args : [ '.steps.list' ] })
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, 'step::reflect.proto.' ))
-      test.is( _.strHas( got.output, 'step::reflect.proto.debug' ))
-      test.is( _.strHas( got.output, 'step::reflect.proto.raw' ))
-      test.is( _.strHas( got.output, 'step::reflect.proto.debug.raw' ))
-      test.is( _.strHas( got.output, 'step::export.proto' ))
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'step::reflect.proto.' ))
+    test.is( _.strHas( got.output, 'step::reflect.proto.debug' ))
+    test.is( _.strHas( got.output, 'step::reflect.proto.raw' ))
+    test.is( _.strHas( got.output, 'step::reflect.proto.debug.raw' ))
+    test.is( _.strHas( got.output, 'step::export.proto' ))
 
-      return null;
-    })
+    return null;
   })
 
   /* - */
 
-  .thenKeep( () =>
+  shell({ args : [ '.builds.list' ] })
+
+  .thenKeep( ( got ) =>
   {
     test.case = '.builds.list'
-    return shell({ args : [ '.builds.list' ] })
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, 'build::debug.raw' ));
-      test.is( _.strHas( got.output, 'build::debug.compiled' ));
-      test.is( _.strHas( got.output, 'build::release.raw' ));
-      test.is( _.strHas( got.output, 'build::release.compiled' ));
-      test.is( _.strHas( got.output, 'build::all' ));
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'build::debug.raw' ));
+    test.is( _.strHas( got.output, 'build::debug.compiled' ));
+    test.is( _.strHas( got.output, 'build::release.raw' ));
+    test.is( _.strHas( got.output, 'build::release.compiled' ));
+    test.is( _.strHas( got.output, 'build::all' ));
 
-      return null;
-    })
+    return null;
   })
 
   /* - */
 
-  .thenKeep( () =>
+  shell({ args : [ '.exports.list' ] })
+
+  .thenKeep( ( got ) =>
   {
     test.case = '.exports.list'
-    return shell({ args : [ '.exports.list' ] })
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, 'build::proto.export' ));
-      test.is( _.strHas( got.output, 'steps : ' ));
-      test.is( _.strHas( got.output, 'build::debug.raw' ));
-      test.is( _.strHas( got.output, 'step::export.proto' ));
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'build::proto.export' ));
+    test.is( _.strHas( got.output, 'steps : ' ));
+    test.is( _.strHas( got.output, 'build::debug.raw' ));
+    test.is( _.strHas( got.output, 'step::export.proto' ));
 
-      return null;
-    })
+    return null;
   })
 
   /* - */
 
-  .thenKeep( () =>
+  shell({ args : [ '.about.list' ] })
+
+  .thenKeep( ( got ) =>
   {
     test.case = '.about.list'
-    return shell({ args : [ '.about.list' ] })
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
 
-      test.is( _.strHas( got.output, `name : 'single'` ));
-      test.is( _.strHas( got.output, `description : 'Module for testing'` ));
-      test.is( _.strHas( got.output, `version : '0.0.1'` ));
-      test.is( _.strHas( got.output, `enabled : 1` ));
-      test.is( _.strHas( got.output, `interpreters :` ));
-      test.is( _.strHas( got.output, `'nodejs >= 6.0.0'` ));
-      test.is( _.strHas( got.output, `'chrome >= 60.0.0'` ));
-      test.is( _.strHas( got.output, `'firefox >= 60.0.0'` ));
-      test.is( _.strHas( got.output, `'nodejs >= 6.0.0'` ));
-      test.is( _.strHas( got.output, `keywords :` ));
-      test.is( _.strHas( got.output, `'wTools'` ));
+    test.identical( got.exitCode, 0 );
 
-      return null;
-    })
+    test.is( _.strHas( got.output, `name : 'single'` ));
+    test.is( _.strHas( got.output, `description : 'Module for testing'` ));
+    test.is( _.strHas( got.output, `version : '0.0.1'` ));
+    test.is( _.strHas( got.output, `enabled : 1` ));
+    test.is( _.strHas( got.output, `interpreters :` ));
+    test.is( _.strHas( got.output, `'nodejs >= 6.0.0'` ));
+    test.is( _.strHas( got.output, `'chrome >= 60.0.0'` ));
+    test.is( _.strHas( got.output, `'firefox >= 60.0.0'` ));
+    test.is( _.strHas( got.output, `'nodejs >= 6.0.0'` ));
+    test.is( _.strHas( got.output, `keywords :` ));
+    test.is( _.strHas( got.output, `'wTools'` ));
+
+    return null;
   })
 
   /* - */
 
-  .thenKeep( () =>
+  shell({ args : [ '.execution.list' ] })
+
+  .thenKeep( ( got ) =>
   {
     test.case = '.execution.list'
-    return shell({ args : [ '.execution.list' ] })
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
-      test.is( got.output.length );
-      return null;
-    })
+    test.identical( got.exitCode, 0 );
+    test.is( got.output.length );
+    return null;
   })
 
   return ready;
@@ -300,78 +284,70 @@ function singleModuleSubmodules( test )
   let originalDirPath = _.path.join( self.assetDirPath, 'single' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec2' ) );
+  let ready = new _.Consequence().take( null )
 
   let shell = _.sheller
   ({
     path : 'node ' + execPath,
     currentPath : routinePath,
-    outputCollecting : 1
+    outputCollecting : 1,
+    ready : ready
   })
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
 
-  let ready = new _.Consequence().take( null )
-
   /* - */
 
-  .thenKeep( () =>
+  shell({ args : [ '.submodules.download' ] })
+
+  .thenKeep( ( got ) =>
   {
     test.case = '.submodules.download'
-    return shell({ args : [ '.submodules.download' ] })
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, '0/0 submodule(s) of module::single were downloaded in' ) );
-      return null;
-    })
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '0/0 submodule(s) of module::single were downloaded in' ) );
+    return null;
   })
 
   /* - */
 
-  .thenKeep( () =>
+  shell({ args : [ '.submodules.download' ] })
+
+  .thenKeep( ( got ) =>
   {
     test.case = '.submodules.download'
-    return shell({ args : [ '.submodules.download' ] })
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, '0/0 submodule(s) of module::single were downloaded in' ) );
-      test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) )
-      test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
-      return null;
-    })
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '0/0 submodule(s) of module::single were downloaded in' ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
+    return null;
   })
 
   /* - */
 
-  .thenKeep( () =>
+  shell({ args : [ '.submodules.upgrade' ] })
+
+  .thenKeep( ( got ) =>
   {
     test.case = '.submodules.upgrade'
-    return shell({ args : [ '.submodules.upgrade' ] })
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, '0/0 submodule(s) of module::single were upgraded in' ) );
-      test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) )
-      test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
-      return null;
-    })
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '0/0 submodule(s) of module::single were upgraded in' ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
+    return null;
   })
 
   /* - */
 
-  .thenKeep( () =>
+  shell({ args : [ '.submodules.clean' ] })
+
+  .thenKeep( ( got ) =>
   {
     test.case = '.submodules.clean';
-    return shell({ args : [ '.submodules.clean' ] })
-    .thenKeep( ( got ) =>
-    {
-      test.identical( got.exitCode, 0 );
-      test.is( _.strHas( got.output, 'Clean deleted 0 file(s) in' ) );
-      test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) )
-      test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
-      return null;
-    })
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Clean deleted 0 file(s) in' ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
+    return null;
   })
 
   return ready;
@@ -388,6 +364,7 @@ function singleModuleClean( test )
   let originalDirPath = _.path.join( self.assetDirPath, 'single' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec2' ) );
+  let ready = new _.Consequence().take( null )
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
 
@@ -395,59 +372,34 @@ function singleModuleClean( test )
   ({
     path : 'node ' + execPath,
     currentPath : routinePath,
-    outputCollecting : 1
+    outputCollecting : 1,
+    ready : ready
   })
-
-  let ready = new _.Consequence().take( null )
 
   /* - */
 
-  .thenKeep( () =>
+  shell({ path : [ '.build', '.clean' ] })
+
+  .thenKeep( ( got ) =>
   {
     test.case = '.clean '
-    return _.shell
-    ({
-      path : 'node ' + execPath,
-      currentPath : routinePath,
-      outputCollecting : 1,
-      args : [ '.build' ]
-    })
-    .thenKeep( () =>
-    {
-      return shell({ args : [ '.clean' ] })
-      .thenKeep( ( got ) =>
-      {
-        test.identical( got.exitCode, 0 );
-        test.is( _.strHas( got.output, 'Clean deleted 0 file(s) in' ) );
-        test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) )
-        test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
-        return null;
-      })
-    })
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Clean deleted 0 file(s) in' ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
+    return null;
   })
 
   /* - */
 
-  .thenKeep( () =>
+  shell({ path : [ '.build', '.clean.what' ] })
+
+  .thenKeep( ( got ) =>
   {
     test.case = '.clean.what '
-    return _.shell
-    ({
-      path : 'node ' + execPath,
-      currentPath : routinePath,
-      outputCollecting : 1,
-      args : [ '.build' ]
-    })
-    .thenKeep( () =>
-    {
-      return shell({ args : [ '.clean.what' ] })
-      .thenKeep( ( got ) =>
-      {
-        test.identical( got.exitCode, 0 );
-        test.is( _.strHas( got.output, 'Clean will delete 0 file(s)' ) );
-        return null;
-      })
-    })
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Clean will delete 0 file(s)' ) );
+    return null;
   })
 
   return ready;
