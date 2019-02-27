@@ -247,7 +247,7 @@ function performExportedReflectors( exportSelector )
   let exportedDirPath = srcFilter.basePaths[ 0 ];
 
   exported.exportedDirPath = module.resourceAllocate( 'path', 'exportedDir.' + exported.name );
-  exported.exportedDirPath.path = path.dot( path.relative( module.dirPath, exportedDirPath ) );
+  exported.exportedDirPath.path = path.dot( path.relative( module.inPath, exportedDirPath ) );
   exported.exportedDirPath.criterion = _.mapExtend( null, exported.criterion );
   exported.exportedDirPath.form();
 
@@ -294,7 +294,7 @@ function performExportedFilesReflector()
 
   exportedFilesPath = _.filter( exportedFilesPath, ( r ) => r.absolute );
 
-  exported.exportedFilesPath.path = path.s.relative( module.dirPath, exportedFilesPath );
+  exported.exportedFilesPath.path = path.s.relative( module.inPath, exportedFilesPath );
 
   _.sure
   (
@@ -362,7 +362,7 @@ function performArchive( enabled )
 
   let archiveFilePath = build.archiveFilePathFor();
   exported.archiveFilePath = module.resourceAllocate( 'path', 'archiveFile.' + exported.name );
-  exported.archiveFilePath.path = path.dot( path.relative( module.dirPath, archiveFilePath ) );
+  exported.archiveFilePath.path = path.dot( path.relative( module.inPath, archiveFilePath ) );
   exported.archiveFilePath.criterion = _.mapExtend( null, exported.criterion );
   exported.archiveFilePath.form();
 
@@ -371,7 +371,7 @@ function performArchive( enabled )
   if( !Tar )
   Tar = require( 'tar' );
 
-  let exportedDirPath = path.s.resolve( module.dirPath, exported.exportedDirPath.path );
+  let exportedDirPath = path.s.resolve( module.inPath, exported.exportedDirPath.path );
 
   hd.dirMake( path.dir( archiveFilePath ) );
 
@@ -413,7 +413,7 @@ function performWriteOutFile()
   let inPathResource = module2.resourceObtain( 'path', 'in' );
   let outPathResource = module2.resourceObtain( 'path', 'out' );
 
-  inPathResource.path = path.relative( module.outPath, module.dirPath );
+  inPathResource.path = path.relative( module.outPath, module.inPath );
 
   let outFilePath = build.outFilePathFor();
   let data = module2.dataExport();

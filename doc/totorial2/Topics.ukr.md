@@ -7,7 +7,9 @@
 - [Структура will-файла](WillFileComposition.ukr.md)
 - [Як користуватися інтерфейсом командного рядка `willbe`](HowToUseCommandLineInterfaceOfWill.ukr.md)
 - [Перший will-файл](FirstWillFile.ukr.md)
-- [Will-файл експорту модуля](ExportedWillFile.md)
+- Побудова модуля
+- ...
+- [Will-файл експорту модуля](ExportedWillFile.md) -> Експортування модуля
 - Split will-file (Ред.)
 - Named will-file (Ред.)
 - Resources (Ред.)
@@ -15,14 +17,15 @@
   - Inheritability
 - How to list (Ред.)
 - How to use selector (Ред.)
-- How to use selector with glob and assertion ( mid ) (Ред.)
 - How to import submodules (Ред.)
 - How to import remote submodules (Ред.)
-- How to use command .with ( mid ) (Ред.)
-- How to use command .each ( mid ) (Ред.)
 - How to use predefined steps (Ред.)
+- ... advanced ...
+- How to use selector with glob and assertion ( mid ) (Ред.)
 - How to use reflector and predefined reflectors ( mid ) (Ред.)
 - Exported section of out will-file ( mid ) (Ред.)
+- How to use command .with ( mid ) (Ред.)
+- How to use command .each ( mid ) (Ред.)
 
 <a name="manuals"></a>
 ## Керівництво користувача

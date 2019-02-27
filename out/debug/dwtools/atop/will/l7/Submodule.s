@@ -104,7 +104,7 @@ function _load()
   ({
     will : will,
     alias : submodule.name,
-    filePath : path.join( module.dirPath, submodule.path ),
+    filePath : path.join( module.inPath, submodule.path ),
     supermodule : module,
     associatedSubmoduleResource : submodule,
   }).preform();

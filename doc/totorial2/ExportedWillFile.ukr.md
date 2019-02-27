@@ -26,13 +26,15 @@ about :
     version : 0.0.1
 
 path :
-  out : '.'
-  fileToExport : './fileToExport'
+  in : '.'
+  out : 'out'
+  fileToExport : 'fileToExport'
 
 ```
-Секція `path` визначає шляхи, які використовуються в модулі:  
-`out` - директорія де будуть поміщені згенеровані файли модуля.  
-`fileToExport` - шлях до файлів експорту вказаний користувачем.
+Секція `path` визначає шляхи, які використовуються в модулі:
+`in` - шлях, відносно якого розташовуються інші шляхи модуля. Якщо `in` не вказано, то за замовчуванням він починається в кореневій директорії `.will.yml`.
+`out` - відносний шлях від `in`, де буде поміщений `*.out.will`-модуль. `out` має вказувати на шлях відмінний від шляху `in` `will`-файла.   
+`fileToExport` - шлях до файлів експорту вказаний користувачем відносно директорії `in`.
 
 <a name="section-step"></a>
 Додамо секцію `step` з процедурою `export.single`:
@@ -40,14 +42,14 @@ path :
 ``` yaml
 step  :
     export.single :
-        inherit : export
+        inherit : predefined.export
         tar : 0
-        export : './fileToExport'
+        export : path::fileToExport
 ```
-Процедура має поля:
-`inherit` - наслідування вбудованого сценарію.  
+Процедура має поля:  
+`inherit` - наслідування вбудованого сценарію експортування `predefined.export`.  
 `tar` - архівування експортованих файлів ( 1 - ввімкнене / 0 - вимкнене архівування).
-`export` - шлях до файлу або директорії з файлами для експорту.
+`export` - шлях до файлу або директорії з файлами для експорту. Використовуйте синтаксис `path::[export.path]` для правильного функціонування пакета.
 
 <a name="section-build"></a>
 Сконфігуруємо `build` для експорту:
@@ -60,7 +62,7 @@ build :
         steps :
             - export.single
 ```
-В процедурі `export` є два критерії: `default : 1` і `export : 1`, що свідчить про використання вбудованого сценарію експорту (побудови) модуля.
+В процедурі `export` є два критерії: `default : 1` і `export : 1`, що свідчить про використання функції експорту модуля, а в полі `steps` використовується описана вище `export.single`.
 <a name="export-module-listing"></a>
 
 <details>
@@ -71,25 +73,26 @@ build :
 about :
     name : second
     description : "Second module"
-    version : 0.0.1
+    version : 0.0.2
 
 path :
-  out : '.'
-  fileToExport : './fileToExport'
+  in : '.'
+  out : 'out'
+  fileToExport : 'fileToExport'
 
 step  :
-    export.single :
-        inherit : export
-        tar : 0
-        export : './fileToExport'
+  export.single :
+      inherit : predefined.export
+      export : path::fileToExport
+      tar : 0
 
 build :
-    export :
-        criterion :
-            default : 1
-            export : 1
-        steps :
-            - export.single
+  export :
+      criterion :
+          default : 1
+          export : 1
+      steps :
+          - export.single
 ```
 </details>
 
@@ -100,18 +103,17 @@ build :
 Введіть в консолі `will .export`:
 
 ```
+...
  Exporting export
-   + Write out file to ...doc/tutorial/modules/second/second.out.will.yml
-  Exported export with 1 files in 0.073s
+   + Write out will-file /path_to_file/out/third.out.will.yml
+   + Exported export with 1 files in 0.705s
+  Exported export in 0.752s
 ```
 
-В процесі експорту `willbe` згенерує `*.out.will.yml` файл, який містить інформацію, що потрібна для імпорту модуля.
+Після виконання команди `willbe` згенерує `second.out.will.yml` за назвою модуля в `about` та помістить файл в директорію `out`.
 
 ### Підсумок
-В цьому розділі описана процедура [експорту `will`-модуля](#export-module-term). Для її проведення необхідні файли, які будуть експортуватись та зконфігурований `.will.yml`.
-Для правильного виконання команди:
-- [секція `path`](#section-path) повинна вказувати на шлях до файлів, які будуть експотруватись, та шлях, де буде поміщено згенерований вихідний (out) модуль;
-- [секція `step`](#section-step) описати конфігурацію процедури експорту;
-- [секція `build`](#section-build) повинна описати операцію експорту (побудови) модуля.
+Експортувати модуль можливо при використанні вбудованої [функції `predefined.export` в секції `step`](#section-step) та правильному налаштуванні секцій [`path`](#section-path) i [`build`](#section-build). 
 
+[Наступний туторіал](SplitWillFile.ukr.md)
 [Повернутись до меню](Topics.ukr.md)

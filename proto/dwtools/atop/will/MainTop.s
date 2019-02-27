@@ -52,7 +52,7 @@ function _moduleOnReady( o )
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
-  let filePath = fileProvider.path.current();
+  let dirPath = fileProvider.path.current();
 
   _.assert( arguments.length === 1 );
   _.assert( _.routineIs( o.onReady ) );
@@ -65,7 +65,7 @@ function _moduleOnReady( o )
   if( !module )
   module = will.currentModule = will.moduleMake
   ({
-    filePath : filePath,
+    dirPath : dirPath,
     forming : o.forming,
   });
 
@@ -633,7 +633,7 @@ function commandWith( e )
   if( will.topCommand === null )
   will.topCommand = commandWith;
 
-  let isolated = ca.isolateSecond( e.subject );
+  let isolated = ca.nextCommandIsolate( e.subject );
   let filePath = path.resolve( isolated.subject );
 
   let module = will.currentModule = will.Module({ will : will, filePath : filePath }).preform();
@@ -687,29 +687,32 @@ function commandEach( e )
   if( will.topCommand === null )
   will.topCommand = commandEach;
 
-  let isolated = ca.isolateSecond( e.subject );
-  let filePath = path.resolve( isolated.subject );
+  let isolated = ca.nextCommandIsolate( e.subject );
+  let dirPath = path.resolve( isolated.subject );
   let con = new _.Consequence().take( null );
   let files = will.willFilesList
   ({
-    filePath : filePath,
+    dirPath : dirPath,
     includingInFiles : 1,
     includingOutFiles : 0,
     rerucrsive : 0,
   });
 
   let dirPaths = Object.create( null );
-
   for( let f = 0 ; f < files.length ; f++ ) con.keep( ( arg ) => /* !!! replace by concurrent, maybe */
   {
     let file = files[ f ];
 
-    debugger; xxx
-    let dirPath = will.Module.DirPathFromWillFilePath( file.absolute );
+    let dirPath = will.Module.DirPathFromFilePaths( file.absolute );
 
+    if( dirPaths[ dirPath ] )
+    debugger;
     if( dirPaths[ dirPath ] )
     return true;
     dirPaths[ dirPath ] = 1;
+
+    if( will.moduleMap[ file.absolute ] )
+    return true;
 
     if( will.currentModule )
     {
@@ -717,10 +720,7 @@ function commandEach( e )
       will.currentModule = null;
     }
 
-    if( will.moduleMap[ dirPath ] )
-    return true;
-
-    let module = will.currentModule = will.Module({ will : will, filePath : dirPath }).preform();
+    let module = will.currentModule = will.Module({ will : will, filePath : file.absolute }).preform();
     module.willFilesFind();
     module.willFilesOpen();
     module.submodulesForm();

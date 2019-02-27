@@ -11,7 +11,7 @@ if( typeof module !== 'undefined' )
 
 /*
 
-= Orientation
+= Orientations
 
 - Willbe prepends all relative paths by path::in. path::out and path::temp prepended by path::in as well.
 - Willbe prepends path::in by module.dirPath, a directory which has the will-file.
@@ -164,17 +164,22 @@ function moduleMake( o )
   let path = will.fileProvider.path;
   let logger = will.logger;
 
-  if( _.strIs( o ) )
-  o = { filePath : o }
-  o.filePath = o.filePath || fileProvider.path.current();
+  // if( _.strIs( o ) )
+  // o = { filePath : o }
 
   _.assert( arguments.length === 1 );
-  _.routineOptions( moduleMake, o );
+  o = _.routineOptions( moduleMake, arguments );
+
+  if( !o.filePath && !o.dirPath )
+  o.dirPath = o.dirPath || fileProvider.path.current();
 
   if( !o.module )
   {
-    o.module = will.Module({ will : will, filePath : o.filePath }).preform();
+    o.module = will.Module({ will : will, filePath : o.filePath, dirPath : o.dirPath }).preform();
   }
+
+  _.assert( o.module.filePath === o.filePath || o.module.filePath === o.dirPath );
+  _.assert( o.module.dirPath === o.dirPath );
 
   // debugger; xxx
   // _.assert( o.module.dirPath === o.dirPath );
@@ -202,6 +207,7 @@ moduleMake.defaults =
 {
   module : null,
   filePath : null,
+  dirPath : null,
   forming : null,
 }
 
@@ -257,7 +263,7 @@ willFilesList.defaults =
 {
   dirPath : null,
   includingInFiles : 1,
-  includingOutFiles : 0,
+  includingOutFiles : 1,
   rerucrsive : 0,
 }
 

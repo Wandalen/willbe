@@ -10,7 +10,6 @@ if( typeof module !== 'undefined' )
   _.include( 'wTesting' );
 
   require( '../l3/Path.s' );
-  // require( 'wFiles' )
 
 }
 
@@ -5368,71 +5367,97 @@ function dir( test )
 
   test.case = 'simple absolute path'; /* */
 
-  var path2 = '/foo';
+  var src = '/foo';
   var expected2 = '/';
-  var got = _.path.dir( path2 );
+  var got = _.path.dir( src );
   test.identical( got, expected2 );
 
   test.case = 'absolute path : nested dirs'; /* */
 
-  var path = '/foo/bar/baz/text.txt';
+  var src = '/foo/bar/baz/text.txt';
   var expected = '/foo/bar/baz';
-  var got = _.path.dir( path );
+  var got = _.path.dir( src );
   test.identical( got, expected );
 
-  var path = '/aa/bb';
+  var src = '/aa/bb';
   var expected = '/aa';
-  var got = _.path.dir( path );
+  var got = _.path.dir( src );
   test.identical( got, expected );
 
-  var path = '/aa/bb/';
-  var expected = '/aa';
-  var got = _.path.dir( path );
+  var src = '/aa/bb/';
+  var expected = '/aa/bb';
+  var got = _.path.dir( src );
   test.identical( got, expected );
 
-  var path = '/aa';
+  var src = '/aa';
   var expected = '/';
-  var got = _.path.dir( path );
+  var got = _.path.dir( src );
   test.identical( got, expected );
 
-  var path = '/';
+  var src = '/';
   var expected = '/..';
-  var got = _.path.dir( path );
+  var got = _.path.dir( src );
   test.identical( got, expected );
 
   test.case = 'relative path : nested dirs'; /* */
 
-  var path = 'aa/bb';
+  var src = 'aa/bb';
   var expected = 'aa';
-  var got = _.path.dir( path );
+  var got = _.path.dir( src );
   test.identical( got, expected );
 
-  var path = 'aa';
+  var src = 'aa';
   var expected = '.';
-  var got = _.path.dir( path );
+  var got = _.path.dir( src );
   test.identical( got, expected );
 
-  var path = '.';
+  var src = '.';
   var expected = '..';
-  var got = _.path.dir( path );
+  var got = _.path.dir( src );
   test.identical( got, expected );
 
-  var path = '..';
+  var src = '..';
   var expected = '../..';
-  var got = _.path.dir( path );
+  var got = _.path.dir( src );
   test.identical( got, expected );
 
-  // test.case = 'windows os path';
-  // var path4 = 'c:/';
-  // var expected4 = 'c:/..';
-  // var got = _.path.dir( path4 );
-  // test.identical( got, expected4 );
+  /* - */
 
-  // test.case = 'windows os path : nested dirs';
-  // var path5 = 'a:/foo/baz/bar.txt';
-  // var expected5 = 'a:/foo/baz';
-  // var got = _.path.dir( path5 );
-  // test.identical( got, expected5 );
+  test.open( 'trailing slash' );
+
+  var src = '/a/b/';
+  var expected = '/a/b';
+  var got = _.path.dir( src );
+  test.identical( got, expected );
+
+  var src = '/a/b/.';
+  var expected = '/a';
+  var got = _.path.dir( src );
+  test.identical( got, expected );
+
+  var src = '/a/b/./';
+  var expected = '/a/b';
+  var got = _.path.dir( src );
+  test.identical( got, expected );
+
+  var src = 'a/b/';
+  var expected = 'a/b';
+  var got = _.path.dir( src );
+  test.identical( got, expected );
+
+  var src = 'a/b/.';
+  var expected = 'a';
+  var got = _.path.dir( src );
+  test.identical( got, expected );
+
+  var src = 'a/b/./';
+  var expected = 'a/b';
+  var got = _.path.dir( src );
+  test.identical( got, expected );
+
+  test.close( 'trailing slash' );
+
+  /* - */
 
   if( !Config.debug )
   return;

@@ -67,7 +67,6 @@ function form1()
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !!will.formed );
-  // _.assert( module.preformed >= 2 );
   _.assert( !willf || !!willf.formed );
   _.assert( _.strDefined( reflector.name ) );
 
@@ -118,8 +117,8 @@ function form2()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  // if( reflector.absoluteName === 'module::super / module::MultipleExports / reflector::exportedFiles.export.' )
-  // debugger;
+  if( reflector.absoluteName === 'module::submodule / reflector::reflect.proto.' )
+  debugger;
 
   /* filters */
 
@@ -210,14 +209,8 @@ function _inheritSingle( o )
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
 
-  // if( reflector.absoluteName === 'module::super / reflector::reflect.submodules.' )
-  // debugger;
-
   reflector.src.and( reflector2.src ).pathsInherit( reflector2.src );
   reflector.dst.and( reflector2.dst ).pathsInherit( reflector2.dst );
-
-  // if( reflector.absoluteName === 'module::super / reflector::reflect.submodules.' )
-  // debugger;
 
 }
 
@@ -243,8 +236,8 @@ function form3()
   _.assert( arguments.length === 0 );
   _.assert( reflector.formed === 2 );
 
-  // if( reflector.absoluteName === 'module::super / module::MultipleExports / reflector::exportedFiles.export.' )
-  // debugger;
+  if( reflector.absoluteName === 'module::submodule / reflector::reflect.proto.' )
+  debugger;
 
   /* begin */
 
@@ -306,9 +299,15 @@ function _reflectMapForm( o )
       });
 
       if( !_.errIs( resolved ) && !_.strIs( resolved ) && !_.arrayIs( resolved ) && !( resolved instanceof will.Reflector ) )
-      resolved = _.err( 'Source of reflects map was resolved to unexpected type', _.strType( resolved ) );
+      {
+        debugger;
+        resolved = _.err( 'Source of reflects map was resolved to unexpected type', _.strType( resolved ) );
+      }
       if( _.errIs( resolved ) )
-      throw _.err( 'Failed to form ', reflector.nickName, '\n', resolved );
+      {
+        debugger;
+        throw _.err( 'Failed to form', reflector.nickName, '\n', resolved );
+      }
 
       if( _.arrayIs( resolved ) )
       {
@@ -322,8 +321,8 @@ function _reflectMapForm( o )
 
           if( path.isAbsolute( rpath ) && !path.isGlobal( rpath ) )
           debugger;
-          if( path.isAbsolute( rpath ) && !path.isGlobal( rpath ) )
-          rpath = path.s.relative( module.dirPath, rpath );
+          // if( path.isAbsolute( rpath ) && !path.isGlobal( rpath ) )
+          // rpath = path.s.relative( module.inPath, rpath );
 
           map[ rpath ] = dst;
         }
@@ -332,8 +331,8 @@ function _reflectMapForm( o )
       {
         resolved = path.normalize( resolved );
 
-        if( path.isAbsolute( resolved ) && !path.isGlobal( resolved ) )
-        resolved = path.s.relative( module.dirPath, resolved );
+        // if( path.isAbsolute( resolved ) && !path.isGlobal( resolved ) )
+        // resolved = path.s.relative( module.inPath, resolved );
 
         delete map[ r ];
         map[ resolved ] = dst;
