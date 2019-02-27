@@ -8,13 +8,13 @@ path :
 
 reflector :
 
-  reflect.proto :
+  reflect.proto.debug :
     filePath :
-      path::proto : path::out.*=1
+      path::proto : path::out.debug
 
 step :
 
-  reflect.proto :
+  reflect.proto.debug :
     inherit : predefined.reflect
     reflector :
       reflector::reflect.proto
@@ -23,4 +23,4 @@ build :
 
   debug :
     steps :
-      - step::reflect.proto
+      - step::reflect.proto*
