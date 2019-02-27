@@ -27,7 +27,6 @@
 - How to use command .with ( mid ) (Ред.)
 - How to use command .each ( mid ) (Ред.)
 
-
 <a name="manuals"></a>
 ## Керівництво користувача
 - [Базові концепції та поняття ](Concepts.urk.md)
