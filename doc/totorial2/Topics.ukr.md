@@ -31,6 +31,7 @@
 - [How to use command .with](UsingWithCommand.ukr.md) ( mid ) (Ред.)
 - [How to use command .each](UsingEachCommand.ukr.md) ( mid ) (Ред.)
 
+
 <a name="manuals"></a>
 ## Керівництво користувача
 - [Базові концепції та поняття ](Concepts.urk.md)

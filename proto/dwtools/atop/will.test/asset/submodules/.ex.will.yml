@@ -1,7 +1,7 @@
 
 about :
 
-  name : "withSubmodules"
+  name : "submodules"
   description : "Module for testing"
   version : "0.0.1"
   enabled : 1

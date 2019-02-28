@@ -83,7 +83,7 @@ function stepRoutineReflect( frame )
 
   // let reflector = module.resolve
   // ({
-  //   query : opts.reflector,
+  //   selector : opts.reflector,
   //   defaultPool : 'reflector',
   //   current : step,
   // });
@@ -210,7 +210,7 @@ function stepRoutineJs( frame )
 
   try
   {
-    opts.js = step.inPathResolve({ query : opts.js, prefixlessAction : 'resolved' });
+    opts.js = step.inPathResolve({ selector : opts.js, prefixlessAction : 'resolved' });
     opts.routine = require( fileProvider.providersWithProtocolMap.hd.path.nativize( opts.js ) );
     if( !_.routineIs( opts.routine ) )
     throw _.err( 'JS file should return function, but got', _.strType( opts.routine ) );
@@ -263,7 +263,7 @@ function stepRoutineShell( frame )
   /* */
 
   if( opts.currentPath )
-  opts.currentPath = step.inPathResolve({ query : opts.currentPath, prefixlessAction : 'resolved' });
+  opts.currentPath = step.inPathResolve({ selector : opts.currentPath, prefixlessAction : 'resolved' });
   _.sure( opts.currentPath === null || _.strIs( opts.currentPath ), 'Current path should be string if defined' );
 
   /* */

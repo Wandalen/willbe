@@ -188,36 +188,22 @@ function open()
 
   /* */
 
-  // if( 0 )
-  if( willf.module.supermodule )
-  {
-
-    // debugger;
-    let outPath = willf.data.path.out;
-    if( _.mapIs( outPath ) )
-    outPath = outPath.path;
-
-    outPath = path.relative( outPath, '.' );
-    let dirPath = path.join( willf.dirPath, outPath );
-    module.dirPathSet( dirPath );
-
-  }
+  // if( willf.module.supermodule && willf.data.path && willf.data.path.out )
+  // {
+  //
+  //   let outPath = willf.data.path.out;
+  //   if( _.mapIs( outPath ) )
+  //   outPath = outPath.path;
+  //
+  //   // debugger; // yyy
+  //
+  //   outPath = path.relative( outPath, '.' );
+  //   let dirPath = path.join( willf.dirPath, outPath );
+  //   module.filePathSet( module.filePath, dirPath );
+  //
+  // }
 
   _.assert( willf.dirPath === path.dir( willf.filePath ) );
-  // _.assert( !willf.data.path || !willf.data.path.baseDir, 'Will file should have no path::baseDir' ); // xxx : uncomment
-
-  /* */
-
-  // if( 0 )
-  // if( willf.data.path && willf.data.path.baseDir )
-  // {
-  //   debugger;
-  //   let p = willf.data.path.baseDir;
-  //   if( _.mapIs( p ) )
-  //   p = p.path;
-  //   p = path.join( path.dir( willf.filePath ), p );
-  //   module.dirPathSet( p );
-  // }
 
   /* */
 
@@ -230,25 +216,14 @@ function open()
 
   /* */
 
-  // if( willf.data.exported )
   willf._resourcesMake( will.Exported, willf.data.exported || {} );
-
-  // if( willf.data.submodule )
   willf._resourcesMake( will.Submodule, willf.data.submodule || {} );
-
-  // if( willf.data.path )
-  willf._resourcesMake( will.PathObj, willf.data.path || {} );
-
-  // if( willf.data.reflector )
+  willf._resourcesMake( will.PathResource, willf.data.path || {} );
   willf._resourcesMake( will.Reflector, willf.data.reflector || {} );
-
   willf._resourcesMake( will.Step, willf.data.step || {} );
-
-  // if( willf.data.build )
   willf._resourcesMake( will.Build, willf.data.build || {} );
 
   willf.formed = 2;
-
   return true;
 }
 
@@ -370,7 +345,7 @@ let Aggregates =
 
   submoduleMap : _.define.own({}),
   pathMap : _.define.own({}),
-  pathObjMap : _.define.own({}),
+  pathResourceMap : _.define.own({}),
   reflectorMap : _.define.own({}),
   stepMap : _.define.own({}),
   buildMap : _.define.own({}),
@@ -380,12 +355,17 @@ let Aggregates =
 
 let Associates =
 {
-  module : null,
   data : null,
+}
+
+let Medials =
+{
+  module : null,
 }
 
 let Restricts =
 {
+  module : null,
   formed : 0,
 }
 
@@ -424,6 +404,7 @@ let Proto =
   Composes,
   Aggregates,
   Associates,
+  Medials,
   Restricts,
   Statics,
   Forbids,

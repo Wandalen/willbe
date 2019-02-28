@@ -86,9 +86,11 @@ function OptionsFrom( o )
 
 function finit()
 {
-  if( this.formed )
-  this.unform();
-  return _.Copyable.prototype.finit.apply( this, arguments );
+  let resource = this;
+  if( resource.formed )
+  resource.unform();
+  resource.module = null;
+  return _.Copyable.prototype.finit.apply( resource, arguments );
 }
 
 //
@@ -184,6 +186,9 @@ function form()
 function form1()
 {
   let resource = this;
+
+  _.assert( !!resource.module );
+
   let module = resource.module;
   let willf = resource.willf;
   let will = module.will;
@@ -200,7 +205,7 @@ function form1()
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !!will.formed );
-  _.assert( module.preformed >= 2 );
+  // _.assert( module.preformed >= 2 );
   _.assert( !willf || !!willf.formed );
   _.assert( _.strDefined( resource.name ) );
 
@@ -291,7 +296,7 @@ function _inheritMultiple( o )
     // debugger;
     let ancestors = module.resolve
     ({
-      query : ancestor,
+      selector : ancestor,
       defaultPool : resource.KindName,
       visited : o.visited,
       current : resource,
@@ -652,7 +657,7 @@ function inPathResolve_body( o )
   let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
-  _.assert( _.strIs( o.query ) );
+  _.assert( _.strIs( o.selector ) );
   _.assertRoutineOptions( inPathResolve_body, arguments );
 
   let result = resource.resolve( o );
@@ -705,12 +710,18 @@ let Aggregates =
 
 let Associates =
 {
-  module : null,
+}
+
+let Medials =
+{
   willf : null,
+  module : null,
 }
 
 let Restricts =
 {
+  willf : null,
+  module : null,
   formed : 0,
 }
 
@@ -796,6 +807,7 @@ let Proto =
   Composes,
   Aggregates,
   Associates,
+  Medials,
   Restricts,
   Statics,
   Forbids,

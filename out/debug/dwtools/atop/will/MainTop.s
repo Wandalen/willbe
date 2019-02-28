@@ -58,27 +58,6 @@ function _moduleOnReady( o )
   _.assert( _.routineIs( o.onReady ) );
   _.routineOptions( _moduleOnReady, arguments );
 
-  // if( !will.topCommand )
-  // will.topCommand = o.onReady;
-  //
-  // let module = will.currentModule;
-  // if( !module )
-  // {
-  //   module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).preform();
-  //   module.willFilesFind();
-  //   module.willFilesOpen();
-  //   if( o.forming )
-  //   {
-  //     module.submodulesForm();
-  //     module.resourcesForm();
-  //   }
-  //   else
-  //   {
-  //     module.submodulesFormSkip();
-  //     module.resourcesFormSkip();
-  //   }
-  // }
-
   if( !will.topCommand )
   will.topCommand = o.onReady;
 
@@ -654,10 +633,10 @@ function commandWith( e )
   if( will.topCommand === null )
   will.topCommand = commandWith;
 
-  let isolated = ca.isolateSecond( e.subject );
-  let dirPath = path.resolve( isolated.subject );
+  let isolated = ca.nextCommandIsolate( e.subject );
+  let filePath = path.resolve( isolated.subject );
 
-  let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).preform();
+  let module = will.currentModule = will.Module({ will : will, filePath : filePath }).preform();
   module.willFilesFind();
   module.willFilesOpen();
   module.submodulesForm();
@@ -708,7 +687,7 @@ function commandEach( e )
   if( will.topCommand === null )
   will.topCommand = commandEach;
 
-  let isolated = ca.isolateSecond( e.subject );
+  let isolated = ca.nextCommandIsolate( e.subject );
   let dirPath = path.resolve( isolated.subject );
   let con = new _.Consequence().take( null );
   let files = will.willFilesList
@@ -720,16 +699,20 @@ function commandEach( e )
   });
 
   let dirPaths = Object.create( null );
-
   for( let f = 0 ; f < files.length ; f++ ) con.keep( ( arg ) => /* !!! replace by concurrent, maybe */
   {
     let file = files[ f ];
 
-    let dirPath = will.Module.DirPathFromWillFilePath( file.absolute );
+    let dirPath = will.Module.DirPathFromFilePaths( file.absolute );
 
+    if( dirPaths[ dirPath ] )
+    debugger;
     if( dirPaths[ dirPath ] )
     return true;
     dirPaths[ dirPath ] = 1;
+
+    if( will.moduleMap[ file.absolute ] )
+    return true;
 
     if( will.currentModule )
     {
@@ -737,10 +720,7 @@ function commandEach( e )
       will.currentModule = null;
     }
 
-    if( will.moduleMap[ dirPath ] )
-    return true;
-
-    let module = will.currentModule = will.Module({ will : will, dirPath : dirPath }).preform();
+    let module = will.currentModule = will.Module({ will : will, filePath : file.absolute }).preform();
     module.willFilesFind();
     module.willFilesOpen();
     module.submodulesForm();
