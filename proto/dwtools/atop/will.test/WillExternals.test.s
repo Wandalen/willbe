@@ -732,10 +732,11 @@ function singleStep( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
-
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
 
   /* Vova : step::list.dir does not have {- stepRoutine -}. Failed to deduce it, try specifying "inherit" field explicitly */
+
+  ready
 
   .thenKeep( () =>
   {

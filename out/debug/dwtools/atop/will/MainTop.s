@@ -563,7 +563,6 @@ function commandBuild( e )
   let will = this;
   return will.moduleOnReady( function( module )
   {
-    debugger;
     let builds = module.buildsSelect( e.argument, e.propertiesMap );
     let logger = will.logger;
 
