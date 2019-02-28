@@ -1,7 +1,7 @@
 format: willfile-1.0.0
 about:
   name: willbe
-  description: Tool to manage modules of modular systems
+  description: Utility to manage modules of complex modular systems
   version: 0.3.166
   enabled: 1
   interpreters:
