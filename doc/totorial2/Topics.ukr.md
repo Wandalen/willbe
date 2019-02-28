@@ -9,8 +9,9 @@
 - [Перший will-файл](FirstWillFile.ukr.md)
 - [Перший will-модуль. Імпорт підмодуля](SubmodulesImporting.md)
 - [Управління підмодулями](SubmodulesImporting.md)
+- [Створення модуля з команди `.build`](ModuleCreationByBuild.ukr.md)
 - [Поняття критеріонів в `will`-файлах](CriterionsInWillFile.ukr.md)
-- [Створення модуля з використанням критеріонів](ModuleCreation.ukr.md)
+- 
 - [Використання оболонки операційної системи в `will`-файлі](SubmodulesImporting.md)
 - [Експортування модуля](ExportedWillFile.ukr.md) 
 - [Розділені `will`-файли (Split will files)](SplitWillFile.ukr.md)
