@@ -164,11 +164,6 @@ path:
       - proto/dwtools/atop/will.test/asset/concat/proto/File1.release.js
       - proto/dwtools/atop/will.test/asset/concat/proto/File2.debug.js
       - proto/dwtools/atop/will.test/asset/concat/proto/File2.release.js
-      - proto/dwtools/atop/will.test/asset/experiment
-      - proto/dwtools/atop/will.test/asset/experiment/out
-      - proto/dwtools/atop/will.test/asset/experiment/out/debug
-      - proto/dwtools/atop/will.test/asset/experiment/out/debug/File.debug.js
-      - proto/dwtools/atop/will.test/asset/experiment/out/debug/File.release.js
       - proto/dwtools/atop/will.test/asset/import-in
       - proto/dwtools/atop/will.test/asset/import-in/super.ex.will.yml
       - proto/dwtools/atop/will.test/asset/import-in/super.im.will.yml
@@ -559,11 +554,6 @@ reflector:
         dwtools/atop/will.test/asset/concat/proto/File1.release.js: true
         dwtools/atop/will.test/asset/concat/proto/File2.debug.js: true
         dwtools/atop/will.test/asset/concat/proto/File2.release.js: true
-        dwtools/atop/will.test/asset/experiment: true
-        dwtools/atop/will.test/asset/experiment/out: true
-        dwtools/atop/will.test/asset/experiment/out/debug: true
-        dwtools/atop/will.test/asset/experiment/out/debug/File.debug.js: true
-        dwtools/atop/will.test/asset/experiment/out/debug/File.release.js: true
         dwtools/atop/will.test/asset/import-in: true
         dwtools/atop/will.test/asset/import-in/super.ex.will.yml: true
         dwtools/atop/will.test/asset/import-in/super.im.will.yml: true
