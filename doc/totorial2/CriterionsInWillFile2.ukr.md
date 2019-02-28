@@ -22,24 +22,16 @@ about :
 В попердньому туторіалі `willbe` виводив повідомлення в консоль, проте пакет працює з зовнішніми програмами, що встановлені в систему. Використаємо пакетний менеджер _NodeJS_ для встановлення залежностей. Для цього в секцію `step` помістимо код:
 
 ```yaml
-
 step :
 
   npm.install :
     currentPath : '.'
     shell : npm install
 
-```
-В секції описана процедура з назвою `npm.install`, яка має 2 поля - поточна директорії (`currentPath`) та команда оболонки (`shell`). Цей крок дозволить завантажити пакети залежностей NodeJS в поточну директорію.  
-Тепер помістимо цю процедуру в секцію [`build`](WillFileStructure.ukr.md#build):
-```yaml
-
 build :
 
-  debug:
-    criterion :
-      default : 1
-    steps :
+  install :
+     steps :
       - npm.install
 
 ```
@@ -65,9 +57,7 @@ step :
 
 build :
 
-  debug:
-    criterion :
-      default : 1
+  install:
     steps :
       - npm.install
 
@@ -75,12 +65,7 @@ build :
 
 </details>
 
-<p></p>
-
- 
-Побудова модуля проходить через процедуру `debug`, яка за замовчуванням ввімкнена (критерій має значення "1") та використовує команду  в кроці `npm.install`.
-
-Щоб протестувати роботу `will`-файла створимо `package.json` з NodeJS-залежностями та помістимо його в директорію файла `.will.yml`:
+Цей крок дозволить завантажити пакети залежностей NodeJS в поточну директорію, але поки що немає залежностей. Створимо `package.json` та помістимо його в директорію файла `.will.yml`:
 
 ``` json
 {
@@ -101,27 +86,68 @@ build :
 
 ```
 
-Запустіть в консолі команду `will .build` в кореневій директорії файла `.will.yml` і `willbe` створить готовий модуль з NodeJS-пакетом "express".  
+Запустіть в консолі команду `will .build install` в кореневій директорії файла `.will.yml` і `willbe` створить готовий модуль з NodeJS-пакетом "express".  
 В консолі отримаєте такий лог, що свідчить про правильне виконання скрипту:
+
 ```
-[user@user ~]$ will .build
-Request ".build"
-   . Read : /path_to_file/.will.yml
- . Read 1 will-files in 0.079s
-
-  Building debug
+[user@user ~]$ will .build install
+Request ".build install"
+...
+  Building install
  > npm install
-
+...
 added 48 packages from 36 contributors and audited 121 packages in 4.863s
 found 0 vulnerabilities
 
-  Built debug in 16.456s
+  Built debug in 9.456s
 
 ```
 
+Тепер маємо наступну конфігурацію:
 
+```
+.
+├── node_modules
+│         ├── ...
+│         ├── ...
+│ 
+├── package.json
+├── package-lock.json
+├── .will.yml
 
-> `Willbe` може [використовувати командну оболонку](#shell-resource) операційної системи для управління модулями.
+```
+
+Якщо маємо лише один сценарій побудови модуля або декілька сценаріїв з одним головним, то введення правильної фрази може ускладнити процес побудови модуля. Пакет `willbe` дозволяє призначити один сценарій, який буде виконуватись за замовчуванням. Для цього потрібно додати критеріон _'default : 1'_. Після збереження файла, фраза `will .build` виконає обраний сценарій.  
+Додамо критеріон в `.will.yml`.
+
+```
+build :
+
+  install:
+    criterion :
+      default : 1
+    steps :
+      - npm.install
+
+```
+
+Видаліть зайві файли з директорії (`rm -Rf node_modules package-lock.json` в косолі або в графічному менеджері) та виконайте фразу `will .build`.
+
+```
+[user@user ~]$ will .build
+Request ".build"
+...
+  Building install
+ > npm install
+...
+added 48 packages from 36 contributors and audited 121 packages in 4.863s
+found 0 vulnerabilities
+
+  Built debug in 8.456s
+
+```
+
+> `Willbe` має інструменти для автоматизації побудови модулів.
 
 [Наступний туторіал](ExportedWillFile.ukr.md)  
 [Повернутись до меню](Topics.ukr.md)
