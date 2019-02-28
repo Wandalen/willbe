@@ -38,7 +38,9 @@
 - [Структура will-файла](WillFileStructure.ukr.md)
 - [Інтерфейс командного рядка `willbe`](CommandLineInterfaceOfWill.ukr.md)
 - [Створення will-модуля:](WillFileCreation.md)
-  - Базова конфігурація
-  - Експорт модуля
-  - Іменований підмодуль
-  - Імпорт підмодуля
+  - [Початок роботи](WillFileCreation.md#start)
+  - [Базова конфігурація](WillFileCreation.md#basic-configuration)
+  - [Робота з підмодулями](WillFileCreation.md#submodules-importing)
+  - [Використання секцій `step` i `build` при створенні модуля](WillFileCreation.md#step-and-build)
+  - [Експорт модуля](WillFileCreation.md#module-export)
+  - [Іменований підмодуль](WillFileCreation.md#named-module)
