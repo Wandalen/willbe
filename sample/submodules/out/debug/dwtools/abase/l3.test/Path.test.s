@@ -5083,7 +5083,7 @@ function resolve( test )
 
   console.log( '_.path.current()',_.path.current() );
   var paths = [  'aa','cc','..','..','..' ];
-  var expected = _.strIsolateEndOrNone( _.path.current(),'/' )[ 0 ];
+  var expected = _.strIsolateRightOrNone( _.path.current(),'/' )[ 0 ];
   if( _.path.current() === '/' )
   expected = '/..';
   var got = _.path.resolve.apply( _.path, paths );

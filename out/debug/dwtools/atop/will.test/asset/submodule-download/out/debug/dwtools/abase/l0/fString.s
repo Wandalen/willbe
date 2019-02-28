@@ -506,7 +506,6 @@ function _strRightSingle( src, ins, first, last )
         }
         else
         {
-          debugger;
           found = found1;
           index = index1 - found.length;
         }

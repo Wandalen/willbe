@@ -2566,7 +2566,7 @@ function strSplitShort( srcStr )
 {
   let module = this;
   _.assert( !_.strHas( srcStr, '/' ) );
-  let result = _.strIsolateBeginOrNone( srcStr, '::' );
+  let result = _.strIsolateLeftOrNone( srcStr, '::' );
   return result;
 }
 
@@ -2733,7 +2733,7 @@ function resolve_body( o )
   function mapsFlatten( result )
   {
     if( o.flattening && _.mapIs( result ) )
-    result = _.mapsFlatten2([ result ]);
+    result = _.mapsFlatten([ result ]);
     return result;
   }
 
@@ -3122,7 +3122,7 @@ function _resolveAct( o )
 
     if( it.dst instanceof will.Reflector )
     {
-      debugger;
+      // debugger;
       let module2 = it.iterationCurrent.module;
       let reflector = it.dst;
       _.assert( reflector.inherit.length === 0 );

@@ -2813,7 +2813,7 @@ function _strExtractInlinedStereo_body( o )
 
   for( let i = 1; i < splitArray.length; i++ )
   {
-    let halfs = _.strIsolateBeginOrNone( splitArray[ i ], o.postfix );
+    let halfs = _.strIsolateLeftOrNone( splitArray[ i ], o.postfix );
 
     _.assert( halfs.length === 3 );
 
@@ -2943,7 +2943,7 @@ function strExtractInlinedStereo( o )
 
   for( let i = 1; i < splitted.length; i++ )
   {
-    let halfs = _.strIsolateBeginOrNone( splitted[ i ],o.postfix );
+    let halfs = _.strIsolateLeftOrNone( splitted[ i ],o.postfix );
     let strip = o.onInlined ? o.onInlined( halfs[ 0 ] ) : halfs[ 0 ];
 
     _.assert( halfs.length === 3 );

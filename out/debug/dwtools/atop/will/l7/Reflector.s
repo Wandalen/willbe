@@ -117,8 +117,8 @@ function form2()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  if( reflector.absoluteName === 'module::submodule / reflector::reflect.proto.' )
-  debugger;
+  // if( reflector.absoluteName === 'module::submodule / reflector::reflect.proto.' )
+  // debugger;
 
   /* filters */
 
@@ -236,8 +236,8 @@ function form3()
   _.assert( arguments.length === 0 );
   _.assert( reflector.formed === 2 );
 
-  if( reflector.absoluteName === 'module::submodule / reflector::reflect.proto.' )
-  debugger;
+  // if( reflector.absoluteName === 'module::submodule / reflector::reflect.proto.' )
+  // debugger;
 
   /* begin */
 

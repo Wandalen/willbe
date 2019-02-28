@@ -1534,7 +1534,81 @@ function strsEquivalentNone( test )
 
 //
 
-function strIsolateBeginOrNone( test )
+function strShort( test )
+{
+
+  test.case = 'undefined';
+  var src = undefined;
+  var expected = 'undefined';
+  var got = _.strShort( src );
+  test.identical( got, expected );
+
+  test.case = 'null';
+  var src = null;
+  var expected = 'null';
+  var got = _.strShort( src );
+  test.identical( got, expected );
+
+  test.case = 'number';
+  var src = 13;
+  var expected = '13';
+  var got = _.strShort( src );
+  test.identical( got, expected );
+
+  test.case = 'boolean';
+  var src = false;
+  var expected = 'false';
+  var got = _.strShort( src );
+  test.identical( got, expected );
+
+  test.case = 'string';
+  var src = 'abc';
+  var expected = 'abc';
+  var got = _.strShort( src );
+  test.identical( got, expected );
+
+}
+
+//
+
+function strPrimitive( test )
+{
+
+  test.case = 'undefined';
+  var src = undefined;
+  var expected = undefined;
+  var got = _.strPrimitive( src );
+  test.identical( got, expected );
+
+  test.case = 'null';
+  var src = null;
+  var expected = undefined;
+  var got = _.strPrimitive( src );
+  test.identical( got, expected );
+
+  test.case = 'number';
+  var src = 13;
+  var expected = '13';
+  var got = _.strPrimitive( src );
+  test.identical( got, expected );
+
+  test.case = 'boolean';
+  var src = false;
+  var expected = 'false';
+  var got = _.strPrimitive( src );
+  test.identical( got, expected );
+
+  test.case = 'string';
+  var src = 'abc';
+  var expected = 'abc';
+  var got = _.strPrimitive( src );
+  test.identical( got, expected );
+
+}
+
+//
+
+function strIsolateLeftOrNone( test )
 {
   var got, expected;
 
@@ -1544,106 +1618,106 @@ function strIsolateBeginOrNone( test )
 
   /**/
 
-  got = _.strIsolateBeginOrNone( '', '' );
+  got = _.strIsolateLeftOrNone( '', '' );
   expected = [ '', '', '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( '', [ '' ] );
+  got = _.strIsolateLeftOrNone( '', [ '' ] );
   expected = [ '', '', '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'abc', [ '' ] );
+  got = _.strIsolateLeftOrNone( 'abc', [ '' ] );
   expected = [ '', '', 'abc' ];
   test.identical( got, expected );
 
   /* empty delimeters array */
 
-  got = _.strIsolateBeginOrNone( 'abca', [] );
-  expected = [ '', '', 'abca' ];
+  got = _.strIsolateLeftOrNone( 'abca', [] );
+  expected = [ '', undefined, 'abca' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( '', 'a' );
-  expected = [ '', '', '' ];
+  got = _.strIsolateLeftOrNone( '', 'a' );
+  expected = [ '', undefined, '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( '', [ 'a' ] );
-  expected = [ '', '', '' ];
+  got = _.strIsolateLeftOrNone( '', [ 'a' ] );
+  expected = [ '', undefined, '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'abca', 'a' );
+  got = _.strIsolateLeftOrNone( 'abca', 'a' );
   expected = [ '', 'a', 'bca' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'abca', [ 'a' ] );
+  got = _.strIsolateLeftOrNone( 'abca', [ 'a' ] );
   expected = [ '', 'a', 'bca' ];
   test.identical( got, expected );
 
   /* number 1 by default, no cut, just returns src */
 
-  got = _.strIsolateBeginOrNone( 'abca', 'd' );
-  expected = [ '', '', 'abca' ];
+  got = _.strIsolateLeftOrNone( 'abca', 'd' );
+  expected = [ '', undefined, 'abca' ];
   test.identical( got, expected );
 
   /* number 1 by default, no cut, just returns src */
 
-  got = _.strIsolateBeginOrNone( 'abca', [ 'd' ] );
-  expected = [ '', '', 'abca' ];
+  got = _.strIsolateLeftOrNone( 'abca', [ 'd' ] );
+  expected = [ '', undefined, 'abca' ];
   test.identical( got, expected );
 
   /* - */
 
   test.case = 'single delimeter, number';
 
-  got = _.strIsolateBeginOrNone( 'abca', '', 2 );
+  got = _.strIsolateLeftOrNone( 'abca', '', 2 );
   expected = [ 'a', '', 'bca' ];
   test.identical( got, expected );
 
   /* cut on second occurrence */
 
-  got = _.strIsolateBeginOrNone( 'abca', 'a', 2 );
+  got = _.strIsolateLeftOrNone( 'abca', 'a', 2 );
   expected = [ 'abc', 'a', '' ];
   test.identical( got, expected );
 
   /* cut on second occurrence */
 
-  got = _.strIsolateBeginOrNone( 'abca', [ 'a' ], 2 );
+  got = _.strIsolateLeftOrNone( 'abca', [ 'a' ], 2 );
   expected = [ 'abc', 'a', '' ];
   test.identical( got, expected );
 
   /* cut on third occurrence */
 
-  got = _.strIsolateBeginOrNone( 'abcaca', 'a', 3 );
+  got = _.strIsolateLeftOrNone( 'abcaca', 'a', 3 );
   expected = [ 'abcac', 'a', '' ];
   test.identical( got, expected );
 
   /* cut on third occurrence */
 
-  got = _.strIsolateBeginOrNone( 'abcaca', [ 'a' ], 3 );
+  got = _.strIsolateLeftOrNone( 'abcaca', [ 'a' ], 3 );
   expected = [ 'abcac', 'a', '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'abcaca', 'a', 4 );
-  expected = [ 'abcaca', 'a', '' ];
+  got = _.strIsolateLeftOrNone( 'abcaca', 'a', 4 );
+  expected = [ 'abcaca', undefined, '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'abcaca', [ 'a' ], 4 );
-  expected = [ 'abcaca', 'a', '' ];
+  got = _.strIsolateLeftOrNone( 'abcaca', [ 'a' ], 4 );
+  expected = [ 'abcaca', undefined, '' ];
   test.identical( got, expected );
 
   /* - */
@@ -1652,25 +1726,25 @@ function strIsolateBeginOrNone( test )
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'abca', [ 'a', 'c' ] );
+  got = _.strIsolateLeftOrNone( 'abca', [ 'a', 'c' ] );
   expected = [ '', 'a', 'bca' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'abca', [ 'c', 'a' ] );
+  got = _.strIsolateLeftOrNone( 'abca', [ 'c', 'a' ] );
   expected = [ '', 'a', 'bca' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'abca', [ 'x', 'y' ] );
-  expected = [ '', '', 'abca'  ];
+  got = _.strIsolateLeftOrNone( 'abca', [ 'x', 'y' ] );
+  expected = [ '', undefined, 'abca'  ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'abca', [ 'x', 'y', 'a' ] );
+  got = _.strIsolateLeftOrNone( 'abca', [ 'x', 'y', 'a' ] );
   expected = [ '', 'a', 'bca'  ];
   test.identical( got, expected );
 
@@ -1680,38 +1754,38 @@ function strIsolateBeginOrNone( test )
 
   /* empty delimeters array */
 
-  got = _.strIsolateBeginOrNone( 'abca', [], 2 );
-  expected = [ '', '', 'abca' ];
+  got = _.strIsolateLeftOrNone( 'abca', [], 2 );
+  expected = [ '', undefined, 'abca' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'abca', [ 'a', 'c' ], 2 );
+  got = _.strIsolateLeftOrNone( 'abca', [ 'a', 'c' ], 2 );
   expected = [ 'ab', 'c', 'a' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'abcbc', [ 'c', 'a' ], 2 );
+  got = _.strIsolateLeftOrNone( 'abcbc', [ 'c', 'a' ], 2 );
   expected = [ 'ab', 'c', 'bc' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'cbcbc', [ 'c', 'a' ], 3 );
+  got = _.strIsolateLeftOrNone( 'cbcbc', [ 'c', 'a' ], 3 );
   expected = [ 'cbcb', 'c', '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'cbcbc', [ 'c', 'a' ], 4 );
-  expected = [ 'cbcbc', 'c', '' ];
+  got = _.strIsolateLeftOrNone( 'cbcbc', [ 'c', 'a' ], 4 );
+  expected = [ 'cbcbc', undefined, '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'jj', [ 'c', 'a' ], 4 );
-  expected = [ 'jj', 'c', ''];
+  got = _.strIsolateLeftOrNone( 'jj', [ 'c', 'a' ], 4 );
+  expected = [ '', undefined, 'jj' ];
   test.identical( got, expected );
 
   /* - */
@@ -1720,31 +1794,31 @@ function strIsolateBeginOrNone( test )
 
   /* - */
 
-  got = _.strIsolateBeginOrNone( 'ab', [ 'a', 'ab' ] );
+  got = _.strIsolateLeftOrNone( 'ab', [ 'a', 'ab' ] );
   expected = [ '', 'a', 'b' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'ab', [ 'ab', 'a' ] );
+  got = _.strIsolateLeftOrNone( 'ab', [ 'ab', 'a' ] );
   expected = [ '', 'ab', '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'ab', [ 'b', 'ab' ] );
+  got = _.strIsolateLeftOrNone( 'ab', [ 'b', 'ab' ] );
   expected = [ '', 'ab', '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'ab', [ 'ab', 'b' ] );
+  got = _.strIsolateLeftOrNone( 'ab', [ 'ab', 'b' ] );
   expected = [ '', 'ab', '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'a b c', ' ', 1 );
+  got = _.strIsolateLeftOrNone( 'a b c', ' ', 1 );
   expected = [ 'a', ' ', 'b c' ];
   test.identical( got, expected );
 
@@ -1754,26 +1828,26 @@ function strIsolateBeginOrNone( test )
 
   /* cut on first appear */
 
-  got = _.strIsolateBeginOrNone( 'abca', 'a', 1 );
+  got = _.strIsolateLeftOrNone( 'abca', 'a', 1 );
   expected = [ '', 'a', 'bca' ];
   test.identical( got , expected );
 
   /* no occurrences */
 
-  got = _.strIsolateBeginOrNone( 'jj', 'a', 1 );
-  expected = [ '', '', 'jj'];
+  got = _.strIsolateLeftOrNone( 'jj', 'a', 1 );
+  expected = [ '', undefined, 'jj'];
   test.identical( got , expected );
 
   /* cut on second appear */
 
-  got = _.strIsolateBeginOrNone( 'abca', 'a', 2 );
+  got = _.strIsolateLeftOrNone( 'abca', 'a', 2 );
   expected = [ 'abc', 'a', '' ];
   test.identical( got , expected );
 
   /* 5 attempts */
 
-  got = _.strIsolateBeginOrNone( 'abca', 'a', 5 );
-  expected = [ 'abca', 'a', '' ];
+  got = _.strIsolateLeftOrNone( 'abca', 'a', 5 );
+  expected = [ 'abca', undefined, '' ];
   test.identical( got , expected );
 
   /* - */
@@ -1782,32 +1856,32 @@ function strIsolateBeginOrNone( test )
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'abca', [ 'a', 'c' ], 1 );
+  got = _.strIsolateLeftOrNone( 'abca', [ 'a', 'c' ], 1 );
   expected = [ '', 'a', 'bca' ];
   test.identical( got , expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'abca', [ 'a', 'c' ], 2 );
+  got = _.strIsolateLeftOrNone( 'abca', [ 'a', 'c' ], 2 );
   expected = [ 'ab', 'c', 'a' ];
   test.identical( got , expected );
 
   /**/
 
-  got = _.strIsolateBeginOrNone( 'abca', [ 'a', 'c' ], 3 );
+  got = _.strIsolateLeftOrNone( 'abca', [ 'a', 'c' ], 3 );
   expected = [ 'abc', 'a', '' ];
   test.identical( got , expected );
 
   /* no occurrences */
 
-  got = _.strIsolateBeginOrNone( 'jj', [ 'a', 'c' ], 1 );
-  expected = [ '', '', 'jj' ];
+  got = _.strIsolateLeftOrNone( 'jj', [ 'a', 'c' ], 1 );
+  expected = [ '', undefined, 'jj' ];
   test.identical( got , expected );
 
   /* no occurrences */
 
-  got = _.strIsolateBeginOrNone( 'jj', [ 'a' ], 1 );
-  expected = [ '', '', 'jj' ];
+  got = _.strIsolateLeftOrNone( 'jj', [ 'a' ], 1 );
+  expected = [ '', undefined, 'jj' ];
   test.identical( got , expected );
 
   /* - */
@@ -1816,13 +1890,13 @@ function strIsolateBeginOrNone( test )
 
   /**/
 
-  got = _.strIsolateBeginOrNone({ src : 'abca', delimeter : 'a', number : 1 });
+  got = _.strIsolateLeftOrNone({ src : 'abca', delimeter : 'a', times : 1 });
   expected = [ '', 'a', 'bca' ];
   test.identical( got , expected );
 
   /* number option is missing */
 
-  got = _.strIsolateBeginOrNone({ src : 'abca', delimeter : 'a' });
+  got = _.strIsolateLeftOrNone({ src : 'abca', delimeter : 'a' });
   expected = [ '', 'a', 'bca' ];
   test.identical( got , expected );
 
@@ -1832,15 +1906,115 @@ function strIsolateBeginOrNone( test )
 
   /* number is zero */
 
-  got = _.strIsolateBeginOrNone( 'abca', 'a', 0 );
-  expected = [ '', '', 'abca' ];
+  got = _.strIsolateLeftOrNone( 'abca', 'a', 0 );
+  expected = [ '', undefined, 'abca' ];
   test.identical( got , expected );
 
   /* number is negative */
 
-  got = _.strIsolateBeginOrNone( 'abca', 'a', -1 );
-  expected = [ '', '', 'abca' ];
+  got = _.strIsolateLeftOrNone( 'abca', 'a', -1 );
+  expected = [ '', undefined, 'abca' ];
   test.identical( got , expected );
+
+  /* - */
+
+  test.open( 'abaaca with strings' )
+
+  got = _.strIsolateLeftOrNone( 'abaaca', 'a', 0 );
+  expected = [ '', undefined, 'abaaca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrNone( 'abaaca', 'a', 1 );
+  expected = [ '', 'a', 'baaca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrNone( 'abaaca', 'a', 2 );
+  expected = [ 'ab', 'a', 'aca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrNone( 'abaaca', 'a', 3 );
+  expected = [ 'aba', 'a', 'ca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrNone( 'abaaca', 'a', 4 );
+  expected = [ 'abaac', 'a', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrNone( 'abaaca', 'a', 5 );
+  expected = [ 'abaaca', undefined, '' ];
+  test.identical( got, expected );
+
+  test.close( 'abaaca with strings' )
+  test.open( 'abababa with strings' )
+
+  got = _.strIsolateLeftOrNone( 'abababa', 'aba', 1 );
+  expected = [ '', 'aba', 'baba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrNone( 'abababa', 'aba', 2 );
+  expected = [ 'ab', 'aba', 'ba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrNone( 'abababa', 'aba', 3 );
+  expected = [ 'abab', 'aba', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrNone( 'abababa', 'aba', 4 );
+  expected = [ 'abababa', undefined, '' ];
+  test.identical( got, expected );
+
+  test.close( 'abababa with strings' )
+
+  /* - */
+
+  test.open( 'abaaca with regexp' )
+
+  got = _.strIsolateLeftOrNone( 'abaaca', /a+/, 0 );
+  expected = [ '', undefined, 'abaaca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrNone( 'abaaca', /a+/, 1 );
+  expected = [ '', 'a', 'baaca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrNone( 'abaaca', /a+/, 2 );
+  expected = [ 'ab', 'aa', 'ca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrNone( 'abaaca', /a+/, 3 );
+  expected = [ 'aba', 'a', 'ca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrNone( 'abaaca', /a+/, 4 );
+  expected = [ 'abaac', 'a', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrNone( 'abaaca', /a+/, 5 );
+  expected = [ 'abaaca', undefined, '' ];
+  test.identical( got, expected );
+
+  test.close( 'abaaca with regexp' )
+  test.open( 'abababa with regexp' )
+
+  got = _.strIsolateLeftOrNone( 'abababa', /aba/, 1 );
+  expected = [ '', 'aba', 'baba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrNone( 'abababa', /aba/, 2 );
+  expected = [ 'ab', 'aba', 'ba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrNone( 'abababa', /aba/, 3 );
+  expected = [ 'abab', 'aba', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrNone( 'abababa', /aba/, 4 );
+  expected = [ 'abababa', undefined, '' ];
+  test.identical( got, expected );
+
+  test.close( 'abababa with regexp' )
+
+  /* - */
 
   if( !Config.debug )
   return;
@@ -1848,26 +2022,187 @@ function strIsolateBeginOrNone( test )
   test.case = 'single argument but object expected';
   test.shouldThrowErrorSync( function()
   {
-    _.strIsolateBeginOrNone( 'abc' );
+    _.strIsolateLeftOrNone( 'abc' );
   })
 
   test.case = 'invalid option';
   test.shouldThrowErrorSync( function()
   {
-    _.strIsolateBeginOrNone({ src : 'abc', delimeter : 'a', x : 'a' });
+    _.strIsolateLeftOrNone({ src : 'abc', delimeter : 'a', x : 'a' });
   })
 
   test.case = 'changing of left option not allowed';
   test.shouldThrowErrorSync( function()
   {
-    _.strIsolateBeginOrNone({ src : 'abc', delimeter : 'a', left : 0 });
+    _.strIsolateLeftOrNone({ src : 'abc', delimeter : 'a', left : 0 });
   })
 
 }
 
 //
 
-function strIsolateEndOrNone( test )
+function strIsolateLeftOrAll( test )
+{
+  var got, expected;
+
+  test.case = 'cut in most left position';
+
+  /* nothing */
+
+  got = _.strIsolateLeftOrAll( '', 'b' );
+  expected = [ '', undefined, '' ];
+  test.identical( got, expected );
+
+  /* nothing */
+
+  got = _.strIsolateLeftOrAll( '', '' );
+  expected = [ '', '', '' ];
+  test.identical( got, expected );
+
+  /**/
+
+  got = _.strIsolateLeftOrAll( 'appc', 'p' );
+  expected = [ 'a', 'p', 'pc' ];
+  test.identical( got, expected );
+
+  /**/
+
+  got = _.strIsolateLeftOrAll( 'appc', 'c' );
+  expected = [ 'app', 'c', '' ];
+  test.identical( got, expected );
+
+  /**/
+
+  got = _.strIsolateLeftOrAll( 'appc', 'a' );
+  expected = [ '', 'a', 'ppc' ];
+  test.identical( got, expected );
+
+  /**/
+
+  got = _.strIsolateLeftOrAll( 'jj', 'a' );
+  expected = [ 'jj', undefined, '' ];
+  test.identical( got, expected );
+
+  /* - */
+
+  test.open( 'abaaca with strings' )
+
+  got = _.strIsolateLeftOrAll( 'abaaca', 'a', 0 );
+  expected = [ '', undefined, 'abaaca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrAll( 'abaaca', 'a', 1 );
+  expected = [ '', 'a', 'baaca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrAll( 'abaaca', 'a', 2 );
+  expected = [ 'ab', 'a', 'aca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrAll( 'abaaca', 'a', 3 );
+  expected = [ 'aba', 'a', 'ca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrAll( 'abaaca', 'a', 4 );
+  expected = [ 'abaac', 'a', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrAll( 'abaaca', 'a', 5 );
+  expected = [ 'abaaca', undefined, '' ];
+  test.identical( got, expected );
+
+  test.close( 'abaaca with strings' )
+  test.open( 'abababa with strings' )
+
+  got = _.strIsolateLeftOrAll( 'abababa', 'aba', 1 );
+  expected = [ '', 'aba', 'baba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrAll( 'abababa', 'aba', 2 );
+  expected = [ 'ab', 'aba', 'ba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrAll( 'abababa', 'aba', 3 );
+  expected = [ 'abab', 'aba', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrAll( 'abababa', 'aba', 4 );
+  expected = [ 'abababa', undefined, '' ];
+  test.identical( got, expected );
+
+  test.close( 'abababa with strings' )
+
+  /* - */
+
+  test.open( 'abaaca with regexp' )
+
+  got = _.strIsolateLeftOrAll( 'abaaca', /a+/, 0 );
+  expected = [ '', undefined, 'abaaca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrAll( 'abaaca', /a+/, 1 );
+  expected = [ '', 'a', 'baaca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrAll( 'abaaca', /a+/, 2 );
+  expected = [ 'ab', 'aa', 'ca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrAll( 'abaaca', /a+/, 3 );
+  expected = [ 'aba', 'a', 'ca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrAll( 'abaaca', /a+/, 4 );
+  expected = [ 'abaac', 'a', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrAll( 'abaaca', /a+/, 5 );
+  expected = [ 'abaaca', undefined, '' ];
+  test.identical( got, expected );
+
+  test.close( 'abaaca with regexp' )
+  test.open( 'abababa with regexp' )
+
+  got = _.strIsolateLeftOrAll( 'abababa', /aba/, 1 );
+  expected = [ '', 'aba', 'baba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrAll( 'abababa', /aba/, 2 );
+  expected = [ 'ab', 'aba', 'ba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrAll( 'abababa', /aba/, 3 );
+  expected = [ 'abab', 'aba', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrAll( 'abababa', /aba/, 4 );
+  expected = [ 'abababa', undefined, '' ];
+  test.identical( got, expected );
+
+  test.close( 'abababa with regexp' )
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'delimeter must be a String';
+  test.shouldThrowErrorSync( function()
+  {
+    _.strIsolateLeftOrAll( 'jj', 1 );
+  });
+
+  test.case = 'source must be a String';
+  test.shouldThrowErrorSync( function()
+  {
+    _.strIsolateLeftOrAll( 1, '1' );
+  });
+
+}
+
+//
+
+function strIsolateRightOrNone( test )
 {
   var got, expected;
 
@@ -1877,108 +2212,104 @@ function strIsolateEndOrNone( test )
 
   /**/
 
-  got = _.strIsolateEndOrNone( '', '' );
+  got = _.strIsolateRightOrNone( '', '' );
   expected = [ '', '', '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( '', [ '' ] );
+  got = _.strIsolateRightOrNone( '', [ '' ] );
   expected = [ '', '', '' ];
   test.identical( got, expected );
 
-  /*!!!*/
-
-  got = _.strIsolateEndOrNone( 'abc', [ '' ] );
-  expected = [ 'ab', '', 'c' ];
+  got = _.strIsolateRightOrNone( 'abc', [ '' ] );
+  expected = [ 'abc', '', '' ];
   test.identical( got, expected );
 
   /* empty delimeters array */
 
-  got = _.strIsolateEndOrNone( 'abca', [] );
-  expected = [ 'abca', '', '' ];
+  got = _.strIsolateRightOrNone( 'abca', [] );
+  expected = [ 'abca', undefined, '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( '', 'a' );
-  expected = [ '', '', '' ];
+  got = _.strIsolateRightOrNone( '', 'a' );
+  expected = [ '', undefined, '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( '', [ 'a' ] );
-  expected = [ '', '', '' ];
+  got = _.strIsolateRightOrNone( '', [ 'a' ] );
+  expected = [ '', undefined, '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'abca', 'a' );
+  got = _.strIsolateRightOrNone( 'abca', 'a' );
   expected = [ 'abc', 'a', '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'abca', [ 'a' ] );
+  got = _.strIsolateRightOrNone( 'abca', [ 'a' ] );
   expected = [ 'abc', 'a', '' ];
   test.identical( got, expected );
 
   /* number 1 by default, no cut, just returns src */
 
-  got = _.strIsolateEndOrNone( 'abca', 'd' );
-  expected = [ 'abca', '', '' ];
+  got = _.strIsolateRightOrNone( 'abca', 'd' );
+  expected = [ 'abca', undefined, '' ];
   test.identical( got, expected );
 
   /* number 1 by default, no cut, just returns src */
 
-  got = _.strIsolateEndOrNone( 'abca', [ 'd' ] );
-  expected = [ 'abca', '', '' ];
+  got = _.strIsolateRightOrNone( 'abca', [ 'd' ] );
+  expected = [ 'abca', undefined, '' ];
   test.identical( got, expected );
 
   /* - */
 
   test.case = 'single delimeter, number';
 
-  /*!!!*/
-
-  got = _.strIsolateEndOrNone( 'abca', '', 2 );
-  expected = [ 'ab', '', 'ca' ];
+  got = _.strIsolateRightOrNone( 'abca', '', 2 );
+  expected = [ 'abc', '', 'a' ];
   test.identical( got, expected );
 
   /* cut on second occurrence */
 
-  got = _.strIsolateEndOrNone( 'abca', 'a', 2 );
+  got = _.strIsolateRightOrNone( 'abca', 'a', 2 );
   expected = [ '', 'a', 'bca' ];
   test.identical( got, expected );
 
   /* cut on second occurrence */
 
-  got = _.strIsolateEndOrNone( 'abca', [ 'a' ], 2 );
+  got = _.strIsolateRightOrNone( 'abca', [ 'a' ], 2 );
   expected = [ '', 'a', 'bca' ];
   test.identical( got, expected );
 
   /* cut on third occurrence */
 
-  got = _.strIsolateEndOrNone( 'abcaca', 'a', 3 );
+  got = _.strIsolateRightOrNone( 'abcaca', 'a', 3 );
   expected = [ '', 'a', 'bcaca' ];
   test.identical( got, expected );
 
   /* cut on third occurrence */
 
-  got = _.strIsolateEndOrNone( 'abcaca', [ 'a' ], 3 );
+  got = _.strIsolateRightOrNone( 'abcaca', [ 'a' ], 3 );
   expected = [ '', 'a', 'bcaca' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'abcaca', 'a', 4 );
-  expected = [ '', '', 'abcaca' ];
+  got = _.strIsolateRightOrNone( 'abcaca', 'a', 4 );
+  expected = [ '', undefined, 'abcaca' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'abcaca', [ 'a' ], 4 );
-  expected = [ '', '', 'abcaca' ];
+  got = _.strIsolateRightOrNone( 'abcaca', [ 'a' ], 4 );
+  expected = [ '', undefined, 'abcaca' ];
   test.identical( got, expected );
 
   /* - */
@@ -1987,25 +2318,25 @@ function strIsolateEndOrNone( test )
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'abca', [ 'a', 'c' ] );
+  got = _.strIsolateRightOrNone( 'abca', [ 'a', 'c' ] );
   expected = [ 'abc', 'a', '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'abca', [ 'c', 'a' ] );
+  got = _.strIsolateRightOrNone( 'abca', [ 'c', 'a' ] );
   expected = [ 'abc', 'a', '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'abca', [ 'x', 'y' ] );
-  expected = [ 'abca', '', ''  ];
+  got = _.strIsolateRightOrNone( 'abca', [ 'x', 'y' ] );
+  expected = [ 'abca', undefined, ''  ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'abca', [ 'x', 'y', 'a' ] );
+  got = _.strIsolateRightOrNone( 'abca', [ 'x', 'y', 'a' ] );
   expected = [ 'abc', 'a', ''  ];
   test.identical( got, expected );
 
@@ -2015,38 +2346,42 @@ function strIsolateEndOrNone( test )
 
   /* empty delimeters array */
 
-  got = _.strIsolateEndOrNone( 'abca', [], 2 );
-  expected = [ 'abca', '', '' ];
+  got = _.strIsolateRightOrNone( 'abca', [], 2 );
+  expected = [ 'abca', undefined, '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'abca', [ 'a', 'c' ], 2 );
+  got = _.strIsolateRightOrNone( 'abca', [ 'a', 'c' ], 1 );
+  expected = [ 'abc', 'a', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abca', [ 'a', 'c' ], 2 );
   expected = [ 'ab', 'c', 'a' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'abcbc', [ 'c', 'a' ], 2 );
+  got = _.strIsolateRightOrNone( 'abcbc', [ 'c', 'a' ], 2 );
   expected = [ 'ab', 'c', 'bc' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'cbcbc', [ 'c', 'a' ], 3 );
+  got = _.strIsolateRightOrNone( 'cbcbc', [ 'c', 'a' ], 3 );
   expected = [ '', 'c', 'bcbc' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'cbcbc', [ 'c', 'a' ], 4 );
-  expected = [ '', '', 'cbcbc' ];
+  got = _.strIsolateRightOrNone( 'cbcbc', [ 'c', 'a' ], 4 );
+  expected = [ '', undefined, 'cbcbc' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'jj', [ 'c', 'a' ], 4 );
-  expected = [ '', 'c', 'jj' ];
+  got = _.strIsolateRightOrNone( 'jj', [ 'c', 'a' ], 4 );
+  expected = [ 'jj', undefined, '' ];
   test.identical( got, expected );
 
   /* - */
@@ -2055,25 +2390,25 @@ function strIsolateEndOrNone( test )
 
   /* - */
 
-  got = _.strIsolateEndOrNone( 'ab', [ 'a', 'ab' ] );
+  got = _.strIsolateRightOrNone( 'ab', [ 'a', 'ab' ] );
   expected = [ '', 'a', 'b' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'ab', [ 'ab', 'a' ] );
+  got = _.strIsolateRightOrNone( 'ab', [ 'ab', 'a' ] );
   expected = [ '', 'ab', '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'ab', [ 'b', 'ab' ] );
+  got = _.strIsolateRightOrNone( 'ab', [ 'b', 'ab' ] );
   expected = [ 'a', 'b', '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'ab', [ 'ab', 'b' ] );
+  got = _.strIsolateRightOrNone( 'ab', [ 'ab', 'b' ] );
   expected = [ 'a', 'b', '' ];
   test.identical( got, expected );
 
@@ -2083,7 +2418,7 @@ function strIsolateEndOrNone( test )
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'a b c', ' ', 1 );
+  got = _.strIsolateRightOrNone( 'a b c', ' ', 1 );
   expected = [ 'a b', ' ', 'c' ];
   test.identical( got, expected );
 
@@ -2093,26 +2428,26 @@ function strIsolateEndOrNone( test )
 
   /* cut on first appear */
 
-  got = _.strIsolateEndOrNone( 'abca', 'a', 1 );
+  got = _.strIsolateRightOrNone( 'abca', 'a', 1 );
   expected = [ 'abc', 'a', '' ];
   test.identical( got , expected );
 
   /* no occurrences */
 
-  got = _.strIsolateEndOrNone( 'jj', 'a', 1 );
-  expected = [ 'jj', '', '' ];
+  got = _.strIsolateRightOrNone( 'jj', 'a', 1 );
+  expected = [ 'jj', undefined, '' ];
   test.identical( got , expected );
 
   /* cut on second appear */
 
-  got = _.strIsolateEndOrNone( 'abca', 'a', 2 );
+  got = _.strIsolateRightOrNone( 'abca', 'a', 2 );
   expected = [ '', 'a', 'bca' ];
   test.identical( got , expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'abca', 'a', 5 );
-  expected = [ '', '', 'abca' ];
+  got = _.strIsolateRightOrNone( 'abca', 'a', 5 );
+  expected = [ '', undefined, 'abca' ];
   test.identical( got , expected );
 
   /* - */
@@ -2121,32 +2456,32 @@ function strIsolateEndOrNone( test )
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'abca', [ 'a', 'c' ], 1 );
+  got = _.strIsolateRightOrNone( 'abca', [ 'a', 'c' ], 1 );
   expected = [ 'abc', 'a', '' ];
   test.identical( got , expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'abca', [ 'a', 'c' ], 2 );
+  got = _.strIsolateRightOrNone( 'abca', [ 'a', 'c' ], 2 );
   expected = [ 'ab', 'c', 'a' ];
   test.identical( got , expected );
 
   /**/
 
-  got = _.strIsolateEndOrNone( 'abca', [ 'a', 'c' ], 3 );
+  got = _.strIsolateRightOrNone( 'abca', [ 'a', 'c' ], 3 );
   expected = [ '', 'a', 'bca' ];
   test.identical( got , expected );
 
   /* no occurrences */
 
-  got = _.strIsolateEndOrNone( 'jj', [ 'a', 'c' ], 1 );
-  expected = [ 'jj', '', '' ];
+  got = _.strIsolateRightOrNone( 'jj', [ 'a', 'c' ], 1 );
+  expected = [ 'jj', undefined, '' ];
   test.identical( got , expected );
 
   /* no occurrences */
 
-  got = _.strIsolateEndOrNone( 'jj', [ 'a' ], 1 );
-  expected = [ 'jj', '', '' ];
+  got = _.strIsolateRightOrNone( 'jj', [ 'a' ], 1 );
+  expected = [ 'jj', undefined, '' ];
   test.identical( got , expected );
 
   /* - */
@@ -2155,13 +2490,13 @@ function strIsolateEndOrNone( test )
 
   /**/
 
-  got = _.strIsolateEndOrNone({ src : 'abca', delimeter : 'a', number : 1 });
+  got = _.strIsolateRightOrNone({ src : 'abca', delimeter : 'a', times : 1 });
   expected = [ 'abc', 'a', '' ];
   test.identical( got , expected );
 
   /* number option is missing */
 
-  got = _.strIsolateEndOrNone({ src : 'abca', delimeter : 'a' });
+  got = _.strIsolateRightOrNone({ src : 'abca', delimeter : 'a' });
   expected = [ 'abc', 'a', '' ];
   test.identical( got , expected );
 
@@ -2171,15 +2506,141 @@ function strIsolateEndOrNone( test )
 
   /* number is zero */
 
-  got = _.strIsolateEndOrNone( 'abca', 'a', 0 );
-  expected = [ 'abca', '', '' ];
+  got = _.strIsolateRightOrNone( 'abca', 'a', 0 );
+  expected = [ 'abca', undefined, '' ];
   test.identical( got , expected );
 
   /* number is negative */
 
-  got = _.strIsolateEndOrNone( 'abca', 'a', -1 );
-  expected = [ 'abca', '', '' ];
+  got = _.strIsolateRightOrNone( 'abca', 'a', -1 );
+  expected = [ 'abca', undefined, '' ];
   test.identical( got , expected );
+
+  /* */
+
+  got = _.strIsolateRightOrNone( 'acbca', [ 'a', 'c' ], 1 );
+  expected = [ 'acbc', 'a', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'acbca', [ 'a', 'c' ], 2 );
+  expected = [ 'acb', 'c', 'a' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abababa', 'aba', 1 );
+  expected = [ 'abab', 'aba', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abababa', 'aba', 2 );
+  expected = [ 'ab', 'aba', 'ba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abababa', 'aba', 3 );
+  expected = [ '', 'aba', 'baba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abababa', 'aba', 4 );
+  expected = [ '', undefined, 'abababa' ];
+  test.identical( got, expected );
+
+  /* - */
+
+  test.open( 'abaaca with strings' )
+
+  got = _.strIsolateRightOrNone( 'abaaca', 'a', 0 );
+  expected = [ 'abaaca', undefined, '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abaaca', 'a', 1 );
+  expected = [ 'abaac', 'a', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abaaca', 'a', 2 );
+  expected = [ 'aba', 'a', 'ca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abaaca', 'a', 3 );
+  expected = [ 'ab', 'a', 'aca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abaaca', 'a', 4 );
+  expected = [ '', 'a', 'baaca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abaaca', 'a', 5 );
+  expected = [ '', undefined, 'abaaca' ];
+  test.identical( got, expected );
+
+  test.close( 'abaaca with strings' )
+  test.open( 'abababa with strings' )
+
+  got = _.strIsolateRightOrNone( 'abababa', 'aba', 1 );
+  expected = [ 'abab', 'aba', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abababa', 'aba', 2 );
+  expected = [ 'ab', 'aba', 'ba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abababa', 'aba', 3 );
+  expected = [ '', 'aba', 'baba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abababa', 'aba', 4 );
+  expected = [ '', undefined, 'abababa' ];
+  test.identical( got, expected );
+
+  test.close( 'abababa with strings' )
+
+  /* - */
+
+  test.open( 'abaaca with regexp' )
+
+  got = _.strIsolateRightOrNone( 'abaaca', /a+/, 0 );
+  expected = [ 'abaaca', undefined, '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abaaca', /a+/, 1 );
+  expected = [ 'abaac', 'a', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abaaca', /a+/, 2 );
+  expected = [ 'ab', 'aa', 'ca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abaaca', /a+/, 3 );
+  expected = [ 'ab', 'a', 'aca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abaaca', /a+/, 4 );
+  expected = [ '', 'a', 'baaca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abaaca', /a+/, 5 );
+  expected = [ '', undefined, 'abaaca' ];
+  test.identical( got, expected );
+
+  test.close( 'abaaca with regexp' )
+  test.open( 'abababa with regexp' )
+
+  got = _.strIsolateRightOrNone( 'abababa', /aba/, 1 );
+  expected = [ 'abab', 'aba', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abababa', /aba/, 2 );
+  expected = [ 'ab', 'aba', 'ba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abababa', /aba/, 3 );
+  expected = [ '', 'aba', 'baba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrNone( 'abababa', /aba/, 4 );
+  expected = [ '', undefined, 'abababa' ];
+  test.identical( got, expected );
+
+  test.close( 'abababa with regexp' )
+
+  /* */
 
   if( !Config.debug )
   return;
@@ -2187,26 +2648,26 @@ function strIsolateEndOrNone( test )
   test.case = 'single argument but object expected';
   test.shouldThrowErrorSync( function()
   {
-    _.strIsolateEndOrNone( 'abc' );
+    _.strIsolateRightOrNone( 'abc' );
   });
 
   test.case = 'invalid option';
   test.shouldThrowErrorSync( function()
   {
-    _.strIsolateEndOrNone({ src : 'abc', delimeter : 'a', x : 'a' });
+    _.strIsolateRightOrNone({ src : 'abc', delimeter : 'a', x : 'a' });
   });
 
   test.case = 'changing of left option not allowed';
   test.shouldThrowErrorSync( function()
   {
-    _.strIsolateEndOrNone({ src : 'abc', delimeter : 'a', left : 0 });
+    _.strIsolateRightOrNone({ src : 'abc', delimeter : 'a', left : 0 });
   });
 
 }
 
 //
 
-function strIsolateEndOrAll( test )
+function strIsolateRightOrAll( test )
 {
   var got, expected;
 
@@ -2214,39 +2675,163 @@ function strIsolateEndOrAll( test )
 
   /* nothing */
 
-  got = _.strIsolateEndOrAll( '', 'b' );
+  got = _.strIsolateRightOrAll( '', '' );
   expected = [ '', '', '' ];
   test.identical( got, expected );
 
   /* nothing */
 
-  got = _.strIsolateEndOrAll( '', '' );
-  expected = [ '', '', '' ];
+  got = _.strIsolateRightOrAll( '', 'b' );
+  expected = [ '', undefined, '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrAll( 'ahpc', 'h' );
+  got = _.strIsolateRightOrAll( 'ahpc', 'h' );
   expected = [ 'a', 'h', 'pc' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrAll( 'ahpc', 'c' );
+  got = _.strIsolateRightOrAll( 'ahpc', 'c' );
   expected = [ 'ahp', 'c', '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrAll( 'appbb', 'b' );
+  got = _.strIsolateRightOrAll( 'appbb', 'b' );
   expected = [ 'appb', 'b', '' ];
   test.identical( got, expected );
 
   /**/
 
-  got = _.strIsolateEndOrAll( 'jj', 'a' );
-  expected = [ '', '', 'jj' ];
+  got = _.strIsolateRightOrAll( 'jj', 'a' );
+  expected = [ '', undefined, 'jj' ];
   test.identical( got, expected );
+
+  /* */
+
+  got = _.strIsolateRightOrAll( 'acbca', [ 'a', 'c' ], 1 );
+  expected = [ 'acbc', 'a', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'acbca', [ 'a', 'c' ], 2 );
+  expected = [ 'acb', 'c', 'a' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abababa', 'aba', 1 );
+  expected = [ 'abab', 'aba', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abababa', 'aba', 2 );
+  expected = [ 'ab', 'aba', 'ba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abababa', 'aba', 3 );
+  expected = [ '', 'aba', 'baba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abababa', 'aba', 4 );
+  expected = [ '', undefined, 'abababa' ];
+  test.identical( got, expected );
+
+  /* - */
+
+  test.open( 'abaaca with strings' )
+
+  got = _.strIsolateRightOrAll( 'abaaca', 'a', 0 );
+  expected = [ 'abaaca', undefined, '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abaaca', 'a', 1 );
+  expected = [ 'abaac', 'a', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abaaca', 'a', 2 );
+  expected = [ 'aba', 'a', 'ca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abaaca', 'a', 3 );
+  expected = [ 'ab', 'a', 'aca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abaaca', 'a', 4 );
+  expected = [ '', 'a', 'baaca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abaaca', 'a', 5 );
+  expected = [ '', undefined, 'abaaca' ];
+  test.identical( got, expected );
+
+  test.close( 'abaaca with strings' )
+  test.open( 'abababa with strings' )
+
+  got = _.strIsolateRightOrAll( 'abababa', 'aba', 1 );
+  expected = [ 'abab', 'aba', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abababa', 'aba', 2 );
+  expected = [ 'ab', 'aba', 'ba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abababa', 'aba', 3 );
+  expected = [ '', 'aba', 'baba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abababa', 'aba', 4 );
+  expected = [ '', undefined, 'abababa' ];
+  test.identical( got, expected );
+
+  test.close( 'abababa with strings' )
+
+  /* - */
+
+  test.open( 'abaaca with regexp' )
+
+  got = _.strIsolateRightOrAll( 'abaaca', /a+/, 0 );
+  expected = [ 'abaaca', undefined, '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abaaca', /a+/, 1 );
+  expected = [ 'abaac', 'a', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abaaca', /a+/, 2 );
+  expected = [ 'ab', 'aa', 'ca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abaaca', /a+/, 3 );
+  expected = [ 'ab', 'a', 'aca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abaaca', /a+/, 4 );
+  expected = [ '', 'a', 'baaca' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abaaca', /a+/, 5 );
+  expected = [ '', undefined, 'abaaca' ];
+  test.identical( got, expected );
+
+  test.close( 'abaaca with regexp' )
+  test.open( 'abababa with regexp' )
+
+  got = _.strIsolateRightOrAll( 'abababa', /aba/, 1 );
+  expected = [ 'abab', 'aba', '' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abababa', /aba/, 2 );
+  expected = [ 'ab', 'aba', 'ba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abababa', /aba/, 3 );
+  expected = [ '', 'aba', 'baba' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateRightOrAll( 'abababa', /aba/, 4 );
+  expected = [ '', undefined, 'abababa' ];
+  test.identical( got, expected );
+
+  test.close( 'abababa with regexp' )
 
   /* */
 
@@ -2256,77 +2841,14 @@ function strIsolateEndOrAll( test )
   test.case = 'delimeter must be a String';
   test.shouldThrowErrorSync( function()
   {
-    _.strIsolateEndOrAll( 'jj', 1 );
+    _.strIsolateRightOrAll( 'jj', 1 );
   })
 
   test.case = 'source must be a String';
   test.shouldThrowErrorSync( function()
   {
-    _.strIsolateEndOrAll( 1, '1' );
+    _.strIsolateRightOrAll( 1, '1' );
   })
-
-}
-
-//
-
-function strIsolateBeginOrAll( test )
-{
-  var got, expected;
-
-  test.case = 'cut in most left position';
-
-  /* nothing */
-
-  got = _.strIsolateBeginOrAll( '', 'b' );
-  expected = [ '', '', '' ];
-  test.identical( got, expected );
-
-  /* nothing */
-
-  got = _.strIsolateBeginOrAll( '', '' );
-  expected = [ '', '', '' ];
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strIsolateBeginOrAll( 'appc', 'p' );
-  expected = [ 'a', 'p', 'pc' ];
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strIsolateBeginOrAll( 'appc', 'c' );
-  expected = [ 'app', 'c', '' ];
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strIsolateBeginOrAll( 'appc', 'a' );
-  expected = [ '', 'a', 'ppc' ];
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strIsolateBeginOrAll( 'jj', 'a' );
-  expected = [ 'jj', '', '' ];
-  test.identical( got, expected );
-
-  /* - */
-
-  if( !Config.debug )
-  return;
-
-  test.case = 'delimeter must be a String';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strIsolateBeginOrAll( 'jj', 1 );
-  });
-
-  test.case = 'source must be a String';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strIsolateBeginOrAll( 1, '1' );
-  });
 
 }
 
@@ -3323,80 +3845,6 @@ function strEnds( test )
 
 //
 
-function strShort( test )
-{
-
-  test.case = 'undefined';
-  var src = undefined;
-  var expected = 'undefined';
-  var got = _.strShort( src );
-  test.identical( got, expected );
-
-  test.case = 'null';
-  var src = null;
-  var expected = 'null';
-  var got = _.strShort( src );
-  test.identical( got, expected );
-
-  test.case = 'number';
-  var src = 13;
-  var expected = '13';
-  var got = _.strShort( src );
-  test.identical( got, expected );
-
-  test.case = 'boolean';
-  var src = false;
-  var expected = 'false';
-  var got = _.strShort( src );
-  test.identical( got, expected );
-
-  test.case = 'string';
-  var src = 'abc';
-  var expected = 'abc';
-  var got = _.strShort( src );
-  test.identical( got, expected );
-
-}
-
-//
-
-function strPrimitive( test )
-{
-
-  test.case = 'undefined';
-  var src = undefined;
-  var expected = undefined;
-  var got = _.strPrimitive( src );
-  test.identical( got, expected );
-
-  test.case = 'null';
-  var src = null;
-  var expected = undefined;
-  var got = _.strPrimitive( src );
-  test.identical( got, expected );
-
-  test.case = 'number';
-  var src = 13;
-  var expected = '13';
-  var got = _.strPrimitive( src );
-  test.identical( got, expected );
-
-  test.case = 'boolean';
-  var src = false;
-  var expected = 'false';
-  var got = _.strPrimitive( src );
-  test.identical( got, expected );
-
-  test.case = 'string';
-  var src = 'abc';
-  var expected = 'abc';
-  var got = _.strPrimitive( src );
-  test.identical( got, expected );
-
-}
-
-//
-
 var Self =
 {
 
@@ -3425,10 +3873,10 @@ var Self =
     strShort,
     strPrimitive,
 
-    strIsolateBeginOrNone,
-    strIsolateEndOrNone,
-    strIsolateEndOrAll,
-    strIsolateBeginOrAll,
+    strIsolateLeftOrNone,
+    strIsolateLeftOrAll,
+    strIsolateRightOrNone,
+    strIsolateRightOrAll,
     strIsolateInsideOrNone,
     strIsolateInsideOrAll,
 

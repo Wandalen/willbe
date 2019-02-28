@@ -1985,6 +1985,59 @@ function mapInvertDroppingDuplicates( src, dst )
   return dst;
 }
 
+// //
+//
+// function mapsFlatten( o )
+// {
+//
+//   if( _.arrayIs( o ) )
+//   o = { src : o }
+//
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   _.routineOptions( mapsFlatten, o );
+//   _.assert( _.arrayIs( o.src ) )
+//
+//   o.result = o.result || Object.create( null );
+//
+//   function extend( r, s )
+//   {
+//     if( !o.allowingCollision )
+//     _.assertMapHasNone( r, s );
+//     _.mapExtend( r, s );
+//   }
+//
+//   for( let a = 0 ; a < o.src.length ; a++ )
+//   {
+//
+//     let src = o.src[ a ];
+//
+//     if( !_.longIs( src ) )
+//     {
+//       _.assert( _.objectLike( src ) );
+//       if( src !== undefined )
+//       extend( o.result, src );
+//       continue;
+//     }
+//
+//     mapsFlatten
+//     ({
+//       src : src,
+//       result : o.result,
+//       allowingCollision : o.allowingCollision,
+//     });
+//
+//   }
+//
+//   return o.result;
+// }
+//
+// mapsFlatten.defaults =
+// {
+//   src : null,
+//   result : null,
+//   allowingCollision : 0,
+// }
+
 //
 
 function mapsFlatten( o )
@@ -1993,148 +2046,59 @@ function mapsFlatten( o )
   if( _.arrayIs( o ) )
   o = { src : o }
 
-  _.assert( arguments.length === 1, 'Expects single argument' );
   _.routineOptions( mapsFlatten, o );
-  _.assert( _.arrayIs( o.src ) )
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.assert( o.delimeter === false || o.delimeter === 0 || _.strIs( o.delimeter ) );
+  _.assert( _.arrayLike( o.src ) || _.mapLike( o.src ) )
 
-  o.result = o.result || Object.create( null );
+  debugger;
+  o.dst = o.dst || Object.create( null );
+  extend( o.src, '' );
 
-  function extend( r, s )
+  return o.dst;
+
+  /* */
+
+  function extend( src, prefix )
   {
-    if( o.assertingUniqueness )
-    _.assertMapHasNone( r, s );
-    _.mapExtend( r, s );
-  }
 
-  for( let a = 0 ; a < o.src.length ; a++ )
-  {
-
-    let src = o.src[ a ];
-
-    if( !_.longIs( src ) )
+    if( _.arrayLike( src ) )
     {
-      _.assert( _.objectLike( src ) );
-      if( src !== undefined )
-      extend( o.result, src );
-      continue;
-    }
+      for( let s = 0 ; s < src.length ; s++ )
+      extend( src[ s ], prefix );
 
-    mapsFlatten
-    ({
-      src : src,
-      result : o.result,
-      assertingUniqueness : o.assertingUniqueness,
-    });
+    }
+    else if( _.mapLike( src ) )
+    {
+
+      for( let k in src )
+      {
+        let key = k;
+        if( _.strIs( o.delimeter ) )
+        key = ( prefix ? prefix + o.delimeter : '' ) + k;
+        if( _.mapIs( src[ k ] ) )
+        {
+          extend( src[ k ], key );
+        }
+        else
+        {
+          _.assert( !!o.allowingCollision || o.dst[ key ] === undefined );
+          o.dst[ key ] = src[ k ];
+        }
+      }
+
+    }
+    else _.assert( 0, 'Expects map or array of maps, but got ' + _.strType( src ) );
 
   }
 
-  return o.result;
 }
 
 mapsFlatten.defaults =
 {
   src : null,
-  result : null,
-  assertingUniqueness : 1,
-}
-
-//
-
-/*
-xxx : attention required !!!
-qqq : tests require
-*/
-
-function mapsFlatten2( o )
-{
-
-  if( _.arrayIs( o ) )
-  o = { src : o }
-
-  _.routineOptions( mapsFlatten2, o );
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( o.prefix === false || o.prefix === 0 || _.strIs( o.prefix ) );
-  _.assert( _.arrayLike( o.src ) || _.mapLike( o.src ) )
-
-  o.result = o.result || Object.create( null );
-
-  if( _.arrayLike( o.src ) )
-  for( let a = 0 ; a < o.src.length ; a++ )
-  {
-    let src = o.src[ a ];
-
-    mapsFlatten2
-    ({
-      src : src,
-      result : o.result,
-      assertingUniqueness : o.assertingUniqueness,
-      prefix : o.prefix,
-      delimeter : o.delimeter,
-    });
-
-  }
-  else
-  {
-    extend( o.result, o.src );
-  }
-
-  return o.result;
-
-  /* */
-
-  function extend( dst, src )
-  {
-    _.assert( _.objectLike( dst ) );
-    _.assert( _.objectLike( src ) );
-
-    if( o.assertingUniqueness )
-    _.assertMapHasNone( dst, src );
-
-    if( _.strIs( o.prefix ) )
-    {
-      for( let k in src )
-      {
-        let key = o.prefix + ( o.prefix ? o.delimeter : '' ) + k;
-        if( _.mapIs( src[ k ] ) )
-        mapsFlatten2
-        ({
-          src : src[ k ],
-          result : o.result,
-          assertingUniqueness : o.assertingUniqueness,
-          prefix : key,
-          delimeter : o.delimeter,
-        });
-        else
-        dst[ key ] = src[ k ];
-      }
-    }
-    else
-    {
-      debugger;
-      for( let k in src )
-      if( _.mapIs( src[ k ] ) )
-      mapsFlatten2
-      ({
-        src : src[ k ],
-        result : o.result,
-        assertingUniqueness : o.assertingUniqueness,
-        prefix : o.prefix,
-        delimeter : o.delimeter,
-      });
-      else
-      dst[ k ] = src[ k ];
-    }
-
-  }
-
-}
-
-mapsFlatten2.defaults =
-{
-  src : null,
-  result : null,
-  assertingUniqueness : 1,
-  prefix : '',
+  dst : null,
+  allowingCollision : 0,
   delimeter : '/',
 }
 
@@ -5239,7 +5203,7 @@ let Routines =
   mapInvert,
   mapInvertDroppingDuplicates,
   mapsFlatten,
-  mapsFlatten2,
+  mapsFlatten,
 
   mapToArray, /* qqq : test required */
   mapToStr, /* experimental */

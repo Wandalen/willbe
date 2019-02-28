@@ -665,7 +665,7 @@ function diagnosticStack( stack, range )
   }
 
   // if( stack[ 0 ].indexOf( '@' ) === -1 )
-  // stack[ 0 ] = _.strIsolateBeginOrNone( stack[ 0 ],'@' )[ 1 ];
+  // stack[ 0 ] = _.strIsolateLeftOrNone( stack[ 0 ],'@' )[ 1 ];
 
   // if( !stack[ 0 ] )
   // return '... stack is empty ...';

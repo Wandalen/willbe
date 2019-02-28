@@ -21,7 +21,7 @@ function strIsolate_pre( routine, args )
 
   if( args.length > 1 )
   {
-    o = { src : args[ 0 ], delimeter : args[ 1 ], number : args[ 2 ] };
+    o = { src : args[ 0 ], delimeter : args[ 1 ], times : args[ 2 ] };
   }
   else
   {
@@ -34,7 +34,7 @@ function strIsolate_pre( routine, args )
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
   _.assert( _.strIs( o.src ) );
   _.assert( _.strsLikeAll( o.delimeter ) )
-  // _.assert( _.strIs( o.delimeter ) || _.arrayIs( o.delimeter ) );
+  _.assert( _.numberIs( o.times ) );
 
   return o;
 }
@@ -57,17 +57,17 @@ function strIsolate_pre( routine, args )
  *
  * @example
  * //returns [ 'sample', 'string' ]
- * _._strIsolate( { src : 'sample, string', delimeter : [ ',' ] } );
+ * _.strIsolate( { src : 'sample, string', delimeter : [ ',' ] } );
  *
  * @example
  * //returns [ 'sample', 'string' ]
- *_._strIsolate( { src : 'sample string', delimeter : ' ' } )
+ *_.strIsolate( { src : 'sample string', delimeter : ' ' } )
  *
  * @example
  * //returns [ 'sample string, name', 'string' ]
- * _._strIsolate( { src : 'sample string, name string', delimeter : [ ',', ' ' ] } )
+ * _.strIsolate( { src : 'sample string, name string', delimeter : [ ',', ' ' ] } )
  *
- * @method _strIsolate
+ * @method strIsolate
  * @throws { Exception } Throw an exception if no argument provided.
  * @throws { Exception } Throw an exception if( o ) is not a Map.
  * @throws { Exception } Throw an exception if( o.src ) is not a String.
@@ -77,154 +77,24 @@ function strIsolate_pre( routine, args )
  *
  */
 
-function _strIsolate( o )
-{
-  let result = [];
-  let number = o.number;
-  let delimeter
-  let index = o.left ? -1 : o.src.length;
-
-  _.assertRoutineOptions( _strIsolate, o );
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.strIs( o.src ), 'Expects string {-o.src-}, got', _.strType( o.src ) );
-  _.assert( _.strIs( o.delimeter ) || _.arrayIs( o.delimeter ) );
-  _.assert( _.numberIs( o.number ) );
-
-  /* */
-
-  if( !( number >= 1 ) )
-  {
-    return whatLeft( o.left ^ o.none );
-  }
-
-  if( _.arrayIs( o.delimeter ) && o.delimeter.length === 1 )
-  o.delimeter = o.delimeter[ 0 ];
-
-  let closest = o.left ? strLeft : strRight;
-
-  /* */
-
-  while( number > 0 )
-  {
-
-    index += o.left ? +1 : -1;
-
-    if( _.arrayIs( o.delimeter ) )
-    {
-
-      if( !o.delimeter.length )
-      {
-        return whatLeft( o.left ^ o.none );
-      }
-
-      let c = closest( index );
-
-      delimeter = c.element;
-      index = c.value;
-
-      if( o.number === 1 && index === o.src.length && o.left )
-      index = -1;
-
-    }
-    else
-    {
-
-      delimeter = o.delimeter;
-      index = o.left ? o.src.indexOf( delimeter, index ) : o.src.lastIndexOf( delimeter, index );
-
-      if( o.left && !( index >= 0 ) && o.number > 1 )
-      {
-        index = o.src.length;
-        break;
-      }
-
-    }
-
-    /* */
-
-    if( !o.left && number > 1 && index === 0  )
-    {
-      return whatLeft( !o.none )
-    }
-
-    if( !( index >= 0 ) && o.number === 1 )
-    {
-      return whatLeft( o.left ^ o.none )
-    }
-
-    number -= 1;
-
-  }
-
-  /* */
-
-  result.push( o.src.substring( 0, index ) );
-  result.push( delimeter );
-  result.push( o.src.substring( index + delimeter.length ) );
-
-  return result;
-
-  /* */
-
-  function whatLeft( side )
-  {
-    return ( side ) ? [ o.src, '', '' ] : [ '', '', o.src ];
-  }
-
-  /* */
-
-  function strLeft( index )
-  {
-    return _.entityMin( o.delimeter, function( a )
-    {
-      let i = o.src.indexOf( a, index );
-      if( i === -1 )
-      return o.src.length;
-      return i;
-    });
-  }
-
-  /* */
-
-  function strRight( index )
-  {
-    return _.entityMax( o.delimeter, function( a )
-    {
-      let i = o.src.lastIndexOf( a, index );
-      return i;
-    });
-  }
-
-}
-
-_strIsolate.defaults =
-{
-  src : null,
-  delimeter : ' ',
-  quoting : null,
-  left : 1,
-  number : 1,
-  none : 1,
-}
-
-// function _strIsolate( o )
+// function strIsolate( o )
 // {
 //   let result = [];
-//   let number = o.number;
+//   let times = o.times;
 //   let delimeter
 //   let index = o.left ? -1 : o.src.length;
 //
-//   _.assertRoutineOptions( _strIsolate, o );
+//   _.assertRoutineOptions( strIsolate, o );
 //   _.assert( arguments.length === 1, 'Expects single argument' );
 //   _.assert( _.strIs( o.src ), 'Expects string {-o.src-}, got', _.strType( o.src ) );
 //   _.assert( _.strIs( o.delimeter ) || _.arrayIs( o.delimeter ) );
-//   _.assert( _.numberIs( o.number ) );
+//   _.assert( _.numberIs( o.times ) );
 //
 //   /* */
 //
-//   if( !( number >= 1 ) )
+//   if( !( times >= 1 ) )
 //   {
-//     return whatLeft( o.left ^ o.none );
+//     return everything( o.left ^ o.none );
 //   }
 //
 //   if( _.arrayIs( o.delimeter ) && o.delimeter.length === 1 )
@@ -232,11 +102,9 @@ _strIsolate.defaults =
 //
 //   let closest = o.left ? strLeft : strRight;
 //
-//   debugger;
-//
 //   /* */
 //
-//   while( number > 0 )
+//   while( times > 0 )
 //   {
 //
 //     index += o.left ? +1 : -1;
@@ -246,115 +114,47 @@ _strIsolate.defaults =
 //
 //       if( !o.delimeter.length )
 //       {
-//         return whatLeft( o.left ^ o.none );
+//         return everything( o.left ^ o.none );
 //       }
 //
-//       let c = closest( index ); debugger;
+//       let c = closest( index );
 //
-//       // delimeter = c.element;
-//       // index = c.value;
+//       delimeter = c.element;
+//       index = c.value;
 //
-//       delimeter = c.entry;
-//       index = c.index;
-//
-//       // if( o.number === 1 && index === o.src.length && o.left )
-//       // index = -1;
+//       if( o.times === 1 && index === o.src.length && o.left )
+//       index = -1;
 //
 //     }
 //     else
 //     {
 //
 //       delimeter = o.delimeter;
-//       // index = o.left ? o.src.indexOf( delimeter, index ) : o.src.lastIndexOf( delimeter, index );
-//       let c = closest( index ); debugger;
-//       index = c.index;
+//       index = o.left ? o.src.indexOf( delimeter, index ) : o.src.lastIndexOf( delimeter, index );
 //
-//       if( c.entry === undefined )
-//       break;
-//
-//       // if( o.left && !( index >= 0 ) && o.number > 1 )
-//       // {
-//       //   index = o.src.length;
-//       //   break;
-//       // }
+//       if( o.left && !( index >= 0 ) && o.times > 1 )
+//       {
+//         index = o.src.length;
+//         break;
+//       }
 //
 //     }
 //
 //     /* */
 //
-//     if( !o.left && number > 1 && index === 0  )
+//     if( !o.left && times > 1 && index === 0  )
 //     {
-//       return whatLeft( !o.none )
+//       return everything( !o.none )
 //     }
 //
-//     if( !( index >= 0 ) && o.number === 1 )
+//     if( !( index >= 0 ) && o.times === 1 )
 //     {
-//       return whatLeft( o.left ^ o.none )
+//       return everything( o.left ^ o.none )
 //     }
 //
-//     number -= 1;
+//     times -= 1;
 //
 //   }
-//
-//   // while( number > 0 )
-//   // {
-//   //
-//   //   index += o.left ? +1 : -1;
-//   //
-//   //   if( _.arrayIs( o.delimeter ) )
-//   //   {
-//   //
-//   //     if( !o.delimeter.length )
-//   //     {
-//   //       return whatLeft( o.left ^ o.none );
-//   //     }
-//   //
-//   //     let c = closest( index ); debugger;
-//   //
-//   //     // delimeter = c.element;
-//   //     // index = c.value;
-//   //
-//   //     delimeter = c.entry;
-//   //     index = c.index;
-//   //
-//   //     // if( o.number === 1 && index === o.src.length && o.left )
-//   //     // index = -1;
-//   //
-//   //   }
-//   //   else
-//   //   {
-//   //
-//   //     delimeter = o.delimeter;
-//   //     // index = o.left ? o.src.indexOf( delimeter, index ) : o.src.lastIndexOf( delimeter, index );
-//   //     let c = closest( index ); debugger;
-//   //     index = c.index;
-//   //
-//   //     if( c.entry === undefined )
-//   //     break;
-//   //
-//   //     // if( o.left && !( index >= 0 ) && o.number > 1 )
-//   //     // {
-//   //     //   index = o.src.length;
-//   //     //   break;
-//   //     // }
-//   //
-//   //   }
-//   //
-//   //   /* */
-//   //
-//   //   if( !o.left && number > 1 && index === 0  )
-//   //   {
-//   //     return whatLeft( !o.none )
-//   //   }
-//   //
-//   //   if( !( index >= 0 ) && o.number === 1 )
-//   //   {
-//   //     return whatLeft( o.left ^ o.none )
-//   //   }
-//   //
-//   //   number -= 1;
-//   //
-//   // }
 //
 //   /* */
 //
@@ -366,7 +166,7 @@ _strIsolate.defaults =
 //
 //   /* */
 //
-//   function whatLeft( side )
+//   function everything( side )
 //   {
 //     return ( side ) ? [ o.src, '', '' ] : [ '', '', o.src ];
 //   }
@@ -375,47 +175,146 @@ _strIsolate.defaults =
 //
 //   function strLeft( index )
 //   {
-//     return _._strLeftSingle( o.src, o.delimeter, index, undefined );
-//     // return _.entityMin( o.delimeter, function( delimeter )
-//     // {
-//     //   debugger;
-//     //   // let i = o.src.indexOf( a, index );
-//     //   // if( i === -1 )
-//     //   // return o.src.length;
-//     //   // return i;
-//     // });
+//     return _.entityMin( o.delimeter, function( a )
+//     {
+//       let i = o.src.indexOf( a, index );
+//       if( i === -1 )
+//       return o.src.length;
+//       return i;
+//     });
 //   }
 //
 //   /* */
 //
 //   function strRight( index )
 //   {
-//     return _._strRightSingle( o.src, o.delimeter, undefined, index );
-//     // return _.entityMax( o.delimeter, function( a )
-//     // {
-//     //   debugger;
-//     //   return _._strRightSingle( o.src, o.delimeter[ delimeter ] );
-//     //   // let i = o.src.lastIndexOf( a, index );
-//     //   // return i;
-//     // });
+//     return _.entityMax( o.delimeter, function( a )
+//     {
+//       let i = o.src.lastIndexOf( a, index );
+//       return i;
+//     });
 //   }
 //
 // }
 //
-// _strIsolate.defaults =
+// strIsolate.defaults =
 // {
 //   src : null,
 //   delimeter : ' ',
 //   quoting : null,
 //   left : 1,
-//   number : 1,
+//   times : 1,
 //   none : 1,
 // }
+
+function strIsolate_body( o )
+{
+  let result = [];
+  let times = o.times;
+  let delimeter
+  let index = o.left ? 0 : o.src.length;
+  let more = o.left ? strLeft : strRight;
+  let delta = ( o.left ? +1 : -1 );
+
+  _.assertRoutineOptions( strIsolate_body, arguments );
+
+  /* */
+
+  if( _.arrayIs( o.delimeter ) && o.delimeter.length === 1 )
+  o.delimeter = o.delimeter[ 0 ];
+
+  /* */
+
+  while( times > 0 )
+  {
+    let found = more( index );
+
+    if( found.entry === undefined )
+    break;
+
+    times -= 1;
+
+    if( o.left )
+    index = found.index + delta;
+    else
+    index = found.index + found.entry.length + delta;
+
+    if( times === 0 )
+    {
+      result.push( o.src.substring( 0, found.index ) );
+      result.push( found.entry );
+      result.push( o.src.substring( found.index + found.entry.length ) );
+      return result;
+    }
+
+    /* */
+
+    if( o.left )
+    {
+      if( index >= o.src.length )
+      break;
+    }
+    else
+    {
+      if( index <= 0 )
+      break;
+    }
+
+  }
+
+  /* */
+
+  if( !result.length )
+  {
+
+    if( o.times === 0 )
+    return everything( !o.left );
+    else if( times === o.times )
+    return everything( o.left ^ o.none );
+    else
+    return everything( o.left );
+
+  }
+
+  return result;
+
+  /* */
+
+  function everything( side )
+  {
+    return ( side ) ? [ o.src, undefined, '' ] : [ '', undefined, o.src ];
+  }
+
+  /* */
+
+  function strLeft( index )
+  {
+    return _._strLeftSingle( o.src, o.delimeter, index, undefined );
+  }
+
+  /* */
+
+  function strRight( index )
+  {
+    return _._strRightSingle( o.src, o.delimeter, undefined, index );
+  }
+
+}
+
+strIsolate_body.defaults =
+{
+  src : null,
+  delimeter : ' ',
+  quoting : null,
+  left : 1,
+  times : 1,
+  none : 1,
+}
 
 //
 
 /**
- * Short-cut for _strIsolate function.
+ * Short-cut for strIsolate function.
  * Finds occurrence of delimeter( o.delimeter ) from begining of ( o.src ) and splits string in finded position by half.
  *
  * @param {wTools~toStrInhalfOptions} o - Contains data and options {@link wTools~toStrInhalfOptions}.
@@ -423,17 +322,17 @@ _strIsolate.defaults =
  *
  * @example
  * //returns [ 'sample', 'string' ]
- * _.strIsolateBeginOrNone( { src : 'sample, string', delimeter : [ ', ' ] } );
+ * _.strIsolateLeftOrNone( { src : 'sample, string', delimeter : [ ', ' ] } );
  *
  * @example
  * //returns [ 'sample', 'string' ]
- *_.strIsolateBeginOrNone( { src : 'sample string', delimeter : ' ' } )
+ *_.strIsolateLeftOrNone( { src : 'sample string', delimeter : ' ' } )
  *
  * @example
  * //returns [ 'sample string, name', 'string' ]
- * _.strIsolateBeginOrNone( 'sample string, name string', ',' )
+ * _.strIsolateLeftOrNone( 'sample string, name string', ',' )
  *
- * @method strIsolateBeginOrNone
+ * @method strIsolateLeftOrNone
  * @throws { Exception } Throw an exception if no argument provided.
  * @throws { Exception } Throw an exception if( o ) is not a Map.
  * @throws { Exception } Throw an exception if( o.src ) is not a String.
@@ -441,28 +340,44 @@ _strIsolate.defaults =
  *
  */
 
-function _strIsolateBeginOrNone_body( o )
+function strIsolateLeftOrNone_body( o )
 {
   o.left = 1;
   o.none = 1;
-  let result = _strIsolate( o );
+  let result = _.strIsolate.body( o );
   return result;
 }
 
-_strIsolateBeginOrNone_body.defaults =
+strIsolateLeftOrNone_body.defaults =
 {
   src : null,
   delimeter : ' ',
-  number : 1,
+  times : 1,
   quoting : null,
 }
 
-// let strIsolateBeginOrNone = _.routineFromPreAndBody( strIsolate_pre, _strIsolateBeginOrNone_body );
+//
+
+function strIsolateLeftOrAll_body( o )
+{
+  o.left = 1;
+  o.none = 0;
+  let result = _.strIsolate.body( o );
+  return result;
+}
+
+strIsolateLeftOrAll_body.defaults =
+{
+  src : null,
+  delimeter : ' ',
+  times : 1,
+  quoting : null,
+}
 
 //
 
 /**
- * Short-cut for _strIsolate function.
+ * Short-cut for strIsolate function.
  * Finds occurrence of delimeter( o.delimeter ) from end of ( o.src ) and splits string in finded position by half.
  *
  * @param {wTools~toStrInhalfOptions} o - Contains data and options {@link wTools~toStrInhalfOptions}.
@@ -470,13 +385,13 @@ _strIsolateBeginOrNone_body.defaults =
  *
  * @example
  * //returns [ 'sample', 'string' ]
- * _.strIsolateEndOrNone( { src : 'sample, string', delimeter : [ ',' ] } );
+ * _.strIsolateRightOrNone( { src : 'sample, string', delimeter : [ ',' ] } );
  *
  * @example
  * //returns [ 'sample', 'string' ]
- *_.strIsolateEndOrNone( { src : 'sample string', delimeter : ' ' } )
+ *_.strIsolateRightOrNone( { src : 'sample string', delimeter : ' ' } )
  *
- * @method strIsolateEndOrNone
+ * @method strIsolateRightOrNone
  * @throws { Exception } Throw an exception if no argument provided.
  * @throws { Exception } Throw an exception if( o ) is not a Map.
  * @throws { Exception } Throw an exception if( o.src ) is not a String.
@@ -484,81 +399,39 @@ _strIsolateBeginOrNone_body.defaults =
  *
  */
 
-function _strIsolateEndOrNone_body( o )
+function strIsolateRightOrNone_body( o )
 {
   o.left = 0;
   o.none = 1;
-  let result = _strIsolate( o );
+  let result = _.strIsolate.body( o );
   return result;
 }
 
-_strIsolateEndOrNone_body.defaults =
+strIsolateRightOrNone_body.defaults =
 {
   src : null,
   delimeter : ' ',
-  number : 1,
+  times : 1,
   quoting : null,
 }
 
-// let strIsolateEndOrNone = _.routineFromPreAndBody( strIsolate_pre, _strIsolateEndOrNone_body );
-
 //
 
-function _strIsolateEndOrAll_body( o )
+function strIsolateRightOrAll_body( o )
 {
   o.left = 0;
   o.none = 0;
-  let result = _strIsolate( o );
+  let result = _.strIsolate.body( o );
   return result;
-
-  // let i = o.src.lastIndexOf( o.delimeter );
-  //
-  // if( i === -1 )
-  // return [ '', '', o.src ];
-  //
-  // let result = [ o.src.substring( 0, i ), o.delimeter, o.src.substring( i+o.delimeter.length, o.src.length ) ];
-  //
-  // return result;
 }
 
-_strIsolateEndOrAll_body.defaults =
+strIsolateRightOrAll_body.defaults =
 {
   src : null,
   delimeter : ' ',
-  number : 1,
+  times : 1,
   quoting : null,
 }
-
-// let strIsolateEndOrAll = _.routineFromPreAndBody( strIsolate_pre, _strIsolateEndOrAll_body );
-
-//
-
-function _strIsolateBeginOrAll_body( o )
-{
-  o.left = 1;
-  o.none = 0;
-  let result = _strIsolate( o );
-  return result;
-
-  // let i = o.src.indexOf( o.delimeter );
-  //
-  // if( i === -1 )
-  // return [ o.src, '', '' ];
-  //
-  // let result = [ o.src.substring( 0, i ), o.delimeter, o.src.substring( i+o.delimeter.length, o.src.length ) ];
-  //
-  // return result;
-}
-
-_strIsolateBeginOrAll_body.defaults =
-{
-  src : null,
-  delimeter : ' ',
-  number : 1,
-  quoting : null,
-}
-
-// let strIsolateBeginOrAll = _.routineFromPreAndBody( strIsolate_pre, _strIsolateBeginOrAll_body );
 
 //
 
@@ -603,7 +476,7 @@ _strIsolateBeginOrAll_body.defaults =
   * @memberof wTools
   */
 
-function _strIsolateInsideOrNone( src, begin, end )
+function strIsolateInsideOrNoneSingle( src, begin, end )
 {
 
   _.assert( _.strIs( src ), 'Expects string {-src-}' );
@@ -638,19 +511,19 @@ function strIsolateInsideOrNone( src, begin, end )
   {
     let result = [];
     for( let s = 0 ; s < src.length ; s++ )
-    result[ s ] = _._strIsolateInsideOrNone( src[ s ], begin, end );
+    result[ s ] = _.strIsolateInsideOrNoneSingle( src[ s ], begin, end );
     return result;
   }
   else
   {
-    return _._strIsolateInsideOrNone( src, begin, end );
+    return _.strIsolateInsideOrNoneSingle( src, begin, end );
   }
 
 }
 
 //
 
-function _strIsolateInsideOrAll( src, begin, end )
+function strIsolateInsideOrAllSignle( src, begin, end )
 {
 
   _.assert( _.strIs( src ), 'Expects string {-src-}' );
@@ -688,12 +561,12 @@ function strIsolateInsideOrAll( src, begin, end )
   {
     let result = [];
     for( let s = 0 ; s < src.length ; s++ )
-    result[ s ] = _._strIsolateInsideOrAll( src[ s ], begin, end );
+    result[ s ] = _.strIsolateInsideOrAllSignle( src[ s ], begin, end );
     return result;
   }
   else
   {
-    return _._strIsolateInsideOrAll( src, begin, end );
+    return _.strIsolateInsideOrAllSignle( src, begin, end );
   }
 
 }
@@ -714,16 +587,15 @@ let Fields =
 let Routines =
 {
 
-  _strIsolate,
+  strIsolate : _.routineFromPreAndBody( strIsolate_pre, strIsolate_body ),
+  strIsolateLeftOrNone : _.routineFromPreAndBody( strIsolate_pre, strIsolateLeftOrNone_body ),
+  strIsolateLeftOrAll : _.routineFromPreAndBody( strIsolate_pre, strIsolateLeftOrAll_body ),
+  strIsolateRightOrNone : _.routineFromPreAndBody( strIsolate_pre, strIsolateRightOrNone_body ),
+  strIsolateRightOrAll : _.routineFromPreAndBody( strIsolate_pre, strIsolateRightOrAll_body ),
 
-  strIsolateBeginOrNone : _.routineFromPreAndBody( strIsolate_pre, _strIsolateBeginOrNone_body ),
-  strIsolateEndOrNone : _.routineFromPreAndBody( strIsolate_pre, _strIsolateEndOrNone_body ),
-  strIsolateEndOrAll : _.routineFromPreAndBody( strIsolate_pre, _strIsolateEndOrAll_body ),
-  strIsolateBeginOrAll : _.routineFromPreAndBody( strIsolate_pre, _strIsolateBeginOrAll_body ),
-
-  _strIsolateInsideOrNone,
+  strIsolateInsideOrNoneSingle,
   strIsolateInsideOrNone,
-  _strIsolateInsideOrAll,
+  strIsolateInsideOrAllSignle,
   strIsolateInsideOrAll,
 
 }
