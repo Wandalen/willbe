@@ -7,25 +7,30 @@
 - [Структура will-файла](WillFileComposition.ukr.md)
 - [Як користуватися інтерфейсом командного рядка `willbe`](HowToUseCommandLineInterfaceOfWill.ukr.md)
 - [Перший will-файл](FirstWillFile.ukr.md)
-- Побудова модуля
-- ...
-- [Will-файл експорту модуля](ExportedWillFile.md) -> Експортування модуля
-- Split will-file (Ред.)
-- Named will-file (Ред.)
+- [Перший will-модуль. Імпорт підмодуля](SubmodulesImporting.md)
+- [Управління підмодулями](SubmodulesImporting2.md)
+- [Створення модуля з використанням команди `.build`](ModuleCreationByBuild.ukr.md)
+- [Поняття критеріонів в `will`-файлах та їх використання](CriterionsInWillFile.ukr.md)
+- [Удосконалена техніка створення модулів з критеріонами](CriterionsInWillFile2.ukr.md)
+- 
+- [Експортування модуля](ExportedWillFile.ukr.md) 
+- [Розділені `will`-файли (Split will files)](SplitWillFile.ukr.md)
+- [Named will-file](NamedWillFile.md) (Ред.)
 - Resources (Ред.)
   - Kinds, sections of will-file
-  - Inheritability
-- How to list (Ред.)
-- How to use selector (Ред.)
-- How to import submodules (Ред.)
-- How to import remote submodules (Ред.)
-- How to use predefined steps (Ред.)
+  - [Inheritability](ResourceInheritability.ukr.md)
+- [How to list](HowToUseCommandLineInterfaceOfWill.ukr.md) (Ред.)
+- [How to use selector](SelectorsOfWillFile.md) (Ред.)
+- [How to import submodules]() (Ред.)
+- [How to import remote submodules]() (Ред.)
+- [How to use predefined steps](PrefinedSteps.ukr.md) (Ред.)
 - ... advanced ...
-- How to use selector with glob and assertion ( mid ) (Ред.)
-- How to use reflector and predefined reflectors ( mid ) (Ред.)
-- Exported section of out will-file ( mid ) (Ред.)
-- How to use command .with ( mid ) (Ред.)
-- How to use command .each ( mid ) (Ред.)
+- [How to use selector with glob and assertion](SelectorWithGlobAndAssertion.ukr.md) ( mid ) (Ред.)
+- [How to use reflector and predefined reflectors](ReflectorUsing.ukr.md) ( mid ) (Ред.)
+- [Exported section of out will-file](ExportedSectionOfWillFile.ukr.md) ( mid ) (Ред.)
+- [How to use command .with](UsingWithCommand.ukr.md) ( mid ) (Ред.)
+- [How to use command .each](UsingEachCommand.ukr.md) ( mid ) (Ред.)
+
 
 <a name="manuals"></a>
 ## Керівництво користувача
