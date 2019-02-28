@@ -1,0 +1,78 @@
+
+submodule :
+
+path :
+
+  proto : './proto'
+  temp : 'out'
+  in : '.'
+  out : 'out'
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : './out/release'
+    criterion :
+      debug : 0
+
+reflector :
+
+  reflect.proto :
+    inherit : predefined.*
+    criterion :
+      debug : [ 0,1 ]
+    filePath :
+      path::proto : path::out.*=1
+
+  concat.proto :
+    inherit : reflect.proto.*
+    filePath :
+      '*.test*' : 0
+
+step :
+
+  reflect.proto :
+    inherit : predefined.reflect
+    reflector : reflector::reflect.proto.*=1
+    criterion :
+      debug : [ 0,1 ]
+      raw : [ 0,1 ]
+
+  concat.proto :
+    inherit : predefined.concat.js
+    reflector : reflector::reflect.proto.*=1
+    criterion :
+      debug : [ 0,1 ]
+      raw : 0
+
+build :
+
+  debug.raw :
+    criterion :
+      default : 1
+      debug : 1
+      raw : 1
+    steps :
+      - step::reflect.proto.*=1
+
+  debug.compiled :
+    criterion :
+      debug : 1
+      raw : 0
+    steps :
+      - step::concat.proto.*=1
+
+  release.raw :
+    criterion :
+      debug : 0
+      raw : 1
+    steps :
+      - step::reflect.proto.*=1
+
+  release.compiled :
+    criterion :
+      debug : 0
+      raw : 0
+    steps :
+      - step::concat.proto.*=1
