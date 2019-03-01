@@ -3,15 +3,15 @@
 <a name="tutorials"></a>
 ## Туторіали
 - [Введення](Introduction.ukr.md)  
-- [Базові концепції та поняття ](Concepts.urk.md)
+- [Базові концепції та поняття](Concepts.urk.md)
 - [Структура will-файла](WillFileComposition.ukr.md)
 - [Як користуватися інтерфейсом командного рядка `willbe`](HowToUseCommandLineInterfaceOfWill.ukr.md)
 - [Перший will-файл](FirstWillFile.ukr.md)
 - [Перший will-модуль. Імпорт підмодуля](SubmodulesImporting.ukr.md)
-- [Управління підмодулями](SubmodulesImporting2.ukr.md)
-- [Побудова модуля з використанням команди `.build`](ModuleCreationByBuild.ukr.md)
+- [Оновлення та видалення підмодулів](SubmodulesImporting2.ukr.md)
+- [Використання команди `.build` для побудови модуля](ModuleCreationByBuild.ukr.md)
 - [Поняття критеріонів в `will`-файлах та їх використання](CriterionsInWillFile.ukr.md)
-- [Білд за замовчуванням](CriterionsInWillFile2.ukr.md)
+- [Побудова модуля (build) за замовчуванням](DefaultCriterionInWillFile.ukr.md)
 - [Експортування модуля](ExportedWillFile.ukr.md)
 -  
 - [Розділені `will`-файли (Split will files)](SplitWillFile.ukr.md)
