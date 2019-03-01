@@ -13,14 +13,16 @@
 - [Поняття критеріонів в `will`-файлах та їх використання](CriterionsInWillFile.ukr.md)
 - [Побудова модуля (build) за замовчуванням](DefaultCriterionInWillFile.ukr.md)
 - [Експортування модуля](ExportedWillFile.ukr.md)
--  
+- [Поняття селекторів в `will`-файлах](SelectorsTermInWillFile.ukr.md)
+- [Як використовувати селектори з ґлобами](HowToUseSelectorsWithGlob.ukr.md)
+- [Як використовувати ассерти в `will`-файлах](HowToUseAsserts.ukr.md)
 - [Розділені `will`-файли (Split will files)](SplitWillFile.ukr.md)
 - [Named will-file](NamedWillFile.md) (Ред.)
 - Resources (Ред.)
   - Kinds, sections of will-file
   - [Inheritability](ResourceInheritability.ukr.md)
 - [How to list](HowToUseCommandLineInterfaceOfWill.ukr.md) (Ред.)
-- [How to use selector](SelectorsOfWillFile.md) (Ред.)
+- 
 - [How to import submodules]() (Ред.)
 - [How to import remote submodules]() (Ред.)
 - [How to use predefined steps](PrefinedSteps.ukr.md) (Ред.)
