@@ -131,7 +131,7 @@ build :
 
 ```
 
-Видаліть зайві файли з директорії (`rm -Rf node_modules package-lock.json` в косолі або в графічному менеджері) та виконайте фразу `will .build`.
+Видаліть зайві файли з директорії (в косолі `rm -Rf node_modules package-lock.json` або в графічному менеджері) та виконайте фразу `will .build`.
 
 ```
 [user@user ~]$ will .build

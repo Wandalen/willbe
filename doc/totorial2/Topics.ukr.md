@@ -12,8 +12,8 @@
 - [Створення модуля з використанням команди `.build`](ModuleCreationByBuild.ukr.md)
 - [Поняття критеріонів в `will`-файлах та їх використання](CriterionsInWillFile.ukr.md)
 - [Удосконалена техніка створення модулів з критеріонами](CriterionsInWillFile2.ukr.md)
-- 
-- [Експортування модуля](ExportedWillFile.ukr.md) 
+- [Експортування модуля](ExportedWillFile.ukr.md)
+-  
 - [Розділені `will`-файли (Split will files)](SplitWillFile.ukr.md)
 - [Named will-file](NamedWillFile.md) (Ред.)
 - Resources (Ред.)
@@ -44,3 +44,4 @@
   - [Використання секцій `step` i `build` при створенні модуля](WillFileCreation.md#step-and-build)
   - [Експорт модуля](WillFileCreation.md#module-export)
   - [Іменований підмодуль](WillFileCreation.md#named-module)
+- [Критеріони (criterion) в `will`-файлах](WillFileCriterions.urk.md)
