@@ -73,4 +73,4 @@ Request ".submodules.clean"
 - Для чистого встановлення підмодулів бажано попередньо [очистити директорію `.module`](#submodules-cleaning).
 
 [Наступний туторіал](CriterionsInWillFile.ukr.md)  
-[Повернутись до меню](Topics.ukr.md)
+[Повернутись до змісту](Topics.ukr.md)
