@@ -1054,7 +1054,7 @@ function _willFilesFindMaybe( o )
     return end( filePaths );
   }
 
-  debugger;
+  // debugger;
   return null;
 
   /* */
@@ -1794,7 +1794,7 @@ function remoteFormAct()
   let submodulesDir = module.supermodule.submodulesCloneDirGet();
   let localPath = fileProvider2.pathIsolateGlobalAndLocal( module.filePath )[ 1 ];
 
-  debugger;
+  // debugger;
   module.remotePath = module.filePath;
   module.clonePath = path.resolve( submodulesDir, module.alias );
   module.dirPath = path.resolve( module.clonePath, localPath );
@@ -1805,7 +1805,7 @@ function remoteFormAct()
   // _.assert( will.moduleMap[ module.filePath ] === module );
   // _.assert( will.moduleMap[ module.remotePath ] === module ); // yyy
   // _.sure( will.moduleMap[ module.filePath ] === undefined, () => 'Module at ' + _.strQuote( module.dirPath ) + ' already exists' ); // yyy
-   // will.moduleMap[ module.dirPath ] = module;
+  // will.moduleMap[ module.dirPath ] = module;
 
   return module;
 }

@@ -714,7 +714,7 @@ function dir( test )
       [
         '/foo/bar/baz',
         '/aa',
-        '/aa',
+        '/aa/bb',
         '/',
         '/..'
       ]
@@ -753,7 +753,9 @@ function dir( test )
       test.shouldThrowError( () => _.paths.dir( c.src ) )
     }
     else
-    test.identical( _.paths.dir( c.src ), c.expected );
+    {
+      test.identical( _.paths.dir( c.src ), c.expected );
+    }
   }
 
 }
@@ -1378,26 +1380,26 @@ var Self =
   tests :
   {
 
-    refine : refine,
-    normalize : normalize,
+    refine,
+    normalize,
 
-    dot : dot,
-    undot : undot,
+    dot,
+    undot,
 
-    join : join,
-    reroot : reroot,
-    resolve : resolve,
+    join,
+    reroot,
+    resolve,
 
-    dir : dir,
-    ext : ext,
-    prefixGet : prefixGet,
-    name : name,
-    withoutExt : withoutExt,
-    changeExt : changeExt,
+    dir,
+    ext,
+    prefixGet,
+    name,
+    withoutExt,
+    changeExt,
 
-    relative : relative,
+    relative,
 
-    common : common,
+    common,
 
   },
 }

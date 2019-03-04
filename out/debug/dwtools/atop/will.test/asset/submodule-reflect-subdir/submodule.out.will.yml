@@ -29,8 +29,8 @@ reflector:
   exported.export:
     src:
       filePath:
-        proto: true
-      prefixPath: .
+        .: true
+      prefixPath: proto
     criterion:
       default: 1
       export: 1
