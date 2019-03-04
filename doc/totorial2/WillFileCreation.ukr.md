@@ -1,14 +1,18 @@
 # Створення will-модуля
 
-Описані процедури створення will-модулів різного призначення
+В цьому керівництві описано процедуру створення will-файла та модулів різного призначення
 
 <a name="topics"></a>
+
 Зміст   
 - [Початок роботи](#start)
 - [Базова конфігурація](#basic-configuration)
+- [Робота з підмодулями](#submodules-importing)
+- [Використання секцій `step` i `build` при створенні модуля](#step-and-build)
 - [Експорт модуля](#module-export)
 - [Іменований підмодуль](#named-module)
-- [Імпорт підмодуля](#module-import)
+
+> Команди в прикладах виконуються з кореневої директорії `will`- файла (`.will.yml`)
 
 <a name="start"></a>
 ### Початок роботи
@@ -41,23 +45,26 @@ about :
         - nodejs >= 6.0.0
 ```
 
-_Починати роботу з заповнення секції `about` є доброю практикою, адже, ця інформація дозволяє іншим користувачам легко отримати загальні дані про модуль, а також адміністувати її в довготривалій перспективі._  
+_Починати роботу з заповнення секції `about` є доброю практикою, адже, ця інформація дозволяє іншим користувачам легко отримати загальні дані про модуль, а також адміністувати його в довготривалій перспективі._  
 
+<a name="submodules-importing"></a>
+### Базова конфігурація
 Для створення робочого модуля в `.will.yml` потрібно додати секції, що описують файли модуля.  
-Секція `submodule` дозволяє використовувати готові підмодулі полегшуючи компонування системи.
-```yaml
+[Секція `submodule`](WillFileStructure.ukr.md#submodule) дозволяє використовувати готові підмодулі полегшуючи компонування системи.
 
+```yaml
 submodule :
 
-  Tools :
-    description : "Downloading submodules from GitHub"
-    path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-    criterion :
-      default : 1
-  #inherit : some inherit parameter
+  WTools :
+       path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+       description : 'Import willbe tools'
+       #criterion :
+       #    debug : 1
+       #inherit : some inherit parameter
 
 ```
-Приклад вище іллюструє використання всіх полів секції. Щоб використовувати таку форму, вказуйте назву процедури, в данному випадку, назву підмодуля (Tools). Критерії (criterion) та наслідування (inherit, в прикладі закоментовано) розглянуті окремо. Також, якщо немає додаткових умов, цю секцію можливо записати в скороченій формі - назву підмодуля і шлях до нього:
+Приклад вище іллюструє використання повної форми - запису всіх полів секції. Щоб використовувати її, вказуйте назву процедури, в данному випадку, назву підмодуля (Tools). Критеріони (criterion) та наслідування (inherit, в прикладі закоментовано) розглянуті окремо. Також, якщо немає додаткових умов, шлях можна записати в скороченій формі - назву підмодуля і шлях до нього:
+
 ```yaml
 submodule :
 
@@ -67,7 +74,7 @@ submodule :
 
 Об'єднавши попередні секції в `.will.yml` вам стануть доступні операції з підмодулями.
 <details>
-  <summary><u>Файл `.will.yml` та лістинг `will .submodules.download`</u></summary>
+  <summary><u>Файл `.will.yml` та лістинги команд</u></summary>
 
 ```yaml
 
@@ -82,12 +89,26 @@ about :
 
 submodule :
 
-    Tools :
-      description : "Downloading submodules from GitHub"
-      path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-      criterion :
-        default : 1
-    #inherit : some inherited parameter
+    WTools :
+       path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+       description : 'Import willbe tools'
+       #criterion :
+       #    debug : 1
+       #inherit : some inherited parameter
+
+```
+<p> </p>
+
+```
+[user@user ~]$ will .submodules.list
+...
+submodule::WTools
+  path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master 
+  description : Downloading submodules from GitHub 
+  criterion : 
+    default : 1
+  isDownloaded : false
+  Exported builds : []
 
 ```
 
@@ -95,63 +116,210 @@ submodule :
 
 ```
 [user@user ~]$ will .submodules.download
-Request ".submodules.download"
-   . Read : /path_to_file/.will.yml
- . Read 1 will-files in 0.068s
- ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
-   . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
+...
+   . Read : /path_to_file/.module/WTools/out/wTools.out.will.yml
    + module::Tools was downloaded in 12.360s
  + 1/1 submodule(s) of module::first were downloaded in 12.365s
 
 ```
-
-</details>
-
 <p> </p>
-Секція `path` має таку ж структуру, як і `submodule`.
-
-```yaml
-
-path :
-
-  in :
-    description : "Input files"
-    path : '.'
-    criterion :
-       debug : 1
-   #inherit : some inherited parameter
 
 ```
-
-<details>
-  <summary><u>Скорочена форма запису</u></summary>
-
-```yaml
-
-path :
-
-  in : '.'
+[user@user ~]$ will .submodules.clean
+...
+ - Clean deleted 252 file(s) in 0.907s
 
 ```
 
 </details>
 
-<p> </p>
-Розглянемо [`step`](WillFileStructure.ukr.md#step), де описуються процедури користувача для створення модулю.  
+Використання секції ефективне, якщо вас влаштовують готові підмодулі, проте для точного налаштування системи цього недостатньо.
+
+
+<a name="step-and-build"></a>
+### Використання секцій `step` i `build` при створенні модуля
+[Секція `step`](WillFileStructure.ukr.md#step) описує визначені користувачем дії, які можуть використовуватись пакетом для створення модульної системи. `Step` складається з чотирьох полів: _description, criterion, opts i inherit._  Особливим є поле _opts_ яке дає змогу використовувати широкий набір інструментів як з пакету `willbe`, так і зовнішніх програм, наприклад, використовувати командну оболонку системи або створювати експорт модуля.    
 Приклад секції `step`:
+
 ```yaml
 step :
 
-  npm.install :
-    criterion :
-        debug : 1
+  echoHello :
     currentPath : '.'
-    shell : npm install
+    shell : echo "Hello World"
+    #inherit : some inherited parameter
+    #criterion :
+    #    debug : 1
+
+```
+Секція виконує команду _'echo'_, тобто, вивід рядка в консолі системи.
+Секція `step` дозволяє реалізувати ідеї користувача по створенню модульної системи, але самостійно кроки з секції реалізувати неможливо, для цього будуються сценарії [секції `build`](WillFileStructure.ukr.md#build). Сценарієм вважається умови і послідовності виконання дій пакетом `willbe` для створення модуля.  
+Приклад секції `build` з усіма полями:
+
+```yaml
+build :
+
+  echo:
+    steps :
+       - echoHello
+    #description : "Some description"
+    #criterion :
+    #   debug : 1
+    #inherit : some inherited parameter
+  
+```
+
+<details>
+  <summary><u>Файл `.will.yml` та лістинги команд</u></summary>
+
+```yaml
+
+about :
+    name : buildWithStep
+
+step :
+
+  echoHello :
+    currentPath : '.'
+    shell : echo "Hello World"
+    #inherit : some inherited parameter
+    #criterion :
+    #    debug : 1
+
+build :
+
+  echo:
+    steps :
+       - echoHello
+    #description : "Some description"
+    #criterion :
+    #   debug : 1
+    #inherit : some inherited parameter
+
+```
+<p> </p>
+
+
+</details>
+
+Для запуску сценарію вводимо фразу `will .build [назва сценарію]`. Якщо звернутись до прикладу, то фраза матиме вигляд `will .build echo`. 
+
+```
+[user@user ~]$ will .build echo
+...
+  Building echo
+ > echo "Hello World"
+Hello World
+  Built echo in 0.088s
+```
+
+Виконання побудови модуля за замовчуванням з використанням фрази `will .build` розглядається в керівництві користувача про критеріони.
+
+### <a name="#module-export"></a> Експорт модуля
+Особливий вид побудови модульної системи результатом виконання якої є згенерований `*.out.will`-файл називається експортуванням модуля. Вихідний `*.out.will` містить повну інформацію про створений модуль і експортовані файли та використовується іншими модулями в процесі імпорту.  
+Спрощена структура модуля для експорту має вигляд:
+
+```
+.
+├── fileToExport
+├── .will.yml
+```
+Тому для операції експорту модуля необхідні файли для експорту. Ми використовуємо порожній файл з назвою _'fileToExport'_.  
+[Секція `path`](WillFileStructure.ukr.md#path) описує карту шляхів модуля для швидкого орієнтування в його структурі:
+
+``` yaml
+about :
+    name : export
+    description : "Export module"
+    version : 0.0.1
+
+path :
+  in : '.'
+  out : 
+    path : 'out'
+    #description
+    #inherit
+    #criterion
+  fileToExport : 'fileToExport'
 
 ```
 
-Секція `Step` складається з чотирьох полів: _description, criterion, opts i inherit._  
-Відмінністю від попередніх є можливість опціонально (поле _opts_) використовувати широкий набір інструментів як з `will`-файлу, так і зовнішніх програм. Приклад показує, як поле _shell_, тобто, інтерфейс командного рядка, використовує команду _'npm install'_.  
-З допомогою секції `step` легко реалізувати складні сценарії користувача для створення модульної системи.
+`in` - шлях, відносно якого розташовуються інші шляхи модуля. Якщо `in` не вказано, то за замовчуванням він починається в кореневій директорії `.will.yml`.
+`out` - відносний шлях від `in`, де буде поміщений `*.out.will`-модуль. `out` має вказувати на шлях відмінний від шляху `in` `will`-файла.   
+`fileToExport` - шлях до файлів експорту вказаний користувачем відносно директорії `in`.
 
-[Повернутись до меню](Topics.ukr.md)
+Створимо процедуру експорту `export.single` в секції `step` використовуючи вбудовану функцію `predefined.export`. Використання вбудованих функцій описано в відповідному керівництві користувача.
+
+``` yaml
+step  :
+    export.single :
+        inherit : predefined.export
+        tar : 0
+        export : path::fileToExport
+        
+```
+
+Процедура має поля:  
+`inherit` - наслідування вбудованого сценарію експортування `predefined.export`.  
+`tar` - архівування експортованих файлів ( 1 - ввімкнене / 0 - вимкнене архівування).
+`export` - шлях до файлу або директорії з файлами для експорту. Використовуйте синтаксис `path::[export.path]` для правильного функціонування пакета.
+
+Сконфігуруємо `build` для експорту:
+``` yaml
+build :
+    export :
+        criterion :
+            export : 1
+        steps :
+            - export.single
+```
+Сценарій `export` має критерій: `export : 1`, що свідчить про використання функції експорту модуля.
+
+<details>
+  <summary><u>Повний лістинг файла `.will.yml` для експорту модуля</u></summary>
+
+```yaml
+
+about :
+    name : export
+    description : "Export module"
+    version : 0.0.1
+
+path :
+  in : '.'
+  out : 
+    path : 'out'
+    #description
+    #inherit
+    #criterion
+  fileToExport : 'fileToExport'
+
+step  :
+  export.single :
+      inherit : predefined.export
+      export : path::fileToExport
+      tar : 0
+
+build :
+  export :
+      criterion :
+         export : 1
+      steps :
+         - export.single
+```
+</details>
+
+Введіть в консолі `will .export`:
+
+```
+...
+ Exporting export
+   + Write out will-file /path_to_file/out/third.out.will.yml
+   + Exported export with 1 files in 0.705s
+  Exported export in 0.752s
+  
+```
+
+Після виконання команди `willbe` згенерує `export.out.will.yml` за назвою модуля в `about` та помістить файл в директорію `out`.
+
+[Повернутись до змісту](Topics.ukr.md)

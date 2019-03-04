@@ -3,24 +3,26 @@
 <a name="tutorials"></a>
 ## Туторіали
 - [Введення](Introduction.ukr.md)  
-- [Базові концепції та поняття ](Concepts.urk.md)
+- [Базові концепції та поняття](Concepts.urk.md)
 - [Структура will-файла](WillFileComposition.ukr.md)
 - [Як користуватися інтерфейсом командного рядка `willbe`](HowToUseCommandLineInterfaceOfWill.ukr.md)
 - [Перший will-файл](FirstWillFile.ukr.md)
-- [Перший will-модуль. Імпорт підмодуля](SubmodulesImporting.md)
-- [Управління підмодулями](SubmodulesImporting2.md)
-- [Створення модуля з використанням команди `.build`](ModuleCreationByBuild.ukr.md)
+- [Перший will-модуль. Імпорт підмодуля](SubmodulesImporting.ukr.md)
+- [Оновлення та видалення підмодулів](SubmodulesImporting2.ukr.md)
+- [Використання команди `.build` для побудови модуля](ModuleCreationByBuild.ukr.md)
 - [Поняття критеріонів в `will`-файлах та їх використання](CriterionsInWillFile.ukr.md)
-- [Удосконалена техніка створення модулів з критеріонами](CriterionsInWillFile2.ukr.md)
-- 
-- [Експортування модуля](ExportedWillFile.ukr.md) 
+- [Побудова модуля (build) за замовчуванням](DefaultCriterionInWillFile.ukr.md)
+- [Експортування модуля](ExportedWillFile.ukr.md)
+- [Поняття селекторів в `will`-файлах](SelectorsTermInWillFile.ukr.md)
+- [Як використовувати селектори з ґлобами](HowToUseSelectorsWithGlob.ukr.md)
+- [Як використовувати ассерти в `will`-файлах](HowToUseAsserts.ukr.md)
 - [Розділені `will`-файли (Split will files)](SplitWillFile.ukr.md)
 - [Named will-file](NamedWillFile.md) (Ред.)
 - Resources (Ред.)
   - Kinds, sections of will-file
   - [Inheritability](ResourceInheritability.ukr.md)
 - [How to list](HowToUseCommandLineInterfaceOfWill.ukr.md) (Ред.)
-- [How to use selector](SelectorsOfWillFile.md) (Ред.)
+- 
 - [How to import submodules]() (Ред.)
 - [How to import remote submodules]() (Ред.)
 - [How to use predefined steps](PrefinedSteps.ukr.md) (Ред.)
@@ -38,7 +40,10 @@
 - [Структура will-файла](WillFileStructure.ukr.md)
 - [Інтерфейс командного рядка `willbe`](CommandLineInterfaceOfWill.ukr.md)
 - [Створення will-модуля:](WillFileCreation.md)
-  - Базова конфігурація
-  - Експорт модуля
-  - Іменований підмодуль
-  - Імпорт підмодуля
+  - [Початок роботи](WillFileCreation.md#start)
+  - [Базова конфігурація](WillFileCreation.md#basic-configuration)
+  - [Робота з підмодулями](WillFileCreation.md#submodules-importing)
+  - [Використання секцій `step` i `build` при створенні модуля](WillFileCreation.md#step-and-build)
+  - [Експорт модуля](WillFileCreation.md#module-export)
+  - [Іменований підмодуль](WillFileCreation.md#named-module)
+- [Критеріони (criterion) в `will`-файлах](WillFileCriterions.urk.md)
