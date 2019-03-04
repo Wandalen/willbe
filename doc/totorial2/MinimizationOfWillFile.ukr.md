@@ -104,7 +104,7 @@ step  :
 ```yaml
 build :
 
-  delete. :
+  delete :
       criterion :
           debug : [ 0,1 ]
       steps :
@@ -112,4 +112,31 @@ build :
 
 ```
 
-Спробуємо виконати `will build debug
+Виконаємо `will .build delete`:
+
+```
+...
+Please specify exactly one build scenario, none satisfies passed arguments 
+
+```
+
+Перевіримо, які у нас є сценарії, оскільки `willbe` не знайшов ні одного:
+
+```
+will .builds.list`
+...
+build::delete.
+  criterion : 
+    debug : 0 
+  steps : 
+    delete.*
+
+build::delete.debug
+  criterion : 
+    debug : 1 
+  steps : 
+    delete.*
+ 
+```
+
+`Willbe` на основі критеріона `debug : [ 0,1 ]` створив два сценарії: `delete.` з критеріоном `debug : 0` та `delete.debug` з критеріоном `debug : 1`, тобто при значенні `debug : 0` пакет до назви процедури додає знак '.', а якщо встановлено '1', то використовується приставка _'.[criterion_name]'_.
