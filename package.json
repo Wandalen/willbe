@@ -1,7 +1,7 @@
 {
   "name": "willbe",
-  "version": "0.3.179",
-  "description": "Tool to manage modules of modular systems",
+  "version": "0.3.182",
+  "description": "Utility to manage modules of complex modular systems",
   "author": "Kostiantyn Wandalen <wanalen@willbe.so>",
   "license": "MIT",
   "main": "proto/dwtools/atop/will/MainTop.s",

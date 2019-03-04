@@ -1,7 +1,7 @@
 format: willfile-1.0.0
 about:
   name: willbe
-  description: Tool to manage modules of modular systems
+  description: Utility to manage modules of complex modular systems
   version: 0.3.166
   enabled: 1
   interpreters:
@@ -164,17 +164,6 @@ path:
       - proto/dwtools/atop/will.test/asset/concat/proto/File1.release.js
       - proto/dwtools/atop/will.test/asset/concat/proto/File2.debug.js
       - proto/dwtools/atop/will.test/asset/concat/proto/File2.release.js
-      - proto/dwtools/atop/will.test/asset/experiment
-      - proto/dwtools/atop/will.test/asset/experiment/final.im.will.yml
-      - proto/dwtools/atop/will.test/asset/experiment/out
-      - proto/dwtools/atop/will.test/asset/experiment/out/release
-      - proto/dwtools/atop/will.test/asset/experiment/out/release/File.js
-      - >-
-        proto/dwtools/atop/will.test/asset/experiment/out/release/File.release.js
-      - proto/dwtools/atop/will.test/asset/experiment/proto
-      - proto/dwtools/atop/will.test/asset/experiment/proto/File.debug.js
-      - proto/dwtools/atop/will.test/asset/experiment/proto/File.js
-      - proto/dwtools/atop/will.test/asset/experiment/proto/File.release.js
       - proto/dwtools/atop/will.test/asset/import-in
       - proto/dwtools/atop/will.test/asset/import-in/super.ex.will.yml
       - proto/dwtools/atop/will.test/asset/import-in/super.im.will.yml
@@ -231,139 +220,77 @@ path:
         proto/dwtools/atop/will.test/asset/multiple-exports-exported/super.ex.will.yml
       - >-
         proto/dwtools/atop/will.test/asset/multiple-exports-exported/super.im.will.yml
+      - proto/dwtools/atop/will.test/asset/multiple-exports-exported/out
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports-exported/out/submodule.debug.out.tgs
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports-exported/out/submodule.out.tgs
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports-exported/out/submodule.out.will.yml
+      - proto/dwtools/atop/will.test/asset/multiple-exports-exported/out/debug
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports-exported/out/debug/File.debug.js
+      - proto/dwtools/atop/will.test/asset/multiple-exports-exported/out/release
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports-exported/out/release/File.release.js
       - proto/dwtools/atop/will.test/asset/multiple-exports-exported/proto
       - >-
         proto/dwtools/atop/will.test/asset/multiple-exports-exported/proto/File.debug.js
       - >-
         proto/dwtools/atop/will.test/asset/multiple-exports-exported/proto/File.release.js
+      - proto/dwtools/atop/will.test/asset/multiple-exports-exported/super.out
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports-exported/super.out/super.debug.out.tgs
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports-exported/super.out/super.out.tgs
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports-exported/super.out/super.out.will.yml
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports-exported/super.out/debug
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports-exported/super.out/debug/File.debug.js
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports-exported/super.out/release
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports-exported/super.out/release/File.release.js
+      - proto/dwtools/atop/will.test/asset/scaffold
+      - proto/dwtools/atop/will.test/asset/scaffold/final.im.will.yml
+      - proto/dwtools/atop/will.test/asset/scaffold/out
+      - proto/dwtools/atop/will.test/asset/scaffold/out/debug
+      - proto/dwtools/atop/will.test/asset/scaffold/out/debug/File.debug.js
+      - proto/dwtools/atop/will.test/asset/scaffold/out/debug/File.js
+      - proto/dwtools/atop/will.test/asset/scaffold/out/debug/File.release.js
+      - proto/dwtools/atop/will.test/asset/scaffold/out/release
+      - proto/dwtools/atop/will.test/asset/scaffold/out/release/File.js
+      - proto/dwtools/atop/will.test/asset/scaffold/out/release/File.release.js
+      - proto/dwtools/atop/will.test/asset/scaffold/proto
+      - proto/dwtools/atop/will.test/asset/scaffold/proto/File.debug.js
+      - proto/dwtools/atop/will.test/asset/scaffold/proto/File.js
+      - proto/dwtools/atop/will.test/asset/scaffold/proto/File.release.js
       - proto/dwtools/atop/will.test/asset/simple
       - proto/dwtools/atop/will.test/asset/simple/proto
       - proto/dwtools/atop/will.test/asset/simple/proto/File.js
       - proto/dwtools/atop/will.test/asset/single
       - proto/dwtools/atop/will.test/asset/single/proto
       - proto/dwtools/atop/will.test/asset/single/proto/Single.s
+      - proto/dwtools/atop/will.test/asset/single space
+      - proto/dwtools/atop/will.test/asset/single space/proto
+      - proto/dwtools/atop/will.test/asset/single space/proto/Single.s
       - proto/dwtools/atop/will.test/asset/single with space
       - proto/dwtools/atop/will.test/asset/single with space/proto
       - proto/dwtools/atop/will.test/asset/single with space/proto/Single.s
+      - proto/dwtools/atop/will.test/asset/single-out-to-root
+      - proto/dwtools/atop/will.test/asset/single-out-to-root/proto
+      - proto/dwtools/atop/will.test/asset/single-out-to-root/proto/Single.s
+      - proto/dwtools/atop/will.test/asset/single-reflect-repositoty
       - proto/dwtools/atop/will.test/asset/step-shell
       - proto/dwtools/atop/will.test/asset/submodule-download
-      - proto/dwtools/atop/will.test/asset/submodule-download/out
-      - proto/dwtools/atop/will.test/asset/submodule-download/out/debug
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/Simple.js
-      - proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/Tools.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/Layer0.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/Layer1.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/Layer2.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/aPredefined.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/aSetup.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/bPremature.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fBool.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fChecker.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fEntity.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fErr.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fLong.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fMap.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fNumber.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fRange.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fRegexp.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fRoutine.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fString.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fTime.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/iArrayDescriptor.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/iCompose.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/iField.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/cErr.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gBool.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gEntity.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gLong.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gMap.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gNumber.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gRange.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gRegexp.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gRoutine.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gString.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gTime.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/rFundamental.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/zSetup.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1.test
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1.test/Array.test.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1.test/Diagnostics.test.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1.test/Entity.test.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1.test/Map.test.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1.test/Regexp.test.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1.test/Routine.test.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1.test/String.test.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1.test/Typing.test.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l2
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l2/IncludeTools.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l2/ModulesRegistry.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l2/NameTools.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l2/StringTools.s
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l2.test
-      - >-
-        proto/dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l2.test/StringTools.test.s
       - proto/dwtools/atop/will.test/asset/submodule-download/proto
       - proto/dwtools/atop/will.test/asset/submodule-download/proto/Simple.js
       - proto/dwtools/atop/will.test/asset/submodule-get-path
       - proto/dwtools/atop/will.test/asset/submodule-reflect-subdir
+      - >-
+        proto/dwtools/atop/will.test/asset/submodule-reflect-subdir/submodule.out.will.yml
       - proto/dwtools/atop/will.test/asset/submodule-reflect-subdir/module
       - >-
         proto/dwtools/atop/will.test/asset/submodule-reflect-subdir/module/submodule.will.yml
@@ -383,6 +310,43 @@ path:
       - proto/dwtools/atop/will.test/asset/submodules-broken-2/proto
       - >-
         proto/dwtools/atop/will.test/asset/submodules-broken-2/proto/WithSubmodules.s
+      - proto/dwtools/atop/will.test/asset/submodules-reflect-subdir
+      - proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out
+      - proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/WithSubmodules.s
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/Tools.s
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l3
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l3/Path.s
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l3.test
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l3.test/Path.test.html
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l3.test/Path.test.s
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l4
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l4/Paths.s
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l4.test
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l4.test/Paths.test.s
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l7
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l7/Glob.s
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l7.test
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l7.test/Glob.test.s
     criterion:
       default: 1
       debug: 1
@@ -590,16 +554,6 @@ reflector:
         dwtools/atop/will.test/asset/concat/proto/File1.release.js: true
         dwtools/atop/will.test/asset/concat/proto/File2.debug.js: true
         dwtools/atop/will.test/asset/concat/proto/File2.release.js: true
-        dwtools/atop/will.test/asset/experiment: true
-        dwtools/atop/will.test/asset/experiment/final.im.will.yml: true
-        dwtools/atop/will.test/asset/experiment/out: true
-        dwtools/atop/will.test/asset/experiment/out/release: true
-        dwtools/atop/will.test/asset/experiment/out/release/File.js: true
-        dwtools/atop/will.test/asset/experiment/out/release/File.release.js: true
-        dwtools/atop/will.test/asset/experiment/proto: true
-        dwtools/atop/will.test/asset/experiment/proto/File.debug.js: true
-        dwtools/atop/will.test/asset/experiment/proto/File.js: true
-        dwtools/atop/will.test/asset/experiment/proto/File.release.js: true
         dwtools/atop/will.test/asset/import-in: true
         dwtools/atop/will.test/asset/import-in/super.ex.will.yml: true
         dwtools/atop/will.test/asset/import-in/super.im.will.yml: true
@@ -641,82 +595,62 @@ reflector:
         dwtools/atop/will.test/asset/multiple-exports-exported: true
         dwtools/atop/will.test/asset/multiple-exports-exported/super.ex.will.yml: true
         dwtools/atop/will.test/asset/multiple-exports-exported/super.im.will.yml: true
+        dwtools/atop/will.test/asset/multiple-exports-exported/out: true
+        dwtools/atop/will.test/asset/multiple-exports-exported/out/submodule.debug.out.tgs: true
+        dwtools/atop/will.test/asset/multiple-exports-exported/out/submodule.out.tgs: true
+        dwtools/atop/will.test/asset/multiple-exports-exported/out/submodule.out.will.yml: true
+        dwtools/atop/will.test/asset/multiple-exports-exported/out/debug: true
+        dwtools/atop/will.test/asset/multiple-exports-exported/out/debug/File.debug.js: true
+        dwtools/atop/will.test/asset/multiple-exports-exported/out/release: true
+        dwtools/atop/will.test/asset/multiple-exports-exported/out/release/File.release.js: true
         dwtools/atop/will.test/asset/multiple-exports-exported/proto: true
         dwtools/atop/will.test/asset/multiple-exports-exported/proto/File.debug.js: true
         dwtools/atop/will.test/asset/multiple-exports-exported/proto/File.release.js: true
+        dwtools/atop/will.test/asset/multiple-exports-exported/super.out: true
+        dwtools/atop/will.test/asset/multiple-exports-exported/super.out/super.debug.out.tgs: true
+        dwtools/atop/will.test/asset/multiple-exports-exported/super.out/super.out.tgs: true
+        dwtools/atop/will.test/asset/multiple-exports-exported/super.out/super.out.will.yml: true
+        dwtools/atop/will.test/asset/multiple-exports-exported/super.out/debug: true
+        dwtools/atop/will.test/asset/multiple-exports-exported/super.out/debug/File.debug.js: true
+        dwtools/atop/will.test/asset/multiple-exports-exported/super.out/release: true
+        dwtools/atop/will.test/asset/multiple-exports-exported/super.out/release/File.release.js: true
+        dwtools/atop/will.test/asset/scaffold: true
+        dwtools/atop/will.test/asset/scaffold/final.im.will.yml: true
+        dwtools/atop/will.test/asset/scaffold/out: true
+        dwtools/atop/will.test/asset/scaffold/out/debug: true
+        dwtools/atop/will.test/asset/scaffold/out/debug/File.debug.js: true
+        dwtools/atop/will.test/asset/scaffold/out/debug/File.js: true
+        dwtools/atop/will.test/asset/scaffold/out/debug/File.release.js: true
+        dwtools/atop/will.test/asset/scaffold/out/release: true
+        dwtools/atop/will.test/asset/scaffold/out/release/File.js: true
+        dwtools/atop/will.test/asset/scaffold/out/release/File.release.js: true
+        dwtools/atop/will.test/asset/scaffold/proto: true
+        dwtools/atop/will.test/asset/scaffold/proto/File.debug.js: true
+        dwtools/atop/will.test/asset/scaffold/proto/File.js: true
+        dwtools/atop/will.test/asset/scaffold/proto/File.release.js: true
         dwtools/atop/will.test/asset/simple: true
         dwtools/atop/will.test/asset/simple/proto: true
         dwtools/atop/will.test/asset/simple/proto/File.js: true
         dwtools/atop/will.test/asset/single: true
         dwtools/atop/will.test/asset/single/proto: true
         dwtools/atop/will.test/asset/single/proto/Single.s: true
+        dwtools/atop/will.test/asset/single space: true
+        dwtools/atop/will.test/asset/single space/proto: true
+        dwtools/atop/will.test/asset/single space/proto/Single.s: true
         dwtools/atop/will.test/asset/single with space: true
         dwtools/atop/will.test/asset/single with space/proto: true
         dwtools/atop/will.test/asset/single with space/proto/Single.s: true
+        dwtools/atop/will.test/asset/single-out-to-root: true
+        dwtools/atop/will.test/asset/single-out-to-root/proto: true
+        dwtools/atop/will.test/asset/single-out-to-root/proto/Single.s: true
+        dwtools/atop/will.test/asset/single-reflect-repositoty: true
         dwtools/atop/will.test/asset/step-shell: true
         dwtools/atop/will.test/asset/submodule-download: true
-        dwtools/atop/will.test/asset/submodule-download/out: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/Simple.js: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/Tools.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/Layer0.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/Layer1.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/Layer2.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/aPredefined.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/aSetup.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/bPremature.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fBool.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fChecker.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fEntity.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fErr.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fLong.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fMap.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fNumber.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fRange.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fRegexp.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fRoutine.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fString.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/fTime.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/iArrayDescriptor.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/iCompose.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l0/iField.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/cErr.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gBool.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gEntity.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gLong.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gMap.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gNumber.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gRange.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gRegexp.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gRoutine.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gString.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/gTime.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/rFundamental.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1/zSetup.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1.test: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1.test/Array.test.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1.test/Diagnostics.test.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1.test/Entity.test.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1.test/Map.test.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1.test/Regexp.test.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1.test/Routine.test.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1.test/String.test.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l1.test/Typing.test.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l2: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l2/IncludeTools.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l2/ModulesRegistry.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l2/NameTools.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l2/StringTools.s: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l2.test: true
-        dwtools/atop/will.test/asset/submodule-download/out/debug/dwtools/abase/l2.test/StringTools.test.s: true
         dwtools/atop/will.test/asset/submodule-download/proto: true
         dwtools/atop/will.test/asset/submodule-download/proto/Simple.js: true
         dwtools/atop/will.test/asset/submodule-get-path: true
         dwtools/atop/will.test/asset/submodule-reflect-subdir: true
+        dwtools/atop/will.test/asset/submodule-reflect-subdir/submodule.out.will.yml: true
         dwtools/atop/will.test/asset/submodule-reflect-subdir/module: true
         dwtools/atop/will.test/asset/submodule-reflect-subdir/module/submodule.will.yml: true
         dwtools/atop/will.test/asset/submodule-reflect-subdir/module/proto: true
@@ -731,6 +665,26 @@ reflector:
         dwtools/atop/will.test/asset/submodules-broken-2: true
         dwtools/atop/will.test/asset/submodules-broken-2/proto: true
         dwtools/atop/will.test/asset/submodules-broken-2/proto/WithSubmodules.s: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/WithSubmodules.s: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/Tools.s: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l3: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l3/Path.s: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l3.test: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l3.test/Path.test.html: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l3.test/Path.test.s: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l4: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l4/Paths.s: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l4.test: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l4.test/Paths.test.s: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l7: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l7/Glob.s: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l7.test: true
+        dwtools/atop/will.test/asset/submodules-reflect-subdir/out/debug/dwtools/abase/l7.test/Glob.test.s: true
       basePath: .
       prefixPath: proto
     criterion:

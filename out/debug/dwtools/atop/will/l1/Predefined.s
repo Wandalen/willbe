@@ -81,17 +81,6 @@ function stepRoutineReflect( frame )
 
   let reflector = step.reflectorResolve( opts.reflector );
 
-  // let reflector = module.resolve
-  // ({
-  //   selector : opts.reflector,
-  //   defaultPool : 'reflector',
-  //   current : step,
-  // });
-  //
-  // delete opts.reflector ;
-  //
-  // reflector.form();
-
   _.sure( reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strType( reflector ) )
   _.assert( reflector.formed === 3, () => reflector.nickName + ' is not formed' );
 
@@ -112,7 +101,9 @@ function stepRoutineReflect( frame )
   let verbosity = opts.verbosity;
   opts.verbosity = 0;
 
+  debugger;
   let result = will.Predefined.filesReflect.call( fileProvider, opts );
+  debugger;
 
   // if( will.verbosity >= 5 )
   // {

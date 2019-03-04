@@ -41,7 +41,7 @@ function exec()
   let appArgs = _.appArgs();
   let ca = will.commandsMake();
 
-  return ca.performApplicationArguments({ appArgs : appArgs });
+  return ca.appArgsPerform({ appArgs : appArgs });
 }
 
 //
@@ -178,8 +178,6 @@ function errTooMany( elements, what )
   {
     debugger;
     if( elements.length === 0 )
-    // return _.errBriefly( 'Please specify exactly one ' + what + ', ' + what + ' ' + _.strQuote( e.subject ) + ' does not exist' );
-    // else
     return _.errBriefly( 'Please specify exactly one ' + what + ', none satisfies passed arguments' );
     else
     return _.errBriefly( 'Please specify exactly one ' + what + ', ' + elements.length + ' satisfy(s)' + '\nFound : ' + _.strQuote( _.select( elements, '*/name' ) ) );
@@ -260,7 +258,8 @@ function commandHelp( e )
 
   if( !e.subject )
   {
-    logger.log( 'Use ' + logger.colorFormat( '"will .help"', 'code' ) + ' to get help' );
+    _.assert( 0 );
+    // logger.log( 'Use ' + logger.colorFormat( '"will .help"', 'code' ) + ' to get help' );
   }
 
 }
@@ -399,9 +398,10 @@ function commandBuildsList( e )
   function act( module )
   {
     let logger = will.logger;
+    debugger;
     let builds = module.buildsSelect
     ({
-      name : e.subject,
+      name : e.argument,
       criterion : e.propertiesMap,
       preffering : 'more',
     });
@@ -422,9 +422,10 @@ function commandExportsList( e )
   function act( module )
   {
     let logger = will.logger;
+    debugger;
     let builds = module.exportsSelect
     ({
-      name : e.subject,
+      name : e.argument,
       criterion : e.propertiesMap,
       preffering : 'more',
     });
@@ -562,7 +563,7 @@ function commandBuild( e )
   let will = this;
   return will.moduleOnReady( function( module )
   {
-    let builds = module.buildsSelect( e.subject, e.propertiesMap );
+    let builds = module.buildsSelect( e.argument, e.propertiesMap );
     let logger = will.logger;
 
     if( logger.verbosity >= 2 && builds.length > 1 )
@@ -587,7 +588,7 @@ function commandExport( e )
   let will = this;
   return will.moduleOnReady( function( module )
   {
-    let builds = module.exportsSelect( e.subject, e.propertiesMap );
+    let builds = module.exportsSelect( e.argument, e.propertiesMap );
 
     if( logger.verbosity >= 2 && builds.length > 1 )
     {
@@ -598,13 +599,6 @@ function commandExport( e )
 
     if( builds.length !== 1 )
     throw errTooMany( builds, 'export scenario' );
-
-    // if( builds.length !== 1 )
-    // {
-    //   if( builds.length === 0 )
-    //   throw _.errBriefly( 'To export please specify exactly one export scenario, none satisfies passed arguments' );
-    //   throw _.errBriefly( 'To export please specify exactly one export scenario, ' + builds.length + ' satisfy(s) passed arguments' );
-    // }
 
     let build = builds[ 0 ];
     return build.perform()
@@ -627,14 +621,14 @@ function commandWith( e )
     will.currentModule = null;
   }
 
-  _.sure( _.strDefined( e.subject ), 'Expects path to module' )
+  _.sure( _.strDefined( e.argument ), 'Expects path to module' );
   _.assert( arguments.length === 1 );
 
   if( will.topCommand === null )
   will.topCommand = commandWith;
 
-  let isolated = ca.nextCommandIsolate( e.subject );
-  let filePath = path.resolve( isolated.subject );
+  let isolated = ca.commandIsolateSecondFromArgument( e.argument ); // xxx
+  let filePath = path.resolve( isolated.argument );
 
   let module = will.currentModule = will.Module({ will : will, filePath : filePath }).preform();
   module.willFilesFind();
@@ -647,10 +641,10 @@ function commandWith( e )
 
     _.assert( module.willFileArray.length > 0 );
 
-    return ca.performCommand
+    return ca.commandPerform // xxx
     ({
       command : isolated.secondCommand,
-      subject : isolated.secondSubject,
+      // subject : isolated.secondSubject,
       propertiesMap : e.propertiesMap,
     });
 
@@ -681,14 +675,14 @@ function commandEach( e )
     will.currentModule = null;
   }
 
-  _.sure( _.strDefined( e.subject ), 'Expects path to module' )
+  _.sure( _.strDefined( e.argument ), 'Expects path to module' )
   _.assert( arguments.length === 1 );
 
   if( will.topCommand === null )
   will.topCommand = commandEach;
 
-  let isolated = ca.nextCommandIsolate( e.subject );
-  let dirPath = path.resolve( isolated.subject );
+  let isolated = ca.commandIsolateSecondFromArgument( e.argument );
+  let dirPath = path.resolve( isolated.argument );
   let con = new _.Consequence().take( null );
   let files = will.willFilesList
   ({
@@ -731,10 +725,10 @@ function commandEach( e )
 
       _.assert( module.willFileArray.length > 0 );
 
-      let r = ca.performCommand
+      let r = ca.commandPerform
       ({
         command : isolated.secondCommand,
-        subject : isolated.secondSubject,
+        // subject : isolated.secondSubject,
         propertiesMap : e.propertiesMap,
       });
 

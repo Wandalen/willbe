@@ -234,7 +234,6 @@ function archiveFilePathFor()
   let hd = hub.providersWithProtocolMap.file;
   let inExportFile = module.willFileWithRoleMap.export || module.willFileWithRoleMap.single;
   let inFileDirPath = hd.path.dir( inExportFile.filePath )
-  // let outDirPath = module.pathMap.out || '.';
 
   _.assert( arguments.length === 0 );
   _.assert( _.strDefined( build.name ), 'Build should have name' );
@@ -249,9 +248,6 @@ function archiveFilePathFor()
   delete criterions[ c ];
 
   let name = _.strJoinPath( [ module.about.name, _.mapKeys( criterions ).join( '-' ), '.out.tgs' ], '.' );
-  // let name = _.strJoinPath( [ module.about.name, build.name, '.out.tgs' ], '.' );
-
-  debugger;
 
   return hd.path.resolve( module.outPath, name );
 }
@@ -267,7 +263,6 @@ function outFilePathFor()
   let hd = hub.providersWithProtocolMap.file;
   let inExportFile = module.willFileWithRoleMap.export || module.willFileWithRoleMap.single;
   let inFileDirPath = hd.path.dir( inExportFile.filePath )
-  // let outDirPath = module.pathMap.out || '.';
 
   _.assert( arguments.length === 0 );
   _.assert( _.strDefined( build.name ) );
@@ -275,8 +270,6 @@ function outFilePathFor()
   _.assert( _.strDefined( module.about.name ), 'Module should have name, declare about.name' );
 
   let name = _.strJoinPath( [ module.about.name, '.out.will.yml' ], '.' );
-
-  debugger;
 
   return hd.path.resolve( module.outPath, name );
 }
@@ -291,11 +284,7 @@ let Composes =
 
   description : null,
   criterion : null,
-
   steps : null,
-  // exportDirPath : null,
-  // entryPath : null,
-
   inherit : _.define.own([]),
 
 }

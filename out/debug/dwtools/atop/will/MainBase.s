@@ -2,12 +2,14 @@
 
 'use strict';
 
-if( typeof module !== 'undefined' )
-{
+/**
+ * Utility to manage modules of complex modular systems.
+  @module Tools/Willbe
+*/
 
-  require( './IncludeBase.s' );
-
-}
+/**
+ * @file Main.bse.s
+ */
 
 /*
 
@@ -18,6 +20,13 @@ if( typeof module !== 'undefined' )
 - Only difference between generated out-will-files and manually written will-file is section exported. out-will-files has such section, manually written will-file does not.
 
 */
+
+if( typeof module !== 'undefined' )
+{
+
+  require( './IncludeBase.s' );
+
+}
 
 //
 
