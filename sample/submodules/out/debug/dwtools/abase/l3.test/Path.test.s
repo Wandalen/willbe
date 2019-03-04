@@ -5867,200 +5867,269 @@ function relative( test )
 {
   var got;
 
-  test.case = 'same path'; /* */
+  // test.case = 'same path'; /* */
+  //
+  // var from = '/aa/bb/cc';
+  // var to = '/aa/bb/cc';
+  // var expected = '.';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // var from = '/aa/bb/cc';
+  // var to = '/aa/bb/cc/';
+  // var expected = '.';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // var from = '/aa/bb/cc/';
+  // var to = '/aa/bb/cc';
+  // var expected = '.';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // var from = '/aa//bb/cc/';
+  // var to = '//xx/yy/zz/';
+  // var expected = '../../../..//xx/yy/zz';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // test.case = 'down path'; /* */
+  //
+  // var from = '/aa/bb/cc';
+  // var to = '/aa/bb';
+  // var expected = '..';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // var from = '/aa/bb/cc/';
+  // var to = '/aa/bb';
+  // var expected = '..';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // var from = '/aa/bb/cc';
+  // var to = '/aa/bb/';
+  // var expected = '..';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // var from = '/aa//bb/cc/';
+  // var to = '//xx/yy/';
+  // var expected = '../../../..//xx/yy';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // test.case = 'relative to same path'; /* */
+  // var from = '/foo/bar/baz/asdf/quux';
+  // var to = '/foo/bar/baz/asdf/quux';
+  // var expected = '.';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // test.case = 'relative to nested'; /* */
+  // var from = '/foo/bar/baz/asdf/quux';
+  // var to = '/foo/bar/baz/asdf/quux/new1';
+  // var expected = 'new1';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // test.case = 'relative to parent directory'; /* */
+  // var from = '/foo/bar/baz/asdf/quux';
+  // var to = '/foo/bar/baz/asdf';
+  // var expected = '..';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  //
+  // test.case = 'absolute paths'; /* */
+  // var from = '/include/dwtools/l3.test';
+  // var to = '/include/dwtools/l3.test/Path.path.test.s';
+  // var expected = 'Path.path.test.s';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // test.case = 'absolute paths, from === to'; /* */
+  // var from = '/include/dwtools/l3.test';
+  // var to = '/include/dwtools/l3.test';
+  // var expected = '.';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // test.case = 'out of relative dir'; /* */
+  // var from = '/abc';
+  // var to = '/a/b/z';
+  // var expected = '../a/b/z';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // test.case = 'out of relative dir'; /* */
+  // var from = '/abc/def';
+  // var to = '/a/b/z';
+  // var expected = '../../a/b/z';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // test.case = 'relative root'; /* */
+  // var from = '/';
+  // var to = '/a/b/z';
+  // var expected = 'a/b/z';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // test.case = 'relative root'; /* */
+  // var from = '/';
+  // var to = '/a';
+  // var expected = 'a';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // test.case = 'relative root'; /* */
+  // var from = '/';
+  // var to = '/';
+  // var expected = '.';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // test.case = 'windows disks'; /* */
+  //
+  // var from = 'd:/';
+  // var to = 'c:/x/y';
+  // var expected = '../c/x/y';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // test.case = 'long, not direct'; /* */
+  //
+  // var from = '/a/b/xx/yy/zz';
+  // var to = '/a/b/files/x/y/z.txt';
+  // var expected = '../../../files/x/y/z.txt';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
 
-  var from = '/aa/bb/cc';
-  var to = '/aa/bb/cc';
+  test.case = '. - .'; /* */
+  var from = '.';
+  var to = '.';
   var expected = '.';
   var got = _.path.relative( from, to );
   test.identical( got, expected );
 
-  var from = '/aa/bb/cc';
-  var to = '/aa/bb/cc/';
-  var expected = '.';
-  var got = _.path.relative( from, to );
-  test.identical( got, expected );
-
-  var from = '/aa/bb/cc/';
-  var to = '/aa/bb/cc';
-  var expected = '.';
-  var got = _.path.relative( from, to );
-  test.identical( got, expected );
-
-  var from = '/aa//bb/cc/';
-  var to = '//xx/yy/zz/';
-  var expected = '../../../..//xx/yy/zz';
-  var got = _.path.relative( from, to );
-  test.identical( got, expected );
-
-  test.case = 'down path'; /* */
-
-  var from = '/aa/bb/cc';
-  var to = '/aa/bb';
+  test.case = '. - ..'; /* */
+  var from = '.';
+  var to = '..';
   var expected = '..';
   var got = _.path.relative( from, to );
   test.identical( got, expected );
 
-  var from = '/aa/bb/cc/';
-  var to = '/aa/bb';
+  test.case = '. - ../..'; /* */
+  var from = '.';
+  var to = '../..';
+  var expected = '../..';
+  var got = _.path.relative( from, to );
+  test.identical( got, expected );
+
+  test.case = '.. - ../..'; /* */
+  var from = '..';
+  var to = '../..';
   var expected = '..';
   var got = _.path.relative( from, to );
   test.identical( got, expected );
 
-  var from = '/aa/bb/cc';
-  var to = '/aa/bb/';
-  var expected = '..';
-  var got = _.path.relative( from, to );
-  test.identical( got, expected );
-
-  var from = '/aa//bb/cc/';
-  var to = '//xx/yy/';
-  var expected = '../../../..//xx/yy';
-  var got = _.path.relative( from, to );
-  test.identical( got, expected );
-
-  test.case = 'relative to same path'; /* */
-  var from = '/foo/bar/baz/asdf/quux';
-  var to = '/foo/bar/baz/asdf/quux';
+  test.case = '.. - ..'; /* */
+  var from = '..';
+  var to = '..';
   var expected = '.';
   var got = _.path.relative( from, to );
   test.identical( got, expected );
 
-  test.case = 'relative to nested'; /* */
-  var from = '/foo/bar/baz/asdf/quux';
-  var to = '/foo/bar/baz/asdf/quux/new1';
-  var expected = 'new1';
+  test.case = '../a/b - ../c/d'; /* */
+  var from = '../a/b';
+  var to = '../c/d';
+  var expected = '../../c/d';
   var got = _.path.relative( from, to );
   test.identical( got, expected );
 
-  test.case = 'relative to parent directory'; /* */
-  var from = '/foo/bar/baz/asdf/quux';
-  var to = '/foo/bar/baz/asdf';
-  var expected = '..';
-  var got = _.path.relative( from, to );
-  test.identical( got, expected );
+  // must be fails
+  //
+  // test.case = '../a/b - .'; /* */
+  // var from = '../a/b';
+  // var to = '../c/d';
+  // var expected = '../../c/d';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // test.case = '../a/b - ./c/d'; /* */
+  // var from = '../a/b';
+  // var to = '../c/d';
+  // var expected = '../../c/d';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
+  //
+  // test.case = '.. - .'; /* */
+  // var from = '..';
+  // var to = '.';
+  // var expected = '.';
+  // var got = _.path.relative( from, to );
+  // test.identical( got, expected );
 
-
-  test.case = 'absolute paths'; /* */
-  var from = '/include/dwtools/l3.test';
-  var to = '/include/dwtools/l3.test/Path.path.test.s';
-  var expected = 'Path.path.test.s';
-  var got = _.path.relative( from, to );
-  test.identical( got, expected );
-
-  test.case = 'absolute paths, from === to'; /* */
-  var from = '/include/dwtools/l3.test';
-  var to = '/include/dwtools/l3.test';
-  var expected = '.';
-  var got = _.path.relative( from, to );
-  test.identical( got, expected );
-
-  test.case = 'out of relative dir'; /* */
-  var from = '/abc';
-  var to = '/a/b/z';
-  var expected = '../a/b/z';
-  var got = _.path.relative( from, to );
-  test.identical( got, expected );
-
-  test.case = 'out of relative dir'; /* */
-  var from = '/abc/def';
-  var to = '/a/b/z';
-  var expected = '../../a/b/z';
-  var got = _.path.relative( from, to );
-  test.identical( got, expected );
-
-  test.case = 'relative root'; /* */
-  var from = '/';
-  var to = '/a/b/z';
-  var expected = 'a/b/z';
-  var got = _.path.relative( from, to );
-  test.identical( got, expected );
-
-  test.case = 'relative root'; /* */
-  var from = '/';
-  var to = '/a';
-  var expected = 'a';
-  var got = _.path.relative( from, to );
-  test.identical( got, expected );
-
-  test.case = 'relative root'; /* */
-  var from = '/';
-  var to = '/';
-  var expected = '.';
-  var got = _.path.relative( from, to );
-  test.identical( got, expected );
-
-  test.case = 'windows disks'; /* */
-
-  var from = 'd:/';
-  var to = 'c:/x/y';
-  var expected = '../c/x/y';
-  var got = _.path.relative( from, to );
-  test.identical( got, expected );
-
-  test.case = 'long, not direct'; /* */
-
-  var from = '/a/b/xx/yy/zz';
-  var to = '/a/b/files/x/y/z.txt';
+  test.case = 'both relative, long, not direct'; /* */
+  var from = 'a/b/xx/yy/zz';
+  var to = 'a/b/files/x/y/z.txt';
   var expected = '../../../files/x/y/z.txt';
   var got = _.path.relative( from, to );
   test.identical( got, expected );
 
   test.case = 'both relative, long, not direct, resolving : 0'; /* */
+  var from = 'a/b/xx/yy/zz';
+  var to = 'a/b/files/x/y/z.txt';
+  var expected = '../../../files/x/y/z.txt';
+  var got = _.path._relative({ relative : from, path : to, resolving : 0 });
+  test.identical( got, expected );
 
-  // var from = 'a/b/xx/yy/zz';
-  // var to = 'a/b/files/x/y/z.txt';
-  // var expected = '../../../files/x/y/z.txt';
-  // var got = _.path.relative({ relative : from, path : to, resolving : 0 });
-  // test.identical( got, expected );
+  test.case = 'both relative, long, not direct, resolving : 1'; /* */
+  var from = 'a/b/xx/yy/zz';
+  var to = 'a/b/files/x/y/z.txt';
+  var expected = '../../../files/x/y/z.txt';
+  var got = _.path._relative({ relative : from, path : to, resolving : 1 });
+  test.identical( got, expected );
 
-  // test.case = 'both relative, long, not direct, resolving : 1'; /* */
+  test.case = 'one relative, resolving 1'; /* */
+  var current = _.path.current();
+  var upStr = '/';
 
-  // var from = 'a/b/xx/yy/zz';
-  // var to = 'a/b/files/x/y/z.txt';
-  // var expected = '../../../files/x/y/z.txt';
-  // var got = _.path.relative({ relative : from, path : to, resolving : 1 });
-  // test.identical( got, expected );
+  //
 
-  // test.case = 'one relative, resolving 1'; /* */
-  // var current = _.path.current();
-  // var upStr = '/';
+  test.case = 'with colon'; /* */
+  var from = 'c:/x/y';
+  var to = 'a/b/files/x/y/z.txt';
+  var expected = '../../../a/b/files/x/y/z.txt';
+  if( current !== upStr )
+  expected = '../../..' + _.path.join( current, to );
+  var got = _.path._relative({ relative :  from, path : to, resolving : 1 });
+  test.identical( got, expected );
 
-  // //
+  //
 
-  // var from = 'c:/x/y';
-  // var to = 'a/b/files/x/y/z.txt';
-  // var expected = '../../../a/b/files/x/y/z.txt';
-  // if( current !== upStr )
-  // expected = '../../..' + _.path.join( current, to );
-  // var got = _.path.relative({ relative :  from, path : to, resolving : 1 });
-  // test.identical( got, expected );
+  var from = 'a/b/files/x/y/z.txt';
+  var to = 'c:/x/y';
+  var expected = '../../../../../../c/x/y';
+  if( current !== upStr )
+  {
+    var outOfCurrent = _.path.relative( current, upStr );
+    var toNormalized = _.path.normalize( to );
+    expected = outOfCurrent + '/../../../../../..' + toNormalized;
+  }
+  var got = _.path.relative({ relative :  from, path : to, resolving : 1 });
+  test.identical( got, expected );
 
-  // //
+  test.case = 'one relative, resolving 0'; /* */
 
-  // var from = 'a/b/files/x/y/z.txt';
-  // var to = 'c:/x/y';
-  // var expected = '../../../../../../c/x/y';
-  // if( current !== upStr )
-  // {
-  //   var outOfCurrent = _.path.relative( current, upStr );
-  //   var toNormalized = _.path.normalize( to );
-
-  //   expected = outOfCurrent + '/../../../../../..' + toNormalized;
-  // }
-  // var got = _.path.relative({ relative :  from, path : to, resolving : 1 });
-  // test.identical( got, expected );
-
-
-  // test.case = 'one relative, resolving 0'; /* */
-
-  // var from = 'c:/x/y';
-  // var to = 'a/b/files/x/y/z.txt';
-  // var expected = '../../../files/x/y/z.txt';
-  // test.shouldThrowErrorSync( function()
-  // {
-  //   _.path.relative({ relative :  from, path : to, resolving : 0 });
-  // })
+  var from = 'c:/x/y';
+  var to = 'a/b/files/x/y/z.txt';
+  var expected = '../../../files/x/y/z.txt';
+  test.shouldThrowErrorSync( function()
+  {
+    _.path.relative({ relative :  from, path : to, resolving : 0 });
+  })
 
   //
 

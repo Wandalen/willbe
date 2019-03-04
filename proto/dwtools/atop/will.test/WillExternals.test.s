@@ -2676,25 +2676,67 @@ function reflectGetPath( test )
 
   ready.thenKeep( () =>
   {
-    test.case = '.build'
+    test.case = '.build debug1'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  shell({ args : [ '.build' ] })
+  shell({ args : [ '.build debug1' ] })
+  .thenKeep( ( arg ) => validate( arg ) )
 
-  .thenKeep( ( got ) =>
+  /* - */
+
+  ready.thenKeep( () =>
   {
-    test.identical( got.exitCode, 0 );
-
-    var files = self.find( outPath );
-    test.is( files.length > 10 );
-    test.identical( files, [] );
-
+    test.case = '.build debug2'
+    _.fileProvider.filesDelete( outPath );
     return null;
   })
 
+  shell({ args : [ '.build debug2' ] })
+  .thenKeep( ( arg ) => validate( arg ) )
+
+  /* - */
+
+  ready.thenKeep( () =>
+  {
+    test.case = '.build debug3'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build debug3' ] })
+  .thenKeep( ( arg ) => validate( arg ) )
+
+  /* - */
+
   return ready;
+
+  function validate( arg )
+  {
+    test.identical( arg.exitCode, 0 );
+
+    var expected =
+    [
+      '.',
+      './debug',
+      './debug/dwtools',
+      './debug/dwtools/Tools.s',
+      './debug/dwtools/abase',
+      './debug/dwtools/abase/l3',
+      './debug/dwtools/abase/l3/Path.s',
+      './debug/dwtools/abase/l4',
+      './debug/dwtools/abase/l4/Paths.s',
+      './debug/dwtools/abase/l7',
+      './debug/dwtools/abase/l7/Glob.s'
+    ]
+
+    var files = self.find( outPath );
+    test.is( files.length > 10 );
+    test.identical( files, expected );
+
+    return null;
+  }
 }
 
 reflectGetPath.timeOut = 130000;
@@ -2837,14 +2879,7 @@ function reflectRemote( test )
   })
 
   shell({ args : [ '.build download1' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    var files = self.find( downloadPath );
-    test.is( files.length > 10 );
-    test.identical( got.exitCode, 0 );
-    return null;
-  })
+  .thenKeep( ( arg ) => validate( arg ) )
 
   //
 
@@ -2856,16 +2891,23 @@ function reflectRemote( test )
   })
 
   shell({ args : [ '.build download2' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    var files = self.find( downloadPath );
-    test.is( files.length > 10 );
-    test.identical( got.exitCode, 0 );
-    return null;
-  })
+  .thenKeep( ( arg ) => validate( arg ) )
 
   return ready;
+
+  /* */
+
+  function validate( arg )
+  {
+    var expected =
+    []
+    var files = self.find( downloadPath );
+    test.is( files.length > 10 );
+    test.identical( arg.exitCode, 0 );
+    test.identical( files, expected );
+    return null;
+  }
+
 }
 
 reflectRemote.timeOut = 130000;

@@ -111,13 +111,13 @@ function form2()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  if( reflector.nickName === 'reflector::reflect.submodules' )
+  if( reflector.nickName === 'reflector::download1' )
   debugger;
 
   reflector.pathsResolve();
 
-  // if( reflector.src.prefixPath )
-  // reflector.src.prefixPath = path.join( module.inPath, reflector.src.prefixPath || '.' );
+  if( reflector.src.hasSomePath() )
+  reflector.src.prefixPath = path.join( module.inPath, reflector.src.prefixPath || '.' );
 
   let result = Parent.prototype.form2.apply( reflector, arguments );
 
@@ -201,13 +201,13 @@ function _inheritSingle( o )
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
 
-  if( reflector.nickName === 'reflector::reflect.submodules' )
+  if( reflector.nickName === 'reflector::download1' )
   debugger;
 
   reflector.src.and( reflector2.src ).pathsInherit( reflector2.src );
   reflector.dst.and( reflector2.dst ).pathsInherit( reflector2.dst );
 
-  if( reflector.nickName === 'reflector::reflect.submodules' )
+  if( reflector.nickName === 'reflector::download1' )
   debugger;
 
 }
@@ -234,7 +234,7 @@ function form3()
   _.assert( arguments.length === 0 );
   _.assert( reflector.formed === 2 );
 
-  if( reflector.nickName === 'reflector::reflect.submodules' )
+  if( reflector.nickName === 'reflector::download1' )
   debugger;
 
   /* begin */
