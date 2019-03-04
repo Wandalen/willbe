@@ -1,4 +1,4 @@
-# Як користуватися інтерфейсом командного рядка `willbe`  
+# Як користуватися інтерфейсом командного рядка 'willbe ' 
 
 У цьому розділі описується використання командного рядка для взаємодії з пакетом `willbe`, застосування команд `.help` та `.list`  
 
@@ -199,7 +199,8 @@ Found no module::/[path] at "/[path]"
 
 Тож, відкрийте клонований репозиторій і перейдіть за шляхом './sample/submodules/', де знаходиться файл `.will.yml` та відкрийте директорію в терміналі (або одразу виконайте `cd [.../willbe/sample/submodules/]`). Можливо, його не буде видно, ввімкніть відображення прихованих файлів.
 Після цього введіть `will .paths.list`.
-Після того як на моніторі відобразиться результат, відкрийте файл `.will.yml` з допомогою вашого улюбленого текстового редактора. Порівняйте вміст [секції](Concepts.urk.md#will-file-section) `path` файлу і текст який отримали в терміналі.  
+Після того як на моніторі відобразиться результат, відкрийте файл `.will.yml` з допомогою вашого улюбленого текстового редактора. Порівняйте вміст [секції](Concepts.urk.md#will-file-section) `path` файлу і текст який отримали в терміналі.
+
 <details>
   <summary><u>Лістинг команди `will .paths.list`</u></summary>
 
@@ -290,6 +291,9 @@ submodule::PathFundamentals
  ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
  ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
 About
+  name : 'test' 
+  description : 'To test commands of willbe-package' 
+  version : '0.0.1' 
   enabled : 1
 
 Paths
@@ -339,15 +343,18 @@ build::debug
 
 </details>
 
-Проглянувши файл `.will.yml` ви не знайдете секцію `About`:
+Проглянувши файл `.will.yml` ви знайдете секцію `About`:
 
 ```
 About
+  name : 'test' 
+  description : 'To test commands of willbe-package' 
+  version : '0.0.1' 
   enabled : 1
 
 ```
 
-[`About`](WillFileStructure.ukr.md#about) - це обов'язкова [секція](Concepts.urk.md#will-file-section) модуля. В завантаженому `.will.yml` вона відсутня, тому пакет автоматично її згенерував з єдиним параметром за замовчуванням.  
+[`About`](WillFileStructure.ukr.md#about) - це обов'язкова [секція](Concepts.urk.md#will-file-section) модуля. В завантаженому `.will.yml` немає поля `enabled`, тому пакет автоматично його згенерував з параметром за замовчуванням.  
 Детальна інформація про структуру will-файлу знаходиться в розділі ["Will file structure"](WillFileFtructure.ukr.md).  
 
 А з іншими командами ми познайомимось в наступних уроках.

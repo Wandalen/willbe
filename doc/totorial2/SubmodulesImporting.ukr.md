@@ -2,56 +2,8 @@
 
 В цьому туторіалі описується робота з імпортованими підмодулями  
 
-### <a name="importing-submodules"></a> Використання зовнішніх підмодулів  
-Ви [створили свій перший `will`-файл](FirstWillFile.ukr.md), який описує модуль, але не має функціоналу. Тепер перетворимо його в робочий [`will`-модуль](Concepts.ukr.md#module) - базову одиницю пакету.  
-
-Перш ніж створювати власні сценарії, навчимось використовувати готові рішення в вигляді підмодулів. Інформація про підмодулі `willbe` розміщена в секції `submodule`. Тому, запишемо:
-
-```yaml
-
-submodule :
-
-  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-
-```
-
-Об'єднавши її з попереднім файлом матимемо доступ до операцій з підмодулями.  
-
-<details>  
-  <summary><u>Файл `.will.yml`</u></summary>
-
-```yaml
-
-about :
-
-    name : first
-    description : "First module"
-    version : 0.0.1
-    keywords :
-        - willbe
-
-submodule :
-
-    WTools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-
-```
-
-</details>
-
-<p> </p>
-
-Тепер в `submodule` поміщений один ресурс з назвою _'WTools'_, який має _URL_-шлях _'git+https:///github.com/Wandalen/wTools.git/out/wTools#master'_. Опис шляху свідчить про використання підмодуля з _GitHub_-у.  
-Скориставшись знайомою з попереднього туторіалу командою `will. submodules.list`, отримаємо такі рядки (тут і далі, текст лістинга команди, що не включено в туторіал позначений '...'):
-
-```
-...
- ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
-...
-  isDownloaded : false
-  Exported builds : []
-
-```
-Тепер, скористуємось фразою `will. submodules.download`:
+В попередньому туторіалі ви створили конфігурацію для роботи з зовнішніми підмодулями, зробимо наступний крок для створення модуля.  
+Скористуємось фразою `will. submodules.download`:
 
 ```
 [user@user ~]$ will .submodules.download

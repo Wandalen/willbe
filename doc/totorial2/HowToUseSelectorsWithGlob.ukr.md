@@ -102,9 +102,8 @@ build :
     <summary><u><em>Лістинг `.will.yml`</em></u></summary>
 
 ```yaml
-build :
 
-  about :
+about :
 
   name : selectorWithGlob
   description : "Using selector with glob to choise path"

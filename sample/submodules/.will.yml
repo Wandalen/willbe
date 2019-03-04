@@ -1,3 +1,7 @@
+about :
+  name : test
+  description : "To test commands of willbe-package"
+  version : 0.0.1
 
 submodule :
 

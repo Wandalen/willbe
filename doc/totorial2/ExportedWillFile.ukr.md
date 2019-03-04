@@ -21,8 +21,8 @@
 <a name="section-path"></a>
 ``` yaml
 about :
-    name : second
-    description : "Second module"
+    name : exportModule
+    description : "To export single file"
     version : 0.0.1
 
 path :
@@ -107,12 +107,12 @@ build :
 ```
 ...
  Exporting export
-   + Write out will-file /path_to_file/out/third.out.will.yml
+   + Write out will-file /path_to_file/out/exportModule.out.will.yml
    + Exported export with 1 files in 0.705s
   Exported export in 0.752s
 ```
 
-Після виконання команди `willbe` згенерує `second.out.will.yml` за назвою модуля в `about` та помістить файл в директорію `out`.
+Після виконання команди `willbe` згенерує `exportModule.out.will.yml` за назвою модуля в `about` та помістить файл в директорію `out`.
 
 ### Підсумок
 Експортувати модуль можливо при використанні вбудованої [функції `predefined.export` в секції `step`](#section-step) та правильному налаштуванні секцій [`path`](#section-path) i [`build`](#section-build). 
