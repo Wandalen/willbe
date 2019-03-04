@@ -86,9 +86,9 @@ function stepRoutineReflect( frame )
 
   delete opts.reflector ;
 
-  reflector = reflector.optionsForReflectExport();
+  let reflectorOptions = reflector.optionsForReflectExport();
 
-  _.mapSupplement( opts, reflector )
+  _.mapSupplement( opts, reflectorOptions )
 
   if( will.verbosity >= 4 )
   {
@@ -101,9 +101,7 @@ function stepRoutineReflect( frame )
   let verbosity = opts.verbosity;
   opts.verbosity = 0;
 
-  debugger;
   let result = will.Predefined.filesReflect.call( fileProvider, opts );
-  debugger;
 
   // if( will.verbosity >= 5 )
   // {
@@ -261,7 +259,7 @@ function stepRoutineShell( frame )
 
   return _.shell
   ({
-    path : opts.shell,
+    execPath : opts.shell,
     currentPath : opts.currentPath,
     verbosity : will.verbosity - 1,
   })

@@ -1,0 +1,36 @@
+
+submodule :
+
+  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+
+path :
+
+  proto : './proto'
+  in : '.'
+  out : 'out'
+  out.debug : './out/debug'
+
+reflector :
+
+  reflect.submodules :
+    inherit : predefined.*
+    filePath :
+      submodule::*/path::in*=1 : path::out.*=1
+    src :
+      basePath : '.module/PathFundamentals'
+
+step :
+
+  reflect.submodules :
+    inherit : predefined.reflect
+    reflector :
+      reflector::reflect.submodules*=1
+
+build :
+
+  debug.raw :
+    criterion :
+      default : 1
+    steps :
+      - submodules.download
+      - reflect.submodules*=1
