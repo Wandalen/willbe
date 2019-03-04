@@ -13,11 +13,11 @@
 
 /*
 
-= Orientations
+= Principles
 
-- Willbe prepends all relative paths by path::in. path::out and path::temp prepended by path::in as well.
+- Willbe prepends all relative paths by path::in. path::out and path::temp are prepended by path::in as well.
 - Willbe prepends path::in by module.dirPath, a directory which has the will-file.
-- Only difference between generated out-will-files and manually written will-file is section exported. out-will-files has such section, manually written will-file does not.
+- Major difference between generated out-will-files and manually written will-file is section exported. out-will-files has such section, manually written will-file does not.
 
 */
 

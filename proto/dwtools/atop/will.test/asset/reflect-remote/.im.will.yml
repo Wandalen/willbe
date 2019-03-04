@@ -1,7 +1,6 @@
 
 path :
 
-  # source : git:///git@bitbucket.org:stoneridgetechnology/encore.common.git#21f783b2040103235748a3ccb64eabbf34ef506f
   source : git+https:///github.com/Wandalen/wPathFundamentals.git
   pathFundamentals : 'wPathFundamentals'
 
@@ -10,15 +9,21 @@ reflector :
   download1 :
     src :
       prefixPath : path::source
-    dst :
-      basePath : .
-      prefixPath : path::pathFundamentals
+      filePath :
+        path::source : path::pathFundamentals
 
   download2 :
     src :
       prefixPath : path::source
     filePath :
       path::source : path::pathFundamentals
+
+  download3 :
+    src :
+      prefixPath : path::source
+    dst :
+      basePath : .
+      prefixPath : path::pathFundamentals
 
 step :
 

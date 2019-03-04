@@ -8,10 +8,7 @@ path :
   proto : './proto'
   in : '.'
   out : 'out'
-  out.debug :
-    path : './out/debug'
-    criterion :
-      debug : 1
+  out.debug : './out/debug'
 
 reflector :
 
@@ -21,8 +18,6 @@ reflector :
       submodule::*/path::in*=1 : path::out.*=1
     src :
       basePath : '.module/PathFundamentals'
-    criterion :
-      debug : 1
 
 step :
 
@@ -30,15 +25,12 @@ step :
     inherit : predefined.reflect
     reflector :
       reflector::reflect.submodules*=1
-    criterion :
-      debug : 1
 
 build :
 
   debug.raw :
     criterion :
       default : 1
-      debug : 1
     steps :
       - submodules.download
       - reflect.submodules*=1
