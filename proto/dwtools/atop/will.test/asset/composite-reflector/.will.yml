@@ -1,0 +1,104 @@
+
+path :
+
+  proto : 'proto'
+  dir1 : 'dir1'
+  dir2 : 'dir2'
+  temp : 'out'
+  testFile : 'File.test.s'
+  in : '.'
+  out : 'out'
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : './out/release'
+    criterion :
+      debug : 0
+
+reflector :
+
+  reflect.proto.0 :
+    inherit : predefined.*
+    filePath :
+      path::proto : path::out.*=1
+    criterion :
+      debug : [ 0,1 ]
+      variant : 0
+
+  reflect.proto.1 :
+    inherit : predefined.*
+    src :
+      filePath :
+        path::proto : path::out.*=1
+    criterion :
+      debug : [ 0,1 ]
+      variant : 1
+
+  reflect.proto.2 :
+    inherit : predefined.*
+    dst :
+      filePath :
+        path::proto : path::out.*=1
+    criterion :
+      debug : [ 0,1 ]
+      variant : 2
+
+  reflect.proto.3 :
+    inherit : predefined.*
+    filePath :
+      '{path::proto}' : '{path::out.*=1}'
+    criterion :
+      debug : [ 0,1 ]
+      variant : 3
+
+  reflect.proto.4 :
+    inherit : predefined.*
+    filePath :
+      '{path::proto}/{path::dir2}' : '{path::out.*=1}/{path::dir1}'
+    criterion :
+      debug : [ 0,1 ]
+      variant : 4
+
+  reflect.proto.5 :
+    inherit : predefined.*
+    filePath :
+      . : .
+    src :
+      prefixPath : '{path::proto}/{path::dir2}'
+    dst :
+      prefixPath : '{path::out.*=1}/{path::dir1}'
+    criterion :
+      debug : [ 0,1 ]
+      variant : 5
+
+  reflect.proto.6 :
+    inherit : predefined.*
+    filePath :
+      'path::testFile' : 'path::testFile'
+    src :
+      prefixPath : '{path::proto}/{path::dir2}'
+    dst :
+      prefixPath : '{path::out.*=1}/{path::dir1}'
+    criterion :
+      debug : [ 0,1 ]
+      variant : 6
+
+step :
+
+  reflect.proto :
+    inherit : predefined.reflect
+    reflector : reflector::reflect.proto.*=1
+    criterion :
+      debug : [ 0,1 ]
+      variant : [ 0,1,2,3,4,5,6 ]
+
+build :
+
+  out :
+    criterion :
+      debug : 1
+      variant : [ 0,1,2,3,4,5,6 ]
+    steps :
+      - step::reflect.proto.*=1

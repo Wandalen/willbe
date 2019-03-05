@@ -12,25 +12,54 @@ path :
 
 reflector :
 
-  reflect.submodules :
+  reflect.submodules1 :
     inherit : predefined.*
     filePath :
-      submodule::*/path::in*=1 : path::out.*=1
+      submodule::*/path::proto*=1 : path::out.*=1
+
+  reflect.submodules2 :
+    inherit : predefined.*
     src :
-      basePath : '.module/PathFundamentals'
+      filePath :
+        submodule::*/path::proto*=1 : path::out.*=1
+
+  reflect.submodules3 :
+    inherit : predefined.*
+    src :
+      basePath : submodule::*/path::proto*=1
+      filePath :
+        submodule::*/path::proto*=1 : path::out.*=1
 
 step :
 
-  reflect.submodules :
+  reflect.submodules1 :
     inherit : predefined.reflect
     reflector :
-      reflector::reflect.submodules*=1
+      reflector::reflect.submodules1
+
+  reflect.submodules2 :
+    inherit : predefined.reflect
+    reflector :
+      reflector::reflect.submodules2
+
+  reflect.submodules3 :
+    inherit : predefined.reflect
+    reflector :
+      reflector::reflect.submodules3
 
 build :
 
-  debug.raw :
-    criterion :
-      default : 1
+  debug1 :
     steps :
       - submodules.download
-      - reflect.submodules*=1
+      - reflect.submodules1
+
+  debug2 :
+    steps :
+      - submodules.download
+      - reflect.submodules2
+
+  debug3 :
+    steps :
+      - submodules.download
+      - reflect.submodules3

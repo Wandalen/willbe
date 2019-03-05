@@ -7,18 +7,32 @@ path :
 reflector :
 
   download1 :
+    filePath :
+      path::source : path::pathFundamentals
+
+  download2 :
+    src :
+      filePath :
+        path::source : path::pathFundamentals
+
+  download3 :
+    dst :
+      filePath :
+        path::source : path::pathFundamentals
+
+  download4 :
     src :
       prefixPath : path::source
       filePath :
         path::source : path::pathFundamentals
 
-  download2 :
+  download5 :
     src :
       prefixPath : path::source
     filePath :
       path::source : path::pathFundamentals
 
-  download3 :
+  download6 :
     src :
       prefixPath : path::source
     dst :
@@ -40,15 +54,9 @@ step :
 build :
 
   download1 :
-    criterion :
-      default : 1
-      debug : 1
     steps :
       - step::download1
 
   download2 :
-    criterion :
-      default : 1
-      debug : 1
     steps :
       - step::download2

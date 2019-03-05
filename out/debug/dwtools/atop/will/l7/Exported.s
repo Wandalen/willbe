@@ -315,6 +315,9 @@ function performExportedFilesReflector()
   });
   let exportedFilesReflector = exported.exportedFilesReflector;
 
+  debugger;
+
+  exportedFilesReflector.src.pairRefine( exportedFilesReflector.dst );
   exportedFilesReflector.src.prefixesApply();
   exportedFilesReflector.dst.prefixesApply();
 
@@ -333,9 +336,9 @@ function performExportedFilesReflector()
   exportedFilesReflector.dst.filteringClear();
   exportedFilesReflector.dst.filePath = exportedFilesReflector.src.filePath = path.pathMapExtend( null, exportedFilesPath );
   exportedFilesReflector.recursive = 0;
-  // debugger;
   exportedFilesReflector.form();
-  // debugger;
+
+  debugger;
 
   _.assert( exportedFilesReflector.dst.prefixPath === null );
   _.assert( exportedFilesReflector.dst.basePath === null );

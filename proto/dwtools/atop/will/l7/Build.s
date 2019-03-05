@@ -76,7 +76,8 @@ function stepsEach( onEach )
     step = module.resolve
     ({
       selector : step,
-      defaultPool : 'step',
+      defaultResourceName : 'step',
+      prefixlessAction : 'default',
       current : build,
     });
 

@@ -679,7 +679,7 @@ function singleModuleWithSpaceTrivial( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'single with space' );
   let routinePath = _.path.join( self.tempDir, test.name, 'single with space' );
-  let modulesPath = _.path.join( routinePath, '.module' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
@@ -717,7 +717,7 @@ function singleStep( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'step-shell' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulesPath = _.path.join( routinePath, 'module' );
+  let submodulesPath = _.path.join( routinePath, 'module' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
@@ -765,7 +765,7 @@ function submodulesInfo( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulesPath = _.path.join( routinePath, '.module' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
@@ -804,7 +804,7 @@ function submodulesList( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulesPath = _.path.join( routinePath, '.module' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
@@ -942,7 +942,7 @@ function submodulesDownloadUpgrade( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulesPath = _.path.join( routinePath, '.module' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
 
   let ready = new _.Consequence().take( null )
@@ -965,7 +965,7 @@ function submodulesDownloadUpgrade( test )
   .thenKeep( () =>
   {
     test.case = '.submodules.download - first time';
-    _.fileProvider.filesDelete( modulesPath );
+    _.fileProvider.filesDelete( submodulesPath );
     return null;
   })
 
@@ -975,12 +975,12 @@ function submodulesDownloadUpgrade( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '2/2 submodule(s) of module::submodules were downloaded in' ) );
 
-    var files = self.find( modulesPath );
+    var files = self.find( submodulesPath );
 
     test.is( files.length > 30 );
 
-    test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'Tools' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'PathFundamentals' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathFundamentals' ) ) )
     return null;
   })
 
@@ -997,14 +997,14 @@ function submodulesDownloadUpgrade( test )
   //
   //   test.identical( got.exitCode, 0 );
   //   test.is( _.strHas( got.output, '0/2 submodule(s) of module::submodules were downloaded in' ) );
-  //   test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'Tools' ) ) )
-  //   test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'PathFundamentals' ) ) )
+  //   test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
+  //   test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathFundamentals' ) ) )
   //   test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
   //
-  //   var files = self.find( _.path.join( modulesPath, 'Tools' ) );
+  //   var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
   //   test.is( files.length > 3 );
   //
-  //   var files = self.find( _.path.join( modulesPath, 'PathFundamentals' ) );
+  //   var files = self.find( _.path.join( submodulesPath, 'PathFundamentals' ) );
   //   test.is( files.length > 3 );
   //
   //   return null;
@@ -1015,7 +1015,7 @@ function submodulesDownloadUpgrade( test )
   .thenKeep( () =>
   {
     test.case = '.submodules.upgrade - first time';
-    _.fileProvider.filesDelete( modulesPath );
+    _.fileProvider.filesDelete( submodulesPath );
     return null;
   })
   shell({ args : [ '.submodules.upgrade' ] })
@@ -1024,14 +1024,14 @@ function submodulesDownloadUpgrade( test )
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '2/2 submodule(s) of module::submodules were upgraded in' ) );
-    test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'Tools' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'PathFundamentals' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathFundamentals' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
 
-    var files = self.find( _.path.join( modulesPath, 'Tools' ) );
+    var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
     test.is( files.length );
 
-    var files = self.find( _.path.join( modulesPath, 'PathFundamentals' ) );
+    var files = self.find( _.path.join( submodulesPath, 'PathFundamentals' ) );
     test.is( files.length );
 
     return null;
@@ -1050,14 +1050,14 @@ function submodulesDownloadUpgrade( test )
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '0/2 submodule(s) of module::submodules were upgraded in' ) );
-    test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'Tools' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'PathFundamentals' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathFundamentals' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
 
-    var files = self.find( _.path.join( modulesPath, 'Tools' ) );
+    var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
     test.is( files.length );
 
-    var files = self.find( _.path.join( modulesPath, 'PathFundamentals' ) );
+    var files = self.find( _.path.join( submodulesPath, 'PathFundamentals' ) );
     test.is( files.length );
 
     return null;
@@ -1072,7 +1072,7 @@ function submodulesDownloadUpgrade( test )
   {
     test.case = '.submodules.clean';
 
-    files = self.find( modulesPath );
+    files = self.find( submodulesPath );
 
     return files;
   })
@@ -1104,7 +1104,7 @@ function submodulesClean( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulesPath = _.path.join( routinePath, '.module' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
 
   let ready = new _.Consequence().take( null );
@@ -1132,7 +1132,7 @@ function submodulesClean( test )
     test.case = '.clean ';
     test.is( _.strHas( got.output, '2/2 submodule(s) of module::submodules were upgraded in' ) );
 
-    files = self.find( modulesPath );
+    files = self.find( submodulesPath );
 
     test.is( files.length > 100 );
 
@@ -1157,7 +1157,7 @@ function submodulesClean( test )
   {
     test.case = '.clean.what';
 
-    files = self.find( modulesPath );
+    files = self.find( submodulesPath );
 
     test.is( files.length > 100 );
 
@@ -1195,14 +1195,14 @@ function submodulesClean( test )
   {
     test.case = '.submodules.upgrade'
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'Tools' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( modulesPath, 'PathFundamentals' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathFundamentals' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
 
-    var files = self.find( _.path.join( modulesPath, 'Tools' ) );
+    var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
     test.is( files.length );
 
-    var files = self.find( _.path.join( modulesPath, 'PathFundamentals' ) );
+    var files = self.find( _.path.join( submodulesPath, 'PathFundamentals' ) );
     test.is( files.length );
 
     return null;
@@ -1215,7 +1215,7 @@ function submodulesClean( test )
   .thenKeep( () =>
   {
 
-    files = self.find( modulesPath );
+    files = self.find( submodulesPath );
 
     return null;
   })
@@ -1247,7 +1247,7 @@ function submodulesBuild( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulesPath = _.path.join( routinePath, '.module' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
 
   let ready = new _.Consequence().take( null );
@@ -1362,7 +1362,7 @@ function submodulesExport( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulesPath = _.path.join( routinePath, '.module' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let buildOutPath = _.path.join( routinePath, 'out/debug' );
   let outPath = _.path.join( routinePath, 'out' );
@@ -1518,7 +1518,7 @@ function submodulesBrokenClean1( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-broken-1' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulesPath = _.path.join( routinePath, '.module' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let buildOutPath = _.path.join( routinePath, 'out/debug' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
@@ -1547,7 +1547,7 @@ function submodulesBrokenClean1( test )
   {
     test.case = '.clean ';
 
-    var files = self.find( modulesPath );
+    var files = self.find( submodulesPath );
     test.identical( files.length, 4 );
 
     return null;
@@ -1561,7 +1561,7 @@ function submodulesBrokenClean1( test )
   {
     test.case = '.clean.what';
 
-    var files = self.find( modulesPath );
+    var files = self.find( submodulesPath );
 
     test.identical( files.length, 4 );
 
@@ -1652,7 +1652,7 @@ function submodulesBrokenClean2( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-broken-2' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulesPath = _.path.join( routinePath, '.module' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let buildOutPath = _.path.join( routinePath, 'out/debug' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
@@ -1681,7 +1681,7 @@ function submodulesBrokenClean2( test )
   {
     test.case = '.clean ';
 
-    var files = self.find( modulesPath );
+    var files = self.find( submodulesPath );
 
     test.identical( files.length, 4 );
 
@@ -1696,7 +1696,7 @@ function submodulesBrokenClean2( test )
   {
     test.case = '.clean.what';
 
-    var files = self.find( modulesPath );
+    var files = self.find( submodulesPath );
 
     test.identical( files.length, 4 );
 
@@ -1786,7 +1786,7 @@ function multipleExports( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulesPath = _.path.join( routinePath, '.module' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
@@ -2189,7 +2189,7 @@ function multipleExportsImport( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulesPath = _.path.join( routinePath, '.module' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let out2Path = _.path.join( routinePath, 'super.out' );
   let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
@@ -2388,7 +2388,7 @@ function multipleExportsBroken( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports-broken' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulesPath = _.path.join( routinePath, '.module' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
@@ -2498,7 +2498,7 @@ function multipleExportsDoc( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports-doc' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulesPath = _.path.join( routinePath, '.module' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
   let subOutPath = _.path.join( routinePath, 'out' );
   let supOutPath = _.path.join( routinePath, 'doc.out' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
@@ -2559,7 +2559,7 @@ function importInExport( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'import-in' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulesPath = _.path.join( routinePath, '.module' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
@@ -2610,7 +2610,7 @@ function reflectSubmoduleNone( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflect-submodules-none' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulesPath = _.path.join( routinePath, 'module' );
+  let submodulesPath = _.path.join( routinePath, 'module' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null )
@@ -2657,7 +2657,7 @@ function reflectGetPath( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflect-get-path' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulesPath = _.path.join( routinePath, 'module' );
+  let submodulesPath = _.path.join( routinePath, 'module' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null )
@@ -2851,12 +2851,56 @@ reflectSubdir.timeOut = 130000;
 
 //
 
+function reflectComposite( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'composite-reflector' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  ready.thenKeep( () =>
+  {
+    test.case = '.build out* variant:0'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build out* variant:0' ] })
+  .thenKeep( ( arg ) =>
+  {
+    var expected = [];
+    var files = self.find( outPath );
+    test.is( files.length > 10 );
+    test.identical( files, expected );
+    test.identical( arg.exitCode, 0 );
+    return null;
+  })
+
+  return ready;
+}
+
+reflectComposite.timeOut = 130000;
+
+//
+
 function reflectRemote( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflect-remote' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulesPath = _.path.join( routinePath, 'module' );
+  let submodulesPath = _.path.join( routinePath, 'module' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
   let downloadPath = _.path.join( routinePath, 'wPathFundamentals' );
@@ -2964,6 +3008,7 @@ var Self =
     reflectSubmoduleNone,
     reflectGetPath,
     reflectSubdir,
+    reflectComposite,
     reflectRemote,
 
   }

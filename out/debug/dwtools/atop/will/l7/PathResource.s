@@ -121,23 +121,16 @@ function _pathSet( src )
   if( _.arrayLike( src ) )
   src = _.arraySlice( src );
 
-  // if( pathResource.path )
-  // debugger;
-  // if( src )
-  // debugger;
-
-  if( module && pathResource.name )
+  if( module && pathResource.name && !pathResource.original )
   {
-    // debugger;
     _.assert( module.pathMap[ pathResource.name ] === pathResource.path );
     delete module.pathMap[ pathResource.name ];
   }
 
   pathResource[ pathSymbol ] = src;
 
-  if( module && pathResource.name )
+  if( module && pathResource.name && !pathResource.original )
   {
-    // debugger;
     _.assert( module.pathMap[ pathResource.name ] === undefined );
     module.pathMap[ pathResource.name ] = pathResource.path;
   }

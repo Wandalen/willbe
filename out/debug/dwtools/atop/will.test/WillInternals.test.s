@@ -60,14 +60,14 @@ function buildSimple( test )
   let originalDirPath = _.path.join( self.assetDirPath, 'simple' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, '.' );
-  let modulesPath = _.path.join( routinePath, '.module' );
-  let exportPath = _.path.join( routinePath, 'out' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
   let will = new _.Will;
 
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-  _.fileProvider.filesDelete( exportPath );
+  _.fileProvider.filesDelete( outPath );
 
   var module = will.moduleMake({ filePath : modulePath });
 
@@ -75,7 +75,7 @@ function buildSimple( test )
   {
 
     var expected = [];
-    var files = self.find( exportPath );
+    var files = self.find( outPath );
 
     let builds = module.buildsSelect();
 
@@ -88,7 +88,7 @@ function buildSimple( test )
     {
 
       var expected = [ '.', './debug', './debug/File.js' ];
-      var files = self.find( exportPath );
+      var files = self.find( outPath );
       test.identical( files, expected );
 
       module.finit();
@@ -468,8 +468,8 @@ function clone( test )
   let originalDirPath = _.path.join( self.assetDirPath, 'import-in' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, 'super' );
-  let modulesPath = _.path.join( routinePath, '.module' );
-  let exportPath = _.path.join( routinePath, 'out' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
   let will = new _.Will;
   let path = _.fileProvider.path;
@@ -503,7 +503,7 @@ function clone( test )
 
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-  _.fileProvider.filesDelete( exportPath );
+  _.fileProvider.filesDelete( outPath );
 
   var module = will.moduleMake({ filePath : modulePath });
   var module2;
@@ -576,15 +576,15 @@ function buildsResolve( test )
   let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, 'super' );
-  let modulesPath = _.path.join( routinePath, '.module' );
-  let exportPath = _.path.join( routinePath, 'out' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
   let will = new _.Will;
   let path = _.fileProvider.path;
 
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-  _.fileProvider.filesDelete( exportPath );
+  _.fileProvider.filesDelete( outPath );
 
   var module = will.moduleMake({ filePath : modulePath });
 
@@ -702,8 +702,8 @@ function pathsResolve( test )
   let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, 'super' );
-  let modulesPath = _.path.join( routinePath, '.module' );
-  let exportPath = _.path.join( routinePath, 'out' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
   let will = new _.Will;
   let path = _.fileProvider.path;
@@ -720,7 +720,7 @@ function pathsResolve( test )
 
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-  _.fileProvider.filesDelete( exportPath );
+  _.fileProvider.filesDelete( outPath );
 
   var module = will.moduleMake({ filePath : modulePath });
 
@@ -823,8 +823,9 @@ function pathsResolve( test )
     }
     var got = _.select( resolved, '*/path' );
     test.identical( got, expected );
-    _.any( resolved, ( e, k ) => test.is( e === module.pathResourceMap[ k ] ) );
+    _.any( resolved, ( e, k ) => test.is( e.identicalWith( module.pathResourceMap[ k ] ) ) );
     _.any( resolved, ( e, k ) => test.is( e.module === module ) );
+    _.any( resolved, ( e, k ) => test.is( !!e.original ) );
 
     test.case = 'path::* - pu:0 mvu:0 pr:in'; /* */
     var resolved = module.resolve
@@ -991,8 +992,8 @@ function pathsResolveImportIn( test )
   let originalDirPath = _.path.join( self.assetDirPath, 'import-in' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, 'super' );
-  let modulesPath = _.path.join( routinePath, '.module' );
-  let exportPath = _.path.join( routinePath, 'out' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
   let will = new _.Will;
   let path = _.fileProvider.path;
@@ -1009,7 +1010,7 @@ function pathsResolveImportIn( test )
 
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-  _.fileProvider.filesDelete( exportPath );
+  _.fileProvider.filesDelete( outPath );
 
   var module = will.moduleMake({ filePath : modulePath });
 
@@ -1036,8 +1037,6 @@ function pathsResolveImportIn( test )
     });
     var expected = pin( 'proto' );
     test.identical( resolved, expected );
-
-    // "submodule::*/exported::*=1/path::exportedDir*=1"
 
     return null;
   });
@@ -1111,7 +1110,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = [ 'proto' ];
+    var expected = [ [ 'proto' ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -1150,10 +1149,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected =
-    {
-      'MultipleExports' : { 'in' : 'proto' }
-    }
+    var expected = 'proto';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -1168,7 +1164,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'MultipleExports' : { 'in' : 'proto' } };
+    var expected = 'proto';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -1187,7 +1183,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = { 'MultipleExports' : { 'in' : 'proto' } };
+    var expected = [ [ 'proto' ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -1269,7 +1265,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = [ pin( 'proto' ) ];
+    var expected = [ [ pin( 'proto' ) ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -1308,10 +1304,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected =
-    {
-      'MultipleExports' : { 'in' : pin( 'proto' ) }
-    }
+    var expected = pin( 'proto' );
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -1326,7 +1319,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'MultipleExports' : { 'in' : pin( 'proto' ) } };
+    var expected = pin( 'proto' );
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -1345,7 +1338,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = { 'MultipleExports' : { 'in' : pin( 'proto' ) } };
+    var expected = [ [ pin( 'proto' ) ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -1435,7 +1428,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = [ '.' ];
+    var expected = [ [ '.' ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -1474,10 +1467,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected =
-    {
-      'MultipleExports' : { 'proto' : '.' }
-    }
+    var expected = '.';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -1492,7 +1482,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'MultipleExports' : { 'proto' : '.' } };
+    var expected = '.';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -1511,7 +1501,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = { 'MultipleExports' : { 'proto' : '.' } };
+    var expected = [ [ '.' ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -1593,7 +1583,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = [ pin( 'proto' ) ];
+    var expected = [ [ pin( 'proto' ) ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -1632,10 +1622,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected =
-    {
-      'MultipleExports' : { 'proto' : pin( 'proto' ) }
-    }
+    var expected = pin( 'proto' );
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -1650,7 +1637,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'MultipleExports' : { 'proto' : pin( 'proto' ) } };
+    var expected = pin( 'proto' );
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -1669,7 +1656,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = { 'MultipleExports' : { 'proto' : pin( 'proto' ) } };
+    var expected = [ [ pin( 'proto' ) ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -1884,7 +1871,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = [ '..' ];
+    var expected = [ [ '..' ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -1923,10 +1910,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected =
-    {
-      'MultipleExports' : { 'in' : '..' }
-    }
+    var expected = '..';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -1941,7 +1925,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'MultipleExports' : { 'in' : '..' } };
+    var expected = '..';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -1960,7 +1944,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = { 'MultipleExports' : { 'in' : '..' } };
+    var expected = [ [ '..' ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2042,7 +2026,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = [ pin( '.' ) ];
+    var expected = [ [ pin( '.' ) ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2081,10 +2065,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected =
-    {
-      'MultipleExports' : { 'in' : pin( '.' ) }
-    }
+    var expected = pin( '.' );
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2099,7 +2080,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'MultipleExports' : { 'in' : pin( '.' ) } };
+    var expected = pin( '.' );
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -2118,7 +2099,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = { 'MultipleExports' : { 'in' : pin( '.' ) } };
+    var expected = [ [ pin( '.' ) ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2208,7 +2189,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = [ './proto' ];
+    var expected = [ [ './proto' ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2247,10 +2228,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected =
-    {
-      'MultipleExports' : { 'proto' : './proto' }
-    }
+    var expected = './proto';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2265,7 +2243,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'MultipleExports' : { 'proto' : './proto' } };
+    var expected = './proto';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -2284,7 +2262,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = { 'MultipleExports' : { 'proto' : './proto' } };
+    var expected = [ [ './proto' ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2366,7 +2344,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = [ pin( 'proto' ) ];
+    var expected = [ [ pin( 'proto' ) ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2405,10 +2383,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected =
-    {
-      'MultipleExports' : { 'proto' : pin( 'proto' ) }
-    }
+    var expected = pin( 'proto' );
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2423,7 +2398,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'MultipleExports' : { 'proto' : pin( 'proto' ) } };
+    var expected = pin( 'proto' );
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -2442,7 +2417,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
     });
-    var expected = { 'MultipleExports' : { 'proto' : pin( 'proto' ) } };
+    var expected = [ [ pin( 'proto' ) ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2497,6 +2472,283 @@ function pathsResolveOutFileOfExports( test )
 
 pathsResolveOutFileOfExports.timeOut = 130000;
 
+//
+
+function pathsResolveComposite( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'composite-path' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulePath = _.path.join( routinePath, '.' );
+  let ready = new _.Consequence().take( null );
+  let will = new _.Will;
+  let path = _.fileProvider.path;
+
+  function pin( filePath )
+  {
+    return path.s.join( routinePath, 'in', filePath );
+  }
+
+  function pout( filePath )
+  {
+    return path.s.join( routinePath, 'out', filePath );
+  }
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  var module = will.moduleMake({ filePath : modulePath });
+
+  module.ready.thenKeep( ( arg ) =>
+  {
+
+    test.case = 'path::protoDir1';
+    var resolved = module.resolve( 'path::protoDir1' )
+    var expected = pin( 'proto/dir' );
+    test.identical( resolved, expected );
+
+    test.case = 'path::protoDir2';
+    var resolved = module.resolve( 'path::protoDir2' )
+    var expected = pin( 'protodir' );
+    test.identical( resolved, expected );
+
+    test.case = 'path::protoDir3';
+    var resolved = module.resolve( 'path::protoDir3' )
+    var expected = pin( 'prefix/proto/dir/dir2' );
+    test.identical( resolved, expected );
+
+    test.case = 'path::protoDir4';
+    var resolved = module.resolve( 'path::protoDir4' )
+    var expected = pin( '../prefix/aprotobdirc/dir2' );
+    test.identical( resolved, expected );
+
+    test.case = 'path::protoDir4b';
+    var resolved = module.resolve( 'path::protoDir4b' )
+    var expected = pin( '../prefix/aprotobdirc/dir2/proto' );
+    test.identical( resolved, expected );
+
+    return null;
+  });
+
+  /* - */
+
+  module.ready.finallyKeep( ( err, arg ) =>
+  {
+
+    debugger;
+    test.is( err === undefined );
+    module.finit();
+
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  return module.ready.split();
+}
+
+pathsResolveComposite.timeOut = 130000;
+
+//
+
+function reflectorResolve( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'composite-reflector' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulePath = _.path.join( routinePath, '.' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let outPath = _.path.join( routinePath, 'out' );
+  let will = new _.Will;
+  let path = _.fileProvider.path;
+
+  function pin( filePath )
+  {
+    return path.s.join( routinePath, filePath );
+  }
+
+  function pout( filePath )
+  {
+    return path.s.join( routinePath, 'super.out', filePath );
+  }
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( outPath );
+
+  var module = will.moduleMake({ filePath : modulePath });
+
+  /* - */
+
+  module.ready.thenKeep( ( arg ) =>
+  {
+
+    test.case = 'reflector::reflect.proto.0.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.0.debug' )
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'maskAll' : { 'excludeAny' : true },
+        'prefixPath' : 'proto'
+      },
+      'dst' : { 'prefixPath' : 'out/debug' },
+      'criterion' : { 'debug' : 1, 'variant' : 0 },
+      'inherit' : [ 'predefined.*' ]
+    }
+    var resolvedData = resolved.dataExport();
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.proto.1.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.1.debug' )
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'maskAll' : { 'excludeAny' : true },
+        'prefixPath' : 'proto'
+      },
+      'dst' : { 'prefixPath' : 'out/debug' },
+      'criterion' : { 'debug' : 1, 'variant' : 1 },
+      'inherit' : [ 'predefined.*' ]
+    }
+    var resolvedData = resolved.dataExport();
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.proto.2.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.2.debug' )
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'maskAll' : { 'excludeAny' : true },
+        'prefixPath' : 'proto'
+      },
+      'dst' : { 'prefixPath' : 'out/debug' },
+      'criterion' : { 'debug' : 1, 'variant' : 2 },
+      'inherit' : [ 'predefined.*' ]
+    }
+    var resolvedData = resolved.dataExport();
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.proto.3.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.3.debug' )
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'maskAll' : { 'excludeAny' : true },
+        'prefixPath' : 'proto'
+      },
+      'dst' : { 'prefixPath' : 'out/debug' },
+      'criterion' : { 'debug' : 1, 'variant' : 3 },
+      'inherit' : [ 'predefined.*' ]
+    }
+    var resolvedData = resolved.dataExport();
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.proto.4.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.4.debug' )
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'maskAll' : { 'excludeAny' : true },
+        'prefixPath' : 'proto/dir2',
+      },
+      'dst' : { 'prefixPath' : 'out/debug/dir1' },
+      'criterion' : { 'debug' : 1, 'variant' : 4 },
+      'inherit' : [ 'predefined.*' ]
+    }
+    var resolvedData = resolved.dataExport();
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+    test.identical( resolved.src.prefixPath, pin( 'proto/dir2' ) );
+    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1' ) );
+
+    test.case = 'reflector::reflect.proto.5.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.5.debug' )
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'maskAll' : { 'excludeAny' : true },
+        'prefixPath' : 'proto/dir2',
+      },
+      'dst' : { 'prefixPath' : 'out/debug/dir1' },
+      'criterion' : { 'debug' : 1, 'variant' : 5 },
+      'inherit' : [ 'predefined.*' ]
+    }
+    var resolvedData = resolved.dataExport();
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+    test.identical( resolved.src.prefixPath, pin( 'proto/dir2' ) );
+    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1' ) );
+
+    test.case = 'reflector::reflect.proto.6.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.6.debug' )
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'maskAll' : { 'excludeAny' : true },
+        'prefixPath' : 'proto/dir2/File.test.s',
+      },
+      'dst' : { 'prefixPath' : 'out/debug/dir1/File.test.s' },
+      'criterion' : { 'debug' : 1, 'variant' : 6 },
+      'inherit' : [ 'predefined.*' ]
+    }
+    var resolvedData = resolved.dataExport();
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+    test.identical( resolved.src.prefixPath, pin( 'proto/dir2/File.test.s' ) );
+    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1/File.test.s' ) );
+
+    return null;
+  });
+
+  /* - */
+
+  module.ready.finallyKeep( ( err, arg ) =>
+  {
+
+    debugger;
+    test.is( err === undefined );
+    module.finit();
+
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  return module.ready.split();
+}
+
 // --
 // define class
 // --
@@ -2529,6 +2781,9 @@ var Self =
     pathsResolve,
     pathsResolveImportIn,
     pathsResolveOutFileOfExports,
+    pathsResolveComposite,
+
+    reflectorResolve,
 
   }
 

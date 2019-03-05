@@ -38,6 +38,9 @@ function MakeForEachCriterion( o )
   let will = module.will;
   let counter = 0;
 
+  if( o.criterion )
+  o.criterion = Cls.CriterionNormalize( o.criterion );
+
   if( o.criterion && _.mapKeys( o.criterion ).length > 0 )
   {
     let samples = _.eachSample({ sets : o.criterion });
@@ -46,21 +49,11 @@ function MakeForEachCriterion( o )
     {
       let criterion = samples[ index ];
       let o2 = _.mapExtend( null, o );
-
-      let vcriterion = Cls.CriterionVariable( samples, criterion );
-
-      let postfix = [];
-      for( let c in vcriterion )
-      if( vcriterion[ c ] )
-      postfix.push( c );
-
-      // if( o.name === 'export' ) // xxx
-      // debugger;
+      let postfix = Cls.CriterionPostfixFor( samples, criterion );
 
       o2.criterion = criterion;
-      o2.name = o.name + '.' + ( postfix.length ? postfix.join( '.' ) : '' );
+      o2.name = o.name + '.' + postfix;
 
-      // o2.name = o.name + '.' + index;
       result.push( Cls( o2 ).form1() );
       counter += 1;
     }
@@ -126,6 +119,24 @@ function copy( o )
 
 //
 
+function cloneDerivative()
+{
+  let resource = this;
+
+  _.assert( arguments.length === 0 );
+
+  let resource2 = resource.clone();
+
+  resource2.module = resource.module;
+  resource2.willf = resource.willf;
+  resource2.original = resource.original || resource;
+  resource2.formed = resource.formed;
+
+  return resource2;
+}
+
+//
+
 function unform()
 {
   let resource = this;
@@ -138,15 +149,22 @@ function unform()
 
   _.assert( arguments.length === 0 );
   _.assert( resource.formed );
-  _.assert( module[ resource.MapName ][ resource.name ] === resource );
-  if( willf )
-  _.assert( willf[ resource.MapName ][ resource.name ] === resource );
+
+  if( !resource.original )
+  {
+    _.assert( module[ resource.MapName ][ resource.name ] === resource );
+    if( willf )
+    _.assert( willf[ resource.MapName ][ resource.name ] === resource );
+  }
 
   /* begin */
 
-  delete module[ resource.MapName ][ resource.name ];
-  if( willf )
-  delete willf[ resource.MapName ][ resource.name ];
+  if( !resource.original )
+  {
+    delete module[ resource.MapName ][ resource.name ];
+    if( willf )
+    delete willf[ resource.MapName ][ resource.name ];
+  }
 
   /* end */
 
@@ -158,6 +176,8 @@ function unform()
 
 function form()
 {
+  _.assert( !!this.module );
+
   let resource = this;
   let module = resource.module;
   let willf = resource.willf;
@@ -165,9 +185,6 @@ function form()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-
-  // if( resource.absoluteName === 'module::withSubmodules / module::Tools / reflector::exportedFiles.0' )
-  // debugger;
 
   if( resource.formed === 0 )
   resource.form1();
@@ -196,8 +213,6 @@ function form1()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.sure( !module[ resource.MapName ][ resource.name ], () => 'Module ' + module.dirPath + ' already has ' + resource.nickName );
-  _.assert( !willf || !willf[ resource.MapName ][ resource.name ] );
   _.assert( arguments.length === 0 );
   _.assert( !resource.formed );
   _.assert( !!will );
@@ -205,15 +220,23 @@ function form1()
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !!will.formed );
-  // _.assert( module.preformed >= 2 );
   _.assert( !willf || !!willf.formed );
   _.assert( _.strDefined( resource.name ) );
 
+  if( !resource.original )
+  {
+    _.sure( !module[ resource.MapName ][ resource.name ], () => 'Module ' + module.dirPath + ' already has ' + resource.nickName );
+    _.assert( !willf || !willf[ resource.MapName ][ resource.name ] );
+  }
+
   /* begin */
 
-  module[ resource.MapName ][ resource.name ] = resource;
-  if( willf )
-  willf[ resource.MapName ][ resource.name ] = resource;
+  if( !resource.original )
+  {
+    module[ resource.MapName ][ resource.name ] = resource;
+    if( willf )
+    willf[ resource.MapName ][ resource.name ] = resource;
+  }
 
   /* end */
 
@@ -292,12 +315,11 @@ function _inheritMultiple( o )
     _.assert( _.strIs( resource.KindName ) );
     _.assert( _.strIs( ancestor ) );
 
-    // if( resource.nickName === 'reflector::reflect.submodules' )
-    // debugger;
     let ancestors = module.resolve
     ({
       selector : ancestor,
-      defaultPool : resource.KindName,
+      defaultResourceName : resource.KindName,
+      prefixlessAction : 'default',
       visited : o.visited,
       current : resource,
       flattening : 1,
@@ -427,7 +449,7 @@ function criterionValidate()
   for( let c in resource.criterion )
   {
     let crit = resource.criterion[ c ];
-    _.sure( _.primitiveIs( crit ), () => 'Criterion ' + c + ' of ' + resource.nickName + ' should be primitive, but is ' + _.strType( crit ) );
+    _.sure( _.strIs( crit ) || _.numberIs( crit ), () => 'Criterion ' + c + ' of ' + resource.nickName + ' should be number or string, but is ' + _.strType( crit ) );
   }
 
 }
@@ -439,17 +461,18 @@ function criterionSattisfy( criterion2 )
   let resource = this;
   let criterion1 = resource.criterion;
 
+  _.assert( _.mapIs( criterion1 ) );
   _.assert( criterion2 === null || _.mapIs( criterion2 ) );
   _.assert( arguments.length === 1 );
 
-  if( criterion2 === null )
-  debugger;
+  // if( criterion2 === null )
+  // debugger;
+  // if( criterion1 === null )
+  // return 1;
+  // if( criterion2 === null )
+  // return 1;
 
-  if( criterion1 === null )
-  return true;
-  if( criterion2 === null )
-  return true;
-
+  if( criterion2 )
   for( let c in criterion2 )
   {
     if( criterion1[ c ] === undefined )
@@ -483,41 +506,39 @@ function criterionInherit( criterion2 )
 
 //
 
-function criterionVariable( criterions, criterion )
+function criterionVariable( criterionMaps, criterion )
 {
   let resource = this;
 
   if( !criterion )
   criterion = resource.criterion;
 
-  return resource.CriterionVariable( criterions, criterion );
+  return resource.CriterionVariable( criterionMaps, criterion );
 }
 
 //
 
-function CriterionVariable( criterions, criterion )
+function CriterionVariable( criterionMaps, criterion )
 {
 
-  criterions = _.arrayAs( criterions );
-  criterions = criterions.map( ( e ) => _.mapIs( e ) ? e : e.criterion );
+  criterionMaps = _.arrayAs( criterionMaps );
+  criterionMaps = criterionMaps.map( ( e ) => _.mapIs( e ) ? e : e.criterion );
 
   if( Config.debug )
-  _.assert( _.all( criterions, ( criterion ) => _.mapIs( criterion ) ) );
+  _.assert( _.all( criterionMaps, ( criterion ) => _.mapIs( criterion ) ) );
   _.assert( arguments.length === 2 );
 
-  _.arrayAppendOnce( criterions, criterion );
+  _.arrayAppendOnce( criterionMaps, criterion );
 
-  // let any = _.mapExtend( null, criterions[ 0 ] );
-  let all = _.mapExtend( null, criterions[ 0 ] );
+  let all = _.mapExtend( null, criterionMaps[ 0 ] );
+  all = this.CriterionNormalize( all );
 
-  for( let i = 1 ; i < criterions.length ; i++ )
+  for( let i = 1 ; i < criterionMaps.length ; i++ )
   {
-    let criterion2 = criterions[ i ];
-
-    // _.mapExtend( any, criterion2 );
+    let criterion2 = criterionMaps[ i ];
 
     for( let c in all )
-    if( criterion2[ c ] != all[ c ] )
+    if( this.CriterionValueNormalize( criterion2[ c ] ) !== all[ c ] )
     delete all[ c ];
 
   }
@@ -526,6 +547,67 @@ function CriterionVariable( criterions, criterion )
 
   return result;
 }
+
+//
+
+function CriterionPostfixFor( criterionMaps, criterionMap )
+{
+
+  _.assert( arguments.length === 2 );
+
+  let variableCriterionMap = this.CriterionVariable( criterionMaps, criterionMap );
+  let postfix = [];
+  for( let c in variableCriterionMap )
+  {
+    let value = variableCriterionMap[ c ];
+    _.assert( value === this.CriterionValueNormalize( value ) );
+    if( value === 0 )
+    {}
+    else if( value === 1 )
+    postfix.push( c );
+    else if( value > 1 )
+    postfix.push( c + value );
+    else if( _.strIs( value ) )
+    postfix.push( value );
+    else _.assert( 0 );
+  }
+
+  let result = ( postfix.length ? postfix.join( '.' ) : '' );
+
+  return result;
+}
+//
+
+function CriterionNormalize( criterionMap )
+{
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.mapIs( criterionMap ) );
+
+  for( let c in criterionMap )
+  {
+    let value = criterionMap[ c ];
+    // _.assert( _.numberIs( value ) || _.boolIs( value ) || _.strIs( value ) || _.arrayIs( value ) );
+    if( _.arrayIs( value ) )
+    criterionMap[ c ] = value.map( ( e ) => CriterionValueNormalize( e ) )
+    else
+    criterionMap[ c ] = CriterionValueNormalize( value );
+  }
+
+  return criterionMap;
+}
+
+//
+
+function CriterionValueNormalize( criterionValue )
+{
+  _.assert( arguments.length === 1 );
+  _.assert( _.numberIsInt( criterionValue ) || _.boolIs( criterionValue ) || _.strIs( criterionValue ) );
+  if( !_.boolIs( criterionValue ) )
+  return criterionValue;
+  return criterionValue === true ? 1 : 0;
+}
+
 // --
 // export
 // --
@@ -642,7 +724,8 @@ function resolve_body( o )
   return resolved;
 }
 
-resolve_body.defaults = Object.create( _.Will.Module.prototype.resolve.defaults );
+var defaults = resolve_body.defaults = Object.create( _.Will.Module.prototype.resolve.defaults );
+defaults.prefixlessAction = 'default';
 
 let resolve = _.routineFromPreAndBody( _.Will.Module.prototype.resolve.pre, resolve_body );
 
@@ -660,14 +743,17 @@ function inPathResolve_body( o )
   _.assert( _.strIs( o.selector ) );
   _.assertRoutineOptions( inPathResolve_body, arguments );
 
+  if( o.prefixlessAction !== 'default' )
+  o.defaultResourceName = null;
+
   let result = resource.resolve( o );
 
   return result;
 }
 
 var defaults = inPathResolve_body.defaults = Object.create( resolve.defaults );
-defaults.defaultPool = 'path';
-defaults.prefixlessAction = 'throw';
+defaults.defaultResourceName = 'path';
+defaults.prefixlessAction = 'default';
 defaults.pathResolving = 'in';
 
 let inPathResolve = _.routineFromPreAndBody( resolve.pre, inPathResolve_body );
@@ -716,12 +802,14 @@ let Medials =
 {
   willf : null,
   module : null,
+  original : null,
 }
 
 let Restricts =
 {
   willf : null,
   module : null,
+  original : null,
   formed : 0,
 }
 
@@ -730,6 +818,9 @@ let Statics =
   MakeForEachCriterion,
   OptionsFrom,
   CriterionVariable,
+  CriterionPostfixFor,
+  CriterionNormalize,
+  CriterionValueNormalize,
 
   MapName : null,
   KindName : null,
@@ -764,6 +855,7 @@ let Proto =
   finit,
   init,
   copy,
+  cloneDerivative,
 
   unform,
   form,
@@ -783,6 +875,9 @@ let Proto =
   criterionInherit,
   criterionVariable,
   CriterionVariable,
+  CriterionPostfixFor,
+  CriterionNormalize,
+  CriterionValueNormalize,
 
   // export
 

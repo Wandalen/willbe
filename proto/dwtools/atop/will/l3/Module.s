@@ -2495,54 +2495,6 @@ defaults.resource = 'export';
 // resolver
 // --
 
-function reflectorResolve_pre( routine, args )
-{
-  let o = args[ 0 ];
-  if( _.strIs( o ) )
-  o = { selector : o }
-
-  _.routineOptions( routine, o );
-  _.assert( arguments.length === 2 );
-  _.assert( args.length === 1 );
-
-  return o;
-}
-
-//
-
-function reflectorResolve_body( o )
-{
-  let module = this;
-  let will = module.will;
-
-  let reflector = module.resolve
-  ({
-    selector : o.selector,
-    defaultPool : 'reflector',
-    current : o.current,
-    pathResolving : 0,
-  });
-
-  // delete opts.reflector ;
-
-  reflector.form();
-
-  _.sure( reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strType( reflector ) )
-  _.assert( reflector.formed === 3, () => reflector.nickName + ' is not formed' );
-
-  return reflector;
-}
-
-reflectorResolve_body.defaults =
-{
-  selector : null,
-  current : null,
-}
-
-let reflectorResolve = _.routineFromPreAndBody( reflectorResolve_pre, reflectorResolve_body );
-
-//
-
 function errResolving( o )
 {
   let module = this;
@@ -2562,59 +2514,155 @@ errResolving.defaults =
 
 //
 
-function strSplitShort( srcStr )
+function _selectorShortSplitAct( selector )
 {
   let module = this;
-  _.assert( !_.strHas( srcStr, '/' ) );
-  let result = _.strIsolateLeftOrNone( srcStr, '::' );
+  _.assert( !_.strHas( selector, '/' ) );
+  let result = _.strIsolateLeftOrNone( selector, '::' );
   return result;
 }
 
 //
 
-function _strSplit( o )
+function _selectorShortSplit( o )
 {
   let module = this;
   let will = module.will;
   let result;
 
-  _.assertRoutineOptions( _strSplit, arguments );
+  _.assertRoutineOptions( _selectorShortSplit, o );
+  _.assert( arguments.length === 1 );
   _.assert( !_.strHas( o.selector, '/' ) );
   _.sure( _.strIs( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
 
-  let splits = module.strSplitShort( o.selector );
+  let splits = module._selectorShortSplitAct( o.selector );
 
-  if( !splits[ 0 ] && o.defaultPool )
+  if( !splits[ 0 ] && o.defaultResourceName )
   {
-    splits = [ o.defaultPool, '::', o.selector ]
+    splits = [ o.defaultResourceName, '::', o.selector ]
   }
 
   return splits;
 }
 
-var defaults = _strSplit.defaults = Object.create( null )
-
+var defaults = _selectorShortSplit.defaults = Object.create( null )
 defaults.selector = null
-defaults.defaultPool = null;
+defaults.defaultResourceName = null;
 
 //
 
-function strGetPrefix( srcStr )
+function selectorLongSplit( o )
 {
   let module = this;
-  let splits = module.strSplitShort( srcStr );
-  if( !splits[ 0 ] )
+  let will = module.will;
+  let result = [];
+
+  if( _.strIs( o ) )
+  o = { selector : o }
+
+  _.routineOptions( selectorLongSplit, o );
+  _.assert( arguments.length === 1 );
+  _.sure( _.strIs( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
+
+  let selectors = o.selector.split( '/' );
+
+  selectors.forEach( ( selector ) =>
+  {
+    let o2 = _.mapExtend( null, o );
+    o2.selector = selector;
+    result.push( module._selectorShortSplit( o2 ) );
+  });
+
+  return result;
+}
+
+var defaults = selectorLongSplit.defaults = Object.create( null )
+defaults.selector = null
+defaults.defaultResourceName = null;
+
+//
+
+function selectorParse( o )
+{
+  let module = this;
+  let will = module.will;
+  let result = [];
+
+  if( _.strIs( o ) )
+  o = { selector : o }
+
+  _.routineOptions( selectorParse, o );
+  _.assert( arguments.length === 1 );
+  _.sure( _.strIs( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
+
+  let splits = _.strSplitFast
+  ({
+    src : o.selector,
+    delimeter : [ '{', '}' ],
+  });
+
+  splits = _.strSplitsCoupledGroup({ splits : splits, prefix : '{', postfix : '}' });
+
+  if( splits[ 0 ] === '' )
+  splits.splice( 0, 1 );
+  if( splits[ splits.length-1 ] === '' )
+  splits.splice( splits.length-1, 1 );
+
+  splits = splits.map( ( split ) =>
+  {
+    if( !_.arrayIs( split ) )
+    return split;
+    _.assert( split.length === 3 )
+    if( module.selectorIs( split[ 1 ] ) )
+    {
+      let o2 = _.mapExtend( null, o );
+      o2.selector = split[ 1 ];
+      split[ 1 ] = module.selectorLongSplit( o2 );
+    }
+    return split;
+  });
+
+  return splits;
+}
+
+var defaults = selectorParse.defaults = Object.create( null )
+defaults.selector = null
+defaults.defaultResourceName = null;
+
+//
+
+function selectorIs( selector )
+{
+  if( !_.strIs( selector ) )
   return false;
-  if( !_.arrayHas( will.ResourceKinds, splits[ 0 ] ) )
+  if( !_.strHas( selector, '::' ) )
   return false;
-  return splits[ 0 ];
+  return true;
 }
 
 //
 
-function strIsResolved( srcStr )
+function selectorIsComposite( selector )
 {
-  return !_.strHas( srcStr, '::' );
+  let module = this;
+  if( !module.selectorIs( selector ) )
+  return false;
+
+  let splits = _.strSplitFast
+  ({
+    src : selector,
+    delimeter : [ '{', '}' ],
+  });
+
+  if( splits.length < 5 )
+  return false;
+
+  splits = _.strSplitsCoupledGroup({ splits : splits, prefix : '{', postfix : '}' });
+
+  if( !splits.some( ( split ) => _.arrayIs( split ) ) )
+  return false;
+
+  return true;
 }
 
 //
@@ -2626,11 +2674,17 @@ function resolve_pre( routine, args )
   o = { selector : o }
 
   _.routineOptions( routine, o );
+
+  if( o.visited === null )
+  o.visited = [];
+
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
   _.assert( _.arrayHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ), 'Unknown value of option path resolving', o.pathResolving );
   _.assert( _.arrayHas( [ 'undefine', 'throw', 'error' ], o.missingAction ), 'Unknown value of option missing action', o.missingAction );
   _.assert( _.arrayHas( [ 'default', 'resolved', 'throw', 'error' ], o.prefixlessAction ), 'Unknown value of option prefixless action', o.prefixlessAction );
+  // _.assert( o.prefixlessAction === 'default' || o.defaultResourceName === null, 'prefixlessAction should be "default" if defaultResourceName is provided' );
+  _.assert( _.arrayIs( o.visited ) );
 
   return o;
 }
@@ -2645,9 +2699,9 @@ function resolve_body( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  // debugger;
+  _.assert( o.prefixlessAction === 'default' || o.defaultResourceName === null, 'Prefixless action should be "default" if default resource is provided' );
+
   let result = module._resolveAct( o );
-  // debugger;
 
   if( result === undefined )
   {
@@ -2680,7 +2734,7 @@ function resolve_body( o )
   result = mapsFlatten( result );
   result = mapValsUnwrap( result );
   result = singleUnwrap( result );
-  result = pathsUnwrap( result );
+  // result = pathsUnwrap( result );
 
   _.assert( result !== undefined );
 
@@ -2688,20 +2742,20 @@ function resolve_body( o )
 
   /* - */
 
-  function pathsUnwrap( result )
-  {
-
-    if( !o.pathUnwrapping || !o.hasPath )
-    return result;
-
-    _.assert( _.mapIs( result ) || _.objectIs( result ) || _.arrayIs( result ) || _.strIs( result ) );
-    if( _.mapIs( result ) || _.arrayIs( result ) )
-    result = _.filter( result, ( e ) => pathsUnwrap( e ) )
-    else if( result instanceof will.PathResource )
-    result = result.path;
-
-    return result;
-  }
+  // function pathsUnwrap( result )
+  // {
+  //
+  //   if( !o.pathUnwrapping || !o.hasPath )
+  //   return result;
+  //
+  //   _.assert( _.mapIs( result ) || _.objectIs( result ) || _.arrayIs( result ) || _.strIs( result ) );
+  //   if( _.mapIs( result ) || _.arrayIs( result ) )
+  //   result = _.filter( result, ( e ) => pathsUnwrap( e ) )
+  //   else if( result instanceof will.PathResource )
+  //   result = result.path;
+  //
+  //   return result;
+  // }
 
   /* */
 
@@ -2711,7 +2765,7 @@ function resolve_body( o )
     if( !o.singleUnwrapping )
     return result;
 
-    if( !_.all( result, ( e ) => _.instanceIs( e ) ) )
+    if( _.any( result, ( e ) => _.mapIs( e ) || _.arrayIs( e ) ) )
     return result;
 
     if( _.mapIs( result ) )
@@ -2741,7 +2795,11 @@ function resolve_body( o )
 
   function mapValsUnwrap( result )
   {
-    if( !o.mapValsUnwrapping || !_.mapIs( result ) || !_.all( result, ( e ) => _.instanceIs( e ) || _.primitiveIs( e ) ) )
+    if( !o.mapValsUnwrapping )
+    return result
+    if( !_.mapIs( result ) )
+    return result;
+    if( !_.all( result, ( e ) => _.instanceIs( e ) || _.primitiveIs( e ) ) )
     return result;
     return _.mapVals( result );
   }
@@ -2751,9 +2809,9 @@ function resolve_body( o )
 resolve_body.defaults =
 {
   selector : null,
-  defaultPool : null,
-  prefixlessAction : 'default',
-  // prefixlessAction : 'resolved',
+  defaultResourceName : null,
+  // prefixlessAction : 'default',
+  prefixlessAction : 'resolved',
   missingAction : 'throw',
   visited : null,
   current : null,
@@ -2775,6 +2833,8 @@ defaults.missingAction = 'undefine';
 
 //
 
+let onSelectorComposite = _.select.functor.onSelectorComposite({ isStrippedSelector : 1 });
+let onSelectorDown = _.select.functor.onSelectorDownComposite({});
 function _resolveAct( o )
 {
   let module = this;
@@ -2794,6 +2854,7 @@ function _resolveAct( o )
   _.assertRoutineOptions( _resolveAct, arguments );
   _.assert( o.currentModule instanceof will.Module );
   _.assert( o.criterion === null || _.mapIs( o.criterion ) );
+  _.assert( _.arrayIs( o.visited ) );
 
   /* */
 
@@ -2805,11 +2866,12 @@ function _resolveAct( o )
       src : module,
       selector : o.selector,
       onSelector : onSelector,
+      onSelectorDown : onSelectorDown,
       onUpBegin : onUpBegin,
       onUpEnd : onUpEnd,
+      onDownEnd : onDownEnd,
       onQuantitativeFail : onQuantitativeFail,
       missingAction : 'error',
-      // recursive : Infinity, // xxx
       iterationCurrent :
       {
         module : o.currentModule,
@@ -2839,13 +2901,18 @@ function _resolveAct( o )
 
   function onSelector( selector )
   {
-    let it = this;
+    let op = this;
 
     if( !_.strIs( selector ) )
     return;
 
-    if( !module.strIsResolved( selector ) )
-    return selector;
+    if( module.selectorIs( selector ) )
+    {
+      // if( _.strIs( selector ) && _.strHas( selector, '{' ) )
+      // debugger;
+      return onSelectorComposite.call( op, selector );
+      // return selector;
+    }
 
     if( o.prefixlessAction === 'default' )
     {
@@ -2853,7 +2920,7 @@ function _resolveAct( o )
     }
     else if( o.prefixlessAction === 'throw' || o.prefixlessAction === 'error' )
     {
-      it.iterator.continue = false;
+      op.iterator.continue = false;
       let err = module.errResolving
       ({
         selector : selector,
@@ -2864,18 +2931,15 @@ function _resolveAct( o )
       if( op.prefixlessAction === 'throw' )
       throw err;
       debugger;
-      it.dst = err;
+      op.dst = err;
       return;
     }
     else if( o.prefixlessAction === 'resolved' )
     {
-      // debugger;
-      // return selector;
       return;
     }
     else _.assert( 0 );
 
-    // return selector
   }
 
   /* */
@@ -2883,8 +2947,6 @@ function _resolveAct( o )
   function onUpBegin()
   {
     let it = this;
-
-    // debugger;
 
     inheritsUpdate.call( it );
     globCriterionFilter.call( it );
@@ -2908,17 +2970,23 @@ function _resolveAct( o )
   {
     let it = this;
 
-    // debugger;
-    // if( _.strHas( it.path, '/MultipleExports' ) )
-    // debugger;
-
-    if( it.path === '/MultipleExports/export.debug/in' )
-    debugger;
-
     exportedWriteThrough.call( it );
-    exportedPathResolve.call( it );
     currentExclude.call( it );
+    compositePathsSelect.call( it );
     pathsResolve.call( it );
+    pathsUnwrap.call( it );
+
+  }
+
+  //
+
+  function onDownEnd()
+  {
+    let it = this;
+
+    mapsFlatten.call( it );
+    mapValsUnwrap.call( it );
+    singleUnwrap.call( it );
 
   }
 
@@ -2972,9 +3040,6 @@ function _resolveAct( o )
   {
     let it = this;
 
-    // if( _.strHas( it.path, '/MultipleExports' ) )
-    // debugger;
-
     if( it.down && it.down.isGlob )
     if(  o.criterion && it.src && it.src.criterionSattisfy )
     {
@@ -3000,7 +3065,7 @@ function _resolveAct( o )
 
     _.assert( !!it.iterationCurrent.module );
 
-    let splits = it.iterationCurrent.module._strSplit({ selector : it.selector, defaultPool : o.defaultPool });
+    let splits = it.iterationCurrent.module._selectorShortSplit({ selector : it.selector, defaultResourceName : o.defaultResourceName });
 
     it.parsedSelector = Object.create( null );
     it.parsedSelector.full = splits.join( '' );
@@ -3069,33 +3134,6 @@ function _resolveAct( o )
 
   /* */
 
-  function exportedPathResolve()
-  {
-    let it = this;
-
-    // if( !it.selector && it.iterationCurrent.exported && it.dst )
-    // {
-    //
-    //   if( it.dst instanceof will.Reflector )
-    //   {
-    //     let module2 = it.iterationCurrent.module;
-    //     let reflector = it.dst;
-    //     _.assert( reflector.inherit.length === 0 );
-    //     reflector.form();
-    //     it.dst = reflector;
-    //   }
-    //   else if( it.dst instanceof will.PathResource )
-    //   {
-    //     let module2 = it.iterationCurrent.module;
-    //     it.dst = path.s.join( module2.inPath, it.dst.path );
-    //   }
-    //
-    // }
-
-  }
-
-  /* */
-
   function currentExclude()
   {
     let it = this;
@@ -3107,56 +3145,193 @@ function _resolveAct( o )
 
   /* */
 
+  function compositePathSelect( module2, resource, filePath )
+  {
+    let result = filePath;
+
+    _.assert( _.strIs( filePath ) || _.strsAreAll( filePath ) );
+
+    if( module2.selectorIsComposite( filePath ) )
+    {
+
+      result = module2.pathResolve
+      ({
+        selector : result,
+        visited : _.arrayFlatten( null, [ o.visited, result ] ),
+        pathResolving : 0,
+        current : resource,
+      });
+
+    }
+
+    return result;
+  }
+
+  /* */
+
+  function compositePathsSelect()
+  {
+    let it = this;
+    let module2 = it.iterationCurrent.module;
+    let resource = it.dst;
+
+    if( !it.dstWritingDown )
+    return;
+
+    if( it.dst instanceof will.Reflector )
+    {
+      resource = it.dst = it.dst.cloneDerivative();
+
+      // if( resource.nickName === 'reflector::reflect.proto.5.debug' )
+      // debugger;
+
+      if( resource.src.prefixPath )
+      resource.src.prefixPath = compositePathSelect( module2, resource, resource.src.prefixPath );
+      if( resource.dst.prefixPath )
+      resource.dst.prefixPath = compositePathSelect( module2, resource, resource.dst.prefixPath );
+
+    }
+
+    if( resource instanceof will.PathResource )
+    {
+      resource = it.dst = resource.cloneDerivative();
+      resource.path = compositePathSelect( module2, resource, resource.path )
+    }
+
+  }
+
+  /* */
+
+  function pathResolve( module2, filePath, pathName )
+  {
+    let result = filePath;
+
+    _.assert( _.strIs( filePath ) || _.strsAreAll( filePath ) );
+
+    let prefixPath = '.';
+    if( o.pathResolving === 'in' && pathName !== 'in' )
+    prefixPath = module2.pathMap.in || '.';
+    else if( o.pathResolving === 'out' && pathName !== 'out' )
+    prefixPath = module2.pathMap.out || '.';
+    result = path.s.join( module2.dirPath, prefixPath, result );
+
+    return result;
+  }
+
+  /* */
+
   function pathsResolve()
   {
     let it = this;
     let module2 = it.iterationCurrent.module;
+    let resource = it.dst;
 
     if( !o.pathResolving )
     return;
     if( !it.dstWritingDown )
     return;
 
-    // if( !( it.dst instanceof will.PathResource ) )
-    // return;
+    // if( resource.nickName === 'reflector::reflect.proto.5.debug' )
+    // debugger;
 
     if( it.dst instanceof will.Reflector )
     {
-      // debugger;
-      let module2 = it.iterationCurrent.module;
-      let reflector = it.dst;
-      _.assert( reflector.inherit.length === 0 );
-      if( it.dst.src.hasSomePath() )
-      it.dst.src.prefixPath = path.s.join( module2.inPath, it.dst.src.prefixPath || '.' );
-      if( it.dst.dst.hasSomePath() )
-      it.dst.dst.prefixPath = path.s.join( module2.inPath, it.dst.dst.prefixPath || '.' );
-      // reflector.form();
-      // it.dst = reflector;
-      return;
+      resource = it.dst = it.dst.cloneDerivative();
+      if( resource.formed === 0 )
+      resource.form1();
+      if( resource.formed === 1 )
+      resource.form2();
+      // if( resource.formed === 2 )
+      // resource.form3();
+      // resource.form();
+      _.assert( resource.formed >= 2 );
+
+      if( resource.src.hasAnyPath() )
+      resource.src.prefixPath = pathResolve( module2, resource.src.prefixPath || '.' );
+      if( resource.dst.hasAnyPath() )
+      resource.dst.prefixPath = pathResolve( module2, resource.dst.prefixPath || '.' );
     }
 
-    if( !( it.dst instanceof will.PathResource ) )
+    if( it.dst instanceof will.PathResource )
+    {
+      resource = it.dst = resource.cloneDerivative();
+      _.assert( _.arrayIs( resource.path ) || _.strIs( resource.path ) );
+      resource.path = pathResolve( module2, resource.path, resource.name )
+    }
+
+  }
+
+  /* */
+
+  function pathsUnwrap()
+  {
+    let it = this;
+    let module2 = it.iterationCurrent.module;
+
+    if( !o.pathUnwrapping )
     return;
 
-    // if( it.dst instanceof will.PathResource )
-    // {
-    //   let module2 = it.iterationCurrent.module;
-    //   it.dst = path.s.join( module2.inPath, it.dst.path );
-    // }
+    if( it.dst instanceof will.PathResource )
+    it.dst = it.dst.path;
 
-    it.dst = it.dst.clone();
-    it.dst.module = null;
+    return result;
+  }
 
-    _.assert( _.arrayIs( it.dst.path ) || _.strIs( it.dst.path ) );
+  /* */
 
-    let prefixPath = '.';
-    if( o.pathResolving === 'in' && it.dst.name !== 'in' )
-    prefixPath = module2.pathMap.in || '.';
-    else if( o.pathResolving === 'out' && it.dst.name !== 'out' )
-    prefixPath = module2.pathMap.out || '.';
+  function singleUnwrap()
+  {
+    let it = this;
+    let module2 = it.iterationCurrent.module;
 
-    it.dst.path = path.s.resolve( module2.dirPath, prefixPath, it.dst.path );
+    // return;
 
+    if( !o.singleUnwrapping )
+    return;
+
+    if( _.any( it.dst, ( e ) => _.mapIs( e ) || _.arrayIs( e ) ) )
+    return;
+
+    if( _.mapIs( it.dst ) )
+    {
+      if( _.mapKeys( it.dst ).length === 1 )
+      it.dst = _.mapVals( it.dst )[ 0 ];
+    }
+    else if( _.arrayIs( it.dst ) )
+    {
+      if( it.dst.length === 1 )
+      it.dst = it.dst[ 0 ];
+    }
+
+  }
+
+  //
+
+  function mapsFlatten()
+  {
+    let it = this;
+    let module2 = it.iterationCurrent.module;
+    if( !o.flattening || !_.mapIs( it.dst ) )
+    return;
+
+    it.dst = _.mapsFlatten([ it.dst ]);
+  }
+
+  //
+
+  function mapValsUnwrap()
+  {
+    let it = this;
+    let module2 = it.iterationCurrent.module;
+
+    if( !o.mapValsUnwrapping )
+    return;
+    if( !_.mapIs( it.dst ) )
+    return;
+    if( !_.all( it.dst, ( e ) => _.instanceIs( e ) || _.primitiveIs( e ) ) )
+    return;
+
+    it.dst = _.mapVals( it.dst );
   }
 
 }
@@ -3164,6 +3339,108 @@ function _resolveAct( o )
 var defaults = _resolveAct.defaults = Object.create( resolve.defaults )
 
 defaults.visited = null;
+
+//
+
+function pathResolve_body( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( _.strIs( o.selector ) );
+
+  let o2 = _.mapExtend( null, o );
+  o2.pathResolving = 0;
+
+  let result = module.resolve( o2 );
+
+  if( o.pathResolving )
+  {
+
+    let pathName = o.selector;
+    if( module.selectorIs( pathName ) )
+    {
+      let parsed = module.selectorParse( pathName );
+      pathName = '';
+      if( _.arrayIs( parsed[ 0 ] ) )
+      {
+        _.assert( _.arrayIs( parsed[ 0 ][ 1 ][ 0 ] ) );
+        pathName = parsed[ 0 ][ 1 ][ 0 ][ 2 ];
+      }
+    }
+
+    let prefixPath = '.';
+    if( o.pathResolving === 'in' && pathName !== 'in' )
+    prefixPath = module.pathMap.in || '.';
+    else if( o.pathResolving === 'out' && pathName !== 'out' )
+    prefixPath = module.pathMap.out || '.';
+    result = path.s.join( module.dirPath, prefixPath, result );
+
+  }
+
+  return result;
+}
+
+_.routineExtend( pathResolve_body, resolve );
+
+var defaults = pathResolve_body.defaults;
+// defaults.pathResolving = 0;
+defaults.pathResolving = 'in';
+defaults.prefixlessAction = 'resolved';
+
+let pathResolve = _.routineFromPreAndBody( resolve_pre, pathResolve_body );
+
+//
+
+function reflectorResolve_pre( routine, args )
+{
+  let o = args[ 0 ];
+  if( _.strIs( o ) )
+  o = { selector : o }
+
+  _.routineOptions( routine, o );
+  _.assert( arguments.length === 2 );
+  _.assert( args.length === 1 );
+
+  return o;
+}
+
+//
+
+function reflectorResolve_body( o )
+{
+  let module = this;
+  let will = module.will;
+
+  let reflector = module.resolve
+  ({
+    selector : o.selector,
+    defaultResourceName : 'reflector',
+    prefixlessAction : 'default',
+    current : o.current,
+    pathResolving : 0,
+  });
+
+  // delete opts.reflector ;
+
+  reflector.form();
+
+  _.sure( reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strType( reflector ) )
+  _.assert( reflector.formed === 3, () => reflector.nickName + ' is not formed' );
+
+  return reflector;
+}
+
+reflectorResolve_body.defaults =
+{
+  selector : null,
+  current : null,
+}
+
+let reflectorResolve = _.routineFromPreAndBody( reflectorResolve_pre, reflectorResolve_body );
 
 // --
 // exporter
@@ -3596,18 +3873,22 @@ let Proto =
 
   // resolver
 
-  reflectorResolve,
   errResolving,
 
-  strSplitShort,
-  _strSplit,
-  strGetPrefix,
-  strIsResolved,
+  _selectorShortSplitAct,
+  _selectorShortSplit,
+  selectorLongSplit,
+  selectorParse,
+  selectorIs,
+  selectorIsComposite,
 
   resolve,
   resolveMaybe,
 
   _resolveAct,
+
+  pathResolve,
+  reflectorResolve,
 
   // exporter
 

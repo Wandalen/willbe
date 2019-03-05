@@ -1,0 +1,34 @@
+
+path :
+
+  proto : 'proto'
+  dir : 'dir'
+  temp : 'out'
+  in : 'in'
+  out : 'out'
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : './out/release'
+    criterion :
+      debug : 0
+
+  protoDir1 : '{path::proto}/{path::dir}'
+  protoDir2 : '{path::proto}{path::dir}'
+  protoDir3 : 'prefix/{path::proto}/{path::dir}/dir2'
+  protoDir4 : '../prefix/a{path::proto}b{path::dir}c/dir2'
+  protoDir4b : '{path::protoDir4}/{path::proto}'
+
+step :
+
+  echo :
+    inherit : predefined.shell
+    shell : echo Test!
+
+build :
+
+  echo :
+    steps :
+      - step::echo
