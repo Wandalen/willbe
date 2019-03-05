@@ -82,7 +82,7 @@ step  :
 Перевіримо які кроки є в файлі:
 
 ```
-[user@user ~]$ will .steps.list`
+[user@user ~]$ will .steps.list
 ...
 step::delete.debug.
   criterion : 
