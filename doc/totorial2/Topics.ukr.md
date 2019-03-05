@@ -3,7 +3,7 @@
 <a name="tutorials"></a>
 ## Туторіали
 - [Введення](Introduction.ukr.md)  
-- [Встановлення пакета willbe](WillbeInstalation.ukr.md) 
+- [Встановлення пакета willbe](WillbeInstalation.ukr.md)
 - [Базові концепції та поняття](Concepts.urk.md)
 - [Структура will-файла](WillFileComposition.ukr.md)
 - [Як користуватися інтерфейсом командного рядка 'willbe'](HowToUseCommandLineInterfaceOfWill.ukr.md)
@@ -20,7 +20,7 @@
 - [Як використовувати ассерти в will-файлах](HowToUseAsserts.ukr.md)
 - [Мінімізація will-файла](MinimizationOfWillFile.ukr.md)
 - [Розділені will-файли (Split will-files)](SplitWillFile.ukr.md)
-- 
+-
 - ...In progress...
 - [Named will-file](NamedWillFile.md) (Ред.)
 - [Resources Inheritability](ResourceInheritability.ukr.md) (Ред.)
@@ -37,9 +37,11 @@
 
 <a name="manuals"></a>
 ## Керівництво користувача
-- [Базові концепції та поняття ](Concepts.urk.md)
-- [Структура will-файла](WillFileStructure.ukr.md)
-- [Інтерфейс командного рядка `willbe`](CommandLineInterfaceOfWill.ukr.md)
+- [Введення](Introduction.ukr.md)
+- [Встановлення пакета willbe](WillbeInstalation.ukr.md)
+- [Базові концепції та поняття ](Concepts.urk.md)  
+- [Структура will-файла](WillFileStructure.ukr.md)  
+- [Інтерфейс командного рядка willbe](CommandLineInterfaceOfWill.ukr.md)
 - ...In progress...
 - [Створення will-модуля:](WillFileCreation.md)
   - [Початок роботи](WillFileCreation.md#start)
@@ -49,6 +51,5 @@
   - [Експорт модуля](WillFileCreation.md#module-export)
   - [Іменований підмодуль](WillFileCreation.md#named-module)
 - [Критеріони (criterion) в `will`-файлах](WillFileCriterions.urk.md)
-- [Вбудовані функції та особливості 'willbe'](WillFilePredefinedComponents.ukr.md)
+- [Вбудовані функції та особливості willbe](WillFilePredefinedComponents.ukr.md)
 - [Cелектори з ґлобами та ассертами](SelectorWithGlobAndAssertion.ukr.md)
-
