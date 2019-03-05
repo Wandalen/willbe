@@ -63,6 +63,7 @@ step :
 ```
 [user@user ~]$ will .build clean
   Building clean
+  ...
    - Clean deleted 346 file(s) in 1.159s
   Built clean in 1.207s
   
@@ -71,15 +72,15 @@ step :
 ```
 [user@user ~]$ will .build upgrade
 Request ".build upgrade"
-   . Read : /home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe_src/pract2/PredefinedSteps/.will.yml
+   . Read : /path_to_file/.will.yml
  . Read 1 will-files in 0.089s
  ! Failed to read submodule::WTools, try to download it with .submodules.download or even clean it before downloading
  ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
 
   Building upgrade
-     . Read : /home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe_src/pract2/PredefinedSteps/.module/WTools/out/wTools.out.will.yml
+     . Read : /path_to_file/.module/WTools/out/wTools.out.will.yml
      + module::WTools was upgraded in 17.024s
-     . Read : /home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe_src/pract2/PredefinedSteps/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+     . Read : /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
      + module::PathFundamentals was upgraded in 4.256s
    + 2/2 submodule(s) of module::first were upgraded in 21.288s
   Built upgrade in 21.330s
@@ -88,8 +89,8 @@ Request ".build upgrade"
   
 Послідовність виконання дій не випадкова - останній лістинг з фразою `will .build upgrade` показує, що в випадку відсутності підмодулів процедура оновлення також виконує завантаження. Тому, якщо ви видалите підмодуль, пакет його завантажить при наступному оновленні.  
   
-> Вбудовані функції і кроки полегшують створення модульної системи.
+> Вбудовані функції і кроки полегшують створення модульної системи.  
 > Кроки можуть записуються в секцію `step` i `build`
 
-Наступний туторіал ["Поняття критеріонів в `will`-файлах та їх використання"](CriterionsInWillFile.ukr.md)  
+[Наступний туторіал](CriterionsInWillFile.ukr.md)  
 [Повернутись до змісту](Topics.ukr.md)

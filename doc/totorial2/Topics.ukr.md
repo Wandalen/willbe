@@ -3,6 +3,7 @@
 <a name="tutorials"></a>
 ## Туторіали
 - [Введення](Introduction.ukr.md)  
+- [Встановлення пакета willbe](WillbeInstalation.ukr.md) 
 - [Базові концепції та поняття](Concepts.urk.md)
 - [Структура will-файла](WillFileComposition.ukr.md)
 - [Як користуватися інтерфейсом командного рядка 'willbe'](HowToUseCommandLineInterfaceOfWill.ukr.md)
