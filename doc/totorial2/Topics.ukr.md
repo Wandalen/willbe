@@ -10,6 +10,7 @@
 - [Перший will-модуль. Імпорт підмодуля](SubmodulesImporting.ukr.md)
 - [Оновлення та видалення підмодулів](SubmodulesImporting2.ukr.md)
 - [Використання команди '.build' для побудови модуля](ModuleCreationByBuild.ukr.md)
+- [Знайомство з вбудованими кроками](PrefinedSteps.ukr.md)
 - [Поняття критеріонів в will-файлах та їх використання](CriterionsInWillFile.ukr.md)
 - [Побудова модуля (build) за замовчуванням](DefaultCriterionInWillFile.ukr.md)
 - [Експортування модуля](ExportedWillFile.ukr.md)
@@ -24,7 +25,6 @@
 - [Resources Inheritability](ResourceInheritability.ukr.md) (Ред.)
 - [How to list](HowToUseCommandLineInterfaceOfWill.ukr.md) (Ред.)
 - [How to import remote submodules]() (Ред.)
-- [How to use predefined steps](PrefinedSteps.ukr.md) (Ред.)
 - ... advanced ...
 - [How to use reflector and predefined reflectors](ReflectorUsing.ukr.md) ( mid ) (Ред.)
 - [Exported section of out will-file](ExportedSectionOfWillFile.ukr.md) ( mid ) (Ред.)
