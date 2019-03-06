@@ -31,7 +31,6 @@ Will-файл має наступні властивості:
 
 <a name="basic-configuration"></a>
 ### Базова конфігурація
-
 В створений `.will.yml` внесіть інформацію в секцію `about`. Приклад іллюструє всі поля секції, ви можете використати окремі:
 
 ```yaml
@@ -48,9 +47,9 @@ about :
 _Починати роботу з заповнення секції `about` є доброю практикою, адже, ця інформація дозволяє іншим користувачам легко отримати загальні дані про модуль, а також адміністувати його в довготривалій перспективі._  
 
 <a name="submodules-importing"></a>
-### Базова конфігурація
+### Робота з підмодулями
 Для створення робочого модуля в `.will.yml` потрібно додати секції, що описують файли модуля.  
-[Секція `submodule`](WillFileStructure.ukr.md#submodule) дозволяє використовувати готові підмодулі полегшуючи компонування системи.
+[Секція `submodule`](WillFileStructure.ukr.md#submodule) дозволяє використовувати готові підмодулі для компонування системи.
 
 ```yaml
 submodule :
@@ -72,7 +71,7 @@ submodule :
 
 ```
 
-Об'єднавши попередні секції в `.will.yml` вам стануть доступні операції з підмодулями.
+Об'єднавши попередні секції в `.will.yml` вам стануть доступні операції з підмодулями: завантаження фразою `will .submodules.download`, оновлення фразою `will .submodules.upgrade` та видалення - `will .submodules.clean`. Інформація про підмодулі виводиться командою `.submodules.list`.
 <details>
   <summary><u>Файл `.will.yml` та лістинги команд</u></summary>
 
@@ -103,9 +102,9 @@ submodule :
 [user@user ~]$ will .submodules.list
 ...
 submodule::WTools
-  path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master 
-  description : Downloading submodules from GitHub 
-  criterion : 
+  path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+  description : Downloading submodules from GitHub
+  criterion :
     default : 1
   isDownloaded : false
   Exported builds : []
@@ -120,6 +119,16 @@ submodule::WTools
    . Read : /path_to_file/.module/WTools/out/wTools.out.will.yml
    + module::Tools was downloaded in 12.360s
  + 1/1 submodule(s) of module::first were downloaded in 12.365s
+
+```
+<p> </p>
+
+```
+[user@user ~]$ will .submodules.upgrade
+...
+. Read : /path_to_file/.module/PathFundamentals/out/wTools.out.will.yml
++ module::Tools was upgraded in 15.133s
++ 1/1 submodule(s) of module::first were upgraded in 15.138s
 
 ```
 <p> </p>
@@ -166,7 +175,7 @@ build :
     #criterion :
     #   debug : 1
     #inherit : some inherited parameter
-  
+
 ```
 
 <details>
@@ -202,7 +211,7 @@ build :
 
 </details>
 
-Для запуску сценарію вводимо фразу `will .build [назва сценарію]`. Якщо звернутись до прикладу, то фраза матиме вигляд `will .build echo`. 
+Для запуску сценарію вводимо фразу `will .build [назва сценарію]`. Якщо звернутись до прикладу, то фраза матиме вигляд `will .build echo`.
 
 ```
 [user@user ~]$ will .build echo
@@ -235,7 +244,7 @@ about :
 
 path :
   in : '.'
-  out : 
+  out :
     path : 'out'
     #description
     #inherit
@@ -256,7 +265,7 @@ step  :
         inherit : predefined.export
         tar : 0
         export : path::fileToExport
-        
+
 ```
 
 Процедура має поля:  
@@ -287,7 +296,7 @@ about :
 
 path :
   in : '.'
-  out : 
+  out :
     path : 'out'
     #description
     #inherit
@@ -317,7 +326,7 @@ build :
    + Write out will-file /path_to_file/out/third.out.will.yml
    + Exported export with 1 files in 0.705s
   Exported export in 0.752s
-  
+
 ```
 
 Після виконання команди `willbe` згенерує `export.out.will.yml` за назвою модуля в `about` та помістить файл в директорію `out`.

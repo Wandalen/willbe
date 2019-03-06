@@ -26,13 +26,13 @@
 - [Resources Inheritability](ResourceInheritability.ukr.md) (Ред.)
 - [How to list](HowToUseCommandLineInterfaceOfWill.ukr.md) (Ред.)
 - [How to import remote submodules]() (Ред.)
+- [How to use command .set](UsingSetCommand.ukr.md) ( mid ) (Ред.)
+- [How to use JavaScript in 'willbe'](UsingOfJSInWillbe.md) ( mid ) (Ред.)
 - ... advanced ...
 - [How to use reflector and predefined reflectors](ReflectorUsing.ukr.md) ( mid ) (Ред.)
 - [Exported section of out will-file](ExportedSectionOfWillFile.ukr.md) ( mid ) (Ред.)
 - [How to use command .with](UsingWithCommand.ukr.md) ( mid ) (Ред.)
 - [How to use command .each](UsingEachCommand.ukr.md) ( mid ) (Ред.)
-- [How to use command .set](UsingSetCommand.ukr.md) ( mid ) (Ред.)
-- [How to use JavaScript in 'willbe'](UsingOfJSInWillbe.md) ( mid ) (Ред.)
 
 
 <a name="manuals"></a>
@@ -42,6 +42,7 @@
 - [Базові концепції та поняття ](Concepts.urk.md)  
 - [Структура will-файла](WillFileStructure.ukr.md)  
 - [Інтерфейс командного рядка willbe](CommandLineInterfaceOfWill.ukr.md)
+- [Критеріони (criterion) в `will`-файлах](WillFileCriterions.urk.md)
 - ...In progress...
 - [Створення will-модуля:](WillFileCreation.md)
   - [Початок роботи](WillFileCreation.md#start)
@@ -50,6 +51,5 @@
   - [Використання секцій `step` i `build` при створенні модуля](WillFileCreation.md#step-and-build)
   - [Експорт модуля](WillFileCreation.md#module-export)
   - [Іменований підмодуль](WillFileCreation.md#named-module)
-- [Критеріони (criterion) в `will`-файлах](WillFileCriterions.urk.md)
 - [Вбудовані функції та особливості willbe](WillFilePredefinedComponents.ukr.md)
 - [Cелектори з ґлобами та ассертами](SelectorWithGlobAndAssertion.ukr.md)
