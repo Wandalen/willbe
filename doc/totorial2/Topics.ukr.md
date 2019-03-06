@@ -20,23 +20,21 @@
 - [Як використовувати ассерти в will-файлах](HowToUseAsserts.ukr.md)
 - [Мінімізація will-файла](MinimizationOfWillFile.ukr.md)
 - [Розділені will-файли (Split will-files)](SplitWillFile.ukr.md)
-- [Іменовані will-файли. Використання команди '.with'](NamedWillFile.md) (Ред.)
+- [Іменовані will-файли. Використання команди '.with'](NamedWillFile.md)
+- [Як користуватись командою '.each'](UsingEachCommand.ukr.md)
 -
 - ...In progress...
 - [Resources Inheritability](ResourceInheritability.ukr.md) (Ред.)
 - [How to list](HowToUseCommandLineInterfaceOfWill.ukr.md) (Ред.)
-- [How to import remote submodules]() (Ред.)
-- [How to use command .set](UsingSetCommand.ukr.md) ( mid ) (Ред.)
-- [How to use JavaScript in 'willbe'](UsingOfJSInWillbe.md) ( mid ) (Ред.)
+- [How to use command .set](UsingSetCommand.ukr.md) (Ред.)
+- [How to use JavaScript in 'willbe'](UsingOfJSInWillbe.md) (Ред.)
 - [How to use complex selector](HowToUseComplexSelector.ukr.md) (Ред.)
 - ... advanced ...
 - [How to use reflector and predefined reflectors](ReflectorUsing.ukr.md) ( mid ) (Ред.)
 - [Reflector Structure]()
 - [Reflector Mapping]()
-
 - [Exported section of out will-file](ExportedSectionOfWillFile.ukr.md) ( mid ) (Ред.)
-- [How to use command .with](UsingWithCommand.ukr.md) ( mid ) (Ред.)
-- [How to use command .each](UsingEachCommand.ukr.md) ( mid ) (Ред.)
+
 
 
 <a name="manuals"></a>
