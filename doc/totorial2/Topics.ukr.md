@@ -20,9 +20,9 @@
 - [Як використовувати ассерти в will-файлах](HowToUseAsserts.ukr.md)
 - [Мінімізація will-файла](MinimizationOfWillFile.ukr.md)
 - [Розділені will-файли (Split will-files)](SplitWillFile.ukr.md)
+- [Іменовані will-файли. Використання команди '.with'](NamedWillFile.md) (Ред.)
 -
 - ...In progress...
-- [Named will-file](NamedWillFile.md) (Ред.)
 - [Resources Inheritability](ResourceInheritability.ukr.md) (Ред.)
 - [How to list](HowToUseCommandLineInterfaceOfWill.ukr.md) (Ред.)
 - [How to import remote submodules]() (Ред.)
