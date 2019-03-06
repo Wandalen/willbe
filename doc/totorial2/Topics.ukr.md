@@ -5,7 +5,7 @@
 - [Введення](Introduction.ukr.md)  
 - [Встановлення пакета willbe](WillbeInstalation.ukr.md)
 - [Базові концепції та поняття](Concepts.urk.md)
-- [Структура will-файла](WillFileComposition.ukr.md)
+- [Структура will-файла](CompositionOfWillFile.ukr.md)
 - [Як користуватися інтерфейсом командного рядка 'willbe'](HowToUseCommandLineInterfaceOfWill.ukr.md)
 - [Перший will-файл](FirstWillFile.ukr.md)
 - [Перший will-модуль. Імпорт підмодуля](SubmodulesImporting.ukr.md)
@@ -28,8 +28,12 @@
 - [How to import remote submodules]() (Ред.)
 - [How to use command .set](UsingSetCommand.ukr.md) ( mid ) (Ред.)
 - [How to use JavaScript in 'willbe'](UsingOfJSInWillbe.md) ( mid ) (Ред.)
+- [How to use complex selector](HowToUseComplexSelector.ukr.md) (Ред.)
 - ... advanced ...
 - [How to use reflector and predefined reflectors](ReflectorUsing.ukr.md) ( mid ) (Ред.)
+- [Reflector Structure]()
+- [Reflector Mapping]()
+
 - [Exported section of out will-file](ExportedSectionOfWillFile.ukr.md) ( mid ) (Ред.)
 - [How to use command .with](UsingWithCommand.ukr.md) ( mid ) (Ред.)
 - [How to use command .each](UsingEachCommand.ukr.md) ( mid ) (Ред.)
@@ -52,4 +56,6 @@
   - [Експорт модуля](WillFileCreation.md#module-export)
   - [Іменований підмодуль](WillFileCreation.md#named-module)
 - [Вбудовані функції та особливості willbe](WillFilePredefinedComponents.ukr.md)
-- [Cелектори з ґлобами та ассертами](SelectorWithGlobAndAssertion.ukr.md)
+- [Cелектори з ґлобами та ассертами](WillFileSelectors.ukr.md)
+- [Reflector Structure]()
+-

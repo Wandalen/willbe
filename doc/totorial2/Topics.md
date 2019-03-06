@@ -3,7 +3,7 @@
 ## Tutorials
 - Introduction (Ред.)
 - [Basic concepts and terms](Concepts.urk.md)
-- [Will file structure](WillFileComposition.ukr.md)
+- [Will file structure](CompositionOfWillFile.ukr.md)
 - [How to use command line interface of will](HowToUseCommandLineInterfaceOfWill.ukr.md)
 - [First will-file](FirstWillFile.ukr.md)
 - [Exported will-file](ExportedWillFile.md)
