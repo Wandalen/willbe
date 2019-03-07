@@ -3408,14 +3408,11 @@ function pathResolve_body( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( _.strIs( o.selector ) );
+  _.assert( _.strIs( o.selector ) || _.arrayIs( o.selector ) );
 
   let o2 = _.mapExtend( null, o );
-  // o2.pathResolving = 0;
 
-  // debugger;
   let result = module.resolve( o2 );
-  // debugger;
 
   // if( o.pathResolving )
   // {

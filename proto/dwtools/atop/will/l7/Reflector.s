@@ -127,8 +127,8 @@ function form2()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  if( reflector.nickName === 'reflector::reflect.submodules.0' )
-  debugger;
+  // if( reflector.nickName === 'reflector::concat.proto.' )
+  // debugger;
 
   reflector.pathsResolve();
   if( reflector.src.hasAnyPath() )
@@ -156,7 +156,7 @@ function form3()
 
   /* begin */
 
-  if( reflector.nickName === 'reflector::reflect.submodules.0' )
+  if( reflector.nickName === 'reflector::concat.proto.' )
   debugger;
 
   reflector.pathsResolve();
@@ -252,14 +252,14 @@ function _inheritSingle( o )
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
 
-  // if( reflector.nickName === 'reflector::reflect.submodules1' )
-  // debugger;
+  if( reflector.nickName === 'reflector::concat.proto.' )
+  debugger;
 
   reflector.src.and( reflector2.src ).pathsInherit( reflector2.src );
   reflector.dst.and( reflector2.dst ).pathsInherit( reflector2.dst );
 
-  // if( reflector.nickName === 'reflector::reflect.submodules1' )
-  // debugger;
+  if( reflector.nickName === 'reflector::concat.proto.' )
+  debugger;
 
 }
 

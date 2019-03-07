@@ -15,7 +15,7 @@ about :
 execution :
 
   scripts :
-    # test : wtest staging
+    # test : wtest proto
     # docgen : wdocgen staging
 
 path :
