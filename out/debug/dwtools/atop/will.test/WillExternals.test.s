@@ -553,6 +553,7 @@ function singleModuleExport( test )
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
   let outPath = _.path.join( routinePath, 'out' );
+  let outWillPath = _.path.join( routinePath, 'out/single.out.will.yml' );
   let ready = new _.Consequence().take( null )
 
   let shell = _.sheller
@@ -591,6 +592,19 @@ function singleModuleExport( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './single.out.will.yml', './debug', './debug/Single.s' ] );
 
+    test.is( _.fileProvider.fileExists( outWillPath ) )
+    var outfile = _.fileProvider.fileConfigRead( outWillPath );
+
+    let reflector = outfile.reflector[ 'exportedFiles.proto.export' ];
+    let expectedFilePath =
+    {
+      '.' : true,
+      'Single.s' : true
+    }
+    test.identical( reflector.src.basePath, '.' );
+    test.identical( reflector.src.prefixPath, 'proto' );
+    test.identical( reflector.src.filePath, expectedFilePath )
+
     return null;
   })
 
@@ -620,6 +634,19 @@ function singleModuleExport( test )
     test.identical( files, [ '.', './Single.s' ] );
     var files = self.find( outPath );
     test.identical( files, [ '.', './single.out.will.yml', './debug', './debug/Single.s'  ] );
+
+    test.is( _.fileProvider.fileExists( outWillPath ) )
+    var outfile = _.fileProvider.fileConfigRead( outWillPath );
+
+    let reflector = outfile.reflector[ 'exportedFiles.proto.export' ];
+    let expectedFilePath =
+    {
+      '.' : true,
+      'Single.s' : true
+    }
+    test.identical( reflector.src.basePath, '.' );
+    test.identical( reflector.src.prefixPath, 'proto' );
+    test.identical( reflector.src.filePath, expectedFilePath )
 
     return null;
   })

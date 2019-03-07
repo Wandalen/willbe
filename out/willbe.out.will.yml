@@ -155,15 +155,41 @@ path:
       - proto/dwtools/atop/will.test/WillExternals.test.s
       - proto/dwtools/atop/will.test/WillInternals.test.s
       - proto/dwtools/atop/will.test/asset
+      - proto/dwtools/atop/will.test/asset/clean
+      - proto/dwtools/atop/will.test/asset/clean/NoBuild.will.yml
+      - proto/dwtools/atop/will.test/asset/clean/NoTemp.ex.will.yml
+      - proto/dwtools/atop/will.test/asset/clean/NoTemp.im.will.yml
+      - proto/dwtools/atop/will.test/asset/clean/proto
+      - proto/dwtools/atop/will.test/asset/clean/proto/WithSubmodules.s
+      - proto/dwtools/atop/will.test/asset/composite-path
+      - proto/dwtools/atop/will.test/asset/composite-reflector
+      - proto/dwtools/atop/will.test/asset/composite-reflector/proto
+      - proto/dwtools/atop/will.test/asset/composite-reflector/proto/dir1
+      - proto/dwtools/atop/will.test/asset/composite-reflector/proto/dir2
+      - >-
+        proto/dwtools/atop/will.test/asset/composite-reflector/proto/dir2/File.js
+      - >-
+        proto/dwtools/atop/will.test/asset/composite-reflector/proto/dir2/File.test.js
+      - >-
+        proto/dwtools/atop/will.test/asset/composite-reflector/proto/dir2/File1.debug.js
+      - >-
+        proto/dwtools/atop/will.test/asset/composite-reflector/proto/dir2/File1.release.js
+      - >-
+        proto/dwtools/atop/will.test/asset/composite-reflector/proto/dir2/File2.debug.js
+      - >-
+        proto/dwtools/atop/will.test/asset/composite-reflector/proto/dir2/File2.release.js
       - proto/dwtools/atop/will.test/asset/concat
       - proto/dwtools/atop/will.test/asset/concat/super.ex.will.yml
       - proto/dwtools/atop/will.test/asset/concat/super.im.will.yml
       - proto/dwtools/atop/will.test/asset/concat/proto
-      - proto/dwtools/atop/will.test/asset/concat/proto/File.test.s
-      - proto/dwtools/atop/will.test/asset/concat/proto/File1.debug.js
-      - proto/dwtools/atop/will.test/asset/concat/proto/File1.release.js
-      - proto/dwtools/atop/will.test/asset/concat/proto/File2.debug.js
-      - proto/dwtools/atop/will.test/asset/concat/proto/File2.release.js
+      - proto/dwtools/atop/will.test/asset/concat/proto/dir1
+      - proto/dwtools/atop/will.test/asset/concat/proto/dir2
+      - proto/dwtools/atop/will.test/asset/concat/proto/dir2/File.js
+      - proto/dwtools/atop/will.test/asset/concat/proto/dir2/File.test.js
+      - proto/dwtools/atop/will.test/asset/concat/proto/dir2/File1.debug.js
+      - proto/dwtools/atop/will.test/asset/concat/proto/dir2/File1.release.js
+      - proto/dwtools/atop/will.test/asset/concat/proto/dir2/File2.debug.js
+      - proto/dwtools/atop/will.test/asset/concat/proto/dir2/File2.release.js
       - proto/dwtools/atop/will.test/asset/experiment
       - proto/dwtools/atop/will.test/asset/experiment/final.im.will.yml
       - proto/dwtools/atop/will.test/asset/experiment/proto
@@ -195,6 +221,14 @@ path:
       - proto/dwtools/atop/will.test/asset/multiple-exports
       - proto/dwtools/atop/will.test/asset/multiple-exports/super.ex.will.yml
       - proto/dwtools/atop/will.test/asset/multiple-exports/super.im.will.yml
+      - proto/dwtools/atop/will.test/asset/multiple-exports/out
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports/out/submodule.debug.out.tgs
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports/out/submodule.out.will.yml
+      - proto/dwtools/atop/will.test/asset/multiple-exports/out/debug
+      - >-
+        proto/dwtools/atop/will.test/asset/multiple-exports/out/debug/File.debug.js
       - proto/dwtools/atop/will.test/asset/multiple-exports/proto
       - proto/dwtools/atop/will.test/asset/multiple-exports/proto/File.debug.js
       - >-
@@ -261,7 +295,6 @@ path:
         proto/dwtools/atop/will.test/asset/multiple-exports-exported/super.out/release/File.release.js
       - proto/dwtools/atop/will.test/asset/reflect-get-path
       - proto/dwtools/atop/will.test/asset/reflect-remote
-      - proto/dwtools/atop/will.test/asset/reflect-remote/wPathFundamentals
       - proto/dwtools/atop/will.test/asset/reflect-subdir
       - proto/dwtools/atop/will.test/asset/reflect-subdir/module
       - >-
@@ -519,15 +552,35 @@ reflector:
         dwtools/atop/will.test/WillExternals.test.s: true
         dwtools/atop/will.test/WillInternals.test.s: true
         dwtools/atop/will.test/asset: true
+        dwtools/atop/will.test/asset/clean: true
+        dwtools/atop/will.test/asset/clean/NoBuild.will.yml: true
+        dwtools/atop/will.test/asset/clean/NoTemp.ex.will.yml: true
+        dwtools/atop/will.test/asset/clean/NoTemp.im.will.yml: true
+        dwtools/atop/will.test/asset/clean/proto: true
+        dwtools/atop/will.test/asset/clean/proto/WithSubmodules.s: true
+        dwtools/atop/will.test/asset/composite-path: true
+        dwtools/atop/will.test/asset/composite-reflector: true
+        dwtools/atop/will.test/asset/composite-reflector/proto: true
+        dwtools/atop/will.test/asset/composite-reflector/proto/dir1: true
+        dwtools/atop/will.test/asset/composite-reflector/proto/dir2: true
+        dwtools/atop/will.test/asset/composite-reflector/proto/dir2/File.js: true
+        dwtools/atop/will.test/asset/composite-reflector/proto/dir2/File.test.js: true
+        dwtools/atop/will.test/asset/composite-reflector/proto/dir2/File1.debug.js: true
+        dwtools/atop/will.test/asset/composite-reflector/proto/dir2/File1.release.js: true
+        dwtools/atop/will.test/asset/composite-reflector/proto/dir2/File2.debug.js: true
+        dwtools/atop/will.test/asset/composite-reflector/proto/dir2/File2.release.js: true
         dwtools/atop/will.test/asset/concat: true
         dwtools/atop/will.test/asset/concat/super.ex.will.yml: true
         dwtools/atop/will.test/asset/concat/super.im.will.yml: true
         dwtools/atop/will.test/asset/concat/proto: true
-        dwtools/atop/will.test/asset/concat/proto/File.test.s: true
-        dwtools/atop/will.test/asset/concat/proto/File1.debug.js: true
-        dwtools/atop/will.test/asset/concat/proto/File1.release.js: true
-        dwtools/atop/will.test/asset/concat/proto/File2.debug.js: true
-        dwtools/atop/will.test/asset/concat/proto/File2.release.js: true
+        dwtools/atop/will.test/asset/concat/proto/dir1: true
+        dwtools/atop/will.test/asset/concat/proto/dir2: true
+        dwtools/atop/will.test/asset/concat/proto/dir2/File.js: true
+        dwtools/atop/will.test/asset/concat/proto/dir2/File.test.js: true
+        dwtools/atop/will.test/asset/concat/proto/dir2/File1.debug.js: true
+        dwtools/atop/will.test/asset/concat/proto/dir2/File1.release.js: true
+        dwtools/atop/will.test/asset/concat/proto/dir2/File2.debug.js: true
+        dwtools/atop/will.test/asset/concat/proto/dir2/File2.release.js: true
         dwtools/atop/will.test/asset/experiment: true
         dwtools/atop/will.test/asset/experiment/final.im.will.yml: true
         dwtools/atop/will.test/asset/experiment/proto: true
@@ -553,6 +606,11 @@ reflector:
         dwtools/atop/will.test/asset/multiple-exports: true
         dwtools/atop/will.test/asset/multiple-exports/super.ex.will.yml: true
         dwtools/atop/will.test/asset/multiple-exports/super.im.will.yml: true
+        dwtools/atop/will.test/asset/multiple-exports/out: true
+        dwtools/atop/will.test/asset/multiple-exports/out/submodule.debug.out.tgs: true
+        dwtools/atop/will.test/asset/multiple-exports/out/submodule.out.will.yml: true
+        dwtools/atop/will.test/asset/multiple-exports/out/debug: true
+        dwtools/atop/will.test/asset/multiple-exports/out/debug/File.debug.js: true
         dwtools/atop/will.test/asset/multiple-exports/proto: true
         dwtools/atop/will.test/asset/multiple-exports/proto/File.debug.js: true
         dwtools/atop/will.test/asset/multiple-exports/proto/File.release.js: true
@@ -596,7 +654,6 @@ reflector:
         dwtools/atop/will.test/asset/multiple-exports-exported/super.out/release/File.release.js: true
         dwtools/atop/will.test/asset/reflect-get-path: true
         dwtools/atop/will.test/asset/reflect-remote: true
-        dwtools/atop/will.test/asset/reflect-remote/wPathFundamentals: true
         dwtools/atop/will.test/asset/reflect-subdir: true
         dwtools/atop/will.test/asset/reflect-subdir/module: true
         dwtools/atop/will.test/asset/reflect-subdir/module/submodule.will.yml: true
