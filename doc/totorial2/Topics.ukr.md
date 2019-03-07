@@ -22,12 +22,12 @@
 - [Розділені will-файли (Split will-files)](SplitWillFile.ukr.md)
 - [Іменовані will-файли. Використання команди '.with'](NamedWillFile.md)
 - [Як користуватись командою '.each'](UsingEachCommand.ukr.md)
+- [Використання JavaScript файлів пакетом willbe](UsingOfJSInWillbe.md)
 -
 - ...In progress...
 - [Resources Inheritability](ResourceInheritability.ukr.md) (Ред.)
 - [How to list](HowToUseCommandLineInterfaceOfWill.ukr.md) (Ред.)
 - [How to use command .set](UsingSetCommand.ukr.md) (Ред.)
-- [How to use JavaScript in 'willbe'](UsingOfJSInWillbe.md) (Ред.)
 - [How to use complex selector](HowToUseComplexSelector.ukr.md) (Ред.)
 - ... advanced ...
 - [How to use reflector and predefined reflectors](ReflectorUsing.ukr.md) ( mid ) (Ред.)
@@ -46,6 +46,7 @@
 - [Інтерфейс командного рядка willbe](CommandLineInterfaceOfWill.ukr.md)
 - [Критеріони (criterion) в `will`-файлах](WillFileCriterions.urk.md)
 - ...In progress...
+- 
 - [Створення will-модуля:](WillFileCreation.md)
   - [Початок роботи](WillFileCreation.md#start)
   - [Базова конфігурація](WillFileCreation.md#basic-configuration)
