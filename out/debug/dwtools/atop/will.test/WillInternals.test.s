@@ -825,7 +825,7 @@ function pathsResolve( test )
     test.identical( got, expected );
     _.any( resolved, ( e, k ) => test.is( e.identicalWith( module.pathResourceMap[ k ] ) ) );
     _.any( resolved, ( e, k ) => test.is( e.module === module ) );
-    _.any( resolved, ( e, k ) => test.is( !!e.original ) );
+    _.any( resolved, ( e, k ) => test.is( !e.original ) );
 
     test.case = 'path::* - pu:0 mvu:0 pr:in'; /* */
     var resolved = module.resolve
@@ -2597,6 +2597,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 0 },
       'inherit' : [ 'predefined.*' ]
     }
+    resolved.form();
     var resolvedData = resolved.dataExport();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -2605,6 +2606,7 @@ function reflectorResolve( test )
 
     test.case = 'reflector::reflect.proto.1.debug';
     var resolved = module.resolve( 'reflector::reflect.proto.1.debug' )
+    resolved.form();
     var expected =
     {
       'src' :
@@ -2624,7 +2626,8 @@ function reflectorResolve( test )
     test.identical( resolvedData, expected );
 
     test.case = 'reflector::reflect.proto.2.debug';
-    var resolved = module.resolve( 'reflector::reflect.proto.2.debug' )
+    var resolved = module.resolve( 'reflector::reflect.proto.2.debug' );
+    resolved.form();
     var expected =
     {
       'src' :
@@ -2644,7 +2647,8 @@ function reflectorResolve( test )
     test.identical( resolvedData, expected );
 
     test.case = 'reflector::reflect.proto.3.debug';
-    var resolved = module.resolve( 'reflector::reflect.proto.3.debug' )
+    var resolved = module.resolve( 'reflector::reflect.proto.3.debug' );
+    resolved.form();
     var expected =
     {
       'src' :
@@ -2664,7 +2668,8 @@ function reflectorResolve( test )
     test.identical( resolvedData, expected );
 
     test.case = 'reflector::reflect.proto.4.debug';
-    var resolved = module.resolve( 'reflector::reflect.proto.4.debug' )
+    var resolved = module.resolve( 'reflector::reflect.proto.4.debug' );
+    resolved.form();
     var expected =
     {
       'src' :
@@ -2686,7 +2691,8 @@ function reflectorResolve( test )
     test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1' ) );
 
     test.case = 'reflector::reflect.proto.5.debug';
-    var resolved = module.resolve( 'reflector::reflect.proto.5.debug' )
+    var resolved = module.resolve( 'reflector::reflect.proto.5.debug' );
+    resolved.form();
     var expected =
     {
       'src' :
@@ -2708,26 +2714,46 @@ function reflectorResolve( test )
     test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1' ) );
 
     test.case = 'reflector::reflect.proto.6.debug';
-    var resolved = module.resolve( 'reflector::reflect.proto.6.debug' )
+    var resolved = module.resolve( 'reflector::reflect.proto.6.debug' );
+    resolved.form();
     var expected =
     {
       'src' :
       {
         'filePath' : { '.' : '.' },
-        'maskAll' : { 'excludeAny' : true },
-        'prefixPath' : 'proto/dir2/File.test.s',
+        'prefixPath' : 'proto/dir2/File.test.js',
       },
-      'dst' : { 'prefixPath' : 'out/debug/dir1/File.test.s' },
+      'dst' : { 'prefixPath' : 'out/debug/dir1/File.test.js' },
       'criterion' : { 'debug' : 1, 'variant' : 6 },
-      'inherit' : [ 'predefined.*' ]
     }
     var resolvedData = resolved.dataExport();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
     test.identical( resolvedData, expected );
-    test.identical( resolved.src.prefixPath, pin( 'proto/dir2/File.test.s' ) );
-    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1/File.test.s' ) );
+    test.identical( resolved.src.prefixPath, pin( 'proto/dir2/File.test.js' ) );
+    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1/File.test.js' ) );
+
+    test.case = 'reflector::reflect.proto.7.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.7.debug' );
+    resolved.form();
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'prefixPath' : 'proto/dir2/File.test.js',
+      },
+      'dst' : { 'prefixPath' : 'out/debug/dir1/File.test.js' },
+      'criterion' : { 'debug' : 1, 'variant' : 7 },
+    }
+    var resolvedData = resolved.dataExport();
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+    test.identical( resolved.src.prefixPath, pin( 'proto/dir2/File.test.js' ) );
+    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1/File.test.js' ) );
 
     return null;
   });
@@ -2748,6 +2774,8 @@ function reflectorResolve( test )
 
   return module.ready.split();
 }
+
+reflectorResolve.timeOut = 30000;
 
 // --
 // define class

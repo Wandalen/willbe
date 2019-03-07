@@ -315,8 +315,6 @@ function performExportedFilesReflector()
   });
   let exportedFilesReflector = exported.exportedFilesReflector;
 
-  debugger;
-
   exportedFilesReflector.src.pairRefine( exportedFilesReflector.dst );
   exportedFilesReflector.src.prefixesApply();
   exportedFilesReflector.dst.prefixesApply();
@@ -337,8 +335,6 @@ function performExportedFilesReflector()
   exportedFilesReflector.dst.filePath = exportedFilesReflector.src.filePath = path.pathMapExtend( null, exportedFilesPath );
   exportedFilesReflector.recursive = 0;
   exportedFilesReflector.form();
-
-  debugger;
 
   _.assert( exportedFilesReflector.dst.prefixPath === null );
   _.assert( exportedFilesReflector.dst.basePath === null );
@@ -423,6 +419,7 @@ function performWriteOutFile()
   let outPathResource = module2.resourceObtain( 'path', 'out' );
 
   inPathResource.path = path.relative( module.outPath, module.inPath );
+  _.assert( module2.pathResourceMap[ inPathResource.name ] === inPathResource );
 
   let outFilePath = build.outFilePathFor();
   let data = module2.dataExport();

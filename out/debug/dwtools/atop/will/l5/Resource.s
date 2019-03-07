@@ -125,6 +125,9 @@ function cloneDerivative()
 
   _.assert( arguments.length === 0 );
 
+  if( resource.nickName === 'reflector::reflect.proto' )
+  debugger;
+
   let resource2 = resource.clone();
 
   resource2.module = resource.module;
@@ -275,6 +278,7 @@ function _inheritForm( o )
 {
   let resource = this;
   let module = resource.module;
+  let original = resource.original;
 
   _.assert( arguments.length === 1 );
   _.assert( resource.formed === 1 );
@@ -291,7 +295,7 @@ function _inheritForm( o )
   /* end */
 
   _.arrayRemoveElementOnceStrictly( o.visited, resource );
-
+  _.assert( original === resource.original );
   return resource;
 }
 
@@ -461,18 +465,15 @@ function criterionSattisfy( criterion2 )
   let resource = this;
   let criterion1 = resource.criterion;
 
-  _.assert( _.mapIs( criterion1 ) );
+  _.assert( criterion1 === null || _.mapIs( criterion1 ) );
   _.assert( criterion2 === null || _.mapIs( criterion2 ) );
   _.assert( arguments.length === 1 );
 
-  // if( criterion2 === null )
-  // debugger;
-  // if( criterion1 === null )
-  // return 1;
-  // if( criterion2 === null )
-  // return 1;
+  if( criterion1 === null )
+  return true;
+  if( criterion2 === null )
+  return true;
 
-  if( criterion2 )
   for( let c in criterion2 )
   {
     if( criterion1[ c ] === undefined )
@@ -499,7 +500,7 @@ function criterionInherit( criterion2 )
 
   criterion1 = resource.criterion = resource.criterion || Object.create( null );
 
-  _.mapSupplement( criterion1, _.mapBut( criterion1, { default : null, predefined : null } ) )
+  _.mapSupplement( criterion1, _.mapBut( criterion2, { default : null, predefined : null } ) )
 
   return criterion1;
 }
@@ -538,7 +539,7 @@ function CriterionVariable( criterionMaps, criterion )
     let criterion2 = criterionMaps[ i ];
 
     for( let c in all )
-    if( this.CriterionValueNormalize( criterion2[ c ] ) !== all[ c ] )
+    if( criterion2[ c ] === undefined || this.CriterionValueNormalize( criterion2[ c ] ) !== all[ c ] )
     delete all[ c ];
 
   }

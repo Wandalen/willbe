@@ -502,11 +502,10 @@ function cleanWhat( o )
       let exp = exps[ e ];
       let archiveFilePath = exp.archiveFilePathFor();
       let outFilePath = exp.outFilePathFor();
-
       _.arrayAppendArrayOnce( files, [ archiveFilePath, outFilePath ] );
-
     }
 
+    debugger;
     find( files );
   }
 
@@ -537,7 +536,9 @@ function cleanWhat( o )
   function find( filePath )
   {
 
-    // debugger;
+    if( !filePath.length )
+    return;
+
     let commonPath = path.detrail( path.common( filePath ) );
 
     let found = fileProvider.filesDelete
@@ -2153,10 +2154,13 @@ function resourceObtain( resourceKind, resourceName )
     pathUnwrapping : 0,
     missingAction : 'undefine',
   });
+
   if( !resource )
   resource = module.resourceAllocate( resourceKind, resourceName );
 
   _.assert( resource instanceof will.Resource );
+  if( resource instanceof will.PathResource )
+  _.assert( module.pathResourceMap[ resource.name ] === resource );
 
   return resource;
 }
@@ -2397,9 +2401,6 @@ function _buildsSelect_body( o )
     elements = _.mapVals( _.path.globFilterKeys( elements, o.name ) );
     if( !elements.length )
     return []
-    // if( !elements[ o.name ] )
-    // return []
-    // elements = [ elements[ o.name ] ];
     if( o.criterion === null || Object.keys( o.criterion ).length === 0 )
     return elements;
   }
@@ -2413,7 +2414,6 @@ function _buildsSelect_body( o )
   {
 
     _.assert( _.objectIs( o.criterion ), 'not tested' );
-    _.assert( !o.name, 'not tested' );
 
     elements = filterWith( elements, o.criterion );
 
@@ -2438,7 +2438,6 @@ function _buildsSelect_body( o )
   {
 
     _.assert( _.objectIs( filter ), 'not tested' );
-    _.assert( !o.name, 'not tested' );
 
     if( _.objectIs( filter ) && Object.keys( filter ).length > 0 )
     {
@@ -2810,13 +2809,12 @@ resolve_body.defaults =
 {
   selector : null,
   defaultResourceName : null,
-  // prefixlessAction : 'default',
   prefixlessAction : 'resolved',
   missingAction : 'throw',
   visited : null,
   current : null,
   criterion : null,
-  currentModule : null,
+  module : null,
   pathResolving : 'in',
   pathUnwrapping : 1,
   singleUnwrapping : 1,
@@ -2845,14 +2843,14 @@ function _resolveAct( o )
   let result;
   let current = o.current;
 
-  if( o.currentModule === null )
-  o.currentModule = module;
+  if( o.module === null )
+  o.module = module;
   if( o.criterion === null && o.current && o.current.criterion )
   o.criterion = o.current.criterion;
 
   _.assert( arguments.length === 1 );
   _.assertRoutineOptions( _resolveAct, arguments );
-  _.assert( o.currentModule instanceof will.Module );
+  _.assert( o.module instanceof will.Module );
   _.assert( o.criterion === null || _.mapIs( o.criterion ) );
   _.assert( _.arrayIs( o.visited ) );
 
@@ -2860,6 +2858,9 @@ function _resolveAct( o )
 
   try
   {
+
+    if( o.selector === 'submodule::*/path::proto*=1' )
+    debugger;
 
     result = _.select
     ({
@@ -2872,16 +2873,24 @@ function _resolveAct( o )
       onDownEnd : onDownEnd,
       onQuantitativeFail : onQuantitativeFail,
       missingAction : 'error',
-      iterationCurrent :
-      {
-        module : o.currentModule,
-        exported : null,
-      },
       iteratorExtension :
       {
         resolveOptions : o,
       },
+      iterationExtension :
+      {
+        // compositeRoot : 0,
+      },
+      iterationPreserve :
+      {
+        module : o.module,
+        exported : null,
+        // composite : 0,
+      },
     });
+
+    if( o.selector === 'submodule::*/path::proto*=1' )
+    debugger;
 
   }
   catch( err )
@@ -2908,10 +2917,7 @@ function _resolveAct( o )
 
     if( module.selectorIs( selector ) )
     {
-      // if( _.strIs( selector ) && _.strHas( selector, '{' ) )
-      // debugger;
       return onSelectorComposite.call( op, selector );
-      // return selector;
     }
 
     if( o.prefixlessAction === 'default' )
@@ -2948,7 +2954,7 @@ function _resolveAct( o )
   {
     let it = this;
 
-    inheritsUpdate.call( it );
+    statusUpdate.call( it );
     globCriterionFilter.call( it );
 
     if( !it.dstWritingDown )
@@ -3022,15 +3028,43 @@ function _resolveAct( o )
 
   /* */
 
-  function inheritsUpdate()
+  function statusUpdate()
   {
     let it = this;
 
-    if( it.src && it.src instanceof will.Submodule )
-    it.iterationCurrent.module = it.src.loadedModule;
+    if( !it.src )
+    return;
 
-    if( it.src && it.src instanceof will.Exported )
-    it.iterationCurrent.exported = it.src;
+    _.assert( !it.src.rejoin );
+
+    if( it.src instanceof will.Submodule )
+    {
+      _.assert( !!it.src.loadedModule, 'not tested' );
+      if( it.src.loadedModule )
+      it.module = it.src.loadedModule;
+    }
+    else if( it.src instanceof will.Exported )
+    {
+      it.exported = it.src;
+    }
+    // else if( _.arrayIs( it.src ) && it.src.rejoin )
+    // {
+    //   debugger;
+    //   if( !it.composite )
+    //   it.compositeRoot = true;
+    //   it.composite = true;
+    // }
+
+    // if( it.src && it.src instanceof will.Submodule )
+    // it.iterationPreserve.module = it.src.loadedModule;
+    // else if( it.src && it.src instanceof will.Exported )
+    // it.iterationPreserve.exported = it.src;
+    // else if( _.arrayIs( it.src ) && it.src.rejoin )
+    // {
+    //   if( !it.iterationPreserve.composite )
+    //   it.compositeRoot = true;
+    //   it.iterationPreserve.composite = true;
+    // }
 
   }
 
@@ -3063,9 +3097,15 @@ function _resolveAct( o )
     if( !it.selector )
     return;
 
-    _.assert( !!it.iterationCurrent.module );
+    // _.assert( !!it.iterationPreserve.module );
+    // let splits = it.iterationPreserve.module._selectorShortSplit({ selector : it.selector, defaultResourceName : o.defaultResourceName });
 
-    let splits = it.iterationCurrent.module._selectorShortSplit({ selector : it.selector, defaultResourceName : o.defaultResourceName });
+    _.assert( !!it.module );
+    let splits = it.module._selectorShortSplit
+    ({
+      selector : it.selector,
+      defaultResourceName : o.defaultResourceName,
+    });
 
     it.parsedSelector = Object.create( null );
     it.parsedSelector.full = splits.join( '' );
@@ -3084,15 +3124,16 @@ function _resolveAct( o )
     return;
 
     let kind = it.parsedSelector.kind;
-    let pool = it.iterationCurrent.module.resourceMapForKind( kind );
+    let resourceMap = it.module.resourceMapForKind( kind );
+    // let resourceMap = it.iterationPreserve.module.resourceMapForKind( kind );
 
-    if( !pool )
+    if( !resourceMap )
     {
       debugger;
-      throw _.ErrorLooking( 'Unknown type of resource, no pool for such resource', _.strQuote( it.parsedSelector.full ) );
+      throw _.ErrorLooking( 'No resource map', _.strQuote( it.parsedSelector.full ) );
     }
 
-    it.src = pool;
+    it.src = resourceMap;
     it.iterable = it.onIterable( it.src );
 
   }
@@ -3105,11 +3146,9 @@ function _resolveAct( o )
 
     if( it.parsedSelector )
     {
-
-      let kind = it.parsedSelector.kind
+      let kind = it.parsedSelector.kind;
       if( kind === 'path' && o.hasPath === null )
       o.hasPath = true;
-
     }
 
   }
@@ -3137,10 +3176,8 @@ function _resolveAct( o )
   function currentExclude()
   {
     let it = this;
-
     if( it.src === o.current && it.down )
     it.dstWritingDown = false;
-
   }
 
   /* */
@@ -3149,9 +3186,9 @@ function _resolveAct( o )
   {
     let result = filePath;
 
-    _.assert( _.strIs( filePath ) || _.strsAreAll( filePath ) );
+    _.assert( _.strIs( result ) || _.strsAreAll( result ) );
 
-    if( module2.selectorIsComposite( filePath ) )
+    if( module2.selectorIsComposite( result ) )
     {
 
       result = module2.pathResolve
@@ -3172,7 +3209,8 @@ function _resolveAct( o )
   function compositePathsSelect()
   {
     let it = this;
-    let module2 = it.iterationCurrent.module;
+    // let module2 = it.iterationPreserve.module;
+    let module2 = it.module;
     let resource = it.dst;
 
     if( !it.dstWritingDown )
@@ -3180,22 +3218,23 @@ function _resolveAct( o )
 
     if( it.dst instanceof will.Reflector )
     {
-      resource = it.dst = it.dst.cloneDerivative();
-
-      // if( resource.nickName === 'reflector::reflect.proto.5.debug' )
-      // debugger;
-
-      if( resource.src.prefixPath )
-      resource.src.prefixPath = compositePathSelect( module2, resource, resource.src.prefixPath );
-      if( resource.dst.prefixPath )
-      resource.dst.prefixPath = compositePathSelect( module2, resource, resource.dst.prefixPath );
-
+      if( module2.selectorIsComposite( resource.src.prefixPath ) || module2.selectorIsComposite( resource.dst.prefixPath ) )
+      {
+        resource = it.dst = it.dst.cloneDerivative();
+        if( resource.src.prefixPath )
+        resource.src.prefixPath = compositePathSelect( module2, resource, resource.src.prefixPath );
+        if( resource.dst.prefixPath )
+        resource.dst.prefixPath = compositePathSelect( module2, resource, resource.dst.prefixPath );
+      }
     }
 
     if( resource instanceof will.PathResource )
     {
-      resource = it.dst = resource.cloneDerivative();
-      resource.path = compositePathSelect( module2, resource, resource.path )
+      if( module2.selectorIsComposite( resource.path ) )
+      {
+        resource = it.dst = resource.cloneDerivative();
+        resource.path = compositePathSelect( module2, resource, resource.path )
+      }
     }
 
   }
@@ -3204,9 +3243,16 @@ function _resolveAct( o )
 
   function pathResolve( module2, filePath, pathName )
   {
+    let it = this;
     let result = filePath;
 
     _.assert( _.strIs( filePath ) || _.strsAreAll( filePath ) );
+
+    if( it.replicateIteration.composite && it.replicateIteration.compositeRoot !== it.replicateIteration )
+    {
+      if( it.replicateIteration.key !== 0 )
+      return result;
+    }
 
     let prefixPath = '.';
     if( o.pathResolving === 'in' && pathName !== 'in' )
@@ -3223,7 +3269,7 @@ function _resolveAct( o )
   function pathsResolve()
   {
     let it = this;
-    let module2 = it.iterationCurrent.module;
+    let module2 = it.module;
     let resource = it.dst;
 
     if( !o.pathResolving )
@@ -3231,11 +3277,12 @@ function _resolveAct( o )
     if( !it.dstWritingDown )
     return;
 
-    // if( resource.nickName === 'reflector::reflect.proto.5.debug' )
-    // debugger;
-
     if( it.dst instanceof will.Reflector )
     {
+
+      if( it.dst.nickName === 'reflectorreflect.proto.6.debug' )
+      debugger;
+
       resource = it.dst = it.dst.cloneDerivative();
       if( resource.formed === 0 )
       resource.form1();
@@ -3246,17 +3293,24 @@ function _resolveAct( o )
       // resource.form();
       _.assert( resource.formed >= 2 );
 
+      if( it.dst.nickName === 'reflectorreflect.proto.6.debug' )
+      debugger;
+
       if( resource.src.hasAnyPath() )
-      resource.src.prefixPath = pathResolve( module2, resource.src.prefixPath || '.' );
+      resource.src.prefixPath = pathResolve.call( it, module2, resource.src.prefixPath || '.' );
       if( resource.dst.hasAnyPath() )
-      resource.dst.prefixPath = pathResolve( module2, resource.dst.prefixPath || '.' );
+      resource.dst.prefixPath = pathResolve.call( it, module2, resource.dst.prefixPath || '.' );
+
+      if( it.dst.nickName === 'reflectorreflect.proto.6.debug' )
+      debugger;
+
     }
 
     if( it.dst instanceof will.PathResource )
     {
       resource = it.dst = resource.cloneDerivative();
       _.assert( _.arrayIs( resource.path ) || _.strIs( resource.path ) );
-      resource.path = pathResolve( module2, resource.path, resource.name )
+      resource.path = pathResolve.call( it, module2, resource.path, resource.name )
     }
 
   }
@@ -3266,7 +3320,8 @@ function _resolveAct( o )
   function pathsUnwrap()
   {
     let it = this;
-    let module2 = it.iterationCurrent.module;
+    // let module2 = it.iterationPreserve.module;
+    let module2 = it.module;
 
     if( !o.pathUnwrapping )
     return;
@@ -3282,7 +3337,8 @@ function _resolveAct( o )
   function singleUnwrap()
   {
     let it = this;
-    let module2 = it.iterationCurrent.module;
+    // let module2 = it.iterationPreserve.module;
+    let module2 = it.module;
 
     // return;
 
@@ -3310,7 +3366,8 @@ function _resolveAct( o )
   function mapsFlatten()
   {
     let it = this;
-    let module2 = it.iterationCurrent.module;
+    // let module2 = it.iterationPreserve.module;
+    let module2 = it.module;
     if( !o.flattening || !_.mapIs( it.dst ) )
     return;
 
@@ -3322,7 +3379,8 @@ function _resolveAct( o )
   function mapValsUnwrap()
   {
     let it = this;
-    let module2 = it.iterationCurrent.module;
+    // let module2 = it.iterationPreserve.module;
+    let module2 = it.module;
 
     if( !o.mapValsUnwrapping )
     return;
@@ -3353,33 +3411,35 @@ function pathResolve_body( o )
   _.assert( _.strIs( o.selector ) );
 
   let o2 = _.mapExtend( null, o );
-  o2.pathResolving = 0;
+  // o2.pathResolving = 0;
 
+  // debugger;
   let result = module.resolve( o2 );
+  // debugger;
 
-  if( o.pathResolving )
-  {
-
-    let pathName = o.selector;
-    if( module.selectorIs( pathName ) )
-    {
-      let parsed = module.selectorParse( pathName );
-      pathName = '';
-      if( _.arrayIs( parsed[ 0 ] ) )
-      {
-        _.assert( _.arrayIs( parsed[ 0 ][ 1 ][ 0 ] ) );
-        pathName = parsed[ 0 ][ 1 ][ 0 ][ 2 ];
-      }
-    }
-
-    let prefixPath = '.';
-    if( o.pathResolving === 'in' && pathName !== 'in' )
-    prefixPath = module.pathMap.in || '.';
-    else if( o.pathResolving === 'out' && pathName !== 'out' )
-    prefixPath = module.pathMap.out || '.';
-    result = path.s.join( module.dirPath, prefixPath, result );
-
-  }
+  // if( o.pathResolving )
+  // {
+  //
+  //   let pathName = o.selector;
+  //   if( module.selectorIs( pathName ) )
+  //   {
+  //     let parsed = module.selectorParse( pathName );
+  //     pathName = '';
+  //     if( _.arrayIs( parsed[ 0 ] ) )
+  //     {
+  //       _.assert( _.arrayIs( parsed[ 0 ][ 1 ][ 0 ] ) );
+  //       pathName = parsed[ 0 ][ 1 ][ 0 ][ 2 ];
+  //     }
+  //   }
+  //
+  //   let prefixPath = '.';
+  //   if( o.pathResolving === 'in' && pathName !== 'in' )
+  //   prefixPath = module.pathMap.in || '.';
+  //   else if( o.pathResolving === 'out' && pathName !== 'out' )
+  //   prefixPath = module.pathMap.out || '.';
+  //   result = path.s.join( module.dirPath, prefixPath, result );
+  //
+  // }
 
   return result;
 }
@@ -3591,7 +3651,7 @@ function resourceImport( resource2 )
 
   let resource = new resource2.Self( resourceData );
   resource.form1();
-  _.assert( module.resolve({ selector : resource.nickName, pathUnwrapping : 0, pathResolving : 0 }) === resource );
+  _.assert( module.resolve({ selector : resource.nickName, pathUnwrapping : 0, pathResolving : 0 }).absoluteName === resource.absoluteName );
 
   return resource;
 }
@@ -3884,7 +3944,6 @@ let Proto =
 
   resolve,
   resolveMaybe,
-
   _resolveAct,
 
   pathResolve,

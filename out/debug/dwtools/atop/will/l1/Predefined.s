@@ -108,15 +108,21 @@ function stepRoutineReflect( frame )
   //   logger.log( _.toStr( _.select( result, '*/src/absolute' ), { levels : 2, wrap : 0 } ) );
   // }
 
-  if( verbosity >= 1 )
+  _.Consequence.From( result ).then( ( result ) =>
   {
-    let dstFilter = opts.dstFilter.clone();
-    let srcFilter = opts.srcFilter.clone().pairWithDst( dstFilter ).form();
-    dstFilter.form();
-    let src = srcFilter.srcPathCommon();
-    let dst = dstFilter.dstPathCommon();
-    logger.log( ' + ' + step.name + ' reflected ' + opts.result.length + ' files ' + path.moveReport( dst, src ) + ' in ' + _.timeSpent( time ) );
-  }
+
+    if( verbosity >= 1 )
+    {
+      let dstFilter = opts.dstFilter.clone();
+      let srcFilter = opts.srcFilter.clone().pairWithDst( dstFilter ).form();
+      dstFilter.form();
+      let src = srcFilter.srcPathCommon();
+      let dst = dstFilter.dstPathCommon();
+      logger.log( ' + ' + step.name + ' reflected ' + opts.result.length + ' files ' + path.moveReport( dst, src ) + ' in ' + _.timeSpent( time ) );
+    }
+
+    return result;
+  });
 
   return result;
 }

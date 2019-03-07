@@ -12,24 +12,38 @@ path :
 
 reflector :
 
-  reflect.submodules :
+  reflect.submodules.0 :
     inherit : predefined.*
     filePath :
       submodule::*/exported::*=1/path::exportedDir*=1 : path::out.*=1
     src :
-      basePath : '..'
+      basePath : "{submodule::*/exported::*=1/path::exportedDir*=1}/.."
+    criterion :
+      variant : 0
+
+  reflect.submodules.1 :
+    inherit : predefined.*
+    filePath :
+      submodule::*/exported::*=1/path::exportedDir*=1 : path::out.*=1
+    src :
+      basePath : 'module'
+    criterion :
+      variant : 1
 
 step :
 
   reflect.submodules :
     inherit : predefined.reflect
+    criterion :
+      variant : [ 0,1 ]
     reflector :
-      reflector::reflect.submodules*=1
+      reflector::reflect.submodules.*=1
 
 build :
 
   debug :
     criterion :
       default : 1
+      variant : [ 0,1 ]
     steps :
-      - step::reflect.submodules
+      - step::reflect.submodules.*=1

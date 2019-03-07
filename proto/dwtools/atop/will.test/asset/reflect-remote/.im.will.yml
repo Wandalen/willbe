@@ -1,62 +1,83 @@
 
 path :
 
-  source : git+https:///github.com/Wandalen/wPathFundamentals.git
-  pathFundamentals : 'wPathFundamentals'
+  PathFundamentals.remote : git+https:///github.com/Wandalen/wPathFundamentals.git
+  PathFundamentals.local : 'PathFundamentals'
+
+  Looker.remote : git+https:///github.com/Wandalen/wLooker.git
+  Looker.local : 'Looker'
+
+  Proto.remote : git+https:///github.com/Wandalen/wProto.git
+  Proto.local : 'Proto'
 
 reflector :
 
-  download1 :
+  download.1 :
+    criterion :
+      variant : 1
     filePath :
-      path::source : path::pathFundamentals
+      path::PathFundamentals.remote : path::PathFundamentals.local
 
-  download2 :
+  download.2 :
+    criterion :
+      variant : 2
     src :
       filePath :
-        path::source : path::pathFundamentals
+        path::PathFundamentals.remote : path::PathFundamentals.local
 
-  download3 :
+  download.3 :
+    criterion :
+      variant : 3
     dst :
       filePath :
-        path::source : path::pathFundamentals
+        path::PathFundamentals.remote : path::PathFundamentals.local
 
-  download4 :
+  download.4 :
+    criterion :
+      variant : 4
     src :
-      prefixPath : path::source
+      prefixPath : path::PathFundamentals.remote
       filePath :
-        path::source : path::pathFundamentals
+        path::PathFundamentals.remote : path::PathFundamentals.local
 
-  download5 :
+  download.5 :
+    criterion :
+      variant : 5
     src :
-      prefixPath : path::source
+      prefixPath : path::PathFundamentals.remote
     filePath :
-      path::source : path::pathFundamentals
+      path::PathFundamentals.remote : path::PathFundamentals.local
 
-  download6 :
+  download.6 :
+    criterion :
+      variant : 6
     src :
-      prefixPath : path::source
+      prefixPath : path::PathFundamentals.remote
     dst :
       basePath : .
-      prefixPath : path::pathFundamentals
+      prefixPath : path::PathFundamentals.local
+
+  download.7 :
+    criterion :
+      variant : 7
+    filePath :
+      path::PathFundamentals.remote : path::PathFundamentals.local
+      path::Looker.remote : path::Looker.local
+      path::Proto.remote : path::Proto.local
 
 step :
 
-  download1 :
+  download :
     inherit : predefined.reflect
+    criterion :
+      variant : [ 1,2,3,4,5,6,7 ]
     reflector :
-      reflector::download1
-
-  download2 :
-    inherit : predefined.reflect
-    reflector :
-      reflector::download2
+      reflector::download.*=1
 
 build :
 
-  download1 :
+  download :
+    criterion :
+      variant : [ 1,2,3,4,5,6,7 ]
     steps :
-      - step::download1
-
-  download2 :
-    steps :
-      - step::download2
+      - step::download.*=1

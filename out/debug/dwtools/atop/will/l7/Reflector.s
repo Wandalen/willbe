@@ -30,6 +30,9 @@ function init( o )
 
   _.assert( o && o.module );
 
+  if( o.src && o.src.basePath )
+  debugger;
+
   let module = o.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
@@ -77,6 +80,9 @@ function form1()
   _.assert( !willf || !!willf.formed );
   _.assert( _.strDefined( reflector.name ) );
 
+  // if( reflector.nickName === 'reflector::reflect.proto' )
+  // debugger;
+
   /* begin */
 
   module[ reflector.MapName ][ reflector.name ] = reflector;
@@ -84,24 +90,21 @@ function form1()
   willf[ reflector.MapName ][ reflector.name ] = reflector;
 
   reflector.src = reflector.src || {};
-
   if( reflector.src )
   {
     reflector.src.hubFileProvider = fileProvider;
-    if( reflector.src.basePath )
-    reflector.src.basePath = path.s.normalize( reflector.src.basePath );
+    // if( reflector.src.basePath )
+    // reflector.src.basePath = path.s.normalize( reflector.src.basePath );
     if( !reflector.src.formed )
     reflector.src._formAssociations();
   }
 
   reflector.dst = reflector.dst || {};
-
   if( reflector.dst )
   {
     reflector.dst.hubFileProvider = fileProvider;
-
-    if( reflector.dst.basePath )
-    reflector.dst.basePath = path.s.normalize( reflector.dst.basePath );
+    // if( reflector.dst.basePath )
+    // reflector.dst.basePath = path.s.normalize( reflector.dst.basePath );
     if( !reflector.dst.formed )
     reflector.dst._formAssociations();
   }
@@ -123,6 +126,9 @@ function form2()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+
+  if( reflector.nickName === 'reflector::reflect.submodules.0' )
+  debugger;
 
   reflector.pathsResolve();
   if( reflector.src.hasAnyPath() )
@@ -149,6 +155,9 @@ function form3()
   _.assert( reflector.formed === 2 );
 
   /* begin */
+
+  if( reflector.nickName === 'reflector::reflect.submodules.0' )
+  debugger;
 
   reflector.pathsResolve();
   reflector.src.pairRefine( reflector.dst );
@@ -189,11 +198,7 @@ function _inheritMultiple( o )
   Parent.prototype._inheritMultiple.call( reflector, o );
 
   if( reflector.filePath )
-  {
-    reflector._reflectMapForm({ visited : o.visited });
-  }
-
-  /* end */
+  reflector._reflectMapForm({ visited : o.visited });
 
   return reflector;
 }
@@ -242,17 +247,18 @@ function _inheritSingle( o )
   delete extend.dst;
   delete extend.criterion;
   delete extend.filePath;
+  delete extend.original;
 
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
 
-  // if( reflector.nickName === 'reflector::download1' )
+  // if( reflector.nickName === 'reflector::reflect.submodules1' )
   // debugger;
 
   reflector.src.and( reflector2.src ).pathsInherit( reflector2.src );
   reflector.dst.and( reflector2.dst ).pathsInherit( reflector2.dst );
 
-  // if( reflector.nickName === 'reflector::download1' )
+  // if( reflector.nickName === 'reflector::reflect.submodules1' )
   // debugger;
 
 }
@@ -401,7 +407,6 @@ sureRelativeOrGlobal.defaults =
 {
   fixes : 0,
   basePath : 1,
-  // stemPath : 1,
   filePath : 1,
 }
 
@@ -493,13 +498,18 @@ function pathsResolve( o )
   reflector.src.filePath = resolve( reflector.src.filePath );
   if( reflector.src.prefixPath || reflector.src.hasAnyPath() )
   reflector.src.prefixPath = resolve( reflector.src.prefixPath || '.', 'in' );
+  if( reflector.src.prefixPath || reflector.src.hasAnyPath() )
+  reflector.src.prefixPath = path.join( reflector.module.inPath, reflector.src.prefixPath || '.' );
 
   if( reflector.dst.filePath )
   reflector.dst.filePath = resolve( reflector.dst.filePath );
   if( reflector.dst.basePath )
   reflector.dst.basePath = resolve( reflector.dst.basePath );
-  if( reflector.dst.prefixPath || reflector.dst.hasAnyPath() )
+  let dstHasDst = path.pathMapDstFromDst( reflector.dst.filePath ).filter( ( e ) => !_.boolLike( e ) ).length > 0;
+  if( reflector.dst.prefixPath || dstHasDst )
   reflector.dst.prefixPath = resolve( reflector.dst.prefixPath || '.', 'in' );
+  if( reflector.dst.prefixPath || dstHasDst )
+  reflector.dst.prefixPath = path.join( reflector.module.inPath, reflector.dst.prefixPath || '.' );
 
   _.assert( reflector.src.prefixPath === null || path.s.allAreAbsolute( reflector.src.prefixPath ) );
   _.assert( reflector.dst.prefixPath === null || path.s.allAreAbsolute( reflector.dst.prefixPath ) );
@@ -508,27 +518,29 @@ function pathsResolve( o )
 
   function resolve( src, pathResolving )
   {
+
     return path.refilter( src, ( filePath ) =>
     {
       if( _.instanceIs( filePath ) )
       return filePath;
       if( _.boolIs( filePath ) )
       return filePath;
+      if( !module.selectorIs( filePath ) && !pathResolving )
+      return filePath;
       return module.pathResolve
       ({
-        // prefixlessAction : 'resolved',
         selector : filePath,
-        pathResolving : pathResolving || 0,
         current : reflector,
+        pathResolving : /*pathResolving ||*/ 'in',
       });
     });
+
   }
 
 }
 
 pathsResolve.defaults =
 {
-  // addingSrcPrefix : 0,
 }
 
 //
