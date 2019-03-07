@@ -23,11 +23,11 @@
 - [Іменовані will-файли. Використання команди '.with'](NamedWillFile.md)
 - [Як користуватись командою '.each'](UsingEachCommand.ukr.md)
 - [Використання JavaScript файлів пакетом willbe](UsingOfJSInWillbe.md)
+- [Використання команди '.set'](UsingSetCommand.ukr.md)
 -
 - ...In progress...
 - [Resources Inheritability](ResourceInheritability.ukr.md) (Ред.)
 - [How to list](HowToUseCommandLineInterfaceOfWill.ukr.md) (Ред.)
-- [How to use command .set](UsingSetCommand.ukr.md) (Ред.)
 - [How to use complex selector](HowToUseComplexSelector.ukr.md) (Ред.)
 - ... advanced ...
 - [How to use reflector and predefined reflectors](ReflectorUsing.ukr.md) ( mid ) (Ред.)
