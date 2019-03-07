@@ -24,11 +24,11 @@
 - [Як користуватись командою '.each'](UsingEachCommand.ukr.md)
 - [Використання JavaScript файлів пакетом willbe](UsingOfJSInWillbe.md)
 - [Використання команди '.set'](UsingSetCommand.ukr.md)
+- [Як використовувати складні селектори](HowToUseComplexSelector.ukr.md)
 -
 - ...In progress...
 - [Resources Inheritability](ResourceInheritability.ukr.md) (Ред.)
 - [How to list](HowToUseCommandLineInterfaceOfWill.ukr.md) (Ред.)
-- [How to use complex selector](HowToUseComplexSelector.ukr.md) (Ред.)
 - ... advanced ...
 - [How to use reflector and predefined reflectors](ReflectorUsing.ukr.md) ( mid ) (Ред.)
 - [Reflector Structure]()
@@ -45,8 +45,8 @@
 - [Структура will-файла](WillFileStructure.ukr.md)  
 - [Інтерфейс командного рядка willbe](CommandLineInterfaceOfWill.ukr.md)
 - [Критеріони (criterion) в `will`-файлах](WillFileCriterions.urk.md)
-- ...In progress...
-- 
+-
+- ...In progress... 
 - [Створення will-модуля:](WillFileCreation.md)
   - [Початок роботи](WillFileCreation.md#start)
   - [Базова конфігурація](WillFileCreation.md#basic-configuration)
@@ -56,5 +56,4 @@
   - [Іменований підмодуль](WillFileCreation.md#named-module)
 - [Вбудовані функції та особливості willbe](WillFilePredefinedComponents.ukr.md)
 - [Cелектори з ґлобами та ассертами](WillFileSelectors.ukr.md)
-- [Reflector Structure]()
--
+- [Reflector in will-files](WillFileReflectors.ukr.md)
