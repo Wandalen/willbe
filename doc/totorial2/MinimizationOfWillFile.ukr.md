@@ -18,8 +18,6 @@ about :
 
 path :
 
-  in : '.'
-  out : 'out'
   fileToDelete.debug :
     criterion :
        debug : 1
@@ -62,8 +60,8 @@ build :
 
 </details>
 
-Після цього в кореневій директорії `.will.yml` створіть директорію `files` і помістіть файли назви яких будуть починатись на _'Debug'_ та _'Release'_ (можете створити по декілька файлів, оскільки в секції `path` використано ґлоб '\*', тоді лістинги будуть відрізнятись кількістю файлів). 
-Вбудований крок `predefined.delete` видаляє файли і директорії за вказаним в `filePath` шляхом. Тому запуск сценаріїв призведе до видалення відповідних файлів. Але для початку зменшимо кількість кроків. 
+Після цього в кореневій директорії `.will.yml` створіть директорію `files` і помістіть файли назви яких будуть починатись на _'Debug'_ та _'Release'_ (можете створити по декілька файлів, оскільки в секції `path` використано ґлоб '\*', тоді лістинги будуть відрізнятись кількістю файлів).
+Вбудований крок `predefined.delete` видаляє файли і директорії за вказаним в `filePath` шляхом. Тому запуск сценаріїв призведе до видалення відповідних файлів. Але для початку зменшимо кількість кроків.
 Проаналізуємо `path`: є два ресурси які починаються на `fileToDelete`, але продовження назви, критеріони і шляхи відрізняються. Якщо ми об'єднаємо ці ресурси, то не зможемо розділити шляхи до файлів. Тому, секція `path` залишається без змін.
 Аналіз кроків `delete.debug` i `delete.release`, показує, що функціонал (в даному випадку процедура видалення) у них однаковий, але є відмінності в назвах та критеріонах. Саме при таких умовах використовується мінімізація за рахунок об'єднання критеріонів. Змініть секцію `step` до вигляду:
 
@@ -85,22 +83,22 @@ step  :
 [user@user ~]$ will .steps.list
 ...
 step::delete.debug.
-  criterion : 
-    debug : 0 
-  opts : 
-    filePath : path::fileToDelete.* 
-  inherit : 
+  criterion :
+    debug : 0
+  opts :
+    filePath : path::fileToDelete.*
+  inherit :
     predefined.delete
 
 step::delete.debug.debug
-  criterion : 
-    debug : 1 
-  opts : 
-    filePath : path::fileToDelete.* 
-  inherit : 
+  criterion :
+    debug : 1
+  opts :
+    filePath : path::fileToDelete.*
+  inherit :
     predefined.delete
 
- 
+
 ```
 
 `Willbe` на основі критеріона `debug : [ 0,1 ]` створив два кроки: `delete.debug.` з критеріоном `debug : 0` та `delete.debug.debug` з критеріоном `debug : 1`, тобто при значенні `debug : 0` пакет до назви процедури додає знак '.', а якщо встановлено '1', то використовується приставка _'.[criterion_name]'_.  
@@ -112,7 +110,7 @@ step::delete.debug.debug
   Building delete.debug
    - filesDelete 1 files at /path_to_file/files in 0.028s
   Built delete.debug in 0.154s
-  
+
 ```
 
 Після чого перевірте вміст директорії `files` (`ls -l files/` в терміналі):
@@ -143,17 +141,17 @@ build :
 [user@user ~]$ will .builds.list
 ...
 build::delete.
-  criterion : 
-    debug : 0 
-  steps : 
+  criterion :
+    debug : 0
+  steps :
     delete.*
 
 build::delete.debug
-  criterion : 
-    debug : 1 
-  steps : 
+  criterion :
+    debug : 1
+  steps :
     delete.*
- 
+
 ```
 
 Відповідно, щоб видалити файл _'Release'_ введемо `will .build delete.`.
@@ -164,7 +162,7 @@ build::delete.debug
   Building delete.
    - filesDelete 1 files at /path_to_file/files in 0.028s
   Built delete. in 0.149s
- 
+
 ```
 
 
