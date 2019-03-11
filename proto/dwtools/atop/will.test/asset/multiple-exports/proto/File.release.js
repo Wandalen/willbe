@@ -1,1 +1,1 @@
-console.log( 'File1.release.js' );
+console.log( 'dir2/File1.release.js' );

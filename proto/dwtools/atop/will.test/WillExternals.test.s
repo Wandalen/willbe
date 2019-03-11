@@ -1161,6 +1161,7 @@ function submodulesBuild( test )
     var files = _.fileProvider.dirRead( outDebugPath );
     debugger;
     test.identical( files.length, 2 );
+    debugger;
     return null;
   })
 
@@ -2718,8 +2719,10 @@ function multipleExportsDoc( test )
     var files = self.find( subOutPath );
     test.identical( files, [ '.', './submodule.default-debug-raw.out.tgs', './submodule.default-raw.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
 
+    debugger;
     var files = self.find( supOutPath );
     test.identical( files, [ '.', './file.md' ] );
+    debugger;
 
     return null;
   })

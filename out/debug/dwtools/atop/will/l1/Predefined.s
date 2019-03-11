@@ -88,7 +88,7 @@ function stepRoutineReflect( frame )
 
   let reflectorOptions = reflector.optionsForReflectExport();
 
-  _.mapSupplement( opts, reflectorOptions )
+  _.mapSupplement( opts, reflectorOptions );
 
   if( will.verbosity >= 4 )
   {
@@ -101,6 +101,7 @@ function stepRoutineReflect( frame )
   let verbosity = opts.verbosity;
   opts.verbosity = 0;
 
+  debugger;
   let result = will.Predefined.filesReflect.call( fileProvider, opts );
 
   // if( will.verbosity >= 5 )
@@ -308,8 +309,6 @@ function stepRoutineConcatJs( frame )
 
   _.include( 'wTranspilationStrategy' );
 
-  debugger;
-
   let ts = new _.TranspilationStrategy({ logger : logger }).form();
   let multiple = ts.multiple
   ({
@@ -319,12 +318,11 @@ function stepRoutineConcatJs( frame )
     totalReporting : 0,
   });
 
-  debugger;
+  // debugger;
 
   return multiple.form().perform()
   .finally( ( err, arg ) =>
   {
-    debugger;
     if( err )
     throw _.errLogOnce( err );
     return arg;

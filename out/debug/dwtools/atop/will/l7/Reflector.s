@@ -30,8 +30,8 @@ function init( o )
 
   _.assert( o && o.module );
 
-  if( o.src && o.src.basePath )
-  debugger;
+  // if( o.src && o.src.basePath )
+  // debugger;
 
   let module = o.module;
   let will = module.will;
@@ -52,7 +52,7 @@ function cloneDerivative()
   let reflector = this;
   let reflector2 = Parent.prototype.cloneDerivative.apply( reflector, arguments );
 
-  if( reflector.src.dst === reflector.dst )
+  if( reflector.src.dstFilter === reflector.dst )
   reflector2.src.pairWithDst( reflector2.dst );
 
   return reflector2;
@@ -80,9 +80,6 @@ function form1()
   _.assert( !willf || !!willf.formed );
   _.assert( _.strDefined( reflector.name ) );
 
-  // if( reflector.nickName === 'reflector::reflect.proto' )
-  // debugger;
-
   /* begin */
 
   module[ reflector.MapName ][ reflector.name ] = reflector;
@@ -93,8 +90,6 @@ function form1()
   if( reflector.src )
   {
     reflector.src.hubFileProvider = fileProvider;
-    // if( reflector.src.basePath )
-    // reflector.src.basePath = path.s.normalize( reflector.src.basePath );
     if( !reflector.src.formed )
     reflector.src._formAssociations();
   }
@@ -103,8 +98,6 @@ function form1()
   if( reflector.dst )
   {
     reflector.dst.hubFileProvider = fileProvider;
-    // if( reflector.dst.basePath )
-    // reflector.dst.basePath = path.s.normalize( reflector.dst.basePath );
     if( !reflector.dst.formed )
     reflector.dst._formAssociations();
   }
@@ -127,13 +120,16 @@ function form2()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  // if( reflector.nickName === 'reflector::concat.proto.' )
-  // debugger;
+  // reflector.pathsResolve();
+  // if( reflector.src.hasAnyPath() )
+  // reflector.src.prefixPath = path.join( module.inPath, reflector.src.prefixPath || '.' );
+  // reflector.src.pairRefine( reflector.dst );
 
-  reflector.pathsResolve();
-  if( reflector.src.hasAnyPath() )
-  reflector.src.prefixPath = path.join( module.inPath, reflector.src.prefixPath || '.' );
-  reflector.src.pairRefine( reflector.dst );
+  reflector.src.pairWithDst( reflector.dst );
+
+  if( reflector.src.filePath !== reflector.dst.filePath )
+  if( !reflector.dst.filePath || _.mapIs( reflector.dst.filePath ) )
+  reflector.src.pairRefineLight();
 
   let result = Parent.prototype.form2.apply( reflector, arguments );
   return result;
@@ -156,11 +152,16 @@ function form3()
 
   /* begin */
 
-  if( reflector.nickName === 'reflector::concat.proto.' )
+  if( reflector.nickName === "reflector::concat.proto.only.tests.debug" )
   debugger;
 
   reflector.pathsResolve();
+  if( reflector.src.hasAnyPath() )
+  reflector.src.prefixPath = path.join( module.inPath, reflector.src.prefixPath || '.' );
   reflector.src.pairRefine( reflector.dst );
+
+  // reflector.pathsResolve();
+  // reflector.src.pairRefine( reflector.dst );
 
   reflector.prefixesApply();
   reflector.prefixesRelative();
@@ -171,6 +172,9 @@ function form3()
 
   _.assert( reflector.src.prefixPath === null || path.isAbsolute( reflector.src.prefixPath ) );
   _.assert( reflector.dst.prefixPath === null || path.isAbsolute( reflector.dst.prefixPath ) );
+
+  if( reflector.nickName === "reflector::concat.proto.only.tests.debug" )
+  debugger;
 
   /* end */
 
@@ -252,14 +256,23 @@ function _inheritSingle( o )
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
 
-  if( reflector.nickName === 'reflector::concat.proto.' )
-  debugger;
+  // if( reflector.nickName === "reflector::concat.proto.only.tests.debug" )
+  // debugger;
 
   reflector.src.and( reflector2.src ).pathsInherit( reflector2.src );
+
+  if( reflector.src.filePath !== reflector.dst.filePath )
+  if( !reflector.dst.filePath || _.mapIs( reflector.dst.filePath ) )
+  reflector.src.pairRefineLight();
+
   reflector.dst.and( reflector2.dst ).pathsInherit( reflector2.dst );
 
-  if( reflector.nickName === 'reflector::concat.proto.' )
-  debugger;
+  if( reflector.src.filePath !== reflector.dst.filePath )
+  if( !reflector.dst.filePath || _.mapIs( reflector.dst.filePath ) )
+  reflector.src.pairRefineLight();
+
+  // if( reflector.nickName === "reflector::concat.proto.only.tests.debug" )
+  // debugger;
 
 }
 
@@ -284,26 +297,29 @@ function _reflectMapForm( o )
 
   _.assertRoutineOptions( _reflectMapForm, arguments );
 
-  let map = reflector.filePath;
-  for( let src in map )
+  let pathMap = reflector.filePath;
+  for( let src in pathMap )
   {
-    let dst = map[ src ];
+    let dst = pathMap[ src ];
 
-    if( !_.boolLike( dst ) )
-    {
-      dst = module.pathResolve
-      ({
-        selector : dst,
-        visited : o.visited,
-        current : reflector,
-        // prefixlessAction : 'resolved',
-      });
-    }
+    // if( !_.boolLike( dst ) && dst !== null )
+    // // if( module.selectorIs( dst ) )
+    // {
+    //   if( !module.selectorIs( dst ) )
+    //   debugger;
+    //   dst = module.pathResolve
+    //   ({
+    //     selector : dst,
+    //     visited : o.visited,
+    //     current : reflector,
+    //     // prefixlessAction : 'resolved',
+    //   });
+    // }
 
     if( module.selectorIs( src ) )
     {
 
-      let resolved = module.pathResolve
+      let resolvedSrc = module.pathResolve
       ({
         selector : src,
         visited : o.visited,
@@ -313,25 +329,25 @@ function _reflectMapForm( o )
         // flattening : 1,
       });
 
-      if( !_.errIs( resolved ) && !_.strIs( resolved ) && !_.arrayIs( resolved ) && !( resolved instanceof will.Reflector ) )
+      if( !_.errIs( resolvedSrc ) && !_.strIs( resolvedSrc ) && !_.arrayIs( resolvedSrc ) && !( resolvedSrc instanceof will.Reflector ) )
       {
         debugger;
-        resolved = _.err( 'Source of reflects map was resolved to unexpected type', _.strType( resolved ) );
+        resolvedSrc = _.err( 'Source of path map was resolved to unexpected type', _.strType( resolvedSrc ) );
       }
-      if( _.errIs( resolved ) )
+      if( _.errIs( resolvedSrc ) )
       {
         debugger;
-        throw _.err( 'Failed to form', reflector.nickName, '\n', resolved );
+        throw _.err( 'Failed to form', reflector.nickName, '\n', resolvedSrc );
       }
 
-      if( _.arrayIs( resolved ) )
+      if( _.arrayIs( resolvedSrc ) )
       {
-        resolved = path.s.normalize( resolved );
+        resolvedSrc = path.s.normalize( resolvedSrc );
 
-        delete map[ src ];
-        for( let p = 0 ; p < resolved.length ; p++ )
+        delete pathMap[ src ];
+        for( let p = 0 ; p < resolvedSrc.length ; p++ )
         {
-          let rpath = resolved[ p ];
+          let rpath = resolvedSrc[ p ];
           _.assert( _.strIs( rpath ) );
 
           if( path.isAbsolute( rpath ) && !path.isGlobal( rpath ) )
@@ -339,29 +355,30 @@ function _reflectMapForm( o )
           // if( path.isAbsolute( rpath ) && !path.isGlobal( rpath ) )
           // rpath = path.s.relative( module.inPath, rpath );
 
-          map[ rpath ] = dst;
+          pathMap[ rpath ] = dst;
         }
       }
-      else if( _.strIs( resolved ) )
+      else if( _.strIs( resolvedSrc ) )
       {
-        resolved = path.normalize( resolved );
+        resolvedSrc = path.normalize( resolvedSrc );
 
-        // if( path.isAbsolute( resolved ) && !path.isGlobal( resolved ) )
-        // resolved = path.s.relative( module.inPath, resolved );
+        // if( path.isAbsolute( resolvedSrc ) && !path.isGlobal( resolvedSrc ) )
+        // resolvedSrc = path.s.relative( module.inPath, resolvedSrc );
 
-        delete map[ src ];
-        map[ resolved ] = dst;
+        delete pathMap[ src ];
+        pathMap[ resolvedSrc ] = dst;
       }
-      else if( resolved instanceof will.Reflector )
+      else if( resolvedSrc instanceof will.Reflector )
       {
-        delete map[ src ];
+        delete pathMap[ src ];
         debugger;
-        reflector._inheritSingle({ visited : o.visited, ancestor : resolved, defaultDst : dst });
-        _.sure( !!resolved.filePath );
-        path.pathMapExtend( map, resolved.filePath, dst );
+        reflector._inheritSingle({ visited : o.visited, ancestor : resolvedSrc, defaultDst : dst });
+        _.sure( !!resolvedSrc.filePath );
+        path.pathMapExtend( pathMap, resolvedSrc.filePath, dst );
       }
 
     }
+
   }
 
 }
