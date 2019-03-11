@@ -1835,6 +1835,9 @@ function _remoteDownload( o )
 
   if( !o.upgrading )
   {
+    // possible fix of submodules.download problem:
+    // module.isDownloaded = !!module.remoteIsDownloaded();
+
     if( module.isDownloaded )
     return false;
   }
