@@ -15,7 +15,7 @@ about :
 
 submodule :
 
-    WTools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+    Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
     PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
 
 build :
@@ -51,8 +51,8 @@ step :
 ```
 [user@user ~]$ will .build download
 ...
-     . Read : /path_to_file/.module/WTools/out/wTools.out.will.yml
-     + module::WTools was downloaded in 12.741s
+     . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
+     + module::Tools was downloaded in 12.741s
      . Read : /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
      + module::PathFundamentals was downloaded in 4.903s
    + 2/2 submodule(s) of module::first were downloaded in 17.652s
@@ -74,12 +74,12 @@ step :
 Request ".build upgrade"
    . Read : /path_to_file/.will.yml
  . Read 1 will-files in 0.089s
- ! Failed to read submodule::WTools, try to download it with .submodules.download or even clean it before downloading
+ ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
  ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
 
   Building upgrade
-     . Read : /path_to_file/.module/WTools/out/wTools.out.will.yml
-     + module::WTools was upgraded in 17.024s
+     . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
+     + module::Tools was upgraded in 17.024s
      . Read : /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
      + module::PathFundamentals was upgraded in 4.256s
    + 2/2 submodule(s) of module::first were upgraded in 21.288s

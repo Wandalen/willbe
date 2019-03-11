@@ -8,7 +8,7 @@
 ```yaml
 submodule :
 
-    WTools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master  
+    Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master  
     PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
 
 ```
@@ -20,7 +20,7 @@ submodule :
 ```yaml
 submodule :
 
-    WTools :
+    Tools :
        path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
        description : 'Import willbe tools'  
     PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
@@ -31,7 +31,7 @@ submodule :
 
 ```
 ...
-submodule::WTools
+submodule::Tools
   path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
   description : Import willbe tools
   isDownloaded : true
@@ -58,7 +58,7 @@ submodule::PathFundamentals
 ```
 .
 ├── .module
-│   ├──WTools
+│   ├──Tools
 │   └──PathFundamentals
 └── .will.yml
 
@@ -71,8 +71,8 @@ submodule::PathFundamentals
 ```
 [user@user ~]$ will .submodules.upgrade
 ...
-   . Read : /path_to_file/.module/WTools/out/wTools.out.will.yml
-   + module::WTools was upgraded in 13.568s
+   . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
+   + module::Tools was upgraded in 13.568s
    . Read : /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
    + module::PathFundamentals was upgraded in 3.340s
  + 2/2 submodule(s) of module::first were upgraded in 16.917s

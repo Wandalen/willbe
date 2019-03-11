@@ -54,7 +54,7 @@ About
 
 submodule :
 
-  WTools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
 
 ```
 
@@ -75,7 +75,7 @@ about :
 
 submodule :
 
-    WTools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+    Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
 
 ```
 
@@ -83,7 +83,7 @@ submodule :
 
 <p> </p>
 
-Тепер в `submodule` поміщений один ресурс з назвою _'WTools'_, який має _URL_-шлях _'git+https:///github.com/Wandalen/wTools.git/out/wTools#master'_. Опис шляху свідчить про використання підмодуля з _GitHub_-у.  
+Тепер в `submodule` поміщений один ресурс з назвою _'Tools'_, який має _URL_-шлях _'git+https:///github.com/Wandalen/wTools.git/out/wTools#master'_. Опис шляху свідчить про використання підмодуля з _GitHub_-у.  
 Скориставшись знайомою з попереднього туторіалу командою `will. submodules.list`, отримаємо такі рядки (тут і далі, текст лістинга команди, що не включено в туторіал позначений '...'):
 
 ```

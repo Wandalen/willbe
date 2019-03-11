@@ -1,4 +1,4 @@
-# Перший will-модуль. Імпорт підмодуля
+# Перший will-модуль. Завантаження віддаленого підмодуля
 
 В цьому туторіалі описується робота з імпортованими підмодулями  
 
@@ -10,9 +10,9 @@
 Request ".submodules.download"
    . Read : /path_to_file/.will.yml
  . Read 1 will-files in 0.068s
- ! Failed to read submodule::WTools, try to download it with .submodules.download or even clean it before downloading
-   . Read : /path_to_file/.module/WTools/out/wTools.out.will.yml
-   + module::WTools was downloaded in 12.360s
+ ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
+   . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
+   + module::Tools was downloaded in 12.360s
  + 1/1 submodule(s) of module::first were downloaded in 12.365s
 
 ```
@@ -28,7 +28,7 @@ Request ".submodules.download"
 
 ```
 
-В кореневій директорії файла `.will.yml` має з'явитись каталог підмодулів `.module`. Відкривши його ви знайдете директорію `WTools` з файлами підмодуля.  
+В кореневій директорії файла `.will.yml` має з'явитись каталог підмодулів `.module`. Відкривши його ви знайдете директорію `Tools` з файлами підмодуля.  
 Додамо ще один підмодуль в `.will.yml` та знову виконаємо `will .submodules.list`:
 
 ```yaml
@@ -39,7 +39,7 @@ PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wP
 
 ```
 ...
-submodule::WTools
+submodule::Tools
   path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
   isDownloaded : true
   Exported builds : [ 'proto.export' ]
@@ -50,7 +50,7 @@ submodule::PathFundamentals
 
 ```
 
-<a name="resource-inheritation"> Зверніть увагу на рядки, які позначають окремі підмодулі - _'submodule::WTools'_ i _'submodule::PathFundamentals'_. В порівнянні з виводом інформації секції `about` (фраза `will .about.list`).
+<a name="resource-inheritation"> Зверніть увагу на рядки, які позначають окремі підмодулі - _'submodule::Tools'_ i _'submodule::PathFundamentals'_. В порівнянні з виводом інформації секції `about` (фраза `will .about.list`).
 
 ```
 ...
