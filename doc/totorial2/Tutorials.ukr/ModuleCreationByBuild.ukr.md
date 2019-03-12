@@ -1,10 +1,10 @@
 # Використання команди '.build' для побудови модуля
 
-Туторіал описує збірки побудови модуля в `will`-файлі
+Туторіал описує запуск окремих збірок побудови модуля в `will`-файлі
 
 <a name="module-by-build">  
     
-Для запису збірок побудови модуля використовується [cекція `build`](CompositionOfWillFile.ukr.md#build). Збірка секції `build` - послідовності і умови виконання процедур побудови модуля.  
+Ресурси [cекції `build`](CompositionOfWillFile.ukr.md#build) називаються збірками. Збірка - послідовності і умови виконання процедур побудови модуля. В збірках окремо виділено сценарій збірки - послідовність виконання кроків в ресурсі.  
 
 Створимо новий `will`-файл:
 
@@ -19,13 +19,13 @@ about :
         
 step :
 
-  echo :
+  echo.hello :
     shell : echo "Hello, World"
     currentPath : '.'
     
 ```
 
-Секція [`step`](WillFileStructure.ukr.md#step) описує визначені користувачем дії, які можуть використовуватись пакетом для створення модульної системи. В прикладі, крок під назвою `echo` має два поля - використання командної оболонки  операційної системи `shell` де виводиться рядок _"Hello, World"_ (працюють всі команди системи) та директорія в якій ця команда виконується `currentPath`.  
+Секція [`step`](CompositionOfWillFile.ukr.md#step) включає процедури користувача (кроки) для створення модульної системи. В прикладі, крок під назвою `echo.hello` має два поля - `shell` для використання консолі операційної системи (команда `echo` виводить рядок _"Hello, World"_) та `currentPath` - директорія в якій виконується команда.  
 Перейдемо до секції `build`:
     
 ```yaml
@@ -34,9 +34,11 @@ build :
 
   echo:
     steps :
-       - echo
+       - echo.hello
 
 ```
+
+Збірка `echo` виконує один крок `echo.hello`. Об'єднайте секції в одному файлі:
 
 <details>
   <summary><u>Повний лістинг файла `.will.yml`</u></summary>
@@ -53,7 +55,7 @@ about :
         
 step :
 
-  echo :
+  echo.hello :
     shell : echo "Hello, World"
     currentPath : '.'
     
@@ -61,14 +63,13 @@ build :
 
   echo:
     steps :
-       - echo
+       - echo.hello
 
 ```
 
 </details>
 
-В секцію поміщена збірка `echo`, яка викликає крок `echo`. 
-Тепер введемо фразу `will .build` в консолі з кореневої директорії файла:
+Для запуску збірок необхідно використати команду `.build` тому, введемо фразу `will .build` в консолі з кореневої директорії `will`-файла:
 
 ```
 ...
@@ -82,21 +83,21 @@ Please specify exactly one build scenario, none satisfies passed arguments
 [user@user ~]$ will .builds.list
 Request ".builds.list"
 ...
-build::echo.debug
+build::echo
   steps : 
-    echo
+    echo.hello
 
 ```
 
 Збірка є. Тепер введемо її назву як аргумент команди:
 
 ```
-[user@user ~]$ will .build echo.debug
-Request ".build echo.debug"
+[user@user ~]$ will .build echo
+Request ".build echo"
 ...
-  Building echo.debug
- > echo "Debug is done"
-Debug is done
+  Building echo
+ > echo "Hello, World"
+Hello, World
   Built echo.debug in 0.089s
 
 ```
@@ -111,19 +112,22 @@ Debug is done
         
 ```
 
-Можемо додати крок в збірку `echo`, але тоді буде виконано обидва кроки або створити ще одну збірку для запуску окремого кроку. Створимо збірку. 
+Додамо крок `echo.two` в збірку `echo`, щоб пакет виконав обидва кроки, а також створимо збірку для запуску другого кроку. Додайте в секцію `build` наступний ресурс: 
 
 ```yaml
-
-build :
-
-  echo.two:
+  echo :
+    steps :
+       - echo.hello
+       - echo.two
+       
+  echo.two :
     steps :
        - echo.two
 
 ```
 
 Перегляньте створений файл.
+
 <details>
   <summary><u>Повний лістинг файла `.will.yml`</u></summary>
 
@@ -139,7 +143,7 @@ about :
         
 step :
 
-  echo :
+  echo.hello :
     shell : echo "Hello, World"
     currentPath : '.'
         
@@ -151,18 +155,47 @@ build :
 
   echo:
     steps :
-       - echo
+       - echo.hello
+       - echo.two
        
   echo.two:
     steps :
-       - echo.two       
+       - echo.two      
 
 ```
 
 </details>
 
-> `Willbe` може [використовувати командну оболонку](#shell-resource) операційної системи для управління модулями
+Запустіть окремі збірки та порівняйте результати виводу:
 
+<details>
+  <summary><u>Лістинги виводу команд</u></summary>
+    <p>Збірка 'echo'</p>
+
+```
+  Building echo
+ > echo "Hello, World"
+Hello, World
+ > echo "It's Willbe"
+It's Willbe
+  Built echo in 0.275s
+
+``` 
+
+<p>Збірка `echo.two`</p>
+
+```
+  Building echo.two
+ > echo "It's Willbe"
+It's Willbe
+  Built echo in 0.095s
+
+``` 
+
+</details>
+
+
+> `Willbe` може [використовувати командну оболонку](#shell-resource) операційної системи.  
 > Головний недолік створення окремих збірок полягає в тому, що зі збільшенням числа умов необхідно ускладнювати структуру `will`-файла.  
 
 [Наступний туторіал](PredefinedSteps.ukr.md)  

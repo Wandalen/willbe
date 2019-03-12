@@ -14,6 +14,7 @@
 - [Поняття критеріонів в will-файлах та їх використання](CriterionsInWillFile.ukr.md)
 - [Побудова модуля (build) за замовчуванням](DefaultCriterionInWillFile.ukr.md)
 - [Експортування модуля](ExportedWillFile.ukr.md)
+- [Імпорт локального підмодуля](LocalSubmodulesImporting.ukr.md)
 - [Поняття селекторів в will-файлах](SelectorsTermInWillFile.ukr.md)
 - [Як використовувати селектори з ґлобами](HowToUseSelectorsWithGlob.ukr.md)
 - [Як використовувати ассерти в will-файлах](HowToUseAsserts.ukr.md)
@@ -26,9 +27,8 @@
 - [Як використовувати складні селектори](HowToUseComplexSelector.ukr.md)
 -
 - ...In progress...
-- [Resources Inheritability](ResourceInheritability.ukr.md) (Ред.)
-- [How to list](HowToUseCommandLineInterfaceOfWill.ukr.md) (Ред.)
-- [Local submodule import](LocalSubmodulesImporting.ukr.md) (Ред.)
+- [Resources Inheritability](ResourceInheritability.ukr.md) 
+- [How to list](HowToUseCommandLineInterfaceOfWill.ukr.md)
 - ... advanced ...
 - [How to use reflector and predefined reflectors](ReflectorUsing.ukr.md) ( mid ) (Ред.)
 - [Reflector Structure]()
