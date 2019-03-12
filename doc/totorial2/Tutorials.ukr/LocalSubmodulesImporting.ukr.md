@@ -71,7 +71,7 @@ build :
 
 </details>
 
-Також використаємо експортований `exportModule.out.will.yml` файл з цього туторіалу, перейменувавши його в `local.out.will.yml` та помістимо за шляхом './local.modules/localTwo/out/'.  
+Також використаємо експортований `exportModule.out.will.yml` файл з цього туторіалу, перейменувавши його в `local.out.will.yml` та помістимо за шляхом './local.modules/localTwo/out/' (якщо у вас немає файла, пройдіть туторіал [Експортування модуля](ExportedWillFile.ukr.md)).  
 Перевіримо конфігурацію фразою `will .submodules.list`:
 
 ```
@@ -91,3 +91,73 @@ submodule::localTwo
 
 ```
 
+Завантаження та оновлення для локальних підмодулів не потрібне - на машині знаходиться актуальна версія модуля, але завантажимо віддалений. 
+
+```
+[user@user ~]$ will .submodules.download
+...
+   + module::PathFundamentals was downloaded in 4.872s
+ + 1/3 submodule(s) of module::local.import were downloaded in 4.877s
+
+``` 
+Перегляньте директорію модуля:
+
+``` 
+[user@user ~]$ ls -al
+...
+drwxr-xr-x 4 user user 4096 Мар 12 13:25 local.modules
+drwxr-xr-x 4 user user 4096 Мар 12 13:27 .module
+-rw-r--r-- 1 user user  307 Мар 12 13:41 .will.yml
+
+```
+
+Виведемо інформацію про підмодулі (`will .submodules.list`):
+
+```
+submodule::PathFundamentals
+  path : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  isDownloaded : true
+  Exported builds : [ 'proto.export' ]
+submodule::localOne
+  path : ./local.modules/localOne/
+  isDownloaded : 1
+  Exported builds : []
+submodule::localTwo
+  path : ./local.modules/localTwo/out/local
+  isDownloaded : 1
+  Exported builds : [ 'export' ]
+
+```
+
+З чого встановлюємо, що локальні підмодулі завжди мають статус завантажені `isDownloaded : 1` (в виводі інформації про віддалені підмодулі вказується `true` або `false`), а також, якщо підмодуль посилається на експортований `will`-файл, то виводиться інформація по якій збірці він будувався.  
+Видалимо підмодулі фразою `will .submodules.clean`:
+
+```
+...
+- Clean deleted 93 file(s) in 0.385s
+
+```
+Прогляньте структуру модуля:
+
+``` 
+[user@user ~]$ ls -al
+...
+drwxr-xr-x 4 user user 4096 Мар 12 13:25 local.modules
+-rw-r--r-- 1 user user  307 Мар 12 13:41 .will.yml
+
+```
+
+```
+[user@user ~]$ ls -al local.modules/
+...
+drwxr-xr-x 2 user user 4096 Мар 12 13:51 localOne
+drwxr-xr-x 3 user user 4096 Мар 12 13:13 localTwo
+
+```
+
+Ця інформація свідчить про те, що пакет `willbe` не виконує операцій з локальними підмодулями для їх збереження. Щоб керувати локальними підмодулями потрібно використовувати інструменти пакету для роботи з файловою системою. 
+
+> Щоб підключити локальний підмодуль внесіть відповідний ресурс в секцію `submodule`.  
+> Для збереження данних, `willbe` не виконує операцій над локальними підмодулями.  
+
+[Повернутись до змісту](Topics.ukr.md)
