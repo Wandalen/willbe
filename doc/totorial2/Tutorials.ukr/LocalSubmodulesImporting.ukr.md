@@ -2,7 +2,7 @@
 
 В туторіалі показана процедура додавання локального підмодуля та її особливості
 
-Крім віддалених підмодулів, ви можете використовувати створені локально на машині. Для цього в секцію `submodule` потрібно додати новий ресурс з шляхом до `will`-файла. Якщо використовується неіменований `will`-файл, використовуйте повну назву файла, а для іменованих вказуйте назву файла до розширення `.will.yml` або `.out.will.yml`.   
+Крім віддалених підмодулів, ви можете використовувати створені локально на машині. Для цього в секцію `submodule` потрібно додати новий ресурс з шляхом до `will`-файла. Якщо використовується неіменований `will`-файл, використовуйте або повну назву файла або тільки шлях, а для іменованих `will`-файлыв вказуйте назву файла до розширення `.will.yml` або `.out.will.yml`.   
 Створимо структуру для дослідження двох підмодулів - з іменованим та неіменованим файлом:
 
 ```
@@ -30,7 +30,7 @@ about :
 submodule :
 
   PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
-  localOne : ./local.modules/localOne/.im.will.yml
+  localOne : ./local.modules/localOne/
   localTwo : ./local.modules/localTwo/out/local
 
 ```
@@ -66,5 +66,28 @@ build :
           export : 1
       steps :
           - export.single
+          
 ```
+
 </details>
+
+Також використаємо експортований `exportModule.out.will.yml` файл з цього туторіалу, перейменувавши його в `local.out.will.yml` та помістимо за шляхом './local.modules/localTwo/out/'.  
+Перевіримо конфігурацію фразою `will .submodules.list`:
+
+```
+...
+submodule::PathFundamentals
+  path : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  isDownloaded : false
+  Exported builds : []
+submodule::localOne
+  path : ./local.modules/localOne/
+  isDownloaded : 1
+  Exported builds : []
+submodule::localTwo
+  path : ./local.modules/localTwo/out/local
+  isDownloaded : 1
+  Exported builds : [ 'export' ]
+
+```
+
