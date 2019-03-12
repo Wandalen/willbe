@@ -43,9 +43,9 @@ build :
 
 about :
 
-  name : 'second'
-  description : 'Second module'
-  version : 0.0.2
+  name : 'defaultBuild'
+  description : 'Default build with criterion'
+  version : 0.0.1
   keywords :
       - willbe
 
@@ -113,7 +113,7 @@ found 0 vulnerabilities
 │ 
 ├── package.json
 ├── package-lock.json
-├── .will.yml
+└── .will.yml
 
 ```
 

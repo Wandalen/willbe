@@ -28,7 +28,7 @@
 - ...In progress...
 - [Resources Inheritability](ResourceInheritability.ukr.md) (Ред.)
 - [How to list](HowToUseCommandLineInterfaceOfWill.ukr.md) (Ред.)
-- [Local submodule import]() (Ред.)
+- [Local submodule import](LocalSubmodulesImporting.ukr.md) (Ред.)
 - ... advanced ...
 - [How to use reflector and predefined reflectors](ReflectorUsing.ukr.md) ( mid ) (Ред.)
 - [Reflector Structure]()
