@@ -7,8 +7,8 @@
 - [Структура will-файла](CompositionOfWillFile.ukr.md)  
 - [Як користуватися інтерфейсом командного рядка 'willbe'](HowToUseCommandLineInterfaceOfWill.ukr.md)
 - [Перший will-файл](FirstWillFile.ukr.md)
-- [Перший will-модуль. Завантаження віддаленого підмодуля](SubmodulesImporting.ukr.md)
-- [Оновлення та видалення підмодулів](SubmodulesImporting2.ukr.md)
+- [Перший will-модуль. Завантаження віддаленого підмодуля](RemoteSubmodulesImporting.ukr.md)
+- [Оновлення та видалення підмодулів](SubmodulesAdministration.ukr.md)
 - [Використання команди '.build' для побудови модуля](ModuleCreationByBuild.ukr.md)
 - [Знайомство з вбудованими кроками](PredefinedSteps.ukr.md)
 - [Поняття критеріонів в will-файлах та їх використання](CriterionsInWillFile.ukr.md)
@@ -28,6 +28,7 @@
 - ...In progress...
 - [Resources Inheritability](ResourceInheritability.ukr.md) (Ред.)
 - [How to list](HowToUseCommandLineInterfaceOfWill.ukr.md) (Ред.)
+- [Local submodule import]() (Ред.)
 - ... advanced ...
 - [How to use reflector and predefined reflectors](ReflectorUsing.ukr.md) ( mid ) (Ред.)
 - [Reflector Structure]()
