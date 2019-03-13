@@ -55,7 +55,7 @@ _Починати роботу з заповнення секції `about` є �
 ```yaml
 submodule :
 
-  WTools :
+  Tools :
        path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
        description : 'Import willbe tools'
        #criterion :
@@ -89,7 +89,7 @@ about :
 
 submodule :
 
-    WTools :
+    Tools :
        path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
        description : 'Import willbe tools'
        #criterion :
@@ -102,7 +102,7 @@ submodule :
 ```
 [user@user ~]$ will .submodules.list
 ...
-submodule::WTools
+submodule::Tools
   path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
   description : Downloading submodules from GitHub
   criterion :
@@ -117,7 +117,7 @@ submodule::WTools
 ```
 [user@user ~]$ will .submodules.download
 ...
-   . Read : /path_to_file/.module/WTools/out/wTools.out.will.yml
+   . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
    + module::Tools was downloaded in 12.360s
  + 1/1 submodule(s) of module::first were downloaded in 12.365s
 

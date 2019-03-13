@@ -1,0 +1,36 @@
+# <a name="tutorials"></a> Туторіал
+
+## Зміст
+- [Введення](../Introduction.ukr.md)  
+- [Встановлення пакета willbe](WillbeInstalation.ukr.md)
+- [Базові концепції та поняття](Concepts.urk.md)
+- [Структура will-файла](CompositionOfWillFile.ukr.md)  
+- [Як користуватися інтерфейсом командного рядка 'willbe'](HowToUseCommandLineInterfaceOfWill.ukr.md)
+- [Перший will-файл](FirstWillFile.ukr.md)
+- [Перший will-модуль. Завантаження віддаленого підмодуля](RemoteSubmodulesImporting.ukr.md)
+- [Оновлення та видалення підмодулів](SubmodulesAdministration.ukr.md)
+- [Використання команди '.build' для побудови модуля](ModuleCreationByBuild.ukr.md)
+- [Знайомство з вбудованими кроками](PredefinedSteps.ukr.md)
+- [Поняття критеріонів в will-файлах та їх використання](CriterionsInWillFile.ukr.md)
+- [Побудова модуля (build) за замовчуванням](DefaultCriterionInWillFile.ukr.md)
+- [Експортування модуля](ExportedWillFile.ukr.md)
+- [Імпорт локального підмодуля](LocalSubmodulesImporting.ukr.md)
+- [Поняття селекторів в will-файлах](SelectorsTermInWillFile.ukr.md)
+- [Як використовувати селектори з ґлобами](HowToUseSelectorsWithGlob.ukr.md)
+- [Як використовувати ассерти в will-файлах](HowToUseAsserts.ukr.md)
+- [Мінімізація will-файла](MinimizationOfWillFile.ukr.md)
+- [Розділені will-файли (Split will-files)](SplitWillFile.ukr.md)
+- [Іменовані will-файли. Використання команди '.with'](NamedWillFile.md)
+- [Як користуватись командою '.each'](UsingEachCommand.ukr.md)
+- [Використання JavaScript файлів пакетом willbe](UsingOfJSInWillbe.md)
+- [Використання команди '.set'](UsingSetCommand.ukr.md)
+- [Як використовувати складні селектори](HowToUseComplexSelector.ukr.md)
+-
+- ...In progress...
+- [Resources Inheritability](ResourceInheritability.ukr.md) 
+- [How to list](HowToUseCommandLineInterfaceOfWill.ukr.md)
+- ... advanced ...
+- [How to use reflector and predefined reflectors](ReflectorUsing.ukr.md) ( mid ) (Ред.)
+- [Reflector Structure]()
+- [Reflector Mapping]()
+- [Exported section of out will-file](ExportedSectionOfWillFile.ukr.md) ( mid ) (Ред.)
