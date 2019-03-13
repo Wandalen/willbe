@@ -7,7 +7,7 @@
 
 Загальний вид синтаксису команд пакету [`willbe`](https://github.com/Wandalen/willbe) має наступну структуру: `will .[command] [argument]`, де, `will` вказує на використання пакету `willbe`, префікс команд `.` - особливість роботи пакету, `[command]` - команда пакета, а `[argument]` - аргумент команди, якщо команда приймає аргументи.
 
-## <a name="will-commands"></a>Команди `willbe`
+## <a name="will-commands"></a> Команди `willbe`
 Для виводу всіх доступних команд наберіть `will .` або `will .help`
 
 #### <a name="table"></a> Таблиця. Команди пакету willbe
