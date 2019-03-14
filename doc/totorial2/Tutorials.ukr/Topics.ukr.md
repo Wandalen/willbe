@@ -25,13 +25,13 @@
 - [Використання JavaScript файлів пакетом willbe](UsingOfJSInWillbe.md)
 - [Використання команди '.set'](UsingSetCommand.ukr.md)
 - [Як використовувати складні селектори](HowToUseComplexSelector.ukr.md)
-- [Поняття рефлекторів. Копіювання файлів](ReflectorUsing.ukr.md) ( mid )
+- [Поняття рефлекторів. Копіювання файлів](ReflectorUsing.ukr.md)
 -
 - ...In progress...
 - [Resources Inheritability](ResourceInheritability.ukr.md) 
 - [How to list](HowToUseCommandLineInterfaceOfWill.ukr.md)
 - ... advanced ...
-- [How to use reflector and predefined reflectors](ReflectorUsing.ukr.md) ( mid ) (Ред.)
+- [How to use predefined reflectors](PredefinedReflectorsUsing.ukr.md)
+- [Reflector filters](ReflectorFilters.ukr.md)
 - [Reflector Structure]()
-- [Reflector Mapping]()
 - [Exported section of out will-file](ExportedSectionOfWillFile.ukr.md) ( mid ) (Ред.)
