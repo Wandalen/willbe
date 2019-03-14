@@ -254,6 +254,7 @@ function commandHelp( e )
   let ca = e.ca;
   let logger = will.logger;
 
+  debugger;
   ca._commandHelp( e );
 
   if( !e.subject )

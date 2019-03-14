@@ -3283,9 +3283,6 @@ function _resolveAct( o )
     if( it.dst instanceof will.Reflector )
     {
 
-      if( it.dst.nickName === 'reflectorreflect.proto.6.debug' )
-      debugger;
-
       resource = it.dst = it.dst.cloneDerivative();
       if( resource.formed === 0 )
       resource.form1();
@@ -3296,16 +3293,13 @@ function _resolveAct( o )
       // resource.form();
       _.assert( resource.formed >= 2 );
 
-      if( it.dst.nickName === 'reflectorreflect.proto.6.debug' )
-      debugger;
+      // if( it.dst.nickName === 'reflector::exportedFiles.export.' )
+      // debugger;
 
       if( resource.src.hasAnyPath() )
       resource.src.prefixPath = pathResolve.call( it, module2, resource.src.prefixPath || '.' );
       if( resource.dst.hasAnyPath() )
       resource.dst.prefixPath = pathResolve.call( it, module2, resource.dst.prefixPath || '.' );
-
-      if( it.dst.nickName === 'reflectorreflect.proto.6.debug' )
-      debugger;
 
     }
 

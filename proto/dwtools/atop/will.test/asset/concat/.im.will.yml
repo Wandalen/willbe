@@ -11,10 +11,22 @@ path :
     path : './out/debug'
     criterion :
       debug : 1
+      compiled : 0
+  out.debug.compiled :
+    path : './out/debug.compiled'
+    criterion :
+      debug : 1
+      compiled : 1
+  out.release.raw :
+    path : './out/release.raw'
+    criterion :
+      debug : 0
+      compiled : 0
   out.release :
     path : './out/release'
     criterion :
       debug : 0
+      compiled : 1
 
 reflector :
 
@@ -22,13 +34,30 @@ reflector :
     inherit : predefined.*
     criterion :
       debug : [ 0,1 ]
+      compiled : 0
     filePath :
       path::proto : path::out.*=1
 
-  concat.proto :
-    inherit : reflect.proto.*
+  concat.proto.no.tests :
+    inherit : predefined.*
+    criterion :
+      tests : 'no.tests'
+      compiled : 1
+      debug : [ 0,1 ]
     filePath :
-      '*.test*' : 0
+      '**.test*' : 0
+      '**.test/**' : 0
+      path::proto : path::out.*=1
+
+  concat.proto.only.tests :
+    inherit : predefined.*
+    criterion :
+      tests : 'only.tests'
+      debug : [ 0,1 ]
+      compiled : 1
+    filePath :
+      '**.test*' : 1
+      path::proto : path::out.*=1
 
 step :
 
@@ -41,8 +70,9 @@ step :
 
   concat.proto :
     inherit : predefined.concat.js
-    reflector : reflector::reflect.proto.*=1
+    reflector : reflector::concat.proto.*=1
     criterion :
+      tests : [ 'no.tests', 'only.tests' ]
       debug : [ 0,1 ]
       raw : 0
 
@@ -61,7 +91,8 @@ build :
       debug : 1
       raw : 0
     steps :
-      - step::concat.proto.*=1
+      # - step::concat.proto.no.tests*=1
+      - step::concat.proto.only.tests*=1
 
   release.raw :
     criterion :

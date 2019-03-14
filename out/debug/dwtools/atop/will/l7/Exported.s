@@ -166,6 +166,7 @@ function performExportedReflectors( exportSelector )
   _.assert( exported.exportedReflector === null );
   _.assert( exported.exportedDirPath === null );
 
+  debugger;
   let exp = step.resolve( exportSelector );
   let exportedReflector;
 
@@ -219,9 +220,11 @@ function performExportedReflectors( exportSelector )
   }
   else _.assert( 0 );
 
+  debugger;
   exportedReflector.criterion = _.mapExtend( null, exported.criterion );
   exportedReflector.form();
   exported.exportedReflector = exportedReflector;
+  debugger;
 
   _.assert( _.mapIs( exportedReflector.criterion ) );
   _.assert( exportedReflector.dst.prefixPath === null );
@@ -232,7 +235,7 @@ function performExportedReflectors( exportSelector )
   /* srcFilter */
 
   let srcFilter = exported.srcFilter = exportedReflector.src.clone();
-  srcFilter._formBasePath();
+  srcFilter._formPaths();
 
   _.assert( srcFilter.formed === 3 );
   _.assert( _.mapIs( srcFilter.basePath ) );
@@ -307,6 +310,7 @@ function performExportedFilesReflector()
 
   /* exportedFilesReflector */
 
+  // debugger;
   if( !exported.exportedFilesReflector )
   exported.exportedFilesReflector = exported.exportedReflector.cloneExtending
   ({
@@ -315,7 +319,8 @@ function performExportedFilesReflector()
   });
   let exportedFilesReflector = exported.exportedFilesReflector;
 
-  exportedFilesReflector.src.pairRefine( exportedFilesReflector.dst );
+  exportedFilesReflector.src.pairWithDst( exportedFilesReflector.dst );
+  exportedFilesReflector.src.pairRefine();
   exportedFilesReflector.src.prefixesApply();
   exportedFilesReflector.dst.prefixesApply();
 
@@ -338,6 +343,7 @@ function performExportedFilesReflector()
 
   _.assert( exportedFilesReflector.dst.prefixPath === null );
   _.assert( exportedFilesReflector.dst.basePath === null );
+  // debugger;
 
 }
 
@@ -423,6 +429,11 @@ function performWriteOutFile()
 
   let outFilePath = build.outFilePathFor();
   let data = module2.dataExport();
+
+  // debugger;
+  // let xxx = module.reflectorMap['exportedFiles.proto.export'].dataExport();
+  // // let yyy = module2.reflectorMap['exportedFiles.proto.export'].dataExport();
+  // debugger;
 
   module2.finit();
 
