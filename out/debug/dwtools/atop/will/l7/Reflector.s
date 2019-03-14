@@ -259,7 +259,7 @@ function _inheritSingle( o )
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
 
-  if( reflector.nickName === "reflector::reflect.submodules." )
+  if( reflector.nickName === "reflector::reflect.submodules" )
   debugger;
 
   reflector.src.and( reflector2.src ).pathsInherit( reflector2.src );
@@ -274,7 +274,7 @@ function _inheritSingle( o )
   if( !reflector.dst.filePath || _.mapIs( reflector.dst.filePath ) )
   reflector.src.pairRefineLight();
 
-  if( reflector.nickName === "reflector::reflect.submodules." )
+  if( reflector.nickName === "reflector::reflect.submodules" )
   debugger;
 
 }
