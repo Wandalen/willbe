@@ -603,11 +603,10 @@ function singleModuleExport( test )
     }
     test.identical( reflector.src.basePath, '.' );
     test.identical( reflector.src.prefixPath, 'proto' );
-    test.identical( reflector.src.filePath, expectedFilePath )
+    test.identical( reflector.src.filePath, expectedFilePath );
 
     return null;
   })
-
 
   /* - */
 

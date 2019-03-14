@@ -309,7 +309,7 @@ function performExportedFilesReflector()
 
   /* exportedFilesReflector */
 
-  // debugger;
+  debugger;
   if( !exported.exportedFilesReflector )
   exported.exportedFilesReflector = exported.exportedReflector.cloneExtending
   ({
@@ -318,7 +318,8 @@ function performExportedFilesReflector()
   });
   let exportedFilesReflector = exported.exportedFilesReflector;
 
-  exportedFilesReflector.src.pairRefine( exportedFilesReflector.dst );
+  exportedFilesReflector.src.pairWithDst( exportedFilesReflector.dst );
+  exportedFilesReflector.src.pairRefine();
   exportedFilesReflector.src.prefixesApply();
   exportedFilesReflector.dst.prefixesApply();
 

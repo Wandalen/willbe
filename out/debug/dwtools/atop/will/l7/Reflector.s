@@ -120,14 +120,6 @@ function form2()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  // reflector.pathsResolve();
-  // if( reflector.src.hasAnyPath() )
-  // reflector.src.prefixPath = path.join( module.inPath, reflector.src.prefixPath || '.' );
-  // reflector.src.pairRefine( reflector.dst );
-
-  // if( reflector.nickName === "reflector::exportedFiles.export." )
-  // debugger;
-
   reflector.src.pairWithDst( reflector.dst );
 
   if( reflector.src.filePath !== reflector.dst.filePath )
@@ -161,10 +153,8 @@ function form3()
   reflector.pathsResolve();
   if( reflector.src.hasAnyPath() )
   reflector.src.prefixPath = path.join( module.inPath, reflector.src.prefixPath || '.' );
-  reflector.src.pairRefine( reflector.dst );
-
-  // reflector.pathsResolve();
-  // reflector.src.pairRefine( reflector.dst );
+  reflector.src.pairWithDst( reflector.dst );
+  reflector.src.pairRefine();
 
   reflector.prefixesApply();
   reflector.prefixesRelative();
