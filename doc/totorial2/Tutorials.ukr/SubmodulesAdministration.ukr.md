@@ -1,14 +1,14 @@
 # Оновлення та видалення підмодулів
 
-В туторіалі продовжено опис імпортованих підмодулів, більш детально розглянуто їх адміністрування
+В туторіалі продовжено опис підмодулів, більш детально розглянуто їх адміністрування
 
-В попередньому туторіалі йдеться про умовне [_"наслідування"_ ресурсами властивостей секції](SubmodulesImporting.ukr.md#resource-inheritation), тобто, ресурс має наслідувати структуру секції за замовчуванням, а для `submodule` вона включає чотири поля: `description`, `path`, `criterion`, `inherit`. Два останніх - предмет окремих туторіалів, з ними ознайомитесь пізніше, а поки що перепишемо попередній приклад зі скороченою формою запису:
+Окремі ресурси секцій можуть мати повну і скорочену форму запису. В секції `submodule` ми записували підмодулі в скороченій формі: 'Назва підмодуля : Шлях до підмодуля', а повна форма включає чотири поля: `description`, `path`, `criterion`, `inherit`. Два останніх - предмет окремих туторіалів, з ними ознайомитесь пізніше, а поки що перепишемо попередній приклад зі скороченою формою запису:
 <a name="short-form">
   
 ```yaml
 submodule :
 
-    WTools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master  
+    Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master  
     PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
 
 ```
@@ -20,7 +20,7 @@ submodule :
 ```yaml
 submodule :
 
-    WTools :
+    Tools :
        path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
        description : 'Import willbe tools'  
     PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
@@ -31,7 +31,7 @@ submodule :
 
 ```
 ...
-submodule::WTools
+submodule::Tools
   path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
   description : Import willbe tools
   isDownloaded : true
@@ -45,7 +45,7 @@ submodule::PathFundamentals
 
 <a name="submodules-cleaning">
     
-Маємо один завантажений підмодуль з описом. Для завантаження другого введіть фразу `will .submodules.download`. Проте, краще виконаємо чисте встановлення, попередньо видаливши директорію `.module` з підмодулями фразою `will .submodules.clean`
+В лістингу також з'явився опис підмодуля `Tools`. Для завантаження другого введіть фразу `will .submodules.download`. Проте, краще виконаємо чисте встановлення, попередньо видаливши директорію `.module` з підмодулями фразою `will .submodules.clean`
 
 ```
 [user@user ~]$ will .submodules.clean
@@ -58,21 +58,29 @@ submodule::PathFundamentals
 ```
 .
 ├── .module
-│   ├──WTools
+│   ├──Tools
 │   └──PathFundamentals
 └── .will.yml
 
 ```
 
+Перевірте виконавши `ls -al .module/` з кореневої директорії `.will.yml`:
+
+```
+drwxr-xr-x 6 user user 4096 Мар 12 07:20 PathFundamentals
+drwxr-xr-x 9 user user 4096 Мар 12 07:20 Tools
+
+```
+
 <a name="submodules-upgrade">
     
-Ці підмодулі будуть виконувати своє призначення, проте, з часом може виникнути потреба оновити підмодулі не виконуючи очистку і повне завантаження. Для цього використовується команда `.submodules.upgrade` яка зчитує дані про підмодулі та порівнює їх з віддаленими версіями. При наявності оновлення пакет його встановить:
+Встановлені підмодулі будуть працювати, проте, з часом може виникнути потреба оновити підмодулі без очищення директорії `.module`. Для цього використовуйте команду `.submodules.upgrade` яка зчитує дані про підмодулі та порівнює їх з віддаленими версіями і, при наявності нової версії встановить її:
 
 ```
 [user@user ~]$ will .submodules.upgrade
 ...
-   . Read : /path_to_file/.module/WTools/out/wTools.out.will.yml
-   + module::WTools was upgraded in 13.568s
+   . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
+   + module::Tools was upgraded in 13.568s
    . Read : /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
    + module::PathFundamentals was upgraded in 3.340s
  + 2/2 submodule(s) of module::first were upgraded in 16.917s
@@ -88,7 +96,6 @@ submodule::PathFundamentals
 
 ```
 
-### Підсумок
 > Ресурс секції може мати [скорочену](#short-form) і [повну](#full-form) форму запису.
 > `Willbe` виконує операції з зовнішніми підмодулями з командної оболонки системи.
 
