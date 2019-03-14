@@ -6547,6 +6547,225 @@ function common( test )
 
 }
 
+//
+
+function filter( test )
+{
+  test.case = 'string';
+  var src = '/a/b/c';
+  var got = _.path.filter( src,onEach );
+  var expected = '/prefix/a/b/c';
+  test.identical( got, expected );
+  test.notIdentical( got, src );
+
+  test.case = 'array';
+  var src = [ '/a', '/b' ];
+  var got = _.path.filter( src,onEach );
+  var expected = [ '/prefix/a', '/prefix/b' ];
+  test.identical( got, expected );
+  test.notIdentical( got, src );
+
+  test.case = 'array filter';
+  var src = [ '/a', 'b' ];
+  var got = _.path.filter( src,onEachFilter );
+  var expected = [ '/a' ];
+  test.identical( got, expected );
+  test.notIdentical( got, src );
+
+  test.case = 'map';
+  var src = { '/src' : '/dst' };
+  var got = _.path.filter( src,onEach );
+  var expected = { '/prefix/src' : '/prefix/dst' };
+  test.identical( got, expected );
+  test.notIdentical( got, src );
+
+  test.case = 'map filter';
+  var src = { '/src' : 'dst' };
+  var got = _.path.filter( src,onEachFilter );
+  var expected = {};
+  test.identical( got, expected );
+  test.notIdentical( got, src );
+
+  test.case = 'map filter';
+  var src = { '/a' : [ '/b', 'c', null, undefined ] };
+  var got = _.path.filter( src,onEachStructure );
+  var expected =
+  {
+    '/src/a' : [ '/dst/b','/dst/c', '/dst', '/dst' ]
+  };
+  test.identical( got, expected );
+  test.notIdentical( got, src );
+
+  test.case = 'map filter keys, onEach returns array with undefined';
+  var src = { '/a' : '/b' };
+  var got = _.path.filter( src,onEachStructureKeys );
+  var expected =
+  {
+    '/src/a' : '/b'
+  };
+  test.identical( got, expected );
+  test.notIdentical( got, src );
+
+  test.case = 'null';
+  var src = null;
+  var got = _.path.filter( src,onEach );
+  var expected = '/';
+  test.identical( got, expected );
+  test.notIdentical( got, src );
+
+  if( Config.debug )
+  {
+    test.case = 'number';
+    test.shouldThrowErrorSync( () => _.path.filter( 1,onEach ) )
+  }
+
+  /*  */
+
+  function onEach( filePath, it )
+  {
+    if( filePath === null )
+    return '/';
+    return _.path.reroot( '/prefix', filePath );
+  }
+
+  function onEachFilter( filePath, it )
+  {
+    if( _.path.isAbsolute( filePath ) )
+    return filePath;
+  }
+
+  function onEachStructure( filePath, it )
+  {
+    if( _.arrayIs( filePath ) )
+    return filePath.map( onPath );
+    return onPath( filePath );
+
+    function onPath( path )
+    {
+      let prefix = it.side === 'src' ? '/src' : '/dst';
+      if( path === null || path === undefined )
+      return prefix;
+      return _.path.reroot( prefix, path );
+    }
+  }
+
+  function onEachStructureKeys( filePath, it )
+  {
+    if( it.side === 'src' )
+    return [ _.path.reroot( '/src', filePath ), undefined ];
+    return filePath;
+  }
+
+}
+
+//
+
+function refilter( test )
+{
+  test.case = 'string';
+  var src = '/a/b/c';
+  var got = _.path.refilter( src,onEach );
+  var expected = '/prefix/a/b/c';
+  test.identical( got, expected );
+
+  test.case = 'array';
+  var src = [ '/a', '/b' ];
+  var got = _.path.refilter( src,onEach );
+  var expected = [ '/prefix/a', '/prefix/b' ];
+  test.identical( got, expected );
+  test.identical( got, src );
+
+  test.case = 'array filter';
+  var src = [ '/a', 'b' ];
+  var got = _.path.refilter( src,onEachFilter );
+  var expected = [ '/a' ];
+  test.identical( got, expected );
+  test.identical( src, expected );
+
+  test.case = 'map';
+  var src = { '/src' : '/dst' };
+  var got = _.path.refilter( src,onEach );
+  var expected = { '/prefix/src' : '/prefix/dst' };
+  test.identical( got, expected );
+  test.identical( got, src );
+
+  test.case = 'map filter';
+  var src = { '/src' : 'dst' };
+  var got = _.path.refilter( src,onEachFilter );
+  var expected = {};
+  test.identical( got, expected );
+  test.identical( src, expected );
+
+  test.case = 'map filter';
+  var src = { '/a' : [ '/b', 'c', null, undefined ] };
+  var got = _.path.refilter( src,onEachStructure );
+  var expected =
+  {
+    '/src/a' : [ '/dst/b','/dst/c', '/dst', '/dst' ]
+  };
+  test.identical( got, expected );
+  test.identical( src, expected );
+
+  test.case = 'map filter keys, onEach returns array with undefined';
+  var src = { '/a' : '/b' };
+  var got = _.path.refilter( src,onEachStructureKeys );
+  var expected =
+  {
+    '/src/a' : '/b'
+  };
+  test.identical( got, expected );
+  test.identical( src, expected );
+
+  test.case = 'null';
+  var src = null;
+  var got = _.path.refilter( src,onEach );
+  var expected = '/';
+  test.identical( got, expected );
+
+  if( Config.debug )
+  {
+    test.case = 'number';
+    test.shouldThrowErrorSync( () => _.path.refilter( 1,onEach ) )
+  }
+
+  /*  */
+
+  function onEach( filePath, it )
+  {
+    if( filePath === null )
+    return '/';
+    return _.path.reroot( '/prefix', filePath );
+  }
+
+  function onEachFilter( filePath, it )
+  {
+    if( _.path.isAbsolute( filePath ) )
+    return filePath;
+  }
+
+  function onEachStructure( filePath, it )
+  {
+    if( _.arrayIs( filePath ) )
+    return filePath.map( onPath );
+    return onPath( filePath );
+
+    function onPath( path )
+    {
+      let prefix = it.side === 'src' ? '/src' : '/dst';
+      if( path === null || path === undefined )
+      return prefix;
+      return _.path.reroot( prefix, path );
+    }
+  }
+
+  function onEachStructureKeys( filePath, it )
+  {
+    if( it.side === 'src' )
+    return [ _.path.reroot( '/src', filePath ), undefined ];
+    return filePath;
+  }
+}
+
 // --
 // declare
 // --
@@ -6605,6 +6824,9 @@ var Self =
     _relative,
 
     common,
+
+    filter,
+    refilter
 
   },
 
