@@ -342,7 +342,7 @@ function performExportedFilesReflector()
 
   _.assert( exportedFilesReflector.dst.prefixPath === null );
   _.assert( exportedFilesReflector.dst.basePath === null );
-  // debugger;
+  debugger;
 
 }
 
