@@ -25,6 +25,7 @@
 - [Використання JavaScript файлів пакетом willbe](UsingOfJSInWillbe.md)
 - [Використання команди '.set'](UsingSetCommand.ukr.md)
 - [Як використовувати складні селектори](HowToUseComplexSelector.ukr.md)
+- [Поняття рефлекторів. Копіювання файлів](ReflectorUsing.ukr.md) ( mid )
 -
 - ...In progress...
 - [Resources Inheritability](ResourceInheritability.ukr.md) 
