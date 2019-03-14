@@ -166,9 +166,8 @@ function performExportedReflectors( exportSelector )
   _.assert( exported.exportedReflector === null );
   _.assert( exported.exportedDirPath === null );
 
-  // debugger;
+  debugger;
   let exp = step.resolve( exportSelector );
-  // debugger;
   let exportedReflector;
 
   /* */
@@ -221,9 +220,11 @@ function performExportedReflectors( exportSelector )
   }
   else _.assert( 0 );
 
+  debugger;
   exportedReflector.criterion = _.mapExtend( null, exported.criterion );
   exportedReflector.form();
   exported.exportedReflector = exportedReflector;
+  debugger;
 
   _.assert( _.mapIs( exportedReflector.criterion ) );
   _.assert( exportedReflector.dst.prefixPath === null );
@@ -309,7 +310,7 @@ function performExportedFilesReflector()
 
   /* exportedFilesReflector */
 
-  debugger;
+  // debugger;
   if( !exported.exportedFilesReflector )
   exported.exportedFilesReflector = exported.exportedReflector.cloneExtending
   ({
@@ -342,7 +343,7 @@ function performExportedFilesReflector()
 
   _.assert( exportedFilesReflector.dst.prefixPath === null );
   _.assert( exportedFilesReflector.dst.basePath === null );
-  debugger;
+  // debugger;
 
 }
 

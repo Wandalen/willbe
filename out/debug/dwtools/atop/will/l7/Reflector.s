@@ -147,8 +147,8 @@ function form3()
 
   /* begin */
 
-  // if( reflector.nickName === "reflector::exportedFiles.export." )
-  // debugger;
+  if( reflector.nickName === "reflector::exported.proto.export" )
+  debugger;
 
   reflector.pathsResolve();
   if( reflector.src.hasAnyPath() )
