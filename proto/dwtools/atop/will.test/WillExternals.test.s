@@ -598,8 +598,8 @@ function singleModuleExport( test )
     let reflector = outfile.reflector[ 'exportedFiles.proto.export' ];
     let expectedFilePath =
     {
-      '.' : true,
-      'Single.s' : true
+      '.' : null,
+      'Single.s' : null
     }
     test.identical( reflector.src.basePath, '.' );
     test.identical( reflector.src.prefixPath, 'proto' );
@@ -641,8 +641,8 @@ function singleModuleExport( test )
     let reflector = outfile.reflector[ 'exportedFiles.proto.export' ];
     let expectedFilePath =
     {
-      '.' : true,
-      'Single.s' : true
+      '.' : null,
+      'Single.s' : null
     }
     test.identical( reflector.src.basePath, '.' );
     test.identical( reflector.src.prefixPath, 'proto' );
@@ -1159,7 +1159,6 @@ function submodulesBuild( test )
     test.is( !err );
     let outDebugPath = _.path.join( routinePath, 'out/debug' );
     var files = _.fileProvider.dirRead( outDebugPath );
-    debugger;
     test.identical( files.length, 2 );
     debugger;
     return null;
@@ -1860,10 +1859,12 @@ function cleanWhat( test )
   {
     test.case = '.clean.what';
 
+    debugger;
     var files = self.find( outPath );
     test.is( files.length > 25 );
     var files = wasFiles = self.find( submodulesPath );
-    test.is( files.length > 100 ); /* xxx : phantom problem ? */
+    test.is( files.length > 100 );
+    debugger;
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, String( files.length ) + ' at ' ) );
@@ -2030,7 +2031,7 @@ function multipleExports( test )
 
     var exportedReflector =
     {
-      src : { filePath : { '.' : true }, prefixPath : 'out/debug' },
+      src : { filePath : { '.' : null }, prefixPath : 'out/debug' },
       criterion :
       {
         default : 1,
@@ -2048,7 +2049,7 @@ function multipleExports( test )
       recursive : 0,
       src :
       {
-        filePath : { '.' : true, 'File.debug.js' : true },
+        filePath : { '.' : null, 'File.debug.js' : null },
         basePath : '.',
         prefixPath : 'out/debug'
       },
@@ -2198,7 +2199,7 @@ function multipleExports( test )
 
     var exportedReflector =
     {
-      src : { filePath : { '.' : true }, prefixPath : 'out/debug' },
+      src : { filePath : { '.' : null }, prefixPath : 'out/debug' },
       criterion :
       {
         default : 1,
@@ -2211,7 +2212,7 @@ function multipleExports( test )
 
     var exportedReflector =
     {
-      src : { filePath : { '.' : true }, prefixPath : 'out/release' },
+      src : { filePath : { '.' : null }, prefixPath : 'out/release' },
       criterion :
       {
         default : 1,
@@ -2227,7 +2228,7 @@ function multipleExports( test )
       recursive : 0,
       src :
       {
-        filePath : { '.' : true, 'File.debug.js' : true },
+        filePath : { '.' : null, 'File.debug.js' : null },
         basePath : '.',
         prefixPath : 'out/debug'
       },
@@ -2247,7 +2248,7 @@ function multipleExports( test )
       recursive : 0,
       src :
       {
-        filePath : { '.' : true, 'File.release.js' : true },
+        filePath : { '.' : null, 'File.release.js' : null },
         basePath : '.',
         prefixPath : 'out/release'
       },
@@ -2630,7 +2631,7 @@ function multipleExportsBroken( test )
 
     var exportedReflector =
     {
-      src : { filePath : { '.' : true }, prefixPath : 'out/debug' },
+      src : { filePath : { '.' : null }, prefixPath : 'out/debug' },
       criterion :
       {
         default : 1,
@@ -2646,7 +2647,7 @@ function multipleExportsBroken( test )
       recursive : 0,
       src :
       {
-        filePath : { '.' : true, 'File.debug.js' : true },
+        filePath : { '.' : null, 'File.debug.js' : null },
         basePath : '.',
         prefixPath : 'out/debug'
       },

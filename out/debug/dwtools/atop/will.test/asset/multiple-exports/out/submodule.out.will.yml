@@ -22,6 +22,29 @@ path:
     path: ./out/release
     criterion:
       debug: 0
+  exportedDir.export.:
+    path: ./out/release
+    criterion:
+      default: 1
+      debug: 0
+      raw: 1
+      export: 1
+  exportedFiles.export.:
+    path:
+      - out/release
+      - out/release/File.release.js
+    criterion:
+      default: 1
+      debug: 0
+      raw: 1
+      export: 1
+  archiveFile.export.:
+    path: ./out/submodule.out.tgs
+    criterion:
+      default: 1
+      debug: 0
+      raw: 1
+      export: 1
   exportedDir.export.debug:
     path: ./out/debug
     criterion:
@@ -51,6 +74,7 @@ reflector:
     src:
       filePath:
         .: .
+      prefixPath: proto
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -63,7 +87,6 @@ reflector:
           - !<tag:yaml.org,2002:js/regexp> /\.debug($|\.|\/)/i
           - !<tag:yaml.org,2002:js/regexp> /\.test($|\.|\/)/i
           - !<tag:yaml.org,2002:js/regexp> /\.experiment($|\.|\/)/i
-      prefixPath: proto
     dst:
       prefixPath: out/release
     criterion:
@@ -74,6 +97,7 @@ reflector:
     src:
       filePath:
         .: .
+      prefixPath: proto
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -84,17 +108,39 @@ reflector:
           - !<tag:yaml.org,2002:js/regexp> /\.DS_Store$/
           - !<tag:yaml.org,2002:js/regexp> /(^|\/)-/
           - !<tag:yaml.org,2002:js/regexp> /\.release($|\.|\/)/i
-      prefixPath: proto
     dst:
       prefixPath: out/debug
     criterion:
       debug: 1
     inherit:
       - predefined.*
+  exported.export.:
+    src:
+      filePath:
+        .: null
+      prefixPath: out/release
+    criterion:
+      default: 1
+      debug: 0
+      raw: 1
+      export: 1
+  exportedFiles.export.:
+    recursive: 0
+    src:
+      filePath:
+        .: null
+        File.release.js: null
+      basePath: .
+      prefixPath: out/release
+    criterion:
+      default: 1
+      debug: 0
+      raw: 1
+      export: 1
   exported.export.debug:
     src:
       filePath:
-        .: true
+        .: null
       prefixPath: out/debug
     criterion:
       default: 1
@@ -105,8 +151,8 @@ reflector:
     recursive: 0
     src:
       filePath:
-        .: true
-        File.debug.js: true
+        .: null
+        File.debug.js: null
       basePath: .
       prefixPath: out/debug
     criterion:
@@ -220,3 +266,15 @@ exported:
     exportedDirPath: 'path::exportedDir.export.debug'
     exportedFilesPath: 'path::exportedFiles.export.debug'
     archiveFilePath: 'path::archiveFile.export.debug'
+  export.:
+    version: 0.0.1
+    criterion:
+      default: 1
+      debug: 0
+      raw: 1
+      export: 1
+    exportedReflector: 'reflector::exported.export.'
+    exportedFilesReflector: 'reflector::exportedFiles.export.'
+    exportedDirPath: 'path::exportedDir.export.'
+    exportedFilesPath: 'path::exportedFiles.export.'
+    archiveFilePath: 'path::archiveFile.export.'

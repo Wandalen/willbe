@@ -125,6 +125,9 @@ function form2()
   // reflector.src.prefixPath = path.join( module.inPath, reflector.src.prefixPath || '.' );
   // reflector.src.pairRefine( reflector.dst );
 
+  // if( reflector.nickName === "reflector::exportedFiles.export." )
+  // debugger;
+
   reflector.src.pairWithDst( reflector.dst );
 
   if( reflector.src.filePath !== reflector.dst.filePath )
@@ -152,8 +155,8 @@ function form3()
 
   /* begin */
 
-  if( reflector.nickName === "reflector::concat.proto.only.tests.debug" )
-  debugger;
+  // if( reflector.nickName === "reflector::exportedFiles.export." )
+  // debugger;
 
   reflector.pathsResolve();
   if( reflector.src.hasAnyPath() )
@@ -173,8 +176,8 @@ function form3()
   _.assert( reflector.src.prefixPath === null || path.isAbsolute( reflector.src.prefixPath ) );
   _.assert( reflector.dst.prefixPath === null || path.isAbsolute( reflector.dst.prefixPath ) );
 
-  if( reflector.nickName === "reflector::concat.proto.only.tests.debug" )
-  debugger;
+  // if( reflector.nickName === "reflector::exportedFiles.export." )
+  // debugger;
 
   /* end */
 
@@ -256,8 +259,8 @@ function _inheritSingle( o )
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
 
-  // if( reflector.nickName === "reflector::concat.proto.only.tests.debug" )
-  // debugger;
+  if( reflector.nickName === "reflector::reflect.submodules." )
+  debugger;
 
   reflector.src.and( reflector2.src ).pathsInherit( reflector2.src );
 
@@ -271,8 +274,8 @@ function _inheritSingle( o )
   if( !reflector.dst.filePath || _.mapIs( reflector.dst.filePath ) )
   reflector.src.pairRefineLight();
 
-  // if( reflector.nickName === "reflector::concat.proto.only.tests.debug" )
-  // debugger;
+  if( reflector.nickName === "reflector::reflect.submodules." )
+  debugger;
 
 }
 
@@ -296,6 +299,9 @@ function _reflectMapForm( o )
   let logger = will.logger;
 
   _.assertRoutineOptions( _reflectMapForm, arguments );
+
+  // if( reflector.nickName === "reflector::exportedFiles.export." )
+  // debugger;
 
   let pathMap = reflector.filePath;
   for( let src in pathMap )
@@ -380,6 +386,9 @@ function _reflectMapForm( o )
     }
 
   }
+
+  // if( reflector.nickName === "reflector::exportedFiles.export." )
+  // debugger;
 
 }
 
@@ -509,6 +518,9 @@ function pathsResolve( o )
 
   o = _.routineOptions( pathsResolve, arguments );
 
+  if( _.mapIs( reflector.src.filePath ) )
+  reflector.src.filePathNullizeMaybe();
+
   if( reflector.src.basePath )
   reflector.src.basePath = resolve( reflector.src.basePath );
   if( reflector.src.filePath )
@@ -522,7 +534,7 @@ function pathsResolve( o )
   reflector.dst.filePath = resolve( reflector.dst.filePath );
   if( reflector.dst.basePath )
   reflector.dst.basePath = resolve( reflector.dst.basePath );
-  let dstHasDst = path.pathMapDstFromDst( reflector.dst.filePath ).filter( ( e ) => !_.boolLike( e ) ).length > 0;
+  let dstHasDst = path.pathMapDstFromDst( reflector.dst.filePath ).filter( ( e ) => _.strIs( e ) ).length > 0;
   if( reflector.dst.prefixPath || dstHasDst )
   reflector.dst.prefixPath = resolve( reflector.dst.prefixPath || '.', 'in' );
   if( reflector.dst.prefixPath || dstHasDst )
@@ -671,6 +683,7 @@ function dataExport()
   delete result.filePath;
 
   if( result.dst )
+  if( _.mapIs( reflector.src.filePath ) )
   if( _.entityIdentical( reflector.src.filePath, reflector.dst.filePath ) )
   delete result.dst.filePath;
 

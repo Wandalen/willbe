@@ -166,7 +166,9 @@ function performExportedReflectors( exportSelector )
   _.assert( exported.exportedReflector === null );
   _.assert( exported.exportedDirPath === null );
 
+  // debugger;
   let exp = step.resolve( exportSelector );
+  // debugger;
   let exportedReflector;
 
   /* */
@@ -232,7 +234,7 @@ function performExportedReflectors( exportSelector )
   /* srcFilter */
 
   let srcFilter = exported.srcFilter = exportedReflector.src.clone();
-  srcFilter._formBasePath();
+  srcFilter._formPaths();
 
   _.assert( srcFilter.formed === 3 );
   _.assert( _.mapIs( srcFilter.basePath ) );
@@ -307,6 +309,7 @@ function performExportedFilesReflector()
 
   /* exportedFilesReflector */
 
+  // debugger;
   if( !exported.exportedFilesReflector )
   exported.exportedFilesReflector = exported.exportedReflector.cloneExtending
   ({
@@ -338,6 +341,7 @@ function performExportedFilesReflector()
 
   _.assert( exportedFilesReflector.dst.prefixPath === null );
   _.assert( exportedFilesReflector.dst.basePath === null );
+  // debugger;
 
 }
 
@@ -423,6 +427,11 @@ function performWriteOutFile()
 
   let outFilePath = build.outFilePathFor();
   let data = module2.dataExport();
+
+  // debugger;
+  // let xxx = module.reflectorMap['exportedFiles.proto.export'].dataExport();
+  // // let yyy = module2.reflectorMap['exportedFiles.proto.export'].dataExport();
+  // debugger;
 
   module2.finit();
 
