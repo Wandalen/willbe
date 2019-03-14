@@ -3383,6 +3383,44 @@ reflectRemote.timeOut = 130000;
 
 //
 
+function helpCommand( test )
+{
+  let self = this;
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    outputCollecting : 1,
+    ready : ready
+  })
+
+  /* */
+
+  shell({ args : [ '.help' ] })
+  .thenKeep( ( arg ) =>
+  {
+    test.identical( arg.exitCode, 0 );
+    test.ge( _.strLinesCount( arg.output ), 24 );
+    return arg;
+  })
+
+  //
+
+  shell({ args : [] })
+  .thenKeep( ( arg ) =>
+  {
+    test.identical( arg.exitCode, 0 );
+    test.ge( _.strLinesCount( arg.output ), 24 );
+    return arg;
+  })
+
+  return ready;
+}
+
+//
+
 var Self =
 {
 
@@ -3439,6 +3477,8 @@ var Self =
     reflectSubdir,
     reflectComposite,
     reflectRemote,
+
+    helpCommand
 
   }
 
