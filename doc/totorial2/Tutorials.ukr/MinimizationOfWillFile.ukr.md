@@ -165,7 +165,6 @@ build::delete.debug
 
 ```
 
-
 ```
 [user@user ~]$ ls files/
 итого 0

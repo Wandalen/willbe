@@ -123,6 +123,7 @@ build :
 Запустимо реліз-побудову (`debug : 0`), та перевіримо структуру файлів:  
 
 ```
+[user@user ~]$ will .build copy.
 ...
  Building copy.
    + reflect.copy. reflected 4 files /path_to_file/ : out/release <- proto in 0.390s

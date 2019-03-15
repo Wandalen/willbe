@@ -75,6 +75,7 @@ build :
 Перевіримо конфігурацію фразою `will .submodules.list`:
 
 ```
+[user@user ~]$ will .submodules.list
 ...
 submodule::PathFundamentals
   path : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
@@ -114,6 +115,8 @@ drwxr-xr-x 4 user user 4096 Мар 12 13:27 .module
 Виведемо інформацію про підмодулі (`will .submodules.list`):
 
 ```
+[user@user ~]$ will .submodules.list
+...
 submodule::PathFundamentals
   path : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
   isDownloaded : true
@@ -133,6 +136,7 @@ submodule::localTwo
 Видалимо підмодулі фразою `will .submodules.clean`:
 
 ```
+[user@user ~]$ will .submodules.clean
 ...
 - Clean deleted 93 file(s) in 0.385s
 
@@ -155,7 +159,7 @@ drwxr-xr-x 3 user user 4096 Мар 12 13:13 localTwo
 
 ```
 
-Приведені лістинги свідчать про те, що пакет `willbe` не виконує операцій з локальними підмодулями для їх збереження. Щоб керувати локальними підмодулями, потрібно використовувати інструменти пакету для роботи з файловою системою. 
+Приведені лістинги свідчать, що пакет `willbe` не виконує операцій з локальними підмодулями для їх збереження. Щоб керувати локальними підмодулями, потрібно використовувати інструменти пакету для роботи з файловою системою. 
 
 > Щоб підключити локальний підмодуль, внесіть відповідний ресурс в секцію `submodule`.  
 > Для збереження данних, `willbe` не виконує операцій над локальними підмодулями.  

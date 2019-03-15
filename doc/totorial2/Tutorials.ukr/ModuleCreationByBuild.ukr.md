@@ -72,6 +72,7 @@ build :
 Для запуску збірок необхідно використати команду `.build` тому, введемо фразу `will .build` в консолі з кореневої директорії `will`-файла:
 
 ```
+[user@user ~]$ will .build 
 ...
 Please specify exactly one build scenario, none satisfies passed arguments
 
@@ -173,6 +174,8 @@ build :
     <p>Збірка 'echo'</p>
 
 ```
+[user@user ~]$ will .build echo
+...
   Building echo
  > echo "Hello, World"
 Hello, World
@@ -185,6 +188,8 @@ It's Willbe
 <p>Збірка `echo.two`</p>
 
 ```
+[user@user ~]$ will .build echo.two
+...
   Building echo.two
  > echo "It's Willbe"
 It's Willbe

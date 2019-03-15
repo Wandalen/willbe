@@ -105,6 +105,7 @@ build :
 Введіть в консолі `will .export`:
 
 ```
+[user@user ~]$ will .export
 ...
  Exporting export
    + Write out will-file /path_to_file/out/exportModule.out.will.yml
