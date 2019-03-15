@@ -1,13 +1,13 @@
 # <a name="tutorials"></a> Туторіал
 
 ## Зміст
-- [Введення](../Introduction.ukr.md) <details>
-     <summary><u>Детальніше</u></summary>
+- <details>
+     <summary><a href="../Introduction.ukr.md">Введення</a></summary>
     <p>Загальна інформація про пакет willbe</p>
   </details>
-- [Встановлення пакета willbe](WillbeInstalation.ukr.md) <details>
-     <summary><u>Детальніше</u></summary>
-    <p>Показано процес встановлення пакета `willbe` на операційні системи _Windows_ та _Linux_-дистрибутиви</p>
+- <details>
+     <summary><a href="WillbeInstalation.ukr.md">Встановлення пакета willbe</a></summary>
+    <p>Загальна інформація про пакет willbe</p>
   </details>
 - [Базові концепції та поняття](Concepts.urk.md)  
   Описуються основні концепції та поняття для роботи з пакетом `willbe`
