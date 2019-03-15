@@ -10,100 +10,128 @@ path :
   out.debug :
     path : './out/debug'
     criterion :
-      debug : 1
-      compiled : 0
-  out.debug.compiled :
-    path : './out/debug.compiled'
+      debug : 'debug'
+      compiled : 'raw'
+      tests : 'no.tests'
+  out.compiled.debug :
+    path : './out/compiled.debug'
     criterion :
-      debug : 1
-      compiled : 1
-  out.release.raw :
-    path : './out/release.raw'
+      debug : 'debug'
+      compiled : 'compiled'
+      tests : 'no.tests'
+  out.raw.release :
+    path : './out/raw.release'
     criterion :
-      debug : 0
-      compiled : 0
+      debug : 'release'
+      compiled : 'raw'
+      tests : 'no.tests'
   out.release :
     path : './out/release'
     criterion :
-      debug : 0
-      compiled : 1
+      debug : 'release'
+      compiled : 'compiled'
+      tests : 'no.tests'
+  out.tests.compiled.debug :
+    path : './out/tests.compiled.debug'
+    criterion :
+      debug : 'debug'
+      compiled : 'compiled'
+      tests : 'only.tests'
+  out.tests.compiled.release :
+    path : './out/tests.compiled.release'
+    criterion :
+      debug : 'release'
+      compiled : 'compiled'
+      tests : 'only.tests'
 
 reflector :
 
   reflect.proto :
     inherit : predefined.*
     criterion :
-      debug : [ 0,1 ]
-      compiled : 0
+      debug : [ 'debug', 'release' ]
+      compiled : 'raw'
     filePath :
       path::proto : path::out.*=1
 
-  concat.proto.no.tests :
+  transpile.proto.raw.no.tests :
     inherit : predefined.*
     criterion :
       tests : 'no.tests'
-      compiled : 1
-      debug : [ 0,1 ]
+      compiled : 'raw'
+      debug : [ 'debug', 'release' ]
     filePath :
       '**.test*' : 0
       '**.test/**' : 0
-      path::proto : path::out.*=1
+      path::proto : '{path::out.*=1}'
 
-  concat.proto.only.tests :
+  transpile.proto.compiled.no.tests :
+    inherit : predefined.*
+    criterion :
+      tests : 'no.tests'
+      compiled : 'compiled'
+      debug : [ 'debug', 'release' ]
+    filePath :
+      '**.test*' : 0
+      '**.test/**' : 0
+      path::proto : '{path::out.*=1}/Main.s'
+
+  transpile.proto.compiled.only.tests :
     inherit : predefined.*
     criterion :
       tests : 'only.tests'
-      debug : [ 0,1 ]
-      compiled : 1
+      compiled : 'compiled'
+      debug : [ 'debug', 'release' ]
     filePath :
       '**.test*' : 1
-      path::proto : path::out.*=1
+      path::proto : '{path::out.*=1}/Tests.s'
 
 step :
 
   reflect.proto :
     inherit : predefined.reflect
-    reflector : reflector::reflect.proto.*=1
+    reflector : reflector::reflect.proto..compiled.*=1
     criterion :
-      debug : [ 0,1 ]
-      raw : [ 0,1 ]
+      debug : [ 'debug', 'release' ]
+      raw : [ 'raw', 'compiled' ]
 
-  concat.proto :
-    inherit : predefined.concat.js
-    reflector : reflector::concat.proto.*=1
+  transpile.proto :
+    inherit : predefined.transpile
+    reflector : reflector::transpile.proto.compiled.*=1
     criterion :
       tests : [ 'no.tests', 'only.tests' ]
-      debug : [ 0,1 ]
-      raw : 0
+      debug : [ 'debug', 'release' ]
+      raw : 'compiled'
 
 build :
 
   debug.raw :
     criterion :
       default : 1
-      debug : 1
+      debug : 'debug'
       raw : 1
     steps :
-      - step::reflect.proto.*=1
+      - reflect.proto.*=1
 
   debug.compiled :
     criterion :
-      debug : 1
-      raw : 0
+      debug : 'debug'
+      raw : 'compiled'
     steps :
-      # - step::concat.proto.no.tests*=1
-      - step::concat.proto.only.tests*=1
+      - transpile.proto.no.tests*=1
+      - transpile.proto.only.tests*=1
 
   release.raw :
     criterion :
-      debug : 0
+      debug : 'release'
       raw : 1
     steps :
-      - step::reflect.proto.*=1
+      - reflect.proto.*=1
 
   release.compiled :
     criterion :
-      debug : 0
-      raw : 0
+      debug : 'release'
+      raw : 'compiled'
     steps :
-      - step::concat.proto.*=1
+      - transpile.proto.no.tests*=1
+      - transpile.proto.only.tests*=1

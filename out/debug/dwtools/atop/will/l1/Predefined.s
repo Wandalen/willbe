@@ -292,7 +292,7 @@ stepRoutineShell.uniqueOptions =
 
 //
 
-function stepRoutineConcatJs( frame )
+function stepRoutineTranspile( frame )
 {
   let step = this;
   let module = frame.module;
@@ -309,16 +309,34 @@ function stepRoutineConcatJs( frame )
 
   _.include( 'wTranspilationStrategy' );
 
+  // tests : [ 'no.tests', 'only.tests' ]
+  // debug : [ 'debug', 'release' ]
+
+  let debug = false;
+  if( _.strIs( frame.resource.criterion.debug ) )
+  debug = frame.resource.criterion.debug === 'debug';
+  else if( frame.resource.criterion.debug !== undefined )
+  debug = !!frame.resource.criterion.debug;
+
+  let strategies = [ 'Uglify' ];
+  if( debug )
+  strategies = [ 'Nop' ];
+
+  debugger;
   let ts = new _.TranspilationStrategy({ logger : logger }).form();
   let multiple = ts.multiple
   ({
     inputPath : reflectOptions.srcFilter,
     outputPath : reflectOptions.dstFilter,
-    writingTerminalUnderDirectory : 1,
+    writingSingleTerminalUnderDirectory : 1,
     totalReporting : 0,
+    strategies : strategies,
   });
 
-  // debugger;
+  // debug : 0,
+  // optimization : 9,
+  // minification : 8,
+  // beautifing : 0,
 
   return multiple.form().perform()
   .finally( ( err, arg ) =>
@@ -330,16 +348,13 @@ function stepRoutineConcatJs( frame )
 
 }
 
-stepRoutineConcatJs.stepOptions =
+stepRoutineTranspile.stepOptions =
 {
   reflector : null,
-  // shell : null,
-  // currentPath : null,
 }
 
-stepRoutineConcatJs.uniqueOptions =
+stepRoutineTranspile.uniqueOptions =
 {
-  // shell : null,
 }
 
 //
@@ -465,7 +480,7 @@ let Extend =
 
   stepRoutineJs,
   stepRoutineShell,
-  stepRoutineConcatJs,
+  stepRoutineTranspile,
 
   stepRoutineSubmodulesDownload,
   stepRoutineSubmodulesUpgrade,
