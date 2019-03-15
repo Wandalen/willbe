@@ -732,6 +732,58 @@ singleModuleExport.timeOut = 130000;
 
 //
 
+function singleModuleExportExcluding( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'single-export-excluding' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outDebugPath = _.path.join( routinePath, 'out/debug' );
+  let outPath = _.path.join( routinePath, 'out' );
+  let outWillPath = _.path.join( routinePath, 'out/single-export-excluding.out.will.yml' );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+  _.fileProvider.filesDelete( outDebugPath );
+
+
+  /* - */
+
+  ready.thenKeep( () =>
+  {
+    test.case = '.export'
+    _.fileProvider.filesDelete( outDebugPath );
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './single-export-broken.out.will.yml' ] );
+
+    return null;
+  })
+
+  return ready;
+}
+
+singleModuleExport.timeOut = 130000;
+
+//
+
 function singleModuleExportToRoot( test )
 {
   let self = this;
@@ -3622,6 +3674,7 @@ var Self =
     singleModuleBuild,
     singleModuleExport,
     singleModuleExportBroken,
+    singleModuleExportExcluding,
     singleModuleExportToRoot,
     singleModuleWithSpaceTrivial,
 
