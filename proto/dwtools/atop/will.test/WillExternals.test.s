@@ -545,7 +545,93 @@ singleModuleBuild.timeOut = 130000;
 
 //
 
-function singleModuleExport( test )
+function singleModuleWithSpaceTrivial( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'single with space' );
+  let routinePath = _.path.join( self.tempDir, test.name, 'single with space' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : _.path.dir( routinePath ),
+    outputCollecting : 1,
+    ready : ready
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  shell({ args : [ '.with "single with space" .list' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'module info'
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `name : 'single with space'` ) );
+    test.is( _.strHas( got.output, `description : 'Module for testing'` ) );
+    test.is( _.strHas( got.output, `version : '0.0.1'` ) );
+    return null;
+  })
+
+  return ready;
+}
+
+singleModuleWithSpaceTrivial.timeOut = 130000;
+
+//
+
+function singleStep( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-shell' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, 'module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* Vova : step::list.dir does not have {- stepRoutine -}. Failed to deduce it, try specifying "inherit" field explicitly */
+
+  ready
+
+  .thenKeep( () =>
+  {
+    test.case = '.build'
+    let outDebugPath = _.path.join( routinePath, 'out/debug' );
+    let outPath = _.path.join( routinePath, 'out' );
+    _.fileProvider.filesDelete( outDebugPath );
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    return null;
+  })
+
+  return ready;
+}
+
+singleStep.timeOut = 30000;
+
+//
+
+function exportSingle( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'single' );
@@ -653,19 +739,19 @@ function singleModuleExport( test )
   return ready;
 }
 
-singleModuleExport.timeOut = 130000;
+exportSingle.timeOut = 130000;
 
 //
 
-function singleModuleExportBroken( test )
+function exportWithReflector( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'single-export-broken' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-reflector' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
   let outPath = _.path.join( routinePath, 'out' );
-  let outWillPath = _.path.join( routinePath, 'out/single-export-broken.out.will.yml' );
+  let outWillPath = _.path.join( routinePath, 'out/export-with-reflector.out.will.yml' );
   let ready = new _.Consequence().take( null )
 
   let shell = _.sheller
@@ -679,7 +765,6 @@ function singleModuleExportBroken( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
   _.fileProvider.filesDelete( outDebugPath );
 
-
   /* - */
 
   ready.thenKeep( () =>
@@ -690,37 +775,20 @@ function singleModuleExportBroken( test )
     return null;
   })
 
-  /*
-    Module has unused reflector and step : "reflect.submodules"
-    Throws error if no one submodule is defined
-  */
-
   shell({ args : [ '.export' ] })
 
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'reflected 2 files' ) );
-    test.is( _.strHas( got.output, '+ Write out will-file' ) );
-    test.is( _.strHas( got.output, 'Exported proto.export with 2 files in' ) );
 
-    var files = self.find( outDebugPath );
-    test.identical( files, [ '.', './Single.s' ] );
     var files = self.find( outPath );
-    test.identical( files, [ '.', './single-export-broken.out.will.yml', './debug', './debug/Single.s' ] );
+    test.identical( files, [ '.', './export-with-reflector.out.will.yml' ] );
 
-    test.is( _.fileProvider.fileExists( outWillPath ) )
+    // var reflectors =
+
     var outfile = _.fileProvider.fileConfigRead( outWillPath );
 
-    let reflector = outfile.reflector[ 'exportedFiles.proto.export' ];
-    let expectedFilePath =
-    {
-      '.' : null,
-      'Single.s' : null
-    }
-    test.identical( reflector.src.basePath, '.' );
-    test.identical( reflector.src.prefixPath, 'proto' );
-    test.identical( reflector.src.filePath, expectedFilePath );
+    debugger;
 
     return null;
   })
@@ -728,66 +796,14 @@ function singleModuleExportBroken( test )
   return ready;
 }
 
-singleModuleExport.timeOut = 130000;
+exportWithReflector.timeOut = 130000;
 
 //
 
-function singleModuleExportExcluding( test )
+function exportToRoot( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'single-export-excluding' );
-  let routinePath = _.path.join( self.tempDir, test.name );
-  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-  let outDebugPath = _.path.join( routinePath, 'out/debug' );
-  let outPath = _.path.join( routinePath, 'out' );
-  let outWillPath = _.path.join( routinePath, 'out/single-export-excluding.out.will.yml' );
-  let ready = new _.Consequence().take( null )
-
-  let shell = _.sheller
-  ({
-    execPath : 'node ' + execPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    ready : ready
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
-  _.fileProvider.filesDelete( outDebugPath );
-
-
-  /* - */
-
-  ready.thenKeep( () =>
-  {
-    test.case = '.export'
-    _.fileProvider.filesDelete( outDebugPath );
-    _.fileProvider.filesDelete( outPath );
-    return null;
-  })
-
-  shell({ args : [ '.export' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    var files = self.find( outPath );
-    test.identical( files, [ '.', './single-export-broken.out.will.yml' ] );
-
-    return null;
-  })
-
-  return ready;
-}
-
-singleModuleExport.timeOut = 130000;
-
-//
-
-function singleModuleExportToRoot( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'single-out-to-root' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-to-root' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
@@ -815,7 +831,7 @@ function singleModuleExportToRoot( test )
     test.is( _.strHas( got.output, '+ Write out will-file' ) );
     test.is( _.strHas( got.output, 'Exported proto.export with 2 files in' ) );
 
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'single-out-to-root.out.will.yml' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'export-to-root.out.will.yml' ) ) )
 
     return null;
   })
@@ -823,93 +839,7 @@ function singleModuleExportToRoot( test )
   return ready;
 }
 
-singleModuleExportToRoot.timeOut = 130000;
-
-//
-
-function singleModuleWithSpaceTrivial( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'single with space' );
-  let routinePath = _.path.join( self.tempDir, test.name, 'single with space' );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-  let ready = new _.Consequence().take( null )
-
-  let shell = _.sheller
-  ({
-    execPath : 'node ' + execPath,
-    currentPath : _.path.dir( routinePath ),
-    outputCollecting : 1,
-    ready : ready
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
-
-  shell({ args : [ '.with "single with space" .list' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.case = 'module info'
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `name : 'single with space'` ) );
-    test.is( _.strHas( got.output, `description : 'Module for testing'` ) );
-    test.is( _.strHas( got.output, `version : '0.0.1'` ) );
-    return null;
-  })
-
-  return ready;
-}
-
-singleModuleExport.timeOut = 130000;
-
-//
-
-function singleStep( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'step-shell' );
-  let routinePath = _.path.join( self.tempDir, test.name );
-  let submodulesPath = _.path.join( routinePath, 'module' );
-  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-  let ready = new _.Consequence().take( null )
-
-  let shell = _.sheller
-  ({
-    execPath : 'node ' + execPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    ready : ready
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
-
-  /* Vova : step::list.dir does not have {- stepRoutine -}. Failed to deduce it, try specifying "inherit" field explicitly */
-
-  ready
-
-  .thenKeep( () =>
-  {
-    test.case = '.build'
-    let outDebugPath = _.path.join( routinePath, 'out/debug' );
-    let outPath = _.path.join( routinePath, 'out' );
-    _.fileProvider.filesDelete( outDebugPath );
-    _.fileProvider.filesDelete( outPath );
-    return null;
-  })
-
-  shell({ args : [ '.build' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    return null;
-  })
-
-  return ready;
-}
-
-singleStep.timeOut = 30000;
+exportToRoot.timeOut = 130000;
 
 //
 
@@ -2959,6 +2889,81 @@ reflectSubmoduleNone.timeOut = 130000;
 
 //
 
+function reflectNothingFromSubmodules( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-nothing-from-submodules' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outDebugPath = _.path.join( routinePath, 'out/debug' );
+  let outPath = _.path.join( routinePath, 'out' );
+  let outWillPath = _.path.join( routinePath, 'out/reflect-nothing-from-submodules.out.will.yml' );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+  _.fileProvider.filesDelete( outDebugPath );
+
+
+  /* - */
+
+  ready.thenKeep( () =>
+  {
+    test.case = '.export'
+    _.fileProvider.filesDelete( outDebugPath );
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  /*
+    Module has unused reflector and step : "reflect.submodules"
+    Throws error if none submodule is defined
+  */
+
+  shell({ args : [ '.export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflected 2 files' ) );
+    test.is( _.strHas( got.output, '+ Write out will-file' ) );
+    test.is( _.strHas( got.output, 'Exported proto.export with 2 files in' ) );
+
+    var files = self.find( outDebugPath );
+    test.identical( files, [ '.', './Single.s' ] );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './reflect-nothing-from-submodules.out.will.yml', './debug', './debug/Single.s' ] );
+
+    test.is( _.fileProvider.fileExists( outWillPath ) )
+    var outfile = _.fileProvider.fileConfigRead( outWillPath );
+
+    let reflector = outfile.reflector[ 'exportedFiles.proto.export' ];
+    let expectedFilePath =
+    {
+      '.' : null,
+      'Single.s' : null
+    }
+    test.identical( reflector.src.basePath, '.' );
+    test.identical( reflector.src.prefixPath, 'proto' );
+    test.identical( reflector.src.filePath, expectedFilePath );
+
+    return null;
+  })
+
+  return ready;
+}
+
+reflectNothingFromSubmodules.timeOut = 130000;
+
+//
+
 function reflectGetPath( test )
 {
   let self = this;
@@ -3672,11 +3677,11 @@ var Self =
     singleModuleSubmodules,
     singleModuleClean,
     singleModuleBuild,
-    singleModuleExport,
-    singleModuleExportBroken,
-    singleModuleExportExcluding,
-    singleModuleExportToRoot,
     singleModuleWithSpaceTrivial,
+
+    exportSingle,
+    exportWithReflector,
+    exportToRoot,
 
     singleStep,
 
@@ -3702,6 +3707,7 @@ var Self =
     importInExport,
 
     reflectSubmoduleNone,
+    reflectNothingFromSubmodules,
     reflectGetPath,
     reflectSubdir,
     reflectSubmoduleSrcBasePath,

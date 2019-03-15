@@ -209,7 +209,7 @@ function makeNamed( test )
     test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
     test.identical( _.mapKeys( module.pathResourceMap ), [ 'proto', 'temp', 'in', 'out', 'out.debug', 'out.release' ] );
     test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.submodules.', 'reflect.submodules.debug' ] );
-    test.identical( _.mapKeys( module.stepMap ), [ 'predefined.delete', 'predefined.reflect', 'timelapse.begin', 'timelapse.end', 'predefined.js', 'predefined.shell', 'predefined.concat.js', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'predefined.export', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
+    test.identical( _.mapKeys( module.stepMap ), [ 'predefined.delete', 'predefined.reflect', 'timelapse.begin', 'timelapse.end', 'predefined.js', 'predefined.shell', 'predefined.transpile', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'predefined.export', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [] );
 
@@ -326,7 +326,7 @@ function makeAnon( test )
     test.identical( _.mapKeys( module.submoduleMap ), [] );
     test.identical( _.mapKeys( module.pathResourceMap ), [ 'proto', 'in', 'out', 'out.debug', 'out.release' ] );
     test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.proto.', 'reflect.proto.debug' ] );
-    test.identical( _.mapKeys( module.stepMap ), [ 'predefined.delete', 'predefined.reflect', 'timelapse.begin', 'timelapse.end', 'predefined.js', 'predefined.shell', 'predefined.concat.js', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'predefined.export', 'reflect.proto.', 'reflect.proto.debug', 'reflect.proto.raw', 'reflect.proto.debug.raw', 'export.', 'export.debug' ] );
+    test.identical( _.mapKeys( module.stepMap ), [ 'predefined.delete', 'predefined.reflect', 'timelapse.begin', 'timelapse.end', 'predefined.js', 'predefined.shell', 'predefined.transpile', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'predefined.export', 'reflect.proto.', 'reflect.proto.debug', 'reflect.proto.raw', 'reflect.proto.debug.raw', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.buildMap ), [ 'debug.raw', 'debug.compiled', 'release.raw', 'release.compiled', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [] );
 
@@ -450,7 +450,7 @@ function makeOutNamed( test )
     test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
     test.identical( _.mapKeys( module.pathResourceMap ), [ 'proto', 'temp', 'in', 'out', 'out.debug', 'out.release', 'exportedDir.export.debug', 'exportedFiles.export.debug', 'archiveFile.export.debug', 'exportedDir.export.', 'exportedFiles.export.', 'archiveFile.export.' ] );
     test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.debug', 'exportedFiles.export.debug', 'exported.export.', 'exportedFiles.export.' ] );
-    test.identical( _.mapKeys( module.stepMap ), [ 'predefined.delete', 'predefined.reflect', 'timelapse.begin', 'timelapse.end', 'predefined.js', 'predefined.shell', 'predefined.concat.js', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'predefined.export', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
+    test.identical( _.mapKeys( module.stepMap ), [ 'predefined.delete', 'predefined.reflect', 'timelapse.begin', 'timelapse.end', 'predefined.js', 'predefined.shell', 'predefined.transpile', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'predefined.export', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [ 'export.', 'export.debug' ] );
 
@@ -2777,6 +2777,76 @@ function reflectorResolve( test )
 
 reflectorResolve.timeOut = 30000;
 
+//
+
+function submodulesDownload( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulePath = _.path.join( routinePath, '.' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let outPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+  let will = new _.Will;
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( outPath );
+
+  //Possible fix of this problem is located at: will\l3\Module.s:1840, routine : _remoteDownload
+
+  var module = will.moduleMake({ filePath : modulePath });
+
+  return module.ready.split()
+  .then( () =>
+  {
+
+    let builds = module.buildsSelect({ name : 'echo' });
+    test.identical( builds.length, 1 );
+
+    let build = builds[ 0 ];
+
+    let con = build.perform();
+
+    con.then( ( arg ) =>
+    {
+      var files = self.find( submodulesPath );
+      test.is( _.arrayHas( files, './Tools' ) );
+      test.is( _.arrayHas( files, './PathFundamentals' ) );
+      test.is( files.length > 300 );
+
+      return arg;
+    })
+
+    con.then( () => build.perform() )
+
+    con.then( ( arg ) =>
+    {
+      var files = self.find( submodulesPath );
+      test.is( _.arrayHas( files, './Tools' ) );
+      test.is( _.arrayHas( files, './PathFundamentals' ) );
+      test.is( files.length > 300 );
+
+      return arg;
+    })
+
+    con.finally( ( err, arg ) =>
+    {
+      module.finit();
+
+      if( err )
+      throw err;
+      return arg;
+    })
+
+    return con;
+  })
+}
+
+submodulesDownload.timeOut = 30000;
+
+
 // --
 // define class
 // --
@@ -2812,6 +2882,8 @@ var Self =
     pathsResolveComposite,
 
     reflectorResolve,
+
+    submodulesDownload,
 
   }
 

@@ -209,7 +209,7 @@ function makeNamed( test )
     test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
     test.identical( _.mapKeys( module.pathResourceMap ), [ 'proto', 'temp', 'in', 'out', 'out.debug', 'out.release' ] );
     test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.submodules.', 'reflect.submodules.debug' ] );
-    test.identical( _.mapKeys( module.stepMap ), [ 'predefined.delete', 'predefined.reflect', 'timelapse.begin', 'timelapse.end', 'predefined.js', 'predefined.shell', 'predefined.concat.js', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'predefined.export', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
+    test.identical( _.mapKeys( module.stepMap ), [ 'predefined.delete', 'predefined.reflect', 'timelapse.begin', 'timelapse.end', 'predefined.js', 'predefined.shell', 'predefined.transpile', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'predefined.export', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [] );
 
@@ -326,7 +326,7 @@ function makeAnon( test )
     test.identical( _.mapKeys( module.submoduleMap ), [] );
     test.identical( _.mapKeys( module.pathResourceMap ), [ 'proto', 'in', 'out', 'out.debug', 'out.release' ] );
     test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.proto.', 'reflect.proto.debug' ] );
-    test.identical( _.mapKeys( module.stepMap ), [ 'predefined.delete', 'predefined.reflect', 'timelapse.begin', 'timelapse.end', 'predefined.js', 'predefined.shell', 'predefined.concat.js', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'predefined.export', 'reflect.proto.', 'reflect.proto.debug', 'reflect.proto.raw', 'reflect.proto.debug.raw', 'export.', 'export.debug' ] );
+    test.identical( _.mapKeys( module.stepMap ), [ 'predefined.delete', 'predefined.reflect', 'timelapse.begin', 'timelapse.end', 'predefined.js', 'predefined.shell', 'predefined.transpile', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'predefined.export', 'reflect.proto.', 'reflect.proto.debug', 'reflect.proto.raw', 'reflect.proto.debug.raw', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.buildMap ), [ 'debug.raw', 'debug.compiled', 'release.raw', 'release.compiled', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [] );
 
@@ -450,7 +450,7 @@ function makeOutNamed( test )
     test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
     test.identical( _.mapKeys( module.pathResourceMap ), [ 'proto', 'temp', 'in', 'out', 'out.debug', 'out.release', 'exportedDir.export.debug', 'exportedFiles.export.debug', 'archiveFile.export.debug', 'exportedDir.export.', 'exportedFiles.export.', 'archiveFile.export.' ] );
     test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.debug', 'exportedFiles.export.debug', 'exported.export.', 'exportedFiles.export.' ] );
-    test.identical( _.mapKeys( module.stepMap ), [ 'predefined.delete', 'predefined.reflect', 'timelapse.begin', 'timelapse.end', 'predefined.js', 'predefined.shell', 'predefined.concat.js', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'predefined.export', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
+    test.identical( _.mapKeys( module.stepMap ), [ 'predefined.delete', 'predefined.reflect', 'timelapse.begin', 'timelapse.end', 'predefined.js', 'predefined.shell', 'predefined.transpile', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'predefined.export', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [ 'export.', 'export.debug' ] );
 
