@@ -690,7 +690,10 @@ function singleModuleExportBroken( test )
     return null;
   })
 
-  /* Throws error if no one submodule is defined  */
+  /*
+    Module has unused reflector and step : "reflect.submodules"
+    Throws error if no one submodule is defined
+  */
 
   shell({ args : [ '.export' ] })
 
