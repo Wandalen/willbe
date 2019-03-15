@@ -1,10 +1,18 @@
 # <a name="tutorials"></a> Туторіал
 
 ## Зміст
-- [Введення](../Introduction.ukr.md)  
-- [Встановлення пакета willbe](WillbeInstalation.ukr.md)
-- [Базові концепції та поняття](Concepts.urk.md)
+- [Введення](../Introduction.ukr.md) <details>
+     <summary><u>Детальніше</u></summary>
+    <p>Загальна інформація про пакет willbe</p>
+  </details>
+- [Встановлення пакета willbe](WillbeInstalation.ukr.md) <details>
+     <summary><u>Детальніше</u></summary>
+    <p>Показано процес встановлення пакета `willbe` на операційні системи _Windows_ та _Linux_-дистрибутиви</p>
+  </details>
+- [Базові концепції та поняття](Concepts.urk.md)  
+  Описуються основні концепції та поняття для роботи з пакетом `willbe`
 - [Структура will-файла](CompositionOfWillFile.ukr.md)  
+  Описано структуру секцій `will`-файлу та приведено приклади їх застосування
 - [Як користуватися інтерфейсом командного рядка 'willbe'](HowToUseCommandLineInterfaceOfWill.ukr.md)
 - [Перший will-файл](FirstWillFile.ukr.md)
 - [Перший will-модуль. Завантаження віддаленого підмодуля](RemoteSubmodulesImporting.ukr.md)
@@ -21,7 +29,7 @@
 - [Мінімізація will-файла](MinimizationOfWillFile.ukr.md)
 - [Розділені will-файли (Split will-files)](SplitWillFile.ukr.md)
 - [Іменовані will-файли. Використання команди '.with'](NamedWillFile.md)
-- [Як користуватись командою '.each'](UsingEachCommand.ukr.md)  
+- [Як користуватись командою '.each'](UsingEachCommand.ukr.md)
 - [Використання JavaScript файлів пакетом willbe](UsingOfJSInWillbe.md)
 - [Використання команди '.set'](UsingSetCommand.ukr.md)
 - [Як використовувати складні селектори](HowToUseComplexSelector.ukr.md)
@@ -33,3 +41,6 @@
 - [Reflector filters](ReflectorFilters.ukr.md)
 - [Exported will-file structure](ExportedFileStructure.ukr.md)
 - [Exported section of out will-file](ExportedSectionOfWillFile.ukr.md)
+
+## Теги  
+[\*\*Встановлення willbe на Windows](WillbeInstalation.ukr.md)  [\*\*Встановлення willbe на Linux](WillbeInstalation.ukr.md) [\*\*Модуль willbe](Concepts.urk.md#module) [\*\*Простий селектор](SelectorsTermInWillFile.ukr.md)
