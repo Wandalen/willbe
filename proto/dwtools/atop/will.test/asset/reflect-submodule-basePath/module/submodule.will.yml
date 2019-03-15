@@ -1,0 +1,25 @@
+about :
+
+  name : submodule
+  version : 0.0.1
+
+path :
+
+  out : '..'
+  export : 'proto'
+
+step  :
+
+  export.submodule :
+    inherit : predefined.export
+    export : path::export
+    tar : 0
+
+build :
+
+  export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - export.submodule
