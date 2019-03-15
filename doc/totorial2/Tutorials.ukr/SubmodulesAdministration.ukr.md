@@ -30,6 +30,7 @@ submodule :
 Введіть в консолі `will .submodules.list`:
 
 ```
+[user@user ~]$ will .submodules.list
 ...
 submodule::Tools
   path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
@@ -67,6 +68,8 @@ submodule::PathFundamentals
 Перевірте виконавши `ls -al .module/` з кореневої директорії `.will.yml`:
 
 ```
+[user@user ~]$ ls -al .module/
+...
 drwxr-xr-x 6 user user 4096 Мар 12 07:20 PathFundamentals
 drwxr-xr-x 9 user user 4096 Мар 12 07:20 Tools
 
