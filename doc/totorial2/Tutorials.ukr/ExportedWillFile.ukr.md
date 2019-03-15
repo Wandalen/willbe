@@ -119,4 +119,4 @@ build :
 Експортувати модуль можливо при використанні вбудованої [функції `predefined.export` в секції `step`](#section-step) та правильному налаштуванні секцій [`path`](#section-path) i [`build`](#section-build). 
 
 [Наступний туторіал](SelectorsTermInWillFile.ukr.md)  
-[Повернутись до змісту](Topics.ukr.md)
+[Повернутись до змісту](../README.md#tutorials)

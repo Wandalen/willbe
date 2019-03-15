@@ -115,4 +115,4 @@ Done
 > Вбудовані кроки можуть записуються в секцію `step` i `build`
 
 [Наступний туторіал](CriterionsInWillFile.ukr.md)  
-[Повернутись до змісту](Topics.ukr.md)
+[Повернутись до змісту](../README.md#tutorials)

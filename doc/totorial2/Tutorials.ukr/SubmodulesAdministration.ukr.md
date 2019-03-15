@@ -103,4 +103,4 @@ drwxr-xr-x 9 user user 4096 Мар 12 07:20 Tools
 > `Willbe` виконує операції з зовнішніми підмодулями з командної оболонки системи.
 
 [Наступний туторіал](ModuleCreationByBuild.ukr.md)  
-[Повернутись до змісту](Topics.ukr.md)
+[Повернутись до змісту](../README.md#tutorials)
