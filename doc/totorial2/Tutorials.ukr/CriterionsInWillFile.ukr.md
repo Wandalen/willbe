@@ -78,6 +78,7 @@ build :
 Запустіть `will .build echo.debug` та порівняйте:
 
 ```
+[user@user ~]$ will .build echo.debug
 ...
 Building echo.debug
  > echo "Debug is done"
@@ -89,6 +90,8 @@ Debug is done
 Тепер змініть значення критеріону в `will`-файлі на "0" та запустіть повторно команду.
 
 ```
+[user@user ~]$ will .build echo.debug
+...
   Building echo.debug
  > echo "Operation is done"
 Operation is done
@@ -112,6 +115,8 @@ build :
 ```
 
 ```
+[user@user ~]$ will .build echo.debug
+...
   Building echo.debug
  > echo "Debug is done"
 Debug is done

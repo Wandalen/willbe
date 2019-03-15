@@ -20,18 +20,16 @@
 - [Як використовувати ассерти в will-файлах](HowToUseAsserts.ukr.md)
 - [Мінімізація will-файла](MinimizationOfWillFile.ukr.md)
 - [Розділені will-файли (Split will-files)](SplitWillFile.ukr.md)
-- [Іменовані will-файли. Використання команди '.with'](NamedWillFile.md)
-- [Як користуватись командою '.each'](UsingEachCommand.ukr.md)
-- [Використання JavaScript файлів пакетом willbe](UsingOfJSInWillbe.md)
+- [Іменовані will-файли. Використання команди '.with'](NamedWillFile.ukr.md)
+- [Як користуватись командою '.each'](UsingEachCommand.ukr.md)  
+- [Використання JavaScript файлів пакетом willbe](UsingOfJSInWillbe.ukr.md)
 - [Використання команди '.set'](UsingSetCommand.ukr.md)
 - [Як використовувати складні селектори](HowToUseComplexSelector.ukr.md)
-- [Поняття рефлекторів. Копіювання файлів](ReflectorUsing.ukr.md) ( mid )
+- [Поняття рефлекторів. Копіювання файлів](ReflectorUsing.ukr.md)
 -
-- ...In progress...
+- ...In progress, advanced...
 - [Resources Inheritability](ResourceInheritability.ukr.md) 
-- [How to list](HowToUseCommandLineInterfaceOfWill.ukr.md)
-- ... advanced ...
-- [How to use reflector and predefined reflectors](ReflectorUsing.ukr.md) ( mid ) (Ред.)
-- [Reflector Structure]()
-- [Reflector Mapping]()
-- [Exported section of out will-file](ExportedSectionOfWillFile.ukr.md) ( mid ) (Ред.)
+- [How to use predefined reflectors](PredefinedReflectorsUsing.ukr.md)
+- [Reflector filters](ReflectorFilters.ukr.md)
+- [Exported will-file structure](ExportedFileStructure.ukr.md)
+- [Exported section of out will-file](ExportedSectionOfWillFile.ukr.md)

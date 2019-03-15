@@ -64,7 +64,7 @@ build :
             - export.single
             
 ```
-В збірці `export` є два критеріони: `default : 1` і `export : 1`. Критеріон `default` - вбудований критеріон, визначає яка зі збірок буде виконуватись за замовчуванням, а `export` - позначає, що це збірка експорту модуля. В полі `steps` внесено `export.single` описаний вище.
+В збірці `export` є два критеріони: `default : 1` і `export : 1`. Критеріон `default` - вбудований критеріон, визначає яка зі збірок буде виконуватись за замовчуванням, а `export` - позначає збірку експорту модуля. В полі `steps` внесено `export.single`, описаний вище.
 <a name="export-module-listing"></a>
 
 <details>
@@ -105,6 +105,7 @@ build :
 Введіть в консолі `will .export`:
 
 ```
+[user@user ~]$ will .export
 ...
  Exporting export
    + Write out will-file /path_to_file/out/exportModule.out.will.yml
