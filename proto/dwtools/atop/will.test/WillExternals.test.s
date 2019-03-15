@@ -772,7 +772,7 @@ function singleModuleExportExcluding( test )
     test.identical( got.exitCode, 0 );
 
     var files = self.find( outPath );
-    test.identical( files, [ '.', './single-export-broken.out.will.yml' ] );
+    test.identical( files, [ '.', './single-export-excluding.out.will.yml' ] );
 
     return null;
   })
