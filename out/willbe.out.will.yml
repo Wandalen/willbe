@@ -302,7 +302,8 @@ path:
       - proto/dwtools/atop/will.test/asset/reflect-nothing-from-submodules/proto
       - >-
         proto/dwtools/atop/will.test/asset/reflect-nothing-from-submodules/proto/Single.s
-      - proto/dwtools/atop/will.test/asset/reflect-remote
+      - proto/dwtools/atop/will.test/asset/reflect-remote-git
+      - proto/dwtools/atop/will.test/asset/reflect-remote-http
       - proto/dwtools/atop/will.test/asset/reflect-subdir
       - proto/dwtools/atop/will.test/asset/reflect-subdir/module
       - >-
@@ -672,7 +673,8 @@ reflector:
         dwtools/atop/will.test/asset/reflect-nothing-from-submodules: null
         dwtools/atop/will.test/asset/reflect-nothing-from-submodules/proto: null
         dwtools/atop/will.test/asset/reflect-nothing-from-submodules/proto/Single.s: null
-        dwtools/atop/will.test/asset/reflect-remote: null
+        dwtools/atop/will.test/asset/reflect-remote-git: null
+        dwtools/atop/will.test/asset/reflect-remote-http: null
         dwtools/atop/will.test/asset/reflect-subdir: null
         dwtools/atop/will.test/asset/reflect-subdir/module: null
         dwtools/atop/will.test/asset/reflect-subdir/module/submodule.will.yml: null
