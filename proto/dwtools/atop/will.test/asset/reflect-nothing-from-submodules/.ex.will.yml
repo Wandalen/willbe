@@ -1,16 +1,16 @@
 
 about :
 
-  name : "single-out-to-root"
+  name : "reflect-nothing-from-submodules"
   description : "Module for testing"
   version : "0.0.1"
   enabled : 1
-
-path :
-
-  proto : './proto'
-  in : '.'
-  out : '.'
+  interpreters :
+  - nodejs >= 6.0.0
+  - chrome >= 60.0.0
+  - firefox >= 60.0.0
+  keywords :
+  - wTools
 
 step :
 
@@ -26,5 +26,5 @@ build :
       default : 1
       export : 1
     steps :
+      - build::debug.raw
       - step::export.proto
-

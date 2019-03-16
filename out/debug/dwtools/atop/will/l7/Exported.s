@@ -226,11 +226,11 @@ function performExportedReflectors( exportSelector )
   }
   else _.assert( 0 );
 
-  debugger;
   exportedReflector.criterion = _.mapExtend( null, exported.criterion );
-  exportedReflector.form();
-  exported.exportedReflector = exportedReflector;
   debugger;
+  exportedReflector.form();
+  debugger;
+  exported.exportedReflector = exportedReflector;
 
   _.assert( _.mapIs( exportedReflector.criterion ) );
   _.assert( exportedReflector.dst.prefixPath === null );
@@ -324,6 +324,7 @@ function performExportedFilesReflector()
     module : module,
   });
   let exportedFilesReflector = exported.exportedFilesReflector;
+  debugger;
 
   exportedFilesReflector.src.pairWithDst( exportedFilesReflector.dst );
   exportedFilesReflector.src.pairRefine();
@@ -331,20 +332,26 @@ function performExportedFilesReflector()
   exportedFilesReflector.dst.prefixesApply();
 
   _.assert( _.objectIs( exportedFilesReflector.criterion ) );
-  _.assert( exportedFilesReflector.src.basePath === exported.exportedDirPath.path || exportedFilesReflector.src.basePath === null );
+  // _.assert( exportedFilesReflector.src.basePath === exported.exportedDirPath.path || exportedFilesReflector.src.basePath === null );
+  // _.assert( exportedFilesReflector.src.basePath === null || xxx );
+  // debugger;
+  // _.assert( exportedFilesReflector.src.basePath === null || path.basePathEquivalent( exportedFilesReflector.src.basePath, path.join( module.inPath, exported.exportedDirPath.path ) ) );
   exportedFilesReflector.src.filteringClear();
-  _.assert( exportedFilesReflector.src.basePath === exported.exportedDirPath.path || exportedFilesReflector.src.basePath === null );
-  _.assert( exportedFilesReflector.src.prefixPath === module.inPath || exportedFilesReflector.src.prefixPath === null );
+  // _.assert( exportedFilesReflector.src.basePath === exported.exportedDirPath.path || exportedFilesReflector.src.basePath === null );
+  _.assert( exportedFilesReflector.src.basePath === null || path.basePathEquivalent( exportedFilesReflector.src.basePath, path.join( module.inPath, exported.exportedDirPath.path ) ) );
 
   /* base path is really required */
-  _.assert( exportedFilesReflector.src.basePath === null );
   exportedFilesReflector.src.basePath = exportedFilesReflector.src.basePath || '.';
+
+  _.assert( exportedFilesReflector.src.prefixPath === module.inPath || exportedFilesReflector.src.prefixPath === null );
   exportedFilesReflector.src.prefixPath = exported.exportedDirPath.refName;
 
   _.assert( exportedFilesReflector.dst.basePath === null );
+  exportedFilesReflector.src.basePathSimplify();
   exportedFilesReflector.dst.filteringClear();
   exportedFilesReflector.dst.filePath = exportedFilesReflector.src.filePath = path.pathMapExtend( null, exportedFilesPath );
   exportedFilesReflector.recursive = 0;
+  debugger;
   exportedFilesReflector.form();
 
   _.assert( exportedFilesReflector.dst.prefixPath === null );

@@ -147,12 +147,14 @@ function form3()
 
   /* begin */
 
-  if( reflector.nickName === "reflector::reflect.submodules" )
+  if( reflector.nickName === "reflector::reflect.submodules.1" )
   debugger;
 
   reflector.pathsResolve();
+
   if( reflector.src.hasAnyPath() )
-  reflector.src.prefixPath = path.join( module.inPath, reflector.src.prefixPath || '.' );
+  reflector.src.prefixPath = path.s.join( module.inPath, reflector.src.prefixPath || '.' );
+
   reflector.src.pairWithDst( reflector.dst );
   reflector.src.pairRefine();
 
@@ -166,7 +168,7 @@ function form3()
   _.assert( reflector.src.prefixPath === null || path.isAbsolute( reflector.src.prefixPath ) );
   _.assert( reflector.dst.prefixPath === null || path.isAbsolute( reflector.dst.prefixPath ) );
 
-  if( reflector.nickName === "reflector::reflect.submodules" )
+  if( reflector.nickName === "reflector::reflect.submodules.1" )
   debugger;
 
   /* end */
@@ -346,8 +348,8 @@ function _reflectMapForm( o )
           let rpath = resolvedSrc[ p ];
           _.assert( _.strIs( rpath ) );
 
-          if( path.isAbsolute( rpath ) && !path.isGlobal( rpath ) )
-          debugger;
+          // if( path.isAbsolute( rpath ) && !path.isGlobal( rpath ) )
+          // debugger;
           // if( path.isAbsolute( rpath ) && !path.isGlobal( rpath ) )
           // rpath = path.s.relative( module.inPath, rpath );
 
@@ -518,7 +520,7 @@ function pathsResolve( o )
   if( reflector.src.prefixPath || reflector.src.hasAnyPath() )
   reflector.src.prefixPath = resolve( reflector.src.prefixPath || '.', 'in' );
   if( reflector.src.prefixPath || reflector.src.hasAnyPath() )
-  reflector.src.prefixPath = path.join( reflector.module.inPath, reflector.src.prefixPath || '.' );
+  reflector.src.prefixPath = path.s.join( reflector.module.inPath, reflector.src.prefixPath || '.' );
 
   if( reflector.dst.filePath )
   reflector.dst.filePath = resolve( reflector.dst.filePath );
@@ -528,7 +530,7 @@ function pathsResolve( o )
   if( reflector.dst.prefixPath || dstHasDst )
   reflector.dst.prefixPath = resolve( reflector.dst.prefixPath || '.', 'in' );
   if( reflector.dst.prefixPath || dstHasDst )
-  reflector.dst.prefixPath = path.join( reflector.module.inPath, reflector.dst.prefixPath || '.' );
+  reflector.dst.prefixPath = path.s.join( reflector.module.inPath, reflector.dst.prefixPath || '.' );
 
   _.assert( reflector.src.prefixPath === null || path.s.allAreAbsolute( reflector.src.prefixPath ) );
   _.assert( reflector.dst.prefixPath === null || path.s.allAreAbsolute( reflector.dst.prefixPath ) );

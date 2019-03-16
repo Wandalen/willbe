@@ -1,14 +1,14 @@
 about :
 
-  name : submodule
+  name : submodule1
   version : 0.0.1
 
 path :
 
   out : '..'
-  export : 'proto'
+  export : 'proto/File1.s'
 
-step  :
+step :
 
   export.submodule :
     inherit : predefined.export

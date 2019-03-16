@@ -1,7 +1,7 @@
 
 about :
 
-  name : "single-export-excluding"
+  name : "export-with-reflector"
   description : "Module for testing"
   version : "0.0.1"
   enabled : 1
@@ -18,20 +18,12 @@ step :
     inherit : predefined.export
     export : reflector::proto.but.include
     tar : 0
-    criterion :
-      debug : 1
-      proto : 1
 
 build :
 
   proto.export :
     criterion :
       default : 1
-      debug : 1
-      raw : 1
-      proto : 1
       export : 1
-      tar : 1
     steps :
       - step::export.proto
-

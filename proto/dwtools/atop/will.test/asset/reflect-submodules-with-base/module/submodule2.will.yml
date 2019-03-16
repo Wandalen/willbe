@@ -1,12 +1,12 @@
 about :
 
-  name : submodule1
+  name : submodule2
   version : 0.0.1
 
 path :
 
   out : '..'
-  export : 'proto/File1.s'
+  export : 'proto/File2.s'
 
 step :
 
