@@ -3734,6 +3734,49 @@ reflectRemote.timeOut = 130000;
 
 //
 
+function reflectRemoteFile( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-remote-file' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, 'module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+  let outPath = _.path.join( routinePath, 'out' );
+  let localFilePath = _.path.join( routinePath, 'out/package.json' );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  ready.thenKeep( () =>
+  {
+    test.case = '.build'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build' ] })
+  .thenKeep( ( arg ) =>
+  {
+    test.is( _.fileProvider.fileExists( localFilePath ) );
+    let read = _.fileProvider.fileRead({ filePath : localFilePath, encoding : 'json' });
+    test.identical( read.name, 'wTools' );
+  })
+
+  return ready;
+}
+
+reflectRemote.timeOut = 130000;
+
+//
+
 function helpCommand( test )
 {
   let self = this;
@@ -3842,6 +3885,7 @@ var Self =
     reflectSubmodulesWithBase,
     reflectComposite,
     reflectRemote,
+    reflectRemoteFile,
 
     helpCommand
 
