@@ -199,6 +199,15 @@ path:
       - proto/dwtools/atop/will.test/asset/experiment/proto/File.debug.js
       - proto/dwtools/atop/will.test/asset/experiment/proto/File.js
       - proto/dwtools/atop/will.test/asset/experiment/proto/File.release.js
+      - proto/dwtools/atop/will.test/asset/export-to-root
+      - proto/dwtools/atop/will.test/asset/export-to-root/proto
+      - proto/dwtools/atop/will.test/asset/export-to-root/proto/Single.s
+      - proto/dwtools/atop/will.test/asset/export-with-reflector
+      - proto/dwtools/atop/will.test/asset/export-with-reflector/proto
+      - proto/dwtools/atop/will.test/asset/export-with-reflector/proto/Single.s
+      - proto/dwtools/atop/will.test/asset/export-with-reflector/proto/include
+      - >-
+        proto/dwtools/atop/will.test/asset/export-with-reflector/proto/include/MustBeExcluded.s
       - proto/dwtools/atop/will.test/asset/import-in
       - proto/dwtools/atop/will.test/asset/import-in/super.ex.will.yml
       - proto/dwtools/atop/will.test/asset/import-in/super.im.will.yml
@@ -289,28 +298,30 @@ path:
       - >-
         proto/dwtools/atop/will.test/asset/multiple-exports-exported/super.out/release/File.release.js
       - proto/dwtools/atop/will.test/asset/reflect-get-path
+      - proto/dwtools/atop/will.test/asset/reflect-nothing-from-submodules
+      - proto/dwtools/atop/will.test/asset/reflect-nothing-from-submodules/proto
+      - >-
+        proto/dwtools/atop/will.test/asset/reflect-nothing-from-submodules/proto/Single.s
       - proto/dwtools/atop/will.test/asset/reflect-remote
       - proto/dwtools/atop/will.test/asset/reflect-subdir
       - proto/dwtools/atop/will.test/asset/reflect-subdir/module
       - >-
         proto/dwtools/atop/will.test/asset/reflect-subdir/module/submodule.will.yml
       - proto/dwtools/atop/will.test/asset/reflect-subdir/module/proto
-      - proto/dwtools/atop/will.test/asset/reflect-subdir/module/proto/protoA
+      - proto/dwtools/atop/will.test/asset/reflect-subdir/module/proto/File1.s
+      - proto/dwtools/atop/will.test/asset/reflect-subdir/module/proto/File2.s
+      - proto/dwtools/atop/will.test/asset/reflect-submodules-with-base
+      - proto/dwtools/atop/will.test/asset/reflect-submodules-with-base/module
       - >-
-        proto/dwtools/atop/will.test/asset/reflect-subdir/module/proto/protoA/SingleA.s
-      - proto/dwtools/atop/will.test/asset/reflect-submodule-basePath
-      - proto/dwtools/atop/will.test/asset/reflect-submodule-basePath/module
+        proto/dwtools/atop/will.test/asset/reflect-submodules-with-base/module/submodule1.will.yml
       - >-
-        proto/dwtools/atop/will.test/asset/reflect-submodule-basePath/module/submodule.will.yml
+        proto/dwtools/atop/will.test/asset/reflect-submodules-with-base/module/submodule2.will.yml
       - >-
-        proto/dwtools/atop/will.test/asset/reflect-submodule-basePath/module/proto
+        proto/dwtools/atop/will.test/asset/reflect-submodules-with-base/module/proto
       - >-
-        proto/dwtools/atop/will.test/asset/reflect-submodule-basePath/module/proto/protoA
+        proto/dwtools/atop/will.test/asset/reflect-submodules-with-base/module/proto/File1.s
       - >-
-        proto/dwtools/atop/will.test/asset/reflect-submodule-basePath/module/proto/protoA/SingleA.s
-      - proto/dwtools/atop/will.test/asset/reflect-submodules-none
-      - proto/dwtools/atop/will.test/asset/reflect-submodules-none/proto
-      - proto/dwtools/atop/will.test/asset/reflect-submodules-none/proto/File.js
+        proto/dwtools/atop/will.test/asset/reflect-submodules-with-base/module/proto/File2.s
       - proto/dwtools/atop/will.test/asset/scaffold
       - proto/dwtools/atop/will.test/asset/scaffold/final.im.will.yml
       - proto/dwtools/atop/will.test/asset/scaffold/out
@@ -334,19 +345,6 @@ path:
       - proto/dwtools/atop/will.test/asset/single with space
       - proto/dwtools/atop/will.test/asset/single with space/proto
       - proto/dwtools/atop/will.test/asset/single with space/proto/Single.s
-      - proto/dwtools/atop/will.test/asset/single-export-broken
-      - proto/dwtools/atop/will.test/asset/single-export-broken/proto
-      - proto/dwtools/atop/will.test/asset/single-export-broken/proto/Single.s
-      - proto/dwtools/atop/will.test/asset/single-export-excluding
-      - proto/dwtools/atop/will.test/asset/single-export-excluding/proto
-      - >-
-        proto/dwtools/atop/will.test/asset/single-export-excluding/proto/Single.s
-      - proto/dwtools/atop/will.test/asset/single-export-excluding/proto/include
-      - >-
-        proto/dwtools/atop/will.test/asset/single-export-excluding/proto/include/MustBeExcluded.s
-      - proto/dwtools/atop/will.test/asset/single-out-to-root
-      - proto/dwtools/atop/will.test/asset/single-out-to-root/proto
-      - proto/dwtools/atop/will.test/asset/single-out-to-root/proto/Single.s
       - proto/dwtools/atop/will.test/asset/step-shell
       - proto/dwtools/atop/will.test/asset/submodule-download
       - proto/dwtools/atop/will.test/asset/submodule-download/proto
@@ -602,6 +600,14 @@ reflector:
         dwtools/atop/will.test/asset/experiment/proto/File.debug.js: null
         dwtools/atop/will.test/asset/experiment/proto/File.js: null
         dwtools/atop/will.test/asset/experiment/proto/File.release.js: null
+        dwtools/atop/will.test/asset/export-to-root: null
+        dwtools/atop/will.test/asset/export-to-root/proto: null
+        dwtools/atop/will.test/asset/export-to-root/proto/Single.s: null
+        dwtools/atop/will.test/asset/export-with-reflector: null
+        dwtools/atop/will.test/asset/export-with-reflector/proto: null
+        dwtools/atop/will.test/asset/export-with-reflector/proto/Single.s: null
+        dwtools/atop/will.test/asset/export-with-reflector/proto/include: null
+        dwtools/atop/will.test/asset/export-with-reflector/proto/include/MustBeExcluded.s: null
         dwtools/atop/will.test/asset/import-in: null
         dwtools/atop/will.test/asset/import-in/super.ex.will.yml: null
         dwtools/atop/will.test/asset/import-in/super.im.will.yml: null
@@ -663,22 +669,23 @@ reflector:
         dwtools/atop/will.test/asset/multiple-exports-exported/super.out/release: null
         dwtools/atop/will.test/asset/multiple-exports-exported/super.out/release/File.release.js: null
         dwtools/atop/will.test/asset/reflect-get-path: null
+        dwtools/atop/will.test/asset/reflect-nothing-from-submodules: null
+        dwtools/atop/will.test/asset/reflect-nothing-from-submodules/proto: null
+        dwtools/atop/will.test/asset/reflect-nothing-from-submodules/proto/Single.s: null
         dwtools/atop/will.test/asset/reflect-remote: null
         dwtools/atop/will.test/asset/reflect-subdir: null
         dwtools/atop/will.test/asset/reflect-subdir/module: null
         dwtools/atop/will.test/asset/reflect-subdir/module/submodule.will.yml: null
         dwtools/atop/will.test/asset/reflect-subdir/module/proto: null
-        dwtools/atop/will.test/asset/reflect-subdir/module/proto/protoA: null
-        dwtools/atop/will.test/asset/reflect-subdir/module/proto/protoA/SingleA.s: null
-        dwtools/atop/will.test/asset/reflect-submodule-basePath: null
-        dwtools/atop/will.test/asset/reflect-submodule-basePath/module: null
-        dwtools/atop/will.test/asset/reflect-submodule-basePath/module/submodule.will.yml: null
-        dwtools/atop/will.test/asset/reflect-submodule-basePath/module/proto: null
-        dwtools/atop/will.test/asset/reflect-submodule-basePath/module/proto/protoA: null
-        dwtools/atop/will.test/asset/reflect-submodule-basePath/module/proto/protoA/SingleA.s: null
-        dwtools/atop/will.test/asset/reflect-submodules-none: null
-        dwtools/atop/will.test/asset/reflect-submodules-none/proto: null
-        dwtools/atop/will.test/asset/reflect-submodules-none/proto/File.js: null
+        dwtools/atop/will.test/asset/reflect-subdir/module/proto/File1.s: null
+        dwtools/atop/will.test/asset/reflect-subdir/module/proto/File2.s: null
+        dwtools/atop/will.test/asset/reflect-submodules-with-base: null
+        dwtools/atop/will.test/asset/reflect-submodules-with-base/module: null
+        dwtools/atop/will.test/asset/reflect-submodules-with-base/module/submodule1.will.yml: null
+        dwtools/atop/will.test/asset/reflect-submodules-with-base/module/submodule2.will.yml: null
+        dwtools/atop/will.test/asset/reflect-submodules-with-base/module/proto: null
+        dwtools/atop/will.test/asset/reflect-submodules-with-base/module/proto/File1.s: null
+        dwtools/atop/will.test/asset/reflect-submodules-with-base/module/proto/File2.s: null
         dwtools/atop/will.test/asset/scaffold: null
         dwtools/atop/will.test/asset/scaffold/final.im.will.yml: null
         dwtools/atop/will.test/asset/scaffold/out: null
@@ -702,17 +709,6 @@ reflector:
         dwtools/atop/will.test/asset/single with space: null
         dwtools/atop/will.test/asset/single with space/proto: null
         dwtools/atop/will.test/asset/single with space/proto/Single.s: null
-        dwtools/atop/will.test/asset/single-export-broken: null
-        dwtools/atop/will.test/asset/single-export-broken/proto: null
-        dwtools/atop/will.test/asset/single-export-broken/proto/Single.s: null
-        dwtools/atop/will.test/asset/single-export-excluding: null
-        dwtools/atop/will.test/asset/single-export-excluding/proto: null
-        dwtools/atop/will.test/asset/single-export-excluding/proto/Single.s: null
-        dwtools/atop/will.test/asset/single-export-excluding/proto/include: null
-        dwtools/atop/will.test/asset/single-export-excluding/proto/include/MustBeExcluded.s: null
-        dwtools/atop/will.test/asset/single-out-to-root: null
-        dwtools/atop/will.test/asset/single-out-to-root/proto: null
-        dwtools/atop/will.test/asset/single-out-to-root/proto/Single.s: null
         dwtools/atop/will.test/asset/step-shell: null
         dwtools/atop/will.test/asset/submodule-download: null
         dwtools/atop/will.test/asset/submodule-download/proto: null
