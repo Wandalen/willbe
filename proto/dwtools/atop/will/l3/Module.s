@@ -301,8 +301,8 @@ function predefinedForm()
 
   step
   ({
-    name : 'predefined.concat.js',
-    stepRoutine : Predefined.stepRoutineConcatJs,
+    name : 'predefined.transpile',
+    stepRoutine : Predefined.stepRoutineTranspile,
   })
 
   step

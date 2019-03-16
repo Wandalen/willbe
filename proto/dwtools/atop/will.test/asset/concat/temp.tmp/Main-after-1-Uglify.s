@@ -4,11 +4,11 @@
 })(), 
 // ======================================
 function() {
-  console.log("dir2/File.test.s");
+  console.log("dir2/File1.debug.js");
 }(), 
 // ======================================
 function() {
-  console.log("dir2/File1.debug.js");
+  console.log("dir2/File1.release.js");
 }(), 
 // ======================================
 function() {
@@ -16,5 +16,5 @@ function() {
 }(), 
 // ======================================
 function() {
-  console.log("dir3.test/File.js");
+  console.log("dir2/File2.release.js");
 }();

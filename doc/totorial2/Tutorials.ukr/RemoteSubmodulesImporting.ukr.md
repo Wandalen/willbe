@@ -1,6 +1,6 @@
 # Перший will-модуль. Завантаження віддаленого підмодуля
 
-В туторіалі описується імпорт віддалених підмодулів  
+В туторіалі показано як імпортувати віддалені підмодулі  
 
 В попередньому туторіалі створено конфігурацію для роботи з зовнішніми підмодулями, зробимо наступний крок для побудови модуля.  
 <a name="submodules-download"> В директорії з файлом `.will.yml` введіть фразу `will. submodules.download`:
@@ -17,6 +17,7 @@
 Перевіримо зміни в директорії модуля - введіть `ls -al:
 
 ```
+[user@user ~]$ ls -al
 ...
 drwxr-xr-x 4 user user 4096 Мар 12 07:20 .module
 -rw-r--r-- 1 user user  306 Мар  1 11:20 .will.yml
@@ -27,6 +28,7 @@ drwxr-xr-x 4 user user 4096 Мар 12 07:20 .module
 Перевіримо вивід команди `.submodules.list`:
 
 ```
+[user@user ~]$ will .submodules.list
 ...
  . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
 ...
@@ -44,6 +46,7 @@ PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wP
 ```
 
 ```
+[user@user ~]$ will .submodules.list
 ...
 submodule::Tools
   path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
@@ -59,6 +62,7 @@ submodule::PathFundamentals
 <a name="resource-inheritation"> Зверніть увагу на рядки, які позначають окремі підмодулі - _'submodule::Tools'_ i _'submodule::PathFundamentals'_. В порівнянні з виводом інформації секції `about` (фраза `will .about.list`).
 
 ```
+[user@user ~]$ will .about.list
 ...
 About
   name : 'first'

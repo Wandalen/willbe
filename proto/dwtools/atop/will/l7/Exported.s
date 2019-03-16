@@ -166,7 +166,7 @@ function performExportedReflectors( exportSelector )
   _.assert( exported.exportedReflector === null );
   _.assert( exported.exportedDirPath === null );
 
-  debugger;
+  // debugger;
   let exp = step.resolve( exportSelector );
   let exportedReflector;
 
@@ -179,11 +179,17 @@ function performExportedReflectors( exportSelector )
     _.assert( exp.src.formed === 1 );
     _.sure( !!exp.filePath, () => exp.nickName + ' should have filePath' );
 
-    exportedReflector = exp.cloneExtending({ name : module.resourceNameAllocate( 'reflector', 'exported.' + exported.name ) });
+    // debugger;
+    exportedReflector = exp.cloneExtending
+    ({
+      name : module.resourceNameAllocate( 'reflector', 'exported.' + exported.name ),
+      module : module,
+    });
+    // debugger;
 
     _.assert( exportedReflector.src !== exp.src );
-    _.assert( exportedReflector.src.prefixPath === null || exportedReflector.src.prefixPath === module.inPath );
-    exportedReflector.src.prefixPath = null;
+    // _.assert( exportedReflector.src.prefixPath === null || exportedReflector.src.prefixPath === module.inPath );
+    // exportedReflector.src.prefixPath = null;
 
     let filter2 =
     {

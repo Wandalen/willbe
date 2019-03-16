@@ -147,7 +147,7 @@ function form3()
 
   /* begin */
 
-  if( reflector.nickName === "reflector::exported.proto.export" )
+  if( reflector.nickName === "reflector::reflect.submodules" )
   debugger;
 
   reflector.pathsResolve();
@@ -166,8 +166,8 @@ function form3()
   _.assert( reflector.src.prefixPath === null || path.isAbsolute( reflector.src.prefixPath ) );
   _.assert( reflector.dst.prefixPath === null || path.isAbsolute( reflector.dst.prefixPath ) );
 
-  // if( reflector.nickName === "reflector::exportedFiles.export." )
-  // debugger;
+  if( reflector.nickName === "reflector::reflect.submodules" )
+  debugger;
 
   /* end */
 

@@ -301,8 +301,8 @@ function predefinedForm()
 
   step
   ({
-    name : 'predefined.concat.js',
-    stepRoutine : Predefined.stepRoutineConcatJs,
+    name : 'predefined.transpile',
+    stepRoutine : Predefined.stepRoutineTranspile,
   })
 
   step
@@ -1835,6 +1835,9 @@ function _remoteDownload( o )
 
   if( !o.upgrading )
   {
+    // possible fix of submodules.download problem:
+    // module.isDownloaded = !!module.remoteIsDownloaded();
+
     if( module.isDownloaded )
     return false;
   }
