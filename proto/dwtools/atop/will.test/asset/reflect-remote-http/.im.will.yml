@@ -1,0 +1,30 @@
+
+path :
+
+  File.remote : https:///raw.githubusercontent.com/Wandalen/wFiles/master/proto/dwtools/Tools.s
+  File.local : 'Tools.s'
+
+reflector :
+
+  download.1 :
+    criterion :
+      variant : 1
+    filePath :
+      path::File.remote : out/Tools.s
+
+step :
+
+  download.1 :
+    inherit : predefined.reflect
+    criterion :
+      variant : [ 1 ]
+    reflector :
+      reflector::download.*=1
+
+build :
+
+  download :
+    criterion :
+      variant : [ 1 ]
+    steps :
+      - step::download.*=1

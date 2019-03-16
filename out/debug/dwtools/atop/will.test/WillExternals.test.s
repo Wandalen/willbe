@@ -442,7 +442,6 @@ function singleModuleBuild( test )
     return null;
   })
 
-  debugger;
   shell({ args : [ '.build' ] })
 
   .thenKeep( ( got ) =>
@@ -3586,10 +3585,10 @@ reflectComposite.timeOut = 130000;
 
 //
 
-function reflectRemote( test )
+function reflectRemoteGit( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-remote' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-remote-git' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let submodulesPath = _.path.join( routinePath, 'module' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
@@ -3730,7 +3729,55 @@ function reflectRemote( test )
 
 }
 
-reflectRemote.timeOut = 130000;
+reflectRemoteGit.timeOut = 130000;
+
+//
+
+function reflectRemoteHttp( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-remote-http' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, 'module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+  let outPath = _.path.join( routinePath, 'out' );
+  let localFilePath = _.path.join( routinePath, 'out/Tools.s' );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  ready.thenKeep( () =>
+  {
+    test.case = '.build download'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  // debugger;
+  // shell({ args : [ '.builds.list' ] })
+  shell({ args : [ '.build download' ] })
+  .thenKeep( ( arg ) =>
+  {
+    debugger;
+    test.is( _.fileProvider.isTerminal( localFilePath ) );
+    test.gt( _.fileProvider.fileSize( localFilePath ), 200 );
+    // let read = _.fileProvider.fileRead({ filePath : localFilePath, encoding : 'json' });
+    // test.identical( read.name, 'wTools' );
+    return null;
+  })
+
+  return ready;
+}
+
+reflectRemoteHttp.timeOut = 130000;
 
 //
 
@@ -3841,9 +3888,10 @@ var Self =
     reflectSubdir,
     reflectSubmodulesWithBase,
     reflectComposite,
-    reflectRemote,
+    reflectRemoteGit,
+    reflectRemoteHttp,
 
-    helpCommand
+    helpCommand,
 
   }
 

@@ -132,6 +132,7 @@ function formAssociates()
 
     _.FileProvider.Git().providerRegisterTo( hub );
     _.FileProvider.Npm().providerRegisterTo( hub );
+    _.FileProvider.Http().providerRegisterTo( hub );
 
     let defaultProvider = _.FileProvider.Default();
     let image = _.FileFilter.Image({ originalFileProvider : defaultProvider });

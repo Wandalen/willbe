@@ -9,11 +9,11 @@ path :
   out.debug :
     path : './out/debug'
     criterion :
-      debug : 1
+      debug : [ 1 ]
   out.release :
     path : './out/release'
     criterion :
-      debug : 0
+      debug : [ 0 ]
 
 reflector :
 

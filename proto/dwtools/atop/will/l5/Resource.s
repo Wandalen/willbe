@@ -122,13 +122,9 @@ function copy( o )
 function cloneDerivative()
 {
   let resource = this;
+  let resource2 = resource.clone();
 
   _.assert( arguments.length === 0 );
-
-  if( resource.nickName === 'reflector::reflect.proto' )
-  debugger;
-
-  let resource2 = resource.clone();
 
   resource2.module = resource.module;
   resource2.willf = resource.willf;
@@ -234,6 +230,14 @@ function form1()
 
   /* begin */
 
+  resource.criterion = resource.criterion || Object.create( null );
+
+  for( let c in resource.criterion )
+  {
+    if( _.arrayIs( resource.criterion[ c ] ) && resource.criterion[ c ].length === 1 )
+    resource.criterion[ c ] = resource.criterion[ c ][ 0 ];
+  }
+
   if( !resource.original )
   {
     module[ resource.MapName ][ resource.name ] = resource;
@@ -266,6 +270,7 @@ function form2()
 
   /* end */
 
+  _.assert( _.mapIs( resource.criterion ) );
   resource.criterionValidate();
 
   resource.formed = 2;

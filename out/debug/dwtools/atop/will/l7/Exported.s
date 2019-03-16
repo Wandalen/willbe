@@ -46,7 +46,7 @@ function verify()
   _.assert( module.preformed === 3 );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
-  _.assert( exported.criterion === null );
+  // _.assert( exported.criterion === null );
   _.assert( build instanceof will.Build );
 
   _.sure( _.strDefined( module.dirPath ), 'Expects directory path of the module' );
