@@ -82,11 +82,11 @@ function form1()
 
   /* begin */
 
-  module[ reflector.MapName ][ reflector.name ] = reflector;
-  if( willf )
-  willf[ reflector.MapName ][ reflector.name ] = reflector;
+  // module[ reflector.MapName ][ reflector.name ] = reflector;
+  // if( willf )
+  // willf[ reflector.MapName ][ reflector.name ] = reflector;
 
-  reflector.src = reflector.src || {};
+  reflector.src = reflector.src || Object.create( null );
   if( reflector.src )
   {
     reflector.src.hubFileProvider = fileProvider;
@@ -94,7 +94,7 @@ function form1()
     reflector.src._formAssociations();
   }
 
-  reflector.dst = reflector.dst || {};
+  reflector.dst = reflector.dst || Object.create( null );
   if( reflector.dst )
   {
     reflector.dst.hubFileProvider = fileProvider;
@@ -104,7 +104,9 @@ function form1()
 
   /* end */
 
-  reflector.formed = 1;
+  Parent.prototype.form1.call( reflector );
+
+  // reflector.formed = 1;
   return reflector;
 }
 
@@ -793,6 +795,8 @@ let Extend =
   _inheritMultiple,
   _inheritSingle,
   _reflectMapForm,
+
+  //
 
   sureRelativeOrGlobal,
   isRelativeOrGlobal,

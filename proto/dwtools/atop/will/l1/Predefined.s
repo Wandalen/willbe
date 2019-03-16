@@ -318,24 +318,38 @@ function stepRoutineTranspile( frame )
   else if( frame.resource.criterion.debug !== undefined )
   debug = !!frame.resource.criterion.debug;
 
-  let strategies = [ 'Uglify' ];
+  let raw = false;
+  if( _.strIs( frame.resource.criterion.raw ) )
+  raw = frame.resource.criterion.raw === 'raw';
+  else if( frame.resource.criterion.raw !== undefined )
+  raw = !!frame.resource.criterion.raw;
+
+  let transpilingStrategies = [ 'Uglify' ];
   if( debug )
-  strategies = [ 'Nop' ];
+  transpilingStrategies = [ 'Nop' ];
 
   debugger;
   let ts = new _.TranspilationStrategy({ logger : logger }).form();
   let multiple = ts.multiple
   ({
+
     inputPath : reflectOptions.srcFilter,
     outputPath : reflectOptions.dstFilter,
-    writingSingleTerminalUnderDirectory : 1,
     totalReporting : 0,
-    strategies : strategies,
+    transpilingStrategies : transpilingStrategies,
+    splittingStrategy : raw ? 'OneToOne' : 'ManyToOne',
+    writingTerminalUnderDirectory : 1,
+
+    optimization : 9,
+    minification : 8,
+    diagnosing : 1,
+    beautifing : 0,
+
   });
 
-  // debug : 0,
   // optimization : 9,
   // minification : 8,
+  // diagnosing : 0,
   // beautifing : 0,
 
   return multiple.form().perform()

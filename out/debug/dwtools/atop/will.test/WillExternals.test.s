@@ -1184,6 +1184,7 @@ function submodulesBuild( test )
   let routinePath = _.path.join( self.tempDir, test.name );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
   let shell = _.sheller
@@ -1203,8 +1204,8 @@ function submodulesBuild( test )
   .thenKeep( () =>
   {
     test.case = 'build withoud submodules'
-    let outDebugPath = _.path.join( routinePath, 'out/debug' );
-    _.fileProvider.filesDelete( outDebugPath );
+    // let outDebugPath = _.path.join( routinePath, 'out/debug' );
+    _.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -1212,9 +1213,8 @@ function submodulesBuild( test )
   .finally( ( err, got ) =>
   {
     test.is( !err );
-    let outDebugPath = _.path.join( routinePath, 'out/debug' );
-    var files = _.fileProvider.dirRead( outDebugPath );
-    test.identical( files.length, 2 );
+    var files = self.find( outPath );
+    test.gt( files.length, 70 );
     debugger;
     return null;
   })
@@ -1225,8 +1225,8 @@ function submodulesBuild( test )
   .thenKeep( () =>
   {
     test.case = '.build'
-    let outDebugPath = _.path.join( routinePath, 'out/debug' );
-    _.fileProvider.filesDelete( outDebugPath );
+    // let outDebugPath = _.path.join( routinePath, 'out/debug' );
+    _.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -1238,8 +1238,9 @@ function submodulesBuild( test )
     test.is( _.strHas( got.output, 'Building debug.raw' ) );
     test.is( _.strHas( got.output, 'Built debug.raw in' ) );
 
-    let outDebugPath = _.path.join( routinePath, 'out/debug' );
-    var files = self.find( outDebugPath );
+    // let outPath = _.path.join( routinePath, 'out/debug' );
+    // var files = self.find( outPath );
+    var files = self.find( outPath );
 
     test.is( files.length > 10 );
 
@@ -1251,10 +1252,7 @@ function submodulesBuild( test )
   .thenKeep( () =>
   {
     test.case = '.build wrong'
-    let buildOutDebugPath = _.path.join( routinePath, 'out/debug' );
-    let buildOutReleasePath = _.path.join( routinePath, 'out/release' );
-    _.fileProvider.filesDelete( buildOutDebugPath );
-    _.fileProvider.filesDelete( buildOutReleasePath );
+    _.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -1277,8 +1275,9 @@ function submodulesBuild( test )
     {
       test.is( o.exitCode !== 0 );
       test.is( o.output.length );
-      test.is( !_.fileProvider.fileExists( buildOutDebugPath ) )
-      test.is( !_.fileProvider.fileExists( buildOutReleasePath ) )
+      test.is( !_.fileProvider.fileExists( outPath ) );
+      test.is( !_.fileProvider.fileExists( buildOutDebugPath ) );
+      test.is( !_.fileProvider.fileExists( buildOutReleasePath ) );
 
       return null;
     })
@@ -1320,7 +1319,6 @@ function submodulesExport( test )
   .thenKeep( () =>
   {
     test.case = '.export'
-    _.fileProvider.filesDelete( outDebugPath );
     _.fileProvider.filesDelete( outPath );
     return null;
   })
@@ -1334,8 +1332,9 @@ function submodulesExport( test )
 
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/debug/dwtools/abase/l0/aPredefined.s' ) ) );
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/debug/dwtools/abase/l3/Path.s' ) ) );
+    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/submodules.out.will.yml' ) ) );
 
-    var files = self.find( outDebugPath );
+    var files = self.find( outPath );
     test.is( files.length > 60 );
 
     var files = _.fileProvider.dirRead( outPath );
@@ -1412,8 +1411,8 @@ function submodulesDownload( test )
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.gt( _.fileProvider.dirRead( _.path.join( routinePath, '.module/Tools' ) ).length, 0 );
-    test.gt( _.fileProvider.dirRead( _.path.join( routinePath, 'out/debug' ) ).length, 0 );
+    test.gt( self.find( _.path.join( routinePath, '.module/Tools' ) ).length, 70 );
+    test.gt( self.find( _.path.join( routinePath, 'out/debug' ) ).length, 50 );
     return null;
   })
 
@@ -1433,8 +1432,8 @@ function submodulesDownload( test )
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.gt( _.fileProvider.dirRead( _.path.join( routinePath, '.module/Tools' ) ).length, 0 );
-    test.gt( _.fileProvider.dirRead( _.path.join( routinePath, 'out/debug' ) ).length, 0 );
+    test.gt( self.find( _.path.join( routinePath, '.module/Tools' ) ).length, 90 );
+    test.gt( self.find( _.path.join( routinePath, 'out/debug' ) ).length, 50 );
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/Download.out.will.yml' ) ) );
     return null;
   })
@@ -2790,104 +2789,6 @@ multipleExportsDoc.timeOut = 130000;
 
 //
 
-function importInExport( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'import-in' );
-  let routinePath = _.path.join( self.tempDir, test.name );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-  let outPath = _.path.join( routinePath, 'out' );
-  let ready = new _.Consequence().take( null );
-
-  let shell = _.sheller
-  ({
-    execPath : 'node ' + execPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
-
-  /* - */
-
-  ready
-
-  .thenKeep( () =>
-  {
-    test.case = '.export'
-    _.fileProvider.filesDelete( outPath );
-    return null;
-  })
-
-  shell({ args : [ '.export debug:0' ] })
-  shell({ args : [ '.export debug:1' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    var files = _.fileProvider.dirRead( outPath );
-    test.identical( files, [ 'debug', 'release', 'submodule.debug.out.tgs', 'submodule.out.tgs', 'submodule.out.will.yml' ] );
-
-    return null;
-  })
-
-  return ready;
-}
-
-importInExport.timeOut = 130000;
-
-// //
-//
-// function reflectSubmoduleNone( test )
-// {
-//   let self = this;
-//   let originalDirPath = _.path.join( self.assetDirPath, 'reflect-submodules-none' );
-//   let routinePath = _.path.join( self.tempDir, test.name );
-//   let submodulesPath = _.path.join( routinePath, 'module' );
-//   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-//   let outPath = _.path.join( routinePath, 'out' );
-//   let ready = new _.Consequence().take( null )
-//
-//   let shell = _.sheller
-//   ({
-//     execPath : 'node ' + execPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     ready : ready
-//   })
-//
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
-//
-//   /* - */
-//
-//   ready.thenKeep( () =>
-//   {
-//     test.case = '.build'
-//     _.fileProvider.filesDelete( outPath );
-//     return null;
-//   })
-//
-//   shell({ args : [ '.build' ] })
-//
-//   .thenKeep( ( got ) =>
-//   {
-//     test.identical( got.exitCode, 0 );
-//     var files = self.find( outPath );
-//     test.identical( files, [ '.', './debug', './debug/File.js' ] );
-//
-//     return null;
-//   })
-//
-//   return ready;
-// }
-//
-// reflectSubmoduleNone.timeOut = 130000;
-
-//
-
 function reflectNothingFromSubmodules( test )
 {
   let self = this;
@@ -3769,8 +3670,6 @@ function reflectRemoteHttp( test )
     debugger;
     test.is( _.fileProvider.isTerminal( localFilePath ) );
     test.gt( _.fileProvider.fileSize( localFilePath ), 200 );
-    // let read = _.fileProvider.fileRead({ filePath : localFilePath, encoding : 'json' });
-    // test.identical( read.name, 'wTools' );
     return null;
   })
 
@@ -3778,6 +3677,57 @@ function reflectRemoteHttp( test )
 }
 
 reflectRemoteHttp.timeOut = 130000;
+
+//
+
+function importInExport( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'import-in' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+
+  .thenKeep( () =>
+  {
+    test.case = '.export'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.export debug:0' ] })
+  shell({ args : [ '.export debug:1' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = _.fileProvider.dirRead( outPath );
+    test.identical( files, [ 'debug', 'release', 'submodule.debug.out.tgs', 'submodule.out.tgs', 'submodule.out.will.yml' ] );
+
+    return null;
+  })
+
+  return ready;
+}
+
+importInExport.timeOut = 130000;
 
 //
 
@@ -3826,6 +3776,130 @@ function helpCommand( test )
 
   return ready;
 }
+
+//
+
+function transpile( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'transpile' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build debug'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+  shell({ args : [ '.build debug' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File1.release.js', './debug/dir2/File2.debug.js', './debug/dir2/File2.release.js', './debug/dir3.test', './debug/dir3.test/File.js', './debug/dir3.test/File.test.js' ] );
+    _.fileProvider.isTerminal( _.path.join( outPath, 'debug/dir3.test/File.js' ) );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build compiled.debug'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+  shell({ args : [ '.build compiled.debug' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './compiled.debug', './compiled.debug/Main.s', './tests.compiled.debug', './tests.compiled.debug/Tests.s' ] );
+    _.fileProvider.isTerminal( _.path.join( outPath, 'compiled.debug/Main.s' ) );
+    _.fileProvider.isTerminal( _.path.join( outPath, 'tests.compiled.debug/Tests.s' ) );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build raw.release'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+  shell({ args : [ '.build raw.release' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './raw.release', './raw.release/dir2', './raw.release/dir2/File.js', './raw.release/dir2/File.test.js', './raw.release/dir2/File1.debug.js', './raw.release/dir2/File1.release.js', './raw.release/dir2/File2.debug.js', './raw.release/dir2/File2.release.js', './raw.release/dir3.test', './raw.release/dir3.test/File.js', './raw.release/dir3.test/File.test.js' ] );
+    _.fileProvider.isTerminal( _.path.join( outPath, './raw.release/dir3.test/File.test.js' ) );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build release'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+  shell({ args : [ '.build release' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './release', './release/Main.s', './tests.compiled.release', './tests.compiled.release/Tests.s' ] );
+    _.fileProvider.isTerminal( _.path.join( outPath, './release/Main.s' ) );
+    _.fileProvider.isTerminal( _.path.join( outPath, './tests.compiled.release/Tests.s' ) );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build all'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+  shell({ args : [ '.build all' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './compiled.debug', './compiled.debug/Main.s', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File1.release.js', './debug/dir2/File2.debug.js', './debug/dir2/File2.release.js', './debug/dir3.test', './debug/dir3.test/File.js', './debug/dir3.test/File.test.js', './raw.release', './raw.release/dir2', './raw.release/dir2/File.js', './raw.release/dir2/File.test.js', './raw.release/dir2/File1.debug.js', './raw.release/dir2/File1.release.js', './raw.release/dir2/File2.debug.js', './raw.release/dir2/File2.release.js', './raw.release/dir3.test', './raw.release/dir3.test/File.js', './raw.release/dir3.test/File.test.js', './release', './release/Main.s', './tests.compiled.debug', './tests.compiled.debug/Tests.s', './tests.compiled.release', './tests.compiled.release/Tests.s' ] );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+transpile.timeOut = 130000;
 
 //
 
@@ -3881,8 +3955,6 @@ var Self =
     multipleExportsBroken,
     multipleExportsDoc,
 
-    importInExport,
-
     reflectNothingFromSubmodules,
     reflectGetPath,
     reflectSubdir,
@@ -3891,7 +3963,9 @@ var Self =
     reflectRemoteGit,
     reflectRemoteHttp,
 
+    importInExport,
     helpCommand,
+    transpile,
 
   }
 

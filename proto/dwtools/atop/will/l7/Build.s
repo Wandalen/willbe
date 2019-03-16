@@ -81,6 +81,9 @@ function stepsEach( onEach )
       current : build,
     });
 
+    if( _.arrayIs( step ) )
+    return inArray( step );
+
     _.assert( step instanceof will.Step || step instanceof will.Build, () => 'Cant find ' + arguments[ 0 ] );
     let it = Object.create( null );
     it.element = step;
