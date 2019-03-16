@@ -380,4 +380,4 @@ about :
 
 Тепер можемо створити свій [перший will-файл](FirstWillFile.ukr.md).
 
-[Повернутись до змісту](Topics.ukr.md)
+[Повернутись до змісту](../README.md#tutorials)

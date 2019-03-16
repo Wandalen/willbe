@@ -99,4 +99,4 @@ submodule :
 > Ви можете використовувати [готові модулі](#first-modules) позначивши їх як підмодулі в секції `submodule`.
 
 [Наступний туторіал](SubmodulesImporting.ukr.md)   
-[Повернутись до змісту](Topics.ukr.md)
+[Повернутись до змісту](../README.md#tutorials)

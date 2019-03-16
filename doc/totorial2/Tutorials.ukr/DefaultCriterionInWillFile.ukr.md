@@ -153,4 +153,4 @@ found 0 vulnerabilities
 > Пакет `willbe` має інструменти для автоматизації побудови модулів.
 
 [Наступний туторіал](ExportedWillFile.ukr.md)  
-[Повернутись до змісту](Topics.ukr.md)
+[Повернутись до змісту](../README.md#tutorials)

@@ -175,4 +175,4 @@ Exporting export.debug.first
 > Отже, ассерти потрібні для підтвердження правильності виконання програми, а також вони дозволяють [швидко локалізувати помилки в `will`-файлі](#assert-failure-information)
 
 [Наступний туторіал](MinimizationOfWillFile.ukr.md)  
-[Повернутись до змісту](Topics.ukr.md)
+[Повернутись до змісту](../README.md#tutorials)
