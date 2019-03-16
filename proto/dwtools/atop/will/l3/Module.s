@@ -3012,14 +3012,18 @@ function _resolveAct( o )
     result = _.mapVals( result );
     if( _.arrayIs( result ) )
     {
-      let hasNames = 1;
+      let isString = 0;
+      if( result.every( ( e ) => _.strIs( e ) ) )
+      isString = 1;
+      else
       result = result.map( ( e ) =>
       {
         if( !e.nickName )
-        hasNames = 0;
+        isString = 0;
         return e.nickName;
       });
-      if( hasNames )
+
+      if( isString )
       if( result.length )
       err = _.err( 'Found : ' + result.join( ', ' ), '\n', err );
       else

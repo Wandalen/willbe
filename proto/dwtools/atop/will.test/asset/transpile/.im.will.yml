@@ -1,0 +1,176 @@
+
+submodule :
+
+path :
+
+  proto : './proto'
+  temp : 'out'
+  in : '.'
+  out : 'out'
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : debug
+      raw : 'raw'
+      tests : 'no.tests'
+  out.compiled.debug :
+    path : './out/compiled.debug'
+    criterion :
+      debug : debug
+      raw : compiled
+      tests : 'no.tests'
+  out.raw.release :
+    path : './out/raw.release'
+    criterion :
+      debug : release
+      raw : 'raw'
+      tests : 'no.tests'
+  out.release :
+    path : './out/release'
+    criterion :
+      debug : release
+      raw : compiled
+      tests : 'no.tests'
+  out.tests.raw.debug :
+    path : './out/tests.raw.debug'
+    criterion :
+      debug : debug
+      raw : raw
+      tests : 'only.tests'
+  out.tests.compiled.debug :
+    path : './out/tests.compiled.debug'
+    criterion :
+      debug : debug
+      raw : compiled
+      tests : 'only.tests'
+  out.tests.raw.release :
+    path : './out/tests.raw.release'
+    criterion :
+      debug : release
+      raw : raw
+      tests : 'only.tests'
+  out.tests.compiled.release :
+    path : './out/tests.compiled.release'
+    criterion :
+      debug : release
+      raw : compiled
+      tests : 'only.tests'
+
+reflector :
+
+  reflect.proto :
+    inherit : predefined.*
+    criterion :
+      tests : 'no.tests'
+      debug : [ debug, release ]
+      raw : 'raw'
+    filePath :
+      path::proto : path::out.*=1
+
+  transpile.proto.no.tests.raw :
+    inherit : predefined.*
+    criterion :
+      tests : 'no.tests'
+      raw : 'raw'
+      debug : [ debug, release ]
+    filePath :
+      '**.test*' : 0
+      '**.test/**' : 0
+      path::proto : '{path::out.*=1}'
+
+  transpile.proto.no.tests.compiled :
+    inherit : predefined.*
+    criterion :
+      tests : 'no.tests'
+      raw : compiled
+      debug : [ debug, release ]
+    filePath :
+      '**.test*' : 0
+      '**.test/**' : 0
+      path::proto : '{path::out.*=1}/Main.s'
+
+  transpile.proto.only.tests.compiled :
+    inherit : predefined.*
+    criterion :
+      tests : 'only.tests'
+      raw : compiled
+      debug : [ debug, release ]
+    filePath :
+      '**.test*' : 1
+      path::proto : '{path::out.*=1}/Tests.s'
+
+step :
+
+  clean.out :
+    inherit : predefined.delete
+    filePath : path::out.*=1
+    criterion :
+      debug : [ debug, release ]
+      raw : [ 'raw', compiled ]
+      tests : [ 'no.tests', 'only.tests' ]
+
+  reflect.proto :
+    inherit : predefined.reflect
+    reflector : reflector::reflect.proto.*=1
+    criterion :
+      debug : [ debug, release ]
+      raw : [ 'raw', compiled ]
+
+  transpile.proto :
+    inherit : predefined.transpile
+    reflector : reflector::transpile.proto.*=1
+    criterion :
+      tests : [ 'no.tests', 'only.tests' ]
+      debug : [ debug, release ]
+      raw : compiled
+
+  transpile.proto.raw :
+    inherit : predefined.transpile
+    reflector : reflect.proto.*=1
+    criterion :
+      debug : [ debug, release ]
+      raw : raw
+
+build :
+
+  debug :
+    criterion :
+      default : 1
+      debug : debug
+      raw : raw
+    steps :
+      - step::clean.out*=2
+      - reflect.proto.*=1
+
+  compiled.debug :
+    criterion :
+      debug : debug
+      raw : compiled
+    steps :
+      - step::clean.out*=2
+      - transpile.proto.no.tests*=1
+      - transpile.proto.only.tests*=1
+
+  raw.release :
+    criterion :
+      debug : release
+      raw : raw
+    steps :
+      - step::clean.out*=2
+      - transpile.proto.raw.*=1
+
+  release :
+    criterion :
+      debug : release
+      raw : compiled
+    steps :
+      - step::clean.out*=2
+      - transpile.proto.no.tests*=1
+      - transpile.proto.only.tests*=1
+
+  all :
+    steps :
+      - build::debug
+      - build::compiled.debug
+      - build::raw.release
+      - build::release
