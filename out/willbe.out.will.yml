@@ -178,21 +178,6 @@ path:
         proto/dwtools/atop/will.test/asset/composite-reflector/proto/dir2/File2.debug.js
       - >-
         proto/dwtools/atop/will.test/asset/composite-reflector/proto/dir2/File2.release.js
-      - proto/dwtools/atop/will.test/asset/concat
-      - proto/dwtools/atop/will.test/asset/concat/super.ex.will.yml
-      - proto/dwtools/atop/will.test/asset/concat/super.im.will.yml
-      - proto/dwtools/atop/will.test/asset/concat/proto
-      - proto/dwtools/atop/will.test/asset/concat/proto/dir1
-      - proto/dwtools/atop/will.test/asset/concat/proto/dir2
-      - proto/dwtools/atop/will.test/asset/concat/proto/dir2/File.js
-      - proto/dwtools/atop/will.test/asset/concat/proto/dir2/File.test.js
-      - proto/dwtools/atop/will.test/asset/concat/proto/dir2/File1.debug.js
-      - proto/dwtools/atop/will.test/asset/concat/proto/dir2/File1.release.js
-      - proto/dwtools/atop/will.test/asset/concat/proto/dir2/File2.debug.js
-      - proto/dwtools/atop/will.test/asset/concat/proto/dir2/File2.release.js
-      - proto/dwtools/atop/will.test/asset/concat/proto/dir3.test
-      - proto/dwtools/atop/will.test/asset/concat/proto/dir3.test/File.js
-      - proto/dwtools/atop/will.test/asset/concat/proto/dir3.test/File.test.js
       - proto/dwtools/atop/will.test/asset/experiment
       - proto/dwtools/atop/will.test/asset/experiment/final.im.will.yml
       - proto/dwtools/atop/will.test/asset/experiment/proto
@@ -362,6 +347,69 @@ path:
       - proto/dwtools/atop/will.test/asset/submodules-broken-2/proto
       - >-
         proto/dwtools/atop/will.test/asset/submodules-broken-2/proto/WithSubmodules.s
+      - proto/dwtools/atop/will.test/asset/transpile
+      - proto/dwtools/atop/will.test/asset/transpile/super.ex.will.yml
+      - proto/dwtools/atop/will.test/asset/transpile/super.im.will.yml
+      - proto/dwtools/atop/will.test/asset/transpile/out
+      - proto/dwtools/atop/will.test/asset/transpile/out/compiled.debug
+      - proto/dwtools/atop/will.test/asset/transpile/out/compiled.debug/Main.s
+      - proto/dwtools/atop/will.test/asset/transpile/out/debug
+      - proto/dwtools/atop/will.test/asset/transpile/out/debug/dir1
+      - proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2
+      - proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2/File.js
+      - proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2/File.test.js
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2/File1.debug.js
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2/File1.release.js
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2/File2.debug.js
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2/File2.release.js
+      - proto/dwtools/atop/will.test/asset/transpile/out/debug/dir3.test
+      - proto/dwtools/atop/will.test/asset/transpile/out/debug/dir3.test/File.js
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/debug/dir3.test/File.test.js
+      - proto/dwtools/atop/will.test/asset/transpile/out/raw.release
+      - proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir2
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir2/File.js
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir2/File.test.js
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir2/File1.debug.js
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir2/File1.release.js
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir2/File2.debug.js
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir2/File2.release.js
+      - proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir3.test
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir3.test/File.js
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir3.test/File.test.js
+      - proto/dwtools/atop/will.test/asset/transpile/out/release
+      - proto/dwtools/atop/will.test/asset/transpile/out/release/Main.s
+      - proto/dwtools/atop/will.test/asset/transpile/out/tests.compiled.debug
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/tests.compiled.debug/Tests.s
+      - proto/dwtools/atop/will.test/asset/transpile/out/tests.compiled.release
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/tests.compiled.release/Tests.s
+      - proto/dwtools/atop/will.test/asset/transpile/proto
+      - proto/dwtools/atop/will.test/asset/transpile/proto/dir1
+      - proto/dwtools/atop/will.test/asset/transpile/proto/dir2
+      - proto/dwtools/atop/will.test/asset/transpile/proto/dir2/File.js
+      - proto/dwtools/atop/will.test/asset/transpile/proto/dir2/File.test.js
+      - proto/dwtools/atop/will.test/asset/transpile/proto/dir2/File1.debug.js
+      - proto/dwtools/atop/will.test/asset/transpile/proto/dir2/File1.release.js
+      - proto/dwtools/atop/will.test/asset/transpile/proto/dir2/File2.debug.js
+      - proto/dwtools/atop/will.test/asset/transpile/proto/dir2/File2.release.js
+      - proto/dwtools/atop/will.test/asset/transpile/proto/dir3.test
+      - proto/dwtools/atop/will.test/asset/transpile/proto/dir3.test/File.js
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/proto/dir3.test/File.test.js
     criterion:
       default: 1
       debug: 1
@@ -580,21 +628,6 @@ reflector:
         dwtools/atop/will.test/asset/composite-reflector/proto/dir2/File1.release.js: null
         dwtools/atop/will.test/asset/composite-reflector/proto/dir2/File2.debug.js: null
         dwtools/atop/will.test/asset/composite-reflector/proto/dir2/File2.release.js: null
-        dwtools/atop/will.test/asset/concat: null
-        dwtools/atop/will.test/asset/concat/super.ex.will.yml: null
-        dwtools/atop/will.test/asset/concat/super.im.will.yml: null
-        dwtools/atop/will.test/asset/concat/proto: null
-        dwtools/atop/will.test/asset/concat/proto/dir1: null
-        dwtools/atop/will.test/asset/concat/proto/dir2: null
-        dwtools/atop/will.test/asset/concat/proto/dir2/File.js: null
-        dwtools/atop/will.test/asset/concat/proto/dir2/File.test.js: null
-        dwtools/atop/will.test/asset/concat/proto/dir2/File1.debug.js: null
-        dwtools/atop/will.test/asset/concat/proto/dir2/File1.release.js: null
-        dwtools/atop/will.test/asset/concat/proto/dir2/File2.debug.js: null
-        dwtools/atop/will.test/asset/concat/proto/dir2/File2.release.js: null
-        dwtools/atop/will.test/asset/concat/proto/dir3.test: null
-        dwtools/atop/will.test/asset/concat/proto/dir3.test/File.js: null
-        dwtools/atop/will.test/asset/concat/proto/dir3.test/File.test.js: null
         dwtools/atop/will.test/asset/experiment: null
         dwtools/atop/will.test/asset/experiment/final.im.will.yml: null
         dwtools/atop/will.test/asset/experiment/proto: null
@@ -725,6 +758,53 @@ reflector:
         dwtools/atop/will.test/asset/submodules-broken-2: null
         dwtools/atop/will.test/asset/submodules-broken-2/proto: null
         dwtools/atop/will.test/asset/submodules-broken-2/proto/WithSubmodules.s: null
+        dwtools/atop/will.test/asset/transpile: null
+        dwtools/atop/will.test/asset/transpile/super.ex.will.yml: null
+        dwtools/atop/will.test/asset/transpile/super.im.will.yml: null
+        dwtools/atop/will.test/asset/transpile/out: null
+        dwtools/atop/will.test/asset/transpile/out/compiled.debug: null
+        dwtools/atop/will.test/asset/transpile/out/compiled.debug/Main.s: null
+        dwtools/atop/will.test/asset/transpile/out/debug: null
+        dwtools/atop/will.test/asset/transpile/out/debug/dir1: null
+        dwtools/atop/will.test/asset/transpile/out/debug/dir2: null
+        dwtools/atop/will.test/asset/transpile/out/debug/dir2/File.js: null
+        dwtools/atop/will.test/asset/transpile/out/debug/dir2/File.test.js: null
+        dwtools/atop/will.test/asset/transpile/out/debug/dir2/File1.debug.js: null
+        dwtools/atop/will.test/asset/transpile/out/debug/dir2/File1.release.js: null
+        dwtools/atop/will.test/asset/transpile/out/debug/dir2/File2.debug.js: null
+        dwtools/atop/will.test/asset/transpile/out/debug/dir2/File2.release.js: null
+        dwtools/atop/will.test/asset/transpile/out/debug/dir3.test: null
+        dwtools/atop/will.test/asset/transpile/out/debug/dir3.test/File.js: null
+        dwtools/atop/will.test/asset/transpile/out/debug/dir3.test/File.test.js: null
+        dwtools/atop/will.test/asset/transpile/out/raw.release: null
+        dwtools/atop/will.test/asset/transpile/out/raw.release/dir2: null
+        dwtools/atop/will.test/asset/transpile/out/raw.release/dir2/File.js: null
+        dwtools/atop/will.test/asset/transpile/out/raw.release/dir2/File.test.js: null
+        dwtools/atop/will.test/asset/transpile/out/raw.release/dir2/File1.debug.js: null
+        dwtools/atop/will.test/asset/transpile/out/raw.release/dir2/File1.release.js: null
+        dwtools/atop/will.test/asset/transpile/out/raw.release/dir2/File2.debug.js: null
+        dwtools/atop/will.test/asset/transpile/out/raw.release/dir2/File2.release.js: null
+        dwtools/atop/will.test/asset/transpile/out/raw.release/dir3.test: null
+        dwtools/atop/will.test/asset/transpile/out/raw.release/dir3.test/File.js: null
+        dwtools/atop/will.test/asset/transpile/out/raw.release/dir3.test/File.test.js: null
+        dwtools/atop/will.test/asset/transpile/out/release: null
+        dwtools/atop/will.test/asset/transpile/out/release/Main.s: null
+        dwtools/atop/will.test/asset/transpile/out/tests.compiled.debug: null
+        dwtools/atop/will.test/asset/transpile/out/tests.compiled.debug/Tests.s: null
+        dwtools/atop/will.test/asset/transpile/out/tests.compiled.release: null
+        dwtools/atop/will.test/asset/transpile/out/tests.compiled.release/Tests.s: null
+        dwtools/atop/will.test/asset/transpile/proto: null
+        dwtools/atop/will.test/asset/transpile/proto/dir1: null
+        dwtools/atop/will.test/asset/transpile/proto/dir2: null
+        dwtools/atop/will.test/asset/transpile/proto/dir2/File.js: null
+        dwtools/atop/will.test/asset/transpile/proto/dir2/File.test.js: null
+        dwtools/atop/will.test/asset/transpile/proto/dir2/File1.debug.js: null
+        dwtools/atop/will.test/asset/transpile/proto/dir2/File1.release.js: null
+        dwtools/atop/will.test/asset/transpile/proto/dir2/File2.debug.js: null
+        dwtools/atop/will.test/asset/transpile/proto/dir2/File2.release.js: null
+        dwtools/atop/will.test/asset/transpile/proto/dir3.test: null
+        dwtools/atop/will.test/asset/transpile/proto/dir3.test/File.js: null
+        dwtools/atop/will.test/asset/transpile/proto/dir3.test/File.test.js: null
       basePath: .
       prefixPath: proto
     criterion:
