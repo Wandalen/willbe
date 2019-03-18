@@ -307,6 +307,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'predefined.view',
+    stepRoutine : Predefined.stepRoutineView,
+  })
+
+  step
+  ({
     name : 'submodules.download',
     stepRoutine : Predefined.stepRoutineSubmodulesDownload,
   })
