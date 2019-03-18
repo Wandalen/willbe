@@ -115,8 +115,7 @@ build :
 
 Після виконання команди `willbe` згенерує `exportModule.out.will.yml` за назвою модуля в `about` та помістить файл в директорію `out`.
 
-### Підсумок
-Експортувати модуль можливо при використанні вбудованої [функції `predefined.export` в секції `step`](#section-step) та правильному налаштуванні секцій [`path`](#section-path) i [`build`](#section-build). 
+- Експортувати модуль можливо при використанні вбудованої [функції `predefined.export` в секції `step`](#section-step) та правильному налаштуванні секцій [`path`](#section-path) i [`build`](#section-build). 
 
 [Наступний туторіал](SelectorsTermInWillFile.ukr.md)  
 [Повернутись до змісту](../README.md#tutorials)
