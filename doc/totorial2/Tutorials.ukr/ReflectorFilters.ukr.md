@@ -156,3 +156,82 @@ build :
 `notNewerAge` - вік, не менше від встановленого на час проведення процедури.  
 В параметрах полів `notOlder`, `notNewer` вказуються значення в мілісекундах (1 с = 1000 мс), а в полях `notOlderAge` і `notNewerAge` в секундах. Рисунок іллюструє як працюють фільтри. Порівнюється вік файла з встановленим обмеженням.  
 ![time.filter](./Images/time.filter.png)  
+
+Часові фільтри можна комбінувати між собою, щоб задати діапазон вибірки, а також можна комбінувати з масками. Єдиною умовою є виключення конфліктів між фільтрами.  
+Виберемо діапазон для вибірки файлів:  
+\- не менше однієї хвилини;  
+\- не більше 10 діб.  
+Розраховуємо в секундах: `1 хв = 60 с`; `10 діб = 10 * 24 * 60 * 60 с = 864000 с`.  
+Вкажемо діапазон вибірки в рефлекторі:  
+
+```yaml
+reflector :
+
+  reflect.copy.:
+    recursive: 2
+    src:
+      filePath:
+        .: .
+      prefixPath: proto
+      notNewerAge : 3600
+      notOlderAge : 864000
+    dst:
+      prefixPath: path::out.*=1
+    criterion:
+      debug: [ 0,1 ]
+
+```
+
+Запустимо побудову збірки відладки `will .build copy.debug` попередньо видаливши директорію `out`:  
+
+```
+[user@user ~]$ will .build copy.debug
+...
+  Building copy.debug
+   + reflect.copy.debug reflected 8 files /path_to_file/ : out/debug <- proto in 0.390s
+  Built copy.debug in 0.432s
+
+```
+
+Всі файли скопійовано. Змінимо діапазон в `notNewerAge` з 3600 до 800000, щоб виключити можливість копіювання файлів створених для випробування. Запустимо реліз-побудову:  
+
+```
+[user@user ~]$ will .build copy.
+...
+  Building copy.
+   + reflect.copy. reflected 3 files /path_to_file/ : out/release <- proto in 0.311s
+  Built copy. in 0.358s
+
+```
+
+Скопійовано три файла. перевіримо вміст директорії `out/release`:  
+
+```
+[user@user ~]$ ls -a out/release/
+.  ..  files  proto.two
+
+``` 
+Тобто, `willbe` скопіював директорії без файлів. Залишилось перевірити роботу фільтрів `notNewer` i `notOlder`. Задамо новий діапазон:  
+\- не менше 1 секунди;  
+\- не більше 10 хвилин.  
+Відповідно, змініть рефлектор:  
+
+```yaml
+reflector :
+
+  reflect.copy.:
+    recursive: 2
+    src:
+      filePath:
+        .: .
+      prefixPath: proto
+      notNewer : 600000
+      notOlder : 1000
+    dst:
+      prefixPath: path::out.*=1
+    criterion:
+      debug: [ 0,1 ]
+
+```
+
+Видаліть директорію `out` та створіть новий файл в директорії `proto`
