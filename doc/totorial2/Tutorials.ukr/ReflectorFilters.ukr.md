@@ -45,18 +45,19 @@
 `includeAll` - включити в вибірку всі знайдені елементи з вказаним параметром;  
 `excludeAny` - виключити з вибірки будь-який елемент з вказаним параметром;  
 `excludeAll` - виключити з вибірки всі елементи з вказаним параметром.  
-Правила для вибірки формуються з застосуванням регулярних виразів JavaScript.  
+Правила для вибірки формуються з застосуванням регулярних виразів JavaScript для цього в фільтрі маски вказується префікс `!!js/regexp` перед регулярним виразом.   
 Якщо при копіюванні у вказаній структурі потрібно включити всі файли з розширенням '.js' та виключити документи з розширенням '.md', то потрібно додати маску в поле `src`:  
 
 ```yaml
 maskAll:
-  includeAll:
-    - !<tag:yaml.org,2002:js/regexp> /\.js$/
-  excludeAll:
-    - !<tag:yaml.org,2002:js/regexp> /\.md$/
+    excludeAll: 
+       - !!js/regexp '/\.md$/'
+    includeAll: 
+       - !!js/regexp '/\.js$/'
+
 
 ```
-
+ 
 Повний лістинг файла `.will.yml`:
 <details>
   <summary><u>Відкрийте, щоб проглянути</u></summary>
@@ -91,10 +92,10 @@ reflector :
         .: .
       prefixPath: proto
       maskAll:
-        excludeAll:
-          - !<tag:yaml.org,2002:js/regexp> /\.md$/
-        includeAll:
-          - !<tag:yaml.org,2002:js/regexp> /\.js$/
+        excludeAll: 
+           - !!js/regexp '/\.md$/'
+        includeAll: 
+           - !!js/regexp '/\.js$/'
     dst:
       prefixPath: path::out.*=1
     criterion:
