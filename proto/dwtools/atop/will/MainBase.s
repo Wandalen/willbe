@@ -190,7 +190,6 @@ function moduleMake( o )
 
   o.module.willFilesFind();
   o.module.willFilesOpen();
-
   o.module.submodulesForm();
 
   if( o.forming )
@@ -358,7 +357,6 @@ let Extend =
   formAssociates,
 
   moduleMake,
-
   _verbosityChange,
   willFilesList,
 

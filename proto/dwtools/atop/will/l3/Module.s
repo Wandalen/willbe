@@ -511,7 +511,6 @@ function cleanWhat( o )
       _.arrayAppendArrayOnce( files, [ archiveFilePath, outFilePath ] );
     }
 
-    debugger;
     find( files );
   }
 
@@ -519,16 +518,23 @@ function cleanWhat( o )
 
   if( o.cleaningTemp )
   {
-
     let temp = module.pathMap.temp ? _.arrayAs( module.pathMap.temp ) : [];
-    temp = path.s.resolve( module.dirPath, temp );
+
+    debugger;
+    temp = module.pathResolve
+    ({
+      selector : temp,
+      pathResolving : 'in',
+      prefixlessAction : 'resolved',
+    });
+    debugger;
+
+    temp = path.s.join( module.inPath, temp );
 
     for( let p = 0 ; p < temp.length ; p++ )
     {
       let filePath = temp[ p ];
-
       find( filePath );
-
     }
 
   }
@@ -766,7 +772,7 @@ function stateResetError()
 
 //
 
-function willFilesSelect( filePaths )
+function willFilesPick( filePaths )
 {
   let module = this;
   let will = module.will;
@@ -1126,6 +1132,8 @@ function willFilesFind()
   let will = module.will;
   let logger = will.logger;
 
+  module.findBeginTime = _.timeNow();
+
   if( module.willFilesFound > 0 )
   return module.stager.stageConsequence( 'willFilesFound' );
   module.stager.stageState( 'willFilesFound', 1 );
@@ -1227,8 +1235,8 @@ function _willFilesOpen()
 
   // logger.log( 'dirPath' + ' : ' + module.dirPath );
 
-  if( !module.supermodule )
-  logger.up();
+  // if( !module.supermodule )
+  // logger.up();
 
   /* */
 
@@ -1251,7 +1259,7 @@ function _willFilesOpen()
   {
     if( !module.supermodule )
     {
-      logger.down();
+      // logger.down();
       if( !err )
       {
         let total = module.willFileArray.length;
@@ -1261,7 +1269,8 @@ function _willFilesOpen()
         if( opened[ i ].loadedModule )
         total += opened[ i ].loadedModule.willFileArray.length;
 
-        logger.log( ' . Read', total, 'will-files in', _.timeSpent( time ) );
+        // if( will.verbosity >= 2 )
+        // logger.log( ' . Read', total, 'will-files in', _.timeSpent( time ) );
       }
     }
     if( err )
@@ -1457,7 +1466,6 @@ function _submodulesDownload( o )
       {
 
         _.assert( _.boolIs( arg ) );
-        // if( o.upgrading && arg )
         if( arg )
         downloadedNumber += 1;
 
@@ -1950,33 +1958,15 @@ function resourcesFormSkip()
   return module.stager.stageSkip( 'resourcesFormed' )
   .tap( ( err, arg ) =>
   {
-    // debugger;
+
+    if( will.verbosity >= 2 )
+    if( !module.supermodule )
+    logger.log( ' . Read', module.willFileArray.length, 'will-files in', _.timeSpent( module.findBeginTime ) );
+
     _.assert( !module.ready.resourcesCount() );
     module.ready.takeSoon( err, arg );
     _.assert( !module.ready.resourcesCount() );
   });
-
-  // if( module.resourcesFormed > 0 )
-  // return module.stager.stageConsequence( 'resourcesFormed' );
-  // module.stager.stageState( 'resourcesFormed', 1 );
-  //
-  // return module.stager.stageConsequence( 'resourcesFormed', -1 ).split()
-  // .finally( ( err, arg ) =>
-  // {
-  //
-  //   _.assert( !module.ready.resourcesCount() );
-  //   module.ready.takeSoon( err, arg );
-  //   _.assert( !module.ready.resourcesCount() );
-  //
-  //   module.stager.stageState( 'resourcesFormed', 2 );
-  //
-  //   if( err )
-  //   throw module.stager.stageError( 'resourcesFormed', err );
-  //   else
-  //   module.stager.stageState( 'resourcesFormed', 3 );
-  //
-  //   return arg;
-  // });
 
 }
 
@@ -2012,7 +2002,6 @@ function resourcesForm()
 
       con.keep( ( arg ) =>
       {
-        // module.stager.stageState( 'resourcesFormed', 3 );
         if( !module.supermodule )
         module._willFilesCacheSave();
         return arg;
@@ -2029,6 +2018,13 @@ function resourcesForm()
   })
   .finally( ( err, arg ) =>
   {
+
+    if( will.verbosity >= 2 )
+    if( !module.supermodule )
+    {
+      debugger;
+      logger.log( ' . Read', module.willFilesSelect().length, 'will-files in', _.timeSpent( module.findBeginTime ) );
+    }
 
     _.assert( !module.ready.resourcesCount() );
     module.ready.takeSoon( err, arg );
@@ -2498,6 +2494,27 @@ defaults.resource = 'build';
 let exportsSelect = _.routineFromPreAndBody( _buildsSelect_pre, _buildsSelect_body );
 var defaults = exportsSelect.defaults;
 defaults.resource = 'export';
+
+//
+
+function willFilesSelect()
+{
+  let module = this;
+  let will = module.will;
+  _.assert( arguments.length === 0 );
+
+  let result = module.willFileArray.slice();
+
+  for( let m in module.submoduleMap )
+  {
+    let submodule = module.submoduleMap[ m ].loadedModule;
+    if( !submodule )
+    continue;
+    _.arrayAppendArrayOnce( result, submodule.willFilesSelect() );
+  }
+
+  return result;
+}
 
 // --
 // resolver
@@ -3772,6 +3789,7 @@ let Restricts =
   id : null,
   errors : _.define.own([]),
   stager : null,
+  findBeginTime : null,
 
   willFileArray : _.define.own([]),
   willFileWithRoleMap : _.define.own({}),
@@ -3824,8 +3842,6 @@ let Accessors =
   buildMap : { setter : ResourceSetter_functor({ resourceName : 'Build', mapName : 'buildMap' }) },
   exportedMap : { setter : ResourceSetter_functor({ resourceName : 'Exported', mapName : 'exportedMap' }) },
 
-
-
   nickName : { getter : _nickNameGet, combining : 'rewrite', readOnly : 1 },
   absoluteName : { getter : _absoluteNameGet, readOnly : 1 },
   inPath : { getter : inPathGet, readOnly : 1 },
@@ -3865,7 +3881,7 @@ let Proto =
 
   stateResetError,
 
-  willFilesSelect,
+  willFilesPick,
   _willFileFindMaybe,
   _willFilesFindMaybe,
   willFilesFind,
@@ -3934,6 +3950,7 @@ let Proto =
   _buildsSelect,
   buildsSelect,
   exportsSelect,
+  willFilesSelect,
 
   // resolver
 

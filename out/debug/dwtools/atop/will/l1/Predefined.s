@@ -402,11 +402,18 @@ function stepRoutineView( frame )
 
   if( opts.delay )
   {
-    _.timeOut( opts.delay, () => Opn( opts.filePath ) );
+    _.timeOut( opts.delay, () =>
+    {
+      if( will.verbosity >= 3 )
+      logger.log( 'View ' + opts.filePath );
+      Opn( opts.filePath );
+    });
     return null;
   }
 
   debugger;
+  if( will.verbosity >= 3 )
+  logger.log( 'View ' + opts.filePath );
   let result = Opn( o.filePath );
   debugger;
 

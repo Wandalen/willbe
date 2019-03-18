@@ -74,7 +74,7 @@ function readExported()
 
   let outFilePath = build.outFilePathFor();
   let module2 = will.Module({ will : will, dirPath : path.dir( outFilePath ) }).preform();
-  let willFiles = module2.willFilesSelect( outFilePath );
+  let willFiles = module2.willFilesPick( outFilePath );
   let willFile = willFiles[ 0 ];
 
   if( !willFiles.length )
