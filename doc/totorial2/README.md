@@ -101,6 +101,14 @@
   <summary><a href="./Tutorials.ukr/ReflectorUsing.ukr.md">Поняття рефлекторів. Копіювання файлів</a></summary>
     <p>В туторіалі описуються рефлектори, дається приклад копіювання файлів рефлектором, пояснюється як користуватись полем `recursive`</p>
 </details>
+<details>
+  <summary><a href="./Tutorials.ukr/ReflectorFilters.ukr.md">Фільтри рефлектора</a></summary>
+    <p>В туторіалі дається поняття простих фільтрів і масок рефлектора та показано як вони застосовуються</p>
+</details>
+<details>
+  <summary><a href="./Tutorials.ukr/ReflectorTimeFilters.ukr.md">Reflector time filters</a></summary>
+    <p>В туторіалі показано як використовуються фільтри відбору файлів по часу</p>
+</details>
 
 <p></p>
 ...In progress, advanced...
@@ -113,12 +121,8 @@
     <p>В туторіалі показано як використовувати вбудовані рефлектори пакета `willbe`</p>
 </details>
 <details>
-  <summary><a href="./Tutorials.ukr/ReflectorFilters.ukr.md">Reflector filters</a></summary>
-    <p>В туторіалі дається класифікація фільтрів рефлектора та показано як вони застосовуються</p>
-</details>
-<details>
-  <summary><a href="./Tutorials.ukr/ReflectorTimeFilters.ukr.md">Reflector time filters</a></summary>
-    <p>В туторіалі показано як використовуються фільтри відбору файлів по часу, а також як керувати шляхами рефлектора `willbe`</p>
+  <summary><a href="./Tutorials.ukr/ReflectorFSControl.ukr.md">Reflector file control</a></summary>
+    <p>В туторіалі показано як з допомогою рефлекторів можна управляти шляхами і файлами </p>
 </details>
 <details>
   <summary><a href="./Tutorials.ukr/ExportedFileStructure.ukr.md">Exported will-file structure</a></summary>

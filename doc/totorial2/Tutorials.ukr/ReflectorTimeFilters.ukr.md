@@ -1,9 +1,9 @@
 # Часові фільтри рефлектора. Карта шляхів рефлектора
 
-В туторіалі показано як використовуються фільтри відбору файлів по часу, а також як керувати шляхами рефлектора `willbe`
+В туторіалі показано як використовуються фільтри відбору файлів по часу
 
 ### <a name="time-filters"></a> Фільтри по часу (часові фільтри)  
-Крім масок рефлектори здатні фільтрувати файли по часу створення. Для цього в поле `src` вносять спеціальні поля: `notOlder`, `notNewer`, `notOlderAge`, `notNewerAge`:  
+Крім масок та простих фільтрів рефлектори здатні фільтрувати файли по часу створення. Для цього в поле `src` вносять спеціальні поля: `notOlder`, `notNewer`, `notOlderAge`, `notNewerAge`:  
 `notOlder` - не старше на момент вибірки;  
 `notNewer` - не новіше на момент вибірки;  
 `notOlderAge` - вік, не старший від встановленого на час проведення процедури;  
@@ -12,6 +12,25 @@
 ![time.filter](./Images/time.filter.png)  
 
 Часові фільтри можна комбінувати між собою, щоб задати діапазон вибірки, а також можна комбінувати з масками. Єдиною умовою є виключення конфліктів між фільтрами.  
+
+### <a name="time-filters-using"></a> Використання часових фільтрів  
+Створіть структуру файлів як в попередньому туторіалі:  
+
+```
+.
+├── proto
+│     ├── proto.two
+│     │     └── script.js
+│     ├── files
+│     │     ├── manual.md
+│     │     └── tutorial.md
+│     ├── build.txt.js 
+│     └── package.json   
+│
+└── .will.yml       
+
+```
+
 Виберемо діапазон для вибірки файлів:  
 \- не менше однієї хвилини;  
 \- не більше 10 діб.  
@@ -36,7 +55,68 @@ reflector :
 
 ```
 
-Запустимо побудову збірки відладки `will .build copy.debug` попередньо видаливши директорію `out`:  
+<details>
+  <summary><u>Відкрийте, щоб проглянути повний лістинг `.will.yml`</u></summary>
+
+```yaml
+
+about :
+  name : maskFilter
+  description : "To use reflector filter"
+  version : 0.0.1
+
+path :
+
+  in : '.'
+  out : 'out'
+  proto : './proto'
+  out.debug : 
+    path : './out/debug'
+    criterion :
+      debug : 1
+  out.release : 
+    path : './out/release'
+    criterion :
+      debug : 0
+
+reflector :
+
+  reflect.copy.:
+    recursive: 2
+    src:
+      filePath:
+        .: .
+      prefixPath: proto
+      notNewerAge : 3600
+      notOlderAge : 864000
+    dst:
+      prefixPath: path::out.*=1
+    criterion:
+      debug: [ 0,1 ]
+
+step :
+
+  reflect.copy :
+    inherit : predefined.reflect
+    reflector : reflect.*
+    criterion :
+       debug : [ 0,1 ]
+
+build :
+
+  copy :
+    criterion : 
+      default : 1
+      debug : [ 0,1 ]
+    steps :
+      - reflect.*
+
+```
+
+</details>
+
+</br>
+Запустимо побудову збірки відладки `will .build copy.debug`:  
 
 ```
 [user@user ~]$ will .build copy.debug
@@ -66,7 +146,8 @@ reflector :
 
 ``` 
 
-Тобто, `willbe` скопіював директорії без файлів. Залишилось перевірити роботу фільтрів `notNewer` i `notOlder`. Задамо новий діапазон:  
+Тобто, `willbe` скопіював директорії без файлів.  
+Випробуємо часові фільтри `notNewer` i `notOlder`. Задамо новий діапазон:  
 \- не менше 1 секунди;  
 \- не більше 10 хвилин.  
 Відповідно, змініть рефлектор:  
@@ -107,3 +188,7 @@ reflector :
 .  ..  files  file.txt  proto.two
 
 ``` 
+
+- Часові фільтри рефлектора формують діапазони вибірки файлів за часом створення (модифікації).  
+
+[Повернутись до змісту](../README.md#tutorials)
