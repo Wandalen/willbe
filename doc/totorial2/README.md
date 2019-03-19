@@ -117,6 +117,10 @@
     <p>В туторіалі дається класифікація фільтрів рефлектора та показано як вони застосовуються</p>
 </details>
 <details>
+  <summary><a href="./Tutorials.ukr/ReflectorTimeFilters.ukr.md">Reflector time filters</a></summary>
+    <p>В туторіалі показано як використовуються фільтри відбору файлів по часу, а також як керувати шляхами рефлектора `willbe`</p>
+</details>
+<details>
   <summary><a href="./Tutorials.ukr/ExportedFileStructure.ukr.md">Exported will-file structure</a></summary>
     <p>В туторіалі показано особливості структури експортованого `*.out.will.`-файла та окремих ресурсів</p>
 </details>
