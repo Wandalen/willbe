@@ -474,6 +474,27 @@ function predefinedForm()
 
 //
 
+function shell( command )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( _.strIs( command ) );
+  _.assert( arguments.length === 1 );
+
+  return _.shell
+  ({
+    execPath : command,
+    currentPath : module.dirPath,
+    verbosity : will.verbosity-1,
+  });
+
+}
+
+//
+
 function cleanWhat( o )
 {
   let module = this;
@@ -529,7 +550,7 @@ function cleanWhat( o )
     });
     debugger;
 
-    temp = path.s.join( module.inPath, temp );
+    temp = _.arrayAs( path.s.join( module.inPath, temp ) );
 
     for( let p = 0 ; p < temp.length ; p++ )
     {
@@ -785,6 +806,8 @@ function willFilesPick( filePaths )
 
   _.assert( arguments.length === 1 );
   _.assert( _.strsAreAll( filePaths ) );
+
+  module.findBeginTime = _.timeNow();
 
   if( module.willFilesFound > 0 )
   return module.stager.stageConsequence( 'willFilesFound' );
@@ -2022,7 +2045,7 @@ function resourcesForm()
     if( will.verbosity >= 2 )
     if( !module.supermodule )
     {
-      debugger;
+      // debugger;
       logger.log( ' . Read', module.willFilesSelect().length, 'will-files in', _.timeSpent( module.findBeginTime ) );
     }
 
@@ -3869,6 +3892,7 @@ let Proto =
 
   // etc
 
+  shell,
   cleanWhat,
   clean,
 

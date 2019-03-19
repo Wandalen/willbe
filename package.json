@@ -4,6 +4,7 @@
   "description": "Utility to manage modules of complex modular systems",
   "author": "Kostiantyn Wandalen <wanalen@willbe.so>",
   "license": "MIT",
+  "enabled": 1,
   "main": "proto/dwtools/atop/will/MainTop.s",
   "files": [
     "proto/dwtools/atop/will",

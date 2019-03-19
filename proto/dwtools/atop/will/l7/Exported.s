@@ -227,9 +227,7 @@ function performExportedReflectors( exportSelector )
   else _.assert( 0 );
 
   exportedReflector.criterion = _.mapExtend( null, exported.criterion );
-  debugger;
   exportedReflector.form();
-  debugger;
   exported.exportedReflector = exportedReflector;
 
   _.assert( _.mapIs( exportedReflector.criterion ) );
@@ -324,7 +322,7 @@ function performExportedFilesReflector()
     module : module,
   });
   let exportedFilesReflector = exported.exportedFilesReflector;
-  debugger;
+  // debugger;
 
   exportedFilesReflector.src.pairWithDst( exportedFilesReflector.dst );
   exportedFilesReflector.src.pairRefine();
@@ -351,7 +349,7 @@ function performExportedFilesReflector()
   exportedFilesReflector.dst.filteringClear();
   exportedFilesReflector.dst.filePath = exportedFilesReflector.src.filePath = path.pathMapExtend( null, exportedFilesPath );
   exportedFilesReflector.recursive = 0;
-  debugger;
+  // debugger;
   exportedFilesReflector.form();
 
   _.assert( exportedFilesReflector.dst.prefixPath === null );

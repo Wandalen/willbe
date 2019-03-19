@@ -216,6 +216,118 @@ moduleMake.defaults =
 
 //
 
+function moduleEach( o )
+{
+  let will = this.form();
+  // let ca = e.ca;
+  let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
+  let logger = will.logger;
+
+  // if( will.currentModule )
+  // {
+  //   will.currentModule.finit();
+  //   will.currentModule = null;
+  // }
+
+  _.sure( _.strDefined( o.selector ), 'Expects string' );
+  _.assert( arguments.length === 1 );
+
+  // if( will.topCommand === null )
+  // will.topCommand = commandEach;
+
+  // debugger;
+  // let isolated = ca.commandIsolateSecondFromArgument( e.argument );
+  // debugger;
+
+  if( _.strEnds( o.selector, '::' ) )
+  o.selector = o.selector + '*';
+
+  o.selector = path.resolve( o.selector );
+  // o.selector = module.resolve( o.selector );
+
+  let con = new _.Consequence().take( null );
+  let files = will.willFilesList
+  ({
+    dirPath : o.selector,
+    includingInFiles : 1,
+    includingOutFiles : 0,
+    rerucrsive : 0,
+  });
+
+  let dirPaths = Object.create( null );
+  for( let f = 0 ; f < files.length ; f++ ) con.keep( ( arg ) => /* !!! replace by concurrent, maybe */
+  {
+    let file = files[ f ];
+
+    let dirPath = will.Module.DirPathFromFilePaths( file.absolute );
+
+    if( dirPaths[ dirPath ] )
+    debugger;
+    if( dirPaths[ dirPath ] )
+    return true;
+    dirPaths[ dirPath ] = 1;
+
+    if( will.moduleMap[ file.absolute ] )
+    return true;
+
+    // if( will.currentModule )
+    // {
+    //   will.currentModule.finit();
+    //   will.currentModule = null;
+    // }
+
+    let module = will.Module({ will : will, filePath : file.absolute }).preform();
+    module.willFilesFind();
+    module.willFilesOpen();
+    module.submodulesForm();
+    module.resourcesForm();
+
+    let it = Object.create( null );
+    it.dirPath = dirPath;
+    it.module = module;
+
+    return module.ready.split().keep( function( arg )
+    {
+
+      _.assert( module.willFileArray.length > 0 );
+
+      let r = o.onEach( it );
+
+      // let r = ca.commandPerform
+      // ({
+      //   command : isolated.secondCommand,
+      //   // subject : isolated.secondSubject,
+      //   propertiesMap : e.propertiesMap,
+      // });
+      //
+      // _.assert( r !== undefined );
+
+      return r;
+    })
+
+  });
+
+  con.finally( ( err, arg ) =>
+  {
+    // debugger;
+    // will.moduleDone({ error : err || null, command : commandEach });
+    if( err )
+    throw _.err( err );
+    return arg;
+  });
+
+  return con;
+}
+
+moduleEach.defaults =
+{
+  selector : null,
+  onEach : null,
+}
+
+//
+
 function _verbosityChange()
 {
   let will = this;
@@ -357,6 +469,7 @@ let Extend =
   formAssociates,
 
   moduleMake,
+  moduleEach,
   _verbosityChange,
   willFilesList,
 
