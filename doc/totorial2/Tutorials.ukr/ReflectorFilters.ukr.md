@@ -11,16 +11,14 @@
   reflect.copy.:
     recursive: 2
     src:
-      filePath:
-        .: .
-      prefixPath: proto
+      filePath: ./proto
     dst:
-      prefixPath: path::out.*=1
+      filePath: path::out.*=1
     criterion:
       debug: [ 0,1 ]
 
 ```
-Трансформація полягає в розділенні ресурсів на джерело для копіювання `src` та місце призначення `dst`, де будуть поміщені скопійовані файли. Поле `filePath` переміщено в ресурси поля `src` та позначає копіювання файлів з однієї кореневої директорії в другу - обидві директорії кореневі, що пояснюється використанням префіксів директорії `prefixPath`. Для джерела файлів префікс має значення `proto`, а для директорії призначення вибирається за критеріоном з ресурсів секції `path`.
+Трансформація полягає в розділенні ресурсів на джерело для копіювання `src` та місце призначення `dst`, де будуть поміщені скопійовані файли. Поле `filePath` внесено в ресурси полів `src` і `dst` відповідно.
 
 ### <a name="configuration"></a> Початкова конфігурація модуля  
 Почнемо знайомство з фільтрами з останньої конфігурації системи модифікувавши назви файлів:  
@@ -80,14 +78,14 @@ reflector :
   reflect.copy.:
     recursive: 2
     src:
-      filePath:
-        .: .
-      prefixPath: proto
+      filePath: ./proto
       begins: 
         - 'pac'
         - 'file'
     dst:
-      prefixPath: path::out.*=1
+      filePath: path::out.*=1
+    criterion:
+      debug: [ 0,1 ]
     criterion:
       debug: [ 0,1 ]
 
@@ -218,16 +216,14 @@ reflector :
   reflect.copy.:
     recursive: 2
     src:
-      filePath:
-        .: .
-      prefixPath: proto
+      filePath: ./proto
       maskAll:
         excludeAll: 
            - !!js/regexp '/\.md$/'
         includeAll: 
            - !!js/regexp '/\.js$/'
     dst:
-      prefixPath: path::out.*=1
+      filePath: path::out.*=1
     criterion:
       debug: [ 0,1 ]
 
@@ -264,16 +260,14 @@ reflector :
   reflect.copy.:
     recursive: 2
     src:
-      filePath:
-        .: .
-      prefixPath: proto
+      filePath: ./proto
       maskAll:
         excludeAll: 
            - !!js/regexp '/\.md$/'
         includeAll: 
            - !!js/regexp '/\.js$/'
     dst:
-      prefixPath: path::out.*=1
+       filePath: path::out.*=1
     criterion:
       debug: [ 0,1 ]
 

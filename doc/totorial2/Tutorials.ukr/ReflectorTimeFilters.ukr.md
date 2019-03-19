@@ -43,13 +43,11 @@ reflector :
   reflect.copy.:
     recursive: 2
     src:
-      filePath:
-        .: .
-      prefixPath: proto
+      filePath: ./proto
       notNewerAge : 3600
       notOlderAge : 864000
     dst:
-      prefixPath: path::out.*=1
+      filePath: path::out.*=1
     criterion:
       debug: [ 0,1 ]
 
@@ -84,13 +82,11 @@ reflector :
   reflect.copy.:
     recursive: 2
     src:
-      filePath:
-        .: .
-      prefixPath: proto
+      filePath: ./proto
       notNewerAge : 3600
       notOlderAge : 864000
     dst:
-      prefixPath: path::out.*=1
+      filePath: path::out.*=1
     criterion:
       debug: [ 0,1 ]
 
@@ -158,13 +154,11 @@ reflector :
   reflect.copy.:
     recursive: 2
     src:
-      filePath:
-        .: .
-      prefixPath: proto
+      filePath: ./proto
       notNewer : 600000
       notOlder : 1000
     dst:
-      prefixPath: path::out.*=1
+      filePath: path::out.*=1
     criterion:
       debug: [ 0,1 ]
 
