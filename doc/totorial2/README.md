@@ -101,6 +101,14 @@
   <summary><a href="./Tutorials.ukr/ReflectorUsing.ukr.md">Поняття рефлекторів. Копіювання файлів</a></summary>
     <p>В туторіалі описуються рефлектори, дається приклад копіювання файлів рефлектором, пояснюється як користуватись полем `recursive`</p>
 </details>
+<details>
+  <summary><a href="./Tutorials.ukr/ReflectorFilters.ukr.md">Фільтри рефлектора</a></summary>
+    <p>В туторіалі дається поняття простих фільтрів і масок рефлектора та показано як вони застосовуються</p>
+</details>
+<details>
+  <summary><a href="./Tutorials.ukr/ReflectorTimeFilters.ukr.md">Reflector time filters</a></summary>
+    <p>В туторіалі показано як використовуються фільтри відбору файлів по часу</p>
+</details>
 
 <p></p>
 ...In progress, advanced...
@@ -113,8 +121,8 @@
     <p>В туторіалі показано як використовувати вбудовані рефлектори пакета `willbe`</p>
 </details>
 <details>
-  <summary><a href="./Tutorials.ukr/ReflectorFilters.ukr.md">Reflector filters</a></summary>
-    <p>В туторіалі дається класифікація фільтрів рефлектора та показано як вони застосовуються</p>
+  <summary><a href="./Tutorials.ukr/ReflectorFSControl.ukr.md">Reflector file control</a></summary>
+    <p>В туторіалі показано як з допомогою рефлекторів можна управляти шляхами і файлами </p>
 </details>
 <details>
   <summary><a href="./Tutorials.ukr/ExportedFileStructure.ukr.md">Exported will-file structure</a></summary>
@@ -156,7 +164,11 @@
 <details>
   <summary><a href="./Manuals.ukr/WillFileCriterions.urk.md">Критеріони (criterion) в `will`-файлах</a></summary>
     <p>В керівництві користувача визначено поняття критеріонів та приведено приклади їх використання при створенні модулів</p>
-</details>  
+</details>
+<details>
+  <summary><a href="./Manuals.ukr/WillFilePredefinedSteps.ukr.md">Вбудовані кроки пакета willbe</a></summary>
+    <p>Керівництво користувача по вбудованим крокам для побудови модуля</p>
+</details>
 
 <p></p>
 ...In progress... 
@@ -170,10 +182,6 @@
     <p><a href="./Manuals.ukr/WillFileCreation.md#module-export">Експорт модуля</a></p>
     <p><a href="./Manuals.ukr/WillFileCreation.md#named-module">Іменований підмодуль</a></p>
 </details> 
-<details>
-  <summary><a href="./Manuals.ukr/WillFilePredefinedComponents.ukr.md">Вбудовані функції та особливості willbe</a></summary>
-    <p>Комплексне керівництво користувача по вбудованим функціям та властивостям окремих секцій `will`-файла </p>
-</details>
 <details>
   <summary><a href="./Manuals.ukr/WillFileSelectors.ukr.md">Cелектори з ґлобами та ассертами</a></summary>
     <p>В керівництві користувача дається інформація про використання селекторів для побудови модуля</p>
