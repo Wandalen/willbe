@@ -86,8 +86,6 @@ reflector :
       filePath: path::out.*=1
     criterion:
       debug: [ 0,1 ]
-    criterion:
-      debug: [ 0,1 ]
 
 step :
 

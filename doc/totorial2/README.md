@@ -166,7 +166,7 @@
     <p>В керівництві користувача визначено поняття критеріонів та приведено приклади їх використання при створенні модулів</p>
 </details>
 <details>
-  <summary><a href="./Manuals.ukr/WillFilePredefinedComponents.ukr.md">Вбудовані кроки пакета willbe</a></summary>
+  <summary><a href="./Manuals.ukr/WillFilePredefinedSteps.ukr.md">Вбудовані кроки пакета willbe</a></summary>
     <p>Керівництво користувача по вбудованим крокам для побудови модуля</p>
 </details>
 
