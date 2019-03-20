@@ -164,7 +164,11 @@
 <details>
   <summary><a href="./Manuals.ukr/WillFileCriterions.urk.md">Критеріони (criterion) в `will`-файлах</a></summary>
     <p>В керівництві користувача визначено поняття критеріонів та приведено приклади їх використання при створенні модулів</p>
-</details>  
+</details>
+<details>
+  <summary><a href="./Manuals.ukr/WillFilePredefinedComponents.ukr.md">Вбудовані кроки пакета willbe</a></summary>
+    <p>Керівництво користувача по вбудованим крокам для побудови модуля</p>
+</details>
 
 <p></p>
 ...In progress... 
@@ -178,10 +182,6 @@
     <p><a href="./Manuals.ukr/WillFileCreation.md#module-export">Експорт модуля</a></p>
     <p><a href="./Manuals.ukr/WillFileCreation.md#named-module">Іменований підмодуль</a></p>
 </details> 
-<details>
-  <summary><a href="./Manuals.ukr/WillFilePredefinedComponents.ukr.md">Вбудовані функції та особливості willbe</a></summary>
-    <p>Комплексне керівництво користувача по вбудованим функціям та властивостям окремих секцій `will`-файла </p>
-</details>
 <details>
   <summary><a href="./Manuals.ukr/WillFileSelectors.ukr.md">Cелектори з ґлобами та ассертами</a></summary>
     <p>В керівництві користувача дається інформація про використання селекторів для побудови модуля</p>
