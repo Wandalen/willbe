@@ -106,8 +106,12 @@
     <p>В туторіалі дається поняття простих фільтрів і масок рефлектора та показано як вони застосовуються</p>
 </details>
 <details>
-  <summary><a href="./Tutorials.ukr/ReflectorTimeFilters.ukr.md">Reflector time filters</a></summary>
+  <summary><a href="./Tutorials.ukr/ReflectorTimeFilters.ukr.md">Часові фільтри рефлектора</a></summary>
     <p>В туторіалі показано як використовуються фільтри відбору файлів по часу</p>
+</details>
+<details>
+  <summary><a href="./Tutorials.ukr/ReflectorFSControl.ukr.md">Формування шляхів в рефлекторі. Управління файловими операціями</a></summary>
+    <p>В туторіалі показано як формуються шляхи рефлекторів та як управляти кількістю файлових операцій</p>
 </details>
 
 <p></p>
@@ -119,10 +123,6 @@
 <details>
   <summary><a href="./Tutorials.ukr/PredefinedReflectorsUsing.ukr.md">How to use predefined reflectors</a></summary>
     <p>В туторіалі показано як використовувати вбудовані рефлектори пакета `willbe`</p>
-</details>
-<details>
-  <summary><a href="./Tutorials.ukr/ReflectorFSControl.ukr.md">Reflector file control</a></summary>
-    <p>В туторіалі показано як з допомогою рефлекторів можна управляти шляхами і файлами </p>
 </details>
 <details>
   <summary><a href="./Tutorials.ukr/ExportedFileStructure.ukr.md">Exported will-file structure</a></summary>
