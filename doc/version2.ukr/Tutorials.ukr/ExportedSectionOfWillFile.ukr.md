@@ -2,7 +2,7 @@
 
 В цьому туторіалі розглядається секція `exported`
 
-Секція `exported` - присутня лише в експортованому `will`-файлі який генерується утилітоюпри експортуванні модуля. Головне призначення секції - інформаційна карта для імпорту.  
+Секція `exported` - присутня лише в експортованому `will`-файлі який генерується утилітою при експортуванні модуля. Головне призначення секції - інформаційна карта для імпорту.  
 Розглянемо секцію `exported` при експорті модуля з одним файлом. Для цього створіть в одній директорії файли `.will.yml`, `fileToExport` та `fileToExportTwo`. В файл `.will.yml` додайте:  
 
 ```yaml
@@ -21,7 +21,7 @@ path :
       path : 'fileToExport'
       criterion :
         debug : 0
-    fileToExportTwo : 
+    fileToExportTwo :
       path : 'fileToExport*'
       criterion :
         debug : 1
@@ -58,7 +58,7 @@ build :
    + Exported export. with 1 files in 1.860s
   Exported export. in 1.917s
 
-  
+
 ```
 
 Відкрийте файл `exportedSection.out.will.yml` (в консолі введіть `less out/exportedSection.out.will.yml` або в іншому редакторі) та знайдіть в кінці документа секцію `exported`:  
@@ -79,4 +79,4 @@ exported:
 
 ```
 
-В секції поміщено один ресурс з назвою збірки, по якій утиліта виконував експорт. Поле `version` копіює відповідний ресурс секції `about`, критеріони відповідають встановленим в збірці `export`. Наступні поля: `exportedReflector`, `exportedFilesReflector`, `exportedDirPath`, `exportedFilesPath`, `archiveFilePath` вказують на ресурси в секціях `reflector` i `path` які утиліта використовував при побудові експорту модуля. 
+В секції поміщено один ресурс з назвою збірки, по якій утиліта виконувала експорт. Поле `version` копіює відповідний ресурс секції `about`, критеріони відповідають встановленим в збірці `export`. Наступні поля: `exportedReflector`, `exportedFilesReflector`, `exportedDirPath`, `exportedFilesPath`, `archiveFilePath` вказують на ресурси в секціях `reflector` i `path`, які утиліта використовувала при побудові експорту модуля.

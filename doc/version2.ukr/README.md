@@ -85,7 +85,7 @@
     <p>В туторіалі пояснюється призначення команди `.each` та приводиться приклад використання</p>
 </details>
 <details>
-  <summary><a href="./Tutorials.ukr/UsingOfJSInWillbe.ukr.md">Використання JavaScript файлів утилітоюwillbe</a></summary>
+  <summary><a href="./Tutorials.ukr/UsingOfJSInWillbe.ukr.md">Використання JavaScript файлів утилітою willbe</a></summary>
     <p>В туторіалі показано як використовувати JavaScript-скрипти в утиліті `willbe`</p>
 </details>
 <details>
