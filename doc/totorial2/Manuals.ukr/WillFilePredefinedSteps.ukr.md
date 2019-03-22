@@ -102,10 +102,18 @@ step:
 <a name="predefined-transpile"></a> Функція `predefined.transpile`:
 
 ```yaml
-step:                                        # Назва секції
-  predefined:                                # Назва кроку
-    inherit: predefined.transpile            # Наслідування вбудованого кроку об'єднання JS-файлів
-    reflector: reflector::reflect.js.files   # Рефлектор для відбору JS-файлів
+step:                                           # Назва секції
+  predefined:                                   # Назва кроку
+    inherit: predefined.transpile               # Наслідування вбудованого кроку об'єднання JS-файлів
+    reflector: reflector::reflect.js.files      # Рефлектор для відбору JS-файлів
+
+```
+
+В рефлекторі необхідно вказати шляхи для файлів, які будуть скомпоновані і файл, який згенерується. Для цього в рефлекторі вказуйте поля:  
+```yaml
+  filePath :                                    # Вказується для вибору JS-файлів
+    path::filesFrom : '{path::filesTo}/file.js' # Ключ - директорія з якої беруться файли,
+                                                # значення - згенерований файл.
 
 ```
 
