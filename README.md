@@ -1,11 +1,12 @@
 
 # willbe [![Build Status](https://travis-ci.org/Wandalen/willbe.svg?branch=master)](https://travis-ci.org/Wandalen/willbe)
 
-Utility for development it helps to manage modularity of complex modular systems.
+Utility for development which helps to manage modularity of complex modular systems.
+
 
 ## What willbe is
 
-Utility for development it helps to manage modularity of complex modular systems. Utility willbe reaches it's purpose utilizing functionality of modern file systems, extending it and aggregating functionality of other open source utilities.
+Willbe is utility for development. It helps to manage modularity of complex modular systems. Utility willbe reaches it's purpose utilizing functionality of modern file systems, extending it, aggregating functionality of other open source utilities.
 
 The building of application is part of any software development process. There are building blocks which are required for many building scenarios, no matter what language, platform or project you have. Willbe encapsulate such building blocks and offer them to a developer.
 
