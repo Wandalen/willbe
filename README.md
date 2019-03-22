@@ -8,7 +8,7 @@ Utility for development which helps to manage modularity of complex modular syst
 
 Willbe is utility for development. It helps to manage modularity of complex modular systems. Utility willbe reaches it's purpose utilizing functionality of modern file systems, extending it, aggregating functionality of other open source utilities.
 
-The building of application is part of any software development process. There are building blocks which are required for many building scenarios, no matter what language, platform or project you have. Willbe encapsulates such building blocks and offer them to a developer.
+The building of application is part of any software development process. There are building blocks which are required for many building scenarios, no matter what language, platform or project you have. Willbe encapsulates such building blocks and offers them to a developer.
 
 Utility willbe is cross-platform. It hids differences between platforms making development cheaper and more pleasant.
 
