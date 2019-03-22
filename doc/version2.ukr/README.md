@@ -4,15 +4,15 @@
 <details>
   <summary><a href="Introduction.ukr.md">Введення</a></summary>
     <p>Загальна інформація про пакет willbe</p>
-</details> 
+</details>
 <details>
   <summary><a href="./Tutorials.ukr/WillbeInstalation.ukr.md">Встановлення пакета willbe</a></summary>
     <p>Показано процес встановлення пакета `willbe` на операційні системи Windows та Linux-дистрибутиви</p>
-</details> 
+</details>
 <details>
   <summary><a href="./Tutorials.ukr/Concepts.urk.md">Базові концепції та поняття</a></summary>
     <p>В туторіалі описуються основні концепції та поняття для роботи з пакетом `willbe`</p>
-</details> 
+</details>
 <details>
   <summary><a href="./Tutorials.ukr/CompositionOfWillFile.ukr.md">Структура will-файла</a></summary>
     <p>В туторіалі описано структуру секцій `will`-файлу та приведено приклади їх застосування</p>
@@ -140,19 +140,19 @@
 <details>
   <summary><a href="Introduction.ukr.md">Введення</a></summary>
     <p>Загальна інформація про пакет willbe</p>
-</details> 
+</details>
 <details>
   <summary><a href="./Manuals.ukr/WillbeInstalation.ukr.md">Встановлення пакета willbe</a></summary>
     <p>Показано процес встановлення пакета `willbe` на операційні системи Windows та Linux-дистрибутиви</p>
-</details> 
+</details>
 <details>
   <summary><a href="./Manuals.ukr/WillbeInstalation.ukr.md">Встановлення пакета willbe</a></summary>
     <p>Показано процес встановлення пакета `willbe` на операційні системи Windows та Linux-дистрибутиви</p>
-</details> 
+</details>
 <details>
   <summary><a href="./Manuals.ukr/Concepts.urk.md">Базові концепції та поняття</a></summary>
     <p>В туторіалі описуються основні концепції та поняття для роботи з пакетом `willbe`</p>
-</details> 
+</details>
 <details>
   <summary><a href="./Manuals.ukr/WillFileStructure.ukr.md">Структура will-файла</a></summary>
     <p>Описується структура секцій `will`-файлу та приведено приклади їх застосування</p>
@@ -171,7 +171,7 @@
 </details>
 
 <p></p>
-...In progress... 
+...In progress...
 <details>
   <summary><a href="./Manuals.ukr/WillFileCreation.md">Створення will-модуля</a></summary>
     <p>В керівництві описано створення will-файла та побудова модулів різного призначення</p>
@@ -181,7 +181,7 @@
     <p><a href="./Manuals.ukr/WillFileCreation.md#step-and-build">Використання секцій `step` i `build` при створенні модуля</a></p>
     <p><a href="./Manuals.ukr/WillFileCreation.md#module-export">Експорт модуля</a></p>
     <p><a href="./Manuals.ukr/WillFileCreation.md#named-module">Іменований підмодуль</a></p>
-</details> 
+</details>
 <details>
   <summary><a href="./Manuals.ukr/WillFileSelectors.ukr.md">Cелектори з ґлобами та ассертами</a></summary>
     <p>В керівництві користувача дається інформація про використання селекторів для побудови модуля</p>
