@@ -10,7 +10,7 @@ Willbe is utility for development. It helps to manage modularity of complex modu
 
 The building of application is part of any software development process. There are building blocks which are required for many building scenarios, no matter what language, platform or project you have. Willbe encapsulates such building blocks and offers them to a developer.
 
-Utility willbe is cross-platform. It hids differences between platforms making development cheaper and more pleasant.
+Utility willbe is cross-platform. It hides differences between platforms making development cheaper and more pleasant.
 
 A loose definition of concept module imposes minimum restrictions on development and application of the utility. Any set of files could be treated as a module.
 
