@@ -3,7 +3,6 @@
 
 Utility for development which helps to manage modularity of complex modular systems.
 
-
 ## What willbe is
 
 Willbe is utility for development. It helps to manage modularity of complex modular systems. Utility willbe reaches it's purpose utilizing functionality of modern file systems, extending it, aggregating functionality of other open source utilities.
