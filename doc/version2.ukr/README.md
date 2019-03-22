@@ -9,7 +9,7 @@
     <p>Показано процес встановлення утиліти `willbe` на операційні системи Windows та Linux-дистрибутиви</p>
 </details>
 <details>
-  <summary><a href="./Tutorials/Concepts.urk.md">Базові концепції та поняття</a></summary>
+  <summary><a href="./Tutorials/Concepts.md">Базові концепції та поняття</a></summary>
     <p>В туторіалі описуються основні концепції та поняття для роботи з утилітою `willbe`</p>
 </details>
 <details>

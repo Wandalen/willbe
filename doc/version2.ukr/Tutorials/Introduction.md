@@ -1,6 +1,6 @@
 # Willbe [![Build Status](https://travis-ci.org/Wandalen/willbe.svg?branch=master)](https://travis-ci.org/Wandalen/willbe)
 
-Чим утиліта willbe є і чим вона не являється
+Загальна інформація про утиліту willbe. Чим утиліта willbe є і чим вона не являється
 
 ### Чим утиліта willbe є
 
