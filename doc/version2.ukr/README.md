@@ -2,7 +2,7 @@
 
 <details>
   <summary><a href="./Tutorials/Abstract.md">Загальна інформація</a></summary>
-  Загальна інформація про утиліту ```willbe```. Чим утиліта `willbe` є і чим вона не являється
+  Загальна інформація про утиліту ```willbe```. Чим утиліта `willbe` <code>willbe</code> є і чим вона не являється
 </details>
 <details>
   <summary><a href="./Tutorials/WillbeInstalation.md">Встановлення утиліти willbe</a></summary>
