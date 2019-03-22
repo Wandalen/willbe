@@ -1,4 +1,4 @@
-## <a name="tutorials"></a> Туторіал
+## <a name="tutorials"></a> Туторіали
 
 <details>
   <summary><a href="./Tutorials/Abstract.md">Загальна інформація</a></summary>
