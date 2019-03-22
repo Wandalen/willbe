@@ -52,15 +52,15 @@ function init( o )
 function infoExport()
 {
   let about = this;
-  let result = '';
   let fields = about.dataExport();
 
   if( Object.keys( fields ).length === 0 )
-  return result;
+  return '';
 
-  result += 'About' + '\n';
-  result += _.toStr( fields, { wrap : 0, levels : 4, multiline : 1 } ) + '\n';
-  result += '\n';
+  let result = _.color.strFormat( 'About', 'highlighted' );
+  result += '\n' + _.toStr( fields, { wrap : 0, levels : 4, multiline : 1 } );
+
+  result += '\n\n';
 
   return result;
 }

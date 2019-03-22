@@ -256,6 +256,15 @@ function stepRoutineShell( frame )
   _.assert( arguments.length === 1 );
   _.sure( opts.shell === null || _.strIs( opts.shell ) || _.arrayIs( opts.shell ) );
 
+  // debugger;
+  opts.shell = module.resolve
+  ({
+    selector : opts.shell,
+    prefixlessAction : 'resolved',
+    pathNativizing : 1,
+  })
+  // debugger;
+
   /* */
 
   if( opts.currentPath )
@@ -289,6 +298,39 @@ stepRoutineShell.uniqueOptions =
 {
   shell : null,
 }
+
+// //
+//
+// function stepRoutineCommand()
+// {
+//   let step = this;
+//   let module = frame.module;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//   let opts = frame.opts;
+//
+//   _.assert( arguments.length === 1 );
+//   _.sure( opts.command === null || _.strIs( opts.command ) || _.arrayIs( opts.command ) );
+//
+//   /* */
+//
+//   // xxx
+//
+//   /* */
+//
+// }
+//
+// stepRoutineCommand.stepOptions =
+// {
+//   command : null,
+// }
+//
+// stepRoutineCommand.uniqueOptions =
+// {
+//   command : null,
+// }
 
 //
 
@@ -466,6 +508,33 @@ stepRoutineSubmodulesUpgrade.stepOptions =
 
 //
 
+function stepRoutineSubmodulesReload( frame )
+{
+  let step = this;
+  let module = frame.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = frame.opts;
+
+  _.assert( arguments.length === 1 );
+  _.assert( !!module );
+
+  if( will.verbosity >= 3 )
+  {
+    logger.log( ' . Reloading submodules..' );
+  }
+
+  return module.submodulesReload();
+}
+
+stepRoutineSubmodulesReload.stepOptions =
+{
+}
+
+//
+
 function stepRoutineSubmodulesClean( frame )
 {
   let step = this;
@@ -553,11 +622,13 @@ let Extend =
 
   stepRoutineJs,
   stepRoutineShell,
+  // stepRoutineCommand,
   stepRoutineTranspile,
   stepRoutineView,
 
   stepRoutineSubmodulesDownload,
   stepRoutineSubmodulesUpgrade,
+  stepRoutineSubmodulesReload,
   stepRoutineSubmodulesClean,
 
   stepRoutineClean,

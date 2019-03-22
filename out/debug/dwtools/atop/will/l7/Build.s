@@ -98,15 +98,23 @@ function stepsEach( onEach )
     inElement( step );
   }
 
-  function inElement( step )
+  function inElement( stepName )
   {
-    step = module.resolve
+
+    let step = module.resolve
     ({
-      selector : step,
+      selector : stepName,
       defaultResourceName : 'step',
       prefixlessAction : 'default',
       current : build,
+      missingAction : 'error',
     });
+
+    if( _.errIs( step ) )
+    {
+      debugger;
+      throw _.err( 'No such step ' + stepName + ' for build ' + build.nickName + '' + '\n', step );
+    }
 
     if( _.arrayIs( step ) )
     return inArray( step );
@@ -159,13 +167,21 @@ function run( frame )
   _.assert( resource === build );
   _.assert( frame.build === build );
 
+  /*
+    to make sure all steps exist
+  */
   build.stepsEach( function( it )
   {
-    let frame2 = frame.cloneUp( it.element );
-    _.assert( frame2.formed === 1 );
-    con.keep( ( arg ) => frame2.run() );
+  });
+
+  build.stepsEach( function( it )
+  {
+    let frame2;
+    con.then( ( arg ) => frame2 = frame.cloneUp( it.element ) );
+    con.then( ( arg ) => frame2.run() );
     con.finally( ( err, arg ) =>
     {
+      if( frame2 )
       frame2.finit();
       if( err )
       throw err;
@@ -188,6 +204,8 @@ function perform( o )
   let logger = will.logger;
   let isExport = build.isExport();
   let time = _.timeNow();
+
+  // return _.timeOutError( 100, 'xxx' );
 
   let frame = new will.BuildFrame
   ({
@@ -219,7 +237,7 @@ function perform( o )
     logger.up();
     if( logger.verbosity >= 2 )
     {
-      logger.log();
+      // logger.log();
       logger.log( isExport ? 'Exporting' : 'Building', build.name );
     }
   }
@@ -229,9 +247,10 @@ function perform( o )
   function logPost()
   {
 
-    if( logger.verbosity >= 2 /*&& !isExport*/ )
+    if( logger.verbosity >= 1 )
     {
       logger.log( ( isExport ? 'Exported' : 'Built' ), build.name, 'in', _.timeSpent( time ) );
+      if( logger.verbosity >= 2 )
       logger.log();
     }
     logger.down();
@@ -305,7 +324,6 @@ function outFilePathFor()
   return hd.path.resolve( module.outPath, name );
 }
 
-
 // --
 // relations
 // --
@@ -364,8 +382,6 @@ let Proto =
   perform,
   isExport,
 
-  // exportedDirPathFor,
-  // baseDirPathFor,
   archiveFilePathFor,
   outFilePathFor,
 

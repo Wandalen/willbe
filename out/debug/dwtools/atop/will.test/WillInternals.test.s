@@ -209,7 +209,7 @@ function makeNamed( test )
     test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
     test.identical( _.mapKeys( module.pathResourceMap ), [ 'proto', 'temp', 'in', 'out', 'out.debug', 'out.release' ] );
     test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.submodules.', 'reflect.submodules.debug' ] );
-    test.identical( _.mapKeys( module.stepMap ), [ 'predefined.delete', 'predefined.reflect', 'timelapse.begin', 'timelapse.end', 'predefined.js', 'predefined.shell', 'predefined.transpile', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'predefined.export', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
+    test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [] );
 
@@ -326,7 +326,7 @@ function makeAnon( test )
     test.identical( _.mapKeys( module.submoduleMap ), [] );
     test.identical( _.mapKeys( module.pathResourceMap ), [ 'proto', 'in', 'out', 'out.debug', 'out.release' ] );
     test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.proto.', 'reflect.proto.debug' ] );
-    test.identical( _.mapKeys( module.stepMap ), [ 'predefined.delete', 'predefined.reflect', 'timelapse.begin', 'timelapse.end', 'predefined.js', 'predefined.shell', 'predefined.transpile', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'predefined.export', 'reflect.proto.', 'reflect.proto.debug', 'reflect.proto.raw', 'reflect.proto.debug.raw', 'export.', 'export.debug' ] );
+    test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'reflect.proto.', 'reflect.proto.debug', 'reflect.proto.raw', 'reflect.proto.debug.raw', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.buildMap ), [ 'debug.raw', 'debug.compiled', 'release.raw', 'release.compiled', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [] );
 
@@ -450,7 +450,7 @@ function makeOutNamed( test )
     test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
     test.identical( _.mapKeys( module.pathResourceMap ), [ 'proto', 'temp', 'in', 'out', 'out.debug', 'out.release', 'exportedDir.export.debug', 'exportedFiles.export.debug', 'archiveFile.export.debug', 'exportedDir.export.', 'exportedFiles.export.', 'archiveFile.export.' ] );
     test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.debug', 'exportedFiles.export.debug', 'exported.export.', 'exportedFiles.export.' ] );
-    test.identical( _.mapKeys( module.stepMap ), [ 'predefined.delete', 'predefined.reflect', 'timelapse.begin', 'timelapse.end', 'predefined.js', 'predefined.shell', 'predefined.transpile', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'predefined.export', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
+    test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [ 'export.', 'export.debug' ] );
 
@@ -2779,10 +2779,10 @@ reflectorResolve.timeOut = 30000;
 
 //
 
-function submodulesDownload( test )
+function submodulesResolve( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, '.' );
   let submodulesPath = _.path.join( routinePath, '.module' );
@@ -2794,9 +2794,95 @@ function submodulesDownload( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
   _.fileProvider.filesDelete( outPath );
 
-  //Possible fix of this problem is located at: will\l3\Module.s:1840, routine : _remoteDownload
+  var module = will.moduleMake({ dirPath : modulePath });
+
+  /* */
+
+  return module.ready.split()
+  .then( () =>
+  {
+    test.open( 'not downloaded' );
+
+    test.case = 'trivial';
+    var submodule = module.submodulesResolve({ selector : 'Tools' });
+    test.is( submodule instanceof will.Submodule );
+    test.is( !submodule.isDownloaded );
+    test.is( !!submodule.loadedModule );
+    test.identical( submodule.name, 'Tools' );
+    test.identical( submodule.loadedModule.resourcesFormed, 1 );
+    test.is( _.strEnds( submodule.loadedModule.filePath, '.module/Tools/out/wTools' ) );
+    test.is( _.strEnds( submodule.loadedModule.dirPath, '.module/Tools/out/wTools' ) );
+    test.is( _.strEnds( submodule.loadedModule.clonePath, '.module/Tools' ) );
+    test.is( _.strEnds( submodule.loadedModule.remotePath, 'git+https:///github.com/Wandalen/wTools.git/out/wTools#master' ) );
+
+    test.close( 'not downloaded' );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    return module.submodulesDownload();
+  })
+
+  .then( () =>
+  {
+    test.open( 'downloaded' );
+
+    test.case = 'trivial';
+    var submodule = module.submodulesResolve({ selector : 'Tools' });
+    test.is( submodule instanceof will.Submodule );
+    test.is( submodule.isDownloaded );
+    test.is( !!submodule.loadedModule );
+    test.identical( submodule.name, 'Tools' );
+    test.identical( submodule.loadedModule.resourcesFormed, 3 );
+    test.is( _.strEnds( submodule.loadedModule.filePath, '.module/Tools/out/wTools.out' ) );
+    test.is( _.strEnds( submodule.loadedModule.dirPath, '.module/Tools/out' ) );
+    test.is( _.strEnds( submodule.loadedModule.clonePath, '.module/Tools' ) );
+    test.is( _.strEnds( submodule.loadedModule.remotePath, 'git+https:///github.com/Wandalen/wTools.git/out/wTools#master' ) );
+
+    test.case = 'mask, single module';
+    var submodule = module.submodulesResolve({ selector : 'T*' });
+    test.is( submodule instanceof will.Submodule );
+    test.identical( submodule.name, 'Tools' );
+
+    test.case = 'mask, two modules';
+    var submodules = module.submodulesResolve({ selector : '*ls' });
+    test.identical( submodules.length, 2 );
+    test.is( submodules[ 0 ] instanceof will.Submodule );
+    test.identical( submodules[ 0 ].name, 'Tools' );
+    test.is( submodules[ 1 ] instanceof will.Submodule );
+    test.identical( submodules[ 1 ].name, 'PathFundamentals' );
+
+    test.close( 'downloaded' );
+    return null;
+  })
+
+}
+
+submodulesResolve.timeOut = 30000;
+
+//
+
+function submodulesDownload( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download' ); // qqq : where is it?
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulePath = _.path.join( routinePath, '.' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let outPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+  let will = new _.Will;
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( outPath );
 
   var module = will.moduleMake({ filePath : modulePath });
+
+  /* */
 
   return module.ready.split()
   .then( () =>
@@ -2805,9 +2891,10 @@ function submodulesDownload( test )
     let builds = module.buildsSelect({ name : 'echo' });
     test.identical( builds.length, 1 );
 
+    debugger;
     let build = builds[ 0 ];
-
     let con = build.perform();
+    debugger;
 
     con.then( ( arg ) =>
     {
@@ -2815,7 +2902,6 @@ function submodulesDownload( test )
       test.is( _.arrayHas( files, './Tools' ) );
       test.is( _.arrayHas( files, './PathFundamentals' ) );
       test.is( files.length > 300 );
-
       return arg;
     })
 
@@ -2827,14 +2913,12 @@ function submodulesDownload( test )
       test.is( _.arrayHas( files, './Tools' ) );
       test.is( _.arrayHas( files, './PathFundamentals' ) );
       test.is( files.length > 300 );
-
       return arg;
     })
 
     con.finally( ( err, arg ) =>
     {
       module.finit();
-
       if( err )
       throw err;
       return arg;
@@ -2842,6 +2926,7 @@ function submodulesDownload( test )
 
     return con;
   })
+
 }
 
 submodulesDownload.timeOut = 30000;
@@ -2883,7 +2968,9 @@ var Self =
 
     reflectorResolve,
 
-    submodulesDownload,
+    submodulesResolve,
+
+    // submodulesDownload, // qqq : where is it?
 
   }
 

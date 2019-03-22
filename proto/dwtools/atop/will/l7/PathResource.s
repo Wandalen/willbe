@@ -63,6 +63,9 @@ function form1()
   let module = pathResource.module;
   let willf = pathResource.willf;
 
+  if( pathResource.formed && pathResource === module[ pathResource.MapName ][ pathResource.name ] )
+  return pathResource;
+
   _.sure( !module[ pathResource.MapName ][ pathResource.name ], () => 'Module ' + module.dirPath + ' already has ' + pathResource.nickName );
   _.assert( !willf || !willf[ pathResource.MapName ][ pathResource.name ] );
 
@@ -98,12 +101,17 @@ function form3()
 
   /* end */
 
-  _.sure( _.strIs( pathResource.path ) || _.arrayIs( pathResource.path ), 'Path resource should have "path" field' );
-  _.assert
-  (
-    _.all( pathResource.path, ( p ) => path.isRelative( p ) || path.isGlobal( p ) ),
-    () => pathResource.nickName + ' should not have absolute paths, but have ' + _.toStr( pathResource.path )
-  );
+  if( pathResource.writable )
+  {
+
+    _.sure( _.strIs( pathResource.path ) || _.arrayIs( pathResource.path ), 'Path resource should have "path" field' );
+    _.assert
+    (
+      _.all( pathResource.path, ( p ) => path.isRelative( p ) || path.isGlobal( p ) ),
+      () => pathResource.nickName + ' should not have absolute paths, but have ' + _.toStr( pathResource.path )
+    );
+
+  }
 
   pathResource.formed = 3;
   return pathResource;
@@ -164,6 +172,7 @@ let Associates =
 
 let Restricts =
 {
+  // readOnly : false,
 }
 
 let Statics =

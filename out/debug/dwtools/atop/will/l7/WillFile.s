@@ -188,21 +188,6 @@ function open()
 
   /* */
 
-  // if( willf.module.supermodule && willf.data.path && willf.data.path.out )
-  // {
-  //
-  //   let outPath = willf.data.path.out;
-  //   if( _.mapIs( outPath ) )
-  //   outPath = outPath.path;
-  //
-  //   // debugger; // yyy
-  //
-  //   outPath = path.relative( outPath, '.' );
-  //   let dirPath = path.join( willf.dirPath, outPath );
-  //   module.filePathSet( module.filePath, dirPath );
-  //
-  // }
-
   _.assert( willf.dirPath === path.dir( willf.filePath ) );
 
   /* */
@@ -216,12 +201,12 @@ function open()
 
   /* */
 
-  willf._resourcesMake( will.Exported, willf.data.exported || {} );
-  willf._resourcesMake( will.Submodule, willf.data.submodule || {} );
-  willf._resourcesMake( will.PathResource, willf.data.path || {} );
-  willf._resourcesMake( will.Reflector, willf.data.reflector || {} );
-  willf._resourcesMake( will.Step, willf.data.step || {} );
-  willf._resourcesMake( will.Build, willf.data.build || {} );
+  willf._resourcesMake( will.Exported, willf.data.exported );
+  willf._resourcesMake( will.Submodule, willf.data.submodule );
+  willf._resourcesMake( will.PathResource, willf.data.path );
+  willf._resourcesMake( will.Step, willf.data.step );
+  willf._reflectorsMake( will.Reflector, willf.data.reflector );
+  willf._resourcesMake( will.Build, willf.data.build );
 
   willf.formed = 2;
   return true;
@@ -238,6 +223,12 @@ function _resourcesMake( Resource, resources )
   let path = fileProvider.path;
   let logger = will.logger;
 
+  _.assert( _.mapIs( resources ) || resources === null || resources === undefined );
+  _.assert( arguments.length === 2 );
+
+  if( !resources )
+  return;
+
   _.assert( _.mapIs( resources ) );
   _.assert( _.constructorIs( Resource ) );
   _.assert( arguments.length === 2 );
@@ -252,13 +243,81 @@ function _resourcesMake( Resource, resources )
     o2.willf = willf;
     o2.module = module;
     o2.name = k;
+
     try
     {
       Resource.MakeForEachCriterion( o2 );
     }
     catch( err )
     {
-      throw _.err( 'Cant form', Resource.shortName, _.strQuote( o2.name ), '\n', err );
+      debugger;
+      throw _.err( 'Cant form', Resource.KindName + '::' + o2.name, '\n', err );
+    }
+
+  });
+
+}
+
+//
+
+function _reflectorsMake( Reflector, resources )
+{
+  let willf = this;
+  let module = willf.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( _.mapIs( resources ) || resources === null || resources === undefined );
+  _.assert( arguments.length === 2 );
+
+  if( !resources )
+  return;
+
+  _.each( resources, ( resource, name ) =>
+  {
+
+    if( Reflector.OptionsFrom )
+    resource = Reflector.OptionsFrom( resource );
+
+    let o2 = _.mapExtend( null, resource );
+    o2.willf = willf;
+    o2.module = module;
+    o2.name = name;
+
+    try
+    {
+      Reflector.MakeForEachCriterion( o2 );
+    }
+    catch( err )
+    {
+      debugger;
+      throw _.err( 'Cant form', Reflector.KindName + '::' + o2.name, '\n', err );
+    }
+
+    if( !module.stepMap[ name ] )
+    {
+
+      let o3 = Object.create( null );
+      o3.criterion = _.mapExtend( null, resource.criterion || {} );
+      o3.willf = willf;
+      o3.module = module;
+      o3.name = name;
+      o3.reflector = 'reflector::' + name + '*';
+      o3.inherit = 'predefined.reflect';
+      o3.Optional = 1;
+
+      try
+      {
+        will.Step.MakeForEachCriterion( o3 );
+      }
+      catch( err )
+      {
+        debugger;
+        throw _.err( 'Cant form', will.Step.KindName + '::' + o3.name, '\n', err );
+      }
+
     }
 
   });
@@ -396,6 +455,7 @@ let Proto =
   open,
 
   _resourcesMake,
+  _reflectorsMake,
   _inPathsForm,
   exists,
 

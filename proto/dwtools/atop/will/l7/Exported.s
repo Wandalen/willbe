@@ -166,7 +166,6 @@ function performExportedReflectors( exportSelector )
   _.assert( exported.exportedReflector === null );
   _.assert( exported.exportedDirPath === null );
 
-  // debugger;
   let exp = step.resolve( exportSelector );
   let exportedReflector;
 
@@ -175,21 +174,17 @@ function performExportedReflectors( exportSelector )
   if( exp instanceof will.Reflector )
   {
 
-    _.assert( exp.formed === 3 );
+    _.assert( exp.formed >= 2 );
     _.assert( exp.src.formed === 1 );
     _.sure( !!exp.filePath, () => exp.nickName + ' should have filePath' );
 
-    // debugger;
     exportedReflector = exp.cloneExtending
     ({
       name : module.resourceNameAllocate( 'reflector', 'exported.' + exported.name ),
       module : module,
     });
-    // debugger;
 
     _.assert( exportedReflector.src !== exp.src );
-    // _.assert( exportedReflector.src.prefixPath === null || exportedReflector.src.prefixPath === module.inPath );
-    // exportedReflector.src.prefixPath = null;
 
     let filter2 =
     {
@@ -314,7 +309,6 @@ function performExportedFilesReflector()
 
   /* exportedFilesReflector */
 
-  // debugger;
   if( !exported.exportedFilesReflector )
   exported.exportedFilesReflector = exported.exportedReflector.cloneExtending
   ({
@@ -322,7 +316,6 @@ function performExportedFilesReflector()
     module : module,
   });
   let exportedFilesReflector = exported.exportedFilesReflector;
-  // debugger;
 
   exportedFilesReflector.src.pairWithDst( exportedFilesReflector.dst );
   exportedFilesReflector.src.pairRefine();
@@ -330,15 +323,12 @@ function performExportedFilesReflector()
   exportedFilesReflector.dst.prefixesApply();
 
   _.assert( _.objectIs( exportedFilesReflector.criterion ) );
-  // _.assert( exportedFilesReflector.src.basePath === exported.exportedDirPath.path || exportedFilesReflector.src.basePath === null );
-  // _.assert( exportedFilesReflector.src.basePath === null || xxx );
-  // debugger;
-  // _.assert( exportedFilesReflector.src.basePath === null || path.basePathEquivalent( exportedFilesReflector.src.basePath, path.join( module.inPath, exported.exportedDirPath.path ) ) );
   exportedFilesReflector.src.filteringClear();
-  // _.assert( exportedFilesReflector.src.basePath === exported.exportedDirPath.path || exportedFilesReflector.src.basePath === null );
   _.assert( exportedFilesReflector.src.basePath === null || path.basePathEquivalent( exportedFilesReflector.src.basePath, path.join( module.inPath, exported.exportedDirPath.path ) ) );
 
-  /* base path is really required */
+  /*
+  base path is really required!
+  */
   exportedFilesReflector.src.basePath = exportedFilesReflector.src.basePath || '.';
 
   _.assert( exportedFilesReflector.src.prefixPath === module.inPath || exportedFilesReflector.src.prefixPath === null );
@@ -347,14 +337,15 @@ function performExportedFilesReflector()
   _.assert( exportedFilesReflector.dst.basePath === null );
   exportedFilesReflector.src.basePathSimplify();
   exportedFilesReflector.dst.filteringClear();
-  exportedFilesReflector.dst.filePath = exportedFilesReflector.src.filePath = path.pathMapExtend( null, exportedFilesPath );
+  exportedFilesReflector.dst.filePath = exportedFilesReflector.src.filePath = exported.exportedFilesPath.nickName;
+  // exportedFilesReflector.dst.filePath = exportedFilesReflector.src.filePath = path.pathMapExtend( null, exportedFilesPath ); // yyy
   exportedFilesReflector.recursive = 0;
-  // debugger;
-  exportedFilesReflector.form();
+  exportedFilesReflector.form1();
+  // exportedFilesReflector.form2();
+  // exportedFilesReflector.form(); // yyy
 
   _.assert( exportedFilesReflector.dst.prefixPath === null );
   _.assert( exportedFilesReflector.dst.basePath === null );
-  // debugger;
 
 }
 
@@ -431,7 +422,10 @@ function performWriteOutFile()
   let logger = will.logger;
   let build = module.buildMap[ exported.name ];
 
+  debugger;
   let module2 = module.cloneExtending({ dirPath : module.outPath });
+  _.assert( module2.dirPath === module.outPath );
+
   let inPathResource = module2.resourceObtain( 'path', 'in' );
   let outPathResource = module2.resourceObtain( 'path', 'out' );
 
@@ -439,12 +433,14 @@ function performWriteOutFile()
   _.assert( module2.pathResourceMap[ inPathResource.name ] === inPathResource );
 
   let outFilePath = build.outFilePathFor();
-  let data = module2.dataExport();
+  debugger;
+  let data = module2.dataExport({ copyingNonWritable : 0, copyingPredefined : 0 });
+  debugger;
 
-  // debugger;
-  // let xxx = module.reflectorMap['exportedFiles.proto.export'].dataExport();
-  // // let yyy = module2.reflectorMap['exportedFiles.proto.export'].dataExport();
-  // debugger;
+  _.assert( !data.path || !data.path.filePath );
+  _.assert( !data.path || !data.path.dirPath );
+  _.assert( !data.path || !data.path.clonePath );
+  _.assert( !data.path || !data.path.remotePath );
 
   module2.finit();
 
@@ -494,7 +490,6 @@ function perform( frame )
   exported.performExportedReflectors( opts.export );
   exported.performExportedFilesReflector();
   exported.performArchive( opts.tar === undefined || opts.tar );
-
   exported.performWriteOutFile();
 
   /* log */
@@ -544,7 +539,6 @@ let Associates =
 {
   step : null,
   build : null,
-  // module : null,
 }
 
 let Restricts =

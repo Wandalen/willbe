@@ -192,6 +192,8 @@ function moduleMake( o )
   o.module.willFilesOpen();
   o.module.submodulesForm();
 
+  // console.log( 'o.forming', o.forming );
+
   if( o.forming )
   {
     // o.module.submodulesForm();
@@ -219,102 +221,120 @@ moduleMake.defaults =
 function moduleEach( o )
 {
   let will = this.form();
-  // let ca = e.ca;
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
-
-  // if( will.currentModule )
-  // {
-  //   will.currentModule.finit();
-  //   will.currentModule = null;
-  // }
+  let con;
 
   _.sure( _.strDefined( o.selector ), 'Expects string' );
   _.assert( arguments.length === 1 );
 
-  // if( will.topCommand === null )
-  // will.topCommand = commandEach;
-
-  // debugger;
-  // let isolated = ca.commandIsolateSecondFromArgument( e.argument );
-  // debugger;
-
   if( _.strEnds( o.selector, '::' ) )
   o.selector = o.selector + '*';
 
-  o.selector = path.resolve( o.selector );
-  // o.selector = module.resolve( o.selector );
-
-  let con = new _.Consequence().take( null );
-  let files = will.willFilesList
-  ({
-    dirPath : o.selector,
-    includingInFiles : 1,
-    includingOutFiles : 0,
-    rerucrsive : 0,
-  });
-
-  let dirPaths = Object.create( null );
-  for( let f = 0 ; f < files.length ; f++ ) con.keep( ( arg ) => /* !!! replace by concurrent, maybe */
+  if( will.Module.SelectorIs( o.selector ) )
   {
-    let file = files[ f ];
 
-    let dirPath = will.Module.DirPathFromFilePaths( file.absolute );
-
-    if( dirPaths[ dirPath ] )
-    debugger;
-    if( dirPaths[ dirPath ] )
-    return true;
-    dirPaths[ dirPath ] = 1;
-
-    if( will.moduleMap[ file.absolute ] )
-    return true;
-
-    // if( will.currentModule )
-    // {
-    //   will.currentModule.finit();
-    //   will.currentModule = null;
-    // }
-
-    let module = will.Module({ will : will, filePath : file.absolute }).preform();
+    let module = o.currentModule;
+    if( !o.currentModule )
+    module = o.currentModule = will.Module({ will : will, dirPath : path.current() }).preform();
     module.willFilesFind();
     module.willFilesOpen();
     module.submodulesForm();
     module.resourcesForm();
 
-    let it = Object.create( null );
-    it.dirPath = dirPath;
-    it.module = module;
+    con = module.ready;
 
-    return module.ready.split().keep( function( arg )
+    con.then( () =>
     {
+      let con2 = new _.Consequence();
+      debugger;
+      let submodules = module.submodulesResolve({ selector : o.selector });
+      submodules = _.arrayAs( submodules );
+      debugger;
+      for( let s = 0 ; s < submodules.length ; s++ ) con2.keep( ( arg ) => /* !!! replace by concurrent, maybe */
+      {
+        let submodule = submodules[ s ];
+        let it = Object.create( null );
+        it.module = submodule.loadedModule;
+        it.supermodule = module;
+        it.submodule = submodule;
+        it.options = o;
+        return o.onEach( it );
+      });
+      con2.take( null );
+      return con2;
+    });
 
-      _.assert( module.willFileArray.length > 0 );
+  }
+  else
+  {
 
-      let r = o.onEach( it );
+    // debugger;
+    o.selector = path.resolve( o.selector );
+    con = new _.Consequence().take( null );
+    let files = will.willFilesList
+    ({
+      dirPath : o.selector,
+      includingInFiles : 1,
+      includingOutFiles : 0,
+      rerucrsive : 0,
+    });
 
-      // let r = ca.commandPerform
-      // ({
-      //   command : isolated.secondCommand,
-      //   // subject : isolated.secondSubject,
-      //   propertiesMap : e.propertiesMap,
-      // });
+    // let dirPaths = Object.create( null ); xxx
+    for( let f = 0 ; f < files.length ; f++ ) con.then( ( arg ) => /* !!! replace by concurrent, maybe */
+    {
+      let file = files[ f ];
+
+      // let dirPath = will.Module.DirPathFromFilePaths( file.absolute );
       //
-      // _.assert( r !== undefined );
+      // if( dirPaths[ dirPath ] )
+      // debugger;
+      // if( dirPaths[ dirPath ] )
+      // return true;
+      //
+      // dirPaths[ dirPath ] = 1;
 
-      return r;
-    })
+      if( will.moduleMap[ file.absolute ] )
+      return true;
 
-  });
+      let module = will.Module({ will : will, filePath : file.absolute }).preform();
+      module.willFilesFind();
+      module.willFilesOpen();
+      module.submodulesForm();
+      module.resourcesForm();
+
+      let it = Object.create( null );
+      it.module = module;
+      it.options = o;
+
+      return module.ready.split().keep( function( arg )
+      {
+        _.assert( module.willFileArray.length > 0 );
+        // debugger;
+        let r = o.onEach( it );
+
+        r.finally( ( err, arg ) =>
+        {
+          // debugger;
+          if( err )
+          throw err;
+          return arg;
+        });
+
+        // debugger;
+        return r;
+      })
+
+    });
+
+  }
 
   con.finally( ( err, arg ) =>
   {
-    // debugger;
-    // will.moduleDone({ error : err || null, command : commandEach });
     if( err )
     throw _.err( err );
-    return arg;
+    return o;
   });
 
   return con;
@@ -322,6 +342,7 @@ function moduleEach( o )
 
 moduleEach.defaults =
 {
+  currentModule : null,
   selector : null,
   onEach : null,
 }

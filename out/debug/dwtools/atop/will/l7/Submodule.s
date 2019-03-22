@@ -41,8 +41,8 @@ function unform()
 
   if( submodule.loadedModule )
   {
-    _.assert( submodule.loadedModule.associatedSubmoduleResource === submodule )
-    submodule.loadedModule.associatedSubmoduleResource = null;
+    _.assert( submodule.loadedModule.associatedSubmodule === submodule )
+    submodule.loadedModule.associatedSubmodule = null;
     submodule.loadedModule.finit();
   }
 
@@ -61,8 +61,24 @@ function form3()
   let logger = will.logger;
   let result = submodule;
 
+  // debugger;
+
   if( submodule.formed >= 3 )
-  return result;
+  {
+    if( submodule.loadedModule && submodule.loadedModule.hasAnyError() ) 
+    {
+      debugger;
+      _.assert( submodule.loadedModule.associatedSubmodule === submodule )
+      submodule.loadedModule.associatedSubmodule = null;
+      submodule.loadedModule.finit();
+      submodule.loadedModule = null;
+      submodule.formed = 2;
+    }
+    else
+    {
+      return result;
+    }
+  }
 
   _.assert( arguments.length === 0 );
   _.assert( submodule.formed === 2 );
@@ -91,6 +107,14 @@ function _load()
   let path = fileProvider.path;
   let logger = will.logger;
 
+  // if( submodule.loadedModule )
+  // {
+  //   debugger;
+  //   _.assert( submodule.loadedModule.associatedSubmodule === submodule )
+  //   submodule.loadedModule.associatedSubmodule = null;
+  //   submodule.loadedModule.finit();
+  // }
+
   _.assert( arguments.length === 0 );
   _.assert( submodule.formed === 2 );
   _.assert( submodule.loadedModule === null );
@@ -99,14 +123,13 @@ function _load()
 
   /* */
 
-  // debugger;
   submodule.loadedModule = will.Module
   ({
     will : will,
     alias : submodule.name,
     filePath : path.join( module.inPath, submodule.path ),
     supermodule : module,
-    associatedSubmoduleResource : submodule,
+    associatedSubmodule : submodule,
   }).preform();
 
   submodule.loadedModule.willFilesFind({ isOutFile : 1 });
@@ -121,7 +144,6 @@ function _load()
     return arg;
   });
 
-  // debugger;
   submodule.loadedModule.ready.finally( ( err, arg ) =>
   {
     if( err )
@@ -180,10 +202,13 @@ function infoExport()
   let result = Parent.prototype.infoExport.call( submodule );
   let tab = '  ';
 
-  result += tab + 'isDownloaded : ' + _.toStr( submodule.isDownloaded ) + '\n';
+  if( result )
+  result += '\n';
+  result += tab + 'isDownloaded : ' + _.toStr( submodule.isDownloaded );
 
   if( submodule.loadedModule )
   {
+    result += '\n'
     let module2 = submodule.loadedModule
     result += tab + 'Exported builds : ' + _.toStr( _.mapKeys( module2.exportedMap ) );
   }

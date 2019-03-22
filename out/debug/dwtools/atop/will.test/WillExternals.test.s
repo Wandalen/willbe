@@ -663,7 +663,7 @@ function exportSingle( test )
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
   let outPath = _.path.join( routinePath, 'out' );
   let outWillPath = _.path.join( routinePath, 'out/single.out.will.yml' );
-  let ready = new _.Consequence().take( null )
+  let ready = new _.Consequence().take( null );
 
   let shell = _.sheller
   ({
@@ -711,8 +711,8 @@ function exportSingle( test )
       'Single.s' : null
     }
     test.identical( reflector.src.basePath, '.' );
-    test.identical( reflector.src.prefixPath, 'proto' );
-    test.identical( reflector.src.filePath, expectedFilePath );
+    test.identical( reflector.src.prefixPath, 'path::exportedDir.proto.export' );
+    test.identical( reflector.src.filePath, 'path::exportedFiles.proto.export' );
 
     return null;
   })
@@ -753,8 +753,8 @@ function exportSingle( test )
       'Single.s' : null
     }
     test.identical( reflector.src.basePath, '.' );
-    test.identical( reflector.src.prefixPath, 'proto' );
-    test.identical( reflector.src.filePath, expectedFilePath )
+    test.identical( reflector.src.prefixPath, 'path::exportedDir.proto.export' );
+    test.identical( reflector.src.filePath, 'path::exportedFiles.proto.export' );
 
     return null;
   })
@@ -841,7 +841,6 @@ function exportToRoot( test )
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
 
-
   /* - */
 
   shell({ args : [ '.export' ] })
@@ -853,9 +852,7 @@ function exportToRoot( test )
     test.is( _.strHas( got.output, 'Exporting proto.export' ) );
     test.is( _.strHas( got.output, '+ Write out will-file' ) );
     test.is( _.strHas( got.output, 'Exported proto.export with 2 files in' ) );
-
     test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'export-to-root.out.will.yml' ) ) )
-
     return null;
   })
 
@@ -863,6 +860,226 @@ function exportToRoot( test )
 }
 
 exportToRoot.timeOut = 130000;
+
+//
+
+function exportMixed( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let modulePath = _.path.join( routinePath, 'module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.each module .export';
+    return null;
+  })
+
+  shell({ args : [ '.each module .export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Exporting export' ) );
+    test.is( _.strHas( got.output, '+ download reflected' ) );
+    test.is( _.strHas( got.output, '+ Write out will-file' ) );
+    test.is( _.strHas( got.output, 'Exported export in' ) );
+    test.is( _.strHas( got.output, 'module/Proto.informal.out.will.yml' ) );
+    test.is( _.strHas( got.output, 'module/UriFundamentals.informal.out.will.yml' ) );
+
+    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'module/Proto.informal.out.will.yml' ) ) );
+    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'module/UriFundamentals.informal.out.will.yml' ) ) );
+
+    var files = self.find( _.path.join( modulePath, '.module' ) );
+    test.gt( files.length, 150 );
+    var expected = [ '.module', 'Proto.informal.out.will.yml', 'Proto.informal.will.yml', 'UriFundamentals.informal.out.will.yml', 'UriFundamentals.informal.will.yml' ];
+    var files = _.fileProvider.dirRead( modulePath );
+    test.identical( files, expected );
+
+    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'module/Proto.informal.out.will.yml' ) );
+
+    var expected =
+    {
+      'download' :
+      {
+        'src' :
+        {
+          'filePath' : { 'git+https://.' : '.' },
+          'prefixPath' : 'git+https:///github.com/Wandalen/wProto.git'
+        },
+        'dst' : { 'prefixPath' : '.module/Proto' }
+      },
+      'exported.export' :
+      {
+        'src' :
+        {
+          'filePath' : { '.' : null },
+          'prefixPath' : '.module/Proto/proto'
+        },
+        'criterion' : { 'default' : 1, 'export' : 1 }
+      },
+      'exportedFiles.export' :
+      {
+        'recursive' : 0,
+        'src' : { 'filePath' : 'path::exportedFiles.export', 'basePath' : '.', 'prefixPath' : 'path::exportedDir.export' },
+        'criterion' : { 'default' : 1, 'export' : 1 }
+      }
+    }
+    test.identical( outfile.reflector, expected );
+
+    var expected =
+    {
+      'remote' :
+      {
+        'path' : 'git+https:///github.com/Wandalen/wProto.git'
+      },
+      'local' : { 'path' : '.module/Proto' },
+      'export' : { 'path' : '{path::local}/proto' },
+      'exportedDir.export' :
+      {
+        'path' : './.module/Proto/proto',
+        'criterion' : { 'default' : 1, 'export' : 1 }
+      },
+      'exportedFiles.export' :
+      {
+        'path' :
+        [
+          '.module/Proto/proto',
+          '.module/Proto/proto/dwtools',
+          '.module/Proto/proto/dwtools/Tools.s',
+          '.module/Proto/proto/dwtools/abase',
+          '.module/Proto/proto/dwtools/abase/l3',
+          '.module/Proto/proto/dwtools/abase/l3/Proto.s',
+          '.module/Proto/proto/dwtools/abase/l3/ProtoAccessor.s',
+          '.module/Proto/proto/dwtools/abase/l3/ProtoLike.s',
+          '.module/Proto/proto/dwtools/abase/l3.test',
+          '.module/Proto/proto/dwtools/abase/l3.test/Proto.test.s',
+          '.module/Proto/proto/dwtools/abase/l3.test/ProtoLike.test.s'
+        ],
+        'criterion' : { 'default' : 1, 'export' : 1 }
+      },
+      'in' : { 'path' : '.' },
+      'out' : {}
+    }
+    test.identical( outfile.path, expected );
+
+    var expected =
+    {
+      'export' :
+      {
+        'version' : '0.1.0',
+        'criterion' : { 'default' : 1, 'export' : 1 },
+        'exportedReflector' : 'reflector::exported.export',
+        'exportedFilesReflector' : 'reflector::exportedFiles.export',
+        'exportedDirPath' : 'path::exportedDir.export',
+        'exportedFilesPath' : 'path::exportedFiles.export'
+      }
+    }
+    test.identical( outfile.exported, expected );
+
+    var expected =
+    {
+      'export.common' :
+      {
+        'opts' : { 'export' : 'path::export', 'tar' : 0 },
+        'inherit' : [ 'predefined.export' ]
+      },
+      'download' :
+      {
+        'opts' : { 'reflector' : 'reflector::download*' },
+        'inherit' : [ 'predefined.reflect' ]
+      }
+    }
+    test.identical( outfile.step, expected ); debugger;
+
+    var expected =
+    {
+      'export' :
+      {
+        'criterion' : { 'default' : 1, 'export' : 1 },
+        'steps' : [ 'step::download', 'step::export.common' ]
+      }
+    }
+    test.identical( outfile.build, expected );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.build';
+    return null;
+  })
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.build' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Exporting export' ) );
+    test.is( _.strHas( got.output, '+ download reflected' ) );
+    test.is( _.strHas( got.output, '+ Write out will-file' ) );
+    test.is( _.strHas( got.output, 'Exported export in' ) );
+    test.is( _.strHas( got.output, 'module/Proto.informal.out.will.yml' ) );
+    test.is( _.strHas( got.output, 'module/UriFundamentals.informal.out.will.yml' ) );
+    test.is( _.strHas( got.output, 'Reloading submodules' ) );
+
+    test.is( _.strHas( got.output, '- filesDelete 0 files at' ) );
+    test.is( _.strHas( got.output, '+ reflect.proto.debug reflected 2 files' ) );
+    test.is( _.strHas( got.output, '+ reflect.submodules reflected' ) );
+
+    test.is( _.strHas( got.output, '! Failed to read submodule::Tools' ) );
+    test.is( _.strHas( got.output, '! Failed to read submodule::PathFundamentals' ) );
+    test.is( _.strHas( got.output, '! Failed to read submodule::UriFundamentals' ) );
+    test.is( _.strHas( got.output, '! Failed to read submodule::Proto' ) );
+
+    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'module/Proto.informal.out.will.yml' ) ) );
+    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'module/UriFundamentals.informal.out.will.yml' ) ) );
+
+    var files = self.find( _.path.join( modulePath, '.module' ) );
+    test.gt( files.length, 150 );
+
+    var expected = [ '.module', 'Proto.informal.out.will.yml', 'Proto.informal.will.yml', 'UriFundamentals.informal.out.will.yml', 'UriFundamentals.informal.will.yml' ];
+    var files = _.fileProvider.dirRead( modulePath );
+    test.identical( files, expected );
+
+    var expected = [ 'dwtools', 'WithSubmodules.s' ];
+    var files = _.fileProvider.dirRead( _.path.join( routinePath, 'out/debug' ) );
+    test.identical( files, expected );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.gt( files.length, 80 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+exportMixed.timeOut = 130000;
 
 //
 
@@ -958,10 +1175,11 @@ function submodulesList( test )
   {
     test.case = 'steps.list'
     test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, 'step::delete.out.debug' ))
     test.is( _.strHas( got.output, 'step::reflect.proto.' ))
     test.is( _.strHas( got.output, 'step::reflect.proto.debug' ))
-    test.is( _.strHas( got.output, 'step::reflect.proto.raw' ))
-    test.is( _.strHas( got.output, 'step::reflect.proto.debug.raw' ))
+    test.is( _.strHas( got.output, 'step::reflect.submodules' ))
     test.is( _.strHas( got.output, 'step::export.proto' ))
 
     return null;
@@ -1228,7 +1446,6 @@ function submodulesBuild( test )
   .thenKeep( () =>
   {
     test.case = 'build withoud submodules'
-    // let outDebugPath = _.path.join( routinePath, 'out/debug' );
     _.fileProvider.filesDelete( outPath );
     return null;
   })
@@ -1249,7 +1466,6 @@ function submodulesBuild( test )
   .thenKeep( () =>
   {
     test.case = '.build'
-    // let outDebugPath = _.path.join( routinePath, 'out/debug' );
     _.fileProvider.filesDelete( outPath );
     return null;
   })
@@ -2035,6 +2251,62 @@ cleanSubmodules.timeOut = 130000;
 
 //
 
+function cleanMixed( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let modulePath = _.path.join( routinePath, 'module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.clean';
+    return null;
+  })
+
+  shell({ args : [ '.build' ] })
+  shell({ args : [ '.clean' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '- Clean deleted' ) ); debugger;
+
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'out' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
+
+    var expected = [ '.', './Proto.informal.will.yml', './UriFundamentals.informal.will.yml' ];
+    var files = self.find( _.path.join( routinePath, 'module' ) );
+    test.identical( files, expected );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+cleanMixed.timeOut = 130000;
+
+//
+
 function multipleExports( test )
 {
   let self = this;
@@ -2119,17 +2391,35 @@ function multipleExports( test )
       }
     }
     debugger;
-    test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
+    test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector ); // xxx
     debugger;
+
+    // var exportedReflectorFiles =
+    // {
+    //   recursive : 0,
+    //   src :
+    //   {
+    //     filePath : { '.' : null, 'File.debug.js' : null },
+    //     basePath : '.',
+    //     prefixPath : 'out/debug'
+    //   },
+    //   criterion :
+    //   {
+    //     default : 1,
+    //     debug : 1,
+    //     raw : 1,
+    //     export : 1
+    //   }
+    // }
 
     var exportedReflectorFiles =
     {
       recursive : 0,
       src :
       {
-        filePath : { '.' : null, 'File.debug.js' : null },
+        filePath : 'path::exportedFiles.export.debug',
         basePath : '.',
-        prefixPath : 'out/debug'
+        prefixPath : 'path::exportedDir.export.debug',
       },
       criterion :
       {
@@ -2306,9 +2596,9 @@ function multipleExports( test )
       recursive : 0,
       src :
       {
-        filePath : { '.' : null, 'File.debug.js' : null },
+        filePath : 'path::exportedFiles.export.debug',
         basePath : '.',
-        prefixPath : 'out/debug'
+        prefixPath : 'path::exportedDir.export.debug',
       },
       criterion :
       {
@@ -2326,9 +2616,9 @@ function multipleExports( test )
       recursive : 0,
       src :
       {
-        filePath : { '.' : null, 'File.release.js' : null },
+        filePath : 'path::exportedFiles.export.',
         basePath : '.',
-        prefixPath : 'out/release'
+        prefixPath : 'path::exportedDir.export.'
       },
       criterion :
       {
@@ -3755,7 +4045,220 @@ importInExport.timeOut = 130000;
 
 //
 
-function helpCommand( test )
+function setVerbosity( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  ready
+
+  /* - */
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.set verbosity:3 ; .build' ] })
+  .finally( ( err, got ) =>
+  {
+    test.case = '.set verbosity:3 ; .build';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, '.set verbosity:3 ; .build' ) );
+    test.is( _.strHas( got.output, / \. Read .+\/\.im\.will\.yml/ ) );
+    test.is( _.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
+    test.is( _.strHas( got.output, ' ! Failed to read submodule::Tools' ) );
+    test.is( _.strHas( got.output, ' ! Failed to read submodule::PathFundamentals' ) );
+    test.is( _.strHas( got.output, '. Read 2 will-files in' ) );
+
+    test.is( _.strHas( got.output, 'Building debug.raw' ) );
+    test.is( _.strHas( got.output, ' + 2/2 submodule(s) of module::submodules were downloaded in' ) );
+    test.is( _.strHas( got.output, ' - filesDelete' ) );
+    test.is( _.strHas( got.output, ' + reflect.proto.debug reflected 2 files ' ) );
+    test.is( _.strHas( got.output, ' + reflect.submodules reflected' ) );
+    test.is( _.strHas( got.output, 'Built debug.raw in' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.set verbosity:2 ; .build' ] })
+  .finally( ( err, got ) =>
+  {
+    test.case = '.set verbosity:2 ; .build';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, '.set verbosity:2 ; .build' ) );
+    test.is( !_.strHas( got.output, / \. Read .+\/\.im\.will\.yml/ ) );
+    test.is( !_.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
+    test.is( !_.strHas( got.output, ' ! Failed to read submodule::Tools' ) );
+    test.is( !_.strHas( got.output, ' ! Failed to read submodule::PathFundamentals' ) );
+    test.is( _.strHas( got.output, '. Read 2 will-files in' ) );
+
+    test.is( _.strHas( got.output, 'Building debug.raw' ) );
+    test.is( _.strHas( got.output, ' + 2/2 submodule(s) of module::submodules were downloaded in' ) );
+    test.is( _.strHas( got.output, ' - filesDelete' ) );
+    test.is( _.strHas( got.output, ' + reflect.proto.debug reflected 2 files ' ) );
+    test.is( _.strHas( got.output, ' + reflect.submodules reflected' ) );
+    test.is( _.strHas( got.output, 'Built debug.raw in' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.set verbosity:1 ; .build' ] })
+  .finally( ( err, got ) =>
+  {
+    test.case = '.set verbosity:1 ; .build';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, '.set verbosity:1 ; .build' ) );
+    test.is( !_.strHas( got.output, / \. Read .+\/\.im\.will\.yml/ ) );
+    test.is( !_.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
+    test.is( !_.strHas( got.output, ' ! Failed to read submodule::Tools' ) );
+    test.is( !_.strHas( got.output, ' ! Failed to read submodule::PathFundamentals' ) );
+    test.is( !_.strHas( got.output, '. Read 2 will-files in' ) );
+
+    test.is( !_.strHas( got.output, 'Building debug.raw' ) );
+    test.is( !_.strHas( got.output, ' + 2/2 submodule(s) of module::submodules were downloaded in' ) );
+    test.is( !_.strHas( got.output, ' - filesDelete' ) );
+    test.is( !_.strHas( got.output, ' + reflect.proto.debug reflected 2 files ' ) );
+    test.is( !_.strHas( got.output, ' + reflect.submodules reflected' ) );
+    test.is( _.strHas( got.output, 'Built debug.raw in' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+setVerbosity.timeOut = 300000;
+
+//
+
+function stepsList( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  ready
+
+  /* - */
+
+  shell({ args : [ '.steps.list' ] })
+  .finally( ( err, got ) =>
+  {
+    test.case = '.steps.list';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, 'step::delete.out.debug' ) );
+    test.is( _.strHas( got.output, /step::reflect\.proto\.[^d]/ ) );
+    test.is( _.strHas( got.output, 'step::reflect.proto.debug' ) );
+    test.is( _.strHas( got.output, 'step::reflect.submodules' ) );
+    test.is( _.strHas( got.output, 'step::export.proto' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.steps.list *' ] })
+  .finally( ( err, got ) =>
+  {
+    test.case = '.steps.list';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, 'step::delete.out.debug' ) );
+    test.is( _.strHas( got.output, /step::reflect\.proto\.[^d]/ ) );
+    test.is( _.strHas( got.output, 'step::reflect.proto.debug' ) );
+    test.is( _.strHas( got.output, 'step::reflect.submodules' ) );
+    test.is( _.strHas( got.output, 'step::export.proto' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.steps.list *proto*' ] })
+  .finally( ( err, got ) =>
+  {
+    test.case = '.steps.list';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+
+    test.is( !_.strHas( got.output, 'step::delete.out.debug' ) );
+    test.is( _.strHas( got.output, /step::reflect\.proto\.[^d]/ ) );
+    test.is( _.strHas( got.output, 'step::reflect.proto.debug' ) );
+    test.is( !_.strHas( got.output, 'step::reflect.submodules' ) );
+    test.is( _.strHas( got.output, 'step::export.proto' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.steps.list *proto* debug:1' ] })
+  .finally( ( err, got ) =>
+  {
+    test.case = '.steps.list';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+
+    test.is( !_.strHas( got.output, 'step::delete.out.debug' ) );
+    test.is( !_.strHas( got.output, /step::reflect\.proto\.[^d]/ ) );
+    test.is( _.strHas( got.output, 'step::reflect.proto.debug' ) );
+    test.is( !_.strHas( got.output, 'step::reflect.submodules' ) );
+    test.is( _.strHas( got.output, 'step::export.proto' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+//
+
+function help( test )
 {
   let self = this;
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
@@ -3935,7 +4438,7 @@ var Self =
 
   onSuiteBegin : onSuiteBegin,
   onSuiteEnd : onSuiteEnd,
-  routineTimeOut : 30000,
+  routineTimeOut : 60000,
 
   context :
   {
@@ -3957,6 +4460,7 @@ var Self =
     exportSingle,
     exportWithReflector,
     exportToRoot,
+    exportMixed,
 
     singleStep,
 
@@ -3973,6 +4477,7 @@ var Self =
     cleanNoBuild,
     cleanWhat,
     cleanSubmodules,
+    cleanMixed,
 
     multipleExports,
     multipleExportsImport,
@@ -3988,7 +4493,9 @@ var Self =
     reflectRemoteHttp,
 
     importInExport,
-    helpCommand,
+    setVerbosity,
+    stepsList,
+    help,
     transpile,
 
   }

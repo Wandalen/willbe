@@ -37,6 +37,7 @@ function MakeForEachCriterion( o )
   let module = o.module;
   let will = module.will;
   let counter = 0;
+  let single = 1;
 
   if( o.criterion )
   o.criterion = Cls.CriterionNormalize( o.criterion );
@@ -54,17 +55,38 @@ function MakeForEachCriterion( o )
       o2.criterion = criterion;
       o2.name = o.name + '.' + postfix;
 
-      result.push( Cls( o2 ).form1() );
+      single = 0;
+
+      if( o2.Optional )
+      if( module[ Cls.MapName ][ o2.name ] )
+      continue;
+
+      delete o2.Optional;
+      result.push( make( o2 ) );
       counter += 1;
     }
   }
 
-  if( !counter )
-  result = [ Cls( o ).form1() ];
-
-  _.assert( result.length >= 1 );
+  if( single )
+  {
+    delete o.Optional;
+    result = [ make( o ) ];
+  }
 
   return result;
+
+  function make( o )
+  {
+    try
+    {
+      return Cls( o ).form1()
+    }
+    catch( err )
+    {
+      throw _.err( 'Error forming', Cls.KindName + '::' + o.name, '\n', err );
+    }
+  }
+
 }
 
 //
@@ -624,8 +646,8 @@ function infoExport()
   let result = '';
   let fields = resource.dataExport();
 
-  result += resource.nickName + '\n';
-  result += _.toStr( fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '' } ) + '\n';
+  result += _.color.strFormat( resource.nickName, 'entity' ) + '\n';
+  result += _.toStr( fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '' } );
 
   return result;
 }
@@ -635,10 +657,23 @@ function infoExport()
 function dataExport()
 {
   let resource = this;
-
   let o = _.routineOptions( dataExport, arguments );
 
-  let fields = resource.cloneData( o );
+  if( !o.copyingPredefined )
+  if( resource.criterion && resource.criterion.predefined )
+  return;
+
+  // if( !resource.writable )
+  // debugger;
+  if( !o.copyingNonWritable && !resource.writable )
+  return;
+  // if( !resource.writable )
+  // debugger;
+
+  let o2 = _.mapExtend( null, o );
+  delete o2.copyingNonWritable;
+  delete o2.copyingPredefined;
+  let fields = resource.cloneData( o2 );
 
   delete fields.name;
   return fields;
@@ -648,6 +683,8 @@ dataExport.defaults =
 {
   compact : 1,
   copyingAggregates : 0,
+  copyingNonWritable : 1,
+  copyingPredefined : 1,
 }
 
 //
@@ -798,6 +835,7 @@ let Composes =
 
 let Aggregates =
 {
+  writable : 1,
 }
 
 let Associates =
@@ -821,6 +859,7 @@ let Restricts =
 
 let Statics =
 {
+
   MakeForEachCriterion,
   OptionsFrom,
   CriterionVariable,
