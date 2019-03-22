@@ -19,7 +19,7 @@ npm install -g willbe
 
 ```
 
----
+###
 - Утиліту `willbe` можливо встановити через NPM. Для її роботи необхідний Nodejs.
  
 [Повернутись до змісту](../README.md#tutorials)
