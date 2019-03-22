@@ -79,28 +79,59 @@ reflector :
 Рефлектор використовує критеріон `debug : 0`, тобто, при вибірці рефлектора за ґлобом, необхідно, щоб в збірці критеріон `debug` мав значення "0".  
 
 ### Дослідження вбудованих рефлекторів. Мультизбірка
-Навчимось використовувати мультизбірки - виконання багатьох збірок побудов однією командою.  
 Потрібно створити таку структуру, при якій кожен вбудований рефлектор буде фільтрувати визначені файли. Тому побудуйте таку конфігурацію:  
 
 ```
 .
 ├── proto
 │     ├── files.debug
-│     │     ├── manual.md
-│     │     └── tutorial.md
-│     ├── proto.two
-│     │     └── script.js
-│     ├── files
-│     │     ├── manual.md
-│     │     └── tutorial.md
-│     ├── build.txt.js
-│     └── package.json   
+│     │     ├── debug.DS_Store
+│     │     └── debug.js
+│     ├── files.release
+│     │     └── release.test
+│     ├── node_modules              #  directory
+│     ├── other
+│     │     └── other.experiment
+│     ├── -files.yml
+│     └── one.release.file.yml
 │
 └── .will.yml       
 
 ```
 
-Повний лістинг файла `.will.yml`
+Щоб не виконувати окремі побудови, навчимось використовувати мультизбірки - виконання багатьох збірок побудов однією командою. Для створення мультизбірки в секції `build` потрібно вказати всі необхідні збірки модуля, а потім створити сценарій, який буде виконувати декілька збірок.  
+Якщо прийняти, що для використання рефлекторів `predefined.debug` i `predefined.release` будуть використані збірки з мінімізацією кода з назвою `copy`, а для рефлектора `predefined.common` - збірка `copy.common` з простими селекторами, то секція `build` матиме вигляд:  
+
+```yaml
+build :
+
+  copy :
+    criterion : 
+      debug : [ 0,1 ]
+    steps :
+      - reflect.project*=1
+
+  copy.common :
+    steps :
+      - reflect.copy.common
+
+```
+
+Також додамо мультизбірку, яка буде виконуватись за замовчуванням:  
+
+```yaml
+  all.reflectors :
+    criterion : 
+      default : 1
+    steps : 
+      - build::copy.
+      - build::copy.debug
+      - build::copy.common
+
+```
+
+В останній збірці в сценарії вказані не кроки секції `step`, а збірки секції `build`.  
+Запишіть в файл `.will.yml` наступний конфіг:  
 
 <details>
   <summary><u>Відкрийте, щоб проглянути</u></summary>
@@ -159,17 +190,41 @@ build :
 
   copy :
     criterion : 
-      default : 1
       debug : [ 0,1 ]
     steps :
       - reflect.project*=1
 
   copy.common :
-    criterion : 
-      default : 1
     steps :
       - reflect.copy.common
+      
+  all.reflectors :
+    criterion : 
+      default : 1
+    steps : 
+      - build::copy.
+      - build::copy.debug
+      - build::copy.common
 
 ```
 
 </details>
+
+Виконаємо всі побудови, для цього введіть `will .build`: 
+
+```
+[user@user ~]$ will .build
+...
+  Building all
+   + reflect.project. reflected 4 files /path_to_file/ : out.release <- proto in 0.343s
+   + reflect.project.debug reflected 5 files /path_to_file/ : out.debug <- proto in 0.305s
+   + reflect.copy.common reflected 8 files /path_to_file/ : out.common <- proto in 0.273s
+  Built all in 1.078s
+    
+```
+
+Прогляньте створені пакетом директорії `out.common`, `out.debug` i `out.release`. Порівняйте вміст з даними в таблиці.
+
+| Директорія        | Вбудований рефлектор | Файли в директорії після побудови |
+|-------------------|----------------------|-----------------------------------|
+| out.common        | reflector.common     | |
