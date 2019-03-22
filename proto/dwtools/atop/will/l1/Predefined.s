@@ -9,7 +9,7 @@ if( typeof module !== 'undefined' )
 
 }
 
-let Tar;
+let Tar, Opn;
 let _ = wTools;
 let Self = Object.create( null );
 
@@ -373,6 +373,65 @@ stepRoutineTranspile.uniqueOptions =
 
 //
 
+function stepRoutineView( frame )
+{
+  let step = this;
+  let module = frame.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = frame.opts;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  // debugger;
+  let filePath = step.resolve
+  ({
+    selector : opts.filePath,
+    prefixlessAction : 'resolved',
+  });
+  // debugger;
+
+  if( !Opn )
+  Opn = require( 'opn' );
+
+  if( opts.delay )
+  opts.delay = Number( opts.delay );
+
+  if( opts.delay )
+  {
+    _.timeOut( opts.delay, () =>
+    {
+      if( will.verbosity >= 3 )
+      logger.log( 'View ' + opts.filePath );
+      Opn( opts.filePath );
+    });
+    return null;
+  }
+
+  debugger;
+  if( will.verbosity >= 3 )
+  logger.log( 'View ' + opts.filePath );
+  let result = Opn( o.filePath );
+  debugger;
+
+  return result;
+}
+
+stepRoutineView.stepOptions =
+{
+  filePath : null,
+  delay : null,
+}
+
+stepRoutineView.uniqueOptions =
+{
+}
+
+//
+
 function stepRoutineSubmodulesDownload( frame )
 {
   let step = this;
@@ -495,6 +554,7 @@ let Extend =
   stepRoutineJs,
   stepRoutineShell,
   stepRoutineTranspile,
+  stepRoutineView,
 
   stepRoutineSubmodulesDownload,
   stepRoutineSubmodulesUpgrade,

@@ -47,6 +47,33 @@ function form3()
   return build;
 }
 
+function form3()
+{
+  let build = this;
+  let module = build.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 0 );
+  _.assert( build.formed === 2 );
+
+  /* begin */
+
+  if( build.criterion && build.criterion.default !== undefined )
+  build.criterion.default = build.criterion.default ? 1 : 0;
+
+  // if( _.arrayIs( build.steps ) )
+  // build.steps = [ build.steps ];
+
+  /* end */
+
+  // _.assert( build.steps === null || _.arrayIs( build.steps ) );
+  build.formed = 3;
+  return build;
+}
+
 //
 
 function stepsEach( onEach )

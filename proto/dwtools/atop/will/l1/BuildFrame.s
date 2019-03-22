@@ -28,6 +28,7 @@ function finit()
 {
   if( this.formed )
   this.unform();
+  /* already freezed, so calling _.Copyable.prototype.finit is redundant */
   // return _.Copyable.prototype.finit.apply( this, arguments );
 }
 
@@ -65,7 +66,6 @@ function unform()
 
   /* end */
 
-  // frame.formed = 0;
   return frame;
 }
 
@@ -89,7 +89,6 @@ function form()
   _.assert( !!module );
   _.assert( module.preformed === 3 );
   _.assert( build instanceof will.Build );
-  _.assert( _.arrayIs( build.steps ) );
   _.assert( !!resource );
   _.assert( !!fileProvider );
   _.assert( !!logger );
@@ -100,16 +99,6 @@ function form()
   /* begin */
 
   frame.opts = Object.create( null );
-
-  // if( resource instanceof will.Step )
-  // {
-  //
-  //   frame.opts = _.mapExtend( null, resource.opts );
-  //   debugger;
-  //   if( resource.opts && resource.stepRoutine.stepOptions )
-  //   _.routineOptions( resource.stepRoutine, frame.opts, resource.stepRoutine.stepOptions );
-  //
-  // }
 
   /* end */
 

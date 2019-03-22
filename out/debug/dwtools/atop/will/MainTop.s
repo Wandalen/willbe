@@ -218,6 +218,7 @@ function commandsMake()
     'submodules upgrade' :      { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),     h : 'Upgrade each submodule, checking for available updates for such.' },
     'submodules clean' :        { e : _.routineJoin( will, will.commandSubmodulesClean ),       h : 'Delete all downloaded submodules.' },
 
+    'shell' :                   { e : _.routineJoin( will, will.commandShell ),                 h : 'Execute shell command on the module.' },
     'clean' :                   { e : _.routineJoin( will, will.commandClean ),                 h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
     'clean what' :              { e : _.routineJoin( will, will.commandCleanWhat ),             h : 'Find out which files will be deleted by clean command.' },
     'build' :                   { e : _.routineJoin( will, will.commandBuild ),                 h : 'Build current module with spesified criterion.' },
@@ -507,6 +508,21 @@ function commandSubmodulesClean( e )
 
 //
 
+function commandShell( e )
+{
+  let will = this;
+
+  return will.moduleOnReadyNonForming( function( module )
+  {
+    let logger = will.logger;
+    debugger;
+    return module.shell( e.argument );
+  });
+
+}
+
+//
+
 function commandClean( e )
 {
   let will = this;
@@ -682,77 +698,233 @@ function commandEach( e )
   if( will.topCommand === null )
   will.topCommand = commandEach;
 
+  // debugger;
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
-  let dirPath = path.resolve( isolated.argument );
-  let con = new _.Consequence().take( null );
-  let files = will.willFilesList
+  // debugger;
+
+  let con = will.moduleEach
   ({
-    dirPath : dirPath,
-    includingInFiles : 1,
-    includingOutFiles : 0,
-    rerucrsive : 0,
-  });
+    selector : isolated.argument,
+    onEach : handleEach,
+  })
 
-  let dirPaths = Object.create( null );
-  for( let f = 0 ; f < files.length ; f++ ) con.keep( ( arg ) => /* !!! replace by concurrent, maybe */
-  {
-    let file = files[ f ];
-
-    let dirPath = will.Module.DirPathFromFilePaths( file.absolute );
-
-    if( dirPaths[ dirPath ] )
-    debugger;
-    if( dirPaths[ dirPath ] )
-    return true;
-    dirPaths[ dirPath ] = 1;
-
-    if( will.moduleMap[ file.absolute ] )
-    return true;
-
-    if( will.currentModule )
-    {
-      will.currentModule.finit();
-      will.currentModule = null;
-    }
-
-    let module = will.currentModule = will.Module({ will : will, filePath : file.absolute }).preform();
-    module.willFilesFind();
-    module.willFilesOpen();
-    module.submodulesForm();
-    module.resourcesForm();
-
-    return module.ready.split().keep( function( arg )
-    {
-
-      _.assert( module.willFileArray.length > 0 );
-
-      let r = ca.commandPerform
-      ({
-        command : isolated.secondCommand,
-        // subject : isolated.secondSubject,
-        propertiesMap : e.propertiesMap,
-      });
-
-      _.assert( r !== undefined );
-
-      return r;
-    })
-
-  });
-
+  // debugger;
   con.finally( ( err, arg ) =>
   {
-    debugger;
+    // debugger;
     will.moduleDone({ error : err || null, command : commandEach });
     if( err )
-    {
-      throw _.errLogOnce( err );
-    }
+    throw _.errLogOnce( err );
     return arg;
   });
 
+  // debugger;
   return con;
+
+  function handleEach( it )
+  {
+    _.assert( it.module.willFileArray.length > 0 );
+
+    _.assert( will.currentModule === null );
+    will.currentModule = it.module;
+
+    // debugger;
+    let r = ca.commandPerform
+    ({
+      command : isolated.secondCommand,
+      // propertiesMap : e.propertiesMap, // xxx
+    });
+
+    _.assert( r !== undefined );
+    // debugger;
+    r = _.Consequence.From( r );
+
+    return r.finally( ( err, arg ) =>
+    {
+      // debugger;
+      _.assert( will.currentModule === it.module );
+      will.currentModule.finit();
+      will.currentModule = null;
+      if( err )
+      throw _.err( err );
+      return arg;
+    });
+
+  }
+
+  // if( _.strEnds( isolated.argument, '::' ) )
+  // isolated.argument = isolated.argument + '*';
+  //
+  // let dirPath = path.resolve( isolated.argument );
+  // // let dirPath = module.resolve( isolated.argument );
+  //
+  // let con = new _.Consequence().take( null );
+  // let files = will.willFilesList
+  // ({
+  //   dirPath : dirPath,
+  //   includingInFiles : 1,
+  //   includingOutFiles : 0,
+  //   rerucrsive : 0,
+  // });
+  //
+  // let dirPaths = Object.create( null );
+  // for( let f = 0 ; f < files.length ; f++ ) con.keep( ( arg ) =>
+  // {
+  //   let file = files[ f ];
+  //
+  //   let dirPath = will.Module.DirPathFromFilePaths( file.absolute );
+  //
+  //   if( dirPaths[ dirPath ] )
+  //   debugger;
+  //   if( dirPaths[ dirPath ] )
+  //   return true;
+  //   dirPaths[ dirPath ] = 1;
+  //
+  //   if( will.moduleMap[ file.absolute ] )
+  //   return true;
+  //
+  //   if( will.currentModule )
+  //   {
+  //     will.currentModule.finit();
+  //     will.currentModule = null;
+  //   }
+  //
+  //   let module = will.currentModule = will.Module({ will : will, filePath : file.absolute }).preform();
+  //   module.willFilesFind();
+  //   module.willFilesOpen();
+  //   module.submodulesForm();
+  //   module.resourcesForm();
+  //
+  //   return module.ready.split().keep( function( arg )
+  //   {
+  //
+  //     _.assert( module.willFileArray.length > 0 );
+  //
+  //     let r = ca.commandPerform
+  //     ({
+  //       command : isolated.secondCommand,
+  //       propertiesMap : e.propertiesMap,
+  //     });
+  //
+  //     _.assert( r !== undefined );
+  //
+  //     return r;
+  //   })
+  //
+  // });
+  //
+  // con.finally( ( err, arg ) =>
+  // {
+  //   debugger;
+  //   will.moduleDone({ error : err || null, command : commandEach });
+  //   if( err )
+  //   throw _.errLogOnce( err );
+  //   return arg;
+  // });
+  //
+  // return con;
 }
+
+//
+// function commandEach( e )
+// {
+//   let will = this.form();
+//   let ca = e.ca;
+//   let fileProvider = will.fileProvider;
+//   let path = will.fileProvider.path;
+//   let logger = will.logger;
+//
+//   if( will.currentModule )
+//   {
+//     will.currentModule.finit();
+//     will.currentModule = null;
+//   }
+//
+//   _.sure( _.strDefined( e.argument ), 'Expects path to module' )
+//   _.assert( arguments.length === 1 );
+//
+//   if( will.topCommand === null )
+//   will.topCommand = commandEach;
+//
+//   debugger;
+//   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
+//   debugger;
+//
+//   if( _.strEnds( isolated.argument, '::' ) )
+//   isolated.argument = isolated.argument + '*';
+//
+//   let dirPath = path.resolve( isolated.argument );
+//   // let dirPath = module.resolve( isolated.argument );
+//
+//   let con = new _.Consequence().take( null );
+//   let files = will.willFilesList
+//   ({
+//     dirPath : dirPath,
+//     includingInFiles : 1,
+//     includingOutFiles : 0,
+//     rerucrsive : 0,
+//   });
+//
+//   let dirPaths = Object.create( null );
+//   for( let f = 0 ; f < files.length ; f++ ) con.keep( ( arg ) => /* !!! replace by concurrent, maybe */
+//   {
+//     let file = files[ f ];
+//
+//     let dirPath = will.Module.DirPathFromFilePaths( file.absolute );
+//
+//     if( dirPaths[ dirPath ] )
+//     debugger;
+//     if( dirPaths[ dirPath ] )
+//     return true;
+//     dirPaths[ dirPath ] = 1;
+//
+//     if( will.moduleMap[ file.absolute ] )
+//     return true;
+//
+//     if( will.currentModule )
+//     {
+//       will.currentModule.finit();
+//       will.currentModule = null;
+//     }
+//
+//     let module = will.currentModule = will.Module({ will : will, filePath : file.absolute }).preform();
+//     module.willFilesFind();
+//     module.willFilesOpen();
+//     module.submodulesForm();
+//     module.resourcesForm();
+//
+//     return module.ready.split().keep( function( arg )
+//     {
+//
+//       _.assert( module.willFileArray.length > 0 );
+//
+//       let r = ca.commandPerform
+//       ({
+//         command : isolated.secondCommand,
+//         // subject : isolated.secondSubject,
+//         propertiesMap : e.propertiesMap,
+//       });
+//
+//       _.assert( r !== undefined );
+//
+//       return r;
+//     })
+//
+//   });
+//
+//   con.finally( ( err, arg ) =>
+//   {
+//     debugger;
+//     will.moduleDone({ error : err || null, command : commandEach });
+//     if( err )
+//     {
+//       throw _.errLogOnce( err );
+//     }
+//     return arg;
+//   });
+//
+//   return con;
+// }
 
 // --
 // relations
@@ -823,6 +995,7 @@ let Extend =
   commandSubmodulesUpgrade,
   commandSubmodulesClean,
 
+  commandShell,
   commandClean,
   commandCleanWhat,
   commandBuild,

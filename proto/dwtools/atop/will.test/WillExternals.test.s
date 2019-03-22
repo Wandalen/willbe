@@ -601,13 +601,13 @@ function singleStep( test )
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
 
-  /* Vova : step::list.dir does not have {- stepRoutine -}. Failed to deduce it, try specifying "inherit" field explicitly */
+  /* - */
 
   ready
 
   .thenKeep( () =>
   {
-    test.case = '.build'
+    test.case = '.build debug1'
     let outDebugPath = _.path.join( routinePath, 'out/debug' );
     let outPath = _.path.join( routinePath, 'out' );
     _.fileProvider.filesDelete( outDebugPath );
@@ -615,13 +615,37 @@ function singleStep( test )
     return null;
   })
 
-  shell({ args : [ '.build' ] })
+  shell({ args : [ '.build debug1' ] })
 
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     return null;
   })
+
+  /* - */
+
+  ready
+
+  .thenKeep( () =>
+  {
+    test.case = '.build debug2'
+    let outDebugPath = _.path.join( routinePath, 'out/debug' );
+    let outPath = _.path.join( routinePath, 'out' );
+    _.fileProvider.filesDelete( outDebugPath );
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build debug2' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    return null;
+  })
+
+  /* - */
 
   return ready;
 }
@@ -1443,7 +1467,7 @@ function submodulesDownload( test )
   return ready;
 }
 
-submodulesDownload.timeOut = 130000;
+submodulesDownload.timeOut = 300000;
 
 //
 
