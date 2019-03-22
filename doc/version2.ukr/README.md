@@ -1,16 +1,16 @@
-### <a name="tutorials"></a> Туторіал
+## <a name="tutorials"></a> Туторіал
 
 <details>
   <summary><a href="./Tutorials/Abstract.md">Загальна інформація</a></summary>
-  Загальна інформація про утиліту <code>willbe</code>. Чим утиліта <code>willbe</code> є і чим вона не являється
+  Загальна інформація. Чим утиліта <code>willbe</code> є і чим вона не являється
 </details>
 <details>
   <summary><a href="./Tutorials/WillbeInstalation.md">Встановлення утиліти <code>willbe</code></a></summary>
-  Показано процес встановлення утиліти <code>willbe</code> на операційні системи Windows та Linux-дистрибутиви
+  Процес встановлення утиліти <code>willbe</code>
 </details>
 <details>
-  <summary><a href="./Tutorials/Concepts.md">Базові концепції та поняття</a></summary>
-  В туторіалі описуються основні концепції та поняття для роботи з утилітою <code>willbe</code>
+  <summary><a href="./Tutorials/Concepts.md">Основні концепції</a></summary>
+  Основні концепції. Допомагає побачити загальну картину
 </details>
 <details>
   <summary><a href="./Tutorials/CompositionOfWillFile.md">Структура <code>will-файла</code></a></summary>
@@ -134,7 +134,7 @@
 </details>
 
 
-### <a name="manuals"></a> Керівництво користувача
+## <a name="manuals"></a> Керівництво користувача
 
 <details>
   <summary><a href="Introduction.md">Введення</a></summary>
