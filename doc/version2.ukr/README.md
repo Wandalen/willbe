@@ -1,6 +1,5 @@
-## <a name="tutorials"></a> Туторіал
+### <a name="tutorials"></a> Туторіал
 
-### Зміст
 <details>
   <summary><a href="Introduction.ukr.md">Введення</a></summary>
     <p>Загальна інформація про пакет willbe</p>
@@ -134,9 +133,8 @@
 </details>
 
 
-## <a name="manuals"></a> Керівництво користувача
+### <a name="manuals"></a> Керівництво користувача
 
-### Зміст
 <details>
   <summary><a href="Introduction.ukr.md">Введення</a></summary>
     <p>Загальна інформація про пакет willbe</p>
