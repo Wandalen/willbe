@@ -2,134 +2,134 @@
 
 <details>
   <summary><a href="./Tutorials/Abstract.md">Загальна інформація</a></summary>
-  Загальна інформація про утиліту ```willbe```. Чим утиліта `willbe` <code>willbe</code> є і чим вона не являється
+  Загальна інформація про утиліту <code>willbe</code>. Чим утиліта <code>willbe</code> є і чим вона не являється
 </details>
 <details>
-  <summary><a href="./Tutorials/WillbeInstalation.md">Встановлення утиліти willbe</a></summary>
-    <p>Показано процес встановлення утиліти `willbe` на операційні системи Windows та Linux-дистрибутиви</p>
+  <summary><a href="./Tutorials/WillbeInstalation.md">Встановлення утиліти <code>willbe</code></a></summary>
+  Показано процес встановлення утиліти <code>willbe</code> на операційні системи Windows та Linux-дистрибутиви
 </details>
 <details>
   <summary><a href="./Tutorials/Concepts.md">Базові концепції та поняття</a></summary>
-    <p>В туторіалі описуються основні концепції та поняття для роботи з утилітою `willbe`</p>
+  В туторіалі описуються основні концепції та поняття для роботи з утилітою <code>willbe</code>
 </details>
 <details>
   <summary><a href="./Tutorials/CompositionOfWillFile.md">Структура will-файла</a></summary>
-    <p>В туторіалі описано структуру секцій `will`-файлу та приведено приклади їх застосування</p>
+  В туторіалі описано структуру секцій `will`-файлу та приведено приклади їх застосування
 </details>
 <details>
-  <summary><a href="./Tutorials/HowToUseCommandLineInterfaceOfWill.md">Як користуватися інтерфейсом командного рядка 'willbe'</a></summary>
-    <p>В туторіалі описується використання командного рядка для взаємодії з утилітою `willbe`, застосування команд `.help` та `.list`</p>
+  <summary><a href="./Tutorials/HowToUseCommandLineInterfaceOfWill.md">Як користуватися інтерфейсом командного рядка '<code>willbe</code>'</a></summary>
+  В туторіалі описується використання командного рядка для взаємодії з утилітою <code>willbe</code>, застосування команд `.help` та `.list`
 </details>
 <details>
   <summary><a href="./Tutorials/FirstWillFile.md">Перший will-файл</a></summary>
-    <p>В туторіалі описується створення першого will-файлу та першого модуля</p>
+  В туторіалі описується створення першого will-файлу та першого модуля
 </details>
 <details>
   <summary><a href="./Tutorials/RemoteSubmodulesImporting.md">Перший will-модуль. Завантаження віддаленого підмодуля</a></summary>
-    <p>В туторіалі показано як імпортувати віддалені підмодулі</p>
+  В туторіалі показано як імпортувати віддалені підмодулі
 </details>
 <details>
   <summary><a href="./Tutorials/SubmodulesAdministration.md">Оновлення та видалення підмодулів</a></summary>
-    <p>В туторіалі продовжено опис підмодулів, більш детально розглянуто їх адміністрування</p>
+  В туторіалі продовжено опис підмодулів, більш детально розглянуто їх адміністрування
 </details>
 <details>
   <summary><a href="./Tutorials/ModuleCreationByBuild.md">Використання команди '.build' для побудови модуля</a></summary>
-    <p>Туторіал описує запуск окремих збірок побудови модуля в `will`-файлі</p>
+  Туторіал описує запуск окремих збірок побудови модуля в `will`-файлі
 </details>
 <details>
   <summary><a href="./Tutorials/PredefinedSteps.md">Знайомство з вбудованими кроками</a></summary>
-    <p>В туторіалі дається пояснення вбудованих кроків та приведено приклади використання</p>
+  В туторіалі дається пояснення вбудованих кроків та приведено приклади використання
 </details>
 <details>
   <summary><a href="./Tutorials/CriterionsInWillFile.md">Поняття критеріонів в will-файлах та їх використання</a></summary>
-    <p>В туторіалі дається поняття про критеріони (criterion) та їх використання в `will`-файлах</p>
+  В туторіалі дається поняття про критеріони (criterion) та їх використання в `will`-файлах
 </details>
 <details>
   <summary><a href="./Tutorials/DefaultCriterionInWillFile.md">Побудова модуля (build) за замовчуванням</a></summary>
-    <p>В туторіалі показано як користуватись зовнішніми програмами та створено збірку, яка виконується за замовчуванням</p>
+  В туторіалі показано як користуватись зовнішніми програмами та створено збірку, яка виконується за замовчуванням
 </details>
 <details>
   <summary><a href="./Tutorials/ExportedWillFile.md">Експортування модуля</a></summary>
-    <p>В цьому туторіалі описана процедура експортування `will`-модуля</p>
+  В цьому туторіалі описана процедура експортування `will`-модуля
 </details>
 <details>
   <summary><a href="./Tutorials/LocalSubmodulesImporting.md">Імпорт локального підмодуля</a></summary>
-    <p>В туторіалі показано як додати локальний підмодуль та його особливості</p>
+  В туторіалі показано як додати локальний підмодуль та його особливості
 </details>
 <details>
   <summary><a href="./Tutorials/SelectorsTermInWillFile.md">Поняття селекторів в will-файлах</a></summary>
-    <p>В туторіалі дається поняття селекторів та їх застосування в `will`-файлах</p>
+  В туторіалі дається поняття селекторів та їх застосування в `will`-файлах
 </details>
 <details>
   <summary><a href="./Tutorials/HowToUseSelectorsWithGlob.md">Як використовувати селектори з ґлобами</a></summary>
-    <p>В туторіалі пояснюється застосування ґлобів в селекторах `will`-файла</p>
+  В туторіалі пояснюється застосування ґлобів в селекторах `will`-файла
 </details>
 <details>
   <summary><a href="./Tutorials/HowToUseAsserts.md">Як використовувати ассерти в will-файлах</a></summary>
-    <p>В туторіалі пояснюється як з допомогою ассертів зменшити кількість помилок в `will`-файлі</p>
+  В туторіалі пояснюється як з допомогою ассертів зменшити кількість помилок в `will`-файлі
 </details>
 <details>
   <summary><a href="./Tutorials/MinimizationOfWillFile.md">Мінімізація will-файла</a></summary>
-    <p>В туторіалі показано, як мінімізувати величину `will`-файла та властивості ресурсів при використанні скороченої форми запису критеріонів</p>
+  В туторіалі показано, як мінімізувати величину `will`-файла та властивості ресурсів при використанні скороченої форми запису критеріонів
 </details>
 <details>
   <summary><a href="./Tutorials/SplitWillFile.md">Розділені will-файли (Split will-files)</a></summary>
-    <p>В туторіалі розглядається створення розділених `will`-файлів</p>
+  В туторіалі розглядається створення розділених `will`-файлів
 </details>
 <details>
   <summary><a href="./Tutorials/NamedWillFile.md">Іменовані will-файли. Використання команди '.with'</a></summary>
-    <p>В туторіалі дається поняття іменованих `will`-файлів та показано як користуватись командою `.with`</p>
+  В туторіалі дається поняття іменованих `will`-файлів та показано як користуватись командою `.with`
 </details>
 <details>
   <summary><a href="./Tutorials/UsingEachCommand.md">Як користуватись командою '.each'</a></summary>
-    <p>В туторіалі пояснюється призначення команди `.each` та приводиться приклад використання</p>
+  В туторіалі пояснюється призначення команди `.each` та приводиться приклад використання
 </details>
 <details>
-  <summary><a href="./Tutorials/UsingOfJSInWillbe.md">Використання JavaScript файлів утилітою willbe</a></summary>
-    <p>В туторіалі показано як використовувати JavaScript-скрипти в утиліті `willbe`</p>
+  <summary><a href="./Tutorials/UsingOfJSInWillbe.md">Використання JavaScript файлів утилітою <code>willbe</code></a></summary>
+  В туторіалі показано як використовувати JavaScript-скрипти в утиліті <code>willbe</code>
 </details>
 <details>
   <summary><a href="./Tutorials/UsingSetCommand.md">Використання команди '.set'</a></summary>
-    <p>В туторіалі пояснюється призначення команди `.set` та дається приклад використання</p>
+  В туторіалі пояснюється призначення команди `.set` та дається приклад використання
 </details>
 <details>
   <summary><a href="./Tutorials/HowToUseComplexSelector.md">Як використовувати складні селектори</a></summary>
-    <p>В туторіалі пояснюється застосування складних селекторів при побудові модуля, приведено приклади застосування ґлобів та ассертів</p>
+  В туторіалі пояснюється застосування складних селекторів при побудові модуля, приведено приклади застосування ґлобів та ассертів
 </details>
 <details>
   <summary><a href="./Tutorials/ReflectorUsing.md">Поняття рефлекторів. Копіювання файлів</a></summary>
-    <p>В туторіалі описуються рефлектори, дається приклад копіювання файлів рефлектором, пояснюється як користуватись полем `recursive`</p>
+  В туторіалі описуються рефлектори, дається приклад копіювання файлів рефлектором, пояснюється як користуватись полем `recursive`
 </details>
 <details>
   <summary><a href="./Tutorials/ReflectorFilters.md">Фільтри рефлектора</a></summary>
-    <p>В туторіалі дається поняття простих фільтрів і масок рефлектора та показано як вони застосовуються</p>
+  В туторіалі дається поняття простих фільтрів і масок рефлектора та показано як вони застосовуються
 </details>
 <details>
   <summary><a href="./Tutorials/ReflectorTimeFilters.md">Часові фільтри рефлектора</a></summary>
-    <p>В туторіалі показано як використовуються фільтри відбору файлів по часу</p>
+  В туторіалі показано як використовуються фільтри відбору файлів по часу
 </details>
 <details>
   <summary><a href="./Tutorials/ReflectorFSControl.md">Формування шляхів в рефлекторі. Управління файловими операціями</a></summary>
-    <p>В туторіалі показано як формуються шляхи рефлекторів та як управляти кількістю файлових операцій</p>
+  В туторіалі показано як формуються шляхи рефлекторів та як управляти кількістю файлових операцій
 </details>
 
-<p></p>
+<p>
 ...In progress, advanced...
 <details>
   <summary><a href="./Tutorials/ResourceInheritability.md">Resources Inheritability</a></summary>
-    <p>В туторіалі показано як використовувати наслідування ресурсами `will`-файла</p>
+  В туторіалі показано як використовувати наслідування ресурсами `will`-файла
 </details>
 <details>
   <summary><a href="./Tutorials/PredefinedReflectorsUsing.md">How to use predefined reflectors</a></summary>
-    <p>В туторіалі показано як використовувати вбудовані рефлектори утиліти `willbe`</p>
+  В туторіалі показано як використовувати вбудовані рефлектори утиліти <code>willbe</code>
 </details>
 <details>
   <summary><a href="./Tutorials/ExportedFileStructure.md">Exported will-file structure</a></summary>
-    <p>В туторіалі показано особливості структури експортованого `*.out.will.`-файла та окремих ресурсів</p>
+  В туторіалі показано особливості структури експортованого `*.out.will.`-файла та окремих ресурсів
 </details>
 <details>
   <summary><a href="./Tutorials/ExportedSectionOfWillFile.md">Exported section of out will-file</a></summary>
-    <p>В цьому туторіалі розглядається секція `exported`</p>
+  В цьому туторіалі розглядається секція `exported`
 </details>
 
 
@@ -137,50 +137,50 @@
 
 <details>
   <summary><a href="Introduction.md">Введення</a></summary>
-    <p>Загальна інформація про утиліту willbe</p>
+  Загальна інформація про утиліту <code>willbe</code>
 </details>
 <details>
-  <summary><a href="./Manuals/WillbeInstalation.md">Встановлення утиліти willbe</a></summary>
-    <p>Показано процес встановлення утиліти `willbe` на операційні системи Windows та Linux-дистрибутиви</p>
+  <summary><a href="./Manuals/WillbeInstalation.md">Встановлення утиліти <code>willbe</code></a></summary>
+  Показано процес встановлення утиліти <code>willbe</code> на операційні системи Windows та Linux-дистрибутиви
 </details>
 <details>
   <summary><a href="./Manuals/Concepts.urk.md">Базові концепції та поняття</a></summary>
-    <p>В туторіалі описуються основні концепції та поняття для роботи з утилітою `willbe`</p>
+  В туторіалі описуються основні концепції та поняття для роботи з утилітою <code>willbe</code>
 </details>
 <details>
   <summary><a href="./Manuals/WillFileStructure.md">Структура will-файла</a></summary>
-    <p>Описується структура секцій `will`-файлу та приведено приклади їх застосування</p>
+  Описується структура секцій `will`-файлу та приведено приклади їх застосування
 </details>
 <details>
-  <summary><a href="./Manuals/CommandLineInterfaceOfWill.md">Інтерфейс командного рядка willbe</a></summary>
-    <p>Описані команди утиліти `willbe` та їх синтаксис</p>
+  <summary><a href="./Manuals/CommandLineInterfaceOfWill.md">Інтерфейс командного рядка <code>willbe</code></a></summary>
+  Описані команди утиліти <code>willbe</code> та їх синтаксис
 </details>
 <details>
   <summary><a href="./Manuals/WillFileCriterions.urk.md">Критеріони (criterion) в `will`-файлах</a></summary>
-    <p>В керівництві користувача визначено поняття критеріонів та приведено приклади їх використання при створенні модулів</p>
+  В керівництві користувача визначено поняття критеріонів та приведено приклади їх використання при створенні модулів
 </details>
 <details>
-  <summary><a href="./Manuals/WillFilePredefinedSteps.md">Вбудовані кроки утиліти willbe</a></summary>
-    <p>Керівництво користувача по вбудованим крокам для побудови модуля</p>
+  <summary><a href="./Manuals/WillFilePredefinedSteps.md">Вбудовані кроки утиліти <code>willbe</code></a></summary>
+  Керівництво користувача по вбудованим крокам для побудови модуля
 </details>
 
-<p></p>
+<p>
 ...In progress...
 <details>
   <summary><a href="./Manuals/WillFileCreation.md">Створення will-модуля</a></summary>
-    <p>В керівництві описано створення will-файла та побудова модулів різного призначення</p>
-    <p><a href="./Manuals/WillFileCreation.md#start">Початок роботи</a></p>
-    <p><a href="./Manuals/WillFileCreation.md#basic-configuration">Базова конфігурація</a></p>
-    <p><a href="./Manuals/WillFileCreation.md#submodules-importing">Робота з підмодулями</a></p>
-    <p><a href="./Manuals/WillFileCreation.md#step-and-build">Використання секцій `step` i `build` при створенні модуля</a></p>
-    <p><a href="./Manuals/WillFileCreation.md#module-export">Експорт модуля</a></p>
-    <p><a href="./Manuals/WillFileCreation.md#named-module">Іменований підмодуль</a></p>
+  В керівництві описано створення will-файла та побудова модулів різного призначення
+  <a href="./Manuals/WillFileCreation.md#start">Початок роботи</a>
+  <a href="./Manuals/WillFileCreation.md#basic-configuration">Базова конфігурація</a>
+  <a href="./Manuals/WillFileCreation.md#submodules-importing">Робота з підмодулями</a>
+  <a href="./Manuals/WillFileCreation.md#step-and-build">Використання секцій `step` i `build` при створенні модуля</a>
+  <a href="./Manuals/WillFileCreation.md#module-export">Експорт модуля</a>
+  <a href="./Manuals/WillFileCreation.md#named-module">Іменований підмодуль</a>
 </details>
 <details>
   <summary><a href="./Manuals/WillFileSelectors.md">Cелектори з ґлобами та ассертами</a></summary>
-    <p>В керівництві користувача дається інформація про використання селекторів для побудови модуля</p>
+  В керівництві користувача дається інформація про використання селекторів для побудови модуля
 </details>
 <details>
   <summary><a href="./Manuals/WillFileReflectors.md">Reflector in will-files</a></summary>
-    <p>В керівництві користувача описуються рефлектори - призначення, особливості побудови, використання</p>
+  В керівництві користувача описуються рефлектори - призначення, особливості побудови, використання
 </details>
