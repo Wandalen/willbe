@@ -6,7 +6,7 @@
 </details>
 <details>
   <summary><a href="./Tutorials/WillbeInstalation.md">Встановлення утиліти <code>willbe</code></a></summary>
-  Процес встановлення утиліти <code>willbe</code> на операційні системи Windows та Linux-дистрибутиви
+  Процес встановлення утиліти <code>willbe</code>
 </details>
 <details>
   <summary><a href="./Tutorials/Concepts.md">Базові концепції та поняття</a></summary>
