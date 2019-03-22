@@ -2,15 +2,15 @@
 
 <details>
   <summary><a href="Introduction.ukr.md">Введення</a></summary>
-    <p>Загальна інформація про пакет willbe</p>
+    <p>Загальна інформація про утиліту willbe</p>
 </details>
 <details>
-  <summary><a href="./Tutorials.ukr/WillbeInstalation.ukr.md">Встановлення пакета willbe</a></summary>
-    <p>Показано процес встановлення пакета `willbe` на операційні системи Windows та Linux-дистрибутиви</p>
+  <summary><a href="./Tutorials.ukr/WillbeInstalation.ukr.md">Встановлення утиліти willbe</a></summary>
+    <p>Показано процес встановлення утиліти `willbe` на операційні системи Windows та Linux-дистрибутиви</p>
 </details>
 <details>
   <summary><a href="./Tutorials.ukr/Concepts.urk.md">Базові концепції та поняття</a></summary>
-    <p>В туторіалі описуються основні концепції та поняття для роботи з пакетом `willbe`</p>
+    <p>В туторіалі описуються основні концепції та поняття для роботи з утилітою `willbe`</p>
 </details>
 <details>
   <summary><a href="./Tutorials.ukr/CompositionOfWillFile.ukr.md">Структура will-файла</a></summary>
@@ -18,7 +18,7 @@
 </details>
 <details>
   <summary><a href="./Tutorials.ukr/HowToUseCommandLineInterfaceOfWill.ukr.md">Як користуватися інтерфейсом командного рядка 'willbe'</a></summary>
-    <p>В туторіалі описується використання командного рядка для взаємодії з пакетом `willbe`, застосування команд `.help` та `.list`</p>
+    <p>В туторіалі описується використання командного рядка для взаємодії з утилітою `willbe`, застосування команд `.help` та `.list`</p>
 </details>
 <details>
   <summary><a href="./Tutorials.ukr/FirstWillFile.ukr.md">Перший will-файл</a></summary>
@@ -85,8 +85,8 @@
     <p>В туторіалі пояснюється призначення команди `.each` та приводиться приклад використання</p>
 </details>
 <details>
-  <summary><a href="./Tutorials.ukr/UsingOfJSInWillbe.ukr.md">Використання JavaScript файлів пакетом willbe</a></summary>
-    <p>В туторіалі показано як використовувати JavaScript-скрипти в пакеті `willbe`</p>
+  <summary><a href="./Tutorials.ukr/UsingOfJSInWillbe.ukr.md">Використання JavaScript файлів утилітоюwillbe</a></summary>
+    <p>В туторіалі показано як використовувати JavaScript-скрипти в утиліті `willbe`</p>
 </details>
 <details>
   <summary><a href="./Tutorials.ukr/UsingSetCommand.ukr.md">Використання команди '.set'</a></summary>
@@ -121,7 +121,7 @@
 </details>
 <details>
   <summary><a href="./Tutorials.ukr/PredefinedReflectorsUsing.ukr.md">How to use predefined reflectors</a></summary>
-    <p>В туторіалі показано як використовувати вбудовані рефлектори пакета `willbe`</p>
+    <p>В туторіалі показано як використовувати вбудовані рефлектори утиліти `willbe`</p>
 </details>
 <details>
   <summary><a href="./Tutorials.ukr/ExportedFileStructure.ukr.md">Exported will-file structure</a></summary>
@@ -137,19 +137,15 @@
 
 <details>
   <summary><a href="Introduction.ukr.md">Введення</a></summary>
-    <p>Загальна інформація про пакет willbe</p>
+    <p>Загальна інформація про утиліту willbe</p>
 </details>
 <details>
-  <summary><a href="./Manuals.ukr/WillbeInstalation.ukr.md">Встановлення пакета willbe</a></summary>
-    <p>Показано процес встановлення пакета `willbe` на операційні системи Windows та Linux-дистрибутиви</p>
-</details>
-<details>
-  <summary><a href="./Manuals.ukr/WillbeInstalation.ukr.md">Встановлення пакета willbe</a></summary>
-    <p>Показано процес встановлення пакета `willbe` на операційні системи Windows та Linux-дистрибутиви</p>
+  <summary><a href="./Manuals.ukr/WillbeInstalation.ukr.md">Встановлення утиліти willbe</a></summary>
+    <p>Показано процес встановлення утиліти `willbe` на операційні системи Windows та Linux-дистрибутиви</p>
 </details>
 <details>
   <summary><a href="./Manuals.ukr/Concepts.urk.md">Базові концепції та поняття</a></summary>
-    <p>В туторіалі описуються основні концепції та поняття для роботи з пакетом `willbe`</p>
+    <p>В туторіалі описуються основні концепції та поняття для роботи з утилітою `willbe`</p>
 </details>
 <details>
   <summary><a href="./Manuals.ukr/WillFileStructure.ukr.md">Структура will-файла</a></summary>
@@ -157,14 +153,14 @@
 </details>
 <details>
   <summary><a href="./Manuals.ukr/CommandLineInterfaceOfWill.ukr.md">Інтерфейс командного рядка willbe</a></summary>
-    <p>Описані команди пакету `willbe` та їх синтаксис</p>
+    <p>Описані команди утиліти `willbe` та їх синтаксис</p>
 </details>
 <details>
   <summary><a href="./Manuals.ukr/WillFileCriterions.urk.md">Критеріони (criterion) в `will`-файлах</a></summary>
     <p>В керівництві користувача визначено поняття критеріонів та приведено приклади їх використання при створенні модулів</p>
 </details>
 <details>
-  <summary><a href="./Manuals.ukr/WillFilePredefinedSteps.ukr.md">Вбудовані кроки пакета willbe</a></summary>
+  <summary><a href="./Manuals.ukr/WillFilePredefinedSteps.ukr.md">Вбудовані кроки утиліти willbe</a></summary>
     <p>Керівництво користувача по вбудованим крокам для побудови модуля</p>
 </details>
 
