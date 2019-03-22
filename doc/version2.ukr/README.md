@@ -9,8 +9,8 @@
   Процес встановлення утиліти <code>willbe</code>
 </details>
 <details>
-  <summary><a href="./Tutorials/Concepts.md">Базові концепції та поняття</a></summary>
-  В туторіалі описуються основні концепції та поняття для роботи з утилітою <code>willbe</code>
+  <summary><a href="./Tutorials/Concepts.md">Основні концепції</a></summary>
+  Основні концепції. Допомагає побачити загальну картину<code>willbe</code>
 </details>
 <details>
   <summary><a href="./Tutorials/CompositionOfWillFile.md">Структура <code>will-файла</code></a></summary>
