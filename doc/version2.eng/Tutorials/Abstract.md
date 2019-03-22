@@ -1,4 +1,4 @@
-# Загальна інформація
+# Abstract
 
 General information about utility willbe. What willbe is and what willbe is not.
 
