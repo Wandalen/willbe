@@ -14,11 +14,11 @@
 </details>
 <details>
   <summary><a href="./Tutorials/CompositionOfWillFile.md">Структура will-файла</a></summary>
-  В туторіалі описано структуру секцій `will`-файлу та приведено приклади їх застосування
+  В туторіалі описано структуру секцій <code>will-файлу</code> та приведено приклади їх застосування
 </details>
 <details>
   <summary><a href="./Tutorials/HowToUseCommandLineInterfaceOfWill.md">Як користуватися інтерфейсом командного рядка '<code>willbe</code>'</a></summary>
-  В туторіалі описується використання командного рядка для взаємодії з утилітою <code>willbe</code>, застосування команд `.help` та `.list`
+  В туторіалі описується використання командного рядка для взаємодії з утилітою <code>willbe</code>, застосування команд <code>.help</code> та <code>.list</code>
 </details>
 <details>
   <summary><a href="./Tutorials/FirstWillFile.md">Перший will-файл</a></summary>
@@ -149,7 +149,7 @@
 </details>
 <details>
   <summary><a href="./Manuals/WillFileStructure.md">Структура will-файла</a></summary>
-  Описується структура секцій `will`-файлу та приведено приклади їх застосування
+  Описується структура секцій <code>will-файлу</code> та приведено приклади їх застосування
 </details>
 <details>
   <summary><a href="./Manuals/CommandLineInterfaceOfWill.md">Інтерфейс командного рядка <code>willbe</code></a></summary>
