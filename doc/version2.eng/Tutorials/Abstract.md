@@ -1,7 +1,6 @@
+# Abstract
 
-# willbe [![Build Status](https://travis-ci.org/Wandalen/willbe.svg?branch=master)](https://travis-ci.org/Wandalen/willbe)
-
-Utility for development which helps to manage modularity of complex modular systems.
+General information about utility willbe. What willbe is and what willbe is not.
 
 ## What willbe is
 

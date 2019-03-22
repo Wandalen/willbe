@@ -1,8 +1,8 @@
 ### <a name="tutorials"></a> Туторіал
 
 <details>
-  <summary><a href="./Tutorials/Introduction.md">Введення</a></summary>
-    <p>Загальна інформація про утиліту willbe. Чим утиліта willbe є і чим вона не являється</p>
+  <summary><a href="./Tutorials/Abstract.md">Загальна інформація</a></summary>
+  Загальна інформація про утиліту ```willbe```. Чим утиліта `willbe` <code>willbe</code> є і чим вона не являється
 </details>
 <details>
   <summary><a href="./Tutorials/WillbeInstalation.md">Встановлення утиліти willbe</a></summary>
