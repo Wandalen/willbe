@@ -10,7 +10,7 @@
 </details>
 <details>
   <summary><a href="./Tutorials/Concepts.md">Основні концепції</a></summary>
-  Основні концепції. Допомагає побачити загальну картину<code>willbe</code>
+  Основні концепції. Допомагає побачити загальну картину
 </details>
 <details>
   <summary><a href="./Tutorials/CompositionOfWillFile.md">Структура <code>will-файла</code></a></summary>
