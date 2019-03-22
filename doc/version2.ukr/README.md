@@ -1,4 +1,4 @@
-### <a name="tutorials"></a> Туторіал
+## <a name="tutorials"></a> Туторіал
 
 <details>
   <summary><a href="./Tutorials/Abstract.md">Загальна інформація</a></summary>
@@ -134,7 +134,7 @@
 </details>
 
 
-### <a name="manuals"></a> Керівництво користувача
+## <a name="manuals"></a> Керівництво користувача
 
 <details>
   <summary><a href="Introduction.md">Введення</a></summary>
