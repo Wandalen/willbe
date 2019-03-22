@@ -18,7 +18,7 @@ Will-file has comfortable to read format which encourages a developer to stick t
 
 ## What willbe is not
 
-Utility willbe is not a replacement of Git, NPM or other utilities with narrow purpose. Utility willbe aggregates functionality of all that utilities in the single package and under the single philosophy.
+Utility willbe is not a replacement of Git, NPM or other utilities with narrow purpose. It aggregates functionality of all that utilities in the single utility and under the single philosophy.
 
 ## Try out
 ```
