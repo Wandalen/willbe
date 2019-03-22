@@ -20,11 +20,11 @@
 |----------------------|------------------------------------------------------|--------------------------------|
 | predefined.delete    | Для видалення файлів і директорій за вказаним шляхом | filePath                       |
 | predefined.reflect   | Виконує виклик рефлектора                            | reflector, verbosity           |
-| timelapse.begin      | (ред.)                                               | -                               |
-| timelapse.end        | (ред.)                                               | -                               |
+| timelapse.begin      | (В стадії розробки)                                  | -                               |
+| timelapse.end        | (В стадії розробки)                                  | -                               |
 | predefined.js        | Виконання JavaScript-файлів                          | js; (js)                       |
 | predefined.shell     | Використання командної оболонки операційної системи  | shell, currentPath; (shell) |
-| predefined.concat.js | (ред.)                                               | reflector                       |
+| predefined.transpile | Об'єднання групи JavaScript-файлів в один            | reflector                       |
 | submodules.download  | Завантаження підмодулів                              | -                               |
 | submodules.upgrade   | Оновлення підмодулів                                 | -                               |
 | submodules.clean     | Очищення підмодулів                                  | -                               |
@@ -96,6 +96,16 @@ step:
   predefined:                         
     shell: [some_command] 
     currentPath: path::dirToRun         
+
+```
+
+<a name="predefined-transpile"></a> Функція `predefined.transpile`:
+
+```yaml
+step:                                        # Назва секції
+  predefined:                                # Назва кроку
+    inherit: predefined.transpile            # Наслідування вбудованого кроку об'єднання JS-файлів
+    reflector: reflector::reflect.js.files   # Рефлектор для відбору JS-файлів
 
 ```
 
