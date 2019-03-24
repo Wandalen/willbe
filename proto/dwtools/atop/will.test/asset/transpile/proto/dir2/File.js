@@ -1,1 +1,1 @@
-console.log( 'dir2/File.s' );
+console.log( 'dir2/File.js' );

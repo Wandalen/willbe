@@ -315,16 +315,22 @@ function _commandList( e, act, resourceName )
     if( resourceName )
     {
 
-      debugger;
       let request = _.strRequestParse( e.argument );
-      resources = module.resolve
-      ({
+      let o2 =
+      {
         selector : request.subject || '*',
         criterion : request.map,
         defaultResourceName : resourceName,
         prefixlessAction : 'default',
         arrayWrapping : 1,
-      });
+        pathUnwrapping : 1,
+        pathResolving : 0
+      }
+
+      if( resourceName === 'path' )
+      o2.mapValsUnwrapping = 0;
+
+      resources = module.resolve( o2 );
 
     }
 
@@ -357,25 +363,24 @@ function commandPathsList( e )
   function act( module, resources )
   {
 
-    debugger;
-    let request = _.strRequestParse( e.argument );
-    resources = module.resolve
-    ({
-      selector : request.subject || '*',
-      criterion : request.map,
-      defaultResourceName : 'path',
-      prefixlessAction : 'default',
-      mapValsUnwrapping : 0,
-      pathUnwrapping : 1,
-      pathResolving : 0,
-    });
+    // let request = _.strRequestParse( e.argument );
+    // resources = module.resolve
+    // ({
+    //   selector : request.subject || '*',
+    //   criterion : request.map,
+    //   defaultResourceName : 'path',
+    //   prefixlessAction : 'default',
+    //   mapValsUnwrapping : 0,
+    //   pathUnwrapping : 1,
+    //   pathResolving : 0,
+    // });
 
     let logger = will.logger;
-    logger.log( module.infoExportPaths( resources ) ); // xxx
+    logger.log( module.infoExportPaths( resources ) );
 
   }
 
-  return will._commandList( e, act, null );
+  return will._commandList( e, act, 'path' );
 }
 
 //

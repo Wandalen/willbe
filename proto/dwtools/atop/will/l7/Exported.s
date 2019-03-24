@@ -174,6 +174,8 @@ function performExportedReflectors( exportSelector )
   if( exp instanceof will.Reflector )
   {
 
+    exp.form2(); 
+
     _.assert( exp.formed >= 2 );
     _.assert( exp.src.formed === 1 );
     _.sure( !!exp.filePath, () => exp.nickName + ' should have filePath' );

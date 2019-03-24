@@ -123,7 +123,12 @@ function form2()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  if( reflector.absoluteName === "module::submodules-mixed / module::UriFundamentals / reflector::exportedFiles.export" )
+  if( reflector.formed >= 2 )
+  return reflector;
+
+  _.assert( reflector.formed === 1 );
+
+  if( reflector.nickName === "reflector::download.6" )
   debugger;
 
   reflector.src.pairWithDst( reflector.dst );
@@ -131,7 +136,7 @@ function form2()
   if( !reflector.dst.filePath || _.mapIs( reflector.dst.filePath ) )
   reflector.src.pairRefineLight();
 
-  if( reflector.absoluteName === "module::submodules-mixed / module::UriFundamentals / reflector::exportedFiles.export" )
+  if( reflector.nickName === "reflector::download.6" )
   debugger;
 
   let result = Parent.prototype.form2.apply( reflector, arguments );
@@ -155,7 +160,7 @@ function form3()
 
   /* begin */
 
-  if( reflector.absoluteName === "module::submodules-mixed / module::UriFundamentals / reflector::exportedFiles.export" )
+  if( reflector.nickName === "reflector::download.6" )
   debugger;
 
   reflector.pathsResolve();
@@ -176,7 +181,7 @@ function form3()
   _.assert( reflector.src.prefixPath === null || path.isAbsolute( reflector.src.prefixPath ) );
   _.assert( reflector.dst.prefixPath === null || path.isAbsolute( reflector.dst.prefixPath ) );
 
-  if( reflector.absoluteName === "module::submodules-mixed / module::UriFundamentals / reflector::exportedFiles.export" )
+  if( reflector.nickName === "reflector::download.6" )
   debugger;
 
   /* end */
@@ -247,11 +252,8 @@ function _inheritSingle( o )
     _.sure( !_.arrayHas( o.visited, reflector2.name ), () => 'Cyclic dependency ' + reflector.nickName + ' of ' + reflector2.nickName );
     if( reflector2.formed < 2 )
     {
-      debugger;
       reflector2._inheritForm({ visited : o.visited });
-      debugger;
       reflector2.form2();
-      debugger;
     }
     reflector2.form3();
   }
@@ -310,29 +312,10 @@ function _reflectMapForm( o )
 
   _.assertRoutineOptions( _reflectMapForm, arguments );
 
-  if( reflector.absoluteName === "module::submodules-mixed / module::UriFundamentals / reflector::exportedFiles.export" )
-  debugger;
-  // if( reflector.nickName === "reflector::exportedFiles.export." )
-  // debugger;
-
   let pathMap = reflector.filePath;
   for( let src in pathMap )
   {
     let dst = pathMap[ src ];
-
-    // if( !_.boolLike( dst ) && dst !== null )
-    // // if( module.SelectorIs( dst ) )
-    // {
-    //   if( !module.SelectorIs( dst ) )
-    //   debugger;
-    //   dst = module.pathResolve
-    //   ({
-    //     selector : dst,
-    //     visited : o.visited,
-    //     current : reflector,
-    //     // prefixlessAction : 'resolved',
-    //   });
-    // }
 
     if( module.SelectorIs( src ) )
     {
@@ -342,9 +325,6 @@ function _reflectMapForm( o )
         selector : src,
         visited : o.visited,
         current : reflector,
-        // mapValsUnwrapping : 1,
-        // singleUnwrapping : 1,
-        // flattening : 1,
       });
 
       if( !_.errIs( resolvedSrc ) && !_.strIs( resolvedSrc ) && !_.arrayIs( resolvedSrc ) && !( resolvedSrc instanceof will.Reflector ) )
@@ -367,22 +347,12 @@ function _reflectMapForm( o )
         {
           let rpath = resolvedSrc[ p ];
           _.assert( _.strIs( rpath ) );
-
-          // if( path.isAbsolute( rpath ) && !path.isGlobal( rpath ) )
-          // debugger;
-          // if( path.isAbsolute( rpath ) && !path.isGlobal( rpath ) )
-          // rpath = path.s.relative( module.inPath, rpath );
-
           pathMap[ rpath ] = dst;
         }
       }
       else if( _.strIs( resolvedSrc ) )
       {
         resolvedSrc = path.normalize( resolvedSrc );
-
-        // if( path.isAbsolute( resolvedSrc ) && !path.isGlobal( resolvedSrc ) )
-        // resolvedSrc = path.s.relative( module.inPath, resolvedSrc );
-
         delete pathMap[ src ];
         pathMap[ resolvedSrc ] = dst;
       }
@@ -399,7 +369,7 @@ function _reflectMapForm( o )
 
   }
 
-  // if( reflector.nickName === "reflector::exportedFiles.export." )
+  // if( reflector.nickName === "reflector::download.6" )
   // debugger;
 
 }

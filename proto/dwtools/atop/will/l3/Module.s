@@ -79,10 +79,8 @@ function init( o )
     verbosity : Math.max( Math.min( will.verbosity, will.verboseStaging ), will.verbosity - 6 ),
   });
 
-  debugger;
   if( o )
   module.copy( o );
-  debugger;
 
 }
 
@@ -652,14 +650,11 @@ function cleanWhat( o )
 
   if( o.cleaningTemp )
   {
-    // let temp = module.pathMap.temp ? _.arrayAs( module.pathMap.temp ) : [];
     let temp;
-
-    // debugger;
 
     temp = module.reflectorResolve
     ({
-      selector : 'temp',
+      selector : 'reflector::temp',
       pathResolving : 'in',
       missingAction : 'undefine',
     });
@@ -674,7 +669,7 @@ function cleanWhat( o )
     {
       temp = module.pathResolve
       ({
-        selector : 'temp',
+        selector : 'path::temp',
         pathResolving : 'in',
         missingAction : 'undefine',
       });
@@ -3255,8 +3250,8 @@ function _resolveAct( o )
   try
   {
 
-    if( o.selector === 'submodule::*/path::proto*=1' )
-    debugger;
+    // if( o.selector === 'submodule::*/path::proto*=1' )
+    // debugger;
 
     result = _.select
     ({
@@ -3371,6 +3366,9 @@ function _resolveAct( o )
   function onUpEnd()
   {
     let it = this;
+
+    // if( it.path === "/reflect.submodules.variant2" )
+    // debugger;
 
     exportedWriteThrough.call( it );
     currentExclude.call( it );
@@ -3563,21 +3561,22 @@ function _resolveAct( o )
 
   /* */
 
-  function compositePathSelect( module2, resource, filePath )
+  function compositePathSelect( currentModule, currentResource, filePath, resolving )
   {
     let result = filePath;
 
     _.assert( _.strIs( result ) || _.strsAreAll( result ) );
+    _.assert( arguments.length === 4 );
 
-    if( module2.SelectorIsComposite( result ) )
+    if( currentModule.SelectorIsComposite( result ) )
     {
 
-      result = module2.pathResolve
+      result = currentModule.pathResolve
       ({
         selector : result,
         visited : _.arrayFlatten( null, [ o.visited, result ] ),
-        pathResolving : 0,
-        current : resource,
+        pathResolving : resolving,
+        current : currentResource,
         pathNativizing : o.pathNativizing,
       });
 
@@ -3591,30 +3590,30 @@ function _resolveAct( o )
   function compositePathsSelect()
   {
     let it = this;
-    let module2 = it.module;
+    let currentModule = it.module;
     let resource = it.dst;
 
-    if( !it.dstWritingDown )
+    if( !it.dstWritingDown ) // xxx
     return;
 
-    if( it.dst instanceof will.Reflector )
+    if( resource instanceof will.Reflector )
     {
-      if( module2.SelectorIsComposite( resource.src.prefixPath ) || module2.SelectorIsComposite( resource.dst.prefixPath ) )
+      if( currentModule.SelectorIsComposite( resource.src.prefixPath ) || currentModule.SelectorIsComposite( resource.dst.prefixPath ) )
       {
-        resource = it.dst = it.dst.cloneDerivative();
+        resource = it.dst = resource.cloneDerivative(); debugger;
         if( resource.src.prefixPath )
-        resource.src.prefixPath = compositePathSelect( module2, resource, resource.src.prefixPath );
+        resource.src.prefixPath = compositePathSelect( currentModule, resource, resource.src.prefixPath, 'in' );
         if( resource.dst.prefixPath )
-        resource.dst.prefixPath = compositePathSelect( module2, resource, resource.dst.prefixPath );
+        resource.dst.prefixPath = compositePathSelect( currentModule, resource, resource.dst.prefixPath, 'in' );
       }
     }
 
     if( resource instanceof will.PathResource )
     {
-      if( module2.SelectorIsComposite( resource.path ) )
+      if( currentModule.SelectorIsComposite( resource.path ) )
       {
         resource = it.dst = resource.cloneDerivative();
-        resource.path = compositePathSelect( module2, resource, resource.path )
+        resource.path = compositePathSelect( currentModule, resource, resource.path, 0 )
       }
     }
 
@@ -3622,7 +3621,7 @@ function _resolveAct( o )
 
   /* */
 
-  function pathResolve( module2, filePath, pathName )
+  function pathResolve( currentModule, filePath, pathName )
   {
     let it = this;
     let result = filePath;
@@ -3637,11 +3636,19 @@ function _resolveAct( o )
 
     let prefixPath = '.';
     if( o.pathResolving === 'in' && pathName !== 'in' )
-    prefixPath = module2.pathMap.in || '.';
+    prefixPath = currentModule.pathMap.in || '.';
     else if( o.pathResolving === 'out' && pathName !== 'out' )
-    prefixPath = module2.pathMap.out || '.';
+    prefixPath = currentModule.pathMap.out || '.';
 
-    result = path.s.join( module2.dirPath, prefixPath, result );
+    if( currentModule.SelectorIs( prefixPath ) )
+    prefixPath = currentModule.pathResolve( prefixPath );
+    if( currentModule.SelectorIs( result ) )
+    result = currentModule.pathResolve( result );
+
+    // if( currentModule.SelectorIs( result ) && !currentModule.SelectorIsComposite( result ) )
+    // result = '{' + result + '}'
+
+    result = path.s.join( currentModule.dirPath, prefixPath, result );
 
     return result;
   }
@@ -3651,7 +3658,7 @@ function _resolveAct( o )
   function pathsResolve()
   {
     let it = this;
-    let module2 = it.module;
+    let currentModule = it.module;
     let resource = it.dst;
 
     if( !o.pathResolving )
@@ -3662,18 +3669,31 @@ function _resolveAct( o )
     if( it.dst instanceof will.Reflector )
     {
 
+      // if( resource.nickName === "reflector::reflect.submodules.variant2" )
+      // debugger;
+
       resource = it.dst = it.dst.cloneDerivative();
-      if( resource.formed === 0 )
-      resource.form1();
-      if( resource.formed === 1 )
-      resource.form2();
-      _.assert( resource.formed >= 2 );
+
+      _.assert( resource.formed >= 1 );
+
+      // if( resource.formed === 0 )
+      // resource.form1();
+      // if( resource.formed === 1 )
+      // resource.form2();
+      // _.assert( resource.formed >= 2 );
 
       // yyy
-      // if( resource.src.hasAnyPath() )
-      // resource.src.prefixPath = pathResolve.call( it, module2, resource.src.prefixPath || '.' );
-      // if( resource.dst.hasAnyPath() )
-      // resource.dst.prefixPath = pathResolve.call( it, module2, resource.dst.prefixPath || '.' );
+
+      let srcHasAnyPath = resource.src.hasAnyPath();
+      let dstHasAnyPath = resource.dst.hasAnyPath();
+
+      if( srcHasAnyPath || dstHasAnyPath )
+      {
+        if( srcHasAnyPath )
+        resource.src.prefixPath = pathResolve.call( it, currentModule, resource.src.prefixPath || '.' );
+        if( dstHasAnyPath )
+        resource.dst.prefixPath = pathResolve.call( it, currentModule, resource.dst.prefixPath || '.' );
+      }
 
     }
 
@@ -3682,14 +3702,14 @@ function _resolveAct( o )
       resource = it.dst = resource.cloneDerivative();
       _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
       if( resource.path )
-      resource.path = pathResolve.call( it, module2, resource.path, resource.name )
+      resource.path = pathResolve.call( it, currentModule, resource.path, resource.name )
     }
 
   }
 
   /* */
 
-  function pathNativize( module2, filePath, pathName )
+  function pathNativize( currentModule, filePath, pathName )
   {
     let it = this;
     let result = filePath;
@@ -3706,7 +3726,7 @@ function _resolveAct( o )
   function pathsNativize()
   {
     let it = this;
-    let module2 = it.module;
+    let currentModule = it.module;
     let resource = it.dst;
 
     if( !o.pathNativizing )
@@ -3719,7 +3739,7 @@ function _resolveAct( o )
       resource = it.dst = resource.cloneDerivative(); // xxx : don't do second clone
       _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
       if( resource.path )
-      resource.path = pathNativize.call( it, module2, resource.path, resource.name )
+      resource.path = pathNativize.call( it, currentModule, resource.path, resource.name )
     }
 
   }
@@ -3729,7 +3749,7 @@ function _resolveAct( o )
   function pathsUnwrap()
   {
     let it = this;
-    let module2 = it.module;
+    let currentModule = it.module;
 
     if( !o.pathUnwrapping )
     return;
@@ -3745,7 +3765,7 @@ function _resolveAct( o )
   function singleUnwrap()
   {
     let it = this;
-    let module2 = it.module;
+    let currentModule = it.module;
 
     if( !o.singleUnwrapping )
     return;
@@ -3771,7 +3791,7 @@ function _resolveAct( o )
   function mapsFlatten()
   {
     let it = this;
-    let module2 = it.module;
+    let currentModule = it.module;
     if( !o.flattening || !_.mapIs( it.dst ) )
     return;
 
@@ -3783,7 +3803,7 @@ function _resolveAct( o )
   function mapValsUnwrap()
   {
     let it = this;
-    let module2 = it.module;
+    let currentModule = it.module;
 
     if( !o.mapValsUnwrapping )
     return;
@@ -3814,9 +3834,7 @@ function pathResolve_body( o )
   _.assert( _.strIs( o.selector ) || _.arrayIs( o.selector ) );
 
   let o2 = _.mapExtend( null, o );
-
   let result = module.resolve( o2 );
-
   return result;
 }
 
@@ -3867,12 +3885,11 @@ function reflectorResolve_body( o )
 }
 
 var defaults = reflectorResolve_body.defaults = Object.create( resolve.defaults );
-
 defaults.selector = null;
 defaults.defaultResourceName = 'reflector';
 defaults.prefixlessAction = 'default';
 defaults.current = null;
-defaults.pathResolving = 0;
+defaults.pathResolving = 'in';
 
 let reflectorResolve = _.routineFromPreAndBody( reflectorResolve_pre, reflectorResolve_body );
 

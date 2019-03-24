@@ -1687,7 +1687,102 @@ submodulesDownload.timeOut = 300000;
 
 //
 
-function submodulesBrokenClean1( test )
+function clean( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'clean' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath + ' .with NoTemp',
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* - */
+
+  shell
+  ({
+    args : [ '.build' ]
+  })
+
+  var files;
+  ready
+  .thenKeep( () =>
+  {
+    files = self.find( submodulesPath );
+    debugger;
+    test.is( files.length > 50 );
+    return files;
+  })
+
+  shell({ args : [ '.clean' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.clean';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Clean deleted ' + files.length + ' file(s)' ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) ); /* xxx : phantom problem ? */
+    return null;
+  })
+
+  shell({ args : [ '.clean -- second' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.clean';
+    test.identical( got.exitCode, 0 );
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
+    return null;
+  })
+
+  /* - */
+
+  var files = [];
+  ready
+  .thenKeep( () =>
+  {
+    _.fileProvider.filesDelete( outPath );
+    _.fileProvider.filesDelete( submodulesPath );
+    return null;
+  })
+
+  shell({ args : [ '.clean' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.clean';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Clean deleted ' + 0 + ' file(s)' ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) ); /* xxx : phantom problem ? */
+    return null;
+  })
+
+  shell({ args : [ '.clean -- second' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.clean';
+    test.identical( got.exitCode, 0 );
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+clean.timeOut = 130000;
+
+//
+
+function cleanBroken1( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-broken-1' );
@@ -1817,11 +1912,11 @@ function submodulesBrokenClean1( test )
   return ready;
 }
 
-submodulesBrokenClean1.timeOut = 130000;
+cleanBroken1.timeOut = 130000;
 
 //
 
-function submodulesBrokenClean2( test )
+function cleanBroken2( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-broken-2' );
@@ -1951,102 +2046,7 @@ function submodulesBrokenClean2( test )
   return ready;
 }
 
-submodulesBrokenClean2.timeOut = 130000;
-
-//
-
-function clean( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'clean' );
-  let routinePath = _.path.join( self.tempDir, test.name );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let outPath = _.path.join( routinePath, 'out' );
-  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-
-  let ready = new _.Consequence().take( null );
-  let shell = _.sheller
-  ({
-    execPath : 'node ' + execPath + ' .with NoTemp',
-    currentPath : routinePath,
-    outputCollecting : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-
-  /* - */
-
-  shell
-  ({
-    args : [ '.build' ]
-  })
-
-  var files;
-  ready
-  .thenKeep( () =>
-  {
-    files = self.find( submodulesPath );
-    debugger;
-    test.is( files.length > 50 );
-    return files;
-  })
-
-  shell({ args : [ '.clean' ] })
-  .thenKeep( ( got ) =>
-  {
-    test.case = '.clean';
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Clean deleted ' + files.length + ' file(s)' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) ); /* xxx : phantom problem ? */
-    return null;
-  })
-
-  shell({ args : [ '.clean -- second' ] })
-  .thenKeep( ( got ) =>
-  {
-    test.case = '.clean';
-    test.identical( got.exitCode, 0 );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
-    return null;
-  })
-
-  /* - */
-
-  var files = [];
-  ready
-  .thenKeep( () =>
-  {
-    _.fileProvider.filesDelete( outPath );
-    _.fileProvider.filesDelete( submodulesPath );
-    return null;
-  })
-
-  shell({ args : [ '.clean' ] })
-  .thenKeep( ( got ) =>
-  {
-    test.case = '.clean';
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Clean deleted ' + 0 + ' file(s)' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) ); /* xxx : phantom problem ? */
-    return null;
-  })
-
-  shell({ args : [ '.clean -- second' ] })
-  .thenKeep( ( got ) =>
-  {
-    test.case = '.clean';
-    test.identical( got.exitCode, 0 );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
-    return null;
-  })
-
-  /* - */
-
-  return ready;
-}
-
-clean.timeOut = 130000;
+cleanBroken2.timeOut = 130000;
 
 //
 
@@ -3015,9 +3015,11 @@ function multipleExportsBroken( test )
       recursive : 0,
       src :
       {
-        filePath : { '.' : null, 'File.debug.js' : null },
+        filePath : 'path::exportedFiles.export.debug',
+        // filePath : { '.' : null, 'File.debug.js' : null },
         basePath : '.',
-        prefixPath : 'out/debug'
+        // prefixPath : 'out/debug'
+        prefixPath : 'path::exportedDir.export.debug',
       },
       criterion :
       {
@@ -3165,8 +3167,8 @@ function reflectNothingFromSubmodules( test )
       'Single.s' : null
     }
     test.identical( reflector.src.basePath, '.' );
-    test.identical( reflector.src.prefixPath, 'proto' );
-    test.identical( reflector.src.filePath, expectedFilePath );
+    test.identical( reflector.src.prefixPath, 'path::exportedDir.proto.export' );
+    test.identical( reflector.src.filePath, 'path::exportedFiles.proto.export' );
 
     var expectedReflector =
     {
@@ -3174,33 +3176,35 @@ function reflectNothingFromSubmodules( test )
       {
         src :
         {
-          filePath : { '.' : '.' },
-          prefixPath : 'proto',
-          maskAll :
-          {
-            excludeAny :
-            [
-              /(\W|^)node_modules(\W|$)/,
-              /\.unique$/,
-              /\.git$/,
-              /\.svn$/,
-              /\.hg$/,
-              /\.DS_Store$/,
-              /(^|\/)-/,
-              /\.release($|\.|\/)/i,
-              /\.debug($|\.|\/)/i,
-              /\.test($|\.|\/)/i,
-              /\.experiment($|\.|\/)/i
-            ]
-          }
+          // filePath : { '.' : '.' },
+          filePath : { 'path::proto' : 'path::out.*=1' },
+          // prefixPath : 'proto',
+        //   maskAll :
+        //   {
+        //     excludeAny :
+        //     [
+        //       /(\W|^)node_modules(\W|$)/,
+        //       /\.unique$/,
+        //       /\.git$/,
+        //       /\.svn$/,
+        //       /\.hg$/,
+        //       /\.DS_Store$/,
+        //       /(^|\/)-/,
+        //       /\.release($|\.|\/)/i,
+        //       /\.debug($|\.|\/)/i,
+        //       /\.test($|\.|\/)/i,
+        //       /\.experiment($|\.|\/)/i
+        //     ]
+        //   }
         },
-        dst : { prefixPath : 'out/debug' },
-        criterion : { debug : 1 },
-        inherit : [ 'predefined.*' ]
+        // dst : { prefixPath : 'out/debug' },
+        // criterion : { debug : 1 },
+        inherit : [ 'predefined.*' ],
       },
       'reflect.submodules1' :
       {
-        dst : { filePath : '.', basePath : '.', prefixPath : 'out/debug' },
+        // dst : { filePath : '.', basePath : '.', prefixPath : 'out/debug' },
+        'dst' : { 'basePath' : '.', 'prefixPath' : 'path::out.debug' },
         criterion : { debug : 1 },
         inherit :
         [
@@ -3211,20 +3215,21 @@ function reflectNothingFromSubmodules( test )
       {
         src :
         {
-          maskAll :
-          {
-            excludeAny :
-            [
-              /(\W|^)node_modules(\W|$)/,
-              /\.unique$/,
-              /\.git$/,
-              /\.svn$/,
-              /\.hg$/,
-              /\.DS_Store$/,
-              /(^|\/)-/,
-              /\.release($|\.|\/)/i
-            ]
-          }
+          'filePath' : { 'submodule::*/exported::*=1/path::exportedDir*=1' : 'path::out.*=1' }
+          // maskAll :
+          // {
+          //   excludeAny :
+          //   [
+          //     /(\W|^)node_modules(\W|$)/,
+          //     /\.unique$/,
+          //     /\.git$/,
+          //     /\.svn$/,
+          //     /\.hg$/,
+          //     /\.DS_Store$/,
+          //     /(^|\/)-/,
+          //     /\.release($|\.|\/)/i
+          //   ]
+          // }
         },
         criterion : { debug : 1 },
         inherit : [ 'predefined.*' ]
@@ -3243,9 +3248,11 @@ function reflectNothingFromSubmodules( test )
         recursive : 0,
         src :
         {
-          filePath : { '.' : null, 'Single.s' : null },
+          'filePath' : 'path::exportedFiles.proto.export',
+          'prefixPath' : 'path::exportedDir.proto.export',
+          // filePath : { '.' : null, 'Single.s' : null },
           basePath : '.',
-          prefixPath : 'proto'
+          // prefixPath : 'proto'
         },
         criterion : { default : 1, export : 1 }
       }
@@ -3393,46 +3400,6 @@ function reflectSubdir( test )
 
   .thenKeep( () =>
   {
-    test.case = '.build variant:0'
-    _.fileProvider.filesDelete( outPath );
-    return null;
-  });
-  shell({ args : [ '.build variant:0' ] })
-  .thenKeep( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, './module/proto/File1.s' ) ) );
-    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, './out/debug/proto/File1.s' ) ) );
-    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'submodule.out.will.yml' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out' ) ) );
-
-    var expected =
-    [
-      '.',
-      './.ex.will.yml',
-      './.im.will.yml',
-      './submodule.out.will.yml',
-      './module',
-      './module/submodule.will.yml',
-      './module/proto',
-      './module/proto/File1.s',
-      './module/proto/File2.s',
-      './out',
-      './out/debug',
-      './out/debug/proto',
-      './out/debug/proto/File1.s',
-      './out/debug/proto/File2.s',
-    ]
-    var got = self.find( routinePath );
-    test.identical( got, expected );
-
-    return null;
-  })
-
-  /* */
-
-  .thenKeep( () =>
-  {
     test.case = '.build variant:1'
     _.fileProvider.filesDelete( outPath );
     return null;
@@ -3478,6 +3445,46 @@ function reflectSubdir( test )
     return null;
   });
   shell({ args : [ '.build variant:2' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, './module/proto/File1.s' ) ) );
+    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, './out/debug/proto/File1.s' ) ) );
+    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'submodule.out.will.yml' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out' ) ) );
+
+    var expected =
+    [
+      '.',
+      './.ex.will.yml',
+      './.im.will.yml',
+      './submodule.out.will.yml',
+      './module',
+      './module/submodule.will.yml',
+      './module/proto',
+      './module/proto/File1.s',
+      './module/proto/File2.s',
+      './out',
+      './out/debug',
+      './out/debug/proto',
+      './out/debug/proto/File1.s',
+      './out/debug/proto/File2.s',
+    ]
+    var got = self.find( routinePath );
+    test.identical( got, expected );
+
+    return null;
+  })
+
+  /* */
+
+  .thenKeep( () =>
+  {
+    test.case = '.build variant:3'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  });
+  shell({ args : [ '.build variant:3' ] })
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -4470,10 +4477,10 @@ var Self =
     submodulesBuild,
     submodulesExport,
     submodulesDownload,
-    submodulesBrokenClean1,
-    submodulesBrokenClean2,
 
     clean,
+    cleanBroken1,
+    cleanBroken2,
     cleanNoBuild,
     cleanWhat,
     cleanSubmodules,

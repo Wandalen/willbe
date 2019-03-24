@@ -869,6 +869,7 @@ let Statics =
 
   MapName : null,
   KindName : null,
+
 }
 
 let Forbids =

@@ -286,6 +286,8 @@ function _reflectorsMake( Reflector, resources )
     o2.module = module;
     o2.name = name;
 
+    delete o2.step;
+
     try
     {
       Reflector.MakeForEachCriterion( o2 );
@@ -305,6 +307,9 @@ function _reflectorsMake( Reflector, resources )
       o3.module = module;
       o3.name = name;
       o3.reflector = 'reflector::' + name + '*';
+      if( resource.step )
+      o3.inherit = resource.step;
+      else
       o3.inherit = 'predefined.reflect';
       o3.Optional = 1;
 
