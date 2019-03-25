@@ -9,20 +9,20 @@
   Процес встановлення утиліти <code>willbe</code>
 </details>
 <details>
-  <summary><a href="./Tutorials/Concepts.md">Основні концепції</a></summary>
+  <summary><a href="./Concepts.md">Основні концепції</a></summary>
   Основні концепції. Допомагає побачити загальну картину
 </details>
 <details>
   <summary><a href="./Tutorials/CompositionOfWillFile.md">Структура <code>will-файла</code></a></summary>
-  В туторіалі описано структуру секцій <code>will-файлу</code> та приведено приклади їх застосування
+  В туторіалі описано структуру секцій <code>will-файлу</code>
 </details>
 <details>
   <summary><a href="./Tutorials/HowToUseCommandLineInterfaceOfWill.md">Як користуватися інтерфейсом командного рядка <code>willbe</code></a></summary>
-  В туторіалі описується використання командного рядка для взаємодії з утилітою <code>willbe</code>, застосування команд <code>.help</code> та <code>.list</code>
+  Як користуватись командним рядком для взаємодії з утилітою <code>willbe</code>, застосування команд <code>.help</code> та <code>.list</code>
 </details>
 <details>
   <summary><a href="./Tutorials/FirstWillFile.md">Перший <code>will-файл</code></a></summary>
-  В туторіалі описується створення першого <code>will-файлу</code> та першого модуля
+  "Hello, World" з утилітою <code>willbe</code>
 </details>
 <details>
   <summary><a href="./Tutorials/RemoteSubmodulesImporting.md">Перший <code>will-модуль</code>. Завантаження віддаленого підмодуля</a></summary>
@@ -30,83 +30,83 @@
 </details>
 <details>
   <summary><a href="./Tutorials/SubmodulesAdministration.md">Оновлення та видалення підмодулів</a></summary>
-  В туторіалі продовжено опис підмодулів, більш детально розглянуто їх адміністрування
+  Продовжено опис підмодулів, детальніше розглянуто їх адміністрування
 </details>
 <details>
-  <summary><a href="./Tutorials/ModuleCreationByBuild.md">Використання команди '.build' для побудови модуля</a></summary>
+  <summary><a href="./Tutorials/ModuleCreationByBuild.md">Побудова модуля командою <code>.build</code></a></summary>
   Туторіал описує запуск окремих збірок побудови модуля в <code>will-файлі</code>
 </details>
 <details>
   <summary><a href="./Tutorials/PredefinedSteps.md">Знайомство з вбудованими кроками</a></summary>
-  В туторіалі дається пояснення вбудованих кроків та приведено приклади використання
+  В туторіалі пояснюється як користуватись вбудованими кроками для роботи з віддаленими підмодулями
 </details>
 <details>
-  <summary><a href="./Tutorials/CriterionsInWillFile.md">Поняття критеріонів в <code>will-файлах</code> та їх використання</a></summary>
-  В туторіалі дається поняття про критеріони (criterion) та їх використання в <code>will-файлах</code>
+  <summary><a href="./Tutorials/CriterionsInWillFile.md">Критеріони в <code>will-файлах</code></a></summary>
+  Як використовуються критеріони в <code>will-файлі</code>
 </details>
 <details>
-  <summary><a href="./Tutorials/DefaultCriterionInWillFile.md">Побудова модуля (build) за замовчуванням</a></summary>
-  В туторіалі показано як користуватись зовнішніми програмами та створено збірку, яка виконується за замовчуванням
+  <summary><a href="./Tutorials/DefaultCriterionInWillFile.md">Збірка побудови модуля за замовчуванням</a></summary>
+  Як побудувати збірку, що запускається без указання аргумента команди <code>.build</code>
 </details>
 <details>
   <summary><a href="./Tutorials/ExportedWillFile.md">Експортування модуля</a></summary>
-  В цьому туторіалі описана процедура експортування <code>will-модуля</code>
+  В туторіалі описана процедура експортування <code>will-модуля</code>
 </details>
 <details>
   <summary><a href="./Tutorials/LocalSubmodulesImporting.md">Імпорт локального підмодуля</a></summary>
-  В туторіалі показано як додати локальний підмодуль та його особливості
+  В туторіалі показано як додати локальний підмодуль
 </details>
 <details>
   <summary><a href="./Tutorials/SelectorsTermInWillFile.md">Поняття селекторів в <code>will-файлах</code></a></summary>
-  В туторіалі дається поняття селекторів та їх застосування в <code>will-файлах</code>
+  Дається поняття селекторів та приклади застосування в <code>will-файлах</code>
 </details>
 <details>
-  <summary><a href="./Tutorials/HowToUseSelectorsWithGlob.md">Як використовувати селектори з ґлобами</a></summary>
-  В туторіалі пояснюється застосування ґлобів в селекторах <code>will-файла</code>
+  <summary><a href="./Tutorials/HowToUseSelectorsWithGlob.md">Використання селекторів з ґлобами</a></summary>
+  Як користуватись ґлобами в селекторах <code>will-файла</code>
 </details>
 <details>
-  <summary><a href="./Tutorials/HowToUseAsserts.md">Як використовувати ассерти в <code>will-файлах</code></a></summary>
-  В туторіалі пояснюється як з допомогою ассертів зменшити кількість помилок в <code>will-файлі</code>
+  <summary><a href="./Tutorials/HowToUseAsserts.md">Як користуватись ассертами</a></summary>
+  В туторіалі пояснюється як ассерти допомогають зменшити кількість помилок в <code>will-файлі</code>
 </details>
 <details>
   <summary><a href="./Tutorials/MinimizationOfWillFile.md">Мінімізація <code>will-файла</code></a></summary>
-  В туторіалі показано, як мінімізувати величину <code>will-файла</code> та властивості ресурсів при використанні скороченої форми запису критеріонів
+  В туторіалі показано як мінімізувати об'єм `will-файла` та властивості скороченої форми запису критеріонів 
 </details>
 <details>
-  <summary><a href="./Tutorials/SplitWillFile.md">Розділені <code>will-файли</code> (Split <code>will-files</code>)</a></summary>
+  <summary><a href="./Tutorials/SplitWillFile.md">Розділені <code>will-файли</code></a></summary>
   В туторіалі розглядається створення розділених <code>will-файлів</code>
 </details>
 <details>
-  <summary><a href="./Tutorials/NamedWillFile.md">Іменовані <code>will-файли</code>. Використання команди '.with'</a></summary>
-  В туторіалі дається поняття іменованих <code>will-файлів</code> та показано як користуватись командою <code>.with</code>
+    <summary><a href="./Tutorials/NamedWillFile.md">Іменовані <code>will-файли</code>. Команда <code>.with</code></a></summary>
+  Дається поняття іменованих <code>will-файлів</code> та показано як користуватись командою <code>.with</code>
 </details>
 <details>
-  <summary><a href="./Tutorials/UsingEachCommand.md">Як користуватись командою '.each'</a></summary>
-  В туторіалі пояснюється призначення команди <code>.each</code> та приводиться приклад використання
+  <summary><a href="./Tutorials/UsingEachCommand.md">Як користуватись командою <code>.each</code></a></summary>
+  В туторіалі пояснюється як використовується команда <code>.each</code>
 </details>
 <details>
   <summary><a href="./Tutorials/UsingOfJSInWillbe.md">Використання JavaScript файлів утилітою <code>willbe</code></a></summary>
-  В туторіалі показано як використовувати JavaScript-скрипти в утиліті <code>willbe</code>
+  В туторіалі показано як запускати JavaScript-файли в утиліті <code>willbe</code>
 </details>
 <details>
-  <summary><a href="./Tutorials/UsingSetCommand.md">Використання команди '.set'</a></summary>
-  В туторіалі пояснюється призначення команди `.set` та дається приклад використання
+  <summary><a href="./Tutorials/UsingSetCommand.md">Використання команди <code>.set</code></a></summary>
+  Як корстуватись командою <code>.set</code>
 </details>
 <details>
   <summary><a href="./Tutorials/HowToUseComplexSelector.md">Як використовувати складні селектори</a></summary>
-  В туторіалі пояснюється застосування складних селекторів при побудові модуля, приведено приклади застосування ґлобів та ассертів
+  В туторіалі пояснюється як будуються складні селектори
 </details>
 <details>
   <summary><a href="./Tutorials/ReflectorUsing.md">Поняття рефлекторів. Копіювання файлів</a></summary>
-  В туторіалі описуються рефлектори, дається приклад копіювання файлів рефлектором, пояснюється як користуватись полем `recursive`
+  В туторіалі описуються копіювання файлів рефлектором, пояснюється як користуватись полем <code>recursive</code>
 </details>
 <details>
   <summary><a href="./Tutorials/ReflectorFilters.md">Фільтри рефлектора</a></summary>
-  В туторіалі дається поняття простих фільтрів і масок рефлектора та показано як вони застосовуються
+  В туторіалі дається поняття простих фільтрів і масок рефлектора
 </details>
 <details>
   <summary><a href="./Tutorials/ReflectorTimeFilters.md">Часові фільтри рефлектора</a></summary>
-  В туторіалі показано як використовуються фільтри відбору файлів по часу
+  В туторіалі показано як користуватись фільтрами відбору файлів по часу
 </details>
 <details>
   <summary><a href="./Tutorials/ReflectorFSControl.md">Формування шляхів в рефлекторі. Управління файловими операціями</a></summary>
