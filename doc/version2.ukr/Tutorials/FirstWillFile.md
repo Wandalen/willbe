@@ -3,27 +3,47 @@
 Створення модуля "Hello, World" з утилітою `willbe`
 
 ### <a name="will-file-futures"></a> Властивості `will`-файла
-Will-файл - конфігураційний файл для побудови модульної системи утилітою `willbe`.
-Має наступні властивості:
-- файли мають розширення 'yml', 'json', 'cson';
-- документ складається з секцій, які описують поведінку модуля (about, path, step, reflector, build...).  
+`Will-файл` - конфігураційний файл для побудови модульної системи утилітою `willbe`.  
+Має наступні властивості:  
+\- `will-файл` описує файли модуля;  
+\- документ складається з секцій - верхньої структурної одиницi `will-файл` та ресурсів;  
+\- є шість секцій для побудови модуля користувачем: `about`, `path`, `submodule`, `step`, `reflector`, `build` та одна секція, яка генерується утилітою `willbe` при експорті модуля - секція `exported`;  
+\- секції об'єднують ресурси одного типу;  
+\- ресурси описують функціональності модуля.
 
-### <a name="will-file-creation"></a> Створення will-файла
-Для створення першого will-файла виконайте наступні кроки:
-\- Cтворіть порожній файл з назвою `.will.yml` в новій директорії.
-\- Відкрийте його та скопіюйте приведений код:
-```yaml
-    about :
-        name : first
-        description : "First module"
-        version : 0.0.1
-        keywords :
-            - willbe
-```
-\- Збережіть файл.
-Після цього перевірте конфігурацію виконавши з командного рядка `will .about.list` в кореневій директорії файлу.
+### <a name="will-file-creation"></a> Створення will-файла  
+Для створення першого will-файла виконайте наступні кроки:  
+\- Cтворіть порожній файл з назвою `.will.yml` в новій директорії.  
+\- Відкрийте його та скопіюйте приведений код:  
+
 <details>
-  <summary><u>Лістинг `will .about.list`</u></summary>
+  <summary><u>Відкрийте, щоб проглянути структуру директорії та код в файлі <code>.will.yml</code></u></summary> 
+    
+```
+first               # директорія, назва довільна
+  └── .will.yml     # конфігураційний файл
+  
+```
+
+<p>Код в файлі <code>.will.yml</code></p>
+    
+```yaml
+about :
+    name : helloWorld
+    description : "First module like 'Hello, World!' application"
+    version : 0.0.1
+    keywords :
+        - willbe
+```
+
+</details>
+
+</br>
+\- Збережіть файл.  
+Після цього перевірте конфігурацію виконавши з командного рядка `will .about.list` в кореневій директорії файлу.
+
+<details>
+  <summary><u>Вивід фрази <code>will .about.list</code></u></summary>
 
   ```
 [user@user ~]$ will .about.list
@@ -31,8 +51,8 @@ Request ".about.list"
   . Read : /path_to_file/.will.yml
 . Read 1 will-files in 0.109s
 About
- name : 'first'
- description : 'First module'
+ name : 'helloWorld'
+ description : 'First module like 'Hello, World!' application'
  version : '0.0.1'
  enabled : 1
  keywords :
@@ -42,31 +62,21 @@ About
 
 </details>
 
-Заповнення секції 'about' значно спрощує використання модуля іншими розробниками та адміністування системи в довготривалій перспективі.  
+</br>
+Заповнення секції `about` спрощує використання модуля іншими розробниками та управління ним в довготривалій перспективі.  
 
-### <a name="first-modules"></a> Створення модуля  
-Ми створили свій перший `will`-файл, який описує модуль, але не має функціоналу, тож, побудуємо робочий [`will`-модуль](Concepts.md#module) - базову одиницю утиліти.  
-Для початку використаємо готові рішення в вигляді підмодулів. Розмістимо ресурс з описом підмодуля в секції `submodule`:  
+### <a name="first-modules"></a> Побудова модуля  
+Перший `will-файл` створено. Він лише описує модуль, тож, додамо до нього функціональність.  
+Для початку використаємо готові рішення в вигляді віддалених підмодулів. Розмістимо ресурс з описом підмодуля в секції `submodule`. Замініть вміст файла `.will.yml`:  
 
-```yaml
-
-submodule :
-
-  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-
-```
-
-Додайте її до попереднього файла:  
-
-<details>  
-  <summary><u>Файл `.will.yml`</u></summary>
+<details>
+  <summary><u>Відкрийте, щоб проглянути</u></summary> 
 
 ```yaml
 
 about :
-
-    name : first
-    description : "First module"
+    name : helloWorld
+    description : "First module like 'Hello, World!' application"
     version : 0.0.1
     keywords :
         - willbe
@@ -77,12 +87,22 @@ submodule :
 
 ```
 
+<p>Структура директорії</p>
+
+```
+first              
+  └── .will.yml     
+  
+```
+
 </details>
 
-<p> </p>
+</br>
+Тепер в секцію `submodule` поміщено один ресурс з назвою `Tools`, який має _URL_-шлях `git+https:///github.com/Wandalen/wTools.git/out/wTools#master`. Запис шляху свідчить про використання підмодуля з _GitHub_-у.  
+Скориставшись знайомою з попереднього туторіалу ["Як користуватися інтерфейсом командного рядка `willbe`"](HowToUseCommandLineInterfaceOfWill.md#list-commands) фразою `will. submodules.list`, отримаємо такий вивід (тут і далі, текст виводу консолі, що не включено в туторіал позначений `...`):  
 
-Тепер в `submodule` поміщений один ресурс з назвою _'Tools'_, який має _URL_-шлях _'git+https:///github.com/Wandalen/wTools.git/out/wTools#master'_. Опис шляху свідчить про використання підмодуля з _GitHub_-у.  
-Скориставшись знайомою з попереднього туторіалу командою `will. submodules.list`, отримаємо такі рядки (тут і далі, текст лістинга команди, що не включено в туторіал позначений '...'):
+<details>
+  <summary><u>Вивід фрази <code>will .submodules.list</code></u></summary> 
 
 ```
 [user@user ~]$ will .submodules.list
@@ -94,7 +114,10 @@ submodule :
 
 ```
 
-Підмодуль уже відноситься до системи, але він не завантажений і неможливо зчитати інформацію про нього.
+</details>
+
+</br>
+Підмодуль не завантажений і неможливо зчитати інформацію про нього.
 
 ### Підсумок
 - Ви можете використовувати [готові модулі](#first-modules) позначивши їх як підмодулі в секції `submodule`.
