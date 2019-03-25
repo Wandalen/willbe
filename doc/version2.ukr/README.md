@@ -22,11 +22,11 @@
 </details>
 <details>
   <summary><a href="./Tutorials/FirstWillFile.md">Модуль "Hello, World!"</a></summary>
-  Створення модуля "Hello, World!" з утилітою <code>willbe</code>
+  Створення модуля "Hello, World!" з утилітою <code>willbe</code>. Завантаження віддаленого підмодуля
 </details>
 <details>
   <summary><a href="./Tutorials/SubmodulesAdministration.md">Оновлення та видалення підмодулів</a></summary>
-  Продовжено опис підмодулів, розглянуто команди оновлення та видалення
+  Продовжено опис віддалених підмодулів, розглянуто команди оновлення та видалення
 </details>
 <details>
   <summary><a href="./Tutorials/ModuleCreationByBuild.md">Побудова модуля командою <code>.build</code></a></summary>
