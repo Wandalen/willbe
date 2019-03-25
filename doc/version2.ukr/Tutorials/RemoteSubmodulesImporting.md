@@ -1,9 +1,9 @@
-# Перший will-модуль. Завантаження віддаленого підмодуля
+# Перший `will-модуль`. Завантаження віддаленого підмодуля
 
-В туторіалі показано як імпортувати віддалені підмодулі  
+В туторіалі показано як імпортувати віддалені підмодулі
 
 В [попередньому туторіалі](FirstWillFile.md) створено конфігурацію для роботи з зовнішніми підмодулями, зробимо наступний крок для побудови модуля.  
-<a name="submodules-download"></a> В директорії з файлом `.will.yml` введіть фразу `will. submodules.download`:
+В директорії з файлом `.will.yml` введіть фразу `will. submodules.download`:
 
 ```
 [user@user ~]$ will .submodules.download
@@ -59,7 +59,7 @@ submodule::PathFundamentals
 
 ```
 
-<a name="resource-inheritation"> Зверніть увагу на рядки, які позначають окремі підмодулі - _'submodule::Tools'_ i _'submodule::PathFundamentals'_. В порівнянні з виводом інформації секції `about` (фраза `will .about.list`).
+Зверніть увагу на рядки, які позначають окремі підмодулі - _'submodule::Tools'_ i _'submodule::PathFundamentals'_. В порівнянні з виводом інформації секції `about` (фраза `will .about.list`).
 
 ```
 [user@user ~]$ will .about.list
