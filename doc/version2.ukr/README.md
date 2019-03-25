@@ -21,8 +21,8 @@
   Як користуватись командним рядком для взаємодії з утилітою <code>willbe</code>, застосування команд <code>.help</code> та <code>.list</code>
 </details>
 <details>
-  <summary><a href="./Tutorials/FirstWillFile.md">Перший <code>will-файл</code></a></summary>
-  "Hello, World" з утилітою <code>willbe</code>
+  <summary><a href="./Tutorials/FirstWillFile.md">Модуль "Hello, World!"</a></summary>
+  Створення модуля "Hello, World!" з утилітою <code>willbe</code>
 </details>
 <details>
   <summary><a href="./Tutorials/RemoteSubmodulesImporting.md">Перший <code>will-модуль</code>. Завантаження віддаленого підмодуля</a></summary>

@@ -1,6 +1,6 @@
-# Перший `will-файл`
+# Модуль "Hello, World!"
 
-"Hello, World" з утилітою `willbe`
+Створення модуля "Hello, World" з утилітою `willbe`
 
 ### <a name="will-file-futures"></a> Властивості `will`-файла
 Will-файл - конфігураційний файл для побудови модульної системи утилітою `willbe`.
