@@ -183,21 +183,32 @@ function makeNamed( test )
 
     let pathMap =
     {
+
       'proto' : './proto',
       'temp' : './super.out',
       'in' : '.',
       'out' : './super.out',
       'out.debug' : './super.out/debug',
-      'out.release' : './super.out/release'
+      'out.release' : './super.out/release',
+
+      'clonePath' : null,
+      'remotePath' : null,
+      'willPath' : path.join( __dirname, '../will/Exec' ),
+      'dirPath' : path.join( routinePath, '.' ),
+      'filePath' : path.join( routinePath, './super' ),
+
     }
 
     test.identical( module.nickName, 'module::super' );
     test.identical( module.absoluteName, 'module::super' );
     test.identical( module.inPath, routinePath );
     test.identical( module.outPath, routinePath + '/super.out' );
-    test.identical( module.dirPath, routinePath );
-    test.identical( module.filePath, routinePath + '/super' );
     test.identical( module.configName, 'super' );
+    test.identical( module.clonePath, null );
+    test.identical( module.remotePath, null );
+    test.identical( module.willPath, path.join( __dirname, '../will/Exec' ) );
+    test.identical( module.dirPath, path.join( routinePath, '.' ) );
+    test.identical( module.filePath, path.join( routinePath, './super' ) );
 
     test.is( !!module.about );
     test.identical( module.about.name, 'super' );
@@ -207,9 +218,9 @@ function makeNamed( test )
     test.identical( module.willFileArray.length, 2 );
     test.identical( _.mapKeys( module.willFileWithRoleMap ), [ 'import', 'export' ] );
     test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
-    test.identical( _.mapKeys( module.pathResourceMap ), [ 'proto', 'temp', 'in', 'out', 'out.debug', 'out.release' ] );
+    test.identical( _.mapKeys( module.pathResourceMap ), [ 'filePath', 'dirPath', 'clonePath', 'remotePath', 'willPath', 'proto', 'temp', 'in', 'out', 'out.debug', 'out.release' ] );
     test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.submodules.', 'reflect.submodules.debug' ] );
-    test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
+    test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.upgrade', 'submodules.reload', 'submodules.clean', 'clean', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [] );
 
@@ -301,11 +312,19 @@ function makeAnon( test )
 
     let pathMap =
     {
+
       'proto' : '.',
       'in' : 'proto',
       'out' : '../out',
       'out.debug' : '../out/debug',
-      'out.release' : '../out/release'
+      'out.release' : '../out/release',
+
+      'clonePath' : null,
+      'remotePath' : null,
+      'willPath' : path.join( __dirname, '../will/Exec' ),
+      'dirPath' : routinePath,
+      'filePath' : routinePath + '/',
+
     }
 
     test.identical( module.nickName, 'module::submodule' );
@@ -315,6 +334,11 @@ function makeAnon( test )
     test.identical( module.dirPath, routinePath );
     test.identical( module.filePath, routinePath + '/' );
     test.identical( module.configName, 'makeAnon' );
+    test.identical( module.clonePath, null );
+    test.identical( module.remotePath, null );
+    test.identical( module.willPath, path.join( __dirname, '../will/Exec' ) );
+    test.identical( module.dirPath, path.join( routinePath, '.' ) );
+    test.identical( module.filePath, routinePath + '/' );
 
     test.is( !!module.about );
     test.identical( module.about.name, 'submodule' );
@@ -324,9 +348,8 @@ function makeAnon( test )
     test.identical( module.willFileArray.length, 2 );
     test.identical( _.mapKeys( module.willFileWithRoleMap ), [ 'import', 'export' ] );
     test.identical( _.mapKeys( module.submoduleMap ), [] );
-    test.identical( _.mapKeys( module.pathResourceMap ), [ 'proto', 'in', 'out', 'out.debug', 'out.release' ] );
     test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.proto.', 'reflect.proto.debug' ] );
-    test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'reflect.proto.', 'reflect.proto.debug', 'reflect.proto.raw', 'reflect.proto.debug.raw', 'export.', 'export.debug' ] );
+    test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.upgrade', 'submodules.reload', 'submodules.clean', 'clean', 'reflect.proto.', 'reflect.proto.debug', 'reflect.proto.raw', 'reflect.proto.debug.raw', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.buildMap ), [ 'debug.raw', 'debug.compiled', 'release.raw', 'release.compiled', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [] );
 
@@ -418,6 +441,7 @@ function makeOutNamed( test )
 
     let pathMap =
     {
+
       'proto' : './proto',
       'temp' : './super.out',
       'out' : './super.out',
@@ -429,7 +453,14 @@ function makeOutNamed( test )
       'archiveFile.export.debug' : './super.out/super.debug.out.tgs',
       'exportedDir.export.' : './super.out/release',
       'exportedFiles.export.' : [ 'super.out/release', 'super.out/release/File.debug.js', 'super.out/release/File.release.js' ],
-      'archiveFile.export.' : './super.out/super.out.tgs'
+      'archiveFile.export.' : './super.out/super.out.tgs',
+
+      'clonePath' : null,
+      'remotePath' : null,
+      'willPath' : path.join( __dirname, '../will/Exec' ),
+      'dirPath' : routinePath + '/super.out',
+      'filePath' : routinePath + '/super.out/super.out',
+
     }
 
     test.identical( module.nickName, 'module::super' );
@@ -448,9 +479,8 @@ function makeOutNamed( test )
     test.identical( module.willFileArray.length, 1 );
     test.identical( _.mapKeys( module.willFileWithRoleMap ), [ 'single' ] );
     test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
-    test.identical( _.mapKeys( module.pathResourceMap ), [ 'proto', 'temp', 'in', 'out', 'out.debug', 'out.release', 'exportedDir.export.debug', 'exportedFiles.export.debug', 'archiveFile.export.debug', 'exportedDir.export.', 'exportedFiles.export.', 'archiveFile.export.' ] );
     test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.debug', 'exportedFiles.export.debug', 'exported.export.', 'exportedFiles.export.' ] );
-    test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.upgrade', 'submodules.clean', 'clean', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
+    test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.upgrade', 'submodules.reload', 'submodules.clean', 'clean', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug', 'exported.export.debug', 'exportedFiles.export.debug', 'exported.export.', 'exportedFiles.export.' ] );
     test.identical( _.mapKeys( module.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [ 'export.', 'export.debug' ] );
 
@@ -760,8 +790,7 @@ function pathsResolve( test )
 
     test.case = 'path::* - implicit'; /* */
     var resolved = module.resolve( 'path::*' );
-    test.identical( resolved.length, 6 );
-    var expected = path.s.join( routinePath, [ './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ] );
+    var expected = path.s.join( routinePath, [ './super', '.', null, null, path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ] );
     var got = resolved;
     test.identical( got, expected );
 
@@ -773,8 +802,7 @@ function pathsResolve( test )
       mapValsUnwrapping : 1,
       pathResolving : 'in',
     });
-    test.identical( resolved.length, 6 );
-    var expected = path.s.join( routinePath, [ './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ] );
+    var expected = path.s.join( routinePath, [ './super', '.', null, null, path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ] );
     var got = resolved;
     test.identical( got, expected );
 
@@ -786,8 +814,7 @@ function pathsResolve( test )
       mapValsUnwrapping : 1,
       pathResolving : 'out',
     });
-    test.identical( resolved.length, 6 );
-    var expected = path.s.join( routinePath, 'super.out', [ './proto', './super.out', '.', '.', './super.out/debug', './super.out/release' ] );
+    var expected = path.s.join( routinePath, 'super.out', [ '../super', '..', null, null, path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', '.', './super.out/debug', './super.out/release' ] );
     var got = resolved;
     test.identical( got, expected );
 
@@ -799,8 +826,7 @@ function pathsResolve( test )
       mapValsUnwrapping : 1,
       pathResolving : null,
     });
-    test.identical( resolved.length, 6 );
-    var expected = [ './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ];
+    var expected = [ routinePath + '/super', routinePath + '', null, null, path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ];
     var got = resolved;
     test.identical( got, expected );
 
@@ -819,7 +845,12 @@ function pathsResolve( test )
       'in' : '.',
       'out' : './super.out',
       'out.debug' : './super.out/debug',
-      'out.release' : './super.out/release'
+      'out.release' : './super.out/release',
+      'clonePath' : null,
+      'remotePath' : null,
+      'willPath' : path.join( __dirname, '../will/Exec' ),
+      'dirPath' : routinePath + '',
+      'filePath' : routinePath + '/super',
     }
     var got = _.select( resolved, '*/path' );
     test.identical( got, expected );
@@ -843,6 +874,11 @@ function pathsResolve( test )
       'out' : pin( './super.out' ),
       'out.debug' : pin( './super.out/debug' ),
       'out.release' : pin( './super.out/release' ),
+      'clonePath' : null,
+      'remotePath' : null,
+      'willPath' : path.join( __dirname, '../will/Exec' ),
+      'dirPath' : routinePath + '',
+      'filePath' : routinePath + '/super',
     }
     var got = _.select( resolved, '*/path' );
     test.identical( got, expected );
@@ -863,6 +899,11 @@ function pathsResolve( test )
       'out' : pout( '.' ),
       'out.debug' : pout( './super.out/debug' ),
       'out.release' : pout( './super.out/release' ),
+      'clonePath' : null,
+      'remotePath' : null,
+      'willPath' : path.join( __dirname, '../will/Exec' ),
+      'dirPath' : routinePath + '',
+      'filePath' : routinePath + '/super',
     }
     var got = _.select( resolved, '*/path' );
     test.identical( got, expected );
@@ -882,7 +923,12 @@ function pathsResolve( test )
       'in' : '.',
       'out' : './super.out',
       'out.debug' : './super.out/debug',
-      'out.release' : './super.out/release'
+      'out.release' : './super.out/release',
+      'clonePath' : null,
+      'remotePath' : null,
+      'willPath' : path.join( __dirname, '../will/Exec' ),
+      'dirPath' : routinePath + '',
+      'filePath' : routinePath + '/super',
     }
     var got = resolved;
     test.identical( got, expected );
@@ -903,6 +949,11 @@ function pathsResolve( test )
       'out' : pin( './super.out' ),
       'out.debug' : pin( './super.out/debug' ),
       'out.release' : pin( './super.out/release' ),
+      'clonePath' : null,
+      'remotePath' : null,
+      'willPath' : path.join( __dirname, '../will/Exec' ),
+      'dirPath' : routinePath + '',
+      'filePath' : routinePath + '/super',
     }
     var got = resolved;
     test.identical( got, expected );
@@ -923,6 +974,11 @@ function pathsResolve( test )
       'out' : pout( '.' ),
       'out.debug' : pout( './super.out/debug' ),
       'out.release' : pout( './super.out/release' ),
+      'clonePath' : null,
+      'remotePath' : null,
+      'willPath' : path.join( __dirname, '../will/Exec' ),
+      'dirPath' : routinePath + '',
+      'filePath' : routinePath + '/super',
     }
     var got = resolved;
     test.identical( got, expected );
@@ -935,7 +991,7 @@ function pathsResolve( test )
       mapValsUnwrapping : 1,
       pathResolving : null,
     });
-    var expected = [ './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ];
+    var expected = [ routinePath + '/super', routinePath + '', null, null, path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ];
     var got = _.select( resolved, '*/path' );
     test.identical( got, expected );
 
@@ -947,7 +1003,7 @@ function pathsResolve( test )
       mapValsUnwrapping : 1,
       pathResolving : 'in',
     });
-    var expected = pin([ './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ]);
+    var expected = pin([ './super', '.', null, null, path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ]);
     var got = _.select( resolved, '*/path' );
     test.identical( got, expected );
 
@@ -959,7 +1015,7 @@ function pathsResolve( test )
       mapValsUnwrapping : 1,
       pathResolving : 'out',
     });
-    var expected = pout([ './proto', './super.out', '.', '.', './super.out/debug', './super.out/release' ]);
+    var expected = pout([ '../super', '..', null, null, path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', '.', './super.out/debug', './super.out/release' ]);
     var got = _.select( resolved, '*/path' );
     test.identical( got, expected );
 
@@ -2929,9 +2985,6 @@ function submodulesDownload( test )
 
 }
 
-submodulesDownload.timeOut = 30000;
-
-
 // --
 // define class
 // --
@@ -2944,11 +2997,12 @@ var Self =
 
   onSuiteBegin : onSuiteBegin,
   onSuiteEnd : onSuiteEnd,
+  routineTimeOut : 60000,
 
   context :
   {
     tempDir : null,
-    assetDirPath : null
+    assetDirPath : null,
   },
 
   tests :
