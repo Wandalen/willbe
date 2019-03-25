@@ -14,23 +14,19 @@
 </details>
 <details>
   <summary><a href="./Tutorials/CompositionOfWillFile.md">Структура <code>will-файла</code></a></summary>
-  В туторіалі описано структуру секцій <code>will-файлу</code>
+  В туторіалі описано структуру секцій та ресурсів <code>will-файлу</code>
 </details>
 <details>
   <summary><a href="./Tutorials/HowToUseCommandLineInterfaceOfWill.md">Як користуватися інтерфейсом командного рядка <code>willbe</code></a></summary>
-  Як користуватись командним рядком для взаємодії з утилітою <code>willbe</code>, застосування команд <code>.help</code> та <code>.list</code>
+  Як користуватись командним рядком <code>willbe</code>, застосування команд <code>.help</code> та <code>.list</code>
 </details>
 <details>
   <summary><a href="./Tutorials/FirstWillFile.md">Модуль "Hello, World!"</a></summary>
   Створення модуля "Hello, World!" з утилітою <code>willbe</code>
 </details>
 <details>
-  <summary><a href="./Tutorials/RemoteSubmodulesImporting.md">Перший <code>will-модуль</code>. Завантаження віддаленого підмодуля</a></summary>
-  В туторіалі показано як імпортувати віддалені підмодулі
-</details>
-<details>
   <summary><a href="./Tutorials/SubmodulesAdministration.md">Оновлення та видалення підмодулів</a></summary>
-  Продовжено опис підмодулів, детальніше розглянуто їх адміністрування
+  Продовжено опис підмодулів, розглянуто команди оновлення та видалення
 </details>
 <details>
   <summary><a href="./Tutorials/ModuleCreationByBuild.md">Побудова модуля командою <code>.build</code></a></summary>
@@ -50,7 +46,7 @@
 </details>
 <details>
   <summary><a href="./Tutorials/ExportedWillFile.md">Експортування модуля</a></summary>
-  В туторіалі описана процедура експортування <code>will-модуля</code>
+  В туторіалі описана процедура експортування <code>will-модуля</code> для використання його (модуля), іншим модулем
 </details>
 <details>
   <summary><a href="./Tutorials/LocalSubmodulesImporting.md">Імпорт локального підмодуля</a></summary>
@@ -58,11 +54,11 @@
 </details>
 <details>
   <summary><a href="./Tutorials/SelectorsTermInWillFile.md">Поняття селекторів в <code>will-файлах</code></a></summary>
-  Дається поняття селекторів та приклади застосування в <code>will-файлах</code>
+  В туторіалі пояснюється поняття селекторів та як вони використовуються 
 </details>
 <details>
   <summary><a href="./Tutorials/HowToUseSelectorsWithGlob.md">Використання селекторів з ґлобами</a></summary>
-  Як користуватись ґлобами в селекторах <code>will-файла</code>
+  Як користуватись селекторами з ґлобами
 </details>
 <details>
   <summary><a href="./Tutorials/HowToUseAsserts.md">Як користуватись ассертами</a></summary>
