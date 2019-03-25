@@ -30,7 +30,7 @@
 </details>
 <details>
   <summary><a href="./Tutorials/ModuleCreationByBuild.md">Побудова модуля командою <code>.build</code></a></summary>
-  Туторіал описує запуск окремих збірок побудови модуля в <code>will-файлі</code>
+  Туторіал описує запуск окремих збірок побудови модуля  
 </details>
 <details>
   <summary><a href="./Tutorials/PredefinedSteps.md">Знайомство з вбудованими кроками</a></summary>
