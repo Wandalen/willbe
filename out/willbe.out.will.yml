@@ -346,6 +346,7 @@ path:
       - proto/dwtools/atop/will.test/asset/submodules-broken-2/proto
       - >-
         proto/dwtools/atop/will.test/asset/submodules-broken-2/proto/WithSubmodules.s
+      - proto/dwtools/atop/will.test/asset/submodules-download
       - proto/dwtools/atop/will.test/asset/transpile
       - proto/dwtools/atop/will.test/asset/transpile/super.ex.will.yml
       - proto/dwtools/atop/will.test/asset/transpile/super.im.will.yml
