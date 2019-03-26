@@ -67,12 +67,12 @@ reflector :
 
 step :
 
-  download :
-    inherit : predefined.reflect
-    criterion :
-      variant : [ 1,2,3,4,5,6,7 ]
-    reflector :
-      reflector::download.*=1
+  # download :
+  #   inherit : predefined.reflect
+  #   criterion :
+  #     variant : [ 1,2,3,4,5,6,7 ]
+  #   reflector :
+  #     reflector::download.*=1
 
 build :
 

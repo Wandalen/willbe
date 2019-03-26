@@ -7,9 +7,9 @@ step :
 
 build :
 
-  debug :
-    criterion :
-      debug : 1
-      default : 1
+  debug1 :
     steps :
       - step::list.dir*=1
+
+  debug2 :
+    steps : step::list.dir*=1

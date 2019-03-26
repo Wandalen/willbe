@@ -42,12 +42,12 @@ reflector :
 
 step :
 
-  reflect.submodules :
-    inherit : predefined.reflect
-    reflector :
-      reflector::reflect.submodules*=1
-    criterion :
-      variant : [ 0,1 ]
+  # reflect.submodules :
+  #   inherit : predefined.reflect
+  #   reflector :
+  #     reflector::reflect.submodules*=1
+  #   criterion :
+  #     variant : [ 0,1 ]
 
 build :
 
