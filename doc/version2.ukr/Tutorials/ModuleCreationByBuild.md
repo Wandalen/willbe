@@ -89,7 +89,7 @@ buildModule
 `Willbe` дозволяє будувати збірки побудови модуля комбінуючи кроки. Тому, замініть вміст `.will.yml` як в приведеному коді:
 
 <details>
-  <summary><u>Повний лістинг файла `.will.yml`</u></summary>
+  <summary><u>Повний лістинг файла <code>.will.yml</code></u></summary>
 
 ```yaml
 

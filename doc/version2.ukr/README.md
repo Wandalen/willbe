@@ -34,7 +34,7 @@
 </details>
 <details>
   <summary><a href="./Tutorials/PredefinedSteps.md">Знайомство з вбудованими кроками</a></summary>
-  В туторіалі пояснюється як користуватись вбудованими кроками для роботи з віддаленими підмодулями
+  Як користуватись вбудованими кроками для роботи з віддаленими підмодулями
 </details>
 <details>
   <summary><a href="./Tutorials/CriterionsInWillFile.md">Критеріони в <code>will-файлах</code></a></summary>
