@@ -565,23 +565,62 @@ function optionsForFindExport( o )
   let path = fileProvider.path;
   let result = Object.create( null );
 
+  reflector.form();
+
   o = _.routineOptions( optionsForFindExport, arguments );
   _.assert( reflector.dst === null || !reflector.dst.hasFiltering() );
+  _.assert( !o.resolving );
 
   result.recursive = reflector.recursive === null ? 2 : reflector.recursive;
 
   if( reflector.src )
   result.filter = reflector.src.clone();
   result.filter = result.filter || Object.create( null );
-  result.filter.prefixPath = path.resolve( module.inPath, result.filter.prefixPath || '.' );
-  if( o.resolving )
-  if( result.filter.basePath )
-  result.filter.basePath = path.resolve( module.inPath, result.filter.basePath );
+  result.filter.prefixPath = path.s.resolve( module.inPath, result.filter.prefixPath || '.' );
+
+  // if( o.resolving )
+  // if( result.filter.basePath )
+  // result.filter.basePath = path.resolve( module.inPath, result.filter.basePath );
 
   return result;
 }
 
 optionsForFindExport.defaults =
+{
+  resolving : 0,
+}
+
+//
+
+function optionsForFindGroupExport( o )
+{
+  let reflector = this;
+  let module = reflector.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let result = Object.create( null );
+
+  reflector.form();
+
+  o = _.routineOptions( optionsForFindGroupExport, arguments );
+  _.assert( !o.resolving );
+
+  result.recursive = reflector.recursive === null ? 2 : reflector.recursive;
+
+  if( reflector.src )
+  result.fileFilter = reflector.src.clone();
+  result.fileFilter = result.fileFilter || Object.create( null );
+  result.fileFilter.prefixPath = path.s.resolve( module.inPath, result.fileFilter.prefixPath || '.' );
+
+  // if( o.resolving )
+  // if( result.fileFilter.basePath )
+  // result.fileFilter.basePath = path.resolve( module.inPath, result.fileFilter.basePath );
+
+  return result;
+}
+
+optionsForFindGroupExport.defaults =
 {
   resolving : 0,
 }
@@ -597,6 +636,8 @@ function optionsForReflectExport( o )
   let path = fileProvider.path;
   let result = Object.create( null );
 
+  reflector.form();
+
   o = _.routineOptions( optionsForReflectExport, arguments );
   _.assert( !o.resolving );
 
@@ -607,18 +648,18 @@ function optionsForReflectExport( o )
   if( reflector.src )
   result.srcFilter = reflector.src.clone();
   result.srcFilter = result.srcFilter || Object.create( null );
-  result.srcFilter.prefixPath = path.resolve( module.inPath, result.srcFilter.prefixPath || '.' );
-  if( o.resolving )
-  if( result.srcFilter.basePath )
-  result.srcFilter.basePath = path.resolve( module.inPath, result.srcFilter.basePath );
+  result.srcFilter.prefixPath = path.s.resolve( module.inPath, result.srcFilter.prefixPath || '.' );
+  // if( o.resolving )
+  // if( result.srcFilter.basePath )
+  // result.srcFilter.basePath = path.resolve( module.inPath, result.srcFilter.basePath );
 
   if( reflector.dst )
   result.dstFilter = reflector.dst.clone();
   result.dstFilter = result.dstFilter || Object.create( null );
-  result.dstFilter.prefixPath = path.resolve( module.inPath, result.dstFilter.prefixPath || '.' );
-  if( o.resolving )
-  if( result.dstFilter.basePath )
-  result.dstFilter.basePath = path.resolve( module.inPath, result.dstFilter.basePath );
+  result.dstFilter.prefixPath = path.s.resolve( module.inPath, result.dstFilter.prefixPath || '.' );
+  // if( o.resolving )
+  // if( result.dstFilter.basePath )
+  // result.dstFilter.basePath = path.resolve( module.inPath, result.dstFilter.basePath );
 
   /* */
 
@@ -732,6 +773,7 @@ let Composes =
 
   description : null,
   recursive : null,
+  shell : null,
   filePath : null,
   src : null,
   dst : null,
@@ -809,6 +851,7 @@ let Extend =
   // exporter
 
   optionsForFindExport,
+  optionsForFindGroupExport,
   optionsForReflectExport,
   infoExport,
   dataExport,

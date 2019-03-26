@@ -125,7 +125,7 @@ function singleModuleList( test )
 
   /* - */
 
-  shell({ args : [ '.list' ] })
+  shell({ args : [ '.resources.list' ] })
 
   .thenKeep( ( got ) =>
   {
@@ -563,11 +563,11 @@ function singleModuleWithSpaceTrivial( test )
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
 
-  shell({ args : [ '.with "single with space" .list' ] })
+  shell({ args : [ '.with "single with space" .resources.list' ] })
 
   .thenKeep( ( got ) =>
   {
-    test.case = 'module info'
+    test.case = 'module info';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, `name : 'single with space'` ) );
     test.is( _.strHas( got.output, `description : 'Module for testing'` ) );
@@ -1102,7 +1102,7 @@ function submodulesInfo( test )
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
 
-  shell({ args : [ '.list' ] })
+  shell({ args : [ '.resources.list' ] })
 
   .thenKeep( ( got ) =>
   {
@@ -1626,7 +1626,7 @@ function submodulesDownload( test )
 
   /* - */
 
-  shell({ args : [ '.list' ] })
+  shell({ args : [ '.resources.list' ] })
 
   .thenKeep( ( got ) =>
   {
@@ -4001,6 +4001,116 @@ reflectRemoteHttp.timeOut = 130000;
 
 //
 
+function reflectShell( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-shell' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let filePath = _.path.join( routinePath, 'file' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  // node file/Produce.js File.js File.test.js Produced.js
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.with v1 .build'
+    _.fileProvider.fileDelete( _.fileProvider.path.join( filePath, './Produced.js2' ) );
+    _.fileProvider.fileDelete( _.fileProvider.path.join( filePath, './Produced.txt2' ) );
+    return null;
+  })
+
+  shell({ args : [ '.with v1 .build' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Building shell1' ) );
+    test.is( _.strHas( got.output, 'node file/Produce.js' ) );
+    test.is( _.strHas( got.output, 'file\\Produced.txt2' ) );
+    test.is( _.strHas( got.output, 'file\\Produced.js2' ) );
+    test.is( _.strHas( got.output, 'Built shell1' ) );
+
+    var files = self.find( filePath );
+    test.identical( files, [ '.', './File.js', './File.test.js', './Produce.js', './Produced.js2', './Produced.txt', './Produced.txt2', './Src1.txt', './Src2.txt' ] );
+    return null;
+  })
+
+  shell({ args : [ '.with v1 .build' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Building shell1' ) );
+    test.is( !_.strHas( got.output, 'node file/Produce.js' ) );
+    test.is( !_.strHas( got.output, 'file\\Produced.txt2' ) );
+    test.is( !_.strHas( got.output, 'file\\Produced.js2' ) );
+    test.is( _.strHas( got.output, 'Built shell1' ) );
+
+    var files = self.find( filePath );
+    test.identical( files, [ '.', './File.js', './File.test.js', './Produce.js', './Produced.js2', './Produced.txt', './Produced.txt2', './Src1.txt', './Src2.txt' ] );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.with v2 .build'
+    _.fileProvider.fileDelete( _.fileProvider.path.join( filePath, './Produced.js2' ) );
+    _.fileProvider.fileDelete( _.fileProvider.path.join( filePath, './Produced.txt2' ) );
+    return null;
+  })
+
+  shell({ args : [ '.with v2 .build' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Building shell1' ) );
+    test.is( _.strHas( got.output, 'node file/Produce.js' ) );
+    test.is( _.strHas( got.output, 'file\\Produced.txt2' ) );
+    test.is( _.strHas( got.output, 'file\\Produced.js2' ) );
+    test.is( _.strHas( got.output, 'Built shell1' ) );
+
+    var files = self.find( filePath );
+    test.identical( files, [ '.', './File.js', './File.test.js', './Produce.js', './Produced.js2', './Produced.txt', './Produced.txt2', './Src1.txt', './Src2.txt' ] );
+    return null;
+  })
+
+  shell({ args : [ '.with v2 .build' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Building shell1' ) );
+    test.is( !_.strHas( got.output, 'node file/Produce.js' ) );
+    test.is( !_.strHas( got.output, 'file\\Produced.txt2' ) );
+    test.is( !_.strHas( got.output, 'file\\Produced.js2' ) );
+    test.is( _.strHas( got.output, 'Built shell1' ) );
+
+    var files = self.find( filePath );
+    test.identical( files, [ '.', './File.js', './File.test.js', './Produce.js', './Produced.js2', './Produced.txt', './Produced.txt2', './Src1.txt', './Src2.txt' ] );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+//
+
 function importInExport( test )
 {
   let self = this;
@@ -4498,6 +4608,7 @@ var Self =
     reflectComposite,
     reflectRemoteGit,
     reflectRemoteHttp,
+    reflectShell,
 
     importInExport,
     setVerbosity,

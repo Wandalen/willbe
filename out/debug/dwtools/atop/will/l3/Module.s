@@ -268,7 +268,7 @@ function preform2()
   _.assert( module.preformed === 2 );
   _.assert( !!module.will );
   _.assert( will.moduleMap[ module.id ] === module );
-  _.assert( module.dirPath === null || _.strDefined( module.dirPath ) ); // xxx
+  _.assert( module.dirPath === null || _.strDefined( module.dirPath ) );
   _.assert( !!module.filePath );
 
   module.predefinedForm();
@@ -3063,6 +3063,50 @@ function SelectorIsComposite( selector )
 
 //
 
+function resolveContextPrepare( o )
+{
+  let module = this;
+  let will = module.will;
+  let hardDrive = will.fileProvider.providersWithProtocolMap.file;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.routineOptions( resolveContextPrepare, arguments );
+
+  if( !o.currentContext )
+  return o.currentContext;
+
+  if( _.mapIs( o.currentContext ) )
+  {
+  }
+  else if( o.currentContext instanceof will.Reflector )
+  {
+    let currentContext = Object.create( null );
+    currentContext.src = [];
+    currentContext.dst = [];
+    let o2 = o.currentContext.optionsForFindGroupExport();
+    o2.outputFormat = 'absolute';
+    let found = fileProvider.filesFindGroups( o2 );
+    currentContext.filesGrouped = found.filesGrouped;
+    for( let dst in found.filesGrouped )
+    {
+      currentContext.dst.push( hardDrive.path.nativize( dst ) );
+      currentContext.src.push( hardDrive.path.s.nativize( found.filesGrouped[ dst ] ).join( ' ' ) );
+    }
+    o.currentContext = currentContext; // xxx
+  }
+  else _.assert( 0 );
+
+  return o.currentContext;
+}
+
+resolveContextPrepare.defaults =
+{
+  currentContext : null,
+}
+
+//
+
 function resolve_pre( routine, args )
 {
   let o = args[ 0 ];
@@ -3092,10 +3136,16 @@ function resolve_body( o )
   let module = this;
   let will = module.will;
   let current = o.current;
+  let hardDrive = will.fileProvider.providersWithProtocolMap.file;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
   _.assert( o.prefixlessAction === 'default' || o.defaultResourceName === null, 'Prefixless action should be "default" if default resource is provided' );
+
+  if( o.currentContext )
+  {
+    o.currentContext = module.resolveContextPrepare({ currentContext : o.currentContext });
+  }
 
   let result = module._resolveAct( o );
 
@@ -3201,6 +3251,7 @@ resolve_body.defaults =
   prefixlessAction : 'resolved',
   missingAction : 'throw',
   visited : null,
+  currentContext : null,
   current : null,
   criterion : null,
   module : null,
@@ -3499,12 +3550,23 @@ function _resolveAct( o )
   function resourceMapSelect()
   {
     let it = this;
+    let resourceMap;
 
     if( !it.selector )
     return;
 
     let kind = it.parsedSelector.kind;
-    let resourceMap = it.module.resourceMapForKind( kind );
+
+    if( kind === 'this' )
+    {
+      // debugger; // xxx
+      _.assert( _.mapIs( o.currentContext ) );
+      resourceMap = o.currentContext;
+    }
+    else
+    {
+      resourceMap = it.module.resourceMapForKind( kind );
+    }
 
     if( !resourceMap )
     {
@@ -4404,6 +4466,7 @@ let Proto =
   // resolver
 
   errResolving,
+  resolveContextPrepare,
 
   _selectorShortSplitAct,
   _selectorShortSplit,

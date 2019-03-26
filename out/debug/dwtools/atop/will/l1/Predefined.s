@@ -248,22 +248,58 @@ function stepRoutineShell( frame )
   let step = this;
   let module = frame.module;
   let will = module.will;
+  let hardDrive = will.fileProvider.providersWithProtocolMap.file;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
   let opts = frame.opts;
+  let forEachDstReflector, forEachDst;
 
   _.assert( arguments.length === 1 );
   _.sure( opts.shell === null || _.strIs( opts.shell ) || _.arrayIs( opts.shell ) );
+  _.sure( _.arrayHas( [ 'preserve', 'rebuild' ], opts.upToDate ) );
 
-  // debugger;
+  if( opts.forEachDst )
+  forEachDst = forEachDstReflector = step.reflectorResolve( opts.forEachDst );
+
+  /* */
+
+  if( opts.upToDate === 'preserve' && forEachDstReflector )
+  {
+    _.assert( forEachDstReflector instanceof will.Reflector );
+    forEachDst = module.resolveContextPrepare({ currentContext : forEachDstReflector });
+
+    debugger;
+    for( let dst in forEachDst.filesGrouped )
+    {
+      let src = forEachDst.filesGrouped[ dst ];
+      let upToDate = fileProvider.filesAreUpToDate( dst, src );
+      if( upToDate )
+      delete forEachDst.filesGrouped[ dst ];
+    }
+    debugger;
+
+    forEachDst.src = [];
+    forEachDst.dst = [];
+    for( let dst in forEachDst.filesGrouped )
+    {
+      forEachDst.dst.push( hardDrive.path.nativize( dst ) );
+      forEachDst.src.push( hardDrive.path.s.nativize( forEachDst.filesGrouped[ dst ] ).join( ' ' ) );
+    }
+
+  }
+
+  /* */
+
+  debugger;
   opts.shell = module.resolve
   ({
     selector : opts.shell,
-    prefixlessAction : 'resolved',
     pathNativizing : 1,
-  })
-  // debugger;
+    prefixlessAction : 'resolved',
+    currentContext : forEachDst,
+  });
+  debugger;
 
   /* */
 
@@ -292,6 +328,8 @@ stepRoutineShell.stepOptions =
 {
   shell : null,
   currentPath : null,
+  forEachDst : null,
+  upToDate : 'preserve',
 }
 
 stepRoutineShell.uniqueOptions =

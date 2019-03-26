@@ -212,7 +212,7 @@ function commandsMake()
     'help' :                    { e : _.routineJoin( will, will.commandHelp ),                  h : 'Get help.' },
     'set' :                     { e : _.routineJoin( will, will.commandSet ),                   h : 'Command set.' },
 
-    'list' :                    { e : _.routineJoin( will, will.commandList ),                  h : 'List information about the current module.' },
+    'resources list' :          { e : _.routineJoin( will, will.commandResourcesList ),         h : 'List information about resources of the current module.' },
     'paths list' :              { e : _.routineJoin( will, will.commandPathsList ),             h : 'List paths of the current module.' },
     'submodules list' :         { e : _.routineJoin( will, will.commandSubmodulesList ),        h : 'List submodules of the current module.' },
     'reflectors list' :         { e : _.routineJoin( will, will.commandReflectorsList ),        h : 'List avaialable reflectors.' },
@@ -341,7 +341,7 @@ function _commandList( e, act, resourceName )
 
 //
 
-function commandList( e )
+function commandResourcesList( e )
 {
   let will = this;
 
@@ -872,7 +872,7 @@ let Extend =
   commandSet,
 
   _commandList,
-  commandList,
+  commandResourcesList,
   commandPathsList,
   commandSubmodulesList,
   commandReflectorsList,
