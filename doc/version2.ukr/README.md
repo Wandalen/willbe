@@ -38,7 +38,7 @@
 </details>
 <details>
   <summary><a href="./Tutorials/CriterionsInWillFile.md">Критеріони в <code>will-файлах</code></a></summary>
-  Як використовуються критеріони в <code>will-файлі</code>
+  Як використовуються критеріони
 </details>
 <details>
   <summary><a href="./Tutorials/DefaultCriterionInWillFile.md">Збірка побудови модуля за замовчуванням</a></summary>
