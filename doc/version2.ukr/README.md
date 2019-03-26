@@ -109,7 +109,7 @@
   В туторіалі показано як формуються шляхи рефлекторів та як управляти кількістю файлових операцій
 </details>
 
-<p>
+<p></p>
 ...In progress, advanced...
 <details>
   <summary><a href="./Tutorials/ResourceInheritability.md">Resources Inheritability</a></summary>
@@ -130,54 +130,23 @@
 </details>
 
 
-## <a name="manuals"></a> Керівництво користувача
+## <a name="concepts"></a> Концепції
+
+<p>...In progress...</p>
 
 <details>
-  <summary><a href="Introduction.md">Введення</a></summary>
-  Загальна інформація про утиліту <code>willbe</code>
+  <summary><a href="./Concepts/WillFile.md"><code>Will-файл</code></a></summary>
+  Конфігураційний файл для побудови will-модуля
 </details>
 <details>
-  <summary><a href="./Manuals/WillbeInstalation.md">Встановлення утиліти <code>willbe</code></a></summary>
-  Показано процес встановлення утиліти <code>willbe</code> на операційні системи Windows та Linux-дистрибутиви
+  <summary><a href="./Concepts/NamedAndSplitWillFile.md">Іменований <code>will-файл</code></a></summary>
+  Вид <code>will-файла</code> назва якого починається з імені
 </details>
 <details>
-  <summary><a href="./Manuals/Concepts.urk.md">Базові концепції та поняття</a></summary>
-  В туторіалі описуються основні концепції та поняття для роботи з утилітою <code>willbe</code>
+  <summary><a href="./Concepts/NamedAndSplitWillFile.md">Спліт <code>will-файл</code></a></summary>
+  Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля
 </details>
 <details>
-  <summary><a href="./Manuals/WillFileStructure.md">Структура <code>will-файла</code></a></summary>
-  Описується структура секцій <code>will-файлу</code> та приведено приклади їх застосування
-</details>
-<details>
-  <summary><a href="./Manuals/CommandLineInterfaceOfWill.md">Інтерфейс командного рядка <code>willbe</code></a></summary>
-  Описані команди утиліти <code>willbe</code> та їх синтаксис
-</details>
-<details>
-  <summary><a href="./Manuals/WillFileCriterions.urk.md">Критеріони (criterion) в <code>will-файлах</code></a></summary>
-  В керівництві користувача визначено поняття критеріонів та приведено приклади їх використання при створенні модулів
-</details>
-<details>
-  <summary><a href="./Manuals/WillFilePredefinedSteps.md">Вбудовані кроки утиліти <code>willbe</code></a></summary>
-  Керівництво користувача по вбудованим крокам для побудови модуля
-</details>
-
-<p>
-...In progress...
-<details>
-  <summary><a href="./Manuals/WillFileCreation.md">Створення <code>will-модуля</code></a></summary>
-  В керівництві описано створення <code>will-файла</code> та побудова модулів різного призначення
-  <a href="./Manuals/WillFileCreation.md#start">Початок роботи</a>
-  <a href="./Manuals/WillFileCreation.md#basic-configuration">Базова конфігурація</a>
-  <a href="./Manuals/WillFileCreation.md#submodules-importing">Робота з підмодулями</a>
-  <a href="./Manuals/WillFileCreation.md#step-and-build">Використання секцій `step` i `build` при створенні модуля</a>
-  <a href="./Manuals/WillFileCreation.md#module-export">Експорт модуля</a>
-  <a href="./Manuals/WillFileCreation.md#named-module">Іменований підмодуль</a>
-</details>
-<details>
-  <summary><a href="./Manuals/WillFileSelectors.md">Cелектори з ґлобами та ассертами</a></summary>
-  В керівництві користувача дається інформація про використання селекторів для побудови модуля
-</details>
-<details>
-  <summary><a href="./Manuals/WillFileReflectors.md">Reflector in <code>will-files</code></a></summary>
-  В керівництві користувача описуються рефлектори - призначення, особливості побудови, використання
+  <summary><a href="./Concepts/Module.md">Модуль</a></summary>
+  Модулем називається сукупність файлів, які описані в <code>will-файлi</code>
 </details>
