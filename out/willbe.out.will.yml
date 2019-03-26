@@ -289,7 +289,20 @@ path:
         proto/dwtools/atop/will.test/asset/reflect-nothing-from-submodules/proto/Single.s
       - proto/dwtools/atop/will.test/asset/reflect-remote-git
       - proto/dwtools/atop/will.test/asset/reflect-remote-http
+      - proto/dwtools/atop/will.test/asset/reflect-shell
+      - proto/dwtools/atop/will.test/asset/reflect-shell/v1.will.yml
+      - proto/dwtools/atop/will.test/asset/reflect-shell/v2.will.yml
+      - proto/dwtools/atop/will.test/asset/reflect-shell/file
+      - proto/dwtools/atop/will.test/asset/reflect-shell/file/File.js
+      - proto/dwtools/atop/will.test/asset/reflect-shell/file/File.test.js
+      - proto/dwtools/atop/will.test/asset/reflect-shell/file/Produce.js
+      - proto/dwtools/atop/will.test/asset/reflect-shell/file/Produced.js2
+      - proto/dwtools/atop/will.test/asset/reflect-shell/file/Produced.txt
+      - proto/dwtools/atop/will.test/asset/reflect-shell/file/Produced.txt2
+      - proto/dwtools/atop/will.test/asset/reflect-shell/file/Src1.txt
+      - proto/dwtools/atop/will.test/asset/reflect-shell/file/Src2.txt
       - proto/dwtools/atop/will.test/asset/reflect-subdir
+      - proto/dwtools/atop/will.test/asset/reflect-subdir/submodule.out.will.yml
       - proto/dwtools/atop/will.test/asset/reflect-subdir/module
       - >-
         proto/dwtools/atop/will.test/asset/reflect-subdir/module/submodule.will.yml
@@ -347,56 +360,18 @@ path:
       - >-
         proto/dwtools/atop/will.test/asset/submodules-broken-2/proto/WithSubmodules.s
       - proto/dwtools/atop/will.test/asset/submodules-download
+      - proto/dwtools/atop/will.test/asset/submodules-mixed
+      - proto/dwtools/atop/will.test/asset/submodules-mixed/module
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-mixed/module/Proto.informal.will.yml
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-mixed/module/UriFundamentals.informal.will.yml
+      - proto/dwtools/atop/will.test/asset/submodules-mixed/proto
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-mixed/proto/WithSubmodules.s
       - proto/dwtools/atop/will.test/asset/transpile
       - proto/dwtools/atop/will.test/asset/transpile/super.ex.will.yml
       - proto/dwtools/atop/will.test/asset/transpile/super.im.will.yml
-      - proto/dwtools/atop/will.test/asset/transpile/out
-      - proto/dwtools/atop/will.test/asset/transpile/out/compiled.debug
-      - proto/dwtools/atop/will.test/asset/transpile/out/compiled.debug/Main.s
-      - proto/dwtools/atop/will.test/asset/transpile/out/debug
-      - proto/dwtools/atop/will.test/asset/transpile/out/debug/dir1
-      - proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2
-      - proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2/File.js
-      - proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2/File.test.js
-      - >-
-        proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2/File1.debug.js
-      - >-
-        proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2/File1.release.js
-      - >-
-        proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2/File2.debug.js
-      - >-
-        proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2/File2.release.js
-      - proto/dwtools/atop/will.test/asset/transpile/out/debug/dir3.test
-      - proto/dwtools/atop/will.test/asset/transpile/out/debug/dir3.test/File.js
-      - >-
-        proto/dwtools/atop/will.test/asset/transpile/out/debug/dir3.test/File.test.js
-      - proto/dwtools/atop/will.test/asset/transpile/out/raw.release
-      - proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir2
-      - >-
-        proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir2/File.js
-      - >-
-        proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir2/File.test.js
-      - >-
-        proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir2/File1.debug.js
-      - >-
-        proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir2/File1.release.js
-      - >-
-        proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir2/File2.debug.js
-      - >-
-        proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir2/File2.release.js
-      - proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir3.test
-      - >-
-        proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir3.test/File.js
-      - >-
-        proto/dwtools/atop/will.test/asset/transpile/out/raw.release/dir3.test/File.test.js
-      - proto/dwtools/atop/will.test/asset/transpile/out/release
-      - proto/dwtools/atop/will.test/asset/transpile/out/release/Main.s
-      - proto/dwtools/atop/will.test/asset/transpile/out/tests.compiled.debug
-      - >-
-        proto/dwtools/atop/will.test/asset/transpile/out/tests.compiled.debug/Tests.s
-      - proto/dwtools/atop/will.test/asset/transpile/out/tests.compiled.release
-      - >-
-        proto/dwtools/atop/will.test/asset/transpile/out/tests.compiled.release/Tests.s
       - proto/dwtools/atop/will.test/asset/transpile/proto
       - proto/dwtools/atop/will.test/asset/transpile/proto/dir1
       - proto/dwtools/atop/will.test/asset/transpile/proto/dir2
