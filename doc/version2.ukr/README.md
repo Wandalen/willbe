@@ -9,7 +9,7 @@
   Процес встановлення утиліти <code>willbe</code>
 </details>
 <details>
-  <summary><a href="./Concepts.md">Основні концепції</a></summary>
+  <summary><a href="#Concepts.md">Концепції</a></summary>
   Основні концепції. Допомагає побачити загальну картину
 </details>
 <details>
@@ -149,4 +149,40 @@
 <details>
   <summary><a href="./Concepts/Module.md">Модуль</a></summary>
   Модулем називається сукупність файлів, які описані в <code>will-файлi</code>
+</details>
+<details>
+  <summary><a href="./Concepts/Module.md">Підмодуль</a></summary>
+  Окремий модуль з власним конфігураційним <code>will-файлом</code>, який підпорядковується іншому модулю 
+</details>
+<details>
+  <summary><a href="./Concepts/Module.md">Супермодуль</a></summary>
+  Модуль, який включає в себе інші модулі (підмодулі) 
+</details>
+<details>
+  <summary><a href="./Concepts/LocalSubmodule.md">Локальний підмодуль</a></summary>
+  Підмодуль, який розташовується на машині користувача 
+</details>
+<details>
+  <summary><a href="./Concepts/RemoteSubmodule.md">Віддалений підмодуль</a></summary>
+  Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину
+</details>
+<details>
+  <summary><a href="./Concepts/Composition.md">Секція <code>will-файлу</code></a></summary>
+  Верхня структурна одиниця <code>will-файла</code>, яка об'єднує ресурси одного типу
+</details>
+<details>
+  <summary><a href="./Concepts/Composition.md">Ресурси</a></summary>
+  Елементи `will-файла`, які позначають певну функціональність
+</details>
+<details>
+  <summary><a href="./Concepts/Inheritability.md">Наслідування ресурсами</a></summary>
+  Концепція наслідування значень полів ресурса іншим ресурсом
+</details>
+<details>
+  <summary><a href="./Concepts/Selectors.md">Селектор</a></summary>
+  Рядок-посилання на ресурс або декілька ресурсів <code>will-файла</code>
+</details>
+<details>
+  <summary><a href="./Concepts/Inheritability.md">Селектор з ґлобом</a></summary>
+  Рядок-посилання на ресурс або декілька ресурсів <code>will-файла</code>
 </details>
