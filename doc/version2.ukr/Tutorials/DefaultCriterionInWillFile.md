@@ -2,49 +2,22 @@
 
 Як побудувати збірку, що запускається без указання аргумента команди `.build`
 
-### <a name="will-module-creation"></a> Shell-команди в `will`-файлі   
-Створимо новий `.will.yml` та опишемо модуль:
-```yaml
+### <a name="default-criterion"></a> Як встановити збірку за замовчуванням
+Якщо `will-файл` включає одну збірку побудови або декілька збірок з однією головною, то зручно призначити її (збірку) для виконання за замовчуванням. Запуск побудови збірки за замовчуванням здійснюється фразою `will .build` без указання аргумента, що виключає потребу звернення до `will-файла` для уточнення назви збірки. Для призначення збірки за замовчуванням, вкажіть критеріон `default : 1` в відповідному ресурсі. 
 
-about :
-
-  name : 'defaultBuild'
-  description : 'Default build with criterion'
-  version : 0.0.1
-  keywords :
-      - willbe
-
-```
-
-Раніше ми використали приклад, де `willbe` виводив повідомлення в консоль, проте утиліта працює як з операційною системою так і з зовнішніми програмами, що встановлені в неї. Тому, встановимо залежності _NodeJS_ з допомогою утиліти `willbe`. Для цього в `.will.yml` додамо код:
-
-```yaml
-step :
-
-  npm.install :
-    currentPath : '.'
-    shell : npm install
-
-build :
-
-  install :
-     steps :
-      - npm.install
-
-```
+### <a name="will-module-creation"></a> Модуль зі збіркою за замовчуванням    
+В туторіалах ["Критеріони в `will-файлах`"](CriterionsInWillFile.md) та ["Побудова модуля командою `.build`"](ModuleCreationByBuild.md) використовувався вивід в консоль повідомлення командою операційної системи, а утиліта `willbe` працює як з операційною системою, так і з зовнішніми програмами, що встановлені в неї. Тому, завантажимо залежності NodeJS через пакетний менеджер NPM.   
+Створіть новий `.will.yml`-файл в директорії `defaultBuild` та запишіть в нього:  
 
 <details>
-  <summary><u>Повний лістинг файла `.will.yml`</u></summary>
+  <summary><u>Повний код файла <code>.will.yml</code></u></summary>
 
 ```yaml
-
 about :
 
   name : 'defaultBuild'
   description : 'Default build with criterion'
   version : 0.0.1
-  keywords :
-      - willbe
 
 step :
 
@@ -55,14 +28,28 @@ step :
 build :
 
   install:
+    criterion :
+      default : 1
     steps :
       - npm.install
 
 ```
 
+<p>Структура модуля</p>
+
+```
+defaultBuild
+      └── .will.yml 
+
+```
+
 </details>
 
-Крок `npm.install` дозволить завантажити пакети залежностей NodeJS в поточну директорію, але поки що немає залежностей. Створимо `package.json` та помістимо його в директорію файла `.will.yml`:
+</br>
+Cтворіть файл залежностей `package.json` в директорії `will-файла`:
+
+<details>
+  <summary><u>Файл залежностей NodeJS <code>package.json</code></u></summary>
 
 ``` json
 {
@@ -74,62 +61,22 @@ build :
 
 ```
 
-Тепер, ваша директорія має вигляд:
+<p>Структура модуля з файлом залежностей</p>
 
 ```
-.
-├── package.json
-├── .will.yml
-
-```
-
-Запустіть в консолі команду `will .build install` в кореневій директорії файла `.will.yml` і `willbe` створить готовий модуль з NodeJS-утилітою "express".  
-В консолі отримаєте такий лог:
-
-```
-[user@user ~]$ will .build install
-Request ".build install"
-...
-  Building install
- > npm install
-...
-added 48 packages from 36 contributors and audited 121 packages in 4.863s
-found 0 vulnerabilities
-
-  Built debug in 9.456s
+defaultBuild
+     ├── package.json
+     └── .will.yml
 
 ```
 
-Тепер маємо наступну конфігурацію:
+</details>
 
-```
-.
-├── node_modules
-│         ├── ...
-│         ├── ...
-│ 
-├── package.json
-├── package-lock.json
-└── .will.yml
+</br>
+Введіть фразу `will .build` в кореневій директорії `will-файла`:  
 
-```
-
-### <a name="default-criterion"></a> Використання критеріону `default`
-Якщо маємо лише одну збірку побудови модуля або декілька збірок з однією головною, то введення повної фрази необов'язкове - утиліта `willbe` дозволяє призначити збірку, яка буде виконуватись за замовчуванням. Для цього потрібно додати критеріон _'default : 1'_. Після збереження файла, фраза `will .build` виконає збірку з критеріоном _'default : 1'_.  
-Додамо критеріон в `.will.yml`.
-
-```yaml
-build :
-
-  install:
-    criterion :
-      default : 1
-    steps :
-      - npm.install
-
-```
-
-Видаліть зайві файли з директорії (в консолі `rm -Rf node_modules package-lock.json` або в графічному менеджері) та виконайте фразу `will .build`.
+<details>
+  <summary><u>Вивід фрази <code>will .build</code></u></summary>
 
 ```
 [user@user ~]$ will .build
@@ -145,8 +92,28 @@ found 0 vulnerabilities
 
 ```
 
+<p>Структура модуля після побудови</p>
+
+```
+defaultBuild
+     ├── node_modules
+     │         ├── ...
+     │         ├── ...
+     │ 
+     ├── package.json
+     ├── package-lock.json
+     └── .will.yml
+
+```
+
+</details>
+
+</br>
+Утиліта побудувала збірку `install` завдяки критеріону `default`.
+
 ### Підсумок   
-- Утиліта `willbe` має інструменти для автоматизації побудови модулів.
+- Встановлення критеріона `default : 1` в збірку дозволяє запустити її побудову фразою `will .build`.
+- Утиліта `willbe` працює з зовнішніми програмами, які встановлені в операційну систему.
 
 [Наступний туторіал](ExportedWillFile.md)  
 [Повернутись до змісту](../README.md#tutorials)
