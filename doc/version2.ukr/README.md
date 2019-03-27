@@ -167,11 +167,11 @@
   Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля
 </details>
 <details>
-  <summary><a href="./Concepts/LocalSubmodule.md">Локальний підмодуль</a></summary>
+  <summary><a href="./Concepts/LocalAndRemoteSubmodules.md#local-submodule">Локальний підмодуль</a></summary>
   Підмодуль, який розташовується на машині користувача 
 </details>
 <details>
-  <summary><a href="./Concepts/RemoteSubmodule.md">Віддалений підмодуль</a></summary>
+  <summary><a href="./Concepts/LocalAndRemoteSubmodules.md#remote-submodule">Віддалений підмодуль</a></summary>
   Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину
 </details>
 <details>

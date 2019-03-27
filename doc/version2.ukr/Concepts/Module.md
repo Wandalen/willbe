@@ -36,4 +36,4 @@
 
 ![supermodule.png](./Images/supermodule.png)
 
-Детальніше про підмодулі в концепціях ["Іменований `will-файл`](NamedAndSplitWillFile.md#named-will-file) ["Спліт `will-файл`"](NamedAndSplitWillFile.md#split-will-file)
+Детальніше про підмодулі в концепціях ["Локальний підмодуль"](LocalAndRemoteSubmodules.md#local-submodule) ["Віддалений підмодуль"](LocalAndRemoteSubmodules.md#remote-submodule)
