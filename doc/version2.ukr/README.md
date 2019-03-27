@@ -128,6 +128,14 @@
   <summary><a href="./Tutorials/ExportedSectionOfWillFile.md">Exported section of out will-file</a></summary>
   В цьому туторіалі розглядається секція <code>exported</code>
 </details>
+<details>
+  <summary><a href="./Tutorials/HowToList.md">How to list</a></summary>
+  Як дізнатись інформацію про модуль
+</details>
+<details>
+  <summary><a href="./Tutorials/ExportedSectionOfWillFile.md">How to use <code>.clean</code> command</a></summary>
+  Використання команди <code>.clean</code>
+</details>
 
 
 ## <a name="concepts"></a> Концепції
@@ -156,6 +164,14 @@
   <summary><a href="./Concepts/Module.md#supermodule">Супермодуль</a></summary>
   Модуль, який включає в себе інші модулі (підмодулі) 
 </details>
+<details>
+  <summary><a href="./Concepts/LocalAndRemoteSubmodules.md#local-submodule">Локальний підмодуль</a></summary>
+  Підмодуль, який розташовується на машині користувача 
+</details>
+<details>
+  <summary><a href="./Concepts/LocalAndRemoteSubmodules.md#remote-submodule">Віддалений підмодуль</a></summary>
+  Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину
+</details>
 
 <p>...In progress...</p>
 <details>
@@ -165,14 +181,6 @@
 <details>
   <summary><a href="./Concepts/NamedAndSplitWillFile.md">Спліт <code>will-файл</code></a></summary>
   Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля
-</details>
-<details>
-  <summary><a href="./Concepts/LocalAndRemoteSubmodules.md#local-submodule">Локальний підмодуль</a></summary>
-  Підмодуль, який розташовується на машині користувача 
-</details>
-<details>
-  <summary><a href="./Concepts/LocalAndRemoteSubmodules.md#remote-submodule">Віддалений підмодуль</a></summary>
-  Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину
 </details>
 <details>
   <summary><a href="./Concepts/Inheritability.md">Наслідування ресурсами</a></summary>
