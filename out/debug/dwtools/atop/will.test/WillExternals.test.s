@@ -4030,8 +4030,8 @@ function reflectShell( test )
   .thenKeep( () =>
   {
     test.case = '.with v1 .build'
-    _.fileProvider.fileDelete( _.fileProvider.path.join( filePath, './Produced.js2' ) );
-    _.fileProvider.fileDelete( _.fileProvider.path.join( filePath, './Produced.txt2' ) );
+    _.fileProvider.filesDelete( _.fileProvider.path.join( filePath, './Produced.js2' ) );
+    _.fileProvider.filesDelete( _.fileProvider.path.join( filePath, './Produced.txt2' ) );
     return null;
   })
 
@@ -4148,10 +4148,13 @@ function eachMixed( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'git status' ) );
     test.is( _.strHas( got.output, 'On branch master' ) );
-    test.is( _.strHas( got.output, '.module/Tools/out' ) );
-    test.is( _.strHas( got.output, '.module/PathFundamentals/out' ) );
-    test.is( _.strHas( got.output, '.module/module' ) );
-    test.is( _.strHas( got.output, '.module/module' ) );
+    test.is( _.strHas( got.output, `Your branch is up to date with 'origin/master'.` ) );
+    test.is( _.strHas( got.output, /\.module\/Tools\/out[^d]/ ) );
+    test.is( _.strHas( got.output, /\.module\/Tools[^d]/ ) );
+    test.is( _.strHas( got.output, /\.module\/PathFundamentals\/out[^d]/ ) )
+    test.is( _.strHas( got.output, /\.module\/PathFundamentals[^d]/ ) )
+    test.is( _.strHas( got.output, /module[^d]/ ) );
+    test.is( _.strHas( got.output, /\[\][^d]/ ) );
     return null;
   })
 
@@ -4159,6 +4162,8 @@ function eachMixed( test )
 
   return ready;
 }
+
+eachMixed.timeOut = 300000;
 
 //
 
