@@ -132,12 +132,20 @@
 
 ## <a name="concepts"></a> Концепції
 
-<p>...In progress...</p>
-
 <details>
   <summary><a href="./Concepts/WillFile.md"><code>Will-файл</code></a></summary>
-  Конфігураційний файл для побудови will-модуля
+  Конфігураційний файл для побудови <code>will-модуля</code>
 </details>
+<details>
+  <summary><a href="./Concepts/Composition.md#section">Секція <code>will-файлу</code></a></summary>
+  Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу
+</details>
+<details>
+  <summary><a href="./Concepts/Composition.md#resource">Ресурси</a></summary>
+  Елементи <code>will-файла</code>, які позначають певну функціональність
+</details>
+
+<p>...In progress...</p>
 <details>
   <summary><a href="./Concepts/NamedAndSplitWillFile.md">Іменований <code>will-файл</code></a></summary>
   Вид <code>will-файла</code> назва якого починається з імені
@@ -165,14 +173,6 @@
 <details>
   <summary><a href="./Concepts/RemoteSubmodule.md">Віддалений підмодуль</a></summary>
   Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину
-</details>
-<details>
-  <summary><a href="./Concepts/Composition.md">Секція <code>will-файлу</code></a></summary>
-  Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу
-</details>
-<details>
-  <summary><a href="./Concepts/Composition.md">Ресурси</a></summary>
-  Елементи <code>will-файла</code>, які позначають певну функціональність
 </details>
 <details>
   <summary><a href="./Concepts/Inheritability.md">Наслідування ресурсами</a></summary>
