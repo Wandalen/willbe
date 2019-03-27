@@ -9,7 +9,7 @@
   Процес встановлення утиліти <code>willbe</code>
 </details>
 <details>
-  <summary><a href="./Concepts.md">Основні концепції</a></summary>
+  <summary><a href="#Concepts.md">Концепції</a></summary>
   Основні концепції. Допомагає побачити загальну картину
 </details>
 <details>
@@ -109,7 +109,7 @@
   В туторіалі показано як формуються шляхи рефлекторів та як управляти кількістю файлових операцій
 </details>
 
-<p>
+<p></p>
 ...In progress, advanced...
 <details>
   <summary><a href="./Tutorials/ResourceInheritability.md">Resources Inheritability</a></summary>
@@ -130,54 +130,71 @@
 </details>
 
 
-## <a name="manuals"></a> Керівництво користувача
+## <a name="concepts"></a> Концепції
 
 <details>
-  <summary><a href="Introduction.md">Введення</a></summary>
-  Загальна інформація про утиліту <code>willbe</code>
+  <summary><a href="./Concepts/WillFile.md"><code>Will-файл</code></a></summary>
+  Конфігураційний файл для побудови <code>will-модуля</code>
 </details>
 <details>
-  <summary><a href="./Manuals/WillbeInstalation.md">Встановлення утиліти <code>willbe</code></a></summary>
-  Показано процес встановлення утиліти <code>willbe</code> на операційні системи Windows та Linux-дистрибутиви
+  <summary><a href="./Concepts/Composition.md#section">Секція <code>will-файлу</code></a></summary>
+  Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу
 </details>
 <details>
-  <summary><a href="./Manuals/Concepts.urk.md">Базові концепції та поняття</a></summary>
-  В туторіалі описуються основні концепції та поняття для роботи з утилітою <code>willbe</code>
-</details>
-<details>
-  <summary><a href="./Manuals/WillFileStructure.md">Структура <code>will-файла</code></a></summary>
-  Описується структура секцій <code>will-файлу</code> та приведено приклади їх застосування
-</details>
-<details>
-  <summary><a href="./Manuals/CommandLineInterfaceOfWill.md">Інтерфейс командного рядка <code>willbe</code></a></summary>
-  Описані команди утиліти <code>willbe</code> та їх синтаксис
-</details>
-<details>
-  <summary><a href="./Manuals/WillFileCriterions.urk.md">Критеріони (criterion) в <code>will-файлах</code></a></summary>
-  В керівництві користувача визначено поняття критеріонів та приведено приклади їх використання при створенні модулів
-</details>
-<details>
-  <summary><a href="./Manuals/WillFilePredefinedSteps.md">Вбудовані кроки утиліти <code>willbe</code></a></summary>
-  Керівництво користувача по вбудованим крокам для побудови модуля
+  <summary><a href="./Concepts/Composition.md#resource">Ресурси</a></summary>
+  Елементи <code>will-файла</code>, які позначають певну функціональність
 </details>
 
-<p>
-...In progress...
+<p>...In progress...</p>
 <details>
-  <summary><a href="./Manuals/WillFileCreation.md">Створення <code>will-модуля</code></a></summary>
-  В керівництві описано створення <code>will-файла</code> та побудова модулів різного призначення
-  <a href="./Manuals/WillFileCreation.md#start">Початок роботи</a>
-  <a href="./Manuals/WillFileCreation.md#basic-configuration">Базова конфігурація</a>
-  <a href="./Manuals/WillFileCreation.md#submodules-importing">Робота з підмодулями</a>
-  <a href="./Manuals/WillFileCreation.md#step-and-build">Використання секцій `step` i `build` при створенні модуля</a>
-  <a href="./Manuals/WillFileCreation.md#module-export">Експорт модуля</a>
-  <a href="./Manuals/WillFileCreation.md#named-module">Іменований підмодуль</a>
+  <summary><a href="./Concepts/NamedAndSplitWillFile.md">Іменований <code>will-файл</code></a></summary>
+  Вид <code>will-файла</code> назва якого починається з імені
 </details>
 <details>
-  <summary><a href="./Manuals/WillFileSelectors.md">Cелектори з ґлобами та ассертами</a></summary>
-  В керівництві користувача дається інформація про використання селекторів для побудови модуля
+  <summary><a href="./Concepts/NamedAndSplitWillFile.md">Спліт <code>will-файл</code></a></summary>
+  Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля
 </details>
 <details>
-  <summary><a href="./Manuals/WillFileReflectors.md">Reflector in <code>will-files</code></a></summary>
-  В керівництві користувача описуються рефлектори - призначення, особливості побудови, використання
+  <summary><a href="./Concepts/Module.md">Модуль</a></summary>
+  Модулем називається сукупність файлів, які описані в <code>will-файлi</code>
+</details>
+<details>
+  <summary><a href="./Concepts/Module.md">Підмодуль</a></summary>
+  Окремий модуль з власним конфігураційним <code>will-файлом</code>, який підпорядковується іншому модулю 
+</details>
+<details>
+  <summary><a href="./Concepts/Module.md">Супермодуль</a></summary>
+  Модуль, який включає в себе інші модулі (підмодулі) 
+</details>
+<details>
+  <summary><a href="./Concepts/LocalSubmodule.md">Локальний підмодуль</a></summary>
+  Підмодуль, який розташовується на машині користувача 
+</details>
+<details>
+  <summary><a href="./Concepts/RemoteSubmodule.md">Віддалений підмодуль</a></summary>
+  Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину
+</details>
+<details>
+  <summary><a href="./Concepts/Inheritability.md">Наслідування ресурсами</a></summary>
+  Здатність використовувати (наслідувати) значення полів ресурса іншим ресурсом
+</details>
+<details>
+  <summary><a href="./Concepts/Criterions.md">Критеріон</a></summary>
+  Елемент порівняння в <code>will-файлі</code> для визначення умов використання ресурса
+</details>
+<details>
+  <summary><a href="./Concepts/Selectors.md">Селектор</a></summary>
+  Рядок-посилання на ресурс або декілька ресурсів <code>will-файла</code>
+</details>
+<details>
+  <summary><a href="./Concepts/Selectors.md">Селектор з ґлобом</a></summary>
+  Селектор, який для вибору ресурсу використовує пошукові шаблони - ґлоби
+</details>
+<details>
+  <summary><a href="./Concepts/Asserts.md">Ґлоб з ассертом</a></summary>
+  Обмеження кількості ресурсів в вибірці селектора з ґлобом
+</details>
+<details>
+  <summary><a href="./Concepts/Phrase.md">Фраза</a></summary>
+  Команда з одного обо декількох слів, розділених крапкою
 </details>
