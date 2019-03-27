@@ -168,21 +168,33 @@
 </details>
 <details>
   <summary><a href="./Concepts/Composition.md">Секція <code>will-файлу</code></a></summary>
-  Верхня структурна одиниця <code>will-файла</code>, яка об'єднує ресурси одного типу
+  Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу
 </details>
 <details>
   <summary><a href="./Concepts/Composition.md">Ресурси</a></summary>
-  Елементи `will-файла`, які позначають певну функціональність
+  Елементи <code>will-файла</code>, які позначають певну функціональність
 </details>
 <details>
   <summary><a href="./Concepts/Inheritability.md">Наслідування ресурсами</a></summary>
-  Концепція наслідування значень полів ресурса іншим ресурсом
+  Здатність використовувати (наслідувати) значення полів ресурса іншим ресурсом
+</details>
+<details>
+  <summary><a href="./Concepts/Criterions.md">Критеріон</a></summary>
+  Елемент порівняння в <code>will-файлі</code> для визначення умов використання ресурса
 </details>
 <details>
   <summary><a href="./Concepts/Selectors.md">Селектор</a></summary>
   Рядок-посилання на ресурс або декілька ресурсів <code>will-файла</code>
 </details>
 <details>
-  <summary><a href="./Concepts/Inheritability.md">Селектор з ґлобом</a></summary>
-  Рядок-посилання на ресурс або декілька ресурсів <code>will-файла</code>
+  <summary><a href="./Concepts/Selectors.md">Селектор з ґлобом</a></summary>
+  Селектор, який для вибору ресурсу використовує пошукові шаблони - ґлоби
+</details>
+<details>
+  <summary><a href="./Concepts/Asserts.md">Ґлоб з ассертом</a></summary>
+  Обмеження кількості ресурсів в вибірці селектора з ґлобом
+</details>
+<details>
+  <summary><a href="./Concepts/Phrase.md">Фраза</a></summary>
+  Команда з одного обо декількох слів, розділених крапкою
 </details>
