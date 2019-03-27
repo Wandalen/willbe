@@ -268,7 +268,7 @@ function preform2()
   _.assert( module.preformed === 2 );
   _.assert( !!module.will );
   _.assert( will.moduleMap[ module.id ] === module );
-  _.assert( module.dirPath === null || _.strDefined( module.dirPath ) ); // xxx
+  _.assert( module.dirPath === null || _.strDefined( module.dirPath ) );
   _.assert( !!module.filePath );
 
   module.predefinedForm();
@@ -304,13 +304,13 @@ function predefinedForm()
   path
   ({
     name : 'clonePath',
-    path : null,
+    path : [],
   })
 
   path
   ({
     name : 'remotePath',
-    path : null,
+    path : [],
   })
 
   path
@@ -576,23 +576,88 @@ function predefinedForm()
 
 //
 
-function shell( command )
+function shell( o )
 {
   let module = this;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.assert( _.strIs( command ) );
+  if( !_.mapIs( arguments[ 0 ] ) )
+  o = { execPath : arguments[ 0 ] }
+
+  _.assert( _.strIs( o.execPath ) );
   _.assert( arguments.length === 1 );
+  o = _.routineOptions( shell, o );
 
-  return _.shell
+  /* */
+
+  // debugger;
+  o.execPath = module.resolve
   ({
-    execPath : command,
-    currentPath : module.dirPath,
-    verbosity : will.verbosity-1,
+    selector : o.execPath,
+    pathNativizing : 1,
+    prefixlessAction : 'resolved',
+    currentThis : o.currentThis,
+    // preservingIteration : 1,
   });
+  // debugger; xxx
 
+  /* */
+
+  if( o.currentPath )
+  o.currentPath = module.pathResolve({ selector : o.currentPath, prefixlessAction : 'resolved', current : o.current });
+  _.sure( o.currentPath === null || _.strIs( o.currentPath ) || _.strsAreAll( o.currentPath ), 'Current path should be string if defined' );
+
+  /* */
+
+  let ready = new _.Consequence().take( null );
+  if( _.arrayIs( o.currentPath ) ) /* xxx : implement multiple currentPath for _.shell */
+  {
+    o.currentPath.forEach( ( currentPath ) =>
+    {
+      _.shell
+      ({
+        execPath : o.execPath,
+        currentPath : o.currentPath,
+        verbosity : will.verbosity - 1,
+        ready : ready,
+      });
+    });
+  }
+  else
+  {
+
+    _.shell
+    ({
+      execPath : o.execPath,
+      currentPath : o.currentPath,
+      verbosity : will.verbosity - 1,
+      ready : ready,
+    });
+
+  }
+
+  // xxx
+  //
+  // // execPath
+  //
+  // return _.shell
+  // ({
+  //   execPath : execPath,
+  //   currentPath : module.dirPath,
+  //   verbosity : will.verbosity-1,
+  // });
+
+  return ready;
+}
+
+shell.defaults =
+{
+  execPath : null,
+  currentPath : null,
+  currentThis : null,
+  current : null,
 }
 
 //
@@ -3063,6 +3128,50 @@ function SelectorIsComposite( selector )
 
 //
 
+function resolveContextPrepare( o )
+{
+  let module = this;
+  let will = module.will;
+  let hardDrive = will.fileProvider.providersWithProtocolMap.file;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.routineOptions( resolveContextPrepare, arguments );
+
+  if( !o.currentThis )
+  return o.currentThis;
+
+  if( _.mapIs( o.currentThis ) )
+  {
+  }
+  else if( o.currentThis instanceof will.Reflector )
+  {
+    let currentThis = Object.create( null );
+    currentThis.src = [];
+    currentThis.dst = [];
+    let o2 = o.currentThis.optionsForFindGroupExport();
+    o2.outputFormat = 'absolute';
+    let found = fileProvider.filesFindGroups( o2 );
+    currentThis.filesGrouped = found.filesGrouped;
+    for( let dst in found.filesGrouped )
+    {
+      currentThis.dst.push( hardDrive.path.nativize( dst ) );
+      currentThis.src.push( hardDrive.path.s.nativize( found.filesGrouped[ dst ] ).join( ' ' ) );
+    }
+    o.currentThis = currentThis; // xxx
+  }
+  else _.assert( 0 );
+
+  return o.currentThis;
+}
+
+resolveContextPrepare.defaults =
+{
+  currentThis : null,
+}
+
+//
+
 function resolve_pre( routine, args )
 {
   let o = args[ 0 ];
@@ -3092,10 +3201,16 @@ function resolve_body( o )
   let module = this;
   let will = module.will;
   let current = o.current;
+  let hardDrive = will.fileProvider.providersWithProtocolMap.file;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
   _.assert( o.prefixlessAction === 'default' || o.defaultResourceName === null, 'Prefixless action should be "default" if default resource is provided' );
+
+  if( o.currentThis )
+  {
+    o.currentThis = module.resolveContextPrepare({ currentThis : o.currentThis });
+  }
 
   let result = module._resolveAct( o );
 
@@ -3201,6 +3316,7 @@ resolve_body.defaults =
   prefixlessAction : 'resolved',
   missingAction : 'throw',
   visited : null,
+  currentThis : null,
   current : null,
   criterion : null,
   module : null,
@@ -3210,6 +3326,7 @@ resolve_body.defaults =
   singleUnwrapping : 1,
   mapValsUnwrapping : 1,
   arrayWrapping : 0,
+  preservingIteration : 0,
   flattening : 1,
   hasPath : null,
 }
@@ -3250,13 +3367,11 @@ function _resolveAct( o )
   try
   {
 
-    // if( o.selector === 'submodule::*/path::proto*=1' )
-    // debugger;
-
     result = _.select
     ({
       src : module,
       selector : o.selector,
+      preservingIteration : o.preservingIteration,
       onSelector : onSelector,
       onSelectorDown : onSelectorDown,
       onUpBegin : onUpBegin,
@@ -3270,18 +3385,13 @@ function _resolveAct( o )
       },
       iterationExtension :
       {
-        // compositeRoot : 0,
       },
       iterationPreserve :
       {
         module : o.module,
         exported : null,
-        // composite : 0,
       },
     });
-
-    // if( o.selector === 'submodule::*/path::proto*=1' )
-    // debugger;
 
   }
   catch( err )
@@ -3499,12 +3609,23 @@ function _resolveAct( o )
   function resourceMapSelect()
   {
     let it = this;
+    let resourceMap;
 
     if( !it.selector )
     return;
 
     let kind = it.parsedSelector.kind;
-    let resourceMap = it.module.resourceMapForKind( kind );
+
+    if( kind === 'this' )
+    {
+      // debugger; // xxx
+      _.assert( _.mapIs( o.currentThis ) );
+      resourceMap = o.currentThis;
+    }
+    else
+    {
+      resourceMap = it.module.resourceMapForKind( kind );
+    }
 
     if( !resourceMap )
     {
@@ -4404,6 +4525,7 @@ let Proto =
   // resolver
 
   errResolving,
+  resolveContextPrepare,
 
   _selectorShortSplitAct,
   _selectorShortSplit,

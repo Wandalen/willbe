@@ -298,7 +298,34 @@ function _reflectorsMake( Reflector, resources )
       throw _.err( 'Cant form', Reflector.KindName + '::' + o2.name, '\n', err );
     }
 
-    if( !module.stepMap[ name ] )
+    if( resource.shell )
+    {
+
+      let o3 = Object.create( null );
+      o3.criterion = _.mapExtend( null, resource.criterion || {} );
+      o3.willf = willf;
+      o3.module = module;
+      o3.name = name;
+      o3.forEachDst = 'reflector::' + name + '*';
+      if( resource.step )
+      o3.inherit = resource.step;
+      else
+      o3.inherit = 'predefined.shell';
+      o3.shell = resource.shell;
+      // o3.Optional = 1;
+
+      try
+      {
+        will.Step.MakeForEachCriterion( o3 );
+      }
+      catch( err )
+      {
+        debugger;
+        throw _.err( 'Cant form', will.Step.KindName + '::' + o3.name, '\n', err );
+      }
+
+    }
+    else if( !module.stepMap[ name ] )
     {
 
       let o3 = Object.create( null );

@@ -248,19 +248,28 @@ function moduleEach( o )
     con.then( () =>
     {
       let con2 = new _.Consequence();
-      debugger;
-      let submodules = module.submodulesResolve({ selector : o.selector });
-      submodules = _.arrayAs( submodules );
-      debugger;
-      for( let s = 0 ; s < submodules.length ; s++ ) con2.keep( ( arg ) => /* !!! replace by concurrent, maybe */
+      // debugger;
+      let resolved = module.submodulesResolve({ selector : o.selector, preservingIteration : 1 });
+      resolved = _.arrayAs( resolved );
+      // debugger;
+      for( let s = 0 ; s < resolved.length ; s++ ) con2.keep( ( arg ) => /* !!! replace by concurrent, maybe */
       {
-        let submodule = submodules[ s ];
-        let it = Object.create( null );
-        it.module = submodule.loadedModule;
-        it.supermodule = module;
-        it.submodule = submodule;
-        it.options = o;
-        return o.onEach( it );
+        let it1 = resolved[ s ];
+        let module = it1.module;
+
+        let it2 = Object.create( null );
+        it2.module = module;
+        it2.supermodule = module.supermodule || module;
+
+        if( _.arrayIs( it1.dst ) || _.strIs( it1.dst ) )
+        it2.currentPath = it1.dst;
+
+        // it.module = submodule.loadedModule;
+        // it.supermodule = module;
+        // it.submodule = submodule;
+
+        it2.options = o;
+        return o.onEach( it2 );
       });
       con2.take( null );
       return con2;

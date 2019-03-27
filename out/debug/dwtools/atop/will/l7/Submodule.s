@@ -65,7 +65,7 @@ function form3()
 
   if( submodule.formed >= 3 )
   {
-    if( submodule.loadedModule && submodule.loadedModule.hasAnyError() ) 
+    if( submodule.loadedModule && submodule.loadedModule.hasAnyError() )
     {
       debugger;
       _.assert( submodule.loadedModule.associatedSubmodule === submodule )
@@ -148,7 +148,7 @@ function _load()
   {
     if( err )
     {
-      debugger;
+      // debugger;
       if( will.verbosity >= 3 )
       logger.error( ' ! Failed to read ' + submodule.nickName + ', try to download it with .submodules.download or even clean it before downloading' );
       if( will.verbosity >= 5 || !submodule.loadedModule || submodule.loadedModule.isOpened() )

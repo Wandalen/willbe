@@ -1,6 +1,4 @@
 
-submodule :
-
 path :
 
   proto : './proto'
@@ -11,7 +9,7 @@ path :
     path : './out/debug'
     criterion :
       debug : debug
-      raw : 'raw'
+      raw : raw
       tests : 'no.tests'
   out.compiled.debug :
     path : './out/compiled.debug'
@@ -23,7 +21,7 @@ path :
     path : './out/raw.release'
     criterion :
       debug : release
-      raw : 'raw'
+      raw : raw
       tests : 'no.tests'
   out.release :
     path : './out/release'
@@ -63,23 +61,27 @@ reflector :
     criterion :
       tests : 'no.tests'
       debug : [ debug, release ]
-      raw : 'raw'
+      raw : raw
     filePath :
       path::proto : path::out.*=1
 
-  transpile.proto.no.tests.raw :
+  # transpile.proto.no.tests.raw :
+  transpile.proto.raw :
     inherit : predefined.*
+    step : predefined.transpile
     criterion :
-      tests : 'no.tests'
-      raw : 'raw'
-      debug : [ debug, release ]
+      # tests : 'no.tests'
+      raw : raw
+      debug : release
+      # debug : [ debug, release ]
     filePath :
-      '**.test*' : 0
-      '**.test/**' : 0
-      path::proto : '{path::out.*=1}'
+      # '**.test*' : 0
+      # '**.test/**' : 0
+      path::proto : '{path::out.raw.release}'
 
   transpile.proto.no.tests.compiled :
     inherit : predefined.*
+    step : predefined.transpile
     criterion :
       tests : 'no.tests'
       raw : compiled
@@ -90,6 +92,7 @@ reflector :
       path::proto : '{path::out.*=1}/Main.s'
 
   transpile.proto.only.tests.compiled :
+    step : predefined.transpile
     inherit : predefined.*
     criterion :
       tests : 'only.tests'
@@ -106,30 +109,23 @@ step :
     filePath : path::out.*=1
     criterion :
       debug : [ debug, release ]
-      raw : [ 'raw', compiled ]
+      raw : [ raw, compiled ]
       tests : [ 'no.tests', 'only.tests' ]
 
-  reflect.proto :
-    inherit : predefined.reflect
-    reflector : reflector::reflect.proto.*=1
-    criterion :
-      debug : [ debug, release ]
-      raw : [ 'raw', compiled ]
-
-  transpile.proto :
-    inherit : predefined.transpile
-    reflector : reflector::transpile.proto.*=1
-    criterion :
-      tests : [ 'no.tests', 'only.tests' ]
-      debug : [ debug, release ]
-      raw : compiled
-
-  transpile.proto.raw :
-    inherit : predefined.transpile
-    reflector : reflect.proto.*=1
-    criterion :
-      debug : [ debug, release ]
-      raw : raw
+  # transpile.proto :
+  #   inherit : predefined.transpile
+  #   reflector : reflector::transpile.proto.*=1
+  #   criterion :
+  #     tests : [ 'no.tests', 'only.tests' ]
+  #     debug : [ debug, release ]
+  #     raw : compiled
+  #
+  # transpile.proto.raw :
+  #   inherit : predefined.transpile
+  #   reflector : reflect.proto.*=1
+  #   criterion :
+  #     debug : [ debug, release ]
+  #     raw : raw
 
 build :
 
@@ -157,7 +153,7 @@ build :
       raw : raw
     steps :
       - step::clean.out*=2
-      - transpile.proto.raw.*=1
+      - transpile.proto.raw
 
   release :
     criterion :
