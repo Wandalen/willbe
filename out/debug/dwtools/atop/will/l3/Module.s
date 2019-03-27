@@ -304,13 +304,13 @@ function predefinedForm()
   path
   ({
     name : 'clonePath',
-    path : null,
+    path : [],
   })
 
   path
   ({
     name : 'remotePath',
-    path : null,
+    path : [],
   })
 
   path
@@ -576,23 +576,88 @@ function predefinedForm()
 
 //
 
-function shell( command )
+function shell( o )
 {
   let module = this;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.assert( _.strIs( command ) );
+  if( !_.mapIs( arguments[ 0 ] ) )
+  o = { execPath : arguments[ 0 ] }
+
+  _.assert( _.strIs( o.execPath ) );
   _.assert( arguments.length === 1 );
+  o = _.routineOptions( shell, o );
 
-  return _.shell
+  /* */
+
+  // debugger;
+  o.execPath = module.resolve
   ({
-    execPath : command,
-    currentPath : module.dirPath,
-    verbosity : will.verbosity-1,
+    selector : o.execPath,
+    pathNativizing : 1,
+    prefixlessAction : 'resolved',
+    currentThis : o.currentThis,
+    // preservingIteration : 1,
   });
+  // debugger; xxx
 
+  /* */
+
+  if( o.currentPath )
+  o.currentPath = module.pathResolve({ selector : o.currentPath, prefixlessAction : 'resolved', current : o.current });
+  _.sure( o.currentPath === null || _.strIs( o.currentPath ) || _.strsAreAll( o.currentPath ), 'Current path should be string if defined' );
+
+  /* */
+
+  let ready = new _.Consequence().take( null );
+  if( _.arrayIs( o.currentPath ) ) /* xxx : implement multiple currentPath for _.shell */
+  {
+    o.currentPath.forEach( ( currentPath ) =>
+    {
+      _.shell
+      ({
+        execPath : o.execPath,
+        currentPath : o.currentPath,
+        verbosity : will.verbosity - 1,
+        ready : ready,
+      });
+    });
+  }
+  else
+  {
+
+    _.shell
+    ({
+      execPath : o.execPath,
+      currentPath : o.currentPath,
+      verbosity : will.verbosity - 1,
+      ready : ready,
+    });
+
+  }
+
+  // xxx
+  //
+  // // execPath
+  //
+  // return _.shell
+  // ({
+  //   execPath : execPath,
+  //   currentPath : module.dirPath,
+  //   verbosity : will.verbosity-1,
+  // });
+
+  return ready;
+}
+
+shell.defaults =
+{
+  execPath : null,
+  currentPath : null,
+  currentThis : null,
+  current : null,
 }
 
 //
@@ -3073,36 +3138,36 @@ function resolveContextPrepare( o )
 
   _.routineOptions( resolveContextPrepare, arguments );
 
-  if( !o.currentContext )
-  return o.currentContext;
+  if( !o.currentThis )
+  return o.currentThis;
 
-  if( _.mapIs( o.currentContext ) )
+  if( _.mapIs( o.currentThis ) )
   {
   }
-  else if( o.currentContext instanceof will.Reflector )
+  else if( o.currentThis instanceof will.Reflector )
   {
-    let currentContext = Object.create( null );
-    currentContext.src = [];
-    currentContext.dst = [];
-    let o2 = o.currentContext.optionsForFindGroupExport();
+    let currentThis = Object.create( null );
+    currentThis.src = [];
+    currentThis.dst = [];
+    let o2 = o.currentThis.optionsForFindGroupExport();
     o2.outputFormat = 'absolute';
     let found = fileProvider.filesFindGroups( o2 );
-    currentContext.filesGrouped = found.filesGrouped;
+    currentThis.filesGrouped = found.filesGrouped;
     for( let dst in found.filesGrouped )
     {
-      currentContext.dst.push( hardDrive.path.nativize( dst ) );
-      currentContext.src.push( hardDrive.path.s.nativize( found.filesGrouped[ dst ] ).join( ' ' ) );
+      currentThis.dst.push( hardDrive.path.nativize( dst ) );
+      currentThis.src.push( hardDrive.path.s.nativize( found.filesGrouped[ dst ] ).join( ' ' ) );
     }
-    o.currentContext = currentContext; // xxx
+    o.currentThis = currentThis; // xxx
   }
   else _.assert( 0 );
 
-  return o.currentContext;
+  return o.currentThis;
 }
 
 resolveContextPrepare.defaults =
 {
-  currentContext : null,
+  currentThis : null,
 }
 
 //
@@ -3142,9 +3207,9 @@ function resolve_body( o )
 
   _.assert( o.prefixlessAction === 'default' || o.defaultResourceName === null, 'Prefixless action should be "default" if default resource is provided' );
 
-  if( o.currentContext )
+  if( o.currentThis )
   {
-    o.currentContext = module.resolveContextPrepare({ currentContext : o.currentContext });
+    o.currentThis = module.resolveContextPrepare({ currentThis : o.currentThis });
   }
 
   let result = module._resolveAct( o );
@@ -3251,7 +3316,7 @@ resolve_body.defaults =
   prefixlessAction : 'resolved',
   missingAction : 'throw',
   visited : null,
-  currentContext : null,
+  currentThis : null,
   current : null,
   criterion : null,
   module : null,
@@ -3261,6 +3326,7 @@ resolve_body.defaults =
   singleUnwrapping : 1,
   mapValsUnwrapping : 1,
   arrayWrapping : 0,
+  preservingIteration : 0,
   flattening : 1,
   hasPath : null,
 }
@@ -3301,13 +3367,11 @@ function _resolveAct( o )
   try
   {
 
-    // if( o.selector === 'submodule::*/path::proto*=1' )
-    // debugger;
-
     result = _.select
     ({
       src : module,
       selector : o.selector,
+      preservingIteration : o.preservingIteration,
       onSelector : onSelector,
       onSelectorDown : onSelectorDown,
       onUpBegin : onUpBegin,
@@ -3321,18 +3385,13 @@ function _resolveAct( o )
       },
       iterationExtension :
       {
-        // compositeRoot : 0,
       },
       iterationPreserve :
       {
         module : o.module,
         exported : null,
-        // composite : 0,
       },
     });
-
-    // if( o.selector === 'submodule::*/path::proto*=1' )
-    // debugger;
 
   }
   catch( err )
@@ -3560,8 +3619,8 @@ function _resolveAct( o )
     if( kind === 'this' )
     {
       // debugger; // xxx
-      _.assert( _.mapIs( o.currentContext ) );
-      resourceMap = o.currentContext;
+      _.assert( _.mapIs( o.currentThis ) );
+      resourceMap = o.currentThis;
     }
     else
     {

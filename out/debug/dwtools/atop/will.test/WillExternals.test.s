@@ -407,6 +407,8 @@ function singleModuleClean( test )
     return null;
   })
 
+  /* - */
+
   return ready;
 }
 
@@ -4111,6 +4113,55 @@ function reflectShell( test )
 
 //
 
+function eachMixed( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let filePath = _.path.join( routinePath, 'file' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.each submodule::*/path::clonePath .shell "git status"'
+    return null;
+  })
+
+  shell({ args : [ '.build' ] })
+  shell({ args : [ '.each submodule::*/path::clonePath .shell "git status"' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'git status' ) );
+    test.is( _.strHas( got.output, 'On branch master' ) );
+    test.is( _.strHas( got.output, '.module/Tools/out' ) );
+    test.is( _.strHas( got.output, '.module/PathFundamentals/out' ) );
+    test.is( _.strHas( got.output, '.module/module' ) );
+    test.is( _.strHas( got.output, '.module/module' ) );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+//
+
 function importInExport( test )
 {
   let self = this;
@@ -4609,6 +4660,8 @@ var Self =
     reflectRemoteGit,
     reflectRemoteHttp,
     reflectShell,
+
+    eachMixed,
 
     importInExport,
     setVerbosity,

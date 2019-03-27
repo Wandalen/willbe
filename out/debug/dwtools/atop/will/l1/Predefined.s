@@ -267,7 +267,7 @@ function stepRoutineShell( frame )
   if( opts.upToDate === 'preserve' && forEachDstReflector )
   {
     _.assert( forEachDstReflector instanceof will.Reflector );
-    forEachDst = module.resolveContextPrepare({ currentContext : forEachDstReflector });
+    forEachDst = module.resolveContextPrepare({ currentThis : forEachDstReflector });
 
     debugger;
     for( let dst in forEachDst.filesGrouped )
@@ -289,31 +289,12 @@ function stepRoutineShell( frame )
 
   }
 
-  /* */
-
-  debugger;
-  opts.shell = module.resolve
-  ({
-    selector : opts.shell,
-    pathNativizing : 1,
-    prefixlessAction : 'resolved',
-    currentContext : forEachDst,
-  });
-  debugger;
-
-  /* */
-
-  if( opts.currentPath )
-  opts.currentPath = step.inPathResolve({ selector : opts.currentPath, prefixlessAction : 'resolved' });
-  _.sure( opts.currentPath === null || _.strIs( opts.currentPath ), 'Current path should be string if defined' );
-
-  /* */
-
-  return _.shell
+  return module.shell
   ({
     execPath : opts.shell,
     currentPath : opts.currentPath,
-    verbosity : will.verbosity - 1,
+    currentThis : forEachDst,
+    current : step,
   })
   .finally( ( err, arg ) =>
   {
@@ -321,6 +302,39 @@ function stepRoutineShell( frame )
     throw _.errBriefly( 'Failed to shell', step.nickName, '\n', err );
     return arg;
   });
+
+  // /* */
+  //
+  // debugger;
+  // opts.shell = module.resolve
+  // ({
+  //   selector : opts.shell,
+  //   pathNativizing : 1,
+  //   prefixlessAction : 'resolved',
+  //   currentThis : forEachDst,
+  // });
+  // debugger;
+  //
+  // /* */
+  //
+  // if( opts.currentPath )
+  // opts.currentPath = step.inPathResolve({ selector : opts.currentPath, prefixlessAction : 'resolved' });
+  // _.sure( opts.currentPath === null || _.strIs( opts.currentPath ), 'Current path should be string if defined' );
+  //
+  // /* */
+  //
+  // return _.shell
+  // ({
+  //   execPath : opts.shell,
+  //   currentPath : opts.currentPath,
+  //   verbosity : will.verbosity - 1,
+  // })
+  // .finally( ( err, arg ) =>
+  // {
+  //   if( err )
+  //   throw _.errBriefly( 'Failed to shell', step.nickName, '\n', err );
+  //   return arg;
+  // });
 
 }
 

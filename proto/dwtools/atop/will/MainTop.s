@@ -147,6 +147,7 @@ function moduleDone( o )
       if( will.beeping )
       _.diagnosticBeep();
       // debugger;
+      will.currentPath = null;
       will.currentModule = null;
       will.topCommand = null;
       let currentModule = will.currentModule;
@@ -162,6 +163,7 @@ function moduleDone( o )
     _.appExitCode( -1 );
     _.errLogOnce( err );
     debugger;
+    will.currentPath = null;
     will.currentModule = null;
     will.topCommand = null;
     return true;
@@ -566,7 +568,11 @@ function commandShell( e )
   return will.moduleReadyThenNonForming( function( module )
   {
     let logger = will.logger;
-    return module.shell( e.argument );
+    return module.shell
+    ({
+      execPath : e.argument,
+      currentPath : will.currentPath,
+    });
   });
 
 }
@@ -687,6 +693,7 @@ function commandWith( e )
   if( will.currentModule )
   {
     debugger;
+    will.currentPath = null;
     will.currentModule.finit();
     will.currentModule = null;
   }
@@ -748,6 +755,7 @@ function _commandEach_functor( fop )
 
     if( will.currentModule )
     {
+      will.currentPath = null;
       will.currentModule.finit();
       will.currentModule = null;
     }
@@ -758,13 +766,15 @@ function _commandEach_functor( fop )
     if( will.topCommand === null )
     will.topCommand = commandEach;
 
+    // debugger;
     let isolated = ca.commandIsolateSecondFromArgument( e.argument );
-
+    _.assert( _.objectIs( isolated ), 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
     let con = will.moduleEach
     ({
       selector : isolated.argument,
       onEach : handleEach,
     });
+    // debugger;
 
     con.finally( ( err, arg ) =>
     {
@@ -781,9 +791,15 @@ function _commandEach_functor( fop )
 
       _.assert( will.currentModule === null );
       will.currentModule = it.module;
+      will.currentPath = it.currentPath || null;
 
+      // debugger;
       if( will.verbosity > 1 )
-      logger.log( _.color.strFormat( 'At', { fg : 'bright white' } ), it.module.dirPath );
+      {
+        logger.log( _.color.strFormat( 'Module at', { fg : 'bright white' } ), it.module.dirPath );
+        if( will.currentPath )
+        logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), will.currentPath );
+      }
 
       let r = ca.commandPerform
       ({
@@ -797,6 +813,9 @@ function _commandEach_functor( fop )
         _.assert( will.currentModule === it.module );
         will.currentModule.finit();
         will.currentModule = null;
+        // debugger;
+        if( err )
+        _.errLog( _.errBriefly( err ) );
         if( err )
         throw _.err( err );
         return arg;
@@ -833,6 +852,7 @@ let Aggregates =
 let Associates =
 {
   currentModule : null,
+  currentPath : null,
 }
 
 let Restricts =
