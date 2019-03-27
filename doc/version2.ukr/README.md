@@ -113,16 +113,15 @@
 ...In progress, advanced...
 <details>
   <summary><a href="./Tutorials/ResourceInheritability.md">Resources Inheritability</a></summary>
-  В туторіалі показано як використовувати наслідування ресурсами <code>will-файла</code>
+  Як використовувати наслідування ресурсами <code>will-файла</code>
 </details>
 <details>
   <summary><a href="./Tutorials/PredefinedReflectorsUsing.md">How to use predefined reflectors</a></summary>
-  В туторіалі показано як використовувати вбудовані рефлектори утиліти <code>willbe</code>
+  Як використовувати вбудовані рефлектори утиліти <code>willbe</code>
 </details>
 <details>
   <summary><a href="./Tutorials/ExportedFileStructure.md">Exported <code>will-file</code> structure</a></summary>
-  В туторіалі показано особливості структури експортованого `*.out.will.`-файла та окремих ресурсів.
-  Kos: Що?..
+  Структура експортованого `*.out.will.`-файла.
 </details>
 <details>
   <summary><a href="./Tutorials/ExportedSectionOfWillFile.md">Exported section of out will-file</a></summary>
