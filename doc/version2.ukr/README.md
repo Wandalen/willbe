@@ -136,7 +136,7 @@
 
 <details>
   <summary><a href="./Concepts/WillFile.md"><code>Will-файл</code></a></summary>
-  Конфігураційний файл для побудови will-модуля
+  Конфігураційний файл для побудови <code>will-модуля</code>
 </details>
 <details>
   <summary><a href="./Concepts/NamedAndSplitWillFile.md">Іменований <code>will-файл</code></a></summary>

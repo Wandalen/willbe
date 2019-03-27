@@ -15,7 +15,7 @@ Request "."
 Ambiguity  
   .help - Get help.   
   .set - Command set.
-  .list - List information about the current module.
+  .resources.list - List information about the current module.
   .paths.list - List paths of the current module.
   .submodules.list - List submodules of the current module.
   .reflectors.list - List avaialable reflectors.
@@ -319,13 +319,13 @@ submodule::PathFundamentals
 
 </br>
 Шляхи і назви ресурсів співпадають і утиліта `willbe` вивела додаткову інформацію про статус підмодулів, яка спрощує управління модулем.  
-А щоб дізнатись повну інформацію про модуль введіть фразу `will .list`:
+А щоб дізнатись повну інформацію про модуль введіть фразу `will .resources.list`:
 
 <details>
-  <summary><u>Вивід фрази <code>will .list</code></u></summary>
+  <summary><u>Вивід фрази <code>will .resources.list</code></u></summary>
 
 ```
-[user@user ~]$ will .List
+[user@user ~]$ will .resources.list
  . Read : /path_to_file/submodules/.will.yml
  . Read 1 will-files in 0.068s
  ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
@@ -402,7 +402,7 @@ About
 
 </br>
 В утиліті `willbe` деякі ресурси мають значення за замовчуванням. Якщо такий ресурс відсутній, то утиліта його генерує в оперативну пам'ять не змінюючи `will`-файл - `willbe` не має функцій для модифікації `will`-файлів користувача.  
-Саме тому в виводі команди `will .list` секція `about` має поле `enabled` яке відсутнє в `will`-файлі:  
+Саме тому в виводі команди `will .resources.list` секція `about` має поле `enabled` яке відсутнє в `will`-файлі:  
 <details>
   <summary><u>Відкрийте, щоб проглянути</u></summary>
 
