@@ -12,26 +12,28 @@
 ```
 [user@user ~]$ will .  
 Request "."  
-Ambiguity  
-  .help - Get help.   
-  .set - Command set.
-  .resources.list - List information about the current module.
-  .paths.list - List paths of the current module.
-  .submodules.list - List submodules of the current module.
-  .reflectors.list - List avaialable reflectors.
-  .steps.list - List avaialable steps.
-  .builds.list - List avaialable builds.
-  .exports.list - List avaialable exports.
-  .about.list - List descriptive information about the module.
-  .execution.list - List execution scenarios.
-  .submodules.download - Download each submodule if such was not downloaded so far.
-  .submodules.upgrade - Upgrade each submodule, checking for available updates for such.
-  .submodules.clean - Delete all downloaded submodules.
-  .clean - Clean current module. Delete genrated artifacts, temp files and downloaded submodules.
-  .clean.what - Find out which files will be deleted by clean command.
-  .build - Build current module with spesified criterion.
-  .export - Export selected the module with spesified criterion. Save output to output file and archive.
-  .with - Use "with" to select a module.
+Request "."
+Ambiguity. Did you mean?
+  .help - Get help. 
+  .set - Command set. 
+  .resources.list - List information about resources of the current module. 
+  .paths.list - List paths of the current module. 
+  .submodules.list - List submodules of the current module. 
+  .reflectors.list - List avaialable reflectors. 
+  .steps.list - List avaialable steps. 
+  .builds.list - List avaialable builds. 
+  .exports.list - List avaialable exports. 
+  .about.list - List descriptive information about the module. 
+  .execution.list - List execution scenarios. 
+  .submodules.download - Download each submodule if such was not downloaded so far. 
+  .submodules.upgrade - Upgrade each submodule, checking for available updates for such. 
+  .submodules.clean - Delete all downloaded submodules. 
+  .shell - Execute shell command on the module. 
+  .clean - Clean current module. Delete genrated artifacts, temp files and downloaded submodules. 
+  .clean.what - Find out which files will be deleted by clean command. 
+  .build - Build current module with spesified criterion. 
+  .export - Export selected the module with spesified criterion. Save output to output file and archive. 
+  .with - Use "with" to select a module. 
   .each - Use "each" to iterate each module in a directory.
 
 ```
