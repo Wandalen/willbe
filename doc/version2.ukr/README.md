@@ -144,6 +144,14 @@
   Конфігураційний файл для побудови <code>will-модуля</code>
 </details>
 <details>
+  <summary><a href="./Concepts/NamedAndSplitWillFile.md">Іменований <code>will-файл</code></a></summary>
+  Вид <code>will-файла</code> назва якого починається з імені
+</details>
+<details>
+  <summary><a href="./Concepts/NamedAndSplitWillFile.md">Спліт <code>will-файл</code></a></summary>
+  Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля
+</details>
+<details>
   <summary><a href="./Concepts/Composition.md#section">Секція <code>will-файлу</code></a></summary>
   Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу
 </details>
@@ -171,16 +179,12 @@
   <summary><a href="./Concepts/LocalAndRemoteSubmodules.md#remote-submodule">Віддалений підмодуль</a></summary>
   Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину
 </details>
+<details>
+  <summary><a href="./Concepts/Phrase.md">Фраза</a></summary>
+  Команда з одного обо декількох слів, розділених крапкою
+</details>
 
 <p>...In progress...</p>
-<details>
-  <summary><a href="./Concepts/NamedAndSplitWillFile.md">Іменований <code>will-файл</code></a></summary>
-  Вид <code>will-файла</code> назва якого починається з імені
-</details>
-<details>
-  <summary><a href="./Concepts/NamedAndSplitWillFile.md">Спліт <code>will-файл</code></a></summary>
-  Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля
-</details>
 <details>
   <summary><a href="./Concepts/Inheritability.md">Наслідування ресурсами</a></summary>
   Здатність використовувати (наслідувати) значення полів ресурса іншим ресурсом
@@ -200,8 +204,4 @@
 <details>
   <summary><a href="./Concepts/Asserts.md">Ґлоб з ассертом</a></summary>
   Обмеження кількості ресурсів в вибірці селектора з ґлобом
-</details>
-<details>
-  <summary><a href="./Concepts/Phrase.md">Фраза</a></summary>
-  Команда з одного обо декількох слів, розділених крапкою
 </details>
