@@ -144,6 +144,14 @@
   Конфігураційний файл для побудови <code>will-модуля</code>
 </details>
 <details>
+  <summary><a href="./Concepts/NamedAndSplitWillFile.md">Іменований <code>will-файл</code></a></summary>
+  Вид <code>will-файла</code> назва якого починається з імені
+</details>
+<details>
+  <summary><a href="./Concepts/NamedAndSplitWillFile.md">Спліт <code>will-файл</code></a></summary>
+  Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля
+</details>
+<details>
   <summary><a href="./Concepts/Composition.md#section">Секція <code>will-файлу</code></a></summary>
   Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу
 </details>
@@ -171,30 +179,16 @@
   <summary><a href="./Concepts/LocalAndRemoteSubmodules.md#remote-submodule">Віддалений підмодуль</a></summary>
   Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину
 </details>
-
-<p>...In progress...</p>
 <details>
-  <summary><a href="./Concepts/NamedAndSplitWillFile.md">Іменований <code>will-файл</code></a></summary>
-  Вид <code>will-файла</code> назва якого починається з імені
+  <summary><a href="./Concepts/Phrase.md">Фраза</a></summary>
+  Команда з одного обо декількох слів, розділених крапкою
 </details>
 <details>
-  <summary><a href="./Concepts/NamedAndSplitWillFile.md">Спліт <code>will-файл</code></a></summary>
-  Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля
+  <summary><a href="./Concepts/Selectors.md#selector">Селектор</a></summary>
+  Рядок-посилання на ресурс або декілька ресурсів в <code>will-файлі</code>
 </details>
 <details>
-  <summary><a href="./Concepts/Inheritability.md">Наслідування ресурсами</a></summary>
-  Здатність використовувати (наслідувати) значення полів ресурса іншим ресурсом
-</details>
-<details>
-  <summary><a href="./Concepts/Criterions.md">Критеріон</a></summary>
-  Елемент порівняння в <code>will-файлі</code> для визначення умов використання ресурса
-</details>
-<details>
-  <summary><a href="./Concepts/Selectors.md">Селектор</a></summary>
-  Рядок-посилання на ресурс або декілька ресурсів <code>will-файла</code>
-</details>
-<details>
-  <summary><a href="./Concepts/Selectors.md">Селектор з ґлобом</a></summary>
+  <summary><a href="./Concepts/Selectors.md#selector-with-glob">Селектор з ґлобом</a></summary>
   Селектор, який для вибору ресурсу використовує пошукові шаблони - ґлоби
 </details>
 <details>
@@ -202,6 +196,12 @@
   Обмеження кількості ресурсів в вибірці селектора з ґлобом
 </details>
 <details>
-  <summary><a href="./Concepts/Phrase.md">Фраза</a></summary>
-  Команда з одного обо декількох слів, розділених крапкою
+  <summary><a href="./Concepts/Criterions.md">Критеріон</a></summary>
+  Елемент порівняння в <code>will-файлі</code> для визначення умов використання ресурса
+</details>
+
+<p>...In progress...</p>
+<details>
+  <summary><a href="./Concepts/Inheritability.md">Наслідування ресурсами</a></summary>
+  Здатність використовувати (наслідувати) значення полів ресурса іншим ресурсом
 </details>
