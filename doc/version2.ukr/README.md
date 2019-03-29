@@ -195,13 +195,13 @@
   <summary><a href="./Concepts/Asserts.md">Ґлоб з ассертом</a></summary>
   Обмеження кількості ресурсів в вибірці селектора з ґлобом
 </details>
+<details>
+  <summary><a href="./Concepts/Criterions.md">Критеріон</a></summary>
+  Елемент порівняння в <code>will-файлі</code> для визначення умов використання ресурса
+</details>
 
 <p>...In progress...</p>
 <details>
   <summary><a href="./Concepts/Inheritability.md">Наслідування ресурсами</a></summary>
   Здатність використовувати (наслідувати) значення полів ресурса іншим ресурсом
-</details>
-<details>
-  <summary><a href="./Concepts/Criterions.md">Критеріон</a></summary>
-  Елемент порівняння в <code>will-файлі</code> для визначення умов використання ресурса
 </details>
