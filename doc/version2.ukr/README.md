@@ -113,20 +113,27 @@
 ...In progress, advanced...
 <details>
   <summary><a href="./Tutorials/ResourceInheritability.md">Resources Inheritability</a></summary>
-  В туторіалі показано як використовувати наслідування ресурсами <code>will-файла</code>
+  Як використовувати наслідування ресурсами <code>will-файла</code>
 </details>
 <details>
   <summary><a href="./Tutorials/PredefinedReflectorsUsing.md">How to use predefined reflectors</a></summary>
-  В туторіалі показано як використовувати вбудовані рефлектори утиліти <code>willbe</code>
+  Як використовувати вбудовані рефлектори утиліти <code>willbe</code>
 </details>
 <details>
   <summary><a href="./Tutorials/ExportedFileStructure.md">Exported <code>will-file</code> structure</a></summary>
-  В туторіалі показано особливості структури експортованого `*.out.will.`-файла та окремих ресурсів.
-  Kos: Що?..
+  Структура експортованого `*.out.will.`-файла.
 </details>
 <details>
   <summary><a href="./Tutorials/ExportedSectionOfWillFile.md">Exported section of out will-file</a></summary>
   В цьому туторіалі розглядається секція <code>exported</code>
+</details>
+<details>
+  <summary><a href="./Tutorials/HowToList.md">How to list</a></summary>
+  Як дізнатись інформацію про модуль
+</details>
+<details>
+  <summary><a href="./Tutorials/ExportedSectionOfWillFile.md">How to use <code>.clean</code> command</a></summary>
+  Використання команди <code>.clean</code>
 </details>
 
 
@@ -137,16 +144,6 @@
   Конфігураційний файл для побудови <code>will-модуля</code>
 </details>
 <details>
-  <summary><a href="./Concepts/Composition.md#section">Секція <code>will-файлу</code></a></summary>
-  Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу
-</details>
-<details>
-  <summary><a href="./Concepts/Composition.md#resource">Ресурси</a></summary>
-  Елементи <code>will-файла</code>, які позначають певну функціональність
-</details>
-
-<p>...In progress...</p>
-<details>
   <summary><a href="./Concepts/NamedAndSplitWillFile.md">Іменований <code>will-файл</code></a></summary>
   Вид <code>will-файла</code> назва якого починається з імені
 </details>
@@ -155,39 +152,43 @@
   Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля
 </details>
 <details>
-  <summary><a href="./Concepts/Module.md">Модуль</a></summary>
+  <summary><a href="./Concepts/Composition.md#section">Секція <code>will-файлу</code></a></summary>
+  Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу
+</details>
+<details>
+  <summary><a href="./Concepts/Composition.md#resource">Ресурси</a></summary>
+  Елементи <code>will-файла</code>, які позначають певну функціональність
+</details>
+<details>
+  <summary><a href="./Concepts/Module.md#module">Модуль</a></summary>
   Модулем називається сукупність файлів, які описані в <code>will-файлi</code>
 </details>
 <details>
-  <summary><a href="./Concepts/Module.md">Підмодуль</a></summary>
+  <summary><a href="./Concepts/Module.md#submodule">Підмодуль</a></summary>
   Окремий модуль з власним конфігураційним <code>will-файлом</code>, який підпорядковується іншому модулю 
 </details>
 <details>
-  <summary><a href="./Concepts/Module.md">Супермодуль</a></summary>
+  <summary><a href="./Concepts/Module.md#supermodule">Супермодуль</a></summary>
   Модуль, який включає в себе інші модулі (підмодулі) 
 </details>
 <details>
-  <summary><a href="./Concepts/LocalSubmodule.md">Локальний підмодуль</a></summary>
+  <summary><a href="./Concepts/LocalAndRemoteSubmodules.md#local-submodule">Локальний підмодуль</a></summary>
   Підмодуль, який розташовується на машині користувача 
 </details>
 <details>
-  <summary><a href="./Concepts/RemoteSubmodule.md">Віддалений підмодуль</a></summary>
+  <summary><a href="./Concepts/LocalAndRemoteSubmodules.md#remote-submodule">Віддалений підмодуль</a></summary>
   Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину
 </details>
 <details>
-  <summary><a href="./Concepts/Inheritability.md">Наслідування ресурсами</a></summary>
-  Здатність використовувати (наслідувати) значення полів ресурса іншим ресурсом
+  <summary><a href="./Concepts/Phrase.md">Фраза</a></summary>
+  Команда з одного обо декількох слів, розділених крапкою
 </details>
 <details>
-  <summary><a href="./Concepts/Criterions.md">Критеріон</a></summary>
-  Елемент порівняння в <code>will-файлі</code> для визначення умов використання ресурса
+  <summary><a href="./Concepts/Selectors.md#selector">Селектор</a></summary>
+  Рядок-посилання на ресурс або декілька ресурсів в <code>will-файлі</code>
 </details>
 <details>
-  <summary><a href="./Concepts/Selectors.md">Селектор</a></summary>
-  Рядок-посилання на ресурс або декілька ресурсів <code>will-файла</code>
-</details>
-<details>
-  <summary><a href="./Concepts/Selectors.md">Селектор з ґлобом</a></summary>
+  <summary><a href="./Concepts/Selectors.md#selector-with-glob">Селектор з ґлобом</a></summary>
   Селектор, який для вибору ресурсу використовує пошукові шаблони - ґлоби
 </details>
 <details>
@@ -195,6 +196,12 @@
   Обмеження кількості ресурсів в вибірці селектора з ґлобом
 </details>
 <details>
-  <summary><a href="./Concepts/Phrase.md">Фраза</a></summary>
-  Команда з одного обо декількох слів, розділених крапкою
+  <summary><a href="./Concepts/Criterions.md">Критеріон</a></summary>
+  Елемент порівняння в <code>will-файлі</code> для визначення умов використання ресурса
+</details>
+
+<p>...In progress...</p>
+<details>
+  <summary><a href="./Concepts/Inheritability.md">Наслідування ресурсами</a></summary>
+  Здатність використовувати (наслідувати) значення полів ресурса іншим ресурсом
 </details>
