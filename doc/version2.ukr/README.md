@@ -183,6 +183,14 @@
   <summary><a href="./Concepts/Phrase.md">Фраза</a></summary>
   Команда з одного обо декількох слів, розділених крапкою
 </details>
+<details>
+  <summary><a href="./Concepts/Selectors.md">Селектор</a></summary>
+  Рядок-посилання на ресурс або декілька ресурсів в <code>will-файлі</code>
+</details>
+<details>
+  <summary><a href="./Concepts/Selectors.md">Селектор з ґлобом</a></summary>
+  Селектор, який для вибору ресурсу використовує пошукові шаблони - ґлоби
+</details>
 
 <p>...In progress...</p>
 <details>
@@ -192,14 +200,6 @@
 <details>
   <summary><a href="./Concepts/Criterions.md">Критеріон</a></summary>
   Елемент порівняння в <code>will-файлі</code> для визначення умов використання ресурса
-</details>
-<details>
-  <summary><a href="./Concepts/Selectors.md">Селектор</a></summary>
-  Рядок-посилання на ресурс або декілька ресурсів <code>will-файла</code>
-</details>
-<details>
-  <summary><a href="./Concepts/Selectors.md">Селектор з ґлобом</a></summary>
-  Селектор, який для вибору ресурсу використовує пошукові шаблони - ґлоби
 </details>
 <details>
   <summary><a href="./Concepts/Asserts.md">Ґлоб з ассертом</a></summary>
