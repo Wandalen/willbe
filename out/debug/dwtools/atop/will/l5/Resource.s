@@ -974,7 +974,7 @@ _.classDeclare
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDecalre
+_.staticDeclare
 ({
   prototype : _.Will.prototype,
   name : Self.shortName,

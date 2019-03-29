@@ -691,7 +691,7 @@ let Extend =
 //
 
 _.mapExtend( Self, Extend );
-_.staticDecalre
+_.staticDeclare
 ({
   prototype : _.Will.prototype,
   name : 'Predefined',

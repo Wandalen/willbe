@@ -127,7 +127,7 @@ function _load()
   ({
     will : will,
     alias : submodule.name,
-    filePath : path.join( module.inPath, submodule.path ),
+    willFilesPath : path.join( module.inPath, submodule.path ),
     supermodule : module,
     associatedSubmodule : submodule,
   }).preform();
@@ -307,7 +307,7 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDecalre
+_.staticDeclare
 ({
   prototype : _.Will.prototype,
   name : Self.shortName,

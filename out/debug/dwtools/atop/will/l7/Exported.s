@@ -174,7 +174,7 @@ function performExportedReflectors( exportSelector )
   if( exp instanceof will.Reflector )
   {
 
-    exp.form2(); 
+    exp.form2();
 
     _.assert( exp.formed >= 2 );
     _.assert( exp.src.formed === 1 );
@@ -424,7 +424,6 @@ function performWriteOutFile()
   let logger = will.logger;
   let build = module.buildMap[ exported.name ];
 
-  debugger;
   let module2 = module.cloneExtending({ dirPath : module.outPath });
   _.assert( module2.dirPath === module.outPath );
 
@@ -435,14 +434,12 @@ function performWriteOutFile()
   _.assert( module2.pathResourceMap[ inPathResource.name ] === inPathResource );
 
   let outFilePath = build.outFilePathFor();
-  debugger;
   let data = module2.dataExport({ copyingNonWritable : 0, copyingPredefined : 0 });
-  debugger;
 
-  _.assert( !data.path || !data.path.filePath );
-  _.assert( !data.path || !data.path.dirPath );
-  _.assert( !data.path || !data.path.clonePath );
-  _.assert( !data.path || !data.path.remotePath );
+  _.assert( !data.path || !data.path[ 'predefined.will.files' ] );
+  _.assert( !data.path || !data.path[ 'predefined.dir' ] );
+  _.assert( !data.path || !data.path[ 'predefined.lcoal' ] );
+  _.assert( !data.path || !data.path[ 'predefined.remote' ] );
 
   module2.finit();
 
@@ -609,7 +606,7 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDecalre
+_.staticDeclare
 ({
   prototype : _.Will.prototype,
   name : Self.shortName,

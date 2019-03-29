@@ -168,11 +168,18 @@ function open()
 
   try
   {
+
+    // debugger;
+    if( !willf.exists() )
+    throw _.err( 'No will-file' );
+
     willf.data = fileProvider.fileConfigRead
     ({
       filePath : willf.filePath,
       verbosity : will.verbosity-2,
+      found : willf._found,
     });
+
   }
   catch( err )
   {
@@ -399,9 +406,20 @@ function exists()
 
   willf._inPathsForm();
 
-  let r = fileProvider.fileConfigPathGet({ filePath : willf.filePath });
+  if( !willf._found )
+  {
+    willf._found = fileProvider.fileConfigPathGet({ filePath : willf.filePath });
 
-  return !!r && !!r.length;
+    _.assert( willf._found.length === 0 || willf._found.length === 1 );
+
+    // if( willf._found.length )
+    // debugger;
+
+    if( willf._found.length )
+    willf.filePath = willf._found[ 0 ].particularPath;
+  }
+
+  return !!willf._found && !!willf._found.length;
 }
 
 // --
@@ -458,6 +476,7 @@ let Restricts =
 {
   module : null,
   formed : 0,
+  _found : null,
 }
 
 let Statics =
@@ -519,7 +538,7 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDecalre
+_.staticDeclare
 ({
   prototype : _.Will.prototype,
   name : Self.shortName,

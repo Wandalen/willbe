@@ -584,6 +584,349 @@ singleModuleWithSpaceTrivial.timeOut = 130000;
 
 //
 
+function open( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'open' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, 'module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  ready
+
+  .thenKeep( () =>
+  {
+    test.case = '.export'
+    return null;
+  })
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
+    var files = self.find( _.path.join( routinePath, 'doc.out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
+    test.identical( files, [] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .thenKeep( () =>
+  {
+    test.case = '.with . .export'
+    return null;
+  })
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.with . .export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
+    var files = self.find( _.path.join( routinePath, 'doc.out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
+    test.identical( files, [] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .thenKeep( () =>
+  {
+    test.case = '.with doc .export'
+    return null;
+  })
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.with doc .export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc.out' ) );
+    test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
+    var files = self.find( _.path.join( routinePath, 'doc/out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
+    test.identical( files, [] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .thenKeep( () =>
+  {
+    test.case = '.with doc. .export'
+    return null;
+  })
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.with doc. .export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc.out' ) );
+    test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
+    var files = self.find( _.path.join( routinePath, 'doc/out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
+    test.identical( files, [] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .thenKeep( () =>
+  {
+    test.case = '.with doc/. .export'
+    return null;
+  })
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.with doc/. .export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc.out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/out' ) );
+    test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
+    var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
+    test.identical( files, [] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .thenKeep( () =>
+  {
+    test.case = '.with doc/doc .export'
+    return null;
+  })
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.with doc/doc .export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc.out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
+    test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .thenKeep( () =>
+  {
+    test.case = '.with doc/doc. .export'
+    return null;
+  })
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.with doc/doc. .export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc.out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
+    test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .thenKeep( () =>
+  {
+    test.case = '.each . .export'
+    return null;
+  })
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.each . .export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
+    var files = self.find( _.path.join( routinePath, 'doc.out' ) );
+    test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
+    var files = self.find( _.path.join( routinePath, 'doc/out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
+    test.identical( files, [] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .thenKeep( () =>
+  {
+    test.case = '.each . .export'
+    return null;
+  })
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.each doc/. .export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc.out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/out' ) );
+    test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
+    var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
+    test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+open.timeOut = 300000;
+
+//
+
+function eachMixed( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let filePath = _.path.join( routinePath, 'file' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.each submodule::*/path::predefined.local .shell "git status"'
+    return null;
+  })
+
+  shell({ args : [ '.build' ] })
+  shell({ args : [ '.each submodule::*/path::predefined.local .shell "git status"' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'git status' ) );
+    test.is( _.strHas( got.output, 'On branch master' ) );
+    test.is( _.strHas( got.output, `Your branch is up to date with 'origin/master'.` ) );
+    test.is( _.strHas( got.output, /\.module\/Tools\/out[^d]/ ) );
+    test.is( _.strHas( got.output, /\.module\/Tools[^d]/ ) );
+    test.is( _.strHas( got.output, /\.module\/PathFundamentals\/out[^d]/ ) )
+    test.is( _.strHas( got.output, /\.module\/PathFundamentals[^d]/ ) )
+    test.is( _.strHas( got.output, /module[^d]/ ) );
+    test.is( _.strHas( got.output, /\[\][^d]/ ) );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+eachMixed.timeOut = 300000;
+
+//
+
 function singleStep( test )
 {
   let self = this;
@@ -651,8 +994,6 @@ function singleStep( test )
 
   return ready;
 }
-
-singleStep.timeOut = 30000;
 
 //
 
@@ -2762,6 +3103,8 @@ function multipleExportsImport( test )
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
     _.fileProvider.filesDelete( outPath );
 
+    debugger;
+
     return null;
   })
 
@@ -3078,8 +3421,6 @@ function multipleExportsDoc( test )
     return null;
   })
 
-  /* qqq : replace args -> path, maybe */
-
   shell({ args : [ '.with . .export export.doc' ] })
   shell({ args : [ '.with . .export export.debug' ] })
   shell({ args : [ '.with . .export export.' ] })
@@ -3099,6 +3440,8 @@ function multipleExportsDoc( test )
 
     return null;
   })
+
+  /* - */
 
   return ready;
 }
@@ -4113,60 +4456,6 @@ function reflectShell( test )
 
 //
 
-function eachMixed( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
-  let routinePath = _.path.join( self.tempDir, test.name );
-  let filePath = _.path.join( routinePath, 'file' );
-  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-  let ready = new _.Consequence().take( null );
-
-  let shell = _.sheller
-  ({
-    execPath : 'node ' + execPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
-
-  /* - */
-
-  ready
-  .thenKeep( () =>
-  {
-    test.case = '.each submodule::*/path::clonePath .shell "git status"'
-    return null;
-  })
-
-  shell({ args : [ '.build' ] })
-  shell({ args : [ '.each submodule::*/path::clonePath .shell "git status"' ] })
-  .thenKeep( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'git status' ) );
-    test.is( _.strHas( got.output, 'On branch master' ) );
-    test.is( _.strHas( got.output, `Your branch is up to date with 'origin/master'.` ) );
-    test.is( _.strHas( got.output, /\.module\/Tools\/out[^d]/ ) );
-    test.is( _.strHas( got.output, /\.module\/Tools[^d]/ ) );
-    test.is( _.strHas( got.output, /\.module\/PathFundamentals\/out[^d]/ ) )
-    test.is( _.strHas( got.output, /\.module\/PathFundamentals[^d]/ ) )
-    test.is( _.strHas( got.output, /module[^d]/ ) );
-    test.is( _.strHas( got.output, /\[\][^d]/ ) );
-    return null;
-  })
-
-  /* - */
-
-  return ready;
-}
-
-eachMixed.timeOut = 300000;
-
-//
-
 function importInExport( test )
 {
   let self = this;
@@ -4635,6 +4924,8 @@ var Self =
     exportToRoot,
     exportMixed,
 
+    open,
+    eachMixed,
     singleStep,
 
     submodulesInfo,
@@ -4665,8 +4956,6 @@ var Self =
     reflectRemoteGit,
     reflectRemoteHttp,
     reflectShell,
-
-    eachMixed,
 
     importInExport,
     setVerbosity,

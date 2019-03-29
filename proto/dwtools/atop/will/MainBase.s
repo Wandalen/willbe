@@ -177,15 +177,15 @@ function moduleMake( o )
   _.assert( arguments.length === 1 );
   o = _.routineOptions( moduleMake, arguments );
 
-  if( !o.filePath && !o.dirPath )
+  if( !o.willFilesPath && !o.dirPath )
   o.dirPath = o.dirPath || fileProvider.path.current();
 
   if( !o.module )
   {
-    o.module = will.Module({ will : will, filePath : o.filePath, dirPath : o.dirPath }).preform();
+    o.module = will.Module({ will : will, willFilesPath : o.willFilesPath, dirPath : o.dirPath }).preform();
   }
 
-  _.assert( o.module.filePath === o.filePath || o.module.filePath === o.dirPath );
+  _.assert( o.module.willFilesPath === o.willFilesPath || o.module.willFilesPath === o.dirPath );
   _.assert( o.module.dirPath === o.dirPath );
 
   o.module.willFilesFind();
@@ -211,7 +211,7 @@ function moduleMake( o )
 moduleMake.defaults =
 {
   module : null,
-  filePath : null,
+  willFilesPath : null,
   dirPath : null,
   forming : 0,
 }
@@ -248,10 +248,8 @@ function moduleEach( o )
     con.then( () =>
     {
       let con2 = new _.Consequence();
-      // debugger;
       let resolved = module.submodulesResolve({ selector : o.selector, preservingIteration : 1 });
       resolved = _.arrayAs( resolved );
-      // debugger;
       for( let s = 0 ; s < resolved.length ; s++ ) con2.keep( ( arg ) => /* !!! replace by concurrent, maybe */
       {
         let it1 = resolved[ s ];
@@ -269,7 +267,13 @@ function moduleEach( o )
         // it.submodule = submodule;
 
         it2.options = o;
-        return o.onEach( it2 );
+
+        if( o.onBegin )
+        o.onBegin( it2 )
+        if( o.onEnd )
+        return o.onEnd( it2 );
+
+        return null;
       });
       con2.take( null );
       return con2;
@@ -279,9 +283,9 @@ function moduleEach( o )
   else
   {
 
-    // debugger;
     o.selector = path.resolve( o.selector );
     con = new _.Consequence().take( null );
+
     let files = will.willFilesList
     ({
       dirPath : o.selector,
@@ -290,48 +294,52 @@ function moduleEach( o )
       rerucrsive : 0,
     });
 
-    // let dirPaths = Object.create( null ); xxx
+    let filesMap = Object.create( null );
     for( let f = 0 ; f < files.length ; f++ ) con.then( ( arg ) => /* !!! replace by concurrent, maybe */
     {
       let file = files[ f ];
 
-      // let dirPath = will.Module.DirPathFromFilePaths( file.absolute );
-      //
-      // if( dirPaths[ dirPath ] )
-      // debugger;
-      // if( dirPaths[ dirPath ] )
-      // return true;
-      //
-      // dirPaths[ dirPath ] = 1;
+      if( filesMap[ file.absolute ] )
+      {
+        return true;
+      }
 
-      if( will.moduleMap[ file.absolute ] )
-      return true;
+      let module = will.Module({ will : will, willFilesPath : file.absolute }).preform();
 
-      let module = will.Module({ will : will, filePath : file.absolute }).preform();
       module.willFilesFind();
-      module.willFilesOpen();
-      module.submodulesForm();
-      module.resourcesForm();
 
       let it = Object.create( null );
       it.module = module;
       it.options = o;
 
+      module.stager.stageConsequence( 'willFilesFound' ).then( ( arg ) =>
+      {
+        if( o.onBegin )
+        return o.onBegin( it );
+        return arg;
+      });
+
+      module.willFilesOpen();
+      module.submodulesForm();
+      module.resourcesForm();
+
       return module.ready.split().keep( function( arg )
       {
         _.assert( module.willFileArray.length > 0 );
-        // debugger;
-        let r = o.onEach( it );
+        if( module.willFilesPath )
+        _.mapSet( filesMap, module.willFilesPath, true );
+
+        let r = o.onEnd( it );
+
+        r = _.Consequence.From( r );
 
         r.finally( ( err, arg ) =>
         {
-          // debugger;
           if( err )
           throw err;
           return arg;
         });
 
-        // debugger;
         return r;
       })
 
@@ -353,7 +361,8 @@ moduleEach.defaults =
 {
   currentModule : null,
   selector : null,
-  onEach : null,
+  onBegin : null,
+  onEnd : null,
 }
 
 //
@@ -385,7 +394,19 @@ function willFilesList( o )
   _.routineOptions( willFilesList, o );
   _.assert( !!will.formed );
 
-  let filter = { maskTerminal : { includeAny : /\.will(\.|$)/, excludeAny : [], includeAll : [] } };
+  let filter =
+  {
+    maskTerminal :
+    {
+      includeAny : /\.will(\.|$)/,
+      excludeAny :
+      [
+        /\.DS_Store$/,
+        /(^|\/)-/,
+      ],
+      includeAll : []
+    }
+  };
 
   if( !o.includingInFiles )
   filter.maskTerminal.includeAll.push( /\.out(\.|$)/ )
@@ -398,6 +419,7 @@ function willFilesList( o )
     filePath : o.dirPath,
     recursive : o.recursive,
     filter : filter,
+    maskPreset : 0,
   });
   // debugger;
 

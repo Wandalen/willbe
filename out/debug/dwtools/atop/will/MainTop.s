@@ -571,7 +571,7 @@ function commandShell( e )
     return module.shell
     ({
       execPath : e.argument,
-      currentPath : will.currentPath,
+      currentPath : will.currentPath || module.dirPath,
     });
   });
 
@@ -705,9 +705,17 @@ function commandWith( e )
   will.topCommand = commandWith;
 
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
-  let filePath = path.resolve( isolated.argument );
+  let dirPath = path.joinRaw( path.current(), isolated.argument );
 
-  let module = will.currentModule = will.Module({ will : will, filePath : filePath }).preform();
+  // let o2 = { will : will }
+  // if( fileProvider.isDir( dirPath ) )
+  // o2.dirPath = dirPath;
+  // else
+  // o2.willFilesPath = dirPath;
+
+  debugger;
+  let module = will.currentModule = will.Module({ will : will, willFilesPath : dirPath }).preform();
+  // debugger;
   module.willFilesFind();
   module.willFilesOpen();
   module.submodulesForm();
@@ -766,15 +774,16 @@ function _commandEach_functor( fop )
     if( will.topCommand === null )
     will.topCommand = commandEach;
 
-    // debugger;
     let isolated = ca.commandIsolateSecondFromArgument( e.argument );
+
     _.assert( _.objectIs( isolated ), 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
+
     let con = will.moduleEach
     ({
       selector : isolated.argument,
-      onEach : handleEach,
+      onBegin : handleBegin,
+      onEnd : handleEnd,
     });
-    // debugger;
 
     con.finally( ( err, arg ) =>
     {
@@ -786,20 +795,29 @@ function _commandEach_functor( fop )
 
     return con;
 
-    function handleEach( it )
+    /* */
+
+    function handleBegin( it )
+    {
+
+      if( will.verbosity > 1 )
+      {
+        logger.log( _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.module.commonPath, 'path' ) );
+        if( will.currentPath )
+        logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( will.currentPath, 'path' ) );
+      }
+
+      return null;
+    }
+
+    /* */
+
+    function handleEnd( it )
     {
 
       _.assert( will.currentModule === null );
       will.currentModule = it.module;
       will.currentPath = it.currentPath || null;
-
-      // debugger;
-      if( will.verbosity > 1 )
-      {
-        logger.log( _.color.strFormat( 'Module at', { fg : 'bright white' } ), it.module.dirPath );
-        if( will.currentPath )
-        logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), will.currentPath );
-      }
 
       let r = ca.commandPerform
       ({
