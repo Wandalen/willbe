@@ -108,16 +108,16 @@
   <summary><a href="./Tutorials/ReflectorFSControl.md">Формування шляхів в рефлекторі. Управління файловими операціями</a></summary>
   В туторіалі показано як формуються шляхи рефлекторів та як управляти кількістю файлових операцій
 </details>
+<details>
+  <summary><a href="./Tutorials/PredefinedReflectorsUsing.md">Вбудовані рефлектори</a></summary>
+  Використання вбудованих рефлекторів та побудова мультизбірок
+</details>
 
 <p></p>
 ...In progress, advanced...
 <details>
   <summary><a href="./Tutorials/ResourceInheritability.md">Resources Inheritability</a></summary>
   Як використовувати наслідування ресурсами <code>will-файла</code>
-</details>
-<details>
-  <summary><a href="./Tutorials/PredefinedReflectorsUsing.md">How to use predefined reflectors</a></summary>
-  Як використовувати вбудовані рефлектори утиліти <code>willbe</code>
 </details>
 <details>
   <summary><a href="./Tutorials/ExportedFileStructure.md">Exported <code>will-file</code> structure</a></summary>
