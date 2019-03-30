@@ -438,8 +438,8 @@ function performWriteOutFile()
 
   _.assert( !data.path || !data.path[ 'predefined.will.files' ] );
   _.assert( !data.path || !data.path[ 'predefined.dir' ] );
-  _.assert( !data.path || !data.path[ 'predefined.lcoal' ] );
-  _.assert( !data.path || !data.path[ 'predefined.remote' ] );
+  // _.assert( !data.path || !data.path[ 'predefined.local' ] );
+  // _.assert( !data.path || !data.path[ 'predefined.remote' ] );
 
   module2.finit();
 

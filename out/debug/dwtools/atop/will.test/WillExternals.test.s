@@ -888,7 +888,7 @@ function eachMixed( test )
     currentPath : routinePath,
     outputCollecting : 1,
     ready : ready,
-  })
+  });
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
 
@@ -909,12 +909,18 @@ function eachMixed( test )
     test.is( _.strHas( got.output, 'git status' ) );
     test.is( _.strHas( got.output, 'On branch master' ) );
     test.is( _.strHas( got.output, `Your branch is up to date with 'origin/master'.` ) );
-    test.is( _.strHas( got.output, /\.module\/Tools\/out[^d]/ ) );
-    test.is( _.strHas( got.output, /\.module\/Tools[^d]/ ) );
-    test.is( _.strHas( got.output, /\.module\/PathFundamentals\/out[^d]/ ) )
-    test.is( _.strHas( got.output, /\.module\/PathFundamentals[^d]/ ) )
-    test.is( _.strHas( got.output, /module[^d]/ ) );
-    test.is( _.strHas( got.output, /\[\][^d]/ ) );
+
+    test.is( _.strHas( got.output, /eachMixed\/\.module\/Tools\/out\/wTools\.out\.will\.yml[^d]/ ) );
+    test.is( _.strHas( got.output, /eachMixed\/\.module\/Tools[^d]/ ) );
+    test.is( _.strHas( got.output, /eachMixed\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml[^d]/ ) );
+    test.is( _.strHas( got.output, /eachMixed\/\.module\/PathFundamentals[^d]/ ) );
+    test.is( _.strHas( got.output, /eachMixed\/module\/UriFundamentals\.informal\.out\.will\.yml[^d]/ ) );
+    test.is( _.strHas( got.output, /eachMixed\/module\/UriFundamentals[^d]/ ) );
+    test.is( _.strHas( got.output, /eachMixed\/module\/Proto\.informal\.out\.will\.yml[^d]/ ) );
+    test.is( _.strHas( got.output, /eachMixed\/module\/Proto\.informal\.out\.will\.yml[^d]/ ) );
+
+    test.identical( _.strCount( got.output, 'git status' ), 5 );
+
     return null;
   })
 
@@ -1289,12 +1295,12 @@ function exportMixed( test )
 
     var expected =
     {
-      'remote' :
+      'predefined.remote' :
       {
         'path' : 'git+https:///github.com/Wandalen/wProto.git'
       },
-      'local' : { 'path' : '.module/Proto' },
-      'export' : { 'path' : '{path::local}/proto' },
+      'predefined.local' : { 'path' : '.module/Proto' },
+      'export' : { 'path' : '{path::predefined.local}/proto' },
       'exportedDir.export' :
       {
         'path' : './.module/Proto/proto',

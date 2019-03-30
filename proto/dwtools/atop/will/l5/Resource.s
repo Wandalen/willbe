@@ -15,6 +15,17 @@ let _ = wTools;
 let Parent = null;
 let Self = function wWillResource( o )
 {
+
+  // if( o && o.module )
+  // {
+  //   let instance = o.module[ Self.MapName ][ o.name ];
+  //   if( instance && instance.criterion && instance.criterion.predefined )
+  //   {
+  //     debugger;
+  //     return instance;
+  //   }
+  // }
+
   return _.instanceConstructor( Self, this, arguments );
 }
 
@@ -79,7 +90,20 @@ function MakeForEachCriterion( o )
   {
     try
     {
-      return Cls( o ).form1()
+
+      let instance = o.module[ Cls.MapName ][ o.name ];
+      if( instance && instance.criterion && instance.criterion.predefined )
+      {
+        debugger;
+        // delete o.willf;
+        // _.mapExtend( instance, o );
+        // return instance;
+        instance.finit();
+      }
+
+      if( o.name === "predefined.remote" )
+      debugger;
+      return Cls( o ).form1();
     }
     catch( err )
     {

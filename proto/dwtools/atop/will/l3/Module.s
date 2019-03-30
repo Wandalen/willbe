@@ -1124,8 +1124,6 @@ function _willFileFindMaybe( o )
   if( module.willFileWithRoleMap[ o.role ] )
   return null;
 
-  debugger;
-
   /* */
 
   let filePath;
@@ -1636,14 +1634,6 @@ function _willFilesOpen()
       {
         let total = module.willFileArray.length;
         let opened = _.mapVals( module.submoduleMap );
-        //
-        // for( let i = 0 ; i < opened.length ; i++ )
-        // if( opened[ i ].loadedModule )
-        // total += opened[ i ].loadedModule.willFileArray.length;
-        //
-        // if( will.verbosity >= 2 )
-        // logger.log( ' . Read', total, 'will-files in', _.timeSpent( time ) );
-        //
       }
     }
     if( err )
@@ -2733,7 +2723,6 @@ function commonPathGet()
   let path = fileProvider.path;
   let result = module.willFilesPath ? path.common( module.willFilesPath ) : module.dirPath;
 
-  debugger;
   if( _.strEnds( result, '/' ) )
   result += _.strCommonLeft.apply( _, path.s.fullName( module.willFilesPath ) );
 
@@ -2786,8 +2775,8 @@ function nonExportablePathSet_functor( fieldName )
     }
 
     _.assert( !!module.pathResourceMap[ resourceName ] );
-    _.assert( !module.pathResourceMap[ resourceName ].writable, 'Path ' + resourceName + ' is non-writable' );
-    _.assert( module.pathResourceMap[ resourceName ].criterion.predefined, 'Path ' + resourceName + ' is predefined' );
+    // _.assert( !module.pathResourceMap[ resourceName ].writable, 'Path ' + resourceName + ' is non-writable' );
+    // _.assert( module.pathResourceMap[ resourceName ].criterion.predefined, 'Path ' + resourceName + ' is predefined' );
 
     module.pathResourceMap[ resourceName ].path = filePath;
 

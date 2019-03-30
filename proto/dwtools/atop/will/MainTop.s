@@ -146,7 +146,7 @@ function moduleDone( o )
     {
       if( will.beeping )
       _.diagnosticBeep();
-      // debugger;
+
       will.currentPath = null;
       will.currentModule = null;
       will.topCommand = null;
@@ -800,6 +800,12 @@ function _commandEach_functor( fop )
     function handleBegin( it )
     {
 
+      _.assert( will.currentModule === null );
+      _.assert( will.currentPath === null );
+
+      will.currentModule = it.module;
+      will.currentPath = it.currentPath || null;
+
       if( will.verbosity > 1 )
       {
         logger.log( _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.module.commonPath, 'path' ) );
@@ -815,9 +821,7 @@ function _commandEach_functor( fop )
     function handleEnd( it )
     {
 
-      _.assert( will.currentModule === null );
-      will.currentModule = it.module;
-      will.currentPath = it.currentPath || null;
+      // logger.log( 'handleEnd.currentPath', it.currentPath );
 
       let r = ca.commandPerform
       ({
@@ -831,7 +835,8 @@ function _commandEach_functor( fop )
         _.assert( will.currentModule === it.module );
         will.currentModule.finit();
         will.currentModule = null;
-        // debugger;
+        will.currentPath = null;
+
         if( err )
         _.errLog( _.errBriefly( err ) );
         if( err )
