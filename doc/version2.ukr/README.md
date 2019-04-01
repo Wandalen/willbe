@@ -120,14 +120,6 @@
 <p></p>
 ...In progress, advanced...
 <details>
-  <summary><a href="./Tutorials/ExportedFileStructure.md">Exported <code>will-file</code> structure</a></summary>
-  Структура експортованого `*.out.will.`-файла.
-</details>
-<details>
-  <summary><a href="./Tutorials/ExportedSectionOfWillFile.md">Exported section of out will-file</a></summary>
-  В цьому туторіалі розглядається секція <code>exported</code>
-</details>
-<details>
   <summary><a href="./Tutorials/HowToList.md">How to list</a></summary>
   Як дізнатись інформацію про модуль
 </details>
@@ -237,5 +229,5 @@
 </details>
 <details>
   <summary><a href="./Concepts/Inheritability.md">Наслідування ресурсами</a></summary>
-  Принцип побудови модуля, згідно якого ресурс одного <code>will-файла</code> здатний використовувати (наслідувати) значення полів ресурса іншого <code>will-файла</code>
+  Принцип побудови модуля, згідно якого ресурс одного <code>will-файла</code> здатний використовувати (наслідувати) значення полів інших ресурсів секції та ресурсів іншого <code>will-файла</code>
 </details>
