@@ -14,12 +14,12 @@ reflector :
 
 step :
 
-  download.1 :
-    inherit : predefined.reflect
-    criterion :
-      variant : [ 1 ]
-    reflector :
-      reflector::download.*=1
+  # download.1 :
+  #   inherit : predefined.reflect
+  #   criterion :
+  #     variant : [ 1 ]
+  #   reflector :
+  #     reflector::download.*=1
 
 build :
 

@@ -248,27 +248,53 @@ function stepRoutineShell( frame )
   let step = this;
   let module = frame.module;
   let will = module.will;
+  let hardDrive = will.fileProvider.providersWithProtocolMap.file;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
   let opts = frame.opts;
+  let forEachDstReflector, forEachDst;
 
   _.assert( arguments.length === 1 );
   _.sure( opts.shell === null || _.strIs( opts.shell ) || _.arrayIs( opts.shell ) );
+  _.sure( _.arrayHas( [ 'preserve', 'rebuild' ], opts.upToDate ) );
+
+  if( opts.forEachDst )
+  forEachDst = forEachDstReflector = step.reflectorResolve( opts.forEachDst );
 
   /* */
 
-  if( opts.currentPath )
-  opts.currentPath = step.inPathResolve({ selector : opts.currentPath, prefixlessAction : 'resolved' });
-  _.sure( opts.currentPath === null || _.strIs( opts.currentPath ), 'Current path should be string if defined' );
+  if( opts.upToDate === 'preserve' && forEachDstReflector )
+  {
+    _.assert( forEachDstReflector instanceof will.Reflector );
+    forEachDst = module.resolveContextPrepare({ currentThis : forEachDstReflector });
 
-  /* */
+    debugger;
+    for( let dst in forEachDst.filesGrouped )
+    {
+      let src = forEachDst.filesGrouped[ dst ];
+      let upToDate = fileProvider.filesAreUpToDate( dst, src );
+      if( upToDate )
+      delete forEachDst.filesGrouped[ dst ];
+    }
+    debugger;
 
-  return _.shell
+    forEachDst.src = [];
+    forEachDst.dst = [];
+    for( let dst in forEachDst.filesGrouped )
+    {
+      forEachDst.dst.push( hardDrive.path.nativize( dst ) );
+      forEachDst.src.push( hardDrive.path.s.nativize( forEachDst.filesGrouped[ dst ] ).join( ' ' ) );
+    }
+
+  }
+
+  return module.shell
   ({
     execPath : opts.shell,
     currentPath : opts.currentPath,
-    verbosity : will.verbosity - 1,
+    currentThis : forEachDst,
+    current : step,
   })
   .finally( ( err, arg ) =>
   {
@@ -277,18 +303,86 @@ function stepRoutineShell( frame )
     return arg;
   });
 
+  // /* */
+  //
+  // debugger;
+  // opts.shell = module.resolve
+  // ({
+  //   selector : opts.shell,
+  //   pathNativizing : 1,
+  //   prefixlessAction : 'resolved',
+  //   currentThis : forEachDst,
+  // });
+  // debugger;
+  //
+  // /* */
+  //
+  // if( opts.currentPath )
+  // opts.currentPath = step.inPathResolve({ selector : opts.currentPath, prefixlessAction : 'resolved' });
+  // _.sure( opts.currentPath === null || _.strIs( opts.currentPath ), 'Current path should be string if defined' );
+  //
+  // /* */
+  //
+  // return _.shell
+  // ({
+  //   execPath : opts.shell,
+  //   currentPath : opts.currentPath,
+  //   verbosity : will.verbosity - 1,
+  // })
+  // .finally( ( err, arg ) =>
+  // {
+  //   if( err )
+  //   throw _.errBriefly( 'Failed to shell', step.nickName, '\n', err );
+  //   return arg;
+  // });
+
 }
 
 stepRoutineShell.stepOptions =
 {
   shell : null,
   currentPath : null,
+  forEachDst : null,
+  upToDate : 'preserve',
 }
 
 stepRoutineShell.uniqueOptions =
 {
   shell : null,
 }
+
+// //
+//
+// function stepRoutineCommand()
+// {
+//   let step = this;
+//   let module = frame.module;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//   let opts = frame.opts;
+//
+//   _.assert( arguments.length === 1 );
+//   _.sure( opts.command === null || _.strIs( opts.command ) || _.arrayIs( opts.command ) );
+//
+//   /* */
+//
+//   // xxx
+//
+//   /* */
+//
+// }
+//
+// stepRoutineCommand.stepOptions =
+// {
+//   command : null,
+// }
+//
+// stepRoutineCommand.uniqueOptions =
+// {
+//   command : null,
+// }
 
 //
 
@@ -466,6 +560,33 @@ stepRoutineSubmodulesUpgrade.stepOptions =
 
 //
 
+function stepRoutineSubmodulesReload( frame )
+{
+  let step = this;
+  let module = frame.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = frame.opts;
+
+  _.assert( arguments.length === 1 );
+  _.assert( !!module );
+
+  if( will.verbosity >= 3 )
+  {
+    logger.log( ' . Reloading submodules..' );
+  }
+
+  return module.submodulesReload();
+}
+
+stepRoutineSubmodulesReload.stepOptions =
+{
+}
+
+//
+
 function stepRoutineSubmodulesClean( frame )
 {
   let step = this;
@@ -553,11 +674,13 @@ let Extend =
 
   stepRoutineJs,
   stepRoutineShell,
+  // stepRoutineCommand,
   stepRoutineTranspile,
   stepRoutineView,
 
   stepRoutineSubmodulesDownload,
   stepRoutineSubmodulesUpgrade,
+  stepRoutineSubmodulesReload,
   stepRoutineSubmodulesClean,
 
   stepRoutineClean,
@@ -568,7 +691,7 @@ let Extend =
 //
 
 _.mapExtend( Self, Extend );
-_.staticDecalre
+_.staticDeclare
 ({
   prototype : _.Will.prototype,
   name : 'Predefined',

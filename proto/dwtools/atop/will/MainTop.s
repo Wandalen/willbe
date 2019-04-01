@@ -38,7 +38,7 @@ function exec()
 
   let logger = will.logger;
   let fileProvider = will.fileProvider;
-  let appArgs = _.appArgs();
+  let appArgs = _.appArgs({ keyValDelimeter : 0 });
   let ca = will.commandsMake();
 
   return ca.appArgsPerform({ appArgs : appArgs });
@@ -46,7 +46,7 @@ function exec()
 
 //
 
-function _moduleOnReady( o )
+function _moduleReadyThen( o )
 {
   let will = this.form();
   let fileProvider = will.fileProvider;
@@ -56,7 +56,7 @@ function _moduleOnReady( o )
 
   _.assert( arguments.length === 1 );
   _.assert( _.routineIs( o.onReady ) );
-  _.routineOptions( _moduleOnReady, arguments );
+  _.routineOptions( _moduleReadyThen, arguments );
 
   if( !will.topCommand )
   will.topCommand = o.onReady;
@@ -75,12 +75,18 @@ function _moduleOnReady( o )
     _.assert( result !== undefined );
     return result;
   })
-  .finally( ( err, arg ) => will.moduleDone({ error : err || null, command : o.onReady }) )
+  .finally( ( err, arg ) =>
+  {
+    will.moduleDone({ error : err || null, command : o.onReady });
+    if( err )
+    throw err;
+    return arg;
+  })
   ;
 
 }
 
-_moduleOnReady.defaults =
+_moduleReadyThen.defaults =
 {
   onReady : null,
   forming : null,
@@ -88,11 +94,11 @@ _moduleOnReady.defaults =
 
 //
 
-function moduleOnReady( onReady )
+function moduleReadyThen( onReady )
 {
   let will = this.form();
   _.assert( arguments.length === 1 );
-  return will._moduleOnReady
+  return will._moduleReadyThen
   ({
     onReady : onReady,
     forming : 1,
@@ -101,11 +107,11 @@ function moduleOnReady( onReady )
 
 //
 
-function moduleOnReadyNonForming( onReady )
+function moduleReadyThenNonForming( onReady )
 {
   let will = this.form();
   _.assert( arguments.length === 1 );
-  return will._moduleOnReady
+  return will._moduleReadyThen
   ({
     onReady : onReady,
     forming : 0,
@@ -140,6 +146,8 @@ function moduleDone( o )
     {
       if( will.beeping )
       _.diagnosticBeep();
+
+      will.currentPath = null;
       will.currentModule = null;
       will.topCommand = null;
       let currentModule = will.currentModule;
@@ -154,6 +162,8 @@ function moduleDone( o )
   {
     _.appExitCode( -1 );
     _.errLogOnce( err );
+    debugger;
+    will.currentPath = null;
     will.currentModule = null;
     will.topCommand = null;
     return true;
@@ -204,7 +214,7 @@ function commandsMake()
     'help' :                    { e : _.routineJoin( will, will.commandHelp ),                  h : 'Get help.' },
     'set' :                     { e : _.routineJoin( will, will.commandSet ),                   h : 'Command set.' },
 
-    'list' :                    { e : _.routineJoin( will, will.commandList ),                  h : 'List information about the current module.' },
+    'resources list' :          { e : _.routineJoin( will, will.commandResourcesList ),         h : 'List information about resources of the current module.' },
     'paths list' :              { e : _.routineJoin( will, will.commandPathsList ),             h : 'List paths of the current module.' },
     'submodules list' :         { e : _.routineJoin( will, will.commandSubmodulesList ),        h : 'List submodules of the current module.' },
     'reflectors list' :         { e : _.routineJoin( will, will.commandReflectorsList ),        h : 'List avaialable reflectors.' },
@@ -274,8 +284,6 @@ function commandSet( e )
   let ca = e.ca;
   let logger = will.logger;
 
-  // logger.log( e.propertiesMap ); debugger;
-
   let namesMap =
   {
     v : 'verbosity',
@@ -283,42 +291,59 @@ function commandSet( e )
     beeping : 'beeping',
   }
 
+  let request = _.strRequestParse( e.argument );
+
   _.appArgsReadTo
   ({
     dst : will,
-    propertiesMap : e.propertiesMap,
+    propertiesMap : request.map,
     namesMap : namesMap,
   });
 
-  // appArgsReadTo.defaults =
-  // {
-  //   dst : null,
-  //   propertiesMap : null,
-  //   namesMap : null,
-  //   removing : 1,
-  //   only : 1,
-  // }
-
 }
 
 //
 
-function _commandList( e, act )
+function _commandList( e, act, resourceName )
 {
   let will = this;
 
-  _.assert( arguments.length === 2 );
+  _.assert( arguments.length === 3 );
 
-  return will.moduleOnReady( function( module )
+  return will.moduleReadyThen( function( module )
   {
-    return act( module ) || null;
+
+    let resources = null;
+    if( resourceName )
+    {
+
+      let request = _.strRequestParse( e.argument );
+      let o2 =
+      {
+        selector : request.subject || '*',
+        criterion : request.map,
+        defaultResourceName : resourceName,
+        prefixlessAction : 'default',
+        arrayWrapping : 1,
+        pathUnwrapping : 1,
+        pathResolving : 0
+      }
+
+      if( resourceName === 'path' )
+      o2.mapValsUnwrapping = 0;
+
+      resources = module.resolve( o2 );
+
+    }
+
+    return act( module, resources ) || null;
   });
 
 }
 
 //
 
-function commandList( e )
+function commandResourcesList( e )
 {
   let will = this;
 
@@ -328,7 +353,7 @@ function commandList( e )
     logger.log( module.infoExport() );
   }
 
-  return will._commandList( e, act );
+  return will._commandList( e, act, null );
 }
 
 //
@@ -337,13 +362,27 @@ function commandPathsList( e )
 {
   let will = this;
 
-  function act( module )
+  function act( module, resources )
   {
+
+    // let request = _.strRequestParse( e.argument );
+    // resources = module.resolve
+    // ({
+    //   selector : request.subject || '*',
+    //   criterion : request.map,
+    //   defaultResourceName : 'path',
+    //   prefixlessAction : 'default',
+    //   mapValsUnwrapping : 0,
+    //   pathUnwrapping : 1,
+    //   pathResolving : 0,
+    // });
+
     let logger = will.logger;
-    logger.log( module.infoExportPaths() );
+    logger.log( module.infoExportPaths( resources ) );
+
   }
 
-  return will._commandList( e, act );
+  return will._commandList( e, act, 'path' );
 }
 
 //
@@ -352,13 +391,13 @@ function commandSubmodulesList( e )
 {
   let will = this;
 
-  function act( module )
+  function act( module, resources )
   {
     let logger = will.logger;
-    logger.log( module.infoExportResource( module.submoduleMap ) );
+    logger.log( module.infoExportResource( resources ) );
   }
 
-  return will._commandList( e, act );
+  return will._commandList( e, act, 'submodule' );
 }
 
 //
@@ -367,13 +406,13 @@ function commandReflectorsList( e )
 {
   let will = this;
 
-  function act( module )
+  function act( module, resources )
   {
     let logger = will.logger;
-    logger.log( module.infoExportResource( module.reflectorMap ) );
+    logger.log( module.infoExportResource( resources ) );
   }
 
-  return will._commandList( e, act );
+  return will._commandList( e, act, 'reflector' );
 }
 
 //
@@ -382,13 +421,25 @@ function commandStepsList( e )
 {
   let will = this;
 
-  function act( module )
+  function act( module, resources )
   {
     let logger = will.logger;
-    logger.log( module.infoExportResource( module.stepMap ) );
+
+    // let request = _.strRequestParse( e.argument );
+    //
+    // let steps = module.resolve
+    // ({
+    //   selector : request.subject || '*',
+    //   defaultResourceName : 'step',
+    //   prefixlessAction : 'default',
+    //   criterion : request.map,
+    //   arrayWrapping : 1,
+    // });
+
+    logger.log( module.infoExportResource( resources ) );
   }
 
-  return will._commandList( e, act );
+  return will._commandList( e, act, 'step' );
 }
 
 //
@@ -400,17 +451,18 @@ function commandBuildsList( e )
   function act( module )
   {
     let logger = will.logger;
+    let request = _.strRequestParse( e.argument );
     debugger;
     let builds = module.buildsSelect
     ({
-      name : e.argument,
-      criterion : e.propertiesMap,
+      name : request.subject,
+      criterion : request.map,
       preffering : 'more',
     });
     logger.log( module.infoExportResource( builds ) );
   }
 
-  will._commandList( e, act );
+  will._commandList( e, act, null );
 
   return will;
 }
@@ -424,17 +476,18 @@ function commandExportsList( e )
   function act( module )
   {
     let logger = will.logger;
+    let request = _.strRequestParse( e.argument );
     debugger;
     let builds = module.exportsSelect
     ({
-      name : e.argument,
-      criterion : e.propertiesMap,
+      name : request.subject,
+      criterion : request.map,
       preffering : 'more',
     });
     logger.log( module.infoExportResource( builds ) );
   }
 
-  will._commandList( e, act );
+  will._commandList( e, act, null );
 
   return will;
 }
@@ -451,7 +504,7 @@ function commandAboutList( e )
     logger.log( module.about.infoExport() );
   }
 
-  will._commandList( e, act );
+  will._commandList( e, act, null );
 
   return will;
 }
@@ -468,7 +521,7 @@ function commandExecutionList( e )
     logger.log( module.execution.infoExport() );
   }
 
-  will._commandList( e, act );
+  will._commandList( e, act, null );
 
   return will;
 }
@@ -478,7 +531,7 @@ function commandExecutionList( e )
 function commandSubmodulesDownload( e )
 {
   let will = this;
-  return will.moduleOnReadyNonForming( function( module )
+  return will.moduleReadyThenNonForming( function( module )
   {
     return module.submodulesDownload();
   });
@@ -489,7 +542,7 @@ function commandSubmodulesDownload( e )
 function commandSubmodulesUpgrade( e )
 {
   let will = this;
-  return will.moduleOnReadyNonForming( function( module )
+  return will.moduleReadyThenNonForming( function( module )
   {
     return module.submodulesUpgrade();
   });
@@ -500,7 +553,7 @@ function commandSubmodulesUpgrade( e )
 function commandSubmodulesClean( e )
 {
   let will = this;
-  return will.moduleOnReadyNonForming( function( module )
+  return will.moduleReadyThenNonForming( function( module )
   {
     return module.submodulesClean();
   });
@@ -512,11 +565,14 @@ function commandShell( e )
 {
   let will = this;
 
-  return will.moduleOnReadyNonForming( function( module )
+  return will.moduleReadyThenNonForming( function( module )
   {
     let logger = will.logger;
-    debugger;
-    return module.shell( e.argument );
+    return module.shell
+    ({
+      execPath : e.argument,
+      currentPath : will.currentPath || module.dirPath,
+    });
   });
 
 }
@@ -527,7 +583,7 @@ function commandClean( e )
 {
   let will = this;
 
-  return will.moduleOnReadyNonForming( function( module )
+  return will.moduleReadyThenNonForming( function( module )
   {
     let logger = will.logger;
     return module.clean();
@@ -541,7 +597,7 @@ function commandCleanWhat( e )
 {
   let will = this;
 
-  return will.moduleOnReadyNonForming( function( module )
+  return will.moduleReadyThenNonForming( function( module )
   {
     let time = _.timeNow();
     let filesPath = module.cleanWhat();
@@ -578,9 +634,10 @@ function commandCleanWhat( e )
 function commandBuild( e )
 {
   let will = this;
-  return will.moduleOnReady( function( module )
+  return will.moduleReadyThenNonForming( function( module )
   {
-    let builds = module.buildsSelect( e.argument, e.propertiesMap );
+    let request = _.strRequestParse( e.argument );
+    let builds = module.buildsSelect( request.subject, request.map );
     let logger = will.logger;
 
     if( logger.verbosity >= 2 && builds.length > 1 )
@@ -603,9 +660,10 @@ function commandBuild( e )
 function commandExport( e )
 {
   let will = this;
-  return will.moduleOnReady( function( module )
+  return will.moduleReadyThenNonForming( function( module )
   {
-    let builds = module.exportsSelect( e.argument, e.propertiesMap );
+    let request = _.strRequestParse( e.argument );
+    let builds = module.exportsSelect( request.subject, request.map );
 
     if( logger.verbosity >= 2 && builds.length > 1 )
     {
@@ -634,6 +692,8 @@ function commandWith( e )
 
   if( will.currentModule )
   {
+    debugger;
+    will.currentPath = null;
     will.currentModule.finit();
     will.currentModule = null;
   }
@@ -644,10 +704,18 @@ function commandWith( e )
   if( will.topCommand === null )
   will.topCommand = commandWith;
 
-  let isolated = ca.commandIsolateSecondFromArgument( e.argument ); // xxx
-  let filePath = path.resolve( isolated.argument );
+  let isolated = ca.commandIsolateSecondFromArgument( e.argument );
+  let dirPath = path.joinRaw( path.current(), isolated.argument );
 
-  let module = will.currentModule = will.Module({ will : will, filePath : filePath }).preform();
+  // let o2 = { will : will }
+  // if( fileProvider.isDir( dirPath ) )
+  // o2.dirPath = dirPath;
+  // else
+  // o2.willFilesPath = dirPath;
+
+  debugger;
+  let module = will.currentModule = will.Module({ will : will, willFilesPath : dirPath }).preform();
+  // debugger;
   module.willFilesFind();
   module.willFilesOpen();
   module.submodulesForm();
@@ -658,11 +726,11 @@ function commandWith( e )
 
     _.assert( module.willFileArray.length > 0 );
 
-    return ca.commandPerform // xxx
+    return ca.commandPerform
     ({
       command : isolated.secondCommand,
       // subject : isolated.secondSubject,
-      propertiesMap : e.propertiesMap,
+      // propertiesMap : e.propertiesMap, // xxx
     });
 
   })
@@ -678,253 +746,118 @@ function commandWith( e )
 
 //
 
-function commandEach( e )
+function _commandEach_functor( fop )
 {
-  let will = this.form();
-  let ca = e.ca;
-  let fileProvider = will.fileProvider;
-  let path = will.fileProvider.path;
-  let logger = will.logger;
 
-  if( will.currentModule )
+  fop = _.routineOptions( _commandEach_functor, arguments );
+
+  _.assert( _.arrayHas( [ 'all', 'local', 'remote' ], fop.filtering ) );
+
+  return function commandEach( e )
   {
-    will.currentModule.finit();
-    will.currentModule = null;
-  }
+    let will = this.form();
+    let ca = e.ca;
+    let fileProvider = will.fileProvider;
+    let path = will.fileProvider.path;
+    let logger = will.logger;
 
-  _.sure( _.strDefined( e.argument ), 'Expects path to module' )
-  _.assert( arguments.length === 1 );
-
-  if( will.topCommand === null )
-  will.topCommand = commandEach;
-
-  // debugger;
-  let isolated = ca.commandIsolateSecondFromArgument( e.argument );
-  // debugger;
-
-  let con = will.moduleEach
-  ({
-    selector : isolated.argument,
-    onEach : handleEach,
-  })
-
-  // debugger;
-  con.finally( ( err, arg ) =>
-  {
-    // debugger;
-    will.moduleDone({ error : err || null, command : commandEach });
-    if( err )
-    throw _.errLogOnce( err );
-    return arg;
-  });
-
-  // debugger;
-  return con;
-
-  function handleEach( it )
-  {
-    _.assert( it.module.willFileArray.length > 0 );
-
-    _.assert( will.currentModule === null );
-    will.currentModule = it.module;
-
-    // debugger;
-    let r = ca.commandPerform
-    ({
-      command : isolated.secondCommand,
-      // propertiesMap : e.propertiesMap, // xxx
-    });
-
-    _.assert( r !== undefined );
-    // debugger;
-    r = _.Consequence.From( r );
-
-    return r.finally( ( err, arg ) =>
+    if( will.currentModule )
     {
-      // debugger;
-      _.assert( will.currentModule === it.module );
+      will.currentPath = null;
       will.currentModule.finit();
       will.currentModule = null;
+    }
+
+    _.sure( _.strDefined( e.argument ), 'Expects path to module' )
+    _.assert( arguments.length === 1 );
+
+    if( will.topCommand === null )
+    will.topCommand = commandEach;
+
+    let isolated = ca.commandIsolateSecondFromArgument( e.argument );
+
+    _.assert( _.objectIs( isolated ), 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
+
+    let con = will.moduleEach
+    ({
+      selector : isolated.argument,
+      onBegin : handleBegin,
+      onEnd : handleEnd,
+    });
+
+    con.finally( ( err, arg ) =>
+    {
+      will.moduleDone({ error : err || null, command : commandEach });
       if( err )
-      throw _.err( err );
+      throw _.errLogOnce( err );
       return arg;
     });
 
+    return con;
+
+    /* */
+
+    function handleBegin( it )
+    {
+
+      _.assert( will.currentModule === null );
+      _.assert( will.currentPath === null );
+
+      will.currentModule = it.module;
+      will.currentPath = it.currentPath || null;
+
+      if( will.verbosity > 1 )
+      {
+        logger.log( _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.module.commonPath, 'path' ) );
+        if( will.currentPath )
+        logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( will.currentPath, 'path' ) );
+      }
+
+      return null;
+    }
+
+    /* */
+
+    function handleEnd( it )
+    {
+
+      // logger.log( 'handleEnd.currentPath', it.currentPath );
+
+      let r = ca.commandPerform
+      ({
+        command : isolated.secondCommand,
+      });
+      _.assert( r !== undefined );
+      r = _.Consequence.From( r );
+
+      return r.finally( ( err, arg ) =>
+      {
+        _.assert( will.currentModule === it.module );
+        will.currentModule.finit();
+        will.currentModule = null;
+        will.currentPath = null;
+
+        if( err )
+        _.errLog( _.errBriefly( err ) );
+        if( err )
+        throw _.err( err );
+        return arg;
+      });
+
+    }
+
   }
 
-  // if( _.strEnds( isolated.argument, '::' ) )
-  // isolated.argument = isolated.argument + '*';
-  //
-  // let dirPath = path.resolve( isolated.argument );
-  // // let dirPath = module.resolve( isolated.argument );
-  //
-  // let con = new _.Consequence().take( null );
-  // let files = will.willFilesList
-  // ({
-  //   dirPath : dirPath,
-  //   includingInFiles : 1,
-  //   includingOutFiles : 0,
-  //   rerucrsive : 0,
-  // });
-  //
-  // let dirPaths = Object.create( null );
-  // for( let f = 0 ; f < files.length ; f++ ) con.keep( ( arg ) =>
-  // {
-  //   let file = files[ f ];
-  //
-  //   let dirPath = will.Module.DirPathFromFilePaths( file.absolute );
-  //
-  //   if( dirPaths[ dirPath ] )
-  //   debugger;
-  //   if( dirPaths[ dirPath ] )
-  //   return true;
-  //   dirPaths[ dirPath ] = 1;
-  //
-  //   if( will.moduleMap[ file.absolute ] )
-  //   return true;
-  //
-  //   if( will.currentModule )
-  //   {
-  //     will.currentModule.finit();
-  //     will.currentModule = null;
-  //   }
-  //
-  //   let module = will.currentModule = will.Module({ will : will, filePath : file.absolute }).preform();
-  //   module.willFilesFind();
-  //   module.willFilesOpen();
-  //   module.submodulesForm();
-  //   module.resourcesForm();
-  //
-  //   return module.ready.split().keep( function( arg )
-  //   {
-  //
-  //     _.assert( module.willFileArray.length > 0 );
-  //
-  //     let r = ca.commandPerform
-  //     ({
-  //       command : isolated.secondCommand,
-  //       propertiesMap : e.propertiesMap,
-  //     });
-  //
-  //     _.assert( r !== undefined );
-  //
-  //     return r;
-  //   })
-  //
-  // });
-  //
-  // con.finally( ( err, arg ) =>
-  // {
-  //   debugger;
-  //   will.moduleDone({ error : err || null, command : commandEach });
-  //   if( err )
-  //   throw _.errLogOnce( err );
-  //   return arg;
-  // });
-  //
-  // return con;
+}
+
+_commandEach_functor.defaults =
+{
+  filtering : 'all',
 }
 
 //
-// function commandEach( e )
-// {
-//   let will = this.form();
-//   let ca = e.ca;
-//   let fileProvider = will.fileProvider;
-//   let path = will.fileProvider.path;
-//   let logger = will.logger;
-//
-//   if( will.currentModule )
-//   {
-//     will.currentModule.finit();
-//     will.currentModule = null;
-//   }
-//
-//   _.sure( _.strDefined( e.argument ), 'Expects path to module' )
-//   _.assert( arguments.length === 1 );
-//
-//   if( will.topCommand === null )
-//   will.topCommand = commandEach;
-//
-//   debugger;
-//   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
-//   debugger;
-//
-//   if( _.strEnds( isolated.argument, '::' ) )
-//   isolated.argument = isolated.argument + '*';
-//
-//   let dirPath = path.resolve( isolated.argument );
-//   // let dirPath = module.resolve( isolated.argument );
-//
-//   let con = new _.Consequence().take( null );
-//   let files = will.willFilesList
-//   ({
-//     dirPath : dirPath,
-//     includingInFiles : 1,
-//     includingOutFiles : 0,
-//     rerucrsive : 0,
-//   });
-//
-//   let dirPaths = Object.create( null );
-//   for( let f = 0 ; f < files.length ; f++ ) con.keep( ( arg ) => /* !!! replace by concurrent, maybe */
-//   {
-//     let file = files[ f ];
-//
-//     let dirPath = will.Module.DirPathFromFilePaths( file.absolute );
-//
-//     if( dirPaths[ dirPath ] )
-//     debugger;
-//     if( dirPaths[ dirPath ] )
-//     return true;
-//     dirPaths[ dirPath ] = 1;
-//
-//     if( will.moduleMap[ file.absolute ] )
-//     return true;
-//
-//     if( will.currentModule )
-//     {
-//       will.currentModule.finit();
-//       will.currentModule = null;
-//     }
-//
-//     let module = will.currentModule = will.Module({ will : will, filePath : file.absolute }).preform();
-//     module.willFilesFind();
-//     module.willFilesOpen();
-//     module.submodulesForm();
-//     module.resourcesForm();
-//
-//     return module.ready.split().keep( function( arg )
-//     {
-//
-//       _.assert( module.willFileArray.length > 0 );
-//
-//       let r = ca.commandPerform
-//       ({
-//         command : isolated.secondCommand,
-//         // subject : isolated.secondSubject,
-//         propertiesMap : e.propertiesMap,
-//       });
-//
-//       _.assert( r !== undefined );
-//
-//       return r;
-//     })
-//
-//   });
-//
-//   con.finally( ( err, arg ) =>
-//   {
-//     debugger;
-//     will.moduleDone({ error : err || null, command : commandEach });
-//     if( err )
-//     {
-//       throw _.errLogOnce( err );
-//     }
-//     return arg;
-//   });
-//
-//   return con;
-// }
+
+let commandEach = _commandEach_functor({ filtering : 'all' });
 
 // --
 // relations
@@ -942,6 +875,7 @@ let Aggregates =
 let Associates =
 {
   currentModule : null,
+  currentPath : null,
 }
 
 let Restricts =
@@ -970,9 +904,9 @@ let Extend =
   Exec,
   exec,
 
-  _moduleOnReady,
-  moduleOnReady,
-  moduleOnReadyNonForming,
+  _moduleReadyThen,
+  moduleReadyThen,
+  moduleReadyThenNonForming,
   moduleDone,
   errTooMany,
 
@@ -981,7 +915,7 @@ let Extend =
   commandSet,
 
   _commandList,
-  commandList,
+  commandResourcesList,
   commandPathsList,
   commandSubmodulesList,
   commandReflectorsList,
