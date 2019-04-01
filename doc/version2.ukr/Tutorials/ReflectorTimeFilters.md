@@ -111,7 +111,7 @@ build :
 
 </details>
 
-</br>
+
 Запустимо побудову збірки відладки `will .build copy.debug`:  
 
 ```
