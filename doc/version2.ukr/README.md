@@ -9,7 +9,7 @@
   Процес встановлення утиліти <code>willbe</code>
 </details>
 <details>
-  <summary><a href="#Concepts.md">Концепції</a></summary>
+  <summary><a href="#Concepts">Концепції</a></summary>
   Основні концепції. Допомагає побачити загальну картину
 </details>
 <details>
@@ -112,13 +112,13 @@
   <summary><a href="./Tutorials/PredefinedReflectorsUsing.md">Вбудовані рефлектори</a></summary>
   Використання вбудованих рефлекторів та побудова мультизбірок
 </details>
+<details>
+  <summary><a href="./Tutorials/ResourceInheritability.md">Наслідування ресурсами</a></summary>
+  Як користуватись наслідуванням ресурсів
+</details>
 
 <p></p>
 ...In progress, advanced...
-<details>
-  <summary><a href="./Tutorials/ResourceInheritability.md">Resources Inheritability</a></summary>
-  Як використовувати наслідування ресурсами <code>will-файла</code>
-</details>
 <details>
   <summary><a href="./Tutorials/ExportedFileStructure.md">Exported <code>will-file</code> structure</a></summary>
   Структура експортованого `*.out.will.`-файла.
