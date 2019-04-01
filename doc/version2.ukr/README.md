@@ -168,6 +168,34 @@
   Елементи <code>will-файла</code>, які позначають певну функціональність
 </details>
 <details>
+  <summary><a href="./Concepts/About.section.md">Секція <code>about</code></a></summary>
+  В секції поміщено основну інформація про модуль
+</details>
+<details>
+  <summary><a href="./Concepts/Path.section.md">Секція <code>path</code></a></summary>
+  Секція представляє карту шляхів модуля для швидкого орієнтування в його структурі
+</details>
+<details>
+  <summary><a href="./Concepts/Submodule.section.md">Секція <code>submodule</code></a></summary>
+  В секції вказуються підмодулі
+</details>
+<details>
+  <summary><a href="./Concepts/Submodule.section.md">Секція <code>step</code></a></summary>
+  В секції описуються процедури побудови модуля
+</details>
+<details>
+  <summary><a href="./Concepts/Submodule.section.md">Секція <code>reflector</code></a></summary>
+  Основними функціями ресурсів секції (рефлекторів) є файлові операції
+</details>
+<details>
+  <summary><a href="./Concepts/Submodule.section.md">Секція <code>exported</code></a></summary>
+  Секція <code>will-файла</code>, автоматично згенерованого при експортуванні модуля
+</details>
+<details>
+  <summary><a href="./Concepts/Submodule.section.md">Секція <code>build</code></a></summary>
+  Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля
+</details>
+<details>
   <summary><a href="./Concepts/Module.md#module">Модуль</a></summary>
   Модулем називається сукупність файлів, які описані в <code>will-файлi</code>
 </details>
@@ -210,34 +238,4 @@
 <details>
   <summary><a href="./Concepts/Inheritability.md">Наслідування ресурсами</a></summary>
   Принцип побудови модуля, згідно якого ресурс одного <code>will-файла</code> здатний використовувати (наслідувати) значення полів ресурса іншого <code>will-файла</code>
-</details>
-<p></p>
-...In progress...
-<details>
-  <summary><a href="./Concepts/About.section.md">Секція <code>about</code></a></summary>
-  В секції поміщено основну інформація про модуль
-</details>
-<details>
-  <summary><a href="./Concepts/Path.section.md">Секція <code>path</code></a></summary>
-  Секція представляє карту шляхів модуля для швидкого орієнтування в його структурі
-</details>
-<details>
-  <summary><a href="./Concepts/Submodule.section.md">Секція <code>submodule</code></a></summary>
-  В секції вказуються підмодулі
-</details>
-<details>
-  <summary><a href="./Concepts/Submodule.section.md">Секція <code>step</code></a></summary>
-  В секції описуються процедури побудови модуля
-</details>
-<details>
-  <summary><a href="./Concepts/Submodule.section.md">Секція <code>reflector</code></a></summary>
-  Основними функціями ресурсів секції (рефлекторів) є файлові операції
-</details>
-<details>
-  <summary><a href="./Concepts/Submodule.section.md">Секція <code>exported</code></a></summary>
-  Секція <code>will-файла</code>, автоматично згенерованого при експортуванні модуля
-</details>
-<details>
-  <summary><a href="./Concepts/Submodule.section.md">Секція <code>build</code></a></summary>
-  Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля
 </details>
