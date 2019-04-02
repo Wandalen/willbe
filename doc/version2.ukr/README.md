@@ -124,7 +124,7 @@
 <p></p>
 ...In progress, advanced...
 <details>
-  <summary><a href="./Tutorials/HowToList.md">How to list</a></summary>
+  <summary><a href="./Tutorials/HowToList.md">Перелік ресурсів через командний рядок</a></summary>
   Як дізнатись інформацію про модуль
 </details>
 <details>
