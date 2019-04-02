@@ -408,12 +408,10 @@ function exists()
 
   if( !willf._found )
   {
+
     willf._found = fileProvider.fileConfigPathGet({ filePath : willf.filePath });
 
     _.assert( willf._found.length === 0 || willf._found.length === 1 );
-
-    // if( willf._found.length )
-    // debugger;
 
     if( willf._found.length )
     willf.filePath = willf._found[ 0 ].particularPath;

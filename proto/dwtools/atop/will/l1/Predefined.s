@@ -551,7 +551,7 @@ function stepRoutineSubmodulesUpgrade( frame )
   _.assert( arguments.length === 1 );
   _.assert( !!module );
 
-  return module.submodulesUpgrade();
+  return module.submodulesUpdate();
 }
 
 stepRoutineSubmodulesUpgrade.stepOptions =

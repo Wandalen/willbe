@@ -5,6 +5,8 @@ about :
 
 path :
 
+  in : ..
+  out : out
   predefined.remote : 'git+https:///github.com/Wandalen/wUriFundamentals.git'
   predefined.local : '.module/UriFundamentals'
   export : '{path::predefined.local}/proto'

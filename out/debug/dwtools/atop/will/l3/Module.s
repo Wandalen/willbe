@@ -407,7 +407,7 @@ function predefinedForm()
 
   step
   ({
-    name : 'submodules.upgrade',
+    name : 'submodules.update',
     stepRoutine : Predefined.stepRoutineSubmodulesUpgrade,
   })
 
@@ -919,7 +919,7 @@ function DirPathFromFilePaths( filePaths )
     return filePath;
   });
 
-  let filePath = _.strCommonLeft.apply( _, filePaths );
+  let filePath = _.strCommonLeft.apply( _, _.arrayAs( filePaths ) );
   _.assert( filePath.length > 0 );
   return filePath;
 }
@@ -1872,9 +1872,9 @@ function _submodulesDownload( o )
   {
     logger.down();
     if( err )
-    throw _.err( 'Failed to', ( o.upgrading ? 'upgrade' : 'download' ), 'submodules of', module.nickName, '\n', err );
+    throw _.err( 'Failed to', ( o.upgrading ? 'update' : 'download' ), 'submodules of', module.decoratedNickName, '\n', err );
     logger.rbegin({ verbosity : -2 });
-    logger.log( ' + ' + downloadedNumber + /*'/' + remoteNumber +*/ '/' + totalNumber + ' submodule(s) of ' + module.nickName + ' were ' + ( o.upgrading ? 'upgraded' : 'downloaded' ) + ' in ' + _.timeSpent( time ) );
+    logger.log( ' + ' + downloadedNumber + /*'/' + remoteNumber +*/ '/' + totalNumber + ' submodule(s) of ' + module.decoratedNickName + ' were ' + ( o.upgrading ? 'updated' : 'downloaded' ) + ' in ' + _.timeSpent( time ) );
     logger.rend({ verbosity : -2 });
     return arg;
   });
@@ -1903,7 +1903,7 @@ function submodulesDownload()
 
 //
 
-function submodulesUpgrade()
+function submodulesUpdate()
 {
   let module = this;
   let will = module.will;
@@ -1934,6 +1934,229 @@ function submodulesClean()
 
   return result;
 }
+
+//
+
+function submodulesFixate( o )
+{
+  let module = this;
+  let will = module.will;
+  let logger = will.logger;
+
+  _.assert( module.preformed === 3 );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+  o = _.routineOptions( submodulesFixate, arguments );
+
+  let o2 = _.mapExtend( null, o );
+  o2.submodule = module;
+  module.moduleFixate( o2 );
+
+  for( let m in module.submoduleMap )
+  {
+    let submodule = module.submoduleMap[ m ].loadedModule;
+    if( !submodule )
+    continue;
+
+    let o2 = _.mapExtend( null, o );
+    o2.submodule = submodule;
+    module.moduleFixate( o2 );
+
+  }
+
+  return module;
+}
+
+submodulesFixate.defaults =
+{
+  dry : 0,
+  upgrading : 0,
+}
+
+//
+
+function moduleFixate( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  if( !_.mapIs( o ) )
+  o = { submodule : o }
+
+  _.assert( module.preformed === 3 );
+  _.assert( arguments.length === 1 );
+  _.assert( _.boolLike( o.dry ) );
+  _.assert( _.boolLike( o.upgrading ) );
+  _.assert( o.submodule.supermodule === null || o.submodule.supermodule === module );
+  _.routineOptions( moduleFixate, o );
+
+  //  predefined.remote
+
+  let counter = 0;
+
+  if( o.submodule.associatedSubmodule )
+  {
+
+    let o2 = _.mapExtend( null, o );
+    o2.remotePath = o.submodule.associatedSubmodule.path;
+    o2.willFilePath = o.submodule.associatedSubmodule.willf.filePath;
+    let fixatedPath = module.moduleFixatePath( o2 );
+    if( fixatedPath )
+    {
+      if( !o.dry )
+      {
+        o.submodule.remotePath = fixatedPath;
+        o.submodule.associatedSubmodule.path = fixatedPath;
+      }
+      counter += 1;
+    }
+
+  }
+
+  let remote = o.submodule.pathResourceMap[ 'predefined.remote' ];
+  if( remote && remote.path && remote.path.length && !remote.criterion.predefined )
+  {
+
+    if( _.arrayIs( remote.path ) && remote.path.length === 1 )
+    remote.path = remote.path[ 0 ];
+
+    _.assert( _.strIs( remote.path ) );
+
+    let o2 = _.mapExtend( null, o );
+    o2.remotePath = remote.path;
+    o2.willFilePath = remote.willf.filePath;
+    o2.secondaryWillFilesPath = remote.module.pathResolve
+    ({
+      selector : 'path::original.will.files',
+      missingAction : 'undefine',
+    });
+    let fixatedPath = module.moduleFixatePath( o2 );
+    if( fixatedPath )
+    {
+      if( !o.dry )
+      {
+        debugger;
+        remote.path = fixatedPath;
+        _.assert( o.submodule.remotePath === fixatedPath );
+      }
+      counter += 1;
+    }
+
+  }
+
+  return counter;
+}
+
+var defaults = moduleFixate.defaults = Object.create( submodulesFixate.defaults );
+defaults.submodule = null;
+
+//
+
+function moduleFixatePath( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  if( !_.mapIs( o ) )
+  o = { submodule : o }
+
+  _.assert( module.preformed === 3 );
+  _.assert( arguments.length === 1 );
+  _.assert( _.boolLike( o.dry ) );
+  _.assert( _.boolLike( o.upgrading ) );
+  _.assert( o.submodule.supermodule === null || o.submodule.supermodule === module );
+  _.routineOptions( moduleFixatePath, o );
+
+  if( _.strIs( o.secondaryWillFilesPath ) )
+  o.secondaryWillFilesPath = _.arrayAs( o.secondaryWillFilesPath );
+
+  debugger;
+
+  if( !o.remotePath )
+  return false;
+
+  if( _.arrayIs( o.remotePath ) && o.remotePath.length === 0 )
+  return false;
+
+  let vcs = will.vcsFor( o.remotePath );
+
+  if( !vcs )
+  return false;
+
+  if( !o.upgrading )
+  if( vcs.pathIsFixated( o.remotePath ) )
+  return false;
+
+  let fixatedPath = vcs.pathFixate( o.remotePath );
+
+  if( !fixatedPath )
+  return false;
+
+  if( fixatedPath === o.remotePath )
+  return false;
+
+  let log = '';
+
+  fileReplace( o.willFilePath, 1 );
+  if( o.secondaryWillFilesPath )
+  for( let f = 0 ; f < o.secondaryWillFilesPath.length ; f++ )
+  fileReplace( o.secondaryWillFilesPath[ f ], 0 );
+
+  if( will.verbosity >= 2 )
+  logger.log( log );
+
+  return fixatedPath;
+
+  function fileReplace( willFilePath, mandatory )
+  {
+
+    let code = fileProvider.fileRead( willFilePath );
+
+    if( !mandatory )
+    {
+      if( !_.strHas( code, o.remotePath ) )
+      return false;
+    }
+
+    _.sure( _.strHas( code, o.remotePath ), () => 'Failed to parse ' + _.color.strFormat( o.willFilePath, 'path' ) + ' to replace ' + _.color.strFormat( o.remotePath, 'path' ) );
+
+    if( will.verbosity >= 2 )
+    {
+      let fixated = 'fixated';
+      if( o.dry )
+      fixated = 'will be fixated';
+      let moveReport = path.moveReport( fixatedPath, o.remotePath );
+
+      if( !log.length )
+      {
+        log += 'Remote path of ' + o.submodule.decoratedAbsoluteName + ' ' + fixated;
+        log += '\n  ' + moveReport;
+      }
+
+      log += '\n  in ' + _.color.strFormat( willFilePath, 'path' );
+
+    }
+
+    if( !o.dry )
+    {
+      code = code.replace( o.remotePath, fixatedPath );
+      fileProvider.fileWrite( willFilePath, code );
+    }
+
+    return true;
+  }
+
+}
+
+var defaults = moduleFixatePath.defaults = Object.create( moduleFixate.defaults );
+defaults.remotePath = null;
+defaults.willFilePath = null;
+defaults.secondaryWillFilesPath = null;
 
 //
 
@@ -2062,7 +2285,7 @@ function submodulesReload()
 // remote
 // --
 
-function remoteIsRemote()
+function remoteIs()
 {
   let module = this;
   let will = module.will;
@@ -2070,11 +2293,10 @@ function remoteIsRemote()
   let path = fileProvider.path;
 
   _.assert( !!module.willFilesPath || !!module.dirPath );
+  _.assert( arguments.length === 0 );
 
-  // debugger;
-  let fileProvider2 = fileProvider.providerForPath( module.willFilesPath ? path.s.common( module.willFilesPath ) : module.dirPath );
-  // let fileProvider2 = fileProvider.providerForPath( module.dirPath );
-  if( fileProvider2.limitedImplementation )
+  let remoteProvider = fileProvider.providerForPath( module.commonPath );
+  if( remoteProvider.isVcs )
   return end( true );
 
   return end( false );
@@ -2101,12 +2323,12 @@ function remoteIsDownloaded()
   _.assert( !!module.willFilesPath );
   _.assert( module.isRemote === true );
 
-  let fileProvider2 = fileProvider.providerForPath( module.remotePath );
-  _.assert( !!fileProvider2.limitedImplementation );
+  let remoteProvider = fileProvider.providerForPath( module.remotePath );
+  _.assert( !!remoteProvider.isVcs );
 
-  let result = fileProvider2.isDownloaded
+  let result = remoteProvider.isDownloaded
   ({
-    remotePath : module.remotePath,
+    // remotePath : module.remotePath,
     localPath : module.localPath,
   });
 
@@ -2144,11 +2366,11 @@ function remoteIsUpToDate()
   _.assert( !!module.willFilesPath );
   _.assert( module.isRemote === true );
 
-  let fileProvider2 = fileProvider.providerForPath( module.remotePath );
+  let remoteProvider = fileProvider.providerForPath( module.remotePath );
 
-  _.assert( !!fileProvider2.limitedImplementation );
+  _.assert( !!remoteProvider.isVcs );
 
-  let result = fileProvider2.isUpToDate
+  let result = remoteProvider.isUpToDate
   ({
     remotePath : module.remotePath,
     localPath : module.localPath,
@@ -2187,9 +2409,8 @@ function remoteForm()
   let logger = will.logger;
 
   _.assert( module.preformed === 2 );
-  // _.assert( !!module.willFilesPath );
 
-  module.isRemote = module.remoteIsRemote();
+  module.isRemote = module.remoteIs();
 
   if( module.isRemote )
   {
@@ -2218,18 +2439,16 @@ function remoteFormAct()
   _.assert( _.strDefined( module.alias ) );
   _.assert( !!module.supermodule );
 
-  // debugger;
-  let fileProvider2 = fileProvider.providerForPath( module.willFilesPath ? path.s.common( module.willFilesPath ) : module.dirPath );
-  // let fileProvider2 = fileProvider.providerForPath( module.willFilesPath );
+  let remoteProvider = fileProvider.providerForPath( module.commonPath );
+
+  _.assert( remoteProvider.isVcs && _.routineIs( remoteProvider.pathParse ), () => 'Seems file provider ' + remoteProvider.nickName + ' does not have version control system features' );
+
   let submodulesDir = module.supermodule.submodulesCloneDirGet();
-  let localPath = fileProvider2.pathIsolateGlobalAndLocal( module.willFilesPath )[ 1 ];
+  let parsed = remoteProvider.pathParse( module.willFilesPath );
 
   module.remotePath = module.willFilesPath;
   module.localPath = path.resolve( submodulesDir, module.alias );
-  module.willFilesPath = path.resolve( module.localPath, localPath );
-  debugger;
-  // module.dirPath = path.resolve( module.localPath, localPath );
-  // module.willFilesPath = module.dirPath; debugger // xxx
+  module.willFilesPath = path.resolve( module.localPath, parsed.localVcsPath );
   module.isDownloaded = !!module.remoteIsDownloaded();
 
   _.assert( will.moduleMap[ module.id ] === module );
@@ -2281,7 +2500,7 @@ function _remoteDownload( o )
   {
     wasUpToDate = module.isUpToDate;
     /*
-    delete downloaded module if it has critical error
+    delete remote module if it has a critical error
     */
     if( module.willFilesOpenReady.errorsCount() )
     fileProvider.filesDelete({ filePath : module.localPath, throwing : 0, sync : 1 });
@@ -2296,7 +2515,6 @@ function _remoteDownload( o )
     {
       _.assert( module.preformed === 3, 'not tested' );
 
-      // debugger;
       if( module.resourcesFormReady.errorsCount() || module.ready.errorsCount() )
       module.stateResetError();
 
@@ -2304,7 +2522,6 @@ function _remoteDownload( o )
       module.willFilesOpen();
       module.submodulesFormSkip();
       module.resourcesFormSkip();
-      // debugger;
 
       return module.ready
       .finallyGive( function( err, arg )
@@ -2318,9 +2535,15 @@ function _remoteDownload( o )
   .finallyKeep( function( err, arg )
   {
     if( err )
-    throw _.err( 'Failed to', ( o.upgrading ? 'upgrade' : 'download' ), module.nickName, '\n', err );
+    throw _.err( 'Failed to', ( o.upgrading ? 'update' : 'download' ), module.decoratedAbsoluteName, '\n', err );
     if( will.verbosity >= 3 && !wasUpToDate )
-    logger.log( ' + ' + module.nickName + ' was ' + ( o.upgrading ? 'upgraded' : 'downloaded' ) + ' in ' + _.timeSpent( time ) );
+    {
+      // debugger;
+      let remoteProvider = fileProvider.providerForPath( module.remotePath );
+      let version = remoteProvider.versionCurrentRetrive( module.localPath );
+      // debugger;
+      logger.log( ' + ' + module.decoratedNickName + ' version ' + version + ' was ' + ( o.upgrading ? 'updated' : 'downloaded' ) + ' in ' + _.timeSpent( time ) );
+    }
     return !wasUpToDate;
   });
 
@@ -2348,6 +2571,42 @@ function remoteUpgrade()
   let module = this;
   let will = module.will;
   return module._remoteDownload({ upgrading : 1 });
+}
+
+//
+
+function remoteCurrentVersion()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( !!module.willFilesPath || !!module.dirPath );
+  _.assert( arguments.length === 0 );
+
+  debugger;
+  let remoteProvider = fileProvider.providerForPath( module.commonPath );
+  debugger;
+  return remoteProvider.versionCurrentRetrive( module.remotePath )
+}
+
+//
+
+function remoteLatestVersion()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( !!module.willFilesPath || !!module.dirPath );
+  _.assert( arguments.length === 0 );
+
+  debugger;
+  let remoteProvider = fileProvider.providerForPath( module.commonPath );
+  debugger;
+  return remoteProvider.versionLatestRetrive( module.clonePath )
 }
 
 // --
@@ -2421,7 +2680,7 @@ function resourcesForm()
     else
     {
       if( will.verbosity === 2 )
-      logger.error( ' ! One or more submodules of ' + module.nickName + ' were not downloaded!'  );
+      logger.error( ' ! One or more submodules of ' + module.decoratedNickName + ' were not downloaded!'  );
     }
 
     return con;
@@ -2723,8 +2982,9 @@ function commonPathGet()
   let path = fileProvider.path;
   let result = module.willFilesPath ? path.common( module.willFilesPath ) : module.dirPath;
 
+  debugger;
   if( _.strEnds( result, '/' ) )
-  result += _.strCommonLeft.apply( _, path.s.fullName( module.willFilesPath ) );
+  result += _.strCommonLeft.apply( _, _.arrayAs( path.s.fullName( module.willFilesPath ) ) );
 
   return result;
 }
@@ -2800,7 +3060,7 @@ let remotePathSet = nonExportablePathSet_functor( 'remotePath' );
 // accessor
 // --
 
-function _nickNameGet()
+function nickNameGet()
 {
   let module = this;
   let name = module.alias ? module.alias : null;
@@ -2813,7 +3073,16 @@ function _nickNameGet()
 
 //
 
-function _absoluteNameGet()
+function decoratedNickNameGet()
+{
+  let module = this;
+  let result = module.nickName;
+  return _.color.strFormat( result, 'entity' );
+}
+
+//
+
+function absoluteNameGet()
 {
   let module = this;
   let supermodule = module.supermodule;
@@ -2821,6 +3090,15 @@ function _absoluteNameGet()
   return supermodule.nickName + ' / ' + module.nickName;
   else
   return module.nickName;
+}
+
+//
+
+function decoratedAbsoluteNameGet()
+{
+  let module = this;
+  let result = module.absoluteName;
+  return _.color.strFormat( result, 'entity' );
 }
 
 // --
@@ -2989,9 +3267,9 @@ function errResolving( o )
   let module = this;
   _.routineOptions( errResolving, arguments );
   if( o.current && o.current.nickName )
-  return _.err( 'Failed to resolve', _.strQuote( o.selector ), 'for', o.current.nickName, 'in', module.nickName, '\n', o.err );
+  return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'code' ), 'for', o.current.decoratedNickName, 'in', module.decoratedNickName, '\n', o.err );
   else
-  return _.err( 'Failed to resolve', _.strQuote( o.selector ), 'in', module.nickName, '\n', o.err );
+  return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'code' ), 'in', module.decoratedNickName, '\n', o.err );
 }
 
 errResolving.defaults =
@@ -3504,9 +3782,6 @@ function _resolveAct( o )
   function onUpEnd()
   {
     let it = this;
-
-    // if( it.path === "/reflect.submodules.variant2" )
-    // debugger;
 
     exportedWriteThrough.call( it );
     currentExclude.call( it );
@@ -4421,8 +4696,10 @@ let Accessors =
   buildMap : { setter : ResourceSetter_functor({ resourceName : 'Build', mapName : 'buildMap' }) },
   exportedMap : { setter : ResourceSetter_functor({ resourceName : 'Exported', mapName : 'exportedMap' }) },
 
-  nickName : { getter : _nickNameGet, combining : 'rewrite', readOnly : 1 },
-  absoluteName : { getter : _absoluteNameGet, readOnly : 1 },
+  nickName : { getter : nickNameGet, combining : 'rewrite', readOnly : 1 },
+  decoratedNickName : { getter : decoratedNickNameGet, combining : 'rewrite', readOnly : 1 },
+  absoluteName : { getter : absoluteNameGet, readOnly : 1 },
+  decoratedAbsoluteName : { getter : decoratedAbsoluteNameGet, readOnly : 1 },
   inPath : { getter : inPathGet, readOnly : 1 },
   outPath : { getter : outPathGet, readOnly : 1 },
   commonPath : { getter : commonPathGet, readOnly : 1 },
@@ -4494,8 +4771,11 @@ let Proto =
 
   _submodulesDownload,
   submodulesDownload,
-  submodulesUpgrade,
+  submodulesUpdate,
   submodulesClean,
+  submodulesFixate,
+  moduleFixate,
+  moduleFixatePath,
 
   submodulesFormSkip,
   submodulesForm,
@@ -4505,7 +4785,7 @@ let Proto =
 
   // remote
 
-  remoteIsRemote,
+  remoteIs,
   remoteIsDownloaded,
   remoteIsUpToDate,
 
@@ -4514,6 +4794,8 @@ let Proto =
   _remoteDownload,
   remoteDownload,
   remoteUpgrade,
+  remoteCurrentVersion,
+  remoteLatestVersion,
 
   // resource
 
@@ -4548,7 +4830,10 @@ let Proto =
 
   // accessor
 
-  _nickNameGet,
+  nickNameGet,
+  decoratedNickNameGet,
+  absoluteNameGet,
+  decoratedAbsoluteNameGet,
 
   // selector
 

@@ -113,6 +113,15 @@ function form3()
 
   }
 
+  if( pathResource.path )
+  {
+    let filePath = _.arrayAs( pathResource.path );
+    filePath.forEach( ( p ) =>
+    {
+      _.sure( !path.isGlobal( p ) || path.isAbsolute( p ), 'Global paths should be absolute, but ' + p + ' is not absolute' );
+    });
+  }
+
   pathResource.formed = 3;
   return pathResource;
 }
