@@ -116,6 +116,10 @@
   <summary><a href="./Tutorials/ResourceInheritability.md">Наслідування ресурсами</a></summary>
   Як користуватись наслідуванням ресурсів
 </details>
+<details>
+  <summary><a href="./Tutorials/TranspileStep.md">Транспіляція файлів</a></summary>
+  Використання кроку <code>predefined.transpile</code> для трансформації JavaScript-файлів 
+</details>
 
 <p></p>
 ...In progress, advanced...
@@ -126,10 +130,6 @@
 <details>
   <summary><a href="./Tutorials/ExportedSectionOfWillFile.md">How to use <code>.clean</code> command</a></summary>
   Використання команди <code>.clean</code>
-</details>
-<details>
-  <summary><a href="./Tutorials/TranspileStep.md">Транспіляція файлів</a></summary>
-  Використання кроку <code>predefined.transpile</code> для трансформації JavaScript файлів 
 </details>
 <details>
   <summary><a href="./Tutorials/ExportedSectionOfWillFile.md">How to use <code>.shell</code> command</a></summary>
