@@ -93,6 +93,10 @@
   В туторіалі пояснюється як будуються складні селектори
 </details>
 <details>
+  <summary><a href="./Tutorials/HowToList.md">Перелік ресурсів через командний рядок</a></summary>
+  Як отримати інформацію про окремі ресурси модуля  
+</details>
+<details>
   <summary><a href="./Tutorials/ReflectorUsing.md">Поняття рефлекторів. Копіювання файлів</a></summary>
   В туторіалі описуються копіювання файлів рефлектором, пояснюється як користуватись полем <code>recursive</code>
 </details>
@@ -121,18 +125,15 @@
   Використання кроку <code>predefined.transpile</code> для трансформації JavaScript-файлів 
 </details>
 
+
 <p></p>
 ...In progress, advanced...
 <details>
-  <summary><a href="./Tutorials/HowToList.md">Перелік ресурсів через командний рядок</a></summary>
-  Як дізнатись інформацію про модуль
-</details>
-<details>
-  <summary><a href="./Tutorials/ExportedSectionOfWillFile.md">How to use <code>.clean</code> command</a></summary>
+  <summary><a href="./Tutorials/CleanCommandUsing.md">How to use <code>.clean</code> command</a></summary>
   Використання команди <code>.clean</code>
 </details>
 <details>
-  <summary><a href="./Tutorials/ExportedSectionOfWillFile.md">How to use <code>.shell</code> command</a></summary>
+  <summary><a href="./Tutorials/HowToUseShellCommand.md">How to use <code>.shell</code> command</a></summary>
   Використання команди <code>.shell</code>
 </details>
 
