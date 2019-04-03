@@ -136,6 +136,10 @@
   <summary><a href="./Tutorials/HowToUseShellCommand.md">How to use <code>.shell</code> command</a></summary>
   Використання команди <code>.shell</code>
 </details>
+<details>
+  <summary><a href="./Tutorials/HowToUseShellCommand.md">Неформальний підмодуль</a></summary>
+  Створення неформального підмодуля
+</details>
 
 
 ## <a name="concepts"></a> Концепції
