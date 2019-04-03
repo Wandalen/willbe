@@ -6,10 +6,10 @@
 
 ### Команда `.submodules.fixate`  
 Команда `.submodules.fixate` призначена для пошуку оновлень для віддалених підмодулів та заміни значень в відповідних ресурсах секції `submodule`. Команда має опцію `dry`, яка відповідає за поведінку виконання команди. При `dry:0` (значення за замовчуванням) фраза `will .submodules.fixate dry:0` знайде останні оновлення в репозиторіях підмодулів і замінить URL-посилання на актуальні. При значенні `dry:1` команда виводить список доступних оновлень для підмодулів не змінюючи `will-файл`. Команда `.submodules.fixate` пропускає підмодулі URL-посилання яких містить указану версію підмодуля.  
-Для дослідження команди створіть файл `.will.yml` в директорії `submodulesVersions`. Внесіть в `.will.yml` код:  
+Для дослідження команди створіть `will-файли` в директорії `submodulesVersions`. Внесіть в `.will.yml` та `svc.will.yml` код:  
 
 <details>
-  <summary><u>Повний код файла <code>.will.yml</code></u></summary>
+  <summary><u>Повний код файлів, структура файлів</u></summary>
 
 ```yaml
 
@@ -30,10 +30,33 @@ submodule :
 
 ```
 submodulesVersions
+        ├── svc.will.yml
         └── .will.yml
 
 ```
 
 </details>
 
+Файл `svc.will.yml` призначений для дослідження команди `.submodules.upgrade.refs`, буде використаний далі.  
+Виконайте пошук оновлень для підмодулів, без їх завантаження (опція `dry:1`):  
+
+<details>
+  <summary><u>Вивід фрази <code>will .submodules.fixate dry:1</code></u></summary>
+
+```
+[user@user ~]$ will .export
+...
+Remote path of module::versionControl / module::Tools will be fixated
+  git+https:///github.com/Wandalen/wTools.git/out/wTools : .#56afe924c2680301078ccb8ad24a9e7be7008485 <- .#master
+  in /path_to_file/.will.yml
+Remote path of module::versionControl / module::PathFundamentals will be fixated
+  git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals : .#5f6be76c9e6bf832919827c34bc4eaa0c3fee0dd <- .#master
+  in /path_to_file/.will.yml
+Remote path of module::versionControl / module::Files will be fixated
+  git+https:///github.com/Wandalen/wFiles.git/out/wFiles : .#7de48ed4c9134854d7083bd8edbd2f0acf0de6d5 <- .#master
+  in /path_to_file/.will.yml
+
+```
+
+</details>
 
