@@ -2,9 +2,14 @@
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#c8dadf139a49d70ccae2cac4f91845ecd0a925e0
+  Color : npm:///wColor/out/wColor#0.3.102
   UriFundamentals : out/UriFundamentals.informal.out
   Proto : out/Proto.informal.out
+  Procedure : out/Procedure.informal.out
+  # UriFundamentals : out/UriFundamentals.informal.out
+  # Proto : out/Proto.informal.out
+  # Procedure : out/Procedure.informal.out
 
 path :
 

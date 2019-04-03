@@ -100,8 +100,6 @@ function buildSimple( test )
   });
 }
 
-buildSimple.timeOut = 30000;
-
 //
 
 function makeNamed( test )
@@ -227,8 +225,6 @@ function makeNamed( test )
   }
 
 }
-
-makeNamed.timeOut = 30000;
 
 //
 
@@ -357,8 +353,6 @@ function makeAnon( test )
 
 }
 
-makeAnon.timeOut = 30000;
-
 //
 
 function makeOutNamed( test )
@@ -455,6 +449,7 @@ function makeOutNamed( test )
       'predefined.willbe' : path.join( __dirname, '../will/Exec' ),
       'predefined.dir' : routinePath + '/super.out',
       'predefined.will.files' : routinePath + '/super.out/super.out.will.yml',
+      'original.will.files' : [ 'super.im.will.yml', 'super.ex.will.yml' ],
 
     }
 
@@ -474,16 +469,14 @@ function makeOutNamed( test )
     test.identical( module.willFileArray.length, 1 );
     test.identical( _.mapKeys( module.willFileWithRoleMap ), [ 'single' ] );
     test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
-    test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.debug', 'exportedFiles.export.debug', 'exported.export.', 'exportedFiles.export.' ] );
-    test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.update', 'submodules.reload', 'submodules.clean', 'clean', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug', 'exported.export.debug', 'exportedFiles.export.debug', 'exported.export.', 'exportedFiles.export.' ] );
+    test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.', 'exportedFiles.export.', 'exported.export.debug', 'exportedFiles.export.debug' ] );
+    test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.update', 'submodules.reload', 'submodules.clean', 'clean', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug', 'exported.export.', 'exportedFiles.export.', 'exported.export.debug', 'exportedFiles.export.debug' ] );
     test.identical( _.mapKeys( module.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
-    test.identical( _.mapKeys( module.exportedMap ), [ 'export.', 'export.debug' ] );
+    test.identical( _.mapKeys( module.exportedMap ), [ 'export.debug', 'export.' ] );
 
   }
 
 }
-
-makeOutNamed.timeOut = 30000;
 
 //
 
@@ -2650,7 +2643,8 @@ function reflectorResolve( test )
       },
       'dst' : { 'prefixPath' : 'out/debug' },
       'criterion' : { 'debug' : 1, 'variant' : 0 },
-      'inherit' : [ 'predefined.*' ]
+      'inherit' : [ 'predefined.*' ],
+      'mandatory' : 1
     }
     resolved.form();
     var resolvedData = resolved.dataExport();
@@ -2672,7 +2666,8 @@ function reflectorResolve( test )
       },
       'dst' : { 'prefixPath' : 'out/debug' },
       'criterion' : { 'debug' : 1, 'variant' : 1 },
-      'inherit' : [ 'predefined.*' ]
+      'inherit' : [ 'predefined.*' ],
+      'mandatory' : 1,
     }
     var resolvedData = resolved.dataExport();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -2693,7 +2688,8 @@ function reflectorResolve( test )
       },
       'dst' : { 'prefixPath' : 'out/debug' },
       'criterion' : { 'debug' : 1, 'variant' : 2 },
-      'inherit' : [ 'predefined.*' ]
+      'inherit' : [ 'predefined.*' ],
+      'mandatory' : 1,
     }
     var resolvedData = resolved.dataExport();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -2714,7 +2710,8 @@ function reflectorResolve( test )
       },
       'dst' : { 'prefixPath' : 'out/debug' },
       'criterion' : { 'debug' : 1, 'variant' : 3 },
-      'inherit' : [ 'predefined.*' ]
+      'inherit' : [ 'predefined.*' ],
+      'mandatory' : 1,
     }
     var resolvedData = resolved.dataExport();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -2735,7 +2732,8 @@ function reflectorResolve( test )
       },
       'dst' : { 'prefixPath' : 'out/debug/dir1' },
       'criterion' : { 'debug' : 1, 'variant' : 4 },
-      'inherit' : [ 'predefined.*' ]
+      'inherit' : [ 'predefined.*' ],
+      'mandatory' : 1,
     }
     var resolvedData = resolved.dataExport();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -2758,7 +2756,8 @@ function reflectorResolve( test )
       },
       'dst' : { 'prefixPath' : 'out/debug/dir1' },
       'criterion' : { 'debug' : 1, 'variant' : 5 },
-      'inherit' : [ 'predefined.*' ]
+      'inherit' : [ 'predefined.*' ],
+      'mandatory' : 1
     }
     var resolvedData = resolved.dataExport();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -2780,6 +2779,7 @@ function reflectorResolve( test )
       },
       'dst' : { 'prefixPath' : 'out/debug/dir1/File.test.js' },
       'criterion' : { 'debug' : 1, 'variant' : 6 },
+      'mandatory' : 1
     }
     var resolvedData = resolved.dataExport();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -2801,6 +2801,7 @@ function reflectorResolve( test )
       },
       'dst' : { 'prefixPath' : 'out/debug/dir1/File.test.js' },
       'criterion' : { 'debug' : 1, 'variant' : 7 },
+      'mandatory' : 1,
     }
     var resolvedData = resolved.dataExport();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -2829,8 +2830,6 @@ function reflectorResolve( test )
 
   return module.ready.split();
 }
-
-reflectorResolve.timeOut = 30000;
 
 //
 
@@ -2893,7 +2892,7 @@ function submodulesResolve( test )
     test.is( !!submodule.loadedModule );
     test.identical( submodule.name, 'Tools' );
     test.identical( submodule.loadedModule.resourcesFormed, 3 );
-    test.identical( submodule.loadedModule.willFilesPath, _.path.s.join( routinePath, '.module/Tools/out/wTools.out.will' ) );
+    test.identical( submodule.loadedModule.willFilesPath, _.path.s.join( routinePath, '.module/Tools/out/wTools.out.will.yml' ) );
     test.is( _.strEnds( submodule.loadedModule.dirPath, '.module/Tools/out' ) );
     test.is( _.strEnds( submodule.loadedModule.localPath, '.module/Tools' ) );
     test.is( _.strEnds( submodule.loadedModule.remotePath, 'git+https:///github.com/Wandalen/wTools.git/out/wTools#master' ) );
@@ -2917,14 +2916,12 @@ function submodulesResolve( test )
 
 }
 
-submodulesResolve.timeOut = 30000;
-
 //
 
 function submodulesDownload( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download' ); // qqq : where is it?
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, '.' );
   let submodulesPath = _.path.join( routinePath, '.module' );
@@ -2985,6 +2982,8 @@ function submodulesDownload( test )
 
 }
 
+submodulesResolve.timeOut = 300000;
+
 // --
 // define class
 // --
@@ -3023,8 +3022,7 @@ var Self =
     reflectorResolve,
 
     submodulesResolve,
-
-    // submodulesDownload, // qqq : where is it?
+    submodulesDownload,
 
   }
 

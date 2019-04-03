@@ -1078,7 +1078,7 @@ function willFilesPick( filePaths )
 
 //
 
-function _willFileFindMaybe( o )
+function _willFileFindSingle( o )
 {
   let module = this;
   let will = module.will;
@@ -1086,7 +1086,7 @@ function _willFileFindMaybe( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.routineOptions( _willFileFindMaybe, arguments );
+  _.routineOptions( _willFileFindSingle, arguments );
 
   _.assert( _.strDefined( o.role ) );
   _.assert( !module.willFilesFindReady.resourcesCount() );
@@ -1099,9 +1099,7 @@ function _willFileFindMaybe( o )
   if( o.isNamed )
   {
     namePath = path.fullName( path.parse( commonPath ).longPath );
-    // debugger;
     namePath = _.strReplace( namePath, /(\.ex|\.im|)\.will(\.\w+)?$/, '' );
-    // debugger;
   }
 
   /* */
@@ -1163,7 +1161,7 @@ function _willFileFindMaybe( o )
   if( will.verbosity >= 5 )
   logger.log( ' . Trying to open', filePath );
 
-  _.assert( module.willFileWithRoleMap[ o.role ] === undefined )
+  _.assert( module.willFileWithRoleMap[ o.role ] === undefined );
 
   new will.WillFile
   ({
@@ -1186,7 +1184,7 @@ function _willFileFindMaybe( o )
 
 }
 
-_willFileFindMaybe.defaults =
+_willFileFindSingle.defaults =
 {
   role : null,
   isOutFile : 0,
@@ -1196,249 +1194,41 @@ _willFileFindMaybe.defaults =
 
 //
 
-function _willFilesFindMaybe( o )
+function _willFileFindMultiple( o )
 {
   let module = this;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let filePaths;
-
-  o = _.routineOptions( _willFilesFindMaybe, arguments );
-
-  _.assert( module.willFileArray.length === 0, 'not tested' );
-  _.assert( !module.willFilesFindReady.resourcesCount() );
-  _.assert( !module.willFilesOpenReady.resourcesCount() );
-  _.assert( !module.submodulesFormReady.resourcesCount() );
-  _.assert( !module.resourcesFormReady.resourcesCount() );
-
-  /* specific terminal file */
-
-  if( _.arrayIs( module.willFilesPath ) && module.willFilesPath.length === 1 )
-  module.willFilesPath = module.willFilesPath[ 0 ];
-
-  // debugger;
-
-  // if( _.strIs( module.willFilesPath ) && fileProvider.resolvedIsTerminal( module.willFilesPath ) )
-  // {
-  //
-  //   _.assert( module.willFileWithRoleMap.single === undefined )
-  //
-  //   new will.WillFile
-  //   ({
-  //     role : 'single',
-  //     filePath : module.willFilesPath,
-  //     module : module,
-  //   }).form1();
-  //
-  //   let willf = module.willFileWithRoleMap.single;
-  //
-  //   if( willf.exists() )
-  //   {
-  //     filePaths = [ module.willFilesPath ];
-  //     namedNameDeduce();
-  //     return end( filePaths );
-  //   }
-  //   else
-  //   {
-  //     debugger;
-  //     willf.finit();
-  //   }
-  //
-  // }
-
-  /* */
-
   let roles = [ 'single', 'import', 'export' ];
   let files = Object.create( null );
 
-  /* */
+  _.routineOptions( _willFileFindMultiple, arguments );
 
   for( let r = 0 ; r < roles.length ; r++ )
   {
     let role = roles[ r ];
-    files[ role ] = module._willFileFindMaybe
+    files[ role ] = module._willFileFindSingle
     ({
       role : role,
       isOutFile : o.isOutFile,
-      isNamed : 1,
+      isNamed : o.isNamed,
+      lookingDir : o.lookingDir,
     })
   }
 
-  filePaths = filePathsGet( files );
+  let filePaths = filePathsGet( files );
   if( filePaths.length )
   {
+    if( o.isNamed )
     namedNameDeduce();
-    return end( filePaths );
-  }
-
-  /* */
-
-  if( module.willFilesPath )
-  {
-
-    for( let r = 0 ; r < roles.length ; r++ )
-    {
-      let role = roles[ r ];
-      files[ role ] = module._willFileFindMaybe
-      ({
-        role : role,
-        isOutFile : o.isOutFile,
-        isNamed : 1,
-        lookingDir : 0,
-      })
-    }
-
-    filePaths = filePathsGet( files );
-    if( filePaths.length )
-    {
-      namedNameDeduce();
-      return end( filePaths );
-    }
-
-  }
-
-  /* */
-
-  for( let r = 0 ; r < roles.length ; r++ )
-  {
-    let role = roles[ r ];
-    files[ role ] = module._willFileFindMaybe
-    ({
-      role : role,
-      isOutFile : o.isOutFile,
-      isNamed : 0,
-    })
-  }
-
-  filePaths = filePathsGet( files );
-  if( filePaths.length )
-  {
+    else
     notNamedNameDeduce();
     return end( filePaths );
   }
 
-  /* */
-
-  if( module.willFilesPath )
-  {
-
-    for( let r = 0 ; r < roles.length ; r++ )
-    {
-      let role = roles[ r ];
-      files[ role ] = module._willFileFindMaybe
-      ({
-        role : role,
-        isOutFile : o.isOutFile,
-        isNamed : 0,
-        lookingDir : 0,
-      })
-    }
-
-    filePaths = filePathsGet( files );
-    if( filePaths.length )
-    {
-      notNamedNameDeduce();
-      return end( filePaths );
-    }
-
-  }
-
-  /* */
-
-  for( let r = 0 ; r < roles.length ; r++ )
-  {
-    let role = roles[ r ];
-    files[ role ] = module._willFileFindMaybe
-    ({
-      role : role,
-      isOutFile : !o.isOutFile,
-      isNamed : 1,
-    })
-  }
-
-  filePaths = filePathsGet( files );
-  if( filePaths.length )
-  {
-    namedNameDeduce();
-    return end( filePaths );
-  }
-
-  /* */
-
-  if( module.willFilesPath )
-  {
-
-    for( let r = 0 ; r < roles.length ; r++ )
-    {
-      let role = roles[ r ];
-      files[ role ] = module._willFileFindMaybe
-      ({
-        role : role,
-        isOutFile : !o.isOutFile,
-        isNamed : 1,
-        lookingDir : 0,
-      })
-    }
-
-    filePaths = filePathsGet( files );
-    if( filePaths.length )
-    {
-      namedNameDeduce();
-      return end( filePaths );
-    }
-
-  }
-
-  /* */
-
-  for( let r = 0 ; r < roles.length ; r++ )
-  {
-    let role = roles[ r ];
-    files[ role ] = module._willFileFindMaybe
-    ({
-      role : role,
-      isOutFile : !o.isOutFile,
-      isNamed : 0,
-    })
-  }
-
-  filePaths = filePathsGet( files );
-  if( filePaths.length )
-  {
-    notNamedNameDeduce();
-    return end( filePaths );
-  }
-
-  /* */
-
-  if( module.willFilesPath )
-  {
-
-    for( let r = 0 ; r < roles.length ; r++ )
-    {
-      let role = roles[ r ];
-      files[ role ] = module._willFileFindMaybe
-      ({
-        role : role,
-        isOutFile : !o.isOutFile,
-        isNamed : 0,
-      })
-    }
-
-    filePaths = filePathsGet( files );
-    if( filePaths.length )
-    {
-      notNamedNameDeduce();
-      return end( filePaths );
-    }
-
-  }
-
-  /* */
-
-  return null;
+  return false;
 
   /* */
 
@@ -1488,6 +1278,394 @@ function _willFilesFindMaybe( o )
     module.filePathChange( filePaths, path.dir( filePath ) );
     return true;
   }
+
+}
+
+_willFileFindMultiple.defaults =
+{
+  isOutFile : 0,
+  isNamed : 0,
+  lookingDir : 1,
+}
+
+//
+
+function _willFilesFindMaybe( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let filePaths;
+
+  o = _.routineOptions( _willFilesFindMaybe, arguments );
+
+  _.assert( module.willFileArray.length === 0, 'not tested' );
+  _.assert( !module.willFilesFindReady.resourcesCount() );
+  _.assert( !module.willFilesOpenReady.resourcesCount() );
+  _.assert( !module.submodulesFormReady.resourcesCount() );
+  _.assert( !module.resourcesFormReady.resourcesCount() );
+
+  /* specific terminal file */
+
+  if( _.arrayIs( module.willFilesPath ) && module.willFilesPath.length === 1 )
+  module.willFilesPath = module.willFilesPath[ 0 ];
+
+  // if( _.strIs( module.willFilesPath ) && fileProvider.resolvedIsTerminal( module.willFilesPath ) )
+  // {
+  //
+  //   _.assert( module.willFileWithRoleMap.single === undefined )
+  //
+  //   new will.WillFile
+  //   ({
+  //     role : 'single',
+  //     filePath : module.willFilesPath,
+  //     module : module,
+  //   }).form1();
+  //
+  //   let willf = module.willFileWithRoleMap.single;
+  //
+  //   if( willf.exists() )
+  //   {
+  //     filePaths = [ module.willFilesPath ];
+  //     namedNameDeduce();
+  //     return end( filePaths );
+  //   }
+  //   else
+  //   {
+  //     debugger;
+  //     willf.finit();
+  //   }
+  //
+  // }
+
+  let found;
+
+  /* isOutFile */
+
+  found = module._willFileFindMultiple
+  ({
+    isOutFile : o.isOutFile,
+    isNamed : 1,
+    lookingDir : 1,
+  });
+  if( found )
+  return found;
+
+  if( module.willFilesPath )
+  found = module._willFileFindMultiple
+  ({
+    isOutFile : o.isOutFile,
+    isNamed : 1,
+    lookingDir : 0,
+  });
+  if( found )
+  return found;
+
+  found = module._willFileFindMultiple
+  ({
+    isOutFile : o.isOutFile,
+    isNamed : 0,
+    lookingDir : 1,
+  });
+  if( found )
+  return found;
+
+  if( module.willFilesPath )
+  found = module._willFileFindMultiple
+  ({
+    isOutFile : o.isOutFile,
+    isNamed : 0,
+    lookingDir : 0,
+  });
+  if( found )
+  return found;
+
+  /* !isOutFile */
+
+  found = module._willFileFindMultiple
+  ({
+    isOutFile : !o.isOutFile,
+    isNamed : 1,
+    lookingDir : 1,
+  });
+  if( found )
+  return found;
+
+  if( module.willFilesPath )
+  found = module._willFileFindMultiple
+  ({
+    isOutFile : !o.isOutFile,
+    isNamed : 1,
+    lookingDir : 0,
+  });
+  if( found )
+  return found;
+
+  found = module._willFileFindMultiple
+  ({
+    isOutFile : !o.isOutFile,
+    isNamed : 0,
+    lookingDir : 1,
+  });
+  if( found )
+  return found;
+
+  if( module.willFilesPath )
+  found = module._willFileFindMultiple
+  ({
+    isOutFile : !o.isOutFile,
+    isNamed : 0,
+    lookingDir : 0,
+  });
+  if( found )
+  return found;
+
+  /* */
+
+  return found;
+
+  // /* */
+  //
+  // let roles = [ 'single', 'import', 'export' ];
+  // let files = Object.create( null );
+  //
+  // /* */
+  //
+  // for( let r = 0 ; r < roles.length ; r++ )
+  // {
+  //   let role = roles[ r ];
+  //   files[ role ] = module._willFileFindSingle
+  //   ({
+  //     role : role,
+  //     isOutFile : o.isOutFile,
+  //     isNamed : 1,
+  //   })
+  // }
+  //
+  // filePaths = filePathsGet( files );
+  // if( filePaths.length )
+  // {
+  //   namedNameDeduce();
+  //   return end( filePaths );
+  // }
+  //
+  // /* */
+  //
+  // if( module.willFilesPath )
+  // {
+  //
+  //   for( let r = 0 ; r < roles.length ; r++ )
+  //   {
+  //     let role = roles[ r ];
+  //     files[ role ] = module._willFileFindMaybe
+  //     ({
+  //       role : role,
+  //       isOutFile : o.isOutFile,
+  //       isNamed : 1,
+  //       lookingDir : 0,
+  //     })
+  //   }
+  //
+  //   filePaths = filePathsGet( files );
+  //   if( filePaths.length )
+  //   {
+  //     namedNameDeduce();
+  //     return end( filePaths );
+  //   }
+  //
+  // }
+  //
+  // /* */
+  //
+  // for( let r = 0 ; r < roles.length ; r++ )
+  // {
+  //   let role = roles[ r ];
+  //   files[ role ] = module._willFileFindMaybe
+  //   ({
+  //     role : role,
+  //     isOutFile : o.isOutFile,
+  //     isNamed : 0,
+  //   })
+  // }
+  //
+  // filePaths = filePathsGet( files );
+  // if( filePaths.length )
+  // {
+  //   notNamedNameDeduce();
+  //   return end( filePaths );
+  // }
+  //
+  // /* */
+  //
+  // if( module.willFilesPath )
+  // {
+  //
+  //   for( let r = 0 ; r < roles.length ; r++ )
+  //   {
+  //     let role = roles[ r ];
+  //     files[ role ] = module._willFileFindMaybe
+  //     ({
+  //       role : role,
+  //       isOutFile : o.isOutFile,
+  //       isNamed : 0,
+  //       lookingDir : 0,
+  //     })
+  //   }
+  //
+  //   filePaths = filePathsGet( files );
+  //   if( filePaths.length )
+  //   {
+  //     notNamedNameDeduce();
+  //     return end( filePaths );
+  //   }
+  //
+  // }
+  //
+  // /* */
+  //
+  // for( let r = 0 ; r < roles.length ; r++ )
+  // {
+  //   let role = roles[ r ];
+  //   files[ role ] = module._willFileFindMaybe
+  //   ({
+  //     role : role,
+  //     isOutFile : !o.isOutFile,
+  //     isNamed : 1,
+  //   })
+  // }
+  //
+  // filePaths = filePathsGet( files );
+  // if( filePaths.length )
+  // {
+  //   namedNameDeduce();
+  //   return end( filePaths );
+  // }
+  //
+  // /* */
+  //
+  // if( module.willFilesPath )
+  // {
+  //
+  //   for( let r = 0 ; r < roles.length ; r++ )
+  //   {
+  //     let role = roles[ r ];
+  //     files[ role ] = module._willFileFindMaybe
+  //     ({
+  //       role : role,
+  //       isOutFile : !o.isOutFile,
+  //       isNamed : 1,
+  //       lookingDir : 0,
+  //     })
+  //   }
+  //
+  //   filePaths = filePathsGet( files );
+  //   if( filePaths.length )
+  //   {
+  //     namedNameDeduce();
+  //     return end( filePaths );
+  //   }
+  //
+  // }
+  //
+  // /* */
+  //
+  // for( let r = 0 ; r < roles.length ; r++ )
+  // {
+  //   let role = roles[ r ];
+  //   files[ role ] = module._willFileFindMaybe
+  //   ({
+  //     role : role,
+  //     isOutFile : !o.isOutFile,
+  //     isNamed : 0,
+  //   })
+  // }
+  //
+  // filePaths = filePathsGet( files );
+  // if( filePaths.length )
+  // {
+  //   notNamedNameDeduce();
+  //   return end( filePaths );
+  // }
+  //
+  // /* */
+  //
+  // if( module.willFilesPath )
+  // {
+  //
+  //   for( let r = 0 ; r < roles.length ; r++ )
+  //   {
+  //     let role = roles[ r ];
+  //     files[ role ] = module._willFileFindMaybe
+  //     ({
+  //       role : role,
+  //       isOutFile : !o.isOutFile,
+  //       isNamed : 0,
+  //     })
+  //   }
+  //
+  //   filePaths = filePathsGet( files );
+  //   if( filePaths.length )
+  //   {
+  //     notNamedNameDeduce();
+  //     return end( filePaths );
+  //   }
+  //
+  // }
+  //
+  // /* */
+  //
+  // return null;
+
+  // /* */
+  //
+  // function namedNameDeduce()
+  // {
+  //   for( let w = 0 ; w < module.willFileArray.length ; w++ )
+  //   {
+  //     let willFile = module.willFileArray[ w ];
+  //     let name = path.name( willFile.filePath );
+  //     name = _.strRemoveEnd( name, '.will' );
+  //     name = _.strRemoveEnd( name, '.im' );
+  //     name = _.strRemoveEnd( name, '.ex' );
+  //     _.assert( module.configName === null || module.configName === name, 'Name of will files should be the same, something wrong' );
+  //     if( name )
+  //     module.configName = name;
+  //   }
+  // }
+  //
+  // /* */
+  //
+  // function notNamedNameDeduce()
+  // {
+  //   module.configName = path.fullName( path.dir( filePaths[ 0 ] ) );
+  // }
+  //
+  // /* - */
+  //
+  // function filePathsGet()
+  // {
+  //   let filePaths = [];
+  //   if( files.single )
+  //   filePaths.push( files.single.filePath );
+  //   if( files.import )
+  //   filePaths.push( files.import.filePath );
+  //   if( files.export )
+  //   filePaths.push( files.export.filePath );
+  //   return filePaths;
+  // }
+  //
+  // /* */
+  //
+  // function end( filePaths )
+  // {
+  //   let filePath = module.DirPathFromFilePaths( filePaths );
+  //   if( _.arrayIs( filePaths ) && filePaths.length === 1 )
+  //   filePaths = filePaths[ 0 ];
+  //   module.filePathChange( filePaths, path.dir( filePath ) );
+  //   return true;
+  // }
 
 }
 
@@ -2982,7 +3160,6 @@ function commonPathGet()
   let path = fileProvider.path;
   let result = module.willFilesPath ? path.common( module.willFilesPath ) : module.dirPath;
 
-  debugger;
   if( _.strEnds( result, '/' ) )
   result += _.strCommonLeft.apply( _, _.arrayAs( path.s.fullName( module.willFilesPath ) ) );
 
@@ -3143,6 +3320,8 @@ function _buildsSelect_body( o )
   _.assertRoutineOptions( _buildsSelect_body, arguments );
   _.assert( arguments.length === 1 );
 
+  debugger;
+
   if( o.name )
   {
     elements = _.mapVals( _.path.globFilterKeys( elements, o.name ) );
@@ -3209,6 +3388,8 @@ function _buildsSelect_body( o )
     }
 
     elements = _.entityFilter( elements, filter );
+
+    debugger;
 
     return elements;
   }
@@ -4747,7 +4928,8 @@ let Proto =
   stateResetError,
 
   willFilesPick,
-  _willFileFindMaybe,
+  _willFileFindSingle,
+  _willFileFindMultiple,
   _willFilesFindMaybe,
   willFilesFind,
 

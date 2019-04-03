@@ -175,7 +175,7 @@ function run( frame )
   }
   catch( err )
   {
-    throw _.err( 'Failed', step.nickName, 'of', build.nickName, '\n', err );
+    throw _.err( 'Failed', step.decoratedAbsoluteName, '\n', err );
   }
 
   return result;

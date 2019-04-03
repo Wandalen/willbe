@@ -984,7 +984,7 @@ function fixateDetached( test )
     test.identical( _.strCount( got.output, 'fixateDetached/.im.will.yml' ), 4 );
 
     test.is( _.strHas( got.output, /module::UriFundamentals.* will be fixated/ ) );
-    test.is( _.strHas( got.output, /wUriFundamentals\.git.* : .*\.#8bacf6ba2fb08c1ee69cbcb60e2246c1f8391908.* <- .*\./ ) );
+    test.is( _.strHas( got.output, /wUriFundamentals\.git.* : .*\.#\w+.* <- .*\./ ) );
     test.is( _.strHas( got.output, /in .+\/fixateDetached\/out\/UriFundamentals\.informal\.out\.will\.yml/ ) );
     test.is( _.strHas( got.output, /in .+\/fixateDetached\/module\/UriFundamentals\.informal\.will\.yml/ ) );
 
@@ -1030,7 +1030,7 @@ function fixateDetached( test )
     // test.identical( _.strCount( got.output, 'fixateDetached/.im.will.yml' ), 4 );
 
     test.is( _.strHas( got.output, /module::UriFundamentals.* will be fixated/ ) );
-    test.is( _.strHas( got.output, /wUriFundamentals\.git.* : .*\.#8bacf6ba2fb08c1ee69cbcb60e2246c1f8391908.* <- .*\./ ) );
+    test.is( _.strHas( got.output, /wUriFundamentals\.git.* : .*\.#\w+.* <- .*\./ ) );
     test.is( _.strHas( got.output, /in .+\/fixateDetached\/out\/UriFundamentals\.informal\.out\.will\.yml/ ) );
     test.is( _.strHas( got.output, /in .+\/fixateDetached\/module\/UriFundamentals\.informal\.will\.yml/ ) );
 
@@ -1483,7 +1483,8 @@ function exportMixed( test )
           'filePath' : { 'git+https://.' : '.' },
           'prefixPath' : 'git+https:///github.com/Wandalen/wProto.git'
         },
-        'dst' : { 'prefixPath' : '.module/Proto' }
+        'dst' : { 'prefixPath' : '.module/Proto' },
+        'mandatory' : 1,
       },
       'exported.export' :
       {
@@ -1492,11 +1493,13 @@ function exportMixed( test )
           'filePath' : { '.' : null },
           'prefixPath' : '.module/Proto/proto'
         },
-        'criterion' : { 'default' : 1, 'export' : 1 }
+        'criterion' : { 'default' : 1, 'export' : 1 },
+        'mandatory' : 1,
       },
       'exportedFiles.export' :
       {
         'recursive' : 0,
+        'mandatory' : 1,
         'src' : { 'filePath' : 'path::exportedFiles.export', 'basePath' : '.', 'prefixPath' : 'path::exportedDir.export' },
         'criterion' : { 'default' : 1, 'export' : 1 }
       }
@@ -3114,11 +3117,11 @@ function multipleExports( test )
         originalWillFilesPath : 'path::original.will.files',
       },
     }
-
     test.identical( outfile.exported, exported );
 
     var exportedReflector =
     {
+      'mandatory' : 1,
       src : { filePath : { '.' : null }, prefixPath : 'out/debug' },
       criterion :
       {
@@ -3132,6 +3135,7 @@ function multipleExports( test )
 
     var exportedReflector =
     {
+      'mandatory' : 1,
       src : { filePath : { '.' : null }, prefixPath : 'out/release' },
       criterion :
       {
@@ -3560,6 +3564,7 @@ function multipleExportsBroken( test )
 
     var exportedReflector =
     {
+      'mandatory' : 1,
       src : { filePath : { '.' : null }, prefixPath : 'out/debug' },
       criterion :
       {
@@ -3734,36 +3739,16 @@ function reflectNothingFromSubmodules( test )
     {
       'reflect.proto' :
       {
+        'mandatory' : 1,
         src :
         {
-          // filePath : { '.' : '.' },
           filePath : { 'path::proto' : 'path::out.*=1' },
-          // prefixPath : 'proto',
-        //   maskAll :
-        //   {
-        //     excludeAny :
-        //     [
-        //       /(\W|^)node_modules(\W|$)/,
-        //       /\.unique$/,
-        //       /\.git$/,
-        //       /\.svn$/,
-        //       /\.hg$/,
-        //       /\.DS_Store$/,
-        //       /(^|\/)-/,
-        //       /\.release($|\.|\/)/i,
-        //       /\.debug($|\.|\/)/i,
-        //       /\.test($|\.|\/)/i,
-        //       /\.experiment($|\.|\/)/i
-        //     ]
-        //   }
         },
-        // dst : { prefixPath : 'out/debug' },
-        // criterion : { debug : 1 },
         inherit : [ 'predefined.*' ],
       },
       'reflect.submodules1' :
       {
-        // dst : { filePath : '.', basePath : '.', prefixPath : 'out/debug' },
+        'mandatory' : 1,
         'dst' : { 'basePath' : '.', 'prefixPath' : 'path::out.debug' },
         criterion : { debug : 1 },
         inherit :
@@ -3773,29 +3758,17 @@ function reflectNothingFromSubmodules( test )
       },
       'reflect.submodules2' :
       {
+        'mandatory' : 1,
         src :
         {
           'filePath' : { 'submodule::*/exported::*=1/path::exportedDir*=1' : 'path::out.*=1' }
-          // maskAll :
-          // {
-          //   excludeAny :
-          //   [
-          //     /(\W|^)node_modules(\W|$)/,
-          //     /\.unique$/,
-          //     /\.git$/,
-          //     /\.svn$/,
-          //     /\.hg$/,
-          //     /\.DS_Store$/,
-          //     /(^|\/)-/,
-          //     /\.release($|\.|\/)/i
-          //   ]
-          // }
         },
         criterion : { debug : 1 },
         inherit : [ 'predefined.*' ]
       },
       'exported.proto.export' :
       {
+        'mandatory' : 1,
         src :
         {
           filePath : { '.' : null },
@@ -4571,8 +4544,6 @@ function reflectShell( test )
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
 
-  // node file/Produce.js File.js File.test.js Produced.js
-
   let shell = _.sheller
   ({
     execPath : 'node ' + execPath,
@@ -4662,6 +4633,96 @@ function reflectShell( test )
 
     var files = self.find( filePath );
     test.identical( files, [ '.', './File.js', './File.test.js', './Produce.js', './Produced.js2', './Produced.txt', './Produced.txt2', './Src1.txt', './Src2.txt' ] );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+//
+
+function reflectWithOptions( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-with-options' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let filePath = _.path.join( routinePath, 'file' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  });
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.with mandatory .build variant1';
+    return null;
+  })
+
+  shell({ args : [ '.with mandatory .clean' ] })
+  shell({ args : [ '.with mandatory .build variant1' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /\+ reflect\.proto1 reflected 3 files .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './debug', './debug/File.js', './debug/File.test.js' ] );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.with mandatory .build variant2';
+    return null;
+  })
+
+  shell({ args : [ '.with mandatory .clean' ] })
+  shell({ args : [ '.with mandatory .build variant2' ] })
+  .finally( ( err, got ) =>
+  {
+    test.is( !err );
+    test.is( !!got.exitCode );
+    test.is( _.strHas( got.output, /Failed .*module::.+ \/ step::reflect\.proto2/ ) );
+    test.is( _.strHas( got.output, /Error\. No file moved : .+reflectWithOptions.* : .*out\/debug.* <- .*proto2.*/ ) );
+    var files = self.find( outPath );
+    test.identical( files, [] );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.with mandatory .build variant3';
+    return null;
+  })
+
+  shell({ args : [ '.with mandatory .clean' ] })
+  shell({ args : [ '.with mandatory .build variant3' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /\+ reflect\.proto3 reflected 0 files .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
+    var files = self.find( outPath );
+    test.identical( files, [] );
     return null;
   })
 
@@ -5174,6 +5235,7 @@ var Self =
     reflectRemoteGit,
     reflectRemoteHttp,
     reflectShell,
+    reflectWithOptions,
 
     importInExport,
     setVerbosity,

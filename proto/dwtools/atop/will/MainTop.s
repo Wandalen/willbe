@@ -700,7 +700,7 @@ function commandBuild( e )
     throw errTooMany( builds, 'build scenario' );
 
     let build = builds[ 0 ];
-    return build.perform()
+    return build.perform();
   });
 }
 
@@ -756,15 +756,7 @@ function commandWith( e )
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
   let dirPath = path.joinRaw( path.current(), isolated.argument );
 
-  // let o2 = { will : will }
-  // if( fileProvider.isDir( dirPath ) )
-  // o2.dirPath = dirPath;
-  // else
-  // o2.willFilesPath = dirPath;
-
-  debugger;
   let module = will.currentModule = will.Module({ will : will, willFilesPath : dirPath }).preform();
-  // debugger;
   module.willFilesFind();
   module.willFilesOpen();
   module.submodulesForm();
@@ -778,8 +770,6 @@ function commandWith( e )
     return ca.commandPerform
     ({
       command : isolated.secondCommand,
-      // subject : isolated.secondSubject,
-      // propertiesMap : e.propertiesMap, // xxx
     });
 
   })
