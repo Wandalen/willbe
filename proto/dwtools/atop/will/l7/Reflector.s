@@ -128,16 +128,16 @@ function form2()
 
   _.assert( reflector.formed === 1 );
 
-  if( reflector.nickName === "reflector::download.6" )
-  debugger;
+  // if( reflector.nickName === "reflector::download" )
+  // debugger;
 
   reflector.src.pairWithDst( reflector.dst );
   if( reflector.src.filePath !== reflector.dst.filePath )
   if( !reflector.dst.filePath || _.mapIs( reflector.dst.filePath ) )
   reflector.src.pairRefineLight();
 
-  if( reflector.nickName === "reflector::download.6" )
-  debugger;
+  // if( reflector.nickName === "reflector::download" )
+  // debugger;
 
   let result = Parent.prototype.form2.apply( reflector, arguments );
   return result;
@@ -160,8 +160,8 @@ function form3()
 
   /* begin */
 
-  if( reflector.nickName === "reflector::download.6" )
-  debugger;
+  // if( reflector.nickName === "reflector::download" )
+  // debugger;
 
   reflector.pathsResolve();
 
@@ -181,8 +181,8 @@ function form3()
   _.assert( reflector.src.prefixPath === null || path.isAbsolute( reflector.src.prefixPath ) );
   _.assert( reflector.dst.prefixPath === null || path.isAbsolute( reflector.dst.prefixPath ) );
 
-  if( reflector.nickName === "reflector::download.6" )
-  debugger;
+  // if( reflector.nickName === "reflector::download" )
+  // debugger;
 
   /* end */
 
@@ -369,7 +369,7 @@ function _reflectMapForm( o )
 
   }
 
-  // if( reflector.nickName === "reflector::download.6" )
+  // if( reflector.nickName === "reflector::download" )
   // debugger;
 
 }
@@ -577,10 +577,7 @@ function optionsForFindExport( o )
   result.filter = reflector.src.clone();
   result.filter = result.filter || Object.create( null );
   result.filter.prefixPath = path.s.resolve( module.inPath, result.filter.prefixPath || '.' );
-
-  // if( o.resolving )
-  // if( result.filter.basePath )
-  // result.filter.basePath = path.resolve( module.inPath, result.filter.basePath );
+  result.mandatory = reflector.mandatory;
 
   return result;
 }
@@ -607,15 +604,12 @@ function optionsForFindGroupExport( o )
   _.assert( !o.resolving );
 
   result.recursive = reflector.recursive === null ? 2 : reflector.recursive;
+  result.mandatory = reflector.mandatory;
 
   if( reflector.src )
   result.fileFilter = reflector.src.clone();
   result.fileFilter = result.fileFilter || Object.create( null );
   result.fileFilter.prefixPath = path.s.resolve( module.inPath, result.fileFilter.prefixPath || '.' );
-
-  // if( o.resolving )
-  // if( result.fileFilter.basePath )
-  // result.fileFilter.basePath = path.resolve( module.inPath, result.fileFilter.basePath );
 
   return result;
 }
@@ -642,6 +636,7 @@ function optionsForReflectExport( o )
   _.assert( !o.resolving );
 
   result.recursive = reflector.recursive === null ? 2 : reflector.recursive;
+  result.mandatory = reflector.mandatory;
 
   /* */
 
@@ -649,17 +644,11 @@ function optionsForReflectExport( o )
   result.srcFilter = reflector.src.clone();
   result.srcFilter = result.srcFilter || Object.create( null );
   result.srcFilter.prefixPath = path.s.resolve( module.inPath, result.srcFilter.prefixPath || '.' );
-  // if( o.resolving )
-  // if( result.srcFilter.basePath )
-  // result.srcFilter.basePath = path.resolve( module.inPath, result.srcFilter.basePath );
 
   if( reflector.dst )
   result.dstFilter = reflector.dst.clone();
   result.dstFilter = result.dstFilter || Object.create( null );
   result.dstFilter.prefixPath = path.s.resolve( module.inPath, result.dstFilter.prefixPath || '.' );
-  // if( o.resolving )
-  // if( result.dstFilter.basePath )
-  // result.dstFilter.basePath = path.resolve( module.inPath, result.dstFilter.basePath );
 
   /* */
 
@@ -772,12 +761,14 @@ let Composes =
 {
 
   description : null,
-  recursive : null,
   shell : null,
   filePath : null,
   src : null,
   dst : null,
   criterion : null,
+
+  recursive : null,
+  mandatory : 1,
 
   inherit : _.define.own([]),
 
@@ -889,7 +880,7 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDecalre
+_.staticDeclare
 ({
   prototype : _.Will.prototype,
   name : Self.shortName,

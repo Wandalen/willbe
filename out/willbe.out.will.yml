@@ -372,6 +372,24 @@ path:
       - proto/dwtools/atop/will.test/asset/transpile
       - proto/dwtools/atop/will.test/asset/transpile/super.ex.will.yml
       - proto/dwtools/atop/will.test/asset/transpile/super.im.will.yml
+      - proto/dwtools/atop/will.test/asset/transpile/out
+      - proto/dwtools/atop/will.test/asset/transpile/out/debug
+      - proto/dwtools/atop/will.test/asset/transpile/out/debug/dir1
+      - proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2
+      - proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2/File.js
+      - proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2/File.test.js
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2/File1.debug.js
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2/File1.release.js
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2/File2.debug.js
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/debug/dir2/File2.release.js
+      - proto/dwtools/atop/will.test/asset/transpile/out/debug/dir3.test
+      - proto/dwtools/atop/will.test/asset/transpile/out/debug/dir3.test/File.js
+      - >-
+        proto/dwtools/atop/will.test/asset/transpile/out/debug/dir3.test/File.test.js
       - proto/dwtools/atop/will.test/asset/transpile/proto
       - proto/dwtools/atop/will.test/asset/transpile/proto/dir1
       - proto/dwtools/atop/will.test/asset/transpile/proto/dir2
@@ -394,6 +412,10 @@ path:
       export: 1
       tar: 1
       public: 1
+  original.will.files:
+    path:
+      - .im.will.yml
+      - .ex.will.yml
 submodule: {}
 reflector:
   reflect.proto.:
@@ -402,6 +424,7 @@ reflector:
         'path::proto': 'path::out.*=1'
     criterion:
       debug: 0
+    mandatory: 1
     inherit:
       - predefined.*
   reflect.proto.debug:
@@ -410,6 +433,7 @@ reflector:
         'path::proto': 'path::out.*=1'
     criterion:
       debug: 1
+    mandatory: 1
     inherit:
       - predefined.*
   reflect.submodules:
@@ -418,6 +442,7 @@ reflector:
         'submodule::*/exported::*=1/path::exportedDir*=1': 'path::out.*=1'
     criterion:
       debug: 1
+    mandatory: 1
     inherit:
       - predefined.*
   exported.doc.export:
@@ -434,8 +459,8 @@ reflector:
       export: 1
       tar: 0
       public: 1
+    mandatory: 1
   exportedFiles.doc.export:
-    recursive: 0
     src:
       filePath:
         .: true
@@ -498,6 +523,8 @@ reflector:
       export: 1
       tar: 0
       public: 1
+    recursive: 0
+    mandatory: 1
   exported.proto.export:
     src:
       filePath:
@@ -512,8 +539,8 @@ reflector:
       export: 1
       tar: 1
       public: 1
+    mandatory: 1
   exportedFiles.proto.export:
-    recursive: 0
     src:
       filePath: 'path::exportedFiles.proto.export'
       basePath: .
@@ -527,6 +554,8 @@ reflector:
       export: 1
       tar: 1
       public: 1
+    recursive: 0
+    mandatory: 1
 step:
   clean.out.:
     criterion:
@@ -686,6 +715,7 @@ exported:
     exportedFilesReflector: 'reflector::exportedFiles.proto.export'
     exportedDirPath: 'path::exportedDir.proto.export'
     exportedFilesPath: 'path::exportedFiles.proto.export'
+    originalWillFilesPath: 'path::original.will.files'
   doc.export:
     version: 0.3.159
     criterion:

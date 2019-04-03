@@ -113,9 +113,9 @@ function copy( o )
 
   let names =
   {
-    filePath : null,
+    willFilesPath : null,
     dirPath : null,
-    clonePath : null,
+    localPath : null,
     remotePath : null,
   }
 
@@ -187,7 +187,7 @@ function unform()
     _.arrayRemoveElementOnceStrictly( will.moduleArray, module );
   }
 
-  _.assert( will.moduleMap[ module.filePath ] !== module );
+  // _.assert( will.moduleMap[ module.willFilesPath ] !== module );
   _.assert( will.moduleMap[ module.id ] !== module );
   _.assert( !_.arrayHas( will.moduleArray, module ) );
 
@@ -240,12 +240,12 @@ function preform1()
 
   _.assert( arguments.length === 0 );
   _.assert( !!module.will );
-  _.assert( _.strIs( module.filePath ) || _.strIs( module.dirPath ), 'Expects filePath or dirPath' );
+  _.assert( _.strsAreAll( module.willFilesPath ) || _.strIs( module.dirPath ), 'Expects willFilesPath or dirPath' );
 
-  if( module.filePath === null )
-  module.filePath = module.dirPath;
+  // if( module.willFilesPath === null )
+  // module.willFilesPath = module.dirPath;
 
-  module._filePathChange( module.filePath, module.dirPath );
+  module._filePathChange( module.willFilesPath, module.dirPath );
 
   /* */
 
@@ -269,7 +269,7 @@ function preform2()
   _.assert( !!module.will );
   _.assert( will.moduleMap[ module.id ] === module );
   _.assert( module.dirPath === null || _.strDefined( module.dirPath ) );
-  _.assert( !!module.filePath );
+  _.assert( !!module.willFilesPath || !!module.dirPath );
 
   module.predefinedForm();
   module.remoteForm();
@@ -291,33 +291,63 @@ function predefinedForm()
 
   path
   ({
-    name : 'filePath',
+    name : 'predefined.will.files',
     path : null,
   })
 
   path
   ({
-    name : 'dirPath',
+    name : 'predefined.dir',
     path : null,
   })
 
   path
   ({
-    name : 'clonePath',
+    name : 'predefined.local',
     path : [],
   })
 
   path
   ({
-    name : 'remotePath',
+    name : 'predefined.remote',
     path : [],
   })
 
   path
   ({
-    name : 'willPath',
+    name : 'predefined.willbe',
     path : _.path.join( __dirname, '../Exec' ),
   })
+
+  // path
+  // ({
+  //   name : 'filePath',
+  //   path : null,
+  // })
+  //
+  // path
+  // ({
+  //   name : 'dirPath',
+  //   path : null,
+  // })
+  //
+  // path
+  // ({
+  //   name : 'localPath',
+  //   path : [],
+  // })
+  //
+  // path
+  // ({
+  //   name : 'remotePath',
+  //   path : [],
+  // })
+  //
+  // path
+  // ({
+  //   name : 'willbePath',
+  //   path : _.path.join( __dirname, '../Exec' ),
+  // })
 
   /* */
 
@@ -377,7 +407,7 @@ function predefinedForm()
 
   step
   ({
-    name : 'submodules.upgrade',
+    name : 'submodules.update',
     stepRoutine : Predefined.stepRoutineSubmodulesUpgrade,
   })
 
@@ -889,7 +919,7 @@ function DirPathFromFilePaths( filePaths )
     return filePath;
   });
 
-  let filePath = _.strCommonLeft.apply( _, filePaths );
+  let filePath = _.strCommonLeft.apply( _, _.arrayAs( filePaths ) );
   _.assert( filePath.length > 0 );
   return filePath;
 }
@@ -1064,13 +1094,37 @@ function _willFileFindMaybe( o )
   _.assert( !module.submodulesFormReady.resourcesCount() );
   _.assert( !module.resourcesFormReady.resourcesCount() );
 
-  let dirPath = module.dirPath || path.dir( module.filePath );
+  let commonPath = module.willFilesPath ? path.s.common( module.willFilesPath ) : module.dirPath;
   let namePath = '.';
   if( o.isNamed )
-  namePath = path.fullName( path.parse( module.filePath ).longPath );
+  {
+    namePath = path.fullName( path.parse( commonPath ).longPath );
+    // debugger;
+    namePath = _.strReplace( namePath, /(\.ex|\.im|)\.will(\.\w+)?$/, '' );
+    // debugger;
+  }
+
+  /* */
+
+  let dirPath;
+  if( module.dirPath )
+  {
+    dirPath = module.dirPath;
+  }
+  else
+  {
+    if( o.lookingDir )
+    dirPath = path.dir( commonPath );
+    else
+    dirPath = commonPath;
+  }
+
+  /* */
 
   if( module.willFileWithRoleMap[ o.role ] )
   return null;
+
+  /* */
 
   let filePath;
   if( o.isOutFile )
@@ -1078,11 +1132,6 @@ function _willFileFindMaybe( o )
 
     if( o.isNamed )
     {
-
-      if( module.dirPath )
-      dirPath = path.dir( module.dirPath );
-      else
-      dirPath = path.dir( module.filePath );
       let name = _.strJoinPath( [ namePath, '.out', module.prefixPathForRole( o.role ) ], '.' );
       filePath = path.resolve( dirPath, '.', name );
     }
@@ -1098,28 +1147,18 @@ function _willFileFindMaybe( o )
 
     if( o.isNamed )
     {
-      if( module.dirPath )
-      dirPath = path.dir( module.dirPath );
-      else
-      dirPath = path.dir( module.filePath );
-
       let name = _.strJoinPath( [ namePath, module.prefixPathForRole( o.role ) ], '.' );
       filePath = path.resolve( dirPath, '.', name );
     }
     else
     {
-
-      if( module.dirPath )
-      dirPath = module.dirPath;
-      else
-      dirPath = module.filePath;
-
       let name = module.prefixPathForRole( o.role );
       filePath = path.resolve( dirPath, namePath, name );
-
     }
 
   }
+
+  /* */
 
   if( will.verbosity >= 5 )
   logger.log( ' . Trying to open', filePath );
@@ -1152,6 +1191,7 @@ _willFileFindMaybe.defaults =
   role : null,
   isOutFile : 0,
   isNamed : 0,
+  lookingDir : 1,
 }
 
 //
@@ -1175,41 +1215,44 @@ function _willFilesFindMaybe( o )
 
   /* specific terminal file */
 
-  if( module.filePath && fileProvider.resolvedIsTerminal( module.filePath ) )
-  {
+  if( _.arrayIs( module.willFilesPath ) && module.willFilesPath.length === 1 )
+  module.willFilesPath = module.willFilesPath[ 0 ];
 
-    _.assert( module.willFileWithRoleMap.single === undefined )
+  // debugger;
 
-    new will.WillFile
-    ({
-      role : 'single',
-      filePath : module.filePath,
-      module : module,
-    }).form1();
-
-    let willf = module.willFileWithRoleMap.single;
-
-    if( willf.exists() )
-    {
-      filePaths = [ module.filePath ];
-      namedNameDeduce();
-      return end( filePaths );
-    }
-    else
-    {
-      debugger;
-      willf.finit();
-    }
-
-  }
+  // if( _.strIs( module.willFilesPath ) && fileProvider.resolvedIsTerminal( module.willFilesPath ) )
+  // {
+  //
+  //   _.assert( module.willFileWithRoleMap.single === undefined )
+  //
+  //   new will.WillFile
+  //   ({
+  //     role : 'single',
+  //     filePath : module.willFilesPath,
+  //     module : module,
+  //   }).form1();
+  //
+  //   let willf = module.willFileWithRoleMap.single;
+  //
+  //   if( willf.exists() )
+  //   {
+  //     filePaths = [ module.willFilesPath ];
+  //     namedNameDeduce();
+  //     return end( filePaths );
+  //   }
+  //   else
+  //   {
+  //     debugger;
+  //     willf.finit();
+  //   }
+  //
+  // }
 
   /* */
 
   let roles = [ 'single', 'import', 'export' ];
   let files = Object.create( null );
 
-  // debugger; // yyy
-
   /* */
 
   for( let r = 0 ; r < roles.length ; r++ )
@@ -1228,6 +1271,32 @@ function _willFilesFindMaybe( o )
   {
     namedNameDeduce();
     return end( filePaths );
+  }
+
+  /* */
+
+  if( module.willFilesPath )
+  {
+
+    for( let r = 0 ; r < roles.length ; r++ )
+    {
+      let role = roles[ r ];
+      files[ role ] = module._willFileFindMaybe
+      ({
+        role : role,
+        isOutFile : o.isOutFile,
+        isNamed : 1,
+        lookingDir : 0,
+      })
+    }
+
+    filePaths = filePathsGet( files );
+    if( filePaths.length )
+    {
+      namedNameDeduce();
+      return end( filePaths );
+    }
+
   }
 
   /* */
@@ -1252,6 +1321,32 @@ function _willFilesFindMaybe( o )
 
   /* */
 
+  if( module.willFilesPath )
+  {
+
+    for( let r = 0 ; r < roles.length ; r++ )
+    {
+      let role = roles[ r ];
+      files[ role ] = module._willFileFindMaybe
+      ({
+        role : role,
+        isOutFile : o.isOutFile,
+        isNamed : 0,
+        lookingDir : 0,
+      })
+    }
+
+    filePaths = filePathsGet( files );
+    if( filePaths.length )
+    {
+      notNamedNameDeduce();
+      return end( filePaths );
+    }
+
+  }
+
+  /* */
+
   for( let r = 0 ; r < roles.length ; r++ )
   {
     let role = roles[ r ];
@@ -1268,6 +1363,32 @@ function _willFilesFindMaybe( o )
   {
     namedNameDeduce();
     return end( filePaths );
+  }
+
+  /* */
+
+  if( module.willFilesPath )
+  {
+
+    for( let r = 0 ; r < roles.length ; r++ )
+    {
+      let role = roles[ r ];
+      files[ role ] = module._willFileFindMaybe
+      ({
+        role : role,
+        isOutFile : !o.isOutFile,
+        isNamed : 1,
+        lookingDir : 0,
+      })
+    }
+
+    filePaths = filePathsGet( files );
+    if( filePaths.length )
+    {
+      namedNameDeduce();
+      return end( filePaths );
+    }
+
   }
 
   /* */
@@ -1290,7 +1411,33 @@ function _willFilesFindMaybe( o )
     return end( filePaths );
   }
 
-  // debugger;
+  /* */
+
+  if( module.willFilesPath )
+  {
+
+    for( let r = 0 ; r < roles.length ; r++ )
+    {
+      let role = roles[ r ];
+      files[ role ] = module._willFileFindMaybe
+      ({
+        role : role,
+        isOutFile : !o.isOutFile,
+        isNamed : 0,
+      })
+    }
+
+    filePaths = filePathsGet( files );
+    if( filePaths.length )
+    {
+      notNamedNameDeduce();
+      return end( filePaths );
+    }
+
+  }
+
+  /* */
+
   return null;
 
   /* */
@@ -1336,7 +1483,9 @@ function _willFilesFindMaybe( o )
   function end( filePaths )
   {
     let filePath = module.DirPathFromFilePaths( filePaths );
-    module.filePathChange( filePath, path.dir( filePath ) );
+    if( _.arrayIs( filePaths ) && filePaths.length === 1 )
+    filePaths = filePaths[ 0 ];
+    module.filePathChange( filePaths, path.dir( filePath ) );
     return true;
   }
 
@@ -1354,6 +1503,8 @@ function willFilesFind()
   let module = this;
   let will = module.will;
   let logger = will.logger;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
 
   module.willFilesReadBegin();
 
@@ -1370,10 +1521,11 @@ function willFilesFind()
 
     if( !result )
     {
+      let dirPath = module.dirPath ? module.dirPath : path.s.common( module.willFilesPath );
       if( module.supermodule )
-      throw _.errBriefly( 'Found no .out.will file for',  module.supermodule.nickName, 'at', _.strQuote( module.filePath || module.dirPath ) );
+      throw _.errBriefly( 'Found no .out.will file for',  module.supermodule.nickName, 'at', _.strQuote( dirPath ) );
       else
-      throw _.errBriefly( 'Found no will-file at', _.strQuote( module.filePath || module.dirPath ) );
+      throw _.errBriefly( 'Found no will-file at', _.strQuote( dirPath ) );
     }
 
     result = _.Consequence.From( result );
@@ -1381,10 +1533,11 @@ function willFilesFind()
 
     result.finally( function( err, arg )
     {
+      let dirPath = module.dirPath ? module.dirPath : path.s.common( module.willFilesPath );
       if( !err && module.willFileArray.length === 0 )
-      throw _.errLogOnce( 'No will files', module.nickName, 'at', _.strQuote( module.dirPath ) );
+      throw _.errLogOnce( 'No will files', module.nickName, 'at', _.strQuote( dirPath ) );
       if( err )
-      throw _.errLogOnce( 'Error looking for will files for', module.nickName, 'at', _.strQuote( module.dirPath ), '\n', err );
+      throw _.errLogOnce( 'Error looking for will files for', module.nickName, 'at', _.strQuote( dirPath ), '\n', err );
       return arg;
     });
 
@@ -1481,14 +1634,6 @@ function _willFilesOpen()
       {
         let total = module.willFileArray.length;
         let opened = _.mapVals( module.submoduleMap );
-        //
-        // for( let i = 0 ; i < opened.length ; i++ )
-        // if( opened[ i ].loadedModule )
-        // total += opened[ i ].loadedModule.willFileArray.length;
-        //
-        // if( will.verbosity >= 2 )
-        // logger.log( ' . Read', total, 'will-files in', _.timeSpent( time ) );
-        //
       }
     }
     if( err )
@@ -1591,6 +1736,7 @@ function _willFilesExport()
     _.assert( _.objectIs( willFile.data ) );
     result[ willFile.filePath ] = willFile.data;
   }
+
 }
 
 //
@@ -1726,9 +1872,9 @@ function _submodulesDownload( o )
   {
     logger.down();
     if( err )
-    throw _.err( 'Failed to', ( o.upgrading ? 'upgrade' : 'download' ), 'submodules of', module.nickName, '\n', err );
+    throw _.err( 'Failed to', ( o.upgrading ? 'update' : 'download' ), 'submodules of', module.decoratedNickName, '\n', err );
     logger.rbegin({ verbosity : -2 });
-    logger.log( ' + ' + downloadedNumber + /*'/' + remoteNumber +*/ '/' + totalNumber + ' submodule(s) of ' + module.nickName + ' were ' + ( o.upgrading ? 'upgraded' : 'downloaded' ) + ' in ' + _.timeSpent( time ) );
+    logger.log( ' + ' + downloadedNumber + /*'/' + remoteNumber +*/ '/' + totalNumber + ' submodule(s) of ' + module.decoratedNickName + ' were ' + ( o.upgrading ? 'updated' : 'downloaded' ) + ' in ' + _.timeSpent( time ) );
     logger.rend({ verbosity : -2 });
     return arg;
   });
@@ -1757,7 +1903,7 @@ function submodulesDownload()
 
 //
 
-function submodulesUpgrade()
+function submodulesUpdate()
 {
   let module = this;
   let will = module.will;
@@ -1788,6 +1934,229 @@ function submodulesClean()
 
   return result;
 }
+
+//
+
+function submodulesFixate( o )
+{
+  let module = this;
+  let will = module.will;
+  let logger = will.logger;
+
+  _.assert( module.preformed === 3 );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+  o = _.routineOptions( submodulesFixate, arguments );
+
+  let o2 = _.mapExtend( null, o );
+  o2.submodule = module;
+  module.moduleFixate( o2 );
+
+  for( let m in module.submoduleMap )
+  {
+    let submodule = module.submoduleMap[ m ].loadedModule;
+    if( !submodule )
+    continue;
+
+    let o2 = _.mapExtend( null, o );
+    o2.submodule = submodule;
+    module.moduleFixate( o2 );
+
+  }
+
+  return module;
+}
+
+submodulesFixate.defaults =
+{
+  dry : 0,
+  upgrading : 0,
+}
+
+//
+
+function moduleFixate( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  if( !_.mapIs( o ) )
+  o = { submodule : o }
+
+  _.assert( module.preformed === 3 );
+  _.assert( arguments.length === 1 );
+  _.assert( _.boolLike( o.dry ) );
+  _.assert( _.boolLike( o.upgrading ) );
+  _.assert( o.submodule.supermodule === null || o.submodule.supermodule === module );
+  _.routineOptions( moduleFixate, o );
+
+  //  predefined.remote
+
+  let counter = 0;
+
+  if( o.submodule.associatedSubmodule )
+  {
+
+    let o2 = _.mapExtend( null, o );
+    o2.remotePath = o.submodule.associatedSubmodule.path;
+    o2.willFilePath = o.submodule.associatedSubmodule.willf.filePath;
+    let fixatedPath = module.moduleFixatePath( o2 );
+    if( fixatedPath )
+    {
+      if( !o.dry )
+      {
+        o.submodule.remotePath = fixatedPath;
+        o.submodule.associatedSubmodule.path = fixatedPath;
+      }
+      counter += 1;
+    }
+
+  }
+
+  let remote = o.submodule.pathResourceMap[ 'predefined.remote' ];
+  if( remote && remote.path && remote.path.length && !remote.criterion.predefined )
+  {
+
+    if( _.arrayIs( remote.path ) && remote.path.length === 1 )
+    remote.path = remote.path[ 0 ];
+
+    _.assert( _.strIs( remote.path ) );
+
+    let o2 = _.mapExtend( null, o );
+    o2.remotePath = remote.path;
+    o2.willFilePath = remote.willf.filePath;
+    o2.secondaryWillFilesPath = remote.module.pathResolve
+    ({
+      selector : 'path::original.will.files',
+      missingAction : 'undefine',
+    });
+    let fixatedPath = module.moduleFixatePath( o2 );
+    if( fixatedPath )
+    {
+      if( !o.dry )
+      {
+        debugger;
+        remote.path = fixatedPath;
+        _.assert( o.submodule.remotePath === fixatedPath );
+      }
+      counter += 1;
+    }
+
+  }
+
+  return counter;
+}
+
+var defaults = moduleFixate.defaults = Object.create( submodulesFixate.defaults );
+defaults.submodule = null;
+
+//
+
+function moduleFixatePath( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  if( !_.mapIs( o ) )
+  o = { submodule : o }
+
+  _.assert( module.preformed === 3 );
+  _.assert( arguments.length === 1 );
+  _.assert( _.boolLike( o.dry ) );
+  _.assert( _.boolLike( o.upgrading ) );
+  _.assert( o.submodule.supermodule === null || o.submodule.supermodule === module );
+  _.routineOptions( moduleFixatePath, o );
+
+  if( _.strIs( o.secondaryWillFilesPath ) )
+  o.secondaryWillFilesPath = _.arrayAs( o.secondaryWillFilesPath );
+
+  debugger;
+
+  if( !o.remotePath )
+  return false;
+
+  if( _.arrayIs( o.remotePath ) && o.remotePath.length === 0 )
+  return false;
+
+  let vcs = will.vcsFor( o.remotePath );
+
+  if( !vcs )
+  return false;
+
+  if( !o.upgrading )
+  if( vcs.pathIsFixated( o.remotePath ) )
+  return false;
+
+  let fixatedPath = vcs.pathFixate( o.remotePath );
+
+  if( !fixatedPath )
+  return false;
+
+  if( fixatedPath === o.remotePath )
+  return false;
+
+  let log = '';
+
+  fileReplace( o.willFilePath, 1 );
+  if( o.secondaryWillFilesPath )
+  for( let f = 0 ; f < o.secondaryWillFilesPath.length ; f++ )
+  fileReplace( o.secondaryWillFilesPath[ f ], 0 );
+
+  if( will.verbosity >= 2 )
+  logger.log( log );
+
+  return fixatedPath;
+
+  function fileReplace( willFilePath, mandatory )
+  {
+
+    let code = fileProvider.fileRead( willFilePath );
+
+    if( !mandatory )
+    {
+      if( !_.strHas( code, o.remotePath ) )
+      return false;
+    }
+
+    _.sure( _.strHas( code, o.remotePath ), () => 'Failed to parse ' + _.color.strFormat( o.willFilePath, 'path' ) + ' to replace ' + _.color.strFormat( o.remotePath, 'path' ) );
+
+    if( will.verbosity >= 2 )
+    {
+      let fixated = 'fixated';
+      if( o.dry )
+      fixated = 'will be fixated';
+      let moveReport = path.moveReport( fixatedPath, o.remotePath );
+
+      if( !log.length )
+      {
+        log += 'Remote path of ' + o.submodule.decoratedAbsoluteName + ' ' + fixated;
+        log += '\n  ' + moveReport;
+      }
+
+      log += '\n  in ' + _.color.strFormat( willFilePath, 'path' );
+
+    }
+
+    if( !o.dry )
+    {
+      code = code.replace( o.remotePath, fixatedPath );
+      fileProvider.fileWrite( willFilePath, code );
+    }
+
+    return true;
+  }
+
+}
+
+var defaults = moduleFixatePath.defaults = Object.create( moduleFixate.defaults );
+defaults.remotePath = null;
+defaults.willFilePath = null;
+defaults.secondaryWillFilesPath = null;
 
 //
 
@@ -1916,15 +2285,18 @@ function submodulesReload()
 // remote
 // --
 
-function remoteIsRemote()
+function remoteIs()
 {
   let module = this;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  let fileProvider2 = fileProvider.providerForPath( module.filePath );
-  if( fileProvider2.limitedImplementation )
+  _.assert( !!module.willFilesPath || !!module.dirPath );
+  _.assert( arguments.length === 0 );
+
+  let remoteProvider = fileProvider.providerForPath( module.commonPath );
+  if( remoteProvider.isVcs )
   return end( true );
 
   return end( false );
@@ -1947,17 +2319,17 @@ function remoteIsDownloaded()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.assert( _.strDefined( module.clonePath ) );
-  _.assert( _.strDefined( module.filePath ) );
+  _.assert( _.strDefined( module.localPath ) );
+  _.assert( !!module.willFilesPath );
   _.assert( module.isRemote === true );
 
-  let fileProvider2 = fileProvider.providerForPath( module.remotePath );
-  _.assert( !!fileProvider2.limitedImplementation );
+  let remoteProvider = fileProvider.providerForPath( module.remotePath );
+  _.assert( !!remoteProvider.isVcs );
 
-  let result = fileProvider2.isDownloaded
+  let result = remoteProvider.isDownloaded
   ({
-    remotePath : module.remotePath,
-    localPath : module.clonePath,
+    // remotePath : module.remotePath,
+    localPath : module.localPath,
   });
 
   if( !result )
@@ -1990,18 +2362,18 @@ function remoteIsUpToDate()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.assert( _.strDefined( module.clonePath ) );
-  _.assert( _.strDefined( module.filePath ) );
+  _.assert( _.strDefined( module.localPath ) );
+  _.assert( !!module.willFilesPath );
   _.assert( module.isRemote === true );
 
-  let fileProvider2 = fileProvider.providerForPath( module.remotePath );
+  let remoteProvider = fileProvider.providerForPath( module.remotePath );
 
-  _.assert( !!fileProvider2.limitedImplementation );
+  _.assert( !!remoteProvider.isVcs );
 
-  let result = fileProvider2.isUpToDate
+  let result = remoteProvider.isUpToDate
   ({
     remotePath : module.remotePath,
-    localPath : module.clonePath,
+    localPath : module.localPath,
     verbosity : will.verbosity - 3,
   });
 
@@ -2037,9 +2409,8 @@ function remoteForm()
   let logger = will.logger;
 
   _.assert( module.preformed === 2 );
-  _.assert( _.strDefined( module.filePath ) );
 
-  module.isRemote = module.remoteIsRemote();
+  module.isRemote = module.remoteIs();
 
   if( module.isRemote )
   {
@@ -2064,26 +2435,23 @@ function remoteFormAct()
   let logger = will.logger;
 
   _.assert( module.preformed === 2 );
-  _.assert( _.strDefined( module.filePath ) );
+  _.assert( !!module.willFilesPath || !!module.dirPath );
   _.assert( _.strDefined( module.alias ) );
   _.assert( !!module.supermodule );
 
-  let fileProvider2 = fileProvider.providerForPath( module.filePath );
-  let submodulesDir = module.supermodule.submodulesCloneDirGet();
-  let localPath = fileProvider2.pathIsolateGlobalAndLocal( module.filePath )[ 1 ];
+  let remoteProvider = fileProvider.providerForPath( module.commonPath );
 
-  // debugger;
-  module.remotePath = module.filePath;
-  module.clonePath = path.resolve( submodulesDir, module.alias );
-  module.dirPath = path.resolve( module.clonePath, localPath );
-  module.filePath = module.dirPath;
+  _.assert( remoteProvider.isVcs && _.routineIs( remoteProvider.pathParse ), () => 'Seems file provider ' + remoteProvider.nickName + ' does not have version control system features' );
+
+  let submodulesDir = module.supermodule.submodulesCloneDirGet();
+  let parsed = remoteProvider.pathParse( module.willFilesPath );
+
+  module.remotePath = module.willFilesPath;
+  module.localPath = path.resolve( submodulesDir, module.alias );
+  module.willFilesPath = path.resolve( module.localPath, parsed.localVcsPath );
   module.isDownloaded = !!module.remoteIsDownloaded();
 
   _.assert( will.moduleMap[ module.id ] === module );
-  // _.assert( will.moduleMap[ module.filePath ] === module );
-  // _.assert( will.moduleMap[ module.remotePath ] === module ); // yyy
-  // _.sure( will.moduleMap[ module.filePath ] === undefined, () => 'Module at ' + _.strQuote( module.dirPath ) + ' already exists' ); // yyy
-  // will.moduleMap[ module.dirPath ] = module;
 
   return module;
 }
@@ -2104,10 +2472,10 @@ function _remoteDownload( o )
   _.routineOptions( _remoteDownload, o );
   _.assert( arguments.length === 1 );
   _.assert( module.preformed === 3 );
-  _.assert( _.strDefined( module.filePath ) );
+  _.assert( !!module.willFilesPath );
   _.assert( _.strDefined( module.alias ) );
   _.assert( _.strDefined( module.remotePath ) );
-  _.assert( _.strDefined( module.clonePath ) );
+  _.assert( _.strDefined( module.localPath ) );
   _.assert( !!module.supermodule );
 
   if( !o.upgrading )
@@ -2121,7 +2489,7 @@ function _remoteDownload( o )
 
   let o2 =
   {
-    reflectMap : { [ module.remotePath ] : module.clonePath },
+    reflectMap : { [ module.remotePath ] : module.localPath },
     verbosity : will.verbosity - 5,
     extra : { fetching : 0 },
   }
@@ -2132,10 +2500,10 @@ function _remoteDownload( o )
   {
     wasUpToDate = module.isUpToDate;
     /*
-    delete downloaded module if it has critical error
+    delete remote module if it has a critical error
     */
     if( module.willFilesOpenReady.errorsCount() )
-    fileProvider.filesDelete({ filePath : module.clonePath, throwing : 0, sync : 1 });
+    fileProvider.filesDelete({ filePath : module.localPath, throwing : 0, sync : 1 });
     return arg;
   })
   .keep( () => will.Predefined.filesReflect.call( fileProvider, o2 ) )
@@ -2147,7 +2515,6 @@ function _remoteDownload( o )
     {
       _.assert( module.preformed === 3, 'not tested' );
 
-      // debugger;
       if( module.resourcesFormReady.errorsCount() || module.ready.errorsCount() )
       module.stateResetError();
 
@@ -2155,7 +2522,6 @@ function _remoteDownload( o )
       module.willFilesOpen();
       module.submodulesFormSkip();
       module.resourcesFormSkip();
-      // debugger;
 
       return module.ready
       .finallyGive( function( err, arg )
@@ -2169,9 +2535,15 @@ function _remoteDownload( o )
   .finallyKeep( function( err, arg )
   {
     if( err )
-    throw _.err( 'Failed to', ( o.upgrading ? 'upgrade' : 'download' ), module.nickName, '\n', err );
+    throw _.err( 'Failed to', ( o.upgrading ? 'update' : 'download' ), module.decoratedAbsoluteName, '\n', err );
     if( will.verbosity >= 3 && !wasUpToDate )
-    logger.log( ' + ' + module.nickName + ' was ' + ( o.upgrading ? 'upgraded' : 'downloaded' ) + ' in ' + _.timeSpent( time ) );
+    {
+      // debugger;
+      let remoteProvider = fileProvider.providerForPath( module.remotePath );
+      let version = remoteProvider.versionCurrentRetrive( module.localPath );
+      // debugger;
+      logger.log( ' + ' + module.decoratedNickName + ' version ' + version + ' was ' + ( o.upgrading ? 'updated' : 'downloaded' ) + ' in ' + _.timeSpent( time ) );
+    }
     return !wasUpToDate;
   });
 
@@ -2199,6 +2571,42 @@ function remoteUpgrade()
   let module = this;
   let will = module.will;
   return module._remoteDownload({ upgrading : 1 });
+}
+
+//
+
+function remoteCurrentVersion()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( !!module.willFilesPath || !!module.dirPath );
+  _.assert( arguments.length === 0 );
+
+  debugger;
+  let remoteProvider = fileProvider.providerForPath( module.commonPath );
+  debugger;
+  return remoteProvider.versionCurrentRetrive( module.remotePath )
+}
+
+//
+
+function remoteLatestVersion()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( !!module.willFilesPath || !!module.dirPath );
+  _.assert( arguments.length === 0 );
+
+  debugger;
+  let remoteProvider = fileProvider.providerForPath( module.commonPath );
+  debugger;
+  return remoteProvider.versionLatestRetrive( module.clonePath )
 }
 
 // --
@@ -2272,7 +2680,7 @@ function resourcesForm()
     else
     {
       if( will.verbosity === 2 )
-      logger.error( ' ! One or more submodules of ' + module.nickName + ' were not downloaded!'  );
+      logger.error( ' ! One or more submodules of ' + module.decoratedNickName + ' were not downloaded!'  );
     }
 
     return con;
@@ -2495,7 +2903,7 @@ function submodulesCloneDirGet()
 
 //
 
-function filePathChange( filePath, dirPath )
+function filePathChange( willFilesPath, dirPath )
 {
   let module = this;
   let will = module.will;
@@ -2503,21 +2911,18 @@ function filePathChange( filePath, dirPath )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  filePath = path.normalizeTolerant( filePath );
-  dirPath = path.normalize( dirPath );
-
   _.assert( arguments.length === 2 );
   _.assert( module.preformed === 3 );
   _.assert( will.moduleMap[ module.id ] === module );
 
-  module._filePathChange( filePath, dirPath );
+  module._filePathChange( willFilesPath, dirPath );
 
   return module;
 }
 
 //
 
-function _filePathChange( filePath, dirPath )
+function _filePathChange( willFilesPath, dirPath )
 {
   let module = this;
   let will = module.will;
@@ -2525,8 +2930,10 @@ function _filePathChange( filePath, dirPath )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  if( filePath )
-  filePath = path.normalizeTolerant( filePath );
+  // debugger;
+
+  if( willFilesPath )
+  willFilesPath = path.s.normalizeTolerant( willFilesPath );
   if( dirPath )
   dirPath = path.normalize( dirPath );
 
@@ -2534,11 +2941,11 @@ function _filePathChange( filePath, dirPath )
   _.assert( dirPath === null || _.strDefined( dirPath ) );
   _.assert( dirPath === null || path.isAbsolute( dirPath ) );
   _.assert( dirPath === null || path.isNormalized( dirPath ) );
-  _.assert( _.strDefined( filePath ) );
-  _.assert( path.isAbsolute( filePath ) );
+  // _.assert( _.strDefined( willFilesPath ) );
+  _.assert( willFilesPath === null || path.s.allAreAbsolute( willFilesPath ) );
 
+  module.willFilesPath = willFilesPath;
   module.dirPath = dirPath;
-  module.filePath = filePath;
 
   return module;
 }
@@ -2567,10 +2974,29 @@ function outPathGet()
 
 //
 
-function nonExportablePathGet_functor( name )
+function commonPathGet()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let result = module.willFilesPath ? path.common( module.willFilesPath ) : module.dirPath;
+
+  debugger;
+  if( _.strEnds( result, '/' ) )
+  result += _.strCommonLeft.apply( _, _.arrayAs( path.s.fullName( module.willFilesPath ) ) );
+
+  return result;
+}
+
+//
+
+function nonExportablePathGet_functor( fieldName )
 {
 
-  // let symbol = Symbol.for( name );
+  let resourceName = _.strRemoveEnd( fieldName, 'Path' );
+  resourceName = _.strSplitCamel( resourceName );
+  resourceName = 'predefined.' + resourceName.join( '.' );
 
   return function nonExportablePathGet()
   {
@@ -2579,198 +3005,62 @@ function nonExportablePathGet_functor( name )
     if( !module.will)
     return null;
 
-    // if( !module.pathResourceMap[ name ] )
-    // {
-    //   let resource = new _.Will.PathResource({ module : module, name : name }).form1();
-    //   resource.criterion = resource.criterion || Object.create( null );
-    //   resource.criterion.predefined = 1;
-    //   resource.writable = 0;
-    // }
-
-    return module.pathMap[ name ] || null;
+    return module.pathMap[ resourceName ] || null;
   }
 
 }
 
 //
 
-function nonExportablePathSet_functor( name )
+function nonExportablePathSet_functor( fieldName )
 {
 
-  // let symbol = Symbol.for( name );
+  let resourceName = _.strRemoveEnd( fieldName, 'Path' );
+  resourceName = _.strSplitCamel( resourceName );
+  resourceName = 'predefined.' + resourceName.join( '.' );
 
   return function nonExportablePathSet( filePath )
   {
     let module = this;
 
-    // module[ symbol ] = filePath;
-
     if( !module.will && !filePath )
     return filePath;
 
-    // if( name === 'dirPath' )
-    // debugger;
-
-    if( !module.pathResourceMap[ name ] )
+    if( !module.pathResourceMap[ resourceName ] )
     {
-      let resource = new _.Will.PathResource({ module : module, name : name }).form1();
+      let resource = new _.Will.PathResource({ module : module, name : resourceName }).form1();
       resource.criterion = resource.criterion || Object.create( null );
       resource.criterion.predefined = 1;
       resource.writable = 0;
     }
 
-    _.assert( !!module.pathResourceMap[ name ] );
-    _.assert( !module.pathResourceMap[ name ].writable, 'Path ' + name + ' is non-writable' );
-    _.assert( module.pathResourceMap[ name ].criterion.predefined, 'Path ' + name + ' is predefined' );
+    _.assert( !!module.pathResourceMap[ resourceName ] );
+    // _.assert( !module.pathResourceMap[ resourceName ].writable, 'Path ' + resourceName + ' is non-writable' );
+    // _.assert( module.pathResourceMap[ resourceName ].criterion.predefined, 'Path ' + resourceName + ' is predefined' );
 
-    module.pathResourceMap[ name ].path = filePath;
+    module.pathResourceMap[ resourceName ].path = filePath;
 
     return filePath;
   }
 
 }
 
-let filePathGet = nonExportablePathGet_functor( 'filePath' );
+let willFilesPathGet = nonExportablePathGet_functor( 'willFilesPath' );
 let dirPathGet = nonExportablePathGet_functor( 'dirPath' );
-let clonePathGet = nonExportablePathGet_functor( 'clonePath' );
+let clonePathGet = nonExportablePathGet_functor( 'localPath' );
 let remotePathGet = nonExportablePathGet_functor( 'remotePath' );
-let willPathGet = nonExportablePathGet_functor( 'willPath' );
+let willbePathGet = nonExportablePathGet_functor( 'willbePath' );
 
-let filePathSet = nonExportablePathSet_functor( 'filePath' );
+let willFilesPathSet = nonExportablePathSet_functor( 'willFilesPath' );
 let dirPathSet = nonExportablePathSet_functor( 'dirPath' );
-let clonePathSet = nonExportablePathSet_functor( 'clonePath' );
+let clonePathSet = nonExportablePathSet_functor( 'localPath' );
 let remotePathSet = nonExportablePathSet_functor( 'remotePath' );
-
-// //
-//
-// function filePathSet( filePath )
-// {
-//   let module = this;
-//   module[ filePathSymbol ] = filePath;
-//
-//   if( !module.will && !filePath )
-//   return filePath;
-//
-//   if( !module.pathResourceMap.filePath )
-//   {
-//     debugger;
-//     // let resource = module.resourceAllocate( 'path', 'filePath' );
-//     let resource = new _.Will.PathResource({ module : module, name : 'filePath' }).form1();
-//     debugger;
-//     resource.readOnly = true;
-//   }
-//
-//   _.assert( !!module.pathResourceMap.filePath );
-//   _.assert( module.pathResourceMap.filePath.readOnly, 'Path filePath is read only' );
-//
-//   if( module.pathMap )
-//   {
-//     // _.assert( module.pathMap.filePath === undefined || module.pathMap.filePath === null || module.pathMap.filePath === filePath );
-//     // _.assert( module.pathResourceMap.filePath === undefined, 'Path filePath is read only' );
-//     // module.pathMap.filePath = filePath;
-//     module.pathResourceMap.filePath.path = filePath;
-//   }
-//
-//   return filePath;
-// }
-//
-// //
-//
-// function dirPathSet( dirPath )
-// {
-//   let module = this;
-//   module[ dirPathSymbol ] = dirPath;
-//
-//   if( !module.will && !filePath )
-//   return dirPath;
-//
-//   if( !module.pathResourceMap.dirPath )
-//   {
-//     // let resource = module.resourceAllocate( 'path', 'dirPath' );
-//     let resource = new _.Will.PathResource({ module : module, name : 'dirPath' }).form1();
-//     resource.readOnly = true;
-//   }
-//
-//   _.assert( !!module.pathResourceMap.dirPath );
-//   _.assert( module.pathResourceMap.dirPath.readOnly, 'Path dirPath is read only' );
-//
-//   if( module.pathMap )
-//   {
-//     // _.assert( module.pathMap.dirPath === undefined || module.pathMap.dirPath === null || module.pathMap.dirPath === dirPath );
-//     // _.assert( module.pathResourceMap.dirPath === undefined, 'Path dirPath is read only' );
-//     // module.pathMap.dirPath = dirPath;
-//     module.pathResourceMap.dirPath.path = dirPath;
-//   }
-//
-//   return dirPath;
-// }
-//
-//
-// //
-//
-// function clonePathSet( clonePath )
-// {
-//   let module = this;
-//   module[ clonePathSymbol ] = clonePath;
-//
-//   if( !module.will && !filePath )
-//   return clonePath;
-//
-//   if( !module.pathResourceMap.clonePath )
-//   {
-//     // let resource = module.resourceAllocate( 'path', 'clonePath' );
-//     let resource = new _.Will.PathResource({ module : module, name : 'clonePath' }).form1();
-//     resource.readOnly = true;
-//   }
-//
-//   _.assert( !!module.pathResourceMap.clonePath );
-//   _.assert( module.pathResourceMap.clonePath.readOnly, 'Path clonePath is read only' );
-//
-//   if( module.pathMap )
-//   {
-//     // _.assert( module.pathMap.clonePath === undefined || module.pathMap.clonePath === null || module.pathMap.clonePath === clonePath );
-//     // _.assert( module.pathResourceMap.clonePath === undefined, 'Path clonePath is read only' );
-//     // module.pathMap.clonePath = clonePath;
-//     module.pathResourceMap.clonePath.path = clonePath;
-//   }
-//
-//   return clonePath;
-// }
-//
-//
-// //
-//
-// function remotePathSet( remotePath )
-// {
-//   let module = this;
-//   module[ remotePathSymbol ] = remotePath;
-//
-//   if( !module.pathResourceMap.remotePath )
-//   {
-//     // let resource = module.resourceAllocate( 'path', 'remotePath' );
-//     let resource = new _.Will.PathResource({ module : module, name : 'remotePath' }).form1();
-//     resource.readOnly = true;
-//   }
-//
-//   _.assert( !!module.pathResourceMap.remotePath );
-//   _.assert( module.pathResourceMap.remotePath.readOnly, 'Path remotePath is read only' );
-//
-//   if( module.pathMap )
-//   {
-//     // _.assert( module.pathMap.remotePath === undefined || module.pathMap.remotePath === null || module.pathMap.remotePath === remotePath );
-//     // _.assert( module.pathResourceMap.remotePath === undefined, 'Path remotePath is read only' );
-//     // module.pathMap.remotePath = remotePath;
-//     module.pathResourceMap.remotePath.path = remotePath;
-//   }
-//
-//   return remotePath;
-// }
 
 // --
 // accessor
 // --
 
-function _nickNameGet()
+function nickNameGet()
 {
   let module = this;
   let name = module.alias ? module.alias : null;
@@ -2779,13 +3069,20 @@ function _nickNameGet()
   if( !name )
   name = module.dirPath;
   return 'module' + '::' + name;
-  // return module.constructor.shortName + '::' + name;
-  // return '→ ' + module.constructor.shortName + ' ' + _.strQuote( name ) + ' ←';
 }
 
 //
 
-function _absoluteNameGet()
+function decoratedNickNameGet()
+{
+  let module = this;
+  let result = module.nickName;
+  return _.color.strFormat( result, 'entity' );
+}
+
+//
+
+function absoluteNameGet()
 {
   let module = this;
   let supermodule = module.supermodule;
@@ -2793,6 +3090,15 @@ function _absoluteNameGet()
   return supermodule.nickName + ' / ' + module.nickName;
   else
   return module.nickName;
+}
+
+//
+
+function decoratedAbsoluteNameGet()
+{
+  let module = this;
+  let result = module.absoluteName;
+  return _.color.strFormat( result, 'entity' );
 }
 
 // --
@@ -2961,9 +3267,9 @@ function errResolving( o )
   let module = this;
   _.routineOptions( errResolving, arguments );
   if( o.current && o.current.nickName )
-  return _.err( 'Failed to resolve', _.strQuote( o.selector ), 'for', o.current.nickName, 'in', module.nickName, '\n', o.err );
+  return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'code' ), 'for', o.current.decoratedNickName, 'in', module.decoratedNickName, '\n', o.err );
   else
-  return _.err( 'Failed to resolve', _.strQuote( o.selector ), 'in', module.nickName, '\n', o.err );
+  return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'code' ), 'in', module.decoratedNickName, '\n', o.err );
 }
 
 errResolving.defaults =
@@ -3476,9 +3782,6 @@ function _resolveAct( o )
   function onUpEnd()
   {
     let it = this;
-
-    // if( it.path === "/reflect.submodules.variant2" )
-    // debugger;
 
     exportedWriteThrough.call( it );
     currentExclude.call( it );
@@ -4282,19 +4585,18 @@ ResourceSetter_functor.defaults =
 // relations
 // --
 
-let filePathSymbol = Symbol.for( 'filePath' );
-let dirPathSymbol = Symbol.for( 'dirPath' );
-let clonePathSymbol = Symbol.for( 'clonePath' );
-let remotePathSymbol = Symbol.for( 'remotePath' );
+// let dirPathSymbol = Symbol.for( 'dirPath' );
+// let clonePathSymbol = Symbol.for( 'localPath' );
+// let remotePathSymbol = Symbol.for( 'remotePath' );
 
 let Composes =
 {
 
-  filePath : null,
+  willFilesPath : null,
   dirPath : null,
-  clonePath : null,
+  localPath : null,
   remotePath : null,
-  // willPath : null,
+  // willbePath : null,
 
   configName : null,
 
@@ -4333,7 +4635,6 @@ let Restricts =
 {
 
   id : null,
-  // errors : _.define.own([]),
   stager : null,
   willFilesReadBeginTime : null,
 
@@ -4378,6 +4679,8 @@ let Forbids =
   downloaded : 'downloaded',
   formed : 'formed',
   formReady : 'formReady',
+  filePath : 'filePath',
+  errors : 'errors',
 }
 
 let Accessors =
@@ -4393,16 +4696,19 @@ let Accessors =
   buildMap : { setter : ResourceSetter_functor({ resourceName : 'Build', mapName : 'buildMap' }) },
   exportedMap : { setter : ResourceSetter_functor({ resourceName : 'Exported', mapName : 'exportedMap' }) },
 
-  nickName : { getter : _nickNameGet, combining : 'rewrite', readOnly : 1 },
-  absoluteName : { getter : _absoluteNameGet, readOnly : 1 },
+  nickName : { getter : nickNameGet, combining : 'rewrite', readOnly : 1 },
+  decoratedNickName : { getter : decoratedNickNameGet, combining : 'rewrite', readOnly : 1 },
+  absoluteName : { getter : absoluteNameGet, readOnly : 1 },
+  decoratedAbsoluteName : { getter : decoratedAbsoluteNameGet, readOnly : 1 },
   inPath : { getter : inPathGet, readOnly : 1 },
   outPath : { getter : outPathGet, readOnly : 1 },
+  commonPath : { getter : commonPathGet, readOnly : 1 },
 
-  filePath : { getter : filePathGet, setter : filePathSet },
+  willFilesPath : { getter : willFilesPathGet, setter : willFilesPathSet },
   dirPath : { getter : dirPathGet, setter : dirPathSet },
-  clonePath : { getter : clonePathGet, setter : clonePathSet },
+  localPath : { getter : clonePathGet, setter : clonePathSet },
   remotePath : { getter : remotePathGet, setter : remotePathSet },
-  willPath : { getter : willPathGet, readOnly : 1 },
+  willbePath : { getter : willbePathGet, readOnly : 1 },
 
 }
 
@@ -4465,8 +4771,11 @@ let Proto =
 
   _submodulesDownload,
   submodulesDownload,
-  submodulesUpgrade,
+  submodulesUpdate,
   submodulesClean,
+  submodulesFixate,
+  moduleFixate,
+  moduleFixatePath,
 
   submodulesFormSkip,
   submodulesForm,
@@ -4476,7 +4785,7 @@ let Proto =
 
   // remote
 
-  remoteIsRemote,
+  remoteIs,
   remoteIsDownloaded,
   remoteIsUpToDate,
 
@@ -4485,6 +4794,8 @@ let Proto =
   _remoteDownload,
   remoteDownload,
   remoteUpgrade,
+  remoteCurrentVersion,
+  remoteLatestVersion,
 
   // resource
 
@@ -4505,15 +4816,24 @@ let Proto =
   _filePathChange,
   inPathGet,
   outPathGet,
+  commonPathGet,
 
-  filePathSet,
+  willFilesPathGet,
+  dirPathGet,
+  clonePathGet,
+  remotePathGet,
+
+  willFilesPathSet,
   dirPathSet,
   clonePathSet,
   remotePathSet,
 
   // accessor
 
-  _nickNameGet,
+  nickNameGet,
+  decoratedNickNameGet,
+  absoluteNameGet,
+  decoratedAbsoluteNameGet,
 
   // selector
 
@@ -4577,7 +4897,7 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDecalre
+_.staticDeclare
 ({
   prototype : _.Will.prototype,
   name : Self.shortName,

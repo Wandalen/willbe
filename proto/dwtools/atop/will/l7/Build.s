@@ -237,8 +237,7 @@ function perform( o )
     logger.up();
     if( logger.verbosity >= 2 )
     {
-      // logger.log();
-      logger.log( isExport ? 'Exporting' : 'Building', build.name );
+      logger.log( isExport ? 'Exporting' : 'Building', build.decoratedAbsoluteName );
     }
   }
 
@@ -249,7 +248,7 @@ function perform( o )
 
     if( logger.verbosity >= 1 )
     {
-      logger.log( ( isExport ? 'Exported' : 'Built' ), build.name, 'in', _.timeSpent( time ) );
+      logger.log( ( isExport ? 'Exported' : 'Built' ), build.decoratedAbsoluteName, 'in', _.timeSpent( time ) );
       if( logger.verbosity >= 2 )
       logger.log();
     }
@@ -413,7 +412,7 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDecalre
+_.staticDeclare
 ({
   prototype : _.Will.prototype,
   name : Self.shortName,

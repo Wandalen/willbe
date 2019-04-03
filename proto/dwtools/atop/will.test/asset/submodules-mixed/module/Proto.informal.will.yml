@@ -5,15 +5,17 @@ about :
 
 path :
 
-  remote : 'git+https:///github.com/Wandalen/wProto.git'
-  local : '.module/Proto'
-  export : '{path::local}/proto'
+  in : ..
+  out : out
+  predefined.remote : 'git+https:///github.com/Wandalen/wProto.git'
+  predefined.local : '.module/Proto'
+  export : '{path::predefined.local}/proto'
 
 reflector :
 
   download :
-    src : path::remote
-    dst : path::local
+    src : path::predefined.remote
+    dst : path::predefined.local
 
 step :
 

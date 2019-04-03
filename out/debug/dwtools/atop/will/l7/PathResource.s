@@ -113,6 +113,15 @@ function form3()
 
   }
 
+  if( pathResource.path )
+  {
+    let filePath = _.arrayAs( pathResource.path );
+    filePath.forEach( ( p ) =>
+    {
+      _.sure( !path.isGlobal( p ) || path.isAbsolute( p ), 'Global paths should be absolute, but ' + p + ' is not absolute' );
+    });
+  }
+
   pathResource.formed = 3;
   return pathResource;
 }
@@ -236,7 +245,7 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDecalre
+_.staticDeclare
 ({
   prototype : _.Will.prototype,
   name : Self.shortName,
