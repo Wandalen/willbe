@@ -2,10 +2,10 @@
 
 Використання команди `.shell`  
 
-Для роботи з модулем часто доводиться використовувати сторонні інструменти - командну оболонку операційної системи чи зовнішні програми. Наприклад, вивести список файлів після побудови, запустити створений файл... Це можна здійснити помістивши в збірку `will-файла` крок `predefined.shell` з потрібною командою, а для повторного використання таких дій потрібно будувати окремі збірки. Якщо ви працюєте з готовим модулем, вносити такі зміни незручно тому, є команда `.shell`, яка дозволяє запускати сторонні команди в терміналі операційної системи. Її основне призначення - виконання зовнішніх команд при взаємодії з модулем.   
+Для роботи з модулем часто доводиться використовувати сторонні інструменти - командну оболонку операційної системи чи зовнішні програми. Наприклад, вивести список файлів після побудови, запустити створений файл... Це можна здійснити помістивши в збірку `will-файла` крок `predefined.shell` з потрібною командою, а для повторного використання команд потрібно будувати окремі збірки. Якщо ви працюєте з готовим модулем, вносити зміни в `will-файл` незручно тому, є команда `.shell`, яка дозволяє виконувати команди сторонніх програм в терміналі операційної системи.  
 
 ### Використання команди
-Команда `.shell` може бути використана окремо в вигляді `will .shell ls`, де `ls` - команда виводу списку файлів, яку утиліта `willbe` виконає з допомогою `.shell`. При такому способі різниці між запуском `ls` самостійно і разом з `will .shell` не буде, оскільки, команда `.shell` безпосередньо не взаємодіє з компонентами модуля. Для ефективного використання команди `.shell` застосовуйте її разом з командою `.each`, котра виконує команди як над групою `will-файлів`, так і над окремими ресурсами модуля.  
+Команда `.shell` може використовуватись окремо в вигляді `will .shell [command]`, де `[command]` - команда операційної системи чи сторонньої програми, яку утиліта `willbe` виконає з допомогою `.shell`. При такому способі різниці між запуском команди самостійно і разом з `will .shell` не буде, оскільки, команда `.shell` безпосередньо не взаємодіє з компонентами модуля. Для ефективного використання команди `.shell` застосовуйте її разом з командою `.each`, котра виконує команди як над групою `will-файлів`, так і над окремими ресурсами модуля.  
 Побудуйте модуль згідно представленої структури:  
 
 <details>
@@ -14,7 +14,8 @@
 ```
 shellCommand
     ├── module.test
-    │        └── one.will.yml
+    │        ├── one.will.yml
+    │        └── two.will.yml
     │ 
     └── .will.yml       
 
@@ -22,7 +23,7 @@ shellCommand
 
 </details>
 
-В файл `.will.yml` та `one.will.yml` внесіть код: 
+В файл `.will.yml`, `one.will.yml` та `two.will.yml` внесіть код: 
 
 <details>
   <summary><u>Код <code>will-файлів</code></u></summary>
@@ -51,7 +52,7 @@ build :
 
 ```
 
-<p>Код <code>one.will.yml</code></p>
+<p>Код <code>one.will.yml</code> і <code>two.will.yml</code></p>
 
 ```yaml
 about :
@@ -76,7 +77,7 @@ about :
      + module::Tools version master was downloaded in 12.011s
      . Read : /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
      + module::PathFundamentals version master was downloaded in 4.239s
-   + 2/3 submodule(s) of module::shellCommand were downloaded in 16.262s
+   + 2/4 submodule(s) of module::shellCommand were downloaded in 16.262s
   Built module::shellCommand / build::download in 16.313s
 
 ```
@@ -89,7 +90,8 @@ shellCommand
     │      ├── Tools
     │      └── PathFundamentals
     ├── module.test
-    │        └── one.will.yml
+    │        ├── one.will.yml
+    │        └── two.will.yml
     │ 
     └── .will.yml       
 
@@ -97,4 +99,130 @@ shellCommand
 
 </details>
 
-З командою `.shell` можна виконати 
+З командою `.shell` можна виконати будь-які зовнішні операції над модулем. Для прикладу, виведіть повну інформацію про `will-файли` підмодулів. Для цього використовуйте команду `.each`:  
+
+<details>
+  <summary><u>Вивід фрази <code>will .each submodule::* .shell ls -al *.yml</code></u></summary>
+
+```
+[user@user ~]$ will .each submodule::* .shell ls -al *.yml
+...
+Module at /path_to_file/.module/Tools/out/wTools.out.will.yml
+ > ls -al *.yml
+-rw-r--r-- 1 user user 7526 Апр  3 10:00 wTools.out.will.yml
+
+Module at /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+ > ls -al *.yml
+-rw-r--r-- 1 user user 5970 Апр  3 10:00 wPathFundamentals.out.will.yml
+
+Module at /path_to_file/module.test/one.will.yml
+ > ls -al *.yml
+-rw-r--r-- 1 user user 88 Апр  3 09:29 one.will.yml
+-rw-r--r-- 1 user user 88 Апр  3 09:29 two.will.yml
+
+```
+
+<p>Модуль</p>
+
+```
+shellCommand
+    ├── .module 
+    │      ├── Tools
+    │      └── PathFundamentals
+    ├── module.test
+    │        ├── one.will.yml
+    │        └── two.will.yml
+    │ 
+    └── .will.yml       
+
+```
+
+</details>
+
+Підмодулі `Tools` i `PathFundamentals` завантажені з Git-репозиторію. Для них можна виконувати git-команди. Наприклад, дізнайтесь статус підмодулів командою `git status`:
+
+<details>
+  <summary><u>Вивід фрази <code>will .each submodule::*s .shell git status</code></u></summary>
+
+```
+[user@user ~]$ will .each submodule::*s .shell git status
+...
+Module at /path_to_file/.module/Tools/out/wTools.out.will.yml
+ > git status
+На ветке master
+Ваша ветка обновлена в соответствии с «origin/master».
+нечего коммитить, нет изменений в рабочем каталоге
+
+Module at /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+ > git status
+На ветке master
+Ваша ветка обновлена в соответствии с «origin/master».
+нечего коммитить, нет изменений в рабочем каталоге
+
+```
+
+<p>Модуль</p>
+
+```
+shellCommand
+    ├── .module 
+    │      ├── Tools
+    │      └── PathFundamentals
+    ├── module.test
+    │        ├── one.will.yml
+    │        └── two.will.yml
+    │ 
+    └── .will.yml       
+
+```
+
+</details>
+
+При роботі з окремими `will-файлами` утиліта додатково виводить інформацію, про те, які файли зчитано. Перевірте список файлів в директорії `module.test`:  
+
+<details>
+  <summary><u>Вивід фрази <code>will .each module.test .shell ls</code></u></summary>
+
+```
+[user@user ~]$ will .each module.test .shell ls
+...
+Module at /path_to_file/module.test/one.will.yml
+ . Read : /path_to_file/module.test/one.will.yml
+ . Read 1 will-files in 0.344s 
+
+ > ls
+one.will.yml
+two.will.yml
+
+Module at /path_to_file/module.test/two.will.yml
+ . Read : /path_to_file/module.test/two.will.yml
+ . Read 1 will-files in 0.265s 
+
+ > ls
+one.will.yml
+two.will.yml
+
+
+```
+
+<p>Модуль</p>
+
+```
+shellCommand
+    ├── .module 
+    │      ├── Tools
+    │      └── PathFundamentals
+    ├── module.test
+    │        ├── one.will.yml
+    │        └── two.will.yml
+    │ 
+    └── .will.yml       
+
+```
+
+</details>
+
+### Підсумок  
+- Команда `.shell` має переваги над побудовою збірок з кроками `predefined.shell` в комбінації з командою `.each` - полегшує роботу з іменованими `will-файлами` та підмодулями.
+
+[Повернутись до змісту](../README.md#tutorials)
