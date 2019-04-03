@@ -137,15 +137,15 @@
   Використання команди <code>.clean</code>
 </details>
 <details>
-  <summary><a href="./Tutorials/HowToUseShellCommand.md">Неформальний підмодуль</a></summary>
+  <summary><a href="./Tutorials/UnformalSubmodule.md">Неформальний підмодуль</a></summary>
   Створення неформального підмодуля
 </details>
 <details>
-  <summary><a href="./Tutorials/HowToUseShellCommand.md">Компіляція програм з утилітою <code>willbe</code></a></summary>
+  <summary><a href="./Tutorials/WillbeAsMake.md">Компіляція програм з утилітою <code>willbe</code></a></summary>
   Використання утиліти для компіляції файлів
 </details>
 <details>
-  <summary><a href="./Tutorials/HowToUseShellCommand.md">How to use <code>.submodules.fixate</code>and <code>.submodules.upgrade.refs</code> commands</a></summary>
+  <summary><a href="./Tutorials/SubmodulesVersionControl.md">How to use <code>.submodules.fixate</code>and <code>.submodules.upgrade.refs</code> commands</a></summary>
   Перевірка і встановлення актуальних версій підмодулів
 </details>
 
