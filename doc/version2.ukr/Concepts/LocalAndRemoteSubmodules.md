@@ -40,6 +40,7 @@
 submodule :
     Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
     PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+    Color : npm:///wColor/out/wColor#0.3.102
 
 ```
 

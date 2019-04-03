@@ -45,7 +45,7 @@ defaultBuild
 
 </details>
 
-</br>
+
 Cтворіть файл залежностей `package.json` в директорії `will-файла`:
 
 <details>
@@ -72,7 +72,7 @@ defaultBuild
 
 </details>
 
-</br>
+
 Введіть фразу `will .build` в кореневій директорії `will-файла`:  
 
 <details>
@@ -108,7 +108,7 @@ defaultBuild
 
 </details>
 
-</br>
+
 Утиліта побудувала збірку `install` завдяки критеріону `default`.
 
 ### Підсумок   
