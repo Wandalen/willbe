@@ -124,6 +124,10 @@
   <summary><a href="./Tutorials/TranspileStep.md">Транспіляція файлів</a></summary>
   Використання кроку <code>predefined.transpile</code> для трансформації JavaScript-файлів 
 </details>
+<details>
+  <summary><a href="./Tutorials/HowToUseShellCommand.md">Як користуватись командою <code>.shell</code> </a></summary>
+  Як виконати зовнішню команду в модулі <code>willbe</code>
+</details>
 
 
 <p></p>
@@ -133,12 +137,16 @@
   Використання команди <code>.clean</code>
 </details>
 <details>
-  <summary><a href="./Tutorials/HowToUseShellCommand.md">How to use <code>.shell</code> command</a></summary>
-  Використання команди <code>.shell</code>
-</details>
-<details>
   <summary><a href="./Tutorials/HowToUseShellCommand.md">Неформальний підмодуль</a></summary>
   Створення неформального підмодуля
+</details>
+<details>
+  <summary><a href="./Tutorials/HowToUseShellCommand.md">Компіляція програм з утилітою <code>willbe</code></a></summary>
+  Використання утиліти для компіляції файлів
+</details>
+<details>
+  <summary><a href="./Tutorials/HowToUseShellCommand.md">How to use <code>.submodules.fixate</code>and <code>.submodules.upgrade.refs</code> commands</a></summary>
+  Перевірка і встановлення актуальних версій підмодулів
 </details>
 
 
