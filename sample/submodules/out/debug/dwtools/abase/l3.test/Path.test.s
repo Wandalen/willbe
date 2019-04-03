@@ -6202,7 +6202,7 @@ function relative( test )
 
 //
 
-function _relative( test )
+function relativeWithOptions( test )
 {
   test.open( 'old cases' )
 
@@ -6210,14 +6210,14 @@ function _relative( test )
   var from = 'a/b/xx/yy/zz';
   var to = 'a/b/files/x/y/z.txt';
   var expected = '../../../files/x/y/z.txt';
-  var got = _.path._relative({ relative : from, filePath : to, resolving : 0 });
+  var got = _.path.relative({ basePath : from, filePath : to, resolving : 0 });
   test.identical( got, expected );
 
   test.case = 'both relative, long, not direct, resolving : 1'; /* */
   var from = 'a/b/xx/yy/zz';
   var to = 'a/b/files/x/y/z.txt';
   var expected = '../../../files/x/y/z.txt';
-  var got = _.path._relative({ relative : from, filePath : to, resolving : 1 });
+  var got = _.path.relative({ basePath : from, filePath : to, resolving : 1 });
   test.identical( got, expected );
 
   test.case = 'one relative, resolving 1'; /* */
@@ -6232,7 +6232,7 @@ function _relative( test )
   var expected = '../../../a/b/files/x/y/z.txt';
   if( current !== upStr )
   expected = '../../..' + _.path.join( current, to );
-  var got = _.path._relative({ relative :  from, filePath : to, resolving : 1 });
+  var got = _.path.relative({ basePath :  from, filePath : to, resolving : 1 });
   test.identical( got, expected );
 
   //
@@ -6246,7 +6246,7 @@ function _relative( test )
     var toNormalized = _.path.normalize( to );
     expected = outOfCurrent + '/../../../../../..' + toNormalized;
   }
-  var got = _.path._relative({ relative :  from, filePath : to, resolving : 1 });
+  var got = _.path.relative({ basePath :  from, filePath : to, resolving : 1 });
   test.identical( got, expected );
 
   test.case = 'one relative, resolving 0'; /* */
@@ -6256,7 +6256,7 @@ function _relative( test )
   var expected = '../../../files/x/y/z.txt';
   test.shouldThrowErrorSync( function()
   {
-    _.path._relative({ relative :  from, filePath : to, resolving : 0 });
+    _.path.relative({ basePath :  from, filePath : to, resolving : 0 });
   })
 
   test.close( 'old cases' )
@@ -6271,27 +6271,27 @@ function _relative( test )
   test.case = '../a/b - .'; /* */
   var from = '../a/b';
   var to = '.';
-  test.shouldThrowError( () => _.path._relative({ relative : from, filePath : to, resolving : 0 }) );
+  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 0 }) );
 
   test.case = '../a/b - ./c/d'; /* */
   var from = '../a/b';
   var to = './c/d';
-  test.shouldThrowError( () => _.path._relative({ relative : from, filePath : to, resolving : 0 }) );
+  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 0 }) );
 
   test.case = '.. - .'; /* */
   var from = '..';
   var to = '.';
-  test.shouldThrowError( () => _.path._relative({ relative : from, filePath : to, resolving : 0 }) );
+  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 0 }) );
 
   test.case = '.. - ./a'; /* */
   var from = '..';
   var to = './a';
-  test.shouldThrowError( () => _.path._relative({ relative : from, filePath : to, resolving : 0 }) );
+  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 0 }) );
 
   test.case = '../a - a'; /* */
   var from = '../a';
   var to = 'a';
-  test.shouldThrowError( () => _.path._relative({ relative : from, filePath : to, resolving : 0 }) );
+  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 0 }) );
 
   test.close( 'relative, resolving : 0' )
 
@@ -6305,32 +6305,32 @@ function _relative( test )
   test.case = '../a/b - .'; /* */
   var from = prefixFrom + '../a/b';
   var to = '.';
-  test.shouldThrowError( () => _.path._relative({ relative : from, filePath : to, resolving : 1 }) );
+  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
 
   test.case = '../a/b - ./c/d'; /* */
   var from = prefixFrom + '../a/b';
   var to = './c/d';
-  test.shouldThrowError( () => _.path._relative({ relative : from, filePath : to, resolving : 1 }) );
+  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
 
   test.case = '../a/b - ../c/d'; /* */
   var from = prefixFrom + '../a/b';
   var to = '../c/d';
-  test.shouldThrowError( () => _.path._relative({ relative : from, filePath : to, resolving : 1 }) );
+  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
 
   test.case = '.. - .'; /* */
   var from = prefixFrom + '..';
   var to = '.';
-  test.shouldThrowError( () => _.path._relative({ relative : from, filePath : to, resolving : 1 }) );
+  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
 
   test.case = '.. - ./a'; /* */
   var from = prefixFrom + '..';
   var to = './a';
-  test.shouldThrowError( () => _.path._relative({ relative : from, filePath : to, resolving : 1 }) );
+  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
 
   test.case = '../a - a'; /* */
   var from = prefixFrom + '../a';
   var to = 'a';
-  test.shouldThrowError( () => _.path._relative({ relative : from, filePath : to, resolving : 1 }) );
+  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
 
   test.close( 'relative, resolving : 1' )
 
@@ -6821,7 +6821,7 @@ var Self =
     ext,
 
     relative,
-    _relative,
+    relativeWithOptions,
 
     common,
 

@@ -5,6 +5,8 @@ about :
 
 path :
 
+  in : ..
+  out : out
   predefined.remote : 'git+https:///github.com/Wandalen/wProto.git'
   predefined.local : '.module/Proto'
   export : '{path::predefined.local}/proto'

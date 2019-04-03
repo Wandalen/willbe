@@ -282,6 +282,15 @@ path:
         proto/dwtools/atop/will.test/asset/multiple-exports-exported/super.out/release
       - >-
         proto/dwtools/atop/will.test/asset/multiple-exports-exported/super.out/release/File.release.js
+      - proto/dwtools/atop/will.test/asset/open
+      - proto/dwtools/atop/will.test/asset/open/doc.ex.will.yml
+      - proto/dwtools/atop/will.test/asset/open/doc.im.will.yml
+      - proto/dwtools/atop/will.test/asset/open/doc
+      - proto/dwtools/atop/will.test/asset/open/doc/doc.ex.will.yml
+      - proto/dwtools/atop/will.test/asset/open/doc/doc.im.will.yml
+      - proto/dwtools/atop/will.test/asset/open/proto
+      - proto/dwtools/atop/will.test/asset/open/proto/File.debug.js
+      - proto/dwtools/atop/will.test/asset/open/proto/File.release.js
       - proto/dwtools/atop/will.test/asset/reflect-get-path
       - proto/dwtools/atop/will.test/asset/reflect-nothing-from-submodules
       - proto/dwtools/atop/will.test/asset/reflect-nothing-from-submodules/proto
@@ -296,9 +305,7 @@ path:
       - proto/dwtools/atop/will.test/asset/reflect-shell/file/File.js
       - proto/dwtools/atop/will.test/asset/reflect-shell/file/File.test.js
       - proto/dwtools/atop/will.test/asset/reflect-shell/file/Produce.js
-      - proto/dwtools/atop/will.test/asset/reflect-shell/file/Produced.js2
       - proto/dwtools/atop/will.test/asset/reflect-shell/file/Produced.txt
-      - proto/dwtools/atop/will.test/asset/reflect-shell/file/Produced.txt2
       - proto/dwtools/atop/will.test/asset/reflect-shell/file/Src1.txt
       - proto/dwtools/atop/will.test/asset/reflect-shell/file/Src2.txt
       - proto/dwtools/atop/will.test/asset/reflect-subdir
@@ -321,6 +328,13 @@ path:
         proto/dwtools/atop/will.test/asset/reflect-submodules-with-base/module/proto/File1.s
       - >-
         proto/dwtools/atop/will.test/asset/reflect-submodules-with-base/module/proto/File2.s
+      - proto/dwtools/atop/will.test/asset/reflect-with-options
+      - >-
+        proto/dwtools/atop/will.test/asset/reflect-with-options/mandatory.will.yml
+      - proto/dwtools/atop/will.test/asset/reflect-with-options/proto
+      - proto/dwtools/atop/will.test/asset/reflect-with-options/proto/File.js
+      - >-
+        proto/dwtools/atop/will.test/asset/reflect-with-options/proto/File.test.js
       - proto/dwtools/atop/will.test/asset/scaffold
       - proto/dwtools/atop/will.test/asset/scaffold/final.im.will.yml
       - proto/dwtools/atop/will.test/asset/scaffold/out
@@ -359,6 +373,17 @@ path:
       - proto/dwtools/atop/will.test/asset/submodules-broken-2/proto
       - >-
         proto/dwtools/atop/will.test/asset/submodules-broken-2/proto/WithSubmodules.s
+      - proto/dwtools/atop/will.test/asset/submodules-detached
+      - proto/dwtools/atop/will.test/asset/submodules-detached/module
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-detached/module/Procedure.informal.will.yml
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-detached/module/Proto.informal.will.yml
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-detached/module/UriFundamentals.informal.will.yml
+      - proto/dwtools/atop/will.test/asset/submodules-detached/proto
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-detached/proto/WithSubmodules.s
       - proto/dwtools/atop/will.test/asset/submodules-download
       - proto/dwtools/atop/will.test/asset/submodules-mixed
       - proto/dwtools/atop/will.test/asset/submodules-mixed/module
@@ -394,6 +419,10 @@ path:
       export: 1
       tar: 1
       public: 1
+  original.will.files:
+    path:
+      - .im.will.yml
+      - .ex.will.yml
 submodule: {}
 reflector:
   reflect.proto.:
@@ -402,6 +431,7 @@ reflector:
         'path::proto': 'path::out.*=1'
     criterion:
       debug: 0
+    mandatory: 1
     inherit:
       - predefined.*
   reflect.proto.debug:
@@ -410,6 +440,7 @@ reflector:
         'path::proto': 'path::out.*=1'
     criterion:
       debug: 1
+    mandatory: 1
     inherit:
       - predefined.*
   reflect.submodules:
@@ -418,6 +449,7 @@ reflector:
         'submodule::*/exported::*=1/path::exportedDir*=1': 'path::out.*=1'
     criterion:
       debug: 1
+    mandatory: 1
     inherit:
       - predefined.*
   exported.doc.export:
@@ -434,8 +466,8 @@ reflector:
       export: 1
       tar: 0
       public: 1
+    mandatory: 1
   exportedFiles.doc.export:
-    recursive: 0
     src:
       filePath:
         .: true
@@ -498,6 +530,8 @@ reflector:
       export: 1
       tar: 0
       public: 1
+    recursive: 0
+    mandatory: 1
   exported.proto.export:
     src:
       filePath:
@@ -512,8 +546,8 @@ reflector:
       export: 1
       tar: 1
       public: 1
+    mandatory: 1
   exportedFiles.proto.export:
-    recursive: 0
     src:
       filePath: 'path::exportedFiles.proto.export'
       basePath: .
@@ -527,6 +561,8 @@ reflector:
       export: 1
       tar: 1
       public: 1
+    recursive: 0
+    mandatory: 1
 step:
   clean.out.:
     criterion:
@@ -686,6 +722,7 @@ exported:
     exportedFilesReflector: 'reflector::exportedFiles.proto.export'
     exportedDirPath: 'path::exportedDir.proto.export'
     exportedFilesPath: 'path::exportedFiles.proto.export'
+    originalWillFilesPath: 'path::original.will.files'
   doc.export:
     version: 0.3.159
     criterion:

@@ -101,8 +101,16 @@ function stepRoutineReflect( frame )
   let verbosity = opts.verbosity;
   opts.verbosity = 0;
 
-  debugger;
-  let result = will.Predefined.filesReflect.call( fileProvider, opts );
+  let result;
+  try
+  {
+    result = will.Predefined.filesReflect.call( fileProvider, opts );
+  }
+  catch( err )
+  {
+    if( err )
+    throw _.errBriefly( err );
+  }
 
   // if( will.verbosity >= 5 )
   // {
@@ -551,7 +559,7 @@ function stepRoutineSubmodulesUpgrade( frame )
   _.assert( arguments.length === 1 );
   _.assert( !!module );
 
-  return module.submodulesUpgrade();
+  return module.submodulesUpdate();
 }
 
 stepRoutineSubmodulesUpgrade.stepOptions =

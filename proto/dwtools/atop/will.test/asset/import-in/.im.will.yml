@@ -1,6 +1,4 @@
 
-submodule :
-
 path :
 
   proto : '.'

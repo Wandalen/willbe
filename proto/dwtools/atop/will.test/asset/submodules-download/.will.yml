@@ -22,7 +22,7 @@ build :
 
     upgrade :
         steps :
-           - submodules.upgrade
+           - submodules.update
 
     clean :
         steps :

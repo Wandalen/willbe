@@ -224,9 +224,11 @@ function commandsMake()
     'about list' :              { e : _.routineJoin( will, will.commandAboutList ),             h : 'List descriptive information about the module.' },
     'execution list' :          { e : _.routineJoin( will, will.commandExecutionList ),         h : 'List execution scenarios.' },
 
-    'submodules download' :     { e : _.routineJoin( will, will.commandSubmodulesDownload ),    h : 'Download each submodule if such was not downloaded so far.' },
-    'submodules upgrade' :      { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),     h : 'Upgrade each submodule, checking for available updates for such.' },
     'submodules clean' :        { e : _.routineJoin( will, will.commandSubmodulesClean ),       h : 'Delete all downloaded submodules.' },
+    'submodules download' :     { e : _.routineJoin( will, will.commandSubmodulesDownload ),    h : 'Download each submodule if such was not downloaded so far.' },
+    'submodules update' :       { e : _.routineJoin( will, will.commandSubmodulesUpdate ),      h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
+    'submodules fixate' :       { e : _.routineJoin( will, will.commandSubmodulesFixate ),      h : 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.' },
+    'submodules upgrade refs' : { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),     h : 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.' },
 
     'shell' :                   { e : _.routineJoin( will, will.commandShell ),                 h : 'Execute shell command on the module.' },
     'clean' :                   { e : _.routineJoin( will, will.commandClean ),                 h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
@@ -265,7 +267,7 @@ function commandHelp( e )
   let ca = e.ca;
   let logger = will.logger;
 
-  debugger;
+  // debugger;
   ca._commandHelp( e );
 
   if( !e.subject )
@@ -528,6 +530,17 @@ function commandExecutionList( e )
 
 //
 
+function commandSubmodulesClean( e )
+{
+  let will = this;
+  return will.moduleReadyThenNonForming( function( module )
+  {
+    return module.submodulesClean();
+  });
+}
+
+//
+
 function commandSubmodulesDownload( e )
 {
   let will = this;
@@ -539,24 +552,60 @@ function commandSubmodulesDownload( e )
 
 //
 
-function commandSubmodulesUpgrade( e )
+function commandSubmodulesUpdate( e )
 {
   let will = this;
   return will.moduleReadyThenNonForming( function( module )
   {
-    return module.submodulesUpgrade();
+    return module.submodulesUpdate();
   });
 }
 
 //
 
-function commandSubmodulesClean( e )
+function commandSubmodulesFixate( e )
 {
   let will = this;
+
+  let propertiesMap = _.strToMap( e.argument );
+  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
+
   return will.moduleReadyThenNonForming( function( module )
   {
-    return module.submodulesClean();
+    return module.submodulesFixate( e.propertiesMap );
   });
+
+}
+
+commandSubmodulesFixate.commandProperties =
+{
+  dry : 'Dry run without writing. Default is dry:0.',
+  // upgrading : 'Upgrade already fixated submodules. Default is upgrading:0.',
+}
+
+//
+
+function commandSubmodulesUpgrade( e )
+{
+  let will = this;
+
+  let propertiesMap = _.strToMap( e.argument );
+  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
+
+  _.assert( e.propertiesMap.upgrading === undefined );
+  e.propertiesMap.upgrading = 1;
+
+  return will.moduleReadyThenNonForming( function( module )
+  {
+    return module.submodulesFixate( e.propertiesMap );
+  });
+
+}
+
+commandSubmodulesUpgrade.commandProperties =
+{
+  dry : 'Dry run without writing. Default is dry:0.',
+  upgrading : 'Upgrade already fixated submodules. Default is upgrading:1.',
 }
 
 //
@@ -651,7 +700,7 @@ function commandBuild( e )
     throw errTooMany( builds, 'build scenario' );
 
     let build = builds[ 0 ];
-    return build.perform()
+    return build.perform();
   });
 }
 
@@ -707,15 +756,7 @@ function commandWith( e )
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
   let dirPath = path.joinRaw( path.current(), isolated.argument );
 
-  // let o2 = { will : will }
-  // if( fileProvider.isDir( dirPath ) )
-  // o2.dirPath = dirPath;
-  // else
-  // o2.willFilesPath = dirPath;
-
-  debugger;
   let module = will.currentModule = will.Module({ will : will, willFilesPath : dirPath }).preform();
-  // debugger;
   module.willFilesFind();
   module.willFilesOpen();
   module.submodulesForm();
@@ -729,8 +770,6 @@ function commandWith( e )
     return ca.commandPerform
     ({
       command : isolated.secondCommand,
-      // subject : isolated.secondSubject,
-      // propertiesMap : e.propertiesMap, // xxx
     });
 
   })
@@ -808,7 +847,7 @@ function _commandEach_functor( fop )
 
       if( will.verbosity > 1 )
       {
-        logger.log( _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.module.commonPath, 'path' ) );
+        logger.log( '\n', _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.module.commonPath, 'path' ) );
         if( will.currentPath )
         logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( will.currentPath, 'path' ) );
       }
@@ -821,7 +860,7 @@ function _commandEach_functor( fop )
     function handleEnd( it )
     {
 
-      // logger.log( 'handleEnd.currentPath', it.currentPath );
+      logger.up();
 
       let r = ca.commandPerform
       ({
@@ -832,13 +871,15 @@ function _commandEach_functor( fop )
 
       return r.finally( ( err, arg ) =>
       {
+        logger.down();
+
         _.assert( will.currentModule === it.module );
         will.currentModule.finit();
         will.currentModule = null;
         will.currentPath = null;
 
         if( err )
-        _.errLog( _.errBriefly( err ) );
+        _.errLogOnce( _.errBriefly( err ) );
         if( err )
         throw _.err( err );
         return arg;
@@ -925,9 +966,11 @@ let Extend =
   commandAboutList,
   commandExecutionList,
 
-  commandSubmodulesDownload,
-  commandSubmodulesUpgrade,
   commandSubmodulesClean,
+  commandSubmodulesDownload,
+  commandSubmodulesUpdate,
+  commandSubmodulesFixate,
+  commandSubmodulesUpgrade,
 
   commandShell,
   commandClean,

@@ -434,6 +434,43 @@ willFilesList.defaults =
   rerucrsive : 0,
 }
 
+//
+
+function vcsFor( o )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  if( !_.mapIs( o ) )
+  o = { filePath : o }
+
+  _.assert( arguments.length === 1 );
+  _.routineOptions( vcsFor, o );
+  _.assert( !!will.formed );
+
+  if( _.arrayIs( o.filePath ) && o.filePath.length === 0 )
+  return null;
+
+  if( !o.filePath )
+  return null;
+
+  let result = fileProvider.providerForPath( o.filePath );
+
+  if( !result )
+  return null
+
+  if( !result.isVcs )
+  return null
+
+  return result;
+}
+
+vcsFor.defaults =
+{
+  filePath : null,
+}
+
 // --
 // relations
 // --
@@ -455,6 +492,7 @@ var ResourceKindToClassName = new _.NameMapper({ leftName : 'resource kind', rig
 var ResourceKindToMapName = new _.NameMapper({ leftName : 'resource kind', rightName : 'resource map name' }).set
 ({
 
+  'about' : 'about',
   'submodule' : 'submoduleMap',
   'step' : 'stepMap',
   'path' : 'pathResourceMap',
@@ -524,6 +562,7 @@ let Extend =
   moduleEach,
   _verbosityChange,
   willFilesList,
+  vcsFor,
 
   // relation
 

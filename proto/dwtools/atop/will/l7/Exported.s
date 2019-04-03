@@ -331,6 +331,7 @@ function performExportedFilesReflector()
   /*
   base path is really required!
   */
+
   exportedFilesReflector.src.basePath = exportedFilesReflector.src.basePath || '.';
 
   _.assert( exportedFilesReflector.src.prefixPath === module.inPath || exportedFilesReflector.src.prefixPath === null );
@@ -340,14 +341,30 @@ function performExportedFilesReflector()
   exportedFilesReflector.src.basePathSimplify();
   exportedFilesReflector.dst.filteringClear();
   exportedFilesReflector.dst.filePath = exportedFilesReflector.src.filePath = exported.exportedFilesPath.nickName;
-  // exportedFilesReflector.dst.filePath = exportedFilesReflector.src.filePath = path.pathMapExtend( null, exportedFilesPath ); // yyy
   exportedFilesReflector.recursive = 0;
   exportedFilesReflector.form1();
-  // exportedFilesReflector.form2();
-  // exportedFilesReflector.form(); // yyy
 
   _.assert( exportedFilesReflector.dst.prefixPath === null );
   _.assert( exportedFilesReflector.dst.basePath === null );
+
+}
+
+//
+
+function performPaths()
+{
+  let exported = this;
+  let module = exported.module;
+  let will = module.will;
+  let hub = will.fileProvider;
+  let hd = hub.providersWithProtocolMap.file;
+  let path = hub.path;
+  let logger = will.logger;
+  let build = module.buildMap[ exported.name ];
+
+  let originalWillFilesPath = module.resourceObtain( 'path', 'original.will.files' );
+  originalWillFilesPath.path = path.s.relative( module.inPath, _.entityShallowClone( module.willFilesPath ) );
+  exported.originalWillFilesPath = originalWillFilesPath;
 
 }
 
@@ -451,7 +468,7 @@ function performWriteOutFile()
   });
 
   if( will.verbosity >= 3 )
-  logger.log( ' + ' + 'Write out will-file ' + outFilePath );
+  logger.log( ' + ' + 'Write out will-file ' + _.color.strFormat( outFilePath, 'path' ) );
 
 }
 
@@ -488,6 +505,7 @@ function perform( frame )
   exported.readExported();
   exported.performExportedReflectors( opts.export );
   exported.performExportedFilesReflector();
+  exported.performPaths();
   exported.performArchive( opts.tar === undefined || opts.tar );
   exported.performWriteOutFile();
 
@@ -495,15 +513,6 @@ function perform( frame )
 
   if( will.verbosity >= 3 )
   logger.log( ' + Exported', exported.name, 'with', exported.exportedFilesPath.path.length, 'files', 'in', _.timeSpent( time ) );
-
-  /* ref names */
-
-  // exported.exportedFilesReflector = exported.exportedFilesReflector.refName;
-  // exported.exportedReflector = exported.exportedReflector.refName;
-  // exported.exportedDirPath = exported.exportedDirPath.refName;
-  // exported.exportedFilesPath = exported.exportedFilesPath.refName;
-  // if( _.objectIs( exported.archiveFilePath ) )
-  // exported.archiveFilePath = exported.archiveFilePath.refName;
 
   return exported;
 }
@@ -522,10 +531,10 @@ let Composes =
 
   exportedReflector : null,
   exportedFilesReflector : null,
-
   exportedDirPath : null,
   exportedFilesPath : null,
   archiveFilePath : null,
+  originalWillFilesPath : null,
 
 }
 
@@ -574,6 +583,7 @@ let Proto =
   readExported,
   performExportedReflectors,
   performExportedFilesReflector,
+  performPaths,
   performArchive,
   performWriteOutFile,
   perform,

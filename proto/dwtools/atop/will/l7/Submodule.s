@@ -107,14 +107,6 @@ function _load()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  // if( submodule.loadedModule )
-  // {
-  //   debugger;
-  //   _.assert( submodule.loadedModule.associatedSubmodule === submodule )
-  //   submodule.loadedModule.associatedSubmodule = null;
-  //   submodule.loadedModule.finit();
-  // }
-
   _.assert( arguments.length === 0 );
   _.assert( submodule.formed === 2 );
   _.assert( submodule.loadedModule === null );
@@ -140,7 +132,7 @@ function _load()
   submodule.loadedModule.willFilesFindReady.finally( ( err, arg ) =>
   {
     if( err )
-    throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.loadedModule.dirPath ), '\n', err );
+    throw _.err( 'Failed to open', submodule.decoratedNickName, 'at', _.strQuote( submodule.loadedModule.dirPath ), '\n', err );
     return arg;
   });
 
@@ -150,7 +142,7 @@ function _load()
     {
       // debugger;
       if( will.verbosity >= 3 )
-      logger.error( ' ! Failed to read ' + submodule.nickName + ', try to download it with .submodules.download or even clean it before downloading' );
+      logger.error( ' ! Failed to read ' + submodule.decoratedNickName + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading' );
       if( will.verbosity >= 5 || !submodule.loadedModule || submodule.loadedModule.isOpened() )
       {
         if( will.verbosity < 5 )

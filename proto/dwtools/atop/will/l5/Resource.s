@@ -94,15 +94,9 @@ function MakeForEachCriterion( o )
       let instance = o.module[ Cls.MapName ][ o.name ];
       if( instance && instance.criterion && instance.criterion.predefined )
       {
-        debugger;
-        // delete o.willf;
-        // _.mapExtend( instance, o );
-        // return instance;
         instance.finit();
       }
 
-      if( o.name === "predefined.remote" )
-      debugger;
       return Cls( o ).form1();
     }
     catch( err )
@@ -745,11 +739,19 @@ function compactField( it )
 // accessor
 // --
 
-function _nickNameGet()
+function nickNameGet()
 {
   let resource = this;
   return resource.refName;
-  // return '→ ' + resource.constructor.shortName + ' ' + _.strQuote( resource.name ) + ' ←';
+}
+
+//
+
+function decoratedNickNameGet()
+{
+  let module = this;
+  let result = module.nickName;
+  return _.color.strFormat( result, 'entity' );
 }
 
 //
@@ -762,11 +764,20 @@ function _refNameGet()
 
 //
 
-function _absoluteNameGet()
+function absoluteNameGet()
 {
   let resource = this;
   let module = resource.module;
   return module.absoluteName + ' / ' + resource.nickName;
+}
+
+//
+
+function decoratedAbsoluteNameGet()
+{
+  let resource = this;
+  let result = resource.absoluteName;
+  return _.color.strFormat( result, 'entity' );
 }
 
 // --
@@ -904,9 +915,11 @@ let Forbids =
 
 let Accessors =
 {
-  nickName : { getter : _nickNameGet, readOnly : 1 },
+  nickName : { getter : nickNameGet, readOnly : 1 },
+  decoratedNickName : { getter : decoratedNickNameGet, readOnly : 1 },
   refName : { getter : _refNameGet, readOnly : 1 },
-  absoluteName : { getter : _absoluteNameGet, readOnly : 1 },
+  absoluteName : { getter : absoluteNameGet, readOnly : 1 },
+  decoratedAbsoluteName : { getter : decoratedAbsoluteNameGet, readOnly : 1 },
   inherit : { setter : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
 }
 
@@ -957,9 +970,11 @@ let Proto =
 
   // accessor
 
-  _nickNameGet,
+  nickNameGet,
+  decoratedNickNameGet,
   _refNameGet,
-  _absoluteNameGet,
+  absoluteNameGet,
+  decoratedAbsoluteNameGet,
 
   // resolver
 
