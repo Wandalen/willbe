@@ -9,7 +9,7 @@
   Процес встановлення утиліти <code>willbe</code>
 </details>
 <details>
-  <summary><a href="#Concepts.md">Концепції</a></summary>
+  <summary><a href="#Concepts">Концепції</a></summary>
   Основні концепції. Допомагає побачити загальну картину
 </details>
 <details>
@@ -93,6 +93,10 @@
   В туторіалі пояснюється як будуються складні селектори
 </details>
 <details>
+  <summary><a href="./Tutorials/HowToList.md">Перелік ресурсів через командний рядок</a></summary>
+  Як отримати інформацію про окремі ресурси модуля  
+</details>
+<details>
   <summary><a href="./Tutorials/ReflectorUsing.md">Поняття рефлекторів. Копіювання файлів</a></summary>
   В туторіалі описуються копіювання файлів рефлектором, пояснюється як користуватись полем <code>recursive</code>
 </details>
@@ -108,32 +112,29 @@
   <summary><a href="./Tutorials/ReflectorFSControl.md">Формування шляхів в рефлекторі. Управління файловими операціями</a></summary>
   В туторіалі показано як формуються шляхи рефлекторів та як управляти кількістю файлових операцій
 </details>
+<details>
+  <summary><a href="./Tutorials/PredefinedReflectorsUsing.md">Вбудовані рефлектори</a></summary>
+  Використання вбудованих рефлекторів та побудова мультизбірок
+</details>
+<details>
+  <summary><a href="./Tutorials/ResourceInheritability.md">Наслідування ресурсами</a></summary>
+  Як користуватись наслідуванням ресурсів
+</details>
+<details>
+  <summary><a href="./Tutorials/TranspileStep.md">Транспіляція файлів</a></summary>
+  Використання кроку <code>predefined.transpile</code> для трансформації JavaScript-файлів 
+</details>
+
 
 <p></p>
 ...In progress, advanced...
 <details>
-  <summary><a href="./Tutorials/ResourceInheritability.md">Resources Inheritability</a></summary>
-  Як використовувати наслідування ресурсами <code>will-файла</code>
-</details>
-<details>
-  <summary><a href="./Tutorials/PredefinedReflectorsUsing.md">How to use predefined reflectors</a></summary>
-  Як використовувати вбудовані рефлектори утиліти <code>willbe</code>
-</details>
-<details>
-  <summary><a href="./Tutorials/ExportedFileStructure.md">Exported <code>will-file</code> structure</a></summary>
-  Структура експортованого `*.out.will.`-файла.
-</details>
-<details>
-  <summary><a href="./Tutorials/ExportedSectionOfWillFile.md">Exported section of out will-file</a></summary>
-  В цьому туторіалі розглядається секція <code>exported</code>
-</details>
-<details>
-  <summary><a href="./Tutorials/HowToList.md">How to list</a></summary>
-  Як дізнатись інформацію про модуль
-</details>
-<details>
-  <summary><a href="./Tutorials/ExportedSectionOfWillFile.md">How to use <code>.clean</code> command</a></summary>
+  <summary><a href="./Tutorials/CleanCommandUsing.md">How to use <code>.clean</code> command</a></summary>
   Використання команди <code>.clean</code>
+</details>
+<details>
+  <summary><a href="./Tutorials/HowToUseShellCommand.md">How to use <code>.shell</code> command</a></summary>
+  Використання команди <code>.shell</code>
 </details>
 
 
@@ -158,6 +159,34 @@
 <details>
   <summary><a href="./Concepts/Composition.md#resource">Ресурси</a></summary>
   Елементи <code>will-файла</code>, які позначають певну функціональність
+</details>
+<details>
+  <summary><a href="./Concepts/About.section.md">Секція <code>about</code></a></summary>
+  В секції поміщено основну інформація про модуль
+</details>
+<details>
+  <summary><a href="./Concepts/Path.section.md">Секція <code>path</code></a></summary>
+  Секція представляє карту шляхів модуля для швидкого орієнтування в його структурі
+</details>
+<details>
+  <summary><a href="./Concepts/Submodule.section.md">Секція <code>submodule</code></a></summary>
+  В секції вказуються підмодулі
+</details>
+<details>
+  <summary><a href="./Concepts/Submodule.section.md">Секція <code>step</code></a></summary>
+  В секції описуються процедури побудови модуля
+</details>
+<details>
+  <summary><a href="./Concepts/Submodule.section.md">Секція <code>reflector</code></a></summary>
+  Основними функціями ресурсів секції (рефлекторів) є файлові операції
+</details>
+<details>
+  <summary><a href="./Concepts/Submodule.section.md">Секція <code>exported</code></a></summary>
+  Секція <code>will-файла</code>, автоматично згенерованого при експортуванні модуля
+</details>
+<details>
+  <summary><a href="./Concepts/Submodule.section.md">Секція <code>build</code></a></summary>
+  Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля
 </details>
 <details>
   <summary><a href="./Concepts/Module.md#module">Модуль</a></summary>
@@ -199,9 +228,14 @@
   <summary><a href="./Concepts/Criterions.md">Критеріон</a></summary>
   Елемент порівняння в <code>will-файлі</code> для визначення умов використання ресурса
 </details>
-
-<p>...In progress...</p>
 <details>
   <summary><a href="./Concepts/Inheritability.md">Наслідування ресурсами</a></summary>
-  Здатність використовувати (наслідувати) значення полів ресурса іншим ресурсом
+  Принцип побудови модуля, згідно якого ресурс одного <code>will-файла</code> здатний використовувати (наслідувати) значення полів інших ресурсів секції та ресурсів іншого <code>will-файла</code>
+</details>
+
+<p></p>
+...In progress, advanced...
+<details>
+  <summary><a href="./Concepts/FileFilter.md">Файловий фільтр</a></summary>
+  Умова відбору файлів в рефлекторі
 </details>

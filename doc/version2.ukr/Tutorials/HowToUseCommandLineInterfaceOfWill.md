@@ -40,7 +40,7 @@ Ambiguity. Did you mean?
 
 </details>
 
-</br>
+
 Якщо скористуватись [командою `.help`](#help-command), то результат не зміниться. Для отримання довідки по обраній команді використовуйте синтаксис: `will .help [команда]`.    
 Тепер введіть в терміналі `will .help .build`, а потім `will .help .builds.list` і порівняйте з виводом в консолі нижче. 
 
@@ -70,7 +70,7 @@ Request ".help .builds.list"
 
 </details>
 
-</br>
+
 Тепер ви можете отримати довідку по командам. А що буде, якщо ввести неповну фразу `will .help .submodules`? 
 
 <details>
@@ -89,7 +89,7 @@ Request ".help .submodules"
 
 </details>
 
-</br>
+
 `Willbe` запропонував варіанти команд з вказаним словом. Це зручно, адже, якщо не памятаете повну фразу з командою або бажаєте отримати вичерпний список команд з визначеним словом, достатньо ввести першу частину, а утиліта запропонує доповнення.  
 Спробуйте отримати довідку про команду `.build` змінивши `.` на інші знаки, такі, як `-` та `_` або літеру в команді `will .help`.  
 
@@ -177,7 +177,7 @@ Try subject ".help"
 
 </details>
 
-</br>
+
 Не залишається сумнівів, що перед командами завжди потрібно ставити `.` та вірно вводити фразу.  
 
 ### <a name="list-commands"></a>  Команди групи `.list`
@@ -197,7 +197,7 @@ Found no module::/[path] at "/[path]"
 
 </details>
 
-</br>
+
 Відкрийте склонований репозиторій і перейдіть за шляхом `./sample/submodules/` та відкрийте директорію в терміналі (або одразу виконайте `cd [path_to_willbe/willbe/sample/submodules/]`). Перевірте вміст директорії виконавши команду `ls -al`:
 
 <details>
@@ -214,41 +214,44 @@ drwxr-xr-x 6 user user 4096 Мар 11 11:27 ..
 
 </details>
 
-</br>
-Введіть фразу `will .paths.list`. Після того як на моніторі відобразиться результат, відкрийте файл `.will.yml` з допомогою текстового редактора. Порівняйте вміст секції `path` і текст який отримали в терміналі.  
+
+Введіть фразу `will .builds.list`. Після того як на моніторі відобразиться результат, відкрийте файл `.will.yml` з допомогою текстового редактора. Порівняйте вміст секції `build` і текст який отримали в терміналі.  
 
 <details>
-  <summary><u>Вивід фрази <code>will .paths.list</code></u></summary>
+  <summary><u>Вивід фрази <code>will .builds.list</code></u></summary>
 
 ```
-[user@user ~]$ will .paths.list
-Request ".paths.list"
-  . Read : /path_to_file/.will.yml
- . Read 1 will-files in 0.080s
+[user@user ~]$ will .builds.list
+Request ".builds.list"
 ...
-Paths
-  proto : './proto'
-  in : '.'
-  out : 'out'
-  out.debug : 'out/debug'
+build::debug
+  criterion : 
+    default : 1 
+  steps : 
+    submodules.download 
+    delete.out.debug 
+    reflect.submodules
+
 
 ```
 
 <p>Секція <code>path</code></p>
 
 ```yaml
-path :
+build :
 
-  proto : './proto'
-  in : '.'
-  out : 'out'
-  out.debug : 'out/debug'
+  debug :
+    criterion :
+      default : 1
+    steps :
+      - submodules.download
+      - delete.out.debug
+      - reflect.submodules
 
 ```
 
 </details>
 
-</br>
 Інформацію про окрему секцію `will-файла` та модуля можливо отримати ввівши фразу `will [назва секції]s.list` (закінчення `s` додається до назв секції, виключення - секція `about` - без змін).  
 Тепер дізнаємось інформацію з секції `submodule`. Порівняйте:  
 
@@ -285,7 +288,6 @@ submodule :
 
 </details>
 
-</br>
 В консолі виводиться попередження про помилку зчитування інформації про підмодулі і дається рекомендація завантажити їх з допомогою команди `.submodules.download`,  або спробувати очистити підмодулі перед їх завантаженням.  
 
 <details>
@@ -299,7 +301,6 @@ submodule :
 
 </details>
 
-</br>
 Далі виводиться сервісна інформація про підмодулі - назва (після `Submodule::`), шлях (`path`), статус завантаження (`isDownloaded`) та експортні сценарії (`Exported builds`):  
 
 <details>
@@ -319,7 +320,6 @@ submodule::PathFundamentals
 
 </details>
 
-</br>
 Шляхи і назви ресурсів співпадають і утиліта `willbe` вивела додаткову інформацію про статус підмодулів, яка спрощує управління модулем.  
 А щоб дізнатись повну інформацію про модуль введіть фразу `will .resources.list`:
 
@@ -339,6 +339,9 @@ About
   enabled : 1
 
 Paths
+  predefined.willbe : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec' 
+  predefined.will.files : '/path_to_file/.will.yml' 
+  predefined.dir : '/path_to_file' 
   proto : './proto'
   in : '.'
   out : 'out'
@@ -385,7 +388,6 @@ build::debug
 
 </details>
 
-</br>
 Проглянувши вивід ви знайдете секцію `About`:  
 
 <details>
@@ -402,9 +404,8 @@ About
 
 </details>
 
-</br>
-В утиліті `willbe` деякі ресурси мають значення за замовчуванням. Якщо такий ресурс відсутній, то утиліта його генерує в оперативну пам'ять не змінюючи `will`-файл - `willbe` не має функцій для модифікації `will`-файлів користувача.  
-Саме тому в виводі команди `will .resources.list` секція `about` має поле `enabled` яке відсутнє в `will`-файлі:  
+В утиліті `willbe` деякі ресурси мають значення за замовчуванням. Якщо такий ресурс відсутній, то утиліта його генерує в оперативну пам'ять не змінюючи `will`-файл - `willbe` не має функцій для модифікації `will-файлів` користувача.  
+Саме тому в виводі команди `will .resources.list` секція `about` має поле `enabled` яке відсутнє в `will-файлі`:  
 <details>
   <summary><u>Відкрийте, щоб проглянути</u></summary>
 

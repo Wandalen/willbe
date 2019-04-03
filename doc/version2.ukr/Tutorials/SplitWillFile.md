@@ -152,7 +152,7 @@ found 0 vulnerabilities
 
 </details>
 
-</br>
+
 `Willbe` прочитав два файла в директорії та завантажив 48 пакетів залежностей за збіркою побудови модуля.  
 Введіть фразу `will .export`:  
 
@@ -191,7 +191,7 @@ found 0 vulnerabilities
 
 </details>
 
-</br>
+
 `Willbe` експортував 48 включень директорії `node_modules` в `splited-config.out.will.yml`. При цьому файл `.im.will.yml` був прочитаний, але не виконувався.  
 
 ### Підсумок  
