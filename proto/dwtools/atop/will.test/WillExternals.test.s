@@ -136,7 +136,41 @@ function singleModuleList( test )
     test.is( _.strHas( got.output, `version : '0.0.1'` ) );
     return null;
   })
+  
+//  /* To test output by command with args */
+//  shell({ args : [ '.resources.list *proto*' ] })
+//
+//  .thenKeep( ( got ) =>
+//  {
+//    test.case = 'resources list globs';
+//    test.identical( got.exitCode, 0 );
+//    test.is( _.strHas( got.output, `build::debug.raw` ) );
+//    test.is( _.strHas( got.output, `step::reflect.proto.*=1` ) );
+//      
+//    test.is( _.strHas( got.output, 'build::debug.compiled'  ) );
+//    test.is( _.strHas( got.output, `step::reflect.proto.*=1` ) );
+//
+//    return null;
+//  })
+//    
+//    
+//  shell({ args : [ '.resources.list *proto*' ] })
+//
+//  .thenKeep( ( got ) =>
+//  {
+//    test.case = 'resources list globs';
+//    test.identical( got.exitCode, 0 );
+//    test.is( _.strHas( got.output, `proto : './proto'` ) );
+//        
+//    test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
+//    test.is( _.strHas( got.output, `. : '.'` ) );
+//    
+//    test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
+//    test.is( _.strHas( got.output, `predefined.reflect` ) );
+//    return null;
+//  })
 
+        
   /* - */
 
   shell({ args : [ '.paths.list' ] })

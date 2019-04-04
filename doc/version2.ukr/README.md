@@ -97,6 +97,10 @@
   Як отримати інформацію про окремі ресурси модуля  
 </details>
 <details>
+  <summary><a href="./Tutorials/SubmodulesVersionControl.md">Як користуватись командами <code>.submodules.fixate</code> і <code>.submodules.upgrade.refs</code></a></summary>
+  Перевірка і встановлення актуальних версій підмодулів
+</details>
+<details>
   <summary><a href="./Tutorials/ReflectorUsing.md">Поняття рефлекторів. Копіювання файлів</a></summary>
   В туторіалі описуються копіювання файлів рефлектором, пояснюється як користуватись полем <code>recursive</code>
 </details>
@@ -145,8 +149,8 @@
   Використання утиліти для компіляції файлів
 </details>
 <details>
-  <summary><a href="./Tutorials/SubmodulesVersionControl.md">How to use <code>.submodules.fixate</code>and <code>.submodules.upgrade.refs</code> commands</a></summary>
-  Перевірка і встановлення актуальних версій підмодулів
+  <summary><a href="./Tutorials/ViewStep.md">View step</a></summary>
+  Як користуватись вбулованим кроком <code>predefined.view</code>
 </details>
 
 

@@ -51,7 +51,7 @@ step :
 
   submodules.informal.export :
     currentPath : path::dirPath
-    shell : 'node {path::willPath} .each ./module .export'
+    shell : 'will .each ./module .export'
 
 ```
 
@@ -125,7 +125,7 @@ step::delete.out.debug
 step::submodules.informal.export
   opts : 
     currentPath : path::dirPath 
-    shell : node {path::willPath} .each ./module .export 
+    shell : will .each ./module .export 
   inherit : 
     predefined.shell
 
@@ -193,7 +193,7 @@ step::reflect.submodules
 step::submodules.informal.export
   opts : 
     currentPath : path::dirPath 
-    shell : node {path::willPath} .each ./module .export 
+    shell : will .each ./module .export 
   inherit : 
     predefined.shell
 
@@ -222,7 +222,7 @@ step::reflect.proto.
 step::submodules.informal.export
   opts : 
     currentPath : path::dirPath 
-    shell : node {path::willPath} .each ./module .export 
+    shell : will .each ./module .export 
   inherit : 
     predefined.shell
 

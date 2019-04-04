@@ -1,4 +1,4 @@
-# How to use `.submodules.fixate` and `.submodules.upgrade.refs` commands 
+# Як користуватись командами `.submodules.fixate` і `.submodules.upgrade.refs` 
 
 Перевірка і встановлення актуальних версій підмодулів 
 
