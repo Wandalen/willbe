@@ -23,8 +23,9 @@
 | timelapse.begin      | (В стадії розробки)                                  | -                               |
 | timelapse.end        | (В стадії розробки)                                  | -                               |
 | predefined.js        | Виконання JavaScript-файлів                          | js; (js)                       |
-| predefined.shell     | Використання командної оболонки операційної системи  | shell, currentPath; (shell) |
+| predefined.shell     | Використання командної оболонки операційної системи  | shell, currentPath, forEachDst, upToDate; (shell) |
 | predefined.transpile | Об'єднання групи JavaScript-файлів в один            | reflector                       |
+| predefined.view      | Відображення HTML або txt сторінки в браузері        | filePath, delay                 |
 | submodules.download  | Завантаження підмодулів                              | -                               |
 | submodules.upgrade   | Оновлення підмодулів                                 | -                               |
 | submodules.clean     | Очищення підмодулів                                  | -                               |
@@ -86,6 +87,8 @@ step:                                   # Назва секції
     inherit: predefined.shell           # Наслідування вбудованого кроку використання терміналу ОС
     shell: [some_command]               # Команда для вводу в термінал ОС
     currentPath: path::dirToRun         # Вказується директорія в якій виконується файл
+    forEachDst : some_reflector         # Рефлектор для команди (необов'язково)
+    upToDate : 'preserve'               # Опція - виконувати команду при зміні файлів вибірки
 
 ```
 
@@ -135,6 +138,17 @@ step:                                   # Назва секції
 step:                                   
   predefined:                           
     export: path::fileToExport          
+
+```
+
+<a name="predefined-view"></a> Функція `predefined.view`:
+
+```yaml
+step:                                         # Назва секції
+  predefined:                                 # Назва кроку
+    inherit: predefined.view                  # Наслідування вбудованого кроку відображення HTML файла
+    filePath: path::html_file                 # Шлях до HTML файла 
+    delay: 1000                               # Затримка запуску файла
 
 ```
 
