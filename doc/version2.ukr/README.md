@@ -97,6 +97,10 @@
   Як отримати інформацію про окремі ресурси модуля  
 </details>
 <details>
+  <summary><a href="./Tutorials/SubmodulesVersionControl.md">Як користуватись командами <code>.submodules.fixate</code> і <code>.submodules.upgrade.refs</code></a></summary>
+  Перевірка і встановлення актуальних версій підмодулів
+</details>
+<details>
   <summary><a href="./Tutorials/ReflectorUsing.md">Поняття рефлекторів. Копіювання файлів</a></summary>
   В туторіалі описуються копіювання файлів рефлектором, пояснюється як користуватись полем <code>recursive</code>
 </details>
@@ -124,7 +128,14 @@
   <summary><a href="./Tutorials/TranspileStep.md">Транспіляція файлів</a></summary>
   Використання кроку <code>predefined.transpile</code> для трансформації JavaScript-файлів 
 </details>
-
+<details>
+  <summary><a href="./Tutorials/HowToUseShellCommand.md">Як користуватись командою <code>.shell</code> </a></summary>
+  Як виконати зовнішню команду в модулі <code>willbe</code>
+</details>
+<details>
+  <summary><a href="./Tutorials/WillbeAsMake.md">Компіляція програм з утилітою <code>willbe</code></a></summary>
+  Використання утиліти для компіляції файлів
+</details>
 
 <p></p>
 ...In progress, advanced...
@@ -133,8 +144,12 @@
   Використання команди <code>.clean</code>
 </details>
 <details>
-  <summary><a href="./Tutorials/HowToUseShellCommand.md">How to use <code>.shell</code> command</a></summary>
-  Використання команди <code>.shell</code>
+  <summary><a href="./Tutorials/UnformalSubmodule.md">Неформальний підмодуль</a></summary>
+  Створення неформального підмодуля
+</details>
+<details>
+  <summary><a href="./Tutorials/ViewStep.md">View step</a></summary>
+  Як користуватись вбулованим кроком <code>predefined.view</code>
 </details>
 
 
