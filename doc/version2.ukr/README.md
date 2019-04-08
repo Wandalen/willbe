@@ -149,7 +149,7 @@
 </details>
 <details>
   <summary><a href="./Tutorials/ViewStep.md">View step</a></summary>
-  Як користуватись вбулованим кроком <code>predefined.view</code>
+  Як користуватись вбудованим кроком <code>predefined.view</code>
 </details>
 
 
