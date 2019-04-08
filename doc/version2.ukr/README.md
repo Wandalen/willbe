@@ -246,10 +246,14 @@
   <summary><a href="./Concepts/Inheritability.md">Наслідування ресурсами</a></summary>
   Принцип побудови модуля, згідно якого ресурс одного <code>will-файла</code> здатний використовувати (наслідувати) значення полів інших ресурсів секції та ресурсів іншого <code>will-файла</code>
 </details>
+<details>
+  <summary><a href="./Concepts/FileFilter.md">Файловий фільтр</a></summary>
+  Особливий вид селектора для відбору файлів в рефлекторі
+</details>
 
 <p></p>
 ...In progress, advanced...
 <details>
-  <summary><a href="./Concepts/FileFilter.md">Файловий фільтр</a></summary>
-  Умова відбору файлів в рефлекторі
+  <summary><a href="./Concepts/InformalSubmodule.md">Неформальний підмодуль</a></summary>
+  Підмодуль, завантажений з віддаленого джерела, експортований і підключений як локальний
 </details>
