@@ -125,6 +125,10 @@
   Як користуватись наслідуванням ресурсів
 </details>
 <details>
+  <summary><a href="./Tutorials/ViewStep.md">Перегляд файлів при побудові</a></summary>
+  Як користуватись вбудованим кроком <code>predefined.view</code> для перегляду файлів
+</details>
+<details>
   <summary><a href="./Tutorials/TranspileStep.md">Транспіляція файлів</a></summary>
   Використання кроку <code>predefined.transpile</code> для трансформації JavaScript-файлів 
 </details>
@@ -136,6 +140,10 @@
   <summary><a href="./Tutorials/WillbeAsMake.md">Компіляція програм з утилітою <code>willbe</code></a></summary>
   Використання утиліти для компіляції файлів
 </details>
+<details>
+  <summary><a href="./Tutorials/InformalSubmodule.md">Неформальний підмодуль</a></summary>
+  Імпорт неформального підмодуля
+</details>
 
 <p></p>
 ...In progress, advanced...
@@ -143,15 +151,6 @@
   <summary><a href="./Tutorials/CleanCommandUsing.md">How to use <code>.clean</code> command</a></summary>
   Використання команди <code>.clean</code>
 </details>
-<details>
-  <summary><a href="./Tutorials/UnformalSubmodule.md">Неформальний підмодуль</a></summary>
-  Створення неформального підмодуля
-</details>
-<details>
-  <summary><a href="./Tutorials/ViewStep.md">View step</a></summary>
-  Як користуватись вбулованим кроком <code>predefined.view</code>
-</details>
-
 
 ## <a name="concepts"></a> Концепції
 
@@ -224,6 +223,10 @@
   Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину
 </details>
 <details>
+  <summary><a href="./Concepts/InformalSubmodule.md">Неформальний підмодуль</a></summary>
+  Віддалений підмодуль імпортований непрямим шляхом
+</details>
+<details>
   <summary><a href="./Concepts/Phrase.md">Фраза</a></summary>
   Команда з одного обо декількох слів, розділених крапкою
 </details>
@@ -247,10 +250,7 @@
   <summary><a href="./Concepts/Inheritability.md">Наслідування ресурсами</a></summary>
   Принцип побудови модуля, згідно якого ресурс одного <code>will-файла</code> здатний використовувати (наслідувати) значення полів інших ресурсів секції та ресурсів іншого <code>will-файла</code>
 </details>
-
-<p></p>
-...In progress, advanced...
 <details>
   <summary><a href="./Concepts/FileFilter.md">Файловий фільтр</a></summary>
-  Умова відбору файлів в рефлекторі
+  Особливий вид селектора для відбору файлів в рефлекторі
 </details>
