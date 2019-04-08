@@ -125,6 +125,10 @@
   Як користуватись наслідуванням ресурсів
 </details>
 <details>
+  <summary><a href="./Tutorials/ViewStep.md">Перегляд файлів при побудові</a></summary>
+  Як користуватись вбудованим кроком <code>predefined.view</code> для перегляду файлів
+</details>
+<details>
   <summary><a href="./Tutorials/TranspileStep.md">Транспіляція файлів</a></summary>
   Використання кроку <code>predefined.transpile</code> для трансформації JavaScript-файлів 
 </details>
@@ -147,11 +151,6 @@
   <summary><a href="./Tutorials/CleanCommandUsing.md">How to use <code>.clean</code> command</a></summary>
   Використання команди <code>.clean</code>
 </details>
-<details>
-  <summary><a href="./Tutorials/ViewStep.md">View step</a></summary>
-  Як користуватись вбудованим кроком <code>predefined.view</code>
-</details>
-
 
 ## <a name="concepts"></a> Концепції
 
