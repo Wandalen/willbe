@@ -12,7 +12,7 @@
   <summary><u>Структура файлів</u></summary>
 
 ```
-compileCProgram
+compileCpp
         ├── file
         │     ├── hello.c
         │     └── main.c
@@ -25,9 +25,7 @@ compileCProgram
 В кожен із файлів внесіть відповідний код:  
 
 <details>
-  <summary><u>Код файлів <code>hello.c</code>, <code>main.c</code> i <code>.will.yml</code></u></summary>
-    
-<p>Код <code>hello.c</code></p>
+  <summary><u>Код файлa <code>hello.c</code></u></summary>
 
 ```c
 #include <stdio.h>
@@ -38,7 +36,9 @@ void hello()
 
 ```
 
-<p>Код <code>main.c</code></p>
+</details>
+<details>
+  <summary><u>Код файлa <code>main.c</code></u></summary>
 
 ```c
 int main()
@@ -49,11 +49,13 @@ int main()
 
 ```
 
-<p>Код <code>.will.yml</code></p>
+</details>
+<details>
+  <summary><u>Код файлa <code>.will.yml</code></u></summary>
 
 ```yaml
 about :
-  name : 'compileCProgram'
+  name : 'compileCpp'
   description : 'To use willbe as make'
   version : 0.0.1
 
@@ -155,26 +157,26 @@ step :
 Запустіть побудову збірки `compile`, перевірте директорію `temp` після побудови:  
 
 <details>
-  <summary><u>Вивід фрази <code>will .build</code></u></summary>
+  <summary><u>Вивід команди <code>will .build</code></u></summary>
 
 ```
 [user@user ~]$ will .build
 ...
-  Building module::compileCProgram / build::compile
+  Building module::compileCpp / build::compile
    + copy.temp reflected 3 files /path_to_file/ : temp <- file in 0.490s
  > gcc-6 -c /path_to_file/temp/hello.c /path_to_file/temp/main.c
 /path_to_file/temp/main.c: In function ‘main’:
 /path_to_file/temp/main.c:3:2: warning: implicit declaration of function ‘hello’ [-Wimplicit-function-declaration]
   hello();
   ^~~~~
-  Built module::compileCProgram / build::compile in 0.974s
+  Built module::compileCpp / build::compile in 0.974s
 
 ```
 
 <p>Модуль після побудови</p>
 
 ```
-compileCProgram
+compileCpp
         ├── file
         │     ├── hello.c
         │     └── main.c
@@ -193,22 +195,22 @@ compileCProgram
 Виконайте побудову збірки `build.hello`:  
 
 <details>
-  <summary><u>Вивід фрази <code>will .build build.hello</code></u></summary>
+  <summary><u>Вивід команди <code>will .build build.hello</code></u></summary>
     
 ```
 [user@user ~]$ will .build build.hello
 ...
-  Building module::compileCProgram / build::build.hello
+  Building module::compileCpp / build::build.hello
  > gcc-6 -o hello /path_to_file/hello.o /path_to_file/temp/main.o
    + copy.out reflected 2 files /path_to_file/ : out <- temp in 0.412s
-  Built module::compileCProgram / build::build.hello in 1.057s
+  Built module::compileCpp / build::build.hello in 1.057s
   
 ```  
 
 <p>Модуль після побудови</p>
 
 ```
-compileCProgram
+compileCpp
         ├── file
         │     ├── hello.c
         │     └── main.c
@@ -232,7 +234,7 @@ compileCProgram
   <summary><u>Відкрийте, щоб проглянути</u></summary>
     
 ```
-[user@user ~]$ /home/user/Documents/test/compileCProgram/out/hello 
+[user@user ~]$ /home/user/Documents/test/compileCpp/out/hello 
 Hello World!
 
 ```
@@ -243,21 +245,21 @@ Hello World!
 Повторіть ввід фрази `will .build build.hello`:
 
 <details>
-  <summary><u>Вивід фрази <code>will .build build.hello</code></u></summary>
+  <summary><u>Вивід команди <code>will .build build.hello</code></u></summary>
     
 ```
 [user@user ~]$ will .build build.hello
 ...
-  Building module::compileCProgram / build::build.hello
+  Building module::compileCpp / build::build.hello
    + copy.out reflected 2 files /path_to_file/ : out <- temp in 0.388s
-  Built module::compileCProgram / build::build.hello in 0.999s
+  Built module::compileCpp / build::build.hello in 0.999s
   
 ```  
 
 <p>Модуль після побудови</p>
 
 ```
-compileCProgram
+compileCpp
         ├── file
         │     ├── hello.c
         │     └── main.c
@@ -283,7 +285,7 @@ compileCProgram
 
 ```yaml
 about :
-  name : 'compileCProgram'
+  name : 'compileCpp'
   description : 'To use willbe as make'
   version : 0.0.1
 
@@ -360,12 +362,12 @@ build :
 Видаліть зайві файли (`rm -Rf temp/ out/`) та виконайте побудову збірки `all`:  
 
 <details>
-  <summary><u>Вивід фрази <code>will .build all</code></u></summary>
+  <summary><u>Вивід команди <code>will .build all</code></u></summary>
     
 ```
 [user@user ~]$ will .build all
 ...
-  Building module::compileCProgram / build::all
+  Building module::compileCpp / build::all
    + copy.temp reflected 3 files /path_to_file/ : temp <- file in 0.652s
  > gcc-6 -c /path_to_file/temp/hello.c /path_to_file/temp/main.c
 /path_to_file/temp/main.c: In function ‘main’:
@@ -376,7 +378,7 @@ build :
    + copy.out reflected 2 files /path_to_file/ : out <- temp in 0.463s
    - Clean deleted 6 file(s) in 0.138s
    - Clean deleted 0 file(s) in 0.094s
-  Built module::compileCProgram / build::all in 3.772s
+  Built module::compileCpp / build::all in 3.772s
 
   
 ```  
@@ -384,7 +386,7 @@ build :
 <p>Модуль після побудови</p>
 
 ```
-compileCProgram
+compileCpp
         ├── file
         │     ├── hello.c
         │     └── main.c

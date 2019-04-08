@@ -85,7 +85,7 @@ build :
 Виконайте побудови збірок (команди вводяться в кореневій директорії `will-файла`):
 
 <details>
-  <summary><u>Вивід фрази <code>will .build download</code> та структура модуля</u></summary>
+  <summary><u>Вивід команди <code>will .build download</code> та структура модуля</u></summary>
 
 ```
 [user@user ~]$ will .build download
@@ -113,7 +113,7 @@ predefinedSteps
 </details>
 
 <details>
-  <summary><u>Вивід фрази <code>will .build clean</code> та структура модуля</u></summary>
+  <summary><u>Вивід команди <code>will .build clean</code> та структура модуля</u></summary>
 
 ```
 [user@user ~]$ will .build clean
@@ -135,7 +135,7 @@ predefinedSteps
 </details>
 
 <details>
-  <summary><u>Вивід фрази <code>will .build upgrade</code> та структура модуля</u></summary>
+  <summary><u>Вивід команди <code>will .build upgrade</code> та структура модуля</u></summary>
 
 ```
 [user@user ~]$ will .build upgrade
@@ -164,7 +164,7 @@ predefinedSteps
 </details>
 
 <details>
-  <summary><u>Вивід фрази <code>will .build clean.download</code> та структура модуля</u></summary>
+  <summary><u>Вивід команди <code>will .build clean.download</code> та структура модуля</u></summary>
 
 ```
 [user@user ~]$ will .build clean.download

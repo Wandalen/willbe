@@ -67,7 +67,7 @@ about :
 Запустіть побудову: 
 
 <details>
-  <summary><u>Вивід фрази <code>will .build</code></u></summary>
+  <summary><u>Вивід команди <code>will .build</code></u></summary>
 
 ```
 [user@user ~]$ will .build
@@ -102,7 +102,7 @@ shellCommand
 З командою `.shell` можна виконати будь-які зовнішні операції над модулем. Для прикладу, виведіть повну інформацію про `will-файли` підмодулів. Для цього використовуйте команду `.each`:  
 
 <details>
-  <summary><u>Вивід фрази <code>will .each submodule::* .shell ls -al *.yml</code></u></summary>
+  <summary><u>Вивід команди <code>will .each submodule::* .shell ls -al *.yml</code></u></summary>
 
 ```
 [user@user ~]$ will .each submodule::* .shell ls -al *.yml
@@ -142,7 +142,7 @@ shellCommand
 Підмодулі `Tools` i `PathFundamentals` завантажені з Git-репозиторію. Для них можна виконувати git-команди. Наприклад, дізнайтесь статус підмодулів командою `git status`:
 
 <details>
-  <summary><u>Вивід фрази <code>will .each submodule::*s .shell git status</code></u></summary>
+  <summary><u>Вивід команди <code>will .each submodule::*s .shell git status</code></u></summary>
 
 ```
 [user@user ~]$ will .each submodule::*s .shell git status
@@ -181,7 +181,7 @@ shellCommand
 При роботі з окремими `will-файлами` утиліта додатково виводить інформацію, про те, які файли зчитано. Перевірте список файлів в директорії `module.test`:  
 
 <details>
-  <summary><u>Вивід фрази <code>will .each module.test .shell ls</code></u></summary>
+  <summary><u>Вивід команди <code>will .each module.test .shell ls</code></u></summary>
 
 ```
 [user@user ~]$ will .each module.test .shell ls

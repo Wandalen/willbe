@@ -74,7 +74,7 @@ criterion
 Критеріон `debug` в збірці `echo.debug` має значення "1". Запустіть побудову збірки та порівняйте:  
 
 <details>
-  <summary><u>Вивід фрази <code>will .build echo.debug</code></u></summary>
+  <summary><u>Вивід команди <code>will .build echo.debug</code></u></summary>
 
 ```
 [user@user ~]$ will .build echo.debug
@@ -100,7 +100,7 @@ criterion
 
 <details>
   <summary><u>Виводи побудов</u></summary>
-<p>Вивід фрази <code>will .build echo.debug</code></p>
+<p>Вивід команди <code>will .build echo.debug</code></p>
 
 ```
 [user@user ~]$ will .build echo.debug
@@ -112,7 +112,7 @@ Operation is done
 
 ```
 
-<p>Вивід фрази <code>will .build echo.debug</code></p>
+<p>Вивід команди <code>will .build echo.debug</code></p>
 
 ```
 [user@user ~]$ will .build echo.test

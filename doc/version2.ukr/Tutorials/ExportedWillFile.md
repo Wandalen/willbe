@@ -69,7 +69,7 @@ exportSingle
 Запустіть експорт модуля (фраза `will .export` в кореневій директорії `.will.yml`):
 
 <details>
-  <summary><u>Вивід фрази <code>will .export</code></u></summary>
+  <summary><u>Вивід команди <code>will .export</code></u></summary>
 
 ```
 [user@user ~]$ will .export

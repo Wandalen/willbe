@@ -76,7 +76,7 @@ defaultBuild
 Введіть фразу `will .build` в кореневій директорії `will-файла`:  
 
 <details>
-  <summary><u>Вивід фрази <code>will .build</code></u></summary>
+  <summary><u>Вивід команди <code>will .build</code></u></summary>
 
 ```
 [user@user ~]$ will .build
