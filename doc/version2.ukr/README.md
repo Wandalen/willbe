@@ -223,6 +223,10 @@
   Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину
 </details>
 <details>
+  <summary><a href="./Concepts/InformalSubmodule.md">Неформальний підмодуль</a></summary>
+  Віддалений підмодуль імпортований непрямим шляхом
+</details>
+<details>
   <summary><a href="./Concepts/Phrase.md">Фраза</a></summary>
   Команда з одного обо декількох слів, розділених крапкою
 </details>
@@ -249,11 +253,4 @@
 <details>
   <summary><a href="./Concepts/FileFilter.md">Файловий фільтр</a></summary>
   Особливий вид селектора для відбору файлів в рефлекторі
-</details>
-
-<p></p>
-...In progress, advanced...
-<details>
-  <summary><a href="./Concepts/InformalSubmodule.md">Неформальний підмодуль</a></summary>
-  Підмодуль, завантажений з віддаленого джерела, експортований і підключений як локальний
 </details>
