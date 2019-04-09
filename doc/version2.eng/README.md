@@ -29,7 +29,7 @@
   Як користуватись вбудованими кроками для роботи з віддаленими підмодулями
 </details>
 <details>
-  <summary><a href="./tutorial/Criterions.md">Критеріони</a></summary>
+  <summary><a href="./tutorial/CriterionsInWillFile.md">Критеріони в <code>will-файлах</code></a></summary>
   Як використовуються критеріони
 </details>
 <details>
