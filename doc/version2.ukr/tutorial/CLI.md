@@ -8,11 +8,7 @@
 
 <details>
   <summary><u>Вивід команди <code>will .</code></u></summary>
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> 08085d0e16e886f47e8aa57e344e9d61fddeed57
 ```
 [user@user ~]$ will .  
 Command "."
@@ -46,26 +42,29 @@ Ambiguity. Did you mean?
 
 В утиліті `willbe` всі фрази починаються з вводу слів `will .`.  
 Для отримання довідки по обраній команді використовуйте синтаксис: `will .help [команда]`.    
-Тепер введіть в терміналі `will .help .build`, а потім `will .help .builds.list` і порівняйте з виводом в консолі нижче.
+Тепер введіть в терміналі `will .help .build`
 
 <details>
   <summary><u>Вивід команди <code>will .help .build</code></u></summary>
 
 ```
 [user@user ~]$ will .help .build
-Request ".help .build"
+Command ".help .build"
 
   .build - Build current module with spesified criterion.
 
 ```
 
 </details>
+
+Тепер спробуйте `will .help .builds.list` і порівняйте вивід.
+
 <details>
   <summary><u>Вивід команди <code>will .help .builds.list</code></u></summary>
 
 ```
 [user@user ~]$ will .help .builds.list
-Request ".help .builds.list"
+Command ".help .builds.list"
 
   .builds.list - List avaialable builds.
 
@@ -73,14 +72,14 @@ Request ".help .builds.list"
 
 </details>
 
-Тепер ви можете отримати довідку по командам. А що буде, якщо ввести неповну фразу `will .help .submodules`?
+Тепер спробуйте ввести неповну фразу `will .help .submodules`?
 
 <details>
   <summary><u>Вивід команди <code>will .help .submodules</code></u></summary>
 
 ```
 [user@user ~]$ will .help .submodules
-Request ".help .submodules"
+Command ".help .submodules"
 
   .submodules.list - List submodules of the current module.
   .submodules.clean - Delete all downloaded submodules.
@@ -93,27 +92,28 @@ Request ".help .submodules"
 
 </details>
 
-
-`Willbe` запропонував варіанти команд з вказаним словом. Це зручно, адже, якщо не памятаете повну фразу з командою або бажаєте отримати вичерпний список команд з визначеним словом, достатньо ввести першу частину, а утиліта запропонує доповнення.  
+Утиліта `willbe` запропонувала варіанти фраз з вказаним словом. Це зручно, адже, якщо ви не пам'ятаете повну фразу з командою або бажаєте отримати вичерпний список команд з даним словом, достатньо його ввести, а утиліта запропонує варіанти доповнення.
 
 ### <a name="list-commands"></a>  Команди групи `.list`
-Наступним рівнем є використання операцій з `will-файлами`. Створювати `will-файли` навчитесь пізніше, а поки склонуйте Git-репозиторій `willbe` з готовими прикладами за посиланням <https://github.com/Wandalen/willbe.git>.  
-В списку команд утиліти `willbe` багато таких, які закінчуються на `.list`. Ці команди взаємодіють з модулем та виводять інформацію про нього. Якщо ввести будь-яку з команд групи `.list` в директорії, де відсутній `will-файл`, ви отримаєте попередження про відсутність модуля. Введіть фразу `will .builds.list` в директорії без `will-файла` та порівняйте:  
+
+Тепер давайте попрацюємо із `will-файлами`. Склонуйте [git-репозиторій]( <https://github.com/Wandalen/willbe.git> ) `willbe` з готовими прикладами.  
+В списку команд утиліти `willbe` багато таких, які закінчуються на `.list`. Якщо ввести команду `.list` в директорії, де відсутній `will-файл`, ви отримаєте попередження про відсутність модуля.
+
+Введіть команду `will .about.list` в вашій поточній директорі ( припускається, що в ній нема `will-файла` )
 
 <details>
-  <summary><u>Вивід команди <code>will .builds.list</code></u></summary>
+  <summary><u>Вивід команди <code>will .builds.list</code>в поточній директорії</u></summary>
 
 ```
 [user@user ~]$ will .builds.list
-Request ".builds.list"
+Command .builds.list
 Found no module::/[path] at "/[path]"
 
 ```
 
 </details>
 
-
-Відкрийте склонований репозиторій і перейдіть за шляхом `./sample/submodules/` та відкрийте директорію в терміналі (або одразу виконайте `cd [path_to_willbe/willbe/sample/submodules/]`). Перевірте вміст директорії виконавши команду `ls -al`:
+Відкрийте склонований репозиторій і перейдіть за шляхом `./sample/submodules/`. Перевірте вміст директорії виконавши команду `ls -al`:
 
 <details>
   <summary><u>Вивід команди <code>ls -al</code></u></summary>
@@ -129,14 +129,30 @@ drwxr-xr-x 6 user user 4096 Мар 11 11:27 ..
 
 </details>
 
-Введіть фразу `will .builds.list`. Після того як на моніторі відобразиться результат, відкрийте файл `.will.yml` з допомогою текстового редактора. Порівняйте вміст секції `build` і текст який отримали в терміналі.  
+Для отримання описової інформацію про модуль використайте команду `will .about.list`
+
+<details>
+
+  <summary><u>Вивід команди <code>will .about.list</code></u></summary>
+
+```
+About
+  name : 'test'
+  description : 'To test commands of willbe-package'
+  version : '0.0.1'
+  enabled : 1
+```
+
+</details>
+
+Введіть команду `will .builds.list`. Після того як на моніторі відобразиться результат, відкрийте файл `.will.yml` з допомогою текстового редактора і порівняйте вміст секції `build` файла і вивід команди.
 
 <details>
   <summary><u>Вивід команди <code>will .builds.list</code></u></summary>
 
 ```
 [user@user ~]$ will .builds.list
-Request ".builds.list"
+Command ".builds.list"
 ...
 build::debug
   criterion :
@@ -149,7 +165,10 @@ build::debug
 
 ```
 
-<p>Секція <code>path</code></p>
+</details>
+
+<details>
+  <summary><u>Секція <code>build</code> файлу <code>.will.yml</code></u></summary>
 
 ```yaml
 build :
@@ -166,15 +185,16 @@ build :
 
 </details>
 
-Інформацію про окрему секцію `will-файла` можливо отримати ввівши фразу `will [назва секції]s.list` (закінчення `s` додається до назв секції, виключення - секція `about` - без змін).  
-Тепер дізнаємось інформацію з секції `submodule`. Порівняйте вивід:  
+Інформацію про окрему секцію `will-файла` можливо отримати ввівши фразу `will [назва секції].list`.
+
+Перерахуємо підмодулі.
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.list</code></u></summary>
 
 ```
 [user@user ~]$ will .submodules.list
-Request ".submodules.list"
+Command ".submodules.list"
    . Read : /path_to_file/submodules/.will.yml
  . Read 1 will-files in 0.084s
  ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
@@ -190,7 +210,10 @@ submodule::PathFundamentals
 
 ```
 
-<p>Секція <code>submodule</code></p>
+</details>
+
+<details>
+  <summary><u>Секція <code>submodule</code> файлу <code>.will.yml</code></u></summary>
 
 ```yaml
 submodule :
@@ -202,7 +225,7 @@ submodule :
 
 </details>
 
-В консолі виводиться попередження про помилку зчитування інформації про підмодулі і дається рекомендація завантажити їх з допомогою команди `.submodules.download`,  або спробувати очистити підмодулі перед їх завантаженням.  
+Перераховуючи підмодулі утиліта виводить попередження про помилку зчитування інформації про підмодулі і дає рекомендацію завантажити їх з допомогою команди `.submodules.download`.  
 
 <details>
   <summary><u>Повідомлення про помилку зчитування підмодулів</u></summary>
@@ -215,27 +238,9 @@ submodule :
 
 </details>
 
-Далі виводиться сервісна інформація про підмодулі - назва (після `Submodule::`), шлях (`path`), статус завантаження (`isDownloaded`) та експортні сценарії (`Exported builds`):  
+Інформація, що утиліта `willbe` вивела відповідає тій, яка записана в `will-файлі`.
 
-<details>
-  <summary><u>Сервісна інформація про підмодулі</u></summary>
-
-```
-submodule::Tools
-  path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  isDownloaded : false
-  Exported builds : []
-submodule::PathFundamentals
-  path : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
-  isDownloaded : false
-  Exported builds : []
-
-```
-
-</details>
-
-Шляхи і назви ресурсів співпадають і утиліта `willbe` вивела додаткову інформацію про статус підмодулів, яка спрощує управління модулем.  
-А щоб дізнатись повну інформацію про модуль введіть фразу `will .resources.list`:
+Щоб перерахувати всі ресурси поточного модуля використайте команду `will .resources.list`:
 
 <details>
   <summary><u>Вивід команди <code>will .resources.list</code></u></summary>
@@ -297,22 +302,6 @@ build::debug
     submodules.download
     delete.out.debug
     reflect.submodules
-
-```
-
-</details>
-
-Проглянувши вивід ви знайдете секцію `About`:  
-
-<details>
-  <summary><u>Секція <code>about</code> в виводі команди <code>will .resources.list</code></u></summary>
-
-```
-About
-  name : 'test'
-  description : 'To test commands of willbe-package'
-  version : '0.0.1'
-  enabled : 1
 
 ```
 

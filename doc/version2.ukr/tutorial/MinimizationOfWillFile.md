@@ -102,7 +102,7 @@ step::delete.debug.debug
 ```
 
 `Willbe` на основі критеріона `debug : [ 0,1 ]` створив два кроки: `delete.debug.` з критеріоном `debug : 0` та `delete.debug.debug` з критеріоном `debug : 1`, тобто при значенні `debug : 0` утиліта до назви процедури додає знак `.`, а якщо встановлено `1`, то використовується приставка `.[criterion_name]`.  
-Введіть фразу `will .build delete.debug`:
+Введіть команду `will .build delete.debug`:
 
 ```
 [user@user ~]$ will .build delete.debug

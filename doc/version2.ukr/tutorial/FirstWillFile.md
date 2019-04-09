@@ -52,7 +52,7 @@ about :
 
   ```
 [user@user ~]$ will .about.list
-Request ".about.list"
+Command ".about.list"
   . Read : /path_to_file/.will.yml
 . Read 1 will-files in 0.109s
 About
@@ -124,7 +124,7 @@ first
 </details>
 
 
-Зробіть наступний крок для побудови модуля - введіть фразу `will. submodules.download` в кореневій директорії `will-файла`:
+Зробіть наступний крок для побудови модуля - Введіть команду `will. submodules.download` в кореневій директорії `will-файла`:
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.download</code></u></summary> 

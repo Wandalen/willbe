@@ -66,7 +66,7 @@ Please specify exactly one build scenario, none satisfies passed arguments
 
 ```
 [user@user ~]$ will .build echo
-Request ".build echo"
+Command ".build echo"
 ...
   Building echo
  > echo "Hello, World"

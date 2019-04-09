@@ -93,7 +93,7 @@ submodule::PathFundamentals
 
 ### <a name="submodules-update"></a> Команда `.submodules.update`    
 З часом з'являється нові версії підмодулів і виникає потреба їх оновити. За оновлення підмодулів в утиліті `willbe` відповідає команда `.submodules.update`, яка зчитує дані про кожен завантажений підмодуль, порівнює їх з віддаленими версіями і, при наявності нової версії, встановить її.  
-Введіть фразу `will .submodules.update` 
+Введіть команду `will .submodules.update` 
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.update</code></u></summary>

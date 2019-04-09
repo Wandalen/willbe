@@ -77,14 +77,14 @@ defaultBuild
 </details>
 
 
-Введіть фразу `will .build` в кореневій директорії `will-файла`:  
+Введіть команду `will .build` в кореневій директорії `will-файла`:  
 
 <details>
   <summary><u>Вивід команди <code>will .build</code></u></summary>
 
 ```
 [user@user ~]$ will .build
-Request ".build"
+Command ".build"
 ...
   Building install
  > npm install

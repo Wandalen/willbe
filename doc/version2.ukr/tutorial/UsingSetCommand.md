@@ -63,7 +63,7 @@ build :
     
 ```
 [user@user ~]$ will ".set verbosity:8 ; .build"
-Request ".set ; .build"
+Command ".set ; .build"
  s module::/path_to_module/UsingSetCommand preformed 1
  s module::/path_to_module/UsingSetCommand preformed 2
  s module::/path_to_module/UsingSetCommand preformed 3
@@ -156,7 +156,7 @@ Found no .out.will file for module::setVerbosity at "/path_to_module/UsingSetCom
     
 ```
 [user@user ~]$ will .set verbosity:4 ; .export submodules.export
-Request ".set ; .export submodules.export"
+Command ".set ; .export submodules.export"
 Trying to open /path_to_module/UsingSetCommand.will
 Trying to open /path_to_module/UsingSetCommand.im.will
 Trying to open /path_to_module/UsingSetCommand.ex.will
@@ -189,7 +189,7 @@ Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPat
     
 ```
 [user@user ~]$ will .set verbosity:0 ; .build
-Request ".set ; .build"
+Command ".set ; .build"
  . Read 1 will-files in 0.082s
 
 ```

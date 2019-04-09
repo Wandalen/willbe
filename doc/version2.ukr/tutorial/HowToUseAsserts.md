@@ -93,7 +93,7 @@ build :
 </details>
 
 Модуль здійснює експорт файлів.  
-Введіть фразу `will .export export.debug` в кореневій директорії файла `.will.yml`:
+Введіть команду `will .export export.debug` в кореневій директорії файла `.will.yml`:
 
 <details>
   <summary><u>Вивід команди <code>will .export export.debug</code></u></summary>
