@@ -3,11 +3,10 @@
 Як користуватись командним рядком `willbe`, застосування команд `.help` та `.list`
 
 ### <a name="ui-intro"></a> Знайомство з користувацьким інтерфейсом. Команда `.help`
-Користувацький інтерфейс `willbe` представлено консоллю операційної системи. Тож, відкрийте її та введіть фразу яка складається з двох слів:  'will .'  (в утиліті `willbe` всі фрази починаються з вводу цих слів).  
-Фраза виведе повний список команд:  
+Користувацький інтерфейс `willbe` представлено консоллю операційної системи. Тож, відкрийте її та введіть фразу яка складається з двох слів:  `will .`. Фраза виведе повний список команд:  
 
 <details>
-  <summary><u>Вивід фрази <code>will .</code></u></summary>
+  <summary><u>Вивід команди <code>will .</code></u></summary>
 
 ```
 [user@user ~]$ will .  
@@ -38,17 +37,16 @@ Ambiguity. Did you mean?
   .with - Use "with" to select a module. 
   .each - Use "each" to iterate each module in a directory.
 
-
 ```
 
 </details>
 
-
-Якщо скористуватись [командою `.help`](#help-command), то результат не зміниться. Для отримання довідки по обраній команді використовуйте синтаксис: `will .help [команда]`.    
+В утиліті `willbe` всі фрази починаються з вводу слів `will .`.  
+Для отримання довідки по обраній команді використовуйте синтаксис: `will .help [команда]`.    
 Тепер введіть в терміналі `will .help .build`, а потім `will .help .builds.list` і порівняйте з виводом в консолі нижче. 
 
 <details>
-  <summary><u>Вивід фрази <code>will .help .build</code></u></summary>
+  <summary><u>Вивід команди <code>will .help .build</code></u></summary>
 
 ```
 [user@user ~]$ will .help .build
@@ -61,7 +59,7 @@ Request ".help .build"
 </details>
 
 <details>
-  <summary><u>Вивід фрази <code>will .help .builds.list</code></u></summary>
+  <summary><u>Вивід команди <code>will .help .builds.list</code></u></summary>
 
 ```
 [user@user ~]$ will .help .builds.list
@@ -77,7 +75,7 @@ Request ".help .builds.list"
 Тепер ви можете отримати довідку по командам. А що буде, якщо ввести неповну фразу `will .help .submodules`? 
 
 <details>
-  <summary><u>Вивід фрази <code>will .help .submodules</code></u></summary>
+  <summary><u>Вивід команди <code>will .help .submodules</code></u></summary>
 
 ```
 [user@user ~]$ will .help .submodules
@@ -96,110 +94,13 @@ Request ".help .submodules"
 
 
 `Willbe` запропонував варіанти команд з вказаним словом. Це зручно, адже, якщо не памятаете повну фразу з командою або бажаєте отримати вичерпний список команд з визначеним словом, достатньо ввести першу частину, а утиліта запропонує доповнення.  
-Спробуйте отримати довідку про команду `.build` змінивши `.` на інші знаки, такі, як `-` та `_` або літеру в команді `will .help`.  
-
-<details>
-  <summary><u>Вивід фрази <code>will -help .build</code></u></summary>
-
-```
-[user@user ~]$ will -help .build
-Illformed request "-help .build"
-
-  .help - Get help. 
-  .set - Command set. 
-  .resources.list - List information about resources of the current module. 
-  .paths.list - List paths of the current module. 
-  .submodules.list - List submodules of the current module. 
-  .reflectors.list - List avaialable reflectors. 
-  .steps.list - List avaialable steps. 
-  .builds.list - List avaialable builds. 
-  .exports.list - List avaialable exports. 
-  .about.list - List descriptive information about the module. 
-  .execution.list - List execution scenarios. 
-  .submodules.clean - Delete all downloaded submodules. 
-  .submodules.download - Download each submodule if such was not downloaded so far. 
-  .submodules.update - Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version. 
-  .submodules.fixate - Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended. 
-  .submodules.upgrade.refs - Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version. 
-  .shell - Execute shell command on the module. 
-  .clean - Clean current module. Delete genrated artifacts, temp files and downloaded submodules. 
-  .clean.what - Find out which files will be deleted by clean command. 
-  .build - Build current module with spesified criterion. 
-  .export - Export selected the module with spesified criterion. Save output to output file and archive. 
-  .with - Use "with" to select a module. 
-  .each - Use "each" to iterate each module in a directory.
-
-
-```
-
-</details>
-
-<details>
-<summary><u>Вивід фрази <code>will _help .build</code></u></summary>
-
-```
-[user@user ~]$ will -help .build
-Illformed request "-help .build"
-
-.help - Get help. 
-  .set - Command set. 
-  .resources.list - List information about resources of the current module. 
-  .paths.list - List paths of the current module. 
-  .submodules.list - List submodules of the current module. 
-  .reflectors.list - List avaialable reflectors. 
-  .steps.list - List avaialable steps. 
-  .builds.list - List avaialable builds. 
-  .exports.list - List avaialable exports. 
-  .about.list - List descriptive information about the module. 
-  .execution.list - List execution scenarios. 
-  .submodules.clean - Delete all downloaded submodules. 
-  .submodules.download - Download each submodule if such was not downloaded so far. 
-  .submodules.update - Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version. 
-  .submodules.fixate - Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended. 
-  .submodules.upgrade.refs - Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version. 
-  .shell - Execute shell command on the module. 
-  .clean - Clean current module. Delete genrated artifacts, temp files and downloaded submodules. 
-  .clean.what - Find out which files will be deleted by clean command. 
-  .build - Build current module with spesified criterion. 
-  .export - Export selected the module with spesified criterion. Save output to output file and archive. 
-  .with - Use "with" to select a module. 
-  .each - Use "each" to iterate each module in a directory.
-
-
-```
-
-</details>
-
-<details>
-  <summary><u>Вивід фрази <code>will .held .build</code></u></summary>
-
-```
-[user@user ~]$ will .held .build
-Request ".held .build"
-------------------------------- unhandled errorr ------------------------------->
-
- * Application
-Current path : /[path]
-Exec path : /usr/bin/node /usr/lib/node_modules/willbe/proto/dwtools/atop/will/MainTop.s .held .build
-
-Unknown subject ".held"
-Try subject ".help"   
-------------------------------- unhandled errorr -------------------------------<
-
-```
-
-</details>
-
-
-Не залишається сумнівів, що перед командами завжди потрібно ставити `.` та вірно вводити фразу.  
 
 ### <a name="list-commands"></a>  Команди групи `.list`
-Наступним рівнем є використання операцій з `will-файлами`. Створювати `will-файли` навчимось пізніше, а поки склонуйте Git-репозиторій `willbe` з готовими прикладами за посиланням <https://github.com/Wandalen/willbe.git>.  
-
+Наступним рівнем є використання операцій з `will-файлами`. Створювати `will-файли` навчитесь пізніше, а поки склонуйте Git-репозиторій `willbe` з готовими прикладами за посиланням <https://github.com/Wandalen/willbe.git>.  
 В списку команд утиліти `willbe` багато таких, які закінчуються на `.list`. Ці команди взаємодіють з модулем та виводять інформацію про нього. Якщо ввести будь-яку з команд групи `.list` в директорії, де відсутній `will-файл`, ви отримаєте попередження про відсутність модуля. Введіть фразу `will .builds.list` в директорії без `will-файла` та порівняйте:  
 
 <details>
-  <summary><u>Вивід фрази <code>will .builds.list</code></u></summary>
+  <summary><u>Вивід команди <code>will .builds.list</code></u></summary>
 
 ```
 [user@user ~]$ will .builds.list
@@ -227,11 +128,10 @@ drwxr-xr-x 6 user user 4096 Мар 11 11:27 ..
 
 </details>
 
-
 Введіть фразу `will .builds.list`. Після того як на моніторі відобразиться результат, відкрийте файл `.will.yml` з допомогою текстового редактора. Порівняйте вміст секції `build` і текст який отримали в терміналі.  
 
 <details>
-  <summary><u>Вивід фрази <code>will .builds.list</code></u></summary>
+  <summary><u>Вивід команди <code>will .builds.list</code></u></summary>
 
 ```
 [user@user ~]$ will .builds.list
@@ -269,7 +169,7 @@ build :
 Тепер дізнаємось інформацію з секції `submodule`. Порівняйте:  
 
 <details>
-  <summary><u>Вивід фрази <code>will .submodules.list</code></u></summary>
+  <summary><u>Вивід команди <code>will .submodules.list</code></u></summary>
 
 ```
 [user@user ~]$ will .submodules.list
@@ -304,7 +204,7 @@ submodule :
 В консолі виводиться попередження про помилку зчитування інформації про підмодулі і дається рекомендація завантажити їх з допомогою команди `.submodules.download`,  або спробувати очистити підмодулі перед їх завантаженням.  
 
 <details>
-  <summary><u>Відкрийте, щоб проглянути</u></summary>
+  <summary><u>Повідомлення про помилку зчитування підмодулів</u></summary>
 
 ```
 ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
@@ -317,7 +217,7 @@ submodule :
 Далі виводиться сервісна інформація про підмодулі - назва (після `Submodule::`), шлях (`path`), статус завантаження (`isDownloaded`) та експортні сценарії (`Exported builds`):  
 
 <details>
-  <summary><u>Відкрийте, щоб проглянути</u></summary>
+  <summary><u>Сервісна інформація про підмодулі</u></summary>
     
 ```
 submodule::Tools
@@ -337,7 +237,7 @@ submodule::PathFundamentals
 А щоб дізнатись повну інформацію про модуль введіть фразу `will .resources.list`:
 
 <details>
-  <summary><u>Вивід фрази <code>will .resources.list</code></u></summary>
+  <summary><u>Вивід команди <code>will .resources.list</code></u></summary>
 
 ```
 [user@user ~]$ will .resources.list
@@ -404,7 +304,7 @@ build::debug
 Проглянувши вивід ви знайдете секцію `About`:  
 
 <details>
-  <summary><u>Відкрийте, щоб проглянути</u></summary>
+  <summary><u>Секція <code>about</code> в виводі команди <code>will .resources.list</code></u></summary>
 
 ```
 About
@@ -420,7 +320,7 @@ About
 В утиліті `willbe` деякі ресурси мають значення за замовчуванням. Якщо такий ресурс відсутній, то утиліта його генерує в оперативну пам'ять не змінюючи `will`-файл - `willbe` не має функцій для модифікації `will-файлів` користувача.  
 Саме тому в виводі команди `will .resources.list` секція `about` має поле `enabled` яке відсутнє в `will-файлі`:  
 <details>
-  <summary><u>Відкрийте, щоб проглянути</u></summary>
+  <summary><u>Секція <code>about</code></u></summary>
 
 ```yaml
 about :

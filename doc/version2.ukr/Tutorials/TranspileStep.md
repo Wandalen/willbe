@@ -118,7 +118,7 @@ build :
 В `will-файлі` відсутній крок `transpile.proto`, який вказано в збірці. Справа в тому, що для вбудованих кроків, яким необхідний рефлектор можна неявно його створити, указавши поле `step` з назвою вбудованого кроку. В рефлекторі `transpile.proto` указано поле `step : predefined.transpile`. Перевірте вивід команди `.steps.list` (в директорії `will-файла`):  
 
 <details>
-  <summary><u>Вивід фрази <code>will .steps.list</code></u></summary>
+  <summary><u>Вивід команди <code>will .steps.list</code></u></summary>
 
 ```
 [user@user ~]$ will .steps.list
@@ -151,7 +151,7 @@ step::transpile.proto.debug
 
 <details>
   <summary><u>Реліз і дебаг-побудови</u></summary>
-<p>Вивід фрази <code>will .build transpile.proto.</code></p>
+<p>Вивід команди <code>will .build transpile.proto.</code></p>
     
 ```
 [user@user ~]$ will .build transpile.proto.
@@ -181,7 +181,7 @@ transpile
 
 ```
 
-<p>Вивід фрази <code>will .build transpile.proto.debug</code></p>
+<p>Вивід команди <code>will .build transpile.proto.debug</code></p>
 
 ```
 [user@user ~]$ will .build transpile.proto.debug
