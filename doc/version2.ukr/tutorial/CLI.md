@@ -1,49 +1,49 @@
-# Як користуватися інтерфейсом командного рядка `willbe`
+# Інтерфейс командного рядка</a></summary>
 
-Як користуватись командним рядком `willbe`, застосування команд `.help` та `.list`
+Як користуватися інтерфейсом командного рядка утиліти <code>willbe</code></a></summary>. Застосування команд <code>.help</code> та <code>.list</code>.
 
 ### <a name="ui-intro"></a> Знайомство з користувацьким інтерфейсом. Команда `.help`
-Користувацький інтерфейс `willbe` представлено консоллю операційної системи. Тож, відкрийте її та введіть фразу яка складається з двох слів:  `will .`. Фраза виведе повний список команд:  
+
+Після [встановлення](<Instalation.md>) утиліти `willbe` в консолі вашої ОС введіть команду `will .`.
 
 <details>
   <summary><u>Вивід команди <code>will .</code></u></summary>
 
-```
+<code>
 [user@user ~]$ will .  
-Request "."  
-Request "."
+Command "."
 Ambiguity. Did you mean?
-  .help - Get help. 
-  .set - Command set. 
-  .resources.list - List information about resources of the current module. 
-  .paths.list - List paths of the current module. 
-  .submodules.list - List submodules of the current module. 
-  .reflectors.list - List avaialable reflectors. 
-  .steps.list - List avaialable steps. 
-  .builds.list - List avaialable builds. 
-  .exports.list - List avaialable exports. 
-  .about.list - List descriptive information about the module. 
-  .execution.list - List execution scenarios. 
-  .submodules.clean - Delete all downloaded submodules. 
-  .submodules.download - Download each submodule if such was not downloaded so far. 
-  .submodules.update - Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version. 
-  .submodules.fixate - Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended. 
-  .submodules.upgrade.refs - Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version. 
-  .shell - Execute shell command on the module. 
-  .clean - Clean current module. Delete genrated artifacts, temp files and downloaded submodules. 
-  .clean.what - Find out which files will be deleted by clean command. 
-  .build - Build current module with spesified criterion. 
-  .export - Export selected the module with spesified criterion. Save output to output file and archive. 
-  .with - Use "with" to select a module. 
+  .help - Get help.
+  .set - Command set.
+  .resources.list - List information about resources of the current module.
+  .paths.list - List paths of the current module.
+  .submodules.list - List submodules of the current module.
+  .reflectors.list - List avaialable reflectors.
+  .steps.list - List avaialable steps.
+  .builds.list - List avaialable builds.
+  .exports.list - List avaialable exports.
+  .about.list - List descriptive information about the module.
+  .execution.list - List execution scenarios.
+  .submodules.clean - Delete all downloaded submodules.
+  .submodules.download - Download each submodule if such was not downloaded so far.
+  .submodules.update - Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.
+  .submodules.fixate - Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.
+  .submodules.upgrade.refs - Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.
+  .shell - Execute shell command on the module.
+  .clean - Clean current module. Delete genrated artifacts, temp files and downloaded submodules.
+  .clean.what - Find out which files will be deleted by clean command.
+  .build - Build current module with spesified criterion.
+  .export - Export selected the module with spesified criterion. Save output to output file and archive.
+  .with - Use "with" to select a module.
   .each - Use "each" to iterate each module in a directory.
 
-```
+</code>
 
 </details>
 
 В утиліті `willbe` всі фрази починаються з вводу слів `will .`.  
 Для отримання довідки по обраній команді використовуйте синтаксис: `will .help [команда]`.    
-Тепер введіть в терміналі `will .help .build`, а потім `will .help .builds.list` і порівняйте з виводом в консолі нижче. 
+Тепер введіть в терміналі `will .help .build`, а потім `will .help .builds.list` і порівняйте з виводом в консолі нижче.
 
 <details>
   <summary><u>Вивід команди <code>will .help .build</code></u></summary>
@@ -72,7 +72,7 @@ Request ".help .builds.list"
 </details>
 
 
-Тепер ви можете отримати довідку по командам. А що буде, якщо ввести неповну фразу `will .help .submodules`? 
+Тепер ви можете отримати довідку по командам. А що буде, якщо ввести неповну фразу `will .help .submodules`?
 
 <details>
   <summary><u>Вивід команди <code>will .help .submodules</code></u></summary>
@@ -81,11 +81,11 @@ Request ".help .builds.list"
 [user@user ~]$ will .help .submodules
 Request ".help .submodules"
 
-  .submodules.list - List submodules of the current module. 
-  .submodules.clean - Delete all downloaded submodules. 
-  .submodules.download - Download each submodule if such was not downloaded so far. 
-  .submodules.update - Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version. 
-  .submodules.fixate - Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended. 
+  .submodules.list - List submodules of the current module.
+  .submodules.clean - Delete all downloaded submodules.
+  .submodules.download - Download each submodule if such was not downloaded so far.
+  .submodules.update - Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.
+  .submodules.fixate - Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.
   .submodules.upgrade.refs - Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.
 
 ```
@@ -116,7 +116,7 @@ Found no module::/[path] at "/[path]"
 
 <details>
   <summary><u>Вивід команди <code>ls -al</code></u></summary>
-    
+
 ```
 [user@user ~]$ ls -al
 итого 12
@@ -138,11 +138,11 @@ drwxr-xr-x 6 user user 4096 Мар 11 11:27 ..
 Request ".builds.list"
 ...
 build::debug
-  criterion : 
-    default : 1 
-  steps : 
-    submodules.download 
-    delete.out.debug 
+  criterion :
+    default : 1
+  steps :
+    submodules.download
+    delete.out.debug
     reflect.submodules
 
 
@@ -218,7 +218,7 @@ submodule :
 
 <details>
   <summary><u>Сервісна інформація про підмодулі</u></summary>
-    
+
 ```
 submodule::Tools
   path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
@@ -246,15 +246,15 @@ submodule::PathFundamentals
  ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
  ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
 About
-  name : 'test' 
-  description : 'To test commands of willbe-package' 
-  version : '0.0.1' 
+  name : 'test'
+  description : 'To test commands of willbe-package'
+  version : '0.0.1'
   enabled : 1
 
 Paths
-  predefined.willbe : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec' 
-  predefined.will.files : '/path_to_file/.will.yml' 
-  predefined.dir : '/path_to_file' 
+  predefined.willbe : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec'
+  predefined.will.files : '/path_to_file/.will.yml'
+  predefined.dir : '/path_to_file'
   proto : './proto'
   in : '.'
   out : 'out'
@@ -308,9 +308,9 @@ build::debug
 
 ```
 About
-  name : 'test' 
-  description : 'To test commands of willbe-package' 
-  version : '0.0.1' 
+  name : 'test'
+  description : 'To test commands of willbe-package'
+  version : '0.0.1'
   enabled : 1
 
 ```
@@ -330,7 +330,7 @@ about :
 
 ```
 
-</details> 
+</details>
 
 ### <a name="conclusion"></a> Підсумок
 
