@@ -239,6 +239,8 @@ path:
       - proto/dwtools/atop/will.test/asset/multiple-exports-doc/doc.im.will.yml
       - proto/dwtools/atop/will.test/asset/multiple-exports-doc/doc
       - proto/dwtools/atop/will.test/asset/multiple-exports-doc/doc/file.md
+      - proto/dwtools/atop/will.test/asset/multiple-exports-doc/doc.out
+      - proto/dwtools/atop/will.test/asset/multiple-exports-doc/doc.out/file.md
       - proto/dwtools/atop/will.test/asset/multiple-exports-doc/proto
       - >-
         proto/dwtools/atop/will.test/asset/multiple-exports-doc/proto/File.debug.js
@@ -352,6 +354,8 @@ path:
       - proto/dwtools/atop/will.test/asset/scaffold/proto/File.debug.js
       - proto/dwtools/atop/will.test/asset/scaffold/proto/File.js
       - proto/dwtools/atop/will.test/asset/scaffold/proto/File.release.js
+      - proto/dwtools/atop/will.test/asset/shell
+      - proto/dwtools/atop/will.test/asset/shell/script.js
       - proto/dwtools/atop/will.test/asset/shell-composite
       - proto/dwtools/atop/will.test/asset/shell-composite/proto
       - proto/dwtools/atop/will.test/asset/shell-composite/proto/File1.js
