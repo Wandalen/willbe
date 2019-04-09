@@ -136,7 +136,7 @@ function singleModuleList( test )
     test.is( _.strHas( got.output, `version : '0.0.1'` ) );
     return null;
   })
-  
+
   /*-*/
   /* To test output by command with glob and criterion args*/
   /* Glob using negative test */
@@ -153,8 +153,8 @@ function singleModuleList( test )
 
     return null;
   })
-    
-  /* Glob using positive test */ 
+
+  /* Glob using positive test */
   shell({ args : [ '.resources.list *proto*' ] })
 
   .thenKeep( ( got ) =>
@@ -162,16 +162,16 @@ function singleModuleList( test )
     test.case = 'resources list globs';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, `proto : './proto'` ) );
-        
+
     test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
     test.is( _.strHas( got.output, `. : '.'` ) );
-    
+
     test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
     test.is( _.strHas( got.output, `predefined.reflect` ) );
-      
+
     test.is( _.strHas( got.output, 'build::proto.export'  ) );
     test.is( _.strHas( got.output, `step::export.proto` ) );
-      
+
     return null;
   })
 
@@ -189,8 +189,8 @@ function singleModuleList( test )
 
     return null;
   })
-    
-  /* Glob and criterion using positive test */ 
+
+  /* Glob and criterion using positive test */
   shell({ args : [ '.resources.list *proto* debug:0' ] })
 
   .thenKeep( ( got ) =>
@@ -198,19 +198,19 @@ function singleModuleList( test )
     test.case = 'globs and criterions positive';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, `out.release : './out/release'` ) );
-        
+
     test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
     test.is( _.strHas( got.output, `. : '.'` ) );
-    
+
     test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
     test.is( _.strHas( got.output, `predefined.reflect` ) );
-      
+
     test.is( _.strHas( got.output, 'build::release.compiled'  ) );
     test.is( _.strHas( got.output, `step::reflect.proto.*=1` ) );
-      
+
     return null;
   })
-    
+
   /* Glob and two criterions using negative test */
   shell({ args : [ '.resources.list * debug:0 raw:1' ] })
 
@@ -223,22 +223,22 @@ function singleModuleList( test )
 
     return null;
   })
-    
-  /* Glob and two criterion using positive test */ 
+
+  /* Glob and two criterion using positive test */
   shell({ args : [ '.resources.list * debug:0 raw:1' ] })
 
   .thenKeep( ( got ) =>
   {
     test.case = 'two criterions positive';
     test.identical( got.exitCode, 0 );
-        
+
     test.is( _.strHas( got.output, 'step::reflect.proto.raw'  ) );
     test.is( _.strHas( got.output, 'build::release.raw'  ) );
-      
+
     return null;
   })
 
-  /* end test */     
+  /* end test */
   /* - */
 
   shell({ args : [ '.paths.list' ] })
