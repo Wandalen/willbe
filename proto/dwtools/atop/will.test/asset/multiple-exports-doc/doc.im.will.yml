@@ -35,23 +35,6 @@ reflector :
     criterion :
       doc : 1
 
-step :
-
-  reflect.submodules :
-    inherit : predefined.reflect
-    reflector :
-      reflector::reflect.submodules*=1
-    criterion :
-      doc : 0
-      debug : [ 0,1 ]
-
-  reflect.doc :
-    inherit : predefined.reflect
-    reflector :
-      reflector::reflect.doc*=1
-    criterion :
-      doc : 1
-
 build :
 
   debug :

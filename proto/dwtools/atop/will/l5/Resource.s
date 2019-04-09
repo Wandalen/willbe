@@ -325,12 +325,17 @@ function _inheritForm( o )
   let module = resource.module;
   let original = resource.original;
 
+  if( resource.inherited === 1 )
+  return resource;
+
   _.assert( arguments.length === 1 );
   _.assert( resource.formed === 1 );
+  _.assert( resource.inherited === 0 );
   _.assert( _.arrayIs( resource.inherit ) );
   _.assert( o.ancestors === undefined );
-
   _.arrayAppendOnceStrictly( o.visited, resource );
+
+  resource.inherited = 1;
 
   /* begin */
 
@@ -341,6 +346,7 @@ function _inheritForm( o )
 
   _.arrayRemoveElementOnceStrictly( o.visited, resource );
   _.assert( original === resource.original );
+  _.assert( resource.inherited === 1 );
   return resource;
 }
 
@@ -358,8 +364,10 @@ function _inheritMultiple( o )
 
   /* begin */
 
-  o.ancestors.map( ( ancestor ) =>
+  // o.ancestors.map( ( ancestor ) =>
+  for( let a = o.ancestors.length-1 ; a >= 0 ; a-- )
   {
+    let ancestor = o.ancestors[ a ];
 
     _.assert( _.strIs( resource.KindName ) );
     _.assert( _.strIs( ancestor ) );
@@ -407,7 +415,7 @@ function _inheritMultiple( o )
       }
     }
 
-  });
+  }
 
   /* end */
 
@@ -890,6 +898,7 @@ let Restricts =
   module : null,
   original : null,
   formed : 0,
+  inherited : 0,
 }
 
 let Statics =

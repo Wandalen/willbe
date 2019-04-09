@@ -169,7 +169,6 @@ function open()
   try
   {
 
-    // debugger;
     if( !willf.exists() )
     throw _.err( 'No will-file' );
 
@@ -178,7 +177,11 @@ function open()
       filePath : willf.filePath,
       verbosity : will.verbosity-2,
       found : willf._found,
-    });
+    })
+
+    _.assert( _.mapIs( willf.data ) );
+
+    // willf.data = willf.data || Object.create( null );
 
   }
   catch( err )

@@ -217,7 +217,8 @@ function makeNamed( test )
     test.identical( module.willFileArray.length, 2 );
     test.identical( _.mapKeys( module.willFileWithRoleMap ), [ 'import', 'export' ] );
     test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
-    test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.submodules.', 'reflect.submodules.debug' ] );
+    // test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.submodules.', 'reflect.submodules.debug' ] );
+    test.identical( _.filter( _.mapKeys( module.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug' ] );
     test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.update', 'submodules.reload', 'submodules.clean', 'clean', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [] );
@@ -344,7 +345,8 @@ function makeAnon( test )
     test.identical( module.willFileArray.length, 2 );
     test.identical( _.mapKeys( module.willFileWithRoleMap ), [ 'import', 'export' ] );
     test.identical( _.mapKeys( module.submoduleMap ), [] );
-    test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.proto.', 'reflect.proto.debug' ] );
+    // test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.proto.', 'reflect.proto.debug' ] );
+    test.identical( _.filter( _.mapKeys( module.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.proto.', 'reflect.proto.debug' ] );
     test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.update', 'submodules.reload', 'submodules.clean', 'clean', 'reflect.proto.', 'reflect.proto.debug', 'reflect.proto.raw', 'reflect.proto.debug.raw', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.buildMap ), [ 'debug.raw', 'debug.compiled', 'release.raw', 'release.compiled', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [] );
@@ -469,7 +471,8 @@ function makeOutNamed( test )
     test.identical( module.willFileArray.length, 1 );
     test.identical( _.mapKeys( module.willFileWithRoleMap ), [ 'single' ] );
     test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
-    test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.', 'exportedFiles.export.', 'exported.export.debug', 'exportedFiles.export.debug' ] );
+    // test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.', 'exportedFiles.export.', 'exported.export.debug', 'exportedFiles.export.debug' ] );
+    test.identical( _.filter( _.mapKeys( module.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.', 'exportedFiles.export.', 'exported.export.debug', 'exportedFiles.export.debug' ] );
     test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.update', 'submodules.reload', 'submodules.clean', 'clean', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug', 'exported.export.', 'exportedFiles.export.', 'exported.export.debug', 'exportedFiles.export.debug' ] );
     test.identical( _.mapKeys( module.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [ 'export.debug', 'export.' ] );
@@ -2599,6 +2602,75 @@ pathsResolveComposite.timeOut = 130000;
 
 //
 
+function pathsResolveArray( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-shell' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulePath = _.path.join( routinePath, 'v1' );
+  let ready = new _.Consequence().take( null );
+  let will = new _.Will;
+  let path = _.fileProvider.path;
+
+  function pin( filePath )
+  {
+    return path.s.join( routinePath, '', filePath );
+  }
+
+  function pout( filePath )
+  {
+    return path.s.join( routinePath, 'out', filePath );
+  }
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  var module = will.moduleMake({ willFilesPath : modulePath });
+
+  /* - */
+
+  module.ready.thenKeep( ( arg ) =>
+  {
+
+    test.case = 'path::produced.js';
+    var got = module.pathResolve
+    ({
+      selector : 'path::produced.js',
+      pathResolving : 'in',
+      missingAction : 'undefine',
+    });
+    var expected = pin( 'file/Produced.js2' );
+    test.identical( got, expected );
+
+    test.case = 'path::temp';
+    var got = module.pathResolve
+    ({
+      selector : 'path::temp',
+      pathResolving : 'in',
+      missingAction : 'undefine',
+    });
+    var expected = pin( [ 'file/Produced.txt2', 'file/Produced.js2' ] );
+    test.identical( got, expected );
+
+    return null;
+  });
+
+  /* - */
+
+  module.ready.finallyKeep( ( err, arg ) =>
+  {
+    test.is( err === undefined );
+    module.finit();
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  return module.ready.split();
+}
+
+//
+
 function reflectorResolve( test )
 {
   let self = this;
@@ -2918,10 +2990,10 @@ function submodulesResolve( test )
 
 //
 
-function submodulesDownload( test )
+function submodulesDeleteAndDownload( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-del-download' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, '.' );
   let submodulesPath = _.path.join( routinePath, '.module' );
@@ -2941,7 +3013,7 @@ function submodulesDownload( test )
   .then( () =>
   {
 
-    let builds = module.buildsSelect({ name : 'echo' });
+    let builds = module.buildsSelect({ name : 'build' });
     test.identical( builds.length, 1 );
 
     debugger;
@@ -2980,9 +3052,11 @@ function submodulesDownload( test )
     return con;
   })
 
+  /* */
+
 }
 
-submodulesResolve.timeOut = 300000;
+submodulesDeleteAndDownload.timeOut = 300000;
 
 // --
 // define class
@@ -3018,11 +3092,12 @@ var Self =
     pathsResolveImportIn,
     pathsResolveOutFileOfExports,
     pathsResolveComposite,
+    pathsResolveArray,
 
     reflectorResolve,
 
     submodulesResolve,
-    submodulesDownload,
+    submodulesDeleteAndDownload,
 
   }
 
