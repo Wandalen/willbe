@@ -6,7 +6,7 @@
 Створіть новий `will-файл` в директорії `buildModule`:  
 
 <details>
-  <summary><u>Повний код файла <code>.will.yml</code>. Структура модуля</u></summary>
+  <summary><u>Повний код файла <code>.will.yml</code></u></summary>
 
 ```yaml
 about :
@@ -31,7 +31,9 @@ build :
     
 ```
 
-<p>Структура модуля</p>
+</details>
+<details>
+  <summary><u>Структура файлів</u></summary>
 
 ```
 buildModule              
@@ -40,7 +42,6 @@ buildModule
 ```
 
 </details>
-
 
 Секція `step` об'єднує ресурси (кроки) користувача, які описують процедури створення модульної системи. В прикладі, крок під назвою `echo.hello` має два поля - `shell` для використання консолі операційної системи (команда `echo` виводить рядок `Hello, World!`) та `currentPath` - директорія в якій виконується команда.  
 Збірка `echo` виконуватиме крок `echo.hello`.  
@@ -58,8 +59,7 @@ Please specify exactly one build scenario, none satisfies passed arguments
 
 </details>
 
-
-`Willbe` не знайшов сценарію побудови, тому, вкажемо назву збірки аргументом команди `.build`:
+Утиліта на знайшла сценарію побудови, тому, вкажіть назву збірки аргументом команди `.build`:
 
 <details>
   <summary><u>Вивід команди <code>will .build echo</code></u></summary>
@@ -75,7 +75,9 @@ Hello, World
 
 ```
 
-<p>Структура модуля після побудови</p>
+</details>
+<details>
+  <summary><u>Структура модуля після побудови</u></summary> 
 
 ```
 buildModule              
@@ -89,7 +91,7 @@ buildModule
 `Willbe` дозволяє будувати збірки побудови модуля комбінуючи кроки. Тому, замініть вміст `.will.yml` як в приведеному коді:
 
 <details>
-  <summary><u>Повний лістинг файла <code>.will.yml</code></u></summary>
+  <summary><u>Код файла <code>.will.yml</code></u></summary>
 
 ```yaml
 
@@ -124,7 +126,9 @@ build :
 
 ```
 
-<p>Структура модуля</p>
+</details>
+<details>
+  <summary><u>Структура модуля</u></summary>
 
 ```
 buildModule              
@@ -134,13 +138,11 @@ buildModule
 
 </details>
 
-
 В файл додано крок `echo.two`, який виводить фразу `It's Willbe` в консоль. Сценарій збірки `echo` включає два кроки, а збірка `echo.two` - один.  
 Запустіть окремі збірки та порівняйте результати виводу:  
 
 <details>
-  <summary><u>Вивід команд <code>will .build echo</code> та <code>will .build echo.two</code></u></summary>
-    <p>Збірка 'echo'</p>
+  <summary><u>Вивід команди <code>will .build echo</code></u></summary>
 
 ```
 [user@user ~]$ will .build echo
@@ -154,7 +156,10 @@ It's Willbe
 
 ``` 
 
-<p>Збірка `echo.two`</p>
+</details>
+<details>
+  <summary><u>Вивід команди <code>will .build echo.two</code></u>
+
 
 ```
 [user@user ~]$ will .build echo.two
@@ -165,8 +170,9 @@ It's Willbe
   Built echo in 0.095s
 
 ``` 
-
-<p>Структура модуля після побудов</p>
+</details>
+<details>
+  <summary><u>Структура модуля після побудови</u></summary>
 
 ```
 buildModule              
@@ -177,7 +183,7 @@ buildModule
 </details>
 
 ### Підсумок
-- `Willbe` [працює з командною оболонкою](#shell-resource) операційної системи.  
+- `Willbe` працює з командною оболонкою операційної системи.  
 - Кроки в сценарії збірки виконуються згідно послідовності запису.  
 
 [Наступний туторіал](PredefinedSteps.md)  

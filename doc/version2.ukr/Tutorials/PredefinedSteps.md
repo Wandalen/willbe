@@ -7,7 +7,7 @@
 Створіть новий `will-файл` в директорії `predefinedSteps` та додайте в нього приведений код:  
 
 <details>
-  <summary><u>Повний код файла <code>.will.yml</code></u></summary>
+  <summary><u>Код файла <code>.will.yml</code></u></summary>
 
 ```yaml
 about :
@@ -32,9 +32,9 @@ build :
        steps :
           - submodules.download
 
-   upgrade :
+   update :
        steps :
-          - submodules.upgrade
+          - submodules.update
 
    clean :
        steps :
@@ -62,7 +62,7 @@ predefinedSteps
 Вбудовані кроки управління підмодулями формулюються як команди в консолі операційної системи (для більшості команд утиліти `willbe` є вбудовані кроки). Кроки поміщені в поле `steps` секції `build`, оскільки, вони не мають додаткових полів опису. Порівняйте з повною формою запису:
 
 <details>
-  <summary><u>Повний форма запису вбудованого кроку <code>submodules.download</code></u></summary>
+  <summary><u>Повнa форма запису вбудованого кроку <code>submodules.download</code></u></summary>
 
 ```yaml
 step :
@@ -85,7 +85,7 @@ build :
 Виконайте побудови збірок (команди вводяться в кореневій директорії `will-файла`):
 
 <details>
-  <summary><u>Вивід фрази <code>will .build download</code> та структура модуля</u></summary>
+  <summary><u>Вивід команди <code>will .build download</code></u></summary>
 
 ```
 [user@user ~]$ will .build download
@@ -95,11 +95,13 @@ build :
      . Read : /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
      + module::PathFundamentals was downloaded in 4.903s
    + 2/2 submodule(s) of module::predefinedSteps were downloaded in 17.652s
-  Built download in 17.698s
+  Built module::first / build::download in 17.698s
 
 ```
 
-<p>Структура модуля після побудови</p>
+</details>
+<details>
+  <summary><u>Структура модуля після побудови</u></summary>
 
 ```
 predefinedSteps
@@ -113,18 +115,20 @@ predefinedSteps
 </details>
 
 <details>
-  <summary><u>Вивід фрази <code>will .build clean</code> та структура модуля</u></summary>
+  <summary><u>Вивід команди <code>will .build clean</code></u></summary>
 
 ```
 [user@user ~]$ will .build clean
   Building clean
   ...
    - Clean deleted 346 file(s) in 1.159s
-  Built clean in 1.207s
+  Built module::first / build::clean in 1.207s
   
 ```
 
-<p>Структура модуля після побудови</p>
+</details>
+<details>
+  <summary><u>Структура модуля після побудови</u></summary>
 
 ```
 predefinedSteps
@@ -135,22 +139,25 @@ predefinedSteps
 </details>
 
 <details>
-  <summary><u>Вивід фрази <code>will .build upgrade</code> та структура модуля</u></summary>
+  <summary><u>Вивід команди <code>will .build update</code></u></summary>
 
 ```
-[user@user ~]$ will .build upgrade
+[user@user ~]$ will .build update
 ...
-  Building upgrade
+  Building module::first / build::upgrade
      . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
-     + module::Tools was upgraded in 17.024s
+     + module::Tools version master was updated in 13.922s
      . Read : /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
-     + module::PathFundamentals was upgraded in 4.256s
-   + 2/2 submodule(s) of module::predefinedSteps were upgraded in 21.288s
-  Built upgrade in 21.330s
+     + module::PathFundamentals version master was updated in 3.553s
+   + 2/2 submodule(s) of module::first were updated in 17.484s
+  Built module::first / build::update in 17.538s
+
 
   ```
 
-<p>Структура модуля після побудови</p>
+</details>
+<details>
+  <summary><u>Структура модуля після побудови</u></summary>
 
 ```
 predefinedSteps
@@ -164,7 +171,7 @@ predefinedSteps
 </details>
 
 <details>
-  <summary><u>Вивід фрази <code>will .build clean.download</code> та структура модуля</u></summary>
+  <summary><u>Вивід команди <code>will .build clean.download</code></u></summary>
 
 ```
 [user@user ~]$ will .build clean.download
@@ -176,11 +183,13 @@ predefinedSteps
    + 2/2 submodule(s) of module::predefinedSteps were downloaded in 16.610s
  > echo "Done"
 Done
-  Built clean.download in 17.907s
+  Built module::first / build::clean.download in 17.907s
 
 ```
 
-<p>Структура модуля після побудови</p>
+</details>
+<details>
+  <summary><u>Структура модуля після побудови</u></summary>
 
 ```
 predefinedSteps
@@ -194,7 +203,7 @@ predefinedSteps
 </details>
 
   
-Послідовність виконання дій показує, що фраза `will .build upgrade` при відсутності підмодулів також виконує завантаження. Тому, якщо ви видалите підмодуль, утиліта його завантажить при наступному оновленні. Для повного видалення підмодуля відредагуйте секцію `submodule` `will-файлa`.  
+Послідовність виконання дій показує, що фраза `will .build update` при відсутності підмодулів також виконує завантаження. Тому, якщо ви видалите підмодуль, утиліта його завантажить при наступному оновленні. Для повного видалення підмодуля відредагуйте секцію `submodule` `will-файлa`.  
 
 ### Підсумок  
 - Вбудовані кроки спрощують створення модульної системи.  

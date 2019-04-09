@@ -9,14 +9,6 @@
   Процес встановлення утиліти <code>willbe</code>
 </details>
 <details>
-  <summary><a href="#Concepts">Концепції</a></summary>
-  Основні концепції. Допомагає побачити загальну картину
-</details>
-<details>
-  <summary><a href="./Tutorials/CompositionOfWillFile.md">Структура <code>will-файла</code></a></summary>
-  В туторіалі описано структуру секцій та ресурсів <code>will-файлу</code>
-</details>
-<details>
   <summary><a href="./Tutorials/HowToUseCommandLineInterfaceOfWill.md">Як користуватися інтерфейсом командного рядка <code>willbe</code></a></summary>
   Як користуватись командним рядком <code>willbe</code>, застосування команд <code>.help</code> та <code>.list</code>
 </details>

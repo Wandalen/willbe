@@ -69,7 +69,7 @@ list
 Введіть фразу для виводу переліку всіх ресурсів:  
 
 <details>
-  <summary><u>Вивід фрази <code>will .resources.list</code></u></summary>
+  <summary><u>Вивід команди <code>will .resources.list</code></u></summary>
 
 ```
 [user@user ~]$ will .resources.list
@@ -143,7 +143,7 @@ step::submodules.informal.export
 Для вибору ресурсів за назвою вказуйте ключові слова з глобом аргументом команди. Наприклад, для шляхів, які починаються на `o` введіть фразу `will .paths.list о*`:  
 
 <details>
-  <summary><u>Вивід фрази <code>will .paths.list о*</code></u></summary>
+  <summary><u>Вивід команди <code>will .paths.list о*</code></u></summary>
 
 ```
 [user@user ~]$ will .paths.list o*
@@ -160,7 +160,7 @@ Paths
 Ресурс також обирається за назвою і критеріоном. Для виводу шляхів, які починаються на `o` та мають критеріон `proto:1` введіть фразу `will .paths.list о* proto:1`:  
 
 <details>
-  <summary><u>Вивід фрази <code>will .paths.list о* proto:1</code></u></summary>
+  <summary><u>Вивід команди <code>will .paths.list о* proto:1</code></u></summary>
 
 ```
 [user@user ~]$ will .paths.list o* proto:1
@@ -176,7 +176,7 @@ Paths
 Вибірка ресурсів за комбінацією критеріонів: 
 
 <details>
-  <summary><u>Вивід фрази <code>will .steps.list *s* proto:0 debug:1</code></u></summary>
+  <summary><u>Вивід команди <code>will .steps.list *s* proto:0 debug:1</code></u></summary>
 
 ```
 [user@user ~]$ will .steps.list *s* proto:0 debug:1
@@ -205,7 +205,7 @@ step::submodules.informal.export
 Умовою правильного вибору ресурсів за критеріонами є перебір за іменами. Для перебору лише за критеріонами використовуйте ґлоб `*`, який включає будь-яку назву ресурса. Таким чином для вибору кроків за критеріоном `debug:0` введіть фразу `will .steps.list * debug:0`:
 
 <details>
-  <summary><u>Вивід фрази <code>will .steps.list * debug:0</code></u></summary>
+  <summary><u>Вивід команди <code>will .steps.list * debug:0</code></u></summary>
 
 ```
 [user@user ~]$ will .steps.list * debug:0
