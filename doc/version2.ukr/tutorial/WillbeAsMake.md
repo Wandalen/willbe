@@ -1,6 +1,6 @@
-# Компіляція програм з утилітою `willbe`
+# Компіляція С++ програми
 
-Використання утиліти для компіляції файлів
+Використання утиліти <code>willbe</code> для компіляції С++ програми.
 
 Однією із задач при програмуванні є перетворення одного типу файлів в інший, для виконання якої існує велика кількість різних програм і утліт. З транспіляцією ви ознайомились в туторіалі ["Транспіляція файлів"](TranspileStep.md) - використовуючи вбудовані інструменти, утиліта перетворила групу JavaScript-файлів в єдиний, а при реліз-побудові додатково його оптимізувала. В цьому туторіалі показано як `willbe`, агрегуючи можливості операційної системи, зовнішніх програм і вбудованих інструментів, побудує виконуваний файл.
 
@@ -65,7 +65,7 @@ path :
   file : 'file'
 
 reflector :
-  
+
   compile :
     filePath :
       '*.c' : 1
@@ -78,7 +78,7 @@ reflector :
       '*.o' : 1
       '*.c' : 0
       path::file : 1
-  
+
 step :
 
   compile :
@@ -86,7 +86,7 @@ step :
     currentPath : path::file
     forEachDst : compile
     upToDate : preserve
-  
+
   build :
     shell : gcc-6 -o hello {this::src}
     currentPath : path::file
@@ -111,7 +111,7 @@ build :
 
 Процес створення виконуваних файлів має два етапи: перший - створення об'єктних файлів з вихідних в збірці `compile`; другий - об'єднання об'єктних файлів в виконуваний в збірці `make.hello`.  
 Завдяки рефлекторам відбір файлів можна здійснити по багатьом параметрам (туторіали ["Фільтри рефлектора"](ReflectorFilters.md), ["Часові фільтри рефлектора"](ReflectorTimeFilters.md), ["Формування шляхів в рефлекторі. Управління файловими операціями"](ReflectorFSControl.md)).   
-Результуюча скомпільована програма повинна вивести фразу `Hello World!` в консоль. 
+Результуюча скомпільована програма повинна вивести фразу `Hello World!` в консоль.
 
 ### Компіляція в виконуваний файл  
 Виклик компілятора проходить в кроках `compile` i `build`:  
@@ -127,7 +127,7 @@ step :
     currentPath : path::file
     forEachDst : compile
     upToDate : preserve
-  
+
   build :
     shell : gcc-6 -o hello {this::src}
     currentPath : path::file
@@ -175,14 +175,14 @@ compileCpp
 
 <details>
   <summary><u>Вивід команди <code>will .build make.hello</code></u></summary>
-    
+
 ```
 [user@user ~]$ will .build make.hello
 ...
   Building module::compileCpp / build::build.hello
  > gcc-6 -o hello /path_to_file/hello.o /path_to_file/temp/main.o
   Built module::compileCpp / build::make.hello in 0.357s
-  
+
 ```
 
 </details>
@@ -207,9 +207,9 @@ compileCpp
 
 <details>
   <summary><u>Запуск файла <code>hello</code></u></summary>
-    
+
 ```
-[user@user ~]$ /home/user/Documents/test/compileCpp/out/hello 
+[user@user ~]$ /home/user/Documents/test/compileCpp/out/hello
 Hello World!
 
 ```
@@ -221,13 +221,13 @@ Hello World!
 
 <details>
   <summary><u>Вивід команди <code>will .build</code></u></summary>
-    
+
 ```
 [user@user ~]$ will .build
 ...
   Building module::compileCpp / build::compile
   Built module::compileCpp / build::compile in 0.495s
-  
+
 ```  
 </details>
 <details>
@@ -265,7 +265,7 @@ path :
   file : 'file'
 
 reflector :
-  
+
   compile :
     filePath :
       '*.c' : 1
@@ -286,13 +286,13 @@ step :
     currentPath : path::file
     forEachDst : compile
     upToDate : preserve
-  
+
   build :
     shell : gcc-6 -o hello {this::src}
     currentPath : path::file
     forEachDst : build
     upToDate : preserve
-  
+
   clean.temp :
     inherit: predefined.shell
     shell : rm -Rf *.o
@@ -309,7 +309,7 @@ build :
   make.hello :
     steps :
       - step::build
-  
+
   all :
     steps :
       - build::compile
@@ -325,7 +325,7 @@ build :
 
 <details>
   <summary><u>Вивід команди <code>will .build all</code></u></summary>
-    
+
 ```
 [user@user ~]$ will .build all
 ...
@@ -336,7 +336,7 @@ build :
  > rm -Rf *.o
   Built module::compileCpp / build::all in 3.772s
 
-  
+
 ```  
 
 </details>
@@ -353,13 +353,13 @@ compileCpp
 
 ```
 
-</details> 
+</details>
 
 Всі незручності попередніх етапів усунено при збереженні результату.  
 
 ### Підсумок
 - Утиліта `willbe` агрегує можливості операційної системи, зовнішніх програм і власних інструментів для автоматизації процесів розробки, в тому числі, створення виконуваних файлів.  
 - З допомогою рефлекторів утиліти можна здійснити вибірку файлів за багатьма параметрами, що робить вимоги до структури файлів менш жорсткими.
-- Утиліта слідкує за зміною файлів. Якщо вхідні і вихідні файли залишились без змін, то повторні операції з файлами (компіляція, об'єднання) не виконуються. 
+- Утиліта слідкує за зміною файлів. Якщо вхідні і вихідні файли залишились без змін, то повторні операції з файлами (компіляція, об'єднання) не виконуються.
 
 [Повернутись до змісту](../README.md#tutorials)

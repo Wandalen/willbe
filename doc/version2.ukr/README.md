@@ -30,7 +30,7 @@
 </details>
 <details>
   <summary><a href="./tutorial/Criterions.md">Критеріони</a></summary>
-  Як використовуються критеріони
+  Як використовувати критеріони для відбору ресурсів
 </details>
 <details>
   <summary><a href="./tutorial/DefaultCriterionInWillFile.md">Збірка побудови модуля за замовчуванням</a></summary>
@@ -58,15 +58,15 @@
 </details>
 <details>
   <summary><a href="./tutorial/MinimizationOfWillFile.md">Мінімізація <code>will-файла</code></a></summary>
-  В туторіалі показано як мінімізувати об'єм `will-файла` та властивості скороченої форми запису критеріонів
+  Як мінімізувати об'єм `will-файла` за допомогою розгортання критеріонами із множинними значеннями
 </details>
 <details>
   <summary><a href="./tutorial/SplitWillFile.md">Розділені <code>will-файли</code></a></summary>
   В туторіалі розглядається створення розділених <code>will-файлів</code>
 </details>
 <details>
-    <summary><a href="./tutorial/NamedWillFile.md">Іменовані <code>will-файли</code>. Команда <code>.with</code></a></summary>
-  Дається поняття іменованих <code>will-файлів</code> та показано як користуватись командою <code>.with</code>
+  <summary><a href="./tutorial/NamedWillFile.md">Команда <code>.with</code> та іменований <code>will-файл</code>. </a></summary>
+  Як виористовувати команду <code>.with</code>? Що таке іменований <code>will-файл</code>?
 </details>
 <details>
   <summary><a href="./tutorial/UsingEachCommand.md">Як користуватись командою <code>.each</code></a></summary>
@@ -86,11 +86,11 @@
 </details>
 <details>
   <summary><a href="./tutorial/HowToList.md">Перелік ресурсів через командний рядок</a></summary>
-  Як отримати інформацію про окремі ресурси модуля  
+  Як отримати інформацію про ресурси модуля  
 </details>
 <details>
   <summary><a href="./tutorial/SubmodulesVersionControl.md">Як користуватись командами <code>.submodules.fixate</code> і <code>.submodules.upgrade.refs</code></a></summary>
-  Перевірка і встановлення актуальних версій підмодулів
+  Перевірка, оновлення і фіксування версій підмодулів в <code>will-файлі</code>
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorUsing.md">Поняття рефлекторів. Копіювання файлів</a></summary>
@@ -125,20 +125,17 @@
   Використання кроку <code>predefined.transpile</code> для трансформації JavaScript-файлів
 </details>
 <details>
-  <summary><a href="./tutorial/HowToUseShellCommand.md">Як користуватись командою <code>.shell</code> </a></summary>
-  Як виконати зовнішню команду в модулі <code>willbe</code>
+  <summary><a href="./tutorial/HowToUseCommandShell.md">Як користуватись командою <code>.shell</code> </a></summary>
+  Як виконати зовнішню програма.
 </details>
 <details>
-  <summary><a href="./tutorial/WillbeAsMake.md">Компіляція програм з утилітою <code>willbe</code></a></summary>
-  Використання утиліти для компіляції файлів
+  <summary><a href="./tutorial/WillbeAsMake.md">Компіляція С++ програми</a></summary>
+  Використання утиліти <code>willbe</code> для компіляції С++ програми
 </details>
 <details>
-  <summary><a href="./tutorial/InformalSubmodule.md">Неформальний підмодуль</a></summary>
-  Імпорт неформального підмодуля
+  <summary><a href="./tutorial/InformalSubmodule.md">Неформальні підмодулі</a></summary>
+  Імпортування неформальних підмодулів
 </details>
-
-<p></p>
-...In progress, advanced...
 <details>
   <summary><a href="./tutorial/CleanCommandUsing.md">How to use <code>.clean</code> command</a></summary>
   Використання команди <code>.clean</code>
@@ -159,12 +156,12 @@
   Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля
 </details>
 <details>
-  <summary><a href="./concept/Composition.md#section">Секція <code>will-файлу</code></a></summary>
-  Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу
-</details>
-<details>
   <summary><a href="./concept/Composition.md#resource">Ресурси</a></summary>
   Елементи <code>will-файла</code>, які позначають певну функціональність
+</details>
+<details>
+  <summary><a href="./concept/Composition.md#section">Секції <code>will-файлу</code></a></summary>
+  Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що писують дану секцію
 </details>
 <details>
   <summary><a href="./concept/About.section.md">Секція <code>about</code></a></summary>
@@ -236,7 +233,7 @@
 </details>
 <details>
   <summary><a href="./concept/Criterions.md">Критеріон</a></summary>
-  Елемент порівняння в <code>will-файлі</code> для визначення умов використання ресурса
+  Елемент порівняння для відбору ресусрів
 </details>
 <details>
   <summary><a href="./concept/Inheritability.md">Наслідування ресурсами</a></summary>

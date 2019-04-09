@@ -1,6 +1,6 @@
-# Як користуватись командою `.shell`
+## Як користуватись командою `.shell`
 
-Як виконати зовнішню команду в модулі `willbe`  
+Як виконати зовнішню програма.
 
 Для роботи з модулем часто доводиться використовувати сторонні інструменти - командну оболонку операційної системи чи зовнішні програми. Наприклад, вивести список файлів після побудови, запустити створений файл... Це можна здійснити помістивши в збірку `will-файла` крок `predefined.shell` з потрібною командою, а для повторного використання команд потрібно будувати окремі збірки. Якщо ви працюєте з готовим модулем, вносити зміни в `will-файл` незручно тому, є команда `.shell`, яка дозволяє виконувати команди сторонніх програм в терміналі операційної системи.  
 
@@ -16,14 +16,14 @@ shellCommand
     ├── module.test
     │        ├── one.will.yml
     │        └── two.will.yml
-    │ 
+    │
     └── .will.yml       
 
 ```
 
 </details>
 
-В файл `.will.yml`, `one.will.yml` та `two.will.yml` внесіть код: 
+В файл `.will.yml`, `one.will.yml` та `two.will.yml` внесіть код:
 
 <details>
   <summary><u>Код <code>will-файлів</code></u></summary>
@@ -43,7 +43,7 @@ submodule :
   One : module.test/one
 
 build :
-  
+
   download :
     criterion :
       default : 1
@@ -64,7 +64,7 @@ about :
 
 </details>
 
-Запустіть побудову: 
+Запустіть побудову:
 
 <details>
   <summary><u>Вивід команди <code>will .build</code></u></summary>
@@ -86,13 +86,13 @@ about :
 
 ```
 shellCommand
-    ├── .module 
+    ├── .module
     │      ├── Tools
     │      └── PathFundamentals
     ├── module.test
     │        ├── one.will.yml
     │        └── two.will.yml
-    │ 
+    │
     └── .will.yml       
 
 ```
@@ -126,13 +126,13 @@ Module at /path_to_file/module.test/one.will.yml
 
 ```
 shellCommand
-    ├── .module 
+    ├── .module
     │      ├── Tools
     │      └── PathFundamentals
     ├── module.test
     │        ├── one.will.yml
     │        └── two.will.yml
-    │ 
+    │
     └── .will.yml       
 
 ```
@@ -165,13 +165,13 @@ Module at /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.
 
 ```
 shellCommand
-    ├── .module 
+    ├── .module
     │      ├── Tools
     │      └── PathFundamentals
     ├── module.test
     │        ├── one.will.yml
     │        └── two.will.yml
-    │ 
+    │
     └── .will.yml       
 
 ```
@@ -188,7 +188,7 @@ shellCommand
 ...
 Module at /path_to_file/module.test/one.will.yml
  . Read : /path_to_file/module.test/one.will.yml
- . Read 1 will-files in 0.344s 
+ . Read 1 will-files in 0.344s
 
  > ls
 one.will.yml
@@ -196,7 +196,7 @@ two.will.yml
 
 Module at /path_to_file/module.test/two.will.yml
  . Read : /path_to_file/module.test/two.will.yml
- . Read 1 will-files in 0.265s 
+ . Read 1 will-files in 0.265s
 
  > ls
 one.will.yml
@@ -209,13 +209,13 @@ two.will.yml
 
 ```
 shellCommand
-    ├── .module 
+    ├── .module
     │      ├── Tools
     │      └── PathFundamentals
     ├── module.test
     │        ├── one.will.yml
     │        └── two.will.yml
-    │ 
+    │
     └── .will.yml       
 
 ```

@@ -1,6 +1,6 @@
-# Неформальний підмодуль
+# Неформальні підмодулі
 
-Імпорт неформального підмодуля
+Імпортування неформальних підмодулів
 
 Якщо підмодуль, який потрібен для функціонування вашого додатку, розроблений стороннім розробником без застосування утиліти `willbe`, то є можливість його непрямого імпорту в проект - створення неформального підмодуля. Неформальний підмодуль - підмодуль, завантажений з віддаленого джерела, експортований і підключений як локальний.  
 
@@ -60,7 +60,7 @@ build :
     steps :
       - step::download.informal
       - step::export.module
-      
+
 ```
 
 </details>
@@ -87,11 +87,11 @@ path :
   in : '.'
   out : 'out'
   proto : './proto'
-  out.debug : 
+  out.debug :
     path : './out/module.debug'
     criterion :
       debug : 1
-  out.release : 
+  out.release :
     path : './out/module.release'
     criterion :
       debug : 0
@@ -123,7 +123,7 @@ build :
       - submodules.informal.export
       - submodules.reload
       - reflect.submodules*=1
-      
+
 ```
 
 </details>
@@ -131,7 +131,7 @@ build :
 Збірка `make.informal` містить чотири кроки. Перший - завантаження віддалених підмодулів, другий - запуск побудови збірки експорту для кожного `will-файла` в директорії `module`, тобто, директорії з файлом `Color.informal.will.yml`. Третій крок - вбудований крок, який перезавантажує підмодулі (оновлює статус). Четвертий - `reflect.submodules`, з допомогою одноіменного рефлектора копіює експортовані файли підмодулів в директорію `./out/module.debug` (за критеріоном `debug : 1`).
 
 ### Виконання побудови
-В директорії файла `.will.yml` виконайте фразу `will .build`: 
+В директорії файла `.will.yml` виконайте фразу `will .build`:
 
 <details>
   <summary><u>Вивід команди <code>will .build</code></u></summary>
@@ -142,7 +142,7 @@ Command ".build"
  . Read : /path_to_file/.will.yml
  ! Failed to read submodule::Tools, try to download it with .submodules.download or even .clean it before downloading
  ! Failed to read submodule::Color, try to download it with .submodules.download or even .clean it before downloading
- . Read 1 will-files in 1.987s 
+ . Read 1 will-files in 1.987s
 
   Building module::informalSubmodule / build::make.informal
      . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
@@ -153,7 +153,7 @@ Command ".each module .export"
 
 Module at /path_to_file/module/Color.informal.will.yml
  . Read : /path_to_file/module/Color.informal.will.yml
- . Read 1 will-files in 0.566s 
+ . Read 1 will-files in 0.566s
 
     Exporting module::Color.informal / build::export
      + download.informal reflected 71 files :/// : path_to_file/.module/Color <- git+https://github.com/Wandalen/wColor.git in 3.652s
@@ -165,7 +165,7 @@ Module at /path_to_file/module/Color.informal.will.yml
    . Read : /path_to_file/out/Color.informal.out.will.yml
    + reflect.submodules.debug reflected 64 files /path_to_file/ : out/module.debug <- .module in 2.211s
   Built module::informalSubmodule / build::make.informal in 28.494s
-  
+
 ```
 
 <p>Модуль після побудови</p>
