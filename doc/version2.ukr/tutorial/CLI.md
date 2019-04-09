@@ -8,7 +8,11 @@
 
 <details>
   <summary><u>Вивід команди <code>will .</code></u></summary>
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 08085d0e16e886f47e8aa57e344e9d61fddeed57
 ```
 [user@user ~]$ will .  
 Command "."
@@ -56,7 +60,6 @@ Request ".help .build"
 ```
 
 </details>
-
 <details>
   <summary><u>Вивід команди <code>will .help .builds.list</code></u></summary>
 
@@ -69,7 +72,6 @@ Request ".help .builds.list"
 ```
 
 </details>
-
 
 Тепер ви можете отримати довідку по командам. А що буде, якщо ввести неповну фразу `will .help .submodules`?
 
@@ -164,8 +166,8 @@ build :
 
 </details>
 
-Інформацію про окрему секцію `will-файла` та модуля можливо отримати ввівши фразу `will [назва секції]s.list` (закінчення `s` додається до назв секції, виключення - секція `about` - без змін).  
-Тепер дізнаємось інформацію з секції `submodule`. Порівняйте:  
+Інформацію про окрему секцію `will-файла` можливо отримати ввівши фразу `will [назва секції]s.list` (закінчення `s` додається до назв секції, виключення - секція `about` - без змін).  
+Тепер дізнаємось інформацію з секції `submodule`. Порівняйте вивід:  
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.list</code></u></summary>

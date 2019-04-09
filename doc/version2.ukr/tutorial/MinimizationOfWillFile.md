@@ -6,7 +6,7 @@
 Для початку створимо модуль для видалення файлів в директорії `files`:
 
 <details>
-    <summary><u><em>Лістинг `.will.yml`</em></u></summary>
+    <summary><u>Лістинг `.will.yml`</u></summary>
 
 ```yaml
 
