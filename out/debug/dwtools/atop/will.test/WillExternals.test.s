@@ -137,6 +137,108 @@ function singleModuleList( test )
     return null;
   })
 
+  /*-*/
+  /* To test output by command with glob and criterion args*/
+  /* Glob using negative test */
+  shell({ args : [ '.resources.list *proto*' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'resources list globs negative';
+    test.identical( got.exitCode, 0 );
+    test.is( !_.strHas( got.output, `out.release : './out/release'` ) );
+    test.is( !_.strHas( got.output, `build::debug.raw` ) );
+    test.is( !_.strHas( got.output, 'build::debug.compiled'  ) );
+    test.is( !_.strHas( got.output, 'build::release.compiled'  ) );
+
+    return null;
+  })
+
+  /* Glob using positive test */
+  shell({ args : [ '.resources.list *proto*' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'resources list globs';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `proto : './proto'` ) );
+
+    test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
+    test.is( _.strHas( got.output, `. : '.'` ) );
+
+    test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
+    test.is( _.strHas( got.output, `predefined.reflect` ) );
+
+    test.is( _.strHas( got.output, 'build::proto.export'  ) );
+    test.is( _.strHas( got.output, `step::export.proto` ) );
+
+    return null;
+  })
+
+  /* Glob and criterion using negative test */
+  shell({ args : [ '.resources.list *proto* debug:0' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'globs and criterions negative';
+    test.identical( got.exitCode, 0 );
+    test.is( !_.strHas( got.output, `out.debug : './out/debug'` ) );
+    test.is( !_.strHas( got.output, `reflector::reflect.proto.debug` ) );
+    test.is( !_.strHas( got.output, 'step::reflect.proto.debug'  ) );
+    test.is( !_.strHas( got.output, 'build::debug.raw'  ) );
+
+    return null;
+  })
+
+  /* Glob and criterion using positive test */
+  shell({ args : [ '.resources.list *proto* debug:0' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'globs and criterions positive';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `out.release : './out/release'` ) );
+
+    test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
+    test.is( _.strHas( got.output, `. : '.'` ) );
+
+    test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
+    test.is( _.strHas( got.output, `predefined.reflect` ) );
+
+    test.is( _.strHas( got.output, 'build::release.compiled'  ) );
+    test.is( _.strHas( got.output, `step::reflect.proto.*=1` ) );
+
+    return null;
+  })
+
+  /* Glob and two criterions using negative test */
+  shell({ args : [ '.resources.list * debug:0 raw:1' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'two criterions negative';
+    test.identical( got.exitCode, 0 );
+    test.is( !_.strHas( got.output, `step::reflect.proto.debug` ) );
+    test.is( !_.strHas( got.output, `build::debug.compiled` ) );
+
+    return null;
+  })
+
+  /* Glob and two criterion using positive test */
+  shell({ args : [ '.resources.list * debug:0 raw:1' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'two criterions positive';
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, 'step::reflect.proto.raw'  ) );
+    test.is( _.strHas( got.output, 'build::release.raw'  ) );
+
+    return null;
+  })
+
+  /* end test */
   /* - */
 
   shell({ args : [ '.paths.list' ] })
@@ -3877,18 +3979,25 @@ function reflectGetPath( test )
       './debug/dwtools/abase',
       './debug/dwtools/abase/l3',
       './debug/dwtools/abase/l3/Path.s',
+      './debug/dwtools/abase/l3.test',
+      './debug/dwtools/abase/l3.test/Path.test.html',
+      './debug/dwtools/abase/l3.test/Path.test.s',
       './debug/dwtools/abase/l4',
       './debug/dwtools/abase/l4/Paths.s',
+      './debug/dwtools/abase/l4.test',
+      './debug/dwtools/abase/l4.test/Paths.test.s',
       './debug/dwtools/abase/l7',
-      './debug/dwtools/abase/l7/Glob.s'
+      './debug/dwtools/abase/l7/Glob.s',
+      './debug/dwtools/abase/l7.test',
+      './debug/dwtools/abase/l7.test/Glob.test.s'
     ]
-
     var files = self.find( outPath );
     test.is( files.length > 10 );
     test.identical( files, expected );
 
     return null;
   }
+
 }
 
 reflectGetPath.timeOut = 130000;
@@ -3902,7 +4011,7 @@ function reflectSubdir( test )
   let routinePath = _.path.join( self.tempDir, test.name );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
-  let ready = new _.Consequence().take( null )
+  let ready = new _.Consequence().take( null );
 
   let shell = _.sheller
   ({
@@ -4576,7 +4685,7 @@ function reflectShell( test )
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
     var files = self.find( filePath );
-    test.identical( files, [ '.', './File.js', './File.test.js', './Produce.js', './Produced.js2', './Produced.txt', './Produced.txt2', './Src1.txt', './Src2.txt' ] );
+    test.identical( files, [ '.', './File.js', './File.test.js', './Produce.js', './Produced.js2', './Produced.txt2', './Src1.txt', './Src2.txt' ] );
     return null;
   })
 
@@ -4591,7 +4700,7 @@ function reflectShell( test )
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
     var files = self.find( filePath );
-    test.identical( files, [ '.', './File.js', './File.test.js', './Produce.js', './Produced.js2', './Produced.txt', './Produced.txt2', './Src1.txt', './Src2.txt' ] );
+    test.identical( files, [ '.', './File.js', './File.test.js', './Produce.js', './Produced.js2', './Produced.txt2', './Src1.txt', './Src2.txt' ] );
     return null;
   })
 
@@ -4617,7 +4726,7 @@ function reflectShell( test )
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
     var files = self.find( filePath );
-    test.identical( files, [ '.', './File.js', './File.test.js', './Produce.js', './Produced.js2', './Produced.txt', './Produced.txt2', './Src1.txt', './Src2.txt' ] );
+    test.identical( files, [ '.', './File.js', './File.test.js', './Produce.js', './Produced.js2', './Produced.txt2', './Src1.txt', './Src2.txt' ] );
     return null;
   })
 
@@ -4632,7 +4741,7 @@ function reflectShell( test )
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
     var files = self.find( filePath );
-    test.identical( files, [ '.', './File.js', './File.test.js', './Produce.js', './Produced.js2', './Produced.txt', './Produced.txt2', './Src1.txt', './Src2.txt' ] );
+    test.identical( files, [ '.', './File.js', './File.test.js', './Produce.js', './Produced.js2', './Produced.txt2', './Src1.txt', './Src2.txt' ] );
     return null;
   })
 
@@ -5045,6 +5154,11 @@ function help( test )
 
 //
 
+/*
+qqq : investigate
+(node:595912) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 exit listeners added. Use emitter.setMaxListeners() to increase limit
+*/
+
 function transpile( test )
 {
   let self = this;
@@ -5078,7 +5192,7 @@ function transpile( test )
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
-    test.identical( files, [ '.', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File1.release.js', './debug/dir2/File2.debug.js', './debug/dir2/File2.release.js', './debug/dir3.test', './debug/dir3.test/File.js', './debug/dir3.test/File.test.js' ] );
+    test.identical( files, [ '.', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js', './debug/dir3.test', './debug/dir3.test/File.js', './debug/dir3.test/File.test.js' ] );
     _.fileProvider.isTerminal( _.path.join( outPath, 'debug/dir3.test/File.js' ) );
     return null;
   })
@@ -5100,6 +5214,14 @@ function transpile( test )
     test.identical( files, [ '.', './compiled.debug', './compiled.debug/Main.s', './tests.compiled.debug', './tests.compiled.debug/Tests.s' ] );
     _.fileProvider.isTerminal( _.path.join( outPath, 'compiled.debug/Main.s' ) );
     _.fileProvider.isTerminal( _.path.join( outPath, 'tests.compiled.debug/Tests.s' ) );
+
+    let read = _.fileProvider.fileRead( _.path.join( outPath, 'compiled.debug/Main.s' ) );
+    test.is( _.strHas( read, 'dir2/File.js' ) );
+    test.is( _.strHas( read, 'dir2/File1.debug.js' ) );
+    test.is( !_.strHas( read, 'dir2/File1.release.js' ) );
+    test.is( _.strHas( read, 'dir2/File2.debug.js' ) );
+    test.is( !_.strHas( read, 'dir2/File2.release.js' ) );
+
     return null;
   })
 
@@ -5117,7 +5239,7 @@ function transpile( test )
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
-    test.identical( files, [ '.', './raw.release', './raw.release/dir2', './raw.release/dir2/File.js', './raw.release/dir2/File.test.js', './raw.release/dir2/File1.debug.js', './raw.release/dir2/File1.release.js', './raw.release/dir2/File2.debug.js', './raw.release/dir2/File2.release.js', './raw.release/dir3.test', './raw.release/dir3.test/File.js', './raw.release/dir3.test/File.test.js' ] );
+    test.identical( files, [ '.', './raw.release', './raw.release/dir2', './raw.release/dir2/File.js', './raw.release/dir2/File.test.js', './raw.release/dir2/File1.release.js', './raw.release/dir2/File2.release.js', './raw.release/dir3.test', './raw.release/dir3.test/File.js', './raw.release/dir3.test/File.test.js' ] );
     _.fileProvider.isTerminal( _.path.join( outPath, './raw.release/dir3.test/File.test.js' ) );
     return null;
   })
@@ -5127,7 +5249,7 @@ function transpile( test )
   ready
   .thenKeep( () =>
   {
-    test.case = '.build release'
+    test.case = '.build release';
     _.fileProvider.filesDelete( outPath );
     return null;
   })
@@ -5139,6 +5261,14 @@ function transpile( test )
     test.identical( files, [ '.', './release', './release/Main.s', './tests.compiled.release', './tests.compiled.release/Tests.s' ] );
     _.fileProvider.isTerminal( _.path.join( outPath, './release/Main.s' ) );
     _.fileProvider.isTerminal( _.path.join( outPath, './tests.compiled.release/Tests.s' ) );
+
+    let read = _.fileProvider.fileRead( _.path.join( outPath, './release/Main.s' ) );
+    test.is( _.strHas( read, 'dir2/File.js' ) );
+    test.is( !_.strHas( read, 'dir2/File1.debug.js' ) );
+    test.is( _.strHas( read, 'dir2/File1.release.js' ) );
+    test.is( !_.strHas( read, 'dir2/File2.debug.js' ) );
+    test.is( _.strHas( read, 'dir2/File2.release.js' ) );
+
     return null;
   })
 
@@ -5156,7 +5286,7 @@ function transpile( test )
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
-    test.identical( files, [ '.', './compiled.debug', './compiled.debug/Main.s', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File1.release.js', './debug/dir2/File2.debug.js', './debug/dir2/File2.release.js', './debug/dir3.test', './debug/dir3.test/File.js', './debug/dir3.test/File.test.js', './raw.release', './raw.release/dir2', './raw.release/dir2/File.js', './raw.release/dir2/File.test.js', './raw.release/dir2/File1.debug.js', './raw.release/dir2/File1.release.js', './raw.release/dir2/File2.debug.js', './raw.release/dir2/File2.release.js', './raw.release/dir3.test', './raw.release/dir3.test/File.js', './raw.release/dir3.test/File.test.js', './release', './release/Main.s', './tests.compiled.debug', './tests.compiled.debug/Tests.s', './tests.compiled.release', './tests.compiled.release/Tests.s' ] );
+    test.identical( files, [ '.', './compiled.debug', './compiled.debug/Main.s', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js', './debug/dir3.test', './debug/dir3.test/File.js', './debug/dir3.test/File.test.js', './raw.release', './raw.release/dir2', './raw.release/dir2/File.js', './raw.release/dir2/File.test.js', './raw.release/dir2/File1.release.js', './raw.release/dir2/File2.release.js', './raw.release/dir3.test', './raw.release/dir3.test/File.js', './raw.release/dir3.test/File.test.js', './release', './release/Main.s', './tests.compiled.debug', './tests.compiled.debug/Tests.s', './tests.compiled.release', './tests.compiled.release/Tests.s' ] );
     return null;
   })
 
@@ -5166,6 +5296,72 @@ function transpile( test )
 }
 
 transpile.timeOut = 130000;
+
+//
+
+function shell( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'shell' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build debug1, args option'
+    return null;
+  })
+  shell({ args : [ '.build debug1' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'script.js' ) )
+    test.is( _.strHas( got.output, 'somePath' ) )
+    test.is( _.strHas( got.output, 'arg1' ) )
+    test.is( _.strHas( got.output, 'arg2' ) )
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build debug2, args in shell option'
+    return null;
+  })
+  shell({ args : [ '.build debug2' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'script.js' ) )
+    test.is( _.strHas( got.output, 'somePath' ) )
+    test.is( _.strHas( got.output, 'arg1' ) )
+    test.is( _.strHas( got.output, 'arg2' ) )
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+shell.timeOut = 30000;
 
 //
 
@@ -5243,6 +5439,7 @@ var Self =
     help,
     transpile,
 
+    shell
   }
 
 }

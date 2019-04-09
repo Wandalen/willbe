@@ -112,21 +112,6 @@ step :
       raw : [ raw, compiled ]
       tests : [ 'no.tests', 'only.tests' ]
 
-  # transpile.proto :
-  #   inherit : predefined.transpile
-  #   reflector : reflector::transpile.proto.*=1
-  #   criterion :
-  #     tests : [ 'no.tests', 'only.tests' ]
-  #     debug : [ debug, release ]
-  #     raw : compiled
-  #
-  # transpile.proto.raw :
-  #   inherit : predefined.transpile
-  #   reflector : reflect.proto.*=1
-  #   criterion :
-  #     debug : [ debug, release ]
-  #     raw : raw
-
 build :
 
   debug :

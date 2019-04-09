@@ -18,8 +18,24 @@
 - Willbe prepends all relative paths by path::in. path::out and path::temp are prepended by path::in as well.
 - Willbe prepends path::in by module.dirPath, a directory which has the will-file.
 - Major difference between generated out-will-files and manually written will-file is section exported. out-will-files has such section, manually written will-file does not.
+- Input files are for manual editing, but the utility can help with it.
 
 */
+
+/*
+
+= Requested features
+
+- Inherit reflector
+- Predefined platform
+- Faster loading, perhaps without submodules
+- Option args for step shell
+
+- view filePath issue
+
+*/
+
+//
 
 if( typeof module !== 'undefined' )
 {
@@ -190,9 +206,10 @@ function moduleMake( o )
 
   o.module.willFilesFind();
   o.module.willFilesOpen();
-  o.module.submodulesForm();
 
-  // console.log( 'o.forming', o.forming );
+  // debugger;
+  o.module.submodulesForm();
+  // debugger;
 
   if( o.forming )
   {

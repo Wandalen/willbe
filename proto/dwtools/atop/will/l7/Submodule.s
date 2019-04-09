@@ -132,15 +132,16 @@ function _load()
   submodule.loadedModule.willFilesFindReady.finally( ( err, arg ) =>
   {
     if( err )
-    throw _.err( 'Failed to open', submodule.decoratedNickName, 'at', _.strQuote( submodule.loadedModule.dirPath ), '\n', err );
+    throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.loadedModule.dirPath ), '\n', err );
     return arg;
   });
 
+  // debugger;
   submodule.loadedModule.ready.finally( ( err, arg ) =>
   {
+    // debugger;
     if( err )
     {
-      // debugger;
       if( will.verbosity >= 3 )
       logger.error( ' ! Failed to read ' + submodule.decoratedNickName + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading' );
       if( will.verbosity >= 5 || !submodule.loadedModule || submodule.loadedModule.isOpened() )
@@ -163,6 +164,7 @@ function _load()
 
   return submodule.loadedModule.ready.split().finally( ( err, arg ) =>
   {
+    // debugger;
     return null;
   });
 

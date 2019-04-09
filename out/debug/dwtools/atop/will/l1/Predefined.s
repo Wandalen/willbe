@@ -104,6 +104,7 @@ function stepRoutineReflect( frame )
   let result;
   try
   {
+    debugger;
     result = will.Predefined.filesReflect.call( fileProvider, opts );
   }
   catch( err )
@@ -359,39 +360,6 @@ stepRoutineShell.uniqueOptions =
   shell : null,
 }
 
-// //
-//
-// function stepRoutineCommand()
-// {
-//   let step = this;
-//   let module = frame.module;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//   let opts = frame.opts;
-//
-//   _.assert( arguments.length === 1 );
-//   _.sure( opts.command === null || _.strIs( opts.command ) || _.arrayIs( opts.command ) );
-//
-//   /* */
-//
-//   // xxx
-//
-//   /* */
-//
-// }
-//
-// stepRoutineCommand.stepOptions =
-// {
-//   command : null,
-// }
-//
-// stepRoutineCommand.uniqueOptions =
-// {
-//   command : null,
-// }
-
 //
 
 function stepRoutineTranspile( frame )
@@ -551,7 +519,7 @@ stepRoutineSubmodulesDownload.stepOptions =
 
 //
 
-function stepRoutineSubmodulesUpgrade( frame )
+function stepRoutineSubmodulesUpdate( frame )
 {
   let step = this;
   let module = frame.module;
@@ -562,7 +530,7 @@ function stepRoutineSubmodulesUpgrade( frame )
   return module.submodulesUpdate();
 }
 
-stepRoutineSubmodulesUpgrade.stepOptions =
+stepRoutineSubmodulesUpdate.stepOptions =
 {
 }
 
@@ -682,12 +650,11 @@ let Extend =
 
   stepRoutineJs,
   stepRoutineShell,
-  // stepRoutineCommand,
   stepRoutineTranspile,
   stepRoutineView,
 
   stepRoutineSubmodulesDownload,
-  stepRoutineSubmodulesUpgrade,
+  stepRoutineSubmodulesUpdate,
   stepRoutineSubmodulesReload,
   stepRoutineSubmodulesClean,
 
