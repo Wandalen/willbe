@@ -1,0 +1,10 @@
+
+path :
+
+  proto : './proto'
+  in : '.'
+  out : 'out'
+  out.debug : './out/debug'
+  temp :
+    - 'out'
+    - 'path::out'

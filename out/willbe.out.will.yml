@@ -156,9 +156,11 @@ path:
       - proto/dwtools/atop/will.test/WillInternals.test.s
       - proto/dwtools/atop/will.test/asset
       - proto/dwtools/atop/will.test/asset/clean
+      - proto/dwtools/atop/will.test/asset/clean/Build.will.yml
       - proto/dwtools/atop/will.test/asset/clean/NoBuild.will.yml
       - proto/dwtools/atop/will.test/asset/clean/NoTemp.ex.will.yml
       - proto/dwtools/atop/will.test/asset/clean/NoTemp.im.will.yml
+      - proto/dwtools/atop/will.test/asset/clean/Vector.will.yml
       - proto/dwtools/atop/will.test/asset/clean/proto
       - proto/dwtools/atop/will.test/asset/clean/proto/WithSubmodules.s
       - proto/dwtools/atop/will.test/asset/composite-path
