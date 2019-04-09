@@ -45,7 +45,7 @@
   В туторіалі показано як додати локальний підмодуль
 </details>
 <details>
-  <summary><a href="./tutorials/HowToUseSelectorsWithGlob.md">Використання селекторів з ґлобами</a></summary>
+  <summary><a href="./tutorial/HowToUseSelectorsWithGlob.md">Використання селекторів з ґлобами</a></summary>
   Як користуватись селекторами з ґлобами
 </details>
 <details>
@@ -113,7 +113,7 @@
   Як користуватись наслідуванням ресурсів
 </details>
 <details>
-  <summary><a href="./tutorials/ViewStep.md">Як користуватись вбудованим кроком `predefined.view`</a></summary>
+  <summary><a href="./tutorial/ViewStep.md">Як користуватись вбудованим кроком <code>predefined.view</code></a></summary>
   Використання вбудованого кроку <code>predefined.view</code> для перегляду файлів
 </details>
 <details>
