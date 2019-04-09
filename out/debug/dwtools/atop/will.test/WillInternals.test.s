@@ -43,6 +43,8 @@ function onSuiteBegin()
 
 }
 
+//
+
 function onSuiteEnd()
 {
   let self = this;
@@ -642,14 +644,14 @@ function buildsResolve( test )
     var got = _.select( resolved, '*/name' );
     test.identical( got, expected );
 
-    test.case = 'build::*, current is build::export.'; /* */
+    test.case = 'build::*, currentContext is build::export.'; /* */
 
     var build = module.resolve({ selector : 'build::export.' });
     test.is( build instanceof will.Build );
     test.identical( build.nickName, 'build::export.' );
     test.identical( build.absoluteName, 'module::super / build::export.' );
 
-    var resolved = module.resolve({ selector : 'build::*', current : build, singleUnwrapping : 0 });
+    var resolved = module.resolve({ selector : 'build::*', currentContext : build, singleUnwrapping : 0 });
     test.identical( resolved.length, 1 );
 
     var expected = [ 'release' ];
@@ -660,10 +662,10 @@ function buildsResolve( test )
     var got = resolved[ 0 ].criterion;
     test.identical( got, expected );
 
-    test.case = 'build::*, current is build::export.debug'; /* */
+    test.case = 'build::*, currentContext is build::export.debug'; /* */
 
     var build = module.resolve({ selector : 'build::export.debug' });
-    var resolved = module.resolve({ selector : 'build::*', current : build, singleUnwrapping : 0 });
+    var resolved = module.resolve({ selector : 'build::*', currentContext : build, singleUnwrapping : 0 });
     test.identical( resolved.length, 1 );
 
     var expected = [ 'debug' ];
@@ -674,7 +676,7 @@ function buildsResolve( test )
     var got = resolved[ 0 ].criterion;
     test.identical( got, expected );
 
-    test.case = 'build::*, current is build::export.debug, short-cut'; /* */
+    test.case = 'build::*, currentContext is build::export.debug, short-cut'; /* */
 
     var build = module.resolve({ selector : 'build::export.debug' });
     var resolved = build.resolve({ selector : 'build::*', singleUnwrapping : 0 });
@@ -684,7 +686,7 @@ function buildsResolve( test )
     var got = _.select( resolved, '*/name' );
     test.identical( got, expected );
 
-    test.case = 'build::*, current is build::export.debug, short-cut, explicit criterion'; /* */
+    test.case = 'build::*, short-cut, explicit criterion'; /* */
 
     var build = module.resolve({ selector : 'build::export.*', criterion : { debug : 1 } });
     var resolved = build.resolve({ selector : 'build::*', singleUnwrapping : 0, criterion : { debug : 0 } });
@@ -773,6 +775,16 @@ function pathsResolve( test )
     test.case = 'path::in*=1';
     var resolved = module.resolve({ prefixlessAction : 'resolved', selector : 'path::in*=1' })
     var expected = routinePath;
+    test.identical( resolved, expected );
+
+    test.case = 'path::out.debug';
+    var resolved = module.resolve( 'path::out.debug' )
+    var expected = pin( 'super.out/debug' );
+    test.identical( resolved, expected );
+
+    test.case = '[ path::out.debug, path::out.release ]';
+    var resolved = module.resolve( [ 'path::out.debug', 'path::out.release' ] );
+    var expected = pin([ 'super.out/debug', 'super.out/release' ]);
     test.identical( resolved, expected );
 
     return null;

@@ -106,7 +106,7 @@ function stepsEach( onEach )
       selector : stepName,
       defaultResourceName : 'step',
       prefixlessAction : 'default',
-      current : build,
+      currentContext : build,
       missingAction : 'error',
     });
 

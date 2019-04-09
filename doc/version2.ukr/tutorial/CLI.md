@@ -9,7 +9,7 @@
 <details>
   <summary><u>Вивід команди <code>will .</code></u></summary>
 
-<code>
+```
 [user@user ~]$ will .  
 Command "."
 Ambiguity. Did you mean?
@@ -36,8 +36,7 @@ Ambiguity. Did you mean?
   .export - Export selected the module with spesified criterion. Save output to output file and archive.
   .with - Use "with" to select a module.
   .each - Use "each" to iterate each module in a directory.
-
-</code>
+```
 
 </details>
 

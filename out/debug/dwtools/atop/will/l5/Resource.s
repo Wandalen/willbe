@@ -378,7 +378,7 @@ function _inheritMultiple( o )
       defaultResourceName : resource.KindName,
       prefixlessAction : 'default',
       visited : o.visited,
-      current : resource,
+      currentContext : resource,
       flattening : 1,
     });
 
@@ -801,9 +801,9 @@ function resolve_body( o )
   let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
-  _.assert( o.current === null || o.current === resource )
+  _.assert( o.currentContext === null || o.currentContext === resource )
 
-  o.current = resource;
+  o.currentContext = resource;
 
   let resolved = module.resolve.body.call( module, o );
 
@@ -855,9 +855,9 @@ function reflectorResolve_body( o )
   let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
-  _.assert( o.current === null || o.current === resource )
+  _.assert( o.currentContext === null || o.currentContext === resource )
 
-  o.current = resource;
+  o.currentContext = resource;
 
   let resolved = module.reflectorResolve.body.call( module, o );
 

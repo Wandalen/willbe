@@ -358,7 +358,7 @@ function _reflectMapForm( o )
       ({
         selector : src,
         visited : o.visited,
-        current : reflector,
+        currentContext : reflector,
       });
 
       if( !_.errIs( resolvedSrc ) && !_.strIs( resolvedSrc ) && !_.arrayIs( resolvedSrc ) && !( resolvedSrc instanceof will.Reflector ) )
@@ -583,7 +583,7 @@ function pathsResolve( o )
       return module.pathResolve
       ({
         selector : filePath,
-        current : reflector,
+        currentContext : reflector,
         pathResolving : 'in',
       });
     });

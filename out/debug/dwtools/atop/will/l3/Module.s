@@ -620,7 +620,7 @@ function shell( o )
   /* */
 
   if( o.currentPath )
-  o.currentPath = module.pathResolve({ selector : o.currentPath, prefixlessAction : 'resolved', current : o.current });
+  o.currentPath = module.pathResolve({ selector : o.currentPath, prefixlessAction : 'resolved', currentContext : o.currentContext });
   _.sure( o.currentPath === null || _.strIs( o.currentPath ) || _.strsAreAll( o.currentPath ), 'Current path should be string if defined' );
 
   /* */
@@ -660,7 +660,7 @@ shell.defaults =
   execPath : null,
   currentPath : null,
   currentThis : null,
-  current : null,
+  currentContext : null,
 }
 
 //
@@ -3244,8 +3244,8 @@ function errResolving( o )
 {
   let module = this;
   _.routineOptions( errResolving, arguments );
-  if( o.current && o.current.nickName )
-  return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'code' ), 'for', o.current.decoratedNickName, 'in', module.decoratedNickName, '\n', o.err );
+  if( o.currentContext && o.currentContext.nickName )
+  return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'code' ), 'for', o.currentContext.decoratedNickName, 'in', module.decoratedNickName, '\n', o.err );
   else
   return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'code' ), 'in', module.decoratedNickName, '\n', o.err );
 }
@@ -3253,7 +3253,7 @@ function errResolving( o )
 errResolving.defaults =
 {
   err : null,
-  current : null,
+  currentContext : null,
   selector : null,
 }
 
@@ -3490,7 +3490,8 @@ resolveContextPrepare.defaults =
 function resolve_pre( routine, args )
 {
   let o = args[ 0 ];
-  if( _.strIs( o ) )
+
+  if( _.strIs( o ) || _.arrayIs( o ) )
   o = { selector : o }
 
   _.routineOptions( routine, o );
@@ -3515,10 +3516,10 @@ function resolve_body( o )
 {
   let module = this;
   let will = module.will;
-  let current = o.current;
   let hardDrive = will.fileProvider.providersWithProtocolMap.file;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
+  let currentContext = o.currentContext = o.currentContext || module;
 
   _.assert( o.prefixlessAction === 'default' || o.defaultResourceName === null, 'Prefixless action should be "default" if default resource is provided' );
 
@@ -3535,7 +3536,7 @@ function resolve_body( o )
     result = module.errResolving
     ({
       selector : o.selector,
-      current : o.current,
+      currentContext : o.currentContext,
       err : _.ErrorLooking( o.selector, 'was not found' ),
     })
   }
@@ -3548,7 +3549,7 @@ function resolve_body( o )
     let err = module.errResolving
     ({
       selector : o.selector,
-      current : o.current,
+      currentContext : o.currentContext,
       err : result,
     });
     if( o.missingAction === 'throw' )
@@ -3632,7 +3633,7 @@ resolve_body.defaults =
   missingAction : 'throw',
   visited : null,
   currentThis : null,
-  current : null,
+  currentContext : null,
   criterion : null,
   module : null,
   pathResolving : 'in',
@@ -3664,12 +3665,12 @@ function _resolveAct( o )
   let path = fileProvider.path;
   let logger = will.logger;
   let result;
-  let current = o.current;
+  let currentContext = o.currentContext;
 
   if( o.module === null )
   o.module = module;
-  if( o.criterion === null && o.current && o.current.criterion )
-  o.criterion = o.current.criterion;
+  if( o.criterion === null && o.currentContext && o.currentContext.criterion )
+  o.criterion = o.currentContext.criterion;
 
   _.assert( arguments.length === 1 );
   _.assertRoutineOptions( _resolveAct, arguments );
@@ -3715,7 +3716,7 @@ function _resolveAct( o )
     throw module.errResolving
     ({
       selector : o.selector,
-      current : current,
+      currentContext : currentContext,
       err : err,
     });
   }
@@ -3746,7 +3747,7 @@ function _resolveAct( o )
       let err = module.errResolving
       ({
         selector : selector,
-        current : current,
+        currentContext : currentContext,
         err : _.ErrorLooking( 'Resource selector should have prefix' ),
       });
       debugger;
@@ -3988,7 +3989,7 @@ function _resolveAct( o )
   function currentExclude()
   {
     let it = this;
-    if( it.src === o.current && it.down )
+    if( it.src === o.currentContext && it.down )
     it.dstWritingDown = false;
   }
 
@@ -4009,7 +4010,7 @@ function _resolveAct( o )
         selector : result,
         visited : _.arrayFlatten( null, [ o.visited, result ] ),
         pathResolving : resolving,
-        current : currentResource,
+        currentContext : currentResource,
         pathNativizing : o.pathNativizing,
       });
 
@@ -4276,20 +4277,20 @@ defaults.prefixlessAction = 'resolved';
 
 let pathResolve = _.routineFromPreAndBody( resolve_pre, pathResolve_body );
 
+// //
 //
-
-function reflectorResolve_pre( routine, args )
-{
-  let o = args[ 0 ];
-  if( _.strIs( o ) )
-  o = { selector : o }
-
-  _.routineOptions( routine, o );
-  _.assert( arguments.length === 2 );
-  _.assert( args.length === 1 );
-
-  return o;
-}
+// function reflectorResolve_pre( routine, args )
+// {
+//   let o = args[ 0 ];
+//   if( _.strIs( o ) )
+//   o = { selector : o }
+//
+//   _.routineOptions( routine, o );
+//   _.assert( arguments.length === 2 );
+//   _.assert( args.length === 1 );
+//
+//   return o;
+// }
 
 //
 
@@ -4318,10 +4319,10 @@ var defaults = reflectorResolve_body.defaults = Object.create( resolve.defaults 
 defaults.selector = null;
 defaults.defaultResourceName = 'reflector';
 defaults.prefixlessAction = 'default';
-defaults.current = null;
+defaults.currentContext = null;
 defaults.pathResolving = 'in';
 
-let reflectorResolve = _.routineFromPreAndBody( reflectorResolve_pre, reflectorResolve_body );
+let reflectorResolve = _.routineFromPreAndBody( resolve_pre, reflectorResolve_body );
 
 //
 
@@ -4330,10 +4331,11 @@ function submodulesResolve_body( o )
   let module = this;
   let will = module.will;
 
-  if( _.strIs( o ) )
-  o = { selector : o }
-  o = _.routineOptions( submodulesResolve_body, o );
-  _.assert( arguments.length === 0 || arguments.length === 1 );
+  // if( _.strIs( o ) )
+  // o = { selector : o }
+
+  // o = _.routineOptions( submodulesResolve_body, o );
+  // _.assert( arguments.length === 0 || arguments.length === 1 );
 
   // o.prefixlessAction = 'default';
   // o.defaultResourceName = 'submodule';

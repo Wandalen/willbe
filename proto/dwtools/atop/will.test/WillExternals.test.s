@@ -2367,7 +2367,7 @@ function clean( test )
   let ready = new _.Consequence().take( null );
   let shell = _.sheller
   ({
-    execPath : 'node ' + execPath + ' .with NoTemp',
+    execPath : 'node ' + execPath + '',
     currentPath : routinePath,
     outputCollecting : 1,
     ready : ready,
@@ -2379,7 +2379,7 @@ function clean( test )
 
   shell
   ({
-    args : [ '.build' ]
+    args : [ '.with NoTemp .build' ]
   })
 
   var files;
@@ -2392,7 +2392,7 @@ function clean( test )
     return files;
   })
 
-  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.with NoTemp .clean' ] })
   .thenKeep( ( got ) =>
   {
     test.case = '.clean';
@@ -2402,10 +2402,10 @@ function clean( test )
     return null;
   })
 
-  shell({ args : [ '.clean -- second' ] })
+  shell({ args : [ '.with NoTemp .clean' ] })
   .thenKeep( ( got ) =>
   {
-    test.case = '.clean';
+    test.case = '.with NoTemp .clean -- second';
     test.identical( got.exitCode, 0 );
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
     return null;
@@ -2422,22 +2422,36 @@ function clean( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.with NoBuild .clean' ] })
   .thenKeep( ( got ) =>
   {
-    test.case = '.clean';
+    test.case = '.with NoBuild .clean';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted ' + 0 + ' file(s)' ) );
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) ); /* xxx : phantom problem ? */
     return null;
   })
 
-  shell({ args : [ '.clean -- second' ] })
+  /* - */
+
+  var files = [];
+  ready
+  .thenKeep( () =>
+  {
+    _.fileProvider.filesDelete( outPath );
+    _.fileProvider.filesDelete( submodulesPath );
+    return null;
+  })
+
+  shell({ args : [ '.with Build .build' ] })
+  shell({ args : [ '.with Vector .clean' ] })
   .thenKeep( ( got ) =>
   {
-    test.case = '.clean';
+    test.case = '.with NoBuild .clean';
     test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '- Clean deleted 2 file(s) in' ) );
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'out' ) ) );
     return null;
   })
 
