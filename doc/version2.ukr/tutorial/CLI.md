@@ -10,9 +10,7 @@
   <summary><u>Вивід команди <code>will .</code></u></summary>
 
 <code>
-[user@user ~]$ will .  
-Command "."
-Ambiguity. Did you mean?
+
   .help - Get help.
   .set - Command set.
   .resources.list - List information about resources of the current module.
