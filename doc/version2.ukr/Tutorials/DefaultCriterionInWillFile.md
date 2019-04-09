@@ -10,7 +10,7 @@
 Створіть новий `.will.yml`-файл в директорії `defaultBuild` та запишіть в нього:  
 
 <details>
-  <summary><u>Повний код файла <code>.will.yml</code></u></summary>
+  <summary><u>Код файла <code>.will.yml</code></u></summary>
 
 ```yaml
 about :
@@ -35,7 +35,9 @@ build :
 
 ```
 
-<p>Структура модуля</p>
+</details>
+<details>
+  <summary><u>Структура модуля</u></summary>
 
 ```
 defaultBuild
@@ -61,7 +63,9 @@ Cтворіть файл залежностей `package.json` в директо
 
 ```
 
-<p>Структура модуля з файлом залежностей</p>
+</details>
+<details>
+  <summary><u>Структура модуля з файлом залежностей</u></summary>
 
 ```
 defaultBuild
@@ -92,7 +96,9 @@ found 0 vulnerabilities
 
 ```
 
-<p>Структура модуля після побудови</p>
+</details>
+<details>
+  <summary><u>Структура модуля після побудови</u></summary>
 
 ```
 defaultBuild
@@ -109,7 +115,7 @@ defaultBuild
 </details>
 
 
-Утиліта побудувала збірку `install` завдяки критеріону `default`.
+Утиліта побудувала збірку `install` без указання аргумента завдяки критеріону `default`.
 
 ### Підсумок   
 - Встановлення критеріона `default : 1` в збірку дозволяє запустити її побудову фразою `will .build`.
