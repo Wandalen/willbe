@@ -117,8 +117,8 @@
   Як користуватись наслідуванням ресурсів
 </details>
 <details>
-  <summary><a href="./Tutorials/ViewStep.md">Перегляд файлів при побудові</a></summary>
-  Як користуватись вбудованим кроком <code>predefined.view</code> для перегляду файлів
+  <summary><a href="./Tutorials/ViewStep.md">Як користуватись вбудованим кроком `predefined.view`</a></summary>
+  Використання вбудованого кроку <code>predefined.view</code> для перегляду файлів
 </details>
 <details>
   <summary><a href="./Tutorials/TranspileStep.md">Транспіляція файлів</a></summary>

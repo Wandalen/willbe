@@ -12,43 +12,46 @@
 ```yaml
 about :
 
-   name : predefinedSteps
-   description : "To use predefined submodule control steps"
-   version : 0.0.1
+  name : predefinedSteps
+  description : "To use predefined submodule control steps"
+  version : 0.0.1
 
 submodule :
-
-   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-   PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  
+  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
 
 step :
 
-   echo :
-       shell : echo "Done"
-       currentPath : '.'
+  echo :
+    shell : echo "Done"
+    currentPath : '.'
 build :
 
-   download :
-       steps :
-          - submodules.download
+  download :
+    steps :
+      - submodules.download
 
-   update :
-       steps :
-          - submodules.update
+  update :
+    steps :
+      - submodules.update
 
-   clean :
-       steps :
-          - submodules.clean
+  clean :
+    steps :
+      - submodules.clean
           
-   clean.download :
-       steps :
-          - submodules.clean
-          - submodules.download
-          - echo
+  clean.download :
+    steps :
+      - submodules.clean
+      - submodules.reload
+      - submodules.download
+      - echo
            
 ```
 
-<p>Структура модуля</p>
+</details>
+<details>
+  <summary><u>Структура модуля</u></summary>
 
 ```
 predefinedSteps              
@@ -59,7 +62,8 @@ predefinedSteps
 </details>
 
 
-Вбудовані кроки управління підмодулями формулюються як команди в консолі операційної системи (для більшості команд утиліти `willbe` є вбудовані кроки). Кроки поміщені в поле `steps` секції `build`, оскільки, вони не мають додаткових полів опису. Порівняйте з повною формою запису:
+Вбудовані кроки управління підмодулями формулюються як команди в консолі операційної системи і для більшості команд утиліти `willbe` є вбудовані кроки. Крок `submodules.reload` в збірці `clean.download` відповідає за перезавантаження статусу підмодулів після очищення.  
+Кроки поміщені в поле `steps` збірок секції `build`, оскільки, вони не мають додаткових полів опису. Порівняйте з записом кроку в секції `step`:
 
 <details>
   <summary><u>Повнa форма запису вбудованого кроку <code>submodules.download</code></u></summary>
@@ -113,7 +117,6 @@ predefinedSteps
 ```
 
 </details>
-
 <details>
   <summary><u>Вивід команди <code>will .build clean</code></u></summary>
 
@@ -137,7 +140,6 @@ predefinedSteps
 ```
 
 </details>
-
 <details>
   <summary><u>Вивід команди <code>will .build update</code></u></summary>
 
@@ -169,21 +171,22 @@ predefinedSteps
 ```
 
 </details>
-
 <details>
   <summary><u>Вивід команди <code>will .build clean.download</code></u></summary>
 
 ```
 [user@user ~]$ will .build clean.download
 ...
-  Building clean.download
-   - Clean deleted 344 file(s) in 1.205s
+  Building module::predefinedSteps / build::clean.download
+   - Clean deleted 344 file(s) in 1.155s
+   . Reloading submodules..
      + module::Tools was downloaded in 13.699s
      + module::PathFundamentals was downloaded in 2.903s
    + 2/2 submodule(s) of module::predefinedSteps were downloaded in 16.610s
  > echo "Done"
 Done
-  Built module::first / build::clean.download in 17.907s
+  Built module::predefinedSteps / build::clean.download in 1.411s
+
 
 ```
 

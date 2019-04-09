@@ -20,7 +20,6 @@
   <summary><u>Код файла <code>.will.yml</code></u></summary>
 
 ```yaml
-
 about :
 
     name : buildModuleWithCriterion
