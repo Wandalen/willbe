@@ -8,9 +8,10 @@
 
 <details>
   <summary><u>Вивід команди <code>will .</code></u></summary>
-
-<code>
-
+```
+[user@user ~]$ will .  
+Command "."
+Ambiguity. Did you mean?
   .help - Get help.
   .set - Command set.
   .resources.list - List information about resources of the current module.
@@ -34,9 +35,7 @@
   .export - Export selected the module with spesified criterion. Save output to output file and archive.
   .with - Use "with" to select a module.
   .each - Use "each" to iterate each module in a directory.
-
-</code>
-
+```
 </details>
 
 В утиліті `willbe` всі фрази починаються з вводу слів `will .`.  
