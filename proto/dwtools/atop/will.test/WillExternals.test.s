@@ -136,7 +136,109 @@ function singleModuleList( test )
     test.is( _.strHas( got.output, `version : '0.0.1'` ) );
     return null;
   })
+  
+  /*-*/
+  /* To test output by command with glob and criterion args*/
+  /* Glob using negative test */
+  shell({ args : [ '.resources.list *proto*' ] })
 
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'resources list globs negative';
+    test.identical( got.exitCode, 0 );
+    test.is( !_.strHas( got.output, `out.release : './out/release'` ) );
+    test.is( !_.strHas( got.output, `build::debug.raw` ) );
+    test.is( !_.strHas( got.output, 'build::debug.compiled'  ) );
+    test.is( !_.strHas( got.output, 'build::release.compiled'  ) );
+
+    return null;
+  })
+    
+  /* Glob using positive test */ 
+  shell({ args : [ '.resources.list *proto*' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'resources list globs';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `proto : './proto'` ) );
+        
+    test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
+    test.is( _.strHas( got.output, `. : '.'` ) );
+    
+    test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
+    test.is( _.strHas( got.output, `predefined.reflect` ) );
+      
+    test.is( _.strHas( got.output, 'build::proto.export'  ) );
+    test.is( _.strHas( got.output, `step::export.proto` ) );
+      
+    return null;
+  })
+
+  /* Glob and criterion using negative test */
+  shell({ args : [ '.resources.list *proto* debug:0' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'globs and criterions negative';
+    test.identical( got.exitCode, 0 );
+    test.is( !_.strHas( got.output, `out.debug : './out/debug'` ) );
+    test.is( !_.strHas( got.output, `reflector::reflect.proto.debug` ) );
+    test.is( !_.strHas( got.output, 'step::reflect.proto.debug'  ) );
+    test.is( !_.strHas( got.output, 'build::debug.raw'  ) );
+
+    return null;
+  })
+    
+  /* Glob and criterion using positive test */ 
+  shell({ args : [ '.resources.list *proto* debug:0' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'globs and criterions positive';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `out.release : './out/release'` ) );
+        
+    test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
+    test.is( _.strHas( got.output, `. : '.'` ) );
+    
+    test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
+    test.is( _.strHas( got.output, `predefined.reflect` ) );
+      
+    test.is( _.strHas( got.output, 'build::release.compiled'  ) );
+    test.is( _.strHas( got.output, `step::reflect.proto.*=1` ) );
+      
+    return null;
+  })
+    
+  /* Glob and two criterions using negative test */
+  shell({ args : [ '.resources.list * debug:0 raw:1' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'two criterions negative';
+    test.identical( got.exitCode, 0 );
+    test.is( !_.strHas( got.output, `step::reflect.proto.debug` ) );
+    test.is( !_.strHas( got.output, `build::debug.compiled` ) );
+
+    return null;
+  })
+    
+  /* Glob and two criterion using positive test */ 
+  shell({ args : [ '.resources.list * debug:0 raw:1' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'two criterions positive';
+    test.identical( got.exitCode, 0 );
+        
+    test.is( _.strHas( got.output, 'step::reflect.proto.raw'  ) );
+    test.is( _.strHas( got.output, 'build::release.raw'  ) );
+      
+    return null;
+  })
+
+  /* end test */     
   /* - */
 
   shell({ args : [ '.paths.list' ] })

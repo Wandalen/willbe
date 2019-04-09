@@ -97,6 +97,10 @@
   Як отримати інформацію про окремі ресурси модуля  
 </details>
 <details>
+  <summary><a href="./Tutorials/SubmodulesVersionControl.md">Як користуватись командами <code>.submodules.fixate</code> і <code>.submodules.upgrade.refs</code></a></summary>
+  Перевірка і встановлення актуальних версій підмодулів
+</details>
+<details>
   <summary><a href="./Tutorials/ReflectorUsing.md">Поняття рефлекторів. Копіювання файлів</a></summary>
   В туторіалі описуються копіювання файлів рефлектором, пояснюється як користуватись полем <code>recursive</code>
 </details>
@@ -121,10 +125,25 @@
   Як користуватись наслідуванням ресурсів
 </details>
 <details>
+  <summary><a href="./Tutorials/ViewStep.md">Перегляд файлів при побудові</a></summary>
+  Як користуватись вбудованим кроком <code>predefined.view</code> для перегляду файлів
+</details>
+<details>
   <summary><a href="./Tutorials/TranspileStep.md">Транспіляція файлів</a></summary>
   Використання кроку <code>predefined.transpile</code> для трансформації JavaScript-файлів 
 </details>
-
+<details>
+  <summary><a href="./Tutorials/HowToUseShellCommand.md">Як користуватись командою <code>.shell</code> </a></summary>
+  Як виконати зовнішню команду в модулі <code>willbe</code>
+</details>
+<details>
+  <summary><a href="./Tutorials/WillbeAsMake.md">Компіляція програм з утилітою <code>willbe</code></a></summary>
+  Використання утиліти для компіляції файлів
+</details>
+<details>
+  <summary><a href="./Tutorials/InformalSubmodule.md">Неформальний підмодуль</a></summary>
+  Імпорт неформального підмодуля
+</details>
 
 <p></p>
 ...In progress, advanced...
@@ -132,11 +151,6 @@
   <summary><a href="./Tutorials/CleanCommandUsing.md">How to use <code>.clean</code> command</a></summary>
   Використання команди <code>.clean</code>
 </details>
-<details>
-  <summary><a href="./Tutorials/HowToUseShellCommand.md">How to use <code>.shell</code> command</a></summary>
-  Використання команди <code>.shell</code>
-</details>
-
 
 ## <a name="concepts"></a> Концепції
 
@@ -209,6 +223,10 @@
   Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину
 </details>
 <details>
+  <summary><a href="./Concepts/InformalSubmodule.md">Неформальний підмодуль</a></summary>
+  Віддалений підмодуль імпортований непрямим шляхом
+</details>
+<details>
   <summary><a href="./Concepts/Phrase.md">Фраза</a></summary>
   Команда з одного обо декількох слів, розділених крапкою
 </details>
@@ -232,10 +250,7 @@
   <summary><a href="./Concepts/Inheritability.md">Наслідування ресурсами</a></summary>
   Принцип побудови модуля, згідно якого ресурс одного <code>will-файла</code> здатний використовувати (наслідувати) значення полів інших ресурсів секції та ресурсів іншого <code>will-файла</code>
 </details>
-
-<p></p>
-...In progress, advanced...
 <details>
   <summary><a href="./Concepts/FileFilter.md">Файловий фільтр</a></summary>
-  Умова відбору файлів в рефлекторі
+  Особливий вид селектора для відбору файлів в рефлекторі
 </details>
