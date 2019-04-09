@@ -4842,6 +4842,74 @@ function reflectWithOptions( test )
 
 //
 
+function reflectInherit( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-inherit' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build debug1'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build debug1' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '+ reflect.proto1 reflected 3 files' ) );
+    test.is( _.strHas( got.output, /.*out\/debug1.* <- .*proto.*/ ) );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.test.js' ] );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build debug2'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build debug2' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '+ reflect.proto2 reflected 3 files' ) );
+    test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './debug2', './debug2/File.js', './debug2/File.test.js' ] );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+//
+
 function importInExport( test )
 {
   let self = this;
@@ -5432,6 +5500,7 @@ var Self =
     reflectRemoteHttp,
     reflectShell,
     reflectWithOptions,
+    reflectInherit,
 
     importInExport,
     setVerbosity,
