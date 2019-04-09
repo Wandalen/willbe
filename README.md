@@ -3,7 +3,7 @@
 
 Utility for development which helps to manage modularity of complex modular systems.
 
-## What `willbe` is
+### What `willbe` is
 
 `Willbe` is utility for development. It helps to manage modularity of complex modular systems. Utility `willbe` reaches it's purpose utilizing functionality of modern file systems, extending it, aggregating functionality of other open source utilities of such kind.
 
@@ -17,7 +17,7 @@ A loose definition of concept module imposes minimum restrictions on development
 
 Declarative programming paradigm is heavily used in `will-files`.
 
-## What `willbe` is not
+### What `willbe` is not
 
 Utility willbe is not a replacement of Git, NPM or other utilities with narrow purpose. It aggregates functionality of all that utilities in the single utility and under the single philosophy.
 

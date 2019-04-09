@@ -30,31 +30,31 @@ will-file
 
 ### <a name="sections"></a> Призначення секцій `will-файла`  
 <details>
-  <summary><a href="./Concepts/About.section.md">Секція <code>about</code></a></summary>
+  <summary><a href="./concept/About.section.md">Секція <code>about</code></a></summary>
   В секції поміщено основну інформація про модуль
 </details>
 <details>
-  <summary><a href="./Concepts/Path.section.md">Секція <code>path</code></a></summary>
+  <summary><a href="./concept/Path.section.md">Секція <code>path</code></a></summary>
   Секція представляє карту шляхів модуля для швидкого орієнтування в його структурі
 </details>
 <details>
-  <summary><a href="./Concepts/Submodule.section.md">Секція <code>submodule</code></a></summary>
+  <summary><a href="./concept/Submodule.section.md">Секція <code>submodule</code></a></summary>
   В секції вказуються підмодулі
 </details>
 <details>
-  <summary><a href="./Concepts/Submodule.section.md">Секція <code>step</code></a></summary>
+  <summary><a href="./concept/Submodule.section.md">Секція <code>step</code></a></summary>
   В секції описуються процедури побудови модуля
 </details>
 <details>
-  <summary><a href="./Concepts/Submodule.section.md">Секція <code>reflector</code></a></summary>
+  <summary><a href="./concept/Submodule.section.md">Секція <code>reflector</code></a></summary>
   Основними функціями ресурсів секції (рефлекторів) є файлові операції
 </details>
 <details>
-  <summary><a href="./Concepts/Submodule.section.md">Секція <code>exported</code></a></summary>
+  <summary><a href="./concept/Submodule.section.md">Секція <code>exported</code></a></summary>
   Секція <code>will-файла</code>, автоматично згенерованого при експортуванні модуля
 </details>
 <details>
-  <summary><a href="./Concepts/Submodule.section.md">Секція <code>build</code></a></summary>
+  <summary><a href="./concept/Submodule.section.md">Секція <code>build</code></a></summary>
   Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля
 </details>
 
