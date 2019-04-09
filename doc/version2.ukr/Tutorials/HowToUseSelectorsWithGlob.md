@@ -2,10 +2,46 @@
 
 Як користуватись селекторами з ґлобами
 
-Для створення модуля доводиться використовувати ресурси, які мають близьке значення - схожі назви, однакові розширення... На прямі посилання витрачається багато часу, тому, в `willbe` використовуються ґлоби - шаблон пошуку (англ. Wildcard pattern, glob pattern) - метод опису пошукового запиту з використанням метасимволов (символів-джокерів). .  
+### Поняття селекторів в `will-файлах`
+Селектор - рядок-посилання на ресурс або декілька ресурсів в `will-файлі`. Селектори мають просту і більш складну форму запису в залежності від поля секції. В попередніх туторіалах неявно використовувались прості селектори в ресурсах, які посилались на інші ресурси.  
+Приклад простих селекторів в секції `step`:
 
-### Побудова `will-файла` експорту модуля з застосуванням ґлобів
-Створимо приклад, в якому модуль буде вибирати необхідний шлях в секції `path` для експорту модуля в директорію `out`.  
+<details>
+  <summary><u>Cекція <code>step</code></u></summary>
+
+```yaml
+step :
+
+  delete.out.debug :
+    ...
+    inherit : predefined.export  --> простий селектор
+    filePath : path::out.debug   --> складний селектор
+    
+```
+
+</details>
+
+Селектор `path::out.debug` - простий селктор оскільки він має пряме посилання на секцію `path` та ресурс `out.debug`. Селектор `predefined.export` - простий селектор, що вказує на вбудований крок. 
+
+### Побудова експорту модуля з застосуванням ґлобів
+При побудові модуля використовуються ресурси, які мають близький або ідентичний функціонал, а тому і схожі назви, розширення... Використаня простих селекторів і лінійних сценаріїв збільшить об'єм `will-файла` і займе багато часу, тому, в утиліті `willbe`, для вибору ресурсів, використовуються ґлоби - шаблон пошуку (англ. Wildcard pattern, glob pattern) - метод опису пошукового запиту з використанням метасимволов (символів-джокерів).  
+Створіть структуру файлів для модуля та внесіть код в файл `.will.yml`:  
+
+<details>
+  <summary><u>Структура модуля</u></summary>
+
+```
+shellCommand
+    ├── fileDebug
+    ├── fileRelease         
+    └── .will.yml       
+
+```
+
+</details>
+ 
+<details>
+  <summary><u>Код файла <code>.will.yml</code></u></summary>
 
 ```yaml
 about :
@@ -19,150 +55,58 @@ path :
   in : '.'
   out : 'out'
   fileToExport.debug :
-    path : './fileDebug'
     criterion :
-       debug : 1
+      debug : 1
+    path : 'fileDebug'
 
   fileToExport.release :
-    path : './fileRelease'
     criterion :
-       debug : 0
+      debug : 0
+    path : 'fileRelease'
 
-```
-
-Приведений лістинг показує, що в експорт-модуль при збірці відладки (`debug`) буде поміщено файл `fileDebug`, а при виконанні збірки релізу - `fileRelease`.   
-Додамо крок для експорту:  
-
-```yaml
-step  :
-  export.single :
-      inherit : predefined.export
-      export : path::fileToExport.*
-      tar : 0
-      criterion :
-         debug : 1
-         
-```
-
-Процедура `export.single` виконуватиме лише `debug`- збірку (критеріон відладки зі значенням "1"). Тому розіб'ємо його на два окремих - `export.debug` i `export.release`:
-
-<details>
-    <summary><u><em>Кроки `export.debug` i `export.release`</em></u></summary>
-
-```yaml
 step  :
   export.debug :
-      inherit : predefined.export
-      export : path::fileToExport.*
-      tar : 0
-      criterion :
-         debug : 1
+    inherit : predefined.export
+    export : path::fileToExport.*
+    tar : 0
+    criterion :
+      debug : 1
 
   export.release :
-      inherit : predefined.export
-      export : path::fileToExport.*
-      tar : 0
-      criterion :
-         debug : 0
+    inherit : predefined.export
+    export : path::fileToExport.*
+    tar : 0
+    criterion :
+      debug : 0
 
-```
-
-</details>
-
-Також, побудуємо дві збірки в секції `build`, які б виконували відповідні експорти:
-<details>
-    <summary><u><em>Збірки секції `build`</em></u></summary>
-
-```yaml
 build :
 
   export.debug :
-      criterion :
-          export : 1
-          debug : 1
-      steps :
-          - export.*
-          
+    criterion :
+      export : 1
+      debug : 1
+    steps :
+      - export.*
+
   export.release :
-      criterion :
-          export : 1
-          debug : 0
-      steps :
-          - export.*
+    criterion :
+      export : 1
+      debug : 0
+    steps :
+      - export.*
 
 ```
 
 </details>
+
+Кожна із збірок `export.debug` i `export.release` обирає крок в секції `step` для експорту файла згідно критеріона. Код показує, що в експорт-модуль при збірці відладки (`debug`) буде поміщено файл `fileDebug`, а при виконанні збірки релізу - `fileRelease`.   
 
 ### Експортування модуля з окремими файлами
-В `will-файлі` використовується [ґлоб](https://linuxhint.com/bash_globbing_tutorial/) `*`, який означає - додати до назви будь-яку кількість довільних символів, включаючи варіант без додавання. Тобто, для секції `build` кроки з назвами `export.`, `export.a`, `export.abcd1234` є валідними, але секція `step` має два визначені - саме з ними йде порівняння мапи критеріонів.  
-Кроки `export.debug` i `export.release` також обирають потрібний шлях порівнюючи мапи критеріонів.
+В `will-файлі` використовується [ґлоб](https://linuxhint.com/bash_globbing_tutorial/) `*`, який означає - додати до назви будь-яку кількість довільних символів, включаючи варіант без додавання. Тобто, для селектора `export.*` в секції `build` кроки з назвами `export.`, `export.a`, `export.abcd1234` є валідними. Секція `step` має кроки `export.debug` i `export.release`, відповідно, для вибору необхідного кроку утиліта порівнює мапи критеріонів. Кроки `export.debug` i `export.release` в свою чергу обирають потрібний шлях в секції `path` за селектором `path::fileToExport.*`.  
+Експортуйте модуль з процедурою відладки:  
 
 <details>
-    <summary><u><em>Лістинг `.will.yml`</em></u></summary>
-
-```yaml
-
-about :
-
-  name : selectorWithGlob
-  description : "Using selector with glob to choise path"
-  version : 0.0.1
-
-path :
-
-  in : '.'
-  out : 'out'
-  fileToExport.debug :
-    criterion :
-       debug : 1
-    path : './fileDebug'
-
-  fileToExport.release :
-    criterion :
-       debug : 0
-    path : './fileRelease'
-
-step  :
-  export.debug :
-      inherit : predefined.export
-      export : path::fileToExport.*
-      tar : 0
-      criterion :
-         debug : 1
-
-  export.release :
-      inherit : predefined.export
-      export : path::fileToExport.*
-      tar : 0
-      criterion :
-         debug : 0
-
-build :
-
-  export.debug :
-      criterion :
-          export : 1
-          debug : 1
-      steps :
-          - export.*
-
-  export.release :
-      criterion :
-          export : 1
-          debug : 0
-      steps :
-          - export.*
-
-```
-
-</details>
-
-<p></p>
-
-- Поєднання селекторів з ґлобами та критеріонів - потужний інструмент в налаштуванні роботи модуля.  
-
-Експортуємо модуль з процедурою відладки:
+  <summary><u>Вивід команди <code>will .export export.debug</code></u></summary>
 
 ```
 [user@user ~]$ will .export export.debug
@@ -170,11 +114,16 @@ build :
    Exporting export.debug
    + Write out will-file /path_to_file/out/selectorWithGlob.out.will.yml
    + Exported export.debug with 1 files in 1.370s
-  Exported export.debug in 1.419s
+  Exported module::selectorWithGlob / build::export.debug in 1.370s
 
 ```
 
-Використаємо ґлоб `?`, який означає - будь-який знак. Приведіть ресурс в `path` до вигляду:
+</details>
+
+Ґлоб `*` може бути замінений на `?` - будь-який знак, при умові відомого числа знаків. Наприклад, змініть ресурс `fileToExport.release` в `path` до вигляду:
+
+<details>
+  <summary><u>Ресурс <code>fileToExport.release</code></u></summary>
 
 ```yaml
 
@@ -185,7 +134,12 @@ build :
 
 ```
 
-Видаліть створену утилітою `willbe` директорію `out` та введіть `will .export export.release`
+</details>
+
+Видаліть створену утилітою `willbe` директорію `out` (команда `rm -Rf out`) та введіть `will .export export.release`:
+
+<details>
+  <summary><u>Вивід команди <code>will .export export.release</code></u></summary>
 
 ```
 [user@user ~]$ will .export export.release
@@ -193,13 +147,15 @@ build :
   Exporting export.release
    + Write out will-file /path_to_file/out/selectorWithGlob.out.will.yml
    + Exported export.release with 1 files in 1.379s
-  Exported export.release in 1.429s
+  Exported module::selectorWithGlob / build::export.release in 1.379s
 
 ```
 
-- Використовуйте ґлоби для гнучкого пошуку утилітою `willbe` та покращення читабельності `will-файла`  
+</details>
 
-Наш модуль працює. Але збірка не виключає помилок, тож, дізнаймося як зменшити ймовірність помилок в `will-файлі`.
+### Підсумок
+- Поєднання селекторів з ґлобами та критеріонів - потужний інструмент в налаштуванні побудови модуля. Використовуйте ґлоби для гнучкого пошуку ресурсів утилітою `willbe` та покращення читабельності `will-файла`.  
 
-[Наступний туторіал](HowToUseAsserts.md)  
+Побудовані збірки не виключають помилок, тож, в наступному туторіалі ["Як користуватись ассертами"](HowToUseAsserts.md) показано як зменшити ймовірність помилок в `will-файлі`.
+ 
 [Повернутись до змісту](../README.md#tutorials)

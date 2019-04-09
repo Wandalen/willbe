@@ -45,10 +45,6 @@
   В туторіалі показано як додати локальний підмодуль
 </details>
 <details>
-  <summary><a href="./Tutorials/SelectorsTermInWillFile.md">Поняття селекторів в <code>will-файлах</code></a></summary>
-  В туторіалі пояснюється поняття селекторів та як вони використовуються 
-</details>
-<details>
   <summary><a href="./Tutorials/HowToUseSelectorsWithGlob.md">Використання селекторів з ґлобами</a></summary>
   Як користуватись селекторами з ґлобами
 </details>
