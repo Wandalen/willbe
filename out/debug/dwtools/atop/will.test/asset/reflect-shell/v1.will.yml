@@ -2,11 +2,13 @@
 path :
 
   file : 'file'
+  produced.txt : '{path::file}/Produced.txt2'
+  produced.js : '{path::file}/Produced.js2'
   in : '.'
   out : 'out'
   temp :
-    - '{path::file}/Produced.txt'
-    - '{path::file}/Produced.js'
+    - '{path::file}/Produced.txt2'
+    - '{path::file}/Produced.js2'
 
 reflector :
 
