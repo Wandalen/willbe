@@ -210,7 +210,7 @@ function _inheritMultiple( o )
 
   Parent.prototype._inheritMultiple.call( reflector, o );
 
-  if( reflector.nickName === "reflector::reflect.submodules." )
+  if( reflector.nickName === "reflector::reflect.proto2" )
   debugger;
 
   reflector.src.pairWithDst( reflector.dst );
@@ -228,7 +228,7 @@ function _inheritMultiple( o )
   if( reflector.filePath )
   reflector._reflectMapForm({ visited : o.visited });
 
-  if( reflector.nickName === "reflector::reflect.submodules." )
+  if( reflector.nickName === "reflector::reflect.proto2" )
   debugger;
 
   return reflector;
@@ -293,11 +293,21 @@ function _inheritSingle( o )
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
 
-  if( reflector.nickName === "reflector::reflect.submodules." )
+  if( reflector.nickName === "reflector::reflect.proto2" )
   debugger;
 
   reflector2 = reflector2.cloneDerivative();
   reflector2.pathsResolve();
+
+  if( reflector2.src.prefixPath && reflector2.src.filePath )
+  {
+    reflector2.src.prefixesApply();
+  }
+  if( reflector2.dst.prefixPath && reflector2.dst.filePath )
+  {
+    reflector2.dst.prefixesApply();
+  }
+
   reflector._accumulator.src.pairRefineLight();
 
   reflector._accumulator.src.and( reflector2.src ).pathsExtend2( reflector2.src );
@@ -310,7 +320,7 @@ function _inheritSingle( o )
   if( reflector._accumulator.src.filePath !== reflector._accumulator.dst.filePath )
   reflector._accumulator.src.pairRefineLight();
 
-  if( reflector.nickName === "reflector::reflect.submodules." )
+  if( reflector.nickName === "reflector::reflect.proto2" )
   debugger;
 
 }

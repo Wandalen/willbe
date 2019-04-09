@@ -5,8 +5,8 @@
   Загальна інформація. Чим утиліта <code>willbe</code> є і чим вона не являється
 </details>
 <details>
-  <summary><a href="./tutorial/WillbeInstalation.md">Встановлення утиліти <code>willbe</code></a></summary>
-  Процес встановлення утиліти <code>willbe</code>
+  <summary><a href="./tutorial/Instalation.md">Встановлення утиліти <code>willbe</code></a></summary>
+  Процедура встановлення утиліти <code>willbe</code>
 </details>
 <details>
   <summary><a href="./tutorial/HowToUseCommandLineInterfaceOfWill.md">Як користуватися інтерфейсом командного рядка <code>willbe</code></a></summary>
