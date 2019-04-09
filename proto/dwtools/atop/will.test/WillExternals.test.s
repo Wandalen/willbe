@@ -5299,6 +5299,72 @@ transpile.timeOut = 130000;
 
 //
 
+function shell( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'shell' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build debug1, args option'
+    return null;
+  })
+  shell({ args : [ '.build debug1' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'script.js' ) )
+    test.is( _.strHas( got.output, 'somePath' ) )
+    test.is( _.strHas( got.output, 'arg1' ) )
+    test.is( _.strHas( got.output, 'arg2' ) )
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build debug2, args in shell option'
+    return null;
+  })
+  shell({ args : [ '.build debug2' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'script.js' ) )
+    test.is( _.strHas( got.output, 'somePath' ) )
+    test.is( _.strHas( got.output, 'arg1' ) )
+    test.is( _.strHas( got.output, 'arg2' ) )
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+shell.timeOut = 30000;
+
+//
+
 var Self =
 {
 
@@ -5373,6 +5439,7 @@ var Self =
     help,
     transpile,
 
+    shell
   }
 
 }
