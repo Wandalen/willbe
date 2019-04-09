@@ -54,7 +54,7 @@
 </details>
 <details>
   <summary><a href="./tutorial/MinimizationOfWillFile.md">Мінімізація <code>will-файла</code></a></summary>
-  Як мінімізувати об'єм `will-файла` за допомогою розгортання критеріонами із множинними значеннями
+  Як мінімізувати об'єм <code>will-файла</code> за допомогою розгортання критеріонами із множинними значеннями
 </details>
 <details>
   <summary><a href="./tutorial/SplitWillFile.md">Розділені <code>will-файли</code></a></summary>
@@ -62,7 +62,7 @@
 </details>
 <details>
   <summary><a href="./tutorial/NamedWillFile.md">Команда <code>.with</code> та іменований <code>will-файл</code>. </a></summary>
-  Як виористовувати команду <code>.with</code>? Що таке іменований <code>will-файл</code>?
+  Як використовувати команду <code>.with</code>? Що таке іменований <code>will-файл</code>?
 </details>
 <details>
   <summary><a href="./tutorial/UsingEachCommand.md">Як користуватись командою <code>.each</code></a></summary>
