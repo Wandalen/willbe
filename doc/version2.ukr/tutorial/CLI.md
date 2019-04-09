@@ -2,7 +2,7 @@
 
 Як користуватися інтерфейсом командного рядка утиліти <code>willbe</code></a></summary>. Застосування команд <code>.help</code> та <code>.list</code>.
 
-### <a name="ui-intro"></a> Знайомство з користувацьким інтерфейсом. Команда `.help`
+### Інтерфейсь командного рядка.
 
 Після [встановлення](<Instalation.md>) утиліти `willbe` в консолі вашої ОС введіть команду `will .`.
 
@@ -40,7 +40,43 @@ Ambiguity. Did you mean?
 
 </details>
 
-В утиліті `willbe` всі фрази починаються з вводу слів `will .`.  
+В утиліті `willbe` всі команди починаються з вводу `will .`. Кожна команда це фраза, котра складається із одного або більше слів. Наприклад:
+
+```
+will .help
+will .about.list
+will .resources.list
+will .paths.list
+```
+
+Введіть команду `will .list`
+
+<details>
+  <summary><u>Вивід команди <code>will .list</code></u></summary>
+
+```
+[user@user ~]$ will .list
+Command ".list"
+Ambiguity. Did you mean?
+  .resources.list - List information about resources of the current module.
+  .paths.list - List paths of the current module.
+  .submodules.list - List submodules of the current module.
+  .reflectors.list - List avaialable reflectors.
+  .steps.list - List avaialable steps.
+  .builds.list - List avaialable builds.
+  .exports.list - List avaialable exports.
+  .about.list - List descriptive information about the module.
+  .execution.list - List execution scenarios.
+
+```
+
+</details>
+
+Утиліта `willbe` знає багато команд, що містять слово `list` тому вона виводить інорфмацію про всі можливі фрази із вказаним словом. Це зручно якщо ви забули повну фразу з командою або дослідити можливості утиліти. Щоб отримати вичерпний список команд з даним словом, достатньо його ввести, а утиліта запропонує варіанти доповнення.
+
+
+### Команда `.help`
+
 Для отримання довідки по обраній команді використовуйте синтаксис: `will .help [команда]`.    
 Тепер введіть в терміналі `will .help .build`
 
@@ -57,7 +93,7 @@ Command ".help .build"
 
 </details>
 
-Тепер спробуйте `will .help .builds.list` і порівняйте вивід.
+Введіть команду `will .help .builds.list` і порівняйте вивід.
 
 <details>
   <summary><u>Вивід команди <code>will .help .builds.list</code></u></summary>
@@ -72,7 +108,7 @@ Command ".help .builds.list"
 
 </details>
 
-Тепер спробуйте ввести неповну фразу `will .help .submodules`?
+Введіть команду `will .help .submodules`?
 
 <details>
   <summary><u>Вивід команди <code>will .help .submodules</code></u></summary>
@@ -94,7 +130,7 @@ Command ".help .submodules"
 
 Утиліта `willbe` запропонувала варіанти фраз з вказаним словом. Це зручно, адже, якщо ви не пам'ятаете повну фразу з командою або бажаєте отримати вичерпний список команд з даним словом, достатньо його ввести, а утиліта запропонує варіанти доповнення.
 
-### Облік ресурсів модуля із командою `.*.list`
+### Команда `.*.list`
 
 Тепер давайте попрацюємо із `will-файлами`. Склонуйте [git-репозиторій]( <https://github.com/Wandalen/willbe.git> ) `willbe` з готовими прикладами.  
 В списку команд утиліти `willbe` багато таких, які закінчуються на `.list`. Якщо ввести команду `.list` в директорії, де відсутній `will-файл`, ви отримаєте попередження про відсутність модуля.
@@ -322,11 +358,11 @@ about :
 
 </details>
 
-### <a name="conclusion"></a> Підсумок
+### <a name="conclusion"></a> Підсумок xxx
 
 - Є декілька способів отримати список [команд `willbe`](#ui-intro) та [довідку по обраній](#help-command).  
-- `Willbe` виводить підказки, якщо не памятаете [повну фразу або бажаєте отримати список команд з визначеним словом](#help-completion).  
-- Команди групи `.list` виводять актуальну [інформацію про `will-модуль`](#list-commands).  
+- Якщо ви забули повну фразу то `Willbe` виведе підказки по одному слову, якщо не памятаете [повну фразу або бажаєте отримати список команд з визначеним словом](#help-completion).  
+- Використовуйте команди `.*.list` для того щоб перерахувати ресурси модуля.
 
 Наступний туторіал: [Модуль "Hello, World!"](FirstWillFile.md).
 
