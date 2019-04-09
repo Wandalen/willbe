@@ -8,6 +8,7 @@
 
 <details>
   <summary><u>Вивід команди <code>will .</code></u></summary>
+  
 ```
 [user@user ~]$ will .  
 Command "."
@@ -36,6 +37,7 @@ Ambiguity. Did you mean?
   .with - Use "with" to select a module.
   .each - Use "each" to iterate each module in a directory.
 ```
+
 </details>
 
 В утиліті `willbe` всі фрази починаються з вводу слів `will .`.  
