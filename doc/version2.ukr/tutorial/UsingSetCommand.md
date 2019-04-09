@@ -8,7 +8,7 @@
 Створимо `will`-файл з двома збірками. Перша буде завантажувати підмодулі, а друга експортувати:
 
 <details>
-    <summary><u><em>Лістинг `.will.yml`</em></u></summary>
+    <summary><u>Лістинг `.will.yml`</u></summary>
 
 ```yaml
 about :
@@ -59,7 +59,7 @@ build :
 Протестуємо фразу `will .set verbosity:8 ; .build`:
 
 <details>
-    <summary><u><em>Лог побудови з `verbosity:8`</em></u></summary>
+    <summary><u>Лог побудови з `verbosity:8`</u></summary>
     
 ```
 [user@user ~]$ will ".set verbosity:8 ; .build"
@@ -152,7 +152,7 @@ Found no .out.will file for module::setVerbosity at "/path_to_module/UsingSetCom
 Експортуємо модуль зі значенням `verbosity:4`:
 
 <details>
-    <summary><u><em>Лог експорту з `verbosity:4`</em></u></summary>
+    <summary><u>Лог експорту з `verbosity:4`</u></summary>
     
 ```
 [user@user ~]$ will .set verbosity:4 ; .export submodules.export
@@ -185,7 +185,7 @@ Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPat
 Видалимо підмодулі (`will .submodules.clean`) та знову завантажимо з `verbosity:0`:
 
 <details>
-    <summary><u><em>Лог побудови `verbosity:0`</em></u></summary>
+    <summary><u>Лог побудови `verbosity:0`</u></summary>
     
 ```
 [user@user ~]$ will .set verbosity:0 ; .build

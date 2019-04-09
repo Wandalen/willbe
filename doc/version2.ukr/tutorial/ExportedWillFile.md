@@ -15,11 +15,10 @@
   <summary><u>Код файла <code>.will.yml</code></u></summary>
 
 ```yaml
-
 about :
-    name : exportModule
-    description : "To export single file"
-    version : 0.0.1
+  name : exportModule
+  description : "To export single file"
+  version : 0.0.1
 
 path :
   in : '.'
@@ -28,17 +27,17 @@ path :
 
 step  :
   export.single :
-      inherit : predefined.export
-      export : path::fileToExport
-      tar : 0
+    inherit : predefined.export
+    export : path::fileToExport
+    tar : 0
 
 build :
   export.single :
-      criterion :
-          default : 1
-          export : 1
-      steps :
-          - export.single
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - export.single
 ```
 
 </details>

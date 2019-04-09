@@ -45,20 +45,16 @@
   В туторіалі показано як додати локальний підмодуль
 </details>
 <details>
-  <summary><a href="./tutorial/SelectorsTermInWillFile.md">Поняття селекторів в <code>will-файлах</code></a></summary>
-  В туторіалі пояснюється поняття селекторів та як вони використовуються
-</details>
-<details>
   <summary><a href="./tutorial/HowToUseSelectorsWithGlob.md">Використання селекторів з ґлобами</a></summary>
   Як користуватись селекторами з ґлобами
 </details>
 <details>
   <summary><a href="./tutorial/HowToUseAsserts.md">Як користуватись ассертами</a></summary>
-  В туторіалі пояснюється як ассерти допомогають зменшити кількість помилок в <code>will-файлі</code>
+  Як ассерти допомогають зменшити кількість помилок в <code>will-файлі</code>
 </details>
 <details>
   <summary><a href="./tutorial/MinimizationOfWillFile.md">Мінімізація <code>will-файла</code></a></summary>
-  Як мінімізувати об'єм `will-файла` за допомогою розгортання критеріонами із множинними значеннями
+  Як мінімізувати об'єм <code>will-файла</code> за допомогою розгортання критеріонами із множинними значеннями
 </details>
 <details>
   <summary><a href="./tutorial/SplitWillFile.md">Розділені <code>will-файли</code></a></summary>
@@ -66,7 +62,7 @@
 </details>
 <details>
   <summary><a href="./tutorial/NamedWillFile.md">Команда <code>.with</code> та іменований <code>will-файл</code>. </a></summary>
-  Як виористовувати команду <code>.with</code>? Що таке іменований <code>will-файл</code>?
+  Як використовувати команду <code>.with</code>? Що таке іменований <code>will-файл</code>?
 </details>
 <details>
   <summary><a href="./tutorial/UsingEachCommand.md">Як користуватись командою <code>.each</code></a></summary>
@@ -117,8 +113,8 @@
   Як користуватись наслідуванням ресурсів
 </details>
 <details>
-  <summary><a href="./tutorial/ViewStep.md">Перегляд файлів при побудові</a></summary>
-  Як користуватись вбудованим кроком <code>predefined.view</code> для перегляду файлів
+  <summary><a href="./tutorial/ViewStep.md">Як користуватись вбудованим кроком <code>predefined.view</code></a></summary>
+  Використання вбудованого кроку <code>predefined.view</code> для перегляду файлів
 </details>
 <details>
   <summary><a href="./tutorial/TranspileStep.md">Транспіляція файлів</a></summary>

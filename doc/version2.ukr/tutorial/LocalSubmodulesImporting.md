@@ -2,28 +2,31 @@
 
 В туторіалі показано як додати локальний підмодуль
 
-Крім віддалених підмодулів, ви можете використовувати створені локально на машині. Для цього в секцію `submodule` потрібно додати новий ресурс з шляхом до `will-файла`. Якщо використовується неіменований `will`-файл, використовуйте або повну назву файла або тільки шлях, а для іменованих `will-файлів` вказуйте назву файла до розширення `.will.yml` або `.out.will.yml`.   
+Крім віддалених підмодулів, ви можете використовувати створені локально на машині. Для цього в секцію `submodule` потрібно додати новий ресурс з шляхом до `will-файла`. Якщо використовується неіменований `will`-файл, вказуйте тільки шлях, а для іменованих `will-файлів` вказуйте шлях з назвою файла до розширення `.will.yml` або `.out.will.yml`.   
 Створіть структуру для дослідження двох підмодулів - з іменованим та неіменованим файлом:
 
 <details>
-  <summary><u>Структура файлів</u></summary>
+  <summary><u>Структура модуля</u></summary>
     
 ```
 .
-├── local.modules
-│         ├── localOne
-│         │     └── .im.will.yml
-│         │
-│         └── localTwo
-│               └── out
-└── .will.yml        └── local.out.will.yml
+├── modules
+│      ├── localOne
+│      │     └── .will.yml
+│      │
+│      └── localTwo
+│             └── out
+└── юwill.yml      └── local.out.will.yml
 
 ```
 
 </details>
 
-В директорії `local.modules` поміщено два модуля - `localOne` та `localTwo`.  
-Відредагуємо `.will.yml` для використання відповідних підмодулів.  
+В директорії `modules` поміщено два модуля - `localOne` та `localTwo`.  
+Помістіть в файл `.will.yml` код:
+
+<details>
+  <summary><u>Код файла <code>.will.yml</code></u></summary>
 
 ```yaml
 about :
@@ -35,23 +38,24 @@ about :
 submodule :
 
   PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
-  localOne : ./local.modules/localOne/
-  localTwo : ./local.modules/localTwo/out/local
+  localOne : ./modules/localOne/
+  localTwo : ./modules/localTwo/out/local
 
 ```
 
+</details>
+
 Для порівняння роботи команд з віддаленими і локальними підмодулями введено віддалений ресурс `PathFundamentals`.  
-Для файла `.im.will.yml` використаємо лістинг `.will.ymml` з туторілу [Експортування модуля](ExportedWillFile.md):
+Для файла `.will.yml` в директорії `localOne` використайте код з файла `.will.yml` в туторілі [Експортування модуля](ExportedWillFile.md):
 
 <details>
-  <summary><u>Лістинг файла `.im.will.yml`</u></summary>
+  <summary><u>Код файла <code>.will.yml</code> в директорії <code>localOne</code></u></summary>
 
 ```yaml
-
 about :
-    name : exportModule
-    description : "To export single file"
-    version : 0.0.1
+  name : exportModule
+  description : "To export single file"
+  version : 0.0.1
 
 path :
   in : '.'
@@ -60,24 +64,27 @@ path :
 
 step  :
   export.single :
-      inherit : predefined.export
-      export : path::fileToExport
-      tar : 0
+    inherit : predefined.export
+    export : path::fileToExport
+    tar : 0
 
 build :
-  export :
-      criterion :
-          default : 1
-          export : 1
-      steps :
-          - export.single
+  export.single :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - export.single
           
 ```
 
 </details>
 
-Також використаємо експортований `exportModule.out.will.yml` файл з цього туторіалу, перейменувавши його в `local.out.will.yml` та помістимо за шляхом `./local.modules/localTwo/out/` (якщо у вас немає файла, пройдіть туторіал [Експортування модуля](ExportedWillFile.md)).  
-Перевіримо конфігурацію фразою `will .submodules.list`:
+Також, використайте експортований `exportModule.out.will.yml` файл з туторіалу [Експортування модуля](ExportedWillFile.md)), перейменувавши його в `local.out.will.yml` та помістивши за шляхом `./modules/localTwo/out/`. Якщо у вас немає файла, ви можете його завантажити за посиланням <https://github.com/Wandalen/willbe/tree/master/sample/version2/LocalSubmodulesImporting/modules/localTwo/out/>.  
+Перевірте конфігурацію командою `will .submodules.list`:  
+
+<details>
+  <summary><u>Вивід команди <code>will .submodules.list</code></u></summary>
 
 ```
 [user@user ~]$ will .submodules.list
@@ -97,7 +104,12 @@ submodule::localTwo
 
 ```
 
-Завантаження та оновлення для локальних підмодулів не потрібне - на машині знаходиться актуальна версія модуля, але завантажимо віддалений. 
+</details>
+
+Завантаження та оновлення для локальних підмодулів не потрібне - на машині знаходиться актуальна версія модуля, завантажте віддалений:  
+
+<details>
+  <summary><u>Вивід команди <code>will .submodules.download</code></u></summary>
 
 ```
 [user@user ~]$ will .submodules.download
@@ -106,18 +118,31 @@ submodule::localTwo
  + 1/3 submodule(s) of module::local.import were downloaded in 4.877s
 
 ``` 
-Перегляньте директорію модуля:
 
-``` 
-[user@user ~]$ ls -al
-...
-drwxr-xr-x 4 user user 4096 Мар 12 13:25 local.modules
-drwxr-xr-x 4 user user 4096 Мар 12 13:27 .module
--rw-r--r-- 1 user user  307 Мар 12 13:41 .will.yml
+</details>
+<details>
+  <summary><u>Структура модуля після завантаження</u></summary>
+    
+```
+.
+├── .modules
+│      └── PathFundamentals
+├── modules
+│      ├── localOne
+│      │     └── .will.yml
+│      │
+│      └── localTwo
+│             └── out
+└── юwill.yml      └── local.out.will.yml
 
 ```
 
-Виведемо інформацію про підмодулі (`will .submodules.list`):
+</details>
+
+Перегляньте зміни в виводі інформації про підмодулі (`will .submodules.list`):
+
+<details>
+  <summary><u>Вивід команди <code>will .submodules.list</code></u></summary>
 
 ```
 [user@user ~]$ will .submodules.list
@@ -137,8 +162,13 @@ submodule::localTwo
 
 ```
 
-З чого встановлюємо, що локальні підмодулі завжди мають статус завантажені `isDownloaded : 1` (в виводі інформації про віддалені підмодулі вказується `true` або `false`), а також, якщо підмодуль посилається на експортований `will`-файл, то виводиться інформація по якій збірці він будувався.  
-Видалимо підмодулі фразою `will .submodules.clean`:
+</details>
+
+Локальні підмодулі завжди мають статус завантажені `isDownloaded : 1` (в виводі інформації про віддалені підмодулі вказується `true` або `false`), а також, якщо підмодуль посилається на експортований `will`-файл, то виводиться інформація по якій збірці він будувався.  
+Видаліть підмодулі фразою `will .submodules.clean`:
+
+<details>
+  <summary><u>Вивід команди <code>will .submodules.clean</code></u></summary>
 
 ```
 [user@user ~]$ will .submodules.clean
@@ -146,27 +176,29 @@ submodule::localTwo
 - Clean deleted 93 file(s) in 0.385s
 
 ```
-Прогляньте структуру модуля:
 
-``` 
-[user@user ~]$ ls -al
-...
-drwxr-xr-x 4 user user 4096 Мар 12 13:25 local.modules
--rw-r--r-- 1 user user  307 Мар 12 13:41 .will.yml
+</details>
+<details>
+  <summary><u>Структура модуля після видалення підмодулів</u></summary>
+    
+```
+.
+├── modules
+│      ├── localOne
+│      │     └── .will.yml
+│      │
+│      └── localTwo
+│             └── out
+└── юwill.yml      └── local.out.will.yml
 
 ```
 
-```
-[user@user ~]$ ls -al local.modules/
-...
-drwxr-xr-x 2 user user 4096 Мар 12 13:51 localOne
-drwxr-xr-x 3 user user 4096 Мар 12 13:13 localTwo
+</details>
 
-```
+Локальні підмодулі залишились без змін - утиліта `willbe` не виконує операцій над локальними підмодулями для збереження даних.
 
-Приведені лістинги свідчать, що утиліта `willbe` не виконує операцій з локальними підмодулями для їх збереження. Щоб керувати локальними підмодулями, потрібно використовувати інструменти утиліти для роботи з файловою системою. 
-
+### Підсумок
 - Щоб підключити локальний підмодуль, внесіть відповідний ресурс в секцію `submodule`.  
-- Для збереження данних, `willbe` не виконує операцій над локальними підмодулями.  
+- Для збереження данних `willbe` не виконує операцій над локальними підмодулями.  
 
 [Повернутись до змісту](../README.md#tutorials)
