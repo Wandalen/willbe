@@ -62,47 +62,36 @@ about :
 path :
 
   in : '.'
-  final : 'out'
   file : 'file'
-  temp : 'temp'
 
 reflector :
-
-  copy.temp :
-    filePath :
-      '*.c' : 1
-      path::file : path::temp
-  
-  copy.out :
-    filePath :
-      '*.*' : 0
-      path::temp : path::final
   
   compile :
     filePath :
       '*.c' : 1
+      path::file : 1
     src :
-      prefixPath : 'temp'
+      prefixPath : 'file'
 
   build :
     filePath :
       '*.o' : 1
       '*.c' : 0
-      path::temp : 1
-
+      path::file : 1
+  
 step :
 
   compile :
     shell : gcc-6 -c {this::src}
-    currentPath : path::temp
+    currentPath : path::file
     forEachDst : compile
     upToDate : preserve
   
   build :
     shell : gcc-6 -o hello {this::src}
-    currentPath : path::temp
+    currentPath : path::file
     forEachDst : build
-    upToDate : preserve
+    upToDate : preserve    
 
 build :
 
@@ -110,22 +99,18 @@ build :
     criterion :
       default : 1
     steps :
-      - step::copy.temp
       - step::compile
 
-  build.hello :
+  make.hello :
     steps :
       - step::build
-      - step::copy.out
 
 ```
 
 </details>
 
-Процес створення виконуваних файлів має два етапи: перший - створення об'єктних файлів з вихідних; другий - об'єднання об'єктних файлів в виконуваний.  
-В `will-файлі` проходить таке розділення операцій побудови модуля:  
-\- збірка `compile` виконує копіювання файлів з розширенням `.c` в тимчасову директорію `temp`, де проходить їх компіляція - крок для розділення директорії вихідних файлів і директорії побудови. Завдяки  налаштуванням рефлекторів відбір можна здійснити по багатьом параметрам (туторіали ["Фільтри рефлектора"](ReflectorFilters.md), ["Часові фільтри рефлектора"](ReflectorTimeFilters.md), ["Формування шляхів в рефлекторі. Управління файловими операціями"](ReflectorFSControl.md));  
-\- збірка `build.hello` об'єднує об'єктні файли в виконуваний і копіює результат в директорію `out` ресурса `final`.  
+Процес створення виконуваних файлів має два етапи: перший - створення об'єктних файлів з вихідних в збірці `compile`; другий - об'єднання об'єктних файлів в виконуваний в збірці `make.hello`.  
+Завдяки рефлекторам відбір файлів можна здійснити по багатьом параметрам (туторіали ["Фільтри рефлектора"](ReflectorFilters.md), ["Часові фільтри рефлектора"](ReflectorTimeFilters.md), ["Формування шляхів в рефлекторі. Управління файловими операціями"](ReflectorFSControl.md)).   
 Результуюча скомпільована програма повинна вивести фразу `Hello World!` в консоль. 
 
 ### Компіляція в виконуваний файл  
@@ -139,13 +124,13 @@ step :
 
   compile :
     shell : gcc-6 -c {this::src}
-    currentPath : path::temp
+    currentPath : path::file
     forEachDst : compile
     upToDate : preserve
   
   build :
     shell : gcc-6 -o hello {this::src}
-    currentPath : path::temp
+    currentPath : path::file
     forEachDst : build
     upToDate : preserve
 
@@ -153,8 +138,8 @@ step :
 
 </details>
 
-Крок `compile` виконує компіляюцію вихідних файлів з допомогою компілятора `gcc` шостої версії (за необхідності, встановіть [gcc](http://gcc.gnu.org/) і змініть команду в полі `shell` відповідно до версії компілятора). Компіляція проходить в директорії `temp` і здійснюється для кожного елемента згідно рефлектора `compile`. Полем `upToDate` задається функція слідкування за змінами файлів в директорії. Відмінність кроку `build` в тому, що він виконує об'єднання об'єктних файлів в виконуваний.   
-Запустіть побудову збірки `compile`, перевірте директорію `temp` після побудови:  
+Крок `compile` виконує компіляюцію вихідних файлів з допомогою компілятора `gcc` шостої версії (за необхідності, встановіть [gcc](http://gcc.gnu.org/) і змініть команду в полі `shell` відповідно до версії компілятора). Компіляція проходить в директорії `file` і здійснюється для кожного елемента згідно рефлектора `compile`. Полем `upToDate` задається функція слідкування за змінами файлів в директорії. Відмінність кроку `build` в тому, що він виконує об'єднання об'єктних файлів в виконуваний.   
+Запустіть побудову збірки `compile`, перевірте директорію `file` після побудови:  
 
 <details>
   <summary><u>Вивід команди <code>will .build</code></u></summary>
@@ -163,60 +148,50 @@ step :
 [user@user ~]$ will .build
 ...
   Building module::compileCpp / build::compile
-   + copy.temp reflected 3 files /path_to_file/ : temp <- file in 0.490s
- > gcc-6 -c /path_to_file/temp/hello.c /path_to_file/temp/main.c
-/path_to_file/temp/main.c: In function ‘main’:
-/path_to_file/temp/main.c:3:2: warning: implicit declaration of function ‘hello’ [-Wimplicit-function-declaration]
-  hello();
-  ^~~~~
+ > gcc-6 -c /path_to_file/file/hello.c /path_to_file/file/main.c
+...
   Built module::compileCpp / build::compile in 0.974s
 
 ```
 
-<p>Модуль після побудови</p>
+</details>
+<details>
+  <summary><u>Структура модуля після побудови</u></summary>
 
 ```
 compileCpp
         ├── file
         │     ├── hello.c
-        │     └── main.c
-        ├── temp
-        │     ├── hello.c
         │     ├── hello.o
         │     ├── main.c
-        │     └── main.o
+        │     └── main.o        
         └── .will.yml
 
 ```
 
 </details>
 
-Компіляція пройшла успішно, компілятор видав попередження про виклик функції, яку явно не вказано в файлі.  
-Виконайте побудову збірки `build.hello`:  
+Компіляція пройшла успішно. Виконайте побудову збірки `make.hello`:  
 
 <details>
-  <summary><u>Вивід команди <code>will .build build.hello</code></u></summary>
+  <summary><u>Вивід команди <code>will .build make.hello</code></u></summary>
     
 ```
-[user@user ~]$ will .build build.hello
+[user@user ~]$ will .build make.hello
 ...
   Building module::compileCpp / build::build.hello
  > gcc-6 -o hello /path_to_file/hello.o /path_to_file/temp/main.o
-   + copy.out reflected 2 files /path_to_file/ : out <- temp in 0.412s
-  Built module::compileCpp / build::build.hello in 1.057s
+  Built module::compileCpp / build::make.hello in 0.357s
   
-```  
+```
 
-<p>Модуль після побудови</p>
+</details>
+<details>
+  <summary><u>Структура модуля після побудови</u></summary>
 
 ```
 compileCpp
         ├── file
-        │     ├── hello.c
-        │     └── main.c
-        ├── out
-        │     └── hello
-        ├── temp
         │     ├── hello
         │     ├── hello.c
         │     ├── hello.o
@@ -228,10 +203,10 @@ compileCpp
 
 </details>
 
-В директорії `out` поміщено виконуваний файл `hello`. Запустіть його вказавши в консолі повний шлях до файла. В виводі нижче показано запуск в Linux-дистрибутиві:  
+В директорії `file` поміщено виконуваний файл `hello`. Запустіть його вказавши в консолі повний шлях до файла. В виводі нижче показано запуск в Linux-дистрибутиві:  
 
 <details>
-  <summary><u>Відкрийте, щоб проглянути</u></summary>
+  <summary><u>Запуск файла <code>hello</code></u></summary>
     
 ```
 [user@user ~]$ /home/user/Documents/test/compileCpp/out/hello 
@@ -242,30 +217,25 @@ Hello World!
 </details>
 
 
-Повторіть ввід фрази `will .build build.hello`:
+Повторіть ввід фрази `will .build`:
 
 <details>
-  <summary><u>Вивід команди <code>will .build build.hello</code></u></summary>
+  <summary><u>Вивід команди <code>will .build</code></u></summary>
     
 ```
-[user@user ~]$ will .build build.hello
+[user@user ~]$ will .build
 ...
-  Building module::compileCpp / build::build.hello
-   + copy.out reflected 2 files /path_to_file/ : out <- temp in 0.388s
-  Built module::compileCpp / build::build.hello in 0.999s
+  Building module::compileCpp / build::compile
+  Built module::compileCpp / build::compile in 0.495s
   
 ```  
-
-<p>Модуль після побудови</p>
+</details>
+<details>
+  <summary><u>Структура модуля після побудови</u></summary>
 
 ```
 compileCpp
         ├── file
-        │     ├── hello.c
-        │     └── main.c
-        ├── out
-        │     └── hello
-        ├── temp
         │     ├── hello
         │     ├── hello.c
         │     ├── hello.o
@@ -277,11 +247,11 @@ compileCpp
 
 </details>
 
-На відміну від попереднього виконання команди, утиліта не провела об'єднання файлів в новий оскільки файли `hello.o` i `main.o` не змінились. Як і утиліта `make` `willbe` слідкує за змінами файлів.  
-Процес побудови був розбитий на частини, а після побудови залишилась директорія з тимчасовими файлами - зайва робота. Внесіть в секцію `build` мультизбірку, яка виконає всі операції за один запуск побудови:  
+На відміну від попереднього виконання команди, утиліта не провела компіляцію файлів в новий, оскільки файли `hello.с` i `main.с` не змінились. Як і утиліта `make` `willbe` слідкує за змінами файлів.  
+Процес побудови був розбитий на частини, а після побудови залишились тимчасові файли - зайва робота. Внесіть в секцію `build` мультизбірку, яка виконає всі операції за один запуск побудови та в секцію `step` крок для видалення тимчасових файлів:  
 
 <details>
-  <summary><u><code>Will-файл</code> зі змінами в секції <code>build</code> після змін</u></summary>
+  <summary><u><code>Will-файл</code> зі змінами в секціях <code>build</code> i <code>step</code></u></summary>
 
 ```yaml
 about :
@@ -292,47 +262,41 @@ about :
 path :
 
   in : '.'
-  final : 'out'
   file : 'file'
-  temp : 'temp'
 
 reflector :
-
-  copy.temp :
-    filePath :
-      '*.c' : 1
-      path::file : path::temp
-  
-  copy.out :
-    filePath :
-      '*.*' : 0
-      path::temp : path::final
   
   compile :
     filePath :
       '*.c' : 1
+      path::file : 1
     src :
-      prefixPath : 'temp'
+      prefixPath : 'file'
 
   build :
     filePath :
       '*.o' : 1
       '*.c' : 0
-      path::temp : 1
+      path::file : 1  
 
 step :
 
   compile :
     shell : gcc-6 -c {this::src}
-    currentPath : path::temp
+    currentPath : path::file
     forEachDst : compile
     upToDate : preserve
   
   build :
     shell : gcc-6 -o hello {this::src}
-    currentPath : path::temp
+    currentPath : path::file
     forEachDst : build
     upToDate : preserve
+  
+  clean.temp :
+    inherit: predefined.shell
+    shell : rm -Rf *.o
+    currentPath : path::file    
 
 build :
 
@@ -340,26 +304,24 @@ build :
     criterion :
       default : 1
     steps :
-      - step::copy.temp
       - step::compile
 
-  build.hello :
+  make.hello :
     steps :
       - step::build
-      - step::copy.out
   
   all :
     steps :
       - build::compile
-      - build::build.hello
-      - clean
+      - build::make.hello
+      - clean.temp
 
 ```
 
 </details>
 
-Вбудований крок `clean` видаляє завантажені підмодулі, тимчасові файли в ресурсі `temp` та експортовані файли модуля в ресурсі `out` (відсутні в модулі).
-Видаліть зайві файли (`rm -Rf temp/ out/`) та виконайте побудову збірки `all`:  
+Крок `clean.temp` видаляє об'єктні файли в директорії `file`.
+Видаліть зайві файли та виконайте побудову збірки `all`:  
 
 <details>
   <summary><u>Вивід команди <code>will .build all</code></u></summary>
@@ -368,37 +330,32 @@ build :
 [user@user ~]$ will .build all
 ...
   Building module::compileCpp / build::all
-   + copy.temp reflected 3 files /path_to_file/ : temp <- file in 0.652s
  > gcc-6 -c /path_to_file/temp/hello.c /path_to_file/temp/main.c
-/path_to_file/temp/main.c: In function ‘main’:
-/path_to_file/temp/main.c:3:2: warning: implicit declaration of function ‘hello’ [-Wimplicit-function-declaration]
-  hello();
-  ^~~~~
+ ...
  > gcc-6 -o hello /path_to_file/temp/hello.o /path_to_file/temp/main.o
-   + copy.out reflected 2 files /path_to_file/ : out <- temp in 0.463s
-   - Clean deleted 6 file(s) in 0.138s
-   - Clean deleted 0 file(s) in 0.094s
+ > rm -Rf *.o
   Built module::compileCpp / build::all in 3.772s
 
   
 ```  
 
-<p>Модуль після побудови</p>
+</details>
+<details>
+  <summary><u>Структура модуля після побудови</u></summary>
 
 ```
 compileCpp
         ├── file
+        │     ├── hello
         │     ├── hello.c
         │     └── main.c
-        ├── out
-        │     └── hello
         └── .will.yml
 
 ```
 
 </details> 
 
-Всі незручності попередніх етапів усунено при збереженні результату і високій безпеці побудови файла.  
+Всі незручності попередніх етапів усунено при збереженні результату.  
 
 ### Підсумок
 - Утиліта `willbe` агрегує можливості операційної системи, зовнішніх програм і власних інструментів для автоматизації процесів розробки, в тому числі, створення виконуваних файлів.  
