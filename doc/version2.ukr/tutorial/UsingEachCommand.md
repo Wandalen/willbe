@@ -6,7 +6,7 @@
 Використаємо `will`-файли з попереднього туторіалу попередньо змінивши неіменований `.will.yml` в `will.will.yml` та модифікувавши `submodule.will.yml`.
 
 <details>
-    <summary><u><em>Лістинг `will.will.yml`</em></u></summary>
+    <summary><u>Лістинг `will.will.yml`</u></summary>
 
 ```yaml
 
@@ -40,7 +40,7 @@ build :
 </details>
 
 <details>
-    <summary><u><em>Лістинг `submodule.will.yml`</em></u></summary>
+    <summary><u>Лістинг `submodule.will.yml`</u></summary>
 
 ```yaml
 about :

@@ -45,12 +45,12 @@
   В туторіалі показано як додати локальний підмодуль
 </details>
 <details>
-  <summary><a href="./Tutorials/HowToUseSelectorsWithGlob.md">Використання селекторів з ґлобами</a></summary>
+  <summary><a href="./tutorials/HowToUseSelectorsWithGlob.md">Використання селекторів з ґлобами</a></summary>
   Як користуватись селекторами з ґлобами
 </details>
 <details>
   <summary><a href="./tutorial/HowToUseAsserts.md">Як користуватись ассертами</a></summary>
-  В туторіалі пояснюється як ассерти допомогають зменшити кількість помилок в <code>will-файлі</code>
+  Як ассерти допомогають зменшити кількість помилок в <code>will-файлі</code>
 </details>
 <details>
   <summary><a href="./tutorial/MinimizationOfWillFile.md">Мінімізація <code>will-файла</code></a></summary>
@@ -113,7 +113,7 @@
   Як користуватись наслідуванням ресурсів
 </details>
 <details>
-  <summary><a href="./Tutorials/ViewStep.md">Як користуватись вбудованим кроком `predefined.view`</a></summary>
+  <summary><a href="./tutorials/ViewStep.md">Як користуватись вбудованим кроком `predefined.view`</a></summary>
   Використання вбудованого кроку <code>predefined.view</code> для перегляду файлів
 </details>
 <details>

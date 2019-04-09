@@ -9,7 +9,7 @@
 Створимо в новій директорії один іменований для завантаження підмодулів (_submodule.will.yml_) та один неіменований файл (_.will.yml_) для видалення завантаженого підмодуля.  
 
 <details>
-    <summary><u><em>Лістинг `.will.yml`</em></u></summary>
+    <summary><u>Лістинг `.will.yml`</u></summary>
 
 ```yaml
 
@@ -43,7 +43,7 @@ build :
 </details>
 
 <details>
-    <summary><u><em>Лістинг `submodule.will.yml`</em></u></summary>
+    <summary><u>Лістинг `submodule.will.yml`</u></summary>
 
 ```yaml
 about :
