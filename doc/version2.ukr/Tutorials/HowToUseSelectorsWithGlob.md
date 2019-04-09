@@ -38,8 +38,7 @@ shellCommand
 
 ```
 
-</details>
- 
+</details> 
 <details>
   <summary><u>Код файла <code>.will.yml</code></u></summary>
 
