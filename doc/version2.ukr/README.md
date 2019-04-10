@@ -6,7 +6,7 @@
 
 <details>
   <summary><a href="./concept/WillFile.md"><code>Will-файл</code></a></summary>
-  Конфігураційний файл для побудови <code>will-модуля</code>
+  Конфігураційний файл для побудови модуля. Кожен формальний модуль має такий файл.
 </details>
 <details>
   <summary><a href="./concept/NamedAndSplitWillFile.md">Іменований <code>will-файл</code></a></summary>

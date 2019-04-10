@@ -18,19 +18,19 @@
 \- Відкрийте його та скопіюйте приведений нижче код. В секції `about`   
 
 <details>
-  <summary><u>Структура файлів</u></summary> 
-    
+  <summary><u>Структура файлів</u></summary>
+
 ```
 first               # директорія, назва довільна
   └── .will.yml     # конфігураційний файл
-  
+
 ```
 
 </details>
 
 <details>
-  <summary><u>Код файла <code>.will.yml</code></u></summary> 
-    
+  <summary><u>Код файла <code>.will.yml</code></u></summary>
+
 ```yaml
 about :
 
@@ -74,7 +74,7 @@ About
 Почніть з використання віддалених підмодулів - готових модулів, які знаходяться на віддаленому сервері. Для цього в секцію `submodule` `will-файла` помістіть ресурс з описом підмодуля. Замініть вміст файла `.will.yml`:  
 
 <details>
-  <summary><u>Код файла <code>.will.yml</code></u></summary> 
+  <summary><u>Код файла <code>.will.yml</code></u></summary>
 
 ```yaml
 about :
@@ -94,12 +94,12 @@ submodule :
 </details>
 
 <details>
-  <summary><u>Структура файлів</u></summary> 
+  <summary><u>Структура файлів</u></summary>
 
 ```
 first              
   └── .will.yml     
-  
+
 ```
 
 </details>
@@ -109,7 +109,7 @@ first
 Скористайтесь фразою `will. submodules.list` з попереднього туторіалу ["Як користуватися інтерфейсом командного рядка `willbe`"](HowToUseCommandLineInterfaceOfWill.md#list-commands) (тут і далі, текст виводу консолі, що не включено в туторіал позначений `...`):  
 
 <details>
-  <summary><u>Вивід команди <code>will .submodules.list</code></u></summary> 
+  <summary><u>Вивід команди <code>will .submodules.list</code></u></summary>
 
 ```
 [user@user ~]$ will .submodules.list
@@ -127,7 +127,7 @@ first
 Зробіть наступний крок для побудови модуля - Введіть команду `will. submodules.download` в кореневій директорії `will-файла`:
 
 <details>
-  <summary><u>Вивід команди <code>will .submodules.download</code></u></summary> 
+  <summary><u>Вивід команди <code>will .submodules.download</code></u></summary>
 
 ```
 [user@user ~]$ will .submodules.download
@@ -144,7 +144,7 @@ first
 Перевірте зміни в директорії модуля, використовуючи команду `ls`:
 
 <details>
-  <summary><u>Вивід команди <code>ls -al</code></u></summary> 
+  <summary><u>Вивід команди <code>ls -al</code></u></summary>
 
 ```
 [user@user ~]$ ls -al
@@ -164,14 +164,14 @@ drwxr-xr-x 4 user user 4096 Мар 12 07:20 Tools
 </details>
 
 <details>
-  <summary><u>Структура файлів, що відповідає виводу команд <code>ls -al</code></u></summary> 
+  <summary><u>Структура файлів, що відповідає виводу команд <code>ls -al</code></u></summary>
 <p>Що відповідає структурі каталогів:</p>
 
 ```
 first
   ├── .module
   │       └── Tools
-  └── .will.yml 
+  └── .will.yml
 
 ```
 
@@ -181,7 +181,7 @@ first
 В директорії для завантажених підмодулів `.module` утиліта `willbe` помістила підмодуль `Tools` . Перевірте статус підмодуля після завантаження:  
 
 <details>
-  <summary><u>Вивід команди <code>will .submodules.list</code></u></summary> 
+  <summary><u>Вивід команди <code>will .submodules.list</code></u></summary>
 
 ```
 [user@user ~]$ will .submodules.list
@@ -201,7 +201,7 @@ submodule::Tools
 Зверніть увагу на рядок, який позначає підмодуль секції - `submodule::Tools`. Вивід у формі 'Назва секції :: Назва ресурса', свідчить про те, що секція має необмежену кількість ресурсів. Секція `about`, має єдину форму запису:  
 
 <details>
-  <summary><u>Вивід команди <code>will .about.list</code></u></summary> 
+  <summary><u>Вивід команди <code>will .about.list</code></u></summary>
 
 ```
 [user@user ~]$ will .about.list
@@ -217,7 +217,7 @@ About
 
 ### Підсумок
 - Ви можете використовувати [готові модулі](#first-modules) позначивши їх як підмодулі в секції `submodule`.
-- Вивід інформації про ресурси секції в консоль має вигляд `Назва секції :: Назва ресурса`.
+- Вивід інформації про ресурси секції в консоль має вигляд `Тип ресурса :: Назва ресурса`.
 
 [Наступний туторіал](SubmodulesAdministration.md)   
 [Повернутись до змісту](../README.md#tutorials)
