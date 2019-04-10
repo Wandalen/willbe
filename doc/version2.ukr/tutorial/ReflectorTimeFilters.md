@@ -1,6 +1,6 @@
 # Часові фільтри рефлектора  
 
-В туторіалі показано як користуватись фільтрами відбору файлів по часу
+Як користуватись фільтрами відбору файлів по часу.
 
 ### <a name="time-filters"></a> Фільтри по часу (часові фільтри)  
 Крім масок та простих фільтрів рефлектори здатні фільтрувати файли по часу створення. Для цього в поле `src` вносять спеціальні поля: `notOlder`, `notNewer`, `notOlderAge`, `notNewerAge`:  
@@ -24,7 +24,7 @@
 │     ├── files
 │     │     ├── manual.md
 │     │     └── tutorial.md
-│     ├── build.txt.js 
+│     ├── build.txt.js
 │     └── package.json   
 │
 └── .will.yml       
@@ -68,11 +68,11 @@ path :
   in : '.'
   out : 'out'
   proto : './proto'
-  out.debug : 
+  out.debug :
     path : './out/debug'
     criterion :
       debug : 1
-  out.release : 
+  out.release :
     path : './out/release'
     criterion :
       debug : 0
@@ -101,7 +101,7 @@ step :
 build :
 
   copy :
-    criterion : 
+    criterion :
       default : 1
       debug : [ 0,1 ]
     steps :
@@ -140,7 +140,7 @@ build :
 [user@user ~]$ ls -a out/release/
 .  ..  files  proto.two
 
-``` 
+```
 
 Тобто, `willbe` скопіював директорії без файлів.  
 Випробуємо часові фільтри `notNewer` i `notOlder`. Задамо новий діапазон:  
@@ -181,7 +181,7 @@ reflector :
 [user@user ~]$ ls -a out/release/
 .  ..  files  file.txt  proto.two
 
-``` 
+```
 
 - Часові фільтри рефлектора формують діапазони вибірки файлів за часом створення (модифікації).  
 

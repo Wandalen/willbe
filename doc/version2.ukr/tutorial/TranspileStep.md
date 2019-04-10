@@ -1,6 +1,6 @@
 # Транспіляція файлів
 
-Використання кроку `predefined.transpile` для трансформації JavaScript-файлів  
+Використання вбудованого кроку <code>predefined.transpile</code> для трансформації JavaScript-файлів.  
 
 Транспіляція, це переклад вихідного коду з однієї мови на іншу. В утиліті `willbe` є можливість перетворювати вихідні JavaScript файли в стиснений і перетворений код. Для цього використовується вбудований крок `predefined.transpile`.  
 
@@ -19,7 +19,7 @@ transpile
     │     ├── File1.release.js
     │     ├── File2.debug.js
     │     ├── File2.release.js
-    │     └── File.experiment.js 
+    │     └── File.experiment.js
     └── .will.yml
 
 ```
@@ -110,7 +110,7 @@ build :
       debug : [ 0,1 ]
     steps :
       - transpile.proto*=1
-      
+
 ```
 
 </details>
@@ -124,21 +124,21 @@ build :
 [user@user ~]$ will .steps.list
 ...
 step::transpile.proto.
-  criterion : 
-    debug : 0 
-  opts : 
-    reflector : reflector::transpile.proto* 
-  inherit : 
+  criterion :
+    debug : 0
+  opts :
+    reflector : reflector::transpile.proto*
+  inherit :
     predefined.transpile
 
 step::transpile.proto.debug
-  criterion : 
-    debug : 1 
-  opts : 
-    reflector : reflector::transpile.proto* 
-  inherit : 
+  criterion :
+    debug : 1
+  opts :
+    reflector : reflector::transpile.proto*
+  inherit :
     predefined.transpile
-      
+
 ```
 
 </details>
@@ -152,7 +152,7 @@ step::transpile.proto.debug
 <details>
   <summary><u>Реліз і дебаг-побудови</u></summary>
 <p>Вивід команди <code>will .build transpile.proto.</code></p>
-    
+
 ```
 [user@user ~]$ will .build transpile.proto.
 ...
@@ -160,7 +160,7 @@ step::transpile.proto.debug
    # Transpiled 2 file(s) to /path_to_file/out/release/Main.s in 0.167s
    # Compression factor : 198.0 b / 107.0 b / 66.0 b
   Built transpile.proto. in 3.205s
-      
+
 ```
 
 <p>Структура файлів після реліз-побудови</p>
@@ -176,7 +176,7 @@ transpile
     │     ├── File1.release.js
     │     ├── File2.debug.js
     │     ├── File2.release.js
-    │     └── File.experiment.js 
+    │     └── File.experiment.js
     └── .will.yml
 
 ```
@@ -190,7 +190,7 @@ transpile
    # Transpiled 3 file(s) to /path_to_file/out/debug/Main.s in 0.120s
    # Compression factor : 295.0 b / 295.0 b / 100.0 b
   Built transpile.proto.debug in 3.296s
-      
+
 ```
 
 <p>Структура файлів після дебаг-побудови</p>
@@ -208,7 +208,7 @@ transpile
     │     ├── File1.release.js
     │     ├── File2.debug.js
     │     ├── File2.release.js
-    │     └── File.experiment.js 
+    │     └── File.experiment.js
     └── .will.yml
 
 ```
@@ -221,7 +221,7 @@ transpile
 <details>
   <summary><u>Код в <code>Main.s</code></u></summary>
 <p><code>Main.s</code> в <code>./out/debug/</code></p>
-    
+
 ```js
 // ======================================
 ( function() {
@@ -240,14 +240,14 @@ console.log( 'File2.debug.js' );
 })();
 
 ```    
-    
+
 <p><code>Main.s</code> в <code>./out/debug/</code></p>
 
 ```js
 // ======================================
 console.log("File1.release.js"), console.log("File2.release.js");
 
-``` 
+```
 
 </details>
 
