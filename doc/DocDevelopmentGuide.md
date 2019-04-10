@@ -12,7 +12,7 @@
 
 - Use utility willbe, not package willbe.
 - Minimize water, negation and strong statements.
-- Don't mention name of referent explicitly.
+- Use implicit referencing. Don't mention name of referent explicitly.
 <br>*Fore example, instead of:*<br>
 In the pervious tutorial [ "Predefined steps" ](PredefinedSteps.md) predefined steps were used to compose a build.
 <br>*Should be:*<br>
