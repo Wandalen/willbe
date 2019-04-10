@@ -1,10 +1,10 @@
-# Як користуватись вбудованим кроком `predefined.view`
+# Вбудований крок <code>predefined.view</code>
 
-Використання вбудованого кроку `predefined.view` для перегляду файлів   
+Використання вбудованого кроку <code>predefined.view</code> для перегляду файлів.
 
 В процесі і після побудови модуля, зазвичай, потрібно перевірити правильність виконання операцій. Одним із способів є запуск файлів для їх виконання, редагування, перегляду. Для вирішення задачі в утиліті є вбудований крок `predefined.view`, який призначений для запуску файлів.  
 
-### Конфігурація 
+### Конфігурація
 Для дослідження вбудованого кроку `predefined.view`, створіть структуру файлів як приведено нижче та внесіть в файли код:  
 
 <details>
@@ -36,7 +36,7 @@ path :
   txt : './file/hello.txt'
   url : 'https://www.google.com/'
 
-step : 
+step :
 
   view.url :
     inherit : predefined.view
@@ -47,14 +47,14 @@ step :
     inherit : predefined.view
     filePath : path::html
     delay : 8000
-  
+
   view.txt :
     inherit : predefined.view
     filePath : path::txt
     delay : 1000  
 
 build :
-  
+
   open.view :
     criterion :
       default : 1
@@ -92,7 +92,7 @@ build :
 
 <details>
   <summary><u>Вивід команди <code>will .build</code></u></summary>
-    
+
 ```
 [user@user ~]$ will .build
 ...
@@ -111,19 +111,19 @@ View path::url
 
 <details>
   <summary><u>Вивід текстового редактора</u></summary>
-    
+
 ![txt.view.png](./Images/txt.view.png)
 
 </details>
 <details>
   <summary><u>Вивід браузера. HTML-файл</u></summary>
-    
+
 ![html.view.png](./Images/html.view.png)
 
 </details>
 <details>
   <summary><u>Вивід браузера. URL-посилання</u></summary>
-    
+
 ![html.view.png](./Images/url.view.png)
 
 </details>

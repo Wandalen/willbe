@@ -227,7 +227,7 @@
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorTimeFilters.md">Часові фільтри рефлектора</a></summary>
-  В туторіалі показано як користуватись фільтрами відбору файлів по часу
+  Як користуватись фільтрами відбору файлів по часу.
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorFSControl.md">Формування шляхів в рефлекторі. Управління файловими операціями</a></summary>
@@ -238,20 +238,20 @@
   Використання вбудованих рефлекторів та побудова мультизбірок
 </details>
 <details>
-  <summary><a href="./tutorial/ResourceInheritability.md">Наслідування ресурсами</a></summary>
+  <summary><a href="./tutorial/ResourceInheritability.md">Наслідування ресурсів</a></summary>
   Як користуватись наслідуванням ресурсів
 </details>
 <details>
-  <summary><a href="./tutorial/ViewStep.md">Як користуватись вбудованим кроком <code>predefined.view</code></a></summary>
-  Використання вбудованого кроку <code>predefined.view</code> для перегляду файлів
+  <summary><a href="./tutorial/ViewStep.md">Вбудований крок <code>predefined.view</code></a></summary>
+  Використання вбудованого кроку <code>predefined.view</code> для перегляду файлів.
 </details>
 <details>
   <summary><a href="./tutorial/TranspileStep.md">Транспіляція файлів</a></summary>
-  Використання кроку <code>predefined.transpile</code> для трансформації JavaScript-файлів
+  Використання вбудованого кроку <code>predefined.transpile</code> для трансформації JavaScript-файлів
 </details>
 <details>
-  <summary><a href="./tutorial/HowToUseCommandShell.md">Як користуватись командою <code>.shell</code> </a></summary>
-  Як виконати зовнішню програма.
+  <summary><a href="./tutorial/HowToUseCommandShell.md">Команда <code>.shell</code> </a></summary>
+  Команда для виклику зовнішніх програм утилітою <code>willbe</code> для вибраних модулів.
 </details>
 <details>
   <summary><a href="./tutorial/WillbeAsMake.md">Компіляція С++ програми</a></summary>
@@ -262,6 +262,6 @@
   Імпортування неформальних підмодулів
 </details>
 <details>
-  <summary><a href="./tutorial/CleanCommandUsing.md">How to use <code>.clean</code> command</a></summary>
-  Використання команди <code>.clean</code>
+  <summary><a href="./tutorial/CleanCommandUsing.md">Команда очистки <code>.clean</code></a></summary>
+  Використання команди для очистки <code>.clean</code> для того щоб видалити згенеровані та тимчасові файли.
 </details>
