@@ -60,7 +60,7 @@
 </details>
 <details>
   <summary><a href="./concept/Export.md#out-will-file">Експортований <code>will-файл</code> (<code>out-will-файл</code>)</a></summary>
-  <code>Will-файл</code>, який автоматично згенерований утилітою при виконанні експорту модуля.
+  <code>Out-will-файл</code> - різновид <code>will-файла</code> згенерованого утилітою при експортуванні модуля. Інші модулі можуть використати даний модуль імортувавши його <code>out-will-файл</code>.
 </details>
 <details>
   <summary><a href="./concept/Module.md#module">Модуль</a></summary>
