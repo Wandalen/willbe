@@ -1,5 +1,4 @@
-
-# willbe [![Build Status](https://travis-ci.org/Wandalen/willbe.svg?branch=master)](https://travis-ci.org/Wandalen/willbe)
+# Abstract
 
 Utility for development which helps to manage modularity of complex modular systems.
 
@@ -21,10 +20,4 @@ Declarative programming paradigm is heavily used in `will-files`.
 
 Utility willbe is not a replacement of Git, NPM or other utilities with narrow purpose. It aggregates functionality of all that utilities in the single utility and under the single philosophy.
 
-## Try out
-```
-npm install -g willbe
-cd sample/submodules
-will .build
-```
-
+[Back to content](../README.md#tutorials)
