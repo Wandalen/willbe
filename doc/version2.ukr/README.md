@@ -12,7 +12,7 @@
 </details>
 <details>
   <summary><a href="./concept/NamedAndSplitWillFile.md">Іменований <code>will-файл</code></a></summary>
-  Вид <code>will-файла</code> назва якого починається з імені
+  Вид <code>will-файла</code>, що має не стандартне ім'я файлу. Дозволяє мати більше одного модуля із різними іменами файлів в одній дерикторії.
 </details>
 <details>
   <summary><a href="./concept/NamedAndSplitWillFile.md">Спліт <code>will-файл</code></a></summary>
@@ -20,15 +20,15 @@
 </details>
 <details>
   <summary><a href="./concept/Structure.md#resource">Ресурси</a></summary>
-  Елементи <code>will-файла</code>, які позначають певну функціональність
+  Структурна і функціональна одиниця <code>will-файла</code>. В файлі ресурси одного типу зібрані в одній секції.
 </details>
 <details>
   <summary><a href="./concept/Structure.md#section">Секції <code>will-файлу</code></a></summary>
-  Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що писують дану секцію
+  Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що описують дану секцію
 </details>
 <details>
   <summary><a href="./concept/About.section.md">Секція <code>about</code></a></summary>
-  В секції поміщено основну інформація про модуль
+  Секція містить описову інформація про модуль
 </details>
 <details>
   <summary><a href="./concept/Path.section.md">Секція <code>path</code></a></summary>
@@ -36,22 +36,22 @@
 </details>
 <details>
   <summary><a href="./concept/Submodule.section.md">Секція <code>submodule</code></a></summary>
-  В секції вказуються підмодулі
+  Секції містить підмодулі
 </details>
 <details>
-  <summary><a href="./concept/Submodule.section.md">Секція <code>step</code></a></summary>
-  В секції описуються процедури побудови модуля
+  <summary><a href="./concept/Step.section.md">Секція <code>step</code></a></summary>
+  Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля
 </details>
 <details>
-  <summary><a href="./concept/Submodule.section.md">Секція <code>reflector</code></a></summary>
+  <summary><a href="./concept/Reflector.section.md">Секція <code>reflector</code></a></summary>
   Основними функціями ресурсів секції (рефлекторів) є файлові операції
 </details>
 <details>
-  <summary><a href="./concept/Submodule.section.md">Секція <code>exported</code></a></summary>
-  Секція <code>will-файла</code>, автоматично згенерованого при експортуванні модуля
+  <summary><a href="./concept/Exported.section.md">Секція <code>exported</code></a></summary>
+  Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля
 </details>
 <details>
-  <summary><a href="./concept/Submodule.section.md">Секція <code>build</code></a></summary>
+  <summary><a href="./concept/Build.section.md">Секція <code>build</code></a></summary>
   Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля
 </details>
 <details>
