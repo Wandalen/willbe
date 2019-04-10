@@ -95,12 +95,12 @@
   Група файлів, що не розповсюджується із <code>will-файлом</code>. Для такого підмодуля можливо створити <code>will-файл</code> та експортувати його самостійно.
 </details>
 <details>
-  <summary><a href="./concept/Phrase.md#will-phrase">Фраза</a></summary>
-  Слово або декілька слів, відокремлених крапкою при вводі в командній оболонці системи
+  <summary><a href="./concept/Command.md#command">Команда</a></summary>
+  Рядок що містить фраза для позначення наміру розробинка і дії, котрі будуть виконані утилітою по її введенні. Вводиться в інтерфейсь командного рядка розробником.
 </details>
 <details>
-  <summary><a href="./concept/Phrase.md#command">Команда</a></summary>
-  Фраза, котра складається із одного або більше слів
+  <summary><a href="./concept/Command.md#will-phrase">Фраза</a></summary>
+  Слово або декілька слів, відокремлених крапкою, позначає команду, яку має виконати утиліта.
 </details>
 <details>
   <summary><a href="./concept/Selectors.md#selector">Селектор</a></summary>
