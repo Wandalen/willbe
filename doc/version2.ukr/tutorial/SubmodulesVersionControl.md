@@ -1,6 +1,6 @@
-# Як користуватись командами `.submodules.fixate` і `.submodules.upgrade.refs` 
+# Командами <code>.submodules.fixate</code> і <code>.submodules.upgrade</code>
 
-Перевірка, оновлення і фіксування версій підмодулів в <code>will-файлі</code> 
+Перевірка, оновлення і фіксування версій підмодулів в <code>will-файлі</code>
 
 Зазвичай, один програмний продукт залежить від багатьох сторонніх модулів, бібліотек, програм. Розробка програмного забезпечення динамічний процес і версії швидко змінюється. Для забезпечення  актуальності версій нерідко доводиться безпосередньо слідкувати за станом продукту в офіційних джерелах. Тим не менше, при значному об'ємі допоміжного програмного забезпечення, яке розміщується в різних джерелах, потрібне швидке і безпечне здійснення оновлень. Утиліта `willbe` дозволяє розробнику слідкувати за станом підмодулів як допоміжного програмного забезпечення, з допомогою команд `.submodules.fixate` i `.submodules.upgrade.refs`.   
 
@@ -30,7 +30,7 @@ about :
 
   name : versionControl
   description : "To test .submodules.fixate and .submodules.upgrade.refs commands"
-    
+
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
@@ -125,21 +125,21 @@ Remote path of module::versionControl / module::Files fixated
 </details>
 
 Утиліта завантажила підмодулі згідно версій комітів на які було змінено ресурси секції `submodule` в файлі `.will.yml`. Повторне введення команди `.submodules.fixate` не змінить файл, оскільки, у всіх ресурсах вказано версію коміта.  
-Розділення етапів оновлення посилань і завантаження підмодулів потрібне для того, щоб розробник міг безпечно оновити підмодулі в зручний час, наприклад, після бекапу даних модуля. 
+Розділення етапів оновлення посилань і завантаження підмодулів потрібне для того, щоб розробник міг безпечно оновити підмодулі в зручний час, наприклад, після бекапу даних модуля.
 
-### <a name="submodules-upgrade-refs"></a> Команда `.submodules.upgrade.refs` 
+### <a name="submodules-upgrade-refs"></a> Команда `.submodules.upgrade.refs`
 Команда `.submodules.upgrade.refs`, аналогічно до `.submodules.fixate`, призначена для пошуку оновлень для віддалених підмодулів та перезапису посилань в відповідних ресурсах секції `submodule`, має опцію `dry`. При `dry:0` (значення за замовчуванням) утиліта знайде останні оновлення в репозиторіях підмодулів і замінить URL-посилання на актуальні. При значенні `dry:1` команда виводить список доступних оновлень для підмодулів не змінюючи `will-файл`. Команда `.submodules.upgrade.refs` шукає і замінює всі URL-посилання на підмодулі.  
 Перевірте, які підмодулі потребують оновлення версії в кожному з `will-файлів`:  
 
 <details>
   <summary><u>Вивід команди <code>will .each . .submodules.upgrade.refs dry:1</code></u></summary>
-    
+
 ```
 [user@user ~]$ will .each . .submodules.upgrade.refs dry:1
 ...
 Module at /path_to_file/.will.yml
 ...
- . Read 4 will-files in 2.914s 
+ . Read 4 will-files in 2.914s
 
   Remote path of module::versionControl / module::Tools will be fixated
     git+https:///github.com/Wandalen/wTools.git/out/wTools : .#56afe924c2680301078ccb8ad24a9e7be7008485 <- .#ec60e39ded1669e27abaa6fc2798ee13804c400a
@@ -147,7 +147,7 @@ Module at /path_to_file/.will.yml
 
 Module at /path_to_file/svc.will.yml
 ...
- . Read 4 will-files in 2.645s 
+ . Read 4 will-files in 2.645s
 
   Remote path of module::versionControl / module::Tools will be fixated
     git+https:///github.com/Wandalen/wTools.git/out/wTools : .#56afe924c2680301078ccb8ad24a9e7be7008485 <- .#ec60e39ded1669e27abaa6fc2798ee13804c400a
