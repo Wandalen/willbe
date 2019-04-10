@@ -4,7 +4,7 @@ For quick start [install](<./tutorial/Instalation.md>) utility `willbe`, [get ac
 
 For gentle introduction use tutorials. For getting exhaustive information on one or another aspect use list of concepts to find a concept of interest and dive into it.
 
-## Концепції
+## Concepts
 
 <details>
   <summary><a href="./concept/WillFile.md"><code>Will-file</code></a></summary>
@@ -127,7 +127,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   Спосіб опису критеріїв відобору необхідних файлів для виконання якоїсь операції над групою файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>.
 </details>
 
-## Туторіали
+## Totorials
 
 <details>
   <summary><a href="./tutorial/Abstract.md">Загальна інформація</a></summary>
