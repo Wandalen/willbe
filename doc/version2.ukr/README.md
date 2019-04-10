@@ -12,7 +12,7 @@
 </details>
 <details>
   <summary><a href="./concept/NamedAndSplitWillFile.md">Іменований <code>will-файл</code></a></summary>
-  Вид <code>will-файла</code>, що має не стандартне ім'я файлу. Дозволяє мати більше одного модуля із різними іменами файлів в одній дерикторії.
+  Вид <code>will-файла</code>, що має не стандартне ім'я файлу. Дозволяє мати більше одного модуля із різними іменами файлів в одній директорії.
 </details>
 <details>
   <summary><a href="./concept/NamedAndSplitWillFile.md">Спліт <code>will-файл</code></a></summary>
@@ -24,11 +24,11 @@
 </details>
 <details>
   <summary><a href="./concept/Structure.md#resource-type">Тип ресурсу</a></summary>
-  Функціональність обмежена призначенням і механізмом виконання.
+  Функціональність пов'язана із групою ресурсів, обмежена призначенням. Приклад того які бувать типи ресурів: шлях, підмодуль, крок, збірка. Кожен тип ресурів має власне призначення і обробляється утиілітою по-різному.
 </details>
 <details>
   <summary><a href="./concept/Structure.md#section">Секція <code>will-файла</code></a></summary>
-  Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що описують дану секцію
+  Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що описують даний модуль.
 </details>
 <details>
   <summary><a href="./concept/About.section.md">Секція <code>about</code></a></summary>
@@ -40,15 +40,15 @@
 </details>
 <details>
   <summary><a href="./concept/Submodule.section.md">Секція <code>submodule</code></a></summary>
-  Секції містить інформацію про підмодулі
+  Секція містить інформацію про підмодулі.
 </details>
 <details>
   <summary><a href="./concept/Step.section.md">Секція <code>step</code></a></summary>
-  Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля
+  Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля.
 </details>
 <details>
   <summary><a href="./concept/Reflector.section.md">Секція <code>reflector</code></a></summary>
-  Секція містить рефлектори, ресурси для виконання операцій над групами файлів.
+  Секція містить рефлектори, особливий тип ресурса для виконання операцій над групами файлів.
 </details>
 <details>
   <summary><a href="./concept/Build.section.md">Секція <code>build</code></a></summary>
@@ -84,11 +84,11 @@
 </details>
 <details>
   <summary><a href="./concept/CurrentModule.md">Поточний модуль</a></summary>
-  <code>Will-модуль</code>, відносно якого виконуються операції в командній оболонці системи.  
+  Модуль відносно якого виконуються операції. За замовчуванням цей модуль завантажується із файла <code>.will.yml</code> поточної дерикторії.
 </details>
 <details>
   <summary><a href="./concept/Export.md#module-export">Експорт модуля</a></summary>
-  Особливий вид збірки, котрий призначений для перенесення конфігурації поточного модуля
+  Особливий вид збірки необхідний для використання даного модуля іншими розробниками та модулями. Результатом експортування модуля є аретфакти, зокерма <code>out-will-file</code>.
 </details>
 <details>
   <summary><a href="./concept/InformalSubmodule.md">Неформальний підмодуль</a></summary>

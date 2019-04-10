@@ -8,98 +8,98 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 
 <details>
   <summary><a href="./concept/WillFile.md"><code>Will-file</code></a></summary>
-  Конфігураційний файл для побудови модуля. Кожен формальний модуль має такий файл.
+  Config for describing and building a module. Each formal module has such file.
 </details>
 <details>
   <summary><a href="./concept/NamedAndSplitWillFile.md">Named <code>will-file</code></a></summary>
-  Вид <code>will-file</code>, що має не стандартне ім'я файлу. Дозволяє мати більше одного модуля із різними іменами файлів в одній дерикторії.
+  Kind of <code>will-file</code>, which has nonstandard name. It makes possible to have multiple modules with different names in a directory.
 </details>
 <details>
-  <summary><a href="./concept/NamedAndSplitWillFile.md">Спліт <code>will-file</code></a></summary>
-  Розділення <code>will-file</code> на два file - для імпорту та експорту модуля
+  <summary><a href="./concept/NamedAndSplitWillFile.md">Split <code>will-file</code></a></summary>
+  Splitted <code>will-file</code> on two files - one for importing data another for exporting.
 </details>
 <details>
-  <summary><a href="./concept/Structure.md#resource">Ресурси</a></summary>
-  Структурна і функціональна одиниця <code>will-file</code>. Ресурси одного типу зібрані в одній секції.
+  <summary><a href="./concept/Structure.md#resource">Resources</a></summary>
+  Structural and functional element of <code>will-file</code>. Resources of the same type collected in a section.
 </details>
 <details>
-  <summary><a href="./concept/Structure.md#resource-type">Тип ресурсу</a></summary>
-  Функціональність обмежена призначенням і механізмом виконання.
+  <summary><a href="./concept/Structure.md#resource-type">Type of resource</a></summary>
+  Functionality associated with group of resources restricted by its purpose. Examples of types of resources: path, submodule, step, build. Each type of resources has its own purpose and is treated by the utility differently.
 </details>
 <details>
-  <summary><a href="./concept/Structure.md#section">Секція <code>will-file</code></a></summary>
-  Вища структурна одиниця <code>will-file</code>, яка складається з ресурсів одного типу або полів, що описують дану секцію
+  <summary><a href="./concept/Structure.md#section">Section <code>will-file</code></a></summary>
+  Higher structural element of <code>will-file</code>, which consists of resources of single type or fields, which describe the module.
 </details>
 <details>
-  <summary><a href="./concept/About.section.md">Секція <code>about</code></a></summary>
-  Секція містить описову інформація про модуль
+  <summary><a href="./concept/About.section.md">Section <code>about</code></a></summary>
+  The section has descriptive information about the module.
 </details>
 <details>
-  <summary><a href="./concept/Path.section.md">Секція <code>path</code></a></summary>
-  Секція представляє карту шляхів модуля для швидкого орієнтування в його файловій структурі
+  <summary><a href="./concept/Path.section.md">Section <code>path</code></a></summary>
+  The section has map of paths for fast understanding of files structure of the module.
 </details>
 <details>
-  <summary><a href="./concept/Submodule.section.md">Секція <code>submodule</code></a></summary>
-  Секції містить інформацію про підмодулі
+  <summary><a href="./concept/Submodule.section.md">Section <code>submodule</code></a></summary>
+  The section has information about submodules of the module.
 </details>
 <details>
-  <summary><a href="./concept/Step.section.md">Секція <code>step</code></a></summary>
-  Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля
+  <summary><a href="./concept/Step.section.md">Section <code>step</code></a></summary>
+  The section has steps which could be used by build for building of the module.
 </details>
 <details>
-  <summary><a href="./concept/Reflector.section.md">Секція <code>reflector</code></a></summary>
-  Секція містить рефлектори, ресурси для виконання операцій над групами файлів.
+  <summary><a href="./concept/Reflector.section.md">Section <code>reflector</code></a></summary>
+  The section has reflectors, special type of resource for operation on groups of files.
 </details>
 <details>
-  <summary><a href="./concept/Build.section.md">Секція <code>build</code></a></summary>
-  Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля
+  <summary><a href="./concept/Build.section.md">Section <code>build</code></a></summary>
+  Resources of the section describe sequence and conditions of building the module.
 </details>
 <details>
-  <summary><a href="./concept/Exported.section.md">Секція <code>exported</code></a></summary>
-  Секція <code>out-will-file</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.
+  <summary><a href="./concept/Exported.section.md">Section <code>exported</code></a></summary>
+  Section of <code>out-will-file</code>, programatically generated with exporting of the module. It has list of exported files and it used by other modules for importing the module.
 </details>
 <details>
-  <summary><a href="./concept/Export.md#out-will-file">Експортований <code>will-file</code> (<code>out-will-file</code>)</a></summary>
-  <code>Out-will-file</code> - різновид <code>will-file</code> згенерованого утилітою при експортуванні модуля. Інші модулі можуть використати даний модуль імортувавши його <code>out-will-file</code>.
+  <summary><a href="./concept/Export.md#out-will-file">Exported <code>will-file</code> (<code>out-will-file</code>)</a></summary>
+  <code>Out-will-file</code> - kind of <code>will-file</code> generated by the utility during exporting of a module. Other modules can use the module importing its <code>out-will-file</code>.
 </details>
 <details>
-  <summary><a href="./concept/Module.md#module">Модуль</a></summary>
-  Модулем називається сукупність файлів, які описані в <code>will-file</code>
+  <summary><a href="./concept/Module.md#module">Module</a></summary>
+  Module is set of files described in <code>will-file</code>
 </details>
 <details>
-  <summary><a href="./concept/Module.md#submodule">Підмодуль</a></summary>
-  Окремий модуль з власним конфігураційним <code>will-file</code>, який використовується іншому модулю ( супермодулю )
+  <summary><a href="./concept/Module.md#submodule">Submodule</a></summary>
+  A module with its own <code>will-file</code> which used but other module ( supermodule ).
 </details>
 <details>
-  <summary><a href="./concept/Module.md#supermodule">Супермодуль</a></summary>
-  Модуль, який включає в себе інші модулі ( підмодулі )
+  <summary><a href="./concept/Module.md#supermodule">Supermodule</a></summary>
+  A module which has other modules ( submodules ).
 </details>
 <details>
-  <summary><a href="./concept/LocalAndRemoteSubmodules.md#local-submodule">Локальний підмодуль</a></summary>
-  Підмодуль, який розташовується на машині користувача
+  <summary><a href="./concept/LocalAndRemoteSubmodules.md#local-submodule">Local submodule</a></summary>
+  A submodule which is located locally
 </details>
 <details>
-  <summary><a href="./concept/LocalAndRemoteSubmodules.md#remote-submodule">Віддалений підмодуль</a></summary>
-  Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину
+  <summary><a href="./concept/LocalAndRemoteSubmodules.md#remote-submodule">Remote submodule</a></summary>
+  A module which is located remotely. It should be downloaded to be used.
 </details>
 <details>
-  <summary><a href="./concept/CurrentModule.md">Поточний модуль</a></summary>
-  <code>Will-модуль</code>, відносно якого виконуються операції в командній оболонці системи.  
+  <summary><a href="./concept/CurrentModule.md">Current module</a></summary>
+  A module on which utility will perform operations. By default the module is loaded from file <code>.will.yml</code> of the current directory.
 </details>
 <details>
-  <summary><a href="./concept/Export.md#module-export">Експорт модуля</a></summary>
-  Особливий вид збірки, котрий призначений для перенесення конфігурації поточного модуля
+  <summary><a href="./concept/Export.md#module-export">Export</a></summary>
+  Special kind of build which required for the module to been used by other developers and modules. Result of exporting is artefacts among wich is <code>out-will-file</code>.
 </details>
 <details>
-  <summary><a href="./concept/InformalSubmodule.md">Неформальний підмодуль</a></summary>
-  Група файлів, що не розповсюджується із <code>will-file</code>. Для такого підмодуля можливо створити <code>will-file</code> та експортувати його самостійно.
+  <summary><a href="./concept/InformalSubmodule.md">Informal submodule</a></summary>
+  Set of files distribution of which does not have <code>will-file</code>. It's possible to create <code>will-file</code> for such submodule on side of user to use it as a submodule.
 </details>
 <details>
-  <summary><a href="./concept/Command.md#command">Команда</a></summary>
-  Рядок що містить фраза для позначення наміру розробинка і дії, котрі будуть виконані утилітою по її введенні. Вводиться в інтерфейсь командного рядка розробником.
+  <summary><a href="./concept/Command.md#command">Command</a></summary>
+  A string which has phrase which describe intention of developer and desirable result of operation to be done by utility after user enter it. Developer enters command in command line interface.
 </details>
 <details>
-  <summary><a href="./concept/Command.md#will-phrase">Фраза</a></summary>
+  <summary><a href="./concept/Command.md#will-phrase">Phrase</a></summary>
   Слово або декілька слів, відокремлених крапкою, позначає команду, яку має виконати утиліта.
 </details>
 <details>
