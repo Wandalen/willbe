@@ -76,11 +76,11 @@
 </details>
 <details>
   <summary><a href="./concept/InformalSubmodule.md">Неформальний підмодуль</a></summary>
-  Група файлів, що не розповсюджується із <code>will-файлом</code>. Для такого підмодуля можливо створити <code>will-файлом</code> самостійно
+  Група файлів, що не розповсюджується із <code>will-файлом</code>. Для такого підмодуля можливо створити <code>will-файл</code> та експортувати його самостійно.
 </details>
 <details>
   <summary><a href="./concept/Phrase.md">Фраза</a></summary>
-  Команда з одного обо декількох слів, розділених крапкою
+  Команда з одного обо декількох слів, розділених крапками
 </details>
 <details>
   <summary><a href="./concept/Selectors.md#selector">Селектор</a></summary>
