@@ -237,7 +237,23 @@ About
 
 </details>
 
-Введіть команду `will .builds.list`. Після того як на моніторі відобразиться результат, відкрийте файл `.will.yml` з допомогою текстового редактора і порівняйте вміст секції `build` файла і вивід команди.  
+Зверніть увагу, що деякі ресурси мають поля із значеннями за замовчуванням. Якщо таке поле відсутнє, то завантажуючи `will`-файл з диска утиліта його генерує.  
+Саме тому в виводі команди `will .about.list` секція `about` має поле `enabled` яке відсутнє в `will-файлі`:  
+
+<details>
+  <summary><u>Секція <code>about</code> файлу <code>.will.yml</code></u></summary>
+
+```yaml
+about :
+  name : test
+  description : "To test commands of willbe-package"
+  version : 0.0.1
+
+```
+
+</details>
+
+Введіть команду `will .builds.list`. Після того як на моніторі відобразиться результат, відкрийте файл `.will.yml` з допомогою текстового редактора і порівняйте вміст секції `build` файла і вивід команди.
 
 <details>
   <summary><u>Вивід команди <code>will .builds.list</code></u></summary>
@@ -383,21 +399,6 @@ build::debug
     submodules.download 
     delete.out.debug 
     delete.proto
-
-```
-
-</details>
-
-В утиліті `willbe` деякі ресурси мають значення за замовчуванням. Якщо такий ресурс відсутній, то утиліта його генерує в оперативну пам'ять не змінюючи `will`-файл - `willbe` не має функцій для модифікації `will-файлів` користувача.  
-Саме тому в виводі команди `will .resources.list` секція `about` має поле `enabled` яке відсутнє в `will-файлі`:  
-<details>
-  <summary><u>Секція <code>about</code></u></summary>
-
-```yaml
-about :
-  name : test
-  description : "To test commands of willbe-package"
-  version : 0.0.1
 
 ```
 
