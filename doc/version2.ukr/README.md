@@ -59,7 +59,7 @@
   Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.
 </details>
 <details>
-  <summary><a href="./concept/Export.md#out-will-file">Експортований <code>will-файл</code> (<code>*.out.will-файл</code>)</a></summary>
+  <summary><a href="./concept/Export.md#out-will-file">Експортований <code>will-файл</code> (<code>out-will-файл</code>)</a></summary>
   <code>Will-файл</code>, який автоматично згенерований утилітою при виконанні експорту модуля.
 </details>
 <details>
