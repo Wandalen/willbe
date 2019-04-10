@@ -1,0 +1,35 @@
+about :
+
+  name : selectorWithGlob
+  description : "Using selector with glob to choise path"
+  version : 0.0.1
+
+path :
+
+  in : '.'
+
+  fileToExport.debug :
+    criterion :
+       debug : 1
+    path : './fileDebug'
+
+  fileToExport.release :
+    criterion :
+       debug : 0
+    path : './fileRelease'
+
+step  :
+  export.single :
+      inherit : predefined.export
+      tar : 0
+      filePath : path::fileToExport.*=1
+      criterion :
+         debug [ 0, 1 ]
+
+build :
+  export :
+      criterion :
+          default : 1
+          debug : 1
+      steps :
+          - export.*

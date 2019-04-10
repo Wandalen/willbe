@@ -2,14 +2,31 @@
 
 Як мінімізувати об'єм `will-файла` за допомогою розгортання критеріонами із множинними значеннями  
 
-Ми вже бачили, що об'єм `will-файла` можливо зменшити, використовуючи скорочену форму запису деяких ресурсів, записуючи масиви з допомогою ґлобів, а також з допомогою критеріонів. Перші два способи суттєво зменшують `will-файл`, проте, коли ми використовували критеріони, то на кожну комбінацію значень створюється окремий ресурс, що навпаки збільшує об'єм. При цьому, кількість комбінацій критеріонів, відповідно, кількість ресурсів, які потенційно потрібно створити в одній секції визначається як `2 ^ (n)`, де `n` - число критеріонів в модулі. Тобто, якщо маємо один критеріон (`n = 1`), то в одній секції є `2 ^ 1 = 2` потенційних ресурси, при `n = 3` це число збільшується до 8-ми. Як бачите, користуватись такою формою запису незручно, тому, `willbe` має іншу.  
-Для початку створимо модуль для видалення файлів в директорії `files`:
+Об'єм `will-файла` можливо зменшити, використовуючи скорочену форму запису деяких ресурсів, записуючи масиви з допомогою ґлобів, а також з допомогою критеріонів. Перші два способи зменшують `will-файл`, а критеріони можуть навіть збільшити об'єм. Тож, час дізнатись як користуватись розгортанням ресурсів з критеріонами.   
+
+### Розгортання критеріонами. Конфігурація
+Створіть директорію `minimize` з наступною конфігурацією:  
 
 <details>
-    <summary><u>Лістинг `.will.yml`</u></summary>
+  <summary><u>Структура модуля</u></summary>
+
+```
+minimize
+    ├── files
+    │     ├── Debug.txt
+    │     └── Release.js
+    └── .will.yml
+
+```
+
+</details>
+
+Помістіть код в `will-файл`: 
+
+<details>
+  <summary><u>Код файла <code>.will.yml</code></u></summary>
 
 ```yaml
-
 about :
 
   name : willFileMinimizing
@@ -18,91 +35,94 @@ about :
 
 path :
 
+  in : '.'
+  out : 'out'
   fileToDelete.debug :
     criterion :
-       debug : 1
+      debug : 1
     path : './files/Debug*'
-
   fileToDelete.release :
     criterion :
-       debug : 0
+      debug : 0
     path : './files/Release*'
 
 step  :
 
-  delete.debug :
-      inherit : predefined.delete
-      filePath : path::fileToDelete.*
-      criterion :
-         debug : 1
-
-  delete.release :
-      inherit : predefined.delete
-      filePath : path::fileToDelete.*
-      criterion :
-         debug : 0
+  delete.files :
+    inherit : predefined.delete
+    filePath : path::fileToDelete.*=1
+    criterion :
+      debug : [ 0,1 ]
 
 build :
 
-  delete.debug :
-      criterion :
-          debug : 1
-      steps :
-          - delete.*
-
-  delete.release :
-      criterion :
-          debug : 0
-      steps :
-          - delete.*
+  delete :
+    criterion :
+      debug : [ 0,1 ]
+    steps :
+      - delete.*=1
 
 ```
 
 </details>
 
-Після цього в кореневій директорії `.will.yml` створіть директорію `files` і помістіть файли назви яких будуть починатись на `Debug` та `Release` (можете створити по декілька файлів, оскільки в секції `path` використано ґлоб `*`, тоді лістинги будуть відрізнятись кількістю файлів).
-Вбудований крок `predefined.delete` видаляє файли і директорії за вказаним в `filePath` шляхом. Тому запуск збірок призведе до видалення відповідних файлів. Але для початку зменшимо кількість кроків.
-Проаналізуємо секцію `path`: є два ресурси які починаються на `fileToDelete`, але продовження назви, критеріони і шляхи відрізняються. Якщо ми об'єднаємо ці ресурси, то не зможемо розділити шляхи до файлів. Тому, секція `path` залишається без змін.
-Аналіз кроків `delete.debug` i `delete.release`, показує, що функціонал (в даному випадку процедура видалення) у них однаковий, але є відмінності в назвах та критеріонах. Саме при таких умовах використовується мінімізація за рахунок об'єднання критеріонів. Змініть секцію `step` до вигляду:
+Збірка `delete` в секції `build` та крок `delete.files` в секції `step` використовують функцію розгортання ресурсів з критеріонами. Для цього критеріону присвоюється значення в вигляді массиву, в даному випадку, `debug : [ 0,1 ]`.
+Перевірте, які ресурси в секціях `step` i `build` присутні:
 
-```yaml
-step  :
-
-  delete.debug :
-      inherit : predefined.delete
-      filePath : path::fileToDelete.*
-      criterion :
-         debug : [ 0,1 ]
-
-```
-
-Залишився один крок, а обидва значення критеріона заключено в квадратні дужки та введено через кому, як при позначенні массивів в мовах програмування.
-Перевіримо які кроки є в файлі:
+<details>
+  <summary><u>Вивід команди <code>will .steps.list</code></u></summary>
 
 ```
 [user@user ~]$ will .steps.list
 ...
-step::delete.debug.
+step::delete.files.
   criterion :
     debug : 0
   opts :
-    filePath : path::fileToDelete.*
+    filePath : path::fileToDelete.*=1
   inherit :
     predefined.delete
 
-step::delete.debug.debug
+step::delete.files.debug
   criterion :
     debug : 1
   opts :
-    filePath : path::fileToDelete.*
+    filePath : path::fileToDelete.*=1
   inherit :
     predefined.delete
 
+```
+
+</details>
+<details>
+  <summary><u>Вивід команди <code>will .builds.list</code></u></summary>
+
+```
+[user@user ~]$ will .builds.list
+...
+build::delete.
+  criterion :
+    debug : 0
+  steps :
+    delete.*=1
+
+build::delete.debug
+  criterion :
+    debug : 1
+  steps :
+    delete.*=1
 
 ```
 
+</details>
+
+Ресурси зі скороченою формою запису критеріонів були згенеровані утилітою `willbe` в оперативну пам'ять як окремі ресурси зі звичайним записом критеріонів і ідентичним функціоналом. Крім цього, назви ресурсів змінились: при `debug : 0` до назви ресурса додано знак `.`, a при `debug : 1` - `.debug`, тобто, за назвою критеріона.  
+В ресурсі може бути декілька критеріонів зі скороченою формою запису, в такому випадку утиліта згенерує ресурси зі всіма можливими комбінаціями критеріонів.  
+
+### Побудова збірок
+Вбудований крок `predefined.delete` видаляє файли і директорії за вказаним в `filePath` шляхом. 
 `Willbe` на основі критеріона `debug : [ 0,1 ]` створив два кроки: `delete.debug.` з критеріоном `debug : 0` та `delete.debug.debug` з критеріоном `debug : 1`, тобто при значенні `debug : 0` утиліта до назви процедури додає знак `.`, а якщо встановлено `1`, то використовується приставка `.[criterion_name]`.  
-Введіть команду `will .build delete.debug`:
+Введіть фразу `will .build delete.debug`:
 
 ```
 [user@user ~]$ will .build delete.debug
@@ -135,24 +155,7 @@ build :
 
 ```
 
-Оскільки використання скороченої форми запису критеріонів змінює назви ресурсів, спочатку перевірте, які у вас є збірки:
 
-```
-[user@user ~]$ will .builds.list
-...
-build::delete.
-  criterion :
-    debug : 0
-  steps :
-    delete.*
-
-build::delete.debug
-  criterion :
-    debug : 1
-  steps :
-    delete.*
-
-```
 
 Відповідно, щоб видалити файл `Release`, введіть `will .build delete.`.
 
