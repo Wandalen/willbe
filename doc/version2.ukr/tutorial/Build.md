@@ -1,6 +1,6 @@
 # <a name="module-by-build"></a> Побудова модуля командою `.build`
 
-Туторіал описує запуск окремих збірок побудови модуля
+Запуск окремих збірок модуля для його побудови.
 
 Ресурси cекції `build` називаються збірками. Збірка - послідовність і умови виконання кроків для побудови модуля. Сценарій збірки - послідовність виконання кроків збірки.  
 Створіть новий `will-файл` в директорії `buildModule`:  
@@ -16,19 +16,19 @@ about :
     version : 0.0.1
     keywords :
         - willbe
-        
+
 step :
 
   echo.hello :
     shell : echo "Hello, World!"
     currentPath : '.'
-    
+
 build :
 
   echo:
     steps :
        - echo.hello
-    
+
 ```
 
 </details>
@@ -38,7 +38,7 @@ build :
 ```
 buildModule              
      └── .will.yml     
-  
+
 ```
 
 </details>
@@ -51,7 +51,7 @@ buildModule
   <summary><u>Вивід команди <code>will .build</code></u></summary>
 
 ```
-[user@user ~]$ will .build 
+[user@user ~]$ will .build
 ...
 Please specify exactly one build scenario, none satisfies passed arguments
 
@@ -77,12 +77,12 @@ Hello, World
 
 </details>
 <details>
-  <summary><u>Структура модуля після побудови</u></summary> 
+  <summary><u>Структура модуля після побудови</u></summary>
 
 ```
 buildModule              
      └── .will.yml     
-  
+
 ```
 
 </details>
@@ -102,13 +102,13 @@ about :
     version : 0.0.1
     keywords :
         - willbe
-        
+
 step :
 
   echo.hello :
     shell : echo "Hello, World"
     currentPath : '.'
-        
+
   echo.two :
     shell : echo "It's Willbe"
     currentPath : '.'    
@@ -119,7 +119,7 @@ build :
     steps :
        - echo.hello
        - echo.two
-       
+
   echo.two:
     steps :
        - echo.two      
@@ -133,7 +133,7 @@ build :
 ```
 buildModule              
      └── .will.yml     
-  
+
 ```
 
 </details>
@@ -154,7 +154,7 @@ Hello, World
 It's Willbe
   Built echo in 0.275s
 
-``` 
+```
 
 </details>
 <details>
@@ -169,7 +169,7 @@ It's Willbe
 It's Willbe
   Built echo in 0.095s
 
-``` 
+```
 </details>
 <details>
   <summary><u>Структура модуля після побудови</u></summary>
@@ -177,7 +177,7 @@ It's Willbe
 ```
 buildModule              
      └── .will.yml     
-  
+
 ```
 
 </details>

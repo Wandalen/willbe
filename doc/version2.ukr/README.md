@@ -59,8 +59,8 @@
   Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.
 </details>
 <details>
-  <summary><a href="./concept/Export.md#out-will-file">Експортований <code>will-файл</code> (<code>*.out.will-файл</code>)</a></summary>
-  <code>Will-файл</code>, який автоматично згенерований утилітою при виконанні експорту модуля.
+  <summary><a href="./concept/Export.md#out-will-file">Експортований <code>will-файл</code> (<code>out-will-файл</code>)</a></summary>
+  <code>Out-will-файл</code> - різновид <code>will-файла</code> згенерованого утилітою при експортуванні модуля. Інші модулі можуть використати даний модуль імортувавши його <code>out-will-файл</code>.
 </details>
 <details>
   <summary><a href="./concept/Module.md#module">Модуль</a></summary>
@@ -92,15 +92,15 @@
 </details>
 <details>
   <summary><a href="./concept/InformalSubmodule.md">Неформальний підмодуль</a></summary>
-  Група файлів, що не розповсюджується із <code>will-файлом</code>. Для такого підмодуля можливо створити <code>will-файлом</code> самостійно
+  Група файлів, що не розповсюджується із <code>will-файлом</code>. Для такого підмодуля можливо створити <code>will-файл</code> та експортувати його самостійно.
 </details>
 <details>
-  <summary><a href="./concept/Phrase.md#will-phrase">Фраза</a></summary>
-  Слово або декілька слів, відокремлених крапкою при вводі в командній оболонці системи
+  <summary><a href="./concept/Command.md#command">Команда</a></summary>
+  Рядок що містить фраза для позначення наміру розробинка і дії, котрі будуть виконані утилітою по її введенні. Вводиться в інтерфейсь командного рядка розробником.
 </details>
 <details>
-  <summary><a href="./concept/Phrase.md#command">Команда</a></summary>
-  Фраза, котра складається із одного або більше слів
+  <summary><a href="./concept/Command.md#will-phrase">Фраза</a></summary>
+  Слово або декілька слів, відокремлених крапкою, позначає команду, яку має виконати утиліта.
 </details>
 <details>
   <summary><a href="./concept/Selectors.md#selector">Селектор</a></summary>
@@ -112,7 +112,7 @@
 </details>
 <details>
   <summary><a href="./concept/Asserts.md">Ґлоб з ассертом</a></summary>
-  Обмеження кількості ресурсів в вибірці селектора з ґлобом
+  Обмеження кількості ресурсів в вибірці селектором з ґлобом
 </details>
 <details>
   <summary><a href="./concept/Criterions.md">Критеріон</a></summary>
@@ -120,11 +120,11 @@
 </details>
 <details>
   <summary><a href="./concept/Inheritability.md">Наслідування ресурсами</a></summary>
-  Принцип побудови модуля, згідно якого ресурс одного <code>will-файла</code> здатний використовувати (наслідувати) значення полів інших ресурсів секції та ресурсів іншого <code>will-файла</code>
+  Принцип опису модуля, згідно якого ресурс <code>will-файла</code> здатний використовувати (наслідувати) значення полів інших ресурсів того ж типу.
 </details>
 <details>
   <summary><a href="./concept/FileFilter.md">Файловий фільтр</a></summary>
-  Особливий вид селектора для відбору файлів в рефлекторі
+  Спосіб опису критеріїв відобору необхідних файлів для виконання якоїсь операції над групою файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>.
 </details>
 
 ## <a name="tutorials"></a> Туторіали
@@ -147,14 +147,14 @@
 </details>
 <details>
   <summary><a href="./tutorial/SubmodulesAdministration.md">Оновлення та видалення підмодулів</a></summary>
-  Продовжено опис віддалених підмодулів, розглянуто команди оновлення та видалення
+  Команди оновлення підмодулів, апгрейду підмодулів автоматизовним перезаписом <code>will-файла</code> та очищення модуля.
 </details>
 <details>
-  <summary><a href="./tutorial/ModuleCreationByBuild.md">Побудова модуля командою <code>.build</code></a></summary>
-  Туторіал описує запуск окремих збірок побудови модуля  
+  <summary><a href="./tutorial/Build.md">Побудова модуля командою <code>.build</code></a></summary>
+  Запуск окремих збірок модуля для його побудови.
 </details>
 <details>
-  <summary><a href="./tutorial/PredefinedSteps.md">Знайомство з вбудованими кроками</a></summary>
+  <summary><a href="./tutorial/PredefinedSteps.md">Вубдовані кроки</a></summary>
   Як користуватись вбудованими кроками для роботи з віддаленими підмодулями
 </details>
 <details>
@@ -162,32 +162,32 @@
   Як використовувати критеріони для відбору ресурсів
 </details>
 <details>
-  <summary><a href="./tutorial/DefaultCriterionInWillFile.md">Збірка побудови модуля за замовчуванням</a></summary>
-  Як побудувати збірку, що запускається без указання аргумента команди <code>.build</code>
+  <summary><a href="./tutorial/DefaultCriterionInWillFile.md">Збірка модуля за замовчуванням</a></summary>
+  Як побудувати збірку, що запускається без явного указання аргумента команди <code>.build</code>
 </details>
 <details>
   <summary><a href="./tutorial/ExportedWillFile.md">Експортування модуля</a></summary>
-  В туторіалі описана процедура експортування <code>will-модуля</code> для використання його (модуля), іншим модулем
+  Процедура експортування <code>will-модуля</code> для перевикористання його іншим модулем
 </details>
 <details>
   <summary><a href="./tutorial/LocalSubmodulesImporting.md">Імпорт локального підмодуля</a></summary>
-  В туторіалі показано як додати локальний підмодуль
+  Використання локального підмодуля
 </details>
 <details>
-  <summary><a href="./tutorial/HowToUseSelectorsWithGlob.md">Використання селекторів з ґлобами</a></summary>
+  <summary><a href="./tutorial/HowToUseSelectorsWithGlob.md">Селектори із ґлобами</a></summary>
   Як користуватись селекторами з ґлобами
 </details>
 <details>
   <summary><a href="./tutorial/HowToUseAsserts.md">Як користуватись ассертами</a></summary>
-  Як ассерти допомогають зменшити кількість помилок в <code>will-файлі</code>
+  Як ассерти допомогають зменшити кількість помилок при розробці.
 </details>
 <details>
   <summary><a href="./tutorial/MinimizationOfWillFile.md">Мінімізація <code>will-файла</code></a></summary>
-  Як мінімізувати об'єм <code>will-файла</code> за допомогою розгортання критеріонами із множинними значеннями
+  Як мінімізувати <code>will-файл</code> за допомогою розгортання критеріонами із множинними значеннями.
 </details>
 <details>
   <summary><a href="./tutorial/SplitWillFile.md">Розділені <code>will-файли</code></a></summary>
-  В туторіалі розглядається створення розділених <code>will-файлів</code>
+  Як створити та використовувати модуль із розділеними <code>will-файлами</code>.
 </details>
 <details>
   <summary><a href="./tutorial/NamedWillFile.md">Команда <code>.with</code> та іменований <code>will-файл</code>. </a></summary>
