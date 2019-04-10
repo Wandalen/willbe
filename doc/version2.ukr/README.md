@@ -91,8 +91,12 @@
   Віддалений підмодуль імпортований непрямим шляхом
 </details>
 <details>
-  <summary><a href="./concept/Phrase.md">Фраза</a></summary>
-  Команда з одного обо декількох слів, розділених крапкою
+  <summary><a href="./concept/Phrase.md#will-phrase">Фраза</a></summary>
+  Слово або декілька слів, відокремлених крапкою при вводі в командній оболонці системи
+</details>
+<details>
+  <summary><a href="./concept/Phrase.md#command">Команда</a></summary>
+  Фраза, котра складається із одного або більше слів
 </details>
 <details>
   <summary><a href="./concept/Selectors.md#selector">Селектор</a></summary>
