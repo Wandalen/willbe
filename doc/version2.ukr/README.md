@@ -23,6 +23,10 @@
   Структурна і функціональна одиниця <code>will-файла</code>. В файлі ресурси одного типу зібрані в одній секції.
 </details>
 <details>
+  <summary><a href="./concept/Structure.md#resource-type">Тип ресурсу</a></summary>
+  Функціональність обмежена призначенням і механізмом виконання.
+</details>
+<details>
   <summary><a href="./concept/Structure.md#section">Секції <code>will-файлу</code></a></summary>
   Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що описують дану секцію
 </details>
