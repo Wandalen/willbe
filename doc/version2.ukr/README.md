@@ -206,7 +206,7 @@
   Як користуватись командою <code>.set</code> для зміни станів утиліти, наприклад, для зміни рівня вербальності
 </details>
 <details>
-  <summary><a href="./tutorial/HowToUseComplexSelector.md">Складні селектори</a></summary>
+  <summary><a href="./tutorial/ComplexSelector.md">Складні селектори</a></summary>
   Використання складних селекторів для відбору ресурсів із підмодулів
 </details>
 <details>
