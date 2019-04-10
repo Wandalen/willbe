@@ -23,7 +23,11 @@
   Структурна і функціональна одиниця <code>will-файла</code>. Ресурси одного типу зібрані в одній секції.
 </details>
 <details>
-  <summary><a href="./concept/Structure.md#section">Секції <code>will-файла</code></a></summary>
+  <summary><a href="./concept/Structure.md#resource-type">Тип ресурсу</a></summary>
+  Функціональність обмежена призначенням і механізмом виконання.
+</details>
+<details>
+  <summary><a href="./concept/Structure.md#section">Секція <code>will-файла</code></a></summary>
   Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що описують дану секцію
 </details>
 <details>
@@ -47,12 +51,16 @@
   Секція містить рефлектори, ресурси для виконання операцій над групами файлів.
 </details>
 <details>
+  <summary><a href="./concept/Build.section.md">Секція <code>build</code></a></summary>
+  Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля
+</details>
+<details>
   <summary><a href="./concept/Exported.section.md">Секція <code>exported</code></a></summary>
   Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.
 </details>
 <details>
-  <summary><a href="./concept/Build.section.md">Секція <code>build</code></a></summary>
-  Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля
+  <summary><a href="./concept/Export.md#out-will-file">Експортований <code>will-файл</code> (<code>*.out.will-файл</code>)</a></summary>
+  <code>Will-файл</code>, який автоматично згенерований утилітою при виконанні експорту модуля.
 </details>
 <details>
   <summary><a href="./concept/Module.md#module">Модуль</a></summary>
@@ -75,12 +83,24 @@
   Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину
 </details>
 <details>
+  <summary><a href="./concept/CurrentModule.md">Поточний модуль</a></summary>
+  <code>Will-модуль</code>, відносно якого виконуються операції в командній оболонці системи.  
+</details>
+<details>
+  <summary><a href="./concept/Export.md#module-export">Експорт модуля</a></summary>
+  Особливий вид збірки, котрий призначений для перенесення конфігурації поточного модуля
+</details>
+<details>
   <summary><a href="./concept/InformalSubmodule.md">Неформальний підмодуль</a></summary>
   Група файлів, що не розповсюджується із <code>will-файлом</code>. Для такого підмодуля можливо створити <code>will-файл</code> та експортувати його самостійно.
 </details>
 <details>
-  <summary><a href="./concept/Phrase.md">Фраза</a></summary>
-  Команда з одного обо декількох слів, розділених крапками
+  <summary><a href="./concept/Phrase.md#will-phrase">Фраза</a></summary>
+  Слово або декілька слів, відокремлених крапкою при вводі в командній оболонці системи
+</details>
+<details>
+  <summary><a href="./concept/Phrase.md#command">Команда</a></summary>
+  Фраза, котра складається із одного або більше слів
 </details>
 <details>
   <summary><a href="./concept/Selectors.md#selector">Селектор</a></summary>
