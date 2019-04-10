@@ -147,7 +147,7 @@
 </details>
 <details>
   <summary><a href="./tutorial/SubmodulesAdministration.md">Оновлення та видалення підмодулів</a></summary>
-  Продовжено опис віддалених підмодулів, розглянуто команди оновлення та видалення
+  Команди оновлення підмодулів, апгрейду підмодулів автоматизовним перезаписом <code>will-файла</code> та очищення модуля.
 </details>
 <details>
   <summary><a href="./tutorial/ModuleCreationByBuild.md">Побудова модуля командою <code>.build</code></a></summary>

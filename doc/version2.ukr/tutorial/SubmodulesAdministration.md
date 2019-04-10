@@ -1,20 +1,20 @@
 # Оновлення та видалення підмодулів
 
-Продовжено опис віддалених підмодулів, розглянуто команди оновлення та видалення
+Команди оновлення підмодулів, апгрейду підмодулів автоматизовним перезаписом <code>will-файла</code> та очищення модуля.
 
 Окремі ресурси секцій можуть мати повну і скорочену форму запису. В [попередньому туторіалі](FirstWillFile.md#first-modules), в секції `submodule`, підмодулі записувались в скороченій формі: `Назва ресурса : Значення ресурса`, а повна форма може включати чотири поля: `description`, `path`, `criterion`, `inherit`.   
 Створіть новий `will-файл` в директорії `second` і помістіть в нього код зі [скороченою формою](#short-form) та [повною формою](#full-form) запису підмодулів:
 
 <details>
-  <summary><u>Код файла<code>.will.yml</code></u></summary> 
-  
+  <summary><u>Код файла<code>.will.yml</code></u></summary>
+
 ```yaml
 about :
 
     name : upgradeAndClean
     description : "Upgrade and clean modules"
     version : 0.0.1
-        
+
 submodule :
 
     Tools :
@@ -27,12 +27,12 @@ submodule :
 </details>
 
 <details>
-  <summary><u>Структура файлів</u></summary> 
+  <summary><u>Структура файлів</u></summary>
 
 ```
 second              
    └── .will.yml     
-  
+
 ```
 
 </details>
@@ -41,7 +41,7 @@ second
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.download</code></u></summary>
-    
+
 ```
 [user@user ~]$ will .submodules.download
 ...
@@ -53,7 +53,7 @@ second
 
 ```  
 </details>
-  
+
 <details>
   <summary><u>Структура модуля після завантаження підмодулів</u></summary>
 
@@ -75,7 +75,7 @@ second
 [user@user ~]$ will .submodules.download
 ...
 submodule::Tools
-  path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master 
+  path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
   description : Import willbe tools
   isDownloaded : true
   Exported builds : [ 'proto.export' ]
@@ -85,15 +85,15 @@ submodule::PathFundamentals
   isDownloaded : true
   Exported builds : [ 'proto.export' ]
 
-``` 
+```
 
 </details>
 
-Вивід інформації по підмодулю `Tools` відрізняється полем `description`. Додаткові поля потрібні для точного опису ресурсу, а скорочена дає загальне поняття. 
+Вивід інформації по підмодулю `Tools` відрізняється полем `description`. Додаткові поля потрібні для точного опису ресурсу, а скорочена дає загальне поняття.
 
 ### <a name="submodules-update"></a> Команда `.submodules.update`    
 З часом з'являється нові версії підмодулів і виникає потреба їх оновити. За оновлення підмодулів в утиліті `willbe` відповідає команда `.submodules.update`, яка зчитує дані про кожен завантажений підмодуль, порівнює їх з віддаленими версіями і, при наявності нової версії, встановить її.  
-Введіть команду `will .submodules.update` 
+Введіть команду `will .submodules.update`
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.update</code></u></summary>
@@ -106,7 +106,7 @@ submodule::PathFundamentals
 ```
 
 </details>
-    
+
 <details>
   <summary><u>Структура модуля після оновлення підмодулів</u></summary>
 
@@ -147,7 +147,7 @@ submodule::PathFundamentals
 ```
 second              
    └── .will.yml     
-  
+
 ```
 
 </details>
