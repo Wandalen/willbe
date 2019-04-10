@@ -1,3 +1,5 @@
+## Швидкий старт
+
 Для швидкого старту [встановіть](<./tutorial/Instalation.md>) утиліту `willbe`, [ознайомтеся](<./tutorial/CLI.md>) із інтрфейсом командного рядка та створіть ваш перший [модуль](<./tutorial/HelloWorld.md>). [Прочитатйе](<./tutorial/Abstract.md>) загальну інформацію якщо вам цікаво дізнатися більше про призначення та філософію утиліти `willbe`.
 
 Для плавного заглиблення в предмет використовуйте туторіали. Для отримання вичерпного розуміння якогось із аспектів використайте перелік концепцій щоб знайти потрібну і ознайомтеся із нею.
@@ -6,7 +8,7 @@
 
 <details>
   <summary><a href="./concept/WillFile.md"><code>Will-файл</code></a></summary>
-  Конфігураційний файл для побудови <code>will-модуля</code>
+  Конфігураційний файл для побудови модуля. Кожен формальний модуль має такий файл.
 </details>
 <details>
   <summary><a href="./concept/NamedAndSplitWillFile.md">Іменований <code>will-файл</code></a></summary>
@@ -17,11 +19,11 @@
   Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля
 </details>
 <details>
-  <summary><a href="./concept/Composition.md#resource">Ресурси</a></summary>
+  <summary><a href="./concept/Structure.md#resource">Ресурси</a></summary>
   Елементи <code>will-файла</code>, які позначають певну функціональність
 </details>
 <details>
-  <summary><a href="./concept/Composition.md#section">Секції <code>will-файлу</code></a></summary>
+  <summary><a href="./concept/Structure.md#section">Секції <code>will-файлу</code></a></summary>
   Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що писують дану секцію
 </details>
 <details>
