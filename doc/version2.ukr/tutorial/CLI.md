@@ -1,6 +1,6 @@
 # Інтерфейс командного рядка</a></summary>
 
-Як користуватися інтерфейсом командного рядка утиліти <code>willbe</code></a></summary>. Застосування команд <code>.help</code> та <code>.list</code>.
+Як користуватися інтерфейсом командного рядка утиліти <code>willbe</code>. Застосування команд <code>.help</code> та <code>.list</code>.
 
 ### Інтерфейсь командного рядка.
 
@@ -129,7 +129,7 @@ Command ".help .submodules"
 Утиліта `willbe` запропонувала варіанти фраз з вказаним словом. Це зручно, адже, якщо ви не пам'ятаете повну фразу з командою або бажаєте отримати вичерпний список команд з даним словом, достатньо його ввести, а утиліта запропонує варіанти доповнення.
 
 ### Команда `.*.list`  
-Тепер, давайте попрацюємо із `will-файлами`. 
+Тепер, давайте попрацюємо із `will-файлами`.
 Створіть нову директорію з назвою `commands` в яку помістіть файл з назвою `.will.yml`. Структура файлів виглядатиме так:  
 
 <details>
@@ -355,19 +355,19 @@ submodule :
   . Read : /path_to_file/.will.yml
  ! Failed to read submodule::Tools, try to download it with .submodules.download or even .clean it before downloading
  ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even .clean it before downloading
- . Read 1 will-files in 1.865s 
+ . Read 1 will-files in 1.865s
 
 About
-  name : 'test' 
-  description : 'To test commands of willbe-package' 
-  version : '0.0.1' 
+  name : 'test'
+  description : 'To test commands of willbe-package'
+  version : '0.0.1'
   enabled : 1
 
 Paths
-  predefined.willbe : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec' 
-  predefined.will.files : '/home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe/sample/version2/CLI/.will.yml' 
-  predefined.dir : '/home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe/sample/version2/CLI' 
-  proto : 'proto' 
+  predefined.willbe : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec'
+  predefined.will.files : '/home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe/sample/version2/CLI/.will.yml'
+  predefined.dir : '/home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe/sample/version2/CLI'
+  proto : 'proto'
   out.debug : 'out/debug'
 
 submodule::Tools
@@ -381,23 +381,23 @@ submodule::PathFundamentals
   Exported builds : []
 
 step::delete.proto
-  opts : 
-    filePath : path::proto 
-  inherit : 
+  opts :
+    filePath : path::proto
+  inherit :
     predefined.delete
 
 step::delete.out.debug
-  opts : 
-    filePath : path::out.debug 
-  inherit : 
+  opts :
+    filePath : path::out.debug
+  inherit :
     predefined.delete
 
 build::debug
-  criterion : 
-    default : 1 
-  steps : 
-    submodules.download 
-    delete.out.debug 
+  criterion :
+    default : 1
+  steps :
+    submodules.download
+    delete.out.debug
     delete.proto
 
 ```

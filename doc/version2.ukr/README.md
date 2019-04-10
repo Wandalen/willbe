@@ -104,7 +104,7 @@
 </details>
 <details>
   <summary><a href="./concept/Selectors.md#selector">Селектор</a></summary>
-  Рядок-посилання на ресурс або декілька ресурсів в <code>will-файлі</code>
+  Рядок-посилання на ресурс або декілька ресурсів модуля.
 </details>
 <details>
   <summary><a href="./concept/Selectors.md#selector-with-glob">Селектор з ґлобом</a></summary>
@@ -112,7 +112,7 @@
 </details>
 <details>
   <summary><a href="./concept/Asserts.md">Ґлоб з ассертом</a></summary>
-  Обмеження кількості ресурсів в вибірці селектором з ґлобом
+  Обмеження кількості ресурсів, що мають бути знайдені селектором з ґлобом.
 </details>
 <details>
   <summary><a href="./concept/Criterions.md">Критеріон</a></summary>
@@ -139,22 +139,22 @@
 </details>
 <details>
   <summary><a href="./tutorial/CLI.md">Інтерфейс командного рядка</a></summary>
-  Як користуватися інтерфейсом командного рядка утиліти <code>willbe</code></a></summary>. Застосування команд <code>.help</code> та <code>.list</code>.
+  Як користуватися інтерфейсом командного рядка утиліти <code>willbe</code>. Застосування команд <code>.help</code> та <code>.list</code>.
 </details>
 <details>
   <summary><a href="./tutorial/HelloWorld.md">Модуль "Hello, World!"</a></summary>
-  Створення модуля "Hello, World!" з утилітою <code>willbe</code>. Завантаження віддаленого підмодуля
+  Створення модуля "Hello, World!". Завантаження віддаленого підмодуля.
 </details>
 <details>
-  <summary><a href="./tutorial/SubmodulesAdministration.md">Оновлення та видалення підмодулів</a></summary>
-  Команди оновлення підмодулів, апгрейду підмодулів автоматизовним перезаписом <code>will-файла</code> та очищення модуля.
+  <summary><a href="./tutorial/SubmodulesAdministration.md">Команди оновлення, апгрейду та очищення підмодулів</a></summary>
+  Команди оновлення підмодулів завантаженням файлів, апгрейду підмодулів автоматизовним перезаписом <code>will-файлу</code> та команда очищення підмодулів видаленням завантажених файлів.
 </details>
 <details>
   <summary><a href="./tutorial/Build.md">Побудова модуля командою <code>.build</code></a></summary>
   Запуск окремих збірок модуля для його побудови.
 </details>
 <details>
-  <summary><a href="./tutorial/PredefinedSteps.md">Вубдовані кроки</a></summary>
+  <summary><a href="./tutorial/PredefinedSteps.md">Вбудовані кроки</a></summary>
   Як користуватись вбудованими кроками для роботи з віддаленими підмодулями
 </details>
 <details>
@@ -167,11 +167,11 @@
 </details>
 <details>
   <summary><a href="./tutorial/ExportedWillFile.md">Експортування модуля</a></summary>
-  Процедура експортування <code>will-модуля</code> для перевикористання його іншим модулем
+  Експортування модуля для перевикористання його іншим розробником або модулем.
 </details>
 <details>
   <summary><a href="./tutorial/LocalSubmodulesImporting.md">Імпорт локального підмодуля</a></summary>
-  Використання локального підмодуля
+  Використання локального підмодуля із іншого модуля ( супермодуля ).
 </details>
 <details>
   <summary><a href="./tutorial/HowToUseSelectorsWithGlob.md">Селектори із ґлобами</a></summary>
@@ -198,8 +198,8 @@
   Команда <code>.each</code> для виконання одної дії для багатьох модулів чи підмодулів.
 </details>
 <details>
-  <summary><a href="./tutorial/UsingOfJSInWillbe.md">Використання JavaScript файлів утилітою <code>willbe</code></a></summary>
-  Як використовувати JavaScript-файлів в утиліті <code>willbe</code> для виконання складних сценаріїв побудови.
+  <summary><a href="./tutorial/UsingOfJSInWillbe.md">Використання <code>JavaScript</code> файлів утилітою <code>willbe</code></a></summary>
+  Як використовувати <code>JavaScript</code> файлів в утиліті <code>willbe</code> для виконання складних сценаріїв побудови.
 </details>
 <details>
   <summary><a href="./tutorial/UsingSetCommand.md">Команда <code>.set</code></a></summary>
@@ -210,8 +210,8 @@
   Використання складних селекторів для відбору ресурсів із підмодулів.
 </details>
 <details>
-  <summary><a href="./tutorial/HowToList.md">Перелік ресурсів через застосовуючи фільтри та глоби</a></summary>
-  Як побудувати запиш до утиліти та отримати перелік ресурсів застосовуючи фільтри та глоби.
+  <summary><a href="./tutorial/HowToList.md">Перелік ресурсів застосовуючи фільтри та глоби</a></summary>
+  Як побудувати запит до утиліти та отримати перелік ресурсів застосовуючи фільтри та глоби.
 </details>
 <details>
   <summary><a href="./tutorial/SubmodulesVersionControl.md">Командами <code>.submodules.fixate</code> і <code>.submodules.upgrade</code></a></summary>
@@ -235,23 +235,23 @@
 </details>
 <details>
   <summary><a href="./tutorial/PredefinedReflectorsUsing.md">Вбудовані рефлектори</a></summary>
-  Використання вбудованих рефлекторів та побудова мультизбірок
+  Використання вбудованих рефлекторів для розбиття на версію для відлагодження і для релізу. Побудова мультизбірок.
 </details>
 <details>
   <summary><a href="./tutorial/ResourceInheritability.md">Наслідування ресурсів</a></summary>
-  Як користуватись наслідуванням ресурсів
+  Як користуватись наслідуванням ресурсів для перевикористання даних.
 </details>
 <details>
   <summary><a href="./tutorial/ViewStep.md">Вбудований крок <code>predefined.view</code></a></summary>
   Використання вбудованого кроку <code>predefined.view</code> для перегляду файлів.
 </details>
 <details>
-  <summary><a href="./tutorial/TranspileStep.md">Транспіляція файлів</a></summary>
-  Використання вбудованого кроку <code>predefined.transpile</code> для трансформації JavaScript-файлів
+  <summary><a href="./tutorial/TranspileStep.md">Транспіляція</a></summary>
+  Використання вбудованого кроку <code>predefined.transpile</code> для транспіляції <code>JavaScript</code> файлів або їх конкатенації.
 </details>
 <details>
   <summary><a href="./tutorial/HowToUseCommandShell.md">Команда <code>.shell</code> </a></summary>
-  Команда для виклику зовнішніх програм утилітою <code>willbe</code> для вибраних модулів.
+  Команда для виклику зовнішніх програм утилітою <code>willbe</code> для вибраних модулів чи підмодулів.
 </details>
 <details>
   <summary><a href="./tutorial/WillbeAsMake.md">Компіляція С++ програми</a></summary>
