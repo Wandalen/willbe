@@ -19,11 +19,11 @@
   Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля
 </details>
 <details>
-  <summary><a href="./concept/Composition.md#resource">Ресурси</a></summary>
+  <summary><a href="./concept/Structure.md#resource">Ресурси</a></summary>
   Елементи <code>will-файла</code>, які позначають певну функціональність
 </details>
 <details>
-  <summary><a href="./concept/Composition.md#section">Секції <code>will-файлу</code></a></summary>
+  <summary><a href="./concept/Structure.md#section">Секції <code>will-файлу</code></a></summary>
   Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що писують дану секцію
 </details>
 <details>
