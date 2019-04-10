@@ -72,11 +72,9 @@ Ambiguity. Did you mean?
 
 </details>
 
-Утиліта `willbe` знає багато команд, що містять слово `list` тому вона виводить інорфмацію про всі можливі фрази із вказаним словом. Це зручно якщо ви забули повну фразу з командою або дослідити можливості утиліти. Щоб отримати вичерпний список команд з даним словом, достатньо його ввести, а утиліта запропонує варіанти доповнення.
-
+Утиліта `willbe` знає багато команд, що містять слово `list` тому вона виводить інорфмацію про всі можливі фрази із вказаним словом. Це зручно якщо ви забули повну фразу з командою або бажаєте дослідити можливості утиліти. Щоб отримати вичерпний список команд з даним словом, достатньо його ввести, а утиліта запропонує варіанти доповнення.
 
 ### Команда `.help`
-
 Для отримання довідки по обраній команді використовуйте синтаксис: `will .help [команда]`.    
 Тепер введіть в терміналі `will .help .build`
 
@@ -130,9 +128,67 @@ Command ".help .submodules"
 
 Утиліта `willbe` запропонувала варіанти фраз з вказаним словом. Це зручно, адже, якщо ви не пам'ятаете повну фразу з командою або бажаєте отримати вичерпний список команд з даним словом, достатньо його ввести, а утиліта запропонує варіанти доповнення.
 
-### Команда `.*.list`
+### Команда `.*.list`  
+Тепер, давайте попрацюємо із `will-файлами`. 
+Створіть нову директорію з назвою `commands` в яку помістіть файл з назвою `.will.yml`. Структура файлів виглядатиме так:  
 
-Тепер давайте попрацюємо із `will-файлами`. Склонуйте [git-репозиторій]( <https://github.com/Wandalen/willbe.git> ) `willbe` з готовими прикладами.  
+<details>
+  <summary><u>Структура файлів</u></summary>
+
+```
+commands
+    └── .will.yml
+
+```
+
+</details>
+
+Скопіюйте код, приведений нижче в файл `.will.yml`:  
+
+<details>
+  <summary><u>Код файла <code>.will.yml</code></u></summary>
+
+```yaml
+about :
+  name : test
+  description : "To test commands of willbe-package"
+  version : 0.0.1
+
+submodule :
+
+  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+
+path :
+
+  proto : 'proto'
+  out.debug : 'out/debug'
+
+step :
+
+  delete.proto :
+    inherit : predefined.delete
+    filePath: path::proto
+
+  delete.out.debug :
+    inherit : predefined.delete
+    filePath : path::out.debug
+
+build :
+
+  debug :
+    criterion :
+      default : 1
+    steps :
+      - submodules.download
+      - delete.out.debug
+      - delete.proto
+
+```
+
+</details>
+
+
 В списку команд утиліти `willbe` багато таких, які закінчуються на `.list`. Якщо ввести команду `.list` в директорії, де відсутній `will-файл`, ви отримаєте попередження про відсутність модуля.
 
 Введіть команду `will .about.list` в вашій поточній директорі ( припускається, що в ній нема `will-файла` )
@@ -149,7 +205,7 @@ Found no module::/[path] at "/[path]"
 
 </details>
 
-Відкрийте склонований репозиторій і перейдіть за шляхом `./sample/submodules/`. Перевірте вміст директорії виконавши команду `ls -al`:
+Відкрийте директорію `commands` в консолі та перевірте її вміст виконавши команду `ls -al`:
 
 <details>
   <summary><u>Вивід команди <code>ls -al</code></u></summary>
@@ -157,9 +213,9 @@ Found no module::/[path] at "/[path]"
 ```
 [user@user ~]$ ls -al
 итого 12
-drwxr-xr-x 2 user user 4096 Мар 11 11:27 .
-drwxr-xr-x 6 user user 4096 Мар 11 11:27 ..
--rw-r--r-- 1 user user  917 Мар  4 15:07 .will.yml
+drwxr-xr-x 2 user user 4096 Mar 11 11:27 .
+drwxr-xr-x 6 user user 4096 Mar 11 11:27 ..
+-rw-r--r-- 1 user user  917 Mar  4 15:07 .will.yml
 
 ```
 
@@ -181,7 +237,7 @@ About
 
 </details>
 
-Введіть команду `will .builds.list`. Після того як на моніторі відобразиться результат, відкрийте файл `.will.yml` з допомогою текстового редактора і порівняйте вміст секції `build` файла і вивід команди.
+Введіть команду `will .builds.list`. Після того як на моніторі відобразиться результат, відкрийте файл `.will.yml` з допомогою текстового редактора і порівняйте вміст секції `build` файла і вивід команди.  
 
 <details>
   <summary><u>Вивід команди <code>will .builds.list</code></u></summary>
@@ -194,15 +250,13 @@ build::debug
   criterion :
     default : 1
   steps :
-    submodules.download
-    delete.out.debug
-    reflect.submodules
-
+    - submodules.download
+    - delete.out.debug
+    - delete.proto
 
 ```
 
 </details>
-
 <details>
   <summary><u>Секція <code>build</code> файлу <code>.will.yml</code></u></summary>
 
@@ -215,7 +269,7 @@ build :
     steps :
       - submodules.download
       - delete.out.debug
-      - reflect.submodules
+      - delete.proto
 
 ```
 
@@ -247,7 +301,6 @@ submodule::PathFundamentals
 ```
 
 </details>
-
 <details>
   <summary><u>Секція <code>submodule</code> файлу <code>.will.yml</code></u></summary>
 
@@ -283,61 +336,53 @@ submodule :
 
 ```
 [user@user ~]$ will .resources.list
- . Read : /path_to_file/submodules/.will.yml
- . Read 1 will-files in 0.068s
- ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
- ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
+  . Read : /path_to_file/.will.yml
+ ! Failed to read submodule::Tools, try to download it with .submodules.download or even .clean it before downloading
+ ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even .clean it before downloading
+ . Read 1 will-files in 1.865s 
+
 About
-  name : 'test'
-  description : 'To test commands of willbe-package'
-  version : '0.0.1'
+  name : 'test' 
+  description : 'To test commands of willbe-package' 
+  version : '0.0.1' 
   enabled : 1
 
 Paths
-  predefined.willbe : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec'
-  predefined.will.files : '/path_to_file/.will.yml'
-  predefined.dir : '/path_to_file'
-  proto : './proto'
-  in : '.'
-  out : 'out'
+  predefined.willbe : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec' 
+  predefined.will.files : '/home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe/sample/version2/CLI/.will.yml' 
+  predefined.dir : '/home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe/sample/version2/CLI' 
+  proto : 'proto' 
   out.debug : 'out/debug'
 
 submodule::Tools
   path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
   isDownloaded : false
   Exported builds : []
+
 submodule::PathFundamentals
   path : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
   isDownloaded : false
   Exported builds : []
-reflector::reflect.submodules
-  dst :
-    basePath : '.'
-    prefixPath : 'path::out.debug'
-  criterion :
-    debug : 1
-  inherit :
-    'submodule::*/exported::*=1/reflector::exportedFiles*=1'
 
-step::reflect.submodules
-  opts :
-    reflector : reflector::reflect.submodules*=1
-  inherit :
-    predefined.reflect
+step::delete.proto
+  opts : 
+    filePath : path::proto 
+  inherit : 
+    predefined.delete
 
 step::delete.out.debug
-  opts :
-    filePath : path::out.debug
-  inherit :
+  opts : 
+    filePath : path::out.debug 
+  inherit : 
     predefined.delete
 
 build::debug
-  criterion :
-    default : 1
-  steps :
-    submodules.download
-    delete.out.debug
-    reflect.submodules
+  criterion : 
+    default : 1 
+  steps : 
+    submodules.download 
+    delete.out.debug 
+    delete.proto
 
 ```
 
@@ -365,6 +410,5 @@ about :
 - Якщо ви забули повну фразу то `Willbe` виведе перелік фраз по [слову](#інтерфейсь-командного-рядка). яке ви пам'ятаєте
 - Використовуйте [командою `will .*.list`](#Команда-list) для того щоб перерахувати ресурси модуля.
 
-Наступний туторіал: [Модуль "Hello, World!"](FirstWillFile.md).
-
+[Наступний туторіал](FirstWillFile.md).
 [Повернутись до змісту](../README.md#tutorials)
