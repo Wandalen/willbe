@@ -1,6 +1,6 @@
 # Розділені `will-файли`
 
-В туторіалі розглядається створення розділених `will-файлів`
+Як створити та використовувати модуль із розділеними <code>will-файлами</code>.
 
 ### <a name="split-file-structure"></a> Поняття розділених `will-файлів`
 Розділення етапів роботи - практика, яка дозволяє підвищити ефективність і якість виконання завдань. Побудова модуля і його експорт, також різні етапи роботи тому, утиліта `willbe` дозволяє працювати над ними окремо - з допомогою розділених `will-файлів`.  
@@ -42,7 +42,7 @@ build :
       default : 1
     steps :
       - npm.install
-      
+
 ```
 
 <p><code>package.json</code></p>
@@ -96,7 +96,7 @@ build :
           export : 1
       steps :
           - export.single
-          
+
 ```
 
 <p>Структура модуля</p>
@@ -126,7 +126,7 @@ defaultBuild
 . Read 2 will-files in 0.123s
 ...
 Building install
- > npm install 
+ > npm install
 ...
 added 48 packages from 36 contributors and audited 121 packages in 8.733s
 found 0 vulnerabilities
@@ -181,7 +181,7 @@ found 0 vulnerabilities
 │
 ├── out
 │    ├── splited-config.out.will.yml
-│ 
+│
 ├── package.json
 ├── package-lock.json
 ├── .ex.will.yml
@@ -198,5 +198,5 @@ found 0 vulnerabilities
 - Розділені `will-файли` дозволяють розділити етапи побудови і експорту модуля.  
 - Створення розділеної конфігурації не потребує зміни вихідних `will-файлів`.
 - `willbe` використовує ресурси обох розділених `will-файлів`.
- 
+
 [Повернутись до змісту](../README.md#tutorials)

@@ -171,23 +171,23 @@
 </details>
 <details>
   <summary><a href="./tutorial/LocalSubmodulesImporting.md">Імпорт локального підмодуля</a></summary>
-  В туторіалі показано як додати локальний підмодуль
+  Використання локального підмодуля
 </details>
 <details>
-  <summary><a href="./tutorial/HowToUseSelectorsWithGlob.md">Використання селекторів з ґлобами</a></summary>
+  <summary><a href="./tutorial/HowToUseSelectorsWithGlob.md">Селектори із ґлобами</a></summary>
   Як користуватись селекторами з ґлобами
 </details>
 <details>
   <summary><a href="./tutorial/HowToUseAsserts.md">Як користуватись ассертами</a></summary>
-  Як ассерти допомогають зменшити кількість помилок в <code>will-файлі</code>
+  Як ассерти допомогають зменшити кількість помилок при розробці.
 </details>
 <details>
   <summary><a href="./tutorial/MinimizationOfWillFile.md">Мінімізація <code>will-файла</code></a></summary>
-  Як мінімізувати об'єм <code>will-файла</code> за допомогою розгортання критеріонами із множинними значеннями
+  Як мінімізувати <code>will-файл</code> за допомогою розгортання критеріонами із множинними значеннями.
 </details>
 <details>
   <summary><a href="./tutorial/SplitWillFile.md">Розділені <code>will-файли</code></a></summary>
-  В туторіалі розглядається створення розділених <code>will-файлів</code>
+  Як створити та використовувати модуль із розділеними <code>will-файлами</code>.
 </details>
 <details>
   <summary><a href="./tutorial/NamedWillFile.md">Команда <code>.with</code> та іменований <code>will-файл</code>. </a></summary>
