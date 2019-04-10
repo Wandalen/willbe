@@ -20,10 +20,10 @@
 </details>
 <details>
   <summary><a href="./concept/Structure.md#resource">Ресурси</a></summary>
-  Структурна і функціональна одиниця <code>will-файла</code>. В файлі ресурси одного типу зібрані в одній секції.
+  Структурна і функціональна одиниця <code>will-файла</code>. Ресурси одного типу зібрані в одній секції.
 </details>
 <details>
-  <summary><a href="./concept/Structure.md#section">Секції <code>will-файлу</code></a></summary>
+  <summary><a href="./concept/Structure.md#section">Секції <code>will-файла</code></a></summary>
   Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що описують дану секцію
 </details>
 <details>
@@ -32,11 +32,11 @@
 </details>
 <details>
   <summary><a href="./concept/Path.section.md">Секція <code>path</code></a></summary>
-  Секція представляє карту шляхів модуля для швидкого орієнтування в його структурі
+  Секція представляє карту шляхів модуля для швидкого орієнтування в його файловій структурі
 </details>
 <details>
   <summary><a href="./concept/Submodule.section.md">Секція <code>submodule</code></a></summary>
-  Секції містить підмодулі
+  Секції містить інформацію про підмодулі
 </details>
 <details>
   <summary><a href="./concept/Step.section.md">Секція <code>step</code></a></summary>
@@ -44,11 +44,11 @@
 </details>
 <details>
   <summary><a href="./concept/Reflector.section.md">Секція <code>reflector</code></a></summary>
-  Основними функціями ресурсів секції (рефлекторів) є файлові операції
+  Секція містить рефлектори, ресурси для виконання операцій над групами файлів.
 </details>
 <details>
   <summary><a href="./concept/Exported.section.md">Секція <code>exported</code></a></summary>
-  Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля
+  Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.
 </details>
 <details>
   <summary><a href="./concept/Build.section.md">Секція <code>build</code></a></summary>
@@ -60,11 +60,11 @@
 </details>
 <details>
   <summary><a href="./concept/Module.md#submodule">Підмодуль</a></summary>
-  Окремий модуль з власним конфігураційним <code>will-файлом</code>, який підпорядковується іншому модулю
+  Окремий модуль з власним конфігураційним <code>will-файлом</code>, який використовується іншому модулю ( супермодулю )
 </details>
 <details>
   <summary><a href="./concept/Module.md#supermodule">Супермодуль</a></summary>
-  Модуль, який включає в себе інші модулі (підмодулі)
+  Модуль, який включає в себе інші модулі ( підмодулі )
 </details>
 <details>
   <summary><a href="./concept/LocalAndRemoteSubmodules.md#local-submodule">Локальний підмодуль</a></summary>
@@ -76,7 +76,7 @@
 </details>
 <details>
   <summary><a href="./concept/InformalSubmodule.md">Неформальний підмодуль</a></summary>
-  Віддалений підмодуль імпортований непрямим шляхом
+  Група файлів, що не розповсюджується із <code>will-файлом</code>. Для такого підмодуля можливо створити <code>will-файлом</code> самостійно
 </details>
 <details>
   <summary><a href="./concept/Phrase.md">Фраза</a></summary>

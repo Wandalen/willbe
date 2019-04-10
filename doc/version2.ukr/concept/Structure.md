@@ -37,11 +37,11 @@ will-file
 </details>
 <details>
   <summary><a href="./concept/Path.section.md">Секція <code>path</code></a></summary>
-  Секція представляє карту шляхів модуля для швидкого орієнтування в його структурі
+  Секція представляє карту шляхів модуля для швидкого орієнтування в його файловій структурі
 </details>
 <details>
   <summary><a href="./concept/Submodule.section.md">Секція <code>submodule</code></a></summary>
-  Секції містить підмодулі
+  Секції містить інформацію про підмодулі
 </details>
 <details>
   <summary><a href="./concept/Submodule.section.md">Секція <code>step</code></a></summary>
