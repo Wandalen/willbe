@@ -16,7 +16,7 @@
 │      │
 │      └── localTwo
 │             └── out
-└── юwill.yml      └── local.out.will.yml
+└── .will.yml      └── local.out.will.yml
 
 ```
 
@@ -133,7 +133,7 @@ submodule::localTwo
 │      │
 │      └── localTwo
 │             └── out
-└── юwill.yml      └── local.out.will.yml
+└── .will.yml      └── local.out.will.yml
 
 ```
 
@@ -189,7 +189,7 @@ submodule::localTwo
 │      │
 │      └── localTwo
 │             └── out
-└── юwill.yml      └── local.out.will.yml
+└── .will.yml      └── local.out.will.yml
 
 ```
 
