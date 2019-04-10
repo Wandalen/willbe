@@ -1,0 +1,12 @@
+about :
+
+    name : upgradeAndClean
+    description : "Upgrade and clean modules"
+    version : 0.0.1
+        
+submodule :
+
+    Tools :
+       path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master  # повна (розширена) форма запису
+       description : 'Import willbe tools'                                    
+    PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master  # скорочена форма запису

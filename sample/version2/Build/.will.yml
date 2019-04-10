@@ -1,0 +1,28 @@
+about :
+
+    name : buildModuleWithCriterion
+    description : "Output of various phrases using criterions"
+    version : 0.0.1
+    keywords :
+        - willbe
+        
+step :
+
+  echo.hello :
+    shell : echo "Hello, World"
+    currentPath : '.'
+        
+  echo.two :
+    shell : echo "It's Willbe"
+    currentPath : '.'    
+
+build :
+
+  echo:
+    steps :
+       - echo.hello
+       - echo.two
+       
+  echo.two:
+    steps :
+       - echo.two
