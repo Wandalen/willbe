@@ -150,8 +150,8 @@
   Команди оновлення підмодулів, апгрейду підмодулів автоматизовним перезаписом <code>will-файла</code> та очищення модуля.
 </details>
 <details>
-  <summary><a href="./tutorial/ModuleCreationByBuild.md">Побудова модуля командою <code>.build</code></a></summary>
-  Туторіал описує запуск окремих збірок побудови модуля  
+  <summary><a href="./tutorial/Build.md">Побудова модуля командою <code>.build</code></a></summary>
+  Запуск окремих збірок модуля для його побудови.
 </details>
 <details>
   <summary><a href="./tutorial/PredefinedSteps.md">Знайомство з вбудованими кроками</a></summary>
