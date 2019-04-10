@@ -154,7 +154,7 @@
   Запуск окремих збірок модуля для його побудови.
 </details>
 <details>
-  <summary><a href="./tutorial/PredefinedSteps.md">Знайомство з вбудованими кроками</a></summary>
+  <summary><a href="./tutorial/PredefinedSteps.md">Вубдовані кроки</a></summary>
   Як користуватись вбудованими кроками для роботи з віддаленими підмодулями
 </details>
 <details>
@@ -162,12 +162,12 @@
   Як використовувати критеріони для відбору ресурсів
 </details>
 <details>
-  <summary><a href="./tutorial/DefaultCriterionInWillFile.md">Збірка побудови модуля за замовчуванням</a></summary>
-  Як побудувати збірку, що запускається без указання аргумента команди <code>.build</code>
+  <summary><a href="./tutorial/DefaultCriterionInWillFile.md">Збірка модуля за замовчуванням</a></summary>
+  Як побудувати збірку, що запускається без явного указання аргумента команди <code>.build</code>
 </details>
 <details>
   <summary><a href="./tutorial/ExportedWillFile.md">Експортування модуля</a></summary>
-  В туторіалі описана процедура експортування <code>will-модуля</code> для використання його (модуля), іншим модулем
+  Процедура експортування <code>will-модуля</code> для перевикористання його іншим модулем
 </details>
 <details>
   <summary><a href="./tutorial/LocalSubmodulesImporting.md">Імпорт локального підмодуля</a></summary>
