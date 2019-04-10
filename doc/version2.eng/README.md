@@ -1,34 +1,34 @@
-## Швидкий старт
+## Quick start
 
-Для швидкого старту [встановіть](<./tutorial/Instalation.md>) утиліту `willbe`, [ознайомтеся](<./tutorial/CLI.md>) із інтрфейсом командного рядка та створіть ваш перший [модуль](<./tutorial/HelloWorld.md>). [Прочитатйе](<./tutorial/Abstract.md>) загальну інформацію якщо вам цікаво дізнатися більше про призначення та філософію утиліти `willbe`.
+For quick start [install](<./tutorial/Instalation.md>) utility `willbe`, [get acquainted with](<./tutorial/CLI.md>) command line interface and create the first [module "Hello World"](<./tutorial/HelloWorld.md>). [Read](<./tutorial/Abstract.md>) abstract if you are wondering what is it for and what philosophy is behind utility `willbe`.
 
-Для плавного заглиблення в предмет використовуйте туторіали. Для отримання вичерпного розуміння якогось із аспектів використайте перелік концепцій щоб знайти потрібну і ознайомтеся із нею.
+For gentle introduction use tutorials. For getting exhaustive information on one or another aspect use list of concepts to find a concept of interest and dive into it.
 
-## <a name="concepts"></a> Концепції
+## Концепції
 
 <details>
-  <summary><a href="./concept/WillFile.md"><code>Will-файл</code></a></summary>
+  <summary><a href="./concept/WillFile.md"><code>Will-file</code></a></summary>
   Конфігураційний файл для побудови модуля. Кожен формальний модуль має такий файл.
 </details>
 <details>
-  <summary><a href="./concept/NamedAndSplitWillFile.md">Іменований <code>will-файл</code></a></summary>
-  Вид <code>will-файла</code>, що має не стандартне ім'я файлу. Дозволяє мати більше одного модуля із різними іменами файлів в одній дерикторії.
+  <summary><a href="./concept/NamedAndSplitWillFile.md">Named <code>will-file</code></a></summary>
+  Вид <code>will-file</code>, що має не стандартне ім'я файлу. Дозволяє мати більше одного модуля із різними іменами файлів в одній дерикторії.
 </details>
 <details>
-  <summary><a href="./concept/NamedAndSplitWillFile.md">Спліт <code>will-файл</code></a></summary>
-  Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля
+  <summary><a href="./concept/NamedAndSplitWillFile.md">Спліт <code>will-file</code></a></summary>
+  Розділення <code>will-file</code> на два file - для імпорту та експорту модуля
 </details>
 <details>
   <summary><a href="./concept/Structure.md#resource">Ресурси</a></summary>
-  Структурна і функціональна одиниця <code>will-файла</code>. Ресурси одного типу зібрані в одній секції.
+  Структурна і функціональна одиниця <code>will-file</code>. Ресурси одного типу зібрані в одній секції.
 </details>
 <details>
   <summary><a href="./concept/Structure.md#resource-type">Тип ресурсу</a></summary>
   Функціональність обмежена призначенням і механізмом виконання.
 </details>
 <details>
-  <summary><a href="./concept/Structure.md#section">Секція <code>will-файла</code></a></summary>
-  Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що описують дану секцію
+  <summary><a href="./concept/Structure.md#section">Секція <code>will-file</code></a></summary>
+  Вища структурна одиниця <code>will-file</code>, яка складається з ресурсів одного типу або полів, що описують дану секцію
 </details>
 <details>
   <summary><a href="./concept/About.section.md">Секція <code>about</code></a></summary>
@@ -56,19 +56,19 @@
 </details>
 <details>
   <summary><a href="./concept/Exported.section.md">Секція <code>exported</code></a></summary>
-  Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.
+  Секція <code>out-will-file</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.
 </details>
 <details>
-  <summary><a href="./concept/Export.md#out-will-file">Експортований <code>will-файл</code> (<code>out-will-файл</code>)</a></summary>
-  <code>Out-will-файл</code> - різновид <code>will-файла</code> згенерованого утилітою при експортуванні модуля. Інші модулі можуть використати даний модуль імортувавши його <code>out-will-файл</code>.
+  <summary><a href="./concept/Export.md#out-will-file">Експортований <code>will-file</code> (<code>out-will-file</code>)</a></summary>
+  <code>Out-will-file</code> - різновид <code>will-file</code> згенерованого утилітою при експортуванні модуля. Інші модулі можуть використати даний модуль імортувавши його <code>out-will-file</code>.
 </details>
 <details>
   <summary><a href="./concept/Module.md#module">Модуль</a></summary>
-  Модулем називається сукупність файлів, які описані в <code>will-файлi</code>
+  Модулем називається сукупність файлів, які описані в <code>will-file</code>
 </details>
 <details>
   <summary><a href="./concept/Module.md#submodule">Підмодуль</a></summary>
-  Окремий модуль з власним конфігураційним <code>will-файлом</code>, який використовується іншому модулю ( супермодулю )
+  Окремий модуль з власним конфігураційним <code>will-file</code>, який використовується іншому модулю ( супермодулю )
 </details>
 <details>
   <summary><a href="./concept/Module.md#supermodule">Супермодуль</a></summary>
@@ -92,7 +92,7 @@
 </details>
 <details>
   <summary><a href="./concept/InformalSubmodule.md">Неформальний підмодуль</a></summary>
-  Група файлів, що не розповсюджується із <code>will-файлом</code>. Для такого підмодуля можливо створити <code>will-файл</code> та експортувати його самостійно.
+  Група файлів, що не розповсюджується із <code>will-file</code>. Для такого підмодуля можливо створити <code>will-file</code> та експортувати його самостійно.
 </details>
 <details>
   <summary><a href="./concept/Command.md#command">Команда</a></summary>
@@ -104,7 +104,7 @@
 </details>
 <details>
   <summary><a href="./concept/Selectors.md#selector">Селектор</a></summary>
-  Рядок-посилання на ресурс або декілька ресурсів в <code>will-файлі</code>
+  Рядок-посилання на ресурс або декілька ресурсів в <code>will-file</code>
 </details>
 <details>
   <summary><a href="./concept/Selectors.md#selector-with-glob">Селектор з ґлобом</a></summary>
@@ -120,14 +120,14 @@
 </details>
 <details>
   <summary><a href="./concept/Inheritability.md">Наслідування ресурсами</a></summary>
-  Принцип опису модуля, згідно якого ресурс <code>will-файла</code> здатний використовувати (наслідувати) значення полів інших ресурсів того ж типу.
+  Принцип опису модуля, згідно якого ресурс <code>will-file</code> здатний використовувати (наслідувати) значення полів інших ресурсів того ж типу.
 </details>
 <details>
   <summary><a href="./concept/FileFilter.md">Файловий фільтр</a></summary>
   Спосіб опису критеріїв відобору необхідних файлів для виконання якоїсь операції над групою файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>.
 </details>
 
-## <a name="tutorials"></a> Туторіали
+## Туторіали
 
 <details>
   <summary><a href="./tutorial/Abstract.md">Загальна інформація</a></summary>
@@ -147,7 +147,7 @@
 </details>
 <details>
   <summary><a href="./tutorial/SubmodulesAdministration.md">Оновлення та видалення підмодулів</a></summary>
-  Команди оновлення підмодулів, апгрейду підмодулів автоматизовним перезаписом <code>will-файла</code> та очищення модуля.
+  Команди оновлення підмодулів, апгрейду підмодулів автоматизовним перезаписом <code>will-file</code> та очищення модуля.
 </details>
 <details>
   <summary><a href="./tutorial/Build.md">Побудова модуля командою <code>.build</code></a></summary>
@@ -182,16 +182,16 @@
   Як ассерти допомогають зменшити кількість помилок при розробці.
 </details>
 <details>
-  <summary><a href="./tutorial/MinimizationOfWillFile.md">Мінімізація <code>will-файла</code></a></summary>
-  Як мінімізувати <code>will-файл</code> за допомогою розгортання критеріонами із множинними значеннями.
+  <summary><a href="./tutorial/MinimizationOfWillFile.md">Мінімізація <code>will-file</code></a></summary>
+  Як мінімізувати <code>will-file</code> за допомогою розгортання критеріонами із множинними значеннями.
 </details>
 <details>
-  <summary><a href="./tutorial/SplitWillFile.md">Розділені <code>will-файли</code></a></summary>
-  Як створити та використовувати модуль із розділеними <code>will-файлами</code>.
+  <summary><a href="./tutorial/SplitWillFile.md">Розділені <code>will-fileи</code></a></summary>
+  Як створити та використовувати модуль із розділеними <code>will-fileми</code>.
 </details>
 <details>
-  <summary><a href="./tutorial/NamedWillFile.md">Команда <code>.with</code> та іменований <code>will-файл</code>. </a></summary>
-  Як використовувати команду <code>.with</code>? Що таке іменований <code>will-файл</code>?
+  <summary><a href="./tutorial/NamedWillFile.md">Команда <code>.with</code> та іменований <code>will-file</code>. </a></summary>
+  Як використовувати команду <code>.with</code>? Що таке іменований <code>will-file</code>?
 </details>
 <details>
   <summary><a href="./tutorial/UsingEachCommand.md">Як користуватись командою <code>.each</code></a></summary>
@@ -215,7 +215,7 @@
 </details>
 <details>
   <summary><a href="./tutorial/SubmodulesVersionControl.md">Командами <code>.submodules.fixate</code> і <code>.submodules.upgrade</code></a></summary>
-  Перевірка, оновлення і фіксування версій підмодулів в <code>will-файлі</code>
+  Перевірка, оновлення і фіксування версій підмодулів в <code>will-file</code>
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorUsing.md">Копіювання файлів за допомогою рефлектора</a></summary>
