@@ -1,6 +1,6 @@
-# Перелік ресурсів через командний рядок
+# Перелік ресурсів через застосовуючи фільтри та глоби
 
-Як отримати інформацію про ресурси модуля  
+Як побудувати запиш до утиліти та отримати перелік ресурсів застосовуючи фільтри та глоби.
 
 В туторілі ["Як користуватися інтерфейсом командного рядка `willbe`"](HowToUseCommandLineInterfaceOfWill.md) команди групи `*.list` були приведені як приклад простих команд утиліти. Насправді, їх функціонал ширше - команди здатні здійснювати вивід інформацію про ресурси за назвою ресурса (за ґлобом) та за критеріонами.  
 Створіть директорію `list` з `will-файлом`:  
@@ -78,55 +78,55 @@ About
   enabled : 1
 
 Paths
-  predefined.willbe : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec' 
-  predefined.will.files : '/path_to_file/.will.yml' 
-  predefined.dir : '/path_to_file' 
-  proto : './proto' 
-  in : '.' 
-  out : 'out' 
-  out.debug : './out/debug' 
+  predefined.willbe : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec'
+  predefined.will.files : '/path_to_file/.will.yml'
+  predefined.dir : '/path_to_file'
+  proto : './proto'
+  in : '.'
+  out : 'out'
+  out.debug : './out/debug'
   out.release : './out/release'
 
 step::reflect.proto.
-  criterion : 
-    debug : 0 
-    proto : 1 
-  opts : 
-    reflector : reflector::reflect.proto.*=1 
-  inherit : 
+  criterion :
+    debug : 0
+    proto : 1
+  opts :
+    reflector : reflector::reflect.proto.*=1
+  inherit :
     predefined.reflect
 
 step::reflect.proto.debug
-  criterion : 
-    debug : 1 
-    proto : 1 
-  opts : 
-    reflector : reflector::reflect.proto.*=1 
-  inherit : 
+  criterion :
+    debug : 1
+    proto : 1
+  opts :
+    reflector : reflector::reflect.proto.*=1
+  inherit :
     predefined.reflect
 
 step::reflect.submodules
-  criterion : 
-    debug : 1 
-    proto : 0 
-  opts : 
-    reflector : reflector::reflect.submodules*=1 
-  inherit : 
+  criterion :
+    debug : 1
+    proto : 0
+  opts :
+    reflector : reflector::reflect.submodules*=1
+  inherit :
     predefined.reflect
 
 step::delete.out.debug
-  criterion : 
-    debug : 1 
-  opts : 
-    filePath : path::out.debug 
-  inherit : 
+  criterion :
+    debug : 1
+  opts :
+    filePath : path::out.debug
+  inherit :
     predefined.delete
 
 step::submodules.informal.export
-  opts : 
-    currentPath : path::dirPath 
-    shell : will .each ./module .export 
-  inherit : 
+  opts :
+    currentPath : path::dirPath
+    shell : will .each ./module .export
+  inherit :
     predefined.shell
 
 
@@ -149,8 +149,8 @@ step::submodules.informal.export
 [user@user ~]$ will .paths.list o*
 ...
 Paths
-  out : 'out' 
-  out.debug : './out/debug' 
+  out : 'out'
+  out.debug : './out/debug'
   out.release : './out/release'
 
 ```
@@ -166,14 +166,14 @@ Paths
 [user@user ~]$ will .paths.list o* proto:1
 ...
 Paths
-  out : 'out' 
+  out : 'out'
   out.debug : './out/debug'
 
 ```
 
 </details>
 
-Вибірка ресурсів за комбінацією критеріонів: 
+Вибірка ресурсів за комбінацією критеріонів:
 
 <details>
   <summary><u>Вивід команди <code>will .steps.list *s* proto:0 debug:1</code></u></summary>
@@ -182,19 +182,19 @@ Paths
 [user@user ~]$ will .steps.list *s* proto:0 debug:1
 ...
 step::reflect.submodules
-  criterion : 
-    debug : 1 
-    proto : 0 
-  opts : 
-    reflector : reflector::reflect.submodules*=1 
-  inherit : 
+  criterion :
+    debug : 1
+    proto : 0
+  opts :
+    reflector : reflector::reflect.submodules*=1
+  inherit :
     predefined.reflect
 
 step::submodules.informal.export
-  opts : 
-    currentPath : path::dirPath 
-    shell : will .each ./module .export 
-  inherit : 
+  opts :
+    currentPath : path::dirPath
+    shell : will .each ./module .export
+  inherit :
     predefined.shell
 
 ```
@@ -211,19 +211,19 @@ step::submodules.informal.export
 [user@user ~]$ will .steps.list * debug:0
 ...
 step::reflect.proto.
-  criterion : 
-    debug : 0 
-    proto : 1 
-  opts : 
-    reflector : reflector::reflect.proto.*=1 
-  inherit : 
+  criterion :
+    debug : 0
+    proto : 1
+  opts :
+    reflector : reflector::reflect.proto.*=1
+  inherit :
     predefined.reflect
 
 step::submodules.informal.export
-  opts : 
-    currentPath : path::dirPath 
-    shell : will .each ./module .export 
-  inherit : 
+  opts :
+    currentPath : path::dirPath
+    shell : will .each ./module .export
+  inherit :
     predefined.shell
 
 ```

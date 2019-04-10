@@ -195,35 +195,35 @@
 </details>
 <details>
   <summary><a href="./tutorial/UsingEachCommand.md">Як користуватись командою <code>.each</code></a></summary>
-  В туторіалі пояснюється як використовується команда <code>.each</code>
+  Команда <code>.each</code> для виконання одної дії для багатьох модулів чи підмодулів.
 </details>
 <details>
   <summary><a href="./tutorial/UsingOfJSInWillbe.md">Використання JavaScript файлів утилітою <code>willbe</code></a></summary>
-  В туторіалі показано як запускати JavaScript-файли в утиліті <code>willbe</code>
+  Як використовувати JavaScript-файлів в утиліті <code>willbe</code> для виконання складних сценаріїв побудови.
 </details>
 <details>
-  <summary><a href="./tutorial/UsingSetCommand.md">Використання команди <code>.set</code></a></summary>
-  Як корстуватись командою <code>.set</code>
+  <summary><a href="./tutorial/UsingSetCommand.md">Команда <code>.set</code></a></summary>
+  Як корстуватись командою <code>.set</code> для зміни станів утиліти, наприклад для зміни рівня вербальності.
 </details>
 <details>
-  <summary><a href="./tutorial/HowToUseComplexSelector.md">Як використовувати складні селектори</a></summary>
-  В туторіалі пояснюється як будуються складні селектори
+  <summary><a href="./tutorial/HowToUseComplexSelector.md">Складні селектори</a></summary>
+  Використання складних селекторів для відбору ресурсів із підмодулів.
 </details>
 <details>
-  <summary><a href="./tutorial/HowToList.md">Перелік ресурсів через командний рядок</a></summary>
-  Як отримати інформацію про ресурси модуля  
+  <summary><a href="./tutorial/HowToList.md">Перелік ресурсів через застосовуючи фільтри та глоби</a></summary>
+  Як побудувати запиш до утиліти та отримати перелік ресурсів застосовуючи фільтри та глоби.
 </details>
 <details>
-  <summary><a href="./tutorial/SubmodulesVersionControl.md">Як користуватись командами <code>.submodules.fixate</code> і <code>.submodules.upgrade.refs</code></a></summary>
+  <summary><a href="./tutorial/SubmodulesVersionControl.md">Командами <code>.submodules.fixate</code> і <code>.submodules.upgrade</code></a></summary>
   Перевірка, оновлення і фіксування версій підмодулів в <code>will-файлі</code>
 </details>
 <details>
-  <summary><a href="./tutorial/ReflectorUsing.md">Поняття рефлекторів. Копіювання файлів</a></summary>
-  В туторіалі описуються копіювання файлів рефлектором, пояснюється як користуватись полем <code>recursive</code>
+  <summary><a href="./tutorial/ReflectorUsing.md">Копіювання файлів за допомогою рефлектора</a></summary>
+  Копіювання файлів за допомогою рефлекта, поле <code>recursive</code> рефлектора.
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorFilters.md">Фільтри рефлектора</a></summary>
-  В туторіалі дається поняття простих фільтрів і масок рефлектора
+  Використання фільтрів рефлектора для відбору файлів для копіювання.
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorTimeFilters.md">Часові фільтри рефлектора</a></summary>

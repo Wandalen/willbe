@@ -1,6 +1,6 @@
-# Використання команди `.set`
+# Команди `.set`
 
-Як корстуватись командою `.set`
+Як корстуватись командою <code>.set</code> для зміни станів утиліти, наприклад для зміни рівня вербальності.
 
 Працюючи з програмним забезпеченням користувачі ставлять перед ним вимоги, які базуються на досвіді та конкретній задачі. При цьому налаштування програми за замовчуванням далеко не завжди влаштовують ці вимоги.  
 Утиліта `willbe` призначений для побудови та адміністрування модульних систем. `Will`-модуль, як основна одиниця утиліти, складається з конфігураційного файла та того, що він описує, тому, майже всі налаштування системи поміщені в `will-файлі`. Запуск цих файлів відбувається з допомогою командного рядка системи і до цього моменту ви бачили ввід та результат, а внутрішні процеси були приховані. З командою `.set` можливо прослідкувати і за цим.  
@@ -19,7 +19,7 @@ about :
 
 submodule :
   PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
-  
+
 path :
 
   out : 'out'
@@ -35,7 +35,7 @@ step  :
     criterion :
       debug : 1
     export : path::submodule.*
-        
+
 build :
 
   submodules.download :
@@ -60,7 +60,7 @@ build :
 
 <details>
     <summary><u>Лог побудови з `verbosity:8`</u></summary>
-    
+
 ```
 [user@user ~]$ will ".set verbosity:8 ; .build"
 Command ".set ; .build"
@@ -109,7 +109,7 @@ Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPat
  !s module::PathFundamentals resourcesFormed failed
  s module::setVerbosity resourcesFormed 1
  ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
-Failed to open submodule::PathFundamentals at "/path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals" 
+Failed to open submodule::PathFundamentals at "/path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals"
 Found no .out.will file for module::setVerbosity at "/path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals"             
  s module::setVerbosity submodulesFormed 3
  s module::setVerbosity resourcesFormed 2
@@ -153,7 +153,7 @@ Found no .out.will file for module::setVerbosity at "/path_to_module/UsingSetCom
 
 <details>
     <summary><u>Лог експорту з `verbosity:4`</u></summary>
-    
+
 ```
 [user@user ~]$ will .set verbosity:4 ; .export submodules.export
 Command ".set ; .export submodules.export"
@@ -186,7 +186,7 @@ Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPat
 
 <details>
     <summary><u>Лог побудови `verbosity:0`</u></summary>
-    
+
 ```
 [user@user ~]$ will .set verbosity:0 ; .build
 Command ".set ; .build"
