@@ -48,7 +48,7 @@
 </details>
 <details>
   <summary><a href="./concept/Reflector.section.md">Секція <code>reflector</code></a></summary>
-  Секція містить рефлектори, ресурси для виконання операцій над групами файлів.
+  Секція містить рефлектори - ресурси для виконання операцій над групами файлів.
 </details>
 <details>
   <summary><a href="./concept/Build.section.md">Секція <code>build</code></a></summary>
@@ -68,7 +68,7 @@
 </details>
 <details>
   <summary><a href="./concept/Module.md#submodule">Підмодуль</a></summary>
-  Окремий модуль з власним конфігураційним <code>will-файлом</code>, який використовується іншому модулю ( супермодулю )
+  Окремий модуль з власним конфігураційним <code>will-файлом</code>, який використовується іншим модулем ( супермодулем )
 </details>
 <details>
   <summary><a href="./concept/Module.md#supermodule">Супермодуль</a></summary>
@@ -96,7 +96,7 @@
 </details>
 <details>
   <summary><a href="./concept/Command.md#command">Команда</a></summary>
-  Рядок що містить фраза для позначення наміру розробинка і дії, котрі будуть виконані утилітою по її введенні. Вводиться в інтерфейсь командного рядка розробником.
+  Рядок що містить фразу для позначення наміру розробника і дії, котрі будуть виконані утилітою по її введенні. Вводиться в інтерфейс командного рядка розробником.
 </details>
 <details>
   <summary><a href="./concept/Command.md#will-phrase">Фраза</a></summary>
@@ -112,7 +112,7 @@
 </details>
 <details>
   <summary><a href="./concept/Asserts.md">Ґлоб з ассертом</a></summary>
-  Обмеження кількості ресурсів в вибірці селектором з ґлобом
+  Обмеження кількості ресурсів в вибірці селектора з ґлобом
 </details>
 <details>
   <summary><a href="./concept/Criterions.md">Критеріон</a></summary>
@@ -124,7 +124,7 @@
 </details>
 <details>
   <summary><a href="./concept/FileFilter.md">Файловий фільтр</a></summary>
-  Спосіб опису критеріїв відобору необхідних файлів для виконання якоїсь операції над групою файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>.
+  Спосіб опису критеріїв відобору необхідних файлів для виконання деякої операції над групою файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>.
 </details>
 
 ## <a name="tutorials"></a> Туторіали
