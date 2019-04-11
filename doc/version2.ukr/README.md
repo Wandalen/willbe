@@ -24,11 +24,11 @@
 </details>
 <details>
   <summary><a href="./concept/Structure.md#resource-type">Тип ресурсу</a></summary>
-  Функціональність обмежена призначенням і механізмом виконання
+  Функціональність пов'язана із групою ресурсів, обмежена призначенням. Приклад того які бувать типи ресурів: шлях, підмодуль, крок, збірка. Кожен тип ресурів має власне призначення і обробляється утиілітою по-різному.
 </details>
 <details>
   <summary><a href="./concept/Structure.md#section">Секція <code>will-файла</code></a></summary>
-  Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що описують дану секцію
+  Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що описують даний модуль.
 </details>
 <details>
   <summary><a href="./concept/About.section.md">Секція <code>about</code></a></summary>
@@ -40,11 +40,11 @@
 </details>
 <details>
   <summary><a href="./concept/Submodule.section.md">Секція <code>submodule</code></a></summary>
-  Секції містить інформацію про підмодулі
+  Секція містить інформацію про підмодулі.
 </details>
 <details>
   <summary><a href="./concept/Step.section.md">Секція <code>step</code></a></summary>
-  Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля
+  Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля.
 </details>
 <details>
   <summary><a href="./concept/Reflector.section.md">Секція <code>reflector</code></a></summary>
@@ -84,11 +84,11 @@
 </details>
 <details>
   <summary><a href="./concept/CurrentModule.md">Поточний модуль</a></summary>
-  <code>Will-модуль</code>, відносно якого виконуються операції в командній оболонці системи  
+  Модуль відносно якого виконуються операції. За замовчуванням цей модуль завантажується із файла <code>.will.yml</code> поточної дерикторії.
 </details>
 <details>
   <summary><a href="./concept/Export.md#module-export">Експорт модуля</a></summary>
-  Особливий вид збірки, котрий призначений для перенесення конфігурації поточного модуля
+  Особливий вид збірки необхідний для використання даного модуля іншими розробниками та модулями. Результатом експортування модуля є аретфакти, зокерма <code>out-will-file</code>.
 </details>
 <details>
   <summary><a href="./concept/InformalSubmodule.md">Неформальний підмодуль</a></summary>
@@ -104,7 +104,7 @@
 </details>
 <details>
   <summary><a href="./concept/Selectors.md#selector">Селектор</a></summary>
-  Рядок-посилання на ресурс або декілька ресурсів в <code>will-файлі</code>
+  Рядок-посилання на ресурс або декілька ресурсів модуля.
 </details>
 <details>
   <summary><a href="./concept/Selectors.md#selector-with-glob">Селектор з ґлобом</a></summary>
@@ -112,7 +112,7 @@
 </details>
 <details>
   <summary><a href="./concept/Asserts.md">Ґлоб з ассертом</a></summary>
-  Обмеження кількості ресурсів в вибірці селектора з ґлобом
+  Обмеження кількості ресурсів, що мають бути знайдені селектором з ґлобом.
 </details>
 <details>
   <summary><a href="./concept/Criterions.md">Критеріон</a></summary>
@@ -143,11 +143,11 @@
 </details>
 <details>
   <summary><a href="./tutorial/HelloWorld.md">Модуль "Hello, World!"</a></summary>
-  Створення модуля "Hello, World!" з утилітою <code>willbe</code>. Завантаження віддаленого підмодуля
+  Створення модуля "Hello, World!". Завантаження віддаленого підмодуля.
 </details>
 <details>
-  <summary><a href="./tutorial/SubmodulesCommands.md">Оновлення та видалення підмодулів</a></summary>
-  Команди оновлення підмодулів, апгрейду підмодулів автоматизовним перезаписом <code>will-файла</code> та очищення модуля
+  <summary><a href="./tutorial/SubmodulesCommands.md">Команди оновлення, апгрейду та очищення підмодулів</a></summary>
+  Команди оновлення підмодулів, апгрейду підмодулів автоматизовним перезаписом <code>will-файла</code> та очищення підмодулів видаленням завантажених файлів.
 </details>
 <details>
   <summary><a href="./tutorial/Build.md">Побудова модуля командою <code>.build</code></a></summary>
@@ -167,11 +167,11 @@
 </details>
 <details>
   <summary><a href="./tutorial/ExportedWillFile.md">Експортування модуля</a></summary>
-  Процедура експортування <code>will-модуля</code> для перевикористання його іншим модулем
+  Експортування модуля для перевикористання його іншим розробником або модулем.
 </details>
 <details>
   <summary><a href="./tutorial/LocalSubmodulesImporting.md">Імпорт локального підмодуля</a></summary>
-  Використання локального підмодуля
+  Використання локального підмодуля із іншого модуля ( супермодуля ).
 </details>
 <details>
   <summary><a href="./tutorial/HowToUseSelectorsWithGlob.md">Селектори із ґлобами</a></summary>
@@ -198,8 +198,8 @@
   Команда <code>.each</code> для виконання одної дії для багатьох модулів чи підмодулів
 </details>
 <details>
-  <summary><a href="./tutorial/UsingOfJSInWillbe.md">Використання JavaScript файлів утилітою <code>willbe</code></a></summary>
-  Як використовувати JavaScript-файлів в утиліті <code>willbe</code> для виконання складних сценаріїв побудови
+  <summary><a href="./tutorial/UsingOfJSInWillbe.md">Використання <code>JavaScript</code> файлів утилітою <code>willbe</code></a></summary>
+  Як використовувати <code>JavaScript</code> файлів в утиліті <code>willbe</code> для виконання складних сценаріїв побудови.
 </details>
 <details>
   <summary><a href="./tutorial/UsingSetCommand.md">Команда <code>.set</code></a></summary>
@@ -210,8 +210,8 @@
   Використання складних селекторів для відбору ресурсів із підмодулів
 </details>
 <details>
-  <summary><a href="./tutorial/HowToList.md">Пошук ресурсів за ґлобами і критеріонами</a></summary>
-  Як побудувати запит до утиліти та отримати перелік ресурсів застосовуючи ґлоби і критеріони
+  <summary><a href="./tutorial/HowToList.md">Перелік ресурсів застосовуючи фільтри та глоби</a></summary>
+  Як побудувати запит до утиліти та отримати перелік ресурсів застосовуючи фільтри та глоби.
 </details>
 <details>
   <summary><a href="./tutorial/SubmodulesVersionControl.md">Команди <code>.submodules.fixate</code> і <code>.submodules.upgrade</code></a></summary>
@@ -235,23 +235,23 @@
 </details>
 <details>
   <summary><a href="./tutorial/PredefinedReflectorsUsing.md">Вбудовані рефлектори</a></summary>
-  Використання вбудованих рефлекторів та побудова мультизбірок
+  Використання вбудованих рефлекторів для розбиття на версію для відлагодження і для релізу. Побудова мультизбірок.
 </details>
 <details>
   <summary><a href="./tutorial/ResourceInheritability.md">Наслідування ресурсів</a></summary>
-  Як користуватись наслідуванням ресурсів
+  Як користуватись наслідуванням ресурсів для перевикористання даних.
 </details>
 <details>
   <summary><a href="./tutorial/ViewStep.md">Вбудований крок <code>predefined.view</code></a></summary>
   Використання вбудованого кроку <code>predefined.view</code> для перегляду файлів
 </details>
 <details>
-  <summary><a href="./tutorial/TranspileStep.md">Транспіляція файлів</a></summary>
-  Використання вбудованого кроку <code>predefined.transpile</code> для трансформації JavaScript-файлів
+  <summary><a href="./tutorial/TranspileStep.md">Транспіляція</a></summary>
+  Використання вбудованого кроку <code>predefined.transpile</code> для транспіляції <code>JavaScript</code> файлів або їх конкатенації.
 </details>
 <details>
-  <summary><a href="./tutorial/HowToUseCommandShell.md">Команда <code>.shell</code></a></summary>
-  Команда для виклику зовнішніх програм утилітою <code>willbe</code> для вибраних модулів
+  <summary><a href="./tutorial/HowToUseCommandShell.md">Команда <code>.shell</code> </a></summary>
+  Команда для виклику зовнішніх програм утилітою <code>willbe</code> для вибраних модулів чи підмодулів.
 </details>
 <details>
   <summary><a href="./tutorial/WillbeAsMake.md">Компіляція С++ програми</a></summary>

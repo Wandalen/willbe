@@ -1,6 +1,6 @@
 # Вбудовані рефлектори  
 
-Використання вбудованих рефлекторів та побудова мультизбірок  
+Використання вбудованих рефлекторів для розбиття на версію для відлагодження і для релізу. Побудова мультизбірок.
 
 ### <a name="predefined-reflectors-term"></a> Призначення вбудованих рефлекторів
 Крім вбудованих кроків в утиліті є вбудовані рефлектори. Вбудовані рефлектори позбавляють необхідності прописувати налаштування фільтрів для стандартних операцій. Всього є три вбудованих рефлектора: `predefined.common`, `predefined.debug` i `predefined.release`.  
@@ -11,8 +11,8 @@
   <summary><u>Відкрийте, щоб проглянути</u></summary>
 
 ```yaml
-reflector : 
-    
+reflector :
+
     use.predefined.reflector :
         inherit : predefined.common
 
@@ -40,7 +40,7 @@ reflector :
           - !!js/regex '/\.hg$/'
           - !!js/regex '/\.DS_Store$/'
           - !!js/regex '/(^|\/)-/'
-          
+
 ```
 
 </details>
@@ -54,7 +54,7 @@ reflector :
 \- `node_modules`.  
 Тобто, рефлектор `predefined.common` необхідний для виключення зі збірки допоміжних файлів для побудови модуля.  
 
-##### <a name="predefined-debug"></a> Вбудований рефлектор `predefined.debug` 
+##### <a name="predefined-debug"></a> Вбудований рефлектор `predefined.debug`
 Рефлектор для фільтрації файлів, призначених для релізу проекта.   
 
 <details>
@@ -63,11 +63,11 @@ reflector :
 ```yaml
      src :
        maskAll :
-         excludeAny : 
-           - !!js/regex '/\.release($|\.|\/)/i' 
+         excludeAny :
+           - !!js/regex '/\.release($|\.|\/)/i'
      criterion :
        debug : 1
-    
+
 ```
 
 </details>
@@ -84,18 +84,18 @@ reflector :
 ```yaml
      src :
        maskAll :
-         excludeAny : 
+         excludeAny :
            - !!js/regex '/\.debug($|\.|\/)/i'
            - !!js/regex '/\.test($|\.|\/)/i'
            - !!js/regex '/\.experiment($|\.|\/)/i'
      criterion :
        debug : 0
-    
+
 ```
-   
+
 </details>
-    
-    
+
+
 Вбудований рефлектор `predefined.release` виключає зі збірки файли:
 \- які мають розширення `.debug`, `.test`, `.experiment`;  
 \- в назві яких є слово `.debug.`, `.test.`, `.experiment.`;  
@@ -103,7 +103,7 @@ reflector :
 Рефлектор використовує критеріон `debug : 0`, тобто, необхідно, щоб в збірці побудови критеріон `debug` мав значення "0".  
 
 ### <a name="experiment-and-multiassembly"></a> Дослідження вбудованих рефлекторів. Мультизбірка
-##### <a name="configuration"></a> Конфігурація 
+##### <a name="configuration"></a> Конфігурація
 Потрібно створити таку структуру, при якій кожен вбудований рефлектор буде фільтрувати визначені файли. Тому побудуйте таку конфігурацію в директорії `predefinedReflectors`:  
 
 <details>
@@ -135,14 +135,14 @@ predefinedReflectors
 
 <details>
   <summary><u>Повний код <code>.will.yml</code></u></summary>
-    
+
 ```yaml
 about :
   name : predefinedReflectors
   description : "To use predefined reflectors"
   version : 0.0.1
 
-path : 
+path :
 
   out.debug :
     path : out.debug
@@ -159,7 +159,7 @@ reflector :
   reflect.project:
     inherit: predefined.*
     src:
-      filePath: 
+      filePath:
         proto : 1
     dst:
       filePath: path::out.*=1
@@ -169,7 +169,7 @@ reflector :
   reflect.copy.common:
     inherit: predefined.common
     src:
-      filePath: 
+      filePath:
         proto : 1
     dst:
       filePath: out.common
@@ -181,7 +181,7 @@ step :
     reflector : reflect.project*=1
     criterion :
       debug : [ 0,1 ]
-  
+
   reflect.copy.common :
     inherit : predefined.reflect
     reflector : reflect.copy.common
@@ -189,7 +189,7 @@ step :
 build :
 
   copy :
-    criterion : 
+    criterion :
       debug : [ 0,1 ]
     steps :
       - reflect.project*=1
@@ -197,11 +197,11 @@ build :
   copy.common :
     steps :
       - reflect.copy.common
-      
+
   all.reflectors :
-    criterion : 
+    criterion :
       default : 1
-    steps : 
+    steps :
       - build::copy.
       - build::copy.debug
       - build::copy.common
@@ -219,19 +219,19 @@ build :
 
 ```yaml
   all.reflectors :
-    criterion : 
+    criterion :
       default : 1
-    steps : 
+    steps :
       - build::copy.
       - build::copy.debug
       - build::copy.common
 
 ```
 
-</details> 
+</details>
 
-##### <a name="building"></a> Побудова модуля 
-Виконайте побудови (фраза `will .build`): 
+##### <a name="building"></a> Побудова модуля
+Виконайте побудови (фраза `will .build`):
 
 <details>
   <summary><u>Відкрийте, щоб проглянути</u></summary>
@@ -244,7 +244,7 @@ build :
    + reflect.project.debug reflected 5 files /path_to_file/ : out.debug <- proto in 0.305s
    + reflect.copy.common reflected 8 files /path_to_file/ : out.common <- proto in 0.273s
   Built all in 1.078s
-    
+
 ```
 
 <p>Структура модуля після побудови</p>
