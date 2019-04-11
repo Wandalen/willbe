@@ -12,23 +12,31 @@
 </details>
 <details>
   <summary><a href="./concept/NamedAndSplitWillFile.md">Іменований <code>will-файл</code></a></summary>
-  Вид <code>will-файла</code>, що має не стандартне ім'я файлу. Дозволяє мати більше одного модуля із різними іменами файлів в одній дерикторії
+  Вид <code>will-файла</code>, що має не стандартне ім'я файлу. Дозволяє мати більше одного модуля із різними іменами файлів в одній дерикторії.
 </details>
 <details>
   <summary><a href="./concept/NamedAndSplitWillFile.md">Спліт <code>will-файл</code></a></summary>
-  Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля
+  Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля.
 </details>
 <details>
   <summary><a href="./concept/Structure.md#resource">Ресурси</a></summary>
-  Структурна і функціональна одиниця <code>will-файла</code>. Ресурси одного типу зібрані в одній секції
+  Структурна і функціональна одиниця <code>will-файла</code>. Ресурси одного типу зібрані в одній секції.
 </details>
 <details>
   <summary><a href="./concept/Structure.md#resource-type">Тип ресурсу</a></summary>
   Функціональність пов'язана із групою ресурсів, обмежена призначенням. Приклад того які бувать типи ресурів: шлях, підмодуль, крок, збірка. Кожен тип ресурів має власне призначення і обробляється утиілітою по-різному.
 </details>
 <details>
-  <summary><a href="./concept/Path.section.md">Шлях</a></summary>
+  <summary><a href="./concept/Paths.md#Шлях">Шлях</a></summary>
   Ресурс секції <code>path</code>, який вказує на розміщення елементів модуля і використовується в роутингу для інших ресурсів.
+</details>
+<details>
+  <summary><a href="./concept/Steps.md#Крок">Крок</a></summary>
+  Ресурс секції <code>step</code>, який представляє собою інструкцію для виконання утилітою при побудові модуля.
+</details>
+<details>
+  <summary><a href="./concept/Reflectors.md#Рефлектор">Рефлектор</a></summary>
+  Ресурс секції <code>reflector</code>, який формулює напрям і критерії здійснення операцій над групою файлів. 
 </details>
 <details>
   <summary><a href="./concept/Structure.md#section">Секція <code>will-файла</code></a></summary>
@@ -36,10 +44,10 @@
 </details>
 <details>
   <summary><a href="./concept/About.section.md">Секція <code>about</code></a></summary>
-  Секція містить описову інформація про модуль
+  Секція містить описову інформація про модуль.
 </details>
 <details>
-  <summary><a href="./concept/Path.section.md">Секція <code>path</code></a></summary>
+  <summary><a href="./concept/Paths.md#Секція-path">Секція <code>path</code></a></summary>
   Секція представляє карту шляхів модуля для швидкого орієнтування в його файловій структурі.
 </details>
 <details>
@@ -47,44 +55,44 @@
   Секція містить інформацію про підмодулі.
 </details>
 <details>
-  <summary><a href="./concept/Step.section.md">Секція <code>step</code></a></summary>
+  <summary><a href="./concept/Steps.md#Секція-step">Секція <code>step</code></a></summary>
   Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля.
 </details>
 <details>
-  <summary><a href="./concept/Reflector.section.md">Секція <code>reflector</code></a></summary>
-  Секція містить рефлектори - ресурси для виконання операцій над групами файлів
+  <summary><a href="./concept/Reflectors.md#Секція-reflector">Секція <code>reflector</code></a></summary>
+  Секція містить рефлектори - ресурси для виконання операцій над групами файлів.
 </details>
 <details>
   <summary><a href="./concept/Build.section.md">Секція <code>build</code></a></summary>
-  Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля
+  Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля.
 </details>
 <details>
   <summary><a href="./concept/Exported.section.md">Секція <code>exported</code></a></summary>
-  Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим
+  Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.
 </details>
 <details>
   <summary><a href="./concept/Export.md#out-will-file">Експортований <code>will-файл</code> (<code>out-will-файл</code>)</a></summary>
-  <code>Out-will-файл</code> - різновид <code>will-файла</code> згенерованого утилітою при експортуванні модуля. Інші модулі можуть використати даний модуль імортувавши його <code>out-will-файл</code>
+  <code>Out-will-файл</code> - різновид <code>will-файла</code> згенерованого утилітою при експортуванні модуля. Інші модулі можуть використати даний модуль імортувавши його <code>out-will-файл</code>.
 </details>
 <details>
   <summary><a href="./concept/Module.md#module">Модуль</a></summary>
-  Модулем називається сукупність файлів, які описані в <code>will-файлi</code>
+  Модулем називається сукупність файлів, які описані в <code>will-файлi</code>.
 </details>
 <details>
   <summary><a href="./concept/Module.md#submodule">Підмодуль</a></summary>
-  Окремий модуль з власним конфігураційним <code>will-файлом</code>, який використовується іншим модулем ( супермодулем )
+  Окремий модуль з власним конфігураційним <code>will-файлом</code>, який використовується іншим модулем ( супермодулем ).
 </details>
 <details>
   <summary><a href="./concept/Module.md#supermodule">Супермодуль</a></summary>
-  Модуль, який включає в себе інші модулі ( підмодулі )
+  Модуль, який включає в себе інші модулі ( підмодулі ).
 </details>
 <details>
   <summary><a href="./concept/LocalAndRemoteSubmodules.md#local-submodule">Локальний підмодуль</a></summary>
-  Підмодуль, який розташовується на машині користувача
+  Підмодуль, який розташовується на машині користувача.
 </details>
 <details>
   <summary><a href="./concept/LocalAndRemoteSubmodules.md#remote-submodule">Віддалений підмодуль</a></summary>
-  Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину
+  Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину.
 </details>
 <details>
   <summary><a href="./concept/CurrentModule.md">Поточний модуль</a></summary>
@@ -96,15 +104,15 @@
 </details>
 <details>
   <summary><a href="./concept/InformalSubmodule.md">Неформальний підмодуль</a></summary>
-  Група файлів, що не розповсюджується із <code>will-файлом</code>. Для такого підмодуля можливо створити <code>will-файл</code> та експортувати його самостійно
+  Група файлів, що не розповсюджується із <code>will-файлом</code>. Для такого підмодуля можливо створити <code>will-файл</code> та експортувати його самостійно.
 </details>
 <details>
   <summary><a href="./concept/Command.md#command">Команда</a></summary>
-  Рядок що містить фразу для позначення наміру розробника і дії, котрі будуть виконані утилітою по її введенні. Вводиться в інтерфейс командного рядка розробником
+  Рядок що містить фразу для позначення наміру розробника і дії, котрі будуть виконані утилітою по її введенні. Вводиться в інтерфейс командного рядка розробником.
 </details>
 <details>
   <summary><a href="./concept/Command.md#will-phrase">Фраза</a></summary>
-  Слово або декілька слів, відокремлених крапкою, позначає команду, яку має виконати утиліта
+  Слово або декілька слів, відокремлених крапкою, позначає команду, яку має виконати утиліта.
 </details>
 <details>
   <summary><a href="./concept/Selectors.md#selector">Селектор</a></summary>
@@ -112,7 +120,7 @@
 </details>
 <details>
   <summary><a href="./concept/Selectors.md#selector-with-glob">Селектор з ґлобом</a></summary>
-  Селектор, який для вибору ресурсу використовує пошукові шаблони - ґлоби
+  Селектор, який для вибору ресурсу використовує пошукові шаблони - ґлоби.
 </details>
 <details>
   <summary><a href="./concept/Asserts.md">Ґлоб з ассертом</a></summary>
@@ -120,15 +128,15 @@
 </details>
 <details>
   <summary><a href="./concept/Criterions.md">Критеріон</a></summary>
-  Елемент порівняння для відбору ресусрів
+  Елемент порівняння для відбору ресусрів.
 </details>
 <details>
   <summary><a href="./concept/Inheritability.md">Наслідування ресурсами</a></summary>
-  Принцип опису модуля, згідно якого ресурс <code>will-файла</code> здатний використовувати (наслідувати) значення полів інших ресурсів того ж типу
+  Принцип опису модуля, згідно якого ресурс <code>will-файла</code> здатний використовувати (наслідувати) значення полів інших ресурсів того ж типу.
 </details>
 <details>
   <summary><a href="./concept/FileFilter.md">Файловий фільтр</a></summary>
-  Спосіб опису критеріїв відобору необхідних файлів для виконання деякої операції над групою файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>
+  Спосіб опису критеріїв відобору необхідних файлів для виконання деякої операції над групою файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>.
 </details>
 
 ## <a name="tutorials"></a> Туторіали
