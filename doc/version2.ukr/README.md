@@ -147,15 +147,15 @@
 
 <details>
   <summary><a href="./tutorial/Abstract.md">Загальна інформація</a></summary>
-  Загальна інформація. Чим утиліта <code>willbe</code> є і чим вона не являється
+  Загальна інформація. Чим утиліта <code>willbe</code> є і чим вона не являється.
 </details>
 <details>
   <summary><a href="./tutorial/Instalation.md">Встановлення</a></summary>
-  Процедура встановлення утиліти <code>willbe</code>
+  Процедура встановлення утиліти <code>willbe</code>.
 </details>
 <details>
   <summary><a href="./tutorial/CLI.md">Інтерфейс командного рядка</a></summary>
-  Як користуватися інтерфейсом командного рядка утиліти <code>willbe</code>. Застосування команд <code>.help</code> та <code>.list</code>
+  Як користуватися інтерфейсом командного рядка утиліти <code>willbe</code>. Застосування команд <code>.help</code> та <code>.list</code>.
 </details>
 <details>
   <summary><a href="./tutorial/HelloWorld.md">Модуль "Hello, World!"</a></summary>
@@ -163,7 +163,7 @@
 </details>
 <details>
   <summary><a href="./tutorial/SubmodulesCommands.md">Команди оновлення, апгрейду та очищення підмодулів</a></summary>
-  Команди оновлення підмодулів, апгрейду підмодулів автоматизовним перезаписом <code>will-файла</code> та очищення підмодулів видаленням завантажених файлів.
+  Команди оновлення підмодулів, апгрейду підмодулів автоматизовним перезаписом <code>will-файла</code> та очищення модуля.
 </details>
 <details>
   <summary><a href="./tutorial/Build.md">Побудова модуля командою <code>.build</code></a></summary>
@@ -228,10 +228,6 @@
 <details>
   <summary><a href="./tutorial/HowToList.md">Перелік ресурсів застосовуючи фільтри та глоби</a></summary>
   Як побудувати запит до утиліти та отримати перелік ресурсів застосовуючи фільтри та глоби.
-</details>
-<details>
-  <summary><a href="./tutorial/SubmodulesVersionControl.md">Команди <code>.submodules.fixate</code> і <code>.submodules.upgrade</code></a></summary>
-  Перевірка, оновлення і фіксування версій підмодулів в <code>will-файлі</code>
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorUsing.md">Копіювання файлів за допомогою рефлектора</a></summary>
