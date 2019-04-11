@@ -19,11 +19,11 @@
   Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля.
 </details>
 <details>
-  <summary><a href="./concept/Structure.md#resource">Ресурси</a></summary>
+  <summary><a href="./concept/Structure.md#Ресурси">Ресурси</a></summary>
   Структурна і функціональна одиниця <code>will-файла</code>. Ресурси одного типу зібрані в одній секції.
 </details>
 <details>
-  <summary><a href="./concept/Structure.md#resource-type">Тип ресурсу</a></summary>
+  <summary><a href="./concept/Structure.md#Тип-ресурсу">Тип ресурсу</a></summary>
   Функціональність пов'язана із групою ресурсів, обмежена призначенням. Приклад того які бувать типи ресурів: шлях, підмодуль, крок, збірка. Кожен тип ресурів має власне призначення і обробляється утиілітою по-різному.
 </details>
 <details>
@@ -39,7 +39,11 @@
   Ресурс секції <code>reflector</code>, який формулює напрям і критерії здійснення операцій над групою файлів. 
 </details>
 <details>
-  <summary><a href="./concept/Structure.md#section">Секція <code>will-файла</code></a></summary>
+  <summary><a href="./concept/Builds.md#Збірка">Збірка</a></summary>
+  Послідовність і умови виконання процедур побудови модуля. 
+</details>
+<details>
+  <summary><a href="./concept/Structure.md#Секція-will-файла">Секція <code>will-файла</code></a></summary>
   Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що описують даний модуль.
 </details>
 <details>
@@ -63,7 +67,7 @@
   Секція містить рефлектори - ресурси для виконання операцій над групами файлів.
 </details>
 <details>
-  <summary><a href="./concept/Build.section.md">Секція <code>build</code></a></summary>
+  <summary><a href="./concept/Builds.md#Секція-build">Секція <code>build</code></a></summary>
   Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля.
 </details>
 <details>
