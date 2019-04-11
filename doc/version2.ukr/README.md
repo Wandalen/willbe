@@ -27,16 +27,16 @@
   Функціональність пов'язана із групою ресурсів, обмежена призначенням. Приклад того які бувать типи ресурів: шлях, підмодуль, крок, збірка. Кожен тип ресурів має власне призначення і обробляється утиілітою по-різному.
 </details>
 <details>
+  <summary><a href="./concept/Path.section.md">Шлях</a></summary>
+  Ресурс секції <code>path</code>, який вказує на розміщення елементів модуля і використовується в роутингу для інших ресурсів.
+</details>
+<details>
   <summary><a href="./concept/Structure.md#section">Секція <code>will-файла</code></a></summary>
   Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що описують даний модуль.
 </details>
 <details>
   <summary><a href="./concept/About.section.md">Секція <code>about</code></a></summary>
   Секція містить описову інформація про модуль
-</details>
-<details>
-  <summary><a href="./concept/Path.section.md">Шлях</a></summary>
-  Ресурс секції <code>path</code>, який вказує на розміщення елементів модуля і використовується в роутингу для інших ресурсів.
 </details>
 <details>
   <summary><a href="./concept/Path.section.md">Секція <code>path</code></a></summary>
