@@ -42,14 +42,13 @@ path :
 
 step  :
 
-  delete.submodule :
+  delete.out :
     inherit : predefined.delete
     filePath : path::fileToDelete
 
-
 build :
 
-  delete.submodule :
+  delete.out :
     criterion :
       default : 1
     steps :
