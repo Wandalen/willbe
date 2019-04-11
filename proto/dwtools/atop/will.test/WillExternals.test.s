@@ -4926,6 +4926,71 @@ function reflectInherit( test )
 
 //
 
+function reflectSubmodulesWithCriterion( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-with-criterion' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out/debug' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = 'reflect only A'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build A' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    var expected = [ '.', './A.js' ];
+    test.identical( files, expected );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = 'reflect only B'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build B' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    var expected = [ '.', './B.js' ];
+    test.identical( files, expected );
+    return null;
+  })
+
+
+  return ready;
+}
+
+//
+
 function importInExport( test )
 {
   let self = this;
@@ -5517,6 +5582,7 @@ var Self =
     reflectShell,
     reflectWithOptions,
     reflectInherit,
+    reflectSubmodulesWithCriterion,
 
     importInExport,
     setVerbosity,
