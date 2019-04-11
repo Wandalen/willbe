@@ -12,7 +12,7 @@
 </details>
 <details>
   <summary><a href="./concept/NamedAndSplitWillFile.md">Іменований <code>will-файл</code></a></summary>
-  Вид <code>will-файла</code>, що має не стандартне ім'я файлу. Дозволяє мати більше одного модуля із різними іменами файлів в одній директорії.
+  Вид <code>will-файла</code>, що має не стандартне ім'я файлу. Дозволяє мати більше одного модуля із різними іменами файлів в одній дерикторії
 </details>
 <details>
   <summary><a href="./concept/NamedAndSplitWillFile.md">Спліт <code>will-файл</code></a></summary>
@@ -20,7 +20,7 @@
 </details>
 <details>
   <summary><a href="./concept/Structure.md#resource">Ресурси</a></summary>
-  Структурна і функціональна одиниця <code>will-файла</code>. Ресурси одного типу зібрані в одній секції.
+  Структурна і функціональна одиниця <code>will-файла</code>. Ресурси одного типу зібрані в одній секції
 </details>
 <details>
   <summary><a href="./concept/Structure.md#resource-type">Тип ресурсу</a></summary>
@@ -48,7 +48,7 @@
 </details>
 <details>
   <summary><a href="./concept/Reflector.section.md">Секція <code>reflector</code></a></summary>
-  Секція містить рефлектори, особливий тип ресурса для виконання операцій над групами файлів.
+  Секція містить рефлектори - ресурси для виконання операцій над групами файлів
 </details>
 <details>
   <summary><a href="./concept/Build.section.md">Секція <code>build</code></a></summary>
@@ -56,11 +56,11 @@
 </details>
 <details>
   <summary><a href="./concept/Exported.section.md">Секція <code>exported</code></a></summary>
-  Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.
+  Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим
 </details>
 <details>
   <summary><a href="./concept/Export.md#out-will-file">Експортований <code>will-файл</code> (<code>out-will-файл</code>)</a></summary>
-  <code>Out-will-файл</code> - різновид <code>will-файла</code> згенерованого утилітою при експортуванні модуля. Інші модулі можуть використати даний модуль імортувавши його <code>out-will-файл</code>.
+  <code>Out-will-файл</code> - різновид <code>will-файла</code> згенерованого утилітою при експортуванні модуля. Інші модулі можуть використати даний модуль імортувавши його <code>out-will-файл</code>
 </details>
 <details>
   <summary><a href="./concept/Module.md#module">Модуль</a></summary>
@@ -68,7 +68,7 @@
 </details>
 <details>
   <summary><a href="./concept/Module.md#submodule">Підмодуль</a></summary>
-  Окремий модуль з власним конфігураційним <code>will-файлом</code>, який використовується іншому модулю ( супермодулю )
+  Окремий модуль з власним конфігураційним <code>will-файлом</code>, який використовується іншим модулем ( супермодулем )
 </details>
 <details>
   <summary><a href="./concept/Module.md#supermodule">Супермодуль</a></summary>
@@ -92,15 +92,15 @@
 </details>
 <details>
   <summary><a href="./concept/InformalSubmodule.md">Неформальний підмодуль</a></summary>
-  Група файлів, що не розповсюджується із <code>will-файлом</code>. Для такого підмодуля можливо створити <code>will-файл</code> та експортувати його самостійно.
+  Група файлів, що не розповсюджується із <code>will-файлом</code>. Для такого підмодуля можливо створити <code>will-файл</code> та експортувати його самостійно
 </details>
 <details>
   <summary><a href="./concept/Command.md#command">Команда</a></summary>
-  Рядок що містить фраза для позначення наміру розробинка і дії, котрі будуть виконані утилітою по її введенні. Вводиться в інтерфейсь командного рядка розробником.
+  Рядок що містить фразу для позначення наміру розробника і дії, котрі будуть виконані утилітою по її введенні. Вводиться в інтерфейс командного рядка розробником
 </details>
 <details>
   <summary><a href="./concept/Command.md#will-phrase">Фраза</a></summary>
-  Слово або декілька слів, відокремлених крапкою, позначає команду, яку має виконати утиліта.
+  Слово або декілька слів, відокремлених крапкою, позначає команду, яку має виконати утиліта
 </details>
 <details>
   <summary><a href="./concept/Selectors.md#selector">Селектор</a></summary>
@@ -120,11 +120,11 @@
 </details>
 <details>
   <summary><a href="./concept/Inheritability.md">Наслідування ресурсами</a></summary>
-  Принцип опису модуля, згідно якого ресурс <code>will-файла</code> здатний використовувати (наслідувати) значення полів інших ресурсів того ж типу.
+  Принцип опису модуля, згідно якого ресурс <code>will-файла</code> здатний використовувати (наслідувати) значення полів інших ресурсів того ж типу
 </details>
 <details>
   <summary><a href="./concept/FileFilter.md">Файловий фільтр</a></summary>
-  Спосіб опису критеріїв відобору необхідних файлів для виконання якоїсь операції над групою файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>.
+  Спосіб опису критеріїв відобору необхідних файлів для виконання деякої операції над групою файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>
 </details>
 
 ## <a name="tutorials"></a> Туторіали
@@ -139,19 +139,19 @@
 </details>
 <details>
   <summary><a href="./tutorial/CLI.md">Інтерфейс командного рядка</a></summary>
-  Як користуватися інтерфейсом командного рядка утиліти <code>willbe</code>. Застосування команд <code>.help</code> та <code>.list</code>.
+  Як користуватися інтерфейсом командного рядка утиліти <code>willbe</code>. Застосування команд <code>.help</code> та <code>.list</code>
 </details>
 <details>
   <summary><a href="./tutorial/HelloWorld.md">Модуль "Hello, World!"</a></summary>
   Створення модуля "Hello, World!". Завантаження віддаленого підмодуля.
 </details>
 <details>
-  <summary><a href="./tutorial/SubmodulesAdministration.md">Команди оновлення, апгрейду та очищення підмодулів</a></summary>
-  Команди оновлення підмодулів завантаженням файлів, апгрейду підмодулів автоматизовним перезаписом <code>will-файлу</code> та команда очищення підмодулів видаленням завантажених файлів.
+  <summary><a href="./tutorial/SubmodulesCommands.md">Команди оновлення, апгрейду та очищення підмодулів</a></summary>
+  Команди оновлення підмодулів, апгрейду підмодулів автоматизовним перезаписом <code>will-файла</code> та очищення підмодулів видаленням завантажених файлів.
 </details>
 <details>
   <summary><a href="./tutorial/Build.md">Побудова модуля командою <code>.build</code></a></summary>
-  Запуск окремих збірок модуля для його побудови.
+  Запуск окремих збірок модуля для його побудови
 </details>
 <details>
   <summary><a href="./tutorial/PredefinedSteps.md">Вбудовані кроки</a></summary>
@@ -179,23 +179,23 @@
 </details>
 <details>
   <summary><a href="./tutorial/HowToUseAsserts.md">Як користуватись ассертами</a></summary>
-  Як ассерти допомогають зменшити кількість помилок при розробці.
+  Як ассерти допомогають зменшити кількість помилок при розробці
 </details>
 <details>
   <summary><a href="./tutorial/MinimizationOfWillFile.md">Мінімізація <code>will-файла</code></a></summary>
-  Як мінімізувати <code>will-файл</code> за допомогою розгортання критеріонами із множинними значеннями.
+  Як мінімізувати <code>will-файл</code> за допомогою розгортання критеріонами із множинними значеннями
 </details>
 <details>
   <summary><a href="./tutorial/SplitWillFile.md">Розділені <code>will-файли</code></a></summary>
-  Як створити та використовувати модуль із розділеними <code>will-файлами</code>.
+  Як створити та використовувати модуль із розділеними <code>will-файлами</code>
 </details>
 <details>
-  <summary><a href="./tutorial/NamedWillFile.md">Команда <code>.with</code> та іменований <code>will-файл</code>. </a></summary>
+  <summary><a href="./tutorial/NamedWillFile.md">Команда <code>.with</code> та іменований <code>will-файл</code></a></summary>
   Як використовувати команду <code>.with</code>? Що таке іменований <code>will-файл</code>?
 </details>
 <details>
   <summary><a href="./tutorial/UsingEachCommand.md">Як користуватись командою <code>.each</code></a></summary>
-  Команда <code>.each</code> для виконання одної дії для багатьох модулів чи підмодулів.
+  Команда <code>.each</code> для виконання одної дії для багатьох модулів чи підмодулів
 </details>
 <details>
   <summary><a href="./tutorial/UsingOfJSInWillbe.md">Використання <code>JavaScript</code> файлів утилітою <code>willbe</code></a></summary>
@@ -203,31 +203,31 @@
 </details>
 <details>
   <summary><a href="./tutorial/UsingSetCommand.md">Команда <code>.set</code></a></summary>
-  Як корстуватись командою <code>.set</code> для зміни станів утиліти, наприклад для зміни рівня вербальності.
+  Як користуватись командою <code>.set</code> для зміни станів утиліти, наприклад, для зміни рівня вербальності
 </details>
 <details>
-  <summary><a href="./tutorial/HowToUseComplexSelector.md">Складні селектори</a></summary>
-  Використання складних селекторів для відбору ресурсів із підмодулів.
+  <summary><a href="./tutorial/ComplexSelector.md">Складні селектори</a></summary>
+  Використання складних селекторів для відбору ресурсів із підмодулів
 </details>
 <details>
   <summary><a href="./tutorial/HowToList.md">Перелік ресурсів застосовуючи фільтри та глоби</a></summary>
   Як побудувати запит до утиліти та отримати перелік ресурсів застосовуючи фільтри та глоби.
 </details>
 <details>
-  <summary><a href="./tutorial/SubmodulesVersionControl.md">Командами <code>.submodules.fixate</code> і <code>.submodules.upgrade</code></a></summary>
+  <summary><a href="./tutorial/SubmodulesVersionControl.md">Команди <code>.submodules.fixate</code> і <code>.submodules.upgrade</code></a></summary>
   Перевірка, оновлення і фіксування версій підмодулів в <code>will-файлі</code>
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorUsing.md">Копіювання файлів за допомогою рефлектора</a></summary>
-  Копіювання файлів за допомогою рефлекта, поле <code>recursive</code> рефлектора.
+  Копіювання файлів за допомогою рефлектора, поле <code>recursive</code> рефлектора
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorFilters.md">Фільтри рефлектора</a></summary>
-  Використання фільтрів рефлектора для відбору файлів для копіювання.
+  Використання фільтрів рефлектора для відбору файлів для копіювання
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorTimeFilters.md">Часові фільтри рефлектора</a></summary>
-  Як користуватись фільтрами відбору файлів по часу.
+  Як користуватись фільтрами відбору файлів по часу
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorFSControl.md">Формування шляхів в рефлекторі. Управління файловими операціями</a></summary>
@@ -243,7 +243,7 @@
 </details>
 <details>
   <summary><a href="./tutorial/ViewStep.md">Вбудований крок <code>predefined.view</code></a></summary>
-  Використання вбудованого кроку <code>predefined.view</code> для перегляду файлів.
+  Використання вбудованого кроку <code>predefined.view</code> для перегляду файлів
 </details>
 <details>
   <summary><a href="./tutorial/TranspileStep.md">Транспіляція</a></summary>
@@ -263,5 +263,5 @@
 </details>
 <details>
   <summary><a href="./tutorial/CleanCommandUsing.md">Команда очистки <code>.clean</code></a></summary>
-  Використання команди для очистки <code>.clean</code> для того щоб видалити згенеровані та тимчасові файли.
+  Використання команди для очистки <code>.clean</code> для того щоб видалити згенеровані та тимчасові файли
 </details>

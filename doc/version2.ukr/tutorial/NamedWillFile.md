@@ -1,12 +1,30 @@
-# Іменовані `will-файли`. Команда `.with`  
+# Команда `.with` та іменований `will-файл`
 
 Як використовувати команду `.with`? Що таке іменований `will-файл`?
 
-В туторіалі [Розділені will-файли (Split will-files)](SplitWillFile.md) зазначено, що `will`-файл можна розділити на декілька окремих файлів, але програма зчитує їх дані як в одному. При одночасній реалізації декількох модулів ці файли стануть менш зручними в використанні тому, якщо виникає потреба в розташуванні декількох модульних систем в одній директорії зручно застосувати іменовані  `will`-файли.  
+[Розділені `will-файли`](SplitWillFile.md) складаються з двох `will-файлів` і описують один модуль, а у розробника може виникнути потреба помістити `will-файли` декількох модулів в одній директорії - для цього використовуються іменовані  `will-файли`.  
+Іменований `will-файл` - вид `will-файла`, що має не стандартне ім'я файлу, тобто, починається з буквенних або числових символів. В директорії одночасно може знаходитись один неіменований `will-файл` та необмежена кількість іменованих.   
+Для того, щоб `willbe` виконав операцію з іменованим `will-файлом` використовується команда `.with`. Повний синтаксис цієї команди `will .with [file_name] [command] [argument]`, де `[file_name]` - назва іменованого файла; `[command]` - комнада для іменованого файла; `[argument]` - аргумент команди, якщо він необхідний.   
 
-Іменований `will-файл` - вид конфігураційного файлу, назва якого починається з буквенних або цифрових символів (імені). Кількість іменованих `will-файлів` в одній директорії необмежена саме тому, `willbe` потребує вводу назви файла для виконання команди.  
-Для того, щоб `willbe` обробив операцію з іменованим файлом потрібно використовувати команду `.with`. Повний синтаксис цієї команди `will .with [file_name] [command] [argument]`, де `[file_name]` - назва іменованого файла; `[command]` - комнада для іменованого файла; `[argument]` - аргумент команди, якщо він необхідний.   
-Створимо в новій директорії один іменований для завантаження підмодулів (`submodule.will.yml`) та один неіменований файл (`.will.yml`) для видалення завантаженого підмодуля.  
+### Використання іменованих `will-файлів`
+Створіть директорію `named` з наступною конфігурацією:  
+
+<details>
+  <summary><u>Структура файлів</u></summary>
+
+```
+named 
+  ├── proto
+  │     └── file.txt
+  ├── submodule.will.yml
+  ├── export.will.yml
+  └── .will.yml       
+
+```
+
+</details>
+
+Скопіюйте код в кожен з файлів:  
 
 <details>
     <summary><u>Код файла <code>.will.yml</code></u></summary>
@@ -14,124 +32,194 @@
 ```yaml
 about :
 
-  name : deleteSubmodule
+  name : deleteOut
   description : "To test named will-files"
 
 path :
 
   fileToDelete :
-      path : './.module/PathFundamentals'
+    path : 'out'
 
 step  :
 
   delete.submodule :
-      inherit : predefined.delete
-      filePath : path::fileToDelete*
+    inherit : predefined.delete
+    filePath : path::fileToDelete
 
 
 build :
 
   delete.submodule :
-      criterion :
-          default : 1
-      steps :
-          - delete.*
+    criterion :
+      default : 1
+    steps :
+      - delete.*
 
 ```
 
 </details>
-
 <details>
-    <summary><u>Лістинг `submodule.will.yml`</u></summary>
+    <summary><u>Код <code>submodule.will.yml</code></u></summary>
 
 ```yaml
 about :
 
-    name : namedWillFile
-    description : "To test named will-files"
-    version : 0.0.1
+  name : submodules
+  description : "To test named will-files"
+  version : 0.0.1
 
 submodule :
 
-    PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
 
-build :
+```
 
-    download :        
-      steps :
-        - submodules.download
-      criterion :
-        default : 1
+</details>
+<details>
+    <summary><u>Код <code>export.will.yml</code></u></summary>
 
-    nodefault :     
-      steps :
-        - submodules.download
+```yaml
+about :
+
+  name : export
+  description : "To test named will-files"
+  version : 0.0.1
+
+path : 
+
+  out : 'out'
+  proto : 'proto'
+  
+step : 
+
+  export : 
+    inherit : predefined.export
+    export : path::proto
+  
+build : 
+
+  export : 
+    criterion : 
+      export : 1
+    steps :
+      - step::export
+      
+```
+
+</details>
+
+Завантажте підмодулі використовуючи файл `submodule.will.yml`:  
+
+<details>
+  <summary><u>Вивід команди <code>will .with submodule .submodules.download</code></u></summary>
+
+```
+[user@user ~]$ will .with submodule .submodules.download
+...
+ . Read : /path_to_file/submodule.will.yml
+ ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even .clean it before downloading
+ . Read 1 will-files in 1.152s 
+
+   . Read : /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+   + module::PathFundamentals version master was downloaded in 4.748s
+ + 1/1 submodule(s) of module::submodules were downloaded in 4.756s
+
+```
+
+</details>
+<details>
+  <summary><u>Структура файлів після завантаження підмодулів</u></summary>
+
+```
+named 
+  ├── .module
+  │     └── PathFundamentals
+  ├── proto
+  │     └── file.txt
+  ├── submodule.will.yml
+  ├── export.will.yml
+  └── .will.yml       
 
 ```
 
 </details>
 
-Після виконання вказаних дій директорія повинна мати вигляд:  
+Виконайте експорт з допомогою файла `export.will.yml`:  
+
+<details>
+  <summary><u>Вивід команди <code>will .with export.will.yml .export export</code></u></summary>
 
 ```
-.
-├── submodule.will.yml
-├── .will.yml
-
-```
-
-Завантажимо підмодулі за дефолтною збіркою (`will .with submodule .build`):
-
-```
-[user@user ~]$ will .with submodule .build
+[user@user ~]$ will .with export.will.yml .export export
 ...
-  Building download
-     . Read : /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
-     + module::PathFundamentals was downloaded in 3.710s
-     + 1/1 submodule(s) of module::namedWillFile were downloaded in 3.720s
-   Built download in 3.765s
+  Exporting module::export / build::export
+   + Write out archive /path_to_file/ : out/export.out.tgs <- proto
+   + Write out will-file /path_to_file/out/export.out.will.yml
+   + Exported export with 2 files in 2.762s
+  Exported module::export / build::export in 2.819s
 
 ```
 
-Команда `.with` працює і з неіменованими файлами. Для цього треба ввести повну назву неіменованого файла `will .with .will.yml .build` або замість імені вказати поточну директорію `.` - `will .with . .build`:  
+</details>
+<details>
+  <summary><u>Структура файлів після експорту модуля</u></summary>
 
 ```
-[user@user ~]$ will .with . .build
+named 
+  ├── .module
+  │     └── PathFundamentals
+  ├── out
+  │    ├── export.out.tgs
+  │    └── export.out.will.yml
+  ├── proto
+  │     └── file.txt
+  ├── submodule.will.yml
+  ├── export.will.yml
+  └── .will.yml       
+
+```
+
+</details>
+
+Видаліть директорію `out` запустивши збірку побудови за замовчуванням з неіменованого `will-файла`:  
+
+<details>
+  <summary><u>Вивід команди <code>will .build</code></u></summary>
+
+```
+[user@user ~]$ will .build
 ...
-  Building delete.submodule
-   - filesDelete 92 files at /path_to_file/.module/PathFundamentals in 0.361s
-  Built delete.submodule in 0.449s
-
-```
-Проте, робота зі скороченою формою запису більш комфортна - `will .build`.  
-Виконаємо завантаження підмодулів командою з аргументом:
-
-```
-[user@user ~]$ will .with submodule .build nodefault
-...
-  Building download
-     . Read : /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
-     + module::PathFundamentals was downloaded in 3.710s
-     + 1/1 submodule(s) of module::namedWillFile were downloaded in 3.840s
-    Built nodefault in 3.885s
+  Building module::deleteOut / build::delete.submodule
+   - filesDelete 3 files at /path_to_file/out in 0.034s
+  Built module::deleteOut / build::delete.submodule in 0.159s
 
 ```
 
-Ще одна особливість використання утилітою `will-файлів` полягає в тому, що `willbe` зчитує закінчення `.will.[розширення]` як повне розширення, що слугує захистом від випадкових дій зі сторонніми файлами. Скажімо, якщо ви перейменуєте `submodule.will.yml` в `submodule.yml`, то запуск `will .with submodule .build` не знайде потрібний файл:
+</details>
+<details>
+  <summary><u>Структура файлів після видалення <code>out</code>-директорії</u></summary>
 
 ```
-[user@user ~]$ will .with submodule .build
-...
-Found no will-file at "/path_to_file/submodule"           
-Unhandled error caught by Consequence
-... (error message)
+named 
+  ├── .module
+  │     └── PathFundamentals
+  ├── proto
+  │     └── file.txt
+  ├── submodule.will.yml
+  ├── export.will.yml
+  └── .will.yml       
 
 ```
 
-Щоб виправити помилку вказуйте повну назву файла `submodule.yml` або використовуйте ґлоби.  
-_Порада. Якщо потрібно вказати унікальну назву файла або єдиний аргумент команди в консолі операційної системи, використовуйте ґлоби. Наприклад, фраза яка виконає збірку `nodefault`: `will .with s* .build n*`._
+</details>
 
-- Іменовані `will`-файли - удосконалений інструмент побудови модульної системи, що здатен керувати окремими модулями в системі будь-якої складності.
+Робота з іменованими `will-файлами` відрізняється від неіменованих використанням команди `.with`, її аргументом може бути як повна назва файла, так і назва до розширення `.will.yml`.  
+Також, команда `.with` працює з неіменованими файлами. Для цього треба ввести повну назву неіменованого файла `will .with .will.yml .build` або замість імені вказати поточну директорію `.` - `will .with . .build`, але скорочена форма запису простіша - `will .build`.  
+
+### Підсумок  
+- Іменовані `will-файли` - удосконалений інструмент побудови модульної системи.  
+- В одній директорії може бути поміщено необмежена кількість іменованих `will-файлів`.
+- Для роботи з іменованими `will-файлами` використовується команда `.with`.  
 
 [Наступний туторіал](UsingEachCommand.md)  
 [Повернутись до змісту](../README.md#tutorials)

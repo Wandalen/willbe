@@ -1,0 +1,20 @@
+path :
+
+  out : 'out'
+  fileToExport : './node_modules/*'
+
+step  :
+
+  export.dependencies :
+    inherit : predefined.export
+    export : path::fileToExport
+    tar : 0
+
+build :
+
+  export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - export.dependencies

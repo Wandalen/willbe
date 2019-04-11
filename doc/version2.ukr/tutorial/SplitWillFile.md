@@ -1,28 +1,41 @@
 # Розділені `will-файли`
 
-Як створити та використовувати модуль із розділеними <code>will-файлами</code>.
+Як створити та використовувати модуль із розділеними `will-файлами`
 
 ### <a name="split-file-structure"></a> Поняття розділених `will-файлів`
 Розділення етапів роботи - практика, яка дозволяє підвищити ефективність і якість виконання завдань. Побудова модуля і його експорт, також різні етапи роботи тому, утиліта `willbe` дозволяє працювати над ними окремо - з допомогою розділених `will-файлів`.  
-Розділені `will-файли` - підхід до створення модульної системи, що основується на розділенні функцій експорту і імпорту модуля між двома взаємозалежними `will-файлами`. Таке розділення дозволяє абстрагуватись від задачі експорту і працювати над побудовою модуля, а після побудови створити експорт. Крім того, розділення функцій зменшує об'єм `will-файла` та полегшує його зчитування.  
+Розділені `will-файли` - підхід до створення модульної системи, що основується на розділенні функцій експорту і імпорту модуля між двома взаємозалежними `will-файлами`. Таке розділення дозволяє абстрагуватись від задачі експорту і працювати над побудовою модуля, а після побудови створити експорт. Крім того, розділення функцій зменшує об'єм окремого `will-файла` та полегшує його зчитування.  
 
 ### <a name=""></a> Побудова модуля з використанням розділених `will-файлів`
-Завдання. На основі існуючого `will-файла` побудувати експорт модуля.  
-Перший спосіб розв'язання - відредагувати вихідний `will-файл` і побудувати експорт модуля. Другий - побудувати експорт на основі розділених `will-файлів`.  
-Другий спосіб не змінює вихідний `will-файл`. Його реалізація складається з наступних етапів:   
-- перейменування вихіного `will-файла` в розділений `will-файла` імпорту (`.will.yml`в `.im.will.yml`);  
-- створення розділеного `will-файла` експорту (`.ex.will.yml`).  
+Якщо перед розробником стоїть задача на основі існуючого `will-файла` побудувати експорт модуля, то перший спосіб розв'язання - відредагувати вихідний `will-файл` і побудувати експорт модуля. Другий - побудувати експорт на основі розділених `will-файлів`.  
+Другий спосіб не потребує корекції вихідного `will-файла`, а його реалізація складається з наступних етапів:   
+\- перейменування вихіного `will-файла` в `will-файла` імпорту (`.will.yml` в `.im.will.yml`);  
+\- створення розділеного `will-файла` експорту (`.ex.will.yml`).  
+Приставки `im` та `ex` застосовуються для створення як неіменованих, так іменованих розділених `will-файлів`. Якщо використовуються іменовані `will-файли`, то, відповідно, вони позначаються як `name.im.will.yml` i `name.ex.will.yml`.
 
-### <a name="import-configuration"></a> Конфігурація імпорту  
-В туторіалі ["Збірка модуля за замовчуванням"](DefaultCriterionInWillFile.md) встановлювались залежності NodeJS з використанням командного рядку операційної системи. Використайте його, попередньо перейменувавши його в `.im.will.yml`та видаливши зайві секції. Файл `package.json` копіюємо без змін.  
+### <a name="import-configuration"></a> Конфігурація   
+
+Побудуйте наступну конфігурацію файлів в директорії `split`: 
 
 <details>
-  <summary><u><code>.im.will.yml</code>,<code>package.json</code> і структура каталогу</u></summary>
+  <summary><u>Структура модуля</u></summary>
+    
+```
+split
+  ├── package.json
+  ├── .ex.will.yml
+  └── .im.will.yml 
 
-<p><code>.im.will.yml</code></p>
+```
+
+</details>
+
+Внесіть в файли `.im.will.yml` i `package.json` код:  
+
+<details>
+  <summary><u>Код файла <code>.im.will.yml</code></u></summary>
 
 ```yaml
-
 about :
 
   name : splited-config
@@ -45,7 +58,9 @@ build :
 
 ```
 
-<p><code>package.json</code></p>
+</details>
+<details>
+<summary><u>Код файла <code>package.json</code></u></summary>
 
 ``` json
 {
@@ -57,23 +72,14 @@ build :
 
 ```
 
-<p>Структура модуля</p>
-
-```
-defaultBuild
-     ├── package.json
-     └── .im.will.yml
-
-```
-
 </details>
 
-### <a name="export-configuration"></a> Конфігурація експорту  
-Ресурси секції визначені в одному з розділених `will-файлів` доступні в другому тому, для файла `.ex.will` не потрібно дублювати секцію `about` з `im.will`, а лише додати власні ресурси.  
-Створіть конфігураційний файл експорту модуля `.ex.will.yml` в директорії модуля:
+Збірка `install` в файлі `.im.will.yml` виконує завантаження залежностей NodeJS в поточну директорію.  
+Особливість розділених `will-файлів` в тому, що ресурси визначені в одному з розділених `will-файлів` доступні в другому. Тому, для файла `.ex.will` не потрібно дублювати секцію `about` з `im.will`, а лише додати власні ресурси.  
+Скопіюйте код в файл `.ex.will.yml`:
 
 <details>
-  <summary><u><code>.ex.will.yml</code></u></summary>
+  <summary><u>Код файла <code>.ex.will.yml</code></u></summary>
 
 ```yaml
 path :
@@ -83,120 +89,110 @@ path :
 
 step  :
 
-  export.single :
-      inherit : predefined.export
-      tar : 0
-      export : path::fileToExport
+  export.dependencies :
+    inherit : predefined.export
+    export : path::fileToExport
+    tar : 0
 
 build :
 
   export :
-      criterion :
-          default : 1
-          export : 1
-      steps :
-          - export.single
-
-```
-
-<p>Структура модуля</p>
-
-```
-defaultBuild
-     ├── package.json
-     ├── .ex.will.yml
-     └── .im.will.yml
-
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - export.dependencies
+          
 ```
 
 </details>
 
+Збірка `export` виконує експорт файлів з директорії `node_modules`.
+
 ### <a name="executions"></a> Побудова модуля  
-
-> Команди виконуються в кореневій директорії модуля
-
-Запустіть команду побудови модуля `.build install`:
+Запустіть команду побудови модуля `.build`:
 
 <details>
-  <summary><u>Натисніть, щоб відкрити!</u></summary>
+  <summary><u>Вивід команди <code>will .build</code></u></summary>
 
 ```
-[user@user ~]$ will .build install
+[user@user ~]$ will .build 
 ...
 . Read 2 will-files in 0.123s
 ...
-Building install
- > npm install
+  Building module::splited-config / build::install
+ > npm install 
 ...
 added 48 packages from 36 contributors and audited 121 packages in 8.733s
 found 0 vulnerabilities
 
-  Built install in 11.712s
+  Built module::splited-config / build::install in 10.733s
 
 ```
 
-<p>Структура після завантаження</p>
+</details>
+<details>
+  <summary><u>Структура модуля після побудови</u></summary>
 
 ```
-.
-├── node_modules
-│         ├── ...
-│         ├── ...
-│
-├── package.json
-├── package-lock.json
-├── .ex.will.yml
-└── .im.will.yml
+split
+  ├── node_modules
+  │         ├── ...
+  │         ├── ...
+  │
+  ├── package.json
+  ├── package-lock.json
+  ├── .ex.will.yml
+  └── .im.will.yml
 
 ```
 
 </details>
 
 
-`Willbe` прочитав два файла в директорії та завантажив 48 пакетів залежностей за збіркою побудови модуля.  
-Введіть команду `will .export`:  
+`Willbe` завантажив залежності, еспортуйте модуль виконавши команду `will .export`:  
 
 <details>
-  <summary><u>Натисніть, щоб відкрити!</u></summary>
+  <summary><u>Вивід команди <code>will .build</code></u></summary>
 
 ```
 [user@user ~]$ will .export
 ...
  . Read 2 will-files in 0.131s
 
-  Exporting export
+  Exporting module::splited-config / build::export
    + Write out will-file /path_to_files/out/splited-config.out.will.yml
    + Exported export with 48 files in 2.108s
-  Exported export in 2.155s
+  Exported module::splited-config / build::export in 2.155s
 
 ```
 
-<p>Структура після завантаження</p>
+</details>
+<details>
+  <summary><u>Структура модуля після експорту</u></summary>
 
 ```
-.
-├── node_modules
-│         ├── ...
-│         ├── ...
-│
-├── out
-│    ├── splited-config.out.will.yml
-│
-├── package.json
-├── package-lock.json
-├── .ex.will.yml
-└── .im.will.yml
+split
+  ├── node_modules
+  │         ├── ...
+  │         ├── ...
+  ├── out
+  │    └── splited-config.out.will.yml
+  │ 
+  ├── package.json
+  ├── package-lock.json
+  ├── .ex.will.yml
+  └── .im.will.yml
 
 ```
 
 </details>
 
-
-`Willbe` експортував 48 включень директорії `node_modules` в `splited-config.out.will.yml`. При цьому файл `.im.will.yml` був прочитаний, але не виконувався.  
+Утиліта експортувала конфігурацію модуля з 48-а включеннями директорії `node_modules` в файл `splited-config.out.will.yml`.    
 
 ### Підсумок  
 - Розділені `will-файли` дозволяють розділити етапи побудови і експорту модуля.  
 - Створення розділеної конфігурації не потребує зміни вихідних `will-файлів`.
-- `willbe` використовує ресурси обох розділених `will-файлів`.
-
+- `Willbe` використовує ресурси обох розділених `will-файлів`.
+ 
 [Повернутись до змісту](../README.md#tutorials)
