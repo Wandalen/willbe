@@ -35,8 +35,12 @@
   Секція містить описову інформація про модуль
 </details>
 <details>
+  <summary><a href="./concept/Path.section.md">Шлях</a></summary>
+  Ресурс секції <code>path</code>, який вказує на розміщення елементів модуля і використовується в роутингу для інших ресурсів.
+</details>
+<details>
   <summary><a href="./concept/Path.section.md">Секція <code>path</code></a></summary>
-  Секція представляє карту шляхів модуля для швидкого орієнтування в його файловій структурі
+  Секція представляє карту шляхів модуля для швидкого орієнтування в його файловій структурі.
 </details>
 <details>
   <summary><a href="./concept/Submodule.section.md">Секція <code>submodule</code></a></summary>
