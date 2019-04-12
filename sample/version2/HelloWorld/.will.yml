@@ -1,0 +1,11 @@
+about :
+
+    name : helloWorld
+    description : "First module like 'Hello, World!' application"
+    version : 0.0.1
+    keywords :
+        - willbe
+
+submodule :
+
+    Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
