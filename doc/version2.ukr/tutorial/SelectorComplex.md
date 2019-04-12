@@ -10,7 +10,7 @@
 
 ```
 .
-├── Debug
+├── file
 │     ├── testing
 │     │      └── fileToExport
 │     └── temp        └── test.will.yml  
@@ -40,8 +40,7 @@ path :
 
   in : '.'
   out : 'out'
-  export.file :
-    path : './D*/t??????/[a-f]*/test.*'
+  export.file : './f*/t??????/[a-f]*/test.*'
 
 step :
 
@@ -55,13 +54,16 @@ step :
 
 build :
 
-  export.debug :
+  export.file :
     criterion :
+      export : 1
       default : 1
     steps :
       - step::exportFile
 
-  export.release :
+  export.submodule :
+    criterion :
+      export : 1
     steps :
       - submodules.download
       - step::exportSubmodule
@@ -70,38 +72,69 @@ build :
 
 </details>
 
-В прикладі використано ще один ґлоб - квадратні дужки `[]`, в які поміщають діапазон значень для вибірки. В файлі `[a-f]*` означає, що файл чи директорія повинна починатись на літеру від `а` до `f` та мати будь-яке продовження.   
+В шляху `export.file` використано ще один ґлоб - квадратні дужки `[]`- позначає діапазон значень для вибірки. В файлі `[a-f]*` означає, що файл чи директорія повинна починатись на літеру від `а` до `f` та мати будь-яке продовження.   
 Запустіть збірку експорту за замовчуванням:  
 
+<details>
+  <summary><u>Вивід команди <code>will .export</code></u></summary>
+    
+```
+[user@user ~]$ will .export
+...
+Exporting module::complexSelector / build::export.file
+   + Write out will-file /path_to_file/out/complexSelector.out.will.yml
+   + Exported export.debug with 1 files in 1.984s
+  Exported module::complexSelector / build::export.file in 2.059s
+
+```
+
+</details>
+<details>
+  <summary><u>Структура модуля після експорту</u></summary>
+
+```
+.
+├── Debug
+│     ├── testing
+│     │      └── fileToExport
+│     └── temp        └── test.will.yml 
+├── out
+│     └── complexSelector.out.will.yml
+│
+└── .will.yml
+
+```
+
+</details>
+
+Експортовано один файл, помилок немає. В збірці `export.submodule` крок `exportSubmodule` використовує складний селектор в якому здійснюється доступ до `out.will`-файла підмодуля в якому вибираються ресурси секції `exported`. Запустіть експорт збірки `export.submodule`:
+
+<details>
+  <summary><u>Вивід команди <code>will .export export.submodule</code></u></summary>
 
 ```
 [user@user ~]$ will .export
 ...
-Exporting export.debug
+  Exporting module::complexSelector / build::export.submodule
+     . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
+     + module::Tools version master was downloaded in 13.710s
+   + 1/1 submodule(s) of module::complexSelector were downloaded in 13.718s
+   . Read : /path_to_file/out/complexSelector.out.will.yml
+   . Read 1 will-files in 0.231s  
+  
    + Write out will-file /path_to_file/out/complexSelector.out.will.yml
-   + Exported export.debug with 1 files in 1.716s
-  Exported export.debug in 1.771s
+   + Exported export.submodule with 261 files in 3.741s
+  Exported module::complexSelector / build::export.submodule in 3.895s
 
 ```
 
-Експортовано один файл, помилок немає. Тепер запустимо другу збірку:
+</details>
 
-```
-[user@user ~]$ will .export
-...
-  Exporting export.release
-     . Read : /path_to_file/out/complexSelector.out.will.yml
-   . Read 1 will-files in 0.215s
-   + Write out will-file /path_to_file/out/complexSelector.out.will.yml
-   + Exported export.release with 2 files in 2.380s
-  Exported export.release in 2.440s
+Експортовано файли підмодуля `Tools`.  
 
-```
+### Підсумок  
+- Складний селектор записується як шлях до ресурса.
+- Складні селектори дозволяють створити вибірку даних в будь-якому місці операційної системи.  
+- Складні селектори використовують ресурси `will-файлів` підмодулів.  
 
-Експортовано дві директорії - `setting` i `testing`.  
-Вибірка шляхів - не єдиний спосіб використання складних селекторів, дізнайтесь більше в туторіалі про рефлектори.
-
-- Складні селектори дозволяють створити вибірку даних в будь-якому місці операційної системи.
-
-[Наступний туторіал]()  
 [Повернутись до змісту](../README.md#tutorials)
