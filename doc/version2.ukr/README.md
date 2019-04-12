@@ -215,7 +215,7 @@
 </details>
 <details>
   <summary><a href="./tutorial/StepJS.md">Використання <code>JavaScript</code> файлів утилітою <code>willbe</code></a></summary>
-  Як використовувати <code>JavaScript</code> файлів в утиліті <code>willbe</code> для виконання складних сценаріїв побудови.
+  Як використовувати <code>JavaScript</code> файли в утиліті <code>willbe</code> для виконання складних сценаріїв побудови.
 </details>
 <details>
   <summary><a href="./tutorial/CommandSet.md">Команда <code>.set</code></a></summary>

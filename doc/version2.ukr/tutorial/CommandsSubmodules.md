@@ -96,7 +96,7 @@ submodulesCommands
 В підмодуль `Tools` внесене указання комміта. Застосуйте команду `.submodules.fixate` без аргументів:
 
 <details>
-  <summary><u>Вивід фрази <code>will .submodules.fixate</code></u></summary>
+  <summary><u>Вивід команди <code>will .submodules.fixate</code></u></summary>
 
 ```
 [user@user ~]$ will .submodules.fixate
