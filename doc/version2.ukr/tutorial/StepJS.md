@@ -37,15 +37,15 @@ path :
 step  :
 
   run.js :
-      js : path::js.*
+    js : path::js.*
 
 build :
 
   run.js :
-      criterion :
-          default : 1
-      steps :
-          - run.*
+    criterion :
+      default : 1
+    steps :
+      - run.*
 
 ```
 
@@ -55,7 +55,7 @@ build :
 
 ```js
 function hello(){
-    console.log('Hello, world!')
+  console.log('Hello, world!');
 }
 
 module.exports = hello;
