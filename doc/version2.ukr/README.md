@@ -11,11 +11,11 @@
   Конфігураційний файл для опису та збірки модуля. Кожен формальний модуль має такий файл.
 </details>
 <details>
-  <summary><a href="./concept/NamedAndSplitWillFile.md">Іменований <code>will-файл</code></a></summary>
+  <summary><a href="./concept/WillFileNamedAndSplit.md">Іменований <code>will-файл</code></a></summary>
   Вид <code>will-файла</code>, що має не стандартне ім'я файлу. Дозволяє мати більше одного модуля із різними іменами файлів в одній дерикторії.
 </details>
 <details>
-  <summary><a href="./concept/NamedAndSplitWillFile.md">Спліт <code>will-файл</code></a></summary>
+  <summary><a href="./concept/WillFileNamedAndSplit.md">Спліт <code>will-файл</code></a></summary>
   Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля.
 </details>
 <details>
@@ -47,7 +47,7 @@
   Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що описують даний модуль.
 </details>
 <details>
-  <summary><a href="./concept/About.section.md">Секція <code>about</code></a></summary>
+  <summary><a href="./concept/SectionAbout.md">Секція <code>about</code></a></summary>
   Секція містить описову інформація про модуль.
 </details>
 <details>
@@ -71,7 +71,7 @@
   Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля.
 </details>
 <details>
-  <summary><a href="./concept/Exported.section.md">Секція <code>exported</code></a></summary>
+  <summary><a href="./concept/SectionExported.md">Секція <code>exported</code></a></summary>
   Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.
 </details>
 <details>
@@ -91,15 +91,15 @@
   Модуль, який включає в себе інші модулі ( підмодулі ).
 </details>
 <details>
-  <summary><a href="./concept/LocalAndRemoteSubmodules.md#local-submodule">Локальний підмодуль</a></summary>
+  <summary><a href="./concept/SubmodulesLocalAndRemote.md#local-submodule">Локальний підмодуль</a></summary>
   Підмодуль, який розташовується на машині користувача.
 </details>
 <details>
-  <summary><a href="./concept/LocalAndRemoteSubmodules.md#remote-submodule">Віддалений підмодуль</a></summary>
+  <summary><a href="./concept/SubmodulesLocalAndRemote.md#remote-submodule">Віддалений підмодуль</a></summary>
   Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину.
 </details>
 <details>
-  <summary><a href="./concept/CurrentModule.md">Поточний модуль</a></summary>
+  <summary><a href="./concept/ModuleCurrent.md">Поточний модуль</a></summary>
   Модуль відносно якого виконуються операції. За замовчуванням цей модуль завантажується із файла <code>.will.yml</code> поточної дерикторії.
 </details>
 <details>
@@ -107,7 +107,7 @@
   Особливий вид збірки необхідний для використання даного модуля іншими розробниками та модулями. Результатом експортування модуля є аретфакти, зокерма <code>out-will-file</code>.
 </details>
 <details>
-  <summary><a href="./concept/InformalSubmodule.md">Неформальний підмодуль</a></summary>
+  <summary><a href="./concept/SubmoduleInformal.md">Неформальний підмодуль</a></summary>
   Група файлів, що не розповсюджується із <code>will-файлом</code>. Для такого підмодуля можливо створити <code>will-файл</code> та експортувати його самостійно.
 </details>
 <details>
@@ -139,7 +139,7 @@
   Принцип опису модуля, згідно якого ресурс <code>will-файла</code> здатний використовувати (наслідувати) значення полів інших ресурсів того ж типу.
 </details>
 <details>
-  <summary><a href="./concept/FileFilter.md">Файловий фільтр</a></summary>
+  <summary><a href="./concept/ReflectorFileFilter.md">Файловий фільтр</a></summary>
   Спосіб опису критеріїв відобору необхідних файлів для виконання деякої операції над групою файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>.
 </details>
 
@@ -170,7 +170,7 @@
   Запуск окремих збірок модуля для його побудови
 </details>
 <details>
-  <summary><a href="./tutorial/PredefinedSteps.md">Вбудовані кроки</a></summary>
+  <summary><a href="./tutorial/StepsPredefined.md">Вбудовані кроки</a></summary>
   Як користуватись вбудованими кроками для роботи з віддаленими підмодулями
 </details>
 <details>
@@ -246,7 +246,7 @@
   В туторіалі показано як формуються шляхи рефлекторів та як управляти кількістю файлових операцій
 </details>
 <details>
-  <summary><a href="./tutorial/PredefinedReflectors.md">Вбудовані рефлектори</a></summary>
+  <summary><a href="./tutorial/ReflectorsPredefined.md">Вбудовані рефлектори</a></summary>
   Використання вбудованих рефлекторів для розбиття на версію для відлагодження і для релізу. Побудова мультизбірок.
 </details>
 <details>

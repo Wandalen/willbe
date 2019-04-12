@@ -40,4 +40,4 @@
 
 ![supermodule.png](./Images/supermodule.png)
 
-Детальніше про підмодулі в концепціях ["Локальний підмодуль"](LocalAndRemoteSubmodules.md#local-submodule) ["Віддалений підмодуль"](LocalAndRemoteSubmodules.md#remote-submodule)
+Детальніше про підмодулі в концепціях ["Локальний підмодуль"](SubmodulesLocalAndRemote.md#local-submodule) ["Віддалений підмодуль"](SubmodulesLocalAndRemote.md#remote-submodule)

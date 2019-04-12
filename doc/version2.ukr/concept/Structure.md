@@ -34,7 +34,7 @@ will-file
 ### Призначення секцій `will-файла`
 
 <details>
-  <summary><a href="./concept/About.section.md">Секція <code>about</code></a></summary>
+  <summary><a href="./concept/SectionAbout.md">Секція <code>about</code></a></summary>
   Секція містить описову інформація про модуль
 </details>
 <details>
