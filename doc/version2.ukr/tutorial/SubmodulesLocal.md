@@ -46,7 +46,7 @@ submodule :
 </details>
 
 Для порівняння роботи команд з віддаленими і локальними підмодулями введено віддалений ресурс `PathFundamentals`.  
-Для файла `.will.yml` в директорії `localOne` використайте код з файла `.will.yml` в туторілі [Експортування модуля](ExportedWillFile.md):
+Для файла `.will.yml` в директорії `localOne` використайте код з файла `.will.yml` в туторілі [Експортування модуля](ModuleExport.md):
 
 <details>
   <summary><u>Код файла <code>.will.yml</code> в директорії <code>localOne</code></u></summary>
@@ -80,7 +80,7 @@ build :
 
 </details>
 
-Також, використайте експортований `exportModule.out.will.yml` файл з туторіалу [Експортування модуля](ExportedWillFile.md)), перейменувавши його в `local.out.will.yml` та помістивши за шляхом `./modules/localTwo/out/`. Якщо у вас немає файла, ви можете його завантажити за посиланням <https://github.com/Wandalen/willbe/tree/master/sample/version2/LocalSubmodulesImporting/modules/localTwo/out/>.  
+Також, використайте експортований `exportModule.out.will.yml` файл з туторіалу [Експортування модуля](ModuleExport.md)), перейменувавши його в `local.out.will.yml` та помістивши за шляхом `./modules/localTwo/out/`. Якщо у вас немає файла, ви можете його завантажити за посиланням <https://github.com/Wandalen/willbe/tree/master/sample/version2/SubmodulesLocal/modules/localTwo/out/>.  
 Перевірте конфігурацію командою `will .submodules.list`:  
 
 <details>

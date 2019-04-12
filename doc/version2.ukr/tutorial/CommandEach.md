@@ -122,7 +122,7 @@ Module at /path_to_file/.will.yml
  . Read 1 will-files in 0.924s 
 
     Building module::deleteOut / build::delete.submodule
-     - filesDelete 0 files at /home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe_src/pract/UsingEachCommand/out in 0.002s
+     - filesDelete 0 files at /home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe_src/pract/CommandEach/out in 0.002s
     Built module::deleteOut / build::delete.submodule in 0.108s
 
 ...

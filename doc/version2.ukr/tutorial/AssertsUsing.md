@@ -257,5 +257,5 @@ Exporting export.debug.first
 - Ассерти потрібні для підтвердження правильності вибору ресурсів.
 - Ассерти дозволяють [швидко локалізувати помилки в `will-файлі`](#assert-failure-information)
 
-[Наступний туторіал](MinimizationOfWillFile.md)  
+[Наступний туторіал](WillFileMinimization.md)  
 [Повернутись до змісту](../README.md#tutorials)
