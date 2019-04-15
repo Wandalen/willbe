@@ -2,29 +2,33 @@
 
 Копіювання файлів за допомогою рефлектора, поле <code>recursive</code> рефлектора.
 
-Основними функціями ресурсів [секції `reflector`](CompositionOfWillFile.md#reflector) є файлові операції, в тому числі, двосторонні (вибір файлів (директорій), переміщення, копіювання і т.д.).  
-Почнемо вивчення функціоналу з операції копіювання. Створіть наступну структуру файлів:
-
-```
-.
-├── proto
-│     ├── proto.two
-│     │     └── file.js
-│     │
-│     ├── fileOne.js
-│     └── fileTwo.json   
-│
-└── .will.yml       
-
-```
-
-В `will.yml` внесіть код:
+Основними функціями ресурсів секції `reflector` є файлові операції, в тому числі, двосторонні (вибір файлів (директорій), переміщення, копіювання і т.д.).  
+Створіть наступну структуру файлів для дослідження копіювання файлів рефлектором:  
 
 <details>
-  <summary><u>Лістинг файла `.will.yml`</u></summary>
+  <summary><u>Структура модуля</u></summary>
+
+```
+copy
+  ├── proto
+  │     ├── proto.two
+  │     │     └── file.js
+  │     ├── fileOne.js
+  │     └── fileTwo.json   
+  └── .will.yml       
+
+```
+
+</details>
+
+В файл `will.yml` внесіть код:
+
+<details>
+  <summary><u>Код файла <code>.will.yml</code></u></summary>
 
 ```yaml
 about :
+
   name : copyByReflector
   description : "To copy files by reflector using"
 
@@ -62,7 +66,6 @@ build :
 
   copy :
     criterion :
-      default : 1
       debug : [ 0,1 ]
     steps :
       - reflect.*
@@ -71,9 +74,8 @@ build :
 
 </details>
 
-Крок `reflect.` використовує вбудований крок `predefined.reflect`, в якого аргументом є поле `reflector` з посиланням на ресурс секції `reflector`.  
-В секції `reflector` поміщений ресурс з назвою `reflect.copy`. Для копіювання файлів з однієї директорії в іншу без додаткових умов (фільтрів) в полі `filePath` ресурса вказується два значення: `source_path : destination_path`, де `source_path` - шлях до директорії з файлами для копіювання, `destination_path` - директорія в яку файли скопіюються.  
-Відповідно, запис
+Вбудований крок `predefined.reflect`, в якого аргументом є поле `reflector` посилається на ресурс секції `reflector`. В секції `reflector` поміщений ресурс з назвою `reflect.copy`. Для копіювання файлів з однієї директорії в іншу без додаткових умов (фільтрів) в полі `filePath` ресурса вказується два значення: `source_path : destination_path`, де `source_path` - шлях до директорії з файлами для копіювання, `destination_path` - директорія в яку файли скопіюються.  
+Відповідно, запис вигляду
 
 ```yaml
     filePath :
@@ -81,44 +83,58 @@ build :
 
 ```
 
-означає скопіювати файли з директорії `proto` в одну з директорій, які починаються на `out`, згідно мапи критеріонів та додатково вказаний ассерт для виключення помилки вибору.  
-Запустимо реліз-побудову:
+означає скопіювати файли з директорії `proto` в одну з директорій, які починаються на `out.`, згідно мапи критеріонів, додатково вказаний ассерт для виключення помилки вибору.  
+Запустіть реліз-побудову:  
+
+<details>
+  <summary><u>Вивід команди <code>will .build copy.</code></u></summary>
 
 ```
 [user@user ~]$ will .build copy.
 ...
-  Building copy.
-   + reflect.copy. reflected 5 files /path_to_file/ : out/release <- proto in 0.352s
-  Built copy. in 0.406s
+  Building module::copyByReflector / build::copy.
+   + reflect.. reflected 5 files /path_to_file/ : out/release <- proto in 0.596s
+   + reflect.copy. reflected 5 files /path_to_file/ : out/release <- proto in 0.469s
+  Built module::copyByReflector / build::copy. in 1.187s
 
 ```
 
-Вивід логу, також свідчить, що використовувався рефлектор `+ reflect.copy.` та відбулось копіювання файлів з одного каталогу в інший `out/release <- proto`.  
-Проглянемо зміни в структурі каталогів:  
+</details>
+<details>
+  <summary><u>Структура модуля після побудови</u></summary>
 
 ```
-[user@user ~]$ ls -a
-.  ..  out  proto  .will.yml
+copy
+  ├── proto
+  │     ├── proto.two
+  │     │     └── file.js
+  │     ├── fileOne.js
+  │     └── fileTwo.json   
+  ├── out
+  │     └── release
+  │            ├── proto.two
+  │            │     └── file.js
+  │            ├── fileOne.js
+  │            └── fileTwo.json 
+  └── .will.yml       
 
 ```
 
-```
-[user@user ~]$ ls -a out/release/
-.  ..  fileOne.js  fileTwo.json  proto.two
+</details>
 
-[user@user ~]$ ls -a out/release/proto.two/
-.  ..  file.js
+Вивід свідчить, що використовувався рефлектор `+ reflect.copy.` та відбулось копіювання файлів з одного каталогу в інший `out/release <- proto`.  
 
-```
-
-### <a name="recursive-reflector"></a> Опція `recursive`
-Рефлектор скопіював всі файли з директорії `proto`, але адмініструючи модулі потрібно буде обирати як каталог з якого буде скопійовано файли, так і окремі файли в ному. Так, знайомі нам ґлоби ефективні при виборі файлів з однотипними назвами на рівні однієї директорії, наприклад, якщо потрібно скопіювати файли `fileOne` i `fileTwo` то в шляху `proto` можемо вказати наступний селектор: `proto : ./proto/file*`. При цьому, якщо створити каталог `proto/files`  та помістити в нього файли, то селектор з ґлобом скопіює каталог, але не його вміст.  
+### Опція `recursive`
+Будуючи модулі потрібно обирати як каталог з якого буде скопійовано файли, так і окремі файли в ньому. Так, ґлоби ефективні при виборі файлів з однотипними назвами на рівні однієї директорії, наприклад, якщо потрібно скопіювати файли `fileOne` i `fileTwo`, то в шляху `proto` можемо вказати наступний селектор: `proto : ./proto/file*`. При цьому, якщо створити каталог `proto/files`  та помістити в нього файли, то селектор з ґлобом скопіює каталог, але не його вміст.  
 Тому в рефлекторі передбачена опція `recursive`, яка визначає рівень зчитування структури директорії. Поле `recursive` приймає три значення:  
 "0" - зчитується файл (директорія) вказана в шляху;  
-"1" - зчитується файли (директорії), що поміщені за вказаним шляхом (вміст директорій не зчитується);  
+"1" - зчитується файли (директорії), що поміщені в директорії за вказаним шляхом (вміст директорій не зчитується);  
 "2" - зчитуються файли і директорії на всіх рівнях, що нижче від вказаного в шляху.  
-Тобто, якщо проходить копіювання за рефлектором без зазначеного поля `recursive`, то за замовчуванням його значення "2" - копіювання всієї структури, а якщо використовуєтся вибірка за ґлобом, то, умовно, поле `recursive` має значення "1", прямі посилання на файл чи папку - `recursive : 0`.
+За замовчуванням поле `recursive` має значення "2" - копіювання всієї структури.
 Змініть ресурс `reflect.copy` до вигляду:  
+
+<details>
+  <summary><u>Рефлектор <code>reflect.copy</code> зі змінами</u></summary>
 
 ```yaml
   reflect.copy :
@@ -130,44 +146,71 @@ build :
 
 ```
 
-та виконайте побудову зі значенням критеріона `debug : 1`:  
+</details>
+
+Виконайте побудову з критеріоном `debug : 1`:  
+
+<details>
+  <summary><u>Вивід команди <code>will .build copy.debug</code></u></summary>
 
 ```
 [user@user ~]$ will .build copy.debug
 ...
-  Building copy.debug
-   + reflect.copy. reflected 4 files /path_to_file/ : out/debug <- proto in 0.322s
-  Built copy. in 0.376s
+  Building module::copyByReflector / build::copy.debug
+   + reflect..debug reflected 4 files /path_to_file/ : out/debug <- proto in 0.565s
+   + reflect.copy.debug reflected 4 files /path_to_file/ : out/debug <- proto in 0.465s
+  Built module::copyByReflector / build::copy.debug in 1.151s
 
 ```
 
-Скопійовано на один файл менше. Проглянемо  вміст в _'./out/debug'_:
+</details>
+
+Скопійовано на один файл менше. Прогляньте  вміст в `./out/debug`:  
+
+<details>
+  <summary><u>Вивід команд <code>ls -a out/debug/</code>, <code>ls -a out/debug/proto.two/</code></u></summary>
 
 ```
 [user@user ~]$ ls -a out/debug/
 .  ..  fileOne.js  fileTwo.json  proto.two
 
-[user@user ~]$ ls -a out/release/proto.two/
+[user@user ~]$ ls -a out/debug/proto.two/
 .  ..
 
 ```
 
-Тому, якщо змінити поле рефлектора на `recursive : 0` буде скопійовано саму директорію `proto`. Змініть шлях `proto : ./proto/fileOne.js` при значенні `recursive : 0` та запустіть команду реліз-побудови:  
+</details>
+<details>
+  <summary><u>Структура модуля після побудови</u></summary>
 
 ```
-[user@user ~]$ will .build copy.
-...
-  Building copy.
-   + reflect.copy. reflected 1 files /path_to_file/ : out/release <- proto/fileOne.js in 0.325s
-  Built copy. in 0.378s
+copy
+  ├── proto
+  │     ├── proto.two
+  │     │     └── file.js
+  │     ├── fileOne.js
+  │     └── fileTwo.json   
+  ├── out
+  │     ├── release
+  │     │      ├── proto.two
+  │     │      │     └── file.js
+  │     │      ├── fileOne.js
+  │     │      └── fileTwo.json 
+  │     └── debug
+  │            ├── proto.two
+  │            ├── fileOne.js
+  │            └── fileTwo.json
+  └── .will.yml       
 
 ```
 
-Якщо поле `recursive` має значення "0", то потрібно вказувати шляхи до кожного файла в рефлекторі.
+</details>
+
+Якщо змінити в рефлекторі на `recursive : 0` буде скопійовано саму директорію `proto`, тобто, нічого з неї не буде скопійовано. 
 
 ### Підсумок
-- [Рефлектори](#reflector-term) виконують операції з файлами, в тому числі двосторонні.  
-- [Для копіювання файлів](#copy-by-reflector) потрібно вказати директорію з якої буде скопійовано файли і директорію призначення.   
-- В рефлекторах встановлюються [рівні зчитування файлової системи](#recursive-reflector) відносно вказаного шляху.
+- Рефлектори виконують операції з файлами, в тому числі двосторонні.  
+- Для копіювання файлів з допомогою поля `filePath` потрібно вказати директорію з якої буде скопійовано файли і директорію призначення.   
+- В рефлекторах встановлюються рівні зчитування файлової системи відносно вказаного шляху.
 
 [Повернутись до змісту](../README.md#tutorials)

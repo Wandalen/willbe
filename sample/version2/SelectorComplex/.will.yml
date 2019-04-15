@@ -1,0 +1,41 @@
+about :
+  name : complexSelector
+  description : 'To use complexSelector in will-file'
+  version : 0.0.1
+
+submodule : 
+ 
+  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+
+path :
+
+  in : '.'
+  out : 'out'
+  export.file :
+    path : './f*/t??????/[a-f]*/test.*'
+
+step :
+
+  exportFile :
+    export : path::export.file
+    tar : 0
+
+  exportSubmodule :
+    export : submodule::*/exported::*=1/reflector::exportedFiles*=1
+    tar : 0
+
+build :
+
+  export.file :
+    criterion :
+      export : 1
+      default : 1
+    steps :
+      - step::exportFile
+
+  export.submodule :
+    criterion :
+      export : 1
+    steps :
+      - submodules.download
+      - step::exportSubmodule

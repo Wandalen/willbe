@@ -1,0 +1,8 @@
+build :
+
+  copy :
+    criterion : 
+      debug : [ 0,1 ]
+    steps :
+      - submodules.download
+      - reflect*=1

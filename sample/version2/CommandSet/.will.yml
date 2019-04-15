@@ -1,0 +1,40 @@
+about :
+
+  name : setVerbosity
+  description : "To use .set command"
+  version : 0.0.1
+
+submodule :
+  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+
+path :
+
+  out : 'out'
+
+  submodule.pathfundamental :
+    criterion :
+      debug : 1
+    path : '.module/PathFundamentals'
+
+step  :
+
+  export.submodule :
+    criterion :
+      debug : 1
+    export : path::submodule.*
+
+build :
+
+  submodules.download :
+      criterion :
+          default : 1
+          debug : 0
+      steps :
+          - submodules.download
+
+  submodules.export :
+      criterion :
+          export : 1
+          debug : 1
+      steps :
+          - export.*
