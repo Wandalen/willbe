@@ -1,0 +1,69 @@
+about :
+
+  name : predefinedReflectors
+  description : "To use predefined reflectors"
+  version : 0.0.1
+
+path :
+
+  out.debug :
+    path : out.debug
+    criterion :
+      debug : 1
+
+  out.release :
+    path : out.release
+    criterion :
+      debug : 0
+
+reflector :
+
+  reflect.project:
+    inherit: predefined.*
+    src:
+      filePath:
+        proto : 1
+    dst:
+      filePath: path::out.*=1
+    criterion :
+      debug : [ 0,1 ]
+
+  reflect.copy.common:
+    inherit: predefined.common
+    src:
+      filePath:
+        proto : 1
+    dst:
+      filePath: out.common
+
+step :
+
+  reflect.project :
+    inherit : predefined.reflect
+    reflector : reflect.project*=1
+    criterion :
+      debug : [ 0,1 ]
+
+  reflect.copy.common :
+    inherit : predefined.reflect
+    reflector : reflect.copy.common
+
+build :
+
+  copy :
+    criterion :
+      debug : [ 0,1 ]
+    steps :
+      - reflect.project*=1
+
+  copy.common :
+    steps :
+      - reflect.copy.common
+
+  all.reflectors :
+    criterion :
+      default : 1
+    steps :
+      - build::copy.
+      - build::copy.debug
+      - build::copy.common

@@ -3,7 +3,7 @@
 Використання вбудованих рефлекторів для розбиття на версію для відлагодження і для релізу. Побудова мультизбірок.
 
 ### Призначення вбудованих рефлекторів
-Крім вбудованих кроків в утиліті є вбудовані рефлектори. Вбудовані рефлектори позбавляють необхідності прописувати налаштування фільтрів для стандартних операцій. Всього є три вбудованих рефлектора: `predefined.common`, `predefined.debug` i `predefined.release`.  
+Крім вбудованих кроків в утиліті є вбудовані рефлектори, які мають налаштовані файлові фільтри для стандартних операцій. Всього є три вбудованих рефлектора: `predefined.common`, `predefined.debug` i `predefined.release`.  
 Для використання вбудованих рефлекторів в ресурсі потрібно вказати поле `inherit` з обраним рефлектором.  
 Наприклад, для рефлектора `predefined.common` в рефлекторі `use.predefined.reflector`:  
 
@@ -24,7 +24,7 @@ reflector :
 
 ### Властивості вбудованих рефлекторів
 ##### Вбудований рефлектор `predefined.common`  
-Рефлектор, який відфільтровує допоміжні файли проекта.   
+Рефлектор для фільтрування допоміжних файлів проекта.   
 
 <details>
   <summary><u>Налаштування рефлектора <code>predefined.common</code></u></summary>
@@ -47,12 +47,11 @@ reflector :
 
 
 Вбудований рефлектор `predefined.common` виключає зі збірки файли, які мають розширення `.unique`, `,git`, `.svn`, `.hg`, `.DS_Store`, а також файли які починаються зі знаків `/` або `-`.  
-Регулярний вираз `/(\W|^)node_modules(\W|$)/` фільтрує наступні комбінації назви файлів:   
+Регулярний вираз `/(\W|^)node_modules(\W|$)/` фільтрує наступні комбінації у назвах файлів:   
 \- `спеціальний символ (несловесний) + node_modules`;  
 \- `спеціальний символ (несловесний) + node_modules + спеціальний символ (несловесний)`;  
 \- `node_modules + спеціальний символ (несловесний)`;  
-\- `node_modules`.  
-Тобто, рефлектор `predefined.common` необхідний для виключення зі збірки допоміжних файлів для побудови модуля.  
+\- `node_modules`.    
 
 ##### Вбудований рефлектор `predefined.debug`
 Рефлектор для фільтрації файлів, призначених для релізу проекта.   
@@ -72,11 +71,10 @@ reflector :
 
 </details>
 
-
 Вбудований рефлектор `predefined.debug` виключає зі збірки файли, які мають розширення `.release`, в назві яких є слово `.release.` і директорії з закінченням `.release`. Також, рефлектор використовує критеріон `debug : 1`, тобто, необхідно, щоб в збірці побудови був встановлений критеріон `debug`.  
 
 ##### Вбудований рефлектор `predefined.release`  
-Рефлектор, який фільтрує файли для підготовки до релізу - відладки, тестові, експериментальні.   
+Рефлектор, який фільтрує файли підготовки до релізу - відладки, тестові, експериментальні.   
 
 <details>
   <summary><u>Налаштування рефлектора <code>predefined.release</code></u></summary>
@@ -100,14 +98,14 @@ reflector :
 \- які мають розширення `.debug`, `.test`, `.experiment`;  
 \- в назві яких є слово `.debug.`, `.test.`, `.experiment.`;  
 \- директорії з закінченням `.debug`, `.test`, `.experiment`.   
-Рефлектор використовує критеріон `debug : 0`, тобто, необхідно, щоб в збірці побудови критеріон `debug` мав значення "0".  
+Рефлектор використовує критеріон `debug : 0`, тому, в збірці побудови має бути критеріон `debug` зі значенням `0`.  
 
 ### Дослідження вбудованих рефлекторів. Мультизбірка
 ##### Конфігурація
-Потрібно створити таку структуру, при якій кожен вбудований рефлектор буде фільтрувати визначені файли. Тому побудуйте таку конфігурацію в директорії `predefinedReflectors`:  
+Для дослідження вбудованих критеріонів потрібно створити таку структуру, при якій кожен вбудований рефлектор буде фільтрувати визначені файли. Створіть наступну конфігурацію в директорії `predefinedReflectors`:  
 
 <details>
-  <summary><u>Відкрийте, щоб проглянути</u></summary>
+  <summary><u>Структура модуля</u></summary>
 
 ```
 predefinedReflectors
@@ -134,10 +132,11 @@ predefinedReflectors
 Запишіть в `.will.yml` наступний код:  
 
 <details>
-  <summary><u>Повний код <code>.will.yml</code></u></summary>
+  <summary><u>Код файла <code>.will.yml</code></u></summary>
 
 ```yaml
 about :
+
   name : predefinedReflectors
   description : "To use predefined reflectors"
   version : 0.0.1
@@ -210,43 +209,29 @@ build :
 
 </details>
 
-Для використання рефлекторів `predefined.debug` i `predefined.release` використані збірки з мінімізацією кода під назвою `copy`, а для рефлектора `predefined.common` - збірка `copy.common` з простими селекторами.    
-Також побудована мультизбірка, яка виконується за замовчуванням. В сценарії збірки `all.reflectors` вказані збірки секції `build` як кроки секції `step` - принцип побудови мультизбірок:  
-
-<details>
-  <summary><u>Відкрийте, щоб проглянути</u></summary>
-
-```yaml
-  all.reflectors :
-    criterion :
-      default : 1
-    steps :
-      - build::copy.
-      - build::copy.debug
-      - build::copy.common
-
-```
-
-</details>
+Для використання рефлекторів `predefined.debug` i `predefined.release` використана збірка з мінімізацією кода під назвою `copy`, а для рефлектора `predefined.common` - збірка `copy.common` з простими селекторами.    
+Також побудована мультизбірка `all.reflectors`, яка виконується за замовчуванням. В сценарії збірки `all.reflectors` вказані збірки секції `build` як кроки секції `step` - принцип побудови мультизбірок. 
 
 ##### Побудова модуля
-Виконайте побудови (фраза `will .build`):
+Виконайте побудову (фраза `will .build`):
 
 <details>
-  <summary><u>Відкрийте, щоб проглянути</u></summary>
+  <summary><u>Вивід команди <code>will .build</code></u></summary>
 
 ```
 [user@user ~]$ will .build
 ...
-  Building all
-   + reflect.project. reflected 4 files /path_to_file/ : out.release <- proto in 0.343s
-   + reflect.project.debug reflected 5 files /path_to_file/ : out.debug <- proto in 0.305s
-   + reflect.copy.common reflected 8 files /path_to_file/ : out.common <- proto in 0.273s
-  Built all in 1.078s
+  Building module::predefinedReflectors / build::all.reflectors
+   + reflect.project. reflected 4 files /path_to_file/ : out.release <- proto in 1.548s
+   + reflect.project.debug reflected 5 files /path_to_file/ : out.debug <- proto in 1.219s
+   + reflect.copy.common reflected 8 files /path_to_file/ : out.common <- proto in 0.918s
+  Built module::predefinedReflectors / build::all.reflectors in 3.967s
 
 ```
 
-<p>Структура модуля після побудови</p>
+</details>
+<details>
+  <summary><u>Структура модуля після побудови</u></summary>
 
 ```
 predefinedReflectors
@@ -265,7 +250,6 @@ predefinedReflectors
 
 </details>
 
-
 Прогляньте створені пакетом директорії `out.common`, `out.debug` i `out.release`. Порівняйте вміст з даними в таблиці.
 
 | Директорія    | Вбудований рефлектор | Файли в директорії після побудови |
@@ -277,7 +261,10 @@ predefinedReflectors
 По результатам копіювання очевидно, що вбудовані рефлектори `predefined.debug` i `predefined.release` використовують попередню фільтрацію файлів з допомогою рефлектора `predefined.common` оскільки після побудови в директоріях  `out.debug` і `out.release` відсутні файли, які фільтруються рефлектором `predefined.common`.
 
 ### Підсумок  
-- Вбудовані рефлектори використовуються для фільтрації допоміжних файлів проекту (`.git`, `.svn` та інші).  
+- Вбудовані рефлектори мають налаштовані фільтри для побудови модуля.
+- Вбудований рефлектор `predefined.common` використовується для фільтрації допоміжних файлів проекту (розширення `.git`, `.svn` та інші).  
+- Рефлектор `predefined.debug` - фільтрує файли призначені для релізу, а `predefined.release` - файли відладки, тестові, експериментальні.
+- Для використання рефлектора `predefined.debug` в збірці необхідно встановити критеріон `debug : 1`, а для `predefined.release` - `debug : 0`.
 - Вбудовані рефлектори `predefined.debug` i `predefined.release` здійснюють попередню фільтрацію файлів з допомогою рефлектора `predefined.common`.
 
 [Повернутись до змісту](../README.md#tutorials)
