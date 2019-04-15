@@ -1,4 +1,4 @@
-# Використання <code>JavaScript</code> файлів утилітою <code>willbe</code></a></summary>
+# Використання <code>JavaScript</code> файлів утилітою <code>willbe</code>
 
 Як використовувати <code>JavaScript</code> файли в утиліті <code>willbe</code> для виконання складних сценаріїв побудови.
 

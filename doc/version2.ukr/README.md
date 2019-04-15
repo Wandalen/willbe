@@ -167,19 +167,19 @@
 </details>
 <details>
   <summary><a href="./tutorial/Build.md">Побудова модуля командою <code>.build</code></a></summary>
-  Запуск окремих збірок модуля для його побудови
+  Запуск окремих збірок модуля для його побудови.
 </details>
 <details>
   <summary><a href="./tutorial/StepsPredefined.md">Вбудовані кроки</a></summary>
-  Як користуватись вбудованими кроками для роботи з віддаленими підмодулями
+  Як користуватись вбудованими кроками для роботи з віддаленими підмодулями.
 </details>
 <details>
   <summary><a href="./tutorial/Criterions.md">Критеріони</a></summary>
-  Як використовувати критеріони для відбору ресурсів
+  Як використовувати критеріони для відбору ресурсів.
 </details>
 <details>
   <summary><a href="./tutorial/CriterionDefault.md">Збірка модуля за замовчуванням</a></summary>
-  Як побудувати збірку, що запускається без явного указання аргумента команди <code>.build</code>
+  Як побудувати збірку, що запускається без явного указання аргумента команди <code>.build</code>.
 </details>
 <details>
   <summary><a href="./tutorial/ModuleExport.md">Експортування модуля</a></summary>
@@ -187,23 +187,23 @@
 </details>
 <details>
   <summary><a href="./tutorial/SubmodulesLocal.md">Імпорт локального підмодуля</a></summary>
-  Використання локального підмодуля із іншого модуля ( супермодуля ).
+  Використання локального підмодуля із іншого модуля (супермодуля).
 </details>
 <details>
   <summary><a href="./tutorial/SelectorsWithGlob.md">Селектори із ґлобами</a></summary>
-  Як користуватись селекторами з ґлобами
+  Як користуватись селекторами з ґлобами.
 </details>
 <details>
   <summary><a href="./tutorial/AssertsUsing.md">Як користуватись ассертами</a></summary>
-  Як ассерти допомогають зменшити кількість помилок при розробці
+  Як ассерти допомогають зменшити кількість помилок при розробці.
 </details>
 <details>
   <summary><a href="./tutorial/WillFileMinimization.md">Мінімізація <code>will-файла</code></a></summary>
-  Як мінімізувати <code>will-файл</code> за допомогою розгортання критеріонами із множинними значеннями
+  Як мінімізувати <code>will-файл</code> за допомогою розгортання критеріонами із множинними значеннями.
 </details>
 <details>
   <summary><a href="./tutorial/WillFileSplit.md">Розділені <code>will-файли</code></a></summary>
-  Як створити та використовувати модуль із розділеними <code>will-файлами</code>
+  Як створити та використовувати модуль із розділеними <code>will-файлами</code>.
 </details>
 <details>
   <summary><a href="./tutorial/WillFileNamed.md">Команда <code>.with</code> та іменований <code>will-файл</code></a></summary>
@@ -211,7 +211,7 @@
 </details>
 <details>
   <summary><a href="./tutorial/CommandEach.md">Як користуватись командою <code>.each</code></a></summary>
-  Команда <code>.each</code> для виконання одної дії для багатьох модулів чи підмодулів
+  Команда <code>.each</code> для виконання одної дії для багатьох модулів чи підмодулів.
 </details>
 <details>
   <summary><a href="./tutorial/StepJS.md">Використання <code>JavaScript</code> файлів утилітою <code>willbe</code></a></summary>
@@ -219,11 +219,11 @@
 </details>
 <details>
   <summary><a href="./tutorial/CommandSet.md">Команда <code>.set</code></a></summary>
-  Як користуватись командою <code>.set</code> для зміни станів утиліти, наприклад, для зміни рівня вербальності
+  Як користуватись командою <code>.set</code> для зміни станів утиліти, наприклад, для зміни рівня вербальності.
 </details>
 <details>
   <summary><a href="./tutorial/SelectorComplex.md">Складні селектори</a></summary>
-  Використання складних селекторів для відбору ресурсів із підмодулів
+  Використання складних селекторів для відбору ресурсів із підмодулів.
 </details>
 <details>
   <summary><a href="./tutorial/CommandsListSearch.md">Перелік ресурсів застосовуючи фільтри та глоби</a></summary>
@@ -231,19 +231,19 @@
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorUsing.md">Копіювання файлів за допомогою рефлектора</a></summary>
-  Копіювання файлів за допомогою рефлектора, поле <code>recursive</code> рефлектора
+  Копіювання файлів за допомогою рефлектора, поле <code>recursive</code> рефлектора.
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorFilters.md">Фільтри рефлектора</a></summary>
-  Використання фільтрів рефлектора для відбору файлів для копіювання
+  Використання фільтрів рефлектора для відбору файлів для копіювання.
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorTimeFilters.md">Часові фільтри рефлектора</a></summary>
-  Як користуватись фільтрами відбору файлів по часу
+  Як користуватись фільтрами відбору файлів по часу.
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorFSControl.md">Формування шляхів в рефлекторі. Управління файлами</a></summary>
-  Як формуються шляхи рефлекторів та як управляти файлами і директоріями в рефлекторі
+  Як формуються шляхи рефлекторів та як управляти файлами і директоріями в рефлекторі.
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorsPredefined.md">Вбудовані рефлектори</a></summary>
@@ -255,7 +255,7 @@
 </details>
 <details>
   <summary><a href="./tutorial/StepView.md">Вбудований крок <code>predefined.view</code></a></summary>
-  Використання вбудованого кроку <code>predefined.view</code> для перегляду файлів
+  Використання вбудованого кроку <code>predefined.view</code> для перегляду файлів.
 </details>
 <details>
   <summary><a href="./tutorial/StepTranspile.md">Транспіляція</a></summary>
@@ -267,13 +267,13 @@
 </details>
 <details>
   <summary><a href="./tutorial/WillbeAsMake.md">Компіляція С++ програми</a></summary>
-  Використання утиліти <code>willbe</code> для компіляції С++ програми
+  Використання утиліти <code>willbe</code> для компіляції С++ програми.
 </details>
 <details>
   <summary><a href="./tutorial/SubmoduleInformal.md">Неформальні підмодулі</a></summary>
-  Імпортування неформальних підмодулів
+  Імпортування неформальних підмодулів.
 </details>
 <details>
   <summary><a href="./tutorial/CommandClean.md">Команда очистки <code>.clean</code></a></summary>
-  Використання команди для очистки <code>.clean</code> для того щоб видалити згенеровані та тимчасові файли
+  Використання команди для очистки <code>.clean</code> для того щоб видалити згенеровані та тимчасові файли.
 </details>
