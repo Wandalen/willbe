@@ -1,0 +1,24 @@
+about :
+
+  name : downloadFiles
+  version : 0.0.1
+
+path :
+
+  in : '..'
+  predefined.remote : 'git+https:///github.com/Wandalen/wColor.git'
+  predefined.local : './temp'
+
+reflector :
+
+  download.files :
+    src : path::predefined.remote
+    dst : path::predefined.local
+
+build :
+
+  download.files :
+    criterion :
+      default : 1
+    steps :
+      - step::download.files

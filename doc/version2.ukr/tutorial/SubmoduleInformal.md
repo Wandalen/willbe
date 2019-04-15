@@ -171,7 +171,7 @@ Module at /path_to_file/module/Color.informal.will.yml
 
 </details>
 <details>
-  <summary><u>Модуль після побудови</u></summary>
+  <summary><u>Структура модуля після побудови</u></summary>
 
 ```
 informalModule

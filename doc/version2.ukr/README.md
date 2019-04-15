@@ -275,5 +275,5 @@
 </details>
 <details>
   <summary><a href="./tutorial/CommandClean.md">Команда очистки <code>.clean</code></a></summary>
-  Використання команди для очистки <code>.clean</code> для того щоб видалити згенеровані та тимчасові файли.
+  Використання команди <code>.clean</code> для очистки згенерованих та тимчасових файлів.
 </details>
