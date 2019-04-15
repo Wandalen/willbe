@@ -1,0 +1,17 @@
+about :
+
+  name : submodules
+  description : "To test .each command"
+  version : 0.0.1
+
+submodule :
+
+  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  
+build : 
+  
+  download : 
+    criterion :
+      default : 1
+    steps : 
+      - submodules.download
