@@ -1,0 +1,26 @@
+about :
+
+  name : reflectorPaths
+  description : "To use reflector path constructor"
+  version : 0.0.1
+
+reflector :
+
+  reflect.copy :
+    filePath :
+      files : out1
+      proto : out2
+
+step :
+
+  reflect.copy :
+    inherit : predefined.reflect
+    reflector : reflect.*
+
+build :
+
+  copy :
+    criterion : 
+      default : 1
+    steps :
+      - reflect.*

@@ -242,8 +242,8 @@
   Як користуватись фільтрами відбору файлів по часу
 </details>
 <details>
-  <summary><a href="./tutorial/ReflectorFSControl.md">Формування шляхів в рефлекторі. Управління файловими операціями</a></summary>
-  В туторіалі показано як формуються шляхи рефлекторів та як управляти кількістю файлових операцій
+  <summary><a href="./tutorial/ReflectorFSControl.md">Формування шляхів в рефлекторі. Управління файлами</a></summary>
+  Як формуються шляхи рефлекторів та як управляти файлами і директоріями в рефлекторі
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorsPredefined.md">Вбудовані рефлектори</a></summary>
