@@ -1,0 +1,8 @@
+<html>
+<header>
+  <title>Test page</title>
+</header>
+<body>
+<h1>Hello world!</h1>
+</body>
+</html>

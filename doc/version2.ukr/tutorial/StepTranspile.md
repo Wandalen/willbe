@@ -9,8 +9,7 @@
 Побудуйте структуру та внесіть в файли код:  
 
 <details>
-  <summary><u>Структура і код файлів</u></summary>
-<p>Структура файлів</p>
+  <summary><u>Структура файлів</u></summary>
 
 ```
 transpile
@@ -25,44 +24,68 @@ transpile
 
 ```
 
-<p>Код <code>-Excluded.js</code></p>
+</details>
+<details>
+  <summary><u>Код файла <code>-Excluded.js</code></u></summary>
 
-```yaml
+```js
 console.log( '-Excluded.js' );
 
 ```
 
-<p>Код <code>File1.debug.js</code></p>
+</details>
+<details>
+  <summary><u>Код файла <code>File1.debug.js</code></u></summary>
 
-```yaml
+```js
+function sum(a, b){
+    return a+b;
+}
 console.log( 'File1.debug.js' );
 
 ```
 
-<p>Код <code>File1.release.js</code></p>
+</details>
+<details>
+  <summary><u>Код файла <code>File1.release.js</code></u></summary>
 
-```yaml
+```js
+function sum(a, b){
+    return a+b;
+}
 console.log( 'File1.release.js' );
 
 ```
 
-<p>Код <code>File1.debug.js</code></p>
+</details>
+<details>
+  <summary><u>Код файла <code>File2.debug.js</code></u></summary>
 
-```yaml
-console.log( 'File2.debug.js' );
-
-```
-
-<p>Код <code>File1.release.js</code></p>
-
-```yaml
-console.log( 'File2.release.js' );
+```js
+function sum(a, b){
+    return a+b;
+}
+console.log( 'Sum of 2 and 3 is: ' + sum(2, 3) );
 
 ```
 
-<p>Код <code>File1.experiment.js</code></p>
+</details>
+<details>
+  <summary><u>Код файла <code>File2.release.js</code></u></summary>
 
-```yaml
+```js
+function sum(a, b){
+    return a+b;
+}
+console.log( 'Sum of 3 and 7 is: ' + sum(3, 7) );
+
+```
+
+</details>
+<details>
+  <summary><u>Код файла <code>File1.experiment.js</code></u></summary>
+
+```js
 console.log( 'File2.experiment.js' );
 
 ```
@@ -72,13 +95,14 @@ console.log( 'File2.experiment.js' );
 В файл `.will.yml` помістіть код для транспіляції файлів:  
 
 <details>
-  <summary><u>Повний код файла <code>.will.yml</code></u></summary>
+  <summary><u>Код файла <code>.will.yml</code></u></summary>
 
 ```yaml
 about :
-    name : transpile
-    description : "To transpile js-files"
-    version : 0.0.1
+
+  name : transpile
+  description : "To transpile js-files"
+  version : 0.0.1
 
 path :
 
@@ -116,7 +140,7 @@ build :
 
 </details>
 
-В `will-файлі` відсутній крок `transpile.proto`, який вказано в збірці. Справа в тому, що для вбудованих кроків, яким необхідний рефлектор можна неявно його створити, указавши поле `step` з назвою вбудованого кроку. В рефлекторі `transpile.proto` указано поле `step : predefined.transpile`. Перевірте вивід команди `.steps.list` (в директорії `will-файла`):  
+В `will-файлі` відсутній крок `transpile.proto`, який вказано в збірці - утиліта генерує вбудовані кроки, яким необхідний рефлектор в оперативну пам'ять. Для цього в рефлекторі указується поле `step` з назвою вбудованого кроку. В рефлекторі `transpile.proto` указано поле `step : predefined.transpile`. Перевірте вивід команди `.steps.list` (в директорії `will-файла`):  
 
 <details>
   <summary><u>Вивід команди <code>will .steps.list</code></u></summary>
@@ -144,15 +168,14 @@ step::transpile.proto.debug
 
 </details>
 
-Кроки сформовані в оперативній пам'яті і не змінили вихідний `will-файл`. Використання автоматичного створення кроків для рефлекторів зменшує об'єм, збільшує швидкість написання, полегшує зчитування інформації з `will-файла`.   
+Кроки сформовані в оперативній пам'яті і не змінили вихідний `will-файл`. Використання автоматичного створення кроків для рефлекторів зменшує об'єм `will-файла`, збільшує швидкість написання, полегшує зчитування інформації.   
 
 ### Побудова модуля. Транспільовані файли
-Для вбудованого кроку `predefined.transpile` в рефлекторі використовується особливий синтаксис для запису транспільованого файла: `path::proto : '{path::out.*=1}/Main.s'` - використовуються фігурні дужки для запису шляху призначення і через слеш вказується назва файла який буде створено - `'{path::out.*=1}/Main.s'`
+Для вбудованого кроку `predefined.transpile` в рефлекторі використовується особливий синтаксис для запису транспільованого файла: `path::proto : '{path::out.*=1}/Main.s'` - використовуються фігурні дужки для запису шляху призначення і через слеш вказується назва файла який буде створено.
 Проведіть дебаг і реліз-побудови:  
 
 <details>
-  <summary><u>Реліз і дебаг-побудови</u></summary>
-<p>Вивід команди <code>will .build transpile.proto.</code></p>
+  <summary><u>Вивід команди <code>will .build transpile.proto.</code></u></summary>
 
 ```
 [user@user ~]$ will .build transpile.proto.
@@ -164,7 +187,9 @@ step::transpile.proto.debug
 
 ```
 
-<p>Структура файлів після реліз-побудови</p>
+</details>
+<details>
+  <summary><u>Структура файлів після реліз-побудови</u></summary>
 
 ```
 transpile
@@ -182,7 +207,9 @@ transpile
 
 ```
 
-<p>Вивід команди <code>will .build transpile.proto.debug</code></p>
+</details>
+<details>
+  <summary><u>Вивід команди <code>will .build transpile.proto.debug</code></u></summary>
 
 ```
 [user@user ~]$ will .build transpile.proto.debug
@@ -193,8 +220,9 @@ transpile
   Built transpile.proto.debug in 3.296s
 
 ```
-
-<p>Структура файлів після дебаг-побудови</p>
+</details>
+<details>
+  <summary><u>Структура файлів після дебаг-побудови</u></summary>
 
 ```
 transpile
@@ -220,8 +248,7 @@ transpile
 Відкрийте файли `Main.s` з директорій `./out/debug/` i `./out/release/` в текстовому редакторі та порівняйте:  
 
 <details>
-  <summary><u>Код в <code>Main.s</code></u></summary>
-<p><code>Main.s</code> в <code>./out/debug/</code></p>
+  <summary><u>Код в <code>Main.s</code> за шляхом <code>./out/debug/</code></u></summary>
 
 ```js
 // ======================================
@@ -231,31 +258,41 @@ console.log( 'File.experiment.js' );
 })();
 // ======================================
 ( function() {
+function sum(a, b){
+    return a+b;
+}
 console.log( 'File1.debug.js' );
 
 })();
 // ======================================
 ( function() {
-console.log( 'File2.debug.js' );
+function sum(a, b){
+    return a+b;
+}
+console.log( 'Sum of 2 and 3 is: ' + sum(2, 3) );
 
 })();
+```
 
-```    
-
-<p><code>Main.s</code> в <code>./out/debug/</code></p>
+</details>
+<details>
+  <summary><u>Код в <code>Main.s</code> за шляхом <code>./out/release/</code></u></summary>
 
 ```js
 // ======================================
-console.log("File1.release.js"), console.log("File2.release.js");
+console.log("File1.release.js"), console.log("Sum of 3 and 7 is: " + function sum(o, e) {
+  return o + e;
+}(3, 7));
 
 ```
 
 </details>
 
-Утиліта використовує критеріон `debug` як тригер, що визначає форму побудови транспільованого файла. При значенні критеріона `debug : 1`, утиліта формує файл із автопідключаємих функцій, що відділені коментарем `//=====`, де в окремих функціях поміщено код із файлів. При реліз-побудові (`debug : 0`) - код із вихідних файлів утворює рядок.
+Утиліта використовує критеріон `debug` як тригер, що визначає форму побудови транспільованого файла. При значенні критеріона `debug : 1`, утиліта формує файл із автопідключаємих функцій, що відділені коментарем `//=====`, де в окремих функціях поміщено код із файлів. При реліз-побудові (`debug : 0`) - код із вихідних файлів утворює рядок з оптимізованих функцій. В даному випадку утиліта в файлі `File1.release.js` не включила визначення функції, яка не використовується і в файлі `File2.release.js` замінила аргумент `sum(2, 3)` на функцію: `function sum(o, e) {  return o + e;}(3, 7)`, оскільки, остання використовується один раз.
 
 ### Підсумок  
 - Транспіляція в утиліті `willbe` - інструмент для перетворення групи JavaScript-файлів в єдиний модуль.  
-- Транспіляція проходить за двома сценаріями - відладки і релізу.
+- Транспіляція проходить за двома сценаріями - відладки і релізу.  
+- При транспіляції за реліз-побудовою утиліта `willbe` оптимізує результуючий код.  
 
 [Повернутись до змісту](../README.md#tutorials)
