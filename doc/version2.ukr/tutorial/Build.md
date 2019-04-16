@@ -6,7 +6,7 @@
 Створіть новий `will-файл` в директорії `buildModule`:  
 
 <details>
-  <summary><u>Повний код файла <code>.will.yml</code></u></summary>
+  <summary><u>Код файла <code>.will.yml</code></u></summary>
 
 ```yaml
 about :
@@ -33,7 +33,7 @@ build :
 
 </details>
 <details>
-  <summary><u>Структура файлів</u></summary>
+  <summary><u>Структура модуля</u></summary>
 
 ```
 buildModule              
@@ -45,7 +45,7 @@ buildModule
 
 Секція `step` об'єднує ресурси (кроки) користувача, які описують процедури створення модульної системи. В прикладі, крок під назвою `echo.hello` має два поля - `shell` для використання консолі операційної системи (команда `echo` виводить рядок `Hello, World!`) та `currentPath` - директорія в якій виконується команда.  
 Збірка `echo` виконуватиме крок `echo.hello`.  
-Для запуску збірок використовується команда `.build` тому, введемо фразу `will .build` в консолі з кореневої директорії `will-файла`:
+Для запуску збірок використовується команда `.build` тому, введіть фразу `will .build` в консолі з кореневої директорії `will-файла`:
 
 <details>
   <summary><u>Вивід команди <code>will .build</code></u></summary>
