@@ -7,7 +7,7 @@
 `Will-файл`, назва якого має вигляд `.will.[розширення]` вважається неіменованим. В директорії одночасно може знаходитись один неіменований `will-файл` та необмежена кількість іменованих. Для роботи з іменованими `will-файлами` використовується команда `.with`. Приклад: фраза побудови збірки `release` в іменованому `will-файлі` `final.release.will.yml` матиме вигляд `will .with final.release.will.yml .build release`. Для роботи з групою `will-файлів` використовується команда `.each`. 
 На рисунку показаний вивід команди `ls -al` в директорії модуля з іменованими `will-файлами`:  
 
-![namedAndUnnamed.png](./Images/namedAndUnnamed.png)  
+![will.file.named.unnamed.png](./Images/will.file.named.unnamed.png)  
 
 ### Розділені <code>will-файли</code>
 
@@ -35,4 +35,4 @@
 
 Вивід команди `ls -al` в директорії модуля зі сплітом іменованого та неіменованого `will-файла`:
 
-![split.png](./Images/split.png)
+![will.file.split.png](./Images/will.file.split.png)

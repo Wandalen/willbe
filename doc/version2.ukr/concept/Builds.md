@@ -19,4 +19,4 @@
 
 Приклад секції `build` з ресурсом `export`: 
 
-![build.section.png](./Images/build.section.png)
+![section.build.png](./Images/section.build.png)

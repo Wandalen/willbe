@@ -36,22 +36,22 @@ name : [ name1, name2, name3 ]
 - Проста форма запису використовує значення "0" та "1".  
 - Критеріон `default` вказується в збірці секції `build`, яка буде виконуватись за замовчуванням.
 
-![default.criterion.png](./Images/default.criterion.png)
+![criterion.default.png](./Images/criterion.default.png)
 
 Для побудови збірки `release` вводиться фраза `will .build` без аргумента.
 - В одному `will-файлі` одночасно може бути дві збірки за замовчуванням - для побудови і для експорту.
 - Критеріон `export` в поєднанні з критеріоном `default` позначає збірку експорту за замовчуванням. Без критеріона `default`, критеріон `export` - звичайний критеріон утиліти.
 
-![export.criterion.png](./Images/export.criterion.png)
+![criterion.export.png](./Images/criterion.export.png)
 
 - Порівняння мап критеріонів проходить, якщо в посиланні на ресурс використовуються ґлоби, тобто, припускається, що є декілька ресурсів, які входять в вибірку селектора.
 - При використанні простого селектора - прямого посилання на ресурс - критеріони ігноруються.  
 Вказаний на рисунку крок `export.multi` буде виконано, хоча критеріони не співпадають.
 
-![direct.selector.png](./Images/direct.selector.png)  
+![selector.direct.png](./Images/selector.direct.png)  
 
 - Якщо в мапі критеріонів ресурса не вказаний критеріон-ключ, який є в мапі критеріонів збірки, то ресурс валідує його з будь-яким значенням.
 
-![no.criterions.png](./Images/no.criterions.png)
+![resource.without.criterion.png](./Images/resource.without.criterion.png)
 
 Зазначений крок `proto.release` буде виконаний при будь-якому значенні критеріона `debug` в збірці `release`. Якщо в збірку додати інші критеріони, крок також буде виконано.

@@ -16,4 +16,4 @@
 
 Приклад секції `about`:  
 
-![about.section.png](./Images/about.section.png)
+![section.about.png](./Images/section.about.png)

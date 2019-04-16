@@ -57,4 +57,4 @@ filePath :
 
 Приклад секції `reflector` з ресурсом `reflect.project`:
 
-![reflector.section.png](./Images/reflector.section.png)
+![section.reflector.png](./Images/section.reflector.png)

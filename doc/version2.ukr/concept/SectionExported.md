@@ -19,4 +19,4 @@
 
 Приклад секції `exported`:
 
-![exported.section.png](./Images/exported.section.png)
+![section.exported.png](./Images/section.exported.png)

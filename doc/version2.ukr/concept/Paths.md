@@ -20,4 +20,4 @@
 
 Приклад секції `path` з ресурсами `in`, `out`, `toDelete`:  
 
-![path.section.png](./Images/path.section.png)
+![section.path.png](./Images/section.path.png)
