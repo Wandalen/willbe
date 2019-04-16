@@ -84,18 +84,18 @@
 </details>
 <details>
   <summary><a href="./concept/Module.md#submodule">Підмодуль</a></summary>
-  Окремий модуль з власним конфігураційним <code>will-файлом</code>, який використовується іншим модулем ( супермодулем ).
+  Окремий модуль з власним конфігураційним <code>will-файлом</code>, який використовується іншим модулем (супермодулем).
 </details>
 <details>
   <summary><a href="./concept/Module.md#supermodule">Супермодуль</a></summary>
-  Модуль, який включає в себе інші модулі ( підмодулі ).
+  Модуль, який включає в себе інші модулі (підмодулі).
 </details>
 <details>
-  <summary><a href="./concept/SubmodulesLocalAndRemote.md#local-submodule">Локальний підмодуль</a></summary>
+  <summary><a href="./concept/SubmodulesLocalAndRemote.md#Локальний-підмодуль">Локальний підмодуль</a></summary>
   Підмодуль, який розташовується на машині користувача.
 </details>
 <details>
-  <summary><a href="./concept/SubmodulesLocalAndRemote.md#remote-submodule">Віддалений підмодуль</a></summary>
+  <summary><a href="./concept/SubmodulesLocalAndRemote.md#Віддалений-підмодуль">Віддалений підмодуль</a></summary>
   Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину.
 </details>
 <details>
