@@ -35,31 +35,31 @@ will-file
 
 <details>
   <summary><a href="./concept/SectionAbout.md">Секція <code>about</code></a></summary>
-  Секція містить описову інформація про модуль
+  Секція містить описову інформація про модуль.
 </details>
 <details>
-  <summary><a href="./concept/Path.section.md">Секція <code>path</code></a></summary>
-  Секція представляє карту шляхів модуля для швидкого орієнтування в його файловій структурі
+  <summary><a href="./concept/Paths.md#Секція-path">Секція <code>path</code></a></summary>
+  Секція представляє карту шляхів модуля для швидкого орієнтування в його файловій структурі.
 </details>
 <details>
   <summary><a href="./concept/Submodule.section.md">Секція <code>submodule</code></a></summary>
-  Секції містить інформацію про підмодулі
+  Секція містить інформацію про підмодулі.
 </details>
 <details>
-  <summary><a href="./concept/Submodule.section.md">Секція <code>step</code></a></summary>
-  Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля
+  <summary><a href="./concept/Steps.md#Секція-step">Секція <code>step</code></a></summary>
+  Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля.
 </details>
 <details>
-  <summary><a href="./concept/Submodule.section.md">Секція <code>reflector</code></a></summary>
-  Основними функціями ресурсів секції (рефлекторів) є файлові операції
+  <summary><a href="./concept/Reflectors.md#Секція-reflector">Секція <code>reflector</code></a></summary>
+  Секція містить рефлектори - ресурси для виконання операцій над групами файлів.
 </details>
 <details>
-  <summary><a href="./concept/Submodule.section.md">Секція <code>exported</code></a></summary>
-  Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля
+  <summary><a href="./concept/Builds.md#Секція-build">Секція <code>build</code></a></summary>
+  Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля.
 </details>
 <details>
-  <summary><a href="./concept/Submodule.section.md">Секція <code>build</code></a></summary>
-  Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля
+  <summary><a href="./concept/SectionExported.md">Секція <code>exported</code></a></summary>
+  Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.
 </details>
 
 Приклад `will-файла`:  

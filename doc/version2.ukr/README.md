@@ -55,7 +55,7 @@
   Секція представляє карту шляхів модуля для швидкого орієнтування в його файловій структурі.
 </details>
 <details>
-  <summary><a href="./concept/Submodule.section.md">Секція <code>submodule</code></a></summary>
+  <summary><a href="./concept/SectionSubmodule.md">Секція <code>submodule</code></a></summary>
   Секція містить інформацію про підмодулі.
 </details>
 <details>
