@@ -127,12 +127,12 @@
   Селектор, який для вибору ресурсу використовує пошукові шаблони - ґлоби.
 </details>
 <details>
-  <summary><a href="./concept/Asserts.md">Ґлоб з ассертом</a></summary>
-  Обмеження кількості ресурсів, що мають бути знайдені селектором з ґлобом.
+  <summary><a href="./concept/Criterions.md">Критеріон</a></summary>
+  Елемент порівняння для відбору ресурсів. 
 </details>
 <details>
-  <summary><a href="./concept/Criterions.md">Критеріон</a></summary>
-  Елемент порівняння для відбору ресусрів.
+  <summary><a href="./concept/Asserts.md">Ґлоб з ассертом</a></summary>
+  Обмеження кількості ресурсів, що мають бути знайдені селектором з ґлобом.
 </details>
 <details>
   <summary><a href="./concept/Inheritability.md">Наслідування ресурсами</a></summary>
