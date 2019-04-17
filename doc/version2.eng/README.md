@@ -135,7 +135,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 </details>
 <details>
   <summary><a href="./tutorial/Instalation.md">Instalation</a></summary>
-  Procedure of instalation of utility <code>willbe</code>
+  Procedure of instalation of utility. <code>willbe</code>
 </details>
 <details>
   <summary><a href="./tutorial/CLI.md">Command line interface</a></summary>

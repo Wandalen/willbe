@@ -55,7 +55,7 @@
   Секція представляє карту шляхів модуля для швидкого орієнтування в його файловій структурі.
 </details>
 <details>
-  <summary><a href="./concept/Submodule.section.md">Секція <code>submodule</code></a></summary>
+  <summary><a href="./concept/SectionSubmodule.md">Секція <code>submodule</code></a></summary>
   Секція містить інформацію про підмодулі.
 </details>
 <details>
@@ -84,18 +84,18 @@
 </details>
 <details>
   <summary><a href="./concept/Module.md#submodule">Підмодуль</a></summary>
-  Окремий модуль з власним конфігураційним <code>will-файлом</code>, який використовується іншим модулем ( супермодулем ).
+  Окремий модуль з власним конфігураційним <code>will-файлом</code>, який використовується іншим модулем (супермодулем).
 </details>
 <details>
   <summary><a href="./concept/Module.md#supermodule">Супермодуль</a></summary>
-  Модуль, який включає в себе інші модулі ( підмодулі ).
+  Модуль, який включає в себе інші модулі (підмодулі).
 </details>
 <details>
-  <summary><a href="./concept/SubmodulesLocalAndRemote.md#local-submodule">Локальний підмодуль</a></summary>
+  <summary><a href="./concept/SubmodulesLocalAndRemote.md#Локальний-підмодуль">Локальний підмодуль</a></summary>
   Підмодуль, який розташовується на машині користувача.
 </details>
 <details>
-  <summary><a href="./concept/SubmodulesLocalAndRemote.md#remote-submodule">Віддалений підмодуль</a></summary>
+  <summary><a href="./concept/SubmodulesLocalAndRemote.md#Віддалений-підмодуль">Віддалений підмодуль</a></summary>
   Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину.
 </details>
 <details>
@@ -127,12 +127,12 @@
   Селектор, який для вибору ресурсу використовує пошукові шаблони - ґлоби.
 </details>
 <details>
-  <summary><a href="./concept/Asserts.md">Ґлоб з ассертом</a></summary>
-  Обмеження кількості ресурсів, що мають бути знайдені селектором з ґлобом.
+  <summary><a href="./concept/Criterions.md">Критеріон</a></summary>
+  Елемент порівняння для відбору ресурсів. 
 </details>
 <details>
-  <summary><a href="./concept/Criterions.md">Критеріон</a></summary>
-  Елемент порівняння для відбору ресусрів.
+  <summary><a href="./concept/Asserts.md">Ґлоб з ассертом</a></summary>
+  Обмеження кількості ресурсів, що мають бути знайдені селектором з ґлобом.
 </details>
 <details>
   <summary><a href="./concept/Inheritability.md">Наслідування ресурсами</a></summary>
@@ -140,7 +140,7 @@
 </details>
 <details>
   <summary><a href="./concept/ReflectorFileFilter.md">Файловий фільтр</a></summary>
-  Спосіб опису критеріїв відобору необхідних файлів для виконання деякої операції над групою файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>.
+  Спосіб опису критеріїв відбору необхідних файлів для виконання деякої операції над групою файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>.
 </details>
 
 ## <a name="tutorials"></a> Туторіали
@@ -243,7 +243,7 @@
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorFSControl.md">Формування шляхів в рефлекторі. Управління файлами</a></summary>
-  Як формуються шляхи рефлекторів та як управляти файлами і директоріями в рефлекторі.
+  Як формуються шляхи рефлекторів та як управляти доступом до файлів і директорій в рефлекторі.
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorsPredefined.md">Вбудовані рефлектори</a></summary>
@@ -275,5 +275,5 @@
 </details>
 <details>
   <summary><a href="./tutorial/CommandClean.md">Команда очистки <code>.clean</code></a></summary>
-  Використання команди для очистки <code>.clean</code> для того щоб видалити згенеровані та тимчасові файли.
+  Використання команди <code>.clean</code> для очистки згенерованих та тимчасових файлів.
 </details>

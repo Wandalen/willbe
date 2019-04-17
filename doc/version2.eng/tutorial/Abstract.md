@@ -1,6 +1,6 @@
 # Abstract
 
-Utility for development which helps to manage modularity of complex modular systems.
+General information. What utility <code>willbe</code> is and what it is not.
 
 ### What `willbe` is
 
