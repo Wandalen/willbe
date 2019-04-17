@@ -1,14 +1,27 @@
-# Команди `.set`
+# Командa <code>.set</code>
 
-Як корстуватись командою <code>.set</code> для зміни станів утиліти, наприклад для зміни рівня вербальності.
+Як користуватись командою <code>.set</code> для зміни станів утиліти, наприклад, для зміни рівня вербальності.
 
-Працюючи з програмним забезпеченням користувачі ставлять перед ним вимоги, які базуються на досвіді та конкретній задачі. При цьому налаштування програми за замовчуванням далеко не завжди влаштовують ці вимоги.  
-Утиліта `willbe` призначений для побудови та адміністрування модульних систем. `Will`-модуль, як основна одиниця утиліти, складається з конфігураційного файла та того, що він описує, тому, майже всі налаштування системи поміщені в `will-файлі`. Запуск цих файлів відбувається з допомогою командного рядка системи і до цього моменту ви бачили ввід та результат, а внутрішні процеси були приховані. З командою `.set` можливо прослідкувати і за цим.  
-На даний час `willbe` може встановити лише один параметр - `verbosity`, який відповідає за вивід сервісної інформації виконання збірки `will-файла`. Для використання введіть `will .set verbosity:[n] ; [command] [argument]` (в деяких bash-терміналах з лапками - `will ".set verbosity:[n] ; [command] [argument]"`), де `verbosity` - відповідно, деталізація логу; `[n]` - число від 0 до 8 яке встановлює ступінь деталізації, 8 - найвищий ступінь; `[command]` - команда для якої виводиться лог; `[argument]` - аргумент команди, якщо він необхідний.  
-Створимо `will`-файл з двома збірками. Перша буде завантажувати підмодулі, а друга експортувати:
+Працюючи з програмним забезпеченням розробники ставлять перед ним вимоги, які базуються на досвіді та конкретній задачі. При цьому налаштування програми за замовчуванням не завжди влаштовують ці вимоги.  
+Утиліта `willbe` призначена для побудови модульних систем, а взаємодія з нею здійснюється через командний рядок системи. До цього моменту ви бачили ввід в консолі та результат, а внутрішні процеси були приховані. З командою `.set` можливо прослідкувати і за ними.  
+`Willbe` може встановити параметр `verbosity`, який відповідає за вивід сервісної інформації виконання команди. Для використання введіть `will .set verbosity:[n] ; [command] [argument]` (в деяких bash-терміналах з лапками - `will ".set verbosity:[n] ; [command] [argument]"`), де `verbosity` - відповідно, деталізація логу; `[n]` - число від 0 до 8 яке встановлює ступінь деталізації, 8 - найвищий ступінь; `[command]` - команда для якої виводиться лог; `[argument]` - аргумент команди, якщо він необхідний.  
+Створіть наступну конфігурацію файлів для дослідження параметру `verbosity`:  
 
 <details>
-    <summary><u>Лістинг `.will.yml`</u></summary>
+  <summary><u>Структура модуля</u></summary>
+
+```
+setCommand
+     └── .will.yml
+
+```
+
+</details>
+
+Помістіть в файл `.will.yml` код:  
+
+<details>
+    <summary><u>Код файла <code>.will.yml</code></u></summary>
 
 ```yaml
 about :
@@ -23,7 +36,6 @@ submodule :
 path :
 
   out : 'out'
-
   submodule.pathfundamental :
     criterion :
       debug : 1
@@ -39,27 +51,26 @@ step  :
 build :
 
   submodules.download :
-      criterion :
-          default : 1
-          debug : 0
-      steps :
-          - submodules.download
+    criterion :
+      default : 1
+    steps :
+      - submodules.download
 
   submodules.export :
-      criterion :
-          export : 1
-          debug : 1
-      steps :
-          - export.*
+    criterion :
+      export : 1
+      default : 1
+    steps :
+      - export.*
 
 ```
 
 </details>
 
-Протестуємо фразу `will .set verbosity:8 ; .build`:
+Запустіть побудову завантаження підмодулів з найвищим рівнем вербальності (`will .set verbosity:8 ; .build`):
 
 <details>
-    <summary><u>Лог побудови з `verbosity:8`</u></summary>
+    <summary><u>Вивід команди <code>will .set verbosity:8 ; .build</code></u></summary>
 
 ```
 [user@user ~]$ will ".set verbosity:8 ; .build"
@@ -148,15 +159,26 @@ Found no .out.will file for module::setVerbosity at "/path_to_module/UsingSetCom
 ```
 
 </details>
-
-Експортуємо модуль зі значенням `verbosity:4`:
-
 <details>
-    <summary><u>Лог експорту з `verbosity:4`</u></summary>
+  <summary><u>Структура модуля після побудови</u></summary>
 
 ```
-[user@user ~]$ will .set verbosity:4 ; .export submodules.export
-Command ".set ; .export submodules.export"
+setCommand
+     ├── .module
+     └── .will.yml
+
+```
+
+</details>
+
+Експортуйте модуль зі значенням `verbosity:4`:
+
+<details>
+    <summary><u>Вивід команди <code>will .set verbosity:4 ; .export</code></u></summary>
+
+```
+[user@user ~]$ will .set verbosity:4 ; .export
+Command ".set ; .export"
 Trying to open /path_to_module/UsingSetCommand.will
 Trying to open /path_to_module/UsingSetCommand.im.will
 Trying to open /path_to_module/UsingSetCommand.ex.will
@@ -181,11 +203,23 @@ Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPat
 ```
 
 </details>
+<details>
+  <summary><u>Структура модуля після експорту</u></summary>
 
-Видалимо підмодулі (`will .submodules.clean`) та знову завантажимо з `verbosity:0`:
+```
+setCommand
+     ├── out
+     ├── .module
+     └── .will.yml
+
+```
+
+</details>
+
+Видаліть підмодулі (`will .submodules.clean`) та завантажте з встановленим `verbosity:0`:
 
 <details>
-    <summary><u>Лог побудови `verbosity:0`</u></summary>
+    <summary><u>Вивід команди <code>will .set verbosity:0 ; .build</code></u></summary>
 
 ```
 [user@user ~]$ will .set verbosity:0 ; .build
@@ -195,8 +229,32 @@ Command ".set ; .build"
 ```
 
 </details>
+<details>
+  <summary><u>Структура модуля після вводу <code>will .submodules.clean</code></u></summary>
 
-- Встановлення параметра `verbosity` найбільш корисне при відладці модулів
+```
+setCommand
+     ├── out
+     └── .will.yml
 
-[Наступний туторіал]()  
+```
+
+</details>
+<details>
+  <summary><u>Структура модуля після вводу <code>will .set verbosity:0 ; .build</code></u></summary>
+
+```
+setCommand
+     ├── out
+     ├── .module
+     └── .will.yml
+
+```
+
+</details>
+
+### Підсумок
+- Параметр `verbosity` встановлює рівень вербальності команди - кількість виводу сервісної інформації про виконання команди. Найвищий рівень вербальності - "8", а найнижчий - "0".
+- Встановлення параметра `verbosity` корисне при відладці модулів.
+  
 [Повернутись до змісту](../README.md#tutorials)
