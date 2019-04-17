@@ -424,8 +424,11 @@ function stepRoutineView( frame )
   ({
     selector : opts.filePath,
     prefixlessAction : 'resolved',
+    pathNativizing : 1,
   });
   debugger;
+
+  // filePath = _.strReplace( filePath, '///', '//' );
 
   if( !Open )
   Open = require( 'open' );
@@ -437,20 +440,23 @@ function stepRoutineView( frame )
   {
     _.timeOut( opts.delay, () =>
     {
-      if( will.verbosity >= 3 )
-      logger.log( 'View ' + opts.filePath );
-      Open( opts.filePath );
+      view( filePath );
     });
     return null;
   }
 
-  debugger;
-  if( will.verbosity >= 3 )
-  logger.log( 'View ' + opts.filePath );
-  let result = Open( o.filePath );
-  debugger;
+  return view( filePath );
 
-  return result;
+  function view( filePath )
+  {
+    debugger;
+    if( will.verbosity >= 3 )
+    logger.log( 'View ' + filePath );
+    let result = Open( filePath );
+    debugger;
+    return result;
+  }
+
 }
 
 stepRoutineView.stepOptions =

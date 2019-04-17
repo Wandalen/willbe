@@ -51,6 +51,9 @@ function MakeForEachCriterion( o )
   let single = 1;
 
   if( o.criterion )
+  o.criterion = Cls.CriterionMapResolve( module, o.criterion );
+
+  if( o.criterion )
   o.criterion = Cls.CriterionNormalize( o.criterion );
 
   if( o.criterion && _.mapKeys( o.criterion ).length > 0 )
@@ -85,6 +88,8 @@ function MakeForEachCriterion( o )
   }
 
   return result;
+
+  /* */
 
   function make( o )
   {
@@ -659,6 +664,47 @@ function CriterionPostfixFor( criterionMaps, criterionMap )
 
   return result;
 }
+
+//
+
+function CriterionMapResolve( module, criterionMap )
+{
+
+  _.assert( arguments.length === 2 );
+  _.assert( _.mapIs( criterionMap ) );
+
+  let criterionMap2 = Object.create( null );
+
+  for( let c in criterionMap )
+  {
+    let value = criterionMap[ c ];
+
+    let c2 = module.resolve
+    ({
+      selector : c,
+      prefixlessAction : 'resolved',
+    });
+
+    let value2 = value;
+    if( _.strIs( value ) || _.arrayIs( value ) )
+    {
+      value2 = module.resolve
+      ({
+        selector : value,
+        prefixlessAction : 'resolved',
+      });
+    }
+
+    delete criterionMap[ c ];
+    criterionMap2[ c2 ] = value2;
+
+  }
+
+  _.mapExtend( criterionMap, criterionMap2 );
+
+  return criterionMap;
+}
+
 //
 
 function CriterionNormalize( criterionMap )
@@ -670,7 +716,6 @@ function CriterionNormalize( criterionMap )
   for( let c in criterionMap )
   {
     let value = criterionMap[ c ];
-    // _.assert( _.numberIs( value ) || _.boolIs( value ) || _.strIs( value ) || _.arrayIs( value ) );
     if( _.arrayIs( value ) )
     criterionMap[ c ] = value.map( ( e ) => CriterionValueNormalize( e ) )
     else
@@ -937,6 +982,7 @@ let Statics =
   OptionsFrom,
   CriterionVariable,
   CriterionPostfixFor,
+  CriterionMapResolve,
   CriterionNormalize,
   CriterionValueNormalize,
 

@@ -7,6 +7,4 @@ read[ a ] = File.readFileSync( process.argv[ a ], 'utf8' );
 if( process.argv.length < 4 )
 throw 'Lack of arguments';
 
-debugger;
 File.writeFileSync( process.argv[ process.argv.length-1 ], read.join( '' ) );
-debugger;

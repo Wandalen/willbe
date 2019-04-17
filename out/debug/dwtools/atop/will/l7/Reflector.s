@@ -102,8 +102,8 @@ function form1()
     reflector.dst._formAssociations();
   }
 
-  if( reflector.nickName === "reflector::reflect.proto.2.debug" )
-  debugger;
+  // if( reflector.nickName === "reflector::reflect.proto.2.debug" )
+  // debugger;
 
   /* end */
 
@@ -129,8 +129,8 @@ function form2()
 
   _.assert( reflector.formed === 1 );
 
-  // if( reflector.nickName === "reflector::reflect.proto.2.debug" )
-  // debugger;
+  if( reflector.nickName === "reflector::reflect.proto.4.debug" )
+  debugger;
 
   reflector.src.pairWithDst( reflector.dst );
   if( reflector.src.filePath !== reflector.dst.filePath )
@@ -158,7 +158,7 @@ function form3()
 
   /* begin */
 
-  if( reflector.nickName === "reflector::reflect.submodules" )
+  if( reflector.nickName === "reflector::reflect.proto.4.debug" )
   debugger;
 
   reflector.pathsResolve();
@@ -179,7 +179,7 @@ function form3()
   _.assert( reflector.src.prefixPath === null || path.isAbsolute( reflector.src.prefixPath ) );
   _.assert( reflector.dst.prefixPath === null || path.isAbsolute( reflector.dst.prefixPath ) );
 
-  if( reflector.nickName === "reflector::reflect.submodules" )
+  if( reflector.nickName === "reflector::reflect.proto.4.debug" )
   debugger;
 
   /* end */

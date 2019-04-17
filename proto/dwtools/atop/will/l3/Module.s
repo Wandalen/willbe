@@ -3895,7 +3895,6 @@ function _resolveAct( o )
     if( o.pathResolving || it.compositeFunction )
     pathsResolve.call( it );
 
-    // if( o.pathResolving && it.dstWritingDown )
     if( it.dstWritingDown )
     if( o.pathNativizing || it.compositeFunction )
     pathsNativize.call( it );
@@ -3911,11 +3910,7 @@ function _resolveAct( o )
   {
     let it = this;
 
-    // if( it.selectOptions.selector === "path::paths/f::strings.join" )
-    // debugger;
-
-    functionApply.call( it );
-
+    functionStringsJoinDown.call( it );
     mapsFlatten.call( it );
     mapValsUnwrap.call( it );
     arrayFlatten.call( it );
@@ -4055,29 +4050,14 @@ function _resolveAct( o )
 
       if( it.selector === 'strings.join' )
       {
-
-        it.src = [ it.src ];
-        it.src[ functionSymbol ] = it.selector;
-        it.dst = [ it.dst ];
-        it.dst[ functionSymbol ] = it.selector;
-
-        debugger;
-
-        it.selector = 0;
-        it.compositeFunction = it.selector;
-        sop.selectorChanged.call( it );
-
+        functionStringsJoinUp.call( it );
       }
-      else if( it.selector === 'platform' )
+      else if( it.selector === 'os' )
       {
-        debugger;
-        xxx
+        functionOsGetUp.call( it );
       }
       else _.sure( 0, 'Unknown function', it.parsedSelector.full );
 
-      // globCriterionFilter();
-      // debugger;
-      // xxx
     }
     else if( kind === 'this' )
     {
@@ -4156,19 +4136,59 @@ function _resolveAct( o )
 
   /* */
 
-  function functionApply()
+  function functionStringsJoinUp()
   {
     let it = this;
+    let sop = it.selectOptions;
+
+    _.sure( !!it.down, () => it.parsedSelector.full + ' expects context to join it' );
+
+    it.src = [ it.src ];
+    it.src[ functionSymbol ] = it.selector;
+    it.dst = [ it.dst ];
+    it.dst[ functionSymbol ] = it.selector;
+
+    it.selector = 0;
+    it.compositeFunction = it.selector;
+    sop.selectorChanged.call( it );
+
+  }
+
+  /* */
+
+  function functionStringsJoinDown()
+  {
+    let it = this;
+    let sop = it.selectOptions;
 
     if( !_.arrayIs( it.src ) || !it.src[ functionSymbol ] )
     return;
 
     it.dst = it.dst.join( ' ' );
 
-    // pathsResolve.call( it );
-    //
-    // x
-    // debugger; xxx
+  }
+
+  /* */
+
+  function functionOsGetUp()
+  {
+    let it = this;
+    let sop = it.selectOptions;
+    let Os = require( 'os' );
+    let os = 'posix';
+
+    debugger;
+
+    if( Os.platform() === 'win32' )
+    os = 'windows';
+    else if( Os.platform() === 'darwin' )
+    os = 'osx';
+
+    it.dst = os;
+    it.src = os;
+    it.selector = undefined;
+
+    sop.selectorChanged.call( it );
 
   }
 
@@ -4215,9 +4235,6 @@ function _resolveAct( o )
     let currentModule = it.module;
     let resource = it.dst;
 
-    // if( !it.dstWritingDown )
-    // return;
-
     if( resource instanceof will.Reflector )
     {
       if( currentModule.SelectorIsComposite( resource.src.prefixPath ) || currentModule.SelectorIsComposite( resource.dst.prefixPath ) )
@@ -4250,12 +4267,9 @@ function _resolveAct( o )
 
     _.assert( _.strIs( filePath ) || _.strsAreAll( filePath ) );
 
-    // if( it.selectOptions.selector === "path::paths/f::strings.join" )
-    // debugger;
-
     if( it.replicateIteration.composite )
     if( it.replicateIteration.compositeRoot !== it.replicateIteration )
-    if( it.down === it.replicateIteration.compositeRoot )
+    if( it.replicateIteration.compositeRoot === it.replicateIteration.down )
     {
       if( it.replicateIteration.key !== 0 )
       return result;

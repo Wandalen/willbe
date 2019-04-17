@@ -5655,6 +5655,60 @@ console.log( 'File1.js' );
 
 //
 
+function functionPlatform( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'function-platform' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build'
+    return null;
+  })
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.build' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'copy reflected 2 files' ), 1 );
+
+    var Os = require( 'os' );
+    var files = self.find( outPath );
+
+    if( Os.platform() === 'win32' )
+    test.identical( files, [ '.', './dir.windows', './dir.windows/File.js' ] );
+    else if( Os.platform() === 'darwin' )
+    test.identical( files, [ '.', './dir.osx', './dir.osx/File.js' ] );
+    else
+    test.identical( files, [ '.', './dir.posix', './dir.posix/File.js' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+//
+
 var Self =
 {
 
@@ -5732,6 +5786,7 @@ var Self =
     transpile,
     // shellArgs,
     shellComplex,
+    functionPlatform,
 
   }
 
