@@ -2,14 +2,17 @@ format: willfile-1.0.0
 about:
   name: willbe
   description: Utility to manage modules of complex modular systems
-  version: 0.3.166
   enabled: 1
-  interpreters:
-    - nodejs >= 6.0.0
-    - chrome >= 60.0.0
-    - firefox >= 60.0.0
-  keywords:
-    - wTools
+  version: 0.3.166
+  values:
+    enabled: 1
+    name: willbe
+    interpreters:
+      - nodejs >= 6.0.0
+      - chrome >= 60.0.0
+      - firefox >= 60.0.0
+    keywords:
+      - wTools
 execution:
   scripts:
     test: wtest proto
@@ -299,7 +302,11 @@ path:
       - proto/dwtools/atop/will.test/asset/reflect-inherit
       - proto/dwtools/atop/will.test/asset/reflect-inherit/proto
       - proto/dwtools/atop/will.test/asset/reflect-inherit/proto/File.js
+      - proto/dwtools/atop/will.test/asset/reflect-inherit/proto/File.s
       - proto/dwtools/atop/will.test/asset/reflect-inherit/proto/File.test.js
+      - proto/dwtools/atop/will.test/asset/reflect-inherit/proto/some.test
+      - >-
+        proto/dwtools/atop/will.test/asset/reflect-inherit/proto/some.test/File2.js
       - proto/dwtools/atop/will.test/asset/reflect-nothing-from-submodules
       - proto/dwtools/atop/will.test/asset/reflect-nothing-from-submodules/proto
       - >-
@@ -356,14 +363,15 @@ path:
       - proto/dwtools/atop/will.test/asset/scaffold/proto/File.debug.js
       - proto/dwtools/atop/will.test/asset/scaffold/proto/File.js
       - proto/dwtools/atop/will.test/asset/scaffold/proto/File.release.js
-      - proto/dwtools/atop/will.test/asset/shell
-      - proto/dwtools/atop/will.test/asset/shell/script.js
-      - proto/dwtools/atop/will.test/asset/shell-composite
-      - proto/dwtools/atop/will.test/asset/shell-composite/proto
-      - proto/dwtools/atop/will.test/asset/shell-composite/proto/File1.js
-      - proto/dwtools/atop/will.test/asset/shell-composite/proto/File2.js
-      - proto/dwtools/atop/will.test/asset/shell-composite/proto/File3.js
-      - proto/dwtools/atop/will.test/asset/shell-composite/proto/Produce.js
+      - proto/dwtools/atop/will.test/asset/shell-args
+      - proto/dwtools/atop/will.test/asset/shell-args/script.js
+      - proto/dwtools/atop/will.test/asset/shell-complex
+      - proto/dwtools/atop/will.test/asset/shell-complex/proto
+      - proto/dwtools/atop/will.test/asset/shell-complex/proto/Echo.js
+      - proto/dwtools/atop/will.test/asset/shell-complex/proto/File1.js
+      - proto/dwtools/atop/will.test/asset/shell-complex/proto/File2.js
+      - proto/dwtools/atop/will.test/asset/shell-complex/proto/File3.js
+      - proto/dwtools/atop/will.test/asset/shell-complex/proto/Produce.js
       - proto/dwtools/atop/will.test/asset/simple
       - proto/dwtools/atop/will.test/asset/simple/proto
       - proto/dwtools/atop/will.test/asset/simple/proto/File.js
