@@ -379,7 +379,7 @@ function _inheritMultiple( o )
       prefixlessAction : 'default',
       visited : o.visited,
       currentContext : resource,
-      flattening : 1,
+      mapFlattening : 1,
     });
 
     if( _.mapIs( ancestors ) )
@@ -531,6 +531,35 @@ function criterionSattisfy( criterion2 )
   {
     if( criterion1[ c ] === undefined )
     continue;
+    if( criterion1[ c ] !== criterion2[ c ] )
+    return false;
+  }
+
+  return true;
+}
+
+//
+
+function criterionSattisfyStrict( criterion2 )
+{
+  let resource = this;
+  let criterion1 = resource.criterion;
+
+  _.assert( criterion1 === null || _.mapIs( criterion1 ) );
+  _.assert( criterion2 === null || _.mapIs( criterion2 ) );
+  _.assert( arguments.length === 1 );
+
+  if( criterion1 === null )
+  return true;
+  if( criterion2 === null )
+  return true;
+
+  for( let c in criterion2 )
+  {
+
+    if( criterion1[ c ] === undefined && !criterion2[ c ] )
+    continue;
+
     if( criterion1[ c ] !== criterion2[ c ] )
     return false;
   }
@@ -964,6 +993,7 @@ let Proto =
 
   criterionValidate,
   criterionSattisfy,
+  criterionSattisfyStrict,
   criterionInherit,
   criterionVariable,
   CriterionVariable,

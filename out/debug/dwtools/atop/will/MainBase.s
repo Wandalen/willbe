@@ -30,8 +30,7 @@
 - Predefined platform
 - Faster loading, perhaps without submodules
 - Option args for step shell
-
-- view filePath issue
+- Fix view filePath issue
 
 */
 

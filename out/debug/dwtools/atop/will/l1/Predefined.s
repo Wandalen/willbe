@@ -9,7 +9,7 @@ if( typeof module !== 'undefined' )
 
 }
 
-let Tar, Opn;
+let Tar, Open;
 let _ = wTools;
 let Self = Object.create( null );
 
@@ -312,39 +312,6 @@ function stepRoutineShell( frame )
     return arg;
   });
 
-  // /* */
-  //
-  // debugger;
-  // opts.shell = module.resolve
-  // ({
-  //   selector : opts.shell,
-  //   pathNativizing : 1,
-  //   prefixlessAction : 'resolved',
-  //   currentThis : forEachDst,
-  // });
-  // debugger;
-  //
-  // /* */
-  //
-  // if( opts.currentPath )
-  // opts.currentPath = step.inPathResolve({ selector : opts.currentPath, prefixlessAction : 'resolved' });
-  // _.sure( opts.currentPath === null || _.strIs( opts.currentPath ), 'Current path should be string if defined' );
-  //
-  // /* */
-  //
-  // return _.shell
-  // ({
-  //   execPath : opts.shell,
-  //   currentPath : opts.currentPath,
-  //   verbosity : will.verbosity - 1,
-  // })
-  // .finally( ( err, arg ) =>
-  // {
-  //   if( err )
-  //   throw _.errBriefly( 'Failed to shell', step.nickName, '\n', err );
-  //   return arg;
-  // });
-
 }
 
 stepRoutineShell.stepOptions =
@@ -379,9 +346,6 @@ function stepRoutineTranspile( frame )
 
   _.include( 'wTranspilationStrategy' );
 
-  // tests : [ 'no.tests', 'only.tests' ]
-  // debug : [ 'debug', 'release' ]
-
   let debug = false;
   if( _.strIs( frame.resource.criterion.debug ) )
   debug = frame.resource.criterion.debug === 'debug';
@@ -398,7 +362,6 @@ function stepRoutineTranspile( frame )
   if( debug )
   transpilingStrategies = [ 'Nop' ];
 
-  debugger;
   let ts = new _.TranspilationStrategy({ logger : logger }).form();
   let multiple = ts.multiple
   ({
@@ -456,16 +419,16 @@ function stepRoutineView( frame )
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
 
-  // debugger;
+  debugger;
   let filePath = step.resolve
   ({
     selector : opts.filePath,
     prefixlessAction : 'resolved',
   });
-  // debugger;
+  debugger;
 
-  if( !Opn )
-  Opn = require( 'opn' );
+  if( !Open )
+  Open = require( 'open' );
 
   if( opts.delay )
   opts.delay = Number( opts.delay );
@@ -476,7 +439,7 @@ function stepRoutineView( frame )
     {
       if( will.verbosity >= 3 )
       logger.log( 'View ' + opts.filePath );
-      Opn( opts.filePath );
+      Open( opts.filePath );
     });
     return null;
   }
@@ -484,7 +447,7 @@ function stepRoutineView( frame )
   debugger;
   if( will.verbosity >= 3 )
   logger.log( 'View ' + opts.filePath );
-  let result = Opn( o.filePath );
+  let result = Open( o.filePath );
   debugger;
 
   return result;
