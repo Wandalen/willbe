@@ -1,6 +1,6 @@
-# Встановлення
+# Instalation
 
-Процедура встановлення утиліти <code>willbe</code>
+Procedure of instalation of utility.
 
 ### Встановлення `NodeJS`
 
