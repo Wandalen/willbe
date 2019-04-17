@@ -243,7 +243,7 @@
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorFSControl.md">Формування шляхів в рефлекторі. Управління файлами</a></summary>
-  Як формуються шляхи рефлекторів та як управляти файлами і директоріями в рефлекторі.
+  Як формуються шляхи рефлекторів та як управляти доступом до файлів і директорій в рефлекторі.
 </details>
 <details>
   <summary><a href="./tutorial/ReflectorsPredefined.md">Вбудовані рефлектори</a></summary>
