@@ -1,6 +1,6 @@
-## Рефлектор  
+## Reflector  
 
-Ресурс секції <code>reflector</code>, який формулює напрям і критерії здійснення операцій над групою файлів.    
+<code>Reflector</code> section resource which defines the direction and criteria for performing operations over a group of files.    
 
 #### Поля ресурсів секції `reflector`     
 

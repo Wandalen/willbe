@@ -1,6 +1,6 @@
-## Збірка
+## Build assembly
 
-Послідовність і умови виконання процедур побудови модуля.
+Sequence and conditions of procedures execution for module constructing.
 
 Сценарій збірки - послідовність виконання кроків в збірці. 
 

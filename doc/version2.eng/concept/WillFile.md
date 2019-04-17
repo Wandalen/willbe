@@ -1,6 +1,6 @@
-# <code>Will-файл</code>
+# <code>Will-file</code>
 
-Конфігураційний файл для опису та збірки модуля. Кожен формальний модуль має такий файл.
+Config for describing and building a module. Each formal module has such file.
 
 Для [неформальних підмодулів](SubmoduleInformal.md) такий файл має бути створено, для того щоб ним зручно було користуватися.
 `Will-файл` має наступні властивості:  
