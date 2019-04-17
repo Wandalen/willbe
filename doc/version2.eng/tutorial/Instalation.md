@@ -1,6 +1,6 @@
 # Instalation
 
-Procedure of instalation of utility.
+Procedure of installation of utility.
 
 ### Встановлення `NodeJS`
 

@@ -1,6 +1,6 @@
-# Інтерфейс командного рядка
+# Command line interface
 
-Як користуватися інтерфейсом командного рядка утиліти <code>willbe</code>. Застосування команд <code>.help</code> та <code>.list</code>.
+How to use command line interface of utility <code>willbe</code>. How to use command <code>.help</code> and command <code>.list</code>.
 
 ### Інтерфейс командного рядка.
 
