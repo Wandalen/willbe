@@ -198,6 +198,9 @@ path:
       - proto/dwtools/atop/will.test/asset/export-with-reflector/proto/include
       - >-
         proto/dwtools/atop/will.test/asset/export-with-reflector/proto/include/MustBeExcluded.s
+      - proto/dwtools/atop/will.test/asset/function-platform
+      - proto/dwtools/atop/will.test/asset/function-platform/proto
+      - proto/dwtools/atop/will.test/asset/function-platform/proto/File.js
       - proto/dwtools/atop/will.test/asset/import-in
       - proto/dwtools/atop/will.test/asset/import-in/super.ex.will.yml
       - proto/dwtools/atop/will.test/asset/import-in/super.im.will.yml
@@ -382,6 +385,8 @@ path:
       - proto/dwtools/atop/will.test/asset/single with space/proto
       - proto/dwtools/atop/will.test/asset/single with space/proto/Single.s
       - proto/dwtools/atop/will.test/asset/step-shell
+      - proto/dwtools/atop/will.test/asset/step-view
+      - proto/dwtools/atop/will.test/asset/step-view/File.html
       - proto/dwtools/atop/will.test/asset/submodule-download
       - proto/dwtools/atop/will.test/asset/submodule-download/proto
       - proto/dwtools/atop/will.test/asset/submodule-download/proto/Simple.js
