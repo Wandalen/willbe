@@ -6549,74 +6549,87 @@ function common( test )
 
 //
 
-function filter( test )
+function pathMapFilter( test )
 {
+
   test.case = 'string';
   var src = '/a/b/c';
-  var got = _.path.filter( src,onEach );
+  var got = _.path.pathMapFilter( src,onEach );
   var expected = '/prefix/a/b/c';
   test.identical( got, expected );
-  test.notIdentical( got, src );
 
   test.case = 'array';
   var src = [ '/a', '/b' ];
-  var got = _.path.filter( src,onEach );
+  var got = _.path.pathMapFilter( src,onEach );
   var expected = [ '/prefix/a', '/prefix/b' ];
   test.identical( got, expected );
-  test.notIdentical( got, src );
+  test.is( got !== src );
 
   test.case = 'array filter';
+  var original = [ '/a', 'b' ];
   var src = [ '/a', 'b' ];
-  var got = _.path.filter( src,onEachFilter );
+  var got = _.path.pathMapFilter( src,onEachFilter );
   var expected = [ '/a' ];
   test.identical( got, expected );
-  test.notIdentical( got, src );
+  test.identical( src, original );
 
   test.case = 'map';
+  var original = { '/src' : '/dst' };
   var src = { '/src' : '/dst' };
-  var got = _.path.filter( src,onEach );
+  var got = _.path.pathMapFilter( src, onEach );
   var expected = { '/prefix/src' : '/prefix/dst' };
   test.identical( got, expected );
-  test.notIdentical( got, src );
+  test.identical( src, original );
 
   test.case = 'map filter';
+  var original = { '/src' : 'dst' };
   var src = { '/src' : 'dst' };
-  var got = _.path.filter( src,onEachFilter );
+  var got = _.path.pathMapFilter( src, onEachFilter );
   var expected = {};
   test.identical( got, expected );
-  test.notIdentical( got, src );
+  test.identical( src, original );
+  test.is( got !== src );
+
+  test.case = 'map with multiple keys';
+  var original = { '/src1' : 'dst1', '/src2' : 'dst2' };
+  var src = { '/src1' : 'dst1', '/src2' : 'dst2' };
+  var got = _.path.pathMapFilter( src, onEach );
+  var expected = { '/prefix/src1' : '/prefix/dst1', '/prefix/src2' : '/prefix/dst2' };
+  test.identical( got, expected );
+  test.identical( src, original );
+  test.is( got !== src );
 
   test.case = 'map filter';
   var src = { '/a' : [ '/b', 'c', null, undefined ] };
-  var got = _.path.filter( src,onEachStructure );
+  var got = _.path.pathMapFilter( src,onEachStructure );
   var expected =
   {
     '/src/a' : [ '/dst/b','/dst/c', '/dst', '/dst' ]
-  };
+  }
   test.identical( got, expected );
-  test.notIdentical( got, src );
+  test.is( got !== src );
 
   test.case = 'map filter keys, onEach returns array with undefined';
   var src = { '/a' : '/b' };
-  var got = _.path.filter( src,onEachStructureKeys );
+  var got = _.path.pathMapFilter( src,onEachStructureKeys );
   var expected =
   {
     '/src/a' : '/b'
-  };
+  }
   test.identical( got, expected );
-  test.notIdentical( got, src );
+  test.is( got !== src );
 
   test.case = 'null';
   var src = null;
-  var got = _.path.filter( src,onEach );
+  var got = _.path.pathMapFilter( src,onEach );
   var expected = '/';
   test.identical( got, expected );
-  test.notIdentical( got, src );
+  test.is( got !== src );
 
   if( Config.debug )
   {
     test.case = 'number';
-    test.shouldThrowErrorSync( () => _.path.filter( 1,onEach ) )
+    test.shouldThrowErrorSync( () => _.path.pathMapFilter( 1,onEach ) )
   }
 
   /*  */
@@ -6660,45 +6673,46 @@ function filter( test )
 
 //
 
-function refilter( test )
+function pathMapRefilter( test )
 {
+
   test.case = 'string';
   var src = '/a/b/c';
-  var got = _.path.refilter( src,onEach );
+  var got = _.path.pathMapRefilter( src,onEach );
   var expected = '/prefix/a/b/c';
   test.identical( got, expected );
 
   test.case = 'array';
   var src = [ '/a', '/b' ];
-  var got = _.path.refilter( src,onEach );
+  var got = _.path.pathMapRefilter( src,onEach );
   var expected = [ '/prefix/a', '/prefix/b' ];
   test.identical( got, expected );
   test.identical( got, src );
 
   test.case = 'array filter';
   var src = [ '/a', 'b' ];
-  var got = _.path.refilter( src,onEachFilter );
+  var got = _.path.pathMapRefilter( src,onEachFilter );
   var expected = [ '/a' ];
   test.identical( got, expected );
   test.identical( src, expected );
 
   test.case = 'map';
   var src = { '/src' : '/dst' };
-  var got = _.path.refilter( src,onEach );
+  var got = _.path.pathMapRefilter( src,onEach );
   var expected = { '/prefix/src' : '/prefix/dst' };
   test.identical( got, expected );
   test.identical( got, src );
 
   test.case = 'map filter';
   var src = { '/src' : 'dst' };
-  var got = _.path.refilter( src,onEachFilter );
+  var got = _.path.pathMapRefilter( src,onEachFilter );
   var expected = {};
   test.identical( got, expected );
   test.identical( src, expected );
 
   test.case = 'map filter';
   var src = { '/a' : [ '/b', 'c', null, undefined ] };
-  var got = _.path.refilter( src,onEachStructure );
+  var got = _.path.pathMapRefilter( src,onEachStructure );
   var expected =
   {
     '/src/a' : [ '/dst/b','/dst/c', '/dst', '/dst' ]
@@ -6708,7 +6722,7 @@ function refilter( test )
 
   test.case = 'map filter keys, onEach returns array with undefined';
   var src = { '/a' : '/b' };
-  var got = _.path.refilter( src,onEachStructureKeys );
+  var got = _.path.pathMapRefilter( src,onEachStructureKeys );
   var expected =
   {
     '/src/a' : '/b'
@@ -6716,16 +6730,24 @@ function refilter( test )
   test.identical( got, expected );
   test.identical( src, expected );
 
+  test.case = 'map with multiple keys';
+  var original = { '/src1' : 'dst1', '/src2' : 'dst2' };
+  var src = { '/src1' : 'dst1', '/src2' : 'dst2' };
+  var got = _.path.pathMapRefilter( src, onEach );
+  var expected = { '/prefix/src1' : '/prefix/dst1', '/prefix/src2' : '/prefix/dst2' };
+  test.identical( got, expected );
+  test.is( got === src );
+
   test.case = 'null';
   var src = null;
-  var got = _.path.refilter( src,onEach );
+  var got = _.path.pathMapRefilter( src,onEach );
   var expected = '/';
   test.identical( got, expected );
 
   if( Config.debug )
   {
     test.case = 'number';
-    test.shouldThrowErrorSync( () => _.path.refilter( 1,onEach ) )
+    test.shouldThrowErrorSync( () => _.path.pathMapRefilter( 1,onEach ) )
   }
 
   /*  */
@@ -6825,8 +6847,8 @@ var Self =
 
     common,
 
-    filter,
-    refilter
+    pathMapFilter,
+    pathMapRefilter
 
   },
 

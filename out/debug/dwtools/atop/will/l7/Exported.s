@@ -451,7 +451,9 @@ function performWriteOutFile()
   _.assert( module2.pathResourceMap[ inPathResource.name ] === inPathResource );
 
   let outFilePath = build.outFilePathFor();
+  debugger;
   let data = module2.dataExport({ copyingNonWritable : 0, copyingPredefined : 0 });
+  debugger;
 
   _.assert( !data.path || !data.path[ 'predefined.will.files' ] );
   _.assert( !data.path || !data.path[ 'predefined.dir' ] );
