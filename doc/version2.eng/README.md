@@ -7,7 +7,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 ## Concepts
 
 <details>
-  <summary><a href="./concept/WillFile.md"><code>Will-file</code></a></summary>
+  <summary><a href="./concept/WillFile.md"><code>Will-file</code>  </a></summary>
   Config for describing and building a module. Each formal module has such file.
 </details>
 <details>
@@ -26,7 +26,6 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   <summary><a href="./concept/Structure.md#Type-of-resource">Type of resource</a></summary>
   Functionality associated with group of resources restricted by its purpose. Examples of types of resources: path, submodule, step, build. Each type of resources has its own purpose and is treated by the utility differently.
 </details>
-
 <details>
   <summary><a href="./concept/Paths.md#Path">Path</a></summary>
    <code>Path</code> section resource which points to the placement of module elements and used in routing for other resources.
@@ -81,19 +80,19 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 </details>
 <details>
   <summary><a href="./concept/Module.md#Module">Module</a></summary>
-  Module is set of files described in <code>will-file</code>
+  Module is set of files described in <code>will-file</code>.
 </details>
 <details>
   <summary><a href="./concept/Module.md#Submodule">Submodule</a></summary>
-  A module with its own <code>will-file</code> which used but other module ( supermodule ).
+  A module with its own <code>will-file</code> which used but other module (supermodule).
 </details>
 <details>
   <summary><a href="./concept/Module.md#Supermodule">Supermodule</a></summary>
-  A module which has other modules ( submodules ).
+  A module which has other modules (submodules).
 </details>
 <details>
   <summary><a href="./concept/SubmodulesLocalAndRemote.md#Local-submodule">Local submodule</a></summary>
-  A submodule which is located locally
+  A submodule which is located locally.
 </details>
 <details>
   <summary><a href="./concept/SubmodulesLocalAndRemote.md#Remote-submodule">Remote submodule</a></summary>
@@ -136,15 +135,15 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   Restriction of glob by number of expected resources which should be found by the selector.
 </details>
 <details>
-  <summary><a href="./concept/Inheritability.md">Resources inheritance</a></summary>
+  <summary><a href="./concept/Inheritance.md">Resources inheritance</a></summary>
   Approach of description of a module according to wich <code>will-file</code> can reuse (inherit) value of fields of other resource(s) of the same type.
 </details>
 <details>
-  <summary><a href="./concept/FileFilter.md">File filter</a></summary>
+  <summary><a href="./concept/ReflectorFileFilter.md">File filter</a></summary>
   Technique to describe conditions of selection required files for some operation on group of files. Reflector has two file filters: <code>src</code> and <code>dst</code>.
 </details>
 
-## Totorials
+## Tutorials
 
 <details>
   <summary><a href="./tutorial/Abstract.md">Abstract</a></summary>
@@ -180,7 +179,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 </details>
 <details>
   <summary><a href="./tutorial/CriterionDefault.md">Default build</a></summary>
-  How to build without explicit argument for command <code>.build</code>
+  How to build without explicit argument for command <code>.build</code>.
 </details>
 <details>
   <summary><a href="./tutorial/ModuleExport.md">Exporting of a module</a></summary>
@@ -188,11 +187,11 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 </details>
 <details>
   <summary><a href="./tutorial/SubmodulesLocal.md">Importing of local submodule</a></summary>
-  How to use local submodule from another module.
+  How to use local submodule from another module (supermodule).
 </details>
 <details>
   <summary><a href="./tutorial/SelectorsWithGlob.md">Selectors with globs</a></summary>
-  How to use selectors with globs
+  How to use selectors with globs.
 </details>
 <details>
   <summary><a href="./tutorial/AssertsUsing.md">How to use assertions</a></summary>
@@ -207,7 +206,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   How to create and use a module with split <code>will-fileми</code>.
 </details>
 <details>
-  <summary><a href="./tutorial/WillFileNamed.md">Command <code>.with</code> and named <code>will-file</code>. </a></summary>
+  <summary><a href="./tutorial/WillFileNamed.md">Command <code>.with</code> and named <code>will-file</code></a></summary>
   How to use command <code>.with</code>? What is named <code>will-file</code>?
 </details>
 <details>
@@ -215,7 +214,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   How to use command <code>.each</code> for executing same operation for each module or submodule.
 </details>
 <details>
-  <summary><a href="./tutorial/StepJS.md">Using <code>JavaScript</code> files utility <code>willbe</code></a></summary>
+  <summary><a href="./tutorial/StepJS.md">Using <code>JavaScript</code> files by utility <code>willbe</code></a></summary>
   How to use JavaScript files by utility <code>willbe</code> for complicated scenarios of builds.
 </details>
 <details>
@@ -223,7 +222,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   How to use command <code>.set</code> to change state of the utility, for example to change level of verbosity.
 </details>
 <details>
-  <summary><a href="./tutorial/SelectorComplex.md">Composte selectors</a></summary>
+  <summary><a href="./tutorial/SelectorComposite.md">Composite selectors</a></summary>
   How to use composite selectors for selecting of resources of submodules.
 </details>
 <details>
@@ -251,7 +250,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   How to use predefined reflectors to split debug and release files and how to build a multibuild.
 </details>
 <details>
-  <summary><a href="./tutorial/ResourceInheritability.md">Resources inheritance</a></summary>
+  <summary><a href="./tutorial/ResourceInheritance.md">Resources inheritance</a></summary>
   How to use resource inheritance to reuse data.
 </details>
 <details>

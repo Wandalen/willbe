@@ -1,8 +1,8 @@
 # `Will-file` structure
 
-### Секція <code>will-файла</code>  
+### Section <code>will-file</code>   
 
-Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що описують даний модуль.
+Higher structural element of <code>will-file</code>, which consists of resources of single type or fields, which describe the module.
 
 Для побудови модуля існує 6-ть необов'язкових секцій: `about`, `path`, `submodule`, `step`, `reflector`, `build` та одна секція, яка генерується утилітою `willbe` при експорті модуля - секція `exported`.   
 

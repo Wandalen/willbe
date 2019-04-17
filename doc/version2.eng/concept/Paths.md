@@ -14,9 +14,9 @@
 | inherit        | наслідування значень полів іншого ресурса   | 
 
 
-## Секція <code>path</code>
+## Section <code>path</code>
 
-Секція представляє карту шляхів модуля для швидкого орієнтування в його файловій структурі.  
+The section has map of paths for fast understanding of files structure of the module.    
 
 Приклад секції `path` з ресурсами `in`, `out`, `toDelete`:  
 

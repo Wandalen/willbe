@@ -169,8 +169,10 @@ build:                                  # Назва секції
 
 ```
 
-## Секція <code>step</code> 
-Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля. Ресурси секції - кроки - поміщають в сценарії збірок секції <code>build</code> для виконання побудови. 
+## Section <code>step</code> 
+The section has steps which could be used by build for building of the module.  
+
+Ресурси секції - кроки - поміщають в сценарії збірок секції <code>build</code> для виконання побудови. 
 
 Приклад секції `step` з ресурсами `export.proto`, `proto.release`: 
 

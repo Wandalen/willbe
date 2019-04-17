@@ -1,6 +1,6 @@
-# Використання <code>JavaScript</code> файлів утилітою <code>willbe</code>
+# Using <code>JavaScript</code> files by utility <code>willbe</code>
 
-Як використовувати <code>JavaScript</code> файли в утиліті <code>willbe</code> для виконання складних сценаріїв побудови.
+How to use JavaScript files by utility <code>willbe</code> for complicated scenarios of builds.
 
 Для виконання деяких функцій побудови модуля, зручніше використовувати зовнішні програми і скрипти. Для цієї мети в утиліті `willbe` використовуються JavaScript файли.   
 Створіть директорію `jsUsing` наступної конфігурації:  

@@ -50,9 +50,10 @@ filePath :
 ```
 
 
-## Секція <code>reflector</code>  
+## Section <code>reflector</code>  
 
-Секція містить рефлектори - ресурси для виконання операцій над групами файлів.
+The section has reflectors, special type of resource for operation on groups of files.  
+
 Основними операціями є вибір файлів (директорій) та копіювання. 
 
 Приклад секції `reflector` з ресурсом `reflect.project`:

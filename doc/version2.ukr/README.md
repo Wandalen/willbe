@@ -135,7 +135,7 @@
   Обмеження кількості ресурсів, що мають бути знайдені селектором з ґлобом.
 </details>
 <details>
-  <summary><a href="./concept/Inheritability.md">Наслідування ресурсами</a></summary>
+  <summary><a href="./concept/Inheritance.md">Наслідування ресурсами</a></summary>
   Принцип опису модуля, згідно якого ресурс <code>will-файла</code> здатний використовувати (наслідувати) значення полів інших ресурсів того ж типу.
 </details>
 <details>
@@ -222,7 +222,7 @@
   Як користуватись командою <code>.set</code> для зміни станів утиліти, наприклад, для зміни рівня вербальності.
 </details>
 <details>
-  <summary><a href="./tutorial/SelectorComplex.md">Складні селектори</a></summary>
+  <summary><a href="./tutorial/SelectorComposite.md">Складні селектори</a></summary>
   Використання складних селекторів для відбору ресурсів із підмодулів.
 </details>
 <details>
@@ -250,7 +250,7 @@
   Використання вбудованих рефлекторів для розбиття на версію для відлагодження і для релізу. Побудова мультизбірок.
 </details>
 <details>
-  <summary><a href="./tutorial/ResourceInheritability.md">Наслідування ресурсів</a></summary>
+  <summary><a href="./tutorial/ResourceInheritance.md">Наслідування ресурсів</a></summary>
   Як користуватись наслідуванням ресурсів для перевикористання даних.
 </details>
 <details>
