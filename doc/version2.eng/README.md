@@ -11,112 +11,129 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   Config for describing and building a module. Each formal module has such file.
 </details>
 <details>
-  <summary><a href="./concept/NamedAndSplitWillFile.md">Named <code>will-file</code></a></summary>
+  <summary><a href="./concept/WillFileNamedAndSplit.md#Named-will-file">Named <code>will-file</code></a></summary>
   Kind of <code>will-file</code>, which has nonstandard name. It makes possible to have multiple modules with different names in a directory.
 </details>
 <details>
-  <summary><a href="./concept/NamedAndSplitWillFile.md">Split <code>will-file</code></a></summary>
+  <summary><a href="./concept/WillFileNamedAndSplit.md#Split-will-file">Split <code>will-file</code></a></summary>
   Splitted <code>will-file</code> on two files - one for importing data another for exporting.
 </details>
 <details>
-  <summary><a href="./concept/Structure.md#resource">Resources</a></summary>
+  <summary><a href="./concept/Structure.md#Resources">Resources</a></summary>
   Structural and functional element of <code>will-file</code>. Resources of the same type collected in a section.
 </details>
 <details>
-  <summary><a href="./concept/Structure.md#resource-type">Type of resource</a></summary>
+  <summary><a href="./concept/Structure.md#Type-of-resource">Type of resource</a></summary>
   Functionality associated with group of resources restricted by its purpose. Examples of types of resources: path, submodule, step, build. Each type of resources has its own purpose and is treated by the utility differently.
 </details>
+
 <details>
-  <summary><a href="./concept/Structure.md#section">Section <code>will-file</code></a></summary>
+  <summary><a href="./concept/Paths.md#Path">Path</a></summary>
+   <code>Path</code> section resource which points to the placement of module elements and used in routing for other resources.
+</details>
+<details>
+  <summary><a href="./concept/Steps.md#Step">Step</a></summary>
+  <code>Step</code> section resource which is an  executing instruction of module building.
+</details>
+<details>
+  <summary><a href="./concept/Reflectors.md#Reflector">Reflector</a></summary>
+  <code>Reflector</code> section resource which defines the direction and criteria for performing operations over a group of files.
+</details>
+<details>
+  <summary><a href="./concept/Builds.md#Build-assembly">Build assembly</a></summary>
+  Sequence and conditions of procedures execution for module constructing.
+</details>
+<details>
+  <summary><a href="./concept/Structure.md#Section-will-file">Section <code>will-file</code></a></summary>
   Higher structural element of <code>will-file</code>, which consists of resources of single type or fields, which describe the module.
 </details>
 <details>
-  <summary><a href="./concept/About.section.md">Section <code>about</code></a></summary>
+  <summary><a href="./concept/SectionAbout.md">Section <code>about</code></a></summary>
   The section has descriptive information about the module.
 </details>
 <details>
-  <summary><a href="./concept/Path.section.md">Section <code>path</code></a></summary>
+  <summary><a href="./concept/Paths.md#Section-path">Section <code>path</code></a></summary>
   The section has map of paths for fast understanding of files structure of the module.
 </details>
 <details>
-  <summary><a href="./concept/Submodule.section.md">Section <code>submodule</code></a></summary>
+  <summary><a href="./concept/SectionSubmodule.md">Section <code>submodule</code></a></summary>
   The section has information about submodules of the module.
 </details>
 <details>
-  <summary><a href="./concept/Step.section.md">Section <code>step</code></a></summary>
+  <summary><a href="./concept/Steps.md#Section-step">Section <code>step</code></a></summary>
   The section has steps which could be used by build for building of the module.
 </details>
 <details>
-  <summary><a href="./concept/Reflector.section.md">Section <code>reflector</code></a></summary>
+  <summary><a href="./concept/Reflectors.md#Section-reflector">Section <code>reflector</code></a></summary>
   The section has reflectors, special type of resource for operation on groups of files.
 </details>
 <details>
-  <summary><a href="./concept/Build.section.md">Section <code>build</code></a></summary>
+  <summary><a href="./concept/Builds.md#Section-build">Section <code>build</code></a></summary>
   Resources of the section describe sequence and conditions of building the module.
 </details>
 <details>
-  <summary><a href="./concept/Exported.section.md">Section <code>exported</code></a></summary>
+  <summary><a href="./concept/SectionExported.md">Section <code>exported</code></a></summary>
   Section of <code>out-will-file</code>, programatically generated with exporting of the module. It has list of exported files and it used by other modules for importing the module.
 </details>
 <details>
-  <summary><a href="./concept/Export.md#out-will-file">Exported <code>will-file</code> (<code>out-will-file</code>)</a></summary>
+  <summary><a href="./concept/Export.md#Exported-will-file-out-will-file">Exported <code>will-file</code> (<code>out-will-file</code>)</a></summary>
   <code>Out-will-file</code> - kind of <code>will-file</code> generated by the utility during exporting of a module. Other modules can use the module importing its <code>out-will-file</code>.
 </details>
 <details>
-  <summary><a href="./concept/Module.md#module">Module</a></summary>
+  <summary><a href="./concept/Module.md#Module">Module</a></summary>
   Module is set of files described in <code>will-file</code>
 </details>
 <details>
-  <summary><a href="./concept/Module.md#submodule">Submodule</a></summary>
+  <summary><a href="./concept/Module.md#Submodule">Submodule</a></summary>
   A module with its own <code>will-file</code> which used but other module ( supermodule ).
 </details>
 <details>
-  <summary><a href="./concept/Module.md#supermodule">Supermodule</a></summary>
+  <summary><a href="./concept/Module.md#Supermodule">Supermodule</a></summary>
   A module which has other modules ( submodules ).
 </details>
 <details>
-  <summary><a href="./concept/LocalAndRemoteSubmodules.md#local-submodule">Local submodule</a></summary>
+  <summary><a href="./concept/SubmodulesLocalAndRemote.md#Local-submodule">Local submodule</a></summary>
   A submodule which is located locally
 </details>
 <details>
-  <summary><a href="./concept/LocalAndRemoteSubmodules.md#remote-submodule">Remote submodule</a></summary>
+  <summary><a href="./concept/SubmodulesLocalAndRemote.md#Remote-submodule">Remote submodule</a></summary>
   A module which is located remotely. It should be downloaded to be used.
 </details>
 <details>
-  <summary><a href="./concept/CurrentModule.md">Current module</a></summary>
+  <summary><a href="./concept/ModuleCurrent.md">Current module</a></summary>
   A module on which utility will perform operations. By default the module is loaded from file <code>.will.yml</code> of the current directory.
 </details>
 <details>
-  <summary><a href="./concept/Export.md#module-export">Export</a></summary>
+  <summary><a href="./concept/Export.md#Export">Export</a></summary>
   Special kind of build which required for the module to been used by other developers and modules. Result of exporting is artefacts among wich is <code>out-will-file</code>.
 </details>
 <details>
-  <summary><a href="./concept/InformalSubmodule.md">Informal submodule</a></summary>
+  <summary><a href="./concept/SubmoduleInformal.md">Informal submodule</a></summary>
   Set of files distribution of which does not have <code>will-file</code>. It's possible to create <code>will-file</code> for such submodule on side of user to use it as a submodule.
 </details>
 <details>
-  <summary><a href="./concept/Command.md#command">Command</a></summary>
+  <summary><a href="./concept/Command.md#Command">Command</a></summary>
   A string which has phrase which describe intention of developer and desirable result of operation to be done by utility after user enter it. Developer enters command in command line interface.
 </details>
 <details>
-  <summary><a href="./concept/Command.md#will-phrase">Phrase</a></summary>
+  <summary><a href="./concept/Command.md#Phrase">Phrase</a></summary>
   Word or several words, separated by dot, denotes command which utility will perform.
 </details>
 <details>
-  <summary><a href="./concept/Selectors.md#selector">Selector</a></summary>
+  <summary><a href="./concept/Selectors.md#Selector">Selector</a></summary>
   String-reference on resource or group of resources of the module.
 </details>
 <details>
-  <summary><a href="./concept/Selectors.md#selector-with-glob">Selector with globs</a></summary>
+  <summary><a href="./concept/Selectors.md#Selector-with-globs">Selector with globs</a></summary>
   Selector which use glob technique for selecting resources of the module.
-</details>
-<details>
-  <summary><a href="./concept/Asserts.md">Glob with assertion</a></summary>
-  Restriction of glob by number of expected resources which should be found by the selector.
 </details>
 <details>
   <summary><a href="./concept/Criterions.md">Criterion</a></summary>
   Element of comparison for selection of resources.
+</details>
+<details>
+  <summary><a href="./concept/Asserts.md">Glob with assertion</a></summary>
+  Restriction of glob by number of expected resources which should be found by the selector.
 </details>
 <details>
   <summary><a href="./concept/Inheritability.md">Resources inheritance</a></summary>
