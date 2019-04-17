@@ -5,7 +5,7 @@
 Для роботи з модулем доводиться використовувати сторонні інструменти - командну оболонку операційної системи чи зовнішні програми. Наприклад, вивести список файлів після побудови, запустити створений файл... Якщо працюєте з готовим модулем, то вносити зміни в `will-файл` незручно тому, є команда `.shell`, яка дозволяє виконувати команди сторонніх програм в терміналі операційної системи разом з іншими командами утиліти.  
 
 ### Використання команди
-Команда `.shell` може використовуватись окремо в вигляді `will .shell [command]`, де `[command]` - команда операційної системи чи сторонньої програми. При такому способі різниці між запуском команди самостійно і разом з `will .shell`. Для ефективного використання команди `.shell` застосовуйте її разом з командою `.each`, котра виконує команди як над групою `will-файлів`, так і над окремими ресурсами модуля.  
+Команда `.shell` може використовуватись окремо в вигляді `will .shell [command]`, де `[command]` - команда операційної системи чи сторонньої програми. При такому способі різниця між запуском команди самостійно і разом з `will .shell` мінімальна. Для ефективного використання команди `.shell` застосовуйте її разом з командою `.each`, котра виконує команди як над групою `will-файлів`, так і над окремими ресурсами модуля.  
 Побудуйте модуль згідно представленої структури:  
 
 <details>
@@ -105,23 +105,35 @@ shellCommand
 З командою `.shell` можна виконати будь-які зовнішні операції над модулем. Для прикладу, виведіть повну інформацію про `will-файли` підмодулів. Для цього використовуйте команду `.each`:  
 
 <details>
-  <summary><u>Вивід команди <code>will .each submodule::* .shell ls -al *.yml</code></u></summary>
+  <summary><u>Вивід команди <code>will .each submodule::* .shell ls -al</code></u></summary>
 
 ```
-[user@user ~]$ will .each submodule::* .shell ls -al *.yml
+[user@user ~]$ will .each submodule::* .shell ls -al
 ...
 Module at /path_to_file/.module/Tools/out/wTools.out.will.yml
- > ls -al *.yml
--rw-r--r-- 1 user user 7526 Апр  3 10:00 wTools.out.will.yml
+> ls -al
+total 232
+drwxr-xr-x 3 user user   4096 Apr 17 11:16 .
+drwxr-xr-x 9 user user   4096 Apr 17 11:16 ..
+drwxr-xr-x 3 user user   4096 Apr 17 11:16 debug
+-rw-r--r-- 1 user user   7526 Apr 17 11:16 wTools.out.will.yml
+-rw-r--r-- 1 user user 215828 Apr 17 11:16 wTools.proto.export.out.tgs
 
 Module at /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
- > ls -al *.yml
--rw-r--r-- 1 user user 5970 Апр  3 10:00 wPathFundamentals.out.will.yml
+> ls -al
+total 20
+drwxr-xr-x 3 user user 4096 Apr 17 11:16 .
+drwxr-xr-x 6 user user 4096 Apr 17 11:16 ..
+drwxr-xr-x 3 user user 4096 Apr 17 11:16 debug
+-rw-r--r-- 1 user user 5970 Apr 17 11:16 wPathFundamentals.out.will.yml
 
 Module at /path_to_file/module.test/one.will.yml
- > ls -al *.yml
--rw-r--r-- 1 user user 88 Апр  3 09:29 one.will.yml
--rw-r--r-- 1 user user 88 Апр  3 09:29 two.will.yml
+> ls -al
+total 16
+drwxr-xr-x 2 user user 4096 Apr  3 10:31 .
+drwxr-xr-x 4 user user 4096 Apr 17 11:16 ..
+-rw-r--r-- 1 user user   88 Apr  3 09:29 one.will.yml
+-rw-r--r-- 1 user user   88 Apr  3 09:29 two.will.yml
 
 ```
 
@@ -184,6 +196,6 @@ two.will.yml
 
 ### Підсумок  
 - Команда `.shell` виконує дії над файлами модуля.  
-- Команда `.shell` ефективна в комбінації з командою `.each` - запускає операції в командній оболонці системи для підмодулів `will-файла`, а також окремих модулів в указаній директорії.
+- Команда `.shell` ефективна в комбінації з командою `.each` - запускає операції в командній оболонці системи для підмодулів `will-файла`, а також, для модулів в указаній директорії.
 
 [Повернутись до змісту](../README.md#tutorials)
