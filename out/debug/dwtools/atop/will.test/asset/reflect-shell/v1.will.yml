@@ -22,7 +22,7 @@ reflector :
 step :
 
   shell1 :
-    shell : node file/Produce.js {this::src} {this::dst}
+    shell : node file/Produce.js {f::this/src} {f::this/dst}
     forEachDst : shell1
     upToDate : preserve
 

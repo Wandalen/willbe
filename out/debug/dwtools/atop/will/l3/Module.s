@@ -609,13 +609,16 @@ function shell( o )
 
   /* */
 
+  debugger;
   o.execPath = module.resolve
   ({
     selector : o.execPath,
-    pathNativizing : 1,
     prefixlessAction : 'resolved',
     currentThis : o.currentThis,
+    pathNativizing : 1,
+    arrayFlattening : 0, /* required for f::this and feature make */
   });
+  debugger;
 
   /* */
 
@@ -3793,7 +3796,7 @@ function _resolveAct( o )
       {
         module : o.module,
         exported : null,
-        compositeFunction : null,
+        isFunction : null,
       },
     });
 
@@ -3860,7 +3863,7 @@ function _resolveAct( o )
   {
     let it = this;
 
-    // if( it.selectOptions.selector === "path::paths/f::strings.join" )
+    // if( it.selectOptions.selector === "f::this/src" )
     // debugger;
 
     statusUpdate.call( it );
@@ -3892,11 +3895,11 @@ function _resolveAct( o )
     compositePathsSelect.call( it );
 
     if( it.dstWritingDown )
-    if( o.pathResolving || it.compositeFunction )
+    if( o.pathResolving || it.isFunction )
     pathsResolve.call( it );
 
     if( it.dstWritingDown )
-    if( o.pathNativizing || it.compositeFunction )
+    if( o.pathNativizing || it.isFunction )
     pathsNativize.call( it );
 
     if( o.pathUnwrapping )
@@ -3909,6 +3912,9 @@ function _resolveAct( o )
   function onDownEnd()
   {
     let it = this;
+
+    // if( it.selectOptions.selector === "f::this/src" )
+    // debugger;
 
     functionStringsJoinDown.call( it );
     mapsFlatten.call( it );
@@ -4056,39 +4062,30 @@ function _resolveAct( o )
       {
         functionOsGetUp.call( it );
       }
+      else if( it.selector === 'this' )
+      {
+        functionThisUp.call( it );
+      }
       else _.sure( 0, 'Unknown function', it.parsedSelector.full );
 
     }
-    else if( kind === 'this' )
-    {
-      _.assert( _.mapIs( o.currentThis ) );
-      it.src = o.currentThis;
-    }
+    // else if( kind === 'this' )
+    // {
+    //   _.assert( _.mapIs( o.currentThis ) );
+    //   it.src = o.currentThis;
+    // }
     else
     {
 
       it.src = it.module.resourceMapsForKind( kind );
       // it.src = it.module.resourceMaps();
 
-      // debugger;
       if( _.strIs( kind ) && _.path.isGlob( kind ) )
       {
-        // debugger;
-        // sop.selectorArray.splice( it.logicalLevel-1, 1, kind, it.selector );
         sop.selectorArray.splice( it.logicalLevel-1, 1, '*', it.selector );
         it.selector = sop.selectorArray[ it.logicalLevel-1 ];
         sop.selectorChanged.call( it );
-        // debugger;
       }
-
-      // if( _.arrayIs( it.src ) )
-      // {
-      //   debugger;
-      //   sop.selectorArray.splice( it.logicalLevel-1, 1, '*', it.selector );
-      //   it.selector = sop.selectorArray[ it.logicalLevel-1 ];
-      //   sop.selectorChanged.call( it );
-      //   debugger;
-      // }
 
       if( !it.src )
       {
@@ -4145,11 +4142,11 @@ function _resolveAct( o )
 
     it.src = [ it.src ];
     it.src[ functionSymbol ] = it.selector;
-    it.dst = [ it.dst ];
-    it.dst[ functionSymbol ] = it.selector;
+    // it.dst = [ it.dst ];
+    // it.dst[ functionSymbol ] = it.selector;
 
     it.selector = 0;
-    it.compositeFunction = it.selector;
+    it.isFunction = it.selector;
     sop.selectorChanged.call( it );
 
   }
@@ -4164,7 +4161,15 @@ function _resolveAct( o )
     if( !_.arrayIs( it.src ) || !it.src[ functionSymbol ] )
     return;
 
-    it.dst = it.dst.join( ' ' );
+    debugger;
+    if( _.arrayIs( it.dst ) && it.dst.every( ( e ) => _.arrayIs( e ) ) )
+    {
+      it.dst = it.dst.map( ( e ) => e.join( ' ' ) );
+    }
+    else
+    {
+      it.dst = it.dst.join( ' ' );
+    }
 
   }
 
@@ -4184,10 +4189,29 @@ function _resolveAct( o )
     else if( Os.platform() === 'darwin' )
     os = 'osx';
 
-    it.dst = os;
     it.src = os;
+    it.dst = os;
     it.selector = undefined;
+    sop.selectorChanged.call( it );
 
+  }
+
+  /* */
+
+  function functionThisUp()
+  {
+    let it = this;
+    let sop = it.selectOptions;
+
+    debugger;
+
+    it.src = [ o.currentThis ];
+    // it.dst = [ o.currentThis ];
+    it.selector = 0;
+
+    // it.src = o.currentThis;
+    // it.dst = o.currentThis;
+    // it.selector = null;
     sop.selectorChanged.call( it );
 
   }

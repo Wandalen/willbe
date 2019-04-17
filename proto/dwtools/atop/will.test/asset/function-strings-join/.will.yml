@@ -39,13 +39,6 @@ step :
   echo2 :
     shell : 'node proto/Echo.js {about::options2/f::strings.join} {about::options3/a}'
 
-    # args :
-    #   - '.generate',
-    #   - '{path::out.sources}',
-    #   - '{path::out.doc}',
-    #   - '{path::concepts}',
-    #   - '{path::tutorials}'
-
 build :
 
   strings.join :

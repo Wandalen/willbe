@@ -638,7 +638,7 @@ function superResolve( test )
       mapValsUnwrapping : 1,
       missingAction : 'undefine',
     });
-    test.identical( resolved, [ 'step::timelapse.begin', 'step::timelapse.end', 'step::predefined.transpile', 'step::submodules.download', 'step::submodules.update', 'step::submodules.reload', 'step::submodules.clean', 'step::clean', 'path::predefined.local', 'path::out.release', 'reflector::predefined.release.v1', 'reflector::predefined.release.v2', 'build::release' ] );
+    test.identical( resolved, [ 'path::predefined.local', 'path::out.release', 'reflector::predefined.release.v1', 'reflector::predefined.release.v2', 'step::timelapse.begin', 'step::timelapse.end', 'step::predefined.transpile', 'step::submodules.download', 'step::submodules.update', 'step::submodules.reload', 'step::submodules.clean', 'step::clean', 'build::release' ] );
 
     test.case = '*';
     var resolved = module.resolve
@@ -2758,7 +2758,7 @@ pathsResolveComposite.timeOut = 130000;
 function pathsResolveArray( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-shell' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'make' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, 'v1' );
   let ready = new _.Consequence().take( null );

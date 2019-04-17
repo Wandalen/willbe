@@ -278,7 +278,7 @@ function stepRoutineShell( frame )
     _.assert( forEachDstReflector instanceof will.Reflector );
     forEachDst = module.resolveContextPrepare({ currentThis : forEachDstReflector });
 
-    debugger;
+    // debugger;
     for( let dst in forEachDst.filesGrouped )
     {
       let src = forEachDst.filesGrouped[ dst ];
@@ -286,7 +286,6 @@ function stepRoutineShell( frame )
       if( upToDate )
       delete forEachDst.filesGrouped[ dst ];
     }
-    debugger;
 
     forEachDst.src = [];
     forEachDst.dst = [];
@@ -294,10 +293,12 @@ function stepRoutineShell( frame )
     {
       forEachDst.dst.push( hardDrive.path.nativize( dst ) );
       forEachDst.src.push( hardDrive.path.s.nativize( forEachDst.filesGrouped[ dst ] ).join( ' ' ) );
+      // forEachDst.src.push( hardDrive.path.s.nativize( forEachDst.filesGrouped[ dst ] ) );
     }
 
   }
 
+  debugger;
   return module.shell
   ({
     execPath : opts.shell,
