@@ -150,7 +150,7 @@
   Загальна інформація. Чим утиліта <code>willbe</code> є і чим вона не являється.
 </details>
 <details>
-  <summary><a href="./tutorial/Instalation.md">Встановлення</a></summary>
+  <summary><a href="./tutorial/Installation.md">Встановлення</a></summary>
   Процедура встановлення утиліти <code>willbe</code>.
 </details>
 <details>

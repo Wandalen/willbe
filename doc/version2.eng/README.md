@@ -134,7 +134,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   General information. What utility <code>willbe</code> is and what it is not.
 </details>
 <details>
-  <summary><a href="./tutorial/Instalation.md">Installation</a></summary>
+  <summary><a href="./tutorial/Installation.md">Installation</a></summary>
   Procedure of instalation of utility. <code>willbe</code>
 </details>
 <details>
