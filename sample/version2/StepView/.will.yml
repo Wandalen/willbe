@@ -1,0 +1,38 @@
+about :
+
+  name : viewStep
+  description : "To use predefined.view step"
+  version : 0.0.1
+
+path :
+  in : '.'
+  html : './file/hello.html'
+  txt : './file/hello.txt'
+  url : 'https://www.google.com/'
+
+step : 
+
+  view.url :
+    inherit : predefined.view
+    filePath : path::url
+    delay : 12000
+
+  view.html :
+    inherit : predefined.view
+    filePath : path::html
+    delay : 8000
+  
+  view.txt :
+    inherit : predefined.view
+    filePath : path::txt
+    delay : 1000  
+
+build :
+  
+  open.view :
+    criterion :
+      default : 1
+    steps :
+      - view.url
+      - step::view.html
+      - step::view.txt

@@ -1,0 +1,30 @@
+about :
+
+  name : reflectorPaths
+  description : "To use reflector path constructor"
+  version : 0.0.1
+
+reflector :
+
+  reflect.copy :
+    recursive : 2
+    src :
+      filePath : proto.two
+      prefixPath : proto
+    dst :
+      basePath : .
+      prefixPath : files/files.two
+
+step :
+
+  reflect.copy :
+    inherit : predefined.reflect
+    reflector : reflect.*
+
+build :
+
+  copy :
+    criterion : 
+      default : 1
+    steps :
+      - reflect.*

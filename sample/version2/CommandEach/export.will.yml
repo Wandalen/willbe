@@ -1,0 +1,24 @@
+about :
+
+  name : export
+  description : "To test named will-files"
+  version : 0.0.1
+
+path : 
+
+  out : 'out'
+  proto : 'proto'
+  
+step : 
+
+  export : 
+    inherit : predefined.export
+    export : path::proto
+  
+build : 
+
+  export : 
+    criterion : 
+      default : 1
+    steps :
+      - step::export
