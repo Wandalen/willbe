@@ -1,22 +1,40 @@
-## Recource path
+# Ресурс та секція шлях
 
-<code>Path</code> section resource which points to the placement of module elements and used in routing for other resources.
+### Resource path
 
-The utility has three built-in paths. This is `in`,` out` and `temp` paths. The `in` path is a reference point for the relative paths of the module. The utility reads the other path relative to `in` directory. `out` path is the directory for the exported module files. `temp` is placed temporary module files. If `in` path is not specified then` willbe` start routing from the root directory of `will-file`.  
+Ресурс для визначення файлової структури модуля, що містить файлові шлях до файлів. Шляхи розміщаються в секції <code>path</code>.
 
-### Поля ресурсів секції `path`     
+Ресурс шлях, як й інші види ресурсів можуть мати критеріони, опис та наслідування. В короткій формі запису цей ресурс має лише шлях.
 
-| Field          | Description                                                       |
-|----------------|-------------------------------------------------------------------|
-| path           | path to the directory (absolute, relative)                        |
-| description    | description of the directory                                      |
-| criterion      | condition for the resource using (see [criterion](Criterions.md)) |
-| inherit        | reusing (inheritance) of another resource fields                  |
-
-## Section <code>path</code>
-
-The section has map of paths for fast understanding of files structure of the module.   
-
-The example of `path` section with `in`, `out` and `toDelete` resources:  
+### Приклад
 
 ![section.path.png](./Images/section.path.png)
+
+Містить секцію `path` з шляхами `in`, `out`, `toDelete`. `toDelete` в розгорнутому форматі і має поле із описом.
+
+### Поля ресурсів секції `path`
+
+| Поле           | Опис                                        |
+|----------------|---------------------------------------------|
+| path           | шлях до файлу  |
+| description    | опис директорії                             |
+| criterion      | умова використання ресурса (див. [критеріон](Criterions.md)) |
+| inherit        | наслідування від іншого ресурса   |
+
+### Вубдовані шляхи
+
+Модуль має такі вбудовані шляхи доступні для використання:
+
+- `path::in` - базовий шлях, всі інші відносні шляхи даного модуля вважаються відносними відносно `path::in`. `path::in` є відносним шляхом відносно `path::predefined.dir`. Розробник може задати довільний шлях `path::in` в `will-файлі`. Якщо `in` не вказаний, то `willbe` починає відлік від шляху `path::predefined.dir`.
+- `path::out` - директорія куди утиліта покладе `out-will-файл` та інші файли згенеровані при експортуванні модуля. Як і всі інші відносні шляхи `path::out` є відносним відносно шляху `path::in`. Розробник може задати довільний шлях `path::out` в `will-файлі`.
+- `path::temp` - файли за цим шляхом видаляються при очистці. Якщо `path::temp` не задано тоді очистка видаляє лише завантажені модулі, `out-will-файл` та згенеровані архіви якщо такі є.
+- `path::predefined.will.files` - шлях до `will-файлів`, відносно яких виконується команда.
+- `path::predefined.dir` - шлях до директорії, з файлами, над якими виконується команда утиліти.
+- `path::predefined.remote` - URL-посилання, яке вказує на віддалений ресурс для завантаження файлів.
+- `path::predefined.local` - вказує на директорію, в яку утиліта помістить завантажені з віддаленого ресурсу файли.  
+- `path::predefined.willbe` - вказує на розміщення виконуваного файлу утиліти `willbe`. 
+
+### Секція <code>path</code>
+
+Секція містить перелік шляхів модуля для швидкого орієнтування в його файловій структурі.
+
