@@ -1,23 +1,22 @@
-## Шлях 
+## Path 
 
-Ресурс секції <code>path</code>, який вказує на розміщення елементів модуля і використовується в роутингу для інших ресурсів.
+<code>Path</code> section resource which points to the placement of module elements and used in routing for other resources.
 
-В утиліті є три вбудовані шляхи: `in`, `out` та `temp`. Директорія на яку вказує `in` - точка відліку для відносних шляхів модуля - утиліта зчитує шлях до ресурсу відносно каталогу `in`, `out` - директорія для експортованих файлів модуля, `temp` - поміщаються тимчасові файли. Якщо `in` не вказаний, то `willbe` починає відлік від кореневої директорії `will-файла`.
+The utility has three built-in paths. This is `in`,` out` and `temp` paths. The `in` path is a reference point for the relative paths of the module. The utility reads the other path relative to `in` directory. `out` path is the directory for the exported module files. `temp` is placed temporary module files. If `in` path is not specified then` willbe` start routing from the root directory of `will-file`.  
 
 ### Поля ресурсів секції `path`     
 
-| Поле           | Опис                                        |
-|----------------|---------------------------------------------|
-| path           | шлях до директорії (абсолютний, відносний)  |
-| description    | опис директорії                             |
-| criterion      | умова використання ресурса (див. [критеріон](Criterions.md)) |
-| inherit        | наслідування значень полів іншого ресурса   |
+| Field          | Description                                                       |
+|----------------|-------------------------------------------------------------------|
+| path           | path to the directory (absolute, relative)                        |
+| description    | description of the directory                                      |
+| criterion      | condition for the resource using (see [criterion](Criterions.md)) |
+| inherit        | reusing (inheritance) of another resource fields                  |
 
+## Section <code>path</code>
 
-## Секція <code>path</code>
+The section has map of paths for fast understanding of files structure of the module.   
 
-Секція представляє карту шляхів модуля для швидкого орієнтування в його файловій структурі.  
-
-Приклад секції `path` з ресурсами `in`, `out`, `toDelete`:  
+The example of `path` section with `in`, `out` and `toDelete` resources:  
 
 ![section.path.png](./Images/section.path.png)
