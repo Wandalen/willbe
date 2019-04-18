@@ -30,7 +30,7 @@ will-file
 </details>
 <details>
   <summary><a href="./concept/Paths.md#Секція-path">Секція <code>path</code></a></summary>
-  Секція представляє карту шляхів модуля для швидкого орієнтування в його файловій структурі.
+  Секція містить перелік шляхів модуля для швидкого орієнтування в його файловій структурі.
 </details>
 <details>
   <summary><a href="./concept/Submodule.section.md">Секція <code>submodule</code></a></summary>
