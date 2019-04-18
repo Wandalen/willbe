@@ -31,11 +31,11 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   Approach of description of a module according to wich <code>will-file</code> can reuse (inherit) value of fields of other resource(s) of the same type.
 </details>
 <details>
-  <summary><a href="./concept/Paths.md#Path">Recource path</a></summary>
+  <summary><a href="./concept/Paths.md#Recource-path">Recource path</a></summary>
    <code>Path</code> section resource which points to the placement of module elements and used in routing for other resources.
 </details>
 <details>
-  <summary><a href="./concept/Reflectors.md#Reflector">Resource reflector</a></summary>
+  <summary><a href="./concept/Reflectors.md#Resource-reflector">Resource reflector</a></summary>
   <code>Reflector</code> section resource which defines the direction and criteria for performing operations over a group of files.
 </details>
 <details>
@@ -47,11 +47,11 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   A field of a reflector and a technique to describe set of files to include as many files as required and to exclude unwanted files with help of excluding conditions and globs.
 </details>
 <details>
-  <summary><a href="./concept/Steps.md#Step">Step</a></summary>
+  <summary><a href="./concept/Steps.md#Resource-step">Resource step</a></summary>
   <code>Step</code> section resource which is an  executing instruction of module building.
 </details>
 <details>
-  <summary><a href="./concept/Builds.md#Build-assembly">Build assembly</a></summary>
+  <summary><a href="./concept/Builds.md#Resource-build">Resource build</a></summary>
   Sequence and conditions of procedures execution for module constructing.
 </details>
 <details>
