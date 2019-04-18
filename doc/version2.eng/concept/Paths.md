@@ -1,4 +1,4 @@
-## Path 
+## Recource path
 
 <code>Path</code> section resource which points to the placement of module elements and used in routing for other resources.
 

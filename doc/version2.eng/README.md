@@ -35,7 +35,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
     Recource to describe file structure of the module, it has file paths to files of the module. Paths are collected in section <code>path</code>.
 </details>
 <details>
-  <summary><a href="./concept/Reflectors.md#Reflector">Resource reflector</a></summary>
+  <summary><a href="./concept/Reflectors.md#Resource-reflector">Resource reflector</a></summary>
   <code>Reflector</code> section resource which defines the direction and criteria for performing operations over a group of files.
 </details>
 <details>
@@ -47,11 +47,11 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   A field of a reflector and a technique to describe set of files to include as many files as required and to exclude unwanted files with help of excluding conditions and globs.
 </details>
 <details>
-  <summary><a href="./concept/Steps.md#Step">Step</a></summary>
+  <summary><a href="./concept/Steps.md#Resource-step">Resource step</a></summary>
   <code>Step</code> section resource which is an  executing instruction of module building.
 </details>
 <details>
-  <summary><a href="./concept/Builds.md#Build-assembly">Build assembly</a></summary>
+  <summary><a href="./concept/Builds.md#Resource-build">Resource build</a></summary>
   Sequence and conditions of procedures execution for module constructing.
 </details>
 <details>
