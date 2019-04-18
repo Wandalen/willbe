@@ -12,7 +12,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 </details>
 <details>
   <summary><a href="./concept/WillFileNamedAndSplit.md#Named-will-file">Named <code>will-file</code></a></summary>
-  Kind of <code>will-file</code>, which has nonstandard name. It makes possible to have multiple modules with different names in a directory.
+  Kind of <code>will-file</code> which has nonstandard name. It makes possible to have multiple modules with different names in a directory.
 </details>
 <details>
   <summary><a href="./concept/WillFileNamedAndSplit.md#Split-will-file">Split <code>will-file</code></a></summary>
@@ -44,7 +44,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 </details>
 <details>
   <summary><a href="./concept/Structure.md#Section-will-file">Section <code>will-file</code></a></summary>
-  Higher structural element of <code>will-file</code>, which consists of resources of single type or fields, which describe the module.
+  Higher structural element of <code>will-file</code> which consists of resources of single type or fields, which describe the module.
 </details>
 <details>
   <summary><a href="./concept/SectionAbout.md">Section <code>about</code></a></summary>

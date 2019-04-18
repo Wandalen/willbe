@@ -1,6 +1,6 @@
-## Build assembly
+## Збірка
 
-Sequence and conditions of procedures execution for module constructing.
+Послідовність і умови виконання процедур побудови модуля.
 
 Сценарій збірки - послідовність виконання кроків в збірці. 
 
@@ -13,9 +13,9 @@ Sequence and conditions of procedures execution for module constructing.
 | steps         | побудова сценарію збірки - послідовність кроків                  |
 | inherit       | наслідування значень полів іншого ресурса                        |
 
-## Section <code>build</code> 
+## Секція <code>build</code> 
 
-Resources of the section describe sequence and conditions of building the module.  
+Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля.  
 
 Приклад секції `build` з ресурсом `export`: 
 

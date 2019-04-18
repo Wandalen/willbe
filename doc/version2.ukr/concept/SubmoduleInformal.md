@@ -1,6 +1,6 @@
-# Informal submodule  
+# Неформальний підмодуль  
 
-Set of files distribution of which does not have <code>will-file</code>. It's possible to create <code>will-file</code> for such submodule on side of user to use it as a submodule.   
+Група файлів, що не розповсюджується із <code>will-файлом</code>. Для такого підмодуля можливо створити <code>will-файлом</code> самостійно.  
 
 Під імпортом непрямим шляхом розуміється те, що підмодуль створено без використання утиліти `willbe`, тому, для підключення такого підмодуля потрібно створити його експортну конфігурації і помістити посилання на локальний експортований файл в секцію `submodule`.  
 
