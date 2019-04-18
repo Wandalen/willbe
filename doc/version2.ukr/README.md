@@ -11,7 +11,9 @@
   Конфігураційний файл для опису та збірки модуля. Кожен формальний модуль має такий файл.
 </details>
 <details>
-  <summary><a href="./concept/WillFileNamedAndSplit.md#Іменований-will-файл">Іменований <code>will-файл</code></a></summary>
+  <summary><a href="./concept/WillFileNamedAndSplit.md#Іменований-will-файл">
+  Іменований <code>will-файл</code>
+  </a></summary>
   Вид <code>will-файла</code>, що має не стандартне ім'я файлу. Дозволяє мати більше одного модуля із різними іменами файлів в одній дерикторії.
 </details>
 <details>
@@ -34,7 +36,7 @@
 </details>
 <details>
   <summary><a href="./concept/Paths.md#Ресурс-шлях">Ресурс шлях</a></summary>
-  Ресурс секції <code>path</code>, який вказує на розміщення елементів модуля і використовується в роутингу для інших ресурсів.
+  Ресурс для визначення файлової структури модуля, що містить файлові шлях до файлів. Шляхи розміщаються в секції <code>path</code>.
 </details>
 <details>
   <summary><a href="./concept/Reflectors.md#Ресурс-рефлектор">Ресурс рефлектор</a></summary>
@@ -68,19 +70,19 @@
 </details>
 <details>
   <summary><a href="./concept/Paths.md#Секція-path">Секція <code>path</code></a></summary>
-  Секція представляє карту шляхів модуля для швидкого орієнтування в його файловій структурі.
+  Секція містить перелік шляхів модуля для швидкого орієнтування в його файловій структурі.
 </details>
 <details>
   <summary><a href="./concept/SectionSubmodule.md">Секція <code>submodule</code></a></summary>
   Секція містить інформацію про підмодулі.
 </details>
 <details>
-  <summary><a href="./concept/Steps.md#Секція-step">Секція <code>step</code></a></summary>
-  Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля.
-</details>
-<details>
   <summary><a href="./concept/Reflectors.md#Секція-reflector">Секція <code>reflector</code></a></summary>
   Секція містить рефлектори - ресурси для виконання операцій над групами файлів.
+</details>
+<details>
+  <summary><a href="./concept/Steps.md#Секція-step">Секція <code>step</code></a></summary>
+  Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля.
 </details>
 <details>
   <summary><a href="./concept/Builds.md#Секція-build">Секція <code>build</code></a></summary>

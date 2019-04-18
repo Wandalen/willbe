@@ -31,8 +31,8 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   Approach of description of a module according to wich <code>will-file</code> can reuse (inherit) value of fields of other resource(s) of the same type.
 </details>
 <details>
-  <summary><a href="./concept/Paths.md#Recource-path">Recource path</a></summary>
-   <code>Path</code> section resource which points to the placement of module elements and used in routing for other resources.
+  <summary><a href="./concept/Paths.md#Path">Recource path</a></summary>
+    Recource to describe file structure of the module, it has file paths to files of the module. Paths are collected in section <code>path</code>.
 </details>
 <details>
   <summary><a href="./concept/Reflectors.md#Resource-reflector">Resource reflector</a></summary>
@@ -64,19 +64,19 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 </details>
 <details>
   <summary><a href="./concept/Paths.md#Section-path">Section <code>path</code></a></summary>
-  The section has map of paths for fast understanding of files structure of the module.
+  The section has list of paths for fast understanding of files structure of the module.
 </details>
 <details>
   <summary><a href="./concept/SectionSubmodule.md">Section <code>submodule</code></a></summary>
   The section has information about submodules of the module.
 </details>
 <details>
-  <summary><a href="./concept/Steps.md#Section-step">Section <code>step</code></a></summary>
-  The section has steps which could be used by build for building of the module.
-</details>
-<details>
   <summary><a href="./concept/Reflectors.md#Section-reflector">Section <code>reflector</code></a></summary>
   The section has reflectors, special type of resource for operation on groups of files.
+</details>
+<details>
+  <summary><a href="./concept/Steps.md#Section-step">Section <code>step</code></a></summary>
+  The section has steps which could be used by build for building of the module.
 </details>
 <details>
   <summary><a href="./concept/Builds.md#Section-build">Section <code>build</code></a></summary>
