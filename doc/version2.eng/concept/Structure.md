@@ -74,15 +74,15 @@ will-file
 Функціональність пов'язана із групою ресурсів, обмежена призначенням. Приклад того, які бувать типи ресурів: шлях, підмодуль, крок, збірка. Кожен тип ресурів має власне призначення і обробляється утиілітою по-різному.
 
 <details>
-  <summary><a href="./Paths.md.md#Recource-path">Ресурси типу <code>path</code></a></summary>
+  <summary><a href="./Paths.md.md#Ресурс-шлях">Ресурси типу <code>path</code></a></summary>
   Описують файлову структуру модуля через вказання шляхів до файлів.
 </details>
 <details>
-  <summary><a href="./Steps.md#Resource-step">Ресурси типу <code>step</code></a></summary>
+  <summary><a href="./Steps.md#Ресурс-крок">Ресурси типу <code>step</code></a></summary>
   Описують операції та бажаний результат <a href="./Module.md#Модуль">модуля</a>. Збірки складаються із кроків.
 </details>
 <details>
-  <summary><a href="./Reflectors.md#Resource-reflector">Ресурси типу <code>reflector</code></a></summary>
+  <summary><a href="./Reflectors.md#Ресурс-рефлектор">Ресурси типу <code>reflector</code></a></summary>
   Призначені для вибірки групи файлів для здійснення над ними якоїсь операції.
 </details>
 <details>
@@ -94,11 +94,11 @@ will-file
   Містять перелік кроків, котрі потрібно здійснити щоб збудувати модуль.
 </details>
 <details>
-  <summary><a href="./Export.md#Export">Ресурси типу <code>export</code></a></summary>
+  <summary><a href="./Export.md#Експорт-модуля">Ресурси типу <code>export</code></a></summary>
   Це особливий вид збірки, результатом виконання, якої є згенерованй `out-will-файл`, що може бути використаний іншим модулем.
 </details>
 <details>
-  <summary><a href="./SectionExported.md#Section-exported">Ресурси типу <code>exported</code></a></summary>
+  <summary><a href="./SectionExported.md#Секція-exported">Ресурси типу <code>exported</code></a></summary>
   Включають описові поля і посилання на ресурси інших секцій.
 </details>
 <details>
