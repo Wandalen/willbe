@@ -139,7 +139,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   Approach of description of a module according to wich <code>will-file</code> can reuse (inherit) value of fields of other resource(s) of the same type.
 </details>
 <details>
-  <summary><a href="./concept/ReflectorFileFilter.md">File filter</a></summary>
+  <summary><a href="./concept/ReflectorFileFilter.md">File filters</a></summary>
   Technique to describe conditions of selection required files for some operation on group of files. Reflector has two file filters: <code>src</code> and <code>dst</code>.
 </details>
 

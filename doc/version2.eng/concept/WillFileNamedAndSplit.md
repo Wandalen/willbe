@@ -1,22 +1,21 @@
-# Named and split `will-files`  
+# Іменовані і розділені `will-файли`
 
-### Named <code>will-file</code>  
+### Іменований <code>will-файл</code>
 
-Kind of <code>will-file</code> which has nonstandard name. It makes possible to have multiple modules with different names in a directory.  
+Вид <code>will-файла</code>, що має не стандартне ім'я файлу. Дозволяє мати більше одного модуля із різними іменами файлів в одній дерикторії.
 
-Name of `will-file` that looks like `.will.[extension]` is considered unnamed. At the same time, a directory may contain one unnamed `will-file` and unlimited number of named ones. To work with named `will-files` the` .with` command is used. Example: to build the `release` build scenario in the `will-file` named `final.release.will.yml` the command looks like` will .with final.release.will.yml .build release`. To work with the `will-files` group the` .each` command is used.  
-The figure shows the output of the `ls -al` command in the module directory of named `will-files`:   
+`Will-файл`, назва якого має вигляд `.will.[розширення]` вважається неіменованим. В директорії одночасно може знаходитись один неіменований `will-файл` та необмежена кількість іменованих. Для роботи з іменованими `will-файлами` використовується команда `.with`. Приклад: фраза побудови збірки `release` в іменованому `will-файлі` `final.release.will.yml` матиме вигляд `will .with final.release.will.yml .build release`. Для роботи з групою `will-файлів` використовується команда `.each`. 
+На рисунку показаний вивід команди `ls -al` в директорії модуля з іменованими `will-файлами`:  
 
 ![will.file.named.unnamed.png](./Images/will.file.named.unnamed.png)  
 
-### Split <code>will-file</code>  
+### Спліт <code>will-файл</code>
 
-Splitted <code>will-file</code> on two files - one for importing data another for exporting.  
+Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля.  
+Дозволяє розробнику розділити процес побудови модуля і його експорту на окремі етапи. 
 
-Split `will-file` allows the developer to split the process of building a module and exporting it to individual stages.  
-
-The resources are described in one of the split `will-files` available in the second which eliminates the need to duplicate the data. Split is possible both for the unnamed `will-file` and for the named one. When splitting the unnamed `will-files` the import file is called` .im.will.yml` and the export file is called `.ex.will.yml`.   
-The structure of split of unnamed `will-files`:  
+Ресурси описані в одному з розділених `will-файлів`, доступні в другому, що позбавляє необхіності дублювати дані. Спліт можливий як для неіменованого `will-файла`, так і для іменованого. При розділенні неіменованих `will-файлів`, файл імпорту називається `.im.will.yml`, а файл експорту - `.ex.will.yml`.  
+Структура розділених неіменованих `will-файлів`:   
 
 ```
 .
@@ -25,7 +24,7 @@ The structure of split of unnamed `will-files`:
 
 ```  
 
-The split of named `will-files` is different from the unnamed ones by name before the corresponding extension. For example,` will-file` named `first` will be divided into `first.im.will.yml` for the import file and` first.ex.will.yml` for the export file: 
+Спліт іменованих `will-файлів` відрізняється від неіменованих ім'ям перед відповідним розширенням. Наприклад, `will-файл` з назвою `first` буде розділений на `first.im.will.yml` для файлу імпорту і  `first.ex.will.yml` для файла експорту:  
 
 ```
 .
@@ -34,6 +33,6 @@ The split of named `will-files` is different from the unnamed ones by name befor
 
 ```
 
-Output of `ls -al` command in the module directory with split of named and unnamed` will-file`:
+Вивід команди `ls -al` в директорії модуля зі сплітом іменованого та неіменованого `will-файла`:
 
 ![will.file.split.png](./Images/will.file.split.png)

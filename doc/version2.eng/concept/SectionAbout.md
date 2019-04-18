@@ -1,7 +1,6 @@
-# Section <code>about</code>
+# Секція <code>about</code>
 
-The section has descriptive information about the module.
-
+Секція містить описову інформація про модуль.
 Секція не має ресурсів.    
 
 ### Структура полів секції `about`
