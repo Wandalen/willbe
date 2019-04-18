@@ -31,16 +31,16 @@
   Ресурс секції <code>path</code>, який вказує на розміщення елементів модуля і використовується в роутингу для інших ресурсів.
 </details>
 <details>
+  <summary><a href="./concept/Reflectors.md#Рефлектор">Рефлектор</a></summary>
+  Ресурс секції <code>reflector</code>, який формулює напрям і критерії здійснення операцій над групою файлів.
+</details>
+<details>
   <summary><a href="./concept/Steps.md#Крок">Крок</a></summary>
   Ресурс секції <code>step</code>, який представляє собою інструкцію для виконання утилітою при побудові модуля.
 </details>
 <details>
-  <summary><a href="./concept/Reflectors.md#Рефлектор">Рефлектор</a></summary>
-  Ресурс секції <code>reflector</code>, який формулює напрям і критерії здійснення операцій над групою файлів. 
-</details>
-<details>
   <summary><a href="./concept/Builds.md#Збірка">Збірка</a></summary>
-  Послідовність і умови виконання процедур побудови модуля. 
+  Послідовність і умови виконання процедур побудови модуля.
 </details>
 <details>
   <summary><a href="./concept/Structure.md#Секція-will-файла">Секція <code>will-файла</code></a></summary>
@@ -128,7 +128,7 @@
 </details>
 <details>
   <summary><a href="./concept/Criterions.md">Критеріон</a></summary>
-  Елемент порівняння для відбору ресурсів. 
+  Елемент порівняння для відбору ресурсів.
 </details>
 <details>
   <summary><a href="./concept/Asserts.md">Ґлоб з ассертом</a></summary>
