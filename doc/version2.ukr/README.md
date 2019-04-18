@@ -35,6 +35,10 @@
   Ресурс секції <code>reflector</code>, який формулює напрям і критерії здійснення операцій над групою файлів.
 </details>
 <details>
+  <summary><a href="./concept/ReflectorFileFilter.md">Файлові фільтри</a></summary>
+  Спосіб опису умов відбору необхідних для виконання деякої операції файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>.
+</details>
+<details>
   <summary><a href="./concept/Steps.md#Крок">Крок</a></summary>
   Ресурс секції <code>step</code>, який представляє собою інструкцію для виконання утилітою при побудові модуля.
 </details>
@@ -137,10 +141,6 @@
 <details>
   <summary><a href="./concept/Inheritance.md">Наслідування ресурсами</a></summary>
   Принцип опису модуля, згідно якого ресурс <code>will-файла</code> здатний використовувати (наслідувати) значення полів інших ресурсів того ж типу.
-</details>
-<details>
-  <summary><a href="./concept/ReflectorFileFilter.md">Файлові фільтри</a></summary>
-  Спосіб опису умов відбору необхідних для виконання деякої операції файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>.
 </details>
 
 ## Туторіали

@@ -35,6 +35,10 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   <code>Reflector</code> section resource which defines the direction and criteria for performing operations over a group of files.
 </details>
 <details>
+  <summary><a href="./concept/ReflectorFileFilter.md">File filters</a></summary>
+  Technique to describe conditions of selection required files for some operation on group of files. Reflector has two file filters: <code>src</code> and <code>dst</code>.
+</details>
+<details>
   <summary><a href="./concept/Steps.md#Step">Step</a></summary>
   <code>Step</code> section resource which is an  executing instruction of module building.
 </details>
@@ -137,10 +141,6 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details>
   <summary><a href="./concept/Inheritance.md">Resources inheritance</a></summary>
   Approach of description of a module according to wich <code>will-file</code> can reuse (inherit) value of fields of other resource(s) of the same type.
-</details>
-<details>
-  <summary><a href="./concept/ReflectorFileFilter.md">File filters</a></summary>
-  Technique to describe conditions of selection required files for some operation on group of files. Reflector has two file filters: <code>src</code> and <code>dst</code>.
 </details>
 
 ## Tutorials
