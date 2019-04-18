@@ -31,12 +31,12 @@ For gentle introduction use tutorials. For getting exhaustive information on one
    <code>Path</code> section resource which points to the placement of module elements and used in routing for other resources.
 </details>
 <details>
-  <summary><a href="./concept/Steps.md#Step">Step</a></summary>
-  <code>Step</code> section resource which is an  executing instruction of module building.
-</details>
-<details>
   <summary><a href="./concept/Reflectors.md#Reflector">Reflector</a></summary>
   <code>Reflector</code> section resource which defines the direction and criteria for performing operations over a group of files.
+</details>
+<details>
+  <summary><a href="./concept/Steps.md#Step">Step</a></summary>
+  <code>Step</code> section resource which is an  executing instruction of module building.
 </details>
 <details>
   <summary><a href="./concept/Builds.md#Build-assembly">Build assembly</a></summary>
