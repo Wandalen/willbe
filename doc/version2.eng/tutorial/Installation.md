@@ -1,8 +1,8 @@
-# Встановлення
+# Installation
 
-Процедура встановлення утиліти <code>willbe</code>
+Procedure of installation of utility.
 
-### Встановлення `NodeJS`
+### Installation of `NodeJS`
 
 Для встановлення `willbe` необхідно мати інстальований Node.js®. Якщо у вас його немає та завантажте версію для вашої операційної системи із [офіційного сайту](<https://nodejs.org/en/>) або виконуйте інструкції [по встановленню](https://nodejs.org/en/download/package-manager/).
 

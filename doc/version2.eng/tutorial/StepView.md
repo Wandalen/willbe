@@ -1,6 +1,6 @@
-# Вбудований крок <code>predefined.view</code>
+# Predefined step <code>predefined.view</code>
 
-Використання вбудованого кроку <code>predefined.view</code> для перегляду файлів.
+How to use predefined step <code>predefined.view</code> to view file.
 
 В процесі і після побудови модуля, зазвичай, потрібно перевірити правильність виконання операцій. Одним із способів є запуск файлів для їх виконання, редагування, перегляду. Для вирішення задачі в утиліті є вбудований крок `predefined.view`, котрий запускає файли при побудові модуля.  
 

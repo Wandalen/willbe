@@ -4,18 +4,18 @@
 
 Для плавного заглиблення в предмет використовуйте туторіали. Для отримання вичерпного розуміння якогось із аспектів використайте перелік концепцій щоб знайти потрібну і ознайомтеся із нею.
 
-## <a name="concepts"></a> Концепції
+## Концепції
 
 <details>
   <summary><a href="./concept/WillFile.md"><code>Will-файл</code></a></summary>
   Конфігураційний файл для опису та збірки модуля. Кожен формальний модуль має такий файл.
 </details>
 <details>
-  <summary><a href="./concept/WillFileNamedAndSplit.md">Іменований <code>will-файл</code></a></summary>
+  <summary><a href="./concept/WillFileNamedAndSplit.md#Іменований-will-файл">Іменований <code>will-файл</code></a></summary>
   Вид <code>will-файла</code>, що має не стандартне ім'я файлу. Дозволяє мати більше одного модуля із різними іменами файлів в одній дерикторії.
 </details>
 <details>
-  <summary><a href="./concept/WillFileNamedAndSplit.md">Спліт <code>will-файл</code></a></summary>
+  <summary><a href="./concept/WillFileNamedAndSplit.md#Спліт-will-файл">Спліт <code>will-файл</code></a></summary>
   Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля.
 </details>
 <details>
@@ -75,19 +75,19 @@
   Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.
 </details>
 <details>
-  <summary><a href="./concept/Export.md#out-will-file">Експортований <code>will-файл</code> (<code>out-will-файл</code>)</a></summary>
+  <summary><a href="./concept/Export.md#експортований-will-файл-out-will-файл">Експортований <code>will-файл</code> (<code>out-will-файл</code>)</a></summary>
   <code>Out-will-файл</code> - різновид <code>will-файла</code> згенерованого утилітою при експортуванні модуля. Інші модулі можуть використати даний модуль імортувавши його <code>out-will-файл</code>.
 </details>
 <details>
-  <summary><a href="./concept/Module.md#module">Модуль</a></summary>
+  <summary><a href="./concept/Module.md#Модуль">Модуль</a></summary>
   Модулем називається сукупність файлів, які описані в <code>will-файлi</code>.
 </details>
 <details>
-  <summary><a href="./concept/Module.md#submodule">Підмодуль</a></summary>
+  <summary><a href="./concept/Module.md#Підмодуль">Підмодуль</a></summary>
   Окремий модуль з власним конфігураційним <code>will-файлом</code>, який використовується іншим модулем (супермодулем).
 </details>
 <details>
-  <summary><a href="./concept/Module.md#supermodule">Супермодуль</a></summary>
+  <summary><a href="./concept/Module.md#Супермодуль">Супермодуль</a></summary>
   Модуль, який включає в себе інші модулі (підмодулі).
 </details>
 <details>
@@ -103,7 +103,7 @@
   Модуль відносно якого виконуються операції. За замовчуванням цей модуль завантажується із файла <code>.will.yml</code> поточної дерикторії.
 </details>
 <details>
-  <summary><a href="./concept/Export.md#module-export">Експорт модуля</a></summary>
+  <summary><a href="./concept/Export.md#Експорт-модуля">Експорт модуля</a></summary>
   Особливий вид збірки необхідний для використання даного модуля іншими розробниками та модулями. Результатом експортування модуля є аретфакти, зокерма <code>out-will-file</code>.
 </details>
 <details>
@@ -111,19 +111,19 @@
   Група файлів, що не розповсюджується із <code>will-файлом</code>. Для такого підмодуля можливо створити <code>will-файл</code> та експортувати його самостійно.
 </details>
 <details>
-  <summary><a href="./concept/Command.md#command">Команда</a></summary>
+  <summary><a href="./concept/Command.md#Команда">Команда</a></summary>
   Рядок що містить фразу для позначення наміру розробника і дії, котрі будуть виконані утилітою по її введенні. Вводиться в інтерфейс командного рядка розробником.
 </details>
 <details>
-  <summary><a href="./concept/Command.md#will-phrase">Фраза</a></summary>
+  <summary><a href="./concept/Command.md#Фраза">Фраза</a></summary>
   Слово або декілька слів, відокремлених крапкою, позначає команду, яку має виконати утиліта.
 </details>
 <details>
-  <summary><a href="./concept/Selectors.md#selector">Селектор</a></summary>
+  <summary><a href="./concept/Selectors.md#Селектор">Селектор</a></summary>
   Рядок-посилання на ресурс або декілька ресурсів модуля.
 </details>
 <details>
-  <summary><a href="./concept/Selectors.md#selector-with-glob">Селектор з ґлобом</a></summary>
+  <summary><a href="./concept/Selectors.md#Селектор-з-ґлобом">Селектор з ґлобом</a></summary>
   Селектор, який для вибору ресурсу використовує пошукові шаблони - ґлоби.
 </details>
 <details>
@@ -135,7 +135,7 @@
   Обмеження кількості ресурсів, що мають бути знайдені селектором з ґлобом.
 </details>
 <details>
-  <summary><a href="./concept/Inheritability.md">Наслідування ресурсами</a></summary>
+  <summary><a href="./concept/Inheritance.md">Наслідування ресурсами</a></summary>
   Принцип опису модуля, згідно якого ресурс <code>will-файла</code> здатний використовувати (наслідувати) значення полів інших ресурсів того ж типу.
 </details>
 <details>
@@ -143,14 +143,14 @@
   Спосіб опису критеріїв відбору необхідних файлів для виконання деякої операції над групою файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>.
 </details>
 
-## <a name="tutorials"></a> Туторіали
+## Туторіали
 
 <details>
   <summary><a href="./tutorial/Abstract.md">Загальна інформація</a></summary>
   Загальна інформація. Чим утиліта <code>willbe</code> є і чим вона не являється.
 </details>
 <details>
-  <summary><a href="./tutorial/Instalation.md">Встановлення</a></summary>
+  <summary><a href="./tutorial/Installation.md">Встановлення</a></summary>
   Процедура встановлення утиліти <code>willbe</code>.
 </details>
 <details>
@@ -222,7 +222,7 @@
   Як користуватись командою <code>.set</code> для зміни станів утиліти, наприклад, для зміни рівня вербальності.
 </details>
 <details>
-  <summary><a href="./tutorial/SelectorComplex.md">Складні селектори</a></summary>
+  <summary><a href="./tutorial/SelectorComposite.md">Складні селектори</a></summary>
   Використання складних селекторів для відбору ресурсів із підмодулів.
 </details>
 <details>
@@ -250,7 +250,7 @@
   Використання вбудованих рефлекторів для розбиття на версію для відлагодження і для релізу. Побудова мультизбірок.
 </details>
 <details>
-  <summary><a href="./tutorial/ResourceInheritability.md">Наслідування ресурсів</a></summary>
+  <summary><a href="./tutorial/ResourceInheritance.md">Наслідування ресурсів</a></summary>
   Як користуватись наслідуванням ресурсів для перевикористання даних.
 </details>
 <details>

@@ -1,8 +1,8 @@
-# Внутрішня будова
+# `Will-file` structure
 
-### Секція <code>will-файла</code>  
+### Section <code>will-file</code>   
 
-Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що описують даний модуль.
+Higher structural element of <code>will-file</code>, which consists of resources of single type or fields, which describe the module.
 
 Для побудови модуля існує 6-ть необов'язкових секцій: `about`, `path`, `submodule`, `step`, `reflector`, `build` та одна секція, яка генерується утилітою `willbe` при експорті модуля - секція `exported`.   
 
@@ -66,16 +66,16 @@ will-file
 
 ![will.file.inner.png](./Images/will.file.inner.png)  
 
-### Ресурси
-Структурна і функціональна одиниця <code>will-файла</code>. В файлі ресурси одного типу зібрані в одній секції.  
+### Resources
+Structural and functional element of <code>will-file</code>. Resources of the same type collected in a section.   
 
 Ресурси секцій позначаються декларативно, тобто, вказується лише результат, який потрібно отримати, а послідовність дій для отримання результату опускається.  
 Вигляд ресурсів окремих секцій відрізняється. На рисунку підмодуль `Tools` секції `submodule` має скорочену форму запису, а ресурс `npm.install` секції `step` - повну (розширену):
 
 ![resource.png](./Images/resource.png)  
 
-### Тип ресурса
+### Type of resource
 
-Функціональність пов'язана із групою ресурсів, обмежена призначенням. Приклад того, які бувать типи ресурів: шлях, підмодуль, крок, збірка. Кожен тип ресурів має власне призначення і обробляється утиілітою по-різному.
+Functionality associated with group of resources restricted by its purpose. Examples of types of resources: path, submodule, step, build. Each type of resources has its own purpose and is treated by the utility differently.
 
 В секції `path` об'єднані ресурси типу `шлях` - ресурс указує на шлях до файла (директорії) і використовується в роутингу для інших ресурсів. Секція `step` об'єднує ресурси типу "функція побудови [модуля](Module.md#Модуль)" (скорочена назва "крок") - ресурс вказує процедуру побудови і умови її виконання. Секція `reflector` - ресурс типу "рефлектор" - виконання операцій з файлами. Секція `submodule` об'єднує ресурси "підмодулі" - допоміжні частини модуля, окремі модулі. Секція `build` поміщає ресурси типу "збірка" - послідовність виконання побудови модуля. Секція `exported` включає описові поля і посилання на ресурси інших секцій. Секція `about` не має ресурсів, а містить описову інформацію про модуль.
