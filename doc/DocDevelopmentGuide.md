@@ -23,3 +23,5 @@ Etc..
 In the pervious tutorial [ "Predefined steps" ](PredefinedSteps.md) predefined steps were used to compose a build.
 <br>*Should be:*<br>
 In the [ pervious tutorial ](PredefinedSteps.md) predefined steps were used to compose a build.
+- Separate section for example is preferable.
+- Detailed description of illustration/code should goes after illustration/code. Before illustration should be title of section or very short description if it's appropriate.

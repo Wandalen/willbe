@@ -16,7 +16,7 @@
 </details>
 <details>
   <summary><a href="./concept/WillFileNamedAndSplit.md#Спліт-will-файл">Спліт <code>will-файл</code></a></summary>
-  Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля.
+  Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля. Дозволяє розробнику розділити дані для побудови модуля і дані для використання цього модуля іншими модулями.
 </details>
 <details>
   <summary><a href="./concept/Structure.md#Ресурси">Ресурси</a></summary>
