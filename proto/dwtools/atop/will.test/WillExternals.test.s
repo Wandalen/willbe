@@ -126,7 +126,6 @@ function singleModuleList( test )
   /* - */
 
   shell({ args : [ '.resources.list' ] })
-
   .thenKeep( ( got ) =>
   {
     test.case = 'list';
@@ -137,211 +136,9 @@ function singleModuleList( test )
     return null;
   })
 
-  /*-*/
-  /* To test output by command with glob and criterion args*/
-  /* Glob using negative test */
-  shell({ args : [ '.resources.list *proto*' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.case = 'resources list globs negative';
-    test.identical( got.exitCode, 0 );
-    test.is( !_.strHas( got.output, `out.release : './out/release'` ) );
-    test.is( !_.strHas( got.output, `build::debug.raw` ) );
-    test.is( !_.strHas( got.output, 'build::debug.compiled'  ) );
-    test.is( !_.strHas( got.output, 'build::release.compiled'  ) );
-
-    return null;
-  })
-
-  /* Glob using positive test */
-  shell({ args : [ '.resources.list *proto*' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.case = 'resources list globs';
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `proto : './proto'` ) );
-
-    test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
-    test.is( _.strHas( got.output, `. : '.'` ) );
-
-    test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
-    test.is( _.strHas( got.output, `predefined.reflect` ) );
-
-    test.is( _.strHas( got.output, 'build::proto.export'  ) );
-    test.is( _.strHas( got.output, `step::export.proto` ) );
-
-    return null;
-  })
-
-  /* Glob and criterion using negative test */
-  shell({ args : [ '.resources.list *proto* debug:0' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.case = 'globs and criterions negative';
-    test.identical( got.exitCode, 0 );
-    test.is( !_.strHas( got.output, `out.debug : './out/debug'` ) );
-    test.is( !_.strHas( got.output, `reflector::reflect.proto.debug` ) );
-    test.is( !_.strHas( got.output, 'step::reflect.proto.debug'  ) );
-    test.is( !_.strHas( got.output, 'build::debug.raw'  ) );
-
-    return null;
-  })
-
-  /* Glob and criterion using positive test */
-  shell({ args : [ '.resources.list *proto* debug:0' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.case = 'globs and criterions positive';
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `out.release : './out/release'` ) );
-
-    test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
-    test.is( _.strHas( got.output, `. : '.'` ) );
-
-    test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
-    test.is( _.strHas( got.output, `predefined.reflect` ) );
-
-    test.is( _.strHas( got.output, 'build::release.compiled'  ) );
-    test.is( _.strHas( got.output, `step::reflect.proto.*=1` ) );
-
-    return null;
-  })
-
-  /* Glob and two criterions using negative test */
-  shell({ args : [ '.resources.list * debug:0 raw:1' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.case = 'two criterions negative';
-    test.identical( got.exitCode, 0 );
-    test.is( !_.strHas( got.output, `step::reflect.proto.debug` ) );
-    test.is( !_.strHas( got.output, `build::debug.compiled` ) );
-
-    return null;
-  })
-
-  /* Glob and two criterion using positive test */
-  shell({ args : [ '.resources.list * debug:0 raw:1' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.case = 'two criterions positive';
-    test.identical( got.exitCode, 0 );
-
-    test.is( _.strHas( got.output, 'step::reflect.proto.raw'  ) );
-    test.is( _.strHas( got.output, 'build::release.raw'  ) );
-
-    return null;
-  })
-
-  /* end test */
-  /* - */
-
-  shell({ args : [ '.paths.list' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.case = 'module info'
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `proto : './proto'` ) );
-    test.is( _.strHas( got.output, `in : '.'` ) );
-    test.is( _.strHas( got.output, `out : 'out'` ) );
-    test.is( _.strHas( got.output, `out.debug : './out/debug'` ) ); debugger;
-    test.is( _.strHas( got.output, `out.release : './out/release'` ) );
-    return null;
-  })
-
-
-  shell({ args : [ '.submodules.list' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.case = 'submodules list'
-    test.identical( got.exitCode, 0 );
-    test.is( got.output.length );
-    return null;
-  })
-
-  /* - */
-
-  shell({ args : [ '.reflectors.list' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.case = 'reflectors.list'
-    test.identical( got.exitCode, 0 );
-
-    test.is( _.strHas( got.output, 'reflector::reflect.proto.' ) );
-    test.is( _.strHas( got.output, `. : '.'` ) );
-    test.is( _.strHas( got.output, `prefixPath : 'out/release'` ) );
-    test.is( _.strHas( got.output, `prefixPath : 'proto'` ) );
-
-    test.is( _.strHas( got.output, `reflector::reflect.proto.debug` ) );
-    test.is( _.strHas( got.output, `. : '.'` ) );
-    test.is( _.strHas( got.output, `prefixPath : 'out/debug'` ) );
-    test.is( _.strHas( got.output, `prefixPath : 'proto'` ) );
-
-    return null;
-  })
-
-  /* - */
-
-  shell({ args : [ '.steps.list' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.case = 'steps.list'
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'step::reflect.proto.' ))
-    test.is( _.strHas( got.output, 'step::reflect.proto.debug' ))
-    test.is( _.strHas( got.output, 'step::reflect.proto.raw' ))
-    test.is( _.strHas( got.output, 'step::reflect.proto.debug.raw' ))
-    test.is( _.strHas( got.output, 'step::export.proto' ))
-
-    return null;
-  })
-
-  /* - */
-
-  shell({ args : [ '.builds.list' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.case = '.builds.list'
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'build::debug.raw' ));
-    test.is( _.strHas( got.output, 'build::debug.compiled' ));
-    test.is( _.strHas( got.output, 'build::release.raw' ));
-    test.is( _.strHas( got.output, 'build::release.compiled' ));
-    test.is( _.strHas( got.output, 'build::all' ));
-
-    return null;
-  })
-
-  /* - */
-
-  shell({ args : [ '.exports.list' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.case = '.exports.list'
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'build::proto.export' ));
-    test.is( _.strHas( got.output, 'steps : ' ));
-    test.is( _.strHas( got.output, 'build::debug.raw' ));
-    test.is( _.strHas( got.output, 'step::export.proto' ));
-
-    return null;
-  })
-
   /* - */
 
   shell({ args : [ '.about.list' ] })
-
   .thenKeep( ( got ) =>
   {
     test.case = '.about.list'
@@ -365,15 +162,229 @@ function singleModuleList( test )
 
   /* - */
 
-  shell({ args : [ '.execution.list' ] })
-
+  shell({ args : [ '.paths.list' ] })
   .thenKeep( ( got ) =>
   {
-    test.case = '.execution.list'
+    test.case = 'module info'
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `proto : './proto'` ) );
+    test.is( _.strHas( got.output, `in : '.'` ) );
+    test.is( _.strHas( got.output, `out : 'out'` ) );
+    test.is( _.strHas( got.output, `out.debug : './out/debug'` ) );
+    test.is( _.strHas( got.output, `out.release : './out/release'` ) );
+    return null;
+  })
+
+
+  shell({ args : [ '.submodules.list' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'submodules list'
     test.identical( got.exitCode, 0 );
     test.is( got.output.length );
     return null;
   })
+
+  /* - */
+
+  shell({ args : [ '.reflectors.list' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'reflectors.list'
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, 'reflector::reflect.proto.' ) );
+    test.is( _.strHas( got.output, `. : '.'` ) );
+    test.is( _.strHas( got.output, `prefixPath : 'out/release'` ) );
+    test.is( _.strHas( got.output, `prefixPath : 'proto'` ) );
+
+    test.is( _.strHas( got.output, `reflector::reflect.proto.debug` ) );
+    test.is( _.strHas( got.output, `. : '.'` ) );
+    test.is( _.strHas( got.output, `prefixPath : 'out/debug'` ) );
+    test.is( _.strHas( got.output, `prefixPath : 'proto'` ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.steps.list' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'steps.list'
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'step::reflect.proto.' ))
+    test.is( _.strHas( got.output, 'step::reflect.proto.debug' ))
+    test.is( _.strHas( got.output, 'step::reflect.proto.raw' ))
+    test.is( _.strHas( got.output, 'step::reflect.proto.debug.raw' ))
+    test.is( _.strHas( got.output, 'step::export.proto' ))
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.builds.list' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.builds.list'
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'build::debug.raw' ));
+    test.is( _.strHas( got.output, 'build::debug.compiled' ));
+    test.is( _.strHas( got.output, 'build::release.raw' ));
+    test.is( _.strHas( got.output, 'build::release.compiled' ));
+    test.is( _.strHas( got.output, 'build::all' ));
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.exports.list' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.exports.list'
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'build::proto.export' ));
+    test.is( _.strHas( got.output, 'steps : ' ));
+    test.is( _.strHas( got.output, 'build::debug.raw' ));
+    test.is( _.strHas( got.output, 'step::export.proto' ));
+
+    return null;
+  })
+
+  /* - */ /* To test output by command with glob and criterion args*/
+
+  shell({ args : [ '.resources.list *a* predefined:0' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'resources list globs negative';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'path::out.release' ) );
+    test.is( _.strHas( got.output, 'step::reflect.proto.raw' ) );
+    test.is( _.strHas( got.output, 'step::reflect.proto.debug.raw' ) );
+    test.is( _.strHas( got.output, 'build::debug.raw' ) );
+    test.is( _.strHas( got.output, 'build::release.raw' ) );
+    test.is( _.strHas( got.output, 'build::release.compiled' ) );
+    test.is( _.strHas( got.output, 'build::all' ) );
+    test.identical( _.strCount( got.output, '::' ), 14 );
+
+    return null;
+  })
+
+  shell({ args : [ '.resources.list *p* debug:1' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'resources list globs negative';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflector::predefined.debug.v1'  ) );
+    test.is( _.strHas( got.output, 'reflector::reflect.proto.debug' ) );
+    test.is( _.strHas( got.output, 'step::reflect.proto.debug' ) );
+    test.is( _.strHas( got.output, 'step::reflect.proto.debug.raw' ) );
+    test.is( _.strHas( got.output, 'step::export.proto' ) );
+    test.is( _.strHas( got.output, 'build::debug.compiled' ) );
+    test.is( _.strHas( got.output, 'build::proto.export' ) );
+    test.identical( _.strCount( got.output, '::' ), 13 );
+
+    return null;
+  })
+
+  /* Glob using positive test */
+  shell({ args : [ '.resources.list *proto*' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'resources list globs';
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
+    test.is( _.strHas( got.output, `. : '.'` ) );
+
+    test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
+    test.is( _.strHas( got.output, `predefined.reflect` ) );
+
+    test.is( _.strHas( got.output, 'build::proto.export'  ) );
+    test.is( _.strHas( got.output, `step::export.proto` ) );
+
+    return null;
+  })
+
+  /* Glob and criterion using negative test */
+  shell({ args : [ '.resources.list *proto* debug:0' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'globs and criterions negative';
+    test.identical( got.exitCode, 0 );
+    test.is( !_.strHas( got.output, `out.debug : './out/debug'` ) );
+    test.is( !_.strHas( got.output, `reflector::reflect.proto.debug` ) );
+    test.is( !_.strHas( got.output, 'step::reflect.proto.debug'  ) );
+    test.is( !_.strHas( got.output, 'build::debug.raw'  ) );
+
+    return null;
+  })
+
+  /* Glob and criterion using positive test */
+  shell({ args : [ '.resources.list *proto* debug:0 predefined:0' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'globs and criterions positive';
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, 'path::proto'  ) );
+
+    test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
+    test.is( _.strHas( got.output, `. : '.'` ) );
+
+    test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
+    test.is( _.strHas( got.output, `predefined.reflect` ) );
+
+    test.identical( _.strCount( got.output, '::' ), 6 );
+
+    return null;
+  })
+
+  /* Glob and two criterions using negative test */
+  shell({ args : [ '.resources.list * debug:1 raw:0 predefined:0' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.resources.list * debug:1 raw:0 predefined:0';
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, `path::out.debug` ) );
+    test.is( _.strHas( got.output, `reflector::reflect.proto.debug` ) );
+    test.is( _.strHas( got.output, `step::reflect.proto.debug` ) );
+    test.is( _.strHas( got.output, `step::export.proto` ) );
+    test.is( _.strHas( got.output, `build::debug.compiled` ) );
+    test.is( _.strHas( got.output, `build::proto.export` ) );
+    test.identical( _.strCount( got.output, '::' ), 11 );
+
+    return null;
+  })
+
+  /* Glob and two criterion using positive test */
+  shell({ args : [ '.resources.list * debug:0 raw:1' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.resources.list * debug:0 raw:1';
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, 'step::reflect.proto.raw'  ) );
+    test.is( _.strHas( got.output, 'build::release.raw'  ) );
+    test.identical( _.strCount( got.output, '::' ), 4 );
+
+    return null;
+  })
+
+  // /* - */
+  //
+  // shell({ args : [ '.execution.list' ] })
+  //
+  // .thenKeep( ( got ) =>
+  // {
+  //   test.case = '.execution.list'
+  //   test.identical( got.exitCode, 0 );
+  //   test.is( got.output.length );
+  //   return null;
+  // })
 
   return ready;
 }
@@ -1243,6 +1254,52 @@ eachMixed.timeOut = 300000;
 
 //
 
+function withMixed( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let filePath = _.path.join( routinePath, 'file' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  });
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.with module .build'
+    return null;
+  })
+
+  shell({ args : [ '.with module .build' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.is( got.exitCode !== 0 );
+    test.is( _.strHas( got.output, 'Found no will-file' ) );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+withMixed.timeOut = 300000;
+
+//
+
 function singleStep( test )
 {
   let self = this;
@@ -1702,6 +1759,7 @@ function exportMixed( test )
 
   .thenKeep( ( got ) =>
   {
+
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exporting .*module::UriFundamentals.informal.* \/ build::export/ ) );
     test.is( _.strHas( got.output, '+ download reflected' ) );
@@ -1910,17 +1968,17 @@ function submodulesList( test )
     return null;
   })
 
-  /* - */
-
-  shell({ args : [ '.execution.list' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.case = '.execution.list'
-    test.identical( got.exitCode, 0 );
-    test.is( got.output.length );
-    return null;
-  })
+  // /* - */
+  //
+  // shell({ args : [ '.execution.list' ] })
+  //
+  // .thenKeep( ( got ) =>
+  // {
+  //   test.case = '.execution.list'
+  //   test.identical( got.exitCode, 0 );
+  //   test.is( got.output.length );
+  //   return null;
+  // })
 
   return ready;
 }
@@ -2428,11 +2486,9 @@ function clean( test )
     test.case = '.with NoBuild .clean';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted ' + 0 + ' file(s)' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) ); /* xxx : phantom problem ? */
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
     return null;
   })
-
-
 
   /* - */
 
@@ -4660,10 +4716,268 @@ reflectRemoteHttp.timeOut = 130000;
 
 //
 
-function reflectShell( test )
+function reflectWithOptions( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-shell' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-with-options' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let filePath = _.path.join( routinePath, 'file' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  });
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.with mandatory .build variant1';
+    return null;
+  })
+
+  shell({ args : [ '.with mandatory .clean' ] })
+  shell({ args : [ '.with mandatory .build variant1' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /\+ reflect\.proto1 reflected 3 files .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './debug', './debug/File.js', './debug/File.test.js' ] );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.with mandatory .build variant2';
+    return null;
+  })
+
+  shell({ args : [ '.with mandatory .clean' ] })
+  shell({ args : [ '.with mandatory .build variant2' ] })
+  .finally( ( err, got ) =>
+  {
+    test.is( !err );
+    test.is( !!got.exitCode );
+    test.is( _.strHas( got.output, /Failed .*module::.+ \/ step::reflect\.proto2/ ) );
+    test.is( _.strHas( got.output, /Error\. No file moved : .+reflectWithOptions.* : .*out\/debug.* <- .*proto2.*/ ) );
+    var files = self.find( outPath );
+    test.identical( files, [] );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.with mandatory .build variant3';
+    return null;
+  })
+
+  shell({ args : [ '.with mandatory .clean' ] })
+  shell({ args : [ '.with mandatory .build variant3' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /\+ reflect\.proto3 reflected 0 files .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
+    var files = self.find( outPath );
+    test.identical( files, [] );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+//
+
+function reflectInherit( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-inherit' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  // ready
+  // .thenKeep( () =>
+  // {
+  //   test.case = '.build debug1'
+  //   _.fileProvider.filesDelete( outPath );
+  //   return null;
+  // })
+  //
+  // shell({ args : [ '.build debug1' ] })
+  // .thenKeep( ( got ) =>
+  // {
+  //   test.identical( got.exitCode, 0 );
+  //   test.is( _.strHas( got.output, '+ reflect.proto1 reflected 6 files' ) );
+  //   test.is( _.strHas( got.output, /.*out\/debug1.* <- .*proto.*/ ) );
+  //   var files = self.find( outPath );
+  //   test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.s', './debug1/File.test.js', './debug1/some.test', './debug1/some.test/File2.js' ] );
+  //   return null;
+  // })
+  //
+  // /* - */
+  //
+  // ready
+  // .thenKeep( () =>
+  // {
+  //   test.case = '.build debug2'
+  //   _.fileProvider.filesDelete( outPath );
+  //   return null;
+  // })
+  //
+  // shell({ args : [ '.build debug2' ] })
+  // .thenKeep( ( got ) =>
+  // {
+  //   test.identical( got.exitCode, 0 );
+  //   test.is( _.strHas( got.output, '+ reflect.proto2 reflected 6 files' ) );
+  //   test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
+  //   var files = self.find( outPath );
+  //   test.identical( files, [ '.', './debug2', './debug2/File.js', './debug2/File.s', './debug2/File.test.js', './debug2/some.test', './debug2/some.test/File2.js' ] );
+  //   return null;
+  // })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build debug3'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build debug3' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '+ reflect.not.test.only.js.v1 reflected 6 files' ) );
+    test.is( _.strHas( got.output, /.*out.* <- .*proto.*/ ) );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.s', './debug2', './debug2/File.js', './debug2/File.s' ] );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+//
+
+function reflectWithSelectorInDstFilter( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-selecting-dst' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let filePath = _.path.join( routinePath, 'file' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  });
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /*
+    reflect.proto:
+      filePath :
+        path::proto : .
+      dst :
+        basePath : .
+        prefixPath : path::out.*=1 #<-- doesn't work
+        # prefixPath : "{path::out.*=1}" #<-- this works
+      criterion :
+        debug : [ 0,1 ]
+  */
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = 'reflect to out/debug';
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build debug' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './debug', './debug/Single.s' ] );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = 'reflect to out/release';
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build release' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './release', './release/Single.s' ] );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+//
+
+//function reflectInherit( test )
+function make( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'make' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let filePath = _.path.join( routinePath, 'file' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
@@ -4758,242 +5072,6 @@ function reflectShell( test )
 
     var files = self.find( filePath );
     test.identical( files, [ '.', './File.js', './File.test.js', './Produce.js', './Produced.js2', './Produced.txt2', './Src1.txt', './Src2.txt' ] );
-    return null;
-  })
-
-  /* - */
-
-  return ready;
-}
-
-//
-
-function reflectWithOptions( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-with-options' );
-  let routinePath = _.path.join( self.tempDir, test.name );
-  let filePath = _.path.join( routinePath, 'file' );
-  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-  let outPath = _.path.join( routinePath, 'out' );
-  let ready = new _.Consequence().take( null );
-
-  let shell = _.sheller
-  ({
-    execPath : 'node ' + execPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    throwingExitCode : 0,
-    ready : ready,
-  });
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
-
-  /* - */
-
-  ready
-  .thenKeep( () =>
-  {
-    test.case = '.with mandatory .build variant1';
-    return null;
-  })
-
-  shell({ args : [ '.with mandatory .clean' ] })
-  shell({ args : [ '.with mandatory .build variant1' ] })
-  .thenKeep( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /\+ reflect\.proto1 reflected 3 files .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
-    var files = self.find( outPath );
-    test.identical( files, [ '.', './debug', './debug/File.js', './debug/File.test.js' ] );
-    return null;
-  })
-
-  /* - */
-
-  ready
-  .thenKeep( () =>
-  {
-    test.case = '.with mandatory .build variant2';
-    return null;
-  })
-
-  shell({ args : [ '.with mandatory .clean' ] })
-  shell({ args : [ '.with mandatory .build variant2' ] })
-  .finally( ( err, got ) =>
-  {
-    test.is( !err );
-    test.is( !!got.exitCode );
-    test.is( _.strHas( got.output, /Failed .*module::.+ \/ step::reflect\.proto2/ ) );
-    test.is( _.strHas( got.output, /Error\. No file moved : .+reflectWithOptions.* : .*out\/debug.* <- .*proto2.*/ ) );
-    var files = self.find( outPath );
-    test.identical( files, [] );
-    return null;
-  })
-
-  /* - */
-
-  ready
-  .thenKeep( () =>
-  {
-    test.case = '.with mandatory .build variant3';
-    return null;
-  })
-
-  shell({ args : [ '.with mandatory .clean' ] })
-  shell({ args : [ '.with mandatory .build variant3' ] })
-  .thenKeep( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /\+ reflect\.proto3 reflected 0 files .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
-    var files = self.find( outPath );
-    test.identical( files, [] );
-    return null;
-  })
-
-  /* - */
-
-  return ready;
-}
-
-//
-
-function reflectWithSelectorInDstFilter( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-selecting-dst' );
-  let routinePath = _.path.join( self.tempDir, test.name );
-  let filePath = _.path.join( routinePath, 'file' );
-  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-  let outPath = _.path.join( routinePath, 'out' );
-  let ready = new _.Consequence().take( null );
-
-  let shell = _.sheller
-  ({
-    execPath : 'node ' + execPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    throwingExitCode : 0,
-    ready : ready,
-  });
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
-
-  /*
-    reflect.proto:
-      filePath :
-        path::proto : .
-      dst :
-        basePath : .
-        prefixPath : path::out.*=1 #<-- doesn't work
-        # prefixPath : "{path::out.*=1}" #<-- this works
-      criterion :
-        debug : [ 0,1 ]
-  */
-
-  /* - */
-
-  ready
-  .thenKeep( () =>
-  {
-    test.case = 'reflect to out/debug';
-    _.fileProvider.filesDelete( outPath );
-    return null;
-  })
-
-  shell({ args : [ '.build debug' ] })
-  .thenKeep( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    var files = self.find( outPath );
-    test.identical( files, [ '.', './debug', './debug/Single.s' ] );
-    return null;
-  })
-
-  /* - */
-
-  ready
-  .thenKeep( () =>
-  {
-    test.case = 'reflect to out/release';
-    _.fileProvider.filesDelete( outPath );
-    return null;
-  })
-
-  shell({ args : [ '.build release' ] })
-  .thenKeep( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    var files = self.find( outPath );
-    test.identical( files, [ '.', './release', './release/Single.s' ] );
-    return null;
-  })
-
-  /* - */
-
-  return ready;
-}
-
-//
-
-function reflectInherit( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-inherit' );
-  let routinePath = _.path.join( self.tempDir, test.name );
-  let outPath = _.path.join( routinePath, 'out' );
-  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-  let ready = new _.Consequence().take( null );
-
-  let shell = _.sheller
-  ({
-    execPath : 'node ' + execPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
-
-  /* - */
-
-  ready
-  .thenKeep( () =>
-  {
-    test.case = '.build debug1'
-    _.fileProvider.filesDelete( outPath );
-    return null;
-  })
-
-  shell({ args : [ '.build debug1' ] })
-  .thenKeep( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '+ reflect.proto1 reflected 3 files' ) );
-    test.is( _.strHas( got.output, /.*out\/debug1.* <- .*proto.*/ ) );
-    var files = self.find( outPath );
-    test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.test.js' ] );
-    return null;
-  })
-
-  /* - */
-
-  ready
-  .thenKeep( () =>
-  {
-    test.case = '.build debug2'
-    _.fileProvider.filesDelete( outPath );
-    return null;
-  })
-
-  shell({ args : [ '.build debug2' ] })
-  .thenKeep( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '+ reflect.proto2 reflected 3 files' ) );
-    test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
-    var files = self.find( outPath );
-    test.identical( files, [ '.', './debug2', './debug2/File.js', './debug2/File.test.js' ] );
     return null;
   })
 
@@ -5526,10 +5604,10 @@ transpile.timeOut = 130000;
 
 //
 
-function shell( test )
+function shellArgs( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'shell' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'shell-args' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
@@ -5588,7 +5666,190 @@ function shell( test )
   return ready;
 }
 
-shell.timeOut = 30000;
+//
+
+function functionStringsJoin( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'function-strings-join' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build strings.join'
+    return null;
+  })
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.build strings.join' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'node' ), 1 );
+    test.identical( _.strCount( got.output, 'File2.js' ), 1 );
+    test.identical( _.strCount( got.output, 'File3.js' ), 1 );
+    test.identical( _.strCount( got.output, 'File1.js' ), 1 );
+    test.identical( _.strCount( got.output, 'out1.js' ), 1 );
+
+    var expected =
+`console.log( 'File2.js' );
+console.log( 'File3.js' );
+console.log( 'File1.js' );
+`
+    var read = _.fileProvider.fileRead( _.path.join( routinePath, 'out1.js' ) );
+    test.identical( read, expected );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build multiply'
+    return null;
+  })
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.build multiply' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'node' ), 2 );
+    test.identical( _.strCount( got.output, 'File2.js' ), 1 );
+    test.identical( _.strCount( got.output, 'File3.js' ), 1 );
+    test.identical( _.strCount( got.output, 'File1.js' ), 2 );
+    test.identical( _.strCount( got.output, 'out2.js' ), 2 );
+
+    var expected =
+`console.log( 'File3.js' );
+console.log( 'File1.js' );
+`
+    var read = _.fileProvider.fileRead( _.path.join( routinePath, 'out2.js' ) );
+    test.identical( read, expected );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build echo1'
+    return null;
+  })
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.build echo1' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'node' ), 6 );
+    test.identical( _.strCount( got.output, 'File2.js' ), 4 );
+    test.identical( _.strCount( got.output, 'File3.js' ), 4 );
+    test.identical( _.strCount( got.output, 'File3.js op2' ), 2 );
+    test.identical( _.strCount( got.output, 'File3.js op3' ), 2 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build echo2'
+    return null;
+  })
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.build echo2' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'node' ), 6 );
+    test.identical( _.strCount( got.output, 'Echo.js op2 op3 op1' ), 2 );
+    test.identical( _.strCount( got.output, 'Echo.js op2 op3 op2' ), 2 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+//
+
+function functionPlatform( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'function-platform' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build'
+    return null;
+  })
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.build' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'copy reflected 2 files' ), 1 );
+
+    var Os = require( 'os' );
+    var files = self.find( outPath );
+
+    if( Os.platform() === 'win32' )
+    test.identical( files, [ '.', './dir.windows', './dir.windows/File.js' ] );
+    else if( Os.platform() === 'darwin' )
+    test.identical( files, [ '.', './dir.osx', './dir.osx/File.js' ] );
+    else
+    test.identical( files, [ '.', './dir.posix', './dir.posix/File.js' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
 
 //
 
@@ -5628,6 +5889,7 @@ var Self =
     buildDetached,
     fixateDetached,
     eachMixed,
+    withMixed,
     singleStep,
 
     submodulesInfo,
@@ -5657,19 +5919,22 @@ var Self =
     reflectComposite,
     reflectRemoteGit,
     reflectRemoteHttp,
-    reflectShell,
     reflectWithOptions,
     reflectWithSelectorInDstFilter,
     reflectInherit,
     reflectSubmodulesWithCriterion,
 
+    make,
     importInExport,
     setVerbosity,
     stepsList,
     help,
     transpile,
+    // shellArgs,
 
-    shell
+    functionStringsJoin,
+    functionPlatform,
+
   }
 
 }

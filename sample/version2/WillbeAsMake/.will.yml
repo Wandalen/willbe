@@ -1,0 +1,61 @@
+about :
+  name : 'compileCpp'
+  description : 'To use willbe as make'
+  version : 0.0.1
+
+path :
+
+  in : '.'
+  file : 'file'
+
+reflector :
+  
+  compile :
+    filePath :
+      '*.c' : 1
+      path::file : 1
+    src :
+      prefixPath : 'file'
+
+  build :
+    filePath :
+      '*.o' : 1
+      '*.c' : 0
+      path::file : 1
+
+step :
+
+  compile :
+    shell : gcc-6 -c {this::src}
+    currentPath : path::file
+    forEachDst : compile
+    upToDate : preserve
+  
+  build :
+    shell : gcc-6 -o hello {this::src}
+    currentPath : path::file
+    forEachDst : build
+    upToDate : preserve
+  
+  clean.temp :
+    inherit: predefined.shell
+    shell : rm -Rf *.o
+    currentPath : path::file
+
+build :
+
+  compile :
+    criterion :
+      default : 1
+    steps :
+      - step::compile
+
+  make.hello :
+    steps :
+      - step::build
+  
+  all :
+    steps :
+      - build::compile
+      - build::make.hello
+      - clean.temp

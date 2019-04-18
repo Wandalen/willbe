@@ -1,0 +1,64 @@
+about :
+
+  name : cleanCommand
+  description : "To use .clean command"
+  version : 0.0.1
+
+submodule :
+
+  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+
+path :
+
+  in : '.'
+  out : 'out'
+  temp : 'temp'
+  out.debug :
+    path : './out/module.debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : './out/module.release'
+    criterion :
+      debug : 0
+
+reflector :
+
+  reflect.submodules :
+    inherit : submodule::*/exported::*=1/reflector::exportedFiles*=1
+    dst :
+      basePath : .
+      prefixPath : path::out.*=1
+    criterion :
+      debug : 1
+      
+  reflect.files : 
+    filePath : 
+      '*.yml' : false
+      '{path::temp}/out' : path::out.*=1
+    criterion :
+      debug : 1
+
+step :
+
+  files.import :
+    currentPath : path::predefined.dir
+    shell : 'will .each module .build'
+    
+  export.module : 
+    export : path::out.*=1
+    criterion : 
+      debug : [ 0,1 ]
+
+build :
+
+  make.module :
+    criterion :
+      default : 1
+      debug : 1
+    steps :
+      - submodules.download
+      - reflect.submodules*=1
+      - files.import
+      - reflect.files
+      - export.module*

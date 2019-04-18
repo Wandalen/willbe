@@ -319,16 +319,26 @@ function _commandList( e, act, resourceName )
     if( resourceName )
     {
 
-      let request = _.strRequestParse( e.argument );
+      let selectorIsGlob = _.path.isGlob( resourceName );
+      _.assert( e.request === undefined );
+      e.request = _.strRequestParse( e.argument );
+
+      if( selectorIsGlob && e.request.subject && !module.SelectorIs( e.request.subject ) )
+      {
+        e.request.subject = '*::' + e.request.subject;
+      }
+
       let o2 =
       {
-        selector : request.subject || '*',
-        criterion : request.map,
-        defaultResourceName : resourceName,
-        prefixlessAction : 'default',
+        selector : selectorIsGlob ? ( e.request.subject || '*::*' ) : ( e.request.subject || '*' ),
+        criterion : e.request.map,
+        defaultResourceName : selectorIsGlob ? null : resourceName,
+        prefixlessAction : selectorIsGlob ? 'throw' : 'default',
         arrayWrapping : 1,
-        pathUnwrapping : 1,
-        pathResolving : 0
+        pathUnwrapping : selectorIsGlob ? 0 : 1,
+        pathResolving : 0,
+        mapValsUnwrapping : selectorIsGlob ? 0 : 1,
+        strictCriterion : 1,
       }
 
       if( resourceName === 'path' )
@@ -349,13 +359,36 @@ function commandResourcesList( e )
 {
   let will = this;
 
-  function act( module )
+  function act( module, resources )
   {
+
+    debugger;
     let logger = will.logger;
-    logger.log( module.infoExport() );
+
+    if( !e.request.subject && !_.mapKeys( e.request.map ).length )
+    {
+
+      let result = '';
+      result += module.about.infoExport();
+
+      logger.log( result );
+
+    }
+
+    logger.log( module.infoExportResource( resources ) );
+
   }
 
-  return will._commandList( e, act, null );
+  return will._commandList( e, act, '*' );
+
+  // function act( module )
+  // {
+  //   let logger = will.logger;
+  //   logger.log( module.infoExport() );
+  // }
+  //
+  // return will._commandList( e, act, '*' );
+
 }
 
 //

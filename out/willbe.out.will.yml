@@ -2,14 +2,17 @@ format: willfile-1.0.0
 about:
   name: willbe
   description: Utility to manage modules of complex modular systems
-  version: 0.3.166
   enabled: 1
-  interpreters:
-    - nodejs >= 6.0.0
-    - chrome >= 60.0.0
-    - firefox >= 60.0.0
-  keywords:
-    - wTools
+  version: 0.3.166
+  values:
+    enabled: 1
+    name: willbe
+    interpreters:
+      - nodejs >= 6.0.0
+      - chrome >= 60.0.0
+      - firefox >= 60.0.0
+    keywords:
+      - wTools
 execution:
   scripts:
     test: wtest proto
@@ -195,6 +198,17 @@ path:
       - proto/dwtools/atop/will.test/asset/export-with-reflector/proto/include
       - >-
         proto/dwtools/atop/will.test/asset/export-with-reflector/proto/include/MustBeExcluded.s
+      - proto/dwtools/atop/will.test/asset/function-platform
+      - proto/dwtools/atop/will.test/asset/function-platform/proto
+      - proto/dwtools/atop/will.test/asset/function-platform/proto/File.js
+      - proto/dwtools/atop/will.test/asset/function-strings-join
+      - proto/dwtools/atop/will.test/asset/function-strings-join/proto
+      - proto/dwtools/atop/will.test/asset/function-strings-join/proto/Echo.js
+      - proto/dwtools/atop/will.test/asset/function-strings-join/proto/File1.js
+      - proto/dwtools/atop/will.test/asset/function-strings-join/proto/File2.js
+      - proto/dwtools/atop/will.test/asset/function-strings-join/proto/File3.js
+      - >-
+        proto/dwtools/atop/will.test/asset/function-strings-join/proto/Produce.js
       - proto/dwtools/atop/will.test/asset/import-in
       - proto/dwtools/atop/will.test/asset/import-in/super.ex.will.yml
       - proto/dwtools/atop/will.test/asset/import-in/super.im.will.yml
@@ -217,6 +231,15 @@ path:
         proto/dwtools/atop/will.test/asset/import-in/super.out/release/File.debug.js
       - >-
         proto/dwtools/atop/will.test/asset/import-in/super.out/release/File.release.js
+      - proto/dwtools/atop/will.test/asset/make
+      - proto/dwtools/atop/will.test/asset/make/v1.will.yml
+      - proto/dwtools/atop/will.test/asset/make/v2.will.yml
+      - proto/dwtools/atop/will.test/asset/make/file
+      - proto/dwtools/atop/will.test/asset/make/file/File.js
+      - proto/dwtools/atop/will.test/asset/make/file/File.test.js
+      - proto/dwtools/atop/will.test/asset/make/file/Produce.js
+      - proto/dwtools/atop/will.test/asset/make/file/Src1.txt
+      - proto/dwtools/atop/will.test/asset/make/file/Src2.txt
       - proto/dwtools/atop/will.test/asset/multiple-exports
       - proto/dwtools/atop/will.test/asset/multiple-exports/super.ex.will.yml
       - proto/dwtools/atop/will.test/asset/multiple-exports/super.im.will.yml
@@ -299,22 +322,17 @@ path:
       - proto/dwtools/atop/will.test/asset/reflect-inherit
       - proto/dwtools/atop/will.test/asset/reflect-inherit/proto
       - proto/dwtools/atop/will.test/asset/reflect-inherit/proto/File.js
+      - proto/dwtools/atop/will.test/asset/reflect-inherit/proto/File.s
       - proto/dwtools/atop/will.test/asset/reflect-inherit/proto/File.test.js
+      - proto/dwtools/atop/will.test/asset/reflect-inherit/proto/some.test
+      - >-
+        proto/dwtools/atop/will.test/asset/reflect-inherit/proto/some.test/File2.js
       - proto/dwtools/atop/will.test/asset/reflect-nothing-from-submodules
       - proto/dwtools/atop/will.test/asset/reflect-nothing-from-submodules/proto
       - >-
         proto/dwtools/atop/will.test/asset/reflect-nothing-from-submodules/proto/Single.s
       - proto/dwtools/atop/will.test/asset/reflect-remote-git
       - proto/dwtools/atop/will.test/asset/reflect-remote-http
-      - proto/dwtools/atop/will.test/asset/reflect-shell
-      - proto/dwtools/atop/will.test/asset/reflect-shell/v1.will.yml
-      - proto/dwtools/atop/will.test/asset/reflect-shell/v2.will.yml
-      - proto/dwtools/atop/will.test/asset/reflect-shell/file
-      - proto/dwtools/atop/will.test/asset/reflect-shell/file/File.js
-      - proto/dwtools/atop/will.test/asset/reflect-shell/file/File.test.js
-      - proto/dwtools/atop/will.test/asset/reflect-shell/file/Produce.js
-      - proto/dwtools/atop/will.test/asset/reflect-shell/file/Src1.txt
-      - proto/dwtools/atop/will.test/asset/reflect-shell/file/Src2.txt
       - proto/dwtools/atop/will.test/asset/reflect-subdir
       - proto/dwtools/atop/will.test/asset/reflect-subdir/submodule.out.will.yml
       - proto/dwtools/atop/will.test/asset/reflect-subdir/module
@@ -356,14 +374,8 @@ path:
       - proto/dwtools/atop/will.test/asset/scaffold/proto/File.debug.js
       - proto/dwtools/atop/will.test/asset/scaffold/proto/File.js
       - proto/dwtools/atop/will.test/asset/scaffold/proto/File.release.js
-      - proto/dwtools/atop/will.test/asset/shell
-      - proto/dwtools/atop/will.test/asset/shell/script.js
-      - proto/dwtools/atop/will.test/asset/shell-composite
-      - proto/dwtools/atop/will.test/asset/shell-composite/proto
-      - proto/dwtools/atop/will.test/asset/shell-composite/proto/File1.js
-      - proto/dwtools/atop/will.test/asset/shell-composite/proto/File2.js
-      - proto/dwtools/atop/will.test/asset/shell-composite/proto/File3.js
-      - proto/dwtools/atop/will.test/asset/shell-composite/proto/Produce.js
+      - proto/dwtools/atop/will.test/asset/shell-args
+      - proto/dwtools/atop/will.test/asset/shell-args/script.js
       - proto/dwtools/atop/will.test/asset/simple
       - proto/dwtools/atop/will.test/asset/simple/proto
       - proto/dwtools/atop/will.test/asset/simple/proto/File.js
@@ -374,6 +386,8 @@ path:
       - proto/dwtools/atop/will.test/asset/single with space/proto
       - proto/dwtools/atop/will.test/asset/single with space/proto/Single.s
       - proto/dwtools/atop/will.test/asset/step-shell
+      - proto/dwtools/atop/will.test/asset/step-view
+      - proto/dwtools/atop/will.test/asset/step-view/File.html
       - proto/dwtools/atop/will.test/asset/submodule-download
       - proto/dwtools/atop/will.test/asset/submodule-download/proto
       - proto/dwtools/atop/will.test/asset/submodule-download/proto/Simple.js

@@ -593,6 +593,105 @@ clone.timeOut = 130000;
 
 //
 
+function superResolve( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulePath = _.path.join( routinePath, 'super' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let outPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+  let will = new _.Will;
+  let path = _.fileProvider.path;
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( outPath );
+
+  var module = will.moduleMake({ willFilesPath : modulePath });
+
+  /* - */
+
+  module.ready.thenKeep( ( arg ) =>
+  {
+
+    test.case = 'build::*';
+    var resolved = module.resolve( 'build::*' );
+    test.identical( resolved.length, 4 );
+
+    test.case = '*::*a*';
+    var resolved = module.resolve
+    ({
+      selector : '*::*a*',
+      pathUnwrapping : 0,
+      missingAction : 'undefine',
+    });
+    test.identical( resolved.length, 13 );
+
+    test.case = '*::*a*/nickName';
+    var resolved = module.resolve
+    ({
+      selector : '*::*a*/nickName',
+      pathUnwrapping : 0,
+      singleUnwrapping : 0,
+      mapValsUnwrapping : 1,
+      missingAction : 'undefine',
+    });
+    test.identical( resolved, [ 'path::predefined.local', 'path::out.release', 'reflector::predefined.release.v1', 'reflector::predefined.release.v2', 'step::timelapse.begin', 'step::timelapse.end', 'step::predefined.transpile', 'step::submodules.download', 'step::submodules.update', 'step::submodules.reload', 'step::submodules.clean', 'step::clean', 'build::release' ] );
+
+    test.case = '*';
+    var resolved = module.resolve
+    ({
+      selector : '*',
+      pathUnwrapping : 1,
+      pathResolving : 0
+    });
+    test.identical( resolved, '*' );
+
+    test.case = '*::*';
+    var resolved = module.resolve
+    ({
+      selector : '*::*',
+      pathUnwrapping : 0,
+      mapValsUnwrapping : 1,
+      pathResolving : 0,
+    });
+    test.identical( resolved.length, 41 );
+
+    test.case = '* + defaultResourceName';
+    var resolved = module.resolve
+    ({
+      selector : '*',
+      defaultResourceName : 'path',
+      prefixlessAction : 'default',
+      pathUnwrapping : 0,
+      mapValsUnwrapping : 1,
+      pathResolving : 0,
+    });
+    test.identical( resolved.length, 11 );
+
+    return null;
+  })
+
+  /* - */
+
+  module.ready.finallyKeep( ( err, arg ) =>
+  {
+    test.is( err === undefined );
+    module.finit();
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  return module.ready.split();
+}
+
+superResolve.timeOut = 130000;
+
+//
+
 function buildsResolve( test )
 {
   let self = this;
@@ -797,7 +896,8 @@ function pathsResolve( test )
 
     test.case = 'path::* - implicit'; /* */
     var resolved = module.resolve( 'path::*' );
-    var expected = pin([ [ './super.im.will.yml', './super.ex.will.yml' ], '.', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ]);
+    // var expected = pin([ [ './super.im.will.yml', './super.ex.will.yml' ], '.', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ]);
+    var expected = pin([ './super.im.will.yml', './super.ex.will.yml', '.', path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ]);
     var got = resolved;
     test.identical( got, expected );
 
@@ -807,6 +907,7 @@ function pathsResolve( test )
       selector : 'path::*',
       pathUnwrapping : 1,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
       pathResolving : 'in',
     });
     var expected = pin([ [ './super.im.will.yml', './super.ex.will.yml' ], '.', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ] );
@@ -819,6 +920,7 @@ function pathsResolve( test )
       selector : 'path::*',
       pathUnwrapping : 1,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
       pathResolving : 'out',
     });
     var expected = pout([ [ '../super.im.will.yml', '../super.ex.will.yml' ], '..', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', '.', './super.out/debug', './super.out/release' ] );
@@ -831,6 +933,7 @@ function pathsResolve( test )
       selector : 'path::*',
       pathUnwrapping : 1,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
       pathResolving : null,
     });
     var expected = [ pin([ './super.im.will.yml', './super.ex.will.yml' ]), routinePath + '', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ];
@@ -843,6 +946,7 @@ function pathsResolve( test )
       selector : 'path::*',
       pathUnwrapping : 0,
       mapValsUnwrapping : 0,
+      arrayFlattening : 0,
       pathResolving : null,
     });
     var expected =
@@ -1096,7 +1200,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::in*=1',
       mapValsUnwrapping : 1,
       singleUnwrapping : 1,
-      flattening : 1,
+      mapFlattening : 1,
     });
     var expected = pin( 'proto' );
     test.identical( resolved, expected );
@@ -1110,7 +1214,7 @@ function pathsResolveImportIn( test )
 /*
   pathUnwrapping : 1,
   pathResolving : 0,
-  flattening : 1,
+  mapFlattening : 1,
   singleUnwrapping : 1,
   mapValsUnwrapping : 1,
 */
@@ -1123,7 +1227,7 @@ function pathsResolveImportIn( test )
 
     test.open( 'pathResolving : 0' );
 
-    test.open( 'flattening : 1' );
+    test.open( 'mapFlattening : 1' );
 
     test.open( 'singleUnwrapping : 1' );
 
@@ -1135,7 +1239,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
@@ -1150,7 +1254,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
@@ -1169,9 +1273,10 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = [ [ 'proto' ] ];
     test.identical( resolved, expected );
@@ -1184,7 +1289,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
     });
@@ -1194,8 +1299,8 @@ function pathsResolveImportIn( test )
 
     test.close( 'singleUnwrapping : 0' );
 
-    test.close( 'flattening : 1' );
-    test.open( 'flattening : 0' );
+    test.close( 'mapFlattening : 1' );
+    test.open( 'mapFlattening : 0' );
 
     test.open( 'singleUnwrapping : 1' );
 
@@ -1208,7 +1313,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
@@ -1223,7 +1328,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
@@ -1242,9 +1347,10 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 0,
       singleUnwrapping : 0,
+      mapFlattening : 0,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = [ [ 'proto' ] ];
     test.identical( resolved, expected );
@@ -1257,7 +1363,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
     });
@@ -1270,13 +1376,13 @@ function pathsResolveImportIn( test )
 
     test.close( 'singleUnwrapping : 0' );
 
-    test.close( 'flattening : 0' );
+    test.close( 'mapFlattening : 0' );
 
     test.close( 'pathResolving : 0' );
 
     test.open( 'pathResolving : in' );
 
-    test.open( 'flattening : 1' );
+    test.open( 'mapFlattening : 1' );
 
     test.open( 'singleUnwrapping : 1' );
 
@@ -1289,7 +1395,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
@@ -1305,7 +1411,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
@@ -1324,9 +1430,10 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 1,
       singleUnwrapping : 0,
+      mapFlattening : 1,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = [ [ pin( 'proto' ) ] ];
     test.identical( resolved, expected );
@@ -1339,7 +1446,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
     });
@@ -1349,8 +1456,8 @@ function pathsResolveImportIn( test )
 
     test.close( 'singleUnwrapping : 0' );
 
-    test.close( 'flattening : 1' );
-    test.open( 'flattening : 0' );
+    test.close( 'mapFlattening : 1' );
+    test.open( 'mapFlattening : 0' );
 
     test.open( 'singleUnwrapping : 1' );
 
@@ -1363,7 +1470,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
@@ -1378,7 +1485,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
@@ -1397,9 +1504,10 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 0,
       singleUnwrapping : 0,
+      mapFlattening : 0,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = [ [ pin( 'proto' ) ] ];
     test.identical( resolved, expected );
@@ -1412,7 +1520,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
     });
@@ -1425,7 +1533,7 @@ function pathsResolveImportIn( test )
 
     test.close( 'singleUnwrapping : 0' );
 
-    test.close( 'flattening : 0' );
+    test.close( 'mapFlattening : 0' );
 
     test.close( 'pathResolving : in' );
 
@@ -1441,7 +1549,7 @@ function pathsResolveImportIn( test )
 
     test.open( 'pathResolving : 0' );
 
-    test.open( 'flattening : 1' );
+    test.open( 'mapFlattening : 1' );
 
     test.open( 'singleUnwrapping : 1' );
 
@@ -1453,7 +1561,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
@@ -1468,7 +1576,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
@@ -1487,9 +1595,10 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 1,
-      singleUnwrapping : 0,
+      mapFlattening : 1,
       mapValsUnwrapping : 1,
+      singleUnwrapping : 0,
+      arrayFlattening : 0,
     });
     var expected = [ [ '.' ] ];
     test.identical( resolved, expected );
@@ -1502,7 +1611,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
     });
@@ -1512,8 +1621,8 @@ function pathsResolveImportIn( test )
 
     test.close( 'singleUnwrapping : 0' );
 
-    test.close( 'flattening : 1' );
-    test.open( 'flattening : 0' );
+    test.close( 'mapFlattening : 1' );
+    test.open( 'mapFlattening : 0' );
 
     test.open( 'singleUnwrapping : 1' );
 
@@ -1526,7 +1635,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
@@ -1541,7 +1650,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
@@ -1560,9 +1669,10 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 0,
       singleUnwrapping : 0,
+      mapFlattening : 0,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = [ [ '.' ] ];
     test.identical( resolved, expected );
@@ -1575,7 +1685,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
     });
@@ -1588,13 +1698,13 @@ function pathsResolveImportIn( test )
 
     test.close( 'singleUnwrapping : 0' );
 
-    test.close( 'flattening : 0' );
+    test.close( 'mapFlattening : 0' );
 
     test.close( 'pathResolving : 0' );
 
     test.open( 'pathResolving : in' );
 
-    test.open( 'flattening : 1' );
+    test.open( 'mapFlattening : 1' );
 
     test.open( 'singleUnwrapping : 1' );
 
@@ -1607,7 +1717,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
@@ -1623,7 +1733,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
@@ -1642,9 +1752,10 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 1,
-      singleUnwrapping : 0,
+      mapFlattening : 1,
       mapValsUnwrapping : 1,
+      singleUnwrapping : 0,
+      arrayFlattening : 0,
     });
     var expected = [ [ pin( 'proto' ) ] ];
     test.identical( resolved, expected );
@@ -1657,7 +1768,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
     });
@@ -1667,8 +1778,8 @@ function pathsResolveImportIn( test )
 
     test.close( 'singleUnwrapping : 0' );
 
-    test.close( 'flattening : 1' );
-    test.open( 'flattening : 0' );
+    test.close( 'mapFlattening : 1' );
+    test.open( 'mapFlattening : 0' );
 
     test.open( 'singleUnwrapping : 1' );
 
@@ -1681,7 +1792,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
@@ -1696,7 +1807,7 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
@@ -1715,9 +1826,10 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = [ [ pin( 'proto' ) ] ];
     test.identical( resolved, expected );
@@ -1730,9 +1842,10 @@ function pathsResolveImportIn( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
+      arrayFlattening : 0,
     });
     var expected =
     {
@@ -1743,7 +1856,7 @@ function pathsResolveImportIn( test )
 
     test.close( 'singleUnwrapping : 0' );
 
-    test.close( 'flattening : 0' );
+    test.close( 'mapFlattening : 0' );
 
     test.close( 'pathResolving : in' );
 
@@ -1821,7 +1934,7 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::in*=1',
       mapValsUnwrapping : 1,
       singleUnwrapping : 1,
-      flattening : 1,
+      mapFlattening : 1,
     });
     var expected = pin( '.' );
     test.identical( resolved, expected );
@@ -1853,7 +1966,7 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/exported::*=1debug/path::in*=1',
       mapValsUnwrapping : 1,
       singleUnwrapping : 1,
-      flattening : 1,
+      mapFlattening : 1,
     });
     var expected = pin( '.' );
     test.identical( resolved, expected );
@@ -1871,7 +1984,7 @@ function pathsResolveOutFileOfExports( test )
 /*
   pathUnwrapping : 1,
   pathResolving : 0,
-  flattening : 1,
+  mapFlattening : 1,
   singleUnwrapping : 1,
   mapValsUnwrapping : 1,
 */
@@ -1884,7 +1997,7 @@ function pathsResolveOutFileOfExports( test )
 
     test.open( 'pathResolving : 0' );
 
-    test.open( 'flattening : 1' );
+    test.open( 'mapFlattening : 1' );
 
     test.open( 'singleUnwrapping : 1' );
 
@@ -1896,7 +2009,7 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
@@ -1911,7 +2024,7 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
@@ -1930,9 +2043,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 1,
-      singleUnwrapping : 0,
+      mapFlattening : 1,
       mapValsUnwrapping : 1,
+      singleUnwrapping : 0,
+      arrayFlattening : 0,
     });
     var expected = [ [ '..' ] ];
     test.identical( resolved, expected );
@@ -1945,9 +2059,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
+      arrayFlattening : 0,
     });
     var expected = { 'MultipleExports/in' : '..' };
     test.identical( resolved, expected );
@@ -1955,8 +2070,8 @@ function pathsResolveOutFileOfExports( test )
 
     test.close( 'singleUnwrapping : 0' );
 
-    test.close( 'flattening : 1' );
-    test.open( 'flattening : 0' );
+    test.close( 'mapFlattening : 1' );
+    test.open( 'mapFlattening : 0' );
 
     test.open( 'singleUnwrapping : 1' );
 
@@ -1969,9 +2084,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = '..';
     test.identical( resolved, expected );
@@ -1984,9 +2100,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
+      arrayFlattening : 0,
     });
     var expected = '..';
     test.identical( resolved, expected );
@@ -2003,9 +2120,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = [ [ '..' ] ];
     test.identical( resolved, expected );
@@ -2018,9 +2136,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
+      arrayFlattening : 0,
     });
     var expected =
     {
@@ -2031,13 +2150,13 @@ function pathsResolveOutFileOfExports( test )
 
     test.close( 'singleUnwrapping : 0' );
 
-    test.close( 'flattening : 0' );
+    test.close( 'mapFlattening : 0' );
 
     test.close( 'pathResolving : 0' );
 
     test.open( 'pathResolving : in' );
 
-    test.open( 'flattening : 1' );
+    test.open( 'mapFlattening : 1' );
 
     test.open( 'singleUnwrapping : 1' );
 
@@ -2050,7 +2169,7 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
@@ -2066,7 +2185,7 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
@@ -2085,9 +2204,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = [ [ pin( '.' ) ] ];
     test.identical( resolved, expected );
@@ -2100,9 +2220,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
+      arrayFlattening : 0,
     });
     var expected = { 'MultipleExports/in' : pin( '.' ) };
     test.identical( resolved, expected );
@@ -2110,8 +2231,8 @@ function pathsResolveOutFileOfExports( test )
 
     test.close( 'singleUnwrapping : 0' );
 
-    test.close( 'flattening : 1' );
-    test.open( 'flattening : 0' );
+    test.close( 'mapFlattening : 1' );
+    test.open( 'mapFlattening : 0' );
 
     test.open( 'singleUnwrapping : 1' );
 
@@ -2124,9 +2245,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = pin( '.' );
     test.identical( resolved, expected );
@@ -2139,9 +2261,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
+      arrayFlattening : 0,
     });
     var expected = pin( '.' );
     test.identical( resolved, expected );
@@ -2158,9 +2281,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = [ [ pin( '.' ) ] ];
     test.identical( resolved, expected );
@@ -2173,9 +2297,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::in*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
+      arrayFlattening : 0,
     });
     var expected =
     {
@@ -2186,7 +2311,7 @@ function pathsResolveOutFileOfExports( test )
 
     test.close( 'singleUnwrapping : 0' );
 
-    test.close( 'flattening : 0' );
+    test.close( 'mapFlattening : 0' );
 
     test.close( 'pathResolving : in' );
 
@@ -2202,7 +2327,7 @@ function pathsResolveOutFileOfExports( test )
 
     test.open( 'pathResolving : 0' );
 
-    test.open( 'flattening : 1' );
+    test.open( 'mapFlattening : 1' );
 
     test.open( 'singleUnwrapping : 1' );
 
@@ -2214,9 +2339,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = './proto';
     test.identical( resolved, expected );
@@ -2229,9 +2355,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
+      arrayFlattening : 0,
     });
     var expected = './proto';
     test.identical( resolved, expected );
@@ -2248,9 +2375,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = [ [ './proto' ] ];
     test.identical( resolved, expected );
@@ -2263,9 +2391,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
+      arrayFlattening : 0,
     });
     var expected = { 'MultipleExports/proto' : './proto' };
     test.identical( resolved, expected );
@@ -2273,8 +2402,8 @@ function pathsResolveOutFileOfExports( test )
 
     test.close( 'singleUnwrapping : 0' );
 
-    test.close( 'flattening : 1' );
-    test.open( 'flattening : 0' );
+    test.close( 'mapFlattening : 1' );
+    test.open( 'mapFlattening : 0' );
 
     test.open( 'singleUnwrapping : 1' );
 
@@ -2287,9 +2416,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = './proto';
     test.identical( resolved, expected );
@@ -2302,9 +2432,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
+      arrayFlattening : 0,
     });
     var expected = './proto';
     test.identical( resolved, expected );
@@ -2321,9 +2452,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = [ [ './proto' ] ];
     test.identical( resolved, expected );
@@ -2336,9 +2468,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 0,
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
+      arrayFlattening : 0,
     });
     var expected =
     {
@@ -2349,13 +2482,13 @@ function pathsResolveOutFileOfExports( test )
 
     test.close( 'singleUnwrapping : 0' );
 
-    test.close( 'flattening : 0' );
+    test.close( 'mapFlattening : 0' );
 
     test.close( 'pathResolving : 0' );
 
     test.open( 'pathResolving : in' );
 
-    test.open( 'flattening : 1' );
+    test.open( 'mapFlattening : 1' );
 
     test.open( 'singleUnwrapping : 1' );
 
@@ -2368,9 +2501,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = pin( 'proto' );
     test.identical( resolved, expected );
@@ -2384,9 +2518,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
+      arrayFlattening : 0,
     });
     var expected = pin( 'proto' );
     test.identical( resolved, expected );
@@ -2403,9 +2538,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = [ [ pin( 'proto' ) ] ];
     test.identical( resolved, expected );
@@ -2418,9 +2554,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 1,
+      mapFlattening : 1,
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
+      arrayFlattening : 0,
     });
     var expected = { 'MultipleExports/proto' : pin( 'proto' ) };
     test.identical( resolved, expected );
@@ -2428,8 +2565,8 @@ function pathsResolveOutFileOfExports( test )
 
     test.close( 'singleUnwrapping : 0' );
 
-    test.close( 'flattening : 1' );
-    test.open( 'flattening : 0' );
+    test.close( 'mapFlattening : 1' );
+    test.open( 'mapFlattening : 0' );
 
     test.open( 'singleUnwrapping : 1' );
 
@@ -2442,9 +2579,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = pin( 'proto' );
     test.identical( resolved, expected );
@@ -2457,9 +2595,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
+      arrayFlattening : 0,
     });
     var expected = pin( 'proto' );
     test.identical( resolved, expected );
@@ -2476,9 +2615,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 0,
       mapValsUnwrapping : 1,
+      arrayFlattening : 0,
     });
     var expected = [ [ pin( 'proto' ) ] ];
     test.identical( resolved, expected );
@@ -2491,9 +2631,10 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/path::proto*=1',
       pathUnwrapping : 1,
       pathResolving : 'in',
-      flattening : 0,
+      mapFlattening : 0,
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
+      arrayFlattening : 0,
     });
     var expected =
     {
@@ -2504,7 +2645,7 @@ function pathsResolveOutFileOfExports( test )
 
     test.close( 'singleUnwrapping : 0' );
 
-    test.close( 'flattening : 0' );
+    test.close( 'mapFlattening : 0' );
 
     test.close( 'pathResolving : in' );
 
@@ -2617,7 +2758,7 @@ pathsResolveComposite.timeOut = 130000;
 function pathsResolveArray( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-shell' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'make' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, 'v1' );
   let ready = new _.Consequence().take( null );
@@ -3181,6 +3322,7 @@ var Self =
     makeOutNamed,
     clone,
 
+    superResolve,
     buildsResolve,
     pathsResolve,
     pathsResolveImportIn,

@@ -1,66 +1,52 @@
-# Часові фільтри рефлектора  
+# Time filters of reflector  
 
-Як користуватись фільтрами відбору файлів по часу.
+How to use filters to select files by age.
 
-### <a name="time-filters"></a> Фільтри по часу (часові фільтри)  
-Крім масок та простих фільтрів рефлектори здатні фільтрувати файли по часу створення. Для цього в поле `src` вносять спеціальні поля: `notOlder`, `notNewer`, `notOlderAge`, `notNewerAge`:  
-`notOlder` - не старше на момент вибірки;  
-`notNewer` - не новіше на момент вибірки;  
-`notOlderAge` - вік, не старший від встановленого на час проведення процедури;  
-`notNewerAge` - вік, не менше від встановленого на час проведення процедури.  
-В параметрах полів `notOlder`, `notNewer` вказуються значення в мілісекундах (1 с = 1000 мс), а в полях `notOlderAge` і `notNewerAge` в секундах. Рисунок іллюструє як працюють фільтри. Порівнюється вік файла з встановленим обмеженням.  
+### Фільтри по часу (часові фільтри)  
+Крім [масок](ReflectorFilters.md#Маски-рефлектора) та [простих фільтрів](ReflectorFilters.md#Прості-фільтри-рефлектора) рефлектори здатні фільтрувати файли по часу створення (модифікації). Для цього рефлектори використовують спеціальні поля: `notOlder`, `notNewer`, `notOlderAge`, `notNewerAge`:  
+`notOlder` - всі файли не старше на момент вибірки;  
+`notNewer` - всі файли не новіше на момент вибірки;  
+`notOlderAge` - вік окремих файлів, не старший від встановленого на час проведення процедури;  
+`notNewerAge` - вік окремих файлів, не менше від встановленого на час проведення процедури.  
+В параметрах полів `notOlder`, `notNewer`, `notOlderAge` і `notNewerAge` вказуються значення в мілісекундах (1 с = 1000 мс). Рисунок іллюструє як працюють фільтри. Порівнюється вік файла з встановленим обмеженням.  
+
 ![time.filter](./Images/time.filter.png)  
 
-Часові фільтри можна комбінувати між собою, щоб задати діапазон вибірки, а також можна комбінувати з масками. Єдиною умовою є виключення конфліктів між фільтрами.  
+Часові фільтри можна комбінувати між собою, щоб задати діапазон вибірки, а також можна комбінувати з іншими. Єдиною умовою є виключення конфліктів між фільтрами.  
 
-### <a name="time-filters-using"></a> Використання часових фільтрів  
-Створіть наступну структуру:  
-
-```
-.
-├── proto
-│     ├── proto.two
-│     │     └── script.js
-│     ├── files
-│     │     ├── manual.md
-│     │     └── tutorial.md
-│     ├── build.txt.js
-│     └── package.json   
-│
-└── .will.yml       
-
-```
-
-Виберемо діапазон для вибірки файлів:  
-\- не менше однієї хвилини;  
-\- не більше 10 діб.  
-Розраховуємо в секундах: `1 хв = 60 с`; `10 діб = 10 * 24 * 60 * 60 с = 864000 с`.  
-Вкажемо діапазон вибірки в рефлекторі:  
-
-```yaml
-reflector :
-
-  reflect.copy.:
-    recursive: 2
-    src:
-      filePath: ./proto
-      notNewerAge : 3600
-      notOlderAge : 864000
-    dst:
-      filePath: path::out.*=1
-    criterion:
-      debug: [ 0,1 ]
-
-```
+### Використання часових фільтрів  
+Створіть наступну структуру файлів для дослідження часових фільтрів:  
 
 <details>
-  <summary><u>Відкрийте, щоб проглянути повний лістинг `.will.yml`</u></summary>
+  <summary><u>Структура модуля</u></summary>
+
+```
+timeFilters
+     ├── proto
+     │     ├── proto.two
+     │     │     └── script.js
+     │     ├── files
+     │     │     ├── manual.md
+     │     │     └── tutorial.md
+     │     ├── build.txt.js
+     │     └── package.json  
+     └── .will.yml       
+
+```
+
+</details>
+
+Якщо діапазон для вибірки файлів буде не менше однієї хвилини і не більше 10 діб, то в секундах: `1 хв = 60 с`; `10 діб = 10 * 24 * 60 * 60 с = 864000 с`.  
+Скопіюйте код в файл `.will.yml`:  
+
+<details>
+  <summary><u>Код файла <code>.will.yml</code></u></summary>
 
 ```yaml
-
 about :
-  name : maskFilter
-  description : "To use reflector filter"
+
+  name : timeFilter
+  description : "To use reflector time filters"
   version : 0.0.1
 
 path :
@@ -83,8 +69,8 @@ reflector :
     recursive: 2
     src:
       filePath: ./proto
-      notNewerAge : 3600
-      notOlderAge : 864000
+      notNewerAge : 60000
+      notOlderAge : 864000000
     dst:
       filePath: path::out.*=1
     criterion:
@@ -102,7 +88,6 @@ build :
 
   copy :
     criterion :
-      default : 1
       debug : [ 0,1 ]
     steps :
       - reflect.*
@@ -112,7 +97,10 @@ build :
 </details>
 
 
-Запустимо побудову збірки відладки `will .build copy.debug`:  
+Запустіть побудову збірки відладки `will .build copy.debug`:  
+
+<details>
+  <summary><u>Вивід команди <code> will .build copy.debug</code></u></summary>
 
 ```
 [user@user ~]$ will .build copy.debug
@@ -123,7 +111,39 @@ build :
 
 ```
 
-Всі файли скопійовано. Змінимо діапазон в `notNewerAge` з 3600 до 800000, щоб виключити можливість копіювання файлів створених для випробування. Запустимо реліз-побудову:  
+</details>
+<details>
+  <summary><u>Структура модуля після побудови</u></summary>
+
+```
+timeFilters
+     ├── proto
+     │     ├── proto.two
+     │     │     └── script.js
+     │     ├── files
+     │     │     ├── manual.md
+     │     │     └── tutorial.md
+     │     ├── build.txt.js
+     │     └── package.json  
+     ├── out
+     │     └── debug
+     │           ├── proto.two
+     │           │     └── script.js
+     │           ├── files
+     │           │     ├── manual.md
+     │           │     └── tutorial.md
+     │           ├── build.txt.js
+     │           └── package.json    
+     └── .will.yml       
+
+```
+
+</details>
+
+Всі файли скопійовано. Змініть діапазон в `notNewerAge` з 60000 до 80000000, щоб виключити можливість копіювання файлів створених для випробування. Запустіть реліз-побудову:  
+
+<details>
+  <summary><u>Вивід команди <code> will .build copy.</code></u></summary>
 
 ```
 [user@user ~]$ will .build copy.
@@ -134,7 +154,12 @@ build :
 
 ```
 
-Скопійовано три файла. перевіримо вміст директорії `out/release`:  
+</details>
+
+Скопійовано три файла, перевірте вміст директорії `out/release`:  
+
+<details>
+  <summary><u>Вивід команди <code>ls -a out/release/</code></u></summary>
 
 ```
 [user@user ~]$ ls -a out/release/
@@ -142,11 +167,44 @@ build :
 
 ```
 
-Тобто, `willbe` скопіював директорії без файлів.  
-Випробуємо часові фільтри `notNewer` i `notOlder`. Задамо новий діапазон:  
-\- не менше 1 секунди;  
-\- не більше 10 хвилин.  
+</details>
+<details>
+  <summary><u>Структура модуля після побудови</u></summary>
+
+```
+timeFilters
+     ├── proto
+     │     ├── proto.two
+     │     │     └── script.js
+     │     ├── files
+     │     │     ├── manual.md
+     │     │     └── tutorial.md
+     │     ├── build.txt.js
+     │     └── package.json  
+     ├── out
+     │     ├── debug
+     │     │     ├── proto.two
+     │     │     │     └── script.js
+     │     │     ├── files
+     │     │     │     ├── manual.md
+     │     │     │     └── tutorial.md
+     │     │     ├── build.txt.js
+     │     │     └── package.json 
+     │     └── release
+     │           ├── proto.two
+     │           └── files
+     └── .will.yml       
+
+```
+
+</details>
+
+Тобто, скопіювано директорії без файлів.  
+Випробуйте часовий фільтр `notOlder` з новим діапазоном - не менше 1 хвилини.  
 Відповідно, змініть рефлектор:  
+
+<details>
+  <summary><u>Секція <code>reflector</code> зі змінами</u></summary>
 
 ```yaml
 reflector :
@@ -155,8 +213,7 @@ reflector :
     recursive: 2
     src:
       filePath: ./proto
-      notNewer : 600000
-      notOlder : 1000
+      notOlder : 60000
     dst:
       filePath: path::out.*=1
     criterion:
@@ -164,25 +221,56 @@ reflector :
 
 ```
 
-Видаліть директорію `out` та створіть новий файл `file.txt` в директорії `proto`. Запустіть побудову відладки:  
+</details>
+
+Видаліть директорію `out` та запустіть побудову відладки:  
+
+<details>
+  <summary><u>Вивід команди <code>will .build copy.debug</code></u></summary>
 
 ```
 [user@user ~]$ will .build copy.debug
 ...
   Building copy.debug
-   + reflect.copy. reflected 4 files /path_to_file/ : out/debug <- proto in 0.311s
+   + reflect.copy. reflected 8 files /path_to_file/ : out/debug <- proto in 0.311s
   Built copy. in 0.358s
 
 ```
 
-Якщо проглянемо директорію `out/release`, то знайдемо на один файл більше:  
+</details>
+<details>
+  <summary><u>Структура модуля після побудови</u></summary>
 
 ```
-[user@user ~]$ ls -a out/release/
-.  ..  files  file.txt  proto.two
+timeFilters
+     ├── proto
+     │     ├── proto.two
+     │     │     └── script.js
+     │     ├── files
+     │     │     ├── manual.md
+     │     │     └── tutorial.md
+     │     ├── build.txt.js
+     │     └── package.json  
+     ├── out
+     │     └── debug
+     │           ├── proto.two
+     │           │     └── script.js
+     │           ├── files
+     │           │     ├── manual.md
+     │           │     └── tutorial.md
+     │           ├── build.txt.js
+     │           └── package.json    
+     └── .will.yml       
 
 ```
 
+</details>
+
+На момент побудови вік всіх файлів більше однієї хвилини, тому скопійовано всю структуру.
+
+### Підсумок
 - Часові фільтри рефлектора формують діапазони вибірки файлів за часом створення (модифікації).  
+- Часові фільтри комбінуються з іншими фільтрами рефлектора.  
+- Фільтри `notOlder` і `notNewer` здійснюють операцію, якщо всі файли входять в діапазон вибірки, а фільтри `notOlderAge` і `notNewerAge` здійснюють відбір відносно кожного файла.  
 
 [Повернутись до змісту](../README.md#tutorials)

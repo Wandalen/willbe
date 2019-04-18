@@ -1,0 +1,48 @@
+about :
+  name : maskFilter
+  description : "To use reflector filter"
+  version : 0.0.1
+
+path :
+
+  in : '.'
+  out : 'out'
+  proto : './proto'
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : './out/release'
+    criterion :
+      debug : 0
+
+reflector :
+
+  reflect.copy.:
+    recursive: 2
+    src:
+      filePath: ./proto
+      begins:
+        - 'pac'
+        - 'file'
+    dst:
+      filePath: path::out.*=1
+    criterion:
+      debug: [ 0,1 ]
+
+step :
+
+  reflect.copy :
+    inherit : predefined.reflect
+    reflector : reflect.*
+    criterion :
+       debug : [ 0,1 ]
+
+build :
+
+  copy :
+    criterion :
+      debug : [ 0,1 ]
+    steps :
+      - reflect.*

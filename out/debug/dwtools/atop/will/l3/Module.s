@@ -609,13 +609,16 @@ function shell( o )
 
   /* */
 
+  debugger;
   o.execPath = module.resolve
   ({
     selector : o.execPath,
-    pathNativizing : 1,
     prefixlessAction : 'resolved',
     currentThis : o.currentThis,
+    pathNativizing : 1,
+    arrayFlattening : 0, /* required for f::this and feature make */
   });
+  debugger;
 
   /* */
 
@@ -1390,6 +1393,7 @@ function _willFilesFindMaybe( o )
   if( found )
   return found;
 
+  if( module.dirPath )
   found = module._willFileFindMultiple
   ({
     isOutFile : o.isOutFile,
@@ -1430,6 +1434,7 @@ function _willFilesFindMaybe( o )
   if( found )
   return found;
 
+  if( module.dirPath )
   found = module._willFileFindMultiple
   ({
     isOutFile : !o.isOutFile,
@@ -2779,11 +2784,93 @@ function resourceMapForKind( resourceKind )
 
   if( resourceKind === 'export' )
   result = module.buildMap;
+  else if( resourceKind === 'about' )
+  result = module.about.values;
   else
   result = module[ will.ResourceKindToMapName.forKey( resourceKind ) ];
 
   _.assert( arguments.length === 1 );
   _.sure( _.objectIs( result ), () => 'Cant find resource map for resource kind ' + _.strQuote( resourceKind ) );
+
+  return result;
+}
+
+//
+
+function resourceMaps()
+{
+  let module = this;
+  let will = module.will;
+
+  // let ResourcesNames =
+  // [
+  //   // 'about',
+  //   'submodule',
+  //   'step',
+  //   'path',
+  //   'reflector',
+  //   'build',
+  //   'exported',
+  // ]
+
+  let Resources =
+  {
+    // 'about',
+    'submodule' : module.resourceMapForKind( 'submodule' ),
+    'path' : module.resourceMapForKind( 'path' ),
+    'reflector' : module.resourceMapForKind( 'reflector' ),
+    'step' : module.resourceMapForKind( 'step' ),
+    'build' : module.resourceMapForKind( 'build' ),
+    'exported' : module.resourceMapForKind( 'exported' ),
+  }
+
+  // if( !_.path.isGlob( resourceSelector ) )
+  // return module.resourceMapForKind( resourceSelector );
+  //
+  // let result = _.path.globFilter( ResourcesNames, resourceSelector );
+  //
+  // result = result.map( ( resourceSelector ) => module.resourceMapForKind( resourceSelector ) );
+
+  return Resources;
+}
+
+//
+
+function resourceMapsForKind( resourceSelector )
+{
+  let module = this;
+  let will = module.will;
+
+  let ResourcesNames =
+  [
+    // 'about',
+    'submodule',
+    'path',
+    'reflector',
+    'step',
+    'build',
+    'exported',
+  ]
+
+  let Resources =
+  {
+    // 'about',
+    'submodule' : module.resourceMapForKind( 'submodule' ),
+    'path' : module.resourceMapForKind( 'path' ),
+    'reflector' : module.resourceMapForKind( 'reflector' ),
+    'step' : module.resourceMapForKind( 'step' ),
+    'build' : module.resourceMapForKind( 'build' ),
+    'exported' : module.resourceMapForKind( 'exported' ),
+  }
+
+  if( !_.path.isGlob( resourceSelector ) )
+  return module.resourceMapForKind( resourceSelector );
+
+  // debugger;
+  let result = _.path.globFilterKeys( Resources, resourceSelector );
+  // debugger;
+
+  // result = result.map( ( resourceSelector ) => module.resourceMapForKind( resourceSelector ) );
 
   return result;
 }
@@ -3284,7 +3371,7 @@ function _selectorShortSplit( o )
 
   if( !splits[ 0 ] && o.defaultResourceName )
   {
-    splits = [ o.defaultResourceName, '::', o.selector ]
+    splits = [ o.defaultResourceName, '::', o.selector ];
   }
 
   return splits;
@@ -3506,6 +3593,7 @@ function resolve_pre( routine, args )
   _.assert( _.arrayHas( [ 'default', 'resolved', 'throw', 'error' ], o.prefixlessAction ), 'Unknown value of option prefixless action', o.prefixlessAction );
   // _.assert( o.prefixlessAction === 'default' || o.defaultResourceName === null, 'prefixlessAction should be "default" if defaultResourceName is provided' );
   _.assert( _.arrayIs( o.visited ) );
+  _.assert( !o.defaultResourceName || !_.path.isGlob( o.defaultResourceName ), 'Expects non glob {-defaultResourceName-}' );
 
   return o;
 }
@@ -3594,7 +3682,7 @@ function resolve_body( o )
 
   function mapsFlatten( result )
   {
-    if( o.flattening && _.mapIs( result ) )
+    if( o.mapFlattening && _.mapIs( result ) )
     result = _.mapsFlatten([ result ]);
     return result;
   }
@@ -3641,9 +3729,11 @@ resolve_body.defaults =
   pathUnwrapping : 1,
   singleUnwrapping : 1,
   mapValsUnwrapping : 1,
+  mapFlattening : 1,
   arrayWrapping : 0,
+  arrayFlattening : 1,
   preservingIteration : 0,
-  flattening : 1,
+  strictCriterion : 0,
   hasPath : null,
 }
 
@@ -3694,7 +3784,7 @@ function _resolveAct( o )
       onUpEnd : onUpEnd,
       onDownEnd : onDownEnd,
       onQuantitativeFail : onQuantitativeFail,
-      missingAction : 'error',
+      missingAction : o.missingAction === 'undefine' ? 'undefine' : 'error',
       iteratorExtension :
       {
         resolveOptions : o,
@@ -3706,6 +3796,7 @@ function _resolveAct( o )
       {
         module : o.module,
         exported : null,
+        isFunction : null,
       },
     });
 
@@ -3727,14 +3818,14 @@ function _resolveAct( o )
 
   function onSelector( selector )
   {
-    let op = this;
+    let it = this;
 
     if( !_.strIs( selector ) )
     return;
 
     if( module.SelectorIsPrimitive( selector ) )
     {
-      return onSelectorComposite.call( op, selector );
+      return onSelectorComposite.call( it, selector );
     }
 
     if( o.prefixlessAction === 'default' )
@@ -3743,7 +3834,8 @@ function _resolveAct( o )
     }
     else if( o.prefixlessAction === 'throw' || o.prefixlessAction === 'error' )
     {
-      op.iterator.continue = false;
+      debugger;
+      it.iterator.continue = false;
       let err = module.errResolving
       ({
         selector : selector,
@@ -3751,10 +3843,10 @@ function _resolveAct( o )
         err : _.ErrorLooking( 'Resource selector should have prefix' ),
       });
       debugger;
-      if( op.prefixlessAction === 'throw' )
+      if( o.prefixlessAction === 'throw' )
       throw err;
       debugger;
-      op.dst = err;
+      it.dst = err;
       return;
     }
     else if( o.prefixlessAction === 'resolved' )
@@ -3770,6 +3862,9 @@ function _resolveAct( o )
   function onUpBegin()
   {
     let it = this;
+
+    // if( it.selectOptions.selector === "f::this/src" )
+    // debugger;
 
     statusUpdate.call( it );
     globCriterionFilter.call( it );
@@ -3795,21 +3890,36 @@ function _resolveAct( o )
 
     exportedWriteThrough.call( it );
     currentExclude.call( it );
+
+    if( it.dstWritingDown )
     compositePathsSelect.call( it );
+
+    if( it.dstWritingDown )
+    if( o.pathResolving || it.isFunction )
     pathsResolve.call( it );
+
+    if( it.dstWritingDown )
+    if( o.pathNativizing || it.isFunction )
     pathsNativize.call( it );
+
+    if( o.pathUnwrapping )
     pathsUnwrap.call( it );
 
   }
 
-  //
+  /* */
 
   function onDownEnd()
   {
     let it = this;
 
+    // if( it.selectOptions.selector === "f::this/src" )
+    // debugger;
+
+    functionStringsJoinDown.call( it );
     mapsFlatten.call( it );
     mapValsUnwrap.call( it );
+    arrayFlatten.call( it );
     singleUnwrap.call( it );
 
   }
@@ -3884,7 +3994,9 @@ function _resolveAct( o )
     if(  o.criterion && it.src && it.src.criterionSattisfy )
     {
 
-      if( !it.src.criterionSattisfy( o.criterion ) )
+      let s = o.strictCriterion ? it.src.criterionSattisfyStrict( o.criterion ) : it.src.criterionSattisfy( o.criterion );
+
+      if( !s )
       {
         it.continue = false;
         it.dstWritingDown = false;
@@ -3911,8 +4023,15 @@ function _resolveAct( o )
     });
 
     it.parsedSelector = Object.create( null );
-    it.parsedSelector.full = splits.join( '' );
     it.parsedSelector.kind = splits[ 0 ];
+
+    if( !it.parsedSelector.kind )
+    {
+      if( splits[ 1 ] !== undefined )
+      it.parsedSelector.kind = null;
+    }
+
+    it.parsedSelector.full = splits.join( '' );
     it.selector = it.parsedSelector.name = splits[ 2 ];
 
   }
@@ -3922,33 +4041,61 @@ function _resolveAct( o )
   function resourceMapSelect()
   {
     let it = this;
-    let resourceMap;
+    let sop = it.selectOptions;
 
     if( !it.selector )
     return;
 
     let kind = it.parsedSelector.kind;
 
-    if( kind === 'this' )
+    if( kind === '' )
     {
-      // debugger; // xxx
-      _.assert( _.mapIs( o.currentThis ) );
-      resourceMap = o.currentThis;
     }
+    else if( kind === 'f' )
+    {
+
+      if( it.selector === 'strings.join' )
+      {
+        functionStringsJoinUp.call( it );
+      }
+      else if( it.selector === 'os' )
+      {
+        functionOsGetUp.call( it );
+      }
+      else if( it.selector === 'this' )
+      {
+        functionThisUp.call( it );
+      }
+      else _.sure( 0, 'Unknown function', it.parsedSelector.full );
+
+    }
+    // else if( kind === 'this' )
+    // {
+    //   _.assert( _.mapIs( o.currentThis ) );
+    //   it.src = o.currentThis;
+    // }
     else
     {
-      resourceMap = it.module.resourceMapForKind( kind );
+
+      it.src = it.module.resourceMapsForKind( kind );
+      // it.src = it.module.resourceMaps();
+
+      if( _.strIs( kind ) && _.path.isGlob( kind ) )
+      {
+        sop.selectorArray.splice( it.logicalLevel-1, 1, '*', it.selector );
+        it.selector = sop.selectorArray[ it.logicalLevel-1 ];
+        sop.selectorChanged.call( it );
+      }
+
+      if( !it.src )
+      {
+        debugger;
+        throw _.ErrorLooking( 'No resource map', _.strQuote( it.parsedSelector.full ) );
+      }
+
     }
 
-    if( !resourceMap )
-    {
-      debugger;
-      throw _.ErrorLooking( 'No resource map', _.strQuote( it.parsedSelector.full ) );
-    }
-
-    it.src = resourceMap;
-    it.iterable = it.onIterable( it.src );
-
+    it.srcChanged();
   }
 
   /* */
@@ -3981,6 +4128,91 @@ function _resolveAct( o )
         return r;
       }
     }
+
+  }
+
+  /* */
+
+  function functionStringsJoinUp()
+  {
+    let it = this;
+    let sop = it.selectOptions;
+
+    _.sure( !!it.down, () => it.parsedSelector.full + ' expects context to join it' );
+
+    it.src = [ it.src ];
+    it.src[ functionSymbol ] = it.selector;
+    // it.dst = [ it.dst ];
+    // it.dst[ functionSymbol ] = it.selector;
+
+    it.selector = 0;
+    it.isFunction = it.selector;
+    sop.selectorChanged.call( it );
+
+  }
+
+  /* */
+
+  function functionStringsJoinDown()
+  {
+    let it = this;
+    let sop = it.selectOptions;
+
+    if( !_.arrayIs( it.src ) || !it.src[ functionSymbol ] )
+    return;
+
+    debugger;
+    if( _.arrayIs( it.dst ) && it.dst.every( ( e ) => _.arrayIs( e ) ) )
+    {
+      it.dst = it.dst.map( ( e ) => e.join( ' ' ) );
+    }
+    else
+    {
+      it.dst = it.dst.join( ' ' );
+    }
+
+  }
+
+  /* */
+
+  function functionOsGetUp()
+  {
+    let it = this;
+    let sop = it.selectOptions;
+    let Os = require( 'os' );
+    let os = 'posix';
+
+    debugger;
+
+    if( Os.platform() === 'win32' )
+    os = 'windows';
+    else if( Os.platform() === 'darwin' )
+    os = 'osx';
+
+    it.src = os;
+    it.dst = os;
+    it.selector = undefined;
+    sop.selectorChanged.call( it );
+
+  }
+
+  /* */
+
+  function functionThisUp()
+  {
+    let it = this;
+    let sop = it.selectOptions;
+
+    debugger;
+
+    it.src = [ o.currentThis ];
+    // it.dst = [ o.currentThis ];
+    it.selector = 0;
+
+    // it.src = o.currentThis;
+    // it.dst = o.currentThis;
+    // it.selector = null;
+    sop.selectorChanged.call( it );
 
   }
 
@@ -4027,9 +4259,6 @@ function _resolveAct( o )
     let currentModule = it.module;
     let resource = it.dst;
 
-    if( !it.dstWritingDown ) // xxx
-    return;
-
     if( resource instanceof will.Reflector )
     {
       if( currentModule.SelectorIsComposite( resource.src.prefixPath ) || currentModule.SelectorIsComposite( resource.dst.prefixPath ) )
@@ -4062,7 +4291,9 @@ function _resolveAct( o )
 
     _.assert( _.strIs( filePath ) || _.strsAreAll( filePath ) );
 
-    if( it.replicateIteration.composite && it.replicateIteration.compositeRoot !== it.replicateIteration )
+    if( it.replicateIteration.composite )
+    if( it.replicateIteration.compositeRoot !== it.replicateIteration )
+    if( it.replicateIteration.compositeRoot === it.replicateIteration.down )
     {
       if( it.replicateIteration.key !== 0 )
       return result;
@@ -4092,28 +4323,17 @@ function _resolveAct( o )
     let currentModule = it.module;
     let resource = it.dst;
 
-    if( !o.pathResolving )
-    return;
-    if( !it.dstWritingDown )
-    return;
+    // if( !o.pathResolving )
+    // return;
+    // if( !it.dstWritingDown )
+    // return;
 
     if( it.dst instanceof will.Reflector )
     {
 
-      // if( resource.nickName === "reflector::reflect.submodules.variant2" )
-      // debugger;
-
       resource = it.dst = it.dst.cloneDerivative();
 
       _.assert( resource.formed >= 1 );
-
-      // if( resource.formed === 0 )
-      // resource.form1();
-      // if( resource.formed === 1 )
-      // resource.form2();
-      // _.assert( resource.formed >= 2 );
-
-      // yyy
 
       let srcHasAnyPath = resource.src.hasAnyPath();
       let dstHasAnyPath = resource.dst.hasAnyPath();
@@ -4160,10 +4380,10 @@ function _resolveAct( o )
     let currentModule = it.module;
     let resource = it.dst;
 
-    if( !o.pathNativizing )
-    return;
-    if( !it.dstWritingDown )
-    return;
+    // if( !o.pathNativizing )
+    // return;
+    // if( !it.dstWritingDown )
+    // return;
 
     if( it.dst instanceof will.PathResource )
     {
@@ -4182,8 +4402,8 @@ function _resolveAct( o )
     let it = this;
     let currentModule = it.module;
 
-    if( !o.pathUnwrapping )
-    return;
+    // if( !o.pathUnwrapping )
+    // return;
 
     if( it.dst instanceof will.PathResource )
     it.dst = it.dst.path;
@@ -4217,19 +4437,33 @@ function _resolveAct( o )
 
   }
 
-  //
+  /* */
+
+  function arrayFlatten()
+  {
+    let it = this;
+    let currentModule = it.module;
+
+    if( !o.arrayFlattening || !_.arrayIs( it.dst ) )
+    return;
+
+    it.dst = _.arrayFlattenDefined( it.dst );
+
+  }
+
+  /* */
 
   function mapsFlatten()
   {
     let it = this;
     let currentModule = it.module;
-    if( !o.flattening || !_.mapIs( it.dst ) )
+    if( !o.mapFlattening || !_.mapIs( it.dst ) )
     return;
 
     it.dst = _.mapsFlatten([ it.dst ]);
   }
 
-  //
+  /* */
 
   function mapValsUnwrap()
   {
@@ -4593,6 +4827,8 @@ ResourceSetter_functor.defaults =
 // relations
 // --
 
+let functionSymbol = Symbol.for( 'function' );
+
 let Composes =
 {
 
@@ -4812,6 +5048,8 @@ let Proto =
 
   resourceClassForKind,
   resourceMapForKind,
+  resourceMapsForKind,
+  resourceMaps,
   resourceObtain,
   resourceAllocate,
   resourceNameAllocate,

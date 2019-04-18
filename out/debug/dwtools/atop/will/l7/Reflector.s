@@ -102,8 +102,8 @@ function form1()
     reflector.dst._formAssociations();
   }
 
-  if( reflector.nickName === "reflector::reflect.proto.2.debug" )
-  debugger;
+  // if( reflector.nickName === "reflector::reflect.proto.2.debug" )
+  // debugger;
 
   /* end */
 
@@ -129,8 +129,8 @@ function form2()
 
   _.assert( reflector.formed === 1 );
 
-  // if( reflector.nickName === "reflector::reflect.proto.2.debug" )
-  // debugger;
+  if( reflector.nickName === "reflector::reflect.proto.4.debug" )
+  debugger;
 
   reflector.src.pairWithDst( reflector.dst );
   if( reflector.src.filePath !== reflector.dst.filePath )
@@ -158,8 +158,8 @@ function form3()
 
   /* begin */
 
-  // if( reflector.nickName === "reflector::download" )
-  // debugger;
+  if( reflector.nickName === "reflector::reflect.proto.4.debug" )
+  debugger;
 
   reflector.pathsResolve();
 
@@ -179,8 +179,8 @@ function form3()
   _.assert( reflector.src.prefixPath === null || path.isAbsolute( reflector.src.prefixPath ) );
   _.assert( reflector.dst.prefixPath === null || path.isAbsolute( reflector.dst.prefixPath ) );
 
-  // if( reflector.nickName === "reflector::download" )
-  // debugger;
+  if( reflector.nickName === "reflector::reflect.proto.4.debug" )
+  debugger;
 
   /* end */
 
@@ -210,8 +210,8 @@ function _inheritMultiple( o )
 
   Parent.prototype._inheritMultiple.call( reflector, o );
 
-  if( reflector.nickName === "reflector::reflect.proto2" )
-  debugger;
+  // if( reflector.nickName === "reflector::reflect.submodules" )
+  // debugger;
 
   reflector.src.pairWithDst( reflector.dst );
   reflector.pathsResolve();
@@ -228,8 +228,8 @@ function _inheritMultiple( o )
   if( reflector.filePath )
   reflector._reflectMapForm({ visited : o.visited });
 
-  if( reflector.nickName === "reflector::reflect.proto2" )
-  debugger;
+  // if( reflector.nickName === "reflector::reflect.submodules" )
+  // debugger;
 
   return reflector;
 }
@@ -293,8 +293,8 @@ function _inheritSingle( o )
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
 
-  if( reflector.nickName === "reflector::reflect.proto2" )
-  debugger;
+  // if( reflector.nickName === "reflector::reflect.submodules" )
+  // debugger;
 
   reflector2 = reflector2.cloneDerivative();
   reflector2.pathsResolve();
@@ -320,8 +320,8 @@ function _inheritSingle( o )
   if( reflector._accumulator.src.filePath !== reflector._accumulator.dst.filePath )
   reflector._accumulator.src.pairRefineLight();
 
-  if( reflector.nickName === "reflector::reflect.proto2" )
-  debugger;
+  // if( reflector.nickName === "reflector::reflect.submodules" )
+  // debugger;
 
 }
 
@@ -495,6 +495,9 @@ function prefixesRelative()
   _.assert( reflector.src.postfixPath === null, 'not implemented' );
   _.assert( reflector.dst.postfixPath === null, 'not implemented' );
 
+  if( reflector.nickName === "reflector::reflect.submodules" )
+  debugger;
+
   reflector.src.pairWithDst( reflector.dst );
   reflector.src.prefixesRelative();
   reflector.dst.prefixesRelative();
@@ -517,7 +520,9 @@ function prefixesApply()
   _.assert( reflector.dst.postfixPath === null, 'not implemented' );
 
   reflector.src.pairWithDst( reflector.dst );
+  if( !reflector.src.filePathDstAllBools() )
   reflector.src.prefixesApply();
+  if( !reflector.dst.filePathDstAllBools() )
   reflector.dst.prefixesApply();
 
 }
@@ -572,7 +577,7 @@ function pathsResolve( o )
   function resolve( src, pathResolving )
   {
 
-    return path.refilter( src, ( filePath ) =>
+    return path.pathMapRefilter( src, ( filePath ) =>
     {
       if( _.instanceIs( filePath ) )
       return filePath;

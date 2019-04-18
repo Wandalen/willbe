@@ -1,0 +1,19 @@
+about :
+
+  name : shellCommand
+  description : "To use .shell command"
+  version : 0.0.1
+
+submodule :
+
+  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  One : module.test/one
+
+build:
+  
+  download:
+    criterion:
+      default : 1
+    steps:
+      - submodules.download

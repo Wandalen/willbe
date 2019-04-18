@@ -51,6 +51,9 @@ function MakeForEachCriterion( o )
   let single = 1;
 
   if( o.criterion )
+  o.criterion = Cls.CriterionMapResolve( module, o.criterion );
+
+  if( o.criterion )
   o.criterion = Cls.CriterionNormalize( o.criterion );
 
   if( o.criterion && _.mapKeys( o.criterion ).length > 0 )
@@ -85,6 +88,8 @@ function MakeForEachCriterion( o )
   }
 
   return result;
+
+  /* */
 
   function make( o )
   {
@@ -379,7 +384,7 @@ function _inheritMultiple( o )
       prefixlessAction : 'default',
       visited : o.visited,
       currentContext : resource,
-      flattening : 1,
+      mapFlattening : 1,
     });
 
     if( _.mapIs( ancestors ) )
@@ -540,6 +545,35 @@ function criterionSattisfy( criterion2 )
 
 //
 
+function criterionSattisfyStrict( criterion2 )
+{
+  let resource = this;
+  let criterion1 = resource.criterion;
+
+  _.assert( criterion1 === null || _.mapIs( criterion1 ) );
+  _.assert( criterion2 === null || _.mapIs( criterion2 ) );
+  _.assert( arguments.length === 1 );
+
+  if( criterion1 === null )
+  return true;
+  if( criterion2 === null )
+  return true;
+
+  for( let c in criterion2 )
+  {
+
+    if( criterion1[ c ] === undefined && !criterion2[ c ] )
+    continue;
+
+    if( criterion1[ c ] !== criterion2[ c ] )
+    return false;
+  }
+
+  return true;
+}
+
+//
+
 function criterionInherit( criterion2 )
 {
   let resource = this;
@@ -630,6 +664,47 @@ function CriterionPostfixFor( criterionMaps, criterionMap )
 
   return result;
 }
+
+//
+
+function CriterionMapResolve( module, criterionMap )
+{
+
+  _.assert( arguments.length === 2 );
+  _.assert( _.mapIs( criterionMap ) );
+
+  let criterionMap2 = Object.create( null );
+
+  for( let c in criterionMap )
+  {
+    let value = criterionMap[ c ];
+
+    let c2 = module.resolve
+    ({
+      selector : c,
+      prefixlessAction : 'resolved',
+    });
+
+    let value2 = value;
+    if( _.strIs( value ) || _.arrayIs( value ) )
+    {
+      value2 = module.resolve
+      ({
+        selector : value,
+        prefixlessAction : 'resolved',
+      });
+    }
+
+    delete criterionMap[ c ];
+    criterionMap2[ c2 ] = value2;
+
+  }
+
+  _.mapExtend( criterionMap, criterionMap2 );
+
+  return criterionMap;
+}
+
 //
 
 function CriterionNormalize( criterionMap )
@@ -641,7 +716,6 @@ function CriterionNormalize( criterionMap )
   for( let c in criterionMap )
   {
     let value = criterionMap[ c ];
-    // _.assert( _.numberIs( value ) || _.boolIs( value ) || _.strIs( value ) || _.arrayIs( value ) );
     if( _.arrayIs( value ) )
     criterionMap[ c ] = value.map( ( e ) => CriterionValueNormalize( e ) )
     else
@@ -908,6 +982,7 @@ let Statics =
   OptionsFrom,
   CriterionVariable,
   CriterionPostfixFor,
+  CriterionMapResolve,
   CriterionNormalize,
   CriterionValueNormalize,
 
@@ -964,6 +1039,7 @@ let Proto =
 
   criterionValidate,
   criterionSattisfy,
+  criterionSattisfyStrict,
   criterionInherit,
   criterionVariable,
   CriterionVariable,

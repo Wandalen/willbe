@@ -39,12 +39,49 @@ function init( o )
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
+  about.values = Object.create( null );
+  about.values.enabled = 1;
+  about.values.name = null;
+
   _.instanceInit( about );
   Object.preventExtensions( about );
 
   if( o )
   about.copy( o );
 
+}
+
+//
+
+function copy( o )
+{
+  let about = this;
+
+  // debugger;
+  // about.name = 'xxx';
+  // about.enabled = 3;
+  // debugger;
+
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+
+  if( _.instanceIs( o ) )
+  {
+
+    _.Copyable.prototype.copy.call( about, o );
+    _.mapExtend( about.values, o.values );
+
+  }
+  else
+  {
+
+    let values = _.mapBut( o, about.FieldsOfCopyableGroups );
+    let o2 = _.mapOnly( o, about.FieldsOfCopyableGroups );
+    _.Copyable.prototype.copy.call( about, o2 );
+    _.mapExtend( about.values, values );
+
+  }
+
+  // debugger;
 }
 
 //
@@ -67,20 +104,13 @@ function infoExport()
 
 //
 
-// function dataExport()
-// {
-//   let about = this;
-//   let fields = _.mapOnly( about, about.Composes );
-//   fields = _.mapButNulls( fields );
-//   return fields;
-// }
-
 function dataExport()
 {
   let about = this;
   let fields = about.cloneData({ compact : 1, copyingAggregates : 0 });
   return fields;
 }
+
 // --
 // relations
 // --
@@ -90,10 +120,13 @@ let Composes =
 
   name : null,
   description : null,
-  version : null,
   enabled : 1,
-  interpreters : null,
-  keywords : null,
+  version : null,
+  values : null,
+
+  // interpreters : null,
+  // keywords : null,
+
 
 }
 
@@ -103,7 +136,9 @@ let Aggregates =
 
 let Associates =
 {
+
   module : null,
+
 }
 
 let Restricts =
@@ -112,7 +147,9 @@ let Restricts =
 
 let Statics =
 {
+
   formed : 0,
+
 }
 
 let Forbids =
@@ -121,6 +158,10 @@ let Forbids =
 
 let Accessors =
 {
+  name : { getterSetter : _.accessor.accessor.alias({ containerName : 'values', originalName : 'name' }) },
+  enabled : { getterSetter : _.accessor.accessor.alias({ containerName : 'values', originalName : 'enabled' }) },
+  // name : { setter : _.accessor.setter.alias({ containerName : 'values', original : 'name', alias : 'name' }), getter : _.accessor.getter.alias({ containerName : 'values', original : 'name', alias : 'name' }) },
+  // enabled : { setter : _.accessor.setter.alias({ containerName : 'values', original : 'enabled', alias : 'enabled' }), getter : _.accessor.getter.alias({ containerName : 'values', original : 'enabled', alias : 'enabled' }) },
 }
 
 // --
@@ -134,6 +175,7 @@ let Proto =
 
   finit,
   init,
+  copy,
 
   infoExport,
   dataExport,

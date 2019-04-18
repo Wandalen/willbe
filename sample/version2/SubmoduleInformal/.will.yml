@@ -1,0 +1,51 @@
+about :
+  name : informalSubmodule
+  description : "To make submodule from Git-repository"
+  version : 0.0.1
+
+submodule :
+
+  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+  Color : out/Color.informal.out
+
+path :
+
+  in : '.'
+  out : 'out'
+  proto : './proto'
+  out.debug : 
+    path : './out/module.debug'
+    criterion :
+      debug : 1
+  out.release : 
+    path : './out/module.release'
+    criterion :
+      debug : 0
+
+reflector :
+
+  reflect.submodules :
+    inherit : submodule::*/exported::*=1/reflector::exportedFiles*=1
+    dst :
+      basePath : .
+      prefixPath : path::out.*=1
+    criterion :
+      debug : [ 0,1 ]
+
+step :
+
+  submodules.informal.export :
+    currentPath : path::predefined.dir
+    shell : 'will .each module .export'
+
+build :
+
+  make.unformal :
+    criterion :
+      default : 1
+      debug : [ 0,1 ]
+    steps :
+      - submodules.download
+      - submodules.informal.export
+      - submodules.reload
+      - reflect.submodules*=1
