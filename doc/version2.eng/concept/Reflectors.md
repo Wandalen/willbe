@@ -8,7 +8,7 @@
 |----------------|-----------------------------------------------------------------------------------|
 | description    | reflector description                                                             |
 | recursive      | option that determines the level of reading the file structure of the directory   |
-| filePath       | specifies the paths to the module directories, file operations and the management of the directories  |
+| filePath       | specifies the paths to the module directories, file operations and provide the management of the directories  |
 | src            | specifies the paths to the source directories and file selection conditions       |
 | dst            | the destination directory in which the files will be placed                       |
 | criterion      | condition for the resource using (see [criterion](Criterions.md))                 |
@@ -16,18 +16,17 @@
 
 The `src` and ` dst` fields have resources structurally divided into paths and [file filters](ReflectorFileFilter.md).    
 
-### Мапа шляхів
+### Path map
 
-Спосіб опису множини файлів, котрий дозволяє включити в множину безліч файлів і виключити через умови виключення та глоби не потрібні файли.
+Path map is a method for describing a plurality of files. Its allows you to include in a plural set of files and exclude not needed files by the terms of the exception and globes.
 
-Мапа шляхів може
-- задавати розміщення файлів над якими необхідно виконати, якусь операцію;
-- задавати розміщення файлів в які потрібно записати результат операції;
-- може вказувати безліч дерикторій;
-- безліч умов виключення файлів із вибірки;
-- виключення файлів із вибірки, що співпадають із глобом через `false` чи `0`;
-- виключення файлів із вибірки, що не співпадають із глобом через `true` чи `1`;
-
+Path map can:  
+- specify the placement of files to perform some operation over them;
+- specify the location of the files in which you want to record the result of the operation;
+- indicate the set of directories;
+- include many conditions for exclusion of files from the sample;
+- exclude sample files that match the globe via `false` or` 0`;
+- exclude sample files that do not match the globe via `true` or` 1`;
 
 Мапа шляхів задається в полі `filePath` рефлектора, при наслідуванні умови виключення успадковуються( ті котрі `0`, `1`, `false`, `true` ), переліки дерикторій в яких вести пошук переписуються осатннім предком або безпосередньо нащадком.
 
