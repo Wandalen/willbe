@@ -9,7 +9,7 @@
 
 ![will.file.named.unnamed.png](./Images/will.file.named.unnamed.png)  
 
-### Розділені <code>will-файли</code>
+### Спліт <code>will-файл</code>
 
 Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля.  
 Дозволяє розробнику розділити процес побудови модуля і його експорту на окремі етапи. 
