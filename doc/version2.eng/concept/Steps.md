@@ -1,6 +1,6 @@
-## Step 
+## Крок 
 
-<code>Step</code> section resource which is an  executing instruction of module building.  
+Ресурс секції <code>step</code>, який представляє собою інструкцію для виконання утилітою при побудові модуля.
 
 Кроки (інструкції) формуються на основі вбудованих функцій - вбудованих кроків:  
 \- вбудовані кроки описують основні процедури побудови модуля;  
@@ -169,10 +169,8 @@ build:                                  # Назва секції
 
 ```
 
-## Section <code>step</code> 
-The section has steps which could be used by build for building of the module.  
-
-Ресурси секції - кроки - поміщають в сценарії збірок секції <code>build</code> для виконання побудови. 
+## Секція <code>step</code> 
+Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля. Ресурси секції - кроки - поміщають в сценарії збірок секції <code>build</code> для виконання побудови. 
 
 Приклад секції `step` з ресурсами `export.proto`, `proto.release`: 
 

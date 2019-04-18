@@ -1,8 +1,8 @@
-# Selectors
+# Селектори
 
-### Selector
+### Селектор
 
-String-reference on resource or group of resources of the module.
+Рядок-посилання на ресурс або декілька ресурсів модуля.
 
 Селектори формулюються як назви ресурса в відповідних полях.  
 
@@ -10,9 +10,9 @@ String-reference on resource or group of resources of the module.
 
 Позначені на рисунку селектори - прості - мають пряме посилання на ресурс.  В полі `export` використовується селектор вигляду `Назва секції :: Назва ресурса` - йому віддається перевага, якщо йде посилання на ресурс секції `will-файла`. Наприклад, селектор `export.single` в секції `build` можна записати `step::export.single`.
 
-### Selector with globs
+### Селектор з ґлобом
 
-Selector which use glob technique for selecting resources of the module. 
+Селектор, який для вибору ресурсу використовує пошукові шаблони - ґлоби.  
 
 [Globbing](https://linuxhint.com/bash_globbing_tutorial/) - представляє собою аналог регулярних виразів  для пошуку файлів в bash-терміналі.  
 
