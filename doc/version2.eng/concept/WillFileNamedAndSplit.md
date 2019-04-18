@@ -2,9 +2,9 @@
 
 ### Named <code>will-file</code>  
 
-Kind of <code>will-file</code>, which has nonstandard name. It makes possible to have multiple modules with different names in a directory.  
+Kind of <code>will-file</code> which has nonstandard name. It makes possible to have multiple modules with different names in a directory.  
 
-`Will-file` name that looks like `.will.[extension]` is considered unnamed. At the same time, a directory may contain one unnamed `will-file` and unlimited number of named ones. To work with named `will-files` the` .with` command is used. Example: to build the `release` build scenario in the `will-file` named `final.release.will.yml` the command looks like` will .with final.release.will.yml .build release`. To work with the `will-files` group the` .each` command is used.  
+Name of `will-file` that looks like `.will.[extension]` is considered unnamed. At the same time, a directory may contain one unnamed `will-file` and unlimited number of named ones. To work with named `will-files` the` .with` command is used. Example: to build the `release` build scenario in the `will-file` named `final.release.will.yml` the command looks like` will .with final.release.will.yml .build release`. To work with the `will-files` group the` .each` command is used.  
 The figure shows the output of the `ls -al` command in the module directory of named `will-files`:   
 
 ![will.file.named.unnamed.png](./Images/will.file.named.unnamed.png)  

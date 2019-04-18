@@ -1,6 +1,6 @@
-## Reflector  
+## Рефлектор  
 
-<code>Reflector</code> section resource which defines the direction and criteria for performing operations over a group of files.    
+Ресурс секції <code>reflector</code>, який формулює напрям і критерії здійснення операцій над групою файлів.    
 
 #### Поля ресурсів секції `reflector`     
 
@@ -50,10 +50,9 @@ filePath :
 ```
 
 
-## Section <code>reflector</code>  
+## Секція <code>reflector</code>  
 
-The section has reflectors, special type of resource for operation on groups of files.  
-
+Секція містить рефлектори - ресурси для виконання операцій над групами файлів.
 Основними операціями є вибір файлів (директорій) та копіювання. 
 
 Приклад секції `reflector` з ресурсом `reflect.project`:

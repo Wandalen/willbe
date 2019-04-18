@@ -1,12 +1,12 @@
-# Elements of input in the command shell
+# Елементи вводу в командній оболонці системи
 
-### Command
+### Команда
 
-A string which has phrase which describe intention of developer and desirable result of operation to be done by utility after user enter it. Developer enters command in command line interface.
+Рядок що містить фразу для позначення наміру розробника і дії, котрі будуть виконані утилітою по її введенні. Вводиться в інтерфейс командного рядка розробником.
 
-### Phrase
+### Фраза
 
-Word or several words, separated by dot, denotes command which utility will perform.
+Слово або декілька слів, відокремлених крапкою, позначає команду, яку має виконати утиліта.
 
 Крапка розділяє слова фрази на частини, що полегшує набір і зчитування.  
 
