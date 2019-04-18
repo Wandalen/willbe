@@ -5,11 +5,16 @@
 /**
  * Collection of routines to operate paths in the reliable and consistent way. Path leverages parsing,joining,extracting,normalizing,nativizing,resolving paths. Use the module to get uniform experience from playing with paths on different platforms.
   @module Tools/base/Path
-  @alias wTools.path
 */
 
 /**
  * @file Path.s.
+ */
+
+/**
+ * Collection of routines to operate paths in the reliable and consistent way.
+ * @namespace Path
+ * @memberof module:Tools/base/Path
  */
 
 if( typeof module !== 'undefined' )
@@ -253,8 +258,8 @@ function like( path )
  * (not hidden for example).
  * @param {String} filePath Source path for check
  * @returns {boolean}
- * @method isSafe
- * @memberof module:Tools/base/Path.
+ * @function isSafe
+ * @memberof module:Tools/base/Path.Path
  */
 
 function isSafe( filePath,level )
@@ -323,8 +328,8 @@ function isSafe( filePath,level )
  * returns true when the path has slash ( / ) in the end .
  * @param {String} filePath Source path for check
  * @returns {boolean}
- * @method isRefinedMaybeTrailed
- * @memberof module:Tools/base/Path.
+ * @function isRefinedMaybeTrailed
+ * @memberof module:Tools/base/Path.Path
  */
 
 function isRefinedMaybeTrailed( path )
@@ -358,8 +363,8 @@ function isRefinedMaybeTrailed( path )
  * Checks if string path is refined: checks that the string doesn´t contain left( \\ ) or double slashes ( // ) ), and that it is not trailed
  * @param {String} filePath Source path for check
  * @returns {boolean}
- * @method isRefined
- * @memberof module:Tools/base/Path.
+ * @function isRefined
+ * @memberof module:Tools/base/Path.Path
  */
 
 function isRefined( path )
@@ -384,8 +389,8 @@ function isRefined( path )
  * Checks if string path is normalized, and maybe trailed ( ends with a slash ( / ) ).
  * @param {String} filePath Source path for check
  * @returns {boolean}
- * @method isNormalizedMaybeTrailed
- * @memberof module:Tools/base/Path.
+ * @function isNormalizedMaybeTrailed
+ * @memberof module:Tools/base/Path.Path
  */
 
 function isNormalizedMaybeTrailed( filePath )
@@ -403,8 +408,8 @@ function isNormalizedMaybeTrailed( filePath )
  * Checks if string path is normalized.
  * @param {String} filePath Source path for check
  * @returns {boolean}
- * @method isNormalized
- * @memberof module:Tools/base/Path.
+ * @function isNormalized
+ * @memberof module:Tools/base/Path.Path
  */
 
 function isNormalized( filePath )
@@ -542,8 +547,8 @@ function ends( srcPath,endPath )
   *
   * @param {string} src path for refinement
   * @returns {string}
-  * @method refine
-  * @memberof module:Tools/base/Path.
+  * @function refine
+  * @memberof module:Tools/base/Path.Path
   */
 
 function refine( src )
@@ -663,8 +668,8 @@ _normalize.defaults =
    path = wTools.normalize( path ); // /foo/bar/baz1/baz2
  * @param {string} src path for normalization
  * @returns {string}
- * @method normalize
- * @memberof module:Tools/base/Path.
+ * @function normalize
+ * @memberof module:Tools/base/Path.Path
  */
 
 function normalize( src )
@@ -818,8 +823,8 @@ function detrail( path )
  * @param {string} path path string
  * @returns {string}
  * @throws {Error} If argument is not string
- * @method dir
- * @memberof module:Tools/base/Path.
+ * @function dir
+ * @memberof module:Tools/base/Path.Path
  */
 
 function dir( path )
@@ -879,8 +884,8 @@ function dir( path )
  * @param {string} path Path string
  * @returns {string}
  * @throws {Error} If passed argument is not string.
- * @method prefixGet
- * @memberof module:Tools/base/Path.
+ * @function prefixGet
+ * @memberof module:Tools/base/Path.Path
  */
 
 function prefixGet( path )
@@ -913,8 +918,8 @@ function prefixGet( path )
  * @param {boolean} o.withExtension if this parameter set to true method return name with extension.
  * @returns {string}
  * @throws {Error} If passed argument is not string
- * @method name
- * @memberof module:Tools/base/Path.
+ * @function name
+ * @memberof module:Tools/base/Path.Path
  */
 
 function name( o )
@@ -970,8 +975,8 @@ function fullName( path )
  * @param {string} path String path
  * @returns {string}
  * @throws {Error} If passed argument is not string
- * @method withoutExt
- * @memberof module:Tools/base/Path.
+ * @function withoutExt
+ * @memberof module:Tools/base/Path.Path
  */
 
 function withoutExt( path )
@@ -1001,8 +1006,8 @@ function withoutExt( path )
  * @param {string} ext
  * @returns {string}
  * @throws {Error} If passed argument is not string
- * @method changeExt
- * @memberof module:Tools/base/Path.
+ * @function changeExt
+ * @memberof module:Tools/base/Path.Path
  */
 
 // qqq : extend tests
@@ -1056,8 +1061,8 @@ function _pathsChangeExt( src )
  * @param {string} path path string
  * @returns {string} file extension
  * @throws {Error} If passed argument is not string.
- * @method ext
- * @memberof module:Tools/base/Path.
+ * @function ext
+ * @memberof module:Tools/base/Path.Path
  */
 
 function ext( path )
@@ -1116,8 +1121,8 @@ function exts( path )
  * @throws {Error} If missed arguments.
  * @throws {Error} If elements of `paths` are not strings
  * @throws {Error} If o has extra parameters.
- * @method join_body
- * @memberof module:Tools/base/Path.
+ * @function join_body
+ * @memberof module:Tools/base/Path.Path
  */
 
 function join_body( o )
@@ -1230,8 +1235,8 @@ join_body.defaults =
  * @param {...string} paths path strings
  * @returns {string} Result path is the concatenation of all `paths` with '/' directory delimeter.
  * @throws {Error} If one of passed arguments is not string
- * @method join
- * @memberof module:Tools/base/Path.
+ * @function join
+ * @memberof module:Tools/base/Path.Path
  */
 
 function join()
@@ -1303,8 +1308,8 @@ function joinCross()
  * @param {...string} paths path strings
  * @returns {string} Result path is the concatenation of all `paths` with '/' directory delimeter.
  * @throws {Error} If one of passed arguments is not string
- * @method reroot
- * @memberof module:Tools/base/Path.
+ * @function reroot
+ * @memberof module:Tools/base/Path.Path
  */
 
 function reroot()
@@ -1330,8 +1335,8 @@ function reroot()
  * let absPath = wTools.resolve('work/wFiles'); // '/home/user/work/wFiles';
  * @param [...string] paths A sequence of paths or path segments
  * @returns {string}
- * @method resolve
- * @memberof module:Tools/base/Path.
+ * @function resolve
+ * @memberof module:Tools/base/Path.Path
  */
 
 function resolve()
@@ -1568,72 +1573,88 @@ function current()
 * Returns a relative path to `path` from an `relative` path. This is a path computation : the filesystem is not
 * accessed to confirm the existence or nature of path or start.
 
-* If {o.relative} and {o.path} each resolve to the same path method returns '.'.
-* If {o.resolving} is enabled -- paths {o.relative} and {o.path} are resolved before computation, uses result of _.path.current as base. @see {@link Tools/base/Path/current}.
-* If {o.resolving} is disabled -- paths {o.relative} and {o.path} are not resolved and must be both relative or absolute.
+* * If `o.relative` and `o.path` each resolve to the same path method returns `.`.
+* * If `o.resolving` is enabled -- paths `o.relative` and `o.path` are resolved before computation, uses result of {@link module:Tools/base/Path.Path.current _.path.current} as base.
+* * If `o.resolving` is disabled -- paths `o.relative` and `o.path` are not resolved and must be both relative or absolute.
 *
-* Examples of how result is computed and how to chech the result:
-* Result is checked by a formula : from + result === to, where '+' means join operation @see {@link Tools/base/Path/join}
-* Note :
-*   from -- o.relative
-*   to -- o.path
-*   cd -- current directory
-* 1)
+* **Examples of how result is computed and how to chech the result:**
+*
+* Result is checked by a formula : from + result === to, where '+' means join operation {@link module:Tools/base/Path.Path.join _.path.join}
+*
+* **Note** :
+* * `from` -- `o.relative`
+* * `to` -- `o.path`
+* * `cd` -- current directory
+*
+* *Example #1*
+*   ```
 *   from : /a
 *   to : /b
 *   result : ../b
 *   from + result = to : /a + ../b = /b
-*
-* 2)
+*   ```
+* *Example #2*
+*   ```
 *   from : /
 *   to : /b
 *   result : ./b
 *   from + result = to : / + ./b = /b
-*
-* 3)
+*   ```
+* *Example #3*
+*   ```
 *   resolving : 0
 *   from : ..
 *   to : .
 *   result : .
 *   from + result = to : .. + . != .. <> . -- error because result doesn't satisfy the final check
 *   from + result = to : .. + .. != ../.. <> . -- error because result doesn't satisfy the final check
+*   ```
 *
-* 4)
+* *Example #4*
+*   ```
 *   resolving : 1
 *   cd : /d -- current dir
 *   from : .. -> /
 *   to : . -> /d
 *   result : ./d
 *   from + result = to : / + ./d === /d
+*   ```
 *
-* 5)
+* *Example #5*
+*   ```
 *   resolving : 0
 *   from : ../a/b
 *   to : ../c/d
 *   result : ../../c/d
 *   from + result = to : ../a/b + ../../c/d === ../c/d
+*   ```
 *
-* 6)
+* *Example #6*
+*   ```
 *   resolving : 1
 *   cd : /
 *   from : ../a/b -> /../a/b
 *   to : ../c/d -> /../c/d
 *   from + result = to : /../a/b + /../../c/d === /../c/d -- error resolved "from" leads out of file system
+*   ```
 *
-* 7)
+* *Example #7*
+*   ```
 *   resolving : 0
 *   from : ..
 *   to : ./a
 *   result : ../a
 *   from + result = to : .. + ../a != ./a -- error because result doesn't satisfy the final check
-
-* 8)
+*   ```
+* *Example #8*
+*   ```
 *   resolving : 1
 *   cd : /
 *   from : .. -> /..
 *   to : ./a -> /a
 *   result : /../a
 *   from + result = to : .. + ../a != ./a -- error resolved "from" leads out of file system
+*   ```
 *
 * @param {Object} [o] Options map.
 * @param {String|wFileRecord} [o.relative] Start path.
@@ -1666,8 +1687,8 @@ function current()
 * _.path._relative({ relative : from, path : to, resolving : 1 });
 * //'./d'
 *
-* @method _relative
-* @memberof module:Tools/base/Path.
+* @function _relative
+* @memberof module:Tools/base/Path.Path
 */
 
 function _relative( o )
@@ -1808,13 +1829,13 @@ _relative.defaults =
 //
 
 /**
-* Short-cut for routine relative @see {@link Tools/base/Path/_relative}.
+* Short-cut for routine relative {@link module:Tools/base/Path.Path._relative _.path._relative}.
 * Returns a relative path to `path` from an `relative`. Does not resolve paths {o.relative} and {o.path} before computation.
 *
 * @param {string|wFileRecord} relative Start path.
 * @param {string|string[]} path Target path(s).
 * @returns {string|string[]} Returns relative path as String or array of Strings.
-* For more details please see @see {@link Tools/base/Path/_relative}.
+* For more details please see {@link module:Tools/base/Path.Path._relative _.path._relative}.
 *
 * @example
 * let from = '/a';
@@ -1857,8 +1878,8 @@ _relative.defaults =
 * _.path.relative( from, to );
 * //'../../c/d'
 *
-* @method relative
-* @memberof module:Tools/base/Path.
+* @function relative
+* @memberof module:Tools/base/Path.Path
 */
 
 function relative_pre( routine, args )
