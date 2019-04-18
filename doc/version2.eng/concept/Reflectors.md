@@ -2,28 +2,28 @@
 
 <code>Reflector</code> section resource which defines the direction and criteria for performing operations over a group of files.    
 
-#### Поля ресурсів секції `reflector`     
+### Resource fields of `reflector` section     
 
-| Поле           | Опис                                                       |
-|----------------|------------------------------------------------------------|
-| description    | опис рефлектора                                            |
-| recursive      | опція, яка визначає рівень зчитування структури директорії |
-| filePath       | вказуються шляхи до директорій модуля, управління директоріями  |
-| src            | вказуються шляхи до директорій та умови вибору файлів      |
-| dst            | директорія в яку будут поміщено файли                      |
-| criterion      | умова використання ресурса (див. критеріон)                |
-| inherit        | наслідування значень полів іншого ресурса                  |
+| Field          | Description                                                                       |
+|----------------|-----------------------------------------------------------------------------------|
+| description    | reflector description                                                             |
+| recursive      | option that determines the level of reading the file structure of the directory   |
+| filePath       | specifies the paths to the module directories, file operations and the management of the directories  |
+| src            | specifies the paths to the source directories and file selection conditions       |
+| dst            | the destination directory in which the files will be placed                       |
+| criterion      | condition for the resource using (see [criterion](Criterions.md))                 |
+| inherit        | reusing (inheritance) of another resource fields                                  |
 
-Поля `src`, `dst` мають ресурси які структурно розділені на шляхи і [файлові фільтри](ReflectorFileFilter.md).  
+The `src` and ` dst` fields have resources structurally divided into paths and [file filters](ReflectorFileFilter.md).  
 
-### Опція `recursive`  
-Файлові фільтри мають певний діапазон видимості, який визначається полем-опцією `recursive` тому, при їх використанні зверніть увагу на її значення.
-Поле `recursive` приймає три значення:  
-"0" - зчитується файл (директорія) вказана в шляху;  
+### `recursive` option  
+File filters have a certain range of visibility. Visibility is determined by the field `recursive` of a reflector. So, if you use them pay attention to its value.  
+The `recursive` field accepts three values:  
+'0' - reads the file (directory) specified in the path;  
 
 ![recursive.0.png](./Images/recursive.0.png)
 
-"1" - зчитується файли (директорії), що поміщені за вказаним шляхом (вміст директорій не зчитується);  
+'1' - reads the files (directories) that are placed in the specified path (the contents of next level directories are not read);  
 
 ![recursive.1.png](./Images/recursive.1.png)
 
