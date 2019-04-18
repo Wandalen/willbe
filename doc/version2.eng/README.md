@@ -27,6 +27,10 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   Functionality associated with group of resources restricted by its purpose. Examples of types of resources: path, submodule, step, build. Each type of resources has its own purpose and is treated by the utility differently.
 </details>
 <details>
+  <summary><a href="./concept/Inheritance.md">Resources inheritance</a></summary>
+  Approach of description of a module according to wich <code>will-file</code> can reuse (inherit) value of fields of other resource(s) of the same type.
+</details>
+<details>
   <summary><a href="./concept/Paths.md#Path">Path</a></summary>
    <code>Path</code> section resource which points to the placement of module elements and used in routing for other resources.
 </details>
@@ -137,10 +141,6 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details>
   <summary><a href="./concept/Asserts.md">Glob with assertion</a></summary>
   Restriction of glob by number of expected resources which should be found by the selector.
-</details>
-<details>
-  <summary><a href="./concept/Inheritance.md">Resources inheritance</a></summary>
-  Approach of description of a module according to wich <code>will-file</code> can reuse (inherit) value of fields of other resource(s) of the same type.
 </details>
 
 ## Tutorials
