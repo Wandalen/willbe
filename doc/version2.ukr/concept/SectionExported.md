@@ -1,6 +1,7 @@
-# Секція <code>exported</code>
+# Section <code>exported</code>
 
-Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.  
+Section of <code>out-will-file</code>, programatically generated with exporting of the module. It has list of exported files and it used by other modules for importing the module.
+
 Головне призначення - інформаційна карта для імпорту.   
 
 ### Поля ресурсів секції `exported`   

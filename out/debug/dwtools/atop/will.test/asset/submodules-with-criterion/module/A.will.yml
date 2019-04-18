@@ -1,0 +1,23 @@
+about :
+
+  name : A
+  version : 0.1.0
+
+path :
+
+  predefined.local : 'A'
+
+step :
+
+  export.A :
+    export : path::predefined.local
+    tar : 0
+
+build :
+
+  export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - step::export.A

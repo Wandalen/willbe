@@ -2824,6 +2824,88 @@ function pathsResolveArray( test )
 
 //
 
+function pathsResolveOfSubmodules( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let outPath = _.path.join( routinePath, 'out' );
+  let will = new _.Will;
+  let path = _.fileProvider.path;
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( outPath );
+
+  var module = will.moduleMake({ willFilesPath : routinePath });
+
+  /* - */
+
+  module.ready.thenKeep( ( arg ) =>
+  {
+    let builds = module.buildsSelect({ name : 'debug.raw' });
+    test.identical( builds.length, 1 );
+
+    let build = builds[ 0 ];
+    return build.perform();
+  })
+
+  /* - */
+
+  module.ready.thenKeep( ( arg ) =>
+  {
+    test.case = 'resolve submodules';
+    var submodules = module.submodulesResolve({ selector : '*' });
+    test.identical( submodules.length, 2 );
+
+    test.case = 'path::in, wTools';
+    var submodule = submodules[ 0 ];
+    var resolved = submodule.resolve( 'path::in' );
+    var expected = path.join( submodulesPath, 'Tools' );
+    test.identical( resolved, expected );
+
+    test.case = 'path::in, wTools, through loadedModule';
+    var submodule = submodules[ 0 ].loadedModule;
+    var resolved = submodule.resolve( 'path::in' );
+    var expected = path.join( submodulesPath, 'Tools' );
+    test.identical( resolved, expected );
+
+    test.case = 'path::out, wTools';
+    var submodule = submodules[ 0 ];
+    var resolved = submodule.resolve( 'path::out' );
+    var expected = path.join( submodulesPath, 'Tools/out' );
+    test.identical( resolved, expected );
+
+    test.case = 'path::out, wTools, through loadedModule';
+    var submodule = submodules[ 0 ].loadedModule;
+    var resolved = submodule.resolve( 'path::out' );
+    var expected = path.join( submodulesPath, 'Tools/out' );
+    test.identical( resolved, expected );
+
+    return null;
+  })
+
+  /* - */
+
+  module.ready.finallyKeep( ( err, arg ) =>
+  {
+
+    debugger;
+    test.is( err === undefined );
+    module.finit();
+
+    if( err )
+    throw err;
+    return arg;
+  });
+  return module.ready.split();
+}
+
+pathsResolveOfSubmodules.timeOut = 130000;
+
+//
+
 function reflectorResolve( test )
 {
   let self = this;
@@ -3247,6 +3329,7 @@ var Self =
     pathsResolveOutFileOfExports,
     pathsResolveComposite,
     pathsResolveArray,
+    pathsResolveOfSubmodules,
 
     reflectorResolve,
 

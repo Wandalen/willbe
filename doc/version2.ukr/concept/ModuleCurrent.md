@@ -1,6 +1,6 @@
-# Поточний модуль
+# Current module
 
-Модуль відносно якого виконуються операції. За замовчуванням цей модуль завантажується із файла <code>.will.yml</code> поточної дерикторії.
+A module on which utility will perform operations. By default the module is loaded from file <code>.will.yml</code> of the current directory.
 
 Іншими словами, це `will-файл`, по відношенню до якого виконуються команди в командній оболонці системи.
 Наприклад, директорія має наступну структуру файлів:  

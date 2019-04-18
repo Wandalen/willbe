@@ -1,6 +1,6 @@
-# Секція <code>submodule</code>
+# Section <code>submodule</code>
 
-Секції містить інформацію про підмодулі. 
+The section has information about submodules of the module.
 
 Підмодуль -  окремий модуль з власним конфігураційним <code>will-файлом</code>, який підпорядковується іншому модулю.  
 

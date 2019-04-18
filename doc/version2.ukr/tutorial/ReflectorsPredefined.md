@@ -1,6 +1,6 @@
-# Вбудовані рефлектори  
+# Predefined reflectors 
 
-Використання вбудованих рефлекторів для розбиття на версію для відлагодження і для релізу. Побудова мультизбірок.
+How to use predefined reflectors to split debug and release files and how to build a multibuild.
 
 ### Призначення вбудованих рефлекторів
 Крім вбудованих кроків в утиліті є вбудовані рефлектори, які мають налаштовані файлові фільтри для стандартних операцій. Всього є три вбудованих рефлектора: `predefined.common`, `predefined.debug` i `predefined.release`.  

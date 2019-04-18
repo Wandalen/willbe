@@ -333,6 +333,9 @@ path:
         proto/dwtools/atop/will.test/asset/reflect-nothing-from-submodules/proto/Single.s
       - proto/dwtools/atop/will.test/asset/reflect-remote-git
       - proto/dwtools/atop/will.test/asset/reflect-remote-http
+      - proto/dwtools/atop/will.test/asset/reflect-selecting-dst
+      - proto/dwtools/atop/will.test/asset/reflect-selecting-dst/proto
+      - proto/dwtools/atop/will.test/asset/reflect-selecting-dst/proto/Single.s
       - proto/dwtools/atop/will.test/asset/reflect-subdir
       - proto/dwtools/atop/will.test/asset/reflect-subdir/submodule.out.will.yml
       - proto/dwtools/atop/will.test/asset/reflect-subdir/module
@@ -458,6 +461,22 @@ path:
       - proto/dwtools/atop/will.test/asset/submodules-mixed/proto
       - >-
         proto/dwtools/atop/will.test/asset/submodules-mixed/proto/WithSubmodules.s
+      - proto/dwtools/atop/will.test/asset/submodules-with-criterion
+      - proto/dwtools/atop/will.test/asset/submodules-with-criterion/module
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-with-criterion/module/A.out.will.yml
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-with-criterion/module/A.will.yml
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-with-criterion/module/B.out.will.yml
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-with-criterion/module/B.will.yml
+      - proto/dwtools/atop/will.test/asset/submodules-with-criterion/module/A
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-with-criterion/module/A/A.js
+      - proto/dwtools/atop/will.test/asset/submodules-with-criterion/module/B
+      - >-
+        proto/dwtools/atop/will.test/asset/submodules-with-criterion/module/B/B.js
       - proto/dwtools/atop/will.test/asset/transpile
       - proto/dwtools/atop/will.test/asset/transpile/proto
       - proto/dwtools/atop/will.test/asset/transpile/proto/dir1

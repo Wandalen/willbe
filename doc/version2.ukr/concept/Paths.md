@@ -1,6 +1,6 @@
-## Шлях 
+## Path 
 
-Ресурс секції <code>path</code>, який вказує на розміщення елементів модуля і використовується в роутингу для інших ресурсів.
+<code>Path</code> section resource which points to the placement of module elements and used in routing for other resources.  
 
 В утиліті є три вбудовані шляхи: `in`, `out` та `temp`. Директорія на яку вказує `in` - точка відліку для відносних шляхів модуля - утиліта зчитує шлях до ресурсу відносно каталогу `in`, `out` - директорія для експортованих файлів модуля, `temp` - поміщаються тимчасові файли. Якщо `in` не вказаний, то `willbe` починає відлік від кореневої директорії `will-файла`. 
 
@@ -14,9 +14,9 @@
 | inherit        | наслідування значень полів іншого ресурса   | 
 
 
-## Секція <code>path</code>
+## Section <code>path</code>
 
-Секція представляє карту шляхів модуля для швидкого орієнтування в його файловій структурі.  
+The section has map of paths for fast understanding of files structure of the module.    
 
 Приклад секції `path` з ресурсами `in`, `out`, `toDelete`:  
 
