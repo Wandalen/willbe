@@ -1,21 +1,21 @@
-# <code>Will-file</code>
+# <code>Will-file</code>  
 
-Config for describing and building a module. Each formal module has such file.
+Config for describing and building a module. Each formal module has such file.  
 
-Для [неформальних підмодулів](SubmoduleInformal.md) такий файл має бути створено, для того щоб ним зручно було користуватися.
-`Will-файл` має наступні властивості:  
-\- описує файли модуля;  
-\- документ складається з секцій та ресурсів;  
-\- [секція](Structure.md#Секція-will-файла) - вища структурна одиниця `will-файлa`;   
-\- [ресурс](Structure.md#Ресурси) - структурна і функціональна одиниця `will-файлa`;  
-\- ресурси описують функціональності модуля;  
-\- секції об'єднують ресурси одного типу.   
+`Will-file` must be created for [informal submodules](SubmoduleInformal.md). It is convenient to use informal submodules.  
+`Will file` has following properties:  
+\- describes the module files;  
+\- the document consists of sections and resources;  
+\- [section](Structure.mdSection-will-file) is the highest structural element of `will-file`;  
+\- [resource](Structure.mdResources) is structural and functional element of `will-file`;  
+\- resources describe the functionality of the module;  
+\- section consists of single type resources.  
 
-Підтримуються розширення `.yml`, `.json`, `cson`.  
-На рисунку приведений список файлів в директорії модуля (вивід команди `ls -al`), прямокутником позначений `will-файл`:  
+`Will-file` supported `.yml`,` .json` and `cson` extensions.  
+The figure shows the list of files in the module directory (the `ls -al` command output). `Will-file` marked by rectangle:    
 
-![will.file.png](./Images/will.file.png)
+![will.file.png](./Images/will.file.png)  
 
-Приклад `will-файла`:  
+Example of `will-file`:  
 
 ![will.file.inner.png](./Images/will.file.inner.png)
