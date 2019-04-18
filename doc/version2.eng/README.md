@@ -31,16 +31,20 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   Approach of description of a module according to wich <code>will-file</code> can reuse (inherit) value of fields of other resource(s) of the same type.
 </details>
 <details>
-  <summary><a href="./concept/Paths.md#Path">Path</a></summary>
+  <summary><a href="./concept/Paths.md#Path">Recource path</a></summary>
    <code>Path</code> section resource which points to the placement of module elements and used in routing for other resources.
 </details>
 <details>
-  <summary><a href="./concept/Reflectors.md#Reflector">Reflector</a></summary>
+  <summary><a href="./concept/Reflectors.md#Reflector">Resource reflector</a></summary>
   <code>Reflector</code> section resource which defines the direction and criteria for performing operations over a group of files.
 </details>
 <details>
   <summary><a href="./concept/ReflectorFileFilter.md">File filters</a></summary>
   Technique to describe conditions of selection required files for some operation on group of files. Reflector has two file filters: <code>src</code> and <code>dst</code>.
+</details>
+<details>
+  <summary><a href="./concept/Reflectors.md#map-of-paths">Map of paths</a></summary>
+  A field of a reflector and a technique to describe set of files to include as many files as required and to exclude unwanted files with help of excluding conditions and globs.
 </details>
 <details>
   <summary><a href="./concept/Steps.md#Step">Step</a></summary>
