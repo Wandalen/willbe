@@ -1,34 +1,36 @@
-## Reflector  
+## Refllector resource     
 
-<code>Reflector</code> section resource which defines the direction and criteria for performing operations over a group of files.   
+Ресурс секції <code>reflector</code> та спосіб опису множини файлів для виконання якоїсь операції над ними.
 
-### Resource fields of `reflector` section     
+### Поля ресурсу `reflector`
 
-| Field          | Description                                                                       |
-|----------------|-----------------------------------------------------------------------------------|
-| description    | reflector description                                                             |
-| recursive      | option that determines the level of reading the file structure of the directory   |
-| filePath       | specifies the paths to the module directories, file operations and provide the management of the directories  |
-| src            | specifies the paths to the source directories and file selection conditions       |
-| dst            | the destination directory in which the files will be placed                       |
-| criterion      | condition for the resource using (see [criterion](Criterions.md))                 |
-| inherit        | reusing (inheritance) of another resource fields                                  |
+| Поле           | Опис                                                       |
+|----------------|------------------------------------------------------------|
+| description    | Пояснення для інших. розробників                                            |
+| recursive      | Включати файли із піддиректорій чи ні. Можливі значення: `0`, `1`, `2`. Значення за замовчуванням `2`. |
+| mandatory      | Викидати помилку якщо не знайдено жодного файла. Можливі значення: `0`, `1`. Значення за замовчуванням `1`. |
+| filePath       | Мапа шляхів. |
+| src            | Філтри файлів над якими потрібно здійснити операцію. |
+| dst            | Філтри файлів, в які треба записати результат виконання операції, якщо такий є. |
+| criterion      | [Умови](Criterions.md) використання ресурса                |
+| inherit        | Наслідування значень полів іншого рефлектора                  |
 
-The `src` and ` dst` fields have resources structurally divided into paths and [file filters](ReflectorFileFilter.md).    
+Поля `src`, `dst` можуть мати під-поля, що описують [файлові фільтри](ReflectorFileFilter.md).   
 
-### Path map
+### Мапа шляхів
 
-Path map is a method for describing a plurality of files. Its allows you to include in a plural set of files and exclude not needed files by the terms of the exception and globes.
+Спосіб опису множини файлів, котрий дозволяє включити в неї безліч файлів і виключити з неї через умови виключення та глоби не потрібні файли.
 
-Path map can:  
-- specify the placement of files to perform some operation over them;
-- specify the location of the files in which you want to record the result of the operation;
-- indicate the set of directories;
-- include many conditions for exclusion of files from the sample;
-- exclude sample files that match the globe via `false` or` 0`;
-- exclude sample files that do not match the globe via `true` or` 1`;
+Мапа шляхів може
+- задавати розміщення файлів над якими необхідно виконати, якусь операцію;
+- задавати розміщення файлів в які потрібно записати результат операції;
+- може вказувати безліч дерикторій;
+- безліч умов виключення файлів із вибірки;
+- виключення файлів із вибірки, що співпадають із глобом через `false` чи `0`;
+- виключення файлів із вибірки, що не співпадають із глобом через `true` чи `1`;
 
-Мапа шляхів задається в полі `filePath` рефлектора, при наслідуванні умови виключення успадковуються( ті котрі `0`, `1`, `false`, `true` ), переліки дерикторій в яких вести пошук переписуються осатннім предком або безпосередньо нащадком.
+
+Мапа шляхів може задаватися в полі `filePath` або в полі `src.filePath` чи `dst.filePath` рефлектора. При наслідуванні умови виключення успадковуються( ті котрі `0`, `1`, `false`, `true` ), переліки дерикторій в яких вести пошук переписуються осатннім предком або безпосередньо нащадком.
 
 Виключати файли із вибірки можливо не лише мапою шлхяів, але і [фільтрами файлів](<./ReflectorFileFilter.md#>).
 
@@ -49,15 +51,15 @@ src:
 
 ### Kos: бракує!
 
-### Reflector field `recursive`
+### Поле рефлектора `recursive`
 
-File filters have a certain range of visibility. Visibility is determined by the field `recursive` of a reflector. So, if you use them pay attention to its value.  
-The `recursive` field accepts three values:  
-'0' - reads the file (directory) specified in the path;  
+Файлові фільтри мають певний діапазон видимості, який визначається полем-опцією `recursive` тому, при їх використанні зверніть увагу на її значення.
+Поле `recursive` приймає три значення:  
+"0" - зчитується файл (директорія) вказана в шляху;  
 
 ![recursive.0.png](./Images/recursive.0.png)
 
-'1' - reads the files (directories) that are placed in the specified path (the contents of next level directories are not read);  
+"1" - зчитується файли (директорії), що поміщені за вказаним шляхом (вміст директорій не зчитується);  
 
 ![recursive.1.png](./Images/recursive.1.png)
 
@@ -103,7 +105,7 @@ filePath :
 ## Секція <code>reflector</code>  
 
 Секція містить рефлектори - ресурси для виконання операцій над групами файлів.
-Основними операціями є вибір файлів (директорій) та копіювання. 
+Основними операціями є вибір файлів (директорій) та копіювання.
 
 Приклад секції `reflector` з ресурсом `reflect.project`:
 

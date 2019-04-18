@@ -16,7 +16,7 @@
 </details>
 <details>
   <summary><a href="./concept/WillFileNamedAndSplit.md#Спліт-will-файл">Спліт <code>will-файл</code></a></summary>
-  Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля.
+  Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля. Дозволяє розробнику розділити дані для побудови модуля і дані для використання цього модуля іншими модулями.
 </details>
 <details>
   <summary><a href="./concept/Structure.md#Ресурси">Ресурси</a></summary>
@@ -27,11 +27,11 @@
   Функціональність пов'язана із групою ресурсів, обмежена призначенням. Приклад того які бувать типи ресурів: шлях, підмодуль, крок, збірка. Кожен тип ресурів має власне призначення і обробляється утиілітою по-різному.
 </details>
 <details>
-  <summary><a href="./concept/Paths.md#Шлях">Шлях</a></summary>
+  <summary><a href="./concept/Paths.md#Ресурс-шлях">Ресурс "шлях"</a></summary>
   Ресурс секції <code>path</code>, який вказує на розміщення елементів модуля і використовується в роутингу для інших ресурсів.
 </details>
 <details>
-  <summary><a href="./concept/Reflectors.md#Рефлектор">Рефлектор</a></summary>
+  <summary><a href="./concept/Reflectors.md#Ресурс-рефлектор">Ресурс "рефлектор"</a></summary>
   Ресурс секції <code>reflector</code>, який формулює напрям і критерії здійснення операцій над групою файлів.
 </details>
 <details>
@@ -39,11 +39,15 @@
   Спосіб опису умов відбору необхідних для виконання деякої операції файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>.
 </details>
 <details>
-  <summary><a href="./concept/Steps.md#Крок">Крок</a></summary>
+  <summary><a href="./concept/Reflectors.md#Мапа-шляхів">Мапа шляхів</a></summary>
+  Спосіб опису множини файлів, котрий дозволяє включити в неї безліч файлів і виключити з неї через умови виключення та глоби не потрібні файли.
+</details>
+<details>
+  <summary><a href="./concept/Steps.md#Ресурс крок">Ресурс "крок"</a></summary>
   Ресурс секції <code>step</code>, який представляє собою інструкцію для виконання утилітою при побудові модуля.
 </details>
 <details>
-  <summary><a href="./concept/Builds.md#Збірка">Збірка</a></summary>
+  <summary><a href="./concept/Builds.md#Ресурс-збірка">Ресурс "збірка"</a></summary>
   Послідовність і умови виконання процедур побудови модуля.
 </details>
 <details>
