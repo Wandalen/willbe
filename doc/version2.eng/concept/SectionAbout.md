@@ -6,7 +6,16 @@
 
 ### Приклад
 
-![section.about.png](./Images/section.about.png)
+```yaml
+about :	
+													
+    name : aboutSection
+    description : "Example of about section"
+    version : 0.0.1
+    keyword :
+      - willbe
+
+```
 
 Cекції `about` має 4-ри поля серед, яких назва модуля, опис, версія та одне ключове слово.
 
