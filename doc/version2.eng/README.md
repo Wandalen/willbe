@@ -27,7 +27,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   Functionality associated with group of resources restricted by its purpose. Examples of types of resources: path, submodule, step, build. Each type of resources has its own purpose and is treated by the utility differently.
 </details>
 <details>
-  <summary><a href="./concept/Inheritance.md">Resources inheritance</a></summary>
+  <summary><a href="./concept/Inheritance.md">Inheritance</a></summary>
   Approach of description of a module according to wich <code>will-file</code> can reuse (inherit) value of fields of other resource(s) of the same type.
 </details>
 <details>
@@ -44,7 +44,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 </details>
 <details>
   <summary><a href="./concept/ResourceReflector.md#map-of-paths">Map of paths</a></summary>
-  A field of a reflector and a technique to describe set of files to include as many files as required and to exclude unwanted files with help of excluding conditions and globs. 
+  A field of a reflector and a technique to describe set of files to include as many files as required and to exclude unwanted files with help of excluding conditions and globs.
 </details>
 <details>
   <summary><a href="./concept/ResourceStep.md#Resource-step">Resource step</a></summary>
@@ -52,7 +52,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 </details>
 <details>
   <summary><a href="./concept/ResourceBuild.md#Resource-build">Resource build</a></summary>
-  Sequence and conditions of procedures execution for module constructing.
+  Sequence and conditions of procedures execution to build a module. Developer has to select a particular build calling command <code>.build</code> by name or by constraints.
 </details>
 <details>
   <summary><a href="./concept/Structure.md#Section-will-file">Section <code>will-file</code></a></summary>
