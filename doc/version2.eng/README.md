@@ -36,7 +36,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 </details>
 <details>
   <summary><a href="./concept/Reflectors.md#Resource-reflector">Resource reflector</a></summary>
-  <code>Reflector</code> section resource which defines the direction and criteria for performing operations over a group of files.
+  Resource of section <code>reflector</code>, technique to describe set of files to perform an operation on this set of files.
 </details>
 <details>
   <summary><a href="./concept/ReflectorFileFilter.md">File filters</a></summary>
@@ -44,7 +44,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 </details>
 <details>
   <summary><a href="./concept/Reflectors.md#map-of-paths">Map of paths</a></summary>
-  A field of a reflector and a technique to describe set of files to include as many files as required and to exclude unwanted files with help of excluding conditions and globs.
+  A field of a reflector and a technique to describe set of files to include as many files as required and to exclude unwanted files with help of excluding conditions and globs. 
 </details>
 <details>
   <summary><a href="./concept/Steps.md#Resource-step">Resource step</a></summary>
