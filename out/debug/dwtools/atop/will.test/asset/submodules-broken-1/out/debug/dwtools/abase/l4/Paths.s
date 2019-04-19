@@ -8,8 +8,7 @@
 
 /**
  * Collection of routines to operate multiple paths in the reliable and consistent way.
- * @namespace Paths
- * @augments module:Tools/base/Path.Path
+ * @namespace "wTools.paths"
  * @memberof module:Tools/base/Path
  */
 
@@ -178,7 +177,7 @@ function vectorizeOnly( routine )
  * _.path.s.are(['/a', 1 ]); //[ true, false ]
  * @returns {Array} Returns array of same size with check results.
  * @function are
- * @memberof module:Tools/base/Path.Paths
+ * @memberof module:Tools/base/Path.wTools.paths
  */
 
 /**
@@ -188,7 +187,7 @@ function vectorizeOnly( routine )
  * _.path.s.allAre(['/a', 1 ]); //false
  * @returns {Bollean} Returns true if all elements are paths or false.
  * @function allAre
- * @memberof module:Tools/base/Path.Paths
+ * @memberof module:Tools/base/Path.wTools.paths
  */
 
 /**
@@ -198,7 +197,7 @@ function vectorizeOnly( routine )
  * _.path.s.anyAre(['/a', 1 ]); //true
  * @returns {Bollean} Returns true if at least one element is a path or false.
  * @function anyAre
- * @memberof module:Tools/base/Path.Paths
+ * @memberof module:Tools/base/Path.wTools.paths
  */
 
  /**
@@ -208,7 +207,7 @@ function vectorizeOnly( routine )
  * _.path.s.noneAre(['/a', 1 ]); //false
  * @returns {Bollean} Returns false if at least one element is a path, otherwise true.
  * @function noneAre
- * @memberof module:Tools/base/Path.Paths
+ * @memberof module:Tools/base/Path.wTools.paths
  */
 
  /**
@@ -219,7 +218,7 @@ function vectorizeOnly( routine )
  * _.path.s.normalize(['\\a', '/a/../b' ]); //['/a', '/b' ]
  * @returns {Array} Returns array with normalized paths.
  * @function normalize
- * @memberof module:Tools/base/Path.Paths
+ * @memberof module:Tools/base/Path.wTools.paths
  */
 
 /**
@@ -240,7 +239,7 @@ function vectorizeOnly( routine )
  *
  * @returns {Array|Object} Returns array with joined paths.
  * @function join
- * @memberof module:Tools/base/Path.Paths
+ * @memberof module:Tools/base/Path.wTools.paths
  */
 
 /**
@@ -257,7 +256,7 @@ function vectorizeOnly( routine )
  *
  * @returns {Array} Returns array with results of dir operation.
  * @function dir
- * @memberof module:Tools/base/Path.Paths
+ * @memberof module:Tools/base/Path.wTools.paths
  */
 
 /**
@@ -274,7 +273,7 @@ function vectorizeOnly( routine )
  *
  * @returns {Array} Returns array with results of name operation.
  * @function name
- * @memberof module:Tools/base/Path.Paths
+ * @memberof module:Tools/base/Path.wTools.paths
  */
 
 
@@ -292,7 +291,7 @@ function vectorizeOnly( routine )
  *
  * @returns {Array} Returns array with results of ext operation.
  * @function ext
- * @memberof module:Tools/base/Path.Paths
+ * @memberof module:Tools/base/Path.wTools.paths
  */
 
 
@@ -314,7 +313,7 @@ function vectorizeOnly( routine )
  *
  * @returns {Array|Object} Returns array with result for each combination of paths.
  * @function common
- * @memberof module:Tools/base/Path.Paths
+ * @memberof module:Tools/base/Path.wTools.paths
  */
 
 // --
