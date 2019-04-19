@@ -64,7 +64,7 @@
 <details><summary><a href="./concept/ResourceBuild.md#Ресурс-збірка">
       Ресурс збірка
   </a></summary>
-  Послідовність і умови виконання процедур побудови модуля.
+  Послідовність і умови виконання процедур побудови модуля. При виконанні команди <code>.build</code> розробник має вказати збірку, яку хоче зібрати, однозначно вибравши одну по імені або по умовам вибірки.
 </details>
 <details><summary><a href="./concept/Structure.md#Секція-will-файла">
       Секція <code>will-файла</code>
@@ -200,7 +200,7 @@
   Як користуватися інтерфейсом командного рядка утиліти <code>willbe</code>. Застосування команд <code>.help</code> та <code>.list</code>.
 </details>
 <details><summary><a href="./tutorial/HelloWorld.md">
-      Модуль "Hello, World!" 
+      Модуль "Hello, World!"
   </a></summary>
   Створення модуля "Hello, World!". Завантаження віддаленого підмодуля.
 </details>
@@ -210,7 +210,7 @@
   Команди оновлення підмодулів, апгрейду підмодулів автоматизовним перезаписом <code>will-файла</code> та очищення модуля.
 </details>
 <details><summary><a href="./tutorial/Build.md">
-      Побудова модуля командою <code>.build</code> 
+      Побудова модуля командою <code>.build</code>
   </a></summary>
   Запуск окремих збірок модуля для його побудови.
 </details>
