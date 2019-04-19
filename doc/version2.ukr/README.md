@@ -36,12 +36,12 @@
   </a></summary>
   Принцип опису модуля, згідно якого ресурс <code>will-файла</code> здатний використовувати (наслідувати) значення полів інших ресурсів того ж типу.
 </details>
-<details><summary><a href="./concept/Paths.md#Ресурс-шлях">
+<details><summary><a href="./concept/ResourcePath.md#Ресурс-шлях">
       Ресурс шлях
   </a></summary>
   Ресурс для визначення файлової структури модуля, що містить файлові шлях до файлів. Шляхи розміщаються в секції <code>path</code>.
 </details>
-<details><summary><a href="./concept/Reflectors.md#Ресурс-рефлектор">
+<details><summary><a href="./concept/ResourceReflector.md#Ресурс-рефлектор">
       Ресурс рефлектор
   </a></summary>
   Ресурс секції <code>reflector</code>, спосіб опису множини файлів для виконання якоїсь операції над ними.
@@ -51,17 +51,17 @@
   </a></summary>
   Спосіб опису умов відбору необхідних для виконання деякої операції файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>.
 </details>
-<details><summary><a href="./concept/Reflectors.md#Мапа-шляхів">
+<details><summary><a href="./concept/ResourceReflector.md#Мапа-шляхів">
       Мапа шляхів
   </a></summary>
   Поле рефлектора та спосіб опису множини файлів, котрий дозволяє включити в неї безліч файлів і виключити із неї не потрібні файли за допомогою умов виключення та глобів. рефлектора.
 </details>
-<details><summary><a href="./concept/Steps.md#Ресурс крок">
+<details><summary><a href="./concept/ResourceStep.md#Ресурс крок">
       Ресурс крок
   </a></summary>
   Ресурс секції <code>step</code>, який представляє собою інструкцію для виконання утилітою при побудові модуля.
 </details>
-<details><summary><a href="./concept/Builds.md#Ресурс-збірка">
+<details><summary><a href="./concept/ResourceBuild.md#Ресурс-збірка">
       Ресурс збірка
   </a></summary>
   Послідовність і умови виконання процедур побудови модуля.
@@ -76,7 +76,7 @@
   </a></summary>
   Секція містить описову інформація про модуль.
 </details>
-<details><summary><a href="./concept/Paths.md#Секція-path">
+<details><summary><a href="./concept/ResourcePath.md#Секція-path">
       Секція <code>path</code>
   </a></summary>
   Секція містить перелік шляхів модуля для швидкого орієнтування в його файловій структурі.
@@ -86,17 +86,17 @@
   </a></summary>
   Секція містить інформацію про підмодулі.
 </details>
-<details><summary><a href="./concept/Reflectors.md#Секція-reflector">
+<details><summary><a href="./concept/ResourceReflector.md#Секція-reflector">
       Секція <code>reflector</code>
   </a></summary>
   Секція містить рефлектори - ресурси для виконання операцій над групами файлів.
 </details>
-<details><summary><a href="./concept/Steps.md#Секція-step">
+<details><summary><a href="./concept/ResourceStep.md#Секція-step">
       Секція <code>step</code>
   </a></summary>
   Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля.
 </details>
-<details><summary><a href="./concept/Builds.md#Секція-build">
+<details><summary><a href="./concept/ResourceBuild.md#Секція-build">
       Секція <code>build</code>
   </a></summary>
   Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля.
