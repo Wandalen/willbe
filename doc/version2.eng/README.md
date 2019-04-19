@@ -57,7 +57,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   A field of a reflector and a technique to describe set of files to include as many files as required and to exclude unwanted files with help of excluding conditions and globs.
 </details>
 <details><summary><a href="./concept/ResourceStep.md#Resource-step">
-  Resource step
+      Resource step
   </a></summary>
   <code>Step</code> section resource which is an executing instruction of module building.
 </details>
