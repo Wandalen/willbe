@@ -29,7 +29,7 @@ will-file
   Секція містить описову інформація про модуль.
 </details>
 <details>
-  <summary><a href="./concept/Paths.md#Секція-path">Секція <code>path</code></a></summary>
+  <summary><a href="./concept/ResourcePath.md#Секція-path">Секція <code>path</code></a></summary>
   Секція містить перелік шляхів модуля для швидкого орієнтування в його файловій структурі.
 </details>
 <details>
@@ -37,15 +37,15 @@ will-file
   Секція містить інформацію про підмодулі.
 </details>
 <details>
-  <summary><a href="./concept/Steps.md#Секція-step">Секція <code>step</code></a></summary>
+  <summary><a href="./concept/ResourceStep.md#Секція-step">Секція <code>step</code></a></summary>
   Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля.
 </details>
 <details>
-  <summary><a href="./concept/Reflectors.md#Секція-reflector">Секція <code>reflector</code></a></summary>
+  <summary><a href="./concept/ResourceReflector.md#Секція-reflector">Секція <code>reflector</code></a></summary>
   Секція містить рефлектори - ресурси для виконання операцій над групами файлів.
 </details>
 <details>
-  <summary><a href="./concept/Builds.md#Секція-build">Секція <code>build</code></a></summary>
+  <summary><a href="./concept/ResourceBuild.md#Секція-build">Секція <code>build</code></a></summary>
   Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля.
 </details>
 <details>
@@ -76,15 +76,15 @@ will-file
 ### Ресурси по типам
 
 <details>
-  <summary><a href="./Paths.md.md#Ресурс-шлях">Ресурси типу <code>path</code></a></summary>
+  <summary><a href="./ResourcePath.md.md#Ресурс-шлях">Ресурси типу <code>path</code></a></summary>
   Описують файлову структуру модуля, вказуючи шляхів до файлів даного модуля.
 </details>
 <details>
-  <summary><a href="./Steps.md#Ресурс-крок">Ресурси типу <code>step</code></a></summary>
+  <summary><a href="./ResourceStep.md#Ресурс-крок">Ресурси типу <code>step</code></a></summary>
   Ресурс секції <code>step</code>, який представляє собою інструкцію для виконання утилітою при побудові модуля. Описують операції та бажаний результат. Збірки складаються із кроків.
 </details>
 <details>
-  <summary><a href="./Reflectors.md#Ресурс-рефлектор">Ресурси типу <code>reflector</code></a></summary>
+  <summary><a href="./ResourceReflector.md#Ресурс-рефлектор">Ресурси типу <code>reflector</code></a></summary>
   Призначені для вибірки групи файлів для здійснення над ними якоїсь операції.
 </details>
 <details>
@@ -92,7 +92,7 @@ will-file
   Є посиланнями на інші модулі, які можливо використати в якості підмодулів даного модуля.
 </details>
 <details>
-  <summary><a href="./Builds.md#Ресурс-збірка">Ресурси типу <code>build</code></a></summary>
+  <summary><a href="./ResourceBuild.md#Ресурс-збірка">Ресурси типу <code>build</code></a></summary>
   Містять перелік кроків, котрі потрібно здійснити щоб збудувати модуль.
 </details>
 <details>
