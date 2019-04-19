@@ -65,33 +65,34 @@ path :
   file : 'file'
 
 reflector :
-
+  
   compile :
     filePath :
       '*.c' : 1
       path::file : 1
     src :
       prefixPath : 'file'
+    dst :
+      filePath : path::file
 
   build :
     filePath :
       '*.o' : 1
       '*.c' : 0
       path::file : 1
+    src :
+      prefixPath : 'file'
+    dst :
+      filePath : path::file
+    shell : gcc-6 -o {f::this/dst}/hello {f::this/src}    
 
 step :
 
   compile :
-    shell : gcc-6 -c {this::src}
+    shell : gcc-6 -c {f::this/src}
     currentPath : path::file
     forEachDst : compile
     upToDate : preserve
-
-  build :
-    shell : gcc-6 -o hello {this::src}
-    currentPath : path::file
-    forEachDst : build
-    upToDate : preserve    
 
 build :
 
@@ -137,7 +138,7 @@ step :
 
 </details>
 
-Крок `compile` виконує компіляюцію вихідних файлів з допомогою компілятора `gcc` шостої версії (за необхідності, встановіть [gcc](http://gcc.gnu.org/) і змініть команду в полі `shell` відповідно до версії компілятора). Компіляція проходить в директорії `file` і здійснюється для кожного елемента згідно рефлектора `compile`. Полем `upToDate` задається функція слідкування за змінами файлів в директорії. Відмінність кроку `build` в тому, що він виконує об'єднання об'єктних файлів в виконуваний.   
+Крок `compile` виконує компіляюцію вихідних файлів з допомогою компілятора `gcc` шостої версії (за необхідності, встановіть [gcc](http://gcc.gnu.org/) і змініть команду в полі `shell` відповідно до версії компілятора). Компіляція проходить в директорії `file` і кожнен скомпільований файл поміщається в директорію визначену полем `dst` рефлектора `compile`. Полем `upToDate` задається функція слідкування за змінами файлів в директорії. Відмінність кроку `build` в тому, що він виконує об'єднання об'єктних файлів в один виконуваний. В ньому використана функція генерації ресурсів - в рефлектор `build` внесена команда `gcc-6 -o {f::this/dst}/hello {f::this/src}`.   
 Запустіть побудову збірки `compile`, перевірте директорію `file` після побудови:  
 
 <details>
@@ -264,38 +265,39 @@ path :
   file : 'file'
 
 reflector :
-
+  
   compile :
     filePath :
       '*.c' : 1
       path::file : 1
     src :
       prefixPath : 'file'
+    dst :
+      filePath : path::file
 
   build :
     filePath :
       '*.o' : 1
       '*.c' : 0
-      path::file : 1  
+      path::file : 1
+    src :
+      prefixPath : 'file'
+    dst :
+      filePath : path::file
+    shell : gcc-6 -o {f::this/dst}/hello {f::this/src}    
 
 step :
 
   compile :
-    shell : gcc-6 -c {this::src}
+    shell : gcc-6 -c {f::this/src}
     currentPath : path::file
     forEachDst : compile
     upToDate : preserve
-
-  build :
-    shell : gcc-6 -o hello {this::src}
-    currentPath : path::file
-    forEachDst : build
-    upToDate : preserve
-
+  
   clean.temp :
     inherit: predefined.shell
     shell : rm -Rf *.o
-    currentPath : path::file    
+    currentPath : path::file
 
 build :
 
@@ -308,11 +310,11 @@ build :
   make.hello :
     steps :
       - step::build
-
+  
   all :
     steps :
-      - build::compile
-      - build::make.hello
+      - compile
+      - make.hello
       - clean.temp
 
 ```
