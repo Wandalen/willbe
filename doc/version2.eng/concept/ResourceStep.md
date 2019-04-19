@@ -273,6 +273,21 @@ build:                                  # Назва секції
 
 #### Приклад
 
-![step.section.png](./Images/step.section.png)
+```
+step  :
 
-Приклад секції `step` з кроками `export.proto`, `proto.release`.
+  export.proto :
+    inherit : predefined.export
+    export : path::fileToExport.*
+    criterion : 
+      debug : 0
+
+  proto.debug :
+    inherit : predefined.reflect
+    export : path::fileToReflect.*
+    criterion : 
+      debug : 1
+      
+```
+
+Приклад секції `step` з кроками `export.proto`, `proto.debug`. Крок `export.proto` виконує експорт файлів якщо в збірці критеріон `debug` має значення `0`, а виконання файлової операції в кроці `proto.debug` виконується з встановленим критеріоном `debug : 1`.
