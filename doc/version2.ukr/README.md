@@ -184,135 +184,166 @@
 
 ## Туторіали
 
-<details>
-  <summary><a href="./tutorial/Abstract.md">Загальна інформація</a></summary>
+<details><summary><a href="./tutorial/Abstract.md">
+      Загальна інформація
+  </a></summary>
   Загальна інформація. Чим утиліта <code>willbe</code> є і чим вона не являється.
 </details>
-<details>
-  <summary><a href="./tutorial/Installation.md">Встановлення</a></summary>
+<details><summary><a href="./tutorial/Installation.md">
+      Встановлення
+  </a></summary>
   Процедура встановлення утиліти <code>willbe</code>.
 </details>
-<details>
-  <summary><a href="./tutorial/CLI.md">Інтерфейс командного рядка</a></summary>
+<details><summary><a href="./tutorial/CLI.md">
+      Інтерфейс командного рядка
+  </a></summary>
   Як користуватися інтерфейсом командного рядка утиліти <code>willbe</code>. Застосування команд <code>.help</code> та <code>.list</code>.
 </details>
-<details>
-  <summary><a href="./tutorial/HelloWorld.md">Модуль "Hello, World!"</a></summary>
+<details><summary><a href="./tutorial/HelloWorld.md">
+      Модуль "Hello, World!" 
+  </a></summary>
   Створення модуля "Hello, World!". Завантаження віддаленого підмодуля.
 </details>
-<details>
-  <summary><a href="./tutorial/CommandsSubmodules.md">Команди оновлення, апгрейду та очищення підмодулів</a></summary>
+<details><summary><a href="./tutorial/CommandsSubmodules.md">
+      Команди оновлення, апгрейду та очищення підмодулів
+  </a></summary>
   Команди оновлення підмодулів, апгрейду підмодулів автоматизовним перезаписом <code>will-файла</code> та очищення модуля.
 </details>
-<details>
-  <summary><a href="./tutorial/Build.md">Побудова модуля командою <code>.build</code></a></summary>
+<details><summary><a href="./tutorial/Build.md">
+      Побудова модуля командою <code>.build</code> 
+  </a></summary>
   Запуск окремих збірок модуля для його побудови.
 </details>
-<details>
-  <summary><a href="./tutorial/StepsPredefined.md">Вбудовані кроки</a></summary>
+<details><summary><a href="./tutorial/StepsPredefined.md">
+      Вбудовані кроки
+  </a></summary>
   Як користуватись вбудованими кроками для роботи з віддаленими підмодулями.
 </details>
-<details>
-  <summary><a href="./tutorial/Criterions.md">Критеріони</a></summary>
+<details><summary><a href="./tutorial/Criterions.md">
+      Критеріони
+  </a></summary>
   Як використовувати критеріони для відбору ресурсів.
 </details>
-<details>
-  <summary><a href="./tutorial/CriterionDefault.md">Збірка модуля за замовчуванням</a></summary>
+<details><summary><a href="./tutorial/CriterionDefault.md">
+      Збірка модуля за замовчуванням
+  </a></summary>
   Як побудувати збірку, що запускається без явного указання аргумента команди <code>.build</code>.
 </details>
-<details>
-  <summary><a href="./tutorial/ModuleExport.md">Експортування модуля</a></summary>
+<details><summary><a href="./tutorial/ModuleExport.md">
+      Експортування модуля
+  </a></summary>
   Експортування модуля для перевикористання його іншим розробником або модулем.
 </details>
-<details>
-  <summary><a href="./tutorial/SubmodulesLocal.md">Імпорт локального підмодуля</a></summary>
+<details><summary><a href="./tutorial/SubmodulesLocal.md">
+      Імпорт локального підмодуля
+  </a></summary>
   Використання локального підмодуля із іншого модуля (супермодуля).
 </details>
-<details>
-  <summary><a href="./tutorial/SelectorsWithGlob.md">Селектори із ґлобами</a></summary>
+<details><summary><a href="./tutorial/SelectorsWithGlob.md">
+      Селектори із ґлобами
+  </a></summary>
   Як користуватись селекторами з ґлобами.
 </details>
-<details>
-  <summary><a href="./tutorial/AssertsUsing.md">Як користуватись ассертами</a></summary>
+<details><summary><a href="./tutorial/AssertsUsing.md">
+      Як користуватись ассертами
+  </a></summary>
   Як ассерти допомогають зменшити кількість помилок при розробці.
 </details>
-<details>
-  <summary><a href="./tutorial/WillFileMinimization.md">Мінімізація <code>will-файла</code></a></summary>
+<details><summary><a href="./tutorial/WillFileMinimization.md">
+      Мінімізація <code>will-файла</code>
+  </a></summary>
   Як мінімізувати <code>will-файл</code> за допомогою розгортання критеріонами із множинними значеннями.
 </details>
-<details>
-  <summary><a href="./tutorial/WillFileSplit.md">Розділені <code>will-файли</code></a></summary>
+<details><summary><a href="./tutorial/WillFileSplit.md">
+      Розділені <code>will-файли</code>
+  </a></summary>
   Як створити та використовувати модуль із розділеними <code>will-файлами</code>.
 </details>
-<details>
-  <summary><a href="./tutorial/WillFileNamed.md">Команда <code>.with</code> та іменований <code>will-файл</code></a></summary>
+<details><summary><a href="./tutorial/WillFileNamed.md">
+      Команда <code>.with</code> та іменований <code>will-файл</code>
+  </a></summary>
   Як використовувати команду <code>.with</code>? Що таке іменований <code>will-файл</code>?
 </details>
-<details>
-  <summary><a href="./tutorial/CommandEach.md">Як користуватись командою <code>.each</code></a></summary>
+<details><summary><a href="./tutorial/CommandEach.md">
+      Як користуватись командою <code>.each</code>
+  </a></summary>
   Команда <code>.each</code> для виконання одної дії для багатьох модулів чи підмодулів.
 </details>
-<details>
-  <summary><a href="./tutorial/StepJS.md">Використання <code>JavaScript</code> файлів утилітою <code>willbe</code></a></summary>
+<details><summary><a href="./tutorial/StepJS.md">
+      Використання <code>JavaScript</code> файлів утилітою <code>willbe</code>
+  </a></summary>
   Як використовувати <code>JavaScript</code> файли в утиліті <code>willbe</code> для виконання складних сценаріїв побудови.
 </details>
-<details>
-  <summary><a href="./tutorial/CommandSet.md">Команда <code>.set</code></a></summary>
+<details><summary><a href="./tutorial/CommandSet.md">Команда <code>.set</code></a></summary>
   Як користуватись командою <code>.set</code> для зміни станів утиліти, наприклад, для зміни рівня вербальності.
 </details>
-<details>
-  <summary><a href="./tutorial/SelectorComposite.md">Складні селектори</a></summary>
+<details><summary><a href="./tutorial/SelectorComposite.md">
+      Складні селектори
+  </a></summary>
   Використання складних селекторів для відбору ресурсів із підмодулів.
 </details>
-<details>
-  <summary><a href="./tutorial/CommandsListSearch.md">Перелік ресурсів застосовуючи фільтри та глоби</a></summary>
+<details><summary><a href="./tutorial/CommandsListSearch.md">
+      Перелік ресурсів застосовуючи фільтри та глоби
+  </a></summary>
   Як побудувати запит до утиліти та отримати перелік ресурсів застосовуючи фільтри та глоби.
 </details>
-<details>
-  <summary><a href="./tutorial/ReflectorUsing.md">Копіювання файлів за допомогою рефлектора</a></summary>
+<details><summary><a href="./tutorial/ReflectorUsing.md">
+      Копіювання файлів за допомогою рефлектора
+  </a></summary>
   Копіювання файлів за допомогою рефлектора, поле <code>recursive</code> рефлектора.
 </details>
-<details>
-  <summary><a href="./tutorial/ReflectorFilters.md">Фільтри рефлектора</a></summary>
+<details><summary><a href="./tutorial/ReflectorFilters.md">
+      Фільтри рефлектора
+  </a></summary>
   Використання фільтрів рефлектора для відбору файлів для копіювання.
 </details>
-<details>
-  <summary><a href="./tutorial/ReflectorTimeFilters.md">Часові фільтри рефлектора</a></summary>
+<details><summary><a href="./tutorial/ReflectorTimeFilters.md">
+      Часові фільтри рефлектора
+  </a></summary>
   Як користуватись фільтрами відбору файлів по часу.
 </details>
-<details>
-  <summary><a href="./tutorial/ReflectorFSControl.md">Формування шляхів в рефлекторі. Управління файлами</a></summary>
+<details><summary><a href="./tutorial/ReflectorFSControl.md">
+      Формування шляхів в рефлекторі. Управління файлами
+  </a></summary>
   Як формуються шляхи рефлекторів та як управляти доступом до файлів і директорій в рефлекторі.
 </details>
-<details>
-  <summary><a href="./tutorial/ReflectorsPredefined.md">Вбудовані рефлектори</a></summary>
+<details><summary><a href="./tutorial/ReflectorsPredefined.md">
+      Вбудовані рефлектори
+  </a></summary>
   Використання вбудованих рефлекторів для розбиття на версію для відлагодження і для релізу. Побудова мультизбірок.
 </details>
-<details>
-  <summary><a href="./tutorial/ResourceInheritance.md">Наслідування ресурсів</a></summary>
+<details><summary><a href="./tutorial/ResourceInheritance.md">
+      Наслідування ресурсів
+  </a></summary>
   Як користуватись наслідуванням ресурсів для перевикористання даних.
 </details>
-<details>
-  <summary><a href="./tutorial/StepView.md">Вбудований крок <code>predefined.view</code></a></summary>
+<details><summary><a href="./tutorial/StepView.md">
+      Вбудований крок <code>predefined.view</code>
+  </a></summary>
   Використання вбудованого кроку <code>predefined.view</code> для перегляду файлів.
 </details>
-<details>
-  <summary><a href="./tutorial/StepTranspile.md">Транспіляція</a></summary>
+<details><summary><a href="./tutorial/StepTranspile.md">
+      Транспіляція
+  </a></summary>
   Використання вбудованого кроку <code>predefined.transpile</code> для транспіляції <code>JavaScript</code> файлів або їх конкатенації.
 </details>
-<details>
-  <summary><a href="./tutorial/CommandShell.md">Команда <code>.shell</code> </a></summary>
+<details><summary><a href="./tutorial/CommandShell.md">
+      Команда <code>.shell</code>
+  </a></summary>
   Команда для виклику зовнішніх програм утилітою <code>willbe</code> для вибраних модулів чи підмодулів.
 </details>
-<details>
-  <summary><a href="./tutorial/WillbeAsMake.md">Компіляція С++ програми</a></summary>
+<details><summary><a href="./tutorial/WillbeAsMake.md">
+      Компіляція С++ програми
+  </a></summary>
   Використання утиліти <code>willbe</code> для компіляції С++ програми.
 </details>
-<details>
-  <summary><a href="./tutorial/SubmoduleInformal.md">Неформальні підмодулі</a></summary>
+<details><summary><a href="./tutorial/SubmoduleInformal.md">
+      Неформальні підмодулі
+  </a></summary>
   Імпортування неформальних підмодулів.
 </details>
-<details>
-  <summary><a href="./tutorial/CommandClean.md">Команда очистки <code>.clean</code></a></summary>
+<details><summary><a href="./tutorial/CommandClean.md">
+      Команда очистки <code>.clean</code>
+  </a></summary>
   Використання команди <code>.clean</code> для очистки згенерованих та тимчасових файлів.
 </details>
