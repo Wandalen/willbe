@@ -87,7 +87,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   Section of <code>out-will-file</code>, programatically generated with exporting of the module. It has list of exported files and it used by other modules for importing the module.
 </details>
 <details>
-  <summary><a href="./concept/Export.md#Resource-export">Resource export</a></summary>
+  <summary><a href="./concept/ResourceBuild.md#Resource-export">Resource export</a></summary>
   Special kind of build which required for the module to been used by other developers and modules. Result of exporting is artefacts among wich is <code>out-will-file</code>.
 </details>
 <details>
