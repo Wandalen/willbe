@@ -16,7 +16,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 </details>
 <details>
   <summary><a href="./concept/WillFileNamedAndSplit.md#Split-will-file">Split <code>will-file</code></a></summary>
-  Splitted <code>will-file</code> on two files - one for importing data another for exporting. Make possible splitting data related building and development of a module and data related its exporting and reusing by another modules.
+  Splitting <code>will-file</code> into two files. One of them is for importing data and the other for exporting. Its make possible splitting data related building and development of a module and data related its exporting and reusing by other modules.
 </details>
 <details>
   <summary><a href="./concept/Structure.md#Resources">Resources</a></summary>
