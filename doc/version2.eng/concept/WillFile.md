@@ -22,13 +22,13 @@ The following `will-file` extensions are supported:
 - `.json`,
 - `.cson`.  
 
-### The example of the file structure of the module
+### An example of the file structure of the module
 
 ![will.file.png](./Images/will.file.png)
 
 The figure shows the list of files in the module directory (the `ls -al` command output). `Will-file` marked by rectangle.
 
-### The example of `will-file`
+### An example of `will-file`
 
 ![will.file.inner.png](./Images/will.file.inner.png)
 
