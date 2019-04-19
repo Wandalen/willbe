@@ -1,6 +1,6 @@
 # Export of module and `out-will-file`
 
-### Export
+### Resource export
 
 Special kind of build which required for the module to been used by other developers and modules. Result of exporting is artefacts among wich is <code>out-will-file</code>.
 

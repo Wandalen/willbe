@@ -46,11 +46,11 @@
 
 Для відддалених підмодулів:  
 - вивід інформації про стан (локальних і віддалених) здійснюється командою `will .submodules.list`;
-- завантаження командою `will .submodules.download` або з використанням вбудованого кроку [`submodules.download`](ResourceStep.md#submodules.download).    
+- завантаження командою `will .submodules.download` або з використанням вбудованого кроку [`submodules.download`](ResourceStep.md#submodulesdownload).    
 - фіксуються версії підмодуля командою `will .submodules.fixate`;
 - оновлення URL-посилань на підмодулі командою `will .submodules.upgrade.refs`;
-- встановлення оновлень командою `will .submodules.update` або вбудованим кроком [`submodules.update`](ResourceStep.md#submodules.update) (якщо є доступні оновлення);
-- видалення разом з директорією `.module` фразою `will .submodules.clean` або вбудованим кроком [`submodules.clean`](ResourceStep.md#submodules.clean).    
+- встановлення оновлень командою `will .submodules.update` або вбудованим кроком [`submodules.update`](ResourceStep.md#submodulesupdate) (якщо є доступні оновлення);
+- видалення разом з директорією `.module` фразою `will .submodules.clean` або вбудованим кроком [`submodules.clean`](ResourceStep.md#submodulesclean).    
 
 #### Приклад секції `submodule`  
 

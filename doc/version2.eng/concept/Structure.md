@@ -96,7 +96,7 @@ will-file
   Містять перелік кроків, котрі потрібно здійснити щоб збудувати модуль.
 </details>
 <details>
-  <summary><a href="./Export.md#Експорт-модуля">Ресурси типу <code>export</code></a></summary>
+  <summary><a href="./Export.md#Ресурс-експорт">Ресурси типу <code>export</code></a></summary>
   Це особливий вид збірки, результатом виконання, якої є згенерованй `out-will-файл`, що може бути використаний іншим модулем.
 </details>
 <details>
