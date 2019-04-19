@@ -6,150 +6,179 @@
 
 ## Концепції
 
-<details>
-  <summary><a href="./concept/WillFile.md"><code>Will-файл</code></a></summary>
+<details><summary><a href="./concept/WillFile.md">
+      <code>Will-файл</code>
+  </a></summary>
   Конфігураційний файл для опису та збірки модуля. Кожен формальний модуль має такий файл.
 </details>
-<details>
-  <summary><a href="./concept/WillFileNamedAndSplit.md#Іменований-will-файл">
-  Іменований <code>will-файл</code>
+<details><summary><a href="./concept/WillFileNamedAndSplit.md#Іменований-will-файл">
+      Іменований <code>will-файл</code>
   </a></summary>
   Вид <code>will-файла</code>, що має не стандартне ім'я файлу. Дозволяє мати більше одного модуля із різними іменами файлів в одній директорії.
 </details>
-<details>
-  <summary><a href="./concept/WillFileNamedAndSplit.md#Спліт-will-файл">Спліт <code>will-файл</code></a></summary>
+<details><summary><a href="./concept/WillFileNamedAndSplit.md#Спліт-will-файл">
+      Спліт <code>will-файл</code>
+  </a></summary>
   Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля. Дозволяє розробнику розділити дані для побудови модуля і дані для використання цього модуля іншими модулями.
 </details>
-<details>
-  <summary><a href="./concept/Structure.md#Ресурси">Ресурси</a></summary>
+<details><summary><a href="./concept/Structure.md#Ресурси">
+      Ресурси
+  </a></summary>
   Структурна і функціональна одиниця <code>will-файла</code>. Ресурси одного типу зібрані в одній секції.
 </details>
-<details>
-  <summary><a href="./concept/Structure.md#Тип-ресурсу">
-  Тип ресурсу
+<details><summary><a href="./concept/Structure.md#Тип-ресурсу">
+      Тип ресурсу
   </a></summary>
   Функціональність пов'язана із групою ресурсів, обмежена призначенням. Приклад того які бувать типи ресурів: шлях, підмодуль, крок, збірка. Кожен тип ресурів має власне призначення і обробляється утилітою по-різному.
 </details>
-<details>
-  <summary><a href="./concept/Inheritance.md">Наслідування</a></summary>
+<details><summary><a href="./concept/Inheritance.md">
+      Наслідування
+  </a></summary>
   Принцип опису модуля, згідно якого ресурс <code>will-файла</code> здатний використовувати (наслідувати) значення полів інших ресурсів того ж типу.
 </details>
-<details>
-  <summary><a href="./concept/Paths.md#Ресурс-шлях">Ресурс шлях</a></summary>
+<details><summary><a href="./concept/Paths.md#Ресурс-шлях">
+      Ресурс шлях
+  </a></summary>
   Ресурс для визначення файлової структури модуля, що містить файлові шлях до файлів. Шляхи розміщаються в секції <code>path</code>.
 </details>
-<details>
-  <summary><a href="./concept/Reflectors.md#Ресурс-рефлектор">Ресурс рефлектор</a></summary>
+<details><summary><a href="./concept/Reflectors.md#Ресурс-рефлектор">
+      Ресурс рефлектор
+  </a></summary>
   Ресурс секції <code>reflector</code>, спосіб опису множини файлів для виконання якоїсь операції над ними.
 </details>
-<details>
-  <summary><a href="./concept/ReflectorFileFilter.md">Файлові фільтри</a></summary>
+<details><summary><a href="./concept/ReflectorFileFilter.md">
+      Файлові фільтри
+  </a></summary>
   Спосіб опису умов відбору необхідних для виконання деякої операції файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>.
 </details>
-<details>
-  <summary><a href="./concept/Reflectors.md#Мапа-шляхів">Мапа шляхів</a></summary>
+<details><summary><a href="./concept/Reflectors.md#Мапа-шляхів">
+      Мапа шляхів
+  </a></summary>
   Поле рефлектора та спосіб опису множини файлів, котрий дозволяє включити в неї безліч файлів і виключити із неї не потрібні файли за допомогою умов виключення та глобів. рефлектора.
 </details>
-<details>
-  <summary><a href="./concept/Steps.md#Ресурс крок">Ресурс крок</a></summary>
+<details><summary><a href="./concept/Steps.md#Ресурс крок">
+      Ресурс крок
+  </a></summary>
   Ресурс секції <code>step</code>, який представляє собою інструкцію для виконання утилітою при побудові модуля.
 </details>
-<details>
-  <summary><a href="./concept/Builds.md#Ресурс-збірка">
-  Ресурс збірка
+<details><summary><a href="./concept/Builds.md#Ресурс-збірка">
+      Ресурс збірка
   </a></summary>
   Послідовність і умови виконання процедур побудови модуля.
 </details>
-<details>
-  <summary><a href="./concept/Structure.md#Секція-will-файла">Секція <code>will-файла</code></a></summary>
+<details><summary><a href="./concept/Structure.md#Секція-will-файла">
+      Секція <code>will-файла</code>
+  </a></summary>
   Вища структурна одиниця <code>will-файла</code>, яка складається з ресурсів одного типу або полів, що описують даний модуль.
 </details>
-<details>
-  <summary><a href="./concept/SectionAbout.md">Секція <code>about</code></a></summary>
+<details><summary><a href="./concept/SectionAbout.md">
+      Секція <code>about</code>
+  </a></summary>
   Секція містить описову інформація про модуль.
 </details>
-<details>
-  <summary><a href="./concept/Paths.md#Секція-path">Секція <code>path</code></a></summary>
+<details><summary><a href="./concept/Paths.md#Секція-path">
+      Секція <code>path</code>
+  </a></summary>
   Секція містить перелік шляхів модуля для швидкого орієнтування в його файловій структурі.
 </details>
-<details>
-  <summary><a href="./concept/SectionSubmodule.md">Секція <code>submodule</code></a></summary>
+<details><summary><a href="./concept/SectionSubmodule.md">
+      Секція <code>submodule</code>
+  </a></summary>
   Секція містить інформацію про підмодулі.
 </details>
-<details>
-  <summary><a href="./concept/Reflectors.md#Секція-reflector">Секція <code>reflector</code></a></summary>
+<details><summary><a href="./concept/Reflectors.md#Секція-reflector">
+      Секція <code>reflector</code>
+  </a></summary>
   Секція містить рефлектори - ресурси для виконання операцій над групами файлів.
 </details>
-<details>
-  <summary><a href="./concept/Steps.md#Секція-step">Секція <code>step</code></a></summary>
+<details><summary><a href="./concept/Steps.md#Секція-step">
+      Секція <code>step</code>
+  </a></summary>
   Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля.
 </details>
-<details>
-  <summary><a href="./concept/Builds.md#Секція-build">Секція <code>build</code></a></summary>
+<details><summary><a href="./concept/Builds.md#Секція-build">
+      Секція <code>build</code>
+  </a></summary>
   Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля.
 </details>
-<details>
-  <summary><a href="./concept/SectionExported.md">Секція <code>exported</code></a></summary>
+<details><summary><a href="./concept/SectionExported.md">
+      Секція <code>exported</code>
+  </a></summary>
   Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.
 </details>
-<details>
-  <summary><a href="./concept/Export.md#експортований-will-файл-out-will-файл">Експортований <code>will-файл</code> (<code>out-will-файл</code>)</a></summary>
+<details><summary><a href="./concept/Export.md#експортований-will-файл-out-will-файл">
+      Експортований <code>will-файл</code> (<code>out-will-файл</code>)
+  </a></summary>
   <code>Out-will-файл</code> - різновид <code>will-файла</code> згенерованого утилітою при експортуванні модуля. Інші модулі можуть використати даний модуль імортувавши його <code>out-will-файл</code>.
 </details>
-<details>
-  <summary><a href="./concept/Module.md#Модуль">Модуль</a></summary>
+<details><summary><a href="./concept/Module.md#Модуль">
+      Модуль
+  </a></summary>
   Модулем називається сукупність файлів, які описані в <code>will-файлi</code>.
 </details>
-<details>
-  <summary><a href="./concept/Module.md#Підмодуль">Підмодуль</a></summary>
+<details><summary><a href="./concept/Module.md#Підмодуль">
+      Підмодуль
+  </a></summary>
   Окремий модуль з власним конфігураційним <code>will-файлом</code>, який використовується іншим модулем (супермодулем).
 </details>
-<details>
-  <summary><a href="./concept/Module.md#Супермодуль">Супермодуль</a></summary>
+<details><summary><a href="./concept/Module.md#Супермодуль">
+      Супермодуль
+  </a></summary>
   Модуль, який включає в себе інші модулі (підмодулі).
 </details>
-<details>
-  <summary><a href="./concept/SubmodulesLocalAndRemote.md#Локальний-підмодуль">Локальний підмодуль</a></summary>
+<details><summary><a href="./concept/SubmodulesLocalAndRemote.md#Локальний-підмодуль">
+      Локальний підмодуль
+  </a></summary>
   Підмодуль, який розташовується на машині користувача.
 </details>
-<details>
-  <summary><a href="./concept/SubmodulesLocalAndRemote.md#Віддалений-підмодуль">Віддалений підмодуль</a></summary>
+<details><summary><a href="./concept/SubmodulesLocalAndRemote.md#Віддалений-підмодуль">
+      Віддалений підмодуль
+  </a></summary>
   Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину.
 </details>
-<details>
-  <summary><a href="./concept/ModuleCurrent.md">Поточний модуль</a></summary>
+<details><summary><a href="./concept/ModuleCurrent.md">
+      Поточний модуль
+  </a></summary>
   Модуль відносно якого виконуються операції. За замовчуванням цей модуль завантажується із файла <code>.will.yml</code> поточної директорії.
 </details>
-<details>
-  <summary><a href="./concept/Export.md#Експорт-модуля">Експорт модуля</a></summary>
+<details><summary><a href="./concept/Export.md#Експорт-модуля">
+      Експорт модуля
+  </a></summary>
   Особливий вид збірки необхідний для використання даного модуля іншими розробниками та модулями. Результатом експортування модуля є аретфакти, зокерма <code>out-will-file</code>.
 </details>
-<details>
-  <summary><a href="./concept/SubmoduleInformal.md">Неформальний підмодуль</a></summary>
+<details><summary><a href="./concept/SubmoduleInformal.md">
+      Неформальний підмодуль
+  </a></summary>
   Група файлів, що не розповсюджується із <code>will-файлом</code>. Для такого підмодуля можливо створити <code>will-файл</code> та експортувати його самостійно.
 </details>
-<details>
-  <summary><a href="./concept/Command.md#Команда">Команда</a></summary>
+<details><summary><a href="./concept/Command.md#Команда">
+      Команда
+  </a></summary>
   Рядок що містить фразу для позначення наміру розробника і дії, котрі будуть виконані утилітою по її введенні. Вводиться в інтерфейс командного рядка розробником.
 </details>
-<details>
-  <summary><a href="./concept/Command.md#Фраза">Фраза</a></summary>
+<details><summary><a href="./concept/Command.md#Фраза">
+      Фраза
+  </a></summary>
   Слово або декілька слів, відокремлених крапкою, позначає команду, яку має виконати утиліта.
 </details>
-<details>
-  <summary><a href="./concept/Selectors.md#Селектор">Селектор</a></summary>
+<details><summary><a href="./concept/Selectors.md#Селектор">
+      Селектор
+  </a></summary>
   Рядок-посилання на ресурс або декілька ресурсів модуля.
 </details>
-<details>
-  <summary><a href="./concept/Selectors.md#Селектор-з-ґлобом">Селектор з ґлобом</a></summary>
+<details><summary><a href="./concept/Selectors.md#Селектор-з-ґлобом">
+      Селектор з ґлобом
+  </a></summary>
   Селектор, який для вибору ресурсу використовує пошукові шаблони - ґлоби.
 </details>
-<details>
-  <summary><a href="./concept/Criterions.md">Критеріон</a></summary>
+<details><summary><a href="./concept/Criterions.md">
+      Критеріон
+  </a></summary>
   Елемент порівняння для відбору ресурсів.
 </details>
-<details>
-  <summary><a href="./concept/Asserts.md">Ґлоб з ассертом</a></summary>
+<details><summary><a href="./concept/Asserts.md">
+      Ґлоб з ассертом  
+  </a></summary>
   Обмеження кількості ресурсів, що мають бути знайдені селектором з ґлобом.
 </details>
 
