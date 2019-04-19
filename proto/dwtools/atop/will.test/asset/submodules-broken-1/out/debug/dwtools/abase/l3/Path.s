@@ -12,8 +12,8 @@
  */
 
 /**
- * Collection of routines to operate paths in the reliable and consistent way.
- * @namespace Path
+ * @summary Collection of routines to operate paths in the reliable and consistent way.
+ * @namespace "wTools.path"
  * @memberof module:Tools/base/Path
  */
 
@@ -259,7 +259,7 @@ function like( path )
  * @param {String} filePath Source path for check
  * @returns {boolean}
  * @function isSafe
- * @memberof module:Tools/base/Path.Path
+ * @memberof module:Tools/base/Path.wTools.path
  */
 
 function isSafe( filePath,level )
@@ -329,7 +329,7 @@ function isSafe( filePath,level )
  * @param {String} filePath Source path for check
  * @returns {boolean}
  * @function isRefinedMaybeTrailed
- * @memberof module:Tools/base/Path.Path
+ * @memberof module:Tools/base/Path.wTools.path
  */
 
 function isRefinedMaybeTrailed( path )
@@ -364,7 +364,7 @@ function isRefinedMaybeTrailed( path )
  * @param {String} filePath Source path for check
  * @returns {boolean}
  * @function isRefined
- * @memberof module:Tools/base/Path.Path
+ * @memberof module:Tools/base/Path.wTools.path
  */
 
 function isRefined( path )
@@ -390,7 +390,7 @@ function isRefined( path )
  * @param {String} filePath Source path for check
  * @returns {boolean}
  * @function isNormalizedMaybeTrailed
- * @memberof module:Tools/base/Path.Path
+ * @memberof module:Tools/base/Path.wTools.path
  */
 
 function isNormalizedMaybeTrailed( filePath )
@@ -409,7 +409,7 @@ function isNormalizedMaybeTrailed( filePath )
  * @param {String} filePath Source path for check
  * @returns {boolean}
  * @function isNormalized
- * @memberof module:Tools/base/Path.Path
+ * @memberof module:Tools/base/Path.wTools.path
  */
 
 function isNormalized( filePath )
@@ -548,7 +548,7 @@ function ends( srcPath,endPath )
   * @param {string} src path for refinement
   * @returns {string}
   * @function refine
-  * @memberof module:Tools/base/Path.Path
+  * @memberof module:Tools/base/Path.wTools.path
   */
 
 function refine( src )
@@ -669,7 +669,7 @@ _normalize.defaults =
  * @param {string} src path for normalization
  * @returns {string}
  * @function normalize
- * @memberof module:Tools/base/Path.Path
+ * @memberof module:Tools/base/Path.wTools.path
  */
 
 function normalize( src )
@@ -824,7 +824,7 @@ function detrail( path )
  * @returns {string}
  * @throws {Error} If argument is not string
  * @function dir
- * @memberof module:Tools/base/Path.Path
+ * @memberof module:Tools/base/Path.wTools.path
  */
 
 function dir( path )
@@ -885,7 +885,7 @@ function dir( path )
  * @returns {string}
  * @throws {Error} If passed argument is not string.
  * @function prefixGet
- * @memberof module:Tools/base/Path.Path
+ * @memberof module:Tools/base/Path.wTools.path
  */
 
 function prefixGet( path )
@@ -919,7 +919,7 @@ function prefixGet( path )
  * @returns {string}
  * @throws {Error} If passed argument is not string
  * @function name
- * @memberof module:Tools/base/Path.Path
+ * @memberof module:Tools/base/Path.wTools.path
  */
 
 function name( o )
@@ -976,7 +976,7 @@ function fullName( path )
  * @returns {string}
  * @throws {Error} If passed argument is not string
  * @function withoutExt
- * @memberof module:Tools/base/Path.Path
+ * @memberof module:Tools/base/Path.wTools.path
  */
 
 function withoutExt( path )
@@ -1007,7 +1007,7 @@ function withoutExt( path )
  * @returns {string}
  * @throws {Error} If passed argument is not string
  * @function changeExt
- * @memberof module:Tools/base/Path.Path
+ * @memberof module:Tools/base/Path.wTools.path
  */
 
 // qqq : extend tests
@@ -1062,7 +1062,7 @@ function _pathsChangeExt( src )
  * @returns {string} file extension
  * @throws {Error} If passed argument is not string.
  * @function ext
- * @memberof module:Tools/base/Path.Path
+ * @memberof module:Tools/base/Path.wTools.path
  */
 
 function ext( path )
@@ -1122,7 +1122,7 @@ function exts( path )
  * @throws {Error} If elements of `paths` are not strings
  * @throws {Error} If o has extra parameters.
  * @function join_body
- * @memberof module:Tools/base/Path.Path
+ * @memberof module:Tools/base/Path.wTools.path
  */
 
 function join_body( o )
@@ -1236,7 +1236,7 @@ join_body.defaults =
  * @returns {string} Result path is the concatenation of all `paths` with '/' directory delimeter.
  * @throws {Error} If one of passed arguments is not string
  * @function join
- * @memberof module:Tools/base/Path.Path
+ * @memberof module:Tools/base/Path.wTools.path
  */
 
 function join()
@@ -1309,7 +1309,7 @@ function joinCross()
  * @returns {string} Result path is the concatenation of all `paths` with '/' directory delimeter.
  * @throws {Error} If one of passed arguments is not string
  * @function reroot
- * @memberof module:Tools/base/Path.Path
+ * @memberof module:Tools/base/Path.wTools.path
  */
 
 function reroot()
@@ -1336,7 +1336,7 @@ function reroot()
  * @param [...string] paths A sequence of paths or path segments
  * @returns {string}
  * @function resolve
- * @memberof module:Tools/base/Path.Path
+ * @memberof module:Tools/base/Path.wTools.path
  */
 
 function resolve()
@@ -1688,7 +1688,7 @@ function current()
 * //'./d'
 *
 * @function _relative
-* @memberof module:Tools/base/Path.Path
+* @memberof module:Tools/base/Path.wTools.path
 */
 
 function _relative( o )
@@ -1879,7 +1879,7 @@ _relative.defaults =
 * //'../../c/d'
 *
 * @function relative
-* @memberof module:Tools/base/Path.Path
+* @memberof module:Tools/base/Path.wTools.path
 */
 
 function relative_pre( routine, args )
