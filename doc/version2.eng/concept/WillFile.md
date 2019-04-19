@@ -1,35 +1,35 @@
-# <code>Will-файл</code>
+# <code>Will-file</code>  
 
-Конфігураційний файл для опису та збірки модуля. Кожен формальний модуль має такий файл.
+Config for describing and building a module. Each formal module has such file.  
 
-Для [неформальних підмодулів](SubmoduleInformal.md) такий файл має бути створено, для того щоб ним зручно було користуватися.
+`Will-file` must be created for [informal submodules](SubmoduleInformal.md). It is convenient to use informal submodules. 
 
-`Will-файл`
-- описує файли [модуля](Module.md#Модуль);
-- складається з секцій та ресурсів;
-- [секція](Structure.md#Секція-will-файла) - вища структурна одиниця `will-файлa`;
-- [ресурс](Structure.md#Ресурси) - структурна і функціональна одиниця `will-файлa`;
-- ресурси описують функціональності модуля;
-- секції об'єднують ресурси одного типу;
-- може бути [анонімним або іменованим](WillFileNamedAndSplit.md#Іменований-will-файл);
-- для зручності може бути [розділеним](WillFileNamedAndSplit.md#Спліт-will-файл) на два фізичних файли;
-- може бути [згенерованим (`out-will-файлом`)](Export.md#експортований-will-файл-out-will-файл) або написаним вручну;
-- згенерований `out-will-файл` можливо імпортувати, як підмодуль;
-- ресурси можливо використовувати повторно через [наслідування](Inheritance.md).
+`Will file`:  
+- describes the [module](Module.md#Module) files;  
+- the document consists of sections and resources;  
+- [section](Structure.mdSection-will-file) is the highest structural element of `will-file`;  
+- [resource](Structure.mdResources) is structural and functional element of `will-file`;  
+- resources describe the functionalities of the module;  
+- section consists of single type resources;  
+- can be [named and unnamed](WillFileNamedAndSplit.md#Named-will-file);  
+- can be [split](WillFileNamedAndSplit.md#Split-will-file) into two files for convenient use;
+- may be [generated (`out-will-file`)] (Export.md#Exported-will-file-out-will-file) or written manually;
+- generated `out-will-file` can be imported as a submodule;
+- resources can be reused through [inheritance](Inheritance.md).
 
-Підтримуються такі розширення `will-файла`:
+The following `will-file` extensions are supported:
 - `.yml`,
 - `.json`,
 - `.cson`.  
 
-### Приклад файлової структруи модуля
+### The example of the file structure of the module
 
 ![will.file.png](./Images/will.file.png)
 
-На рисунку приведений список файлів в директорії модуля (вивід команди `ls -al`), прямокутником позначений `will-файл`.
+The figure shows the list of files in the module directory (the `ls -al` command output). `Will-file` marked by rectangle.
 
-### Приклад `will-файла`
+### The example of `will-file`
 
 ![will.file.inner.png](./Images/will.file.inner.png)
 
-Структура `will-файла` та його елементи
+The `will-file` structure and its elements.
