@@ -42,14 +42,15 @@
 
 Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину. Завантажені віддалені підмодулі знаходяться в директорії <code>.module</code> в кореневому каталозі <code>will-файлa</code>.  
 
-Для підключення віддаленого підмодуля вказується ресурс з URL-шляхом в секції `submodule`. Віддалені підмодулі завантажуються командою `will .submodules.download` з кореневої директорії `will-файла` або з використанням вбудованого кроку [`submodules.download`](ResourceStep.md#submodules.download).  
+Для підключення віддаленого підмодуля вказується ресурс з URL-шляхом в секції `submodule`. 
 
-Крім завантаження утиліта має команди:  
-- фіксування версій підмодуля `will .submodules.fixate` та оновлення посилань на підмодулі в `will-файлі` - `will .submodules.upgrade.refs`;
-- оновлення завантажених підмодулів фразою `will .submodules.update` (якщо є доступні оновлення);
-- видалення завантажених підмодулів разом з директорією `.module` фразою `will .submodules.clean`.  
-
-Для виводу інформації про стан підмодулів (локальних і віддалених) використовується фраза `will .submodules.list`.  
+Для відддалених підмодулів:  
+- вивід інформації про стан (локальних і віддалених) здійснюється командою `will .submodules.list`;
+- завантаження командою `will .submodules.download` або з використанням вбудованого кроку [`submodules.download`](ResourceStep.md#submodules.download).    
+- фіксуються версії підмодуля командою `will .submodules.fixate`;
+- оновлення URL-посилань на підмодулі командою `will .submodules.upgrade.refs`;
+- встановлення оновлень командою `will .submodules.update` або вбудованим кроком [`submodules.update`](ResourceStep.md#submodules.update) (якщо є доступні оновлення);
+- видалення разом з директорією `.module` фразою `will .submodules.clean` або вбудованим кроком [`submodules.clean`](ResourceStep.md#submodules.clean).    
 
 #### Приклад секції `submodule`  
 
