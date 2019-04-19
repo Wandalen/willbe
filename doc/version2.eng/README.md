@@ -31,11 +31,11 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   Approach of description of a module according to wich <code>will-file</code> can reuse (inherit) value of fields of other resource(s) of the same type.
 </details>
 <details>
-  <summary><a href="./concept/Paths.md#Path">Recource path</a></summary>
+  <summary><a href="./concept/ResourcePath.md#Path">Recource path</a></summary>
     Recource to describe file structure of the module, it has file paths to files of the module. Paths are collected in section <code>path</code>.
 </details>
 <details>
-  <summary><a href="./concept/Reflectors.md#Resource-reflector">Resource reflector</a></summary>
+  <summary><a href="./concept/ResourceReflector.md#Resource-reflector">Resource reflector</a></summary>
   Resource of section <code>reflector</code>, technique to describe set of files to perform an operation on this set of files.
 </details>
 <details>
@@ -43,15 +43,15 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   Technique to describe conditions of selection required files for some operation on group of files. Reflector has two file filters: <code>src</code> and <code>dst</code>.
 </details>
 <details>
-  <summary><a href="./concept/Reflectors.md#map-of-paths">Map of paths</a></summary>
+  <summary><a href="./concept/ResourceReflector.md#map-of-paths">Map of paths</a></summary>
   A field of a reflector and a technique to describe set of files to include as many files as required and to exclude unwanted files with help of excluding conditions and globs. 
 </details>
 <details>
-  <summary><a href="./concept/Steps.md#Resource-step">Resource step</a></summary>
+  <summary><a href="./concept/ResourceStep.md#Resource-step">Resource step</a></summary>
   <code>Step</code> section resource which is an  executing instruction of module building.
 </details>
 <details>
-  <summary><a href="./concept/Builds.md#Resource-build">Resource build</a></summary>
+  <summary><a href="./concept/ResourceBuild.md#Resource-build">Resource build</a></summary>
   Sequence and conditions of procedures execution for module constructing.
 </details>
 <details>
@@ -63,7 +63,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   The section has descriptive information about the module.
 </details>
 <details>
-  <summary><a href="./concept/Paths.md#Section-path">Section <code>path</code></a></summary>
+  <summary><a href="./concept/ResourcePath.md#Section-path">Section <code>path</code></a></summary>
   The section has list of paths for fast understanding of files structure of the module.
 </details>
 <details>
@@ -71,15 +71,15 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   The section has information about submodules of the module.
 </details>
 <details>
-  <summary><a href="./concept/Reflectors.md#Section-reflector">Section <code>reflector</code></a></summary>
+  <summary><a href="./concept/ResourceReflector.md#Section-reflector">Section <code>reflector</code></a></summary>
   The section has reflectors, special type of resource for operation on groups of files.
 </details>
 <details>
-  <summary><a href="./concept/Steps.md#Section-step">Section <code>step</code></a></summary>
+  <summary><a href="./concept/ResourceStep.md#Section-step">Section <code>step</code></a></summary>
   The section has steps which could be used by build for building of the module.
 </details>
 <details>
-  <summary><a href="./concept/Builds.md#Section-build">Section <code>build</code></a></summary>
+  <summary><a href="./concept/ResourceBuild.md#Section-build">Section <code>build</code></a></summary>
   Resources of the section describe sequence and conditions of building the module.
 </details>
 <details>
