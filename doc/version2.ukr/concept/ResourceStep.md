@@ -176,7 +176,7 @@ step:                                   # Назва секції
 step:                                        # Назва секції
   open.url:                                  # Назва кроку
     inherit: predefined.view                 # Наслідування
-    filePath: 'http:///google.com'            # URL-посилання
+    filePath: 'http:///google.com'            # URI-посилання
     delay: 10000                             # Затримка
 
 ```
