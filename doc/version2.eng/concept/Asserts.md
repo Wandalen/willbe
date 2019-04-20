@@ -1,30 +1,17 @@
-# Ґлоб з ассертом
+# Glob with assert
 
-Обмеження кількості ресурсів, що мають бути знайдені селектором з ґлобом
+Restriction the numbers of the resources, which should be found by selector with glob.
 
-Ассерт - це спеціальна конструкція, що дозволяє перевіряти припущення про значення довільних даних в довільному місці програми.  
-
-При побудові модуля дані зводяться до ресурсів `will-файла` і припускається, що селектор вибирає задану (запрограмовану) кількість ресурсів. Якщо використовуються прості селектори, то це припущення вірне, а в випадку використання ґлобів не виключена логічна помилка. Тому, використання ґлобів разом з ассертами є гарною практикою.   
-
-Ґлоб з ассертом - обмеження вибірки селектора з ґлобом числовим значенням для локалізації місця помилки та попередження виконання небажаних дій.   
-
-#### Приклад алгоритму перевірки на кількість входжень
-
+Assert - is a special structure, which allows checking of assumption about the value of arbitrary data in arbitrary place of the program. By construction of the module the data come down to resources of `will-file` and it is assumed, that selector chooses given (programmed) number of resources. If simple selectors were used, it means, that assumption is correct, but in case of glob using mistake is possible. Thus utilization of globes with asserts is  highly recommended.
+Glob with assert means restriction of the sample of selector with globe by numeric value for localization of place of mistake and prevention of implementation unwanted actions. At the figure is shown simplified algorithm of verification of input's amount.  
 ![criterions.and.assert.png](./Images/criterions.and.asserts.png)
 
-Алгоритм виконує перевірку ресурсів на співпадіння мап критеріонів. При співпадінні утиліта записує інкрементує лічильник ресурсів. Після перевірки всіх ресурсів іде порівняння на кількість входжень - значення лічильника порівнюється з встановленим в ассерті.  
-
-### Використання ассертів
-
-Ассерт записуєтся після ґлобу та має вигляд `=n`, де `n` - позначає кількість входженнь. Наприклад, в більшості випадків, селектор має обирати один ресурс секції `will-файла` і тому використовується ассерт '=1'.  
-
-#### Приклад `will-файла` з використанням ассертів  
+Assert is wrtitten after glob and has is represented by `=n`, with `n` - number of inputs. For instance, in majority of cases, selector has to choose one resource of section `will-file` and therefore assert '=1' is used.
 
 ![asserts.png](./Images/asserts.png)  
 
-На рисунку селектор `step::export.*` в збірці `export` може виконати кроки `export.single` i `export.multi`. Через помилку в `will-файлі` (відсутність критеріонів в кроці `export.multi` - див. [критеріон](Criterions.md)) побудова буде зломана, оскільки, за один крок в сценарії збірки виконується один крок в секції `step`. Без ассертів утиліта `willbe` видасть повідомлення про помилку, яку буде складно локалізувати, а при використанні ассертів в термінал виводиться повідомлення про місце і ресурси, в яких виникла помилка.  Також, розробник обмежив кількість входжень файлів, які починаються на `fileTo` п'ятьма файлами (поле `path: 'fileTo*=5'` в шляху `fileToExport.multi`). Якщо кількість входжень зміниться, то побудова буде відмінена.
+At the figure selector `step::export.*` in build  `export` can implement steps `export.single` and  `export.multi`. Due to mistake in `will-file` (lack of criterions in step `export.multi` - see criterion) construction will be broken, since in one step in scenario of build a step in section `step` is implemented. Without asserts utility `willbe` will produce a message with mistake, which will be difficult to localize, but by using asserts in terminal, the message about place and resources in which the error appears is displayed.
 
-![assert.message.png](./Images/assert.message.png)  
+![assert.message.png](./Images/assert.message.png)     
 
-На рисунку показано частину повідомлення про помилку в виборі ресурсів для `will-файла` на рисунку вище.  
-   
+Developer restricted the number of file inputs, which begins from `fileTo` by five files as well(pole `path: 'fileTo*=5'` in path `fileToExport.multi`). If number of inputs is altered, construction will be cancelled.
