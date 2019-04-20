@@ -15,7 +15,7 @@ submodule :
   Proto : out/Proto.informal.out
 ```
 
-Підключається 4-ри підмодуля, 2-ва локальних `out/UriFundamentals.informal.out`, `out/Proto.informal.out` та 2-ва віддалених `git+https:///github.com/Wandalen/wTools.git/out/wTools#master`, `git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#d95a35b`. Віддалені модулі підключаються із вказанням версії ( вітки і номера коміта ).
+Підключається 4-ри підмодуля, 2-ва [локальних](SubmodulesLocalAndRemote.md#Локальний-підмодуль) `out/UriFundamentals.informal.out`, `out/Proto.informal.out` та 2-ва [віддалених](SubmodulesLocalAndRemote.md#Віддалений-підмодуль) `git+https:///github.com/Wandalen/wTools.git/out/wTools#master`, `git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#d95a35b`. Віддалені модулі підключаються із вказанням версії (вітки і номера коміта).
 
 ### Поля ресурсів секції `submodule`
 
