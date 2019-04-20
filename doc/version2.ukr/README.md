@@ -142,15 +142,15 @@
   </a></summary>
   Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину.
 </details>
-<details><summary><a href="./concept/ModuleCurrent.md">
-      Поточний модуль
-  </a></summary>
-  Модуль відносно якого виконуються операції. За замовчуванням цей модуль завантажується із файла <code>.will.yml</code> поточної директорії.
-</details>
 <details><summary><a href="./concept/SubmoduleInformal.md">
       Неформальний підмодуль
   </a></summary>
   Група файлів, що не розповсюджується із <code>will-файлом</code>. Для такого підмодуля можливо створити <code>will-файл</code> та експортувати його самостійно.
+</details>
+<details><summary><a href="./concept/ModuleCurrent.md">
+      Поточний модуль
+  </a></summary>
+  Модуль відносно якого виконуються операції. За замовчуванням цей модуль завантажується із файла <code>.will.yml</code> поточної директорії або із пари файлів <code>.im.will.yml</code> та <code>.ex.will.yml</code>.
 </details>
 <details><summary><a href="./concept/Command.md#Команда">
       Команда

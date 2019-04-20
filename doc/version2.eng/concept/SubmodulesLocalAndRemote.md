@@ -42,13 +42,13 @@
 
 Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину. Завантажені віддалені підмодулі знаходяться в директорії <code>.module</code> в кореневому каталозі <code>will-файлa</code>.  
 
-Для підключення віддаленого підмодуля вказується ресурс з URL-шляхом в секції `submodule`. 
+Для підключення віддаленого підмодуля вказується ресурс з URI-шляхом в секції `submodule`. 
 
 Для віддалених підмодулів:  
 - вивід інформації про стан (локальних і віддалених) здійснюється командою `will .submodules.list`;
 - завантаження командою `will .submodules.download` або з використанням вбудованого кроку [`submodules.download`](ResourceStep.md#submodulesdownload).    
 - фіксуються версії підмодуля командою `will .submodules.fixate`;
-- оновлення URL-посилань на підмодулі командою `will .submodules.upgrade.refs`;
+- оновлення URI-посилань на підмодулі командою `will .submodules.upgrade.refs`;
 - встановлення оновлень командою `will .submodules.update` або вбудованим кроком [`submodules.update`](ResourceStep.md#submodulesupdate) (якщо є доступні оновлення);
 - видалення разом з директорією `.module` фразою `will .submodules.clean` або вбудованим кроком [`submodules.clean`](ResourceStep.md#submodulesclean).    
 
