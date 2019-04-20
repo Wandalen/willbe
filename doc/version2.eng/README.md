@@ -7,7 +7,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 ## Concepts
 
 <details><summary><a href="./concept/WillFile.md">
-      <code>Will-file</code>
+      Config <code>will-file</code>
   </a></summary>
   Config for describing and building a module. Each formal module has such file.
 </details>

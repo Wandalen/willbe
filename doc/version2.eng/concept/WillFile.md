@@ -1,8 +1,8 @@
-# <code>Will-file</code>  
+# Config <code>Will-file</code>  
 
 Config for describing and building a module. Each formal module has such file.  
 
-`Will-file` must be created for [informal submodules](SubmoduleInformal.md). It is convenient to use informal submodules. 
+`Will-file` must be created for [informal submodules](SubmoduleInformal.md). It is convenient to use informal submodules.
 
 `Will file`:  
 - describes the [module](Module.md#Module) files;  
