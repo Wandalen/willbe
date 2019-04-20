@@ -103,7 +103,7 @@ first
 </details>
 
 
-В секції `submodule` поміщено ресурс з назвою `Tools`, який має _URL_-шлях `git+https:///github.com/Wandalen/wTools.git/out/wTools#master`. Запис шляху свідчить про використання підмодуля з _GitHub_-у.  
+В секції `submodule` поміщено ресурс з назвою `Tools`, який має _URI_-шлях `git+https:///github.com/Wandalen/wTools.git/out/wTools#master`. Запис шляху свідчить про використання підмодуля з _GitHub_-у.  
 Скористайтесь фразою `will. submodules.list` для отримання довідки по підмодулям (тут і далі, текст виводу консолі, що не включено в туторіал позначений `...`):  
 
 <details>

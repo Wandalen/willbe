@@ -30,6 +30,7 @@ The fields `src`, `dst` can contain subfields which describe [file filters](Refl
 
 ### Map of the paths
 
+<<<<<<< HEAD
 Reflector field and a way to describe a set of files, which allows including a lot of files in it and exclude from it the files that are not required by the terms of exclusion and globes.
 
 The path map can:
@@ -39,6 +40,17 @@ The path map can:
 - many conditions for exclusion of files from the build;
 - exclude sample files that match the globe via `false` or` 0`;
 - exclude sample files that do not match the globe via `true` or` 1`
+=======
+Поле рефлектора та спосіб опису множини файлів, котрий дозволяє включити в неї безліч файлів і виключити із неї не потрібні файли за допомогою умов виключення та ґлобів.
+
+Мапа шляхів може:
+- задавати розміщення файлів над якими необхідно виконати операцію;
+- задавати розміщення файлів, в які потрібно записати результат операції;
+- може вказувати безліч директорій;
+- безліч умов виключення файлів із вибірки;
+- виключення файлів із вибірки, що співпадають із ґлобом через `false` чи `0`;
+- виключення файлів із вибірки, що не співпадають із ґлобом через `true` чи `1`.
+>>>>>>> 5be7b85482dffb8963c6728e004be753d63cc02d
 
 Мапа шляхів може задаватися в полі `filePath` або в полі `src.filePath` чи `dst.filePath` рефлектора. При наслідуванні успадковуються ті умови виключення, котрі мають значення `0`, `1`, `false`, `true`, а директорії (шляхи, які мають в значенні `null`, простий указаний шлях), в яких ведеться пошук, переписуються останнім предком або безпосередньо нащадком.
 

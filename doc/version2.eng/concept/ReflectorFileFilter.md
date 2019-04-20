@@ -2,11 +2,19 @@
 
 Technique to describe conditions of selection required files for some operation on group of files. Reflector has two file filters: <code>src</code> and <code>dst</code>.
 
+<<<<<<< HEAD
 Files can be selected:
 - by simple file filters;
 - by mask of file operations;
 - by time filters;
 - by globes in the map of the paths.
+=======
+Файли можуть бути відібрані:
+- простими файловими фільтрами;
+- масками файлових операцій;
+- часовими фільтрами;
+- ґлобами в мапі шляхів.
+>>>>>>> 5be7b85482dffb8963c6728e004be753d63cc02d
 
 ### Simple file filters
 
@@ -70,6 +78,10 @@ src :
 
 The time filter `notOlderAge` selects files that have an age of no more than 10 seconds.
 
+<<<<<<< HEAD
 ### Using globes in the map of paths.
+=======
+### Використання ґлобів в мапі шляхів.
+>>>>>>> 5be7b85482dffb8963c6728e004be753d63cc02d
 
 Excluding files from the build is possible not only with file filters, but also by means of [Map of the paths](<./ResourceReflector.md#>).

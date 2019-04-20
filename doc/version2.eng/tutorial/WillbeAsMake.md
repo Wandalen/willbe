@@ -9,7 +9,7 @@ How to use utility <code>willbe</code> for compiling С++ application.
 Побудуйте структуру файлів для компіляції виконуваного файла:  
 
 <details>
-  <summary><u>Структура файлів</u></summary>
+  <summary><u>Файлова структура</u></summary>
 
 ```
 compileCpp

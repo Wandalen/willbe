@@ -10,7 +10,7 @@ Resource path, as well as the other types of resources can have criterions, path
 
 ![section.path.png](./Images/section.path.png)
 
-It contains section `path` with paths `in`, `out`, `toDelete`. The path `toDelete` is written in open format and has a field with description.
+It contains section `path` with paths `in`, `out`, `toDelete`. The path `toDelete` is written in extended format and has a field with description.
 
 ### Fields of resources of section `path`
 
