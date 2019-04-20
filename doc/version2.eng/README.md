@@ -185,8 +185,8 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 
 ## Tutorials
 
-<details><summary><a href="./tutorial/General information.md">
-      Abstract
+<details><summary><a href="./tutorial/Abstract.md">
+     General information
   </a></summary>
   General information. What utility <code>willbe</code> is and what it is not.
 </details>
@@ -207,8 +207,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 </details>
 <details><summary><a href="./tutorial/CommandsSubmodules.md">
       Commands of updating, upgrading and cleaning of submodules
-  </a></summary>  
-  Commands of updating files of submodules, upgrading submodules rewriting <code>will-file</code> automatically and cleaning of submodules.
+  </a></summary>      Commands of updating files of submodules, upgrading submodules rewriting <code>will-file</code> automatically and cleaning of submodules.
 </details>
 <details><summary><a href="./tutorial/Build.md">
       Module building by command <code>.build</code>
@@ -216,9 +215,9 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   Launch of some builds of the module for construction of it.
 </details>
 <details><summary><a href="./tutorial/StepsPredefined.md">
-      Embedded steps
+      Predefined steps
   </a></summary>
-  How to use embedded steps for the work with remote submodules.
+  How to use predefined steps for the work with remote submodules.
 </details>
 <details><summary><a href="./tutorial/Criterions.md">
       Criterions
@@ -313,9 +312,9 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   How the paths of the reflectors are created and how to manage the access to files and directory in reflector
 </details>
 <details><summary><a href="./tutorial/ReflectorsPredefined.md">
-      Embedded reflectors
+      Predefined reflectors
   </a></summary>
-  Using of embedded reflectors to split on version of debugging  and release. and Building of multibuilds.
+  Using of predefined reflectors to split on version of debugging  and release. and Building of multibuilds.
 </details>
 <details><summary><a href="./tutorial/ResourceInheritance.md">
       Resources inheritance
@@ -323,9 +322,9 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   How to use resource inheritance to reuse data.
 </details>
 <details><summary><a href="./tutorial/StepView.md">
-      Embedded (predefined) step <code>predefined.view</code>
+      Predefined (predefined) step <code>predefined.view</code>
   </a></summary>
-  How to use embedded (predefined) step <code>predefined.view</code> to view files.
+  How to use predefined (predefined) step <code>predefined.view</code> to view files.
 </details>
 <details><summary><a href="./tutorial/StepTranspile.md">
       Transpilation
@@ -338,9 +337,9 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   A command to call external application by utility <code>willbe</code> for chosen modules or submodules.
 </details>
 <details><summary><a href="./tutorial/WillbeAsMake.md">
-      Compiling of С++ program
+      Compiling of С++ application
   </a></summary>
-  How to use utility <code>willbe</code> for compiling С++ program.
+  How to use utility <code>willbe</code> for compiling С++ application.
 </details>
 <details><summary><a href="./tutorial/SubmoduleInformal.md">
       Informal submodules
