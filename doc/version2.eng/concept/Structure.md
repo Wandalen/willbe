@@ -53,11 +53,11 @@ will-file
   Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.
 </details>
 
-### Приклад `will-файла`:  
+### An example of `will-file`    
 
 ![will.file.inner.png](./Images/will.file.inner.png)  
 
-На рисунку можна бачити `will-файл` з 4-ма секціями та декількома ресурсами.
+The figure shows the `will-file` with four sections and several resources.
 
 ### Resources
 
@@ -78,35 +78,36 @@ The functionality associated with group of resources is restricted by its purpos
 ### Ресурси по типам
 
 <details><summary><a href="./concept/ResourcePath.md#Path">
-      Recource of path type
+    Recource of <code>path</code> type
   </a></summary>
   This is a resource for describing the file structure of a module that contains file paths. Paths are located in the <code>path</code> section.
 </details>
 <details><summary><a href="./ResourceStep.md#Resource-step">
-      Resource of step type
+    Resource of <code>step</code> type
   </a></summary>
   This is the resource of the  <code>step</code> section which is an instruction for executing by the utility when constructing the module. Step resource describes the operations and the desired result. The builds consist of steps. 
 </details>
 <details><summary><a href="./concept/ResourceReflector.md#Resource-reflector">
-      Resource of reflector type
+    Resource of <code>reflector</code> type
   </a></summary>
   This is the resource of the <code>reflector</code> section. It is a way to describe a set of files to perform some operation on them.
 </details>
-
-
-<details>
-  <summary><a href="./SubmodulesLocalAndRemote.md">Ресурси типу <code>submodule</code></a></summary>
-  Є посиланнями на інші модулі, які можливо використати в якості підмодулів даного модуля.
+<details><summary><a href="./SubmodulesLocalAndRemote.md">
+      Resource of <code>submodule
+  </code> type</a></summary>
+  There are links to other modules that can be used as submodules of this module. 
 </details>
-<details>
-  <summary><a href="./ResourceBuild.md#Ресурс-збірка">Ресурси типу <code>build</code></a></summary>
-  Містять перелік кроків, котрі потрібно здійснити щоб збудувати модуль.
+<details><summary><a href="./ResourceBuild.md#Resource-build">
+      Resource of <code>build</code> type</a></summary>
+  Contains a list of steps that required to build a module. 
 </details>
-<details>
-  <summary><a href="./ResourceBuild.md#Ресурс-експорт">Ресурси типу <code>export</code></a></summary>
-  Це особливий вид збірки, результатом виконання, якої є згенерованй `out-will-файл`, що може бути використаний іншим модулем.
+<details><summary><a href="./ResourceBuild.md#Resource-export">
+      Resource of <code>export</code> type
+  </a></summary>
+  This is a special kind of build. The result of export is the generated `out-will-file` that can be used by another module.
 </details>
-<details>
-  <summary><a href="./SectionExported.md#Секція-exported">Ресурси типу <code>exported</code></a></summary>
-  Цей ресурс генерується при експортуванні модуля і наявний лише в згенерованих файлах. <code>out-will-файл</code> має рівно стільки ресурсів типу <code>exported</code> скільки разів було виконано експортування даного модуля для різних експортів. Ресурси цього типу включають описові поля і перелік експортованих файлів.
+<details><summary><a href="./SectionExported.md#Section-exported">
+      Resource of <code>exported</code> type
+  </a></summary>
+  When the module is exported this resource is generated. The export resource available only in the generated files. The <code> out-will-file </code> has exactly the same amount of <code> exported </code> resources as  the number of different exports was done. Resources of this type include descriptive fields and a list of exported files.
 </details>
