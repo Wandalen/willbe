@@ -8,6 +8,7 @@ Files can be selected:
 - by time filters;
 - by globes in the map of the paths.
 
+
 ### Simple file filters
 
 Simple filters are filters that select files by name. They have string values.
@@ -71,5 +72,6 @@ src :
 The time filter `notOlderAge` selects files that have an age of no more than 10 seconds.
 
 ### Using globes in the map of paths.
+
 
 Excluding files from the build is possible not only with file filters, but also by means of [Map of the paths](<./ResourceReflector.md#>).

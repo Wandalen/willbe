@@ -9,7 +9,7 @@
 Побудуйте структуру та внесіть в файли код:  
 
 <details>
-  <summary><u>Структура файлів</u></summary>
+  <summary><u>Файлова структура</u></summary>
 
 ```
 transpile
@@ -186,7 +186,7 @@ step::transpile.proto.debug
 
 </details>
 <details>
-  <summary><u>Структура файлів після реліз-побудови</u></summary>
+  <summary><u>Файлова структура після реліз-побудови</u></summary>
 
 ```
 transpile
@@ -219,7 +219,7 @@ transpile
 ```
 </details>
 <details>
-  <summary><u>Структура файлів після дебаг-побудови</u></summary>
+  <summary><u>Файлова структура після дебаг-побудови</u></summary>
 
 ```
 transpile
