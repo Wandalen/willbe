@@ -67,6 +67,11 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   </a></summary>
   Sequence and conditions of procedures execution to build a module. By implementation of the command `will .build`, developer has to select a particular build which is wanted unambiguously calling command by name or by conditions of the build.
 </details>
+<details><summary><a href="./concept/ResourceBuild.md#Resource-export">
+      Resource export
+  </a></summary>
+  Special kind of build which required for the module to been used by other developers and modules. Result of exporting is generated files among wich is <code>out-will-file</code> and archive.
+</details>
 <details><summary><a href="./concept/Structure.md#Section-will-file">
       Section <code>will-file</code>
   </a></summary>
@@ -106,11 +111,6 @@ For gentle introduction use tutorials. For getting exhaustive information on one
       Section <code>exported</code>
   </a></summary>
   It is programmatically generated section of <code>out-will-file</code> by exporting a module. It has a list of exported files and it is used by other modules for importing the module.
-</details>
-<details><summary><a href="./concept/ResourceBuild.md#Resource-export">
-      Resource export
-  </a></summary>
-  Special kind of build which is required for utilization of the module  by other developers and modules. Result of module's exporting is generated files among which is <code>out-will-file</code> and archive.
 </details>
 <details><summary><a href="./concept/WillFileExported.md#Exported-will-file-out-will-file">
       Exported <code>will-file</code> (<code>out-will-file</code>)
