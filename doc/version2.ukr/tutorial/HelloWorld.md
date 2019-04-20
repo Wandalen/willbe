@@ -1,6 +1,6 @@
-# Module "Hello, World!"
+# Модуль "Hello, World!"
 
-Creating module "Hello, World!". Downloading of remote submodule.
+Створення модуля "Hello, World!". Завантаження віддаленого підмодуля.
 
 ### Властивості `will-файла`
 `Will-файл` - конфігураційний файл для побудови модульної системи утилітою `willbe`.  
