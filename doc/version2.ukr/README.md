@@ -111,7 +111,7 @@
   </a></summary>
   Особливий вид збірки необхідний для використання даного модуля іншими розробниками та модулями. Результатом експортування модуля є аретфакти, зокерма <code>out-will-file</code>.
 </details>
-<details><summary><a href="./concept/Export.md#експортований-will-файл-out-will-файл">
+<details><summary><a href="./concept/WillFileExported.md#експортований-will-файл-out-will-файл">
       Експортований <code>will-файл</code> (<code>out-will-файл</code>)
   </a></summary>
   <code>Out-will-файл</code> - різновид <code>will-файла</code> згенерованого утилітою при експортуванні модуля. Інші модулі можуть використати даний модуль імортувавши його <code>out-will-файл</code>.
