@@ -207,7 +207,8 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 </details>
 <details><summary><a href="./tutorial/CommandsSubmodules.md">
       Commands of updating, upgrading and cleaning of submodules
-  </a></summary>      Commands of updating files of submodules, upgrading submodules rewriting <code>will-file</code> automatically and cleaning of submodules.
+       </a></summary>     
+   Commands of updating files of submodules, upgrading submodules rewriting <code>will-file</code> automatically and cleaning of submodules.
 </details>
 <details><summary><a href="./tutorial/Build.md">
       Module building by command <code>.build</code>
@@ -290,9 +291,9 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   How to construct a request to utility and obtain the list of resources using filters and globs.
 </details>
 <details><summary><a href="./tutorial/ReflectorUsing.md">
-      Copying of files by means of reflector
+      Copying of files by reflector
   </a></summary>
-  Copying files by means of reflectors, field <code>recursive</code> of reflector.
+  Copying files by reflectors, field <code>recursive</code> of reflector.
 </details>
 <details><summary><a href="./tutorial/ReflectorFilters.md">
       Filters of reflector
@@ -314,7 +315,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./tutorial/ReflectorsPredefined.md">
       Predefined reflectors
   </a></summary>
-  Using of predefined reflectors to split on version of debugging  and release. and Building of multibuilds.
+  Using of predefined reflectors to split on version of debugging  and release.Building of multibuilds.
 </details>
 <details><summary><a href="./tutorial/ResourceInheritance.md">
       Resources inheritance
