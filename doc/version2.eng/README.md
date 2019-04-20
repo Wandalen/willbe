@@ -172,12 +172,12 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   </a></summary>
   Selector which uses searching patterns (globs) for selecting of resources.
 </details>
-<details><summary><a href="./concept/Criterions.md">
+<details><summary><a href="./concept/Criterion.md">
       Criterion
   </a></summary>
   Element of comparison for selection of resources.
 </details>
-<details><summary><a href="./concept/Asserts.md">
+<details><summary><a href="./concept/Assert.md">
       Glob with assertion
   </a></summary>
   Restriction of glob by number of expected resources which should be found by the selector.
@@ -220,7 +220,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   </a></summary>
   How to use predefined steps for the work with remote submodules.
 </details>
-<details><summary><a href="./tutorial/Criterions.md">
+<details><summary><a href="./tutorial/Criterion.md">
       Criterions
   </a></summary>
   How to use criterions for resource selection.

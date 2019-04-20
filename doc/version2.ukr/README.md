@@ -171,12 +171,12 @@
   </a></summary>
   Селектор, який для вибору ресурсу використовує пошукові шаблони - ґлоби.
 </details>
-<details><summary><a href="./concept/Criterions.md">
+<details><summary><a href="./concept/Criterion.md">
       Критеріон
   </a></summary>
   Елемент порівняння для відбору ресурсів.
 </details>
-<details><summary><a href="./concept/Asserts.md">
+<details><summary><a href="./concept/Assert.md">
       Ґлоб з ассертом  
   </a></summary>
   Обмеження кількості ресурсів, що мають бути знайдені селектором з ґлобом.
@@ -219,7 +219,7 @@
   </a></summary>
   Як користуватись вбудованими кроками для роботи з віддаленими підмодулями.
 </details>
-<details><summary><a href="./tutorial/Criterions.md">
+<details><summary><a href="./tutorial/Criterion.md">
       Критеріони
   </a></summary>
   Як використовувати критеріони для відбору ресурсів.
