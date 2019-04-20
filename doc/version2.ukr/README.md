@@ -161,17 +161,17 @@
   </a></summary>
   Слово або декілька слів, відокремлених крапкою, позначає команду, яку має виконати утиліта.
 </details>
-<details><summary><a href="./concept/Selectors.md#Селектор">
+<details><summary><a href="./concept/Selector.md#Селектор">
       Селектор
   </a></summary>
   Рядок-посилання на ресурс або декілька ресурсів модуля.
 </details>
-<details><summary><a href="./concept/Selectors.md#Селектор-з-ґлобом">
+<details><summary><a href="./concept/Selector.md#Селектор-з-ґлобом">
       Селектор з ґлобом
   </a></summary>
   Селектор, який для вибору ресурсу використовує пошукові шаблони - ґлоби.
 </details>
-<details><summary><a href="./concept/Criterion.md">
+<details><summary><a href="./concept/Criterions.md">
       Критеріон
   </a></summary>
   Елемент порівняння для відбору ресурсів.
@@ -219,7 +219,7 @@
   </a></summary>
   Як користуватись вбудованими кроками для роботи з віддаленими підмодулями.
 </details>
-<details><summary><a href="./tutorial/Criterion.md">
+<details><summary><a href="./tutorial/Criterions.md">
       Критеріони
   </a></summary>
   Як використовувати критеріони для відбору ресурсів.
