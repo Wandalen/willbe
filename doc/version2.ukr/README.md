@@ -7,7 +7,7 @@
 ## Концепції
 
 <details><summary><a href="./concept/WillFile.md">
-      <code>Will-файл</code>
+      Конфігураційний <code>will-файл</code>
   </a></summary>
   Конфігураційний файл для опису та збірки модуля. Кожен формальний модуль має такий файл.
 </details>
@@ -274,7 +274,9 @@
   </a></summary>
   Як використовувати <code>JavaScript</code> файли в утиліті <code>willbe</code> для виконання складних сценаріїв побудови.
 </details>
-<details><summary><a href="./tutorial/CommandSet.md">Команда <code>.set</code></a></summary>
+<details><summary><a href="./tutorial/CommandSet.md">
+    Команда <code>.set</code>
+</a></summary>
   Як користуватись командою <code>.set</code> для зміни станів утиліти, наприклад, для зміни рівня вербальності.
 </details>
 <details><summary><a href="./tutorial/SelectorComposite.md">
