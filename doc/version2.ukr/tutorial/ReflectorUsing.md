@@ -1,6 +1,6 @@
-# Copying of files with help of reflectors
+# Копіювання файлів за допомогою рефлектора
 
-How to copy files with help of reflectors, field <code>recursive</code> of reflector.
+Копіювання файлів за допомогою рефлектора, поле <code>recursive</code> рефлектора.
 
 Основними функціями ресурсів секції `reflector` є файлові операції, в тому числі, двосторонні (вибір файлів (директорій), переміщення, копіювання та інші).  
 
