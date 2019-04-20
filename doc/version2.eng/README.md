@@ -323,9 +323,9 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   How to use resource inheritance to reuse data.
 </details>
 <details><summary><a href="./tutorial/StepView.md">
-      Predefined (predefined) step <code>predefined.view</code>
+      Predefined step <code>predefined.view</code>
   </a></summary>
-  How to use predefined (predefined) step <code>predefined.view</code> to view files.
+  How to use predefined step <code>predefined.view</code> to view files.
 </details>
 <details><summary><a href="./tutorial/StepTranspile.md">
       Transpilation
