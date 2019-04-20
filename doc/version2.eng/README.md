@@ -1,3 +1,4 @@
+
 ## Quick start
 
 For quick start [install](<./tutorial/Instalation.md>) utility `willbe`, [get acquainted with](<./tutorial/CLI.md>) command line interface and create the first [module "Hello World"](<./tutorial/HelloWorld.md>). [Read](<./tutorial/Abstract.md>) abstract if you are wondering what is it for and what philosophy is behind utility `willbe`.
@@ -162,12 +163,12 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   </a></summary>
   Word or several words, separated by dot, it denotes command which utility should perform.
 </details>
-<details><summary><a href="./concept/Selectors.md#Selector">
+<details><summary><a href="./concept/Selector.md#Selector">
       Selector
   </a></summary>
   String-reference on resource or group of resources of the module.
 </details>
-<details><summary><a href="./concept/Selectors.md#Selector-with-globs">
+<details><summary><a href="./concept/Selector.md#Selector-with-globs">
       Selector with globs
   </a></summary>
   Selector which uses searching patterns (globs) for selecting of resources.
@@ -177,7 +178,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   </a></summary>
   Element of comparison for selection of resources.
 </details>
-<details><summary><a href="./concept/Asserts.md">
+<details><summary><a href="./concept/Assert.md">
       Glob with assertion
   </a></summary>
   Restriction of glob by number of expected resources which should be found by the selector.

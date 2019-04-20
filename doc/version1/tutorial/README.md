@@ -8,5 +8,5 @@
 * [Declaring local submodules](LocalSubmodules.md)
 * [Importing remote submodules](RemoteSubmodules.md)
 * [Creating reflectors and steps](ReflectorsAndSteps.md)
-* [Creating reflectors using criteria](Criterion.md)
+* [Creating reflectors using criteria](Criterions.md)
 * [Declaring a multi-config module](MultiConfigModule.md)
