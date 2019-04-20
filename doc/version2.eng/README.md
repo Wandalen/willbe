@@ -7,19 +7,19 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 ## Concepts
 
 <details><summary><a href="./concept/WillFile.md">
-      Config <code>will-file</code>
+      Configuration <code>will-file</code>
   </a></summary>
-  Config for describing and building a module. Each formal module has such file.
+  Configuration for describing and building a module. Each formal module has such a file.
 </details>
 <details><summary><a href="./concept/WillFileNamedAndSplit.md#Named-will-file">
       Named <code>will-file</code>
   </a></summary>
-  Kind of <code>will-file</code> which has nonstandard name. It makes possible to have multiple modules with different names in a directory.
+  Kind of <code>will-file</code> which has a nonstandard name. It makes possible to have multiple modules with different names in a directory.
 </details>
 <details><summary><a href="./concept/WillFileNamedAndSplit.md#Split-will-file">
       Split <code>will-file</code>
   </a></summary>
-  Splitting <code>will-file</code> into two files. One of them is for importing data and the other for exporting. Its make possible splitting data related building and development of a module and data related its exporting and reusing by other modules.
+  Splitting <code>will-file</code> into two files. One of them is for importing data and other is for exporting. It makes possible to split data related building and to develop a module and data which can be used by another modules.
 </details>
 <details><summary><a href="./concept/Structure.md#Resources">
       Resources
@@ -65,7 +65,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/ResourceBuild.md#Resource-build">
       Resource build
   </a></summary>
-  Sequence and conditions of procedures execution to build a module. Developer has to select a particular build calling command <code>.build</code> by name or by constraints.
+  Sequence and conditions of procedures execution to build a module. Developer has to select a particular build calling command <code>will .build</code> by name or by constraints.
 </details>
 <details><summary><a href="./concept/Structure.md#Section-will-file">
       Section <code>will-file</code>
@@ -110,7 +110,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/ResourceBuild.md#Resource-export">
       Resource export
   </a></summary>
-  Special kind of build which required for the module to been used by other developers and modules. Result of exporting is artefacts among wich is <code>out-will-file</code>.
+  Special kind of build which required for the module to been used by other developers and modules. Result of exporting is generated files among wich is <code>out-will-file</code> and archive.
 </details>
 <details><summary><a href="./concept/WillFileExported.md#Exported-will-file-out-will-file">
       Exported <code>will-file</code> (<code>out-will-file</code>)

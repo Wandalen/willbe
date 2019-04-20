@@ -10,7 +10,6 @@
 step  :
 
   export.proto :
-    inherit : predefined.export
     export : path::fileToExport.*
     criterion :
       debug : 0
