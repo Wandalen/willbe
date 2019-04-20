@@ -1,291 +1,264 @@
-## Ресурс крок
+## Resource step
 
-Ресурс секції <code>step</code>, який представляє собою інструкцію для виконання утилітою при побудові модуля. Описують операції та бажаний результат. Збірки складаються із кроків.
+Instruction for building the module. Describe an operation and desired outcome. Build consists of <code>step</code>. Step section resource which is an executing instruction of module building.
 
-### Поля ресурсів секції `step`   
-
-| Поле           | Опис                                                             |
-|----------------|------------------------------------------------------------------|
-| description    | описова інформація для інших розробників                         |
-| criterion      | умова використання ресурса (див. [критеріон](Criterions.md))     |
-| opts           | додаткові опції можуть передаватися через мапу `opts`            |
-| inherit        | наслідування від інших кроків                                    |
-
-
-### Перелік вбудованих кроків
-### Вбудований крок `predefined.delete`  
-
-Призначений для видалення файлів за вказаним шляхом. 
-
-Включає одне поле `filePath`, в якому вказується шлях до файлів, що потрібно видалити.  
-
-#### Приклад ресурсу з кроком `predefined.delete` 
-
+### Example
 ```yaml
-step:                                   # Назва секції
-  delete.files:                         # Назва кроку
-    inherit: predefined.delete          # Наслідування вбудованого кроку видалення файлів
-    filePath: path::fileToDelete        # Файл чи директорія 'fileToDelete' в секції 'path'
 
-```
+step  :
 
-У ресурсі `delete.files`, через [наслідування](Inheritance.md), використовується вбудований крок `predefined.delete`. Крок видаляє файли за шляхом `path::fileToDelete`.
-
-### Вбудований крок `predefined.reflect`  
-
-Крок призначений для виклику [рефлектора](ResourceReflector.md#Ресурс-рефлектор).  
-
-Рефлектори виконують файлові операції над групою файлів. 
-
-Крок включає поля `reflector` для указання ресурса секції `reflector` i поле `verbosity`, яке визначає рівень вербальності виводу консолі, тобто, кількість сервісної інформації при виконанні кроку. Діапазон зміни рівня вербальності можна задати від 0 до 8. 8 - найвищий рівень вербальності.  
-
-#### Приклад ресурсу з кроком `predefined.reflect`
-
-```yaml
-step:                                         # Назва секції
-  reflect.files:                              # Назва кроку
-    inherit: predefined.reflect               # Наслідування вбудованого кроку виклика рефлектора
-    reflector: reflector::reflect.some.files  # Виклик рефлектора із секції 'reflector'  
-    verbosity: 3                              # Деталізація логу виконання побудови модуля (значення                                             # від 0 до 8)
-
-```
-
-У ресурсі `reflect.files`, через [наслідування](Inheritance.md), використовується вбудований крок `predefined.reflect`. Крок використовує рефлектор `reflect.some.files`. Рівень вербальності виводу - 3.
-
-### Вбудований крок `predefined.js`   
-
-Призначений для виконання JavaScript-файлів під час побудови модуля.  
-
-Крок може використовувати лише експортовані функції і змінні в JS-файлі.  
-
-`predefined.js` включає одне поле з назвою `js`, яке вказує шлях до JS-файла для виконання. 
-
-Оскільки вказане поле унікальне - відсутнє в інших вбудованих кроках, то крок `predefined.js` може бути записаний через неявне наслідування, тобто, з указанням в ресурсі поля `js`.  
-
-#### Приклади ресурсів з кроком `predefined.js`
-
-```yaml
-step:                                   # Назва секції
-  run.js:                               # Назва кроку
-    inherit: predefined.js              # Наслідування вбудованого кроку використання терміналу ОС
-    js: path::jsFileToRun               # Шлях до JS-файла в секції 'path'
-
-```
-
-Запис вбудованого кроку `predefined.js` з явним указаннням наслідування в полі `inherit` ресурса `run.js`. Крок виконує файл за указаним шляхом `path::jsFileToRun`.
-
-```yaml
-step:                                   
-  run.js:                           
-    js: path::jsFileToRun               
-
-```
-
-Запис вбудованого кроку `predefined.js` в ресурсі `run.js` з неявним указаннням наслідування - поле `inherit` відсутнє. 
-
-### Вбудований крок `predefined.shell`  
-
-Призначений  для запуску команд в командній оболонці операційної системи.  
-
-Розширює вбудовані можливості утиліти завдяки використанню зовнішніх програм і команд операційної системи.  
-
-Крок `predefined.shell` має поля:
-- shell - указується команда для виконання операційною системою;
-- currentPath - указується шлях до директорії, в якій команда буде виконана. Якщо поле не вказано, то використовується шлях `predefined.dir`.
-- forEachDst - в полі вказується назва рефлектора для указання директорії призначення для файлів, що будуть створені командою. Директорія призначення вибирається з фільтра `dst` рефлектора.
-- upToDate - поле, яке встановлює можливість повторного запуску команди над файлами, що не змінились з попередньої побудови. Приймає два значення: `preserve` - не виконувати команду, якщо файли не змінились; `rebuild` - виконувати команду незалежно від змін в файлі. За замовчуванням установлено значення `preserve`. Наприклад, утиліта виконала компіляцію файлів з вихідних, якщо при повторному запуску побудови не відбулось змін в вихідних і скомпілованих файлах, то утиліта не буде виконувати команду компіляції. 
-
-Поле `shell` присутнє тільки в вбудованому кроці `predefined.shell` і, тому, крок може бути записаний через неявне наслідування, тобто, з указанням поля `shell` в ресурсі. При цьому, якщо додаткові поля не вказані, то вони приймають значення за замовчуванням.  
-
-#### Приклади ресурсів з кроком `predefined.shell`
-
-```yaml
-step:                                   # Назва секції
-  run.command:                          # Назва кроку
-    inherit: predefined.shell           # Наслідування вбудованого кроку використання терміналу ОС
-    shell: ls -a                        # Команда для вводу в термінал ОС
-    currentPath: path::dirToRun         # Вказується директорія в якій виконується файл
-    forEachDst : some_reflector         # Рефлектор для команди (необов'язково)
-    upToDate : 'preserve'               # Опція - виконувати команду при зміні файлів вибірки
-
-```
-Приклад іллюструє використання явного наслідування кроку `predefined.shell` в ресурсі `run.command`. Розшифровується так: виконати команду `ls -a` в директорії за шляхом `path::dirToRun`. Для файлів призначення використати шлях в полі `dst` рефлектора `some_reflector`.   
-
-```yaml
-step:                                   
-  run.command:                         
-    shell: npm install
-    currentPath: path::dirToRun         
-
-```
-
-Приклад показує неявне наслідування кроку `predefined.shell` в ресурсі `run.command`. Крок `run.command` виконує команду `npm install` в директорії за шляхом `path::dirToRun`.  
-
-### Вбудований крок `predefined.transpile` 
-
-Призначений для транспіляції `JavaScript` файлів або їх конкатенації. 
-
-Конкатенація - об'єднання групи файлів в один. Транспіляція в утиліті `willbe` - це перетворення вихідних JavaScript файлів в стиснений і перетворений код.  Для вибору режиму перетворення застосовується критеріон `debug`. При значенні `debug : 1` утиліта виконує конкатенацію файлів без їх зміни (оптимізації), при `debug : 0` - виконується транспіляція, утиліта об'єднує і оптимізує код.
-
-Крок `predefined.transpile` має одне поле `reflector` для указання рефлектора за яким буде здійснено перетворення. 
-
-#### Приклад ресурсу з кроком `predefined.transpile`
-
-```yaml
-step:                                           # Назва секції
-  transpile.files:                              # Назва кроку
-    inherit: predefined.transpile               # Наслідування вбудованого кроку об'єднання JS-файлів
-    reflector: reflector::reflect.js.files      # Рефлектор для відбору JS-файлів
-    criterion: 
+  export.proto :
+    export : path::fileToExport.*
+    criterion :
       debug : 0
 
+  view :
+    inherit : predefined.view
+    filePath : http:///www.google.com
+
 ```
 
-Крок `transpile.files` виконує транспіляцію файлів (`debug : 0`) згідно рефлектора `reflect.js.files `. 
-В вказуються шляхи для файлів, які будуть скомпоновані і файл, який згенерується. Для цього в рефлекторі вказуйте відповідні фільтри. Наприклад, для при використанні поля `filePath` рефлектора запис може мати вигляд:  
+Cекції step містить 2-ва кроки export.proto, view. Крок export.proto призначений для експортування модуля. Крок view призначений для перегляду файлу http:///www.google.com користувачем на якомусь етапі збірки.
+
+The `step` section contains two steps for `export.proto`, `view`. The `export.proto` step is intended to export the module. The `view` step is intended to be used for viewing the file at http: ///www.google.com  by user at some stage of the build.
+
+### Common fields of the step
+
+| Field           | Description                                                             |
+|----------------|------------------------------------------------------------------|
+| description    | descriptive information for other developers                          |
+| criterion      | condition of use of the resource (see [criterion](Criterions.md))     |
+| opts           | additional options can be transmitted through the map `opts`            |
+| inherit        | inheritance from other steps                       |
+
+Section `step`
+Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля. Ресурси секції - кроки - поміщають в сценарії збірок секції build для виконання побудови.
+
+The section contains steps that can be used by the build to build the module. The section resources - the steps - are placed in the build, in scenario of the build for implementation of the construction.
+### List of predefined steps
+### Predefined step `predefined.delete`  
+
+Designed to delete files in the specified path.
+
+Includes one `filePath` field, which specifies the path to the files which have to be deleted.
+
+#### Example of a resource with step `predefined.delete`
 
 ```yaml
-  filePath :                                    # Вказується для вибору JS-файлів
-    path::filesFrom : '{path::filesTo}/file.js' # Зліва - директорія з якої беруться файли,
-                                                # справа - директорія в який буде згенеровано файл і його назва.
+step:                                   # Name of the section
+  delete.files:                         # Name of the step
+    inherit: predefined.delete          # Inheritance
+filePath: some/dir                      # File, which will be deleted
+```
+
+In resource `delete.files`, through [inheritance](Inheritance.md), predefined step is used `predefined.delete`. Step removes files by path `path::fileToDelete`.
+
+### Predefined step `predefined.reflect`  
+
+The step is designed for a copying the files by means of [reflector](ResourceReflector.md#Ресурс-рефлектор).  
+
+Reflectors choose a set of files over which to perform some operation. The step `predefined.reflect` performs copying of files from one place to another. By default, copying is performed by storing of hard-links between a couple of files. This means that the destination file and the source file will have the same content and any changes made to one of the files will be displayed by the operating system in another file.
+
+The step includes the `reflector` field to indicate the resource of the section` reflector` and field  `verbosity`, which determines the level of verbal output of the console, that is, the amount of service information when performing the step. The range of change in verbal level can be set from 0 to 9. 9 - the highest level of verbal.
+
+#### Example of a resource with step `predefined.reflect`
+
+```yaml
+step:                                         # Name of the section
+  reflect.files:                              # Name of the step
+    inherit: predefined.reflect               # Inheritance
+    reflector: reflector::reflect.some.files  # Reflector for build of the files
+    verbosity: 3                              # Level of verbality
+
+```
+Крок reflect.files наслідується від predefined.reflect. Для вибору файлів крок використовує рефлектор reflect.some.files. Рівень вербальності виводу - 3.
+
+The step `reflect.files` is inherited from `predefined.reflect`. To select files, the step uses `reflect.some.files`. Level of verbal output - 3.
+### Predefined step `predefined.js`   
+
+Designed to execute JavaScript files while constructing a module.  
+
+`predefined.js` includes one field with a name `js`,which specifies the path to the JS file to execute.
+
+Since the `js` field has only one step `predefined.js` - not in other predefined steps, the `predefined.js` step can be written without explicit imitation.
+
+#### Examples of resources with step`predefined.js`
+
+```yaml
+step:                                   # Name of the sectiom
+  run.js:                               # Name of the step
+      js: run.js                        # The path to the JS file in the section 'path'
 
 ```
 
-Тобто, поле `filePath` указує вибрати файли з директорії `filesFrom` i об'єднати їх в файлі `file.js` в директорії `filesTo`.  
+The step to run `run.js.` The inheritance is not explicit, since the field `js` is a unique field of the predefined step `predefined.js`..
 
-### Вбудований крок `predefined.export`  
+### Predefined step `predefined.shell`  
 
-Призначений для особливого виду побудови модуля - експорту. Результатом побудови є згенеровані `out-will-файл` i, опціонально, архів з експортованими файлами.  
+Designed to run commands in the command shell of the operating system.
 
-Згенерований `out-will-файл` містить повну інформацію про модуль і експортовані файли, а також збірку, за якою побудовано експорт.  
+Extends the predefined opportunity of utilities through the use of external programs and operating system commands.
+
+Step `predefined.shell` has fields:
+
+- shell - indicates the command to be executed by operating system;
+- currentPath - indicates the path to the directory in which the command will be executed. If the field is not specified then the `predefined.dir` path is used.
+- forEachDst - The name of the reflector is specified in the field to indicate the destination directory for the files that will be created by the team. The destination directory is selected from the `dst` reflector filter.
+- upToDate - a field that sets the ability to restart the command over files that have not changed from the previous comstruction. Accepts two values: `preserve` - do not execute the command if the files have not changed; `rebuild` - execute the command regardless of the changes in the file. The default value is `preserve`.
+
+The `shell` field is present only in the built-in step `predefined.sll` and, therefore, the step can be written through implicit inheritance, that is, from the specified field` shell` in the resource.
+
+#### Examples of resources with step `predefined.shell`
+
+```yaml
+step:                                   # Name of the section
+  run.command:                          # Name of the step
+    shell: ls -a                        # Command to enter the OS terminal
+
+```
+Calling of   an external ls -al program. The inheritance of predefined.shell is implemented implicitly.
+
+### Predefined step `predefined.transpile`
+
+Designed for transcribing JavaScript files or concatenating of them.
+
+Конкатенація - об'єднання групи файлів в один. Транспіляція - перетворення вихідних файлів із кодом в вихідні із аналогічним змістом, але в іншій формі. Для вибору режиму перетворення застосовується критеріони <code>debug<code> та <code>raw<code>.
+
+Concatenation - combining a group of files into one. Transpilation - converting output files with code files into outputs with similar content, but in a different form. To select the conversion mode, the <code> debug <code> and <code> raw <code> criterions are applied.
+
+`debug`:` debug` utility performs concatenation of files without changing them (optimization)
+`debug`:` release` - transcribing and optimizing the code is implemented.
+`raw`:` raw` utility does not perform concatenation, but puts each file separately.
+`raw`:` compiled` - concatenation of several files into one is implemented.
+
+The `predefined.transpile` step has one` reflector` field to indicate the reflector for which the conversion will be made.
+
+#### Example of a resource with step `predefined.transpile`
+
+```yaml
+step:                                           # Name of the section
+  transpile.files:                              # Name of the step
+    inherit: predefined.transpile               # Inheritance of the predefined JS-file merge step
+    reflector: reflector::reflect.js.files      # Reflector for selecting JS-files
+    criterion:
+      debug : release
+      raw : compiled
+
+```
+
+The `transpile.files` step executes the transcription of files (` debug: 0`) by the reflector `reflect.js.files`.
+Specifies the paths to the files that will be composed and file which will be generated. To do this, specify the appropriate filters in the reflector. For example, if you use the `filePath` field of the reflector, the entry may have the form:
+
+```yaml
+reflector :
+reflect.js.files :
+  filePath :                                    # Map of the path
+    path::filesFrom : '{path::filesTo}/file.js'
+
+```
+Move files from the path :: filesFrom and place them in {path :: filesTo}/file.js.
+
+### Predefined step `predefined.export`  
+
+Призначений для особливого виду побудови модуля - експорту. Результатом побудови є згенеровані `out-will-файл` i, опціонально, архів з експортованими файлами.
+
+Designed for a special type of module construction - export. The result of the construction is the generated `out-will-file` and , optionally, the archive with the exported files.  
+
+The generated `out-will-file` contains the complete information about the module and the exported files, as well as the build on which the export was built.
 
 Крок `predefined.export` має поля:
-- export - вказуються шляхи до файлів для експорту; 
+- export - вказуються шляхи до файлів для експорту;
 - tar - архівування файлів модуля. Поле прийма значення: 1 - архівування включене; 0 - архівування вимкнене. За замовувчуванням значення - 1.
 
-Поле `export` присутнє тільки у вбудованому кроці `predefined.export` і, тому, крок може бути записаний через неявне наслідування, тобто, з указанням поля `export` в ресурсі. При цьому, якщо полe `tar` не вказане, то при виконанні побудови буде створено архів.
+The `predefined.export` step has the fields:
+- export - specify the paths to files for export;
+- tar - archiving of module files. The field accepts the value: 1 - archiving is included; 0 - archiving is off. By default, the value is 1.
 
-#### Приклади ресурсів з кроком `predefined.export`
+Поле `export` присутнє тільки у вбудованому кроці `predefined.export` і, тому, крок може бути записаний через неявне наслідування, тобто, з указанням поля `export` в ресурсі.
 
-```yaml
-step:                                   # Назва секції
-  export.files:                         # Назва кроку
-    inherit: predefined.export          # Наслідування вбудованого кроку експорту модуля
-    export: path::fileToExport          # Шлях до файлів модуля, що експортуються
-    tar: 0                              # Архівування експортованої конфігурації. '1' - ввімкнена,
-                                        # '0' - вимкнена. За замовчуванням '1'
+The `export` field is present only in the predefined step` predefined.export`  and, therefore, the step can be written through implicit inheritance, that is, with specification of the `export` field in the resource.
 
-```
-
-В кроці `export.files` явно указане наслідування вбудованого кроку `predefined.export`. При виконанні побудови буде експортовано файли за шляхом `path::fileToExport` без створення архіву з файлами.  
+#### Examples of resources with step`predefined.export`
 
 ```yaml
-step:                                   
-  export.reflect:                           
-    export: reflector::fileToExport          
+step:                                   # Name of the section
+  export.files:                         # Name of the step
+    export: path::proto                 # The path to the exported module files
+    tar: 0                              #Do not create an archive.
 
 ```
+When constructing, files will be exported through path :: proto, and the file archive creation is disabled.
 
-В кроці `export.reflect` експортуються файли, які вибрано з допомогою рефлектора `fileToExport`. Поле `tar` не вказане - буде створено архів.
+### Predefined step `predefined.view`  
 
-### Вбудований крок `predefined.view`  
+Designed to open files and URI-links in the programs to view by user.
 
-Призначений для відкриття файлів i URI-посилань в програмах для перегляду. 
 
-Крок `predefined.view` використовує програми перегляду, що встановлені в операційній системі за замовчуванням для даного типу файлів. Файли і посилання запускаються з затримкою, яку визначає користувач.     
+The `predefined.view` step uses the viewing programs that are installed on the operating system to view this type of file by default. Use the `delay` field to start the view with delay.
 
 Крок `predefined.view` має поля:
-- filePath - вказується шлях до файлів, що потрібно відкрити;
-- delay - затримка перед запуском програми для перегляду, вказується в мс.
+- `filePath` - вказується шлях до файлів, що потрібно відкрити;
+- `delay` - затримка перед запуском програми для перегляду, вказується в мс.
+
+The `predefined.view` step has fields:
+- `filePath` - specifies the path to the files which need to be open;
+- `delay` - delay before starting the program for viewing, it is indicated in ms.
 
 #### Приклад ресурсу з кроком `predefined.view`
 
 ```yaml
-step:                                        # Назва секції
-  open.url:                                 # Назва кроку
-    inherit: predefined.view                 # Наслідування вбудованого кроку перегляду
-    filePath: 'http://google.com'            # URI-посилання
-    delay: 10000                              # Затримка запуску файла
+step:                                        # Name of the section
+  open.url:                                  # Name of the step
+    inherit: predefined.view                 # Inheritance of the predefined step of the viewing
+    filePath: 'http://google.com'            # URI-link
+    delay: 10000                             #Delay of the file startup
 
 ```
 
-Після виконання кроку `open.url`, через десять секунд утиліта запустить браузер для відкриття посилання `http://google.com`.
+Open to view`http://google.com` in 10 second.
 
-### Вбудовані кроки `submodules.download`, `submodules.update`, `submodules.reload`, `submodules.clean`, `clean`   
+#### Predefined step `submodules.download`
 
-#### `submodules.download`
+Performs loading of remote submodules specified in the section resources `submodule`.
 
-Виконує завантаження віддалених підмодулів указаних в ресурсах секції `submodule`. 
+There are no fields and it can be specified directly in the `steps` section of the` build `section without inheritance
 
-Полів не має і може вказуватись безпосередньо в полі `steps` секції `build`.  
+#### Predefined step `submodules.update`
 
-#### `submodules.update`
+If new versions of remote submodules are available, it downloads and installs them.
+There are no fields and it can be specified directly in the `steps` section of the` build `section without inheritance
 
-При наявності нових версій віддалених підмодулів завантажує і встановлює їх. 
+#### Predefined step `submodules.reload`
 
-Полів не має і може вказуватись безпосередньо в полі `steps` секції `build`. 
+Performs a dynamic reboot of submodules. Useful in a situation where submodules files that were not initially, were loaded during the implementation of some build.
 
-#### `submodules.reload`
+There are no fields and it can be specified directly in the `steps` section of the` build `section without inheritance
+#### Predefined step `submodules.clean`
 
-Виконує перезавантаження статусу підмодулів в утиліті.
+Performs a complete removal of the `.module` directory with submodules.
 
-Після запуску побудови, утиліта зчитує і записує статус підмодулів. Алгоритм побудови може включати дії над підмодулями, що призведе до зміни їх статусу, а крок `submodules.reload` переписує його для правильного виконання наступних дій.  
+There are no fields and it can be specified directly in the `steps` section of the` build `section without inheritance
 
-Полів не має і може вказуватись безпосередньо в полі `steps` секції `build`. 
+#### Predefined step `clean`
 
-#### `submodules.clean`
+Виконує видалення з модуля тимчасових і згененрованих файлів. До них відносяться:
+- завантажені підмодулі (директорія `./.module`);
 
-Виконує повне видалення директорії `.module` з підмодулями. 
+Performs removal from the module of temporary and generated files. It includes:
+- loaded submodules (directory `./ module`);
+- generated files: exported `out-will file` and archive.
+- `path::temp` directory, if such is specified for the module.
 
-Полів не має і може вказуватись безпосередньо в полі `steps` секції `build`. 
+There are no fields and it can be specified directly in the `steps` section of the` build `section without inheritance
 
-#### `clean`
-
-Виконує видалення з модуля тимчасових і згененрованих файлів. До них відносяться: 
-- завантажені підмодулі (директорія `./.module`); 
-- експортовані `out-will-файл` і архів в директорії `path:out`; 
-- `path::temp` директорія.
-
-Полів не має і може вказуватись безпосередньо в полі `steps` секції `build`. 
-
-#### Приклад ресурсу з кроками, що можуть записуватись в секцію `build`
+#### An example of a resource with steps that can be written to a section `build`
 
 ```yaml
-build:                                  # Назва секції
-  direct.writen:                        # Назва кроку
-    steps:                              # Кроки - сценарій збірки
-    - submodules.update                 # Вбудовані кроки, що поміщаються в секцію `build`
-    - submodules.clean
-    - submodules.reload
-    - submodules.download               
-    - clean                             
+build:                                  # Name of the section
+  submodules.download:                  # Name of the build
+    steps:                              # Steps - scenario of the build
+    - clean
+    - submodules.download                          
 
 ```
-
-Вбудовані кроки `submodules.download`, `submodules.update`, `submodules.reload`, `submodules.clean`, `clean` поміщені в один сценарій збірки `direct.writen` так, як вони виконують визначену функцію і не мають додаткових полів. Вказані кроки використовуються згідно призначення збірки окремо.  
-Якщо запустити побудову збірки `direct.writen`, то утиліта виконає оновлення (завантаження) віддалених підмодулів в директорії `.module`, видалить їх, оновить статус підмодулів, завантажить кроком `submodules.download`, після чого видалить тимчасові і згенеровані файли кроком `clean`.
-
-### Секція <code>step</code>
-
-Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля. Ресурси секції - кроки - поміщають в сценарії збірок секції <code>build</code> для виконання побудови.  
-
-#### Приклад
-
-```yaml
-step  :
-
-  export.proto :
-    inherit : predefined.export
-    export : path::fileToExport.*
-    criterion : 
-      debug : 0
-
-  proto.debug :
-    inherit : predefined.reflect
-    export : path::fileToReflect.*
-    criterion : 
-      debug : 1
-      
-```
-
-Приклад секції `step` з кроками `export.proto`, `proto.debug`. Крок `export.proto` виконує експорт файлів якщо в збірці критеріон `debug` має значення `0`, а виконання файлової операції в кроці `proto.debug` виконується з встановленим критеріоном `debug : 1`.
+Performs complete module cleaning and loading submodules.

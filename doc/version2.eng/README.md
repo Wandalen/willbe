@@ -1,7 +1,7 @@
 
 ## Quick start
 
-For quick start [install](<./tutorial/Instalation.md>) utility `willbe`, [get acquainted with](<./tutorial/CLI.md>) command line interface and create the first [module "Hello World"](<./tutorial/HelloWorld.md>). [Read](<./tutorial/Abstract.md>) general information if you are wondering what is it for and what philosophy is behind utility `willbe`.
+For quick start [install](<./tutorial/Instalation.md>) utility `willbe`, [get acquainted with](<./tutorial/CLI.md>) command line interface and create the first [module "Hello World"](<./tutorial/HelloWorld.md>). [Read](<./tutorial/Abstract.md>) abstract if you are wondering what is it for and what philosophy is behind utility `willbe`.
 
 For gentle introduction use tutorials. For getting exhaustive information on one or another aspect use list of concepts to find a concept of interest and get familiar with it.
 
@@ -187,9 +187,9 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 ## Tutorials
 
 <details><summary><a href="./tutorial/Abstract.md">
-     General information
+     Abstract
   </a></summary>
-  General information. What utility <code>willbe</code> is and what it is not.
+  Abstract. What utility <code>willbe</code> is and what it is not.
 </details>
 <details><summary><a href="./tutorial/Installation.md">
       Installation
@@ -214,7 +214,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./tutorial/Build.md">
       Module building by command <code>.build</code>
   </a></summary>
-  Launch of some builds of the module for construction of it.
+  Build of some builds of the module for construction of it.
 </details>
 <details><summary><a href="./tutorial/StepsPredefined.md">
       Predefined steps
