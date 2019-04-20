@@ -112,14 +112,6 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   </a></summary>
   It is programmatically generated section of <code>out-will-file</code> by exporting a module. It has a list of exported files and it is used by other modules for importing the module.
 </details>
-<<<<<<< HEAD
-=======
-<details><summary><a href="./concept/ResourceBuild.md#Resource-export">
-      Resource export
-  </a></summary>
-  Special kind of build which is required for utilization of the module  by other developers and modules. Result of module's exporting is generated files among which is <code>out-will-file</code> and archive.
-</details>
->>>>>>> 06c9c6bf4b4e9cf24eacc0b880096e0b4d9deac8
 <details><summary><a href="./concept/WillFileExported.md#Exported-will-file-out-will-file">
       Exported <code>will-file</code> (<code>out-will-file</code>)
   </a></summary>
