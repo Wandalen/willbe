@@ -2,21 +2,20 @@
 
 Technique to describe conditions of selection required files for some operation on group of files. Reflector has two file filters: <code>src</code> and <code>dst</code>.
 
-Файли можуть бути відібрані:
-- простими файловими фільтрами;
-- масками файлових операцій;
-- часовими фільтрами;
-- глобами в мапі шляхів.
+Files can be selected:
+- by simple file filters;
+- by mask of file operations;
+- by time filters;
+- by globes in the map of the paths.
 
-### Прості файлові фільтри
+### Simple file filters
 
-Прості фільтри - це фільтри, які відбирають файли за назвою. Мають рядкові значення.
+Simple filters are filters that select files by name. They have string values.
 
-- `begins` - виключає із вибірки всі файли, назва яких не починається з указаного в фільтрі слова.
-- `ends` - виключає із вибірки всі файли, назва яких не закінчується на вказане в фільтрі слово.
-- `hasExtension` - виключає із вибірки, всі файли, імена яких не мають вказаних розширень. Розширення файла може бути складеним і складатися із декількох частин. Утиліта `willbe` зчитує його, починаючи з першої крапки в назві файла. Наприклад, файл `somefile.txt.md` має два розширення - `txt` i `md`.
-
-### Приклад запису простого фільтра:
+- `begins` -excludes from the build all files whose name does not begin with the word specified in the filter.
+- `ends` - excludes from the build all files whose name does not end on the word specified in the filter.
+- `hasExtension` - excludes from the build all files whose names do not have the specified extensions. The file extension can be composed and consist of several parts. The `willbe` utility will read it starting from the first point in the filename. For example, the `somefile.txt.md` file has two extensions -` txt` i `md`.
+### example of writing of a simple filter:
 
 ```yaml
 src:
@@ -25,22 +24,22 @@ src:
 
 ```
 
-### Маски рефлектора
+### Masks of the reflector
 
-Для використання регулярних виразів при відборі файлів застосовуйте маски.
+For regular expressions when selecting files use masks.
 
-Рефлектори `willbe` має три групи масок, в залежності від того до яких типів файлів вони застосовуються:
-- `maskDirectory` - маски директорії, застосовуються лише до директорій;  
-- `maskTerminal` - маски термінальних файлів, застосовуються лише до термінальних (звичайних) файлів, до директорій не застосовуються;
-- `maskAll` - маски, які застосовуються до всіх типів файлів.
+Reflectors `willbe` have three groups of masks, depending on which types of files they are applied:
+- `maskDirectory` - directory masks, apply only to directories;
+- `maskTerminal` - masks of terminal files, apply only to terminal (normal) files, to directories do not apply;
+- `maskAll` - masks that apply to all file types.
 
-В кожній із цих трьох груп масок є такі:
-- `includeAny` - виключити файли, які не мають співпадіння із жодним із регулярних виразів даного фільтра;
-- `includeAll` - виключити файли, які не мають співпадіння із всіма регулярними виразами даного фільтра;
-- `excludeAny` - виключити файли, які мають принаймні одне співпадіння із регулярними виразами даного фільтра;  
-- `excludeAll` - виключити файли, які мають співпадіння із всіма регулярними виразами даного фільтра.
+Each out of these three mask groups has the following fields :
+- `includeAny` - exclude files that have no coincidence with any of the regular expressions of this filter;
+- `includeAll` - exclude files that do not have a coincidence with all regular expressions of the filter;
+- `excludeAny` - exclude files that have at least one coincidence with the regular expressions of the filter;
+- `excludeAll` - exclude files that have a coincidence with all regular expressions of the filter.
 
-### Приклад масок рефлектора:
+### Example of reflector masks:
 
 ```yaml
 src :
@@ -49,29 +48,28 @@ src :
     excludeAny : !!js/regexp '/\.debug/'  
 
 ```
+This writing means to include in build  all files with the extension '.js'  and exclude any files containing '.debug' in the name.
 
-Цей запис означає, включити в вибірку всі файли з розширенням '.js' та виключити будь-які файли, що містять '.debug' в імені.
+### Time filters
 
-### Часові фільтри  
+Filters are necessary to limit time-based selection. Reflectors have four time filters: `notOlder`,` notNewer`, `notOlderAge`,` notNewerAge`. Шт аield parameters the values are entered in milliseconds (1 s = 1000 ms, 1 hour = 3600000 ms).
 
-Фільтри необхідні для обмеження вибору по часовій ознаці. Рефлектори мають чотири часових фільтра: `notOlder`, `notNewer`, `notOlderAge`, `notNewerAge`. В параметрах полів вносяться значення в мілісекундах (1 с = 1000 мс; 1 година = 3600000 мс).
 
-Існують такі часові фільтри:
-- `notOlder` - всі файли не старше від встановленого на момент виконання побудови;  
-- `notNewer` - всі файли не новіше від встановленого на момент виконання побудови;
-- `notOlderAge` - вік окремих файлів, не більше від встановленого на момент виконання побудови;  
-- `notNewerAge` - вік окремих файлів, не менше від встановленого на момент виконання побудови.
+There are the following time filters:
+- `notOlder` - all files are not older than the build date set;
+- `notNewer` - all files are not newer than the one set at the time of construction;
+- `notOlderAge` - the age of individual files, no more than the date set at the time of construction;
+- `notNewerAge` - the age of individual files, is not smaller than the date set at the time of construction.
 
-### Приклад застосування часових фільтрів 
-
+### An example of using time filters
 ```yaml
 src :
   notOlderAge : 10000
-  
+
 ```
 
-Часовим фільтром `notOlderAge` вибираються файли, що мають вік не більш 10 секунд.
+The time filter `notOlderAge` selects files that have an age of no more than 10 seconds.
 
-### Використання глобів в мапі шляхів.
+### Using globes in the map of paths.
 
-Виключати із вибірки файли можливо не лише фільтрами файлів, але і за допомогою [мапи шляхів](<./ResourceReflector.md#>).
+Excluding files from the build is possible not only with file filters, but also by means of [Map of the paths](<./ResourceReflector.md#>).
