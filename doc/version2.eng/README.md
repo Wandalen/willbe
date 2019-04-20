@@ -104,7 +104,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/SectionExported.md">
       Section <code>exported</code>
   </a></summary>
-  Section of <code>out-will-file</code>, programatically generated with exporting of the module. It has list of exported files and it used by other modules for importing the module.
+  It is programmatically generated section of <code>out-will-file</code> by exporting a module. It has a list of exported files and is used by other modules for importing the module.
 </details>
 <details><summary><a href="./concept/ResourceBuild.md#Resource-export">
       Resource export
