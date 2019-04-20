@@ -176,7 +176,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/Selector.md#Glob-with-assertion">
       Glob with assertion
   </a></summary>
-  Restriction of glob by number of expected resources which should be found by the selector.
+  Special syntax construction appended after glob to restrict by expected number of resources which should be found by the selector.
 </details>
 <details><summary><a href="./concept/Criterions.md">
       Criterion
