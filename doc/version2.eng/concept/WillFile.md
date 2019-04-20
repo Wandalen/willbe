@@ -1,6 +1,6 @@
-# Config <code>Will-file</code>  
+# Configuration <code>Will-file</code>  
 
-Config for describing and building a module. Each formal module has such file.  
+Configuration for describing and building a module. Each formal module has such a file.  
 
 `Will-file` must be created for [informal submodules](SubmoduleInformal.md). It is convenient to use informal submodules.
 
@@ -26,7 +26,7 @@ The following `will-file` extensions are supported:
 
 ![will.file.png](./Images/will.file.png)
 
-The figure shows the list of files in the module directory (the `ls -al` command output). `Will-file` marked by rectangle.
+The figure shows the list of files in the module directory (the `ls -al` command output). `Will-file` is marked by rectangle.
 
 ### An example of `will-file`
 
