@@ -53,61 +53,55 @@ will-file
   Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.
 </details>
 
-### An example of `will-file`    
+### Приклад `will-файла`:  
 
 ![will.file.inner.png](./Images/will.file.inner.png)  
 
-The figure shows the `will-file` with four sections and several resources.
+На рисунку можна бачити `will-файл` з 4-ма секціями та декількома ресурсами.
 
-### Resources
+### Ресурси
 
-Structural and functional element of <code>will-file</code>. Resources of the same type collected in a section.
+Структурна і функціональна одиниця <code>will-файла</code>. В файлі ресурси одного типу зібрані в одній секції.  
 
-Resources of sections are designated declaratively. This means that the desired result is specified but there is no sequence or instructions for obtaining this result.
+Ресурси секцій позначаються декларативно, тобто, вказується бажаний результат, а не послідовність інструкцій для отримання цього результату.
 
-The type of resources representation of individual sections is different.
+Вигляд ресурсів окремих секцій відрізняється.
 
 ![resource.png](./Images/resource.png)  
 
-In the figure the resource `Tools` of submodule type  located in the section `submodule`. It is written in a shortened form of the record. The resource `npm. install` of step type located in the section `step` is written in a full (extended) record form.
+На рисунку ресурс типу підмодуль `Tools` розміщений в секції `submodule` має скорочену форму запису, а ресурс типу крок `npm.install` розміщеий в секції `step` має повну (розширену) форму запису.
 
-### Type of resource
+### Тип ресурса
 
-The functionality associated with group of resources is restricted by its purpose. Examples of types of resources: path, submodule, step, build. Each type of resources has its own purpose and is treated by the utility differently.
+Функціональність пов'язана із групою ресурсів, обмежена призначенням. Приклад того, які бувать типи ресурів: шлях, підмодуль, крок, збірка. Кожен тип ресурів має власне призначення і обробляється утиілітою по-різному.
 
 ### Ресурси по типам
 
-<details><summary><a href="./concept/ResourcePath.md#Path">
-    Recource of <code>path</code> type
-  </a></summary>
-  This is a resource for describing the file structure of a module that contains file paths. Paths are located in the <code>path</code> section.
+<details>
+  <summary><a href="./ResourcePath.md.md#Ресурс-шлях">Ресурси типу <code>path</code></a></summary>
+  Описують файлову структуру модуля, вказуючи шляхів до файлів даного модуля.
 </details>
-<details><summary><a href="./ResourceStep.md#Resource-step">
-    Resource of <code>step</code> type
-  </a></summary>
-  This is the resource of the  <code>step</code> section which is an instruction for executing by the utility when constructing the module. Step resource describes the operations and the desired result. The builds consist of steps. 
+<details>
+  <summary><a href="./ResourceStep.md#Ресурс-крок">Ресурси типу <code>step</code></a></summary>
+  Ресурс секції <code>step</code>, який представляє собою інструкцію для виконання утилітою при побудові модуля. Описують операції та бажаний результат. Збірки складаються із кроків.
 </details>
-<details><summary><a href="./concept/ResourceReflector.md#Resource-reflector">
-    Resource of <code>reflector</code> type
-  </a></summary>
-  This is the resource of the <code>reflector</code> section. It is a way to describe a set of files to perform some operation on them.
+<details>
+  <summary><a href="./ResourceReflector.md#Ресурс-рефлектор">Ресурси типу <code>reflector</code></a></summary>
+  Призначені для вибірки групи файлів для здійснення над ними якоїсь операції.
 </details>
-<details><summary><a href="./SubmodulesLocalAndRemote.md">
-      Resource of <code>submodule
-  </code> type</a></summary>
-  There are links to other modules that can be used as submodules of this module. 
+<details>
+  <summary><a href="./SubmodulesLocalAndRemote.md">Ресурси типу <code>submodule</code></a></summary>
+  Є посиланнями на інші модулі, які можливо використати в якості підмодулів даного модуля.
 </details>
-<details><summary><a href="./ResourceBuild.md#Resource-build">
-      Resource of <code>build</code> type</a></summary>
-  Contains a list of steps that required to build a module. 
+<details>
+  <summary><a href="./ResourceBuild.md#Ресурс-збірка">Ресурси типу <code>build</code></a></summary>
+  Містять перелік кроків, котрі потрібно здійснити щоб збудувати модуль.
 </details>
-<details><summary><a href="./ResourceBuild.md#Resource-export">
-      Resource of <code>export</code> type
-  </a></summary>
-  This is a special kind of build. The result of export is the generated `out-will-file` that can be used by another module.
+<details>
+  <summary><a href="./ResourceBuild.md#Ресурс-експорт">Ресурси типу <code>export</code></a></summary>
+  Це особливий вид збірки, результатом виконання, якої є згенерованй `out-will-файл`, що може бути використаний іншим модулем.
 </details>
-<details><summary><a href="./SectionExported.md#Section-exported">
-      Resource of <code>exported</code> type
-  </a></summary>
-  When the module is exported this resource is generated. The export resource available only in the generated files. The <code> out-will-file </code> has exactly the same amount of <code> exported </code> resources as  the number of different exports was done. Resources of this type include descriptive fields and a list of exported files.
+<details>
+  <summary><a href="./SectionExported.md#Секція-exported">Ресурси типу <code>exported</code></a></summary>
+  Цей ресурс генерується при експортуванні модуля і наявний лише в згенерованих файлах. <code>out-will-файл</code> має рівно стільки ресурсів типу <code>exported</code> скільки разів було виконано експортування даного модуля для різних експортів. Ресурси цього типу включають описові поля і перелік експортованих файлів.
 </details>

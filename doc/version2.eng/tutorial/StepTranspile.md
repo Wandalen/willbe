@@ -1,6 +1,6 @@
-# Transpilation
+# Транспіляція
 
-How to use predefined step <code>predefined.transpile</code> to transpile <code>JavaScript</code> files or concatenate them.  
+Використання вбудованого кроку <code>predefined.transpile</code> для транспіляції <code>JavaScript</code> файлів або їх конкатенації.
 
 Транспіляція, це переклад вихідного коду з однієї мови на іншу. В утиліті `willbe` є можливість перетворювати вихідні JavaScript файли в стиснений і перетворений код. Для цього використовується вбудований крок `predefined.transpile`.  
 
