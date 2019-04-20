@@ -20,7 +20,7 @@ To work with named `will-files` command [`.with`](../tutorial/WillFileNamed.md) 
 will .with final.release.will.yml .build release
 ```
 
-Build command for the `release` for the named ` will-file` `final.release.will.yml`.
+Build command of the `release`build for the named ` will-file` `final.release.will.yml`.
 
 #### `.each` command for named `will-files`
 
