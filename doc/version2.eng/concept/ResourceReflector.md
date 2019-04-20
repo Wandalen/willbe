@@ -88,7 +88,7 @@ When `recursive: 1` is used, the` proto` directory and its contents will be sele
 ![recursive.2.png](./Images/recursive.2.png)
 
 By the value `recursive: 2`, all the contents of the` proto` directory of all levels of the nesting, including files in the `files` directory and the following levels if available, will be selected.
-### Поля `basePath` i `prefixPath`  
+### Poles `basePath` and `prefixPath`  
 
 The `basePath`,` prefixPath` and `filePath` fields are used to specify file allocation in the` src` i `dst` filters.
 
