@@ -98,7 +98,8 @@ submodule :
 ```
 
 </details>
-Додайте готовий подмодуль. Використайте віддалений модуль `git+https:///github.com/Wandalen/wTools.git/out/wTools`. Додайте його в секцію `submodule` `will-файла`.
+
+Додайте готовий підмодуль. Використайте віддалений модуль `git+https:///github.com/Wandalen/wTools.git/out/wTools`. Додайте його в секцію `submodule` `will-файла`.
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.list</code></u></summary>
