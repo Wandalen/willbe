@@ -145,7 +145,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/ModuleCurrent.md">
       Current module
   </a></summary>
-  A module with respect to which operations are performed. By default the module is loaded from file <code>.will.yml</code> of the current directory.
+  A module with respect to which operations are performed. By default the module is loaded from file <code>.will.yml</code> of the current directory or pair of files <code>.im.will.yml</code> and <code>.ex.will.yml</code>.
 </details>
 <details><summary><a href="./concept/SubmoduleInformal.md">
       Informal submodule

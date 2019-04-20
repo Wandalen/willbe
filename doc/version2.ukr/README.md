@@ -144,7 +144,7 @@
 <details><summary><a href="./concept/ModuleCurrent.md">
       Поточний модуль
   </a></summary>
-  Модуль відносно якого виконуються операції. За замовчуванням цей модуль завантажується із файла <code>.will.yml</code> поточної директорії.
+  Модуль відносно якого виконуються операції. За замовчуванням цей модуль завантажується із файла <code>.will.yml</code> поточної директорії або із пари файлів <code>.im.will.yml</code> та <code>.ex.will.yml</code>.
 </details>
 <details><summary><a href="./concept/SubmoduleInformal.md">
       Неформальний підмодуль
