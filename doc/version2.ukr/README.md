@@ -21,6 +21,11 @@
   </a></summary>
   Розділення <code>will-файла</code> на два файла - для імпорту та експорту модуля. Дозволяє розробнику розділити дані для побудови модуля і дані для використання цього модуля іншими модулями.
 </details>
+<details><summary><a href="./concept/WillFileExported.md#експортований-will-файл-out-will-файл">
+      Експортований <code>will-файл</code> (<code>out-will-файл</code>)
+  </a></summary>
+  <code>Out-will-файл</code> - різновид <code>will-файла</code> згенерованого утилітою при експортуванні модуля. Інші модулі можуть використати даний модуль імортувавши його <code>out-will-файл</code>.
+</details>
 <details><summary><a href="./concept/Structure.md#Ресурси">
       Ресурси
   </a></summary>
@@ -110,11 +115,6 @@
       Секція <code>exported</code>
   </a></summary>
   Секція <code>out-will-файла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.
-</details>
-<details><summary><a href="./concept/WillFileExported.md#експортований-will-файл-out-will-файл">
-      Експортований <code>will-файл</code> (<code>out-will-файл</code>)
-  </a></summary>
-  <code>Out-will-файл</code> - різновид <code>will-файла</code> згенерованого утилітою при експортуванні модуля. Інші модулі можуть використати даний модуль імортувавши його <code>out-will-файл</code>.
 </details>
 <details><summary><a href="./concept/Module.md#Модуль">
       Модуль
