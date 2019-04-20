@@ -38,54 +38,27 @@ second
 </details>
 <details>
   <summary><a href="./concept/ResourceReflector.md#Resource-reflector">Resource reflector</a></summary>
-  Resource of section <code>reflector</code>, technique to describe set of files to perform an operation on it...
-=======
+  Resource of section <code>reflector</code>, technique to describe set of files to perform an operation on it.
 
->master
-</details>
-<details><summary><a href="./concept/Structure.md#Resources">
-      Resources
-  </a></summary>
-  Structural and functional element of <code>will-file</code>. Resources of the same type collected in a section.
-</details>
-<details><summary><a href="./concept/Structure.md#Type-of-resource">
-      Type of resource
-  </a></summary>
-  Functionality associated with group of resources restricted by its purpose. Examples of types of resources: path, submodule, step, build. Each type of resources has its own purpose and is treated by the utility differently.
-</details>
-<details><summary><a href="./concept/Inheritance.md">
-      Inheritance
-  </a></summary>
-  Approach of description of a module according to wich <code>will-file</code> can reuse (inherit) value of fields of other resource(s) of the same type.
-</details>
-<details><summary><a href="./concept/ResourcePath.md#Path">
-      Recource path
-  </a></summary>
-  This is a resource for describing the file structure of a module that contains file paths. Paths are located in the <code>path</code> section.
-</details>
-<details><summary><a href="./concept/ResourceReflector.md#Resource-reflector">
-      Resource reflector
-  </a></summary>
-  Resource of section <code>reflector</code>, technique to describe set of files to perform an operation on this set of files.
->>>>>>> 9ec937711fb9b57c87c7e675e68edf5123785f64
 </details>
 <details><summary><a href="./concept/ReflectorFileFilter.md">
       File filters
   </a></summary>
   Technique to describe conditions of selection required files for some operation on group of files. Reflector has two file filters: <code>src</code> and <code>dst</code>.
 </details>
-<<<<<<< HEAD
+
 <details>
   <summary><a href="./concept/ResourceReflector.md#map-of-paths">Map of paths</a></summary>
   A field of a reflector and a technique to describe the set of files to include as many files as required and to exclude unwanted files with help of excluding conditions and globs.
-=======
+
 <details><summary><a href="./concept/ResourceReflector.md#map-of-paths">
       Map of paths
   </a></summary>
   A field of a reflector and a technique to describe set of files to include as many files as required and to exclude unwanted files with help of excluding conditions and globs.
->>>>>>> 9ec937711fb9b57c87c7e675e68edf5123785f64
 </details>
-<details><summary><a href="./concept/ResourceStep.md#Resource-step">
+
+<details>
+<summary><a href="./concept/ResourceStep.md#Resource-step">
       Resource step
   </a></summary>
   <code>Step</code> section resource which is an executing instruction of module building.
