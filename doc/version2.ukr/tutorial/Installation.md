@@ -20,7 +20,6 @@ npm install -g willbe
 
 ```
 will .help
-
 ```
 
 ### Підсумок
