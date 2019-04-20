@@ -38,7 +38,7 @@ second
 </details>
 <details>
   <summary><a href="./concept/ResourceReflector.md#Resource-reflector">Resource reflector</a></summary>
-  Resource of section <code>reflector</code>, technique to describe set of files to perform an operation on it.
+  Resource of section <code>reflector</code>, technique to describe set of files to perform an operation on it...
 =======
 
 >master
