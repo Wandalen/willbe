@@ -9,7 +9,7 @@ Commands of updating files of submodules, upgrading submodules rewriting <code>w
 Для дослідження команди створіть наступну структуру файлів в директорії `submodulesCommands`:   
 
 <details>
-  <summary><u>Структура файлів</u></summary>
+  <summary><u>Файлова структура</u></summary>
 
 ```
 submodulesCommands
@@ -80,7 +80,7 @@ submodule :
 
 </details>
 <details>
-  <summary><u>Структура файлів</u></summary>
+  <summary><u>Файлова структура</u></summary>
 
 ```
 submodulesCommands
@@ -164,7 +164,7 @@ Remote path of module::submodulesCommands / module::Files will be fixated
 
 </details>
 <details>
-  <summary><u>Структура файлів після оновлення підмодулів</u></summary>
+  <summary><u>Файлова структура після оновлення підмодулів</u></summary>
 
 ```
 submodulesCommands
@@ -211,7 +211,7 @@ Remote path of module::submodulesCommands / module::Tools fixated
 
 </details>
 <details>
-  <summary><u>Структура файлів після оновлення підмодулів</u></summary>
+  <summary><u>Файлова структура після оновлення підмодулів</u></summary>
 
 ```
 submodulesCommands
@@ -243,7 +243,7 @@ submodulesCommands
 </details>
 
 <details>
-  <summary><u>Структура файлів після видалення підмодулів</u></summary>
+  <summary><u>Файлова структура після видалення підмодулів</u></summary>
 
 ```
 submodulesCommands

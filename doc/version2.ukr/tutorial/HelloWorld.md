@@ -17,7 +17,7 @@
 - Cтворіть порожній файл з назвою `.will.yml` в новій директорії (`first`).  
 
 <details>
-  <summary><u>Структура файлів</u></summary>
+  <summary><u>Файлова структура</u></summary>
 
 ```
 first               # директорія, назва довільна
@@ -92,7 +92,7 @@ submodule :
 
 </details>
 <details>
-  <summary><u>Структура файлів</u></summary>
+  <summary><u>Файлова структура</u></summary>
 
 ```
 first              
@@ -159,7 +159,7 @@ drwxr-xr-x 4 user user 4096 Мар 12 07:20 Tools
 
 </details>
 <details>
-  <summary><u>Структура файлів, що відповідає виводу команд <code>ls -al</code></u></summary>
+  <summary><u>Файлова структура, що відповідає виводу команд <code>ls -al</code></u></summary>
 
 ```
 first
