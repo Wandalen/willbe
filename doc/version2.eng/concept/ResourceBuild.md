@@ -1,33 +1,44 @@
-## Ресурс збірка
+## Resource build
 
-Послідовність і умови виконання процедур побудови модуля. При виконанні команди <code>.build</code> розробник має вказати збірку, яку хоче зібрати, однозначно вибравши одну по імені або по умовам вибірки.
+Sequence and conditions of procedures execution to build a module. By implementation of the command `will .build`, developer has to select a particular build which is wanted unambiguously calling command by name or by conditions of the build.
 
 Найважливішим полем збірки є `steps` - сценарій збірки. Сценарій збірки - послідовність кроків, що потрібно виконати для того щоб збірка вважалася побудованою.
 
-### Збірка за замовчуванням
+The most important the field of the build  is `steps` - a build script. Build script is a sequence of steps that must be performed consider the build constructed.
 
-Модуль може мати збірку за замовчуванням. Для того щоб зробити якусь збірку такою потрібно вказати для неї [критеріон `default : 1`](Criterions.md#Використання).
+### Build by default
 
-### Приклад
+  Модуль може мати збірку за замовчуванням. Для того щоб зробити якусь збірку такою потрібно вказати для неї
+
+The module may have a default build. In order to make a such a build it is needed to specify for her
+  [cryterion `default : 1`](Criterions.md#Використання).
+
+### Example
 
 ![section.build.png](./Images/section.build.png)
 
-Приклад має показує збірку з назвою `copy.files`, яка виконує крок `copy.proto`. В збірці встановлено критеріон `default : 1`, який визначає збірку за замовчуванням.
+The build with the name `copy.files` has one step `copy.proto`. Criterion `default : 1` makes this build the default build.
 
-### Поля ресурсів секції `build`  
+### The fields of resources of section `build`  
 
-| Поле          | Опис                                                             |
+| Field        | Description                                                            |
 |---------------|------------------------------------------------------------------|
-| description   | опис для інших розробників                                       |
-| criterion     | умова побудови модуля (див. [критеріон](Criterions.md))          |
-| steps         | послідовність кроків, що потрібно виконати для того щоб збірка вважалася побудованою        |
-| inherit       | наслідування від іншої збірки                        |
+  | description   | description for other developers                                    |
+| criterion     | condition of module construction (see [criterion](Criterions.md))          |
+| steps         | sequence of steps to be performed in order to consider the build being constructed        |
+| inherit       | inheritance from another collection                       |
 
-### Ресурс експорт
+### Resource export
 
 Особливий вид збірки необхідний для використання даного модуля іншими розробниками та модулями. Результатом експортування модуля є аретфакти, зокерма <code>out-will-file</code>.
 
-Результатом експорту модуля є згенерований конфігураційний `*.out.will.`-файл та, опціонально, архів з файлами модуля (`*` позначає назву збірки, за якою виконувався експорт). Процес експортування `*.out.will.`-файла включає як копіювання інформації з поточного модуля, так і додавання сервісної інформації для імпорту. При експортуванні модуля заповнення секції `about` обов'язкове.  
+A special kind of build which is needed to use this module by other developers and modules. The result of the module export are generated files, which is <code> out-will-file </ code> and archive.
+
+Результатом експорту модуля є згенерований конфігураційний `out-will-file` та, опціонально, архів з файлами модуля. При експортуванні модуля заповнення секції about обов'язкова і вона повинна мати ім'я та версію модуля.
+
+The result of the module exportation is the generated configuration `out-will-file`  and optionally the archive with the module files. While exporting the module, filling out the section `about` is required and must have the name and version of the module.
+
+ Процес експортування `*.out.will.`-файла включає як копіювання інформації з поточного модуля, так і додавання сервісної інформації для імпорту. При експортуванні модуля заповнення секції `about` обов'язкове.  
 Експорт модуля здійснюється з допомогою [вбудованого кроку `predefined.export`](ResourceStep.md#вбудований-крок-predefinedexport).  
 
 ### Приклад збірки експорту

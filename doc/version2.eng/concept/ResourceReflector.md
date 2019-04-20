@@ -1,23 +1,18 @@
 ### Resource reflector
 
-Ресурс секції <code>reflector</code>, спосіб опису множини файлів для виконання якоїсь операції над ними.
-
 Resource of the section <code>reflector</code>, method of description of the set of files in order to implement some operation at it.
 
 ### Example
 
 ![section.reflector.png](./Images/section.reflector.png)
 
-Приклад секції `reflector` з ресурсом `reflector1`. Рефлектор має два поля: перше вказує на джерело файлів, а друге на директорію призначення. Тобто, рефлектор копіює файли поміщені за шляхом `path::proto` в директорію за шляхом `path::out`.
-
-
-An example of a `reflector` section with a` reflector1` resource. The reflector has two fields: the first specifies the source of the files, and second - destination directory. That means, that  reflector copies files placed by path `path :: proto` in the directory by path` path :: out`.
+An example of a `reflector` section with a` reflector1` resource. The reflector has two fields: the first specifies the source of the files, and second - destination directory. That means, that  reflector copies files placed by path `path :: proto` in the directory.
 
 ### Fields of resource `reflector`
 
 | Field          | Description                                                       |
 |----------------|------------------------------------------------------------|
-| description    | Explanations for other  developers                                    |
+| description    | Description for other  developers                                    |
 | recursive      | Include files from sub directories or not. Possible values: `0`,` 1`, `2`. The default value is `2` |
 | mandatory      | Show an error if no file is found. Possible values: `0`,` 1`. The default value is `1` |
 | filePath       | Map of the paths |
@@ -30,7 +25,6 @@ The fields `src`, `dst` can contain subfields which describe [file filters](Refl
 
 ### Map of the paths
 
-<<<<<<< HEAD
 Reflector field and a way to describe a set of files, which allows including a lot of files in it and exclude from it the files that are not required by the terms of exclusion and globes.
 
 The path map can:
@@ -40,23 +34,10 @@ The path map can:
 - many conditions for exclusion of files from the build;
 - exclude sample files that match the globe via `false` or` 0`;
 - exclude sample files that do not match the globe via `true` or` 1`
-=======
-Поле рефлектора та спосіб опису множини файлів, котрий дозволяє включити в неї безліч файлів і виключити із неї не потрібні файли за допомогою умов виключення та ґлобів.
-
-Мапа шляхів може:
-- задавати розміщення файлів над якими необхідно виконати операцію;
-- задавати розміщення файлів, в які потрібно записати результат операції;
-- може вказувати безліч директорій;
-- безліч умов виключення файлів із вибірки;
-- виключення файлів із вибірки, що співпадають із ґлобом через `false` чи `0`;
-- виключення файлів із вибірки, що не співпадають із ґлобом через `true` чи `1`.
->>>>>>> 5be7b85482dffb8963c6728e004be753d63cc02d
-
-Мапа шляхів може задаватися в полі `filePath` або в полі `src.filePath` чи `dst.filePath` рефлектора. При наслідуванні успадковуються ті умови виключення, котрі мають значення `0`, `1`, `false`, `true`, а директорії (шляхи, які мають в значенні `null`, простий указаний шлях), в яких ведеться пошук, переписуються останнім предком або безпосередньо нащадком.
 
 The path map can be specified in the `filePath` field or in the` src.filePath` or `dst.filePath` field of the reflector. By inheritance, those exclusion are taken, which have the value `0`,` 1`, `false`,` true`, and the directories (paths that have the `null`, simple specified path) in which the searching is made, are rewritten by the last ancestor or directly by descendant.
 
-Виключати файли із вибірки можливо не лише мапою шлхяів, але і
+By inheritance, the exclusion which have the value `0`,` 1`, `false`,` true` are taken. Moreover  the directories (paths that have the `null`, simple specified path) in which the searching is made, are rewritten by the last ancestor or directly by descendant.
 
 Excluding build files is possible not only with the map path , but also [filter of the file](<./ReflectorFileFilter.md#>).
 
@@ -76,13 +57,10 @@ src:
 - `'**.debug**' : 0` - negative exclusion condition.
 - `'**.js' : 1` - positive exclusion condition.
 
-Читається так: переглянути всі файли в директоріях `some/dir1` та `some/dir1`, відкинути всі файли, що мають в шляху `.debug` або не зкінчуються розширенням `.js`.
-
 It reads like this: to view all the files in the `some / dir1` and` some / dir1` directories, reject all files that are in the `.debug` path or end with the` .js` extension.
 
 ### The field of the reflector `mandatory`
 
-Поле, яке керує видачею помилки про відсутність файлів за указаним шляхом. При значенні `mandatory : 1` утиліта видасть помилку і завершить побудову, якщо за указаним шляхом не буде знайдено жодного файлу, а при `mandatory : 0` помилки викинуто не буде і процедура побудови продовжиться. За замовчуваням має значення `1`.
 
 The field that controls the issue of missing files in the specified path. When the value `mandatory: 1` is used, the utility will issue an error and complete the build if no file is found in the specified path, and if` mandatory: 0` the error will not be shown and the construction procedure will continue. The default value is `1`.
 
