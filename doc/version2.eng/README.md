@@ -65,7 +65,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/ResourceBuild.md#Resource-build">
       Resource build
   </a></summary>
-  Sequence and conditions of procedures execution to build a module. Developer has to select a particular build calling command <code>.build</code> by name or by constraints.
+  Sequence and conditions of procedures execution to build a module. Developer has to select a particular build calling command <code>will .build</code> by name or by constraints.
 </details>
 <details><summary><a href="./concept/Structure.md#Section-will-file">
       Section <code>will-file</code>
@@ -110,7 +110,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/ResourceBuild.md#Resource-export">
       Resource export
   </a></summary>
-  Special kind of build which required for the module to been used by other developers and modules. Result of exporting is artefacts among wich is <code>out-will-file</code>.
+  Special kind of build which required for the module to been used by other developers and modules. Result of exporting is generated files among wich is <code>out-will-file</code> and archive.
 </details>
 <details><summary><a href="./concept/WillFileExported.md#Exported-will-file-out-will-file">
       Exported <code>will-file</code> (<code>out-will-file</code>)
