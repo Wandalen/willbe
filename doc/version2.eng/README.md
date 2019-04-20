@@ -59,6 +59,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/ResourceStep.md#Resource-step">
       Resource step
   </a></summary>
+  Instruction for building the module. Describe operation and desired outcome. Build consists of steps.
   <code>Step</code> section resource which is an executing instruction of module building.
 </details>
 <details><summary><a href="./concept/ResourceBuild.md#Resource-build">
