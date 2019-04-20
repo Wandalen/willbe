@@ -15,11 +15,13 @@ second
   <summary><a href="./concept/WillFileNamedAndSplit.md#Named-will-file">Named <code>will-file</code></a></summary>
   Kind of <code>will-file</code> which has a nonstandard name. It makes possible to have multiple modules with different names in a directory.
 </details>
+
 <details>
   <summary><a href="./concept/WillFileNamedAndSplit.md#Split-will-file">Split <code>will-file</code></a></summary>
   Splitting <code>will-file</code> into two files. One of them is for importing data and other is for exporting. It makes possible splitting data related builds and develop a module. Data is related to its exporting paths and can be reused by other modules.
-<<<<<<< HEAD
-</details>
+<details>
+  
+ 
 <details>
   <summary><a href="./concept/Structure.md#Resources">Resources</a></summary>
   Structural and functional element of <code>will-file</code>. Resources of the same type are collected in a section.
@@ -28,6 +30,7 @@ second
   <summary><a href="./concept/Structure.md#Type-of-resource">Type of resource</a></summary>
   Functionality associated with a group of resources restricted by its purpose. Examples of types of resources: path, submodule, step, build. Each type of resources has its own purpose and is treated differently by the utility.
 </details>
+
 <details>
   <summary><a href="./concept/Inheritance.md">Inheritance</a></summary>
   Approach of description of a module according to which <code>will-file</code> can use (inherit) the values of fields of other resource(s) of the same type.
@@ -36,9 +39,11 @@ second
   <summary><a href="./concept/ResourcePath.md#Path">Recource path</a></summary>
     Resource to describe file structure of the module, which has the file paths to files of the module. Paths are collected in section <code>path</code>.
 </details>
+
 <details>
   <summary><a href="./concept/ResourceReflector.md#Resource-reflector">Resource reflector</a></summary>
   Resource of section <code>reflector</code>, technique to describe set of files to perform an operation on it.
+
 
 </details>
 <details><summary><a href="./concept/ReflectorFileFilter.md">
