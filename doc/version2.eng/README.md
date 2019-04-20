@@ -8,15 +8,15 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 
 <details>
   <summary><a href="./concept/WillFile.md"><code>Will-file</code>  </a></summary>
-  Config for describing and building a module. Each formal module has such file.
+  Configuration for describing and building a module. Each formal module has such a file.
 </details>
 <details>
   <summary><a href="./concept/WillFileNamedAndSplit.md#Named-will-file">Named <code>will-file</code></a></summary>
-  Kind of <code>will-file</code> which has nonstandard name. It makes possible to have multiple modules with different names in a directory.
+  Kind of <code>will-file</code> which has a nonstandard name. It makes possible to have multiple modules with different names in a directory.
 </details>
 <details>
   <summary><a href="./concept/WillFileNamedAndSplit.md#Split-will-file">Split <code>will-file</code></a></summary>
-  Splitting <code>will-file</code> into two files. One of them is for importing data and the other for exporting. Its make possible splitting data related building and development of a module and data related its exporting and reusing by other modules.
+  Splitting <code>will-file</code> into two files. One of them is for importing data and other is for exporting. It makes possible splitting data related builds and develop a module. Data is related to its exporting paths and can be reused by other modules.
 </details>
 <details>
   <summary><a href="./concept/Structure.md#Resources">Resources</a></summary>
