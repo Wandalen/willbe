@@ -39,7 +39,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/ResourcePath.md#Path">
       Recource path
   </a></summary>
-  Recource to describe file structure of the module, it has file paths to files of the module. Paths are collected in section <code>path</code>.
+  This is a resource for describing the file structure of a module that contains file paths. Paths are located in the <code>path</code> section.
 </details>
 <details><summary><a href="./concept/ResourceReflector.md#Resource-reflector">
       Resource reflector

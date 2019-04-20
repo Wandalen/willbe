@@ -63,32 +63,37 @@ will-file
 
 Structural and functional element of <code>will-file</code>. Resources of the same type collected in a section.
 
-Ресурси секцій позначаються декларативно, тобто, вказується бажаний результат, а не послідовність інструкцій для отримання цього результату.
+Resources of sections are designated declaratively. This means that the desired result is specified but there is no sequence or instructions for obtaining this result.
 
-Вигляд ресурсів окремих секцій відрізняється.
+The type of resources representation of individual sections is different.
 
 ![resource.png](./Images/resource.png)  
 
-На рисунку ресурс типу підмодуль `Tools` розміщений в секції `submodule` має скорочену форму запису, а ресурс типу крок `npm.install` розміщеий в секції `step` має повну (розширену) форму запису.
+In the figure the resource `Tools` of submodule type  located in the section `submodule`. It is written in a shortened form of the record. The resource `npm. install` of step type located in the section `step` is written in a full (extended) record form.
 
-### Тип ресурса
+### Type of resource
 
-Функціональність пов'язана із групою ресурсів, обмежена призначенням. Приклад того, які бувать типи ресурів: шлях, підмодуль, крок, збірка. Кожен тип ресурів має власне призначення і обробляється утиілітою по-різному.
+The functionality associated with group of resources is restricted by its purpose. Examples of types of resources: path, submodule, step, build. Each type of resources has its own purpose and is treated by the utility differently.
 
 ### Ресурси по типам
 
-<details>
-  <summary><a href="./ResourcePath.md.md#Ресурс-шлях">Ресурси типу <code>path</code></a></summary>
-  Описують файлову структуру модуля, вказуючи шляхів до файлів даного модуля.
+<details><summary><a href="./concept/ResourcePath.md#Path">
+      Recource of path type
+  </a></summary>
+  This is a resource for describing the file structure of a module that contains file paths. Paths are located in the <code>path</code> section.
 </details>
-<details>
-  <summary><a href="./ResourceStep.md#Ресурс-крок">Ресурси типу <code>step</code></a></summary>
-  Ресурс секції <code>step</code>, який представляє собою інструкцію для виконання утилітою при побудові модуля. Описують операції та бажаний результат. Збірки складаються із кроків.
+<details><summary><a href="./ResourceStep.md#Resource-step">
+      Resource of step type
+  </a></summary>
+  This is the resource of the  <code>step</code> section which is an instruction for executing by the utility when constructing the module. Step resource describes the operations and the desired result. The builds consist of steps. 
 </details>
-<details>
-  <summary><a href="./ResourceReflector.md#Ресурс-рефлектор">Ресурси типу <code>reflector</code></a></summary>
-  Призначені для вибірки групи файлів для здійснення над ними якоїсь операції.
+<details><summary><a href="./concept/ResourceReflector.md#Resource-reflector">
+      Resource of reflector type
+  </a></summary>
+  This is the resource of the <code>reflector</code> section. It is a way to describe a set of files to perform some operation on them.
 </details>
+
+
 <details>
   <summary><a href="./SubmodulesLocalAndRemote.md">Ресурси типу <code>submodule</code></a></summary>
   Є посиланнями на інші модулі, які можливо використати в якості підмодулів даного модуля.
