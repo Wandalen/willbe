@@ -8,35 +8,35 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 
 <details>
   <summary><a href="./concept/WillFile.md"><code>Will-file</code>  </a></summary>
-  Config for describing and building a module. Each formal module has such file.
+  Configuration for describing and building a module. Each formal module has such a file.
 </details>
 <details>
   <summary><a href="./concept/WillFileNamedAndSplit.md#Named-will-file">Named <code>will-file</code></a></summary>
-  Kind of <code>will-file</code> which has nonstandard name. It makes possible to have multiple modules with different names in a directory.
+  Kind of <code>will-file</code> which has a nonstandard name. It makes possible to have multiple modules with different names in a directory.
 </details>
 <details>
   <summary><a href="./concept/WillFileNamedAndSplit.md#Split-will-file">Split <code>will-file</code></a></summary>
-  Splitting <code>will-file</code> into two files. One of them is for importing data and the other for exporting. Its make possible splitting data related building and development of a module and data related its exporting and reusing by other modules.
+  Splitting <code>will-file</code> into two files. One of them is for importing data and other is for exporting. It makes possible splitting data related builds and develop a module. Data is related to its exporting paths and can be reused by other modules.
 </details>
 <details>
   <summary><a href="./concept/Structure.md#Resources">Resources</a></summary>
-  Structural and functional element of <code>will-file</code>. Resources of the same type collected in a section.
+  Structural and functional element of <code>will-file</code>. Resources of the same type are collected in a section.
 </details>
 <details>
   <summary><a href="./concept/Structure.md#Type-of-resource">Type of resource</a></summary>
-  Functionality associated with group of resources restricted by its purpose. Examples of types of resources: path, submodule, step, build. Each type of resources has its own purpose and is treated by the utility differently.
+  Functionality associated with a group of resources restricted by its purpose. Examples of types of resources: path, submodule, step, build. Each type of resources has its own purpose and is treated differently by the utility.
 </details>
 <details>
   <summary><a href="./concept/Inheritance.md">Inheritance</a></summary>
-  Approach of description of a module according to wich <code>will-file</code> can reuse (inherit) value of fields of other resource(s) of the same type.
+  Approach of description of a module according to which <code>will-file</code> can use (inherit) the values of fields of other resource(s) of the same type.
 </details>
 <details>
   <summary><a href="./concept/ResourcePath.md#Path">Recource path</a></summary>
-    Recource to describe file structure of the module, it has file paths to files of the module. Paths are collected in section <code>path</code>.
+    Resource to describe file structure of the module, which has the file paths to files of the module. Paths are collected in section <code>path</code>.
 </details>
 <details>
   <summary><a href="./concept/ResourceReflector.md#Resource-reflector">Resource reflector</a></summary>
-  Resource of section <code>reflector</code>, technique to describe set of files to perform an operation on this set of files.
+  Resource of section <code>reflector</code>, technique to describe set of files to perform an operation on it.
 </details>
 <details>
   <summary><a href="./concept/ReflectorFileFilter.md">File filters</a></summary>
@@ -44,7 +44,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 </details>
 <details>
   <summary><a href="./concept/ResourceReflector.md#map-of-paths">Map of paths</a></summary>
-  A field of a reflector and a technique to describe set of files to include as many files as required and to exclude unwanted files with help of excluding conditions and globs.
+  A field of a reflector and a technique to describe the set of files to include as many files as required and to exclude unwanted files with help of excluding conditions and globs.
 </details>
 <details>
   <summary><a href="./concept/ResourceStep.md#Resource-step">Resource step</a></summary>
