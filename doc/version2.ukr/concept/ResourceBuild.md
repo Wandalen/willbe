@@ -35,7 +35,7 @@
 ### Приклад збірки експорту
 
 ```yaml
-steps :
+step :
 
   export.proto :
     export : path::proto
