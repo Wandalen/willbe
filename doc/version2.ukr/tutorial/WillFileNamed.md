@@ -10,7 +10,7 @@
 Створіть директорію `named` з наступною конфігурацією:  
 
 <details>
-  <summary><u>Структура файлів</u></summary>
+  <summary><u>Файлова структура</u></summary>
 
 ```
 named 
@@ -127,7 +127,7 @@ build :
 
 </details>
 <details>
-  <summary><u>Структура файлів після завантаження підмодулів</u></summary>
+  <summary><u>Файлова структура після завантаження підмодулів</u></summary>
 
 ```
 named 
@@ -161,7 +161,7 @@ named
 
 </details>
 <details>
-  <summary><u>Структура файлів після експорту модуля</u></summary>
+  <summary><u>Файлова структура після експорту модуля</u></summary>
 
 ```
 named 
@@ -196,7 +196,7 @@ named
 
 </details>
 <details>
-  <summary><u>Структура файлів після видалення <code>out</code>-директорії</u></summary>
+  <summary><u>Файлова структура після видалення <code>out</code>-директорії</u></summary>
 
 ```
 named 

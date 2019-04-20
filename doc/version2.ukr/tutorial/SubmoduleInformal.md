@@ -8,7 +8,7 @@
 Створіть конфігурацію файлів, як приведено нижче:  
 
 <details>
-  <summary><u>Структура файлів</u></summary>
+  <summary><u>Файлова структура</u></summary>
 
 ```
 informalModule
