@@ -1,14 +1,10 @@
 ## Resource build
 
-Sequence and conditions of procedures execution to build a module. By implementation of the command `will .build`, developer has to select a particular build which is wanted unambiguously calling command by name or by conditions of the build.
+Sequence and conditions of the procedure's execution to build a module. By implementation of the command `will .build`, the developer has to select a particular build which is wanted unambiguously calling command by name or by conditions of the build.
 
-Найважливішим полем збірки є `steps` - сценарій збірки. Сценарій збірки - послідовність кроків, що потрібно виконати для того щоб збірка вважалася побудованою.
-
-The most important the field of the build  is `steps` - a build script. Build script is a sequence of steps that must be performed consider the build constructed.
+The most important the field of the build  is `steps` - a build script. Build script is a sequence of steps that must be performed to consider the build being constructed.
 
 ### Build by default
-
-  Модуль може мати збірку за замовчуванням. Для того щоб зробити якусь збірку такою потрібно вказати для неї
 
 The module may have a default build. In order to make a such a build it is needed to specify for her
   [cryterion `default : 1`](Criterions.md#Використання).
@@ -23,27 +19,27 @@ The build with the name `copy.files` has one step `copy.proto`. Criterion `defau
 
 | Field        | Description                                                            |
 |---------------|------------------------------------------------------------------|
-  | description   | description for other developers                                    |
+| description   | description for other developers                                    |
 | criterion     | condition of module construction (see [criterion](Criterions.md))          |
 | steps         | sequence of steps to be performed in order to consider the build being constructed        |
 | inherit       | inheritance from another collection                       |
 
 ### Resource export
 
-Особливий вид збірки необхідний для використання даного модуля іншими розробниками та модулями. Результатом експортування модуля є аретфакти, зокерма <code>out-will-file</code>.
-
-A special kind of build which is needed to use this module by other developers and modules. The result of the module export are generated files, which is <code> out-will-file </ code> and archive.
-
-Результатом експорту модуля є згенерований конфігураційний `out-will-file` та, опціонально, архів з файлами модуля. При експортуванні модуля заповнення секції about обов'язкова і вона повинна мати ім'я та версію модуля.
+A special kind of build which is needed in order to use this module by other developers and modules. The result of the module export are generated files, which is <code> out-will-file </ code> and archive.
 
 The result of the module exportation is the generated configuration `out-will-file`  and optionally the archive with the module files. While exporting the module, filling out the section `about` is required and must have the name and version of the module.
 
- Процес експортування `*.out.will.`-файла включає як копіювання інформації з поточного модуля, так і додавання сервісної інформації для імпорту. При експортуванні модуля заповнення секції `about` обов'язкове.  
-Експорт модуля здійснюється з допомогою [вбудованого кроку `predefined.export`](ResourceStep.md#вбудований-крок-predefinedexport).  
+The developer can export the module with the `will .export command.` In this case, the module must have a build for export. The export build must have a [predefined step `predefined.export`](ResourceStep.md#вбудований-крок-predefinedexport) and the criterion `export : 1`.
 
-### Приклад збірки експорту
+### Example of build's export
 
 ```yaml
+step :
+
+  export.proto :
+    export : path::proto
+
 build :
 
   export :
@@ -51,11 +47,11 @@ build :
       default : 1
       export : 1
     steps :
-	  - export.files
+      - export.proto
 ```
 
-В збірці `export` використовується крок `export.files` для експортування файлів. Поєднання критеріонів `export` i `default` дозволяє призначити [збірку експорту за замовчуванням](Criterions.md#Використання).
+In build `export` the step `export.files` is used to export of the files. Merging of criterions `export` and `default` allows to appoint [build's export by default](Criterions.md#Використання).
 
-### Секція <code>build</code>
+### Section <code>build</code>
 
-Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля.  
+Resource of the section (builds) describe the sequence and conditions of the implementation of creation of the external module.
