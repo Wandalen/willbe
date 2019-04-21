@@ -1,10 +1,10 @@
-# Секція <code>submodule</code>
+# Section <code>submodule</code>
 
-Секції містить інформацію про підмодулі.
+The section contains information about the submodule.
 
-Підмодуль - окремий модуль з власним конфігураційним <code>will-файлом</code>, який підпорядковується іншому модулю.  
+Submodule - an individual module with its own configuration <code> will-file </ code>, which is subordinated to another module.
 
-### Приклад
+### Example
 
 ```yml
 submodule :
@@ -15,13 +15,13 @@ submodule :
   Proto : out/Proto.informal.out
 ```
 
-Підключається 4-ри підмодуля, 2-ва [локальних](SubmodulesLocalAndRemote.md#Локальний-підмодуль) `out/UriFundamentals.informal.out`, `out/Proto.informal.out` та 2-ва [віддалених](SubmodulesLocalAndRemote.md#Віддалений-підмодуль) `git+https:///github.com/Wandalen/wTools.git/out/wTools#master`, `git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#d95a35b`. Віддалені модулі підключаються із вказанням версії (вітки і номера коміта).
+4 submodules are connected, 2  [local](SubmodulesLocalAndRemote.md#Local-submodule) `out/UriFundamentals.informal.out`, `out/Proto.informal.out` and 2 [remote](SubmodulesLocalAndRemote.md#Remote-submodule) `git+https:///github.com/Wandalen/wTools.git/out/wTools#master`, `git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#d95a35b`. Remote modules are connected with the version indication (branches and commit numbers).
 
-### Поля ресурсів секції `submodule`
+### The field of section resources `submodule`
 
-| Поле           | Опис                                           |
+| Field           | Description                                           |
 |----------------|------------------------------------------------|
-| path           | шлях до підмодуля, може бути абсолютним/відносним, локальним/ґлобальним |
-| description    | опис для інших розробників                                 |
-| criterion      | умова використання ресурса (див. [критеріон](Criterions.md)) |
-| inherit        | наслідування значень полів іншого підмодуля      |
+| path           | path to submodule, may be absolute / relative, local / global |
+| description    | description for other developers                                |
+| criterion      | condition of resource using (see [criterion](Criterions.md)) |
+| inherit        |inheritance of the fields values of the another submodule     |
