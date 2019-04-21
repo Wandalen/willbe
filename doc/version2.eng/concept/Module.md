@@ -1,35 +1,38 @@
-# Модуль, підмодуль, супермодуль
+# Module, submodule, supermodule
 
-### Модуль 
+### Module
 
-Модулем називається сукупність файлів, які описані в <code>will-файлi</code>.  
+A module is a collection of files that are described in <code> will-files </code>.
+Free definition of `willbe-module` imposes minimal restrictions on the development of software and using of utilities. Any set of files may be considered as a module.
 
-#### Приклад `will-файла` модуля
+#### Example of `will-файла` of module
 
 ![module.file.png](./Images/module.file.png)
 
-На рисунку приведений код `will-файла`, номерами і стрілками позначено як його читати (спрощена схема). 
-1. В секції `about` (якщо вказана) поміщено опис модуля - назва, версія, опис, інтерпретатори і ключові слова - інформація для розробника. На даному рисунку вказано, що модуль називається `exportModule`, версія - 0.0.1, він призначений для експорту одного файла.   
-2. Щоб визначити функціональність модуля, починайте зчитування з секції `build`, яка присутня в більшості `will-файлiв`. В секції `build` поміщено [збірки](ResourceBuild.md) побудови модуля. На рисунку збірка з назвою `export` виконує крок з назвою `export.single` (стрілкою вказано перехід до кроку).  
-3. Крок `export.single` виконує експорт. В полі `export` крок посилається на ресурс секції `path` з назвою `fileToExport` (стрілкою вказано перехід до шляху). В ресурсах прийнято формулювати посилання `Назва секції :: Назва ресурса`.
-4. Ресурс `fileToExport` секції `path` вказує на файл з назвою `fileToExport` в директорії модуля.   
+The figure shows the `will file` code, numbers and arrows marked as it should be read (simplified scheme).
+1. In section `about` (if specified) there is a description of the module - name, version, description, interpreters and keywords - information for the developer. At this figure it is specified that the module is called `exportModule`, version 0.0.1.
+2. To determine the functionality of the module, start reading from the section `build`, which is present in most` will-files`. The build section contains [builds](ResourceBuild.md) to build the module. At the figure, the build with the name `export` executes the step with the name` export.single` (the arrow indicates the transition to the step).
+3. The `export.single` step implements export. In the field `export`, the step refers to the resource section` path` with the name `fileToExport` (the arrow indicates the transition to the path). In resources it is accepted to formulate the link `Section title :: The name of the resource`.
+4. The `fileToExport` resource of the section `path` 'specifies a file named` fileToExport` in the module directory.
 
-Для визначення структури файлів без уточнення умов функціонування модуля звертайтесь до секції `path` проминувши інші кроки. Для отримання довідки про підмодулі - до секції `submodule`. Ресурси інших секцій взаємопов'язані і відповідають вказаному вище алгоритму зчитування.
+To understand the structure of the files refer to the `path` section. For getting information about submodules, see section `submodule`.To understand the modular structure of this module, see the section `submodule`. To understand which kind of build scenario are and which builds are available in this module, explore its section `build`.
 
-### Підмодуль  
+### Submodule
 
-Окремий модуль з власним конфігураційним <code>will-файлом</code>, який використовується іншим модулем (супермодулем).
+An individual module with its own configuration <code> will-file </code> which is used by another module (supermodule).
 
-### Супермодуль
+### Supermodule
 
-Модуль, який включає в себе інші модулі (підмодулі).  
+The module that includes other modules (submodules).
 
 Для підключення підмодуля в секцію `submodule` `will-файлa` поміщається ресурс з посиланням на `will-файл` підмодуля.  
- 
-#### Приклад підключення підмодуля
+
+To connect a submodule to the section `submodule`` will-file` is placed in the resource with the link to` will-file` of submodule.
+
+#### Example of submodule connection
 
 ![supermodule.png](./Images/supermodule.png)
 
-На рисунку показана частина `will-файла`, що описує супермодуль з назвою `superModule`. В секцію `submodule` поміщений підмодуль `Tools` з посиланням на віддалений сервер.
+The figure shows the part of `will-file` that describes the supermodule named` superModule`. The section `submodule` contains a submodule` Tools` with the link to a remote server.
 
-Детальніше про підмодулі в концепціях ["Локальний підмодуль"](SubmodulesLocalAndRemote.md#Локальний-підмодуль) ["Віддалений підмодуль"](SubmodulesLocalAndRemote.md#Віддалений-підмодуль)
+More about submodules in concepts ["Local submodule"](SubmodulesLocalAndRemote.md#Local-submodule), ["Remote submodule"](SubmodulesLocalAndRemote.md#Remote-submodule)
