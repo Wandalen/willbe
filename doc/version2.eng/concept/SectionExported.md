@@ -2,8 +2,6 @@
 
 The <code> out-will-file </ code> section is programmatically generated when the module is exported, contain the list of all exported files and is used by importation of this module by another one.
 
-
-
 ### Example
 
 ```yml
@@ -51,7 +49,7 @@ path :
 
 The list of exported files looks like this. All paths are relative to `path::in`.
 
-### The field of section resources  `exported`   
+### The fields of section resources  `exported`   
 
 | Field                     | Description                                   |
 |--------------------------|----------------------------------------|

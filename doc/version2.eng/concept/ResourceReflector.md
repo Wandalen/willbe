@@ -6,7 +6,7 @@ Resource of the section <code>reflector</code>, method of description of the set
 
 ![section.reflector.png](./Images/section.reflector.png)
 
-An example of a `reflector` section with a` reflector1` resource. The reflector has two fields: the first specifies the source of the files, and second - destination directory. That means, that  reflector copies files placed by path `path :: proto` in the directory.
+An example of a `reflector` section with a` reflector1` resource. The reflector has two fields. First specifies the source of the files, and second - destination directory. That means, that  reflector copies files placed by path `path :: proto` in the directory.
 
 ### Fields of resource `reflector`
 

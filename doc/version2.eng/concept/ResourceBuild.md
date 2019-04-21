@@ -6,8 +6,7 @@ The most important the field of the build  is `steps` - a build script. Build sc
 
 ### Build by default
 
-The module may have a default build. In order to make a such a build it is needed to specify for her
-  [cryterion `default : 1`](Criterions.md#Використання).
+The module may have a default build. In order to make such a build it is needed to specify for it [cryterion `default : 1`](Criterions.md#Використання).
 
 ### Example
 
@@ -22,13 +21,13 @@ The build with the name `copy.files` has one step `copy.proto`. Criterion `defau
 | description   | description for other developers                                    |
 | criterion     | condition of module construction (see [criterion](Criterions.md))          |
 | steps         | sequence of steps to be performed in order to consider the build being constructed        |
-| inherit       | inheritance from another collection                       |
+| inherit       | inheritance from another build                       |
 
 ### Resource export
 
 A special kind of build which is needed in order to use this module by other developers and modules. The result of the module export are generated files, which is <code> out-will-file </ code> and archive.
 
-The result of the module exportation is the generated configuration `out-will-file`  and optionally the archive with the module files. While exporting the module, filling out the section `about` is required and must have the name and version of the module.
+The result of the module exportation is the generated configuration `out-will-file`  and optionally the archive with the module files. Filling out of the section `about` is required and it must have the name and version of the module while module export.
 
 The developer can export the module with the `will .export command.` In this case, the module must have a build for export. The export build must have a [predefined step `predefined.export`](ResourceStep.md#вбудований-крок-predefinedexport) and the criterion `export : 1`.
 

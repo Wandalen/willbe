@@ -15,11 +15,11 @@ submodule :
   Proto : out/Proto.informal.out
 ```
 
-4 submodules are connected, 2  [local](SubmodulesLocalAndRemote.md#Local-submodule) `out/UriFundamentals.informal.out`, `out/Proto.informal.out` and 2 [remote](SubmodulesLocalAndRemote.md#Remote-submodule) `git+https:///github.com/Wandalen/wTools.git/out/wTools#master`, `git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#d95a35b`. Remote modules are connected with the version indication (branches and commit numbers).
+4 submodules are connected, 2  [local](SubmodulesLocalAndRemote.md#Local-submodule) `out/UriFundamentals.informal.out`, `out/Proto.informal.out` and 2 [remote](SubmodulesLocalAndRemote.md#Remote-submodule) `git+https:///github.com/Wandalen/wTools.git/out/wTools#master`, `git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#d95a35b`. Remote modules are connected with the speversion (branches and commit numbers).
 
 ### The field of section resources `submodule`
 
-| Field           | Description                                           |
+| Field          | Description                                           |
 |----------------|------------------------------------------------|
 | path           | path to submodule, may be absolute / relative, local / global |
 | description    | description for other developers                                |

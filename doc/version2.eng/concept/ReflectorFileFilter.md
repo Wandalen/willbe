@@ -15,7 +15,7 @@ Simple filters are filters that select files by name. They have string values.
 - `begins` -excludes from the build all files whose name does not begin with the word specified in the filter.
 - `ends` - excludes from the build all files whose name does not end on the word specified in the filter.
 - `hasExtension` - excludes from the build all files whose names do not have the specified extensions. The file extension can be composed and consist of several parts. The `willbe` utility will read it starting from the first point in the filename. For example, the `somefile.txt.md` file has two extensions -` txt` i `md`.
-### Уxample of writing of a simple filter:
+### Example of writing of a simple filter:
 
 ```yaml
 src:
