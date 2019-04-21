@@ -1,49 +1,39 @@
-### Селектор
+### Selector
 
-Рядок-посилання на ресурс або декілька ресурсів модуля.
+String-reference on resource or group of resources of the module.
 
-### Селектор з ґлобом
+### Selector with globe
 
-Селектор, який для вибору ресурсу використовує пошукові шаблони - ґлоби.  
+[Globbing](https://linuxhint.com/bash_globbing_tutorial/) - it is an analogue of regular expressions for searching files in the bash-terminal.
 
-[Globbing](https://linuxhint.com/bash_globbing_tutorial/) - представляє собою аналог регулярних виразів  для пошуку файлів в bash-терміналі.  
-
-#### Приклад секцій `will-файла` з селекторами  
+#### Example of sections `will-file` with selectors
 
 ![selector.png](./Images/selector.png)
 
-На рисунку в збірці `export` використовується два види селекторів. Селектор `export.*` використовує ґлоб `*`, який означає будь-яку кількість симоволів, включаючи, відсутність символів. Таким чином, він може обрати кроки `export.single` i `export.multi` (позначено синіми стрілками). Вибір кроку здійснюється [порівнянням мапи критеріонів](Criterions.md). Аналогічно здійснюється вибір шляхів кроками `export.single` i `export.multi`.  
+The two build of selectors are used in the drawing `export`. The `step::export.*` selector is the glob because it contains `*`, it reads: "select all steps that begin with `export`".This selector can select steps `:: export.single` and `step :: export.multi` (indicated by blue arrows).The choice of a step is carried out by [comparing the map of criterion](Criterions.md). Similarly, the paths are selected by steps `export.single` and `export.multi`.
 
-Селектори `step::delete.out` в збірці `export` і `path::out` в кроці `delete.out` - прості - мають пряме посилання на ресурс.  В `will-файлі` використовуються селектори вигляду `Назва секції :: Назва ресурса` - віддається перевага, якщо йде посилання на ресурс секції `will-файла`. 
+The selectors `step :: delete.out` in the build` export` and `path :: out` in the` delete.out` step are simple - have a direct link to the resource. In `will-file` selectors of the form` Section name :: The name of the resource` are used.
 
-### Ґлоб з ассертом
+### Glob with assertor
 
-Обмеження кількості ресурсів, що мають бути знайдені селектором з ґлобом
+A special syntactic construction that is added to the glob in order to limit the amount of resources which have to be found by the selector with this globe.
 
-Ассерт - це спеціальна конструкція, що дозволяє перевіряти припущення про значення довільних даних в довільному місці програми.  
+The `step::export` step must choose one way `path::out.debug`. Since it is the predictable and expectable result, developer put in selector `path::out.*=1` assert `=1`. This will ensure that the error is shown, if it happens, and more or less of  one path will be found by this selector. For example, if in paths do not specify a debug criterion, both paths will be found and an assert will show the error.
 
-При побудові модуля дані зводяться до ресурсів `will-файла` і припускається, що селектор вибирає задану (запрограмовану) кількість ресурсів. Якщо використовуються прості селектори, то це припущення вірне, а в випадку використання ґлобів не виключена логічна помилка. Тому, використання ґлобів разом з ассертами є гарною практикою.   
+It is possible to find more than one or even none of the resource by selector with globe. If the developer knows how many selector with the globe can find the resources, he can specify this number as an assert in the selector. Then while performing the utility notices that the developer's forecast is not confirmed and consequently will show the error. Leave asserts everywhere, where it is exactly known which the result of execution is - good practice of software development. Globe with assert is the specially enforced implementation by the developer to prevent unpredictable consequences. If the selector is simple and has no globe, then assert is not needed.
 
-Ґлоб з ассертом - обмеження вибірки селектора з ґлобом числовим значенням для локалізації місця помилки та попередження виконання небажаних дій.   
-
-#### Приклад алгоритму перевірки на кількість входжень
+#### Algorythm of verification asserts in selectors
 
 ![criterions.and.assert.png](./Images/criterions.and.asserts.png)
 
-Алгоритм виконує перевірку ресурсів на співпадіння мап [критеріонів](Criterions.md)- при їх співпадінні, утиліта інкрементує лічильник ресурсів. Після перевірки всіх ресурсів значення лічильника порівнюється з встановленим в ассерті. В випадку неспівпадіння значень утиліта видає повідомлення про помилку.  
+The algorithm performs a verification of the resources on the map coincidence [criterions](Criterions.md) - when they coincide, the utility increments the counter of resources. After verifying all resources, the value of the counter is compared to the one which is set in the assert. In case of non-matching values, the utility shows an error message.
 
-### Використання ассертів
-
-Ассерт записуєтся після ґлобу та має вигляд `=n`, де `n` - позначає кількість входженнь. Наприклад, в більшості випадків, селектор має обирати один ресурс секції `will-файла` і тому використовується ассерт '=1'.  
-
-#### Приклад `will-файла` з використанням ассертів  
+### Use of asserts
 
 ![asserts.png](./Images/asserts.png)  
 
-На рисунку селектор `step::export.*` в збірці `export` може виконати кроки `export.single` i `export.multi`. Через помилку в `will-файлі` (відсутність критеріонів в кроці `export.multi` - див. [критеріон](Criterions.md)) побудова буде зломана, оскільки, за один крок в сценарії збірки виконується один крок в секції `step`. Без ассертів утиліта `willbe` видасть повідомлення про помилку, яку буде складно локалізувати, а при використанні ассертів в термінал виводиться повідомлення про місце і ресурси, в яких виникла помилка.  Також, розробник обмежив кількість входжень файлів, які починаються на `fileTo` п'ятьма файлами (поле `path: 'fileTo*=5'` в шляху `fileToExport.multi`). Якщо кількість входжень зміниться, то побудова буде відмінена.
+The figure on the left shows a variant of the resource's erroneous writing. Because of the lack of criterions in the step`export.multi` selector `step::export.*=1` in build `build::export` will choose `step::export.single` and `step::export.multi`steps, which is contrary to the developer's expectation. Thanks to assert `= 1` the error will be localized.
 
 ![assert.message.png](./Images/assert.message.png)  
 
-На рисунку показано частину повідомлення про помилку в виборі ресурсів для `will-файла` на рисунку вище.  
-   
-
+Error message in resources selection for the `will-file` due to the assert's triggering.
