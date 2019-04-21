@@ -2,52 +2,44 @@
 
 Creating module "Hello, World!". Downloading of remote submodule.
 
-### Властивості `will-файла`
-`Will-файл` - конфігураційний файл для побудови модульної системи утилітою `willbe`.  
-Має наступні властивості:  
-\- `will-файл` описує файли модуля;  
-\- документ складається з секцій та ресурсів;  
-\- секція - вища структурна одиниця `will-файлa`;  
-\- є шість секцій для побудови модуля користувачем: `about`, `path`, `submodule`, `step`, `reflector`, `build` та одна секція, яка генерується утилітою `willbe` при експорті модуля - секція `exported`;   
-\- ресурси описують функціональності модуля;  
-\- ресурси одного типу об'єднуються в одній секції.   
+### Properties of `will-file`
+`Will-файл` - configuration file for building a modular system by utility `willbe`. It has the its own [properties](WillFile.md)
 
-### Створення `will-файла`  
-Для створення першого `will-файла` виконайте наступні кроки:  
-- Cтворіть порожній файл з назвою `.will.yml` в новій директорії (`first`).  
+### First module
+Creation of first module
 
 <details>
-  <summary><u>Структура файлів</u></summary>
+  <summary><u>File structure</u></summary>
 
 ```
-first               # директорія, назва довільна
-  └── .will.yml     # конфігураційний файл
+first               # directory, the name is arbitrary
+  └── .will.yml     # configuration file
 
 ```
 
-</details>
-- Відкрийте його та скопіюйте приведений нижче код.   
+To create the first module, create an empty `first` directory. In the newly created directory `first` create an empty file named `.will.yml`.
+
+</details>  
 
 <details>
-  <summary><u>Код файла <code>.will.yml</code></u></summary>
+  <summary><u>Code of the file <code>.will.yml</code></u></summary>
 
 ```yaml
 about :
 
     name : helloWorld
-    description : "First module like 'Hello, World!' application"
+    description : 'Hello, World!'
     version : 0.0.1
     keywords :
-        - willbe
+        - key
+        -word
 ```
-
 </details>
 
-- Збережіть файл.  
-- Перевірте конфігурацію, виконавши команду `will .about.list` в кореневій директорії файлa:
+Copy the specified code into the `.will.yml` file.
 
 <details>
-  <summary><u>Вивід команди <code>will .about.list</code></u></summary>
+  <summary><u>Command output   <code>will .about.list</code></u></summary>
 
   ```
 [user@user ~]$ will .about.list
@@ -56,7 +48,7 @@ Command ".about.list"
 . Read 1 will-files in 0.109s
 About
  name : 'helloWorld'
- description : 'First module like 'Hello, World!' application'
+ description : 'Hello, World!'
  version : '0.0.1'
  enabled : 1
  keywords :
@@ -65,21 +57,33 @@ About
 ```
 
 </details>
+Make sure the module is created by executing the `will.about.list` command in the `first` directory.
 
-Заповнення секції `about` спрощує використання та управління модулем в довготривалій перспективі.  
+The `about` section contains descriptive information, its presence is needed to export this module and to use it by another modules and developments.
 
-### Побудова модуля  
-Для побудови робочого модуля потрібно додати в нього функціональність.  
-Почніть з використання віддалених підмодулів - готових модулів, які знаходяться на віддаленому сервері. Для цього в секцію `submodule` `will-файла` помістіть ресурс з описом підмодуля. Замініть вміст файла `.will.yml`:  
+### First construction
+
+First construction of the module
+
 
 <details>
-  <summary><u>Код файла <code>.will.yml</code></u></summary>
+  <summary><u>Files structure</u></summary>
+
+```
+first              
+  └── .will.yml     
+
+```
+</details>
+
+<details>
+  <summary><u>Code of the file <code>.will.yml</code></u></summary>
 
 ```yaml
 about :
 
     name : helloWorld
-    description : "First module like 'Hello, World!' application"
+    description : 'Hello, World!'
     version : 0.0.1
     keywords :
         - willbe
@@ -91,23 +95,11 @@ submodule :
 ```
 
 </details>
-<details>
-  <summary><u>Структура файлів</u></summary>
 
-```
-first              
-  └── .will.yml     
-
-```
-
-</details>
-
-
-В секції `submodule` поміщено ресурс з назвою `Tools`, який має _URI_-шлях `git+https:///github.com/Wandalen/wTools.git/out/wTools#master`. Запис шляху свідчить про використання підмодуля з _GitHub_-у.  
-Скористайтесь фразою `will. submodules.list` для отримання довідки по підмодулям (тут і далі, текст виводу консолі, що не включено в туторіал позначений `...`):  
+Add the ready submodule. Use the remote `git+https:///github.com/Wandalen/wTools.git/out/wTools` module. Add it to the section of the `submodule` of the ` will-file`.
 
 <details>
-  <summary><u>Вивід команди <code>will .submodules.list</code></u></summary>
+  <summary><u>Command output<code>will .submodules.list</code></u></summary>
 
 ```
 [user@user ~]$ will .submodules.list
@@ -121,10 +113,10 @@ first
 
 </details>
 
-Зробіть наступний крок для побудови модуля - введіть команду `will. submodules.download` в кореневій директорії `will-файла`:
+Use the phrase `will.submodules.list` for information about submodules.
 
 <details>
-  <summary><u>Вивід команди <code>will .submodules.download</code></u></summary>
+  <summary><u>Command output<code>will .submodules.download</code></u></summary>
 
 ```
 [user@user ~]$ will .submodules.download
@@ -137,10 +129,10 @@ first
 
 </details>
 
-Перевірте зміни в директорії модуля, використовуючи команду `ls`:
+Enter the command `will.submodules.download` in the `first` directory.
 
 <details>
-  <summary><u>Вивід команди <code>ls -al</code></u></summary>
+  <summary><u>Command output <code>ls -al</code></u></summary>
 
 ```
 [user@user ~]$ ls -al
@@ -159,7 +151,7 @@ drwxr-xr-x 4 user user 4096 Мар 12 07:20 Tools
 
 </details>
 <details>
-  <summary><u>Структура файлів, що відповідає виводу команд <code>ls -al</code></u></summary>
+  <summary><u>The structure of the files corresponding to the output of the commands <code>ls -al</code></u></summary>
 
 ```
 first
@@ -171,10 +163,10 @@ first
 
 </details>
 
-В директорії для завантажених підмодулів `.module` утиліта `willbe` помістила підмодуль `Tools` . Перевірте статус підмодуля після завантаження:  
+  Check the changes in the module directory using the `ls` command. In the directory for the downloaded submodules `.module` the utility `willbe` placed the sub-module `Tools`.
 
 <details>
-  <summary><u>Вивід команди <code>will .submodules.list</code></u></summary>
+  <summary><u>Command output<code>will .submodules.list</code></u></summary>
 
 ```
 [user@user ~]$ will .submodules.list
@@ -190,26 +182,31 @@ submodule::Tools
 
 </details>
 
-Зверніть увагу на рядок, який позначає підмодуль секції - `submodule::Tools`. Вивід у формі `Назва секції :: Назва ресурса`, свідчить про те, що секція має необмежену кількість ресурсів. Секція `about`, має єдину форму запису:  
+Check the submodule status after loading.
+
+Pay attention to the line that represents the submodule of the section - `submodule::Tools`. Output in the form `Section name::The name of the resource`
 
 <details>
-  <summary><u>Вивід команди <code>will .about.list</code></u></summary>
+  <summary><u>Command output <code>will .about.list</code></u></summary>
 
 ```
 [user@user ~]$ will .about.list
 ...
 About
   name : 'helloWorld'
-  description : 'First module like 'Hello, World!' application'
+  description : 'Hello, World!'
   ...
 
 ```
 
 </details>
 
-### Підсумок
-- Ви можете використовувати готові модулі позначивши їх як підмодулі в секції `submodule`.
-- Вивід інформації про ресурси секції в консоль має вигляд `Тип ресурса :: Назва ресурса`.
+The `about` section has a simpler form of writing
 
-[Наступний туторіал](CommandsSubmodules.md)   
-[Повернутись до змісту](../README.md#tutorials)
+### Summary
+- It is possible to use ready-made modules by connecting them as submodules in the section `submodule`.
+- The output of information about the resources of the section in the console has the form `Type of resource :: The name of the resource`.
+- The `about` section contains descriptive information.
+
+[Next tutorial](CommandsSubmodules.md)   
+[Return to content](../README.md#tutorials)
