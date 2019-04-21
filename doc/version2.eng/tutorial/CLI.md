@@ -148,6 +148,7 @@ commands
 Create a new directory named `commands` to put a file named `.will.yml`.
 
 <details>
+
   <summary><u>Code of the file<code>.will.yml</code></u></summary>
 
 ```yaml
@@ -275,6 +276,7 @@ build::debug
 ```
 
 </details>
+
 <details>
   <summary><u>Section <code>build</code> of the file <code>.will.yml</code></u></summary>
 
@@ -320,6 +322,7 @@ submodule::PathFundamentals
 ```
 
 </details>
+
 <details>
   <summary><u>Section <code>submodule</code> of the file <code>.will.yml</code></u></summary>
 

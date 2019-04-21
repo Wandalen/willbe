@@ -57,6 +57,7 @@ About
 ```
 
 </details>
+
 Make sure the module is created by executing the `will.about.list` command in the `first` directory.
 
 The `about` section contains descriptive information, its presence is needed to export this module and to use it by another modules and developments.
@@ -150,6 +151,7 @@ drwxr-xr-x 4 user user 4096 Мар 12 07:20 Tools
 ```
 
 </details>
+
 <details>
   <summary><u>The structure of the files corresponding to the output of the commands <code>ls -al</code></u></summary>
 
