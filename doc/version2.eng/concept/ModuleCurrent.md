@@ -1,10 +1,11 @@
-# Поточний модуль
+# Current module
 
-Модуль відносно якого виконуються операції. За замовчуванням цей модуль завантажується із файла <code>.will.yml</code> поточної директорії.
+A module with respect to which operations are performed. By default the module is loaded from file <code>.will.yml</code> of the current directory.
 
-Іншими словами, це `will-файл`, по відношенню до якого виконуються команди в командній оболонці системи.
+In other words, it is `will-file`, in relation to which the commands in the command shell of the system are executed.
 
-#### Приклад   
+
+#### Example   
 
 ```
  .
@@ -20,9 +21,8 @@
 
  ```
 
-На зображеній структурі файлів, при виконанні команд з кореневої директорії файла `.will.yml` без фраз `.with` i `.each`, що використовують іменовані `will-файли`, поточним буде модуль з файлом `.will.yml`.  
+ To make the current module, the module named `will-file`, execute the command `.with` with the name specification of the corresponding `will-file`, for instance by implementation  `will .with second .build` the current module will be the module with file `second.will.yml`.  
 
-Для того, щоб поточним був модуль з іменованим `will-файлом`, виконайте команду `.with` з указанням імені відповідного `will-файлa`, наприклад, при виконанні `will .with release .build` поточним буде модуль з файлом `release.will.yml`. 
+ By implementation of `.each` each module will be loaded in sequence. `will .each . .build`. This command will build each module in the current directory.
 
-При виконанні команди `.each` в кореневій директорії файла `.will.yml` кожен із модулів буде поточним.  
-Якщо `will-файл` запускає побудову в іншому `will-файлі`, то він залишається поточним.
+ Named `will-file` is not possible to make current without using the `.with` or `.each` commands.
