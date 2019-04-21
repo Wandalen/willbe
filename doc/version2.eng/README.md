@@ -146,7 +146,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/SubmoduleInformal.md">
       Informal submodule
   </a></summary>
-  Set of files distribution of which does not include <code>will-file</code>.For such a submodule it's possible to create <code>will-file</code> and to export is independently.
+  Set of files distribution of which does not include <code>will-file</code>. For such a submodule it is possible to create <code>will-file</code> independently.
 </details>
 <details><summary><a href="./concept/ModuleCurrent.md">
       Current module
