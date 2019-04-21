@@ -1,8 +1,9 @@
-# Cryterions
+# Criterions
 
 Element of comparison for selection of resources.
 
-In `will-file` the map of criterions is represented by an associative array. Each resource can have any number of criterions. Criterions are used by selection by one resource another one through [selector with globe](Selector.md#Selector-with-globe). Criterions are not used by using the selector without glob, since there is no uncertainty in this selector.
+In `will-file` the map of criterions is represented by an associative array. Each resource can have any number of criterions. Criterions are used by selection by one resource another one through [selector with globe](Selector.md#Selector-with-globe). Criterions are not used the selector without glob was chosen, since there is no uncertainty in this selector.
+
 
 ### Example
 
@@ -30,7 +31,7 @@ For example, in the `step::delete.files` step, the` path::out.debug` path is use
 
 ### Instantiation of critetions
 
-In `will-file` for a single criterion it is possible to set a set of values. Herewith  not one [resource](Structure.md#Resources) will be created, but, as many different values combinations of the criterion of this resource as possible.
+In `will-file` for a single criterion it is possible to establish a set of values. Herewith  not one [resource](Structure.md#Resources) will be created, but, as many different values combinations of the criterion of this resource as possible.
 
 ```yaml
 step :
@@ -51,10 +52,10 @@ The step `step::delete.files`, which has two criterions `raw` and `debug`, is de
 Criterions can have Boolean or string values.
 
 ```yaml
-condition : false       # Boolean value
-compile : 1             # Boolean value
-raw : one               # Boolean value
-name : name1            # Boolean value
+condition : false       # String value
+compile : 1             # String value
+raw : one               # String value
+name : name1            # String value
 ```
 
 `false` and `0` -- considered to be alias
@@ -63,7 +64,7 @@ name : name1            # Boolean value
 ### Resource by default
 
 
-The `default` criterion has a particular meaning. The resource that has the criterion `default:1` is considered as the default resource. By means of `default: 1` criterion, one can specify the [build](ResourceBuild.md#Resource-collection) that should be assembled by default.
+The `default` criterion has a particular meaning. The resource that has the criterion `default:1` is considered as the default resource. By means of `default: 1` criterion, one can specify the [build](ResourceBuild.md#Resource-collection) that should build resource by default.
 
 ![criterion.default.png](./Images/criterion.default.png)
 
@@ -81,4 +82,4 @@ By build [selector with globe](Selector.md#Selector-with-globs), resources which
 
 ![resource.without.criterion.png](./Images/resource.without.criterion.png)
 
-The `step::proto.release` stepwill be executed by any value of the criterion `debug` in build `build::release`. Adding other criterions in `step::proto.relase` or in `build::release` the result will not be changed.
+The `step::proto.release` will be executed by any value of the criterion `debug` in build `build::release`. Adding other criterions in `step::proto.relase` or in `build::release` the result will not change.

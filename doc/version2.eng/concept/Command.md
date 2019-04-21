@@ -1,6 +1,6 @@
 ### Command
 
-A string which has phrase which describes intention of a developer and actions which will be done by utility after user enters it. It is entered in the interface of the command prompt by developer.
+A string consisting phrase which describes intention of a developer and actions which utility will do after user enters it. It is entered in the interface of the command prompt by developer.
 
 ### Phrase
 
@@ -24,15 +24,15 @@ To display the commands of the utility, type `will` or `will .help`
 | Phrase| Description                                       | Command                |
 |-------------------|--------------------------------------------|----------------------------------|
 | `.help`           | Display an information about the command| `will .help .[command]`          |
-| `.set`            |   Change the internal state of the utility, for example, the level of verbality.    | `will .set [properties] .[command] [argument]`                                   |
+| `.set`            |   Change the internal state of the utility, for example, the level of verbosity.    | `will .set [properties] .[command] [argument]`                                   |
 | `.resources.list` | Display all available information about the current module   | `will .resources.list [resources] [criterion]`                                  |
-| `.paths.list`     |  Recalculation of available paths of the current module | `will .paths.list [resources] [criterion]`         |
-| `.submodules.list` | Recalculation of available submodules of the current module                   | `will .submodules.list [resources] [criterion]`     |
-| `.reflectors.list` |  Recalculation of available reflectors of the current module                        | `will .reflectors.list [resources] [criterion]`     |
-| `.steps.list`     |  Recalculation of available steps of the current module                             | `will .steps.list [resources] [criterion]`          |
-| `.builds.list `   |     Recalculation of available builds of the current module        | `will .builds.list [resources] [criterion]`         |
-| `.exports.list`   | Recalculation of available builds for the export of the current module           | `will .exports.list [resources] [criterion]`        |
-| `.about.list`     | Display of description of the current module (section `about`)                               | `will .about.list`                                  |
+| `.paths.list`     |  List or other term of available paths of the current module | `will .paths.list [resources] [criterion]`         |
+| `.submodules.list` | List or other term of available submodules of the current module                   | `will .submodules.list [resources] [criterion]`     |
+| `.reflectors.list` |  List or other term of available reflectors of the current module                        | `will .reflectors.list [resources] [criterion]`     |
+| `.steps.list`     |  List or other term of available steps of the current module                             | `will .steps.list [resources] [criterion]`          |
+| `.builds.list `   |     List or other term of available builds of the current module        | `will .builds.list [resources] [criterion]`         |
+| `.exports.list`   | List or other term of available builds for the export of the current module           | `will .exports.list [resources] [criterion]`        |
+| `.about.list`     | Display of general infoormation about the current module (section `about`)                               | `will .about.list`                                  |
 | `.submodules.download` | Downloading of submodules files to the local computer | `will .submodules.download`               |
 | `.submodules.update`  |  Update of submodules files at the local computer | `will .submodules.update` |
 | `.submodules.fixate`  | Reading and rewriting (without loading) URI-address remoted submodules in `will-file` on the last loaded version (last commit), it does not rewrite resources the version of which is not explicitly specified in the `will-file` . There is option `dry` with denotation "0" - implement rewriting and "1" - read without rewriting | `will .submodules.fixate [dry:1]` |

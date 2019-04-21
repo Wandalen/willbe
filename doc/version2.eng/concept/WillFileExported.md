@@ -33,7 +33,7 @@ Properties of the exported `out-will-file`
   -  `exportedDir.[build]` - paths to exported module directories;  
   - `exportedFiles.[build]`- list of exported files;
   - `archiveFile.[build]` -  path to the archive. The field is present only if by the export archive was created  (`tar : 1`).
-- in the section `reflector`, in addition to the data of the original file placed the generated resources:
+- in the section `reflector`, are placed the data of the original file and the generated resources:
   - `exported.[build]` - reflector by which the export was created;
   - `exportedFiles. [build]` - reflector with a list of files that were exported.
   the `sections`,`step`,`build`,`submodule` are copied unchanged.

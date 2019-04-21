@@ -3,7 +3,7 @@
 Creating module "Hello, World!". Downloading of remote submodule.
 
 ### Properties of `will-file`
-`Will-файл` - configuration file for building a modular system by utility `willbe`. It has the its own [properties](WillFile.md)
+`Will-file` - configuration file for building a modular system by utility `willbe`. It has its own [properties](WillFile.md)
 
 ### First module
 Creation of first module
@@ -96,7 +96,7 @@ submodule :
 
 </details>
 
-Add the ready submodule. Use the remote `git+https:///github.com/Wandalen/wTools.git/out/wTools` module. Add it to the section of the `submodule` of the ` will-file`.
+Add the ready submodule. Use the remote `git+https:///github.com/Wandalen/wTools.git/out/wTools` module. Add it to `submodule` section of the ` will-file`.
 
 <details>
   <summary><u>Command output<code>will .submodules.list</code></u></summary>
