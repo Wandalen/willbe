@@ -109,4 +109,4 @@ Prefix `. / Out / out.debug / `will be added to such files with the description`
 ### Section <code>reflector</code>  
 
 The section contains reflexes, it is resources for operations on file groups.
-The basics of operations are the choice of files (directors) and copying information.
+The basics of operations are the choice of files (directories) and copying information.

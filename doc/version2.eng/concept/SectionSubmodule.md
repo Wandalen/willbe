@@ -2,7 +2,7 @@
 
 The section contains information about the submodule.
 
-Submodule - an individual module with its own configuration <code> will-file </ code>, which is subordinated to another module.
+Submodule is an individual module with its own configuration <code> will-file </ code>, which is subordinated to another module.
 
 ### Example
 
@@ -24,4 +24,4 @@ submodule :
 | path           | path to submodule, may be absolute / relative, local / global |
 | description    | description for other developers                                |
 | criterion      | condition of resource using (see [criterion](Criterions.md)) |
-| inherit        |inheritance of the fields values of the another submodule     |
+| inherit        | inheritance of the fields values of the another submodule     |
