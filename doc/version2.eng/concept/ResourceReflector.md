@@ -81,8 +81,6 @@ When `recursive: 0` is used, only the` proto` directory specified in the path `f
 
 ![recursive.1.png](./Images/recursive.1.png)
 
-При значенні `recursive : 1` буде вибрано директорію `proto` та її вміст, тобто, файл `some_file.will.yml` i директорію `files`.
-
 When `recursive: 1` is used, the` proto` directory and its contents will be selected, which means the file `some_file.will.yml` in the` files` directory.
 
 ![recursive.2.png](./Images/recursive.2.png)
@@ -109,9 +107,6 @@ src :
 Prefix `. / Out / out.debug / `will be added to such files with the description` filePath` so that the reflector will select 2 files `out / out.debug / File1.js` and` out / out.debug / File2. js`
 
 ### Section <code>reflector</code>  
-
-Секція містить рефлектори - ресурси для виконання операцій над групами файлів.
-Основними операціями є вибір файлів (директорій) та копіювання.
 
 The section contains reflexes, it is resources for operations on file groups.
 The basics of operations are the choice of files (directors) and copying information.
