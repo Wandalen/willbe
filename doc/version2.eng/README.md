@@ -55,7 +55,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/ReflectorFileFilter.md">
       File filters
   </a></summary>
-  Technique to describe conditions of selection of the files which are needed to perform some operation at it. Reflector has two file filters: <code>src</code> and <code>dst</code>.
+  Technique of describing the conditions for selecting the required files for some operation on a group of files. Reflector has two file filters: <code>src</code> and <code>dst</code>.
 </details>
 <details><summary><a href="./concept/ResourceReflector.md#map-of-paths">
       Map of paths
@@ -65,8 +65,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/ResourceStep.md#Resource-step">
       Resource step
   </a></summary>
-  Instruction for building the module. Describe an operation and desired outcome. Build consists of steps.
-  <code>Step</code> section resource which is an executing instruction of module building.
+  Instruction for building the module. Describe an operation and desired outcome. Build consists of <code>steps</code>.
 </details>
 <details><summary><a href="./concept/ResourceBuild.md#Resource-build">
       Resource build
