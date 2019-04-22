@@ -40,12 +40,12 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/Inheritance.md">
       Inheritance
   </a></summary>
-  Approach of description of a module according to which <code>will-file</code> can use (inherit) value of fields of other resource(s) of the same type.
+  It is the approach to describing a module when `will-file` can reuse (inherit) value of fields of another resource(s) of the same type.
 </details>
 <details><summary><a href="./concept/ResourcePath.md#Path">
-      Recource path
+      Resource path
   </a></summary>
-  This is a resource for describing the file structure of a module that contains file paths. Paths are located in the <code>path</code> section.
+  Resource for determination of the module's file structure. It includes paths to the module files. The paths are placed in the section <code>path</code>.
 </details>
 <details><summary><a href="./concept/ResourceReflector.md#Resource-reflector">
       Resource reflector
@@ -91,7 +91,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/ResourcePath.md#Section-path">
       Section <code>path</code>
   </a></summary>
-  The section has the list of the paths for quick orientation in its file structure.
+  Section has the list of the module paths for quick orientation in its file structure.
 </details>
 <details><summary><a href="./concept/SectionSubmodule.md">
       Section <code>submodule</code>
