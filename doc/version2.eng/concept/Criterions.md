@@ -54,8 +54,8 @@ Criterions can have Boolean or string values.
 ```yaml
 condition : false       # String value
 compile : 1             # String value
-raw : one               # String value
-name : name1            # String value
+raw : one               # Boolean value
+name : name1            # Boolean value
 ```
 
 `false` and `0` -- considered to be alias
@@ -64,7 +64,7 @@ name : name1            # String value
 ### Resource by default
 
 
-The `default` criterion has a particular meaning. The resource that has the criterion `default:1` is considered as the default resource. By means of `default: 1` criterion, one can specify the [build](ResourceBuild.md#Resource-collection) that should build resource by default.
+The `default` criterion has a particular meaning. The resource that has the criterion `default:1` is considered as the default resource. By means of `default: 1` criterion, one can specify the [build](ResourceBuild.md#Resource-collection) that should be built by default.
 
 ![criterion.default.png](./Images/criterion.default.png)
 
