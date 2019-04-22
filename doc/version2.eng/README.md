@@ -120,7 +120,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/Module.md#Module">
       Module
   </a></summary>
-  Module is the set of files, which is described in <code>will-file</code>.
+  A module is a set of files that are described in <code>will-file</code>.
 </details>
 <details><summary><a href="./concept/Module.md#Submodule">
       Submodule
@@ -140,7 +140,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/SubmodulesLocalAndRemote.md#Remote-submodule">
       Remote submodule
   </a></summary>
-  A module which is located at the remote server. It should be downloaded in order to be used.
+  A module located on the remote server is downloaded to the local machine for use.
 </details>
 <details><summary><a href="./concept/SubmoduleInformal.md">
       Informal submodule
