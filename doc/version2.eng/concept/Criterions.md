@@ -27,7 +27,7 @@ step :
   criterion :
     debug : 1
 ```
-For example, in the `step::delete.files` step, the` path::out.debug` path is used, which is selected through the selector with the globe `path::out. *`. The utility knows that one of the two possible paths `path::out.debug` or` path::out.release` is needed to select `path::out.debug` because the step `step::delete.files`, and path `path::out.debug` has the criterion `debug:1`.
+For example, in the `step::delete.files` step, the` path::out.debug` path is used, which is selected through the selector with the globe `path::out. *`. The utility knows that one of the two possible paths `path::out.debug` or` path::out.release` is needed to select `path::out.debug`, because the step `step::delete.files`, and path `path::out.debug` has the criterion `debug:1`.
 
 ### Instantiation of critetions
 
@@ -40,10 +40,10 @@ step :
     filePath : path::out.*
   criterion :
     raw : 1           # single meaning  - ordinary form of writing
-    debug : [ 0,1 ]   # plural meaning -record in array form, used by instantiation of criterions
+    debug : [ 0,1 ]   # plural meaning - record in array form, used by instantiation of criterions
 ```
 
-The step `step::delete.files`, which has two criterions `raw` and `debug`, is defined. The `debug` criterion has a plural value, and therefore, during instantiation of criterions, the two steps `delete.files.` and `delete.files.debug` are created.
+The step `step::delete.files`, which has two criterions `raw` and `debug`, is defined. The `debug` criterion has a plural value. Therefore during instantiation of criterions, the two steps `delete.files.` and `delete.files.debug` are created.
 
 [Tutorial](../tutorial/WillFileMinimization.md) about instantiation of criterions.
 
@@ -74,7 +74,7 @@ The special `export: 1` criterion differentiates the build which is intended for
 
 ![criterion.export.png](./Images/criterion.export.png)
 
-This module has one regular build and one export. The `will .build` command will execute the build` build::release `, and` will .export` command will execute the build for export `build::export`. Both builds are default builds because they have `default : 1`, and therefore the commands for their constructing do not require any additional arguments.
+This module has one regular build and one export. The `will .build` command will execute the build` build::release ` and` will .export` command will execute the build for export `build::export`. Both builds are default builds because they have `default : 1`.Therefore the commands for their construction do not require any additional arguments.
 
 ### Resources which do not have the criterion
 
@@ -82,4 +82,4 @@ By build [selector with globe](Selector.md#Selector-with-globs), resources which
 
 ![resource.without.criterion.png](./Images/resource.without.criterion.png)
 
-The `step::proto.release` will be executed by any value of the criterion `debug` in build `build::release`. Adding other criterions in `step::proto.relase` or in `build::release` the result will not change.
+The `step::proto.release` will be executed by any value of the criterion `debug` in build `build::release`. The result will not change if you add criterions in `step::proto.relase` or in `build::release`

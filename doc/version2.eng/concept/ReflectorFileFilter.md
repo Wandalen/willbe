@@ -10,11 +10,11 @@ Files can be selected:
 
 ### Simple file filters
 
-Simple filters are filters that select files by name. They have string values.
+Simple filters are the filters that select files by name. They have a string values.
 
-- `begins` -excludes from the build all files whose name does not begin with the word specified in the filter.
+- `begins` - excludes from the build all files whose name does not begin with the word specified in the filter.
 - `ends` - excludes from the build all files whose name does not end on the word specified in the filter.
-- `hasExtension` - excludes from the build all files whose names do not have the specified extensions. The file extension can be composed and consist of several parts. The `willbe` utility will read it starting from the first point in the filename. For example, the `somefile.txt.md` file has two extensions -` txt` i `md`.
+- `hasExtension` - excludes from the build all files whose names do not have the specified extensions. The file extension can be composed and consist of several parts. The `willbe` utility will read it starting from the first point in the filename. For example, the `somefile.txt.md` file has two extensions -` txt` and `md`.
 ### Example of writing of a simple filter:
 
 ```yaml
@@ -26,18 +26,18 @@ src:
 
 ### Masks of the reflector
 
-For regular expressions when selecting files use masks.
+Use masks for regular expressions while filter selection.
 
-Reflectors `willbe` have three groups of masks, depending on which types of files they are applied:
+Reflectors `willbe` have three groups of masks. Depending on the group the different types of files can be applied:
 - `maskDirectory` - directory masks, apply only to directories;
-- `maskTerminal` - masks of terminal files, apply only to terminal (normal) files, to directories do not apply;
+- `maskTerminal` - masks of terminal files, they apply only to terminal (normal) files, to directories they do not apply;
 - `maskAll` - masks that apply to all file types.
 
-Each out of these three mask groups has the following fields :
+Each out of these three mask's groups has the following fields :
 - `includeAny` - exclude files that have no coincidence with any of the regular expressions of this filter;
-- `includeAll` - exclude files that do not have a coincidence with all regular expressions of the filter;
+- `includeAll` - exclude files that do not have the coincidence with all regular expressions of the filter;
 - `excludeAny` - exclude files that have at least one coincidence with the regular expressions of the filter;
-- `excludeAll` - exclude files that have a coincidence with all regular expressions of the filter.
+- `excludeAll` - exclude files that have the coincidence with all regular expressions of the filter.
 
 ### Example of reflector masks:
 
@@ -48,11 +48,11 @@ src :
     excludeAny : !!js/regexp '/\.debug/'  
 
 ```
-This writing means to include in build  all files with the extension '.js'  and exclude any files containing '.debug' in the name.
+This writing means to include in build  all files with the extension `.js`  and exclude any files containing `.debug` in the name.
 
 ### Time filters
 
-Filters are necessary to limit time-based selection. Reflectors have four time filters: `notOlder`,` notNewer`, `notOlderAge`,` notNewerAge`. Шт аield parameters the values are entered in milliseconds (1 s = 1000 ms, 1 hour = 3600000 ms).
+Filters are necessary to limit time-based selection. Reflectors have four time filters: `notOlder`,` notNewer`, `notOlderAge`,` notNewerAge`. In the field parameters the values are entered in milliseconds (1 s = 1000 ms, 1 hour = 3600000 ms).
 
 
 There are the following time filters:
@@ -71,6 +71,5 @@ src :
 The time filter `notOlderAge` selects files that have an age of no more than 10 seconds.
 
 ### Using globes in the map of paths.
-
 
 Excluding files from the build is possible not only with file filters, but also by means of [Map of the paths](<./ResourceReflector.md#>).
