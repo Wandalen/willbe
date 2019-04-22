@@ -1,58 +1,26 @@
-# Локальні і віддалені підмодулі
+# Local and remote submodules
 
-### Локальний підмодуль  
+### Local submodule
 
-Підмодуль, який розташовується на машині користувача.  
+Submodule, which is located at the user's computer
 
-Будь-який модуль, який розташовується на локальній машині можна підключити як підмодуль іншого модуля. Для підключення підмодуля в секції `submodule` вказується ресурс з шляхом до `will-файла` іншого модуля (створеного користувачем або експортованого утилітою). Для підключення локального підмодуля краще використовувати експортовані `some_name.out.will`-файли, оскільки вони містять інформацію про модуль і збірки по яким він побудований.  
+A module located at the local machine can be connected as a submodule of another module. To connect a submodule place resource with the link to `will-file` of another module to the section `submodule` of current `will-file`. To connect a local submodule, it is better to use exported `some_name.out.will`-files because they contain information about the module and builds by which it is built.
 
-#### Приклад локального підмодуля
+#### Example of a local submodule
 
 ![submodule.local.png](./Images/submodule.local.png)
 
-На рисунку приведений код `will-файла` з двома локальними підмодулями - `ModuleOne` i `LocalModule`. Перший локальний підмодуль поміщається в директорії `ModuleOne`, яка знаходиться в кореневій директорії модуля (відносний шлях), а другий - в директорії за шляхом `/home/user/localModule/` (абсолютний шлях в Linux дистрибутиві).
+The module consists of 2 local submodules, which are named `ModuleOne` and `LocalModule`. The first local submodule is placed in the `ModuleOne` directory, which is in the root directory of the module (relative path), and the second in the directory by the path `/home/user/localModule/` (absolute path).
 
-Схематичне представлення структури модуля:   
+### Remote submodule
 
-```
-/                                                  # корінь файлової системи Linux дистрибутива
-├── home                            
-│     ├── user                      
-├──        ├── localModule
-├──                 ├── localFiles                 # директорія з файлами модуля localModule 
-                    │       ├── ...
-                    │       ├── ...
-                    │
-                    └── localModule.out.will.yml   # експортований конфігураційний файл модуля localModule 
-... 
-       ...                          # будь-який шлях до директорії модуля local
-        ├── ModuleOne               
-        │       ├── moduleFile      # файли модуля ModuleOne 
-        │       └── .will.yml       # конфігураційний файл модуля ModuleOne
-        └── .will.yml               # конфігураційний файл модуля local
-        
-```  
+A module located on the remote server is downloaded to the local machine for use.  
 
-Вибір форми запису шляхів до локальних підмодулів залежить від взаємного розташування модулів.  
-Утиліта `willbe` не має інструментів по управлінню над локальними підмодулями. 
+The remote submodules are loaded into the `.module` directory, which belongs to the root directory of the current module.
 
-Видалення локальних підмодулів з модуля здійснюється редагуванням відповідних ресурсів `will-файла`. 
+To connect the remote submodule, the URI-path resource is specified in the section `submodule`.
 
-### Віддалений підмодуль  
-
-Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину. Завантажені віддалені підмодулі знаходяться в директорії <code>.module</code> в кореневому каталозі <code>will-файлa</code>.  
-
-Для підключення віддаленого підмодуля вказується ресурс з URI-шляхом в секції `submodule`. 
-
-Для віддалених підмодулів:  
-- вивід інформації про стан (локальних і віддалених) здійснюється командою `will .submodules.list`;
-- завантаження командою `will .submodules.download` або з використанням вбудованого кроку [`submodules.download`](ResourceStep.md#submodulesdownload).    
-- фіксуються версії підмодуля командою `will .submodules.fixate`;
-- оновлення URI-посилань на підмодулі командою `will .submodules.upgrade.refs`;
-- встановлення оновлень командою `will .submodules.update` або вбудованим кроком [`submodules.update`](ResourceStep.md#submodulesupdate) (якщо є доступні оновлення);
-- видалення разом з директорією `.module` фразою `will .submodules.clean` або вбудованим кроком [`submodules.clean`](ResourceStep.md#submodulesclean).    
-
-#### Приклад секції `submodule`  
+#### Example of section `submodule`  
 
 ```yaml
 submodule :
@@ -61,4 +29,16 @@ submodule :
     Color : npm:///wColor/out/wColor#0.3.102
 
 ```
-В секцію поміщено віддалені підмодулі `Tools` i `PathFundamentals`.
+The module connects the `Tools` and `PathFundamentals` submodules.
+
+Management tools of remote submodules:
+
+- the command `will .submodules.list` lists the connected submodules and information about them;
+- the command `will .submodules.download` downloads files of remote submodules;
+- the predefined step [`submodules.download`](ResourceStep.md#submodulesdownload) downloads the files of remote submodules;
+- the command `will .submodules.update` download the latest versions of the remote submodules files (without patching the `will-file`);
+- the predefined step of [`submodules.update`](ResourceStep.md#submodulesupdate) updates files of remote submodules;
+- the `will.submodules.fixate` command fixates the submodule version, patching the current submodule paths in `will-file` to the latest versions of the remote submodules, unless a specific version was specified;
+- the ` will command.submodules.upgrade.refs` updates the version of the submodules, patching the current submodule paths in `will-file` to the most recent versions of the remote submodule (if newer versions are available);
+- the `will .submodules.clean` command deletes the remote submodules files (`.module` directory);
+- predefined step [`submodules.clean`](ResourceStep.md#submodulesclean) deletes the remote submodules files (`.module` directory).

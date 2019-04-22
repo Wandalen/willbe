@@ -1,10 +1,10 @@
-# Критеріони
+# Criterions
 
-Елемент порівняння для відбору ресурсів.
+Element of comparison for selection of resources.
 
-В `will-файлі` мапа критеріонів представлена асоціативним масивом. Кожен ресурс може мати будь-яку кількість критеріонів. Критеріони використовуються при відобрі одним ресурсом іншого через [селектор із ґлобом](Selector.md#Селектор-з-ґлобом). При використанні селектора без ґлоба критеріони не використовуються, так як немає жодної невизначеності в такому селекторі.  
+In `will-file` the map of criterions is represented by an associative array. Each resource can have any number of criterions. Criterions are used by selection by one resource another one through [selector with globe](Selector.md#Selector-with-globe). Criterions are not used in selector without glob as this selector has no ambiguity.
 
-### Приклад
+### Example
 
 ```yml
 path :
@@ -26,12 +26,11 @@ step :
   criterion :
     debug : 1
 ```
+For example, in the `step::delete.files` step, the` path::out.debug` path is used, which is selected through the selector with the globe `path::out.*`. The utility knows that one of the two possible paths `path::out.debug` or` path::out.release` is needed to select `path::out.debug`, because the step `step::delete.files`, and path `path::out.debug` has the criterion `debug:1`.
 
-Наприклад, в кроці `step::delete.files` використовується шлях `path::out.debug`, котрий вибирається через селектор із ґлобом `path::out.*`. Утиліта знає, що із двох можливих шляхів `path::out.debug` або `path::out.release` потрібно вибрати саме `path::out.debug` тому, що і крок `step::delete.files`, і шлях `path::out.debug` має критеріон `debug : 1`.
+### Instantiation of critetions
 
-### Розгортання критеріонів
-
-В `will-файлі` для окремого критеріона можливо задати множину значень, при цьому буде створено не один [ресурс](Structure.md#Ресурси), а, стільки, скільки можливо різних комбінацій значень критеріонів цього ресурса.
+In `will-file` for a single criterion it is possible to establish a set of values. Herewith not one [resource](Structure.md#Resources) will be created, but, as many different values combinations of the criterion of this resource as possible.
 
 ```yaml
 step :
@@ -39,48 +38,46 @@ step :
     inherit : predefined.delete
     filePath : path::out.*
   criterion :
-    raw : 1           # одиничне значення - звичайна форма запису
-    debug : [ 0,1 ]   # множинне значення - запис в формі массиву, використовується при розгортанні критеріонів
+    raw : 1           # single meaning - ordinary form of writing
+    debug : [ 0,1 ]   # plural meaning - record in array form, used by instantiation of criterions
 ```
 
-Визначено крок `step::delete.files`, котрий має два критеріона `raw` та `debug`. Критеріон `debug` має множинне значення, а отже під час розгортання критеріонів буде створено 2-ва кроки `delete.files.` та `delete.files.debug`.
+The step `step::delete.files`, which has two criterions `raw` and `debug`, is defined. The `debug` criterion has a plural value. Therefore during instantiation of criterions, the two steps `delete.files.` and `delete.files.debug` are created.
 
-[Туторіал](../tutorial/WillFileMinimization.md) про розгортання критеріонів.
+[Tutorial](../tutorial/WillFileMinimization.md) about instantiation of criterions.
 
-### Можливі значення.
+### Possible values.
 
-Критеріони можуть мати бульові або рядкові значення.
+Criterions can have Boolean or string values.
 
 ```yaml
-condition : false       # бульове значення
-compile : 1             # бульове значення
-raw : one               # рядкове значення
-name : name1            # рядкове значення
+condition : false       # Boolean value
+compile : 1             # Boolean value
+raw : one               # String value
+name : name1            # String value
 ```
 
-`false` та `0` -- вважаються синонімами
-`true` та `1` -- вважаються синонімами
+`false` and `0` -- considered to be alias.
+`true` and `1` -- considered to be alias.
 
-### Ресурс за замовчуванням
+### Resource by default
 
-Критеріон `default` має особливе значення. Ресурс, який має критеріон `default : 1` вважається ресурсом за замовчуванням. За допомогою критеріона `default : 1` можливо задати [збірку](ResourceBuild.md#Ресурс-збірка), що має збиратися за замовчуванням.
+The `default` criterion has a particular meaning. The resource that has the criterion `default:1` is considered as the default resource. By means of `default: 1` criterion, you can specify the [build](ResourceBuild.md#Resource-collection), which is built by default.
 
 ![criterion.default.png](./Images/criterion.default.png)
 
-Для побудови збірки `release` вводиться фраза `will .build` без аргумента.
+### Criterion of the build for the export
 
-### Критеріон збірки для експортування
-
-Спеціальний критеріон `export : 1` диференціює збірку, яка призначеня для [еспортування](ResourceBuild.md#Ресурс-експорт) модуля від інших збірок даного модуля.
+The special `export: 1` criterion differentiates the build which is intended for [export](ResourceBuild.md#Resource-Export) of the module from other builds of this module.
 
 ![criterion.export.png](./Images/criterion.export.png)
 
-Даний модуль має одну звичайну збірку та один експорт. Команда `will .build` виконає збірку `build::release`, а команда `will .export` виконає збірку для експортування `build::export`. Обидві збірки є збірками по замовчуванню так як мають `default : 1`, а отже команди для їх побудови не потребують додаткових аргментів.
+This module has one regular build and one export. The `will .build` command will execute the build` build::release ` and` will .export` command will execute the build for export `build::export`. Both builds are default builds because they have `default : 1`. Therefore the commands for their construction do not require any additional arguments.
 
-### Ресурси, що не мають критеріона
+### Resources which do not have the criterion
 
-При вибірці [селектором із ґлобом](Selector.md#Селектор-з-ґлобом), ресурси, що не мають критеріона вибираються, а не відкидаються.
+By build [selector with globe](Selector.md#Selector-with-globs), resources which do not have the criterion are selected, but not rejected.
 
 ![resource.without.criterion.png](./Images/resource.without.criterion.png)
 
-Крок `step::proto.release` буде виконаний при будь-якому значенні критеріона `debug` в збірці `build::release`. Якщо додати інші критеріони в `step::proto.relase` або в `build::release` то результат не зміниться.
+The `step::proto.release` will be executed by any value of the criterion `debug` in build `build::release`. The result will not change if you add criterions in `step::proto.relase` or in `build::release`.

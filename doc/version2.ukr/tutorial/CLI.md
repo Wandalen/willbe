@@ -91,7 +91,7 @@ Command ".help .build"
 
 </details>
 
-Введіть в терміналі `will .help .build`
+Введіть в терміналі `will .help .build`.
 
 <details>
   <summary><u>Вивід команди <code>will .help .builds.list</code></u></summary>
