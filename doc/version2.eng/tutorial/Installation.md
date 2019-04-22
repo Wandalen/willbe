@@ -1,30 +1,30 @@
 # Installation
 
-Procedure of installation of utility.
+Utility installation procedure.
 
 ### Installation of `NodeJS`
 
-Для встановлення `willbe` необхідно мати інстальований Node.js®. Якщо у вас його немає та завантажте версію для вашої операційної системи із [офіційного сайту](<https://nodejs.org/en/>) або виконуйте інструкції [по встановленню](https://nodejs.org/en/download/package-manager/).
+To install `willbe` you need an installed Node.js®. If you do not have it then download the version for your operating system from [official site](<https://nodejs.org/en/>) and follow the [installation instructions](https://nodejs.org/en/download/package-manager/).
 
-### Встановлення `willbe`
+### Installation of `willbe`
 
-Після встановлення Nodejs, відкрийте консоль операційної системи та виконайте команду:
+After installing Nodejs, open the operating system console and run the command:
 
 ```
 npm install -g willbe
 
 ```
 
-Прапорець `-g` означає ґлобальне встановлення утиліти.  
-Переконайтеся, що утиліту було встановлено на вашу систему.
+The `-g` attribute indicates a global installation of the utility.
+Make sure the utility is installed on your system.
 
 ```
 will .help
 
 ```
 
-### Підсумок
+### Summary
 
-- Утиліту `willbe` можливо встановити через NPM. Для її роботи потрібен Nodejs.
+- The `willbe` utility can be installed via NPM. Nodejs is required for its work.
 
-[Повернутись до змісту](../README.md#tutorials)
+[Return to content](../README.md#tutorials)

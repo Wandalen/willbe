@@ -2,12 +2,12 @@
 
 How to use command line interface of utility <code>willbe</code>. How to use command <code>.help</code> and command <code>.list</code>.
 
-### Інтерфейс командного рядка.
+### Complement of the commands
 
-Після [встановлення](<Instalation.md>) утиліти `willbe` в консолі вашої ОС введіть команду `will .`.
+After [installation](<Instalation.md>) of utility `willbe` enter the `will .` command in the console of your operating system.
 
 <details>
-  <summary><u>Вивід команди <code>will .</code></u></summary>
+  <summary><u>Command output <code>will .</code></u></summary>
 
 ```
 [user@user ~]$ will .  
@@ -40,7 +40,7 @@ Ambiguity. Did you mean?
 
 </details>
 
-В утиліті `willbe` всі команди починаються з вводу `will .`. Кожна команда це фраза, котра складається із одного або більше слів. Наприклад:
+All commands of utility `willbe` start with` will .`. Each command is a phrase composed of one or more words. For example:
 
 ```
 will .help
@@ -49,10 +49,10 @@ will .resources.list
 will .paths.list
 ```
 
-Введіть команду `will .list`
+Enter the command `will .list`:
 
 <details>
-  <summary><u>Вивід команди <code>will .list</code></u></summary>
+  <summary><u>Command output <code>will .list</code></u></summary>
 
 ```
 [user@user ~]$ will .list
@@ -72,29 +72,32 @@ Ambiguity. Did you mean?
 
 </details>
 
-Утиліта `willbe` знає багато команд, що містять слово `list` тому вона виводить інорфмацію про всі можливі фрази із вказаним словом. Це зручно якщо ви забули повну фразу з командою або бажаєте дослідити можливості утиліти. Щоб отримати вичерпний список команд з даним словом, достатньо його ввести, а утиліта запропонує варіанти доповнення.
+To get a list of phrases that have the word `list`, type the `will .list` command.
 
-### Команда `.help`
-Для отримання довідки по обраній команді використовуйте синтаксис: `will .help [команда]`.    
-Тепер введіть в терміналі `will .help .build`
+The `willbe` utility knows many commands containing the word` list` thus it outputs information about all possible phrases with the specified word. This is useful if you forgot the full phrase with the command. It helps to explore the utility capability. To get an exhaustive list of commands with a given word just enter it and the utility will offer options for adding.
+
+### Command `.help`
+
+For help on the selected command, use the syntax `will .help [command]`.    
+Now, enter in the terminal `will .help .build`:
 
 <details>
-  <summary><u>Вивід команди <code>will .help .build</code></u></summary>
+  <summary><u>Command output<code>will .help .build</code></u></summary>
 
 ```
 [user@user ~]$ will .help .build
 Command ".help .build"
 
-  .build - Build current module with spesified criterion.
+  .build - Build current module with specified criterion.
 
 ```
 
 </details>
 
-Введіть команду `will .help .builds.list` і порівняйте вивід.
+Enter the command `will .help .builds.list` and compare the output.
 
 <details>
-  <summary><u>Вивід команди <code>will .help .builds.list</code></u></summary>
+  <summary><u>Command output<code>will .help .builds.list</code></u></summary>
 
 ```
 [user@user ~]$ will .help .builds.list
@@ -106,10 +109,8 @@ Command ".help .builds.list"
 
 </details>
 
-Введіть команду `will .help .submodules`.
-
 <details>
-  <summary><u>Вивід команди <code>will .help .submodules</code></u></summary>
+  <summary><u>Commands output<code>will .help .submodules</code></u></summary>
 
 ```
 [user@user ~]$ will .help .submodules
@@ -126,14 +127,17 @@ Command ".help .submodules"
 
 </details>
 
-Утиліта `willbe` запропонувала варіанти фраз з вказаним словом. Це зручно, адже, якщо ви не пам'ятаете повну фразу з командою або бажаєте отримати вичерпний список команд з даним словом, достатньо його ввести, а утиліта запропонує варіанти доповнення.
+To get the information about all phrases containing the word `submodule`, enter the command `will .help .submodules`.
 
-### Команда `.*.list`  
-Тепер, давайте попрацюємо із `will-файлами`.
-Створіть нову директорію з назвою `commands` в яку помістіть файл з назвою `.will.yml`. Структура файлів виглядатиме так:  
+The command was incomplete, and the utility `willbe` again offered phrase variants with the specified word.
+
+### Command `.*.list`  
+
+Most commands work with the `will-files` of specific modules.
+
 
 <details>
-  <summary><u>Структура файлів</u></summary>
+  <summary><u>File structure</u></summary>
 
 ```
 commands
@@ -143,10 +147,11 @@ commands
 
 </details>
 
-Скопіюйте код, приведений нижче в файл `.will.yml`:  
+Create a new directory named `commands` and put a file named `.will.yml`.
 
 <details>
-  <summary><u>Код файла <code>.will.yml</code></u></summary>
+
+  <summary><u>Code of the file<code>.will.yml</code></u></summary>
 
 ```yaml
 about :
@@ -188,13 +193,12 @@ build :
 
 </details>
 
+Copy the code in the `.will.yml` file.  
 
-В списку команд утиліти `willbe` багато таких, які закінчуються на `.list`. Якщо ввести команду `.list` в директорії, де відсутній `will-файл`, ви отримаєте попередження про відсутність модуля.
-
-Введіть команду `will .about.list` в вашій поточній директорі (припускається, що в ній нема `will-файла`):
+Utility `willbe` has the list of commands that ends on ` .list`. They display a list of resources of the given type of the current module. Therefore, if you type one of the `.*.list` commands in the directory where` will-file `is missing, you will receive a warning about the absence of the module.
 
 <details>
-  <summary><u>Вивід команди <code>will .builds.list</code>в поточній директорії</u></summary>
+  <summary><u>Command output <code>will .builds.list</code>in the current directory</u></summary>
 
 ```
 [user@user ~]$ will .builds.list
@@ -205,10 +209,10 @@ Found no module::/[path] at "/[path]"
 
 </details>
 
-Відкрийте директорію `commands` в консолі та перевірте її вміст виконавши команду `ls -al`:
+To make sure that the `.builds.list` command works with the current module, enter in its  directory without the `will-file`.
 
 <details>
-  <summary><u>Вивід команди <code>ls -al</code></u></summary>
+  <summary><u>Command output <code>ls -al</code></u></summary>
 
 ```
 [user@user ~]$ ls -al
@@ -221,11 +225,10 @@ drwxr-xr-x 6 user user 4096 Mar 11 11:27 ..
 
 </details>
 
-Для отримання описової інформацію про модуль використайте команду `will .about.list`
+Open the `commands` directory in the console and check its contents by executing the `ls -al` command.
 
 <details>
-
-  <summary><u>Вивід команди <code>will .about.list</code></u></summary>
+  <summary><u>Command output <code>will .about.list</code></u></summary>
 
 ```
 About
@@ -237,11 +240,12 @@ About
 
 </details>
 
-Зверніть увагу, що деякі ресурси мають поля із значеннями за замовчуванням. Якщо таке поле відсутнє, то завантажуючи `will-файл` з диска утиліта його генерує.  
-Саме тому в виводі команди `will .about.list` секція `about` має поле `enabled` яке відсутнє в `will-файлі`:  
+To get a descriptive information about the module use the command `will .about.list`.
+
+Please, note that some resources have fields with default values. If the resource has no such field, utility generates it by loading `will-file` from the disk.
 
 <details>
-  <summary><u>Секція <code>about</code> файлу <code>.will.yml</code></u></summary>
+  <summary><u>Section <code>about</code> of the file <code>.will.yml</code></u></summary>
 
 ```yaml
 about :
@@ -253,10 +257,10 @@ about :
 
 </details>
 
-Введіть команду `will .builds.list`. Після того як на моніторі відобразиться результат, відкрийте файл `.will.yml` з допомогою текстового редактора і порівняйте вміст секції `build` файла і вивід команди.
+Therefore,  section `about` has an `enabled` field in the output of the command `will.about.list` that does not exist in the `will-file`.
 
 <details>
-  <summary><u>Вивід команди <code>will .builds.list</code></u></summary>
+  <summary><u>Command output <code>will .builds.list</code></u></summary>
 
 ```
 [user@user ~]$ will .builds.list
@@ -274,7 +278,7 @@ build::debug
 
 </details>
 <details>
-  <summary><u>Секція <code>build</code> файлу <code>.will.yml</code></u></summary>
+  <summary><u>Section <code>build</code> of the file <code>.will.yml</code></u></summary>
 
 ```yaml
 build :
@@ -291,12 +295,13 @@ build :
 
 </details>
 
-Інформацію про окрему секцію `will-файла` можливо отримати ввівши фразу `will [назва секції].list`.
+To obtain the list of builds of the current module, enter the command `will .builds.list`. Once the result is displayed on the monitor, open the `.will.yml` file using a text editor and compare the contents of the `build` section and the output of the command.
 
-Перерахуємо підмодулі.
+You can get information about a separate section of the `will-file` by entering the phrase `will.[Section name].list`.
+
 
 <details>
-  <summary><u>Вивід команди <code>will .submodules.list</code></u></summary>
+  <summary><u>Command output <code>will .submodules.list</code></u></summary>
 
 ```
 [user@user ~]$ will .submodules.list
@@ -317,8 +322,9 @@ submodule::PathFundamentals
 ```
 
 </details>
+
 <details>
-  <summary><u>Секція <code>submodule</code> файлу <code>.will.yml</code></u></summary>
+  <summary><u>Section <code>submodule</code> of the file <code>.will.yml</code></u></summary>
 
 ```yaml
 submodule :
@@ -330,10 +336,11 @@ submodule :
 
 </details>
 
-Перераховуючи підмодулі утиліта виводить попередження про помилку зчитування інформації про підмодулі і дає рекомендацію завантажити їх з допомогою команди `.submodules.download`.  
+The utility displays a warning error message when reading information about the submodule and recommends loading it by using the command `.submodules.download`.
+
 
 <details>
-  <summary><u>Повідомлення про помилку зчитування підмодулів</u></summary>
+  <summary><u>Error message about reading submodules</u></summary>
 
 ```
 ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
@@ -343,12 +350,12 @@ submodule :
 
 </details>
 
-Інформація, що утиліта `willbe` вивела відповідає тій, яка записана в `will-файлі`.
+The information that the utility `willbe` output corresponds to the one that is written in the `will-file`.
 
-Щоб перерахувати всі ресурси поточного модуля використайте команду `will .resources.list`:
+To enumerate all resources of the current module use `will.resources.list` command:
 
 <details>
-  <summary><u>Вивід команди <code>will .resources.list</code></u></summary>
+  <summary><u>Command output <code>will .resources.list</code></u></summary>
 
 ```
 [user@user ~]$ will .resources.list
@@ -404,12 +411,14 @@ build::debug
 
 </details>
 
-### Підсумок
+### Summary
 
-- Користуйтеся [командою `will .help`](#команда-help) для отримання переліку команд (фраз).
-- Користуйтеся [командою `will .help *`](#команда-help) для отримання довідки по конкретній команді.
-- Якщо ви забули повну фразу то `willbe` виведе перелік фраз по [слову](#інтерфейс-командного-рядка). яке ви пам'ятаєте
-- Використовуйте [команду `will .*.list`](#Команда-list) для того щоб перерахувати ресурси модуля.
+- Use [the `will .` command](#command-help) to get the list of commands (phrases).
+- Use the [`will .[word]` command](#command-help) to get the list of all commands (phrases) that have the word `word`.
+- Use the [command `will .help *`](#команда-help) to get help with a specific command.
+- If you forget the full phrase then `willbe` will list the phrases by [word](#CLI) which you remember.
+- Use the [command `will .[resource].list`](#Command-list) in order to enumerate the resources of the type `resource` of the module.
+- Use the [`will .resources.list` command](#Command-list) to enumerate all the resources of this module.
 
-[Наступний туторіал](FirstWillFile.md).
-[Повернутись до змісту](../README.md#tutorials)
+[Next tutorial](FirstWillFile.md).
+[Return to content](../README.md#tutorials)
