@@ -1,10 +1,10 @@
 # Inner structure
 
-### Section <code>will-file</code>  
+### Section of the <code>will-file</code>  
 
-The highest structural unit is the <code>will-fil </code>, which consists of one-type resources or fields that describe this module.   
+The highest structural unit of the <code>will-file</code>, which consists of one-type resources or fields that describe this module.   
 
-There are 6 sections for constructing the module: `about`,` path`, `submodule`,` step`, `reflector`,` build` and the `exported` section which is generated only by exporting the module,
+There are 6 sections for constructing the module: `about`,` path`, `submodule`,` step`, `reflector`,` build` and the `exported` section which is generated only by exporting the module.
 
 #### Schematic structure of `will-files`
 

@@ -2,7 +2,7 @@
 
 The section contains descriptive information about the module.
 
-The section has no resources. Furthermore is can have any structure from arrays and maps having any form of nesting. If a build parameter is not the path and if a user does not know where it should be written, then he writes it to the "about" section. The data in this section can be used in steps, for example, the `about :: keyword / 0` selector will use the first keywords.
+The section has no resources. Furthermore is can have any structure from arrays and maps having any form of nesting. If a build parameter is not the path and if a user does not know where it should be written, then he writes it to the "about" section. The data in this section can be used in steps, for example, the `about::keyword/0` selector will use the first keywords.
 
 ### Example
 
@@ -21,7 +21,7 @@ The `about` section has 4 fields among which are the module name, description, v
 
 ### Fields of the `about` section, which can be used by default
 
-| Field         | Description                                    |
+| Field          | Description                                    |
 |----------------|-----------------------------------------|
 | name           | name of the module                           |
 | description    | description of the module                             |

@@ -2,11 +2,11 @@
 
 Sequence and conditions of the procedure's execution to build a module. By implementation of the command `will .build`, the developer has to select a particular build which is wanted unambiguously calling command by name or by conditions of the build.
 
-The most important the field of the build  is `steps` - a build script. Build script is a sequence of steps that must be performed to consider the build being constructed.
+The most important field of the build  is `steps`. `steps` it is a build script. The build script is a sequence of steps that must be performed construct the build.
 
 ### Build by default
 
-The module may have a default build. In order to make such a build it is needed to specify for it [cryterion `default : 1`](Criterions.md#Використання).
+The module may have a default build. In order to make it, the [cryterion `default : 1`](Criterions.md#Використання) needs to be specified.
 
 ### Example
 
@@ -20,12 +20,14 @@ The build with the name `copy.files` has one step `copy.proto`. Criterion `defau
 |---------------|------------------------------------------------------------------|
 | description   | description for other developers                                    |
 | criterion     | condition of module construction (see [criterion](Criterions.md))          |
-| steps         | sequence of steps to be performed in order to consider the build being constructed        |
+| steps         | sequence of steps to be performed in order to construct the build        |
 | inherit       | inheritance from another build                       |
 
 ### Resource export
 
-A special kind of build which is needed in order to use this module by other developers and modules. The result of the module export are generated files, which is <code> out-will-file </ code> and archive.
+A special kind of build which is required in order to use this module by other developers and modules. The result of the module export are generated files, which is <code>out-will-file</code> and archive.
+
+
 
 The result of the module exportation is the generated configuration `out-will-file`  and optionally the archive with the module files. Filling out of the section `about` is required and it must have the name and version of the module while module export.
 
@@ -53,4 +55,4 @@ In build `export` the step `export.files` is used to export of the files. Mergin
 
 ### Section <code>build</code>
 
-Resource of the section (builds) describe the sequence and conditions of the implementation of creation of the external module.
+Resources of the section (builds) describe the sequence and conditions of the implementation of the external module's creation .
