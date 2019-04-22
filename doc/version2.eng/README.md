@@ -40,7 +40,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/Inheritance.md">
       Inheritance
   </a></summary>
-  It is the approach to describing a module when `will-file` can reuse (inherit) value of fields of another resource(s) of the same type.
+    It is the approach to describing a module when <code>will-file</code> can reuse (inherit) value of fields of another resource(s) of the same type.
 </details>
 <details><summary><a href="./concept/ResourcePath.md#Path">
       Resource path
@@ -50,7 +50,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/ResourceReflector.md#Resource-reflector">
       Resource reflector
   </a></summary>
-  Resource of section <code>reflector</code>, technique to describe set of files to perform some operation at it.
+    It is a resource of section <code>reflector</code>, a method to describe a set of files in order to perform some operation on it.
 </details>
 <details><summary><a href="./concept/ReflectorFileFilter.md">
       File filters
@@ -101,7 +101,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/ResourceReflector.md#Section-reflector">
       Section <code>reflector</code>
   </a></summary>
-  The section has reflectors. It is  a special type of resources for operation at the groups of files.
+  The section has reflectors. It is a special type of resources for operation on the groups of files.
 </details>
 <details><summary><a href="./concept/ResourceStep.md#Section-step">
       Section <code>step</code>
