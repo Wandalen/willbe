@@ -1,14 +1,14 @@
-# Секція <code>about</code>
+# Section <code>about</code>
 
-Секція містить описову інформація про модуль.
+The section contains descriptive information about the module.
 
-Секція не має ресурсів і може мати будь-яку структуру із масивів та мап будь-якого рівня вкладеності. Якщо є параметр збірки, котрий не є шляхом і ви не знаєте куди його записати тоді запишіть його в секцію `about`. Дані із цієї секції можуть використовуватися кроками, наприклад селектор `about::keyword/0` використає перше ключове слово.
+The section has no resources. Furthermore is can have any structure from arrays and maps having any form of nesting. If a build parameter is not the path and if a user does not know where it should be written, then he writes it to the `about` section. The data in this section can be used in steps, for example, the `about::keyword/0` selector will use the first keywords.
 
-### Приклад
+### Example
 
 ```yaml
-about :	
-													
+about :
+
     name : aboutSection
     description : "Example of about section"
     version : 0.0.1
@@ -17,15 +17,15 @@ about :
 
 ```
 
-Cекція `about` має 4-ри поля серед, яких назва модуля, опис, версія та одне ключове слово.
+The `about` section has 4 fields among which are the module name, description, version and one keyword.
 
-### Поля секції `about`, котрі можуть використовуватися по замовчуванню
+### Fields of the `about` section, which can be used by default
 
-| Поле           | Опис                                    |
+| Field          | Description                                    |
 |----------------|-----------------------------------------|
-| name           | назва модуля                            |
-| description    | опис модуля                             |
-| version        | версія релізу модуля                    |
-| enabled        | чи є модуль активним, за замочуванню `1` |
-| interpreters   | інтерпретатори на яких має виконуватися модуль     |
-| keywords       | ключові слова                           |  
+| name           | name of the module                           |
+| description    | description of the module                             |
+| version        | version of the module release                    |
+| enabled        | whether the module is active, by default `1` |
+| interpreters   | interpreters on which the module should run     |
+| keywords       | keywords                          |  
