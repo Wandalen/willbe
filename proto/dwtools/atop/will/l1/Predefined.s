@@ -581,7 +581,8 @@ function stepRoutineExport( frame )
 
   if( module.exportedMap[ build.name ] )
   {
-    _.assert( 0, 'not tested' );
+    // _.assert( 0, 'not tested' );
+    debugger;
     module.exportedMap[ build.name ].finit();
     _.assert( module.exportedMap[ build.name ] === undefined );
   }

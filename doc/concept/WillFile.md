@@ -13,7 +13,7 @@ Configuration for describing and building a module. Each formal module has such 
 - section consists of single type resources;  
 - can be [named and unnamed](WillFileNamedAndSplit.md#Named-will-file);  
 - can be [split](WillFileNamedAndSplit.md#Split-will-file) into two files for convenient use;
-- may be [generated (`out-will-file`)] (WillFileExported.md#Exported-will-file-out-will-file) or written manually;
+- may be [generated (`out-will-file`)](WillFileExported.md#Exported-will-file-out-will-file) or written manually;
 - generated `out-will-file` can be imported as a submodule;
 - resources can be reused through [inheritance](Inheritance.md).
 

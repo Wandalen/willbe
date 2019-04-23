@@ -1233,14 +1233,22 @@ function eachMixed( test )
 
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.build' ] })
-  shell({ args : [ '.each submodule:: .shell ls' ] })
+  shell({ args : [ '.each submodule:: .shell ls -al' ] })
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
-    test.is( _.strHas( got.output, [ 'debug', 'wTools.out.will.yml', 'wTools.proto.export.out.tgs' ].join( '\n' ) ) );
-    test.is( _.strHas( got.output, [ 'debug', 'wPathFundamentals.out.will.yml' ].join( '\n' ) ) );
-    test.is( _.strHas( got.output, [ 'Proto.informal.out.will.yml', 'UriFundamentals.informal.out.will.yml', 'debug' ].join( '\n' ) ) );
+    test.identical( _.strCount( got.output, 'ls -al' ), 5 );
+    test.identical( _.strCount( got.output, 'Module at' ), 4 );
+
+    test.identical( _.strCount( got.output, '.module/Tools/out/wTools.out.will.yml' ), 2 );
+    test.identical( _.strCount( got.output, '.module/PathFundamentals/out/wPathFundamentals.out.will.yml' ), 2 );
+    test.identical( _.strCount( got.output, 'out/UriFundamentals.informal.out.will.yml' ), 2 );
+    test.identical( _.strCount( got.output, 'out/Proto.informal.out.will.yml' ), 2 );
+
+    // test.is( _.strHas( got.output, [ 'debug', 'wTools.out.will.yml', 'wTools.proto.export.out.tgs' ].join( '\n' ) ) );
+    // test.is( _.strHas( got.output, [ 'debug', 'wPathFundamentals.out.will.yml' ].join( '\n' ) ) );
+    // test.is( _.strHas( got.output, [ 'Proto.informal.out.will.yml', 'UriFundamentals.informal.out.will.yml', 'debug' ].join( '\n' ) ) );
 
     return null;
   })
@@ -1806,6 +1814,343 @@ function exportMixed( test )
 }
 
 exportMixed.timeOut = 300000;
+
+//
+
+function exportSecond( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-second' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let modulePath = _.path.join( routinePath, 'module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.export';
+    return null;
+  })
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, '+ Write out will-file' ), 2 );
+    test.identical( _.strCount( got.output, 'Exported doc.export with 2 files in' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported proto.export with 2 files in' ), 1 );
+
+    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [ '.', './ExportSecond.out.will.yml' ] );
+
+    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
+
+    var expected =
+    {
+      'reflect.proto.' :
+      {
+        src :
+        {
+          filePath : { 'path::proto' : 'path::out.*=1' }
+        },
+        criterion : { debug : 0 },
+        mandatory : 1,
+        inherit : [ 'predefined.*' ]
+      },
+      'reflect.proto.debug' :
+      {
+        src :
+        {
+          filePath : { 'path::proto' : 'path::out.*=1' }
+        },
+        criterion : { debug : 1 },
+        mandatory : 1,
+        inherit : [ 'predefined.*' ]
+      },
+      'exported.proto.export' :
+      {
+        src :
+        {
+          filePath : { '.' : null },
+          prefixPath : 'proto'
+        },
+        criterion : { proto : 1, export : 1 },
+        mandatory : 1
+      },
+      'exportedFiles.proto.export' :
+      {
+        src : { filePath : 'path::exportedFiles.proto.export', basePath : '.', prefixPath : 'path::exportedDir.proto.export' },
+        criterion : { proto : 1, export : 1 },
+        recursive : 0,
+        mandatory : 1
+      },
+      'exported.doc.export' :
+      {
+        src :
+        {
+          filePath : { '.' : null },
+          prefixPath : 'doc'
+        },
+        criterion : { doc : 1, export : 1 },
+        mandatory : 1
+      },
+      'exportedFiles.doc.export' :
+      {
+        src : { filePath : 'path::exportedFiles.doc.export', basePath : '.', prefixPath : 'path::exportedDir.doc.export' },
+        criterion : { doc : 1, export : 1 },
+        recursive : 0,
+        mandatory : 1
+      }
+    }
+    test.identical( outfile.reflector, expected );
+
+    var expected =
+    {
+      in : { path : '..' },
+      temp : { path : 'out' },
+      out : { path : 'out' },
+      'out.debug' :
+      {
+        path : './out/debug',
+        criterion : { debug : 1 }
+      },
+      'out.release' :
+      {
+        path : './out/release',
+        criterion : { debug : 0 }
+      },
+      proto : { path : './proto' },
+      doc : { path : './doc' },
+      'exportedDir.proto.export' :
+      {
+        path : './proto',
+        criterion : { proto : 1, export : 1 }
+      },
+      'exportedFiles.proto.export' :
+      {
+        path : [ 'proto', 'proto/File.js' ],
+        criterion : { proto : 1, export : 1 }
+      },
+      'original.will.files' :
+      {
+        path : [ '.im.will.yml', '.ex.will.yml' ]
+      },
+      'exportedDir.doc.export' :
+      {
+        path : './doc',
+        criterion : { doc : 1, export : 1 }
+      },
+      'exportedFiles.doc.export' :
+      {
+        path : [ 'doc', 'doc/File.md' ],
+        criterion : { doc : 1, export : 1 }
+      }
+    }
+    test.identical( outfile.path, expected );
+
+    var expected =
+    {
+      'doc.export' :
+      {
+        version : '0.0.0',
+        criterion : { doc : 1, export : 1 },
+        exportedReflector : 'reflector::exported.doc.export',
+        exportedFilesReflector : 'reflector::exportedFiles.doc.export',
+        exportedDirPath : 'path::exportedDir.doc.export',
+        exportedFilesPath : 'path::exportedFiles.doc.export',
+        originalWillFilesPath : 'path::original.will.files'
+      },
+      'proto.export' :
+      {
+        version : '0.0.0',
+        criterion : { proto : 1, export : 1 },
+        exportedReflector : 'reflector::exported.proto.export',
+        exportedFilesReflector : 'reflector::exportedFiles.proto.export',
+        exportedDirPath : 'path::exportedDir.proto.export',
+        exportedFilesPath : 'path::exportedFiles.proto.export',
+        originalWillFilesPath : 'path::original.will.files'
+      }
+    }
+    test.identical( outfile.exported, expected );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, '+ Write out will-file' ), 2 );
+    test.identical( _.strCount( got.output, 'Exported doc.export with 2 files in' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported proto.export with 2 files in' ), 1 );
+
+    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [ '.', './ExportSecond.out.will.yml' ] );
+
+    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
+
+    var expected =
+    {
+      'reflect.proto.' :
+      {
+        src :
+        {
+          filePath : { 'path::proto' : 'path::out.*=1' }
+        },
+        criterion : { debug : 0 },
+        mandatory : 1,
+        inherit : [ 'predefined.*' ]
+      },
+      'reflect.proto.debug' :
+      {
+        src :
+        {
+          filePath : { 'path::proto' : 'path::out.*=1' }
+        },
+        criterion : { debug : 1 },
+        mandatory : 1,
+        inherit : [ 'predefined.*' ]
+      },
+      'exported.proto.export' :
+      {
+        src :
+        {
+          filePath : { '.' : null },
+          prefixPath : 'proto'
+        },
+        criterion : { proto : 1, export : 1 },
+        mandatory : 1
+      },
+      'exportedFiles.proto.export' :
+      {
+        src : { filePath : 'path::exportedFiles.proto.export', basePath : '.', prefixPath : 'path::exportedDir.proto.export' },
+        criterion : { proto : 1, export : 1 },
+        recursive : 0,
+        mandatory : 1
+      },
+      'exported.doc.export' :
+      {
+        src :
+        {
+          filePath : { '.' : null },
+          prefixPath : 'doc'
+        },
+        criterion : { doc : 1, export : 1 },
+        mandatory : 1
+      },
+      'exportedFiles.doc.export' :
+      {
+        src : { filePath : 'path::exportedFiles.doc.export', basePath : '.', prefixPath : 'path::exportedDir.doc.export' },
+        criterion : { doc : 1, export : 1 },
+        recursive : 0,
+        mandatory : 1
+      }
+    }
+    test.identical( outfile.reflector, expected );
+
+    var expected =
+    {
+      in : { path : '..' },
+      temp : { path : 'out' },
+      out : { path : 'out' },
+      'out.debug' :
+      {
+        path : './out/debug',
+        criterion : { debug : 1 }
+      },
+      'out.release' :
+      {
+        path : './out/release',
+        criterion : { debug : 0 }
+      },
+      proto : { path : './proto' },
+      doc : { path : './doc' },
+      'exportedDir.proto.export' :
+      {
+        path : './proto',
+        criterion : { proto : 1, export : 1 }
+      },
+      'exportedFiles.proto.export' :
+      {
+        path : [ 'proto', 'proto/File.js' ],
+        criterion : { proto : 1, export : 1 }
+      },
+      'original.will.files' :
+      {
+        path : [ '.im.will.yml', '.ex.will.yml' ]
+      },
+      'exportedDir.doc.export' :
+      {
+        path : './doc',
+        criterion : { doc : 1, export : 1 }
+      },
+      'exportedFiles.doc.export' :
+      {
+        path : [ 'doc', 'doc/File.md' ],
+        criterion : { doc : 1, export : 1 }
+      }
+    }
+    test.identical( outfile.path, expected );
+
+    var expected =
+    {
+      'doc.export' :
+      {
+        version : '0.0.0',
+        criterion : { doc : 1, export : 1 },
+        exportedReflector : 'reflector::exported.doc.export',
+        exportedFilesReflector : 'reflector::exportedFiles.doc.export',
+        exportedDirPath : 'path::exportedDir.doc.export',
+        exportedFilesPath : 'path::exportedFiles.doc.export',
+        originalWillFilesPath : 'path::original.will.files'
+      },
+      'proto.export' :
+      {
+        version : '0.0.0',
+        criterion : { proto : 1, export : 1 },
+        exportedReflector : 'reflector::exported.proto.export',
+        exportedFilesReflector : 'reflector::exportedFiles.proto.export',
+        exportedDirPath : 'path::exportedDir.proto.export',
+        exportedFilesPath : 'path::exportedFiles.proto.export',
+        originalWillFilesPath : 'path::original.will.files'
+      }
+    }
+    test.identical( outfile.exported, expected );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+exportSecond.timeOut = 300000;
 
 //
 
@@ -3292,6 +3637,7 @@ function multipleExports( test )
       },
     }
     test.identical( outfile.exported, exported );
+    debugger;
 
     var exportedReflector =
     {
@@ -3306,6 +3652,7 @@ function multipleExports( test )
       }
     }
     test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
+    debugger;
 
     var exportedReflector =
     {
@@ -4973,7 +5320,6 @@ function reflectWithSelectorInDstFilter( test )
 
 //
 
-//function reflectInherit( test )
 function make( test )
 {
   let self = this;
@@ -5884,6 +6230,7 @@ var Self =
     exportWithReflector,
     exportToRoot,
     exportMixed,
+    exportSecond,
 
     open,
     buildDetached,

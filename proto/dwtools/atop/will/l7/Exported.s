@@ -26,6 +26,38 @@ Self.shortName = 'Exported';
 // inter
 // --
 
+function finit()
+{
+  let exported = this;
+  let module = exported.module;
+
+  debugger;
+
+  fieldFinit( 'exportedReflector' );
+  fieldFinit( 'exportedFilesReflector' );
+  fieldFinit( 'exportedDirPath' );
+  fieldFinit( 'exportedFilesPath' );
+  fieldFinit( 'archiveFilePath' );
+
+  Parent.prototype.finit.call( exported );
+
+  function fieldFinit( name )
+  {
+    if( exported[ name ] )
+    {
+      // debugger;
+      if( !( exported[ name ] instanceof _.Will.Resource ) )
+      exported[ name ] = module.resolveRaw( exported[ name ] );
+      if( exported[ name ] instanceof _.Will.Resource )
+      if( !_.instanceIsFinited( exported[ name ] ) )
+      exported[ name ].finit();
+    }
+  }
+
+}
+
+//
+
 function verify()
 {
   let exported = this;
@@ -72,8 +104,10 @@ function readExported()
   let path = hub.path;
   let logger = will.logger;
 
+  debugger;
+
   let outFilePath = build.outFilePathFor();
-  let module2 = will.Module({ will : will, dirPath : path.dir( outFilePath ) }).preform();
+  let module2 = will.Module({ will : will, dirPath : path.dir( outFilePath ), originalModule : module }).preform();
   let willFiles = module2.willFilesPick( outFilePath );
   let willFile = willFiles[ 0 ];
 
@@ -96,6 +130,7 @@ function readExported()
     con
     .thenKeep( ( arg ) =>
     {
+
       if( willFile.data && willFile.data.exported )
       for( let exportedName in willFile.data.exported )
       {
@@ -103,8 +138,11 @@ function readExported()
         continue;
         let exported2 = module2.exportedMap[ exportedName ];
         _.assert( exported2 instanceof Self );
-        module.resourceImport( exported2 );
+        module.resourceImport({ srcResource : exported2 });
       }
+
+      debugger;
+
       return arg;
     })
     .finallyKeep( ( err, arg ) =>
@@ -451,7 +489,6 @@ function performWriteOutFile()
   _.assert( module2.pathResourceMap[ inPathResource.name ] === inPathResource );
 
   let outFilePath = build.outFilePathFor();
-  debugger;
   let data = module2.dataExport({ copyingNonWritable : 0, copyingPredefined : 0 });
   debugger;
 
@@ -578,6 +615,8 @@ let Accessors =
 
 let Proto =
 {
+
+  finit,
 
   // inter
 
