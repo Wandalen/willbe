@@ -298,7 +298,7 @@ function stepRoutineShell( frame )
 
   }
 
-  debugger;
+  // debugger;
   return module.shell
   ({
     execPath : opts.shell,

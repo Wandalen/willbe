@@ -609,7 +609,7 @@ function shell( o )
 
   /* */
 
-  debugger;
+  // debugger;
   o.execPath = module.resolve
   ({
     selector : o.execPath,
@@ -618,7 +618,7 @@ function shell( o )
     pathNativizing : 1,
     arrayFlattening : 0, /* required for f::this and feature make */
   });
-  debugger;
+  // debugger;
 
   /* */
 
