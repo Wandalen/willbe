@@ -135,7 +135,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/SubmodulesLocalAndRemote.md#Local-submodule">
       Local submodule
   </a></summary>
-  A submodule which is located locally.
+  A submodule which is located on the local machine.
 </details>
 <details><summary><a href="./concept/SubmodulesLocalAndRemote.md#Remote-submodule">
       Remote submodule
