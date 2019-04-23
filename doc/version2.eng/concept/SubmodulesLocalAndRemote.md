@@ -16,7 +16,7 @@ The module consists of 2 local submodules, which are named `ModuleOne` and `Loca
 
 A module located on the remote server is downloaded to the local machine for use.  
 
-The remote submodules are loaded into the `.module` directory, which belongs to the root directory of the current module.
+The remote submodules are downloaded into the `.module` directory, which is located in the root directory of the current module.
 
 To connect the remote submodule, the URI-path resource is specified in the section `submodule`.
 
