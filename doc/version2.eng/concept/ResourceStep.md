@@ -2,7 +2,7 @@
 
 Instruction for building the module. Describe an operation and desired outcome. Build consists of <code>steps</code>. 
 
-<code>Steps</code> section resource which is an executing instruction of module building.
+The steps described in the section `step` and to execute it uses in the build. The build constructs by the `.build` command and have as one of the steps given. 
 
 ### Example
 
@@ -25,12 +25,12 @@ The `step` section contains two steps for `export.proto` and `view`. The `export
 
 ### Common fields of the step
 
-| Field           | Description                                                             |
+| Field          | Description                                                      |
 |----------------|------------------------------------------------------------------|
-| description    | descriptive information for other developers                          |
+| description    | descriptive information for other developers                     |
 | criterion      | condition of resource using (see [criterion](Criterions.md))     |
-| opts           | additional options can be transmitted through the map `opts`            |
-| inherit        | inheritance from other steps                       |
+| opts           | additional options can be transmitted through the map `opts`     |
+| inherit        | inheritance from other steps                                     |
 
 ### Section `step`
 
@@ -51,7 +51,7 @@ Includes one `filePath` field, which specifies the path to the files which have 
 step:                                   # Name of the section
   delete.files:                         # Name of the step
     inherit: predefined.delete          # Inheritance
-filePath: some/dir                      # File, which will be deleted
+    filePath: some/dir                  # File, which will be deleted
 ```
 
 In resource `delete.files`, through [inheritance](Inheritance.md), `predefined.delete` step is used. Step removes files by path `path::fileToDelete`.
@@ -62,7 +62,7 @@ The step is designed for a copying the files by means of [reflector](ResourceRef
 
 Reflectors choose a set of files over which to perform some operation. The step `predefined.reflect` performs copying of files from one place to another. By default, copying is performed by storing of hard-links between a couple of files. This means that the destination file and the source file will have the same content. Furthermore any changes made to one of the files will be displayed by the operating system in another file.
 
-The step includes the `reflector` field to indicate the resource of the section` reflector` and field  `verbosity`, which determines the level of verbal output of the console namely the amount of service information while step performing. The range of verbosity level can be set from 0 to 9. 9 - the highest level of verbal.
+The step includes the `reflector` field to indicate the resource of the section` reflector` and field  `verbosity`, which determines the verbosity level of console output namely the amount of service information while step performing. The range of verbosity level can be set from 0 to 9. 9 is the highest level of verbosity.
 
 #### Example of a resource with step `predefined.reflect`
 
@@ -75,7 +75,7 @@ step:                                         # Name of the section
 
 ```
 
-The step `reflect.files` is inherited from `predefined.reflect`. To select files, the step uses `reflect.some.files` reflector. Level of verbal output is `3`.
+The step `reflect.files` is inherited from `predefined.reflect`. To select files, the step uses `reflect.some.files` reflector. Level of verbosity output is `3`.
 
 ### Predefined step `predefined.js`   
 
