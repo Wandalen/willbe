@@ -30,7 +30,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/Structure.md#Resources">
       Resources
   </a></summary>
-  Structural and functional element of <code>will-file</code>. Resources of the same type collected in a section.
+  Structural and functional unit of <code>will-file</code>. Resources of the same type are collected in a section.
 </details>
 <details><summary><a href="./concept/Structure.md#Type-of-resource">
       Type of resource
