@@ -81,20 +81,20 @@ The step `reflect.files` is inherited from `predefined.reflect`. To select files
 
 Designed to execute JavaScript files while constructing a module.  
 
-`predefined.js` includes one field with a name `js`, which specifies the path to the JS file to execute.
+`predefined.js` step includes one field with a name `js`, which specifies the path to the JS file to execute.
 
 Since the `js` field has only one step `predefined.js` not in other predefined steps, the `predefined.js` step can be written without explicit inheritance.
 
-#### Examples of resources with step`predefined.js`
+#### Examples of resources with step `predefined.js`
 
 ```yaml
 step:                                   # Name of the sectiom
   run.js:                               # Name of the step
-      js: run.js                        # The path to the JS file in the section 'path'
+      js: run.js                        # The path to the JS file
 
 ```
 
-The step to run `run.js.` The inheritance is not explicit, since the field `js` is a unique field of the predefined step `predefined.js`.
+The step executes `run.js.` file. The inheritance is not explicit, since the field `js` is a unique field of the predefined step `predefined.js`.
 
 ### Predefined step `predefined.shell`  
 
@@ -103,11 +103,10 @@ Designed to run commands in the command shell of the operating system.
 Extends the predefined capabilities of utility through the use of external programs and operating system commands.
 
 Step `predefined.shell` has fields:
-
 - shell - indicates the command to be executed by operating system;
-- currentPath - indicates the path to the directory in which the command will be executed. If the field is not specified then the `predefined.dir` path is used.
-- forEachDst - The name of the reflector is specified in the field to indicate the destination directory for the files that will be created by the team. The destination directory is selected from the `dst` reflector filter.
-- upToDate - a field that sets the ability to re-execute command on files that have not changed from the previous construction. Accepts two values: `preserve` - do not execute the command if the files have not changed; `rebuild` - execute the command regardless of the changes in the file. The default value is `preserve`.
+- currentPath - indicates the path to the command execution directory. If the field is not specified then the `predefined.dir` path is used.
+- forEachDst - specifies the reflector name to indicate the destination directory for the files that will be created by the command. The destination directory is selected from the `dst` reflector filter.
+- upToDate - sets the ability to re-execute command on files that have not changed from the previous construction. The field accepts two values: `preserve` - do not execute the command if the files have not changed; `rebuild` - execute the command regardless of the changes in the file. The default value is `preserve`.
 
 The `shell` field is present only in the built-in step `predefined.shell` and the step can be written by implicit inheritance, that is, from the specified field` shell` in the resource.
 
