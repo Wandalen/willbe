@@ -609,7 +609,7 @@ function shell( o )
 
   /* */
 
-  debugger;
+  // debugger;
   o.execPath = module.resolve
   ({
     selector : o.execPath,
@@ -618,7 +618,7 @@ function shell( o )
     pathNativizing : 1,
     arrayFlattening : 0, /* required for f::this and feature make */
   });
-  debugger;
+  // debugger;
 
   /* */
 
@@ -1682,7 +1682,7 @@ function willFilesReadEnd()
   let logger = will.logger;
 
   if( will.verbosity >= 2 )
-  if( !module.supermodule )
+  if( !module.supermodule && !module.originalModule )
   logger.log( ' . Read', module.willFilesSelect().length, 'will-files in', _.timeSpent( module.willFilesReadBeginTime ), '\n' );
 
 }
@@ -3620,7 +3620,6 @@ function resolve_body( o )
 
   if( result === undefined )
   {
-    debugger;
     result = module.errResolving
     ({
       selector : o.selector,
@@ -4487,44 +4486,67 @@ var defaults = _resolveAct.defaults = Object.create( resolve.defaults )
 defaults.visited = null;
 
 //
+//
+// function pathResolve_body( o )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//
+//   _.assert( _.strIs( o.selector ) || _.arrayIs( o.selector ) );
+//
+//   let o2 = _.mapExtend( null, o );
+//   let result = module.resolve( o2 );
+//   return result;
+// }
+//
+// _.routineExtend( pathResolve_body, resolve );
+//
+// var defaults = pathResolve_body.defaults;
+// defaults.pathResolving = 'in';
+// defaults.prefixlessAction = 'resolved';
 
-function pathResolve_body( o )
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
+let pathResolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
-  _.assert( _.strIs( o.selector ) || _.arrayIs( o.selector ) );
-
-  let o2 = _.mapExtend( null, o );
-  let result = module.resolve( o2 );
-  return result;
-}
-
-_.routineExtend( pathResolve_body, resolve );
-
-var defaults = pathResolve_body.defaults;
+var defaults = pathResolve.defaults;
 defaults.pathResolving = 'in';
 defaults.prefixlessAction = 'resolved';
 
-let pathResolve = _.routineFromPreAndBody( resolve_pre, pathResolve_body );
+//
 
-// //
-//
-// function reflectorResolve_pre( routine, args )
+// function resolveRaw_body( o )
 // {
-//   let o = args[ 0 ];
-//   if( _.strIs( o ) )
-//   o = { selector : o }
+//   let module = this;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
 //
-//   _.routineOptions( routine, o );
-//   _.assert( arguments.length === 2 );
-//   _.assert( args.length === 1 );
+//   _.assert( _.strIs( o.selector ) || _.arrayIs( o.selector ) );
 //
-//   return o;
+//   let o2 = _.mapExtend( null, o );
+//   let result = module.resolve( o2 );
+//   return result;
 // }
+//
+// _.routineExtend( resolveRaw_body, resolve );
+//
+// var defaults = resolveRaw_body.defaults;
+
+let resolveRaw = _.routineFromPreAndBody( resolve_pre, resolve_body );
+
+var defaults = resolveRaw.defaults;
+defaults.pathResolving = 0;
+defaults.pathNativizing = 0;
+defaults.pathUnwrapping = 0;
+defaults.singleUnwrapping = 0;
+defaults.mapValsUnwrapping = 0;
+defaults.mapFlattening = 0;
+defaults.arrayWrapping = 0;
+defaults.arrayFlattening = 0;
+// defaults.missingAction = 'undefine';
 
 //
 
@@ -4714,26 +4736,30 @@ function dataExportResources( resources, options )
 
 //
 
-function resourceImport( resource2 )
+function resourceImport( o )
 {
   let module = this;
   let will = module.will;
-  let module2 = resource2.module;
+
+  _.assert( _.mapIs( o ) );
+  _.assert( arguments.length === 1 );
+  _.assert( o.srcResource instanceof will.Resource );
+  _.routineOptions( resourceImport, arguments );
+
+  let srcModule = o.srcResource.module;
 
   _.assert( module instanceof will.Module );
-  _.assert( module2 === null || module2 instanceof will.Module );
-  _.assert( resource2 instanceof will.Resource );
+  _.assert( srcModule === null || srcModule instanceof will.Module );
 
-  let resourceData = resource2.dataExport();
+  let resourceData = o.srcResource.dataExport();
 
-  // debugger;
-
+  if( _.mapIs( resourceData ) )
   for( let k in resourceData )
   {
     let value = resourceData[ k ];
 
-    if( _.strIs( value ) && module2 )
-    value = module2.resolveMaybe
+    if( _.strIs( value ) && srcModule )
+    value = srcModule.resolveMaybe
     ({
       selector : value,
       prefixlessAction : 'resolved',
@@ -4741,23 +4767,48 @@ function resourceImport( resource2 )
       pathResolving : 0,
     });
 
+    // _.assert( !_.instanceIsStandard( value ) );
     if( _.instanceIsStandard( value ) )
     {
-      let subresource = module.resourceImport( value );
+      let o2 = _.mapExtend( null, o );
+      o2.srcResource = value;
+      // debugger;
+      let subresource = module.resourceImport( o2 );
       value = subresource.nickName;
     }
 
     resourceData[ k ] = value;
   }
 
-  resourceData.module = module;
-  resourceData.name = module.resourceNameAllocate( resource2.KindName, resource2.name )
+  // debugger;
+  if( o.overriding )
+  {
+    let oldResource = module.resolveRaw
+    ({
+      selector : o.srcResource.KindName + '::' + o.srcResource.name,
+      missingAction : 'undefine',
+    });
+    if( oldResource )
+    {
+      // debugger;
+      oldResource.finit();
+    }
+  }
 
-  let resource = new resource2.Self( resourceData );
+  resourceData.module = module;
+  resourceData.name = module.resourceNameAllocate( o.srcResource.KindName, o.srcResource.name )
+
+  let resource = new o.srcResource.Self( resourceData );
   resource.form1();
   _.assert( module.resolve({ selector : resource.nickName, pathUnwrapping : 0, pathResolving : 0 }).absoluteName === resource.absoluteName );
 
   return resource;
+}
+
+resourceImport.defaults =
+{
+  srcResource : null,
+  overriding : 1,
 }
 
 //
@@ -4868,6 +4919,7 @@ let Associates =
   will : null,
   supermodule : null,
   associatedSubmodule : null,
+  originalModule : null,
 }
 
 let Restricts =
@@ -5102,6 +5154,8 @@ let Proto =
   resolve,
   resolveMaybe,
   _resolveAct,
+
+  resolveRaw,
 
   pathResolve,
   reflectorResolve,
