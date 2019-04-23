@@ -95,7 +95,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/SectionSubmodule.md">
       Section <code>submodule</code>
   </a></summary>
-  The section has an information about submodules.
+  The section contains information about the submodules.
 </details>
 <details><summary><a href="./concept/ResourceReflector.md#Section-reflector">
       Section <code>reflector</code>

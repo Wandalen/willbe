@@ -12,7 +12,7 @@ Resource path, as well as the other types of resources can have criterions, path
 
 The example contains section `path` with paths `in`, `out`, `toDelete`. The path `toDelete` is written in extended format and has a description field.
 
-### Fields of resources of section `path`
+### Resource fields of section `path`
 
 | Field          | Description                                 |
 |----------------|---------------------------------------------|

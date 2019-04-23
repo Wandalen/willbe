@@ -14,7 +14,7 @@ The module may have a default build. In order to make it, the [cryterion `defaul
 
 The build named `copy.files` has one step `copy.proto`. Criterion `default : 1` makes this build the default build.
 
-### The fields of resources of section `build`  
+### Resource fields of `build` section 
 
 | Field        | Description                                                       |
 |---------------|------------------------------------------------------------------|

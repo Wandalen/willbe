@@ -23,7 +23,7 @@ step  :
 
 The `step` section contains two steps for `export.proto` and `view`. The `export.proto` step is intended to export the module. The `view` step is intended to be used for viewing the file at `http:///www.google.com`. It is determined by the user at some stage of the build.
 
-### Common fields of the step
+### Resource fields of `step` section
 
 | Field          | Description                                                      |
 |----------------|------------------------------------------------------------------|

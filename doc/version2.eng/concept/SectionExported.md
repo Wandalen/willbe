@@ -47,7 +47,7 @@ path :
 
 The list of exported files looks like this. All paths are relative to `path::in`.
 
-### The fields of section resources  `exported`   
+### Resource fields of `exported` section   
 
 | Field                    | Description                                   |
 |--------------------------|----------------------------------------|
