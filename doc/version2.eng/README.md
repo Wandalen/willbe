@@ -40,7 +40,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/Inheritance.md">
       Inheritance
   </a></summary>
-    It is the approach to describing a module when <code>will-file</code> can reuse (inherit) value of fields of another resource(s) of the same type.
+  It is the approach to describing a module when <code>will-file</code> can reuse (inherit) field values of another resource(s) of the same type.
 </details>
 <details><summary><a href="./concept/ResourcePath.md#Path">
       Resource path
