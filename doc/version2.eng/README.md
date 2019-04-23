@@ -150,7 +150,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/ModuleCurrent.md">
       Current module
   </a></summary>
-  A module with respect to which operations are performed. By default the module is loaded from file <code>.will.yml</code> of the current directory or pair of files <code>.im.will.yml</code> and <code>.ex.will.yml</code>.
+  A module for which operations are performed. By default, this module loads from the file <code>.will.yml</code> of the current directory or from a pair of files <code>.im.will.yml</code> and <code>.ex.will.yml</code>.
 </details>
 <details><summary><a href="./concept/Command.md#Command">
       Command
