@@ -128,9 +128,7 @@ function finit()
   _.assert( !_.instanceIsFinited( resource ) );
   if( resource.formed )
   resource.unform();
-  // _.assert( !_.instanceIsFinited( resource ) );
   resource.module = null;
-  // debugger;
   return _.Copyable.prototype.finit.apply( resource, arguments );
 }
 

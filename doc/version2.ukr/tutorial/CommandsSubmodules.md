@@ -68,7 +68,7 @@ Remote path of module::submodulesCommands / module::Files will be fixated
 
 </details>
 
-Файл `.will.yml` в директорії `submodulesUpgrade` призначений для дослідження команди `.submodules.upgrade.refs` тому, перейдіть в директорію `submodulesFixate` та виконайте пошук оновлень для підмодулів командою `.submodules.fixate` з опцією `dry:1` - без заміни значень. 
+Файл `.will.yml` в директорії `submodulesUpgrade` призначений для дослідження команди `.submodules.upgrade` тому, перейдіть в директорію `submodulesFixate` та виконайте пошук оновлень для підмодулів командою `.submodules.fixate` з опцією `dry:1` - без заміни значень. 
 
 Вивід з указанням `will be fixated` говорить про те, що при опції `dry:0` ресурс буде змінено.  
 
@@ -122,15 +122,15 @@ Remote path of module::submodulesCommands / module::Files fixated
 
 Утиліта змінила ресурси в секції `submodule` `will-файлa` згідно останніх коммітів на віддаленому сервері. При цьому команда `.submodules.fixate` не змінила ресурс `Tools`, в якому вказано версію.  
 
-### Команда `.submodules.upgrade.refs`
+### Команда `.submodules.upgrade`
 
 Команда `.submodules.upgrade.refs`, здійснює пошук оновлень для віддалених підмодулів та перезапис значень в відповідних ресурсах секції `submodule`. Команда має опцію `dry` аналогічно до команди `.submodules.fixate`. При використанні команди `.submodules.upgrade.refs` ресурси секції `submodule` замінюються незалежно від наявності вказаної версії підмодуля.  
 
 <details>
-  <summary><u>Вивід команди <code>will .submodules.upgrade.refs dry:1</code></u></summary>
+  <summary><u>Вивід команди <code>will .submodules.upgrade dry:1</code></u></summary>
 
 ```
-[user@user ~]$ will .submodules.upgrade.refs dry:1
+[user@user ~]$ will .submodules.upgrade dry:1
 ...
 Module at /path_to_file/.will.yml
 ...
@@ -195,10 +195,10 @@ submodulesCommands
 Утиліта завантажила підмодулі згідно версій указаних в `will-файлі`. Тобто, якщо модуль має незавантажені підмодулі, наприклад, додані після побудови, то команда `.submodules.update` їх завантажить.  
 
 <details>
-  <summary><u>Вивід команди <code>will .submodules.upgrade.refs</code></u></summary>
+  <summary><u>Вивід команди <code>will .submodules.upgrade</code></u></summary>
 
 ```
-[user@user ~]$ will .submodules.upgrade.refs
+[user@user ~]$ will .submodules.upgrade
 ...
 Remote path of module::submodulesCommands / module::Tools fixated
   git+https:///github.com/Wandalen/wTools.git/out/wTools : .#56afe924c2680301078ccb8ad24a9e7be7008485 <- .#ec60e39ded1669e27abaa6fc2798ee13804c400a
@@ -278,8 +278,8 @@ submodulesCommands
 ### Підсумок
 
 - `Willbe` виконує операції з віддаленими підмодулями з командної оболонки системи.  
-- Команда `.submodules.fixate` -  фіксує версію віддаленого підмодуля, а команда `.submodules.upgrade.refs` оновлює ресурси `will-файла` до останньої версії віддаленого підмодуля.  
-- Використання команд `.submodules.fixate` i `.submodules.upgrade.refs` разом з командою `.submodules.update`, розділяє оновлення підмодулів на два етапи - оновлення посилань і завантаження підмодулів, що забезпечує безпечне оновлення підмодулів і надійність роботи модуля.   
+- Команда `.submodules.fixate` -  фіксує версію віддаленого підмодуля, а команда `.submodules.upgrade` оновлює ресурси `will-файла` до останньої версії віддаленого підмодуля.  
+- Використання команд `.submodules.fixate` i `.submodules.upgrade` разом з командою `.submodules.update`, розділяє оновлення підмодулів на два етапи - оновлення посилань і завантаження підмодулів, що забезпечує безпечне оновлення підмодулів і надійність роботи модуля.   
 - Команда `.submodules.clean` очищає модуль від завантажених підмодулів разом з директорією `.module`.
 
 [Повернутись до змісту](../README.md#tutorials)

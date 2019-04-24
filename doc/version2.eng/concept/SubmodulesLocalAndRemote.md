@@ -39,6 +39,6 @@ Management tools of remote submodules:
 - the command `will .submodules.update` download the latest versions of the remote submodules files (without patching the `will-file`);
 - the predefined step of [`submodules.update`](ResourceStep.md#submodulesupdate) updates files of remote submodules;
 - the `will.submodules.fixate` command fixates the submodule version, patching the current submodule paths in `will-file` to the latest versions of the remote submodules, unless a specific version was specified;
-- the ` will command.submodules.upgrade.refs` updates the version of the submodules, patching the current submodule paths in `will-file` to the most recent versions of the remote submodule (if newer versions are available);
+- the ` will command.submodules.upgrade` updates the version of the submodules, patching the current submodule paths in `will-file` to the most recent versions of the remote submodule (if newer versions are available);
 - the `will .submodules.clean` command deletes the remote submodules files (`.module` directory);
 - predefined step [`submodules.clean`](ResourceStep.md#submodulesclean) deletes the remote submodules files (`.module` directory).

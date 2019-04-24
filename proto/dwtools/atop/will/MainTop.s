@@ -228,7 +228,7 @@ function commandsMake()
     'submodules download' :     { e : _.routineJoin( will, will.commandSubmodulesDownload ),    h : 'Download each submodule if such was not downloaded so far.' },
     'submodules update' :       { e : _.routineJoin( will, will.commandSubmodulesUpdate ),      h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
     'submodules fixate' :       { e : _.routineJoin( will, will.commandSubmodulesFixate ),      h : 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.' },
-    'submodules upgrade refs' : { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),     h : 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.' },
+    'submodules upgrade' :      { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),     h : 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.' },
 
     'shell' :                   { e : _.routineJoin( will, will.commandShell ),                 h : 'Execute shell command on the module.' },
     'clean' :                   { e : _.routineJoin( will, will.commandClean ),                 h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
@@ -625,7 +625,8 @@ function commandSubmodulesUpgrade( e )
   let propertiesMap = _.strToMap( e.argument );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
-  _.assert( e.propertiesMap.upgrading === undefined );
+  _.assert( e.propertiesMap.upgrading === undefined, 'Unknown option upgrading' );
+
   e.propertiesMap.upgrading = 1;
 
   return will.moduleReadyThenNonForming( function( module )
@@ -638,7 +639,7 @@ function commandSubmodulesUpgrade( e )
 commandSubmodulesUpgrade.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
-  upgrading : 'Upgrade already fixated submodules. Default is upgrading:1.',
+  // upgrading : 'Upgrade already fixated submodules. Default is upgrading:1.',
 }
 
 //

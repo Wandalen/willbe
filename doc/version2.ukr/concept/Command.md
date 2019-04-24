@@ -46,7 +46,7 @@ will .paths.list
 | `.clean.what`     | Відображає список файлів, які можуть бути видалені командою `clean`              | `will .clean.what`                        |
 | `.build`          | Побудова модуля по вибраній збірці                           | `will .build [scenario]`                  |
 | `.export`         | Експортування модуля для використання, його іншими моулями                     | `will .export [scenario]`                 |
-| `.with`           | Вмбір поточного модуля по імені його `will-файла`     | `will .with [will-file] [command] [argument]`                         |
+| `.with`           | Вибір поточного модуля по імені його `will-файла`     | `will .with [will-file] [command] [argument]`                         |
 | `.each`           | Виконання вказаної операції для кожного модуля в вказаній директорії         | `will .each .[command]`                   |
 
 ### Неповний ввід команди
