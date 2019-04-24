@@ -1,0 +1,15 @@
+.search-input
+{
+  height: 50px !important;
+  padding-left: 10px !important;
+  border-radius: 0px !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+}
+
+.search .content
+{
+  position : inherit !important;
+  padding-top: 0px !important;
+}

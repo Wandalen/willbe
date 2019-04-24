@@ -1,0 +1,156 @@
+.search .input
+{
+  width: 100% !important;
+}
+
+.search .content
+{
+  position : inherit !important;
+  padding-top: 0px !important;
+}
+
+.description
+{
+  margin-top: 0px;
+  padding-left: 25px !important;
+}
+
+.description p
+{
+  padding-left: 0px !important;
+}
+
+.ui .accordion
+{
+  margin: 0px !important;
+}
+
+/*  */
+
+.scrollToTop
+{
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 30px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 18px;
+}
+
+/*  */
+
+.index
+{
+  max-height:calc(100vh - 160px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+.list .item a
+{
+  color: var(--theme-color,#42b983);
+  font-weight: 600;
+}
+
+.list .item a:hover
+{
+  color: #1e70bf !important;
+  text-decoration: none;
+}
+
+/*  */
+
+.custom-sidebar
+{
+  padding-top: 0px !important;
+  box-shadow: none !important;
+  height: 100% !important;
+  border-right: 1px solid rgba(34,36,38,.15);
+  position: fixed !important;
+  overflow: hidden;
+  min-width: 300px !important;
+  width : auto !important;
+  min-width: 300px !important;
+}
+
+.custom-sidebar code
+{
+  background-color: #f8f8f8;
+  font-family: Roboto Mono,Monaco,courier,monospace;
+  border-radius: 2px;
+  color: #e96900;
+  font-size: .8rem;
+  margin: 0 0;
+  padding: 0px 5px;
+  white-space: pre-wrap;
+}
+
+.custom-sidebar-toggle
+{
+  position: fixed;
+  bottom: 20px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 10px;
+  margin-left: -45px;
+}
+
+.sidebar-index-item-active
+{
+  color: #4183c4 !important;
+}
+
+/*  */
+
+section.content
+{
+  position: relative !important;
+  left: 0 !important;
+  margin: 0 0 !important;
+}
+
+.pusher
+{
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -o-transition: none !important;
+  transition: none !important;
+}
+
+.markdown-section
+{
+  margin : 0px 15% !important;
+}
+
+/*  */
+
+.header-url-icon
+{
+  font-size: 0.8em !important;
+  text-decoration: none !important;
+  color: black !important;
+  cursor: pointer;
+  visibility: hidden;
+}
+
+.anchor
+{
+  margin-left: -30px !important;
+  color: black !important;
+  text-decoration: none !important;
+}
+
+.anchor-special
+{
+  margin-left: -30px !important;
+  color: black !important;
+}
