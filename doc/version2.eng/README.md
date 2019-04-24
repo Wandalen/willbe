@@ -1,4 +1,3 @@
-
 ## Quick start
 
 For quick start [install](<./tutorial/Instalation.md>) utility `willbe`, [get acquainted with](<./tutorial/CLI.md>) command line interface and create the first [module "Hello World"](<./tutorial/HelloWorld.md>). [Read](<./tutorial/Abstract.md>) abstract if you are wondering what is it for and what philosophy is behind utility `willbe`.
@@ -404,8 +403,8 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   </a></summary>
   How to use filters to select files by time.
 </details>
-<details><summary><a href="./tutorial/ReflectorFSControl.md">
-      Forming of paths of reflectors. Managing of the files
+<details><summary><a href="./tutorial/ReflectorMapPaths.md">
+      Map of the paths. Using globs to filter files
   </a></summary>
   Describe algorithm of path forming and explicit copying restrictions.
 

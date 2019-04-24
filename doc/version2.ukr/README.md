@@ -304,8 +304,8 @@
   </a></summary>
   Як користуватись фільтрами відбору файлів по часу.
 </details>
-<details><summary><a href="./tutorial/ReflectorFSControl.md">
-      Формування шляхів в рефлекторі. Управління файлами
+<details><summary><a href="./tutorial/ReflectorMapPaths.md">
+      Мапа шляхів. Використання глобів для фільтрування файлів
   </a></summary>
   Як формуються шляхи рефлекторів та як управляти доступом до файлів і директорій в рефлекторі.
 </details>
