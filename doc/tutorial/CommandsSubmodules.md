@@ -4,7 +4,7 @@
 
 Зазвичай, один програмний продукт залежить від багатьох сторонніх модулів, бібліотек, програм. Розробка програмного забезпечення - динамічний процес і версії швидко змінюються. Для забезпечення  актуальності версій, нерідко, доводиться слідкувати за станом продукту в офіційних джерелах. Тим не менше, при значному об'ємі допоміжного програмного забезпечення, яке розміщується в різних джерелах, потрібне швидке і безпечне здійснення оновлень.  
 
-Утиліта `willbe` дозволяє розробнику слідкувати за станом розробки віддалених підмодулів з допомогою команд `.submodules.fixate` i `.submodules.upgrade.refs`, оновлювати підмодулі з командою `.submodules.update` i видаляти командою `.submodules.clean`.   
+Утиліта `willbe` дозволяє розробнику слідкувати за станом розробки віддалених підмодулів з допомогою команд `.submodules.fixate` i `.submodules.upgrade`, оновлювати підмодулі з командою `.submodules.update` i видаляти командою `.submodules.clean`.   
 
 ### Команда `.submodules.fixate` 
 
@@ -66,7 +66,7 @@ Remote path of module::submodulesCommands / module::Files will be fixated
 
 </details>
 
-Файл `.will.yml` в директорії `submodulesUpgrade` призначений для дослідження команди `.submodules.upgrade.refs` тому, перейдіть в директорію `submodulesFixate` та виконайте пошук оновлень для підмодулів командою `.submodules.fixate` з опцією `dry:1` - без заміни значень. 
+Файл `.will.yml` в директорії `submodulesUpgrade` призначений для дослідження команди `.submodules.upgrade` тому, перейдіть в директорію `submodulesFixate` та виконайте пошук оновлень для підмодулів командою `.submodules.fixate` з опцією `dry:1` - без заміни значень. 
 
 Вивід з указанням `will be fixated` говорить про те, що при опції `dry:0` ресурс буде змінено.  
 
@@ -120,15 +120,15 @@ Remote path of module::submodulesCommands / module::Files fixated
 
 Утиліта змінила ресурси в секції `submodule` `will-файлa` згідно останніх коммітів на віддаленому сервері. При цьому команда `.submodules.fixate` не змінила ресурс `Tools`, в якому вказано версію.  
 
-### Команда `.submodules.upgrade.refs`
+### Команда `.submodules.upgrade`
 
-Команда `.submodules.upgrade.refs`, аналогічно до `.submodules.fixate`, здійснює пошук оновлень для віддалених підмодулів та перезапис значень в відповідних ресурсах секції `submodule`, має опцію `dry`. Відмінність в тому, що ресурси секції `submodule` замінюються незалежно від наявності вказаної версії підмодуля.  
+Команда `.submodules.upgrade`, аналогічно до `.submodules.fixate`, здійснює пошук оновлень для віддалених підмодулів та перезапис значень в відповідних ресурсах секції `submodule`, має опцію `dry`. Відмінність в тому, що ресурси секції `submodule` замінюються незалежно від наявності вказаної версії підмодуля.  
 
 <details>
-  <summary><u>Вивід команди <code>will .submodules.upgrade.refs dry:1</code></u></summary>
+  <summary><u>Вивід команди <code>will .submodules.upgrade dry:1</code></u></summary>
 
 ```
-[user@user ~]$ will .submodules.upgrade.refs dry:1
+[user@user ~]$ will .submodules.upgrade dry:1
 ...
 Module at /path_to_file/.will.yml
 ...
@@ -148,11 +148,11 @@ Remote path of module::submodulesCommands / module::Files will be fixated
 
 Перевірте, які підмодулі потребують оновлення в `will-файлі` директорії `submodulesUpgrade`.
 
-Таким чином, команда `.submodules.upgrade.refs` оновить всі застарілі посилання не зважаючи на те, що в підмодулі `Tools` вказаний комміт - застарілий комміт, який не змінювала команда `.submodules.fixate`.   
+Таким чином, команда `.submodules.upgrade` оновить всі застарілі посилання не зважаючи на те, що в підмодулі `Tools` вказаний комміт - застарілий комміт, який не змінювала команда `.submodules.fixate`.   
 
 ### Команда `.submodules.update` 
 
-Команди `.submodules.fixate` i `.submodules.upgrade.refs` змінюють ресурси `will-файла` модуля, не завантажуючи оновлень. Для завантаження оновлень використовуйте команду `.submodules.update`.  
+Команди `.submodules.fixate` i `.submodules.upgrade` змінюють ресурси `will-файла` модуля, не завантажуючи оновлень. Для завантаження оновлень використовуйте команду `.submodules.update`.  
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.update</code></u></summary>
@@ -191,10 +191,10 @@ submodulesCommands
 Утиліта завантажила підмодулі згідно версій указаних в `will-файлі`, тобто, в випадку відсутності віддалених підмодулів, команда `.submodules.update` їх завантажує.  
 
 <details>
-  <summary><u>Вивід команди <code>will .submodules.upgrade.refs</code></u></summary>
+  <summary><u>Вивід команди <code>will .submodules.upgrade</code></u></summary>
 
 ```
-[user@user ~]$ will .submodules.upgrade.refs
+[user@user ~]$ will .submodules.upgrade
 ...
 Remote path of module::submodulesCommands / module::Tools fixated
   git+https:///github.com/Wandalen/wTools.git/out/wTools : .#56afe924c2680301078ccb8ad24a9e7be7008485 <- .#ec60e39ded1669e27abaa6fc2798ee13804c400a
@@ -274,8 +274,8 @@ submodulesCommands
 ### Підсумок
 
 - `Willbe` виконує операції з віддаленими підмодулями з командної оболонки системи.  
-- Команда `.submodules.fixate` -  фіксує версію віддаленого підмодуля, а команда `.submodules.upgrade.refs` оновлює ресурси `will-файла` до останньої версії віддаленого підмодуля.  
-- Використання команд `.submodules.fixate` i `.submodules.upgrade.refs` разом з командою `.submodules.update`, розділяє оновлення підмодулів на два етапи - оновлення посилань і завантаження підмодулів, що забезпечує безпечне оновлення підмодулів і надійність роботи модуля.   
+- Команда `.submodules.fixate` -  фіксує версію віддаленого підмодуля, а команда `.submodules.upgrade` оновлює ресурси `will-файла` до останньої версії віддаленого підмодуля.  
+- Використання команд `.submodules.fixate` i `.submodules.upgrade` разом з командою `.submodules.update`, розділяє оновлення підмодулів на два етапи - оновлення посилань і завантаження підмодулів, що забезпечує безпечне оновлення підмодулів і надійність роботи модуля.   
 - Команда `.submodules.clean` очищає модуль від завантажених підмодулів разом з директорією `.module`.
 
 [Повернутись до змісту](../README.md#tutorials)

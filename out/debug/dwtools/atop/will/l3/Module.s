@@ -4283,9 +4283,10 @@ function _resolveAct( o )
 
   /* */
 
-  function pathResolve( currentModule, filePath, pathName )
+  function pathResolve( filePath, resourceName )
   {
     let it = this;
+    let currentModule = it.module;
     let result = filePath;
 
     _.assert( _.strIs( filePath ) || _.strsAreAll( filePath ) );
@@ -4299,15 +4300,15 @@ function _resolveAct( o )
     }
 
     let prefixPath = '.';
-    if( o.pathResolving === 'in' && pathName !== 'in' )
+    if( o.pathResolving === 'in' && resourceName !== 'in' )
     prefixPath = currentModule.pathMap.in || '.';
-    else if( o.pathResolving === 'out' && pathName !== 'out' )
+    else if( o.pathResolving === 'out' && resourceName !== 'out' )
     prefixPath = currentModule.pathMap.out || '.';
 
     if( currentModule.SelectorIs( prefixPath ) )
-    prefixPath = currentModule.pathResolve( prefixPath );
+    prefixPath = currentModule.pathResolve({ selector : prefixPath, currentContext : it.dst });
     if( currentModule.SelectorIs( result ) )
-    result = currentModule.pathResolve( result );
+    result = currentModule.pathResolve({ selector : result, currentContext : it.dst });
 
     result = path.s.join( currentModule.dirPath, prefixPath, result );
 
@@ -4340,9 +4341,9 @@ function _resolveAct( o )
       if( srcHasAnyPath || dstHasAnyPath )
       {
         if( srcHasAnyPath )
-        resource.src.prefixPath = pathResolve.call( it, currentModule, resource.src.prefixPath || '.' );
+        resource.src.prefixPath = pathResolve.call( it, resource.src.prefixPath || '.' );
         if( dstHasAnyPath )
-        resource.dst.prefixPath = pathResolve.call( it, currentModule, resource.dst.prefixPath || '.' );
+        resource.dst.prefixPath = pathResolve.call( it, resource.dst.prefixPath || '.' );
       }
 
     }
@@ -4352,16 +4353,17 @@ function _resolveAct( o )
       resource = it.dst = resource.cloneDerivative();
       _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
       if( resource.path )
-      resource.path = pathResolve.call( it, currentModule, resource.path, resource.name )
+      resource.path = pathResolve.call( it, resource.path, resource.name )
     }
 
   }
 
   /* */
 
-  function pathNativize( currentModule, filePath, pathName )
+  function pathNativize( filePath )
   {
     let it = this;
+    let currentModule = it.module;
     let result = filePath;
 
     _.assert( _.strIs( filePath ) || _.strsAreAll( filePath ) );
@@ -4379,17 +4381,12 @@ function _resolveAct( o )
     let currentModule = it.module;
     let resource = it.dst;
 
-    // if( !o.pathNativizing )
-    // return;
-    // if( !it.dstWritingDown )
-    // return;
-
     if( it.dst instanceof will.PathResource )
     {
       resource = it.dst = resource.cloneDerivative(); // xxx : don't do second clone
       _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
       if( resource.path )
-      resource.path = pathNativize.call( it, currentModule, resource.path, resource.name )
+      resource.path = pathNativize.call( it, resource.path )
     }
 
   }
@@ -4400,9 +4397,6 @@ function _resolveAct( o )
   {
     let it = this;
     let currentModule = it.module;
-
-    // if( !o.pathUnwrapping )
-    // return;
 
     if( it.dst instanceof will.PathResource )
     it.dst = it.dst.path;

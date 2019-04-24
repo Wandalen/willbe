@@ -172,6 +172,30 @@ function _load()
 
 //
 
+function resolve_body( o )
+{
+  let submodule = this;
+  let module = submodule.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let module2 = submodule.loadedModule || module;
+
+  _.assert( arguments.length === 1 );
+  _.assert( o.currentContext === null || o.currentContext === submodule )
+
+  o.currentContext = submodule;
+
+  let resolved = module2.resolve.body.call( module2, o );
+
+  return resolved;
+}
+
+_.routineExtend( resolve_body, _.Will.Resource.prototype.resolve.body );
+let resolve = _.routineFromPreAndBody( _.Will.Resource.prototype.resolve.pre, resolve_body );
+
+//
+
 function isDownloadedGet()
 {
   let submodule = this;
@@ -268,6 +292,8 @@ let Proto =
   form3,
 
   _load,
+
+  resolve,
 
   isDownloadedGet,
 

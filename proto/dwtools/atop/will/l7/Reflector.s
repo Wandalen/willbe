@@ -495,8 +495,8 @@ function prefixesRelative()
   _.assert( reflector.src.postfixPath === null, 'not implemented' );
   _.assert( reflector.dst.postfixPath === null, 'not implemented' );
 
-  if( reflector.nickName === "reflector::reflect.submodules" )
-  debugger;
+  // if( reflector.nickName === "reflector::reflect.submodules" )
+  // debugger;
 
   reflector.src.pairWithDst( reflector.dst );
   reflector.src.prefixesRelative();

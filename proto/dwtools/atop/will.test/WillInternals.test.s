@@ -2899,6 +2899,7 @@ function pathsResolveOfSubmodules( test )
     throw err;
     return arg;
   });
+
   return module.ready.split();
 }
 

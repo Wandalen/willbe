@@ -1073,13 +1073,13 @@ function fixateDetached( test )
   ready
   .thenKeep( () =>
   {
-    test.case = '.submodules.upgrade.refs dry:1';
+    test.case = '.submodules.upgrade dry:1';
     return null;
   })
 
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.each module .export' ] })
-  shell({ args : [ '.submodules.upgrade.refs dry:1' ] })
+  shell({ args : [ '.submodules.upgrade dry:1' ] })
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -5280,7 +5280,7 @@ function reflectWithSelectorInDstFilter( test )
   ready
   .thenKeep( () =>
   {
-    test.case = 'reflect to out/debug';
+    test.case = '.build debug';
     _.fileProvider.filesDelete( outPath );
     return null;
   })
@@ -5299,7 +5299,7 @@ function reflectWithSelectorInDstFilter( test )
   ready
   .thenKeep( () =>
   {
-    test.case = 'reflect to out/release';
+    test.case = '.build release';
     _.fileProvider.filesDelete( outPath );
     return null;
   })

@@ -28,7 +28,7 @@ Ambiguity. Did you mean?
   .submodules.download - Download each submodule if such was not downloaded so far.
   .submodules.update - Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.
   .submodules.fixate - Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.
-  .submodules.upgrade.refs - Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.
+  .submodules.upgrade - Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.
   .shell - Execute shell command on the module.
   .clean - Clean current module. Delete genrated artifacts, temp files and downloaded submodules.
   .clean.what - Find out which files will be deleted by clean command.
@@ -121,7 +121,7 @@ Command ".help .submodules"
   .submodules.download - Download each submodule if such was not downloaded so far.
   .submodules.update - Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.
   .submodules.fixate - Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.
-  .submodules.upgrade.refs - Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.
+  .submodules.upgrade - Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.
 
 ```
 

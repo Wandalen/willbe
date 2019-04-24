@@ -36,7 +36,7 @@ To display the commands of the utility, type `will` or `will .help`
 | `.submodules.download` | Downloading of submodules files to the local computer | `will .submodules.download`               |
 | `.submodules.update`  |  Update of submodules files at the local computer | `will .submodules.update` |
 | `.submodules.fixate`  | Reading and rewriting (without loading) URI-address remoted submodules in `will-file` on the last loaded version (last commit), it does not rewrite resources the version of which is not explicitly specified in the `will-file` . There is option `dry` with denotation "0" - implement rewriting and "1" - read without rewriting | `will .submodules.fixate [dry:1]` |
-| `.submodules.upgrade.refs`  | Reading and rewriting (without loading) URI-address remote submodules in `will-file` on the last loaded version. There is option `dry` with denotation "0" - implement rewriting (by default) and "1" - read without rewriting  | `will .submodules.upgrade.refs [dry:1]` |
+| `.submodules.upgrade`  | Reading and rewriting (without loading) URI-address remote submodules in `will-file` on the last loaded version. There is option `dry` with denotation "0" - implement rewriting (by default) and "1" - read without rewriting  | `will .submodules.upgrade [dry:1]` |
 | `.submodules.clean`    | Deletion of all loaded submodules with the directory `.module`               | `will .submodules.clean`   |
 | `.shell`          |  Implementation of the command in console of operating system for the current module                             | `will .shell [command_in_shell]`          |
 | `.clean`          | Deletion of 3 types of the module out of directory. Deleted are files: 1) loaded submodules (directory `.module`); 2)`out-will` files and archives; 3) the place which specifies `path::temp`, if this path is determined in `will-file`                | `will .clean`                             |
@@ -64,7 +64,7 @@ If command consists of two or more parts, then by the input of incomplete phrase
     .submodules.download - Download each submodule if such was not downloaded so far.
     .submodules.update - Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.
     .submodules.fixate - Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.
-    .submodules.upgrade.refs - Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.
+    .submodules.upgrade - Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.
 
   ```
 
