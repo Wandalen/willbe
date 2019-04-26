@@ -21,7 +21,7 @@ A module with respect to which the operations are performed. By default, this mo
   ```
   will .with second .build
   ```
-  the current module will be the module with the file `second.will.yml.`
+  the current module will be the module with the file `second.will.yml.`.
 
    By implementation of `.each` each module will be loaded in sequence.
    ```
