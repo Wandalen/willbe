@@ -1,6 +1,6 @@
 # File filter
 
-Technique of describing the conditions for selecting the required files for some operation on a group of files. Reflector has two file filters: <code>src</code> and <code>dst</code>.
+Technique of the file selection in order to perform the operation on it. Reflector has two file filters: <code>src</code> and <code>dst</code>.
 
 Files can be selected:
 - by simple file filters;

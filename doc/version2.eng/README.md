@@ -54,7 +54,8 @@ It is the approach of the module description according to which the <code>will-f
 <details><summary><a href="./concept/ReflectorFileFilter.md">
       File filters
   </a></summary>
-  Technique of describing the conditions for selecting the required files for some operation on a group of files. Reflector has two file filters: <code>src</code> and <code>dst</code>.
+
+  Technique of the file selection in order to perform the operation on it. Reflector has two file filters: <code>src</code> and <code>dst</code>.
 </details>
 <details><summary><a href="./concept/ResourceReflector.md#map-of-paths">
       Map of paths
