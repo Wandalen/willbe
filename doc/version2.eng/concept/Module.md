@@ -12,8 +12,8 @@ Free definition of `willbe-module` imposes minimal restrictions on the developme
 
 The figure shows the `will file` code. Numbers and arrows marked as it should be read (simplified scheme).
 1. The section `about` (if specified) has descriptive information like module name, version, interpreters and keywords. All of this is the information for the developer. This figure shows that the module is called `exportModule`, version 0.0.1.
-2. To determine the functionality of the module start reading from the section `build`, which is present in most `will-files`. The build section contains [builds](ResourceBuild.md) to build the module. At the figure the build with the name `export` executes the step with the name `export.single` (the arrow indicates the transition to the step).
-3. The `export.single` step implements export. In the field `export`, the step refers to the resource section `path` with the name `fileToExport` (the arrow indicates the transition to the path). In resources it is accepted to formulate the link `Section name :: Resource name`.
+2. To determine the functionality of the module start reading from the section `build`, which is present in most `will-files`. The build section contains [builds](ResourceBuild.md) to build the module. At the figure, the build with the name `export` executes the step with the name `export.single` (the arrow indicates the transition to the step).
+3. The `export.single` step implements export. In the field `export`, the step refers to the resource section `path` with the name `fileToExport` (the arrow indicates the transition to the path). In resources, it is accepted to formulate the link `Section name :: Resource name`.
 4. The `fileToExport` resource of the section `path` points to a file named `fileToExport` in the module directory.
 
 To understand the file structure of the module, refer to the `path` section. To understand the modular structure of this module, see the section `submodule`. The section `build` explains kinds of build scenario and types of the builds that are available in this module.

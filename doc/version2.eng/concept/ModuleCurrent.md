@@ -16,7 +16,7 @@ A module with respect to which the operations are performed. By default, this mo
  ```
 
 
-  In order to make the current module the module with the named `will-file`, please execute the command `.with`. Do not forget to specify the name of the corresponding `will-file`. For instance by implementation
+  In order to make the current module the module with the named `will-file`, please execute the command `.with`. Do not forget to specify the name of the corresponding `will-file`. For instance by the implementation
 
   ```
   will .with second .build

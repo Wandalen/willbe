@@ -25,7 +25,7 @@ The fields `src` and `dst` can contain subfields which describe [file filters](R
 
 ### Map of the paths
 
-It is reflector field and the way to describe a set of files that allows to include a lot of files in it. Moreover it allows to exclude from it the files that are not required by the terms of exclusion and globes.
+It is reflector field and the way to describe a set of files that allows to include a lot of files in it. Moreover, it allows to exclude from it the files that are not required by the terms of exclusion and globes.
 
 The path map can:
 - specify the location of files in which to performing of operation is needed;
@@ -37,7 +37,7 @@ The path map can:
 
 The path map can be specified in the `filePath` field or in the `src.filePath` or `dst.filePath` field of the reflector. The exclusion which have the value `0`,` 1`, `false`,` true` are taken by inheritance. Moreover, the directories (paths that have the `null` values, simple specified path) in which the searching is made, are rewritten by the last ancestor or directly by a descendant.
 
-Excluding build files is possible not only with the path map, but also using [file filters](<./ReflectorFileFilter.md#>).
+Excluding build files is possible not only with the path map but also using [file filters](<./ReflectorFileFilter.md#>).
 
 ### An example of a path map with file exceptions
 

@@ -57,9 +57,9 @@ The section contains steps that can be used by the build to build the module.
 
 ### Predefined step `predefined.reflect`  
 
- This is the step for a copying the files by means of [reflector](ResourceReflector.md#Resource-reflector).  
+ This is the step for copying the files by means of [reflector](ResourceReflector.md#Resource-reflector).  
 
- Reflectors choose a set of files over which to perform some operation. The step `predefined.reflect` performs copying of files from one place to another. By default, copying is performed with the storing of hard-links between a couple of files. This means that the destination file and the source file will have the same content. Furthermore any changes made to one of the files will be displayed by the operating system in another file.
+ Reflectors choose a set of files over which to perform some operation. The step `predefined.reflect` performs the copying of files from one place to another. By default, copying is performed with the storing of hard-links between a couple of files. This means that the destination file and the source file will have the same content. Furthermore any changes made to one of the files will be displayed by the operating system in another file.
 
  The step includes the `reflector` field to indicate the resource of the section` reflector` and field  `verbosity`, which determines the level of verbal output of the console, namely the amount of service information while step performing. The range of change in verbal level can be set from 0 to 9. 9 - the highest level of the verbosity.
 
@@ -99,12 +99,12 @@ The section contains steps that can be used by the build to build the module.
 
  Step `predefined.shell` has fields:
 
- - `shell` - the command to be executed by operating system;
+ - `shell` - the command to be executed by the operating system;
  - `currentPath` - indicates the path to the directory in which the command will be executed. If the field is not specified then the `predefined.dir` path is used.
  - `forEachDst` - the name of the reflector is specified in the field to indicate the destination directory for the files that will be created by the command. The destination directory is selected from the `dst` reflector filter.
  - `upToDate` - a field that sets the ability to restart the command over files that have not changed from the previous construction. Accepts two values: `preserve` - do not execute the command if the files have not changed; `rebuild` - execute the command regardless of the changes in the file. The default value is `preserve`.
 
- The `shell` field is present only in the predefined step `predefined.sll` and, therefore, the step can be written through implicit inheritance,which means with specification of the field `shell` in the resource.
+ The `shell` field is present only in the predefined step `predefined.sll` and, therefore, the step can be written through implicit inheritance,which means with the specification of the field `shell` in the resource.
 
  ```yaml
  step:                                   # Name of the section
@@ -120,9 +120,9 @@ The section contains steps that can be used by the build to build the module.
 
  Concatenation is the combining of the group of files into one. Transpilation is converting output files with code files into outputs with similar content, but in a different form. To select the conversion mode, the <code>debug</code> and <code>raw</code> criterions are applied.
  - `debug`:` debug` utility performs concatenation of files without changing them (optimization)
- - `debug`:` release` - transpilation and optimization of the code is implemented.
+ - `debug`:` release` - transpilation and optimization of the code are implemented.
  - `raw`:` raw` utility does not perform concatenation, but puts each file separately.
- - `raw`:` compiled` - concatenation of several files into one is implemented.
+ - `raw`:` compiled` - a concatenation of several files into one is implemented.
 
  The `predefined.transpile` step has one` reflector` field to indicate the reflector by which the conversion will be made.
 
@@ -158,7 +158,7 @@ The `predefined.export` step has the fields:
 - export - specify the paths to files for export. The reflector can be specified. Unique field of this step
 - tar - archiving of module files. The field accepts the value: 1 - archiving is on; 0 - archiving is off. By default, the value is 1.
 
-The `export` field is present only in the predefined step` predefined.export`  and, therefore, the step can be written through implicit inheritance, which means with specification of the `export` field in the resource.
+The `export` field is present only in the predefined step` predefined.export`  and, therefore, the step can be written through implicit inheritance, which means with the specification of the `export` field in the resource.
 
 ```yaml
 step:                                   # Name of the section
@@ -188,7 +188,7 @@ step:                                        # Name of the section
 
 ```
 
-Open to view`http://google.com` in 10 second.
+Open to view`http://google.com` in 10 seconds.
 
 #### Predefined step `submodules.download`
 

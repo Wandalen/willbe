@@ -57,8 +57,8 @@ raw : one               # String value
 name : name1            # String value
 ```
 
-`false` and `0` -- considered to be alias.
-`true` and `1` -- considered to be alias.
+`false` and `0` -- considered to be an alias.
+`true` and `1` -- considered to be an alias.
 
 ### Resource by default
 

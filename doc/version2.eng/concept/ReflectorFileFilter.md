@@ -4,13 +4,13 @@ Technique of the file selection in order to perform the operation on it. Reflect
 
 Files can be selected:
 - by simple file filters;
-- by mask of file operations;
+- by the mask of file operations;
 - by time filters;
 - by globes in the map of the paths.
 
 ### Simple file filters
 
-Simple filters select files by name. They have a string values.
+Simple filters select files by name. They have string values.
 - `begins` - excludes from the build all files whose name does not begin with the word specified in the filter.
 - `ends` - excludes from the build all files whose name does not end on the word specified in the filter.
 - `hasExtension` - excludes from the build all files whose names do not have the specified extensions. The file extension can be composed and consist of several parts. The `willbe` utility read it starting from the first point in the filename. For example, the `somefile.txt.md` file has two extensions -` txt` and `md`.
@@ -33,7 +33,7 @@ Reflectors have three groups of masks. Depending on the group the different type
 - `maskTerminal` - masks of terminal files, they apply only to terminal (normal) files, to directories they do not apply;
 - `maskAll` - masks that apply to all file types.
 
-Each out of these three mask's groups can include following fields:
+Each out of these three mask's groups can include the following fields:
 - `includeAny` - exclude files that have no coincidence with any of the regular expressions of the filter;
 - `includeAll` - exclude files that do not have the coincidence with all regular expressions of the filter;
 - `excludeAny` - exclude files that have at least one coincidence with the regular expressions of the filter;
@@ -55,11 +55,11 @@ This example means to include in build all files with the extension `.js`  and e
 
 Filters are necessary to limit time-based selection. Reflectors have four time filters: `notOlder`,` notNewer`, `notOlderAge`,` notNewerAge`. In the field parameters, the values are entered in milliseconds (1 s = 1000 ms, 1 hour = 3600000 ms).
 
-Time filters excludes:
+Time filters exclude:
 - `notOlder` - all files if at least one older than the set time limit;
 - `notNewer` - all files if at least one newer than the time limit;
-- `notOlderAge` - files which age is older than the set time limit;
-- `notNewerAge` - files which age is newer than the set time limit.
+- `notOlderAge` - files whose age is older than the set time limit;
+- `notNewerAge` - files whose age is newer than the set time limit.
 
 ### An example of using time filters
 
@@ -73,4 +73,4 @@ The time filter `notOlderAge` selects files that have an age of no more than 10 
 
 ### Using globes in the map of paths.
 
-Excluding files from the build is possible not only with file filters, but also by means of [Map of the paths](<./ResourceReflector.md#>).
+Excluding files from the build is possible not only with file filters but also by means of [Map of the paths](<./ResourceReflector.md#>).

@@ -1,12 +1,12 @@
 ### Command
 
-A string which has phrase which describes intention of a developer and actions which will be done by utility after user enters it. It is entered in the interface of the command prompt by developer.
+A string which has a phrase which describes the intention of a developer and actions which will be done by utility after the user enters it. It is entered in the interface of the command prompt by the developer.
 
 ### Phrase
 
-Word or couple of words which are separated by a point. It specifies the command to be executed by the utility.  
+The word or a couple of words which are separated by a point. It specifies the command to be executed by the utility.  
 
-A point separate the words of the phrase on the parts, it facilitates typing and reading processes.
+A point separates the words of the phrase on the parts, it facilitates typing and reading processes.
 
 Examples:
 
@@ -64,11 +64,11 @@ If command consists of two or more parts, then by the input of incomplete phrase
     .submodules.clean - Delete all downloaded submodules.
     .submodules.download - Download each submodule if such was not downloaded so far.
     .submodules.update - Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.
-    .submodules.fixate - Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.
+    .submodules.fixate - Fixate remote submodules. If URI of a submodule does not contain a version then the version will be appended.
     .submodules.upgrade - Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.
 
   ```
 
 </details>
 
-For example, by the input of the phrase `will .submodules` utility will propose all possible variants of phrases with word `submodule`
+For example, by the input of the phrase `will .submodules` utility will propose all possible variants of phrases with the word `submodule`

@@ -4,7 +4,7 @@ String-reference on the resource or the group of the module resources.
 ### Selector with globs
 Selector which uses searching patterns (globs) for selection of the resources.
 
-[Globbing](https://linuxhint.com/bash_globbing_tutorial/) - it is an analogue of regular expressions for searching files in the bash-terminal.
+[Globbing](https://linuxhint.com/bash_globbing_tutorial/) - it is an analog of regular expressions for searching files in the bash-terminal.
 
 ![selector.png](./Images/selector.png)
 
@@ -13,7 +13,7 @@ At the figure in the build `build::export` the two types of selectors are used. 
 The selectors `step::delete.out` in the build` export` and `path::out` in the` delete.out` step are simple. Simple selectors are the selectors which have a direct link to the resource. In `will-file` selectors of the form `Section name::The name of the resource` are used.
 
 ### Glob with assertion
-A special syntactic construct that is added to the globe to limit the amount of resources which have to be found by the selector with this glob.
+A special syntactic construct that is added to the globe to limit the number of resources which have to be found by the selector with this glob.
 
 ```yml
 path :
@@ -35,22 +35,22 @@ step :
       debug : 0
 ```
 
-The `step::export` step must choose one way `path::out.debug`. Since it is the predictable and expectable result, developer put in selector `path::out.*=1` assert `=1`. This will ensure that the error is shown and if it happens, more or less of one path will be found by this selector. For example, if in paths you do not specify a debug criterion, both paths will be found and an assert will show the error.
+The `step::export` step must choose one way `path::out.debug`. Since it is the predictable and expectable result, the developer put in selector `path::out.*=1` assert `=1`. This will ensure that the error is shown and if it happens, more or less of one path will be found by this selector. For example, if in paths you do not specify a debug criterion, both paths will be found and an assert will show the error.
 
-It is possible to find more than one or even none of the resource by selector with globe. If the developer knows how many selector with the globe can find the resources, he can specify this number as an assert in the selector. Then while performing the utility notices that the developer's forecast is not confirmed and consequently will show the error. Leave asserts everywhere, where it is exactly known which the result of execution is the good practice of software development. Globe with assert is the specially enforced implementation by the developer to prevent unpredictable consequences. If the selector is simple and has no globe, then assert is not needed.
+It is possible to find more than one or even none of the resource by a selector with the globe. If the developer knows how many selectors with the globe can find the resources, he can specify this number as an assert in the selector. Then while performing the utility notices that the developer's forecast is not confirmed and consequently will show the error. Leave asserts everywhere, where it is exactly known which the result of execution is the good practice of software development. Globe with assert is the especially enforced implementation by the developer to prevent unpredictable consequences. If the selector is simple and has no globe, then assert is not needed.
 
 #### Algorithm of verification asserts in selectors
 
 ![criterions.and.assert.png](./Images/criterions.and.asserts.png)
 
-The algorithm performs a verification of the resources on the coincidence of the [criterions](Criterions.md). When they coincide, the utility increments the counter of resources. After verifying all resources, the value of the counter is compared to the one which is set in the assert. In case of non-matching values, the utility shows an error message.
+The algorithm performs a verification of the resources on the coincidence of the [criterions](Criterions.md). When they coincide, the utility increments the counter of resources. After verifying all resources, the value of the counter is compared to the one which is set in the assert. In the case of non-matching values, the utility shows an error message.
 
 
 ### Use of asserts
 
 ![asserts.png](./Images/asserts.png)  
 
-The figure on the left shows a variant of the resource's erroneous writing. Because of the [lack of criterions](Criterions.md) in the `export.multi` step the `step::export.*=1` selector in the  `build::export` build will choose `step::export.single` and `step::export.multi` steps, which is contrary to the developer's expectation. Thanks to assert `= 1` the error will be localized.
+The figure on the left shows a variant of the resource's erroneous writing. Because of the [lack of criterions](Criterions.md) in the `export.multi` step the `step::export.*=1` the selector in the  `build::export` build will choose `step::export.single` and `step::export.multi` steps, which is contrary to the developer's expectation. Thanks to assert `= 1` the error will be localized.
 
 ![assert.message.png](./Images/assert.message.png)  
 

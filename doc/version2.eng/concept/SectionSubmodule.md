@@ -24,4 +24,4 @@ submodule :
 | path           | path to submodule, may be absolute/relative, local/global |
 | description    | description for other developers                          |
 | criterion      | condition of resource using (see [criterion](Criterions.md)) |
-| inherit        | inheritance of the fields values of the another submodule    |
+| inherit        | inheritance of the values of the fields of another submodule    |

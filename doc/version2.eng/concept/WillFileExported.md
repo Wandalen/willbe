@@ -37,5 +37,5 @@
   - in the section `reflector` except of the data from the original file, the generated resources are placed;
     - `exported.[build]` - reflector by which the export was created;
     - `exportedFiles. [build]` - reflector with a list of files that were exported;
-  - the  `step`,`build`,`submodule` sections are copied unchanged;
+  - the  `step`,`build`, `submodule` sections are copied unchanged;
   - section `exported`. It is the section generated during the export. It contains the information about the module export as well as the link to the generated resources and the original `will-file`.
