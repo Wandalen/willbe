@@ -27,7 +27,7 @@ will .paths.list
 | Фраза              | Опис                                       | Виклик                |
 |--------------------|--------------------------------------------|----------------------------------|
 | `.help`            | Вивід інформації про команду.              | `will .help .[command]`          |
-| `.set`             | Зміна внутрішнього стану утиліти, наприклад рівня верьальності.        | `will .set [properties] .[command] [argument]`                                   |
+| `.set`             | Зміна внутрішнього стану утиліти, наприклад рівня вербальності.        | `will .set [properties] .[command] [argument]`                                   |
 | `.resources.list`  | Вивід всієї доступної інформації про поточний модуль          | `will .resources.list [resources] [criterion]`                                  |
 | `.paths.list`      | Перерахунок наявних шляхів поточного модуля | `will .paths.list [resources] [criterion]`         |
 | `.submodules.list` | Перерахунок наявних підмодулів поточного модуля                     | `will .submodules.list [resources] [criterion]`     |
