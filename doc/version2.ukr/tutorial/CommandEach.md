@@ -126,7 +126,7 @@ Module at /path_to_file/.will.yml
  . Read 1 will-files in 0.924s 
 
     Building module::deleteOut / build::delete.submodule
-     - filesDelete 0 files at /home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe_src/pract/CommandEach/out in 0.002s
+     - filesDelete 0 files at /path_to_file/out in 0.002s
     Built module::deleteOut / build::delete.submodule in 0.108s
 
 ...
@@ -147,10 +147,28 @@ Module at /path_to_file/.will.yml
 
 ```
 </details>
+<details>
+  <summary><u>Файлова структура після побудов</u></summary>
+
+```  
+named 
+  ├── .module
+  │     └── PathFundamentals
+  ├── proto
+  │     └── file.txt
+  ├── out
+  │     └── export.out.will.yml
+  ├── submodule.will.yml
+  ├── export.will.yml
+  └── .will.yml       
+
+```
+
+</details>
 
 Введіть фразу `will .each . .build` для виконання побудов в директорії з файлами.
 
-Команда `.each` запускає `will-файли` згідно алфавітного порядку тому, якщо вам потрібно послідовно виконати декілька дій над спільними файлами модулів, прослідкуйте за чергуванням `will-файлів`.  
+Першою збіркою видалялась директорія `out`, яка ще не існувала, потім було здійснено експорт з файла `export` і в кінці завантажено підмодулі. Тобто, команда `.each` запускає `will-файли` згідно алфавітного порядку. Тому, якщо вам потрібно послідовно виконати декілька дій над спільними файлами модулів, прослідкуйте за чергуванням назв іменованих `will-файлів`.  
 
 ### Підсумок  
 
