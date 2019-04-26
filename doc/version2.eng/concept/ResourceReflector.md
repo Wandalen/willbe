@@ -8,7 +8,7 @@ It is a resource of section `reflector`, a method to describe a set of files in 
 
 An example of a `reflector` section with a `reflector1` resource. The reflector has two fields. First of them specifies the source of the files and second specifies the destination directory. That means that reflector copies files placed by path `path::proto` in the directory by path `path::out`.
 
-### Fields of resource `reflector`
+### Resource fields of `reflector` section
 
 | Field          | Description                                                |
 |----------------|------------------------------------------------------------|

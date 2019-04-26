@@ -2,7 +2,7 @@
 
 Instruction for building the module. Describe an operation and desired outcome. Build consists of <code>steps</code>. 
 
-<code>Steps</code> section resource which is an executing instruction of module building.
+The steps described in the section `step` and to execute it uses in the build. The build constructs by the `.build` command and have as one of the steps given. 
 
 ### Example
 
@@ -23,14 +23,14 @@ step  :
 
 The `step` section contains two steps for `export.proto` and `view`. The `export.proto` step is intended to export the module. The `view` step is intended to be used for viewing the file at `http:///www.google.com`. It is determined by the user at some stage of the build.
 
-### Common fields of the step
+### Resource fields of `step` section
 
-| Field           | Description                                                             |
+| Field          | Description                                                      |
 |----------------|------------------------------------------------------------------|
-| description    | descriptive information for other developers                          |
+| description    | descriptive information for other developers                     |
 | criterion      | condition of resource using (see [criterion](Criterions.md))     |
-| opts           | additional options can be transmitted through the map `opts`            |
-| inherit        | inheritance from other steps                       |
+| opts           | additional options can be transmitted through the map `opts`     |
+| inherit        | inheritance from other steps                                     |
 
 ### Section `step`
 
@@ -51,7 +51,7 @@ Includes one `filePath` field, which specifies the path to the files which have 
 step:                                   # Name of the section
   delete.files:                         # Name of the step
     inherit: predefined.delete          # Inheritance
-filePath: some/dir                      # File, which will be deleted
+    filePath: some/dir                  # File, which will be deleted
 ```
 
 In resource `delete.files`, through [inheritance](Inheritance.md), `predefined.delete` step is used. Step removes files by path `path::fileToDelete`.
@@ -62,7 +62,7 @@ The step is designed for a copying the files by means of [reflector](ResourceRef
 
 Reflectors choose a set of files over which to perform some operation. The step `predefined.reflect` performs copying of files from one place to another. By default, copying is performed by storing of hard-links between a couple of files. This means that the destination file and the source file will have the same content. Furthermore any changes made to one of the files will be displayed by the operating system in another file.
 
-The step includes the `reflector` field to indicate the resource of the section` reflector` and field  `verbosity`, which determines the level of verbal output of the console namely the amount of service information while step performing. The range of verbosity level can be set from 0 to 9. 9 - the highest level of verbal.
+The step includes the `reflector` field to indicate the resource of the section` reflector` and field  `verbosity`, which determines the verbosity level of console output namely the amount of service information while step performing. The range of verbosity level can be set from 0 to 9. 9 is the highest level of verbosity.
 
 #### Example of a resource with step `predefined.reflect`
 
@@ -75,26 +75,26 @@ step:                                         # Name of the section
 
 ```
 
-The step `reflect.files` is inherited from `predefined.reflect`. To select files, the step uses `reflect.some.files` reflector. Level of verbal output is `3`.
+The step `reflect.files` is inherited from `predefined.reflect`. To select files, the step uses `reflect.some.files` reflector. Level of verbosity output is `3`.
 
 ### Predefined step `predefined.js`   
 
 Designed to execute JavaScript files while constructing a module.  
 
-`predefined.js` includes one field with a name `js`, which specifies the path to the JS file to execute.
+`predefined.js` step includes one field with a name `js`, which specifies the path to the JS file to execute.
 
 Since the `js` field has only one step `predefined.js` not in other predefined steps, the `predefined.js` step can be written without explicit inheritance.
 
-#### Examples of resources with step`predefined.js`
+#### Examples of resources with step `predefined.js`
 
 ```yaml
 step:                                   # Name of the sectiom
   run.js:                               # Name of the step
-      js: run.js                        # The path to the JS file in the section 'path'
+      js: run.js                        # The path to the JS file
 
 ```
 
-The step to run `run.js.` The inheritance is not explicit, since the field `js` is a unique field of the predefined step `predefined.js`.
+The `run.js` step executes `run.js.` file. The inheritance is not explicit, since the field `js` is a unique field of the predefined step `predefined.js`.
 
 ### Predefined step `predefined.shell`  
 
@@ -103,13 +103,12 @@ Designed to run commands in the command shell of the operating system.
 Extends the predefined capabilities of utility through the use of external programs and operating system commands.
 
 Step `predefined.shell` has fields:
-
 - shell - indicates the command to be executed by operating system;
-- currentPath - indicates the path to the directory in which the command will be executed. If the field is not specified then the `predefined.dir` path is used.
-- forEachDst - The name of the reflector is specified in the field to indicate the destination directory for the files that will be created by the team. The destination directory is selected from the `dst` reflector filter.
-- upToDate - a field that sets the ability to re-execute command on files that have not changed from the previous construction. Accepts two values: `preserve` - do not execute the command if the files have not changed; `rebuild` - execute the command regardless of the changes in the file. The default value is `preserve`.
+- currentPath - indicates the path to the command execution directory. If the field is not specified then the `predefined.dir` path is used.
+- forEachDst - specifies the reflector name to indicate the destination directory for the files that will be created by the command. The destination directory is selected from the `dst` reflector filter.
+- upToDate - sets the ability to re-execute command on files that have not changed from the previous construction. The field accepts two values: `preserve` - do not execute the command if the files have not changed; `rebuild` - execute the command regardless of the changes in the file. The default value is `preserve`.
 
-The `shell` field is present only in the built-in step `predefined.shell` and the step can be written by implicit inheritance, that is, from the specified field` shell` in the resource.
+The `shell` field is present only in the predefined step `predefined.shell` and the step can be written by implicit inheritance, that is, from the specified field` shell` in the resource.
 
 #### Examples of resources with step `predefined.shell`
 
@@ -119,13 +118,13 @@ step:                                   # Name of the section
     shell: ls -a                        # Command to enter the OS terminal
 
 ```
-Calling of an external `ls -al` command. The inheritance of `predefined.shell` is implemented implicitly.
+The `run.command` step calls external `ls -al` command. The inheritance of `predefined.shell` is implemented implicitly.
 
 ### Predefined step `predefined.transpile`
 
-Designed to transpile JavaScript files or concatenate of them.
+Designed to transpile JavaScript files or concatenate them.
 
-Concatenation is a combining  of a group of files into one. Transpilation is a converting source files into output with similar content, but in a different form. To select the conversion mode, the <code>debug</code> and <code>raw</code> criterions are applied.
+Concatenation is a combining of a group of files into one. Transpilation is a converting source files into output with similar content, but in a different form. To select the conversion mode, the <code>debug</code> and <code>raw</code> criterions are applied.
 
 - `debug: debug` - utility performs concatenation of files without changing them (optimization).
 - `debug: release` - transpiling and optimizing the code is implemented.
@@ -147,8 +146,7 @@ step:                                           # Name of the section
 
 ```
 
-The `transpile.files` step executes the transcription of files (`debug: 0`) by the reflector `reflect.js.files`.
-Specifies the paths to the files that will be composed and file which will be generated. To do this,  specify the appropriate filters in the reflector. For example, if you use the `filePath` field of the reflector, the entry may have the form:
+The `transpile.files` step executes the transcription of files (`debug: 0`) by the reflector `reflect.js.files`. The `reflect.js.files` reflector specifies the paths to the files that will be transpiled and file which will be generated. To do this, specify the appropriate filters in the reflector. For example, if you use the `filePath` field of the reflector, the entry may have the form:
 
 ```yaml
 reflector :
@@ -157,7 +155,7 @@ reflector :
       path::filesFrom : '{path::filesTo}/file.js'
 
 ```
-Move files from the `path::filesFrom` and place them in `{path :: filesTo}/file.js`.
+The `reflect.js.files` reflector moves files from the `path::filesFrom` and puts them in `{path :: filesTo}/file.js`.
 
 ### Predefined step `predefined.export`  
 
@@ -167,7 +165,7 @@ The generated `out-will-file` contains the complete information about the module
 
 The `predefined.export` step has the fields:
 - `export` - specify the paths to files for export;
-- `tar` - possibility of module files archiving. The field accepts the value: 1 - archiving is included; 0 - archiving is off. By default, the value is 1.
+- `tar` - enable module files archiving. The field accepts the value: 1 - archiving is enabled; 0 - archiving is off. By default, the value is 1.
 
 The `export` field is present only in the predefined step `predefined.export`. Therefore, the `predefined.export` step can be written through implicit inheritance, that is, with specification of the `export` field in the resource.
 
@@ -186,13 +184,13 @@ Files will be exported through `path::proto` and the archive creation is disable
 
 Designed to open files and URI-links by default programs.
 
-The `predefined.view` step uses the viewing programs that are installed in the operating system to open this type of file by default. Use the `delay` field to start the view with delay.
+The `predefined.view` step uses the viewing programs that are installed in the operating system to open this type of file. Use the `delay` field to start the view with delay.
 
 The `predefined.view` step has fields:
-- `filePath` - specifies the path to the files which required to be open;
-- `delay` - delay before starting the program for viewing, it is indicated in ms.
+- `filePath` - specifies the path to the file which required to be open;
+- `delay` - delay before starting the viewing program, it is indicated in ms.
 
-####  Examples of resources with step  `predefined.view`
+####  Examples of resources with step `predefined.view`
 
 ```yaml
 step:                                        # Name of the section
@@ -207,7 +205,7 @@ Open to view `http://google.com` in 10 second.
 
 #### Predefined step `submodules.download`
 
-Performs loading of remote submodules specified in the section resources `submodule`.
+Performs downloading of remote submodules specified in the section `submodule`.
 
 There are no additional fields, and it can be specified directly in the `steps` field of the` build` section.
 
@@ -216,9 +214,10 @@ There are no additional fields, and it can be specified directly in the `steps` 
 If new versions of remote submodules are available, it downloads and installs them.
 
 There are no additional fields, and it can be specified directly in the `steps` field of the` build` section.
+
 #### Predefined step `submodules.reload`
 
-Performs a dynamic reboot of submodules. Useful in a situation where submodules files that were not initially, were changed during the implementation of some build.
+Performs a dynamic reboot of submodules. Useful in a situation where submodule files that were not initially, were changed during the implementation of some build.
 
 There are no additional fields, and it can be specified directly in the `steps` field of the` build` section.
 
@@ -232,7 +231,7 @@ There are no additional fields, and it can be specified directly in the `steps` 
 
 Performs deletion of temporary and generated files from the module. It includes:
 - loaded submodules (directory `./module`);
-- generated files: exported `out-will file` and archive.
+- generated files: exported `out-will file` and archive;
 - `path::temp` directory, if such is specified for the module.
 
 There are no additional fields, and it can be specified directly in the `steps` field of the` build` section.

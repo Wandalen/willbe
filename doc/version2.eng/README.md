@@ -1,7 +1,6 @@
-
 ## Quick start
 
-For quick start [install](<./tutorial/Instalation.md>) utility `willbe`, [get acquainted with](<./tutorial/CLI.md>) command line interface and create the first [module "Hello World"](<./tutorial/HelloWorld.md>). [Read](<./tutorial/Abstract.md>) abstract if you are wondering what is it for and what philosophy is behind utility `willbe`.
+For quick start [install](<./tutorial/Installation.md>) utility `willbe`, [get acquainted with](<./tutorial/CLI.md>) command line interface and create the first [module "Hello World"](<./tutorial/HelloWorld.md>). [Read](<./tutorial/Abstract.md>) abstract if you are wondering what is it for and what philosophy is behind utility `willbe`.
 
 For gentle introduction use tutorials. For getting exhaustive information on one or another aspect use list of concepts to find a concept of interest and get familiar with it.
 
@@ -95,7 +94,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/SectionSubmodule.md">
       Section <code>submodule</code>
   </a></summary>
-  The section has an information about submodules.
+  The section contains information about the submodules.
 </details>
 <details><summary><a href="./concept/ResourceReflector.md#Section-reflector">
       Section <code>reflector</code>
@@ -135,7 +134,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/SubmodulesLocalAndRemote.md#Local-submodule">
       Local submodule
   </a></summary>
-  A submodule which is located locally.
+  A submodule which is located on the local machine.
 </details>
 <details><summary><a href="./concept/SubmodulesLocalAndRemote.md#Remote-submodule">
       Remote submodule
@@ -145,12 +144,12 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/SubmoduleInformal.md">
       Informal submodule
   </a></summary>
-  Set of files distribution of which does not include <code>will-file</code>. For such a submodule it is possible to create <code>will-file</code> independently.
+  A set of files that are distributed without <code>will-file</code>. For such submodule it is possible to create <code>will-file</code> independently.
 </details>
 <details><summary><a href="./concept/ModuleCurrent.md">
       Current module
   </a></summary>
-  A module with respect to which operations are performed. By default the module is loaded from file <code>.will.yml</code> of the current directory or pair of files <code>.im.will.yml</code> and <code>.ex.will.yml</code>.
+  A module for which operations are performed. By default, this module loads from the file <code>.will.yml</code> of the current directory or from a pair of files <code>.im.will.yml</code> and <code>.ex.will.yml</code>.
 </details>
 <details><summary><a href="./concept/Command.md#Command">
       Command
@@ -175,7 +174,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./concept/Selector.md#Glob-with-assertion">
       Glob with assertion
   </a></summary>
-  Special syntax construction appended after glob to restrict by expected number of resources which should be found by the selector.
+  Special syntax construction appended after glob to restrict a number of resources which should be found by the selector.
 </details>
 <details><summary><a href="./concept/Criterions.md">
       Criterion
@@ -394,6 +393,13 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   </a></summary>
   Copying files by reflectors, field <code>recursive</code> of reflector.
 </details>
+<details><summary><a href="./tutorial/ReflectorMapPaths.md">
+      Map of the paths. Using globs to filter files
+  </a></summary>
+  Describe algorithm of path forming and explicit copying restrictions.
+
+  How the paths of the reflectors are created and how to manage the access to files and directory in reflector
+</details>
 <details><summary><a href="./tutorial/ReflectorFilters.md">
       Filters of reflector
   </a></summary>
@@ -403,13 +409,6 @@ For gentle introduction use tutorials. For getting exhaustive information on one
       Time filters of reflector
   </a></summary>
   How to use filters to select files by time.
-</details>
-<details><summary><a href="./tutorial/ReflectorFSControl.md">
-      Forming of paths of reflectors. Managing of the files
-  </a></summary>
-  Describe algorithm of path forming and explicit copying restrictions.
-
-  How the paths of the reflectors are created and how to manage the access to files and directory in reflector
 </details>
 <details><summary><a href="./tutorial/ReflectorsPredefined.md">
       Predefined reflectors

@@ -6,9 +6,10 @@ A string which has phrase which describes intention of a developer and actions w
 
 Word or couple of words which are separated by a point. Specifies the command to be executed by utility.  
 
-A point separate the words of the phrase on the parts, what facilitates typing and reading processes.
+A point separate the words of the phrase on the parts, it facilitates typing and reading processes.
 
 Examples:
+
 ```
 will .help
 will .about.list
@@ -19,31 +20,31 @@ will .paths.list
 
 ### Commands of the utility `willbe`
 
-To display the commands of the utility, type `will` or `will .help`
+To display the commands of the utility, type `will .` or `will .help`
 
-| Phrase| Description                                       | Command                |
-|-------------------|--------------------------------------------|----------------------------------|
-| `.help`           | Display an information about the command | `will .help .[command]`          |
-| `.set`            |   Change the internal state of the utility, for example, the level of verbosity.    | `will .set [properties] .[command] [argument]`                                   |
-| `.resources.list` | Display all available information about the current module   | `will .resources.list [resources] [criterion]`                                  |
-| `.paths.list`     |  List or other term of available paths of the current module | `will .paths.list [resources] [criterion]`         |
-| `.submodules.list` | List or other term of available submodules of the current module                   | `will .submodules.list [resources] [criterion]`     |
-| `.reflectors.list` |  List or other term of available reflectors of the current module                        | `will .reflectors.list [resources] [criterion]`     |
-| `.steps.list`     |  List or other term of available steps of the current module                             | `will .steps.list [resources] [criterion]`          |
-| `.builds.list `   |     List or other term of available builds of the current module        | `will .builds.list [resources] [criterion]`         |
-| `.exports.list`   | List or other term of available builds for the export of the current module           | `will .exports.list [resources] [criterion]`        |
-| `.about.list`     | Display of general infoormation about the current module (section `about`)                               | `will .about.list`                                  |
-| `.submodules.download` | Downloading of submodules files to the local computer | `will .submodules.download`               |
-| `.submodules.update`  |  Update of submodules files at the local computer | `will .submodules.update` |
-| `.submodules.fixate`  | Reading and rewriting (without loading) URI-address remoted submodules in `will-file` on the last loaded version (last commit), it does not rewrite resources the version of which is not explicitly specified in the `will-file` . There is option `dry` with denotation "0" - implement rewriting and "1" - read without rewriting | `will .submodules.fixate [dry:1]` |
-| `.submodules.upgrade`  | Reading and rewriting (without loading) URI-address remote submodules in `will-file` on the last loaded version. There is option `dry` with denotation "0" - implement rewriting (by default) and "1" - read without rewriting  | `will .submodules.upgrade [dry:1]` |
-| `.submodules.clean`    | Deletion of all loaded submodules with the directory `.module`               | `will .submodules.clean`   |
-| `.shell`          |  Implementation of the command in console of operating system for the current module                             | `will .shell [command_in_shell]`          |
-| `.clean`          | Deletion of 3 types of the module out of directory. Deleted are files: 1) loaded submodules (directory `.module`); 2)`out-will` files and archives; 3) the place which specifies `path::temp`, if this path is determined in `will-file`                | `will .clean`                             |
+| Phrase             | Description                                | Command                          |
+|--------------------|--------------------------------------------|----------------------------------|
+| `.help`            | Display an information about the command   | `will .help .[command]`          |
+| `.set`             | Change the internal state of the utility, for example, the level of verbosity | `will .set [properties] .[command] [argument]`                                   |
+| `.resources.list`  | Display all available information about the current module   | `will .resources.list [resources] [criterion]`  |
+| `.paths.list`      | List paths of the current module           | `will .paths.list [resources] [criterion]`         |
+| `.submodules.list` | List submodules of the current module      | `will .submodules.list [resources] [criterion]`   |
+| `.reflectors.list` | List avaialable reflectors the current module  | `will .reflectors.list [resources] [criterion]`     |
+| `.steps.list`      | List avaialable steps the current module       | `will .steps.list [resources] [criterion]`   |
+| `.builds.list `    | List avaialable builds the current module      | `will .builds.list [resources] [criterion]`   |
+| `.exports.list`    | List avaialable exports the current module     | `will .exports.list [resources] [criterion]`   |
+| `.about.list`      | Display descriptive infoormation about current module (section `about`)  | `will .about.list`   |
+| `.submodules.download` | Download each submodule if such was not downloaded so far | `will .submodules.download`               |
+| `.submodules.update`   | Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version | `will .submodules.update` |
+| `.submodules.fixate`  | Fixates the submodule version, patching the current submodule paths in `will-file` to the latest versions of the remote submodules, unless a specific version was specified. There is option `dry` with denotation "0" - implement rewriting and "1" - read without rewriting | `will .submodules.fixate [dry:1]` |
+| `.submodules.upgrade.refs`  | Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version. There is option `dry` with denotation "0" - implement rewriting (by default) and "1" - read without rewriting  | `will .submodules.upgrade.refs [dry:1]` |
+| `.submodules.clean` | Delete all downloaded submodules with the directory `.module` | `will .submodules.clean`   |
+| `.shell`          |  Execute shell command on the module                       | `will .shell [command_in_shell]`          |
+| `.clean`          | Deletion of 3 types of the module out of directory. Command deletes: 1) downloaded submodules (directory `.module`); 2)`out-will-file` and archive; 3) `path::temp` specified directory (if this path is determined in `will-file`)                | `will .clean`                             |
 | `.clean.what`     | Displays list of files, which can be deleted by the command `clean`             | `will .clean.what`                        |
 | `.build`          | Construction of the module according to specified build                          | `will .build [scenario]`                  |
-| `.export`         |   Exports the module for use it with its other modules     | `will .export [scenario]`                 |
-| `.with`           | Select the current module by the name of its `will-files`     | `will .with [will-file] [command] [argument]`                         |
+| `.export`         | Exports the module for use it with its other modules      | `will .export [scenario]`                 |
+| `.with`           | Select the current module by the name of its `will-files` | `will .with [will-file] [command] [argument]`                         |
 | `.each`           | Implementation of specified command for each module in the directory         | `will .each .[command]`                   |
 
 
