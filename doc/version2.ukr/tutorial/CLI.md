@@ -212,7 +212,7 @@ Found no module::/[path] at "/[path]"
 
 ```
 [user@user ~]$ ls -al
-итого 12
+total 12
 drwxr-xr-x 2 user user 4096 Mar 11 11:27 .
 drwxr-xr-x 6 user user 4096 Mar 11 11:27 ..
 -rw-r--r-- 1 user user  917 Mar  4 15:07 .will.yml

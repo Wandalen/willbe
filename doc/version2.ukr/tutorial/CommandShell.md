@@ -151,15 +151,13 @@ drwxr-xr-x 4 user user 4096 Apr 17 11:16 ..
 ...
 Module at /path_to_file/.module/Tools/out/wTools.out.will.yml
  > git status
-На ветке master
-Ваша ветка обновлена в соответствии с «origin/master».
-нечего коммитить, нет изменений в рабочем каталоге
+On branch master
+nothing to commit, working tree clean
 
 Module at /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
  > git status
-На ветке master
-Ваша ветка обновлена в соответствии с «origin/master».
-нечего коммитить, нет изменений в рабочем каталоге     
+On branch master
+nothing to commit, working tree clean   
 
 ```
 
@@ -189,14 +187,13 @@ Module at /path_to_file/module.test/two.will.yml
 one.will.yml
 two.will.yml
 
-
 ```
 
 </details>  
 
 При роботі з окремими `will-файлами` утиліта додатково виводить інформацію, про те, які файли зчитано. Перевірте список файлів в директорії `module.test` командою `will .each module.test .shell ls`. 
 
-Команда зчитала і вивела дані відносно окремих модулів в директорії.
+Отримано два однакових виводи, оскільки, команда зчитала і вивела дані відносно окремих модулів в директорії.
 
 ### Підсумок  
 
