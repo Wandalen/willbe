@@ -1,6 +1,6 @@
 # Section <code>submodule</code>
 
-The section contains information about the submodules.
+The section contains the information about the submodules.
 
 Submodule is an individual module with its own configuration <code>will-file</code>, which is subordinated to another module.
 

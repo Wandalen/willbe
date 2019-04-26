@@ -1,6 +1,6 @@
 # Criterions
 
-Element of comparison for selection of resources.
+Element of comparison for selection of the resources.
 
 In `will-file` the map of criterions is represented by an associative array. Each resource can have any number of criterions. Criterions are used by selection by one resource another one through [selector with glob](Selector.md#Selector-with-glob). Criterions are not used in selector without glob as this selector has no ambiguity.
 

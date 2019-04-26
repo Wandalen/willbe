@@ -1,6 +1,6 @@
 ### Resource reflector
 
-It is a resource of section `reflector`, a method to describe a set of files in order to perform some operation on it.
+It is a resource of the <code>reflector</code> section. It is the method to describe a set of files in order to perform some operation on it.
 
 ### Example
 
@@ -70,7 +70,7 @@ The `recursive` field accepts three possible values:
 - `1` - select the file specified in the path and all the files it contains if it is a directory;
 - `2` - select all files in the specified path at all levels of the nesting, without restrictions.
 
-###  Examples of `recursive` field using 
+###  Examples of `recursive` field using
 
 ![recursive.0.png](./Images/recursive.0.png)
 
