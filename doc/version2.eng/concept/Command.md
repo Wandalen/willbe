@@ -15,9 +15,7 @@ will .help
 will .about.list
 will .resources.list
 will .paths.list
-
 ```
-
 ### Commands of the utility `willbe`
 
 To display the commands of the utility, type `will .` or `will .help`
@@ -47,7 +45,6 @@ To display the commands of the utility, type `will .` or `will .help`
 | `.with`           | Select the current module by the name of its `will-files` | `will .with [will-file] [command] [argument]`                         |
 | `.each`           | Implementation of specified command for each module in the directory         | `will .each .[command]`                   |
 
-
 ### Incomplete command entry
 
 If command consists of two or more parts, then by the input of incomplete phrase utility will offer variants of addition.
@@ -68,7 +65,6 @@ If command consists of two or more parts, then by the input of incomplete phrase
     .submodules.upgrade - Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.
 
   ```
-
 </details>
 
 For example, by the input of the phrase `will .submodules` utility will propose all possible variants of phrases with the word `submodule`

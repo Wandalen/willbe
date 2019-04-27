@@ -42,15 +42,13 @@ The structure of split of unnamed `will-files`:
 ```
 
 The split of named `will-files` is different from the unnamed ones by name before the corresponding extension.  
-
 ```
 .
 ├── first.im.will.yml    # import split-file
 ├── first.ex.will.yml    # export split-file
 
 ```
-
-`Will-file` named `first` is split on `first.im.will.yml` import file and `first.ex.will.yml` export file.  
+For example the `will-file` named `first` is split on `first.im.will.yml` import file and `first.ex.will.yml` export file.  
 
 #### An example of two modules in one directory
 

@@ -11,7 +11,6 @@
 
   All this information is recorded in the [exported](SectionExported.md) section of the generated file.
 
-
   #### Schematic structure of the `out-will-file`  
 
   ```

@@ -11,12 +11,14 @@ The diagram shows the relation between the resource which is followed by the res
 ### Use of the resources which belong to the same module
 
 For the inheritance within the borders of one `will-file`:
+
 - specify the parent resource which will be followed in the field `inherit` of the child resource. For example `inherit : reflector::some` ;
 - if needed, change or supplement the field of resource
 
 ### Use of the resources which belong to the different module
 
 For the use of inheritance by resources from another `will-file`:
+
 - connect outside `will-file` as a submodule of the section `submodule`;
 - specify in the field `inherit` the selector to the resource, which will be followed. For example `inherit:submodule::NameOfSubmodule/section::NameOfSection/NameOfResource`, which means that submodule, section and resource are specified clearly;
 - if needed, specify criterions and supplement the fields of the resource for the child resource.

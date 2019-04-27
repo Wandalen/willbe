@@ -68,7 +68,7 @@ src :
   notOlderAge : 10000
 
 ```
-
+    
 The time filter `notOlderAge` selects files that have an age of no more than 10 seconds.
 
 ### Using globes in the map of paths.

@@ -31,8 +31,6 @@ The `step` section contains two steps for `export.proto`, `view`. The `export.pr
 | opts           | additional options can be transmitted through the map `opts`            |
 | inherit        | inheritance from other steps                       |
 
-
-
 ## Section <code>step</code>
 
 The section contains steps that can be used by the build to build the module.
@@ -112,6 +110,7 @@ The section contains steps that can be used by the build to build the module.
      shell: ls -a                        # Command to enter the OS terminal
 
  ```
+
  Call of an external `ls -al` program. The inheritance of `predefined.shell` is implemented implicitly.
 
  ### Predefined step `predefined.transpile`
@@ -136,6 +135,7 @@ The section contains steps that can be used by the build to build the module.
        raw : compiled
 
  ```
+ 
 The `transpile.files` step implements the transpilation of the files with optimization `debug : release` and concatenation `raw : compiled`. The `reflect.js.files` reflector implements the selection of files which have to be transpiled. Moreover it decides where to put the result of the transpilation. Reflector can have the following look:
 
 ```yaml
@@ -167,6 +167,7 @@ step:                                   # Name of the section
     tar: 0                              # Do not create an archive.
 
 ```
+
 While construction, files will be exported through `path::proto` and the file archive creation is disabled.
 
 ### Predefined step `predefined.view`  
@@ -230,4 +231,5 @@ build:                                  # Name of the section
     - submodules.download                          
 
 ```
+
 Performs complete module cleaning and loading of the submodules.

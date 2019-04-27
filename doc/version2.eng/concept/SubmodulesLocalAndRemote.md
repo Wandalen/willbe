@@ -28,6 +28,7 @@ submodule :
     Color : npm:///wColor/out/wColor#0.3.102
 
 ```
+
 The module connects the `Tools` and `PathFundamentals` submodules.
 
 Management tools of remote submodules:

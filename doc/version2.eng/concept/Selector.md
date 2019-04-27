@@ -45,7 +45,6 @@ It is possible to find more than one or even none of the resource by a selector 
 
 The algorithm performs a verification of the resources on the coincidence of the [criterions](Criterions.md). When they coincide, the utility increments the counter of resources. After verifying all resources, the value of the counter is compared to the one which is set in the assert. In the case of non-matching values, the utility shows an error message.
 
-
 ### Use of asserts
 
 ![asserts.png](./Images/asserts.png)  
