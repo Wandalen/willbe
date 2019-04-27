@@ -12,7 +12,7 @@ At the figure in the build `build::export` the two types of selectors are used. 
 
 The selectors `step::delete.out` in the build` export` and `path::out` in the` delete.out` step are simple. Simple selectors are the selectors which have a direct link to the resource. In `will-file` selectors of the form `Section name::Resource name` are used.
 
-### Glob with assertionion
+### Glob with assertion
 A special syntactic construct that is added to the globe to limit the number of resources which have to be found by the selector with this glob.
 
 ```yml
@@ -35,7 +35,7 @@ step :
       debug : 0
 ```
 
-The `step::export` step must choose one way `path::out.debug`. The developer can put in selector `path::out.*=1` assertion `=1` due to the fact that it is the predictable and expectable result. This will ensure that the error is shown and if it happens, more or less of one path will be found by this selector. For example, if in paths you do not specify a debug criterion, both paths will be found and an assertion will show the error.
+The `step::export` step must choose one way `path::out.debug`. The developer can put in selector `path::out.*=1` assertion `=1` due to the fact that it is the predictable and expectable result. This will ensure that the error is shown. If it happens then by this selector will be found more or less of one path. For example, if in paths you do not specify a debug criterion, both paths will be found and an assertion will show the error.
 
 It is possible to find more than one or even none of the resource by a selector with the globe. If the developer knows how many selectors with the globe can find the resources, he can specify this number as an assertion in the selector. Then while performing the utility notices that the developer's forecast is not confirmed and consequently will show the error. The good practice of software development is to leave assertions everywhere, where  the result of execution is exactly known. Globe with assertion is the especially enforced implementation by the developer to prevent unpredictable consequences. If the selector is simple and has no globe, then assertion is not needed.
 
