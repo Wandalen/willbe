@@ -102,7 +102,7 @@ The section contains steps that can be used by the build to build the module.
  - `forEachDst` - the name of the reflector is specified in the field to indicate the destination directory for the files that will be created by the command. The destination directory is selected from the `dst` reflector filter.
  - `upToDate` - a field that sets the ability to restart the command over files that have not changed from the previous construction. Accepts two values: `preserve` - do not execute the command if the files have not changed; `rebuild` - execute the command regardless of the changes in the file. The default value is `preserve`.
 
- The `shell` field is present only in the predefined step `predefined.sll` and, therefore, the step can be written through implicit inheritance,which means with the specification of the field `shell` in the resource.
+ The `shell` field is present only in the predefined step `predefined.shell` and, therefore, the step can be written through implicit inheritance,which means with the specification of the field `shell` in the resource.
 
  ```yaml
  step:                                   # Name of the section
@@ -135,7 +135,7 @@ The section contains steps that can be used by the build to build the module.
        raw : compiled
 
  ```
- 
+
 The `transpile.files` step implements the transpilation of the files with optimization `debug : release` and concatenation `raw : compiled`. The `reflect.js.files` reflector implements the selection of files which have to be transpiled. Moreover it decides where to put the result of the transpilation. Reflector can have the following look:
 
 ```yaml
@@ -189,13 +189,13 @@ step:                                        # Name of the section
 
 ```
 
-Open to view`http://google.com` in 10 seconds.
+Open to view `http://google.com` in 10 seconds.
 
 #### Predefined step `submodules.download`
 
-Performs loading of remote submodules specified in the section resources `submodule`.
+Performs downloading of remote submodules specified in the section resources `submodule`.
 
-There are no fields and it can be specified directly in the `steps` section of the` build `section without inheritance.
+There are no fields and it can be specified directly in the `steps` filed of the` build `section without inheritance.
 
 #### Predefined step `submodules.update`
 If new versions of remote submodules are available, it downloads and installs them.
@@ -217,7 +217,7 @@ There are no fields and it can be specified directly in the `steps` field of the
 #### Predefined step `clean`
 
 Performs removal from the module of temporary and generated files. It includes:
-- loaded submodules (`.module` directory);
+- downloaded submodules (`.module` directory);
 - generated files: exported `out-will file` and archive.
 - `path::temp` directory, if such is specified for the module.
 
@@ -232,4 +232,4 @@ build:                                  # Name of the section
 
 ```
 
-Performs complete module cleaning and loading of the submodules.
+Performs complete module cleaning and downloading of the submodules.

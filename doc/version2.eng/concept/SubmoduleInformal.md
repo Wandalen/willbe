@@ -8,4 +8,4 @@ To connect a submodule which is created without using the `willbe` utility, you 
 
 ![submodule.informal.png](./Images/submodule.informal.png)
 
-The figure shows the general sequence of the creation of the informal submodule. The `will-file` of the informal submodule combines operations of downloading files from a remote server and exporting of the local submodule. The `will-file` of the module imports the locally generated submodule.
+ The figure shows the general sequence of the informal submodule creation. The `will-file` of the informal submodule combines operations of downloading files from a remote server and exporting of the local submodule. The `will-file` of the module imports the locally generated submodule.
