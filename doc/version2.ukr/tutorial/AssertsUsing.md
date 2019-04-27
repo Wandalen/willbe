@@ -247,7 +247,8 @@ build :
     <summary><u>Вивід команди <code>will .export export.debug.first</code></u></summary>
 
 ```
-[user@user ~]$ will .export export.debug.first
+[user@us
+er ~]$ will .export export.debug.first
 ...
 Exporting export.debug.first
    + Write out will-file /path_to_file/out/assertsTesting.out.will.yml

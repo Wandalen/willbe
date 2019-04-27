@@ -62,7 +62,7 @@ The figure shows all sections of `will-file`. None of the sections are required 
 
 ### Example of `will-file`   
 
-![will.file.inner.png](./images/will.file.inner.png)  
+![will.file.inner.png](../images/will.file.inner.png)  
 
 At the figure, the `will-file` with 4 sections and several resources is shown.
 
@@ -73,7 +73,7 @@ Structural and functional unit of <code>will-file</code>. Resources of the same 
 The resources of the sections are denoted declaratively - that indicates the desired result without instructions for obtaining this result.
 The appearance of the resources of individual sections is different.
 
-![resource.png](./images/resource.png)  
+![resource.png](../images/resource.png)  
 
 At the figure, the resource named `Tools` of the submodule type is located in the section `submodule` and has a shortened form of the record, whereas the resource `npm.install` of step type is placed in the `step` section and has a full (extended) record form.
 

@@ -8,7 +8,7 @@ Resource path, as well as the other types of resources can have criterions, path
 
 ### Example
 
-![section.path.png](./images/section.path.png)
+![section.path.png](../images/section.path.png)
 
 The example contains section `path` with paths `in`, `out`, `toDelete`. The path `toDelete` is written in extended format and has a description field.
 

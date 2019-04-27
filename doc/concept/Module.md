@@ -8,7 +8,7 @@ Free definition of `willbe-module` imposes minimal restrictions on the developme
 
 #### Example of `will-file` of module
 
-![module.file.png](./images/module.file.png)
+![module.file.png](../images/module.file.png)
 
 The figure shows the `will file` code. Numbers and arrows marked as it should be read (simplified scheme).
 1. In section `about` (if specified) there is a description of the module like name, version, interpreters and keywords. All of this is the information for the developer. This figure shows that the module is called `exportModule`, version 0.0.1.
@@ -30,7 +30,7 @@ To connect a submodule place resource with the link to `will-file` of the submod
 
 #### Example of submodule connection
 
-![supermodule.png](./images/supermodule.png)
+![supermodule.png](../images/supermodule.png)
 
 The figure shows the part of `will-file` that describes the supermodule named `superModule`. The section `submodule` contains a submodule `Tools` with the link to a remote server.
 
