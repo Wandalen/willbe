@@ -24,12 +24,12 @@ The following `will-file` extensions are supported:
 
 ### An example of the file structure of the module
 
-![will.file.png](./Images/will.file.png)
+![will.file.png](./images/will.file.png)
 
 The figure shows the list of files in the module directory (the `ls -al` command output). `Will-file` is marked by rectangle.
 
 ### An example of `will-file`
 
-![will.file.inner.png](./Images/will.file.inner.png)
+![will.file.inner.png](./images/will.file.inner.png)
 
 The `will-file` structure and its elements.

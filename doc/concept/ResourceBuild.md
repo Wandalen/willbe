@@ -10,7 +10,7 @@ The module may have a default build. In order to make it, the [cryterion `defaul
 
 ### Example
 
-![section.build.png](./Images/section.build.png)
+![section.build.png](./images/section.build.png)
 
 The build with the name `copy.files` has one step `copy.proto`. Criterion `default : 1` makes this build the default build.
 

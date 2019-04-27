@@ -64,13 +64,13 @@ name : name1            # String value
 
 The `default` criterion has a particular meaning. The resource that has the criterion `default:1` is considered as the default resource. By means of `default: 1` criterion, you can specify the [build](ResourceBuild.md#Resource-collection), which is built by default.
 
-![criterion.default.png](./Images/criterion.default.png)
+![criterion.default.png](./images/criterion.default.png)
 
 ### Criterion of the build for the export
 
 The special `export: 1` criterion differentiates the build which is intended for [export](ResourceBuild.md#Resource-Export) of the module from other builds of this module.
 
-![criterion.export.png](./Images/criterion.export.png)
+![criterion.export.png](./images/criterion.export.png)
 
 This module has one regular build and one export. The `will .build` command will execute the build` build::release ` and` will .export` command will execute the build for export `build::export`. Both builds are default builds because they have `default : 1`. Therefore the commands for their construction do not require any additional arguments.
 
@@ -78,6 +78,6 @@ This module has one regular build and one export. The `will .build` command will
 
 By build [selector with globe](Selector.md#Selector-with-globs), resources which do not have the criterion are selected, but not rejected.
 
-![resource.without.criterion.png](./Images/resource.without.criterion.png)
+![resource.without.criterion.png](./images/resource.without.criterion.png)
 
 The `step::proto.release` will be executed by any value of the criterion `debug` in build `build::release`. The result will not change if you add criterions in `step::proto.relase` or in `build::release`.

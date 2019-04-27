@@ -6,7 +6,7 @@ Kind of <code>will-file</code> which has a non-standard name. It makes possible 
 
 `Will-file` name that looks like `.will.[extension]` is considered to be unnamed. At the same time, a directory may contain one unnamed `will-file` due to the name collision. The number of named` will-files` is not limited.
 
-![will.file.named.unnamed.png](./Images/will.file.named.unnamed.png)  
+![will.file.named.unnamed.png](./images/will.file.named.unnamed.png)  
 
 The figure shows the output of the `ls -al` command in the module directory of named `will-files`.
 
@@ -54,6 +54,6 @@ The split of named `will-files` is different from the unnamed ones by name befor
 
 #### An example of two modules in one directory
 
-![will.file.split.png](./Images/will.file.split.png)
+![will.file.split.png](./images/will.file.split.png)
 
 The output of `ls -al` command in the module directory with the split of named and unnamed `will-file`.

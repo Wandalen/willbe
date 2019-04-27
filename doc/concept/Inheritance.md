@@ -6,7 +6,7 @@ By inheritance, a resource is able to change and complement inherited resource. 
 
 The diagram below shows the relation of the parent resource to the child resource. 
 
-![resources.inheritability.png](./Images/resources.inheritability.png)
+![resources.inheritability.png](./images/resources.inheritability.png)
 
 ### Inhetitance properties:
 
