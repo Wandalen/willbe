@@ -342,6 +342,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'npm.generate',
+    stepRoutine : Predefined.stepRoutineNpmGenerate,
+  })
+
+  step
+  ({
     name : 'submodules.download',
     stepRoutine : Predefined.stepRoutineSubmodulesDownload,
   })
@@ -609,7 +615,6 @@ function shell( o )
 
   /* */
 
-  // debugger;
   o.execPath = module.resolve
   ({
     selector : o.execPath,
@@ -618,7 +623,6 @@ function shell( o )
     pathNativizing : 1,
     arrayFlattening : 0, /* required for f::this and feature make */
   });
-  // debugger;
 
   /* */
 
@@ -629,18 +633,21 @@ function shell( o )
   /* */
 
   let ready = new _.Consequence().take( null );
-  if( _.arrayIs( o.currentPath ) ) /* xxx, qqq : implement multiple currentPath for _.shell */
+  if( _.arrayIs( o.currentPath ) ) /* xxx, qqq : implement multiple currentPath for routine _.shell */
   {
+
+    debugger;
     o.currentPath.forEach( ( currentPath ) =>
     {
       _.shell
       ({
         execPath : o.execPath,
-        currentPath : o.currentPath,
+        currentPath : currentPath,
         verbosity : will.verbosity - 1,
         ready : ready,
       });
     });
+
   }
   else
   {
@@ -2428,7 +2435,6 @@ function _remoteDownload( o )
   let path = fileProvider.path;
   let logger = will.logger;
   let time = _.timeNow();
-  // let wasUpToDate = false;
   let reopening = false;
   let con = _.Consequence().take( null );
 
@@ -2440,14 +2446,6 @@ function _remoteDownload( o )
   _.assert( _.strDefined( module.remotePath ) );
   _.assert( _.strDefined( module.localPath ) );
   _.assert( !!module.supermodule );
-
-  // if( !o.upgrading )
-  // {
-  //   // possible fix of submodules.download problem:
-  //   module.isDownloaded = !!module.remoteIsDownloaded();
-  //   if( module.isDownloaded )
-  //   return false;
-  // }
 
   let o2 =
   {
@@ -2466,7 +2464,6 @@ function _remoteDownload( o )
   })
   .keep( function( arg )
   {
-    // wasUpToDate = module.isUpToDate;
 
     if( o.upgrading )
     reopening = !module.isUpToDate;
@@ -2498,12 +2495,7 @@ function _remoteDownload( o )
     {
       _.assert( module.preformed === 3, 'not tested' );
 
-      // debugger;
       module.close();
-      // debugger;
-      // if( module.resourcesFormReady.errorsCount() || module.ready.errorsCount() )
-      // module.stateResetError();
-
       module.willFilesFind();
       module.willFilesOpen();
       module.submodulesFormSkip();
@@ -3734,6 +3726,7 @@ resolve_body.defaults =
   preservingIteration : 0,
   strictCriterion : 0,
   hasPath : null,
+  selectorIsPath : 0,
 }
 
 let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
@@ -3745,7 +3738,63 @@ defaults.missingAction = 'undefine';
 //
 
 let onSelectorComposite = _.select.functor.onSelectorComposite({ isStrippedSelector : 1 });
-let onSelectorDown = _.select.functor.onSelectorDownComposite({});
+/* let onSelectorDown = _.select.functor.onSelectorDownComposite({}); */
+function onSelectorDown()
+{
+  let it = this;
+
+  if( it.continue && _.arrayIs( it.dst ) && it.src.rejoin === _.hold )
+  {
+    it.dst = _.strJoin( it.dst );
+    pathsNativize.call( it );
+  }
+
+  /* */
+
+  function pathsNativize()
+  {
+    let it = this;
+    let resource = it.dst;
+
+    if( !it.selectMultipleOptions.iteratorExtension.resolveOptions.selectorIsPath )
+    return;
+
+    it.dst = _.map( it.dst, ( resource ) =>
+    {
+      if( _.strIs( resource ) )
+      return pathNativize.call( it, resource );
+      if( resource instanceof will.PathResource )
+      {
+        resource = resource.cloneDerivative(); // xxx : don't do second clone
+        _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
+        if( resource.path )
+        resource.path = pathNativize.call( it, resource.path );
+      }
+      else debugger;
+      return resource;
+    });
+    debugger;
+    return;
+
+  }
+
+  /* */
+
+  function pathNativize( filePath )
+  {
+    let it = this;
+    let currentModule = it.module;
+    let result = filePath;
+    let will = it.selectMultipleOptions.iteratorExtension.resolveOptions.module.will;
+    _.assert( _.strIs( filePath ) || _.strsAreAll( filePath ) );
+    result = will.fileProvider.providersWithProtocolMap.file.path.s.nativize( result );
+    return result;
+  }
+
+  /* */
+
+}
+
 function _resolveAct( o )
 {
   let module = this;
@@ -3796,6 +3845,7 @@ function _resolveAct( o )
         module : o.module,
         exported : null,
         isFunction : null,
+        selectorIsPath : 0,
       },
     });
 
@@ -3897,9 +3947,9 @@ function _resolveAct( o )
     if( o.pathResolving || it.isFunction )
     pathsResolve.call( it );
 
-    if( it.dstWritingDown )
-    if( o.pathNativizing || it.isFunction )
-    pathsNativize.call( it );
+    // if( it.dstWritingDown )
+    // if( o.pathNativizing || it.isFunction )
+    // pathsNativize.call( it );
 
     if( o.pathUnwrapping )
     pathsUnwrap.call( it );
@@ -3912,8 +3962,13 @@ function _resolveAct( o )
   {
     let it = this;
 
+    // debugger;
     // if( it.selectOptions.selector === "f::this/src" )
     // debugger;
+
+    if( it.dstWritingDown )
+    if( o.pathNativizing || it.isFunction )
+    pathsNativize.call( it );
 
     functionStringsJoinDown.call( it );
     mapsFlatten.call( it );
@@ -4103,11 +4158,18 @@ function _resolveAct( o )
   {
     let it = this;
 
+    if( o.selectorIsPath )
+    it.selectorIsPath = 1;
+
     if( it.parsedSelector )
     {
       let kind = it.parsedSelector.kind;
+
       if( kind === 'path' && o.hasPath === null )
       o.hasPath = true;
+
+      if( kind === 'path' )
+      it.selectorIsPath = 1;
     }
 
   }
@@ -4381,13 +4443,42 @@ function _resolveAct( o )
     let currentModule = it.module;
     let resource = it.dst;
 
-    if( it.dst instanceof will.PathResource )
+    // debugger;
+
+    if( it.selectorIsPath )
     {
-      resource = it.dst = resource.cloneDerivative(); // xxx : don't do second clone
-      _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
-      if( resource.path )
-      resource.path = pathNativize.call( it, resource.path )
+      if( it.down && it.down.selectorIsPath )
+      return;
+      // debugger;
+      it.dst = _.map( it.dst, ( resource ) =>
+      {
+        // debugger;
+        if( _.strIs( resource ) )
+        return pathNativize.call( it, resource );
+        if( resource instanceof will.PathResource )
+        {
+          resource = resource.cloneDerivative(); // xxx : don't do second clone
+          _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
+          // debugger;
+          if( resource.path )
+          resource.path = pathNativize.call( it, resource.path );
+        }
+        else debugger;
+        return resource;
+      });
+      // debugger;
+      return;
     }
+
+    // if( it.dst instanceof will.PathResource )
+    // {
+    //   resource = it.dst = resource.cloneDerivative(); // xxx : don't do second clone
+    //   _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
+    //   debugger;
+    //   if( resource.path )
+    //   resource.path = pathNativize.call( it, resource.path )
+    // }
+    // debugger;
 
   }
 

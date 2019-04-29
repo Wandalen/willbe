@@ -674,7 +674,7 @@ function commandClean( e )
 
 }
 
-//
+// xxx : remove the command, add option dry to command .clean
 
 function commandCleanWhat( e )
 {

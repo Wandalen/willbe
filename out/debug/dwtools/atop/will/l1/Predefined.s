@@ -160,7 +160,7 @@ function stepRoutineTimelapseBegin( frame )
   /* */
 
   logger.log( 'Timelapse begin' );
-  fileProvider.providersWithProtocolMap.hd.archive.timelapseBegin();
+  // fileProvider.providersWithProtocolMap.hd.archive.timelapseBegin();
 
   return null;
 }
@@ -186,7 +186,7 @@ function stepRoutineTimelapseEnd( frame )
   /* */
 
   logger.log( 'Timelapse end' );
-  fileProvider.providersWithProtocolMap.hd.archive.timelapseEnd();
+  // fileProvider.providersWithProtocolMap.hd.archive.timelapseEnd();
 
   return null;
 }
@@ -266,7 +266,7 @@ function stepRoutineShell( frame )
 
   _.assert( arguments.length === 1 );
   _.sure( opts.shell === null || _.strIs( opts.shell ) || _.arrayIs( opts.shell ) );
-  _.sure( _.arrayHas( [ 'preserve', 'rebuild' ], opts.upToDate ) );
+  _.sure( _.arrayHas( [ 'preserve', 'rebuild' ], opts.upToDate ), () => 'Unknown value of upToDate ' + _.strQuote( opts.upToDate ) );
 
   if( opts.forEachDst )
   forEachDst = forEachDstReflector = step.reflectorResolve( opts.forEachDst );
@@ -278,7 +278,6 @@ function stepRoutineShell( frame )
     _.assert( forEachDstReflector instanceof will.Reflector );
     forEachDst = module.resolveContextPrepare({ currentThis : forEachDstReflector });
 
-    // debugger;
     for( let dst in forEachDst.filesGrouped )
     {
       let src = forEachDst.filesGrouped[ dst ];
@@ -298,7 +297,6 @@ function stepRoutineShell( frame )
 
   }
 
-  // debugger;
   return module.shell
   ({
     execPath : opts.shell,
@@ -340,6 +338,7 @@ function stepRoutineTranspile( frame )
   let logger = will.logger;
   let opts = frame.opts;
 
+  _.sure( _.arrayHas( [ 'preserve', 'rebuild' ], opts.upToDate ), () => 'Unknown value of upToDate ' + _.strQuote( opts.upToDate ) );
   _.assert( arguments.length === 1 );
 
   let reflector = step.reflectorResolve( opts.reflector );
@@ -373,6 +372,7 @@ function stepRoutineTranspile( frame )
     transpilingStrategies : transpilingStrategies,
     splittingStrategy : raw ? 'OneToOne' : 'ManyToOne',
     writingTerminalUnderDirectory : 1,
+    upToDate : opts.upToDate,
 
     optimization : 9,
     minification : 8,
@@ -399,6 +399,7 @@ function stepRoutineTranspile( frame )
 stepRoutineTranspile.stepOptions =
 {
   reflector : null,
+  upToDate : 'preserve',
 }
 
 stepRoutineTranspile.uniqueOptions =
@@ -467,6 +468,58 @@ stepRoutineView.stepOptions =
 }
 
 stepRoutineView.uniqueOptions =
+{
+}
+
+//
+
+function stepRoutineNpmGenerate( frame )
+{
+  let step = this;
+  let module = frame.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = frame.opts;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  opts.packagePath = opts.packagePath || '{path::out}/package.json';
+
+  debugger;
+  let packagePath = step.resolve
+  ({
+    selector : opts.packagePath,
+    prefixlessAction : 'resolved',
+    pathNativizing : 1,
+  });
+  debugger;
+
+  let config = Object.create( null );
+
+  config.name = module.about.name;
+  config.version = module.about.version;
+
+  _.sure( fileProvider.isDir( packagePath ), () => packagePath + ' is dir, not safe to delete' );
+
+  fileProvider.fileWrite
+  ({
+    filePath : packagePath,
+    data : config,
+    encoding : 'json',
+  });
+
+  return null;
+}
+
+stepRoutineNpmGenerate.stepOptions =
+{
+  packagePath : '{path::out}/package.json',
+}
+
+stepRoutineNpmGenerate.uniqueOptions =
 {
 }
 
@@ -577,12 +630,8 @@ function stepRoutineExport( frame )
 
   _.assert( arguments.length === 1 );
 
-  /* begin */
-
   if( module.exportedMap[ build.name ] )
   {
-    // _.assert( 0, 'not tested' );
-    debugger;
     module.exportedMap[ build.name ].finit();
     _.assert( module.exportedMap[ build.name ] === undefined );
   }
@@ -623,6 +672,7 @@ let Extend =
   stepRoutineShell,
   stepRoutineTranspile,
   stepRoutineView,
+  stepRoutineNpmGenerate,
 
   stepRoutineSubmodulesDownload,
   stepRoutineSubmodulesUpdate,
