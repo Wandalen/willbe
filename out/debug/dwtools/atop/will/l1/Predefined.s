@@ -493,7 +493,8 @@ function stepRoutineNpmGenerate( frame )
   ({
     selector : opts.packagePath,
     prefixlessAction : 'resolved',
-    pathNativizing : 1,
+    pathNativizing : 0,
+    selectorIsPath : 1,
   });
   debugger;
 
@@ -502,13 +503,14 @@ function stepRoutineNpmGenerate( frame )
   config.name = module.about.name;
   config.version = module.about.version;
 
-  _.sure( fileProvider.isDir( packagePath ), () => packagePath + ' is dir, not safe to delete' );
+  _.sure( !fileProvider.isDir( packagePath ), () => packagePath + ' is dir, not safe to delete' );
 
   fileProvider.fileWrite
   ({
     filePath : packagePath,
     data : config,
-    encoding : 'json',
+    encoding : 'json.fine',
+    verbosity : will.verbosity >= 3 ? 5 : 0,
   });
 
   return null;

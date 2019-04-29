@@ -1,0 +1,29 @@
+
+path :
+
+  proto : './proto'
+  temp : 'out'
+  in : '.'
+  out : 'out'
+  out.debug1 : './out/debug1'
+  out.debug2 : './out/debug2'
+
+reflector :
+
+  reflect.proto1 :
+    src : path::proto
+    dst : path::out.debug1
+
+  reflect.proto2 :
+    inherit : reflect.proto1
+    dst : path::out.debug2
+
+build :
+
+  debug1 :
+    steps :
+      - step::reflect.proto1
+
+  debug2 :
+    steps :
+      - step::reflect.proto2

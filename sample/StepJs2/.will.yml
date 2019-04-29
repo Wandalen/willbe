@@ -1,0 +1,19 @@
+
+path :
+
+  exec : 'Exec.js'
+
+step :
+
+  exec.js :
+    js : path::exec
+
+  exec.shell :
+    shell : echo Hello!
+
+build :
+
+  run :
+    steps :
+      - exec.js
+      - exec.shell
