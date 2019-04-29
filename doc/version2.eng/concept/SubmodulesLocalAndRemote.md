@@ -14,9 +14,8 @@ The module consists of 2 local submodules, which are named `ModuleOne` and `Loca
 
 ### Remote submodule
 
-A module located on the remote server is downloaded to the local machine for use.  
-
-The remote submodules are downloaded into the `.module` directory, which is located in the root directory of the current module.
+A module located on the remote server is downloaded to the local machine for use.
+The remote submodules are downloaded into the <code>.module</code> directory, which is located in the root directory of the current module.
 
 To connect the remote submodule, the URI-path resource is specified in the section `submodule`.
 
@@ -29,6 +28,7 @@ submodule :
     Color : npm:///wColor/out/wColor#0.3.102
 
 ```
+
 The module connects the `Tools` and `PathFundamentals` submodules.
 
 Management tools of remote submodules:
@@ -38,7 +38,7 @@ Management tools of remote submodules:
 - the predefined step [`submodules.download`](ResourceStep.md#submodulesdownload) downloads the files of remote submodules;
 - the command `will .submodules.update` download the latest versions of the remote submodules files (without patching the `will-file`);
 - the predefined step of [`submodules.update`](ResourceStep.md#submodulesupdate) updates files of remote submodules;
-- the `will.submodules.fixate` command fixates the submodule version, patching the current submodule paths in `will-file` to the latest versions of the remote submodules, unless a specific version was specified;
+- the `will.submodules.fixate` command fixates the submodule version, patching the current submodule paths in `will-file` to the latest versions of the remote submodules unless a specific version was specified;
 - the ` will command.submodules.upgrade` updates the version of the submodules, patching the current submodule paths in `will-file` to the most recent versions of the remote submodule (if newer versions are available);
 - the `will .submodules.clean` command deletes the remote submodules files (`.module` directory);
 - predefined step [`submodules.clean`](ResourceStep.md#submodulesclean) deletes the remote submodules files (`.module` directory).

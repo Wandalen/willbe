@@ -1,6 +1,6 @@
 # Section <code>exported</code>
 
-The <code>out-will-file</code> section is programmatically generated when the module is exported. It contains the list of all exported files and is used by importation of this module by another one.
+The <code>out-will-file</code> section is programmatically generated when the module is exported. It contains the list of all exported files and is used by the importation of this module by another one.
 
 ### Example
 
