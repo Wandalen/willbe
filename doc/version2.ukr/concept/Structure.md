@@ -55,7 +55,7 @@ will-file
 
 ### Приклад `will-файла`:  
 
-![will.file.inner.png](./Images/will.file.inner.png)  
+![will.file.inner.png](../../images/will.file.inner.png)  
 
 На рисунку можна бачити `will-файл` з 4-ма секціями та декількома ресурсами.
 
@@ -67,7 +67,7 @@ will-file
 
 Вигляд ресурсів окремих секцій відрізняється.
 
-![resource.png](./Images/resource.png)  
+![resource.png](../../images/resource.png)  
 
 На рисунку ресурс типу підмодуль `Tools` розміщений в секції `submodule` має скорочену форму запису, а ресурс типу крок `npm.install` розміщеий в секції `step` має повну (розширену) форму запису.
 

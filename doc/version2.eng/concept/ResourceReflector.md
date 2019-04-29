@@ -1,6 +1,6 @@
 ### Resource reflector
 
-It is a resource of section `reflector`, a method to describe a set of files in order to perform some operation on it.
+It is a resource of the <code>reflector</code> section. It is the method to describe a set of files in order to perform some operation on it.
 
 ### Example
 
@@ -8,7 +8,7 @@ It is a resource of section `reflector`, a method to describe a set of files in 
 
 An example of a `reflector` section with a `reflector1` resource. The reflector has two fields. First of them specifies the source of the files and second specifies the destination directory. That means that reflector copies files placed by path `path::proto` in the directory by path `path::out`.
 
-### Fields of resource `reflector`
+### Resource fields of `reflector` section
 
 | Field          | Description                                                |
 |----------------|------------------------------------------------------------|
@@ -25,7 +25,7 @@ The fields `src` and `dst` can contain subfields which describe [file filters](R
 
 ### Map of the paths
 
-It is reflector field and the way to describe a set of files that allows to include a lot of files in it. Moreover it allows to exclude from it the files that are not required by the terms of exclusion and globes.
+It is reflector field and the way to describe a set of files that allows to include a lot of files in it. Moreover, it allows to exclude from it the files that are not required by the terms of exclusion and globes.
 
 The path map can:
 - specify the location of files in which to performing of operation is needed;
@@ -37,7 +37,7 @@ The path map can:
 
 The path map can be specified in the `filePath` field or in the `src.filePath` or `dst.filePath` field of the reflector. The exclusion which have the value `0`,` 1`, `false`,` true` are taken by inheritance. Moreover, the directories (paths that have the `null` values, simple specified path) in which the searching is made, are rewritten by the last ancestor or directly by a descendant.
 
-Excluding build files is possible not only with the path map, but also using [file filters](<./ReflectorFileFilter.md#>).
+Excluding build files is possible not only with the path map but also using [file filters](<./ReflectorFileFilter.md#>).
 
 ### An example of a path map with file exceptions
 
@@ -70,7 +70,7 @@ The `recursive` field accepts three possible values:
 - `1` - select the file specified in the path and all the files it contains if it is a directory;
 - `2` - select all files in the specified path at all levels of the nesting, without restrictions.
 
-###  Examples of `recursive` field using 
+###  Examples of `recursive` field using
 
 ![recursive.0.png](./Images/recursive.0.png)
 

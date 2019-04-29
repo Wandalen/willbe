@@ -16,25 +16,26 @@ reflector :
       path::file : 1
     src :
       prefixPath : 'file'
+    dst :
+      filePath : path::file
 
   build :
     filePath :
       '*.o' : 1
       '*.c' : 0
       path::file : 1
+    src :
+      prefixPath : 'file'
+    dst :
+      filePath : path::file
+    shell : gcc -o {f::this/dst}/hello {f::this/src}
 
 step :
 
   compile :
-    shell : gcc-6 -c {this::src}
+    shell : gcc -c {f::this/src}
     currentPath : path::file
     forEachDst : compile
-    upToDate : preserve
-  
-  build :
-    shell : gcc-6 -o hello {this::src}
-    currentPath : path::file
-    forEachDst : build
     upToDate : preserve
   
   clean.temp :

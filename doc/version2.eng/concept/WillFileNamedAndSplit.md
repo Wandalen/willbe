@@ -28,7 +28,7 @@ To work with a group of named `will-files` command [`.each`](../tutorial/Command
 
 ### Split <code>will-file</code>
 
-Splitting <code>will-file</code> into two files. One of them is for importing data and the other is for exporting. It makes possible to split data related building and to develop a module and data which can be used by another modules.
+Splitting <code>will-file</code> into two files. One of them is for the import of the module and the other is for export of it. It makes possible to split data related building and to develop a module and data which can be used by other modules.
 
 The resources which are described in one of the split `will-files` are available in the second. It eliminates the need to duplicate the data. Split can be implemented for named and unnamed `will-files`. By splitting the unnamed `will-files` the import file is called` .im.will.yml` and the export file is called `.ex.will.yml`.  
 
@@ -42,15 +42,13 @@ The structure of split of unnamed `will-files`:
 ```
 
 The split of named `will-files` is different from the unnamed ones by name before the corresponding extension.  
-
 ```
 .
 ├── first.im.will.yml    # import split-file
 ├── first.ex.will.yml    # export split-file
 
 ```
-
-`Will-file` named `first` is split on `first.im.will.yml` import file and `first.ex.will.yml` export file.  
+For example the `will-file` named `first` is split on `first.im.will.yml` import file and `first.ex.will.yml` export file.  
 
 #### An example of two modules in one directory
 

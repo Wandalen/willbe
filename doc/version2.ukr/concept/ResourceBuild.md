@@ -11,7 +11,7 @@
 
 ### Приклад збірки
 
-![section.build.png](./Images/section.build.png)
+![section.build.png](../../images/section.build.png)
 
 Збірку з назвою `copy.files` має один крок `copy.proto`. Критеріон `default : 1` робить цю збірку збіркою за замовчуванням.
 
@@ -50,7 +50,7 @@ build :
       - export.proto
 ```
 
-В збірці `export` використовується крок `export.зкщещ` для експортування файлів. Поєднання критеріонів `export` i `default` дозволяє призначити [збірку експорту за замовчуванням](Criterions.md#Використання). Крок `export.proto` можна бачити вище.
+В збірці `export` використовується крок `export.proto` для експортування файлів. Поєднання критеріонів `export` i `default` дозволяє призначити [збірку експорту за замовчуванням](Criterions.md#Використання). Крок `export.proto` можна бачити вище.
 
 ### Секція <code>build</code>
 

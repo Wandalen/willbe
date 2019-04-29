@@ -79,7 +79,7 @@ At the figure, the resource named `Tools` of the submodule type is located in th
 
 ### Type of resource
 
-Functionality is associated with a group of resources, limited to the purpose. An example of resource types is a path, submodule, step, build. Each type of resource has its own purpose and is processed by utility in different ways.
+Functionality which is associated with a group of resources. It is limited by its purpose. An example of resource types is a path, submodule, step, build. Each type of resource has its own purpose and is processed by a utility in different ways.
 
 ### Resources by type
 

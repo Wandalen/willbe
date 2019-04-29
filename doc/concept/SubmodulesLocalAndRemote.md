@@ -8,7 +8,7 @@ A module located at the local machine can be connected as a submodule of another
 
 #### Example of a local submodule
 
-![submodule.local.png](./Images/submodule.local.png)
+![submodule.local.png](../images/submodule.local.png)
 
 The module consists of 2 local submodules, which are named `ModuleOne` and `LocalModule`. The first local submodule is placed in the `ModuleOne` directory, which is in the root directory of the module (relative path), and the second in the directory by the path `/home/user/localModule/` (absolute path).
 

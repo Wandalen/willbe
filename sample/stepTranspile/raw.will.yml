@@ -1,0 +1,36 @@
+about :
+
+  name : transpile
+  description : "To use raw criterion"
+  version : 0.0.1
+
+path :
+
+  proto : './proto'
+  in : '.'
+  out : 'out'
+  out.debug:
+    path : './out/debug'
+    criterion :
+      debug : 1
+
+reflector :
+
+  transpile.proto :
+    inherit : predefined.*
+    step : predefined.transpile
+    criterion :
+      debug : 1
+      raw : 1
+    filePath :
+      path::proto : '{path::out.*=1}/Main.s'
+
+build :
+
+  transpile.proto :
+    criterion :
+      default : 1
+      debug : 1
+      raw : 1
+    steps :
+      - transpile.proto*=1

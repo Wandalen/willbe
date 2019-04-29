@@ -65,7 +65,7 @@ name : name1            # рядкове значення
 
 Критеріон `default` має особливе значення. Ресурс, який має критеріон `default : 1` вважається ресурсом за замовчуванням. За допомогою критеріона `default : 1` можливо задати [збірку](ResourceBuild.md#Ресурс-збірка), що має збиратися за замовчуванням.
 
-![criterion.default.png](./Images/criterion.default.png)
+![criterion.default.png](../../images/criterion.default.png)
 
 Для побудови збірки `release` вводиться фраза `will .build` без аргумента.
 
@@ -73,7 +73,7 @@ name : name1            # рядкове значення
 
 Спеціальний критеріон `export : 1` диференціює збірку, яка призначеня для [еспортування](ResourceBuild.md#Ресурс-експорт) модуля від інших збірок даного модуля.
 
-![criterion.export.png](./Images/criterion.export.png)
+![criterion.export.png](../../images/criterion.export.png)
 
 Даний модуль має одну звичайну збірку та один експорт. Команда `will .build` виконає збірку `build::release`, а команда `will .export` виконає збірку для експортування `build::export`. Обидві збірки є збірками по замовчуванню так як мають `default : 1`, а отже команди для їх побудови не потребують додаткових аргментів.
 
@@ -81,6 +81,6 @@ name : name1            # рядкове значення
 
 При вибірці [селектором із ґлобом](Selector.md#Селектор-з-ґлобом), ресурси, що не мають критеріона вибираються, а не відкидаються.
 
-![resource.without.criterion.png](./Images/resource.without.criterion.png)
+![resource.without.criterion.png](../../images/resource.without.criterion.png)
 
 Крок `step::proto.release` буде виконаний при будь-якому значенні критеріона `debug` в збірці `build::release`. Якщо додати інші критеріони в `step::proto.relase` або в `build::release` то результат не зміниться.

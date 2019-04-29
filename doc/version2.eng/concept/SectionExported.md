@@ -1,6 +1,6 @@
 # Section <code>exported</code>
 
-The <code>out-will-file</code> section is programmatically generated when the module is exported. It contains the list of all exported files and is used by importation of this module by another one.
+The <code>out-will-file</code> section is programmatically generated when the module is exported. It contains the list of all exported files and is used by the importation of this module by another one.
 
 ### Example
 
@@ -47,15 +47,15 @@ path :
 
 The list of exported files looks like this. All paths are relative to `path::in`.
 
-### The fields of section resources  `exported`   
+### Resource fields of `exported` section   
 
-| Field                    | Description                                   |
+| Field                    | Description                            |
 |--------------------------|----------------------------------------|
-| version                  | version of the module, exported from the section `about`                         |
+| version                  | version of the module, exported from the section `about`  |
 | criterion                | criterions which are exported from the `build` section when executing the export build(see [criterion](Criterions.md)) |
 | exportedReflector        | original version of the reflector with all the filters and masks which was used to choose exported files  |
-| exportedFilesReflector   | reflector with a list of all exported files  |  
-| exportedDirPath          | directory path to exported files      |
-| exportedFilesPath        | list of all exported files           |
-| originalWillFilesPath    | the path to the original `will-file` version of this module          |
-| archiveFilePath          | the path to the archive with exported module files                   |
+| exportedFilesReflector   | reflector for a list of all exported files  |  
+| exportedDirPath          | path to directory with exported files        |
+| exportedFilesPath        | path with a list of all exported files       |
+| originalWillFilesPath    | the path to the original `will-file` of this module  |
+| archiveFilePath          | the path to the archive with exported module files   |

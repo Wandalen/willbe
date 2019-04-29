@@ -8,7 +8,7 @@
 
 ### Приклад локального підмодуля
 
-![submodule.local.png](./Images/submodule.local.png)
+![submodule.local.png](../../images/submodule.local.png)
 
 Модуль має 2-ва локальних підмодулями - `ModuleOne` i `LocalModule`. Перший локальний підмодуль поміщається в директорії `ModuleOne`, яка знаходиться в кореневій директорії модуля (відносний шлях), а другий - в директорії за шляхом `/home/user/localModule/` (абсолютний posix шлях).
 

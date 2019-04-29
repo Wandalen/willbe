@@ -117,10 +117,10 @@ Cant find step export.*
 
 Введіть команду `will .export export.debug` в кореневій директорії файла `.will.yml`.
 
-Утиліта не знайшла крок `export.*`, хоча є три. Додайте ассерт для вибору одного файла в селектор `export.*` збірок секції `build` та повторіть ввід команди:
+Утиліта не знайшла крок `export.*`, хоча в секції `step` є три. Додайте ассерт для вибору одного кроку в селектори збірок секції `build` та повторіть ввід команди:
 
 <details>
-    <summary><u>Код файла <code>.will.yml</code> зі змінами</u></summary>
+    <summary><u>Код файла <code>.will.yml</code> з ассертами в секції <code>build</code></u></summary>
 
 ```yaml
 about :
@@ -186,13 +186,13 @@ build :
 
 </details>
 <details>
-    <summary><u>Лог помилки та <code>will-файл</code></u></summary>
+    <summary><u>Вивід консолі про помилку та <code>will-файл</code></u></summary>
 
-![SelectorWithAssert](./Images/selector.with.assert.png)
+![SelectorWithAssert](../../images/selector.with.assert.png)
 
 </details>
 
-Інформація в консолі вказує, що допущена помилка в збірці `export.debug` - знайдено два кроки `Found : step::export.debug, step::export.default`, а очікувався один. Тобто, ресурс підтверджує істинність критеріонів, які не вказані в ньому тому. Утиліта `willbe` зчитала крок `export.default` як дійсний за відсутністю критеріона `debug`.   
+Інформація в консолі вказує, що допущена помилка в збірці `export.debug`. Утилітою знайдено два кроки: `Found : step::export.debug, step::export.default`, а очікувався один. Тобто, ресурс підтверджує істинність критеріонів, які не вказані в ньому тому. Утиліта `willbe` зчитала крок `export.default` як дійсний за відсутністю критеріона `debug`.   
 
 В порівнянні з попереднім виводом консолі, отримано дані про помилку в визначених ресурсах, що спрощує корегування файла. Для того, щоб виправити помилку, потрібно зробити ресурс унікальним. Для цього можна змінити назву ресурса і додати відповідну збірку або ж змінити мапу критеріонів.    
 
@@ -247,7 +247,8 @@ build :
     <summary><u>Вивід команди <code>will .export export.debug.first</code></u></summary>
 
 ```
-[user@user ~]$ will .export export.debug.first
+[user@us
+er ~]$ will .export export.debug.first
 ...
 Exporting export.debug.first
    + Write out will-file /path_to_file/out/assertsTesting.out.will.yml
