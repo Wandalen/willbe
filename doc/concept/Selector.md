@@ -10,7 +10,7 @@ Selector which uses searching patterns (globs) for selecting of resources.
 
 #### Example of sections `will-file` with selectors
 
-![selector.png](./Images/selector.png)
+![selector.png](../images/selector.png)
 
 The two build of selectors are used in the firure. The `step::export.*` selector is the glob because it contains `*`, it reads: "select all steps that begin with `export`". This selector can select steps `step::export.single` and `step::export.multi` (indicated by blue arrows).The choice of the step is carried out by [comparing the map of criterion](Criterions.md). Similarly, the paths are selected by steps `export.single` and `export.multi`.
 
@@ -46,16 +46,16 @@ It is possible to find more than one or even none of the resource by selector wi
 
 #### Algorithm of verification assertions in selectors
 
-![criterions.and.assert.png](./Images/criterions.and.asserts.png)
+![criterions.and.assert.png](../images/criterions.and.asserts.png)
 
 The algorithm performs a verification of the [criterions](Criterions.md) coincidence. When they coincide, the utility increments the counter of resources. After verifying all resources, the value of the counter is compared to the one which is set in the assertion. In case of non-matching values, the utility shows an error message.
 
 ### Assertions using 
 
-![asserts.png](./Images/asserts.png)  
+![asserts.png](../images/asserts.png)  
 
 The figure on the left shows a variant of the resource's erroneous writing. Because of the lack of criterions in the step `export.multi` selector `step::export.*=1` in build `build::export` will choose `step::export.single` and `step::export.multi` steps, which is contrary to the developer's expectation. Thanks to assert `= 1` the error will be localized.
 
-![assert.message.png](./Images/assert.message.png)  
+![assert.message.png](../images/assert.message.png)  
 
 Error message in resources selection for the `will-file` due to the assertions triggering.

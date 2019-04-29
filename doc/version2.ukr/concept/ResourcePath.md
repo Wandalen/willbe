@@ -8,7 +8,7 @@
 
 ### Приклад
 
-![section.path.png](./Images/section.path.png)
+![section.path.png](../../images/section.path.png)
 
 Містить секцію `path` з шляхами `in`, `out`, `toDelete`. Шлях `toDelete` записаний в розгорнутому форматі і має поле із описом.
 

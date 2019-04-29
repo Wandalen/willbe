@@ -8,7 +8,7 @@
 
 [Globbing](https://linuxhint.com/bash_globbing_tutorial/) - представляє собою аналог регулярних виразів  для пошуку файлів в bash-терміналі.  
 
-![selector.png](./Images/selector.png)
+![selector.png](../../images/selector.png)
 
 На рисунку в збірці `build::export` використовується два види селекторів. Селектор `step::export.*` є селектором з ґлобом бо містить `*`, читається: "вибрати всі кроки, які починаються на `export.`". Цей селектро може обрати кроки `step::export.single` i `step::export.multi` (позначено синіми стрілками). Вибір кроку здійснюється [порівнянням мапи критеріонів](Criterions.md) - і співпадає лише один крок `step::export.multi`. Аналогічно здійснюється вибір шляху селектором `path::fileToExport.*` в кроці `step::export.multi`.
 
@@ -44,16 +44,16 @@ step :
 
 ### Алгоритм перевірки асертів в селекторах
 
-![criterions.and.assert.png](./Images/criterions.and.asserts.png)
+![criterions.and.assert.png](../../images/criterions.and.asserts.png)
 
 Алгоритм виконує перевірку ресурсів на співпадіння [критеріонів](Criterions.md) - при їх співпадінні, утиліта інкрементує лічильник ресурсів. Після перевірки всіх ресурсів значення лічильника порівнюється з встановленим в ассерті. В випадку неспівпадіння значень утиліта видає повідомлення про помилку.  
 
 ### Використання ассертів
 
-![asserts.png](./Images/asserts.png)
+![asserts.png](../../images/asserts.png)
 
 На рисунку зліва зображено варіант помилкового запису ресурсу. Через [відсутність критеріонів](Criterions.md) в кроці `export.multi` селектор `step::export.*=1` в збірці `build::export` вибере кроки `step::export.single` i `step::export.multi`, що суперечить очікуванню розробника. Завдяки ассерту `=1` помилку буде локалізувано.
 
-![assert.message.png](./Images/assert.message.png)
+![assert.message.png](../../images/assert.message.png)
 
 Повідомлення про помилку в виборі ресурсів для `will-файла` через спрацювання асерта.  

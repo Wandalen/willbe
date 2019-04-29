@@ -27,12 +27,12 @@
 
 ### Приклад файлової структури модуля
 
-![will.file.png](./Images/will.file.png)
+![will.file.png](../../images/will.file.png)
 
 На рисунку приведений список файлів в директорії модуля (вивід команди `ls -al`), прямокутником позначений `will-файл`.
 
 ### Приклад `will-файла`
 
-![will.file.inner.png](./Images/will.file.inner.png)
+![will.file.inner.png](../../images/will.file.inner.png)
 
 Структура `will-файла` та його елементи

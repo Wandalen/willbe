@@ -11,7 +11,7 @@
 
 ### Приклад збірки
 
-![section.build.png](./Images/section.build.png)
+![section.build.png](../../images/section.build.png)
 
 Збірку з назвою `copy.files` має один крок `copy.proto`. Критеріон `default : 1` робить цю збірку збіркою за замовчуванням.
 

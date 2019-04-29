@@ -6,7 +6,7 @@
 
 `Will-файл`, назва якого має вигляд `.will.[розширення]` вважається неіменованим. Через колізію імен в директорії одночасно може знаходитись лише один неіменований `will-файл`, проте кількість іменованих `will-файлів` не обмежена.
 
-![will.file.named.unnamed.png](./Images/will.file.named.unnamed.png)  
+![will.file.named.unnamed.png](../../images/will.file.named.unnamed.png)  
 
 На рисунку показаний вивід команди `ls -al` в директорії модуля з іменованими `will-файлами`.
 
@@ -52,6 +52,6 @@ will .with final.release.will.yml .build release
 
 #### Приклад з двома модулями в одній директорії
 
-![will.file.split.png](./Images/will.file.split.png)
+![will.file.split.png](../../images/will.file.split.png)
 
 Вивід команди `ls -al` в директорії модуля зі сплітом іменованого та сплітом неіменованого `will-файлів`.

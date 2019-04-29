@@ -184,7 +184,7 @@ build :
 <details>
     <summary><u>Лог помилки та <code>will-файл</code></u></summary>
 
-![SelectorWithAssert](./Images/selector.with.assert.png)
+![SelectorWithAssert](../images/selector.with.assert.png)
 
 </details>
 

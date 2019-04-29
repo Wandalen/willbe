@@ -4,7 +4,7 @@
 
 ### Приклад
 
-![section.reflector.png](./Images/section.reflector.png)
+![section.reflector.png](../../images/section.reflector.png)
 
 Приклад секції `reflector` з ресурсом `reflector1`. Рефлектор має два поля: перше вказує на джерело файлів, а друге на директорію призначення. Тобто, рефлектор копіює файли поміщені за шляхом `path::proto` в директорію за шляхом `path::out`.
 
@@ -72,15 +72,15 @@ src:
 
 ### Приклади використання поля `recursive`
 
-![recursive.0.png](./Images/recursive.0.png)
+![recursive.0.png](../../images/recursive.0.png)
 
 При значенні `recursive : 0` буде вибрано лише директорію `proto`, указану в шляху `filePath`.  
 
-![recursive.1.png](./Images/recursive.1.png)
+![recursive.1.png](../../images/recursive.1.png)
 
 При значенні `recursive : 1` буде вибрано директорію `proto` та її вміст, тобто, файл `some_file.will.yml` i директорію `files`.
 
-![recursive.2.png](./Images/recursive.2.png)
+![recursive.2.png](../../images/recursive.2.png)
 
 При значенні `recursive : 2` буде вибрано весь вміст директорії `proto` всіх рівнів вкладеності, включаючи файли в директорії `files` і наступних рівнів за наявності.
 

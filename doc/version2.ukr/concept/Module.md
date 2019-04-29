@@ -8,7 +8,7 @@
 
 ### Приклад `will-файла` модуля
 
-![module.file.png](./Images/module.file.png)
+![module.file.png](../../images/module.file.png)
 
 На рисунку приведений код `will-файла`, номерами і стрілками позначено як його читати.
 
@@ -29,7 +29,7 @@
 
 Для підключення підмодуля в секцію `submodule` `will-файлa`, помістіть ресурс з посиланням на `will-файл` підмодуля.
 
-![supermodule.png](./Images/supermodule.png)
+![supermodule.png](../../images/supermodule.png)
 
 Супермодуль `superModule` використовує підмодуль `Tools`, котрий завантадується з `git+https:///github.com/Wandalen/wTools.git/out/wTools#master`.
 

@@ -112,19 +112,19 @@ View path::url
 <details>
   <summary><u>Вивід текстового редактора</u></summary>
 
-![txt.view.png](./Images/txt.view.png)
+![txt.view.png](../../images/txt.view.png)
 
 </details>
 <details>
   <summary><u>Вивід браузера. HTML-файл</u></summary>
 
-![html.view.png](./Images/html.view.png)
+![html.view.png](../../images/html.view.png)
 
 </details>
 <details>
   <summary><u>Вивід браузера. URI-посилання</u></summary>
 
-![html.view.png](./Images/url.view.png)
+![html.view.png](../../images/url.view.png)
 
 </details>
 
