@@ -126,7 +126,6 @@ function makeNamed( test )
 
   module1.ready.thenKeep( ( arg ) =>
   {
-    debugger;
     test.case = 'opened filePath : ' + assetName;
     check( module1 );
     return null;
@@ -136,7 +135,6 @@ function makeNamed( test )
 
   module1.ready.finallyKeep( ( err, arg ) =>
   {
-    debugger;
     test.case = 'opened filePath : ' + assetName;
     test.is( err === undefined );
     module1.finit();
@@ -221,7 +219,10 @@ function makeNamed( test )
     test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
     // test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.submodules.', 'reflect.submodules.debug' ] );
     test.identical( _.filter( _.mapKeys( module.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug' ] );
-    test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.update', 'submodules.reload', 'submodules.clean', 'clean', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
+
+    // test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.update', 'submodules.reload', 'submodules.clean', 'clean', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
+    let steps = _.select( module.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
+    test.identical( steps, [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [] );
 
@@ -252,7 +253,6 @@ function makeAnon( test )
 
   module1.ready.thenKeep( ( arg ) =>
   {
-    debugger;
     test.case = 'opened filePath : ' + assetName;
     check( module1 );
     return null;
@@ -262,7 +262,6 @@ function makeAnon( test )
 
   module1.ready.finallyKeep( ( err, arg ) =>
   {
-    debugger;
     test.case = 'opened filePath : ' + assetName;
     test.is( err === undefined );
     module1.finit();
@@ -293,7 +292,6 @@ function makeAnon( test )
     throw err;
     return arg;
   });
-
 
   return _.Consequence.AndTake([ module1.ready, module2.ready ])
   .finallyKeep( ( err, arg ) =>
@@ -349,7 +347,10 @@ function makeAnon( test )
     test.identical( _.mapKeys( module.submoduleMap ), [] );
     // test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.proto.', 'reflect.proto.debug' ] );
     test.identical( _.filter( _.mapKeys( module.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.proto.', 'reflect.proto.debug' ] );
-    test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.update', 'submodules.reload', 'submodules.clean', 'clean', 'reflect.proto.', 'reflect.proto.debug', 'reflect.proto.raw', 'reflect.proto.debug.raw', 'export.', 'export.debug' ] );
+
+    let steps = _.select( module.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
+    // test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.update', 'submodules.reload', 'submodules.clean', 'clean', 'reflect.proto.', 'reflect.proto.debug', 'reflect.proto.raw', 'reflect.proto.debug.raw', 'export.', 'export.debug' ] );
+    test.identical( steps, [ 'reflect.proto.', 'reflect.proto.debug', 'reflect.proto.raw', 'reflect.proto.debug.raw', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.buildMap ), [ 'debug.raw', 'debug.compiled', 'release.raw', 'release.compiled', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [] );
 
@@ -475,7 +476,12 @@ function makeOutNamed( test )
     test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
     // test.identical( _.mapKeys( module.reflectorMap ), [ 'predefined.common', 'predefined.debug', 'predefined.release', 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.', 'exportedFiles.export.', 'exported.export.debug', 'exportedFiles.export.debug' ] );
     test.identical( _.filter( _.mapKeys( module.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.', 'exportedFiles.export.', 'exported.export.debug', 'exportedFiles.export.debug' ] );
-    test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.update', 'submodules.reload', 'submodules.clean', 'clean', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug', 'exported.export.', 'exportedFiles.export.', 'exported.export.debug', 'exportedFiles.export.debug' ] );
+    // test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.update', 'submodules.reload', 'submodules.clean', 'clean', 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug', 'exported.export.', 'exportedFiles.export.', 'exported.export.debug', 'exportedFiles.export.debug' ] );
+
+    let steps = _.select( module.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
+    // test.identical( _.filter( _.mapKeys( module.stepMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'timelapse.begin', 'timelapse.end', 'submodules.download', 'submodules.update', 'submodules.reload', 'submodules.clean', 'clean', 'reflect.proto.', 'reflect.proto.debug', 'reflect.proto.raw', 'reflect.proto.debug.raw', 'export.', 'export.debug' ] );
+    test.identical( steps, [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug', 'exported.export.', 'exportedFiles.export.', 'exported.export.debug', 'exportedFiles.export.debug' ] );
+
     test.identical( _.mapKeys( module.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [ 'export.debug', 'export.' ] );
 
@@ -627,7 +633,7 @@ function superResolve( test )
       pathUnwrapping : 0,
       missingAction : 'undefine',
     });
-    test.identical( resolved.length, 13 );
+    test.identical( resolved.length, 14 );
 
     test.case = '*::*a*/nickName';
     var resolved = module.resolve
@@ -638,7 +644,7 @@ function superResolve( test )
       mapValsUnwrapping : 1,
       missingAction : 'undefine',
     });
-    test.identical( resolved, [ 'path::predefined.local', 'path::out.release', 'reflector::predefined.release.v1', 'reflector::predefined.release.v2', 'step::timelapse.begin', 'step::timelapse.end', 'step::predefined.transpile', 'step::submodules.download', 'step::submodules.update', 'step::submodules.reload', 'step::submodules.clean', 'step::clean', 'build::release' ] );
+    test.identical( resolved, [ 'path::predefined.local', 'path::out.release', 'reflector::predefined.release.v1', 'reflector::predefined.release.v2', 'step::timelapse.begin', 'step::timelapse.end', 'step::predefined.transpile', 'step::npm.generate', 'step::submodules.download', 'step::submodules.update', 'step::submodules.reload', 'step::submodules.clean', 'step::clean', 'build::release' ] );
 
     test.case = '*';
     var resolved = module.resolve
@@ -657,7 +663,7 @@ function superResolve( test )
       mapValsUnwrapping : 1,
       pathResolving : 0,
     });
-    test.identical( resolved.length, 41 );
+    test.identical( resolved.length, 42 );
 
     test.case = '* + defaultResourceName';
     var resolved = module.resolve
@@ -886,252 +892,263 @@ function pathsResolve( test )
     var expected = pin([ 'super.out/debug', 'super.out/release' ]);
     test.identical( resolved, expected );
 
+    test.case = '{path::in*=1}/proto, pathNativizing : 1';
+    var resolved = module.resolve({ selector : '{path::in*=1}/proto', pathNativizing : 1, selectorIsPath : 1 })
+    var expected = _.path.nativize( pin( 'proto' ) );
+    test.identical( resolved, expected );
+
+    test.case = '{path::in*=1}/proto, pathNativizing : 1';
+    var resolved = module.resolve({ selector : '{path::in*=1}/proto', pathNativizing : 1, selectorIsPath : 0 })
+    var expected = _.path.nativize( pin( '.' ) ) + '/proto';
+    test.identical( resolved, expected );
+
     return null;
   })
 
-  /* - */
-
-  module.ready.thenKeep( ( arg ) =>
-  {
-
-    test.case = 'path::* - implicit'; /* */
-    var resolved = module.resolve( 'path::*' );
-    // var expected = pin([ [ './super.im.will.yml', './super.ex.will.yml' ], '.', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ]);
-    var expected = pin([ './super.im.will.yml', './super.ex.will.yml', '.', path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ]);
-    var got = resolved;
-    test.identical( got, expected );
-
-    test.case = 'path::* - pu:1 mvu:1 pr:in'; /* */
-    var resolved = module.resolve
-    ({
-      selector : 'path::*',
-      pathUnwrapping : 1,
-      mapValsUnwrapping : 1,
-      arrayFlattening : 0,
-      pathResolving : 'in',
-    });
-    var expected = pin([ [ './super.im.will.yml', './super.ex.will.yml' ], '.', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ] );
-    var got = resolved;
-    test.identical( got, expected );
-
-    test.case = 'path::* - pu:1 mvu:1 pr:out'; /* */
-    var resolved = module.resolve
-    ({
-      selector : 'path::*',
-      pathUnwrapping : 1,
-      mapValsUnwrapping : 1,
-      arrayFlattening : 0,
-      pathResolving : 'out',
-    });
-    var expected = pout([ [ '../super.im.will.yml', '../super.ex.will.yml' ], '..', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', '.', './super.out/debug', './super.out/release' ] );
-    var got = resolved;
-    test.identical( got, expected );
-
-    test.case = 'path::* - pu:1 mvu:1 pr:null'; /* */
-    var resolved = module.resolve
-    ({
-      selector : 'path::*',
-      pathUnwrapping : 1,
-      mapValsUnwrapping : 1,
-      arrayFlattening : 0,
-      pathResolving : null,
-    });
-    var expected = [ pin([ './super.im.will.yml', './super.ex.will.yml' ]), routinePath + '', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ];
-    var got = resolved;
-    test.identical( got, expected );
-
-    test.case = 'path::* - pu:0 mvu:0 pr:null'; /* */
-    var resolved = module.resolve
-    ({
-      selector : 'path::*',
-      pathUnwrapping : 0,
-      mapValsUnwrapping : 0,
-      arrayFlattening : 0,
-      pathResolving : null,
-    });
-    var expected =
-    {
-      'proto' : './proto',
-      'temp' : './super.out',
-      'in' : '.',
-      'out' : './super.out',
-      'out.debug' : './super.out/debug',
-      'out.release' : './super.out/release',
-      'predefined.local' : [],
-      'predefined.remote' : [],
-      'predefined.willbe' : path.join( __dirname, '../will/Exec' ),
-      'predefined.dir' : routinePath + '',
-      'predefined.will.files' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
-    }
-    var got = _.select( resolved, '*/path' );
-    test.identical( got, expected );
-    _.any( resolved, ( e, k ) => test.is( e.identicalWith( module.pathResourceMap[ k ] ) ) );
-    _.any( resolved, ( e, k ) => test.is( e.module === module ) );
-    _.any( resolved, ( e, k ) => test.is( !e.original ) );
-
-    test.case = 'path::* - pu:0 mvu:0 pr:in'; /* */
-    var resolved = module.resolve
-    ({
-      selector : 'path::*',
-      pathUnwrapping : 0,
-      mapValsUnwrapping : 0,
-      pathResolving : 'in',
-    });
-    var expected =
-    {
-      'proto' : pin( './proto' ),
-      'temp' : pin( './super.out' ),
-      'in' : pin( '.' ),
-      'out' : pin( './super.out' ),
-      'out.debug' : pin( './super.out/debug' ),
-      'out.release' : pin( './super.out/release' ),
-      'predefined.local' : [],
-      'predefined.remote' : [],
-      'predefined.willbe' : path.join( __dirname, '../will/Exec' ),
-      'predefined.dir' : routinePath + '',
-      'predefined.will.files' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
-    }
-    var got = _.select( resolved, '*/path' );
-    test.identical( got, expected );
-
-    test.case = 'path::* - pu:0 mvu:0 pr:out'; /* */
-    var resolved = module.resolve
-    ({
-      selector : 'path::*',
-      pathUnwrapping : 0,
-      mapValsUnwrapping : 0,
-      pathResolving : 'out',
-    });
-    var expected =
-    {
-      'proto' : pout( './proto' ),
-      'temp' : pout( './super.out' ),
-      'in' : pout( '.' ),
-      'out' : pout( '.' ),
-      'out.debug' : pout( './super.out/debug' ),
-      'out.release' : pout( './super.out/release' ),
-      'predefined.local' : [],
-      'predefined.remote' : [],
-      'predefined.willbe' : path.join( __dirname, '../will/Exec' ),
-      'predefined.dir' : routinePath + '',
-      'predefined.will.files' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
-    }
-    var got = _.select( resolved, '*/path' );
-    test.identical( got, expected );
-
-    test.case = 'path::* - pu:1 mvu:0 pr:null'; /* */
-    var resolved = module.resolve
-    ({
-      selector : 'path::*',
-      pathUnwrapping : 1,
-      mapValsUnwrapping : 0,
-      pathResolving : null,
-    });
-    var expected =
-    {
-      'proto' : './proto',
-      'temp' : './super.out',
-      'in' : '.',
-      'out' : './super.out',
-      'out.debug' : './super.out/debug',
-      'out.release' : './super.out/release',
-      'predefined.local' : [],
-      'predefined.remote' : [],
-      'predefined.willbe' : path.join( __dirname, '../will/Exec' ),
-      'predefined.dir' : routinePath + '',
-      'predefined.will.files' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
-    }
-    var got = resolved;
-    test.identical( got, expected );
-
-    test.case = 'path::* - pu:1 mvu:0 pr:in'; /* */
-    var resolved = module.resolve
-    ({
-      selector : 'path::*',
-      pathUnwrapping : 1,
-      mapValsUnwrapping : 0,
-      pathResolving : 'in',
-    });
-    var expected =
-    {
-      'proto' : pin( './proto' ),
-      'temp' : pin( './super.out' ),
-      'in' : pin( '.' ),
-      'out' : pin( './super.out' ),
-      'out.debug' : pin( './super.out/debug' ),
-      'out.release' : pin( './super.out/release' ),
-      'predefined.local' : [],
-      'predefined.remote' : [],
-      'predefined.willbe' : path.join( __dirname, '../will/Exec' ),
-      'predefined.dir' : routinePath + '',
-      'predefined.will.files' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
-    }
-    var got = resolved;
-    test.identical( got, expected );
-
-    test.case = 'path::* - pu:1 mvu:0 pr:out'; /* */
-    var resolved = module.resolve
-    ({
-      selector : 'path::*',
-      pathUnwrapping : 1,
-      mapValsUnwrapping : 0,
-      pathResolving : 'out',
-    });
-    var expected =
-    {
-      'proto' : pout( './proto' ),
-      'temp' : pout( './super.out' ),
-      'in' : pout( '.' ),
-      'out' : pout( '.' ),
-      'out.debug' : pout( './super.out/debug' ),
-      'out.release' : pout( './super.out/release' ),
-      'predefined.local' : [],
-      'predefined.remote' : [],
-      'predefined.willbe' : path.join( __dirname, '../will/Exec' ),
-      'predefined.dir' : routinePath + '',
-      'predefined.will.files' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
-    }
-    var got = resolved;
-    test.identical( got, expected );
-
-    test.case = 'path::* - pu:0 mvu:1 pr:null'; /* */
-    var resolved = module.resolve
-    ({
-      selector : 'path::*',
-      pathUnwrapping : 0,
-      mapValsUnwrapping : 1,
-      pathResolving : null,
-    });
-    var expected = [ [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ], routinePath + '', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ];
-    var got = _.select( resolved, '*/path' );
-    test.identical( got, expected );
-
-    test.case = 'path::* - pu:0 mvu:1 pr:in'; /* */
-    var resolved = module.resolve
-    ({
-      selector : 'path::*',
-      pathUnwrapping : 0,
-      mapValsUnwrapping : 1,
-      pathResolving : 'in',
-    });
-    var expected = pin([ [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ], '.', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ]);
-    var got = _.select( resolved, '*/path' );
-    test.identical( got, expected );
-
-    test.case = 'path::* - pu:0 mvu:1 pr:out'; /* */
-    var resolved = module.resolve
-    ({
-      selector : 'path::*',
-      pathUnwrapping : 0,
-      mapValsUnwrapping : 1,
-      pathResolving : 'out',
-    });
-    var expected = pout([ [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ], '..', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', '.', './super.out/debug', './super.out/release' ]);
-    var got = _.select( resolved, '*/path' );
-    test.identical( got, expected );
-
-    return null;
-  });
+  // xxx
+  // /* - */
+  //
+  // module.ready.thenKeep( ( arg ) =>
+  // {
+  //
+  //   test.case = 'path::* - implicit'; /* */
+  //   var resolved = module.resolve( 'path::*' );
+  //   // var expected = pin([ [ './super.im.will.yml', './super.ex.will.yml' ], '.', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ]);
+  //   var expected = pin([ './super.im.will.yml', './super.ex.will.yml', '.', path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ]);
+  //   var got = resolved;
+  //   test.identical( got, expected );
+  //
+  //   test.case = 'path::* - pu:1 mvu:1 pr:in'; /* */
+  //   var resolved = module.resolve
+  //   ({
+  //     selector : 'path::*',
+  //     pathUnwrapping : 1,
+  //     mapValsUnwrapping : 1,
+  //     arrayFlattening : 0,
+  //     pathResolving : 'in',
+  //   });
+  //   var expected = pin([ [ './super.im.will.yml', './super.ex.will.yml' ], '.', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ] );
+  //   var got = resolved;
+  //   test.identical( got, expected );
+  //
+  //   test.case = 'path::* - pu:1 mvu:1 pr:out'; /* */
+  //   var resolved = module.resolve
+  //   ({
+  //     selector : 'path::*',
+  //     pathUnwrapping : 1,
+  //     mapValsUnwrapping : 1,
+  //     arrayFlattening : 0,
+  //     pathResolving : 'out',
+  //   });
+  //   var expected = pout([ [ '../super.im.will.yml', '../super.ex.will.yml' ], '..', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', '.', './super.out/debug', './super.out/release' ] );
+  //   var got = resolved;
+  //   test.identical( got, expected );
+  //
+  //   test.case = 'path::* - pu:1 mvu:1 pr:null'; /* */
+  //   var resolved = module.resolve
+  //   ({
+  //     selector : 'path::*',
+  //     pathUnwrapping : 1,
+  //     mapValsUnwrapping : 1,
+  //     arrayFlattening : 0,
+  //     pathResolving : null,
+  //   });
+  //   var expected = [ pin([ './super.im.will.yml', './super.ex.will.yml' ]), routinePath + '', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ];
+  //   var got = resolved;
+  //   test.identical( got, expected );
+  //
+  //   test.case = 'path::* - pu:0 mvu:0 pr:null'; /* */
+  //   var resolved = module.resolve
+  //   ({
+  //     selector : 'path::*',
+  //     pathUnwrapping : 0,
+  //     mapValsUnwrapping : 0,
+  //     arrayFlattening : 0,
+  //     pathResolving : null,
+  //   });
+  //   var expected =
+  //   {
+  //     'proto' : './proto',
+  //     'temp' : './super.out',
+  //     'in' : '.',
+  //     'out' : './super.out',
+  //     'out.debug' : './super.out/debug',
+  //     'out.release' : './super.out/release',
+  //     'predefined.local' : [],
+  //     'predefined.remote' : [],
+  //     'predefined.willbe' : path.join( __dirname, '../will/Exec' ),
+  //     'predefined.dir' : routinePath + '',
+  //     'predefined.will.files' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
+  //   }
+  //   var got = _.select( resolved, '*/path' );
+  //   test.identical( got, expected );
+  //   _.any( resolved, ( e, k ) => test.is( e.identicalWith( module.pathResourceMap[ k ] ) ) );
+  //   _.any( resolved, ( e, k ) => test.is( e.module === module ) );
+  //   _.any( resolved, ( e, k ) => test.is( !e.original ) );
+  //
+  //   test.case = 'path::* - pu:0 mvu:0 pr:in'; /* */
+  //   var resolved = module.resolve
+  //   ({
+  //     selector : 'path::*',
+  //     pathUnwrapping : 0,
+  //     mapValsUnwrapping : 0,
+  //     pathResolving : 'in',
+  //   });
+  //   var expected =
+  //   {
+  //     'proto' : pin( './proto' ),
+  //     'temp' : pin( './super.out' ),
+  //     'in' : pin( '.' ),
+  //     'out' : pin( './super.out' ),
+  //     'out.debug' : pin( './super.out/debug' ),
+  //     'out.release' : pin( './super.out/release' ),
+  //     'predefined.local' : [],
+  //     'predefined.remote' : [],
+  //     'predefined.willbe' : path.join( __dirname, '../will/Exec' ),
+  //     'predefined.dir' : routinePath + '',
+  //     'predefined.will.files' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
+  //   }
+  //   var got = _.select( resolved, '*/path' );
+  //   test.identical( got, expected );
+  //
+  //   test.case = 'path::* - pu:0 mvu:0 pr:out'; /* */
+  //   var resolved = module.resolve
+  //   ({
+  //     selector : 'path::*',
+  //     pathUnwrapping : 0,
+  //     mapValsUnwrapping : 0,
+  //     pathResolving : 'out',
+  //   });
+  //   var expected =
+  //   {
+  //     'proto' : pout( './proto' ),
+  //     'temp' : pout( './super.out' ),
+  //     'in' : pout( '.' ),
+  //     'out' : pout( '.' ),
+  //     'out.debug' : pout( './super.out/debug' ),
+  //     'out.release' : pout( './super.out/release' ),
+  //     'predefined.local' : [],
+  //     'predefined.remote' : [],
+  //     'predefined.willbe' : path.join( __dirname, '../will/Exec' ),
+  //     'predefined.dir' : routinePath + '',
+  //     'predefined.will.files' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
+  //   }
+  //   var got = _.select( resolved, '*/path' );
+  //   test.identical( got, expected );
+  //
+  //   test.case = 'path::* - pu:1 mvu:0 pr:null'; /* */
+  //   var resolved = module.resolve
+  //   ({
+  //     selector : 'path::*',
+  //     pathUnwrapping : 1,
+  //     mapValsUnwrapping : 0,
+  //     pathResolving : null,
+  //   });
+  //   var expected =
+  //   {
+  //     'proto' : './proto',
+  //     'temp' : './super.out',
+  //     'in' : '.',
+  //     'out' : './super.out',
+  //     'out.debug' : './super.out/debug',
+  //     'out.release' : './super.out/release',
+  //     'predefined.local' : [],
+  //     'predefined.remote' : [],
+  //     'predefined.willbe' : path.join( __dirname, '../will/Exec' ),
+  //     'predefined.dir' : routinePath + '',
+  //     'predefined.will.files' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
+  //   }
+  //   var got = resolved;
+  //   test.identical( got, expected );
+  //
+  //   test.case = 'path::* - pu:1 mvu:0 pr:in'; /* */
+  //   var resolved = module.resolve
+  //   ({
+  //     selector : 'path::*',
+  //     pathUnwrapping : 1,
+  //     mapValsUnwrapping : 0,
+  //     pathResolving : 'in',
+  //   });
+  //   var expected =
+  //   {
+  //     'proto' : pin( './proto' ),
+  //     'temp' : pin( './super.out' ),
+  //     'in' : pin( '.' ),
+  //     'out' : pin( './super.out' ),
+  //     'out.debug' : pin( './super.out/debug' ),
+  //     'out.release' : pin( './super.out/release' ),
+  //     'predefined.local' : [],
+  //     'predefined.remote' : [],
+  //     'predefined.willbe' : path.join( __dirname, '../will/Exec' ),
+  //     'predefined.dir' : routinePath + '',
+  //     'predefined.will.files' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
+  //   }
+  //   var got = resolved;
+  //   test.identical( got, expected );
+  //
+  //   test.case = 'path::* - pu:1 mvu:0 pr:out'; /* */
+  //   var resolved = module.resolve
+  //   ({
+  //     selector : 'path::*',
+  //     pathUnwrapping : 1,
+  //     mapValsUnwrapping : 0,
+  //     pathResolving : 'out',
+  //   });
+  //   var expected =
+  //   {
+  //     'proto' : pout( './proto' ),
+  //     'temp' : pout( './super.out' ),
+  //     'in' : pout( '.' ),
+  //     'out' : pout( '.' ),
+  //     'out.debug' : pout( './super.out/debug' ),
+  //     'out.release' : pout( './super.out/release' ),
+  //     'predefined.local' : [],
+  //     'predefined.remote' : [],
+  //     'predefined.willbe' : path.join( __dirname, '../will/Exec' ),
+  //     'predefined.dir' : routinePath + '',
+  //     'predefined.will.files' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
+  //   }
+  //   var got = resolved;
+  //   test.identical( got, expected );
+  //
+  //   test.case = 'path::* - pu:0 mvu:1 pr:null'; /* */
+  //   var resolved = module.resolve
+  //   ({
+  //     selector : 'path::*',
+  //     pathUnwrapping : 0,
+  //     mapValsUnwrapping : 1,
+  //     pathResolving : null,
+  //   });
+  //   var expected = [ [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ], routinePath + '', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ];
+  //   var got = _.select( resolved, '*/path' );
+  //   test.identical( got, expected );
+  //
+  //   test.case = 'path::* - pu:0 mvu:1 pr:in'; /* */
+  //   var resolved = module.resolve
+  //   ({
+  //     selector : 'path::*',
+  //     pathUnwrapping : 0,
+  //     mapValsUnwrapping : 1,
+  //     pathResolving : 'in',
+  //   });
+  //   var expected = pin([ [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ], '.', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ]);
+  //   var got = _.select( resolved, '*/path' );
+  //   test.identical( got, expected );
+  //
+  //   test.case = 'path::* - pu:0 mvu:1 pr:out'; /* */
+  //   var resolved = module.resolve
+  //   ({
+  //     selector : 'path::*',
+  //     pathUnwrapping : 0,
+  //     mapValsUnwrapping : 1,
+  //     pathResolving : 'out',
+  //   });
+  //   var expected = pout([ [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ], '..', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', '.', './super.out/debug', './super.out/release' ]);
+  //   var got = _.select( resolved, '*/path' );
+  //   test.identical( got, expected );
+  //
+  //   return null;
+  // });
 
   /* - */
 
