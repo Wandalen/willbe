@@ -137,7 +137,7 @@ build :
 
 </details>
 
-В `will-файлі` відсутній крок `transpile.proto`, який вказано в збірці - утиліта генерує вбудовані кроки, яким необхідний рефлектор в оперативну пам'ять. Для цього в рефлекторі указується поле `step` з назвою вбудованого кроку. В рефлекторі `transpile.proto` указано поле `step : predefined.transpile`, відповідно, рефлектор здійснює відбір файлів для транспіляції. Перевірте вивід команди `.steps.list` (в директорії `will-файла`):  
+В `will-файлі` відсутній крок `transpile.proto`, який вказано в збірці - утиліта генерує вбудовані кроки, яким необхідний рефлектор в оперативну пам'ять. Для цього в рефлекторі указується поле `step` з назвою вбудованого кроку. В рефлекторі `transpile.proto` указано поле `step : predefined.transpile`.  
 
 <details>
   <summary><u>Вивід команди <code>will .steps.list</code></u></summary>
@@ -165,11 +165,13 @@ step::transpile.proto.debug
 
 </details>
 
+Перевірте наявні кроки в модулі (команда `will .steps.list` в директорії `will-файла`). 
+
 Кроки сформовані в оперативній пам'яті і не змінили вихідний `will-файл`. Використання автоматичного створення кроків для рефлекторів зменшує об'єм `will-файла`, збільшує швидкість написання, полегшує зчитування інформації.   
 
 ### Побудова модуля. Транспільовані файли
-Для вбудованого кроку `predefined.transpile` в рефлекторі використовується особливий синтаксис для запису транспільованого файла: `'{path::out.*=1}/Main.s'` - в фігурних дужках вказується шлях призначення і через слеш назва файла, який буде створено.
-Проведіть дебаг і реліз-побудови:  
+
+Для вбудованого кроку `predefined.transpile` в рефлекторі використовується особливий синтаксис для запису транспільованого файла: `'{path::out.*=1}/Main.s'` - в фігурних дужках вказується шлях призначення і через слеш назва файла, який буде створено. 
 
 <details>
   <summary><u>Вивід команди <code>will .build transpile.proto.</code></u></summary>
@@ -241,8 +243,9 @@ transpile
 
 </details>
 
-Вивід фраз включає інформацію про кількість файлів з яких побудовано транспільований файл та його розташування, а також, коефіцієнт компресії `# Compression factor`.
-Відкрийте файли `Main.s` з директорій `./out/debug/` i `./out/release/` в текстовому редакторі та порівняйте:  
+Проведіть дебаг і реліз-побудови модуля. Перевірте результати виконанн.
+
+Вивід фраз включає інформацію про кількість файлів з яких побудовано транспільований файл та його розташування, а також, коефіцієнт компресії `# Compression factor`. 
 
 <details>
   <summary><u>Код в <code>Main.s</code> за шляхом <code>./out/debug/</code></u></summary>
@@ -285,11 +288,109 @@ console.log("File1.release.js"), console.log("Sum of 3 and 7 is: " + function su
 
 </details>
 
+Відкрийте згенеровані файли `Main.s` в директоріях `./out/debug/` i `./out/release/` в текстовому редакторі та порівняйте з приведеним вище кодом. 
+
 Утиліта використовує критеріон `debug` як тригер, що визначає форму побудови транспільованого файла. При значенні критеріона `debug : 1`, утиліта формує JavaScript-файл із автопідключаємих функцій, що відділені коментарем `//=====`, де в окремих функціях поміщено код із файлів. При реліз-побудові (`debug : 0`) - код із вихідних файлів утворює рядок з оптимізованих функцій. В даному випадку, утиліта не включила визначення функції `sum` з файла `File1.release.js`  - функція не використовується, а в файлі `File2.release.js` замінила аргумент `sum(3, 7)` на функцію: `function sum(o, e) {  return o + e;}(3, 7)`, оскільки, остання використовується один раз.  
 
-### Підсумок  
+Додатково, можливістю конкатенації керує критеріон `raw`: 
+- `raw : raw` або `raw : 1` - утиліта не виконує конкатенацію, а кладе кожен файл окремо.
+- `raw : compiled` або `raw : 0` - виконується конкатенація декількох файлів в один. Значення за замовчуванням.
+
+<details>
+  <summary><u>Код файла <code>.will.yml</code> з критеріоном <code>raw</code></u></summary>
+
+```yaml
+about :
+
+  name : transpile
+  description : "To use raw criterion"
+  version : 0.0.1
+
+path :
+
+  proto : './proto'
+  in : '.'
+  out : 'out'
+  out.debug:
+    path : './out/debug'
+    criterion :
+      debug : 1
+
+reflector :
+
+  transpile.proto :
+    inherit : predefined.*
+    step : predefined.transpile
+    criterion :
+      debug : 1
+      raw : 1
+    filePath :
+      path::proto : '{path::out.*=1}/Main.s'
+
+build :
+
+  transpile.proto :
+    criterion :
+      default : 1
+      debug : 1
+      raw : 1
+    steps :
+      - transpile.proto*=1
+
+```
+
+</details>
+
+Змініть `will-файл` для виконання конкатенації з критеріоном `raw : 1`. Виконайте побудову та перевірте структуру директорії `out`.
+
+<details>
+  <summary><u>Вивід команди <code>will .build</code></u></summary>
+
+```
+[user@user ~]$ will .build 
+...
+   Building module::transpile / build::transpile.proto
+   # Transpiled 1 file(s) to /path_to_file/out/debug/Main.s/File.experiment.js in 0.267s
+   # Compression factor : 37.0 b / 37.0 b / 55.0 b
+   # Transpiled 1 file(s) to /path_to_file/out/debug/Main.s/File1.debug.js in 0.059s
+   # Compression factor : 71.0 b / 71.0 b / 89.0 b
+   # Transpiled 1 file(s) to /path_to_file/out/debug/Main.s/File2.debug.js in 0.061s
+   # Compression factor : 88.0 b / 88.0 b / 102.0 b
+  Built module::transpile / build::transpile.proto in 12.470s
+
+```
+</details>
+<details>
+  <summary><u>Файлова структура після дебаг-побудови</u></summary>
+
+```
+transpile
+    ├── out
+    │    └── debug
+    │         └── Main.s
+    │               ├── File.experiment.js
+    │               ├── File1.debug.js
+    │               └── File2.debug.js
+    ├── proto
+    │     ├── -Excluded.js
+    │     ├── File1.debug.js
+    │     ├── File1.release.js
+    │     ├── File2.debug.js
+    │     ├── File2.release.js
+    │     └── File.experiment.js
+    └── .will.yml
+
+```
+
+</details>
+
+Таким чином, рефлектор не об'єднав JS файли в один, а скопіював їх в директорію `Main.s`.
+
+### Підсумок 
+
 - Транспіляція в утиліті `willbe` - інструмент для перетворення JavaScript-файлів в єдиний модуль.  
-- Транспіляція проходить за двома сценаріями - відладки і релізу.  
-- При транспіляції за реліз-побудовою утиліта `willbe` оптимізує результуючий код.  
+- Транспіляція проходить за двома сценаріями - конкатенації і транспіляції. Для вибору режиму використовується критеріон `debug`.
+- Конкатенацією керує критеріон `raw`.
+- При транспіляції утиліта `willbe` оптимізує результуючий код.  
 
 [Повернутись до змісту](../README.md#tutorials)
