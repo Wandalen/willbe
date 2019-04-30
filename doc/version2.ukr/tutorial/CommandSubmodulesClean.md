@@ -1,10 +1,74 @@
-# Команди оновлення, апгрейду та очищення підмодулів
+# Команда <code>.submodules.clean</code>
 
-Команди оновлення підмодулів, апгрейду підмодулів автоматизовним перезаписом <code>вілфайла</code> та очищення модуля.
+Команда очищення віддалених підмодулів.
 
-### Команда `.submodules.clean`    
+Команда `.submodules.clean` використовується для видалення віддалених підмодулів з директорією `.module`.
 
-Для видалення підмодулів з директорією `.module` використовуйте команду `will .submodules.clean`.
+### Структура файлів
+
+<details>
+  <summary><u>Файлова структура після видалення підмодулів</u></summary>
+
+```
+ submodulesClean
+          └── .will.yml    
+
+```
+
+</details>
+
+Для дослідження команди створіть структуру файлів вказану вище та внесіть код в `вілфайл`.  
+
+<details>
+    <summary><u>Код файла <code>.will.yml</code></u></summary>
+
+```yaml
+about :
+
+  name : submodulesCommands
+  description : "To test .submodules.clean command"
+
+submodule :
+
+  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+
+```
+</details>
+
+### Використання команди `.submodules.clean`
+
+<details>
+  <summary><u>Вивід команди <code>will .submodules.download</code></u></summary>
+
+```
+[user@user ~]$ will .submodules.download
+...
+   . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
+   + module::Tools version 7db7bd21ac76fc495aae44cc8b1c4474ce5012a4 was downloaded in 16.504s
+   . Read : /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+   + module::PathFundamentals version d95a35b7ef1568df823c12efa5bd5e1f4ceec8b7 was downloaded in 5.986s
+
+```
+
+</details>
+<details>
+  <summary><u>Файлова структура після виконання команди <code>will .submodules.download</code></u></summary>
+
+```
+submodulesCommands
+        ├── .module
+        │      ├── PathFundamentals
+        │      └── Tools
+        └── .will.yml
+
+```
+
+</details>
+
+Для використання команди `.submodulesClean` потрібно мати завантажені підмодулі. Завантажте підмодулі командою `will .submodules.download`. Після виконання побудови, перевірте зміни в директорії `submodulesClean`.
+
+Утиліта створила директорію `.module`, яка містить завантажені віддалені підмодулі.    
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.clean</code></u></summary>
@@ -17,28 +81,24 @@
 ```
 
 </details>
-
 <details>
-  <summary><u>Файлова структура після видалення підмодулів</u></summary>
+  <summary><u>Файлова структура після виконання команди <code>will .submodules.download</code></u></summary>
 
 ```
 submodulesCommands
-        ├── submodulesFixate
-        │           └── .will.yml
-        └── submodulesUpgrade
-                    └── .will.yml    
+        └── .will.yml
 
 ```
 
 </details>
 
-Введіть в директорії `submodulesFixate` команду `will .submodules.clean`.
+Команда `.submodules.clean` видаляє всі завантажені підмодулі разом з директорією `.module`. Введіть команду та перевірте зміни в директорії `submodulesClean`.
+
+Модуль повернувся до початкового стану. `Вілфайл` не змінився.
 
 ### Підсумок
 
-- `Willbe` виконує операції з віддаленими підмодулями з командної оболонки системи.  
-- Команда `.submodules.fixate` -  фіксує версію віддаленого підмодуля, а команда `.submodules.upgrade` оновлює ресурси `вілфайла` до останньої версії віддаленого підмодуля.  
-- Використання команд `.submodules.fixate` i `.submodules.upgrade` разом з командою `.submodules.update`, розділяє оновлення підмодулів на два етапи - оновлення посилань і завантаження підмодулів, що забезпечує безпечне оновлення підмодулів і надійність роботи модуля.   
-- Команда `.submodules.clean` очищає модуль від завантажених підмодулів разом з директорією `.module`.
+- Команда `.submodules.clean` корисна при необхіності очищення модуля від завантажених підмодулів.
+- Команда `.submodules.clean` не змінює `вілфайл`.
 
 [Повернутись до змісту](../README.md#tutorials)
