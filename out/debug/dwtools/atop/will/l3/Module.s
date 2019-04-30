@@ -841,6 +841,44 @@ cleanWhat.defaults =
 
 //
 
+function cleanWhatReport()
+{
+  let module = this;
+  let will = module.will;
+  let logger = will.logger;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  let time = _.timeNow();
+  let filesPath = module.cleanWhat();
+  logger.log();
+
+  if( logger.verbosity >= 4 )
+  logger.log( _.toStr( filesPath[ '/' ], { multiline : 1, wrap : 0, levels : 2 } ) );
+
+  if( logger.verbosity >= 2 )
+  {
+    let details = _.filter( filesPath, ( filesPath, basePath ) =>
+    {
+      if( basePath === '/' )
+      return;
+      if( !filesPath.length )
+      return;
+      return filesPath.length + ' at ' + basePath;
+    });
+    logger.log( _.mapVals( details ).join( '\n' ) );
+  }
+
+  logger.log( 'Clean will delete ' + filesPath[ '/' ].length + ' file(s) in total, found in ' + _.timeSpent( time ) );
+
+  return filesPath;
+
+}
+
+cleanWhatReport.defaults = Object.create( cleanWhat.defaults );
+
+//
+
 function clean()
 {
   let module = this;
@@ -5116,6 +5154,7 @@ let Proto =
   shell,
   hasAnyError,
   cleanWhat,
+  cleanWhatReport,
   clean,
 
   // opener
