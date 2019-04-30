@@ -232,7 +232,7 @@ function commandsMake()
 
     'shell' :                   { e : _.routineJoin( will, will.commandShell ),                 h : 'Execute shell command on the module.' },
     'clean' :                   { e : _.routineJoin( will, will.commandClean ),                 h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
-    'clean what' :              { e : _.routineJoin( will, will.commandCleanWhat ),             h : 'Find out which files will be deleted by clean command.' },
+    // 'clean what' :              { e : _.routineJoin( will, will.commandCleanWhat ),             h : 'Find out which files will be deleted by clean command.' },
     'build' :                   { e : _.routineJoin( will, will.commandBuild ),                 h : 'Build current module with spesified criterion.' },
     'export' :                  { e : _.routineJoin( will, will.commandExport ),                h : 'Export selected the module with spesified criterion. Save output to output file and archive.' },
     'with' :                    { e : _.routineJoin( will, will.commandWith ),                  h : 'Use "with" to select a module.' },
@@ -613,7 +613,6 @@ function commandSubmodulesFixate( e )
 commandSubmodulesFixate.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
-  // upgrading : 'Upgrade already fixated submodules. Default is upgrading:0.',
 }
 
 //
@@ -666,51 +665,64 @@ function commandClean( e )
 {
   let will = this;
 
+  let propertiesMap = _.strToMap( e.argument );
+  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
+
   return will.moduleReadyThenNonForming( function( module )
   {
     let logger = will.logger;
+
+    if( e.propertiesMap.dry )
+    return module.cleanWhatReport();
+    else
     return module.clean();
+
   });
 
 }
 
-// xxx : remove the command, add option dry to command .clean
-
-function commandCleanWhat( e )
+commandClean.commandProperties =
 {
-  let will = this;
-
-  return will.moduleReadyThenNonForming( function( module )
-  {
-    let time = _.timeNow();
-    let filesPath = module.cleanWhat();
-    let logger = will.logger;
-    logger.log();
-
-    if( logger.verbosity >= 4 )
-    logger.log( _.toStr( filesPath[ '/' ], { multiline : 1, wrap : 0, levels : 2 } ) );
-
-    if( logger.verbosity >= 2 )
-    {
-      let details = _.filter( filesPath, ( filesPath, basePath ) =>
-      {
-        if( basePath === '/' )
-        return;
-        if( !filesPath.length )
-        return;
-        // if( filesPath.length === 1 )
-        // return filesPath[ 0 ];
-        return filesPath.length + ' at ' + basePath;
-      });
-      logger.log( _.mapVals( details ).join( '\n' ) );
-    }
-
-    logger.log( 'Clean will delete ' + filesPath[ '/' ].length + ' file(s) in total, found in ' + _.timeSpent( time ) );
-
-    return filesPath;
-  });
-
+  dry : 'Dry run without deleting. Default is dry:0.',
 }
+
+// // xxx : remove the command, add option dry to command .clean
+//
+// function commandCleanWhat( e )
+// {
+//   let will = this;
+//
+//   return will.moduleReadyThenNonForming( function( module )
+//   {
+//     let time = _.timeNow();
+//     let filesPath = module.cleanWhat();
+//     let logger = will.logger;
+//     logger.log();
+//
+//     if( logger.verbosity >= 4 )
+//     logger.log( _.toStr( filesPath[ '/' ], { multiline : 1, wrap : 0, levels : 2 } ) );
+//
+//     if( logger.verbosity >= 2 )
+//     {
+//       let details = _.filter( filesPath, ( filesPath, basePath ) =>
+//       {
+//         if( basePath === '/' )
+//         return;
+//         if( !filesPath.length )
+//         return;
+//         // if( filesPath.length === 1 )
+//         // return filesPath[ 0 ];
+//         return filesPath.length + ' at ' + basePath;
+//       });
+//       logger.log( _.mapVals( details ).join( '\n' ) );
+//     }
+//
+//     logger.log( 'Clean will delete ' + filesPath[ '/' ].length + ' file(s) in total, found in ' + _.timeSpent( time ) );
+//
+//     return filesPath;
+//   });
+//
+// }
 
 //
 
@@ -1008,7 +1020,7 @@ let Extend =
 
   commandShell,
   commandClean,
-  commandCleanWhat,
+  // commandCleanWhat,
   commandBuild,
   commandExport,
 
