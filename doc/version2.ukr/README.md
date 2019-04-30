@@ -212,7 +212,7 @@
 <details><summary><a href="./tutorial/CommandSubmodulesUpgrade.md">
       Команда <code>.submodules.upgrade</code>
   </a></summary>
-  Команда апгрейду підмодулів автоматизовним перезаписом <code>вілфайла</code>.
+  Команда апгрейду версій підмодулів автоматизовним перезаписом <code>вілфайла</code>.
 </details>
 <details><summary><a href="./tutorial/CommandSubmodulesUpdate.md">
       Команда <code>.submodules.update</code>
