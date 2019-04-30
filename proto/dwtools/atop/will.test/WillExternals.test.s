@@ -43,30 +43,6 @@ function onSuiteEnd()
   _.fileProvider.filesDelete( self.tempDir );
 }
 
-/*
-
-  .help - Get help.
-  .list - List information about the current module.
-  .paths.list - List paths of the current module.
-  .submodules.list - List submodules of the current module.
-  .reflectors.list - List avaialable reflectors.
-  .steps.list - List avaialable steps.
-  .builds.list - List avaialable builds.
-  .exports.list - List avaialable exports.
-  .about.list - List descriptive information about the module.
-  .execution.list - List execution scenarios.
-  .submodules.download - Download each submodule if such was not downloaded so far.
-  .submodules.update - Upgrade each submodule, checking for available updates for such.
-  .submodules.clean - Delete all downloaded submodules.
-  .clean - Clean current module. Delete genrated artifacts, temp files and downloaded submodules.
-  .clean.what - Find out which files will be deleted by clean command.
-  .build - Build current module with spesified criterion.
-  .export - Export selected the module with spesified criterion. Save output to output file and archive.
-  .with - Use "with" to select a module.
-  .each - Use "each" to iterate each module in a directory.
-
-*/
-
 //
 
 function singleModuleSimplest( test )
@@ -509,11 +485,11 @@ function singleModuleClean( test )
 
   /* - */
 
-  shell({ execPath : [ '.build', '.clean.what' ] })
+  shell({ execPath : [ '.build', '.clean dry:1' ] })
 
   .thenKeep( ( got ) =>
   {
-    test.case = '.clean.what '
+    test.case = '.clean dry:1'
     test.identical( got[ 0 ].exitCode, 0 );
     test.identical( got[ 1 ].exitCode, 0 );
     test.is( _.strHas( got[ 1 ].output, 'Clean will delete 0 file(s)' ) );
@@ -2909,11 +2885,11 @@ function cleanBroken1( test )
 
   /* - */
 
-  shell({ args : [ '.clean.what' ] })
+  shell({ args : [ '.clean dry:1' ] })
 
   .thenKeep( ( got ) =>
   {
-    test.case = '.clean.what';
+    test.case = '.clean dry:1';
 
     var files = self.find( submodulesPath );
 
@@ -3044,11 +3020,11 @@ function cleanBroken2( test )
 
   /* - */
 
-  shell({ args : [ '.clean.what' ] })
+  shell({ args : [ '.clean dry:1' ] })
 
   .thenKeep( ( got ) =>
   {
-    test.case = '.clean.what';
+    test.case = '.clean dry:1';
 
     var files = self.find( submodulesPath );
 
@@ -3232,11 +3208,11 @@ function cleanWhat( test )
 
   var wasFiles;
 
-  shell({ args : [ '.clean.what' ] })
+  shell({ args : [ '.clean dry:1' ] })
 
   .thenKeep( ( got ) =>
   {
-    test.case = '.clean.what';
+    test.case = '.clean dry:1';
 
     debugger;
     var files = self.find( outPath );
@@ -3892,11 +3868,11 @@ function multipleExportsImport( test )
   ready
   .thenKeep( ( got ) =>
   {
-    test.case = '.with super .clean.what';
+    test.case = '.with super .clean dry:1';
     return null;
   })
 
-  shell({ args : [ '.with super .clean.what' ] })
+  shell({ args : [ '.with super .clean dry:1' ] })
 
   .thenKeep( ( got ) =>
   {
@@ -3964,11 +3940,11 @@ function multipleExportsImport( test )
   ready
   .thenKeep( ( got ) =>
   {
-    test.case = '.with super .clean.what';
+    test.case = '.with super .clean dry:1';
     return null;
   })
 
-  shell({ args : [ '.with super .clean.what' ] })
+  shell({ args : [ '.with super .clean dry:1' ] })
 
   .thenKeep( ( got ) =>
   {
