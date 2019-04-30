@@ -488,7 +488,6 @@ function stepRoutineNpmGenerate( frame )
 
   opts.packagePath = opts.packagePath || '{path::out}/package.json';
 
-  debugger;
   let packagePath = step.resolve
   ({
     selector : opts.packagePath,
@@ -496,12 +495,54 @@ function stepRoutineNpmGenerate( frame )
     pathNativizing : 0,
     selectorIsPath : 1,
   });
-  debugger;
 
   let config = Object.create( null );
-
   config.name = module.about.name;
   config.version = module.about.version;
+  config.enabled = module.about.enabled;
+
+  if( module.about.values.description )
+  config.description = module.about.values.description;
+  if( module.about.values.keywords )
+  config.keywords = module.about.values.keywords;
+  if( module.about.values.license )
+  config.license = module.about.values.license;
+
+  if( module.about.values.interpreters )
+  {
+    let interpreters = _.arrayAs( module.about.values.interpreters );
+    interpreters.forEach( ( interpreter ) =>
+    {
+      if( _.strHas( interpreter, 'node' ) )
+      config.engine = interpreter;
+    });
+  }
+
+  if( module.about.values.author )
+  config.author = module.about.values.author;
+  if( module.about.values.contributors )
+  config.contributors = module.about.values.contributors;
+
+  for( let n in module.about.values )
+  {
+    if( !_.strBegins( n, 'npm.' ) )
+    continue;
+    config[ _.strRemoveBegin( n, 'npm.' ) ] = module.about.values[ n ];
+  }
+
+  if( module.pathMap.repository )
+  config.repository = module.pathMap.repository;
+  if( module.pathMap.bugtracker )
+  config.bugs = module.pathMap.bugtracker;
+  if( module.pathMap.entry )
+  config.entry = module.pathMap.entry;
+
+  for( let n in module.pathMap )
+  {
+    if( !_.strBegins( n, 'npm.' ) )
+    continue;
+    config[ _.strRemoveBegin( n, 'npm.' ) ] = module.pathMap[ n ];
+  }
 
   _.sure( !fileProvider.isDir( packagePath ), () => packagePath + ' is dir, not safe to delete' );
 
@@ -513,6 +554,7 @@ function stepRoutineNpmGenerate( frame )
     verbosity : will.verbosity >= 3 ? 5 : 0,
   });
 
+  debugger;
   return null;
 }
 

@@ -1,7 +1,6 @@
-
 ## Quick start
 
-For quick start [install](<./tutorial/Instalation.md>) utility `willbe`, [get acquainted with](<./tutorial/CLI.md>) command line interface and create the first [module "Hello World"](<./tutorial/HelloWorld.md>). [Read](<./tutorial/Abstract.md>) abstract if you are wondering what is it for and what philosophy is behind utility `willbe`.
+For quick start [install](<./tutorial/Installation.md>) utility `willbe`, [get acquainted with](<./tutorial/CLI.md>) command line interface and create the first [module "Hello World"](<./tutorial/HelloWorld.md>). [Read](<./tutorial/Abstract.md>) abstract if you are wondering what is it for and what philosophy is behind utility `willbe`.
 
 For gentle introduction use tutorials. For getting exhaustive information on one or another aspect use list of concepts to find a concept of interest and get familiar with it.
 
@@ -117,6 +116,13 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   </a></summary>
   Copying files by reflectors, field <code>recursive</code> of reflector.
 </details>
+<details><summary><a href="./tutorial/ReflectorMapPaths.md">
+      Map of the paths. Using globs to filter files
+  </a></summary>
+  Describe algorithm of path forming and explicit copying restrictions.
+
+  How the paths of the reflectors are created and how to manage the access to files and directory in reflector
+</details>
 <details><summary><a href="./tutorial/ReflectorFilters.md">
       Filters of reflector
   </a></summary>
@@ -126,13 +132,6 @@ For gentle introduction use tutorials. For getting exhaustive information on one
       Time filters of reflector
   </a></summary>
   How to use filters to select files by time.
-</details>
-<details><summary><a href="./tutorial/ReflectorFSControl.md">
-      Forming of paths of reflectors. Managing of the files
-  </a></summary>
-  Describe algorithm of path forming and explicit copying restrictions.
-
-  How the paths of the reflectors are created and how to manage the access to files and directory in reflector
 </details>
 <details><summary><a href="./tutorial/ReflectorsPredefined.md">
       Predefined reflectors

@@ -22,6 +22,7 @@ To display the commands of the utility, type `will .` or `will .help`
 
 | Phrase             | Description                                | Command                          |
 |--------------------|--------------------------------------------|----------------------------------|
+<<<<<<< HEAD
 | `.help`            | Display an information about the command   | `will .help .[command]`          |
 | `.set`             | Change the internal state of the utility, for example, the level of verbosity | `will .set [properties] .[command] [argument]`                                   |
 | `.resources.list`  | Display all available information about the current module   | `will .resources.list [resources] [criterion]`  |
