@@ -39,7 +39,7 @@ will .paths.list
 | `.submodules.download` | Завантаження файлів підмодулів на локальну машину  | `will .submodules.download`               |
 | `.submodules.update`  | Оновлення файлів підмодулів на локальній машині  | `will .submodules.update` |
 | `.submodules.fixate`  | Зчитування та перезапис (без завантаження) URI-адрес віддалених підмодулів в `will-файлі` на найновіші URI (останній комміт), не переписує посилання на ті модулі версія яких вказана явно в `will-файлі`. Має опція `dry` зі значенням "0" - виконати перезапис та "1" - зчитати без перезапису | `will .submodules.fixate [dry:1]` |
-| `.submodules.upgrade.refs`  | Зчитування та перезапис (без завантаження) URI-адрес віддалених підмодулів в `will-файлі` на найсвіжіші. Має опцію `dry` зі значенням "0" - виконати перезапис (за замовчуванням) та "1" - зчитати без перезапису | `will .submodules.upgrade.refs [dry:1]` |
+| `.submodules.upgrade`  | Зчитування та перезапис (без завантаження) URI-адрес віддалених підмодулів в `will-файлі` на найсвіжіші. Має опцію `dry` зі значенням "0" - виконати перезапис (за замовчуванням) та "1" - зчитати без перезапису | `will .submodules.upgrade [dry:1]` |
 | `.submodules.clean`    | Видалення всіх завантажених підмодулів разом з директорією `.module`                | `will .submodules.clean`   |
 | `.shell`          | Виконання команди в консолі ОС для поточного модуля                               | `will .shell [command_in_shell]`          |
 | `.clean`          | Очищеня модуля від згенерованих та заватнажених файлів. Видаляються 1) завантажені підмодулі (директорія `.module`); 2) згенеровані `out-will-файл` та архіви; 3) те куди вказує `path::temp`, якщо такий шлях визначений в `will-файлі`                | `will .clean`                             |
@@ -65,7 +65,7 @@ Ambiguity. Did you mean?
   .submodules.download - Download each submodule if such was not downloaded so far.
   .submodules.update - Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.
   .submodules.fixate - Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.
-  .submodules.upgrade.refs - Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.
+  .submodules.upgrade - Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.
 
 ```
 
