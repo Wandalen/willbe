@@ -207,7 +207,7 @@
 <details><summary><a href="./tutorial/CommandSubmodulesFixate.md">
       Команда <code>.submodules.fixate</code>
   </a></summary>
-  Команда встановлення версії підмодулів автоматизовним перезаписом <code>вілфайла</code>..
+  Команда встановлення версії підмодулів в <code>вілфайлі</code> його автоматизовним перезаписом.
 </details>
 <details><summary><a href="./tutorial/CommandSubmodulesUpgrade.md">
       Команда <code>.submodules.upgrade</code>
