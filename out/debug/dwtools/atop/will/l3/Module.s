@@ -1874,6 +1874,7 @@ function _submodulesDownload( o )
         downloadedNumber += 1;
         return arg;
       });
+
     });
 
   }
@@ -1896,6 +1897,7 @@ _submodulesDownload.defaults =
 {
   upgrading : 0,
   forming : 1,
+  recursive : 0,
 }
 
 //
@@ -2567,6 +2569,7 @@ _remoteDownload.defaults =
 {
   upgrading : 0,
   forming : 1,
+  recursive : 0,
 }
 
 //
@@ -3581,8 +3584,10 @@ function resolveContextPrepare( o )
     let currentThis = Object.create( null );
     currentThis.src = [];
     currentThis.dst = [];
+    // debugger;
     let o2 = o.currentThis.optionsForFindGroupExport();
     o2.outputFormat = 'absolute';
+    // debugger;
     let found = fileProvider.filesFindGroups( o2 );
     currentThis.filesGrouped = found.filesGrouped;
     for( let dst in found.filesGrouped )
@@ -5059,6 +5064,7 @@ let Restricts =
   willFileArray : _.define.own([]),
   willFileWithRoleMap : _.define.own({}),
   pathMap : _.define.own({}),
+  allSubmoduleMap : _.define.own({}), // yyy
 
   preformed : 0,
   willFilesFound : 0,
