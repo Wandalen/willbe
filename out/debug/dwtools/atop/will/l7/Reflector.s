@@ -654,9 +654,9 @@ function optionsForFindGroupExport( o )
   result.mandatory = reflector.mandatory;
 
   if( reflector.src )
-  result.fileFilter = reflector.src.clone();
-  result.fileFilter = result.fileFilter || Object.create( null );
-  result.fileFilter.prefixPath = path.s.resolve( module.inPath, result.fileFilter.prefixPath || '.' );
+  result./*fileFilter*/src = reflector.src.clone();
+  result./*fileFilter*/src = result./*fileFilter*/src || Object.create( null );
+  result./*fileFilter*/src.prefixPath = path.s.resolve( module.inPath, result./*fileFilter*/src.prefixPath || '.' );
 
   return result;
 }

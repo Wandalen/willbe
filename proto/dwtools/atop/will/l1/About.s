@@ -124,9 +124,6 @@ let Composes =
   version : null,
   values : null,
 
-  // interpreters : null,
-  // keywords : null,
-
 
 }
 

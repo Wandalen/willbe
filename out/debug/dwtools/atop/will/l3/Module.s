@@ -3755,8 +3755,11 @@ function onSelectorDown()
   {
     let it = this;
     let resource = it.dst;
+    let rop = it.selectMultipleOptions.iteratorExtension.resolveOptions;
 
-    if( !it.selectMultipleOptions.iteratorExtension.resolveOptions.selectorIsPath )
+    if( !rop.selectorIsPath )
+    return;
+    if( !rop.pathNativizing )
     return;
 
     it.dst = _.map( it.dst, ( resource ) =>
@@ -3784,8 +3787,9 @@ function onSelectorDown()
   {
     let it = this;
     let currentModule = it.module;
+    let rop = it.selectMultipleOptions.iteratorExtension.resolveOptions;
     let result = filePath;
-    let will = it.selectMultipleOptions.iteratorExtension.resolveOptions.module.will;
+    let will = rop.module.will;
     _.assert( _.strIs( filePath ) || _.strsAreAll( filePath ) );
     result = will.fileProvider.providersWithProtocolMap.file.path.s.nativize( result );
     return result;
