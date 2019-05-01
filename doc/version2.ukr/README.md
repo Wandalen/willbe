@@ -319,6 +319,11 @@
   </a></summary>
   Використання фільтрів рефлектора для відбору файлів для копіювання.
 </details>
+<details><summary><a href="./tutorial/ReflectorMasks.md">
+      Маски рефлектора
+  </a></summary>
+  Використання масок рефлектора для відбору файлів для копіювання.
+</details>
 <details><summary><a href="./tutorial/ReflectorTimeFilters.md">
       Часові фільтри рефлектора
   </a></summary>

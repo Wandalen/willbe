@@ -4,10 +4,10 @@
 
 З допомогою [мапи шляхів](ReflectorMapPaths.md#) в полі `filePath` здійснюється відбір за іменем файлів. При цьому поле `filePath` може записуватись самостійно, а також бути розділеним між полями фільтрів `src` i `dst`. Проте, рефлектори мають додаткові можливості по відбору файлів - файлові фільтри, які використовуються виключно в полях `src` i `dst`.  
 
-### Початкова конфігурація модуля   
+### Початкова конфігурація    
 
 <details>
-  <summary><u>Структура модуля</u></summary>
+  <summary><u>Структура файлів</u></summary>
 
 ```
 fileFilters
@@ -25,7 +25,7 @@ fileFilters
 
 </details>
 
-Створіть конфігурацію системи для дослідження фільтрів рефлектора.  
+Створіть приведену конфігурацію файлів для дослідження фільтрів рефлектора.  
 
 ### Прості фільтри рефлектора  
 
@@ -136,7 +136,7 @@ fileFilters
 
 </details>
 
-Запустіть реліз-побудову (`will .build.copy`).
+Запустіть реліз-побудову командою `will .build copy.`.
 
 Рефлектор скопіював файли з відповідними назвами, включаючи внутрішню структуру директорії `files` (файли `manual.md` i `tutorial.md`).  
 
@@ -206,7 +206,7 @@ fileFilters
 
 </details>
 
-Запустіть побудову відладки та прогляньте зміни в директоріях `out/`.
+Запустіть побудову відладки командою `will .build copy.debug` та прогляньте зміни в директоріях `out/`.
 
 ##### Фільтр `hasExtension`  
 
@@ -274,121 +274,6 @@ fileFilters
 </details>
 
 Очистіть директорію `out` (`rm -Rf out/`) та запустіть збірку відладки, перевірте вміст в директорії `out/debug`.
-
-### Маски рефлектора
-
-Маски рефлектора здійснюють фільтрування операцій відповідно до виду файлу. Є три групи масок
-- `maskDirectory` - маски директорії, застосовуються лише до директорій;  
-- `maskTerminal` - маски термінальних файлів, застосовуються лише до термінальних (звичайних) файлів, до директорій не застосовуються;
-- `maskAll` - маски, які застосовуються до всіх типів файлів.
-
-В кожній із цих трьох груп масок є такі:  
-`includeAny` - включити в вибірку будь-який елемент з вказаним параметром;  
-`includeAll` - включити в вибірку всі знайдені елементи з вказаним параметром;  
-`excludeAny` - виключити з вибірки будь-який елемент з вказаним параметром;  
-`excludeAll` - виключити з вибірки всі елементи з вказаним параметром.  
-
-В значеннях масок використовуються регулярні вирази JavaScript. Перед регулярним виразом в масці вказується фраза `!!js/regexp`.    
-
-<details>
-  <summary><u>Код файла <code>.will.yml</code> з масками файлових операцій</u></summary>
-
-```yaml
-about :
-  name : maskFilter
-  description : "To use reflector filter"
-  version : 0.0.1
-
-path :
-
-  in : '.'
-  out : 'out'
-  proto : './proto'
-  out.debug :
-    path : './out/debug'
-    criterion :
-      debug : 1
-  out.release :
-    path : './out/release'
-    criterion :
-      debug : 0
-
-reflector :
-
-  reflect.copy.:
-    recursive: 2
-    src:
-      filePath: ./proto
-      maskAll:
-        excludeAll:
-           - !!js/regexp '/\.md$/'
-        includeAll:
-           - !!js/regexp '/\.js$/'
-    dst:
-       filePath: path::out.*=1
-    criterion:
-      debug: [ 0,1 ]
-
-step :
-
-  reflect.copy :
-    inherit : predefined.reflect
-    reflector : reflect.*
-    criterion :
-       debug : [ 0,1 ]
-
-build :
-
-  copy :
-    criterion :
-      debug : [ 0,1 ]
-    steps :
-      - reflect.*
-
-```
-
-</details>
-
-Якщо потрібно включити всі файли з розширенням `.js` та виключити документи з розширенням `.md`, то можна використати маски. Внесіть в `.will.yml` код, що приведений вище.    
-
-<details>
-  <summary><u>Вивід команди <code>will .build copy.</code></u></summary>
-
-```
-[user@user ~]$ will .build copy.
-...
- Building copy.
-   + reflect.copy. reflected 4 files /path_to_file/ : out/release <- proto in 0.390s
-  Built copy. in 0.440s
-
-```
-
-</details>
-<details>
-  <summary><u>Структура модуля після побудови</u></summary>
-
-```
-fileFilters
-     ├── proto
-     │     ├── proto.two
-     │     │     └── script.js
-     │     ├── files
-     │     │     ├── manual.md
-     │     │     └── tutorial.md
-     │     ├── build.txt.js
-     │     └── package.json  
-     ├── out
-     │     └── release
-     │            ├── proto.two
-     │            │     └── script.js
-     │            └── build.txt.js  
-     └── .will.yml       
-
-```
-
-</details>
-
-Видаліть директорію `out` (`rm -Rf out/`). Запустіть реліз-побудову, та перевірте структуру файлів.
 
 ### Підсумок
 

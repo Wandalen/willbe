@@ -411,14 +411,17 @@ A string which has phrase which describes intention of a developer and actions w
 <details><summary><a href="./tutorial/ReflectorMapPaths.md">
       Map of the paths. Using globs to filter files
   </a></summary>
-  Describe algorithm of path forming and explicit copying restrictions.
-
-  How the paths of the reflectors are created and how to manage the access to files and directory in reflector
+  How the paths of the reflectors are created and how to manage the access to files and directory in reflector.
 </details>
 <details><summary><a href="./tutorial/ReflectorFilters.md">
       Filters of reflector
   </a></summary>
   Using filters of reflectors for selection of files for copying.
+</details>
+<details><summary><a href="./tutorial/ReflectorMasks.md">
+      Masks of reflector
+  </a></summary>
+  Using masks of reflectors for selection of files for copying.
 </details>
 <details><summary><a href="./tutorial/ReflectorTimeFilters.md">
       Time filters of reflector
