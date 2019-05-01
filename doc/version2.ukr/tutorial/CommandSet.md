@@ -6,7 +6,7 @@
 
 Команда `.set` призначена для зміни внутрішніх станів (налаштувань) утиліти. Наприклад, `willbe` може встановити параметр `verbosity`, який відповідає за вивід сервісної інформації виконання команди. 
 
-Для використання команди введіть `will .set verbosity:[n] ; [command] [argument]` (в деяких терміналах  ввід з лапками - `will ".set verbosity:[n] ; [command] [argument]"`), де `verbosity` - відповідно, деталізація виводу; `[n]` - число від 0 до 8 яке встановлює ступінь деталізації, 8 - найвищий ступінь; `[command]` - команда для якої виводиться лог; `[argument]` - аргумент команди, якщо він необхідний.  
+Для використання команди введіть `will .set verbosity:[n] ; [command] [argument]` (в деяких терміналах  ввід з лапками - `will ".set verbosity:[n] ; [command] [argument]"`), де `verbosity` - відповідно, деталізація виводу; `[n]` - число від 0 до 9 яке встановлює ступінь деталізації, 9 - найвищий ступінь; `[command]` - команда для якої виводиться лог; `[argument]` - аргумент команди, якщо він необхідний.  
 
 ### Дослідження команди `.set` 
 
@@ -21,7 +21,7 @@ setCommand
 
 </details>
 
-Створіть наступну конфігурацію файлів для дослідження параметру `verbosity`. 
+Створіть приведену конфігурацію файлів для дослідження параметру `verbosity` в команді `.set`. 
 
 <details>
     <summary><u>Код файла <code>.will.yml</code></u></summary>
@@ -70,17 +70,17 @@ build :
 
 </details>
 
-Помістіть в файл `.will.yml` приведений код. 
+Помістіть в файл `.will.yml` код, що приведений вище. 
 
 В `вілфайлі` поміщено два сценарії - один для завантаження підмодулів, а другий - для експорту файлів з директорії підмодуля `PathFundamentals`.  
 
-Запустіть побудову завантаження підмодулів з найвищим рівнем вербальності (`will .set verbosity:8 ; .build`). Порівняйте результати виводу:
+Запустіть побудову завантаження підмодулів з найвищим рівнем вербальності (`will .set verbosity:9 ; .build`). Порівняйте результати виводу:
 
 <details>
-    <summary><u>Вивід команди <code>will .set verbosity:8 ; .build</code></u></summary>
+    <summary><u>Вивід команди <code>will .set verbosity:9 ; .build</code></u></summary>
 
 ```
-[user@user ~]$ will ".set verbosity:8 ; .build"
+[user@user ~]$ will ".set verbosity:9 ; .build"
 Command ".set ; .build"
  s module::/path_to_module/UsingSetCommand preformed 1
  s module::/path_to_module/UsingSetCommand preformed 2
@@ -136,12 +136,12 @@ Found no .out.will file for module::setVerbosity at "/path_to_module/UsingSetCom
   Building submodules.download
      - filesDelete 1 files at /path_to_module/UsingSetCommand/.module/PathFundamentals in 0.017s
  > git clone https://github.com/Wandalen/wPathFundamentals.git/ .
-Клонирование в «.»…
+Cloning into '.'...
  > git checkout master
-Уже на «master»
-Ваша ветка обновлена в соответствии с «origin/master».
+Already on 'master'
+Your branch is up-to-date with 'origin/master'.
  > git merge
-Уже обновлено.
+Already up-to-date.
      + Reflect 92 files /path_to_module/UsingSetCommand/.module/PathFundamentals <- git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master in 3.612s
  s module::PathFundamentals willFilesFound 1
  s module::PathFundamentals willFilesFound 2
@@ -264,7 +264,9 @@ setCommand
 
 ### Підсумок
 
-- Параметр `verbosity` встановлює рівень вербальності виводу консолі - кількість виводу сервісної інформації про виконання команди. Найвищий рівень вербальності - "8", а найнижчий - "0".
+- Параметр `verbosity` встановлює рівень вербальності виводу консолі - кількість виводу сервісної інформації про виконання команди. 
+- Найвищий рівень вербальності - "9". Утиліта виводить максимум сервісної інформації.
+- Найнижчий рівень вербальності - "0". Утиліта не виводить інформацію про побудову.
 - Встановлення параметра `verbosity` корисне при відладці модулів.
   
 [Повернутись до змісту](../README.md#tutorials)
