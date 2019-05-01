@@ -34,15 +34,14 @@ To display the commands of the utility, type `will .` or `will .help`
 | `.about.list`      | Display descriptive infoormation about current module (section `about`)  | `will .about.list`   |
 | `.submodules.download` | Download each submodule if such was not downloaded so far | `will .submodules.download`               |
 | `.submodules.update`   | Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version | `will .submodules.update` |
-| `.submodules.fixate`  | Fixates the submodule version, patching the current submodule paths in `will-file` to the latest versions of the remote submodules, unless a specific version was specified. There is option `dry` with denotation "0" - implement rewriting and "1" - read without rewriting | `will .submodules.fixate [dry:1]` |
+| `.submodules.fixate`  | Fixates the submodule version, patching the current submodule paths in `willfile` to the latest versions of the remote submodules, unless a specific version was specified. There is option `dry` with denotation "0" - implement rewriting and "1" - read without rewriting | `will .submodules.fixate [dry:1]` |
 | `.submodules.upgrade`  | Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version. There is option `dry` with denotation "0" - implement rewriting (by default) and "1" - read without rewriting  | `will .submodules.upgrade.refs [dry:1]` |
 | `.submodules.clean` | Delete all downloaded submodules with the directory `.module` | `will .submodules.clean`   |
 | `.shell`          |  Execute shell command on the module                       | `will .shell [command_in_shell]`          |
-| `.clean`          | Deletion of 3 types of the module out of directory. Command deletes: 1) downloaded submodules (directory `.module`); 2)`out-will-file` and archive; 3) `path::temp` specified directory (if this path is determined in `will-file`)                | `will .clean`                             |
-| `.clean.what`     | Displays list of files, which can be deleted by the command `clean`             | `will .clean.what`                        |
+| `.clean`          | Deletion of 3 types of the module out of directory. Command deletes: 1) downloaded submodules (directory `.module`); 2)`out-willfile` and archive; 3) `path::temp` specified directory (if this path is determined in `willfile`). There is option `dry` with denotation "0" - implement deletion (by default) and "1" - display information about the files to be deleted | `will .clean [dry:1]` |
 | `.build`          | Construction of the module according to specified build                          | `will .build [scenario]`                  |
 | `.export`         | Exports the module for use it with its other modules      | `will .export [scenario]`                 |
-| `.with`           | Select the current module by the name of its `will-files` | `will .with [will-file] [command] [argument]`                         |
+| `.with`           | Select the current module by the name of its `willfiles` | `will .with [willfile] [command] [argument]`                         |
 | `.each`           | Implementation of specified command for each module in the directory         | `will .each .[command]`                   |
 
 ### Incomplete command entry

@@ -1,6 +1,6 @@
-# Split <code>will-files</code>
+# Split <code>willfiles</code>
 
-How to create and use a module with split <code>will-fileми</code>.
+How to create and use a module with split <code>willfileми</code>.
 
 ### Поняття розділених `will-файлів`
 Розділення етапів роботи - практика, яка дозволяє підвищити ефективність і якість виконання завдань. Побудова модуля і його експорт, також різні етапи побудови тому, утиліта `willbe` дозволяє працювати над ними окремо - з допомогою розділених `will-файлів`.  
@@ -118,7 +118,7 @@ build :
 ```
 [user@user ~]$ will .build 
 ...
-. Read 2 will-files in 0.123s
+. Read 2 willfiles in 0.123s
 ...
   Building module::splited-config / build::install
  > npm install 
@@ -158,10 +158,10 @@ split
 ```
 [user@user ~]$ will .export
 ...
- . Read 2 will-files in 0.131s
+ . Read 2 willfiles in 0.131s
 
   Exporting module::splited-config / build::export
-   + Write out will-file /path_to_files/out/splited-config.out.will.yml
+   + Write out willfile /path_to_files/out/splited-config.out.will.yml
    + Exported export with 48 files in 2.108s
   Exported module::splited-config / build::export in 2.155s
 

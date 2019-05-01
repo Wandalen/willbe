@@ -150,9 +150,9 @@ Move files from the `path::filesFrom` and place them in `{path :: filesTo}/file.
 
 ### Predefined step `predefined.export`  
 
-Designed for a special type of module construction - export. The result of the construction is the generated `out-will-file` and , optionally, the archive with the exported files.  
+Designed for a special type of module construction - export. The result of the construction is the generated `out-willfile` and , optionally, the archive with the exported files.  
 
-The generated `out-will-file` contains the complete information about the module and the exported files, the list of the exported files, version and so on.
+The generated `out-willfile` contains the complete information about the module and the exported files, the list of the exported files, version and so on.
 
 The `predefined.export` step has the fields:
 - export - specify the paths to files for export. The reflector can be specified. Unique field of this step

@@ -2,7 +2,7 @@
 
 The section contains the information about the submodules.
 
-Submodule is an individual module with its own configuration <code>will-file</code>, which is subordinated to another module.
+Submodule is an individual module with its own configuration <code>willfile</code>, which is subordinated to another module.
 
 ### Example
 

@@ -1,6 +1,6 @@
 # Section <code>exported</code>
 
-The <code>out-will-file</code> section is programmatically generated when the module is exported. It contains the list of all exported files and is used by the importation of this module by another one.
+The <code>out-willfile</code> section is programmatically generated when the module is exported. It contains the list of all exported files and is used by the importation of this module by another one.
 
 ### Example
 
@@ -34,7 +34,7 @@ exported:
     originalWillFilesPath: 'path::original.will.files'
 ```
 
-The `exported` section with two `export` and`export.debug` resources are generated during the export of this module. `exported` resources contain links to the list of files, the original `will-file` and the base directory in which the files are located.
+The `exported` section with two `export` and`export.debug` resources are generated during the export of this module. `exported` resources contain links to the list of files, the original `willfile` and the base directory in which the files are located.
 
 ```yml
 path :
@@ -57,5 +57,5 @@ The list of exported files looks like this. All paths are relative to `path::in`
 | exportedFilesReflector   | reflector for a list of all exported files  |  
 | exportedDirPath          | path to directory with exported files        |
 | exportedFilesPath        | path with a list of all exported files       |
-| originalWillFilesPath    | the path to the original `will-file` of this module  |
+| originalWillFilesPath    | the path to the original `willfile` of this module  |
 | archiveFilePath          | the path to the archive with exported module files   |

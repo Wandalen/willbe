@@ -184,7 +184,7 @@ build :
 <details>
     <summary><u>Лог помилки та <code>will-файл</code></u></summary>
 
-![SelectorWithAssert](../../images/selector.with.assert.png)
+![SelectorWithAssert](../.../../images/selector.with.assert.png)
 
 </details>
 
@@ -245,7 +245,7 @@ build :
 [user@user ~]$ will .export export.debug.first
 ...
 Exporting export.debug.first
-   + Write out will-file /path_to_file/out/assertsTesting.out.will.yml
+   + Write out willfile /path_to_file/out/assertsTesting.out.will.yml
    + Exported export.debug.first with 1 files in 1.455s
   Exported export.debug.first in 1.513s
 

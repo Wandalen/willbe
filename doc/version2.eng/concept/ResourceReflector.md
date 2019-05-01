@@ -4,7 +4,7 @@ It is a resource of the <code>reflector</code> section. It is the method to desc
 
 ### Example
 
-![section.reflector.png](./Images/section.reflector.png)
+![section.reflector.png](../../images/section.reflector.png)
 
 An example of a `reflector` section with a `reflector1` resource. The reflector has two fields. First of them specifies the source of the files and second specifies the destination directory. That means that reflector copies files placed by path `path::proto` in the directory by path `path::out`.
 
@@ -72,15 +72,15 @@ The `recursive` field accepts three possible values:
 
 ###  Examples of `recursive` field using
 
-![recursive.0.png](./Images/recursive.0.png)
+![recursive.0.png](../../images/recursive.0.png)
 
 When `recursive: 0` is used, only the `proto` directory specified in the path `filePath` will be selected.
 
-![recursive.1.png](./Images/recursive.1.png)
+![recursive.1.png](../../images/recursive.1.png)
 
 When `recursive: 1` is used, the `proto` directory and its contents will be selected. It means that the file `some_file.will.yml` and the` files` directory will be chosen.
 
-![recursive.2.png](./Images/recursive.2.png)
+![recursive.2.png](../../images/recursive.2.png)
 
 By the value `recursive: 2`, all the contents of the` proto` directory of all levels of the nesting will be selected, including files in the `files` directory and the available next levels.
 

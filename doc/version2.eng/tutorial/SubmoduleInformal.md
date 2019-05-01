@@ -143,7 +143,7 @@ Command ".build"
  . Read : /path_to_file/.will.yml
  ! Failed to read submodule::Tools, try to download it with .submodules.download or even .clean it before downloading
  ! Failed to read submodule::Color, try to download it with .submodules.download or even .clean it before downloading
- . Read 1 will-files in 1.987s
+ . Read 1 willfiles in 1.987s
 
   Building module::informalSubmodule / build::make.informal
      . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
@@ -154,11 +154,11 @@ Command ".each module .export"
 
 Module at /path_to_file/module/Color.informal.will.yml
  . Read : /path_to_file/module/Color.informal.will.yml
- . Read 1 will-files in 0.566s
+ . Read 1 willfiles in 0.566s
 
     Exporting module::Color.informal / build::export
      + download.informal reflected 71 files :/// : path_to_file/.module/Color <- git+https://github.com/Wandalen/wColor.git in 3.652s
-     + Write out will-file /path_to_file/out/Color.informal.out.will.yml
+     + Write out willfile /path_to_file/out/Color.informal.out.will.yml
      + Exported export with 8 files in 1.524s
     Exported module::Color.informal / build::export in 5.243s
 

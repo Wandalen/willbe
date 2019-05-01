@@ -15,7 +15,7 @@ A module with respect to which the operations are performed. By default, this mo
 └── super.will.yml
  ```
 
-  In order to make the current module the module with the named `will-file`, please execute the command `.with`. Do not forget to specify the name of the corresponding `will-file`. For instance by the implementation
+  In order to make the current module the module with the named `willfile`, please execute the command `.with`. Do not forget to specify the name of the corresponding `willfile`. For instance by the implementation
   ```
   will .with second .build
   ```
@@ -27,4 +27,4 @@ A module with respect to which the operations are performed. By default, this mo
    ```
   This command will build each module in the current directory.
 
-  Named `will-file` is not possible to make the current `will-file` without using the `.with` or `.each` commands.
+  Named `willfile` is not possible to make the current `willfile` without using the `.with` or `.each` commands.

@@ -2,9 +2,9 @@
 
 Creating module "Hello, World!". Downloading of remote submodule.
 
-### Properties of `will-file`
+### Properties of `willfile`
 
-`Will-file` is a configuration file for building a modular system by utility `willbe`. It has its own [attributes](WillFile.md).
+`willfile` is a configuration file for building a modular system by utility `willbe`. It has its own [attributes](WillFile.md).
 
 ### First module
 
@@ -46,7 +46,7 @@ Copy the specified code into the `.will.yml` file.
 [user@user ~]$ will .about.list
 Command ".about.list"
   . Read : /path_to_file/.will.yml
-. Read 1 will-files in 0.109s
+. Read 1 willfiles in 0.109s
 About
  name : 'helloWorld'
  description : 'Hello, World!'
@@ -98,7 +98,7 @@ submodule :
 
 </details>
 
-Add the ready submodule. Use the remote module on `git+https:///github.com/Wandalen/wTools.git/out/wTools` by adding it to `submodule` section of the ` will-file`.
+Add the ready submodule. Use the remote module on `git+https:///github.com/Wandalen/wTools.git/out/wTools` by adding it to `submodule` section of the ` willfile`.
 
 <details>
   <summary><u>Command output<code>will .submodules.list</code></u></summary>

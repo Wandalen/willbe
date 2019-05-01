@@ -1,6 +1,6 @@
-# Minimization of <code>will-file</code>
+# Minimization of <code>willfile</code>
 
-How to minimize <code>will-file</code> with help of instantiation of sets of criterions.
+How to minimize <code>willfile</code> with help of instantiation of sets of criterions.
 
 Зручність роботи з `will-файлом` залежить від його об'єму - чим він менший, тим легше. Тому, використовується скорочена форма запису ресурсів, ґлоби, а також, критеріони. Скорочена форма запису ресурсів і ґлоби зменшують `will-файл`, а критеріони можуть навіть збільшити об'єм. Тож, час дізнатись як користуватись розгортанням ресурсів з критеріонами для мінімізації `will-файла`.   
 
@@ -30,7 +30,7 @@ minimize
 about :
 
   name : willFileMinimizing
-  description : "To minimize will-file by short write form of criterions"
+  description : "To minimize willfile by short write form of criterions"
   version : 0.0.1
 
 path :

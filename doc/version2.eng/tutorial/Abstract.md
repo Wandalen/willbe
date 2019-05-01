@@ -12,9 +12,9 @@ Utility `willbe` is cross-platform. It hides differences between platforms makin
 
 A loose definition of concept module imposes minimum restrictions on development and application of the utility. Any set of files could be treated as a module.
 
-`Will-file` has comfortable to read format which encourages a developer to stick to the best practices. For example, `will-file` has section `path`, developer collects all the paths ( local and remote files ) in one place, what gives to teammates clear look at the module from the perspective of files.
+`willfile` has comfortable to read format which encourages a developer to stick to the best practices. For example, `willfile` has section `path`, developer collects all the paths ( local and remote files ) in one place, what gives to teammates clear look at the module from the perspective of files.
 
-Declarative programming paradigm is heavily used in `will-files`.
+Declarative programming paradigm is heavily used in `willfiles`.
 
 ### What `willbe` is not
 
