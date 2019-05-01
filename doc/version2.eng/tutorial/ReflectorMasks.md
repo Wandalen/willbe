@@ -121,9 +121,22 @@ build :
 ```
 [user@user ~]$ will .build copy.
 ...
- Building copy.
+ Building module::maskFilter / build::copy.
    + reflect.copy. reflected 4 files /path_to_file/ : out/release <- proto in 0.390s
-  Built copy. in 0.440s
+  Built module::maskFilter / build::copy. in 0.440s
+
+```
+
+</details>
+<details>
+  <summary><u>Вивід команди <code>will .build copy.debug</code></u></summary>
+
+```
+[user@user ~]$ will .build copy.debug
+...
+ Building module::maskFilter / build::copy.debug
+   + reflect.copy.debug reflected 6 files /path_to_file/ : out/debug <- proto in 0.625s
+  Built module::maskFilter / build::copy.debug in 0.701s
 
 ```
 
