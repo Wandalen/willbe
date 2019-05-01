@@ -304,10 +304,24 @@ A string which has phrase which describes intention of a developer and actions w
   </a></summary>
   Creating module "Hello, World!". Downloading of remoted submodule.
 </details>
-<details><summary><a href="./tutorial/CommandsSubmodules.md">
-      Commands of updating, upgrading and cleaning of submodules
-       </a></summary>     
-   Commands of updating files of submodules, upgrading submodules rewriting <code>willfile</code> automatically and cleaning of submodules.
+<details><summary><a href="./tutorial/CommandSubmodulesFixate.md">
+      Command <code>.submodules.fixate</code>
+  </a></summary>
+  The command to fixate the submodule version in <code>willfile</code> using its automated overwriting.</details>
+<details><summary><a href="./tutorial/CommandSubmodulesUpgrade.md">
+      Command <code>.submodules.upgrade</code>
+  </a></summary>
+  The command to upgrade the version of the submodules using the automated overwriting of the <code>willfile</code>.
+</details>
+<details><summary><a href="./tutorial/CommandSubmodulesUpdate.md">
+      Command <code>.submodules.update</code>
+  </a></summary>
+  Command to update remote submodules.
+</details>
+<details><summary><a href="./tutorial/CommandSubmodulesClean">
+      Command <code>.submodules.clean</code>
+  </a></summary>
+  Command to clean remote submodules.
 </details>
 <details><summary><a href="./tutorial/Build.md">
       Module building by command <code>.build</code>
