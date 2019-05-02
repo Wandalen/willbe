@@ -1,0 +1,37 @@
+about :
+
+  name : 'platformChoice'
+  description : 'Building a module that depends on platform'
+
+path :
+
+  proto : proto
+  out : out
+  windows.os :
+    path : '{path::out}/windows'
+    criterion :
+      os : 'windows'
+  posix.os :
+    path : '{path::out}/posix'
+    criterion :
+      os : 'posix'
+  osx.os :
+    path : '{path::out}/osx'
+    criterion :
+      os : 'osx'
+
+reflector :
+
+  copy :
+    criterion :
+      os : 'f::os'
+    filePath :
+      'path::proto' : 'path::*.os'
+
+build :
+
+  build :
+    criterion :
+      default : 1
+    steps :
+      - step::copy

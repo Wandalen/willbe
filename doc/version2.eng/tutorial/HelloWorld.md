@@ -184,7 +184,7 @@ submodule::Tools
 
 </details>
 
-Check the status of the submodule after it is loaded.
+Check the status of the submodule after it is downloaded.
 
 Pay attention to the line `submodule::Tools`, which represents the submodule of the section. Console output of resources has form `Section name::Name of the resource`.
 

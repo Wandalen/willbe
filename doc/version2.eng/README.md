@@ -469,3 +469,13 @@ A string which has phrase which describes intention of a developer and actions w
   </a></summary>
   Using of the command <code>.clean</code> for cleaning generated and temporary files.
 </details>
+<details><summary><a href="./tutorial/FunctionPlatform.md">
+      Building platform dependent modules
+  </a></summary>
+  Using the operating system determination to build platform dependent modules.
+</details>
+<details><summary><a href="./tutorial/FunctionStringJoin.md">
+      Processing an array of string values in the resources of <code>wilfile</code>
+  </a></summary>
+  How to use the function of working with an array of string values in resources of <code>willfile</code>.
+</details>
