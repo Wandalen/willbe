@@ -27,11 +27,16 @@ reflector :
       os : 'f::os'
     filePath :
       'path::proto' : 'path::*.os'
+step :
+
+  echo.os :
+    shell : echo {f::os}
 
 build :
 
-  build :
+  copy.on.platform :
     criterion :
       default : 1
     steps :
+      - step::echo.os
       - step::copy
