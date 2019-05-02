@@ -40,7 +40,7 @@ about :
 Copy the specified code into the `.will.yml` file.
 
 <details>
-  <summary><u>Command output   <code>will .about.list</code></u></summary>
+  <summary><u>Command output <code>will .about.list</code></u></summary>
 
   ```
 [user@user ~]$ will .about.list

@@ -307,7 +307,8 @@ A string which has phrase which describes intention of a developer and actions w
 <details><summary><a href="./tutorial/CommandSubmodulesFixate.md">
       Command <code>.submodules.fixate</code>
   </a></summary>
-  The command to fixate the submodule version in <code>willfile</code> using its automated overwriting.</details>
+  The command to fixate the submodule version in <code>willfile</code> using its automated overwriting.
+</details>
 <details><summary><a href="./tutorial/CommandSubmodulesUpgrade.md">
       Command <code>.submodules.upgrade</code>
   </a></summary>

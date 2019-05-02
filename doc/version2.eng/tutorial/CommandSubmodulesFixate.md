@@ -1,17 +1,17 @@
-# Команда <code>.submodules.fixate</code>
+# Command <code>.submodules.fixate</code>
 
-Команда встановлення версії підмодулів в <code>вілфайлі</code> його автоматизовним перезаписом.
+The command to fixate the submodule version in <code>willfile</code> using its automated overwriting.
 
-Стабільність роботи модуля з віддаленими підмодулями залежить від якості останніх. Оновлення віддалених підмодулів може призвести до поломки або нестабільного функціонування модуля. Дл уникнення такої проблеми при розробці та супровождженню зафіксуйте версії підмодулів командою `.submodules.fixate`.
+Stability of the module with remote submodules depends on the quality of the submodules. Updating remote submodules may cause the module to fail or become unstable. To avoid this problem during development and support, fixate the submodule versions with the command `. submodules. fixate`.
 
-Команда призначена для автоматизованого перезапису URI-адрес віддалених підмодулів  в `вілфайлі` на URI найновіших версій підмодулів. При цьому завантаження файлів цих підмодулів автоматично не відбувається. Команда `.submodules.fixate` переписує лише ті підмодулі, для яких явно не вказана версія (коміт).
+The command is intended for automated overwriting of current URI links of remote submodules in `willfile`. The command changes the current URIs to the most recent versions of submodule URIs. At the same time, downloading files of these submodules do not automatically occur. The command `.submodules.fixate` overwrites only those submodules for which the version (commit) is explicitly not specified.
 
-Команда має опцію `dry` для ввімкнення перезапису `вілфайла`, яка приймає значення `0` i `1`. При `dry:0` команда здійснює перезапис URI-посилань. При значенні `dry:1` команда `will .submodules.fixate dry:1` виконує всі операцію, виводить список доступних оновлень не змінюючи, при цьому, `вілфайл`. Ззначення за замовчуванням `dry:0`.
+The command has the option `dry` to enable overwriting of the `willfile`. It takes the value `0` i` 1`. At `dry:0` the command overwrite URI-links. At `dry:1` the command `will. submodules. fixate dry:1` performs all the operation and displays the list of available updates without changing `willfile`. The default value is `dry:0`.
 
-### Структура файлів
+### File structure
 
 <details>
-  <summary><u>Файлова структура</u></summary>
+  <summary><u>File structure</u></summary>
 
 ```
 submodulesFixate
@@ -21,10 +21,10 @@ submodulesFixate
 
 </details>
 
-Для дослідження команди створіть модуль з вказаною структурою файлів та внесіть код в `вілфайл`.
+To test the command, create a module with the specified file structure and enter the code in the `willfile`.
 
 <details>
-    <summary><u>Код файла <code>.will.yml</code></u></summary>
+    <summary><u>Code of file <code>.will.yml</code></u></summary>
 
 ```yaml
 about :
@@ -41,10 +41,10 @@ submodule :
 ```
 </details>
 
-### Використання команди `.submodules.fixate`
+### Command `.submodules.fixate` using
 
 <details>
-  <summary><u>Вивід команди <code>will .submodules.fixate dry:1</code></u></summary>
+  <summary><u>Command output<code>will .submodules.fixate dry:1</code></u></summary>
 
 ```
 [user@user ~]$ will .submodules.fixate dry:1
@@ -63,14 +63,14 @@ Remote path of module::submodulesCommands / module::Files will be fixated
 
 </details>
 
-Перейдіть в директорію `submodulesFixate` та виконайте пошук оновлень для підмодулів командою `.submodules.fixate` з опцією `dry:1`.
+Navigate to the `submodulesFixate` directory and find the updates for the submodules with `.submodules.fixate` command using the `dry: 1` option.
 
-Перезапису URI-посилань підмодулів не відбувався, файл `.will.yml` залишився без змін, а на консоль було виведено перелік підмодулів із найновішими із доступних версій.
+Overwriting of submodule URI links did not occur, file `.will.yml` remained unchanged, and the console showed the list of submodules with the latest available versions.
 
-Вивід має три рядочки із словами`will be fixated`. В наявності є новіші версії для всіх троьох підмодулів. При виконанні комадни `will .submodules.fixate` із `dry:0` вілфайл буде перезаписано цими версіями.
+The command output has three rows with the words `will be fixated`. There are more recent versions available for all three submodules. The `willfile` will be overwritten by these versions when the `will .submodules.fixate dry:0` command will be executed.
 
 <details>
-  <summary><u>Секція <code>submodule</code> зі змінами в підмодулі <code>Tools</code></u></summary>
+  <summary><u>Section <code>submodule</code> with changes in <code>Tools</code> submodule</u></summary>
 
 ```yaml    
 submodule :
@@ -83,10 +83,10 @@ submodule :
 
 </details>
 
-Відкрийте файл `.will.yml` та змініть ресурс `Tools` на приведений вище.
+Open the file `.will.yml` and change the resource `Tools` on the above.
 
 <details>
-  <summary><u>Вивід команди <code>will .submodules.fixate</code></u></summary>
+  <summary><u>Command output <code>will .submodules.fixate</code></u></summary>
 
 ```
 [user@user ~]$ will .submodules.fixate
@@ -102,21 +102,21 @@ Remote path of module::submodulesCommands / module::Files fixated
 
 </details>
 
-Застосуйте команду `.submodules.fixate` без аргументів.
+Enter the command `.submodules.fixate` without arguments.
 
-Утиліта замінила версії підмодулів в `вілфайлі`. При цьому команда `.submodules.fixate` не замінила підмодуль `Tools`, для якого явно вказано версію.
+Utility replaced versions of submodules in `wilfile`. At the time, command `.submodules.fixate` did not replace the `Tools` submodule for which the version is explicitly specified.
 
-Використовуйте команду `.submodules.fixate` перед побудовою модуля або одразу після. Це зафіксує версії підмодулів. Вихід наступних версій підмодулів не зможе зламати роботу модуля, а розробник матиме змогу оновити їх в зручний момент.
+Use the command `.submodules.fixate` before building the module or immediately after. It fixates the version of submodules. The release of subsequent versions of submodules cannot break the module's work, and the developer will be able to update them at a convenient time.
 
-Для перезапису URI-посилань підмодулів на найновіші, незалежно від того чи була вказано версія підмодуля, використовується [команду `.submodules.upgrade`](CommandSubmodulesUpgrade.md), для завантаження файлів використовується [команда `.submodules.update`](CommandSubmodulesUpdate.md).
+To overwrite URI links of submodules to the most recent ones, regardless of whether the version of the submodule was specified, the [command `.submodules.upgrade`](CommandSubmodulesUpgrade .md)  is used, to download the submodule files [the command `.submodules.update`](CommandSubmodulesUpdate .md) is used.
 
-### Підсумок
+### Summary
 
-- Команда `.submodules.fixate` забезпечує стабільність роботи модуля з віддаленими підмодулями.
-- Команда `.submodules.fixate` призначена для перезапису URI-посилань підмодулів.  
-- Команда `.submodules.fixate` автоматично змінює вміст `вілфайла` для розробника.
-- Команда `.submodules.fixate` не здійснює завантаження файлів підмодулів.
-- Команда `.submodules.fixate` не змінює посилання в яких явно вказано версію (коміт).
-- Команду `.submodules.fixate` краще використовувати перед побудовою модуля або одразу після. Таким чином фіксуються версії віддалених підмодулів на момент побудови і забезпечується надійна робота модуля.
+- Command `.submodules.fixate` ensures the stability of the module with remote submodules.
+- Command `.submodules.fixate` designed to overwrite the URI-links of submodules.  
+- Command `.submodules.fixate` automatically changes the contents of `willfile` for the developer.
+- Command `.submodules.fixate` does not download the files of submodules.
+- Command `.submodules.fixate` does not change the links with the explicitly specified version (commit).
+- Command `.submodules.fixate` is better to use before the building of the module or immediately after. Thus, version remote submodule fixates at the time of building and ensures reliable work of module.
 
-[Повернутись до змісту](../README.md#tutorials)
+[Return to content](../README.md#tutorials)
