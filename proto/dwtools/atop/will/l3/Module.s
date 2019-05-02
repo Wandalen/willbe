@@ -29,14 +29,18 @@ function finit()
   let module = this;
   let will = module.will;
 
-  if( module.associatedSubmodule )
+  module.associatedSubmodules.forEach( ( submodule ) =>
   {
-    _.assert( module.associatedSubmodule.loadedModule === module );
-    module.associatedSubmodule.loadedModule = null;
-    module.associatedSubmodule.finit();
-    module.associatedSubmodule = null;
-  }
+    debugger;
+    _.assert( submodule.loadedModule === module );
+    submodule.finit();
+    // _.assert( submodule === null );
+    // module.associatedSubmodule.loadedModule = null;
+    // _.assert( module.associatedSubmodule.loadedModule === null );
+    // module.associatedSubmodule = null;
+  });
 
+  debugger;
   module.unform();
   module.about.finit();
   module.execution.finit();
@@ -50,6 +54,7 @@ function finit()
   _.assert( Object.keys( module.reflectorMap ).length === 0 );
   _.assert( Object.keys( module.pathResourceMap ).length === 0 );
   _.assert( Object.keys( module.submoduleMap ).length === 0 );
+  _.assert( Object.keys( module.allSubmoduleMap ).length === 0 );
 
   _.assert( module.willFileArray.length === 0 );
   _.assert( Object.keys( module.willFileWithRoleMap ).length === 0 );
@@ -1035,34 +1040,23 @@ function close()
   _.assert( Object.keys( module.willFileWithRoleMap ).length === 0 );
   _.assert( will.moduleMap[ module.remotePath ] === undefined );
 
-  // if( module.resourcesFormReady.errorsCount() || module.ready.errorsCount() )
-  // {
-  //
-  //   module.stateResetError();
-  //
-  // }
-  // else
-  {
+  // module.preformed = 0;
+  // module.preformRady.resourcesCancel();
 
-    // module.preformed = 0;
-    // module.preformRady.resourcesCancel();
+  module.willFilesFound = 0;
+  module.willFilesFindReady.resourcesCancel();
 
-    module.willFilesFound = 0;
-    module.willFilesFindReady.resourcesCancel();
+  module.willFilesOpened = 0;
+  module.willFilesOpenReady.resourcesCancel();
 
-    module.willFilesOpened = 0;
-    module.willFilesOpenReady.resourcesCancel();
+  module.submodulesFormed = 0;
+  module.submodulesFormReady.resourcesCancel();
 
-    module.submodulesFormed = 0;
-    module.submodulesFormReady.resourcesCancel();
+  module.resourcesFormed = 0;
+  module.resourcesFormReady.resourcesCancel();
 
-    module.resourcesFormed = 0;
-    module.resourcesFormReady.resourcesCancel();
-
-    module.ready.resourcesCancel();
-    module.totallyFormed = 0;
-
-  }
+  module.ready.resourcesCancel();
+  module.totallyFormed = 0;
 
 }
 
@@ -1847,37 +1841,15 @@ function _submodulesDownload( o )
   let time = _.timeNow();
   let con = new _.Consequence().take( null );
 
+  o.downloaded = o.downloaded || Object.create( null );
+
   _.assert( module.preformed === 3 );
   _.assert( arguments.length === 1 );
   _.routineOptions( _submodulesDownload, arguments );
 
   logger.up();
 
-  for( let n in module.submoduleMap )
-  {
-    let submodule = module.submoduleMap[ n ].loadedModule;
-    _.assert( !!submodule && submodule.preformed === 3, 'Submodule', ( submodule ? submodule.nickName : n ), 'was not preformed' );
-
-    if( !submodule.isRemote )
-    continue;
-
-    con.keep( () =>
-    {
-
-      remoteNumber += 1;
-
-      let r = _.Consequence.From( submodule._remoteDownload( _.mapExtend( null, o ) ) );
-      return r.keep( ( arg ) =>
-      {
-        _.assert( _.boolIs( arg ) );
-        if( arg )
-        downloadedNumber += 1;
-        return arg;
-      });
-
-    });
-
-  }
+  downloadAgain();
 
   con.finally( ( err, arg ) =>
   {
@@ -1891,13 +1863,90 @@ function _submodulesDownload( o )
   });
 
   return con;
+
+  /* */
+
+  function downloadAgain()
+  {
+    let remoteNumberWas;
+
+    remoteNumberWas = remoteNumber;
+
+    for( let n in module.submoduleMap )
+    {
+      let submodule = module.submoduleMap[ n ].loadedModule;
+      // submodule.preform();
+      _.assert( !!submodule && submodule.preformed === 3, 'Submodule', ( submodule ? submodule.nickName : n ), 'was not preformed' );
+
+      if( !submodule.isRemote )
+      continue;
+
+      con.then( () =>
+      {
+
+        if( o.downloaded[ submodule.remotePath ] )
+        return null;
+
+        remoteNumber += 1;
+
+        let o2 = _.mapExtend( null, o );
+        delete o2.downloaded;
+        let r = _.Consequence.From( submodule._remoteDownload( o2 ) );
+        return r.keep( ( arg ) =>
+        {
+          _.assert( _.boolIs( arg ) );
+          _.assert( _.strIs( submodule.remotePath ) );
+          o.downloaded[ submodule.remotePath ] = submodule;
+
+          if( arg )
+          downloadedNumber += 1;
+
+          // if( arg && o.recursive )
+          // {
+          //   debugger;
+          //   let o2 = _.mapExtend( null, o );
+          //   return submodule._submodulesDownload( o2 );
+          // }
+
+          return arg;
+        });
+
+      });
+
+    }
+
+  }
+
+  /* */
+
+  function downloadRecursive()
+  {
+    let remoteNumberWas;
+
+    remoteNumberWas = remoteNumber;
+
+    for( let n in module.submoduleMap )
+    {
+      let submodule = module.submoduleMap[ n ];
+
+      if( !submodule.loadedModule )
+      {
+        debugger;
+        submodule.form();
+      }
+
+    }
+
+  }
+
 }
 
 _submodulesDownload.defaults =
 {
   upgrading : 0,
   forming : 1,
-  recursive : 0,
+  recursive : 1,
+  downloaded : null,
 }
 
 //
@@ -2008,24 +2057,25 @@ function moduleFixate( o )
 
   let counter = 0;
 
-  if( o.submodule.associatedSubmodule )
+  // if( o.submodule.associatedSubmodule )
+  o.submodule.associatedSubmodules.forEach( ( submodule ) =>
   {
 
     let o2 = _.mapExtend( null, o );
-    o2.remotePath = o.submodule.associatedSubmodule.path;
-    o2.willFilePath = o.submodule.associatedSubmodule.willf.filePath;
+    o2.remotePath = submodule.path;
+    o2.willFilePath = submodule.willf.filePath;
     let fixatedPath = module.moduleFixatePath( o2 );
     if( fixatedPath )
     {
       if( !o.dry )
       {
         o.submodule.remotePath = fixatedPath;
-        o.submodule.associatedSubmodule.path = fixatedPath;
+        submodule.path = fixatedPath;
       }
       counter += 1;
     }
 
-  }
+  });
 
   let remote = o.submodule.pathResourceMap[ 'predefined.remote' ];
   if( remote && remote.path && remote.path.length && !remote.criterion.predefined )
@@ -3199,6 +3249,16 @@ function decoratedAbsoluteNameGet()
   return _.color.strFormat( result, 'entity' );
 }
 
+//
+
+function rootModuleGet()
+{
+  let module = this;
+  while( module.supermodule )
+  module = module.supermodule;
+  return module;
+}
+
 // --
 // selector
 // --
@@ -4170,11 +4230,6 @@ function _resolveAct( o )
       else _.sure( 0, 'Unknown function', it.parsedSelector.full );
 
     }
-    // else if( kind === 'this' )
-    // {
-    //   _.assert( _.mapIs( o.currentThis ) );
-    //   it.src = o.currentThis;
-    // }
     else
     {
 
@@ -4311,15 +4366,9 @@ function _resolveAct( o )
     let it = this;
     let sop = it.selectOptions;
 
-    debugger;
-
     it.src = [ o.currentThis ];
-    // it.dst = [ o.currentThis ];
     it.selector = 0;
 
-    // it.src = o.currentThis;
-    // it.dst = o.currentThis;
-    // it.selector = null;
     sop.selectorChanged.call( it );
 
   }
@@ -5050,7 +5099,7 @@ let Associates =
 {
   will : null,
   supermodule : null,
-  associatedSubmodule : null,
+  associatedSubmodules : _.define.own([]),
   originalModule : null,
 }
 
@@ -5106,6 +5155,7 @@ let Forbids =
   formReady : 'formReady',
   filePath : 'filePath',
   errors : 'errors',
+  associatedSubmodule : 'associatedSubmodule',
 }
 
 let Accessors =
@@ -5125,6 +5175,8 @@ let Accessors =
   decoratedNickName : { getter : decoratedNickNameGet, combining : 'rewrite', readOnly : 1 },
   absoluteName : { getter : absoluteNameGet, readOnly : 1 },
   decoratedAbsoluteName : { getter : decoratedAbsoluteNameGet, readOnly : 1 },
+  rootModule : { getter : rootModuleGet, readOnly : 1 },
+
   inPath : { getter : inPathGet, readOnly : 1 },
   outPath : { getter : outPathGet, readOnly : 1 },
   commonPath : { getter : commonPathGet, readOnly : 1 },
@@ -5264,6 +5316,7 @@ let Proto =
   decoratedNickNameGet,
   absoluteNameGet,
   decoratedAbsoluteNameGet,
+  rootModuleGet,
 
   // selector
 

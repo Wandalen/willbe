@@ -31,7 +31,7 @@ function finit()
   let exported = this;
   let module = exported.module;
 
-  debugger;
+  // debugger;
 
   fieldFinit( 'exportedReflector' );
   fieldFinit( 'exportedFilesReflector' );
@@ -104,7 +104,7 @@ function readExported()
   let path = hub.path;
   let logger = will.logger;
 
-  debugger;
+  // debugger;
 
   let outFilePath = build.outFilePathFor();
   let module2 = will.Module({ will : will, dirPath : path.dir( outFilePath ), originalModule : module }).preform();
@@ -141,7 +141,7 @@ function readExported()
         module.resourceImport({ srcResource : exported2 });
       }
 
-      debugger;
+      // debugger;
 
       return arg;
     })
@@ -490,7 +490,7 @@ function performWriteOutFile()
 
   let outFilePath = build.outFilePathFor();
   let data = module2.dataExport({ copyingNonWritable : 0, copyingPredefined : 0 });
-  debugger;
+  // debugger;
 
   _.assert( !data.path || !data.path[ 'predefined.will.files' ] );
   _.assert( !data.path || !data.path[ 'predefined.dir' ] );

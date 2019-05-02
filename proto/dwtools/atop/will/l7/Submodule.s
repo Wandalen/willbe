@@ -38,15 +38,56 @@ function unform()
 {
   let submodule = this;
   let module = submodule.module;
+  let rootModule = module.rootModule;
+
+  if( !submodule.original && rootModule.allSubmoduleMap[ submodule.path ] )
+  {
+    debugger;
+    _.assert( rootModule.allSubmoduleMap[ submodule.path ] === submodule.loadedModule );
+    delete rootModule.allSubmoduleMap[ submodule.path ];
+  }
 
   if( submodule.loadedModule )
   {
-    _.assert( submodule.loadedModule.associatedSubmodule === submodule )
-    submodule.loadedModule.associatedSubmodule = null;
-    submodule.loadedModule.finit();
+    // _.assert( submodule.loadedModule.associatedSubmodules === submodule );
+    _.arrayRemoveOnceStrictly( submodule.loadedModule.associatedSubmodules, submodule );
+    // submodule.loadedModule.associatedSubmodule = null;
+    // submodule.loadedModule.finit();
+    submodule.loadedModule = null;
   }
 
   return Parent.prototype.unform.call( submodule );
+}
+
+//
+
+function form1()
+{
+  let submodule = this;
+
+  _.assert( !!submodule.module );
+
+  let rootModule = submodule.module.rootModule;
+  let willf = submodule.willf;
+  let will = rootModule.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 0 );
+
+  /* begin */
+
+  // debugger;
+  // if( !submodule.original )
+  // {
+  //   rootModule.allSubmoduleMap[ submodule.path ] = submodule;
+  // }
+
+  /* end */
+
+  Parent.prototype.form1.call( submodule );
+  return submodule;
 }
 
 //
@@ -61,15 +102,14 @@ function form3()
   let logger = will.logger;
   let result = submodule;
 
-  // debugger;
-
   if( submodule.formed >= 3 )
   {
     if( submodule.loadedModule && submodule.loadedModule.hasAnyError() )
     {
       debugger;
-      _.assert( submodule.loadedModule.associatedSubmodule === submodule )
-      submodule.loadedModule.associatedSubmodule = null;
+      // _.assert( submodule.loadedModule.associatedSubmodule === submodule )
+      // submodule.loadedModule.associatedSubmodule = null;
+      _.arrayRemoveOnceStrictly( submodule.loadedModule.associatedSubmodules, submodule );
       submodule.loadedModule.finit();
       submodule.loadedModule = null;
       submodule.formed = 2;
@@ -106,12 +146,21 @@ function _load()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+  let rootModule = module.rootModule;
 
   _.assert( arguments.length === 0 );
   _.assert( submodule.formed === 2 );
   _.assert( submodule.loadedModule === null );
   _.assert( _.strIs( submodule.path ), 'not tested' );
+  _.assert( !submodule.original );
   _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
+
+  if( rootModule.allSubmoduleMap[ submodule.path ] )
+  {
+    debugger;
+    submodule.loadedModule = rootModule.allSubmoduleMap[ submodule.path ];
+    return submodule.loadedModule.ready.split()
+  }
 
   /* */
 
@@ -121,8 +170,11 @@ function _load()
     alias : submodule.name,
     willFilesPath : path.join( module.inPath, submodule.path ),
     supermodule : module,
-    associatedSubmodule : submodule,
+    associatedSubmodules : [ submodule ],
   }).preform();
+
+  rootModule.allSubmoduleMap[ submodule.path ] = submodule.loadedModule;
+  // debugger;
 
   submodule.loadedModule.willFilesFind({ isOutFile : 1 });
   submodule.loadedModule.willFilesOpen();
@@ -142,6 +194,11 @@ function _load()
     // debugger;
     if( err )
     {
+      if( rootModule.allSubmoduleMap[ submodule.path ] === submodule.loadedModule )
+      {
+        // debugger;
+        delete rootModule.allSubmoduleMap[ submodule.path ]
+      }
       if( will.verbosity >= 3 )
       logger.error( ' ! Failed to read ' + submodule.decoratedNickName + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading' );
       if( will.verbosity >= 5 || !submodule.loadedModule || submodule.loadedModule.isOpened() )
@@ -289,6 +346,7 @@ let Proto =
 
   OptionsFrom,
   unform,
+  form1,
   form3,
 
   _load,

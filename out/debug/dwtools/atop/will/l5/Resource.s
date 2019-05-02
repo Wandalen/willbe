@@ -15,17 +15,6 @@ let _ = wTools;
 let Parent = null;
 let Self = function wWillResource( o )
 {
-
-  // if( o && o.module )
-  // {
-  //   let instance = o.module[ Self.MapName ][ o.name ];
-  //   if( instance && instance.criterion && instance.criterion.predefined )
-  //   {
-  //     debugger;
-  //     return instance;
-  //   }
-  // }
-
   return _.instanceConstructor( Self, this, arguments );
 }
 
