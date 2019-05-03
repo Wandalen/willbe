@@ -129,8 +129,8 @@ function form2()
 
   _.assert( reflector.formed === 1 );
 
-  if( reflector.nickName === "reflector::reflect.proto.4.debug" )
-  debugger;
+  // if( reflector.nickName === "reflector::reflect.submodules.steps" )
+  // debugger;
 
   reflector.src.pairWithDst( reflector.dst );
   if( reflector.src.filePath !== reflector.dst.filePath )
@@ -158,8 +158,8 @@ function form3()
 
   /* begin */
 
-  if( reflector.nickName === "reflector::reflect.proto.4.debug" )
-  debugger;
+  // if( reflector.nickName === "reflector::reflect.submodules.steps" )
+  // debugger;
 
   reflector.pathsResolve();
 
@@ -179,8 +179,8 @@ function form3()
   _.assert( reflector.src.prefixPath === null || path.isAbsolute( reflector.src.prefixPath ) );
   _.assert( reflector.dst.prefixPath === null || path.isAbsolute( reflector.dst.prefixPath ) );
 
-  if( reflector.nickName === "reflector::reflect.proto.4.debug" )
-  debugger;
+  // if( reflector.nickName === "reflector::reflect.proto.4.debug" )
+  // debugger;
 
   /* end */
 
@@ -199,6 +199,9 @@ function _inheritMultiple( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+
+  if( reflector.nickName === "reflector::reflect.submodules.steps" )
+  debugger;
 
   _.assert( arguments.length === 1 );
   _.assert( reflector.formed === 1 );
@@ -345,6 +348,9 @@ function _reflectMapForm( o )
   let logger = will.logger;
 
   _.assertRoutineOptions( _reflectMapForm, arguments );
+
+  if( reflector.nickName === "reflector::reflect.submodules.steps" )
+  debugger;
 
   let pathMap = reflector.filePath;
   for( let src in pathMap )
@@ -520,9 +526,9 @@ function prefixesApply()
   _.assert( reflector.dst.postfixPath === null, 'not implemented' );
 
   reflector.src.pairWithDst( reflector.dst );
-  if( !reflector.src.filePathDstAllBools() )
+  if( !reflector.src.filePathDstHasAllBools() )
   reflector.src.prefixesApply();
-  if( !reflector.dst.filePathDstAllBools() )
+  if( !reflector.dst.filePathDstHasAllBools() )
   reflector.dst.prefixesApply();
 
 }
@@ -549,7 +555,15 @@ function pathsResolve( o )
   if( reflector.src.basePath )
   reflector.src.basePath = resolve( reflector.src.basePath );
   if( reflector.src.filePath )
-  reflector.src.filePath = resolve( reflector.src.filePath );
+  {
+    let r = resolve( reflector.src.filePath, 0, 'src' );
+    debugger;
+    reflector.src.filePath = null;
+    if( r instanceof _.FileRecordFilter )
+    reflector.src.pathsExtend2( r );
+    else
+    reflector.src.filePath = r;
+  }
   if( reflector.src.prefixPath || reflector.src.hasAnyPath() )
   reflector.src.prefixPath = resolve( reflector.src.prefixPath || '.', 'in' );
   if( reflector.src.prefixPath || reflector.src.hasAnyPath() )
@@ -557,7 +571,15 @@ function pathsResolve( o )
 
   if( !paired )
   if( reflector.dst.filePath )
-  reflector.dst.filePath = resolve( reflector.dst.filePath );
+  {
+    let r = resolve( reflector.dst.filePath, 0, 'dst' );
+    debugger;
+    reflector.dst.filePath
+    if( r instanceof _.FileRecordFilter )
+    reflector.dst.pathsExtend2( r );
+    else
+    reflector.dst.filePath = r;
+  }
   if( reflector.dst.basePath )
   reflector.dst.basePath = resolve( reflector.dst.basePath );
   let dstHasDst = path.pathMapDstFromDst( reflector.dst.filePath ).filter( ( e ) => _.strIs( e ) ).length > 0;
@@ -574,7 +596,7 @@ function pathsResolve( o )
 
   /* */
 
-  function resolve( src, pathResolving )
+  function resolve( src, pathResolving, side )
   {
 
     return path.pathMapRefilter( src, ( filePath ) =>
@@ -585,12 +607,23 @@ function pathsResolve( o )
       return filePath;
       if( !module.SelectorIs( filePath ) && !pathResolving )
       return filePath;
-      return module.pathResolve
+
+      let r = module.pathResolve
       ({
         selector : filePath,
         currentContext : reflector,
         pathResolving : 'in',
       });
+
+      if( r instanceof will.Reflector && side )
+      {
+        if( side === 'src' )
+        return r.src;
+        else
+        return r.dst;
+      }
+
+      return r;
     });
 
   }

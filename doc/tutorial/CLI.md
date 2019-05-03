@@ -133,7 +133,7 @@ The command was incomplete, and the utility `willbe` again offered phrase varian
 
 ### Command `.*.list`  
 
-Most commands work with the `will-files` of specific modules.
+Most commands work with the `willfiles` of specific modules.
 
 
 <details>
@@ -195,7 +195,7 @@ build :
 
 Copy the code in the `.will.yml` file.  
 
-Utility `willbe` has the list of commands that ends on ` .list`. They display a list of resources of the given type of the current module. Therefore, if you type one of the `.*.list` commands in the directory where` will-file `is missing, you will receive a warning about the absence of the module.
+Utility `willbe` has the list of commands that ends on ` .list`. They display a list of resources of the given type of the current module. Therefore, if you type one of the `.*.list` commands in the directory where` willfile `is missing, you will receive a warning about the absence of the module.
 
 <details>
   <summary><u>Command output <code>will .builds.list</code>in the current directory</u></summary>
@@ -209,7 +209,7 @@ Found no module::/[path] at "/[path]"
 
 </details>
 
-To make sure that the `.builds.list` command works with the current module, enter in its  directory without the `will-file`.
+To make sure that the `.builds.list` command works with the current module, enter in its  directory without the `willfile`.
 
 <details>
   <summary><u>Command output <code>ls -al</code></u></summary>
@@ -242,7 +242,7 @@ About
 
 To get a descriptive information about the module use the command `will .about.list`.
 
-Please, note that some resources have fields with default values. If the resource has no such field, utility generates it by loading `will-file` from the disk.
+Please, note that some resources have fields with default values. If the resource has no such field, utility generates it by loading `willfile` from the disk.
 
 <details>
   <summary><u>Section <code>about</code> of the file <code>.will.yml</code></u></summary>
@@ -257,7 +257,7 @@ about :
 
 </details>
 
-Therefore,  section `about` has an `enabled` field in the output of the command `will.about.list` that does not exist in the `will-file`.
+Therefore,  section `about` has an `enabled` field in the output of the command `will.about.list` that does not exist in the `willfile`.
 
 <details>
   <summary><u>Command output <code>will .builds.list</code></u></summary>
@@ -297,7 +297,7 @@ build :
 
 To obtain the list of builds of the current module, enter the command `will .builds.list`. Once the result is displayed on the monitor, open the `.will.yml` file using a text editor and compare the contents of the `build` section and the output of the command.
 
-You can get information about a separate section of the `will-file` by entering the phrase `will.[Section name].list`.
+You can get information about a separate section of the `willfile` by entering the phrase `will.[Section name].list`.
 
 
 <details>
@@ -307,7 +307,7 @@ You can get information about a separate section of the `will-file` by entering 
 [user@user ~]$ will .submodules.list
 Command ".submodules.list"
    . Read : /path_to_file/submodules/.will.yml
- . Read 1 will-files in 0.084s
+ . Read 1 willfiles in 0.084s
  ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
  ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
 submodule::Tools
@@ -350,7 +350,7 @@ The utility displays a warning error message when reading information about the 
 
 </details>
 
-The information that the utility `willbe` output corresponds to the one that is written in the `will-file`.
+The information that the utility `willbe` output corresponds to the one that is written in the `willfile`.
 
 To enumerate all resources of the current module use `will.resources.list` command:
 
@@ -362,7 +362,7 @@ To enumerate all resources of the current module use `will.resources.list` comma
   . Read : /path_to_file/.will.yml
  ! Failed to read submodule::Tools, try to download it with .submodules.download or even .clean it before downloading
  ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even .clean it before downloading
- . Read 1 will-files in 1.865s
+ . Read 1 willfiles in 1.865s
 
 About
   name : 'test'
