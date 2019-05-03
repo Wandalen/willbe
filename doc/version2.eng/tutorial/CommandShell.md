@@ -59,7 +59,7 @@ build :
 about :
 
   name : noWorkedFile
-  description : "Only example of will-file"
+  description : "Only example of willfile"
 
 ```
 
@@ -173,7 +173,7 @@ Module at /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.
 ...
 Module at /path_to_file/module.test/one.will.yml
  . Read : /path_to_file/module.test/one.will.yml
- . Read 1 will-files in 0.344s
+ . Read 1 willfiles in 0.344s
 
  > ls
 one.will.yml
@@ -181,7 +181,7 @@ two.will.yml
 
 Module at /path_to_file/module.test/two.will.yml
  . Read : /path_to_file/module.test/two.will.yml
- . Read 1 will-files in 0.265s
+ . Read 1 willfiles in 0.265s
 
  > ls
 one.will.yml

@@ -134,7 +134,7 @@ build :
 ```
 [user@user ~]$ will .build
 ...
- . Read 1 will-files in 1.491s
+ . Read 1 willfiles in 1.491s
 
   Building module::cleanCommand / build::make.module
      . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
@@ -146,7 +146,7 @@ Command ".each module .build"
 
 Module at /path_to_file/module/Color.download.will.yml
  . Read : /path_to_file/module/Color.download.will.yml
- . Read 1 will-files in 1.189s
+ . Read 1 willfiles in 1.189s
 
     Building module::downloadFiles / build::download.files
      + download.files reflected 71 files :/// : path_to_file/temp <- git+https://github.com/Wandalen/wColor.git in 4.383s
@@ -154,7 +154,7 @@ Module at /path_to_file/module/Color.download.will.yml
 
    + reflect.files reflected 9 files /path_to_file/ : out/module.debug <- temp/out in 0.603s
    + Write out archive /path_to_file/out/ : cleanCommand.out.tgs <- module.debug
-   + Write out will-file /path_to_file/out/cleanCommand.out.will.yml
+   + Write out willfile /path_to_file/out/cleanCommand.out.will.yml
    + Exported make.module with 64 files in 2.675s
   Built module::cleanCommand / build::make.module in 39.521s
 

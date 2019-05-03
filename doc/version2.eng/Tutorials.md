@@ -29,7 +29,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
 <details><summary><a href="./tutorial/CommandsSubmodules.md">
       Commands of updating, upgrading and cleaning of submodules
        </a></summary>     
-   Commands of updating files of submodules, upgrading submodules rewriting <code>will-file</code> automatically and cleaning of submodules.
+   Commands of updating files of submodules, upgrading submodules rewriting <code>willfile</code> automatically and cleaning of submodules.
 </details>
 <details><summary><a href="./tutorial/Build.md">
       Module building by command <code>.build</code>
@@ -72,19 +72,19 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   How assertions help to reduce errors during design.
 </details>
 <details><summary><a href="./tutorial/WillFileMinimization.md">
-      Minimization of <code>will-file</code>
+      Minimization of <code>willfile</code>
   </a></summary>
-  How to minimize <code>will-file</code> by means of instantiation of sets of criterions.
+  How to minimize <code>willfile</code> by means of instantiation of sets of criterions.
 </details>
 <details><summary><a href="./tutorial/WillFileSplit.md">
-      Split <code>will-files</code>
+      Split <code>willfiles</code>
   </a></summary>
-  How to create and use a module with split <code>will-file</code>.
+  How to create and use a module with split <code>willfile</code>.
 </details>
 <details><summary><a href="./tutorial/WillFileNamed.md">
-      Command <code>.with</code> and named <code>will-file</code>
+      Command <code>.with</code> and named <code>willfile</code>
   </a></summary>
-  How to use command <code>.with</code>? What is named <code>will-file</code>?
+  How to use command <code>.with</code>? What is named <code>willfile</code>?
 </details>
 <details><summary><a href="./tutorial/CommandEach.md">
       Command <code>.each</code>

@@ -90,7 +90,7 @@ Trying to open /path_to_module/UsingSetCommand/.ex.will
  s module::/path_to_module/UsingSetCommand willFilesOpened 1
  s module::/path_to_module/UsingSetCommand willFilesOpened 2
    . Read : /path_to_module/UsingSetCommand/.will.yml
- . Read 1 will-files in 0.081s
+ . Read 1 willfiles in 0.081s
  s module::setVerbosity willFilesOpened 3
  s module::setVerbosity submodulesFormed 1
  s module::setVerbosity submodulesFormed 2
@@ -186,7 +186,7 @@ Trying to open /path_to_module/UsingSetCommand/.will
 Trying to open /path_to_module/UsingSetCommand/.im.will
 Trying to open /path_to_module/UsingSetCommand/.ex.will
    . Read : /path_to_module/UsingSetCommand/.will.yml
- . Read 1 will-files in 0.104s
+ . Read 1 willfiles in 0.104s
 Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals.out.will
 Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals.out.im.will
 Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals.out.ex.will
@@ -194,9 +194,9 @@ Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPat
 
   Exporting submodules.export
      . Read : /path_to_module/UsingSetCommand/out/setVerbosity.out.will.yml
-   . Read 1 will-files in 0.195s
+   . Read 1 willfiles in 0.195s
    + Write out archive /path_to_module/UsingSetCommand/ : out/setVerbosity.out.tgs <- .module/PathFundamentals
-   + Write out will-file /path_to_module/UsingSetCommand/out/setVerbosity.out.will.yml
+   + Write out willfile /path_to_module/UsingSetCommand/out/setVerbosity.out.will.yml
    + Exported submodules.export with 46 files in 2.423s
   Exported submodules.export in 2.467s
 
@@ -224,7 +224,7 @@ setCommand
 ```
 [user@user ~]$ will .set verbosity:0 ; .build
 Command ".set ; .build"
- . Read 1 will-files in 0.082s
+ . Read 1 willfiles in 0.082s
 
 ```
 

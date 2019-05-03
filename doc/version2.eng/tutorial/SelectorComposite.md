@@ -30,7 +30,7 @@ complexSelector
 about :
 
   name : complexSelector
-  description : 'To use complexSelector in will-file'
+  description : 'To use complexSelector in willfile'
   version : 0.0.1
 
 submodule : 
@@ -83,7 +83,7 @@ build :
 [user@user ~]$ will .export
 ...
 Exporting module::complexSelector / build::export.file
-   + Write out will-file /path_to_file/out/complexSelector.out.will.yml
+   + Write out willfile /path_to_file/out/complexSelector.out.will.yml
    + Exported export.debug with 1 files in 1.984s
   Exported module::complexSelector / build::export.file in 2.059s
 
@@ -121,9 +121,9 @@ Exporting module::complexSelector / build::export.file
      + module::Tools version master was downloaded in 13.710s
    + 1/1 submodule(s) of module::complexSelector were downloaded in 13.718s
    . Read : /path_to_file/out/complexSelector.out.will.yml
-   . Read 1 will-files in 0.231s  
+   . Read 1 willfiles in 0.231s  
   
-   + Write out will-file /path_to_file/out/complexSelector.out.will.yml
+   + Write out willfile /path_to_file/out/complexSelector.out.will.yml
    + Exported export.submodule with 261 files in 3.741s
   Exported module::complexSelector / build::export.submodule in 3.895s
 

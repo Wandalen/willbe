@@ -119,7 +119,7 @@ build :
 ...
 Module at /path_to_file/.will.yml
  . Read : /path_to_file/.will.yml
- . Read 1 will-files in 0.924s 
+ . Read 1 willfiles in 0.924s 
 
     Building module::deleteOut / build::delete.submodule
      - filesDelete 0 files at /home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe_src/pract/CommandEach/out in 0.002s
@@ -129,7 +129,7 @@ Module at /path_to_file/.will.yml
 
     Building module::export / build::export
      + Write out archive /path_to_file/ : out/export.out.tgs <- proto
-     + Write out will-file /path_to_file/out/export.out.will.yml
+     + Write out willfile /path_to_file/out/export.out.will.yml
      + Exported export with 2 files in 2.311s
     Built module::export / build::export in 2.363s
     

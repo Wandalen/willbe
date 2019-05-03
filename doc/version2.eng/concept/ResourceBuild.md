@@ -10,7 +10,7 @@ The module may have a default build. In order to make it, the [cryterion `defaul
 
 ### Example
 
-![section.build.png](./Images/section.build.png)
+![section.build.png](../../images/section.build.png)
 
 The build named `copy.files` has one step `copy.proto`. Criterion `default : 1` makes this build the default build.
 
@@ -25,9 +25,9 @@ The build named `copy.files` has one step `copy.proto`. Criterion `default : 1` 
 
 ### Resource export
 
-A special kind of build which is required in order to use this module by other developers and modules. The result of the module export is generated files, which is <code>out-will-file</code> and archive.
+A special kind of build which is required in order to use this module by other developers and modules. The result of the module export is generated files, which is <code>out-willfile</code> and archive.
 
-The result of the module export is the generated configuration `out-will-file`  and optionally the archive with the module files. Filling out of the section `about` is required and it must have the name and version of the module while module export.
+The result of the module export is the generated configuration `out-willfile`  and optionally the archive with the module files. Filling out of the section `about` is required and it must have the name and version of the module while module export.
 
 The developer can export the module with the `will .export` command. In this case, the module must have a build for export. The export build must have a [predefined step `predefined.export`](ResourceStep.md#Predefined-step-predefinedexport) and the criterion `export : 1`.
 

@@ -76,7 +76,7 @@ exportSingle
 [user@user ~]$ will .export
 ...
  Exporting export.single
-   + Write out will-file /path_to_file/out/exportModule.out.will.yml
+   + Write out willfile /path_to_file/out/exportModule.out.will.yml
    + Exported export.single with 1 files in 0.705s
   Exported export.single in 0.752s
 ```

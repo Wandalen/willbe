@@ -115,7 +115,7 @@ build :
 [user@user ~]$ will .export export.debug
 ...
    Exporting export.debug
-   + Write out will-file /path_to_file/out/selectorWithGlob.out.will.yml
+   + Write out willfile /path_to_file/out/selectorWithGlob.out.will.yml
    + Exported export.debug with 1 files in 1.370s
   Exported module::selectorWithGlob / build::export.debug in 1.370s
 
@@ -162,7 +162,7 @@ selectorWithGlob
 [user@user ~]$ will .export export.release
 ...
   Exporting export.release
-   + Write out will-file /path_to_file/out/selectorWithGlob.out.will.yml
+   + Write out willfile /path_to_file/out/selectorWithGlob.out.will.yml
    + Exported export.release with 1 files in 1.379s
   Exported module::selectorWithGlob / build::export.release in 1.379s
 

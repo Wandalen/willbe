@@ -1,15 +1,15 @@
-# `Will-file` structure
+# `willfile` structure
 
-### Section of <code>will-file</code>  
+### Section of <code>willfile</code>  
 
-The highest structural unit of the <code>will-file</code>, which consists of one-type resources or fields that describe this module.   
+The highest structural unit of the <code>willfile</code>, which consists of one-type resources or fields that describe this module.   
 
 There are 6 sections for constructing the module: `about`,` path`, `submodule`,` step`, `reflector`,` build` and the `exported` section which is generated only by exporting the module.
 
-#### Schematic structure of `will-file`
+#### Schematic structure of `willfile`
 
 ```
-will-file
+willfile
     ├── about
     ├── submodule
     ├── path
@@ -20,9 +20,9 @@ will-file
 
 ```
 
-The figure shows all sections of `will-file`. None of the sections are required for use `will-file`. However, for the execution of some commands, the presence some of them is necessary. For example, to export the module, `will-file` must have the name and version specified in the section `about`.
+The figure shows all sections of `willfile`. None of the sections are required for use `willfile`. However, for the execution of some commands, the presence some of them is necessary. For example, to export the module, `willfile` must have the name and version specified in the section `about`.
 
-### Sections assignment of `will-file`
+### Sections assignment of `willfile`
 
 <details><summary><a href="./concept/SectionAbout.md">
       Section <code>about</code>
@@ -57,23 +57,23 @@ The figure shows all sections of `will-file`. None of the sections are required 
 <details><summary><a href="./concept/SectionExported.md">
       Section <code>exported</code>
   </a></summary>
-  It is programmatically generated section of <code>out-will-file</code> by exporting a module. It has a list of exported files and it is used by other modules for importing the module.
+  It is programmatically generated section of <code>out-willfile</code> by exporting a module. It has a list of exported files and it is used by other modules for importing the module.
 </details>
 
-### Example of `will-file`   
+### Example of `willfile`   
 
-![will.file.inner.png](./Images/will.file.inner.png)  
+![will.file.inner.png](../../images/will.file.inner.png)  
 
-At the figure, the `will-file` with 4 sections and several resources is shown.
+At the figure, the `willfile` with 4 sections and several resources is shown.
 
 ### Resources
 
-Structural and functional unit of <code>will-file</code>. Resources of the same type are collected in a section.
+Structural and functional unit of <code>willfile</code>. Resources of the same type are collected in a section.
 
 The resources of the sections are denoted declaratively - that indicates the desired result without instructions for obtaining this result.
 The appearance of the resources of individual sections is different.
 
-![resource.png](./Images/resource.png)  
+![resource.png](../../images/resource.png)  
 
 At the figure, the resource named `Tools` of the submodule type is located in the section `submodule` and has a shortened form of the record, whereas the resource `npm.install` of step type is placed in the `step` section and has a full (extended) record form.
 
@@ -111,10 +111,10 @@ Functionality which is associated with a group of resources. It is limited by it
 <details><summary><a href="./ResourceBuild.md#Resource-export">
     Type of resources <code>export</code>
   </a></summary>
-  This is a special kind of build, the result of which is the generated `out-will-file` that can be used by another module.
+  This is a special kind of build, the result of which is the generated `out-willfile` that can be used by another module.
 </details>
 <details><summary><a href="./SectionExported.md#Section-exported">
     Type of resources <code>exported</code>
   </a></summary>
-  This resource is generated when the module is exported and only available in the generated files. The <code>out-will-file</code> has exactly the same amount of resources as <code>exported</code> as the number of times that the module was exported for different exports. Resources of this type include descriptive fields and a list of exported files.
+  This resource is generated when the module is exported and only available in the generated files. The <code>out-willfile</code> has exactly the same amount of resources as <code>exported</code> as the number of times that the module was exported for different exports. Resources of this type include descriptive fields and a list of exported files.
 </details>

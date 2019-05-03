@@ -1,6 +1,6 @@
-# Command <code>.with</code> and named <code>will-file</code>
+# Command <code>.with</code> and named <code>willfile</code>
 
-How to use command <code>.with</code>? What is named <code>will-file</code>?
+How to use command <code>.with</code>? What is named <code>willfile</code>?
 
 [Розділені `will-файли`](WillFileSplit.md) складаються з двох `will-файлів` і описують один модуль, а у розробника може виникнути потреба помістити `will-файли` декількох модулів в одній директорії - для цього використовуються іменовані  `will-файли`.  
 Іменований `will-файл` - вид `will-файла`, що має не стандартне ім'я файлу, тобто, починається з буквенних або числових символів. В директорії одночасно може знаходитись один неіменований `will-файл` та необмежена кількість іменованих.   
@@ -33,7 +33,7 @@ named
 about :
 
   name : deleteOut
-  description : "To test named will-files"
+  description : "To test named willfiles"
 
 path :
 
@@ -64,7 +64,7 @@ build :
 about :
 
   name : submodules
-  description : "To test named will-files"
+  description : "To test named willfiles"
   version : 0.0.1
 
 submodule :
@@ -81,7 +81,7 @@ submodule :
 about :
 
   name : export
-  description : "To test named will-files"
+  description : "To test named willfiles"
   version : 0.0.1
 
 path : 
@@ -117,7 +117,7 @@ build :
 ...
  . Read : /path_to_file/submodule.will.yml
  ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even .clean it before downloading
- . Read 1 will-files in 1.152s 
+ . Read 1 willfiles in 1.152s 
 
    . Read : /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
    + module::PathFundamentals version master was downloaded in 4.748s
@@ -153,7 +153,7 @@ named
 ...
   Exporting module::export / build::export
    + Write out archive /path_to_file/ : out/export.out.tgs <- proto
-   + Write out will-file /path_to_file/out/export.out.will.yml
+   + Write out willfile /path_to_file/out/export.out.will.yml
    + Exported export with 2 files in 2.762s
   Exported module::export / build::export in 2.819s
 
