@@ -477,5 +477,5 @@ A string which has phrase which describes intention of a developer and actions w
 <details><summary><a href="./tutorial/FunctionStringJoin.md">
       Processing an array of string values in the resources of <code>wilfile</code>
   </a></summary>
-  How to use the function of working with an array of string values in resources of <code>willfile</code>.
+  How to use the function of combining string arrays in willfile <code>willfile</code>.
 </details>
