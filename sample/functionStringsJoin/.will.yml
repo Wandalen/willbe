@@ -1,0 +1,47 @@
+about :
+
+  name : 'stringsJoin'
+  description : 'Using of strings.join function to download dependencies'
+  package.list :
+    main :
+      - wTools
+      - wpathfundamentals
+    optional :
+      - wColor
+      - wProto
+  simple.list :
+    - one
+    - two
+    - three
+
+step :
+
+  install.dependencies.join :
+    shell : npm install {about::package.list/f::strings.join}
+
+  install.dependencies.nojoin :
+    shell : npm install {about::package.list/main}
+
+  echo.dependencies.join :
+    shell : echo {about::package.list/f::strings.join}
+
+  echo.dependencies.nojoin :
+    shell : echo {about::package.list}
+
+  echo.simple.list :
+    shell : echo {about::simple.list}
+
+build :
+
+  echo.strings :
+    criterion :
+      default : 1
+    steps :
+      - echo.dependencies.join
+      - echo.dependencies.nojoin
+      - echo.simple.list
+
+  install.strings :
+    steps:
+      - install.dependencies.join
+      - install.dependencies.nojoin

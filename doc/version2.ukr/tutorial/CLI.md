@@ -365,8 +365,8 @@ About
 
 Paths
   predefined.willbe : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec'
-  predefined.will.files : '/home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe/sample/version2/CLI/.will.yml'
-  predefined.dir : '/home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe/sample/version2/CLI'
+  predefined.will.files : '/path_to_file/.will.yml'
+  predefined.dir : '/path_to_file'
   proto : 'proto'
   out.debug : 'out/debug'
 
@@ -404,7 +404,7 @@ build::debug
 
 </details>
 
-Щоб перерахувати всі ресурси поточного модуля використайте команду `will .resources.list`:
+Щоб перерахувати всі ресурси поточного модуля використайте команду `will .resources.list`.
 
 ### Підсумок
 
