@@ -129,8 +129,8 @@ function form2()
 
   _.assert( reflector.formed === 1 );
 
-  if( reflector.nickName === "reflect.proto2" )
-  debugger;
+  // if( reflector.nickName === "reflector::reflect.proto2" )
+  // debugger;
 
   reflector.src.pairWithDst( reflector.dst );
   if( reflector.src.filePath !== reflector.dst.filePath )
@@ -158,7 +158,7 @@ function form3()
 
   /* begin */
 
-  if( reflector.nickName === "reflect.proto2" )
+  if( reflector.nickName === "reflector::reflect.proto2" )
   debugger;
 
   reflector.pathsResolve();
@@ -200,8 +200,8 @@ function _inheritMultiple( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  if( reflector.nickName === "reflector::reflect.submodules.steps" )
-  debugger;
+  // if( reflector.nickName === "reflector::reflect.proto2" )
+  // debugger;
 
   _.assert( arguments.length === 1 );
   _.assert( reflector.formed === 1 );
@@ -213,11 +213,12 @@ function _inheritMultiple( o )
 
   Parent.prototype._inheritMultiple.call( reflector, o );
 
-  // if( reflector.nickName === "reflector::reflect.submodules" )
-  // debugger;
-
   reflector.src.pairWithDst( reflector.dst );
   reflector.pathsResolve();
+
+  if( reflector.nickName === "reflector::reflect.proto2" )
+  debugger;
+
   reflector.src.pairRefineLight();
 
   reflector.src.and( reflector._accumulator.src ).pathsInherit( reflector._accumulator.src );
@@ -231,8 +232,8 @@ function _inheritMultiple( o )
   if( reflector.filePath )
   reflector._reflectMapForm({ visited : o.visited });
 
-  // if( reflector.nickName === "reflector::reflect.submodules" )
-  // debugger;
+  if( reflector.nickName === "reflector::reflect.proto2" )
+  debugger;
 
   return reflector;
 }
@@ -349,8 +350,8 @@ function _reflectMapForm( o )
 
   _.assertRoutineOptions( _reflectMapForm, arguments );
 
-  if( reflector.nickName === "reflector::reflect.submodules.steps" )
-  debugger;
+  // if( reflector.nickName === "reflector::reflect.submodules.steps" )
+  // debugger;
 
   let pathMap = reflector.filePath;
   for( let src in pathMap )
@@ -556,13 +557,17 @@ function pathsResolve( o )
   reflector.src.basePath = resolve( reflector.src.basePath );
   if( reflector.src.filePath )
   {
-    let r = resolve( reflector.src.filePath, 0, 'src' );
-    debugger;
+    let r = resolve( reflector.src.filePath, 1, 'src' );
     reflector.src.filePath = null;
     if( r instanceof _.FileRecordFilter )
-    reflector.src.pathsInherit( r );
+    {
+      debugger;
+      reflector.src.pathsInherit( r ); // yyy
+    }
     else
-    reflector.src.filePath = r;
+    {
+      reflector.src.filePath = r;
+    }
   }
   if( reflector.src.prefixPath || reflector.src.hasAnyPath() )
   reflector.src.prefixPath = resolve( reflector.src.prefixPath || '.', 'in' );
@@ -572,13 +577,17 @@ function pathsResolve( o )
   if( !paired )
   if( reflector.dst.filePath )
   {
-    let r = resolve( reflector.dst.filePath, 0, 'dst' );
-    debugger;
-    reflector.dst.filePath
+    let r = resolve( reflector.dst.filePath, 1, 'dst' );
+    reflector.dst.filePath = null;
     if( r instanceof _.FileRecordFilter )
-    reflector.dst.pathsInherit( r );
+    {
+      debugger;
+      reflector.dst.pathsInherit( r ); // yyy
+    }
     else
-    reflector.dst.filePath = r;
+    {
+      reflector.dst.filePath = r;
+    }
   }
   if( reflector.dst.basePath )
   reflector.dst.basePath = resolve( reflector.dst.basePath );
@@ -614,6 +623,12 @@ function pathsResolve( o )
         currentContext : reflector,
         pathResolving : 'in',
       });
+
+      if( r instanceof will.Reflector )
+      {
+        _.assert( !!r.original );
+        r.form();
+      }
 
       if( r instanceof will.Reflector && side )
       {
