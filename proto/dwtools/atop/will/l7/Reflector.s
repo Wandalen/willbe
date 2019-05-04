@@ -129,8 +129,8 @@ function form2()
 
   _.assert( reflector.formed === 1 );
 
-  // if( reflector.nickName === "reflector::reflect.submodules.steps" )
-  // debugger;
+  if( reflector.nickName === "reflector::reflect.submodules.steps" )
+  debugger;
 
   reflector.src.pairWithDst( reflector.dst );
   if( reflector.src.filePath !== reflector.dst.filePath )
@@ -158,8 +158,8 @@ function form3()
 
   /* begin */
 
-  // if( reflector.nickName === "reflector::reflect.submodules.steps" )
-  // debugger;
+  if( reflector.nickName === "reflect.proto2" )
+  debugger;
 
   reflector.pathsResolve();
 
