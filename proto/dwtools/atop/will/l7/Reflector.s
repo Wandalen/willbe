@@ -129,7 +129,7 @@ function form2()
 
   _.assert( reflector.formed === 1 );
 
-  if( reflector.nickName === "reflector::reflect.submodules.steps" )
+  if( reflector.nickName === "reflect.proto2" )
   debugger;
 
   reflector.src.pairWithDst( reflector.dst );
@@ -560,7 +560,7 @@ function pathsResolve( o )
     debugger;
     reflector.src.filePath = null;
     if( r instanceof _.FileRecordFilter )
-    reflector.src.pathsExtend2( r );
+    reflector.src.pathsInherit( r );
     else
     reflector.src.filePath = r;
   }
@@ -576,7 +576,7 @@ function pathsResolve( o )
     debugger;
     reflector.dst.filePath
     if( r instanceof _.FileRecordFilter )
-    reflector.dst.pathsExtend2( r );
+    reflector.dst.pathsInherit( r );
     else
     reflector.dst.filePath = r;
   }

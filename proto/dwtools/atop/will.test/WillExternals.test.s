@@ -5168,48 +5168,48 @@ function reflectInherit( test )
   //   test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.s', './debug1/File.test.js', './debug1/some.test', './debug1/some.test/File2.js' ] );
   //   return null;
   // })
-  //
-  // /* - */
-  //
-  // ready
-  // .thenKeep( () =>
-  // {
-  //   test.case = '.build debug2'
-  //   _.fileProvider.filesDelete( outPath );
-  //   return null;
-  // })
-  //
-  // shell({ args : [ '.build debug2' ] })
-  // .thenKeep( ( got ) =>
-  // {
-  //   test.identical( got.exitCode, 0 );
-  //   test.is( _.strHas( got.output, '+ reflect.proto2 reflected 6 files' ) );
-  //   test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
-  //   var files = self.find( outPath );
-  //   test.identical( files, [ '.', './debug2', './debug2/File.js', './debug2/File.s', './debug2/File.test.js', './debug2/some.test', './debug2/some.test/File2.js' ] );
-  //   return null;
-  // })
 
   /* - */
 
   ready
   .thenKeep( () =>
   {
-    test.case = '.build debug3'
+    test.case = '.build debug2'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  shell({ args : [ '.build debug3' ] })
+  shell({ args : [ '.build debug2' ] })
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '+ reflect.not.test.only.js.v1 reflected 6 files' ) );
-    test.is( _.strHas( got.output, /.*out.* <- .*proto.*/ ) );
+    test.is( _.strHas( got.output, '+ reflect.proto2 reflected 6 files' ) );
+    test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
     var files = self.find( outPath );
-    test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.s', './debug2', './debug2/File.js', './debug2/File.s' ] );
+    test.identical( files, [ '.', './debug2', './debug2/File.js', './debug2/File.s', './debug2/File.test.js', './debug2/some.test', './debug2/some.test/File2.js' ] );
     return null;
   })
+
+  /* - */
+
+  // ready
+  // .thenKeep( () =>
+  // {
+  //   test.case = '.build debug3'
+  //   _.fileProvider.filesDelete( outPath );
+  //   return null;
+  // })
+  //
+  // shell({ args : [ '.build debug3' ] })
+  // .thenKeep( ( got ) =>
+  // {
+  //   test.identical( got.exitCode, 0 );
+  //   test.is( _.strHas( got.output, '+ reflect.not.test.only.js.v1 reflected 6 files' ) );
+  //   test.is( _.strHas( got.output, /.*out.* <- .*proto.*/ ) );
+  //   var files = self.find( outPath );
+  //   test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.s', './debug2', './debug2/File.js', './debug2/File.s' ] );
+  //   return null;
+  // })
 
   /* - */
 

@@ -1541,113 +1541,115 @@ function isNormalizedMaybeTrailed( test )
 
   var got;
 
-  test.case = 'posix path'; /* */
-
-  // Not normalized
-
-  var path = '/foo/bar//baz/asdf/quux/..';
-  var expected = false;
-  var got = _.path.isNormalizedMaybeTrailed( path );
-  test.identical( got, expected );
-
-  var path = '/foo/bar//baz/asdf/quux/../';
-  var expected = false;
-  var got = _.path.isNormalizedMaybeTrailed( path );
-  test.identical( got, expected );
-
-  var path = 'foo/bar//baz/asdf/quux/..//.';
-  var expected = false;
-  var got = _.path.isNormalizedMaybeTrailed( path );
-  test.identical( got, expected );
-
-  // Normalized
-
-  var path = '/foo/bar//baz/asdf';
-  var expected = true;
-  var got = _.path.isNormalizedMaybeTrailed( path );
-  test.identical( got, expected );
-
-  var path = _.path.normalize( '/foo/bar//baz/asdf/quux/../' );
-  var expected = true;
-  var got = _.path.isNormalizedMaybeTrailed( path );
-  test.identical( got, expected );
-
-  var path = _.path.normalize( 'foo/bar//baz/asdf/quux/..//.' );
-  var expected = true;
-  var got = _.path.isNormalizedMaybeTrailed( path );
-  test.identical( got, expected );
-
-  test.case = 'windows path'; /* */
-
-  //Not normalized
-
-  var path = '/C:\\temp\\\\foo\\bar\\..\\';
-  var expected = false;
-  var got = _.path.isNormalizedMaybeTrailed( path );
-  test.identical( got, expected );
-
-  var path = '\\C:\\temp\\\\foo\\bar\\..\\';
-  var expected = false;
-  var got = _.path.isNormalizedMaybeTrailed( path );
-  test.identical( got, expected );
-
-  var path = 'C:\\temp\\\\foo\\bar\\..\\..\\';
-  var expected = false;
-  var got = _.path.isNormalizedMaybeTrailed( path );
-  test.identical( got, expected );
-
-  var path = 'c://temp/foo/bar/';
-  var expected = false;
-  var got = _.path.isNormalizedMaybeTrailed( path );
-  test.identical( got, expected );
-
-  // Normalized
-
-  var path = _.path.normalize( '/C:\\temp\\\\foo\\bar\\..\\' );
-  var expected = true;
-  var got = _.path.isNormalizedMaybeTrailed( path );
-  test.identical( got, expected );
-
-  var path = '/C:/temp//foo';
-  var expected = true;
-  var got = _.path.isNormalizedMaybeTrailed( path );
-  test.identical( got, expected );
-
-  var path = _.path.normalize( 'C:\\temp\\\\foo\\bar\\..\\..\\' );
-  var expected = true;
-  var got = _.path.isNormalizedMaybeTrailed( path );
-  test.identical( got, expected );
-
-  test.case = 'empty path'; /* */
-
-  var path = '';
-  var expected = false;
-  var got = _.path.isNormalizedMaybeTrailed( path );
-  test.identical( got, expected );
-
-  var path = '.';
-  var expected = true;
-  var got = _.path.isNormalizedMaybeTrailed( path );
-  test.identical( got, expected );
-
-  var path = '/';
-  var expected = true;
-  var got = _.path.isNormalizedMaybeTrailed( path );
-  test.identical( got, expected );
-
-  var path = '///';
-  var expected = true;
-  var got = _.path.isNormalizedMaybeTrailed( path );
-  test.identical( got, expected );
-
-  var path = '/./.';
-  var expected = false;
-  var got = _.path.isNormalizedMaybeTrailed( path );
-  test.identical( got, expected );
+  // test.case = 'posix path'; /* */
+  //
+  // // Not normalized
+  //
+  // var path = '/foo/bar//baz/asdf/quux/..';
+  // var expected = false;
+  // var got = _.path.isNormalizedMaybeTrailed( path );
+  // test.identical( got, expected );
+  //
+  // var path = '/foo/bar//baz/asdf/quux/../';
+  // var expected = false;
+  // var got = _.path.isNormalizedMaybeTrailed( path );
+  // test.identical( got, expected );
+  //
+  // var path = 'foo/bar//baz/asdf/quux/..//.';
+  // var expected = false;
+  // var got = _.path.isNormalizedMaybeTrailed( path );
+  // test.identical( got, expected );
+  //
+  // // Normalized
+  //
+  // var path = '/foo/bar//baz/asdf';
+  // var expected = true;
+  // var got = _.path.isNormalizedMaybeTrailed( path );
+  // test.identical( got, expected );
+  //
+  // var path = _.path.normalize( '/foo/bar//baz/asdf/quux/../' );
+  // var expected = true;
+  // var got = _.path.isNormalizedMaybeTrailed( path );
+  // test.identical( got, expected );
+  //
+  // var path = _.path.normalize( 'foo/bar//baz/asdf/quux/..//.' );
+  // var expected = true;
+  // var got = _.path.isNormalizedMaybeTrailed( path );
+  // test.identical( got, expected );
+  //
+  // test.case = 'windows path'; /* */
+  //
+  // //Not normalized
+  //
+  // var path = '/C:\\temp\\\\foo\\bar\\..\\';
+  // var expected = false;
+  // var got = _.path.isNormalizedMaybeTrailed( path );
+  // test.identical( got, expected );
+  //
+  // var path = '\\C:\\temp\\\\foo\\bar\\..\\';
+  // var expected = false;
+  // var got = _.path.isNormalizedMaybeTrailed( path );
+  // test.identical( got, expected );
+  //
+  // var path = 'C:\\temp\\\\foo\\bar\\..\\..\\';
+  // var expected = false;
+  // var got = _.path.isNormalizedMaybeTrailed( path );
+  // test.identical( got, expected );
+  //
+  // var path = 'c://temp/foo/bar/';
+  // var expected = false;
+  // var got = _.path.isNormalizedMaybeTrailed( path );
+  // test.identical( got, expected );
+  //
+  // // Normalized
+  //
+  // var path = _.path.normalize( '/C:\\temp\\\\foo\\bar\\..\\' );
+  // var expected = true;
+  // var got = _.path.isNormalizedMaybeTrailed( path );
+  // test.identical( got, expected );
+  //
+  // var path = '/C:/temp//foo';
+  // var expected = true;
+  // var got = _.path.isNormalizedMaybeTrailed( path );
+  // test.identical( got, expected );
+  //
+  // var path = _.path.normalize( 'C:\\temp\\\\foo\\bar\\..\\..\\' );
+  // var expected = true;
+  // var got = _.path.isNormalizedMaybeTrailed( path );
+  // test.identical( got, expected );
+  //
+  // test.case = 'empty path'; /* */
+  //
+  // var path = '';
+  // var expected = true;
+  // var got = _.path.isNormalizedMaybeTrailed( path );
+  // test.identical( got, expected );
+  //
+  // var path = '.';
+  // var expected = true;
+  // var got = _.path.isNormalizedMaybeTrailed( path );
+  // test.identical( got, expected );
+  //
+  // var path = '/';
+  // var expected = true;
+  // var got = _.path.isNormalizedMaybeTrailed( path );
+  // test.identical( got, expected );
+  //
+  // var path = '///';
+  // var expected = true;
+  // var got = _.path.isNormalizedMaybeTrailed( path );
+  // test.identical( got, expected );
+  //
+  // var path = '/./.';
+  // var expected = false;
+  // var got = _.path.isNormalizedMaybeTrailed( path );
+  // test.identical( got, expected );
 
   var path = './.';
   var expected = false;
+  debugger;
   var got = _.path.isNormalizedMaybeTrailed( path );
+  debugger;
   test.identical( got, expected );
 
   test.case = 'path with "." in the middle'; /* */
@@ -1960,7 +1962,7 @@ function isNormalized( test )
   test.case = 'empty path'; /* */
 
   var path = '';
-  var expected = false;
+  var expected = true;
   var got = _.path.isNormalized( path );
   test.identical( got, expected );
 
@@ -3826,8 +3828,6 @@ function refine( test )
 function normalize( test )
 {
 
-  var got;
-
   test.case = 'posix path'; /* */
 
   var path = '/foo/bar//baz/asdf/quux/..';
@@ -3890,7 +3890,7 @@ function normalize( test )
   test.case = 'empty path'; /* */
 
   var path = '';
-  var expected = '.';
+  var expected = '';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
@@ -4305,7 +4305,7 @@ function normalizeTolerant( test )
   test.case = 'empty path'; /* */
 
   var path = '';
-  var expected = '.';
+  var expected = '';
   var got = _.path.normalizeTolerant( path );
   test.identical( got, expected );
 
@@ -4772,6 +4772,20 @@ function undot( test )
 function join( test )
 {
 
+  test.case = 'join empty';
+  var paths = [ '' ];
+  var expected = '';
+  debugger;
+  var got = _.path.join.apply( _.path, paths );
+  debugger;
+  test.identical( got, expected );
+
+  test.case = 'join several empties';
+  var paths = [ '', '' ];
+  var expected = '';
+  var got = _.path.join.apply( _.path, paths );
+  test.identical( got, expected );
+
   test.case = 'join with empty';
   var paths = [ '', 'a/b', '', 'c', '' ];
   var expected = 'a/b/c';
@@ -5179,7 +5193,7 @@ function joinNames( test )
   test.case = 'nothing';
   var got = _.path.joinNames();
   //var expected = ''; // _.path.normalize( '' ) returns '.'
-  var expected = '.';
+  var expected = '';
   test.identical( got, expected );
 
   // Only one type
@@ -5249,7 +5263,7 @@ function joinNames( test )
   test.case = 'null - end';
   var got = _.path.joinNames( 'a.a', 'b.b',  null );
   //var expected = '';
-  var expected = '.';
+  var expected = '';
   test.identical( got, expected );
 
   // Names with Prefixes
@@ -5306,7 +5320,7 @@ function joinNames( test )
 
   test.case = 'null - end';
   var got = _.path.joinNames( 'a/a', 'b/b',  null );
-  var expected = '.';
+  var expected = '';
   test.identical( got, expected );
 
   // Names with prefixes and extensions

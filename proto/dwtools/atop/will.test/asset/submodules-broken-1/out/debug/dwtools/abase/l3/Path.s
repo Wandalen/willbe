@@ -586,7 +586,10 @@ function _normalize( o )
   _.assert( _.strIs( o.src ), 'Expects string' );
 
   if( !o.src.length )
-  return '.';
+  return '';
+
+  // if( !o.src.length )
+  // return '.';
 
   let result = o.src;
   let endsWithUpStr = o.src === this._upStr || _.strEnds( o.src, this._upStr );
@@ -674,11 +677,11 @@ _normalize.defaults =
 
 function normalize( src )
 {
-  let result = this._normalize({ src : src,tolerant : false });
+  let result = this._normalize({ src : src, tolerant : false });
 
   _.assert( _.strIs( src ), 'Expects string' );
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( result.length > 0 );
+  // _.assert( result.length > 0 );
   _.assert( result === this._upStr || _.strEnds( result, this._upStr + this._upStr ) ||  !_.strEnds( result, this._upStr ) );
   _.assert( result.lastIndexOf( this._upStr + this._hereStr + this._upStr ) === -1 );
   _.assert( !_.strEnds( result, this._upStr + this._hereStr ) );
@@ -701,7 +704,7 @@ function normalizeTolerant( src )
   let result = this._normalize({ src : src, tolerant : true });
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( result.length > 0 );
+  // _.assert( result.length > 0 );
   _.assert( result === this._upStr || _.strEnds( result, this._upStr ) || !_.strEnds( result, this._upStr + this._upStr ) );
   _.assert( result.lastIndexOf( this._upStr + this._hereStr + this._upStr ) === -1 );
   _.assert( !_.strEnds( result, this._upStr + this._hereStr ) );
@@ -1169,8 +1172,8 @@ function join_body( o )
 
   /* */
 
-  if( result === '' )
-  return '.';
+  // if( result === '' )
+  // return '.';
 
   if( !o.raw && result !== null )
   result = this.normalize( result );
