@@ -132,7 +132,7 @@ submodule :
 
 </details>
 
-Введіть команду `will .submodules.download` в директорії `first`.
+Введіть [команду `will .submodules.download`](../concept/Command.md#Таблиця-команд-утиліти-willbe) в директорії `first`.
 
 <details>
   <summary><u>Вивід команди <code>ls -al</code></u></summary>
