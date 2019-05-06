@@ -37,80 +37,9 @@ path:
   proto:
     path: ./proto
   repository:
-    path: 'git+https://github.com/Wandalen/willbe.git'
+    path: 'git+https:///github.com/Wandalen/willbe.git'
   bugs:
-    path: 'https://github.com/Wandalen/willbe/issues'
-  exportedDir.doc.export:
-    path: ./doc
-    criterion:
-      default: 0
-      debug: 1
-      raw: 1
-      proto: 0
-      doc: 1
-      export: 1
-      tar: 0
-      public: 1
-  exportedFiles.doc.export:
-    path:
-      - doc
-      - doc/Build.md
-      - doc/Introduction.md
-      - doc/Module.md
-      - doc/README.md
-      - doc/Submodules.md
-      - doc/Will-files.md
-      - doc/totorial2
-      - doc/totorial2/Concepts.md
-      - doc/totorial2/Concepts.urk.md
-      - doc/totorial2/ExplicitRequirements.md
-      - doc/totorial2/Faq.ukr.md
-      - doc/totorial2/FirstWillFile.md
-      - doc/totorial2/HowToUseCommandLineInterfaceOfWill.ukr.md
-      - doc/totorial2/Links.md
-      - doc/totorial2/Topics.md
-      - doc/totorial2/WillFileFtructure.md
-      - doc/tutorial
-      - doc/tutorial/Criterion.md
-      - doc/tutorial/DeclaringModule.md
-      - doc/tutorial/Exporting.md
-      - doc/tutorial/FirstBuild.md
-      - doc/tutorial/ListingResources.md
-      - doc/tutorial/LocalSubmodules.md
-      - doc/tutorial/README.md
-      - doc/tutorial/ReflectorsAndSteps.md
-      - doc/tutorial/RemoteSubmodules.md
-      - doc/tutorial/SettingUp.md
-      - doc/tutorial/SplitModule.md
-      - doc/tutorial/modules
-      - doc/tutorial/modules/copying
-      - doc/tutorial/modules/copying/proto
-      - doc/tutorial/modules/criterion
-      - doc/tutorial/modules/criterion/fileA
-      - doc/tutorial/modules/criterion/fileB
-      - doc/tutorial/modules/first
-      - doc/tutorial/modules/importing
-      - doc/tutorial/modules/importing/local_modules
-      - doc/tutorial/modules/importing/local_modules/semantic-ui.out.will.yml
-      - doc/tutorial/modules/importing/local_modules/semantic-ui.will.yml
-      - doc/tutorial/modules/importing/local_modules/dir
-      - doc/tutorial/modules/importing/local_modules/dir/File.js
-      - doc/tutorial/modules/listing
-      - doc/tutorial/modules/second
-      - doc/tutorial/modules/second/package.json
-      - doc/tutorial/modules/split-files
-      - doc/tutorial/modules/split-files/fileToExport
-      - doc/tutorial/modules/third
-      - doc/tutorial/modules/third/fileToExport
-    criterion:
-      default: 0
-      debug: 1
-      raw: 1
-      proto: 0
-      doc: 1
-      export: 1
-      tar: 0
-      public: 1
+    path: 'https:///github.com/Wandalen/willbe/issues'
   exportedDir.proto.export:
     path: ./proto
     criterion:
@@ -189,6 +118,11 @@ path:
       - proto/dwtools/atop/will.test/asset/experiment/proto/File.debug.js
       - proto/dwtools/atop/will.test/asset/experiment/proto/File.js
       - proto/dwtools/atop/will.test/asset/experiment/proto/File.release.js
+      - proto/dwtools/atop/will.test/asset/export-second
+      - proto/dwtools/atop/will.test/asset/export-second/doc
+      - proto/dwtools/atop/will.test/asset/export-second/doc/File.md
+      - proto/dwtools/atop/will.test/asset/export-second/proto
+      - proto/dwtools/atop/will.test/asset/export-second/proto/File.js
       - proto/dwtools/atop/will.test/asset/export-to-root
       - proto/dwtools/atop/will.test/asset/export-to-root/proto
       - proto/dwtools/atop/will.test/asset/export-to-root/proto/Single.s
@@ -198,6 +132,41 @@ path:
       - proto/dwtools/atop/will.test/asset/export-with-reflector/proto/include
       - >-
         proto/dwtools/atop/will.test/asset/export-with-reflector/proto/include/MustBeExcluded.s
+      - proto/dwtools/atop/will.test/asset/export-with-submodules
+      - proto/dwtools/atop/will.test/asset/export-with-submodules/a.will.yml
+      - proto/dwtools/atop/will.test/asset/export-with-submodules/b.will.yml
+      - proto/dwtools/atop/will.test/asset/export-with-submodules/c.will.yml
+      - proto/dwtools/atop/will.test/asset/export-with-submodules/File.js
+      - proto/dwtools/atop/will.test/asset/export-with-submodules/out
+      - >-
+        proto/dwtools/atop/will.test/asset/export-with-submodules/out/module-a.out.will.yml
+      - >-
+        proto/dwtools/atop/will.test/asset/export-with-submodules/out/module-b.out.will.yml
+      - >-
+        proto/dwtools/atop/will.test/asset/export-with-submodules/out/module-c.out.will.yml
+      - proto/dwtools/atop/will.test/asset/export-with-submodules/proto
+      - proto/dwtools/atop/will.test/asset/export-with-submodules/proto/a
+      - >-
+        proto/dwtools/atop/will.test/asset/export-with-submodules/proto/a/File.js
+      - proto/dwtools/atop/will.test/asset/export-with-submodules/proto/b
+      - >-
+        proto/dwtools/atop/will.test/asset/export-with-submodules/proto/b/File.js
+      - >-
+        proto/dwtools/atop/will.test/asset/export-with-submodules/proto/b/File.test.js
+      - >-
+        proto/dwtools/atop/will.test/asset/export-with-submodules/proto/b/File1.debug.js
+      - >-
+        proto/dwtools/atop/will.test/asset/export-with-submodules/proto/b/File1.release.js
+      - >-
+        proto/dwtools/atop/will.test/asset/export-with-submodules/proto/b/File2.debug.js
+      - >-
+        proto/dwtools/atop/will.test/asset/export-with-submodules/proto/b/File2.release.js
+      - >-
+        proto/dwtools/atop/will.test/asset/export-with-submodules/proto/dir3.test
+      - >-
+        proto/dwtools/atop/will.test/asset/export-with-submodules/proto/dir3.test/File.js
+      - >-
+        proto/dwtools/atop/will.test/asset/export-with-submodules/proto/dir3.test/File.test.js
       - proto/dwtools/atop/will.test/asset/function-platform
       - proto/dwtools/atop/will.test/asset/function-platform/proto
       - proto/dwtools/atop/will.test/asset/function-platform/proto/File.js
@@ -238,6 +207,8 @@ path:
       - proto/dwtools/atop/will.test/asset/make/file/File.js
       - proto/dwtools/atop/will.test/asset/make/file/File.test.js
       - proto/dwtools/atop/will.test/asset/make/file/Produce.js
+      - proto/dwtools/atop/will.test/asset/make/file/Produced.js2
+      - proto/dwtools/atop/will.test/asset/make/file/Produced.txt2
       - proto/dwtools/atop/will.test/asset/make/file/Src1.txt
       - proto/dwtools/atop/will.test/asset/make/file/Src2.txt
       - proto/dwtools/atop/will.test/asset/multiple-exports
@@ -389,11 +360,12 @@ path:
       - proto/dwtools/atop/will.test/asset/single with space/proto
       - proto/dwtools/atop/will.test/asset/single with space/proto/Single.s
       - proto/dwtools/atop/will.test/asset/step-shell
+      - proto/dwtools/atop/will.test/asset/step-submodules-download
+      - proto/dwtools/atop/will.test/asset/step-submodules-download/proto
+      - >-
+        proto/dwtools/atop/will.test/asset/step-submodules-download/proto/Simple.js
       - proto/dwtools/atop/will.test/asset/step-view
       - proto/dwtools/atop/will.test/asset/step-view/File.html
-      - proto/dwtools/atop/will.test/asset/submodule-download
-      - proto/dwtools/atop/will.test/asset/submodule-download/proto
-      - proto/dwtools/atop/will.test/asset/submodule-download/proto/Simple.js
       - proto/dwtools/atop/will.test/asset/submodules
       - proto/dwtools/atop/will.test/asset/submodules/proto
       - proto/dwtools/atop/will.test/asset/submodules/proto/WithSubmodules.s
@@ -509,7 +481,21 @@ reflector:
   reflect.proto.:
     src:
       filePath:
-        'path::proto': 'path::out.*=1'
+        .: .
+      prefixPath: proto
+      maskAll:
+        excludeAny:
+          - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
+          - !<tag:yaml.org,2002:js/regexp> /\.unique$/
+          - !<tag:yaml.org,2002:js/regexp> /\.git$/
+          - !<tag:yaml.org,2002:js/regexp> /\.svn$/
+          - !<tag:yaml.org,2002:js/regexp> /\.hg$/
+          - !<tag:yaml.org,2002:js/regexp> /\.DS_Store$/
+          - !<tag:yaml.org,2002:js/regexp> /(^|\/)-/
+          - !<tag:yaml.org,2002:js/regexp> /\.debug($|\.|\/)/i
+          - !<tag:yaml.org,2002:js/regexp> /\.experiment($|\.|\/)/i
+    dst:
+      prefixPath: out/release
     criterion:
       debug: 0
     mandatory: 1
@@ -518,7 +504,20 @@ reflector:
   reflect.proto.debug:
     src:
       filePath:
-        'path::proto': 'path::out.*=1'
+        .: .
+      prefixPath: proto
+      maskAll:
+        excludeAny:
+          - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
+          - !<tag:yaml.org,2002:js/regexp> /\.unique$/
+          - !<tag:yaml.org,2002:js/regexp> /\.git$/
+          - !<tag:yaml.org,2002:js/regexp> /\.svn$/
+          - !<tag:yaml.org,2002:js/regexp> /\.hg$/
+          - !<tag:yaml.org,2002:js/regexp> /\.DS_Store$/
+          - !<tag:yaml.org,2002:js/regexp> /(^|\/)-/
+          - !<tag:yaml.org,2002:js/regexp> /\.release($|\.|\/)/i
+    dst:
+      prefixPath: out/debug
     criterion:
       debug: 1
     mandatory: 1
@@ -526,93 +525,21 @@ reflector:
       - predefined.*
   reflect.submodules:
     src:
-      filePath:
-        'submodule::*/exported::*=1/path::exportedDir*=1': 'path::out.*=1'
+      maskAll:
+        excludeAny:
+          - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
+          - !<tag:yaml.org,2002:js/regexp> /\.unique$/
+          - !<tag:yaml.org,2002:js/regexp> /\.git$/
+          - !<tag:yaml.org,2002:js/regexp> /\.svn$/
+          - !<tag:yaml.org,2002:js/regexp> /\.hg$/
+          - !<tag:yaml.org,2002:js/regexp> /\.DS_Store$/
+          - !<tag:yaml.org,2002:js/regexp> /(^|\/)-/
+          - !<tag:yaml.org,2002:js/regexp> /\.release($|\.|\/)/i
     criterion:
       debug: 1
     mandatory: 1
     inherit:
       - predefined.*
-  exported.doc.export:
-    src:
-      filePath:
-        doc: true
-      prefixPath: .
-    criterion:
-      default: 0
-      debug: 1
-      raw: 1
-      proto: 0
-      doc: 1
-      export: 1
-      tar: 0
-      public: 1
-    mandatory: 1
-  exportedFiles.doc.export:
-    src:
-      filePath:
-        .: true
-        Build.md: true
-        Introduction.md: true
-        Module.md: true
-        README.md: true
-        Submodules.md: true
-        Will-files.md: true
-        totorial2: true
-        totorial2/Concepts.md: true
-        totorial2/Concepts.urk.md: true
-        totorial2/ExplicitRequirements.md: true
-        totorial2/Faq.ukr.md: true
-        totorial2/FirstWillFile.md: true
-        totorial2/HowToUseCommandLineInterfaceOfWill.ukr.md: true
-        totorial2/Links.md: true
-        totorial2/Topics.md: true
-        totorial2/WillFileFtructure.md: true
-        tutorial: true
-        tutorial/Criterion.md: true
-        tutorial/DeclaringModule.md: true
-        tutorial/Exporting.md: true
-        tutorial/FirstBuild.md: true
-        tutorial/ListingResources.md: true
-        tutorial/LocalSubmodules.md: true
-        tutorial/README.md: true
-        tutorial/ReflectorsAndSteps.md: true
-        tutorial/RemoteSubmodules.md: true
-        tutorial/SettingUp.md: true
-        tutorial/SplitModule.md: true
-        tutorial/modules: true
-        tutorial/modules/copying: true
-        tutorial/modules/copying/proto: true
-        tutorial/modules/criterion: true
-        tutorial/modules/criterion/fileA: true
-        tutorial/modules/criterion/fileB: true
-        tutorial/modules/first: true
-        tutorial/modules/importing: true
-        tutorial/modules/importing/local_modules: true
-        tutorial/modules/importing/local_modules/semantic-ui.out.will.yml: true
-        tutorial/modules/importing/local_modules/semantic-ui.will.yml: true
-        tutorial/modules/importing/local_modules/dir: true
-        tutorial/modules/importing/local_modules/dir/File.js: true
-        tutorial/modules/listing: true
-        tutorial/modules/second: true
-        tutorial/modules/second/package.json: true
-        tutorial/modules/split-files: true
-        tutorial/modules/split-files/fileToExport: true
-        tutorial/modules/third: true
-        tutorial/modules/third/fileToExport: true
-      basePath: .
-      prefixPath: doc
-    criterion:
-      default: 0
-      debug: 1
-      raw: 1
-      proto: 0
-      doc: 1
-      export: 1
-      tar: 0
-      public: 1
-    recursive: 0
-    mandatory: 1
   exported.proto.export:
     src:
       filePath:
@@ -804,18 +731,3 @@ exported:
     exportedDirPath: 'path::exportedDir.proto.export'
     exportedFilesPath: 'path::exportedFiles.proto.export'
     originalWillFilesPath: 'path::original.will.files'
-  doc.export:
-    version: 0.3.159
-    criterion:
-      default: 0
-      debug: 1
-      raw: 1
-      proto: 0
-      doc: 1
-      export: 1
-      tar: 0
-      public: 1
-    exportedReflector: 'reflector::exported.doc.export'
-    exportedFilesReflector: 'reflector::exportedFiles.doc.export'
-    exportedDirPath: 'path::exportedDir.doc.export'
-    exportedFilesPath: 'path::exportedFiles.doc.export'

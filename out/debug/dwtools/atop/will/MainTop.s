@@ -69,6 +69,12 @@ function _moduleReadyThen( o )
     forming : o.forming,
   });
 
+  if( o.forming && module.resourcesFormed <= 1 )
+  {
+    module.stager.stageCancel( 'resourcesFormed' );
+    module.resourcesForm();
+  }
+
   return will.currentModule.ready.split().keep( function( arg )
   {
     let result = o.onReady( module );
@@ -312,6 +318,7 @@ function _commandList( e, act, resourceName )
 
   _.assert( arguments.length === 3 );
 
+  debugger;
   return will.moduleReadyThen( function( module )
   {
 
@@ -361,8 +368,6 @@ function commandResourcesList( e )
 
   function act( module, resources )
   {
-
-    debugger;
     let logger = will.logger;
 
     if( !e.request.subject && !_.mapKeys( e.request.map ).length )
@@ -381,14 +386,6 @@ function commandResourcesList( e )
 
   return will._commandList( e, act, '*' );
 
-  // function act( module )
-  // {
-  //   let logger = will.logger;
-  //   logger.log( module.infoExport() );
-  // }
-  //
-  // return will._commandList( e, act, '*' );
-
 }
 
 //
@@ -399,18 +396,6 @@ function commandPathsList( e )
 
   function act( module, resources )
   {
-
-    // let request = _.strRequestParse( e.argument );
-    // resources = module.resolve
-    // ({
-    //   selector : request.subject || '*',
-    //   criterion : request.map,
-    //   defaultResourceName : 'path',
-    //   prefixlessAction : 'default',
-    //   mapValsUnwrapping : 0,
-    //   pathUnwrapping : 1,
-    //   pathResolving : 0,
-    // });
 
     let logger = will.logger;
     logger.log( module.infoExportPaths( resources ) );
@@ -577,10 +562,19 @@ function commandSubmodulesClean( e )
 function commandSubmodulesDownload( e )
 {
   let will = this;
+
+  let propertiesMap = _.strToMap( e.argument );
+  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
+
   return will.moduleReadyThenNonForming( function( module )
   {
-    return module.submodulesDownload();
+    return module.submodulesDownload({ dry : e.propertiesMap.dry });
   });
+}
+
+commandSubmodulesDownload.commandProperties =
+{
+  dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
 }
 
 //
@@ -588,10 +582,19 @@ function commandSubmodulesDownload( e )
 function commandSubmodulesUpdate( e )
 {
   let will = this;
+
+  let propertiesMap = _.strToMap( e.argument );
+  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
+
   return will.moduleReadyThenNonForming( function( module )
   {
-    return module.submodulesUpdate();
+    return module.submodulesUpdate({ dry : e.propertiesMap.dry });
   });
+}
+
+commandSubmodulesUpdate.commandProperties =
+{
+  dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
 }
 
 //
@@ -686,44 +689,6 @@ commandClean.commandProperties =
   dry : 'Dry run without deleting. Default is dry:0.',
 }
 
-// // xxx : remove the command, add option dry to command .clean
-//
-// function commandCleanWhat( e )
-// {
-//   let will = this;
-//
-//   return will.moduleReadyThenNonForming( function( module )
-//   {
-//     let time = _.timeNow();
-//     let filesPath = module.cleanWhat();
-//     let logger = will.logger;
-//     logger.log();
-//
-//     if( logger.verbosity >= 4 )
-//     logger.log( _.toStr( filesPath[ '/' ], { multiline : 1, wrap : 0, levels : 2 } ) );
-//
-//     if( logger.verbosity >= 2 )
-//     {
-//       let details = _.filter( filesPath, ( filesPath, basePath ) =>
-//       {
-//         if( basePath === '/' )
-//         return;
-//         if( !filesPath.length )
-//         return;
-//         // if( filesPath.length === 1 )
-//         // return filesPath[ 0 ];
-//         return filesPath.length + ' at ' + basePath;
-//       });
-//       logger.log( _.mapVals( details ).join( '\n' ) );
-//     }
-//
-//     logger.log( 'Clean will delete ' + filesPath[ '/' ].length + ' file(s) in total, found in ' + _.timeSpent( time ) );
-//
-//     return filesPath;
-//   });
-//
-// }
-
 //
 
 function commandBuild( e )
@@ -755,7 +720,7 @@ function commandBuild( e )
 function commandExport( e )
 {
   let will = this;
-  return will.moduleReadyThenNonForming( function( module )
+  return will.moduleReadyThen( function( module )
   {
     let request = _.strRequestParse( e.argument );
     let builds = module.exportsSelect( request.subject, request.map );
@@ -806,7 +771,8 @@ function commandWith( e )
   module.willFilesFind();
   module.willFilesOpen();
   module.submodulesForm();
-  module.resourcesForm();
+  // module.resourcesForm();
+  module.resourcesFormSkip();
 
   return module.ready.split().keep( function( arg )
   {

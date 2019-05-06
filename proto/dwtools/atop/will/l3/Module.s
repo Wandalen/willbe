@@ -40,7 +40,6 @@ function finit()
     // module.associatedSubmodule = null;
   });
 
-  debugger;
   module.unform();
   module.about.finit();
   module.execution.finit();
@@ -1722,7 +1721,11 @@ function willFilesReadEnd()
 
   if( will.verbosity >= 2 )
   if( !module.supermodule && !module.originalModule )
-  logger.log( ' . Read', module.willFilesSelect().length, 'will-files in', _.timeSpent( module.willFilesReadBeginTime ), '\n' );
+  {
+    if( !module.willFilesReadTimeReported )
+    logger.log( ' . Read', module.willFilesSelect().length, 'will-files in', _.timeSpent( module.willFilesReadBeginTime ), '\n' );
+    module.willFilesReadTimeReported = 1;
+  }
 
 }
 
@@ -1828,7 +1831,25 @@ function submodulesHaveAnyError()
 
 //
 
-function _submodulesDownload( o )
+function _submodulesDownload_pre( routine, args )
+{
+  let module = this;
+
+  _.assert( arguments.length === 2 );
+  _.assert( args.length <= 2 );
+
+  let o;
+  if( args[ 1 ] !== undefined )
+  o = { name : args[ 0 ], criterion : args[ 1 ] }
+  else
+  o = args[ 0 ];
+
+  o = _.routineOptions( routine, o );
+
+  return o;
+}
+
+function _submodulesDownload_body( o )
 {
   let module = this;
   let will = module.will;
@@ -1845,7 +1866,7 @@ function _submodulesDownload( o )
 
   _.assert( module.preformed === 3 );
   _.assert( arguments.length === 1 );
-  _.routineOptions( _submodulesDownload, arguments );
+  _.assertRoutineOptions( _submodulesDownload_body, arguments );
 
   logger.up();
 
@@ -1855,9 +1876,12 @@ function _submodulesDownload( o )
   {
     logger.down();
     if( err )
-    throw _.err( 'Failed to', ( o.upgrading ? 'update' : 'download' ), 'submodules of', module.decoratedNickName, '\n', err );
+    throw _.err( 'Failed to', ( o.updating ? 'update' : 'download' ), 'submodules of', module.decoratedNickName, '\n', err );
     logger.rbegin({ verbosity : -2 });
-    logger.log( ' + ' + downloadedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedNickName + ' were ' + ( o.upgrading ? 'updated' : 'downloaded' ) + ' in ' + _.timeSpent( time ) );
+    if( o.dry )
+    logger.log( ' + ' + downloadedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedNickName + ' will be ' + ( o.updating ? 'updated' : 'downloaded' ) );
+    else
+    logger.log( ' + ' + downloadedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedNickName + ' were ' + ( o.updating ? 'updated' : 'downloaded' ) + ' in ' + _.timeSpent( time ) );
     logger.rend({ verbosity : -2 });
     return arg;
   });
@@ -1941,39 +1965,50 @@ function _submodulesDownload( o )
 
 }
 
-_submodulesDownload.defaults =
+_submodulesDownload_body.defaults =
 {
-  upgrading : 0,
+  updating : 0,
   forming : 1,
   recursive : 1,
+  dry : 0,
   downloaded : null,
 }
 
-//
-
-function submodulesDownload()
-{
-  let module = this;
-  let will = module.will;
-
-  _.assert( module.preformed === 3 );
-  _.assert( arguments.length === 0 );
-
-  return module._submodulesDownload({ upgrading : 0 });
-}
+let _submodulesDownload = _.routineFromPreAndBody( _submodulesDownload_pre, _submodulesDownload_body );
 
 //
 
-function submodulesUpdate()
-{
-  let module = this;
-  let will = module.will;
+// function submodulesDownload()
+// {
+//   let module = this;
+//   let will = module.will;
+//
+//   _.assert( module.preformed === 3 );
+//   _.assert( arguments.length === 0 );
+//
+//   return module._submodulesDownload({ updating : 0 });
+// }
 
-  _.assert( module.preformed === 3 );
-  _.assert( arguments.length === 0 );
+let submodulesDownload = _.routineFromPreAndBody( _submodulesDownload_pre, _submodulesDownload_body, 'submodulesDownload' );
+submodulesDownload.defaults.updating = 0;
 
-  return module._submodulesDownload({ upgrading : 1 });
-}
+//
+
+// function submodulesUpdate()
+// {
+//   let module = this;
+//   let will = module.will;
+//
+//   _.assert( module.preformed === 3 );
+//   _.assert( arguments.length === 0 );
+//
+//   return module._submodulesDownload({ updating : 1 });
+// }
+//
+// submodulesUpdate.defaults = Object.create
+
+let submodulesUpdate = _.routineFromPreAndBody( _submodulesDownload_pre, _submodulesDownload_body, 'submodulesUpdate' );
+submodulesUpdate.defaults.updating = 1;
 
 //
 
@@ -2189,9 +2224,10 @@ function moduleFixatePath( o )
 
     if( will.verbosity >= 2 )
     {
-      let fixated = 'fixated';
+      let fixated = 'fixated to version';
+
       if( o.dry )
-      fixated = 'will be fixated';
+      fixated = 'will be fixated to version';
       let moveReport = path.moveReport( fixatedPath, o.remotePath );
 
       if( !log.length )
@@ -2234,27 +2270,7 @@ function submodulesFormSkip()
 
   if( module.submodulesFormed > 0 )
   return module.stager.stageConsequence( 'submodulesFormed' );
-
   return module.stager.stageSkip( 'submodulesFormed' );
-
-  // if( module.submodulesFormed > 0 )
-  // return module.stager.stageConsequence( 'submodulesFormed' );
-  // module.stager.stageState( 'submodulesFormed', 1 );
-  //
-  // return module.stager.stageConsequence( 'submodulesFormed', -1 ).split()
-  // .finally( ( err, arg ) =>
-  // {
-  //
-  //   module.stager.stageState( 'submodulesFormed', 2 );
-  //
-  //   if( err )
-  //   throw module.stager.stageError( 'submodulesFormed', err );
-  //   else
-  //   module.stager.stageState( 'submodulesFormed', 3 );
-  //
-  //   return arg;
-  // });
-
 }
 
 //
@@ -2287,6 +2303,7 @@ function submodulesForm()
     module.stager.stageState( 'submodulesFormed', 3 );
     return arg;
   });
+
 }
 
 //
@@ -2525,7 +2542,7 @@ function _remoteDownload( o )
   let path = fileProvider.path;
   let logger = will.logger;
   let time = _.timeNow();
-  let reopening = false;
+  let downloading = false;
   let con = _.Consequence().take( null );
 
   _.routineOptions( _remoteDownload, o );
@@ -2537,17 +2554,10 @@ function _remoteDownload( o )
   _.assert( _.strDefined( module.localPath ) );
   _.assert( !!module.supermodule );
 
-  let o2 =
-  {
-    reflectMap : { [ module.remotePath ] : module.localPath },
-    verbosity : will.verbosity - 5,
-    extra : { fetching : 0 },
-  }
-
   return con
   .keep( () =>
   {
-    if( o.upgrading )
+    if( o.updating )
     return module.remoteIsUpToDate();
     else
     return module.remoteIsDownloaded();
@@ -2555,16 +2565,16 @@ function _remoteDownload( o )
   .keep( function( arg )
   {
 
-    if( o.upgrading )
-    reopening = !module.isUpToDate;
+    if( o.updating )
+    downloading = !module.isUpToDate;
     else
-    reopening = !module.isDownloaded;
+    downloading = !module.isDownloaded;
 
     /*
-    delete remote module if it has a critical error
+    delete old remote module if it has a critical error
     */
 
-    if( module.willFilesOpenReady.errorsCount() )
+    if( module.willFilesOpenReady.errorsCount() && !o.dry )
     fileProvider.filesDelete({ filePath : module.localPath, throwing : 0, sync : 1 });
 
     return arg;
@@ -2572,7 +2582,15 @@ function _remoteDownload( o )
   .keep( () =>
   {
 
-    if( reopening )
+    let o2 =
+    {
+      reflectMap : { [ module.remotePath ] : module.localPath },
+      verbosity : will.verbosity - 5,
+      extra : { fetching : 0 },
+    }
+
+    // debugger;
+    if( downloading && !o.dry )
     return will.Predefined.filesReflect.call( fileProvider, o2 );
 
     return null;
@@ -2581,7 +2599,7 @@ function _remoteDownload( o )
   {
     module.isUpToDate = true;
     module.isDownloaded = true;
-    if( o.forming && reopening )
+    if( o.forming && !o.dry && downloading )
     {
       _.assert( module.preformed === 3, 'not tested' );
 
@@ -2603,21 +2621,31 @@ function _remoteDownload( o )
   .finallyKeep( function( err, arg )
   {
     if( err )
-    throw _.err( 'Failed to', ( o.upgrading ? 'update' : 'download' ), module.decoratedAbsoluteName, '\n', err );
-    if( will.verbosity >= 3 && reopening )
+    throw _.err( 'Failed to', ( o.updating ? 'update' : 'download' ), module.decoratedAbsoluteName, '\n', err );
+    if( will.verbosity >= 3 && downloading )
     {
-      let remoteProvider = fileProvider.providerForPath( module.remotePath );
-      let version = remoteProvider.versionCurrentRetrive( module.localPath );
-      logger.log( ' + ' + module.decoratedNickName + ' version ' + version + ' was ' + ( o.upgrading ? 'updated' : 'downloaded' ) + ' in ' + _.timeSpent( time ) );
+      if( o.dry )
+      {
+        let remoteProvider = fileProvider.providerForPath( module.remotePath );
+        let version = remoteProvider.versionRemoteCurrentRetrive( module.remotePath );
+        logger.log( ' + ' + module.decoratedNickName + ' will be ' + ( o.updating ? 'updated to' : 'downloaded' ) + ' version ' + _.color.strFormat( version, 'path' ) );
+      }
+      else
+      {
+        let remoteProvider = fileProvider.providerForPath( module.remotePath );
+        let version = remoteProvider.versionLocalRetrive( module.localPath );
+        logger.log( ' + ' + module.decoratedNickName + ' was ' + ( o.updating ? 'updated to' : 'downloaded' ) + ' version ' + _.color.strFormat( version, 'path' ) + ' in ' + _.timeSpent( time ) );
+      }
     }
-    return reopening;
+    return downloading;
   });
 
 }
 
 _remoteDownload.defaults =
 {
-  upgrading : 0,
+  updating : 0,
+  dry : 0,
   forming : 1,
   recursive : 0,
 }
@@ -2628,7 +2656,7 @@ function remoteDownload()
 {
   let module = this;
   let will = module.will;
-  return module._remoteDownload({ upgrading : 0 });
+  return module._remoteDownload({ updating : 0 });
 }
 
 //
@@ -2637,7 +2665,7 @@ function remoteUpgrade()
 {
   let module = this;
   let will = module.will;
-  return module._remoteDownload({ upgrading : 1 });
+  return module._remoteDownload({ updating : 1 });
 }
 
 //
@@ -2655,7 +2683,7 @@ function remoteCurrentVersion()
   debugger;
   let remoteProvider = fileProvider.providerForPath( module.commonPath );
   debugger;
-  return remoteProvider.versionCurrentRetrive( module.remotePath )
+  return remoteProvider.versionLocalRetrive( module.remotePath )
 }
 
 //
@@ -2673,7 +2701,7 @@ function remoteLatestVersion()
   debugger;
   let remoteProvider = fileProvider.providerForPath( module.commonPath );
   debugger;
-  return remoteProvider.versionLatestRetrive( module.clonePath )
+  return remoteProvider.versionRemoteLatestRetrive( module.clonePath )
 }
 
 // --
@@ -2757,9 +2785,7 @@ function resourcesForm()
     module.willFilesReadEnd();
 
     _.assert( !module.ready.resourcesCount() );
-    // module.ready.takeSoon( err, arg ); // xxx
     module.ready.take( err, arg );
-    // _.assert( !module.ready.resourcesCount() );
 
     if( err )
     throw module.stager.stageError( 'resourcesFormed', err );
@@ -3644,10 +3670,8 @@ function resolveContextPrepare( o )
     let currentThis = Object.create( null );
     currentThis.src = [];
     currentThis.dst = [];
-    // debugger;
     let o2 = o.currentThis.optionsForFindGroupExport();
     o2.outputFormat = 'absolute';
-    // debugger;
     let found = fileProvider.filesFindGroups( o2 );
     currentThis.filesGrouped = found.filesGrouped;
     for( let dst in found.filesGrouped )
@@ -3655,7 +3679,7 @@ function resolveContextPrepare( o )
       currentThis.dst.push( hardDrive.path.nativize( dst ) );
       currentThis.src.push( hardDrive.path.s.nativize( found.filesGrouped[ dst ] ).join( ' ' ) );
     }
-    o.currentThis = currentThis; // xxx
+    o.currentThis = currentThis;
   }
   else _.assert( 0 );
 
@@ -3871,7 +3895,7 @@ function onSelectorDown()
       return pathNativize.call( it, resource );
       if( resource instanceof will.PathResource )
       {
-        resource = resource.cloneDerivative(); // xxx : don't do second clone
+        resource = resource.cloneDerivative(); // !!! xxx : don't do second clone
         _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
         if( resource.path )
         resource.path = pathNativize.call( it, resource.path );
@@ -3879,8 +3903,6 @@ function onSelectorDown()
       else debugger;
       return resource;
     });
-    debugger;
-    return;
 
   }
 
@@ -3889,13 +3911,31 @@ function onSelectorDown()
   function pathNativize( filePath )
   {
     let it = this;
-    let currentModule = it.module;
+    let currentModule = it.module
     let rop = it.selectMultipleOptions.iteratorExtension.resolveOptions;
-    let result = filePath;
     let will = rop.module.will;
-    _.assert( _.strIs( filePath ) || _.strsAreAll( filePath ) );
-    result = will.fileProvider.providersWithProtocolMap.file.path.s.nativize( result );
-    return result;
+    let path = will.fileProvider.providersWithProtocolMap.file.path;
+    let result = filePath;
+
+    _.assert( _.strIs( result ) || _.strsAreAll( result ) );
+
+    if( _.arrayIs( filePath ) )
+    {
+      return filePath.map( ( e ) => nativize( e ) );
+    }
+    else
+    {
+      return nativize( filePath );
+    }
+
+    function nativize( filePath )
+    {
+      if( path.isGlobal( filePath ) )
+      return filePath
+      else
+      return path.nativize( filePath );
+    }
+
   }
 
   /* */
@@ -4447,6 +4487,9 @@ function _resolveAct( o )
     let currentModule = it.module;
     let result = filePath;
 
+    if( _.arrayIs( filePath ) )
+    filePath = _.arrayFlattenOnce( filePath );
+
     _.assert( _.strIs( filePath ) || _.strsAreAll( filePath ) );
 
     if( it.replicateIteration.composite )
@@ -4485,6 +4528,9 @@ function _resolveAct( o )
     // return;
     // if( !it.dstWritingDown )
     // return;
+
+    if( it.dst && it.dst.nickName === 'path::export' )
+    debugger;
 
     if( it.dst instanceof will.Reflector )
     {
@@ -4667,54 +4713,15 @@ var defaults = _resolveAct.defaults = Object.create( resolve.defaults )
 defaults.visited = null;
 
 //
-//
-// function pathResolve_body( o )
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   _.assert( _.strIs( o.selector ) || _.arrayIs( o.selector ) );
-//
-//   let o2 = _.mapExtend( null, o );
-//   let result = module.resolve( o2 );
-//   return result;
-// }
-//
-// _.routineExtend( pathResolve_body, resolve );
-//
-// var defaults = pathResolve_body.defaults;
-// defaults.pathResolving = 'in';
-// defaults.prefixlessAction = 'resolved';
 
 let pathResolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
 var defaults = pathResolve.defaults;
 defaults.pathResolving = 'in';
 defaults.prefixlessAction = 'resolved';
+defaults.selectorIsPath = 1;
 
 //
-
-// function resolveRaw_body( o )
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   _.assert( _.strIs( o.selector ) || _.arrayIs( o.selector ) );
-//
-//   let o2 = _.mapExtend( null, o );
-//   let result = module.resolve( o2 );
-//   return result;
-// }
-//
-// _.routineExtend( resolveRaw_body, resolve );
-//
-// var defaults = resolveRaw_body.defaults;
 
 let resolveRaw = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
@@ -4736,18 +4743,21 @@ function reflectorResolve_body( o )
   let module = this;
   let will = module.will;
 
-  let reflector = module.resolve( o );
+  let o2 = _.mapExtend( null, o );
+  o2.pathResolving = 0; // yyy
+  let reflector = module.resolve( o2 );
 
   if( o.missingAction === 'undefine' && reflector === undefined )
   return reflector;
   else if( o.missingAction === 'error' && _.errIs( reflector ) )
   return reflector;
 
-  _.sure( reflector instanceof will.Reflector, () => 'Reflector ' + o.selector + ' was not found' + _.strType( reflector ) );
-
-  reflector.form();
-
-  _.assert( reflector.formed === 3, () => reflector.nickName + ' is not formed' );
+  if( reflector instanceof will.Reflector )
+  {
+    _.sure( reflector instanceof will.Reflector, () => 'Reflector ' + o.selector + ' was not found' + _.strType( reflector ) );
+    reflector.form();
+    _.assert( reflector.formed === 3, () => reflector.nickName + ' is not formed' );
+  }
 
   return reflector;
 }
@@ -4768,15 +4778,6 @@ function submodulesResolve_body( o )
   let module = this;
   let will = module.will;
 
-  // if( _.strIs( o ) )
-  // o = { selector : o }
-
-  // o = _.routineOptions( submodulesResolve_body, o );
-  // _.assert( arguments.length === 0 || arguments.length === 1 );
-
-  // o.prefixlessAction = 'default';
-  // o.defaultResourceName = 'submodule';
-
   let result = module.resolve( o );
 
   return result;
@@ -4784,7 +4785,6 @@ function submodulesResolve_body( o )
 
 var defaults = submodulesResolve_body.defaults = Object.create( resolve.defaults );
 defaults.selector = null;
-// defaults.singleUnwrapping = 0;
 defaults.prefixlessAction = 'default';
 defaults.defaultResourceName = 'submodule';
 
@@ -5109,6 +5109,7 @@ let Restricts =
   id : null,
   stager : null,
   willFilesReadBeginTime : null,
+  willFilesReadTimeReported : 0,
 
   willFileArray : _.define.own([]),
   willFileWithRoleMap : _.define.own({}),
@@ -5252,6 +5253,7 @@ let Proto =
   _submodulesDownload,
   submodulesDownload,
   submodulesUpdate,
+
   submodulesClean,
   submodulesFixate,
   moduleFixate,

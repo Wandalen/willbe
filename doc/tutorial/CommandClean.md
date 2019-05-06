@@ -149,7 +149,7 @@ Module at /path_to_file/module/Color.download.will.yml
  . Read 1 will-files in 1.189s
 
     Building module::downloadFiles / build::download.files
-     + download.files reflected 71 files :/// : path_to_file/temp <- git+https://github.com/Wandalen/wColor.git in 4.383s
+     + download.files reflected 71 files :/// : path_to_file/temp <- git+https:///github.com/Wandalen/wColor.git in 4.383s
     Built module::downloadFiles / build::download.files in 4.438s
 
    + reflect.files reflected 9 files /path_to_file/ : out/module.debug <- temp/out in 0.603s

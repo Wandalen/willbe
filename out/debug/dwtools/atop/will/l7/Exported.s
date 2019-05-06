@@ -204,8 +204,19 @@ function performExportedReflectors( exportSelector )
   _.assert( exported.exportedReflector === null );
   _.assert( exported.exportedDirPath === null );
 
-  let exp = step.resolve( exportSelector );
+  // debugger;
   let exportedReflector;
+  let exp = module.pathResolve
+  ({
+    selector : exportSelector,
+    currentContext : step,
+  });
+  // let exp = module.reflectorResolve
+  // ({
+  //   selector : exportSelector,
+  //   currentContext : step,
+  // });
+  // debugger;
 
   /* */
 
@@ -239,7 +250,7 @@ function performExportedReflectors( exportSelector )
   {
     let commonPath = path.common.apply( path, exp );
 
-    _.assert( path.isRelative( commonPath ) );
+    // _.assert( path.isRelative( commonPath ) );
 
     exportedReflector = module.resourceAllocate( 'reflector', 'exported.' + exported.name );
     exportedReflector.src.filePath = Object.create( null );
@@ -479,6 +490,8 @@ function performWriteOutFile()
   let logger = will.logger;
   let build = module.buildMap[ exported.name ];
 
+  /* */
+
   let module2 = module.cloneExtending({ dirPath : module.outPath });
   _.assert( module2.dirPath === module.outPath );
 
@@ -488,23 +501,24 @@ function performWriteOutFile()
   inPathResource.path = path.relative( module.outPath, module.inPath );
   _.assert( module2.pathResourceMap[ inPathResource.name ] === inPathResource );
 
-  let outFilePath = build.outFilePathFor();
   let data = module2.dataExport({ copyingNonWritable : 0, copyingPredefined : 0 });
-  // debugger;
 
   _.assert( !data.path || !data.path[ 'predefined.will.files' ] );
   _.assert( !data.path || !data.path[ 'predefined.dir' ] );
-  // _.assert( !data.path || !data.path[ 'predefined.local' ] );
-  // _.assert( !data.path || !data.path[ 'predefined.remote' ] );
 
   module2.finit();
 
+  /* */
+
+  let outFilePath = build.outFilePathFor();
   hd.fileWrite
   ({
     filePath : outFilePath,
     data : data,
     encoding : 'yaml',
   });
+
+  /* */
 
   if( will.verbosity >= 3 )
   logger.log( ' + ' + 'Write out will-file ' + _.color.strFormat( outFilePath, 'path' ) );
@@ -531,6 +545,7 @@ function perform( frame )
   _.assert( step instanceof will.Step );
   _.assert( exported.step === null || exported.step === step );
   _.assert( _.strDefined( opts.export ), () => step.nickName + ' should have options option export, path to directory to export or reflector' )
+  _.assert( module.resourcesFormed === 3, 'Resources should be formed' );
 
   exported.verify();
 
@@ -552,6 +567,7 @@ function perform( frame )
 
   if( will.verbosity >= 3 )
   logger.log( ' + Exported', exported.name, 'with', exported.exportedFilesPath.path.length, 'files', 'in', _.timeSpent( time ) );
+  // debugger;
 
   return exported;
 }

@@ -20,8 +20,8 @@ execution :
 
 path :
 
-  repository : git+https://github.com/Wandalen/willbe.git
-  bugs : https://github.com/Wandalen/willbe/issues
+  repository : git+https:///github.com/Wandalen/willbe.git
+  bugs : https:///github.com/Wandalen/willbe/issues
 
 step :
 
