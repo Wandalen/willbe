@@ -2,7 +2,7 @@
 
 The command to fixate the submodule version in <code>willfile</code> using its automated overwriting.
 
-Stability of the module with remote submodules depends on the quality of the submodules. Updating remote submodules may result in module failure or unstable operation. To avoid this problem during development and support, fixate the submodule versions with the command `.submodules.fixate`.
+Stability of the module with remote submodules depends on the quality of the submodules. Updating remote submodules may result in module failure or unstable operation. To avoid this problem during development and support, fixate the submodule versions with the [command `.submodules.fixate`](../concept/Command.md#Commands-of-the-utility-willbe).
 
 The command is intended for automated overwriting of current URI links of remote submodules in `willfile`. The command owerwrites the current URIs to the most recent versions of submodule URIs. At the same time, downloading files of these submodules do not automatically occur. The command `.submodules.fixate` overwrites only those submodules for which the version (commit) is explicitly not specified.
 
