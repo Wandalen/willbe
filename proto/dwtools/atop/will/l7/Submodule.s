@@ -266,6 +266,27 @@ function isDownloadedGet()
 
 //
 
+function dataExport()
+{
+  let submodule = this;
+  let module = submodule.module;
+  let willf = submodule.willf;
+  let will = module.will;
+
+  let result = Parent.prototype.dataExport.apply( this, arguments );
+
+  if( result === undefined )
+  return result;
+
+  debugger;
+
+  return result;
+}
+
+dataExport.defaults = Object.create( _.Will.Resource.prototype.dataExport.defaults );
+
+//
+
 function infoExport()
 {
   let submodule = this;
@@ -312,6 +333,7 @@ let Aggregates =
 
 let Associates =
 {
+  data : null,
 }
 
 let Restricts =
@@ -355,6 +377,7 @@ let Proto =
 
   isDownloadedGet,
 
+  dataExport,
   infoExport,
 
   // relation

@@ -3216,7 +3216,8 @@ function submodulesResolve( test )
     test.is( submodule.isDownloaded );
     test.is( !!submodule.loadedModule );
     test.identical( submodule.name, 'Tools' );
-    test.identical( submodule.loadedModule.resourcesFormed, 3 );
+    test.identical( submodule.loadedModule.resourcesFormed, 0 );
+    test.identical( submodule.loadedModule.submodulesFormed, 0 ); 
     test.identical( submodule.loadedModule.willFilesPath, _.path.s.join( routinePath, '.module/Tools/out/wTools.out.will.yml' ) );
     test.is( _.strEnds( submodule.loadedModule.dirPath, '.module/Tools/out' ) );
     test.is( _.strEnds( submodule.loadedModule.localPath, '.module/Tools' ) );

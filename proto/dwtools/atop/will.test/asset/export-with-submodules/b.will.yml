@@ -1,15 +1,21 @@
 
 about :
 
-  name : "export-with-reflector"
+  name : "module-b"
   description : "Module for testing"
   version : "0.0.1"
+
+path :
+
+  proto : './proto'
+  out : 'out'
+  temp :
+    - path::out
 
 step :
 
   export.proto :
-    inherit : predefined.export
-    export : reflector::proto.but.include
+    export : '{path::proto}/b'
     tar : 0
 
 build :

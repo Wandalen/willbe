@@ -203,9 +203,7 @@ function moduleMake( o )
   o.module.willFilesFind();
   o.module.willFilesOpen();
 
-  // debugger;
   o.module.submodulesForm();
-  // debugger;
 
   if( o.forming )
   {
@@ -254,7 +252,8 @@ function moduleEach( o )
     module.willFilesFind();
     module.willFilesOpen();
     module.submodulesForm();
-    module.resourcesForm();
+    // module.resourcesForm(); // yyy
+    module.resourcesFormSkip();
 
     con = module.ready;
 
@@ -334,7 +333,8 @@ function moduleEach( o )
 
       module.willFilesOpen();
       module.submodulesForm();
-      module.resourcesForm();
+      // module.resourcesForm(); // yyy
+      module.resourcesFormSkip();
 
       return module.ready.split().keep( function( arg )
       {

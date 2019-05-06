@@ -35,6 +35,30 @@ reflector :
       - path::out.debug1
       - path::out.debug2
 
+  # inheriting of file filter
+
+  files1 : # for src only
+    src :
+      - proto/File.js
+      - proto/File.s
+    dst : out2
+
+  files2 : # for dst only
+    src :
+      - proto/File.test.js
+    dst : path::out
+
+  files3 : # for src/basePath only
+    src :
+      filePath : src1
+      basePath : proto
+    dst : dst1
+
+  reflect.files :
+    inherit : reflector::files3
+    src : reflector::files1
+    dst : reflector::files2
+
 build :
 
   debug1 :
@@ -48,3 +72,7 @@ build :
   debug3 :
     steps :
       - step::reflect.not.test.only.js.v1
+
+  files1 :
+    steps :
+      - reflect.files

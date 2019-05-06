@@ -84,6 +84,30 @@ function form1()
 
 //
 
+function form2()
+{
+  let pathResource = this;
+  let module = pathResource.module;
+  let willf = pathResource.willf;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 0 );
+  _.assert( pathResource.formed === 1 );
+
+  if( pathResource.nickName === 'path::export' )
+  debugger;
+
+  if( _.arrayIs( pathResource.path ) )
+  pathResource.path = _.arrayFlattenOnce( pathResource.path );
+
+  return Parent.prototype.form2.call( pathResource );
+}
+
+//
+
 function form3()
 {
   let pathResource = this;
@@ -97,10 +121,6 @@ function form3()
   _.assert( arguments.length === 0 );
   _.assert( pathResource.formed === 2 );
 
-  /* begin */
-
-  /* end */
-
   if( pathResource.writable )
   {
 
@@ -112,6 +132,9 @@ function form3()
     );
 
   }
+
+  // if( pathResource.nickName === 'path::export' )
+  // debugger;
 
   if( pathResource.path )
   {
@@ -215,6 +238,7 @@ let Proto =
 
   unform,
   form1,
+  form2,
   form3,
 
   // relation

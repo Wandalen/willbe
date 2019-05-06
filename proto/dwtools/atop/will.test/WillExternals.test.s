@@ -998,9 +998,9 @@ function buildDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.is( _.strHas( got.output, /module::Tools.+ version master/ ) );
-    test.is( _.strHas( got.output, /module::PathFundamentals.+ version c8dadf139a49d70ccae2cac4f91845ecd0a925e0/ ) );
-    test.is( _.strHas( got.output, /module::Color.+ version 0.3.102/ ) );
+    test.is( _.strHas( got.output, /\+ .*module::Tools.* was downloaded version .*master.* in/ ) );
+    test.is( _.strHas( got.output, /\+ .*module::PathFundamentals.* was downloaded version .*c8dadf139a49d70ccae2cac4f91845ecd0a925e0.* in/ ) );
+    test.is( _.strHas( got.output, /\+ .*module::Color.* was downloaded version .*0.3.102.* in/ ) );
     test.is( _.strHas( got.output, /\.module\/Procedure\.informal.+ <- .+npm:\/\/wprocedure/ ) );
     test.is( _.strHas( got.output, /\.module\/Proto\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wProto\.git#5500fe0c9540dde7bc7fbeccbe44c657a2862c30/ ) );
     test.is( _.strHas( got.output, /\.module\/UriFundamentals\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wUriFundamentals\.git/ ) );
@@ -1822,7 +1822,7 @@ function exportSecond( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.clean' ] }) // xxx
   shell({ args : [ '.export' ] })
 
   .thenKeep( ( got ) =>
@@ -1846,8 +1846,25 @@ function exportSecond( test )
       {
         src :
         {
-          filePath : { 'path::proto' : 'path::out.*=1' }
+          filePath : { '.' : '.' },
+          prefixPath : 'proto',
+          maskAll :
+          {
+            excludeAny :
+            [
+              /(\W|^)node_modules(\W|$)/,
+              /\.unique$/,
+              /\.git$/,
+              /\.svn$/,
+              /\.hg$/,
+              /\.DS_Store$/,
+              /(^|\/)-/,
+              /\.debug($|\.|\/)/i,
+              /\.experiment($|\.|\/)/i
+            ]
+          }
         },
+        dst : { prefixPath : 'out/release' },
         criterion : { debug : 0 },
         mandatory : 1,
         inherit : [ 'predefined.*' ]
@@ -1856,8 +1873,24 @@ function exportSecond( test )
       {
         src :
         {
-          filePath : { 'path::proto' : 'path::out.*=1' }
+          filePath : { '.' : '.' },
+          prefixPath : 'proto',
+          maskAll :
+          {
+            excludeAny :
+            [
+              /(\W|^)node_modules(\W|$)/,
+              /\.unique$/,
+              /\.git$/,
+              /\.svn$/,
+              /\.hg$/,
+              /\.DS_Store$/,
+              /(^|\/)-/,
+              /\.release($|\.|\/)/i
+            ]
+          }
         },
+        dst : { prefixPath : 'out/debug' },
         criterion : { debug : 1 },
         mandatory : 1,
         inherit : [ 'predefined.*' ]
@@ -1897,7 +1930,66 @@ function exportSecond( test )
         mandatory : 1
       }
     }
-    test.identical( outfile.reflector, expected );
+    test.identical( outfile.reflector, expected ); debugger;
+
+    // var expected =
+    // {
+    //   'reflect.proto.' :
+    //   {
+    //     src :
+    //     {
+    //       filePath : { 'path::proto' : 'path::out.*=1' }
+    //     },
+    //     criterion : { debug : 0 },
+    //     mandatory : 1,
+    //     inherit : [ 'predefined.*' ]
+    //   },
+    //   'reflect.proto.debug' :
+    //   {
+    //     src :
+    //     {
+    //       filePath : { 'path::proto' : 'path::out.*=1' }
+    //     },
+    //     criterion : { debug : 1 },
+    //     mandatory : 1,
+    //     inherit : [ 'predefined.*' ]
+    //   },
+    //   'exported.proto.export' :
+    //   {
+    //     src :
+    //     {
+    //       filePath : { '.' : null },
+    //       prefixPath : 'proto'
+    //     },
+    //     criterion : { proto : 1, export : 1 },
+    //     mandatory : 1
+    //   },
+    //   'exportedFiles.proto.export' :
+    //   {
+    //     src : { filePath : 'path::exportedFiles.proto.export', basePath : '.', prefixPath : 'path::exportedDir.proto.export' },
+    //     criterion : { proto : 1, export : 1 },
+    //     recursive : 0,
+    //     mandatory : 1
+    //   },
+    //   'exported.doc.export' :
+    //   {
+    //     src :
+    //     {
+    //       filePath : { '.' : null },
+    //       prefixPath : 'doc'
+    //     },
+    //     criterion : { doc : 1, export : 1 },
+    //     mandatory : 1
+    //   },
+    //   'exportedFiles.doc.export' :
+    //   {
+    //     src : { filePath : 'path::exportedFiles.doc.export', basePath : '.', prefixPath : 'path::exportedDir.doc.export' },
+    //     criterion : { doc : 1, export : 1 },
+    //     recursive : 0,
+    //     mandatory : 1
+    //   }
+    // }
+    // test.identical( outfile.reflector, expected ); debugger;
 
     var expected =
     {
@@ -1971,157 +2063,157 @@ function exportSecond( test )
     return null;
   })
 
-  /* - */
-
-  shell({ args : [ '.export' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    test.identical( _.strCount( got.output, '+ Write out will-file' ), 2 );
-    test.identical( _.strCount( got.output, 'Exported doc.export with 2 files in' ), 1 );
-    test.identical( _.strCount( got.output, 'Exported proto.export with 2 files in' ), 1 );
-
-    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
-
-    var files = self.find( _.path.join( routinePath, 'out' ) );
-    test.identical( files, [ '.', './ExportSecond.out.will.yml' ] );
-
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
-
-    var expected =
-    {
-      'reflect.proto.' :
-      {
-        src :
-        {
-          filePath : { 'path::proto' : 'path::out.*=1' }
-        },
-        criterion : { debug : 0 },
-        mandatory : 1,
-        inherit : [ 'predefined.*' ]
-      },
-      'reflect.proto.debug' :
-      {
-        src :
-        {
-          filePath : { 'path::proto' : 'path::out.*=1' }
-        },
-        criterion : { debug : 1 },
-        mandatory : 1,
-        inherit : [ 'predefined.*' ]
-      },
-      'exported.proto.export' :
-      {
-        src :
-        {
-          filePath : { '.' : null },
-          prefixPath : 'proto'
-        },
-        criterion : { proto : 1, export : 1 },
-        mandatory : 1
-      },
-      'exportedFiles.proto.export' :
-      {
-        src : { filePath : 'path::exportedFiles.proto.export', basePath : '.', prefixPath : 'path::exportedDir.proto.export' },
-        criterion : { proto : 1, export : 1 },
-        recursive : 0,
-        mandatory : 1
-      },
-      'exported.doc.export' :
-      {
-        src :
-        {
-          filePath : { '.' : null },
-          prefixPath : 'doc'
-        },
-        criterion : { doc : 1, export : 1 },
-        mandatory : 1
-      },
-      'exportedFiles.doc.export' :
-      {
-        src : { filePath : 'path::exportedFiles.doc.export', basePath : '.', prefixPath : 'path::exportedDir.doc.export' },
-        criterion : { doc : 1, export : 1 },
-        recursive : 0,
-        mandatory : 1
-      }
-    }
-    test.identical( outfile.reflector, expected );
-
-    var expected =
-    {
-      in : { path : '..' },
-      temp : { path : 'out' },
-      out : { path : 'out' },
-      'out.debug' :
-      {
-        path : './out/debug',
-        criterion : { debug : 1 }
-      },
-      'out.release' :
-      {
-        path : './out/release',
-        criterion : { debug : 0 }
-      },
-      proto : { path : './proto' },
-      doc : { path : './doc' },
-      'exportedDir.proto.export' :
-      {
-        path : './proto',
-        criterion : { proto : 1, export : 1 }
-      },
-      'exportedFiles.proto.export' :
-      {
-        path : [ 'proto', 'proto/File.js' ],
-        criterion : { proto : 1, export : 1 }
-      },
-      'original.will.files' :
-      {
-        path : [ '.im.will.yml', '.ex.will.yml' ]
-      },
-      'exportedDir.doc.export' :
-      {
-        path : './doc',
-        criterion : { doc : 1, export : 1 }
-      },
-      'exportedFiles.doc.export' :
-      {
-        path : [ 'doc', 'doc/File.md' ],
-        criterion : { doc : 1, export : 1 }
-      }
-    }
-    test.identical( outfile.path, expected );
-
-    var expected =
-    {
-      'doc.export' :
-      {
-        version : '0.0.0',
-        criterion : { doc : 1, export : 1 },
-        exportedReflector : 'reflector::exported.doc.export',
-        exportedFilesReflector : 'reflector::exportedFiles.doc.export',
-        exportedDirPath : 'path::exportedDir.doc.export',
-        exportedFilesPath : 'path::exportedFiles.doc.export',
-        originalWillFilesPath : 'path::original.will.files'
-      },
-      'proto.export' :
-      {
-        version : '0.0.0',
-        criterion : { proto : 1, export : 1 },
-        exportedReflector : 'reflector::exported.proto.export',
-        exportedFilesReflector : 'reflector::exportedFiles.proto.export',
-        exportedDirPath : 'path::exportedDir.proto.export',
-        exportedFilesPath : 'path::exportedFiles.proto.export',
-        originalWillFilesPath : 'path::original.will.files'
-      }
-    }
-    test.identical( outfile.exported, expected );
-
-    return null;
-  })
-
-  /* - */
+  // /* - */
+  //
+  // shell({ args : [ '.export' ] })
+  //
+  // .thenKeep( ( got ) =>
+  // {
+  //   test.identical( got.exitCode, 0 );
+  //
+  //   test.identical( _.strCount( got.output, '+ Write out will-file' ), 2 );
+  //   test.identical( _.strCount( got.output, 'Exported doc.export with 2 files in' ), 1 );
+  //   test.identical( _.strCount( got.output, 'Exported proto.export with 2 files in' ), 1 );
+  //
+  //   test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
+  //
+  //   var files = self.find( _.path.join( routinePath, 'out' ) );
+  //   test.identical( files, [ '.', './ExportSecond.out.will.yml' ] );
+  //
+  //   var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
+  //
+  //   var expected =
+  //   {
+  //     'reflect.proto.' :
+  //     {
+  //       src :
+  //       {
+  //         filePath : { 'path::proto' : 'path::out.*=1' }
+  //       },
+  //       criterion : { debug : 0 },
+  //       mandatory : 1,
+  //       inherit : [ 'predefined.*' ]
+  //     },
+  //     'reflect.proto.debug' :
+  //     {
+  //       src :
+  //       {
+  //         filePath : { 'path::proto' : 'path::out.*=1' }
+  //       },
+  //       criterion : { debug : 1 },
+  //       mandatory : 1,
+  //       inherit : [ 'predefined.*' ]
+  //     },
+  //     'exported.proto.export' :
+  //     {
+  //       src :
+  //       {
+  //         filePath : { '.' : null },
+  //         prefixPath : 'proto'
+  //       },
+  //       criterion : { proto : 1, export : 1 },
+  //       mandatory : 1
+  //     },
+  //     'exportedFiles.proto.export' :
+  //     {
+  //       src : { filePath : 'path::exportedFiles.proto.export', basePath : '.', prefixPath : 'path::exportedDir.proto.export' },
+  //       criterion : { proto : 1, export : 1 },
+  //       recursive : 0,
+  //       mandatory : 1
+  //     },
+  //     'exported.doc.export' :
+  //     {
+  //       src :
+  //       {
+  //         filePath : { '.' : null },
+  //         prefixPath : 'doc'
+  //       },
+  //       criterion : { doc : 1, export : 1 },
+  //       mandatory : 1
+  //     },
+  //     'exportedFiles.doc.export' :
+  //     {
+  //       src : { filePath : 'path::exportedFiles.doc.export', basePath : '.', prefixPath : 'path::exportedDir.doc.export' },
+  //       criterion : { doc : 1, export : 1 },
+  //       recursive : 0,
+  //       mandatory : 1
+  //     }
+  //   }
+  //   test.identical( outfile.reflector, expected );
+  //
+  //   var expected =
+  //   {
+  //     in : { path : '..' },
+  //     temp : { path : 'out' },
+  //     out : { path : 'out' },
+  //     'out.debug' :
+  //     {
+  //       path : './out/debug',
+  //       criterion : { debug : 1 }
+  //     },
+  //     'out.release' :
+  //     {
+  //       path : './out/release',
+  //       criterion : { debug : 0 }
+  //     },
+  //     proto : { path : './proto' },
+  //     doc : { path : './doc' },
+  //     'exportedDir.proto.export' :
+  //     {
+  //       path : './proto',
+  //       criterion : { proto : 1, export : 1 }
+  //     },
+  //     'exportedFiles.proto.export' :
+  //     {
+  //       path : [ 'proto', 'proto/File.js' ],
+  //       criterion : { proto : 1, export : 1 }
+  //     },
+  //     'original.will.files' :
+  //     {
+  //       path : [ '.im.will.yml', '.ex.will.yml' ]
+  //     },
+  //     'exportedDir.doc.export' :
+  //     {
+  //       path : './doc',
+  //       criterion : { doc : 1, export : 1 }
+  //     },
+  //     'exportedFiles.doc.export' :
+  //     {
+  //       path : [ 'doc', 'doc/File.md' ],
+  //       criterion : { doc : 1, export : 1 }
+  //     }
+  //   }
+  //   test.identical( outfile.path, expected );
+  //
+  //   var expected =
+  //   {
+  //     'doc.export' :
+  //     {
+  //       version : '0.0.0',
+  //       criterion : { doc : 1, export : 1 },
+  //       exportedReflector : 'reflector::exported.doc.export',
+  //       exportedFilesReflector : 'reflector::exportedFiles.doc.export',
+  //       exportedDirPath : 'path::exportedDir.doc.export',
+  //       exportedFilesPath : 'path::exportedFiles.doc.export',
+  //       originalWillFilesPath : 'path::original.will.files'
+  //     },
+  //     'proto.export' :
+  //     {
+  //       version : '0.0.0',
+  //       criterion : { proto : 1, export : 1 },
+  //       exportedReflector : 'reflector::exported.proto.export',
+  //       exportedFilesReflector : 'reflector::exportedFiles.proto.export',
+  //       exportedDirPath : 'path::exportedDir.proto.export',
+  //       exportedFilesPath : 'path::exportedFiles.proto.export',
+  //       originalWillFilesPath : 'path::original.will.files'
+  //     }
+  //   }
+  //   test.identical( outfile.exported, expected );
+  //
+  //   return null;
+  // })
+  //
+  // /* - */
 
   return ready;
 }
@@ -2308,164 +2400,6 @@ submodulesList.timeOut = 130000;
 
 //
 
-function submodulesDownloadUpgrade( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
-  let routinePath = _.path.join( self.tempDir, test.name );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-
-  let ready = new _.Consequence().take( null )
-  let shell = _.sheller
-  ({
-    execPath : 'node ' + execPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-
-  /* */
-
-  ready
-
-  /* */
-
-  .thenKeep( () =>
-  {
-    test.case = '.submodules.download - first time';
-    _.fileProvider.filesDelete( submodulesPath );
-    return null;
-  })
-
-  shell({ args : [ '.submodules.download' ] })
-  .thenKeep( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /2\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
-
-    var files = self.find( submodulesPath );
-
-    test.is( files.length > 30 );
-
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathFundamentals' ) ) )
-    return null;
-  })
-
-  /* xxx */
-
-  .thenKeep( () =>
-  {
-    test.case = '.submodules.download - again';
-    return null;
-  })
-  shell({ args : [ '.submodules.download' ] })
-  .thenKeep( ( got ) =>
-  {
-
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /0\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathFundamentals' ) ) )
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
-
-    var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
-    test.is( files.length > 3 );
-
-    var files = self.find( _.path.join( submodulesPath, 'PathFundamentals' ) );
-    test.is( files.length > 3 );
-
-    return null;
-  })
-
-  /* xxx */
-
-  .thenKeep( () =>
-  {
-    test.case = '.submodules.update - first time';
-    _.fileProvider.filesDelete( submodulesPath );
-    return null;
-  })
-  shell({ args : [ '.submodules.update' ] })
-  .thenKeep( ( got ) =>
-  {
-
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /2\/2 submodule\(s\) of .*module::submodules.* were updated in/ ) );
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathFundamentals' ) ) )
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
-
-    var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
-    test.is( files.length );
-
-    var files = self.find( _.path.join( submodulesPath, 'PathFundamentals' ) );
-    test.is( files.length );
-
-    return null;
-  })
-
-  /* */
-
-  .thenKeep( () =>
-  {
-    test.case = '.submodules.update - again';
-    return null;
-  })
-  shell({ args : [ '.submodules.update' ] })
-  .thenKeep( ( got ) =>
-  {
-
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /0\/2 submodule\(s\) of .*module::submodules.* were updated in/ ) );
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathFundamentals' ) ) )
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
-
-    var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
-    test.is( files.length );
-
-    var files = self.find( _.path.join( submodulesPath, 'PathFundamentals' ) );
-    test.is( files.length );
-
-    return null;
-  })
-
-  /* */
-
-  var files;
-
-  ready
-  .thenKeep( () =>
-  {
-    test.case = '.submodules.clean';
-    files = self.find( submodulesPath );
-    return files;
-  })
-
-  shell({ args : [ '.submodules.clean' ] })
-  .thenKeep( ( got ) =>
-  {
-
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `${files.length}` ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) ); /* xxx : phantom problem ? */
-
-    return null;
-  })
-
-  /* */
-
-  return ready;
-}
-
-submodulesDownloadUpgrade.timeOut = 300000;
-
-//
-
 function submodulesBuild( test )
 {
   let self = this;
@@ -2637,100 +2571,277 @@ submodulesExport.timeOut = 130000;
 
 //
 
-function submodulesDownload( test )
+function submodulesDownloadUpdate( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodule-download' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
-  _.fileProvider.filesDelete( _.path.join( routinePath, '.module' ) );
-  _.fileProvider.filesDelete( _.path.join( routinePath, 'out/debug' ) );
-
-  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
-
   let shell = _.sheller
   ({
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
-    verbosity : 3,
-    ready : ready
+    ready : ready,
   })
 
-  /* - */
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
 
-  shell()
+  /* */
 
-  .thenKeep( ( got ) =>
-  {
-    test.case = 'simple run without args'
-    test.identical( got.exitCode, 0 );
-    test.is( got.output.length );
-    return null;
-  })
+  ready
 
-  /* - */
-
-  shell({ args : [ '.resources.list' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.case = 'list'
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `git+https:///github.com/Wandalen/wTools.git/out/wTools#master` ) );
-    return null;
-  })
-
-  /* - */
+  /* */
 
   .thenKeep( () =>
   {
-    test.case = 'build'
-    _.fileProvider.filesDelete( _.path.join( routinePath, '.module' ) );
-    _.fileProvider.filesDelete( _.path.join( routinePath, 'out/debug' ) );
+    test.case = '.submodules.download - first time';
+    _.fileProvider.filesDelete( submodulesPath );
     return null;
   })
 
-  shell({ args : [ '.build' ] })
-
+  shell({ args : [ '.submodules.download' ] })
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.gt( self.find( _.path.join( routinePath, '.module/Tools' ) ).length, 70 );
-    test.gt( self.find( _.path.join( routinePath, 'out/debug' ) ).length, 50 );
+    test.is( _.strHas( got.output, /2\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+
+    var files = self.find( submodulesPath );
+
+    test.is( files.length > 30 );
+
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathFundamentals' ) ) )
     return null;
   })
 
-  /* - */
+  /* */
 
   .thenKeep( () =>
   {
-    test.case = 'export'
-    _.fileProvider.filesDelete( _.path.join( routinePath, '.module' ) );
-    _.fileProvider.filesDelete( _.path.join( routinePath, 'out/debug' ) );
-    _.fileProvider.filesDelete( _.path.join( routinePath, 'out/Download.out.will.yml' ) );
+    test.case = '.submodules.download - again';
     return null;
   })
-
-  shell({ args : [ '.export' ] })
-
+  shell({ args : [ '.submodules.download' ] })
   .thenKeep( ( got ) =>
   {
+
     test.identical( got.exitCode, 0 );
-    test.gt( self.find( _.path.join( routinePath, '.module/Tools' ) ).length, 90 );
-    test.gt( self.find( _.path.join( routinePath, 'out/debug' ) ).length, 50 );
-    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/Download.out.will.yml' ) ) );
+    test.is( _.strHas( got.output, /0\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathFundamentals' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
+
+    var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
+    test.is( files.length > 3 );
+
+    var files = self.find( _.path.join( submodulesPath, 'PathFundamentals' ) );
+    test.is( files.length > 3 );
+
     return null;
   })
 
-  /* - */
+  /* */
+
+  .thenKeep( () =>
+  {
+    test.case = '.submodules.update - first time';
+    _.fileProvider.filesDelete( submodulesPath );
+    return null;
+  })
+  shell({ args : [ '.submodules.update' ] })
+  .thenKeep( ( got ) =>
+  {
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /2\/2 submodule\(s\) of .*module::submodules.* were updated in/ ) );
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathFundamentals' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
+
+    var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
+    test.is( files.length );
+
+    var files = self.find( _.path.join( submodulesPath, 'PathFundamentals' ) );
+    test.is( files.length );
+
+    return null;
+  })
+
+  /* */
+
+  .thenKeep( () =>
+  {
+    test.case = '.submodules.update - again';
+    return null;
+  })
+  shell({ args : [ '.submodules.update' ] })
+  .thenKeep( ( got ) =>
+  {
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /0\/2 submodule\(s\) of .*module::submodules.* were updated in/ ) );
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathFundamentals' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
+
+    var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
+    test.is( files.length );
+
+    var files = self.find( _.path.join( submodulesPath, 'PathFundamentals' ) );
+    test.is( files.length );
+
+    return null;
+  })
+
+  /* */
+
+  var files;
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.submodules.clean';
+    files = self.find( submodulesPath );
+    return files;
+  })
+
+  shell({ args : [ '.submodules.clean' ] })
+  .thenKeep( ( got ) =>
+  {
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `${files.length}` ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) ); /* xxx : phantom problem ? */
+
+    return null;
+  })
+
+  /* */
 
   return ready;
 }
 
-submodulesDownload.timeOut = 300000;
+submodulesDownloadUpdate.timeOut = 300000;
+
+//
+
+function submodulesDownloadUpdateDry( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-detached' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+
+  let ready = new _.Consequence().take( null )
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.submodules.download dry:1';
+    _.fileProvider.filesDelete( submodulesPath );
+    return null;
+  })
+
+  shell({ args : [ '.submodules.download dry:1' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, / \+ .*module::Tools.* will be downloaded version .*/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::PathFundamentals.* will be downloaded version .*c8dadf139a49d70ccae2cac4f91845ecd0a925e0.*/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::Color.* will be downloaded version .*0.3.102.*/ ) );
+    test.is( _.strHas( got.output, / \+ 3\/6 submodule\(s\) of .*module::submodules-detached.* will be downloaded/ ) );
+    var files = self.find( submodulesPath );
+    test.is( files.length === 0 );
+    return null;
+  })
+
+  /* */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.submodules.download dry:1 -- after download';
+    _.fileProvider.filesDelete( submodulesPath );
+    return null;
+  })
+
+  shell({ args : [ '.submodules.download' ] })
+  shell({ args : [ '.submodules.download dry:1' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, / \+ 0\/6 submodule\(s\) of .*module::submodules-detached.* will be downloaded/ ) );
+    var files = self.find( submodulesPath );
+    test.gt( files.length, 150 );
+    return null;
+  })
+
+  /* */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.submodules.update dry:1';
+    _.fileProvider.filesDelete( submodulesPath );
+    return null;
+  })
+
+  shell({ args : [ '.submodules.update dry:1' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, / \+ .*module::Tools.* will be updated to version .*/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::PathFundamentals.* will be updated to version .*c8dadf139a49d70ccae2cac4f91845ecd0a925e0.*/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::Color.* will be updated to version .*0.3.102.*/ ) );
+    test.is( _.strHas( got.output, / \+ 3\/6 submodule\(s\) of .*module::submodules-detached.* will be update/ ) );
+    var files = self.find( submodulesPath );
+    test.is( files.length === 0 );
+    return null;
+  })
+
+  /* */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.submodules.update dry:1 -- after update';
+    _.fileProvider.filesDelete( submodulesPath );
+    return null;
+  })
+
+  shell({ args : [ '.submodules.update' ] })
+  shell({ args : [ '.submodules.update dry:1' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, / \+ 0\/6 submodule\(s\) of .*module::submodules-detached.* will be updated/ ) );
+    var files = self.find( submodulesPath );
+    test.gt( files.length, 150 );
+    return null;
+  })
+
+  /* */
+
+  return ready;
+}
+
+submodulesDownloadUpdateDry.timeOut = 300000;
 
 //
 
@@ -4236,18 +4347,37 @@ function reflectNothingFromSubmodules( test )
     {
       'reflect.proto' :
       {
-        'mandatory' : 1,
         src :
         {
-          filePath : { 'path::proto' : 'path::out.*=1' },
+          filePath : { '.' : '.' },
+          prefixPath : 'proto',
+          maskAll :
+          {
+            excludeAny :
+            [
+              /(\W|^)node_modules(\W|$)/,
+              /\.unique$/,
+              /\.git$/,
+              /\.svn$/,
+              /\.hg$/,
+              /\.DS_Store$/,
+              /(^|\/)-/,
+              /\.release($|\.|\/)/i,
+              /\.debug($|\.|\/)/i,
+              /\.experiment($|\.|\/)/i
+            ]
+          }
         },
-        inherit : [ 'predefined.*' ],
+        dst : { prefixPath : 'out/debug' },
+        criterion : { debug : 1 },
+        mandatory : 1,
+        inherit : [ 'predefined.*' ]
       },
       'reflect.submodules1' :
       {
-        'mandatory' : 1,
-        'dst' : { 'basePath' : '.', 'prefixPath' : 'path::out.debug' },
+        dst : { basePath : '.', prefixPath : 'out/debug' },
         criterion : { debug : 1 },
+        mandatory : 1,
         inherit :
         [
           'submodule::*/exported::*=1/reflector::exportedFiles*=1'
@@ -4255,41 +4385,106 @@ function reflectNothingFromSubmodules( test )
       },
       'reflect.submodules2' :
       {
-        'mandatory' : 1,
         src :
         {
-          'filePath' : { 'submodule::*/exported::*=1/path::exportedDir*=1' : 'path::out.*=1' }
+          maskAll :
+          {
+            excludeAny :
+            [
+              /(\W|^)node_modules(\W|$)/,
+              /\.unique$/,
+              /\.git$/,
+              /\.svn$/,
+              /\.hg$/,
+              /\.DS_Store$/,
+              /(^|\/)-/,
+              /\.release($|\.|\/)/i
+            ]
+          }
         },
         criterion : { debug : 1 },
+        mandatory : 1,
         inherit : [ 'predefined.*' ]
       },
       'exported.proto.export' :
       {
-        'mandatory' : 1,
         src :
         {
           filePath : { '.' : null },
           prefixPath : 'proto'
         },
-        criterion : { default : 1, export : 1 }
+        criterion : { default : 1, export : 1 },
+        mandatory : 1
       },
       'exportedFiles.proto.export' :
       {
+        src : { filePath : 'path::exportedFiles.proto.export', basePath : '.', prefixPath : 'path::exportedDir.proto.export' },
+        criterion : { default : 1, export : 1 },
         recursive : 0,
-        mandatory : 1,
-        src :
-        {
-          'filePath' : 'path::exportedFiles.proto.export',
-          'prefixPath' : 'path::exportedDir.proto.export',
-          // filePath : { '.' : null, 'Single.s' : null },
-          basePath : '.',
-          // prefixPath : 'proto'
-        },
-        criterion : { default : 1, export : 1 }
+        mandatory : 1
       }
     }
     test.identical( outfile.reflector, expectedReflector );
     debugger;
+
+    // var expectedReflector =
+    // {
+    //   'reflect.proto' :
+    //   {
+    //     'mandatory' : 1,
+    //     src :
+    //     {
+    //       filePath : { 'path::proto' : 'path::out.*=1' },
+    //     },
+    //     inherit : [ 'predefined.*' ],
+    //   },
+    //   'reflect.submodules1' :
+    //   {
+    //     'mandatory' : 1,
+    //     'dst' : { 'basePath' : '.', 'prefixPath' : 'path::out.debug' },
+    //     criterion : { debug : 1 },
+    //     inherit :
+    //     [
+    //       'submodule::*/exported::*=1/reflector::exportedFiles*=1'
+    //     ]
+    //   },
+    //   'reflect.submodules2' :
+    //   {
+    //     'mandatory' : 1,
+    //     src :
+    //     {
+    //       'filePath' : { 'submodule::*/exported::*=1/path::exportedDir*=1' : 'path::out.*=1' }
+    //     },
+    //     criterion : { debug : 1 },
+    //     inherit : [ 'predefined.*' ]
+    //   },
+    //   'exported.proto.export' :
+    //   {
+    //     'mandatory' : 1,
+    //     src :
+    //     {
+    //       filePath : { '.' : null },
+    //       prefixPath : 'proto'
+    //     },
+    //     criterion : { default : 1, export : 1 }
+    //   },
+    //   'exportedFiles.proto.export' :
+    //   {
+    //     recursive : 0,
+    //     mandatory : 1,
+    //     src :
+    //     {
+    //       'filePath' : 'path::exportedFiles.proto.export',
+    //       'prefixPath' : 'path::exportedDir.proto.export',
+    //       // filePath : { '.' : null, 'Single.s' : null },
+    //       basePath : '.',
+    //       // prefixPath : 'proto'
+    //     },
+    //     criterion : { default : 1, export : 1 }
+    //   }
+    // }
+    // test.identical( outfile.reflector, expectedReflector );
+    // debugger;
 
     return null;
   })
@@ -5129,6 +5324,149 @@ function reflectWithOptions( test )
 
 //
 
+function reflectWithSelectorInDstFilter( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-selecting-dst' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let filePath = _.path.join( routinePath, 'file' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  });
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /*
+    reflect.proto:
+      filePath :
+        path::proto : .
+      dst :
+        basePath : .
+        prefixPath : path::out.*=1 #<-- doesn't work
+        # prefixPath : "{path::out.*=1}" #<-- this works
+      criterion :
+        debug : [ 0,1 ]
+  */
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build debug';
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build debug' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './debug', './debug/Single.s' ] );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build release';
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build release' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './release', './release/Single.s' ] );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+//
+
+function reflectSubmodulesWithCriterion( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-with-criterion' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out/debug' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = 'reflect only A'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build A' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    var expected = [ '.', './A.js' ];
+    test.identical( files, expected );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = 'reflect only B'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build B' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    var expected = [ '.', './B.js' ];
+    test.identical( files, expected );
+    return null;
+  })
+
+
+  return ready;
+}
+
+//
+
 function reflectInherit( test )
 {
   let self = this;
@@ -5239,14 +5577,13 @@ function reflectInherit( test )
 
 //
 
-function reflectWithSelectorInDstFilter( test )
+function reflectComplexInherit( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-selecting-dst' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let filePath = _.path.join( routinePath, 'file' );
-  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
 
   let shell = _.sheller
@@ -5254,59 +5591,32 @@ function reflectWithSelectorInDstFilter( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
-    throwingExitCode : 0,
     ready : ready,
-  });
+  })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
-
-  /*
-    reflect.proto:
-      filePath :
-        path::proto : .
-      dst :
-        basePath : .
-        prefixPath : path::out.*=1 #<-- doesn't work
-        # prefixPath : "{path::out.*=1}" #<-- this works
-      criterion :
-        debug : [ 0,1 ]
-  */
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
 
   /* - */
 
   ready
   .thenKeep( () =>
   {
-    test.case = '.build debug';
+    test.case = '.with c .build'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  shell({ args : [ '.build debug' ] })
+  shell({ args : [ '.with a .export' ] })
+  shell({ args : [ '.with b .export' ] })
+  shell({ args : [ '.with c .build' ] })
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, / \+ .*files\.all.* reflected 20 files .*\/.* : .*out\/files.* <- .*proto.* in/ ) );
+
     var files = self.find( outPath );
-    test.identical( files, [ '.', './debug', './debug/Single.s' ] );
-    return null;
-  })
-
-  /* - */
-
-  ready
-  .thenKeep( () =>
-  {
-    test.case = '.build release';
-    _.fileProvider.filesDelete( outPath );
-    return null;
-  })
-
-  shell({ args : [ '.build release' ] })
-  .thenKeep( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    var files = self.find( outPath );
-    test.identical( files, [ '.', './release', './release/Single.s' ] );
+    test.identical( files, [ '.', './module-a.out.will.yml', './module-b.out.will.yml', './files', './files/a', './files/a/File.js', './files/b', './files/b/-Excluded.js', './files/b/File.js', './files/b/File.test.js', './files/b/File1.debug.js', './files/b/File1.release.js', './files/b/File2.debug.js', './files/b/File2.release.js', './files/dir3.test', './files/dir3.test/File.js', './files/dir3.test/File.test.js' ] );
     return null;
   })
 
@@ -5314,6 +5624,103 @@ function reflectWithSelectorInDstFilter( test )
 
   return ready;
 }
+
+//
+
+function stepSubmodulesDownload( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-submodules-download' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+  _.fileProvider.filesDelete( _.path.join( routinePath, '.module' ) );
+  _.fileProvider.filesDelete( _.path.join( routinePath, 'out/debug' ) );
+
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    verbosity : 3,
+    ready : ready
+  })
+
+  /* - */
+
+  shell()
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'simple run without args'
+    test.identical( got.exitCode, 0 );
+    test.is( got.output.length );
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.resources.list' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'list'
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `git+https:///github.com/Wandalen/wTools.git/out/wTools#master` ) );
+    return null;
+  })
+
+  /* - */
+
+  .thenKeep( () =>
+  {
+    test.case = 'build'
+    _.fileProvider.filesDelete( _.path.join( routinePath, '.module' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'out/debug' ) );
+    return null;
+  })
+
+  shell({ args : [ '.build' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.gt( self.find( _.path.join( routinePath, '.module/Tools' ) ).length, 70 );
+    test.gt( self.find( _.path.join( routinePath, 'out/debug' ) ).length, 50 );
+    return null;
+  })
+
+  /* - */
+
+  .thenKeep( () =>
+  {
+    test.case = 'export'
+    _.fileProvider.filesDelete( _.path.join( routinePath, '.module' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'out/debug' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'out/Download.out.will.yml' ) );
+    return null;
+  })
+
+  shell({ args : [ '.export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.gt( self.find( _.path.join( routinePath, '.module/Tools' ) ).length, 90 );
+    test.gt( self.find( _.path.join( routinePath, 'out/debug' ) ).length, 50 );
+    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/Download.out.will.yml' ) ) );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+stepSubmodulesDownload.timeOut = 300000;
 
 //
 
@@ -5419,71 +5826,6 @@ function make( test )
   })
 
   /* - */
-
-  return ready;
-}
-
-//
-
-function reflectSubmodulesWithCriterion( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-with-criterion' );
-  let routinePath = _.path.join( self.tempDir, test.name );
-  let outPath = _.path.join( routinePath, 'out/debug' );
-  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-  let ready = new _.Consequence().take( null );
-
-  let shell = _.sheller
-  ({
-    execPath : 'node ' + execPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
-
-  /* - */
-
-  ready
-  .thenKeep( () =>
-  {
-    test.case = 'reflect only A'
-    _.fileProvider.filesDelete( outPath );
-    return null;
-  })
-
-  shell({ args : [ '.build A' ] })
-  .thenKeep( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    var files = self.find( outPath );
-    var expected = [ '.', './A.js' ];
-    test.identical( files, expected );
-    return null;
-  })
-
-  /* - */
-
-  ready
-  .thenKeep( () =>
-  {
-    test.case = 'reflect only B'
-    _.fileProvider.filesDelete( outPath );
-    return null;
-  })
-
-  shell({ args : [ '.build B' ] })
-  .thenKeep( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    var files = self.find( outPath );
-    var expected = [ '.', './B.js' ];
-    test.identical( files, expected );
-    return null;
-  })
-
 
   return ready;
 }
@@ -6238,10 +6580,10 @@ var Self =
 
     submodulesInfo,
     submodulesList,
-    submodulesDownloadUpgrade,
     submodulesBuild,
     submodulesExport,
-    submodulesDownload,
+    submodulesDownloadUpdate,
+    submodulesDownloadUpdateDry,
 
     clean,
     cleanBroken1,
@@ -6265,9 +6607,11 @@ var Self =
     reflectRemoteHttp,
     reflectWithOptions,
     reflectWithSelectorInDstFilter,
-    reflectInherit,
     reflectSubmodulesWithCriterion,
+    reflectInherit,
+    reflectComplexInherit,
 
+    stepSubmodulesDownload,
     make,
     importInExport,
     setVerbosity,

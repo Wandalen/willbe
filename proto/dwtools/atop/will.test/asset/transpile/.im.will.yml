@@ -5,50 +5,50 @@ path :
   temp : 'out'
   in : '.'
   out : 'out'
-  out.debug :
-    path : './out/debug'
+  out.raw.debug :
+    path : '{path::out}/debug'
     criterion :
       debug : debug
       raw : raw
       tests : 'no.tests'
   out.compiled.debug :
-    path : './out/compiled.debug'
+    path : '{path::out}/compiled.debug'
     criterion :
       debug : debug
       raw : compiled
       tests : 'no.tests'
   out.raw.release :
-    path : './out/raw.release'
+    path : '{path::out}/raw.release'
     criterion :
       debug : release
       raw : raw
       tests : 'no.tests'
-  out.release :
-    path : './out/release'
+  out.compiled.release :
+    path : '{path::out}/release'
     criterion :
       debug : release
       raw : compiled
       tests : 'no.tests'
   out.tests.raw.debug :
-    path : './out/tests.raw.debug'
+    path : '{path::out}/tests.raw.debug'
     criterion :
       debug : debug
       raw : raw
       tests : 'only.tests'
   out.tests.compiled.debug :
-    path : './out/tests.compiled.debug'
+    path : '{path::out}/tests.compiled.debug'
     criterion :
       debug : debug
       raw : compiled
       tests : 'only.tests'
   out.tests.raw.release :
-    path : './out/tests.raw.release'
+    path : '{path::out}/tests.raw.release'
     criterion :
       debug : release
       raw : raw
       tests : 'only.tests'
   out.tests.compiled.release :
-    path : './out/tests.compiled.release'
+    path : '{path::out}/tests.compiled.release'
     criterion :
       debug : release
       raw : compiled
@@ -65,18 +65,13 @@ reflector :
     filePath :
       path::proto : path::out.*=1
 
-  # transpile.proto.no.tests.raw :
   transpile.proto.raw :
     inherit : predefined.*
     step : predefined.transpile
     criterion :
-      # tests : 'no.tests'
       raw : raw
       debug : release
-      # debug : [ debug, release ]
     filePath :
-      # '**.test*' : 0
-      # '**.test/**' : 0
       path::proto : '{path::out.raw.release}'
 
   transpile.proto.no.tests.compiled :
