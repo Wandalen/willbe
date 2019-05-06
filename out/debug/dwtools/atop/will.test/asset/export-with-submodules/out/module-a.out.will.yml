@@ -1,0 +1,80 @@
+format: willfile-1.0.0
+about:
+  name: module-a
+  description: Module for testing
+  enabled: 1
+  version: 0.0.1
+  values:
+    enabled: 1
+    name: module-a
+execution: {}
+path:
+  proto:
+    path: ./proto
+  out:
+    path: out
+  temp:
+    path:
+      - 'path::out'
+  exportedDir.proto.export:
+    path: ./proto/a
+    criterion:
+      default: 1
+      export: 1
+  exportedFiles.proto.export:
+    path:
+      - proto/a
+      - proto/a/File.js
+    criterion:
+      default: 1
+      export: 1
+  original.will.files:
+    path: a.will.yml
+  in:
+    path: ..
+submodule: {}
+reflector:
+  exported.proto.export:
+    src:
+      filePath:
+        .: null
+      prefixPath: proto/a
+    criterion:
+      default: 1
+      export: 1
+    mandatory: 1
+  exportedFiles.proto.export:
+    src:
+      filePath: 'path::exportedFiles.proto.export'
+      basePath: .
+      prefixPath: 'path::exportedDir.proto.export'
+    criterion:
+      default: 1
+      export: 1
+    recursive: 0
+    mandatory: 1
+step:
+  export.proto:
+    opts:
+      export: '{path::proto}/a'
+      tar: 0
+    inherit:
+      - predefined.export
+build:
+  proto.export:
+    criterion:
+      default: 1
+      export: 1
+    steps:
+      - 'step::export.proto'
+exported:
+  proto.export:
+    version: 0.0.1
+    criterion:
+      default: 1
+      export: 1
+    exportedReflector: 'reflector::exported.proto.export'
+    exportedFilesReflector: 'reflector::exportedFiles.proto.export'
+    exportedDirPath: 'path::exportedDir.proto.export'
+    exportedFilesPath: 'path::exportedFiles.proto.export'
+    originalWillFilesPath: 'path::original.will.files'

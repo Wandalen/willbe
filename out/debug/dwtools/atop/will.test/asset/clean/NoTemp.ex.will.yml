@@ -1,0 +1,33 @@
+
+about :
+
+  name : "submodules"
+  description : "Module for testing"
+  version : "0.0.1"
+  enabled : 1
+  interpreters :
+  - nodejs >= 6.0.0
+  - chrome >= 60.0.0
+  - firefox >= 60.0.0
+  keywords :
+  - wTools
+
+step :
+
+  export.proto :
+    inherit : predefined.export
+    export : path::proto
+    tar : 0
+    criterion :
+      debug : 1
+      proto : 1
+
+build :
+
+  proto.export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - build::debug.raw
+      - step::export.proto

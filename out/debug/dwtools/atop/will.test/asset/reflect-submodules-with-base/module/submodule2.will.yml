@@ -1,0 +1,25 @@
+about :
+
+  name : submodule2
+  version : 0.0.1
+
+path :
+
+  out : '..'
+  export : 'proto/File2.s'
+
+step :
+
+  export.submodule :
+    inherit : predefined.export
+    export : path::export
+    tar : 0
+
+build :
+
+  export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - export.submodule
