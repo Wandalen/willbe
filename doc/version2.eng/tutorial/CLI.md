@@ -4,7 +4,7 @@ How to use command line interface of utility <code>willbe</code>. How to use com
 
 ### Complement of the commands
 
-After [installation](<Instalation.md>) of utility `willbe` enter the `will .` command in the console of your operating system.
+After [installation](<Instalation.md>) of utility `willbe` enter the [`will .` command](../concept/Command.md#Commands-of-the-utility-willbe) in the console of your operating system.
 
 <details>
   <summary><u>Command output <code>will .</code></u></summary>
@@ -78,7 +78,7 @@ The `willbe` utility knows many commands containing the word` list` thus it outp
 
 ### Command `.help`
 
-For help on the selected command, use the syntax `will .help [command]`.    
+For help on the selected command, use the syntax [`will .help [command]`](../concept/Command.md#Commands-of-the-utility-willbe).    
 Now, enter in the terminal `will .help .build`:
 
 <details>
@@ -195,7 +195,7 @@ build :
 
 Copy the code in the `.will.yml` file.  
 
-Utility `willbe` has the list of commands that ends on ` .list`. They display a list of resources of the given type of the current module. Therefore, if you type one of the `.*.list` commands in the directory where` willfile `is missing, you will receive a warning about the absence of the module.
+Utility `willbe` has the list of [commands that ends on ` .list`](../concept/Command.md#Commands-of-the-utility-willbe). They display a list of resources of the given type of the current module. Therefore, if you type one of the `.*.list` commands in the directory where` willfile `is missing, you will receive a warning about the absence of the module.
 
 <details>
   <summary><u>Command output <code>will .builds.list</code>in the current directory</u></summary>
