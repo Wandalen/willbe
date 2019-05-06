@@ -123,6 +123,12 @@ build :
       - reflect.submodules*=1
       - files.import
       - reflect.files
+  
+  export : 
+    criterion :
+      default : 1
+      export : 1
+    steps :
       - export.module*=1
 
 ```
@@ -135,8 +141,9 @@ build :
 - завантаження віддалених підмодулів;
 - копіювання файлів підмодуля в кроці `reflect.submodules*=1`;
 - завантаження файлів для неформального підмодуля в директорію `temp` (крок `files.import`);
-- копіювання файлів з директорії `{path::temp}/out` в директорію `path::out.*=1`
-- створення експорту побудованого модуля.   
+- копіювання файлів з директорії `{path::temp}/out` в директорію `path::out.*=1`.
+Збірка `export` виконує експорт побудованого модуля.  
+
 Файл `Color.download.will.yml` створений для завантаження файлів з віддаленого сервера.   
 
 ### Побудова і очищення модуля
@@ -147,29 +154,38 @@ build :
 ```
 [user@user ~]$ will .build
 ...
- . Read 1 will-files in 1.491s
-
-  Building module::cleanCommand / build::make.module
+ Building module::cleanCommand / build::make.module
      . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
-     + module::Tools version master was downloaded in 21.695s
-   + 1/1 submodule(s) of module::cleanCommand were downloaded in 21.704s
-   + reflect.submodules reflected 56 files /path_to_file/ : out/module.debug <- .module/Tools/proto in 2.059s
+     + module::Tools was downloaded version master in 14.125s
+   + 1/1 submodule(s) of module::cleanCommand were downloaded in 14.134s
+   + reflect.submodules reflected 56 files /path_to_file/ : out/module.debug <- .module/Tools/proto in 2.041s
  > will .each module .build
 Command ".each module .build"
 
 Module at /path_to_file/module/Color.download.will.yml
  . Read : /path_to_file/module/Color.download.will.yml
- . Read 1 will-files in 1.189s
+ . Read 1 will-files in 0.270s 
 
     Building module::downloadFiles / build::download.files
-     + download.files reflected 71 files :/// : path_to_file/temp <- git+https://github.com/Wandalen/wColor.git in 4.383s
-    Built module::downloadFiles / build::download.files in 4.438s
+     + download.files reflected 71 files :/// : path_to_file/temp <- git+https://github.com/Wandalen/wColor.git in 3.573s
+    Built module::downloadFiles / build::download.files in 3.644s
 
-   + reflect.files reflected 9 files /path_to_file/ : out/module.debug <- temp/out in 0.603s
-   + Write out archive /path_to_file/out/ : cleanCommand.out.tgs <- module.debug
+   + reflect.files reflected 9 files /path_to_file/ : out/module.debug <- temp/out in 0.435s
+  Built module::cleanCommand / build::make.module in 26.338s
+
+```
+
+</details>
+<details>
+  <summary><u>Вивід команди <code>will .export</code></u></summary>
+
+```
+[user@user ~]$ will .export
+...
+ Exporting module::cleanCommand / build::export
    + Write out will-file /path_to_file/out/cleanCommand.out.will.yml
-   + Exported make.module with 64 files in 2.675s
-  Built module::cleanCommand / build::make.module in 39.521s
+   + Exported export with 64 files in 2.241s
+  Exported module::cleanCommand / build::export in 2.293s
 
 ```
 
@@ -199,10 +215,10 @@ cleanCommand
 
 </details>
 
-Запустіть побудову модуля в кореневій директорії `.will.yml`.  
+Запустіть побудову модуля в кореневій директорії `.will.yml` командою `will .build`. Після побудови виконайте експорт модуля командою `will .export`  
 
 <details>
-  <summary><u>Вивід команди <code>will .build</code></u></summary>
+  <summary><u>Вивід команди <code>will .clean</code></u></summary>
 
 ```
 [user@user ~]$ will .clean
