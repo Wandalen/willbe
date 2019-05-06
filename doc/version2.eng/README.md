@@ -384,6 +384,11 @@ A string which has phrase which describes intention of a developer and actions w
   </a></summary>
   Command <code>.each</code> for executing the same operation for plenty modules or submodules.
 </details>
+<details><summary><a href="./tutorial/CommandShell.md">
+      Command <code>.shell</code>
+  </a></summary>
+  A command to call external application by utility <code>willbe</code> for chosen modules or submodules.
+</details>
 <details><summary><a href="./tutorial/StepJS.md">
       Using <code>JavaScript</code> files by utility <code>willbe</code>
   </a></summary>
@@ -448,11 +453,6 @@ A string which has phrase which describes intention of a developer and actions w
       Transpilation
   </a></summary>
   Using of predefined step <code>predefined.transpile</code> to transpile <code>JavaScript</code> files or its concatenation.
-</details>
-<details><summary><a href="./tutorial/CommandShell.md">
-      Command <code>.shell</code>
-  </a></summary>
-  A command to call external application by utility <code>willbe</code> for chosen modules or submodules.
 </details>
 <details><summary><a href="./tutorial/WillbeAsMake.md">
       Compiling of С++ application

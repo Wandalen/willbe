@@ -284,6 +284,11 @@
   </a></summary>
   Команда <code>.each</code> для виконання одної дії для багатьох модулів чи підмодулів.
 </details>
+<details><summary><a href="./tutorial/CommandShell.md">
+      Команда <code>.shell</code>
+  </a></summary>
+  Команда для виклику зовнішніх програм утилітою <code>willbe</code> для вибраних модулів чи підмодулів.
+</details>
 <details><summary><a href="./tutorial/StepJS.md">
       Використання <code>JavaScript</code> файлів утилітою <code>willbe</code>
   </a></summary>
@@ -348,11 +353,6 @@
       Транспіляція
   </a></summary>
   Використання вбудованого кроку <code>predefined.transpile</code> для транспіляції <code>JavaScript</code> файлів або їх конкатенації.
-</details>
-<details><summary><a href="./tutorial/CommandShell.md">
-      Команда <code>.shell</code>
-  </a></summary>
-  Команда для виклику зовнішніх програм утилітою <code>willbe</code> для вибраних модулів чи підмодулів.
 </details>
 <details><summary><a href="./tutorial/WillbeAsMake.md">
       Компіляція С++ програми
