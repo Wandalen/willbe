@@ -275,6 +275,7 @@ function stepRoutineShell( frame )
 
   if( opts.upToDate === 'preserve' && forEachDstReflector )
   {
+
     _.assert( forEachDstReflector instanceof will.Reflector );
     forEachDst = module.resolveContextPrepare({ currentThis : forEachDstReflector });
 

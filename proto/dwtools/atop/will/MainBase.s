@@ -26,6 +26,7 @@
 
 = Requested features
 
+- Command .submodules.update should change back manually updated fixated submodules.
 - Faster loading, perhaps without submodules
 - Timelapse for transpilation
 

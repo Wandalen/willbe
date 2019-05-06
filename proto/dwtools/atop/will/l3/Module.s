@@ -630,9 +630,11 @@ function shell( o )
 
   /* */
 
+  debugger;
   if( o.currentPath )
   o.currentPath = module.pathResolve({ selector : o.currentPath, prefixlessAction : 'resolved', currentContext : o.currentContext });
   _.sure( o.currentPath === null || _.strIs( o.currentPath ) || _.strsAreAll( o.currentPath ), 'Current path should be string if defined' );
+  debugger;
 
   /* */
 

@@ -1830,7 +1830,7 @@ function exportSecond( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, '+ Write out will-file' ), 2 );
-    test.identical( _.strCount( got.output, 'Exported doc.export with 2 files in' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported doc.export with 4 files in' ), 1 );
     test.identical( _.strCount( got.output, 'Exported proto.export with 2 files in' ), 1 );
 
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
@@ -2015,7 +2015,7 @@ function exportSecond( test )
       },
       'exportedFiles.proto.export' :
       {
-        path : [ 'proto', 'proto/File.js' ],
+        path : [ 'proto', 'proto/-NotExecluded.js', 'proto/.NotExecluded.js', 'proto/File.js' ],
         criterion : { proto : 1, export : 1 }
       },
       'original.will.files' :

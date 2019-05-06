@@ -328,6 +328,7 @@ function performExportedFilesReflector()
   try
   {
 
+    debugger;
     exportedFilesPath = hd.filesFind
     ({
       recursive : 2,
@@ -337,7 +338,9 @@ function performExportedFilesReflector()
       verbosity : 0,
       outputFormat : 'record',
       filter : exported.srcFilter.clone(),
+      maskPreset : 0,
     });
+    debugger;
 
   }
   catch( err )

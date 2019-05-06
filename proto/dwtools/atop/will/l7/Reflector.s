@@ -620,7 +620,7 @@ function pathsResolve( o )
     reflector.src.filePath = null;
     if( r instanceof _.FileRecordFilter )
     {
-      debugger;
+      // debugger;
       reflector.src.pathsInherit( r ); // yyy
     }
     else

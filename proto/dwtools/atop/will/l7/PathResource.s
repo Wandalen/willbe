@@ -97,8 +97,8 @@ function form2()
   _.assert( arguments.length === 0 );
   _.assert( pathResource.formed === 1 );
 
-  if( pathResource.nickName === 'path::export' )
-  debugger;
+  // if( pathResource.nickName === 'path::export' )
+  // debugger;
 
   if( _.arrayIs( pathResource.path ) )
   pathResource.path = _.arrayFlattenOnce( pathResource.path );
