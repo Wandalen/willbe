@@ -5626,6 +5626,85 @@ function reflectComplexInherit( test )
 }
 
 //
+    
+/* To test maskDirectory and maskTerminal masks. Now they are not working properly */    
+ function reflectorMasks( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflector-masks' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outReleasePath = _.path.join( routinePath, 'out/release' );
+  let outDebugPath = _.path.join( routinePath, 'out/debug' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+
+  test.description = 'should handle correct files';
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  /* - */
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  ready
+
+  /* - */
+
+  shell({ args : [ '.build copy.' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'mask directory';
+
+    var files = self.find( outReleasePath );
+
+    test.identical( files.length, 3 );
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflect.copy. reflected ' + String( files.length ) + ' files ' ) );
+    test.is( _.fileProvider.fileExists( _.path.join( outReleasePath, 'proto.two' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( outReleasePath, 'files' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( outReleasePath, 'build.txt.js' ) ) );
+
+    return null;
+  })
+    
+  /* - */
+
+  shell({ args : [ '.build copy.debug' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'mask terminal';
+
+    var files = self.find( outDebugPath );
+
+    test.identical( files.length, 6 );
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflect.copy. reflected ' + String( files.length ) + ' files ' ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( outReleasePath, 'proto.two' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( outReleasePath, 'files' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( outReleasePath, 'build.txt.js' ) ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+reflectorMasks.timeOut = 130000;  
+
+//
 
 function stepSubmodulesDownload( test )
 {
@@ -6534,7 +6613,7 @@ function functionPlatform( test )
   /* - */
 
   return ready;
-}
+} 
 
 //
 
@@ -6610,6 +6689,7 @@ var Self =
     reflectSubmodulesWithCriterion,
     reflectInherit,
     reflectComplexInherit,
+    reflectorMasks,
 
     stepSubmodulesDownload,
     make,
@@ -6622,6 +6702,8 @@ var Self =
 
     functionStringsJoin,
     functionPlatform,
+      
+    
 
   }
 
