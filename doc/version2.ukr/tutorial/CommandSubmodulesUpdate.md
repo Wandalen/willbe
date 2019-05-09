@@ -47,21 +47,19 @@ submodule :
 ```
 [user@user ~]$ will .submodules.update
 ...
-  Remote path of module::submodulesCommands / module::Tools will be fixated
-  git+https:///github.com/Wandalen/wTools.git/out/wTools : .#7db7bd21ac76fc495aae44cc8b1c4474ce5012a4 <- .#ec60e39ded1669e27abaa6fc2798ee13804c400a
-  in /path_to_file/submodulesUpgrade/.will.yml
-  Remote path of module::submodulesCommands / module::PathFundamentals will be fixated
-  git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals : .#d95a35b7ef1568df823c12efa5bd5e1f4ceec8b7 <- .#master
+  + module::Tools will be updated to version ec60e39ded1669e27abaa6fc2798ee13804c400a
+  + module::PathFundamentals will be updated to version aa4b10e291c0cb0e79961b6ece128da544f00568
+
 
 ```
 
 </details>
 
-Для того, щоб дослідити команду `.submodules.update`, дізнайтесь, які найновіші оновлення підмодулів наявні. Для цього використайте команду `will .submodules.upgrade dry:1`. Опція `dry:1` вказує, що `вілфайл` не буде переписано.
+Дізнайтесь, до якої версії можна оновити наявні підмодулі. Для цього використайте команду `will .submodules.update dry:1`. Опція `dry:1` вказує, що файли підмодулів не будуть завантажені.
 
 Вивід показує (на момент створення туторіалу):
-- можливу заміну версії `#ec60e39ded1669e27abaa6fc2798ee13804c400a` на `#7db7bd21ac76fc495aae44cc8b1c4474ce5012a4` в підмодулі `Tools`;
-- можливу заміну версії `#master` на `#d95a35b7ef1568df823c12efa5bd5e1f4ceec8b7` в підмодулі `PathFundamentals`.
+- для підмодуля `Tools` буде здійснено оновлення до вказаної версії коміту `#ec60e39ded1669e27abaa6fc2798ee13804c400a`;
+- в підмодулі `PathFundamentals` буде здійснено оновлення до версії `#d95a35b7ef1568df823c12efa5bd5e1f4ceec8b7`.
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.update</code></u></summary>
@@ -93,7 +91,8 @@ submodulesUpdate
 
 Виконайте оновлення файлів віддалених підмодулів командою `will .submodules.update`. Знайдіть в виводі версії завантажених підмодулів.
 
-Утиліта завантажила оновлення для обох підмодулів згідно встановлених версій: `#master` для підмодуля `PathFundamentals` i `#ec60e39ded1669e27abaa6fc2798ee13804c400a` для підмодуля `Tools`. Тобто, у випадку відсутності підмодуля, команда `.submodules.update` його завантажить.
+Утиліта завантажила оновлення для обох підмодулів згідно встановлених версій: `#master` для підмодуля `PathFundamentals` i `#ec60e39ded1669e27abaa6fc2798ee13804c400a` для підмодуля `Tools`.  
+Тобто, команда `.submodules.update` завантажує підмодулі у випадку їх відсутності.
 
 У підмодуля `Tools` встановлено застарілу версію. Здійсніть його оновлення.
 
@@ -118,6 +117,8 @@ Remote path of module::submodulesCommands / module::PathFundamentals fixated
 
 Для оновлення підмодуля `Tools` потрібно змінити його URI-посилання в `вілфайлі`. Використайте команду `will .submodules.upgrade`.
 
+Після виконання команди `.submodules.upgrade` підмодуль `Tools` змінив версію на актуальну. Тому, команда `.submodules.update` може завантажити оновлену версію.
+
 <details>
   <summary><u>Вивід команди <code>will .submodules.update</code></u></summary>
 
@@ -133,6 +134,11 @@ Remote path of module::submodulesCommands / module::PathFundamentals fixated
 ```
 
 </details>
+
+Введіть команду `will .submodules.update`. Порівняйте з приведеним вище виводом.
+
+Підмодуль `Tools` був оновлений до версії встановленої командою `.submodules.upgrade`. Підмодуль `PathFundamentals` не оновився тому, що версія вітки `master` є актуальною.
+
 <details>
   <summary><u>Файлова структура після оновлення підмодулів</u></summary>
 
@@ -145,7 +151,7 @@ submodulesUpdate
 
 </details>
 
-Після виконання команди `.submodules.upgrade` підмодуль `Tools` змінив версію на актуальну. Тому команда `.submodules.update` змогла завантажити оновлену версію. Підмодуль `PathFundamentals` не оновився тому, що версія вітки `master` є актуальною.
+Після повторного виконання оновлення структура файлів не змінилась.
 
 ### Підсумок
 

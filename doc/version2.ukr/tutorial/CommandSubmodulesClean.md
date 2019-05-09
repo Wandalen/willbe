@@ -40,6 +40,8 @@ submodule :
 
 ### Використання команди `.submodules.clean`
 
+Для використання команди `.submodulesClean` потрібно мати завантажені підмодулі.
+
 <details>
   <summary><u>Вивід команди <code>will .submodules.download</code></u></summary>
 
@@ -54,6 +56,9 @@ submodule :
 ```
 
 </details>
+
+Завантажте підмодулі командою `will .submodules.download`.
+
 <details>
   <summary><u>Файлова структура після виконання команди <code>will .submodules.download</code></u></summary>
 
@@ -68,9 +73,9 @@ submodulesCommands
 
 </details>
 
-Для використання команди `.submodulesClean` потрібно мати завантажені підмодулі. Завантажте підмодулі командою `will .submodules.download`. Після виконання побудови, перевірте зміни в директорії `submodulesClean`.
+Після виконання побудови, перевірте зміни в директорії `submodulesClean`. Порівняйте структуру файлів з приведеною вище.
 
-Утиліта створила директорію `.module`, яка містить завантажені віддалені підмодулі.    
+Утиліта створила директорію `.module`, яка містить завантажені віддалені підмодулі `Tools` i `PathFundamentals`.    
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.clean</code></u></summary>
@@ -83,8 +88,11 @@ submodulesCommands
 ```
 
 </details>
+
+Команда `.submodules.clean` видаляє всі завантажені підмодулі разом з директорією `.module`. Введіть команду та перевірте зміни в директорії `submodulesClean`.
+
 <details>
-  <summary><u>Файлова структура після виконання команди <code>will .submodules.download</code></u></summary>
+  <summary><u>Файлова структура після виконання команди <code>will .submodules.clean</code></u></summary>
 
 ```
 submodulesCommands
@@ -94,9 +102,7 @@ submodulesCommands
 
 </details>
 
-Команда `.submodules.clean` видаляє всі завантажені підмодулі разом з директорією `.module`. Введіть команду та перевірте зміни в директорії `submodulesClean`.
-
-Модуль повернувся до початкового стану. `Вілфайл` не змінився.
+Після виконання команди `will .submodules.clean` модуль повернувся до початкового стану. Директорія `.module` видалена, а `вілфайл` не змінився.
 
 ### Підсумок
 
