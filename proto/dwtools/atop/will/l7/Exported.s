@@ -104,10 +104,8 @@ function readExported()
   let path = hub.path;
   let logger = will.logger;
 
-  // debugger;
-
   let outFilePath = build.outFilePathFor();
-  let module2 = will.Module({ will : will, dirPath : path.dir( outFilePath ), originalModule : module }).preform();
+  let module2 = will.Module({ will : will, dirPath : path.dir( outFilePath ), original : module }).preform();
   let willFiles = module2.willFilesPick( outFilePath );
   let willFile = willFiles[ 0 ];
 
@@ -220,6 +218,7 @@ function performExportedReflectors( exportSelector )
 
   /* */
 
+  // debugger;
   if( exp instanceof will.Reflector )
   {
 
@@ -328,7 +327,7 @@ function performExportedFilesReflector()
   try
   {
 
-    debugger;
+    // debugger;
     exportedFilesPath = hd.filesFind
     ({
       recursive : 2,
@@ -340,7 +339,7 @@ function performExportedFilesReflector()
       filter : exported.srcFilter.clone(),
       maskPreset : 0,
     });
-    debugger;
+    // debugger;
 
   }
   catch( err )
@@ -414,7 +413,7 @@ function performPaths()
   let logger = will.logger;
   let build = module.buildMap[ exported.name ];
 
-  let originalWillFilesPath = module.resourceObtain( 'path', 'original.will.files' );
+  let originalWillFilesPath = module.resourceObtain( 'path', 'original.willfiles' );
   originalWillFilesPath.path = path.s.relative( module.inPath, _.entityShallowClone( module.willFilesPath ) );
   exported.originalWillFilesPath = originalWillFilesPath;
 
@@ -495,25 +494,11 @@ function performWriteOutFile()
 
   /* */
 
-  let module2 = module.cloneExtending({ dirPath : module.outPath });
-  _.assert( module2.dirPath === module.outPath );
-
-  let inPathResource = module2.resourceObtain( 'path', 'in' );
-  let outPathResource = module2.resourceObtain( 'path', 'out' );
-
-  inPathResource.path = path.relative( module.outPath, module.inPath );
-  _.assert( module2.pathResourceMap[ inPathResource.name ] === inPathResource );
-
-  let data = module2.dataExport({ copyingNonWritable : 0, copyingPredefined : 0 });
-
-  _.assert( !data.path || !data.path[ 'predefined.will.files' ] );
-  _.assert( !data.path || !data.path[ 'predefined.dir' ] );
-
-  module2.finit();
+  let outFilePath = build.outFilePathFor();
+  let data = module.dataExportForModuleExport({ willfilesPath : outFilePath });
 
   /* */
 
-  let outFilePath = build.outFilePathFor();
   hd.fileWrite
   ({
     filePath : outFilePath,
@@ -524,7 +509,7 @@ function performWriteOutFile()
   /* */
 
   if( will.verbosity >= 3 )
-  logger.log( ' + ' + 'Write out will-file ' + _.color.strFormat( outFilePath, 'path' ) );
+  logger.log( ' + ' + 'Write out willfile ' + _.color.strFormat( outFilePath, 'path' ) );
 
 }
 

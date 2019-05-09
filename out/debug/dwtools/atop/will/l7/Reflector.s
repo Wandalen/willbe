@@ -135,7 +135,7 @@ function form2()
 
   _.assert( reflector.formed === 1 );
 
-  // if( reflector.nickName === "reflector::files.all" )
+  // if( reflector.nickName === "reflector::reflect.submodules.variant2" )
   // debugger;
 
   reflector.src.pairWithDst( reflector.dst );
@@ -206,7 +206,7 @@ function _inheritMultiple( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  // if( reflector.nickName === "reflector::files.all" )
+  // if( reflector.nickName === "reflector::reflect.submodules.variant2" )
   // debugger;
 
   _.assert( arguments.length === 1 );
@@ -227,10 +227,13 @@ function _inheritMultiple( o )
   if( reflector.filePath )
   reflector._reflectMapForm({ visited : o.visited });
 
-  // if( reflector.nickName === "reflector::files.all" )
+  // if( reflector.nickName === "reflector::reflect.submodules.variant2" )
   // debugger;
 
   reflector.pathsResolve();
+
+  // if( reflector.nickName === "reflector::reflect.submodules.variant2" )
+  // debugger;
 
   reflector.src.pairRefineLight();
 
@@ -248,8 +251,8 @@ function _inheritMultiple( o )
   // if( reflector.filePath )
   // reflector._reflectMapForm({ visited : o.visited });
 
-  // if( reflector.nickName === "reflector::files.all" )
-  // debugger;
+  if( reflector.nickName === "reflector::reflect.submodules.variant2" )
+  debugger;
 
   return reflector;
 }

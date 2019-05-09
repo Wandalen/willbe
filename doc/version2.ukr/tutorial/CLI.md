@@ -364,9 +364,9 @@ About
   enabled : 1
 
 Paths
-  predefined.willbe : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec'
-  predefined.will.files : '/home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe/sample/version2/CLI/.will.yml'
-  predefined.dir : '/home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe/sample/version2/CLI'
+  will : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec'
+  module.willfiles : '/home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe/sample/version2/CLI/.will.yml'
+  module.dir : '/home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe/sample/version2/CLI'
   proto : 'proto'
   out.debug : 'out/debug'
 

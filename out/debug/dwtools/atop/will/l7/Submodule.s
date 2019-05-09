@@ -24,6 +24,15 @@ Self.shortName = 'Submodule';
 // inter
 // --
 
+function copy( o )
+{
+  let submodule = this;
+  _.assert( arguments.length === 1 );
+  return Parent.prototype.copy.call( submodule, o );
+}
+
+//
+
 function OptionsFrom( o )
 {
   _.assert( arguments.length === 1 );
@@ -40,19 +49,15 @@ function unform()
   let module = submodule.module;
   let rootModule = module.rootModule;
 
-  if( !submodule.original && rootModule.allSubmoduleMap[ submodule.path ] )
+  if( !submodule.original && rootModule.allModuleMap[ submodule.path ] )
   {
-    debugger;
-    _.assert( rootModule.allSubmoduleMap[ submodule.path ] === submodule.loadedModule );
-    delete rootModule.allSubmoduleMap[ submodule.path ];
+    _.assert( rootModule.allModuleMap[ submodule.path ] === submodule.loadedModule );
+    delete rootModule.allModuleMap[ submodule.path ];
   }
 
   if( submodule.loadedModule )
   {
-    // _.assert( submodule.loadedModule.associatedSubmodules === submodule );
-    _.arrayRemoveOnceStrictly( submodule.loadedModule.associatedSubmodules, submodule );
-    // submodule.loadedModule.associatedSubmodule = null;
-    // submodule.loadedModule.finit();
+    // _.arrayRemoveOnceStrictly( submodule.loadedModule.associatedSubmodules, submodule );
     submodule.loadedModule = null;
   }
 
@@ -78,10 +83,19 @@ function form1()
 
   /* begin */
 
+  _.assert( !!submodule.module );
+  // let module = submodule.module;
+  // let rootModule = module.rootModule;
+  if( submodule.loadedModule )
+  {
+    _.assert( rootModule.allModuleMap[ submodule.path ] === submodule.loadedModule || rootModule.allModuleMap[ submodule.path ] === undefined );
+    rootModule.allModuleMap[ submodule.path ] = submodule.loadedModule;
+  }
+
   // debugger;
   // if( !submodule.original )
   // {
-  //   rootModule.allSubmoduleMap[ submodule.path ] = submodule;
+  //   rootModule.allModuleMap[ submodule.path ] = submodule;
   // }
 
   /* end */
@@ -106,12 +120,12 @@ function form3()
   {
     if( submodule.loadedModule && submodule.loadedModule.hasAnyError() )
     {
-      debugger;
-      // _.assert( submodule.loadedModule.associatedSubmodule === submodule )
-      // submodule.loadedModule.associatedSubmodule = null;
-      _.arrayRemoveOnceStrictly( submodule.loadedModule.associatedSubmodules, submodule );
-      submodule.loadedModule.finit();
+      // debugger;
+      // _.arrayRemoveOnceStrictly( submodule.loadedModule.associatedSubmodules, submodule );
+      let loadedModule = submodule.loadedModule;
       submodule.loadedModule = null;
+      _.assert( loadedModule.associatedSubmodules.length === 0 );
+      loadedModule.finit();
       submodule.formed = 2;
     }
     else
@@ -155,31 +169,39 @@ function _load()
   _.assert( !submodule.original );
   _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
 
-  if( rootModule.allSubmoduleMap[ submodule.path ] )
+  if( rootModule.allModuleMap[ submodule.path ] )
   {
     debugger;
-    submodule.loadedModule = rootModule.allSubmoduleMap[ submodule.path ];
+    submodule.loadedModule = rootModule.allModuleMap[ submodule.path ];
     return submodule.loadedModule.ready.split()
+  }
+
+  if( submodule.data )
+  {
+    _.assert( 0, 'not implemented' );
+    submodule.data = null;
   }
 
   /* */
 
+  // debugger;
   submodule.loadedModule = will.Module
   ({
     will : will,
     alias : submodule.name,
     willFilesPath : path.join( module.inPath, submodule.path ),
     supermodule : module,
-    associatedSubmodules : [ submodule ],
+    // associatedSubmodules : [ submodule ],
   }).preform();
-
-  rootModule.allSubmoduleMap[ submodule.path ] = submodule.loadedModule;
   // debugger;
+
+  // rootModule.allModuleMap[ submodule.path ] = submodule.loadedModule;
 
   submodule.loadedModule.willFilesFind({ isOutFile : 1 });
   submodule.loadedModule.willFilesOpen();
   submodule.loadedModule.submodulesFormSkip();
-  submodule.loadedModule.resourcesForm();
+  submodule.loadedModule.resourcesFormSkip();
+  // submodule.loadedModule.resourcesForm(); // yyy
 
   submodule.loadedModule.willFilesFindReady.finally( ( err, arg ) =>
   {
@@ -188,16 +210,13 @@ function _load()
     return arg;
   });
 
-  // debugger;
   submodule.loadedModule.ready.finally( ( err, arg ) =>
   {
-    // debugger;
     if( err )
     {
-      if( rootModule.allSubmoduleMap[ submodule.path ] === submodule.loadedModule )
+      if( rootModule.allModuleMap[ submodule.path ] === submodule.loadedModule )
       {
-        // debugger;
-        delete rootModule.allSubmoduleMap[ submodule.path ]
+        delete rootModule.allModuleMap[ submodule.path ]
       }
       if( will.verbosity >= 3 )
       logger.error( ' ! Failed to read ' + submodule.decoratedNickName + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading' );
@@ -214,6 +233,10 @@ function _load()
       }
       throw err;
     }
+    else
+    {
+
+    }
     return arg || null;
   });
 
@@ -221,7 +244,6 @@ function _load()
 
   return submodule.loadedModule.ready.split().finally( ( err, arg ) =>
   {
-    // debugger;
     return null;
   });
 
@@ -266,6 +288,54 @@ function isDownloadedGet()
 
 //
 
+function loadedModuleSet( loadedModule )
+{
+  let submodule = this;
+
+  if( loadedModule === submodule[ loadedModuleSymbol ] )
+  return;
+
+  if( submodule[ loadedModuleSymbol ] )
+  _.arrayRemoveOnceStrictly( submodule[ loadedModuleSymbol ].associatedSubmodules, submodule );
+  submodule[ loadedModuleSymbol ] = null;
+
+  if( loadedModule )
+  {
+
+    // debugger;
+    // _.assert( !!submodule.module );
+    // let module = submodule.module;
+    // let rootModule = module.rootModule;
+    // _.assert( rootModule.allModuleMap[ submodule.path ] === loadedModule || rootModule.allModuleMap[ submodule.path ] === undefined );
+    // rootModule.allModuleMap[ submodule.path ] = loadedModule;
+
+    _.arrayAppendOnceStrictly( loadedModule.associatedSubmodules, submodule );
+    submodule[ loadedModuleSymbol ] = loadedModule;
+
+  }
+
+}
+
+//
+
+function dataGet()
+{
+  let submodule = this;
+  let module = submodule.module;
+  return submodule[ dataSymbol ];
+}
+
+//
+
+function dataSet( src )
+{
+  let submodule = this;
+  let module = submodule.module;
+  submodule[ dataSymbol ] = src;
+}
+
+//
+
 function dataExport()
 {
   let submodule = this;
@@ -278,7 +348,15 @@ function dataExport()
   if( result === undefined )
   return result;
 
-  debugger;
+  // if( 0 )
+  if( submodule.loadedModule && !submodule.loadedModule.hasAnyError() )
+  {
+    debugger;
+    _.assert( submodule.data === null, 'not tested' );
+    if( submodule.data )
+    result.data = submodule.data;
+    result.data = submodule.loadedModule.dataExport();
+  }
 
   return result;
 }
@@ -295,19 +373,39 @@ function infoExport()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let result = Parent.prototype.infoExport.call( submodule );
+  let resultMap = Parent.prototype.dataExport.call( submodule );
   let tab = '  ';
 
-  if( result )
-  result += '\n';
-  result += tab + 'isDownloaded : ' + _.toStr( submodule.isDownloaded );
+  debugger;
 
   if( submodule.loadedModule )
   {
-    result += '\n'
-    let module2 = submodule.loadedModule
-    result += tab + 'Exported builds : ' + _.toStr( _.mapKeys( module2.exportedMap ) );
+    let module2 = submodule.loadedModule;
+    resultMap.remote = module2.remotePath;
+    resultMap.local = module2.localPath;
+
+    resultMap[ 'Exported builds' ] = _.toStr( _.mapKeys( module2.exportedMap ) );
+
   }
+
+  resultMap.isDownloaded = submodule.isDownloaded;
+
+  let result = submodule._infoExport( resultMap );
+
+  // if( result )
+  // result += '\n';
+  // result += tab + 'isDownloaded : ' + _.toStr( submodule.isDownloaded );
+  //
+  //
+  // if( submodule.loadedModule )
+  // {
+  //   let module2 = submodule.loadedModule
+  //
+  //   result = tab + 'remote : ' + module2.remotePath + '\n' + result;
+  //   result = tab + 'local : ' + module2.localPath + '\n' + result;
+  //
+  //   result += '\n' + tab + 'Exported builds : ' + _.toStr( _.mapKeys( module2.exportedMap ) );
+  // }
 
   return result;
 }
@@ -316,29 +414,38 @@ function infoExport()
 // relations
 // --
 
+let loadedModuleSymbol = Symbol.for( 'loadedModule' );
+let dataSymbol = Symbol.for( 'data' );
+
 let Composes =
 {
 
-  path : null,
+  own : 1,
   description : null,
   criterion : null,
   inherit : _.define.own([]),
+  path : null,
 
 }
 
 let Aggregates =
 {
   name : null,
+  loadedModule : null,
 }
 
 let Associates =
 {
-  data : null,
 }
 
 let Restricts =
 {
-  loadedModule : null,
+  data : null,
+}
+
+let Medials =
+{
+  data : null,
 }
 
 let Statics =
@@ -351,6 +458,8 @@ let Statics =
 let Accessors =
 {
   isDownloaded : { getter : isDownloadedGet, readOnly : 1 },
+  loadedModule : { setter : loadedModuleSet },
+  data : { getter : dataGet, setter : dataSet },
 }
 
 let Forbids =
@@ -366,6 +475,8 @@ let Proto =
 
   // inter
 
+  copy,
+
   OptionsFrom,
   unform,
   form1,
@@ -376,6 +487,9 @@ let Proto =
   resolve,
 
   isDownloadedGet,
+  loadedModuleSet,
+  dataGet,
+  dataSet,
 
   dataExport,
   infoExport,
@@ -386,6 +500,7 @@ let Proto =
   Aggregates,
   Associates,
   Restricts,
+  Medials,
   Statics,
   Accessors,
   Forbids,

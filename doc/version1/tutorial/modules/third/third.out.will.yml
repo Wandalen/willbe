@@ -49,7 +49,7 @@ step:
       tar: 0
       export: 'path::fileToExport'
     inherit:
-      - predefined.export
+      - module.export
 build:
   export:
     criterion:

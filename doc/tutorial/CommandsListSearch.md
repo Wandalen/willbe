@@ -80,9 +80,9 @@ About
   enabled : 1
 
 Paths
-  predefined.willbe : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec'
-  predefined.will.files : '/path_to_file/.will.yml'
-  predefined.dir : '/path_to_file'
+  will : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec'
+  module.willfiles : '/path_to_file/.will.yml'
+  module.dir : '/path_to_file'
   proto : './proto'
   in : '.'
   out : 'out'
@@ -129,16 +129,16 @@ step::submodules.informal.export
     currentPath : path::dirPath
     shell : will .each ./module .export
   inherit :
-    predefined.shell
+    shell.run
 
 ```
 
 </details>
 
 В секціх `path` утиліта додатково вказує на шляхи до виконуваних файлів:  
-- `predefined.willbe` - шлях до файла утиліти, який виконується;  
-- `predefined.will.files` - `will-файл`, який виконується (або спліт-файли);  
-- `predefined.dir` - шлях до директорії `will-файла`, який виконується.  
+- `will` - шлях до файла утиліти, який виконується;  
+- `module.willfiles` - `will-файл`, який виконується (або спліт-файли);  
+- `module.dir` - шлях до директорії `will-файла`, який виконується.  
 
 ### Аргументи в командах групи `*.list`
 Для вибору ресурсів за назвою вказуйте ключові слова з ґлобом як аргумент команди. Наприклад, для виводу шляхів, які починаються на `o`, введіть команду `will .paths.list о*`:  
@@ -196,7 +196,7 @@ step::submodules.informal.export
     currentPath : path::dirPath
     shell : will .each ./module .export
   inherit :
-    predefined.shell
+    shell.run
 
 ```
 
@@ -225,7 +225,7 @@ step::submodules.informal.export
     currentPath : path::dirPath
     shell : will .each ./module .export
   inherit :
-    predefined.shell
+    shell.run
 
 ```
 

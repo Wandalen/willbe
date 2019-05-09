@@ -170,7 +170,7 @@ function open()
   {
 
     if( !willf.exists() )
-    throw _.err( 'No will-file' );
+    throw _.err( 'No willfile' );
 
     willf.data = fileProvider.fileConfigRead
     ({
@@ -204,8 +204,8 @@ function open()
 
   if( willf.data.about )
   module.about.copy( willf.data.about );
-  if( willf.data.execution )
-  module.execution.copy( willf.data.execution );
+  // if( willf.data.execution )
+  // module.execution.copy( willf.data.execution );
 
   let con = _.Consequence().take( null );
 
@@ -213,10 +213,23 @@ function open()
 
   willf._resourcesMake( will.Exported, willf.data.exported );
   willf._resourcesMake( will.Submodule, willf.data.submodule );
+
+  if( module.absoluteName === "module::submodules-mixed / module::UriFundamentals" )
+  debugger;
+
   willf._resourcesMake( will.PathResource, willf.data.path );
+
   willf._resourcesMake( will.Step, willf.data.step );
   willf._reflectorsMake( will.Reflector, willf.data.reflector );
   willf._resourcesMake( will.Build, willf.data.build );
+
+  _.assert( path.s.allAreAbsolute( module.pathResourceMap[ 'module.dir' ].path ) );
+  _.assert( path.s.allAreAbsolute( module.pathResourceMap[ 'module.willfiles' ].path ) );
+  _.assert( path.s.allAreAbsolute( module.pathResourceMap[ 'local' ].path ) );
+  _.assert( path.s.allAreAbsolute( module.pathResourceMap[ 'will' ].path ) );
+
+  if( module.absoluteName === "module::submodules-mixed / module::UriFundamentals" )
+  debugger;
 
   willf.formed = 2;
   return true;
@@ -253,6 +266,38 @@ function _resourcesMake( Resource, resources )
     o2.willf = willf;
     o2.module = module;
     o2.name = k;
+
+    if( Resource.shortName === 'PathResource' )
+    {
+      // o2.Rewritable = 1;
+      o2.OnExist = function onExist( instance, options )
+      {
+
+        if( !instance.criterion )
+        return;
+        if( !instance.criterion.predefined )
+        return;
+
+        if( options.path )
+        options.path = path.s.join( module.inPath, options.path );
+        options.criterion = options.criterion || Object.create( null );
+        _.mapSupplement( options.criterion, instance.criterion );
+
+        // let p1 = _.scalarFromOrNull( instance.path );
+        // let p2 = _.scalarFromOrNull( options.path );
+        // _.assert( !p1 || !p2 || _.entityIdentical( p1, p2 ), 'not tested' );
+        instance.finit();
+        // if( instance && instance.criterion && instance.criterion.predefined )
+        // {
+        //   instance.finit();
+        // }
+
+      }
+    }
+
+    if( module.absoluteName === "module::submodules-mixed / module::UriFundamentals" )
+    if( o2.name === 'module.willfiles' )
+    debugger;
 
     try
     {
@@ -320,7 +365,7 @@ function _reflectorsMake( Reflector, resources )
       if( resource.step )
       o3.inherit = resource.step;
       else
-      o3.inherit = 'predefined.shell';
+      o3.inherit = 'shell.run';
       o3.shell = resource.shell;
       // o3.Optional = 1;
 

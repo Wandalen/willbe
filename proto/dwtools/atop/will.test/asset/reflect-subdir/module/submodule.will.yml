@@ -8,10 +8,10 @@ path :
   out : '..'
   export : 'proto'
 
-step  :
+step :
 
   export.submodule :
-    inherit : predefined.export
+    inherit : module.export
     export : path::export
     tar : 0
 

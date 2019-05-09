@@ -100,7 +100,7 @@ path :
 step : 
 
   export : 
-    inherit : predefined.export
+    inherit : module.export
     export : path::proto
   
 build : 

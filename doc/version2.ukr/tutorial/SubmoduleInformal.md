@@ -36,15 +36,15 @@ path :
 
   in : '..'
   out : 'out'
-  predefined.remote : 'git+https:///github.com/Wandalen/wColor.git'
-  predefined.local : './.module/Color'
-  export : '{path::predefined.local}/proto'
+  remote : 'git+https:///github.com/Wandalen/wColor.git'
+  local : './.module/Color'
+  export : '{path::local}/proto'
 
 reflector :
 
   download.informal :
-    src : path::predefined.remote
-    dst : path::predefined.local
+    src : path::remote
+    dst : path::local
 
 step :
 
@@ -70,11 +70,11 @@ build :
 
 В збірці `export.informal` є два кроки. Перший - `download.informal` - використовується для завантаження підмодуля з Git-репозиторію `https://github.com/Wandalen/wColor.git`. Завантажені файли поміщаються в директорію `./.module/Color`.  
 В кроці `export.informal` використовуються вбудовані шляхи:
-- `predefined.remote` - шлях для віддалених ресурсів
-- `predefined.local` - шлях, за яким завантажуються віддалені ресурси. 
+- `remote` - шлях для віддалених ресурсів
+- `local` - шлях, за яким завантажуються віддалені ресурси. 
 Крок `download.informal` не вказаний в `вілфайлі`, його генерує утиліта в оперативну пам'ять за назвою рефлектора. 
 
-Другий крок - `export.module` - створює експорт модуля за шляхом `{path::predefined.local}/proto`, тобто, `./.module/Color/proto`.   
+Другий крок - `export.module` - створює експорт модуля за шляхом `{path::local}/proto`, тобто, `./.module/Color/proto`.   
 
 <details>
   <summary><u>Код файла <code>.will.yml</code></u></summary>
@@ -118,7 +118,7 @@ reflector :
 step :
 
   submodules.informal.export :
-    currentPath : path::predefined.dir
+    currentPath : path::module.dir
     shell : 'will .each module .export'
 
 build :

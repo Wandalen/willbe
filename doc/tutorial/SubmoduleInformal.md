@@ -35,15 +35,15 @@ path :
 
   in : '..'
   out : 'out'
-  predefined.remote : 'git+https:///github.com/Wandalen/wColor.git'
-  predefined.local : './.module/Color'
-  export : '{path::predefined.local}/proto'
+  remote : 'git+https:///github.com/Wandalen/wColor.git'
+  local : './.module/Color'
+  export : '{path::local}/proto'
 
 reflector :
 
   download.informal :
-    src : path::predefined.remote
-    dst : path::predefined.local
+    src : path::remote
+    dst : path::local
 
 step :
 
@@ -65,7 +65,7 @@ build :
 
 </details>
 
-В збірці `export.informal` є два кроки. Перший - `download.informal` для завантаження підмодуля з Git-репозиторію `https://github.com/Wandalen/wColor.git` в локальну директорію `./.module/Color`. В ньому використовуються вбудований шлях `predefined.remote` - шлях для віддалених ресурсів та вбудований шлях `predefined.local` - шлях, за яким завантажуються віддалені ресурси. Крок `download.informal` не вказаний в `will-файлі`, його генерує утиліта в оперативну пам'ять за назвою рефлектора. Другий крок - `export.module` створює експорт модуля за шляхом `{path::predefined.local}/proto`, тобто, `./.module/Color/proto`.  
+В збірці `export.informal` є два кроки. Перший - `download.informal` для завантаження підмодуля з Git-репозиторію `https://github.com/Wandalen/wColor.git` в локальну директорію `./.module/Color`. В ньому використовуються вбудований шлях `remote` - шлях для віддалених ресурсів та вбудований шлях `local` - шлях, за яким завантажуються віддалені ресурси. Крок `download.informal` не вказаний в `will-файлі`, його генерує утиліта в оперативну пам'ять за назвою рефлектора. Другий крок - `export.module` створює експорт модуля за шляхом `{path::local}/proto`, тобто, `./.module/Color/proto`.  
 В конфігураційний файл модуля внесіть код:  
 
 <details>
@@ -110,7 +110,7 @@ reflector :
 step :
 
   submodules.informal.export :
-    currentPath : path::predefined.dir
+    currentPath : path::module.dir
     shell : 'will .each module .export'
 
 build :

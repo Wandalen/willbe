@@ -65,7 +65,7 @@ path :
 
 step  :
   export.single :
-    inherit : predefined.export
+    inherit : module.export
     export : path::fileToExport
     tar : 0
 

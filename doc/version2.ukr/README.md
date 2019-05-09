@@ -340,14 +340,14 @@
   Як користуватись наслідуванням ресурсів для перевикористання даних.
 </details>
 <details><summary><a href="./tutorial/StepView.md">
-      Вбудований крок <code>predefined.view</code>
+      Вбудований крок <code>file.view</code>
   </a></summary>
-  Використання вбудованого кроку <code>predefined.view</code> для перегляду файлів.
+  Використання вбудованого кроку <code>file.view</code> для перегляду файлів.
 </details>
 <details><summary><a href="./tutorial/StepTranspile.md">
       Транспіляція
   </a></summary>
-  Використання вбудованого кроку <code>predefined.transpile</code> для транспіляції <code>JavaScript</code> файлів або їх конкатенації.
+  Використання вбудованого кроку <code>files.transpile</code> для транспіляції <code>JavaScript</code> файлів або їх конкатенації.
 </details>
 <details><summary><a href="./tutorial/CommandShell.md">
       Команда <code>.shell</code>
