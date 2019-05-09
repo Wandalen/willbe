@@ -20,7 +20,7 @@ path :
 
 step  :
   export.single :
-      inherit : predefined.export
+      inherit : module.export
       tar : 0
       filePath : path::fileToExport.*=1
       criterion :

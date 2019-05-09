@@ -7,15 +7,15 @@ path :
 
   in : '..'
   out : 'out'
-  predefined.remote : 'git+https:///github.com/Wandalen/wColor.git'
-  predefined.local : './.module/Color'
-  export : '{path::predefined.local}/proto'
+  remote : 'git+https:///github.com/Wandalen/wColor.git'
+  local : './.module/Color'
+  export : '{path::local}/proto'
 
 reflector :
 
   download.informal :
-    src : path::predefined.remote
-    dst : path::predefined.local
+    src : path::remote
+    dst : path::local
 
 step :
 

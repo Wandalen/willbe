@@ -7,11 +7,11 @@ path :
 step :
 
   view1 :
-    inherit : predefined.view
+    inherit : file.view
     filePath : path::google
 
   view2 :
-    inherit : predefined.view
+    inherit : file.view
     filePath : path::local
 
 build :

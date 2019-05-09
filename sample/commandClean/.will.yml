@@ -42,7 +42,7 @@ reflector :
 step :
 
   files.import :
-    currentPath : path::predefined.dir
+    currentPath : path::module.dir
     shell : 'will .each module .build'
     
   export.module : 

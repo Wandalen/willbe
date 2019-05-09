@@ -348,7 +348,7 @@ function dataExport()
   if( result === undefined )
   return result;
 
-  // if( 0 )
+  if( 0 )
   if( submodule.loadedModule && !submodule.loadedModule.hasAnyError() )
   {
     debugger;

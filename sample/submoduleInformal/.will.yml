@@ -35,7 +35,7 @@ reflector :
 step :
 
   submodules.informal.export :
-    currentPath : path::predefined.dir
+    currentPath : path::module.dir
     shell : 'will .each module .export'
 
 build :

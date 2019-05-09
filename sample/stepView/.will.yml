@@ -1,7 +1,7 @@
 about :
 
   name : viewStep
-  description : "To use predefined.view step"
+  description : "To use file.view step"
   version : 0.0.1
 
 path :
@@ -13,17 +13,17 @@ path :
 step : 
 
   view.url :
-    inherit : predefined.view
+    inherit : file.view
     filePath : path::url
     delay : 12000
 
   view.html :
-    inherit : predefined.view
+    inherit : file.view
     filePath : path::html
     delay : 8000
   
   view.txt :
-    inherit : predefined.view
+    inherit : file.view
     filePath : path::txt
     delay : 1000  
 
