@@ -15,7 +15,7 @@ path :
 step :
 
   export.proto :
-    inherit : predefined.export
+    inherit : module.export
     export : path::proto
     tar : 0
 

@@ -8,7 +8,7 @@ about :
 step :
 
   export.default :
-    inherit : predefined.export
+    inherit : module.export
     export : path::out.*=1
     tar : 1
     criterion :
@@ -16,7 +16,7 @@ step :
       doc : 0
 
   export.doc :
-    inherit : predefined.export
+    inherit : module.export
     export : path::doc
     tar : 0
     criterion :

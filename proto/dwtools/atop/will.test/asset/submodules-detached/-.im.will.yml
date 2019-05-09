@@ -71,8 +71,8 @@ step :
       debug : 1
 
   submodules.informal.export :
-    currentPath : path::predefined.dir
-    shell : 'node {path::predefined.willbe} .each module .export'
+    currentPath : path::module.dir
+    shell : 'node {path::will} .each module .export'
 
 build :
 

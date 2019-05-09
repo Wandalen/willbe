@@ -8,7 +8,7 @@ about :
 step :
 
   proto.export :
-    inherit : predefined.export
+    inherit : module.export
     export : path::proto
     tar : 0
     criterion :
@@ -16,7 +16,7 @@ step :
       proto : 1
 
   doc.export :
-    inherit : predefined.export
+    inherit : module.export
     export : path::doc
     tar : 0
     criterion :

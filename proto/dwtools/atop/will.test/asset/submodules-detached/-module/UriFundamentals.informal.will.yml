@@ -7,15 +7,15 @@ path :
 
   in : ..
   out : out
-  predefined.remote : 'git+https:///github.com/Wandalen/wUriFundamentals.git'
-  predefined.local : '.module/{about::name}'
-  export : '{path::predefined.local}/proto'
+  remote : 'git+https:///github.com/Wandalen/wUriFundamentals.git'
+  local : '.module/{about::name}'
+  export : '{path::local}/proto'
 
 reflector :
 
   download :
-    src : path::predefined.remote
-    dst : path::predefined.local
+    src : path::remote
+    dst : path::local
 
 step :
 
