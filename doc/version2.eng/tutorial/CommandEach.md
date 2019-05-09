@@ -2,11 +2,12 @@
 
 How to use command <code>.each</code> for executing same operation for each module or submodule.
 
-Для роботи з декількома модулями, використовуйте команду `.each`, котра виконує вказану фразу для кожного `will-файла` в зазначеній директорії. Для вводу команди використовуйте синтаксис `will .each [dir] [command] [argument]`, де `[dir]` - директорія з `will-файлами`; `[command]` - команда для файлів в директорії; `[argument]` - аргумент команди, якщо він необхідний (для всіх `will-файлів` має бути один аргумент або використовуватись ґлоб).
-Побудуйте структуру файлів і внесіть відповідний код в них:
+Для роботи з декількома модулями, використовуйте [команду `.each`](../concept/Command.md#Таблиця-команд-утиліти-willbe), котра виконує вказану фразу для кожного `вілфайла` в зазначеній директорії. Для вводу команди використовуйте синтаксис `will .each [dir] [command] [argument]`, де `[dir]` - директорія з `вілфайлами`; `[command]` - команда для файлів в директорії; `[argument]` - аргумент команди, якщо він необхідний. Для всіх `вілфайлів` застосовується один аргумент, для запобігання помилок використовуйте ґлоби. 
+
+### Використання команди `.each`. Конфігурація
 
 <details>
-  <summary><u>Структура файлів</u></summary>
+  <summary><u>Файлова структура</u></summary>
 
 ```  
 named 
@@ -98,7 +99,7 @@ step :
   
 build : 
 
-  export : 
+  proto.export : 
     criterion : 
       default : 1
     steps :
@@ -108,8 +109,11 @@ build :
 
 </details>
 
-Збірка `delete.out` в файлі `.will.yml` видаляє директорію `out`, збірка `export` в файлі `export.will.yml` експортує файли із директорії `proto`, а в файлі `submodules.will.yml` збірка `download` виконує завантаження підмодулів.  
-Введіть фразу `will .each . .build` для виконання побудов в директорії з файлами: 
+Побудуйте структуру файлів приведену вище і внесіть код в відповідні `вілфайли`.
+
+Збірка `delete.out` в файлі `.will.yml` видаляє директорію `out`, збірка `proto.export` в файлі `export.will.yml` експортує файли із директорії `proto`, а в файлі `submodules.will.yml` збірка `download` виконує завантаження віддалених підмодулів.  
+
+### Виконання побудов
 
 <details>
   <summary><u>Вивід команди <code>will .each . .build</code></u></summary>
@@ -119,17 +123,17 @@ build :
 ...
 Module at /path_to_file/.will.yml
  . Read : /path_to_file/.will.yml
- . Read 1 willfiles in 0.924s 
+ . Read 1 will-files in 0.924s 
 
     Building module::deleteOut / build::delete.submodule
-     - filesDelete 0 files at /home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe_src/pract/CommandEach/out in 0.002s
+     - filesDelete 0 files at /path_to_file/out in 0.002s
     Built module::deleteOut / build::delete.submodule in 0.108s
 
 ...
 
     Building module::export / build::export
      + Write out archive /path_to_file/ : out/export.out.tgs <- proto
-     + Write out willfile /path_to_file/out/export.out.will.yml
+     + Write out will-file /path_to_file/out/export.out.will.yml
      + Exported export with 2 files in 2.311s
     Built module::export / build::export in 2.363s
     
@@ -143,11 +147,35 @@ Module at /path_to_file/.will.yml
 
 ```
 </details>
+<details>
+  <summary><u>Файлова структура після побудов</u></summary>
 
-Команда `.each` запускає `will-файли` згідно алфавітного порядку тому, якщо вам потрібно послідовно виконати декілька дій над спільними файлами модулів, прослідкуйте за чергуванням `will-файлів`.  
+```  
+named 
+  ├── .module
+  │     └── PathFundamentals
+  ├── proto
+  │     └── file.txt
+  ├── out
+  │     └── export.out.will.yml
+  ├── submodule.will.yml
+  ├── export.will.yml
+  └── .will.yml       
+
+```
+
+</details>
+
+Введіть фразу `will .each . .build` для виконання побудов в директорії з файлами.
+
+Першою побудовою було видалення директорії `out`, яка на момент виконання не існувала. Далі, команда `.each` запустила експорт з файла `export.will.yml`. Останнім було запущено побудову в файлі `submodule.will.yml` та завантажено підмодулі. Тобто, команда `.each` запускає `вілфайли` згідно алфавітного порядку. Тому, якщо вам потрібно послідовно виконати декілька дій над спільними файлами модулів, прослідкуйте за чергуванням назв іменованих `вілфайлів`.  
+
+Команда `.each` може виконати будь-яку іншу команду утиліти над групою модулів. Та особливого значення вона набуває для команди `.shell`. Щоб дізнатись більше про призначення і особливості  команди `.shell` пройдіть [туторіал](CommandShell.md).
 
 ### Підсумок  
-- Команда `.each` працює з масивом `will-файлів`.
-- Послідовність запуску `will-файлів` командою `.each` відповідає алфавітному порядку.
+
+- Команда `.each` працює з групою `вілфайлів`.
+- Команда `.each` виконує команди як з іменованими так і неіменованими `вілфайлами`.
+- Команда `.each` виконує фразу над `вілфайлами ` в алфавітному порядку.
 
 [Повернутись до змісту](../README.md#tutorials)
