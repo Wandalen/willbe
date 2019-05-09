@@ -24,7 +24,7 @@ path :
 step :
 
   echo :
-    inherit : predefined.shell
+    inherit : shell.run
     shell : echo Test!
 
 build :

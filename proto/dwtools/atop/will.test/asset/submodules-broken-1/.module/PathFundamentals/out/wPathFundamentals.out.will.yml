@@ -261,7 +261,7 @@ step:
       export: 'path::proto'
       tar: 0
     inherit:
-      - predefined.export
+      - module.export
 build:
   debug.raw:
     criterion:

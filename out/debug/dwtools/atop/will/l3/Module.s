@@ -3897,6 +3897,11 @@ function onSelectorDown()
 
   if( it.continue && _.arrayIs( it.dst ) && it.src.rejoin === _.hold )
   {
+
+    for( let d = 0 ; d < it.dst.length ; d++ )
+    if( _.errIs( it.dst[ d ] ) )
+    throw it.dst[ d ];
+
     it.dst = _.strJoin( it.dst );
     pathsNativize.call( it );
   }
@@ -3914,6 +3919,7 @@ function onSelectorDown()
     if( !rop.pathNativizing )
     return;
 
+    if( it.dst )
     it.dst = _.map( it.dst, ( resource ) =>
     {
       if( _.strIs( resource ) )
@@ -4084,7 +4090,7 @@ function _resolveAct( o )
   {
     let it = this;
 
-    // if( _.strHas( it.path, '/export' ) )
+    // if( _.strHas( it.path, '/Logger' ) )
     // debugger;
 
     statusUpdate.call( it );
@@ -4109,14 +4115,14 @@ function _resolveAct( o )
   {
     let it = this;
 
-    // if( _.strHas( it.path, '/export' ) )
+    // if( _.strHas( it.path, '/Logger' ) )
     // debugger;
 
     exportedWriteThrough.call( it );
     currentExclude.call( it );
 
-    if( it.dst && it.dst.nickName === 'reflector::reflect.submodules.variant2' )
-    debugger;
+    // if( it.dst && it.dst.nickName === 'reflector::reflect.submodules.variant2' )
+    // debugger;
 
     if( it.dstWritingDown )
     compositePathsSelect.call( it );
@@ -4573,8 +4579,8 @@ function _resolveAct( o )
     if( it.dst instanceof will.Reflector )
     {
 
-      if( it.dst.nickName === 'reflector::reflect.submodules.variant2' )
-      debugger;
+      // if( it.dst.nickName === 'reflector::reflect.submodules.variant2' )
+      // debugger;
 
       resource = it.dst = it.dst.cloneDerivative();
 
@@ -4626,30 +4632,25 @@ function _resolveAct( o )
     let currentModule = it.module;
     let resource = it.dst;
 
-    // debugger;
-
     if( it.selectorIsPath )
     {
       if( it.down && it.down.selectorIsPath )
       return;
-      // debugger;
+      if( it.dst )
       it.dst = _.map( it.dst, ( resource ) =>
       {
-        // debugger;
         if( _.strIs( resource ) )
         return pathNativize.call( it, resource );
         if( resource instanceof will.PathResource )
         {
           resource = resource.cloneDerivative(); // xxx : don't do second clone
           _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
-          // debugger;
           if( resource.path )
           resource.path = pathNativize.call( it, resource.path );
         }
         else debugger;
         return resource;
       });
-      // debugger;
       return;
     }
 

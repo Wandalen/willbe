@@ -8,7 +8,7 @@ about :
 step :
 
   export.proto :
-    inherit : predefined.export
+    inherit : module.export
     export : reflector::proto.but.include
     tar : 0
 
