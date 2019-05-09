@@ -229,7 +229,7 @@
   </a></summary>
   Побудова модуля через запуск однієї із його збірок.
 </details>
-<details><summary><a href="./tutorial/StepsPredefined.md">
+<details><summary><a href="./tutorial/StepSubmodules.md">
       Вбудовані кроки для підмодулів
   </a></summary>
   Як користуватись вбудованими кроками для роботи з віддаленими підмодулями.

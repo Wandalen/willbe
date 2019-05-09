@@ -36,7 +36,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   </a></summary>
   Build of some builds of the module for construction of it.
 </details>
-<details><summary><a href="./tutorial/StepsPredefined.md">
+<details><summary><a href="./tutorial/StepSubmodules.md">
       Predefined steps
   </a></summary>
   How to use predefined steps for the work with remote submodules.
