@@ -283,6 +283,9 @@ function _resourcesMake( Resource, resources )
         options.criterion = options.criterion || Object.create( null );
         _.mapSupplement( options.criterion, instance.criterion );
 
+        if( !options.path )
+        options.path = instance.path;
+
         // let p1 = _.scalarFromOrNull( instance.path );
         // let p2 = _.scalarFromOrNull( options.path );
         // _.assert( !p1 || !p2 || _.entityIdentical( p1, p2 ), 'not tested' );
