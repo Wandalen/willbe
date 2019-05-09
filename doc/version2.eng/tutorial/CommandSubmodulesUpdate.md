@@ -1,6 +1,6 @@
 # Команда <code>.submodules.update</code>
 
-Команда оновлення віддалених підмодулів.
+Команда оновлення файлів віддалених підмодулів.
 
 Команди [`.submodules.fixate`](CommandSubmodulesFixate.md) і [`.submodules.upgrade`](CommandSubmodulesUpgrade.md) здійснюють лише заміну URI-посилань в `відфайлі`. Вони потрібні для контролю версій віддалених підмодулів і дають змогу розробнику встановити оновлення в зручний момент. Для завантаження оновлень використовується команда [`.submodules.update`](../concept/Command.md#Таблиця-команд-утиліти-willbe).
 
@@ -33,14 +33,14 @@ about :
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#ec60e39ded1669e27abaa6fc2798ee13804c400a
-  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master 
+  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
 
 ```
 </details>
 
 Підмодуль `Tools` має версію коміта для дослідження поведінки команди `.submodules.update` з ресурсами з указаною версією.
 
-### Команда `.submodules.update` 
+### Команда `.submodules.update`
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.update</code></u></summary>
@@ -74,7 +74,7 @@ submodule :
    + module::Tools version ec60e39ded1669e27abaa6fc2798ee13804c400a was updated in 13.440s
    . Read : /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
    + module::PathFundamentals version master was updated in 5.047s
-   
+
    + 2/2 submodule(s) of module::submodulesCommands were updated in 18.487s
 
 ```
@@ -92,7 +92,7 @@ submodulesUpdate
 
 </details>
 
-Виконайте оновлення віддалених підмодулів командою `will .submodules.update`. Знайдіть в виводі версії завантажених підмодулів.
+Виконайте оновлення файлів віддалених підмодулів командою `will .submodules.update`. Знайдіть в виводі версії завантажених підмодулів.
 
 Утиліта завантажила оновлення для обох підмодулів згідно встановлених версій: `#master` для підмодуля `PathFundamentals` i `#ec60e39ded1669e27abaa6fc2798ee13804c400a` для підмодуля `Tools`. Тобто, у випадку відсутності підмодуля, команда `.submodules.update` його завантажить.
 
@@ -151,7 +151,7 @@ submodulesUpdate
 ### Підсумок
 
 - Команда `.submodules.update` здійснює завантаження файлів підмодулів згідно встановлених версій.
-- Команда `.submodules.update` не переписує `вілфайл`, для цього використовуються команди [`.submodules.fixate`](CommandSubmodulesFixate.md) і [`.submodules.upgrade`](CommandSubmodulesUpgrade.md). 
+- Команда `.submodules.update` не переписує `вілфайл`, для цього використовуються команди [`.submodules.fixate`](CommandSubmodulesFixate.md) і [`.submodules.upgrade`](CommandSubmodulesUpgrade.md).
 - Розділення функцій перезапису `вілфайла` і завантаження оновлень командою `.submodules.update` запобігає виникненню збоїв в роботі модуля через зміни в підмодулях. Це дає можливість розробнику оновити віддалені підмодулі в зручний момент.
 
 [Повернутись до змісту](../README.md#tutorials)
