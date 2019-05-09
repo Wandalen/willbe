@@ -49,13 +49,11 @@ submodule :
 ...
   + module::Tools will be updated to version ec60e39ded1669e27abaa6fc2798ee13804c400a
   + module::PathFundamentals will be updated to version aa4b10e291c0cb0e79961b6ece128da544f00568
-
-
 ```
 
 </details>
 
-Дізнайтесь, до якої версії можна оновити наявні підмодулі. Для цього використайте команду `will .submodules.update dry:1`. Опція `dry:1` вказує, що файли підмодулів не будуть завантажені.
+Використайте команду `will .submodules.update dry:1` щоб дізнатися до яких версій можна оновити підмодулі. Опція `dry:1` щоб файли підмодулів не завантажувалися.
 
 Вивід показує (на момент створення туторіалу):
 - для підмодуля `Tools` буде здійснено оновлення до вказаної версії коміту `#ec60e39ded1669e27abaa6fc2798ee13804c400a`;
@@ -77,6 +75,10 @@ submodule :
 ```
 
 </details>
+
+Виконайте оновлення файлів віддалених підмодулів командою `will .submodules.update`. Знайдіть в виводі версії завантажених підмодулів.
+
+
 <details>
   <summary><u>Файлова структура після оновлення підмодулів</u></summary>
 
@@ -89,12 +91,11 @@ submodulesUpdate
 
 </details>
 
-Виконайте оновлення файлів віддалених підмодулів командою `will .submodules.update`. Знайдіть в виводі версії завантажених підмодулів.
+З'явилася директорія для підмодулів `.module`.
 
 Утиліта завантажила оновлення для обох підмодулів згідно встановлених версій: `#master` для підмодуля `PathFundamentals` i `#ec60e39ded1669e27abaa6fc2798ee13804c400a` для підмодуля `Tools`.  
-Тобто, команда `.submodules.update` завантажує підмодулі у випадку їх відсутності.
 
-У підмодуля `Tools` встановлено застарілу версію. Здійсніть його оновлення.
+Версія підмодуля `Tools` застарілу. Здійсніть його оновлення.
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.upgrade</code></u></summary>
@@ -115,9 +116,8 @@ Remote path of module::submodulesCommands / module::PathFundamentals fixated
 
 </details>
 
-Для оновлення підмодуля `Tools` потрібно змінити його URI-посилання в `вілфайлі`. Використайте команду `will .submodules.upgrade`.
+Для оновлення підмодуля `Tools` потрібно змінити його URI-посилання в `вілфайлі`. Команду `will .submodules.upgrade` робить це автоматично.
 
-Після виконання команди `.submodules.upgrade` підмодуль `Tools` змінив версію на актуальну. Тому, команда `.submodules.update` може завантажити оновлену версію.
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.update</code></u></summary>
@@ -135,28 +135,12 @@ Remote path of module::submodulesCommands / module::PathFundamentals fixated
 
 </details>
 
-Введіть команду `will .submodules.update`. Порівняйте з приведеним вище виводом.
-
-Підмодуль `Tools` був оновлений до версії встановленої командою `.submodules.upgrade`. Підмодуль `PathFundamentals` не оновився тому, що версія вітки `master` є актуальною.
-
-<details>
-  <summary><u>Файлова структура після оновлення підмодулів</u></summary>
-
-```
-submodulesUpdate
-        ├── .module
-        └── .will.yml
-
-```
-
-</details>
-
-Після повторного виконання оновлення структура файлів не змінилась.
+Після виконання команди `.submodules.upgrade` підмодуль `Tools` змінив версію на новішу `7db7bd21ac76fc495aae44cc8b1c4474ce5012a4`. Тому, виклик команди `.submodules.update` завантажив цю оновлену версію. Порівняйте з приведеним вище виводом.
 
 ### Підсумок
 
-- Команда `.submodules.update` здійснює завантаження файлів підмодулів згідно встановлених версій.
-- Команда `.submodules.update` не переписує `вілфайл`, для цього використовуються команди [`.submodules.fixate`](CommandSubmodulesFixate.md) і [`.submodules.upgrade`](CommandSubmodulesUpgrade.md).
-- Розділення функцій перезапису `вілфайла` і завантаження оновлень командою `.submodules.update` запобігає виникненню збоїв в роботі модуля через зміни в підмодулях. Це дає можливість розробнику оновити віддалені підмодулі в зручний момент.
+- Команда `.submodules.update` здійснює завантаження файлів підмодулів.
+- Команда `.submodules.update` не переписує `вілфайли`, для цього використовуються команди [`.submodules.fixate`](CommandSubmodulesFixate.md) і [`.submodules.upgrade`](CommandSubmodulesUpgrade.md).
+- Розділення функцій перезапису `вілфайла` і завантаження оновлень командою `.submodules.update` запобігає виникненню збоїв в процесі зрозробки через зміни в підмодулях. Це дає можливість розробнику оновити віддалені підмодулі в зручний момент.
 
 [Повернутись до змісту](../README.md#tutorials)
