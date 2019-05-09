@@ -14,7 +14,6 @@
 ```
 submodulesUpdate
           └── .will.yml
-
 ```
 
 </details>
@@ -38,7 +37,7 @@ submodule :
 ```
 </details>
 
-Підмодуль `Tools` має версію коміта для дослідження поведінки команди `.submodules.update` з ресурсами з указаною версією.
+Для підмодуль `Tools` вказана версія.
 
 ### Команда `.submodules.update`
 
