@@ -80,6 +80,8 @@ defaultBuild
 
 ### Виконання побудови модуля
 
+Побудова модуля здійснюється з допомогою команди [`.build`](../concept/Command.md#Таблиця-команд-утиліти-willbe).
+
 <details>
   <summary><u>Вивід команди <code>will .build</code></u></summary>
 
