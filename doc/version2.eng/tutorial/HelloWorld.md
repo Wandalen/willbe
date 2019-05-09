@@ -133,6 +133,8 @@ Use the phrase `will.submodules.list` to get information about submodules.
 
 Enter the command `will.submodules.download` in the `first` directory.
 
+The `will .submodules.download` command is used to download remote submodules. It has the option `dry` to enable downloading of submodules. The option has the value `0` and `1`. When `dry:0` is specified, the submodules are updated. If `dry:1` is specified, the `will .submodules.update dry:1` command displays a list of submodules that will be updated, but submodules are not downloaded. The default value is `dry: 0`, it is automatically added by the utility when there is no option in the entered command.
+
 <details>
   <summary><u>Command output <code>ls -al</code></u></summary>
 

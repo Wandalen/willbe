@@ -2,9 +2,9 @@
 
 The command to fixate the submodule version in <code>willfile</code> using its automated overwriting.
 
-Stability of the module with remote submodules depends on the quality of the submodules. Updating remote submodules may cause the module to fail or become unstable. To avoid this problem during development and support, fixate the submodule versions with the command `. submodules. fixate`.
+Stability of the module with remote submodules depends on the quality of the submodules. Updating remote submodules may result in module failure or unstable operation. To avoid this problem during development and support, fixate the submodule versions with the [command `.submodules.fixate`](../concept/Command.md#Commands-of-the-utility-willbe).
 
-The command is intended for automated overwriting of current URI links of remote submodules in `willfile`. The command changes the current URIs to the most recent versions of submodule URIs. At the same time, downloading files of these submodules do not automatically occur. The command `.submodules.fixate` overwrites only those submodules for which the version (commit) is explicitly not specified.
+The command is intended for automated overwriting of current URI links of remote submodules in `willfile`. The command owerwrites the current URIs to the most recent versions of submodule URIs. At the same time, downloading files of these submodules do not automatically occur. The command `.submodules.fixate` overwrites only those submodules for which the version (commit) is explicitly not specified.
 
 The command has the option `dry` to enable overwriting of the `willfile`. It takes the value `0` i` 1`. At `dry:0` the command overwrite URI-links. At `dry:1` the command `will. submodules. fixate dry:1` performs all the operation and displays the list of available updates without changing `willfile`. The default value is `dry:0`.
 
@@ -104,7 +104,7 @@ Remote path of module::submodulesCommands / module::Files fixated
 
 Enter the command `.submodules.fixate` without arguments.
 
-Utility replaced versions of submodules in `wilfile`. At the time, command `.submodules.fixate` did not replace the `Tools` submodule for which the version is explicitly specified.
+Utility replaced versions of submodules in `wilfile`. At the same time, command `.submodules.fixate` did not replace the `Tools` submodule for which the version is explicitly specified.
 
 Use the command `.submodules.fixate` before building the module or immediately after. It fixates the version of submodules. The release of subsequent versions of submodules cannot break the module's work, and the developer will be able to update them at a convenient time.
 

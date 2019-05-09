@@ -4,7 +4,7 @@
 
 ### Доповнення команд
 
-Після [встановлення](<Instalation.md>) утиліти `willbe` в консолі вашої ОС введіть команду `will .`.
+Після [встановлення](<Instalation.md>) утиліти `willbe` в консолі вашої ОС введіть [команду `will .`](../concept/Command.md#Таблиця-команд-утиліти-willbe).
 
 <details>
   <summary><u>Вивід команди <code>will .</code></u></summary>
@@ -76,7 +76,7 @@ Ambiguity. Did you mean?
 
 ### Команда `.help`
 
-Для отримання довідки по обраній команді використовуйте синтаксис: `will .help [команда]`.    
+Для отримання довідки по обраній команді використовуйте синтаксис: [`will .help [команда]`](../concept/Command.md#Таблиця-команд-утиліти-willbe).    
 
 <details>
   <summary><u>Вивід команди <code>will .help .build</code></u></summary>
@@ -132,7 +132,7 @@ Command ".help .submodules"
 
 ### Команда `.*.list`  
 
-Більшість команд працюємо із `вілфайлами` конкретних модулів.
+Більшість команд працює із `вілфайлами` конкретних модулів.
 
 <details>
   <summary><u>Файлова структура</u></summary>
@@ -191,7 +191,7 @@ build :
 
 Скопіюйте код, приведений нижче, в файл `.will.yml`:  
 
-В списку команд утиліти `willbe` багато таких, які закінчуються на `.list`. Вони роблять перелік ресурсів заданого типу поточного модуля. Тому якщо ввести одну із команд `.*.list` в директорії, де відсутній `вілфайл`, ви отримаєте попередження про відсутність модуля.
+В списку команд утиліти `willbe` багато таких, які закінчуються на [`.list`](../concept/Command.md#Таблиця-команд-утиліти-willbe). Вони роблять перелік ресурсів заданого типу поточного модуля. Тому якщо ввести одну із команд `.*.list` в директорії, де відсутній `вілфайл`, ви отримаєте попередження про відсутність модуля.
 
 <details>
   <summary><u>Вивід команди <code>will .builds.list</code>в поточній директорії</u></summary>
@@ -365,8 +365,8 @@ About
 
 Paths
   will : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec'
-  module.willfiles : '/home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe/sample/version2/CLI/.will.yml'
-  module.dir : '/home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe/sample/version2/CLI'
+  module.willfiles : '/path_to_file/.will.yml'
+  module.dir : '/path_to_file'
   proto : 'proto'
   out.debug : 'out/debug'
 
@@ -404,7 +404,7 @@ build::debug
 
 </details>
 
-Щоб перерахувати всі ресурси поточного модуля використайте команду `will .resources.list`:
+Щоб перерахувати всі ресурси поточного модуля використайте команду `will .resources.list`.
 
 ### Підсумок
 

@@ -384,6 +384,11 @@ A string which has phrase which describes intention of a developer and actions w
   </a></summary>
   Command <code>.each</code> for executing the same operation for plenty modules or submodules.
 </details>
+<details><summary><a href="./tutorial/CommandShell.md">
+      Command <code>.shell</code>
+  </a></summary>
+  A command to call external application by utility <code>willbe</code> for chosen modules or submodules.
+</details>
 <details><summary><a href="./tutorial/StepJS.md">
       Using <code>JavaScript</code> files by utility <code>willbe</code>
   </a></summary>
@@ -449,11 +454,6 @@ A string which has phrase which describes intention of a developer and actions w
   </a></summary>
   Using of predefined step <code>files.transpile</code> to transpile <code>JavaScript</code> files or its concatenation.
 </details>
-<details><summary><a href="./tutorial/CommandShell.md">
-      Command <code>.shell</code>
-  </a></summary>
-  A command to call external application by utility <code>willbe</code> for chosen modules or submodules.
-</details>
 <details><summary><a href="./tutorial/WillbeAsMake.md">
       Compiling of С++ application
   </a></summary>
@@ -477,5 +477,5 @@ A string which has phrase which describes intention of a developer and actions w
 <details><summary><a href="./tutorial/FunctionStringJoin.md">
       Processing an array of string values in the resources of <code>wilfile</code>
   </a></summary>
-  How to use the function of working with an array of string values in resources of <code>willfile</code>.
+  How to use the function of combining string arrays in willfile <code>willfile</code>.
 </details>

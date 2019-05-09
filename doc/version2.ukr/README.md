@@ -284,6 +284,11 @@
   </a></summary>
   Команда <code>.each</code> для виконання одної дії для багатьох модулів чи підмодулів.
 </details>
+<details><summary><a href="./tutorial/CommandShell.md">
+      Команда <code>.shell</code>
+  </a></summary>
+  Команда для виклику зовнішніх програм утилітою <code>willbe</code> для вибраних модулів чи підмодулів.
+</details>
 <details><summary><a href="./tutorial/StepJS.md">
       Використання <code>JavaScript</code> файлів утилітою <code>willbe</code>
   </a></summary>
@@ -349,11 +354,6 @@
   </a></summary>
   Використання вбудованого кроку <code>files.transpile</code> для транспіляції <code>JavaScript</code> файлів або їх конкатенації.
 </details>
-<details><summary><a href="./tutorial/CommandShell.md">
-      Команда <code>.shell</code>
-  </a></summary>
-  Команда для виклику зовнішніх програм утилітою <code>willbe</code> для вибраних модулів чи підмодулів.
-</details>
 <details><summary><a href="./tutorial/WillbeAsMake.md">
       Компіляція С++ програми
   </a></summary>
@@ -375,7 +375,7 @@
   Використання функції визначення операційної системи для побудови платформозалежних модулів.
 </details>
 <details><summary><a href="./tutorial/FunctionStringJoin.md">
-      Обробка массивів рядкових значень в ресурсах <code>вілфайла</code>
+      Обробка масивів рядкових значень в ресурсах <code>вілфайла</code>
   </a></summary>
-  Як використовувати функцію роботи з масивами рядкових значень в ресурсах <code>вілфайла</code>.
+  Як використовувати функцію об'єднання масивів рядкових значень в <code>вілфайлі</code>.
 </details>

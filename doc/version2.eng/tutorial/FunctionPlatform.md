@@ -29,7 +29,7 @@ platformChoice
 Створіть структуру файлів приведену вище для побудови платформозалежного модуля.
 
 <details>
-  <summary><u>Код файла <code>Color.download.will.yml</code></u></summary>
+  <summary><u>Код файла <code>.will.yml</code></u></summary>
 
 ```yaml
 about :
