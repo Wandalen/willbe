@@ -1,0 +1,53 @@
+
+submodule :
+
+  MultipleExports : .
+
+path :
+
+  proto : './proto'
+  temp : './super.out'
+  in : '.'
+  out : './super.out'
+  out.debug :
+    path : './super.out/debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : './super.out/release'
+    criterion :
+      debug : 0
+
+reflector :
+
+  reflect.submodules :
+    src : submodule::* / path::proto
+    dst : path::out.*=1
+    criterion :
+      debug : [ 0,1 ]
+
+step :
+
+  reflect.submodules :
+    inherit : predefined.reflect
+    reflector :
+      reflector::reflect.submodules*=1
+    criterion :
+      debug : [ 0,1 ]
+
+build :
+
+  debug :
+    criterion :
+      default : 1
+      debug : 1
+    steps :
+      - step::submodules.download
+      - step::reflect.submodules.*=1
+
+  release :
+    criterion :
+      debug : 0
+    steps :
+      - step::submodules.download
+      - step::reflect.submodules.*=1

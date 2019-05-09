@@ -1,0 +1,27 @@
+
+path :
+
+  in : '..'
+  out : './doc/doc.out'
+  out.debug : './doc/doc.out/debug'
+  doc : 'doc'
+  proto : './proto'
+  temp :
+    - 'out'
+    - 'doc.out'
+    - 'doc/out'
+    - 'doc/doc.out'
+
+reflector :
+
+  reflect.proto :
+    filePath :
+      path::proto : path::out.debug
+
+build :
+
+  debug :
+    steps :
+      - step::reflect.proto
+    criterion :
+      default : 1

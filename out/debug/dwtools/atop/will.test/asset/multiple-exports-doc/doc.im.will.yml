@@ -1,0 +1,61 @@
+
+submodule :
+
+  # Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+  MultipleExports : ./out/submodule
+
+path :
+
+  in : '.'
+  out : './doc.out'
+  out.debug :
+    path : './doc.out/debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : './doc.out/release'
+    criterion :
+      debug : 0
+  doc : 'doc'
+  proto : './proto'
+  temp : './doc.out'
+
+reflector :
+
+  reflect.submodules :
+    inherit : submodule::*/exported::*=1/reflector::exportedFiles*=1
+    dst : path::out.*=1
+    criterion :
+      doc : 0
+      debug : [ 0,1 ]
+
+  reflect.doc :
+    inherit : submodule::*/exported::*=1/reflector::exportedFiles*=1
+    dst : path::out
+    criterion :
+      doc : 1
+
+build :
+
+  debug :
+    criterion :
+      default : 1
+      debug : 1
+      doc : 0
+    steps :
+      - step::submodules.download
+      - step::reflect.submodules.*=1
+
+  release :
+    criterion :
+      debug : 0
+      doc : 0
+    steps :
+      - step::submodules.download
+      - step::reflect.submodules.*=1
+
+  doc :
+    criterion :
+      doc : 1
+    steps :
+      - step::reflect.doc*=1

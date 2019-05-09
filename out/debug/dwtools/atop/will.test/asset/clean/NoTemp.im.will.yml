@@ -1,0 +1,96 @@
+
+submodule :
+
+  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+
+path :
+
+  proto : './proto'
+  in : '.'
+  out : 'out'
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : './out/release'
+    criterion :
+      debug : 0
+
+reflector :
+
+  reflect.proto :
+    inherit : predefined.*
+    criterion :
+      debug : [ 0,1 ]
+    filePath :
+      path::proto : path::out.*=1
+
+  reflect.submodules :
+    inherit : submodule::*/exported::*=1/reflector::exportedFiles*=1
+    dst :
+      basePath : .
+      prefixPath : path::out.debug
+    criterion :
+      debug : 1
+
+step :
+
+  # reflect.proto :
+  #   inherit : predefined.reflect
+  #   reflector :
+  #     reflector::reflect.proto.*=1
+  #   criterion :
+  #     debug : [ 0,1 ]
+  #     raw : [ 0,1 ]
+  #
+  # reflect.submodules :
+  #   inherit : predefined.reflect
+  #   reflector :
+  #     reflector::reflect.submodules*=1
+  #   criterion :
+  #     debug : 1
+  #     raw : [ 0,1 ]
+
+  delete.out.debug :
+    inherit : predefined.delete
+    filePath : path::out.debug
+    criterion :
+      debug : 1
+
+build :
+
+  debug.raw :
+    criterion :
+      default : 1
+      debug : 1
+      raw : 1
+    steps :
+      # - graph.begin
+      - submodules.download
+      - delete.out.debug
+      - reflect.proto.*=1
+      - reflect.submodules*=1
+      # - graph.end
+
+  debug.compiled :
+    criterion :
+      debug : 1
+      raw : 0
+    steps :
+      - reflect.proto.*=1
+
+  release.raw :
+    criterion :
+      debug : 0
+      raw : 1
+    steps :
+      - reflect.proto.*=1
+
+  release.compiled :
+    criterion :
+      debug : 0
+      raw : 0
+    steps :
+      - reflect.proto.*=1
