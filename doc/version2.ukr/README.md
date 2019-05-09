@@ -227,7 +227,7 @@
 <details><summary><a href="./tutorial/Build.md">
       Побудова модуля командою <code>.build</code>
   </a></summary>
-  Запуск окремих збірок модуля для його побудови.
+  Побудова модуля через запуск одної із його збірок.
 </details>
 <details><summary><a href="./tutorial/StepsPredefined.md">
       Вбудовані кроки
