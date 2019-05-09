@@ -222,7 +222,7 @@
 <details><summary><a href="./tutorial/CommandSubmodulesClean">
       Команда <code>.submodules.clean</code>
   </a></summary>
-  Команда очищення віддалених підмодулів.
+  Команда очищення модуля від тимчасових та завантажених підмодулів.
 </details>
 <details><summary><a href="./tutorial/Build.md">
       Побудова модуля командою <code>.build</code>
