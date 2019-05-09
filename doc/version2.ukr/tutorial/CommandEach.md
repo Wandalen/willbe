@@ -10,7 +10,7 @@
   <summary><u>Файлова структура</u></summary>
 
 ```  
-named 
+named
   ├── proto
   │     └── file.txt
   ├── submodule.will.yml
@@ -64,13 +64,13 @@ about :
 submodule :
 
   PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
-  
-build : 
-  
-  download : 
+
+build :
+
+  download :
     criterion :
       default : 1
-    steps : 
+    steps :
       - submodules.download
 
 ```
@@ -86,25 +86,25 @@ about :
   description : "To test .each command"
   version : 0.0.1
 
-path : 
+path :
 
   out : 'out'
   proto : 'proto'
-  
-step : 
 
-  export : 
-    inherit : predefined.export
+step :
+
+  export :
+    inherit : module.export
     export : path::proto
-  
-build : 
 
-  proto.export : 
-    criterion : 
+build :
+
+  proto.export :
+    criterion :
       default : 1
     steps :
       - step::export
-   
+
 ```
 
 </details>
@@ -123,7 +123,7 @@ build :
 ...
 Module at /path_to_file/.will.yml
  . Read : /path_to_file/.will.yml
- . Read 1 will-files in 0.924s 
+ . Read 1 will-files in 0.924s
 
     Building module::deleteOut / build::delete.submodule
      - filesDelete 0 files at /path_to_file/out in 0.002s
@@ -136,7 +136,7 @@ Module at /path_to_file/.will.yml
      + Write out will-file /path_to_file/out/export.out.will.yml
      + Exported export with 2 files in 2.311s
     Built module::export / build::export in 2.363s
-    
+
 ...
 
     Building module::submodules / build::download
@@ -151,7 +151,7 @@ Module at /path_to_file/.will.yml
   <summary><u>Файлова структура після побудов</u></summary>
 
 ```  
-named 
+named
   ├── .module
   │     └── PathFundamentals
   ├── proto

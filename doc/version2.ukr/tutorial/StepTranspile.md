@@ -1,8 +1,8 @@
 # Транспіляція
 
-Використання вбудованого кроку <code>predefined.transpile</code> для транспіляції <code>JavaScript</code> файлів або їх конкатенації.
+Використання вбудованого кроку <code>files.transpile</code> для транспіляції <code>JavaScript</code> файлів або їх конкатенації.
 
-Транспіляція, це переклад вихідного коду з однієї мови на іншу. В утиліті `willbe` є можливість перетворювати вихідні JavaScript файли в стиснений і перетворений код. Для цього використовується вбудований крок `predefined.transpile`.  
+Транспіляція, це переклад вихідного коду з однієї мови на іншу. В утиліті `willbe` є можливість перетворювати вихідні JavaScript файли в стиснений і перетворений код. Для цього використовується вбудований крок `files.transpile`.  
 
 ### Структура модуля  
 
@@ -119,7 +119,7 @@ reflector :
 
   transpile.proto :
     inherit : predefined.*
-    step : predefined.transpile
+    step : files.transpile
     criterion :
       debug : [ 0, 1 ]
     filePath :
@@ -137,7 +137,7 @@ build :
 
 </details>
 
-В `вілфайлі` відсутній крок `transpile.proto`, який вказано в збірці. Це пов'язано з тим, що утиліта вміє генерувати кроки для виклику рефлектора. Такий крок має назву рефлектора, по якому він знерований, поміщається в оперативну пам'ять і не змінює `вілфайл`. Для цього, щоб згенерований ресурс обирав потрібний вбудований крок в рефлекторі указується поле `step` з назвою відповідного вбудованого кроку. В рефлекторі `transpile.proto` указано поле `step : predefined.transpile`.  
+В `вілфайлі` відсутній крок `transpile.proto`, який вказано в збірці. Це пов'язано з тим, що утиліта вміє генерувати кроки для виклику рефлектора. Такий крок має назву рефлектора, по якому він знерований, поміщається в оперативну пам'ять і не змінює `вілфайл`. Для цього, щоб згенерований ресурс обирав потрібний вбудований крок в рефлекторі указується поле `step` з назвою відповідного вбудованого кроку. В рефлекторі `transpile.proto` указано поле `step : files.transpile`.  
 
 <details>
   <summary><u>Вивід команди <code>will .steps.list</code></u></summary>
@@ -151,7 +151,7 @@ step::transpile.proto.
   opts :
     reflector : reflector::transpile.proto*
   inherit :
-    predefined.transpile
+    files.transpile
 
 step::transpile.proto.debug
   criterion :
@@ -159,7 +159,7 @@ step::transpile.proto.debug
   opts :
     reflector : reflector::transpile.proto*
   inherit :
-    predefined.transpile
+    files.transpile
 
 ```
 
@@ -171,7 +171,7 @@ step::transpile.proto.debug
 
 ### Побудова модуля. Транспільовані файли
 
-Для вбудованого кроку `predefined.transpile` в рефлекторі використовується особливий синтаксис для запису транспільованого файла: `'{path::out.*=1}/Main.s'` - в фігурних дужках вказується шлях призначення і через слеш назва файла, який буде створено. 
+Для вбудованого кроку `files.transpile` в рефлекторі використовується особливий синтаксис для запису транспільованого файла: `'{path::out.*=1}/Main.s'` - в фігурних дужках вказується шлях призначення і через слеш назва файла, який буде створено. 
 
 <details>
   <summary><u>Вивід команди <code>will .build transpile.proto.</code></u></summary>
@@ -326,7 +326,7 @@ reflector :
 
   transpile.proto :
     inherit : predefined.*
-    step : predefined.transpile
+    step : files.transpile
     criterion :
       debug : 1
       raw : 1
@@ -394,7 +394,7 @@ transpile
 
 ### Підсумок 
 
-- Крок `predefined.transpile` в утиліті `willbe` - інструмент для перетворення JavaScript-файлів.  
+- Крок `files.transpile` в утиліті `willbe` - інструмент для перетворення JavaScript-файлів.  
 - Перетворення проходить за двома сценаріями - конкатенації і транспіляції.
 - Для вибору режиму перетворення використовуються критеріони `debug` і `raw`.
 - Критеріон `raw` керує можливістю конкатенації. 

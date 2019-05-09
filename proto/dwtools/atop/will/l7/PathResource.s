@@ -121,7 +121,7 @@ function form3()
   _.assert( arguments.length === 0 );
   _.assert( pathResource.formed === 2 );
 
-  if( pathResource.writable )
+  if( pathResource.writable && !pathResource.criterion.predefined )
   {
 
     _.sure( _.strIs( pathResource.path ) || _.arrayIs( pathResource.path ), 'Path resource should have "path" field' );
@@ -163,7 +163,7 @@ function _pathSet( src )
 
   if( module && pathResource.name && !pathResource.original )
   {
-    _.assert( module.pathMap[ pathResource.name ] === pathResource.path );
+    _.assert( module.pathMap[ pathResource.name ] === pathResource.path || pathResource.path === null );
     delete module.pathMap[ pathResource.name ];
   }
 

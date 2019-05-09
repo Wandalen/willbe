@@ -318,7 +318,6 @@ function _commandList( e, act, resourceName )
 
   _.assert( arguments.length === 3 );
 
-  debugger;
   return will.moduleReadyThen( function( module )
   {
 
@@ -859,6 +858,7 @@ function _commandEach_functor( fop )
 
       if( will.verbosity > 1 )
       {
+        debugger;
         logger.log( '\n', _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.module.commonPath, 'path' ) );
         if( will.currentPath )
         logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( will.currentPath, 'path' ) );

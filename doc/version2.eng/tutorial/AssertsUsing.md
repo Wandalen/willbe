@@ -54,21 +54,21 @@ path :
 
 step  :
   export.debug :
-    inherit : predefined.export
+    inherit : module.export
     export : path::fileToExport.*
     tar : 0
     criterion :
       debug : 1
 
   export.release :
-    inherit : predefined.export
+    inherit : module.export
     export : path::fileToExport.*
     tar : 0
     criterion :
       debug : 0
 
   export.default :
-    inherit : predefined.export
+    inherit : module.export
     export : path::fileToExport.default
     tar : 0
 
@@ -144,21 +144,21 @@ path :
 
 step  :
   export.debug :
-    inherit : predefined.export
+    inherit : module.export
     export : path::fileToExport.*
     tar : 0
     criterion :
       debug : 1
 
   export.release :
-    inherit : predefined.export
+    inherit : module.export
     export : path::fileToExport.*
     tar : 0
     criterion :
       debug : 0
 
   export.default :
-    inherit : predefined.export
+    inherit : module.export
     export : path::fileToExport.default
     tar : 0
 
@@ -198,7 +198,7 @@ build :
 ```yaml
 step  :
   export.debug :
-    inherit : predefined.export
+    inherit : module.export
     export : path::fileToExport.*
     tar : 0
     criterion :
@@ -206,7 +206,7 @@ step  :
       first : 0
 
   export.default :
-    inherit : predefined.export
+    inherit : module.export
     export : path::fileToExport.default
     tar : 0
     criterion :

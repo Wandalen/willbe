@@ -13,7 +13,7 @@ How to use selectors with globs.
 step :
 
   export.out.debug :
-    inherit : predefined.export  --> простий селектор
+    inherit : module.export  --> простий селектор
     export : path::out.debug   --> простий селектор
     tar : 0
     ...
@@ -22,7 +22,7 @@ step :
 
 </details>
 
-Селектор `path::out.debug` - простий селектор, він має пряме посилання на секцію `path` та ресурс `out.debug`. Селектор `predefined.export` - простий селектор, що вказує на вбудований крок.
+Селектор `path::out.debug` - простий селектор, він має пряме посилання на секцію `path` та ресурс `out.debug`. Селектор `module.export` - простий селектор, що вказує на вбудований крок.
 
 ### Селектори з ґлобами. Конфігурація модуля  
 При побудові модуля використовуються ресурси, які мають близький або ідентичний функціонал, а тому і схожі назви, розширення... Використаня простих селекторів і лінійних сценаріїв збільшує об'єм `will-файла` і займає багато часу, тому, в утиліті `willbe`, для вибору ресурсів використовуються ґлоби. [Ґлоб ](https://linuxhint.com/bash_globbing_tutorial/) - шаблон пошуку - метод опису пошукового запиту з використанням метасимволов (символів-джокерів), зокрема `*`, `?`, `[]` та інших.  
@@ -69,14 +69,14 @@ path :
 
 step  :
   export.debug :
-    inherit : predefined.export
+    inherit : module.export
     export : path::fileToExport.*
     tar : 0
     criterion :
       debug : 1
 
   export.release :
-    inherit : predefined.export
+    inherit : module.export
     export : path::fileToExport.*
     tar : 0
     criterion :

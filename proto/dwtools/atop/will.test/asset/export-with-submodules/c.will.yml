@@ -1,22 +1,23 @@
 
 about :
 
-  name : "module-c"
+  name : "module-ab"
   description : "Module for testing"
   version : "0.0.1"
 
 submodule :
 
-  sub-a : out/module-a
-  sub-b : out/module-b
+  sub-a : ../out/module-a
+  sub-b : ../out/module-b
 
 path :
 
-  proto : './proto'
-  out : 'out'
+  proto : '../proto'
+  out : '../out/ab'
   files : '{path::out}/files'
   temp :
-    - path::out
+    - ../out
+    - ../out2
   export :
     - 'submodule::sub-a/path::exportedFiles.proto.export'
     - 'submodule::sub-b/path::exportedFiles.proto.export'

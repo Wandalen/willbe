@@ -16,8 +16,8 @@
 = Principles
 
 - Willbe prepends all relative paths by path::in. path::out and path::temp are prepended by path::in as well.
-- Willbe prepends path::in by module.dirPath, a directory which has the will-file.
-- Major difference between generated out-will-files and manually written will-file is section exported. out-will-files has such section, manually written will-file does not.
+- Willbe prepends path::in by module.dirPath, a directory which has the willfile.
+- Major difference between generated out-willfiles and manually written willfile is section exported. out-willfiles has such section, manually written willfile does not.
 - Output files are generated and input files are for manual editing, but the utility can help with it.
 
 */
@@ -29,6 +29,7 @@
 - Command .submodules.update should change back manually updated fixated submodules.
 - Faster loading, perhaps without submodules
 - Timelapse for transpilation
+- Reflect submodules into dir with the same name as submodule
 
 */
 

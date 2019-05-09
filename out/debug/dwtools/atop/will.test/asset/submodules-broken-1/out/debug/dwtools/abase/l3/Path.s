@@ -2072,7 +2072,6 @@ qqq : teach common to work with uri maps and cover it by tests
 function common()
 {
 
-  // let paths = _.longSlice( arguments );
   let paths = _.arrayFlatten( null, arguments );
 
   for( let s = 0 ; s < paths.length ; s++ )
@@ -2090,8 +2089,6 @@ function common()
 
   let result = paths.pop();
 
-  // debugger;
-
   for( let i = 0, len = paths.length ; i < len ; i++ )
   result = this._commonPair( paths[ i ], result );
 
@@ -2102,6 +2099,10 @@ function common()
 
 function commonReport( filePath )
 {
+
+  if( _.mapIs( filePath ) )
+  filePath = _.mapKeys( filePath );
+
   _.assert( _.strIs( filePath ) || _.arrayIs( filePath ) );
   _.assert( arguments.length === 1 );
 

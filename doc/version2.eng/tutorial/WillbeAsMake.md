@@ -308,7 +308,7 @@ step :
     upToDate : preserve
   
   clean.temp :
-    inherit: predefined.shell
+    inherit: shell.run
     shell : rm -Rf *.o
     currentPath : path::file
 

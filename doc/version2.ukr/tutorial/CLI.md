@@ -364,9 +364,9 @@ About
   enabled : 1
 
 Paths
-  predefined.willbe : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec'
-  predefined.will.files : '/path_to_file/.will.yml'
-  predefined.dir : '/path_to_file'
+  will : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec'
+  module.willfiles : '/path_to_file/.will.yml'
+  module.dir : '/path_to_file'
   proto : 'proto'
   out.debug : 'out/debug'
 

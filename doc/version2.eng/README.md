@@ -445,14 +445,14 @@ A string which has phrase which describes intention of a developer and actions w
   How to use resource inheritance to reuse data.
 </details>
 <details><summary><a href="./tutorial/StepView.md">
-      Predefined step <code>predefined.view</code>
+      Predefined step <code>file.view</code>
   </a></summary>
-  How to use predefined step <code>predefined.view</code> to view files.
+  How to use predefined step <code>file.view</code> to view files.
 </details>
 <details><summary><a href="./tutorial/StepTranspile.md">
       Transpilation
   </a></summary>
-  Using of predefined step <code>predefined.transpile</code> to transpile <code>JavaScript</code> files or its concatenation.
+  Using of predefined step <code>files.transpile</code> to transpile <code>JavaScript</code> files or its concatenation.
 </details>
 <details><summary><a href="./tutorial/WillbeAsMake.md">
       Compiling of С++ application

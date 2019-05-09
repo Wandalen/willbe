@@ -170,7 +170,7 @@ step:
       export: 'path::out.*=1'
       tar: 1
     inherit:
-      - predefined.export
+      - module.export
   export.debug:
     criterion:
       debug: 1
@@ -178,7 +178,7 @@ step:
       export: 'path::out.*=1'
       tar: 1
     inherit:
-      - predefined.export
+      - module.export
 build:
   debug:
     criterion:

@@ -29,7 +29,7 @@ A special kind of build which is required in order to use this module by other d
 
 The result of the module export is the generated configuration `out-willfile`  and optionally the archive with the module files. Filling out of the section `about` is required and it must have the name and version of the module while module export.
 
-The developer can export the module with the `will .export` command. In this case, the module must have a build for export. The export build must have a [predefined step `predefined.export`](ResourceStep.md#Predefined-step-predefinedexport) and the criterion `export : 1`.
+The developer can export the module with the `will .export` command. In this case, the module must have a build for export. The export build must have a [predefined step `module.export`](ResourceStep.md#Predefined-step-predefinedexport) and the criterion `export : 1`.
 
 ### Example of build's export
 

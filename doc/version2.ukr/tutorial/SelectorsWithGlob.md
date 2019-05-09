@@ -17,7 +17,7 @@
 step :
 
   export.out.debug :
-    inherit : predefined.export  --> простий селектор
+    inherit : module.export  --> простий селектор
     export : path::out.debug*    --> селектор з ґлобом 
     tar : 0
     ...
@@ -26,7 +26,7 @@ step :
 
 </details>
 
-Селектор `predefined.export` - простий селектор, що вказує на вбудований крок.  
+Селектор `module.export` - простий селектор, що вказує на вбудований крок.  
 Селектор `path::out.debug*` - селектор з ґлобом `*`.
 
 ### Селектори з ґлобами. Конфігурація модуля  
@@ -72,14 +72,14 @@ path :
 
 step  :
   export.debug :
-    inherit : predefined.export
+    inherit : module.export
     export : path::fileToExport.*
     tar : 0
     criterion :
       debug : 1
 
   export.release :
-    inherit : predefined.export
+    inherit : module.export
     export : path::fileToExport.*
     tar : 0
     criterion :
@@ -149,7 +149,7 @@ selectorWithGlob
 
 ```yaml
   export.release :
-    inherit : predefined.export
+    inherit : module.export
     export : path::fileToExport.[p-t]??????
     tar : 0
     criterion :

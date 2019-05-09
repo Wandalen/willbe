@@ -64,7 +64,6 @@ function MakeForEachCriterion( o )
       if( module[ Cls.MapName ][ o2.name ] )
       continue;
 
-      delete o2.Optional;
       result.push( make( o2 ) );
       counter += 1;
     }
@@ -72,7 +71,6 @@ function MakeForEachCriterion( o )
 
   if( single )
   {
-    delete o.Optional;
     result = [ make( o ) ];
   }
 
@@ -82,13 +80,26 @@ function MakeForEachCriterion( o )
 
   function make( o )
   {
+    let optional = !!o.Optional;
+    let rewritable = !!o.Rewritable;
+    let onExist = o.OnExist;
+
+    delete o.Optional;
+    delete o.Rewritable;
+    delete o.OnExist;
+
     try
     {
 
-      let instance = o.module[ Cls.MapName ][ o.name ];
-      if( instance && instance.criterion && instance.criterion.predefined )
+      // if( rewritable )
       {
-        instance.finit();
+        let instance = o.module[ Cls.MapName ][ o.name ];
+        if( instance )
+        onExist( instance, o );
+        // if( instance && instance.criterion && instance.criterion.predefined )
+        // {
+        //   instance.finit();
+        // }
       }
 
       return Cls( o ).form1();
@@ -149,7 +160,16 @@ function copy( o )
   if( o.name !== undefined )
   resource.name = o.name;
 
-  return _.Copyable.prototype.copy.call( resource, o );
+  if( _.mapIs( o ) )
+  if( o.module !== undefined )
+  resource.module = o.module;
+
+  let resource2 = _.Copyable.prototype.copy.call( resource, o );
+
+  // debugger;
+  // _.assert( resource2.module === null );
+
+  return resource2;
 }
 
 //
@@ -730,15 +750,24 @@ function CriterionValueNormalize( criterionValue )
 // export
 // --
 
-function infoExport()
+function _infoExport( fields )
 {
   let resource = this;
   let result = '';
-  let fields = resource.dataExport();
 
   result += _.color.strFormat( resource.nickName, 'entity' ) + '\n';
   result += _.toStr( fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '' } );
 
+  return result;
+}
+
+//
+
+function infoExport()
+{
+  let resource = this;
+  let fields = resource.dataExport();
+  let result = resource._infoExport( fields );
   return result;
 }
 
@@ -753,29 +782,27 @@ function dataExport()
   if( resource.criterion && resource.criterion.predefined )
   return;
 
-  // if( !resource.writable )
-  // debugger;
   if( !o.copyingNonWritable && !resource.writable )
   return;
-  // if( !resource.writable )
-  // debugger;
 
   let o2 = _.mapExtend( null, o );
   delete o2.copyingNonWritable;
   delete o2.copyingPredefined;
+  delete o2.copyingModulePaths;
   let fields = resource.cloneData( o2 );
 
   delete fields.name;
   return fields;
 }
 
-dataExport.defaults =
-{
-  compact : 1,
-  copyingAggregates : 0,
-  copyingNonWritable : 1,
-  copyingPredefined : 1,
-}
+dataExport.defaults = Object.create( _.Will.Module.prototype.dataExport.defaults );
+// dataExport.defaults =
+// {
+//   compact : 1,
+//   copyingAggregates : 0,
+//   copyingNonWritable : 1,
+//   copyingPredefined : 1,
+// }
 
 //
 
@@ -1039,6 +1066,7 @@ let Proto =
 
   // export
 
+  _infoExport,
   infoExport,
   dataExport,
   compactField,

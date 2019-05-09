@@ -31,14 +31,14 @@ about :
 path :
 
   in : '..'
-  predefined.remote : 'git+https:///github.com/Wandalen/wColor.git'
-  predefined.local : './temp'
+  remote : 'git+https:///github.com/Wandalen/wColor.git'
+  local : './temp'
 
 reflector :
 
   download.files :
-    src : path::predefined.remote
-    dst : path::predefined.local
+    src : path::remote
+    dst : path::local
 
 build :
 
@@ -100,7 +100,7 @@ reflector :
 step :
 
   files.import :
-    currentPath : path::predefined.dir
+    currentPath : path::module.dir
     shell : 'will .each module .build'
 
   export.module :

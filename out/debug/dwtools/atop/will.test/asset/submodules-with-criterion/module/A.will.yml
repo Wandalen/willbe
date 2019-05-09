@@ -5,12 +5,12 @@ about :
 
 path :
 
-  predefined.local : 'A'
+  local : 'A'
 
 step :
 
   export.A :
-    export : path::predefined.local
+    export : path::local
     tar : 0
 
 build :

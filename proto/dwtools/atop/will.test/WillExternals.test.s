@@ -1090,51 +1090,51 @@ function fixateDetached( test )
     return null;
   })
 
-  /* - */
-
-  ready
-  .thenKeep( () =>
-  {
-    test.case = '.submodules.fixate dry:1';
-    return null;
-  })
-
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.each module .export' ] })
-  shell({ args : [ '.submodules.fixate dry:1' ] })
-  .thenKeep( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    test.is( _.strHas( got.output, /module::Tools.* will be fixated/ ) );
-    test.is( _.strHas( got.output, /git\+https:\/\/\/github.com\/Wandalen\/wTools\.git\/out\/wTools.* : .*\.#\w+.* <- .*\.#master/ ) );
-    test.identical( _.strCount( got.output, 'fixateDetached/.im.will.yml' ), 2 );
-
-    test.is( !_.strHas( got.output, /module::PathFundamentals.* will be fixated/ ) );
-    test.is( !_.strHas( got.output, /git\+https:\/\/\/github.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals.* : .*\.#\w+.* <- .*\.#c8dadf139a49d70ccae2cac4f91845ecd0a925e0/ ) );
-    // test.identical( _.strCount( got.output, 'fixateDetached/.im.will.yml' ), 4 );
-
-    test.is( !_.strHas( got.output, /module::Color.* will be fixated/ ) );
-    test.is( !_.strHas( got.output, /npm:\/\/\/wColor\/out\/wColor.* : .*\.\w+.* <- .*\.#0\.3\.102/ ) );
-    // test.identical( _.strCount( got.output, 'fixateDetached/.im.will.yml' ), 4 );
-
-    test.is( _.strHas( got.output, /module::UriFundamentals.* will be fixated/ ) );
-    test.is( _.strHas( got.output, /wUriFundamentals\.git.* : .*\.#\w+.* <- .*\./ ) );
-    test.is( _.strHas( got.output, /in .+\/fixateDetached\/out\/UriFundamentals\.informal\.out\.will\.yml/ ) );
-    test.is( _.strHas( got.output, /in .+\/fixateDetached\/module\/UriFundamentals\.informal\.will\.yml/ ) );
-
-    test.is( !_.strHas( got.output, /module::Proto.* will be fixated/ ) );
-    test.is( !_.strHas( got.output, /wProto\.git.* : .*\.#\w+.* <- .*\.#5500fe0c9540dde7bc7fbeccbe44c657a2862c30/ ) );
-    test.is( !_.strHas( got.output, /in .+\/fixateDetached\/out\/Proto\.informal\.out\.will\.yml/ ) );
-    test.is( !_.strHas( got.output, /in .+\/fixateDetached\/module\/Proto\.informal\.will\.yml/ ) );
-
-    test.is( _.strHas( got.output, /module::Procedure.* will be fixated/ ) );
-    test.is( _.strHas( got.output, /npm:\/\/\/wprocedure.* : .*\.#\w+.* <- .*\./ ) );
-    test.is( _.strHas( got.output, /in .+\/fixateDetached\/out\/Procedure\.informal\.out\.will\.yml/ ) );
-    test.is( _.strHas( got.output, /in .+\/fixateDetached\/module\/Procedure\.informal\.will\.yml/ ) );
-
-    return null;
-  })
+  // /* - */
+  //
+  // ready
+  // .thenKeep( () =>
+  // {
+  //   test.case = '.submodules.fixate dry:1';
+  //   return null;
+  // })
+  //
+  // shell({ args : [ '.clean' ] })
+  // shell({ args : [ '.each module .export' ] })
+  // shell({ args : [ '.submodules.fixate dry:1' ] })
+  // .thenKeep( ( got ) =>
+  // {
+  //   test.identical( got.exitCode, 0 );
+  //
+  //   test.is( _.strHas( got.output, /module::Tools.* will be fixated/ ) );
+  //   test.is( _.strHas( got.output, /git\+https:\/\/\/github.com\/Wandalen\/wTools\.git\/out\/wTools.* : .*\.#\w+.* <- .*\.#master/ ) );
+  //   test.identical( _.strCount( got.output, 'fixateDetached/.im.will.yml' ), 2 );
+  //
+  //   test.is( !_.strHas( got.output, /module::PathFundamentals.* will be fixated/ ) );
+  //   test.is( !_.strHas( got.output, /git\+https:\/\/\/github.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals.* : .*\.#\w+.* <- .*\.#c8dadf139a49d70ccae2cac4f91845ecd0a925e0/ ) );
+  //   // test.identical( _.strCount( got.output, 'fixateDetached/.im.will.yml' ), 4 );
+  //
+  //   test.is( !_.strHas( got.output, /module::Color.* will be fixated/ ) );
+  //   test.is( !_.strHas( got.output, /npm:\/\/\/wColor\/out\/wColor.* : .*\.\w+.* <- .*\.#0\.3\.102/ ) );
+  //   // test.identical( _.strCount( got.output, 'fixateDetached/.im.will.yml' ), 4 );
+  //
+  //   test.is( _.strHas( got.output, /module::UriFundamentals.* will be fixated/ ) );
+  //   test.is( _.strHas( got.output, /wUriFundamentals\.git.* : .*\.#\w+.* <- .*\./ ) );
+  //   test.is( _.strHas( got.output, /in .+\/fixateDetached\/out\/UriFundamentals\.informal\.out\.will\.yml/ ) );
+  //   test.is( _.strHas( got.output, /in .+\/fixateDetached\/module\/UriFundamentals\.informal\.will\.yml/ ) );
+  //
+  //   test.is( !_.strHas( got.output, /module::Proto.* will be fixated/ ) );
+  //   test.is( !_.strHas( got.output, /wProto\.git.* : .*\.#\w+.* <- .*\.#5500fe0c9540dde7bc7fbeccbe44c657a2862c30/ ) );
+  //   test.is( !_.strHas( got.output, /in .+\/fixateDetached\/out\/Proto\.informal\.out\.will\.yml/ ) );
+  //   test.is( !_.strHas( got.output, /in .+\/fixateDetached\/module\/Proto\.informal\.will\.yml/ ) );
+  //
+  //   test.is( _.strHas( got.output, /module::Procedure.* will be fixated/ ) );
+  //   test.is( _.strHas( got.output, /npm:\/\/\/wprocedure.* : .*\.#\w+.* <- .*\./ ) );
+  //   test.is( _.strHas( got.output, /in .+\/fixateDetached\/out\/Procedure\.informal\.out\.will\.yml/ ) );
+  //   test.is( _.strHas( got.output, /in .+\/fixateDetached\/module\/Procedure\.informal\.will\.yml/ ) );
+  //
+  //   return null;
+  // })
 
   /* - */
 
@@ -1169,13 +1169,13 @@ function eachMixed( test )
   ready
   .thenKeep( () =>
   {
-    test.case = '.each submodule::*/path::predefined.local .shell "git status"'
+    test.case = '.each submodule::*/path::local .shell "git status"'
     return null;
   })
 
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.build' ] })
-  shell({ args : [ '.each submodule::*/path::predefined.local .shell "git status"' ] })
+  shell({ args : [ '.each submodule::*/path::local .shell "git status"' ] })
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1271,7 +1271,7 @@ function withMixed( test )
   .thenKeep( ( got ) =>
   {
     test.is( got.exitCode !== 0 );
-    test.is( _.strHas( got.output, 'Found no will-file' ) );
+    test.is( _.strHas( got.output, 'Found no willfile' ) );
     return null;
   })
 
@@ -1392,7 +1392,7 @@ function exportSingle( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 2 files' ) );
-    test.is( _.strHas( got.output, '+ Write out will-file' ) );
+    test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, 'Exported proto.export with 2 files in' ) );
 
     var files = self.find( outDebugPath );
@@ -1549,7 +1549,7 @@ function exportToRoot( test )
     test.case = '.export'
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exporting .+module::export-to-root \/ build::proto\.export.+/ ) );
-    test.is( _.strHas( got.output, '+ Write out will-file' ) );
+    test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, /Exported .+module::export-to-root \/ build::proto\.export.+ in/ ) );
     test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'export-to-root.out.will.yml' ) ) )
     return null;
@@ -1598,7 +1598,7 @@ function exportMixed( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exporting .*module::UriFundamentals\.informal \/ build::export.*/ ) );
     test.is( _.strHas( got.output, '+ download reflected' ) );
-    test.is( _.strHas( got.output, '+ Write out will-file' ) );
+    test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, /Exported .*module::UriFundamentals\.informal \/ build::export.* in/ ) );
     test.is( _.strHas( got.output, 'out/Proto.informal.out.will.yml' ) );
     test.is( _.strHas( got.output, 'out/UriFundamentals.informal.out.will.yml' ) );
@@ -1651,12 +1651,17 @@ function exportMixed( test )
 
     var expected =
     {
-      'predefined.remote' :
+      'remote' :
       {
-        'path' : 'git+https:///github.com/Wandalen/wProto.git'
+        'path' : 'git+https:///github.com/Wandalen/wProto.git',
+        'criterion' : { 'predefined' : 1 },
       },
-      'predefined.local' : { 'path' : '.module/Proto' },
-      'export' : { 'path' : '{path::predefined.local}/proto' },
+      'local' :
+      {
+        'path' : '.module/Proto',
+        'criterion' : { 'predefined' : 1 },
+      },
+      'export' : { 'path' : '{path::local}/proto' },
       'exportedDir.export' :
       {
         'path' : './.module/Proto/proto',
@@ -1680,9 +1685,21 @@ function exportMixed( test )
         ],
         'criterion' : { 'default' : 1, 'export' : 1 }
       },
-      'original.will.files' : { 'path' : 'module/Proto.informal.will.yml' },
+      'original.willfiles' : { 'path' : 'module/Proto.informal.will.yml' },
       'in' : { 'path' : '..' },
-      'out' : { 'path' : 'out' }
+      'out' : { 'path' : 'out' },
+
+      'module.willfiles' :
+      {
+        'path' : 'out/Proto.informal.out.will.yml',
+        'criterion' : { 'predefined' : 1 }
+      },
+      'module.dir' :
+      {
+        'path' : 'out',
+        'criterion' : { 'predefined' : 1 }
+      }
+
     }
     test.identical( outfile.path, expected );
 
@@ -1696,7 +1713,7 @@ function exportMixed( test )
         'exportedFilesReflector' : 'reflector::exportedFiles.export',
         'exportedDirPath' : 'path::exportedDir.export',
         'exportedFilesPath' : 'path::exportedFiles.export',
-        'originalWillFilesPath' : 'path::original.will.files',
+        'originalWillFilesPath' : 'path::original.willfiles',
       }
     }
     test.identical( outfile.exported, expected );
@@ -1706,7 +1723,7 @@ function exportMixed( test )
       'export.common' :
       {
         'opts' : { 'export' : 'path::export', 'tar' : 0 },
-        'inherit' : [ 'predefined.export' ]
+        'inherit' : [ 'module.export' ]
       },
       'download' :
       {
@@ -1747,7 +1764,7 @@ function exportMixed( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exporting .*module::UriFundamentals.informal.* \/ build::export/ ) );
     test.is( _.strHas( got.output, '+ download reflected' ) );
-    test.is( _.strHas( got.output, '+ Write out will-file' ) );
+    test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, /Exported .*module::UriFundamentals.informal.* \/ build::export/ ) );
     test.is( _.strHas( got.output, 'out/Proto.informal.out.will.yml' ) );
     test.is( _.strHas( got.output, 'out/UriFundamentals.informal.out.will.yml' ) );
@@ -1829,7 +1846,7 @@ function exportSecond( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, '+ Write out will-file' ), 2 );
+    test.identical( _.strCount( got.output, '+ Write out willfile' ), 2 );
     test.identical( _.strCount( got.output, 'Exported proto.export with 4 files in' ), 1 );
     test.identical( _.strCount( got.output, 'Exported doc.export with 2 files in' ), 1 );
 
@@ -2018,7 +2035,7 @@ function exportSecond( test )
         path : [ 'proto', 'proto/-NotExecluded.js', 'proto/.NotExecluded.js', 'proto/File.js' ],
         criterion : { proto : 1, export : 1 }
       },
-      'original.will.files' :
+      'original.willfiles' :
       {
         path : [ '.im.will.yml', '.ex.will.yml' ]
       },
@@ -2031,7 +2048,28 @@ function exportSecond( test )
       {
         path : [ 'doc', 'doc/File.md' ],
         criterion : { doc : 1, export : 1 }
+      },
+
+      'module.willfiles' :
+      {
+        'path' : 'out/ExportSecond.out.will.yml',
+        'criterion' : { 'predefined' : 1 }
+      },
+      'module.dir' :
+      {
+        'path' : 'out',
+        'criterion' : { 'predefined' : 1 }
+      },
+      'local' :
+      {
+        'path' : '.',
+        'criterion' : { 'predefined' : 1 }
+      },
+      'remote' :
+      {
+        'criterion' : { 'predefined' : 1 }
       }
+
     }
     test.identical( outfile.path, expected );
 
@@ -2045,7 +2083,7 @@ function exportSecond( test )
         exportedFilesReflector : 'reflector::exportedFiles.doc.export',
         exportedDirPath : 'path::exportedDir.doc.export',
         exportedFilesPath : 'path::exportedFiles.doc.export',
-        originalWillFilesPath : 'path::original.will.files'
+        originalWillFilesPath : 'path::original.willfiles'
       },
       'proto.export' :
       {
@@ -2055,7 +2093,7 @@ function exportSecond( test )
         exportedFilesReflector : 'reflector::exportedFiles.proto.export',
         exportedDirPath : 'path::exportedDir.proto.export',
         exportedFilesPath : 'path::exportedFiles.proto.export',
-        originalWillFilesPath : 'path::original.will.files'
+        originalWillFilesPath : 'path::original.willfiles'
       }
     }
     test.identical( outfile.exported, expected );
@@ -2071,7 +2109,7 @@ function exportSecond( test )
   // {
   //   test.identical( got.exitCode, 0 );
   //
-  //   test.identical( _.strCount( got.output, '+ Write out will-file' ), 2 );
+  //   test.identical( _.strCount( got.output, '+ Write out willfile' ), 2 );
   //   test.identical( _.strCount( got.output, 'Exported doc.export with 2 files in' ), 1 );
   //   test.identical( _.strCount( got.output, 'Exported proto.export with 2 files in' ), 1 );
   //
@@ -2168,7 +2206,7 @@ function exportSecond( test )
   //       path : [ 'proto', 'proto/File.js' ],
   //       criterion : { proto : 1, export : 1 }
   //     },
-  //     'original.will.files' :
+  //     'original.willfiles' :
   //     {
   //       path : [ '.im.will.yml', '.ex.will.yml' ]
   //     },
@@ -2195,7 +2233,7 @@ function exportSecond( test )
   //       exportedFilesReflector : 'reflector::exportedFiles.doc.export',
   //       exportedDirPath : 'path::exportedDir.doc.export',
   //       exportedFilesPath : 'path::exportedFiles.doc.export',
-  //       originalWillFilesPath : 'path::original.will.files'
+  //       originalWillFilesPath : 'path::original.willfiles'
   //     },
   //     'proto.export' :
   //     {
@@ -2205,7 +2243,7 @@ function exportSecond( test )
   //       exportedFilesReflector : 'reflector::exportedFiles.proto.export',
   //       exportedDirPath : 'path::exportedDir.proto.export',
   //       exportedFilesPath : 'path::exportedFiles.proto.export',
-  //       originalWillFilesPath : 'path::original.will.files'
+  //       originalWillFilesPath : 'path::original.willfiles'
   //     }
   //   }
   //   test.identical( outfile.exported, expected );
@@ -2964,7 +3002,7 @@ function cleanBroken1( test )
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
 
-  test.description = 'should handle currputed will-file properly';
+  test.description = 'should handle currputed willfile properly';
 
   let ready = new _.Consequence().take( null );
   let shell = _.sheller
@@ -3098,7 +3136,7 @@ function cleanBroken2( test )
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
 
-  test.description = 'should handle currputed will-file properly';
+  test.description = 'should handle currputed willfile properly';
 
   let ready = new _.Consequence().take( null );
   let shell = _.sheller
@@ -3272,7 +3310,7 @@ cleanNoBuild.timeOut = 130000;
 
 //
 
-function cleanWhat( test )
+function cleanDry( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'clean' );
@@ -3347,7 +3385,7 @@ function cleanWhat( test )
   return ready;
 }
 
-cleanWhat.timeOut = 130000;
+cleanDry.timeOut = 130000;
 
 //
 
@@ -3521,10 +3559,10 @@ function multipleExports( test )
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, 'Exported export.debug with 2 files in' ) );
-    test.is( _.strHas( got.output, 'Read 2 will-files in' ) );
+    test.is( _.strHas( got.output, 'Read 2 willfiles in' ) );
     test.is( _.strHas( got.output, /Exported .*module::submodule \/ build::export.debug.*/ ) );
     test.is( _.strHas( got.output, 'Write out archive' ) );
-    test.is( _.strHas( got.output, 'Write out will-file' ) );
+    test.is( _.strHas( got.output, 'Write out willfile' ) );
     test.is( _.strHas( got.output, 'submodule.debug.out.tgs' ) );
     test.is( _.strHas( got.output, 'out/submodule.out.will.yml' ) );
 
@@ -3546,7 +3584,7 @@ function multipleExports( test )
         exportedDirPath : 'path::exportedDir.export.debug',
         exportedFilesPath : 'path::exportedFiles.export.debug',
         archiveFilePath : 'path::archiveFile.export.debug',
-        originalWillFilesPath : 'path::original.will.files'
+        originalWillFilesPath : 'path::original.willfiles'
       }
     }
 
@@ -3636,10 +3674,31 @@ function multipleExports( test )
           export : 1
         }
       },
-      'original.will.files' :
+      'original.willfiles' :
       {
         'path' : [ '.im.will.yml', '.ex.will.yml' ]
       },
+
+      'module.willfiles' :
+      {
+        'path' : 'out/submodule.out.will.yml',
+        'criterion' : { 'predefined' : 1 }
+      },
+      'module.dir' :
+      {
+        'path' : 'out',
+        'criterion' : { 'predefined' : 1 }
+      },
+      'local' :
+      {
+        'path' : '.',
+        'criterion' : { 'predefined' : 1 }
+      },
+      'remote' :
+      {
+        'criterion' : { 'predefined' : 1 }
+      },
+
     }
 
     test.identical( outfile.path, outfilePath );
@@ -3673,10 +3732,10 @@ function multipleExports( test )
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, 'Exported export. with 2 files in' ) );
-    test.is( _.strHas( got.output, 'Read 2 will-files in' ) );
+    test.is( _.strHas( got.output, 'Read 2 willfiles in' ) );
     test.is( _.strHas( got.output, /Exported .*module::submodule \/ build::export\..* in/ ) );
     test.is( _.strHas( got.output, 'Write out archive' ) );
-    test.is( _.strHas( got.output, 'Write out will-file' ) );
+    test.is( _.strHas( got.output, 'Write out willfile' ) );
     test.is( _.strHas( got.output, 'submodule.out.tgs' ) );
     test.is( _.strHas( got.output, 'out/submodule.out.will.yml' ) );
 
@@ -3703,7 +3762,7 @@ function multipleExports( test )
         exportedDirPath : 'path::exportedDir.export.debug',
         exportedFilesPath : 'path::exportedFiles.export.debug',
         archiveFilePath : 'path::archiveFile.export.debug',
-        originalWillFilesPath : 'path::original.will.files',
+        originalWillFilesPath : 'path::original.willfiles',
       },
       'export.' :
       {
@@ -3720,7 +3779,7 @@ function multipleExports( test )
         exportedDirPath : 'path::exportedDir.export.',
         exportedFilesPath : 'path::exportedFiles.export.',
         archiveFilePath : 'path::archiveFile.export.',
-        originalWillFilesPath : 'path::original.will.files',
+        originalWillFilesPath : 'path::original.willfiles',
       },
     }
     test.identical( outfile.exported, exported );
@@ -3879,10 +3938,31 @@ function multipleExports( test )
           export : 1
         }
       },
-      'original.will.files' :
+      'original.willfiles' :
       {
         'path' : [ '.im.will.yml', '.ex.will.yml' ]
-      }
+      },
+
+      'module.willfiles' :
+      {
+        'path' : 'out/submodule.out.will.yml',
+        'criterion' : { 'predefined' : 1 }
+      },
+      'module.dir' :
+      {
+        'path' : 'out',
+        'criterion' : { 'predefined' : 1 }
+      },
+      'local' :
+      {
+        'path' : '.',
+        'criterion' : { 'predefined' : 1 }
+      },
+      'remote' :
+      {
+        'criterion' : { 'predefined' : 1 }
+      },
+
     }
 
     test.identical( outfile.path, outfilePath );
@@ -4164,7 +4244,7 @@ function multipleExportsBroken( test )
         exportedDirPath : 'path::exportedDir.export.debug',
         exportedFilesPath : 'path::exportedFiles.export.debug',
         archiveFilePath : 'path::archiveFile.export.debug',
-        originalWillFilesPath : 'path::original.will.files',
+        originalWillFilesPath : 'path::original.willfiles',
       }
     }
 
@@ -4322,7 +4402,7 @@ function reflectNothingFromSubmodules( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 2 files' ) );
-    test.is( _.strHas( got.output, '+ Write out will-file' ) );
+    test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, 'Exported proto.export with 2 files in' ) );
 
     var files = self.find( outDebugPath );
@@ -5601,22 +5681,22 @@ function reflectComplexInherit( test )
   ready
   .thenKeep( () =>
   {
-    test.case = '.with c .build'
+    test.case = '.with ab .build'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
   shell({ args : [ '.with a .export' ] })
   shell({ args : [ '.with b .export' ] })
-  shell({ args : [ '.with c .build' ] })
+  shell({ args : [ '.with ab/ab .build' ] })
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
-    test.is( _.strHas( got.output, / \+ .*files\.all.* reflected 20 files .*\/.* : .*out\/files.* <- .*proto.* in/ ) );
+    test.is( _.strHas( got.output, / \+ .*files\.all.* reflected 21 files .*\/.* : .*out\/ab\/files.* <- .*proto.* in/ ) );
 
     var files = self.find( outPath );
-    test.identical( files, [ '.', './module-a.out.will.yml', './module-b.out.will.yml', './files', './files/a', './files/a/File.js', './files/b', './files/b/-Excluded.js', './files/b/File.js', './files/b/File.test.js', './files/b/File1.debug.js', './files/b/File1.release.js', './files/b/File2.debug.js', './files/b/File2.release.js', './files/dir3.test', './files/dir3.test/File.js', './files/dir3.test/File.test.js' ] );
+    test.identical( files, [ '.', './module-a.out.will.yml', './module-b.out.will.yml', './ab', './ab/files', './ab/files/a', './ab/files/a/File.js', './ab/files/b', './ab/files/b/-Excluded.js', './ab/files/b/File.js', './ab/files/b/File.test.js', './ab/files/b/File1.debug.js', './ab/files/b/File1.release.js', './ab/files/b/File2.debug.js', './ab/files/b/File2.release.js', './ab/files/dir3.test', './ab/files/dir3.test/File.js', './ab/files/dir3.test/File.test.js' ] );
     return null;
   })
 
@@ -5999,7 +6079,7 @@ function setVerbosity( test )
     test.is( _.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
     test.is( _.strHas( got.output, / ! Failed to read .+submodule::Tools.+/ ) );
     test.is( _.strHas( got.output, / ! Failed to read .+submodule::PathFundamentals.+/ ) );
-    test.is( _.strHas( got.output, '. Read 2 will-files in' ) );
+    test.is( _.strHas( got.output, '. Read 2 willfiles in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
     test.is( _.strHas( got.output, / \+ 2\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
@@ -6026,7 +6106,7 @@ function setVerbosity( test )
     test.is( !_.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
     test.is( !_.strHas( got.output, / ! Failed to read .+submodule::Tools.+/ ) );
     test.is( !_.strHas( got.output, / ! Failed to read .+submodule::PathFundamentals.+/ ) );
-    test.is( _.strHas( got.output, '. Read 2 will-files in' ) );
+    test.is( _.strHas( got.output, '. Read 2 willfiles in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
     test.is( _.strHas( got.output, / \+ 2\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
@@ -6053,7 +6133,7 @@ function setVerbosity( test )
     test.is( !_.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
     test.is( !_.strHas( got.output, / ! Failed to read .+submodule::Tools.+/ ) );
     test.is( !_.strHas( got.output, / ! Failed to read .+submodule::PathFundamentals.+/ ) );
-    test.is( !_.strHas( got.output, '. Read 2 will-files in' ) );
+    test.is( !_.strHas( got.output, '. Read 2 willfiles in' ) );
 
     test.is( !_.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
     test.is( !_.strHas( got.output, / \+ 2\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
@@ -6668,7 +6748,7 @@ var Self =
     cleanBroken1,
     cleanBroken2,
     cleanNoBuild,
-    cleanWhat,
+    cleanDry,
     cleanSubmodules,
     cleanMixed,
 
