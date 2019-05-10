@@ -58,7 +58,6 @@ build :
   clean.download :
     steps :
       - submodules.clean
-      - submodules.reload
       - submodules.download
       - echo
 
@@ -66,12 +65,12 @@ build :
 
 </details>
 
-Проглянувши збірки в приведеному `вілфайлі` помітно, що вбудовані кроки для управління підмодулями формулюються як команди в консолі операційної системи:   
+Проглянувши збірки `download`, `update` i `clean` в приведеному `вілфайлі` помітно, що вбудовані кроки для управління підмодулями формулюються як команди в консолі операційної системи:   
 - `submodules.download` - для завантаження віддалених підмодулів;
 - `submodules.update` - для оновлення віддалених підомодулів;
 - `submodules.clean` - для видалення віддалених підмодулів разом з директорією `.module`.
 
-Після виконання над підмодулями деякої дії, утиліта не оновлює інформацію про його попердній стан. Тому, перед наступною операцією над підмодулями потрібно оновити їх статус. Для цього використовується вбудований крок `submodules.reload`, котрий здійснює динамічне оновлення статусу підмодулів після виконання над ними деякої операції. В збірці `clean.download` він оновлює статус підмодулів після їх очищення.  
+Окремо створено зібрку `clean.download` для чистого завантаження підмодулів. Збірка очищає модуль від застарілих підмодулів, а потім завантажує їх з допомогою кроку `submodules.download`. В кінці побудови в консоль виводиться повідомлення "Done".
 
 Також, вбудовані кроки з управління підмодулями одразу поміщені в поле `steps` збірок секції `build`. Це пов'язано з тим, що вони не мають додаткових полів опису. Запис в повній формі вбудованих кроків, котрі не мають додаткових полів збільшує об'єм `вілфайла` та знижує його читабельність.  
 
@@ -186,36 +185,23 @@ predefinedSteps
 [user@user ~]$ will .build clean.download
 ...
   Building module::predefinedSteps / build::clean.download
-   - Clean deleted 344 file(s) in 1.155s
-   . Reloading submodules..
-     + module::Tools was downloaded in 13.699s
-     + module::PathFundamentals was downloaded in 2.903s
-   + 2/2 submodule(s) of module::predefinedSteps were downloaded in 16.610s
+   - Clean deleted 285 file(s) in 1.267s
+     . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
+     + module::Tools was downloaded version master in 24.888s
+     . Read : /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+     + module::PathFundamentals was downloaded version master in 3.783s
+   + 2/2 submodule(s) of module::predefinedSteps were downloaded in 28.700s
  > echo "Done"
 Done
-  Built module::predefinedSteps / build::clean.download in 1.411s
-
-
-```
-
-</details>
-<details>
-  <summary><u>Структура модуля після побудови</u></summary>
-
-```
-predefinedSteps
-     ├── .module
-     │      ├── Tools
-     │      └── PathFundamentals
-     └── .will.yml
+  Built module::predefinedSteps / build::clean.download in 30.093s
 
 ```
 
 </details>
 
-Для побудови збірки `clean.download` скористайтесь командою `will .build clean.download`. Порівняйте результати побудови з приведеними.
+Для побудови збірки `clean.download` скористайтесь командою `will .build clean.download`. 
 
-Спочатку, утиліта зчитала та записала в оперативну пам'ять статус підмодулів. На момент побудови статус був "завантажені". При виконанні першого кроку, утиліта видалила ці модулі. Завдяки оновленню статуса в кроці `submodules.reload` збірка `clean.download` завантажила підмодулі у кроці `submodules.download`. Якщо б крок `submodules.reload` був відсутній, то утиліта зчитала попередній статус підмодулів і не здійснювала б завантаження.
+Таким чином виконується чисте завантаження підмодулів. Після побудови модуля структура файлів не змінилась.
 
 ### Підсумок  
 

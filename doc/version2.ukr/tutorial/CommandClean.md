@@ -215,7 +215,7 @@ cleanCommand
 
 </details>
 
-Запустіть побудову модуля в кореневій директорії `.will.yml` командою `will .build`. Після побудови виконайте експорт модуля командою `will .export`  
+Запустіть побудову модуля в директорії `.will.yml` командою `will .build`. Після побудови виконайте експорт модуля командою `will .export`  
 
 <details>
   <summary><u>Вивід команди <code>will .clean</code></u></summary>
