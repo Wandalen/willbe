@@ -31,6 +31,5 @@ build :
   clean.download :
     steps :
       - submodules.clean
-      - submodules.reload
       - submodules.download
       - echo

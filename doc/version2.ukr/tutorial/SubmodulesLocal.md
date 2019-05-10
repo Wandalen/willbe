@@ -16,8 +16,8 @@ localSubmodule
         │      │     └── .will.yml
         │      │
         │      └── localTwo
-        │             └── out
-        └── .will.yml      └── local.out.will.yml
+        │             └── local.out.will.yml
+        └── .will.yml       
 
 ```
 
@@ -25,7 +25,7 @@ localSubmodule
 
 Створіть структуру файлів, як приведено вище.  
 
-В приведеному модулі використовується два локальних підмодуля. Один з іменованим `вілфайлом`, другий - з неіменованим `вілфайлом`. 
+В приведеному модулі використовується два локальних підмодуля. Один з іменованим `вілфайлом` `local.out.will.yml`, другий - з неіменованим `вілфайлом` `.will.yml`. 
 
 <details>
   <summary><u>Код файла <code>.will.yml</code></u></summary>
@@ -41,7 +41,7 @@ submodule :
 
   PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
   localOne : ./modules/localOne/
-  localTwo : ./modules/localTwo/out/local
+  localTwo : ./modules/localTwo/local
 
 ```
 
@@ -49,7 +49,7 @@ submodule :
 
 Помістіть в файл `.will.yml` приведений вище код.
 
-Секція містить неіменований локальний підмодуль за шляхом `./modules/localOne` та іменований з назвою `local` за шляхом `./modules/localTwo/out`. Для порівняння роботи команд з віддаленими і локальними підмодулями, в `вілфайл` введено віддалений підмодуль `PathFundamentals`.  
+В секції підключено неіменований локальний підмодуль за шляхом `./modules/localOne` та іменований з назвою `local` за шляхом `./modules/localTwo/out`. Для порівняння роботи команд з віддаленими і локальними підмодулями, в `вілфайл` введено віддалений підмодуль `PathFundamentals`.  
 
 <details>
   <summary><u>Код файла <code>.will.yml</code> в директорії <code>localOne</code></u></summary>
@@ -85,7 +85,7 @@ build :
 
 Для файла `.will.yml` в директорії `localOne` використайте код, що приведений вище.
 
-Також, використайте експортований `exportModule.out.will.yml` файл з [попереднього туторіалу](ModuleExport.md). Перейменуйте його в `local.out.will.yml` та помістіть за шляхом `./modules/localTwo/out/`. Якщо у вас немає файла, ви можете його завантажити [за посиланням]( https://github.com/Wandalen/willbe/tree/master/sample/submodulesLocal/modules/localTwo/out/).   
+Також, використайте експортований `exportModule.out.will.yml` файл з [попереднього туторіалу](ModuleExport.md). Перейменуйте його в `local.out.will.yml` та помістіть за шляхом `./modules/localTwo/`. Якщо у вас немає файла, ви можете його завантажити [за посиланням]( https://github.com/Wandalen/willbe/tree/master/sample/submodulesLocal/modules/localTwo/out/).   
 
 ### Дослідження локальних підмодулів
 
@@ -114,7 +114,7 @@ submodule::localTwo
 
 Перевірте конфігурацію підмодулів командою `will .submodules.list`.   
 
-Віддалений підмодуль `PathFundamentals` не завантажений, а в статусі завантаження локальних підмодулів вказане значення `1`.
+Поле `isDownloaded` віддаленого підмодуля `PathFundamentals` має значення `false`, тобто,не завантажений. А статус завантаження локальних підмодулів має значення `1`.
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.download</code></u></summary>
@@ -128,6 +128,9 @@ submodule::localTwo
 ```
 
 </details>
+
+Завантаження та оновлення для локальних підмодулів не потрібне - на машині знаходиться актуальна версія модуля. Завантажте віддалений підмодуль командою `will .submodules.download`.
+
 <details>
   <summary><u>Структура модуля після завантаження</u></summary>
 
@@ -147,7 +150,7 @@ submodule::localTwo
 
 </details>
 
-Завантаження та оновлення для локальних підмодулів не потрібне - на машині знаходиться актуальна версія модуля. Завантажте віддалений підмодуль командою `will .submodules.download`. Після завантаження з'явиться директорія `.module` з підмодулем `PathFundamentals`.    
+Після завантаження з'явилась директорія `.module` з підмодулем `PathFundamentals`.    
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.list</code></u></summary>
@@ -190,7 +193,7 @@ submodule::localTwo
 
 </details>
 
-Видаліть підмодулі фразою `will .submodules.clean`. Після виконання команди перегляньте зміни в структурі модуля.
+Видаліть підмодулі фразою `will .submodules.clean`. 
 
 <details>
   <summary><u>Структура модуля після видалення підмодулів</u></summary>
@@ -209,7 +212,7 @@ submodule::localTwo
 
 </details>
 
-Після виконання команди `will .submodules.clean` локальні підмодулі залишились без змін. Утиліта `willbe` не виконує операцій над локальними підмодулями для збереження даних.
+Перегляньте зміни в структурі модуля. Після виконання команди `will .submodules.clean` локальні підмодулі залишились без змін. Утиліта `willbe` не виконує операцій над локальними підмодулями для збереження даних розробника.
 
 ### Підсумок
 
