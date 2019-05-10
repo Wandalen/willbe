@@ -259,7 +259,7 @@
   </a></summary>
   Як користуватись селекторами з ґлобами.
 </details>
-<details><summary><a href="./tutorial/AssertsUsing.md">
+<details><summary><a href="./tutorial/AssertionUsing.md">
       Як користуватись ассертами
   </a></summary>
   Як ассерти допомогають зменшити кількість помилок при розробці.

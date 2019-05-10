@@ -359,7 +359,7 @@ A string which has phrase which describes intention of a developer and actions w
   </a></summary>
   How to use selectors with globs.
 </details>
-<details><summary><a href="./tutorial/AssertsUsing.md">
+<details><summary><a href="./tutorial/AssertionUsing.md">
       How to use assertions
   </a></summary>
   How assertions help to reduce errors during design.

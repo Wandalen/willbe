@@ -66,7 +66,7 @@ For gentle introduction use tutorials. For getting exhaustive information on one
   </a></summary>
   How to use selectors with globs.
 </details>
-<details><summary><a href="./tutorial/AssertsUsing.md">
+<details><summary><a href="./tutorial/AssertionUsing.md">
       How to use assertions
   </a></summary>
   How assertions help to reduce errors during design.
