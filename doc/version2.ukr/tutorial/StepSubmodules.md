@@ -14,7 +14,6 @@
 ```
 predefinedSteps              
       └── .will.yml     
-
 ```
 
 </details>
@@ -41,6 +40,7 @@ step :
   echo :
     shell : echo "Done"
     currentPath : '.'
+
 build :
 
   download :
