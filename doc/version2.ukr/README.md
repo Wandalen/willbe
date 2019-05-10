@@ -244,6 +244,11 @@
   </a></summary>
   Як побудувати збірку, що запускається без явного указання аргумента команди <code>.build</code>.
 </details>
+<details><summary><a href="./tutorial/WillFileMinimization.md">
+      Мінімізація <code>вілфайла</code>
+  </a></summary>
+  Як мінімізувати <code>вілфайл</code> за допомогою розгортання критеріонами із множинними значеннями.
+</details>
 <details><summary><a href="./tutorial/ModuleExport.md">
       Експортування модуля
   </a></summary>
@@ -263,11 +268,6 @@
       Як користуватись ассертами
   </a></summary>
   Як ассерти допомогають зменшити кількість помилок при розробці.
-</details>
-<details><summary><a href="./tutorial/WillFileMinimization.md">
-      Мінімізація <code>вілфайла</code>
-  </a></summary>
-  Як мінімізувати <code>вілфайл</code> за допомогою розгортання критеріонами із множинними значеннями.
 </details>
 <details><summary><a href="./tutorial/WillFileSplit.md">
       Розділені <code>вілфайли</code>

@@ -34,22 +34,20 @@ about :
 
 path :
 
-  in : '.'
-  out : 'out'
   fileToDelete.debug :
     criterion :
       debug : 1
-    path : './files/Debug*'
+    path : './files/Debug.js'
   fileToDelete.release :
     criterion :
       debug : 0
-    path : './files/Release*'
+    path : './files/Release.js'
 
 step  :
 
   delete.files :
     inherit : predefined.delete
-    filePath : path::fileToDelete.*=1
+    filePath : path::fileToDelete.*
     criterion :
       debug : [ 0,1 ]
 
@@ -59,7 +57,7 @@ build :
     criterion :
       debug : [ 0,1 ]
     steps :
-      - delete.*=1
+      - delete.*
 
 ```
 
@@ -67,7 +65,10 @@ build :
 
 Помістіть приведений вище код в `вілфайл`.
 
-В кроці `delete.files` здійснюється видалення файлів з допомогою вбудованого кроку `predefined.delete`. Для видалення потрібних файлів в полі `filePath` вказується шлях до файлів.
+В кроці `delete.files` здійснюється видалення файлів з допомогою вбудованого кроку `predefined.delete`. Для видалення потрібних файлів в полі `filePath` вказується шлях до файлів. Всі шляхи модуля поміщаються в секції `path`, котра призначена для швидкого орієнтування в його структурі.  
+Секція `path` має два шляхи: 
+- `fileToDelete.debug` використовується якщо критеріон `debug` має значення `1`;
+- `fileToDelete.release` використовується якщо критеріон `debug` має значення `0`;
 
 Збірка `delete` в секції `build` та крок `delete.files` в секції `step` використовують функцію розгортання ресурсів з критеріонами. Для цього критеріону присвоюється векторне значення, в даному випадку, `debug : [ 0,1 ]`. Утиліта, зчитуючи такий ресурс, розгортає його на копії, що відрізняються назвою і мають по одному критеріону зі скалярним значенням. 
 
