@@ -9,7 +9,7 @@
 ### Конфігурація 
 
 <details>
-  <summary><u>Структура модуля</u></summary>
+  <summary><u>Структура файлів</u></summary>
 
 ```
 shellCommand
@@ -243,16 +243,15 @@ build :
 
 </details> 
 
-Приведіть відповідні секції згідно коду вище.
+Приведіть відповідні секції файла `.will.yml` згідно коду приведеного вище.
 
-У вказані ресурси введено критеріон `first`, котрий змінив мапу критеріонів для доступу до кроку `export.default`.   
+У вказані ресурси введено критеріон `first`, котрий змінив мапу критеріонів для доступу до кроку `export.default`. Згідно запису, кроки `export.debug` i `export.default` обираються утилітою, коли критеріон `debug` має значення `1`.  
 
 <details>
     <summary><u>Вивід команди <code>will .export export.debug.first</code></u></summary>
 
 ```
-[user@us
-er ~]$ will .export export.debug
+[user@user ~]$ will .export export.debug
 ...
 Exporting export.debug
    + Write out will-file /path_to_file/out/assertsTesting.out.will.yml
@@ -269,7 +268,7 @@ Exporting export.debug
 
 ### Підсумок  
 
-- Ассерти перевіряють кількість входжень в виборі ресурсів селектором з ґлобом.
+- Ассерти перевіряють кількість входжень в вибірці ресурсів селектором з ґлобом.
 - Ассерти дозволяють швидко локалізувати помилки в `вілфайлі`.
 
 [Наступний туторіал](WillFileMinimization.md)  

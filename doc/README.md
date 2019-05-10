@@ -328,7 +328,7 @@ A string which has phrase which describes intention of a developer and actions w
   </a></summary>
   Build of some builds of the module for construction of it.
 </details>
-<details><summary><a href="./tutorial/StepsPredefined.md">
+<details><summary><a href="./tutorial/StepSubmodules.md">
       Predefined steps
   </a></summary>
   How to use predefined steps for the work with remote submodules.
@@ -358,7 +358,7 @@ A string which has phrase which describes intention of a developer and actions w
   </a></summary>
   How to use selectors with globs.
 </details>
-<details><summary><a href="./tutorial/AssertsUsing.md">
+<details><summary><a href="./tutorial/AssertionUsing.md">
       How to use assertions
   </a></summary>
   How assertions help to reduce errors during design.

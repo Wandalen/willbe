@@ -229,7 +229,7 @@
   </a></summary>
   Побудова модуля через запуск однієї із його збірок.
 </details>
-<details><summary><a href="./tutorial/StepsPredefined.md">
+<details><summary><a href="./tutorial/StepSubmodules.md">
       Вбудовані кроки для підмодулів
   </a></summary>
   Як користуватись вбудованими кроками для роботи з віддаленими підмодулями.
@@ -259,7 +259,7 @@
   </a></summary>
   Як користуватись селекторами з ґлобами.
 </details>
-<details><summary><a href="./tutorial/AssertsUsing.md">
+<details><summary><a href="./tutorial/AssertionUsing.md">
       Як користуватись ассертами
   </a></summary>
   Як ассерти допомогають зменшити кількість помилок при розробці.
