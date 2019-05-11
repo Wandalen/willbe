@@ -218,6 +218,7 @@ function _load()
       {
         delete rootModule.allModuleMap[ submodule.path ]
       }
+      // debugger;
       if( will.verbosity >= 3 )
       logger.error( ' ! Failed to read ' + submodule.decoratedNickName + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading' );
       if( will.verbosity >= 5 || !submodule.loadedModule || submodule.loadedModule.isOpened() )
@@ -348,7 +349,7 @@ function dataExport()
   if( result === undefined )
   return result;
 
-  if( 0 )
+  if( 1 )
   if( submodule.loadedModule && !submodule.loadedModule.hasAnyError() )
   {
     debugger;

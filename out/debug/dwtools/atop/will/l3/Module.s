@@ -31,21 +31,14 @@ function finit()
 
   module.associatedSubmodules.forEach( ( submodule ) =>
   {
-    // debugger;
     _.assert( submodule.loadedModule === module );
     submodule.finit();
-    // _.assert( submodule === null );
-    // module.associatedSubmodule.loadedModule = null;
-    // _.assert( module.associatedSubmodule.loadedModule === null );
-    // module.associatedSubmodule = null;
   });
 
   module.unform();
   module.about.finit();
-  // module.execution.finit();
 
   _.assert( _.instanceIsFinited( module.about ) );
-  // _.assert( _.instanceIsFinited( module.execution ) );
 
   _.assert( Object.keys( module.exportedMap ).length === 0 );
   _.assert( Object.keys( module.buildMap ).length === 0 );
@@ -92,6 +85,11 @@ function init( o )
   });
 
   if( o )
+  module.will = o.will;
+
+  module.predefinedForm();
+
+  if( o )
   module.copy( o );
 
 }
@@ -107,6 +105,8 @@ function copy( o )
 
   let result = _.Copyable.prototype.copy.apply( module, arguments );
 
+  // xxx
+
   let names =
   {
     willFilesPath : null,
@@ -120,6 +120,10 @@ function copy( o )
     if( o[ n ] !== undefined )
     module[ n ] = o[ n ];
   }
+
+  // xxx
+
+  _.assert( result.currentRemotePath === module.currentRemotePath );
 
   return result;
 }
@@ -187,7 +191,6 @@ function preform()
   module.stager.stageState( 'preformed', 1 );
   module.stager.stageState( 'preformed', 2 );
 
-  // con.keep( () => module.preform1() );
   con.keep( () => module._preform() );
   con.finally( ( err, arg ) =>
   {
@@ -236,7 +239,7 @@ function _preform()
 
   /* */
 
-  module.predefinedForm();
+  // module.predefinedForm();
   module.remoteForm();
 
   /* */
@@ -271,15 +274,21 @@ function predefinedForm()
   path
   ({
     name : 'local',
-    path : [],
+    path : null,
     writable : 1,
   })
 
   path
   ({
     name : 'remote',
-    path : [],
+    path : null,
     writable : 1,
+  })
+
+  path
+  ({
+    name : 'current.remote',
+    path : null,
   })
 
   path
@@ -2372,7 +2381,7 @@ function remoteIs()
 
 //
 
-function remoteIsDownloaded()
+function remoteIsDownloadedUpdate()
 {
   let module = this;
   let will = module.will;
@@ -2410,13 +2419,108 @@ function remoteIsDownloaded()
   function end( result )
   {
     module.isDownloaded = !!result;
+
+    // if( module.absoluteName === "module::submodules / module::Tools" )
+    // debugger;
+    //
+    // if( result )
+    // {
+    //
+    //   if( module.absoluteName === "module::submodules / module::Tools" )
+    //   debugger;
+    //
+    //   let version = remoteProvider.versionLocalRetrive( module.localPath );
+    //   if( version )
+    //   {
+    //     let remotePath = _.uri.parseConsecutive( module.remotePath );
+    //     remotePath.hash = version;
+    //     debugger;
+    //     module.pathResourceMap[ 'current.remote' ].path = _.uri.str( remotePath );
+    //     debugger;
+    //   }
+    // }
+    // else
+    // {
+    //   module.pathResourceMap[ 'current.remote' ].path = null;
+    // }
+
     return result;
   }
 }
 
 //
 
-function remoteIsUpToDate()
+function remoteIsDownloadedChanged()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( !!module.pathResourceMap[ 'current.remote' ] );
+
+  // if( module.absoluteName === "module::submodules / module::Tools" )
+  // debugger;
+
+  /* */
+
+  if( module.isDownloaded &&  module.remotePath )
+  {
+
+    // debugger;
+    let remoteProvider = fileProvider.providerForPath( module.remotePath );
+    _.assert( !!remoteProvider.isVcs );
+
+    // if( module.absoluteName === "module::submodules / module::Tools" )
+    // debugger;
+
+    let version = remoteProvider.versionLocalRetrive( module.localPath );
+    if( version )
+    {
+      let remotePath = _.uri.parseConsecutive( module.remotePath );
+      remotePath.hash = version;
+      // debugger;
+      module.pathResourceMap[ 'current.remote' ].path = _.uri.str( remotePath );
+      // debugger;
+    }
+  }
+  else
+  {
+    // debugger;
+    module.pathResourceMap[ 'current.remote' ].path = null;
+  }
+
+  /* */
+
+  if( !module.localPath )
+  if( module.dirPath )
+  {
+    _.assert( _.strIs( module.dirPath ) );
+    module.localPath = module.dirPath;
+  }
+
+}
+
+//
+
+function remoteIsDownloadedSet( src )
+{
+  let module = this;
+
+  src = !!src;
+
+  let changed = module[ isDownloadedSymbol ] !== undefined && module[ isDownloadedSymbol ] !== src;
+
+  module[ isDownloadedSymbol ] = src;
+
+  if( changed )
+  module.remoteIsDownloadedChanged();
+
+}
+
+//
+
+function remoteIsUpToDateUpdate()
 {
   let module = this;
   let will = module.will;
@@ -2431,6 +2535,7 @@ function remoteIsUpToDate()
 
   _.assert( !!remoteProvider.isVcs );
 
+  debugger;
   let result = remoteProvider.isUpToDate
   ({
     remotePath : module.remotePath,
@@ -2474,6 +2579,9 @@ function remoteForm()
 
   module.isRemote = module.remoteIs();
 
+  // if( module.absoluteName === "module::submodules / module::Tools" )
+  // debugger;
+
   if( module.isRemote )
   {
     module._remoteFormAct();
@@ -2481,12 +2589,12 @@ function remoteForm()
   else
   {
     module.isDownloaded = 1;
-    if( module.dirPath )
-    {
-      _.assert( _.strIs( module.dirPath ) );
-      module.localPath = module.dirPath;
-      // debugger;
-    }
+    _.assert( module.localPath === module.dirPath );
+    // if( module.dirPath )
+    // {
+    //   _.assert( _.strIs( module.dirPath ) );
+    //   module.localPath = module.dirPath;
+    // }
   }
 
   return module;
@@ -2504,10 +2612,8 @@ function _remoteFormAct()
   let dirPath = module.dirPath || module.willFilesPath;
 
   _.assert( module.preformed === 2 );
-  // _.assert( !!module.willFilesPath || !!module.dirPath );
   _.assert( _.strDefined( module.alias ) );
   _.assert( !!module.supermodule );
-  // _.assert( _.strIs( module.willFilesPath ) );
   _.assert( _.strIs( dirPath ) );
 
   let remoteProvider = fileProvider.providerForPath( module.commonPath );
@@ -2515,27 +2621,30 @@ function _remoteFormAct()
   _.assert( remoteProvider.isVcs && _.routineIs( remoteProvider.pathParse ), () => 'Seems file provider ' + remoteProvider.nickName + ' does not have version control system features' );
 
   let submodulesDir = module.supermodule.submodulesCloneDirGet();
-  // let parsed = remoteProvider.pathParse( module.willFilesPath );
   let parsed = remoteProvider.pathParse( dirPath );
 
-  // module.remotePath = module.willFilesPath;
   module.remotePath = dirPath;
   module.localPath = path.resolve( submodulesDir, module.alias );
   module.willFilesPath = path.resolve( module.localPath, parsed.localVcsPath );
-  module.isDownloaded = !!module.remoteIsDownloaded();
+
+  module.remoteIsDownloadedUpdate();
 
   /* update information about local version */
 
-  if( module.isDownloaded )
-  {
-    let version = remoteProvider.versionLocalRetrive( module.localPath );
-    if( version )
-    {
-      let remotePath = _.uri.parseConsecutive( module.remotePath );
-      remotePath.hash = version;
-      module.remotePath = _.uri.str( remotePath );
-    }
-  }
+  // // debugger;
+  // if( module.isDownloaded )
+  // {
+  //   let version = remoteProvider.versionLocalRetrive( module.localPath );
+  //   if( version )
+  //   {
+  //     let remotePath = _.uri.parseConsecutive( module.remotePath );
+  //     remotePath.hash = version;
+  //     debugger;
+  //     module.pathResourceMap[ 'current.remote' ].path = _.uri.str( remotePath );
+  //     debugger;
+  //     // module.remotePath = _.uri.str( remotePath );
+  //   }
+  // }
 
   _.assert( will.moduleMap[ module.id ] === module );
 
@@ -2568,9 +2677,9 @@ function _remoteDownload( o )
   .keep( () =>
   {
     if( o.updating )
-    return module.remoteIsUpToDate();
+    return module.remoteIsUpToDateUpdate();
     else
-    return module.remoteIsDownloaded();
+    return module.remoteIsDownloadedUpdate();
   })
   .keep( function( arg )
   {
@@ -2643,9 +2752,9 @@ function _remoteDownload( o )
       else
       {
         let remoteProvider = fileProvider.providerForPath( module.remotePath );
-        debugger;
+        // debugger;
         let version = remoteProvider.versionLocalRetrive( module.localPath );
-        debugger;
+        // debugger;
         logger.log( ' + ' + module.decoratedNickName + ' was ' + ( o.updating ? 'updated to' : 'downloaded' ) + ' version ' + _.color.strFormat( version, 'path' ) + ' in ' + _.timeSpent( time ) );
       }
     }
@@ -3184,7 +3293,6 @@ function commonPathGet()
   if( _.strEnds( result, '/' ) )
   result += _.strCommonLeft.apply( _, _.arrayAs( path.s.fullName( module.willFilesPath ) ) );
 
-  // debugger;
   return result;
 }
 
@@ -3192,10 +3300,6 @@ function commonPathGet()
 
 function nonExportablePathGet_functor( fieldName, resourceName )
 {
-
-  // let resourceName = _.strRemoveEnd( fieldName, 'Path' );
-  // resourceName = _.strSplitCamel( resourceName );
-  // resourceName = 'predefined.' + resourceName.join( '.' );
 
   return function nonExportablePathGet()
   {
@@ -3214,10 +3318,6 @@ function nonExportablePathGet_functor( fieldName, resourceName )
 function nonExportablePathSet_functor( fieldName, resourceName )
 {
 
-  // let resourceName = _.strRemoveEnd( fieldName, 'Path' );
-  // resourceName = _.strSplitCamel( resourceName );
-  // resourceName = 'predefined.' + resourceName.join( '.' );
-
   return function nonExportablePathSet( filePath )
   {
     let module = this;
@@ -3234,8 +3334,6 @@ function nonExportablePathSet_functor( fieldName, resourceName )
     }
 
     _.assert( !!module.pathResourceMap[ resourceName ] );
-    // _.assert( !module.pathResourceMap[ resourceName ].writable, 'Path ' + resourceName + ' is non-writable' );
-    // _.assert( module.pathResourceMap[ resourceName ].criterion.predefined, 'Path ' + resourceName + ' is predefined' );
 
     module.pathResourceMap[ resourceName ].path = filePath;
 
@@ -3248,6 +3346,7 @@ let willFilesPathGet = nonExportablePathGet_functor( 'willFilesPath', 'module.wi
 let dirPathGet = nonExportablePathGet_functor( 'dirPath', 'module.dir' );
 let localPathGet = nonExportablePathGet_functor( 'localPath', 'local' );
 let remotePathGet = nonExportablePathGet_functor( 'remotePath', 'remote' );
+let currentRemotePathGet = nonExportablePathGet_functor( 'currentRemotePath', 'current.remote' );
 let willPathGet = nonExportablePathGet_functor( 'willPath', 'will' );
 
 let willFilesPathSet = nonExportablePathSet_functor( 'willFilesPath', 'module.willfiles' );
@@ -4843,7 +4942,6 @@ function infoExport()
   let result = '';
 
   result += module.about.infoExport();
-  // result += module.execution.infoExport();
 
   result += module.infoExportPaths( module.pathMap );
   result += module.infoExportResource( module.submoduleMap );
@@ -4980,14 +5078,13 @@ function dataExportForModuleExport( o )
   data.format = will.WillFile.FormatVersion;
 
   if( o.willfilesPath )
-  {
-    data.path[ 'module.willfiles' ].path = path.relative( module2.inPath, o.willfilesPath );
-  }
+  data.path[ 'module.willfiles' ].path = path.relative( module2.inPath, o.willfilesPath );
 
   _.assert( !data.path || !!data.path[ 'module.willfiles' ] );
   _.assert( !data.path || !!data.path[ 'module.dir' ] );
   _.assert( !data.path || !!data.path[ 'local' ] );
   _.assert( !data.path || data.path[ 'remote' ] !== undefined );
+  _.assert( !data.path || !data.path[ 'current.remote' ] );
   _.assert( !data.path || !data.path[ 'will' ] );
 
   module2.finit();
@@ -5171,6 +5268,7 @@ ResourceSetter_functor.defaults =
 // --
 
 let functionSymbol = Symbol.for( 'function' );
+let isDownloadedSymbol = Symbol.for( 'isDownloaded' );
 
 let Composes =
 {
@@ -5195,8 +5293,6 @@ let Aggregates =
 {
 
   about : _.define.instanceOf( _.Will.ParagraphAbout ),
-  // execution : _.define.instanceOf( _.Will.ParagraphExecution ),
-
   submoduleMap : _.define.own({}),
   pathResourceMap : _.define.own({}),
   reflectorMap : _.define.own({}),
@@ -5225,7 +5321,7 @@ let Restricts =
   willFileArray : _.define.own([]),
   willFileWithRoleMap : _.define.own({}),
   pathMap : _.define.own({}),
-  allModuleMap : _.define.own({}), // yyy
+  allModuleMap : _.define.own({}),
 
   preformed : 0,
   willFilesFound : 0,
@@ -5268,13 +5364,13 @@ let Forbids =
   filePath : 'filePath',
   errors : 'errors',
   associatedSubmodule : 'associatedSubmodule',
+  execution : 'execution',
 }
 
 let Accessors =
 {
 
   about : { setter : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.Will.ParagraphAbout }) },
-  // execution : { setter : _.accessor.setter.friend({ name : 'execution', friendName : 'module', maker : _.Will.ParagraphExecution }) },
 
   submoduleMap : { setter : ResourceSetter_functor({ resourceName : 'Submodule', mapName : 'submoduleMap' }) },
   pathResourceMap : { setter : ResourceSetter_functor({ resourceName : 'PathResource', mapName : 'pathResourceMap' }) },
@@ -5297,7 +5393,10 @@ let Accessors =
   dirPath : { getter : dirPathGet, setter : dirPathSet },
   localPath : { getter : localPathGet, setter : localPathSet },
   remotePath : { getter : remotePathGet, setter : remotePathSet },
+  currentRemotePath : { getter : currentRemotePathGet, readOnly : 1 },
   willPath : { getter : willPathGet, readOnly : 1 },
+
+  isDownloaded : { setter : remoteIsDownloadedSet },
 
 }
 
@@ -5316,7 +5415,6 @@ let Proto =
   clone,
   unform,
   preform,
-  // preform1,
   _preform,
   predefinedForm,
 
@@ -5380,8 +5478,12 @@ let Proto =
   // remote
 
   remoteIs,
-  remoteIsDownloaded,
-  remoteIsUpToDate,
+
+  remoteIsDownloadedUpdate,
+  remoteIsDownloadedChanged,
+  remoteIsDownloadedSet,
+
+  remoteIsUpToDateUpdate,
 
   remoteForm,
   _remoteFormAct,
@@ -5418,6 +5520,7 @@ let Proto =
   dirPathGet,
   localPathGet,
   remotePathGet,
+  currentRemotePathGet,
   willPathGet,
 
   willFilesPathSet,
