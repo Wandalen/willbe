@@ -11,30 +11,24 @@ path :
 
   out : 'out'
 
-  submodule.pathfundamental :
-    criterion :
-      debug : 1
-    path : '.module/PathFundamentals'
+  submodule.pathfundamental : '.module/PathFundamentals'
 
 step  :
 
   export.submodule :
-    criterion :
-      debug : 1
     export : path::submodule.*
 
 build :
 
   submodules.download :
-      criterion :
-          default : 1
-          debug : 0
-      steps :
-          - submodules.download
+    criterion :
+      default : 1
+    steps :
+      - submodules.download
 
   submodules.export :
-      criterion :
-          export : 1
-          debug : 1
-      steps :
-          - export.*
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - export.*

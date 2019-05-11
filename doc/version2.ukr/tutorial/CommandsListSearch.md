@@ -16,6 +16,9 @@ list
 ```
 
 </details>
+
+Створіть директорію `list` з приведеною конфігурацією.
+
 <details>
   <summary><u>Код <code>.will.yml</code></u></summary>
 
@@ -60,7 +63,7 @@ step :
     criterion :
       debug : 1
 
-  submodules.informal.export :
+  submodules.export :
     currentPath : path::dirPath
     shell : 'will .each ./module .export'
 
@@ -68,9 +71,9 @@ step :
 
 </details>
 
-Створіть директорію `list` з `вілфайлом` та внесіть відповідний код.
+Внесіть приведений вище код в файл `.will.yml`.
 
-`вілфайл` призначений для дослідження команд утиліти і не виконує побудов. В ньому використовуються ресурси секцій `path` i `step`. Окремі ресурси мають схожі назви та використовують декілька комбінацій критеріонів.  
+`Вілфайл` включає дві секції `path` i `step` з переліком ресурсів. Він призначений для дослідження команд утиліти і не виконує побудов. Окремі ресурси мають схожі назви та використовують декілька комбінацій критеріонів, що дає змогу дослідити можливості команд `.  
 
 <details>
   <summary><u>Вивід команди <code>will .resources.list</code></u></summary>
@@ -126,7 +129,7 @@ step::delete.out.debug
   inherit :
     predefined.delete
 
-step::submodules.informal.export
+step::submodules.export
   opts :
     currentPath : path::dirPath
     shell : will .each ./module .export
@@ -183,7 +186,7 @@ Paths
 
 Ресурс також обирається за назвою і критеріоном. Для виводу шляхів, які починаються на `o` та мають критеріон `proto:1`, введіть команду `will .paths.list о* proto:1`.
 
-В виводі команди присутні два шляхи. Це пов'язано з тим, що шлях `out` не має критеріонів.
+В виводі команди присутні два шляхи - `out` i `out.debug`. Це пов'язано з тим, що шлях `out` не має критеріонів.
 
 <details>
   <summary><u>Вивід команди <code>will .steps.list *s* proto:0 debug:1</code></u></summary>
@@ -200,7 +203,7 @@ step::reflect.submodules
   inherit :
     predefined.reflect
 
-step::submodules.informal.export
+step::submodules.export
   opts :
     currentPath : path::dirPath
     shell : will .each ./module .export
@@ -213,7 +216,7 @@ step::submodules.informal.export
 
 Вибір ресурсів здійснюється за комбінацією критеріонів. Наприклад, введіть команду `will .steps.list *s* proto:0 debug:1`.
 
-Крок `submodules.informal.export` включений в вибірку тому, що не має критеріонів і ресурс автоматично приймає значення будь-якого критеріона.  
+Крок `submodules.export` включений в вибірку тому, що не має критеріонів і ресурс автоматично приймає значення будь-якого критеріона.  
 
 <details>
   <summary><u>Вивід команди <code>will .steps.list * debug:0</code></u></summary>
@@ -230,7 +233,7 @@ step::reflect.proto.
   inherit :
     predefined.reflect
 
-step::submodules.informal.export
+step::submodules.export
   opts :
     currentPath : path::dirPath
     shell : will .each ./module .export
@@ -242,6 +245,8 @@ step::submodules.informal.export
 </details>
 
 Умовою правильного вибору ресурсів за критеріонами є перебір за іменами. Для перебору лише за критеріонами використовуйте ґлоб `*`, який включає всі ресурси. Таким чином для вибору кроків за критеріоном `debug:0` Введіть команду `will .steps.list * debug:0`.
+
+Утиліта вивела два ресурси - `reflector.proto.` i `submodules.export`. Другий ресурс обрано через відсутність критеріонів.
 
 ### Підсумок   
 

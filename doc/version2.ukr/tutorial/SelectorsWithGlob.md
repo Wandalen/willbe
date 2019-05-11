@@ -107,7 +107,7 @@ build :
 
 В файл `.will.yml` внесіть код.
 
-Кожна із збірок `export.debug` i `export.release` обирає крок в секції `step` згідно критеріона `debug`. Код показує, що при побудові збірки `export.debug` в експорт-модуль буде поміщено файл `fileDebug`, а при виконанні збірки `export.release` - `fileRelease`.   
+Кожна із збірок `export.debug` i `export.release` обирає крок в секції `step` згідно критеріона `debug`. При побудові збірки `export.debug` в експорт-модуль буде поміщено файл `fileDebug`, а при виконанні збірки `export.release` - `fileRelease`.   
 
 ### Експортування модуля з окремими файлами  
 
@@ -127,6 +127,9 @@ build :
 ```
 
 </details>
+
+Побудуйте збірку `export.debug` виконавши команду `will .export export.debug`. 
+
 <details>
   <summary><u>Структура модуля після експорту</u></summary>
 
@@ -141,8 +144,6 @@ selectorWithGlob
 ```
 
 </details>
-
-Побудуйте збірку `export.debug` виконавши команду `will .export export.debug`. 
 
 Утиліта експортувала файл з назвою `selectorWithGlob` в директорію `out`. Експортовано лише один файл, що свідчить про правильну побудову модуля.
 
@@ -179,6 +180,11 @@ selectorWithGlob
 ```
 
 </details>
+
+Видаліть директорію `out` (команда `rm -Rf out`) та введіть `will .export export.release`.
+
+Експорт реліз-модуля пройшов успішно за 1.379s. При побудові утиліта співставила назви шляхів, та обрала ресурс `fileToExport.release`.
+
 <details>
   <summary><u>Структура модуля після експорту</u></summary>
 
@@ -194,9 +200,7 @@ selectorWithGlob
 
 </details>
 
-Видаліть директорію `out` (команда `rm -Rf out`) та введіть `will .export export.release`.  
-
-Експорт реліз-модуля пройшов успішно за 1.379s. При побудові утиліта співставила назви шляхів, та обрала ресурс `fileToExport.release`.
+В директорію `out` утиліта помістила згенерований `out-вілфайл` з назвою `selectorWithGlob.out.will.yml`.
 
 ### Підсумок  
 

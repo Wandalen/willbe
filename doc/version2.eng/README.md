@@ -344,6 +344,11 @@ A string which has phrase which describes intention of a developer and actions w
   </a></summary>
   How to construct the build without explicit specification of the argument for command <code>.build</code>.
 </details>
+<details><summary><a href="./tutorial/WillFileMinimization.md">
+      Minimization of <code>willfile</code>
+  </a></summary>
+  How to minimize <code>willfile</code> by means of instantiation of sets of criterions.
+</details>
 <details><summary><a href="./tutorial/ModuleWillFileExported.md">
       Exporting of a module
   </a></summary>
@@ -363,11 +368,6 @@ A string which has phrase which describes intention of a developer and actions w
       How to use assertions
   </a></summary>
   How assertions help to reduce errors during design.
-</details>
-<details><summary><a href="./tutorial/WillFileMinimization.md">
-      Minimization of <code>willfile</code>
-  </a></summary>
-  How to minimize <code>willfile</code> by means of instantiation of sets of criterions.
 </details>
 <details><summary><a href="./tutorial/WillFileSplit.md">
       Split <code>willfiles</code>
