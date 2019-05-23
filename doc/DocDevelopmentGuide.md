@@ -25,3 +25,4 @@ In the pervious tutorial [ "Predefined steps" ](PredefinedSteps.md) predefined s
 In the [ pervious tutorial ](PredefinedSteps.md) predefined steps were used to compose a build.
 - Separate section for example is preferable.
 - Detailed description of illustration/code should goes after illustration/code. Before illustration should be title of section or very short description if it's appropriate.
+- Avoid having empty sample files. If sample file is textual then it should have some short text. If sample file is JS then it should have "console.log( 'dir/File.js' )", where `dir/File.js` is long name of the file.
