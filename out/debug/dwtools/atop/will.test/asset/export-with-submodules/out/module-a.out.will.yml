@@ -27,7 +27,7 @@ path:
     criterion:
       default: 1
       export: 1
-  original.willfiles:
+  module.original.willfiles:
     path: a.will.yml
   in:
     path: ..
@@ -91,5 +91,5 @@ exported:
     exportedFilesReflector: 'reflector::exportedFiles.proto.export'
     exportedDirPath: 'path::exportedDir.proto.export'
     exportedFilesPath: 'path::exportedFiles.proto.export'
-    originalWillFilesPath: 'path::original.willfiles'
+    originalWillFilesPath: 'path::module.original.willfiles'
 format: willfile-1.0.0
