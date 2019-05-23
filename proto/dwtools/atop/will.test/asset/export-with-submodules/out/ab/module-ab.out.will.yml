@@ -45,12 +45,14 @@ path:
     criterion:
       default: 1
       export: 1
-  original.willfiles:
-    path: ab.will.yml
   in:
     path: ../../ab
   module.willfiles:
-    path: ab.will.yml
+    path: ../out/ab/module-ab.out.will.yml
+    criterion:
+      predefined: 1
+  module.original.willfiles:
+    path: .will.yml
     criterion:
       predefined: 1
   module.dir:
@@ -98,10 +100,12 @@ submodule:
           criterion:
             default: 1
             export: 1
-        original.willfiles:
-          path: a.will.yml
         in:
           path: ..
+        module.original.willfiles:
+          path: out/a.will.yml
+          criterion:
+            predefined: 1
         module.willfiles:
           path: out/module-a.out.will.yml
           criterion:
@@ -111,7 +115,7 @@ submodule:
           criterion:
             predefined: 1
         local:
-          path: out
+          path: .
           criterion:
             predefined: 1
         remote:
@@ -175,7 +179,7 @@ submodule:
           exportedFilesReflector: 'reflector::exportedFiles.proto.export'
           exportedDirPath: 'path::exportedDir.proto.export'
           exportedFilesPath: 'path::exportedFiles.proto.export'
-          originalWillFilesPath: 'path::original.willfiles'
+          originalWillFilesPath: 'path::module.original.willfiles'
   sub-b:
     own: 1
     path: ../out/module-b
@@ -215,10 +219,12 @@ submodule:
           criterion:
             default: 1
             export: 1
-        original.willfiles:
-          path: b.will.yml
         in:
           path: ..
+        module.original.willfiles:
+          path: out/b.will.yml
+          criterion:
+            predefined: 1
         module.willfiles:
           path: out/module-b.out.will.yml
           criterion:
@@ -228,7 +234,7 @@ submodule:
           criterion:
             predefined: 1
         local:
-          path: out
+          path: .
           criterion:
             predefined: 1
         remote:
@@ -292,7 +298,7 @@ submodule:
           exportedFilesReflector: 'reflector::exportedFiles.proto.export'
           exportedDirPath: 'path::exportedDir.proto.export'
           exportedFilesPath: 'path::exportedFiles.proto.export'
-          originalWillFilesPath: 'path::original.willfiles'
+          originalWillFilesPath: 'path::module.original.willfiles'
 reflector:
   files.all:
     src:
@@ -392,5 +398,5 @@ exported:
     exportedFilesReflector: 'reflector::exportedFiles.proto.export'
     exportedDirPath: 'path::exportedDir.proto.export'
     exportedFilesPath: 'path::exportedFiles.proto.export'
-    originalWillFilesPath: 'path::original.willfiles'
+    originalWillFilesPath: 'path::module.original.willfiles'
 format: willfile-1.0.0

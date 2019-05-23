@@ -6,7 +6,6 @@ about:
   values:
     enabled: 1
     name: module-b
-execution: {}
 path:
   proto:
     path: ./proto
@@ -34,10 +33,25 @@ path:
     criterion:
       default: 1
       export: 1
-  original.willfiles:
+  module.original.willfiles:
     path: b.will.yml
   in:
     path: ..
+  module.willfiles:
+    path: out/module-b.out.will.yml
+    criterion:
+      predefined: 1
+  module.dir:
+    path: out
+    criterion:
+      predefined: 1
+  local:
+    path: .
+    criterion:
+      predefined: 1
+  remote:
+    criterion:
+      predefined: 1
 submodule: {}
 reflector:
   exported.proto.export:
@@ -83,5 +97,5 @@ exported:
     exportedFilesReflector: 'reflector::exportedFiles.proto.export'
     exportedDirPath: 'path::exportedDir.proto.export'
     exportedFilesPath: 'path::exportedFiles.proto.export'
-    originalWillFilesPath: 'path::original.willfiles'
+    originalWillFilesPath: 'path::module.original.willfiles'
 format: willfile-1.0.0

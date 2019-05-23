@@ -160,7 +160,7 @@ function run( frame )
   _.assert( !!module );
   _.assert( !!will );
   _.assert( !!logger );
-  _.assert( module.preformed === 3 );
+  _.assert( module.preformed > 0 /* === 3 */ );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
   _.assert( resource.formed === 3 );
@@ -281,7 +281,7 @@ function archiveFilePathFor()
   let will = module.will;
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
-  let inExportFile = module.willFileWithRoleMap.export || module.willFileWithRoleMap.single;
+  let inExportFile = module.willfileWithRoleMap.export || module.willfileWithRoleMap.single;
   let inFileDirPath = hd.path.dir( inExportFile.filePath )
 
   _.assert( arguments.length === 0 );
@@ -289,7 +289,7 @@ function archiveFilePathFor()
   _.assert( _.strDefined( module.about.name ), 'Module should have name, declare about.name' );
   _.assert( inExportFile instanceof will.WillFile );
 
-  let exports = module.exportsSelect();
+  let exports = module.exportsResolve();
   let criterions = build.criterionVariable( exports );
 
   for( let c in criterions )
@@ -310,7 +310,7 @@ function outFilePathFor()
   let will = module.will;
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
-  let inExportFile = module.willFileWithRoleMap.export || module.willFileWithRoleMap.single;
+  let inExportFile = module.willfileWithRoleMap.export || module.willfileWithRoleMap.single;
   let inFileDirPath = hd.path.dir( inExportFile.filePath )
 
   _.assert( arguments.length === 0 );

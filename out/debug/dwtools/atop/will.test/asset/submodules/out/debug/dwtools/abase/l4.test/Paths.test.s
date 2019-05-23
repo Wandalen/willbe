@@ -862,7 +862,7 @@ function name( test )
   [
     {
       description : 'get paths name',
-      withExtension : 0,
+      full : 0,
       src :
       [
         '',
@@ -884,7 +884,7 @@ function name( test )
     },
     {
       description : 'get paths name with extension',
-      withExtension : 1,
+      full : 1,
       src :
       [
         '',
@@ -927,10 +927,10 @@ function name( test )
     {
       var args = c.src.slice();
 
-      if( c.withExtension )
+      if( c.full )
       {
         for( var j = 0; j < args.length; j++ )
-        args[ j ] = { path : args[ j ], withExtension : 1 };
+        args[ j ] = { path : args[ j ], full : 1 };
       }
 
       test.identical( _.paths.name( args ), c.expected );

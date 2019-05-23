@@ -191,32 +191,38 @@ function moduleMake( o )
   _.assert( arguments.length === 1 );
   o = _.routineOptions( moduleMake, arguments );
 
-  if( !o.willFilesPath && !o.dirPath )
-  o.dirPath = o.dirPath || fileProvider.path.current();
+  // if( !o.willfilesPath && !o.dirPath )
+  // o.dirPath = o.dirPath || fileProvider.path.current();
+
+  if( !o.willfilesPath )
+  o.willfilesPath = o.willfilesPath || fileProvider.path.current();
 
   if( !o.module )
   {
-    o.module = will.Module({ will : will, willFilesPath : o.willFilesPath, dirPath : o.dirPath }).preform();
+    o.module = will.Module({ will : will, willfilesPath : o.willfilesPath }).preform();
+    // o.module = will.Module({ will : will, willfilesPath : o.willfilesPath, dirPath : o.dirPath }).preform();
   }
 
-  _.assert( o.module.willFilesPath === o.willFilesPath || o.module.willFilesPath === o.dirPath );
-  _.assert( o.module.dirPath === o.dirPath );
+  _.assert( o.module.willfilesPath === o.willfilesPath || o.module.willfilesPath === o.dirPath );
+  // _.assert( o.module.dirPath === o.dirPath );
 
-  o.module.willFilesFind();
-  o.module.willFilesOpen();
+  // o.module.stager.stageStateSkipping( 'submodulesFormed', !!o.forming );
+  o.module.stager.stageStateSkipping( 'resourcesFormed', !!o.forming );
 
-  o.module.submodulesForm();
+  o.module.willfilesFind();
+  // o.module.willfilesOpen();
+  // o.module.submodulesForm();
 
-  if( o.forming )
-  {
-    // o.module.submodulesForm();
-    o.module.resourcesForm();
-  }
-  else
-  {
-    // o.module.submodulesFormSkip();
-    o.module.resourcesFormSkip();
-  }
+  // if( o.forming )
+  // {
+  //   // o.module.submodulesForm();
+  //   o.module.resourcesForm();
+  // }
+  // else
+  // {
+  //   // o.module.submodulesFormSkip();
+  //   o.module.resourcesFormSkip();
+  // }
 
   return o.module;
 }
@@ -224,8 +230,8 @@ function moduleMake( o )
 moduleMake.defaults =
 {
   module : null,
-  willFilesPath : null,
-  dirPath : null,
+  willfilesPath : null,
+  // dirPath : null,
   forming : 0,
 }
 
@@ -250,15 +256,12 @@ function moduleEach( o )
 
     let module = o.currentModule;
     if( !o.currentModule )
-    module = o.currentModule = will.Module({ will : will, dirPath : path.current() }).preform();
-    module.willFilesFind();
-    module.willFilesOpen();
-    module.submodulesForm();
-    // module.resourcesForm(); // yyy
-    module.resourcesFormSkip();
+    module = o.currentModule = will.Module({ will : will, willfilesPath : path.current() }).preform();
+    // module = o.currentModule = will.Module({ will : will, dirPath : path.current() }).preform();
+
+    module.stager.stageStateSkipping( 'resourcesFormed', 1 );
 
     con = module.ready;
-
     con.then( () =>
     {
       let con2 = new _.Consequence();
@@ -267,19 +270,14 @@ function moduleEach( o )
       for( let s = 0 ; s < resolved.length ; s++ ) con2.keep( ( arg ) => /* !!! replace by concurrent, maybe */
       {
         let it1 = resolved[ s ];
-        let module = it1.module;
+        let module = it1.currentModule;
 
         let it2 = Object.create( null );
-        it2.module = module;
+        it2.currentModule = module;
         it2.supermodule = module.supermodule || module;
 
         if( _.arrayIs( it1.dst ) || _.strIs( it1.dst ) )
         it2.currentPath = it1.dst;
-
-        // it.module = submodule.loadedModule;
-        // it.supermodule = module;
-        // it.submodule = submodule;
-
         it2.options = o;
 
         if( o.onBegin )
@@ -293,6 +291,8 @@ function moduleEach( o )
       return con2;
     });
 
+    module.willfilesFind();
+
   }
   else
   {
@@ -300,13 +300,21 @@ function moduleEach( o )
     o.selector = path.resolve( o.selector );
     con = new _.Consequence().take( null );
 
-    let files = will.willFilesList
-    ({
-      dirPath : o.selector,
-      includingInFiles : 1,
-      includingOutFiles : 0,
-      rerucrsive : 0,
-    });
+    let files;
+    try
+    {
+      files = will.willfilesList
+      ({
+        dirPath : o.selector,
+        includingInFiles : 1,
+        includingOutFiles : 0,
+        rerucrsive : 0,
+      });
+    }
+    catch( err )
+    {
+      throw _.errBriefly( err );
+    }
 
     let filesMap = Object.create( null );
     for( let f = 0 ; f < files.length ; f++ ) con.then( ( arg ) => /* !!! replace by concurrent, maybe */
@@ -318,31 +326,34 @@ function moduleEach( o )
         return true;
       }
 
-      let module = will.Module({ will : will, willFilesPath : file.absolute }).preform();
+      let module = will.Module({ will : will, willfilesPath : file.absolute }).preform();
 
-      module.willFilesFind();
+      // module.stager.stageStateSkipping( 'submodulesFormed', 0 );
+      module.stager.stageStateSkipping( 'resourcesFormed', 1 );
 
       let it = Object.create( null );
-      it.module = module;
+      it.currentModule = module;
       it.options = o;
 
-      module.stager.stageConsequence( 'willFilesFound' ).then( ( arg ) =>
+      module.stager.stageConsequence( 'willfilesFound' ).then( ( arg ) =>
       {
         if( o.onBegin )
         return o.onBegin( it );
         return arg;
       });
 
-      module.willFilesOpen();
-      module.submodulesForm();
-      // module.resourcesForm(); // yyy
-      module.resourcesFormSkip();
+      // module.willfilesOpen();
+      // module.submodulesForm();
+      // // module.resourcesForm(); // yyy
+      // module.resourcesFormSkip();
+
+      module.willfilesFind();
 
       return module.ready.split().keep( function( arg )
       {
-        _.assert( module.willFileArray.length > 0 );
-        if( module.willFilesPath )
-        _.mapSet( filesMap, module.willFilesPath, true );
+        _.assert( module.willfilesArray.length > 0 );
+        if( module.willfilesPath )
+        _.mapSet( filesMap, module.willfilesPath, true );
 
         let r = o.onEnd( it );
 
@@ -396,7 +407,7 @@ function _verbosityChange()
 
 //
 
-function willFilesList( o )
+function willfilesList( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
@@ -406,7 +417,7 @@ function willFilesList( o )
   o = { dirPath : o }
 
   _.assert( arguments.length === 1 );
-  _.routineOptions( willFilesList, o );
+  _.routineOptions( willfilesList, o );
   _.assert( !!will.formed );
 
   let filter =
@@ -441,7 +452,7 @@ function willFilesList( o )
   return files;
 }
 
-willFilesList.defaults =
+willfilesList.defaults =
 {
   dirPath : null,
   includingInFiles : 1,
@@ -508,6 +519,7 @@ var ResourceKindToMapName = new _.NameMapper({ leftName : 'resource kind', right
 ({
 
   'about' : 'about',
+  'module' : 'moduleWithNameMap',
   'submodule' : 'submoduleMap',
   'step' : 'stepMap',
   'path' : 'pathResourceMap',
@@ -576,7 +588,7 @@ let Extend =
   moduleMake,
   moduleEach,
   _verbosityChange,
-  willFilesList,
+  willfilesList,
   vcsFor,
 
   // relation

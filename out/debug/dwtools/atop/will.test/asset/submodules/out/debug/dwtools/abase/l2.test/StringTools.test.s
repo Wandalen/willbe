@@ -7656,27 +7656,67 @@ function strUnicodeEscape( test )
 function strCount( test )
 {
 
-  test.case = 'returns 2';
+  test.open( 'string' );
+
+  test.case = 'none';
+  var got = _.strCount( 'abc', 'z' );
+  var expected = 0;
+  test.identical( got, expected );
+
+  test.case = 'nl';
   var got = _.strCount( 'abc\ndef\nghi', '\n' );
   var expected = 2;
   test.identical( got, expected );
 
   test.case = 'simple string';
-  var got = _.strCount( 'abaac','a' );
-  var expected = 3;
+  var got = _.strCount( 'ababacabacabaaba','aba' );
+  var expected = 4;
   test.identical( got, expected );
 
   test.case = 'empty src';
-  var got = _.strCount( '', 'a' );
+  var got = _.strCount( '', 'abc' );
   var expected = 0;
   test.identical( got, expected );
 
-  test.case = 'empty substring';
-  var got = _.strCount( 'a', '' );
+  test.case = 'empty ins';
+  var got = _.strCount( 'abc', '' );
+  var expected = 3;
+  test.identical( got, expected );
+
+  test.close( 'string' );
+
+  /* */
+
+  test.open( 'regexp' );
+
+  test.case = 'none';
+  var got = _.strCount( 'abc', /z/ );
   var expected = 0;
   test.identical( got, expected );
 
-  /**/
+  test.case = 'nl';
+  var got = _.strCount( 'abc\ndef\nghi', /\n/m );
+  var expected = 2;
+  test.identical( got, expected );
+
+  test.case = 'simple string';
+  var got = _.strCount( 'ababacabacabaaba', /aba/ );
+  var expected = 4;
+  test.identical( got, expected );
+
+  test.case = 'empty src';
+  var got = _.strCount( '', /a/ );
+  var expected = 0;
+  test.identical( got, expected );
+
+  test.case = 'empty ins';
+  var got = _.strCount( 'abc', RegExp( '' ) );
+  var expected = 3;
+  test.identical( got, expected );
+
+  test.close( 'regexp' );
+
+  /* */
 
   if( !Config.debug )
   return;

@@ -75,7 +75,7 @@ function verify()
   _.assert( !!hd );
   _.assert( !!logger );
   _.assert( !!build );
-  _.assert( module.preformed === 3 );
+  _.assert( module.preformed > 0 /* === 3 */ );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
   // _.assert( exported.criterion === null );
@@ -84,8 +84,8 @@ function verify()
   _.sure( _.strDefined( module.dirPath ), 'Expects directory path of the module' );
   _.sure( _.objectIs( build.criterion ), 'Expects criterion of export' );
   _.sure( _.strDefined( build.name ), 'Expects name of export' );
-  _.sure( _.objectIs( module.willFileWithRoleMap.import ) || _.objectIs( module.willFileWithRoleMap.single ), 'Expects import in fine' );
-  _.sure( _.objectIs( module.willFileWithRoleMap.export ) || _.objectIs( module.willFileWithRoleMap.single ), 'Expects export in fine' );
+  _.sure( _.objectIs( module.willfileWithRoleMap.import ) || _.objectIs( module.willfileWithRoleMap.single ), 'Expects import in fine' );
+  _.sure( _.objectIs( module.willfileWithRoleMap.export ) || _.objectIs( module.willfileWithRoleMap.single ), 'Expects export in fine' );
   _.sure( _.strDefined( module.about.name ), 'Expects defined name of the module' );
   _.sure( _.strDefined( module.about.version ), 'Expects defined version of the module' );
 
@@ -105,32 +105,26 @@ function readExported()
   let logger = will.logger;
 
   let outFilePath = build.outFilePathFor();
-  let module2 = will.Module({ will : will, dirPath : path.dir( outFilePath ), original : module }).preform();
-  let willFiles = module2.willFilesPick( outFilePath );
-  let willFile = willFiles[ 0 ];
+  // let module2 = will.Module({ will : will, dirPath : path.dir( outFilePath ), original : module }).preform();
+  let module2 = will.Module({ will : will, willfilesPath : outFilePath, original : module }).preform();
 
-  if( !willFiles.length )
-  {
-    module2.finit();
-    return;
-  }
+  module2.stager.stageStateSkipping( 'submodulesFormed', 1 );
+  module2.stager.stageStateSkipping( 'resourcesFormed', 1 );
 
-  _.assert( willFiles.length === 1 );
-  _.assert( willFile.exists() );
+  let willfiles = module2.willfilesPick( outFilePath );
 
   try
   {
 
-    module2.willFilesOpen();
-    module2.submodulesFormSkip();
-    let con = module2.resourcesFormSkip();
-
+    let con = module2.ready;
     con
     .thenKeep( ( arg ) =>
     {
 
-      if( willFile.data && willFile.data.exported )
-      for( let exportedName in willFile.data.exported )
+      let willfile = module2.willfilesArray[ 0 ];
+      _.assert( willfile && module2.willfilesArray.length === 1 );
+      if( willfile.data && willfile.data.exported )
+      for( let exportedName in willfile.data.exported )
       {
         if( exportedName === exported.name )
         continue;
@@ -138,8 +132,6 @@ function readExported()
         _.assert( exported2 instanceof Self );
         module.resourceImport({ srcResource : exported2 });
       }
-
-      // debugger;
 
       return arg;
     })
@@ -155,9 +147,15 @@ function readExported()
         _.errLogOnce( err2 );
       }
       if( err )
-      debugger;
-      if( err )
-      throw _.errLogOnce( _.errBriefly( err ) );
+      {
+        if( module2.stager.stageStatePerformed( 'willfilesFound' ) )
+        throw _.errLogOnce( _.errBriefly( err ) );
+        else
+        {
+          _.errAttend( err );
+          throw err;
+        }
+      }
       return arg;
     })
     ;
@@ -167,7 +165,6 @@ function readExported()
   }
   catch( err )
   {
-    debugger;
     _.errLogOnce( _.errBriefly( err ) );
   }
 
@@ -193,7 +190,7 @@ function performExportedReflectors( exportSelector )
   _.assert( !!hd );
   _.assert( !!logger );
   _.assert( !!build );
-  _.assert( module.preformed === 3 );
+  _.assert( module.preformed > 0 /* === 3 */ );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
   _.assert( _.objectIs( exported.criterion ) );
@@ -248,9 +245,6 @@ function performExportedReflectors( exportSelector )
   else if( _.arrayIs( exp ) )
   {
     let commonPath = path.common.apply( path, exp );
-
-    // _.assert( path.isRelative( commonPath ) );
-
     exportedReflector = module.resourceAllocate( 'reflector', 'exported.' + exported.name );
     exportedReflector.src.filePath = Object.create( null );
     for( let p = 0 ; p < exp.length ; p++ )
@@ -413,8 +407,12 @@ function performPaths()
   let logger = will.logger;
   let build = module.buildMap[ exported.name ];
 
-  let originalWillFilesPath = module.resourceObtain( 'path', 'original.willfiles' );
-  originalWillFilesPath.path = path.s.relative( module.inPath, _.entityShallowClone( module.willFilesPath ) );
+  let originalWillFilesPath = module.resourceObtain( 'path', 'module.original.willfiles' );
+  originalWillFilesPath.path = path.s.relative( module.inPath, _.entityShallowClone( module.willfilesPath ) );
+  originalWillFilesPath.criterion.predefined = 1;
+
+  _.assert( !originalWillFilesPath.writable );
+  _.assert( !!originalWillFilesPath.exportable );
   exported.originalWillFilesPath = originalWillFilesPath;
 
 }
@@ -533,7 +531,8 @@ function perform( frame )
   _.assert( step instanceof will.Step );
   _.assert( exported.step === null || exported.step === step );
   _.assert( _.strDefined( opts.export ), () => step.nickName + ' should have options option export, path to directory to export or reflector' )
-  _.assert( module.resourcesFormed === 3, 'Resources should be formed' );
+  // _.assert( module.resourcesFormed === 3, 'Resources should be formed' );
+  _.assert( module.stager.stageStatePerformed( 'resourcesFormed' ), 'Resources should be formed' );
 
   exported.verify();
 

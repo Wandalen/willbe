@@ -46,6 +46,9 @@ function init( o )
   _.instanceInit( about );
   Object.preventExtensions( about );
 
+  if( o && o.module )
+  about.module = o.module;
+
   if( o )
   about.copy( o );
 
@@ -56,11 +59,6 @@ function init( o )
 function copy( o )
 {
   let about = this;
-
-  // debugger;
-  // about.name = 'xxx';
-  // about.enabled = 3;
-  // debugger;
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
@@ -81,7 +79,23 @@ function copy( o )
 
   }
 
-  // debugger;
+}
+
+//
+
+let _nameGetterSetter = _.accessor.accessor.alias({ containerName : 'values', originalName : 'name' });
+let nameGetterSetter =
+{
+  get : _nameGetterSetter.get,
+  set : function()
+  {
+    let result = _nameGetterSetter.set.apply( this, arguments );
+    // if( this.module )
+    // debugger;
+    if( this.module )
+    this.module.nameChanged();
+    return result;
+  }
 }
 
 //
@@ -124,7 +138,6 @@ let Composes =
   version : null,
   values : null,
 
-
 }
 
 let Aggregates =
@@ -155,10 +168,8 @@ let Forbids =
 
 let Accessors =
 {
-  name : { getterSetter : _.accessor.accessor.alias({ containerName : 'values', originalName : 'name' }) },
+  name : { getterSetter : nameGetterSetter },
   enabled : { getterSetter : _.accessor.accessor.alias({ containerName : 'values', originalName : 'enabled' }) },
-  // name : { setter : _.accessor.setter.alias({ containerName : 'values', original : 'name', alias : 'name' }), getter : _.accessor.getter.alias({ containerName : 'values', original : 'name', alias : 'name' }) },
-  // enabled : { setter : _.accessor.setter.alias({ containerName : 'values', original : 'enabled', alias : 'enabled' }), getter : _.accessor.getter.alias({ containerName : 'values', original : 'enabled', alias : 'enabled' }) },
 }
 
 // --

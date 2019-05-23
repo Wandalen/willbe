@@ -64,14 +64,16 @@ function MakeForEachCriterion( o )
       if( module[ Cls.MapName ][ o2.name ] )
       continue;
 
-      result.push( make( o2 ) );
+      // result.push( make( o2 ) );
+      make( o2 );
       counter += 1;
     }
   }
 
   if( single )
   {
-    result = [ make( o ) ];
+    make( o );
+    // result = [ make( o ) ];
   }
 
   return result;
@@ -82,32 +84,44 @@ function MakeForEachCriterion( o )
   {
     let optional = !!o.Optional;
     let rewritable = !!o.Rewritable;
-    let onExist = o.OnExist;
+    let importing = !!o.Importing;
+    // let onExist = o.OnExist;
+    let onExist = Cls.OnInstanceExists;
+
+    // if( onExist )
+    // debugger;
 
     delete o.Optional;
     delete o.Rewritable;
-    delete o.OnExist;
+    delete o.Importing;
+    // delete o.OnExist;
+
+    if( o.importable !== undefined && !o.importable )
+    if( importing )
+    {
+      // debugger;
+      return;
+    }
 
     try
     {
 
-      // if( rewritable )
+      let instance = o.module[ Cls.MapName ][ o.name ];
+      if( instance )
       {
-        let instance = o.module[ Cls.MapName ][ o.name ];
-        if( instance )
+        _.assert( !!onExist );
         onExist( instance, o );
-        // if( instance && instance.criterion && instance.criterion.predefined )
-        // {
-        //   instance.finit();
-        // }
       }
 
-      return Cls( o ).form1();
+      let r = Cls( o ).form1();
+      result.push( r );
+      return r;
     }
     catch( err )
     {
       throw _.err( 'Error forming', Cls.KindName + '::' + o.name, '\n', err );
     }
+
   }
 
 }
@@ -756,7 +770,7 @@ function _infoExport( fields )
   let result = '';
 
   result += _.color.strFormat( resource.nickName, 'entity' ) + '\n';
-  result += _.toStr( fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '' } );
+  result += _.toStr( fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '', multiline : 1 } );
 
   return result;
 }
@@ -766,7 +780,7 @@ function _infoExport( fields )
 function infoExport()
 {
   let resource = this;
-  let fields = resource.dataExport();
+  let fields = resource.dataExport({ copyingNonExportable : 1 });
   let result = resource._infoExport( fields );
   return result;
 }
@@ -778,17 +792,25 @@ function dataExport()
   let resource = this;
   let o = _.routineOptions( dataExport, arguments );
 
+  if( !o.copyingNonExportable )
+  if( !resource.exportable )
+  return;
+
   if( !o.copyingPredefined )
+  // if( !o.copyingModulePaths )
   if( resource.criterion && resource.criterion.predefined )
   return;
 
   if( !o.copyingNonWritable && !resource.writable )
+  // if( !o.copyingModulePaths )
   return;
 
   let o2 = _.mapExtend( null, o );
   delete o2.copyingNonWritable;
   delete o2.copyingPredefined;
-  delete o2.copyingModulePaths;
+  delete o2.copyingNonExportable;
+  // delete o2.copyingModulePaths;
+  delete o2.module;
   let fields = resource.cloneData( o2 );
 
   delete fields.name;
@@ -796,13 +818,6 @@ function dataExport()
 }
 
 dataExport.defaults = Object.create( _.Will.Module.prototype.dataExport.defaults );
-// dataExport.defaults =
-// {
-//   compact : 1,
-//   copyingAggregates : 0,
-//   copyingNonWritable : 1,
-//   copyingPredefined : 1,
-// }
 
 //
 
@@ -877,6 +892,17 @@ function decoratedAbsoluteNameGet()
   let resource = this;
   let result = resource.absoluteName;
   return _.color.strFormat( result, 'entity' );
+}
+
+//
+
+function shortNameArrayGet()
+{
+  let resource = this;
+  let module = resource.module;
+  let result = module.shortNameArrayGet();
+  result.push( resource.name );
+  return result;
 }
 
 // --
@@ -970,6 +996,8 @@ let Composes =
 let Aggregates =
 {
   writable : 1,
+  exportable : 1,
+  importable : 1,
 }
 
 let Associates =
@@ -1078,6 +1106,7 @@ let Proto =
   _refNameGet,
   absoluteNameGet,
   decoratedAbsoluteNameGet,
+  shortNameArrayGet,
 
   // resolver
 

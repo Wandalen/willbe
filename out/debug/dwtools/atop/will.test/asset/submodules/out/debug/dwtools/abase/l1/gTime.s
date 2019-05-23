@@ -89,7 +89,7 @@ function timeReady( onReady )
       if( _.Consequence )
       return _.timeOut( time, onReady ).finally( con );
       else if( onReady )
-      setTimeout( onReady, time );
+      _.timeBegin( time, onReady );
       else _.assert( 0 );
     }
 
@@ -101,7 +101,7 @@ function timeReady( onReady )
     if( _.Consequence )
     return _.timeOut( time, onReady );
     else if( onReady )
-    setTimeout( onReady, time );
+    _.timeBegin( time, onReady );
     else _.assert( 0 );
   }
 
@@ -358,10 +358,12 @@ function timeOut_body( o )
 
   /* */
 
-  if( o.delay > 0 )
-  timer = setTimeout( timeEnd, o.delay );
-  else
-  timeSoon( timeEnd );
+  timer = _.timeBegin( o.delay, timeEnd );
+
+  // if( o.delay > 0 )
+  // timer = _.timeBegin( o.delay, timeEnd );
+  // else
+  // timeSoon( timeEnd );
 
   return con;
 

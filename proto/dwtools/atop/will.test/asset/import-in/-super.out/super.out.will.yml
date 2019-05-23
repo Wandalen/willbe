@@ -46,7 +46,7 @@ path:
       debug: 0
       raw: 1
       export: 1
-  original.willfiles:
+  module.original.willfiles:
     path:
       - super.im.will.yml
       - super.ex.will.yml
@@ -220,7 +220,7 @@ exported:
     exportedDirPath: 'path::exportedDir.export.debug'
     exportedFilesPath: 'path::exportedFiles.export.debug'
     archiveFilePath: 'path::archiveFile.export.debug'
-    originalWillFilesPath: 'path::original.willfiles'
+    originalWillFilesPath: 'path::module.original.willfiles'
   export.:
     version: 0.0.1
     criterion:
@@ -233,4 +233,4 @@ exported:
     exportedDirPath: 'path::exportedDir.export.'
     exportedFilesPath: 'path::exportedFiles.export.'
     archiveFilePath: 'path::archiveFile.export.'
-    originalWillFilesPath: 'path::original.willfiles'
+    originalWillFilesPath: 'path::module.original.willfiles'

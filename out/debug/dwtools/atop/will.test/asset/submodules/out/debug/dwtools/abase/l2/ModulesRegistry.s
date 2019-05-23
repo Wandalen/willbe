@@ -453,6 +453,14 @@ let wStarterMaker =
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.StarterMaker },
 }
 
+// amid / l5
+
+let wBitmask =
+{
+  includeAny : includeAny( 'amid/l5_mapper/Bitmask.s', 'wBitmask' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Bitmask },
+}
+
 // math
 
 let wMathScalar =
@@ -630,6 +638,10 @@ let Extend =
   wIncubator,
   wCollectionOfInstances,
   wStarterMaker,
+
+  // amid / l5
+
+  wBitmask,
 
   // math
 

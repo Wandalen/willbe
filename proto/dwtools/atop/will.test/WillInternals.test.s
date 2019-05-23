@@ -71,7 +71,7 @@ function buildSimple( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
   _.fileProvider.filesDelete( outPath );
 
-  var module = will.moduleMake({ willFilesPath : modulePath });
+  var module = will.moduleMake({ willfilesPath : modulePath });
 
   return module.ready.split().then( () =>
   {
@@ -79,7 +79,7 @@ function buildSimple( test )
     var expected = [];
     var files = self.find( outPath );
 
-    let builds = module.buildsSelect();
+    let builds = module.buildsResolve();
 
     test.identical( builds.length, 1 );
 
@@ -118,8 +118,8 @@ function makeNamed( test )
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
 
-  var module1 = will.moduleMake({ willFilesPath : modulePath });
-  var module2 = will.moduleMake({ willFilesPath : modulePath });
+  var module1 = will.moduleMake({ willfilesPath : modulePath });
+  var module2 = will.moduleMake({ willfilesPath : modulePath });
   // var module2 = will.moduleMake({ dirPath : modulePath });
 
   /* - */
@@ -147,7 +147,6 @@ function makeNamed( test )
 
   module2.ready.thenKeep( ( arg ) =>
   {
-    debugger;
     test.case = 'opened dirPath : ' + assetName;
     check( module2 );
     return null;
@@ -196,6 +195,7 @@ function makeNamed( test )
       'will' : path.join( __dirname, '../will/Exec' ),
       'module.dir' : path.join( routinePath, '.' ),
       'module.willfiles' : path.s.join( routinePath, [ './super.im.will.yml', './super.ex.will.yml' ] ),
+      'module.original.willfiles' : null,
 
     }
 
@@ -209,14 +209,15 @@ function makeNamed( test )
     test.identical( module.currentRemotePath, null );
     test.identical( module.willPath, path.join( __dirname, '../will/Exec' ) );
     test.identical( module.dirPath, path.join( routinePath, '.' ) );
-    test.identical( module.willFilesPath, path.s.join( routinePath, [ './super.im.will.yml', './super.ex.will.yml' ] ) );
+    test.identical( module.commonPath, path.join( routinePath, 'super' ) );
+    test.identical( module.willfilesPath, path.s.join( routinePath, [ './super.im.will.yml', './super.ex.will.yml' ] ) );
 
     test.is( !!module.about );
     test.identical( module.about.name, 'super' );
 
     test.identical( module.pathMap, pathMap );
-    test.identical( module.willFileArray.length, 2 );
-    test.identical( _.mapKeys( module.willFileWithRoleMap ), [ 'import', 'export' ] );
+    test.identical( module.willfilesArray.length, 2 );
+    test.identical( _.mapKeys( module.willfileWithRoleMap ), [ 'import', 'export' ] );
     test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
     test.identical( _.filter( _.mapKeys( module.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug' ] );
 
@@ -245,8 +246,9 @@ function makeAnon( test )
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
 
-  var module1 = will.moduleMake({ willFilesPath : modulePath });
-  var module2 = will.moduleMake({ dirPath : modulePath });
+  var module1 = will.moduleMake({ willfilesPath : modulePath });
+  var module2 = will.moduleMake({ willfilesPath : modulePath + '/' });
+  // var module2 = will.moduleMake({ dirPath : modulePath });
 
   /* - */
 
@@ -321,6 +323,7 @@ function makeAnon( test )
       'will' : path.join( __dirname, '../will/Exec' ),
       'module.dir' : routinePath,
       'module.willfiles' : [ routinePath + '/.im.will.yml', routinePath + '/.ex.will.yml' ],
+      'module.original.willfiles' : null,
 
     }
 
@@ -329,21 +332,20 @@ function makeAnon( test )
     test.identical( module.inPath, routinePath + '/proto' );
     test.identical( module.outPath, routinePath + '/out' );
     test.identical( module.dirPath, routinePath );
-    test.identical( module.willFilesPath, [ routinePath + '/.im.will.yml', routinePath + '/.ex.will.yml' ] );
+    test.identical( module.commonPath, path.join( routinePath, '.' ) + '/' );
+    test.identical( module.willfilesPath, [ routinePath + '/.im.will.yml', routinePath + '/.ex.will.yml' ] );
     test.identical( module.configName, 'makeAnon' );
     test.identical( module.localPath, routinePath );
     test.identical( module.remotePath, null );
     test.identical( module.currentRemotePath, null );
     test.identical( module.willPath, path.join( __dirname, '../will/Exec' ) );
-    test.identical( module.dirPath, path.join( routinePath, '.' ) );
-    test.identical( module.willFilesPath, [ routinePath + '/.im.will.yml', routinePath + '/.ex.will.yml' ] );
 
     test.is( !!module.about );
     test.identical( module.about.name, 'submodule' );
 
     test.identical( module.pathMap, pathMap );
-    test.identical( module.willFileArray.length, 2 );
-    test.identical( _.mapKeys( module.willFileWithRoleMap ), [ 'import', 'export' ] );
+    test.identical( module.willfilesArray.length, 2 );
+    test.identical( _.mapKeys( module.willfileWithRoleMap ), [ 'import', 'export' ] );
     test.identical( _.mapKeys( module.submoduleMap ), [] );
     test.identical( _.filter( _.mapKeys( module.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.proto.', 'reflect.proto.debug' ] );
 
@@ -373,8 +375,8 @@ function makeOutNamed( test )
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
 
-  var module1 = will.moduleMake({ willFilesPath : moduleFilePath });
-  var module2 = will.moduleMake({ willFilesPath : moduleFilePath });
+  var module1 = will.moduleMake({ willfilesPath : moduleFilePath });
+  var module2 = will.moduleMake({ willfilesPath : moduleFilePath });
 
   /* - */
 
@@ -452,7 +454,7 @@ function makeOutNamed( test )
       'will' : path.join( __dirname, '../will/Exec' ),
       'module.dir' : routinePath + '/super.out',
       'module.willfiles' : routinePath + '/super.out/super.out.will.yml',
-      'original.willfiles' : [ 'super.im.will.yml', 'super.ex.will.yml' ],
+      'module.original.willfiles' : _.path.s.join( routinePath, [ 'super.im.will.yml', 'super.ex.will.yml' ] ),
 
     }
 
@@ -462,15 +464,16 @@ function makeOutNamed( test )
     test.identical( module.outPath, routinePath + '/super.out' );
     test.identical( module.dirPath, routinePath + '/super.out' );
     test.identical( module.localPath, routinePath + '/super.out' );
-    test.identical( module.willFilesPath, routinePath + '/super.out/super.out.will.yml' );
+    test.identical( module.willfilesPath, routinePath + '/super.out/super.out.will.yml' );
+    test.identical( module.commonPath, path.join( routinePath, 'super.out/super.out' ) );
     test.identical( module.configName, 'super.out' );
 
     test.is( !!module.about );
     test.identical( module.about.name, 'super' );
 
     test.identical( module.pathMap, pathMap );
-    test.identical( module.willFileArray.length, 1 );
-    test.identical( _.mapKeys( module.willFileWithRoleMap ), [ 'single' ] );
+    test.identical( module.willfilesArray.length, 1 );
+    test.identical( _.mapKeys( module.willfileWithRoleMap ), [ 'single' ] );
     test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
     test.identical( _.filter( _.mapKeys( module.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.', 'exportedFiles.export.', 'exported.export.debug', 'exportedFiles.export.debug' ] );
 
@@ -529,7 +532,7 @@ function clone( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
   _.fileProvider.filesDelete( outPath );
 
-  var module = will.moduleMake({ willFilesPath : modulePath });
+  var module = will.moduleMake({ willfilesPath : modulePath });
   var module2;
 
   /* - */
@@ -552,11 +555,11 @@ function clone( test )
     test.is( module.pathMap !== module2.pathMap );
     test.identical( module.pathMap, module2.pathMap );
 
-    test.is( module.willFileArray !== module2.willFileArray );
-    test.identical( module2.willFileArray, [] );
+    test.is( module.willfilesArray !== module2.willfilesArray );
+    test.identical( module2.willfilesArray, [] );
 
-    test.is( module.willFileWithRoleMap !== module2.willFileWithRoleMap );
-    test.identical( module2.willFileWithRoleMap, {} );
+    test.is( module.willfileWithRoleMap !== module2.willfileWithRoleMap );
+    test.identical( module2.willfileWithRoleMap, {} );
 
     checkMap( 'submoduleMap' );
     checkMap( 'pathResourceMap' );
@@ -578,7 +581,6 @@ function clone( test )
 
   module.ready.finallyKeep( ( err, arg ) =>
   {
-    debugger;
     test.is( err === undefined );
     module.finit();
 
@@ -590,6 +592,242 @@ function clone( test )
 }
 
 clone.timeOut = 130000;
+
+//
+
+function reflectorResolve( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'composite-reflector' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulePath = _.path.join( routinePath, '.' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let outPath = _.path.join( routinePath, 'out' );
+  let will = new _.Will;
+  let path = _.fileProvider.path;
+
+  function pin( filePath )
+  {
+    return path.s.join( routinePath, filePath );
+  }
+
+  function pout( filePath )
+  {
+    return path.s.join( routinePath, 'super.out', filePath );
+  }
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( outPath );
+
+  var module = will.moduleMake({ willfilesPath : modulePath });
+
+  /* - */
+
+  module.ready.thenKeep( ( arg ) =>
+  {
+
+    debugger;
+    test.case = 'reflector::reflect.proto.0.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.0.debug' )
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'maskAll' : { 'excludeAny' : true },
+        'prefixPath' : 'proto'
+      },
+      'dst' : { 'prefixPath' : 'out/debug' },
+      'criterion' : { 'debug' : 1, 'variant' : 0 },
+      'inherit' : [ 'predefined.*' ],
+      'mandatory' : 1
+    }
+    debugger;
+    resolved.form();
+    var resolvedData = resolved.dataExport();
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+    debugger;
+
+    test.case = 'reflector::reflect.proto.1.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.1.debug' )
+    resolved.form();
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'maskAll' : { 'excludeAny' : true },
+        'prefixPath' : 'proto'
+      },
+      'dst' : { 'prefixPath' : 'out/debug' },
+      'criterion' : { 'debug' : 1, 'variant' : 1 },
+      'inherit' : [ 'predefined.*' ],
+      'mandatory' : 1,
+    }
+    var resolvedData = resolved.dataExport();
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.proto.2.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.2.debug' );
+    resolved.form();
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'maskAll' : { 'excludeAny' : true },
+        'prefixPath' : 'proto'
+      },
+      'dst' : { 'prefixPath' : 'out/debug' },
+      'criterion' : { 'debug' : 1, 'variant' : 2 },
+      'inherit' : [ 'predefined.*' ],
+      'mandatory' : 1,
+    }
+    var resolvedData = resolved.dataExport();
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.proto.3.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.3.debug' );
+    resolved.form();
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'maskAll' : { 'excludeAny' : true },
+        'prefixPath' : 'proto'
+      },
+      'dst' : { 'prefixPath' : 'out/debug' },
+      'criterion' : { 'debug' : 1, 'variant' : 3 },
+      'inherit' : [ 'predefined.*' ],
+      'mandatory' : 1,
+    }
+    var resolvedData = resolved.dataExport();
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.proto.4.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.4.debug' );
+    resolved.form();
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'maskAll' : { 'excludeAny' : true },
+        'prefixPath' : 'proto/dir2',
+      },
+      'dst' : { 'prefixPath' : 'out/debug/dir1' },
+      'criterion' : { 'debug' : 1, 'variant' : 4 },
+      'inherit' : [ 'predefined.*' ],
+      'mandatory' : 1,
+    }
+    var resolvedData = resolved.dataExport();
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+    test.identical( resolved.src.prefixPath, pin( 'proto/dir2' ) );
+    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1' ) );
+
+    test.case = 'reflector::reflect.proto.5.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.5.debug' );
+    resolved.form();
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'maskAll' : { 'excludeAny' : true },
+        'prefixPath' : 'proto/dir2',
+      },
+      'dst' : { 'prefixPath' : 'out/debug/dir1' },
+      'criterion' : { 'debug' : 1, 'variant' : 5 },
+      'inherit' : [ 'predefined.*' ],
+      'mandatory' : 1
+    }
+    var resolvedData = resolved.dataExport();
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+    test.identical( resolved.src.prefixPath, pin( 'proto/dir2' ) );
+    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1' ) );
+
+    test.case = 'reflector::reflect.proto.6.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.6.debug' );
+    resolved.form();
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'prefixPath' : 'proto/dir2/File.test.js',
+      },
+      'dst' : { 'prefixPath' : 'out/debug/dir1/File.test.js' },
+      'criterion' : { 'debug' : 1, 'variant' : 6 },
+      'mandatory' : 1
+    }
+    var resolvedData = resolved.dataExport();
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+    test.identical( resolved.src.prefixPath, pin( 'proto/dir2/File.test.js' ) );
+    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1/File.test.js' ) );
+
+    test.case = 'reflector::reflect.proto.7.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.7.debug' );
+    resolved.form();
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'prefixPath' : 'proto/dir2/File.test.js',
+      },
+      'dst' : { 'prefixPath' : 'out/debug/dir1/File.test.js' },
+      'criterion' : { 'debug' : 1, 'variant' : 7 },
+      'mandatory' : 1,
+    }
+    var resolvedData = resolved.dataExport();
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+    test.identical( resolved.src.prefixPath, pin( 'proto/dir2/File.test.js' ) );
+    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1/File.test.js' ) );
+
+    return null;
+  });
+
+  /* - */
+
+  module.ready.finallyKeep( ( err, arg ) =>
+  {
+    debugger;
+    test.is( err === undefined );
+    module.finit();
+
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  return module.ready.split();
+}
 
 //
 
@@ -609,7 +847,7 @@ function superResolve( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
   _.fileProvider.filesDelete( outPath );
 
-  var module = will.moduleMake({ willFilesPath : modulePath });
+  var module = will.moduleMake({ willfilesPath : modulePath });
 
   /* - */
 
@@ -627,7 +865,7 @@ function superResolve( test )
       pathUnwrapping : 0,
       missingAction : 'undefine',
     });
-    test.identical( resolved.length, 14 );
+    test.identical( resolved.length, 15 );
 
     test.case = '*::*a*/nickName';
     var resolved = module.resolve
@@ -638,7 +876,7 @@ function superResolve( test )
       mapValsUnwrapping : 1,
       missingAction : 'undefine',
     });
-    test.identical( resolved, [ 'path::local', 'path::out.release', 'reflector::predefined.release.v1', 'reflector::predefined.release.v2', 'step::timelapse.begin', 'step::timelapse.end', 'step::files.transpile', 'step::npm.generate', 'step::submodules.download', 'step::submodules.update', 'step::submodules.reload', 'step::submodules.clean', 'step::clean', 'build::release' ] );
+    test.identical( resolved, [ 'path::module.original.willfiles', 'path::local', 'path::out.release', 'reflector::predefined.release.v1', 'reflector::predefined.release.v2', 'step::timelapse.begin', 'step::timelapse.end', 'step::files.transpile', 'step::npm.generate', 'step::submodules.download', 'step::submodules.update', 'step::submodules.reload', 'step::submodules.clean', 'step::clean', 'build::release' ] );
 
     test.case = '*';
     var resolved = module.resolve
@@ -657,7 +895,7 @@ function superResolve( test )
       mapValsUnwrapping : 1,
       pathResolving : 0,
     });
-    test.identical( resolved.length, 43 );
+    test.identical( resolved.length, 45 );
 
     test.case = '* + defaultResourceName';
     var resolved = module.resolve
@@ -669,7 +907,7 @@ function superResolve( test )
       mapValsUnwrapping : 1,
       pathResolving : 0,
     });
-    test.identical( resolved.length, 12 );
+    test.identical( resolved.length, 13 );
 
     return null;
   })
@@ -708,7 +946,7 @@ function buildsResolve( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
   _.fileProvider.filesDelete( outPath );
 
-  var module = will.moduleMake({ willFilesPath : modulePath });
+  var module = will.moduleMake({ willfilesPath : modulePath });
 
   /* - */
 
@@ -848,7 +1086,7 @@ function pathsResolve( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
   _.fileProvider.filesDelete( outPath );
 
-  var module = will.moduleMake({ willFilesPath : modulePath });
+  var module = will.moduleMake({ willfilesPath : modulePath });
 
   /* - */
 
@@ -1190,7 +1428,7 @@ function pathsResolveImportIn( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
   _.fileProvider.filesDelete( outPath );
 
-  var module = will.moduleMake({ willFilesPath : modulePath });
+  var module = will.moduleMake({ willfilesPath : modulePath });
 
   module.ready.thenKeep( ( arg ) =>
   {
@@ -1922,7 +2160,7 @@ function pathsResolveOutFileOfExports( test )
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
 
-  var module = will.moduleMake({ willFilesPath : modulePath });
+  var module = will.moduleMake({ willfilesPath : modulePath });
 
   module.ready.thenKeep( ( arg ) =>
   {
@@ -2673,7 +2911,6 @@ function pathsResolveOutFileOfExports( test )
   module.ready.finallyKeep( ( err, arg ) =>
   {
 
-    debugger;
     test.is( err === undefined );
     module.finit();
 
@@ -2712,7 +2949,7 @@ function pathsResolveComposite( test )
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
 
-  var module = will.moduleMake({ willFilesPath : modulePath });
+  var module = will.moduleMake({ willfilesPath : modulePath });
 
   module.ready.thenKeep( ( arg ) =>
   {
@@ -2789,7 +3026,7 @@ function pathsResolveArray( test )
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
 
-  var module = will.moduleMake({ willFilesPath : modulePath });
+  var module = will.moduleMake({ willfilesPath : modulePath });
 
   /* - */
 
@@ -2849,13 +3086,13 @@ function pathsResolveOfSubmodules( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
   _.fileProvider.filesDelete( outPath );
 
-  var module = will.moduleMake({ willFilesPath : routinePath });
+  var module = will.moduleMake({ willfilesPath : routinePath });
 
   /* - */
 
   module.ready.thenKeep( ( arg ) =>
   {
-    let builds = module.buildsSelect({ name : 'debug.raw' });
+    let builds = module.buildsResolve({ name : 'debug.raw' });
     test.identical( builds.length, 1 );
 
     let build = builds[ 0 ];
@@ -2867,7 +3104,6 @@ function pathsResolveOfSubmodules( test )
 
   module.ready.thenKeep( ( arg ) =>
   {
-    debugger;
 
     test.case = 'resolve submodules';
     var submodules = module.submodulesResolve({ selector : '*' });
@@ -2879,8 +3115,8 @@ function pathsResolveOfSubmodules( test )
     var expected = path.join( submodulesPath, 'Tools' );
     test.identical( resolved, expected );
 
-    test.case = 'path::in, wTools, through loadedModule';
-    var submodule = submodules[ 0 ].loadedModule;
+    test.case = 'path::in, wTools, through openedModule';
+    var submodule = submodules[ 0 ].openedModule;
     var resolved = submodule.resolve( 'path::in' );
     var expected = path.join( submodulesPath, 'Tools' );
     test.identical( resolved, expected );
@@ -2891,8 +3127,8 @@ function pathsResolveOfSubmodules( test )
     var expected = path.join( submodulesPath, 'Tools/out' );
     test.identical( resolved, expected );
 
-    test.case = 'path::out, wTools, through loadedModule';
-    var submodule = submodules[ 0 ].loadedModule;
+    test.case = 'path::out, wTools, through openedModule';
+    var submodule = submodules[ 0 ].openedModule;
     var resolved = submodule.resolve( 'path::out' );
     var expected = path.join( submodulesPath, 'Tools/out' );
     test.identical( resolved, expected );
@@ -2902,256 +3138,28 @@ function pathsResolveOfSubmodules( test )
 
   /* - */
 
-  module.ready.finallyKeep( ( err, arg ) =>
+  return module.ready.finallyKeep( ( err, arg ) =>
   {
 
-    debugger;
     test.is( err === undefined );
     module.finit();
 
     if( err )
     throw err;
     return arg;
-  });
 
-  return module.ready.split();
-}
-
-pathsResolveOfSubmodules.timeOut = 130000;
-
-//
-
-function reflectorResolve( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'composite-reflector' );
-  let routinePath = _.path.join( self.tempDir, test.name );
-  let modulePath = _.path.join( routinePath, '.' );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let outPath = _.path.join( routinePath, 'out' );
-  let will = new _.Will;
-  let path = _.fileProvider.path;
-
-  function pin( filePath )
+  }).split().finally( ( err, arg ) =>
   {
-    return path.s.join( routinePath, filePath );
-  }
-
-  function pout( filePath )
-  {
-    return path.s.join( routinePath, 'super.out', filePath );
-  }
-
-  _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-  _.fileProvider.filesDelete( outPath );
-
-  var module = will.moduleMake({ willFilesPath : modulePath });
-
-  /* - */
-
-  module.ready.thenKeep( ( arg ) =>
-  {
-
-    test.case = 'reflector::reflect.proto.0.debug';
-    var resolved = module.resolve( 'reflector::reflect.proto.0.debug' )
-    var expected =
-    {
-      'src' :
-      {
-        'filePath' : { '.' : '.' },
-        'maskAll' : { 'excludeAny' : true },
-        'prefixPath' : 'proto'
-      },
-      'dst' : { 'prefixPath' : 'out/debug' },
-      'criterion' : { 'debug' : 1, 'variant' : 0 },
-      'inherit' : [ 'predefined.*' ],
-      'mandatory' : 1
-    }
-    resolved.form();
-    var resolvedData = resolved.dataExport();
-    if( resolvedData.src && resolvedData.src.maskAll )
-    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
-    test.identical( resolved.formed, 3 );
-    test.identical( resolvedData, expected );
-
-    test.case = 'reflector::reflect.proto.1.debug';
-    var resolved = module.resolve( 'reflector::reflect.proto.1.debug' )
-    resolved.form();
-    var expected =
-    {
-      'src' :
-      {
-        'filePath' : { '.' : '.' },
-        'maskAll' : { 'excludeAny' : true },
-        'prefixPath' : 'proto'
-      },
-      'dst' : { 'prefixPath' : 'out/debug' },
-      'criterion' : { 'debug' : 1, 'variant' : 1 },
-      'inherit' : [ 'predefined.*' ],
-      'mandatory' : 1,
-    }
-    var resolvedData = resolved.dataExport();
-    if( resolvedData.src && resolvedData.src.maskAll )
-    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
-    test.identical( resolved.formed, 3 );
-    test.identical( resolvedData, expected );
-
-    test.case = 'reflector::reflect.proto.2.debug';
-    var resolved = module.resolve( 'reflector::reflect.proto.2.debug' );
-    resolved.form();
-    var expected =
-    {
-      'src' :
-      {
-        'filePath' : { '.' : '.' },
-        'maskAll' : { 'excludeAny' : true },
-        'prefixPath' : 'proto'
-      },
-      'dst' : { 'prefixPath' : 'out/debug' },
-      'criterion' : { 'debug' : 1, 'variant' : 2 },
-      'inherit' : [ 'predefined.*' ],
-      'mandatory' : 1,
-    }
-    var resolvedData = resolved.dataExport();
-    if( resolvedData.src && resolvedData.src.maskAll )
-    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
-    test.identical( resolved.formed, 3 );
-    test.identical( resolvedData, expected );
-
-    test.case = 'reflector::reflect.proto.3.debug';
-    var resolved = module.resolve( 'reflector::reflect.proto.3.debug' );
-    resolved.form();
-    var expected =
-    {
-      'src' :
-      {
-        'filePath' : { '.' : '.' },
-        'maskAll' : { 'excludeAny' : true },
-        'prefixPath' : 'proto'
-      },
-      'dst' : { 'prefixPath' : 'out/debug' },
-      'criterion' : { 'debug' : 1, 'variant' : 3 },
-      'inherit' : [ 'predefined.*' ],
-      'mandatory' : 1,
-    }
-    var resolvedData = resolved.dataExport();
-    if( resolvedData.src && resolvedData.src.maskAll )
-    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
-    test.identical( resolved.formed, 3 );
-    test.identical( resolvedData, expected );
-
-    test.case = 'reflector::reflect.proto.4.debug';
-    var resolved = module.resolve( 'reflector::reflect.proto.4.debug' );
-    resolved.form();
-    var expected =
-    {
-      'src' :
-      {
-        'filePath' : { '.' : '.' },
-        'maskAll' : { 'excludeAny' : true },
-        'prefixPath' : 'proto/dir2',
-      },
-      'dst' : { 'prefixPath' : 'out/debug/dir1' },
-      'criterion' : { 'debug' : 1, 'variant' : 4 },
-      'inherit' : [ 'predefined.*' ],
-      'mandatory' : 1,
-    }
-    var resolvedData = resolved.dataExport();
-    if( resolvedData.src && resolvedData.src.maskAll )
-    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
-    test.identical( resolved.formed, 3 );
-    test.identical( resolvedData, expected );
-    test.identical( resolved.src.prefixPath, pin( 'proto/dir2' ) );
-    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1' ) );
-
-    test.case = 'reflector::reflect.proto.5.debug';
-    var resolved = module.resolve( 'reflector::reflect.proto.5.debug' );
-    resolved.form();
-    var expected =
-    {
-      'src' :
-      {
-        'filePath' : { '.' : '.' },
-        'maskAll' : { 'excludeAny' : true },
-        'prefixPath' : 'proto/dir2',
-      },
-      'dst' : { 'prefixPath' : 'out/debug/dir1' },
-      'criterion' : { 'debug' : 1, 'variant' : 5 },
-      'inherit' : [ 'predefined.*' ],
-      'mandatory' : 1
-    }
-    var resolvedData = resolved.dataExport();
-    if( resolvedData.src && resolvedData.src.maskAll )
-    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
-    test.identical( resolved.formed, 3 );
-    test.identical( resolvedData, expected );
-    test.identical( resolved.src.prefixPath, pin( 'proto/dir2' ) );
-    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1' ) );
-
-    test.case = 'reflector::reflect.proto.6.debug';
-    var resolved = module.resolve( 'reflector::reflect.proto.6.debug' );
-    resolved.form();
-    var expected =
-    {
-      'src' :
-      {
-        'filePath' : { '.' : '.' },
-        'prefixPath' : 'proto/dir2/File.test.js',
-      },
-      'dst' : { 'prefixPath' : 'out/debug/dir1/File.test.js' },
-      'criterion' : { 'debug' : 1, 'variant' : 6 },
-      'mandatory' : 1
-    }
-    var resolvedData = resolved.dataExport();
-    if( resolvedData.src && resolvedData.src.maskAll )
-    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
-    test.identical( resolved.formed, 3 );
-    test.identical( resolvedData, expected );
-    test.identical( resolved.src.prefixPath, pin( 'proto/dir2/File.test.js' ) );
-    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1/File.test.js' ) );
-
-    test.case = 'reflector::reflect.proto.7.debug';
-    var resolved = module.resolve( 'reflector::reflect.proto.7.debug' );
-    resolved.form();
-    var expected =
-    {
-      'src' :
-      {
-        'filePath' : { '.' : '.' },
-        'prefixPath' : 'proto/dir2/File.test.js',
-      },
-      'dst' : { 'prefixPath' : 'out/debug/dir1/File.test.js' },
-      'criterion' : { 'debug' : 1, 'variant' : 7 },
-      'mandatory' : 1,
-    }
-    var resolvedData = resolved.dataExport();
-    if( resolvedData.src && resolvedData.src.maskAll )
-    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
-    test.identical( resolved.formed, 3 );
-    test.identical( resolvedData, expected );
-    test.identical( resolved.src.prefixPath, pin( 'proto/dir2/File.test.js' ) );
-    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1/File.test.js' ) );
-
+    if( err && err.finited )
+    return null;
+    if( err )
+    throw err;
     return null;
   });
 
-  /* - */
-
-  module.ready.finallyKeep( ( err, arg ) =>
-  {
-
-    debugger;
-    test.is( err === undefined );
-    module.finit();
-
-    if( err )
-    throw err;
-    return arg;
-  });
-
-  return module.ready.split();
 }
+
+pathsResolveOfSubmodules.timeOut = 500000;
 
 //
 
@@ -3170,7 +3178,8 @@ function submodulesResolve( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
   _.fileProvider.filesDelete( outPath );
 
-  var module = will.moduleMake({ dirPath : modulePath });
+  // var module = will.moduleMake({ dirPath : modulePath });
+  var module = will.moduleMake({ willfilesPath : modulePath });
 
   /* */
 
@@ -3183,14 +3192,15 @@ function submodulesResolve( test )
     var submodule = module.submodulesResolve({ selector : 'Tools' });
     test.is( submodule instanceof will.Submodule );
     test.is( !submodule.isDownloaded );
-    test.is( !!submodule.loadedModule );
+    test.is( !!submodule.openedModule );
     test.identical( submodule.name, 'Tools' );
-    test.identical( submodule.loadedModule.resourcesFormed, 0 );
-    test.identical( submodule.loadedModule.willFilesPath, _.path.s.join( routinePath, '.module/Tools/out/wTools' ) );
-    test.identical( submodule.loadedModule.dirPath, null );
-    test.is( _.strEnds( submodule.loadedModule.localPath, '.module/Tools' ) );
-    test.is( _.strEnds( submodule.loadedModule.remotePath, 'git+https:///github.com/Wandalen/wTools.git/out/wTools#master' ) );
-    test.identical( submodule.loadedModule.currentRemotePath, null );
+    test.identical( submodule.openedModule.resourcesFormed, 25 );
+    test.identical( submodule.openedModule.submodulesFormed, 24 );
+    test.identical( submodule.openedModule.willfilesPath, _.path.s.join( routinePath, '.module/Tools/out/wTools' ) );
+    test.identical( submodule.openedModule.dirPath, _.path.s.join( routinePath, '.module/Tools/out' ) );
+    test.is( _.strEnds( submodule.openedModule.localPath, '.module/Tools' ) );
+    test.is( _.strEnds( submodule.openedModule.remotePath, 'git+https:///github.com/Wandalen/wTools.git/out/wTools#master' ) );
+    test.identical( submodule.openedModule.currentRemotePath, null );
 
     test.close( 'not downloaded' );
     return null;
@@ -3211,15 +3221,15 @@ function submodulesResolve( test )
     var submodule = module.submodulesResolve({ selector : 'Tools' });
     test.is( submodule instanceof will.Submodule );
     test.is( submodule.isDownloaded );
-    test.is( !!submodule.loadedModule );
+    test.is( !!submodule.openedModule );
     test.identical( submodule.name, 'Tools' );
-    test.identical( submodule.loadedModule.resourcesFormed, 0 );
-    test.identical( submodule.loadedModule.submodulesFormed, 0 );
-    test.identical( submodule.loadedModule.willFilesPath, _.path.s.join( routinePath, '.module/Tools/out/wTools.out.will.yml' ) );
-    test.is( _.strEnds( submodule.loadedModule.dirPath, '.module/Tools/out' ) );
-    test.is( _.strEnds( submodule.loadedModule.localPath, '.module/Tools' ) );
-    test.is( _.strEnds( submodule.loadedModule.remotePath, 'git+https:///github.com/Wandalen/wTools.git/out/wTools#master' ) );
-    test.is( _.strEnds( submodule.loadedModule.currentRemotePath, 'git+https:///github.com/Wandalen/wTools.git/out/wTools#master' ) );
+    test.identical( submodule.openedModule.resourcesFormed, 9 );
+    test.identical( submodule.openedModule.submodulesFormed, 9 );
+    test.identical( submodule.openedModule.willfilesPath, _.path.s.join( routinePath, '.module/Tools/out/wTools.out.will.yml' ) );
+    test.is( _.strEnds( submodule.openedModule.dirPath, '.module/Tools/out' ) );
+    test.is( _.strEnds( submodule.openedModule.localPath, '.module/Tools' ) );
+    test.is( _.strEnds( submodule.openedModule.remotePath, 'git+https:///github.com/Wandalen/wTools.git/out/wTools#master' ) );
+    test.is( _.strEnds( submodule.openedModule.currentRemotePath, 'git+https:///github.com/Wandalen/wTools.git/out/wTools#master' ) );
 
     test.case = 'mask, single module';
     var submodule = module.submodulesResolve({ selector : 'T*' });
@@ -3240,7 +3250,7 @@ function submodulesResolve( test )
 
 }
 
-submodulesResolve.timeOut = 300000;
+submodulesResolve.timeOut = 500000;
 
 //
 
@@ -3259,7 +3269,7 @@ function submodulesDeleteAndDownload( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
   _.fileProvider.filesDelete( outPath );
 
-  var module = will.moduleMake({ willFilesPath : modulePath });
+  var module = will.moduleMake({ willfilesPath : modulePath });
 
   /* */
 
@@ -3267,7 +3277,7 @@ function submodulesDeleteAndDownload( test )
   .then( () =>
   {
 
-    let builds = module.buildsSelect({ name : 'build' });
+    let builds = module.buildsResolve({ name : 'build' });
     test.identical( builds.length, 1 );
 
     let build = builds[ 0 ];
@@ -3308,7 +3318,7 @@ function submodulesDeleteAndDownload( test )
 
 }
 
-submodulesDeleteAndDownload.timeOut = 300000;
+submodulesDeleteAndDownload.timeOut = 500000;
 
 // --
 // define class
@@ -3339,6 +3349,8 @@ var Self =
     makeOutNamed,
     clone,
 
+    reflectorResolve,
+
     superResolve,
     buildsResolve,
     pathsResolve,
@@ -3347,8 +3359,6 @@ var Self =
     pathsResolveComposite,
     pathsResolveArray,
     pathsResolveOfSubmodules,
-
-    reflectorResolve,
 
     submodulesResolve,
     submodulesDeleteAndDownload,

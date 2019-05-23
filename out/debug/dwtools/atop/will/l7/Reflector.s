@@ -24,6 +24,15 @@ Self.shortName = 'Reflector';
 // inter
 // --
 
+function OptionsFrom( o )
+{
+  let result = Parent.prototype.OptionsFrom.apply( this, arguments );
+  delete result.step;
+  return result;
+}
+
+//
+
 function init( o )
 {
   let reflector = this;
@@ -108,9 +117,6 @@ function form1()
     reflector.dst._formAssociations();
   }
 
-  // if( reflector.nickName === "reflector::reflect.proto.2.debug" )
-  // debugger;
-
   /* end */
 
   Parent.prototype.form1.call( reflector );
@@ -135,7 +141,7 @@ function form2()
 
   _.assert( reflector.formed === 1 );
 
-  // if( reflector.nickName === "reflector::reflect.submodules.variant2" )
+  // if( reflector.nickName === "reflector::reflect.proto.0.debug" )
   // debugger;
 
   reflector.src.pairWithDst( reflector.dst );
@@ -164,7 +170,7 @@ function form3()
 
   /* begin */
 
-  // if( reflector.nickName === "reflector::files.all" )
+  // if( reflector.nickName === "reflector::reflect.proto.0.debug" )
   // debugger;
 
   reflector.pathsResolve();
@@ -185,7 +191,7 @@ function form3()
   _.assert( reflector.src.prefixPath === null || path.isAbsolute( reflector.src.prefixPath ) );
   _.assert( reflector.dst.prefixPath === null || path.isAbsolute( reflector.dst.prefixPath ) );
 
-  // if( reflector.nickName === "reflector::reflect.proto.4.debug" )
+  // if( reflector.nickName === "reflector::reflect.proto.0.debug" )
   // debugger;
 
   /* end */
@@ -206,9 +212,6 @@ function _inheritMultiple( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  // if( reflector.nickName === "reflector::reflect.submodules.variant2" )
-  // debugger;
-
   _.assert( arguments.length === 1 );
   _.assert( reflector.formed === 1 );
   _.assert( _.arrayIs( reflector.inherit ) );
@@ -217,28 +220,22 @@ function _inheritMultiple( o )
 
   reflector._accumulator = new will.Reflector({ module : module, original : reflector, name : reflector.name });
 
+  // if( reflector.nickName === "reflector::reflect.proto.0.debug" )
+  // debugger;
+
   Parent.prototype._inheritMultiple.call( reflector, o );
 
   reflector.src.pairWithDst( reflector.dst );
 
-  // if( reflector.nickName === "path::export" )
+  // if( reflector.nickName === "reflector::reflect.proto.0.debug" )
   // debugger;
 
   if( reflector.filePath )
   reflector._reflectMapForm({ visited : o.visited });
 
-  // if( reflector.nickName === "reflector::reflect.submodules.variant2" )
-  // debugger;
-
   reflector.pathsResolve();
 
-  // if( reflector.nickName === "reflector::reflect.submodules.variant2" )
-  // debugger;
-
   reflector.src.pairRefineLight();
-
-  // if( reflector.nickName === "reflector::files.all" )
-  // debugger;
 
   reflector.src.and( reflector._accumulator.src ).pathsInherit( reflector._accumulator.src );
   if( reflector.src.filePath !== reflector.dst.filePath )
@@ -248,11 +245,8 @@ function _inheritMultiple( o )
   if( reflector.src.filePath !== reflector.dst.filePath )
   reflector.src.pairRefineLight();
 
-  // if( reflector.filePath )
-  // reflector._reflectMapForm({ visited : o.visited });
-
-  if( reflector.nickName === "reflector::reflect.submodules.variant2" )
-  debugger;
+  // if( reflector.nickName === "reflector::reflect.submodules" )
+  // debugger;
 
   return reflector;
 }
@@ -317,7 +311,7 @@ function _inheritSingle( o )
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
 
-  // if( reflector.nickName === "reflector::reflect.submodules" )
+  // if( reflector.nickName === "reflector::reflect.proto.0.debug" )
   // debugger;
 
   reflector2 = reflector2.cloneDerivative();
@@ -353,6 +347,9 @@ function _inheritSingle( o )
   else
   {
 
+    // if( reflector.nickName === "reflector::reflect.proto.0.debug" )
+    // debugger;
+
     reflector._accumulator.src.pairRefineLight();
 
     reflector._accumulator.src.and( reflector2.src ).pathsExtend2( reflector2.src );
@@ -364,6 +361,9 @@ function _inheritSingle( o )
 
     if( reflector._accumulator.src.filePath !== reflector._accumulator.dst.filePath )
     reflector._accumulator.src.pairRefineLight();
+
+    // if( reflector.nickName === "reflector::reflect.proto.0.debug" )
+    // debugger;
 
   }
 
@@ -817,21 +817,20 @@ optionsForReflectExport.defaults =
   resolving : 0,
 }
 
+// //
 //
-
-function infoExport()
-{
-  let reflector = this;
-  let result = '';
-  let fields = reflector.dataExport();
-
-  // _.assert( reflector.formed > 0 );
-
-  result += _.color.strFormat( reflector.nickName, 'entity' );
-  result += '\n' + _.toStr( fields, { wrap : 0, levels : 4, multiline : 1 } );
-
-  return result;
-}
+// function infoExport()
+// {
+//   let reflector = this;
+//   let result = '';
+//   let fields = reflector.dataExport();
+//
+//   // _.assert( reflector.formed > 0 );
+//   result += _.color.strFormat( reflector.nickName, 'entity' );
+//   result += '\n' + _.toStr( fields, { wrap : 0, levels : 4, multiline : 1 } );
+//
+//   return result;
+// }
 
 //
 
@@ -937,6 +936,7 @@ let Statics =
 {
   KindName : 'reflector',
   MapName : 'reflectorMap',
+  OptionsFrom : OptionsFrom,
 }
 
 let Forbids =
@@ -967,6 +967,7 @@ let Extend =
 
   // inter
 
+  OptionsFrom,
   init,
   cloneDerivative,
   form1,
@@ -990,7 +991,7 @@ let Extend =
   optionsForFindExport,
   optionsForFindGroupExport,
   optionsForReflectExport,
-  infoExport,
+  // infoExport,
   dataExport,
 
   // accessor

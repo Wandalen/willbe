@@ -104,7 +104,7 @@ function stepRoutineReflect( frame )
   let result;
   try
   {
-    debugger;
+    // debugger;
     result = will.Predefined.filesReflect.call( fileProvider, opts );
   }
   catch( err )
@@ -363,6 +363,7 @@ function stepRoutineTranspile( frame )
   if( debug )
   transpilingStrategies = [ 'Nop' ];
 
+  // debugger;
   let ts = new _.TranspilationStrategy({ logger : logger }).form();
   let multiple = ts.multiple
   ({

@@ -37,22 +37,6 @@ reflector :
 
 step :
 
-  # reflect.proto :
-  #   inherit : predefined.reflect
-  #   reflector :
-  #     reflector::reflect.proto.*=1
-  #   criterion :
-  #     debug : [ 0,1 ]
-  #     raw : [ 0,1 ]
-
-  # reflect.submodules :
-  #   inherit : predefined.reflect
-  #   reflector :
-  #     reflector::reflect.submodules*=1
-  #   criterion :
-  #     debug : 1
-  #     raw : [ 0,1 ]
-
   delete.out.debug :
     inherit : predefined.delete
     filePath : path::out.debug
@@ -67,12 +51,10 @@ build :
       debug : 1
       raw : 1
     steps :
-      # - graph.begin
       - submodules.download
       - delete.out.debug
       - reflect.proto.*=1
       - reflect.submodules*=1
-      # - graph.end
 
   debug.compiled :
     criterion :

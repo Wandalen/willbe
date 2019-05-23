@@ -1033,26 +1033,32 @@ function pathMapPairSrcAndDst( srcFilePath, dstFilePath )
     let dstPath1 = path.pathMapDstFromSrc( srcFilePath );
     let dstPath2 = path.pathMapDstFromDst( dstFilePath );
 
-    if( _.arraySetIdentical( srcPath1, [ '.' ] ) )
+    let dstPath = dstPath1.slice();
+    _.arrayAppendOnce( dstPath, dstPath2 );
+    if( dstPath.length > 1 )
+    _.arrayRemoveAll( dstPath, null );
+
+    if( _.arraySetIdentical( srcPath1, [ '.' ] ) && srcPath2.length )
     {
-      // debugger;
-      srcFilePath = path.pathMapExtend( null, srcPath2, dstPath1 );
+      // srcFilePath = path.pathMapExtend( null, srcPath2, dstPath1 );
+      srcFilePath = path.pathMapExtend( null, srcPath2, dstPath );
     }
-    else if( _.arraySetIdentical( srcPath2, [ '.' ] ) )
+    else if( _.arraySetIdentical( srcPath2, [ '.' ] ) && srcPath1.length )
     {
-      // debugger;
-      dstFilePath = path.pathMapExtend( null, srcPath1, dstPath2 );
+      // dstFilePath = path.pathMapExtend( null, srcPath1, dstPath2 );
+      dstFilePath = path.pathMapExtend( null, srcPath1, dstPath );
     }
 
-    if( _.arraySetIdentical( dstPath1, [ '.' ] ) )
+    if( _.arraySetIdentical( dstPath1, [ '.' ] ) && srcPath1.length )
     {
-      // debugger;
-      srcFilePath = path.pathMapExtend( null, srcPath1, dstPath2 );
+      // srcFilePath = path.pathMapExtend( null, srcPath1, dstPath2 );
+      srcFilePath = path.pathMapExtend( null, srcPath1, dstPath );
     }
-    else if( _.arraySetIdentical( dstPath2, [ '.' ] ) )
+    else if( _.arraySetIdentical( dstPath2, [ '.' ] ) && srcPath2.length )
     {
       debugger;
-      dstFilePath = path.pathMapExtend( null, srcPath2, dstPath1 ); yyy
+      // dstFilePath = path.pathMapExtend( null, srcPath2, dstPath1 );
+      dstFilePath = path.pathMapExtend( null, srcPath2, dstPath );
     }
 
     if( _.mapIs( dstFilePath ) )

@@ -32,6 +32,41 @@ function OptionsFrom( o )
 
 //
 
+function OnInstanceExists( instance, options )
+{
+  let module = instance.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  if( !instance.criterion )
+  return;
+  if( !instance.criterion.predefined )
+  return;
+
+  // if( instance.name === 'module.original.willfiles' )
+  // debugger;
+  // if( instance.module.nickName === 'module::Proto' )
+  // debugger;
+
+  // _.assert( path.isAbsolute( module.inPath ) );
+  // if( options.path )
+  // options.path = path.s.join( module.inPath, options.path ); // yyy
+
+  options.criterion = options.criterion || Object.create( null );
+  _.mapSupplement( options.criterion, instance.criterion );
+  options.exportable = instance.exportable;
+  options.writable = instance.writable;
+
+  if( !options.path )
+  options.path = instance.path;
+  instance.finit();
+
+}
+
+//
+
 function unform()
 {
   let pathResource = this;
@@ -177,6 +212,30 @@ function _pathSet( src )
 
 }
 
+//
+
+function dataExport()
+{
+  let pathResource = this;
+  let module = pathResource.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  let result = Parent.prototype.dataExport.apply( pathResource, arguments );
+
+  if( result )
+  {
+    if( result.path && path.s.anyAreAbsolute( result.path ) && path.s.noneAreGlobal( result.path ) )
+    result.path = path.s.relative( module.inPath, result.path );
+  }
+
+  return result;
+}
+
+dataExport.defaults = Object.create( Parent.prototype.dataExport.defaults );
+
 // --
 // relations
 // --
@@ -210,6 +269,7 @@ let Restricts =
 let Statics =
 {
   OptionsFrom : OptionsFrom,
+  OnInstanceExists : OnInstanceExists,
   MapName : 'pathResourceMap',
   KindName : 'path',
 }
@@ -235,11 +295,14 @@ let Proto =
   // inter
 
   OptionsFrom,
+  OnInstanceExists,
 
   unform,
   form1,
   form2,
   form3,
+
+  dataExport,
 
   // relation
 

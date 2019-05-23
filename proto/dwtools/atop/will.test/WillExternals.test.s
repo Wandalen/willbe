@@ -77,7 +77,7 @@ function singleModuleSimplest( test )
   return ready;
 }
 
-singleModuleSimplest.timeOut = 130000;
+singleModuleSimplest.timeOut = 200000;
 
 //
 
@@ -115,11 +115,11 @@ function singleModuleWithSpaceTrivial( test )
   return ready;
 }
 
-singleModuleWithSpaceTrivial.timeOut = 130000;
+singleModuleWithSpaceTrivial.timeOut = 200000;
 
 //
 
-function open( test )
+function openWith( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'open' );
@@ -136,7 +136,7 @@ function open( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
 
   /* - */
 
@@ -231,6 +231,41 @@ function open( test )
 
   .thenKeep( () =>
   {
+    test.case = '.with doc .export -- deleted doc.will.yml'
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.fileDelete( _.path.join( routinePath, 'doc.ex.will.yml' ) );
+    _.fileProvider.fileDelete( _.path.join( routinePath, 'doc.im.will.yml' ) );
+    return null;
+  })
+
+  shell({ args : [ '.with doc .export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc.out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/out' ) );
+    test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
+    var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
+    test.identical( files, [] );
+
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .thenKeep( () =>
+  {
     test.case = '.with doc. .export'
     return null;
   })
@@ -274,11 +309,136 @@ function open( test )
     var files = self.find( _.path.join( routinePath, 'out' ) );
     test.identical( files, [] );
     var files = self.find( _.path.join( routinePath, 'doc.out' ) );
+    test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
+    var files = self.find( _.path.join( routinePath, 'doc/out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
+    test.identical( files, [] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .thenKeep( () =>
+  {
+    test.case = '.with do .export'
+    return null;
+  })
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.with do .export' ], throwingExitCode : 0 })
+
+  .thenKeep( ( got ) =>
+  {
+    test.ni( got.exitCode, 0 );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc.out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
+    test.identical( files, [] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .thenKeep( () =>
+  {
+    test.case = '.with docx .export'
+    return null;
+  })
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.with docx .export' ], throwingExitCode : 0 })
+
+  .thenKeep( ( got ) =>
+  {
+    test.ni( got.exitCode, 0 );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc.out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
+    test.identical( files, [] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .thenKeep( () =>
+  {
+    test.case = '.with doc/ .export'
+    return null;
+  })
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.with doc/ .export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc.out' ) );
     test.identical( files, [] );
     var files = self.find( _.path.join( routinePath, 'doc/out' ) );
     test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
     var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
     test.identical( files, [] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .thenKeep( () =>
+  {
+    test.case = '.with doc/ .export -- deleted doc/.will.yml'
+
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.fileDelete( _.path.join( routinePath, 'doc/.ex.will.yml' ) );
+    _.fileProvider.fileDelete( _.path.join( routinePath, 'doc/.im.will.yml' ) );
+
+    return null;
+  })
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.with doc/ .export' ], throwingExitCode : 0 })
+
+  .thenKeep( ( got ) =>
+  {
+    test.ni( got.exitCode, 0 );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc.out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/out' ) );
+    test.identical( files, [] );
+    var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
+    test.identical( files, [] );
+
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
 
     return null;
   })
@@ -343,6 +503,34 @@ function open( test )
 
   /* - */
 
+  return ready;
+}
+
+openWith.timeOut = 500000;
+
+//
+
+function openEach( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'open' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, 'module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
   ready
 
   .thenKeep( () =>
@@ -376,7 +564,7 @@ function open( test )
 
   .thenKeep( () =>
   {
-    test.case = '.each . .export'
+    test.case = '.each doc/. .export'
     return null;
   })
 
@@ -404,7 +592,7 @@ function open( test )
   return ready;
 }
 
-open.timeOut = 300000;
+openEach.timeOut = 500000;
 
 //
 
@@ -624,7 +812,7 @@ function setVerbosity( test )
   return ready;
 }
 
-setVerbosity.timeOut = 300000;
+setVerbosity.timeOut = 500000;
 
 //
 
@@ -683,6 +871,7 @@ function transpile( test )
   shell({ args : [ '.build compiled.debug' ] })
   .thenKeep( ( got ) =>
   {
+
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
     test.identical( files, [ '.', './compiled.debug', './compiled.debug/Main.s', './tests.compiled.debug', './tests.compiled.debug/Tests.s' ] );
@@ -769,7 +958,7 @@ function transpile( test )
   return ready;
 }
 
-transpile.timeOut = 130000;
+transpile.timeOut = 200000;
 
 //
 
@@ -845,10 +1034,15 @@ function eachMixed( test )
     test.identical( _.strCount( got.output, 'ls -al' ), 5 );
     test.identical( _.strCount( got.output, 'Module at' ), 4 );
 
-    test.identical( _.strCount( got.output, '.module/Tools/out/wTools.out.will.yml' ), 2 );
-    test.identical( _.strCount( got.output, '.module/PathFundamentals/out/wPathFundamentals.out.will.yml' ), 2 );
-    test.identical( _.strCount( got.output, 'out/UriFundamentals.informal.out.will.yml' ), 2 );
-    test.identical( _.strCount( got.output, 'out/Proto.informal.out.will.yml' ), 2 );
+    test.identical( _.strCount( got.output, '.module/Tools/out/wTools.out.will.yml' ), 1 );
+    test.identical( _.strCount( got.output, '.module/PathFundamentals/out/wPathFundamentals.out.will.yml' ), 1 );
+    test.identical( _.strCount( got.output, 'out/UriFundamentals.informal.out.will.yml' ), 1 );
+    test.identical( _.strCount( got.output, 'out/Proto.informal.out.will.yml' ), 1 );
+
+    test.identical( _.strCount( got.output, '.module/Tools/out/wTools' ), 2 );
+    test.identical( _.strCount( got.output, '.module/PathFundamentals/out/wPathFundamentals' ), 2 );
+    test.identical( _.strCount( got.output, 'out/UriFundamentals.informal' ), 2 );
+    test.identical( _.strCount( got.output, 'out/Proto.informal' ), 2 );
 
     // test.is( _.strHas( got.output, [ 'debug', 'wTools.out.will.yml', 'wTools.proto.export.out.tgs' ].join( '\n' ) ) );
     // test.is( _.strHas( got.output, [ 'debug', 'wPathFundamentals.out.will.yml' ].join( '\n' ) ) );
@@ -862,7 +1056,7 @@ function eachMixed( test )
   return ready;
 }
 
-eachMixed.timeOut = 300000;
+eachMixed.timeOut = 500000;
 
 //
 
@@ -908,7 +1102,7 @@ function withMixed( test )
   return ready;
 }
 
-withMixed.timeOut = 300000;
+withMixed.timeOut = 500000;
 
 //
 
@@ -1049,14 +1243,14 @@ function listSingleModule( test )
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, 'reflector::reflect.proto.' ) );
-    test.is( _.strHas( got.output, `. : '.'` ) );
-    test.is( _.strHas( got.output, `prefixPath : 'out/release'` ) );
-    test.is( _.strHas( got.output, `prefixPath : 'proto'` ) );
+    test.is( _.strHas( got.output, `. : .` ) );
+    test.is( _.strHas( got.output, `prefixPath : proto` ) );
+    test.is( _.strHas( got.output, `prefixPath : out/release` ) );
 
     test.is( _.strHas( got.output, `reflector::reflect.proto.debug` ) );
-    test.is( _.strHas( got.output, `. : '.'` ) );
-    test.is( _.strHas( got.output, `prefixPath : 'out/debug'` ) );
-    test.is( _.strHas( got.output, `prefixPath : 'proto'` ) );
+    test.is( _.strHas( got.output, `. : .` ) );
+    test.is( _.strHas( got.output, `prefixPath : proto` ) );
+    test.is( _.strHas( got.output, `prefixPath : out/debug` ) );
 
     return null;
   })
@@ -1152,7 +1346,7 @@ function listSingleModule( test )
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
-    test.is( _.strHas( got.output, `. : '.'` ) );
+    test.is( _.strHas( got.output, `. : .` ) );
 
     test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
     test.is( _.strHas( got.output, `predefined.reflect` ) );
@@ -1187,7 +1381,7 @@ function listSingleModule( test )
     test.is( _.strHas( got.output, 'path::proto'  ) );
 
     test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
-    test.is( _.strHas( got.output, `. : '.'` ) );
+    test.is( _.strHas( got.output, `. : .` ) );
 
     test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
     test.is( _.strHas( got.output, `predefined.reflect` ) );
@@ -1244,7 +1438,7 @@ function listSingleModule( test )
   return ready;
 }
 
-listSingleModule.timeOut = 130000;
+listSingleModule.timeOut = 200000;
 
 //
 
@@ -1422,7 +1616,7 @@ function listWithSubmodules( test )
   return ready;
 }
 
-listWithSubmodules.timeOut = 130000;
+listWithSubmodules.timeOut = 200000;
 
 //
 
@@ -1603,7 +1797,7 @@ function submodulesDownloadSingle( test )
 
 }
 
-submodulesDownloadSingle.timeOut = 130000;
+submodulesDownloadSingle.timeOut = 200000;
 
 //
 
@@ -1761,7 +1955,7 @@ function submodulesDownloadUpdate( test )
   return ready;
 }
 
-submodulesDownloadUpdate.timeOut = 300000;
+submodulesDownloadUpdate.timeOut = 500000;
 
 //
 
@@ -1877,7 +2071,7 @@ function submodulesDownloadUpdateDry( test )
   return ready;
 }
 
-submodulesDownloadUpdateDry.timeOut = 300000;
+submodulesDownloadUpdateDry.timeOut = 500000;
 
 //
 
@@ -1989,7 +2183,7 @@ function submodulesUpdate( test )
   return ready;
 }
 
-submodulesUpdate.timeOut = 300000;
+submodulesUpdate.timeOut = 500000;
 
 //
 
@@ -2086,7 +2280,7 @@ function stepSubmodulesDownload( test )
   return ready;
 }
 
-stepSubmodulesDownload.timeOut = 300000;
+stepSubmodulesDownload.timeOut = 500000;
 
 //
 
@@ -2157,7 +2351,7 @@ function fixateDetached( test )
     return null;
   })
 
-  /* xxx */
+  /* */
 
   ready
   .thenKeep( () =>
@@ -2208,7 +2402,7 @@ function fixateDetached( test )
   return ready;
 }
 
-fixateDetached.timeOut = 300000;
+fixateDetached.timeOut = 500000;
 
 //
 
@@ -2244,7 +2438,6 @@ function clean( test )
   .thenKeep( () =>
   {
     files = self.find( submodulesPath );
-    debugger;
     test.is( files.length > 50 );
     return files;
   })
@@ -2317,7 +2510,7 @@ function clean( test )
   return ready;
 }
 
-clean.timeOut = 130000;
+clean.timeOut = 500000;
 
 //
 
@@ -2373,7 +2566,7 @@ function cleanSingleModule( test )
   return ready;
 }
 
-cleanSingleModule.timeOut = 130000;
+cleanSingleModule.timeOut = 200000;
 
 //
 
@@ -2507,7 +2700,7 @@ function cleanBroken1( test )
   return ready;
 }
 
-cleanBroken1.timeOut = 130000;
+cleanBroken1.timeOut = 200000;
 
 //
 
@@ -2641,7 +2834,7 @@ function cleanBroken2( test )
   return ready;
 }
 
-cleanBroken2.timeOut = 130000;
+cleanBroken2.timeOut = 200000;
 
 //
 
@@ -2691,7 +2884,7 @@ function cleanNoBuild( test )
   return ready;
 }
 
-cleanNoBuild.timeOut = 130000;
+cleanNoBuild.timeOut = 200000;
 
 //
 
@@ -2770,7 +2963,7 @@ function cleanDry( test )
   return ready;
 }
 
-cleanDry.timeOut = 130000;
+cleanDry.timeOut = 500000;
 
 //
 
@@ -2842,7 +3035,7 @@ function cleanSubmodules( test )
   return ready;
 }
 
-cleanSubmodules.timeOut = 130000;
+cleanSubmodules.timeOut = 500000;
 
 //
 
@@ -2898,7 +3091,7 @@ function cleanMixed( test )
   return ready;
 }
 
-cleanMixed.timeOut = 130000;
+cleanMixed.timeOut = 200000;
 
 //
 
@@ -3028,7 +3221,7 @@ function buildSingleModule( test )
   return ready;
 }
 
-buildSingleModule.timeOut = 130000;
+buildSingleModule.timeOut = 200000;
 
 //
 
@@ -3210,7 +3403,7 @@ function buildSubmodules( test )
   return ready;
 }
 
-buildSubmodules.timeOut = 130000;
+buildSubmodules.timeOut = 500000;
 
 //
 
@@ -3271,7 +3464,7 @@ function buildDetached( test )
   return ready;
 }
 
-buildDetached.timeOut = 300000;
+buildDetached.timeOut = 500000;
 
 //
 
@@ -3382,7 +3575,7 @@ function exportSingle( test )
   return ready;
 }
 
-exportSingle.timeOut = 130000;
+exportSingle.timeOut = 200000;
 
 //
 
@@ -3439,7 +3632,7 @@ function exportWithReflector( test )
   return ready;
 }
 
-exportWithReflector.timeOut = 130000;
+exportWithReflector.timeOut = 200000;
 
 //
 
@@ -3479,7 +3672,7 @@ function exportToRoot( test )
   return ready;
 }
 
-exportToRoot.timeOut = 130000;
+exportToRoot.timeOut = 200000;
 
 //
 
@@ -3606,7 +3799,11 @@ function exportMixed( test )
         ],
         'criterion' : { 'default' : 1, 'export' : 1 }
       },
-      'original.willfiles' : { 'path' : 'module/Proto.informal.will.yml' },
+      'module.original.willfiles' :
+      {
+        'path' : 'module/Proto.informal.will.yml',
+        'criterion' : { 'predefined' : 1 },
+      },
       'in' : { 'path' : '..' },
       'out' : { 'path' : 'out' },
 
@@ -3634,7 +3831,7 @@ function exportMixed( test )
         'exportedFilesReflector' : 'reflector::exportedFiles.export',
         'exportedDirPath' : 'path::exportedDir.export',
         'exportedFilesPath' : 'path::exportedFiles.export',
-        'originalWillFilesPath' : 'path::original.willfiles',
+        'originalWillFilesPath' : 'path::module.original.willfiles',
       }
     }
     test.identical( outfile.exported, expected );
@@ -3716,9 +3913,6 @@ function exportMixed( test )
     var files = _.fileProvider.dirRead( _.path.join( routinePath, 'out/debug' ) );
     test.identical( files, expected );
 
-    var files = self.find( _.path.join( routinePath, 'out' ) );
-    test.gt( files.length, 80 );
-
     return null;
   })
 
@@ -3727,7 +3921,7 @@ function exportMixed( test )
   return ready;
 }
 
-exportMixed.timeOut = 300000;
+exportMixed.timeOut = 500000;
 
 //
 
@@ -3868,66 +4062,7 @@ function exportSecond( test )
         mandatory : 1
       }
     }
-    test.identical( outfile.reflector, expected ); debugger;
-
-    // var expected =
-    // {
-    //   'reflect.proto.' :
-    //   {
-    //     src :
-    //     {
-    //       filePath : { 'path::proto' : 'path::out.*=1' }
-    //     },
-    //     criterion : { debug : 0 },
-    //     mandatory : 1,
-    //     inherit : [ 'predefined.*' ]
-    //   },
-    //   'reflect.proto.debug' :
-    //   {
-    //     src :
-    //     {
-    //       filePath : { 'path::proto' : 'path::out.*=1' }
-    //     },
-    //     criterion : { debug : 1 },
-    //     mandatory : 1,
-    //     inherit : [ 'predefined.*' ]
-    //   },
-    //   'exported.proto.export' :
-    //   {
-    //     src :
-    //     {
-    //       filePath : { '.' : null },
-    //       prefixPath : 'proto'
-    //     },
-    //     criterion : { proto : 1, export : 1 },
-    //     mandatory : 1
-    //   },
-    //   'exportedFiles.proto.export' :
-    //   {
-    //     src : { filePath : 'path::exportedFiles.proto.export', basePath : '.', prefixPath : 'path::exportedDir.proto.export' },
-    //     criterion : { proto : 1, export : 1 },
-    //     recursive : 0,
-    //     mandatory : 1
-    //   },
-    //   'exported.doc.export' :
-    //   {
-    //     src :
-    //     {
-    //       filePath : { '.' : null },
-    //       prefixPath : 'doc'
-    //     },
-    //     criterion : { doc : 1, export : 1 },
-    //     mandatory : 1
-    //   },
-    //   'exportedFiles.doc.export' :
-    //   {
-    //     src : { filePath : 'path::exportedFiles.doc.export', basePath : '.', prefixPath : 'path::exportedDir.doc.export' },
-    //     criterion : { doc : 1, export : 1 },
-    //     recursive : 0,
-    //     mandatory : 1
-    //   }
-    // }
-    // test.identical( outfile.reflector, expected ); debugger;
+    test.identical( outfile.reflector, expected );
 
     var expected =
     {
@@ -3956,9 +4091,10 @@ function exportSecond( test )
         path : [ 'proto', 'proto/-NotExecluded.js', 'proto/.NotExecluded.js', 'proto/File.js' ],
         criterion : { proto : 1, export : 1 }
       },
-      'original.willfiles' :
+      'module.original.willfiles' :
       {
-        path : [ '.im.will.yml', '.ex.will.yml' ]
+        path : [ '.im.will.yml', '.ex.will.yml' ],
+        'criterion' : { 'predefined' : 1 },
       },
       'exportedDir.doc.export' :
       {
@@ -3983,7 +4119,7 @@ function exportSecond( test )
       },
       'local' :
       {
-        'path' : '.',
+        'path' : 'out',
         'criterion' : { 'predefined' : 1 }
       },
       'remote' :
@@ -4004,7 +4140,7 @@ function exportSecond( test )
         exportedFilesReflector : 'reflector::exportedFiles.doc.export',
         exportedDirPath : 'path::exportedDir.doc.export',
         exportedFilesPath : 'path::exportedFiles.doc.export',
-        originalWillFilesPath : 'path::original.willfiles'
+        originalWillFilesPath : 'path::module.original.willfiles'
       },
       'proto.export' :
       {
@@ -4014,7 +4150,7 @@ function exportSecond( test )
         exportedFilesReflector : 'reflector::exportedFiles.proto.export',
         exportedDirPath : 'path::exportedDir.proto.export',
         exportedFilesPath : 'path::exportedFiles.proto.export',
-        originalWillFilesPath : 'path::original.willfiles'
+        originalWillFilesPath : 'path::module.original.willfiles'
       }
     }
     test.identical( outfile.exported, expected );
@@ -4022,162 +4158,215 @@ function exportSecond( test )
     return null;
   })
 
-  // /* - */
-  //
-  // shell({ args : [ '.export' ] })
-  //
-  // .thenKeep( ( got ) =>
-  // {
-  //   test.identical( got.exitCode, 0 );
-  //
-  //   test.identical( _.strCount( got.output, '+ Write out willfile' ), 2 );
-  //   test.identical( _.strCount( got.output, 'Exported doc.export with 2 files in' ), 1 );
-  //   test.identical( _.strCount( got.output, 'Exported proto.export with 2 files in' ), 1 );
-  //
-  //   test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
-  //
-  //   var files = self.find( _.path.join( routinePath, 'out' ) );
-  //   test.identical( files, [ '.', './ExportSecond.out.will.yml' ] );
-  //
-  //   var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
-  //
-  //   var expected =
-  //   {
-  //     'reflect.proto.' :
-  //     {
-  //       src :
-  //       {
-  //         filePath : { 'path::proto' : 'path::out.*=1' }
-  //       },
-  //       criterion : { debug : 0 },
-  //       mandatory : 1,
-  //       inherit : [ 'predefined.*' ]
-  //     },
-  //     'reflect.proto.debug' :
-  //     {
-  //       src :
-  //       {
-  //         filePath : { 'path::proto' : 'path::out.*=1' }
-  //       },
-  //       criterion : { debug : 1 },
-  //       mandatory : 1,
-  //       inherit : [ 'predefined.*' ]
-  //     },
-  //     'exported.proto.export' :
-  //     {
-  //       src :
-  //       {
-  //         filePath : { '.' : null },
-  //         prefixPath : 'proto'
-  //       },
-  //       criterion : { proto : 1, export : 1 },
-  //       mandatory : 1
-  //     },
-  //     'exportedFiles.proto.export' :
-  //     {
-  //       src : { filePath : 'path::exportedFiles.proto.export', basePath : '.', prefixPath : 'path::exportedDir.proto.export' },
-  //       criterion : { proto : 1, export : 1 },
-  //       recursive : 0,
-  //       mandatory : 1
-  //     },
-  //     'exported.doc.export' :
-  //     {
-  //       src :
-  //       {
-  //         filePath : { '.' : null },
-  //         prefixPath : 'doc'
-  //       },
-  //       criterion : { doc : 1, export : 1 },
-  //       mandatory : 1
-  //     },
-  //     'exportedFiles.doc.export' :
-  //     {
-  //       src : { filePath : 'path::exportedFiles.doc.export', basePath : '.', prefixPath : 'path::exportedDir.doc.export' },
-  //       criterion : { doc : 1, export : 1 },
-  //       recursive : 0,
-  //       mandatory : 1
-  //     }
-  //   }
-  //   test.identical( outfile.reflector, expected );
-  //
-  //   var expected =
-  //   {
-  //     in : { path : '..' },
-  //     temp : { path : 'out' },
-  //     out : { path : 'out' },
-  //     'out.debug' :
-  //     {
-  //       path : './out/debug',
-  //       criterion : { debug : 1 }
-  //     },
-  //     'out.release' :
-  //     {
-  //       path : './out/release',
-  //       criterion : { debug : 0 }
-  //     },
-  //     proto : { path : './proto' },
-  //     doc : { path : './doc' },
-  //     'exportedDir.proto.export' :
-  //     {
-  //       path : './proto',
-  //       criterion : { proto : 1, export : 1 }
-  //     },
-  //     'exportedFiles.proto.export' :
-  //     {
-  //       path : [ 'proto', 'proto/File.js' ],
-  //       criterion : { proto : 1, export : 1 }
-  //     },
-  //     'original.willfiles' :
-  //     {
-  //       path : [ '.im.will.yml', '.ex.will.yml' ]
-  //     },
-  //     'exportedDir.doc.export' :
-  //     {
-  //       path : './doc',
-  //       criterion : { doc : 1, export : 1 }
-  //     },
-  //     'exportedFiles.doc.export' :
-  //     {
-  //       path : [ 'doc', 'doc/File.md' ],
-  //       criterion : { doc : 1, export : 1 }
-  //     }
-  //   }
-  //   test.identical( outfile.path, expected );
-  //
-  //   var expected =
-  //   {
-  //     'doc.export' :
-  //     {
-  //       version : '0.0.0',
-  //       criterion : { doc : 1, export : 1 },
-  //       exportedReflector : 'reflector::exported.doc.export',
-  //       exportedFilesReflector : 'reflector::exportedFiles.doc.export',
-  //       exportedDirPath : 'path::exportedDir.doc.export',
-  //       exportedFilesPath : 'path::exportedFiles.doc.export',
-  //       originalWillFilesPath : 'path::original.willfiles'
-  //     },
-  //     'proto.export' :
-  //     {
-  //       version : '0.0.0',
-  //       criterion : { proto : 1, export : 1 },
-  //       exportedReflector : 'reflector::exported.proto.export',
-  //       exportedFilesReflector : 'reflector::exportedFiles.proto.export',
-  //       exportedDirPath : 'path::exportedDir.proto.export',
-  //       exportedFilesPath : 'path::exportedFiles.proto.export',
-  //       originalWillFilesPath : 'path::original.willfiles'
-  //     }
-  //   }
-  //   test.identical( outfile.exported, expected );
-  //
-  //   return null;
-  // })
-  //
-  // /* - */
+  /* - */
+
+  shell({ args : [ '.export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, '+ Write out willfile' ), 2 );
+    test.identical( _.strCount( got.output, 'Exported doc.export with 2 files in' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported proto.export with 4 files in' ), 1 );
+
+    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [ '.', './ExportSecond.out.will.yml' ] );
+
+    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
+
+    var expected =
+    {
+      'reflect.proto.' :
+      {
+        src :
+        {
+          filePath : { '.' : '.' },
+          prefixPath : 'proto',
+          maskAll :
+          {
+            excludeAny :
+            [
+              /(\W|^)node_modules(\W|$)/,
+              /\.unique$/,
+              /\.git$/,
+              /\.svn$/,
+              /\.hg$/,
+              /\.DS_Store$/,
+              /(^|\/)-/,
+              /\.debug($|\.|\/)/i,
+              /\.experiment($|\.|\/)/i
+            ]
+          }
+        },
+        dst : { prefixPath : 'out/release' },
+        criterion : { debug : 0 },
+        mandatory : 1,
+        inherit : [ 'predefined.*' ]
+      },
+      'reflect.proto.debug' :
+      {
+        src :
+        {
+          filePath : { '.' : '.' },
+          prefixPath : 'proto',
+          maskAll :
+          {
+            excludeAny :
+            [
+              /(\W|^)node_modules(\W|$)/,
+              /\.unique$/,
+              /\.git$/,
+              /\.svn$/,
+              /\.hg$/,
+              /\.DS_Store$/,
+              /(^|\/)-/,
+              /\.release($|\.|\/)/i
+            ]
+          }
+        },
+        dst : { prefixPath : 'out/debug' },
+        criterion : { debug : 1 },
+        mandatory : 1,
+        inherit : [ 'predefined.*' ]
+      },
+      'exported.proto.export' :
+      {
+        src :
+        {
+          filePath : { '.' : null },
+          prefixPath : 'proto'
+        },
+        criterion : { proto : 1, export : 1 },
+        mandatory : 1
+      },
+      'exportedFiles.proto.export' :
+      {
+        src : { filePath : 'path::exportedFiles.proto.export', basePath : '.', prefixPath : 'path::exportedDir.proto.export' },
+        criterion : { proto : 1, export : 1 },
+        recursive : 0,
+        mandatory : 1
+      },
+      'exported.doc.export' :
+      {
+        src :
+        {
+          filePath : { '.' : null },
+          prefixPath : 'doc'
+        },
+        criterion : { doc : 1, export : 1 },
+        mandatory : 1
+      },
+      'exportedFiles.doc.export' :
+      {
+        src : { filePath : 'path::exportedFiles.doc.export', basePath : '.', prefixPath : 'path::exportedDir.doc.export' },
+        criterion : { doc : 1, export : 1 },
+        recursive : 0,
+        mandatory : 1
+      }
+    }
+    test.identical( outfile.reflector, expected );
+
+    var expected =
+    {
+      'module.willfiles' :
+      {
+        path : 'out/ExportSecond.out.will.yml',
+        criterion : { predefined : 1 }
+      },
+      'module.dir' :
+      {
+        path : 'out',
+        criterion : { predefined : 1 }
+      },
+      local :
+      {
+        path : 'out',
+        criterion : { predefined : 1 }
+      },
+      remote :
+      {
+        criterion : { predefined : 1 }
+      },
+      in : { path : '..' },
+      temp : { path : 'out' },
+      out : { path : 'out' },
+      'out.debug' :
+      {
+        path : './out/debug',
+        criterion : { debug : 1 }
+      },
+      'out.release' :
+      {
+        path : './out/release',
+        criterion : { debug : 0 }
+      },
+      proto : { path : './proto' },
+      doc : { path : './doc' },
+      'exportedDir.proto.export' :
+      {
+        path : './proto',
+        criterion : { proto : 1, export : 1 }
+      },
+      'exportedFiles.proto.export' :
+      {
+        path : [ 'proto', 'proto/-NotExecluded.js', 'proto/.NotExecluded.js', 'proto/File.js' ],
+        criterion : { proto : 1, export : 1 }
+      },
+      'module.original.willfiles' :
+      {
+        path : [ '.im.will.yml', '.ex.will.yml' ],
+        criterion : { predefined : 1 }
+      },
+      'exportedDir.doc.export' :
+      {
+        path : './doc',
+        criterion : { doc : 1, export : 1 }
+      },
+      'exportedFiles.doc.export' :
+      {
+        path : [ 'doc', 'doc/File.md' ],
+        criterion : { doc : 1, export : 1 }
+      }
+    }
+    test.identical( outfile.path, expected );
+
+    var expected =
+    {
+      'doc.export' :
+      {
+        version : '0.0.0',
+        criterion : { doc : 1, export : 1 },
+        exportedReflector : 'reflector::exported.doc.export',
+        exportedFilesReflector : 'reflector::exportedFiles.doc.export',
+        exportedDirPath : 'path::exportedDir.doc.export',
+        exportedFilesPath : 'path::exportedFiles.doc.export',
+        originalWillFilesPath : 'path::module.original.willfiles'
+      },
+      'proto.export' :
+      {
+        version : '0.0.0',
+        criterion : { proto : 1, export : 1 },
+        exportedReflector : 'reflector::exported.proto.export',
+        exportedFilesReflector : 'reflector::exportedFiles.proto.export',
+        exportedDirPath : 'path::exportedDir.proto.export',
+        exportedFilesPath : 'path::exportedFiles.proto.export',
+        originalWillFilesPath : 'path::module.original.willfiles'
+      }
+    }
+    test.identical( outfile.exported, expected );
+
+    return null;
+  })
+
+  /* - */
 
   return ready;
 }
 
-exportSecond.timeOut = 300000;
+exportSecond.timeOut = 500000;
 
 //
 
@@ -4236,7 +4425,7 @@ function exportSubmodules( test )
   return ready;
 }
 
-exportSubmodules.timeOut = 130000;
+exportSubmodules.timeOut = 200000;
 
 //
 
@@ -4307,7 +4496,7 @@ function exportMultiple( test )
         exportedDirPath : 'path::exportedDir.export.debug',
         exportedFilesPath : 'path::exportedFiles.export.debug',
         archiveFilePath : 'path::archiveFile.export.debug',
-        originalWillFilesPath : 'path::original.willfiles'
+        originalWillFilesPath : 'path::module.original.willfiles'
       }
     }
 
@@ -4397,9 +4586,10 @@ function exportMultiple( test )
           export : 1
         }
       },
-      'original.willfiles' :
+      'module.original.willfiles' :
       {
-        'path' : [ '.im.will.yml', '.ex.will.yml' ]
+        'path' : [ '.im.will.yml', '.ex.will.yml' ],
+        'criterion' : { 'predefined' : 1 }
       },
 
       'module.willfiles' :
@@ -4414,7 +4604,7 @@ function exportMultiple( test )
       },
       'local' :
       {
-        'path' : '.',
+        'path' : 'out',
         'criterion' : { 'predefined' : 1 }
       },
       'remote' :
@@ -4485,7 +4675,7 @@ function exportMultiple( test )
         exportedDirPath : 'path::exportedDir.export.debug',
         exportedFilesPath : 'path::exportedFiles.export.debug',
         archiveFilePath : 'path::archiveFile.export.debug',
-        originalWillFilesPath : 'path::original.willfiles',
+        originalWillFilesPath : 'path::module.original.willfiles',
       },
       'export.' :
       {
@@ -4502,7 +4692,7 @@ function exportMultiple( test )
         exportedDirPath : 'path::exportedDir.export.',
         exportedFilesPath : 'path::exportedFiles.export.',
         archiveFilePath : 'path::archiveFile.export.',
-        originalWillFilesPath : 'path::original.willfiles',
+        originalWillFilesPath : 'path::module.original.willfiles',
       },
     }
     test.identical( outfile.exported, exported );
@@ -4661,11 +4851,11 @@ function exportMultiple( test )
           export : 1
         }
       },
-      'original.willfiles' :
+      'module.original.willfiles' :
       {
-        'path' : [ '.im.will.yml', '.ex.will.yml' ]
+        'path' : [ '.im.will.yml', '.ex.will.yml' ],
+        'criterion' : { 'predefined' : 1 },
       },
-
       'module.willfiles' :
       {
         'path' : 'out/submodule.out.will.yml',
@@ -4678,7 +4868,7 @@ function exportMultiple( test )
       },
       'local' :
       {
-        'path' : '.',
+        'path' : 'out',
         'criterion' : { 'predefined' : 1 }
       },
       'remote' :
@@ -4698,7 +4888,7 @@ function exportMultiple( test )
   return ready;
 }
 
-exportMultiple.timeOut = 130000;
+exportMultiple.timeOut = 200000;
 
 //
 
@@ -4899,7 +5089,7 @@ function exportImportMultiple( test )
   return ready;
 }
 
-exportImportMultiple.timeOut = 130000;
+exportImportMultiple.timeOut = 200000;
 
 //
 
@@ -4967,7 +5157,7 @@ function exportBroken( test )
         exportedDirPath : 'path::exportedDir.export.debug',
         exportedFilesPath : 'path::exportedFiles.export.debug',
         archiveFilePath : 'path::archiveFile.export.debug',
-        originalWillFilesPath : 'path::original.willfiles',
+        originalWillFilesPath : 'path::module.original.willfiles',
       }
     }
 
@@ -5077,7 +5267,7 @@ function exportDoc( test )
   return ready;
 }
 
-exportDoc.timeOut = 130000;
+exportDoc.timeOut = 200000;
 
 //
 
@@ -5128,7 +5318,7 @@ function exportImport( test )
   return ready;
 }
 
-exportImport.timeOut = 130000;
+exportImport.timeOut = 200000;
 
 //
 
@@ -5346,7 +5536,7 @@ function reflectNothingFromSubmodules( test )
   return ready;
 }
 
-reflectNothingFromSubmodules.timeOut = 130000;
+reflectNothingFromSubmodules.timeOut = 200000;
 
 //
 
@@ -5444,7 +5634,7 @@ function reflectGetPath( test )
 
 }
 
-reflectGetPath.timeOut = 130000;
+reflectGetPath.timeOut = 200000;
 
 //
 
@@ -5606,7 +5796,7 @@ function reflectSubdir( test )
   return ready;
 }
 
-reflectSubdir.timeOut = 130000;
+reflectSubdir.timeOut = 200000;
 
 //
 
@@ -5890,7 +6080,7 @@ function reflectComposite( test )
   return ready;
 }
 
-reflectComposite.timeOut = 130000;
+reflectComposite.timeOut = 200000;
 
 //
 
@@ -6038,7 +6228,7 @@ function reflectRemoteGit( test )
 
 }
 
-reflectRemoteGit.timeOut = 130000;
+reflectRemoteGit.timeOut = 200000;
 
 //
 
@@ -6084,7 +6274,7 @@ function reflectRemoteHttp( test )
   return ready;
 }
 
-reflectRemoteHttp.timeOut = 130000;
+reflectRemoteHttp.timeOut = 200000;
 
 //
 
@@ -6462,7 +6652,7 @@ function reflectComplexInherit( test )
 
   shell({ args : [ '.with a .export' ] })
   shell({ args : [ '.with b .export' ] })
-  shell({ args : [ '.with ab/ab .build' ] })
+  shell({ args : [ '.with ab .build' ] })
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -6482,7 +6672,7 @@ function reflectComplexInherit( test )
 //
 
 /* To test maskDirectory and maskTerminal masks. Now they are not working properly */
- function reflectorMasks( test )
+function reflectorMasks( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflector-masks' );
@@ -6556,7 +6746,7 @@ function reflectComplexInherit( test )
   return ready;
 }
 
-reflectorMasks.timeOut = 130000;
+reflectorMasks.timeOut = 200000;
 
 //
 
@@ -6767,7 +6957,8 @@ var Self =
 
     singleModuleSimplest,
     singleModuleWithSpaceTrivial,
-    open,
+    openWith,
+    openEach,
     make,
     setVerbosity,
     transpile,

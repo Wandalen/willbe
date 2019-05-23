@@ -63,6 +63,7 @@ function strHas( src, ins )
   return src.indexOf( ins ) !== -1;
   else
   return ins.test( src );
+
 }
 
 //
@@ -205,79 +206,82 @@ function strsNoneHas( srcs, ins )
 
 function strCount( src, ins )
 {
-  let result = -1;
-
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.strIs( src ) );
-  _.assert( _.strIs( ins ) );
-
-  if( !ins.length )
-  return 0;
-
-  let i = -1;
-  do
-  {
-    result += 1;
-    i = src.indexOf( ins, i+1 );
-  }
-  while( i !== -1 );
-
-  return result;
-}
-
-//
-
-function strCountLeft( src, ins )
-{
   let result = 0;
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
   _.assert( _.strIs( src ) );
-  _.assert( _.strIs( ins ) );
-
-  if( !ins.length )
-  return 0;
+  _.assert( _.strLike( ins ) );
 
   let i = 0;
   do
   {
-    if( src.substring( i, i+ins.length ) !== ins )
+    let found = _.strLeft( src, ins, i );
+    if( found.entry === undefined )
     break;
+    i = found.index + found.entry.length;
+    if( !found.entry.length )
+    i += 1;
     result += 1;
-    i += ins.length;
+    _.assert( i !== -1, 'not tested' );
   }
-  while( i < src.length );
+  while( i !== -1 && i < src.length );
 
   return result;
 }
 
+// //
 //
-
-function strCountRight( src, ins )
-{
-  let result = 0;
-
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.strIs( src ) );
-  _.assert( _.strIs( ins ) );
-
-  throw _.err( 'not tested' );
-
-  if( !ins.length )
-  return 0;
-
-  let i = src.length;
-  do
-  {
-    if( src.substring( i-ins.length, i ) !== ins )
-    break;
-    result += 1;
-    i -= ins.length;
-  }
-  while( i > 0 );
-
-  return result;
-}
+// function strCountLeft( src, ins )
+// {
+//   let result = 0;
+//
+//   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+//   _.assert( _.strIs( src ) );
+//   _.assert( _.strIs( ins ) );
+//
+//   if( !ins.length )
+//   return 0;
+//
+//   let i = 0;
+//   do
+//   {
+//     if( src.substring( i, i+ins.length ) !== ins )
+//     break;
+//     result += 1;
+//     i += ins.length;
+//   }
+//   while( i < src.length );
+//
+//   return result;
+// }
+//
+// //
+//
+// function strCountRight( src, ins )
+// {
+//   let result = 0;
+//
+//   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+//   _.assert( _.strIs( src ) );
+//   _.assert( _.strIs( ins ) );
+//
+//   throw _.err( 'not tested' );
+//
+//   if( !ins.length )
+//   return 0;
+//
+//   let i = src.length;
+//   do
+//   {
+//     if( src.substring( i-ins.length, i ) !== ins )
+//     break;
+//     result += 1;
+//     i -= ins.length;
+//   }
+//   while( i > 0 );
+//
+//   return result;
+// }
 
 //
 
@@ -4269,8 +4273,8 @@ let Proto =
   // evaluator
 
   strCount,
-  strCountLeft,
-  strCountRight,
+  // strCountLeft,
+  // strCountRight,
   strsShortest,
   strsLongest,
 

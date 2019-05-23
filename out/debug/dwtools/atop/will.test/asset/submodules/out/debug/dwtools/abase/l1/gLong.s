@@ -144,7 +144,7 @@ function buffersAreEquivalent( src1, src2, accuracy )
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
 
   if( _.bufferTypedIs( src1 ) )
-  return _.buffersTypedAreEquivalent( src1 ,src2, accuracy );
+  return _.buffersTypedAreEquivalent( src1 , src2, accuracy );
   else if( _.bufferRawIs( src1 ) )
   return _.buffersRawAreIdentical( src1, src2 );
   else if( _.bufferViewIs( src1 ) )
@@ -207,7 +207,7 @@ function buffersAreIdentical( src1, src2 )
 
 /* qqq : implement */
 
-function bufferMakeSimilar( ins,src )
+function bufferMakeSimilar( ins, src )
 {
   let result, length;
 
@@ -236,7 +236,7 @@ function bufferMakeSimilar( ins,src )
 
   _.assert( arguments.length === 1 || arguments.length === 2 );
   _.assert( _.numberIsFinite( length ) );
-  _.assert( _.routineIs( ins ) || _.longIs( ins ) || _.bufferRawIs( ins ),'unknown type of array',_.strType( ins ) );
+  _.assert( _.routineIs( ins ) || _.longIs( ins ) || _.bufferRawIs( ins ), 'unknown type of array', _.strType( ins ) );
 
   if( _.longIs( src ) || _.bufferAnyIs( src ) )
   {
@@ -288,13 +288,13 @@ function bufferButRange( src, range, ins )
   // if( size > src.byteLength )
   // {
   //   result = longMake( src, size );
-  //   let resultTyped = new Uint8Array( result,0,result.byteLength );
-  //   let srcTyped = new Uint8Array( src,0,src.byteLength );
+  //   let resultTyped = new Uint8Array( result, 0, result.byteLength );
+  //   let srcTyped = new Uint8Array( src, 0, src.byteLength );
   //   resultTyped.set( srcTyped );
   // }
   // else if( size < src.byteLength )
   // {
-  //   result = src.slice( 0,size );
+  //   result = src.slice( 0, size );
   // }
 
   return result;
@@ -336,7 +336,7 @@ function bufferButRange( src, range, ins )
  * @memberof wTools
  */
 
-function bufferRelen( src,len )
+function bufferRelen( src, len )
 {
 
   _.assert( _.bufferTypedIs( src ) );
@@ -352,7 +352,7 @@ function bufferRelen( src,len )
   }
   else if( len < src.length )
   {
-    result = src.subarray( 0,len );
+    result = src.subarray( 0, len );
   }
 
   return result;
@@ -373,13 +373,13 @@ function bufferResize( srcBuffer, size )
   if( size > srcBuffer.byteLength )
   {
     result = _.longMake( srcBuffer, size );
-    let resultTyped = new Uint8Array( result,0,result.byteLength );
-    let srcTyped = new Uint8Array( srcBuffer,0,srcBuffer.byteLength );
+    let resultTyped = new Uint8Array( result, 0, result.byteLength );
+    let srcTyped = new Uint8Array( srcBuffer, 0, srcBuffer.byteLength );
     resultTyped.set( srcTyped );
   }
   else if( size < srcBuffer.byteLength )
   {
-    result = srcBuffer.slice( 0,size );
+    result = srcBuffer.slice( 0, size );
   }
 
   return result;
@@ -438,7 +438,7 @@ function bufferBytesGet( src )
    * @memberof wTools
    */
 
-function bufferRetype( src,bufferType )
+function bufferRetype( src, bufferType )
 {
 
   _.assert( _.bufferTypedIs( src ) );
@@ -446,7 +446,7 @@ function bufferRetype( src,bufferType )
 
   let o = src.byteOffset;
   let l = Math.floor( src.byteLength / bufferType.BYTES_PER_ELEMENT );
-  let result = new bufferType( src.buffer,o,l );
+  let result = new bufferType( src.buffer, o, l );
 
   return result;
 }
@@ -482,10 +482,10 @@ function bufferJoin()
     }
     else
     {
-      srcs.push( new Uint8Array( src.buffer,src.byteOffset,src.byteLength ) );
+      srcs.push( new Uint8Array( src.buffer, src.byteOffset, src.byteLength ) );
     }
 
-    _.assert( src.byteLength >= 0,'Expects buffers, but got',_.strType( src ) );
+    _.assert( src.byteLength >= 0, 'Expects buffers, but got', _.strType( src ) );
 
     size += src.byteLength;
   }
@@ -521,7 +521,7 @@ function bufferJoin()
 
 //
 
-function bufferMove( dst,src )
+function bufferMove( dst, src )
 {
 
   if( arguments.length === 2 )
@@ -531,7 +531,7 @@ function bufferMove( dst,src )
     _.assert( _.longIs( src ) );
 
     if( dst.length !== src.length )
-    throw _.err( '_.bufferMove :','"dst" and "src" must have same length' );
+    throw _.err( '_.bufferMove :', '"dst" and "src" must have same length' );
 
     if( dst.set )
     {
@@ -547,7 +547,7 @@ function bufferMove( dst,src )
   {
 
     let options = arguments[ 0 ];
-    _.assertMapHasOnly( options,bufferMove.defaults );
+    _.assertMapHasOnly( options, bufferMove.defaults );
 
     let src = options.src;
     let dst = options.dst;
@@ -556,7 +556,7 @@ function bufferMove( dst,src )
     {
       dst = new Uint8Array( dst );
       if( _.bufferTypedIs( src ) && !( src instanceof Uint8Array ) )
-      src = new Uint8Array( src.buffer,src.byteOffset,src.byteLength );
+      src = new Uint8Array( src.buffer, src.byteOffset, src.byteLength );
     }
 
     _.assert( _.longIs( dst ) );
@@ -566,7 +566,7 @@ function bufferMove( dst,src )
 
     if( dst.set )
     {
-      dst.set( src,options.dstOffset );
+      dst.set( src, options.dstOffset );
       return dst;
     }
 
@@ -574,7 +574,7 @@ function bufferMove( dst,src )
     dst[ d ] = src[ s ];
 
   }
-  else _.assert( 0,'unexpected' );
+  else _.assert( 0, 'unexpected' );
 
   return dst;
 }
@@ -593,7 +593,7 @@ function bufferToStr( src )
   let result = '';
 
   if( src instanceof ArrayBuffer )
-  src = new Uint8Array( src,0,src.byteLength );
+  src = new Uint8Array( src, 0, src.byteLength );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.bufferAnyIs( src ) );
@@ -626,7 +626,7 @@ function bufferToDom( xmlBuffer ) {
   {
 
     let parser = new DOMParser();
-    result = parser.parseFromBuffer( xmlBuffer,xmlBuffer.byteLength,'text/xml' );
+    result = parser.parseFromBuffer( xmlBuffer, xmlBuffer.byteLength, 'text/xml' );
     throw _.err( 'not tested' );
 
   }
@@ -643,7 +643,7 @@ function bufferToDom( xmlBuffer ) {
 
 //
 
-function bufferLeft( src,del )
+function bufferLeft( src, del )
 {
 
   if( !_.bufferRawIs( src ) )
@@ -667,7 +667,7 @@ function bufferLeft( src,del )
     return index;
 
     index += 1;
-    index = src.indexOf( del[ 0 ],index );
+    index = src.indexOf( del[ 0 ], index );
 
   }
 
@@ -676,7 +676,7 @@ function bufferLeft( src,del )
 
 //
 
-function bufferSplit( src,del )
+function bufferSplit( src, del )
 {
 
   if( !_.bufferRawIs( src ) )
@@ -700,7 +700,7 @@ function bufferSplit( src,del )
 
     if( i === del.length )
     {
-      result.push( src.slice( begin,index ) );
+      result.push( src.slice( begin, index ) );
       index += i;
       begin = index;
     }
@@ -709,21 +709,21 @@ function bufferSplit( src,del )
       index += 1;
     }
 
-    index = src.indexOf( del[ 0 ],index );
+    index = src.indexOf( del[ 0 ], index );
 
   }
 
   if( begin === 0 )
   result.push( src );
   else
-  result.push( src.slice( begin,src.length ) );
+  result.push( src.slice( begin, src.length ) );
 
   return result;
 }
 
 //
 
-function bufferCutOffLeft( src,del )
+function bufferCutOffLeft( src, del )
 {
 
   if( !_.bufferRawIs( src ) )
@@ -746,9 +746,9 @@ function bufferCutOffLeft( src,del )
 
     if( i === del.length )
     {
-      result.push( src.slice( 0,index ) );
-      result.push( src.slice( index,index+i ) );
-      result.push( src.slice( index+i,src.length ) );
+      result.push( src.slice( 0, index ) );
+      result.push( src.slice( index, index+i ) );
+      result.push( src.slice( index+i, src.length ) );
       return result;
     }
     else
@@ -756,7 +756,7 @@ function bufferCutOffLeft( src,del )
       index += 1;
     }
 
-    index = src.indexOf( del[ 0 ],index );
+    index = src.indexOf( del[ 0 ], index );
 
   }
 
@@ -769,7 +769,7 @@ function bufferCutOffLeft( src,del )
 
 //
 
-function bufferFromArrayOfArray( array,options )
+function bufferFromArrayOfArray( array, options )
 {
 
   if( _.objectIs( array ) )
@@ -785,13 +785,13 @@ function bufferFromArrayOfArray( array,options )
 
   if( options.BufferType === undefined ) options.BufferType = Float32Array;
   if( options.sameLength === undefined ) options.sameLength = 1;
-  if( !options.sameLength ) throw _.err( '_.bufferFromArrayOfArray :','differemt length of arrays is not implemented' );
+  if( !options.sameLength ) throw _.err( '_.bufferFromArrayOfArray :', 'differemt length of arrays is not implemented' );
 
   if( !array.length ) return new options.BufferType();
 
   let atomsPerElement = _.numberIs( array[ 0 ].length ) ? array[ 0 ].length : array[ 0 ].len;
 
-  if( !_.numberIs( atomsPerElement ) ) throw _.err( '_.bufferFromArrayOfArray :','cant find out element length' );
+  if( !_.numberIs( atomsPerElement ) ) throw _.err( '_.bufferFromArrayOfArray :', 'cant find out element length' );
 
   let length = array.length * atomsPerElement;
   let result = new options.BufferType( length );
@@ -823,8 +823,8 @@ function bufferFrom( o )
 
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( o ) );
-  _.assert( _.routineIs( o.bufferConstructor ),'Expects bufferConstructor' );
-  _.assertMapHasOnly( o,bufferFrom.defaults );
+  _.assert( _.routineIs( o.bufferConstructor ), 'Expects bufferConstructor' );
+  _.assertMapHasOnly( o, bufferFrom.defaults );
 
   /* same */
 
@@ -861,7 +861,7 @@ function bufferFrom( o )
 
   /* verification */
 
-  _.assert( _.objectLike( o.src ) || _.longIs( o.src ),'bufferFrom expects object-like or array-like as o.src' );
+  _.assert( _.objectLike( o.src ) || _.longIs( o.src ), 'bufferFrom expects object-like or array-like as o.src' );
 
   /* length */
 
@@ -942,7 +942,7 @@ function bufferRawFromTyped( buffer )
   let result = buffer.buffer;
 
   if( buffer.byteOffset || buffer.byteLength !== result.byteLength )
-  result = result.slice( buffer.byteOffset || 0,buffer.byteLength );
+  result = result.slice( buffer.byteOffset || 0, buffer.byteLength );
 
   _.assert( _.bufferRawIs( result ) );
 
@@ -974,7 +974,7 @@ function bufferRawFrom( buffer )
     // _.assert( 0, 'not implemented' );
     result = buffer.buffer;
     if( buffer.byteOffset || buffer.byteLength !== result.byteLength )
-    result = result.slice( buffer.byteOffset || 0,buffer.byteLength );
+    result = result.slice( buffer.byteOffset || 0, buffer.byteLength );
 
   }
   else if( _.strIs( buffer ) )
@@ -1069,7 +1069,7 @@ function bufferNodeFrom( buffer )
 {
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.bufferViewIs( buffer ) || _.bufferTypedIs( buffer ) || _.bufferRawIs( buffer ) || _.bufferNodeIs( buffer ) || _.strIs( buffer ) || _.arrayIs( buffer ), 'Expects typed or raw buffer, but got',_.strType( buffer ) );
+  _.assert( _.bufferViewIs( buffer ) || _.bufferTypedIs( buffer ) || _.bufferRawIs( buffer ) || _.bufferNodeIs( buffer ) || _.strIs( buffer ) || _.arrayIs( buffer ), 'Expects typed or raw buffer, but got', _.strType( buffer ) );
 
   if( _.bufferNodeIs( buffer ) )
   return buffer;
@@ -1147,8 +1147,8 @@ function buffersSerialize( o )
   o = o || Object.create( null );
 
   _.assertMapHasNoUndefine( o );
-  _.assertMapHasOnly( o,buffersSerialize.defaults );
-  _.mapComplement( o,buffersSerialize.defaults );
+  _.assertMapHasOnly( o, buffersSerialize.defaults );
+  _.mapComplement( o, buffersSerialize.defaults );
   _.assert( _.objectIs( o.store ) );
 
   let store = o.store;
@@ -1163,9 +1163,9 @@ function buffersSerialize( o )
 
     let name = attributes[ a ][ 0 ];
     let attribute = attributes[ a ][ 1 ];
-    let buffer = o.onBufferGet.call( o.context,attribute );
+    let buffer = o.onBufferGet.call( o.context, attribute );
 
-    _.assert( _.bufferTypedIs( buffer ) || buffer === null,'Expects buffer or null, got : ' + _.strType( buffer ) );
+    _.assert( _.bufferTypedIs( buffer ) || buffer === null, 'Expects buffer or null, got : ' + _.strType( buffer ) );
 
     let bufferSize = buffer ? buffer.length*buffer.BYTES_PER_ELEMENT : 0;
 
@@ -1193,11 +1193,11 @@ function buffersSerialize( o )
 
   _.assert( store[ 'buffer' ].byteLength === size );
   if( store[ 'buffer' ].byteLength < size )
-  throw _.err( 'buffersSerialize :','buffer does not have enough space' );
+  throw _.err( 'buffersSerialize :', 'buffer does not have enough space' );
 
   /* sort by atom size */
 
-  buffers.sort( function( a,b )
+  buffers.sort( function( a, b )
   {
     return b.sizeOfAtom - a.sizeOfAtom;
   });
@@ -1217,7 +1217,7 @@ function buffersSerialize( o )
     if( o.dropAttribute && o.dropAttribute[ name ] )
     continue;
 
-    _.bufferMove( dstBuffer.subarray( offset,offset+bufferSize ),bytes );
+    _.bufferMove( dstBuffer.subarray( offset, offset+bufferSize ), bytes );
 
     let serialized = store[ 'attributes' ][ name ] =
     {
@@ -1296,19 +1296,19 @@ function buffersDeserialize( o )
     let sizeOfAtom = attribute[ 'sizeOfAtom' ];
     let fields = attribute[ 'fields' ];
 
-    _.assert( _.routineIs( bufferConstructor ) || bufferConstructor === null,'unknown attribute\' constructor :',attribute[ 'bufferConstructorName' ] )
-    _.assert( _.numberIs( offset ),'unknown attribute\' offset in common buffer :',offset )
-    _.assert( _.numberIs( size ),'unknown attribute\' size of buffer :',size )
-    _.assert( _.numberIs( sizeOfAtom ),'unknown attribute\' sizeOfAtom of buffer :',sizeOfAtom )
+    _.assert( _.routineIs( bufferConstructor ) || bufferConstructor === null, 'unknown attribute\' constructor :', attribute[ 'bufferConstructorName' ] )
+    _.assert( _.numberIs( offset ), 'unknown attribute\' offset in common buffer :', offset )
+    _.assert( _.numberIs( size ), 'unknown attribute\' size of buffer :', size )
+    _.assert( _.numberIs( sizeOfAtom ), 'unknown attribute\' sizeOfAtom of buffer :', sizeOfAtom )
 
     if( attribute.offset+size > commonBuffer.byteLength )
-    throw _.err( 'cant deserialize attribute','"'+a+'"','it is out of common buffer' );
+    throw _.err( 'cant deserialize attribute', '"'+a+'"', 'it is out of common buffer' );
 
-    /* logger.log( 'bufferConstructor( ' + commonBuffer + ',' + offset + ',' + size / sizeOfAtom + ' )' ); */
+    /* logger.log( 'bufferConstructor( ' + commonBuffer + ', ' + offset + ', ' + size / sizeOfAtom + ' )' ); */
 
-    let buffer = bufferConstructor ? new bufferConstructor( commonBuffer,offset,size / sizeOfAtom ) : null;
+    let buffer = bufferConstructor ? new bufferConstructor( commonBuffer, offset, size / sizeOfAtom ) : null;
 
-    o.onAttribute.call( o.context,fields,buffer,a );
+    o.onAttribute.call( o.context, fields, buffer, a );
 
   }
 
@@ -1318,7 +1318,7 @@ buffersDeserialize.defaults =
 {
   store : null,
   context : null,
-  onAttribute : function( attributeOptions,buffer )
+  onAttribute : function( attributeOptions, buffer )
   {
     attributeOptions.buffer = buffer;
     new this.AttributeOfGeometry( attributeOptions ).addTo( this );
@@ -1361,7 +1361,7 @@ function arrayMakeRandom( o )
   }
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routineOptions( arrayMakeRandom,o );
+  _.routineOptions( arrayMakeRandom, o );
 
   debugger;
 
@@ -1378,61 +1378,8 @@ function arrayMakeRandom( o )
 arrayMakeRandom.defaults =
 {
   int : 0,
-  range : [ 0,1 ],
+  range : [ 0, 1 ],
   length : 1,
-}
-
-//
-
-/**
- * The arrayFromNumber() routine returns a new array
- * which containing the static elements only type of Number.
- *
- * It takes two arguments (dst) and (length)
- * checks if the (dst) is a Number, If the (length) is greater than or equal to zero.
- * If true, it returns the new array of static (dst) numbers.
- * Otherwise, if the first argument (dst) is an Array,
- * and its (dst.length) is equal to the (length),
- * it returns the original (dst) Array.
- * Otherwise, it throws an Error.
- *
- * @param { ( Number | Array ) } dst - A number or an Array.
- * @param { Number } length - The length of the new array.
- *
- * @example
- * // returns [ 3, 3, 3, 3, 3, 3, 3 ]
- * let arr = _.arrayFromNumber( 3, 7 );
- *
- * @example
- * // returns [ 3, 7, 13 ]
- * let arr = _.arrayFromNumber( [ 3, 7, 13 ], 3 );
- *
- * @returns { Number[] | Array } - Returns the new array of static numbers or the original array.
- * @function arrayFromNumber
- * @throws { Error } If missed argument, or got less or more than two arguments.
- * @throws { Error } If type of the first argument is not a number or array.
- * @throws { Error } If the second argument is less than 0.
- * @throws { Error } If (dst.length) is not equal to the (length).
- * @memberof wTools
- */
-
-function arrayFromNumber( dst,length )
-{
-
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.numberIs( dst ) || _.arrayIs( dst ),'Expects array of number as argument' );
-  _.assert( length >= 0 );
-
-  if( _.numberIs( dst ) )
-  {
-    dst = _.arrayFillTimes( [] , length , dst );
-  }
-  else
-  {
-    _.assert( dst.length === length,'Expects array of length',length,'but got',dst );
-  }
-
-  return dst;
 }
 
 //
@@ -1522,7 +1469,7 @@ function arrayFromRange( range )
 {
 
   if( _.numberIs( range ) )
-  range = [ 0,range ];
+  range = [ 0, range ];
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( range.length === 2 );
@@ -1530,7 +1477,7 @@ function arrayFromRange( range )
 
   let step = range[ 0 ] <= range[ 1 ] ? +1 : -1;
 
-  return this.arrayFromRangeWithStep( range,step );
+  return this.arrayFromRangeWithStep( range, step );
 }
 
 //
@@ -1556,15 +1503,15 @@ function arrayFromProgressionArithmetic( progression, numberOfSteps )
   if( numberOfSteps === 1 )
   return new this.ArrayType([ progression[ 0 ] ]);
 
-  let range = [ progression[ 0 ],progression[ 0 ]+progression[ 1 ]*(numberOfSteps+1) ];
+  let range = [ progression[ 0 ], progression[ 0 ]+progression[ 1 ]*(numberOfSteps+1) ];
   let step = ( range[ 1 ]-range[ 0 ] ) / ( numberOfSteps-1 );
 
-  return this.arrayFromRangeWithStep( range,step );
+  return this.arrayFromRangeWithStep( range, step );
 }
 
 //
 
-function arrayFromRangeWithStep( range,step )
+function arrayFromRangeWithStep( range, step )
 {
   let result;
 
@@ -1648,41 +1595,6 @@ function arrayFromRangeWithNumberOfSteps( range , numberOfSteps )
   return this.arrayFromRangeWithStep( range , step );
 }
 
-//
-
-/**
- * The arrayAs() routine copies passed argument to the array.
- *
- * @param { * } src - The source value.
- *
- * @example
- * // returns [ false ]
- * let arr = _.arrayAs( false );
- *
- * @example
- * // returns [ { a : 1, b : 2 } ]
- * let arr = _.arrayAs( { a : 1, b : 2 } );
- *
- * @returns { Array } - If passed null or undefined than return the empty array. If passed an array then return it.
- * Otherwise return an array which contains the element from argument.
- * @function arrayAs
- * @memberof wTools
- */
-
-function arrayAs( src )
-{
-  _.assert( arguments.length === 1 );
-  _.assert( src !== undefined );
-
-  if( src === null )
-  return [];
-  else if( _.arrayLike( src ) )
-  return src;
-  else
-  return [ src ];
-
-}
-
 // --
 // array converter
 // --
@@ -1752,7 +1664,7 @@ function arrayToMap( array )
  * @memberof wTools
  */
 
-function arrayToStr( src,options )
+function arrayToStr( src, options )
 {
 
   let result = '';
@@ -1826,17 +1738,17 @@ function arrayToStr( src,options )
  */
 
 /* xxx : not array */
-function arraySub( src,begin,end )
+function arraySub( src, begin, end )
 {
 
   _.assert( arguments.length <= 3 );
-  _.assert( _.longIs( src ),'unknown type of (-src-) argument' );
+  _.assert( _.longIs( src ), 'unknown type of (-src-) argument' );
   _.assert( _.routineIs( src.slice ) || _.routineIs( src.subarray ) );
 
   if( _.routineIs( src.subarray ) )
-  return src.subarray( begin,end );
+  return src.subarray( begin, end );
 
-  return src.slice( begin,end );
+  return src.slice( begin, end );
 }
 
 //
@@ -1861,13 +1773,13 @@ function arrayButRange( src, range, ins )
 
 /* qqq : requires good test coverage */
 
-function arraySlice( srcArray,f,l )
+function arraySlice( srcArray, f, l )
 {
 
   _.assert( _.arrayLikeResizable( srcArray ) );
   _.assert( 1 <= arguments.length && arguments.length <= 3 );
 
-  return srcArray.slice( f,l );
+  return srcArray.slice( f, l );
 }
 
 //
@@ -1937,7 +1849,7 @@ function arraySlice( srcArray,f,l )
  * @memberof wTools
  */
 
-function arrayGrow( array,f,l,val )
+function arrayGrow( array, f, l, val )
 {
 
   let result;
@@ -1960,8 +1872,8 @@ function arrayGrow( array,f,l,val )
 
   /* */
 
-  let lsrc = Math.min( array.length,l );
-  for( let r = Math.max( f,0 ) ; r < lsrc ; r++ )
+  let lsrc = Math.min( array.length, l );
+  for( let r = Math.max( f, 0 ) ; r < lsrc ; r++ )
   result[ r-f ] = array[ r ];
 
   /* */
@@ -2070,7 +1982,7 @@ function arrayGrow( array,f,l,val )
  * @memberof wTools
 */
 
-function arrayResize( array,f,l,val )
+function arrayResize( array, f, l, val )
 {
   _.assert( _.longIs( array ) );
 
@@ -2085,14 +1997,14 @@ function arrayResize( array,f,l,val )
 
   if( l < f )
   l = f;
-  let lsrc = Math.min( array.length,l );
+  let lsrc = Math.min( array.length, l );
 
   if( _.bufferTypedIs( array ) )
   result = new array.constructor( l-f );
   else
   result = new Array( l-f );
 
-  for( let r = Math.max( f,0 ) ; r < lsrc ; r++ )
+  for( let r = Math.max( f, 0 ) ; r < lsrc ; r++ )
   result[ r-f ] = array[ r ];
 
   if( val !== undefined )
@@ -2114,7 +2026,7 @@ function arrayResize( array,f,l,val )
 
 //
 
-/* srcBuffer = _.arrayMultislice( [ originalBuffer,f ],[ originalBuffer,0,srcAttribute.atomsPerElement ] ); */
+/* srcBuffer = _.arrayMultislice( [ originalBuffer, f ], [ originalBuffer, 0, srcAttribute.atomsPerElement ] ); */
 
 function arrayMultislice()
 {
@@ -2130,7 +2042,7 @@ function arrayMultislice()
     let f = src[ 1 ];
     let l = src[ 2 ];
 
-    _.assert( _.longIs( src ) && _.longIs( src[ 0 ] ),'Expects array of array' );
+    _.assert( _.longIs( src ) && _.longIs( src[ 0 ] ), 'Expects array of array' );
     f = f !== undefined ? f : 0;
     l = l !== undefined ? l : src[ 0 ].length;
     if( l < f )
@@ -2222,7 +2134,7 @@ function arrayDuplicate( o )
   }
 
   _.assert( _.numberIs( o.numberOfDuplicatesPerElement ) || o.numberOfDuplicatesPerElement === undefined );
-  _.routineOptions( arrayDuplicate,o );
+  _.routineOptions( arrayDuplicate, o );
   _.assert( _.longIs( o.src ), 'arrayDuplicate expects o.src as longIs entity' );
   _.assert( _.numberIsInt( o.src.length / o.numberOfAtomsPerElement ) );
 
@@ -2250,7 +2162,7 @@ function arrayDuplicate( o )
   if( o.result )
   _.assert( o.result.length >= length );
 
-  o.result = o.result || _.longMake( o.src,length );
+  o.result = o.result || _.longMake( o.src, length );
 
   let rlength = o.result.length;
 
@@ -2329,12 +2241,12 @@ function arrayMask( srcArray, mask )
   let length = srcArray.length / atomsPerElement;
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.longIs( srcArray ),'arrayMask :','Expects array-like as srcArray' );
-  _.assert( _.longIs( mask ),'arrayMask :','Expects array-like as mask' );
+  _.assert( _.longIs( srcArray ), 'arrayMask :', 'Expects array-like as srcArray' );
+  _.assert( _.longIs( mask ), 'arrayMask :', 'Expects array-like as mask' );
   _.assert
   (
     _.numberIsInt( length ),
-    'arrayMask :','Expects mask that has component for each atom of srcArray',
+    'arrayMask :', 'Expects mask that has component for each atom of srcArray',
     _.toStr
     ({
       'atomsPerElement' : atomsPerElement,
@@ -2378,8 +2290,8 @@ function arrayUnmask( o )
     mask : arguments[ 1 ],
   }
 
-  _.assertMapHasOnly( o,arrayUnmask.defaults );
-  _.assert( _.longIs( o.src ),'arrayUnmask : expects o.src as ArrayLike' );
+  _.assertMapHasOnly( o, arrayUnmask.defaults );
+  _.assert( _.longIs( o.src ), 'arrayUnmask : expects o.src as ArrayLike' );
 
   let atomsPerElement = o.mask.length;
 
@@ -2390,7 +2302,7 @@ function arrayUnmask( o )
 
   let length = o.src.length / atomsPerElementPreserved;
   if( Math.floor( length ) !== length )
-  throw _.err( 'arrayMask :','Expects mask that has component for each atom of o.src',_.toStr({ 'atomsPerElementPreserved' : atomsPerElementPreserved, 'o.src.length' : o.src.length  }) );
+  throw _.err( 'arrayMask :', 'Expects mask that has component for each atom of o.src', _.toStr({ 'atomsPerElementPreserved' : atomsPerElementPreserved, 'o.src.length' : o.src.length  }) );
 
   let dstArray = new o.src.constructor( atomsPerElement*length );
 
@@ -2410,7 +2322,7 @@ function arrayUnmask( o )
     }
 
     if( o.onEach )
-    o.onEach( e,i );
+    o.onEach( e, i );
 
     for( let m = 0 ; m < o.mask.length ; m++ )
     dstArray[ i*atomsPerElement + m ] = e[ m ];
@@ -2437,13 +2349,13 @@ function arrayInvestigateUniqueMap( o )
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.longIs( o.src ) );
-  _.assertMapHasOnly( o,arrayInvestigateUniqueMap.defaults );
+  _.assertMapHasOnly( o, arrayInvestigateUniqueMap.defaults );
 
   /* */
 
   if( o.onEvaluate )
   {
-    o.src = _.entityMap( o.src,( e ) => o.onEvaluate( e ) );
+    o.src = _.entityMap( o.src, ( e ) => o.onEvaluate( e ) );
   }
 
   /* */
@@ -2466,7 +2378,7 @@ function arrayInvestigateUniqueMap( o )
     let currentUnique = 1;
     do
     {
-      index = o.src.indexOf( o.src[ i ],index+1 );
+      index = o.src.indexOf( o.src[ i ], index+1 );
       if( index !== -1 )
       {
         isUnique[ index ] = 0;
@@ -2611,7 +2523,7 @@ function arraySet( dst, index, value )
  * @memberof wTools
  */
 
-function arraySwap( dst,index1,index2 )
+function arraySwap( dst, index1, index2 )
 {
 
   if( arguments.length === 1 )
@@ -2621,9 +2533,9 @@ function arraySwap( dst,index1,index2 )
   }
 
   _.assert( arguments.length === 1 || arguments.length === 3 );
-  _.assert( _.longIs( dst ),'arraySwap :','argument must be array' );
-  _.assert( 0 <= index1 && index1 < dst.length,'arraySwap :','index1 is out of bound' );
-  _.assert( 0 <= index2 && index2 < dst.length,'arraySwap :','index2 is out of bound' );
+  _.assert( _.longIs( dst ), 'arraySwap :', 'argument must be array' );
+  _.assert( 0 <= index1 && index1 < dst.length, 'arraySwap :', 'index1 is out of bound' );
+  _.assert( 0 <= index2 && index2 < dst.length, 'arraySwap :', 'index2 is out of bound' );
 
   let e = dst[ index1 ];
   dst[ index1 ] = dst[ index2 ];
@@ -2640,7 +2552,7 @@ function arraySwap( dst,index1,index2 )
  * On success returns array with deleted element(s), otherwise returns empty array.
  * For TypedArray's and buffers returns modified copy of ( dstArray ) or original array if nothing changed.
  *
- * @param { Array|TypedArray|Buffer } dstArray - The target array, TypedArray( Int8Array,Int16Array,Uint8Array ... etc ) or Buffer( ArrayBuffer, Buffer ).
+ * @param { Array|TypedArray|Buffer } dstArray - The target array, TypedArray( Int8Array, Int16Array, Uint8Array ... etc ) or Buffer( ArrayBuffer, Buffer ).
  * @param { Array|Number } range - The range of elements or index of single element to remove from ( dstArray ).
  * @param { Array } srcArray - The array of elements to add to( dstArray ) at the start position of provided range( range ).
  * If one of ( range ) indexies is not specified it will be setted to zero.
@@ -2758,7 +2670,7 @@ function arrayCutin( dstArray, range, srcArray )
     args.unshift( last-first );
     args.unshift( first );
 
-    result = dstArray.splice.apply( dstArray,args );
+    result = dstArray.splice.apply( dstArray, args );
   }
 
   return result;
@@ -2807,7 +2719,7 @@ function arrayPut( dstArray, dstOffset )
 
     if( aIs && _.bufferTypedIs( dstArray ) )
     {
-      dstArray.set( argument,dstOffset );
+      dstArray.set( argument, dstOffset );
       dstOffset += argument.length;
     }
     else if( aIs )
@@ -2858,7 +2770,7 @@ function arrayPut( dstArray, dstOffset )
  * @memberof wTools
  */
 
-function arrayFillTimes( result,times,value )
+function arrayFillTimes( result, times, value )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
@@ -2872,7 +2784,7 @@ function arrayFillTimes( result,times,value )
 
   if( _.routineIs( result.fill ) )
   {
-    result.fill( value,0,times );
+    result.fill( value, 0, times );
   }
   else
   {
@@ -2891,18 +2803,18 @@ function arrayFillTimes( result,times,value )
 
 //
 
-function arrayFillWhole( result,value )
+function arrayFillWhole( result, value )
 {
   _.assert( _.longIs( result ) );
   _.assert( arguments.length === 1 || arguments.length === 2 );
   if( value === undefined )
   value = 0;
-  return _.arrayFillTimes( result,result.length,value );
+  return _.arrayFillTimes( result, result.length, value );
 }
 
 // {
 //   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-//   _.assert( _.objectIs( o ) || _.numberIs( o ) || _.arrayIs( o ),'arrayFill :','"o" must be object' );
+//   _.assert( _.objectIs( o ) || _.numberIs( o ) || _.arrayIs( o ), 'arrayFill :', '"o" must be object' );
 //
 //   if( arguments.length === 1 )
 //   {
@@ -2916,7 +2828,7 @@ function arrayFillWhole( result,value )
 //     o = { result : arguments[ 0 ], value : arguments[ 1 ] };
 //   }
 //
-//   _.assertMapHasOnly( o,arrayFill.defaults );
+//   _.assertMapHasOnly( o, arrayFill.defaults );
 //   if( o.result )
 //   _.assert( _.longIs( o.result ) );
 //
@@ -2928,7 +2840,7 @@ function arrayFillWhole( result,value )
 //   {
 //     if( result.length < times )
 //     result.length = times;
-//     result.fill( value,0,times );
+//     result.fill( value, 0, times );
 //   }
 //   else
 //   {
@@ -2981,12 +2893,12 @@ function arraySupplement( dstArray )
   result = [];
 
   let length = result.length;
-  _.assert( _.longIs( result ) || _.numberIs( result ),'Expects object as argument' );
+  _.assert( _.longIs( result ) || _.numberIs( result ), 'Expects object as argument' );
 
   for( let a = arguments.length-1 ; a >= 1 ; a-- )
   {
-    _.assert( _.longIs( arguments[ a ] ),'argument is not defined :',a );
-    length = Math.max( length,arguments[ a ].length );
+    _.assert( _.longIs( arguments[ a ] ), 'argument is not defined :', a );
+    length = Math.max( length, arguments[ a ].length );
   }
 
   if( _.numberIs( result ) )
@@ -3054,15 +2966,15 @@ function arraySupplement( dstArray )
  * @memberof wTools
  */
 
-function arrayExtendScreening( screenArray,dstArray )
+function arrayExtendScreening( screenArray, dstArray )
 {
   let result = dstArray;
   if( result === null ) result = [];
 
-  _.assert( _.longIs( screenArray ),'Expects object as screenArray' );
-  _.assert( _.longIs( result ),'Expects object as argument' );
+  _.assert( _.longIs( screenArray ), 'Expects object as screenArray' );
+  _.assert( _.longIs( result ), 'Expects object as argument' );
   for( let a = arguments.length-1 ; a >= 2 ; a-- )
-  _.assert( arguments[ a ],'argument is not defined :',a );
+  _.assert( arguments[ a ], 'argument is not defined :', a );
 
   for( let k = 0 ; k < screenArray.length ; k++ )
   {
@@ -3085,7 +2997,7 @@ function arrayExtendScreening( screenArray,dstArray )
 
 //
 
-function arrayShuffle( dst,times )
+function arrayShuffle( dst, times )
 {
   _.assert( arguments.length === 1 || arguments.length === 2 );
   _.assert( _.longIs( dst ) );
@@ -3094,7 +3006,7 @@ function arrayShuffle( dst,times )
   times = dst.length;
 
   let l = dst.length;
-  let e1,e2;
+  let e1, e2;
   for( let t1 = 0 ; t1 < times ; t1++ )
   {
     let t2 = Math.floor( Math.random() * l );
@@ -3125,7 +3037,7 @@ function arraySort( srcArray, onEvaluate )
   }
   else if( onEvaluate.length === 1 )
   {
-    srcArray.sort( function( a,b )
+    srcArray.sort( function( a, b )
     {
       a = onEvaluate( a );
       b = onEvaluate( b );
@@ -3143,7 +3055,7 @@ function arraySort( srcArray, onEvaluate )
 // array etc
 // --
 
-function arrayIndicesOfGreatest( srcArray,numberOfElements,comparator )
+function arrayIndicesOfGreatest( srcArray, numberOfElements, comparator )
 {
   let result = [];
   let l = srcArray.length;
@@ -3153,9 +3065,9 @@ function arrayIndicesOfGreatest( srcArray,numberOfElements,comparator )
 
   comparator = _._comparatorFromEvaluator( comparator );
 
-  function rcomparator( a,b )
+  function rcomparator( a, b )
   {
-    return comparator( srcArray[ a ],srcArray[ b ] );
+    return comparator( srcArray[ a ], srcArray[ b ] );
   };
 
   for( let i = 0 ; i < l ; i += 1 )
@@ -3168,7 +3080,7 @@ function arrayIndicesOfGreatest( srcArray,numberOfElements,comparator )
     }
 
     _.sorted.add( result, i, rcomparator );
-    result.splice( result.length-1,1 );
+    result.splice( result.length-1, 1 );
 
   }
 
@@ -3203,12 +3115,12 @@ function arrayIndicesOfGreatest( srcArray,numberOfElements,comparator )
  * @memberof wTools
  */
 
-function arraySum( src,onEvaluate )
+function arraySum( src, onEvaluate )
 {
   let result = 0;
 
   _.assert( arguments.length === 1 || arguments.length === 2 );
-  _.assert( _.longIs( src ),'arraySum :','Expects ArrayLike' );
+  _.assert( _.longIs( src ), 'arraySum :', 'Expects ArrayLike' );
 
   if( onEvaluate === undefined )
   onEvaluate = function( e ){ return e; };
@@ -3217,7 +3129,7 @@ function arraySum( src,onEvaluate )
 
   for( let i = 0 ; i < src.length ; i++ )
   {
-    result += onEvaluate( src[ i ],i,src );
+    result += onEvaluate( src[ i ], i, src );
   }
 
   return result;
@@ -3302,7 +3214,7 @@ function arraySetBut( dst )
   if( args.length > 1 )
   {
     dst = _.longSlice( args[ 1 ] );
-    args.splice( 1,1 );
+    args.splice( 1, 1 );
   }
   else
   {
@@ -3322,7 +3234,7 @@ function arraySetBut( dst )
       let but = args[ a ];
       if( but.indexOf( dst[ i ] ) !== -1 )
       {
-        dst.splice( i,1 );
+        dst.splice( i, 1 );
         break;
       }
     }
@@ -3381,7 +3293,7 @@ function arraySetIntersection( dst )
       let ins = arguments[ a ];
       if( ins.indexOf( dst[ i ] ) === -1 )
       {
-        dst.splice( i,1 );
+        dst.splice( i, 1 );
         break;
       }
     }
@@ -3402,7 +3314,7 @@ function arraySetUnion( dst )
   {
     dst = [];
     // dst = _.longSlice( args[ 1 ] );
-    // args.splice( 1,1 );
+    // args.splice( 1, 1 );
   }
   else
   {
@@ -3615,7 +3527,7 @@ function arraySetContainNone( src )
  * @memberof wTools
  */
 
-function arraySetIdentical( ins1,ins2 )
+function arraySetIdentical( ins1, ins2 )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -3625,7 +3537,7 @@ function arraySetIdentical( ins1,ins2 )
   if( ins1.length !== ins2.length )
   return false;
 
-  let result = _.arraySetDiff( ins1,ins2 );
+  let result = _.arraySetDiff( ins1, ins2 );
 
   return result.length === 0;
 }
@@ -3655,15 +3567,6 @@ let Routines =
 {
 
   // buffer
-
-  // bufferRawIs : bufferRawIs,
-  // bufferTypedIs : bufferTypedIs,
-  // bufferViewIs : bufferViewIs,
-  // bufferNodeIs : bufferNodeIs,
-  // bufferAnyIs : bufferAnyIs,
-  // bufferBytesIs : bufferBytesIs,
-  // bytesIs : bufferBytesIs,
-  // constructorIsBuffer : constructorIsBuffer,
 
   buffersTypedAreEquivalent : buffersTypedAreEquivalent,
   buffersTypedAreIdentical : buffersTypedAreIdentical,
@@ -3704,9 +3607,9 @@ let Routines =
   // array maker
 
   arrayMakeRandom : arrayMakeRandom,
-  arrayFromNumber : arrayFromNumber,
+  // scalarToVector : scalarToVector,
   arrayFromCoercing : arrayFromCoercing,
-  arrayAs : arrayAs,
+  // arrayAs : arrayAs,
 
   arrayFromRange : arrayFromRange,
   arrayFromProgressionArithmetic : arrayFromProgressionArithmetic,

@@ -6,7 +6,6 @@ about:
   values:
     enabled: 1
     name: module-a
-execution: {}
 path:
   proto:
     path: ./proto
@@ -32,6 +31,21 @@ path:
     path: a.will.yml
   in:
     path: ..
+  module.willfiles:
+    path: out/module-a.out.will.yml
+    criterion:
+      predefined: 1
+  module.dir:
+    path: out
+    criterion:
+      predefined: 1
+  local:
+    path: .
+    criterion:
+      predefined: 1
+  remote:
+    criterion:
+      predefined: 1
 submodule: {}
 reflector:
   exported.proto.export:

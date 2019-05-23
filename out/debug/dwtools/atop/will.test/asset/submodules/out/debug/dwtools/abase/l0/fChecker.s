@@ -1,6 +1,6 @@
 ( function _fChecker_s_() {
 
-'use strict'; 
+'use strict';
 
 let _global = _global_;
 let _ = _global_.wTools;
@@ -452,19 +452,33 @@ function processIs( src )
 
 //
 
+let Inspector = null;
+
 function processIsDebugged()
 {
   _.assert( arguments.length === 0 );
-
+  
   if( typeof process === 'undefined' )
   return false;
+  
+  if( Inspector === null )
+  try
+  { 
+    Inspector = require( 'inspector' ); 
+  } 
+  catch( err )
+  {
+    Inspector = false;
+  }
+  
+  if( Inspector )
+  return _.strIs( Inspector.url() );
 
   if( !process.execArgv.length )
   return false;
-
-  let execArgv = process.execArgv.join();
-  return _.strHas( execArgv, '--inspect' );
-
+  
+  let execArgvString = process.execArgv.join();
+  return _.strHasAny( execArgvString, [ '--inspect', '--inspect-brk', '--debug-brk' ] );
 }
 
 //
@@ -499,45 +513,45 @@ let Routines =
 
   /* qqq : requires good tests */
 
-  nothingIs : nothingIs,
-  definedIs : definedIs,
-  primitiveIs : primitiveIs,
-  containerIs : containerIs,
-  containerLike : containerLike,
+  nothingIs,
+  definedIs,
+  primitiveIs,
+  containerIs,
+  containerLike,
 
-  symbolIs : symbolIs,
-  bigIntIs : bigIntIs,
+  symbolIs,
+  bigIntIs,
 
-  vectorIs : vectorIs,
-  constructorIsVector : constructorIsVector,
-  spaceIs : spaceIs,
-  constructorIsSpace : constructorIsSpace,
+  vectorIs,
+  constructorIsVector,
+  spaceIs,
+  constructorIsSpace,
 
-  consequenceIs : consequenceIs,
-  consequenceLike : consequenceLike,
-  promiseIs : promiseIs,
-  promiseLike : promiseLike,
+  consequenceIs,
+  consequenceLike,
+  promiseIs,
+  promiseLike,
 
-  typeOf : typeOf,
-  prototypeOf : prototypeOf,
-  prototypeHas : prototypeHas,
-  prototypeIs : prototypeIs,
-  prototypeIsStandard : prototypeIsStandard,
-  constructorIs : constructorIs,
-  constructorIsStandard : constructorIsStandard,
-  instanceIs : instanceIs,
-  instanceIsStandard : instanceIsStandard,
-  instanceLike : instanceLike,
+  typeOf,
+  prototypeOf,
+  prototypeHas,
+  prototypeIs,
+  prototypeIsStandard,
+  constructorIs,
+  constructorIsStandard,
+  instanceIs,
+  instanceIsStandard,
+  instanceLike,
 
-  workerIs : workerIs,
-  streamIs : streamIs,
-  consoleIs : consoleIs,
-  printerLike : printerLike,
-  printerIs : printerIs,
-  loggerIs : loggerIs,
-  processIs : processIs,
-  processIsDebugged : processIsDebugged,
-  definitionIs : definitionIs,
+  workerIs,
+  streamIs,
+  consoleIs,
+  printerLike,
+  printerIs,
+  loggerIs,
+  processIs,
+  processIsDebugged,
+  definitionIs,
 
 }
 
@@ -550,9 +564,9 @@ Object.assign( Self, Fields );
 // export
 // --
 
-if( typeof module !== 'undefined' )
-if( _global.WTOOLS_PRIVATE )
-{ /* delete require.cache[ module.id ]; */ }
+// if( typeof module !== 'undefined' )
+// if( _global.WTOOLS_PRIVATE )
+// { /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

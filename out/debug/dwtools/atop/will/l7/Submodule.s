@@ -49,16 +49,17 @@ function unform()
   let module = submodule.module;
   let rootModule = module.rootModule;
 
-  if( !submodule.original && rootModule.allModuleMap[ submodule.path ] )
-  {
-    _.assert( rootModule.allModuleMap[ submodule.path ] === submodule.loadedModule );
-    delete rootModule.allModuleMap[ submodule.path ];
-  }
+  // debugger;
+  // if( !submodule.original && rootModule.allModuleMap[ submodule.longPath ] )
+  // {
+  //   debugger;
+  //   _.assert( rootModule.allModuleMap[ submodule.longPath ] === submodule.openedModule );
+  //   delete rootModule.allModuleMap[ submodule.longPath ];
+  // }
 
-  if( submodule.loadedModule )
+  if( submodule.openedModule )
   {
-    // _.arrayRemoveOnceStrictly( submodule.loadedModule.associatedSubmodules, submodule );
-    submodule.loadedModule = null;
+    submodule.openedModule = null;
   }
 
   return Parent.prototype.unform.call( submodule );
@@ -72,6 +73,7 @@ function form1()
 
   _.assert( !!submodule.module );
 
+  let module = submodule.module;
   let rootModule = submodule.module.rootModule;
   let willf = submodule.willf;
   let will = rootModule.will;
@@ -84,19 +86,14 @@ function form1()
   /* begin */
 
   _.assert( !!submodule.module );
-  // let module = submodule.module;
-  // let rootModule = module.rootModule;
-  if( submodule.loadedModule )
-  {
-    _.assert( rootModule.allModuleMap[ submodule.path ] === submodule.loadedModule || rootModule.allModuleMap[ submodule.path ] === undefined );
-    rootModule.allModuleMap[ submodule.path ] = submodule.loadedModule;
-  }
 
-  // debugger;
-  // if( !submodule.original )
+  // if( submodule.openedModule )
   // {
-  //   rootModule.allModuleMap[ submodule.path ] = submodule;
+  //   _.assert( rootModule.allModuleMap[ submodule.longPath ] === submodule.openedModule || rootModule.allModuleMap[ submodule.longPath ] === undefined );
+  //   rootModule.allModuleMap[ submodule.longPath ] = submodule.openedModule;
   // }
+
+  rootModule.submoduleRegister( submodule );
 
   /* end */
 
@@ -118,14 +115,12 @@ function form3()
 
   if( submodule.formed >= 3 )
   {
-    if( submodule.loadedModule && submodule.loadedModule.hasAnyError() )
+    if( submodule.openedModule && !submodule.openedModule.isValid() )
     {
-      // debugger;
-      // _.arrayRemoveOnceStrictly( submodule.loadedModule.associatedSubmodules, submodule );
-      let loadedModule = submodule.loadedModule;
-      submodule.loadedModule = null;
-      _.assert( loadedModule.associatedSubmodules.length === 0 );
-      loadedModule.finit();
+      let openedModule = submodule.openedModule;
+      submodule.openedModule = null;
+      _.assert( openedModule.submoduleAssociation.length === 0 );
+      openedModule.finit();
       submodule.formed = 2;
     }
     else
@@ -141,18 +136,25 @@ function form3()
 
   /* begin */
 
-  if( !module.supermodule )
-  result = submodule._load();
+  // if( !module.supermodule )
+  result = submodule.open();
+
+  result.tap( ( err, arg ) =>
+  {
+    // module.submoduleRegister( submodule, submodule.name );
+    // module.rootModule.submoduleRegister( submodule );
+    submodule.formed = 3;
+  });
 
   /* end */
 
-  submodule.formed = 3;
+  // submodule.formed = 3;
   return result;
 }
 
 //
 
-function _load()
+function open()
 {
   let submodule = this;
   let module = submodule.module;
@@ -164,64 +166,77 @@ function _load()
 
   _.assert( arguments.length === 0 );
   _.assert( submodule.formed === 2 );
-  _.assert( submodule.loadedModule === null );
+  _.assert( submodule.openedModule === null );
   _.assert( _.strIs( submodule.path ), 'not tested' );
   _.assert( !submodule.original );
   _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
 
-  if( rootModule.allModuleMap[ submodule.path ] )
+  let longPath = submodule.longPath;
+  let openedModule = rootModule.moduleAt( longPath );
+  if( openedModule )
   {
-    debugger;
-    submodule.loadedModule = rootModule.allModuleMap[ submodule.path ];
-    return submodule.loadedModule.ready.split()
+    // debugger;
+    submodule.openedModule = openedModule;
+    return submodule.openedModule.ready.split();
   }
+
+  // if( rootModule.allModuleMap[ longPath ] )
+  // {
+  //   debugger; xxx
+  //   submodule.openedModule = rootModule.allModuleMap[ longPath ];
+  //   return submodule.openedModule.ready.split()
+  // }
 
   if( submodule.data )
   {
-    _.assert( 0, 'not implemented' );
-    submodule.data = null;
+    // debugger;
+    // _.assert( 0, 'not implemented' );
+    // submodule.data = null;
+    submodule._openFromData( submodule.data, longPath );
+  }
+  else
+  {
+    submodule._openFromFile( longPath );
   }
 
-  /* */
-
+  // submodule.openedModule = will.Module
+  // ({
+  //   will : will,
+  //   aliasName : submodule.name,
+  //   willfilesPath : path.join( module.inPath, submodule.path ),
+  //   supermodule : module,
+  // }).preform();
+  //
+  // // submodule.openedModule.stager.stageStateSkipping( 'submodulesFormed', 1 );
+  // submodule.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
   // debugger;
-  submodule.loadedModule = will.Module
-  ({
-    will : will,
-    alias : submodule.name,
-    willFilesPath : path.join( module.inPath, submodule.path ),
-    supermodule : module,
-    // associatedSubmodules : [ submodule ],
-  }).preform();
-  // debugger;
+  // submodule.openedModule.willfilesFind();
+  //
+  // submodule.openedModule.willfilesFindReady.finally( ( err, arg ) =>
+  // {
+  //   if( err )
+  //   throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.openedModule.dirPath ), '\n', err );
+  //   return arg;
+  // });
+  //
+  // // submodule.openedModule.ready.then( ( arg ) =>
+  // // {
+  // //   // _.assert( !submodule.openedModule.stager.stageStatePerformed( 'submodulesFormed' ) );
+  // //   // _.assert( !submodule.openedModule.stager.stageStatePerformed( 'resourcesFormed' ) );
+  // //   return arg;
+  // // });
 
-  // rootModule.allModuleMap[ submodule.path ] = submodule.loadedModule;
-
-  submodule.loadedModule.willFilesFind({ isOutFile : 1 });
-  submodule.loadedModule.willFilesOpen();
-  submodule.loadedModule.submodulesFormSkip();
-  submodule.loadedModule.resourcesFormSkip();
-  // submodule.loadedModule.resourcesForm(); // yyy
-
-  submodule.loadedModule.willFilesFindReady.finally( ( err, arg ) =>
-  {
-    if( err )
-    throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.loadedModule.dirPath ), '\n', err );
-    return arg;
-  });
-
-  submodule.loadedModule.ready.finally( ( err, arg ) =>
+  submodule.openedModule.ready.finally( ( err, arg ) =>
   {
     if( err )
     {
-      if( rootModule.allModuleMap[ submodule.path ] === submodule.loadedModule )
-      {
-        delete rootModule.allModuleMap[ submodule.path ]
-      }
-      // debugger;
+      // if( rootModule.allModuleMap[ submodule.longPath ] === submodule.openedModule )
+      // {
+      //   delete rootModule.allModuleMap[ submodule.longPath ]
+      // }
       if( will.verbosity >= 3 )
       logger.error( ' ! Failed to read ' + submodule.decoratedNickName + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading' );
-      if( will.verbosity >= 5 || !submodule.loadedModule || submodule.loadedModule.isOpened() )
+      if( will.verbosity >= 5 || !submodule.openedModule || submodule.openedModule.isOpened() )
       {
         if( will.verbosity < 5 )
         _.errLogOnce( _.errBriefly( err ) );
@@ -236,18 +251,111 @@ function _load()
     }
     else
     {
-
     }
     return arg || null;
   });
 
   /* */
 
-  return submodule.loadedModule.ready.split().finally( ( err, arg ) =>
+  return submodule.openedModule.ready.split().finally( ( err, arg ) =>
   {
     return null;
   });
 
+}
+
+//
+
+function _openFromData( data, longPath )
+{
+  let submodule = this;
+  let module = submodule.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let rootModule = module.rootModule;
+
+  _.assert( arguments.length === 2 );
+  _.assert( submodule.formed === 2 );
+  _.assert( submodule.openedModule === null );
+  _.assert( _.strIs( submodule.path ), 'not tested' );
+  _.assert( !submodule.original );
+  _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
+  _.assert( !rootModule.moduleAt( submodule.longPath ) );
+
+  /* */
+
+  // debugger;
+  submodule.openedModule = will.Module
+  ({
+    will : will,
+    aliasName : submodule.name,
+    willfilesPath : longPath,
+    pickedWillfilesPath : longPath,
+    pickedWillfileData : data,
+    supermodule : module,
+  }).preform();
+
+  submodule.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
+  submodule.openedModule.willfilesFind();
+
+  submodule.openedModule.willfilesFindReady.finally( ( err, arg ) =>
+  {
+    // debugger;
+    if( err )
+    throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.openedModule.dirPath ), '\n', err );
+    return arg;
+  });
+
+  /* */
+
+}
+
+//
+
+function _openFromFile( longPath )
+{
+  let submodule = this;
+  let module = submodule.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let rootModule = module.rootModule;
+
+  _.assert( arguments.length === 1 );
+  _.assert( submodule.formed === 2 );
+  _.assert( submodule.openedModule === null );
+  _.assert( _.strIs( submodule.path ), 'not tested' );
+  _.assert( !submodule.original );
+  _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
+  _.assert( !submodule.data );
+  _.assert( !rootModule.moduleAt( submodule.longPath ) );
+
+  /* */
+
+  submodule.openedModule = will.Module
+  ({
+    will : will,
+    aliasName : submodule.name,
+    willfilesPath : longPath,
+    supermodule : module,
+  }).preform();
+
+  submodule.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
+  submodule.openedModule.willfilesFind();
+
+  submodule.openedModule.willfilesFindReady.finally( ( err, arg ) =>
+  {
+    if( err )
+    throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.openedModule.dirPath ), '\n', err );
+    return arg;
+  });
+
+  /* */
+
+  return submodule.openedModule;
 }
 
 //
@@ -259,7 +367,7 @@ function resolve_body( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let module2 = submodule.loadedModule || module;
+  let module2 = submodule.openedModule || module;
 
   _.assert( arguments.length === 1 );
   _.assert( o.currentContext === null || o.currentContext === submodule )
@@ -276,45 +384,72 @@ let resolve = _.routineFromPreAndBody( _.Will.Resource.prototype.resolve.pre, re
 
 //
 
+function isAvailableGet()
+{
+  let submodule = this;
+  let module = submodule.module;
+
+  if( !submodule.openedModule )
+  return false;
+
+  if( !submodule.openedModule.isDownloaded )
+  return false;
+
+  if( !submodule.openedModule.isOpened() )
+  return false;
+
+  if( !submodule.openedModule.isValid() )
+  return false;
+
+  return true;
+}
+
+//
+
 function isDownloadedGet()
 {
   let submodule = this;
   let module = submodule.module;
 
-  if( !submodule.loadedModule )
+  if( !submodule.openedModule )
   return false;
 
-  return submodule.loadedModule.isDownloaded;
+  return submodule.openedModule.isDownloaded;
 }
 
 //
 
-function loadedModuleSet( loadedModule )
+function openedModuleSet( openedModule )
 {
   let submodule = this;
 
-  if( loadedModule === submodule[ loadedModuleSymbol ] )
+  if( openedModule === submodule[ openedModuleSymbol ] )
   return;
 
-  if( submodule[ loadedModuleSymbol ] )
-  _.arrayRemoveOnceStrictly( submodule[ loadedModuleSymbol ].associatedSubmodules, submodule );
-  submodule[ loadedModuleSymbol ] = null;
+  if( submodule[ openedModuleSymbol ] )
+  _.arrayRemoveOnceStrictly( submodule[ openedModuleSymbol ].submoduleAssociation, submodule );
+  submodule[ openedModuleSymbol ] = null;
 
-  if( loadedModule )
+  if( openedModule )
   {
 
-    // debugger;
-    // _.assert( !!submodule.module );
-    // let module = submodule.module;
-    // let rootModule = module.rootModule;
-    // _.assert( rootModule.allModuleMap[ submodule.path ] === loadedModule || rootModule.allModuleMap[ submodule.path ] === undefined );
-    // rootModule.allModuleMap[ submodule.path ] = loadedModule;
-
-    _.arrayAppendOnceStrictly( loadedModule.associatedSubmodules, submodule );
-    submodule[ loadedModuleSymbol ] = loadedModule;
+    _.arrayAppendOnceStrictly( openedModule.submoduleAssociation, submodule );
+    submodule[ openedModuleSymbol ] = openedModule;
 
   }
 
+}
+
+//
+
+function longPathGet()
+{
+  let submodule = this;
+  let module = submodule.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  return path.join( module.inPath, submodule.path );
 }
 
 //
@@ -337,26 +472,30 @@ function dataSet( src )
 
 //
 
-function dataExport()
+function dataExport( o )
 {
   let submodule = this;
   let module = submodule.module;
   let willf = submodule.willf;
   let will = module.will;
+  let rootModule = module.rootModule;
 
   let result = Parent.prototype.dataExport.apply( this, arguments );
 
   if( result === undefined )
   return result;
 
-  if( 1 )
-  if( submodule.loadedModule && !submodule.loadedModule.hasAnyError() )
+  if( 0 )
+  if( o.module === module && rootModule === module )
   {
-    debugger;
-    _.assert( submodule.data === null, 'not tested' );
     if( submodule.data )
-    result.data = submodule.data;
-    result.data = submodule.loadedModule.dataExport();
+    {
+      result.data = submodule.data;
+    }
+    else if( submodule.openedModule && submodule.openedModule.isValid() )
+    {
+      result.data = submodule.openedModule.dataExport();
+    }
   }
 
   return result;
@@ -379,9 +518,9 @@ function infoExport()
 
   debugger;
 
-  if( submodule.loadedModule )
+  if( submodule.openedModule )
   {
-    let module2 = submodule.loadedModule;
+    let module2 = submodule.openedModule;
     resultMap.remote = module2.remotePath;
     resultMap.local = module2.localPath;
 
@@ -390,23 +529,9 @@ function infoExport()
   }
 
   resultMap.isDownloaded = submodule.isDownloaded;
+  resultMap.isAvailable = submodule.isAvailable;
 
   let result = submodule._infoExport( resultMap );
-
-  // if( result )
-  // result += '\n';
-  // result += tab + 'isDownloaded : ' + _.toStr( submodule.isDownloaded );
-  //
-  //
-  // if( submodule.loadedModule )
-  // {
-  //   let module2 = submodule.loadedModule
-  //
-  //   result = tab + 'remote : ' + module2.remotePath + '\n' + result;
-  //   result = tab + 'local : ' + module2.localPath + '\n' + result;
-  //
-  //   result += '\n' + tab + 'Exported builds : ' + _.toStr( _.mapKeys( module2.exportedMap ) );
-  // }
 
   return result;
 }
@@ -415,7 +540,7 @@ function infoExport()
 // relations
 // --
 
-let loadedModuleSymbol = Symbol.for( 'loadedModule' );
+let openedModuleSymbol = Symbol.for( 'openedModule' );
 let dataSymbol = Symbol.for( 'data' );
 
 let Composes =
@@ -432,7 +557,7 @@ let Composes =
 let Aggregates =
 {
   name : null,
-  loadedModule : null,
+  openedModule : null,
 }
 
 let Associates =
@@ -458,8 +583,10 @@ let Statics =
 
 let Accessors =
 {
+  isAvailable : { getter : isAvailableGet, readOnly : 1 },
   isDownloaded : { getter : isDownloadedGet, readOnly : 1 },
-  loadedModule : { setter : loadedModuleSet },
+  openedModule : { setter : openedModuleSet },
+  longPath : { getter : longPathGet },
   data : { getter : dataGet, setter : dataSet },
 }
 
@@ -483,12 +610,16 @@ let Proto =
   form1,
   form3,
 
-  _load,
+  open,
+  _openFromData,
+  _openFromFile,
 
   resolve,
 
+  isAvailableGet,
   isDownloadedGet,
-  loadedModuleSet,
+  openedModuleSet,
+  longPathGet,
   dataGet,
   dataSet,
 

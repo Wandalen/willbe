@@ -52,7 +52,7 @@ function _moduleReadyThen( o )
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
-  let dirPath = fileProvider.path.current();
+  let willfilesPath = fileProvider.path.current();
 
   _.assert( arguments.length === 1 );
   _.assert( _.routineIs( o.onReady ) );
@@ -65,14 +65,19 @@ function _moduleReadyThen( o )
   if( !module )
   module = will.currentModule = will.moduleMake
   ({
-    dirPath : dirPath,
+    // dirPath : dirPath,
+    willfilesPath : willfilesPath,
     forming : o.forming,
   });
 
-  if( o.forming && module.resourcesFormed <= 1 )
+  // debugger;
+  // if( o.forming && module.resourcesFormed <= 1 )
+  if( o.forming && module.stager.stageStateSkipping( 'resourcesFormed' ) )
   {
-    module.stager.stageCancel( 'resourcesFormed' );
-    module.resourcesForm();
+    // debugger;
+    // module.stager.stageCancel( 'resourcesFormed' );
+    module.stager.stageRerun( 'resourcesFormed' );
+    // module.resourcesForm();
   }
 
   return will.currentModule.ready.split().keep( function( arg )
@@ -228,7 +233,6 @@ function commandsMake()
     'builds list' :             { e : _.routineJoin( will, will.commandBuildsList ),            h : 'List avaialable builds the current module.' },
     'exports list' :            { e : _.routineJoin( will, will.commandExportsList ),           h : 'List avaialable exports the current module.' },
     'about list' :              { e : _.routineJoin( will, will.commandAboutList ),             h : 'List descriptive information about the current module.' },
-    // 'execution list' :          { e : _.routineJoin( will, will.commandExecutionList ),         h : 'List execution scenarios.' },
 
     'submodules clean' :        { e : _.routineJoin( will, will.commandSubmodulesClean ),       h : 'Delete all downloaded submodules.' },
     'submodules download' :     { e : _.routineJoin( will, will.commandSubmodulesDownload ),    h : 'Download each submodule if such was not downloaded so far.' },
@@ -238,7 +242,6 @@ function commandsMake()
 
     'shell' :                   { e : _.routineJoin( will, will.commandShell ),                 h : 'Execute shell command on the module.' },
     'clean' :                   { e : _.routineJoin( will, will.commandClean ),                 h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
-    // 'clean what' :              { e : _.routineJoin( will, will.commandCleanWhat ),             h : 'Find out which files will be deleted by clean command.' },
     'build' :                   { e : _.routineJoin( will, will.commandBuild ),                 h : 'Build current module with spesified criterion.' },
     'export' :                  { e : _.routineJoin( will, will.commandExport ),                h : 'Export selected the module with spesified criterion. Save output to output file and archive.' },
     'with' :                    { e : _.routineJoin( will, will.commandWith ),                  h : 'Use "with" to select a module.' },
@@ -413,6 +416,7 @@ function commandSubmodulesList( e )
   function act( module, resources )
   {
     let logger = will.logger;
+    debugger;
     logger.log( module.infoExportResource( resources ) );
   }
 
@@ -472,7 +476,7 @@ function commandBuildsList( e )
     let logger = will.logger;
     let request = _.strRequestParse( e.argument );
     debugger;
-    let builds = module.buildsSelect
+    let builds = module.buildsResolve
     ({
       name : request.subject,
       criterion : request.map,
@@ -497,7 +501,7 @@ function commandExportsList( e )
     let logger = will.logger;
     let request = _.strRequestParse( e.argument );
     debugger;
-    let builds = module.exportsSelect
+    let builds = module.exportsResolve
     ({
       name : request.subject,
       criterion : request.map,
@@ -521,23 +525,6 @@ function commandAboutList( e )
   {
     let logger = will.logger;
     logger.log( module.about.infoExport() );
-  }
-
-  will._commandList( e, act, null );
-
-  return will;
-}
-
-//
-
-function commandExecutionList( e )
-{
-  let will = this;
-
-  function act( module )
-  {
-    let logger = will.logger;
-    logger.log( module.execution.infoExport() );
   }
 
   will._commandList( e, act, null );
@@ -696,7 +683,7 @@ function commandBuild( e )
   return will.moduleReadyThenNonForming( function( module )
   {
     let request = _.strRequestParse( e.argument );
-    let builds = module.buildsSelect( request.subject, request.map );
+    let builds = module.buildsResolve( request.subject, request.map );
     let logger = will.logger;
 
     if( logger.verbosity >= 2 && builds.length > 1 )
@@ -722,7 +709,7 @@ function commandExport( e )
   return will.moduleReadyThen( function( module )
   {
     let request = _.strRequestParse( e.argument );
-    let builds = module.exportsSelect( request.subject, request.map );
+    let builds = module.exportsResolve( request.subject, request.map );
 
     if( logger.verbosity >= 2 && builds.length > 1 )
     {
@@ -766,17 +753,25 @@ function commandWith( e )
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
   let dirPath = path.joinRaw( path.current(), isolated.argument );
 
-  let module = will.currentModule = will.Module({ will : will, willFilesPath : dirPath }).preform();
-  module.willFilesFind();
-  module.willFilesOpen();
-  module.submodulesForm();
-  // module.resourcesForm();
-  module.resourcesFormSkip();
+  let module = will.currentModule = will.Module({ will : will, willfilesPath : dirPath }).preform();
 
+  // module.stager.stageStateSkipping( 'submodulesFormed', 1 );
+  module.stager.stageStateSkipping( 'resourcesFormed', 1 );
+
+  // debugger;
+  // module.ready.tap( ( err, arg ) =>
+  // {
+  //   debugger;
+  // });
+  // debugger;
+
+  module.willfilesFind();
+
+  // debugger;
   return module.ready.split().keep( function( arg )
   {
 
-    _.assert( module.willFileArray.length > 0 );
+    _.assert( module.willfilesArray.length > 0 );
 
     return ca.commandPerform
     ({
@@ -786,6 +781,7 @@ function commandWith( e )
   })
   .finally( ( err, arg ) =>
   {
+    debugger;
     will.moduleDone({ error : err || null, command : commandWith });
     if( err )
     throw _.errLogOnce( err );
@@ -853,13 +849,13 @@ function _commandEach_functor( fop )
       _.assert( will.currentModule === null );
       _.assert( will.currentPath === null );
 
-      will.currentModule = it.module;
+      will.currentModule = it.currentModule;
       will.currentPath = it.currentPath || null;
 
       if( will.verbosity > 1 )
       {
-        debugger;
-        logger.log( '\n', _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.module.commonPath, 'path' ) );
+        // debugger;
+        logger.log( '\n', _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.currentModule.commonPath, 'path' ) );
         if( will.currentPath )
         logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( will.currentPath, 'path' ) );
       }
@@ -885,7 +881,7 @@ function _commandEach_functor( fop )
       {
         logger.down();
 
-        _.assert( will.currentModule === it.module );
+        _.assert( will.currentModule === it.currentModule );
         will.currentModule.finit();
         will.currentModule = null;
         will.currentPath = null;
@@ -976,7 +972,6 @@ let Extend =
   commandBuildsList,
   commandExportsList,
   commandAboutList,
-  commandExecutionList,
 
   commandSubmodulesClean,
   commandSubmodulesDownload,
@@ -986,7 +981,6 @@ let Extend =
 
   commandShell,
   commandClean,
-  // commandCleanWhat,
   commandBuild,
   commandExport,
 
