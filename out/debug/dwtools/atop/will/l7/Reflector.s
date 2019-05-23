@@ -48,6 +48,9 @@ function init( o )
 
   reflector.src.pairWithDst( reflector.dst );
 
+  if( o && o.name === "reflect.copy." )
+  debugger;
+
   let result = Parent.prototype.init.apply( reflector, arguments );
 
   // if( reflector.nickName === "reflector::files.all" )
@@ -141,7 +144,7 @@ function form2()
 
   _.assert( reflector.formed === 1 );
 
-  // if( reflector.nickName === "reflector::reflect.proto.0.debug" )
+  // if( reflector.nickName === "reflector::reflect.copy." )
   // debugger;
 
   reflector.src.pairWithDst( reflector.dst );

@@ -6671,14 +6671,12 @@ function reflectComplexInherit( test )
 
 //
 
-/* To test maskDirectory and maskTerminal masks. Now they are not working properly */
 function reflectorMasks( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflector-masks' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let outReleasePath = _.path.join( routinePath, 'out/release' );
-  let outDebugPath = _.path.join( routinePath, 'out/debug' );
+  let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
 
   test.description = 'should handle correct files';
@@ -6697,46 +6695,38 @@ function reflectorMasks( test )
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
 
-  ready
-
   /* - */
 
+  shell({ args : [ '.clean' ] })
   shell({ args : [ '.build copy.' ] })
 
   .thenKeep( ( got ) =>
   {
     test.case = 'mask directory';
 
-    var files = self.find( outReleasePath );
-
-    test.identical( files.length, 3 );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './release', './release/proto.two' ] );
 
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'reflect.copy. reflected ' + String( files.length ) + ' files ' ) );
-    test.is( _.fileProvider.fileExists( _.path.join( outReleasePath, 'proto.two' ) ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( outReleasePath, 'files' ) ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( outReleasePath, 'build.txt.js' ) ) );
+    test.is( _.strHas( got.output, 'reflect.copy. reflected ' + String( files.length - 1 ) + ' files ' ) );
 
     return null;
   })
 
   /* - */
 
+  shell({ args : [ '.clean' ] })
   shell({ args : [ '.build copy.debug' ] })
 
   .thenKeep( ( got ) =>
   {
     test.case = 'mask terminal';
 
-    var files = self.find( outDebugPath );
-
-    test.identical( files.length, 6 );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './debug', './debug/build.txt.js', './debug/manual.md', './debug/package.json', './debug/tutorial.md' ] );
 
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'reflect.copy. reflected ' + String( files.length ) + ' files ' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( outReleasePath, 'proto.two' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( outReleasePath, 'files' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( outReleasePath, 'build.txt.js' ) ) );
+    test.is( _.strHas( got.output, 'reflect.copy.debug reflected ' + String( files.length - 1 ) + ' files ' ) );
 
     return null;
   })
@@ -6944,6 +6934,7 @@ var Self =
   onSuiteBegin : onSuiteBegin,
   onSuiteEnd : onSuiteEnd,
   routineTimeOut : 60000,
+  // verbosity : 10,
 
   context :
   {

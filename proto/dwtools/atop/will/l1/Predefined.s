@@ -363,7 +363,6 @@ function stepRoutineTranspile( frame )
   if( debug )
   transpilingStrategies = [ 'Nop' ];
 
-  // debugger;
   let ts = new _.TranspilationStrategy({ logger : logger }).form();
   let multiple = ts.multiple
   ({
