@@ -6511,6 +6511,112 @@ function reflectSubmodulesWithCriterion( test )
 
 //
 
+function reflectSubmodulesWithPluralCriterionManualExport( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-submodules-with-plural-criterion' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = 'reflect informal submodule, manual export'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.each module .export' ] })
+  
+  //fails with error on first run
+  
+  shell({ args : [ '.build variant1' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    var expected = [ '.', './debug' ];
+    test.identical( files, expected );
+    return null;
+  })
+
+  return ready;
+}
+
+//
+
+function reflectSubmodulesWithPluralCriterionAutoExport( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-submodules-with-plural-criterion' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = 'reflect informal submodule exported using steps, two builds in a row'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+  
+  //first run works
+
+  shell({ args : [ '.build variant2' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    var expected = [ '.', './debug' ];
+    test.identical( files, expected );
+    return null;
+  })
+  
+  //second run fails
+  
+  shell({ args : [ '.build variant2' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    var expected = [ '.', './debug' ];
+    test.identical( files, expected );
+    return null;
+  })
+
+  return ready;
+}
+
+//
+
 function reflectInherit( test )
 {
   let self = this;
@@ -7006,6 +7112,8 @@ var Self =
     reflectWithOptions,
     reflectWithSelectorInDstFilter,
     reflectSubmodulesWithCriterion,
+    reflectSubmodulesWithPluralCriterionManualExport,
+    reflectSubmodulesWithPluralCriterionAutoExport,
     reflectInherit,
     reflectComplexInherit,
     reflectorMasks,
