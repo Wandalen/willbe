@@ -1057,10 +1057,22 @@ function _willfileFindMultiple( o )
     filePaths = filePaths[ 0 ];
 
 /*
-    if( rootModule.moduleAt( module.commonPath ) )
+    let amodule = rootModule.moduleAt( module.commonPath );
+    if( amodule )
     {
+      debugger; xxx
+
+      for( let a = 0 ; a < module.submoduleAssociation.length ; a++ )
+      {
+        let submodule = module.submoduleAssociation[ a ];
+        _.assert( submodule.openedModule === module );
+        submodule.openedModule = amodule;
+      }
       debugger;
+      module.submoduleAssociation.splice();
+
       module.finit();
+
       return true;
     }
 */
