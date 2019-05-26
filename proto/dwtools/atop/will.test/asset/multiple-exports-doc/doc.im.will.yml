@@ -23,14 +23,14 @@ path :
 reflector :
 
   reflect.submodules :
-    inherit : submodule::*/exported::*=1/reflector::exportedFiles*=1
+    inherit : submodule::*/exported::*=1/reflector::exported.files*=1
     dst : path::out.*=1
     criterion :
       doc : 0
       debug : [ 0,1 ]
 
   reflect.doc :
-    inherit : submodule::*/exported::*=1/reflector::exportedFiles*=1
+    inherit : submodule::*/exported::*=1/reflector::exported.files*=1
     dst : path::out
     criterion :
       doc : 1

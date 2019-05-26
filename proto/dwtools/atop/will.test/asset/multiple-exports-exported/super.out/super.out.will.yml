@@ -20,14 +20,14 @@ path:
     path: ./super.out/release
     criterion:
       debug: 0
-  exportedDir.export.debug:
+  exported.dir.export.debug:
     path: ./super.out/debug
     criterion:
       default: 1
       debug: 1
       raw: 1
       export: 1
-  exportedFiles.export.debug:
+  exported.files.export.debug:
     path:
       - super.out/debug
       - super.out/debug/File.debug.js
@@ -43,14 +43,14 @@ path:
       debug: 1
       raw: 1
       export: 1
-  exportedDir.export.:
+  exported.dir.export.:
     path: ./super.out/release
     criterion:
       default: 1
       debug: 0
       raw: 1
       export: 1
-  exportedFiles.export.:
+  exported.files.export.:
     path:
       - super.out/release
       - super.out/release/File.release.js
@@ -85,7 +85,7 @@ reflector:
     criterion:
       debug: 0
     inherit:
-      - 'submodule::*/exported::*=1/reflector::exportedFiles*=1'
+      - 'submodule::*/exported::*=1/reflector::exported.files*=1'
   reflect.submodules.debug:
     recursive: 0
     src:
@@ -101,7 +101,7 @@ reflector:
     criterion:
       debug: 1
     inherit:
-      - 'submodule::*/exported::*=1/reflector::exportedFiles*=1'
+      - 'submodule::*/exported::*=1/reflector::exported.files*=1'
   exported.export.debug:
     src:
       filePath:
@@ -112,7 +112,7 @@ reflector:
       debug: 1
       raw: 1
       export: 1
-  exportedFiles.export.debug:
+  exported.files.export.debug:
     recursive: 0
     src:
       filePath:
@@ -135,7 +135,7 @@ reflector:
       debug: 0
       raw: 1
       export: 1
-  exportedFiles.export.:
+  exported.files.export.:
     recursive: 0
     src:
       filePath:
@@ -220,9 +220,9 @@ exported:
       raw: 1
       export: 1
     exportedReflector: 'reflector::exported.export.'
-    exportedFilesReflector: 'reflector::exportedFiles.export.'
-    exportedDirPath: 'path::exportedDir.export.'
-    exportedFilesPath: 'path::exportedFiles.export.'
+    exportedFilesReflector: 'reflector::exported.files.export.'
+    exportedDirPath: 'path::exported.dir.export.'
+    exportedFilesPath: 'path::exported.files.export.'
     archiveFilePath: 'path::archiveFile.export.'
   export.debug:
     version: 0.0.1
@@ -232,7 +232,7 @@ exported:
       raw: 1
       export: 1
     exportedReflector: 'reflector::exported.export.debug'
-    exportedFilesReflector: 'reflector::exportedFiles.export.debug'
-    exportedDirPath: 'path::exportedDir.export.debug'
-    exportedFilesPath: 'path::exportedFiles.export.debug'
+    exportedFilesReflector: 'reflector::exported.files.export.debug'
+    exportedDirPath: 'path::exported.dir.export.debug'
+    exportedFilesPath: 'path::exported.files.export.debug'
     archiveFilePath: 'path::archiveFile.export.debug'

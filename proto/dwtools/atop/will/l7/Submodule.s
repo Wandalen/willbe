@@ -297,6 +297,11 @@ function _openFromData( data, longPath )
     supermodule : module,
   }).preform();
 
+  if( module.stager.stageStateSkipping( 'willfilesFound' ) )
+  submodule.openedModule.stager.stageStateSkipping( 'willfilesFound', 1 );
+  if( module.stager.stageStateSkipping( 'willfilesOpened' ) )
+  submodule.openedModule.stager.stageStateSkipping( 'willfilesOpened', 1 );
+
   submodule.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
   submodule.openedModule.willfilesFind();
 
@@ -557,7 +562,6 @@ let Composes =
 let Aggregates =
 {
   name : null,
-  openedModule : null,
 }
 
 let Associates =
@@ -567,6 +571,7 @@ let Associates =
 let Restricts =
 {
   data : null,
+  openedModule : null,
 }
 
 let Medials =

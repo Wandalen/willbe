@@ -205,8 +205,6 @@ function perform( o )
   let isExport = build.isExport();
   let time = _.timeNow();
 
-  // return _.timeOutError( 100, 'xxx' );
-
   let frame = new will.BuildFrame
   ({
     module : module,

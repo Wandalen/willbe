@@ -26,9 +26,12 @@ Self.shortName = 'WillFile';
 
 function finit()
 {
-  if( this.formed )
-  this.unform();
-  return _.Copyable.prototype.finit.apply( this, arguments );
+  let willf = this;
+
+  if( willf.formed )
+  willf.unform();
+
+  return _.Copyable.prototype.finit.apply( willf, arguments );
 }
 
 //
@@ -84,11 +87,11 @@ function form()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  debugger; xxx
+  _.assert( 0, 'not tested' );
 
   _.assert( arguments.length === 0 );
   _.assert( !!will );
-  _.assert( module.preformed > 0 /* === 3 */ );
+  _.assert( module.preformed > 0 );
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
   if( willf.formed === 0 )
@@ -122,7 +125,7 @@ function form1()
   _.assert( !!will );
   _.assert( !!fileProvider );
   _.assert( !!logger );
-  _.assert( module.preformed > 0 /* === 3 */ );
+  _.assert( module.preformed > 0 );
   _.assert( !!will.formed );
 
   /* begin */
@@ -159,7 +162,7 @@ function open()
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !!will.formed );
-  _.assert( module.preformed > 0 /* === 3 */ );
+  _.assert( module.preformed > 0 );
   _.assert( !!willf.formed );
 
   /* read */
@@ -599,7 +602,7 @@ function _inPathsForm()
   _.assert( !!module );
   _.assert( !!will );
   _.assert( !!will.formed );
-  _.assert( module.preformed > 0 /* === 3 */ );
+  _.assert( module.preformed > 0 );
   _.assert( !!willf.formed );
 
   if( !willf.filePath )
@@ -677,6 +680,7 @@ let KnownSections =
   step : null,
   build : null,
   exported : null,
+  module : null,
 
 }
 

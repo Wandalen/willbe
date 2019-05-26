@@ -199,8 +199,8 @@ function makeNamed( test )
 
     }
 
-    test.identical( module.nickName, 'module::super' );
-    test.identical( module.absoluteName, 'module::super' );
+    test.identical( module.nickName, 'module::supermodule' );
+    test.identical( module.absoluteName, 'module::supermodule' );
     test.identical( module.inPath, routinePath );
     test.identical( module.outPath, routinePath + '/super.out' );
     test.identical( module.configName, 'super' );
@@ -213,12 +213,12 @@ function makeNamed( test )
     test.identical( module.willfilesPath, path.s.join( routinePath, [ './super.im.will.yml', './super.ex.will.yml' ] ) );
 
     test.is( !!module.about );
-    test.identical( module.about.name, 'super' );
+    test.identical( module.about.name, 'supermodule' );
 
     test.identical( module.pathMap, pathMap );
     test.identical( module.willfilesArray.length, 2 );
     test.identical( _.mapKeys( module.willfileWithRoleMap ), [ 'import', 'export' ] );
-    test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
+    test.identical( _.mapKeys( module.submoduleMap ), [ 'Submodule' ] );
     test.identical( _.filter( _.mapKeys( module.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug' ] );
 
     let steps = _.select( module.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
@@ -351,7 +351,7 @@ function makeAnon( test )
 
     let steps = _.select( module.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
     test.identical( steps, [ 'reflect.proto.', 'reflect.proto.debug', 'reflect.proto.raw', 'reflect.proto.debug.raw', 'export.', 'export.debug' ] );
-    test.identical( _.mapKeys( module.buildMap ), [ 'debug.raw', 'debug.compiled', 'release.raw', 'release.compiled', 'export.', 'export.debug' ] );
+    test.identical( _.mapKeys( module.buildMap ), [ 'debug.raw', 'release.raw', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [] );
 
   }
@@ -363,11 +363,11 @@ function makeAnon( test )
 function makeOutNamed( test )
 {
   let self = this;
-  let assetName = 'import-in/super.out/super';
+  let assetName = 'import-in/super.out/supermodule';
   let originalDirPath = _.path.join( self.assetDirPath, 'import-in' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let moduleDirPath = _.path.join( routinePath, 'super.out' );
-  let moduleFilePath = _.path.join( routinePath, 'super.out/super' );
+  let moduleFilePath = _.path.join( routinePath, 'super.out/supermodule' );
   let ready = new _.Consequence().take( null );
   let will = new _.Will;
   let path = _.fileProvider.path;
@@ -441,44 +441,44 @@ function makeOutNamed( test )
       'out.debug' : './super.out/debug',
       'out.release' : './super.out/release',
       'in' : '..',
-      'exportedDir.export.debug' : './super.out/debug',
-      'exportedFiles.export.debug' : [ 'super.out/debug', 'super.out/debug/File.debug.js', 'super.out/debug/File.release.js' ],
-      'archiveFile.export.debug' : './super.out/super.debug.out.tgs',
-      'exportedDir.export.' : './super.out/release',
-      'exportedFiles.export.' : [ 'super.out/release', 'super.out/release/File.debug.js', 'super.out/release/File.release.js' ],
-      'archiveFile.export.' : './super.out/super.out.tgs',
+      'exported.dir.export.debug' : './super.out/debug',
+      'exported.files.export.debug' : [ 'super.out/debug', 'super.out/debug/File.debug.js', 'super.out/debug/File.release.js' ],
+      'archiveFile.export.debug' : './super.out/supermodule.debug.out.tgs',
+      'exported.dir.export.' : './super.out/release',
+      'exported.files.export.' : [ 'super.out/release', 'super.out/release/File.debug.js', 'super.out/release/File.release.js' ],
+      'archiveFile.export.' : './super.out/supermodule.out.tgs',
 
       'local' : routinePath + '/super.out',
       'remote' : null,
       'current.remote' : null,
       'will' : path.join( __dirname, '../will/Exec' ),
       'module.dir' : routinePath + '/super.out',
-      'module.willfiles' : routinePath + '/super.out/super.out.will.yml',
+      'module.willfiles' : routinePath + '/super.out/supermodule.out.will.yml',
       'module.original.willfiles' : _.path.s.join( routinePath, [ 'super.im.will.yml', 'super.ex.will.yml' ] ),
 
     }
 
-    test.identical( module.nickName, 'module::super' );
-    test.identical( module.absoluteName, 'module::super' );
+    test.identical( module.nickName, 'module::supermodule' );
+    test.identical( module.absoluteName, 'module::supermodule' );
     test.identical( module.inPath, routinePath );
     test.identical( module.outPath, routinePath + '/super.out' );
     test.identical( module.dirPath, routinePath + '/super.out' );
     test.identical( module.localPath, routinePath + '/super.out' );
-    test.identical( module.willfilesPath, routinePath + '/super.out/super.out.will.yml' );
-    test.identical( module.commonPath, path.join( routinePath, 'super.out/super.out' ) );
-    test.identical( module.configName, 'super.out' );
+    test.identical( module.willfilesPath, routinePath + '/super.out/supermodule.out.will.yml' );
+    test.identical( module.commonPath, path.join( routinePath, 'super.out/supermodule.out' ) );
+    test.identical( module.configName, 'supermodule.out' );
 
     test.is( !!module.about );
-    test.identical( module.about.name, 'super' );
+    test.identical( module.about.name, 'supermodule' );
 
     test.identical( module.pathMap, pathMap );
     test.identical( module.willfilesArray.length, 1 );
     test.identical( _.mapKeys( module.willfileWithRoleMap ), [ 'single' ] );
-    test.identical( _.mapKeys( module.submoduleMap ), [ 'MultipleExports' ] );
-    test.identical( _.filter( _.mapKeys( module.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.', 'exportedFiles.export.', 'exported.export.debug', 'exportedFiles.export.debug' ] );
+    test.identical( _.mapKeys( module.submoduleMap ), [ 'Submodule' ] );
+    test.identical( _.filter( _.mapKeys( module.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.', 'exported.files.export.', 'exported.export.debug', 'exported.files.export.debug' ] );
 
     let steps = _.select( module.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
-    test.identical( steps, [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug', 'exported.export.', 'exportedFiles.export.', 'exported.export.debug', 'exportedFiles.export.debug' ] );
+    test.identical( steps, [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug', 'exported.export.', 'exported.files.export.', 'exported.export.debug', 'exported.files.export.debug' ] );
 
     test.identical( _.mapKeys( module.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
     test.identical( _.mapKeys( module.exportedMap ), [ 'export.debug', 'export.' ] );
@@ -627,8 +627,7 @@ function reflectorResolve( test )
   module.ready.thenKeep( ( arg ) =>
   {
 
-    debugger;
-    test.case = 'reflector::reflect.proto.0.debug';
+    test.case = 'reflector::reflect.proto.0.debug formed:1';
     var resolved = module.resolve( 'reflector::reflect.proto.0.debug' )
     var expected =
     {
@@ -643,16 +642,33 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1
     }
-    debugger;
+    resolved.form();
+    var resolvedData = resolved.dataExport({ formed : 1 });
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.proto.0.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.0.debug' )
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { 'path::proto' : 'path::out.*=1' }
+      },
+      'criterion' : { 'debug' : 1, 'variant' : 0 },
+      'inherit' : [ 'predefined.*' ],
+      'mandatory' : 1
+    }
     resolved.form();
     var resolvedData = resolved.dataExport();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
     test.identical( resolvedData, expected );
-    debugger;
 
-    test.case = 'reflector::reflect.proto.1.debug';
+    test.case = 'reflector::reflect.proto.1.debug formed:1';
     var resolved = module.resolve( 'reflector::reflect.proto.1.debug' )
     resolved.form();
     var expected =
@@ -668,13 +684,33 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
     }
+    var resolvedData = resolved.dataExport({ formed : 1 });
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.proto.1.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.1.debug' )
+    resolved.form();
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { 'path::proto' : 'path::out.*=1' }
+      },
+      'criterion' : { 'debug' : 1, 'variant' : 1 },
+      'inherit' : [ 'predefined.*' ],
+      'mandatory' : 1,
+    }
+
     var resolvedData = resolved.dataExport();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
     test.identical( resolvedData, expected );
 
-    test.case = 'reflector::reflect.proto.2.debug';
+    test.case = 'reflector::reflect.proto.2.debug formed:1';
     var resolved = module.resolve( 'reflector::reflect.proto.2.debug' );
     resolved.form();
     var expected =
@@ -690,13 +726,32 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
     }
+    var resolvedData = resolved.dataExport({ formed : 1 });
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.proto.2.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.2.debug' );
+    resolved.form();
+    var expected =
+    {
+      'dst' :
+      {
+        'filePath' : { 'path::proto' : 'path::out.*=1' }
+      },
+      'criterion' : { 'debug' : 1, 'variant' : 2 },
+      'inherit' : [ 'predefined.*' ],
+      'mandatory' : 1,
+    }
     var resolvedData = resolved.dataExport();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
     test.identical( resolvedData, expected );
 
-    test.case = 'reflector::reflect.proto.3.debug';
+    test.case = 'reflector::reflect.proto.3.debug formed:1';
     var resolved = module.resolve( 'reflector::reflect.proto.3.debug' );
     resolved.form();
     var expected =
@@ -712,13 +767,32 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
     }
+    var resolvedData = resolved.dataExport({ formed:1 });
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.proto.3.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.3.debug' );
+    resolved.form();
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '{path::proto}' : '{path::out.*=1}' }
+      },
+      'criterion' : { 'debug' : 1, 'variant' : 3 },
+      'inherit' : [ 'predefined.*' ],
+      'mandatory' : 1,
+    }
     var resolvedData = resolved.dataExport();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
     test.identical( resolvedData, expected );
 
-    test.case = 'reflector::reflect.proto.4.debug';
+    test.case = 'reflector::reflect.proto.4.debug formed:1';
     var resolved = module.resolve( 'reflector::reflect.proto.4.debug' );
     resolved.form();
     var expected =
@@ -734,6 +808,27 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
     }
+    var resolvedData = resolved.dataExport({ formed : 1 });
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+    test.identical( resolved.src.prefixPath, pin( 'proto/dir2' ) );
+    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1' ) );
+
+    test.case = 'reflector::reflect.proto.4.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.4.debug' );
+    resolved.form();
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '{path::proto}/{path::dir2}' : '{path::out.*=1}/{path::dir1}' }
+      },
+      'criterion' : { 'debug' : 1, 'variant' : 4 },
+      'inherit' : [ 'predefined.*' ],
+      'mandatory' : 1,
+    }
     var resolvedData = resolved.dataExport();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -742,7 +837,7 @@ function reflectorResolve( test )
     test.identical( resolved.src.prefixPath, pin( 'proto/dir2' ) );
     test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1' ) );
 
-    test.case = 'reflector::reflect.proto.5.debug';
+    test.case = 'reflector::reflect.proto.5.debug formed:1';
     var resolved = module.resolve( 'reflector::reflect.proto.5.debug' );
     resolved.form();
     var expected =
@@ -758,6 +853,29 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1
     }
+    var resolvedData = resolved.dataExport({ formed : 1 });
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+    test.identical( resolved.src.prefixPath, pin( 'proto/dir2' ) );
+    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1' ) );
+
+    test.case = 'reflector::reflect.proto.5.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.5.debug' );
+    resolved.form();
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'prefixPath' : '{path::proto}/{path::dir2}'
+      },
+      'dst' : { 'prefixPath' : '{path::out.*=1}/{path::dir1}' },
+      'criterion' : { 'debug' : 1, 'variant' : 5 },
+      'inherit' : [ 'predefined.*' ],
+      'mandatory' : 1
+    }
     var resolvedData = resolved.dataExport();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
@@ -766,7 +884,7 @@ function reflectorResolve( test )
     test.identical( resolved.src.prefixPath, pin( 'proto/dir2' ) );
     test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1' ) );
 
-    test.case = 'reflector::reflect.proto.6.debug';
+    test.case = 'reflector::reflect.proto.6.debug formed:1';
     var resolved = module.resolve( 'reflector::reflect.proto.6.debug' );
     resolved.form();
     var expected =
@@ -780,7 +898,53 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 6 },
       'mandatory' : 1
     }
+    var resolvedData = resolved.dataExport({ formed : 1 });
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+    test.identical( resolved.src.prefixPath, pin( 'proto/dir2/File.test.js' ) );
+    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1/File.test.js' ) );
+
+    test.case = 'reflector::reflect.proto.6.debug';
+    var resolved = module.resolve( 'reflector::reflect.proto.6.debug' );
+    resolved.form();
+    var expected =
+    {
+      'src' :
+      {
+        'prefixPath' : '{path::proto}/{path::dir2}/{path::testFile}'
+      },
+      'dst' :
+      {
+        'prefixPath' : '{path::out.*=1}/{path::dir1}/{path::testFile}'
+      },
+      'criterion' : { 'debug' : 1, 'variant' : 6 },
+      'mandatory' : 1
+    }
     var resolvedData = resolved.dataExport();
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+    test.identical( resolved.src.prefixPath, pin( 'proto/dir2/File.test.js' ) );
+    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1/File.test.js' ) );
+
+    test.case = 'reflector::reflect.proto.7.debug formed:1';
+    var resolved = module.resolve( 'reflector::reflect.proto.7.debug' );
+    resolved.form();
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'prefixPath' : 'proto/dir2/File.test.js',
+      },
+      'dst' : { 'prefixPath' : 'out/debug/dir1/File.test.js' },
+      'criterion' : { 'debug' : 1, 'variant' : 7 },
+      'mandatory' : 1,
+    }
+    var resolvedData = resolved.dataExport({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -795,10 +959,11 @@ function reflectorResolve( test )
     {
       'src' :
       {
-        'filePath' : { '.' : '.' },
-        'prefixPath' : 'proto/dir2/File.test.js',
+        'filePath' :
+        {
+          '{path::proto}/{path::dir2}/{path::testFile}' : '{path::out.*=1}/{path::dir1}/{path::testFile}'
+        }
       },
-      'dst' : { 'prefixPath' : 'out/debug/dir1/File.test.js' },
       'criterion' : { 'debug' : 1, 'variant' : 7 },
       'mandatory' : 1,
     }
@@ -817,10 +982,8 @@ function reflectorResolve( test )
 
   module.ready.finallyKeep( ( err, arg ) =>
   {
-    debugger;
     test.is( err === undefined );
     module.finit();
-
     if( err )
     throw err;
     return arg;
@@ -986,7 +1149,7 @@ function buildsResolve( test )
     var build = module.resolve({ selector : 'build::export.' });
     test.is( build instanceof will.Build );
     test.identical( build.nickName, 'build::export.' );
-    test.identical( build.absoluteName, 'module::super / build::export.' );
+    test.identical( build.absoluteName, 'module::supermodule / build::export.' );
 
     var resolved = module.resolve({ selector : 'build::*', currentContext : build, singleUnwrapping : 0 });
     test.identical( resolved.length, 1 );
@@ -1542,7 +1705,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'MultipleExports/in' : 'proto' };
+    var expected = { 'Submodule/in' : 'proto' };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -1618,7 +1781,7 @@ function pathsResolveImportIn( test )
     });
     var expected =
     {
-      'MultipleExports' : { 'in' : 'proto' }
+      'Submodule' : { 'in' : 'proto' }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
@@ -1699,7 +1862,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'MultipleExports/in' : pin( 'proto' ) };
+    var expected = { 'Submodule/in' : pin( 'proto' ) };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -1775,7 +1938,7 @@ function pathsResolveImportIn( test )
     });
     var expected =
     {
-      'MultipleExports' : { 'in' : pin( 'proto' ) }
+      'Submodule' : { 'in' : pin( 'proto' ) }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
@@ -1864,7 +2027,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'MultipleExports/proto' : '.' };
+    var expected = { 'Submodule/proto' : '.' };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -1940,7 +2103,7 @@ function pathsResolveImportIn( test )
     });
     var expected =
     {
-      'MultipleExports' : { 'proto' : '.' }
+      'Submodule' : { 'proto' : '.' }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
@@ -2021,7 +2184,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'MultipleExports/proto' : pin( 'proto' ) };
+    var expected = { 'Submodule/proto' : pin( 'proto' ) };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -2098,7 +2261,7 @@ function pathsResolveImportIn( test )
     });
     var expected =
     {
-      'MultipleExports' : { 'proto' : pin( 'proto' ) }
+      'Submodule' : { 'proto' : pin( 'proto' ) }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
@@ -2142,7 +2305,7 @@ function pathsResolveOutFileOfExports( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports-exported' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulePath = _.path.join( routinePath, 'super.out/super' );
+  let modulePath = _.path.join( routinePath, 'super.out/supermodule' );
   let ready = new _.Consequence().take( null );
   let will = new _.Will;
   let path = _.fileProvider.path;
@@ -2222,7 +2385,7 @@ function pathsResolveOutFileOfExports( test )
 
     test.close( 'with export' );
 
-    // "submodule::*/exported::*=1debug/path::exportedDir*=1"
+    // "submodule::*/exported::*=1debug/path::exported.dir*=1"
 
     return null;
   });
@@ -2313,7 +2476,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 0,
       arrayFlattening : 0,
     });
-    var expected = { 'MultipleExports/in' : '..' };
+    var expected = { 'Submodule/in' : '..' };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -2392,7 +2555,7 @@ function pathsResolveOutFileOfExports( test )
     });
     var expected =
     {
-      'MultipleExports' : { 'in' : '..' }
+      'Submodule' : { 'in' : '..' }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
@@ -2474,7 +2637,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 0,
       arrayFlattening : 0,
     });
-    var expected = { 'MultipleExports/in' : pin( '.' ) };
+    var expected = { 'Submodule/in' : pin( '.' ) };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -2553,7 +2716,7 @@ function pathsResolveOutFileOfExports( test )
     });
     var expected =
     {
-      'MultipleExports' : { 'in' : pin( '.' ) }
+      'Submodule' : { 'in' : pin( '.' ) }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
@@ -2645,7 +2808,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 0,
       arrayFlattening : 0,
     });
-    var expected = { 'MultipleExports/proto' : './proto' };
+    var expected = { 'Submodule/proto' : './proto' };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -2724,7 +2887,7 @@ function pathsResolveOutFileOfExports( test )
     });
     var expected =
     {
-      'MultipleExports' : { 'proto' : './proto' }
+      'Submodule' : { 'proto' : './proto' }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
@@ -2808,7 +2971,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 0,
       arrayFlattening : 0,
     });
-    var expected = { 'MultipleExports/proto' : pin( 'proto' ) };
+    var expected = { 'Submodule/proto' : pin( 'proto' ) };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -2887,7 +3050,7 @@ function pathsResolveOutFileOfExports( test )
     });
     var expected =
     {
-      'MultipleExports' : { 'proto' : pin( 'proto' ) }
+      'Submodule' : { 'proto' : pin( 'proto' ) }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
@@ -3094,9 +3257,7 @@ function pathsResolveOfSubmodules( test )
   {
     let builds = module.buildsResolve({ name : 'debug.raw' });
     test.identical( builds.length, 1 );
-
     let build = builds[ 0 ];
-    debugger;
     return build.perform();
   })
 

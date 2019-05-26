@@ -31,8 +31,6 @@ function finit()
   let exported = this;
   let module = exported.module;
 
-  // debugger;
-
   fieldFinit( 'exportedReflector' );
   fieldFinit( 'exportedFilesReflector' );
   fieldFinit( 'exportedDirPath' );
@@ -45,7 +43,6 @@ function finit()
   {
     if( exported[ name ] )
     {
-      // debugger;
       if( !( exported[ name ] instanceof _.Will.Resource ) )
       exported[ name ] = module.resolveRaw( exported[ name ] );
       if( exported[ name ] instanceof _.Will.Resource )
@@ -75,10 +72,9 @@ function verify()
   _.assert( !!hd );
   _.assert( !!logger );
   _.assert( !!build );
-  _.assert( module.preformed > 0 /* === 3 */ );
+  _.assert( module.preformed > 0 );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
-  // _.assert( exported.criterion === null );
   _.assert( build instanceof will.Build );
 
   _.sure( _.strDefined( module.dirPath ), 'Expects directory path of the module' );
@@ -105,7 +101,6 @@ function readExported()
   let logger = will.logger;
 
   let outFilePath = build.outFilePathFor();
-  // let module2 = will.Module({ will : will, dirPath : path.dir( outFilePath ), original : module }).preform();
   let module2 = will.Module({ will : will, willfilesPath : outFilePath, original : module }).preform();
 
   module2.stager.stageStateSkipping( 'submodulesFormed', 1 );
@@ -190,7 +185,7 @@ function performExportedReflectors( exportSelector )
   _.assert( !!hd );
   _.assert( !!logger );
   _.assert( !!build );
-  _.assert( module.preformed > 0 /* === 3 */ );
+  _.assert( module.preformed > 0 );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
   _.assert( _.objectIs( exported.criterion ) );
@@ -199,23 +194,15 @@ function performExportedReflectors( exportSelector )
   _.assert( exported.exportedReflector === null );
   _.assert( exported.exportedDirPath === null );
 
-  // debugger;
   let exportedReflector;
   let exp = module.pathResolve
   ({
     selector : exportSelector,
     currentContext : step,
   });
-  // let exp = module.reflectorResolve
-  // ({
-  //   selector : exportSelector,
-  //   currentContext : step,
-  // });
-  // debugger;
 
   /* */
 
-  // debugger;
   if( exp instanceof will.Reflector )
   {
 
@@ -292,7 +279,7 @@ function performExportedReflectors( exportSelector )
 
   let exportedDirPath = srcFilter.basePaths[ 0 ];
 
-  exported.exportedDirPath = module.resourceAllocate( 'path', 'exportedDir.' + exported.name );
+  exported.exportedDirPath = module.resourceAllocate( 'path', 'exported.dir.' + exported.name );
   exported.exportedDirPath.path = path.dot( path.relative( module.inPath, exportedDirPath ) );
   exported.exportedDirPath.criterion = _.mapExtend( null, exported.criterion );
   exported.exportedDirPath.form();
@@ -312,7 +299,7 @@ function performExportedFilesReflector()
 
   /* exportedFilesPath */
 
-  exported.exportedFilesPath = module.resourceAllocate( 'path', 'exportedFiles.' + exported.name );
+  exported.exportedFilesPath = module.resourceAllocate( 'path', 'exported.files.' + exported.name );
   exported.exportedFilesPath.criterion = _.mapExtend( null, exported.criterion );
 
   /* */
@@ -321,7 +308,6 @@ function performExportedFilesReflector()
   try
   {
 
-    // debugger;
     exportedFilesPath = hd.filesFind
     ({
       recursive : 2,
@@ -333,7 +319,6 @@ function performExportedFilesReflector()
       filter : exported.srcFilter.clone(),
       maskPreset : 0,
     });
-    // debugger;
 
   }
   catch( err )
@@ -359,15 +344,17 @@ function performExportedFilesReflector()
   if( !exported.exportedFilesReflector )
   exported.exportedFilesReflector = exported.exportedReflector.cloneExtending
   ({
-    name : module.resourceNameAllocate( 'reflector', 'exportedFiles.' + exported.name ),
+    name : module.resourceNameAllocate( 'reflector', 'exported.files.' + exported.name ),
     module : module,
   });
   let exportedFilesReflector = exported.exportedFilesReflector;
 
+  // debugger;
   exportedFilesReflector.src.pairWithDst( exportedFilesReflector.dst );
   exportedFilesReflector.src.pairRefine();
   exportedFilesReflector.src.prefixesApply();
   exportedFilesReflector.dst.prefixesApply();
+  // debugger;
 
   _.assert( _.objectIs( exportedFilesReflector.criterion ) );
   exportedFilesReflector.src.filteringClear();
@@ -385,7 +372,8 @@ function performExportedFilesReflector()
   _.assert( exportedFilesReflector.dst.basePath === null );
   exportedFilesReflector.src.basePathSimplify();
   exportedFilesReflector.dst.filteringClear();
-  exportedFilesReflector.dst.filePath = exportedFilesReflector.src.filePath = exported.exportedFilesPath.nickName;
+  exportedFilesReflector.src.filePath = exported.exportedFilesPath.nickName;
+  exportedFilesReflector.dst.filePath = null;
   exportedFilesReflector.recursive = 0;
   exportedFilesReflector.form1();
 
@@ -413,7 +401,7 @@ function performPaths()
 
   _.assert( !originalWillFilesPath.writable );
   _.assert( !!originalWillFilesPath.exportable );
-  exported.originalWillFilesPath = originalWillFilesPath;
+  // exported.originalWillFilesPath = originalWillFilesPath;
 
 }
 
@@ -469,11 +457,6 @@ function performArchive( enabled )
   let zip = Tar.create( o2, [ '.' ] );
   if( will.verbosity >= 3 )
   logger.log( ' + ' + 'Write out archive ' + hd.path.moveReport( archiveFilePath, exportedDirPath ) );
-
-  /* */
-
-  // if( exported.archiveFilePath )
-  // exported.archiveFilePath = exported.archiveFilePath.refName;
 
 }
 
@@ -531,7 +514,6 @@ function perform( frame )
   _.assert( step instanceof will.Step );
   _.assert( exported.step === null || exported.step === step );
   _.assert( _.strDefined( opts.export ), () => step.nickName + ' should have options option export, path to directory to export or reflector' )
-  // _.assert( module.resourcesFormed === 3, 'Resources should be formed' );
   _.assert( module.stager.stageStatePerformed( 'resourcesFormed' ), 'Resources should be formed' );
 
   exported.verify();
@@ -554,7 +536,6 @@ function perform( frame )
 
   if( will.verbosity >= 3 )
   logger.log( ' + Exported', exported.name, 'with', exported.exportedFilesPath.path.length, 'files', 'in', _.timeSpent( time ) );
-  // debugger;
 
   return exported;
 }
@@ -576,7 +557,7 @@ let Composes =
   exportedDirPath : null,
   exportedFilesPath : null,
   archiveFilePath : null,
-  originalWillFilesPath : null,
+  // originalWillFilesPath : null,
 
 }
 
@@ -594,6 +575,12 @@ let Associates =
 let Restricts =
 {
   srcFilter : null,
+  originalWillFilesPath : null, // xxx
+}
+
+let Medials =
+{
+  originalWillFilesPath : null, // xxx
 }
 
 let Statics =
@@ -606,6 +593,7 @@ let Forbids =
 {
   files : 'files',
   src : 'src',
+  // originalWillFilesPath : 'originalWillFilesPath',
 }
 
 let Accessors =
@@ -638,6 +626,7 @@ let Proto =
   Aggregates,
   Associates,
   Restricts,
+  Medials,
   Statics,
   Forbids,
   Accessors,
