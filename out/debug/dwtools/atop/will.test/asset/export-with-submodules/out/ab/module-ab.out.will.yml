@@ -1,0 +1,59 @@
+&ref_0
+format: willfile-1.0.0
+about:
+  name: module-b
+  description: Module for testing
+  enabled: 1
+  version: 0.0.1
+  values:
+    enabled: 1
+    name: module-b
+path:
+  module.willfiles: *ref_0
+  module.original.willfiles: *ref_0
+  module.dir: *ref_0
+  local: *ref_0
+  remote: *ref_0
+  proto: *ref_0
+  out: *ref_0
+  temp: *ref_0
+  exported.dir.proto.export: *ref_0
+  exported.files.proto.export: *ref_0
+  in: *ref_0
+criterion:
+  default: 1
+  export: 1
+own: 1
+submodule: {}
+src:
+  filePath: 'path::exported.files.proto.export'
+  basePath: .
+  prefixPath: 'path::exported.dir.proto.export'
+recursive: 0
+mandatory: 1
+reflector:
+  exported.proto.export: *ref_0
+  exported.files.proto.export: *ref_0
+opts:
+  reflector: 'reflector::exported.files.proto.export*'
+inherit:
+  - predefined.reflect
+step:
+  export.proto: *ref_0
+  exported.proto.export: *ref_0
+  exported.files.proto.export: *ref_0
+steps:
+  - 'step::export.proto'
+build:
+  proto.export: *ref_0
+version: 0.0.1
+exportedReflector: 'reflector::exported.proto.export'
+exportedFilesReflector: 'reflector::exported.files.proto.export'
+exportedDirPath: 'path::exported.dir.proto.export'
+exportedFilesPath: 'path::exported.files.proto.export'
+exported:
+  proto.export: *ref_0
+module:
+  module-ab.out: root
+  module-a.out: *ref_0
+  module-b.out: *ref_0
