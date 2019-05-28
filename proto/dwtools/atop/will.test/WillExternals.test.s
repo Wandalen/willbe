@@ -506,7 +506,7 @@ function openWith( test )
   return ready;
 }
 
-openWith.timeOut = 500000;
+openWith.timeOut = 300000;
 
 //
 
@@ -592,7 +592,7 @@ function openEach( test )
   return ready;
 }
 
-openEach.timeOut = 500000;
+openEach.timeOut = 300000;
 
 //
 
@@ -739,8 +739,8 @@ function setVerbosity( test )
     test.is( _.strHas( got.output, '.set verbosity:3 ; .build' ) );
     test.is( _.strHas( got.output, / \. Read .+\/\.im\.will\.yml/ ) );
     test.is( _.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
-    test.is( _.strHas( got.output, / ! Failed to read .+submodule::Tools.+/ ) );
-    test.is( _.strHas( got.output, / ! Failed to read .+submodule::PathFundamentals.+/ ) );
+    test.is( _.strHas( got.output, / .*!.* Failed to read .+submodule::Tools.+/ ) );
+    test.is( _.strHas( got.output, / .*!.* Failed to read .+submodule::PathFundamentals.+/ ) );
     test.is( _.strHas( got.output, '. Read 2 willfiles in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
@@ -766,8 +766,8 @@ function setVerbosity( test )
     test.is( _.strHas( got.output, '.set verbosity:2 ; .build' ) );
     test.is( !_.strHas( got.output, / \. Read .+\/\.im\.will\.yml/ ) );
     test.is( !_.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
-    test.is( !_.strHas( got.output, / ! Failed to read .+submodule::Tools.+/ ) );
-    test.is( !_.strHas( got.output, / ! Failed to read .+submodule::PathFundamentals.+/ ) );
+    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::Tools.+/ ) );
+    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::PathFundamentals.+/ ) );
     test.is( _.strHas( got.output, '. Read 2 willfiles in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
@@ -793,8 +793,8 @@ function setVerbosity( test )
     test.is( _.strHas( got.output, '.set verbosity:1 ; .build' ) );
     test.is( !_.strHas( got.output, / \. Read .+\/\.im\.will\.yml/ ) );
     test.is( !_.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
-    test.is( !_.strHas( got.output, / ! Failed to read .+submodule::Tools.+/ ) );
-    test.is( !_.strHas( got.output, / ! Failed to read .+submodule::PathFundamentals.+/ ) );
+    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::Tools.+/ ) );
+    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::PathFundamentals.+/ ) );
     test.is( !_.strHas( got.output, '. Read 2 willfiles in' ) );
 
     test.is( !_.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
@@ -812,7 +812,7 @@ function setVerbosity( test )
   return ready;
 }
 
-setVerbosity.timeOut = 500000;
+setVerbosity.timeOut = 300000;
 
 //
 
@@ -1056,7 +1056,7 @@ function eachMixed( test )
   return ready;
 }
 
-eachMixed.timeOut = 500000;
+eachMixed.timeOut = 300000;
 
 //
 
@@ -1102,7 +1102,7 @@ function withMixed( test )
   return ready;
 }
 
-withMixed.timeOut = 500000;
+withMixed.timeOut = 300000;
 
 //
 
@@ -1955,7 +1955,7 @@ function submodulesDownloadUpdate( test )
   return ready;
 }
 
-submodulesDownloadUpdate.timeOut = 500000;
+submodulesDownloadUpdate.timeOut = 300000;
 
 //
 
@@ -2071,7 +2071,7 @@ function submodulesDownloadUpdateDry( test )
   return ready;
 }
 
-submodulesDownloadUpdateDry.timeOut = 500000;
+submodulesDownloadUpdateDry.timeOut = 300000;
 
 //
 
@@ -2183,7 +2183,7 @@ function submodulesUpdate( test )
   return ready;
 }
 
-submodulesUpdate.timeOut = 500000;
+submodulesUpdate.timeOut = 300000;
 
 //
 
@@ -2280,7 +2280,7 @@ function stepSubmodulesDownload( test )
   return ready;
 }
 
-stepSubmodulesDownload.timeOut = 500000;
+stepSubmodulesDownload.timeOut = 300000;
 
 //
 
@@ -2402,7 +2402,7 @@ function fixateDetached( test )
   return ready;
 }
 
-fixateDetached.timeOut = 500000;
+fixateDetached.timeOut = 300000;
 
 //
 
@@ -2510,7 +2510,7 @@ function clean( test )
   return ready;
 }
 
-clean.timeOut = 500000;
+clean.timeOut = 300000;
 
 //
 
@@ -3049,7 +3049,7 @@ function cleanDry( test )
   return ready;
 }
 
-cleanDry.timeOut = 500000;
+cleanDry.timeOut = 300000;
 
 //
 
@@ -3121,7 +3121,7 @@ function cleanSubmodules( test )
   return ready;
 }
 
-cleanSubmodules.timeOut = 500000;
+cleanSubmodules.timeOut = 300000;
 
 //
 
@@ -3489,7 +3489,7 @@ function buildSubmodules( test )
   return ready;
 }
 
-buildSubmodules.timeOut = 500000;
+buildSubmodules.timeOut = 300000;
 
 //
 
@@ -3550,7 +3550,7 @@ function buildDetached( test )
   return ready;
 }
 
-buildDetached.timeOut = 500000;
+buildDetached.timeOut = 300000;
 
 //
 
@@ -3978,10 +3978,10 @@ function exportMixed( test )
     test.is( _.strHas( got.output, '+ reflect.proto.debug reflected 2 files' ) );
     test.is( _.strHas( got.output, '+ reflect.submodules reflected' ) );
 
-    test.is( _.strHas( got.output, /! Failed to read .+submodule::Tools.+/ ) );
-    test.is( _.strHas( got.output, /! Failed to read .+submodule::PathFundamentals.+/ ) );
-    test.is( _.strHas( got.output, /! Failed to read .+submodule::UriFundamentals.+/ ) );
-    test.is( _.strHas( got.output, /! Failed to read .+submodule::Proto.+/ ) );
+    test.is( _.strHas( got.output, /.*!.* Failed to read .+submodule::Tools.+/ ) );
+    test.is( _.strHas( got.output, /.*!.* Failed to read .+submodule::PathFundamentals.+/ ) );
+    test.is( _.strHas( got.output, /.*!.* Failed to read .+submodule::UriFundamentals.+/ ) );
+    test.is( _.strHas( got.output, /.*!.* Failed to read .+submodule::Proto.+/ ) );
 
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/Proto.informal.out.will.yml' ) ) );
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/UriFundamentals.informal.out.will.yml' ) ) );
@@ -4007,7 +4007,7 @@ function exportMixed( test )
   return ready;
 }
 
-exportMixed.timeOut = 500000;
+exportMixed.timeOut = 300000;
 
 //
 
@@ -4452,7 +4452,7 @@ function exportSecond( test )
   return ready;
 }
 
-exportSecond.timeOut = 500000;
+exportSecond.timeOut = 300000;
 
 //
 
