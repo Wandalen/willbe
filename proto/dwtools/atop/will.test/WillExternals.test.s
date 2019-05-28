@@ -3891,7 +3891,7 @@ function exportMixed( test )
         'criterion' : { 'predefined' : 1 },
       },
       'in' : { 'path' : '..' },
-      // 'out' : { 'path' : 'out' },
+      'out' : { 'path' : 'out' },
 
       'module.willfiles' :
       {
