@@ -1,0 +1,22 @@
+
+about :
+
+  name : "super"
+  description : "Module for testing"
+  version : "0.0.1"
+
+step :
+
+  export :
+    export : path::out.debug
+    tar : 0
+
+build :
+
+  export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - build::*=1
+      - step::export*=1
