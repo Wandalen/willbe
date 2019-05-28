@@ -1,3 +1,4 @@
+format: willfile-1.0.0
 about:
   name: willbe
   description: Utility to manage modules of complex modular systems
@@ -13,6 +14,26 @@ about:
     keywords:
       - wTools
 path:
+  module.willfiles:
+    path: out/willbe.out.will.yml
+    criterion:
+      predefined: 1
+  module.original.willfiles:
+    path:
+      - .im.will.yml
+      - .ex.will.yml
+    criterion:
+      predefined: 1
+  module.dir:
+    path: out
+    criterion:
+      predefined: 1
+  local:
+    criterion:
+      predefined: 1
+  remote:
+    criterion:
+      predefined: 1
   in:
     path: ..
   temp:
@@ -35,7 +56,7 @@ path:
     path: 'git+https:///github.com/Wandalen/willbe.git'
   bugs:
     path: 'https:///github.com/Wandalen/willbe/issues'
-  exportedDir.proto.export:
+  exported.dir.proto.export:
     path: ./proto
     criterion:
       default: 1
@@ -46,7 +67,7 @@ path:
       export: 1
       tar: 1
       public: 1
-  exportedFiles.proto.export:
+  exported.files.proto.export:
     path:
       - proto
       - proto/dwtools
@@ -661,25 +682,6 @@ path:
       export: 1
       tar: 1
       public: 1
-  original.willfiles:
-    path:
-      - .im.will.yml
-      - .ex.will.yml
-  module.willfiles:
-    path: out/willbe.out.will.yml
-    criterion:
-      predefined: 1
-  module.dir:
-    path: out
-    criterion:
-      predefined: 1
-  local:
-    path: .
-    criterion:
-      predefined: 1
-  remote:
-    criterion:
-      predefined: 1
 submodule: {}
 reflector:
   reflect.proto.:
@@ -759,11 +761,11 @@ reflector:
       tar: 1
       public: 1
     mandatory: 1
-  exportedFiles.proto.export:
+  exported.files.proto.export:
     src:
-      filePath: 'path::exportedFiles.proto.export'
+      filePath: 'path::exported.files.proto.export'
       basePath: .
-      prefixPath: 'path::exportedDir.proto.export'
+      prefixPath: 'path::exported.dir.proto.export'
     criterion:
       default: 1
       debug: 1
@@ -931,8 +933,8 @@ exported:
       tar: 1
       public: 1
     exportedReflector: 'reflector::exported.proto.export'
-    exportedFilesReflector: 'reflector::exportedFiles.proto.export'
-    exportedDirPath: 'path::exportedDir.proto.export'
-    exportedFilesPath: 'path::exportedFiles.proto.export'
-    originalWillFilesPath: 'path::original.willfiles'
-format: willfile-1.0.0
+    exportedFilesReflector: 'reflector::exported.files.proto.export'
+    exportedDirPath: 'path::exported.dir.proto.export'
+    exportedFilesPath: 'path::exported.files.proto.export'
+module:
+  willbe.out: root

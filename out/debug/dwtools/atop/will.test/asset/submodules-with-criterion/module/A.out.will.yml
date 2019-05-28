@@ -7,12 +7,12 @@ execution: {}
 path:
   local:
     path: A
-  exportedDir.export:
+  exported.dir.export:
     path: ./A
     criterion:
       default: 1
       export: 1
-  exportedFiles.export:
+  exported.files.export:
     path:
       - A
       - A/A.js
@@ -35,11 +35,11 @@ reflector:
       default: 1
       export: 1
     mandatory: 1
-  exportedFiles.export:
+  exported.files.export:
     src:
-      filePath: 'path::exportedFiles.export'
+      filePath: 'path::exported.files.export'
       basePath: .
-      prefixPath: 'path::exportedDir.export'
+      prefixPath: 'path::exported.dir.export'
     criterion:
       default: 1
       export: 1
@@ -66,7 +66,7 @@ exported:
       default: 1
       export: 1
     exportedReflector: 'reflector::exported.export'
-    exportedFilesReflector: 'reflector::exportedFiles.export'
-    exportedDirPath: 'path::exportedDir.export'
-    exportedFilesPath: 'path::exportedFiles.export'
+    exportedFilesReflector: 'reflector::exported.files.export'
+    exportedDirPath: 'path::exported.dir.export'
+    exportedFilesPath: 'path::exported.files.export'
     originalWillFilesPath: 'path::module.original.willfiles'

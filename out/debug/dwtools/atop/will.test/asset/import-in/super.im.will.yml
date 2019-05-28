@@ -1,7 +1,7 @@
 
 submodule :
 
-  MultipleExports : .
+  Submodule : .
 
 path :
 

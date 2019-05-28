@@ -22,14 +22,14 @@ path:
     path: ./out/release
     criterion:
       debug: 0
-  exportedDir.export.:
+  exported.dir.export.:
     path: ./out/release
     criterion:
       default: 1
       debug: 0
       raw: 1
       export: 1
-  exportedFiles.export.:
+  exported.files.export.:
     path:
       - out/release
       - out/release/File.release.js
@@ -97,7 +97,7 @@ reflector:
       debug: 0
       raw: 1
       export: 1
-  exportedFiles.export.:
+  exported.files.export.:
     recursive: 0
     src:
       filePath:
@@ -217,7 +217,7 @@ exported:
       raw: 1
       export: 1
     exportedReflector: 'reflector::exported.export.'
-    exportedFilesReflector: 'reflector::exportedFiles.export.'
-    exportedDirPath: 'path::exportedDir.export.'
-    exportedFilesPath: 'path::exportedFiles.export.'
+    exportedFilesReflector: 'reflector::exported.files.export.'
+    exportedDirPath: 'path::exported.dir.export.'
+    exportedFilesPath: 'path::exported.files.export.'
     archiveFilePath: 'path::archiveFile.export.'

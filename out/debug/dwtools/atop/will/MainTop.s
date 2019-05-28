@@ -65,19 +65,13 @@ function _moduleReadyThen( o )
   if( !module )
   module = will.currentModule = will.moduleMake
   ({
-    // dirPath : dirPath,
     willfilesPath : willfilesPath,
     forming : o.forming,
   });
 
-  // debugger;
-  // if( o.forming && module.resourcesFormed <= 1 )
   if( o.forming && module.stager.stageStateSkipping( 'resourcesFormed' ) )
   {
-    // debugger;
-    // module.stager.stageCancel( 'resourcesFormed' );
     module.stager.stageRerun( 'resourcesFormed' );
-    // module.resourcesForm();
   }
 
   return will.currentModule.ready.split().keep( function( arg )
@@ -758,16 +752,8 @@ function commandWith( e )
   // module.stager.stageStateSkipping( 'submodulesFormed', 1 );
   module.stager.stageStateSkipping( 'resourcesFormed', 1 );
 
-  // debugger;
-  // module.ready.tap( ( err, arg ) =>
-  // {
-  //   debugger;
-  // });
-  // debugger;
-
   module.willfilesFind();
 
-  // debugger;
   return module.ready.split().keep( function( arg )
   {
 
@@ -781,7 +767,6 @@ function commandWith( e )
   })
   .finally( ( err, arg ) =>
   {
-    debugger;
     will.moduleDone({ error : err || null, command : commandWith });
     if( err )
     throw _.errLogOnce( err );

@@ -82,26 +82,7 @@ function MakeForEachCriterion( o )
 
   function make( o )
   {
-    let optional = !!o.Optional;
-    let rewritable = !!o.Rewritable;
-    let importing = !!o.Importing;
-    // let onExist = o.OnExist;
     let onExist = Cls.OnInstanceExists;
-
-    // if( onExist )
-    // debugger;
-
-    delete o.Optional;
-    delete o.Rewritable;
-    delete o.Importing;
-    // delete o.OnExist;
-
-    if( o.importable !== undefined && !o.importable )
-    if( importing )
-    {
-      // debugger;
-      return;
-    }
 
     try
     {
@@ -112,6 +93,25 @@ function MakeForEachCriterion( o )
         _.assert( !!onExist );
         onExist( instance, o );
       }
+
+      let optional = !!o.Optional;
+      let rewriting = !!o.Rewriting;
+      let importing = !!o.Importing;
+      let isOutFile = !!o.IsOutFile;
+
+      delete o.Optional;
+      delete o.Rewriting;
+      delete o.Importing;
+      delete o.IsOutFile;
+
+      if( o.importable !== undefined && !o.importable )
+      if( importing )
+      {
+        return;
+      }
+
+      if( instance && rewriting )
+      instance.finit();
 
       let r = Cls( o ).form1();
       result.push( r );
@@ -154,11 +154,25 @@ function init( o )
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
+  _.Will.ResourceCounter += 1;
+  resource.id = _.Will.ResourceCounter;
+
+  // if( resource.id === 154 )
+  // debugger;
+
   _.instanceInit( resource );
   Object.preventExtensions( resource );
 
   if( o )
   resource.copy( o );
+
+  // if( resource.name === "reflect.submodules." )
+  // debugger;
+
+  if( _.instanceIs( o ) )
+  {
+    _.assert( resource.willf === null );
+  }
 
   return resource;
 }
@@ -180,9 +194,6 @@ function copy( o )
 
   let resource2 = _.Copyable.prototype.copy.call( resource, o );
 
-  // debugger;
-  // _.assert( resource2.module === null );
-
   return resource2;
 }
 
@@ -191,6 +202,10 @@ function copy( o )
 function cloneDerivative()
 {
   let resource = this;
+
+  if( resource.original )
+  return resource;
+
   let resource2 = resource.clone();
 
   _.assert( arguments.length === 0 );
@@ -199,6 +214,7 @@ function cloneDerivative()
   resource2.willf = resource.willf;
   resource2.original = resource.original || resource;
   resource2.formed = resource.formed;
+  resource2.unformedResource = resource.unformedResource;
 
   return resource2;
 }
@@ -217,6 +233,9 @@ function unform()
 
   _.assert( arguments.length === 0 );
   _.assert( resource.formed );
+
+  if( resource.absoluteName === "module::super / reflector::reflect.submodules." )
+  debugger;
 
   if( !resource.original )
   {
@@ -254,12 +273,18 @@ function form()
   let path = fileProvider.path;
   let logger = will.logger;
 
+  // if( resource.absoluteName === "module::super / reflector::reflect.submodules." )
+  // debugger;
+
   if( resource.formed === 0 )
   resource.form1();
   if( resource.formed === 1 )
   resource.form2();
   if( resource.formed === 2 )
   resource.form3();
+
+  // if( resource.absoluteName === "module::super / reflector::reflect.submodules." )
+  // debugger;
 
   _.assert( resource.formed === 3 );
 
@@ -393,7 +418,6 @@ function _inheritMultiple( o )
 
   /* begin */
 
-  // o.ancestors.map( ( ancestor ) =>
   for( let a = o.ancestors.length-1 ; a >= 0 ; a-- )
   {
     let ancestor = o.ancestors[ a ];
@@ -514,6 +538,9 @@ function form3()
 
   _.assert( arguments.length === 0 );
   _.assert( resource.formed === 2 );
+
+  // if( resource.id === 154 )
+  // debugger;
 
   /* begin */
 
@@ -780,10 +807,21 @@ function _infoExport( fields )
 function infoExport()
 {
   let resource = this;
-  let fields = resource.dataExport({ copyingNonExportable : 1 });
+  let o = _.routineOptions( infoExport, arguments );
+
+  debugger;
+
+  let fields = resource.dataExport( o );
   let result = resource._infoExport( fields );
+
+  debugger;
+
   return result;
 }
+
+var defaults = infoExport.defaults = Object.create( _.Will.Module.prototype.dataExport.defaults );
+defaults.copyingNonExportable = 1;
+defaults.formed = 1;
 
 //
 
@@ -792,25 +830,29 @@ function dataExport()
   let resource = this;
   let o = _.routineOptions( dataExport, arguments );
 
+  if( !o.formed )
+  if( resource.unformedResource )
+  return resource.unformedResource.dataExport.call( resource.unformedResource, o );
+
   if( !o.copyingNonExportable )
   if( !resource.exportable )
   return;
 
   if( !o.copyingPredefined )
-  // if( !o.copyingModulePaths )
   if( resource.criterion && resource.criterion.predefined )
   return;
 
   if( !o.copyingNonWritable && !resource.writable )
-  // if( !o.copyingModulePaths )
   return;
 
   let o2 = _.mapExtend( null, o );
   delete o2.copyingNonWritable;
   delete o2.copyingPredefined;
   delete o2.copyingNonExportable;
-  // delete o2.copyingModulePaths;
   delete o2.module;
+  delete o2.formed;
+  // delete o2.dst;
+
   let fields = resource.cloneData( o2 );
 
   delete fields.name;
@@ -905,6 +947,21 @@ function shortNameArrayGet()
   return result;
 }
 
+//
+
+function willfSet( src )
+{
+  let resource = this;
+
+  // if( resource.id === 154 )
+  // if( src )
+  // debugger;
+
+  resource[ willfSymbol ] = src;
+
+  return src;
+}
+
 // --
 // resolver
 // --
@@ -989,6 +1046,8 @@ let reflectorResolve = _.routineFromPreAndBody( _.Will.Module.prototype.reflecto
 // relations
 // --
 
+let willfSymbol = Symbol.for( 'willf' );
+
 let Composes =
 {
 }
@@ -1013,11 +1072,13 @@ let Medials =
 
 let Restricts =
 {
+  id : null,
   willf : null,
   module : null,
   original : null,
   formed : 0,
   inherited : 0,
+  unformedResource : null,
 }
 
 let Statics =
@@ -1044,6 +1105,7 @@ let Forbids =
 
 let Accessors =
 {
+  willf : { setter : willfSet },
   nickName : { getter : nickNameGet, readOnly : 1 },
   decoratedNickName : { getter : decoratedNickNameGet, readOnly : 1 },
   refName : { getter : _refNameGet, readOnly : 1 },
@@ -1107,6 +1169,7 @@ let Proto =
   absoluteNameGet,
   decoratedAbsoluteNameGet,
   shortNameArrayGet,
+  willfSet,
 
   // resolver
 
@@ -1137,8 +1200,6 @@ _.classDeclare
   withMixin : 1,
   withClass : 1,
 });
-
-// _.Copyable.mixin( Self );
 
 //
 

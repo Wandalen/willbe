@@ -191,38 +191,19 @@ function moduleMake( o )
   _.assert( arguments.length === 1 );
   o = _.routineOptions( moduleMake, arguments );
 
-  // if( !o.willfilesPath && !o.dirPath )
-  // o.dirPath = o.dirPath || fileProvider.path.current();
-
   if( !o.willfilesPath )
   o.willfilesPath = o.willfilesPath || fileProvider.path.current();
 
   if( !o.module )
   {
     o.module = will.Module({ will : will, willfilesPath : o.willfilesPath }).preform();
-    // o.module = will.Module({ will : will, willfilesPath : o.willfilesPath, dirPath : o.dirPath }).preform();
   }
 
   _.assert( o.module.willfilesPath === o.willfilesPath || o.module.willfilesPath === o.dirPath );
-  // _.assert( o.module.dirPath === o.dirPath );
 
-  // o.module.stager.stageStateSkipping( 'submodulesFormed', !!o.forming );
-  o.module.stager.stageStateSkipping( 'resourcesFormed', !!o.forming );
+  o.module.stager.stageStateSkipping( 'resourcesFormed', !o.forming );
 
   o.module.willfilesFind();
-  // o.module.willfilesOpen();
-  // o.module.submodulesForm();
-
-  // if( o.forming )
-  // {
-  //   // o.module.submodulesForm();
-  //   o.module.resourcesForm();
-  // }
-  // else
-  // {
-  //   // o.module.submodulesFormSkip();
-  //   o.module.resourcesFormSkip();
-  // }
 
   return o.module;
 }
@@ -231,7 +212,6 @@ moduleMake.defaults =
 {
   module : null,
   willfilesPath : null,
-  // dirPath : null,
   forming : 0,
 }
 
@@ -257,7 +237,6 @@ function moduleEach( o )
     let module = o.currentModule;
     if( !o.currentModule )
     module = o.currentModule = will.Module({ will : will, willfilesPath : path.current() }).preform();
-    // module = o.currentModule = will.Module({ will : will, dirPath : path.current() }).preform();
 
     module.stager.stageStateSkipping( 'resourcesFormed', 1 );
 
@@ -328,7 +307,6 @@ function moduleEach( o )
 
       let module = will.Module({ will : will, willfilesPath : file.absolute }).preform();
 
-      // module.stager.stageStateSkipping( 'submodulesFormed', 0 );
       module.stager.stageStateSkipping( 'resourcesFormed', 1 );
 
       let it = Object.create( null );
@@ -341,11 +319,6 @@ function moduleEach( o )
         return o.onBegin( it );
         return arg;
       });
-
-      // module.willfilesOpen();
-      // module.submodulesForm();
-      // // module.resourcesForm(); // yyy
-      // module.resourcesFormSkip();
 
       module.willfilesFind();
 
@@ -439,7 +412,6 @@ function willfilesList( o )
   if( !o.includingOutFiles )
   filter.maskTerminal.excludeAny.push( /\.out(\.|$)/ )
 
-  // debugger;
   let files = fileProvider.filesFind
   ({
     filePath : o.dirPath,
@@ -447,7 +419,6 @@ function willfilesList( o )
     filter : filter,
     maskPreset : 0,
   });
-  // debugger;
 
   return files;
 }
@@ -563,11 +534,11 @@ let Statics =
   ResourceKindToClassName : ResourceKindToClassName,
   ResourceKindToMapName : ResourceKindToMapName,
   ResourceKinds : ResourceKinds,
+  ResourceCounter : 0,
 }
 
 let Forbids =
 {
-  // moduleMap : 'moduleMap',
 }
 
 // --

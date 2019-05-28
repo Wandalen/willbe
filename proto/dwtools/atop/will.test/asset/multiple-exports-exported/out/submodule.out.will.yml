@@ -20,14 +20,14 @@ path:
     path: ./out/release
     criterion:
       debug: 0
-  exportedDir.export.:
+  exported.dir.export.:
     path: ./out/release
     criterion:
       default: 1
       debug: 0
       raw: 1
       export: 1
-  exportedFiles.export.:
+  exported.files.export.:
     path:
       - out/release
       - out/release/File.release.js
@@ -43,14 +43,14 @@ path:
       debug: 0
       raw: 1
       export: 1
-  exportedDir.export.debug:
+  exported.dir.export.debug:
     path: ./out/debug
     criterion:
       default: 1
       debug: 1
       raw: 1
       export: 1
-  exportedFiles.export.debug:
+  exported.files.export.debug:
     path:
       - out/debug
       - out/debug/File.debug.js
@@ -118,7 +118,7 @@ reflector:
       debug: 0
       raw: 1
       export: 1
-  exportedFiles.export.:
+  exported.files.export.:
     recursive: 0
     src:
       filePath:
@@ -141,7 +141,7 @@ reflector:
       debug: 1
       raw: 1
       export: 1
-  exportedFiles.export.debug:
+  exported.files.export.debug:
     recursive: 0
     src:
       filePath:
@@ -256,9 +256,9 @@ exported:
       raw: 1
       export: 1
     exportedReflector: 'reflector::exported.export.debug'
-    exportedFilesReflector: 'reflector::exportedFiles.export.debug'
-    exportedDirPath: 'path::exportedDir.export.debug'
-    exportedFilesPath: 'path::exportedFiles.export.debug'
+    exportedFilesReflector: 'reflector::exported.files.export.debug'
+    exportedDirPath: 'path::exported.dir.export.debug'
+    exportedFilesPath: 'path::exported.files.export.debug'
     archiveFilePath: 'path::archiveFile.export.debug'
   export.:
     version: 0.0.1
@@ -268,7 +268,7 @@ exported:
       raw: 1
       export: 1
     exportedReflector: 'reflector::exported.export.'
-    exportedFilesReflector: 'reflector::exportedFiles.export.'
-    exportedDirPath: 'path::exportedDir.export.'
-    exportedFilesPath: 'path::exportedFiles.export.'
+    exportedFilesReflector: 'reflector::exported.files.export.'
+    exportedDirPath: 'path::exported.dir.export.'
+    exportedFilesPath: 'path::exported.files.export.'
     archiveFilePath: 'path::archiveFile.export.'

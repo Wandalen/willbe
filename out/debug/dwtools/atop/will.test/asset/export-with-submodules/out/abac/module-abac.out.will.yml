@@ -19,15 +19,15 @@ path:
       - ../out2
   export:
     path:
-      - 'submodule::sub-a/path::exportedFiles.proto.export'
-      - 'module::sub-b/path::exportedFiles.proto.export'
+      - 'submodule::sub-a/path::exported.files.proto.export'
+      - 'module::sub-b/path::exported.files.proto.export'
       - '{path::proto}/dir3.test'
-  exportedDir.proto.export:
+  exported.dir.proto.export:
     path: ../proto
     criterion:
       default: 1
       export: 1
-  exportedFiles.proto.export:
+  exported.files.proto.export:
     path:
       - ../proto/a
       - ../proto/a/File.js
@@ -90,15 +90,15 @@ submodule:
             - ../out2
         export:
           path:
-            - 'submodule::sub-a/path::exportedFiles.proto.export'
-            - 'submodule::sub-b/path::exportedFiles.proto.export'
+            - 'submodule::sub-a/path::exported.files.proto.export'
+            - 'submodule::sub-b/path::exported.files.proto.export'
             - '{path::proto}/dir3.test'
-        exportedDir.proto.export:
+        exported.dir.proto.export:
           path: ../proto
           criterion:
             default: 1
             export: 1
-        exportedFiles.proto.export:
+        exported.files.proto.export:
           path:
             - ../proto/a
             - ../proto/a/File.js
@@ -196,12 +196,12 @@ submodule:
             default: 1
             export: 1
           mandatory: 1
-        exportedFiles.proto.export:
+        exported.files.proto.export:
           src:
-            filePath: 'path::exportedFiles.proto.export'
+            filePath: 'path::exported.files.proto.export'
             basePath: >-
               /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/asset/export-with-submodules/proto
-            prefixPath: 'path::exportedDir.proto.export'
+            prefixPath: 'path::exported.dir.proto.export'
           criterion:
             default: 1
             export: 1
@@ -222,12 +222,12 @@ submodule:
             reflector: 'reflector::exported.proto.export*'
           inherit:
             - predefined.reflect
-        exportedFiles.proto.export:
+        exported.files.proto.export:
           criterion:
             default: 1
             export: 1
           opts:
-            reflector: 'reflector::exportedFiles.proto.export*'
+            reflector: 'reflector::exported.files.proto.export*'
           inherit:
             - predefined.reflect
       build:
@@ -249,9 +249,9 @@ submodule:
             default: 1
             export: 1
           exportedReflector: 'reflector::exported.proto.export'
-          exportedFilesReflector: 'reflector::exportedFiles.proto.export'
-          exportedDirPath: 'path::exportedDir.proto.export'
-          exportedFilesPath: 'path::exportedFiles.proto.export'
+          exportedFilesReflector: 'reflector::exported.files.proto.export'
+          exportedDirPath: 'path::exported.dir.proto.export'
+          exportedFilesPath: 'path::exported.files.proto.export'
           originalWillFilesPath: 'path::module.original.willfiles'
   sub-a:
     own: 1
@@ -274,12 +274,12 @@ submodule:
           path:
             - 'path::out'
             - out2
-        exportedDir.proto.export:
+        exported.dir.proto.export:
           path: ./proto/a
           criterion:
             default: 1
             export: 1
-        exportedFiles.proto.export:
+        exported.files.proto.export:
           path:
             - proto/a
             - proto/a/File.js
@@ -316,11 +316,11 @@ submodule:
             default: 1
             export: 1
           mandatory: 1
-        exportedFiles.proto.export:
+        exported.files.proto.export:
           src:
-            filePath: 'path::exportedFiles.proto.export'
+            filePath: 'path::exported.files.proto.export'
             basePath: .
-            prefixPath: 'path::exportedDir.proto.export'
+            prefixPath: 'path::exported.dir.proto.export'
           criterion:
             default: 1
             export: 1
@@ -336,7 +336,7 @@ submodule:
             export: 1
           inherit:
             - predefined.reflect
-        exportedFiles.proto.export:
+        exported.files.proto.export:
           criterion:
             default: 1
             export: 1
@@ -356,9 +356,9 @@ submodule:
             default: 1
             export: 1
           exportedReflector: 'reflector::exported.proto.export'
-          exportedFilesReflector: 'reflector::exportedFiles.proto.export'
-          exportedDirPath: 'path::exportedDir.proto.export'
-          exportedFilesPath: 'path::exportedFiles.proto.export'
+          exportedFilesReflector: 'reflector::exported.files.proto.export'
+          exportedDirPath: 'path::exported.dir.proto.export'
+          exportedFilesPath: 'path::exported.files.proto.export'
           originalWillFilesPath: 'path::module.original.willfiles'
   sub-c:
     own: 1
@@ -381,12 +381,12 @@ submodule:
           path:
             - 'path::out'
             - out2
-        exportedDir.proto.export:
+        exported.dir.proto.export:
           path: ./proto/c
           criterion:
             default: 1
             export: 1
-        exportedFiles.proto.export:
+        exported.files.proto.export:
           path:
             - proto/c
             - proto/c/File.js
@@ -423,11 +423,11 @@ submodule:
             default: 1
             export: 1
           mandatory: 1
-        exportedFiles.proto.export:
+        exported.files.proto.export:
           src:
-            filePath: 'path::exportedFiles.proto.export'
+            filePath: 'path::exported.files.proto.export'
             basePath: .
-            prefixPath: 'path::exportedDir.proto.export'
+            prefixPath: 'path::exported.dir.proto.export'
           criterion:
             default: 1
             export: 1
@@ -445,12 +445,12 @@ submodule:
             reflector: 'reflector::exported.proto.export*'
           inherit:
             - predefined.reflect
-        exportedFiles.proto.export:
+        exported.files.proto.export:
           criterion:
             default: 1
             export: 1
           opts:
-            reflector: 'reflector::exportedFiles.proto.export*'
+            reflector: 'reflector::exported.files.proto.export*'
           inherit:
             - predefined.reflect
       build:
@@ -467,9 +467,9 @@ submodule:
             default: 1
             export: 1
           exportedReflector: 'reflector::exported.proto.export'
-          exportedFilesReflector: 'reflector::exportedFiles.proto.export'
-          exportedDirPath: 'path::exportedDir.proto.export'
-          exportedFilesPath: 'path::exportedFiles.proto.export'
+          exportedFilesReflector: 'reflector::exported.files.proto.export'
+          exportedDirPath: 'path::exported.dir.proto.export'
+          exportedFilesPath: 'path::exported.files.proto.export'
           originalWillFilesPath: 'path::module.original.willfiles'
 reflector:
   files.all:
@@ -525,12 +525,12 @@ reflector:
       default: 1
       export: 1
     mandatory: 1
-  exportedFiles.proto.export:
+  exported.files.proto.export:
     src:
-      filePath: 'path::exportedFiles.proto.export'
+      filePath: 'path::exported.files.proto.export'
       basePath: >-
         /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/asset/export-with-submodules/proto
-      prefixPath: 'path::exportedDir.proto.export'
+      prefixPath: 'path::exported.dir.proto.export'
     criterion:
       default: 1
       export: 1
@@ -567,8 +567,8 @@ exported:
       default: 1
       export: 1
     exportedReflector: 'reflector::exported.proto.export'
-    exportedFilesReflector: 'reflector::exportedFiles.proto.export'
-    exportedDirPath: 'path::exportedDir.proto.export'
-    exportedFilesPath: 'path::exportedFiles.proto.export'
+    exportedFilesReflector: 'reflector::exported.files.proto.export'
+    exportedDirPath: 'path::exported.dir.proto.export'
+    exportedFilesPath: 'path::exported.files.proto.export'
     originalWillFilesPath: 'path::module.original.willfiles'
 format: willfile-1.0.0

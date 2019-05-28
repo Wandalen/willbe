@@ -160,7 +160,7 @@ function run( frame )
   _.assert( !!module );
   _.assert( !!will );
   _.assert( !!logger );
-  _.assert( module.preformed > 0 /* === 3 */ );
+  _.assert( module.preformed > 0  );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
   _.assert( resource.formed === 3 );
@@ -204,8 +204,6 @@ function perform( o )
   let logger = will.logger;
   let isExport = build.isExport();
   let time = _.timeNow();
-
-  // return _.timeOutError( 100, 'xxx' );
 
   let frame = new will.BuildFrame
   ({

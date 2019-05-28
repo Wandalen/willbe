@@ -40,28 +40,23 @@ function OnInstanceExists( instance, options )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  if( !instance.criterion )
-  return;
-  if( !instance.criterion.predefined )
-  return;
-
-  // if( instance.name === 'module.original.willfiles' )
-  // debugger;
-  // if( instance.module.nickName === 'module::Proto' )
-  // debugger;
-
-  // _.assert( path.isAbsolute( module.inPath ) );
-  // if( options.path )
-  // options.path = path.s.join( module.inPath, options.path ); // yyy
-
   options.criterion = options.criterion || Object.create( null );
   _.mapSupplement( options.criterion, instance.criterion );
   options.exportable = instance.exportable;
+  options.importable = instance.importable;
   options.writable = instance.writable;
-
   if( !options.path )
   options.path = instance.path;
-  instance.finit();
+
+  options.Rewriting = 1;
+
+  // if( module.absoluteName === "module::submodules-detached / module::PathFundamentals" )
+  if( options.name === 'local' )
+  debugger;
+  if( options.name === 'local' && options.IsOutFile )
+  options.importable = false;
+
+  // instance.finit();
 
 }
 
@@ -263,7 +258,6 @@ let Associates =
 
 let Restricts =
 {
-  // readOnly : false,
 }
 
 let Statics =

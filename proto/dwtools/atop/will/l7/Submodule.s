@@ -175,67 +175,33 @@ function open()
   let openedModule = rootModule.moduleAt( longPath );
   if( openedModule )
   {
-    // debugger;
     submodule.openedModule = openedModule;
     return submodule.openedModule.ready.split();
   }
 
-  // if( rootModule.allModuleMap[ longPath ] )
+  // if( submodule.data )
   // {
-  //   debugger; xxx
-  //   submodule.openedModule = rootModule.allModuleMap[ longPath ];
-  //   return submodule.openedModule.ready.split()
+  //   submodule._openFromData( submodule.data, longPath );
+  // }
+  // else
+  // {
+  //   submodule._openFromFile( longPath );
   // }
 
-  if( submodule.data )
-  {
-    // debugger;
-    // _.assert( 0, 'not implemented' );
-    // submodule.data = null;
-    submodule._openFromData( submodule.data, longPath );
-  }
-  else
-  {
-    submodule._openFromFile( longPath );
-  }
-
-  // submodule.openedModule = will.Module
-  // ({
-  //   will : will,
-  //   aliasName : submodule.name,
-  //   willfilesPath : path.join( module.inPath, submodule.path ),
-  //   supermodule : module,
-  // }).preform();
-  //
-  // // submodule.openedModule.stager.stageStateSkipping( 'submodulesFormed', 1 );
-  // submodule.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
-  // debugger;
-  // submodule.openedModule.willfilesFind();
-  //
-  // submodule.openedModule.willfilesFindReady.finally( ( err, arg ) =>
-  // {
-  //   if( err )
-  //   throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.openedModule.dirPath ), '\n', err );
-  //   return arg;
-  // });
-  //
-  // // submodule.openedModule.ready.then( ( arg ) =>
-  // // {
-  // //   // _.assert( !submodule.openedModule.stager.stageStatePerformed( 'submodulesFormed' ) );
-  // //   // _.assert( !submodule.openedModule.stager.stageStatePerformed( 'resourcesFormed' ) );
-  // //   return arg;
-  // // });
+  submodule._openFrom
+  ({
+    longPath : longPath,
+    data : submodule.data,
+  });
 
   submodule.openedModule.ready.finally( ( err, arg ) =>
   {
     if( err )
     {
-      // if( rootModule.allModuleMap[ submodule.longPath ] === submodule.openedModule )
-      // {
-      //   delete rootModule.allModuleMap[ submodule.longPath ]
-      // }
+      // debugger;
+      // _.errLogOnce( err );
       if( will.verbosity >= 3 )
-      logger.error( ' ! Failed to read ' + submodule.decoratedNickName + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading' );
+      logger.error( ' ' + _.color.strFormat( '!', 'negative' ) + ' Failed to read ' + submodule.decoratedNickName + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading' );
       if( will.verbosity >= 5 || !submodule.openedModule || submodule.openedModule.isOpened() )
       {
         if( will.verbosity < 5 )
@@ -264,9 +230,106 @@ function open()
 
 }
 
+// //
+//
+// function _openFromData( data, longPath )
+// {
+//   let submodule = this;
+//   let module = submodule.module;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//   let rootModule = module.rootModule;
+//
+//   _.assert( arguments.length === 2 );
+//   _.assert( submodule.formed === 2 );
+//   _.assert( submodule.openedModule === null );
+//   _.assert( _.strIs( submodule.path ), 'not tested' );
+//   _.assert( !submodule.original );
+//   _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
+//   _.assert( !rootModule.moduleAt( submodule.longPath ) );
+//
+//   /* */
+//
+//   submodule.openedModule = will.Module
+//   ({
+//     will : will,
+//     aliasName : submodule.name,
+//     willfilesPath : longPath,
+//     pickedWillfilesPath : longPath,
+//     pickedWillfileData : data,
+//     supermodule : module,
+//   }).preform();
+//
+//   if( module.stager.stageStateSkipping( 'willfilesFound' ) )
+//   submodule.openedModule.stager.stageStateSkipping( 'willfilesFound', 1 );
+//   if( module.stager.stageStateSkipping( 'willfilesOpened' ) )
+//   submodule.openedModule.stager.stageStateSkipping( 'willfilesOpened', 1 );
+//
+//   submodule.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
+//   submodule.openedModule.willfilesFind();
+//
+//   submodule.openedModule.willfilesFindReady.finally( ( err, arg ) =>
+//   {
+//     if( err )
+//     throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.openedModule.dirPath ), '\n', err );
+//     return arg;
+//   });
+//
+//   /* */
+//
+// }
+//
+// //
+//
+// function _openFromFile( longPath )
+// {
+//   let submodule = this;
+//   let module = submodule.module;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//   let rootModule = module.rootModule;
+//
+//   _.assert( arguments.length === 1 );
+//   _.assert( submodule.formed === 2 );
+//   _.assert( submodule.openedModule === null );
+//   _.assert( _.strIs( submodule.path ), 'not tested' );
+//   _.assert( !submodule.original );
+//   _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
+//   _.assert( !submodule.data );
+//   _.assert( !rootModule.moduleAt( submodule.longPath ) );
+//
+//   /* */
+//
+//   submodule.openedModule = will.Module
+//   ({
+//     will : will,
+//     aliasName : submodule.name,
+//     willfilesPath : longPath,
+//     supermodule : module,
+//   }).preform();
+//
+//   submodule.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
+//   submodule.openedModule.willfilesFind();
+//
+//   submodule.openedModule.willfilesFindReady.finally( ( err, arg ) =>
+//   {
+//     if( err )
+//     throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.openedModule.dirPath ), '\n', err );
+//     return arg;
+//   });
+//
+//   /* */
+//
+//   return submodule.openedModule;
+// }
+//
 //
 
-function _openFromData( data, longPath )
+function _openFrom( o )
 {
   let submodule = this;
   let module = submodule.module;
@@ -276,54 +339,7 @@ function _openFromData( data, longPath )
   let logger = will.logger;
   let rootModule = module.rootModule;
 
-  _.assert( arguments.length === 2 );
-  _.assert( submodule.formed === 2 );
-  _.assert( submodule.openedModule === null );
-  _.assert( _.strIs( submodule.path ), 'not tested' );
-  _.assert( !submodule.original );
-  _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
-  _.assert( !rootModule.moduleAt( submodule.longPath ) );
-
-  /* */
-
-  // debugger;
-  submodule.openedModule = will.Module
-  ({
-    will : will,
-    aliasName : submodule.name,
-    willfilesPath : longPath,
-    pickedWillfilesPath : longPath,
-    pickedWillfileData : data,
-    supermodule : module,
-  }).preform();
-
-  submodule.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
-  submodule.openedModule.willfilesFind();
-
-  submodule.openedModule.willfilesFindReady.finally( ( err, arg ) =>
-  {
-    // debugger;
-    if( err )
-    throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.openedModule.dirPath ), '\n', err );
-    return arg;
-  });
-
-  /* */
-
-}
-
-//
-
-function _openFromFile( longPath )
-{
-  let submodule = this;
-  let module = submodule.module;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let rootModule = module.rootModule;
-
+  _.routineOptions( _openFrom, arguments );
   _.assert( arguments.length === 1 );
   _.assert( submodule.formed === 2 );
   _.assert( submodule.openedModule === null );
@@ -339,12 +355,32 @@ function _openFromFile( longPath )
   ({
     will : will,
     aliasName : submodule.name,
-    willfilesPath : longPath,
+    willfilesPath : o.longPath,
     supermodule : module,
+    pickedWillfilesPath : o.data ? o.longPath : null,
+    pickedWillfileData : o.data,
   }).preform();
 
+  // submodule.openedModule = will.Module
+  // ({
+  //   will : will,
+  //   aliasName : submodule.name,
+  //   willfilesPath : o.longPath,
+  //   supermodule : module,
+  //   pickedWillfilesPath : o.longPath,
+  //   pickedWillfileData : data,
+  // }).preform();
+
+  if( module.stager.stageStateSkipping( 'willfilesFound' ) )
+  submodule.openedModule.stager.stageStateSkipping( 'willfilesFound', 1 );
+  if( module.stager.stageStateSkipping( 'willfilesOpened' ) )
+  submodule.openedModule.stager.stageStateSkipping( 'willfilesOpened', 1 );
+
   submodule.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
-  submodule.openedModule.willfilesFind();
+  submodule.openedModule.stager.stageStatePausing( 'willfilesFound', 0 );
+  submodule.openedModule.stager.tick();
+
+  // submodule.openedModule.willfilesFind();
 
   submodule.openedModule.willfilesFindReady.finally( ( err, arg ) =>
   {
@@ -356,6 +392,12 @@ function _openFromFile( longPath )
   /* */
 
   return submodule.openedModule;
+}
+
+_openFrom.defaults =
+{
+  data : null,
+  longPath : null,
 }
 
 //
@@ -557,7 +599,6 @@ let Composes =
 let Aggregates =
 {
   name : null,
-  openedModule : null,
 }
 
 let Associates =
@@ -567,6 +608,7 @@ let Associates =
 let Restricts =
 {
   data : null,
+  openedModule : null,
 }
 
 let Medials =
@@ -611,8 +653,9 @@ let Proto =
   form3,
 
   open,
-  _openFromData,
-  _openFromFile,
+  // _openFromData,
+  // _openFromFile,
+  _openFrom,
 
   resolve,
 

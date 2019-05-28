@@ -87,7 +87,7 @@ function form()
   _.assert( !frame.formed );
   _.assert( !!will );
   _.assert( !!module );
-  _.assert( module.preformed > 0 /* === 3 */ );
+  _.assert( module.preformed > 0  );
   _.assert( build instanceof will.Build );
   _.assert( !!resource );
   _.assert( !!fileProvider );

@@ -156,7 +156,7 @@ function run( frame )
     _.assert( !!module );
     _.assert( !!will );
     _.assert( !!logger );
-    _.assert( module.preformed > 0 /* === 3 */ );
+    _.assert( module.preformed > 0  );
     _.assert( will.formed === 1 );
     _.assert( build.formed === 3 );
     _.assert( step.formed === 3 );

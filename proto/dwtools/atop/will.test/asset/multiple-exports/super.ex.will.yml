@@ -1,7 +1,7 @@
 
 about :
 
-  name : "super"
+  name : "supermodule"
   description : "Module for testing"
   version : "0.0.1"
 

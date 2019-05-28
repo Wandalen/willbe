@@ -48,8 +48,8 @@ function init( o )
 
   reflector.src.pairWithDst( reflector.dst );
 
-  if( o && o.name === "reflect.copy." )
-  debugger;
+  // if( o && o.name === "exportedFiles.export" )
+  // debugger;
 
   let result = Parent.prototype.init.apply( reflector, arguments );
 
@@ -102,6 +102,9 @@ function form1()
   _.assert( !willf || !!willf.formed );
   _.assert( _.strDefined( reflector.name ) );
 
+  // if( reflector.absoluteName === "module::super / reflector::reflect.submodules." )
+  // debugger;
+
   /* begin */
 
   reflector.src = reflector.src || Object.create( null );
@@ -144,7 +147,29 @@ function form2()
 
   _.assert( reflector.formed === 1 );
 
-  // if( reflector.nickName === "reflector::reflect.copy." )
+  // if( reflector.nickName === "reflector::exportedFiles.export." )
+  // debugger;
+  if( reflector.absoluteName === "module::reflectorResolve / reflector::reflect.proto.0.debug" )
+  debugger;
+
+  // if( !reflector.unformedResource && !reflector.original )
+  if( !reflector.unformedResource )
+  {
+
+    if( reflector.original )
+    {
+      if( !reflector.original.unformedResource )
+      reflector.original.unformedResource = reflector.original.cloneDerivative();
+      reflector.unformedResource = reflector.original.unformedResource;
+    }
+    else
+    {
+      reflector.unformedResource = reflector.cloneDerivative();
+    }
+
+  }
+
+  // if( reflector.absoluteName === "module::Proto.informal / reflector::exportedFiles.export" )
   // debugger;
 
   reflector.src.pairWithDst( reflector.dst );
@@ -173,7 +198,7 @@ function form3()
 
   /* begin */
 
-  // if( reflector.nickName === "reflector::reflect.proto.0.debug" )
+  // if( reflector.nickName === "reflector::exportedFiles.export" )
   // debugger;
 
   reflector.pathsResolve();
@@ -194,7 +219,7 @@ function form3()
   _.assert( reflector.src.prefixPath === null || path.isAbsolute( reflector.src.prefixPath ) );
   _.assert( reflector.dst.prefixPath === null || path.isAbsolute( reflector.dst.prefixPath ) );
 
-  // if( reflector.nickName === "reflector::reflect.proto.0.debug" )
+  // if( reflector.nickName === "reflector::exportedFiles.export" )
   // debugger;
 
   /* end */
@@ -223,15 +248,9 @@ function _inheritMultiple( o )
 
   reflector._accumulator = new will.Reflector({ module : module, original : reflector, name : reflector.name });
 
-  // if( reflector.nickName === "reflector::reflect.proto.0.debug" )
-  // debugger;
-
   Parent.prototype._inheritMultiple.call( reflector, o );
 
   reflector.src.pairWithDst( reflector.dst );
-
-  // if( reflector.nickName === "reflector::reflect.proto.0.debug" )
-  // debugger;
 
   if( reflector.filePath )
   reflector._reflectMapForm({ visited : o.visited });
@@ -248,9 +267,6 @@ function _inheritMultiple( o )
   if( reflector.src.filePath !== reflector.dst.filePath )
   reflector.src.pairRefineLight();
 
-  // if( reflector.nickName === "reflector::reflect.submodules" )
-  // debugger;
-
   return reflector;
 }
 
@@ -259,7 +275,6 @@ _inheritMultiple.defaults =
   ancestors : null,
   visited : null,
   extending : 0,
-  // defaultDst : true,
 }
 
 //
@@ -303,19 +318,23 @@ function _inheritSingle( o )
 
   _.assert( reflector2.formed === 3 );
 
-  let extend = _.mapOnly( reflector2, _.mapNulls( reflector ) );
+  // if( reflector.absoluteName === "module::reflectorResolve / reflector::reflect.proto.0.debug" )
+  // debugger;
+
+  let only = _.mapNulls( reflector );
+  only = _.mapOnly( reflector, reflector.Composes );
+  let extend = _.mapOnly( reflector2, only );
 
   delete extend.src;
   delete extend.dst;
   delete extend.criterion;
   delete extend.filePath;
-  delete extend.original;
+  delete extend.inherit;
+  // delete extend.original;
+  // delete extend.willf;
 
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
-
-  // if( reflector.nickName === "reflector::reflect.proto.0.debug" )
-  // debugger;
 
   reflector2 = reflector2.cloneDerivative();
   reflector2.pathsResolve();
@@ -350,7 +369,7 @@ function _inheritSingle( o )
   else
   {
 
-    // if( reflector.nickName === "reflector::reflect.proto.0.debug" )
+    // if( reflector.absoluteName === "module::submodules-mixed / reflector::reflect.submodules" )
     // debugger;
 
     reflector._accumulator.src.pairRefineLight();
@@ -365,7 +384,7 @@ function _inheritSingle( o )
     if( reflector._accumulator.src.filePath !== reflector._accumulator.dst.filePath )
     reflector._accumulator.src.pairRefineLight();
 
-    // if( reflector.nickName === "reflector::reflect.proto.0.debug" )
+    // if( reflector.absoluteName === "module::submodules-mixed / reflector::reflect.submodules" )
     // debugger;
 
   }
@@ -615,19 +634,17 @@ function pathsResolve( o )
   if( _.mapIs( reflector.src.filePath ) )
   reflector.src.filePathNullizeMaybe();
 
-  // if( reflector.nickName === "reflector::files.all" )
-  // debugger;
-
   if( reflector.src.basePath )
   reflector.src.basePath = resolve( reflector.src.basePath );
   if( reflector.src.filePath )
   {
     let r = resolve( reflector.src.filePath, 1, 'src' );
+
     reflector.src.filePath = null;
+
     if( r instanceof _.FileRecordFilter )
     {
-      // debugger;
-      reflector.src.pathsInherit( r ); // yyy
+      reflector.src.pathsInherit( r );
     }
     else
     {
@@ -647,13 +664,14 @@ function pathsResolve( o )
     if( r instanceof _.FileRecordFilter )
     {
       debugger;
-      reflector.dst.pathsInherit( r ); // yyy
+      reflector.dst.pathsInherit( r );
     }
     else
     {
       reflector.dst.filePath = r;
     }
   }
+
   if( reflector.dst.basePath )
   reflector.dst.basePath = resolve( reflector.dst.basePath );
   let dstHasDst = path.pathMapDstFromDst( reflector.dst.filePath ).filter( ( e ) => _.strIs( e ) ).length > 0;
@@ -767,9 +785,9 @@ function optionsForFindGroupExport( o )
   result.mandatory = reflector.mandatory;
 
   if( reflector.src )
-  result./*fileFilter*/src = reflector.src.clone();
-  result./*fileFilter*/src = result./*fileFilter*/src || Object.create( null );
-  result./*fileFilter*/src.prefixPath = path.s.resolve( module.inPath, result./*fileFilter*/src.prefixPath || '.' );
+  result.src = reflector.src.clone();
+  result.src = result.src || Object.create( null );
+  result.src.prefixPath = path.s.resolve( module.inPath, result.src.prefixPath || '.' );
 
   return result;
 }
@@ -820,21 +838,6 @@ optionsForReflectExport.defaults =
   resolving : 0,
 }
 
-// //
-//
-// function infoExport()
-// {
-//   let reflector = this;
-//   let result = '';
-//   let fields = reflector.dataExport();
-//
-//   // _.assert( reflector.formed > 0 );
-//   result += _.color.strFormat( reflector.nickName, 'entity' );
-//   result += '\n' + _.toStr( fields, { wrap : 0, levels : 4, multiline : 1 } );
-//
-//   return result;
-// }
-
 //
 
 function dataExport()
@@ -845,12 +848,17 @@ function dataExport()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
+  let o = _.routineOptions( dataExport, arguments );
 
   _.assert( reflector.src instanceof _.FileRecordFilter );
 
   let result = Parent.prototype.dataExport.apply( this, arguments );
 
   if( result === undefined )
+  return result;
+
+  if( !o.formed )
+  if( reflector.unformedResource )
   return result;
 
   delete result.filePath;
@@ -994,7 +1002,6 @@ let Extend =
   optionsForFindExport,
   optionsForFindGroupExport,
   optionsForReflectExport,
-  // infoExport,
   dataExport,
 
   // accessor
