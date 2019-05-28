@@ -198,7 +198,7 @@ function open()
   {
     if( err )
     {
-      debugger;
+      // debugger;
       // _.errLogOnce( err );
       if( will.verbosity >= 3 )
       logger.error( ' ! Failed to read ' + submodule.decoratedNickName + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading' );

@@ -808,14 +808,20 @@ function infoExport()
 {
   let resource = this;
   let o = _.routineOptions( infoExport, arguments );
+
+  debugger;
+
   let fields = resource.dataExport( o );
   let result = resource._infoExport( fields );
+
+  debugger;
+
   return result;
 }
 
-infoExport.defaults = Object.create( _.Will.Module.prototype.dataExport.defaults );
-infoExport.copyingNonExportable = 1;
-infoExport.formed = 1;
+var defaults = infoExport.defaults = Object.create( _.Will.Module.prototype.dataExport.defaults );
+defaults.copyingNonExportable = 1;
+defaults.formed = 1;
 
 //
 

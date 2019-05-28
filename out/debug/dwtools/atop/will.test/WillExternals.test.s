@@ -1993,8 +1993,8 @@ function submodulesDownloadUpdateDry( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ .*module::Tools.* will be downloaded version .*/ ) );
-    test.is( _.strHas( got.output, / \+ .*module::PathFundamentals.* will be downloaded version .*c8dadf139a49d70ccae2cac4f91845ecd0a925e0.*/ ) );
-    test.is( _.strHas( got.output, / \+ .*module::Color.* will be downloaded version .*0.3.102.*/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::PathFundamentals.* will be downloaded version .*ffcb9b22726e2d56d07564178d268bc2eb602b35.*/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::Color.* will be downloaded version .*0.3.109.*/ ) );
     test.is( _.strHas( got.output, / \+ 3\/6 submodule\(s\) of .*module::submodules-detached.* will be downloaded/ ) );
     var files = self.find( submodulesPath );
     test.is( files.length === 0 );
@@ -2037,8 +2037,8 @@ function submodulesDownloadUpdateDry( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ .*module::Tools.* will be updated to version .*/ ) );
-    test.is( _.strHas( got.output, / \+ .*module::PathFundamentals.* will be updated to version .*c8dadf139a49d70ccae2cac4f91845ecd0a925e0.*/ ) );
-    test.is( _.strHas( got.output, / \+ .*module::Color.* will be updated to version .*0.3.102.*/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::PathFundamentals.* will be updated to version .*ffcb9b22726e2d56d07564178d268bc2eb602b35.*/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::Color.* will be updated to version .*0.3.109.*/ ) );
     test.is( _.strHas( got.output, / \+ 3\/6 submodule\(s\) of .*module::submodules-detached.* will be update/ ) );
     var files = self.find( submodulesPath );
     test.is( files.length === 0 );
@@ -2229,7 +2229,7 @@ function stepSubmodulesDownload( test )
   {
     test.case = 'list'
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `git+https:///github.com/Wandalen/wTools.git/out/wTools#master` ) );
+    test.is( _.strHas( got.output, `git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will#master` ) );
     return null;
   })
 
@@ -2326,7 +2326,7 @@ function fixateDetached( test )
     test.identical( _.strCount( got.output, 'fixateDetached/.im.will.yml' ), 4 );
 
     test.is( _.strHas( got.output, /module::PathFundamentals.* will be fixated/ ) );
-    test.is( _.strHas( got.output, /git\+https:\/\/\/github.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals.* : .*\.#\w+.* <- .*\.#c8dadf139a49d70ccae2cac4f91845ecd0a925e0/ ) );
+    test.is( _.strHas( got.output, /git\+https:\/\/\/github.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals.* : .*\.#\w+.* <- .*\.#ffcb9b22726e2d56d07564178d268bc2eb602b35/ ) );
     test.identical( _.strCount( got.output, 'fixateDetached/.im.will.yml' ), 4 );
 
     test.is( _.strHas( got.output, /module::Color.* will be fixated/ ) );
@@ -2339,7 +2339,7 @@ function fixateDetached( test )
     test.is( _.strHas( got.output, /in .+\/fixateDetached\/module\/UriFundamentals\.informal\.will\.yml/ ) );
 
     test.is( _.strHas( got.output, /module::Proto.* will be fixated/ ) );
-    test.is( _.strHas( got.output, /wProto\.git.* : .*\.#\w+.* <- .*\.#5500fe0c9540dde7bc7fbeccbe44c657a2862c30/ ) );
+    test.is( _.strHas( got.output, /wProto\.git.* : .*\.#\w+.* <- .*\.#45452e31fe62f3edfad87ed7a0acb0f45fb1b271/ ) );
     test.is( _.strHas( got.output, /in .+\/fixateDetached\/out\/Proto\.informal\.out\.will\.yml/ ) );
     test.is( _.strHas( got.output, /in .+\/fixateDetached\/module\/Proto\.informal\.will\.yml/ ) );
 
@@ -2372,7 +2372,7 @@ function fixateDetached( test )
     test.identical( _.strCount( got.output, 'fixateDetached/.im.will.yml' ), 2 );
 
     test.is( !_.strHas( got.output, /module::PathFundamentals.* will be fixated/ ) );
-    test.is( !_.strHas( got.output, /git\+https:\/\/\/github.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals.* : .*\.#\w+.* <- .*\.#c8dadf139a49d70ccae2cac4f91845ecd0a925e0/ ) );
+    test.is( !_.strHas( got.output, /git\+https:\/\/\/github.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals.* : .*\.#\w+.* <- .*\.#ffcb9b22726e2d56d07564178d268bc2eb602b35/ ) );
     // test.identical( _.strCount( got.output, 'fixateDetached/.im.will.yml' ), 4 );
 
     test.is( !_.strHas( got.output, /module::Color.* will be fixated/ ) );
@@ -2385,7 +2385,7 @@ function fixateDetached( test )
     test.is( _.strHas( got.output, /in .+\/fixateDetached\/module\/UriFundamentals\.informal\.will\.yml/ ) );
 
     test.is( !_.strHas( got.output, /module::Proto.* will be fixated/ ) );
-    test.is( !_.strHas( got.output, /wProto\.git.* : .*\.#\w+.* <- .*\.#5500fe0c9540dde7bc7fbeccbe44c657a2862c30/ ) );
+    test.is( !_.strHas( got.output, /wProto\.git.* : .*\.#\w+.* <- .*\.#45452e31fe62f3edfad87ed7a0acb0f45fb1b271/ ) );
     test.is( !_.strHas( got.output, /in .+\/fixateDetached\/out\/Proto\.informal\.out\.will\.yml/ ) );
     test.is( !_.strHas( got.output, /in .+\/fixateDetached\/module\/Proto\.informal\.will\.yml/ ) );
 
@@ -3530,10 +3530,10 @@ function buildDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, /\+ .*module::Tools.* was downloaded version .*master.* in/ ) );
-    test.is( _.strHas( got.output, /\+ .*module::PathFundamentals.* was downloaded version .*c8dadf139a49d70ccae2cac4f91845ecd0a925e0.* in/ ) );
-    test.is( _.strHas( got.output, /\+ .*module::Color.* was downloaded version .*0.3.102.* in/ ) );
+    test.is( _.strHas( got.output, /\+ .*module::PathFundamentals.* was downloaded version .*ffcb9b22726e2d56d07564178d268bc2eb602b35.* in/ ) );
+    test.is( _.strHas( got.output, /\+ .*module::Color.* was downloaded version .*0.3.109.* in/ ) );
     test.is( _.strHas( got.output, /\.module\/Procedure\.informal.+ <- .+npm:\/\/wprocedure/ ) );
-    test.is( _.strHas( got.output, /\.module\/Proto\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wProto\.git#5500fe0c9540dde7bc7fbeccbe44c657a2862c30/ ) );
+    test.is( _.strHas( got.output, /\.module\/Proto\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wProto\.git#45452e31fe62f3edfad87ed7a0acb0f45fb1b271/ ) );
     test.is( _.strHas( got.output, /\.module\/UriFundamentals\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wUriFundamentals\.git/ ) );
 
     var files = _.fileProvider.dirRead( modulePath );
@@ -3891,7 +3891,7 @@ function exportMixed( test )
         'criterion' : { 'predefined' : 1 },
       },
       'in' : { 'path' : '..' },
-      'out' : { 'path' : 'out' },
+      // 'out' : { 'path' : 'out' },
 
       'module.willfiles' :
       {
@@ -3917,7 +3917,7 @@ function exportMixed( test )
         'exportedFilesReflector' : 'reflector::exported.files.export',
         'exportedDirPath' : 'path::exported.dir.export',
         'exportedFilesPath' : 'path::exported.files.export',
-        'originalWillFilesPath' : 'path::module.original.willfiles',
+        // 'originalWillFilesPath' : 'path::module.original.willfiles',
       }
     }
     test.identical( outfile.exported, expected );
@@ -4205,7 +4205,7 @@ function exportSecond( test )
       },
       'local' :
       {
-        'path' : 'out',
+        // 'path' : 'out',
         'criterion' : { 'predefined' : 1 }
       },
       'remote' :
@@ -4226,7 +4226,7 @@ function exportSecond( test )
         exportedFilesReflector : 'reflector::exported.files.doc.export',
         exportedDirPath : 'path::exported.dir.doc.export',
         exportedFilesPath : 'path::exported.files.doc.export',
-        originalWillFilesPath : 'path::module.original.willfiles'
+        // originalWillFilesPath : 'path::module.original.willfiles'
       },
       'proto.export' :
       {
@@ -4236,7 +4236,7 @@ function exportSecond( test )
         exportedFilesReflector : 'reflector::exported.files.proto.export',
         exportedDirPath : 'path::exported.dir.proto.export',
         exportedFilesPath : 'path::exported.files.proto.export',
-        originalWillFilesPath : 'path::module.original.willfiles'
+        // originalWillFilesPath : 'path::module.original.willfiles'
       }
     }
     test.identical( outfile.exported, expected );
@@ -4369,7 +4369,7 @@ function exportSecond( test )
       },
       local :
       {
-        path : 'out',
+        // path : 'out',
         criterion : { predefined : 1 }
       },
       remote :
@@ -4429,7 +4429,7 @@ function exportSecond( test )
         exportedFilesReflector : 'reflector::exported.files.doc.export',
         exportedDirPath : 'path::exported.dir.doc.export',
         exportedFilesPath : 'path::exported.files.doc.export',
-        originalWillFilesPath : 'path::module.original.willfiles'
+        // originalWillFilesPath : 'path::module.original.willfiles'
       },
       'proto.export' :
       {
@@ -4439,7 +4439,7 @@ function exportSecond( test )
         exportedFilesReflector : 'reflector::exported.files.proto.export',
         exportedDirPath : 'path::exported.dir.proto.export',
         exportedFilesPath : 'path::exported.files.proto.export',
-        originalWillFilesPath : 'path::module.original.willfiles'
+        // originalWillFilesPath : 'path::module.original.willfiles'
       }
     }
     test.identical( outfile.exported, expected );
@@ -4582,7 +4582,7 @@ function exportMultiple( test )
         exportedDirPath : 'path::exported.dir.export.debug',
         exportedFilesPath : 'path::exported.files.export.debug',
         archiveFilePath : 'path::archiveFile.export.debug',
-        originalWillFilesPath : 'path::module.original.willfiles'
+        // originalWillFilesPath : 'path::module.original.willfiles'
       }
     }
 
@@ -4690,7 +4690,7 @@ function exportMultiple( test )
       },
       'local' :
       {
-        'path' : 'out',
+        // 'path' : 'out',
         'criterion' : { 'predefined' : 1 }
       },
       'remote' :
@@ -4761,7 +4761,7 @@ function exportMultiple( test )
         exportedDirPath : 'path::exported.dir.export.debug',
         exportedFilesPath : 'path::exported.files.export.debug',
         archiveFilePath : 'path::archiveFile.export.debug',
-        originalWillFilesPath : 'path::module.original.willfiles',
+        // originalWillFilesPath : 'path::module.original.willfiles',
       },
       'export.' :
       {
@@ -4778,7 +4778,7 @@ function exportMultiple( test )
         exportedDirPath : 'path::exported.dir.export.',
         exportedFilesPath : 'path::exported.files.export.',
         archiveFilePath : 'path::archiveFile.export.',
-        originalWillFilesPath : 'path::module.original.willfiles',
+        // originalWillFilesPath : 'path::module.original.willfiles',
       },
     }
     test.identical( outfile.exported, exported );
@@ -4954,7 +4954,7 @@ function exportMultiple( test )
       },
       'local' :
       {
-        'path' : 'out',
+        // 'path' : 'out',
         'criterion' : { 'predefined' : 1 }
       },
       'remote' :
@@ -5302,7 +5302,7 @@ function exportBroken( test )
         exportedDirPath : 'path::exported.dir.export.debug',
         exportedFilesPath : 'path::exported.files.export.debug',
         archiveFilePath : 'path::archiveFile.export.debug',
-        originalWillFilesPath : 'path::module.original.willfiles',
+        // originalWillFilesPath : 'path::module.original.willfiles',
       }
     }
 

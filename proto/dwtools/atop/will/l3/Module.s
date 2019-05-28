@@ -1122,7 +1122,7 @@ function _willfilesFindMaybe( o )
   if( _.arrayIs( module.willfilesPath ) && module.willfilesPath.length === 1 )
   module.willfilesPath = module.willfilesPath[ 0 ];
 
-  debugger;
+  // debugger;
 
   if( !found )
   find( o.isOutFile );
@@ -1272,8 +1272,8 @@ function _willfilesFind()
     dirPath = module.willfilesPath;
     dirPath = path.common( dirPath );
 
-    if( !err && module.willfilesArray.length === 0 )
-    debugger;
+    // if( !err && module.willfilesArray.length === 0 )
+    // debugger;
     if( !err && module.willfilesArray.length === 0 )
     if( module.supermodule )
     throw _.errBriefly( 'Found no .out.will file for',  module.supermodule.nickName, 'at', _.strQuote( dirPath ) );
@@ -2321,31 +2321,6 @@ function remoteIsDownloadedUpdate()
   function end( result )
   {
     module.isDownloaded = !!result;
-
-    // if( module.absoluteName === "module::submodules / module::Tools" )
-    // debugger;
-    //
-    // if( result )
-    // {
-    //
-    //   if( module.absoluteName === "module::submodules / module::Tools" )
-    //   debugger;
-    //
-    //   let version = remoteProvider.versionLocalRetrive( module.localPath );
-    //   if( version )
-    //   {
-    //     let remotePath = _.uri.parseConsecutive( module.remotePath );
-    //     remotePath.hash = version;
-    //     debugger;
-    //     module.pathResourceMap[ 'current.remote' ].path = _.uri.str( remotePath );
-    //     debugger;
-    //   }
-    // }
-    // else
-    // {
-    //   module.pathResourceMap[ 'current.remote' ].path = null;
-    // }
-
     return result;
   }
 }
@@ -2361,34 +2336,24 @@ function remoteIsDownloadedChanged()
 
   _.assert( !!module.pathResourceMap[ 'current.remote' ] );
 
-  // if( module.absoluteName === "module::submodules / module::Tools" )
-  // debugger;
-
   /* */
 
   if( module.isDownloaded &&  module.remotePath )
   {
 
-    // debugger;
     let remoteProvider = fileProvider.providerForPath( module.remotePath );
     _.assert( !!remoteProvider.isVcs );
-
-    // if( module.absoluteName === "module::submodules / module::Tools" )
-    // debugger;
 
     let version = remoteProvider.versionLocalRetrive( module.localPath );
     if( version )
     {
       let remotePath = _.uri.parseConsecutive( module.remotePath );
       remotePath.hash = version;
-      // debugger;
       module.pathResourceMap[ 'current.remote' ].path = _.uri.str( remotePath );
-      // debugger;
     }
   }
   else
   {
-    // debugger;
     module.pathResourceMap[ 'current.remote' ].path = null;
   }
 
@@ -2397,7 +2362,6 @@ function remoteIsDownloadedChanged()
   if( !module.localPath )
   if( module.dirPath )
   {
-    debugger;
     _.assert( _.strIs( module.dirPath ) );
     // module.localPath = module.dirPath; // yyy
   }
@@ -2506,7 +2470,6 @@ function _remoteDownload( o )
   return con
   .keep( () =>
   {
-    debugger;
     if( o.updating )
     return module.remoteIsUpToDateUpdate();
     else
@@ -2587,9 +2550,9 @@ function _remoteDownload( o )
       else
       {
         let remoteProvider = fileProvider.providerForPath( module.remotePath );
-        // debugger;
+        debugger; // xxx
         let version = remoteProvider.versionLocalRetrive( module.localPath );
-        // debugger;
+        debugger;
         logger.log( ' + ' + module.decoratedNickName + ' was ' + ( o.updating ? 'updated to' : 'downloaded' ) + ' version ' + _.color.strFormat( version, 'path' ) + ' in ' + _.timeSpent( time ) );
       }
     }

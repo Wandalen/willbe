@@ -7,7 +7,7 @@ path :
 
   in : ..
   out : out
-  remote : 'git+https:///github.com/Wandalen/wProto.git#5500fe0c9540dde7bc7fbeccbe44c657a2862c30'
+  remote : 'git+https:///github.com/Wandalen/wProto.git#45452e31fe62f3edfad87ed7a0acb0f45fb1b271'
   local : '.module/{about::name}'
   export : '{path::local}/proto'
 

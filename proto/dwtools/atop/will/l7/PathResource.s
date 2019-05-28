@@ -40,9 +40,6 @@ function OnInstanceExists( instance, options )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  if( options.name === 'local' && options.IsOutFile )
-  options.importable = false;
-
   options.criterion = options.criterion || Object.create( null );
   _.mapSupplement( options.criterion, instance.criterion );
   options.exportable = instance.exportable;
@@ -52,6 +49,12 @@ function OnInstanceExists( instance, options )
   options.path = instance.path;
 
   options.Rewriting = 1;
+
+  // if( module.absoluteName === "module::submodules-detached / module::PathFundamentals" )
+  if( options.name === 'local' )
+  debugger;
+  if( options.name === 'local' && options.IsOutFile )
+  options.importable = false;
 
   // instance.finit();
 
