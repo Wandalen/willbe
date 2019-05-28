@@ -239,7 +239,7 @@ function preform()
   _.assert( !module.preformed );
   _.assert( !module.stager.stageStateEnded( 'preformed' ) );
 
-  module.stager.stageStateSkipping( 'preformed', 0 );
+  // module.stager.stageStateSkipping( 'preformed', 0 );
   module.stager.stageStatePausing( 'preformed', 0 );
   module.stager.tick();
 
@@ -332,6 +332,7 @@ function predefinedForm()
     path : null,
     writable : 1,
     exportable : 1,
+    importable : 1,
   })
 
   path
@@ -890,15 +891,19 @@ function _willfileFindSingle( o )
   let filePath;
   if( o.isOutFile )
   {
+    // debugger;
+
+    if( !_.strEnds( namePath, '.out' ) )
+    namePath = _.strJoinPath( [ namePath, 'out' ], '.' );
 
     if( o.isNamed )
     {
-      let name = _.strJoinPath( [ namePath, '.out', module.prefixPathForRole( o.role ) ], '.' );
+      let name = _.strJoinPath( [ namePath, module.prefixPathForRole( o.role ) ], '.' );
       filePath = path.resolve( dirPath, '.', name );
     }
     else
     {
-      let name = _.strJoinPath( [ namePath, '.out', module.prefixPathForRole( o.role ) ], '.' );
+      let name = _.strJoinPath( [ namePath, module.prefixPathForRole( o.role ) ], '.' );
       filePath = path.resolve( dirPath, name );
     }
 
@@ -930,6 +935,7 @@ function _willfileFindSingle( o )
   ({
     role : o.role,
     filePath : filePath,
+    isOutFile : o.isOutFile,
     module : module,
   }).form1();
 
@@ -1116,7 +1122,11 @@ function _willfilesFindMaybe( o )
   if( _.arrayIs( module.willfilesPath ) && module.willfilesPath.length === 1 )
   module.willfilesPath = module.willfilesPath[ 0 ];
 
+  debugger;
+
+  if( !found )
   find( o.isOutFile );
+  if( !found )
   find( !o.isOutFile );
 
   /* */
@@ -1263,6 +1273,8 @@ function _willfilesFind()
     dirPath = path.common( dirPath );
 
     if( !err && module.willfilesArray.length === 0 )
+    debugger;
+    if( !err && module.willfilesArray.length === 0 )
     if( module.supermodule )
     throw _.errBriefly( 'Found no .out.will file for',  module.supermodule.nickName, 'at', _.strQuote( dirPath ) );
     else
@@ -1286,7 +1298,7 @@ function willfilesFind()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  module.stager.stageStateSkipping( 'willfilesFound', 0 );
+  // module.stager.stageStateSkipping( 'willfilesFound', 0 );
   module.stager.stageStatePausing( 'willfilesFound', 0 );
   module.stager.tick();
 
@@ -1306,8 +1318,9 @@ function willfilesPick( filePaths )
 
   module.pickedWillfilesPath = filePaths;
 
-  module.stager.stageStatePausing( 'willfilesFound', 0 );
-  module.stager.tick();
+  module.willfilesFind();
+  // module.stager.stageStatePausing( 'willfilesFound', 0 );
+  // module.stager.tick();
 
   return module.willfilesArray.slice();
 }
@@ -1324,7 +1337,7 @@ function willfilesOpen()
 
   _.assert( arguments.length === 0 );
 
-  module.stager.stageStateSkipping( 'willfilesOpened', 0 );
+  // module.stager.stageStateSkipping( 'willfilesOpened', 0 );
   module.stager.stageStatePausing( 'willfilesOpened', 0 );
   module.stager.tick();
 
@@ -1724,7 +1737,7 @@ function submodulesClean()
   let will = module.will;
   let logger = will.logger;
 
-  _.assert( module.preformed > 0 /* === 3 */ );
+  _.assert( module.preformed > 0  );
   _.assert( arguments.length === 0 );
 
   let result = module.clean
@@ -1791,7 +1804,7 @@ function _submodulesDownload_body( o )
 
   o.downloaded = o.downloaded || Object.create( null );
 
-  _.assert( module.preformed > 0 /* === 3 */ );
+  _.assert( module.preformed > 0  );
   _.assert( arguments.length === 1 );
   _.assertRoutineOptions( _submodulesDownload_body, arguments );
 
@@ -1843,11 +1856,13 @@ function _submodulesDownload_body( o )
 
         let o2 = _.mapExtend( null, o );
         delete o2.downloaded;
+        // debugger;
         let r = _.Consequence.From( submodule._remoteDownload( o2 ) );
         return r.keep( ( arg ) =>
         {
           _.assert( _.boolIs( arg ) );
           _.assert( _.strIs( submodule.remotePath ) );
+          // debugger;
           o.downloaded[ submodule.remotePath ] = submodule;
 
           if( arg )
@@ -1922,7 +1937,7 @@ function submodulesFixate( o )
   let will = module.will;
   let logger = will.logger;
 
-  _.assert( module.preformed > 0 /* === 3 */ );
+  _.assert( module.preformed > 0  );
   _.assert( arguments.length === 0 || arguments.length === 1 );
   o = _.routineOptions( submodulesFixate, arguments );
 
@@ -1966,7 +1981,7 @@ function moduleFixate( o )
   if( !_.mapIs( o ) )
   o = { submodule : o }
 
-  _.assert( module.preformed > 0 /* === 3 */ );
+  _.assert( module.preformed > 0  );
   _.assert( arguments.length === 1 );
   _.assert( _.boolLike( o.dry ) );
   _.assert( _.boolLike( o.upgrading ) );
@@ -2048,7 +2063,7 @@ function moduleFixatePath( o )
   if( !_.mapIs( o ) )
   o = { submodule : o }
 
-  _.assert( module.preformed > 0 /* === 3 */ );
+  _.assert( module.preformed > 0  );
   _.assert( arguments.length === 1 );
   _.assert( _.boolLike( o.dry ) );
   _.assert( _.boolLike( o.upgrading ) );
@@ -2151,7 +2166,7 @@ function submodulesForm()
 
   _.assert( arguments.length === 0 );
 
-  module.stager.stageStateSkipping( 'submodulesFormed', 0 );
+  // module.stager.stageStateSkipping( 'submodulesFormed', 0 );
   module.stager.stageStatePausing( 'submodulesFormed', 0 );
   module.stager.tick();
 
@@ -2382,8 +2397,9 @@ function remoteIsDownloadedChanged()
   if( !module.localPath )
   if( module.dirPath )
   {
+    debugger;
     _.assert( _.strIs( module.dirPath ) );
-    module.localPath = module.dirPath;
+    // module.localPath = module.dirPath; // yyy
   }
 
 }
@@ -2480,7 +2496,7 @@ function _remoteDownload( o )
 
   _.routineOptions( _remoteDownload, o );
   _.assert( arguments.length === 1 );
-  _.assert( module.preformed > 0 /* === 3 */ );
+  _.assert( module.preformed > 0  );
   _.assert( !!module.willfilesPath );
   _.assert( _.strDefined( module.aliasName ) );
   _.assert( _.strDefined( module.remotePath ) );
@@ -2490,6 +2506,7 @@ function _remoteDownload( o )
   return con
   .keep( () =>
   {
+    debugger;
     if( o.updating )
     return module.remoteIsUpToDateUpdate();
     else
@@ -2504,11 +2521,15 @@ function _remoteDownload( o )
     downloading = !module.isDownloaded;
 
     /*
-    delete old remote module if it has a critical error
+    delete old remote module if it has a critical error or downloaded files are corrupted
     */
 
-    if( module.willfilesOpenReady.errorsCount() && !o.dry )
-    fileProvider.filesDelete({ filePath : module.localPath, throwing : 0, sync : 1 });
+    if( !o.dry )
+    if( module.willfilesOpenReady.errorsCount() || !module.isDownloaded )
+    {
+      // logger.log( '_remoteDownload/filesDelete', module.localPath );
+      fileProvider.filesDelete({ filePath : module.localPath, throwing : 0, sync : 1 });
+    }
 
     return arg;
   })
@@ -2653,7 +2674,7 @@ function resourcesForm()
 
   _.assert( arguments.length === 0 );
 
-  module.stager.stageStateSkipping( 'resourcesFormed', 0 );
+  // module.stager.stageStateSkipping( 'resourcesFormed', 0 );
   module.stager.stageStatePausing( 'resourcesFormed', 0 );
   module.stager.tick();
 
@@ -3062,9 +3083,6 @@ function _filePathChange( willfilesPath, dirPath )
   let commonPath = module.commonPath;
   let rootModule = module.rootModule;
 
-  // logger.log( module.absoluteName, '_filePathChange', willfilesPath, dirPath );
-
-  // if( !module.original )
   module.moduleUnregister();
 
   if( willfilesPath )
@@ -3082,19 +3100,13 @@ function _filePathChange( willfilesPath, dirPath )
   module._dirPathChange( dirPath );
 
   if( !module.remotePath || ( _.arrayIs( module.remotePath ) && module.remotePath.length === 0 ) )
-  module.localPath = dirPath;
+  if( !path.isGlobal( dirPath ) )
+  {
+    // debugger;
+    // module.localPath = dirPath;
+  }
 
-  // if( !module.original )
   module.moduleRegister();
-
-  // if( !module.original )
-  // {
-  //   let rootModule = module.rootModule;
-  //   _.assert( rootModule.moduleWithPathMap[ commonPath ] === module || rootModule.moduleWithPathMap[ commonPath ] === undefined );
-  //   delete rootModule.moduleWithPathMap[ commonPath ];
-  //   _.assert( rootModule.moduleWithPathMap[ module.commonPath ] === module || rootModule.moduleWithPathMap[ module.commonPath ] === undefined );
-  //   rootModule.moduleWithPathMap[ module.commonPath ] = module;
-  // }
 
   return module;
 }
@@ -5264,7 +5276,7 @@ function dataExportForModuleExport( o )
   o = _.routineOptions( dataExportForModuleExport, arguments );
   _.assert( module.original === null );
 
-  debugger;
+  // debugger;
   let module2 = module.cloneExtending({ willfilesPath : o.willfilesPath, original : module });
   _.assert( module2.dirPath === module.outPath );
   module2.original = module;
@@ -5281,7 +5293,7 @@ function dataExportForModuleExport( o )
   module2.stager.stageStatePausing( 'willfilesFound', 0 );
   module2.stager.tick();
   _.assert( !!module2.ready.resourcesCount() );
-  debugger;
+  // debugger;
 
   let data = Object.create( null );
   data.format = will.WillFile.FormatVersion;
@@ -5289,7 +5301,7 @@ function dataExportForModuleExport( o )
 
   _.assert( !data.path || !!data.path[ 'module.willfiles' ] );
   _.assert( !data.path || !!data.path[ 'module.dir' ] );
-  _.assert( !data.path || !!data.path[ 'local' ] );
+  // _.assert( !data.path || !data.path[ 'local' ] );
   _.assert( !data.path || data.path[ 'remote' ] !== undefined );
   _.assert( !data.path || !data.path[ 'current.remote' ] );
   _.assert( !data.path || !data.path[ 'will' ] );

@@ -120,7 +120,6 @@ function makeNamed( test )
 
   var module1 = will.moduleMake({ willfilesPath : modulePath });
   var module2 = will.moduleMake({ willfilesPath : modulePath });
-  // var module2 = will.moduleMake({ dirPath : modulePath });
 
   /* - */
 
@@ -189,7 +188,8 @@ function makeNamed( test )
       'out.debug' : './super.out/debug',
       'out.release' : './super.out/release',
 
-      'local' : path.join( routinePath, '.' ),
+      // 'local' : path.join( routinePath, '.' ),
+      'local' : null,
       'remote' : null,
       'current.remote' : null,
       'will' : path.join( __dirname, '../will/Exec' ),
@@ -204,7 +204,8 @@ function makeNamed( test )
     test.identical( module.inPath, routinePath );
     test.identical( module.outPath, routinePath + '/super.out' );
     test.identical( module.configName, 'super' );
-    test.identical( module.localPath, routinePath );
+    // test.identical( module.localPath, routinePath );
+    test.identical( module.localPath, null );
     test.identical( module.remotePath, null );
     test.identical( module.currentRemotePath, null );
     test.identical( module.willPath, path.join( __dirname, '../will/Exec' ) );
@@ -248,7 +249,6 @@ function makeAnon( test )
 
   var module1 = will.moduleMake({ willfilesPath : modulePath });
   var module2 = will.moduleMake({ willfilesPath : modulePath + '/' });
-  // var module2 = will.moduleMake({ dirPath : modulePath });
 
   /* - */
 
@@ -317,7 +317,8 @@ function makeAnon( test )
       'out.debug' : '../out/debug',
       'out.release' : '../out/release',
 
-      'local' : path.join( routinePath, '.' ),
+      // 'local' : path.join( routinePath, '.' ),
+      'local' : null,
       'remote' : null,
       'current.remote' : null,
       'will' : path.join( __dirname, '../will/Exec' ),
@@ -335,7 +336,8 @@ function makeAnon( test )
     test.identical( module.commonPath, path.join( routinePath, '.' ) + '/' );
     test.identical( module.willfilesPath, [ routinePath + '/.im.will.yml', routinePath + '/.ex.will.yml' ] );
     test.identical( module.configName, 'makeAnon' );
-    test.identical( module.localPath, routinePath );
+    // test.identical( module.localPath, routinePath );
+    test.identical( module.localPath, null );
     test.identical( module.remotePath, null );
     test.identical( module.currentRemotePath, null );
     test.identical( module.willPath, path.join( __dirname, '../will/Exec' ) );
@@ -3339,7 +3341,6 @@ function submodulesResolve( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
   _.fileProvider.filesDelete( outPath );
 
-  // var module = will.moduleMake({ dirPath : modulePath });
   var module = will.moduleMake({ willfilesPath : modulePath });
 
   /* */
@@ -3357,10 +3358,10 @@ function submodulesResolve( test )
     test.identical( submodule.name, 'Tools' );
     test.identical( submodule.openedModule.resourcesFormed, 25 );
     test.identical( submodule.openedModule.submodulesFormed, 24 );
-    test.identical( submodule.openedModule.willfilesPath, _.path.s.join( routinePath, '.module/Tools/out/wTools' ) );
+    test.identical( submodule.openedModule.willfilesPath, _.path.s.join( routinePath, '.module/Tools/out/wTools.out.will' ) );
     test.identical( submodule.openedModule.dirPath, _.path.s.join( routinePath, '.module/Tools/out' ) );
     test.is( _.strEnds( submodule.openedModule.localPath, '.module/Tools' ) );
-    test.is( _.strEnds( submodule.openedModule.remotePath, 'git+https:///github.com/Wandalen/wTools.git/out/wTools#master' ) );
+    test.is( _.strEnds( submodule.openedModule.remotePath, 'git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will#master' ) );
     test.identical( submodule.openedModule.currentRemotePath, null );
 
     test.close( 'not downloaded' );
@@ -3371,6 +3372,7 @@ function submodulesResolve( test )
 
   .then( () =>
   {
+    debugger;
     return module.submodulesDownload();
   })
 
@@ -3388,9 +3390,9 @@ function submodulesResolve( test )
     test.identical( submodule.openedModule.submodulesFormed, 9 );
     test.identical( submodule.openedModule.willfilesPath, _.path.s.join( routinePath, '.module/Tools/out/wTools.out.will.yml' ) );
     test.is( _.strEnds( submodule.openedModule.dirPath, '.module/Tools/out' ) );
-    test.is( _.strEnds( submodule.openedModule.localPath, '.module/Tools' ) );
-    test.is( _.strEnds( submodule.openedModule.remotePath, 'git+https:///github.com/Wandalen/wTools.git/out/wTools#master' ) );
-    test.is( _.strEnds( submodule.openedModule.currentRemotePath, 'git+https:///github.com/Wandalen/wTools.git/out/wTools#master' ) );
+    test.is( _.strEnds( submodule.openedModule.localPath, '.module/Tools' ) ); debugger;
+    test.is( _.strEnds( submodule.openedModule.remotePath, 'git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will#master' ) );
+    test.is( _.strEnds( submodule.openedModule.currentRemotePath, 'git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will#master' ) );
 
     test.case = 'mask, single module';
     var submodule = module.submodulesResolve({ selector : 'T*' });

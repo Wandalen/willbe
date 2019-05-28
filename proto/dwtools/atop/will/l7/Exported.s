@@ -401,7 +401,7 @@ function performPaths()
 
   _.assert( !originalWillFilesPath.writable );
   _.assert( !!originalWillFilesPath.exportable );
-  // exported.originalWillFilesPath = originalWillFilesPath;
+  _.assert( !!originalWillFilesPath.importable );
 
 }
 

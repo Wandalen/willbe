@@ -236,8 +236,8 @@ function open()
 
   _.assert( path.s.allAreAbsolute( module.pathResourceMap[ 'module.dir' ].path ) );
   _.assert( path.s.allAreAbsolute( module.pathResourceMap[ 'module.willfiles' ].path ) );
-  _.assert( path.s.allAreAbsolute( module.pathResourceMap[ 'local' ].path ) );
   _.assert( path.s.allAreAbsolute( module.pathResourceMap[ 'will' ].path ) );
+  // _.assert( path.s.allAreAbsolute( module.pathResourceMap[ 'local' ].path ) );
 
   // if( _.strEnds( willf.filePath, 'module-a' ) )
   // debugger;
@@ -286,10 +286,6 @@ function resourceMake_body( o )
   _.assert( _.constructorIs( o.resourceClass ) );
   _.assert( arguments.length === 1 );
 
-  // debugger;
-  // if( o.resourceClass.shortName === 'Reflector' )
-  // debugger;
-
   let o2;
   if( o.resourceClass.OptionsFrom )
   o2 = o.resourceClass.OptionsFrom( o.resource );
@@ -300,6 +296,10 @@ function resourceMake_body( o )
   o2.module = module;
   o2.name = o.name;
   o2.Importing = 1;
+  o2.IsOutFile = willf.isOutFile;
+
+  // if( o2.name === 'local' )
+  // debugger;
 
   try
   {
@@ -375,27 +375,6 @@ function resourcesMake_body( o )
 
   });
 
-  //   if( o.resourceClass.OptionsFrom )
-  //   resource = o.resourceClass.OptionsFrom( resource );
-  //
-  //   let o2 = _.mapExtend( null, resource );
-  //   o2.willf = willf;
-  //   o2.module = module;
-  //   o2.name = k;
-  //   o2.Importing = 1;
-  //
-  //   try
-  //   {
-  //     o.resourceClass.MakeForEachCriterion( o2 );
-  //   }
-  //   catch( err )
-  //   {
-  //     debugger;
-  //     throw _.err( 'Cant form', o.resourceClass.KindName + '::' + o2.name, '\n', err );
-  //   }
-  //
-  // });
-
 }
 
 resourcesMake_body.defaults =
@@ -417,16 +396,14 @@ function pathsMake_body( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  // if( module.nickName === 'module::Proto' )
+  // if( module.absoluteName === "module::submodules / module::Tools" )
   // debugger;
 
   let dirPath = module.dirPath;
-
   let result = willf.resourcesMake.body.call( willf, o );
 
   if( dirPath && path.isAbsolute( dirPath ) && dirPath !== module.dirPath )
   {
-    // debugger;
     module._dirPathChange( dirPath );
   }
 
@@ -435,13 +412,6 @@ function pathsMake_body( o )
   for( let r in module.pathResourceMap )
   {
     let resource = module.pathResourceMap[ r ];
-
-    // if( module.nickName === 'module::Proto' )
-    // if( resource.name === 'in' )
-    // debugger;
-    // if( module.nickName === 'module::Proto' )
-    // if( resource.name === 'module.willfiles' )
-    // debugger;
 
     if( !resource.exportable )
     continue;
@@ -455,6 +425,9 @@ function pathsMake_body( o )
     resource.path = path.s.join( module.inPath, resource.path );
 
   }
+
+  // if( module.absoluteName === "module::submodules / module::Tools" )
+  // debugger;
 
   return result;
 }
@@ -615,6 +588,12 @@ function _inPathsForm()
 
   willf.dirPath = path.dir( willf.filePath );
 
+  if( willf.isOutFile === null )
+  {
+    debugger;
+    willf.isOutFile = _.strHas( willf.filePath, /.out.\w+$/ );
+  }
+
 }
 
 //
@@ -652,6 +631,9 @@ function exists()
   if( !willf._found )
   {
 
+    // if( _.strEnds( willf.filePath, '.module/Tools/out/wTools.out.will' ) )
+    // debugger;
+
     willf._found = fileProvider.fileConfigPathGet({ filePath : willf.filePath });
 
     _.assert( willf._found.length === 0 || willf._found.length === 1 );
@@ -687,6 +669,7 @@ let KnownSections =
 let Composes =
 {
   role : null,
+  isOutFile : null,
   filePath : null,
   dirPath : null,
 }

@@ -4978,6 +4978,66 @@ exportMultiple.timeOut = 200000;
 
 //
 
+/*
+Import out file with non-importable path local.
+Test importing of non-valid out files.
+Test redownloading of currupted remote submodules.
+*/
+
+function importPathLocal( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'import-path-local' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'export submodule';
+
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesDelete( outPath );
+
+    return null;
+  })
+
+  shell({ args : [ '.build' ] })
+
+  .thenKeep( ( got ) =>
+  {
+
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './debug', './debug/WithSubmodules.s', './debug/dwtools', './debug/dwtools/Tools.s' ] );
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, /Built .*module::submodules \/ build::debug\.raw.* in/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+importPathLocal.timeOut = 200000;
+
+//
+
 function exportImportMultiple( test )
 {
   let self = this;
@@ -7078,6 +7138,7 @@ var Self =
     exportBroken,
     exportDoc,
     exportImport,
+    importPathLocal,
 
     reflectNothingFromSubmodules,
     reflectGetPath,

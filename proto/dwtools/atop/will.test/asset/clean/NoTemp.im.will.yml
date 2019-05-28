@@ -1,8 +1,8 @@
 
 submodule :
 
-  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals.out.will#master
 
 path :
 

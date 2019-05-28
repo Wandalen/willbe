@@ -82,20 +82,7 @@ function MakeForEachCriterion( o )
 
   function make( o )
   {
-    let optional = !!o.Optional;
-    let rewritable = !!o.Rewritable;
-    let importing = !!o.Importing;
     let onExist = Cls.OnInstanceExists;
-
-    delete o.Optional;
-    delete o.Rewritable;
-    delete o.Importing;
-
-    if( o.importable !== undefined && !o.importable )
-    if( importing )
-    {
-      return;
-    }
 
     try
     {
@@ -106,6 +93,25 @@ function MakeForEachCriterion( o )
         _.assert( !!onExist );
         onExist( instance, o );
       }
+
+      let optional = !!o.Optional;
+      let rewriting = !!o.Rewriting;
+      let importing = !!o.Importing;
+      let isOutFile = !!o.IsOutFile;
+
+      delete o.Optional;
+      delete o.Rewriting;
+      delete o.Importing;
+      delete o.IsOutFile;
+
+      if( o.importable !== undefined && !o.importable )
+      if( importing )
+      {
+        return;
+      }
+
+      if( instance && rewriting )
+      instance.finit();
 
       let r = Cls( o ).form1();
       result.push( r );
@@ -151,8 +157,8 @@ function init( o )
   _.Will.ResourceCounter += 1;
   resource.id = _.Will.ResourceCounter;
 
-  if( resource.id === 154 )
-  debugger;
+  // if( resource.id === 154 )
+  // debugger;
 
   _.instanceInit( resource );
   Object.preventExtensions( resource );
@@ -533,8 +539,8 @@ function form3()
   _.assert( arguments.length === 0 );
   _.assert( resource.formed === 2 );
 
-  if( resource.id === 154 )
-  debugger;
+  // if( resource.id === 154 )
+  // debugger;
 
   /* begin */
 
@@ -941,9 +947,9 @@ function willfSet( src )
 {
   let resource = this;
 
-  if( resource.id === 154 )
-  if( src )
-  debugger;
+  // if( resource.id === 154 )
+  // if( src )
+  // debugger;
 
   resource[ willfSymbol ] = src;
 
