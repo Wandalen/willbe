@@ -8,10 +8,10 @@ The command is intended for automated overwriting of current URI links of remote
 
 The command has the option `dry` to enable overwriting of the `willfile`. It takes the value `0` and` 1`. At `dry:0` the command overwrite URI-links. At `dry:1` the command `will. submodules. fixate dry:1` performs all the operation and displays the list of available updates without changing any file. The default value is `dry:0`.
 
-### Files structure
+### File structure
 
 <details>
-  <summary><u>Files structure</u></summary>
+  <summary><u>File structure</u></summary>
 
 ```
 submodulesUpgrade
