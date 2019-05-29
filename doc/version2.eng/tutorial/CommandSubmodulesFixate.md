@@ -108,7 +108,7 @@ Utility replaced versions of submodules in `wilfile`. At the time, command `.sub
 
 Use the command `.submodules.fixate` before building the module or immediately after. It fixates the version of submodules. The release of subsequent versions of submodules cannot break the module's work, and the developer will be able to update them at a convenient time.
 
-To overwrite URI links of submodules to the most recent ones, regardless of whether the version of the submodule was specified the [command `.submodules.upgrade`](CommandSubmodulesUpgrade .md)  is used, to download the submodule files [the command `.submodules.update`](CommandSubmodulesUpdate .md) is used.
+To overwrite URI links of submodules to the most recent ones, regardless of whether the version of the submodule was specified the [command `.submodules.upgrade`](CommandSubmodulesUpgrade.md)  is used, to download the submodule files [the command `.submodules.update`](CommandSubmodulesUpdate.md) is used.
 
 ### Summary
 

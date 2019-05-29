@@ -57,7 +57,7 @@ The submodule `Tools` has the specified version.
 Use `will .submodules.update dry:1` to get information about submodules, versions of which can be updated. The `dry:1` option allows you not to download the submodule files.
 
 The command output shows (at the time of creating the tutorial):
-- the `Tools` submodule will be updated to the specified version of the commit - `# ec60e39ded1669e27abaa6fc2798ee13804c400a`;
+- the `Tools` submodule will be updated to the specified version of the commit - `#ec60e39ded1669e27abaa6fc2798ee13804c400a`;
 - the version of `PathFundamentals` submodule will be updated to  `#d95a35b7ef1568df823c12efa5bd5e1f4ceec8b7`.
 
 <details>
@@ -134,7 +134,7 @@ To update the `Tools` submodule, you need to modify its URI link in the `willfil
 
 </details>
 
-After executing the command `.submodules.upgrade`, the `Tools` submodule changed the version to a newer - `7db7bd21ac76fc495aae44cc8b1c4474ce5012a4` Therefore, the command `.submodules.update` has downloaded this updated version. Compare with the above output.
+After executing the command `.submodules.upgrade`, the `Tools` submodule changed the version to a newer - `#7db7bd21ac76fc495aae44cc8b1c4474ce5012a4` Therefore, the command `.submodules.update` has downloaded this updated version. Compare with the above output.
 
 ### Summary
 

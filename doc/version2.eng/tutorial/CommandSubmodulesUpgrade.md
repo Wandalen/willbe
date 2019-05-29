@@ -2,11 +2,11 @@
 
 The command to upgrade the version of the submodules using the automated overwriting of the <code>willfile</code>.
 
-Submodule versions available at the time of export may be [fixated] (CommandSubmodulesFixate.md). The `.submodules.upgrade` the command allows you to fixate the latest versions of submodules.
+Submodule versions available at the time of export may be [fixated](CommandSubmodulesFixate.md). The `.submodules.upgrade` the command allows you to fixate the latest versions of submodules.
 
 The command is intended for automated overwriting of current URI links of remote submodules in `willfile`. The command changes the current URIs to the most recent versions of submodule URIs. At the same time, downloading files of these submodules do not automatically occur.
 
-The command has the option `dry` to enable overwriting of the `willfile`. It takes the value `0` and` 1`. At `dry:0` the command overwrite URI-links. At `dry:1` the command `will. submodules. fixate dry:1` performs all the operation and displays the list of available updates without changing any file. The default value is `dry:0`.
+The command has the option `dry` to enable overwriting of the `willfile`. It takes the value `0` and `1`. At `dry:0` the command overwrite URI-links. At `dry:1` the command `will. submodules.fixate dry:1` performs all the operation and displays the list of available updates without changing any file. The default value is `dry:0`.
 
 ### File structure
 
@@ -70,9 +70,9 @@ Update the URIs of the submodules with the `will.submodules.upgrade` command.
 
 The output indicates that the `.submodules.upgrade`  command has updated all three URI links of submodules to the latest ones (at the time of execution). The `Tools` submodule was also upgraded without taking into account the explicitly specified version.
 
-The command `.submodules.upgrade` overwrites the URI versions of [informal submodules] (SubmoduleInformal.md) if they are present in the` willfile`.
+The command `.submodules.upgrade` overwrites the URI versions of [informal submodules](SubmoduleInformal.md) if they are present in the` willfile`.
 
-The command `.submodules.upgrade` is useful for automatically upgrading submodules to the latest versions. The command only overwrites the `willfiles`. The command does not download submodules files. To download submodel files use [command `.submodules.update`] (CommandSubmodulesUpdate.md).
+The command `.submodules.upgrade` is useful for automatically upgrading submodules to the latest versions. The command only overwrites the `willfiles`. The command does not download submodules files. To download submodel files use [command `.submodules.update`](CommandSubmodulesUpdate.md).
 
 ### Summary
 
