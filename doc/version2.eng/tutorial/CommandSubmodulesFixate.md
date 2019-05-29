@@ -117,6 +117,6 @@ To overwrite URI links of submodules to the most recent ones, regardless of whet
 - Command `.submodules.fixate` automatically changes the contents of `willfile` for the developer.
 - Command `.submodules.fixate` does not download the files of submodules.
 - Command `.submodules.fixate` does not change the links with the explicitly specified version (commit).
-- Command `.submodules.fixate` is better to use before the building of the module or immediately after. Thus, version remote submodule fixates at the time of building and ensures reliable work of module.
+- Command `.submodules.fixate` is better to use before the building of the module or immediately after. Thus, version of remote submodule fixates at the time of building and ensures reliable work of module.
 
 [Return to content](../README.md#tutorials)
