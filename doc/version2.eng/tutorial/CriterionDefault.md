@@ -1,16 +1,30 @@
-# Default build
+# Default build of the module
 
-How to build without explicit argument for command <code>.build</code>.
+How to construct the build without explicit specification of the argument for command <code>.build</code>.
 
-### Як встановити збірку за замовчуванням
-Якщо `will-файл` включає одну збірку побудови або декілька збірок з однією головною, то зручно призначити її (збірку) для виконання за замовчуванням. Запуск побудови збірки за замовчуванням здійснюється фразою `will .build` без указання аргумента, що виключає потребу звернення до `will-файла` для уточнення назви збірки. Для призначення збірки за замовчуванням, вкажіть критеріон `default : 1` в відповідному ресурсі. 
+### How to set the default build
 
-### Модуль зі збіркою за замовчуванням    
-Утиліта `willbe` працює як з операційною системою, так і з зовнішніми програмами, що встановлені в неї тому, використаємо пакетний менеджер NPM для завантаження залежностей NodeJS.   
-Створіть новий `.will.yml`-файл в директорії `defaultBuild` та запишіть в нього код:  
+If the `willfile` has a build that executes more often than others, then it is convenient to assign this build by default. The default build runs by the phrase `will .build` without specifying the argument. This eliminates the need to find the correct build name in the `willfile` and makes the call command shorter.
+
+The `willfile` can only have one default build. To define the default build, specify the `default: 1` criterion in the appropriate resource. 
+
+### The module with default build    
 
 <details>
-  <summary><u>Код файла <code>.will.yml</code></u></summary>
+  <summary><u>File structure</u></summary>
+
+```
+defaultBuild
+      └── .will.yml
+
+```
+
+</details>
+
+Create the file structure shown above.
+
+<details>
+  <summary><u>Code of file <code>.will.yml</code></u></summary>
 
 ```yaml
 about :
@@ -36,21 +50,15 @@ build :
 ```
 
 </details>
-<details>
-  <summary><u>Структура модуля</u></summary>
 
-```
-defaultBuild
-      └── .will.yml 
+Enter the code in the file `.will.yml`.  
 
-```
+The `willbe` utility works with both the operating system and external applications. For example, `NodeJS` dependencies are downloaded using the `NPM` package manager in the `npm.install` step.
 
-</details>
-
-Cтворіть файл залежностей `package.json` в директорії `defaultBuild`:
+Add the `package.json` file to the `defaultBuild` directory. Put the appropriate code in this file. 
 
 <details>
-  <summary><u>Файл залежностей NodeJS <code>package.json</code></u></summary>
+  <summary><u>The file <code>package.json</code> with NodeJS dependencies</u></summary>
 
 ``` json
 {
@@ -63,23 +71,24 @@ Cтворіть файл залежностей `package.json` в директо
 ```
 
 </details>
+
+Simple `npm-file` with `express` package.
+
 <details>
-  <summary><u>Структура модуля з файлом залежностей</u></summary>
+  <summary><u>File structure with npm-file</u></summary>
 
 ```
 defaultBuild
      ├── package.json
      └── .will.yml
-
 ```
 
 </details>
 
-
-Введіть команду `will .build` в кореневій директорії `will-файла`:  
+Entering the `.build` command runs the build scenario `install`. This scenario contains only one step that installs the `npm-packages`.
 
 <details>
-  <summary><u>Вивід команди <code>will .build</code></u></summary>
+  <summary><u>Command output <code>will .build</code></u></summary>
 
 ```
 [user@user ~]$ will .build
@@ -96,15 +105,18 @@ found 0 vulnerabilities
 ```
 
 </details>
+
+Enter the `will .build` command in the `willfile` directory. Compare the output of the console.
+
 <details>
-  <summary><u>Структура модуля після побудови</u></summary>
+  <summary><u>Post-build file structure</u></summary>
 
 ```
 defaultBuild
      ├── node_modules
      │         ├── ...
      │         ├── ...
-     │ 
+     │
      ├── package.json
      ├── package-lock.json
      └── .will.yml
@@ -113,11 +125,13 @@ defaultBuild
 
 </details>
 
-Утиліта побудувала збірку `install` без указання аргумента завдяки критеріону `default`.
+Compare the changes in the `defaultBuild` directory. `npm-packages` has been installed.
 
-### Підсумок   
-- Встановлення критеріона `default : 1` в збірку дозволяє запустити її побудову фразою `will .build`.
-- Утиліта `willbe` працює з зовнішніми програмами, які встановлені в операційну систему.
+### Summary   
 
-[Наступний туторіал](ModuleWillFileExported.md)  
-[Повернутись до змісту](../README.md#tutorials)
+- The default build runs by `will .build` command.
+- To set the default build, specify the `default: 1` criterion for it.
+- `Willfile` can have one default build.
+- The utility interacts with the operating system and can run external programs.
+
+[Back to content](../README.md#tutorials)
