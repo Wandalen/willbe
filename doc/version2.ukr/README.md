@@ -355,9 +355,9 @@
   Використання вбудованого кроку <code>files.transpile</code> для транспіляції <code>JavaScript</code> файлів або їх конкатенації.
 </details>
 <details><summary><a href="./tutorial/WillbeAsMake.md">
-      Компіляція С++ програми
+      Компіляція С програми
   </a></summary>
-  Використання утиліти <code>willbe</code> для компіляції С++ програми.
+  Використання утиліти <code>willbe</code> для компіляції С програми.
 </details>
 <details><summary><a href="./tutorial/SubmoduleInformal.md">
       Неформальні підмодулі
