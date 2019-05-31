@@ -219,7 +219,7 @@
   </a></summary>
   Команда оновлення віддалених підмодулів.
 </details>
-<details><summary><a href="./tutorial/CommandSubmodulesClean">
+<details><summary><a href="./tutorial/CommandSubmodulesClean.md">
       Команда <code>.submodules.clean</code>
   </a></summary>
   Команда очищення модуля від тимчасових та завантажених підмодулів.
@@ -363,6 +363,11 @@
       Неформальні підмодулі
   </a></summary>
   Імпортування неформальних підмодулів.
+</details>
+<details><summary><a href="./tutorial/SubmoduleInformal.md#Крок-submodulesreload">
+      Крок <code>.submodules.reload</code>
+  </a></summary>
+  Виконання динамічного оновлення статусу неформальних підмодулів.
 </details>
 <details><summary><a href="./tutorial/CommandClean.md">
       Команда очистки <code>.clean</code>
