@@ -6989,6 +6989,68 @@ reflectorMasks.timeOut = 200000;
 
 //
 
+//
+
+function shellPluralCriterion( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-shell-plural-criterion' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  /* - */
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* - */
+
+  shell({ args : [ '.build A' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = 'should execute file A.js';
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Executed-A.js' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.build B' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = 'should execute file B.js';
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Executed-B.js' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+reflectorMasks.timeOut = 200000;
+
+//
+
 function functionStringsJoin( test )
 {
   let self = this;
@@ -7261,6 +7323,8 @@ var Self =
     reflectInherit,
     reflectComplexInherit,
     reflectorMasks,
+    
+    shellPluralCriterion,
 
     functionStringsJoin,
     functionPlatform,
