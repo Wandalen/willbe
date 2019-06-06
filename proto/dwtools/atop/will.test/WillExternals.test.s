@@ -3181,6 +3181,60 @@ cleanMixed.timeOut = 200000;
 
 //
 
+function stepCleanPaths( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-clean-paths' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let modulePath = _.path.join( routinePath, 'module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /*
+    Expected output :
+    
+    - clean.paths :
+	    - deleted 1 files at proto/A in 0.001s
+      - deleted 1 files at proto/B in 0.001s
+  */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'clean several paths';
+    return null;
+  })
+
+  shell({ args : [ '.build' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+cleanMixed.timeOut = 200000;
+
+//
+
 function buildSingleModule( test )
 {
   let self = this;
@@ -7289,6 +7343,7 @@ var Self =
     cleanDry,
     cleanSubmodules,
     cleanMixed,
+    stepCleanPaths,
 
     buildSingleModule,
     buildSingleStep,
