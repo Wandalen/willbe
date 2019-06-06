@@ -7101,7 +7101,131 @@ function shellPluralCriterion( test )
   return ready;
 }
 
-reflectorMasks.timeOut = 200000;
+shellPluralCriterion.timeOut = 200000;
+
+//
+
+function shellUsingCriterionValue( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-shell-using-criterion-value' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  /* - */
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* - */
+
+  shell({ args : [ '.build debug' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = 'should print debug:1';
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'debug:1' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.build release' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = 'should print debug:0';
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'debug:0' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+shellUsingCriterionValue.timeOut = 200000;
+
+//
+
+function shellVerbosity( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-shell-using-criterion-value' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  
+  /* 
+    Checks amount of output from shell step depending on value of verbosity option
+  */
+
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  /* - */
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* - */
+
+  shell({ args : [ '.build shell.verbosity.zero' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = 'verbosity:0 should not print message';
+
+    test.identical( got.exitCode, 0 );
+    test.is( !_.strHas( got.output, 'message from shell' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.build shell.verbosity.full' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = 'verbosity:9 should print message';
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'message from shell' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+shellVerbosity.timeOut = 20000;
 
 //
 
@@ -7380,6 +7504,8 @@ var Self =
     reflectorMasks,
     
     shellPluralCriterion,
+    shellUsingCriterionValue,
+    shellVerbosity,
 
     functionStringsJoin,
     functionPlatform,

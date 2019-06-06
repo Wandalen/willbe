@@ -1,0 +1,22 @@
+
+step :
+
+  print.criterion.value :
+    currentPath : .
+    shell : node -e "console.log( 'debug:{f::this/criterion/debug}' )"
+    criterion : 
+      debug : [ 0,1 ]
+
+build :
+
+  debug :
+    criterion :
+      debug : 1
+    steps :
+      - print.criterion.value
+
+  release :
+    criterion :
+      debug : 0
+    steps :
+      - print.criterion.value
