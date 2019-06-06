@@ -7052,7 +7052,8 @@ function shellPluralCriterion( test )
   let routinePath = _.path.join( self.tempDir, test.name );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-
+  
+  /* Checks if shell step supports plural criterion and which path is selected using current value of criterion */
 
   let ready = new _.Consequence().take( null );
   let shell = _.sheller
@@ -7112,7 +7113,8 @@ function shellUsingCriterionValue( test )
   let routinePath = _.path.join( self.tempDir, test.name );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-
+  
+  /* Checks if correct value of criterion is passed into shell command */
 
   let ready = new _.Consequence().take( null );
   let shell = _.sheller
@@ -7414,6 +7416,57 @@ function functionPlatform( test )
 
 //
 
+function printStepNameBeforeExecution( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-print-name-before-exec' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  
+  /* 
+    Checks if tool prints name of step before it execution
+  */
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  /* - */
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* - */
+
+  shell({ args : [ '.build ; .set v:4' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = 'should print name of step before execution';
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '+ reflect.file reflected 1 files' ) );
+    test.is( _.strHas( got.output, '. shell.step' ) );
+    test.is( _.strHas( got.output, `node -e "console.log( 'shell.step' )"` ) );
+    test.is( _.strHas( got.output, '. delete.step' ) );
+    test.is( _.strHas( got.output, '- delete.step deleted 1 files at' ) );
+    
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+//
+
 var Self =
 {
 
@@ -7509,6 +7562,8 @@ var Self =
 
     functionStringsJoin,
     functionPlatform,
+    
+    printStepNameBeforeExecution,
 
   }
 
