@@ -104,7 +104,7 @@ function stepRoutineReflect( frame )
   let result;
   try
   {
-    // debugger;
+    debugger;
     result = will.Predefined.filesReflect.call( fileProvider, opts );
   }
   catch( err )
@@ -128,7 +128,9 @@ function stepRoutineReflect( frame )
       dstFilter.form();
       let src = srcFilter.filePathSrcCommon();
       let dst = dstFilter.filePathDstCommon();
-      logger.log( ' + ' + step.name + ' reflected ' + opts.result.length + ' files ' + path.moveReport( dst, src ) + ' in ' + _.timeSpent( time ) );
+      logger.log( ' + ' + reflector.decoratedNickName + ' reflected ' + opts.result.length + ' files ' + path.moveReport( dst, src ) + ' in ' + _.timeSpent( time ) );
+      // logger.log( _.select( opts.result, '*/dst/relative' ) );
+      // debugger;
     }
 
     return result;

@@ -87,6 +87,8 @@ function MakeForEachCriterion( o )
     try
     {
 
+      _.assert( o.module instanceof will.OpenedModule );
+
       let instance = o.module[ Cls.MapName ][ o.name ];
       if( instance )
       {
@@ -166,6 +168,7 @@ function init( o )
   if( o )
   resource.copy( o );
 
+  // _.assert( resource.module === null || resource.module instanceof _.Will.OpenedModule );
   // if( resource.name === "reflect.submodules." )
   // debugger;
 
@@ -192,9 +195,13 @@ function copy( o )
   if( o.module !== undefined )
   resource.module = o.module;
 
-  let resource2 = _.Copyable.prototype.copy.call( resource, o );
+  let result = _.Copyable.prototype.copy.call( resource, o );
 
-  return resource2;
+  let module = o.module !== undefined ? o.module : resource.module;
+  if( o.unformedResource )
+  resource.unformedResource = o.unformedResource.cloneExtending({ original : resource, module : module });
+
+  return result;
 }
 
 //
@@ -315,6 +322,9 @@ function form1()
   _.assert( !!will.formed );
   _.assert( !willf || !!willf.formed );
   _.assert( _.strDefined( resource.name ) );
+
+  // if( resource.nickName === 'submodule::Tools' )
+  // debugger;
 
   if( !resource.original )
   {
@@ -819,7 +829,7 @@ function infoExport()
   return result;
 }
 
-var defaults = infoExport.defaults = Object.create( _.Will.Module.prototype.dataExport.defaults );
+var defaults = infoExport.defaults = Object.create( _.Will.OpenedModule.prototype.dataExport.defaults );
 defaults.copyingNonExportable = 1;
 defaults.formed = 1;
 
@@ -851,7 +861,6 @@ function dataExport()
   delete o2.copyingNonExportable;
   delete o2.module;
   delete o2.formed;
-  // delete o2.dst;
 
   let fields = resource.cloneData( o2 );
 
@@ -859,7 +868,7 @@ function dataExport()
   return fields;
 }
 
-dataExport.defaults = Object.create( _.Will.Module.prototype.dataExport.defaults );
+dataExport.defaults = Object.create( _.Will.OpenedModule.prototype.dataExport.defaults );
 
 //
 
@@ -952,12 +961,22 @@ function shortNameArrayGet()
 function willfSet( src )
 {
   let resource = this;
-
-  // if( resource.id === 154 )
-  // if( src )
-  // debugger;
-
   resource[ willfSymbol ] = src;
+  return src;
+}
+
+//
+
+function moduleSet( src )
+{
+  let resource = this;
+
+  if( src && src instanceof _.Will.OpenerModule )
+  src = src.openedModule;
+
+  resource[ moduleSymbol ] = src;
+
+  _.assert( resource.module === null || resource.module instanceof _.Will.OpenedModule );
 
   return src;
 }
@@ -984,10 +1003,10 @@ function resolve_body( o )
   return resolved;
 }
 
-var defaults = resolve_body.defaults = Object.create( _.Will.Module.prototype.resolve.defaults );
+var defaults = resolve_body.defaults = Object.create( _.Will.OpenedModule.prototype.resolve.defaults );
 defaults.prefixlessAction = 'default';
 
-let resolve = _.routineFromPreAndBody( _.Will.Module.prototype.resolve.pre, resolve_body );
+let resolve = _.routineFromPreAndBody( _.Will.OpenedModule.prototype.resolve.pre, resolve_body );
 
 //
 
@@ -1038,15 +1057,16 @@ function reflectorResolve_body( o )
   return resolved;
 }
 
-reflectorResolve_body.defaults = Object.create( _.Will.Module.prototype.reflectorResolve.defaults );
+reflectorResolve_body.defaults = Object.create( _.Will.OpenedModule.prototype.reflectorResolve.defaults );
 
-let reflectorResolve = _.routineFromPreAndBody( _.Will.Module.prototype.reflectorResolve.pre, reflectorResolve_body );
+let reflectorResolve = _.routineFromPreAndBody( _.Will.OpenedModule.prototype.reflectorResolve.pre, reflectorResolve_body );
 
 // --
 // relations
 // --
 
 let willfSymbol = Symbol.for( 'willf' );
+let moduleSymbol = Symbol.for( 'module' );
 
 let Composes =
 {
@@ -1057,6 +1077,7 @@ let Aggregates =
   writable : 1,
   exportable : 1,
   importable : 1,
+  generated : 0,
 }
 
 let Associates =
@@ -1112,6 +1133,7 @@ let Accessors =
   absoluteName : { getter : absoluteNameGet, readOnly : 1 },
   decoratedAbsoluteName : { getter : decoratedAbsoluteNameGet, readOnly : 1 },
   inherit : { setter : _.accessor.setter.arrayCollection({ name : 'inherit' }) },
+  module : {},
 }
 
 // --
@@ -1170,6 +1192,7 @@ let Proto =
   decoratedAbsoluteNameGet,
   shortNameArrayGet,
   willfSet,
+  moduleSet,
 
   // resolver
 

@@ -24,6 +24,22 @@ Self.shortName = 'Build';
 // inter
 // --
 
+function init( o )
+{
+  let resource = this;
+
+  // debugger;
+  Parent.prototype.init.apply( resource, arguments );
+
+  // if( resource.module && resource.module instanceof _.Will.OpenerModule )
+  // resource.module = resource.module.openedModule;
+  // _.assert( resource.module === null || resource.module instanceof _.Will.OpenedModule );
+
+  return resource;
+}
+
+//
+
 function form3()
 {
   let build = this;
@@ -279,13 +295,13 @@ function archiveFilePathFor()
   let will = module.will;
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
-  let inExportFile = module.willfileWithRoleMap.export || module.willfileWithRoleMap.single;
+  let inExportFile = module.willfileWithRoleMap.export || module.willfileWithRoleMap.single || module.willfileWithRoleMap.import;
   let inFileDirPath = hd.path.dir( inExportFile.filePath )
 
   _.assert( arguments.length === 0 );
   _.assert( _.strDefined( build.name ), 'Build should have name' );
   _.assert( _.strDefined( module.about.name ), 'Module should have name, declare about.name' );
-  _.assert( inExportFile instanceof will.WillFile );
+  _.assert( inExportFile instanceof will.Willfile );
 
   let exports = module.exportsResolve();
   let criterions = build.criterionVariable( exports );
@@ -298,28 +314,28 @@ function archiveFilePathFor()
 
   return hd.path.resolve( module.outPath, name );
 }
-
 //
-
-function outFilePathFor()
-{
-  let build = this
-  let module = build.module;
-  let will = module.will;
-  let hub = will.fileProvider;
-  let hd = hub.providersWithProtocolMap.file;
-  let inExportFile = module.willfileWithRoleMap.export || module.willfileWithRoleMap.single;
-  let inFileDirPath = hd.path.dir( inExportFile.filePath )
-
-  _.assert( arguments.length === 0 );
-  _.assert( _.strDefined( build.name ) );
-  _.assert( inExportFile instanceof will.WillFile );
-  _.assert( _.strDefined( module.about.name ), 'Module should have name, declare about.name' );
-
-  let name = _.strJoinPath( [ module.about.name, '.out.will.yml' ], '.' );
-
-  return hd.path.resolve( module.outPath, name );
-}
+// //
+//
+// function outFilePathFor()
+// {
+//   let build = this
+//   let module = build.module;
+//   let will = module.will;
+//   let hub = will.fileProvider;
+//   let hd = hub.providersWithProtocolMap.file;
+//   let inExportFile = module.willfileWithRoleMap.export || module.willfileWithRoleMap.single;
+//   let inFileDirPath = hd.path.dir( inExportFile.filePath )
+//
+//   _.assert( arguments.length === 0 );
+//   _.assert( _.strDefined( build.name ) );
+//   _.assert( inExportFile instanceof will.Willfile );
+//   _.assert( _.strDefined( module.about.name ), 'Module should have name, declare about.name' );
+//
+//   let name = _.strJoinPath( [ module.about.name, '.out.will.yml' ], '.' );
+//
+//   return hd.path.resolve( module.outPath, name );
+// }
 
 // --
 // relations
@@ -372,6 +388,7 @@ let Proto =
 
   // inter
 
+  init,
   form3,
 
   stepsEach,
@@ -380,7 +397,7 @@ let Proto =
   isExport,
 
   archiveFilePathFor,
-  outFilePathFor,
+  // outFilePathFor,
 
   // relation
 
