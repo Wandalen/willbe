@@ -6,8 +6,10 @@ about :
 
 submodule :
 
-    Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-    PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+    Tools : git://../repo/Tools?out=out/wTools.out.will#master
+    PathFundamentals : git://../repo/PathFundamentals?out=out/wPathFundamentals.out.will#master
+    # Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will#master
+    # PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals.out.will#master
 
 step :
 
@@ -29,6 +31,8 @@ build :
            - submodules.clean
 
     build :
+        criterion :
+          default : 1
         steps :
            - submodules.clean
            - submodules.download

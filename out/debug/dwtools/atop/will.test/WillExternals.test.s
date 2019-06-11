@@ -6786,7 +6786,7 @@ function reflectInherit( test )
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /\+ .*reflector::reflector::reflect.proto1.* reflected 6 files/ ) );
+    test.is( _.strHas( got.output, /\+ .*reflector::reflect.proto1.* reflected 6 files/ ) );
     test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
     var files = self.find( outPath );
     test.identical( files, [ '.', './debug2', './debug2/File.js', './debug2/File.s', './debug2/File.test.js', './debug2/some.test', './debug2/some.test/File2.js' ] );
@@ -6807,7 +6807,7 @@ function reflectInherit( test )
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '+ reflect.not.test.only.js.v1 reflected 6 files' ) );
+    test.is( _.strHas( got.output, /\+ .*reflector::reflect\.not\.test\.only\.js\.v1.* reflected 6 files/ ) );
     test.is( _.strHas( got.output, /.*out.* <- .*proto.*/ ) );
     var files = self.find( outPath );
     test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.s', './debug2', './debug2/File.js', './debug2/File.s' ] );
