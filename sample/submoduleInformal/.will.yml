@@ -25,7 +25,7 @@ path :
 reflector :
 
   reflect.submodules :
-    inherit : submodule::*/exported::*=1/reflector::exportedFiles*=1
+    inherit : submodule::*/exported::*=1/reflector::exported.files*=1
     dst :
       basePath : .
       prefixPath : path::out.*=1
@@ -40,9 +40,8 @@ step :
 
 build :
 
-  make.unformal :
+  make.informal :
     criterion :
-      default : 1
       debug : [ 0,1 ]
     steps :
       - submodules.download

@@ -7,7 +7,7 @@
 ### Структура файлів
 
 <details>
-  <summary><u>Файлова структура після видалення підмодулів</u></summary>
+  <summary><u>Файлова структура</u></summary>
 
 ```
  submodulesClean
@@ -34,13 +34,14 @@ submodule :
   PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
 
 ```
+
 </details>
 
-Внесіть код в `вілфайл`
+Внесіть код в `вілфайл`.
 
 ### Використання команди `.submodules.clean`
 
-Для використання команди `.submodulesClean` потрібно мати завантажені підмодулі.
+Для використання команди `.submodules.clean` потрібно мати завантажені підмодулі.
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.download</code></u></summary>

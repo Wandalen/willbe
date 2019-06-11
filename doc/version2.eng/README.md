@@ -322,7 +322,7 @@ A string which has phrase which describes intention of a developer and actions w
 <details><summary><a href="./tutorial/CommandSubmodulesClean">
       Command <code>.submodules.clean</code>
   </a></summary>
-  Command to clean remote submodules.
+  The command to clear the module from the temporary and downloaded submodules.
 </details>
 <details><summary><a href="./tutorial/Build.md">
       Module building by command <code>.build</code>
