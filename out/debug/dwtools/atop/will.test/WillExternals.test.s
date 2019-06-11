@@ -6533,7 +6533,7 @@ function reflectWithOptions( test )
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /\+ reflect\.proto1 reflected 3 files .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
+    test.is( _.strHas( got.output, /\+ .*reflector::reflect\.proto1.* reflected 3 files .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
     var files = self.find( outPath );
     test.identical( files, [ '.', './debug', './debug/File.js', './debug/File.test.js' ] );
     return null;
@@ -6575,7 +6575,7 @@ function reflectWithOptions( test )
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /\+ reflect\.proto3 reflected 0 files .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
+    test.is( _.strHas( got.output, /\+ .*reflector::reflect\.proto3.* reflected 0 files .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
     var files = self.find( outPath );
     test.identical( files, [] );
     return null;
