@@ -66,7 +66,7 @@ Remote path of module::submodulesCommands / module::Files fixated
 
 </details>
 
-Оновлення URI-посилань підмодулів командою `will .submodules.upgrade`.
+Оновіть URI-посилань підмодулів командою `will .submodules.upgrade`.
 
 Вивід свідчить, що команда `.submodules.upgrade` оновила всі три URI-посилання підмодулів до найновіших (на момент виконання). Попри те, що для підмодуля `Tools` вказано версію підмодуля його теж було апгрейднуто.
 

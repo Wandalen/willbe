@@ -73,7 +73,7 @@ step :
 
 Внесіть приведений вище код в файл `.will.yml`.
 
-`Вілфайл` включає дві секції `path` i `step` з переліком ресурсів. Він призначений для дослідження команд утиліти і не виконує побудов. Окремі ресурси мають схожі назви та використовують декілька комбінацій критеріонів, що дає змогу дослідити можливості команд `.  
+`Вілфайл` включає дві секції `path` i `step` з переліком ресурсів. Він призначений для дослідження команд утиліти і не виконує побудов. Окремі ресурси мають схожі назви та використовують декілька комбінацій критеріонів, що дає змогу дослідити можливості пошуку за критеріонами.  
 
 <details>
   <summary><u>Вивід команди <code>will .resources.list</code></u></summary>
@@ -82,58 +82,108 @@ step :
 [user@user ~]$ will .resources.list
 ...
 About
-  enabled : 1
+  enabled : 1 
+  values : 
+    enabled : 1 
+    name : null
 
-Paths
-  will : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec'
-  module.willfiles : '/path_to_file/.will.yml'
-  module.dir : '/path_to_file'
-  proto : './proto'
-  in : '.'
-  out : 'out'
-  out.debug : './out/debug'
-  out.release : './out/release'
+
+path::module.willfiles
+  path : .will.yml 
+  criterion : 
+    predefined : 1
+
+path::module.original.willfiles
+  criterion : 
+    predefined : 1
+
+path::module.dir
+  path : . 
+  criterion : 
+    predefined : 1
+
+path::local
+  criterion : 
+    predefined : 1
+
+path::remote
+  criterion : 
+    predefined : 1
+
+path::current.remote
+  criterion : 
+    predefined : 1
+
+path::will
+  path : ../../../../../../../../usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec 
+  criterion : 
+    predefined : 1
+
+path::proto
+  path : ./proto
+
+path::in
+  path : .
+
+path::out
+  path : out
+
+path::out.debug
+  path : ./out/debug 
+  criterion : 
+    debug : 1 
+    proto : 1
+
+path::out.release
+  path : ./out/release 
+  criterion : 
+    debug : 0 
+    proto : 0
+
+reflector::predefined.common
+  ...
+  ...
 
 step::reflect.proto.
-  criterion :
-    debug : 0
-    proto : 1
-  opts :
-    reflector : reflector::reflect.proto.*=1
-  inherit :
+  criterion : 
+    debug : 0 
+    proto : 1 
+  opts : 
+    reflector : reflector::reflect.proto.*=1 
+  inherit : 
     predefined.reflect
 
 step::reflect.proto.debug
-  criterion :
-    debug : 1
-    proto : 1
-  opts :
-    reflector : reflector::reflect.proto.*=1
-  inherit :
+  criterion : 
+    debug : 1 
+    proto : 1 
+  opts : 
+    reflector : reflector::reflect.proto.*=1 
+  inherit : 
     predefined.reflect
 
 step::reflect.submodules
-  criterion :
-    debug : 1
-    proto : 0
-  opts :
-    reflector : reflector::reflect.submodules*=1
-  inherit :
+  criterion : 
+    debug : 1 
+    proto : 0 
+  opts : 
+    reflector : reflector::reflect.submodules*=1 
+  inherit : 
     predefined.reflect
 
 step::delete.out.debug
-  criterion :
-    debug : 1
-  opts :
-    filePath : path::out.debug
-  inherit :
+  criterion : 
+    debug : 1 
+  opts : 
+    filePath : path::out.debug 
+  inherit : 
     predefined.delete
 
-step::submodules.export
-  opts :
-    currentPath : path::dirPath
-    shell : will .each ./module .export
-  inherit :
+step::submodules.informal.export
+  opts : 
+    currentPath : path::dirPath 
+    shell : will .each ./module .export 
+  inherit : 
     shell.run
 
 ```
@@ -142,7 +192,8 @@ step::submodules.export
 
 Введіть команду `will .resources.list` для виводу переліку всіх ресурсів.
 
-В секціх `path` утиліта додатково вказує на шляхи до виконуваних файлів:  
+При вводі команди утиліта виводить список доступних ресурсів. Цей список включає значну кількість вбудованих ресурсів. Наприклад, в секції `path` утиліта додатково вказує на шляхи до виконуваних файлів: 
+
 - `will` - шлях до виконуваного файла утиліти;  
 - `module.willfiles` - `вілфайл` поточного модуля (або спліт-файли);  
 - `module.dir` - шлях до директорії `вілфайла` поточного модуля.  
@@ -186,7 +237,7 @@ Paths
 
 Ресурс також обирається за назвою і критеріоном. Для виводу шляхів, які починаються на `o` та мають критеріон `proto:1`, введіть команду `will .paths.list о* proto:1`.
 
-В виводі команди присутні два шляхи - `out` i `out.debug`. Це пов'язано з тим, що шлях `out` не має критеріонів.
+В виводі команди присутні два шляхи - `out` i `out.debug`. Це пов'язано з тим, що шлях `out` не має критеріонів, а тому утиліта його не відкидає при порівнянні мап критеріонів.
 
 <details>
   <summary><u>Вивід команди <code>will .steps.list *s* proto:0 debug:1</code></u></summary>
@@ -214,7 +265,7 @@ step::submodules.export
 
 </details>
 
-Вибір ресурсів здійснюється за комбінацією критеріонів. Наприклад, введіть команду `will .steps.list *s* proto:0 debug:1`.
+Також, вибір ресурсів може здійснюватись за комбінацією критеріонів. Наприклад, введіть команду `will .steps.list *s* proto:0 debug:1`.
 
 Крок `submodules.export` включений в вибірку тому, що не має критеріонів і ресурс автоматично приймає значення будь-якого критеріона.  
 
@@ -244,7 +295,7 @@ step::submodules.export
 
 </details>
 
-Умовою правильного вибору ресурсів за критеріонами є перебір за іменами. Для перебору лише за критеріонами використовуйте ґлоб `*`, який включає всі ресурси. Таким чином для вибору кроків за критеріоном `debug:0` Введіть команду `will .steps.list * debug:0`.
+Умовою правильного вибору ресурсів за критеріонами є перебір за іменами. Для відбору ресурсів лише за критеріонами використовуйте ґлоб `*`, який дає утиліті вказівку шукати серед імен усіх ресурсів. Таким чином для вибору кроків за критеріоном `debug:0` потрібно ввести команду `will .steps.list * debug:0`. Результат виконання команди приведений вище.
 
 Утиліта вивела два ресурси - `reflector.proto.` i `submodules.export`. Другий ресурс обрано через відсутність критеріонів.
 

@@ -20,7 +20,7 @@ viewStep
 
 </details>
 
-Для дослідження вбудованого кроку `file.view`, створіть структуру файлів як приведено вище та внесіть в файли код:  
+Для дослідження вбудованого кроку `file.view` створіть структуру файлів як приведено вище.  
 
 <details>
   <summary><u>Код файла <code>.will.yml</code></u></summary>
@@ -36,13 +36,13 @@ path :
   in : '.'
   html : './file/hello.html'
   txt : './file/hello.txt'
-  url : 'https://www.google.com/'
+  uri : 'https://www.google.com/'
 
 step :
 
-  view.url :
+  view.uri :
     inherit : file.view
-    filePath : path::url
+    filePath : path::uri
     delay : 12000
 
   view.html :
@@ -61,13 +61,20 @@ build :
     criterion :
       default : 1
     steps :
-      - view.url
+      - step::view.uri
       - step::view.html
       - step::view.txt
 
 ```
 
 </details>
+
+Помістіть приведений вище код в файл `.will.yml`.
+
+`Вілфайл` містить одну збірку `open.view`. В сценарії збірки по черзі виконується запуск перегляду URI-посилання та файлів модуля.
+
+Для виклику кроку перегляду файлів в полі `inherit` вказується `file.view`, в полі `filePath` - шлях до файла чи посилання, в полі `delay` - затримка до запуску (в мс). 
+
 <details>
   <summary><u>Код <code>hello.html</code> i <code>hello.txt</code></u></summary>
 
@@ -85,9 +92,9 @@ build :
 
 </details>
 
-Файли `hello.html` i `hello.txt` мають різні розширення для того, щоб утиліта викликала програми для перегляду веб-сторінок і текстовий редактор (якщо в налаштуваннях операційної системи ці файли відкривають різні програми). Крок `view.url` показує, що крім файлів утиліта може відкрити URI-посилання.  
+Внесіть в файли `hello.html` i `hello.txt` приведений код.
 
-Для виклику кроку перегляду файлів в полі `inherit` вказується `file.view`, в полі `filePath` - шлях до файла чи посилання, в полі `delay` - затримка до запуску (в мс).  
+Файли `hello.html` i `hello.txt` мають різні розширення для того, щоб утиліта викликала програми для перегляду веб-сторінок і текстовий редактор (якщо в налаштуваннях операційної системи ці файли відкривають різні програми). Крок `view.urі` показує, що крім файлів утиліта може відкрити URI-посилання.   
 
 ### Побудова модуля  
 
@@ -102,7 +109,7 @@ build :
 
 View path::txt
 View path::html
-View path::url
+View path::urі
 
 ```
 
@@ -118,18 +125,26 @@ View path::url
 ![txt.view.png](../../images/txt.view.png)
 
 </details>
+
+Файл з розширенням `.txt` було відкрито в текстовому редакторі, що встановлений за замовчуванням в операційній системі.  
+
 <details>
   <summary><u>Вивід браузера. HTML-файл</u></summary>
 
 ![html.view.png](../../images/html.view.png)
 
 </details>
+
+Для відкриття файлів з розширенням `.html` в системі використовується браузер. Тому в вікні браузера відображено заголовок "Hello, world!".
+
 <details>
   <summary><u>Вивід браузера. URI-посилання</u></summary>
 
 ![html.view.png](../../images/url.view.png)
 
 </details>
+
+Після затримки в 4 секунди браузер також відкрив URI-посилання.
 
 ### Підсумок    
 
