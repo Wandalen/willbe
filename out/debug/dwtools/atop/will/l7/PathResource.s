@@ -64,10 +64,6 @@ function init( o )
 
   Parent.prototype.init.apply( resource, arguments );
 
-  // if( resource.module && resource.module instanceof _.Will.OpenerModule )
-  // resource.module = resource.module.openedModule;
-  // _.assert( resource.module === null || resource.module instanceof _.Will.OpenedModule );
-
   return resource;
 }
 
@@ -228,27 +224,15 @@ function dataExport()
   if( result )
   {
 
-    // debugger;
-
-    // if( pathResource.nickName === 'path::remote' )
-    // debugger;
-    // if( result.path && path.s.anyAreAbsolute( result.path ) )
-    // debugger;
-
-    // if( result.path && path.s.anyAreAbsolute( result.path ) && path.s.noneAreGlobal( result.path ) )
     if( result.path && path.s.anyAreAbsolute( result.path ) )
     {
-      // debugger;
       result.path = _.filter( result.path, ( p ) =>
       {
         let protocols = path.parse( p ).protocols;
-        // debugger;
-        // if( _.arrayHasNone( protocols, [ 'http', 'https', 'ssh' ] ) )
         if( !protocols.length )
         return path.relative( module.inPath, p );
         return p;
       });
-      // debugger;
     }
 
   }

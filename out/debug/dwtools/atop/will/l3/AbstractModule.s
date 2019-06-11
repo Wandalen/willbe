@@ -460,100 +460,6 @@ let Proto =
   finit,
   init,
 
-  // copy,
-  // clone,
-  // cloneExtending,
-  // unform,
-  // preform,
-  // _preform,
-  // predefinedForm,
-
-  // // etc
-  //
-  // shell,
-  // exportAuto,
-  //
-  // // opener
-  //
-  // isOpened,
-  // isValid,
-  // close,
-  // _formEnd,
-  //
-  // // _willfileFindSingle,
-  // // _willfileFindMultiple,
-  // // _willfilesFindMaybe,
-  // // _willfilesFindPickedFile,
-  // // _willfilesFind,
-  // // willfilesFind,
-  // // willfilesPick,
-  // //
-  // // willfilesOpen,
-  // // _willfilesOpen,
-  // //
-  // // willfilesReadBegin,
-  // // willfilesReadEnd,
-  // //
-  // // _willfilesExport,
-  // // willfileEach,
-  //
-  // // submodule
-  //
-  // // rootModuleGet,
-  // // moduleAt,
-  // // modulePathRegister,
-  // // modulePathUnregister,
-  // //
-  // // submoduleRegister,
-  //
-  // submodulesAllAreDownloaded,
-  // submodulesAllAreValid,
-  // submodulesClean,
-  // submodulesReload,
-  //
-  // _submodulesDownload,
-  // submodulesDownload,
-  // submodulesUpdate,
-  //
-  // submodulesFixate,
-  // moduleFixate,
-  // moduleFixatePath,
-  //
-  // submodulesForm,
-  // _submodulesForm,
-  //
-  // // remote
-  //
-  // remoteIsUpdate,
-  // remoteIsUpToDateUpdate,
-  //
-  // remoteIsDownloadedUpdate,
-  // remoteIsDownloadedChanged,
-  // remoteIsDownloadedSet,
-  //
-  // remoteForm,
-  // _remoteFormAct,
-  // _remoteDownload,
-  // remoteDownload,
-  // remoteUpgrade,
-  // remoteCurrentVersion,
-  // remoteLatestVersion,
-  //
-  // // resource
-  //
-  // resourcesForm,
-  // _resourcesForm,
-  // _resourcesFormAct,
-  // _resourcesAllForm,
-  //
-  // resourceClassForKind,
-  // resourceMapForKind,
-  // resourceMapsForKind,
-  // resourceMaps,
-  // resourceObtain,
-  // resourceAllocate,
-  // resourceNameAllocate,
-
   // path
 
   WillfilePathIs,
@@ -570,62 +476,9 @@ let Proto =
 
   // name
 
-  // nameGet,
-  // nameChanged,
-  // aliasNameSet,
   nickNameGet,
   decoratedNickNameGet,
-  // absoluteNameGet,
   decoratedAbsoluteNameGet,
-  // shortNameArrayGet,
-
-  // // clean
-  //
-  // cleanWhat,
-  // cleanWhatReport,
-  // clean,
-  //
-  // // resolver
-  //
-  // _selectorShortSplitAct,
-  // _selectorShortSplit,
-  // selectorLongSplit,
-  // selectorParse,
-  // SelectorIsPrimitive,
-  // SelectorIs,
-  // SelectorIsComposite,
-  //
-  // errResolving,
-  // errThrow,
-  // resolveContextPrepare,
-  // resolve,
-  // resolveMaybe,
-  // _resolveAct,
-  //
-  // resolveRaw,
-  // pathResolve,
-  // reflectorResolve,
-  // submodulesResolve,
-  //
-  // // other resolver
-  //
-  // _buildsResolve,
-  // buildsResolve,
-  // exportsResolve,
-  // willfilesResolve,
-  //
-  // // exporter
-  //
-  // infoExport,
-  // infoExportPaths,
-  // infoExportResource,
-  //
-  // dataExport,
-  // dataExportForModuleExport,
-  // dataExportResources,
-  // dataExportModules,
-  //
-  // resourceImport,
 
   // relation
 

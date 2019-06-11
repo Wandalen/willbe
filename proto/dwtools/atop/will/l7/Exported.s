@@ -61,10 +61,6 @@ function init( o )
 
   Parent.prototype.init.apply( resource, arguments );
 
-  // if( resource.module && resource.module instanceof _.Will.OpenerModule )
-  // resource.module = resource.module.openedModule;
-  // _.assert( resource.module === null || resource.module instanceof _.Will.OpenedModule );
-
   return resource;
 }
 
@@ -136,7 +132,6 @@ function readExported()
     module2.openedModule.stager.stageStateSkipping( 'submodulesFormed', 1 );
     module2.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
     module2.openedModule.stager.tick();
-    // module2.openedModule.willfilesOpen();
 
     let con = module2.openedModule.ready;
     con
@@ -232,14 +227,11 @@ function performExportedReflectors( exportSelector )
 
   /* */
 
-  // debugger;
   if( exp instanceof will.Reflector )
   {
 
-    // exp.form2();
     exp.form1();
 
-    // _.assert( exp.formed >= 2 );
     _.assert( exp.formed >= 1 );
     _.assert( exp.src.formed === 1 );
     _.sure( !!exp.filePath, () => exp.nickName + ' should have filePath' );
@@ -391,12 +383,10 @@ function performExportedFilesReflector()
   let exportedFilesReflector = exported.exportedFilesReflector;
   exportedFilesReflector.generated = 1;
 
-  // debugger;
   exportedFilesReflector.src.pairWithDst( exportedFilesReflector.dst );
   exportedFilesReflector.src.pairRefine();
   exportedFilesReflector.src.prefixesApply();
   exportedFilesReflector.dst.prefixesApply();
-  // debugger;
 
   _.assert( _.objectIs( exportedFilesReflector.criterion ) );
   exportedFilesReflector.src.filteringClear();
@@ -517,7 +507,6 @@ function performWriteOutFile()
 
   /* */
 
-  // let outFilePath = build.outFilePathFor();
   let outFilePath = module.outfilePathGet();
   let data = module.dataExportForModuleExport({ willfilesPath : outFilePath });
 
@@ -618,12 +607,10 @@ let Associates =
 let Restricts =
 {
   srcFilter : null,
-  originalWillFilesPath : null, // xxx
 }
 
 let Medials =
 {
-  originalWillFilesPath : null, // xxx
 }
 
 let Statics =
@@ -636,7 +623,6 @@ let Forbids =
 {
   files : 'files',
   src : 'src',
-  // originalWillFilesPath : 'originalWillFilesPath',
 }
 
 let Accessors =

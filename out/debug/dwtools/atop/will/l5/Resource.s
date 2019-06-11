@@ -64,7 +64,6 @@ function MakeForEachCriterion( o )
       if( module[ Cls.MapName ][ o2.name ] )
       continue;
 
-      // result.push( make( o2 ) );
       make( o2 );
       counter += 1;
     }
@@ -73,7 +72,6 @@ function MakeForEachCriterion( o )
   if( single )
   {
     make( o );
-    // result = [ make( o ) ];
   }
 
   return result;
@@ -159,18 +157,11 @@ function init( o )
   _.Will.ResourceCounter += 1;
   resource.id = _.Will.ResourceCounter;
 
-  // if( resource.id === 154 )
-  // debugger;
-
   _.instanceInit( resource );
   Object.preventExtensions( resource );
 
   if( o )
   resource.copy( o );
-
-  // _.assert( resource.module === null || resource.module instanceof _.Will.OpenedModule );
-  // if( resource.name === "reflect.submodules." )
-  // debugger;
 
   if( _.instanceIs( o ) )
   {
@@ -280,18 +271,12 @@ function form()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  // if( resource.absoluteName === "module::super / reflector::reflect.submodules." )
-  // debugger;
-
   if( resource.formed === 0 )
   resource.form1();
   if( resource.formed === 1 )
   resource.form2();
   if( resource.formed === 2 )
   resource.form3();
-
-  // if( resource.absoluteName === "module::super / reflector::reflect.submodules." )
-  // debugger;
 
   _.assert( resource.formed === 3 );
 
@@ -322,9 +307,6 @@ function form1()
   _.assert( !!will.formed );
   _.assert( !willf || !!willf.formed );
   _.assert( _.strDefined( resource.name ) );
-
-  // if( resource.nickName === 'submodule::Tools' )
-  // debugger;
 
   if( !resource.original )
   {
@@ -548,9 +530,6 @@ function form3()
 
   _.assert( arguments.length === 0 );
   _.assert( resource.formed === 2 );
-
-  // if( resource.id === 154 )
-  // debugger;
 
   /* begin */
 

@@ -50,10 +50,6 @@ function init( o )
 
   let result = Parent.prototype.init.apply( reflector, arguments );
 
-  // if( reflector.module && reflector.module instanceof _.Will.OpenerModule )
-  // reflector.module = reflector.module.openedModule;
-  // _.assert( reflector.module === null || reflector.module instanceof _.Will.OpenedModule );
-
   return result;
 }
 
@@ -238,9 +234,6 @@ function _inheritMultiple( o )
   _.assert( reflector._accumulator === null );
   _.routineOptions( _inheritMultiple, arguments );
 
-  // if( reflector.nickName === "reflector::reflect.submodules.variant2" )
-  // debugger;
-
   reflector._accumulator = new will.Reflector({ module : module, original : reflector, name : reflector.name });
 
   Parent.prototype._inheritMultiple.call( reflector, o );
@@ -261,9 +254,6 @@ function _inheritMultiple( o )
   reflector.dst.and( reflector._accumulator.dst ).pathsInherit( reflector._accumulator.dst );
   if( reflector.src.filePath !== reflector.dst.filePath )
   reflector.src.pairRefineLight();
-
-  // if( reflector.nickName === "reflector::reflect.submodules.variant2" )
-  // debugger;
 
   return reflector;
 }
@@ -316,9 +306,6 @@ function _inheritSingle( o )
 
   _.assert( reflector2.formed === 3 );
 
-  // if( reflector.absoluteName === "module::reflectorResolve / reflector::reflect.proto.0.debug" )
-  // debugger;
-
   let only = _.mapNulls( reflector );
   only = _.mapOnly( reflector, reflector.Composes );
   let extend = _.mapOnly( reflector2, only );
@@ -328,8 +315,6 @@ function _inheritSingle( o )
   delete extend.criterion;
   delete extend.filePath;
   delete extend.inherit;
-  // delete extend.original;
-  // delete extend.willf;
 
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
@@ -367,9 +352,6 @@ function _inheritSingle( o )
   else
   {
 
-    // if( reflector.absoluteName === "module::submodules-mixed / reflector::reflect.submodules" )
-    // debugger;
-
     reflector._accumulator.src.pairRefineLight();
 
     reflector._accumulator.src.and( reflector2.src ).pathsExtend2( reflector2.src );
@@ -382,15 +364,7 @@ function _inheritSingle( o )
     if( reflector._accumulator.src.filePath !== reflector._accumulator.dst.filePath )
     reflector._accumulator.src.pairRefineLight();
 
-    // if( reflector.absoluteName === "module::submodules-mixed / reflector::reflect.submodules" )
-    // debugger;
-
   }
-
-  /* */
-
-  // if( reflector.nickName === "reflector::reflect.submodules" )
-  // debugger;
 
 }
 
@@ -399,7 +373,6 @@ _inheritSingle.defaults=
   ancestor : null,
   visited : null,
   extending : 0,
-  // defaultDst : true,
 }
 
 //
@@ -415,9 +388,6 @@ function _reflectMapForm( o )
   let logger = will.logger;
 
   _.assertRoutineOptions( _reflectMapForm, arguments );
-
-  // if( reflector.nickName === "reflector::reflect.submodules.steps" )
-  // debugger;
 
   if( !_.mapIs( reflector.filePath ) )
   return;
@@ -480,17 +450,12 @@ function _reflectMapForm( o )
         resolvedSrc.form();
 
         reflector._inheritSingle({ visited : o.visited, ancestor : resolvedSrc, extending : 1 });
-        // reflector._inheritSingle({ visited : o.visited, ancestor : resolvedSrc/*, defaultDst : resolvedDst*/ });
         _.sure( !!resolvedSrc.filePath );
-        // path.pathMapExtend( pathMap, resolvedSrc.filePath, dst );
       }
 
     }
 
   }
-
-  // if( reflector.nickName === "reflector::download" )
-  // debugger;
 
 }
 
@@ -581,9 +546,6 @@ function prefixesRelative()
   _.assert( reflector.src.postfixPath === null, 'not implemented' );
   _.assert( reflector.dst.postfixPath === null, 'not implemented' );
 
-  // if( reflector.nickName === "reflector::reflect.submodules" )
-  // debugger;
-
   reflector.src.pairWithDst( reflector.dst );
   reflector.src.prefixesRelative();
   reflector.dst.prefixesRelative();
@@ -631,9 +593,6 @@ function pathsResolve( o )
 
   if( _.mapIs( reflector.src.filePath ) )
   reflector.src.filePathNullizeMaybe();
-
-  // if( reflector.absoluteName === "module::Proto / reflector::download" )
-  // debugger;
 
   if( reflector.src.basePath )
   reflector.src.basePath = resolve( reflector.src.basePath );

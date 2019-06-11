@@ -2,7 +2,7 @@ format: willfile-1.0.0
 about:
   name: willbe
   description: Utility to manage modules of complex modular systems
-  enabled: 1
+  enabled: 0
   version: 0.3.166
   interpreters:
     - nodejs >= 6.0.0
@@ -29,6 +29,10 @@ path:
     criterion:
       predefined: 1
   remote:
+    criterion:
+      predefined: 1
+  module.common:
+    path: out/willbe.out
     criterion:
       predefined: 1
   in:

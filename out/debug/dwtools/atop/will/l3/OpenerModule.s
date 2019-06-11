@@ -47,6 +47,7 @@ function init( o )
   let opener = this;
 
   opener[ dirPathSymbol ] = null;
+  opener[ commonPathSymbol ] = null;
   opener[ willPathSymbol ] = _.path.join( __dirname, '../Exec' );
   opener[ willfileWithRoleMapSymbol ] = Object.create( null );
   opener[ willfileArraySymbol ] = [];
@@ -813,7 +814,7 @@ function _willfileFindMultiple( o )
     }
 */
 
-    opener._filePathChange( filePaths, path.dir( filePath ) );
+    opener._filePathChange( filePaths );
 
     return true;
   }
@@ -950,7 +951,7 @@ function _willfilesFindPickedFile()
   if( result.length )
   {
     let willfilesPath = _.select( result, '*/filePath' );
-    opener._filePathChange( willfilesPath, path.dir( willfilesPath[ 0 ] ) );
+    opener._filePathChange( willfilesPath );
   }
 
   return result;
@@ -1096,6 +1097,72 @@ function willfileEach( onEach )
 // --
 // submodule
 // --
+
+
+//
+
+function supermoduleGet()
+{
+  let opener = this;
+  return opener[ supermoduleSymbol ];
+}
+
+//
+
+function supermoduleSet( src )
+{
+  let opener = this;
+  _.assert( src === null || src instanceof _.Will.OpenedModule );
+  opener[ supermoduleSymbol ] = src;
+  return src;
+}
+
+//
+
+function rootModuleGet()
+{
+  let opener = this;
+  if( opener.openedModule )
+  return opener.openedModule.rootModule;
+  return opener[ rootModuleSymbol ];
+}
+
+//
+
+function rootModuleSet( src )
+{
+  let opener = this;
+  _.assert( src === null || src instanceof _.Will.OpenedModule );
+  opener[ rootModuleSymbol ] = src;
+  return src;
+}
+
+//
+
+function willfileArraySet( willfileArray )
+{
+  let opener = this;
+  _.assert( _.arrayIs( willfileArray ) );
+
+  if( opener.willfileArray === willfileArray )
+  return opener.willfileArray;
+
+  for( let w = opener.willfileArray.length-1 ; w >= 0 ; w-- )
+  {
+    // debugger;
+    let willf = opener.willfileArray[ w ];
+    opener.willfileUnregister( willf );
+  }
+
+  for( let w = 0 ; w < willfileArray.length ; w++ )
+  {
+    // debugger;
+    let willf = willfileArray[ w ];
+    opener.willfileRegister( willf );
+  }
+
+  return opener.willfileArray;
+}
 
 // function rootModuleGet()
 // {
@@ -1574,7 +1641,7 @@ function _remoteFormAct()
   // debugger;
 
   let willfilesPath2 = path.resolve( opener.localPath, parsed.localVcsPath );
-  opener._filePathChange( willfilesPath2, path.dir( willfilesPath2 ) );
+  opener._filePathChange( willfilesPath2 );
 
   opener.remoteIsDownloadedUpdate();
 
@@ -1773,140 +1840,32 @@ function remoteLatestVersion()
 // path
 // --
 
-// function WillfilePathIs( filePath )
-// {
-//   let fname = _.path.fullName( filePath );
-//   let r = /\.will\.\w+/;
-//   if( _.strHas( fname, r ) )
-//   return true;
-//   return false;
-// }
-//
-// //
-//
-// function DirPathFromFilePaths( filePaths )
-// {
-//   let opener = this;
-//
-//   filePaths = _.arrayAs( filePaths );
-//
-//   _.assert( _.strsAreAll( filePaths ) );
-//   _.assert( arguments.length === 1 );
-//
-//   filePaths = filePaths.map( ( filePath ) =>
-//   {
-//     filePath = _.path.normalizeTolerant( filePath );
-//
-//     let r1 = /(.*)(?:\.will(?:\.|$))[^\/]*$/;
-//     let parsed1 = r1.exec( filePath );
-//     if( parsed1 )
-//     filePath = parsed1[ 1 ];
-//
-//     let r2 = /(.*)(?:\.(?:im|ex)(?:\.|$))[^\/]*$/;
-//     let parsed2 = r2.exec( filePath );
-//     if( parsed2 )
-//     filePath = parsed2[ 1 ];
-//
-//     // if( parsed1 || parsed2 )
-//     // if( _.strEnds( filePath, '/' ) )
-//     // filePath = filePath + '.';
-//
-//     return filePath;
-//   });
-//
-//   let filePath = _.strCommonLeft.apply( _, _.arrayAs( filePaths ) );
-//   _.assert( filePath.length > 0 );
-//   return filePath;
-// }
-//
-// //
-//
-// function prefixPathForRole( role )
-// {
-//   let opener = this;
-//   let result = opener.prefixPathForRoleMaybe( role );
-//
-//   _.assert( arguments.length === 1 );
-//   _.sure( _.strIs( result ), 'Unknown role', _.strQuote( role ) );
-//
-//   return result;
-// }
-//
-// //
-//
-// function prefixPathForRoleMaybe( role )
-// {
-//   let opener = this;
-//
-//   _.assert( arguments.length === 1 );
-//
-//   if( role === 'import' )
-//   return '.im.will';
-//   else if( role === 'export' )
-//   return '.ex.will';
-//   else if( role === 'single' )
-//   return '.will';
-//   else return null;
-//
-// }
-//
-// //
-//
-// function cloneDirPathGet()
-// {
-//   let opener = this;
-//   let will = opener.will;
-//   let inPath = opener.rootModule.inPath;
-//   _.assert( arguments.length === 0 );
-//   return opener.CloneDirPathFor( inPath );
-// }
-//
-// //
-//
-// function CloneDirPathFor( inPath )
-// {
-//   _.assert( arguments.length === 1 );
-//   return _.path.join( inPath, '.opener' );
-// }
-//
-// //
-//
-// function outfilePathGet()
-// {
-//   let opener = this;
-//   let will = opener.will;
-//   _.assert( arguments.length === 0 );
-//   return opener.OutfilePathFor( opener.outPath, opener.about.name );
-// }
-//
-// //
-//
-// function OutfilePathFor( outPath, name )
-// {
-//   _.assert( arguments.length === 2 );
-//   _.assert( _.path.isAbsolute( outPath ), 'Expects absolute path outPath' );
-//   _.assert( _.strDefined( name ), 'Module should have name, declare about::name' );
-//   name = _.strJoinPath( [ name, '.out.will.yml' ], '.' );
-//   return _.path.join( outPath, name );
-// }
-
-//
-
-function _filePathChange( willfilesPath, dirPath )
+function _filePathChange( willfilesPath )
 {
   let opener = this;
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let commonPath = opener.commonPath;
+
+  // will.modulePathUnregister( opener );
 
   if( willfilesPath )
   willfilesPath = path.s.normalizeTolerant( willfilesPath );
+
+  let dirPath = willfilesPath;
+  if( _.arrayIs( dirPath ) )
+  dirPath = dirPath[ 0 ];
+  if( _.strIs( dirPath ) )
+  dirPath = path.dir( dirPath );
+  if( dirPath === null )
+  dirPath = opener.dirPath;
   if( dirPath )
   dirPath = path.normalize( dirPath );
 
-  _.assert( arguments.length === 2 );
+  let commonPath = opener.CommonPathFor( willfilesPath );
+
+  _.assert( arguments.length === 1 );
   _.assert( dirPath === null || _.strDefined( dirPath ) );
   _.assert( dirPath === null || path.isAbsolute( dirPath ) );
   _.assert( dirPath === null || path.isNormalized( dirPath ) );
@@ -1914,9 +1873,20 @@ function _filePathChange( willfilesPath, dirPath )
 
   opener.willfilesPath = willfilesPath;
   opener[ dirPathSymbol ] = dirPath;
+  opener[ commonPathSymbol ] = commonPath;
+
+  if( opener.openedModule )
+  debugger;
+  if( opener.openedModule )
+  opener.openedModule._filePathChange( willfilesPath );
+
+  // opener._dirPathChange( dirPath );
+  // opener._commonPathChange( commonPath );
+  // will.modulePathRegister( opener );
 
   return opener;
 }
+
 
 //
 
@@ -1930,15 +1900,15 @@ function _filePathChanged()
 
   _.assert( arguments.length === 0 );
 
-  let dirPath = opener.willfilesPath;
-  if( _.arrayIs( dirPath ) )
-  dirPath = dirPath[ 0 ];
-  if( _.strIs( dirPath ) )
-  dirPath = path.dir( dirPath );
-  if( dirPath === null )
-  dirPath = opener.dirPath;
+  // let dirPath = opener.willfilesPath;
+  // if( _.arrayIs( dirPath ) )
+  // dirPath = dirPath[ 0 ];
+  // if( _.strIs( dirPath ) )
+  // dirPath = path.dir( dirPath );
+  // if( dirPath === null )
+  // dirPath = opener.dirPath;
 
-  opener._filePathChange( opener.willfilesPath, dirPath );
+  opener._filePathChange( opener.willfilesPath );
 
 }
 
@@ -1972,114 +1942,11 @@ function outPathGet()
   return null;
 
   return opener.openedModule.outPath;
-  // return path.s.join( opener.dirPath, ( opener[ inPathSymbol ] || '.' ), ( opener[ outPathSymbol ] || '.' ) );
-  // return path.s.join( opener.dirPath, ( opener.pathMap.in || '.' ), ( opener.pathMap.out || '.' ) );
 }
 
 //
 
-function supermoduleGet()
-{
-  let opener = this;
-  return opener[ supermoduleSymbol ];
-}
-
-//
-
-function supermoduleSet( src )
-{
-  let opener = this;
-  _.assert( src === null || src instanceof _.Will.OpenedModule );
-  opener[ supermoduleSymbol ] = src;
-  return src;
-}
-
-//
-
-function rootModuleGet()
-{
-  let opener = this;
-  if( opener.openedModule )
-  return opener.openedModule.rootModule;
-  return opener[ rootModuleSymbol ];
-}
-
-//
-
-function rootModuleSet( src )
-{
-  let opener = this;
-  _.assert( src === null || src instanceof _.Will.OpenedModule );
-  opener[ rootModuleSymbol ] = src;
-  return src;
-}
-
-//
-
-function willfileArraySet( willfileArray )
-{
-  let opener = this;
-  _.assert( _.arrayIs( willfileArray ) );
-
-  if( opener.willfileArray === willfileArray )
-  return opener.willfileArray;
-
-  for( let w = opener.willfileArray.length-1 ; w >= 0 ; w-- )
-  {
-    // debugger;
-    let willf = opener.willfileArray[ w ];
-    opener.willfileUnregister( willf );
-  }
-
-  for( let w = 0 ; w < willfileArray.length ; w++ )
-  {
-    // debugger;
-    let willf = willfileArray[ w ];
-    opener.willfileRegister( willf );
-  }
-
-  return opener.willfileArray;
-}
-
-//
-
-function commonPathGet()
-{
-  let opener = this;
-  let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  let willfilesPath = opener.willfilesPath ? opener.willfilesPath : opener.dirPath;
-
-  if( !willfilesPath )
-  return null;
-
-  let common = opener.CommonPathFor( willfilesPath );
-
-  return common;
-}
-
-// //
-//
-// function CommonPathFor( willfilesPath )
-// {
-//   if( _.arrayIs( willfilesPath ) )
-//   willfilesPath = willfilesPath[ 0 ];
-//
-//   _.assert( arguments.length === 1 );
-//   _.assert( _.strIs( willfilesPath ) );
-//
-//   let common = willfilesPath.replace( /\.will\.\w+$/, '' );
-//
-//   common = common.replace( /(\.im|\.ex)$/, '' );
-//
-//   return common;
-// }
-
-//
-
-function predefinedPathGet_functor( fieldName, resourceName )
+function predefinedPathGet_functor( fieldName )
 {
   let symbol = Symbol.for( fieldName );
 
@@ -2098,7 +1965,7 @@ function predefinedPathGet_functor( fieldName, resourceName )
 
 //
 
-function predefinedPathSet_functor( fieldName, resourceName )
+function predefinedPathSet_functor( fieldName )
 {
   let symbol = Symbol.for( fieldName );
 
@@ -2116,16 +1983,16 @@ function predefinedPathSet_functor( fieldName, resourceName )
 
 }
 
-let willfilesPathGet = predefinedPathGet_functor( 'willfilesPath', 'opener.willfiles' );
-let dirPathGet = predefinedPathGet_functor( 'dirPath', 'opener.dir' );
-let localPathGet = predefinedPathGet_functor( 'localPath', 'local' );
-let remotePathGet = predefinedPathGet_functor( 'remotePath', 'remote' );
-// let currentRemotePathGet = predefinedPathGet_functor( 'currentRemotePath', 'current.remote' );
-let willPathGet = predefinedPathGet_functor( 'willPath', 'will' );
+let willfilesPathGet = predefinedPathGet_functor( 'willfilesPath' );
+let dirPathGet = predefinedPathGet_functor( 'dirPath' );
+let commonPathGet = predefinedPathGet_functor( 'commonPath' );
+let localPathGet = predefinedPathGet_functor( 'localPath' );
+let remotePathGet = predefinedPathGet_functor( 'remotePath' );
+let willPathGet = predefinedPathGet_functor( 'willPath' );
 
-let willfilesPathSet = predefinedPathSet_functor( 'willfilesPath', 'opener.willfiles' );
-let localPathSet = predefinedPathSet_functor( 'localPath', 'local' );
-let remotePathSet = predefinedPathSet_functor( 'remotePath', 'remote' );
+let willfilesPathSet = predefinedPathSet_functor( 'willfilesPath' );
+let localPathSet = predefinedPathSet_functor( 'localPath' );
+let remotePathSet = predefinedPathSet_functor( 'remotePath' );
 
 // --
 // name
@@ -2166,41 +2033,6 @@ function nameChanged()
 
   if( !will )
   return;
-
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let name = null;
-  // let rootModule = opener.openerModule.rootModule;
-  let c = 0;
-
-  // debugger; // xxx
-
-  // for( let m in rootModule.moduleWithNameMap )
-  // {
-  //   if( rootModule.moduleWithNameMap[ m ] === opener )
-  //   delete rootModule.moduleWithNameMap[ m ];
-  // }
-  //
-  // if( opener.aliasName )
-  // if( !rootModule.moduleWithNameMap[ opener.aliasName ] )
-  // {
-  //   c += 1;
-  //   rootModule.moduleWithNameMap[ opener.aliasName ] = opener;
-  // }
-  //
-  // if( opener.configName )
-  // if( !rootModule.moduleWithNameMap[ opener.configName ] )
-  // {
-  //   c += 1;
-  //   rootModule.moduleWithNameMap[ opener.configName ] = opener;
-  // }
-  //
-  // if( opener.about && opener.about.name )
-  // if( !rootModule.moduleWithNameMap[ opener.about.name ] )
-  // {
-  //   c += 1;
-  //   rootModule.moduleWithNameMap[ opener.about.name ] = opener;
-  // }
 
 }
 
@@ -2272,6 +2104,7 @@ function shortNameArrayGet()
 let outPathSymbol = Symbol.for( 'outPath' );
 let inPathSymbol = Symbol.for( 'inPath' );
 let dirPathSymbol = Symbol.for( 'dirPath' );
+let commonPathSymbol = Symbol.for( 'commonPath' );
 let aliasSymbol = Symbol.for( 'aliasName' );
 let supermoduleSymbol = Symbol.for( 'supermodule' );
 let rootModuleSymbol = Symbol.for( 'rootModule' );
@@ -2381,7 +2214,6 @@ let Accessors =
   dirPath : { getter : dirPathGet, readOnly : 1 },
   localPath : { getter : localPathGet, setter : localPathSet },
   remotePath : { getter : remotePathGet, setter : remotePathSet },
-  // currentRemotePath : { getter : currentRemotePathGet, readOnly : 1 },
   willPath : { getter : willPathGet, readOnly : 1 },
 
   name : { getter : nameGet, readOnly : 1 },
@@ -2390,7 +2222,6 @@ let Accessors =
 
   supermodule : { getter : supermoduleGet, setter : supermoduleSet },
   rootModule : { getter : rootModuleGet, setter : rootModuleSet },
-  // rootModule : { getter : rootModuleGet, readOnly : 1 },
   willfileArray : { setter : willfileArraySet },
   willfileWithRoleMap : { readOnly : 1 },
 
@@ -2447,10 +2278,15 @@ let Proto =
 
   // submodule
 
+  supermoduleGet,
+  supermoduleSet,
+  rootModuleGet,
+  rootModuleSet,
+  willfileArraySet,
+
   // moduleAt,
   // modulePathRegister,
   // modulePathUnregister,
-
   // submoduleRegister,
 
   submodulesAllAreDownloaded,
@@ -2475,34 +2311,16 @@ let Proto =
 
   // path
 
-  // WillfilePathIs,
-  // DirPathFromFilePaths,
-  // prefixPathForRole,
-  // prefixPathForRoleMaybe,
-
   _filePathChange,
   _filePathChanged,
   inPathGet,
   outPathGet,
-  commonPathGet,
-
-  supermoduleGet,
-  supermoduleSet,
-  rootModuleGet,
-  rootModuleSet,
-  willfileArraySet,
-
-  // CommonPathFor,
-  // cloneDirPathGet,
-  // CloneDirPathFor,
-  // outfilePathGet,
-  // OutfilePathFor,
 
   willfilesPathGet,
   dirPathGet,
+  commonPathGet,
   localPathGet,
   remotePathGet,
-  // currentRemotePathGet,
   willPathGet,
 
   willfilesPathSet,
@@ -2514,10 +2332,7 @@ let Proto =
   nameGet,
   nameChanged,
   aliasNameSet,
-  // nickNameGet,
-  // decoratedNickNameGet,
   absoluteNameGet,
-  // decoratedAbsoluteNameGet,
   shortNameArrayGet,
 
   // relation
