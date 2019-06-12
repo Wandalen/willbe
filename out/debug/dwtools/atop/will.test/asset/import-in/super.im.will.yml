@@ -6,7 +6,9 @@ submodule :
 path :
 
   proto : './proto'
-  temp : './super.out'
+  temp :
+    - './super.out'
+    - './out'
   in : '.'
   out : './super.out'
   out.debug :

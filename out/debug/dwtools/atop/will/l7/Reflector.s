@@ -48,13 +48,11 @@ function init( o )
 
   reflector.src.pairWithDst( reflector.dst );
 
-  // if( o && o.name === "exportedFiles.export" )
-  // debugger;
-
   let result = Parent.prototype.init.apply( reflector, arguments );
 
-  // if( reflector.nickName === "reflector::files.all" )
-  // debugger;
+  // if( reflector.module && reflector.module instanceof _.Will.OpenerModule )
+  // reflector.module = reflector.module.openedModule;
+  // _.assert( reflector.module === null || reflector.module instanceof _.Will.OpenedModule );
 
   return result;
 }
@@ -65,9 +63,6 @@ function cloneDerivative()
 {
   let reflector = this;
   let reflector2 = Parent.prototype.cloneDerivative.apply( reflector, arguments );
-
-  // if( reflector.nickName === "reflector::files.all" )
-  // debugger;
 
   if( reflector.src.dstFilter === reflector.dst )
   {
@@ -92,6 +87,9 @@ function form1()
   let path = fileProvider.path;
   let logger = will.logger;
 
+  if( reflector.formed >= 1 )
+  return reflector;
+
   _.assert( arguments.length === 0 );
   _.assert( !reflector.formed );
   _.assert( !!will );
@@ -101,9 +99,6 @@ function form1()
   _.assert( !!will.formed );
   _.assert( !willf || !!willf.formed );
   _.assert( _.strDefined( reflector.name ) );
-
-  // if( reflector.absoluteName === "module::super / reflector::reflect.submodules." )
-  // debugger;
 
   /* begin */
 
@@ -147,13 +142,7 @@ function form2()
 
   _.assert( reflector.formed === 1 );
 
-  // if( reflector.nickName === "reflector::exportedFiles.export." )
-  // debugger;
-  if( reflector.absoluteName === "module::reflectorResolve / reflector::reflect.proto.0.debug" )
-  debugger;
-
-  // if( !reflector.unformedResource && !reflector.original )
-  if( !reflector.unformedResource )
+  if( !reflector.unformedResource && !reflector.generated )
   {
 
     if( reflector.original )
@@ -169,13 +158,16 @@ function form2()
 
   }
 
-  // if( reflector.absoluteName === "module::Proto.informal / reflector::exportedFiles.export" )
+  // if( reflector.nickName === "reflector::reflect.submodules.variant2" )
   // debugger;
 
   reflector.src.pairWithDst( reflector.dst );
   if( reflector.src.filePath !== reflector.dst.filePath )
   if( !reflector.dst.filePath || _.mapIs( reflector.dst.filePath ) )
   reflector.src.pairRefineLight();
+
+  // if( reflector.nickName === "reflector::reflect.submodules.variant2" )
+  // debugger;
 
   let result = Parent.prototype.form2.apply( reflector, arguments );
   return result;
@@ -198,7 +190,7 @@ function form3()
 
   /* begin */
 
-  // if( reflector.nickName === "reflector::exportedFiles.export" )
+  // if( reflector.nickName === "reflector::reflect.submodules.variant2" )
   // debugger;
 
   reflector.pathsResolve();
@@ -246,6 +238,9 @@ function _inheritMultiple( o )
   _.assert( reflector._accumulator === null );
   _.routineOptions( _inheritMultiple, arguments );
 
+  // if( reflector.nickName === "reflector::reflect.submodules.variant2" )
+  // debugger;
+
   reflector._accumulator = new will.Reflector({ module : module, original : reflector, name : reflector.name });
 
   Parent.prototype._inheritMultiple.call( reflector, o );
@@ -266,6 +261,9 @@ function _inheritMultiple( o )
   reflector.dst.and( reflector._accumulator.dst ).pathsInherit( reflector._accumulator.dst );
   if( reflector.src.filePath !== reflector.dst.filePath )
   reflector.src.pairRefineLight();
+
+  // if( reflector.nickName === "reflector::reflect.submodules.variant2" )
+  // debugger;
 
   return reflector;
 }
@@ -634,6 +632,9 @@ function pathsResolve( o )
   if( _.mapIs( reflector.src.filePath ) )
   reflector.src.filePathNullizeMaybe();
 
+  // if( reflector.absoluteName === "module::Proto / reflector::download" )
+  // debugger;
+
   if( reflector.src.basePath )
   reflector.src.basePath = resolve( reflector.src.basePath );
   if( reflector.src.filePath )
@@ -851,6 +852,9 @@ function dataExport()
   let o = _.routineOptions( dataExport, arguments );
 
   _.assert( reflector.src instanceof _.FileRecordFilter );
+
+  if( reflector.nickName === 'reflector::exported.export' )
+  debugger;
 
   let result = Parent.prototype.dataExport.apply( this, arguments );
 

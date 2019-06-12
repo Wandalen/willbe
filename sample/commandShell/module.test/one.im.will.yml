@@ -1,0 +1,5 @@
+about :
+
+  name : shellCommand
+  description : "To use .shell command"
+  version : 0.0.1

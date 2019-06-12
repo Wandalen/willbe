@@ -55,6 +55,21 @@ function finit()
 
 //
 
+function init( o )
+{
+  let resource = this;
+
+  Parent.prototype.init.apply( resource, arguments );
+
+  // if( resource.module && resource.module instanceof _.Will.OpenerModule )
+  // resource.module = resource.module.openedModule;
+  // _.assert( resource.module === null || resource.module instanceof _.Will.OpenedModule );
+
+  return resource;
+}
+
+//
+
 function verify()
 {
   let exported = this;
@@ -85,6 +100,13 @@ function verify()
   _.sure( _.strDefined( module.about.name ), 'Expects defined name of the module' );
   _.sure( _.strDefined( module.about.version ), 'Expects defined version of the module' );
 
+  for( let s in module.submoduleMap )
+  {
+    let submodule = module.submoduleMap[ s ];
+    if( !submodule.oModule || !submodule.oModule.isOpened() || !submodule.oModule.isValid() )
+    throw _.errBriefly( submodule.decoratedAbsoluteName, 'is broken' );
+  }
+
 }
 
 //
@@ -100,30 +122,35 @@ function readExported()
   let path = hub.path;
   let logger = will.logger;
 
-  let outFilePath = build.outFilePathFor();
-  let module2 = will.Module({ will : will, willfilesPath : outFilePath, original : module }).preform();
-
-  module2.stager.stageStateSkipping( 'submodulesFormed', 1 );
-  module2.stager.stageStateSkipping( 'resourcesFormed', 1 );
-
+  let outFilePath = module.outfilePathGet();
+  let module2 = will.OpenerModule({ will : will, willfilesPath : outFilePath, original : module }).preform();
   let willfiles = module2.willfilesPick( outFilePath );
 
   try
   {
 
-    let con = module2.ready;
+    module2.open();
+    module2.openedModule.willfilesReadTimeReported = 1;
+    module2.openedModule.stager.stageStatePausing( 'opened', 0 );
+    module2.openedModule.stager.stageStateSkipping( 'opened', 0 );
+    module2.openedModule.stager.stageStateSkipping( 'submodulesFormed', 1 );
+    module2.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
+    module2.openedModule.stager.tick();
+    // module2.openedModule.willfilesOpen();
+
+    let con = module2.openedModule.ready;
     con
     .thenKeep( ( arg ) =>
     {
 
-      let willfile = module2.willfilesArray[ 0 ];
-      _.assert( willfile && module2.willfilesArray.length === 1 );
+      let willfile = module2.openedModule.willfileArray[ 0 ];
+      _.assert( willfile && module2.openedModule.willfileArray.length === 1 );
       if( willfile.data && willfile.data.exported )
       for( let exportedName in willfile.data.exported )
       {
         if( exportedName === exported.name )
         continue;
-        let exported2 = module2.exportedMap[ exportedName ];
+        let exported2 = module2.openedModule.exportedMap[ exportedName ];
         _.assert( exported2 instanceof Self );
         module.resourceImport({ srcResource : exported2 });
       }
@@ -134,7 +161,7 @@ function readExported()
     {
       try
       {
-        module2.finit();
+        module2.openedModule.finit();
       }
       catch( err2 )
       {
@@ -143,7 +170,7 @@ function readExported()
       }
       if( err )
       {
-        if( module2.stager.stageStatePerformed( 'willfilesFound' ) )
+        if( module2.openedModule.stager.stageStatePerformed( 'willfilesFound' ) )
         throw _.errLogOnce( _.errBriefly( err ) );
         else
         {
@@ -155,12 +182,13 @@ function readExported()
     })
     ;
 
-    let result = con.toResource();
+    let result = con.sync();
     return result;
   }
   catch( err )
   {
-    _.errLogOnce( _.errBriefly( err ) );
+    // debugger;
+    // _.errLogOnce( _.errBriefly( err ) );
   }
 
 }
@@ -199,16 +227,20 @@ function performExportedReflectors( exportSelector )
   ({
     selector : exportSelector,
     currentContext : step,
+    pathResolving : 'in',
   });
 
   /* */
 
+  // debugger;
   if( exp instanceof will.Reflector )
   {
 
-    exp.form2();
+    // exp.form2();
+    exp.form1();
 
-    _.assert( exp.formed >= 2 );
+    // _.assert( exp.formed >= 2 );
+    _.assert( exp.formed >= 1 );
     _.assert( exp.src.formed === 1 );
     _.sure( !!exp.filePath, () => exp.nickName + ' should have filePath' );
 
@@ -232,11 +264,15 @@ function performExportedReflectors( exportSelector )
   else if( _.arrayIs( exp ) )
   {
     let commonPath = path.common.apply( path, exp );
+    if( path.isAbsolute( commonPath ) )
+    commonPath = path.relative( module.inPath, commonPath );
     exportedReflector = module.resourceAllocate( 'reflector', 'exported.' + exported.name );
     exportedReflector.src.filePath = Object.create( null );
     for( let p = 0 ; p < exp.length ; p++ )
     {
       _.assert( !_.strHas( exp[ p ], '::' ) );
+      if( path.isAbsolute( exp[ p ] ) )
+      exp[ p ] = path.relative( module.inPath, exp[ p ] );
       exportedReflector.src.filePath[ exp[ p ] ] = true;
     }
     exportedReflector.src.basePath = commonPath;
@@ -247,12 +283,15 @@ function performExportedReflectors( exportSelector )
 
     _.assert( !_.strHas( exp, '::' ) );
     exportedReflector = module.resourceAllocate( 'reflector', 'exported.' + exported.name );
+    if( path.isAbsolute( exp ) )
+    exp = path.relative( module.inPath, exp )
     exportedReflector.src.filePath = exp;
 
   }
   else _.assert( 0 );
 
   exportedReflector.criterion = _.mapExtend( null, exported.criterion );
+  exportedReflector.generated = 1; // yyy
   exportedReflector.form();
   exported.exportedReflector = exportedReflector;
 
@@ -280,6 +319,7 @@ function performExportedReflectors( exportSelector )
   let exportedDirPath = srcFilter.basePaths[ 0 ];
 
   exported.exportedDirPath = module.resourceAllocate( 'path', 'exported.dir.' + exported.name );
+  exported.exportedDirPath.generated = 1;
   exported.exportedDirPath.path = path.dot( path.relative( module.inPath, exportedDirPath ) );
   exported.exportedDirPath.criterion = _.mapExtend( null, exported.criterion );
   exported.exportedDirPath.form();
@@ -300,6 +340,7 @@ function performExportedFilesReflector()
   /* exportedFilesPath */
 
   exported.exportedFilesPath = module.resourceAllocate( 'path', 'exported.files.' + exported.name );
+  exported.exportedFilesPath.generated = 1;
   exported.exportedFilesPath.criterion = _.mapExtend( null, exported.criterion );
 
   /* */
@@ -348,6 +389,7 @@ function performExportedFilesReflector()
     module : module,
   });
   let exportedFilesReflector = exported.exportedFilesReflector;
+  exportedFilesReflector.generated = 1;
 
   // debugger;
   exportedFilesReflector.src.pairWithDst( exportedFilesReflector.dst );
@@ -475,7 +517,8 @@ function performWriteOutFile()
 
   /* */
 
-  let outFilePath = build.outFilePathFor();
+  // let outFilePath = build.outFilePathFor();
+  let outFilePath = module.outfilePathGet();
   let data = module.dataExportForModuleExport({ willfilesPath : outFilePath });
 
   /* */
@@ -535,7 +578,7 @@ function perform( frame )
   /* log */
 
   if( will.verbosity >= 3 )
-  logger.log( ' + Exported', exported.name, 'with', exported.exportedFilesPath.path.length, 'files', 'in', _.timeSpent( time ) );
+  logger.log( ' + Exported', exported.decoratedNickName, 'with', exported.exportedFilesPath.path.length, 'files', 'in', _.timeSpent( time ) );
 
   return exported;
 }
@@ -608,6 +651,7 @@ let Proto =
 {
 
   finit,
+  init,
 
   // inter
 

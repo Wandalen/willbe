@@ -9,7 +9,7 @@ step :
 
   export :
     export : path::out.*=1
-    tar : 1
+    tar : 0
     criterion :
       debug : [ 0,1 ]
 

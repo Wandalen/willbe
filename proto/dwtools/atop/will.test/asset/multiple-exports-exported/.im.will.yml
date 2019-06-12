@@ -44,23 +44,9 @@ build :
     steps :
       - step::reflect.proto.*=1
 
-  debug.compiled :
-    criterion :
-      debug : 1
-      raw : 0
-    steps :
-      - step::reflect.proto.*=1
-
   release.raw :
     criterion :
       debug : 0
       raw : 1
-    steps :
-      - step::reflect.proto.*=1
-
-  release.compiled :
-    criterion :
-      debug : 0
-      raw : 0
     steps :
       - step::reflect.proto.*=1

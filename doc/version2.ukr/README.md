@@ -219,7 +219,7 @@
   </a></summary>
   Команда оновлення віддалених підмодулів.
 </details>
-<details><summary><a href="./tutorial/CommandSubmodulesClean">
+<details><summary><a href="./tutorial/CommandSubmodulesClean.md">
       Команда <code>.submodules.clean</code>
   </a></summary>
   Команда очищення модуля від тимчасових та завантажених підмодулів.
@@ -355,14 +355,19 @@
   Використання вбудованого кроку <code>files.transpile</code> для транспіляції <code>JavaScript</code> файлів або їх конкатенації.
 </details>
 <details><summary><a href="./tutorial/WillbeAsMake.md">
-      Компіляція С++ програми
+      Компіляція С програми
   </a></summary>
-  Використання утиліти <code>willbe</code> для компіляції С++ програми.
+  Використання утиліти <code>willbe</code> для компіляції С програми.
 </details>
 <details><summary><a href="./tutorial/SubmoduleInformal.md">
       Неформальні підмодулі
   </a></summary>
   Імпортування неформальних підмодулів.
+</details>
+<details><summary><a href="./tutorial/SubmoduleInformal.md#Крок-submodulesreload">
+      Крок <code>.submodules.reload</code>
+  </a></summary>
+  Виконання динамічного оновлення статусу неформальних підмодулів.
 </details>
 <details><summary><a href="./tutorial/CommandClean.md">
       Команда очистки <code>.clean</code>

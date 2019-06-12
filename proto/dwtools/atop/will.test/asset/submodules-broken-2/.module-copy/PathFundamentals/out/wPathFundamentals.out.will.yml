@@ -37,7 +37,7 @@ path:
     path: 'git+https://github.com/Wandalen/wPathFundamentals.git'
   bugs:
     path: 'https://github.com/Wandalen/wPathFundamentals/issues'
-  exportedDir.0:
+  exported.dir.0:
     path: ./proto
     criterion:
       default: 1
@@ -47,7 +47,7 @@ path:
       export: 1
       tar: 1
       public: 1
-  exportedFiles.0:
+  exported.files.0:
     path:
       - .
       - ./dwtools
@@ -144,7 +144,7 @@ reflector:
     src:
       filePath: ./proto
       prefixPath: .
-  exportedFiles.0:
+  exported.files.0:
     recursive: 0
     filePath:
       .: true
@@ -319,7 +319,7 @@ exported:
       tar: 1
       public: 1
     exportedReflector: 'reflector::exported.0'
-    exportedFilesReflector: 'reflector::exportedFiles.0'
-    exportedDirPath: 'path::exportedDir.0'
-    exportedFilesPath: 'path::exportedFiles.0'
+    exportedFilesReflector: 'reflector::exported.files.0'
+    exportedDirPath: 'path::exported.dir.0'
+    exportedFilesPath: 'path::exported.files.0'
     brokenField: 'path::does_not_exist'

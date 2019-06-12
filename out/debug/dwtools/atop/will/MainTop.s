@@ -69,12 +69,12 @@ function _moduleReadyThen( o )
     forming : o.forming,
   });
 
-  if( o.forming && module.stager.stageStateSkipping( 'resourcesFormed' ) )
+  if( o.forming && module.openedModule.stager.stageStateSkipping( 'resourcesFormed' ) )
   {
-    module.stager.stageRerun( 'resourcesFormed' );
+    module.openedModule.stager.stageRerun( 'resourcesFormed' );
   }
 
-  return will.currentModule.ready.split().keep( function( arg )
+  return will.currentModule.openedModule.ready.split().keep( function( arg )
   {
     let result = o.onReady( module );
     _.assert( result !== undefined );
@@ -203,6 +203,18 @@ function errTooMany( elements, what )
 
 //
 
+function currentModuleSet( src )
+{
+  let will = this;
+
+  _.assert( src === null || src instanceof will.OpenerModule );
+
+  will[ currentModuleSymbol ] = src;
+  return src;
+}
+
+//
+
 function commandsMake()
 {
   let will = this;
@@ -326,7 +338,7 @@ function _commandList( e, act, resourceName )
       _.assert( e.request === undefined );
       e.request = _.strRequestParse( e.argument );
 
-      if( selectorIsGlob && e.request.subject && !module.SelectorIs( e.request.subject ) )
+      if( selectorIsGlob && e.request.subject && !module.openedModule.SelectorIs( e.request.subject ) )
       {
         e.request.subject = '*::' + e.request.subject;
       }
@@ -347,7 +359,7 @@ function _commandList( e, act, resourceName )
       if( resourceName === 'path' )
       o2.mapValsUnwrapping = 0;
 
-      resources = module.resolve( o2 );
+      resources = module.openedModule.resolve( o2 );
 
     }
 
@@ -370,13 +382,13 @@ function commandResourcesList( e )
     {
 
       let result = '';
-      result += module.about.infoExport();
+      result += module.openedModule.about.infoExport();
 
       logger.log( result );
 
     }
 
-    logger.log( module.infoExportResource( resources ) );
+    logger.log( module.openedModule.infoExportResource( resources ) );
 
   }
 
@@ -394,7 +406,7 @@ function commandPathsList( e )
   {
 
     let logger = will.logger;
-    logger.log( module.infoExportPaths( resources ) );
+    logger.log( module.openedModule.infoExportPaths( resources ) );
 
   }
 
@@ -411,7 +423,7 @@ function commandSubmodulesList( e )
   {
     let logger = will.logger;
     debugger;
-    logger.log( module.infoExportResource( resources ) );
+    logger.log( module.openedModule.infoExportResource( resources ) );
   }
 
   return will._commandList( e, act, 'submodule' );
@@ -426,7 +438,7 @@ function commandReflectorsList( e )
   function act( module, resources )
   {
     let logger = will.logger;
-    logger.log( module.infoExportResource( resources ) );
+    logger.log( module.openedModule.infoExportResource( resources ) );
   }
 
   return will._commandList( e, act, 'reflector' );
@@ -444,7 +456,7 @@ function commandStepsList( e )
 
     // let request = _.strRequestParse( e.argument );
     //
-    // let steps = module.resolve
+    // let steps = module.openedModule.resolve
     // ({
     //   selector : request.subject || '*',
     //   defaultResourceName : 'step',
@@ -453,7 +465,7 @@ function commandStepsList( e )
     //   arrayWrapping : 1,
     // });
 
-    logger.log( module.infoExportResource( resources ) );
+    logger.log( module.openedModule.infoExportResource( resources ) );
   }
 
   return will._commandList( e, act, 'step' );
@@ -470,13 +482,13 @@ function commandBuildsList( e )
     let logger = will.logger;
     let request = _.strRequestParse( e.argument );
     debugger;
-    let builds = module.buildsResolve
+    let builds = module.openedModule.buildsResolve
     ({
       name : request.subject,
       criterion : request.map,
       preffering : 'more',
     });
-    logger.log( module.infoExportResource( builds ) );
+    logger.log( module.openedModule.infoExportResource( builds ) );
   }
 
   will._commandList( e, act, null );
@@ -495,13 +507,13 @@ function commandExportsList( e )
     let logger = will.logger;
     let request = _.strRequestParse( e.argument );
     debugger;
-    let builds = module.exportsResolve
+    let builds = module.openedModule.exportsResolve
     ({
       name : request.subject,
       criterion : request.map,
       preffering : 'more',
     });
-    logger.log( module.infoExportResource( builds ) );
+    logger.log( module.openedModule.infoExportResource( builds ) );
   }
 
   will._commandList( e, act, null );
@@ -518,7 +530,7 @@ function commandAboutList( e )
   function act( module )
   {
     let logger = will.logger;
-    logger.log( module.about.infoExport() );
+    logger.log( module.openedModule.about.infoExport() );
   }
 
   will._commandList( e, act, null );
@@ -533,7 +545,7 @@ function commandSubmodulesClean( e )
   let will = this;
   return will.moduleReadyThenNonForming( function( module )
   {
-    return module.submodulesClean();
+    return module.openedModule.submodulesClean();
   });
 }
 
@@ -548,7 +560,7 @@ function commandSubmodulesDownload( e )
 
   return will.moduleReadyThenNonForming( function( module )
   {
-    return module.submodulesDownload({ dry : e.propertiesMap.dry });
+    return module.openedModule.submodulesDownload({ dry : e.propertiesMap.dry });
   });
 }
 
@@ -568,7 +580,7 @@ function commandSubmodulesUpdate( e )
 
   return will.moduleReadyThenNonForming( function( module )
   {
-    return module.submodulesUpdate({ dry : e.propertiesMap.dry });
+    return module.openedModule.submodulesUpdate({ dry : e.propertiesMap.dry });
   });
 }
 
@@ -586,9 +598,12 @@ function commandSubmodulesFixate( e )
   let propertiesMap = _.strToMap( e.argument );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
+  e.propertiesMap.reportingNegative = e.propertiesMap.negative;
+  delete e.propertiesMap.negative;
+
   return will.moduleReadyThenNonForming( function( module )
   {
-    return module.submodulesFixate( e.propertiesMap );
+    return module.openedModule.submodulesFixate( e.propertiesMap );
   });
 
 }
@@ -596,6 +611,7 @@ function commandSubmodulesFixate( e )
 commandSubmodulesFixate.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
+  negative : 'Reporting attempt of upgrade with negative outcome. Default is negative:0.',
 }
 
 //
@@ -610,10 +626,12 @@ function commandSubmodulesUpgrade( e )
   _.assert( e.propertiesMap.upgrading === undefined, 'Unknown option upgrading' );
 
   e.propertiesMap.upgrading = 1;
+  e.propertiesMap.reportingNegative = e.propertiesMap.negative;
+  delete e.propertiesMap.negative;
 
   return will.moduleReadyThenNonForming( function( module )
   {
-    return module.submodulesFixate( e.propertiesMap );
+    return module.openedModule.submodulesFixate( e.propertiesMap );
   });
 
 }
@@ -621,7 +639,7 @@ function commandSubmodulesUpgrade( e )
 commandSubmodulesUpgrade.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
-  // upgrading : 'Upgrade already fixated submodules. Default is upgrading:1.',
+  negative : 'Reporting attempt of upgrade with negative outcome. Default is negative:0.',
 }
 
 //
@@ -633,10 +651,10 @@ function commandShell( e )
   return will.moduleReadyThenNonForming( function( module )
   {
     let logger = will.logger;
-    return module.shell
+    return module.openedModule.shell
     ({
       execPath : e.argument,
-      currentPath : will.currentPath || module.dirPath,
+      currentPath : will.currentPath || module.openedModule.dirPath,
     });
   });
 
@@ -656,9 +674,9 @@ function commandClean( e )
     let logger = will.logger;
 
     if( e.propertiesMap.dry )
-    return module.cleanWhatReport();
+    return module.openedModule.cleanWhatReport();
     else
-    return module.clean();
+    return module.openedModule.clean();
 
   });
 
@@ -677,13 +695,13 @@ function commandBuild( e )
   return will.moduleReadyThenNonForming( function( module )
   {
     let request = _.strRequestParse( e.argument );
-    let builds = module.buildsResolve( request.subject, request.map );
+    let builds = module.openedModule.buildsResolve( request.subject, request.map );
     let logger = will.logger;
 
     if( logger.verbosity >= 2 && builds.length > 1 )
     {
       logger.up();
-      logger.log( module.infoExportResource( builds ) );
+      logger.log( module.openedModule.infoExportResource( builds ) );
       logger.down();
     }
 
@@ -703,12 +721,12 @@ function commandExport( e )
   return will.moduleReadyThen( function( module )
   {
     let request = _.strRequestParse( e.argument );
-    let builds = module.exportsResolve( request.subject, request.map );
+    let builds = module.openedModule.exportsResolve( request.subject, request.map );
 
     if( logger.verbosity >= 2 && builds.length > 1 )
     {
       logger.up();
-      logger.log( module.infoExportResource( builds ) );
+      logger.log( module.openedModule.infoExportResource( builds ) );
       logger.down();
     }
 
@@ -747,17 +765,21 @@ function commandWith( e )
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
   let dirPath = path.joinRaw( path.current(), isolated.argument );
 
-  let module = will.currentModule = will.Module({ will : will, willfilesPath : dirPath }).preform();
+  let module = will.currentModule = will.OpenerModule({ will : will, willfilesPath : dirPath });
 
-  // module.stager.stageStateSkipping( 'submodulesFormed', 1 );
-  module.stager.stageStateSkipping( 'resourcesFormed', 1 );
+  will.currentModule.open();
 
-  module.willfilesFind();
+  // module.openedModule.stager.stageStateSkipping( 'submodulesFormed', 1 );
+  module.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
+  module.openedModule.stager.stageStatePausing( 'opened', 0 );
 
-  return module.ready.split().keep( function( arg )
+  // module.openedModule.willfilesFind();
+  module.openedModule.stager.tick();
+
+  return module.openedModule.ready.split().keep( function( arg )
   {
 
-    _.assert( module.willfilesArray.length > 0 );
+    _.assert( will.currentModule.willfileArray.length > 0 );
 
     return ca.commandPerform
     ({
@@ -897,6 +919,8 @@ let commandEach = _commandEach_functor({ filtering : 'all' });
 // relations
 // --
 
+let currentModuleSymbol = Symbol.for( 'currentModule' );
+
 let Composes =
 {
   beeping : 0,
@@ -926,6 +950,13 @@ let Forbids =
 {
 }
 
+let Accessors =
+{
+
+  currentModule : { setter : currentModuleSet },
+
+}
+
 // --
 // declare
 // --
@@ -943,6 +974,7 @@ let Extend =
   moduleReadyThenNonForming,
   moduleDone,
   errTooMany,
+  currentModuleSet,
 
   commandsMake,
   commandHelp,
@@ -980,6 +1012,7 @@ let Extend =
   Restricts,
   Statics,
   Forbids,
+  Accessors,
 
 }
 

@@ -122,6 +122,7 @@ function dataExport()
 {
   let about = this;
   let fields = about.cloneData({ compact : 1, copyingAggregates : 0 });
+  _.mapExtend( fields, about.values );
   return fields;
 }
 
@@ -136,12 +137,12 @@ let Composes =
   description : null,
   enabled : 1,
   version : null,
-  values : null,
 
 }
 
 let Aggregates =
 {
+  values : null,
 }
 
 let Associates =

@@ -35,20 +35,22 @@ submodule :
   PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
 
 ```
+
 </details>
 
-Для підмодуль `Tools` вказана версія.
+Для підмодуля `Tools` вказана версія.
 
 ### Команда `.submodules.update`
 
 <details>
-  <summary><u>Вивід команди <code>will .submodules.update</code></u></summary>
+  <summary><u>Вивід команди <code>will .submodules.update dry:1</code></u></summary>
 
 ```
-[user@user ~]$ will .submodules.update
+[user@user ~]$ will .submodules.update dry:1
 ...
   + module::Tools will be updated to version ec60e39ded1669e27abaa6fc2798ee13804c400a
   + module::PathFundamentals will be updated to version aa4b10e291c0cb0e79961b6ece128da544f00568
+
 ```
 
 </details>
@@ -95,7 +97,7 @@ submodulesUpdate
 
 Утиліта завантажила оновлення для обох підмодулів згідно встановлених версій: `#master` для підмодуля `PathFundamentals` i `#ec60e39ded1669e27abaa6fc2798ee13804c400a` для підмодуля `Tools`.  
 
-Версія підмодуля `Tools` застарілу. Здійсніть його оновлення.
+Версія підмодуля `Tools` застаріла. Здійсніть його оновлення.
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.upgrade</code></u></summary>
@@ -129,7 +131,6 @@ Remote path of module::submodulesCommands / module::PathFundamentals fixated
    + module::Tools version 7db7bd21ac76fc495aae44cc8b1c4474ce5012a4 was updated in 11.320s
 
   + 1/2 submodule(s) of module::submodulesCommands were updated in 11.420s
-
 
 ```
 

@@ -50,14 +50,25 @@ function OnInstanceExists( instance, options )
 
   options.Rewriting = 1;
 
-  // if( module.absoluteName === "module::submodules-detached / module::PathFundamentals" )
-  if( options.name === 'local' )
-  debugger;
+  if( instance.path !== null )
   if( options.name === 'local' && options.IsOutFile )
   options.importable = false;
 
-  // instance.finit();
+}
 
+//
+
+function init( o )
+{
+  let resource = this;
+
+  Parent.prototype.init.apply( resource, arguments );
+
+  // if( resource.module && resource.module instanceof _.Will.OpenerModule )
+  // resource.module = resource.module.openedModule;
+  // _.assert( resource.module === null || resource.module instanceof _.Will.OpenedModule );
+
+  return resource;
 }
 
 //
@@ -127,9 +138,6 @@ function form2()
   _.assert( arguments.length === 0 );
   _.assert( pathResource.formed === 1 );
 
-  // if( pathResource.nickName === 'path::export' )
-  // debugger;
-
   if( _.arrayIs( pathResource.path ) )
   pathResource.path = _.arrayFlattenOnce( pathResource.path );
 
@@ -163,15 +171,12 @@ function form3()
 
   }
 
-  // if( pathResource.nickName === 'path::export' )
-  // debugger;
-
   if( pathResource.path )
   {
     let filePath = _.arrayAs( pathResource.path );
     filePath.forEach( ( p ) =>
     {
-      _.sure( !path.isGlobal( p ) || path.isAbsolute( p ), 'Global paths should be absolute, but ' + p + ' is not absolute' );
+      // _.sure( !path.isGlobal( p ) || path.isAbsolute( p ), 'Global paths should be absolute, but ' + p + ' is not absolute' );
     });
   }
 
@@ -222,8 +227,30 @@ function dataExport()
 
   if( result )
   {
-    if( result.path && path.s.anyAreAbsolute( result.path ) && path.s.noneAreGlobal( result.path ) )
-    result.path = path.s.relative( module.inPath, result.path );
+
+    // debugger;
+
+    // if( pathResource.nickName === 'path::remote' )
+    // debugger;
+    // if( result.path && path.s.anyAreAbsolute( result.path ) )
+    // debugger;
+
+    // if( result.path && path.s.anyAreAbsolute( result.path ) && path.s.noneAreGlobal( result.path ) )
+    if( result.path && path.s.anyAreAbsolute( result.path ) )
+    {
+      // debugger;
+      result.path = _.filter( result.path, ( p ) =>
+      {
+        let protocols = path.parse( p ).protocols;
+        // debugger;
+        // if( _.arrayHasNone( protocols, [ 'http', 'https', 'ssh' ] ) )
+        if( !protocols.length )
+        return path.relative( module.inPath, p );
+        return p;
+      });
+      // debugger;
+    }
+
   }
 
   return result;
@@ -291,6 +318,7 @@ let Proto =
   OptionsFrom,
   OnInstanceExists,
 
+  init,
   unform,
   form1,
   form2,

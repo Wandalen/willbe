@@ -74,14 +74,10 @@ function init( o )
 
   let logger = will.logger = new _.Logger({ output : _global_.logger, name : 'will' });
 
-  // debugger;
-
   _.instanceInit( will );
   Object.preventExtensions( will );
 
   _.assert( logger === will.logger );
-
-  // debugger;
 
   if( o )
   will.copy( o );
@@ -196,14 +192,18 @@ function moduleMake( o )
 
   if( !o.module )
   {
-    o.module = will.Module({ will : will, willfilesPath : o.willfilesPath }).preform();
+    o.module = will.OpenerModule({ will : will, willfilesPath : o.willfilesPath }).preform();
   }
 
   _.assert( o.module.willfilesPath === o.willfilesPath || o.module.willfilesPath === o.dirPath );
 
-  o.module.stager.stageStateSkipping( 'resourcesFormed', !o.forming );
+  // o.module.stager.stageStateSkipping( 'resourcesFormed', !o.forming );
+  // o.module.willfilesFind();
 
-  o.module.willfilesFind();
+  o.module.open();
+  o.module.openedModule.stager.stageStatePausing( 'opened', 0 );
+  o.module.openedModule.stager.stageStateSkipping( 'resourcesFormed', !o.forming );
+  o.module.openedModule.stager.tick();
 
   return o.module;
 }
@@ -231,29 +231,31 @@ function moduleEach( o )
   if( _.strEnds( o.selector, '::' ) )
   o.selector = o.selector + '*';
 
-  if( will.Module.SelectorIs( o.selector ) )
+  if( will.OpenedModule.SelectorIs( o.selector ) )
   {
 
     let module = o.currentModule;
     if( !o.currentModule )
-    module = o.currentModule = will.Module({ will : will, willfilesPath : path.current() }).preform();
+    module = o.currentModule = will.OpenerModule({ will : will, willfilesPath : path.current() }).preform();
+    module.open(); // xxx
 
-    module.stager.stageStateSkipping( 'resourcesFormed', 1 );
-
-    con = module.ready;
+    con = module.openedModule.ready;
     con.then( () =>
     {
       let con2 = new _.Consequence();
-      let resolved = module.submodulesResolve({ selector : o.selector, preservingIteration : 1 });
+      let resolved = module.openedModule.submodulesResolve({ selector : o.selector, preservingIteration : 1 });
       resolved = _.arrayAs( resolved );
+      debugger;
+
       for( let s = 0 ; s < resolved.length ; s++ ) con2.keep( ( arg ) => /* !!! replace by concurrent, maybe */
       {
         let it1 = resolved[ s ];
         let module = it1.currentModule;
 
+        debugger;
         let it2 = Object.create( null );
-        it2.currentModule = module;
-        it2.supermodule = module.supermodule || module;
+        it2.currentModule = module.openerMake();
+        // it2.supermodule = module.supermodule || module;
 
         if( _.arrayIs( it1.dst ) || _.strIs( it1.dst ) )
         it2.currentPath = it1.dst;
@@ -270,7 +272,11 @@ function moduleEach( o )
       return con2;
     });
 
-    module.willfilesFind();
+    module.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
+    module.openedModule.stager.stageStatePausing( 'opened', 0 );
+    module.openedModule.stager.tick();
+    // module.open();
+    // module.willfilesFind();
 
   }
   else
@@ -305,26 +311,29 @@ function moduleEach( o )
         return true;
       }
 
-      let module = will.Module({ will : will, willfilesPath : file.absolute }).preform();
-
-      module.stager.stageStateSkipping( 'resourcesFormed', 1 );
+      let module = will.OpenerModule({ will : will, willfilesPath : file.absolute }).preform();
+      module.open();
 
       let it = Object.create( null );
       it.currentModule = module;
       it.options = o;
 
-      module.stager.stageConsequence( 'willfilesFound' ).then( ( arg ) =>
+      // module.openedModule.stager.stageConsequence( 'willfilesFound' ).then( ( arg ) =>
+      module.openedModule.stager.stageConsequence( 'opened' ).then( ( arg ) =>
       {
         if( o.onBegin )
         return o.onBegin( it );
         return arg;
       });
 
-      module.willfilesFind();
+      module.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
+      module.openedModule.stager.stageStatePausing( 'opened', 0 );
+      module.openedModule.stager.tick();
+      // module.willfilesFind();
 
-      return module.ready.split().keep( function( arg )
+      return module.openedModule.ready.split().keep( function( arg )
       {
-        _.assert( module.willfilesArray.length > 0 );
+        _.assert( module.willfileArray.length > 0 );
         if( module.willfilesPath )
         _.mapSet( filesMap, module.willfilesPath, true );
 
@@ -468,6 +477,245 @@ vcsFor.defaults =
   filePath : null,
 }
 
+//
+
+function CommonPathFor( willfilesPath )
+{
+  if( _.arrayIs( willfilesPath ) )
+  willfilesPath = willfilesPath[ 0 ];
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.strIs( willfilesPath ) );
+
+  let common = willfilesPath.replace( /\.will(\.\w+)?$/, '' );
+
+  common = common.replace( /(\.im|\.ex)$/, '' );
+
+  return common;
+}
+
+//
+
+function moduleAt( willfilesPath )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( arguments.length === 1 );
+
+  let commonPath = will.CommonPathFor( willfilesPath );
+
+  return will.moduleWithPathMap[ commonPath ];
+}
+
+//
+
+function moduleIdUnregister( openedModule )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 1 );
+  _.assert( openedModule instanceof will.OpenedModule );
+  _.assert( openedModule.id > 0 );
+
+  _.assert( will.moduleWithIdMap[ openedModule.id ] === openedModule || will.moduleWithIdMap[ openedModule.id ] === undefined );
+  delete will.moduleWithIdMap[ openedModule.id ];
+  _.assert( _.arrayCountElement( _.mapVals( will.moduleWithIdMap ), openedModule ) === 0 );
+  _.arrayRemoveOnceStrictly( will.moduleArray, openedModule );
+
+}
+
+//
+
+function moduleIdRegister( openedModule )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( openedModule instanceof will.OpenedModule );
+  _.assert( arguments.length === 1 );
+  _.assert( openedModule.id > 0 );
+
+  _.assert( will.moduleWithIdMap[ openedModule.id ] === openedModule || will.moduleWithIdMap[ openedModule.id ] === undefined );
+  will.moduleWithIdMap[ openedModule.id ] = openedModule;
+  _.assert( _.arrayCountElement( _.mapVals( will.moduleWithIdMap ), openedModule ) === 1 );
+  _.arrayAppendOnceStrictly( will.moduleArray, openedModule );
+
+}
+
+//
+
+function modulePathUnregister( openedModule )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 1 );
+  _.assert( openedModule instanceof will.OpenedModule );
+
+  if( openedModule.commonPath )
+  {
+    _.assert( _.strIs( openedModule.commonPath ) );
+    _.assert( will.moduleWithPathMap[ openedModule.commonPath ] === openedModule || will.moduleWithPathMap[ openedModule.commonPath ] === undefined );
+    delete will.moduleWithPathMap[ openedModule.commonPath ];
+  }
+
+  _.assert( _.arrayCountElement( _.mapVals( will.moduleWithPathMap ), openedModule ) === 0 );
+
+}
+
+//
+
+function modulePathRegister( openedModule )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( openedModule instanceof will.OpenedModule );
+  _.assert( arguments.length === 1 );
+  _.assert( _.strIs( openedModule.commonPath ) );
+
+  _.assert( will.moduleWithPathMap[ openedModule.commonPath ] === openedModule || will.moduleWithPathMap[ openedModule.commonPath ] === undefined );
+  will.moduleWithPathMap[ openedModule.commonPath ] = openedModule;
+  _.assert( _.arrayCountElement( _.mapVals( will.moduleWithPathMap ), openedModule ) === 1 );
+
+}
+
+//
+
+function openerUnregister( opener )
+{
+  let will = this;
+
+  _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
+  delete will.openerModuleWithIdMap[ opener.id ];
+  _.assert( _.arrayCountElement( _.mapVals( will.openerModuleWithIdMap ), opener ) === 0 );
+  _.arrayRemoveOnceStrictly( will.openerModuleArray, opener );
+
+}
+
+//
+
+function openerRegister( opener )
+{
+  let will = this;
+
+  _.assert( opener.id > 0 );
+  will.openerModuleWithIdMap[ opener.id ] = opener;
+  _.arrayAppendOnceStrictly( will.openerModuleArray, opener );
+  _.assert( _.arrayCountElement( _.mapVals( will.openerModuleWithIdMap ), opener ) === 1 );
+
+}
+
+// --
+// willfile
+// --
+
+function willfileAt( filePath )
+{
+  let will = this;
+  let commonPath = will.Willfile.CommonPathFor( filePath );
+  return will.willfileWithPathMap[ commonPath ];
+}
+
+//
+
+function willfileFor( o )
+{
+  // let opener = this;
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.mapIs( o ) );
+
+  o.will = will;
+  // o.openerModule = opener;
+
+  let willf = will.willfileAt( o.filePath );
+  if( willf )
+  {
+    _.assert( !o.data );
+    _.assert( !o.openerModule || o.openerModule === willf.openerModule );
+    willf.copy( o );
+  }
+  else
+  {
+
+    willf = new will.Willfile( o ).form1();
+
+  }
+
+  return willf;
+
+/*
+
+  willf = new will.Willfile
+  ({
+    role : o.role,
+    filePath : filePath,
+    isOutFile : o.isOutFile,
+    openerModule : opener,
+    will : will,
+  }).form1();
+
+  let willfile = new will.Willfile
+  ({
+    will : will,
+    role : 'single',
+    filePath : filePath,
+    openerModule : opener,
+    data : opener.pickedWillfileData,
+  }).form1();
+
+*/
+
+}
+
+//
+
+function willfileUnregister( willf )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( will.willfileWithPathMap[ willf.commonPath ] === willf );
+  delete will.willfileWithPathMap[ willf.commonPath ];
+  _.assert( _.arrayCountElement( _.mapVals( will.willfileWithPathMap ), willf ) === 0 );
+  _.arrayRemoveOnceStrictly( will.willfileArray, willf );
+
+}
+
+//
+
+function willfileRegister( willf )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.arrayAppendOnceStrictly( will.willfileArray, willf );
+  _.assert( will.willfileWithPathMap[ willf.commonPath ] === undefined );
+  will.willfileWithPathMap[ willf.commonPath ] = willf;
+  _.assert( _.arrayCountElement( _.mapVals( will.willfileWithPathMap ), willf ) === 1 );
+
+}
+
 // --
 // relations
 // --
@@ -520,7 +768,14 @@ let Associates =
   logger : null,
 
   moduleArray : _.define.own([]),
-  moduleMap : _.define.own({}),
+  moduleWithIdMap : _.define.own({}),
+  moduleWithPathMap : _.define.own({}),
+
+  openerModuleArray : _.define.own([]),
+  openerModuleWithIdMap : _.define.own({}),
+
+  willfileArray : _.define.own([]),
+  willfileWithPathMap : _.define.own({}),
 
 }
 
@@ -531,6 +786,8 @@ let Restricts =
 
 let Statics =
 {
+  CommonPathFor,
+
   ResourceKindToClassName : ResourceKindToClassName,
   ResourceKindToMapName : ResourceKindToMapName,
   ResourceKinds : ResourceKinds,
@@ -559,8 +816,24 @@ let Extend =
   moduleMake,
   moduleEach,
   _verbosityChange,
+
   willfilesList,
   vcsFor,
+  CommonPathFor,
+
+  moduleAt,
+  moduleIdUnregister,
+  moduleIdRegister,
+  modulePathUnregister,
+  modulePathRegister,
+
+  openerUnregister,
+  openerRegister,
+
+  willfileAt,
+  willfileFor,
+  willfileUnregister,
+  willfileRegister,
 
   // relation
 
@@ -592,6 +865,6 @@ module[ 'exports' ] = Self;
 wTools[ Self.shortName ] = Self;
 
 if( typeof module !== 'undefined' )
-require( './IncludeTop.s' );
+require( './IncludeMid.s' );
 
 })();

@@ -1,11 +1,27 @@
-format: willfile-1.0.0
 about:
   name: submodule
   description: Module for testing
-  version: 0.0.1
   enabled: 1
-execution: {}
+  version: 0.0.1
+  values:
+    enabled: 1
+    name: submodule
 path:
+  module.willfiles:
+    path: out/submodule.out.will.yml
+    criterion:
+      predefined: 1
+  module.dir:
+    path: out
+    criterion:
+      predefined: 1
+  local:
+    path: out
+    criterion:
+      predefined: 1
+  remote:
+    criterion:
+      predefined: 1
   proto:
     path: ./proto
   in:
@@ -43,6 +59,12 @@ path:
       debug: 0
       raw: 1
       export: 1
+  module.original.willfiles:
+    path:
+      - .im.will.yml
+      - .ex.will.yml
+    criterion:
+      predefined: 1
   exported.dir.export.debug:
     path: ./out/debug
     criterion:
@@ -71,7 +93,8 @@ reflector:
   reflect.proto.:
     src:
       filePath:
-        proto: out/release
+        .: .
+      prefixPath: proto
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -82,17 +105,19 @@ reflector:
           - !<tag:yaml.org,2002:js/regexp> /\.DS_Store$/
           - !<tag:yaml.org,2002:js/regexp> /(^|\/)-/
           - !<tag:yaml.org,2002:js/regexp> /\.debug($|\.|\/)/i
-          - !<tag:yaml.org,2002:js/regexp> /\.test($|\.|\/)/i
           - !<tag:yaml.org,2002:js/regexp> /\.experiment($|\.|\/)/i
-      prefixPath: .
+    dst:
+      prefixPath: out/release
     criterion:
       debug: 0
+    mandatory: 1
     inherit:
       - predefined.*
   reflect.proto.debug:
     src:
       filePath:
-        proto: out/debug
+        .: .
+      prefixPath: proto
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -103,57 +128,59 @@ reflector:
           - !<tag:yaml.org,2002:js/regexp> /\.DS_Store$/
           - !<tag:yaml.org,2002:js/regexp> /(^|\/)-/
           - !<tag:yaml.org,2002:js/regexp> /\.release($|\.|\/)/i
-      prefixPath: .
+    dst:
+      prefixPath: out/debug
     criterion:
       debug: 1
+    mandatory: 1
     inherit:
       - predefined.*
   exported.export.:
     src:
       filePath:
-        out/release: true
-      prefixPath: .
-    criterion:
-      default: 1
-      debug: 0
-      raw: 1
-      export: 1
-  exported.files.export.:
-    recursive: 0
-    src:
-      filePath:
-        .: true
-        File.release.js: true
-      basePath: .
+        .: null
       prefixPath: out/release
     criterion:
       default: 1
       debug: 0
       raw: 1
       export: 1
+    mandatory: 1
+  exported.files.export.:
+    src:
+      filePath: 'path::exported.files.export.'
+      basePath: .
+      prefixPath: 'path::exported.dir.export.'
+    criterion:
+      default: 1
+      debug: 0
+      raw: 1
+      export: 1
+    recursive: 0
+    mandatory: 1
   exported.export.debug:
     src:
       filePath:
-        out/debug: true
-      prefixPath: .
-    criterion:
-      default: 1
-      debug: 1
-      raw: 1
-      export: 1
-  exported.files.export.debug:
-    recursive: 0
-    src:
-      filePath:
-        .: true
-        File.debug.js: true
-      basePath: .
+        .: null
       prefixPath: out/debug
     criterion:
       default: 1
       debug: 1
       raw: 1
       export: 1
+    mandatory: 1
+  exported.files.export.debug:
+    src:
+      filePath: 'path::exported.files.export.debug'
+      basePath: .
+      prefixPath: 'path::exported.dir.export.debug'
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      export: 1
+    recursive: 0
+    mandatory: 1
 step:
   reflect.proto.:
     criterion:
@@ -211,22 +238,10 @@ build:
       raw: 1
     steps:
       - 'step::reflect.proto.*=1'
-  debug.compiled:
-    criterion:
-      debug: 1
-      raw: 0
-    steps:
-      - 'step::reflect.proto.*=1'
   release.raw:
     criterion:
       debug: 0
       raw: 1
-    steps:
-      - 'step::reflect.proto.*=1'
-  release.compiled:
-    criterion:
-      debug: 0
-      raw: 0
     steps:
       - 'step::reflect.proto.*=1'
   export.:
@@ -272,3 +287,6 @@ exported:
     exportedDirPath: 'path::exported.dir.export.'
     exportedFilesPath: 'path::exported.files.export.'
     archiveFilePath: 'path::archiveFile.export.'
+module:
+  submodule.out: root
+format: willfile-1.0.0

@@ -18,9 +18,9 @@ reflector :
   reflect.submodules.variant :
     inherit : predefined.*
     filePath :
-      submodule::*/exported::*=1/path::exportedDir*=1 : path::out.*=1
+      submodule::*/exported::*=1/path::exported.dir*=1 : path::out.*=1
     src :
-      basePath : "{submodule::*/exported::*=1/path::exportedDir*=1}/.."
+      basePath : "{submodule::*/exported::*=1/path::exported.dir*=1}/.."
     criterion :
       variant : 1
 
@@ -30,14 +30,14 @@ reflector :
       . : path::out.*=1
     src :
       basePath : ..
-      prefixPath : "{submodule::*/exported::*=1/path::exportedDir*=1}"
+      prefixPath : "{submodule::*/exported::*=1/path::exported.dir*=1}"
     criterion :
       variant : 2
 
   reflect.submodules.variant3 :
     inherit : predefined.*
     filePath :
-      submodule::*/exported::*=1/path::exportedDir*=1 : path::out.*=1
+      submodule::*/exported::*=1/path::exported.dir*=1 : path::out.*=1
     src :
       basePath : 'module'
     criterion :
