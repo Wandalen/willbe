@@ -2018,115 +2018,113 @@ function isNormalizedMaybeTrailed( test )
 
   var got;
 
-  // test.case = 'posix path'; /* */
-  //
-  // // Not normalized
-  //
-  // var path = '/foo/bar//baz/asdf/quux/..';
-  // var expected = false;
-  // var got = _.path.isNormalizedMaybeTrailed( path );
-  // test.identical( got, expected );
-  //
-  // var path = '/foo/bar//baz/asdf/quux/../';
-  // var expected = false;
-  // var got = _.path.isNormalizedMaybeTrailed( path );
-  // test.identical( got, expected );
-  //
-  // var path = 'foo/bar//baz/asdf/quux/..//.';
-  // var expected = false;
-  // var got = _.path.isNormalizedMaybeTrailed( path );
-  // test.identical( got, expected );
-  //
-  // // Normalized
-  //
-  // var path = '/foo/bar//baz/asdf';
-  // var expected = true;
-  // var got = _.path.isNormalizedMaybeTrailed( path );
-  // test.identical( got, expected );
-  //
-  // var path = _.path.normalize( '/foo/bar//baz/asdf/quux/../' );
-  // var expected = true;
-  // var got = _.path.isNormalizedMaybeTrailed( path );
-  // test.identical( got, expected );
-  //
-  // var path = _.path.normalize( 'foo/bar//baz/asdf/quux/..//.' );
-  // var expected = true;
-  // var got = _.path.isNormalizedMaybeTrailed( path );
-  // test.identical( got, expected );
-  //
-  // test.case = 'windows path'; /* */
-  //
-  // //Not normalized
-  //
-  // var path = '/C:\\temp\\\\foo\\bar\\..\\';
-  // var expected = false;
-  // var got = _.path.isNormalizedMaybeTrailed( path );
-  // test.identical( got, expected );
-  //
-  // var path = '\\C:\\temp\\\\foo\\bar\\..\\';
-  // var expected = false;
-  // var got = _.path.isNormalizedMaybeTrailed( path );
-  // test.identical( got, expected );
-  //
-  // var path = 'C:\\temp\\\\foo\\bar\\..\\..\\';
-  // var expected = false;
-  // var got = _.path.isNormalizedMaybeTrailed( path );
-  // test.identical( got, expected );
-  //
-  // var path = 'c://temp/foo/bar/';
-  // var expected = false;
-  // var got = _.path.isNormalizedMaybeTrailed( path );
-  // test.identical( got, expected );
-  //
-  // // Normalized
-  //
-  // var path = _.path.normalize( '/C:\\temp\\\\foo\\bar\\..\\' );
-  // var expected = true;
-  // var got = _.path.isNormalizedMaybeTrailed( path );
-  // test.identical( got, expected );
-  //
-  // var path = '/C:/temp//foo';
-  // var expected = true;
-  // var got = _.path.isNormalizedMaybeTrailed( path );
-  // test.identical( got, expected );
-  //
-  // var path = _.path.normalize( 'C:\\temp\\\\foo\\bar\\..\\..\\' );
-  // var expected = true;
-  // var got = _.path.isNormalizedMaybeTrailed( path );
-  // test.identical( got, expected );
-  //
-  // test.case = 'empty path'; /* */
-  //
-  // var path = '';
-  // var expected = true;
-  // var got = _.path.isNormalizedMaybeTrailed( path );
-  // test.identical( got, expected );
-  //
-  // var path = '.';
-  // var expected = true;
-  // var got = _.path.isNormalizedMaybeTrailed( path );
-  // test.identical( got, expected );
-  //
-  // var path = '/';
-  // var expected = true;
-  // var got = _.path.isNormalizedMaybeTrailed( path );
-  // test.identical( got, expected );
-  //
-  // var path = '///';
-  // var expected = true;
-  // var got = _.path.isNormalizedMaybeTrailed( path );
-  // test.identical( got, expected );
-  //
-  // var path = '/./.';
-  // var expected = false;
-  // var got = _.path.isNormalizedMaybeTrailed( path );
-  // test.identical( got, expected );
+  test.case = 'posix path'; /* */
+
+  // Not normalized
+
+  var path = '/foo/bar//baz/asdf/quux/..';
+  var expected = false;
+  var got = _.path.isNormalizedMaybeTrailed( path );
+  test.identical( got, expected );
+
+  var path = '/foo/bar//baz/asdf/quux/../';
+  var expected = false;
+  var got = _.path.isNormalizedMaybeTrailed( path );
+  test.identical( got, expected );
+
+  var path = 'foo/bar//baz/asdf/quux/..//.';
+  var expected = false;
+  var got = _.path.isNormalizedMaybeTrailed( path );
+  test.identical( got, expected );
+
+  // Normalized
+
+  var path = '/foo/bar//baz/asdf';
+  var expected = true;
+  var got = _.path.isNormalizedMaybeTrailed( path );
+  test.identical( got, expected );
+
+  var path = _.path.normalize( '/foo/bar//baz/asdf/quux/../' );
+  var expected = true;
+  var got = _.path.isNormalizedMaybeTrailed( path );
+  test.identical( got, expected );
+
+  var path = _.path.normalize( 'foo/bar//baz/asdf/quux/..//.' );
+  var expected = true;
+  var got = _.path.isNormalizedMaybeTrailed( path );
+  test.identical( got, expected );
+
+  test.case = 'windows path'; /* */
+
+  //Not normalized
+
+  var path = '/C:\\temp\\\\foo\\bar\\..\\';
+  var expected = false;
+  var got = _.path.isNormalizedMaybeTrailed( path );
+  test.identical( got, expected );
+
+  var path = '\\C:\\temp\\\\foo\\bar\\..\\';
+  var expected = false;
+  var got = _.path.isNormalizedMaybeTrailed( path );
+  test.identical( got, expected );
+
+  var path = 'C:\\temp\\\\foo\\bar\\..\\..\\';
+  var expected = false;
+  var got = _.path.isNormalizedMaybeTrailed( path );
+  test.identical( got, expected );
+
+  var path = 'c://temp/foo/bar/';
+  var expected = false;
+  var got = _.path.isNormalizedMaybeTrailed( path );
+  test.identical( got, expected );
+
+  // Normalized
+
+  var path = _.path.normalize( '/C:\\temp\\\\foo\\bar\\..\\' );
+  var expected = true;
+  var got = _.path.isNormalizedMaybeTrailed( path );
+  test.identical( got, expected );
+
+  var path = '/C:/temp//foo';
+  var expected = true;
+  var got = _.path.isNormalizedMaybeTrailed( path );
+  test.identical( got, expected );
+
+  var path = _.path.normalize( 'C:\\temp\\\\foo\\bar\\..\\..\\' );
+  var expected = true;
+  var got = _.path.isNormalizedMaybeTrailed( path );
+  test.identical( got, expected );
+
+  test.case = 'empty path'; /* */
+
+  var path = '';
+  var expected = true;
+  var got = _.path.isNormalizedMaybeTrailed( path );
+  test.identical( got, expected );
+
+  var path = '.';
+  var expected = true;
+  var got = _.path.isNormalizedMaybeTrailed( path );
+  test.identical( got, expected );
+
+  var path = '/';
+  var expected = true;
+  var got = _.path.isNormalizedMaybeTrailed( path );
+  test.identical( got, expected );
+
+  var path = '///';
+  var expected = true;
+  var got = _.path.isNormalizedMaybeTrailed( path );
+  test.identical( got, expected );
+
+  var path = '/./.';
+  var expected = false;
+  var got = _.path.isNormalizedMaybeTrailed( path );
+  test.identical( got, expected );
 
   var path = './.';
   var expected = false;
-  debugger;
   var got = _.path.isNormalizedMaybeTrailed( path );
-  debugger;
   test.identical( got, expected );
 
   test.case = 'path with "." in the middle'; /* */
@@ -2525,7 +2523,7 @@ function isNormalized( test )
   test.identical( got, expected );
 
   var path = '/foo/baz/.x./';
-  var expected = false;
+  var expected = true;
   var got = _.path.isNormalized( path );
   test.identical( got, expected );
 
@@ -2632,21 +2630,21 @@ function isNormalized( test )
   var path = '/abc/./.././a/b';
   var normalized = _.path.normalize( path );
   var trailed = _.path.trail( normalized );
-  var expected = false;
+  var expected = true;
   var got = _.path.isNormalized( trailed );
   test.identical( got, expected );
 
   var path = '/a/b/abc/./../.';
   var normalized = _.path.normalize( path );
   var trailed = _.path.trail( normalized );
-  var expected = false;
+  var expected = true;
   var got = _.path.isNormalized( trailed );
   test.identical( got, expected );
 
   var path = './../.';
   var normalized = _.path.normalize( path );
   var trailed = _.path.trail( normalized );
-  var expected = false;
+  var expected = true;
   var got = _.path.isNormalized( trailed );
   test.identical( got, expected );
 
@@ -4728,6 +4726,16 @@ function normalize( test )
 
   test.case = 'posix path'; /* */
 
+  var path = '/aa/bb/cc/./';
+  var expected = '/aa/bb/cc/';
+  var got = _.path.normalize( path );
+  test.identical( got, expected );
+
+  var path = '/aa/bb/cc/';
+  var expected = '/aa/bb/cc/';
+  var got = _.path.normalize( path );
+  test.identical( got, expected );
+
   var path = '/foo/bar//baz/asdf/quux/..';
   var expected = '/foo/bar//baz/asdf';
   var got = _.path.normalize( path );
@@ -4735,16 +4743,16 @@ function normalize( test )
 
   var path = '/foo/bar//baz/asdf/quux/.';
   var expected = '/foo/bar//baz/asdf/quux';
-  var got = _.path.normalize( path ); // xxx
+  var got = _.path.normalize( path );
   test.identical( got, expected );
 
   var path = '/foo/bar//baz/asdf/quux/./';
-  var expected = '/foo/bar//baz/asdf/quux';
-  var got = _.path.normalize( path ); // xxx
+  var expected = '/foo/bar//baz/asdf/quux/';
+  var got = _.path.normalize( path );
   test.identical( got, expected );
 
   var path = '/foo/bar//baz/asdf/quux/../';
-  var expected = '/foo/bar//baz/asdf';
+  var expected = '/foo/bar//baz/asdf/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
@@ -4754,25 +4762,24 @@ function normalize( test )
   test.identical( got, expected );
 
   var path = 'foo/bar//baz/asdf/quux/..//.';
-  var expected = 'foo/bar//baz/asdf';
-  // var expected = 'foo/bar//baz/asdf//'; // yyy
+  var expected = 'foo/bar//baz/asdf/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
   test.case = 'windows path'; /* */
 
   var path = '/C:\\temp\\\\foo\\bar\\..\\';
-  var expected = '/C:/temp//foo';
+  var expected = '/C:/temp//foo/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
   var path = '\\C:\\temp\\\\foo\\bar\\..\\';
-  var expected = '/C:/temp//foo';
+  var expected = '/C:/temp//foo/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
   var path = 'C:\\temp\\\\foo\\bar\\..\\';
-  var expected = '/C/temp//foo';
+  var expected = '/C/temp//foo/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
@@ -4792,7 +4799,7 @@ function normalize( test )
   test.identical( got, expected );
 
   var path = 'C:\\temp\\\\foo\\bar\\..\\..\\.';
-  var expected = '/C/temp//';
+  var expected = '/C/temp/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
@@ -4851,22 +4858,22 @@ function normalize( test )
   test.identical( got, expected );
 
   var path = 'foo/././bar/baz/';
-  var expected = 'foo/bar/baz';
+  var expected = 'foo/bar/baz/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
   var path = 'foo/././bar/././baz/';
-  var expected = 'foo/bar/baz';
+  var expected = 'foo/bar/baz/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
   var path = '/foo/././bar/././baz/';
-  var expected = '/foo/bar/baz';
+  var expected = '/foo/bar/baz/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
   var path = '/foo/.x./baz/';
-  var expected = '/foo/.x./baz';
+  var expected = '/foo/.x./baz/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
@@ -4883,17 +4890,17 @@ function normalize( test )
   test.identical( got, expected );
 
   var path = '././foo/bar/';
-  var expected = './foo/bar';
+  var expected = './foo/bar/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
   var path = './/.//foo/bar/';
-  var expected = './//foo/bar';
+  var expected = './//foo/bar/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
   var path = '/.//.//foo/bar/';
-  var expected = '///foo/bar';
+  var expected = '///foo/bar/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
@@ -4935,17 +4942,17 @@ function normalize( test )
   test.identical( got, expected );
 
   var path = 'foo/bar/././';
-  var expected = 'foo/bar';
+  var expected = 'foo/bar/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
   var path = '/foo/bar/././';
-  var expected = '/foo/bar';
+  var expected = '/foo/bar/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
   var path = '/foo/baz/.x./';
-  var expected = '/foo/baz/.x.';
+  var expected = '/foo/baz/.x./';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
@@ -4957,17 +4964,17 @@ function normalize( test )
   test.identical( got, expected );
 
   var path = 'foo/../../bar/baz/';
-  var expected = '../bar/baz';
+  var expected = '../bar/baz/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
   var path = 'foo/../../bar/../../baz/';
-  var expected = '../../baz';
+  var expected = '../../baz/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
   var path = '/foo/../../bar/../../baz/';
-  var expected = '/../../baz';
+  var expected = '/../../baz/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
@@ -4979,17 +4986,17 @@ function normalize( test )
   test.identical( got, expected );
 
   var path = '../../foo/bar/';
-  var expected = '../../foo/bar';
+  var expected = '../../foo/bar/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
   var path = '..//..//foo/bar/';
-  var expected = '..//foo/bar';
+  var expected = '..//foo/bar/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
   var path = '/..//..//foo/bar/';
-  var expected = '/..//foo/bar';
+  var expected = '/..//foo/bar/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
@@ -5026,7 +5033,7 @@ function normalize( test )
   test.identical( got, expected );
 
   var path = 'foo/bar/../../';
-  var expected = '.';
+  var expected = './';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
@@ -5088,7 +5095,7 @@ function normalize( test )
   test.identical( got, expected );
 
   var path = './.././';
-  var expected = '..';
+  var expected = '../';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
@@ -5105,12 +5112,12 @@ function normalize( test )
   test.case = 'path with \/'; /* */
 
   var path = 'foo/bar\/';
-  var expected = 'foo/bar';
+  var expected = 'foo/bar/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
   var path = 'foo/\/bar\/';
-  var expected = 'foo//bar';
+  var expected = 'foo//bar/';
   var got = _.path.normalize( path );
   test.identical( got, expected );
 
@@ -5167,28 +5174,478 @@ function normalize( test )
 
 //
 
+function normalizeStrict( test )
+{
+
+  test.case = 'posix path'; /* */
+
+  var path = '/aa/bb/cc/./';
+  var expected = '/aa/bb/cc';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/aa/bb/cc/';
+  var expected = '/aa/bb/cc';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/foo/bar//baz/asdf/quux/..';
+  var expected = '/foo/bar//baz/asdf';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/foo/bar//baz/asdf/quux/.';
+  var expected = '/foo/bar//baz/asdf/quux';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/foo/bar//baz/asdf/quux/./';
+  var expected = '/foo/bar//baz/asdf/quux';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/foo/bar//baz/asdf/quux/../';
+  var expected = '/foo/bar//baz/asdf';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '//foo/bar//baz/asdf/quux/..//';
+  var expected = '//foo/bar//baz/asdf//';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'foo/bar//baz/asdf/quux/..//.';
+  var expected = 'foo/bar//baz/asdf';
+  // var expected = 'foo/bar//baz/asdf//'; // yyy
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  test.case = 'windows path'; /* */
+
+  var path = '/C:\\temp\\\\foo\\bar\\..\\';
+  var expected = '/C:/temp//foo';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '\\C:\\temp\\\\foo\\bar\\..\\';
+  var expected = '/C:/temp//foo';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'C:\\temp\\\\foo\\bar\\..\\';
+  var expected = '/C/temp//foo';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'C:\\temp\\\\foo\\bar\\..\\\\';
+  var expected = '/C/temp//foo//';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'C:\\temp\\\\foo\\bar\\..\\\\';
+  var expected = '/C/temp//foo//';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'C:\\temp\\\\foo\\bar\\..\\..\\';
+  var expected = '/C/temp//';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'C:\\temp\\\\foo\\bar\\..\\..\\.';
+  var expected = '/C/temp';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  test.case = 'empty path'; /* */
+
+  var path = '';
+  var expected = '';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/';
+  var expected = '/';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '//';
+  var expected = '//';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '///';
+  var expected = '///';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/.';
+  var expected = '/';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/./.';
+  var expected = '/';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '.';
+  var expected = '.';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = './';
+  var expected = '.';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = './.';
+  var expected = '.';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  test.case = 'path with "." in the middle'; /* */
+
+  var path = 'foo/./bar/baz';
+  var expected = 'foo/bar/baz';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'foo/././bar/baz/';
+  var expected = 'foo/bar/baz';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'foo/././bar/././baz/';
+  var expected = 'foo/bar/baz';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/foo/././bar/././baz/';
+  var expected = '/foo/bar/baz';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/foo/.x./baz/';
+  var expected = '/foo/.x./baz';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  test.case = 'path with "." in the beginning'; /* */
+
+  var path = './foo/bar';
+  var expected = './foo/bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '.\\foo\\bar';
+  var expected = './foo/bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '././foo/bar/';
+  var expected = './foo/bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = './/.//foo/bar/';
+  var expected = './//foo/bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/.//.//foo/bar/';
+  var expected = '///foo/bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '.x/foo/bar';
+  var expected = '.x/foo/bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '.x./foo/bar';
+  var expected = '.x./foo/bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = './x/.';
+  var expected = './x';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  test.case = 'path with "." in the end'; /* */
+
+  var path = 'foo/bar.';
+  var expected = 'foo/bar.';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'foo/.bar.';
+  var expected = 'foo/.bar.';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'foo/bar/.';
+  var expected = 'foo/bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'foo/bar/./.';
+  var expected = 'foo/bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'foo/bar/././';
+  var expected = 'foo/bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/foo/bar/././';
+  var expected = '/foo/bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/foo/baz/.x./';
+  var expected = '/foo/baz/.x.';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  test.case = 'path with ".." in the middle'; /* */
+
+  var path = 'foo/../bar/baz';
+  var expected = 'bar/baz';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'foo/../../bar/baz/';
+  var expected = '../bar/baz';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'foo/../../bar/../../baz/';
+  var expected = '../../baz';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/foo/../../bar/../../baz/';
+  var expected = '/../../baz';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  test.case = 'path with ".." in the beginning'; /* */
+
+  var path = '../foo/bar';
+  var expected = '../foo/bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '../../foo/bar/';
+  var expected = '../../foo/bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '..//..//foo/bar/';
+  var expected = '..//foo/bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/..//..//foo/bar/';
+  var expected = '/..//foo/bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '..x/foo/bar';
+  var expected = '..x/foo/bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '..x../foo/bar';
+  var expected = '..x../foo/bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  test.case = 'path with ".." in the end'; /* */
+
+  var path = 'foo/bar..';
+  var expected = 'foo/bar..';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'foo/..bar..';
+  var expected = 'foo/..bar..';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'foo/bar/..';
+  var expected = 'foo';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'foo/bar/../..';
+  var expected = '.';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'foo/bar/../../';
+  var expected = '.';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/foo/bar/../../';
+  var expected = '/';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'foo/bar/../../..';
+  var expected = '..';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'foo/bar/../../../..';
+  var expected = '../..';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'foo/../bar/../../../..';
+  var expected = '../../..';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  test.case = 'path with ".." and "." combined'; /* */
+
+  var path = '/abc/./../a/b';
+  var expected = '/a/b';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/abc/.././a/b';
+  var expected = '/a/b';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/abc/./.././a/b';
+  var expected = '/a/b';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/a/b/abc/../.';
+  var expected = '/a/b';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/a/b/abc/./..';
+  var expected = '/a/b';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '/a/b/abc/./../.';
+  var expected = '/a/b';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = './../.';
+  var expected = '..';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = './.././';
+  var expected = '..';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = './..';
+  var expected = '..';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '../.';
+  var expected = '..';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  test.case = 'path with \/'; /* */
+
+  var path = 'foo/bar\/';
+  var expected = 'foo/bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = 'foo/\/bar\/';
+  var expected = 'foo//bar';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '\/foo/bar/..';
+  var expected = '/foo';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '\/foo\/bar/../..';
+  var expected = '/';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  var path = '\/foo\/bar/../../';
+  var expected = '/';
+  var got = _.path.normalizeStrict( path );
+  test.identical( got, expected );
+
+  /* */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'No arguments';
+  test.shouldThrowError( () => _.path.normalizeStrict( ) );
+
+  test.case = 'Two arguments';
+  test.shouldThrowError( () => _.path.normalizeStrict( 'a', 'b' ) );
+
+  // Input is not path
+
+  test.case = 'No path - regexp';
+  test.shouldThrowError( () => _.path.normalizeStrict( /foo/ ) );
+
+  test.case = 'No path - number';
+  test.shouldThrowError( () => _.path.normalizeStrict( 3 ) );
+
+  test.case = 'No path - array';
+  test.shouldThrowError( () => _.path.normalizeStrict( [ '/C/', 'work/f' ] ) );
+
+  test.case = 'No path - object';
+  test.shouldThrowError( () => _.path.normalizeStrict( { Path : 'C:/foo/baz/bar' } ) );
+
+  test.case = 'No path - undefined';
+  test.shouldThrowError( () => _.path.normalizeStrict( undefined ) );
+
+  test.case = 'No path - null';
+  test.shouldThrowError( () => _.path.normalizeStrict( null ) );
+
+  test.case = 'No path - NaN';
+  test.shouldThrowError( () => _.path.normalizeStrict( NaN ) );
+
+}
+
+//
+
 function normalizeTolerant( test )
 {
 
   test.case = 'posix path'; /* */
 
   var path = '/foo/bar//baz/asdf/quux/..';
-  var expected = '/foo/bar/baz/asdf/';
+  var expected = '/foo/bar/baz/asdf';
   var got = _.path.normalizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/foo/bar//baz/asdf/quux/.';
   var expected = '/foo/bar/baz/asdf/quux';
-  // debugger;
-  var got = _.path.normalizeTolerant( path ); // xxx
-  // debugger;
+  var got = _.path.normalizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/foo/bar//baz/asdf/quux/./';
   var expected = '/foo/bar/baz/asdf/quux/';
-  // debugger;
-  var got = _.path.normalizeTolerant( path ); // xxx
-  // debugger;
+  var got = _.path.normalizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/foo/bar//baz/asdf/quux/../';
@@ -5448,7 +5905,7 @@ function normalizeTolerant( test )
   test.identical( got, expected );
 
   var path = 'foo/bar/..';
-  var expected = 'foo/';
+  var expected = 'foo';
   var got = _.path.normalizeTolerant( path );
   test.identical( got, expected );
 
@@ -5500,17 +5957,17 @@ function normalizeTolerant( test )
   test.identical( got, expected );
 
   var path = '/a/b/abc/../.';
-  var expected = '/a/b/';
+  var expected = '/a/b';
   var got = _.path.normalizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/a/b/abc/./..';
-  var expected = '/a/b/';
+  var expected = '/a/b';
   var got = _.path.normalizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/a/b/abc/./../.';
-  var expected = '/a/b/';
+  var expected = '/a/b';
   var got = _.path.normalizeTolerant( path );
   test.identical( got, expected );
 
@@ -5738,13 +6195,19 @@ function join( test )
 
   test.case = 'join windows os paths';
   var paths = [ 'c:\\', 'foo\\', 'bar\\' ];
-  var expected = '/c/foo/bar';
+  var expected = '/c/foo/bar/';
   var got = _.path.join.apply( _.path, paths );
   test.identical( got, expected );
 
   test.case = 'join unix os paths';
   var paths = [ '/bar/', '/baz', 'foo/', '.' ];
   var expected = '/baz/foo';
+  var got = _.path.join.apply( _.path, paths );
+  test.identical( got, expected );
+
+  test.case = 'join unix os paths';
+  var paths = [ '/bar/', '/baz', 'foo/', '.', 'z' ];
+  var expected = '/baz/foo/z';
   var got = _.path.join.apply( _.path, paths );
   test.identical( got, expected );
 
@@ -5772,6 +6235,24 @@ function join( test )
 
   var paths = [  '/','a', '//b//', '././c', '../d', '..e' ];
   var expected = '//b//d/..e';
+  var got = _.path.join.apply( _.path, paths );
+  test.identical( got, expected );
+
+  test.case = 'join trailed';
+  var paths = [ '/a/b/', '.' ];
+  var expected = '/a/b';
+  var got = _.path.join.apply( _.path, paths );
+  test.identical( got, expected );
+
+  test.case = 'join trailed';
+  var paths = [ '/a/b/', './' ];
+  var expected = '/a/b/';
+  var got = _.path.join.apply( _.path, paths );
+  test.identical( got, expected );
+
+  test.case = 'join trailed';
+  var paths = [ '/a/b', './' ];
+  var expected = '/a/b/';
   var got = _.path.join.apply( _.path, paths );
   test.identical( got, expected );
 
@@ -5977,13 +6458,9 @@ function joinCross( test )
 function reroot( test )
 {
 
-  // test.case = 'missed arguments';
-  // var got = _.path.reroot();
-  // test.identical( got, '.' );
-
   test.case = 'join windows os paths';
   var paths1 = [ 'c:\\', 'foo\\', 'bar\\' ];
-  var expected1 = '/c/foo/bar';
+  var expected1 = '/c/foo/bar/';
   var got = _.path.reroot.apply( _.path, paths1 );
   test.identical( got, expected1 );
 
@@ -6031,7 +6508,7 @@ function resolve( test )
 
   test.case = 'join windows os paths';
   var paths = [ 'c:\\', 'foo\\', 'bar\\' ];
-  var expected = '/c/foo/bar';
+  var expected = '/c/foo/bar/';
   var got = _.path.resolve.apply( _.path, paths );
   test.identical( got, expected );
 
@@ -6374,7 +6851,7 @@ function dir( test )
   test.identical( got, expected );
 
   var src = '/aa/bb/';
-  var expected = '/aa/bb';
+  var expected = '/aa/bb/';
   var got = _.path.dir( src );
   test.identical( got, expected );
 
@@ -6415,7 +6892,7 @@ function dir( test )
   test.open( 'trailing slash' );
 
   var src = '/a/b/';
-  var expected = '/a/b';
+  var expected = '/a/b/';
   var got = _.path.dir( src );
   test.identical( got, expected );
 
@@ -6425,12 +6902,12 @@ function dir( test )
   test.identical( got, expected );
 
   var src = '/a/b/./';
-  var expected = '/a/b';
+  var expected = '/a/b/';
   var got = _.path.dir( src );
   test.identical( got, expected );
 
   var src = 'a/b/';
-  var expected = 'a/b';
+  var expected = 'a/b/';
   var got = _.path.dir( src );
   test.identical( got, expected );
 
@@ -6440,7 +6917,7 @@ function dir( test )
   test.identical( got, expected );
 
   var src = 'a/b/./';
-  var expected = 'a/b';
+  var expected = 'a/b/';
   var got = _.path.dir( src );
   test.identical( got, expected );
 
@@ -6942,6 +7419,27 @@ function relative( test )
   test.case = 'same path'; /* */
   var from = '/aa/bb/cc';
   var to = '/aa/bb/cc/';
+  var expected = './';
+  var got = _.path.relative( from, to );
+  test.identical( got, expected );
+
+  test.case = 'two absolute paths'; /* */
+  var from = '/a/b/';
+  var to = '/a/b/';
+  var expected = './';
+  var got = _.path.relative( from, to );
+  test.identical( got, expected );
+
+  test.case = 'two absolute paths'; /* */
+  var from = '/a/b';
+  var to = '/a/b/';
+  var expected = './';
+  var got = _.path.relative( from, to );
+  test.identical( got, expected );
+
+  test.case = 'two absolute paths'; /* */
+  var from = '/a/b/';
+  var to = '/a/b';
   var expected = '.';
   var got = _.path.relative( from, to );
   test.identical( got, expected );
@@ -6954,9 +7452,30 @@ function relative( test )
   test.identical( got, expected );
 
   test.case = 'same path'; /* */
+  var from = '/a';
+  var to = '//b';
+  var expected = '..//b';
+  var got = _.path.relative( from, to );
+  test.identical( got, expected );
+
+  test.case = 'same path'; /* */
+  var from = '/a/';
+  var to = '//b/';
+  var expected = '..//b/';
+  var got = _.path.relative( from, to );
+  test.identical( got, expected );
+
+  test.case = 'same path'; /* */
+  var from = '/aa//bb/cc';
+  var to = '//xx/yy/zz';
+  var expected = '../../../..//xx/yy/zz';
+  var got = _.path.relative( from, to );
+  test.identical( got, expected );
+
+  test.case = 'same path'; /* */
   var from = '/aa//bb/cc/';
   var to = '//xx/yy/zz/';
-  var expected = '../../../..//xx/yy/zz';
+  var expected = '../../../..//xx/yy/zz/';
   var got = _.path.relative( from, to );
   test.identical( got, expected );
 
@@ -6975,9 +7494,16 @@ function relative( test )
   test.identical( got, expected );
 
   test.case = 'relative to parent directory'; /* */
+  var from = '/aa/bb/cc';
+  var to = '/aa/bb/';
+  var expected = '../';
+  var got = _.path.relative( from, to );
+  test.identical( got, expected );
+
+  test.case = 'relative to parent directory'; /* */
   var from = '/aa/bb/cc/';
   var to = '/aa/bb/';
-  var expected = '..';
+  var expected = '../';
   var got = _.path.relative( from, to );
   test.identical( got, expected );
 
@@ -7229,6 +7755,7 @@ function relative( test )
 
 function relativeWithOptions( test )
 {
+
   test.open( 'old cases' )
 
   test.case = 'both relative, long, not direct, resolving : 0'; /* */
@@ -7848,6 +8375,7 @@ var Self =
     refine,
 
     normalize,
+    normalizeStrict,
     normalizeTolerant,
 
     dot,

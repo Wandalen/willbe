@@ -197,9 +197,6 @@ function moduleMake( o )
 
   _.assert( o.module.willfilesPath === o.willfilesPath || o.module.willfilesPath === o.dirPath );
 
-  // o.module.stager.stageStateSkipping( 'resourcesFormed', !o.forming );
-  // o.module.willfilesFind();
-
   o.module.open();
   o.module.openedModule.stager.stageStatePausing( 'opened', 0 );
   o.module.openedModule.stager.stageStateSkipping( 'resourcesFormed', !o.forming );
@@ -560,11 +557,16 @@ function modulePathUnregister( openedModule )
 
   _.assert( arguments.length === 1 );
   _.assert( openedModule instanceof will.OpenedModule );
+  _.assert( openedModule._pathRegistered === null || openedModule._pathRegistered === openedModule.commonPath );
+
+  if( !openedModule._pathRegistered )
+  return;
 
   if( openedModule.commonPath )
   {
     _.assert( _.strIs( openedModule.commonPath ) );
-    _.assert( will.moduleWithPathMap[ openedModule.commonPath ] === openedModule || will.moduleWithPathMap[ openedModule.commonPath ] === undefined );
+    // _.assert( will.moduleWithPathMap[ openedModule.commonPath ] === openedModule || will.moduleWithPathMap[ openedModule.commonPath ] === undefined );
+    _.assert( will.moduleWithPathMap[ openedModule.commonPath ] === openedModule );
     delete will.moduleWithPathMap[ openedModule.commonPath ];
   }
 
@@ -580,6 +582,8 @@ function modulePathRegister( openedModule )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+
+  openedModule._pathRegistered = openedModule.commonPath;
 
   _.assert( openedModule instanceof will.OpenedModule );
   _.assert( arguments.length === 1 );

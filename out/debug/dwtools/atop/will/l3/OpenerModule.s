@@ -435,12 +435,12 @@ function open()
     _.assert( opener.openedModule === openedModule || opener.openedModule === null );
     opener.openedModule = openedModule;
 
-    debugger;
+    // debugger;
     _.assert( !openedModule.willfileArray.length || _.arrayIdentical( opener.willfileArray, openedModule.willfileArray ) );
-    debugger;
+    // debugger;
     openedModule.willfileArray = _.entityShallowClone( opener.willfileArray );
     // openedModule.willfileWithRoleMap = _.entityShallowClone( opener.willfileWithRoleMap );
-    debugger;
+    // debugger;
 
   }
   else
@@ -849,6 +849,7 @@ function _willfilesFindMaybe( o )
   if( _.arrayIs( opener.willfilesPath ) && opener.willfilesPath.length === 1 )
   opener.willfilesPath = opener.willfilesPath[ 0 ];
 
+  debugger;
   if( !found )
   find( o.isOutFile );
 

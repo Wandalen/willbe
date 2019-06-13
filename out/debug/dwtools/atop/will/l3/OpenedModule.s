@@ -595,6 +595,15 @@ function predefinedForm()
 
   path
   ({
+    name : 'module.common',
+    path : null,
+    writable : 0,
+    exportable : 1,
+    importable : 0,
+  })
+
+  path
+  ({
     name : 'local',
     path : null,
     writable : 1,
@@ -1278,7 +1287,6 @@ function _willfilesOpen()
 
   /* */
 
-  // debugger;
   for( let i = 0 ; i < module.willfileArray.length ; i++ )
   {
     let willfile = module.willfileArray[ i ];
@@ -1296,6 +1304,7 @@ function _willfilesOpen()
   con.finally( ( err, arg ) =>
   {
     // debugger;
+    // console.log( module );
     if( err )
     throw _.err( err );
     return arg;
@@ -1433,193 +1442,6 @@ function willfileArraySet( willfileArray )
 
   return module.willfileArray;
 }
-
-// //
-//
-// function moduleAt( willfilesPath )
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let rootModule = module.rootModule;
-//
-//   _.assert( arguments.length === 1 );
-//
-//   let commonPath = module.CommonPathFor( willfilesPath );
-//
-//   return will.moduleWithPathMap[ commonPath ];
-// }
-//
-// //
-//
-// function modulePathRegister()
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//   let rootModule = module.rootModule;
-//
-//   // _.assert( !module.original );
-//   _.assert( arguments.length === 0 );
-//
-//   _.assert( will.moduleWithPathMap[ module.commonPath ] === module || will.moduleWithPathMap[ module.commonPath ] === undefined );
-//   will.moduleWithPathMap[ module.commonPath ] = module;
-//   _.assert( _.arrayCountElement( _.mapVals( will.moduleWithPathMap ), module ) === 1 );
-//
-// }
-//
-// //
-//
-// function modulePathUnregister()
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//   let rootModule = module.rootModule;
-//
-//   // _.assert( !module.original );
-//   _.assert( arguments.length === 0 );
-//   _.assert( _.strIs( module.commonPath ) );
-//
-//   _.assert( will.moduleWithPathMap[ module.commonPath ] === module || will.moduleWithPathMap[ module.commonPath ] === undefined );
-//   delete will.moduleWithPathMap[ module.commonPath ];
-//   _.assert( _.arrayCountElement( _.mapVals( will.moduleWithPathMap ), module ) === 0 );
-//
-// }
-
-// //
-//
-// function submoduleRegister( submodule )
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let rootModule = module.rootModule;
-//
-//   _.assert( arguments.length === 1 );
-//   _.assert( module.rootModule === module );
-//   _.assert( submodule.shortNameArrayGet().length > 1 );
-//   _.assert( !!module.allSubmodulesMap );
-//
-//   /* */
-//
-//   register( submodule.shortNameArrayGet().join( '.' ) );
-//   register( submodule.name );
-//
-//   /* */
-//
-//   function register( name )
-//   {
-//     let name0 = name;
-//     let counter = 1;
-//     while( module.allSubmodulesMap[ name ] )
-//     {
-//       counter += 1;
-//       name = name0 + '.' + counter;
-//     }
-//     module.allSubmodulesMap[ name ] = submodule;
-//   }
-//
-// }
-
-// submoduleRegister.default =
-// {
-//   submodule : null,
-//   // shortName : null,
-//   // longName : null,
-// }
-//
-// //
-// // //
-// //
-// // function submoduleRegister( o )
-// // {
-// //   let module = this;
-// //   let will = module.will;
-// //   let fileProvider = will.fileProvider;
-// //   let path = fileProvider.path;
-// //   let rootModule = module.rootModule;
-// //
-// //   _.assert( arguments.length === 1 );
-// //   _.assertRoutineOptions( submoduleRegister, arguments );
-// //
-// //   if( submodule.module === module )
-// //   {
-// //     _.assert( submodule.name === o.shortName );
-// //     _.assert( module.submoduleMap[ submodule.name ] === submodule )
-// //   }
-// //   else
-// //   {
-// //     debugger;
-// //
-// //     let shortName = o.shortName;
-// //     if( module.submoduleMap[ shortName ] !== submodule )
-// //     {
-// //       if( module.submoduleMap[ shortName ] )
-// //       debugger;
-// //       if( module.submoduleMap[ shortName ] )
-// //       shortName = module.resourceNameAllocate( 'submodule', shortName );
-// //       module.submoduleMap[ shortName ] = submodule;
-// //     }
-// //
-// //     if( o.shortName !== o.longName )
-// //     {
-// //       let longName = o.longName;
-// //       if( module.submoduleMap[ longName ] !== submodule )
-// //       {
-// //         if( module.submoduleMap[ longName ] )
-// //         debugger;
-// //         if( module.submoduleMap[ longName ] )
-// //         longName = module.resourceNameAllocate( 'submodule', longName );
-// //         module.submoduleMap[ longName ] = submodule;
-// //       }
-// //     }
-// //
-// //   }
-// //
-// //   if( module.supermodule )
-// //   {
-// //     debugger;
-// //     let longName = ( module.aliasName || module.name || '' ) + '.' + o.longName;
-// //     module.supermodule.submoduleRegister
-// //     ({
-// //       submodule : submodule,
-// //       longName : longName,
-// //       shortName : o.shortName,
-// //     });
-// //   }
-// //
-// // }
-// //
-// // submoduleRegister.default =
-// // {
-// //   submodule : null,
-// //   shortName : null,
-// //   longName : null,
-// // }
-//
-// // //
-// //
-// // function submoduleNameAllocate( name )
-// // {
-// //   let module = this;
-// //   let will = module.will;
-// //   let fileProvider = will.fileProvider;
-// //   let path = fileProvider.path;
-// //   let rootModule = module.rootModule;
-// //
-// //   _.assert( arguments.length === 1 );
-// //
-// //
-// //
-// //   return will.moduleWithPathMap[ commonPath ];
-// // }
 
 //
 
@@ -2909,6 +2731,8 @@ function _filePathChange( willfilesPath )
   module.willfilesPath = willfilesPath;
   module._dirPathChange( dirPath );
   module._commonPathChange( commonPath );
+
+  _.assert( module.commonPath === commonPath );
 
   will.modulePathRegister( module );
 
@@ -5455,6 +5279,7 @@ let Restricts =
   stager : null,
 
   willfilesReadTimeReported : 0,
+  _pathRegistered : null,
 
   // willfileArray : _.define.own([]),
   // willfileWithRoleMap : _.define.own({}),
@@ -5623,34 +5448,20 @@ let Proto =
   willfileRegister,
   willfileUnregister,
 
-  // _willfileFindSingle,
-  // _willfileFindMultiple,
-  // _willfilesFindMaybe,
-  // _willfilesFindPickedFile,
-  // _willfilesFind,
-  // willfilesFind,
-  // willfilesPick,
-
   willfilesOpen,
   _willfilesOpen,
 
   willfilesReadBegin,
   willfilesReadEnd,
 
-  // _willfilesExport,
-  // willfileEach,
+  _willfilesExport,
+  willfileEach,
 
   // submodule
 
   rootModuleGet,
   rootModuleSet,
   willfileArraySet,
-
-  // moduleAt,
-  // modulePathRegister,
-  // modulePathUnregister,
-
-  // submoduleRegister,
 
   submodulesAllAreDownloaded,
   submodulesAllAreValid,

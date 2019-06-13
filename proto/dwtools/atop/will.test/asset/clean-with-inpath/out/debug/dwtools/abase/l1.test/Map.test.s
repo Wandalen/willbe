@@ -582,6 +582,100 @@ function mapMake( test )
 }
 
 //
+// map manipulator
+//
+
+function mapSetWithKeys( test )
+{
+  test.case = 'dstMap is null or empty';
+
+  var got = _.mapSetWithKeys( null, [], 2  );
+  test.identical( got, {} );
+
+  var got = _.mapSetWithKeys( {}, [], 2  );
+  test.identical( got, {} );
+
+  var got = _.mapSetWithKeys( null, 'a', 2  );
+  test.identical( got, { 'a' : 2 } );
+
+  var got = _.mapSetWithKeys( {}, 'a', 2  );
+  test.identical( got, { 'a' : 2 } );
+
+  var got = _.mapSetWithKeys( null, [ 'a', 'b' ], 2  );
+  test.identical( got, { 'a' : 2, 'b' : 2 } );
+
+  var got = _.mapSetWithKeys( {}, [ 'a', 'b' ], 2  );
+  test.identical( got, { 'a' : 2, 'b' : 2 } );
+
+  var got = _.mapSetWithKeys( {}, [ 1, 2 ], 2  );
+  test.identical( got, { 1 : 2, 2 : 2 } );
+
+  test.case = 'dstMap is not null';
+
+  var got = _.mapSetWithKeys( { 'a' : 2 }, 'a', 'abc'  );
+  test.identical( got, { 'a' : 'abc' } );
+
+  var got = _.mapSetWithKeys( { 'a' : 2 }, 'b', 3  );
+  test.identical( got, { 'a' : 2, 'b' : 3 } );
+
+  var got = _.mapSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], 3 );
+  test.identical( got, { 'a' : 2, 'b' : 3, 'c' : 3 } );
+
+  var got = _.mapSetWithKeys( { 0 : 0 }, [ 1, 2 ], 2  );
+  test.identical( got, { 0 : 0, 1 : 2, 2 : 2 } );
+
+  test.case = 'val is array';
+
+  var got = _.mapSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], [ 3 ] );
+  test.identical( got, { 'a' : 2, 'b' : [ 3 ], 'c' : [ 3 ] } );
+
+  var got = _.mapSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], [ 3, 'aa' ] );
+  test.identical( got, { 'a' : 2, 'b' : [ 3, 'aa' ], 'c' : [ 3, 'aa' ] } );
+
+  var got = _.mapSetWithKeys( { 0 : 0 }, [ 0, 2 ], [ 3, 'aa' ]  );
+  test.identical( got, { 0 : [ 3, 'aa' ], 2 : [ 3, 'aa' ] } );
+
+  test.case = 'val is object';
+
+  var got = _.mapSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], { 'cc' : 1 } );
+  test.identical( got, { 'a' : 2, 'b' : { 'cc' : 1 }, 'c' : { 'cc' : 1 } } );
+
+  var got = _.mapSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], { 'd' : undefined } );
+  test.identical( got, { 'a' : 2, 'b' : { 'd' : undefined }, 'c' : { 'd' : undefined } } );
+
+  var got = _.mapSetWithKeys( { 0 : 0 }, [ 0, 2 ], { 3 : 'aa' } );
+  test.identical( got, { 0 : { 3 : 'aa' }, 2 : { 3 : 'aa' } } );
+
+  test.case = 'src has null or undefined values';
+
+  var got = _.mapSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ null, 'c' ], 'aa' );
+  test.identical( got, { 'a' : 2, 'b' : 1, 'c' : 'aa', null : 'aa' } );
+
+  var got = _.mapSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ undefined, 'c' ], 'aa' );
+  test.identical( got, { 'a' : 2, 'b' : 1, 'c' : 'aa', undefined : 'aa' } );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'no arguments'
+  test.shouldThrowErrorSync( () => _.mapSetWithKeys() );
+
+  test.case = 'too many arguments'
+  test.shouldThrowErrorSync( () => _.mapSetWithKeys( {}, 'a', 'a', 1 ) );
+
+  test.case = 'dstMap is not object or null'
+  test.shouldThrowErrorSync( () => _.mapSetWithKeys( [], 'a', 'a' ) );
+
+  test.case = 'src is not array of strings or string'
+
+  test.shouldThrowErrorSync( () => _.mapSetWithKeys( { 'a' : 1 }, 1, 'a' ) );
+
+  test.shouldThrowErrorSync( () => _.mapSetWithKeys( { 'a' : 1 }, { 'k' : 2 }, 'a' ) );
+}
+
+//
 
 function mapFirstPair( test )
 {
@@ -3967,6 +4061,11 @@ var Self =
     mapComplement,
 
     mapMake,
+
+    // map manipulator
+
+    mapSetWithKeys,
+    mapSet : mapSetWithKeys,
 
     // map convert
 

@@ -238,6 +238,7 @@ function makeNamed( test )
       'module.dir' : path.join( routinePath, '.' ),
       'module.willfiles' : path.s.join( routinePath, [ './super.im.will.yml', './super.ex.will.yml' ] ),
       'module.original.willfiles' : null,
+      'module.common' : path.join( routinePath, 'super' ),
 
     }
 
@@ -381,6 +382,7 @@ function makeAnon( test )
       'module.willfiles' : [ routinePath + '/.im.will.yml', routinePath + '/.ex.will.yml' ],
       'module.original.willfiles' : null,
       'temp' : [ '../out', '../super.out' ],
+      'module.common' : path.join( routinePath ) + '/',
 
     }
 
@@ -526,6 +528,7 @@ function makeOutNamed( test )
       'module.dir' : routinePath + '/super.out',
       'module.willfiles' : routinePath + '/super.out/supermodule.out.will.yml',
       'module.original.willfiles' : _.path.s.join( routinePath, [ 'super.im.will.yml', 'super.ex.will.yml' ] ),
+      'module.common' : path.join( routinePath ) + '/super.out/supermodule.out',
 
     }
 
@@ -670,7 +673,9 @@ function clone( test )
     test.identical( module2.willfileArray.length, 0 );
     test.identical( _.mapKeys( module2.willfileWithRoleMap ), [] );
 
+    debugger;
     module2.openCloning( module.openedModule );
+    debugger;
 
     test.case = 'compare elements';
 
@@ -1190,7 +1195,7 @@ function superResolve( test )
       mapValsUnwrapping : 1,
       pathResolving : 0,
     });
-    test.identical( resolved.length, 44 );
+    test.identical( resolved.length, 45 );
 
     test.case = '* + defaultResourceName';
     var resolved = module.openedModule.resolve
@@ -1202,7 +1207,7 @@ function superResolve( test )
       mapValsUnwrapping : 1,
       pathResolving : 0,
     });
-    test.identical( resolved.length, 13 );
+    test.identical( resolved.length, 14 );
 
     return null;
   })
@@ -1343,7 +1348,6 @@ function buildsResolve( test )
   });
 
   return ready.split();
-  // return module.openedModule.ready.split();
 }
 
 buildsResolve.timeOut = 130000;
@@ -1438,7 +1442,6 @@ function pathsResolve( test )
 
     test.case = 'path::* - implicit'; /* */
     var resolved = module.openedModule.resolve( 'path::*' );
-    // var expected = pin([ [ './super.im.will.yml', './super.ex.will.yml' ], '.', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ]);
     var expected = pin([ './super.im.will.yml', './super.ex.will.yml', '.', path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ]);
 
     var expected = pin
@@ -1447,6 +1450,7 @@ function pathsResolve( test )
       './super.ex.will.yml',
       null,
       '.',
+      'super',
       null,
       null,
       null,
@@ -1479,6 +1483,7 @@ function pathsResolve( test )
       ],
       null,
       '.',
+      'super',
       null,
       null,
       null,
@@ -1511,6 +1516,7 @@ function pathsResolve( test )
         ]),
         null,
         pin( '.' ),
+        pin( 'super' ),
         null,
         null,
         null,
@@ -1534,7 +1540,6 @@ function pathsResolve( test )
       arrayFlattening : 0,
       pathResolving : null,
     });
-    // var expected = [ pin([ './super.im.will.yml', './super.ex.will.yml' ]), routinePath + '', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ];
     var expected =
     [
       [
@@ -1543,6 +1548,7 @@ function pathsResolve( test )
       ],
       null,
       pin( '.' ),
+      pin( 'super' ),
       null,
       null,
       null,
@@ -1577,6 +1583,7 @@ function pathsResolve( test )
       'will' : path.join( __dirname, '../will/Exec' ),
       'module.dir' : routinePath + '',
       'module.willfiles' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
+      'module.common' : routinePath + '/super',
       'module.original.willfiles' : null,
       'local' : null,
       'remote' : null,
@@ -1604,17 +1611,14 @@ function pathsResolve( test )
       'out' : pin( './super.out' ),
       'out.debug' : pin( './super.out/debug' ),
       'out.release' : pin( './super.out/release' ),
-      // 'local' : [],
-      // 'remote' : [],
       'will' : path.join( __dirname, '../will/Exec' ),
       'module.dir' : routinePath + '',
       'module.willfiles' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
-
+      'module.common' : routinePath + '/super',
       'module.original.willfiles' : null,
       'local' : null,
       'remote' : null,
       'current.remote' : null,
-
     }
     var got = _.select( resolved, '*/path' );
     test.identical( got, expected );
@@ -1635,12 +1639,10 @@ function pathsResolve( test )
       'out' : pout( '.' ),
       'out.debug' : pout( './super.out/debug' ),
       'out.release' : pout( './super.out/release' ),
-      // 'local' : [],
-      // 'remote' : [],
       'will' : path.join( __dirname, '../will/Exec' ),
       'module.dir' : routinePath + '',
       'module.willfiles' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
-
+      'module.common' : routinePath + '/super',
       'module.original.willfiles' : null,
       'local' : null,
       'remote' : null,
@@ -1665,12 +1667,10 @@ function pathsResolve( test )
       'out' : './super.out',
       'out.debug' : './super.out/debug',
       'out.release' : './super.out/release',
-      // 'local' : [],
-      // 'remote' : [],
       'will' : path.join( __dirname, '../will/Exec' ),
       'module.dir' : routinePath + '',
       'module.willfiles' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
-
+      'module.common' : routinePath + '/super',
       'module.original.willfiles' : null,
       'local' : null,
       'remote' : null,
@@ -1695,12 +1695,10 @@ function pathsResolve( test )
       'out' : pin( './super.out' ),
       'out.debug' : pin( './super.out/debug' ),
       'out.release' : pin( './super.out/release' ),
-      // 'local' : [],
-      // 'remote' : [],
       'will' : path.join( __dirname, '../will/Exec' ),
       'module.dir' : routinePath + '',
       'module.willfiles' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
-
+      'module.common' : routinePath + '/super',
       'module.original.willfiles' : null,
       'local' : null,
       'remote' : null,
@@ -1725,12 +1723,10 @@ function pathsResolve( test )
       'out' : pout( '.' ),
       'out.debug' : pout( './super.out/debug' ),
       'out.release' : pout( './super.out/release' ),
-      // 'local' : [],
-      // 'remote' : [],
       'will' : path.join( __dirname, '../will/Exec' ),
       'module.dir' : routinePath + '',
       'module.willfiles' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
-
+      'module.common' : routinePath + '/super',
       'module.original.willfiles' : null,
       'local' : null,
       'remote' : null,
@@ -1747,7 +1743,6 @@ function pathsResolve( test )
       mapValsUnwrapping : 1,
       pathResolving : null,
     });
-    // var expected = [ [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ], routinePath + '', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ];
     var expected =
     [
       [
@@ -1756,6 +1751,7 @@ function pathsResolve( test )
       ],
       null,
       pin( '.' ),
+      pin( 'super' ),
       null,
       null,
       null,
@@ -1778,7 +1774,6 @@ function pathsResolve( test )
       mapValsUnwrapping : 1,
       pathResolving : 'in',
     });
-    // var expected = pin([ [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ], '.', [], [], path.join( __dirname, '../will/Exec' ), './proto', './super.out', '.', './super.out', './super.out/debug', './super.out/release' ]);
     var expected = pin
     ([
       [
@@ -1787,6 +1782,7 @@ function pathsResolve( test )
       ],
       null,
       '.',
+      'super',
       null,
       null,
       null,
@@ -1817,6 +1813,7 @@ function pathsResolve( test )
       ],
       null,
       pin( '.' ),
+      pin( 'super' ),
       null,
       null,
       null,
@@ -1846,7 +1843,6 @@ function pathsResolve( test )
   });
 
   return ready.split();
-  // return module.openedModule.ready.split();
 }
 
 pathsResolve.timeOut = 130000;
@@ -2708,9 +2704,7 @@ function pathsResolveOutFileOfExports( test )
     test.open( 'without export' );
 
     test.case = 'submodule::*/path::in*=1, default';
-    debugger;
     var resolved = module.openedModule.resolve( 'submodule::*/path::in*=1' );
-    debugger;
     var expected = pin( '.' );
     test.identical( resolved, expected );
 
@@ -3460,7 +3454,6 @@ function pathsResolveOutFileOfExports( test )
   });
 
   return ready.split();
-  // return module.openedModule.ready.split();
 }
 
 pathsResolveOutFileOfExports.timeOut = 130000;

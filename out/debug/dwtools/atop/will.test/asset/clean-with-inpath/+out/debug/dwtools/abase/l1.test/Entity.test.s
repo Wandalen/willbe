@@ -161,7 +161,11 @@ function entityMap( test )
     test.identical( Object.is( got, entity4 ), false );
   }
 
-  /**/
+  test.case = 'number';
+  var got = _.entityMap( 3, callback1 );
+  test.identical( got, 9 );
+
+  /* */
 
   if( !Config.debug )
   return;
@@ -178,11 +182,11 @@ function entityMap( test )
     _.entityMap( [ 1,3 ], callback1, callback2 );
   });
 
-  test.case = 'passed argument is not ArrayLike, ObjectLike';
-  test.shouldThrowError( function()
-  {
-    _.entityFilter( 44, callback1 );
-  });
+  // test.case = 'passed argument is not ArrayLike, ObjectLike';
+  // test.shouldThrowError( function()
+  // {
+  //   _.entityMap( 44, callback1 );
+  // });
 
   test.case = 'second argument is not routine';
   test.shouldThrowError( function()
@@ -190,7 +194,7 @@ function entityMap( test )
     _.entityMap( [ 1,3 ], 'callback' );
   });
 
-};
+}
 
 //
 
@@ -250,6 +254,10 @@ function entityFilter( test )
   var got = _.entityFilter( entity1, callback1 );
   test.identical( got,expected1 );
 
+  test.case = 'number';
+  var got = _.entityFilter( 3, callback1 );
+  test.identical( got, Math.sqrt( 3 ) );
+
   /**/
 
   if( !Config.debug )
@@ -267,11 +275,11 @@ function entityFilter( test )
     _.entityFilter( [ 1,3 ], callback1, callback2 );
   });
 
-  test.case = 'passed argument is not ArrayLike, ObjectLike';
-  test.shouldThrowError( function()
-  {
-    _.entityFilter( 44, callback1 );
-  });
+  // test.case = 'passed argument is not ArrayLike, ObjectLike';
+  // test.shouldThrowError( function()
+  // {
+  //   _.entityFilter( 44, callback1 );
+  // });
 
   test.case = 'second argument is not routine';
   test.shouldThrowError( function()
@@ -717,9 +725,14 @@ function entitySize( test )
   var expected = 3 ;
   test.identical( got, expected );
 
+// wrong because routine has this code
+// if( _.numberIs( src ) )
+// return 8;
+// so, expected should be 8
+
   test.case = 'atomic type';
   var got = _.entitySize( 6 );
-  var expected = null;
+  var expected = 8;
   test.identical( got, expected );
 
   test.case = 'buffer';
@@ -727,19 +740,53 @@ function entitySize( test )
   var expected = 10;
   test.identical( got, expected );
 
+// wrong because routine has code
+// if( _.longIs( src ) )
+// {
+//   let result = 0;
+//   for( let i = 0; i < src.length; i++ )
+//   {
+//     result += _.entitySize( src[ i ] );
+//     if( isNaN( result ) )
+//     break;
+//   }
+//   return result;
+// }
+// so, expected should be 3 * 8 = 24
+
   test.case = 'arraylike';
   var got = _.entitySize( [ 1, 2, 3 ] );
-  var expected = 3;
+  var expected = 24;
   test.identical( got, expected );
+
+  // wrong because routine has code
+  // if( _.mapIs( src ) )
+  // {
+  //   let result = 0;
+  //   for( let k in src )
+  //   {
+  //     result += _.entitySize( k );
+  //     result += _.entitySize( src[ k ] );
+  //     if( isNaN( result ) )
+  //     break;
+  //   }
+  //   return result;
+  // }
+  // so, expected should be 1 + 8 + 1 + 8 = 18
 
   test.case = 'object';
   var got = _.entitySize( { a : 1, b : 2 } );
-  var expected = null;
+  var expected = 18;
   test.identical( got, expected );
+
+  // wrong because routine has code
+  // if( !_.definedIs( src ) )
+  // return 8;
+  // so, expected should be 8
 
   test.case = 'empty call';
   var got = _.entitySize( undefined );
-  var expected = null;
+  var expected = 8;
   test.identical( got, expected );
 
   if( !Config.debug )
