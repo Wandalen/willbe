@@ -1,0 +1,22 @@
+
+step :
+
+  shell.verbosity.zero :
+    currentPath : .
+    shell : node -e "console.log( 'message from shell' )"
+    verbosity : 0
+    
+  shell.verbosity.full :
+    currentPath : .
+    shell : node -e "console.log( 'message from shell' )"
+    verbosity : 9
+
+build :
+
+  verbosity.zero :
+    steps :
+      - shell.verbosity.zero
+
+  verbosity.full :
+    steps :
+      - shell.verbosity.full

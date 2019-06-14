@@ -2665,6 +2665,60 @@ cleanWithInPath.timeOut = 200000;
 
 //
 
+function stepCleanPaths( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-clean-paths' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let modulePath = _.path.join( routinePath, 'module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /*
+    Expected output :
+    
+    - clean.paths :
+	    - deleted 1 files at proto/A in 0.001s
+      - deleted 1 files at proto/B in 0.001s
+  */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'clean several paths';
+    return null;
+  })
+
+  shell({ args : [ '.build' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+stepCleanPaths.timeOut = 200000;
+
+//
+
 function buildSingleModule( test )
 {
   let self = this;
@@ -6732,6 +6786,112 @@ function reflectSubmodulesWithCriterion( test )
 
 //
 
+function reflectSubmodulesWithPluralCriterionManualExport( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-submodules-with-plural-criterion' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = 'reflect informal submodule, manual export'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.each module .export' ] })
+
+  //fails with error on first run
+
+  shell({ args : [ '.build variant1' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    var expected = [ '.', './debug' ];
+    test.identical( files, expected );
+    return null;
+  })
+
+  return ready;
+}
+
+//
+
+function reflectSubmodulesWithPluralCriterionAutoExport( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-submodules-with-plural-criterion' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = 'reflect informal submodule exported using steps, two builds in a row'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  //first run works
+
+  shell({ args : [ '.build variant2' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    var expected = [ '.', './debug' ];
+    test.identical( files, expected );
+    return null;
+  })
+
+  //second run fails
+
+  shell({ args : [ '.build variant2' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    var expected = [ '.', './debug' ];
+    test.identical( files, expected );
+    return null;
+  })
+
+  return ready;
+}
+
+//
+
 function reflectInherit( test )
 {
   let self = this;
@@ -6961,6 +7121,192 @@ reflectorMasks.timeOut = 200000;
 
 //
 
+function shellPluralCriterion( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-shell-plural-criterion' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  
+  /* Checks if shell step supports plural criterion and which path is selected using current value of criterion */
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  /* - */
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* - */
+
+  shell({ args : [ '.build A' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = 'should execute file A.js';
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Executed-A.js' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.build B' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = 'should execute file B.js';
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Executed-B.js' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+shellPluralCriterion.timeOut = 200000;
+
+//
+
+function shellUsingCriterionValue( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-shell-using-criterion-value' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+
+  /* Checks if correct value of criterion is passed into shell command */
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  /* - */
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* - */
+
+  shell({ args : [ '.build debug' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = 'should print debug:1';
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'debug:1' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.build release' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = 'should print debug:0';
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'debug:0' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+shellUsingCriterionValue.timeOut = 200000;
+
+//
+
+function shellVerbosity( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-shell-using-criterion-value' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+
+  /* 
+    Checks amount of output from shell step depending on value of verbosity option
+  */
+
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  /* - */
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* - */
+
+  shell({ args : [ '.build shell.verbosity.zero' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = 'verbosity:0 should not print message';
+
+    test.identical( got.exitCode, 0 );
+    test.is( !_.strHas( got.output, 'message from shell' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.build shell.verbosity.full' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = 'verbosity:9 should print message';
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'message from shell' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+shellVerbosity.timeOut = 20000;
+
+//
+
 function functionStringsJoin( test )
 {
   let self = this;
@@ -7135,6 +7481,57 @@ function functionPlatform( test )
     test.identical( files, [ '.', './dir.osx', './dir.osx/File.js' ] );
     else
     test.identical( files, [ '.', './dir.posix', './dir.posix/File.js' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+//
+
+function printStepNameBeforeExecution( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-print-name-before-exec' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+
+  /* 
+    Checks if tool prints name of step before it execution
+  */
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  /* - */
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* - */
+
+  shell({ args : [ '.build ; .set v:4' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = 'should print name of step before execution';
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '+ reflect.file reflected 1 files' ) );
+    test.is( _.strHas( got.output, '. shell.step' ) );
+    test.is( _.strHas( got.output, `node -e "console.log( 'shell.step' )"` ) );
+    test.is( _.strHas( got.output, '. delete.step' ) );
+    test.is( _.strHas( got.output, '- delete.step deleted 1 files at' ) );
 
     return null;
   })
@@ -8996,6 +9393,7 @@ var Self =
     cleanSubmodules,
     cleanMixed,
     cleanWithInPath,
+    stepCleanPaths,
 
     buildSingleModule,
     buildSingleStep,
@@ -9028,12 +9426,20 @@ var Self =
     reflectWithOptions,
     reflectWithSelectorInDstFilter,
     reflectSubmodulesWithCriterion,
+    reflectSubmodulesWithPluralCriterionManualExport,
+    reflectSubmodulesWithPluralCriterionAutoExport,
     reflectInherit,
     // reflectComplexInherit, // xxx
     reflectorMasks,
-
+    
+    shellPluralCriterion,
+    shellUsingCriterionValue,
+    shellVerbosity,
+    
     functionStringsJoin,
     functionPlatform,
+    
+    printStepNameBeforeExecution,
 
     submodulesDownloadSingle,
     submodulesDownloadUpdate,
