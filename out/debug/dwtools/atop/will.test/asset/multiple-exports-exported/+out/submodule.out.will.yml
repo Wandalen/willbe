@@ -1,22 +1,29 @@
+format: willfile-1.0.0
 about:
   name: submodule
   description: Module for testing
   enabled: 1
   version: 0.0.1
-  values:
-    enabled: 1
-    name: submodule
 path:
   module.willfiles:
     path: out/submodule.out.will.yml
+    criterion:
+      predefined: 1
+  module.original.willfiles:
+    path:
+      - .im.will.yml
+      - .ex.will.yml
     criterion:
       predefined: 1
   module.dir:
     path: out
     criterion:
       predefined: 1
+  module.common:
+    path: out/submodule.out
+    criterion:
+      predefined: 1
   local:
-    path: out
     criterion:
       predefined: 1
   remote:
@@ -59,12 +66,6 @@ path:
       debug: 0
       raw: 1
       export: 1
-  module.original.willfiles:
-    path:
-      - .im.will.yml
-      - .ex.will.yml
-    criterion:
-      predefined: 1
   exported.dir.export.debug:
     path: ./out/debug
     criterion:
@@ -93,21 +94,7 @@ reflector:
   reflect.proto.:
     src:
       filePath:
-        .: .
-      prefixPath: proto
-      maskAll:
-        excludeAny:
-          - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
-          - !<tag:yaml.org,2002:js/regexp> /\.unique$/
-          - !<tag:yaml.org,2002:js/regexp> /\.git$/
-          - !<tag:yaml.org,2002:js/regexp> /\.svn$/
-          - !<tag:yaml.org,2002:js/regexp> /\.hg$/
-          - !<tag:yaml.org,2002:js/regexp> /\.DS_Store$/
-          - !<tag:yaml.org,2002:js/regexp> /(^|\/)-/
-          - !<tag:yaml.org,2002:js/regexp> /\.debug($|\.|\/)/i
-          - !<tag:yaml.org,2002:js/regexp> /\.experiment($|\.|\/)/i
-    dst:
-      prefixPath: out/release
+        'path::proto': 'path::out.*=1'
     criterion:
       debug: 0
     mandatory: 1
@@ -116,20 +103,7 @@ reflector:
   reflect.proto.debug:
     src:
       filePath:
-        .: .
-      prefixPath: proto
-      maskAll:
-        excludeAny:
-          - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
-          - !<tag:yaml.org,2002:js/regexp> /\.unique$/
-          - !<tag:yaml.org,2002:js/regexp> /\.git$/
-          - !<tag:yaml.org,2002:js/regexp> /\.svn$/
-          - !<tag:yaml.org,2002:js/regexp> /\.hg$/
-          - !<tag:yaml.org,2002:js/regexp> /\.DS_Store$/
-          - !<tag:yaml.org,2002:js/regexp> /(^|\/)-/
-          - !<tag:yaml.org,2002:js/regexp> /\.release($|\.|\/)/i
-    dst:
-      prefixPath: out/debug
+        'path::proto': 'path::out.*=1'
     criterion:
       debug: 1
     mandatory: 1
@@ -287,6 +261,3 @@ exported:
     exportedDirPath: 'path::exported.dir.export.'
     exportedFilesPath: 'path::exported.files.export.'
     archiveFilePath: 'path::archiveFile.export.'
-module:
-  submodule.out: root
-format: willfile-1.0.0
