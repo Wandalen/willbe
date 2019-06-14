@@ -1,0 +1,109 @@
+format: willfile-1.0.0
+about:
+  name: Proto
+  enabled: 1
+  version: 0.1.0
+path:
+  module.willfiles:
+    path: .module/Proto.out.will.yml
+    criterion:
+      predefined: 1
+  module.original.willfiles:
+    path: module/Proto.will.yml
+    criterion:
+      predefined: 1
+  module.dir:
+    path: .module
+    criterion:
+      predefined: 1
+  in:
+    path: ..
+  out:
+    path: .module
+  remote:
+    criterion:
+      predefined: 1
+  local:
+    criterion:
+      predefined: 1
+  export:
+    path: '{path::local}/proto'
+  temp:
+    path: out
+  exported.dir.export:
+    path: ./.module/Proto/proto
+    criterion:
+      default: 1
+      export: 1
+  exported.files.export:
+    path:
+      - .module/Proto/proto
+      - .module/Proto/proto/dwtools
+      - .module/Proto/proto/dwtools/Tools.s
+      - .module/Proto/proto/dwtools/abase
+      - .module/Proto/proto/dwtools/abase/l3
+      - .module/Proto/proto/dwtools/abase/l3/Proto.s
+      - .module/Proto/proto/dwtools/abase/l3/ProtoAccessor.s
+      - .module/Proto/proto/dwtools/abase/l3/ProtoLike.s
+      - .module/Proto/proto/dwtools/abase/l3.test
+      - .module/Proto/proto/dwtools/abase/l3.test/Proto.test.s
+      - .module/Proto/proto/dwtools/abase/l3.test/ProtoLike.test.s
+    criterion:
+      default: 1
+      export: 1
+submodule: {}
+reflector:
+  download:
+    src:
+      filePath: 'path::remote'
+    dst:
+      filePath: 'path::local'
+    mandatory: 1
+  exported.export:
+    src:
+      filePath: .module/Proto/proto
+    criterion:
+      default: 1
+      export: 1
+    mandatory: 1
+  exported.files.export:
+    src:
+      filePath: 'path::exported.files.export'
+      basePath: .
+      prefixPath: 'path::exported.dir.export'
+    criterion:
+      default: 1
+      export: 1
+    recursive: 0
+    mandatory: 1
+step:
+  export.common:
+    opts:
+      export: 'path::export'
+      tar: 0
+    inherit:
+      - module.export
+  download:
+    opts:
+      reflector: 'reflector::download*'
+    inherit:
+      - predefined.reflect
+build:
+  export:
+    criterion:
+      default: 1
+      export: 1
+    steps:
+      - 'step::download'
+      - 'step::export.common'
+exported:
+  export:
+    version: 0.1.0
+    criterion:
+      default: 1
+      export: 1
+    exportedReflector: 'reflector::exported.export'
+    exportedFilesReflector: 'reflector::exported.files.export'
+    exportedDirPath: 'path::exported.dir.export'
+    exportedFilesPath: 'path::exported.files.export'
+module: {}
