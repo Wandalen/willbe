@@ -767,13 +767,18 @@ function commandWith( e )
 
   let module = will.currentModule = will.OpenerModule({ will : will, willfilesPath : dirPath });
 
-  will.currentModule.open();
+  try
+  {
+    will.currentModule.open();
+  }
+  catch( err )
+  {
+    will.moduleDone({ error : err || null, command : commandWith });
+    throw err;
+  }
 
-  // module.openedModule.stager.stageStateSkipping( 'submodulesFormed', 1 );
   module.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
   module.openedModule.stager.stageStatePausing( 'opened', 0 );
-
-  // module.openedModule.willfilesFind();
   module.openedModule.stager.tick();
 
   return module.openedModule.ready.split().keep( function( arg )

@@ -849,7 +849,6 @@ function _willfilesFindMaybe( o )
   if( _.arrayIs( opener.willfilesPath ) && opener.willfilesPath.length === 1 )
   opener.willfilesPath = opener.willfilesPath[ 0 ];
 
-  debugger;
   if( !found )
   find( o.isOutFile );
 

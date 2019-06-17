@@ -759,7 +759,6 @@ function diagnosticBeep()
 function diagnosticApplicationEntryPointData()
 {
   let result = Object.create( null );
-  debugger;
   if( _global.process !== undefined )
   {
     if( _global.process.argv )

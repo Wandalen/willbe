@@ -960,6 +960,7 @@ function shell( o )
 
   _.assert( _.strIs( o.execPath ) );
   _.assert( arguments.length === 1 );
+  _.assert( o.verbosity === null || _.numberIs( o.verbosity ) );
   o = _.routineOptions( shell, o );
 
   /* */
@@ -969,6 +970,7 @@ function shell( o )
     selector : o.execPath,
     prefixlessAction : 'resolved',
     currentThis : o.currentThis,
+    currentContext : o.currentContext,
     pathNativizing : 1,
     arrayFlattening : 0, /* required for f::this and feature make */
   });
@@ -982,34 +984,14 @@ function shell( o )
   /* */
 
   let ready = new _.Consequence().take( null );
-  // if( _.arrayIs( o.currentPath ) ) /* xxx, qqq : implement multiple currentPath for routine _.shell */
-  // {
-  //
-  //   debugger;
-  //   o.currentPath.forEach( ( currentPath ) =>
-  //   {
-  //     _.shell
-  //     ({
-  //       execPath : o.execPath,
-  //       currentPath : currentPath,
-  //       verbosity : will.verbosity - 1,
-  //       ready : ready,
-  //     });
-  //   });
-  //
-  // }
-  // else
-  // {
 
-    _.shell
-    ({
-      execPath : o.execPath,
-      currentPath : o.currentPath,
-      verbosity : will.verbosity - 1,
-      ready : ready,
-    });
-
-  // }
+  _.shell
+  ({
+    execPath : o.execPath,
+    currentPath : o.currentPath,
+    verbosity : o.verbosity !== null ? o.verbosity : will.verbosity - 1,
+    ready : ready,
+  });
 
   return ready;
 }
@@ -1020,6 +1002,7 @@ shell.defaults =
   currentPath : null,
   currentThis : null,
   currentContext : null,
+  verbosity : null,
 }
 
 //
@@ -3471,12 +3454,14 @@ function resolveContextPrepare( o )
   _.routineOptions( resolveContextPrepare, arguments );
 
   if( !o.currentThis )
-  return o.currentThis;
-
-  if( _.mapIs( o.currentThis ) )
   {
+    if( !o.force )
+    return o.currentThis;
+    debugger;
+    o.currentThis = o.currentContext;
   }
-  else if( o.currentThis instanceof will.Reflector )
+
+  if( o.currentThis instanceof will.Reflector )
   {
     let currentThis = Object.create( null );
     currentThis.src = [];
@@ -3492,6 +3477,14 @@ function resolveContextPrepare( o )
     }
     o.currentThis = currentThis;
   }
+
+  if( _.mapIs( o.currentThis ) )
+  {
+  }
+  else if( o.currentThis instanceof will.Resource )
+  {
+    o.currentThis = o.currentThis.dataExport();
+  }
   else _.assert( 0 );
 
   return o.currentThis;
@@ -3500,6 +3493,8 @@ function resolveContextPrepare( o )
 resolveContextPrepare.defaults =
 {
   currentThis : null,
+  currentContext : null,
+  force : 0,
 }
 
 //
@@ -3542,10 +3537,10 @@ function resolve_body( o )
   _.assert( !!module._resolveAct );
   _.assert( o.prefixlessAction === 'default' || o.defaultResourceName === null, 'Prefixless action should be "default" if default resource is provided' );
 
-  if( o.currentThis )
-  {
-    o.currentThis = module.resolveContextPrepare({ currentThis : o.currentThis });
-  }
+  // if( o.currentThis )
+  // {
+    o.currentThis = module.resolveContextPrepare({ currentThis : o.currentThis, currentContext : o.currentContext });
+  // }
 
   let result = module._resolveAct( o );
 
@@ -4079,9 +4074,6 @@ function _resolveAct( o )
     if(  o.criterion && it.src && it.src.criterionSattisfy )
     {
 
-      // if( _.strHas( it.path, '/Tools' ) )
-      // debugger;
-
       let s = o.strictCriterion ? it.src.criterionSattisfyStrict( o.criterion ) : it.src.criterionSattisfy( o.criterion );
 
       if( !s )
@@ -4272,8 +4264,19 @@ function _resolveAct( o )
   {
     let it = this;
     let sop = it.selectOptions;
+    let currentThis = o.currentThis;
 
-    it.src = [ o.currentThis ];
+    debugger;
+
+    if( currentThis === null )
+    currentThis = module.resolveContextPrepare
+    ({
+      currentThis : currentThis,
+      currentContext : o.currentContext,
+      force : 1,
+    });
+
+    it.src = [ currentThis ];
     it.selector = 0;
 
     sop.selectorChanged.call( it );
@@ -5149,11 +5152,6 @@ function ResourceSetter_functor( op )
     let module = this;
     let resourceMap = module[ mapSymbol ] = module[ mapSymbol ] || Object.create( null );
 
-    // if( mapName === 'exportedMap' )
-    // debugger;
-    // if( mapName === 'pathResourceMap' )
-    // debugger;
-
     _.assert( arguments.length === 1 );
     _.assert( _.mapIs( resourceMap ) );
     _.assert( _.mapIs( resourceMap2 ) );
@@ -5179,20 +5177,14 @@ function ResourceSetter_functor( op )
       _.assert( _.instanceIs( resource ) );
       _.assert( resource.module !== module );
 
-      // if( resource.absoluteName === 'module::Proto.informal / path::local' )
-      // debugger;
 
       if( resource.module !== null )
       resource = resource.clone();
       _.assert( resource.module === null );
-      // resource.module = module.openerModule;
       resource.module = module;
       resource.form1();
       _.assert( !_.instanceIsFinited( resource ) );
     }
-
-    // if( mapName === 'pathResourceMap' )
-    // debugger;
 
     return resourceMap;
   }

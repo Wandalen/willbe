@@ -306,6 +306,7 @@ function stepRoutineShell( frame )
     currentPath : opts.currentPath,
     currentThis : forEachDst,
     currentContext : step,
+    verbosity : step.verbosity,
   })
   .finally( ( err, arg ) =>
   {

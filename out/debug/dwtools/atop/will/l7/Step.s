@@ -215,6 +215,7 @@ let Composes =
   description : null,
   criterion : null,
   opts : null,
+  verbosity : null,
 
   inherit : _.define.own([]),
 
