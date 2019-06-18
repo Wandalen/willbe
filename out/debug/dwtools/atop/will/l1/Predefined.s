@@ -36,6 +36,10 @@ function stepRoutineDelete( frame )
   let path = fileProvider.path;
   let logger = will.logger;
   let opts = frame.opts;
+  let time = _.timeNow();
+  let verbosity = step.verbosityWithDelta( -1 );
+
+  beginLog();
 
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
@@ -45,7 +49,7 @@ function stepRoutineDelete( frame )
   let o2 =
   {
     filePath : filePath,
-    verbosity : step.verbosity !== null ? step.verbosity : ( will.verbosity-1 ),
+    verbosity : 0,
   }
 
   if( filePath instanceof will.Reflector )
@@ -55,7 +59,47 @@ function stepRoutineDelete( frame )
     _.mapExtend( o2, o3 );
   }
 
-  return fileProvider.filesDelete( o2 );
+  let result = fileProvider.filesDelete( o2 );
+
+  endLog();
+
+  return result;
+
+  /* */
+
+  function beginLog()
+  {
+
+    if( verbosity < 3 )
+    return;
+
+    logger.log( ' : ' + step.decoratedNickName );
+
+  }
+
+  /* */
+
+  function endLog()
+  {
+
+    if( !verbosity )
+    return;
+
+    let spentTime = _.timeNow() - time;
+    let groupsMap = path.group({ keys : o2.filter.filePath, vals : o2.result });
+    let textualReport = path.groupTextualReport
+    ({
+      explanation : ' - ' + step.decoratedNickName + ' deleted ',
+      groupsMap : groupsMap,
+      verbosity : verbosity,
+      spentTime : spentTime,
+    });
+
+    if( textualReport )
+    logger.log( textualReport );
+
+  }
+
 }
 
 stepRoutineDelete.stepOptions =
@@ -75,6 +119,7 @@ function stepRoutineReflect( frame )
   let logger = will.logger;
   let opts = frame.opts;
   let time = _.timeNow();
+  let verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( !!opts.reflector, 'Expects option reflector' );
   _.assert( arguments.length === 1 );
@@ -84,27 +129,19 @@ function stepRoutineReflect( frame )
   _.sure( reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strType( reflector ) )
   _.assert( reflector.formed === 3, () => reflector.nickName + ' is not formed' );
 
+  beginLog();
+
   delete opts.reflector ;
 
   let reflectorOptions = reflector.optionsForReflectExport();
 
   _.mapSupplement( opts, reflectorOptions );
 
-  if( will.verbosity >= 4 )
-  {
-    logger.log( ' + Reflecting...' );
-    // logger.log( _.toStr( opts.reflectMap, { wrap : 0, multiline : 1, levels : 3 } ) );
-  }
-
-  if( opts.verbosity === null )
-  opts.verbosity = will.verbosity-1;
-  let verbosity = opts.verbosity;
   opts.verbosity = 0;
 
   let result;
   try
   {
-    // debugger;
     result = will.Predefined.filesReflect.call( fileProvider, opts );
   }
   catch( err )
@@ -113,31 +150,41 @@ function stepRoutineReflect( frame )
     throw _.errBriefly( err );
   }
 
-  // if( will.verbosity >= 5 )
-  // {
-  //   logger.log( _.toStr( _.select( result, '*/src/absolute' ), { levels : 2, wrap : 0 } ) );
-  // }
-
   _.Consequence.From( result ).then( ( result ) =>
   {
-
-    if( verbosity >= 1 )
-    {
-      let dstFilter = opts.dstFilter.clone();
-      let srcFilter = opts.srcFilter.clone().pairWithDst( dstFilter ).form();
-      dstFilter.form();
-      let src = srcFilter.filePathSrcCommon();
-      let dst = dstFilter.filePathDstCommon();
-      debugger;
-      logger.log( ' + ' + reflector.decoratedNickName + ' reflected ' + opts.result.length + ' files ' + path.moveTextualReport( dst, src ) + ' in ' + _.timeSpent( time ) );
-      // logger.log( _.select( opts.result, '*/dst/relative' ) );
-      // debugger;
-    }
-
+    endLog();
     return result;
   });
 
   return result;
+
+  /* */
+
+  function beginLog()
+  {
+    if( verbosity < 3 )
+    return;
+
+    logger.log( ' : ' + reflector.decoratedNickName + '' );
+  }
+
+  /* */
+
+  function endLog()
+  {
+    if( verbosity < 1 )
+    return;
+
+    let dstFilter = opts.dstFilter.clone();
+    let srcFilter = opts.srcFilter.clone().pairWithDst( dstFilter ).form();
+    dstFilter.form();
+    let src = srcFilter.filePathSrcCommon();
+    let dst = dstFilter.filePathDstCommon();
+    logger.log( ' + ' + reflector.decoratedNickName + ' reflected ' + opts.result.length + ' files ' + path.moveTextualReport( dst, src ) + ' in ' + _.timeSpent( time ) );
+  }
+
+  /* */
+
 }
 
 stepRoutineReflect.stepOptions =
@@ -266,6 +313,9 @@ function stepRoutineShell( frame )
   let logger = will.logger;
   let opts = frame.opts;
   let forEachDstReflector, forEachDst;
+  let verbosity = step.verbosityWithDelta( -1 );
+
+  beginLog();
 
   _.assert( arguments.length === 1 );
   _.sure( opts.shell === null || _.strIs( opts.shell ) || _.arrayIs( opts.shell ) );
@@ -307,7 +357,7 @@ function stepRoutineShell( frame )
     currentPath : opts.currentPath,
     currentThis : forEachDst,
     currentContext : step,
-    verbosity : step.verbosity,
+    verbosity : verbosity,
   })
   .finally( ( err, arg ) =>
   {
@@ -315,6 +365,12 @@ function stepRoutineShell( frame )
     throw _.errBriefly( 'Failed to shell', step.nickName, '\n', err );
     return arg;
   });
+
+  /* */
+
+  function beginLog()
+  {
+  }
 
 }
 
@@ -342,6 +398,7 @@ function stepRoutineTranspile( frame )
   let path = fileProvider.path;
   let logger = will.logger;
   let opts = frame.opts;
+  let verbosity = step.verbosityWithDelta( -1 );
 
   _.sure( _.arrayHas( [ 'preserve', 'rebuild' ], opts.upToDate ), () => 'Unknown value of upToDate ' + _.strQuote( opts.upToDate ) );
   _.assert( arguments.length === 1 );
@@ -378,6 +435,7 @@ function stepRoutineTranspile( frame )
     splittingStrategy : raw ? 'OneToOne' : 'ManyToOne',
     writingTerminalUnderDirectory : 1,
     upToDate : opts.upToDate,
+    verbosity : verbosity,
 
     optimization : 9,
     minification : 8,
@@ -422,6 +480,7 @@ function stepRoutineView( frame )
   let path = fileProvider.path;
   let logger = will.logger;
   let opts = frame.opts;
+  let verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
@@ -457,7 +516,7 @@ function stepRoutineView( frame )
   function view( filePath )
   {
     debugger;
-    if( will.verbosity >= 3 )
+    if( verbosity >= 1 )
     logger.log( 'View ' + filePath );
     let result = Open( filePath );
     debugger;
@@ -487,6 +546,7 @@ function stepRoutineNpmGenerate( frame )
   let path = fileProvider.path;
   let logger = will.logger;
   let opts = frame.opts;
+  let verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
@@ -556,7 +616,7 @@ function stepRoutineNpmGenerate( frame )
     filePath : packagePath,
     data : config,
     encoding : 'json.fine',
-    verbosity : will.verbosity >= 3 ? 5 : 0,
+    verbosity : verbosity ? 5 : 0,
   });
 
   debugger;
@@ -617,11 +677,12 @@ function stepRoutineSubmodulesReload( frame )
   let path = fileProvider.path;
   let logger = will.logger;
   let opts = frame.opts;
+  let verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
 
-  if( will.verbosity >= 3 )
+  if( verbosity )
   {
     logger.log( ' . Reloading submodules..' );
   }
