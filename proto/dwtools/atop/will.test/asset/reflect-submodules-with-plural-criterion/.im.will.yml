@@ -8,26 +8,27 @@ path :
   in : '.'
   out : './out'
   out.debug : './out/debug'
-  module.dir : './module'
+  temp :
+    - out
+    - submodule.out.will.yml
 
 reflector :
 
   reflect.submodules :
-    inherit : submodule::*/exported::*=1/reflector::exportedFiles*=1
+    inherit : submodule::*/exported::*=1/reflector::exported.files*=1
     dst :
       basePath : .
       prefixPath : "{path::out.*=1}"
     criterion :
       debug : [ 0,1 ]
-      
+
 step :
-    
+
   submodules.informal.export :
-    currentPath : path::module.dir
     shell : 'node {path::will} .each module .export'
 
 build :
-  
+
   variant1 :
     criterion :
       default : 1

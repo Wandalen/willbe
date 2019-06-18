@@ -1,22 +1,49 @@
 
 step :
 
-  shell.verbosity.zero :
+  verbosity.0 :
     currentPath : .
     shell : node -e "console.log( 'message from shell' )"
     verbosity : 0
-    
-  shell.verbosity.full :
+
+  verbosity.1 :
     currentPath : .
     shell : node -e "console.log( 'message from shell' )"
-    verbosity : 9
+    verbosity : 1
+
+  verbosity.2 :
+    currentPath : .
+    shell : node -e "console.log( 'message from shell' )"
+    verbosity : 2
+
+  verbosity.3 :
+    currentPath : .
+    shell : node -e "console.log( 'message from shell' )"
+    verbosity : 3
+
+  verbosity.5 :
+    currentPath : .
+    shell : node -e "console.log( 'message from shell' )"
+    verbosity : 5
 
 build :
 
-  verbosity.zero :
+  verbosity.0 :
     steps :
-      - shell.verbosity.zero
+      - verbosity.0
 
-  verbosity.full :
+  verbosity.1 :
     steps :
-      - shell.verbosity.full
+      - verbosity.1
+
+  verbosity.2 :
+    steps :
+      - verbosity.2
+
+  verbosity.3 :
+    steps :
+      - verbosity.3
+
+  verbosity.5 :
+    steps :
+      - verbosity.5

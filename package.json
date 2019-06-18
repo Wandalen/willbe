@@ -27,13 +27,17 @@
   ],
   "bin": {
     "will.single.process": "proto/dwtools/atop/will/Exec",
-    "will": "proto/dwtools/atop/will/Exec2"
+    "will.debug": "proto/dwtools/atop/will/Exec.debug",
+    "will.unrestricted": "proto/dwtools/atop/will/Exec.unrestricted",
+    "will": "proto/dwtools/atop/will/Exec.unrestricted"
   },
   "scripts": {
     "test": "wtest proto",
     "docgen": "wdocgen proto",
     "will.single.process": "node proto/dwtools/atop/will/Exec",
-    "will": "node proto/dwtools/atop/will/Exec2"
+    "will.debug": "node proto/dwtools/atop/will/Exec.debug"
+    "will.unrestricted": "node proto/dwtools/atop/will/Exec.unrestricted"
+    "will": "node proto/dwtools/atop/will/Exec.unrestricted"
   },
   "repository": {
     "type": "git",
