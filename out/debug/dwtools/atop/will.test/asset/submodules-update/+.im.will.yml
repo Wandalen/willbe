@@ -1,24 +1,26 @@
 
 submodule :
 
-  Tools : git+hd://../repo/Tools?out=out/wTools.out.will#master
-  # Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will#master
-  # Proto : .module/Proto.out.will
+  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#fc457abd063cb49edc857e46b74b4769da7124e3
+  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals.out.will#master
+  UriFundamentals : git+https:///github.com/Wandalen/wUriFundamentals.git/out/wUriFundamentals#3686d72cc0b8f6573217c947a4b379c38b02e39b
 
 path :
 
   proto : './proto'
   in : '.'
   out : 'out'
-  out.debug : './out/debug'
-  temp : out
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : 1
 
 reflector :
 
   reflect.proto :
     inherit : predefined.*
     criterion :
-      debug : [ 0,1 ]
+      debug : 1
     filePath :
       path::proto : path::out.*=1
 
@@ -38,20 +40,13 @@ step :
     criterion :
       debug : 1
 
-  submodules.informal.export :
-    currentPath : path::module.dir
-    shell : 'node {path::will} .each module .export'
-
 build :
 
-  debug :
+  debug.raw :
     criterion :
       default : 1
-      debug : 1
     steps :
       - submodules.download
-      # - submodules.informal.export
-      # - submodules.reload
       - delete.out.debug
-      - reflect.proto.*=1
+      - reflect.proto*=1
       - reflect.submodules*=1

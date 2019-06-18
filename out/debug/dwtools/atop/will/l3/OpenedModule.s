@@ -3223,9 +3223,7 @@ function clean( o )
   let time = _.timeNow();
 
   o = _.routineOptions( clean, arguments );
-  debugger;
   let report = module.cleanWhat( o );
-  debugger;
 
   _.assert( _.arrayIs( report[ '/' ] ) );
 
@@ -3234,7 +3232,6 @@ function clean( o )
     let filePath = report[ '/' ][ f ];
     _.assert( path.isAbsolute( filePath ) );
     let res = fileProvider.fileDelete({ filePath : filePath, verbosity : 1, throwing : 0 });
-    debugger;
   }
 
   time = _.timeNow() - time;
@@ -3243,15 +3240,8 @@ function clean( o )
   o2.explanation = ' - Clean deleted ';
   o2.spentTime = time;
   o2.report = report;
-  let textualReport = module.cleanWhatReport( o2 );
 
-  // if( textualReport )
-  // logger.log( textualReport );
-  //
-  // if( logger.verbosity === 2 )
-  // {
-  //   logger.log( ' - Clean deleted ' + files[ '/' ].length + ' file(s) in ' + _.timeSpent( time ) );
-  // }
+  let textualReport = module.cleanWhatReport( o2 );
 
   return report;
 }

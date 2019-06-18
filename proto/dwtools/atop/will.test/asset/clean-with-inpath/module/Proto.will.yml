@@ -7,7 +7,7 @@ path :
 
   in : ..
   out : .module
-  remote : 'git://../repo/Proto'
+  remote : 'git+hd://../repo/Proto'
   local : '.module/Proto'
   export : '{path::local}/proto'
   temp : out

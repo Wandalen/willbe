@@ -7,8 +7,9 @@ path :
 
   in : ..
   out : .module
-  remote : 'git://../repo/Proto'
+  remote : 'git+hd://../repo/Proto'
   # remote : 'git+https:///github.com/Wandalen/wProto.git'
+  # git:///git@bitbucket.org:group/repo.git/out/Repo#master
   local : '.module/Proto'
   export : '{path::local}/proto'
   temp : out

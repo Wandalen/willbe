@@ -1,12 +1,32 @@
 format: willfile-1.0.0
 about:
   name: B
-  version: 0.1.0
   enabled: 1
-execution: {}
+  version: 0.1.0
 path:
+  module.willfiles:
+    path: B.out.will.yml
+    criterion:
+      predefined: 1
+  module.original.willfiles:
+    path: B.will.yml
+    criterion:
+      predefined: 1
+  module.dir:
+    path: .
+    criterion:
+      predefined: 1
+  module.common:
+    path: B.out
+    criterion:
+      predefined: 1
+  remote:
+    criterion:
+      predefined: 1
   local:
     path: B
+    criterion:
+      predefined: 1
   exported.dir.export:
     path: ./B
     criterion:
@@ -19,8 +39,6 @@ path:
     criterion:
       default: 1
       export: 1
-  module.original.willfiles:
-    path: B.will.yml
   in:
     path: .
   out: {}
@@ -69,4 +87,3 @@ exported:
     exportedFilesReflector: 'reflector::exported.files.export'
     exportedDirPath: 'path::exported.dir.export'
     exportedFilesPath: 'path::exported.files.export'
-    originalWillFilesPath: 'path::module.original.willfiles'
