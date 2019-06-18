@@ -3,5 +3,4 @@
 let Self = require( './MainTop.s' );
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;
-if( !module.parent )
 Self.Exec();

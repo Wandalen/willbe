@@ -192,8 +192,32 @@ function run( frame )
 }
 
 // --
-// accessor
+// etc
 // --
+
+function verbosityWithDelta( delta )
+{
+  let step = this;
+  let will = step.module.will;
+  let verbosity = step.verbosity !== null ? step.verbosity : ( will.verbosity + delta );
+
+  if( will.verbosity < -delta )
+  verbosity = 0;
+  if( verbosity > 0 )
+  if( will.verbosity <= -delta )
+  verbosity = 1;
+  if( will.verbosity >= 9 )
+  verbosity = 9;
+
+  if( verbosity < 0 )
+  verbosity = 0;
+  if( verbosity > 9 )
+  verbosity = 9;
+
+  return verbosity;
+}
+
+//
 
 function uniqueOptionsGet()
 {
@@ -268,8 +292,9 @@ let Proto =
   form3,
   run,
 
-  // accessor
+  // etc
 
+  verbosityWithDelta,
   uniqueOptionsGet,
 
   // relation
