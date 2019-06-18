@@ -1,0 +1,35 @@
+
+path :
+
+  file : 'file'
+  produced.txt : '{path::file}/Produced.txt2'
+  produced.js : '{path::file}/Produced.js2'
+  in : '.'
+  out : 'out'
+  temp :
+    - '{path::file}/Produced.txt2'
+    - '{path::file}/Produced.js2'
+
+reflector :
+
+  shell1 :
+    filePath :
+      '*.txt' : 'Produced.txt2'
+      '*.js' : 'Produced.js2'
+    src :
+      prefixPath : 'file'
+
+step :
+
+  shell1 :
+    shell : node file/Produce.js {f::this/src} {f::this/dst}
+    forEachDst : shell1
+    upToDate : preserve
+
+build :
+
+  shell1 :
+    criterion :
+      default : 1
+    steps :
+      - step::shell1
