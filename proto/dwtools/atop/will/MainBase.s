@@ -242,14 +242,14 @@ function moduleEach( o )
       let con2 = new _.Consequence();
       let resolved = module.openedModule.submodulesResolve({ selector : o.selector, preservingIteration : 1 });
       resolved = _.arrayAs( resolved );
-      debugger;
+      // debugger;
 
       for( let s = 0 ; s < resolved.length ; s++ ) con2.keep( ( arg ) => /* !!! replace by concurrent, maybe */
       {
         let it1 = resolved[ s ];
         let module = it1.currentModule;
 
-        debugger;
+        // debugger;
         let it2 = Object.create( null );
         it2.currentModule = module.openerMake();
         // it2.supermodule = module.supermodule || module;

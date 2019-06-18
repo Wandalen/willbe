@@ -51,7 +51,7 @@ path :
 step  :
 
   delete.out :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::fileToDelete
 
 build :
@@ -66,7 +66,7 @@ build :
 
 </details>
 
-Файл `.will.yml` призначений для видалення файлів з директорії `out`. Для видалення використовується вбудований крок `predefined.delete`.
+Файл `.will.yml` призначений для видалення файлів з директорії `out`. Для видалення використовується вбудований крок `files.delete`.
 
 <details>
     <summary><u>Код <code>submodule.will.yml</code></u></summary>

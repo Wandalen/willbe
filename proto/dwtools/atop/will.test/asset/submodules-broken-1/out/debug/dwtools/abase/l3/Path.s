@@ -871,6 +871,10 @@ function from( src )
 function dot( filePath )
 {
 
+  /*
+    cant use isAbsolute
+  */
+
   // _.assert( !this.isAbsolute( path ) );
   _.assert( !_.strBegins( filePath, this._upStr ) );
   _.assert( arguments.length === 1 );
@@ -931,53 +935,81 @@ function detrail( path )
  * @memberof module:Tools/base/Path.wTools.path
  */
 
-function dir( path )
+function dir_pre( routine, args )
+{
+  let o = args[ 0 ];
+  if( _.strIs( o ) )
+  o = { filePath : o };
+
+  _.routineOptions( routine, o );
+  _.assert( args.length === 1 );
+  _.assert( arguments.length === 2 );
+  _.assert( _.strDefined( o.filePath ), 'Expects not empty string {- o.filePath -}' );
+
+  return o;
+}
+
+function dir_body( o )
 {
 
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.strDefined( path ) , 'dir','Expects not empty string ( path )' );
+  _.assertRoutineOptions( dir_body, arguments );
 
-  let isTrailed = this.isTrailed( path );
+  let isTrailed = this.isTrailed( o.filePath );
 
-  path = this.normalize( path );
+  if( o.first )
+  o.filePath = this.normalize( o.filePath );
+  else
+  o.filePath = this.normalizeStrict( o.filePath );
 
+  if( o.first )
   if( isTrailed )
-  return path;
+  return o.filePath;
 
-  if( path === this._rootStr )
+  if( o.filePath === this._rootStr )
   {
-    return path + this._downStr;
+    return o.filePath + this._downStr + this._upStr;
   }
 
-  if( _.strEnds( path, this._upStr + this._downStr ) || path === this._downStr )
+  if( _.strEnds( o.filePath, this._upStr + this._downStr ) || o.filePath === this._downStr )
   {
-    return path + this._upStr + this._downStr;
+    return o.filePath + this._upStr + this._downStr + this._upStr;
   }
 
-  let i = path.lastIndexOf( this._upStr );
+  let i = o.filePath.lastIndexOf( this._upStr );
 
   if( i === -1 )
   {
-
-    if( path === this._hereStr )
-    return this._downStr;
+    if( o.filePath === this._hereStr )
+    return this._downStr + this._upStr;
     else
-    return this._hereStr;
-
+    return this._hereStr + this._upStr;
   }
 
-  if( path[ i - 1 ] === '/' )
-  return path;
+  // if( o.first )
+  // if( o.filePath[ i - 1 ] === '/' )
+  // return o.filePath;
 
-  let result = path.substr( 0, i );
+  let result = o.filePath.substr( 0, i+1 );
 
-  // _.assert( result.length > 0 );
+  // if( result === '' )
+  // result = this._rootStr;
 
-  if( result === '' )
-  result = this._rootStr;
+  _.assert( !!result.length )
 
   return result;
 }
+
+dir_body.defaults =
+{
+  filePath : null,
+  first : 0,
+}
+
+let dir = _.routineFromPreAndBody( dir_pre, dir_body );
+dir.defaults.first = 0;
+
+let dirFirst = _.routineFromPreAndBody( dir_pre, dir_body );
+dirFirst.defaults.first = 1;
 
 //
 
@@ -1033,7 +1065,7 @@ function name_pre( routine, args )
   o = { path : o };
 
   _.routineOptions( routine, o );
-  _.assert( args.length === 1 || args.length === 2 );
+  _.assert( args.length === 1 );
   _.assert( arguments.length === 2 );
 
   return o;
@@ -1048,7 +1080,7 @@ function name_body( o )
   o = _.assertRoutineOptions( name, arguments );
   _.assert( o && _.strIs( o.path ), 'Expects strings {-o.path-}' );
 
-  o.path = this.normalize( o.path );
+  o.path = this.normalizeStrict( o.path );
 
   let i = o.path.lastIndexOf( '/' );
   if( i !== -1 )
@@ -1070,21 +1102,7 @@ name_body.defaults =
 }
 
 let name = _.routineFromPreAndBody( name_pre, name_body );
-
-//
-
-// function fullName( path )
-// {
-//
-//   _.assert( arguments.length === 1, 'Expects single argument' );
-//   _.assert( _.strIs( path ), 'Expects strings {-path-}' );
-//
-//   let i = path.lastIndexOf( '/' );
-//   if( i !== -1 )
-//   path = path.substr( i+1 );
-//
-//   return path;
-// }
+name.defaults.full = 0;
 
 let fullName = _.routineFromPreAndBody( name_pre, name_body );
 fullName.defaults.full = 1;
@@ -2401,8 +2419,70 @@ function _commonPair( src1, src2 )
 
 //
 
+function group( o )
+{
+  let self = this;
+
+  _.routineOptions( group, arguments );
+  _.assert( _.arrayIs( o.vals ) );
+  _.assert( o.result === null || _.mapIs( o.result ) );
+
+  o.result = o.result || Object.create( null );
+  o.result[ '/' ] = o.result[ '/' ] || [];
+
+  o.keys = self.s.from( o.keys );
+  o.vals = self.s.from( o.vals );
+
+  let keys = self.pathMapSrcFromSrc( o.keys );
+  let vals = _.arrayFlattenOnce( null, o.vals );
+
+  _.assert( _.arrayIs( keys ) );
+  _.assert( _.arrayIs( vals ) );
+
+  // if( o.vals && o.vals.length )
+  // debugger;
+
+  /* */
+
+  for( let k = 0 ; k < keys.length ; k++ )
+  {
+    let key = keys[ k ];
+    let res = o.result[ key ] = o.result[ key ] || [];
+  }
+
+  /* */
+
+  for( let key in o.result )
+  {
+    let res = o.result[ key ];
+    for( let v = 0 ; v < vals.length ; v++ )
+    {
+      let val = vals[ v ];
+      if( _.strBegins( val, key ) )
+      _.arrayAppendOnce( res, val );
+    }
+
+  }
+
+  /* */
+
+  // if( o.vals && o.vals.length )
+  // debugger;
+
+  return o.result;
+}
+
+group.defaults =
+{
+  keys : null,
+  vals : null,
+  result : null,
+}
+
+//
+
 /*
-qqq : teach common to work with uri maps and cover it by tests
+qqq : teach common to work with path maps and cover it by tests
 */
 
 function common()
@@ -2417,6 +2497,9 @@ function common()
   }
 
   _.assert( _.strsAreAll( paths ) );
+
+  if( !paths.length )
+  return null;
 
   paths.sort( function( a,b )
   {
@@ -2433,7 +2516,87 @@ function common()
 
 //
 
-function commonReport( filePath )
+function rebase( filePath,oldPath,newPath )
+{
+
+  _.assert( arguments.length === 3, 'Expects exactly three arguments' );
+
+  filePath = this.normalize( filePath );
+  if( oldPath )
+  oldPath = this.normalize( oldPath );
+  newPath = this.normalize( newPath );
+
+  if( oldPath )
+  {
+    let commonPath = this.common( filePath, oldPath );
+    filePath = _.strRemoveBegin( filePath, commonPath );
+  }
+
+  filePath = this.reroot( newPath, filePath )
+
+  return filePath;
+}
+
+// --
+// textual reporter
+// --
+
+function groupTextualReport( o )
+{
+  let self = this;
+  let r = '';
+  let commonPath;
+
+  _.routineOptions( groupTextualReport, arguments );
+  o.verbosity = _.numberIs( o.verbosity ) ? o.verbosity : o.verbosity;
+
+  if( o.verbosity >= 5 && o.groupsMap )
+  r +=  _.toStr( o.groupsMap[ '/' ], { multiline : 1, wrap : 0, levels : 2 } ) + '\n';
+
+  if( o.groupsMap )
+  {
+    commonPath = self.common( _.mapKeys( o.groupsMap ).filter( ( p ) => p !== '/' ) );
+    if( o.verbosity >= 3 && o.groupsMap[ '/' ].length )
+    r += '   ' + o.groupsMap[ '/' ].length + ' at ' + commonPath + '\n';
+  }
+
+  if( o.verbosity >= 3 && o.groupsMap )
+  {
+    let details = _.filter( o.groupsMap, ( filesPath, basePath ) =>
+    {
+      if( basePath === '/' )
+      return;
+      if( !filesPath.length )
+      return;
+      return '   ' + filesPath.length + ' at ' + self.dot( self.relative( commonPath, basePath ) );
+    });
+    if( _.mapVals( details ).length )
+    r += _.mapVals( details ).join( '\n' ) + '\n';
+  }
+
+  if( o.verbosity >= 1 )
+  {
+    r += o.explanation + ( o.groupsMap ? o.groupsMap[ '/' ].length : 0 ) + ' file(s)';
+    if( commonPath )
+    r += ', at ' + commonPath;
+    if( o.spentTime !== null )
+    r += ', found in ' + _.timeSpentFormat( o.spentTime );
+  }
+
+  return r;
+}
+
+groupTextualReport.defaults =
+{
+  explanation : '',
+  groupsMap : null,
+  verbosity : 3,
+  spentTime : null,
+}
+
+//
+
+function commonTextualReport( filePath )
 {
 
   if( _.mapIs( filePath ) )
@@ -2464,7 +2627,7 @@ function commonReport( filePath )
 
 //
 
-function moveReport_pre( routine, args )
+function moveTextualReport_pre( routine, args )
 {
 
   let o = args[ 0 ];
@@ -2478,13 +2641,11 @@ function moveReport_pre( routine, args )
   return o;
 }
 
-//
-
-function moveReport_body( o )
+function moveTextualReport_body( o )
 {
   let result = '';
 
-  _.assertRoutineOptions( moveReport_body, arguments );
+  _.assertRoutineOptions( moveTextualReport_body, arguments );
 
   let c = this.isGlobal( o.srcPath ) ? '' : this.common( o.dstPath, o.srcPath );
 
@@ -2506,37 +2667,14 @@ function moveReport_body( o )
   return result;
 }
 
-moveReport_body.defaults =
+moveTextualReport_body.defaults =
 {
   dstPath : null,
   srcPath : null,
   decorating : 1
 }
 
-let moveReport = _.routineFromPreAndBody( moveReport_pre, moveReport_body );
-
-//
-
-function rebase( filePath,oldPath,newPath )
-{
-
-  _.assert( arguments.length === 3, 'Expects exactly three arguments' );
-
-  filePath = this.normalize( filePath );
-  if( oldPath )
-  oldPath = this.normalize( oldPath );
-  newPath = this.normalize( newPath );
-
-  if( oldPath )
-  {
-    let commonPath = this.common( filePath, oldPath );
-    filePath = _.strRemoveBegin( filePath, commonPath );
-  }
-
-  filePath = this.reroot( newPath, filePath )
-
-  return filePath;
-}
+let moveTextualReport = _.routineFromPreAndBody( moveTextualReport_pre, moveTextualReport_body );
 
 // --
 // iterator
@@ -2544,15 +2682,16 @@ function rebase( filePath,oldPath,newPath )
 
 function chainToRoot( filePath )
 {
+  let self = this;
   let result = [];
 
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( filePath ) );
 
-  while( !this.isRoot( filePath ) )
+  while( !self.isRoot( filePath ) )
   {
-    result.unshift( filePath );
-    filePath = this.dir( filePath )
+    result.unshift( self.detrail( filePath ) );
+    filePath = self.dir( filePath );
   }
 
   return result;
@@ -2679,6 +2818,7 @@ let Routines =
   detrail,
 
   dir,
+  dirFirst,
   prefixGet,
   name,
   fullName,
@@ -2715,14 +2855,18 @@ let Routines =
 
   _commonPair,
   common,
-  commonReport,
-  moveReport,
-
+  group,
   rebase,
+
+  // textual reporter
+
+  groupTextualReport,
+  commonTextualReport,
+  moveTextualReport,
 
   // iterator
 
-  chainToRoot,
+  chainToRoot, /* qqq : add basic test coverage */
 
   // exception
 

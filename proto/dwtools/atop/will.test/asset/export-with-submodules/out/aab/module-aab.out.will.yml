@@ -150,7 +150,7 @@ step:
     opts:
       reflector: 'reflector::files.all*'
     inherit:
-      - predefined.reflect
+      - files.reflect
 build:
   files:
     criterion:
@@ -264,7 +264,7 @@ module:
         opts:
           reflector: 'reflector::exported.proto.export*'
         inherit:
-          - predefined.reflect
+          - files.reflect
       exported.files.proto.export:
         criterion:
           default: 1
@@ -272,7 +272,7 @@ module:
         opts:
           reflector: 'reflector::exported.files.proto.export*'
         inherit:
-          - predefined.reflect
+          - files.reflect
     build:
       proto.export:
         criterion:

@@ -42,17 +42,17 @@ reflector :
 step :
 
   reflect.proto :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector :
       reflector::reflect.proto
 
   reflect.submodules1 :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector :
       reflector::reflect.submodules1
 
   reflect.submodules2 :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector : reflector::reflect.submodules2
 
 build :

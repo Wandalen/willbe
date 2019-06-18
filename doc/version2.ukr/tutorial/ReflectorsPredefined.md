@@ -12,14 +12,14 @@
 ```yaml
 reflector :
 
-  use.predefined.reflector :
+  use.files.reflector :
     inherit : predefined.common
 
 ```
 
 </details>
 
-Для використання вбудованих рефлекторів в ресурсі потрібно вказати поле `inherit` з обраним рефлектором. В прикладі, рефлектор `use.predefined.reflector` наслідує вбудований рефлектор `predefined.common`. Запис неповний, він доповнюється інформацією щодо директорій, файли яких будуть фільтруватись, критеріонами за необхідністю, додатковими фільтрами, тощо.  
+Для використання вбудованих рефлекторів в ресурсі потрібно вказати поле `inherit` з обраним рефлектором. В прикладі, рефлектор `use.files.reflector` наслідує вбудований рефлектор `predefined.common`. Запис неповний, він доповнюється інформацією щодо директорій, файли яких будуть фільтруватись, критеріонами за необхідністю, додатковими фільтрами, тощо.  
 
 ### Властивості вбудованих рефлекторів
 
@@ -194,13 +194,13 @@ reflector :
 step :
 
   reflect.project :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector : reflect.project*=1
     criterion :
       debug : [ 0,1 ]
 
   reflect.copy.common :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector : reflect.copy.common
 
 build :

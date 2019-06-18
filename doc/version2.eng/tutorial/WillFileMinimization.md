@@ -49,7 +49,7 @@ path :
 step  :
 
   delete.files :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::fileToDelete.*=1
     criterion :
       debug : [ 0,1 ]
@@ -81,7 +81,7 @@ step::delete.files.
   opts :
     filePath : path::fileToDelete.*=1
   inherit :
-    predefined.delete
+    files.delete
 
 step::delete.files.debug
   criterion :
@@ -89,7 +89,7 @@ step::delete.files.debug
   opts :
     filePath : path::fileToDelete.*=1
   inherit :
-    predefined.delete
+    files.delete
 
 ```
 
@@ -123,7 +123,7 @@ build::delete.debug
 
 ### Побудова збірок
 При використанні розгортання критеріонів в збірках `will-файла` критеріон `default : 1` не працює, оскільки, утиліта не може визначити яка зі згенерованих збірок повинна виконуватись за замовчуванням.  
-В приведеному `will-файлі` обидві збірки здійснюють видалення файлів з допомогою вбудованого кроку `predefined.delete`, що поміщений в крок `delete.files`.    
+В приведеному `will-файлі` обидві збірки здійснюють видалення файлів з допомогою вбудованого кроку `files.delete`, що поміщений в крок `delete.files`.    
 Введіть команду `will .build delete.debug` та перевірте зміни в директорії `files`:
 
 <details>

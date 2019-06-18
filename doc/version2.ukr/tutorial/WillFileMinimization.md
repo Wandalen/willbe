@@ -46,7 +46,7 @@ path :
 step  :
 
   delete.files :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::fileToDelete.*
     criterion :
       debug : [ 0,1 ]
@@ -65,7 +65,7 @@ build :
 
 Помістіть приведений вище код в `вілфайл`.
 
-В кроці `delete.files` здійснюється видалення файлів з допомогою вбудованого кроку `predefined.delete`. Для видалення потрібних файлів в полі `filePath` вказується шлях до файлів. Всі шляхи модуля поміщаються в секції `path`, котра призначена для швидкого орієнтування в його структурі.  
+В кроці `delete.files` здійснюється видалення файлів з допомогою вбудованого кроку `files.delete`. Для видалення потрібних файлів в полі `filePath` вказується шлях до файлів. Всі шляхи модуля поміщаються в секції `path`, котра призначена для швидкого орієнтування в його структурі.  
 Секція `path` має два шляхи: 
 - `fileToDelete.debug` використовується якщо критеріон `debug` має значення `1`;
 - `fileToDelete.release` використовується якщо критеріон `debug` має значення `0`;
@@ -84,7 +84,7 @@ step::delete.files.
   opts :
     filePath : path::fileToDelete.*=1
   inherit :
-    predefined.delete
+    files.delete
 
 step::delete.files.debug
   criterion :
@@ -92,7 +92,7 @@ step::delete.files.debug
   opts :
     filePath : path::fileToDelete.*=1
   inherit :
-    predefined.delete
+    files.delete
 
 ```
 

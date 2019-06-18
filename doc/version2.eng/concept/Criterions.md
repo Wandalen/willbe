@@ -21,7 +21,7 @@ path :
 step :
 
   delete.files :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::out.*
   criterion :
     debug : 1
@@ -35,7 +35,7 @@ In `willfile` for a single criterion it is possible to establish a set of values
 ```yaml
 step :
   delete.files :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::out.*
   criterion :
     raw : 1           # single meaning - ordinary form of writing

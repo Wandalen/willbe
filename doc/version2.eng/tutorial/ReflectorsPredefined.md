@@ -5,7 +5,7 @@ How to use predefined reflectors to split debug and release files and how to bui
 ### Призначення вбудованих рефлекторів
 Крім вбудованих кроків в утиліті є вбудовані рефлектори, які мають налаштовані файлові фільтри для стандартних операцій. Всього є три вбудованих рефлектора: `predefined.common`, `predefined.debug` i `predefined.release`.  
 Для використання вбудованих рефлекторів в ресурсі потрібно вказати поле `inherit` з обраним рефлектором.  
-Наприклад, для рефлектора `predefined.common` в рефлекторі `use.predefined.reflector`:  
+Наприклад, для рефлектора `predefined.common` в рефлекторі `use.files.reflector`:  
 
 <details>
   <summary><u>Відкрийте, щоб проглянути</u></summary>
@@ -13,7 +13,7 @@ How to use predefined reflectors to split debug and release files and how to bui
 ```yaml
 reflector :
 
-    use.predefined.reflector :
+    use.files.reflector :
         inherit : predefined.common
 
 ```
@@ -176,13 +176,13 @@ reflector :
 step :
 
   reflect.project :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector : reflect.project*=1
     criterion :
       debug : [ 0,1 ]
 
   reflect.copy.common :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector : reflect.copy.common
 
 build :

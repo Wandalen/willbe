@@ -282,13 +282,11 @@ function commandHelp( e )
   let ca = e.ca;
   let logger = will.logger;
 
-  // debugger;
   ca._commandHelp( e );
 
   if( !e.subject )
   {
     _.assert( 0 );
-    // logger.log( 'Use ' + logger.colorFormat( '"will .help"', 'code' ) + ' to get help' );
   }
 
 }
@@ -454,17 +452,6 @@ function commandStepsList( e )
   {
     let logger = will.logger;
 
-    // let request = _.strRequestParse( e.argument );
-    //
-    // let steps = module.openedModule.resolve
-    // ({
-    //   selector : request.subject || '*',
-    //   defaultResourceName : 'step',
-    //   prefixlessAction : 'default',
-    //   criterion : request.map,
-    //   arrayWrapping : 1,
-    // });
-
     logger.log( module.openedModule.infoExportResource( resources ) );
   }
 
@@ -481,7 +468,6 @@ function commandBuildsList( e )
   {
     let logger = will.logger;
     let request = _.strRequestParse( e.argument );
-    debugger;
     let builds = module.openedModule.buildsResolve
     ({
       name : request.subject,
@@ -506,7 +492,6 @@ function commandExportsList( e )
   {
     let logger = will.logger;
     let request = _.strRequestParse( e.argument );
-    debugger;
     let builds = module.openedModule.exportsResolve
     ({
       name : request.subject,

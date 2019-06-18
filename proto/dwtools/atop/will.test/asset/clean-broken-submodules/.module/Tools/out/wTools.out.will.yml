@@ -468,7 +468,7 @@ step:
     opts:
       filePath: 'path::out.*=1'
     inherit:
-      - predefined.delete
+      - files.delete
   clean.out.release.raw.no.tests.prime:
     criterion:
       debug: release
@@ -478,7 +478,7 @@ step:
     opts:
       filePath: 'path::out.*=1'
     inherit:
-      - predefined.delete
+      - files.delete
   clean.out.debug.compiled.no.tests.prime:
     criterion:
       debug: debug
@@ -488,7 +488,7 @@ step:
     opts:
       filePath: 'path::out.*=1'
     inherit:
-      - predefined.delete
+      - files.delete
   clean.out.release.compiled.no.tests.prime:
     criterion:
       debug: release
@@ -498,7 +498,7 @@ step:
     opts:
       filePath: 'path::out.*=1'
     inherit:
-      - predefined.delete
+      - files.delete
   clean.out.debug.raw.only.tests.prime:
     criterion:
       debug: debug
@@ -508,7 +508,7 @@ step:
     opts:
       filePath: 'path::out.*=1'
     inherit:
-      - predefined.delete
+      - files.delete
   clean.out.release.raw.only.tests.prime:
     criterion:
       debug: release
@@ -518,7 +518,7 @@ step:
     opts:
       filePath: 'path::out.*=1'
     inherit:
-      - predefined.delete
+      - files.delete
   clean.out.debug.compiled.only.tests.prime:
     criterion:
       debug: debug
@@ -528,7 +528,7 @@ step:
     opts:
       filePath: 'path::out.*=1'
     inherit:
-      - predefined.delete
+      - files.delete
   clean.out.release.compiled.only.tests.prime:
     criterion:
       debug: release
@@ -538,7 +538,7 @@ step:
     opts:
       filePath: 'path::out.*=1'
     inherit:
-      - predefined.delete
+      - files.delete
   clean.out.debug.raw.no.tests.npm:
     criterion:
       debug: debug
@@ -548,7 +548,7 @@ step:
     opts:
       filePath: 'path::out.*=1'
     inherit:
-      - predefined.delete
+      - files.delete
   clean.out.release.raw.no.tests.npm:
     criterion:
       debug: release
@@ -558,7 +558,7 @@ step:
     opts:
       filePath: 'path::out.*=1'
     inherit:
-      - predefined.delete
+      - files.delete
   clean.out.debug.compiled.no.tests.npm:
     criterion:
       debug: debug
@@ -568,7 +568,7 @@ step:
     opts:
       filePath: 'path::out.*=1'
     inherit:
-      - predefined.delete
+      - files.delete
   clean.out.release.compiled.no.tests.npm:
     criterion:
       debug: release
@@ -578,7 +578,7 @@ step:
     opts:
       filePath: 'path::out.*=1'
     inherit:
-      - predefined.delete
+      - files.delete
   clean.out.debug.raw.only.tests.npm:
     criterion:
       debug: debug
@@ -588,7 +588,7 @@ step:
     opts:
       filePath: 'path::out.*=1'
     inherit:
-      - predefined.delete
+      - files.delete
   clean.out.release.raw.only.tests.npm:
     criterion:
       debug: release
@@ -598,7 +598,7 @@ step:
     opts:
       filePath: 'path::out.*=1'
     inherit:
-      - predefined.delete
+      - files.delete
   clean.out.debug.compiled.only.tests.npm:
     criterion:
       debug: debug
@@ -608,7 +608,7 @@ step:
     opts:
       filePath: 'path::out.*=1'
     inherit:
-      - predefined.delete
+      - files.delete
   clean.out.release.compiled.only.tests.npm:
     criterion:
       debug: release
@@ -618,7 +618,7 @@ step:
     opts:
       filePath: 'path::out.*=1'
     inherit:
-      - predefined.delete
+      - files.delete
   clean.out.npm:
     criterion:
       debug: debug
@@ -628,7 +628,7 @@ step:
     opts:
       filePath: 'path::out.*=1'
     inherit:
-      - predefined.delete
+      - files.delete
   reflect.proto.debug.raw:
     criterion:
       tests: no.tests
@@ -638,7 +638,7 @@ step:
     opts:
       reflector: 'reflector::reflect.proto*'
     inherit:
-      - predefined.reflect
+      - files.reflect
   reflect.proto.release.raw:
     criterion:
       tests: no.tests
@@ -648,7 +648,7 @@ step:
     opts:
       reflector: 'reflector::reflect.proto*'
     inherit:
-      - predefined.reflect
+      - files.reflect
   reflect.proto.debug.compiled:
     criterion:
       tests: no.tests
@@ -658,7 +658,7 @@ step:
     opts:
       reflector: 'reflector::reflect.proto*'
     inherit:
-      - predefined.reflect
+      - files.reflect
   reflect.proto.release.compiled:
     criterion:
       tests: no.tests
@@ -668,7 +668,7 @@ step:
     opts:
       reflector: 'reflector::reflect.proto*'
     inherit:
-      - predefined.reflect
+      - files.reflect
   transpile.proto.raw:
     criterion:
       raw: raw

@@ -372,10 +372,10 @@ function routineOptions( routine, args, defaults )
   let options = args[ 0 ];
   if( options === undefined )
   options = Object.create( null );
-  defaults = defaults || routine.defaults;
+  defaults = defaults || ( routine ? routine.defaults : null );
 
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects 2 or 3 arguments' );
-  _.assert( _.routineIs( routine ), 'Expects routine' );
+  _.assert( _.routineIs( routine ) || routine === null, 'Expects routine' );
   _.assert( _.objectIs( defaults ), 'Expects routine with defined defaults or defaults in third argument' );
   _.assert( _.objectIs( options ), 'Expects object' );
   _.assert( args.length === 0 || args.length === 1, 'Expects single options map, but got',args.length,'arguments' );
@@ -396,10 +396,10 @@ function assertRoutineOptions( routine,args,defaults )
   if( !_.argumentsArrayIs( args ) )
   args = [ args ];
   let options = args[ 0 ];
-  defaults = defaults || routine.defaults;
+  defaults = defaults || ( routine ? routine.defaults : null );
 
   _.assert( arguments.length === 2 || arguments.length === 3,'Expects 2 or 3 arguments' );
-  _.assert( _.routineIs( routine ),'Expects routine' );
+  _.assert( _.routineIs( routine ) || routine === null, 'Expects routine' );
   _.assert( _.objectIs( defaults ),'Expects routine with defined defaults or defaults in third argument' );
   _.assert( _.objectIs( options ),'Expects object' );
   _.assert( args.length === 0 || args.length === 1, 'Expects single options map, but got',args.length,'arguments' );

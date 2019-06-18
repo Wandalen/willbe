@@ -1367,7 +1367,7 @@ function listSingleModule( test )
     test.is( _.strHas( got.output, `. : .` ) );
 
     test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
-    test.is( _.strHas( got.output, `predefined.reflect` ) );
+    test.is( _.strHas( got.output, `files.reflect` ) );
 
     test.is( _.strHas( got.output, 'build::proto.export'  ) );
     test.is( _.strHas( got.output, `step::export.proto` ) );
@@ -1402,7 +1402,7 @@ function listSingleModule( test )
     test.is( _.strHas( got.output, `. : .` ) );
 
     test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
-    test.is( _.strHas( got.output, `predefined.reflect` ) );
+    test.is( _.strHas( got.output, `files.reflect` ) );
 
     test.identical( _.strCount( got.output, '::' ), 6 );
 
@@ -3741,7 +3741,7 @@ function exportMixed( test )
       'download' :
       {
         'opts' : { 'reflector' : 'reflector::download*' },
-        'inherit' : [ 'predefined.reflect' ]
+        'inherit' : [ 'files.reflect' ]
       }
     }
     test.identical( outfile.step, expected ); debugger;

@@ -31,7 +31,7 @@ reflector :
 step :
 
   reflect.submodules :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector :
       reflector::reflect.submodules*=1
     criterion :

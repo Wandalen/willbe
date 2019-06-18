@@ -46,7 +46,7 @@ reflector :
 step :
 
   reflect.submodules :
-    inherit : predefined.reflect
+    inherit : files.reflect
     criterion :
       variant : [ 1,2,3 ]
     reflector :

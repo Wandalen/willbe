@@ -366,7 +366,7 @@ function performExportedFilesReflector()
   _.sure
   (
     exported.exportedFilesPath.path.length > 0,
-    () => 'No file found at ' + path.commonReport( exported.srcFilter.filePath )
+    () => 'No file found at ' + path.commonTextualReport( exported.srcFilter.filePath )
     + ', cant export ' + exported.build.name,
   );
 
@@ -488,7 +488,7 @@ function performArchive( enabled )
 
   let zip = Tar.create( o2, [ '.' ] );
   if( will.verbosity >= 3 )
-  logger.log( ' + ' + 'Write out archive ' + hd.path.moveReport( archiveFilePath, exportedDirPath ) );
+  logger.log( ' + ' + 'Write out archive ' + hd.path.moveTextualReport( archiveFilePath, exportedDirPath ) );
 
 }
 
@@ -607,10 +607,12 @@ let Associates =
 let Restricts =
 {
   srcFilter : null,
+  originalWillFilesPath : null, // xxx
 }
 
 let Medials =
 {
+  originalWillFilesPath : null, // xxx
 }
 
 let Statics =

@@ -16,11 +16,11 @@ path :
 step :
 
   delete.proto :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath: path::proto
 
   delete.out.debug :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::out.debug
 
 build :

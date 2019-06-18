@@ -38,7 +38,7 @@ path :
 step :
 
   reflect.proto :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector :
       reflector::reflect.proto.*=1
     criterion :
@@ -46,7 +46,7 @@ step :
       proto : 1
 
   reflect.submodules :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector :
       reflector::reflect.submodules*=1
     criterion :
@@ -54,7 +54,7 @@ step :
       proto : 0
 
   delete.out.debug :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::out.debug
     criterion :
       debug : 1
@@ -96,7 +96,7 @@ step::reflect.proto.
   opts :
     reflector : reflector::reflect.proto.*=1
   inherit :
-    predefined.reflect
+    files.reflect
 
 step::reflect.proto.debug
   criterion :
@@ -105,7 +105,7 @@ step::reflect.proto.debug
   opts :
     reflector : reflector::reflect.proto.*=1
   inherit :
-    predefined.reflect
+    files.reflect
 
 step::reflect.submodules
   criterion :
@@ -114,7 +114,7 @@ step::reflect.submodules
   opts :
     reflector : reflector::reflect.submodules*=1
   inherit :
-    predefined.reflect
+    files.reflect
 
 step::delete.out.debug
   criterion :
@@ -122,7 +122,7 @@ step::delete.out.debug
   opts :
     filePath : path::out.debug
   inherit :
-    predefined.delete
+    files.delete
 
 step::submodules.informal.export
   opts :
@@ -189,7 +189,7 @@ step::reflect.submodules
   opts :
     reflector : reflector::reflect.submodules*=1
   inherit :
-    predefined.reflect
+    files.reflect
 
 step::submodules.informal.export
   opts :
@@ -218,7 +218,7 @@ step::reflect.proto.
   opts :
     reflector : reflector::reflect.proto.*=1
   inherit :
-    predefined.reflect
+    files.reflect
 
 step::submodules.informal.export
   opts :

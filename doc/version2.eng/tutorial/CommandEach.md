@@ -37,7 +37,7 @@ path :
 step  :
 
   delete.out :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::fileToDelete
 
 build :

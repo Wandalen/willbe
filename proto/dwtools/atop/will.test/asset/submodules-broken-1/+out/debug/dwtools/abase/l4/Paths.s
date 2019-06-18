@@ -406,6 +406,8 @@ let Routines =
 
   refine : vectorize( 'refine' ),
   normalize : vectorize( 'normalize' ),
+  normalizeStrict : vectorize( 'normalizeStrict' ),
+  normalizeTolerant : vectorize( 'normalizeTolerant' ),
   nativize : vectorize( 'nativize' ),
   dot : vectorize( 'dot' ),
   undot : vectorize( 'undot' ),
@@ -431,9 +433,10 @@ let Routines =
   // path cut off
 
   dir : vectorize( 'dir' ),
+  dirFirst : vectorize( 'dirFirst' ),
   prefixGet : vectorize( 'prefixGet' ),
   name : vectorize( 'name' ),
-  fullName : vectorize( 'fullName' ), 
+  fullName : vectorize( 'fullName' ),
   withoutExt : vectorize( 'withoutExt' ),
   changeExt : vectorize( 'changeExt', 2 ),
   ext : vectorize( 'ext' ),

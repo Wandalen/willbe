@@ -235,7 +235,7 @@ function makeNamed( test )
       'remote' : null,
       'current.remote' : null,
       'will' : path.join( __dirname, '../will/Exec' ),
-      'module.dir' : path.join( routinePath, '.' ),
+      'module.dir' : path.join( routinePath, './' ),
       'module.willfiles' : path.s.join( routinePath, [ './super.im.will.yml', './super.ex.will.yml' ] ),
       'module.original.willfiles' : null,
       'module.common' : path.join( routinePath, 'super' ),
@@ -251,7 +251,7 @@ function makeNamed( test )
     test.identical( module.remotePath, null );
     // test.identical( module.currentRemotePath, null );
     test.identical( module.willPath, path.join( __dirname, '../will/Exec' ) );
-    test.identical( module.dirPath, path.join( routinePath, '.' ) );
+    test.identical( module.dirPath, path.join( routinePath, './' ) );
     test.identical( module.commonPath, path.join( routinePath, 'super' ) );
     test.identical( module.willfilesPath, path.s.join( routinePath, [ './super.im.will.yml', './super.ex.will.yml' ] ) );
     test.identical( module.willfileArray.length, 2 );
@@ -266,7 +266,7 @@ function makeNamed( test )
     test.identical( module.openedModule.remotePath, null );
     test.identical( module.openedModule.currentRemotePath, null );
     test.identical( module.openedModule.willPath, path.join( __dirname, '../will/Exec' ) );
-    test.identical( module.openedModule.dirPath, path.join( routinePath, '.' ) );
+    test.identical( module.openedModule.dirPath, path.join( routinePath, './' ) );
     test.identical( module.openedModule.commonPath, path.join( routinePath, 'super' ) );
     test.identical( module.openedModule.willfilesPath, path.s.join( routinePath, [ './super.im.will.yml', './super.ex.will.yml' ] ) );
     test.identical( module.openedModule.willfileArray.length, 2 );
@@ -378,7 +378,7 @@ function makeAnon( test )
       'remote' : null,
       'current.remote' : null,
       'will' : path.join( __dirname, '../will/Exec' ),
-      'module.dir' : routinePath,
+      'module.dir' : routinePath + '/',
       'module.willfiles' : [ routinePath + '/.im.will.yml', routinePath + '/.ex.will.yml' ],
       'module.original.willfiles' : null,
       'temp' : [ '../out', '../super.out' ],
@@ -390,7 +390,7 @@ function makeAnon( test )
     test.identical( module.absoluteName, 'module::submodule' );
     test.identical( module.inPath, routinePath + '/proto' );
     test.identical( module.outPath, routinePath + '/out' );
-    test.identical( module.dirPath, routinePath );
+    test.identical( module.dirPath, routinePath + '/' );
     test.identical( module.commonPath, path.join( routinePath, '.' ) + '/' );
     test.identical( module.willfilesPath, [ routinePath + '/.im.will.yml', routinePath + '/.ex.will.yml' ] );
     test.identical( module.configName, 'makeAnon' );
@@ -405,7 +405,7 @@ function makeAnon( test )
     test.identical( module.openedModule.absoluteName, 'module::submodule' );
     test.identical( module.openedModule.inPath, routinePath + '/proto' );
     test.identical( module.openedModule.outPath, routinePath + '/out' );
-    test.identical( module.openedModule.dirPath, routinePath );
+    test.identical( module.openedModule.dirPath, routinePath + '/' );
     test.identical( module.openedModule.commonPath, path.join( routinePath, '.' ) + '/' );
     test.identical( module.openedModule.willfilesPath, [ routinePath + '/.im.will.yml', routinePath + '/.ex.will.yml' ] );
     test.identical( module.openedModule.configName, 'makeAnon' );
@@ -515,17 +515,14 @@ function makeOutNamed( test )
       'in' : '..',
       'exported.dir.export.debug' : './super.out/debug',
       'exported.files.export.debug' : [ 'super.out/debug', 'super.out/debug/File.debug.js', 'super.out/debug/File.release.js' ],
-      // 'archiveFile.export.debug' : './super.out/supermodule.debug.out.tgs',
       'exported.dir.export.' : './super.out/release',
       'exported.files.export.' : [ 'super.out/release', 'super.out/release/File.debug.js', 'super.out/release/File.release.js' ],
-      // 'archiveFile.export.' : './super.out/supermodule.out.tgs',
 
-      // 'local' : routinePath + '/super.out',
       'local' : null,
       'remote' : null,
       'current.remote' : null,
       'will' : path.join( __dirname, '../will/Exec' ),
-      'module.dir' : routinePath + '/super.out',
+      'module.dir' : routinePath + '/super.out/',
       'module.willfiles' : routinePath + '/super.out/supermodule.out.will.yml',
       'module.original.willfiles' : _.path.s.join( routinePath, [ 'super.im.will.yml', 'super.ex.will.yml' ] ),
       'module.common' : path.join( routinePath ) + '/super.out/supermodule.out',
@@ -536,9 +533,8 @@ function makeOutNamed( test )
     test.identical( module.absoluteName, 'module::supermodule' );
     test.identical( module.inPath, routinePath );
     test.identical( module.outPath, routinePath + '/super.out' );
-    test.identical( module.dirPath, routinePath + '/super.out' );
+    test.identical( module.dirPath, routinePath + '/super.out/' );
     test.identical( module.localPath, null );
-    // test.identical( module.localPath, routinePath + '/super.out' );
     test.identical( module.willfilesPath, routinePath + '/super.out/supermodule.out.will.yml' );
     test.identical( module.commonPath, path.join( routinePath, 'super.out/supermodule.out' ) );
     test.identical( module.configName, 'supermodule.out' );
@@ -1449,7 +1445,7 @@ function pathsResolve( test )
       './super.im.will.yml',
       './super.ex.will.yml',
       null,
-      '.',
+      './',
       'super',
       null,
       null,
@@ -1482,7 +1478,7 @@ function pathsResolve( test )
         './super.ex.will.yml'
       ],
       null,
-      '.',
+      './',
       'super',
       null,
       null,
@@ -1515,7 +1511,7 @@ function pathsResolve( test )
           './super.ex.will.yml'
         ]),
         null,
-        pin( '.' ),
+        pin( './' ),
         pin( 'super' ),
         null,
         null,
@@ -1547,7 +1543,7 @@ function pathsResolve( test )
         pin( './super.ex.will.yml' ),
       ],
       null,
-      pin( '.' ),
+      pin( './' ),
       pin( 'super' ),
       null,
       null,
@@ -1581,7 +1577,7 @@ function pathsResolve( test )
       'out.debug' : './super.out/debug',
       'out.release' : './super.out/release',
       'will' : path.join( __dirname, '../will/Exec' ),
-      'module.dir' : routinePath + '',
+      'module.dir' : routinePath + '/',
       'module.willfiles' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
       'module.common' : routinePath + '/super',
       'module.original.willfiles' : null,
@@ -1612,7 +1608,7 @@ function pathsResolve( test )
       'out.debug' : pin( './super.out/debug' ),
       'out.release' : pin( './super.out/release' ),
       'will' : path.join( __dirname, '../will/Exec' ),
-      'module.dir' : routinePath + '',
+      'module.dir' : routinePath + '/',
       'module.willfiles' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
       'module.common' : routinePath + '/super',
       'module.original.willfiles' : null,
@@ -1640,7 +1636,7 @@ function pathsResolve( test )
       'out.debug' : pout( './super.out/debug' ),
       'out.release' : pout( './super.out/release' ),
       'will' : path.join( __dirname, '../will/Exec' ),
-      'module.dir' : routinePath + '',
+      'module.dir' : routinePath + '/',
       'module.willfiles' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
       'module.common' : routinePath + '/super',
       'module.original.willfiles' : null,
@@ -1668,7 +1664,7 @@ function pathsResolve( test )
       'out.debug' : './super.out/debug',
       'out.release' : './super.out/release',
       'will' : path.join( __dirname, '../will/Exec' ),
-      'module.dir' : routinePath + '',
+      'module.dir' : routinePath + '/',
       'module.willfiles' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
       'module.common' : routinePath + '/super',
       'module.original.willfiles' : null,
@@ -1696,7 +1692,7 @@ function pathsResolve( test )
       'out.debug' : pin( './super.out/debug' ),
       'out.release' : pin( './super.out/release' ),
       'will' : path.join( __dirname, '../will/Exec' ),
-      'module.dir' : routinePath + '',
+      'module.dir' : routinePath + '/',
       'module.willfiles' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
       'module.common' : routinePath + '/super',
       'module.original.willfiles' : null,
@@ -1724,7 +1720,7 @@ function pathsResolve( test )
       'out.debug' : pout( './super.out/debug' ),
       'out.release' : pout( './super.out/release' ),
       'will' : path.join( __dirname, '../will/Exec' ),
-      'module.dir' : routinePath + '',
+      'module.dir' : routinePath + '/',
       'module.willfiles' : [ routinePath + '/super.im.will.yml', routinePath + '/super.ex.will.yml' ],
       'module.common' : routinePath + '/super',
       'module.original.willfiles' : null,
@@ -1750,7 +1746,7 @@ function pathsResolve( test )
         pin( './super.ex.will.yml' ),
       ],
       null,
-      pin( '.' ),
+      pin( './' ),
       pin( 'super' ),
       null,
       null,
@@ -1781,7 +1777,7 @@ function pathsResolve( test )
         './super.ex.will.yml'
       ],
       null,
-      '.',
+      './',
       'super',
       null,
       null,
@@ -1812,7 +1808,7 @@ function pathsResolve( test )
         pin( './super.ex.will.yml' ),
       ],
       null,
-      pin( '.' ),
+      pin( './' ),
       pin( 'super' ),
       null,
       null,
@@ -3694,7 +3690,7 @@ function submodulesResolve( test )
     test.identical( submodule.name, 'Tools' );
     test.identical( submodule.oModule.openedModule, null );
     test.identical( submodule.oModule.willfilesPath, _.uri.s.join( routinePath, '.module/Tools/out/wTools.out.will' ) );
-    test.identical( submodule.oModule.dirPath, _.uri.s.join( routinePath, '.module/Tools/out' ) );
+    test.identical( submodule.oModule.dirPath, _.uri.s.join( routinePath, '.module/Tools/out/' ) );
     test.identical( submodule.oModule.localPath, _.uri.join( routinePath, '.module/Tools' ) );
     test.identical( submodule.oModule.remotePath, _.uri.join( repoPath, 'git://Tools?out=out/wTools.out.will#master' ) );
 
@@ -3729,7 +3725,7 @@ function submodulesResolve( test )
 
     test.identical( submodule.oModule.name, 'Tools' );
     test.identical( submodule.oModule.willfilesPath, _.uri.s.join( routinePath, '.module/Tools/out/wTools.out.will.yml' ) );
-    test.identical( submodule.oModule.dirPath, _.uri.join( routinePath, '.module/Tools/out' ) );
+    test.identical( submodule.oModule.dirPath, _.uri.join( routinePath, '.module/Tools/out/' ) );
     test.identical( submodule.oModule.localPath, _.uri.join( routinePath, '.module/Tools' ) );
     test.identical( submodule.oModule.remotePath, _.uri.join( repoPath, 'git://Tools?out=out/wTools.out.will#master' ) );
 
@@ -3737,7 +3733,7 @@ function submodulesResolve( test )
     test.identical( submodule.oModule.openedModule.resourcesFormed, 9 );
     test.identical( submodule.oModule.openedModule.submodulesFormed, 9 );
     test.identical( submodule.oModule.openedModule.willfilesPath, _.uri.s.join( routinePath, '.module/Tools/out/wTools.out.will.yml' ) );
-    test.identical( submodule.oModule.openedModule.dirPath, _.uri.join( routinePath, '.module/Tools/out' ) );
+    test.identical( submodule.oModule.openedModule.dirPath, _.uri.join( routinePath, '.module/Tools/out/' ) );
     test.identical( submodule.oModule.openedModule.localPath, _.uri.join( routinePath, '.module/Tools' ) );
     test.identical( submodule.oModule.openedModule.remotePath, _.uri.join( repoPath, 'git://Tools?out=out/wTools.out.will#master' ) );
     test.identical( submodule.oModule.openedModule.currentRemotePath, _.uri.join( repoPath, 'git://Tools?out=out/wTools.out.will#master' ) );

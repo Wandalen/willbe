@@ -30,7 +30,7 @@ reflector :
 step :
 
   delete.out :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::out
 
 build :

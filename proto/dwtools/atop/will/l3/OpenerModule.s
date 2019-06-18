@@ -585,13 +585,18 @@ function _willfileFindSingle( o )
   let fname = path.fullName( willfilesPath );
 
   if( o.lookingDir )
-  if( o.isNamed || fname === '' || fname === '.' || opener.WillfilePathIs( fname ) )
+  if( !path.isTrailed( willfilesPath ) )
+  if( o.isNamed || opener.WillfilePathIs( fname ) )
+  // if( o.isNamed || !path.isTrailed( willfilesPath ) || !_.strEnds( willfilesPath, '/.' ) || opener.WillfilePathIs( fname ) )
+  // if( o.isNamed || fname === '' || fname === '.' || opener.WillfilePathIs( fname ) )
   {
     dirPath = path.dir( willfilesPath );
   }
 
   if( !dirPath )
   dirPath = willfilesPath;
+
+  dirPath = path.normalize( dirPath );
 
   /* name path */
 
@@ -849,6 +854,7 @@ function _willfilesFindMaybe( o )
   if( _.arrayIs( opener.willfilesPath ) && opener.willfilesPath.length === 1 )
   opener.willfilesPath = opener.willfilesPath[ 0 ];
 
+  // debugger;
   if( !found )
   find( o.isOutFile );
 
@@ -2268,7 +2274,6 @@ let Proto =
   _willfilesFindMaybe,
   _willfilesFindPickedFile,
   _willfilesFind,
-  // willfilesFind,
   willfilesPick,
 
   willfilesReadBegin,

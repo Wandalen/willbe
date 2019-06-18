@@ -88,7 +88,7 @@ reflector :
       prefixPath : path::out.*=1
     criterion :
       debug : 1
-    step : predefined.reflector
+    step : files.reflector
 
   reflect.files :
     filePath :

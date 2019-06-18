@@ -8,7 +8,7 @@ path :
   
 step : 
   clean.paths:
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : 
       - path::A
       - path::B

@@ -33,7 +33,7 @@ reflector :
 step :
 
   delete.out.debug :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::out.debug
     criterion :
       debug : 1

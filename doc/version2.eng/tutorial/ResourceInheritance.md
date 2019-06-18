@@ -54,7 +54,7 @@ reflector :
 step :
 
   copy.all :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector : reflector::reflect.*
     criterion:
       debug: [ 0,1 ]

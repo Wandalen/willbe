@@ -25,7 +25,7 @@ reflector :
 step :
 
   reflect.proto.debug :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector :
       reflector::reflect.proto*
     criterion :

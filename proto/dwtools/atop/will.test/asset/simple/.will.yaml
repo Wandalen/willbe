@@ -16,12 +16,12 @@ reflector :
 step :
 
   reflect.proto :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector :
       reflector::reflect.proto
 
   delete.out.debug :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::out.debug
 
 build :

@@ -534,7 +534,7 @@ function reflectorsImport( Reflector, resources )
       if( resource.step )
       o3.inherit = resource.step;
       else
-      o3.inherit = 'predefined.reflect';
+      o3.inherit = 'files.reflect';
       o3.Optional = 1;
       o3.Importing = 1;
 

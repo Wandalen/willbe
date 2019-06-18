@@ -15,7 +15,13 @@ if( typeof module !== 'undefined' )
 var _global = _global_;
 var _ = _global_.wTools;
 
+/*
+qqq : fix style problems and non-style problems in the test
+*/
+
+// --
 //
+// --
 
 function refine( test )
 {
@@ -307,6 +313,35 @@ function normalize( test )
     test.case = c.description;
     test.identical( _.paths.normalize( c.src ), c.expected );
   }
+
+}
+
+//
+
+function from( test )
+{
+
+  test.case = 'scalar';
+  var expected = 'a/b';
+  var got = _.path.s.from( 'a/b' );
+  test.identical( got, expected );
+
+  test.case = 'array';
+  var expected = [ 'a/b', '/c/d' ];
+  var got = _.path.s.from( [ 'a/b', '/c/d' ] );
+  test.identical( got, expected );
+
+  test.case = 'empty array';
+  var expected = [];
+  var got = _.path.s.from( [] );
+  test.identical( got, expected );
+
+  if( !Config.debug )
+  return;
+
+  test.shouldThrowErrorSync( () => _.path.s.from() );
+  test.shouldThrowErrorSync( () => _.path.s.from( null ) );
+  // test.shouldThrowErrorSync( () => _.path.s.from( {} ) );
 
 }
 
@@ -1308,6 +1343,234 @@ function relative( test )
 
 function common( test )
 {
+
+  test.case = 'empty';
+
+  var got = _.path.s.common();
+  test.identical( got, [] );
+
+  var got = _.path.s.common([]);
+  test.identical( got, [] );
+
+  test.case = 'array';
+
+  var got = _.path.s.common([ '/a1/b2', '/a1/b' ]);
+  test.identical( got, [ '/a1/b2', '/a1/b' ] );
+
+  var got = _.path.s.common( [ '/a1/b1/c', '/a1/b1/d' ], '/a1/b2' );
+  test.identical( got, [ '/a1/', '/a1/' ] );
+
+  test.case = 'absolute-absolute';
+
+  var got = _.path.s.common( '/a1/b2', '/a1/b' );
+  test.identical( got, '/a1/' );
+
+  var got = _.path.s.common( '/a1/b2', '/a1/b1' );
+  test.identical( got, '/a1/' );
+
+  var got = _.path.s.common( '/a1/x/../b1', '/a1/b1' );
+  test.identical( got, '/a1/b1' );
+
+  var got = _.path.s.common( '/a1/b1/c1', '/a1/b1/c' );
+  test.identical( got, '/a1/b1/' );
+
+  var got = _.path.s.common( '/a1/../../b1/c1', '/a1/b1/c1' );
+  test.identical( got, '/' );
+
+  var got = _.path.s.common( '/abcd', '/ab' );
+  test.identical( got, '/' );
+
+  var got = _.path.s.common( '/.a./.b./.c.', '/.a./.b./.c' );
+  test.identical( got, '/.a./.b./' );
+
+  var got = _.path.s.common( '//a//b//c', '/a/b' );
+  test.identical( got, '/a/b' );
+
+  var got = _.path.s.common( '/a//b', '/a//b' );
+  test.identical( got, '/a/b' );
+
+  var got = _.path.s.common( '/a//', '/a//' );
+  test.identical( got, '/a/' );
+
+  var got = _.path.s.common( '/./a/./b/./c', '/a/b' );
+  test.identical( got, '/a/b' );
+
+  var got = _.path.s.common( '/A/b/c', '/a/b/c' );
+  test.identical( got, '/' );
+
+  var got = _.path.s.common( '/', '/x' );
+  test.identical( got, '/' );
+
+  var got = _.path.s.common( '/a', '/x'  );
+  test.identical( got, '/' );
+
+  test.case = 'array';
+
+  var got = _.path.s.common([ '/a1/b2', '/a1/b' ]);
+  test.identical( got, [ '/a1/b2', '/a1/b' ] );
+
+  var got = _.path.s.common( [ '/a1/b2', '/a1/b' ], '/a1/c' );
+  test.identical( got, [ '/a1/', '/a1/' ] );
+
+  var got = _.path.s.common( [ './a1/b2', './a1/b' ], './a1/c' );
+  test.identical( got, [ 'a1/', 'a1/' ] );
+
+  test.case = 'absolute-relative'
+
+  var got = _.path.s.common( '/', '..' );
+  test.identical( got, '/' );
+
+  var got = _.path.s.common( '/', '.' );
+  test.identical( got, '/' );
+
+  var got = _.path.s.common( '/', 'x' );
+  test.identical( got, '/' );
+
+  var got = _.path.s.common( '/', '../..' );
+  test.identical( got, '/' );
+
+  if( Config.debug )
+  {
+    test.shouldThrowError( () => _.path.s.common( '/a', '..' ) );
+    test.shouldThrowError( () => _.path.s.common( '/a', '.' ) );
+    test.shouldThrowError( () => _.path.s.common( '/a', 'x' ) );
+    test.shouldThrowError( () => _.path.s.common( '/a', '../..' ) );
+  }
+
+  test.case = 'relative-relative'
+
+  var got = _.path.s.common( 'a1/b2', 'a1/b' );
+  test.identical( got, 'a1/' );
+
+  var got = _.path.s.common( 'a1/b2', 'a1/b1' );
+  test.identical( got, 'a1/' );
+
+  var got = _.path.s.common( 'a1/x/../b1', 'a1/b1' );
+  test.identical( got, 'a1/b1' );
+
+  var got = _.path.s.common( './a1/x/../b1', 'a1/b1' );
+  test.identical( got,'a1/b1' );
+
+  var got = _.path.s.common( './a1/x/../b1', './a1/b1' );
+  test.identical( got, 'a1/b1');
+
+  var got = _.path.s.common( './a1/x/../b1', '../a1/b1' );
+  test.identical( got, '..');
+
+  var got = _.path.s.common( '.', '..' );
+  test.identical( got, '..' );
+
+  var got = _.path.s.common( './b/c', './x' );
+  test.identical( got, '.' );
+
+  var got = _.path.s.common( './././a', './a/b' );
+  test.identical( got, 'a' );
+
+  var got = _.path.s.common( './a/./b', './a/b' );
+  test.identical( got, 'a/b' );
+
+  var got = _.path.s.common( './a/./b', './a/c/../b' );
+  test.identical( got, 'a/b' );
+
+  var got = _.path.s.common( '../b/c', './x' );
+  test.identical( got, '..' );
+
+  var got = _.path.s.common( '../../b/c', '../b' );
+  test.identical( got, '../..' );
+
+  var got = _.path.s.common( '../../b/c', '../../../x' );
+  test.identical( got, '../../..' );
+
+  var got = _.path.s.common( '../../b/c/../../x', '../../../x' );
+  test.identical( got, '../../..' );
+
+  var got = _.path.s.common( './../../b/c/../../x', './../../../x' );
+  test.identical( got, '../../..' );
+
+  var got = _.path.s.common( '../../..', './../../..' );
+  test.identical( got, '../../..' );
+
+  var got = _.path.s.common( './../../..', './../../..' );
+  test.identical( got, '../../..' );
+
+  var got = _.path.s.common( '../../..', '../../..' );
+  test.identical( got, '../../..' );
+
+  var got = _.path.s.common( '../b', '../b' );
+  test.identical( got, '../b' );
+
+  var got = _.path.s.common( '../b', './../b' );
+  test.identical( got, '../b' );
+
+  test.case = 'several absolute paths'
+
+  var got = _.path.s.common( '/a/b/c', '/a/b/c', '/a/b/c' );
+  test.identical( got, '/a/b/c' );
+
+  var got = _.path.s.common( '/a/b/c', '/a/b/c', '/a/b' );
+  test.identical( got, '/a/b' );
+
+  var got = _.path.s.common( '/a/b/c', '/a/b/c', '/a/b1' );
+  test.identical( got, '/a/' );
+
+  var got = _.path.s.common( '/a/b/c', '/a/b/c', '/a' );
+  test.identical( got, '/a' );
+
+  var got = _.path.s.common( '/a/b/c', '/a/b/c', '/x' );
+  test.identical( got, '/' );
+
+  var got = _.path.s.common( '/a/b/c', '/a/b/c', '/' );
+  test.identical( got, '/' );
+
+  test.case = 'several relative paths';
+
+  var got = _.path.s.common( 'a/b/c', 'a/b/c', 'a/b/c' );
+  test.identical( got, 'a/b/c' );
+
+  var got = _.path.s.common( 'a/b/c', 'a/b/c', 'a/b' );
+  test.identical( got, 'a/b' );
+
+  var got = _.path.s.common( 'a/b/c', 'a/b/c', 'a/b1' );
+  test.identical( got, 'a/' );
+
+  var got = _.path.s.common( 'a/b/c', 'a/b/c', '.' );
+  test.identical( got, '.' );
+
+  var got = _.path.s.common( 'a/b/c', 'a/b/c', 'x' );
+  test.identical( got, '.' );
+
+  var got = _.path.s.common( 'a/b/c', 'a/b/c', './' );
+  test.identical( got, '.' );
+
+  var got = _.path.s.common( '../a/b/c', 'a/../b/c', 'a/b/../c' );
+  test.identical( got, '..' );
+
+  var got = _.path.s.common( './a/b/c', '../../a/b/c', '../../../a/b' );
+  test.identical( got, '../../..' );
+
+  var got = _.path.s.common( '.', './', '..' );
+  test.identical( got, '..' );
+
+  var got = _.path.s.common( '.', './../..', '..' );
+  test.identical( got, '../..' );
+
+  if( Config.debug )
+  {
+
+    test.shouldThrowError( () => _.path.s.common( '/a/b/c', '/a/b/c', './' ) );
+    test.shouldThrowError( () => _.path.s.common( '/a/b/c', '/a/b/c', '.' ) );
+    test.shouldThrowError( () => _.path.s.common( 'x', '/a/b/c', '/a' ) );
+    test.shouldThrowError( () => _.path.s.common( '/a/b/c', '..', '/a' ) );
+    test.shouldThrowError( () => _.path.s.common( '../..', '../../b/c', '/a' ) );
+
+  }
+
+}
+
+//
+
+function commonVectors( test )
+{
   var cases =
   [
     {
@@ -1383,6 +1646,7 @@ var Self =
     refine,
     normalize,
 
+    from,
     dot,
     undot,
 
@@ -1400,6 +1664,7 @@ var Self =
     relative,
 
     common,
+    commonVectors,
 
   },
 }

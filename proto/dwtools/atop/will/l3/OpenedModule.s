@@ -641,13 +641,13 @@ function predefinedForm()
 
   step
   ({
-    name : 'predefined.delete',
+    name : 'files.delete',
     stepRoutine : Predefined.stepRoutineDelete,
   })
 
   step
   ({
-    name : 'predefined.reflect',
+    name : 'files.reflect',
     stepRoutine : Predefined.stepRoutineReflect,
   })
 
@@ -958,10 +958,10 @@ function shell( o )
   if( !_.mapIs( arguments[ 0 ] ) )
   o = { execPath : arguments[ 0 ] }
 
+  o = _.routineOptions( shell, o );
   _.assert( _.strIs( o.execPath ) );
   _.assert( arguments.length === 1 );
   _.assert( o.verbosity === null || _.numberIs( o.verbosity ) );
-  o = _.routineOptions( shell, o );
 
   /* */
 
@@ -1833,7 +1833,7 @@ function moduleFixate( o )
     for( let r in report )
     {
       let line = report[ r ];
-      let movePath = line.fixatedPath ? path.moveReport( line.fixatedPath, line.originalPath ) : _.color.strFormat( line.originalPath, 'path' );
+      let movePath = line.fixatedPath ? path.moveTextualReport( line.fixatedPath, line.originalPath ) : _.color.strFormat( line.originalPath, 'path' );
       if( !grouped[ movePath ] )
       grouped[ movePath ] = []
       grouped[ movePath ].push( line )
@@ -2986,8 +2986,10 @@ function cleanWhat( o )
   let path = fileProvider.path;
   let exps = module.exportsResolve();
   let filePaths = [];
-  let result = Object.create( null );
-  result[ '/' ] = filePaths;
+  let result2 = Object.create( null );
+  result2[ '/' ] = filePaths;
+  // let result = Object.create( null );
+  // result[ '/' ] = filePaths;
 
   o = _.routineOptions( cleanWhat, arguments );
 
@@ -3017,9 +3019,6 @@ function cleanWhat( o )
       let exp = exps[ e ];
       let archiveFilePath = exp.archiveFilePathFor();
       _.arrayAppendArrayOnce( files, [ archiveFilePath ] );
-      // let outFilePath = exp.outFilePathFor();
-      // let outFilePath = exp.outFilePathFor();
-      // _.arrayAppendArrayOnce( files, [ archiveFilePath, outFilePath ] );
     }
 
     find( files );
@@ -3070,7 +3069,8 @@ function cleanWhat( o )
 
   filePaths.sort();
 
-  return result;
+  return result2;
+  // return result;
 
   /* - */
 
@@ -3100,34 +3100,43 @@ function cleanWhat( o )
 
     let found = fileProvider.filesDelete( op );
     _.assert( op.filter.formed === 5 );
-    let filePath = path.pathMapSrcFromSrc( op.filter.filePath );
-    let commonPath = filePath.length ? path.detrail( path.common( filePath ) ) : '';
 
-    found = _.arrayFlattenOnce( found );
+    // debugger;
+    // let r = path.group({ keys : op.filter.filePath, vals : found });
+    // debugger;
 
-    if( found.length )
-    _.arrayFlattenOnce( filePaths, found );
+    // let filePath = path.pathMapSrcFromSrc( op.filter.filePath );
+    // let commonPath = filePath.length ? path.detrail( path.common( filePath ) ) : '';
+    //
+    // found = _.arrayFlattenOnce( found );
+    //
+    // if( found.length )
+    // _.arrayFlattenOnce( filePaths, found );
+    //
+    // if( found.length )
+    // for( let p in result )
+    // {
+    //   if( !_.strHas( commonPath, p ) )
+    //   continue;
+    //   if( p === '/' )
+    //   continue;
+    //   if( !result[ commonPath ] )
+    //   result[ commonPath ] = found;
+    //   else
+    //   _.arrayFlattenOnce( result[ commonPath ], found );
+    //   found = [];
+    //   break;
+    // }
+    //
+    // if( found.length )
+    // if( !result[ commonPath ] )
+    // result[ commonPath ] = found;
+    // else
+    // _.arrayFlattenOnce( result[ commonPath ], found );
 
-    if( found.length )
-    for( let p in result )
-    {
-      if( !_.strHas( commonPath, p ) )
-      continue;
-      if( p === '/' )
-      continue;
-      if( !result[ commonPath ] )
-      result[ commonPath ] = found;
-      else
-      _.arrayFlattenOnce( result[ commonPath ], found );
-      found = [];
-      break;
-    }
-
-    if( found.length )
-    if( !result[ commonPath ] )
-    result[ commonPath ] = found;
-    else
-    _.arrayFlattenOnce( result[ commonPath ], found );
+    // debugger;
+    let r = path.group({ keys : op.filter.filePath, vals : found, result : result2 });
+    // debugger;
 
   }
 
@@ -3142,45 +3151,69 @@ cleanWhat.defaults =
 
 //
 
-function cleanWhatReport()
+function cleanWhatReport( o )
 {
   let module = this;
   let will = module.will;
   let logger = will.logger;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-
   let time = _.timeNow();
-  let filesPath = module.cleanWhat();
-  logger.log();
 
-  if( logger.verbosity >= 4 )
-  logger.log( _.toStr( filesPath[ '/' ], { multiline : 1, wrap : 0, levels : 2 } ) );
+  o = _.routineOptions( cleanWhatReport, arguments );
 
-  if( logger.verbosity >= 2 )
+  if( !o.report )
   {
-    let details = _.filter( filesPath, ( filesPath, basePath ) =>
-    {
-      if( basePath === '/' )
-      return;
-      if( !filesPath.length )
-      return;
-      return filesPath.length + ' at ' + basePath;
-    });
-    logger.log( _.mapVals( details ).join( '\n' ) );
+    let o2 = _.mapExtend( null, o );
+    delete o2.report;
+    delete o2.explanation;
+    delete o2.spentTime;
+    o.report = module.cleanWhat( o2 );
   }
 
-  logger.log( 'Clean will delete ' + filesPath[ '/' ].length + ' file(s) in total, found in ' + _.timeSpent( time ) );
+  // logger.log();
+  // if( logger.verbosity >= 4 )
+  // logger.log( _.toStr( o.found[ '/' ], { multiline : 1, wrap : 0, levels : 2 } ) );
+  //
+  // if( logger.verbosity >= 2 )
+  // {
+  //   let details = _.filter( o.found, ( filesPath, basePath ) =>
+  //   {
+  //     if( basePath === '/' )
+  //     return;
+  //     if( !filesPath.length )
+  //     return;
+  //     return filesPath.length + ' at ' + basePath;
+  //   });
+  //   logger.log( _.mapVals( details ).join( '\n' ) );
+  // }
+  //
+  // logger.log( 'Clean will delete ' + o.found[ '/' ].length + ' file(s) in total, found in ' + _.timeSpent( time ) );
 
-  return filesPath;
+  if( !o.spentTime )
+  o.spentTime = _.timeNow() - time;
 
+  let textualReport = path.groupTextualReport
+  ({
+    explanation : o.explanation,
+    groupsMap : o.report,
+    verbosity : logger.verbosity,
+    spentTime : o.spentTime,
+  });
+
+  logger.log( textualReport );
+
+  return textualReport;
 }
 
 cleanWhatReport.defaults = Object.create( cleanWhat.defaults );
+cleanWhatReport.defaults.report = null;
+cleanWhatReport.defaults.explanation = ' . Clean will delete ';
+cleanWhatReport.defaults.spentTime = null
 
 //
 
-function clean()
+function clean( o )
 {
   let module = this;
   let will = module.will;
@@ -3188,21 +3221,39 @@ function clean()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let time = _.timeNow();
-  let files = module.cleanWhat.apply( module, arguments );
 
-  _.assert( _.arrayIs( files[ '/' ] ) );
+  o = _.routineOptions( clean, arguments );
+  debugger;
+  let report = module.cleanWhat( o );
+  debugger;
 
-  for( let f = files[ '/' ].length-1 ; f >= 0 ; f-- )
+  _.assert( _.arrayIs( report[ '/' ] ) );
+
+  for( let f = report[ '/' ].length-1 ; f >= 0 ; f-- )
   {
-    let filePath = files[ '/' ][ f ];
+    let filePath = report[ '/' ][ f ];
     _.assert( path.isAbsolute( filePath ) );
-    fileProvider.fileDelete({ filePath : filePath, verbosity : 1, throwing : 0 });
+    let res = fileProvider.fileDelete({ filePath : filePath, verbosity : 1, throwing : 0 });
+    debugger;
   }
 
-  if( logger.verbosity >= 2 )
-  logger.log( ' - Clean deleted ' + files[ '/' ].length + ' file(s) in ' + _.timeSpent( time ) );
+  time = _.timeNow() - time;
 
-  return files;
+  let o2 = _.mapExtend( null, o );
+  o2.explanation = ' - Clean deleted ';
+  o2.spentTime = time;
+  o2.report = report;
+  let textualReport = module.cleanWhatReport( o2 );
+
+  // if( textualReport )
+  // logger.log( textualReport );
+  //
+  // if( logger.verbosity === 2 )
+  // {
+  //   logger.log( ' - Clean deleted ' + files[ '/' ].length + ' file(s) in ' + _.timeSpent( time ) );
+  // }
+
+  return report;
 }
 
 clean.defaults = Object.create( cleanWhat.defaults );
@@ -3230,7 +3281,7 @@ function _selectorShortSplit( o )
   _.assertRoutineOptions( _selectorShortSplit, o );
   _.assert( arguments.length === 1 );
   _.assert( !_.strHas( o.selector, '/' ) );
-  _.sure( _.strIs( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
+  _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
 
   let splits = module._selectorShortSplitAct( o.selector );
 
@@ -3259,7 +3310,7 @@ function selectorLongSplit( o )
 
   _.routineOptions( selectorLongSplit, o );
   _.assert( arguments.length === 1 );
-  _.sure( _.strIs( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
+  _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
 
   let selectors = o.selector.split( '/' );
 
@@ -3290,7 +3341,7 @@ function selectorParse( o )
 
   _.routineOptions( selectorParse, o );
   _.assert( arguments.length === 1 );
-  _.sure( _.strIs( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
+  _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
 
   let splits = _.strSplitFast
   ({
@@ -4951,12 +5002,12 @@ function dataExportForModuleExport( o )
   let module2 = opener2.openCloning( module );
   // debugger;
 
-  _.assert( module2.dirPath === module.outPath );
+  _.assert( module2.dirPath === path.trail( module.outPath ) );
   _.assert( module2.original === module );
   _.assert( module2.rootModule === module );
   _.assert( module2.willfileArray.length === 0 );
 
-  _.assert( opener2.dirPath === module.outPath );
+  _.assert( opener2.dirPath === path.trail( module.outPath ) );
   _.assert( opener2.original === module );
   _.assert( opener2.supermodule === null );
   _.assert( opener2.rootModule === module );

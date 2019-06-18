@@ -52,7 +52,7 @@ reflector :
 step :
 
   reflect.copy :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector : reflect.*
 
 build :
@@ -133,7 +133,7 @@ reflector :
 step :
 
   reflect.copy :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector : reflect.*
 
 build :

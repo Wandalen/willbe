@@ -28,7 +28,7 @@ reflector :
 step :
 
   reflect. :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector : reflect.*
     criterion :
        debug : [ 0,1 ]

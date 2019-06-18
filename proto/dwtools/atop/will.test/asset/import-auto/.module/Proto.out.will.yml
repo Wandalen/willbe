@@ -87,7 +87,7 @@ step:
     opts:
       reflector: 'reflector::download*'
     inherit:
-      - predefined.reflect
+      - files.reflect
 build:
   export:
     criterion:

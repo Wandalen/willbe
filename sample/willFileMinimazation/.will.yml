@@ -20,7 +20,7 @@ path :
 
 step  :
   delete.files :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::fileToDelete.*=1
     criterion :
       debug : [ 0,1 ]

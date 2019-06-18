@@ -148,14 +148,14 @@ step:
     opts:
       reflector: 'reflector::reflect.submodules*=1'
     inherit:
-      - predefined.reflect
+      - files.reflect
   reflect.submodules.debug:
     criterion:
       debug: 1
     opts:
       reflector: 'reflector::reflect.submodules*=1'
     inherit:
-      - predefined.reflect
+      - files.reflect
   export.:
     criterion:
       debug: 0

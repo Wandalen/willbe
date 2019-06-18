@@ -33,17 +33,17 @@ reflector :
 step :
 
   reflect.submodules1 :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector :
       reflector::reflect.submodules1
 
   reflect.submodules2 :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector :
       reflector::reflect.submodules2
 
   reflect.submodules3 :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector :
       reflector::reflect.submodules3
 

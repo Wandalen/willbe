@@ -34,13 +34,13 @@ reflector :
 step :
 
   clean.out :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::out.debug
     criterion :
       debug : [ 0,1 ]
 
   reflect.proto :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector :
       reflector::reflect.proto.*=1
     criterion :
@@ -48,7 +48,7 @@ step :
       raw : [ 0,1 ]
 
   reflect.submodules :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector :
       reflector::reflect.submodules*=1
     criterion :

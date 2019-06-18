@@ -98,7 +98,7 @@ reflector :
 step :
 
   reflect.copy :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector : reflect.*
     criterion :
        debug : [ 0,1 ]
@@ -339,7 +339,7 @@ reflector :
 step :
 
   reflect.copy :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector : reflect.*
     criterion :
        debug : [ 0,1 ]

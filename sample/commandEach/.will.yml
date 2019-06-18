@@ -11,7 +11,7 @@ path :
 step  :
 
   delete.submodule :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::fileToDelete
 
 

@@ -45,7 +45,7 @@ function stepRoutineDelete( frame )
   let o2 =
   {
     filePath : filePath,
-    verbosity : will.verbosity >= 2 ? 2 : 0,
+    verbosity : step.verbosity !== null ? step.verbosity : ( will.verbosity-1 ),
   }
 
   if( filePath instanceof will.Reflector )
@@ -128,7 +128,8 @@ function stepRoutineReflect( frame )
       dstFilter.form();
       let src = srcFilter.filePathSrcCommon();
       let dst = dstFilter.filePathDstCommon();
-      logger.log( ' + ' + reflector.decoratedNickName + ' reflected ' + opts.result.length + ' files ' + path.moveReport( dst, src ) + ' in ' + _.timeSpent( time ) );
+      debugger;
+      logger.log( ' + ' + reflector.decoratedNickName + ' reflected ' + opts.result.length + ' files ' + path.moveTextualReport( dst, src ) + ' in ' + _.timeSpent( time ) );
       // logger.log( _.select( opts.result, '*/dst/relative' ) );
       // debugger;
     }

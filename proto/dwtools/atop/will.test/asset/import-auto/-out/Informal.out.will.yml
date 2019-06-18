@@ -103,7 +103,7 @@ step:
     opts:
       filePath: 'path::out.debug'
     inherit:
-      - predefined.delete
+      - files.delete
   submodules.informal.export:
     opts:
       currentPath: 'path::module.dir'
@@ -116,21 +116,21 @@ step:
     opts:
       reflector: 'reflector::reflect.proto*'
     inherit:
-      - predefined.reflect
+      - files.reflect
   reflect.proto.debug:
     criterion:
       debug: 1
     opts:
       reflector: 'reflector::reflect.proto*'
     inherit:
-      - predefined.reflect
+      - files.reflect
   reflect.submodules:
     criterion:
       debug: 1
     opts:
       reflector: 'reflector::reflect.submodules*'
     inherit:
-      - predefined.reflect
+      - files.reflect
   export.proto:
     opts:
       export: 'path::proto'

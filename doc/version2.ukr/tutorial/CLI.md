@@ -168,11 +168,11 @@ path :
 step :
 
   delete.proto :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath: path::proto
 
   delete.out.debug :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::out.debug
 
 build :
@@ -384,13 +384,13 @@ step::delete.proto
   opts :
     filePath : path::proto
   inherit :
-    predefined.delete
+    files.delete
 
 step::delete.out.debug
   opts :
     filePath : path::out.debug
   inherit :
-    predefined.delete
+    files.delete
 
 build::debug
   criterion :

@@ -105,7 +105,7 @@ reflector :
 step :
 
   clean.out :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::out.*=1
     criterion :
       debug : [ debug, release ]

@@ -16,7 +16,7 @@ step :
     shell : node -e "console.log( 'shell.step' )"
     
   delete.step :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::out
 
 build :

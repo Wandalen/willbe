@@ -21,7 +21,7 @@ path :
 step :
 
   delete.files :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::out.*
   criterion :
     debug : 1
@@ -36,7 +36,7 @@ step :
 ```yaml
 step :
   delete.files :
-    inherit : predefined.delete
+    inherit : files.delete
     filePath : path::out.*
   criterion :
     raw : 1           # одиничне значення - звичайна форма запису

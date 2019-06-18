@@ -106,7 +106,7 @@ This steps execute the predefined operations in the `reflector`.
 step :
 
   reflect.proto :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector :
       reflector::reflect.proto
     criterion :
@@ -114,7 +114,7 @@ step :
       copyAll : 0
 
   reflect.protoTwo :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector :
       reflector::reflect.protoTwo
     criterion :
@@ -218,7 +218,7 @@ reflector :
 step :
 
   reflect.proto :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector :
       reflector::reflect.proto
     criterion :
@@ -226,7 +226,7 @@ step :
       copyAll : 0
 
   reflect.protoTwo :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector :
       reflector::reflect.protoTwo
     criterion :

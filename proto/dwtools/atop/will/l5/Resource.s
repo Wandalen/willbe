@@ -998,7 +998,7 @@ function inPathResolve_body( o )
   let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
-  _.assert( _.strIs( o.selector ) );
+  _.assert( _.strIs( o.selector ) || _.strsAreAll( o.selector ) );
   _.assertRoutineOptions( inPathResolve_body, arguments );
 
   if( o.prefixlessAction !== 'default' )

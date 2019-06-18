@@ -70,7 +70,7 @@ This step executes the predefined operation: `reflect`.
 step :
 
   reflect.proto :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector :
       reflector::reflect.proto
     criterion :
@@ -138,7 +138,7 @@ reflector :
 step :
 
   reflect.proto :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector :
       reflector::reflect.proto
     criterion :

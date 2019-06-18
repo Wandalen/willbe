@@ -39,13 +39,13 @@ reflector :
 step :
 
   reflect.project :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector : reflect.project*=1
     criterion :
       debug : [ 0,1 ]
 
   reflect.copy.common :
-    inherit : predefined.reflect
+    inherit : files.reflect
     reflector : reflect.copy.common
 
 build :

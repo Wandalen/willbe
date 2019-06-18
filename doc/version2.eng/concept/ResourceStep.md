@@ -38,7 +38,7 @@ The section contains steps that can be used by the build to build the module.
  the `build` scenario section to implement the build.
 
  ### List of predefined steps
- ### Predefined step `predefined.delete`  
+ ### Predefined step `files.delete`  
 
  Designed to delete files in the specified path.
 
@@ -47,30 +47,30 @@ The section contains steps that can be used by the build to build the module.
  ```yaml
  step:                                   # Name of the section
    delete.files:                         # Name of the step
-     inherit: predefined.delete          # Inheritance
+     inherit: files.delete          # Inheritance
      filePath: some/dir                  # File, which will be deleted
  ```
 
- In `delete.files` step is [inherited](Inheritance.md),from `predefined.delete`. This step removes files by path `path::fileToDelete`.
+ In `delete.files` step is [inherited](Inheritance.md),from `files.delete`. This step removes files by path `path::fileToDelete`.
 
-### Predefined step `predefined.reflect`  
+### Predefined step `files.reflect`  
 
  This is the step for copying the files by means of [reflector](ResourceReflector.md#Resource-reflector).  
 
- Reflectors choose a set of files over which to perform some operation. The step `predefined.reflect` performs the copying of files from one place to another. By default, copying is performed with the storing of hard-links between a couple of files. This means that the destination file and the source file will have the same content. Furthermore any changes made to one of the files will be displayed by the operating system in another file.
+ Reflectors choose a set of files over which to perform some operation. The step `files.reflect` performs the copying of files from one place to another. By default, copying is performed with the storing of hard-links between a couple of files. This means that the destination file and the source file will have the same content. Furthermore any changes made to one of the files will be displayed by the operating system in another file.
 
  The step includes the `reflector` field to indicate the resource of the section` reflector` and field  `verbosity`, which determines the level of verbal output of the console, namely the amount of service information while step performing. The range of change in verbal level can be set from 0 to 9. 9 - the highest level of the verbosity.
 
  ```yaml
  step:                                         # Name of the section
    reflect.files:                              # Name of the step
-     inherit: predefined.reflect               # Inheritance
+     inherit: files.reflect               # Inheritance
      reflector: reflector::reflect.some.files  # Reflector for build of the files
      verbosity: 3                              # Level of verbosity
 
  ```
 
- The step `reflect.files` is [inherited](Inheritance.md) from `predefined.reflect`. To select the files, the step uses the reflector `reflect.some.files`. Level of verbal output - 3.
+ The step `reflect.files` is [inherited](Inheritance.md) from `files.reflect`. To select the files, the step uses the reflector `reflect.some.files`. Level of verbal output - 3.
 
  ### Predefined step `js.run`   
 

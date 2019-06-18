@@ -15,7 +15,7 @@ reflector :
 step :
 
   # download.1 :
-  #   inherit : predefined.reflect
+  #   inherit : files.reflect
   #   criterion :
   #     variant : [ 1 ]
   #   reflector :
