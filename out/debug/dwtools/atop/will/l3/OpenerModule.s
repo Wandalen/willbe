@@ -1698,13 +1698,9 @@ function _remoteDownload( o )
     delete old remote opener if it has a critical error or downloaded files are corrupted
     */
 
-    // debugger;
     if( !o.dry )
-    // if( opener.willfilesOpenReady.errorsCount() || !opener.isDownloaded )
-    // if( opener.error || !opener.isDownloaded )
     if( !opener.isValid() || !opener.isDownloaded )
     {
-      // logger.log( '_remoteDownload/filesDelete', opener.localPath );
       fileProvider.filesDelete({ filePath : opener.localPath, throwing : 0, sync : 1 });
     }
 
@@ -1732,20 +1728,15 @@ function _remoteDownload( o )
     if( o.forming && !o.dry && downloading )
     {
 
-      // _.assert( opener.stager.stageStatePerformed( 'preformed' ) );
-      debugger;
       let willf = opener.willfileArray[ 0 ];
       opener.close();
       _.assert( !_.arrayHas( will.willfileArray, willf ) );
       opener.open();
-      // debugger;
 
       opener.openedModule.stager.stageStatePausing( 'opened', 0 );
       opener.openedModule.stager.stageStateSkipping( 'submodulesFormed', 1 );
       opener.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
       opener.openedModule.stager.tick();
-      // debugger;
-      // opener.willfilesFind();
 
       return opener.openedModule.ready
       .finallyGive( function( err, arg )
@@ -2148,11 +2139,9 @@ let Associates =
 
   rootModule : null,
   supermodule : null,
-  // submoduleAssociation : _.define.own([]),
   pickedWillfileData : null,
 
   willfileArray : _.define.own([]),
-  // willfileWithRoleMap : _.define.own({}),
 
 }
 
@@ -2167,22 +2156,13 @@ let Restricts =
   id : null,
   preformed : 0,
   found : 0,
-  opened : 0,
   error : null,
-
-  // openerModule : null,
-  // _proxy : null,
 
   openedModule : null,
   openerModule : null,
   unwrappedOpenerModule : null,
 
   willfilesReadBeginTime : null,
-  // willfilesReadTimeReported : 0,
-
-  // moduleWithPathMap : null,
-  // moduleWithNameMap : null,
-  // allSubmodulesMap : null,
 
 }
 
@@ -2208,6 +2188,7 @@ let Forbids =
   // supermodule : 'supermodule'
   submoduleAssociation : 'submoduleAssociation',
   currentRemotePath : 'currentRemotePath',
+  opened : 'opened',
 }
 
 let Accessors =

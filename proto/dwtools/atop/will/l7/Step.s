@@ -30,9 +30,6 @@ function init( o )
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  // _.instanceInit( step );
-  // Object.preventExtensions( step );
-
   Parent.prototype.init.call( step );
 
   if( o )
@@ -45,14 +42,6 @@ function init( o )
     if( o )
     step.copy( o );
   }
-
-  // if( step.module && step.module instanceof _.Will.OpenerModule )
-  // step.module = step.module.openedModule;
-  // _.assert( step.module === null || step.module instanceof _.Will.OpenedModule );
-
-  // if( step.module instanceof _.Will.OpenerModule )
-  // step.module = step.module.openedModule;
-  // _.assert( step.module instanceof _.Will.OpenedModule );
 
 }
 

@@ -547,6 +547,7 @@ function stepRoutineNpmGenerate( frame )
   let logger = will.logger;
   let opts = frame.opts;
   let verbosity = step.verbosityWithDelta( -1 );
+  let about = module.about.dataExport();
 
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
@@ -562,20 +563,20 @@ function stepRoutineNpmGenerate( frame )
   });
 
   let config = Object.create( null );
-  config.name = module.about.name;
-  config.version = module.about.version;
-  config.enabled = module.about.enabled;
+  config.name = about.name;
+  config.version = about.version;
+  config.enabled = about.enabled;
 
-  if( module.about.values.description )
-  config.description = module.about.values.description;
-  if( module.about.values.keywords )
-  config.keywords = module.about.values.keywords;
-  if( module.about.values.license )
-  config.license = module.about.values.license;
+  if( about.description )
+  config.description = about.description;
+  if( about.keywords )
+  config.keywords = about.keywords;
+  if( about.license )
+  config.license = about.license;
 
-  if( module.about.values.interpreters )
+  if( about.interpreters )
   {
-    let interpreters = _.arrayAs( module.about.values.interpreters );
+    let interpreters = _.arrayAs( about.interpreters );
     interpreters.forEach( ( interpreter ) =>
     {
       if( _.strHas( interpreter, 'node' ) )
@@ -583,16 +584,16 @@ function stepRoutineNpmGenerate( frame )
     });
   }
 
-  if( module.about.values.author )
-  config.author = module.about.values.author;
-  if( module.about.values.contributors )
-  config.contributors = module.about.values.contributors;
+  if( about.author )
+  config.author = about.author;
+  if( about.contributors )
+  config.contributors = about.contributors;
 
-  for( let n in module.about.values )
+  for( let n in about )
   {
     if( !_.strBegins( n, 'npm.' ) )
     continue;
-    config[ _.strRemoveBegin( n, 'npm.' ) ] = module.about.values[ n ];
+    config[ _.strRemoveBegin( n, 'npm.' ) ] = about[ n ];
   }
 
   if( module.pathMap.repository )

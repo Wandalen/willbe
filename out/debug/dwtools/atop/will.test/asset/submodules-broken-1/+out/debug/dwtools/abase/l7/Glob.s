@@ -348,7 +348,7 @@ function _globRegexpForTerminal( glob, filePath, basePath )
   filePath = basePath;
   if( basePath === null )
   basePath = filePath = this.fromGlob( glob );
-  return self._globRegexpFor2.apply( self, [ glob, filePath, basePath ] ).actual;
+  return self._globFullToRegexpSingle.apply( self, [ glob, filePath, basePath ] ).actual;
 }
 
 //
@@ -377,7 +377,7 @@ function _globRegexpForDirectory( glob, filePath, basePath )
   filePath = basePath;
   if( basePath === null )
   basePath = filePath = this.fromGlob( glob );
-  return self._globRegexpFor2.apply( self, [ glob, filePath, basePath ] ).transient;
+  return self._globFullToRegexpSingle.apply( self, [ glob, filePath, basePath ] ).transient;
 }
 
 //
@@ -396,7 +396,7 @@ function globRegexpsForDirectory()
 
 //
 
-function _globRegexpFor2( glob, filePath, basePath )
+function _globFullToRegexpSingle( glob, filePath, basePath )
 {
   let self = this;
 
@@ -457,17 +457,17 @@ function _globRegexpFor2( glob, filePath, basePath )
 
 //
 
-let _globRegexpsFor2 = _.routineVectorize_functor
+let _globsToRegexps = _.routineVectorize_functor
 ({
-  routine : _globRegexpFor2,
+  routine : _globFullToRegexpSingle,
   select : 3,
 });
 
 //
 
-function globRegexpsFor2()
+function globsToRegexps()
 {
-  let r = _globRegexpsFor2.apply( this, arguments );
+  let r = _globsToRegexps.apply( this, arguments );
   if( _.arrayIs( r ) )
   {
     let result = Object.create( null );
@@ -480,7 +480,7 @@ function globRegexpsFor2()
 
 //
 
-function globToRegexp( glob )
+function globSplitToRegexp( glob )
 {
 
   _.assert( _.strIs( glob ) || _.regexpIs( glob ) );
@@ -537,7 +537,7 @@ function globFilter_body( o )
   }
   else
   {
-    let regexp = this.globsToRegexp( o.selector );
+    let regexp = this.globsToRegexps( o.selector );
     result = _.filter( o.src, ( e, k ) =>
     {
       return regexp.test( o.onEvaluate( e, k, o.src ) ) ? e : undefined;
@@ -768,7 +768,7 @@ function _globSplitToRegexpSource( src )
     // result = result.replace( /[^\*\+\[\]\{\}\?\@\!\^\(\)]+/g, ( m ) => _.regexpEscape( m ) );
 
     // /* replace globs with regexps from map */
-    // result = result.replace( /(\*\*\\\/|\*\*)|(\*)|(\?)|(\[.*\])/g, globToRegexp );
+    // result = result.replace( /(\*\*\\\/|\*\*)|(\*)|(\?)|(\[.*\])/g, globSplitToRegexp );
 
     // /* replace {} -> () and , -> | to make proper regexp */
     // result = result.replace( /\{.*\}/g, curlyBrackets );
@@ -1537,7 +1537,7 @@ function pathMapToRegexps( o )
       if( !path.isGlob( fileGlob ) ) // xxx
       fileGlob = path.join( fileGlob, '**' );
 
-      let regexps = path._globRegexpFor2( fileGlob, commonPath, basePath );
+      let regexps = path._globFullToRegexpSingle( fileGlob, commonPath, basePath );
 
       if( value || value === null )
       {
@@ -1567,7 +1567,7 @@ pathMapToRegexps.defaults =
 
 //
 
-function basePathEquivalent( basePath1, basePath2 )
+function areBasePathsEquivalent( basePath1, basePath2 )
 {
   let path = this;
 
@@ -1620,12 +1620,12 @@ let Routines =
   _globRegexpsForDirectory,
   globRegexpsForDirectory,
 
-  _globRegexpFor2,
-  _globRegexpsFor2,
-  globRegexpsFor2,
+  _globFullToRegexpSingle,
+  _globsToRegexps,
+  globsToRegexps,
 
-  globToRegexp,
-  globsToRegexp : _.routineVectorize_functor( globToRegexp ),
+  globSplitToRegexp,
+  globsToRegexps : _.routineVectorize_functor( globSplitToRegexp ),
   globFilter,
   globFilterVals,
   globFilterKeys,
@@ -1649,7 +1649,7 @@ let Routines =
   pathMapSrcFromDst,
   pathMapGroupByDst,
   pathMapToRegexps,
-  basePathEquivalent,
+  areBasePathsEquivalent,
 
 }
 

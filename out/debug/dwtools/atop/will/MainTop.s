@@ -306,7 +306,7 @@ function commandSet( e )
     beeping : 'beeping',
   }
 
-  let request = _.strRequestParse( e.argument );
+  let request = will.StrRequestParse( e.argument );
 
   _.appArgsReadTo
   ({
@@ -334,7 +334,9 @@ function _commandList( e, act, resourceName )
 
       let selectorIsGlob = _.path.isGlob( resourceName );
       _.assert( e.request === undefined );
-      e.request = _.strRequestParse( e.argument );
+      e.request = will.StrRequestParse( e.argument );
+
+      debugger;
 
       if( selectorIsGlob && e.request.subject && !module.openedModule.SelectorIs( e.request.subject ) )
       {
@@ -376,14 +378,13 @@ function commandResourcesList( e )
   {
     let logger = will.logger;
 
+    debugger;
+
     if( !e.request.subject && !_.mapKeys( e.request.map ).length )
     {
-
       let result = '';
       result += module.openedModule.about.infoExport();
-
       logger.log( result );
-
     }
 
     logger.log( module.openedModule.infoExportResource( resources ) );
@@ -391,7 +392,6 @@ function commandResourcesList( e )
   }
 
   return will._commandList( e, act, '*' );
-
 }
 
 //
@@ -467,7 +467,7 @@ function commandBuildsList( e )
   function act( module )
   {
     let logger = will.logger;
-    let request = _.strRequestParse( e.argument );
+    let request = will.StrRequestParse( e.argument );
     let builds = module.openedModule.buildsResolve
     ({
       name : request.subject,
@@ -491,7 +491,7 @@ function commandExportsList( e )
   function act( module )
   {
     let logger = will.logger;
-    let request = _.strRequestParse( e.argument );
+    let request = will.StrRequestParse( e.argument );
     let builds = module.openedModule.exportsResolve
     ({
       name : request.subject,
@@ -679,7 +679,7 @@ function commandBuild( e )
   let will = this;
   return will.moduleReadyThenNonForming( function( module )
   {
-    let request = _.strRequestParse( e.argument );
+    let request = will.StrRequestParse( e.argument );
     let builds = module.openedModule.buildsResolve( request.subject, request.map );
     let logger = will.logger;
 
@@ -705,7 +705,7 @@ function commandExport( e )
   let will = this;
   return will.moduleReadyThen( function( module )
   {
-    let request = _.strRequestParse( e.argument );
+    let request = will.StrRequestParse( e.argument );
     let builds = module.openedModule.exportsResolve( request.subject, request.map );
 
     if( logger.verbosity >= 2 && builds.length > 1 )
@@ -735,7 +735,6 @@ function commandWith( e )
 
   if( will.currentModule )
   {
-    debugger;
     will.currentPath = null;
     will.currentModule.finit();
     will.currentModule = null;
@@ -821,7 +820,7 @@ function _commandEach_functor( fop )
 
     _.assert( _.objectIs( isolated ), 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
 
-    let con = will.moduleEach
+    let con = will.moduleEachAt
     ({
       selector : isolated.argument,
       onBegin : handleBegin,
@@ -846,13 +845,18 @@ function _commandEach_functor( fop )
       _.assert( will.currentModule === null );
       _.assert( will.currentPath === null );
 
+      // if( will.verbosity > 1 )
+      // {
+      //   logger.log( '' );
+      // }
+
       will.currentModule = it.currentModule;
       will.currentPath = it.currentPath || null;
 
       if( will.verbosity > 1 )
       {
-        // debugger;
-        logger.log( '\n', _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.currentModule.commonPath, 'path' ) );
+        logger.log( '' );
+        logger.log( _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.currentModule.commonPath, 'path' ) );
         if( will.currentPath )
         logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( will.currentPath, 'path' ) );
       }
@@ -862,8 +866,31 @@ function _commandEach_functor( fop )
 
     /* */
 
+    function handleEnd0( it )
+    {
+
+      // _.assert( will.currentModule === null );
+      // _.assert( will.currentPath === null );
+      //
+      // will.currentModule = it.currentModule;
+      // will.currentPath = it.currentPath || null;
+      //
+      // if( will.verbosity > 1 )
+      // {
+      //   logger.log( _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.currentModule.commonPath, 'path' ) );
+      //   if( will.currentPath )
+      //   logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( will.currentPath, 'path' ) );
+      // }
+
+      return null;
+    }
+
+    /* */
+
     function handleEnd( it )
     {
+
+      handleEnd0( it );
 
       logger.up();
 

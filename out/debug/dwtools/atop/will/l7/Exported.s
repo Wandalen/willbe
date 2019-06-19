@@ -390,7 +390,7 @@ function performExportedFilesReflector()
 
   _.assert( _.objectIs( exportedFilesReflector.criterion ) );
   exportedFilesReflector.src.filteringClear();
-  _.assert( exportedFilesReflector.src.basePath === null || path.basePathEquivalent( exportedFilesReflector.src.basePath, path.join( module.inPath, exported.exportedDirPath.path ) ) );
+  _.assert( exportedFilesReflector.src.basePath === null || path.areBasePathsEquivalent( exportedFilesReflector.src.basePath, path.join( module.inPath, exported.exportedDirPath.path ) ) );
 
   /*
   base path is really required!

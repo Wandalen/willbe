@@ -112,10 +112,10 @@ function fromGlob( test )
 
 //
 
-function globToRegexp( test )
+function globSplitToRegexp( test )
 {
 
-  var got = _.path.globToRegexp( '**/b/**' );
+  var got = _.path.globSplitToRegexp( '**/b/**' );
   var expected = /^.*\/b(?:\/.*)?$/;
   test.identical( got, expected );
 
@@ -1369,7 +1369,7 @@ var Self =
   {
 
     fromGlob,
-    globToRegexp,
+    globSplitToRegexp,
     relateForGlob,
     pathMapExtend,
 

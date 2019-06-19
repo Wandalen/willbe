@@ -238,6 +238,9 @@ function _inheritMultiple( o )
 
   Parent.prototype._inheritMultiple.call( reflector, o );
 
+  // if( reflector.nickName === 'reflector::reflect.submodules' )
+  // debugger;
+
   reflector.src.pairWithDst( reflector.dst );
 
   if( reflector.filePath )
@@ -254,6 +257,9 @@ function _inheritMultiple( o )
   reflector.dst.and( reflector._accumulator.dst ).pathsInherit( reflector._accumulator.dst );
   if( reflector.src.filePath !== reflector.dst.filePath )
   reflector.src.pairRefineLight();
+
+  // if( reflector.nickName === 'reflector::reflect.submodules' )
+  // debugger;
 
   return reflector;
 }

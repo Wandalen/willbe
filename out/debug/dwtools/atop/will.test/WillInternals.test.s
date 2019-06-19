@@ -1220,7 +1220,6 @@ function superResolve( test )
   });
 
   return ready.split();
-  // return module.openedModule.ready.split();
 }
 
 superResolve.timeOut = 130000;
@@ -2571,7 +2570,6 @@ function pathsResolveImportIn( test )
   });
 
   return ready.split();
-  // return module.openedModule.ready.split();
 }
 
 pathsResolveImportIn.timeOut = 130000;
@@ -3523,7 +3521,6 @@ function pathsResolveComposite( test )
   });
 
   return ready.split();
-  // return module.openedModule.ready.split();
 }
 
 pathsResolveComposite.timeOut = 130000;
@@ -3579,7 +3576,6 @@ function pathsResolveComposite2( test )
   });
 
   return ready.split();
-  // return module.openedModule.ready.split();
 }
 
 pathsResolveComposite2.timeOut = 130000;
@@ -3650,7 +3646,6 @@ function pathsResolveArray( test )
   });
 
   return ready.split();
-  // return module.openedModule.ready.split();
 }
 
 //
@@ -3692,7 +3687,7 @@ function submodulesResolve( test )
     test.identical( submodule.oModule.willfilesPath, _.uri.s.join( routinePath, '.module/Tools/out/wTools.out.will' ) );
     test.identical( submodule.oModule.dirPath, _.uri.s.join( routinePath, '.module/Tools/out/' ) );
     test.identical( submodule.oModule.localPath, _.uri.join( routinePath, '.module/Tools' ) );
-    test.identical( submodule.oModule.remotePath, _.uri.join( repoPath, 'git://Tools?out=out/wTools.out.will#master' ) );
+    test.identical( submodule.oModule.remotePath, _.uri.join( repoPath, 'git+hd://Tools?out=out/wTools.out.will#master' ) );
 
     test.close( 'not downloaded' );
     return null;
@@ -3716,18 +3711,11 @@ function submodulesResolve( test )
     test.is( !!submodule.oModule );
     test.identical( submodule.name, 'Tools' );
 
-    // test.identical( submodule.oModule.name, 'Tools' );
-    // test.identical( submodule.oModule.willfilesPath, _.uri.s.join( routinePath, '.module/Tools/out/wTools.out.will.yml' ) );
-    // test.identical( submodule.oModule.dirPath, _.uri.join( routinePath, '.module/Tools/out' ) );
-    // test.identical( submodule.oModule.localPath, _.uri.join( routinePath, '.module/Tools' ) );
-    // test.identical( submodule.oModule.remotePath, _.uri.join( repoPath, 'git://Tools?out=out/wTools.out.will#master' ) );
-    // test.identical( submodule.oModule.currentRemotePath, _.uri.join( repoPath, 'git://Tools?out=out/wTools.out.will#master' ) );
-
     test.identical( submodule.oModule.name, 'Tools' );
     test.identical( submodule.oModule.willfilesPath, _.uri.s.join( routinePath, '.module/Tools/out/wTools.out.will.yml' ) );
     test.identical( submodule.oModule.dirPath, _.uri.join( routinePath, '.module/Tools/out/' ) );
     test.identical( submodule.oModule.localPath, _.uri.join( routinePath, '.module/Tools' ) );
-    test.identical( submodule.oModule.remotePath, _.uri.join( repoPath, 'git://Tools?out=out/wTools.out.will#master' ) );
+    test.identical( submodule.oModule.remotePath, _.uri.join( repoPath, 'git+hd://Tools?out=out/wTools.out.will#master' ) );
 
     test.identical( submodule.oModule.openedModule.name, 'Tools' );
     test.identical( submodule.oModule.openedModule.resourcesFormed, 9 );
@@ -3735,8 +3723,8 @@ function submodulesResolve( test )
     test.identical( submodule.oModule.openedModule.willfilesPath, _.uri.s.join( routinePath, '.module/Tools/out/wTools.out.will.yml' ) );
     test.identical( submodule.oModule.openedModule.dirPath, _.uri.join( routinePath, '.module/Tools/out/' ) );
     test.identical( submodule.oModule.openedModule.localPath, _.uri.join( routinePath, '.module/Tools' ) );
-    test.identical( submodule.oModule.openedModule.remotePath, _.uri.join( repoPath, 'git://Tools?out=out/wTools.out.will#master' ) );
-    test.identical( submodule.oModule.openedModule.currentRemotePath, _.uri.join( repoPath, 'git://Tools?out=out/wTools.out.will#master' ) );
+    test.identical( submodule.oModule.openedModule.remotePath, _.uri.join( repoPath, 'git+hd://Tools?out=out/wTools.out.will#master' ) );
+    test.identical( submodule.oModule.openedModule.currentRemotePath, _.uri.join( repoPath, 'git+hd://Tools?out=out/wTools.out.will#master' ) );
 
     test.case = 'mask, single module';
     var submodule = module.openedModule.submodulesResolve({ selector : 'T*' });

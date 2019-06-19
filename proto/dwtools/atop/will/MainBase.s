@@ -175,202 +175,221 @@ function formAssociates()
   _.assert( logger2.verbosity <= logger.verbosity );
 }
 
-//
+// --
+// parser
+// --
 
-function moduleMake( o )
+function StrRequestParse( srcStr )
 {
-  let will = this.form();
-  let fileProvider = will.fileProvider;
-  let path = will.fileProvider.path;
-  let logger = will.logger;
 
-  _.assert( arguments.length === 1 );
-  o = _.routineOptions( moduleMake, arguments );
-
-  if( !o.willfilesPath )
-  o.willfilesPath = o.willfilesPath || fileProvider.path.current();
-
-  if( !o.module )
+  if( Self.SelectorIsScalar( srcStr ) )
   {
-    o.module = will.OpenerModule({ will : will, willfilesPath : o.willfilesPath }).preform();
+    let left, right;
+    let splits = _.strSplit( srcStr );
+
+    if( splits.length > 1 )
+    debugger;
+
+    for( let s = splits.length - 1 ; s >= 0 ; s-- )
+    {
+      let split = splits[ s ];
+      if( Self.SelectorIsScalar( split ) )
+      {
+        left = splits.slice( 0, s+1 ).join( ' ' );
+        right = splits.slice( s+1 ).join( ' ' );
+      }
+    }
+    let result = _.strRequestParse( right );
+    result.subject = left + result.subject;
+    result.subjects = [ result.subject ];
+    return result;
   }
 
-  _.assert( o.module.willfilesPath === o.willfilesPath || o.module.willfilesPath === o.dirPath );
-
-  o.module.open();
-  o.module.openedModule.stager.stageStatePausing( 'opened', 0 );
-  o.module.openedModule.stager.stageStateSkipping( 'resourcesFormed', !o.forming );
-  o.module.openedModule.stager.tick();
-
-  return o.module;
-}
-
-moduleMake.defaults =
-{
-  module : null,
-  willfilesPath : null,
-  forming : 0,
+  let result = _.strRequestParse( srcStr );
+  return result;
 }
 
 //
 
-function moduleEach( o )
+function SelectorIsScalar( selector )
 {
-  let will = this.form();
-  let fileProvider = will.fileProvider;
-  let path = will.fileProvider.path;
-  let logger = will.logger;
-  let con;
+  if( !_.strIs( selector ) )
+  return false;
+  if( !_.strHas( selector, '::' ) )
+  return false;
+  return true;
+}
 
-  _.sure( _.strDefined( o.selector ), 'Expects string' );
-  _.assert( arguments.length === 1 );
+//
 
-  if( _.strEnds( o.selector, '::' ) )
-  o.selector = o.selector + '*';
-
-  if( will.OpenedModule.SelectorIs( o.selector ) )
+function SelectorIs( selector )
+{
+  if( _.arrayIs( selector ) )
   {
+    for( let s = 0 ; s < selector.length ; s++ )
+    if( this.SelectorIs( selector[ s ] ) )
+    return true;
+  }
+  return this.SelectorIsScalar( selector );
+}
 
-    let module = o.currentModule;
-    if( !o.currentModule )
-    module = o.currentModule = will.OpenerModule({ will : will, willfilesPath : path.current() }).preform();
-    module.open(); // xxx
+//
 
-    con = module.openedModule.ready;
-    con.then( () =>
-    {
-      let con2 = new _.Consequence();
-      let resolved = module.openedModule.submodulesResolve({ selector : o.selector, preservingIteration : 1 });
-      resolved = _.arrayAs( resolved );
-      // debugger;
+function SelectorIsComposite( selector )
+{
 
-      for( let s = 0 ; s < resolved.length ; s++ ) con2.keep( ( arg ) => /* !!! replace by concurrent, maybe */
-      {
-        let it1 = resolved[ s ];
-        let module = it1.currentModule;
+  if( !this.SelectorIs( selector ) )
+  return false;
 
-        // debugger;
-        let it2 = Object.create( null );
-        it2.currentModule = module.openerMake();
-        // it2.supermodule = module.supermodule || module;
-
-        if( _.arrayIs( it1.dst ) || _.strIs( it1.dst ) )
-        it2.currentPath = it1.dst;
-        it2.options = o;
-
-        if( o.onBegin )
-        o.onBegin( it2 )
-        if( o.onEnd )
-        return o.onEnd( it2 );
-
-        return null;
-      });
-      con2.take( null );
-      return con2;
-    });
-
-    module.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
-    module.openedModule.stager.stageStatePausing( 'opened', 0 );
-    module.openedModule.stager.tick();
-    // module.open();
-    // module.willfilesFind();
-
+  if( _.arrayIs( selector ) )
+  {
+    for( let s = 0 ; s < selector.length ; s++ )
+    if( isComposite( selector[ s ] ) )
+    return true;
   }
   else
   {
-
-    o.selector = path.resolve( o.selector );
-    con = new _.Consequence().take( null );
-
-    let files;
-    try
-    {
-      files = will.willfilesList
-      ({
-        dirPath : o.selector,
-        includingInFiles : 1,
-        includingOutFiles : 0,
-        rerucrsive : 0,
-      });
-    }
-    catch( err )
-    {
-      throw _.errBriefly( err );
-    }
-
-    let filesMap = Object.create( null );
-    for( let f = 0 ; f < files.length ; f++ ) con.then( ( arg ) => /* !!! replace by concurrent, maybe */
-    {
-      let file = files[ f ];
-
-      if( filesMap[ file.absolute ] )
-      {
-        return true;
-      }
-
-      let module = will.OpenerModule({ will : will, willfilesPath : file.absolute }).preform();
-      module.open();
-
-      let it = Object.create( null );
-      it.currentModule = module;
-      it.options = o;
-
-      // module.openedModule.stager.stageConsequence( 'willfilesFound' ).then( ( arg ) =>
-      module.openedModule.stager.stageConsequence( 'opened' ).then( ( arg ) =>
-      {
-        if( o.onBegin )
-        return o.onBegin( it );
-        return arg;
-      });
-
-      module.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
-      module.openedModule.stager.stageStatePausing( 'opened', 0 );
-      module.openedModule.stager.tick();
-      // module.willfilesFind();
-
-      return module.openedModule.ready.split().keep( function( arg )
-      {
-        _.assert( module.willfileArray.length > 0 );
-        if( module.willfilesPath )
-        _.mapSet( filesMap, module.willfilesPath, true );
-
-        let r = o.onEnd( it );
-
-        r = _.Consequence.From( r );
-
-        r.finally( ( err, arg ) =>
-        {
-          if( err )
-          throw err;
-          return arg;
-        });
-
-        return r;
-      })
-
-    });
-
+    return isComposite( selector );
   }
 
-  con.finally( ( err, arg ) =>
-  {
-    if( err )
-    throw _.err( err );
-    return o;
-  });
+  /* */
 
-  return con;
+  function isComposite( selector )
+  {
+
+    let splits = _.strSplitFast
+    ({
+      src : selector,
+      delimeter : [ '{', '}' ],
+    });
+
+    if( splits.length < 5 )
+    return false;
+
+    splits = _.strSplitsCoupledGroup({ splits : splits, prefix : '{', postfix : '}' });
+
+    if( !splits.some( ( split ) => _.arrayIs( split ) ) )
+    return false;
+
+    return true;
+  }
+
 }
 
-moduleEach.defaults =
+function SelectorShortSplitAct( selector )
 {
-  currentModule : null,
-  selector : null,
-  onBegin : null,
-  onEnd : null,
+  _.assert( !_.strHas( selector, '/' ) );
+  let result = _.strIsolateLeftOrNone( selector, '::' );
+  return result;
 }
 
 //
+
+function SelectorShortSplit( o )
+{
+  let will = this;
+  let result;
+
+  _.assertRoutineOptions( SelectorShortSplit, o );
+  _.assert( arguments.length === 1 );
+  _.assert( !_.strHas( o.selector, '/' ) );
+  _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
+
+  let splits = will.SelectorShortSplitAct( o.selector );
+
+  if( !splits[ 0 ] && o.defaultResourceName )
+  {
+    splits = [ o.defaultResourceName, '::', o.selector ];
+  }
+
+  return splits;
+}
+
+var defaults = SelectorShortSplit.defaults = Object.create( null )
+defaults.selector = null
+defaults.defaultResourceName = null;
+
+//
+
+function SelectorLongSplit( o )
+{
+  let will = this;
+  let result = [];
+
+  if( _.strIs( o ) )
+  o = { selector : o }
+
+  _.routineOptions( SelectorLongSplit, o );
+  _.assert( arguments.length === 1 );
+  _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
+
+  let selectors = o.selector.split( '/' );
+
+  selectors.forEach( ( selector ) =>
+  {
+    let o2 = _.mapExtend( null, o );
+    o2.selector = selector;
+    result.push( will.SelectorShortSplit( o2 ) );
+  });
+
+  return result;
+}
+
+var defaults = SelectorLongSplit.defaults = Object.create( null )
+defaults.selector = null
+defaults.defaultResourceName = null;
+
+//
+
+function SelectorParse( o )
+{
+  let will = this;
+  let result = [];
+
+  if( _.strIs( o ) )
+  o = { selector : o }
+
+  _.routineOptions( SelectorParse, o );
+  _.assert( arguments.length === 1 );
+  _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
+
+  let splits = _.strSplitFast
+  ({
+    src : o.selector,
+    delimeter : [ '{', '}' ],
+  });
+
+  splits = _.strSplitsCoupledGroup({ splits : splits, prefix : '{', postfix : '}' });
+
+  if( splits[ 0 ] === '' )
+  splits.splice( 0, 1 );
+  if( splits[ splits.length-1 ] === '' )
+  splits.splice( splits.length-1, 1 );
+
+  splits = splits.map( ( split ) =>
+  {
+    if( !_.arrayIs( split ) )
+    return split;
+    _.assert( split.length === 3 )
+    if( module.SelectorIs( split[ 1 ] ) )
+    {
+      let o2 = _.mapExtend( null, o );
+      o2.selector = split[ 1 ];
+      split[ 1 ] = module.SelectorLongSplit( o2 );
+    }
+    return split;
+  });
+
+  return splits;
+}
+
+var defaults = SelectorParse.defaults = Object.create( null )
+defaults.selector = null
+defaults.defaultResourceName = null;
+
+// --
+// etc
+// --
 
 function _verbosityChange()
 {
@@ -382,59 +401,6 @@ function _verbosityChange()
   if( will.fileProvider )
   will.fileProvider.verbosity = will.verbosity-2;
 
-}
-
-//
-
-function willfilesList( o )
-{
-  let will = this;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  if( _.strIs( o ) )
-  o = { dirPath : o }
-
-  _.assert( arguments.length === 1 );
-  _.routineOptions( willfilesList, o );
-  _.assert( !!will.formed );
-
-  let filter =
-  {
-    maskTerminal :
-    {
-      includeAny : /\.will(\.|$)/,
-      excludeAny :
-      [
-        /\.DS_Store$/,
-        /(^|\/)-/,
-      ],
-      includeAll : []
-    }
-  };
-
-  if( !o.includingInFiles )
-  filter.maskTerminal.includeAll.push( /\.out(\.|$)/ )
-  if( !o.includingOutFiles )
-  filter.maskTerminal.excludeAny.push( /\.out(\.|$)/ )
-
-  let files = fileProvider.filesFind
-  ({
-    filePath : o.dirPath,
-    recursive : o.recursive,
-    filter : filter,
-    maskPreset : 0,
-  });
-
-  return files;
-}
-
-willfilesList.defaults =
-{
-  dirPath : null,
-  includingInFiles : 1,
-  includingOutFiles : 1,
-  rerucrsive : 0,
 }
 
 //
@@ -489,6 +455,196 @@ function CommonPathFor( willfilesPath )
   common = common.replace( /(\.im|\.ex)$/, '' );
 
   return common;
+}
+
+// --
+// module
+// --
+
+function moduleMake( o )
+{
+  let will = this.form();
+  let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 1 );
+  o = _.routineOptions( moduleMake, arguments );
+
+  if( !o.willfilesPath )
+  o.willfilesPath = o.willfilesPath || fileProvider.path.current();
+
+  if( !o.module )
+  {
+    o.module = will.OpenerModule({ will : will, willfilesPath : o.willfilesPath }).preform();
+  }
+
+  _.assert( o.module.willfilesPath === o.willfilesPath || o.module.willfilesPath === o.dirPath );
+
+  o.module.open();
+  o.module.openedModule.stager.stageStatePausing( 'opened', 0 );
+  o.module.openedModule.stager.stageStateSkipping( 'resourcesFormed', !o.forming );
+  o.module.openedModule.stager.tick();
+
+  return o.module;
+}
+
+moduleMake.defaults =
+{
+  module : null,
+  willfilesPath : null,
+  forming : 0,
+}
+
+//
+
+function moduleEachAt( o )
+{
+  let will = this.form();
+  let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
+  let logger = will.logger;
+  let con;
+
+  _.sure( _.strDefined( o.selector ), 'Expects string' );
+  _.assert( arguments.length === 1 );
+
+  if( _.strEnds( o.selector, '::' ) )
+  o.selector = o.selector + '*';
+
+  if( will.SelectorIs( o.selector ) )
+  {
+
+    let module = o.currentModule;
+    if( !o.currentModule )
+    module = o.currentModule = will.OpenerModule({ will : will, willfilesPath : path.current() }).preform();
+    module.open();
+
+    con = module.openedModule.ready;
+    con.then( () =>
+    {
+      let con2 = new _.Consequence();
+      let resolved = module.openedModule.submodulesResolve({ selector : o.selector, preservingIteration : 1 });
+      resolved = _.arrayAs( resolved );
+
+      for( let s = 0 ; s < resolved.length ; s++ ) con2.keep( ( arg ) => /* !!! replace by concurrent, maybe */
+      {
+        let it1 = resolved[ s ];
+        let module = it1.currentModule;
+
+        let it2 = Object.create( null );
+        it2.currentModule = module.openerMake();
+
+        if( _.arrayIs( it1.dst ) || _.strIs( it1.dst ) )
+        it2.currentPath = it1.dst;
+        it2.options = o;
+
+        if( o.onBegin )
+        o.onBegin( it2 )
+        if( o.onEnd )
+        return o.onEnd( it2 );
+
+        return null;
+      });
+      con2.take( null );
+      return con2;
+    });
+
+    module.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
+    module.openedModule.stager.stageStatePausing( 'opened', 0 );
+    module.openedModule.stager.tick();
+
+  }
+  else
+  {
+
+    o.selector = path.resolve( o.selector );
+    con = new _.Consequence().take( null );
+
+    let files;
+    try
+    {
+      files = will.willfilesList
+      ({
+        dirPath : o.selector,
+        includingInFiles : 1,
+        includingOutFiles : 0,
+        // recursive : 0,
+      });
+    }
+    catch( err )
+    {
+      throw _.errBriefly( err );
+    }
+
+    let filesMap = Object.create( null );
+    for( let f = 0 ; f < files.length ; f++ ) con.then( ( arg ) => /* !!! replace by concurrent, maybe */
+    {
+      let file = files[ f ];
+
+      if( filesMap[ file.absolute ] )
+      {
+        return true;
+      }
+
+      let module = will.OpenerModule({ will : will, willfilesPath : file.absolute }).preform();
+      module.open();
+
+      let it = Object.create( null );
+      it.currentModule = module;
+      it.options = o;
+
+      module.openedModule.stager.stageConsequence( 'preformed' ).then( ( arg ) =>
+      {
+        if( o.onBegin )
+        return o.onBegin( it );
+        return arg;
+      });
+
+      module.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
+      module.openedModule.stager.stageStatePausing( 'opened', 0 );
+      module.openedModule.stager.tick();
+
+      return module.openedModule.ready.split().keep( function( arg )
+      {
+        _.assert( module.willfileArray.length > 0 );
+        if( module.willfilesPath )
+        _.mapSet( filesMap, module.willfilesPath, true );
+
+        let r = o.onEnd( it );
+
+        r = _.Consequence.From( r );
+
+        r.finally( ( err, arg ) =>
+        {
+          if( err )
+          throw err;
+          return arg;
+        });
+
+        return r;
+      })
+
+    });
+
+  }
+
+  con.finally( ( err, arg ) =>
+  {
+    if( err )
+    throw _.err( err );
+    return o;
+  });
+
+  return con;
+}
+
+moduleEachAt.defaults =
+{
+  currentModule : null,
+  selector : null,
+  onBegin : null,
+  onEnd : null,
 }
 
 //
@@ -624,6 +780,63 @@ function openerRegister( opener )
 // --
 // willfile
 // --
+
+function willfilesList( o )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  if( _.strIs( o ) )
+  o = { dirPath : o }
+
+  _.routineOptions( willfilesList, o );
+  _.assert( arguments.length === 1 );
+  _.assert( !!will.formed );
+
+  let filter =
+  {
+    maskTerminal :
+    {
+      includeAny : /\.will(\.|$)/,
+      excludeAny :
+      [
+        /\.DS_Store$/,
+        /(^|\/)-/,
+      ],
+      includeAll : []
+    }
+  };
+
+  if( !o.includingInFiles )
+  filter.maskTerminal.includeAll.push( /\.out(\.|$)/ )
+  if( !o.includingOutFiles )
+  filter.maskTerminal.excludeAny.push( /\.out(\.|$)/ )
+
+  let o2 =
+  {
+    filePath : o.dirPath,
+    recursive : o.recursive,
+    filter : filter,
+    maskPreset : 0,
+  }
+
+  debugger;
+  let files = fileProvider.filesFind( o2 );
+  debugger;
+
+  return files;
+}
+
+willfilesList.defaults =
+{
+  dirPath : null,
+  includingInFiles : 1,
+  includingOutFiles : 1,
+  recursive : null,
+}
+
+//
 
 function willfileAt( filePath )
 {
@@ -790,6 +1003,16 @@ let Restricts =
 
 let Statics =
 {
+
+  StrRequestParse,
+  SelectorIsScalar,
+  SelectorIs,
+  SelectorIsComposite,
+  SelectorShortSplitAct,
+  SelectorShortSplit,
+  SelectorLongSplit,
+  SelectorParse,
+
   CommonPathFor,
 
   ResourceKindToClassName : ResourceKindToClassName,
@@ -817,13 +1040,27 @@ let Extend =
   form,
   formAssociates,
 
-  moduleMake,
-  moduleEach,
-  _verbosityChange,
+  // parser
 
-  willfilesList,
+  StrRequestParse,
+  SelectorIsScalar,
+  SelectorIs,
+  SelectorIsComposite,
+  SelectorShortSplitAct,
+  SelectorShortSplit,
+  SelectorLongSplit,
+  SelectorParse,
+
+  // etc
+
+  _verbosityChange,
   vcsFor,
   CommonPathFor,
+
+  // module
+
+  moduleMake,
+  moduleEachAt,
 
   moduleAt,
   moduleIdUnregister,
@@ -831,9 +1068,14 @@ let Extend =
   modulePathUnregister,
   modulePathRegister,
 
+  // opener
+
   openerUnregister,
   openerRegister,
 
+  // willfile
+
+  willfilesList,
   willfileAt,
   willfileFor,
   willfileUnregister,
