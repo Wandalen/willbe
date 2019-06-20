@@ -93,12 +93,12 @@ function DirPathFromFilePaths( filePaths )
 
 //
 
-function prefixPathForRole( role )
+function prefixPathForRole( role, isOut )
 {
   let module = this;
-  let result = module.prefixPathForRoleMaybe( role );
+  let result = module.prefixPathForRoleMaybe( role, isOut );
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 2 );
   _.sure( _.strIs( result ), 'Unknown role', _.strQuote( role ) );
 
   return result;
@@ -106,20 +106,25 @@ function prefixPathForRole( role )
 
 //
 
-function prefixPathForRoleMaybe( role )
+function prefixPathForRoleMaybe( role, isOut )
 {
   let module = this;
+  let result = '';
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 2 );
 
   if( role === 'import' )
-  return '.im.will';
+  result += '.im';
   else if( role === 'export' )
-  return '.ex.will';
+  result += '.ex';
   else if( role === 'single' )
-  return '.will';
+  result += '';
   else return null;
 
+  result += isOut ? '.out' : '';
+  result += '.will';
+
+  return result;
 }
 
 // //

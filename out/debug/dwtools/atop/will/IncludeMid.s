@@ -11,6 +11,7 @@ if( typeof module !== 'undefined' )
   require( './l1/BuildFrame.s' );
   require( './l1/Execution.s' );
   require( './l1/Predefined.s' );
+  require( './l1/Resolver.s' );
 
   require( './l3/AbstractModule.s' );
   require( './l3/OpenedModule.s' );

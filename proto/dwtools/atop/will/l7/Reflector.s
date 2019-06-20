@@ -403,7 +403,7 @@ function _reflectMapForm( o )
   {
     let dst = reflector.filePath[ src ];
 
-    if( module.SelectorIs( src ) )
+    if( will.Resolver.selectorIsSimple( src ) )
     {
 
       let resolvedSrc = module.pathResolve
@@ -663,7 +663,7 @@ function pathsResolve( o )
       return filePath;
       if( _.boolIs( filePath ) )
       return filePath;
-      if( !module.SelectorIs( filePath ) && !pathResolving )
+      if( !will.Resolver.selectorIsSimple( filePath ) && !pathResolving )
       return filePath;
 
       let r = module.pathResolve
@@ -833,7 +833,7 @@ function dataExport()
   delete result.filePath;
 
   if( result.dst )
-  if( _.mapIs( reflector.src.filePath ) || ( _.strIs( reflector.src.filePath ) && module.SelectorIs( reflector.src.filePath ) ) )
+  if( _.mapIs( reflector.src.filePath ) || ( _.strIs( reflector.src.filePath ) && will.Resolver.selectorIsSimple( reflector.src.filePath ) ) )
   if( _.entityIdentical( reflector.src.filePath, reflector.dst.filePath ) )
   delete result.dst.filePath;
 

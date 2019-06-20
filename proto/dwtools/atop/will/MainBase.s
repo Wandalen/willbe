@@ -176,218 +176,6 @@ function formAssociates()
 }
 
 // --
-// parser
-// --
-
-function StrRequestParse( srcStr )
-{
-
-  if( Self.SelectorIsScalar( srcStr ) )
-  {
-    let left, right;
-    let splits = _.strSplit( srcStr );
-
-    if( splits.length > 1 )
-    debugger;
-
-    for( let s = splits.length - 1 ; s >= 0 ; s-- )
-    {
-      let split = splits[ s ];
-      if( Self.SelectorIsScalar( split ) )
-      {
-        left = splits.slice( 0, s+1 ).join( ' ' );
-        right = splits.slice( s+1 ).join( ' ' );
-      }
-    }
-    let result = _.strRequestParse( right );
-    result.subject = left + result.subject;
-    result.subjects = [ result.subject ];
-    return result;
-  }
-
-  let result = _.strRequestParse( srcStr );
-  return result;
-}
-
-//
-
-function SelectorIsScalar( selector )
-{
-  if( !_.strIs( selector ) )
-  return false;
-  if( !_.strHas( selector, '::' ) )
-  return false;
-  return true;
-}
-
-//
-
-function SelectorIs( selector )
-{
-  if( _.arrayIs( selector ) )
-  {
-    for( let s = 0 ; s < selector.length ; s++ )
-    if( this.SelectorIs( selector[ s ] ) )
-    return true;
-  }
-  return this.SelectorIsScalar( selector );
-}
-
-//
-
-function SelectorIsComposite( selector )
-{
-
-  if( !this.SelectorIs( selector ) )
-  return false;
-
-  if( _.arrayIs( selector ) )
-  {
-    for( let s = 0 ; s < selector.length ; s++ )
-    if( isComposite( selector[ s ] ) )
-    return true;
-  }
-  else
-  {
-    return isComposite( selector );
-  }
-
-  /* */
-
-  function isComposite( selector )
-  {
-
-    let splits = _.strSplitFast
-    ({
-      src : selector,
-      delimeter : [ '{', '}' ],
-    });
-
-    if( splits.length < 5 )
-    return false;
-
-    splits = _.strSplitsCoupledGroup({ splits : splits, prefix : '{', postfix : '}' });
-
-    if( !splits.some( ( split ) => _.arrayIs( split ) ) )
-    return false;
-
-    return true;
-  }
-
-}
-
-function SelectorShortSplitAct( selector )
-{
-  _.assert( !_.strHas( selector, '/' ) );
-  let result = _.strIsolateLeftOrNone( selector, '::' );
-  return result;
-}
-
-//
-
-function SelectorShortSplit( o )
-{
-  let will = this;
-  let result;
-
-  _.assertRoutineOptions( SelectorShortSplit, o );
-  _.assert( arguments.length === 1 );
-  _.assert( !_.strHas( o.selector, '/' ) );
-  _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
-
-  let splits = will.SelectorShortSplitAct( o.selector );
-
-  if( !splits[ 0 ] && o.defaultResourceName )
-  {
-    splits = [ o.defaultResourceName, '::', o.selector ];
-  }
-
-  return splits;
-}
-
-var defaults = SelectorShortSplit.defaults = Object.create( null )
-defaults.selector = null
-defaults.defaultResourceName = null;
-
-//
-
-function SelectorLongSplit( o )
-{
-  let will = this;
-  let result = [];
-
-  if( _.strIs( o ) )
-  o = { selector : o }
-
-  _.routineOptions( SelectorLongSplit, o );
-  _.assert( arguments.length === 1 );
-  _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
-
-  let selectors = o.selector.split( '/' );
-
-  selectors.forEach( ( selector ) =>
-  {
-    let o2 = _.mapExtend( null, o );
-    o2.selector = selector;
-    result.push( will.SelectorShortSplit( o2 ) );
-  });
-
-  return result;
-}
-
-var defaults = SelectorLongSplit.defaults = Object.create( null )
-defaults.selector = null
-defaults.defaultResourceName = null;
-
-//
-
-function SelectorParse( o )
-{
-  let will = this;
-  let result = [];
-
-  if( _.strIs( o ) )
-  o = { selector : o }
-
-  _.routineOptions( SelectorParse, o );
-  _.assert( arguments.length === 1 );
-  _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
-
-  let splits = _.strSplitFast
-  ({
-    src : o.selector,
-    delimeter : [ '{', '}' ],
-  });
-
-  splits = _.strSplitsCoupledGroup({ splits : splits, prefix : '{', postfix : '}' });
-
-  if( splits[ 0 ] === '' )
-  splits.splice( 0, 1 );
-  if( splits[ splits.length-1 ] === '' )
-  splits.splice( splits.length-1, 1 );
-
-  splits = splits.map( ( split ) =>
-  {
-    if( !_.arrayIs( split ) )
-    return split;
-    _.assert( split.length === 3 )
-    if( module.SelectorIs( split[ 1 ] ) )
-    {
-      let o2 = _.mapExtend( null, o );
-      o2.selector = split[ 1 ];
-      split[ 1 ] = module.SelectorLongSplit( o2 );
-    }
-    return split;
-  });
-
-  return splits;
-}
-
-var defaults = SelectorParse.defaults = Object.create( null )
-defaults.selector = null
-defaults.defaultResourceName = null;
-
-// --
 // etc
 // --
 
@@ -479,7 +267,7 @@ function moduleMake( o )
     o.module = will.OpenerModule({ will : will, willfilesPath : o.willfilesPath }).preform();
   }
 
-  _.assert( o.module.willfilesPath === o.willfilesPath || o.module.willfilesPath === o.dirPath );
+  // _.assert( o.module.willfilesPath === o.willfilesPath || o.module.willfilesPath === o.dirPath );
 
   o.module.open();
   o.module.openedModule.stager.stageStatePausing( 'opened', 0 );
@@ -512,12 +300,12 @@ function moduleEachAt( o )
   if( _.strEnds( o.selector, '::' ) )
   o.selector = o.selector + '*';
 
-  if( will.SelectorIs( o.selector ) )
+  if( will.Resolver.selectorIsSimple( o.selector ) )
   {
 
     let module = o.currentModule;
     if( !o.currentModule )
-    module = o.currentModule = will.OpenerModule({ will : will, willfilesPath : path.current() }).preform();
+    module = o.currentModule = will.OpenerModule({ will : will, willfilesPath : path.trail( path.current() ) }).preform();
     module.open();
 
     con = module.openedModule.ready;
@@ -561,6 +349,7 @@ function moduleEachAt( o )
     o.selector = path.resolve( o.selector );
     con = new _.Consequence().take( null );
 
+    debugger;
     let files;
     try
     {
@@ -568,8 +357,7 @@ function moduleEachAt( o )
       ({
         dirPath : o.selector,
         includingInFiles : 1,
-        includingOutFiles : 0,
-        // recursive : 0,
+        includingOutFiles : 1, // yyy
       });
     }
     catch( err )
@@ -823,7 +611,7 @@ function willfilesList( o )
 
   debugger;
   let files = fileProvider.filesFind( o2 );
-  debugger;
+  // debugger;
 
   return files;
 }
@@ -1004,21 +792,13 @@ let Restricts =
 let Statics =
 {
 
-  StrRequestParse,
-  SelectorIsScalar,
-  SelectorIs,
-  SelectorIsComposite,
-  SelectorShortSplitAct,
-  SelectorShortSplit,
-  SelectorLongSplit,
-  SelectorParse,
-
   CommonPathFor,
 
   ResourceKindToClassName : ResourceKindToClassName,
   ResourceKindToMapName : ResourceKindToMapName,
   ResourceKinds : ResourceKinds,
   ResourceCounter : 0,
+
 }
 
 let Forbids =
@@ -1039,17 +819,6 @@ let Extend =
   unform,
   form,
   formAssociates,
-
-  // parser
-
-  StrRequestParse,
-  SelectorIsScalar,
-  SelectorIs,
-  SelectorIsComposite,
-  SelectorShortSplitAct,
-  SelectorShortSplit,
-  SelectorLongSplit,
-  SelectorParse,
 
   // etc
 

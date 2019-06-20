@@ -585,7 +585,7 @@ function _inPathsForm()
     if( !willf.dirPath )
     willf.dirPath = openerModule.dirPath;
     _.assert( _.strIs( willf.dirPath ) );
-    willf.filePath = path.join( willf.dirPath, openerModule.prefixPathForRole( willf.role ) );
+    willf.filePath = path.join( willf.dirPath, openerModule.prefixPathForRole( willf.role, willf.isOutFile ) );
   }
 
   willf.dirPath = path.dir( willf.filePath );

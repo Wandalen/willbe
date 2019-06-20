@@ -575,84 +575,28 @@ function _willfileFindSingle( o )
   _.assert( _.strDefined( o.role ) );
   _.routineOptions( _willfileFindSingle, arguments );
 
-  /* common dir path */
-
-  let willfilesPath = _.strCommonLeft.apply( _, _.arrayAs( opener.willfilesPath ) );
-
-  /* dir path */
-
-  let dirPath;
-  let fname = path.fullName( willfilesPath );
-
-  if( o.lookingDir )
-  if( !path.isTrailed( willfilesPath ) )
-  if( o.isNamed || opener.WillfilePathIs( fname ) )
-  // if( o.isNamed || !path.isTrailed( willfilesPath ) || !_.strEnds( willfilesPath, '/.' ) || opener.WillfilePathIs( fname ) )
-  // if( o.isNamed || fname === '' || fname === '.' || opener.WillfilePathIs( fname ) )
-  {
-    dirPath = path.dir( willfilesPath );
-  }
-
-  if( !dirPath )
-  dirPath = willfilesPath;
-
-  dirPath = path.normalize( dirPath );
-
-  /* name path */
-
-  let namePath = '.';
-  if( o.isNamed )
-  {
-    namePath = path.fullName( path.relative( path.parse( dirPath ).longPath, path.parse( willfilesPath ).longPath ) );
-    namePath = _.strReplace( namePath, /(\.ex|\.im|)\.will(\.\w+)?$/, '' );
-    if( namePath === '' || namePath === '.' )
-    {
-      return null;
-    }
-    _.assert( namePath.length > 0 );
-  }
-
   /* */
 
   if( opener.willfileWithRoleMap[ o.role ] )
-  return null;
+  return opener.willfileWithRoleMap[ o.role ];
 
-  /* */
+  let willfilesPath = _.strCommonLeft.apply( _, _.arrayAs( opener.willfilesPath ) );
+  let isDir = path.isTrailed( willfilesPath );
+  let name = '';
 
-  let filePath;
-  if( o.isOutFile )
+  if( !isDir )
   {
-
-    if( !_.strEnds( namePath, '.out' ) )
-    namePath = _.strJoinPath( [ namePath, 'out' ], '.' );
-
-    if( o.isNamed )
-    {
-      let name = _.strJoinPath( [ namePath, opener.prefixPathForRole( o.role ) ], '.' );
-      filePath = path.resolve( dirPath, '.', name );
-    }
-    else
-    {
-      let name = _.strJoinPath( [ namePath, opener.prefixPathForRole( o.role ) ], '.' );
-      filePath = path.resolve( dirPath, name );
-    }
-
+    name = path.fullName( willfilesPath );
+    name = _.strRemoveEnd( name, '.' );
+    name = _.strReplace( name, /(\.ex|\.im|)?\.will(\.\w+)?$/, '' );
+    name = _.strReplace( name, /(\.out)?$/, '' );
+    willfilesPath = path.dir( willfilesPath );
   }
-  else
-  {
 
-    if( o.isNamed )
-    {
-      let name = _.strJoinPath( [ namePath, opener.prefixPathForRole( o.role ) ], '.' );
-      filePath = path.resolve( dirPath, '.', name );
-    }
-    else
-    {
-      let name = opener.prefixPathForRole( o.role );
-      filePath = path.resolve( dirPath, namePath, name );
-    }
+  let fullName = name;
+  fullName += opener.prefixPathForRole( o.role, o.isOutFile );
 
-  }
+  let filePath = path.resolve( willfilesPath, fullName );
 
   /* */
 
@@ -688,17 +632,20 @@ function _willfileFindSingle( o )
     return null;
   }
 
-  if( !o.isNamed && !o.lookingDir )
+  if( !name )
+  name = path.fullName( willfilesPath );
+  else if( o.isOutFile )
+  name = _.strAppendOnce( name, '.out' );
+  _.assert( opener.configName === null || opener.configName === name );
+  opener.configName = name;
+
+  if( isDir )
   {
     /* try to find other split files */
-    debugger;
     let found = opener._willfileFindMultiple
     ({
       isOutFile : o.isOutFile,
-      isNamed : o.isNamed,
-      lookingDir : 1,
     });
-    debugger;
   }
 
   return willf;
@@ -708,8 +655,6 @@ _willfileFindSingle.defaults =
 {
   role : null,
   isOutFile : 0,
-  isNamed : 0,
-  lookingDir : 1,
 }
 
 //
@@ -734,93 +679,22 @@ function _willfileFindMultiple( o )
     ({
       role : role,
       isOutFile : o.isOutFile,
-      isNamed : o.isNamed,
-      lookingDir : o.lookingDir,
     });
 
   }
 
-  let filePaths = filePathsGet( files );
-  if( filePaths.length )
-  {
-    if( o.isNamed )
-    namedNameDeduce();
-    else
-    notNamedNameDeduce();
-    return end( filePaths );
-  }
+  if( opener.willfileArray.length )
+  return end( opener.willfileArray );
 
   return false;
 
   /* */
-
-  function namedNameDeduce()
+xxx
+  function end( willfileArray )
   {
-    for( let w = 0 ; w < opener.willfileArray.length ; w++ )
-    {
-      let willfile = opener.willfileArray[ w ];
-      let name = path.name( willfile.filePath );
-      name = _.strRemoveEnd( name, '.will' );
-      name = _.strRemoveEnd( name, '.im' );
-      name = _.strRemoveEnd( name, '.ex' );
-      _.assert( opener.configName === null || opener.configName === name, 'Name of will files should be the same, something wrong' );
-      if( name )
-      opener.configName = name;
-    }
-  }
-
-  /* */
-
-  function notNamedNameDeduce()
-  {
-    opener.configName = path.fullName( path.dir( filePaths[ 0 ] ) );
-  }
-
-  /* - */
-
-  function filePathsGet()
-  {
-    let filePaths = [];
-    if( files.single )
-    filePaths.push( files.single.filePath );
-    if( files.import )
-    filePaths.push( files.import.filePath );
-    if( files.export )
-    filePaths.push( files.export.filePath );
-    return filePaths;
-  }
-
-  /* */
-
-  function end( filePaths )
-  {
-    let filePath = opener.DirPathFromFilePaths( filePaths );
-    if( _.arrayIs( filePaths ) && filePaths.length === 1 )
-    filePaths = filePaths[ 0 ];
-
-/*
-    let amodule = rootModule.moduleAt( opener.commonPath );
-    if( amodule )
-    {
-      debugger; xxx
-
-      for( let a = 0 ; a < opener.submoduleAssociation.length ; a++ )
-      {
-        let submodule = opener.submoduleAssociation[ a ];
-        _.assert( submodule.oModule === opener );
-        submodule.oModule = amodule;
-      }
-      debugger;
-      opener.submoduleAssociation.splice();
-
-      opener.finit();
-
-      return true;
-    }
-*/
-
+    _.assert( willfileArray.length > 0 );
+    let filePaths = _.select( willfileArray, '*/filePath' );
     opener._filePathChange( filePaths );
-
     return true;
   }
 
@@ -829,8 +703,6 @@ function _willfileFindMultiple( o )
 _willfileFindMultiple.defaults =
 {
   isOutFile : 0,
-  isNamed : 0,
-  lookingDir : 1,
 }
 
 //
@@ -854,7 +726,6 @@ function _willfilesFindMaybe( o )
   if( _.arrayIs( opener.willfilesPath ) && opener.willfilesPath.length === 1 )
   opener.willfilesPath = opener.willfilesPath[ 0 ];
 
-  // debugger;
   if( !found )
   find( o.isOutFile );
 
@@ -876,35 +747,6 @@ function _willfilesFindMaybe( o )
     found = opener._willfileFindMultiple
     ({
       isOutFile : isOutFile,
-      isNamed : 1,
-      lookingDir : 1,
-    });
-    if( found )
-    return found;
-
-    found = opener._willfileFindMultiple
-    ({
-      isOutFile : isOutFile,
-      isNamed : 1,
-      lookingDir : 0,
-    });
-    if( found )
-    return found;
-
-    found = opener._willfileFindMultiple
-    ({
-      isOutFile : isOutFile,
-      isNamed : 0,
-      lookingDir : 1,
-    });
-    if( found )
-    return found;
-
-    found = opener._willfileFindMultiple
-    ({
-      isOutFile : isOutFile,
-      isNamed : 0,
-      lookingDir : 0,
     });
     if( found )
     return found;
@@ -1846,6 +1688,9 @@ function _filePathChange( willfilesPath )
   let logger = will.logger;
 
   // will.modulePathUnregister( opener );
+
+  if( _.arrayIs( willfilesPath ) && willfilesPath.length === 1 )
+  willfilesPath = willfilesPath[ 0 ];
 
   if( willfilesPath )
   willfilesPath = path.s.normalizeTolerant( willfilesPath );

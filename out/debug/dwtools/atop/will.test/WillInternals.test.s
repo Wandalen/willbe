@@ -61,7 +61,7 @@ function buildSimple( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'simple' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulePath = _.path.join( routinePath, '.' );
+  let modulePath = _.path.join( routinePath, './' );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let will = new _.Will;
@@ -114,7 +114,7 @@ function buildSimple( test )
 
 //
 
-function makeNamed( test )
+function openNamed( test )
 {
   let self = this;
   let assetName = 'import-in/super';
@@ -289,13 +289,13 @@ function makeNamed( test )
 
 //
 
-function makeAnon( test )
+function openAnon( test )
 {
   let self = this;
   let assetName = 'import-in/.';
   let originalDirPath = _.path.join( self.assetDirPath, 'import-in-exported' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulePath = _.path.join( routinePath, '' );
+  let modulePath = _.path.join( routinePath, './' );
   let will = new _.Will;
   let path = _.fileProvider.path;
 
@@ -372,8 +372,6 @@ function makeAnon( test )
       'out' : '../out',
       'out.debug' : '../out/debug',
       'out.release' : '../out/release',
-
-      // 'local' : path.join( routinePath, '.' ),
       'local' : null,
       'remote' : null,
       'current.remote' : null,
@@ -393,10 +391,9 @@ function makeAnon( test )
     test.identical( module.dirPath, routinePath + '/' );
     test.identical( module.commonPath, path.join( routinePath, '.' ) + '/' );
     test.identical( module.willfilesPath, [ routinePath + '/.im.will.yml', routinePath + '/.ex.will.yml' ] );
-    test.identical( module.configName, 'makeAnon' );
+    test.identical( module.configName, 'openAnon' );
     test.identical( module.localPath, null );
     test.identical( module.remotePath, null );
-    // test.identical( module.currentRemotePath, null );
     test.identical( module.willPath, path.join( __dirname, '../will/Exec' ) );
     test.identical( module.willfileArray.length, 2 );
     test.identical( _.mapKeys( module.willfileWithRoleMap ), [ 'import', 'export' ] );
@@ -408,7 +405,7 @@ function makeAnon( test )
     test.identical( module.openedModule.dirPath, routinePath + '/' );
     test.identical( module.openedModule.commonPath, path.join( routinePath, '.' ) + '/' );
     test.identical( module.openedModule.willfilesPath, [ routinePath + '/.im.will.yml', routinePath + '/.ex.will.yml' ] );
-    test.identical( module.openedModule.configName, 'makeAnon' );
+    test.identical( module.openedModule.configName, 'openAnon' );
     test.identical( module.openedModule.localPath, null );
     test.identical( module.openedModule.remotePath, null );
     test.identical( module.openedModule.currentRemotePath, null );
@@ -433,7 +430,7 @@ function makeAnon( test )
 
 //
 
-function makeOutNamed( test )
+function openOutNamed( test )
 {
   let self = this;
   let assetName = 'import-in/super.out/supermodule';
@@ -463,6 +460,7 @@ function makeOutNamed( test )
 
   module1.openedModule.ready.finallyKeep( ( err, arg ) =>
   {
+    debugger;
     test.case = 'opened filePath : ' + assetName;
     test.is( err === undefined );
     module1.finit();
@@ -571,37 +569,11 @@ function clone( test )
   let will = new _.Will;
   let path = _.fileProvider.path;
 
-  function checkMap( module2, mapName )
-  {
-    test.open( mapName );
-
-    test.is( module.openedModule[ mapName ] !== module2.openedModule[ mapName ] );
-    test.identical( _.mapKeys( module.openedModule[ mapName ] ), _.mapKeys( module2.openedModule[ mapName ] ) );
-    for( var k in module.openedModule[ mapName ] )
-    {
-      var resource1 = module.openedModule[ mapName ][ k ];
-      var resource2 = module2.openedModule[ mapName ][ k ];
-      test.is( !!resource1 );
-      test.is( !!resource2 );
-      if( !resource1 || !resource2 )
-      continue;
-      test.is( resource1 !== resource2 );
-      test.is( resource1.module === module.openedModule );
-      test.is( resource2.module === module2.openedModule );
-      if( resource1 instanceof will.Resource )
-      {
-        test.is( !!resource1.willf || ( resource1.criterion && resource1.criterion.predefined ) );
-        test.is( !resource2.willf );
-      }
-    }
-
-    test.close( mapName );
-  }
-
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
 
   var module = will.moduleMake({ willfilesPath : modulePath });
+  var ready = module.openedModule.ready;
 
   /* - */
 
@@ -702,7 +674,7 @@ function clone( test )
 
   /* - */
 
-  let ready = module.openedModule.ready.finallyKeep( ( err, arg ) =>
+  var ready = module.openedModule.ready.finallyKeep( ( err, arg ) =>
   {
     if( err )
     throw err;
@@ -721,6 +693,36 @@ function clone( test )
   });
 
   return ready.split();
+
+  /* */
+
+  function checkMap( module2, mapName )
+  {
+    test.open( mapName );
+
+    test.is( module.openedModule[ mapName ] !== module2.openedModule[ mapName ] );
+    test.identical( _.mapKeys( module.openedModule[ mapName ] ), _.mapKeys( module2.openedModule[ mapName ] ) );
+    for( var k in module.openedModule[ mapName ] )
+    {
+      var resource1 = module.openedModule[ mapName ][ k ];
+      var resource2 = module2.openedModule[ mapName ][ k ];
+      test.is( !!resource1 );
+      test.is( !!resource2 );
+      if( !resource1 || !resource2 )
+      continue;
+      test.is( resource1 !== resource2 );
+      test.is( resource1.module === module.openedModule );
+      test.is( resource2.module === module2.openedModule );
+      if( resource1 instanceof will.Resource )
+      {
+        test.is( !!resource1.willf || ( resource1.criterion && resource1.criterion.predefined ) );
+        test.is( !resource2.willf );
+      }
+    }
+
+    test.close( mapName );
+  }
+
 }
 
 clone.timeOut = 130000;
@@ -732,7 +734,7 @@ function reflectorResolve( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'composite-reflector' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulePath = _.path.join( routinePath, '.' );
+  let modulePath = _.path.join( routinePath, './' );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let will = new _.Will;
@@ -1193,11 +1195,11 @@ function superResolve( test )
     });
     test.identical( resolved.length, 45 );
 
-    test.case = '* + defaultResourceName';
+    test.case = '* + defaultResourceKind';
     var resolved = module.openedModule.resolve
     ({
       selector : '*',
-      defaultResourceName : 'path',
+      defaultResourceKind : 'path',
       prefixlessAction : 'default',
       pathUnwrapping : 0,
       mapValsUnwrapping : 1,
@@ -1423,6 +1425,7 @@ function pathsResolve( test )
     test.identical( resolved, expected );
 
     test.case = '{path::in*=1}/proto, pathNativizing : 1';
+    debugger;
     var resolved = module.openedModule.resolve({ selector : '{path::in*=1}/proto', pathNativizing : 1, selectorIsPath : 0 })
     var expected = _.path.nativize( pin( '.' ) ) + '/proto';
     test.identical( resolved, expected );
@@ -2594,7 +2597,7 @@ function pathsResolveOfSubmodules( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalRepoPath ] : repoPath } });
   _.fileProvider.filesDelete( outPath );
 
-  var module = will.moduleMake({ willfilesPath : routinePath });
+  var module = will.moduleMake({ willfilesPath : routinePath + '/' });
 
   /* - */
 
@@ -2614,6 +2617,11 @@ function pathsResolveOfSubmodules( test )
     test.case = 'resolve submodules';
     var submodules = module.openedModule.submodulesResolve({ selector : '*' });
     test.identical( submodules.length, 2 );
+
+    test.case = 'path::in, supermodule';
+    var resolved = module.openedModule.resolve( 'path::in' );
+    var expected = path.join( routinePath );
+    test.identical( resolved, expected );
 
     test.case = 'path::in, wTools';
     var submodule = submodules[ 0 ];
@@ -3459,7 +3467,7 @@ function pathsResolveComposite( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'composite-path' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulePath = _.path.join( routinePath, '.' );
+  let modulePath = _.path.join( routinePath, './' );
   let will = new _.Will;
   let path = _.fileProvider.path;
 
@@ -3657,7 +3665,7 @@ function submodulesResolve( test )
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-local-repos' );
   let repoPath = _.path.join( self.tempDir, 'repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulePath = _.path.join( routinePath, '.' );
+  let modulePath = _.path.join( routinePath, './' );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let will = new _.Will;
@@ -3756,7 +3764,7 @@ function submodulesDeleteAndDownload( test )
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-del-download' );
   let repoPath = _.path.join( self.tempDir, 'repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let modulePath = _.path.join( routinePath, '.' );
+  let modulePath = _.path.join( routinePath, './' );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let will = new _.Will;
@@ -3862,9 +3870,9 @@ var Self =
   {
 
     buildSimple,
-    makeNamed,
-    makeAnon,
-    makeOutNamed,
+    openNamed,
+    openAnon,
+    openOutNamed,
     clone,
 
     reflectorResolve,

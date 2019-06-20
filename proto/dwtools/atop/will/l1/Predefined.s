@@ -330,7 +330,7 @@ function stepRoutineShell( frame )
   {
 
     _.assert( forEachDstReflector instanceof will.Reflector );
-    forEachDst = module.resolveContextPrepare({ currentThis : forEachDstReflector });
+    forEachDst = will.Resolver.resolveContextPrepare({ currentThis : forEachDstReflector, baseModule : module });
 
     for( let dst in forEachDst.filesGrouped )
     {

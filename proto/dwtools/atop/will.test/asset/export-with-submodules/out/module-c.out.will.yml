@@ -4,9 +4,6 @@ about:
   description: Module for testing
   enabled: 1
   version: 0.0.1
-  values:
-    enabled: 1
-    name: module-c
 path:
   module.willfiles:
     path: out/module-c.out.will.yml
@@ -17,11 +14,14 @@ path:
     criterion:
       predefined: 1
   module.dir:
-    path: out
+    path: out/
+    criterion:
+      predefined: 1
+  module.common:
+    path: out/module-c.out
     criterion:
       predefined: 1
   local:
-    path: out
     criterion:
       predefined: 1
   remote:
@@ -94,5 +94,3 @@ exported:
     exportedFilesReflector: 'reflector::exported.files.proto.export'
     exportedDirPath: 'path::exported.dir.proto.export'
     exportedFilesPath: 'path::exported.files.proto.export'
-module:
-  module-c.out: root

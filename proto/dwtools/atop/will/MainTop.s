@@ -52,7 +52,7 @@ function _moduleReadyThen( o )
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
-  let willfilesPath = fileProvider.path.current();
+  let willfilesPath = fileProvider.path.trail( fileProvider.path.current() );
 
   _.assert( arguments.length === 1 );
   _.assert( _.routineIs( o.onReady ) );
@@ -306,7 +306,7 @@ function commandSet( e )
     beeping : 'beeping',
   }
 
-  let request = will.StrRequestParse( e.argument );
+  let request = will.Resolver.strRequestParse( e.argument );
 
   _.appArgsReadTo
   ({
@@ -319,7 +319,7 @@ function commandSet( e )
 
 //
 
-function _commandList( e, act, resourceName )
+function _commandList( e, act, resourceKind )
 {
   let will = this;
 
@@ -329,37 +329,49 @@ function _commandList( e, act, resourceName )
   {
 
     let resources = null;
-    if( resourceName )
+    if( resourceKind )
     {
 
-      let selectorIsGlob = _.path.isGlob( resourceName );
+      let resourceKindIsGlob = _.path.isGlob( resourceKind );
       _.assert( e.request === undefined );
-      e.request = will.StrRequestParse( e.argument );
+      e.request = will.Resolver.strRequestParse( e.argument );
 
-      debugger;
+      if( will.Resolver.selectorIsSimple( e.request.subject ) )
+      {
+        let splits = will.Resolver.selectorShortSplit
+        ({
+          selector : e.request.subject,
+          defaultResourceKind : resourceKind,
+        });
+        resourceKind = splits[ 0 ];
+        resourceKindIsGlob = _.path.isGlob( resourceKind );
+      }
 
-      if( selectorIsGlob && e.request.subject && !module.openedModule.SelectorIs( e.request.subject ) )
+      if( resourceKindIsGlob && e.request.subject && !will.Resolver.selectorIsSimple( e.request.subject ) )
       {
         e.request.subject = '*::' + e.request.subject;
       }
 
       let o2 =
       {
-        selector : selectorIsGlob ? ( e.request.subject || '*::*' ) : ( e.request.subject || '*' ),
+        selector : resourceKindIsGlob ? ( e.request.subject || '*::*' ) : ( e.request.subject || '*' ),
         criterion : e.request.map,
-        defaultResourceName : selectorIsGlob ? null : resourceName,
-        prefixlessAction : selectorIsGlob ? 'throw' : 'default',
+        defaultResourceKind : resourceKindIsGlob ? null : resourceKind,
+        prefixlessAction : resourceKindIsGlob ? 'throw' : 'default',
         arrayWrapping : 1,
-        pathUnwrapping : selectorIsGlob ? 0 : 1,
+        pathUnwrapping : resourceKindIsGlob ? 0 : 1,
         pathResolving : 0,
-        mapValsUnwrapping : selectorIsGlob ? 0 : 1,
+        // pathResolving : 'in', // yyy
+        mapValsUnwrapping : resourceKindIsGlob ? 0 : 1,
         strictCriterion : 1,
       }
 
-      if( resourceName === 'path' )
+      if( resourceKind === 'path' )
       o2.mapValsUnwrapping = 0;
 
       resources = module.openedModule.resolve( o2 );
+
+      resources = _.filter( resources, ( r ) => r instanceof will.OpenedModule ? undefined : r );
 
     }
 
@@ -377,8 +389,6 @@ function commandResourcesList( e )
   function act( module, resources )
   {
     let logger = will.logger;
-
-    debugger;
 
     if( !e.request.subject && !_.mapKeys( e.request.map ).length )
     {
@@ -467,7 +477,7 @@ function commandBuildsList( e )
   function act( module )
   {
     let logger = will.logger;
-    let request = will.StrRequestParse( e.argument );
+    let request = will.Resolver.strRequestParse( e.argument );
     let builds = module.openedModule.buildsResolve
     ({
       name : request.subject,
@@ -491,7 +501,7 @@ function commandExportsList( e )
   function act( module )
   {
     let logger = will.logger;
-    let request = will.StrRequestParse( e.argument );
+    let request = will.Resolver.strRequestParse( e.argument );
     let builds = module.openedModule.exportsResolve
     ({
       name : request.subject,
@@ -679,7 +689,7 @@ function commandBuild( e )
   let will = this;
   return will.moduleReadyThenNonForming( function( module )
   {
-    let request = will.StrRequestParse( e.argument );
+    let request = will.Resolver.strRequestParse( e.argument );
     let builds = module.openedModule.buildsResolve( request.subject, request.map );
     let logger = will.logger;
 
@@ -705,7 +715,7 @@ function commandExport( e )
   let will = this;
   return will.moduleReadyThen( function( module )
   {
-    let request = will.StrRequestParse( e.argument );
+    let request = will.Resolver.strRequestParse( e.argument );
     let builds = module.openedModule.exportsResolve( request.subject, request.map );
 
     if( logger.verbosity >= 2 && builds.length > 1 )
@@ -747,9 +757,9 @@ function commandWith( e )
   will.topCommand = commandWith;
 
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
-  let dirPath = path.joinRaw( path.current(), isolated.argument );
+  let willfilesPath = path.joinRaw( path.current(), isolated.argument === '.' ? './' : isolated.argument );
 
-  let module = will.currentModule = will.OpenerModule({ will : will, willfilesPath : dirPath });
+  let module = will.currentModule = will.OpenerModule({ will : will, willfilesPath : willfilesPath });
 
   try
   {

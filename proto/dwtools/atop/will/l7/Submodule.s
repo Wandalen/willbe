@@ -333,7 +333,7 @@ function resolve_body( o )
 
   o.currentContext = submodule;
 
-  let resolved = module2.openedModule.resolve.body.call( module2.openedModule, o );
+  let resolved = module2.openedModule.resolve( o );
 
   return resolved;
 }
@@ -502,8 +502,6 @@ function infoExport()
   let resultMap = Parent.prototype.dataExport.call( submodule );
   let tab = '  ';
 
-  debugger;
-
   if( submodule.oModule )
   {
     let module2 = submodule.oModule;
@@ -535,7 +533,6 @@ let pathSymbol = Symbol.for( 'path' );
 let Composes =
 {
 
-  own : 1,
   description : null,
   criterion : null,
   inherit : _.define.own([]),
@@ -557,11 +554,13 @@ let Restricts =
 {
   data : null,
   oModule : null,
+  own : 1, // xxx
 }
 
 let Medials =
 {
   data : null,
+  own : 1, // xxx
 }
 
 let Statics =

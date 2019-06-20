@@ -201,6 +201,9 @@ function cloneDerivative()
 {
   let resource = this;
 
+  if( resource.nickName === 'path::export' )
+  debugger;
+
   if( resource.original )
   return resource;
 
@@ -420,7 +423,7 @@ function _inheritMultiple( o )
     let ancestors = module.resolve
     ({
       selector : ancestor,
-      defaultResourceName : resource.KindName,
+      defaultResourceKind : resource.KindName,
       prefixlessAction : 'default',
       visited : o.visited,
       currentContext : resource,
@@ -785,7 +788,7 @@ function _infoExport( fields )
   let resource = this;
   let result = '';
 
-  result += _.color.strFormat( resource.nickName, 'entity' ) + '\n';
+  result += resource.decoratedAbsoluteName + '\n';
   result += _.toStr( fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '', multiline : 1 } );
 
   return result;
@@ -798,12 +801,8 @@ function infoExport()
   let resource = this;
   let o = _.routineOptions( infoExport, arguments );
 
-  debugger;
-
   let fields = resource.dataExport( o );
   let result = resource._infoExport( fields );
-
-  debugger;
 
   return result;
 }
@@ -839,6 +838,7 @@ function dataExport()
   delete o2.copyingPredefined;
   delete o2.copyingNonExportable;
   delete o2.module;
+  delete o2.rootModule;
   delete o2.formed;
 
   let fields = resource.cloneData( o2 );
@@ -964,6 +964,14 @@ function moduleSet( src )
 // resolver
 // --
 
+function resolve_pre( routine, args )
+{
+  let resource = this;
+  let module = resource.module;
+  let o = module.resolve.pre.apply( module, arguments );
+  return o;
+}
+
 function resolve_body( o )
 {
   let resource = this;
@@ -985,7 +993,7 @@ function resolve_body( o )
 var defaults = resolve_body.defaults = Object.create( _.Will.OpenedModule.prototype.resolve.defaults );
 defaults.prefixlessAction = 'default';
 
-let resolve = _.routineFromPreAndBody( _.Will.OpenedModule.prototype.resolve.pre, resolve_body );
+let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
 //
 
@@ -1002,7 +1010,7 @@ function inPathResolve_body( o )
   _.assertRoutineOptions( inPathResolve_body, arguments );
 
   if( o.prefixlessAction !== 'default' )
-  o.defaultResourceName = null;
+  o.defaultResourceKind = null;
 
   let result = resource.resolve( o );
 
@@ -1010,7 +1018,7 @@ function inPathResolve_body( o )
 }
 
 var defaults = inPathResolve_body.defaults = Object.create( resolve.defaults );
-defaults.defaultResourceName = 'path';
+defaults.defaultResourceKind = 'path';
 defaults.prefixlessAction = 'default';
 defaults.pathResolving = 'in';
 
@@ -1038,7 +1046,7 @@ function reflectorResolve_body( o )
 
 reflectorResolve_body.defaults = Object.create( _.Will.OpenedModule.prototype.reflectorResolve.defaults );
 
-let reflectorResolve = _.routineFromPreAndBody( _.Will.OpenedModule.prototype.reflectorResolve.pre, reflectorResolve_body );
+let reflectorResolve = _.routineFromPreAndBody( resolve.pre, reflectorResolve_body );
 
 // --
 // relations

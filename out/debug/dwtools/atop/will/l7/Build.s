@@ -120,7 +120,7 @@ function stepsEach( onEach )
     let step = module.resolve
     ({
       selector : stepName,
-      defaultResourceName : 'step',
+      defaultResourceKind : 'step',
       prefixlessAction : 'default',
       currentContext : build,
       missingAction : 'error',
