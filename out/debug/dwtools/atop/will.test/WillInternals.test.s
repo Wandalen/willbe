@@ -2672,7 +2672,88 @@ function pathsResolveOfSubmodules( test )
 
 }
 
-pathsResolveOfSubmodules.timeOut = 500000;
+pathsResolveOfSubmodules.timeOut = 300000;
+
+//
+
+function pathsResolveOfSubmodulesAndOwn( test )
+{
+  let self = this;
+  let originalRepoPath = _.path.join( self.assetDirPath, 'repo' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'resolve-path-of-submodules' );
+  let repoPath = _.path.join( self.tempDir, 'repo' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let outPath = _.path.join( routinePath, 'out' );
+  let will = new _.Will;
+  let path = _.fileProvider.path;
+
+  function pin( filePath )
+  {
+    return path.s.join( routinePath, filePath );
+  }
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  var module = will.moduleMake({ willfilesPath : routinePath + '/ab/' });
+
+  /* - */
+
+  module.openedModule.ready.thenKeep( ( arg ) =>
+  {
+
+    test.case = 'path::export';
+    debugger;
+    let resolved = module.openedModule.pathResolve
+    ({
+      selector : 'path::export',
+      currentContext : null,
+      pathResolving : 'in',
+    });
+    debugger;
+    var expected =
+    [
+      'proto/a',
+      'proto/a/File.js',
+      'proto/b',
+      'proto/b/-Excluded.js',
+      'proto/b/File.js',
+      'proto/b/File.test.js',
+      'proto/b/File1.debug.js',
+      'proto/b/File1.release.js',
+      'proto/b/File2.debug.js',
+      'proto/b/File2.release.js',
+      'proto/dir3.test'
+    ]
+    expected = pin( expected );
+    test.identical( resolved, expected );
+
+    return null;
+  })
+
+  /* - */
+
+  let ready = module.openedModule.ready.finallyKeep( ( err, arg ) =>
+  {
+    if( err )
+    throw err;
+    test.is( err === undefined );
+    module.finit();
+    return arg;
+  })
+
+  return ready.split().finally( ( err, arg ) =>
+  {
+    if( err && err.finited )
+    return null;
+    if( err )
+    throw err;
+    return null;
+  });
+
+}
+
+pathsResolveOfSubmodulesAndOwn.timeOut = 300000;
 
 //
 
@@ -3753,7 +3834,7 @@ function submodulesResolve( test )
 
 }
 
-submodulesResolve.timeOut = 500000;
+submodulesResolve.timeOut = 300000;
 
 //
 
@@ -3844,7 +3925,7 @@ function submodulesDeleteAndDownload( test )
 
 }
 
-submodulesDeleteAndDownload.timeOut = 500000;
+submodulesDeleteAndDownload.timeOut = 300000;
 
 // --
 // define class
@@ -3882,6 +3963,7 @@ var Self =
     pathsResolve,
     pathsResolveImportIn,
     pathsResolveOfSubmodules,
+    pathsResolveOfSubmodulesAndOwn,
     pathsResolveOutFileOfExports,
     pathsResolveComposite,
     pathsResolveComposite2,

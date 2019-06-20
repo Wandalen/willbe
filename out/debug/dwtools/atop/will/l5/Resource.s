@@ -201,9 +201,6 @@ function cloneDerivative()
 {
   let resource = this;
 
-  if( resource.nickName === 'path::export' )
-  debugger;
-
   if( resource.original )
   return resource;
 
