@@ -15810,6 +15810,59 @@ function arrayReplaceElement( test )
 
 //
 
+function arrayReplaceElement2( test )
+{
+  test.case = 'replace all ins with sub';
+
+  var dst = [];
+  var got = _.arrayReplaceElement( dst, undefined, 0 );
+  test.identical( got, [] );
+
+  var dst = [ 1, 1, 1 ];
+  var got = _.arrayReplaceElement( dst, 1, 0 );
+  test.identical( got, [ 0, 0, 0 ] );
+
+  var dst = [ 1, 2, 1 ];
+  var got = _.arrayReplaceElement( dst, 1, 0 );
+  test.identical( got, [ 0, 2, 0 ] );
+
+  var dst = [ 1, 2, 3 ];
+  var got = _.arrayReplaceElement( dst, 4, 0 );
+  test.identical( got, [ 1, 2, 3 ] );
+
+  function onEqualize( a, b )
+  {
+    return a.value === b;
+  }
+
+  var dst = [ { value : 1 }, { value : 1 }, { value : 2 } ];
+  var got = _.arrayReplaceElement( dst, 1, { value : 0 }, onEqualize );
+  test.identical( got, [ { value : 0 }, { value : 0 }, { value : 2 } ] );
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'no args';
+  test.shouldThrowError( function()
+  {
+    _.arrayReplaceElement( );
+  });
+
+  test.case = 'first arg is not longIs';
+  test.shouldThrowError( function()
+  {
+    _.arrayReplaceElement( 1, 1, 1 );
+  });
+
+  test.case = 'fourth argument is not a routine';
+  test.shouldThrowError( function()
+  {
+    _.arrayReplaceElement( 1, 1, 1, 1);
+  });
+}
+
+//
+
 function arrayReplaceElementOnce( test )
 {
 
@@ -16070,6 +16123,68 @@ function arrayReplacedElement( test )
   {
     _.arrayReplacedElement( 1, 1, 1, 1);
   })
+}
+
+//
+
+function arrayReplacedElement2( test )
+{
+  test.case = 'replace all ins with sub';
+
+  var dst = [];
+  var got = _.arrayReplacedElement( dst, undefined, 0 );
+  test.identical( got, 0 );
+  test.identical( dst, [] );
+
+  var dst = [ 1, 1, 1 ];
+  var got = _.arrayReplacedElement( dst, 1, 0 );
+  test.identical( got, 3 );
+  test.identical( dst, [ 0, 0, 0 ] );
+
+  var dst = [ 1, 2, 1 ];
+  var got = _.arrayReplacedElement( dst, 1, 0 );
+  test.identical( got, 2 );
+  test.identical( dst, [ 0, 2, 0 ] );
+
+  var dst = [ 1, 2, 3 ];
+  var got = _.arrayReplacedElement( dst, 4, 0 );
+  test.identical( got, 0 );
+  test.identical( dst, [ 1, 2, 3 ] );
+
+  function onEqualize( a, b )
+  {
+    return a.value === b;
+  }
+
+  var dst = [ { value : 1 }, { value : 1 }, { value : 2 } ];
+  var got = _.arrayReplacedElement( dst, 1, { value : 0 }, onEqualize );
+  test.identical( got, 2 );
+  test.identical( dst, [ { value : 0 }, { value : 0 }, { value : 2 } ] );
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'no args';
+  test.shouldThrowError( function()
+  {
+    _.arrayReplacedElement( );
+  });
+
+  test.case = 'first arg is not longIs';
+  debugger;
+  test.shouldThrowError( function()
+  {
+    debugger;
+    _.arrayReplacedElement( 1, 1, 1 );
+  });
+  debugger;
+
+  test.case = 'fourth argument is not a routine';
+  test.shouldThrowError( function()
+  {
+    _.arrayReplacedElement( 1, 1, 1, 1 );
+  });
+
 }
 
 //
@@ -18430,119 +18545,119 @@ function arrayReplacedArraysOnceStrictly( test )
 // }
 //
 //
-
-function arrayReplaceAll( test )
-{
-  test.case = 'replace all ins with sub';
-
-  var dst = [];
-  var got = _.arrayReplaceAll( dst, undefined, 0 );
-  test.identical( got, [] );
-
-  var dst = [ 1, 1, 1 ];
-  var got = _.arrayReplaceAll( dst, 1, 0 );
-  test.identical( got, [ 0, 0, 0 ] );
-
-  var dst = [ 1, 2, 1 ];
-  var got = _.arrayReplaceAll( dst, 1, 0 );
-  test.identical( got, [ 0, 2, 0 ] );
-
-  var dst = [ 1, 2, 3 ];
-  var got = _.arrayReplaceAll( dst, 4, 0 );
-  test.identical( got, [ 1, 2, 3 ] );
-
-  function onEqualize( a, b )
-  {
-    return a.value === b;
-  }
-
-  var dst = [ { value : 1 }, { value : 1 }, { value : 2 } ];
-  var got = _.arrayReplaceAll( dst, 1, { value : 0 }, onEqualize );
-  test.identical( got, [ { value : 0 }, { value : 0 }, { value : 2 } ] );
-
-  if( !Config.debug )
-  return;
-
-  test.case = 'no args';
-  test.shouldThrowError( function()
-  {
-    _.arrayReplaceAll( );
-  });
-
-  test.case = 'first arg is not longIs';
-  test.shouldThrowError( function()
-  {
-    _.arrayReplaceAll( 1, 1, 1 );
-  });
-
-  test.case = 'fourth argument is not a routine';
-  test.shouldThrowError( function()
-  {
-    _.arrayReplaceAll( 1, 1, 1, 1);
-  });
-}
-
 //
-
-function arrayReplacedAll( test )
-{
-  test.case = 'replace all ins with sub';
-
-  var dst = [];
-  var got = _.arrayReplacedAll( dst, undefined, 0 );
-  test.identical( got, 0 );
-  test.identical( dst, [] );
-
-  var dst = [ 1, 1, 1 ];
-  var got = _.arrayReplacedAll( dst, 1, 0 );
-  test.identical( got, 3 );
-  test.identical( dst, [ 0, 0, 0 ] );
-
-  var dst = [ 1, 2, 1 ];
-  var got = _.arrayReplacedAll( dst, 1, 0 );
-  test.identical( got, 2 );
-  test.identical( dst, [ 0, 2, 0 ] );
-
-  var dst = [ 1, 2, 3 ];
-  var got = _.arrayReplacedAll( dst, 4, 0 );
-  test.identical( got, 0 );
-  test.identical( dst, [ 1, 2, 3 ] );
-
-  function onEqualize( a, b )
-  {
-    return a.value === b;
-  }
-
-  var dst = [ { value : 1 }, { value : 1 }, { value : 2 } ];
-  var got = _.arrayReplacedAll( dst, 1, { value : 0 }, onEqualize );
-  test.identical( got, 2 );
-  test.identical( dst, [ { value : 0 }, { value : 0 }, { value : 2 } ] );
-
-  if( !Config.debug )
-  return;
-
-  test.case = 'no args';
-  test.shouldThrowError( function()
-  {
-    _.arrayReplacedAll( );
-  });
-
-  test.case = 'first arg is not longIs';
-  debugger;
-  test.shouldThrowError( function()
-  {
-    debugger;
-    _.arrayReplacedAll( 1, 1, 1 );
-  });
-  debugger;
-
-  test.case = 'fourth argument is not a routine';
-  test.shouldThrowError( function()
-  {
-    _.arrayReplacedAll( 1, 1, 1, 1 );
-  });
-
-}
+// function arrayReplaceAll( test )
+// {
+//   test.case = 'replace all ins with sub';
+//
+//   var dst = [];
+//   var got = _.arrayReplaceAll( dst, undefined, 0 );
+//   test.identical( got, [] );
+//
+//   var dst = [ 1, 1, 1 ];
+//   var got = _.arrayReplaceAll( dst, 1, 0 );
+//   test.identical( got, [ 0, 0, 0 ] );
+//
+//   var dst = [ 1, 2, 1 ];
+//   var got = _.arrayReplaceAll( dst, 1, 0 );
+//   test.identical( got, [ 0, 2, 0 ] );
+//
+//   var dst = [ 1, 2, 3 ];
+//   var got = _.arrayReplaceAll( dst, 4, 0 );
+//   test.identical( got, [ 1, 2, 3 ] );
+//
+//   function onEqualize( a, b )
+//   {
+//     return a.value === b;
+//   }
+//
+//   var dst = [ { value : 1 }, { value : 1 }, { value : 2 } ];
+//   var got = _.arrayReplaceAll( dst, 1, { value : 0 }, onEqualize );
+//   test.identical( got, [ { value : 0 }, { value : 0 }, { value : 2 } ] );
+//
+//   if( !Config.debug )
+//   return;
+//
+//   test.case = 'no args';
+//   test.shouldThrowError( function()
+//   {
+//     _.arrayReplaceAll( );
+//   });
+//
+//   test.case = 'first arg is not longIs';
+//   test.shouldThrowError( function()
+//   {
+//     _.arrayReplaceAll( 1, 1, 1 );
+//   });
+//
+//   test.case = 'fourth argument is not a routine';
+//   test.shouldThrowError( function()
+//   {
+//     _.arrayReplaceAll( 1, 1, 1, 1);
+//   });
+// }
+//
+// //
+//
+// function arrayReplacedAll( test )
+// {
+//   test.case = 'replace all ins with sub';
+//
+//   var dst = [];
+//   var got = _.arrayReplacedAll( dst, undefined, 0 );
+//   test.identical( got, 0 );
+//   test.identical( dst, [] );
+//
+//   var dst = [ 1, 1, 1 ];
+//   var got = _.arrayReplacedAll( dst, 1, 0 );
+//   test.identical( got, 3 );
+//   test.identical( dst, [ 0, 0, 0 ] );
+//
+//   var dst = [ 1, 2, 1 ];
+//   var got = _.arrayReplacedAll( dst, 1, 0 );
+//   test.identical( got, 2 );
+//   test.identical( dst, [ 0, 2, 0 ] );
+//
+//   var dst = [ 1, 2, 3 ];
+//   var got = _.arrayReplacedAll( dst, 4, 0 );
+//   test.identical( got, 0 );
+//   test.identical( dst, [ 1, 2, 3 ] );
+//
+//   function onEqualize( a, b )
+//   {
+//     return a.value === b;
+//   }
+//
+//   var dst = [ { value : 1 }, { value : 1 }, { value : 2 } ];
+//   var got = _.arrayReplacedAll( dst, 1, { value : 0 }, onEqualize );
+//   test.identical( got, 2 );
+//   test.identical( dst, [ { value : 0 }, { value : 0 }, { value : 2 } ] );
+//
+//   if( !Config.debug )
+//   return;
+//
+//   test.case = 'no args';
+//   test.shouldThrowError( function()
+//   {
+//     _.arrayReplacedAll( );
+//   });
+//
+//   test.case = 'first arg is not longIs';
+//   debugger;
+//   test.shouldThrowError( function()
+//   {
+//     debugger;
+//     _.arrayReplacedAll( 1, 1, 1 );
+//   });
+//   debugger;
+//
+//   test.case = 'fourth argument is not a routine';
+//   test.shouldThrowError( function()
+//   {
+//     _.arrayReplacedAll( 1, 1, 1, 1 );
+//   });
+//
+// }
 
 //
 
@@ -20169,271 +20284,273 @@ var Self =
 
     // buffer
 
-    bufferFrom : bufferFrom,
-    bufferRelen : bufferRelen,
-    bufferRetype : bufferRetype,
-    bufferRawFrom : bufferRawFrom,
-    bufferBytesFrom : bufferBytesFrom,
-    bufferNodeFrom : bufferNodeFrom,
-    bufferRawFromTyped : bufferRawFromTyped,
+    bufferFrom,
+    bufferRelen,
+    bufferRetype,
+    bufferRawFrom,
+    bufferBytesFrom,
+    bufferNodeFrom,
+    bufferRawFromTyped,
 
     // type test
 
-    arrayIs : arrayIs,
-    longIs : longIs,
-    constructorLikeArray : constructorLikeArray,
-    hasLength : hasLength,
+    arrayIs,
+    longIs,
+    constructorLikeArray,
+    hasLength,
 
     // producer
 
-    argumentsArrayMake : argumentsArrayMake,
-    argumentsArrayFrom : argumentsArrayFrom,
+    argumentsArrayMake,
+    argumentsArrayFrom,
 
-    unrollMake : unrollMake,
-    unrollFrom : unrollFrom,
+    unrollMake,
+    unrollFrom,
 
-    longMake : longMake,
-    longMakeZeroed : longMakeZeroed,
+    longMake,
+    longMakeZeroed,
 
-    arrayMake : arrayMake,
-    arrayFrom : arrayFrom,
-    arrayFromCoercing : arrayFromCoercing,
+    arrayMake,
+    arrayFrom,
+    arrayFromCoercing,
 
-    scalarAppend : scalarAppend,
+    scalarAppend,
 
-    arrayMakeRandom : arrayMakeRandom,
-    scalarToVector : scalarToVector,
-    arrayFromRange : arrayFromRange,
-    arrayAs : arrayAs,
+    arrayMakeRandom,
+    scalarToVector,
+    arrayFromRange,
+    arrayAs,
 
-    arrayToMap : arrayToMap,
-    arrayToStr : arrayToStr,
+    arrayToMap,
+    arrayToStr,
 
     // long
 
-    longAreRepeatedProbe : longAreRepeatedProbe,
-    longAllAreRepeated : longAllAreRepeated,
-    longAnyAreRepeated : longAnyAreRepeated,
-    longNoneAreRepeated : longNoneAreRepeated,
+    longAreRepeatedProbe,
+    longAllAreRepeated,
+    longAnyAreRepeated,
+    longNoneAreRepeated,
 
     // array transformer
 
-    arraySub : arraySub,
-    // arrayJoin : arrayJoin,
-    arrayGrow : arrayGrow,
-    arrayResize : arrayResize,
-    longSlice : longSlice,
-    arrayDuplicate : arrayDuplicate,
+    arraySub,
+    // arrayJoin,
+    arrayGrow,
+    arrayResize,
+    longSlice,
+    arrayDuplicate,
 
-    arrayMask : arrayMask,
+    arrayMask,
 
-    arraySelect : arraySelect,
+    arraySelect,
 
     // array manipulator
 
-    arraySwap : arraySwap,
-    arrayCutin : arrayCutin,
-    arrayPut : arrayPut,
-    // arrayFill : arrayFill,
-    arrayFillTimes : arrayFillTimes,
-    arrayFillWhole : arrayFillWhole,
+    arraySwap,
+    arrayCutin,
+    arrayPut,
+    // arrayFill,
+    arrayFillTimes,
+    arrayFillWhole,
 
-    arraySupplement : arraySupplement,
-    arrayExtendScreening : arrayExtendScreening,
+    arraySupplement,
+    arrayExtendScreening,
 
     // array checker
 
-    arrayCompare : arrayCompare,
-    arrayIdentical : arrayIdentical,
+    arrayCompare,
+    arrayIdentical,
 
-    arrayHasAny : arrayHasAny,
+    arrayHasAny,
 
     // array sequential search
 
-    arrayLeftIndex : arrayLeftIndex,
-    arrayRightIndex : arrayRightIndex,
+    arrayLeftIndex,
+    arrayRightIndex,
 
-    arrayLeft : arrayLeft,
+    arrayLeft,
 
-    arrayCountElement : arrayCountElement,
-    arrayCountTotal : arrayCountTotal,
-    arrayCountUnique : arrayCountUnique,
+    arrayCountElement,
+    arrayCountTotal,
+    arrayCountUnique,
 
     // array etc
 
-    arraySum : arraySum,
+    arraySum,
 
     // array prepend
 
-    arrayPrependUnrolling : arrayPrependUnrolling,
+    arrayPrependUnrolling,
 
-    arrayPrepend : arrayPrepend,
-    arrayPrependOnce : arrayPrependOnce,
-    arrayPrependOnceStrictly : arrayPrependOnceStrictly,
-    arrayPrepended : arrayPrepended,
-    arrayPrependedOnce : arrayPrependedOnce,
-    arrayPrependedOnceStrictly : arrayPrependedOnceStrictly,
+    arrayPrepend,
+    arrayPrependOnce,
+    arrayPrependOnceStrictly,
+    arrayPrepended,
+    arrayPrependedOnce,
+    arrayPrependedOnceStrictly,
 
-    arrayPrependElement : arrayPrependElement,
-    arrayPrependElementOnce : arrayPrependElementOnce,
-    arrayPrependElementOnceStrictly : arrayPrependElementOnceStrictly,
-    arrayPrependedElement : arrayPrependedElement,
-    arrayPrependedElementOnce : arrayPrependedElementOnce,
-    arrayPrependedElementOnceStrictly : arrayPrependedElementOnceStrictly,
+    arrayPrependElement,
+    arrayPrependElementOnce,
+    arrayPrependElementOnceStrictly,
+    arrayPrependedElement,
+    arrayPrependedElementOnce,
+    arrayPrependedElementOnceStrictly,
 
-    arrayPrependArray : arrayPrependArray,
-    arrayPrependArrayOnce : arrayPrependArrayOnce,
-    arrayPrependArrayOnceStrictly : arrayPrependArrayOnceStrictly,
-    arrayPrependedArray : arrayPrependedArray,
-    arrayPrependedArrayOnce : arrayPrependedArrayOnce,
-    arrayPrependedArrayOnceStrictly : arrayPrependedArrayOnceStrictly,
+    arrayPrependArray,
+    arrayPrependArrayOnce,
+    arrayPrependArrayOnceStrictly,
+    arrayPrependedArray,
+    arrayPrependedArrayOnce,
+    arrayPrependedArrayOnceStrictly,
 
-    arrayPrependArrays : arrayPrependArrays,
-    arrayPrependArraysOnce : arrayPrependArraysOnce,
-    arrayPrependArraysOnceStrictly : arrayPrependArraysOnceStrictly,
-    arrayPrependedArrays : arrayPrependedArrays,
-    arrayPrependedArraysOnce : arrayPrependedArraysOnce,
-    arrayPrependedArraysOnceStrictly : arrayPrependedArraysOnceStrictly,
+    arrayPrependArrays,
+    arrayPrependArraysOnce,
+    arrayPrependArraysOnceStrictly,
+    arrayPrependedArrays,
+    arrayPrependedArraysOnce,
+    arrayPrependedArraysOnceStrictly,
 
     // array append
 
-    arrayAppendUnrolling : arrayAppendUnrolling,
+    arrayAppendUnrolling,
 
-    arrayAppend : arrayAppend,
-    arrayAppendOnce : arrayAppendOnce,
-    arrayAppendOnceStrictly : arrayAppendOnceStrictly,
-    arrayAppended : arrayAppended,
-    arrayAppendedOnce : arrayAppendedOnce,
-    arrayAppendedOnceStrictly : arrayAppendedOnceStrictly,
+    arrayAppend,
+    arrayAppendOnce,
+    arrayAppendOnceStrictly,
+    arrayAppended,
+    arrayAppendedOnce,
+    arrayAppendedOnceStrictly,
 
-    arrayAppendElement : arrayAppendElement,
-    arrayAppendElementOnce : arrayAppendElementOnce,
-    arrayAppendElementOnceStrictly : arrayAppendElementOnceStrictly,
-    arrayAppendedElement : arrayAppendedElement,
-    arrayAppendedElementOnce : arrayAppendedElementOnce,
-    arrayAppendedElementOnceStrictly : arrayAppendedElementOnceStrictly,
+    arrayAppendElement,
+    arrayAppendElementOnce,
+    arrayAppendElementOnceStrictly,
+    arrayAppendedElement,
+    arrayAppendedElementOnce,
+    arrayAppendedElementOnceStrictly,
 
-    arrayAppendArray : arrayAppendArray,
-    arrayAppendArrayOnce : arrayAppendArrayOnce,
-    arrayAppendArrayOnceStrictly : arrayAppendArrayOnceStrictly,
-    arrayAppendedArray : arrayAppendedArray,
-    arrayAppendedArrayOnce : arrayAppendedArrayOnce,
-    arrayAppendedArrayOnceWithSelector : arrayAppendedArrayOnceWithSelector,
-    arrayAppendedArrayOnceStrictly : arrayAppendedArrayOnceStrictly,
+    arrayAppendArray,
+    arrayAppendArrayOnce,
+    arrayAppendArrayOnceStrictly,
+    arrayAppendedArray,
+    arrayAppendedArrayOnce,
+    arrayAppendedArrayOnceWithSelector,
+    arrayAppendedArrayOnceStrictly,
 
-    arrayAppendArrays : arrayAppendArrays,
-    arrayAppendArraysOnce : arrayAppendArraysOnce,
-    arrayAppendArraysOnceStrictly : arrayAppendArraysOnceStrictly,
-    arrayAppendedArrays : arrayAppendedArrays,
-    arrayAppendedArraysOnce : arrayAppendedArraysOnce,
-    arrayAppendedArraysOnceStrictly : arrayAppendedArraysOnceStrictly,
+    arrayAppendArrays,
+    arrayAppendArraysOnce,
+    arrayAppendArraysOnceStrictly,
+    arrayAppendedArrays,
+    arrayAppendedArraysOnce,
+    arrayAppendedArraysOnceStrictly,
 
     // array remove
 
-    arrayRemove : arrayRemove,
-    arrayRemoveOnce : arrayRemoveOnce,
-    arrayRemoveOnceStrictly : arrayRemoveOnceStrictly,
-    arrayRemoved : arrayRemoved,
-    arrayRemovedOnce : arrayRemovedOnce,
-    arrayRemovedOnceStrictly : arrayRemovedOnceStrictly,
+    arrayRemove,
+    arrayRemoveOnce,
+    arrayRemoveOnceStrictly,
+    arrayRemoved,
+    arrayRemovedOnce,
+    arrayRemovedOnceStrictly,
 
-    arrayRemoveElement : arrayRemoveElement,
-    arrayRemoveElementOnce : arrayRemoveElementOnce,
-    arrayRemoveElementOnceStrictly : arrayRemoveElementOnceStrictly,
-    arrayRemovedElement : arrayRemovedElement,
-    arrayRemovedElementOnce : arrayRemovedElementOnce,
-    arrayRemovedElementOnceStrictly : arrayRemovedElementOnceStrictly,
+    arrayRemoveElement,
+    arrayRemoveElementOnce,
+    arrayRemoveElementOnceStrictly,
+    arrayRemovedElement,
+    arrayRemovedElementOnce,
+    arrayRemovedElementOnceStrictly,
 
-    // arrayRemovedOnceStrictly : arrayRemovedOnceStrictly,
+    // arrayRemovedOnceStrictly,
 
-    // arrayRemovedElementOnce2 : arrayRemovedElementOnce2,
-    // arrayRemovedOnceElementStrictly : arrayRemovedOnceElementStrictly,
+    // arrayRemovedElementOnce2,
+    // arrayRemovedOnceElementStrictly,
 
-    arrayRemoveArray : arrayRemoveArray,
-    arrayRemoveArrayOnce : arrayRemoveArrayOnce,
-    arrayRemoveArrayOnceStrictly : arrayRemoveArrayOnceStrictly,
-    arrayRemovedArray : arrayRemovedArray,
-    arrayRemovedArrayOnce : arrayRemovedArrayOnce,
-    arrayRemovedArrayOnceStrictly : arrayRemovedArrayOnceStrictly,
+    arrayRemoveArray,
+    arrayRemoveArrayOnce,
+    arrayRemoveArrayOnceStrictly,
+    arrayRemovedArray,
+    arrayRemovedArrayOnce,
+    arrayRemovedArrayOnceStrictly,
 
-    arrayRemoveArrays : arrayRemoveArrays,
-    arrayRemoveArraysOnce : arrayRemoveArraysOnce,
-    arrayRemoveArraysOnceStrictly : arrayRemoveArraysOnceStrictly,
-    arrayRemovedArrays : arrayRemovedArrays,
-    arrayRemovedArraysOnce : arrayRemovedArraysOnce,
-    arrayRemovedArraysOnceStrictly : arrayRemovedArraysOnceStrictly,
+    arrayRemoveArrays,
+    arrayRemoveArraysOnce,
+    arrayRemoveArraysOnceStrictly,
+    arrayRemovedArrays,
+    arrayRemovedArraysOnce,
+    arrayRemovedArraysOnceStrictly,
 
-    arrayRemoveAll : arrayRemoveAll,
-    // arrayRemoveAll : arrayRemoveAll,
-    arrayRemovedAll : arrayRemovedAll,
+    arrayRemoveAll,
+    // arrayRemoveAll,
+    arrayRemovedAll,
 
-    arrayRemoveDuplicates : arrayRemoveDuplicates,
-    longRemoveDuplicates : longRemoveDuplicates,
+    arrayRemoveDuplicates,
+    longRemoveDuplicates,
 
     // array flatten
 
-    arrayFlatten : arrayFlatten,
-    arrayFlattenOnce : arrayFlattenOnce,
-    arrayFlattenOnceStrictly : arrayFlattenOnceStrictly,
-    arrayFlattened : arrayFlattened,
-    arrayFlattenedOnce : arrayFlattenedOnce,
-    arrayFlattenedOnceStrictly : arrayFlattenedOnceStrictly,
+    arrayFlatten,
+    arrayFlattenOnce,
+    arrayFlattenOnceStrictly,
+    arrayFlattened,
+    arrayFlattenedOnce,
+    arrayFlattenedOnceStrictly,
 
-    arrayFlatten2 : arrayFlatten2,
+    arrayFlatten2,
 
-    arrayFlattenDefined : arrayFlattenDefined,
-    arrayFlattenDefinedOnce : arrayFlattenDefinedOnce,
-    arrayFlattenDefinedOnceStrictly : arrayFlattenDefinedOnceStrictly,
-    arrayFlattenedDefined : arrayFlattenedDefined,
-    arrayFlattenedDefinedOnce : arrayFlattenedDefinedOnce,
-    arrayFlattenedDefinedOnceStrictly : arrayFlattenedDefinedOnceStrictly,
+    arrayFlattenDefined,
+    arrayFlattenDefinedOnce,
+    arrayFlattenDefinedOnceStrictly,
+    arrayFlattenedDefined,
+    arrayFlattenedDefinedOnce,
+    arrayFlattenedDefinedOnceStrictly,
 
     // array replace
 
-    arrayReplace : arrayReplace,
-    arrayReplaceOnce : arrayReplaceOnce,
-    arrayReplaceOnceStrictly : arrayReplaceOnceStrictly,
-    arrayReplaced : arrayReplaced,
-    arrayReplacedOnce : arrayReplacedOnce,
-    arrayReplacedOnceStrictly : arrayReplacedOnceStrictly,
+    arrayReplace,
+    arrayReplaceOnce,
+    arrayReplaceOnceStrictly,
+    arrayReplaced,
+    arrayReplacedOnce,
+    arrayReplacedOnceStrictly,
 
-    arrayReplaceElement : arrayReplaceElement,
-    arrayReplaceElementOnce : arrayReplaceElementOnce,
-    arrayReplaceElementOnceStrictly : arrayReplaceElementOnceStrictly,
-    arrayReplacedElement : arrayReplacedElement,
-    arrayReplacedElementOnce : arrayReplacedElementOnce,
-    arrayReplacedElementOnceStrictly : arrayReplacedElementOnceStrictly,
+    arrayReplaceElement,
+    arrayReplaceElement2,
+    arrayReplaceElementOnce,
+    arrayReplaceElementOnceStrictly,
+    arrayReplacedElement,
+    arrayReplacedElement2,
+    arrayReplacedElementOnce,
+    arrayReplacedElementOnceStrictly,
 
-    arrayReplaceArray : arrayReplaceArray,
-    arrayReplaceArrayOnce : arrayReplaceArrayOnce,
-    arrayReplaceArrayOnceStrictly : arrayReplaceArrayOnceStrictly,
-    arrayReplacedArray : arrayReplacedArray,
-    arrayReplacedArrayOnce : arrayReplacedArrayOnce,
-    arrayReplacedArrayOnceStrictly : arrayReplacedArrayOnceStrictly,
+    arrayReplaceArray,
+    arrayReplaceArrayOnce,
+    arrayReplaceArrayOnceStrictly,
+    arrayReplacedArray,
+    arrayReplacedArrayOnce,
+    arrayReplacedArrayOnceStrictly,
 
-    arrayReplaceArrays : arrayReplaceArrays,
-    arrayReplaceArraysOnce : arrayReplaceArraysOnce,
-    arrayReplaceArraysOnceStrictly : arrayReplaceArraysOnceStrictly,
-    arrayReplacedArrays : arrayReplacedArrays,
-    arrayReplacedArraysOnce : arrayReplacedArraysOnce,
-    arrayReplacedArraysOnceStrictly : arrayReplacedArraysOnceStrictly,
+    arrayReplaceArrays,
+    arrayReplaceArraysOnce,
+    arrayReplaceArraysOnceStrictly,
+    arrayReplacedArrays,
+    arrayReplacedArraysOnce,
+    arrayReplacedArraysOnceStrictly,
 
-    arrayReplaceAll : arrayReplaceAll,
-    arrayReplacedAll : arrayReplacedAll,
+    // arrayReplaceAll,
+    // arrayReplacedAll,
 
-    arrayUpdate : arrayUpdate,
+    arrayUpdate,
 
     // array set
 
-    arraySetDiff : arraySetDiff,
+    arraySetDiff,
 
-    arraySetBut : arraySetBut,
-    arraySetIntersection : arraySetIntersection,
-    arraySetUnion : arraySetUnion,
+    arraySetBut,
+    arraySetIntersection,
+    arraySetUnion,
 
-    arraySetContainAll: arraySetContainAll,
-    arraySetContainAny : arraySetContainAny,
-    arraySetIdentical : arraySetIdentical
+    arraySetContainAll,
+    arraySetContainAny,
+    arraySetIdentical,
 
   }
 
