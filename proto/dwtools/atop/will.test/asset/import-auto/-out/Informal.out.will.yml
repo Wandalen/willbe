@@ -49,7 +49,7 @@ path:
 submodule:
   Tools:
     own: 1
-    path: 'git://../repo/Tools?out=out/wTools.out.will#master'
+    path: 'git+hd://../repo/Tools?out=out/wTools.out.will#master'
     autoExporting: 0
 reflector:
   reflect.proto.:
@@ -186,7 +186,7 @@ module:
         criterion:
           predefined: 1
       remote:
-        path: 'git://../../../../repo/Tools?out=out/wTools.out.will#master'
+        path: 'git+hd://../../../../repo/Tools?out=out/wTools.out.will#master'
         criterion:
           predefined: 1
     submodule: {}
