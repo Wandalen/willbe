@@ -1926,6 +1926,59 @@ strSplitsCoupledGroup.defaults =
 
 //
 
+function strSplitsUngroupedJoin( o )
+{
+
+  if( _.arrayIs( o ) )
+  o = { splits : o }
+  o = _.routineOptions( strSplitsUngroupedJoin, o );
+
+  let s = o.splits.length-1;
+  let l = null;
+
+  while( s >= 0 )
+  {
+    let split = o.splits[ s ];
+
+    if( _.strIs( split ) )
+    {
+      if( l === null )
+      l = s;
+    }
+    else if( l !== null )
+    {
+      join();
+    }
+
+    s -= 1;
+  }
+
+  if( l !== null )
+  join();
+
+  return o.splits;
+
+  /* */
+
+  function join()
+  {
+    if( s+1 < l )
+    {
+      let element = o.splits.slice( s+1, l+1 ).join( '' );
+      o.splits.splice( s+1, l+1, element );
+    }
+    l = null;
+  }
+
+}
+
+strSplitsUngroupedJoin.defaults =
+{
+  splits : null,
+}
+
+//
+
 function strSplitsQuotedRejoin_pre( routine, args )
 {
   let o = args[ 0 ];
@@ -4335,6 +4388,7 @@ let Proto =
   strSplitChunks, /* experimental */
 
   strSplitsCoupledGroup,
+  strSplitsUngroupedJoin,
   strSplitsQuotedRejoin,
   strSplitsDropDelimeters,
   strSplitsStrip,

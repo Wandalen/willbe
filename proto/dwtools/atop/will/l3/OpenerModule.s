@@ -156,19 +156,22 @@ function optionsForModule()
   {
 
     will : null,
-    // supermodule : null,
     rootModule : null,
+    willfileArray : null,
+    willfilesReadBeginTime : null,
+
     willfilesPath : null,
     localPath : null,
     remotePath : null,
+    inPath : null,
+    outPath : null,
+
     configName : null,
     aliasName : null,
+
     isRemote : null,
     isDownloaded : null,
     isUpToDate : null,
-    // willfileWithRoleMap : null,
-    willfileArray : null,
-    willfilesReadBeginTime : null,
 
   }
 
@@ -177,10 +180,7 @@ function optionsForModule()
   if( opener.supermodule )
   result.supermodules = [ opener.supermodule ];
 
-  // result.rootModule = opener.rootModule;
-
   result.willfileArray = _.entityShallowClone( result.willfileArray );
-  // result.willfileWithRoleMap = _.entityShallowClone( result.willfileWithRoleMap );
 
   return result;
 }
@@ -435,19 +435,14 @@ function open()
     _.assert( opener.openedModule === openedModule || opener.openedModule === null );
     opener.openedModule = openedModule;
 
-    // debugger;
     _.assert( !openedModule.willfileArray.length || _.arrayIdentical( opener.willfileArray, openedModule.willfileArray ) );
-    // debugger;
     openedModule.willfileArray = _.entityShallowClone( opener.willfileArray );
-    // openedModule.willfileWithRoleMap = _.entityShallowClone( opener.willfileWithRoleMap );
-    // debugger;
 
   }
   else
   {
     _.assert( opener.openedModule === null );
     let o2 = opener.optionsForModule();
-    // debugger;
     openedModule = opener.openedModule = new will.OpenedModule( o2 );
     if( openedModule.rootModule === null )
     openedModule.rootModule = openedModule;
@@ -476,7 +471,9 @@ function openCloning( openedModule )
   let o2 = opener.optionsForModule();
   o2.rootModule = opener.rootModule;
 
+  // debugger;
   let openedModule2 = openedModule.cloneExtending( o2 );
+  // debugger;
   opener.openedModule = openedModule2;
 
   if( openedModule2.rootModule === null )
@@ -689,7 +686,7 @@ function _willfileFindMultiple( o )
   return false;
 
   /* */
-xxx
+
   function end( willfileArray )
   {
     _.assert( willfileArray.length > 0 );
@@ -1754,37 +1751,37 @@ function _filePathChanged()
 
 }
 
+// //
 //
-
-function inPathGet()
-{
-  let opener = this;
-  let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  if( !opener.openedModule )
-  return null;
-
-  return opener.openedModule.inPath;
-  // return path.s.join( opener.dirPath, ( opener[ inPathSymbol ] || '.' ) );
-  // return path.s.join( opener.dirPath, ( opener.pathMap.in || '.' ) );
-}
-
+// function inPathGet()
+// {
+//   let opener = this;
+//   let will = opener.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
 //
-
-function outPathGet()
-{
-  let opener = this;
-  let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  if( !opener.openedModule )
-  return null;
-
-  return opener.openedModule.outPath;
-}
+//   if( !opener.openedModule )
+//   return null;
+//
+//   return opener.openedModule.inPath;
+//   // return path.s.join( opener.dirPath, ( opener[ inPathSymbol ] || '.' ) );
+//   // return path.s.join( opener.dirPath, ( opener.pathMap.in || '.' ) );
+// }
+//
+// //
+//
+// function outPathGet()
+// {
+//   let opener = this;
+//   let will = opener.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//
+//   if( !opener.openedModule )
+//   return null;
+//
+//   return opener.openedModule.outPath;
+// }
 
 //
 
@@ -1828,11 +1825,15 @@ function predefinedPathSet_functor( fieldName )
 let willfilesPathGet = predefinedPathGet_functor( 'willfilesPath' );
 let dirPathGet = predefinedPathGet_functor( 'dirPath' );
 let commonPathGet = predefinedPathGet_functor( 'commonPath' );
+let inPathGet = predefinedPathGet_functor( 'inPath' );
+let outPathGet = predefinedPathGet_functor( 'outPath' );
 let localPathGet = predefinedPathGet_functor( 'localPath' );
 let remotePathGet = predefinedPathGet_functor( 'remotePath' );
 let willPathGet = predefinedPathGet_functor( 'willPath' );
 
 let willfilesPathSet = predefinedPathSet_functor( 'willfilesPath' );
+let inPathSet = predefinedPathSet_functor( 'inPath' );
+let outPathSet = predefinedPathSet_functor( 'outPath' );
 let localPathSet = predefinedPathSet_functor( 'localPath' );
 let remotePathSet = predefinedPathSet_functor( 'remotePath' );
 
@@ -1959,12 +1960,14 @@ let Composes =
 
   willfilesPath : null,
   pickedWillfilesPath : null,
+  inPath : null,
+  outPath : null,
   localPath : null,
   remotePath : null,
 
-  isRemote : null, // xxx
-  isDownloaded : null, // xxx
-  isUpToDate : null, // xxx
+  isRemote : null,
+  isDownloaded : null,
+  isUpToDate : null,
   finding : 1,
 
   aliasName : null,
@@ -2013,24 +2016,14 @@ let Restricts =
 
 let Statics =
 {
-
-  // WillfilePathIs,
-  // DirPathFromFilePaths,
-  // CommonPathFor,
-  // CloneDirPathFor,
-  // OutfilePathFor,
-
 }
 
 let Forbids =
 {
-  // inPath : 'inPath',
-  // outPath : 'outPath',
   moduleWithPathMap : 'moduleWithPathMap',
   allSubmodulesMap : 'allSubmodulesMap',
   moduleWithNameMap : 'moduleWithNameMap',
   willfilesReadTimeReported : 'willfilesReadTimeReported',
-  // supermodule : 'supermodule'
   submoduleAssociation : 'submoduleAssociation',
   currentRemotePath : 'currentRemotePath',
   opened : 'opened',
@@ -2039,11 +2032,11 @@ let Forbids =
 let Accessors =
 {
 
-  inPath : { getter : inPathGet, readOnly : 1 },
-  outPath : { getter : outPathGet, readOnly : 1 },
-  commonPath : { getter : commonPathGet, readOnly : 1 },
   willfilesPath : { getter : willfilesPathGet, setter : willfilesPathSet },
   dirPath : { getter : dirPathGet, readOnly : 1 },
+  commonPath : { getter : commonPathGet, readOnly : 1 },
+  inPath : { getter : inPathGet, setter : inPathSet },
+  outPath : { getter : outPathGet, setter : outPathSet },
   localPath : { getter : localPathGet, setter : localPathSet },
   remotePath : { getter : remotePathGet, setter : remotePathSet },
   willPath : { getter : willPathGet, readOnly : 1 },
@@ -2063,7 +2056,7 @@ let Accessors =
 // declare
 // --
 
-let Proto =
+let Extend =
 {
 
   // inter
@@ -2144,17 +2137,20 @@ let Proto =
 
   _filePathChange,
   _filePathChanged,
-  inPathGet,
-  outPathGet,
 
   willfilesPathGet,
   dirPathGet,
   commonPathGet,
+
+  inPathGet,
+  outPathGet,
   localPathGet,
   remotePathGet,
   willPathGet,
 
   willfilesPathSet,
+  inPathSet,
+  outPathSet,
   localPathSet,
   remotePathSet,
 
@@ -2183,7 +2179,7 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Proto,
+  extend : Extend,
 });
 
 Self.prototype[ Symbol.toStringTag ] = Object.prototype.toString;

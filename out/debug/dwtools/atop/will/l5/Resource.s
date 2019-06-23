@@ -290,6 +290,7 @@ function form1()
   let resource = this;
 
   _.assert( !!resource.module );
+  _.assert( !!resource.module.will );
 
   let module = resource.module;
   let willf = resource.willf;
@@ -1046,6 +1047,44 @@ reflectorResolve_body.defaults = Object.create( _.Will.OpenedModule.prototype.re
 let reflectorResolve = _.routineFromPreAndBody( resolve.pre, reflectorResolve_body );
 
 // --
+// etc
+// --
+
+function pathRebase( o )
+{
+  let resource = this;
+  let module = resource.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let Resolver = will.Resolver;
+
+  o = _.routineOptions( pathRebase, arguments ); 
+
+  if( o.filePath )
+  if( path.isRelative( o.filePath ) )
+  {
+    if( Resolver.selectorIs( o.filePath ) )
+    {
+      let filePath2 = Resolver.selectorNormalize( o.filePath );
+      if( _.strBegins( filePath2, '{' ) )
+      return o.filePath;
+      o.filePath = filePath2;
+    }
+    return path.relative( o.inPath, path.join( o.exInPath, o.filePath ) );
+  }
+
+  return o.filePath;
+}
+
+pathRebase.defaults =
+{
+  filePath : null,
+  exInPath : null,
+  inPath : null,
+}
+
+// --
 // relations
 // --
 
@@ -1124,7 +1163,7 @@ let Accessors =
 // declare
 // --
 
-let Proto =
+let Extend =
 {
 
   // inter
@@ -1184,6 +1223,10 @@ let Proto =
   inPathResolve,
   reflectorResolve,
 
+  // etc
+
+  pathRebase,
+
   // relation
 
   Composes,
@@ -1203,7 +1246,7 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Proto,
+  extend : Extend,
   withMixin : 1,
   withClass : 1,
 });

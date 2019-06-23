@@ -300,7 +300,7 @@ function moduleEachAt( o )
   if( _.strEnds( o.selector, '::' ) )
   o.selector = o.selector + '*';
 
-  if( will.Resolver.selectorIsSimple( o.selector ) )
+  if( will.Resolver.selectorIs( o.selector ) )
   {
 
     let module = o.currentModule;
@@ -509,7 +509,6 @@ function modulePathUnregister( openedModule )
   if( openedModule.commonPath )
   {
     _.assert( _.strIs( openedModule.commonPath ) );
-    // _.assert( will.moduleWithPathMap[ openedModule.commonPath ] === openedModule || will.moduleWithPathMap[ openedModule.commonPath ] === undefined );
     _.assert( will.moduleWithPathMap[ openedModule.commonPath ] === openedModule );
     delete will.moduleWithPathMap[ openedModule.commonPath ];
   }
@@ -609,9 +608,7 @@ function willfilesList( o )
     maskPreset : 0,
   }
 
-  debugger;
   let files = fileProvider.filesFind( o2 );
-  // debugger;
 
   return files;
 }
@@ -637,7 +634,6 @@ function willfileAt( filePath )
 
 function willfileFor( o )
 {
-  // let opener = this;
   let will = this;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -647,7 +643,6 @@ function willfileFor( o )
   _.assert( _.mapIs( o ) );
 
   o.will = will;
-  // o.openerModule = opener;
 
   let willf = will.willfileAt( o.filePath );
   if( willf )
@@ -664,29 +659,6 @@ function willfileFor( o )
   }
 
   return willf;
-
-/*
-
-  willf = new will.Willfile
-  ({
-    role : o.role,
-    filePath : filePath,
-    isOutFile : o.isOutFile,
-    openerModule : opener,
-    will : will,
-  }).form1();
-
-  let willfile = new will.Willfile
-  ({
-    will : will,
-    role : 'single',
-    filePath : filePath,
-    openerModule : opener,
-    data : opener.pickedWillfileData,
-  }).form1();
-
-*/
-
 }
 
 //

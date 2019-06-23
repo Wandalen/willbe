@@ -121,7 +121,7 @@
 // // declare
 // // --
 //
-// let Proto =
+// let Extend =
 // {
 //
 //   // inter
@@ -150,7 +150,7 @@
 // ({
 //   cls : Self,
 //   parent : Parent,
-//   extend : Proto,
+//   extend : Extend,
 // });
 //
 // _.Copyable.mixin( Self );

@@ -5,20 +5,20 @@ about:
   enabled: 1
   version: 0.0.1
 path:
+  in:
+    path: .
+    criterion:
+      predefined: 0
   module.willfiles:
-    path: out/module-a.out.will.yml
+    path: module-a.out.will.yml
     criterion:
       predefined: 1
   module.original.willfiles:
-    path: a.will.yml
-    criterion:
-      predefined: 1
-  module.dir:
-    path: out/
+    path: ../a.will.yml
     criterion:
       predefined: 1
   module.common:
-    path: out/module-a.out
+    path: module-a.out
     criterion:
       predefined: 1
   local:
@@ -28,34 +28,34 @@ path:
     criterion:
       predefined: 1
   proto:
-    path: ./proto
+    path: ../proto
   out:
-    path: out
+    path: .
+    criterion:
+      predefined: 0
   temp:
     path:
-      - 'path::out'
-      - out2
+      - '{path::out}'
+      - ../out2
   exported.dir.proto.export:
-    path: ./proto/a
+    path: ../proto/a
     criterion:
       default: 1
       export: 1
   exported.files.proto.export:
     path:
-      - proto/a
-      - proto/a/File.js
+      - ../proto/a
+      - ../proto/a/File.js
     criterion:
       default: 1
       export: 1
-  in:
-    path: ..
 submodule: {}
 reflector:
   exported.proto.export:
     src:
       filePath:
         .: null
-      prefixPath: proto/a
+      prefixPath: ../proto/a
     criterion:
       default: 1
       export: 1
@@ -64,7 +64,7 @@ reflector:
     src:
       filePath: 'path::exported.files.proto.export'
       basePath: .
-      prefixPath: 'path::exported.dir.proto.export'
+      prefixPath: '{path::exported.dir.proto.export}'
     criterion:
       default: 1
       export: 1
@@ -95,23 +95,23 @@ exported:
     exportedDirPath: 'path::exported.dir.proto.export'
     exportedFilesPath: 'path::exported.files.proto.export'
 module:
-  a:
+  ../a:
     about:
       name: module-a
       description: Module for testing
       enabled: 1
       version: 0.0.1
     path:
+      in:
+        path: .
+        criterion:
+          predefined: 0
       module.willfiles:
         path: a.will.yml
         criterion:
           predefined: 1
       module.original.willfiles:
         path: a.will.yml
-        criterion:
-          predefined: 1
-      module.dir:
-        path: ./
         criterion:
           predefined: 1
       module.common:
@@ -128,6 +128,8 @@ module:
         path: ./proto
       out:
         path: out
+        criterion:
+          predefined: 0
       temp:
         path:
           - 'path::out'
@@ -189,4 +191,4 @@ module:
         exportedFilesReflector: 'reflector::exported.files.proto.export'
         exportedDirPath: 'path::exported.dir.proto.export'
         exportedFilesPath: 'path::exported.files.proto.export'
-  out/module-a.out: root
+  module-a.out: root

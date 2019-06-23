@@ -71,139 +71,142 @@ function init( o )
 
 function unform()
 {
-  let pathResource = this;
-  let module = pathResource.module;
-  let willf = pathResource.willf;
+  let resource = this;
+  let module = resource.module;
+  let willf = resource.willf;
 
-  _.assert( module[ pathResource.MapName ][ pathResource.name ] === pathResource );
+  _.assert( module[ resource.MapName ][ resource.name ] === resource );
   if( willf )
-  _.assert( willf[ pathResource.MapName ][ pathResource.name ] === pathResource );
+  _.assert( willf[ resource.MapName ][ resource.name ] === resource );
 
-  Parent.prototype.unform.apply( pathResource, arguments )
+  Parent.prototype.unform.apply( resource, arguments )
 
-  delete module[ pathResource.MapName ][ pathResource.name ];
+  delete module[ resource.MapName ][ resource.name ];
   if( willf )
-  delete willf[ pathResource.MapName ][ pathResource.name ];
+  delete willf[ resource.MapName ][ resource.name ];
 
-  delete module.pathMap[ pathResource.name ];
+  delete module.pathMap[ resource.name ];
   if( willf )
-  delete willf.pathMap[ pathResource.name ];
+  delete willf.pathMap[ resource.name ];
 
-  return pathResource;
+  return resource;
 }
 
 //
 
 function form1()
 {
-  let pathResource = this;
-  let module = pathResource.module;
-  let willf = pathResource.willf;
+  let resource = this;
+  let module = resource.module;
+  let willf = resource.willf;
 
-  if( pathResource.formed && pathResource === module[ pathResource.MapName ][ pathResource.name ] )
-  return pathResource;
+  if( resource.formed && resource === module[ resource.MapName ][ resource.name ] )
+  return resource;
 
-  _.sure( !module[ pathResource.MapName ][ pathResource.name ], () => 'Module ' + module.dirPath + ' already has ' + pathResource.nickName );
-  _.assert( !willf || !willf[ pathResource.MapName ][ pathResource.name ] );
+  _.sure( !module[ resource.MapName ][ resource.name ], () => 'Module ' + module.dirPath + ' already has ' + resource.nickName );
+  _.assert( !willf || !willf[ resource.MapName ][ resource.name ] );
 
-  Parent.prototype.form1.apply( pathResource, arguments )
+  Parent.prototype.form1.apply( resource, arguments )
 
-  module[ pathResource.MapName ][ pathResource.name ] = pathResource;
+  module[ resource.MapName ][ resource.name ] = resource;
   if( willf )
-  willf[ pathResource.MapName ][ pathResource.name ] = pathResource;
+  willf[ resource.MapName ][ resource.name ] = resource;
 
-  module.pathMap[ pathResource.name ] = pathResource.path;
+  module.pathMap[ resource.name ] = resource.path;
   if( willf )
-  willf.pathMap[ pathResource.name ] = pathResource.path;
+  willf.pathMap[ resource.name ] = resource.path;
 
-  return pathResource;
+  return resource;
 }
 
 //
 
 function form2()
 {
-  let pathResource = this;
-  let module = pathResource.module;
-  let willf = pathResource.willf;
+  let resource = this;
+  let module = resource.module;
+  let willf = resource.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0 );
-  _.assert( pathResource.formed === 1 );
+  _.assert( resource.formed === 1 );
 
-  if( _.arrayIs( pathResource.path ) )
-  pathResource.path = _.arrayFlattenOnce( pathResource.path );
+  if( _.arrayIs( resource.path ) )
+  resource.path = _.arrayFlattenOnce( resource.path );
 
-  return Parent.prototype.form2.call( pathResource );
+  return Parent.prototype.form2.call( resource );
 }
 
 //
 
 function form3()
 {
-  let pathResource = this;
-  let module = pathResource.module;
-  let willf = pathResource.willf;
+  let resource = this;
+  let module = resource.module;
+  let willf = resource.willf;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0 );
-  _.assert( pathResource.formed === 2 );
+  _.assert( resource.formed === 2 );
 
-  if( pathResource.writable && !pathResource.criterion.predefined )
+  if( resource.writable && !resource.criterion.predefined )
   {
 
-    _.sure( _.strIs( pathResource.path ) || _.arrayIs( pathResource.path ), 'Path resource should have "path" field' );
+    _.sure( _.strIs( resource.path ) || _.arrayIs( resource.path ), 'Path resource should have "path" field' );
     _.assert
     (
-      _.all( pathResource.path, ( p ) => path.isRelative( p ) || path.isGlobal( p ) ),
-      () => pathResource.nickName + ' should not have absolute paths, but have ' + _.toStr( pathResource.path )
+      _.all( resource.path, ( p ) => path.isRelative( p ) || path.isGlobal( p ) ),
+      () => resource.nickName + ' should not have absolute paths, but have ' + _.toStr( resource.path )
     );
 
   }
 
-  if( pathResource.path )
+  if( resource.path )
   {
-    let filePath = _.arrayAs( pathResource.path );
+    let filePath = _.arrayAs( resource.path );
     filePath.forEach( ( p ) =>
     {
       // _.sure( !path.isGlobal( p ) || path.isAbsolute( p ), 'Global paths should be absolute, but ' + p + ' is not absolute' );
     });
   }
 
-  pathResource.formed = 3;
-  return pathResource;
+  resource.formed = 3;
+  return resource;
 }
 
 //
 
 function _pathSet( src )
 {
-  let pathResource = this;
-  let module = pathResource.module;
+  let resource = this;
+  let module = resource.module;
 
   _.assert( src === null || _.strIs( src ) || _.arrayLike( src ) );
+
+  // if( resource.id === 140 )
+  // debugger;
 
   if( _.arrayLike( src ) )
   src = _.arraySlice( src );
 
-  if( module && pathResource.name && !pathResource.original )
+  if( module && resource.name && !resource.original )
   {
-    _.assert( module.pathMap[ pathResource.name ] === pathResource.path || pathResource.path === null );
-    delete module.pathMap[ pathResource.name ];
+    _.assert( module.pathMap[ resource.name ] === resource.path || resource.path === null );
+    delete module.pathMap[ resource.name ];
   }
 
-  pathResource[ pathSymbol ] = src;
+  resource[ pathSymbol ] = src;
 
-  if( module && pathResource.name && !pathResource.original )
+  if( module && resource.name && !resource.original )
   {
-    _.assert( module.pathMap[ pathResource.name ] === undefined );
-    module.pathMap[ pathResource.name ] = pathResource.path;
+    _.assert( module.pathMap[ resource.name ] === undefined );
+    module.pathMap[ resource.name ] = resource.path;
   }
 
 }
@@ -212,14 +215,14 @@ function _pathSet( src )
 
 function dataExport()
 {
-  let pathResource = this;
-  let module = pathResource.module;
+  let resource = this;
+  let module = resource.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
-  let result = Parent.prototype.dataExport.apply( pathResource, arguments );
+  let result = Parent.prototype.dataExport.apply( resource, arguments );
 
   if( result )
   {
@@ -241,6 +244,116 @@ function dataExport()
 }
 
 dataExport.defaults = Object.create( Parent.prototype.dataExport.defaults );
+
+// --
+// etc
+// --
+
+function pathsRebase( o )
+{
+  let resource = this;
+  let module = resource.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let Resolver = will.Resolver;
+
+  o = _.routineOptions( pathsRebase, arguments );
+  _.assert( path.isAbsolute( o.inPath ) );
+  _.assert( path.isAbsolute( o.exInPath ) );
+
+  if( !o.relative )
+  o.relative = path.relative( o.inPath, o.exInPath );
+
+  debugger
+
+  if( o.inPath === o.exInPath )
+  {
+    debugger;
+    return resource;
+  }
+
+  /* */
+
+  if( resource.name === 'in' )
+  return resource;
+  if( resource.name === 'module.dir' )
+  return resource;
+
+  resource.path = path.pathMapFilterInplace( resource.path, ( filePath ) =>
+  {
+    return resource.pathRebase
+    ({
+      filePath : filePath,
+      exInPath : o.exInPath,
+      inPath : o.inPath,
+    });
+  });
+
+/*
+  if( resource.criterion.predefined )
+  return resource;
+
+  if( resource.src.hasAnyPath() )
+  resource.src.prefixPath = path.pathMapFilterInplace( resource.src.prefixPath || null, ( filePath ) =>
+  {
+    if( filePath === null )
+    return o.relative;
+    return resource.pathRebase
+    ({
+      filePath : filePath,
+      exInPath : o.exInPath,
+      inPath : o.inPath,
+    });
+  });
+
+  if( resource.dst.hasAnyPath() )
+  debugger;
+  if( resource.dst.hasAnyPath() )
+  resource.dst.prefixPath = path.pathMapFilterInplace( resource.dst.prefixPath || null, ( filePath ) =>
+  {
+    if( filePath === null )
+    return o.relative;
+    return resource.pathRebase
+    ({
+      filePath : filePath,
+      exInPath : o.exInPath,
+      inPath : o.inPath,
+    });
+  });
+*/
+
+  return resource;
+
+  /* */
+
+  // function replace( filePath )
+  // {
+  //   if( filePath )
+  //   if( path.isRelative( filePath ) )
+  //   {
+  //     if( Resolver.selectorIs( filePath ) )
+  //     {
+  //       let filePath2 = Resolver.selectorNormalize( filePath );
+  //       if( _.strBegins( filePath2, '{' ) )
+  //       return filePath;
+  //       filePath = filePath2;
+  //     }
+  //     return path.relative( o.inPath, path.join( o.exInPath, filePath ) );
+  //   }
+  //   return filePath;
+  // }
+
+}
+
+pathsRebase.defaults =
+{
+  resource : null,
+  relative : null,
+  inPath : null,
+  exInPath : null,
+}
 
 // --
 // relations
@@ -294,7 +407,7 @@ let Accessors =
 // declare
 // --
 
-let Proto =
+let Extend =
 {
 
   // inter
@@ -309,6 +422,10 @@ let Proto =
   form3,
 
   dataExport,
+
+  // etc
+
+  pathsRebase,
 
   // relation
 
@@ -328,7 +445,7 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Proto,
+  extend : Extend,
 });
 
 _.Copyable.mixin( Self );

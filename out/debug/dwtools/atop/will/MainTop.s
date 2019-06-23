@@ -12,8 +12,13 @@ if( typeof module !== 'undefined' )
 //
 
 let _ = wTools;
-let Parent = null;
-let Self = _.Will; // _.WillCli xxx
+let Parent = _.Will;
+let Self = function wWillCli( o )
+{
+  return _.instanceConstructor( Self, this, arguments );
+}
+
+Self.shortName = 'WillCli';
 
 // --
 // exec
@@ -336,7 +341,7 @@ function _commandList( e, act, resourceKind )
       _.assert( e.request === undefined );
       e.request = will.Resolver.strRequestParse( e.argument );
 
-      if( will.Resolver.selectorIsSimple( e.request.subject ) )
+      if( will.Resolver.selectorIs( e.request.subject ) )
       {
         let splits = will.Resolver.selectorShortSplit
         ({
@@ -347,7 +352,7 @@ function _commandList( e, act, resourceKind )
         resourceKindIsGlob = _.path.isGlob( resourceKind );
       }
 
-      if( resourceKindIsGlob && e.request.subject && !will.Resolver.selectorIsSimple( e.request.subject ) )
+      if( resourceKindIsGlob && e.request.subject && !will.Resolver.selectorIs( e.request.subject ) )
       {
         e.request.subject = '*::' + e.request.subject;
       }
@@ -979,9 +984,7 @@ let Forbids =
 
 let Accessors =
 {
-
   currentModule : { setter : currentModuleSet },
-
 }
 
 // --
@@ -1045,9 +1048,10 @@ let Extend =
 
 //
 
-_.classExtend
+_.classDeclare
 ({
   cls : Self,
+  parent : Parent,
   extend : Extend,
 });
 

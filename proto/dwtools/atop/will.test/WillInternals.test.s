@@ -56,6 +56,190 @@ function onSuiteEnd()
 // tests
 // --
 
+function selectorParse( test )
+{
+  let self = this;
+  let will = new _.Will;
+  let r = will.Resolver;
+
+  test.case = 'single inline, single split';
+  var expected =
+  [
+    [
+      [ "a", "::", "b" ]
+    ]
+  ]
+  var got = r.selectorParse( '{a::b}' );
+  test.identical( got, expected );
+
+  test.case = 'implicit inline, single split';
+  var expected =
+  [
+    [
+      [ "a", "::", "b" ]
+    ]
+  ]
+  var got = r.selectorParse( 'a::b' );
+  test.identical( got, expected );
+
+  test.case = 'single inline, several splits';
+  var expected =
+  [
+    [
+      [ 'a', '::', 'b' ],
+      [ 'c', '::', 'd' ]
+    ],
+  ]
+  var got = r.selectorParse( '{a::b/c::d}' );
+  test.identical( got, expected );
+
+  test.case = 'implicit inline, several splits';
+  var expected =
+  [
+    [
+      [ 'a', '::', 'b' ],
+      [ 'c', '::', 'd' ]
+    ],
+  ]
+  var got = r.selectorParse( 'a::b/c::d' );
+  test.identical( got, expected );
+
+  test.case = 'single inline, several splits, non-selector sides';
+  var expected =
+  [
+    'x',
+    [
+      [ 'a', '::', 'b' ],
+      [ 'c', '::', 'd' ]
+    ],
+    'y'
+  ]
+  var got = r.selectorParse( 'x{a::b/c::d}y' );
+  test.identical( got, expected );
+
+  test.case = 'several inlines';
+  var expected =
+  [
+    "x",
+    [
+      [ "a", "::", "b" ],
+      [ "c", "::", "d" ]
+    ],
+    "y",
+    [
+      [ "ee", "::", "ff" ],
+      [ "gg", "::", "hhh" ]
+    ],
+    "z",
+  ]
+  var got = r.selectorParse( 'x{a::b/c::d}y{ee::ff/gg::hhh}z' );
+  test.identical( got, expected );
+
+  test.case = 'several inlines, split without ::';
+  var expected =
+  [
+    "x",
+    [
+      [ "a", "::", "b" ],
+      [ "", "", "mid" ],
+      [ "c", "::", "d" ]
+    ],
+    "y",
+    [
+      [ "ee", "::", "ff" ],
+      [ "gg", "::", "hhh" ]
+    ],
+    "z",
+  ]
+  var got = r.selectorParse( 'x{a::b/mid/c::d}y{ee::ff/gg::hhh}z' );
+  test.identical( got, expected );
+
+  test.case = 'critical, no ::';
+  var expected =
+  [
+    'x{mid}y{}z',
+  ]
+  var got = r.selectorParse( 'x{mid}y{}z' );
+  test.identical( got, expected );
+
+  test.case = 'critical, empty side';
+  var expected =
+  [
+    'x',
+    [
+      [ 'aa', '::', '' ]
+    ],
+    'y',
+    [
+      [ '', '::', 'bb' ]
+    ],
+    'z',
+    [
+      [ '', '::', '' ]
+    ]
+  ]
+  var got = r.selectorParse( 'x{aa::}y{::bb}z{::}' );
+  test.identical( got, expected );
+
+}
+
+//
+
+function selectorNormalize( test )
+{
+  let self = this;
+  let will = new _.Will;
+  let r = will.Resolver;
+
+  test.case = 'single inline, single split';
+  var expected = '{a::b}';
+  var got = r.selectorNormalize( '{a::b}' );
+  test.identical( got, expected );
+
+  test.case = 'implicit inline, single split';
+  var expected = '{a::b}'
+  var got = r.selectorNormalize( 'a::b' );
+  test.identical( got, expected );
+
+  test.case = 'single inline, several splits';
+  var expected = '{a::b/c::d}';
+  var got = r.selectorNormalize( '{a::b/c::d}' );
+  test.identical( got, expected );
+
+  test.case = 'implicit inline, several splits';
+  var expected = '{a::b/c::d}';
+  var got = r.selectorNormalize( 'a::b/c::d' );
+  test.identical( got, expected );
+
+  test.case = 'single inline, several splits, non-selector sides';
+  var expected = 'x{a::b/c::d}y';
+  var got = r.selectorNormalize( 'x{a::b/c::d}y' );
+  test.identical( got, expected );
+
+  test.case = 'several inlines';
+  var expected = 'x{a::b/c::d}y{ee::ff/gg::hhh}z';
+  var got = r.selectorNormalize( 'x{a::b/c::d}y{ee::ff/gg::hhh}z' );
+  test.identical( got, expected );
+
+  test.case = 'several inlines, split without ::';
+  var expected = 'x{a::b/mid/c::d}y{ee::ff/gg::hhh}z';
+  var got = r.selectorNormalize( 'x{a::b/mid/c::d}y{ee::ff/gg::hhh}z' );
+  test.identical( got, expected );
+
+  test.case = 'critical, no ::';
+  var expected = 'x{mid}y{}z';
+  var got = r.selectorNormalize( 'x{mid}y{}z' );
+  test.identical( got, expected );
+
+  test.case = 'critical, empty side';
+  var expected = 'x{aa::}y{::bb}z{::}';
+  var got = r.selectorNormalize( 'x{aa::}y{::bb}z{::}' );
+  test.identical( got, expected );
+
+}
+
+//
+
 function buildSimple( test )
 {
   let self = this;
@@ -3950,6 +4134,9 @@ var Self =
   tests :
   {
 
+    selectorParse,
+    selectorNormalize,
+
     buildSimple,
     openNamed,
     openAnon,
@@ -3957,7 +4144,6 @@ var Self =
     clone,
 
     reflectorResolve,
-
     superResolve,
     buildsResolve,
     pathsResolve,

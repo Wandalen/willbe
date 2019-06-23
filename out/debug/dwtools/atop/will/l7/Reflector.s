@@ -403,7 +403,7 @@ function _reflectMapForm( o )
   {
     let dst = reflector.filePath[ src ];
 
-    if( will.Resolver.selectorIsSimple( src ) )
+    if( will.Resolver.selectorIs( src ) )
     {
 
       let resolvedSrc = module.pathResolve
@@ -470,7 +470,9 @@ _reflectMapForm.defaults =
   visited : null,
 }
 
-//
+// --
+// etc
+// --
 
 function sureRelativeOrGlobal( o )
 {
@@ -657,13 +659,13 @@ function pathsResolve( o )
   function resolve( src, pathResolving, side )
   {
 
-    return path.pathMapRefilter( src, ( filePath ) =>
+    return path.pathMapFilterInplace( src, ( filePath ) =>
     {
       if( _.instanceIs( filePath ) )
       return filePath;
       if( _.boolIs( filePath ) )
       return filePath;
-      if( !will.Resolver.selectorIsSimple( filePath ) && !pathResolving )
+      if( !will.Resolver.selectorIs( filePath ) && !pathResolving )
       return filePath;
 
       let r = module.pathResolve
@@ -696,6 +698,105 @@ function pathsResolve( o )
 
 pathsResolve.defaults =
 {
+}
+
+//
+
+function pathsRebase( o )
+{
+  let resource = this;
+  let module = resource.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let Resolver = will.Resolver;
+
+  o = _.routineOptions( pathsRebase, arguments );
+  _.assert( path.isAbsolute( o.inPath ) );
+  _.assert( path.isAbsolute( o.exInPath ) );
+
+  if( !o.relative )
+  o.relative = path.relative( o.inPath, o.exInPath );
+
+  if( o.inPath === o.exInPath )
+  {
+    debugger;
+    return resource;
+  }
+
+  /* */
+
+  // if( resource.name === 'in' )
+  // return resource;
+  // if( resource.name === 'module.dir' )
+  // return resource;
+  //
+  // resource.path = path.pathMapFilterInplace( resource.path, ( filePath ) =>
+  // {
+  //   return replace( filePath );
+  // });
+
+  if( resource.criterion.predefined )
+  return resource;
+
+  if( resource.src.hasAnyPath() )
+  resource.src.prefixPath = path.pathMapFilterInplace( resource.src.prefixPath || null, ( filePath ) =>
+  {
+    if( filePath === null )
+    return o.relative;
+    return resource.pathRebase
+    ({
+      filePath : filePath,
+      exInPath : o.exInPath,
+      inPath : o.inPath,
+    });
+  });
+
+  if( resource.dst.hasAnyPath() )
+  debugger;
+  if( resource.dst.hasAnyPath() )
+  resource.dst.prefixPath = path.pathMapFilterInplace( resource.dst.prefixPath || null, ( filePath ) =>
+  {
+    if( filePath === null )
+    return o.relative;
+    return resource.pathRebase
+    ({
+      filePath : filePath,
+      exInPath : o.exInPath,
+      inPath : o.inPath,
+    });
+  });
+
+  return resource;
+
+  /* */
+
+  // function replace( filePath )
+  // {
+  //   if( filePath )
+  //   if( path.isRelative( filePath ) )
+  //   {
+  //     if( Resolver.selectorIs( filePath ) )
+  //     {
+  //       let filePath2 = Resolver.selectorNormalize( filePath );
+  //       if( _.strBegins( filePath2, '{' ) )
+  //       return filePath;
+  //       filePath = filePath2;
+  //     }
+  //     return path.relative( o.inPath, path.join( o.exInPath, filePath ) );
+  //   }
+  //   return filePath;
+  // }
+
+}
+
+pathsRebase.defaults =
+{
+  resource : null,
+  relative : null,
+  inPath : null,
+  exInPath : null,
 }
 
 //
@@ -833,7 +934,7 @@ function dataExport()
   delete result.filePath;
 
   if( result.dst )
-  if( _.mapIs( reflector.src.filePath ) || ( _.strIs( reflector.src.filePath ) && will.Resolver.selectorIsSimple( reflector.src.filePath ) ) )
+  if( _.mapIs( reflector.src.filePath ) || ( _.strIs( reflector.src.filePath ) && will.Resolver.selectorIs( reflector.src.filePath ) ) )
   if( _.entityIdentical( reflector.src.filePath, reflector.dst.filePath ) )
   delete result.dst.filePath;
 
@@ -958,13 +1059,14 @@ let Extend =
   _inheritSingle,
   _reflectMapForm,
 
-  //
+  // etc
 
   sureRelativeOrGlobal,
   isRelativeOrGlobal,
   prefixesRelative,
   prefixesApply,
   pathsResolve,
+  pathsRebase,
 
   // exporter
 

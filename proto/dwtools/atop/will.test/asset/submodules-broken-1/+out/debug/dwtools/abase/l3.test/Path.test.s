@@ -8402,46 +8402,46 @@ function pathMapFilter( test )
 
 //
 
-function pathMapRefilter( test )
+function pathMapFilterInplace( test )
 {
 
   test.case = 'string';
   var src = '/a/b/c';
-  var got = _.path.pathMapRefilter( src,onEach );
+  var got = _.path.pathMapFilterInplace( src,onEach );
   var expected = '/prefix/a/b/c';
   test.identical( got, expected );
 
   test.case = 'array';
   var src = [ '/a', '/b' ];
-  var got = _.path.pathMapRefilter( src,onEach );
+  var got = _.path.pathMapFilterInplace( src,onEach );
   var expected = [ '/prefix/a', '/prefix/b' ];
   test.identical( got, expected );
   test.identical( got, src );
 
   test.case = 'array filter';
   var src = [ '/a', 'b' ];
-  var got = _.path.pathMapRefilter( src,onEachFilter );
+  var got = _.path.pathMapFilterInplace( src,onEachFilter );
   var expected = [ '/a' ];
   test.identical( got, expected );
   test.identical( src, expected );
 
   test.case = 'map';
   var src = { '/src' : '/dst' };
-  var got = _.path.pathMapRefilter( src,onEach );
+  var got = _.path.pathMapFilterInplace( src,onEach );
   var expected = { '/prefix/src' : '/prefix/dst' };
   test.identical( got, expected );
   test.identical( got, src );
 
   test.case = 'map filter';
   var src = { '/src' : 'dst' };
-  var got = _.path.pathMapRefilter( src,onEachFilter );
+  var got = _.path.pathMapFilterInplace( src,onEachFilter );
   var expected = {};
   test.identical( got, expected );
   test.identical( src, expected );
 
   test.case = 'map filter';
   var src = { '/a' : [ '/b', 'c', null, undefined ] };
-  var got = _.path.pathMapRefilter( src,onEachStructure );
+  var got = _.path.pathMapFilterInplace( src,onEachStructure );
   var expected =
   {
     '/src/a' : [ '/dst/b','/dst/c', '/dst', '/dst' ]
@@ -8451,7 +8451,7 @@ function pathMapRefilter( test )
 
   test.case = 'map filter keys, onEach returns array with undefined';
   var src = { '/a' : '/b' };
-  var got = _.path.pathMapRefilter( src,onEachStructureKeys );
+  var got = _.path.pathMapFilterInplace( src,onEachStructureKeys );
   var expected =
   {
     '/src/a' : '/b'
@@ -8462,21 +8462,21 @@ function pathMapRefilter( test )
   test.case = 'map with multiple keys';
   var original = { '/src1' : 'dst1', '/src2' : 'dst2' };
   var src = { '/src1' : 'dst1', '/src2' : 'dst2' };
-  var got = _.path.pathMapRefilter( src, onEach );
+  var got = _.path.pathMapFilterInplace( src, onEach );
   var expected = { '/prefix/src1' : '/prefix/dst1', '/prefix/src2' : '/prefix/dst2' };
   test.identical( got, expected );
   test.is( got === src );
 
   test.case = 'null';
   var src = null;
-  var got = _.path.pathMapRefilter( src,onEach );
+  var got = _.path.pathMapFilterInplace( src,onEach );
   var expected = '/';
   test.identical( got, expected );
 
   if( Config.debug )
   {
     test.case = 'number';
-    test.shouldThrowErrorSync( () => _.path.pathMapRefilter( 1,onEach ) )
+    test.shouldThrowErrorSync( () => _.path.pathMapFilterInplace( 1,onEach ) )
   }
 
   /*  */
@@ -8582,7 +8582,7 @@ var Self =
     common,
 
     pathMapFilter,
-    pathMapRefilter
+    pathMapFilterInplace
 
   },
 

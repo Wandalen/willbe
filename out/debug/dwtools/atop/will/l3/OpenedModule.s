@@ -203,6 +203,9 @@ function optionsForOpener()
     willfilesPath : null,
     localPath : null,
     remotePath : null,
+    inPath : null,
+    outPath : null,
+
     configName : null,
     aliasName : null,
 
@@ -307,6 +310,8 @@ function copy( o )
   let names =
   {
     willfilesPath : null,
+    inPath : null,
+    outPath : null,
     localPath : null,
     remotePath : null,
   }
@@ -318,59 +323,6 @@ function copy( o )
   }
 
   _.assert( result.currentRemotePath === module.currentRemotePath );
-
-  // xxx
-  // if( moduleWithPathMap )
-  // {
-  //
-  //   let left = _.mapKeys( moduleWithPathMap ).length;
-  //   while( left )
-  //   {
-  //
-  //     debugger;
-  //     for( let m in moduleWithPathMap )
-  //     {
-  //
-  //       _.assert( module.moduleWithPathMap[ m ] !== moduleWithPathMap[ m ] );
-  //
-  //       if( module.moduleWithPathMap[ m ] )
-  //       {
-  //         delete moduleWithPathMap[ m ];
-  //         continue;
-  //       }
-  //       if( o.original && o.original.commonPath === m )
-  //       {
-  //         delete moduleWithPathMap[ m ];
-  //         continue;
-  //       }
-  //       if( module.commonPath === m )
-  //       {
-  //         delete moduleWithPathMap[ m ];
-  //         continue;
-  //       }
-  //
-  //       _.assert( !!moduleWithPathMap[ m ].supermodule );
-  //       debugger;
-  //
-  //       let supermodule = module.moduleWithPathMap[ moduleWithPathMap[ m ].supermodule.commonPath ];
-  //
-  //       if( !supermodule )
-  //       continue;
-  //
-  //       module.moduleWithPathMap[ m ] = moduleWithPathMap[ m ].cloneExtending({ supermodule : supermodule });
-  //       _.assert( moduleWithPathMap[ m ].supermodule === supermodule );
-  //
-  //     }
-  //
-  //     let left2 = _.mapKeys( moduleWithPathMap ).length;
-  //     if( left && left === left2 )
-  //     throw _.err( 'Supermodule not found for clone of', module.commonPath );
-  //     left = left2;
-  //
-  //   }
-  //
-  //   debugger;
-  // }
 
   return result;
 }
@@ -477,6 +429,11 @@ function _preform()
   _.assert( !!module.will );
   _.assert( _.strsAreAll( module.willfilesPath ) || _.strIs( module.dirPath ), 'Expects willfilesPath or dirPath' );
 
+  if( module.pathResourceMap.in.path === null )
+  module.pathResourceMap.in.path = '.';
+  if( module.pathResourceMap.out.path === null )
+  module.pathResourceMap.out.path = '.';
+
   /* */
 
   module._filePathChanged();
@@ -515,10 +472,37 @@ function predefinedForm()
 
   path
   ({
+    name : 'in',
+    path : '.',
+    writable : 1,
+    exportable : 1,
+    importable : 1,
+    criterion :
+    {
+      predefined : 0,
+    },
+  })
+
+  path
+  ({
+    name : 'out',
+    path : '.',
+    writable : 1,
+    exportable : 1,
+    importable : 1,
+    criterion :
+    {
+      predefined : 0,
+    },
+  })
+
+  path
+  ({
     name : 'module.willfiles',
     path : null,
-    writable : 0,
+    writable : 1,
     exportable : 1,
+    importable : 1,
   })
 
   path
@@ -527,6 +511,7 @@ function predefinedForm()
     path : null,
     writable : 0,
     exportable : 1,
+    importable : 1,
   })
 
   path
@@ -534,7 +519,7 @@ function predefinedForm()
     name : 'module.dir',
     path : null,
     writable : 0,
-    exportable : 1,
+    exportable : 0, // yyy
     importable : 0,
   })
 
@@ -562,6 +547,7 @@ function predefinedForm()
     path : null,
     writable : 1,
     exportable : 1,
+    importable : 1,
   })
 
   path
@@ -971,7 +957,7 @@ function exportAuto()
   {
     'about' :
     {
-      'name' : 'Proto',
+      'name' : 'Extend',
       'version' : '0.1.0'
     },
     'path' :
@@ -979,7 +965,7 @@ function exportAuto()
       'in' : '..',
       'out' : '.module',
       'remote' : 'git+https :///github.com/Wandalen/wProto.git',
-      'local' : '.module/Proto',
+      'local' : '.module/Extend',
       'export' : '{path::local}/proto'
     },
     'reflector' :
@@ -1032,7 +1018,7 @@ function isOpened()
 {
   let module = this;
   debugger; xxx
-  return module.willfileArray.length > 0;
+  return module.willfileArray.length > 0 && module.stager.stageStateEnded( 'opened' );
 }
 
 //
@@ -2503,13 +2489,19 @@ function resourceObtain( resourceKind, resourceName )
   _.assert( arguments.length === 2 );
   _.assert( _.strIs( resourceName ) );
 
-  let resource = module.resolve
-  ({
-    selector : resourceKind + '::' + resourceName,
-    pathResolving : 0,
-    pathUnwrapping : 0,
-    missingAction : 'undefine',
-  });
+  let resourceMap = module.resourceMapForKind( resourceKind );
+
+  _.sure( !!resourceMap, 'No resource map of kind' + resourceKind );
+
+  let resource = resourceMap[ resourceName ];
+
+  // let resource = module.resolve
+  // ({
+  //   selector : resourceKind + '::' + resourceName,
+  //   pathResolving : 0,
+  //   pathUnwrapping : 0,
+  //   missingAction : 'undefine',
+  // });
 
   if( !resource )
   resource = module.resourceAllocate( resourceKind, resourceName );
@@ -2575,13 +2567,121 @@ function resourceNameAllocate( resourceKind, resourceName )
 // path
 // --
 
-function cloneDirPathGet()
+function pathsRebase( o )
 {
   let module = this;
   let will = module.will;
-  let inPath = module.rootModule.inPath;
-  _.assert( arguments.length === 0 );
-  return module.CloneDirPathFor( inPath );
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let Resolver = will.Resolver;
+
+  o = _.routineOptions( pathsRebase, arguments );
+  _.assert( path.isAbsolute( o.inPath ) );
+
+  let inPathResource = module.resourceObtain( 'path', 'in' );
+  if( inPathResource.path === null )
+  inPathResource.path = '.';
+
+  let inPath = path.normalizeStrict( o.inPath );
+  let exInPath = module.inPath;
+  let relative = path.relative( inPath, exInPath );
+
+  if( inPath === exInPath )
+  {
+    debugger;
+    return;
+  }
+
+  for( let p in module.pathResourceMap )
+  {
+    let resource = module.pathResourceMap[ p ];
+
+    if( p === 'in' )
+    continue;
+    if( p === 'module.dir' )
+    continue;
+
+    resource.pathsRebase
+    ({
+      relative : relative,
+      exInPath : exInPath,
+      inPath : inPath,
+    });
+
+    // resource.path = path.pathMapFilterInplace( resource.path, ( filePath ) =>
+    // {
+    //   return replace( filePath );
+    // });
+
+  }
+
+  module.inPath = inPath;
+
+  _.assert( module.pathResourceMap[ inPathResource.name ] === inPathResource );
+  _.assert( module.inPath === inPath );
+  _.assert( path.isRelative( module.pathResourceMap.in.path ) );
+
+  /* */
+
+  for( let r in module.reflectorMap )
+  {
+    let resource = module.reflectorMap[ r ];
+
+    resource.pathsRebase
+    ({
+      relative : relative,
+      exInPath : exInPath,
+      inPath : inPath,
+    });
+
+    // if( resource.criterion.predefined )
+    // continue;
+    //
+    // if( resource.src.hasAnyPath() )
+    // resource.src.prefixPath = path.pathMapFilterInplace( resource.src.prefixPath || null, ( filePath ) =>
+    // {
+    //   if( filePath === null )
+    //   return relative;
+    //   return replace( filePath );
+    // });
+    //
+    // if( resource.dst.hasAnyPath() )
+    // debugger;
+    // if( resource.dst.hasAnyPath() )
+    // resource.dst.prefixPath = path.pathMapFilterInplace( resource.dst.prefixPath || null, ( filePath ) =>
+    // {
+    //   if( filePath === null )
+    //   return relative;
+    //   return replace( filePath );
+    // });
+
+  }
+
+  // /* */
+  //
+  // function replace( filePath )
+  // {
+  //   if( filePath )
+  //   if( path.isRelative( filePath ) )
+  //   {
+  //     if( Resolver.selectorIs( filePath ) )
+  //     {
+  //       let filePath2 = Resolver.selectorNormalize( filePath );
+  //       if( _.strBegins( filePath2, '{' ) )
+  //       return filePath;
+  //       filePath = filePath2;
+  //     }
+  //     return path.relative( inPath, path.join( exInPath, filePath ) );
+  //   }
+  //   return filePath;
+  // }
+
+}
+
+pathsRebase.defaults =
+{
+  inPath : null,
 }
 
 //
@@ -2646,6 +2746,34 @@ function _filePathChanged()
 
 //
 
+function cloneDirPathGet()
+{
+  let module = this;
+  let will = module.will;
+  let inPath = module.rootModule.inPath;
+  _.assert( arguments.length === 0 );
+  return module.CloneDirPathFor( inPath );
+}
+
+//
+
+function predefinedPathGet_functor( fieldName, resourceName )
+{
+
+  return function predefinedPathGet()
+  {
+    let module = this;
+
+    if( !module.will)
+    return null;
+
+    return module.pathMap[ resourceName ] || null;
+  }
+
+}
+
+//
+
 function inPathGet()
 {
   let module = this;
@@ -2668,24 +2796,7 @@ function outPathGet()
 
 //
 
-function predefinedPathGet_functor( fieldName, resourceName )
-{
-
-  return function predefinedPathGet()
-  {
-    let module = this;
-
-    if( !module.will)
-    return null;
-
-    return module.pathMap[ resourceName ] || null;
-  }
-
-}
-
-//
-
-function predefinedPathSet_functor( fieldName, resourceName )
+function predefinedPathSet_functor( fieldName, resourceName, relativizing )
 {
 
   return function predefinedPathSet( filePath )
@@ -2707,6 +2818,24 @@ function predefinedPathSet_functor( fieldName, resourceName )
 
     _.assert( !!module.pathResourceMap[ resourceName ] );
 
+    if( filePath && module.dirPath )
+    if( relativizing )
+    if( _.path.s.anyAreAbsolute( filePath ) )
+    {
+      let will = module.will;
+      let fileProvider = will.fileProvider;
+      let path = fileProvider.path;
+      _.assert( path.isAbsolute( module.dirPath ) );
+      filePath = path.pathMapFilterInplace( filePath, ( filePath ) =>
+      {
+        if( filePath )
+        if( path.isAbsolute( filePath ) )
+        return path.s.relative( module.dirPath, filePath );
+        debugger;
+        return filePath;
+      });
+    }
+
     module.pathResourceMap[ resourceName ].path = filePath;
 
     return filePath;
@@ -2722,6 +2851,8 @@ let remotePathGet = predefinedPathGet_functor( 'remotePath', 'remote' );
 let currentRemotePathGet = predefinedPathGet_functor( 'currentRemotePath', 'current.remote' );
 let willPathGet = predefinedPathGet_functor( 'willPath', 'will' );
 
+let inPathSet = predefinedPathSet_functor( 'inPath', 'in', 1 );
+let outPathSet = predefinedPathSet_functor( 'outPath', 'out', 1 );
 let willfilesPathSet = predefinedPathSet_functor( 'willfilesPath', 'module.willfiles' );
 let _dirPathChange = predefinedPathSet_functor( 'dirPath', 'module.dir' );
 let _commonPathChange = predefinedPathSet_functor( 'commonPath', 'module.common' );
@@ -3487,6 +3618,8 @@ function dataExportForModuleExport( o )
   let o2 = module.optionsForOpener();
   o2.willfilesPath = o.willfilesPath;
   o2.willfileArray = [];
+  // o2.inPath = path.relative( module.outPath, module.dirPath );
+  o2.inPath = path.relative( module.outPath, module.inPath );
   let opener2 = new will.OpenerModule( o2 );
 
   _.assert( opener2.supermodule === null );
@@ -3497,7 +3630,11 @@ function dataExportForModuleExport( o )
   opener2.rootModule = module;
   opener2.original = module;
 
+  // debugger;
   let module2 = opener2.openCloning( module );
+  // debugger;
+
+  module2.pathsRebase({ inPath : module.outPath });
 
   _.assert( module2.dirPath === path.trail( module.outPath ) );
   _.assert( module2.original === module );
@@ -3511,10 +3648,11 @@ function dataExportForModuleExport( o )
   _.assert( opener2.willfileArray.length === 0 );
 
   let inPathResource = module2.resourceObtain( 'path', 'in' );
-  let outPathResource = module2.resourceObtain( 'path', 'out' );
+  // let outPathResource = module2.resourceObtain( 'path', 'out' );
+  // inPathResource.path = path.relative( module.outPath, module.inPath );
 
-  inPathResource.path = path.relative( module.outPath, module.inPath );
-  _.assert( module2.pathResourceMap[ inPathResource.name ] === inPathResource );
+  _.assert( module2.pathResourceMap.in === inPathResource );
+  // _.assert( module2.pathResourceMap.in.path === '/.' ); // xxx
 
   module2.stager.stageStateSkipping( 'picked', 1 );
   module2.stager.stageStateSkipping( 'opened', 1 );
@@ -3531,7 +3669,8 @@ function dataExportForModuleExport( o )
   module2.dataExport({ dst : data });
 
   _.assert( !data.path || !!data.path[ 'module.willfiles' ] );
-  _.assert( !data.path || !!data.path[ 'module.dir' ] );
+  // _.assert( !data.path || !!data.path[ 'module.dir' ] ); // yyy
+  _.assert( !data.path || !data.path[ 'module.dir' ] );
   _.assert( !data.path || data.path[ 'remote' ] !== undefined );
   _.assert( !data.path || !data.path[ 'current.remote' ] );
   _.assert( !data.path || !data.path[ 'will' ] );
@@ -3626,6 +3765,19 @@ function resourceImport( o )
   _.assert( module instanceof will.OpenedModule );
   _.assert( srcModule === null || srcModule instanceof will.OpenedModule );
 
+  if( o.srcResource.pathsRebase )
+  {
+    _.assert( o.srcResource.original === null );
+
+    o.srcResource = o.srcResource.cloneDerivative();
+    o.srcResource.pathsRebase
+    ({
+      exInPath : srcModule.inPath,
+      inPath : module.inPath,
+    });
+
+  }
+
   let resourceData = o.srcResource.dataExport();
 
   if( _.mapIs( resourceData ) )
@@ -3669,7 +3821,8 @@ function resourceImport( o )
     }
   }
 
-  _.assert( _.objectIs( resourceData ) );
+  _.assert( _.mapIs( resourceData ) );
+
   resourceData.module = module;
   resourceData.name = module.resourceNameAllocate( o.srcResource.KindName, o.srcResource.name );
 
@@ -3760,8 +3913,10 @@ let Composes =
 {
 
   willfilesPath : null, // xxx
-  localPath : null, // xxx
-  remotePath : null, // xxx
+  inPath : null,
+  outPath : null,
+  localPath : null,
+  remotePath : null,
 
   aliasName : null,
   configName : null,
@@ -3905,16 +4060,16 @@ let Accessors =
   name : { getter : nameGet, readOnly : 1 },
   absoluteName : { getter : absoluteNameGet, readOnly : 1 },
 
-  inPath : { getter : inPathGet, readOnly : 1 },
-  outPath : { getter : outPathGet, readOnly : 1 },
-  commonPath : { getter : commonPathGet, readOnly : 1 },
   willfilesPath : { getter : willfilesPathGet, setter : willfilesPathSet },
   dirPath : { getter : dirPathGet, readOnly : 1 },
-  localPath : { getter : localPathGet, setter : localPathSet },
-  remotePath : { getter : remotePathGet, setter : remotePathSet },
-
+  commonPath : { getter : commonPathGet, readOnly : 1 },
   currentRemotePath : { getter : currentRemotePathGet, readOnly : 1 },
   willPath : { getter : willPathGet, readOnly : 1 },
+
+  inPath : { getter : inPathGet, setter : inPathSet },
+  outPath : { getter : outPathGet, setter : outPathSet },
+  localPath : { getter : localPathGet, setter : localPathSet },
+  remotePath : { getter : remotePathGet, setter : remotePathSet },
 
 }
 
@@ -3922,7 +4077,7 @@ let Accessors =
 // declare
 // --
 
-let Proto =
+let Extend =
 {
 
   // inter
@@ -4022,8 +4177,10 @@ let Proto =
 
   // path
 
+  pathsRebase,
   _filePathChange,
   _filePathChanged,
+
   inPathGet,
   outPathGet,
   cloneDirPathGet,
@@ -4102,7 +4259,7 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Proto,
+  extend : Extend,
 });
 
 // _.Copyable.mixin( Self );

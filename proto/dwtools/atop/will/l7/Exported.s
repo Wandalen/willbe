@@ -635,7 +635,7 @@ let Accessors =
 // declare
 // --
 
-let Proto =
+let Extend =
 {
 
   finit,
@@ -671,7 +671,7 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Proto,
+  extend : Extend,
 });
 
 _.Copyable.mixin( Self );
