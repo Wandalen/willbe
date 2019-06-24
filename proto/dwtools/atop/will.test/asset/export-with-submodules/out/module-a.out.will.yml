@@ -35,7 +35,7 @@ path:
       predefined: 0
   temp:
     path:
-      - '{path::out}'
+      - 'path::out'
       - ../out2
   exported.dir.proto.export:
     path: ../proto/a
@@ -64,7 +64,7 @@ reflector:
     src:
       filePath: 'path::exported.files.proto.export'
       basePath: .
-      prefixPath: '{path::exported.dir.proto.export}'
+      prefixPath: 'path::exported.dir.proto.export'
     criterion:
       default: 1
       export: 1

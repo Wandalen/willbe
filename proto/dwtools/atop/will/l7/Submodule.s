@@ -299,6 +299,8 @@ function errorNotFound( err )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
+  debugger;
+
   if( will.verbosity >= 3 )
   logger.error( ' ' + _.color.strFormat( '!', 'negative' ) + ' Failed to read ' + submodule.decoratedNickName + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading' );
 
@@ -522,6 +524,56 @@ function infoExport()
 }
 
 // --
+// etc
+// --
+
+function pathsRebase( o )
+{
+  let resource = this;
+  let module = resource.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let Resolver = will.Resolver;
+
+  o = _.routineOptions( pathsRebase, arguments );
+  _.assert( path.isAbsolute( o.inPath ) );
+  _.assert( path.isAbsolute( o.exInPath ) );
+
+  if( !o.relative )
+  o.relative = path.relative( o.inPath, o.exInPath );
+
+  if( o.inPath === o.exInPath )
+  {
+    debugger;
+    return resource;
+  }
+
+  /* */
+
+  resource.path = path.pathMapFilterInplace( resource.path, ( filePath ) =>
+  {
+    return resource.pathRebase
+    ({
+      filePath : filePath,
+      exInPath : o.exInPath,
+      inPath : o.inPath,
+    });
+  });
+
+  return resource;
+}
+
+pathsRebase.defaults =
+{
+  resource : null,
+  relative : null,
+  inPath : null,
+  exInPath : null,
+}
+
+// --
 // relations
 // --
 
@@ -621,6 +673,8 @@ let Extend =
 
   dataExport,
   infoExport,
+
+  pathsRebase,
 
   // relation
 

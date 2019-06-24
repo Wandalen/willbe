@@ -2593,6 +2593,8 @@ function pathsRebase( o )
     return;
   }
 
+  /* path */
+
   for( let p in module.pathResourceMap )
   {
     let resource = module.pathResourceMap[ p ];
@@ -2609,11 +2611,6 @@ function pathsRebase( o )
       inPath : inPath,
     });
 
-    // resource.path = path.pathMapFilterInplace( resource.path, ( filePath ) =>
-    // {
-    //   return replace( filePath );
-    // });
-
   }
 
   module.inPath = inPath;
@@ -2622,7 +2619,22 @@ function pathsRebase( o )
   _.assert( module.inPath === inPath );
   _.assert( path.isRelative( module.pathResourceMap.in.path ) );
 
-  /* */
+  /* submodule */
+
+  for( let p in module.submoduleMap )
+  {
+    let resource = module.submoduleMap[ p ];
+
+    resource.pathsRebase
+    ({
+      relative : relative,
+      exInPath : exInPath,
+      inPath : inPath,
+    });
+
+  }
+
+  /* reflector */
 
   for( let r in module.reflectorMap )
   {
@@ -2635,47 +2647,7 @@ function pathsRebase( o )
       inPath : inPath,
     });
 
-    // if( resource.criterion.predefined )
-    // continue;
-    //
-    // if( resource.src.hasAnyPath() )
-    // resource.src.prefixPath = path.pathMapFilterInplace( resource.src.prefixPath || null, ( filePath ) =>
-    // {
-    //   if( filePath === null )
-    //   return relative;
-    //   return replace( filePath );
-    // });
-    //
-    // if( resource.dst.hasAnyPath() )
-    // debugger;
-    // if( resource.dst.hasAnyPath() )
-    // resource.dst.prefixPath = path.pathMapFilterInplace( resource.dst.prefixPath || null, ( filePath ) =>
-    // {
-    //   if( filePath === null )
-    //   return relative;
-    //   return replace( filePath );
-    // });
-
   }
-
-  // /* */
-  //
-  // function replace( filePath )
-  // {
-  //   if( filePath )
-  //   if( path.isRelative( filePath ) )
-  //   {
-  //     if( Resolver.selectorIs( filePath ) )
-  //     {
-  //       let filePath2 = Resolver.selectorNormalize( filePath );
-  //       if( _.strBegins( filePath2, '{' ) )
-  //       return filePath;
-  //       filePath = filePath2;
-  //     }
-  //     return path.relative( inPath, path.join( exInPath, filePath ) );
-  //   }
-  //   return filePath;
-  // }
 
 }
 
@@ -3578,9 +3550,6 @@ function dataExport( o )
   o.dst.build = module.dataExportResources( module.buildMap, o2 );
   o.dst.exported = module.dataExportResources( module.exportedMap, o2 );
 
-  // if( module.moduleWithPathMap ) // xxx
-  // o.dst.module = module.dataExportModules( module.moduleWithPathMap, o2 );
-
   if( o.rootModule === module )
   {
     debugger;
@@ -3618,7 +3587,6 @@ function dataExportForModuleExport( o )
   let o2 = module.optionsForOpener();
   o2.willfilesPath = o.willfilesPath;
   o2.willfileArray = [];
-  // o2.inPath = path.relative( module.outPath, module.dirPath );
   o2.inPath = path.relative( module.outPath, module.inPath );
   let opener2 = new will.OpenerModule( o2 );
 
@@ -3630,9 +3598,7 @@ function dataExportForModuleExport( o )
   opener2.rootModule = module;
   opener2.original = module;
 
-  // debugger;
   let module2 = opener2.openCloning( module );
-  // debugger;
 
   module2.pathsRebase({ inPath : module.outPath });
 
@@ -3640,19 +3606,13 @@ function dataExportForModuleExport( o )
   _.assert( module2.original === module );
   _.assert( module2.rootModule === module );
   _.assert( module2.willfileArray.length === 0 );
+  _.assert( module2.pathResourceMap.in.path === '.' );
 
   _.assert( opener2.dirPath === path.trail( module.outPath ) );
   _.assert( opener2.original === module );
   _.assert( opener2.supermodule === null );
   _.assert( opener2.rootModule === module );
   _.assert( opener2.willfileArray.length === 0 );
-
-  let inPathResource = module2.resourceObtain( 'path', 'in' );
-  // let outPathResource = module2.resourceObtain( 'path', 'out' );
-  // inPathResource.path = path.relative( module.outPath, module.inPath );
-
-  _.assert( module2.pathResourceMap.in === inPathResource );
-  // _.assert( module2.pathResourceMap.in.path === '/.' ); // xxx
 
   module2.stager.stageStateSkipping( 'picked', 1 );
   module2.stager.stageStateSkipping( 'opened', 1 );
@@ -3669,7 +3629,6 @@ function dataExportForModuleExport( o )
   module2.dataExport({ dst : data });
 
   _.assert( !data.path || !!data.path[ 'module.willfiles' ] );
-  // _.assert( !data.path || !!data.path[ 'module.dir' ] ); // yyy
   _.assert( !data.path || !data.path[ 'module.dir' ] );
   _.assert( !data.path || data.path[ 'remote' ] !== undefined );
   _.assert( !data.path || !data.path[ 'current.remote' ] );
@@ -3737,7 +3696,7 @@ function dataExportModules( modules, options )
     }
     else
     {
-      result[ relative ] = module.dataExport( options );
+      result[ relative ] = module.dataExport( _.mapExtend( null, options ) );
     }
 
     if( result[ relative ] === undefined )

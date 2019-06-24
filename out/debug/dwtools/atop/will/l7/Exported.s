@@ -557,7 +557,9 @@ function perform( frame )
 
   /* */
 
+  // debugger;
   exported.readExported();
+  // debugger;
   exported.performExportedReflectors( opts.export );
   exported.performExportedFilesReflector();
   exported.performPaths();

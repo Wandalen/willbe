@@ -266,8 +266,6 @@ function pathsRebase( o )
   if( !o.relative )
   o.relative = path.relative( o.inPath, o.exInPath );
 
-  debugger
-
   if( o.inPath === o.exInPath )
   {
     debugger;
@@ -291,60 +289,7 @@ function pathsRebase( o )
     });
   });
 
-/*
-  if( resource.criterion.predefined )
   return resource;
-
-  if( resource.src.hasAnyPath() )
-  resource.src.prefixPath = path.pathMapFilterInplace( resource.src.prefixPath || null, ( filePath ) =>
-  {
-    if( filePath === null )
-    return o.relative;
-    return resource.pathRebase
-    ({
-      filePath : filePath,
-      exInPath : o.exInPath,
-      inPath : o.inPath,
-    });
-  });
-
-  if( resource.dst.hasAnyPath() )
-  debugger;
-  if( resource.dst.hasAnyPath() )
-  resource.dst.prefixPath = path.pathMapFilterInplace( resource.dst.prefixPath || null, ( filePath ) =>
-  {
-    if( filePath === null )
-    return o.relative;
-    return resource.pathRebase
-    ({
-      filePath : filePath,
-      exInPath : o.exInPath,
-      inPath : o.inPath,
-    });
-  });
-*/
-
-  return resource;
-
-  /* */
-
-  // function replace( filePath )
-  // {
-  //   if( filePath )
-  //   if( path.isRelative( filePath ) )
-  //   {
-  //     if( Resolver.selectorIs( filePath ) )
-  //     {
-  //       let filePath2 = Resolver.selectorNormalize( filePath );
-  //       if( _.strBegins( filePath2, '{' ) )
-  //       return filePath;
-  //       filePath = filePath2;
-  //     }
-  //     return path.relative( o.inPath, path.join( o.exInPath, filePath ) );
-  //   }
-  //   return filePath;
-  // }
-
 }
 
 pathsRebase.defaults =

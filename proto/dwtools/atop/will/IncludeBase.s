@@ -12,6 +12,8 @@ if( typeof module !== 'undefined' )
   _.include( 'wVerbal' );
   _.include( 'wLogger' );
   _.include( 'wTemplateTreeEnvironment' );
+  _.include( 'wStager' );
+  _.include( 'wGraph' );
 
   _.include( 'wFiles' );
   _.include( 'wFilesArchive' );
@@ -22,8 +24,6 @@ if( typeof module !== 'undefined' )
   _.include( 'wCommandsAggregator' );
   _.include( 'wCommandsConfig' );
   _.include( 'wNameMapper' );
-
-  _.include( 'wStager' );
 
 }
 

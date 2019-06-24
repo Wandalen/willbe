@@ -727,16 +727,6 @@ function pathsRebase( o )
 
   /* */
 
-  // if( resource.name === 'in' )
-  // return resource;
-  // if( resource.name === 'module.dir' )
-  // return resource;
-  //
-  // resource.path = path.pathMapFilterInplace( resource.path, ( filePath ) =>
-  // {
-  //   return replace( filePath );
-  // });
-
   if( resource.criterion.predefined )
   return resource;
 
@@ -754,8 +744,6 @@ function pathsRebase( o )
   });
 
   if( resource.dst.hasAnyPath() )
-  debugger;
-  if( resource.dst.hasAnyPath() )
   resource.dst.prefixPath = path.pathMapFilterInplace( resource.dst.prefixPath || null, ( filePath ) =>
   {
     if( filePath === null )
@@ -769,26 +757,6 @@ function pathsRebase( o )
   });
 
   return resource;
-
-  /* */
-
-  // function replace( filePath )
-  // {
-  //   if( filePath )
-  //   if( path.isRelative( filePath ) )
-  //   {
-  //     if( Resolver.selectorIs( filePath ) )
-  //     {
-  //       let filePath2 = Resolver.selectorNormalize( filePath );
-  //       if( _.strBegins( filePath2, '{' ) )
-  //       return filePath;
-  //       filePath = filePath2;
-  //     }
-  //     return path.relative( o.inPath, path.join( o.exInPath, filePath ) );
-  //   }
-  //   return filePath;
-  // }
-
 }
 
 pathsRebase.defaults =
