@@ -15,14 +15,14 @@ path:
     path: willbe.out.will.yml
     criterion:
       predefined: 1
+  module.common:
+    path: willbe.out
+    criterion:
+      predefined: 1
   module.original.willfiles:
     path:
       - ../.im.will.yml
       - ../.ex.will.yml
-    criterion:
-      predefined: 1
-  module.common:
-    path: willbe.out
     criterion:
       predefined: 1
   local:

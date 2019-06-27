@@ -777,6 +777,10 @@ function commandWith( e )
   will.topCommand = commandWith;
 
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
+
+  if( !isolated )
+  throw _.err( 'Format is: .with (dir) .action' );
+
   let willfilesPath = path.joinRaw( path.current(), isolated.argument === '.' ? './' : isolated.argument );
 
   let module = will.currentModule = will.OpenerModule({ will : will, willfilesPath : willfilesPath });
@@ -847,6 +851,9 @@ function _commandEach_functor( fop )
     will.topCommand = commandEach;
 
     let isolated = ca.commandIsolateSecondFromArgument( e.argument );
+
+    if( !isolated )
+    throw _.err( 'Format is: .with (dir) .action' );
 
     _.assert( _.objectIs( isolated ), 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
 
