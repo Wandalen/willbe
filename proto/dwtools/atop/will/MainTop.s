@@ -239,6 +239,7 @@ function commandsMake()
     'resources list' :          { e : _.routineJoin( will, will.commandResourcesList ),         h : 'List information about resources of the current module.' },
     'paths list' :              { e : _.routineJoin( will, will.commandPathsList ),             h : 'List paths of the current module.' },
     'submodules list' :         { e : _.routineJoin( will, will.commandSubmodulesList ),        h : 'List submodules of the current module.' },
+    'modules list' :            { e : _.routineJoin( will, will.commandModulesList ),           h : 'List all modules.' },
     'reflectors list' :         { e : _.routineJoin( will, will.commandReflectorsList ),        h : 'List avaialable reflectors the current module.' },
     'steps list' :              { e : _.routineJoin( will, will.commandStepsList ),             h : 'List avaialable steps the current module.' },
     'builds list' :             { e : _.routineJoin( will, will.commandBuildsList ),            h : 'List avaialable builds the current module.' },
@@ -374,9 +375,13 @@ function _commandList( e, act, resourceKind )
       if( resourceKind === 'path' )
       o2.mapValsUnwrapping = 0;
 
+      debugger;
       resources = module.openedModule.resolve( o2 );
 
-      resources = _.filter( resources, ( r ) => r instanceof will.OpenedModule ? undefined : r );
+      if( _.arrayIs( resources ) )
+      resources = _.arrayUnique( resources );
+
+      // resources = _.filter( resources, ( r ) => r instanceof will.OpenedModule ? undefined : r );
 
     }
 
@@ -398,6 +403,7 @@ function commandResourcesList( e )
     if( !e.request.subject && !_.mapKeys( e.request.map ).length )
     {
       let result = '';
+      result += _.color.strFormat( 'About', 'highlighted' );
       result += module.openedModule.about.infoExport();
       logger.log( result );
     }
@@ -435,11 +441,25 @@ function commandSubmodulesList( e )
   function act( module, resources )
   {
     let logger = will.logger;
-    debugger;
     logger.log( module.openedModule.infoExportResource( resources ) );
   }
 
   return will._commandList( e, act, 'submodule' );
+}
+
+//
+
+function commandModulesList( e )
+{
+  let will = this;
+
+  function act( module, resources )
+  {
+    let logger = will.logger;
+    logger.log( module.openedModule.infoExportResource( resources ) );
+  }
+
+  return will._commandList( e, act, 'module' );
 }
 
 //
@@ -492,9 +512,7 @@ function commandBuildsList( e )
     logger.log( module.openedModule.infoExportResource( builds ) );
   }
 
-  will._commandList( e, act, null );
-
-  return will;
+  return will._commandList( e, act, null );
 }
 
 //
@@ -516,9 +534,7 @@ function commandExportsList( e )
     logger.log( module.openedModule.infoExportResource( builds ) );
   }
 
-  will._commandList( e, act, null );
-
-  return will;
+  return will._commandList( e, act, null );
 }
 
 //
@@ -530,12 +546,11 @@ function commandAboutList( e )
   function act( module )
   {
     let logger = will.logger;
+    logger.log( _.color.strFormat( 'About', 'highlighted' ) );
     logger.log( module.openedModule.about.infoExport() );
   }
 
-  will._commandList( e, act, null );
-
-  return will;
+  return will._commandList( e, act, null );
 }
 
 //
@@ -1014,6 +1029,7 @@ let Extend =
   commandResourcesList,
   commandPathsList,
   commandSubmodulesList,
+  commandModulesList,
   commandReflectorsList,
   commandStepsList,
   commandBuildsList,

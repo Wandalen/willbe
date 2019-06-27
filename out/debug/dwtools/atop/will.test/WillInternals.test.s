@@ -313,7 +313,6 @@ function openNamed( test )
 
   var module1 = will.moduleMake({ willfilesPath : modulePath });
   let ready1 = module1.openedModule.ready;
-
   var module2 = will.moduleMake({ willfilesPath : modulePath });
   let ready2 = module2.openedModule.ready;
 
@@ -332,7 +331,6 @@ function openNamed( test )
   {
     test.case = 'opened filePath : ' + assetName;
     test.is( err === undefined );
-    // module1.finit();
     if( err )
     throw err;
     return arg;
@@ -353,14 +351,12 @@ function openNamed( test )
   {
     test.case = 'opened dirPath : ' + assetName;
     test.is( err === undefined );
-    // module2.finit();
     if( err )
     throw err;
     return arg;
   });
 
   return _.Consequence.AndTake([ ready1, ready2 ])
-  // return _.Consequence.AndTake([ ready1 ])
   .finallyKeep( ( err, arg ) =>
   {
     if( err )
@@ -414,7 +410,6 @@ function openNamed( test )
       'out.debug' : './super.out/debug',
       'out.release' : './super.out/release',
 
-      // 'local' : path.join( routinePath, '.' ),
       'local' : null,
       'remote' : null,
       'current.remote' : null,
@@ -430,10 +425,10 @@ function openNamed( test )
     test.identical( module.absoluteName, 'module::supermodule' );
     test.identical( module.inPath, routinePath );
     test.identical( module.outPath, routinePath + '/super.out' );
-    test.identical( module.configName, 'super' );
+    test.identical( module.configName, 'super' ); debugger;
+    test.identical( module.aliasName, null );
     test.identical( module.localPath, null );
     test.identical( module.remotePath, null );
-    // test.identical( module.currentRemotePath, null );
     test.identical( module.willPath, path.join( __dirname, '../will/Exec' ) );
     test.identical( module.dirPath, path.join( routinePath, './' ) );
     test.identical( module.commonPath, path.join( routinePath, 'super' ) );
@@ -445,7 +440,6 @@ function openNamed( test )
     test.identical( module.openedModule.absoluteName, 'module::supermodule' );
     test.identical( module.openedModule.inPath, routinePath );
     test.identical( module.openedModule.outPath, routinePath + '/super.out' );
-    test.identical( module.openedModule.configName, 'super' );
     test.identical( module.openedModule.localPath, null );
     test.identical( module.openedModule.remotePath, null );
     test.identical( module.openedModule.currentRemotePath, null );
@@ -576,6 +570,7 @@ function openAnon( test )
     test.identical( module.commonPath, path.join( routinePath, '.' ) + '/' );
     test.identical( module.willfilesPath, [ routinePath + '/.im.will.yml', routinePath + '/.ex.will.yml' ] );
     test.identical( module.configName, 'openAnon' );
+    test.identical( module.aliasName, null );
     test.identical( module.localPath, null );
     test.identical( module.remotePath, null );
     test.identical( module.willPath, path.join( __dirname, '../will/Exec' ) );
@@ -589,7 +584,7 @@ function openAnon( test )
     test.identical( module.openedModule.dirPath, routinePath + '/' );
     test.identical( module.openedModule.commonPath, path.join( routinePath, '.' ) + '/' );
     test.identical( module.openedModule.willfilesPath, [ routinePath + '/.im.will.yml', routinePath + '/.ex.will.yml' ] );
-    test.identical( module.openedModule.configName, 'openAnon' );
+    // test.identical( module.openedModule.configName, 'openAnon' );
     test.identical( module.openedModule.localPath, null );
     test.identical( module.openedModule.remotePath, null );
     test.identical( module.openedModule.currentRemotePath, null );
@@ -720,6 +715,7 @@ function openOutNamed( test )
     test.identical( module.willfilesPath, routinePath + '/super.out/supermodule.out.will.yml' );
     test.identical( module.commonPath, path.join( routinePath, 'super.out/supermodule.out' ) );
     test.identical( module.configName, 'supermodule.out' );
+    test.identical( module.aliasName, null );
 
     test.is( !!module.openedModule.about );
     test.identical( module.openedModule.about.name, 'supermodule' );
@@ -814,9 +810,9 @@ function clone( test )
 
     test.identical( module2.willfileArray.length, 2 );
     test.identical( _.mapKeys( module2.willfileWithRoleMap ), [ 'import', 'export' ] );
-    test.identical( module2.name, 'super' );
-    test.identical( module2.nickName, 'module::super' );
-    test.identical( module2.absoluteName, 'module::super' );
+    test.identical( module2.name, 'new' );
+    test.identical( module2.nickName, 'module::new' );
+    test.identical( module2.absoluteName, 'module::new' );
     test.identical( module2.inPath, module2.inPath );
     test.identical( module2.outPath, module2.outPath );
 
@@ -825,9 +821,7 @@ function clone( test )
     test.identical( module2.willfileArray.length, 0 );
     test.identical( _.mapKeys( module2.willfileWithRoleMap ), [] );
 
-    debugger;
     module2.openCloning( module.openedModule );
-    debugger;
 
     test.case = 'compare elements';
 
@@ -885,7 +879,7 @@ function clone( test )
     test.open( mapName );
 
     test.is( module.openedModule[ mapName ] !== module2.openedModule[ mapName ] );
-    test.identical( _.mapKeys( module.openedModule[ mapName ] ), _.mapKeys( module2.openedModule[ mapName ] ) );
+    test.setsIdentical( _.mapKeys( module.openedModule[ mapName ] ), _.mapKeys( module2.openedModule[ mapName ] ) );
     for( var k in module.openedModule[ mapName ] )
     {
       var resource1 = module.openedModule[ mapName ][ k ];
@@ -3985,12 +3979,14 @@ function submodulesResolve( test )
     test.identical( submodule.name, 'Tools' );
 
     test.identical( submodule.oModule.name, 'Tools' );
+    test.identical( submodule.oModule.aliasName, 'Tools' );
+    test.identical( submodule.oModule.configName, 'wTools.out' );
     test.identical( submodule.oModule.willfilesPath, _.uri.s.join( routinePath, '.module/Tools/out/wTools.out.will.yml' ) );
     test.identical( submodule.oModule.dirPath, _.uri.join( routinePath, '.module/Tools/out/' ) );
     test.identical( submodule.oModule.localPath, _.uri.join( routinePath, '.module/Tools' ) );
     test.identical( submodule.oModule.remotePath, _.uri.join( repoPath, 'git+hd://Tools?out=out/wTools.out.will#master' ) );
 
-    test.identical( submodule.oModule.openedModule.name, 'Tools' );
+    test.identical( submodule.oModule.openedModule.name, 'wTools' );
     test.identical( submodule.oModule.openedModule.resourcesFormed, 9 );
     test.identical( submodule.oModule.openedModule.submodulesFormed, 9 );
     test.identical( submodule.oModule.openedModule.willfilesPath, _.uri.s.join( routinePath, '.module/Tools/out/wTools.out.will.yml' ) );

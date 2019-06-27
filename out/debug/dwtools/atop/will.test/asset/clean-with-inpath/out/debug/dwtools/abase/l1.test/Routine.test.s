@@ -469,7 +469,7 @@ function routinesCompose( test )
     counter += 10;
     for( var a = 0 ; a < arguments.length ; a++ )
     counter += arguments[ a ];
-    return _.unrollAppend( null, arguments, counter );
+    return _.unrollAppend( _.unrollMake( null ), arguments, counter );
   }
 
   function routineNotUnrolling()
@@ -620,7 +620,7 @@ function routinesComposeAll( test )
     counter += 10;
     for( var a = 0 ; a < arguments.length ; a++ )
     counter += arguments[ a ];
-    return _.unrollAppend( null, arguments, counter );
+    return _.unrollAppend( _.unrollMake( null ), arguments, counter );
   }
 
   function routineNotUnrolling()
@@ -711,7 +711,7 @@ function routinesComposeAllReturningLast( test )
     for( var a = 0 ; a < arguments.length ; a++ )
     counter += arguments[ a ];
     debugger;
-    return _.unrollAppend( null, arguments, counter );
+    return _.unrollAppend( _.unrollMake( null ), arguments, counter );
   }
 
   function routineNotUnrolling()
@@ -802,7 +802,7 @@ function routinesChain( test )
     counter += 10;
     for( var a = 0 ; a < arguments.length ; a++ )
     counter += arguments[ a ];
-    return _.unrollAppend( null, arguments, counter );
+    return _.unrollAppend( _.unrollMake( null ), arguments, counter );
   }
 
   function r2()

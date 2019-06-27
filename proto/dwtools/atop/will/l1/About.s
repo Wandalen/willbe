@@ -90,10 +90,8 @@ let nameGetterSetter =
   set : function()
   {
     let result = _nameGetterSetter.set.apply( this, arguments );
-    // if( this.module )
-    // debugger;
     if( this.module )
-    this.module.nameChanged();
+    this.module._nameChanged();
     return result;
   }
 }
@@ -108,7 +106,8 @@ function infoExport()
   if( Object.keys( fields ).length === 0 )
   return '';
 
-  let result = _.color.strFormat( 'About', 'highlighted' );
+  let result = '';
+  // result += _.color.strFormat( 'About', 'highlighted' );
   result += '\n' + _.toStr( fields, { wrap : 0, levels : 4, multiline : 1 } );
 
   result += '\n\n';

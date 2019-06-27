@@ -2896,7 +2896,7 @@ function arrayPrependedArraysOnceStrictly( dstArray, insArray, evaluator1, evalu
 // array append
 // --
 
-function _arrayAppendUnrolling( dstArray, srcArray )
+function _untrollAppend( dstArray, srcArray )
 {
   _.assert( arguments.length === 2 );
   _.assert( _.arrayIs( dstArray ), 'Expects array' );
@@ -2905,7 +2905,7 @@ function _arrayAppendUnrolling( dstArray, srcArray )
   {
     if( _.unrollIs( srcArray[ a ] ) )
     {
-      _arrayAppendUnrolling( dstArray, srcArray[ a ] );
+      _untrollAppend( dstArray, srcArray[ a ] );
     }
     else
     {
@@ -2918,14 +2918,14 @@ function _arrayAppendUnrolling( dstArray, srcArray )
 
 //
 
-function arrayAppendUnrolling( dstArray )
+function untrollAppend( dstArray )
 {
   _.assert( arguments.length >= 1 );
   _.assert( _.arrayIs( dstArray ) || dstArray === null, 'Expects array' );
 
   dstArray = dstArray || [];
 
-  _._arrayAppendUnrolling( dstArray, _.longSlice( arguments, 1 ) );
+  _._untrollAppend( dstArray, _.longSlice( arguments, 1 ) );
 
   return dstArray;
 }
@@ -5693,8 +5693,8 @@ let Routines =
 
   // array append
 
-  _arrayAppendUnrolling,
-  arrayAppendUnrolling,
+  _untrollAppend,
+  untrollAppend,
   arrayAppend_,
 
   arrayAppend,

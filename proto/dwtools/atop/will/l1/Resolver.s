@@ -287,7 +287,7 @@ function selectorNormalize( src )
 // iterator methods
 // --
 
-function onSelector( selector )
+function _onSelector( selector )
 {
   let it = this;
   let rop = it.selectMultipleOptions.iteratorExtension.resolveOptions;
@@ -298,7 +298,7 @@ function onSelector( selector )
 
   if( will.Resolver._selectorIs( selector ) )
   {
-    return onSelectorComposite.call( it, selector );
+    return Self._onSelectorComposite.call( it, selector );
   }
 
   if( rop.prefixlessAction === 'default' )
@@ -331,12 +331,12 @@ function onSelector( selector )
 
 //
 
-let onSelectorComposite = _.select.functor.onSelectorComposite({ isStrippedSelector : 1 });
-/* let onSelectorDown = _.select.functor.onSelectorDownComposite({}); */
+let _onSelectorComposite = _.select.functor.onSelectorComposite({ isStrippedSelector : 1 });
+/* let _onSelectorDown = _.select.functor.onSelectorDownComposite({}); */
 
 //
 
-function onSelectorDown()
+function _onSelectorDown()
 {
   let it = this;
   let rop = it.selectMultipleOptions.iteratorExtension.resolveOptions;
@@ -365,16 +365,11 @@ function onSelectorDown()
 
 //
 
-function onUpBegin()
+function _onUpBegin()
 {
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
   let will = rop.baseModule.will;
-
-  // if( it.selectOptions.selector === "submodule::*/exported::*=1/reflector::exported.files*=1" )
-  // debugger;
-  // if( rop.selector === 'path::out' )
-  // debugger;
 
   _statusPreUpdate.call( it );
   _globCriterionFilter.call( it );
@@ -394,7 +389,7 @@ function onUpBegin()
 
 //
 
-function onUpEnd()
+function _onUpEnd()
 {
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
@@ -423,7 +418,7 @@ function onUpEnd()
 
 //
 
-function onDownEnd()
+function _onDownEnd()
 {
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
@@ -447,7 +442,7 @@ function onDownEnd()
 
 //
 
-function onQuantitativeFail( err )
+function _onQuantitativeFail( err )
 {
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
@@ -1079,7 +1074,18 @@ function _resourceMapSelect()
   else
   {
 
+    // if( _.path.isGlob( kind ) )
+    // it.src = it.currentModule.resourceMaps();
+    // else
+    // it.src = it.currentModule.resourceMapForKind( kind );
+
     it.src = it.currentModule.resourceMapsForKind( kind );
+
+    // if( !_.path.isGlob( resourceSelector ) )
+    // return module.resourceMapForKind( resourceSelector );
+    // let resources = module.resourceMaps();
+    // let result = _.path.globFilterKeys( resources, resourceSelector );
+    // return result;
 
     if( _.strIs( kind ) && path.isGlob( kind ) )
     {
@@ -1439,6 +1445,7 @@ resolve_body.defaults =
   currentContext : null,
   baseModule : null,
   criterion : null,
+  // submodulesUniquing : 1,
   pathResolving : 'in',
   pathNativizing : 0,
   pathUnwrapping : 1,
@@ -1447,6 +1454,7 @@ resolve_body.defaults =
   mapFlattening : 1,
   arrayWrapping : 0,
   arrayFlattening : 1,
+  // arrayUniquing : 0,
   preservingIteration : 0,
   strictCriterion : 0,
   hasPath : null,
@@ -1495,12 +1503,12 @@ function _resolveAct( o )
       preservingIteration : o.preservingIteration,
       missingAction : o.missingAction === 'undefine' ? 'undefine' : 'error',
 
-      onSelector : onSelector,
-      onSelectorDown : onSelectorDown,
-      onUpBegin : onUpBegin,
-      onUpEnd : onUpEnd,
-      onDownEnd : onDownEnd,
-      onQuantitativeFail : onQuantitativeFail,
+      onSelector : _onSelector,
+      onSelectorDown : _onSelectorDown,
+      onUpBegin : _onUpBegin,
+      onUpEnd : _onUpEnd,
+      onDownEnd : _onDownEnd,
+      onQuantitativeFail : _onQuantitativeFail,
 
       iteratorExtension :
       {
@@ -1649,13 +1657,13 @@ let Self =
 
   // iterator methods
 
-  onSelector,
-  onSelectorComposite,
-  onSelectorDown,
-  onUpBegin,
-  onUpEnd,
-  onDownEnd,
-  onQuantitativeFail,
+  _onSelector,
+  _onSelectorComposite,
+  _onSelectorDown,
+  _onUpBegin,
+  _onUpEnd,
+  _onDownEnd,
+  _onQuantitativeFail,
 
   _pathNativize1,
   _pathsNativize1,

@@ -263,6 +263,9 @@ function pathsRebase( o )
   _.assert( path.isAbsolute( o.inPath ) );
   _.assert( path.isAbsolute( o.exInPath ) );
 
+  if( resource.name === 'out' )
+  debugger;
+
   if( !o.relative )
   o.relative = path.relative( o.inPath, o.exInPath );
 

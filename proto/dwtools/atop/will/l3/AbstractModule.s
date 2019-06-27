@@ -127,33 +127,12 @@ function prefixPathForRoleMaybe( role, isOut )
   return result;
 }
 
-// //
-//
-// function cloneDirPathGet()
-// {
-//   let module = this;
-//   let will = module.will;
-//   let inPath = module.rootModule.inPath;
-//   _.assert( arguments.length === 0 );
-//   return module.CloneDirPathFor( inPath );
-// }
-
 //
 
 function CloneDirPathFor( inPath )
 {
   _.assert( arguments.length === 1 );
   return _.path.join( inPath, '.module' );
-}
-
-//
-
-function outfilePathGet()
-{
-  let module = this;
-  let will = module.will;
-  _.assert( arguments.length === 0 );
-  return module.OutfilePathFor( module.outPath, module.about.name );
 }
 
 //
@@ -169,187 +148,10 @@ function OutfilePathFor( outPath, name )
 
 //
 
-function _filePathChange( willfilesPath, dirPath )
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let commonPath = module.commonPath;
-  // let rootModule = module.rootModule;
-
-  module.modulePathUnregister();
-
-  if( willfilesPath )
-  willfilesPath = path.s.normalizeTolerant( willfilesPath );
-  if( dirPath )
-  dirPath = path.normalize( dirPath );
-
-  _.assert( arguments.length === 2 );
-  _.assert( dirPath === null || _.strDefined( dirPath ) );
-  _.assert( dirPath === null || path.isAbsolute( dirPath ) );
-  _.assert( dirPath === null || path.isNormalized( dirPath ) );
-  _.assert( willfilesPath === null || path.s.allAreAbsolute( willfilesPath ) );
-
-  module.willfilesPath = willfilesPath;
-  module._dirPathChange( dirPath );
-
-  if( !module.remotePath || ( _.arrayIs( module.remotePath ) && module.remotePath.length === 0 ) )
-  if( !path.isGlobal( dirPath ) )
-  {
-    // debugger;
-    // module.localPath = dirPath;
-  }
-
-  module.modulePathRegister();
-
-  return module;
-}
-
-//
-
-function _filePathChanged()
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-
-  _.assert( arguments.length === 0 );
-
-  let dirPath = module.willfilesPath;
-  if( _.arrayIs( dirPath ) )
-  dirPath = dirPath[ 0 ];
-  if( _.strIs( dirPath ) )
-  dirPath = path.dir( dirPath );
-  if( dirPath === null )
-  dirPath = module.dirPath;
-
-  module._filePathChange( module.willfilesPath, dirPath );
-
-}
-
-//
-
-function inPathGet()
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  return path.s.join( module.dirPath, ( module.pathMap.in || '.' ) );
-}
-
-//
-
-function outPathGet()
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  return path.s.join( module.dirPath, ( module.pathMap.in || '.' ), ( module.pathMap.out || '.' ) );
-}
-
-// //
-//
-// function commonPathGet()
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//
-//   let willfilesPath = module.willfilesPath ? module.willfilesPath : module.dirPath;
-//
-//   if( !willfilesPath )
-//   return null;
-//
-//   let common = module.CommonPathFor( willfilesPath );
-//
-//   return common;
-// }
-
-//
-
 function CommonPathFor( willfilesPath )
 {
   return _.Will.CommonPathFor.apply( _.Will, arguments );
-  // if( _.arrayIs( willfilesPath ) )
-  // willfilesPath = willfilesPath[ 0 ];
-  //
-  // _.assert( arguments.length === 1 );
-  // _.assert( _.strIs( willfilesPath ) );
-  //
-  // let common = willfilesPath.replace( /\.will\.\w+$/, '' );
-  //
-  // common = common.replace( /(\.im|\.ex)$/, '' );
-  //
-  // return common;
 }
-
-// //
-//
-// function predefinedPathGet_functor( fieldName, resourceName )
-// {
-//
-//   return function predefinedPathGet()
-//   {
-//     let module = this;
-//
-//     if( !module.will)
-//     return null;
-//
-//     return module.pathMap[ resourceName ] || null;
-//   }
-//
-// }
-//
-// //
-//
-// function predefinedPathSet_functor( fieldName, resourceName )
-// {
-//
-//   return function predefinedPathSet( filePath )
-//   {
-//     let module = this;
-//
-//     // if( fieldName === 'willfilesPath' )
-//     // debugger;
-//
-//     if( !module.will && !filePath )
-//     return filePath;
-//
-//     if( !module.pathResourceMap[ resourceName ] )
-//     {
-//       let resource = new _.Will.PathResource({ module : module, name : resourceName }).form1();
-//       resource.criterion = resource.criterion || Object.create( null );
-//       resource.criterion.predefined = 1;
-//       resource.writable = 0;
-//     }
-//
-//     _.assert( !!module.pathResourceMap[ resourceName ] );
-//
-//     module.pathResourceMap[ resourceName ].path = filePath;
-//
-//     return filePath;
-//   }
-//
-// }
-//
-// let willfilesPathGet = predefinedPathGet_functor( 'willfilesPath', 'module.willfiles' );
-// let dirPathGet = predefinedPathGet_functor( 'dirPath', 'module.dir' );
-// let localPathGet = predefinedPathGet_functor( 'localPath', 'local' );
-// let remotePathGet = predefinedPathGet_functor( 'remotePath', 'remote' );
-// let currentRemotePathGet = predefinedPathGet_functor( 'currentRemotePath', 'current.remote' );
-// let willPathGet = predefinedPathGet_functor( 'willPath', 'will' );
-//
-// let willfilesPathSet = predefinedPathSet_functor( 'willfilesPath', 'module.willfiles' );
-// let _dirPathChange = predefinedPathSet_functor( 'dirPath', 'module.dir' );
-// let localPathSet = predefinedPathSet_functor( 'localPath', 'local' );
-// let remotePathSet = predefinedPathSet_functor( 'remotePath', 'remote' );
 
 // --
 // name
@@ -385,8 +187,7 @@ function decoratedAbsoluteNameGet()
 // --
 
 let functionSymbol = Symbol.for( 'function' );
-let isDownloadedSymbol = Symbol.for( 'isDownloaded' );
-let aliasSymbol = Symbol.for( 'aliasName' );
+let aliasNameSymbol = Symbol.for( 'aliasName' );
 let dirPathSymbol = Symbol.for( 'dirPath' );
 
 let Composes =
@@ -472,11 +273,8 @@ let Extend =
   prefixPathForRole,
   prefixPathForRoleMaybe,
 
-  // commonPathGet,
   CommonPathFor,
-  // cloneDirPathGet,
   CloneDirPathFor,
-  outfilePathGet,
   OutfilePathFor,
 
   // name

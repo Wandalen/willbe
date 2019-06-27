@@ -93,14 +93,6 @@ function form1()
   _.assert( arguments.length === 0 );
   _.assert( submodule.module instanceof will.OpenedModule );
 
-  // if( submodule.oModule )
-  // {
-  //   _.assert( rootModule.allModuleMap[ submodule.longPath ] === submodule.oModule || rootModule.allModuleMap[ submodule.longPath ] === undefined );
-  //   rootModule.allModuleMap[ submodule.longPath ] = submodule.oModule;
-  // }
-
-  // rootModule.submoduleRegister( submodule ); // xxx
-
   /* end */
 
   Parent.prototype.form1.call( submodule );
@@ -123,10 +115,9 @@ function form3()
   {
     if( submodule.oModule && !submodule.oModule.isValid() )
     {
-      debugger; // xxx
+      debugger;
       let oModule = submodule.oModule;
       submodule.oModule = null;
-      // _.assert( oModule.submoduleAssociation.length === 0 );
       oModule.finit();
       submodule.formed = 2; // yyy
     }
@@ -143,7 +134,6 @@ function form3()
 
   /* begin */
 
-  // if( !module.supermodule )
   result = submodule.open();
 
   result.finally( ( err, arg ) =>
@@ -151,11 +141,6 @@ function form3()
 
     if( err )
     submodule.errorNotFound( err );
-
-    // module.submoduleRegister( submodule, submodule.name );
-    // module.rootModule.submoduleRegister( submodule );
-    // debugger;
-    // if( !err )
     submodule.formed = 3;
 
     return arg || null;
@@ -163,7 +148,6 @@ function form3()
 
   /* end */
 
-  // submodule.formed = 3;
   return result;
 }
 
@@ -182,7 +166,8 @@ function close()
   if( !submodule.oModule )
   return submodule;
 
-  debugger; xxx
+  debugger;
+  _.assert( 0, 'not tesed' );
   submodule.oModule.close();
 
   return submodule;
@@ -298,8 +283,6 @@ function errorNotFound( err )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-
-  debugger;
 
   if( will.verbosity >= 3 )
   logger.error( ' ' + _.color.strFormat( '!', 'negative' ) + ' Failed to read ' + submodule.decoratedNickName + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading' );

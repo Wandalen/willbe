@@ -575,7 +575,9 @@ function _routinesCompose_body( o )
   else act = function composition()
   {
     let result = [];
-    let args = _.unrollAppend( null, arguments );
+    // let args = _.unrollAppend( _.unrollFrom( null ), arguments );
+    // debugger;
+    let args = _.unrollFrom( arguments );
     for( let k = 0 ; k < elements.length ; k++ )
     {
       _.assert( _.unrollIs( args ), () => 'Expects unroll, but got', _.strType( args ) );
@@ -584,7 +586,7 @@ function _routinesCompose_body( o )
       _.assert( r !== false /* && r !== undefined */, 'Temporally forbidden type of result', r );
       _.assert( !_.argumentsArrayIs( r ) );
       if( r !== undefined )
-      _.arrayAppendUnrolling( result, r );
+      _.unrollAppend( result, r );
       // args = chainer( r, k, args, o );
       args = chainer( args, r, o, k );
       _.assert( args !== undefined && args !== false );
@@ -634,6 +636,11 @@ routinesCompose.body = _routinesCompose_body;
 routinesCompose.defaults = Object.create( routinesCompose.body.defaults );
 
 //
+
+/* qqq :
+- cover it by GOOD test coverage
+- document it ( jsdoc )
+*/
 
 function routineExtend( dst )
 {
@@ -685,14 +692,14 @@ function routineExtend( dst )
     {
       let property = src[ s ];
       let d = Object.getOwnPropertyDescriptor( dst, s );
-      if( d && !d.wratable )
+      if( d && !d.writable )
       continue;
       if( _.objectIs( property ) )
       {
         _.assert( !_.mapHas( dst, s ) || _.mapIs( dst[ s ] ) );
         property = Object.create( property );
         if( dst[ s ] )
-        _.mapExtend( property, dst[ s ] );
+        _.mapSupplement( property, dst[ s ] );
       }
       dst[ s ] = property;
     }
@@ -752,7 +759,7 @@ function routineFromPreAndBody_body( o )
 
   if( !o.name )
   {
-    _.assert( _.strDefined( o.body.name ), 'Body routine should have anme' );
+    _.assert( _.strDefined( o.body.name ), 'Body routine should have name' );
     o.name = o.body.name;
     if( o.name.indexOf( '_body' ) === o.name.length-5 && o.name.length > 5 )
     o.name = o.name.substring( 0, o.name.length-5 );
@@ -775,7 +782,7 @@ function routineFromPreAndBody_body( o )
 
   let callPreAndBody = r[ o.name ];
 
-  _.assert( _.strDefined( callPreAndBody.name ), 'Looks like your interpreter does not support dynamice naming of functions. Please use ES2015 or later interpreter.' );
+  _.assert( _.strDefined( callPreAndBody.name ), 'Looks like your interpreter does not support dynamic naming of functions. Please use ES2015 or later interpreter.' );
 
   _.routineExtend( callPreAndBody, o.body );
 

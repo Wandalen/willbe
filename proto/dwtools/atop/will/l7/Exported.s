@@ -100,7 +100,7 @@ function verify()
   {
     let submodule = module.submoduleMap[ s ];
     if( !submodule.oModule || !submodule.oModule.isOpened() || !submodule.oModule.isValid() )
-    throw _.errBriefly( submodule.decoratedAbsoluteName, 'is broken' );
+    throw _.errBriefly( ' ! ' + submodule.decoratedAbsoluteName + ' is broken!' );
   }
 
 }

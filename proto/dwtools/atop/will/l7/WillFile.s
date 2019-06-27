@@ -95,8 +95,6 @@ function unform()
 {
   let willf = this;
   let will = willf.will;
-  let openerModule = willf.openerModule;
-  let openedModule = willf.openedModule;
 
   _.assert( arguments.length === 0 );
   _.assert( !!willf.formed );
@@ -116,8 +114,6 @@ function unform()
 function form()
 {
   let willf = this;
-  let openerModule = willf.openerModule;
-  let openedModule = willf.openedModule;
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -131,7 +127,7 @@ function form()
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
   if( willf.formed === 0 )
-  willf.form1();
+  willf.preform();
 
   _.assert( willf.formed === 1 );
 
@@ -145,13 +141,11 @@ function form()
 
 //
 
-function form1()
+function preform()
 {
   _.assert( !!this.will );
 
   let willf = this;
-  let openerModule = willf.openerModule;
-  let openedModule = willf.openedModule;
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -159,17 +153,20 @@ function form1()
 
   _.assert( arguments.length === 0 );
   _.assert( willf.formed === 0 );
-
   _.assert( !!will );
   _.assert( !!fileProvider );
   _.assert( !!logger );
-  _.assert( !!openerModule );
-  _.assert( openerModule.preformed > 0 );
   _.assert( !!will.formed );
 
   /* begin */
 
   willf.register();
+
+  if( will.verbosity >= 3 )
+  if( willf.data )
+  {
+    logger.log( ' . Read from cache . ' + _.color.strFormat( willf.filePath, 'path' ) );
+  }
 
   /* end */
 
@@ -182,12 +179,40 @@ function form1()
 function open()
 {
   let willf = this;
-  let openerModule = willf.openerModule;
-  let openedModule = willf.openedModule;
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+
+  _.assert( willf.formed === 1 || willf.formed === 2 );
+  _.assert( arguments.length === 0 );
+  _.assert( !!will );
+  _.assert( !!fileProvider );
+  _.assert( !!logger );
+  _.assert( !!will.formed );
+
+  /* read */
+
+  willf.read();
+  willf.importToModule();
+
+  _.assert( willf.formed === 3 );
+
+  return true;
+}
+
+//
+
+function read()
+{
+  let willf = this;
+  let will = willf.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  if( willf.formed > 1 )
+  return true;
 
   _.assert( willf.formed === 1 );
   _.assert( arguments.length === 0 );
@@ -195,9 +220,6 @@ function open()
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !!will.formed );
-  _.assert( !!openerModule );
-  _.assert( openerModule.preformed > 0 );
-  _.assert( !!willf.formed );
 
   /* read */
 
@@ -225,6 +247,38 @@ function open()
   {
     throw _.errLogOnce( _.errBriefly( err ) );
   }
+
+  _.sureMapHasOnly( willf.data, willf.KnownSections, () => 'Will file ' + willf.filePath + ' should not have section(s) :' );
+
+  if( willf.data.format !== undefined && willf.data.format !== willf.FormatVersion )
+  throw _.err( 'Does not support format', willf.data.format + ',', 'supports only', willf.FormatVersion );
+
+  _.assert( willf.dirPath === path.dir( willf.filePath ) );
+
+  /* */
+
+  willf.formed = 2;
+  return true;
+}
+
+//
+
+function importToModule()
+{
+  let willf = this;
+  let openedModule = willf.openedModule;
+  let will = willf.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( willf.formed === 2 );
+  _.assert( arguments.length === 0 );
+  _.assert( !!will );
+  _.assert( !!fileProvider );
+  _.assert( !!logger );
+  _.assert( !!will.formed );
+  _.assert( _.mapIs( willf.data ) );
 
   _.sureMapHasOnly( willf.data, willf.KnownSections, () => 'Will file ' + willf.filePath + ' should not have section(s) :' );
 
@@ -258,9 +312,8 @@ function open()
   _.assert( path.s.allAreAbsolute( openedModule.pathResourceMap[ 'module.dir' ].path ) );
   _.assert( path.s.allAreAbsolute( openedModule.pathResourceMap[ 'module.willfiles' ].path ) );
   _.assert( path.s.allAreAbsolute( openedModule.pathResourceMap[ 'will' ].path ) );
-  // _.assert( path.s.allAreAbsolute( openedModule.pathResourceMap[ 'local' ].path ) );
 
-  willf.formed = 2;
+  willf.formed = 3;
   return true;
 }
 
@@ -269,8 +322,6 @@ function open()
 function resourceImport_pre( routine, args )
 {
   let willf = this;
-  let openerModule = willf.openerModule;
-  let openedModule = willf.openedModule;
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -290,7 +341,6 @@ function resourceImport_pre( routine, args )
 function resourceImport_body( o )
 {
   let willf = this;
-  let openerModule = willf.openerModule;
   let openedModule = willf.openedModule;
   let will = openedModule.will;
   let fileProvider = will.fileProvider;
@@ -318,8 +368,7 @@ function resourceImport_body( o )
   o2.Importing = 1;
   o2.IsOutFile = willf.isOutFile;
 
-  // if( _.strHas( willf.filePath, "UriFundamentals.informal.out" ) )
-  // if( o2.name === 'local' )
+  // if( o2.name === 'module.common' )
   // debugger;
 
   try
@@ -348,8 +397,6 @@ let resourceImport = _.routineFromPreAndBody( resourceImport_pre, resourceImport
 function resourcesImport_pre( routine, args )
 {
   let willf = this;
-  let openerModule = willf.openerModule;
-  let openedModule = willf.openedModule;
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -370,8 +417,6 @@ function resourcesImport_pre( routine, args )
 function resourcesImport_body( o )
 {
   let willf = this;
-  let openerModule = willf.openerModule;
-  let openedModule = willf.openedModule;
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -418,16 +463,9 @@ function pathsMake_body( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-
   let dirPath = openedModule.dirPath;
 
-  // if( _.strHas( willf.filePath, "UriFundamentals.informal.out" ) )
-  // debugger;
-
   let result = willf.resourcesImport.body.call( willf, o );
-
-  // if( _.strHas( willf.filePath, "UriFundamentals.informal.out" ) )
-  // debugger;
 
   if( dirPath && path.isAbsolute( dirPath ) && dirPath !== openedModule.dirPath )
   {
@@ -465,7 +503,6 @@ let pathsImport = _.routineFromPreAndBody( resourcesImport_pre, pathsMake_body )
 function reflectorsImport( Reflector, resources )
 {
   let willf = this;
-  let openerModule = willf.openerModule;
   let openedModule = willf.openedModule;
   let will = willf.will;
   let fileProvider = will.fileProvider;
@@ -481,7 +518,6 @@ function reflectorsImport( Reflector, resources )
   _.each( resources, ( resource, name ) =>
   {
 
-    // debugger;
     let resource2 = _.mapExtend( null, resource )
     if( Reflector.OptionsFrom )
     resource2 = Reflector.OptionsFrom( resource2 );
@@ -505,7 +541,6 @@ function reflectorsImport( Reflector, resources )
       o3.inherit = 'shell.run';
       o3.shell = resource.shell;
       o3.Importing = 1;
-      // o3.Optional = 1;
 
       willf.resourceImport
       ({
@@ -513,16 +548,6 @@ function reflectorsImport( Reflector, resources )
         resourceClass : will.Step,
         name : name,
       });
-
-      // try
-      // {
-      //   will.Step.MakeForEachCriterion( o3 );
-      // }
-      // catch( err )
-      // {
-      //   debugger;
-      //   throw _.err( 'Cant form', will.Step.KindName + '::' + o3.name, '\n', err );
-      // }
 
     }
     else if( !openedModule.stepMap[ name ] )
@@ -545,16 +570,6 @@ function reflectorsImport( Reflector, resources )
         name : name,
       });
 
-      // try
-      // {
-      //   will.Step.MakeForEachCriterion( o3 );
-      // }
-      // catch( err )
-      // {
-      //   debugger;
-      //   throw _.err( 'Cant form', will.Step.KindName + '::' + o3.name, '\n', err );
-      // }
-
     }
 
   });
@@ -567,7 +582,6 @@ function _inPathsForm()
 {
   let willf = this;
   let openerModule = willf.openerModule;
-  let openedModule = willf.openedModule;
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -617,12 +631,9 @@ function CommonPathFor( willfilesPath )
 function commonPathGet()
 {
   let willf = this;
-  let openerModule = willf.openerModule;
-  let openedModule = willf.openedModule;
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-
   let willfilesPath = willf.filePath ? willf.filePath : willf.dirPath;
 
   let common = willf.CommonPathFor( willfilesPath );
@@ -635,8 +646,6 @@ function commonPathGet()
 function exists()
 {
   let willf = this;
-  let openerModule = willf.openerModule;
-  let openedModule = willf.openedModule;
   let will = willf.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -653,13 +662,9 @@ function exists()
 
     if( willf._found.length )
     {
-
-      // debugger;
       willf.unregister();
       willf.filePath = willf._found[ 0 ].particularPath;
       willf.register();
-      // debugger;
-
     }
 
   }
@@ -764,8 +769,10 @@ let Extend =
   unregister,
   unform,
   form,
-  form1,
+  preform,
   open,
+  read,
+  importToModule,
 
   resourceImport,
   resourcesImport,

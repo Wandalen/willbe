@@ -7,8 +7,8 @@ about :
 
 submodule :
 
-  sub-a : ./out/module-a
-  sub-b : ./out/module-b
+  sub-a : ./out/module-a.out
+  sub-b : ./out/module-b.out
 
 path :
 

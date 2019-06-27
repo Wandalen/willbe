@@ -653,9 +653,7 @@ function willfileFor( o )
   }
   else
   {
-
-    willf = new will.Willfile( o ).form1();
-
+    willf = new will.Willfile( o ).preform();
   }
 
   return willf;
@@ -747,6 +745,7 @@ let Associates =
   moduleArray : _.define.own([]),
   moduleWithIdMap : _.define.own({}),
   moduleWithPathMap : _.define.own({}),
+  moduleWithNameMap : _.define.own({}),
 
   openerModuleArray : _.define.own([]),
   openerModuleWithIdMap : _.define.own({}),

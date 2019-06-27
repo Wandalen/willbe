@@ -907,260 +907,6 @@ function argumentsArrayFrom( test )
 
 //
 
-function unrollMake( test )
-{
-
-  test.case = 'empty';
-  var src = [];
-  var got = _.unrollMake( src );
-  var expected = [];
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src !== got );
-
-  test.case = 'single number';
-  var src = [ 0 ];
-  var got = _.unrollMake( src );
-  var expected = [ 0 ];
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src !== got );
-
-  test.case = 'single string';
-  var src = [ 'a' ];
-  var got = _.unrollMake( src );
-  var expected = [ 'a' ];
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src !== got );
-
-  test.case = 'several';
-  var src = [ 1,2,3 ];
-  var got = _.unrollMake( src );
-  var expected = [ 1,2,3 ];
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src !== got );
-
-  test.case = 'zero length';
-  var got = _.unrollMake( 0 );
-  var expected = new Array( 0 );
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src !== got );
-
-  test.case = 'length';
-  var got = _.unrollMake( 3 );
-  var expected = new Array( 3 );
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src !== got );
-
-  test.case = 'from empty Float32';
-  var src = new Float32Array();
-  var got = _.unrollMake( src );
-  var expected = [];
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src !== got );
-
-  test.case = 'from Float32';
-  var src = new Float32Array([ 1,2,3 ]);
-  var got = _.unrollMake( src );
-  var expected = [ 1,2,3 ];
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src !== got );
-
-  test.case = 'from empty arguments array';
-  var src = _.argumentsArrayMake([]);
-  var got = _.unrollMake( src );
-  var expected = [];
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src !== got );
-
-  test.case = 'from arguments array';
-  var src = _.argumentsArrayMake([ 1,2,3 ]);
-  var got = _.unrollMake( src );
-  var expected = [ 1,2,3 ];
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src !== got );
-
-  test.case = 'from empty array';
-  var src = _.arrayMake([]);
-  var got = _.unrollMake( src );
-  var expected = [];
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src !== got );
-
-  test.case = 'from array';
-  var src = _.arrayMake([ 1,2,3 ]);
-  var got = _.unrollMake( src );
-  var expected = [ 1,2,3 ];
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src !== got );
-
-  if( !Config.debug )
-  return;
-
-  test.shouldThrowError( function()
-  {
-    _.unrollMake();
-  });
-
-  test.shouldThrowError( function()
-  {
-    _.unrollMake( 1,3 );
-  });
-
-  test.shouldThrowError( function()
-  {
-    _.unrollMake( [], 3 );
-  });
-
-  test.shouldThrowError( function()
-  {
-    _.unrollMake( [], [] );
-  });
-
-  test.shouldThrowError( function()
-  {
-    _.unrollMake( {} );
-  });
-
-  test.shouldThrowError( function()
-  {
-    _.unrollMake( '1' );
-  });
-
-}
-
-//
-
-function unrollFrom( test )
-{
-
-  test.case = 'empty';
-  var src = [];
-  var got = _.unrollFrom( src );
-  var expected = [];
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src !== got );
-
-  test.case = 'single number';
-  var src = [ 0 ];
-  var got = _.unrollFrom( src );
-  var expected = [ 0 ];
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src !== got );
-
-  test.case = 'single string';
-  var src = [ 'a' ];
-  var got = _.unrollFrom( src );
-  var expected = [ 'a' ];
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src !== got );
-
-  test.case = 'several';
-  var src = [ 1,2,3 ];
-  var got = _.unrollFrom( src );
-  var expected = [ 1,2,3 ];
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src !== got );
-
-  test.case = 'zero length';
-  var got = _.unrollFrom( 0 );
-  var expected = new Array( 0 );
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src !== got );
-
-  test.case = 'length';
-  var got = _.unrollFrom( 3 );
-  var expected = new Array( 3 );
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src !== got );
-
-  /* */
-
-  test.case = 'preserving empty';
-  var src = _.unrollMake([]);
-  var got = _.unrollFrom( src );
-  var expected = [];
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src === got );
-
-  test.case = 'preserving single number';
-  var src = _.unrollMake([ 0 ]);
-  var got = _.unrollFrom( src );
-  var expected = [ 0 ];
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src === got );
-
-  test.case = 'preserving single string';
-  var src = _.unrollMake([ 'a' ]);
-  var got = _.unrollFrom( src );
-  var expected = [ 'a' ];
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src === got );
-
-  test.case = 'preserving several';
-  var src = _.unrollMake([ 1,2,3 ]);
-  var got = _.unrollFrom( src );
-  var expected = [ 1,2,3 ];
-  test.equivalent( got, expected );
-  test.is( _.arrayIs( got ) );
-  test.is( src === got );
-
-  if( !Config.debug )
-  return;
-
-  test.shouldThrowError( function()
-  {
-    _.unrollFrom();
-  });
-
-  test.shouldThrowError( function()
-  {
-    _.unrollFrom( 1,3 );
-  });
-
-  test.shouldThrowError( function()
-  {
-    _.unrollFrom( [], 3 );
-  });
-
-  test.shouldThrowError( function()
-  {
-    _.unrollFrom( [], [] );
-  });
-
-  test.shouldThrowError( function()
-  {
-    _.unrollFrom( {} );
-  });
-
-  test.shouldThrowError( function()
-  {
-    _.unrollFrom( '1' );
-  });
-
-}
-
-//
-
 /* qqq : implement bufferMakeSimilar */
 
 function longMake( test )
@@ -2377,6 +2123,415 @@ function arrayToStr( test )
     _.arrayToStr( 'wrong argument', {  type : 'float' } );
   });
 
+}
+
+// --
+// unroll
+// --
+
+function unrollMake( test )
+{
+
+  test.case = 'empty';
+  var src = [];
+  var got = _.unrollMake( src );
+  var expected = [];
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src !== got );
+
+  test.case = 'single number';
+  var src = [ 0 ];
+  var got = _.unrollMake( src );
+  var expected = [ 0 ];
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src !== got );
+
+  test.case = 'single string';
+  var src = [ 'a' ];
+  var got = _.unrollMake( src );
+  var expected = [ 'a' ];
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src !== got );
+
+  test.case = 'several';
+  var src = [ 1,2,3 ];
+  var got = _.unrollMake( src );
+  var expected = [ 1,2,3 ];
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src !== got );
+
+  test.case = 'zero length';
+  var got = _.unrollMake( 0 );
+  var expected = new Array( 0 );
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src !== got );
+
+  test.case = 'length';
+  var got = _.unrollMake( 3 );
+  var expected = new Array( 3 );
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src !== got );
+
+  test.case = 'from empty Float32';
+  var src = new Float32Array();
+  var got = _.unrollMake( src );
+  var expected = [];
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src !== got );
+
+  test.case = 'from Float32';
+  var src = new Float32Array([ 1,2,3 ]);
+  var got = _.unrollMake( src );
+  var expected = [ 1,2,3 ];
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src !== got );
+
+  test.case = 'from empty arguments array';
+  var src = _.argumentsArrayMake([]);
+  var got = _.unrollMake( src );
+  var expected = [];
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src !== got );
+
+  test.case = 'from arguments array';
+  var src = _.argumentsArrayMake([ 1,2,3 ]);
+  var got = _.unrollMake( src );
+  var expected = [ 1,2,3 ];
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src !== got );
+
+  test.case = 'from empty array';
+  var src = _.arrayMake([]);
+  var got = _.unrollMake( src );
+  var expected = [];
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src !== got );
+
+  test.case = 'from array';
+  var src = _.arrayMake([ 1,2,3 ]);
+  var got = _.unrollMake( src );
+  var expected = [ 1,2,3 ];
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src !== got );
+
+  if( !Config.debug )
+  return;
+
+  test.shouldThrowError( function()
+  {
+    _.unrollMake();
+  });
+
+  test.shouldThrowError( function()
+  {
+    _.unrollMake( 1,3 );
+  });
+
+  test.shouldThrowError( function()
+  {
+    _.unrollMake( [], 3 );
+  });
+
+  test.shouldThrowError( function()
+  {
+    _.unrollMake( [], [] );
+  });
+
+  test.shouldThrowError( function()
+  {
+    _.unrollMake( {} );
+  });
+
+  test.shouldThrowError( function()
+  {
+    _.unrollMake( '1' );
+  });
+
+}
+
+//
+
+function unrollFrom( test )
+{
+
+  test.case = 'empty';
+  var src = [];
+  var got = _.unrollFrom( src );
+  var expected = [];
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src !== got );
+
+  test.case = 'single number';
+  var src = [ 0 ];
+  var got = _.unrollFrom( src );
+  var expected = [ 0 ];
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src !== got );
+
+  test.case = 'single string';
+  var src = [ 'a' ];
+  var got = _.unrollFrom( src );
+  var expected = [ 'a' ];
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src !== got );
+
+  test.case = 'several';
+  var src = [ 1,2,3 ];
+  var got = _.unrollFrom( src );
+  var expected = [ 1,2,3 ];
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src !== got );
+
+  test.case = 'zero length';
+  var got = _.unrollFrom( 0 );
+  var expected = new Array( 0 );
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src !== got );
+
+  test.case = 'length';
+  var got = _.unrollFrom( 3 );
+  var expected = new Array( 3 );
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src !== got );
+
+  /* */
+
+  test.case = 'preserving empty';
+  var src = _.unrollMake([]);
+  var got = _.unrollFrom( src );
+  var expected = [];
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src === got );
+
+  test.case = 'preserving single number';
+  var src = _.unrollMake([ 0 ]);
+  var got = _.unrollFrom( src );
+  var expected = [ 0 ];
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src === got );
+
+  test.case = 'preserving single string';
+  var src = _.unrollMake([ 'a' ]);
+  var got = _.unrollFrom( src );
+  var expected = [ 'a' ];
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src === got );
+
+  test.case = 'preserving several';
+  var src = _.unrollMake([ 1,2,3 ]);
+  var got = _.unrollFrom( src );
+  var expected = [ 1,2,3 ];
+  test.equivalent( got, expected );
+  test.is( _.arrayIs( got ) );
+  test.is( src === got );
+
+  test.case = 'complex, dst : null';
+  var a1 = _.unrollFrom([ 3, 4, _.unrollFrom([ 5, 6 ]) ]);
+  var a2 = [ 7, _.unrollFrom([ 8, 9 ]) ];
+  var got = _.unrollAppend( null, [ 1, 2, a1, a2, 10 ] );
+  var expected = [ [ 1, 2, 3, 4, 5, 6, [ 7, 8, 9 ], 10 ] ];
+  test.identical( got, expected );
+
+  test.case = 'complex, dst : unroll';
+  var a1 = _.unrollFrom([ 3, 4, _.unrollFrom([ 5, 6 ]) ]);
+  var a2 = [ 7, _.unrollFrom([ 8, 9 ]) ];
+  var got = _.unrollAppend( _.unrollFrom( null ), [ 1, 2, a1, a2, 10 ] );
+  var expected = [ [ 1, 2, 3, 4, 5, 6, [ 7, 8, 9 ], 10 ] ];
+  test.identical( got, expected );
+
+  test.case = 'complex, dst : null, src : unroll';
+  var a1 = _.unrollFrom([ 3, 4, _.unrollFrom([ 5, 6 ]) ]);
+  var a2 = [ 7, _.unrollFrom([ 8, 9 ]) ];
+  var got = _.unrollAppend( null, _.unrollFrom([ 1, 2, a1, a2, 10 ]) );
+  var expected = [ 1, 2, 3, 4, 5, 6, [ 7, 8, 9 ], 10 ];
+  test.identical( got, expected );
+
+  test.case = 'complex, dst : null, manually unrolled src';
+  var a1 = _.unrollFrom([ 3, 4, _.unrollFrom([ 5, 6 ]) ]);
+  var a2 = [ 7, _.unrollFrom([ 8, 9 ]) ];
+  var got = _.unrollAppend( null, 1, 2, a1, a2, 10  );
+  var expected = [ 1, 2, 3, 4, 5, 6, [ 7, 8, 9 ], 10 ];
+  test.identical( got, expected );
+
+  if( !Config.debug )
+  return;
+
+  test.shouldThrowError( function()
+  {
+    _.unrollFrom();
+  });
+
+  test.shouldThrowError( function()
+  {
+    _.unrollFrom( 1,3 );
+  });
+
+  test.shouldThrowError( function()
+  {
+    _.unrollFrom( [], 3 );
+  });
+
+  test.shouldThrowError( function()
+  {
+    _.unrollFrom( [], [] );
+  });
+
+  test.shouldThrowError( function()
+  {
+    _.unrollFrom( {} );
+  });
+
+  test.shouldThrowError( function()
+  {
+    _.unrollFrom( '1' );
+  });
+
+}
+
+//
+
+/* qqq
+unrollAppend, unrollPrepend should have test groups :
+- dst is null / unroll / array
+- one argument / two arguments / three arguments
+- first argument have array / unroll / complex unroll( unroll in unroll in unroll )
+- non-first argument have array / unroll / complex unroll( unroll in unroll in unroll / Float32Array / ArgumentsArray
+*/
+
+//
+
+function unrollAppend( test )
+{
+
+  test.case = 'dstArray is null';
+  var got = _.unrollAppend( null );
+  test.identical( got, [] );
+
+  var unroll = _.unrollMake( [ 1, 2, 3 ] );
+  var got = _.unrollAppend( null, unroll );
+  test.identical( got, unroll );
+
+  test.case = 'only dstArray';
+  var got = _.unrollAppend( [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.case = 'dstArray is empty';
+  var got = _.unrollAppend( [], null );
+  test.identical( got, [ null ] );
+
+  var unroll = _.unrollMake( [ 1, 2, 3 ] );
+  var got = _.unrollAppend( [], unroll );
+  test.identical( got, [ 1, 2, 3 ] );
+
+  test.case = 'simple';
+  var unroll = _.unrollMake( [ 1, 2, 3 ] );
+  var got = _.unrollAppend( [ 1 ], unroll );
+  test.identical( got, [ 1, 1, 2, 3 ] );
+
+  test.case = 'few arguments';
+  var unroll = _.unrollMake( [ 1, 2, 3 ] );
+  var got = _.unrollAppend( [ 1 ], unroll, [ 'a' ], 4 );
+  test.identical( got, [ 1, 1, 2, 3, [ 'a' ], 4 ] );
+
+  test.case = 'with undefined element';
+  var unroll = _.unrollMake( [ 1, undefined, 3 ] );
+  var got = _.unrollAppend( [ 1 ], unroll, [ 'a' ], 4 );
+  test.identical( got, [ 1, 1, undefined, 3, [ 'a' ], 4 ] );
+
+  /* */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'no args';
+  test.shouldThrowError( function()
+  {
+    _.unrollAppend();
+  });
+
+  test.case = 'dst is not an array';
+  test.shouldThrowError( function()
+  {
+    _.unrollAppend( 1, 1 );
+  });
+}
+
+//
+
+function unrollPrepend( test )
+{
+  test.case = 'dstArray is null';
+  var got = _.unrollPrepend( null );
+  test.identical( got, [] );
+
+  var unroll = _.unrollMake( [ 1, 2, 3 ] );
+  var got = _.unrollPrepend( null, unroll );
+  test.identical( got, unroll );
+
+  test.case = 'only dstArray';
+  var got = _.unrollPrepend( [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.case = 'dstArray is empty';
+  var got = _.unrollPrepend( [], null );
+  test.identical( got, [ null ] );
+
+  var unroll = _.unrollMake( [ 1, 2, 3 ] );
+  var got = _.unrollPrepend( [], unroll );
+  test.identical( got, [ 1, 2, 3 ] );
+
+  test.case = 'simple';
+  var unroll = _.unrollMake( [ 1, 2, 3 ] );
+  var got = _.unrollPrepend( [ 1 ], unroll );
+  test.identical( got, [ 1, 2, 3, 1 ] );
+
+  test.case = 'few arguments';
+  var unroll = _.unrollMake( [ 1, 2, 3 ] );
+  var got = _.unrollPrepend( [ 1 ], unroll, [ 'a' ], 4 );
+  test.identical( got, [ 1, 2, 3, [ 'a' ], 4, 1 ] );
+
+  test.case = 'with undefined element';
+  var unroll = _.unrollMake( [ 1, undefined, 3 ] );
+  var got = _.unrollPrepend( [ 1 ], unroll, [ 'a' ], 4 );
+  test.identical( got, [ 1, undefined, 3, [ 'a' ], 4, 1 ] );
+
+  /* */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'no args';
+  test.shouldThrowError( function()
+  {
+    _.unrollPrepend();
+  });
+
+  test.case = 'dst is not an array';
+  test.shouldThrowError( function()
+  {
+    _.unrollPrepend( 1, 1 );
+  });
 }
 
 //
@@ -5255,65 +5410,6 @@ function arraySum( test )
 // array transformation
 // ---
 
-//
-
-function arrayPrependUnrolling( test )
-{
-  test.case = 'dstArray is null';
-  var got = _.arrayPrependUnrolling( null );
-  test.identical( got, [] );
-
-  var unroll = _.unrollMake( [ 1, 2, 3 ] );
-  var got = _.arrayPrependUnrolling( null, unroll );
-  test.identical( got, unroll );
-
-  test.case = 'only dstArray';
-  var got = _.arrayPrependUnrolling( [ 1 ] );
-  test.identical( got, [ 1 ] );
-
-  test.case = 'dstArray is empty';
-  var got = _.arrayPrependUnrolling( [], null );
-  test.identical( got, [ null ] );
-
-  var unroll = _.unrollMake( [ 1, 2, 3 ] );
-  var got = _.arrayPrependUnrolling( [], unroll );
-  test.identical( got, [ 1, 2, 3 ] );
-
-  test.case = 'simple';
-  var unroll = _.unrollMake( [ 1, 2, 3 ] );
-  var got = _.arrayPrependUnrolling( [ 1 ], unroll );
-  test.identical( got, [ 1, 2, 3, 1 ] );
-
-  test.case = 'few arguments';
-  var unroll = _.unrollMake( [ 1, 2, 3 ] );
-  var got = _.arrayPrependUnrolling( [ 1 ], unroll, [ 'a' ], 4 );
-  test.identical( got, [ 1, 2, 3, [ 'a' ], 4, 1 ] );
-
-  test.case = 'with undefined element';
-  var unroll = _.unrollMake( [ 1, undefined, 3 ] );
-  var got = _.arrayPrependUnrolling( [ 1 ], unroll, [ 'a' ], 4 );
-  test.identical( got, [ 1, undefined, 3, [ 'a' ], 4, 1 ] );
-
-  //
-
-  if( !Config.debug )
-  return;
-
-  test.case = 'no args';
-  test.shouldThrowError( function()
-  {
-    _.arrayPrependUnrolling();
-  });
-
-  test.case = 'dst is not an array';
-  test.shouldThrowError( function()
-  {
-    _.arrayPrependUnrolling( 1, 1 );
-  });
-}
-
-//
-
 function arrayPrepend( test )
 {
   test.case = 'dstArray is null';
@@ -7646,63 +7742,6 @@ function arrayPrependedArraysOnceStrictly( test )
     _.arrayPrependedArraysOnceStrictly( [ 6 ], [ [ 1,2 ], 3, [ 6,4,5,1,2,3 ] ] );
   });
 
-}
-
-//
-
-function arrayAppendUnrolling( test )
-{
-  test.case = 'dstArray is null';
-  var got = _.arrayAppendUnrolling( null );
-  test.identical( got, [] );
-
-  var unroll = _.unrollMake( [ 1, 2, 3 ] );
-  var got = _.arrayAppendUnrolling( null, unroll );
-  test.identical( got, unroll );
-
-  test.case = 'only dstArray';
-  var got = _.arrayAppendUnrolling( [ 1 ] );
-  test.identical( got, [ 1 ] );
-
-  test.case = 'dstArray is empty';
-  var got = _.arrayAppendUnrolling( [], null );
-  test.identical( got, [ null ] );
-
-  var unroll = _.unrollMake( [ 1, 2, 3 ] );
-  var got = _.arrayAppendUnrolling( [], unroll );
-  test.identical( got, [ 1, 2, 3 ] );
-
-  test.case = 'simple';
-  var unroll = _.unrollMake( [ 1, 2, 3 ] );
-  var got = _.arrayAppendUnrolling( [ 1 ], unroll );
-  test.identical( got, [ 1, 1, 2, 3 ] );
-
-  test.case = 'few arguments';
-  var unroll = _.unrollMake( [ 1, 2, 3 ] );
-  var got = _.arrayAppendUnrolling( [ 1 ], unroll, [ 'a' ], 4 );
-  test.identical( got, [ 1, 1, 2, 3, [ 'a' ], 4 ] );
-
-  test.case = 'with undefined element';
-  var unroll = _.unrollMake( [ 1, undefined, 3 ] );
-  var got = _.arrayAppendUnrolling( [ 1 ], unroll, [ 'a' ], 4 );
-  test.identical( got, [ 1, 1, undefined, 3, [ 'a' ], 4 ] );
-
-  //
-
-  if( !Config.debug )
-  return;
-
-  test.case = 'no args';
-  test.shouldThrowError( function()
-  {
-    _.arrayAppendUnrolling();
-  });
-
-  test.case = 'dst is not an array';
-  test.shouldThrowError( function()
-  {
-    _.arrayAppendUnrolling( 1, 1 );
-  });
 }
 
 //
@@ -20304,9 +20343,6 @@ var Self =
     argumentsArrayMake,
     argumentsArrayFrom,
 
-    unrollMake,
-    unrollFrom,
-
     longMake,
     longMakeZeroed,
 
@@ -20323,6 +20359,14 @@ var Self =
 
     arrayToMap,
     arrayToStr,
+
+    // unroll
+
+    unrollMake,
+    unrollFrom,
+
+    unrollAppend,
+    unrollPrepend,
 
     // long
 
@@ -20380,8 +20424,6 @@ var Self =
 
     // array prepend
 
-    arrayPrependUnrolling,
-
     arrayPrepend,
     arrayPrependOnce,
     arrayPrependOnceStrictly,
@@ -20411,8 +20453,6 @@ var Self =
     arrayPrependedArraysOnceStrictly,
 
     // array append
-
-    arrayAppendUnrolling,
 
     arrayAppend,
     arrayAppendOnce,
