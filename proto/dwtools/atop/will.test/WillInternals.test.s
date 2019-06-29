@@ -280,12 +280,12 @@ function buildSimple( test )
       module.finit();
       debugger;
 
-      test.identical( will.moduleArray.length, 0 );
+      test.identical( will.modulesArray.length, 0 );
       test.identical( _.mapKeys( will.moduleWithIdMap ).length, 0 );
       test.identical( _.mapKeys( will.moduleWithPathMap ).length, 0 );
-      test.identical( will.openerModuleArray.length, 0 );
+      test.identical( will.openersArray.length, 0 );
       test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, 0 );
-      test.identical( will.willfileArray.length, 0 );
+      test.identical( will.willfilesArray.length, 0 );
       test.identical( _.mapKeys( will.willfileWithPathMap ).length, 0 );
 
       if( err )
@@ -364,32 +364,32 @@ function openNamed( test )
 
     test.is( module1.openedModule === module2.openedModule );
 
-    test.identical( will.moduleArray.length, 2 );
+    test.identical( will.modulesArray.length, 2 );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, 2 );
     test.identical( _.mapKeys( will.moduleWithPathMap ).length, 2 );
-    test.identical( will.openerModuleArray.length, 3 );
+    test.identical( will.openersArray.length, 3 );
     test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, 3 );
-    test.identical( will.willfileArray.length, 3 );
+    test.identical( will.willfilesArray.length, 3 );
     test.identical( _.mapKeys( will.willfileWithPathMap ).length, 3 );
 
     module1.finit();
 
-    test.identical( will.moduleArray.length, 2 );
+    test.identical( will.modulesArray.length, 2 );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, 2 );
     test.identical( _.mapKeys( will.moduleWithPathMap ).length, 2 );
-    test.identical( will.openerModuleArray.length, 2 );
+    test.identical( will.openersArray.length, 2 );
     test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, 2 );
-    test.identical( will.willfileArray.length, 3 );
+    test.identical( will.willfilesArray.length, 3 );
     test.identical( _.mapKeys( will.willfileWithPathMap ).length, 3 );
 
     module2.finit();
 
-    test.identical( will.moduleArray.length, 0 );
+    test.identical( will.modulesArray.length, 0 );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, 0 );
     test.identical( _.mapKeys( will.moduleWithPathMap ).length, 0 );
-    test.identical( will.openerModuleArray.length, 0 );
+    test.identical( will.openersArray.length, 0 );
     test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, 0 );
-    test.identical( will.willfileArray.length, 0 );
+    test.identical( will.willfilesArray.length, 0 );
     test.identical( _.mapKeys( will.willfileWithPathMap ).length, 0 );
 
     return arg;
@@ -433,7 +433,7 @@ function openNamed( test )
     test.identical( module.dirPath, path.join( routinePath, './' ) );
     test.identical( module.commonPath, path.join( routinePath, 'super' ) );
     test.identical( module.willfilesPath, path.s.join( routinePath, [ './super.im.will.yml', './super.ex.will.yml' ] ) );
-    test.identical( module.willfileArray.length, 2 );
+    test.identical( module.willfilesArray.length, 2 );
     test.identical( _.mapKeys( module.willfileWithRoleMap ), [ 'import', 'export' ] );
 
     test.identical( module.openedModule.nickName, 'module::supermodule' );
@@ -447,7 +447,7 @@ function openNamed( test )
     test.identical( module.openedModule.dirPath, path.join( routinePath, './' ) );
     test.identical( module.openedModule.commonPath, path.join( routinePath, 'super' ) );
     test.identical( module.openedModule.willfilesPath, path.s.join( routinePath, [ './super.im.will.yml', './super.ex.will.yml' ] ) );
-    test.identical( module.openedModule.willfileArray.length, 2 );
+    test.identical( module.openedModule.willfilesArray.length, 2 );
     test.identical( _.mapKeys( module.openedModule.willfileWithRoleMap ), [ 'import', 'export' ] );
 
     test.is( !!module.openedModule.about );
@@ -574,7 +574,7 @@ function openAnon( test )
     test.identical( module.localPath, null );
     test.identical( module.remotePath, null );
     test.identical( module.willPath, path.join( __dirname, '../will/Exec' ) );
-    test.identical( module.willfileArray.length, 2 );
+    test.identical( module.willfilesArray.length, 2 );
     test.identical( _.mapKeys( module.willfileWithRoleMap ), [ 'import', 'export' ] );
 
     test.identical( module.openedModule.nickName, 'module::submodule' );
@@ -589,7 +589,7 @@ function openAnon( test )
     test.identical( module.openedModule.remotePath, null );
     test.identical( module.openedModule.currentRemotePath, null );
     test.identical( module.openedModule.willPath, path.join( __dirname, '../will/Exec' ) );
-    test.identical( module.openedModule.willfileArray.length, 2 );
+    test.identical( module.openedModule.willfilesArray.length, 2 );
     test.identical( _.mapKeys( module.openedModule.willfileWithRoleMap ), [ 'import', 'export' ] );
 
     test.is( !!module.openedModule.about );
@@ -721,7 +721,7 @@ function openOutNamed( test )
     test.identical( module.openedModule.about.name, 'supermodule' );
 
     test.identical( module.openedModule.pathMap, pathMap );
-    test.identical( module.openedModule.willfileArray.length, 1 );
+    test.identical( module.openedModule.willfilesArray.length, 1 );
     test.identical( _.mapKeys( module.openedModule.willfileWithRoleMap ), [ 'single' ] );
     test.identical( _.mapKeys( module.openedModule.submoduleMap ), [ 'Submodule' ] );
     test.identical( _.filter( _.mapKeys( module.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.debug', 'exported.files.export.debug', 'exported.export.', 'exported.files.export.' ] );
@@ -763,7 +763,7 @@ function clone( test )
 
     var module2 = module.clone();
 
-    test.identical( module2.willfileArray.length, 2 );
+    test.identical( module2.willfilesArray.length, 2 );
     test.identical( _.mapKeys( module2.willfileWithRoleMap ), [ 'import', 'export' ] );
     test.identical( module2.name, 'super' );
     test.identical( module2.nickName, 'module::super' );
@@ -773,7 +773,7 @@ function clone( test )
 
     module2.close();
 
-    test.identical( module2.willfileArray.length, 0 );
+    test.identical( module2.willfilesArray.length, 0 );
     test.identical( _.mapKeys( module2.willfileWithRoleMap ), [] );
 
     module2.open();
@@ -789,7 +789,7 @@ function clone( test )
     test.is( module.openedModule.pathMap === module2.openedModule.pathMap );
     test.identical( module.openedModule.pathMap, module2.openedModule.pathMap );
 
-    test.is( module.willfileArray !== module2.willfileArray );
+    test.is( module.willfilesArray !== module2.willfilesArray );
     test.is( module.willfileWithRoleMap !== module2.willfileWithRoleMap );
 
     test.case = 'finit';
@@ -808,7 +808,7 @@ function clone( test )
     let newPath = _.path.join( routinePath, 'new' );
     var module2 = module.cloneExtending({ willfilesPath : newPath });
 
-    test.identical( module2.willfileArray.length, 2 );
+    test.identical( module2.willfilesArray.length, 2 );
     test.identical( _.mapKeys( module2.willfileWithRoleMap ), [ 'import', 'export' ] );
     test.identical( module2.name, 'new' );
     test.identical( module2.nickName, 'module::new' );
@@ -818,7 +818,7 @@ function clone( test )
 
     module2.close();
 
-    test.identical( module2.willfileArray.length, 0 );
+    test.identical( module2.willfilesArray.length, 0 );
     test.identical( _.mapKeys( module2.willfileWithRoleMap ), [] );
 
     module2.openCloning( module.openedModule );
@@ -833,7 +833,7 @@ function clone( test )
     test.is( module.openedModule.about !== module2.openedModule.about );
     test.is( module.openedModule.pathMap !== module2.openedModule.pathMap );
 
-    test.is( module.willfileArray !== module2.willfileArray );
+    test.is( module.willfilesArray !== module2.willfilesArray );
     test.is( module.willfileWithRoleMap !== module2.willfileWithRoleMap );
 
     checkMap( module2, 'submoduleMap' );
@@ -859,12 +859,12 @@ function clone( test )
     test.is( err === undefined );
     module.finit();
 
-    test.identical( will.moduleArray.length, 0 );
+    test.identical( will.modulesArray.length, 0 );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, 0 );
     test.identical( _.mapKeys( will.moduleWithPathMap ).length, 0 );
-    test.identical( will.openerModuleArray.length, 0 );
+    test.identical( will.openersArray.length, 0 );
     test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, 0 );
-    test.identical( will.willfileArray.length, 0 );
+    test.identical( will.willfilesArray.length, 0 );
     test.identical( _.mapKeys( will.willfileWithPathMap ).length, 0 );
 
     return arg;
@@ -4073,24 +4073,24 @@ function submodulesDeleteAndDownload( test )
     con.finally( ( err, arg ) =>
     {
 
-      test.identical( will.moduleArray.length, 3 );
+      test.identical( will.modulesArray.length, 3 );
       test.identical( _.mapKeys( will.moduleWithIdMap ).length, 3 );
       test.identical( _.mapKeys( will.moduleWithPathMap ).length, 3 );
-      test.identical( will.openerModuleArray.length, 3 );
+      test.identical( will.openersArray.length, 3 );
       test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, 3 );
-      test.identical( will.willfileArray.length, 3 );
+      test.identical( will.willfilesArray.length, 3 );
       test.identical( _.mapKeys( will.willfileWithPathMap ).length, 3 );
 
       debugger;
       module.finit();
       debugger;
 
-      test.identical( will.moduleArray.length, 0 );
+      test.identical( will.modulesArray.length, 0 );
       test.identical( _.mapKeys( will.moduleWithIdMap ).length, 0 );
       test.identical( _.mapKeys( will.moduleWithPathMap ).length, 0 );
-      test.identical( will.openerModuleArray.length, 0 );
+      test.identical( will.openersArray.length, 0 );
       test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, 0 );
-      test.identical( will.willfileArray.length, 0 );
+      test.identical( will.willfilesArray.length, 0 );
       test.identical( _.mapKeys( will.willfileWithPathMap ).length, 0 );
 
       if( err )

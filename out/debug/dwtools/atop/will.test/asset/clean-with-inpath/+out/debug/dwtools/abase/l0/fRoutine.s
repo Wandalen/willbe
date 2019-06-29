@@ -637,10 +637,54 @@ routinesCompose.defaults = Object.create( routinesCompose.body.defaults );
 
 //
 
-/* qqq :
-- cover it by GOOD test coverage
-- document it ( jsdoc )
-*/
+/**
+ * The routineExtend() is used to copy the values of all properties
+ * from source routine to a target routine.
+ *
+ * It takes first routine (dst), and shallow clone each destination property of type map.
+ * Then it checks properties of source routine (src) and extends dst by source properties.
+ * The dst properties can be owerwriten by values of source routine
+ * if descriptor (writable) of dst property is set.
+ *
+ * If the first routine (dst) is null then
+ * routine routineExtend() makes a routine from routines pre and body
+ * @see {@link wTools.routineFromPreAndBody} - Automatic routine generating
+ * from preparation routine and main routine (body).
+ *
+ * @param{ routine } dst - The target routine or null.
+ * @param{ * } src - The source routine or object to copy.
+ *
+ * @example
+ * // returns [ routine routinesCompose ], got.option === 1
+ * var src =
+ * {
+ *   pre : _.routinesCompose.pre,
+ *   body : _.routinesCompose.body,
+ *   someOption : 1,
+ * }
+ * var got = _.routineExtend( null, src );
+ *
+ * @example
+ * // returns [ routine routinesCompose ]
+ * _.routineExtend( null, _.routinesCompose );
+ *
+ * @example
+ * // returns [ routine routinesCompose ], routinesCompose.someOption === 1
+ * _.routineExtend( _.routinesCompose, { someOption : 1 } );
+ *
+ * @example
+ * // returns [ routine routinesCompose ], routinesCompose.someOption === 1
+ * _.routinesComposes.someOption = 22;
+ * _.routineExtend( _.routinesCompose, { someOption : 1 } );
+ *
+ * @returns { routine } It will return the target routine with extended properties.
+ * @function routineExtend
+ * @throws { Error } Throw an error if arguments.length < 1 or arguments.length > 2.
+ * @throws { Error } Throw an error if dst is not routine or not null.
+ * @throws { Error } Throw an error if dst is null and src has not pre and body properties.
+ * @throws { Error } Throw an error if src is primitive value.
+ * @memberof wTools
+ */
 
 function routineExtend( dst )
 {

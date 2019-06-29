@@ -138,8 +138,8 @@ function readExported()
     .thenKeep( ( arg ) =>
     {
 
-      let willfile = module2.openedModule.willfileArray[ 0 ];
-      _.assert( willfile && module2.openedModule.willfileArray.length === 1 );
+      let willfile = module2.openedModule.willfilesArray[ 0 ];
+      _.assert( willfile && module2.openedModule.willfilesArray.length === 1 );
       if( willfile.data && willfile.data.exported )
       for( let exportedName in willfile.data.exported )
       {

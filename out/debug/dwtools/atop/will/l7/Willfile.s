@@ -165,7 +165,7 @@ function preform()
   if( will.verbosity >= 3 )
   if( willf.data )
   {
-    logger.log( ' . Read cache . ' + _.color.strFormat( willf.filePath, 'path' ) );
+    logger.log( ' . Read from cache . ' + _.color.strFormat( willf.filePath, 'path' ) );
   }
 
   /* end */

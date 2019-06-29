@@ -395,7 +395,7 @@ function moduleEachAt( o )
 
       return module.openedModule.ready.split().keep( function( arg )
       {
-        _.assert( module.willfileArray.length > 0 );
+        _.assert( module.willfilesArray.length > 0 );
         if( module.willfilesPath )
         _.mapSet( filesMap, module.willfilesPath, true );
 
@@ -466,8 +466,9 @@ function moduleIdUnregister( openedModule )
   _.assert( will.moduleWithIdMap[ openedModule.id ] === openedModule || will.moduleWithIdMap[ openedModule.id ] === undefined );
   delete will.moduleWithIdMap[ openedModule.id ];
   _.assert( _.arrayCountElement( _.mapVals( will.moduleWithIdMap ), openedModule ) === 0 );
-  _.arrayRemoveOnceStrictly( will.moduleArray, openedModule );
+  _.arrayRemoveOnceStrictly( will.modulesArray, openedModule );
 
+  will.modulesGraphInvalidate();
 }
 
 //
@@ -486,8 +487,9 @@ function moduleIdRegister( openedModule )
   _.assert( will.moduleWithIdMap[ openedModule.id ] === openedModule || will.moduleWithIdMap[ openedModule.id ] === undefined );
   will.moduleWithIdMap[ openedModule.id ] = openedModule;
   _.assert( _.arrayCountElement( _.mapVals( will.moduleWithIdMap ), openedModule ) === 1 );
-  _.arrayAppendOnceStrictly( will.moduleArray, openedModule );
+  _.arrayAppendOnceStrictly( will.modulesArray, openedModule );
 
+  will.modulesGraphInvalidate();
 }
 
 //
@@ -501,9 +503,9 @@ function modulePathUnregister( openedModule )
 
   _.assert( arguments.length === 1 );
   _.assert( openedModule instanceof will.OpenedModule );
-  _.assert( openedModule._pathRegistered === null || openedModule._pathRegistered === openedModule.commonPath );
+  _.assert( openedModule._registeredPath === null || openedModule._registeredPath === openedModule.commonPath );
 
-  if( !openedModule._pathRegistered )
+  if( !openedModule._registeredPath )
   return;
 
   if( openedModule.commonPath )
@@ -526,7 +528,7 @@ function modulePathRegister( openedModule )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  openedModule._pathRegistered = openedModule.commonPath;
+  openedModule._registeredPath = openedModule.commonPath;
 
   _.assert( openedModule instanceof will.OpenedModule );
   _.assert( arguments.length === 1 );
@@ -540,6 +542,91 @@ function modulePathRegister( openedModule )
 
 //
 
+function modulesGraphInvalidate()
+{
+  let will = this;
+
+  if( will.graphGroup )
+  {
+    will.graphGroup.sys.finit();
+    will.graphGroup = null;
+  }
+
+}
+
+//
+
+function modulesGraphGroupObtain()
+{
+  let will = this;
+
+  let group = will.graphGroup;
+  if( group )
+  return group;
+
+  let sys = new _.graph.AbstractGraphSystem();
+  group = will.graphGroup = sys.groupMake
+  ({
+    onNodeNameGet : ( module ) => module.nickName,
+    onOutNodesFor : onOutNodesFor,
+    onInNodesFor : onInNodesFor,
+  });
+
+  group.nodesAdd( will.modulesArray );
+
+  // debugger;
+  // logger.log( group.exportInfo() );
+  // debugger;
+
+  return group;
+
+  function onOutNodesFor( module )
+  {
+    let result = module.submoduleMap ? _.mapVals( module.submoduleMap ) : [];
+    result = result.map( ( module ) => module.oModule ? module.oModule : module );
+    result = result.map( ( module ) => module.openedModule ? module.openedModule : module );
+    return result;
+  }
+
+  function onInNodesFor( module )
+  {
+    if( module.supermodules )
+    return module.supermodules;
+    if( module.supermodule )
+    return [ module.supermodule ];
+    return [];
+  }
+
+}
+
+//
+
+function modulesTopologicalSort()
+{
+  let will = this;
+
+  let group = will.modulesGraphGroupObtain();
+  let sorted = group.topologicalSortCycledSourceBased();
+
+  return sorted;
+}
+
+//
+
+function modulesInfoExportAsTree( modules )
+{
+  let will = this;
+
+  let group = will.modulesGraphGroupObtain();
+  let info = group.nodesInfoExportAsTree( modules );
+
+  return info;
+}
+
+// --
+// opener
+// --
+
 function openerUnregister( opener )
 {
   let will = this;
@@ -547,7 +634,7 @@ function openerUnregister( opener )
   _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
   delete will.openerModuleWithIdMap[ opener.id ];
   _.assert( _.arrayCountElement( _.mapVals( will.openerModuleWithIdMap ), opener ) === 0 );
-  _.arrayRemoveOnceStrictly( will.openerModuleArray, opener );
+  _.arrayRemoveOnceStrictly( will.openersArray, opener );
 
 }
 
@@ -559,7 +646,7 @@ function openerRegister( opener )
 
   _.assert( opener.id > 0 );
   will.openerModuleWithIdMap[ opener.id ] = opener;
-  _.arrayAppendOnceStrictly( will.openerModuleArray, opener );
+  _.arrayAppendOnceStrictly( will.openersArray, opener );
   _.assert( _.arrayCountElement( _.mapVals( will.openerModuleWithIdMap ), opener ) === 1 );
 
 }
@@ -671,7 +758,7 @@ function willfileUnregister( willf )
   _.assert( will.willfileWithPathMap[ willf.commonPath ] === willf );
   delete will.willfileWithPathMap[ willf.commonPath ];
   _.assert( _.arrayCountElement( _.mapVals( will.willfileWithPathMap ), willf ) === 0 );
-  _.arrayRemoveOnceStrictly( will.willfileArray, willf );
+  _.arrayRemoveOnceStrictly( will.willfilesArray, willf );
 
 }
 
@@ -684,7 +771,7 @@ function willfileRegister( willf )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.arrayAppendOnceStrictly( will.willfileArray, willf );
+  _.arrayAppendOnceStrictly( will.willfilesArray, willf );
   _.assert( will.willfileWithPathMap[ willf.commonPath ] === undefined );
   will.willfileWithPathMap[ willf.commonPath ] = willf;
   _.assert( _.arrayCountElement( _.mapVals( will.willfileWithPathMap ), willf ) === 1 );
@@ -742,15 +829,15 @@ let Associates =
   filesGraph : null,
   logger : null,
 
-  moduleArray : _.define.own([]),
+  modulesArray : _.define.own([]),
   moduleWithIdMap : _.define.own({}),
   moduleWithPathMap : _.define.own({}),
   moduleWithNameMap : _.define.own({}),
 
-  openerModuleArray : _.define.own([]),
+  openersArray : _.define.own([]),
   openerModuleWithIdMap : _.define.own({}),
 
-  willfileArray : _.define.own([]),
+  willfilesArray : _.define.own([]),
   willfileWithPathMap : _.define.own({}),
 
 }
@@ -758,6 +845,7 @@ let Associates =
 let Restricts =
 {
   formed : 0,
+  graphGroup : null,
 }
 
 let Statics =
@@ -807,6 +895,11 @@ let Extend =
   moduleIdRegister,
   modulePathUnregister,
   modulePathRegister,
+
+  modulesGraphInvalidate,
+  modulesGraphGroupObtain,
+  modulesTopologicalSort,
+  modulesInfoExportAsTree,
 
   // opener
 

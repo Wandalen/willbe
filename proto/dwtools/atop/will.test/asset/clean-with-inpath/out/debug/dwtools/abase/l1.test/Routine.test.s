@@ -6,9 +6,8 @@ if( typeof module !== 'undefined' )
 {
   let _ = require( '../../Tools.s' );
   _.include( 'wTesting' );
+  // _.include( 'wProto' );
 }
-
-debugger;
 
 var _global = _global_;
 var _ = _global_.wTools;
@@ -469,7 +468,7 @@ function routinesCompose( test )
     counter += 10;
     for( var a = 0 ; a < arguments.length ; a++ )
     counter += arguments[ a ];
-    return _.unrollAppend( _.unrollMake( null ), arguments, counter );
+    return _.unrollAppend( _.unrollMake( null ), _.unrollMake( arguments ), counter );
   }
 
   function routineNotUnrolling()
@@ -620,7 +619,7 @@ function routinesComposeAll( test )
     counter += 10;
     for( var a = 0 ; a < arguments.length ; a++ )
     counter += arguments[ a ];
-    return _.unrollAppend( _.unrollMake( null ), arguments, counter );
+    return _.unrollAppend( _.unrollMake( null ), _.unrollMake( arguments ), counter );
   }
 
   function routineNotUnrolling()
@@ -711,7 +710,7 @@ function routinesComposeAllReturningLast( test )
     for( var a = 0 ; a < arguments.length ; a++ )
     counter += arguments[ a ];
     debugger;
-    return _.unrollAppend( _.unrollMake( null ), arguments, counter );
+    return _.unrollAppend( _.unrollMake( null ), _.unrollMake( arguments ), counter );
   }
 
   function routineNotUnrolling()
@@ -802,7 +801,7 @@ function routinesChain( test )
     counter += 10;
     for( var a = 0 ; a < arguments.length ; a++ )
     counter += arguments[ a ];
-    return _.unrollAppend( _.unrollMake( null ), arguments, counter );
+    return _.unrollAppend( _.unrollMake( null ), _.unrollMake( arguments ), counter );
   }
 
   function r2()
@@ -869,6 +868,400 @@ function routinesChain( test )
   test.shouldThrowErrorSync( () => _.routinesComposeAll( routines, function(){}, function(){} ) );
 
 }
+
+//
+
+function routineExtend( test )
+{
+
+  // debugger;
+  // var got = _.routineExtend( dst, { c : { s : 1 } } );
+  // test.identical( got.c, {} ); // true
+  // debugger;
+
+  test.open( 'dst is null, src has pre and body properties');
+
+  test.case = 'dst is null, src is routine maked by routineFromPreAndBody';
+  var got = _.routineExtend( null, _.routineFromPreAndBody );
+  test.identical( got.pre, _.routineFromPreAndBody.pre );
+  test.identical( got.body, _.routineFromPreAndBody.body );
+  test.identical( typeof got, 'function' );
+
+  var got = _.routineExtend( null, _.routinesCompose );
+  test.identical( got.pre, _.routinesCompose.pre );
+  test.identical( got.body, _.routinesCompose.body );
+  test.identical( typeof got, 'function' );
+
+  test.case = 'dst is null, src is map with pre and body properties';
+  var src =
+  {
+    pre : _.routineFromPreAndBody.pre,
+    body : _.routineFromPreAndBody.body,
+    map : { a : 2 },
+  }
+  var got = _.routineExtend( null, src );
+  test.identical( got.pre, _.routineFromPreAndBody.pre );
+  test.identical( got.body, _.routineFromPreAndBody.body );
+  test.identical( got.map, {} );
+  test.identical( typeof got, 'function' );
+
+  test.case = 'dst is null, src is map with pre and body properties';
+  var src =
+  {
+    pre : _.routineFromPreAndBody.pre,
+    body : _.routineFromPreAndBody.body,
+    map : { a : 2 },
+  };
+  var got = _.routineExtend( null, src );
+  test.identical( got.pre, _.routineFromPreAndBody.pre );
+  test.identical( got.body, _.routineFromPreAndBody.body );
+  test.identical( got.map, {} );
+  test.identical( typeof got, 'function' );
+
+  test.case = 'dst is null, src is map with pre and body properties';
+  var src =
+  {
+    pre : _.routineFromPreAndBody.pre,
+    body : _.routineFromPreAndBody.body,
+    a : [ 1 ],
+    b : 'str',
+    c : { str : 'str' }
+  }
+  var got = _.routineExtend( null, src );
+  test.identical( got.pre, _.routineFromPreAndBody.pre );
+  test.identical( got.body, _.routineFromPreAndBody.body );
+  test.identical( got.a, [ 1 ] );
+  test.identical( got.b, 'str' );
+  test.identical( got.c, {} );
+  test.identical( typeof got, 'function' );
+
+  test.close( 'dst is null, src has pre and body properties');
+
+  /* - */
+
+  test.open( 'single dst');
+
+  test.case = 'single dst';
+  var dst = function( o )
+  {
+  };
+  var got = _.routineExtend( dst );
+  test.identical( got, dst );
+  test.identical( typeof got, 'function' );
+
+  test.case = 'single dst is routine, has properties';
+  var dst = function( o )
+  {
+  };
+  dst.a = 0;
+  dst.b = 0;
+  var got = _.routineExtend( dst );
+  test.identical( got, dst );
+  test.identical( typeof got, 'function' );
+  test.identical( got.a, 0 );
+  test.identical( got.b, 0 );
+
+  test.case = 'single dst is routine, has hiden properties';
+  var dst = function( o )
+  {
+  };
+  Object.defineProperties( dst, {
+    'a' : {
+      value : 0,
+      enumerable : true,
+      writable : false,
+    },
+    'b' : {
+      value : { a : 2 },
+      enumerable : false,
+      writable : false,
+    }
+  });
+  var got = _.routineExtend( dst );
+  test.identical( got, dst );
+  test.identical( typeof got, 'function' );
+  test.identical( got.a, 0 );
+  test.identical( got.b, { a : 2 } );
+  var got = Object.getOwnPropertyDescriptor( got, 'b' );
+  test.isNot( got.enumerable );
+
+  test.close( 'single dst');
+
+  test.case = 'dst has properties, src map has different properties';
+  var dst = function( o )
+  {
+  };
+  dst.a = 0;
+  dst.b = 0;
+  var got = _.routineExtend( dst, { c : 1, d : 1, e : { s : 1 } } );
+  test.identical( typeof got, 'function' );
+  test.identical( got.a, 0 );
+  test.identical( got.b, 0 );
+  test.identical( got.c, 1 );
+  test.identical( got.e, {} );
+
+  test.case = 'dst has properties, src map has the same properties';
+  var dst = function( o )
+  {
+  };
+  dst.a = 0;
+  dst.b = 0;
+  var got = _.routineExtend( dst, { a: 1, b : 1 } );
+  test.identical( typeof got, 'function' );
+  test.identical( got.a, 1 );
+  test.identical( got.b, 1 );
+
+  /* */
+
+  test.case = 'dst has non-writable properties';
+  var dst = function( o )
+  {
+  };
+  Object.defineProperties( dst,
+  {
+    'a' : {
+      enumerable : true,
+      writable : false,
+      value : 0,
+    },
+    'b' : {
+      enumerable : true,
+      writable : false,
+      value : 0,
+    }
+  });
+  var got = _.routineExtend( dst, { a: 3, b : 2 } );
+  test.identical( typeof got, 'function' );
+  test.identical( got.a, 0 );
+  test.identical( got.b, 0 );
+
+  test.case = 'src has non-writable properties';
+  var dst = function( o )
+  {
+  };
+  dst.a = 0;
+  dst.b = 0;
+  var src = {};
+  Object.defineProperties( src,
+  {
+    'a' : {
+      enumerable : true,
+      writable : false,
+      value : 3,
+    },
+    'b' : {
+      enumerable : true,
+      writable : false,
+      value : 2,
+    }
+  });
+  var got = _.routineExtend( dst, src );
+  test.identical( typeof got, 'function' );
+  test.identical( got.a, 3 );
+  test.identical( got.b, 2 );
+
+  test.case = 'src is an array';
+  var dst = function( o )
+  {
+  };
+  var got = _.routineExtend( dst, [ 'a', 1 ] );
+  test.identical( typeof got, 'function' );
+  test.identical( got[ 0 ], 'a' );
+  test.identical( got[ 1 ], 1 );
+
+  test.open( 'a few extends');
+
+  test.case = 'null extends other routine, null extends result';
+  var src = _.routineExtend( null, _.routinesCompose );
+  var got = _.routineExtend( null, src );
+  test.identical( got.pre, _.routinesCompose.pre );
+  test.identical( got.body, _.routinesCompose.body );
+  test.identical( typeof got, 'function' );
+
+  test.case = 'src extends routine, result extends map ';
+  var src1 =
+  {
+    pre : _.routineFromPreAndBody.pre,
+    body : _.routineFromPreAndBody.body,
+    a : 'str',
+    b : { b : 3 },
+  };
+  var src = _.routineExtend( null, _.routinesCompose );
+  var got = _.routineExtend( src, src1 );
+  test.identical( got.pre, _.routineFromPreAndBody.pre );
+  test.identical( got.body, _.routineFromPreAndBody.body );
+  test.identical( got.b, {} );
+  test.is( got.a === 'str' );
+  test.identical( typeof got, 'function' );
+
+  test.case = 'dst extends map, dst extends other map';
+  var dst = function()
+  {
+  };
+  var src1 =
+  {
+    pre : _.routinesCompose.pre,
+    body : _.routinesCompose.body,
+    a : ['str'],
+    c : { d : 2 },
+  };
+  var src = _.routineExtend( dst, { c : {}, b : 'str' } );
+  var got = _.routineExtend( dst, src1 );
+  test.identical( got.pre, _.routinesCompose.pre );
+  test.identical( got.body, _.routinesCompose.body );
+  test.identical( got.a, [ 'str' ] );
+  test.identical( got.b, 'str' );
+  test.identical( got.c, {} );
+  test.identical( typeof got, 'function' );
+
+  test.case = 'dst has map property, dst extends other map';
+  var dst = function()
+  {
+  };
+  dst.map = { a : 'str' };
+  var src1 =
+  {
+    pre : _.routinesCompose.pre,
+    body : _.routinesCompose.body,
+    a : ['str'],
+    map : { d : 2 },
+  };
+  var src = _.routineExtend( dst, { c : {} } );
+  var got = _.routineExtend( dst, src1 );
+  test.identical( got.pre, _.routinesCompose.pre );
+  test.identical( got.body, _.routinesCompose.body );
+  test.identical( got.a, [ 'str' ] );
+  test.identical( got.map, { a : 'str' } );
+  test.identical( got.c, {} );
+  test.identical( typeof got, 'function' );
+
+  test.case = 'dst extends routine, src extends routine1, dst extends src';
+  var dst = function()
+  {
+  };
+  var src = function()
+  {
+  };
+  var routine = function()
+  {
+  };
+  routine.a = 0;
+  routine.b = [ 'str' ];
+  var routine1 = function()
+  {
+  };
+  routine1.a = 2;
+  routine1.c = [ 'str' ];
+  var src1 = _.routineExtend( src, routine );
+  var src2 = _.routineExtend( dst, routine1 );
+  var got = _.routineExtend( scr2, src1 )
+  test.identical( got.a, [ 'str' ] );
+  test.identical( got.map, { a : 'str' } );
+  test.identical( got.c, {} );
+  test.identical( typeof got, 'function' );
+
+  test.close( 'a few extends');
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'no arguments';
+  test.shouldThrowErrorSync( function()
+  {
+    _.routineExtend();
+  });
+
+  test.case = 'three arguments';
+  test.shouldThrowErrorSync( function()
+  {
+    _.routineExtend( null, { a : 1 }, { b : 2 });
+  });
+
+  test.case = 'single dst is null';
+  test.shouldThrowErrorSync( function()
+  {
+    _.routineExtend( null );
+  });
+
+  test.case = 'second arg has not pre and body properties';
+  test.shouldThrowErrorSync( function()
+  {
+    _.routineExtend( null, _.unrollIs );
+  });
+
+  test.case = 'second arg is primitive';
+  test.shouldThrowErrorSync( function()
+  {
+    _.routineExtend( _.unrollIs, 'str' );
+  });
+
+  test.shouldThrowErrorSync( function()
+  {
+    _.routineExtend( _.unrollIs, 1 );
+  });
+
+  test.case = 'dst is not routine or null';
+  test.shouldThrowErrorSync( function()
+  {
+    _.routineExtend( 1, { a : 1 } );
+  });
+
+  test.shouldThrowErrorSync( function()
+  {
+    _.routineExtend( 'str', { a : 1 } );
+  });
+
+}
+
+//
+
+function routineExtendExperiment( test )
+{
+
+  // test.case = 'map saves';
+  // var dst = function()
+  // {
+  // };
+  // Object.defineProperties( dst,
+  // {
+  //   'a' :
+  //   {
+  //     value : 0,
+  //     enumerable : true,
+  //     writable : false,
+  //   },
+  //   'b' :
+  //   {
+  //     value : { a : 2 },
+  //     enumerable : true,
+  //     writable : true,
+  //   }
+  // });
+  // var got = _.routineExtend( dst );
+  // test.identical( got.b, { a : 2 } );
+  //
+  // test.case = 'resulted map is empty';
+  // var src =
+  // {
+  //   pre : _.routinesCompose.pre,
+  //   body : _.routinesCompose.body,
+  //   c : { str : 'str' }
+  // }
+  // var got = _.routineExtend( null, src );
+  // test.identical( got.c, {} );
+
+  test.case = 'resulted map is empty, but should not';
+  var dst = function( o ) {};
+  dst.b = { a : 2 };
+  var got = _.routineExtend( dst, { b : { a : 3 } } );
+  debugger;
+  test.equivalent( got.b, { a : 3 } );
+  // test.identical( got.b, { a : 3 } );
+  debugger;
+
+}
+
+routineExtendExperiment.experimental = 1;
 
 //
 
@@ -1546,6 +1939,9 @@ var Self =
     routinesComposeAll,
     routinesComposeAllReturningLast,
     routinesChain,
+
+    routineExtend,
+    routineExtendExperiment,
 
     vectorize,
     /* qqq : split test routine vectorize */

@@ -1132,8 +1132,11 @@ function _currentExclude()
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
   let will = rop.baseModule.will;
+
+  if( rop.currentExcluding )
   if( it.src === rop.currentContext && it.down )
   it.dstWritingDown = false;
+
 }
 
 //
@@ -1457,6 +1460,7 @@ resolve_body.defaults =
   // arrayUniquing : 0,
   preservingIteration : 0,
   strictCriterion : 0,
+  currentExcluding : 1,
   hasPath : null,
   selectorIsPath : 0,
 }

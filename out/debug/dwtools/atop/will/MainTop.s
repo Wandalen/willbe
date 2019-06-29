@@ -233,31 +233,33 @@ function commandsMake()
   let commands =
   {
 
-    'help' :                    { e : _.routineJoin( will, will.commandHelp ),                  h : 'Get help.' },
-    'set' :                     { e : _.routineJoin( will, will.commandSet ),                   h : 'Command set.' },
+    'help' :                    { e : _.routineJoin( will, will.commandHelp ),                        h : 'Get help.' },
+    'set' :                     { e : _.routineJoin( will, will.commandSet ),                         h : 'Command set.' },
 
-    'resources list' :          { e : _.routineJoin( will, will.commandResourcesList ),         h : 'List information about resources of the current module.' },
-    'paths list' :              { e : _.routineJoin( will, will.commandPathsList ),             h : 'List paths of the current module.' },
-    'submodules list' :         { e : _.routineJoin( will, will.commandSubmodulesList ),        h : 'List submodules of the current module.' },
-    'modules list' :            { e : _.routineJoin( will, will.commandModulesList ),           h : 'List all modules.' },
-    'reflectors list' :         { e : _.routineJoin( will, will.commandReflectorsList ),        h : 'List avaialable reflectors the current module.' },
-    'steps list' :              { e : _.routineJoin( will, will.commandStepsList ),             h : 'List avaialable steps the current module.' },
-    'builds list' :             { e : _.routineJoin( will, will.commandBuildsList ),            h : 'List avaialable builds the current module.' },
-    'exports list' :            { e : _.routineJoin( will, will.commandExportsList ),           h : 'List avaialable exports the current module.' },
-    'about list' :              { e : _.routineJoin( will, will.commandAboutList ),             h : 'List descriptive information about the current module.' },
+    'resources list' :          { e : _.routineJoin( will, will.commandResourcesList ),               h : 'List information about resources of the current module.' },
+    'paths list' :              { e : _.routineJoin( will, will.commandPathsList ),                   h : 'List paths of the current module.' },
+    'submodules list' :         { e : _.routineJoin( will, will.commandSubmodulesList ),              h : 'List submodules of the current module.' },
+    'modules list' :            { e : _.routineJoin( will, will.commandModulesList ),                 h : 'List all modules.' },
+    'modules topological list' :{ e : _.routineJoin( will, will.commandModulesTopologicalList ),      h : 'List all modules topologically.' },
+    'modules tree list' :       { e : _.routineJoin( will, will.commandModulesTreeList ),             h : 'List all modules as tree.' },
+    'reflectors list' :         { e : _.routineJoin( will, will.commandReflectorsList ),              h : 'List avaialable reflectors the current module.' },
+    'steps list' :              { e : _.routineJoin( will, will.commandStepsList ),                   h : 'List avaialable steps the current module.' },
+    'builds list' :             { e : _.routineJoin( will, will.commandBuildsList ),                  h : 'List avaialable builds the current module.' },
+    'exports list' :            { e : _.routineJoin( will, will.commandExportsList ),                 h : 'List avaialable exports the current module.' },
+    'about list' :              { e : _.routineJoin( will, will.commandAboutList ),                   h : 'List descriptive information about the current module.' },
 
-    'submodules clean' :        { e : _.routineJoin( will, will.commandSubmodulesClean ),       h : 'Delete all downloaded submodules.' },
-    'submodules download' :     { e : _.routineJoin( will, will.commandSubmodulesDownload ),    h : 'Download each submodule if such was not downloaded so far.' },
-    'submodules update' :       { e : _.routineJoin( will, will.commandSubmodulesUpdate ),      h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
-    'submodules fixate' :       { e : _.routineJoin( will, will.commandSubmodulesFixate ),      h : 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.' },
-    'submodules upgrade' :      { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),     h : 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.' },
+    'submodules clean' :        { e : _.routineJoin( will, will.commandSubmodulesClean ),             h : 'Delete all downloaded submodules.' },
+    'submodules download' :     { e : _.routineJoin( will, will.commandSubmodulesDownload ),          h : 'Download each submodule if such was not downloaded so far.' },
+    'submodules update' :       { e : _.routineJoin( will, will.commandSubmodulesUpdate ),            h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
+    'submodules fixate' :       { e : _.routineJoin( will, will.commandSubmodulesFixate ),            h : 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.' },
+    'submodules upgrade' :      { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),           h : 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.' },
 
-    'shell' :                   { e : _.routineJoin( will, will.commandShell ),                 h : 'Execute shell command on the module.' },
-    'clean' :                   { e : _.routineJoin( will, will.commandClean ),                 h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
-    'build' :                   { e : _.routineJoin( will, will.commandBuild ),                 h : 'Build current module with spesified criterion.' },
-    'export' :                  { e : _.routineJoin( will, will.commandExport ),                h : 'Export selected the module with spesified criterion. Save output to output file and archive.' },
-    'with' :                    { e : _.routineJoin( will, will.commandWith ),                  h : 'Use "with" to select a module.' },
-    'each' :                    { e : _.routineJoin( will, will.commandEach ),                  h : 'Use "each" to iterate each module in a directory.' },
+    'shell' :                   { e : _.routineJoin( will, will.commandShell ),                       h : 'Execute shell command on the module.' },
+    'clean' :                   { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
+    'build' :                   { e : _.routineJoin( will, will.commandBuild ),                       h : 'Build current module with spesified criterion.' },
+    'export' :                  { e : _.routineJoin( will, will.commandExport ),                      h : 'Export selected the module with spesified criterion. Save output to output file and archive.' },
+    'with' :                    { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
+    'each' :                    { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
 
   }
 
@@ -367,15 +369,14 @@ function _commandList( e, act, resourceKind )
         arrayWrapping : 1,
         pathUnwrapping : resourceKindIsGlob ? 0 : 1,
         pathResolving : 0,
-        // pathResolving : 'in', // yyy
         mapValsUnwrapping : resourceKindIsGlob ? 0 : 1,
         strictCriterion : 1,
+        currentExcluding : 0,
       }
 
       if( resourceKind === 'path' )
       o2.mapValsUnwrapping = 0;
 
-      debugger;
       resources = module.openedModule.resolve( o2 );
 
       if( _.arrayIs( resources ) )
@@ -457,6 +458,36 @@ function commandModulesList( e )
   {
     let logger = will.logger;
     logger.log( module.openedModule.infoExportResource( resources ) );
+  }
+
+  return will._commandList( e, act, 'module' );
+}
+
+//
+
+function commandModulesTopologicalList( e )
+{
+  let will = this;
+
+  function act( module, resources )
+  {
+    let logger = will.logger;
+    logger.log( module.openedModule.infoExportModulesTopological( resources ) );
+  }
+
+  return will._commandList( e, act, 'module' );
+}
+
+//
+
+function commandModulesTreeList( e )
+{
+  let will = this;
+
+  function act( module, resources )
+  {
+    let logger = will.logger;
+    logger.log( will.modulesInfoExportAsTree( resources ) );
   }
 
   return will._commandList( e, act, 'module' );
@@ -802,7 +833,7 @@ function commandWith( e )
   return module.openedModule.ready.split().keep( function( arg )
   {
 
-    _.assert( will.currentModule.willfileArray.length > 0 );
+    _.assert( will.currentModule.willfilesArray.length > 0 );
 
     return ca.commandPerform
     ({
@@ -1037,6 +1068,8 @@ let Extend =
   commandPathsList,
   commandSubmodulesList,
   commandModulesList,
+  commandModulesTopologicalList,
+  commandModulesTreeList,
   commandReflectorsList,
   commandStepsList,
   commandBuildsList,

@@ -3710,7 +3710,7 @@ function strLinesStrip( src )
 
   if( arguments.length > 1 )
   {
-    let result = _.unrollAppend([]);
+    let result = _.unrollMake( null );
     for( let a = 0 ; a < arguments.length ; a++ )
     result[ a ] = strLinesStrip( arguments[ a ] );
     return result;
