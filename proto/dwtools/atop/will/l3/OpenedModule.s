@@ -1060,10 +1060,7 @@ function close()
     module.willfileUnregister( willf );
     willf.openedModule = null;
     if( willf.openerModule === null )
-    {
-      debugger;
-      willf.finit();
-    }
+    willf.finit();
     _.assert( willf.openedModule === null );
   }
 
@@ -2285,7 +2282,8 @@ function _resourcesForm()
   let logger = will.logger;
   let con = new _.Consequence().take( null );
 
-  // if( !module.supermodule )
+  // logger.log( module.absoluteName, '_resourcesForm' ); debugger;
+
   if( module.rootModule === module )
   if( module.submodulesAllAreDownloaded() && module.submodulesAllAreValid() )
   {
@@ -4104,18 +4102,11 @@ function ResourceSetter_functor( op )
       _.assert( _.instanceIs( resource ) );
       _.assert( resource.module === module );
 
-      // if( m === 'module.common' )
-      // debugger;
-      // if( m === 'module.willfiles' )
-      // debugger;
-
-      if( !resource.importable ) // yyy
+      if( !resource.importable )
       continue;
       resource.finit();
-      _.assert( resourceMap[ m ] === undefined ); // yyy
+      _.assert( resourceMap[ m ] === undefined );
     }
-
-    // _.assert( _.mapKeys( resourceMap ).length === 0 );
 
     if( resourceMap2 === null )
     return resourceMap;
@@ -4128,12 +4119,7 @@ function ResourceSetter_functor( op )
       _.assert( _.instanceIs( resource ) );
       _.assert( resource.module !== module );
 
-      // if( m === 'module.common' )
-      // debugger;
-      // if( m === 'module.willfiles' )
-      // debugger;
-
-      if( resourceMap[ m ] ) // yyy
+      if( resourceMap[ m ] )
       continue;
 
       if( resource.module !== null )

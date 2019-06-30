@@ -1018,7 +1018,7 @@ function constant( dstPrototype, name, value )
 
   Object.defineProperty( dstPrototype, name,
   {
-    value : value,
+    /*ttt*/value,
     enumerable : true,
     writable : false,
     configurable : true,
@@ -1077,7 +1077,7 @@ function hide( dstPrototype, name, value )
 
   Object.defineProperty( dstPrototype, name,
   {
-    value : value,
+    /*ttt*/value,
     enumerable : false,
     writable : true,
     configurable : true,
@@ -1272,7 +1272,7 @@ function toElement( o )
   // _.accessor.declare
   // ({
   //   object : o.object,
-  //   names : names,
+  //   /*ttt*/names,
   // });
 
   return r;
@@ -1624,7 +1624,7 @@ function setterBufferFrom_functor( o )
     }
     else
     {
-      data = _.bufferFrom({ src : data, bufferConstructor : bufferConstructor });
+      data = _.bufferFrom({ src : data, /*ttt*/bufferConstructor });
     }
 
     self[ symbol ] = data;
@@ -1860,7 +1860,7 @@ let aliasAccessor = accessorMakerFrom_functor( aliasGetter_functor_body, aliasSe
 //   _.accessor.declare
 //   ({
 //     object : o.object,
-//     names : names,
+//     /*ttt*/names,
 //   });
 //
 // }
@@ -1901,9 +1901,9 @@ let Forbids =
 let Fields =
 {
 
-  AccessorDefaults : AccessorDefaults,
-  Combining : Combining,
-  DefaultAccessorsMap : DefaultAccessorsMap,
+  /*ttt*/AccessorDefaults,
+  /*ttt*/Combining,
+  /*ttt*/DefaultAccessorsMap,
 
 }
 
@@ -1914,25 +1914,25 @@ let Routines =
 
   // accessor
 
-  _accessorDeclare_pre : _accessorDeclare_pre,
-  _accessorRegister : _accessorRegister,
-  _accessorDeclareAct : _accessorDeclareAct,
-  _accessorDeclare : _accessorDeclare,
+  /*ttt*/_accessorDeclare_pre,
+  /*ttt*/_accessorRegister,
+  /*ttt*/_accessorDeclareAct,
+  /*ttt*/_accessorDeclare,
 
   declare : accessorDeclare,
   forbid : accessorForbid,
-  _accessorDeclareForbid : _accessorDeclareForbid,
+  /*ttt*/_accessorDeclareForbid,
 
   forbidOwns : accessorForbidOwns,
   readOnly : accessorReadOnly,
 
   supplement : accessorsSupplement,
 
-  constant : constant,
-  hide : hide,
-  restrictReadOnly : restrictReadOnly,
+  /*ttt*/constant,
+  /*ttt*/hide,
+  /*ttt*/restrictReadOnly,
 
-  accessorHas : accessorHas,
+  /*ttt*/accessorHas,
 
   accessorMakerFrom_functor,
 
@@ -1941,8 +1941,8 @@ let Routines =
 let GetterSetter =
 {
 
-  // accessorToElement : accessorToElement,
-  toElement : toElement,
+  // /*ttt*/accessorToElement,
+  /*ttt*/toElement,
 
 }
 

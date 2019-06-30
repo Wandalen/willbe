@@ -193,7 +193,7 @@ function _routineJoin( test )
 //   var got = gotfn( testParam1 );
 //   test.identical( got,expected1 );
 //
-//   test.case = 'simple function without context : context test';
+//   test.case = 'simple function without /*ttt*/context test';
 //   var gotfn = _.routineBind(testFunction2, undefined, [ testParam2 ]);
 //   var got = gotfn( testParam1 );
 //   test.identical( got, expected2 );
@@ -337,7 +337,7 @@ function routineJoin( test )
   var got = gotfn( testParam1 );
   test.identical( got,expected1 );
 
-  test.case = 'simple function without context : context test';
+  test.case = 'simple function without /*ttt*/context test';
   var gotfn = _.routineJoin(undefined, testFunction2, [ testParam2 ]);
   var got = gotfn( testParam1 );
   test.identical( got, expected2 );

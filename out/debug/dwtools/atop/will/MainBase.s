@@ -293,6 +293,7 @@ function moduleEachAt( o )
   let path = will.fileProvider.path;
   let logger = will.logger;
   let con;
+  let errs = [];
 
   _.sure( _.strDefined( o.selector ), 'Expects string' );
   _.assert( arguments.length === 1 );
@@ -349,7 +350,6 @@ function moduleEachAt( o )
     o.selector = path.resolve( o.selector );
     con = new _.Consequence().take( null );
 
-    debugger;
     let files;
     try
     {
@@ -357,7 +357,7 @@ function moduleEachAt( o )
       ({
         dirPath : o.selector,
         includingInFiles : 1,
-        includingOutFiles : 1, // yyy
+        includingOutFiles : 1,
       });
     }
     catch( err )
@@ -366,7 +366,8 @@ function moduleEachAt( o )
     }
 
     let filesMap = Object.create( null );
-    for( let f = 0 ; f < files.length ; f++ ) con.then( ( arg ) => /* !!! replace by concurrent, maybe */
+    for( let f = 0 ; f < files.length ; f++ ) con
+    .then( ( arg ) => /* !!! replace by concurrent, maybe */
     {
       let file = files[ f ];
 
@@ -376,7 +377,9 @@ function moduleEachAt( o )
       }
 
       let module = will.OpenerModule({ will : will, willfilesPath : file.absolute }).preform();
+      // debugger;
       module.open();
+      // debugger;
 
       let it = Object.create( null );
       it.currentModule = module;
@@ -413,14 +416,23 @@ function moduleEachAt( o )
         return r;
       })
 
+    })
+    .except( ( err ) =>
+    {
+      debugger;
+      errs.push( _.errBriefly( err ) );
+      return null;
     });
 
   }
 
   con.finally( ( err, arg ) =>
   {
+    debugger;
     if( err )
     throw _.err( err );
+    if( errs.length )
+    throw errs[ 0 ];
     return o;
   });
 

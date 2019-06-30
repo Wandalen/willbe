@@ -277,13 +277,13 @@ function _setup1()
 let Routines =
 {
 
-  _setupUnhandledErrorHandler1 : _setupUnhandledErrorHandler1,
+  /*ttt*/_setupUnhandledErrorHandler1,
 
-  _setupConfig : _setupConfig,
-  _setupLoggerPlaceholder : _setupLoggerPlaceholder,
-  _setupTesterPlaceholder : _setupTesterPlaceholder,
+  /*ttt*/_setupConfig,
+  /*ttt*/_setupLoggerPlaceholder,
+  /*ttt*/_setupTesterPlaceholder,
 
-  _setup1 : _setup1,
+  /*ttt*/_setup1,
 
 }
 

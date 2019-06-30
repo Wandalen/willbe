@@ -62,7 +62,7 @@ will .help
 
 ```
   .help - Get help.
-  .set - Set a command.
+  .imply - Set a command.
   .list - List information about the current module.
   .paths.list - List paths of the current module.
   .submodules.list - List submodules of the current module.

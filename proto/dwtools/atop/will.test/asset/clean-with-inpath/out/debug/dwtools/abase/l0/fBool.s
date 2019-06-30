@@ -154,14 +154,14 @@ let Fields =
 let Routines =
 {
 
-  boolIs : boolIs,
-  boolLike : boolLike,
-  // boolFrom : boolFrom,
+  /*ttt*/boolIs,
+  /*ttt*/boolLike,
+  // /*ttt*/boolFrom,
 
-  boolsAre : boolsAre,
-  boolsAllAre : boolsAllAre,
-  boolsAnyAre : boolsAnyAre,
-  boolsNoneAre : boolsNoneAre,
+  /*ttt*/boolsAre,
+  /*ttt*/boolsAllAre,
+  /*ttt*/boolsAnyAre,
+  /*ttt*/boolsNoneAre,
 
 }
 

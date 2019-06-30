@@ -1377,8 +1377,8 @@ var Self =
     globFilterVals,
     globFilterKeys,
 
-    // globRegexpsFor : globRegexpsFor,
-    // globRegexpsForTerminal : globRegexpsForTerminal,
+    // /*ttt*/globRegexpsFor,
+    // /*ttt*/globRegexpsForTerminal,
 
   },
 

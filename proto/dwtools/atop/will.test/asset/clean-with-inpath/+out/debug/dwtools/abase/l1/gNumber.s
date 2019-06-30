@@ -499,42 +499,42 @@ let Fields =
 let Routines =
 {
 
-  // numberIs : numberIs,
-  // numberIsNotNan : numberIsNotNan,
-  // numberIsFinite : numberIsFinite,
-  // numberIsInfinite : numberIsInfinite,
-  // numberIsInt : numberIsInt,
+  // /*ttt*/numberIs,
+  // /*ttt*/numberIsNotNan,
+  // /*ttt*/numberIsFinite,
+  // /*ttt*/numberIsInfinite,
+  // /*ttt*/numberIsInt,
   //
-  // numbersAre : numbersAre,
-  // numbersAreIdentical : numbersAreIdentical,
-  // numbersAreEquivalent : numbersAreEquivalent,
-  // numbersAreFinite : numbersAreFinite,
-  // numbersArePositive : numbersArePositive,
-  // numbersAreInt : numbersAreInt,
+  // /*ttt*/numbersAre,
+  // /*ttt*/numbersAreIdentical,
+  // /*ttt*/numbersAreEquivalent,
+  // /*ttt*/numbersAreFinite,
+  // /*ttt*/numbersArePositive,
+  // /*ttt*/numbersAreInt,
   //
-  // numberInRange : numberInRange,
+  // /*ttt*/numberInRange,
 
-  numbersTotal : numbersTotal,
+  /*ttt*/numbersTotal,
 
-  numberFrom : numberFrom,
-  numbersFrom : numbersFrom, /* qqq : add test coverage */
-  numberFromStr : numberFromStr,
+  /*ttt*/numberFrom,
+  /*ttt*/numbersFrom, /* qqq : add test coverage */
+  /*ttt*/numberFromStr,
 
-  numbersSlice : numbersSlice,
+  /*ttt*/numbersSlice,
 
-  numberRandomInRange : numberRandomInRange,
-  numberRandomInt : numberRandomInt,
-  numberRandomIntBut : numberRandomIntBut, /* dubious */
+  /*ttt*/numberRandomInRange,
+  /*ttt*/numberRandomInt,
+  /*ttt*/numberRandomIntBut, /* dubious */
 
-  numbersMake : numbersMake,
-  numbersFromNumber : numbersFromNumber,
-  numbersFromInt : numbersFromInt,
+  /*ttt*/numbersMake,
+  /*ttt*/numbersFromNumber,
+  /*ttt*/numbersFromInt,
 
-  numbersMake_functor : numbersMake_functor,
-  numbersFrom_functor : numbersFrom_functor,
+  /*ttt*/numbersMake_functor,
+  /*ttt*/numbersFrom_functor,
 
-  // numberClamp : numberClamp,
-  // numberMix : numberMix,
+  // /*ttt*/numberClamp,
+  // /*ttt*/numberMix,
 
 }
 

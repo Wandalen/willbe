@@ -83,7 +83,7 @@ var Self =
   tests :
   {
 
-    isLike : isLike,
+    /*ttt*/isLike,
 
   },
 

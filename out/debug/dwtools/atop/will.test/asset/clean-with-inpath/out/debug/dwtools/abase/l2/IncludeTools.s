@@ -220,13 +220,13 @@ function _includeAnyAct( srcs )
     var result;
     if( handler.include )
     {
-      paths.push({ path : handler.include, handler : handler }); debugger;
+      paths.push({ path : handler.include, /*ttt*/handler }); debugger;
     }
     else if( handler.includeAny )
     {
       _.assert( _.arrayIs( handler.includeAny ),'include handler expect an array ( includeAny ) if present' );
       for( var p = 0 ; p < handler.includeAny.length ; p++ )
-      paths.push({ path : handler.includeAny[ p ], handler : handler });
+      paths.push({ path : handler.includeAny[ p ], /*ttt*/handler });
     }
     else throw _.err( 'Handler does not has ( include ) neither ( includeAny ).\nCant use the handler to include file',src );
 
@@ -371,24 +371,24 @@ var Proto =
 
   /* qqq : comment out maybe !!! */
 
-  usePath : usePath,
-  usePathGlobally : usePathGlobally,
-  _usePathGlobally : _usePathGlobally,
-  _usePathGloballyChildren : _usePathGloballyChildren,
+  /*ttt*/usePath,
+  /*ttt*/usePathGlobally,
+  /*ttt*/_usePathGlobally,
+  /*ttt*/_usePathGloballyChildren,
 
   //
 
-  _includeWithRequireAct : _includeWithRequireAct,
-  _includeAct : _includeAct,
-  _includeAnyAct : _includeAnyAct,
+  /*ttt*/_includeWithRequireAct,
+  /*ttt*/_includeAct,
+  /*ttt*/_includeAnyAct,
 
-  _includeWithRequire : _includeWithRequire,
-  include : include,
+  /*ttt*/_includeWithRequire,
+  /*ttt*/include,
 
-  _includeWithRequireAny : _includeWithRequireAny,
-  includeAny : includeAny,
+  /*ttt*/_includeWithRequireAny,
+  /*ttt*/includeAny,
 
-  isIncluded : isIncluded,
+  /*ttt*/isIncluded,
 
 }
 

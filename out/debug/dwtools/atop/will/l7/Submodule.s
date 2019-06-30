@@ -119,7 +119,7 @@ function form3()
       let oModule = submodule.oModule;
       submodule.oModule = null;
       oModule.finit();
-      submodule.formed = 2; // yyy
+      submodule.formed = 2;
     }
     else
     {

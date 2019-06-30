@@ -283,7 +283,7 @@ function performExportedReflectors( exportSelector )
   else _.assert( 0 );
 
   exportedReflector.criterion = _.mapExtend( null, exported.criterion );
-  exportedReflector.generated = 1; // yyy
+  exportedReflector.generated = 1;
   exportedReflector.form();
   exported.exportedReflector = exportedReflector;
 

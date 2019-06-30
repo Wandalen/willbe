@@ -1721,26 +1721,26 @@ var Self =
   tests :
   {
 
-    regexpIdentical : regexpIdentical,
+    /*ttt*/regexpIdentical,
 
-    regexpsSources : regexpsSources,
-    regexpsJoin : regexpsJoin,
-    regexpsAtLeastFirst : regexpsAtLeastFirst,
+    /*ttt*/regexpsSources,
+    /*ttt*/regexpsJoin,
+    /*ttt*/regexpsAtLeastFirst,
 
-    regexpsNone : regexpsNone,
-    regexpsAny : regexpsAny,
-    regexpsAll : regexpsAll,
+    /*ttt*/regexpsNone,
+    /*ttt*/regexpsAny,
+    /*ttt*/regexpsAll,
 
-    _regexpTest : _regexpTest,
-    regexpTest : regexpTest,
+    /*ttt*/_regexpTest,
+    /*ttt*/regexpTest,
 
-    regexpTestAll : regexpTestAll,
-    regexpTestAny : regexpTestAny,
-    regexpTestNone : regexpTestNone,
+    /*ttt*/regexpTestAll,
+    /*ttt*/regexpTestAny,
+    /*ttt*/regexpTestNone,
 
-    regexpsTestAll : regexpsTestAll,
-    regexpsTestAny : regexpsTestAny,
-    regexpsTestNone : regexpsTestNone,
+    /*ttt*/regexpsTestAll,
+    /*ttt*/regexpsTestAny,
+    /*ttt*/regexpsTestNone,
 
   }
 

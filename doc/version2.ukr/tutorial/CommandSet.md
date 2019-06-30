@@ -6,7 +6,7 @@
 
 [Команда `.set`](../concept/Command.md#Таблиця-команд-утиліти-willbe) призначена для зміни внутрішніх станів (налаштувань) утиліти. Наприклад, `willbe` може встановити параметр `verbosity`, який відповідає за вивід сервісної інформації виконання команди. 
 
-Для використання команди введіть `will .set verbosity:[n] ; [command] [argument]` (в деяких терміналах  ввід з лапками - `will ".set verbosity:[n] ; [command] [argument]"`), де `verbosity` - відповідно, деталізація виводу; `[n]` - число від 0 до 9 яке встановлює ступінь деталізації, 9 - найвищий ступінь; `[command]` - команда для якої виводиться інформація виконання; `[argument]` - аргумент команди, якщо він необхідний.  
+Для використання команди введіть `will .imply verbosity:[n] ; [command] [argument]` (в деяких терміналах  ввід з лапками - `will ".imply verbosity:[n] ; [command] [argument]"`), де `verbosity` - відповідно, деталізація виводу; `[n]` - число від 0 до 9 яке встановлює ступінь деталізації, 9 - найвищий ступінь; `[command]` - команда для якої виводиться інформація виконання; `[argument]` - аргумент команди, якщо він необхідний.  
 
 ### Дослідження команди `.set` 
 
@@ -30,7 +30,7 @@ setCommand
 about :
 
   name : setVerbosity
-  description : "To use .set command"
+  description : "To use .imply command"
   version : 0.0.1
 
 submodule :
@@ -70,11 +70,11 @@ build :
 В `вілфайлі` поміщено два сценарії. Перший, з назвою `submodules.download`, для завантаження віддалених підмодулів, а другий, з назвою `submodules.export` - для експорту файлів з директорії підмодуля `PathFundamentals`.  
 
 <details>
-    <summary><u>Вивід команди <code>will .set verbosity:9 ; .build</code></u></summary>
+    <summary><u>Вивід команди <code>will .imply verbosity:9 ; .build</code></u></summary>
 
 ```
-[user@user ~]$ will ".set verbosity:9 ; .build"
-Command ".set ; .build"
+[user@user ~]$ will ".imply verbosity:9 ; .build"
+Command ".imply ; .build"
  s module::/path_to_module/UsingSetCommand preformed 1
  s module::/path_to_module/UsingSetCommand preformed 2
  s module::/path_to_module/UsingSetCommand preformed 3
@@ -160,7 +160,7 @@ Already up-to-date.
 
 </details>
 
-Запустіть побудову завантаження підмодулів з найвищим рівнем вербальності (`will .set verbosity:9 ; .build`). Порівняйте результати виводу з приведеними вище.
+Запустіть побудову завантаження підмодулів з найвищим рівнем вербальності (`will .imply verbosity:9 ; .build`). Порівняйте результати виводу з приведеними вище.
 
 Вивід команди з найвищим рівнем вербальності показує всі етапи виконання. Починається з підготовки `вілфайла`, зчитування інформації про підмодулі і лише після цього, побудова. На етапі побудови також виводиться додаткова інформація про завантаження підмодуля і зчитування його `вілфайлів`.
 
@@ -179,11 +179,11 @@ setCommand
 Після побудови в модулі з'явилась директорія `.module` з віддаленим підмодулем `PathFundamentals`.
 
 <details>
-    <summary><u>Вивід команди <code>will .set verbosity:4 ; .export</code></u></summary>
+    <summary><u>Вивід команди <code>will .imply verbosity:4 ; .export</code></u></summary>
 
 ```
-[user@user ~]$ will .set verbosity:4 ; .export
-Command ".set ; .export"
+[user@user ~]$ will .imply verbosity:4 ; .export
+Command ".imply ; .export"
 Trying to open /path_to_module/UsingSetCommand.will
 Trying to open /path_to_module/UsingSetCommand.im.will
 Trying to open /path_to_module/UsingSetCommand.ex.will
@@ -229,11 +229,11 @@ setCommand
 Перегляньте зміни в структурі файлів. В модулі додатково згенерована директорія `out` з експортованими файлами.
 
 <details>
-    <summary><u>Вивід команди <code>will .set verbosity:0 ; .build</code></u></summary>
+    <summary><u>Вивід команди <code>will .imply verbosity:0 ; .build</code></u></summary>
 
 ```
-[user@user ~]$ will .set verbosity:0 ; .build
-Command ".set ; .build"
+[user@user ~]$ will .imply verbosity:0 ; .build
+Command ".imply ; .build"
  . Read 1 will-files in 0.082s
 
 ```
@@ -245,7 +245,7 @@ Command ".set ; .build"
 Зі зменшенням величини параметра `verbosity` зменшувалась кількість рядків виводу результатів команди в консоль, а при `verbosity:0` утиліта взагалі не вивела повідомлень.
 
 <details>
-  <summary><u>Структура модуля після вводу <code>will .set verbosity:0 ; .build</code></u></summary>
+  <summary><u>Структура модуля після вводу <code>will .imply verbosity:0 ; .build</code></u></summary>
 
 ```
 setCommand

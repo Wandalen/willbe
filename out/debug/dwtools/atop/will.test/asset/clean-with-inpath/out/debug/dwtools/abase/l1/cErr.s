@@ -1309,7 +1309,7 @@ let ErrorAbort = _.error_functor( 'ErrorAbort' );
 
 let error =
 {
-  ErrorAbort : ErrorAbort,
+  /*ttt*/ErrorAbort,
 }
 
 let Extend =

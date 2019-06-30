@@ -235,7 +235,7 @@ function commandsMake()
   {
 
     'help' :                    { e : _.routineJoin( will, will.commandHelp ),                        h : 'Get help.' },
-    'set' :                     { e : _.routineJoin( will, will.commandSet ),                         h : 'Command set.' },
+    'imply' :                   { e : _.routineJoin( will, will.commandImply ),                         h : 'Change state or imply variable value' },
 
     'resources list' :          { e : _.routineJoin( will, will.commandResourcesList ),               h : 'List information about resources of the current module.' },
     'paths list' :              { e : _.routineJoin( will, will.commandPathsList ),                   h : 'List paths of the current module.' },
@@ -302,7 +302,7 @@ function commandHelp( e )
 
 //
 
-function commandSet( e )
+function commandImply( e )
 {
   let will = this;
   let ca = e.ca;
@@ -953,10 +953,10 @@ function _commandEach_functor( fop )
 
         if( err )
         logger.log( _.errOnce( _.errBriefly( err ) ) );
-        debugger;
-        if( err )
-        logger.log( _.errOnce( _.errBriefly( err ) ) );
-        logger.log();
+        // debugger;
+        // if( err )
+        // logger.log( _.errOnce( _.errBriefly( err ) ) );
+        // // logger.log();
 
         // _.errLogOnce( _.errBriefly( err ) );
         if( err )
@@ -1040,7 +1040,7 @@ let Extend =
 
   commandsMake,
   commandHelp,
-  commandSet,
+  commandImply,
 
   _commandList,
   commandResourcesList,

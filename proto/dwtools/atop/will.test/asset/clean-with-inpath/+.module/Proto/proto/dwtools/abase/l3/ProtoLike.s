@@ -198,8 +198,8 @@ var symbolForAllClasses = Symbol.for( 'allClasses' );
 
 var Proto =
 {
-  is : is,
-  isLike : isLike,
+  /*ttt*/is,
+  /*ttt*/isLike,
 }
 
 _.assert( !_.construction );
@@ -212,7 +212,7 @@ _.mapExtend( _.construction, Proto );
 
 var Proto =
 {
-  like : like,
+  /*ttt*/like,
 }
 
 _.mapExtend( _, Proto );
@@ -223,10 +223,10 @@ _.mapExtend( _, Proto );
 
 var Proto =
 {
-  name : name,
-  also : also,
-  but : but,
-  _endGet : _endGet,
+  /*ttt*/name,
+  /*ttt*/also,
+  /*ttt*/but,
+  /*ttt*/_endGet,
 }
 
 _.classDeclare

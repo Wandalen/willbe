@@ -4,7 +4,7 @@ How to use command <code>.set</code> to change state of the utility, for example
 
 Працюючи з програмним забезпеченням розробники ставлять перед ним вимоги, які базуються на досвіді та конкретній задачі. При цьому налаштування програми за замовчуванням не завжди влаштовують ці вимоги.  
 Утиліта `willbe` призначена для побудови модульних систем, а взаємодія з нею здійснюється через командний рядок системи. До цього моменту ви бачили ввід в консолі та результат, а внутрішні процеси були приховані. З командою `.set` можливо прослідкувати і за ними.  
-`Willbe` може встановити параметр `verbosity`, який відповідає за вивід сервісної інформації виконання команди. Для використання введіть `will .set verbosity:[n] ; [command] [argument]` (в деяких bash-терміналах з лапками - `will ".set verbosity:[n] ; [command] [argument]"`), де `verbosity` - відповідно, деталізація логу; `[n]` - число від 0 до 8 яке встановлює ступінь деталізації, 8 - найвищий ступінь; `[command]` - команда для якої виводиться лог; `[argument]` - аргумент команди, якщо він необхідний.  
+`Willbe` може встановити параметр `verbosity`, який відповідає за вивід сервісної інформації виконання команди. Для використання введіть `will .imply verbosity:[n] ; [command] [argument]` (в деяких bash-терміналах з лапками - `will ".imply verbosity:[n] ; [command] [argument]"`), де `verbosity` - відповідно, деталізація логу; `[n]` - число від 0 до 8 яке встановлює ступінь деталізації, 8 - найвищий ступінь; `[command]` - команда для якої виводиться лог; `[argument]` - аргумент команди, якщо він необхідний.  
 Створіть наступну конфігурацію файлів для дослідження параметру `verbosity`:  
 
 <details>
@@ -27,7 +27,7 @@ setCommand
 about :
 
   name : setVerbosity
-  description : "To use .set command"
+  description : "To use .imply command"
   version : 0.0.1
 
 submodule :
@@ -67,14 +67,14 @@ build :
 
 </details>
 
-Запустіть побудову завантаження підмодулів з найвищим рівнем вербальності (`will .set verbosity:8 ; .build`):
+Запустіть побудову завантаження підмодулів з найвищим рівнем вербальності (`will .imply verbosity:8 ; .build`):
 
 <details>
-    <summary><u>Вивід команди <code>will .set verbosity:8 ; .build</code></u></summary>
+    <summary><u>Вивід команди <code>will .imply verbosity:8 ; .build</code></u></summary>
 
 ```
-[user@user ~]$ will ".set verbosity:8 ; .build"
-Command ".set ; .build"
+[user@user ~]$ will ".imply verbosity:8 ; .build"
+Command ".imply ; .build"
  s module::/path_to_module/UsingSetCommand preformed 1
  s module::/path_to_module/UsingSetCommand preformed 2
  s module::/path_to_module/UsingSetCommand preformed 3
@@ -174,11 +174,11 @@ setCommand
 Експортуйте модуль зі значенням `verbosity:4`:
 
 <details>
-    <summary><u>Вивід команди <code>will .set verbosity:4 ; .export</code></u></summary>
+    <summary><u>Вивід команди <code>will .imply verbosity:4 ; .export</code></u></summary>
 
 ```
-[user@user ~]$ will .set verbosity:4 ; .export
-Command ".set ; .export"
+[user@user ~]$ will .imply verbosity:4 ; .export
+Command ".imply ; .export"
 Trying to open /path_to_module/UsingSetCommand.will
 Trying to open /path_to_module/UsingSetCommand.im.will
 Trying to open /path_to_module/UsingSetCommand.ex.will
@@ -219,11 +219,11 @@ setCommand
 Видаліть підмодулі (`will .submodules.clean`) та завантажте з встановленим `verbosity:0`:
 
 <details>
-    <summary><u>Вивід команди <code>will .set verbosity:0 ; .build</code></u></summary>
+    <summary><u>Вивід команди <code>will .imply verbosity:0 ; .build</code></u></summary>
 
 ```
-[user@user ~]$ will .set verbosity:0 ; .build
-Command ".set ; .build"
+[user@user ~]$ will .imply verbosity:0 ; .build
+Command ".imply ; .build"
  . Read 1 willfiles in 0.082s
 
 ```
@@ -241,7 +241,7 @@ setCommand
 
 </details>
 <details>
-  <summary><u>Структура модуля після вводу <code>will .set verbosity:0 ; .build</code></u></summary>
+  <summary><u>Структура модуля після вводу <code>will .imply verbosity:0 ; .build</code></u></summary>
 
 ```
 setCommand

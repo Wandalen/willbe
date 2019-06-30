@@ -380,7 +380,7 @@ function _err( o )
     o.location = _.diagnosticLocation
     ({
       error : result,
-      stack : stack,
+      /*ttt*/stack,
       location : o.location,
     });
     c = _.diagnosticCode
@@ -822,13 +822,42 @@ function errLog()
     level : 2,
   });
 
+  return _._errLog( err );
+}
+
+//
+
+function errLogOnce( err )
+{
+
+  err = _err
+  ({
+    args : arguments,
+    level : 2,
+  });
+
+  if( err.attended )
+  return err;
+
+  return _._errLog( err );
+}
+
+//
+
+function _errLog( err )
+{
+  let c = _global.logger || _global.console;
+
+  debugger;
+
   /* */
 
   if( _.routineIs( err.toString ) )
   {
     let str = err.toString();
     if( _.loggerIs( c ) )
-    c.error( '#inputRaw : 1#' + str + '#inputRaw : 0#' )
+    c.error( str )
+    // c.error( '#inputRaw : 1#' + str + '#inputRaw : 0#' )
     else
     c.error( str );
   }
@@ -850,9 +879,9 @@ function errLog()
 
 //
 
-function errLogOnce( err )
+function errOnce( err )
 {
-  let c = _global.logger || _global.console;
+
   err = _err
   ({
     args : arguments,
@@ -860,22 +889,10 @@ function errLogOnce( err )
   });
 
   if( err.attended )
-  return err;
-
-  /* */
-
-  if( _.routineIs( err.toString ) )
-  {
-    c.error( err.toString() );
-  }
-  else
-  {
-    c.error( err );
-  }
-
-  /* */
+  return undefined;
 
   _.errAttend( err );
+
   return err;
 }
 
@@ -1289,7 +1306,7 @@ function assertOwnNoConstructor( ins )
 //
 // let error =
 // {
-//   ErrorAbort : ErrorAbort,
+//   /*ttt*/ErrorAbort,
 // }
 
 // --
@@ -1307,7 +1324,7 @@ function assertOwnNoConstructor( ins )
 
 let Fields =
 {
-  // error : error,
+  // /*ttt*/error,
   error : Object.create( null ),
   debuggerEnabled : !!Config.debug,
 }
@@ -1343,6 +1360,9 @@ let Routines =
 
   errLog,
   errLogOnce,
+  _errLog,
+
+  errOnce,
 
   // checker
 

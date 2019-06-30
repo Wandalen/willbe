@@ -210,9 +210,9 @@ function fieldsGroupComposesExtend( dstPrototype, srcMap )
   let fieldsGroupName = 'Composes';
   return _.fieldsGroupDeclare
   ({
-    fieldsGroupName : fieldsGroupName,
-    dstPrototype : dstPrototype,
-    srcMap : srcMap,
+    /*ttt*/fieldsGroupName,
+    /*ttt*/dstPrototype,
+    /*ttt*/srcMap,
     // filter : _.field.mapper.bypass,
   });
 
@@ -243,9 +243,9 @@ function fieldsGroupAggregatesExtend( dstPrototype,srcMap )
   let fieldsGroupName = 'Aggregates';
   return _.fieldsGroupDeclare
   ({
-    fieldsGroupName : fieldsGroupName,
-    dstPrototype : dstPrototype,
-    srcMap : srcMap,
+    /*ttt*/fieldsGroupName,
+    /*ttt*/dstPrototype,
+    /*ttt*/srcMap,
     // filter : _.field.mapper.bypass,
   });
 
@@ -276,9 +276,9 @@ function fieldsGroupAssociatesExtend( dstPrototype,srcMap )
   let fieldsGroupName = 'Associates';
   return _.fieldsGroupDeclare
   ({
-    fieldsGroupName : fieldsGroupName,
-    dstPrototype : dstPrototype,
-    srcMap : srcMap,
+    /*ttt*/fieldsGroupName,
+    /*ttt*/dstPrototype,
+    /*ttt*/srcMap,
     // filter : _.field.mapper.bypass,
   });
 
@@ -309,9 +309,9 @@ function fieldsGroupRestrictsExtend( dstPrototype,srcMap )
   let fieldsGroupName = 'Restricts';
   return _.fieldsGroupDeclare
   ({
-    fieldsGroupName : fieldsGroupName,
-    dstPrototype : dstPrototype,
-    srcMap : srcMap,
+    /*ttt*/fieldsGroupName,
+    /*ttt*/dstPrototype,
+    /*ttt*/srcMap,
     // filter : _.field.mapper.bypass,
   });
 
@@ -342,9 +342,9 @@ function fieldsGroupComposesSupplement( dstPrototype, srcMap )
   let fieldsGroupName = 'Composes';
   return _.fieldsGroupDeclare
   ({
-    fieldsGroupName : fieldsGroupName,
-    dstPrototype : dstPrototype,
-    srcMap : srcMap,
+    /*ttt*/fieldsGroupName,
+    /*ttt*/dstPrototype,
+    /*ttt*/srcMap,
     filter : _.field.mapper.dstNotHas,
   });
 
@@ -375,9 +375,9 @@ function fieldsGroupAggregatesSupplement( dstPrototype,srcMap )
   let fieldsGroupName = 'Aggregates';
   return _.fieldsGroupDeclare
   ({
-    fieldsGroupName : fieldsGroupName,
-    dstPrototype : dstPrototype,
-    srcMap : srcMap,
+    /*ttt*/fieldsGroupName,
+    /*ttt*/dstPrototype,
+    /*ttt*/srcMap,
     filter : _.field.mapper.dstNotHas,
   });
 
@@ -408,9 +408,9 @@ function fieldsGroupAssociatesSupplement( dstPrototype,srcMap )
   let fieldsGroupName = 'Associates';
   return _.fieldsGroupDeclare
   ({
-    fieldsGroupName : fieldsGroupName,
-    dstPrototype : dstPrototype,
-    srcMap : srcMap,
+    /*ttt*/fieldsGroupName,
+    /*ttt*/dstPrototype,
+    /*ttt*/srcMap,
     filter : _.field.mapper.dstNotHas,
   });
 
@@ -441,9 +441,9 @@ function fieldsGroupRestrictsSupplement( dstPrototype,srcMap )
   let fieldsGroupName = 'Restricts';
   return _.fieldsGroupDeclare
   ({
-    fieldsGroupName : fieldsGroupName,
-    dstPrototype : dstPrototype,
-    srcMap : srcMap,
+    /*ttt*/fieldsGroupName,
+    /*ttt*/dstPrototype,
+    /*ttt*/srcMap,
     filter : _.field.mapper.dstNotHas,
   });
 
@@ -1315,8 +1315,8 @@ function mixinHas( proto,mixin )
  *
  *  let Proto =
  *  {
- *   init : init,
- *   Composes : Composes
+ *   init,
+ *   Composes
  *  }
  *
  *  _.classDeclare
@@ -1621,7 +1621,7 @@ classDeclare.defaults =
  * let Self = function Betta( o ) { };
  * let Statics = { staticFunction : function staticFunction(){ } };
  * let Composes = { a : 1, b : 2 };
- * let Proto = { Composes : Composes, Statics : Statics };
+ * let Proto = { Composes, Statics };
  *
  * let proto =  _.classExtend
  * ({
@@ -1911,9 +1911,9 @@ to prioritize ordinary facets adjustment order should be
         name : s,
         value : o.prototype.Statics[ s ],
         prototype : o.prototype,
-        extending : extending,
-        dstNotOwn : dstNotOwn,
-        fieldsOfRelationsGroups : fieldsOfRelationsGroups,
+        /*ttt*/extending,
+        /*ttt*/dstNotOwn,
+        /*ttt*/fieldsOfRelationsGroups,
       });
 
     }
@@ -2022,7 +2022,7 @@ function staticDeclare( o )
       _.accessor.declare
       ({
         object : o.prototype,
-        methods : methods,
+        /*ttt*/methods,
         names : o.name,
         combining : 'rewrite',
         configurable : true,
@@ -2072,7 +2072,7 @@ function staticDeclare( o )
       _.accessor.declare
       ({
         object : o.prototype.constructor,
-        methods : methods,
+        /*ttt*/methods,
         names : o.name,
         combining : 'rewrite',
         enumerable : true,
@@ -2296,8 +2296,8 @@ function prototypeUnitedInterface( protos )
       _.accessor.declare
       ({
         object : result,
-        names : names,
-        methods : methods,
+        /*ttt*/names,
+        /*ttt*/methods,
         strict : 0,
         prime : 0,
       });
@@ -3216,12 +3216,12 @@ Object.freeze( DefaultForbiddenNames );
 
 let Define =
 {
-  Definition : Definition,
-  common : common,
-  own : own,
-  instanceOf : instanceOf,
-  ownMadeBy : ownMadeBy,
-  contained : contained,
+  /*ttt*/Definition,
+  /*ttt*/common,
+  /*ttt*/own,
+  /*ttt*/instanceOf,
+  /*ttt*/ownMadeBy,
+  /*ttt*/contained,
 }
 
 //
@@ -3229,15 +3229,15 @@ let Define =
 let Fields =
 {
 
-  KnownConstructorFields : KnownConstructorFields,
+  /*ttt*/KnownConstructorFields,
 
-  DefaultFieldsGroups : DefaultFieldsGroups,
-  DefaultFieldsGroupsRelations : DefaultFieldsGroupsRelations,
-  DefaultFieldsGroupsCopyable : DefaultFieldsGroupsCopyable,
-  DefaultFieldsGroupsTight : DefaultFieldsGroupsTight,
-  DefaultFieldsGroupsInput : DefaultFieldsGroupsInput,
+  /*ttt*/DefaultFieldsGroups,
+  /*ttt*/DefaultFieldsGroupsRelations,
+  /*ttt*/DefaultFieldsGroupsCopyable,
+  /*ttt*/DefaultFieldsGroupsTight,
+  /*ttt*/DefaultFieldsGroupsInput,
 
-  DefaultForbiddenNames : DefaultForbiddenNames,
+  /*ttt*/DefaultForbiddenNames,
   CallableObject : wCallableObject,
 
 }

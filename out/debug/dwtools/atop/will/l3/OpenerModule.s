@@ -498,7 +498,7 @@ function open()
 
     if( opener.rootModule === null || opener.rootModule === openedModule )
     if( !opener.original )
-    if( opener.willfilesArray.length ) // yyy
+    if( opener.willfilesArray.length )
     opener.openModulesFromData
     ({
       willfilesArray : opener.willfilesArray.slice(),
@@ -1331,15 +1331,6 @@ function remoteIsDownloadedChanged()
     opener.pathResourceMap[ 'current.remote' ].path = null;
   }
 
-  /* */
-
-  if( !opener.localPath )
-  if( opener.dirPath )
-  {
-    _.assert( _.strIs( opener.dirPath ) );
-    // opener.localPath = opener.dirPath; // yyy
-  }
-
 }
 
 //
@@ -1377,7 +1368,7 @@ function remoteForm()
   }
   else
   {
-    opener.isDownloaded = null; // yyy
+    opener.isDownloaded = null;
   }
 
   return opener;

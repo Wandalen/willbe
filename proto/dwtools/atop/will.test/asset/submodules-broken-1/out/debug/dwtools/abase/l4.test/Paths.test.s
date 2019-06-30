@@ -1209,8 +1209,8 @@ function relative( test )
     // test.case = 'as single object'
     // var o =
     // {
-    //   relative : relative,
-    //   path : path
+    //   /*ttt*/relative,
+    //   /*ttt*/path
     // }
     // allObjects.push( o );
     // var got = _.paths.relative( o );

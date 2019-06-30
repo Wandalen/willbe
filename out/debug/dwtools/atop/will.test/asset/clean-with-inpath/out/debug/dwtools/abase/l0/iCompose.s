@@ -122,8 +122,8 @@ let supervisor =
 let Extend =
 {
 
-  chainer : chainer,
-  supervisor : supervisor
+  /*ttt*/chainer,
+  /*ttt*/supervisor
 
 }
 

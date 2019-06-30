@@ -21,8 +21,6 @@ let _floor = Math.floor;
 // time
 // --
 
-//
-
 let _TimeInfinity = Math.pow( 2, 31 )-1;
 function timeBegin( delay, onEnd )
 {
@@ -314,7 +312,7 @@ function timeOut_pre( routine, args )
     if( args[ 2 ] !== undefined || args[ 3 ] !== undefined )
     onEnd = _.routineJoin.call( _, args[ 1 ], args[ 2 ], args[ 3 ] );
 
-    o = { delay : delay, onEnd : onEnd }
+    o = { /*ttt*/delay, /*ttt*/onEnd }
 
   }
   else

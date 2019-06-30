@@ -21,7 +21,6 @@ let _FunctionBind = Function.prototype.bind;
 let _ObjectToString = Object.prototype.toString;
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
 
-// let __assert = _.assert;
 let _arraySlice = _.longSlice;
 let strType = _.strType;
 
@@ -2981,7 +2980,7 @@ _strExtractInlinedStereo_body.defaults =
  *   if( strip.length )
  *   return strip.toUpperCase();
  * }
- * _.strExtractInlinedStereo.call( { postfix : '$', onInlined : onInlined }, '#abc$' );
+ * _.strExtractInlinedStereo.call( { postfix : '$', onInlined }, '#abc$' );
  * //returns [ 'ABC' ]
  *
  * @method strExtractInlinedStereo
@@ -4400,7 +4399,7 @@ let Proto =
 
   strSplitCamel,
 
-  // strSplitNaive : strSplitNaive,
+  // /*ttt*/strSplitNaive,
 
   // extractor
 

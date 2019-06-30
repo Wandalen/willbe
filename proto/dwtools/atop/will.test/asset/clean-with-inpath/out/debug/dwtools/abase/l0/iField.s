@@ -1151,71 +1151,71 @@ let make =
 
   //
 
-  bypass : bypass,
-  assigning : assigning,
-  primitive : primitive,
-  hiding : hiding,
-  appendingAnything : appendingAnything,
-  appendingArrays : appendingArrays,
-  appendingOnce : appendingOnce,
-  removing : removing,
-  notPrimitiveAssigning : notPrimitiveAssigning,
-  assigningRecursive : assigningRecursive,
-  drop : drop,
+  /*ttt*/bypass,
+  /*ttt*/assigning,
+  /*ttt*/primitive,
+  /*ttt*/hiding,
+  /*ttt*/appendingAnything,
+  /*ttt*/appendingArrays,
+  /*ttt*/appendingOnce,
+  /*ttt*/removing,
+  /*ttt*/notPrimitiveAssigning,
+  /*ttt*/assigningRecursive,
+  /*ttt*/drop,
 
   // src
 
-  srcDefined : srcDefined,
-  srcNull : srcNull,
+  /*ttt*/srcDefined,
+  /*ttt*/srcNull,
 
   // dst
 
-  dstNotConstant : dstNotConstant,
-  dstAndSrcOwn : dstAndSrcOwn,
-  dstUndefinedSrcNotUndefined : dstUndefinedSrcNotUndefined,
+  /*ttt*/dstNotConstant,
+  /*ttt*/dstAndSrcOwn,
+  /*ttt*/dstUndefinedSrcNotUndefined,
 
   // dstNotHas
 
-  dstNotHas : dstNotHas,
-  dstNotHasOrHasNull : dstNotHasOrHasNull,
-  dstNotHasOrHasNil : dstNotHasOrHasNil,
+  /*ttt*/dstNotHas,
+  /*ttt*/dstNotHasOrHasNull,
+  /*ttt*/dstNotHasOrHasNil,
 
-  dstNotHasAssigning : dstNotHasAssigning,
-  dstNotHasAppending : dstNotHasAppending,
-  dstNotHasSrcPrimitive : dstNotHasSrcPrimitive,
+  /*ttt*/dstNotHasAssigning,
+  /*ttt*/dstNotHasAppending,
+  /*ttt*/dstNotHasSrcPrimitive,
 
-  dstNotHasSrcOwn : dstNotHasSrcOwn,
-  dstNotHasSrcOwnAssigning : dstNotHasSrcOwnAssigning,
-  dstNotHasSrcOwnRoutines : dstNotHasSrcOwnRoutines,
-  dstNotHasAssigningRecursive : dstNotHasAssigningRecursive,
+  /*ttt*/dstNotHasSrcOwn,
+  /*ttt*/dstNotHasSrcOwnAssigning,
+  /*ttt*/dstNotHasSrcOwnRoutines,
+  /*ttt*/dstNotHasAssigningRecursive,
 
   // dstNotOwn
 
-  dstNotOwn : dstNotOwn,
-  dstNotOwnSrcOwn : dstNotOwnSrcOwn,
-  dstNotOwnSrcOwnAssigning : dstNotOwnSrcOwnAssigning,
-  dstNotOwnOrUndefinedAssigning : dstNotOwnOrUndefinedAssigning,
-  dstNotOwnAssigning : dstNotOwnAssigning,
-  dstNotOwnAppending : dstNotOwnAppending,
-  dstNotOwnFromDefinition : dstNotOwnFromDefinition,
-  dstNotOwnFromDefinitionStrictlyPrimitive : dstNotOwnFromDefinitionStrictlyPrimitive,
+  /*ttt*/dstNotOwn,
+  /*ttt*/dstNotOwnSrcOwn,
+  /*ttt*/dstNotOwnSrcOwnAssigning,
+  /*ttt*/dstNotOwnOrUndefinedAssigning,
+  /*ttt*/dstNotOwnAssigning,
+  /*ttt*/dstNotOwnAppending,
+  /*ttt*/dstNotOwnFromDefinition,
+  /*ttt*/dstNotOwnFromDefinitionStrictlyPrimitive,
 
   // dstHas
 
-  dstHasMaybeUndefined : dstHasMaybeUndefined,
-  dstHasButUndefined : dstHasButUndefined,
-  dstHasSrcOwn : dstHasSrcOwn,
-  dstHasSrcNotOwn : dstHasSrcNotOwn,
+  /*ttt*/dstHasMaybeUndefined,
+  /*ttt*/dstHasButUndefined,
+  /*ttt*/dstHasSrcOwn,
+  /*ttt*/dstHasSrcNotOwn,
 
   // srcOwn
 
-  srcOwn : srcOwn,
-  srcOwnRoutines : srcOwnRoutines,
-  srcOwnAssigning : srcOwnAssigning,
-  srcOwnPrimitive : srcOwnPrimitive,
-  srcOwnNotPrimitiveAssigning : srcOwnNotPrimitiveAssigning,
-  srcOwnNotPrimitiveAssigningRecursive : srcOwnNotPrimitiveAssigningRecursive,
-  srcOwnAssigningRecursive : srcOwnAssigningRecursive,
+  /*ttt*/srcOwn,
+  /*ttt*/srcOwnRoutines,
+  /*ttt*/srcOwnAssigning,
+  /*ttt*/srcOwnPrimitive,
+  /*ttt*/srcOwnNotPrimitiveAssigning,
+  /*ttt*/srcOwnNotPrimitiveAssigningRecursive,
+  /*ttt*/srcOwnAssigningRecursive,
 
 }
 
@@ -1226,11 +1226,11 @@ let make =
 let Extend =
 {
 
-  make : make,
+  /*ttt*/make,
   mapper : Object.create( null ),
   filter : Object.create( null ),
-  and : and,
-  mapperFromFilter : mapperFromFilter,
+  /*ttt*/and,
+  /*ttt*/mapperFromFilter,
 
 }
 

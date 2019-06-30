@@ -1993,40 +1993,40 @@ var Self =
 
     _err   : _err,
     err    : err,
-    errLog : errLog,
+    /*ttt*/errLog,
     
     // test sureMap*
       
-    sureMapHasExactly : sureMapHasExactly,
-    sureMapOwnExactly : sureMapOwnExactly,
+    /*ttt*/sureMapHasExactly,
+    /*ttt*/sureMapOwnExactly,
       
-    sureMapHasOnly : sureMapHasOnly,
-    sureMapOwnOnly : sureMapOwnOnly,
+    /*ttt*/sureMapHasOnly,
+    /*ttt*/sureMapOwnOnly,
       
-    sureMapHasAll : sureMapHasAll,
-    sureMapOwnAll : sureMapOwnAll,
+    /*ttt*/sureMapHasAll,
+    /*ttt*/sureMapOwnAll,
       
-    sureMapHasNone : sureMapHasNone,
-    sureMapOwnNone : sureMapOwnNone,
+    /*ttt*/sureMapHasNone,
+    /*ttt*/sureMapOwnNone,
       
-    sureMapHasNoUndefine : sureMapHasNoUndefine,
+    /*ttt*/sureMapHasNoUndefine,
     
     // test assertMap*  
       
-    assertMapHasFields : assertMapHasFields,
-    assertMapOwnFields : assertMapOwnFields,
+    /*ttt*/assertMapHasFields,
+    /*ttt*/assertMapOwnFields,
       
-    assertMapHasOnly : assertMapHasOnly,
-    assertMapOwnOnly : assertMapOwnOnly,
+    /*ttt*/assertMapHasOnly,
+    /*ttt*/assertMapOwnOnly,
     
-    assertMapHasNone : assertMapHasNone,
-    assertMapOwnNone : assertMapOwnNone,
+    /*ttt*/assertMapHasNone,
+    /*ttt*/assertMapOwnNone,
       
-    assertMapHasNoUndefine : assertMapHasNoUndefine,
+    /*ttt*/assertMapHasNoUndefine,
       
     //
 
-    assert : assert,
+    /*ttt*/assert,
     diagnosticStack  : diagnosticStack
 
   }

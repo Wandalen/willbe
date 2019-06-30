@@ -179,12 +179,12 @@ function arrayFromCoercing( src )
 let Extend =
 {
 
-  makeSimilar : makeSimilar,
-  makeArrayOfLength : makeArrayOfLength,
-  makeArrayOfLengthZeroed : makeArrayOfLengthZeroed,
+  /*ttt*/makeSimilar,
+  /*ttt*/makeArrayOfLength,
+  /*ttt*/makeArrayOfLengthZeroed,
 
   arrayFrom : arrayFromCoercing,
-  arrayFromCoercing : arrayFromCoercing,
+  /*ttt*/arrayFromCoercing,
 
   array : nameSpace,
 

@@ -759,7 +759,7 @@ _normalize.defaults =
 
 function normalize( src )
 {
-  let result = this._normalize({ src : src, tolerant : false, strict : false });
+  let result = this._normalize({ /*ttt*/src, tolerant : false, strict : false });
 
   _.assert( _.strIs( src ), 'Expects string' );
   _.assert( arguments.length === 1, 'Expects single argument' );
@@ -780,7 +780,7 @@ function normalize( src )
 
 function normalizeStrict( src )
 {
-  let result = this._normalize({ src : src, tolerant : false, strict : true });
+  let result = this._normalize({ /*ttt*/src, tolerant : false, strict : true });
 
   _.assert( _.strIs( src ), 'Expects string' );
   _.assert( arguments.length === 1, 'Expects single argument' );
@@ -803,7 +803,7 @@ function normalizeTolerant( src )
 {
   _.assert( _.strIs( src ),'Expects string' );
 
-  let result = this._normalize({ src : src, tolerant : true, strict : false });
+  let result = this._normalize({ /*ttt*/src, tolerant : true, strict : false });
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( result === this._upStr || _.strEnds( result, this._upStr ) || !_.strEnds( result, this._upStr + this._upStr ) );
@@ -1237,7 +1237,7 @@ function exts( path )
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.strIs( path ), 'Expects string {-path-}, but got', _.strType( path ) );
 
-  path = this.name({ path : path,full : 1 });
+  path = this.name({ /*ttt*/path,full : 1 });
 
   let exts = path.split( '.' );
   exts.splice( 0, 1 );
@@ -2412,7 +2412,7 @@ function _commonPair( src1, src2 )
 
   function split( src )
   {
-    return _.strSplitFast( { src : src,delimeter : [ '/' ], preservingDelimeters : 1,preservingEmpty : 1 } );
+    return _.strSplitFast( { /*ttt*/src,delimeter : [ '/' ], preservingDelimeters : 1,preservingEmpty : 1 } );
   }
 
 }
@@ -2749,7 +2749,7 @@ let Parameters =
 let Fields =
 {
 
-  Parameters : Parameters,
+  /*ttt*/Parameters,
 
   fileProvider : null,
   path : Self,

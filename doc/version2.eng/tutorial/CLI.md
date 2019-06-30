@@ -14,7 +14,7 @@ After [installation](<Instalation.md>) of utility `willbe` enter the [`will .` c
 Command "."
 Ambiguity. Did you mean?
   .help - Get help.
-  .set - Command set.
+  .imply - Command set.
   .resources.list - List information about resources of the current module.
   .paths.list - List paths of the current module.
   .submodules.list - List submodules of the current module.

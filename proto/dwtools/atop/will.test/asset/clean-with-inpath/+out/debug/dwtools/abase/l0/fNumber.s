@@ -237,22 +237,22 @@ let Fields =
 let Routines =
 {
 
-  numberIs : numberIs,
-  numberIsNotNan : numberIsNotNan,
-  numberIsFinite : numberIsFinite,
-  numberIsInfinite : numberIsInfinite,
-  numberIsInt : numberIsInt,
+  /*ttt*/numberIs,
+  /*ttt*/numberIsNotNan,
+  /*ttt*/numberIsFinite,
+  /*ttt*/numberIsInfinite,
+  /*ttt*/numberIsInt,
 
-  numbersAre : numbersAre,
-  numbersAreIdentical : numbersAreIdentical,
-  numbersAreEquivalent : numbersAreEquivalent,
-  numbersAreFinite : numbersAreFinite,
-  numbersArePositive : numbersArePositive,
-  numbersAreInt : numbersAreInt,
+  /*ttt*/numbersAre,
+  /*ttt*/numbersAreIdentical,
+  /*ttt*/numbersAreEquivalent,
+  /*ttt*/numbersAreFinite,
+  /*ttt*/numbersArePositive,
+  /*ttt*/numbersAreInt,
 
-  numberInRange : numberInRange,
-  numberClamp : numberClamp,
-  numberMix : numberMix,
+  /*ttt*/numberInRange,
+  /*ttt*/numberClamp,
+  /*ttt*/numberMix,
 
 }
 

@@ -84,9 +84,9 @@ var Self =
   tests :
   {
 
-    objectLike : objectLike,
-    promiseIs : promiseIs,
-    consequenceLike : consequenceLike
+    /*ttt*/objectLike,
+    /*ttt*/promiseIs,
+    /*ttt*/consequenceLike
 
   }
 

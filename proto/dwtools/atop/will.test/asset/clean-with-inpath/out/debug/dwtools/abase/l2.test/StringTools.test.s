@@ -4899,7 +4899,7 @@ function strSplit( test )
     preservingQuoting : 0,
     inliningQuoting : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:', ' ', '', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -4916,7 +4916,7 @@ function strSplit( test )
     preservingQuoting : 1,
     inliningQuoting : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:', '" "', '', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -4933,7 +4933,7 @@ function strSplit( test )
     preservingQuoting : 0,
     inliningQuoting : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter: ', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -4950,7 +4950,7 @@ function strSplit( test )
     preservingQuoting : 1,
     inliningQuoting : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -4965,7 +4965,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', ' ( Tools', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
@@ -4980,7 +4980,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -4995,7 +4995,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '', ' ( Tools', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
@@ -5010,7 +5010,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -5025,7 +5025,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', ' ( Tools', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
@@ -5040,7 +5040,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -5056,7 +5056,7 @@ function strSplit( test )
     preservingDelimeters : 1,
     preservingQuoting : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -5071,7 +5071,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '', ' ( Tools', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
@@ -5086,7 +5086,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '( Tools', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
@@ -5101,7 +5101,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '/', '/', '( Tools', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
@@ -5116,7 +5116,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '', '( Tools', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
@@ -5131,7 +5131,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '/', '', '/', '( Tools', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
@@ -5146,7 +5146,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '( Tools', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
@@ -5161,7 +5161,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '/', '/', '( Tools', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
@@ -5176,7 +5176,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '', '( Tools', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
@@ -5191,7 +5191,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '/', '', '/', '( Tools', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
@@ -5218,7 +5218,7 @@ function strSplit( test )
     preservingQuoting : 1,
     inliningQuoting : 1,
     delimeter : [ '\n' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ '', '= Org', '', '- Q: "Where?"', '- A1: "Here."', '', '- A2: "There."', '' ];
@@ -5235,7 +5235,7 @@ function strSplit( test )
     preservingQuoting : 1,
     inliningQuoting : 0,
     delimeter : [ '\n' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ '', '= Org', '', '- Q:', '"Where?"', '', '- A1:', '"Here."', '', '', '- A2:', '"There."', '', '' ];
@@ -5252,7 +5252,7 @@ function strSplit( test )
     preservingQuoting : 0,
     inliningQuoting : 1,
     delimeter : [ '\n' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ '', '= Org', '', '- Q: Where?', '- A1: Here.', '', '- A2: There.', '' ];
@@ -5269,7 +5269,7 @@ function strSplit( test )
     preservingQuoting : 0,
     inliningQuoting : 0,
     delimeter : [ '\n' ],
-    src : src,
+    /*ttt*/src,
   }
   var got = _.strSplit( o );
   var expected = [ '', '= Org', '', '- Q:', 'Where?', '', '- A1:', 'Here.', '', '', '- A2:', 'There.', '', '' ];
@@ -5644,7 +5644,7 @@ function strSplit( test )
 //   var expected = [ 'Aa',' ','','<<!','',' ','','<<-','',' ','Bb' ];
 //   var got = _.strSplitNaive
 //   ({
-//     src : src,
+//     /*ttt*/src,
 //     delimeter : [ '->>>','<<<-','->>','<<-','!>>','<<!','>>','<<',' ' ],
 //     preservingEmpty : 1,
 //     preservingDelimeters : 1,
@@ -5657,7 +5657,7 @@ function strSplit( test )
 //   var expected = [ 'Aa',' ','<<!',' ','<<-',' ','Bb' ];
 //   var got = _.strSplitNaive
 //   ({
-//     src : src,
+//     /*ttt*/src,
 //     delimeter : [ '->>>','<<<-','->>','<<-','!>>','<<!','>>','<<',' ' ],
 //     preservingEmpty : 0,
 //     preservingDelimeters : 1,
@@ -5672,7 +5672,7 @@ function strSplit( test )
 //   var expected = [ 'Aa',' ','','<<<-','',' ','Bb' ];
 //   var got = _.strSplitNaive
 //   ({
-//     src : src,
+//     /*ttt*/src,
 //     delimeter : [ '->>>','<<<-','->>','<<-','!>>','<<!','>>','<<',' ' ],
 //     preservingEmpty : 1,
 //     preservingDelimeters : 1,
@@ -5687,7 +5687,7 @@ function strSplit( test )
 //   var expected = [ 'a1',' ','a2',' ','a3',' ','','<<<-','',' ','Bb' ];
 //   var got = _.strSplitNaive
 //   ({
-//     src : src,
+//     /*ttt*/src,
 //     delimeter : [ '->>>','<<<-','->>','<<-','!>>','<<!','>>','<<',' ' ],
 //     preservingEmpty : 1,
 //     preservingDelimeters : 1,
@@ -5701,7 +5701,7 @@ function strSplit( test )
 //   var expected = [ 'a,b,c' ];
 //   var got = _.strSplitNaive
 //   ({
-//     src : src,
+//     /*ttt*/src,
 //     delimeter : [ '.' ],
 //     preservingDelimeters : 1
 //   });
@@ -5713,7 +5713,7 @@ function strSplit( test )
 //   var expected = [ 'a,b,c' ];
 //   var got = _.strSplitNaive
 //   ({
-//     src : src,
+//     /*ttt*/src,
 //     delimeter : [ '.' ],
 //     preservingDelimeters : 1
 //   });
@@ -5727,7 +5727,7 @@ function strSplit( test )
 //   var expected = [ 'a', '', 'b', '', 'c', '', 'd' ];
 //   var got = _.strSplitNaive
 //   ({
-//     src : src,
+//     /*ttt*/src,
 //     delimeter : [ ',', '.' ],
 //     preservingEmpty : 1
 //   });
@@ -5739,7 +5739,7 @@ function strSplit( test )
 //   var expected = [ 'a', 'b', 'c', 'd' ];
 //   var got = _.strSplitNaive
 //   ({
-//     src : src,
+//     /*ttt*/src,
 //     delimeter : ',',
 //     preservingEmpty : 1
 //   });
@@ -5752,7 +5752,7 @@ function strSplit( test )
 //   var expected = [ '', '' ];
 //   var got = _.strSplitNaive
 //   ({
-//     src : src,
+//     /*ttt*/src,
 //     delimeter : ',',
 //     preservingEmpty : 1
 //   });
@@ -5764,7 +5764,7 @@ function strSplit( test )
 //   var expected = [];
 //   var got = _.strSplitNaive
 //   ({
-//     src : src,
+//     /*ttt*/src,
 //     delimeter : ',',
 //     preservingEmpty : 0
 //   });
@@ -8129,7 +8129,7 @@ function strLinesSelect( test )
 
   /**/
 
-  got = _.strLinesSelect({ src : src, range : [ 2, 5 ], zero : 4 });
+  got = _.strLinesSelect({ /*ttt*/src, range : [ 2, 5 ], zero : 4 });
   expected = 'a';
   test.identical( got, expected );
 
@@ -8141,7 +8141,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    src : src,
+    /*ttt*/src,
     line : 2,
     numberOfLines : 3,
     selectMode : 'center',
@@ -8154,7 +8154,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    src : src,
+    /*ttt*/src,
     line : 1,
     numberOfLines : 3,
     selectMode : 'center',
@@ -8167,7 +8167,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    src : src,
+    /*ttt*/src,
     line : 1,
     numberOfLines : 1,
     selectMode : 'center',
@@ -8180,7 +8180,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    src : src,
+    /*ttt*/src,
     line : 1,
     numberOfLines : 99,
     selectMode : 'center',
@@ -8194,7 +8194,7 @@ function strLinesSelect( test )
   var src = 'a\nb\nc\nd';
   got = _.strLinesSelect
   ({
-    src : src,
+    /*ttt*/src,
     line : 1,
     numberOfLines : -1,
     selectMode : 'center',
@@ -8207,7 +8207,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    src : src,
+    /*ttt*/src,
     line : 0,
     numberOfLines : 1,
     selectMode : 'center',
@@ -8235,7 +8235,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    src : src,
+    /*ttt*/src,
     line : 1,
     numberOfLines : 2,
     selectMode : 'begin',
@@ -8248,7 +8248,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    src : src,
+    /*ttt*/src,
     line : -1,
     numberOfLines : 2,
     selectMode : 'begin',
@@ -8261,7 +8261,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    src : src,
+    /*ttt*/src,
     line : 1,
     numberOfLines : 0,
     selectMode : 'begin',
@@ -8274,7 +8274,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    src : src,
+    /*ttt*/src,
     line : 1,
     numberOfLines : 99,
     selectMode : 'begin',
@@ -8287,7 +8287,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    src : src,
+    /*ttt*/src,
     line : 1,
     numberOfLines : 5,
     selectMode : 'begin',
@@ -8304,7 +8304,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    src : src,
+    /*ttt*/src,
     line : 4,
     numberOfLines : 2,
     selectMode : 'end'
@@ -8316,7 +8316,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    src : src,
+    /*ttt*/src,
     line : -1,
     numberOfLines : 2,
     selectMode : 'end'
@@ -8328,7 +8328,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    src : src,
+    /*ttt*/src,
     line : 1,
     numberOfLines : 0,
     selectMode : 'end'
@@ -8340,7 +8340,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    src : src,
+    /*ttt*/src,
     line : 1,
     numberOfLines : 99,
     selectMode : 'end'
@@ -8352,7 +8352,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    src : src,
+    /*ttt*/src,
     line : 1,
     numberOfLines : 5,
     selectMode : 'end',
@@ -8396,7 +8396,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    src : src,
+    /*ttt*/src,
     range : [ 1, 3 ],
     number : 1
   });
@@ -10154,7 +10154,7 @@ function strExtractInlined( test )
 
   test.case = 'trivial case';
   var srcStr = 'this #background:red#is#background:default# text and is not';
-  var got = _.strExtractInlined({ src : srcStr, onInlined : onInlined,  });
+  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined,  });
   var expected =
   [
     'this ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and is not'
@@ -10165,7 +10165,7 @@ function strExtractInlined( test )
 
   test.case = 'openning delimeter # does not have closing';
   var srcStr = 'this #background:red#is#background:default# text and # is not';
-  var got = _.strExtractInlined({ src : srcStr, onInlined : onInlined,  });
+  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined,  });
   var expected =
   [
     'this ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and # is not'
@@ -10176,7 +10176,7 @@ function strExtractInlined( test )
 
   test.case = 'two inlined substrings is not in fact inlined';
   var srcStr = '#simple # text #background:red#is#background:default# text and # is not#';
-  var got = _.strExtractInlined({ src : srcStr, onInlined : onInlined,  });
+  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined,  });
   var expected =
   [
     '#simple # text ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and # is not#'
@@ -10187,7 +10187,7 @@ function strExtractInlined( test )
 
   test.case = 'inlined at the beginning and false inlined';
   var srcStr = '#background:red#i#s#background:default##text';
-  var got = _.strExtractInlined({ src : srcStr, onInlined : onInlined,  });
+  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined,  });
   var expected =
   [
     '', [ 'background', 'red' ], 'i#s', [ 'background', 'default' ], '#text'
@@ -10198,7 +10198,7 @@ function strExtractInlined( test )
 
   test.case = 'inlined at the beginning and the end';
   var srcStr = '#background:red#i#s#background:default#';
-  var got = _.strExtractInlined({ src : srcStr, onInlined : onInlined,  });
+  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined,  });
   var expected =
   [
     '', [ 'background', 'red' ], 'i#s', [ 'background', 'default' ], ''
@@ -10209,7 +10209,7 @@ function strExtractInlined( test )
 
   test.case = 'inlined at the beginning and the end with preservingEmpty:0';
   var srcStr = '#background:red#i#s#background:default#';
-  var got = _.strExtractInlined({ src : srcStr, onInlined : onInlined, preservingEmpty : 0 });
+  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined, preservingEmpty : 0 });
   var expected =
   [
     [ 'background', 'red' ], 'i#s', [ 'background', 'default' ],
@@ -10220,7 +10220,7 @@ function strExtractInlined( test )
 
   test.case = 'wrapped by inlined text';
   var srcStr = '#background:red#text#background:default#';
-  var got = _.strExtractInlined({ src : srcStr, onInlined : onInlined,  } );
+  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined,  } );
   var expected =
   [
     '', [ 'background', 'red' ], 'text', [ 'background', 'default' ], '',

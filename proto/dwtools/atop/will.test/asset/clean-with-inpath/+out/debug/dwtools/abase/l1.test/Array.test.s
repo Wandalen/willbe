@@ -23,31 +23,31 @@ function bufferFrom( test )
 
   test.case = 'src:number,bufferConstructor:typed buffer';
   var src = 1;
-  var got = _.bufferFrom({ src : src, bufferConstructor : Uint8Array });
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Uint8Array });
   var expected = new Uint8Array([ src ]);
   test.identical( got, expected );
 
   test.case = 'src:str,bufferConstructor:typed buffer';
   var src = 'abc';
-  var got = _.bufferFrom({ src : src, bufferConstructor : Uint8Array });
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Uint8Array });
   var expected = new Uint8Array([ 97,98,99 ]);
   test.identical( got, expected );
 
   test.case = 'src:array,bufferConstructor:typed buffer';
   var src = [ 97,98,99 ];
-  var got = _.bufferFrom({ src : src, bufferConstructor : Uint8Array });
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Uint8Array });
   var expected = new Uint8Array([ 97,98,99 ]);
   test.identical( got, expected );
 
   test.case = 'src:raw buffer,bufferConstructor:typed buffer';
   var src = new ArrayBuffer( 3 );
-  var got = _.bufferFrom({ src : src, bufferConstructor : Uint8Array });
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Uint8Array });
   var expected = new Uint8Array([ 0, 0, 0 ]);
   test.identical( got, expected );
 
   test.case = 'src:typed,bufferConstructor:typed buffer';
   var src = new Int32Array([ 97,98,99 ]);
-  var got = _.bufferFrom({ src : src, bufferConstructor : Uint8Array });
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Uint8Array });
   var expected = new Uint8Array([ 97,98,99 ]);
   test.identical( got, expected );
 
@@ -55,7 +55,7 @@ function bufferFrom( test )
   {
     test.case = 'src:node buffer,bufferConstructor:typed buffer';
     var src = Buffer.from([ 97,98,99 ]);
-    var got = _.bufferFrom({ src : src, bufferConstructor : Uint8Array });
+    var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Uint8Array });
     var expected = new Uint8Array([ 97,98,99 ]);
     test.identical( got, expected );
   }
@@ -64,31 +64,31 @@ function bufferFrom( test )
 
   test.case = 'src:number,bufferConstructor:raw buffer';
   var src = 1;
-  var got = _.bufferFrom({ src : src, bufferConstructor : ArrayBuffer });
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : ArrayBuffer });
   var expected = new Uint8Array([ 1 ]).buffer;
   test.identical( got, expected );
 
   test.case = 'src:str,bufferConstructor:raw buffer';
   var src = 'abc';
-  var got = _.bufferFrom({ src : src, bufferConstructor : ArrayBuffer });
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : ArrayBuffer });
   var expected = new Uint8Array([ 97,98,99 ]).buffer;
   test.identical( got, expected );
 
   test.case = 'src:array,bufferConstructor:raw buffer';
   var src = [ 97,98,99 ];
-  var got = _.bufferFrom({ src : src, bufferConstructor : ArrayBuffer });
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : ArrayBuffer });
   var expected = new Uint8Array([ 97,98,99 ]).buffer;
   test.identical( got, expected );
 
   test.case = 'src:raw buffer,bufferConstructor:raw buffer';
   var src = new ArrayBuffer( 3 );
-  var got = _.bufferFrom({ src : src, bufferConstructor : ArrayBuffer });
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : ArrayBuffer });
   var expected = src;
   test.identical( got, expected );
 
   test.case = 'src:typed,bufferConstructor:raw buffer';
   var src = new Int32Array([ 97,98,99 ]);
-  var got = _.bufferFrom({ src : src, bufferConstructor : ArrayBuffer });
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : ArrayBuffer });
   var expected = new Int32Array([ 97,98,99 ]).buffer;
   test.identical( got, expected );
 
@@ -96,7 +96,7 @@ function bufferFrom( test )
   {
     test.case = 'src:node buffer,bufferConstructor:raw buffer';
     var src = Buffer.from([ 97,98,99 ]);
-    var got = _.bufferFrom({ src : src, bufferConstructor : ArrayBuffer });
+    var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : ArrayBuffer });
     var expected = new Uint8Array([ 97,98,99 ]).buffer;
     test.identical( got, expected );
   }
@@ -108,37 +108,37 @@ function bufferFrom( test )
 
   test.case = 'src:number,bufferConstructor:node buffer';
   var src = 1;
-  var got = _.bufferFrom({ src : src, bufferConstructor : Buffer });
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Buffer });
   var expected = Buffer.from( [ src ] );
   test.identical( got, expected );
 
   test.case = 'src:str,bufferConstructor:node buffer';
   var src = 'abc';
-  var got = _.bufferFrom({ src : src, bufferConstructor : Buffer });
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Buffer });
   var expected = Buffer.from( src );
   test.identical( got, expected );
 
   test.case = 'src:array,bufferConstructor:node buffer';
   var src = [ 97,98,99 ];
-  var got = _.bufferFrom({ src : src, bufferConstructor : Buffer });
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Buffer });
   var expected = Buffer.from( src );
   test.identical( got, expected );
 
   test.case = 'src:raw buffer,bufferConstructor:node buffer';
   var src = new ArrayBuffer( 3 );
-  var got = _.bufferFrom({ src : src, bufferConstructor : Buffer });
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Buffer });
   var expected = Buffer.from( src );
   test.identical( got, expected );
 
   test.case = 'src:typed,bufferConstructor:node buffer';
   var src = new Int32Array([ 97,98,99 ]);
-  var got = _.bufferFrom({ src : src, bufferConstructor : Buffer });
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Buffer });
   var expected = Buffer.from( src.buffer, src.buteOffset, src.byteLength );
   test.identical( got, expected );
 
   test.case = 'src:node buffer,bufferConstructor:node buffer';
   var src = Buffer.from([ 97,98,99 ]);
-  var got = _.bufferFrom({ src : src, bufferConstructor : Buffer });
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Buffer });
   var expected = src;
   test.identical( got, expected );
 

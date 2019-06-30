@@ -64,7 +64,7 @@ function vectorize( routine, select )
     vectorizingArray : 1,
     vectorizingMapVals : 0,
     vectorizingMapKeys : 1,
-    select : select,
+    /*ttt*/select,
   });
 }
 
@@ -82,7 +82,7 @@ function vectorizeAsArray( routine, select )
     vectorizingArray : 1,
     vectorizingMapVals : 0,
     vectorizingMapKeys : 0,
-    select : select,
+    /*ttt*/select,
   });
 
   return wrap;
@@ -349,8 +349,8 @@ let Fields =
 let Routines =
 {
 
-  _keyEndsPathFilter : _keyEndsPathFilter,
-  _isPathFilter : _isPathFilter,
+  /*ttt*/_keyEndsPathFilter,
+  /*ttt*/_isPathFilter,
 
   // checker
 

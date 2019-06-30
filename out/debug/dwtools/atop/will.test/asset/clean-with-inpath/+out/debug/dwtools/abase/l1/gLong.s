@@ -2397,7 +2397,7 @@ function arrayInvestigateUniqueMap( o )
 
   }
 
-  return { number : number, array : isUnique };
+  return { /*ttt*/number, array : isUnique };
 }
 
 arrayInvestigateUniqueMap.defaults =
@@ -2416,8 +2416,8 @@ function arrayUnique( src, onEvaluate )
 
   let isUnique = _.arrayInvestigateUniqueMap
   ({
-    src : src,
-    onEvaluate : onEvaluate,
+    /*ttt*/src,
+    /*ttt*/onEvaluate,
     includeFirst : 1,
   });
 
@@ -3568,110 +3568,110 @@ let Routines =
 
   // buffer
 
-  buffersTypedAreEquivalent : buffersTypedAreEquivalent,
-  buffersTypedAreIdentical : buffersTypedAreIdentical,
-  buffersRawAreIdentical : buffersRawAreIdentical,
-  buffersViewAreIdentical : buffersViewAreIdentical,
-  buffersNodeAreIdentical : buffersNodeAreIdentical,
-  buffersAreEquivalent : buffersAreEquivalent,
-  buffersAreIdentical : buffersAreIdentical,
+  /*ttt*/buffersTypedAreEquivalent,
+  /*ttt*/buffersTypedAreIdentical,
+  /*ttt*/buffersRawAreIdentical,
+  /*ttt*/buffersViewAreIdentical,
+  /*ttt*/buffersNodeAreIdentical,
+  /*ttt*/buffersAreEquivalent,
+  /*ttt*/buffersAreIdentical,
 
-  bufferMakeSimilar : bufferMakeSimilar,
-  bufferButRange : bufferButRange,
-  bufferRelen : bufferRelen,
-  bufferResize : bufferResize,
-  bufferBytesGet : bufferBytesGet,
-  bufferRetype : bufferRetype,
+  /*ttt*/bufferMakeSimilar,
+  /*ttt*/bufferButRange,
+  /*ttt*/bufferRelen,
+  /*ttt*/bufferResize,
+  /*ttt*/bufferBytesGet,
+  /*ttt*/bufferRetype,
 
-  bufferJoin : bufferJoin,
+  /*ttt*/bufferJoin,
 
-  bufferMove : bufferMove,
-  bufferToStr : bufferToStr,
-  bufferToDom : bufferToDom,
+  /*ttt*/bufferMove,
+  /*ttt*/bufferToStr,
+  /*ttt*/bufferToDom,
 
-  bufferLeft : bufferLeft,
-  bufferSplit : bufferSplit,
-  bufferCutOffLeft : bufferCutOffLeft,
+  /*ttt*/bufferLeft,
+  /*ttt*/bufferSplit,
+  /*ttt*/bufferCutOffLeft,
 
-  bufferFromArrayOfArray : bufferFromArrayOfArray,
-  bufferFrom : bufferFrom,
-  bufferRawFromTyped : bufferRawFromTyped,
-  bufferRawFrom : bufferRawFrom,
-  bufferBytesFrom : bufferBytesFrom,
-  bufferBytesFromNode : bufferBytesFromNode,
-  bufferNodeFrom : bufferNodeFrom,
+  /*ttt*/bufferFromArrayOfArray,
+  /*ttt*/bufferFrom,
+  /*ttt*/bufferRawFromTyped,
+  /*ttt*/bufferRawFrom,
+  /*ttt*/bufferBytesFrom,
+  /*ttt*/bufferBytesFromNode,
+  /*ttt*/bufferNodeFrom,
 
-  buffersSerialize : buffersSerialize, /* deprecated */
-  buffersDeserialize : buffersDeserialize, /* deprecated */
+  /*ttt*/buffersSerialize, /* deprecated */
+  /*ttt*/buffersDeserialize, /* deprecated */
 
   // array maker
 
-  arrayMakeRandom : arrayMakeRandom,
-  // scalarToVector : scalarToVector,
-  arrayFromCoercing : arrayFromCoercing,
-  // arrayAs : arrayAs,
+  /*ttt*/arrayMakeRandom,
+  // /*ttt*/scalarToVector,
+  /*ttt*/arrayFromCoercing,
+  // /*ttt*/arrayAs,
 
-  arrayFromRange : arrayFromRange,
-  arrayFromProgressionArithmetic : arrayFromProgressionArithmetic,
-  arrayFromRangeWithStep : arrayFromRangeWithStep,
-  arrayFromRangeWithNumberOfSteps : arrayFromRangeWithNumberOfSteps,
+  /*ttt*/arrayFromRange,
+  /*ttt*/arrayFromProgressionArithmetic,
+  /*ttt*/arrayFromRangeWithStep,
+  /*ttt*/arrayFromRangeWithNumberOfSteps,
 
   // array converter
 
-  arrayToMap : arrayToMap, /* dubious */
-  arrayToStr : arrayToStr, /* dubious */
+  /*ttt*/arrayToMap, /* dubious */
+  /*ttt*/arrayToStr, /* dubious */
 
   // array transformer
 
-  arraySub : arraySub,
-  arrayButRange : arrayButRange,
+  /*ttt*/arraySub,
+  /*ttt*/arrayButRange,
 
-  arraySlice : arraySlice,
-  arrayGrow : arrayGrow,
-  arrayResize : arrayResize,
-  arrayMultislice : arrayMultislice,
-  arrayDuplicate : arrayDuplicate,
+  /*ttt*/arraySlice,
+  /*ttt*/arrayGrow,
+  /*ttt*/arrayResize,
+  /*ttt*/arrayMultislice,
+  /*ttt*/arrayDuplicate,
 
-  arrayMask : arrayMask, /* dubious */
-  arrayUnmask : arrayUnmask, /* dubious */
+  /*ttt*/arrayMask, /* dubious */
+  /*ttt*/arrayUnmask, /* dubious */
 
-  arrayInvestigateUniqueMap : arrayInvestigateUniqueMap,  /* dubious */
-  arrayUnique : arrayUnique,  /* dubious */
-  arraySelect : arraySelect,
+  /*ttt*/arrayInvestigateUniqueMap,  /* dubious */
+  /*ttt*/arrayUnique,  /* dubious */
+  /*ttt*/arraySelect,
 
   // array mutator
 
-  arraySet : arraySet,
-  arraySwap : arraySwap,
+  /*ttt*/arraySet,
+  /*ttt*/arraySwap,
 
-  arrayCutin : arrayCutin,
-  arrayPut : arrayPut,
-  arrayFillTimes : arrayFillTimes,
-  arrayFillWhole : arrayFillWhole,
+  /*ttt*/arrayCutin,
+  /*ttt*/arrayPut,
+  /*ttt*/arrayFillTimes,
+  /*ttt*/arrayFillWhole,
 
-  arraySupplement : arraySupplement, /* experimental */
-  arrayExtendScreening : arrayExtendScreening, /* experimental */
+  /*ttt*/arraySupplement, /* experimental */
+  /*ttt*/arrayExtendScreening, /* experimental */
 
-  arrayShuffle : arrayShuffle,
-  arraySort : arraySort,
+  /*ttt*/arrayShuffle,
+  /*ttt*/arraySort,
 
   // array etc
 
-  arrayIndicesOfGreatest : arrayIndicesOfGreatest, /* dubious */
-  arraySum : arraySum, /* dubious */
+  /*ttt*/arrayIndicesOfGreatest, /* dubious */
+  /*ttt*/arraySum, /* dubious */
 
   // array set
 
-  arraySetDiff : arraySetDiff,
+  /*ttt*/arraySetDiff,
 
-  arraySetBut : arraySetBut,
-  arraySetIntersection : arraySetIntersection,
-  arraySetUnion : arraySetUnion,
+  /*ttt*/arraySetBut,
+  /*ttt*/arraySetIntersection,
+  /*ttt*/arraySetUnion,
 
-  arraySetContainAll : arraySetContainAll,
-  arraySetContainAny : arraySetContainAny,
-  arraySetContainNone : arraySetContainNone,
-  arraySetIdentical : arraySetIdentical,
+  /*ttt*/arraySetContainAll,
+  /*ttt*/arraySetContainAny,
+  /*ttt*/arraySetContainNone,
+  /*ttt*/arraySetIdentical,
 
 }
 

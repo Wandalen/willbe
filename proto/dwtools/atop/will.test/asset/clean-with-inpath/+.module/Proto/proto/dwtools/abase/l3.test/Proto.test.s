@@ -371,7 +371,7 @@ function accessorIsClean( test )
 
   var Extend =
   {
-    Accessors : Accessors,
+    /*ttt*/Accessors,
   }
 
   // Extend.constructor = BasicConstructor;
@@ -388,7 +388,7 @@ function accessorIsClean( test )
   ({
     object : BasicConstructor.prototype,
     names : { f2 : { readOnly : 1 } },
-    methods : methods,
+    /*ttt*/methods,
   });
   debugger;
 
@@ -618,7 +618,7 @@ function forbids( test )
 
   var Extend =
   {
-    Forbids : Forbids,
+    /*ttt*/Forbids,
   }
 
   // Extend.constructor = BasicConstructor;
@@ -826,7 +826,7 @@ function classDeclare( test )
   var Extend2 =
   {
     Statics : Statics2,
-    Associates : Associates,
+    /*ttt*/Associates,
     f2 : [],
     f3 : [],
   }
@@ -878,7 +878,7 @@ function classDeclare( test )
     var Extend2 =
     {
       Statics : Statics2,
-      Associates : Associates,
+      /*ttt*/Associates,
       f2 : [],
       f3 : [],
     }
@@ -1255,8 +1255,8 @@ function staticsDeclare( test )
   var Extend =
   {
     f3 : [ 'Extend' ],
-    Associates : Associates,
-    Statics : Statics,
+    /*ttt*/Associates,
+    /*ttt*/Statics,
   }
 
   // Extend.constructor = BasicConstructor;
@@ -1363,7 +1363,7 @@ function staticsOverwrite( test )
 
   var Extend =
   {
-    Statics : Statics,
+    /*ttt*/Statics,
   }
 
   _.classDeclare
@@ -1389,7 +1389,7 @@ function staticsOverwrite( test )
 
   var Extend =
   {
-    Statics : Statics,
+    /*ttt*/Statics,
   }
 
   _.classDeclare
@@ -1415,7 +1415,7 @@ function staticsOverwrite( test )
 
   var Extend =
   {
-    Statics : Statics,
+    /*ttt*/Statics,
   }
 
   // Extend.constructor = DerivedConstructor2;
@@ -1483,7 +1483,7 @@ function mixinStaticsWithDefinition( test )
 
   var Extend =
   {
-    Statics : Statics,
+    /*ttt*/Statics,
   }
 
   _.classDeclare
@@ -1744,7 +1744,7 @@ function customFieldsGroups( test )
   var Extend =
   {
     Names : Names1,
-    Groups : Groups,
+    /*ttt*/Groups,
   }
 
   _.classDeclare
@@ -1869,7 +1869,7 @@ function staticFieldsPreserving( test )
 
   var Extend =
   {
-    init : init,
+    /*ttt*/init,
     Statics :
     {
       set : basicSet

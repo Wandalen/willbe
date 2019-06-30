@@ -433,7 +433,6 @@ function _reflectMapForm( o )
       if( _.arrayIs( resolvedSrc ) )
       {
         resolvedSrc = path.s.normalize( resolvedSrc );
-        // delete reflector.filePath[ src ];
         for( let p = 0 ; p < resolvedSrc.length ; p++ )
         {
           let rpath = resolvedSrc[ p ];
@@ -444,7 +443,6 @@ function _reflectMapForm( o )
       else if( _.strIs( resolvedSrc ) )
       {
         resolvedSrc = path.normalize( resolvedSrc );
-        // delete reflector.filePath[ src ];
         reflector.filePath[ resolvedSrc ] = dst;
 
       }
@@ -465,7 +463,7 @@ function _reflectMapForm( o )
         resolvedSrc.filePath = path.pathMapExtend( null, resolvedSrc.filePath, resolvedDst );
         resolvedSrc.form();
 
-        reflector._inheritSingle({ visited : o.visited, ancestor : resolvedSrc, extending : 0 }); // yyy
+        reflector._inheritSingle({ visited : o.visited, ancestor : resolvedSrc, extending : 0 });
         _.sure( !!resolvedSrc.filePath );
       }
       else _.assert( 0 );

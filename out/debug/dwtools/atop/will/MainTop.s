@@ -146,6 +146,7 @@ function moduleDone( o )
   if( o.error )
   {
     _.appExitCode( -1 );
+    if( will.topCommand === o.command || !will.topCommand )
     _.errLogOnce( o.error );
   }
 
@@ -234,7 +235,7 @@ function commandsMake()
   {
 
     'help' :                    { e : _.routineJoin( will, will.commandHelp ),                        h : 'Get help.' },
-    'set' :                     { e : _.routineJoin( will, will.commandSet ),                         h : 'Command set.' },
+    'imply' :                   { e : _.routineJoin( will, will.commandImply ),                         h : 'Change state or imply variable value' },
 
     'resources list' :          { e : _.routineJoin( will, will.commandResourcesList ),               h : 'List information about resources of the current module.' },
     'paths list' :              { e : _.routineJoin( will, will.commandPathsList ),                   h : 'List paths of the current module.' },
@@ -301,7 +302,7 @@ function commandHelp( e )
 
 //
 
-function commandSet( e )
+function commandImply( e )
 {
   let will = this;
   let ca = e.ca;
@@ -913,11 +914,6 @@ function _commandEach_functor( fop )
       _.assert( will.currentModule === null );
       _.assert( will.currentPath === null );
 
-      // if( will.verbosity > 1 )
-      // {
-      //   logger.log( '' );
-      // }
-
       will.currentModule = it.currentModule;
       will.currentPath = it.currentPath || null;
 
@@ -934,31 +930,8 @@ function _commandEach_functor( fop )
 
     /* */
 
-    function handleEnd0( it )
-    {
-
-      // _.assert( will.currentModule === null );
-      // _.assert( will.currentPath === null );
-      //
-      // will.currentModule = it.currentModule;
-      // will.currentPath = it.currentPath || null;
-      //
-      // if( will.verbosity > 1 )
-      // {
-      //   logger.log( _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.currentModule.commonPath, 'path' ) );
-      //   if( will.currentPath )
-      //   logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( will.currentPath, 'path' ) );
-      // }
-
-      return null;
-    }
-
-    /* */
-
     function handleEnd( it )
     {
-
-      handleEnd0( it );
 
       logger.up();
 
@@ -979,7 +952,13 @@ function _commandEach_functor( fop )
         will.currentPath = null;
 
         if( err )
-        _.errLogOnce( _.errBriefly( err ) );
+        logger.log( _.errOnce( _.errBriefly( err ) ) );
+        // debugger;
+        // if( err )
+        // logger.log( _.errOnce( _.errBriefly( err ) ) );
+        // // logger.log();
+
+        // _.errLogOnce( _.errBriefly( err ) );
         if( err )
         throw _.err( err );
         return arg;
@@ -1061,7 +1040,7 @@ let Extend =
 
   commandsMake,
   commandHelp,
-  commandSet,
+  commandImply,
 
   _commandList,
   commandResourcesList,

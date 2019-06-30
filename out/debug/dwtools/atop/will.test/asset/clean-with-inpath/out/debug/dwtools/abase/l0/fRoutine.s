@@ -207,7 +207,7 @@ function constructorJoin( routine, args )
 
   return _routineJoin
   ({
-    routine : routine,
+    routine,
     context : routine,
     args : args || [],
     sealing : false,
@@ -260,9 +260,9 @@ function routineJoin( context, routine, args )
 
   return _routineJoin
   ({
-    routine : routine,
-    context : context,
-    args : args,
+    /*ttt*/routine,
+    /*ttt*/context,
+    /*ttt*/args,
     sealing : false,
     extending : true,
   });
@@ -313,9 +313,9 @@ function routineJoin( context, routine, args )
 
   return _routineJoin
   ({
-    routine : routine,
-    context : context,
-    args : args,
+    /*ttt*/routine,
+    /*ttt*/context,
+    /*ttt*/args,
     sealing : false,
     extending : true,
   });
@@ -353,9 +353,9 @@ function routineSeal( context, routine, args )
 
   return _routineJoin
   ({
-    routine : routine,
-    context : context,
-    args : args,
+    /*ttt*/routine,
+    /*ttt*/context,
+    /*ttt*/args,
     sealing : true,
     extending : true,
   });
