@@ -269,7 +269,7 @@ function moduleMake( o )
 
   // _.assert( o.module.willfilesPath === o.willfilesPath || o.module.willfilesPath === o.dirPath );
 
-  o.module.open();
+  o.module.moduleFind();
   o.module.openedModule.stager.stageStatePausing( 'opened', 0 );
   o.module.openedModule.stager.stageStateSkipping( 'resourcesFormed', !o.forming );
   o.module.openedModule.stager.tick();
@@ -301,13 +301,15 @@ function moduleEachAt( o )
   if( _.strEnds( o.selector, '::' ) )
   o.selector = o.selector + '*';
 
+  /* */
+
   if( will.Resolver.selectorIs( o.selector ) )
   {
 
     let module = o.currentModule;
     if( !o.currentModule )
     module = o.currentModule = will.OpenerModule({ will : will, willfilesPath : path.trail( path.current() ) }).preform();
-    module.open();
+    module.moduleFind();
 
     con = module.openedModule.ready;
     con.then( () =>
@@ -377,9 +379,9 @@ function moduleEachAt( o )
       }
 
       let module = will.OpenerModule({ will : will, willfilesPath : file.absolute }).preform();
-      // debugger;
-      module.open();
-      // debugger;
+      debugger;
+      module.moduleFind();
+      debugger;
 
       let it = Object.create( null );
       it.currentModule = module;
@@ -387,6 +389,7 @@ function moduleEachAt( o )
 
       module.openedModule.stager.stageConsequence( 'preformed' ).then( ( arg ) =>
       {
+        debugger;
         if( o.onBegin )
         return o.onBegin( it );
         return arg;
@@ -402,39 +405,48 @@ function moduleEachAt( o )
         if( module.willfilesPath )
         _.mapSet( filesMap, module.willfilesPath, true );
 
-        let r = o.onEnd( it );
-
-        r = _.Consequence.From( r );
-
-        r.finally( ( err, arg ) =>
-        {
-          if( err )
-          throw err;
-          return arg;
-        });
+        let r = null;
+        if( o.onEnd )
+        r = o.onEnd( it );
 
         return r;
       })
 
     })
-    .except( ( err ) =>
+    .finally( ( err, arg ) =>
     {
-      debugger;
-      errs.push( _.errBriefly( err ) );
-      return null;
+      if( err )
+      {
+        debugger;
+        if( o.onError )
+        o.onError( err );
+        errs.push( _.errBriefly( err ) );
+        return null;
+      }
+      return arg;
     });
 
   }
+
+  /* */
 
   con.finally( ( err, arg ) =>
   {
     debugger;
     if( err )
-    throw _.err( err );
+    {
+      errs.forEach( ( err, index ) => _.errAttend( err ) );
+      throw _.err( err );
+    }
     if( errs.length )
-    throw errs[ 0 ];
+    {
+      errs.forEach( ( err, index ) => index > 0 ? _.errAttend( err ) : null );
+      throw errs[ 0 ];
+    }
     return o;
   });
+
+  /* */
 
   return con;
 }
@@ -672,6 +684,7 @@ function willfilesList( o )
   let will = this;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
+  let logger = will.logger;
 
   if( _.strIs( o ) )
   o = { dirPath : o }
@@ -684,7 +697,7 @@ function willfilesList( o )
   {
     maskTerminal :
     {
-      includeAny : /\.will(\.|$)/,
+      includeAny : /\.will(\.[^.]*)?$/,
       excludeAny :
       [
         /\.DS_Store$/,
@@ -707,7 +720,9 @@ function willfilesList( o )
     maskPreset : 0,
   }
 
+  // logger.log( 'willfilesList.begin' );
   let files = fileProvider.filesFind( o2 );
+  // logger.log( 'willfilesList.end' );
 
   return files;
 }

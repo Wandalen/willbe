@@ -311,6 +311,7 @@ function openNamed( test )
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
 
+  debugger;
   var module1 = will.moduleMake({ willfilesPath : modulePath });
   let ready1 = module1.openedModule.ready;
   var module2 = will.moduleMake({ willfilesPath : modulePath });
@@ -776,7 +777,7 @@ function clone( test )
     test.identical( module2.willfilesArray.length, 0 );
     test.identical( _.mapKeys( module2.willfileWithRoleMap ), [] );
 
-    module2.open();
+    module2.moduleFind();
 
     test.case = 'compare elements';
 
@@ -821,7 +822,7 @@ function clone( test )
     test.identical( module2.willfilesArray.length, 0 );
     test.identical( _.mapKeys( module2.willfileWithRoleMap ), [] );
 
-    module2.openCloning( module.openedModule );
+    module2.moduleClone( module.openedModule );
 
     test.case = 'compare elements';
 
@@ -3917,6 +3918,115 @@ function pathsResolveArray( test )
 
 //
 
+/*
+  path::path::export cant be resolved
+  so error should be throwen
+  but as it's composite and deep
+  bug could appear here
+*/
+
+function pathsResolveFailing( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulePath = _.path.join( routinePath, 'ab/' );
+  let outPath = _.path.join( routinePath, 'out' );
+  let will = new _.Will;
+  let path = _.fileProvider.path;
+
+  function pin( filePath )
+  {
+    return path.s.join( routinePath, '', filePath );
+  }
+
+  function pout( filePath )
+  {
+    return path.s.join( routinePath, 'out', filePath );
+  }
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( outPath );
+
+  var module = will.moduleMake({ willfilesPath : modulePath });
+
+  /* - */
+
+  module.openedModule.ready.thenKeep( ( arg ) =>
+  {
+
+    test.case = 'path::proto';
+    var got = module.openedModule.pathResolve
+    ({
+      selector : 'path::proto',
+      pathResolving : 0,
+      missingAction : 'undefine',
+    });
+    var expected = '../proto';
+    test.identical( got, expected );
+
+    test.case = 'path::export';
+    test.shouldThrowErrorSync( () =>
+    {
+      debugger;
+      var got = module.openedModule.pathResolve
+      ({
+        /* selector : 'path::export', */
+        selector : 'path::*',
+        pathResolving : 0,
+        missingAction : 'throw',
+        prefixlessAction : 'throw',
+      });
+      debugger;
+    });
+
+/*
+
+  selector : '*::*',
+  criterion : [ Map:Pure with 0 elements ],
+  defaultResourceKind : null,
+  prefixlessAction : 'throw',
+  arrayWrapping : 1,
+  pathUnwrapping : 0,
+  pathResolving : 0,
+  mapValsUnwrapping : 0,
+  strictCriterion : 1,
+  currentExcluding : 0,
+  missingAction : 'throw',
+  visited : [ Array with 0 elements ],
+  currentThis : null,
+  currentContext : [ wWillOpenedModule with 27 elements ],
+  baseModule : [ wWillOpenedModule with 27 elements ],
+  pathNativizing : 0,
+  singleUnwrapping : 1,
+  mapFlattening : 1,
+  arrayFlattening : 1,
+  preservingIteration : 0,
+  hasPath : null,
+  selectorIsPath : 0
+
+*/
+
+    return null;
+  });
+
+  /* - */
+
+  let ready = module.openedModule.ready.finallyKeep( ( err, arg ) =>
+  {
+    if( err )
+    throw err;
+    test.is( err === undefined );
+    module.finit();
+    return arg;
+  });
+
+  return ready.split();
+}
+
+//
+
 function submodulesResolve( test )
 {
   let self = this;
@@ -4150,6 +4260,7 @@ var Self =
     pathsResolveComposite,
     pathsResolveComposite2,
     pathsResolveArray,
+    pathsResolveFailing,
 
     submodulesResolve,
     submodulesDeleteAndDownload,
