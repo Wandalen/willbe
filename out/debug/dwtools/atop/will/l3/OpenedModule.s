@@ -84,7 +84,7 @@ function init( o )
     consequenceNames : [ 'preformReady', 'pickedReady', 'openedReady', 'submodulesFormReady', 'resourcesFormReady', 'ready' ],
     onPerform : [ module._preform, module._willfilesPicked, module._willfilesOpen, module._submodulesForm, module._resourcesForm, null ],
     onBegin : [ null, null, null, null, null, null ],
-    onEnd : [ null, null, null, module.willfilesReadEnd, null, module._formEnd ],
+    onEnd : [ null, null, null, module._willfilesReadEnd, null, module._formEnd ],
   });
 
   module.stager.stageStatePausing( 'opened', 1 );
@@ -1095,7 +1095,11 @@ function _willfilesPicked()
 
   _.assert( module.willfilesArray.length > 0 );
 
-  return null;
+  // debugger;
+  let result = module.modulesAttachedOpen();
+  // debugger;
+
+  return result;
 }
 
 //
@@ -1172,7 +1176,7 @@ function _willfilesOpen()
 
 //
 
-function willfilesReadBegin()
+function _willfilesReadBegin()
 {
   let module = this;
   let will = module.will;
@@ -1185,7 +1189,7 @@ function willfilesReadBegin()
 
 //
 
-function willfilesReadEnd()
+function _willfilesReadEnd()
 {
   let module = this;
   let will = module.will;
@@ -2456,7 +2460,7 @@ function resourceMapsForKind( resourceSelector )
 
   if( !_.path.isGlob( resourceSelector ) )
   return module.resourceMapForKind( resourceSelector );
-  debugger;
+
   let resources = module.resourceMaps();
   let result = _.path.globFilterKeys( resources, resourceSelector );
   return result;
@@ -2556,8 +2560,6 @@ function pathsRelative( basePath, filePath )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-
-  debugger;
 
   if( _.mapIs( filePath ) )
   {
@@ -3386,36 +3388,17 @@ let resolveMaybe = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
 _.routineExtend( resolveMaybe, _.Will.Resolver.resolveMaybe );
 
-// var defaults = resolveMaybe.defaults;
-// defaults.missingAction = 'undefine';
-
 //
 
 let pathResolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
 _.routineExtend( pathResolve, _.Will.Resolver.pathResolve );
 
-// var defaults = pathResolve.defaults;
-// defaults.pathResolving = 'in';
-// defaults.prefixlessAction = 'resolved';
-// defaults.selectorIsPath = 1;
-// defaults.arrayFlattening = 1;
-
 //
 
 let resolveRaw = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
 _.routineExtend( resolveRaw, _.Will.Resolver.resolveRaw );
-
-// var defaults = resolveRaw.defaults;
-// defaults.pathResolving = 0;
-// defaults.pathNativizing = 0;
-// defaults.pathUnwrapping = 0;
-// defaults.singleUnwrapping = 0;
-// defaults.mapValsUnwrapping = 0;
-// defaults.mapFlattening = 0;
-// defaults.arrayWrapping = 0;
-// defaults.arrayFlattening = 0;
 
 //
 
@@ -3427,43 +3410,6 @@ _.assert( _.Will.Resolver.submodulesResolve.defaults.defaultResourceKind === 'su
 _.assert( submodulesResolve.defaults.defaultResourceKind === 'submodule' );
 
 //
-
-// function reflectorResolve_body( o )
-// {
-//   let module = this;
-//   let will = module.will;
-//
-//   let o2 = _.mapExtend( null, o );
-//   o2.pathResolving = 'in';
-//   let reflector = module.resolve( o2 );
-//
-//   /*
-//     `pathResolving` should be `in` for proper resolving of external resources
-//   */
-//
-//   if( o.missingAction === 'undefine' && reflector === undefined )
-//   return reflector;
-//   else if( o.missingAction === 'error' && _.errIs( reflector ) )
-//   return reflector;
-//
-//   if( reflector instanceof will.Reflector )
-//   {
-//     _.sure( reflector instanceof will.Reflector, () => 'Reflector ' + o.selector + ' was not found' + _.strType( reflector ) );
-//     reflector.form();
-//     _.assert( reflector.formed === 3, () => reflector.nickName + ' is not formed' );
-//   }
-//
-//   return reflector;
-// }
-//
-// var defaults = reflectorResolve_body.defaults = Object.create( resolve.defaults );
-// defaults.selector = null;
-// defaults.defaultResourceKind = 'reflector';
-// defaults.prefixlessAction = 'default';
-// defaults.currentContext = null;
-// defaults.pathResolving = 'in';
-//
-// let reflectorResolve = _.routineFromPreAndBody( resolve_pre, reflectorResolve_body );
 
 function reflectorResolve_body( o )
 {
@@ -3479,25 +3425,6 @@ _.routineExtend( reflectorResolve_body, _.Will.Resolver.reflectorResolve );
 let reflectorResolve = _.routineFromPreAndBody( resolve_pre, reflectorResolve_body );
 
 _.assert( reflectorResolve.defaults.defaultResourceKind === 'reflector' );
-
-//
-
-// function submodulesResolve_body( o )
-// {
-//   let module = this;
-//   let will = module.will;
-//
-//   let result = module.resolve( o );
-//
-//   return result;
-// }
-//
-// var defaults = submodulesResolve_body.defaults = Object.create( resolve.defaults );
-// defaults.selector = null;
-// defaults.prefixlessAction = 'default';
-// defaults.defaultResourceKind = 'submodule';
-//
-// let submodulesResolve = _.routineFromPreAndBody( resolve.pre, submodulesResolve_body );
 
 // --
 // other resolver
@@ -3876,7 +3803,7 @@ function dataExportForModuleExport( o )
   opener2.original = module;
 
   debugger;
-  let module2 = opener2.openCloning( module );
+  let module2 = opener2.moduleClone( module );
   debugger;
 
   module2.pathsRebase({ inPath : module.outPath });
@@ -4342,8 +4269,8 @@ let Extend =
   willfilesOpen,
   _willfilesOpen,
 
-  willfilesReadBegin,
-  willfilesReadEnd,
+  _willfilesReadBegin,
+  _willfilesReadEnd,
 
   willfileRegister,
   willfileUnregister,

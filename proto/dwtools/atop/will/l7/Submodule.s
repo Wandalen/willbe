@@ -197,7 +197,7 @@ function open()
   submodule._openFrom
   ({
     longPath : longPath,
-    data : submodule.data,
+    // data : submodule.data,
   });
 
   if( submodule.oModule.error )
@@ -228,10 +228,11 @@ function _openFrom( o )
   _.assert( _.strIs( submodule.path ), 'not tested' );
   _.assert( !submodule.original );
   _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
-  _.assert( !submodule.data );
+  // _.assert( !submodule.data );
 
   /* */
 
+  debugger;
   submodule.oModule = will.OpenerModule
   ({
     will : will,
@@ -239,11 +240,11 @@ function _openFrom( o )
     willfilesPath : o.longPath,
     supermodule : module,
     rootModule : module.rootModule,
-    pickedWillfilesPath : o.data ? o.longPath : null,
-    pickedWillfileData : o.data,
+    // pickedWillfilesPath : o.data ? o.longPath : null,
+    // pickedWillfileData : o.data,
   }).preform();
 
-  if( !submodule.oModule.tryOpen() )
+  if( !submodule.oModule.moduleFindTry() )
   {
     submodule.oModule.error = submodule.oModule.error;
     return submodule.oModule;
@@ -270,7 +271,7 @@ function _openFrom( o )
 
 _openFrom.defaults =
 {
-  data : null,
+  // data : null,
   longPath : null,
 }
 
@@ -370,14 +371,11 @@ function openedModuleSet( oModule )
   if( oModule === submodule[ openedModuleSymbol ] )
   return;
 
-  // if( submodule[ openedModuleSymbol ] )
-  // _.arrayRemoveOnceStrictly( submodule[ openedModuleSymbol ].submoduleAssociation, submodule );
   submodule[ openedModuleSymbol ] = null;
 
   if( oModule )
   {
 
-    // _.arrayAppendOnceStrictly( oModule.submoduleAssociation, submodule );
     submodule[ openedModuleSymbol ] = oModule;
 
   }
@@ -430,12 +428,8 @@ function moduleSet( src )
 {
   let resource = this;
 
-  // if( src && src instanceof _.Will.OpenerModule )
-  // src = src.openedModule;
-
   resource[ moduleSymbol ] = src;
 
-  // _.assert( resource.module === null || resource.module instanceof _.Will.OpenerModule );
   _.assert( resource.module === null || resource.module instanceof _.Will.OpenedModule );
 
   return src;
@@ -456,18 +450,18 @@ function dataExport( o )
   if( result === undefined )
   return result;
 
-  if( 0 )
-  if( o.module === module && rootModule === module )
-  {
-    if( submodule.data )
-    {
-      result.data = submodule.data;
-    }
-    else if( submodule.oModule && submodule.oModule.isValid() )
-    {
-      result.data = submodule.oModule.dataExport();
-    }
-  }
+  // if( 0 )
+  // if( o.module === module && rootModule === module )
+  // {
+  //   if( submodule.data )
+  //   {
+  //     result.data = submodule.data;
+  //   }
+  //   else if( submodule.oModule && submodule.oModule.isValid() )
+  //   {
+  //     result.data = submodule.oModule.dataExport();
+  //   }
+  // }
 
   return result;
 }
@@ -587,14 +581,14 @@ let Associates =
 
 let Restricts =
 {
-  data : null,
+  // data : null, // xxx
   oModule : null,
   own : 1, // xxx
 }
 
 let Medials =
 {
-  data : null,
+  // data : null, // xxx
   own : 1, // xxx
 }
 
@@ -612,12 +606,13 @@ let Accessors =
   oModule : { setter : openedModuleSet },
   longPath : { getter : longPathGet },
   path : { setter : pathSet },
-  data : { getter : dataGet, setter : dataSet },
+  // data : { getter : dataGet, setter : dataSet },
   module : { combining : 'rewrite' },
 }
 
 let Forbids =
 {
+  data : 'data',
 }
 
 // --

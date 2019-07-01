@@ -154,6 +154,109 @@ function CommonPathFor( willfilesPath )
 }
 
 // --
+// etc
+// --
+
+function modulesAttachedOpen()
+{
+  let opener = this;
+  let will = opener.will;
+  let result = null;
+  let openedModule = opener instanceof _.Will.OpenerModule ? opener.openedModule : opener;
+
+  if( opener.rootModule === null || opener.rootModule === openedModule )
+  if( !opener.original )
+  if( opener.willfilesArray.length )
+  result = opener.modulesOpenFromData
+  ({
+    willfilesArray : opener.willfilesArray.slice(),
+    rootModule : openedModule.rootModule,
+  });
+
+  return result;
+}
+
+//
+
+function modulesOpenFromData( o )
+{
+  let opener = this;
+  let will = opener.will;
+
+  o = _.routineOptions( modulesOpenFromData, arguments );
+
+  for( let f = 0 ; f < o.willfilesArray.length ; f++ )
+  {
+    let willfile = o.willfilesArray[ f ];
+    willfile.read();
+
+    for( let modulePath in willfile.data.module )
+    {
+      let data = willfile.data.module[ modulePath ]; debugger;
+      if( data === 'root' )
+      continue;
+      opener.moduleOpenFromData
+      ({
+        modulePath : modulePath,
+        data : data,
+        rootModule : o.rootModule,
+      });
+    }
+
+  }
+
+  return null;
+}
+
+modulesOpenFromData.defaults =
+{
+  willfilesArray : null,
+  rootModule : null,
+}
+
+//
+
+function moduleOpenFromData( o )
+{
+  let opener = this;
+  let will = opener.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  o = _.routineOptions( moduleOpenFromData, arguments );
+
+  let modulePath = path.join( opener.dirPath, o.modulePath );
+  let willf = will.willfileFor
+  ({
+    filePath : modulePath + '.will.cached!',
+    will : will,
+    role : 'single',
+    data : o.data,
+  });
+
+  let opener2 = will.OpenerModule
+  ({
+    will : will,
+    willfilesPath : modulePath,
+    willfilesArray : [ willf ],
+    finding : 0,
+    rootModule : o.rootModule,
+  }).preform();
+
+  opener2.moduleFind();
+
+  return opener2.openedModule;
+}
+
+moduleOpenFromData.defaults =
+{
+  modulePath : null,
+  data : null,
+  rootModule : null,
+}
+
+// --
 // name
 // --
 
@@ -276,6 +379,12 @@ let Extend =
   CommonPathFor,
   CloneDirPathFor,
   OutfilePathFor,
+
+  // etc
+
+  modulesAttachedOpen,
+  modulesOpenFromData,
+  moduleOpenFromData,
 
   // name
 
