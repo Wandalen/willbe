@@ -344,7 +344,7 @@ let Forbids =
   associatedSubmodule : 'associatedSubmodule',
   execution : 'execution',
   allModuleMap : 'allModuleMap',
-  oModule : 'oModule',
+  opener : 'opener',
   Counter : 'Counter',
   moduleWithPathMap : 'moduleWithPathMap',
 

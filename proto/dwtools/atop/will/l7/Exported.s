@@ -99,7 +99,7 @@ function verify()
   for( let s in module.submoduleMap )
   {
     let submodule = module.submoduleMap[ s ];
-    if( !submodule.oModule || !submodule.oModule.isOpened() || !submodule.oModule.isValid() )
+    if( !submodule.opener || !submodule.opener.isOpened() || !submodule.opener.isValid() )
     throw _.errBriefly( ' ! ' + submodule.decoratedAbsoluteName + ' is broken!' );
   }
 

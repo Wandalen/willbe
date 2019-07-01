@@ -1287,12 +1287,12 @@ function willfileEach( onEach )
   for( let s in module.submoduleMap )
   {
     let submodule = module.submoduleMap[ s ];
-    if( !submodule.oModule )
+    if( !submodule.opener )
     continue;
 
-    for( let w = 0 ; w < submodule.oModule.willfilesArray.length ; w++ )
+    for( let w = 0 ; w < submodule.opener.willfilesArray.length ; w++ )
     {
-      let willfile = submodule.oModule.willfilesArray[ w ];
+      let willfile = submodule.opener.willfilesArray[ w ];
       onEach( willfile )
     }
 
@@ -1360,7 +1360,7 @@ function submodulesAllAreDownloaded()
 
   for( let n in module.submoduleMap )
   {
-    let submodule = module.submoduleMap[ n ].oModule;
+    let submodule = module.submoduleMap[ n ].opener;
     if( !submodule )
     return false;
     if( !submodule.isDownloaded )
@@ -1383,7 +1383,7 @@ function submodulesAllAreValid()
 
   for( let n in module.submoduleMap )
   {
-    let submodule = module.submoduleMap[ n ].oModule;
+    let submodule = module.submoduleMap[ n ].opener;
     if( !submodule )
     continue;
     if( !submodule.isValid() )
@@ -1483,7 +1483,7 @@ function _submodulesDownload_body( o )
 
     for( let n in module.submoduleMap )
     {
-      let submodule = module.submoduleMap[ n ].oModule;
+      let submodule = module.submoduleMap[ n ].opener;
 
       // debugger;
       // _.assert( !!submodule && submodule.stager.stageStatePerformed( 'preformed' ), 'Submodule', ( submodule ? submodule.nickName : n ), 'was not preformed' );
@@ -1533,7 +1533,7 @@ function _submodulesDownload_body( o )
     {
       let submodule = module.submoduleMap[ n ];
 
-      if( !submodule.oModule )
+      if( !submodule.opener )
       {
         debugger;
         submodule.form();
@@ -1586,12 +1586,12 @@ function submodulesFixate( o )
   {
     let submodule = module.submoduleMap[ m ];
 
-    if( !submodule.oModule )
+    if( !submodule.opener )
     continue;
 
     let o2 = _.mapExtend( null, o );
     o2.submodule = submodule;
-    o2.module = submodule.oModule.openedModule;
+    o2.module = submodule.opener.openedModule;
     module.moduleFixate( o2 );
 
   }
@@ -1701,7 +1701,7 @@ function moduleFixate( o )
   function submoduleFixate( submodule )
   {
 
-    if( submodule.oModule && !submodule.oModule.isRemote )
+    if( submodule.opener && !submodule.opener.isRemote )
     return;
 
     let originalPath = submodule.path;
@@ -1719,8 +1719,8 @@ function moduleFixate( o )
     if( !o.dry && fixatedPath )
     {
       submodule.path = fixatedPath;
-      if( submodule.oModule )
-      submodule.oModule.remotePath = fixatedPath;
+      if( submodule.opener )
+      submodule.opener.remotePath = fixatedPath;
     }
 
   }
@@ -2167,6 +2167,7 @@ function remoteIsDownloadedUpdate()
     module.isDownloaded = !!result;
     return result;
   }
+
 }
 
 //
@@ -2208,6 +2209,10 @@ function remoteIsDownloadedChanged()
 function remoteIsDownloadedSet( src )
 {
   let module = this;
+
+  if( module.will )
+  if( module.nickName === "module::wTools" )
+  debugger;
 
   src = !!src;
 
@@ -3571,11 +3576,11 @@ function willfilesResolve()
   for( let m in module.submoduleMap )
   {
     let submodule = module.submoduleMap[ m ];
-    if( !submodule.oModule )
+    if( !submodule.opener )
     continue;
-    if( !submodule.oModule.openedModule )
+    if( !submodule.opener.openedModule )
     continue;
-    _.arrayAppendArrayOnce( result, submodule.oModule.openedModule.willfilesResolve() );
+    _.arrayAppendArrayOnce( result, submodule.opener.openedModule.willfilesResolve() );
   }
 
   return result;

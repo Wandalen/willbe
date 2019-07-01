@@ -944,8 +944,8 @@ function _statusPreUpdate()
   }
   else if( it.src instanceof will.Submodule )
   {
-    if( it.src.oModule && it.src.oModule.openedModule )
-    it.currentModule = it.src.oModule.openedModule;
+    if( it.src.opener && it.src.opener.openedModule )
+    it.currentModule = it.src.opener.openedModule;
   }
   else if( it.src instanceof will.Exported )
   {

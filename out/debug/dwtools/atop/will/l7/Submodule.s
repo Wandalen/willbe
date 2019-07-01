@@ -66,9 +66,9 @@ function unform()
   let submodule = this;
   let module = submodule.module;
 
-  if( submodule.oModule )
-  submodule.oModule.finit();
-  submodule.oModule = null;
+  if( submodule.opener )
+  submodule.opener.finit();
+  submodule.opener = null;
 
   return Parent.prototype.unform.call( submodule );
 }
@@ -113,12 +113,12 @@ function form3()
 
   if( submodule.formed >= 3 )
   {
-    if( submodule.oModule && !submodule.oModule.isValid() )
+    if( submodule.opener && !submodule.opener.isValid() )
     {
       debugger;
-      let oModule = submodule.oModule;
-      submodule.oModule = null;
-      oModule.finit();
+      let opener = submodule.opener;
+      submodule.opener = null;
+      opener.finit();
       submodule.formed = 2;
     }
     else
@@ -163,12 +163,12 @@ function close()
   let logger = will.logger;
   let rootModule = module.rootModule;
 
-  if( !submodule.oModule )
+  if( !submodule.opener )
   return submodule;
 
   debugger;
   _.assert( 0, 'not tesed' );
-  submodule.oModule.close();
+  submodule.opener.close();
 
   return submodule;
 }
@@ -187,7 +187,7 @@ function open()
 
   _.assert( arguments.length === 0 );
   _.assert( submodule.formed === 2 );
-  _.assert( submodule.oModule === null );
+  _.assert( submodule.opener === null );
   _.assert( _.strIs( submodule.path ), 'not tested' );
   _.assert( !submodule.original );
   _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
@@ -200,13 +200,13 @@ function open()
     // data : submodule.data,
   });
 
-  if( submodule.oModule.error )
+  if( submodule.opener.error )
   {
-    _.assert( !!submodule.oModule.error );
-    return new _.Consequence().error( submodule.oModule.error );
+    _.assert( !!submodule.opener.error );
+    return new _.Consequence().error( submodule.opener.error );
   }
 
-  return submodule.oModule.openedModule.ready;
+  return submodule.opener.openedModule.ready;
 }
 
 //
@@ -224,7 +224,7 @@ function _openFrom( o )
   _.routineOptions( _openFrom, arguments );
   _.assert( arguments.length === 1 );
   _.assert( submodule.formed === 2 );
-  _.assert( submodule.oModule === null );
+  _.assert( submodule.opener === null );
   _.assert( _.strIs( submodule.path ), 'not tested' );
   _.assert( !submodule.original );
   _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
@@ -233,7 +233,7 @@ function _openFrom( o )
   /* */
 
   // debugger;
-  submodule.oModule = will.OpenerModule
+  submodule.opener = will.OpenerModule
   ({
     will : will,
     aliasName : submodule.name,
@@ -244,29 +244,29 @@ function _openFrom( o )
     // pickedWillfileData : o.data,
   }).preform();
 
-  if( !submodule.oModule.moduleFindTry() )
+  if( !submodule.opener.moduleFindTry() )
   {
-    submodule.oModule.error = submodule.oModule.error;
-    return submodule.oModule;
+    submodule.opener.error = submodule.opener.error;
+    return submodule.opener;
   }
 
   if( module.stager.stageStateSkipping( 'opened' ) )
-  submodule.oModule.openedModule.stager.stageStateSkipping( 'opened', 1 );
+  submodule.opener.openedModule.stager.stageStateSkipping( 'opened', 1 );
 
-  submodule.oModule.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
-  submodule.oModule.openedModule.stager.stageStatePausing( 'picked', 0 );
-  submodule.oModule.openedModule.stager.tick();
+  submodule.opener.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
+  submodule.opener.openedModule.stager.stageStatePausing( 'picked', 0 );
+  submodule.opener.openedModule.stager.tick();
 
-  submodule.oModule.openedModule.ready.finally( ( err, arg ) =>
+  submodule.opener.openedModule.ready.finally( ( err, arg ) =>
   {
     if( err )
-    throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.oModule.dirPath ), '\n', err );
+    throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.opener.dirPath ), '\n', err );
     return arg;
   });
 
   /* */
 
-  return submodule.oModule;
+  return submodule.opener;
 }
 
 _openFrom.defaults =
@@ -288,7 +288,7 @@ function errorNotFound( err )
   if( will.verbosity >= 3 )
   logger.error( ' ' + _.color.strFormat( '!', 'negative' ) + ' Failed to read ' + submodule.decoratedNickName + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading' );
 
-  if( will.verbosity >= 5 || !submodule.oModule || submodule.oModule.isOpened() )
+  if( will.verbosity >= 5 || !submodule.opener || submodule.opener.isOpened() )
   {
     if( will.verbosity < 5 )
     _.errLogOnce( _.errBriefly( err ) );
@@ -312,7 +312,7 @@ function resolve_body( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let module2 = submodule.oModule || module;
+  let module2 = submodule.opener || module;
 
   _.assert( arguments.length === 1 );
   _.assert( o.currentContext === null || o.currentContext === submodule )
@@ -334,16 +334,16 @@ function isAvailableGet()
   let submodule = this;
   let module = submodule.module;
 
-  if( !submodule.oModule )
+  if( !submodule.opener )
   return false;
 
-  if( !submodule.oModule.isDownloaded )
+  if( !submodule.opener.isDownloaded )
   return false;
 
-  if( !submodule.oModule.isOpened() )
+  if( !submodule.opener.isOpened() )
   return false;
 
-  if( !submodule.oModule.isValid() )
+  if( !submodule.opener.isValid() )
   return false;
 
   return true;
@@ -356,27 +356,27 @@ function isDownloadedGet()
   let submodule = this;
   let module = submodule.module;
 
-  if( !submodule.oModule )
+  if( !submodule.opener )
   return false;
 
-  return submodule.oModule.isDownloaded;
+  return submodule.opener.isDownloaded;
 }
 
 //
 
-function openedModuleSet( oModule )
+function openedModuleSet( opener )
 {
   let submodule = this;
 
-  if( oModule === submodule[ openedModuleSymbol ] )
+  if( opener === submodule[ openedModuleSymbol ] )
   return;
 
   submodule[ openedModuleSymbol ] = null;
 
-  if( oModule )
+  if( opener )
   {
 
-    submodule[ openedModuleSymbol ] = oModule;
+    submodule[ openedModuleSymbol ] = opener;
 
   }
 
@@ -457,9 +457,9 @@ function dataExport( o )
   //   {
   //     result.data = submodule.data;
   //   }
-  //   else if( submodule.oModule && submodule.oModule.isValid() )
+  //   else if( submodule.opener && submodule.opener.isValid() )
   //   {
-  //     result.data = submodule.oModule.dataExport();
+  //     result.data = submodule.opener.dataExport();
   //   }
   // }
 
@@ -481,13 +481,13 @@ function infoExport()
   let resultMap = Parent.prototype.dataExport.call( submodule );
   let tab = '  ';
 
-  if( submodule.oModule )
+  if( submodule.opener )
   {
-    let module2 = submodule.oModule;
+    let module2 = submodule.opener;
     resultMap.remote = module2.remotePath;
     resultMap.local = module2.localPath;
 
-    if( submodule.oModule.openedModule )
+    if( submodule.opener.openedModule )
     resultMap[ 'Exported builds' ] = _.toStr( _.mapKeys( module2.openedModule.exportedMap ) );
 
   }
@@ -554,7 +554,7 @@ pathsRebase.defaults =
 // relations
 // --
 
-let openedModuleSymbol = Symbol.for( 'oModule' );
+let openedModuleSymbol = Symbol.for( 'opener' );
 let dataSymbol = Symbol.for( 'data' );
 let moduleSymbol = Symbol.for( 'module' );
 let pathSymbol = Symbol.for( 'path' );
@@ -582,7 +582,7 @@ let Associates =
 let Restricts =
 {
   // data : null, // xxx
-  oModule : null,
+  opener : null,
   own : 1, // xxx
 }
 
@@ -603,7 +603,7 @@ let Accessors =
 {
   isAvailable : { getter : isAvailableGet, readOnly : 1 },
   isDownloaded : { getter : isDownloadedGet, readOnly : 1 },
-  oModule : { setter : openedModuleSet },
+  opener : { setter : openedModuleSet },
   longPath : { getter : longPathGet },
   path : { setter : pathSet },
   // data : { getter : dataGet, setter : dataSet },

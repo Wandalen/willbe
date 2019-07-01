@@ -608,7 +608,7 @@ function modulesGraphGroupObtain()
   function onOutNodesFor( module )
   {
     let result = module.submoduleMap ? _.mapVals( module.submoduleMap ) : [];
-    result = result.map( ( module ) => module.oModule ? module.oModule : module );
+    result = result.map( ( module ) => module.opener ? module.opener : module );
     result = result.map( ( module ) => module.openedModule ? module.openedModule : module );
     return result;
   }

@@ -31,7 +31,7 @@ function finit()
 
   // opener.submoduleAssociation.forEach( ( submodule ) =>
   // {
-  //   _.assert( submodule.oModule === opener );
+  //   _.assert( submodule.opener === opener );
   //   submodule.finit();
   // });
 
@@ -647,12 +647,12 @@ function willfileEach( onEach )
   for( let s in opener.submoduleMap )
   {
     let submodule = opener.submoduleMap[ s ];
-    if( !submodule.oModule )
+    if( !submodule.opener )
     continue;
 
-    for( let w = 0 ; w < submodule.oModule.willfilesArray.length ; w++ )
+    for( let w = 0 ; w < submodule.opener.willfilesArray.length ; w++ )
     {
-      let willfile = submodule.oModule.willfilesArray[ w ];
+      let willfile = submodule.opener.willfilesArray[ w ];
       onEach( willfile )
     }
 
@@ -1064,7 +1064,7 @@ function submodulesAllAreDownloaded()
 
   for( let n in opener.submoduleMap )
   {
-    let submodule = opener.submoduleMap[ n ].oModule;
+    let submodule = opener.submoduleMap[ n ].opener;
     if( !submodule )
     return false;
     if( !submodule.isDownloaded )
@@ -1087,7 +1087,7 @@ function submodulesAllAreValid()
 
   for( let n in opener.submoduleMap )
   {
-    let submodule = opener.submoduleMap[ n ].oModule;
+    let submodule = opener.submoduleMap[ n ].opener;
     if( !submodule )
     continue;
     if( !submodule.isValid() )
@@ -1111,7 +1111,11 @@ function remoteIsUpdate()
   _.assert( !!opener.willfilesPath || !!opener.dirPath );
   _.assert( arguments.length === 0 );
 
-  let remoteProvider = fileProvider.providerForPath( opener.commonPath );
+  // if( opener.remotePath )
+  // return end( true );
+
+  debugger;
+  let remoteProvider = fileProvider.providerForPath( opener.remotePath || opener.commonPath );
   if( remoteProvider.isVcs )
   return end( true );
 
@@ -1124,6 +1128,7 @@ function remoteIsUpdate()
     opener.isRemote = result;
     return result;
   }
+
 }
 
 //
@@ -1215,6 +1220,7 @@ function remoteIsDownloadedUpdate()
     opener.isDownloaded = !!result;
     return result;
   }
+
 }
 
 //
@@ -1301,13 +1307,13 @@ function _remoteFormAct()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let willfilesPath = opener.willfilesPath;
+  let willfilesPath = opener.remotePath || opener.willfilesPath;
 
   _.assert( _.strDefined( opener.aliasName ) );
   _.assert( !!opener.supermodule );
   _.assert( _.strIs( willfilesPath ) );
 
-  let remoteProvider = fileProvider.providerForPath( opener.commonPath );
+  let remoteProvider = fileProvider.providerForPath( opener.remotePath || opener.commonPath );
 
   _.assert( remoteProvider.isVcs && _.routineIs( remoteProvider.pathParse ), () => 'Seems file provider ' + remoteProvider.nickName + ' does not have version control system features' );
 
@@ -1315,9 +1321,7 @@ function _remoteFormAct()
   let parsed = remoteProvider.pathParse( willfilesPath );
 
   opener.remotePath = willfilesPath;
-  debugger;
   opener.localPath = path.resolve( submodulesDir, opener.aliasName );
-  debugger;
 
   let willfilesPath2 = path.resolve( opener.localPath, parsed.localVcsPath );
   opener._filePathChange( willfilesPath2 );
@@ -1561,7 +1565,6 @@ function _filePathChange( willfilesPath )
 
 }
 
-
 //
 
 function _filePathChanged()
@@ -1696,15 +1699,6 @@ function aliasNameSet( src )
   opener._nameChanged();
 }
 
-// //
-//
-// function configNameSet( src )
-// {
-//   let opener = this;
-//   opener[ configNameSymbol ] = src;
-//   opener._nameChanged();
-// }
-
 //
 
 function absoluteNameGet()
@@ -1729,6 +1723,57 @@ function shortNameArrayGet()
   result.push( opener.name );
   return result;
 }
+
+// --
+// other accessor
+// --
+
+function accessorGet_functor( fieldName )
+{
+  let symbol = Symbol.for( fieldName );
+
+  return function accessorGet()
+  {
+    let opener = this;
+    let openedModule = opener.openedModule;
+
+    if( openedModule )
+    return openedModule[ fieldName ];
+
+    let result = opener[ symbol ];
+
+    return result;
+  }
+
+}
+
+//
+
+function accessorSet_functor( fieldName )
+{
+  let symbol = Symbol.for( fieldName );
+
+  return function accessorSet( filePath )
+  {
+    let opener = this;
+    let openedModule = opener.openedModule;
+
+    opener[ symbol ] = filePath;
+    if( openedModule )
+    openedModule[ fieldName ] = filePath;
+
+    return filePath;
+  }
+
+}
+
+let isRemoteGet = accessorGet_functor( 'isRemote' );
+let isDownloadedGet = accessorGet_functor( 'isDownloaded' );
+let isUpToDateGet = accessorGet_functor( 'isUpToDate' );
+
+let isRemoteSet = accessorSet_functor( 'isRemote' );
+let isDownloadedSet = accessorSet_functor( 'isDownloaded' );
+let isUpToDateSet = accessorSet_functor( 'isUpToDate' );
 
 // --
 // relations
@@ -1762,6 +1807,7 @@ let Composes =
   isRemote : null,
   isDownloaded : null,
   isUpToDate : null,
+
   finding : 'smart',
 
 }
@@ -1838,6 +1884,10 @@ let Accessors =
   aliasName : { setter : aliasNameSet },
   configName : { readOnly : 1 },
   absoluteName : { getter : absoluteNameGet, readOnly : 1 },
+
+  isRemote : { getter : isRemoteGet, setter : isRemoteSet },
+  isDownloaded : { getter : isDownloadedGet, setter : isDownloadedSet },
+  isUpToDate : { getter : isUpToDateGet, setter : isUpToDateSet },
 
   supermodule : { getter : supermoduleGet, setter : supermoduleSet },
   rootModule : { getter : rootModuleGet, setter : rootModuleSet },
@@ -1955,6 +2005,16 @@ let Extend =
   aliasNameSet,
   absoluteNameGet,
   shortNameArrayGet,
+
+  // other accessor
+
+  isRemoteGet,
+  isDownloadedGet,
+  isUpToDateGet,
+
+  isRemoteSet,
+  isDownloadedSet,
+  isUpToDateSet,
 
   // relation
 
