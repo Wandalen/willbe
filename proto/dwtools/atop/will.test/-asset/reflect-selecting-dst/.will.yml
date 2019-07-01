@@ -1,0 +1,57 @@
+
+about :
+
+  name : "reflect-selecting-dst"
+  description : "Module for testing"
+  version : "0.0.1"
+  enabled : 1
+
+path :
+
+  proto : './proto'
+  in : '.'
+  out : '.'
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : './out/release'
+    criterion :
+      debug : 0
+
+reflector:
+
+  reflect.proto:
+    filePath :
+      path::proto : .
+    dst :
+      basePath : .
+      prefixPath : path::out.*=1 #<-- doesn't work
+      # prefixPath : "{path::out.*=1}" #<-- this works
+    criterion :
+      debug : [ 0,1 ]
+
+step :
+
+  clean.out :
+    inherit : files.delete
+    filePath : path::out.*=1
+    criterion :
+      debug : [ 0,1 ]
+
+build :
+
+  debug :
+    criterion :
+      debug : 1
+    steps :
+      - step::clean.out.*=1
+      - step::reflect.proto.*=1
+
+  release :
+    criterion :
+      debug : 0
+    steps :
+      - step::clean.out.*=1
+      - step::reflect.proto.*=1

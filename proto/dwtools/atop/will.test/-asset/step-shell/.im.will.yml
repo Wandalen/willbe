@@ -1,0 +1,15 @@
+
+step :
+
+  list.dir :
+    currentPath : .
+    shell : ls
+
+build :
+
+  debug1 :
+    steps :
+      - step::list.dir*=1
+
+  debug2 :
+    steps : step::list.dir*=1

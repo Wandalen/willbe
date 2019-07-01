@@ -828,7 +828,7 @@ function commandWith( e )
   }
 
   module.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
-  module.openedModule.stager.stageStatePausing( 'opened', 0 );
+  module.openedModule.stager.stageStatePausing( 'picked', 0 );
   module.openedModule.stager.tick();
 
   return module.openedModule.ready.split().keep( function( arg )
@@ -950,6 +950,7 @@ function _commandEach_functor( fop )
       return r.finally( ( err, arg ) =>
       {
         logger.down();
+        levelUp = 0;
 
         _.assert( will.currentModule === it.currentModule );
         will.currentModule.finit();

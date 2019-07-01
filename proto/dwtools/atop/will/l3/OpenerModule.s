@@ -366,7 +366,7 @@ function preform()
 
   /* */
 
-  opener.remoteForm();
+  // opener.remoteForm();
 
   /* */
 
@@ -433,8 +433,11 @@ function moduleFind()
   let opener = this;
   let will = opener.will;
 
-  opener.preform();
+  _.assert( _.arrayHas( [ 0, 'smart', 'picked' ], opener.finding ) );
+
   opener._willfilesReadBegin();
+  opener.preform();
+  opener.remoteForm();
 
   let openedModule = opener.openedModule;
   if( !openedModule )
@@ -516,15 +519,14 @@ function moduleClone( openedModule )
   let opener = this;
   let will = opener.will;
 
-  opener.preform();
   opener._willfilesReadBegin();
+  opener.preform();
+  opener.remoteForm();
 
   let o2 = opener.optionsForModule();
   o2.rootModule = opener.rootModule;
-
   let openedModule2 = openedModule.cloneExtending( o2 );
   opener.openedModule = openedModule2;
-
   if( openedModule2.rootModule === null )
   openedModule2.rootModule = openedModule2;
 
@@ -627,6 +629,68 @@ function willfileArraySet( willfilesArray )
   }
 
   return opener.willfilesArray;
+}
+
+//
+
+function willfileEach( onEach )
+{
+  let opener = this;
+  let will = opener.will;
+
+  for( let w = 0 ; w < opener.willfilesArray.length ; w++ )
+  {
+    let willfile = opener.willfilesArray[ w ];
+    onEach( willfile )
+  }
+
+  for( let s in opener.submoduleMap )
+  {
+    let submodule = opener.submoduleMap[ s ];
+    if( !submodule.oModule )
+    continue;
+
+    for( let w = 0 ; w < submodule.oModule.willfilesArray.length ; w++ )
+    {
+      let willfile = submodule.oModule.willfilesArray[ w ];
+      onEach( willfile )
+    }
+
+  }
+
+}
+
+//
+
+function _willfilesReadBegin()
+{
+  let opener = this;
+  let will = opener.will;
+  let logger = will.logger;
+
+  opener.willfilesReadBeginTime = _.timeNow();
+
+  return null;
+}
+
+//
+
+function _willfilesExport()
+{
+  let opener = this;
+  let will = opener.will;
+  let result = Object.create( null );
+
+  opener.willfileEach( handeWillFile );
+
+  return result;
+
+  function handeWillFile( willfile )
+  {
+    _.assert( _.objectIs( willfile.data ) );
+    result[ willfile.filePath ] = willfile.data;
+  }
+
 }
 
 //
@@ -769,7 +833,7 @@ _willfileFindMultiple.defaults =
 
 //
 
-function _willfilesFindMaybe( o )
+function _willfilesFindSmart( o )
 {
   let opener = this;
   let will = opener.will;
@@ -779,7 +843,7 @@ function _willfilesFindMaybe( o )
   let filePaths;
   let found;
 
-  o = _.routineOptions( _willfilesFindMaybe, arguments );
+  o = _.routineOptions( _willfilesFindSmart, arguments );
 
   _.assert( opener.willfilesArray.length === 0, 'not tested' );
 
@@ -817,14 +881,14 @@ function _willfilesFindMaybe( o )
 
 }
 
-_willfilesFindMaybe.defaults =
+_willfilesFindSmart.defaults =
 {
   isOutFile : 0,
 }
 
 //
 
-function _willfilesFindPickedFile()
+function _willfilesFindPicked()
 {
   let opener = this;
   let will = opener.will;
@@ -834,14 +898,19 @@ function _willfilesFindPickedFile()
   let result = [];
 
   _.assert( arguments.length === 0 );
-  _.assert( !!opener.pickedWillfilesPath );
+  // _.assert( !!opener.pickedWillfilesPath );
+  _.assert( !!opener.willfilesPath );
 
-  opener.pickedWillfilesPath = _.arrayAs( opener.pickedWillfilesPath );
-  _.assert( _.strsAreAll( opener.pickedWillfilesPath ) );
+  let willfilesPath = _.arrayAs( opener.willfilesPath );
+  _.assert( _.strsAreAll( willfilesPath ) );
+  // opener.pickedWillfilesPath = _.arrayAs( opener.pickedWillfilesPath );
+  // _.assert( _.strsAreAll( opener.pickedWillfilesPath ) );
 
-  opener.pickedWillfilesPath.forEach( ( filePath ) =>
+  debugger;
+  willfilesPath.forEach( ( filePath ) =>
   {
 
+    debugger;
     let willfile = will.willfileFor
     ({
       filePath : filePath,
@@ -858,6 +927,7 @@ function _willfilesFindPickedFile()
 
   });
 
+  debugger;
   if( result.length )
   {
     let willfilesPath = _.select( result, '*/filePath' );
@@ -890,14 +960,15 @@ function _willfilesFind()
     //   result = opener.exportAuto();
     // }
     // else
-    if( opener.pickedWillfilesPath )
+    // if( opener.pickedWillfilesPath )
+    if( opener.finding === 'picked' )
     {
-      result = opener._willfilesFindPickedFile();
+      result = opener._willfilesFindPicked(); /* xxx : remove maybe the routine? */
     }
     else
     {
       _.assert( !opener.pickedWillfileData );
-      result = opener._willfilesFindMaybe({ isOutFile : !!opener.supermodule });
+      result = opener._willfilesFindSmart({ isOutFile : !!opener.supermodule });
     }
 
     _.assert( !_.consequenceIs( result ) );
@@ -924,90 +995,25 @@ function _willfilesFind()
 
 }
 
+// //
 //
-
-function willfilesPick( filePaths )
-{
-  let opener = this;
-  let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let result = [];
-
-  opener.pickedWillfilesPath = filePaths;
-  opener._willfilesFind();
-  return opener.willfilesArray.slice();
-}
-
+// function willfilesPick( filePaths )
+// {
+//   let opener = this;
+//   let will = opener.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//   let result = [];
 //
-
-function _willfilesReadBegin()
-{
-  let opener = this;
-  let will = opener.will;
-  let logger = will.logger;
-
-  opener.willfilesReadBeginTime = _.timeNow();
-
-  return null;
-}
-
-//
-
-function _willfilesExport()
-{
-  let opener = this;
-  let will = opener.will;
-  let result = Object.create( null );
-
-  opener.willfileEach( handeWillFile );
-
-  return result;
-
-  function handeWillFile( willfile )
-  {
-    _.assert( _.objectIs( willfile.data ) );
-    result[ willfile.filePath ] = willfile.data;
-  }
-
-}
-
-//
-
-function willfileEach( onEach )
-{
-  let opener = this;
-  let will = opener.will;
-
-  for( let w = 0 ; w < opener.willfilesArray.length ; w++ )
-  {
-    let willfile = opener.willfilesArray[ w ];
-    onEach( willfile )
-  }
-
-  for( let s in opener.submoduleMap )
-  {
-    let submodule = opener.submoduleMap[ s ];
-    if( !submodule.oModule )
-    continue;
-
-    for( let w = 0 ; w < submodule.oModule.willfilesArray.length ; w++ )
-    {
-      let willfile = submodule.oModule.willfilesArray[ w ];
-      onEach( willfile )
-    }
-
-  }
-
-}
+//   opener.pickedWillfilesPath = filePaths;
+//   opener._willfilesFind();
+//   return opener.willfilesArray.slice();
+// }
 
 // --
 // submodule
 // --
-
-
-//
 
 function supermoduleGet()
 {
@@ -1403,7 +1409,7 @@ function _remoteDownload( o )
       opener.moduleFind();
 
       debugger;
-      opener.openedModule.stager.stageStatePausing( 'opened', 0 );
+      opener.openedModule.stager.stageStatePausing( 'picked', 0 );
       opener.openedModule.stager.stageStateSkipping( 'submodulesFormed', 1 );
       opener.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
       opener.openedModule.stager.tick();
@@ -1747,7 +1753,7 @@ let Composes =
   aliasName : null,
 
   willfilesPath : null,
-  pickedWillfilesPath : null,
+  // pickedWillfilesPath : null,
   inPath : null,
   outPath : null,
   localPath : null,
@@ -1756,7 +1762,7 @@ let Composes =
   isRemote : null,
   isDownloaded : null,
   isUpToDate : null,
-  finding : 1,
+  finding : 'smart',
 
 }
 
@@ -1813,6 +1819,7 @@ let Forbids =
   currentRemotePath : 'currentRemotePath',
   opened : 'opened',
   // pickedWillfileData : 'pickedWillfileData',
+  pickedWillfilesPath : 'pickedWillfilesPath',
 }
 
 let Accessors =
@@ -1882,18 +1889,16 @@ let Extend =
   willfileUnregister,
   willfileRegister,
   willfileArraySet,
+  willfileEach,
+  _willfilesReadBegin,
+  _willfilesExport,
 
   _willfileFindSingle,
   _willfileFindMultiple,
-  _willfilesFindMaybe,
-  _willfilesFindPickedFile,
+  _willfilesFindSmart,
+  _willfilesFindPicked,
   _willfilesFind,
-  willfilesPick,
-
-  _willfilesReadBegin,
-
-  _willfilesExport,
-  willfileEach,
+  // willfilesPick,
 
   // submodule
 

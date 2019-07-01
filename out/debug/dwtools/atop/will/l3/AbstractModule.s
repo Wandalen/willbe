@@ -159,17 +159,17 @@ function CommonPathFor( willfilesPath )
 
 function modulesAttachedOpen()
 {
-  let opener = this;
-  let will = opener.will;
+  let module = this;
+  let will = module.will;
   let result = null;
-  let openedModule = opener instanceof _.Will.OpenerModule ? opener.openedModule : opener;
+  let openedModule = module instanceof _.Will.OpenerModule ? module.openedModule : module;
 
-  if( opener.rootModule === null || opener.rootModule === openedModule )
-  if( !opener.original )
-  if( opener.willfilesArray.length )
-  result = opener.modulesOpenFromData
+  if( module.rootModule === null || module.rootModule === openedModule )
+  // if( !module.original )
+  if( module.willfilesArray.length )
+  result = module.modulesOpenFromData
   ({
-    willfilesArray : opener.willfilesArray.slice(),
+    willfilesArray : module.willfilesArray.slice(),
     rootModule : openedModule.rootModule,
   });
 
@@ -180,8 +180,10 @@ function modulesAttachedOpen()
 
 function modulesOpenFromData( o )
 {
-  let opener = this;
-  let will = opener.will;
+  let module = this;
+  let will = module.will;
+
+  // logger.log( 'modulesOpenFromData' ); debugger;
 
   o = _.routineOptions( modulesOpenFromData, arguments );
 
@@ -195,7 +197,7 @@ function modulesOpenFromData( o )
       let data = willfile.data.module[ modulePath ]; debugger;
       if( data === 'root' )
       continue;
-      opener.moduleOpenFromData
+      module.moduleOpenFromData
       ({
         modulePath : modulePath,
         data : data,
@@ -218,15 +220,15 @@ modulesOpenFromData.defaults =
 
 function moduleOpenFromData( o )
 {
-  let opener = this;
-  let will = opener.will;
+  let module = this;
+  let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
   o = _.routineOptions( moduleOpenFromData, arguments );
 
-  let modulePath = path.join( opener.dirPath, o.modulePath );
+  let modulePath = path.join( module.dirPath, o.modulePath );
   let willf = will.willfileFor
   ({
     filePath : modulePath + '.will.cached!',

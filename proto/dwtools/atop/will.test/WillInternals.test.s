@@ -3969,7 +3969,7 @@ function pathsResolveFailing( test )
     test.case = 'path::export';
     test.shouldThrowErrorSync( () =>
     {
-      debugger;
+      // debugger;
       var got = module.openedModule.pathResolve
       ({
         /* selector : 'path::export', */
@@ -3978,7 +3978,7 @@ function pathsResolveFailing( test )
         missingAction : 'throw',
         prefixlessAction : 'throw',
       });
-      debugger;
+      // debugger;
     });
 
 /*

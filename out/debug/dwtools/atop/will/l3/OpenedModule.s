@@ -87,7 +87,8 @@ function init( o )
     onEnd : [ null, null, null, module._willfilesReadEnd, null, module._formEnd ],
   });
 
-  module.stager.stageStatePausing( 'opened', 1 );
+  // module.stager.stageStatePausing( 'opened', 1 );
+  module.stager.stageStatePausing( 'picked', 1 );
 
   module.predefinedForm();
 
@@ -189,7 +190,7 @@ function openerMake()
   let o2 = module.optionsForOpener();
   o2.finding = 0;
   let opener = new will.OpenerModule( o2 );
-  opener.open();
+  opener.moduleFind();
 
   return opener;
 }
@@ -3822,7 +3823,7 @@ function dataExportForModuleExport( o )
 
   module2.stager.stageStateSkipping( 'picked', 1 );
   module2.stager.stageStateSkipping( 'opened', 1 );
-  module2.stager.stageStatePausing( 'opened', 0 );
+  module2.stager.stageStatePausing( 'picked', 0 );
   module2.stager.tick();
 
   _.assert( !!module2.ready.resourcesCount() );

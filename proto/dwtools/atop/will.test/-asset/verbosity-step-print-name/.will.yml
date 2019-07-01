@@ -1,0 +1,31 @@
+
+path :
+
+  out : 'out'
+  file : 'file'
+
+reflector :
+
+  reflect.file :
+    filePath :
+      'path::file' : 'path::out'
+
+step :
+
+  shell.step :
+    currentPath : .
+    shell : node -e "console.log( 'shell.step' )"
+
+  delete.step :
+    inherit : files.delete
+    filePath : path::out
+
+build :
+
+  debug :
+    criterion :
+      default : 1
+    steps :
+      - reflect.file
+      - shell.step
+      - delete.step

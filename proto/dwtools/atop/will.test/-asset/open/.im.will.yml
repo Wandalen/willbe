@@ -1,0 +1,29 @@
+
+submodule :
+
+path :
+
+  proto : './proto'
+  in : '.'
+  out : 'out'
+  out.debug : './out/debug'
+  doc : 'doc'
+  temp :
+    - 'out'
+    - 'doc.out'
+    - 'doc/out'
+    - 'doc/doc.out'
+
+reflector :
+
+  reflect.proto :
+    filePath :
+      path::proto : path::out.debug
+
+build :
+
+  debug :
+    steps :
+      - step::reflect.proto
+    criterion :
+      default : 1

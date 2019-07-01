@@ -5,20 +5,20 @@ about:
   enabled: 1
   version: 0.0.1
 path:
-  in:
-    path: .
-    criterion:
-      predefined: 0
   module.willfiles:
     path: module-a.out.will.yml
     criterion:
       predefined: 1
-  module.original.willfiles:
-    path: ../a.will.yml
-    criterion:
-      predefined: 1
   module.common:
     path: module-a.out
+    criterion:
+      predefined: 1
+  in:
+    path: .
+    criterion:
+      predefined: 0
+  module.original.willfiles:
+    path: ../a.will.yml
     criterion:
       predefined: 1
   local:

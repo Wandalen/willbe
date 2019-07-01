@@ -232,7 +232,7 @@ function _openFrom( o )
 
   /* */
 
-  debugger;
+  // debugger;
   submodule.oModule = will.OpenerModule
   ({
     will : will,
@@ -254,7 +254,7 @@ function _openFrom( o )
   submodule.oModule.openedModule.stager.stageStateSkipping( 'opened', 1 );
 
   submodule.oModule.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
-  submodule.oModule.openedModule.stager.stageStatePausing( 'opened', 0 );
+  submodule.oModule.openedModule.stager.stageStatePausing( 'picked', 0 );
   submodule.oModule.openedModule.stager.tick();
 
   submodule.oModule.openedModule.ready.finally( ( err, arg ) =>

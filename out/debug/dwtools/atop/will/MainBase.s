@@ -270,7 +270,7 @@ function moduleMake( o )
   // _.assert( o.module.willfilesPath === o.willfilesPath || o.module.willfilesPath === o.dirPath );
 
   o.module.moduleFind();
-  o.module.openedModule.stager.stageStatePausing( 'opened', 0 );
+  o.module.openedModule.stager.stageStatePausing( 'picked', 0 );
   o.module.openedModule.stager.stageStateSkipping( 'resourcesFormed', !o.forming );
   o.module.openedModule.stager.tick();
 
@@ -324,7 +324,7 @@ function moduleEachAt( o )
         let module = it1.currentModule;
 
         let it2 = Object.create( null );
-        it2.currentModule = module.openerMake();
+        it2.currentModule = module.openerMake(); // xxx
 
         if( _.arrayIs( it1.dst ) || _.strIs( it1.dst ) )
         it2.currentPath = it1.dst;
@@ -342,7 +342,7 @@ function moduleEachAt( o )
     });
 
     module.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
-    module.openedModule.stager.stageStatePausing( 'opened', 0 );
+    module.openedModule.stager.stageStatePausing( 'picked', 0 );
     module.openedModule.stager.tick();
 
   }
@@ -396,11 +396,12 @@ function moduleEachAt( o )
       });
 
       module.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
-      module.openedModule.stager.stageStatePausing( 'opened', 0 );
+      module.openedModule.stager.stageStatePausing( 'picked', 0 );
       module.openedModule.stager.tick();
 
       return module.openedModule.ready.split().keep( function( arg )
       {
+        debugger;
         _.assert( module.willfilesArray.length > 0 );
         if( module.willfilesPath )
         _.mapSet( filesMap, module.willfilesPath, true );

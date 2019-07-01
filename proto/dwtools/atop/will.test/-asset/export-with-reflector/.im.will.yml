@@ -1,0 +1,16 @@
+
+submodule :
+
+path :
+
+  proto : './proto'
+  in : '.'
+  out : 'out'
+
+reflector :
+
+  proto.but.include :
+    src :
+      filePath : path::proto
+      maskTransientDirectory :
+        excludeAny : ./include

@@ -1,0 +1,22 @@
+
+about :
+
+  name : "export-with-reflector"
+  description : "Module for testing"
+  version : "0.0.1"
+
+step :
+
+  export.proto :
+    inherit : module.export
+    export : reflector::proto.but.include
+    tar : 0
+
+build :
+
+  proto.export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - step::export.proto

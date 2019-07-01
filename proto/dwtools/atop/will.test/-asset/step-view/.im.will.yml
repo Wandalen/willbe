@@ -1,0 +1,25 @@
+
+path :
+
+  google : http:///www.google.com
+  local : File.html
+
+step :
+
+  view1 :
+    inherit : file.view
+    filePath : path::google
+
+  view2 :
+    inherit : file.view
+    filePath : path::local
+
+build :
+
+  view1 :
+    steps :
+      - step::view1
+
+  view2 :
+    steps :
+      - step::view2
