@@ -99,7 +99,7 @@ function verify()
   for( let s in module.submoduleMap )
   {
     let submodule = module.submoduleMap[ s ];
-    if( !submodule.oModule || !submodule.oModule.isOpened() || !submodule.oModule.isValid() )
+    if( !submodule.opener || !submodule.opener.isOpened() || !submodule.opener.isValid() )
     throw _.errBriefly( ' ! ' + submodule.decoratedAbsoluteName + ' is broken!' );
   }
 
@@ -119,33 +119,43 @@ function readExported()
   let logger = will.logger;
 
   let outFilePath = module.outfilePathGet();
-  let module2 = will.OpenerModule({ will : will, willfilesPath : outFilePath, original : module }).preform();
-  let willfiles = module2.willfilesPick( outFilePath );
+  let opener2 = will.OpenerModule
+  ({
+    will : will,
+    willfilesPath : outFilePath,
+    original : module,
+    rootModule : module,
+  })
+
+  opener2.preform();
+  // let willfiles = opener2.willfilesPick( outFilePath );
+  // opener2.pickedWillfilesPath = outFilePath;
+  opener2.willfilesPath = outFilePath;
+  opener2.finding = 'picked';
 
   try
   {
 
-    module2.open();
-    module2.openedModule.willfilesReadTimeReported = 1;
-    module2.openedModule.stager.stageStatePausing( 'opened', 0 );
-    module2.openedModule.stager.stageStateSkipping( 'opened', 0 );
-    module2.openedModule.stager.stageStateSkipping( 'submodulesFormed', 1 );
-    module2.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
-    module2.openedModule.stager.tick();
+    opener2.moduleFind();
+    opener2.openedModule.willfilesReadTimeReported = 1;
+    opener2.openedModule.stager.stageStatePausing( 'picked', 0 );
+    opener2.openedModule.stager.stageStateSkipping( 'submodulesFormed', 1 );
+    opener2.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
+    opener2.openedModule.stager.tick();
 
-    let con = module2.openedModule.ready;
+    let con = opener2.openedModule.ready;
     con
     .thenKeep( ( arg ) =>
     {
 
-      let willfile = module2.openedModule.willfilesArray[ 0 ];
-      _.assert( willfile && module2.openedModule.willfilesArray.length === 1 );
+      let willfile = opener2.openedModule.willfilesArray[ 0 ];
+      _.assert( willfile && opener2.openedModule.willfilesArray.length === 1 );
       if( willfile.data && willfile.data.exported )
       for( let exportedName in willfile.data.exported )
       {
         if( exportedName === exported.name )
         continue;
-        let exported2 = module2.openedModule.exportedMap[ exportedName ];
+        let exported2 = opener2.openedModule.exportedMap[ exportedName ];
         _.assert( exported2 instanceof Self );
         module.resourceImport({ srcResource : exported2 });
       }
@@ -156,7 +166,7 @@ function readExported()
     {
       try
       {
-        module2.openedModule.finit();
+        opener2.openedModule.finit();
       }
       catch( err2 )
       {
@@ -165,7 +175,7 @@ function readExported()
       }
       if( err )
       {
-        if( module2.openedModule.stager.stageStatePerformed( 'willfilesFound' ) )
+        if( opener2.openedModule.stager.stageStatePerformed( 'willfilesFound' ) )
         throw _.errLogOnce( _.errBriefly( err ) );
         else
         {
@@ -183,7 +193,7 @@ function readExported()
   catch( err )
   {
     // debugger;
-    // _.errLogOnce( _.errBriefly( err ) );
+    // _.errLogOnce( err );
   }
 
 }

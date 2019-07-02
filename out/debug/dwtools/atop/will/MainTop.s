@@ -811,7 +811,7 @@ function commandWith( e )
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
 
   if( !isolated )
-  throw _.err( 'Format is: .with (dir) .action' );
+  throw _.err( 'Format is: .with (payj) .action' );
 
   let willfilesPath = path.joinRaw( path.current(), isolated.argument === '.' ? './' : isolated.argument );
 
@@ -819,7 +819,7 @@ function commandWith( e )
 
   try
   {
-    will.currentModule.open();
+    will.currentModule.moduleFind();
   }
   catch( err )
   {
@@ -828,7 +828,7 @@ function commandWith( e )
   }
 
   module.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
-  module.openedModule.stager.stageStatePausing( 'opened', 0 );
+  module.openedModule.stager.stageStatePausing( 'picked', 0 );
   module.openedModule.stager.tick();
 
   return module.openedModule.ready.split().keep( function( arg )
@@ -868,6 +868,7 @@ function _commandEach_functor( fop )
     let fileProvider = will.fileProvider;
     let path = will.fileProvider.path;
     let logger = will.logger;
+    let levelUp = 0;
 
     if( will.currentModule )
     {
@@ -885,7 +886,7 @@ function _commandEach_functor( fop )
     let isolated = ca.commandIsolateSecondFromArgument( e.argument );
 
     if( !isolated )
-    throw _.err( 'Format is: .with (dir) .action' );
+    throw _.err( 'Format is: .each (path) .action' );
 
     _.assert( _.objectIs( isolated ), 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
 
@@ -894,6 +895,7 @@ function _commandEach_functor( fop )
       selector : isolated.argument,
       onBegin : handleBegin,
       onEnd : handleEnd,
+      onError : handleError,
     });
 
     con.finally( ( err, arg ) =>
@@ -914,9 +916,6 @@ function _commandEach_functor( fop )
       _.assert( will.currentModule === null );
       _.assert( will.currentPath === null );
 
-      will.currentModule = it.currentModule;
-      will.currentPath = it.currentPath || null;
-
       if( will.verbosity > 1 )
       {
         logger.log( '' );
@@ -924,6 +923,9 @@ function _commandEach_functor( fop )
         if( will.currentPath )
         logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( will.currentPath, 'path' ) );
       }
+
+      will.currentModule = it.currentModule;
+      will.currentPath = it.currentPath || null;
 
       return null;
     }
@@ -934,17 +936,21 @@ function _commandEach_functor( fop )
     {
 
       logger.up();
+      levelUp = 1;
 
       let r = ca.commandPerform
       ({
         command : isolated.secondCommand,
       });
+
       _.assert( r !== undefined );
+
       r = _.Consequence.From( r );
 
       return r.finally( ( err, arg ) =>
       {
         logger.down();
+        levelUp = 0;
 
         _.assert( will.currentModule === it.currentModule );
         will.currentModule.finit();
@@ -952,17 +958,29 @@ function _commandEach_functor( fop )
         will.currentPath = null;
 
         if( err )
-        logger.log( _.errOnce( _.errBriefly( err ) ) );
-        // debugger;
-        // if( err )
-        // logger.log( _.errOnce( _.errBriefly( err ) ) );
-        // // logger.log();
+        logger.log( _.errOnce( _.errBriefly( '\n', err, '\n' ) ) );
 
-        // _.errLogOnce( _.errBriefly( err ) );
         if( err )
         throw _.err( err );
         return arg;
       });
+
+    }
+
+    /* */
+
+    function handleError( err )
+    {
+
+      if( will.currentModule )
+      will.currentModule.finit();
+      will.currentModule = null;
+      will.currentPath = null;
+      if( levelUp )
+      {
+        levelUp = 0;
+        logger.down();
+      }
 
     }
 

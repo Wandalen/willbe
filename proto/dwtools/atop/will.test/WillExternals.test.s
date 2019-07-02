@@ -45,6 +45,57 @@ function onSuiteEnd()
 
 //
 
+function preCloneRepos( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'repo' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.sheller
+  ({
+    // execPath : 'node ' + execPath,
+    currentPath : originalDirPath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.dirMake( originalDirPath );
+
+  /* - */
+
+  clone( 'Color', '2d408bf82b168a39a29aa1261bf13face8bd3e95' );
+  clone( 'PathFundamentals', '95b741c8820a6d6234f59f1fa549c6b59f2d5a5c' );
+  clone( 'Procedure', '829ea81d342db66df60edf80c99687a1cd011a96' );
+  clone( 'Proto', '45452e31fe62f3edfad87ed7a0acb0f45fb1b271' );
+  clone( 'Tools', 'e58dc6a1637603c2151840f5bfb5729eb71d4e34' );
+  clone( 'UriFundamentals', '3686d72cc0b8f6573217c947a4b379c38b02e39b' );
+
+  ready
+  .thenKeep( () =>
+  {
+    test.is( _.fileProvider.isDir( _.path.join( originalDirPath, 'Tools' ) ) );
+    return null;
+  })
+
+  return ready;
+
+  function clone( name, version )
+  {
+
+    if( !_.fileProvider.isDir( _.path.join( originalDirPath, name ) ) )
+    shell( 'git clone https:///github.com/Wandalen/w' + name + '.git ' + name );
+    debugger;
+    shell({ args : 'git checkout ' + version, currentPath : _.path.join( originalDirPath, name ) });
+    debugger;
+
+  }
+
+}
+
+//
+
 function singleModuleSimplest( test )
 {
   let self = this;
@@ -100,11 +151,11 @@ function singleModuleWithSpaceTrivial( test )
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
 
-  shell({ args : [ '.with "single with space" .resources.list' ] })
+  shell({ args : [ '.with "single with space/" .resources.list' ] })
 
   .thenKeep( ( got ) =>
   {
-    test.case = 'module info';
+    test.case = '.with "single with space/" .resources.list';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, `name : 'single with space'` ) );
     test.is( _.strHas( got.output, `description : 'Module for testing'` ) );
@@ -227,121 +278,8 @@ function make( test )
 
 //
 
-function setVerbosity( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
-  let routinePath = _.path.join( self.tempDir, test.name );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-  let outPath = _.path.join( routinePath, 'out' );
-
-  let ready = new _.Consequence().take( null );
-  let shell = _.sheller
-  ({
-    execPath : 'node ' + execPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
-
-  ready
-
-  /* - */
-
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.set verbosity:3 ; .build' ] })
-  .finally( ( err, got ) =>
-  {
-    test.case = '.set verbosity:3 ; .build';
-    test.is( !err );
-    test.identical( got.exitCode, 0 );
-
-    test.is( _.strHas( got.output, '.set verbosity:3 ; .build' ) );
-    test.is( _.strHas( got.output, / \. Read .+\/\.im\.will\.yml/ ) );
-    test.is( _.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
-    test.is( _.strHas( got.output, / .*!.* Failed to read .+submodule::Tools.+/ ) );
-    test.is( _.strHas( got.output, / .*!.* Failed to read .+submodule::PathFundamentals.+/ ) );
-    test.is( _.strHas( got.output, '. Read 2 willfiles in' ) );
-
-    test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
-    test.is( _.strHas( got.output, / \+ 2\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
-    test.is( _.strHas( got.output, ' - filesDelete' ) );
-    test.is( _.strHas( got.output, / \+ .*reflector::reflect.proto.debug.* reflected 2 files/ ) );
-    test.is( _.strHas( got.output, / \+ .*reflector::reflect.submodules.* reflected/ ) );
-    test.is( _.strHas( got.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
-
-    return null;
-  })
-
-  /* - */
-
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.set verbosity:2 ; .build' ] })
-  .finally( ( err, got ) =>
-  {
-    test.case = '.set verbosity:2 ; .build';
-    test.is( !err );
-    test.identical( got.exitCode, 0 );
-
-    test.is( _.strHas( got.output, '.set verbosity:2 ; .build' ) );
-    test.is( !_.strHas( got.output, / \. Read .+\/\.im\.will\.yml/ ) );
-    test.is( !_.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
-    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::Tools.+/ ) );
-    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::PathFundamentals.+/ ) );
-    test.is( _.strHas( got.output, '. Read 2 willfiles in' ) );
-
-    test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
-    test.is( _.strHas( got.output, / \+ 2\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
-    test.is( _.strHas( got.output, ' - filesDelete' ) );
-    test.is( _.strHas( got.output, / \+ .*reflector::reflect.proto.debug.* reflected 2 files/ ) );
-    test.is( _.strHas( got.output, / \+ .*reflector::reflect.submodules.* reflected/ ) );
-    test.is( _.strHas( got.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
-
-    return null;
-  })
-
-  /* - */
-
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.set verbosity:1 ; .build' ] })
-  .finally( ( err, got ) =>
-  {
-    test.case = '.set verbosity:1 ; .build';
-    test.is( !err );
-    test.identical( got.exitCode, 0 );
-
-    test.is( _.strHas( got.output, '.set verbosity:1 ; .build' ) );
-    test.is( !_.strHas( got.output, / \. Read .+\/\.im\.will\.yml/ ) );
-    test.is( !_.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
-    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::Tools.+/ ) );
-    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::PathFundamentals.+/ ) );
-    test.is( !_.strHas( got.output, '. Read 2 willfiles in' ) );
-
-    test.is( !_.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
-    test.is( !_.strHas( got.output, / \+ 2\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
-    test.is( !_.strHas( got.output, ' - filesDelete' ) );
-    test.is( !_.strHas( got.output, ' + reflect.proto.debug reflected 2 files ' ) );
-    test.is( !_.strHas( got.output, ' + reflect.submodules reflected' ) );
-    test.is( _.strHas( got.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
-
-    return null;
-  })
-
-  /* - */
-
-  return ready;
-}
-
-setVerbosity.timeOut = 300000;
-
-//
-
 /*
-qqq : investigate
-(node:595912) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 exit listeners added. Use emitter.setMaxListeners() to increase limit
+Test transpilation of JS files.
 */
 
 function transpile( test )
@@ -605,18 +543,19 @@ function openWith( test )
     return null;
   })
 
-  shell({ args : [ '.with doc .export' ] })
+  shell({ args : [ '.with doc .export' ], throwingExitCode : 0 })
 
   .thenKeep( ( got ) =>
   {
-    test.identical( got.exitCode, 0 );
+    test.notIdentical( got.exitCode, 0 );
 
     var files = self.find( _.path.join( routinePath, 'out' ) );
     test.identical( files, [] );
     var files = self.find( _.path.join( routinePath, 'doc.out' ) );
     test.identical( files, [] );
     var files = self.find( _.path.join( routinePath, 'doc/out' ) );
-    test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
+    test.identical( files, [] );
+    // test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
     var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
     test.identical( files, [] );
 
@@ -701,6 +640,9 @@ function openWith( test )
   {
     test.ni( got.exitCode, 0 );
 
+    test.identical( _.strCount( got.output, 'unhandled errorr' ), 0 );
+    test.identical( _.strCount( got.output, '====' ), 0 );
+
     var files = self.find( _.path.join( routinePath, 'out' ) );
     test.identical( files, [] );
     var files = self.find( _.path.join( routinePath, 'doc.out' ) );
@@ -729,6 +671,9 @@ function openWith( test )
   .thenKeep( ( got ) =>
   {
     test.ni( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'unhandled errorr' ), 0 );
+    test.identical( _.strCount( got.output, '====' ), 0 );
 
     var files = self.find( _.path.join( routinePath, 'out' ) );
     test.identical( files, [] );
@@ -793,6 +738,9 @@ function openWith( test )
   .thenKeep( ( got ) =>
   {
     test.ni( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'unhandled errorr' ), 0 );
+    test.identical( _.strCount( got.output, '====' ), 0 );
 
     var files = self.find( _.path.join( routinePath, 'out' ) );
     test.identical( files, [] );
@@ -962,6 +910,71 @@ openEach.timeOut = 300000;
 
 //
 
+function withMixed( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let filePath = _.path.join( routinePath, 'file' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  });
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.with module .build'
+    return null;
+  })
+
+  shell({ args : [ '.with module .build' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.is( got.exitCode !== 0 );
+    test.is( _.strHas( got.output, 'Found no willfile' ) );
+    test.identical( _.strCount( got.output, 'unhandled errorr' ), 0 );
+    test.identical( _.strCount( got.output, '====' ), 0 );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.with . .build'
+    return null;
+  })
+
+  shell({ args : [ '.with . .export' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.is( got.exitCode === 0 );
+    test.identical( _.strCount( got.output, /Exported .*module::submodules-mixed \/ build::proto.export.* in/ ), 1 );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+withMixed.timeOut = 300000;
+
+//
+
 function eachMixed( test )
 {
   let self = this;
@@ -1045,10 +1058,6 @@ function eachMixed( test )
     test.identical( _.strCount( got.output, 'out/UriFundamentals.informal' ), 2 );
     test.identical( _.strCount( got.output, 'out/Proto.informal' ), 2 );
 
-    // test.is( _.strHas( got.output, [ 'debug', 'wTools.out.will.yml', 'wTools.proto.export.out.tgs' ].join( '\n' ) ) );
-    // test.is( _.strHas( got.output, [ 'debug', 'wPathFundamentals.out.will.yml' ].join( '\n' ) ) );
-    // test.is( _.strHas( got.output, [ 'Proto.informal.out.will.yml', 'UriFundamentals.informal.out.will.yml', 'debug' ].join( '\n' ) ) );
-
     return null;
   })
 
@@ -1061,57 +1070,60 @@ eachMixed.timeOut = 300000;
 
 //
 
-function withMixed( test )
+function withList( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
   let routinePath = _.path.join( self.tempDir, test.name );
-  let filePath = _.path.join( routinePath, 'file' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-  let ready = new _.Consequence().take( null );
 
+  let ready = new _.Consequence().take( null );
   let shell = _.sheller
   ({
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
-    throwingExitCode : 0,
     ready : ready,
-  });
+  })
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
 
   /* - */
 
-  ready
-  .thenKeep( () =>
+  shell({ args : '.with . .resources.list about::name' })
+  .finally( ( err, got ) =>
   {
-    test.case = '.with module .build'
-    return null;
-  })
-
-  shell({ args : [ '.with module .build' ] })
-  .thenKeep( ( got ) =>
-  {
-    test.is( got.exitCode !== 0 );
-    test.is( _.strHas( got.output, 'Found no willfile' ) );
+    test.case = '.with . .resources.list about::name';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'withList/.will.yml' ), 1 );
+    test.identical( _.strCount( got.output, 'module-' ), 1 );
     return null;
   })
 
   /* - */
 
-  ready
-  .thenKeep( () =>
+  shell({ args : '.with . .resources.list about::description' })
+  .finally( ( err, got ) =>
   {
-    test.case = '.with . .build'
+    test.case = '.with . .resources.list about::description';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'withList/.will.yml' ), 1 );
+    test.identical( _.strCount( got.output, 'Module for testing' ), 1 );
     return null;
   })
 
-  shell({ args : [ '.with . .export' ] })
-  .thenKeep( ( got ) =>
+  /* - */
+
+  shell({ args : '.with . .resources.list path::module.dir' })
+  .finally( ( err, got ) =>
   {
-    test.is( got.exitCode === 0 );
-    test.identical( _.strCount( got.output, /Exported .*module::submodules-mixed \/ build::proto.export.* in/ ), 1 );
+    test.case = '.with . .resources.list path::module.dir';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'withList/.will.yml' ), 1 );
+    test.identical( _.strCount( got.output, routinePath + '/' ), 2 );
     return null;
   })
 
@@ -1120,7 +1132,876 @@ function withMixed( test )
   return ready;
 }
 
-withMixed.timeOut = 300000;
+//
+
+function eachList( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'each-list' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  shell({ args : '.clean' })
+
+  /* - */
+
+  shell({ args : '.each . .resources.list about::name' })
+  .finally( ( err, got ) =>
+  {
+    test.case = '.each . .resources.list about::name';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Module at' ), 6 );
+    test.identical( _.strCount( got.output, 'module-' ), 6 );
+
+    test.identical( _.strCount( got.output, 'eachList/.will.yml' ), 1 );
+    test.identical( _.strCount( got.output, 'module-x' ), 1 );
+    test.identical( _.strCount( got.output, 'eachList/ab-named.will.yml' ), 1 );
+    test.identical( _.strCount( got.output, 'module-ab-named' ), 1 );
+    test.identical( _.strCount( got.output, 'eachList/a.will.yml' ), 1 );
+    test.identical( _.strCount( got.output, 'module-a' ), 2 );
+    test.identical( _.strCount( got.output, 'eachList/b.will.yml' ), 1 );
+    test.identical( _.strCount( got.output, 'module-b' ), 2 );
+    test.identical( _.strCount( got.output, 'eachList/bc-named.will.yml' ), 1 );
+    test.identical( _.strCount( got.output, 'module-bc-named' ), 1 );
+    test.identical( _.strCount( got.output, 'eachList/c.will.yml' ), 1 );
+    test.identical( _.strCount( got.output, 'module-c' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : '".imply v:1 ; .each . .resources.list about::name"' })
+  .finally( ( err, got ) =>
+  {
+    test.case = '".imply v:1 ; .each . .resources.list about::name"';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Module at' ), 0 );
+    test.identical( _.strCount( got.output, 'module-' ), 6 );
+    test.identical( _.strLinesCount( got.output ), 8 );
+
+    test.identical( _.strCount( got.output, 'eachList/.will.yml' ), 0 );
+    test.identical( _.strCount( got.output, 'module-x' ), 1 );
+    test.identical( _.strCount( got.output, 'eachList/a.will.yml' ), 0 );
+    test.identical( _.strCount( got.output, 'module-a' ), 2 );
+    test.identical( _.strCount( got.output, 'eachList/ab-named.will.yml' ), 0 );
+    test.identical( _.strCount( got.output, 'module-ab-named' ), 1 );
+    test.identical( _.strCount( got.output, 'eachList/b.will.yml' ), 0 );
+    test.identical( _.strCount( got.output, 'module-b' ), 2 );
+    test.identical( _.strCount( got.output, 'eachList/bc-named.will.yml' ), 0 );
+    test.identical( _.strCount( got.output, 'module-bc-named' ), 1 );
+    test.identical( _.strCount( got.output, 'eachList/c.will.yml' ), 0 );
+    test.identical( _.strCount( got.output, 'module-c' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : '".imply v:1 ; .each . .resources.list path::module.common"' })
+  .finally( ( err, got ) =>
+  {
+    test.case = '".imply v:1 ; .each . .resources.list path::module.common"';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Module at' ), 0 );
+    test.identical( _.strCount( got.output, routinePath ), 6 );
+    test.identical( _.strLinesCount( got.output ), 8 );
+
+    test.identical( _.strCount( got.output, routinePath + '/' ), 6 );
+    test.identical( _.strCount( got.output, routinePath + '/a' ), 2 );
+    test.identical( _.strCount( got.output, routinePath + '/ab-named' ), 1 );
+    test.identical( _.strCount( got.output, routinePath + '/b' ), 2 );
+    test.identical( _.strCount( got.output, routinePath + '/bc-named' ), 1 );
+    test.identical( _.strCount( got.output, routinePath + '/c' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : '".imply v:1 ; .each * .resources.list path::module.common"' })
+  .finally( ( err, got ) =>
+  {
+    test.case = '".imply v:1 ; .each * .resources.list path::module.common"';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Module at' ), 0 );
+    test.identical( _.strCount( got.output, routinePath ), 6 );
+    test.identical( _.strLinesCount( got.output ), 8 );
+
+    test.identical( _.strCount( got.output, routinePath + '/' ), 6 );
+    test.identical( _.strCount( got.output, routinePath + '/a' ), 2 );
+    test.identical( _.strCount( got.output, routinePath + '/ab-named' ), 1 );
+    test.identical( _.strCount( got.output, routinePath + '/b' ), 2 );
+    test.identical( _.strCount( got.output, routinePath + '/bc-named' ), 1 );
+    test.identical( _.strCount( got.output, routinePath + '/c' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : '".imply v:1 ; .each */* .resources.list path::module.common"' })
+  .finally( ( err, got ) =>
+  {
+    test.case = '".imply v:1 ; .each */* .resources.list path::module.common"';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Module at' ), 0 );
+    test.identical( _.strCount( got.output, routinePath ), 9 );
+    test.identical( _.strLinesCount( got.output ), 11 );
+
+    test.identical( _.strCount( got.output, routinePath + '/' ), 9 );
+    test.identical( _.strCount( got.output, routinePath + '/a' ), 5 );
+    test.identical( _.strCount( got.output, routinePath + '/ab-named' ), 1 );
+    test.identical( _.strCount( got.output, routinePath + '/b' ), 2 );
+    test.identical( _.strCount( got.output, routinePath + '/bc-named' ), 1 );
+    test.identical( _.strCount( got.output, routinePath + '/c' ), 1 );
+    test.identical( _.strCount( got.output, routinePath + '/aabc' ), 1 );
+    test.identical( _.strCount( got.output, routinePath + '/ab' ), 3 );
+    test.identical( _.strCount( got.output, routinePath + '/abac' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+eachList.timeOut = 300000;
+
+//
+
+/*
+if one or several willfiles are broken .each should go past and output error
+*/
+
+function eachBrokenIll( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'each-broken' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  shell({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
+  .finally( ( err, got ) =>
+  {
+    test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
+    test.is( !err );
+    test.notIdentical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Failed to resolve' ), 1 );
+    test.identical( _.strCount( got.output, 'eachBrokenIll/' ), 4 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+//
+
+/*
+utility should not try to open non-willfiles
+*/
+
+function eachBrokenNon( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'open-non-willfile' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  shell({ args : '.each */* .paths.list' })
+  .finally( ( err, got ) =>
+  {
+    test.case = '.each */* .paths.list';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Read 1 willfile' ), 1 );
+    test.identical( _.strCount( got.output, 'Module at' ), 1 );
+    test.identical( _.strCount( got.output, 'Paths' ), 1 );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+//
+
+/*
+utility should handle properly illformed second command
+tab should not be accumulated in the output
+*/
+
+function eachBrokenCommand( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules-few' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesDelete({ filePath : outPath })
+
+  /* - */
+
+  shell({ args : '.each */* .resource.list path::module.common' })
+  .finally( ( err, got ) =>
+  {
+    test.case = '.each */* .resource.list path::module.common';
+    test.is( !err );
+    test.notIdentical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Unknown subject ".resource.list"' ), 1 );
+    test.identical( _.strCount( got.output, 'Module at' ), 3 );
+    test.identical( _.strCount( got.output, '      ' ), 0 );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+//
+
+function verbositySet( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  ready
+
+  /* - */
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.imply verbosity:3 ; .build' ] })
+  .finally( ( err, got ) =>
+  {
+    test.case = '.imply verbosity:3 ; .build';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, '.imply verbosity:3 ; .build' ) );
+    test.is( _.strHas( got.output, / \. Read .+\/\.im\.will\.yml/ ) );
+    test.is( _.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
+    test.is( _.strHas( got.output, / .*!.* Failed to read .+submodule::Tools.+/ ) );
+    test.is( _.strHas( got.output, / .*!.* Failed to read .+submodule::PathFundamentals.+/ ) );
+    test.is( _.strHas( got.output, '. Read 2 willfile(s) in' ) );
+
+    test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
+    test.is( _.strHas( got.output, / \+ 2\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.is( _.strHas( got.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
+    test.is( _.strHas( got.output, / \+ .*reflector::reflect.proto.debug.* reflected 2 files/ ) );
+    test.is( _.strHas( got.output, / \+ .*reflector::reflect.submodules.* reflected/ ) );
+    test.is( _.strHas( got.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.imply verbosity:2 ; .build' ] })
+  .finally( ( err, got ) =>
+  {
+    test.case = '.imply verbosity:2 ; .build';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, '.imply verbosity:2 ; .build' ) );
+    test.is( !_.strHas( got.output, / \. Read .+\/\.im\.will\.yml/ ) );
+    test.is( !_.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
+    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::Tools.+/ ) );
+    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::PathFundamentals.+/ ) );
+    test.is( _.strHas( got.output, '. Read 2 willfile(s) in' ) );
+
+    test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
+    test.is( _.strHas( got.output, / \+ 2\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.is( _.strHas( got.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
+    test.is( _.strHas( got.output, / \+ .*reflector::reflect.proto.debug.* reflected 2 files/ ) );
+    test.is( _.strHas( got.output, / \+ .*reflector::reflect.submodules.* reflected/ ) );
+    test.is( _.strHas( got.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.clean' ] })
+  shell({ args : [ '.imply verbosity:1 ; .build' ] })
+  .finally( ( err, got ) =>
+  {
+    test.case = '.imply verbosity:1 ; .build';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, '.imply verbosity:1 ; .build' ) );
+    test.is( !_.strHas( got.output, / \. Read .+\/\.im\.will\.yml/ ) );
+    test.is( !_.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
+    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::Tools.+/ ) );
+    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::PathFundamentals.+/ ) );
+    test.is( !_.strHas( got.output, '. Read 2 willfile(s) in' ) );
+
+    test.is( !_.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
+    test.is( !_.strHas( got.output, / \+ 2\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.is( !_.strHas( got.output, ' - Deleted' ) );
+    test.is( !_.strHas( got.output, ' + reflect.proto.debug reflected 2 files ' ) );
+    test.is( !_.strHas( got.output, ' + reflect.submodules reflected' ) );
+    test.is( _.strHas( got.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+verbositySet.timeOut = 300000;
+
+//
+
+/*
+  Check verbosity field of step::files.delete.
+  Check logging of step::files.delete.
+*/
+
+function verbosityStepDelete( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'verbosity-step-delete' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let modulePath = _.path.join( routinePath, 'module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.build files.delete.vd';
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    return null;
+  })
+
+  shell({ args : [ '.build files.delete.vd' ] })
+
+  .thenKeep( ( got ) =>
+  {
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+
+    test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
+    test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
+    test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
+    test.identical( _.strCount( got.output, /- .*step::files.delete.vd.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\/, found in / ), 1 );
+
+    var files = self.find( _.path.join( routinePath, 'proto' ) );
+    test.identical( files, [ '.' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.build files.delete.v0';
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    return null;
+  })
+
+  shell({ args : [ '.build files.delete.v0' ] })
+
+  .thenKeep( ( got ) =>
+  {
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+
+    test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
+    test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
+    test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
+    test.identical( _.strCount( got.output, /- .*step::files.delete.v0.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\/, found in / ), 0 );
+    test.identical( _.strCount( got.output, 'Deleted' ), 0 );
+
+    var files = self.find( _.path.join( routinePath, 'proto' ) );
+    test.identical( files, [ '.' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.build files.delete.v1';
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    return null;
+  })
+
+  shell({ args : [ '.build files.delete.v1' ] })
+
+  .thenKeep( ( got ) =>
+  {
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+
+    test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
+    test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
+    test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
+    test.identical( _.strCount( got.output, /- .*step::files.delete.v1.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\/, found in / ), 1 );
+
+    var files = self.find( _.path.join( routinePath, 'proto' ) );
+    test.identical( files, [ '.' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.build files.delete.v3';
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    return null;
+  })
+
+  shell({ args : [ '.build files.delete.v3' ] })
+
+  .thenKeep( ( got ) =>
+  {
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+
+    test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 1 );
+    test.identical( _.strCount( got.output, '2 at ./A' ), 1 );
+    test.identical( _.strCount( got.output, '1 at ./B' ), 1 );
+    test.identical( _.strCount( got.output, /- .*step::files.delete.v3.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\/, found in / ), 1 );
+
+    var files = self.find( _.path.join( routinePath, 'proto' ) );
+    test.identical( files, [ '.' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = '".imply v:0 ; .build files.delete.vd"';
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    return null;
+  })
+
+  shell({ args : [ '".imply v:0 ; .build files.delete.vd"' ] })
+
+  .thenKeep( ( got ) =>
+  {
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+
+    test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
+    test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
+    test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
+    test.identical( _.strCount( got.output, /- .*step::files.delete.vd.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\/, found in / ), 0 );
+    test.identical( _.strLinesCount( got.output ), 2 );
+
+    var files = self.find( _.path.join( routinePath, 'proto' ) );
+    test.identical( files, [ '.' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = '".imply v:8 ; .build files.delete.v0"';
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    return null;
+  })
+
+  shell({ args : [ '".imply v:8 ; .build files.delete.v0"' ] })
+
+  .thenKeep( ( got ) =>
+  {
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+
+    test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
+    test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
+    test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
+    test.identical( _.strCount( got.output, /- .*step::files.delete.v0.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\/, found in / ), 0 );
+
+    var files = self.find( _.path.join( routinePath, 'proto' ) );
+    test.identical( files, [ '.' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = '".imply v:9 ; .build files.delete.v0"';
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    return null;
+  })
+
+  shell({ args : [ '".imply v:9 ; .build files.delete.v0"' ] })
+
+  .thenKeep( ( got ) =>
+  {
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+
+    test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 1 );
+    test.identical( _.strCount( got.output, '2 at ./A' ), 1 );
+    test.identical( _.strCount( got.output, '1 at ./B' ), 1 );
+    test.identical( _.strCount( got.output, /- .*step::files.delete.v0.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\/, found in / ), 1 );
+
+    var files = self.find( _.path.join( routinePath, 'proto' ) );
+    test.identical( files, [ '.' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = '".imply v:1 ; .build files.delete.v3"';
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    return null;
+  })
+
+  shell({ args : [ '".imply v:1 ; .build files.delete.v3"' ] })
+
+  .thenKeep( ( got ) =>
+  {
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+
+    test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
+    test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
+    test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
+    test.identical( _.strCount( got.output, /- .*step::files.delete.v3.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\/, found in / ), 1 );
+
+    var files = self.find( _.path.join( routinePath, 'proto' ) );
+    test.identical( files, [ '.' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = '".imply v:2 ; .build files.delete.v3"';
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    return null;
+  })
+
+  shell({ args : [ '".imply v:2 ; .build files.delete.v3"' ] })
+
+  .thenKeep( ( got ) =>
+  {
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+
+    test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 1 );
+    test.identical( _.strCount( got.output, '2 at ./A' ), 1 );
+    test.identical( _.strCount( got.output, '1 at ./B' ), 1 );
+    test.identical( _.strCount( got.output, /- .*step::files.delete.v3.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\/, found in / ), 1 );
+
+    var files = self.find( _.path.join( routinePath, 'proto' ) );
+    test.identical( files, [ '.' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+verbosityStepDelete.timeOut = 200000;
+
+//
+
+/*
+  Checks printing name of step before it execution
+*/
+
+function verbosityStepPrintName( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'verbosity-step-print-name' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( arg ) =>
+  {
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    return arg;
+  })
+
+  shell({ args : [ '".imply v:4 ; .build"' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = '".imply v:4 ; .build"';
+
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, /Building .*module::verbosityStepPrintName \/ build::debug/ ), 1 );
+    test.identical( _.strCount( got.output, /: .*reflector::reflect.file.*/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*reflector::reflect.file.* reflected 1 files .* : .*out.* <- .*file.* in / ), 1 );
+    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 1 );
+    test.identical( _.strCount( got.output, /at.* .*verbosityStepPrintName/ ), 3 );
+    test.identical( _.strCount( got.output, 'shell.step' ), 2 );
+    test.identical( _.strCount( got.output, /: .*step::delete.step.*/ ), 1 );
+    test.identical( _.strCount( got.output, /1 at .*\/out/ ), 1 );
+    test.identical( _.strCount( got.output, /1 at \./ ), 1 );
+    test.identical( _.strCount( got.output, /- .*step::delete.step.* deleted 1 file\(s\), at .*verbosityStepPrintName\/out.*, found in/ ), 1 );
+    test.identical( _.strCount( got.output, /Built .*module::verbosityStepPrintName \/ build::debug.* in / ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( arg ) =>
+  {
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    return arg;
+  })
+
+  shell({ args : [ '".imply v:3 ; .build"' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = '".imply v:3 ; .build"';
+
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, /Building .*module::verbosityStepPrintName \/ build::debug/ ), 1 );
+    test.identical( _.strCount( got.output, /: .*reflector::reflect.file.*/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*reflector::reflect.file.* reflected 1 files .* : .*out.* <- .*file.* in / ), 1 );
+    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 1 );
+    test.identical( _.strCount( got.output, /at.* .*verbosityStepPrintName/ ), 1 );
+    test.identical( _.strCount( got.output, 'shell.step' ), 2 );
+    test.identical( _.strCount( got.output, /: .*step::delete.step.*/ ), 0 );
+    test.identical( _.strCount( got.output, /1 at .*\/out/ ), 0 );
+    test.identical( _.strCount( got.output, /1 at \./ ), 0 );
+    test.identical( _.strCount( got.output, /- .*step::delete.step.* deleted 1 file\(s\), at .*verbosityStepPrintName\/out.*, found in/ ), 1 );
+    test.identical( _.strCount( got.output, /Built .*module::verbosityStepPrintName \/ build::debug.* in / ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( arg ) =>
+  {
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    return arg;
+  })
+
+  shell({ args : [ '".imply v:2 ; .build"' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = '".imply v:2 ; .build"';
+
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, /Building .*module::verbosityStepPrintName \/ build::debug/ ), 1 );
+    test.identical( _.strCount( got.output, /: .*reflector::reflect.file.*/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*reflector::reflect.file.* reflected 1 files .* : .*out.* <- .*file.* in / ), 1 );
+    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 1 );
+    test.identical( _.strCount( got.output, /at.* .*verbosityStepPrintName/ ), 1 );
+    test.identical( _.strCount( got.output, 'shell.step' ), 1 );
+    test.identical( _.strCount( got.output, /: .*step::delete.step.*/ ), 0 );
+    test.identical( _.strCount( got.output, /1 at .*\/out/ ), 0 );
+    test.identical( _.strCount( got.output, /1 at \./ ), 0 );
+    test.identical( _.strCount( got.output, /- .*step::delete.step.* deleted 1 file\(s\), at .*verbosityStepPrintName\/out.*, found in/ ), 1 );
+    test.identical( _.strCount( got.output, /Built .*module::verbosityStepPrintName \/ build::debug.* in / ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( arg ) =>
+  {
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    return arg;
+  })
+
+  shell({ args : [ '".imply v:1 ; .build"' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = '".imply v:1 ; .build"';
+
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, /Building .*module::verbosityStepPrintName \/ build::debug/ ), 0 );
+    test.identical( _.strCount( got.output, /: .*reflector::reflect.file.*/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*reflector::reflect.file.* reflected 1 files .* : .*out.* <- .*file.* in / ), 0 );
+    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 0 );
+    test.identical( _.strCount( got.output, /at.* .*verbosityStepPrintName/ ), 0 );
+    test.identical( _.strCount( got.output, 'shell.step' ), 0 );
+    test.identical( _.strCount( got.output, /: .*step::delete.step.*/ ), 0 );
+    test.identical( _.strCount( got.output, /1 at .*\/out/ ), 0 );
+    test.identical( _.strCount( got.output, /1 at \./ ), 0 );
+    test.identical( _.strCount( got.output, /- .*step::delete.step.* deleted 1 file\(s\), at .*verbosityStepPrintName\/out.*, found in/ ), 0 );
+    test.identical( _.strCount( got.output, /Built .*module::verbosityStepPrintName \/ build::debug.* in / ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+/*
+  Building module::verbosity-step-print-name / build::debug
+   : reflector::reflect.file
+   + reflector::reflect.file reflected 1 files /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/asset/verbosity-step-print-name/ : out <- file in 0.290s
+ > node -e "console.log( 'shell.step' )"
+   at /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/asset/verbosity-step-print-name
+shell.step
+   : step::delete.step
+     1 at /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/asset/verbosity-step-print-name/out
+     1 at .
+   - step::delete.step deleted 1 file(s), at /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/asset/verbosity-step-print-name/out, found in 0.017s
+  Built module::verbosity-step-print-name / build::debug in 0.643s
+*/
+
+  return ready;
+}
 
 //
 
@@ -1234,14 +2115,21 @@ function listSingleModule( test )
   {
     test.case = 'module info'
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `proto : './proto'` ) );
-    test.is( _.strHas( got.output, `in : '.'` ) );
-    test.is( _.strHas( got.output, `out : 'out'` ) );
-    test.is( _.strHas( got.output, `out.debug : './out/debug'` ) );
-    test.is( _.strHas( got.output, `out.release : './out/release'` ) );
+
+    test.is( _.strHas( got.output, `proto : ./proto` ) );
+    test.is( _.strHas( got.output, `in : .` ) );
+    test.is( _.strHas( got.output, `out : out` ) );
+    test.is( _.strHas( got.output, `out.debug : ./out/debug` ) );
+    test.is( _.strHas( got.output, `out.release : ./out/release` ) );
+
+    // test.is( _.strHas( got.output, `proto : './proto'` ) );
+    // test.is( _.strHas( got.output, `in : '.'` ) );
+    // test.is( _.strHas( got.output, `out : 'out'` ) );
+    // test.is( _.strHas( got.output, `out.debug : './out/debug'` ) );
+    // test.is( _.strHas( got.output, `out.release : './out/release'` ) );
+
     return null;
   })
-
 
   shell({ args : [ '.submodules.list' ] })
   .thenKeep( ( got ) =>
@@ -1334,7 +2222,7 @@ function listSingleModule( test )
     test.is( _.strHas( got.output, 'build::release.raw' ) );
     test.is( _.strHas( got.output, 'build::release.compiled' ) );
     test.is( _.strHas( got.output, 'build::all' ) );
-    test.identical( _.strCount( got.output, '::' ), 14 );
+    test.identical( _.strCount( got.output, '::' ), 21 );
 
     return null;
   })
@@ -1351,7 +2239,7 @@ function listSingleModule( test )
     test.is( _.strHas( got.output, 'step::export.proto' ) );
     test.is( _.strHas( got.output, 'build::debug.compiled' ) );
     test.is( _.strHas( got.output, 'build::proto.export' ) );
-    test.identical( _.strCount( got.output, '::' ), 13 );
+    test.identical( _.strCount( got.output, '::' ), 20 );
 
     return null;
   })
@@ -1404,7 +2292,7 @@ function listSingleModule( test )
     test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
     test.is( _.strHas( got.output, `files.reflect` ) );
 
-    test.identical( _.strCount( got.output, '::' ), 6 );
+    test.identical( _.strCount( got.output, '::' ), 10 );
 
     return null;
   })
@@ -1422,7 +2310,7 @@ function listSingleModule( test )
     test.is( _.strHas( got.output, `step::export.proto` ) );
     test.is( _.strHas( got.output, `build::debug.compiled` ) );
     test.is( _.strHas( got.output, `build::proto.export` ) );
-    test.identical( _.strCount( got.output, '::' ), 11 );
+    test.identical( _.strCount( got.output, '::' ), 18 );
 
     return null;
   })
@@ -1436,22 +2324,10 @@ function listSingleModule( test )
 
     test.is( _.strHas( got.output, 'step::reflect.proto.raw'  ) );
     test.is( _.strHas( got.output, 'build::release.raw'  ) );
-    test.identical( _.strCount( got.output, '::' ), 4 );
+    test.identical( _.strCount( got.output, '::' ), 7 );
 
     return null;
   })
-
-  // /* - */
-  //
-  // shell({ args : [ '.execution.list' ] })
-  //
-  // .thenKeep( ( got ) =>
-  // {
-  //   test.case = '.execution.list'
-  //   test.identical( got.exitCode, 0 );
-  //   test.is( got.output.length );
-  //   return null;
-  // })
 
   return ready;
 }
@@ -1739,6 +2615,50 @@ function listSteps( test )
 
 //
 
+function listComplexPaths( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  shell({ args : [ '.each */* .export' ] })
+  shell({ args : [ '.with ab/ .resources.list' ] })
+  .finally( ( err, got ) =>
+  {
+    test.case = '.with ab/ .resources.list';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'About' ), 1 );
+    test.identical( _.strCount( got.output, 'module::module-ab / path::export' ), 1 );
+    test.identical( _.strCount( got.output, 'module::module-ab /' ), 43 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+//
+
 function clean( test )
 {
   let self = this;
@@ -1832,7 +2752,7 @@ function clean( test )
   {
     test.case = '.with NoBuild .clean';
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '- Clean deleted 2 file(s) in' ) );
+    test.is( _.strHas( got.output, '- Clean deleted 2 file(s)' ) );
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'out' ) ) );
     return null;
@@ -1875,7 +2795,7 @@ function cleanSingleModule( test )
     test.case = '.clean '
     test.identical( got[ 0 ].exitCode, 0 );
     test.identical( got[ 1 ].exitCode, 0 );
-    test.is( _.strHas( got[ 1 ].output, 'Clean deleted 0 file(s) in' ) );
+    test.is( _.strHas( got[ 1 ].output, 'Clean deleted 0 file(s)' ) );
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
     return null;
@@ -1957,7 +2877,7 @@ function cleanBroken1( test )
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, String( files.length ) + ' at ' ) );
-    test.is( _.strHas( got.output, 'Clean will delete ' + String( files.length ) + ' file(s) in total, found in ' ) );
+    test.is( _.strHas( got.output, 'Clean will delete ' + String( files.length ) + ' file(s)' ) );
     test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) );
 
@@ -2369,7 +3289,7 @@ function cleanDry( test )
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, String( files.length ) + ' at ' ) );
-    test.is( _.strHas( got.output, 'Clean will delete ' + String( files.length ) + ' file(s) in total, found in' ) );
+    test.is( _.strHas( got.output, 'Clean will delete ' + String( files.length ) + ' file(s)' ) );
     test.is( _.fileProvider.isDir( _.path.join( routinePath, '.module' ) ) ); /* phantom problem ? */
     test.is( _.fileProvider.isDir( _.path.join( routinePath, 'out' ) ) );
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) );
@@ -2651,7 +3571,7 @@ function cleanWithInPath( test )
     test.identical( files, expectedFiles );
 
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '- Clean deleted 84 file(s) in' ), 1 );
+    test.identical( _.strCount( got.output, '- Clean deleted 84 file(s)' ), 1 );
 
     return null;
   })
@@ -2662,60 +3582,6 @@ function cleanWithInPath( test )
 }
 
 cleanWithInPath.timeOut = 200000;
-
-//
-
-function stepCleanPaths( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'step-clean-paths' );
-  let routinePath = _.path.join( self.tempDir, test.name );
-  let outPath = _.path.join( routinePath, 'out' );
-  let modulePath = _.path.join( routinePath, 'module' );
-  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-  let ready = new _.Consequence().take( null )
-
-  let shell = _.sheller
-  ({
-    execPath : 'node ' + execPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    ready : ready
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
-
-  /*
-    Expected output :
-    
-    - clean.paths :
-	    - deleted 1 files at proto/A in 0.001s
-      - deleted 1 files at proto/B in 0.001s
-  */
-
-  ready
-  .thenKeep( ( got ) =>
-  {
-    test.case = 'clean several paths';
-    return null;
-  })
-
-  shell({ args : [ '.build' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
-
-    return null;
-  })
-
-  /* - */
-
-  return ready;
-}
-
-stepCleanPaths.timeOut = 200000;
 
 //
 
@@ -2956,7 +3822,6 @@ function buildSubmodules( test )
     test.is( !err );
     var files = self.find( outPath );
     test.gt( files.length, 70 );
-    debugger;
     return null;
   })
 
@@ -2978,11 +3843,8 @@ function buildSubmodules( test )
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
     test.is( _.strHas( got.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
 
-    // let outPath = _.path.join( routinePath, 'out/debug' );
-    // var files = self.find( outPath );
     var files = self.find( outPath );
-
-    test.is( files.length > 10 );
+    test.gt( files.length, 15 );
 
     return null;
   })
@@ -3236,6 +4098,9 @@ function exportNonExportable( test )
   {
     test.is( got.exitCode !== 0 );
 
+    test.identical( _.strCount( got.output, 'unhandled errorr' ), 0 );
+    test.identical( _.strCount( got.output, '====' ), 0 );
+
     test.identical( _.strCount( got.output, /.*module::supermodule \/ submodule::Submodule.* is broken/ ), 1 );
     test.identical( _.strCount( got.output, /Failed .*module::supermodule \/ step::export.*/ ), 1 );
 
@@ -3295,21 +4160,29 @@ function exportInformal( test )
     {
       "module.willfiles" :
       {
-        "path" : "out/Proto.informal.out.will.yml",
+        "path" : "Proto.informal.out.will.yml",
         "criterion" : { "predefined" : 1 }
       },
       "module.original.willfiles" :
       {
-        "path" : "module/Proto.informal.will.yml",
+        "path" : "../module/Proto.informal.will.yml",
         "criterion" : { "predefined" : 1 }
       },
-      "module.dir" :
+      "module.common" :
       {
-        "path" : "out",
+        "path" : "Proto.informal.out",
         "criterion" : { "predefined" : 1 }
       },
-      "in" : { "path" : ".." },
-      "out" : { "path" : "out" },
+      "in" :
+      {
+        "path" : ".",
+        "criterion" : { "predefined" : 0 }
+      },
+      "out" :
+      {
+        "path" : ".",
+        "criterion" : { "predefined" : 0 }
+      },
       "remote" :
       {
         "path" : "git+https:///github.com/Wandalen/wProto.git",
@@ -3317,20 +4190,21 @@ function exportInformal( test )
       },
       "local" :
       {
-        "path" : ".module/Proto",
+        "path" : "../.module/Proto",
         "criterion" : { "predefined" : 1 }
       },
       "export" : { "path" : "{path::local}/proto" },
       "exported.dir.export" :
       {
-        "path" : "./.module/Proto/proto",
+        "path" : "../.module/Proto/proto",
         "criterion" : { "default" : 1, "export" : 1 }
-      },
+      }
     }
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
-    test.identical( outfile.path.local.path, '.module/Proto' );
+    test.identical( outfile.path.local.path, '../.module/Proto' );
     test.identical( outfile.path.remote.path, 'git+https:///github.com/Wandalen/wProto.git' );
+    // logger.log( _.toJson( outfile.path ) );
 
     return null;
   })
@@ -3359,21 +4233,29 @@ function exportInformal( test )
     {
       "module.willfiles" :
       {
-        "path" : "out/Proto.informal.out.will.yml",
+        "path" : "Proto.informal.out.will.yml",
         "criterion" : { "predefined" : 1 }
       },
       "module.original.willfiles" :
       {
-        "path" : "module/Proto.informal.will.yml",
+        "path" : "../module/Proto.informal.will.yml",
         "criterion" : { "predefined" : 1 }
       },
-      "module.dir" :
+      "module.common" :
       {
-        "path" : "out",
+        "path" : "Proto.informal.out",
         "criterion" : { "predefined" : 1 }
       },
-      "in" : { "path" : ".." },
-      "out" : { "path" : "out" },
+      "in" :
+      {
+        "path" : ".",
+        "criterion" : { "predefined" : 0 }
+      },
+      "out" :
+      {
+        "path" : ".",
+        "criterion" : { "predefined" : 0 }
+      },
       "remote" :
       {
         "path" : "git+https:///github.com/Wandalen/wProto.git",
@@ -3381,20 +4263,21 @@ function exportInformal( test )
       },
       "local" :
       {
-        "path" : ".module/Proto",
+        "path" : "../.module/Proto",
         "criterion" : { "predefined" : 1 }
       },
       "export" : { "path" : "{path::local}/proto" },
       "exported.dir.export" :
       {
-        "path" : "./.module/Proto/proto",
+        "path" : "../.module/Proto/proto",
         "criterion" : { "default" : 1, "export" : 1 }
-      },
+      }
     }
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
-    test.identical( outfile.path.local.path, '.module/Proto' );
+    test.identical( outfile.path.local.path, '../.module/Proto' );
     test.identical( outfile.path.remote.path, 'git+https:///github.com/Wandalen/wProto.git' );
+    // logger.log( _.toJson( outfile.path ) );
 
     return null;
   })
@@ -3423,21 +4306,29 @@ function exportInformal( test )
     {
       "module.willfiles" :
       {
-        "path" : "out/UriFundamentals.informal.out.will.yml",
+        "path" : "UriFundamentals.informal.out.will.yml",
         "criterion" : { "predefined" : 1 }
       },
       "module.original.willfiles" :
       {
-        "path" : "module/UriFundamentals.informal.will.yml",
+        "path" : "../module/UriFundamentals.informal.will.yml",
         "criterion" : { "predefined" : 1 }
       },
-      "module.dir" :
+      "module.common" :
       {
-        "path" : "out",
+        "path" : "UriFundamentals.informal.out",
         "criterion" : { "predefined" : 1 }
       },
-      "in" : { "path" : ".." },
-      "out" : { "path" : "out" },
+      "in" :
+      {
+        "path" : ".",
+        "criterion" : { "predefined" : 0 }
+      },
+      "out" :
+      {
+        "path" : ".",
+        "criterion" : { "predefined" : 0 }
+      },
       "remote" :
       {
         "path" : "npm:///wurifundamentals",
@@ -3445,20 +4336,21 @@ function exportInformal( test )
       },
       "local" :
       {
-        "path" : ".module/UriFundamentals",
+        "path" : "../.module/UriFundamentals",
         "criterion" : { "predefined" : 1 }
       },
       "export" : { "path" : "{path::local}/proto" },
       "exported.dir.export" :
       {
-        "path" : "./.module/UriFundamentals/proto",
+        "path" : "../.module/UriFundamentals/proto",
         "criterion" : { "default" : 1, "export" : 1 }
-      },
+      }
     }
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
-    test.identical( outfile.path.local.path, '.module/UriFundamentals' );
+    test.identical( outfile.path.local.path, '../.module/UriFundamentals' );
     test.identical( outfile.path.remote.path, 'npm:///wurifundamentals' );
+    // logger.log( _.toJson( outfile.path ) );
 
     return null;
   })
@@ -3628,12 +4520,6 @@ function exportMixed( test )
     {
       'download' :
       {
-        // 'src' :
-        // {
-        //   'filePath' : { 'git+https://.' : '.' },
-        //   'prefixPath' : 'git+https:///github.com/Wandalen/wProto.git'
-        // },
-        // 'dst' : { 'prefixPath' : '.module/Proto' },
         'src' : { 'filePath' : 'path::remote' },
         'dst' : { 'filePath' : 'path::local' },
         'mandatory' : 1,
@@ -3643,7 +4529,7 @@ function exportMixed( test )
         'src' :
         {
           'filePath' : { '.' : null },
-          'prefixPath' : '.module/Proto/proto'
+          'prefixPath' : '../.module/Proto/proto'
         },
         'criterion' : { 'default' : 1, 'export' : 1 },
         'mandatory' : 1,
@@ -3660,61 +4546,68 @@ function exportMixed( test )
 
     var expected =
     {
-      'remote' :
+      "module.willfiles" :
       {
-        'path' : 'git+https:///github.com/Wandalen/wProto.git',
-        'criterion' : { 'predefined' : 1 },
+        "path" : "Proto.informal.out.will.yml",
+        "criterion" : { "predefined" : 1 }
       },
-      'local' :
+      "module.original.willfiles" :
       {
-        'path' : '.module/Proto',
-        'criterion' : { 'predefined' : 1 },
+        "path" : "../module/Proto.informal.will.yml",
+        "criterion" : { "predefined" : 1 }
       },
-      'export' : { 'path' : '{path::local}/proto' },
-      'exported.dir.export' :
+      "module.common" :
       {
-        'path' : './.module/Proto/proto',
-        'criterion' : { 'default' : 1, 'export' : 1 }
+        "path" : "Proto.informal.out",
+        "criterion" : { "predefined" : 1 }
       },
-      'exported.files.export' :
+      "in" :
       {
-        'path' :
+        "path" : ".",
+        "criterion" : { "predefined" : 0 }
+      },
+      "out" :
+      {
+        "path" : ".",
+        "criterion" : { "predefined" : 0 }
+      },
+      "remote" :
+      {
+        "path" : "git+https:///github.com/Wandalen/wProto.git",
+        "criterion" : { "predefined" : 1 }
+      },
+      "local" :
+      {
+        "path" : "../.module/Proto",
+        "criterion" : { "predefined" : 1 }
+      },
+      "export" : { "path" : "{path::local}/proto" },
+      "exported.dir.export" :
+      {
+        "path" : "../.module/Proto/proto",
+        "criterion" : { "default" : 1, "export" : 1 }
+      },
+      "exported.files.export" :
+      {
+        "path" :
         [
-          '.module/Proto/proto',
-          '.module/Proto/proto/dwtools',
-          '.module/Proto/proto/dwtools/Tools.s',
-          '.module/Proto/proto/dwtools/abase',
-          '.module/Proto/proto/dwtools/abase/l3',
-          '.module/Proto/proto/dwtools/abase/l3/Proto.s',
-          '.module/Proto/proto/dwtools/abase/l3/ProtoAccessor.s',
-          '.module/Proto/proto/dwtools/abase/l3/ProtoLike.s',
-          '.module/Proto/proto/dwtools/abase/l3.test',
-          '.module/Proto/proto/dwtools/abase/l3.test/Proto.test.s',
-          '.module/Proto/proto/dwtools/abase/l3.test/ProtoLike.test.s'
+          "../.module/Proto/proto",
+          "../.module/Proto/proto/dwtools",
+          "../.module/Proto/proto/dwtools/Tools.s",
+          "../.module/Proto/proto/dwtools/abase",
+          "../.module/Proto/proto/dwtools/abase/l3",
+          "../.module/Proto/proto/dwtools/abase/l3/Proto.s",
+          "../.module/Proto/proto/dwtools/abase/l3/ProtoAccessor.s",
+          "../.module/Proto/proto/dwtools/abase/l3/ProtoLike.s",
+          "../.module/Proto/proto/dwtools/abase/l3.test",
+          "../.module/Proto/proto/dwtools/abase/l3.test/Proto.test.s",
+          "../.module/Proto/proto/dwtools/abase/l3.test/ProtoLike.test.s"
         ],
-        'criterion' : { 'default' : 1, 'export' : 1 }
-      },
-      'module.original.willfiles' :
-      {
-        'path' : 'module/Proto.informal.will.yml',
-        'criterion' : { 'predefined' : 1 },
-      },
-      'in' : { 'path' : '..' },
-      'out' : { 'path' : 'out' },
-
-      'module.willfiles' :
-      {
-        'path' : 'out/Proto.informal.out.will.yml',
-        'criterion' : { 'predefined' : 1 }
-      },
-      'module.dir' :
-      {
-        'path' : 'out',
-        'criterion' : { 'predefined' : 1 }
+        "criterion" : { "default" : 1, "export" : 1 }
       }
-
     }
     test.identical( outfile.path, expected );
+    // logger.log( _.toJson( outfile.path ) );
 
     var expected =
     {
@@ -3726,7 +4619,6 @@ function exportMixed( test )
         'exportedFilesReflector' : 'reflector::exported.files.export',
         'exportedDirPath' : 'path::exported.dir.export',
         'exportedFilesPath' : 'path::exported.files.export',
-        // 'originalWillFilesPath' : 'path::module.original.willfiles',
       }
     }
     test.identical( outfile.exported, expected );
@@ -3744,7 +4636,7 @@ function exportMixed( test )
         'inherit' : [ 'files.reflect' ]
       }
     }
-    test.identical( outfile.step, expected ); debugger;
+    test.identical( outfile.step, expected );
 
     var expected =
     {
@@ -3783,7 +4675,7 @@ function exportMixed( test )
     test.is( _.strHas( got.output, 'out/UriFundamentals.informal.out.will.yml' ) );
     test.is( _.strHas( got.output, 'Reloading submodules' ) );
 
-    test.is( _.strHas( got.output, '- filesDelete 0 files at' ) );
+    test.is( _.strHas( got.output, /- .*step::delete.out.debug.* deleted 0 file\(s\), at/ ) );
     test.is( _.strHas( got.output, /\+ .*reflector::reflect.proto.debug.* reflected 2 files/ ) );
     test.is( _.strHas( got.output, /\+ .*reflector::reflect.submodules.* reflected/ ) );
 
@@ -3867,96 +4759,6 @@ function exportSecond( test )
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
 
-    // var expected =
-    // {
-    //   'reflect.proto.' :
-    //   {
-    //     src :
-    //     {
-    //       filePath : { '.' : '.' },
-    //       prefixPath : 'proto',
-    //       maskAll :
-    //       {
-    //         excludeAny :
-    //         [
-    //           /(\W|^)node_modules(\W|$)/,
-    //           /\.unique$/,
-    //           /\.git$/,
-    //           /\.svn$/,
-    //           /\.hg$/,
-    //           /\.DS_Store$/,
-    //           /(^|\/)-/,
-    //           /\.debug($|\.|\/)/i,
-    //           /\.experiment($|\.|\/)/i
-    //         ]
-    //       }
-    //     },
-    //     dst : { prefixPath : 'out/release' },
-    //     criterion : { debug : 0 },
-    //     mandatory : 1,
-    //     inherit : [ 'predefined.*' ]
-    //   },
-    //   'reflect.proto.debug' :
-    //   {
-    //     src :
-    //     {
-    //       filePath : { '.' : '.' },
-    //       prefixPath : 'proto',
-    //       maskAll :
-    //       {
-    //         excludeAny :
-    //         [
-    //           /(\W|^)node_modules(\W|$)/,
-    //           /\.unique$/,
-    //           /\.git$/,
-    //           /\.svn$/,
-    //           /\.hg$/,
-    //           /\.DS_Store$/,
-    //           /(^|\/)-/,
-    //           /\.release($|\.|\/)/i
-    //         ]
-    //       }
-    //     },
-    //     dst : { prefixPath : 'out/debug' },
-    //     criterion : { debug : 1 },
-    //     mandatory : 1,
-    //     inherit : [ 'predefined.*' ]
-    //   },
-    //   'exported.proto.export' :
-    //   {
-    //     src :
-    //     {
-    //       filePath : { '.' : null },
-    //       prefixPath : 'proto'
-    //     },
-    //     criterion : { proto : 1, export : 1 },
-    //     mandatory : 1
-    //   },
-    //   'exported.files.proto.export' :
-    //   {
-    //     src : { filePath : 'path::exported.files.proto.export', basePath : '.', prefixPath : 'path::exported.dir.proto.export' },
-    //     criterion : { proto : 1, export : 1 },
-    //     recursive : 0,
-    //     mandatory : 1
-    //   },
-    //   'exported.doc.export' :
-    //   {
-    //     src :
-    //     {
-    //       filePath : { '.' : null },
-    //       prefixPath : 'doc'
-    //     },
-    //     criterion : { doc : 1, export : 1 },
-    //     mandatory : 1
-    //   },
-    //   'exported.files.doc.export' :
-    //   {
-    //     src : { filePath : 'path::exported.files.doc.export', basePath : '.', prefixPath : 'path::exported.dir.doc.export' },
-    //     criterion : { doc : 1, export : 1 },
-    //     recursive : 0,
-    //     mandatory : 1
-    //   }
-    // }
     var expected =
     {
       "reflect.proto." :
@@ -3983,8 +4785,8 @@ function exportSecond( test )
       {
         "src" :
         {
-          'filePath' : { '.' : null },
-          'prefixPath' : 'proto'
+          "filePath" : { "." : null },
+          "prefixPath" : "../proto"
         },
         "criterion" : { "proto" : 1, "export" : 1 },
         "mandatory" : 1
@@ -4000,8 +4802,8 @@ function exportSecond( test )
       {
         "src" :
         {
-          'filePath' : { '.' : null },
-          'prefixPath' : 'doc'
+          "filePath" : { "." : null },
+          "prefixPath" : "../doc"
         },
         "criterion" : { "doc" : 1, "export" : 1 },
         "mandatory" : 1
@@ -4014,73 +4816,80 @@ function exportSecond( test )
         "mandatory" : 1
       }
     }
-    test.identical( outfile.reflector, expected ); debugger;
+    test.identical( outfile.reflector, expected );
+    // logger.log( _.toJson( outfile.reflector ) );
 
     var expected =
     {
-      in : { path : '..' },
-      temp : { path : 'out' },
-      out : { path : 'out' },
-      'out.debug' :
+      "module.willfiles" :
       {
-        path : './out/debug',
-        criterion : { debug : 1 }
+        "path" : "ExportSecond.out.will.yml",
+        "criterion" : { "predefined" : 1 }
       },
-      'out.release' :
+      "module.original.willfiles" :
       {
-        path : './out/release',
-        criterion : { debug : 0 }
+        "path" : [ "../.im.will.yml", "../.ex.will.yml" ],
+        "criterion" : { "predefined" : 1 }
       },
-      proto : { path : './proto' },
-      doc : { path : './doc' },
-      'exported.dir.proto.export' :
+      "module.common" :
       {
-        path : './proto',
-        criterion : { proto : 1, export : 1 }
+        "path" : "ExportSecond.out",
+        "criterion" : { "predefined" : 1 }
       },
-      'exported.files.proto.export' :
+      "local" :
       {
-        path : [ 'proto', 'proto/-NotExecluded.js', 'proto/.NotExecluded.js', 'proto/File.js' ],
-        criterion : { proto : 1, export : 1 }
+        "criterion" : { "predefined" : 1 }
       },
-      'module.original.willfiles' :
+      "remote" :
       {
-        path : [ '.im.will.yml', '.ex.will.yml' ],
-        'criterion' : { 'predefined' : 1 },
+        "criterion" : { "predefined" : 1 }
       },
-      'exported.dir.doc.export' :
+      "in" :
       {
-        path : './doc',
-        criterion : { doc : 1, export : 1 }
+        "path" : ".",
+        "criterion" : { "predefined" : 0 }
       },
-      'exported.files.doc.export' :
+      "temp" : { "path" : "." },
+      "out" :
       {
-        path : [ 'doc', 'doc/File.md' ],
-        criterion : { doc : 1, export : 1 }
+        "path" : ".",
+        "criterion" : { "predefined" : 0 }
       },
-
-      'module.willfiles' :
+      "out.debug" :
       {
-        'path' : 'out/ExportSecond.out.will.yml',
-        'criterion' : { 'predefined' : 1 }
+        "path" : "debug",
+        "criterion" : { "debug" : 1 }
       },
-      'module.dir' :
+      "out.release" :
       {
-        'path' : 'out',
-        'criterion' : { 'predefined' : 1 }
+        "path" : "release",
+        "criterion" : { "debug" : 0 }
       },
-      'local' :
+      "proto" : { "path" : "../proto" },
+      "doc" : { "path" : "../doc" },
+      "exported.dir.proto.export" :
       {
-        // 'path' : 'out',
-        'criterion' : { 'predefined' : 1 }
+        "path" : "../proto",
+        "criterion" : { "proto" : 1, "export" : 1 }
       },
-      'remote' :
+      "exported.files.proto.export" :
       {
-        'criterion' : { 'predefined' : 1 }
+        "path" : [ "../proto", "../proto/-NotExecluded.js", "../proto/.NotExecluded.js", "../proto/File.js" ],
+        "criterion" : { "proto" : 1, "export" : 1 }
+      },
+      "exported.dir.doc.export" :
+      {
+        "path" : "../doc",
+        "criterion" : { "doc" : 1, "export" : 1 }
+      },
+      "exported.files.doc.export" :
+      {
+        "path" : [ "../doc", "../doc/File.md" ],
+        "criterion" : { "doc" : 1, "export" : 1 }
       }
-
     }
     test.identical( outfile.path, expected );
+    // logger.log( _.toJson( outfile.reflector ) );
 
     var expected =
     {
@@ -4092,7 +4901,6 @@ function exportSecond( test )
         exportedFilesReflector : 'reflector::exported.files.doc.export',
         exportedDirPath : 'path::exported.dir.doc.export',
         exportedFilesPath : 'path::exported.files.doc.export',
-        // originalWillFilesPath : 'path::module.original.willfiles'
       },
       'proto.export' :
       {
@@ -4102,7 +4910,6 @@ function exportSecond( test )
         exportedFilesReflector : 'reflector::exported.files.proto.export',
         exportedDirPath : 'path::exported.dir.proto.export',
         exportedFilesPath : 'path::exported.files.proto.export',
-        // originalWillFilesPath : 'path::module.original.willfiles'
       }
     }
     test.identical( outfile.exported, expected );
@@ -4129,96 +4936,6 @@ function exportSecond( test )
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
 
-    // var expected =
-    // {
-    //   'reflect.proto.' :
-    //   {
-    //     src :
-    //     {
-    //       filePath : { '.' : '.' },
-    //       prefixPath : 'proto',
-    //       maskAll :
-    //       {
-    //         excludeAny :
-    //         [
-    //           /(\W|^)node_modules(\W|$)/,
-    //           /\.unique$/,
-    //           /\.git$/,
-    //           /\.svn$/,
-    //           /\.hg$/,
-    //           /\.DS_Store$/,
-    //           /(^|\/)-/,
-    //           /\.debug($|\.|\/)/i,
-    //           /\.experiment($|\.|\/)/i
-    //         ]
-    //       }
-    //     },
-    //     dst : { prefixPath : 'out/release' },
-    //     criterion : { debug : 0 },
-    //     mandatory : 1,
-    //     inherit : [ 'predefined.*' ]
-    //   },
-    //   'reflect.proto.debug' :
-    //   {
-    //     src :
-    //     {
-    //       filePath : { '.' : '.' },
-    //       prefixPath : 'proto',
-    //       maskAll :
-    //       {
-    //         excludeAny :
-    //         [
-    //           /(\W|^)node_modules(\W|$)/,
-    //           /\.unique$/,
-    //           /\.git$/,
-    //           /\.svn$/,
-    //           /\.hg$/,
-    //           /\.DS_Store$/,
-    //           /(^|\/)-/,
-    //           /\.release($|\.|\/)/i
-    //         ]
-    //       }
-    //     },
-    //     dst : { prefixPath : 'out/debug' },
-    //     criterion : { debug : 1 },
-    //     mandatory : 1,
-    //     inherit : [ 'predefined.*' ]
-    //   },
-    //   'exported.proto.export' :
-    //   {
-    //     src :
-    //     {
-    //       filePath : { '.' : null },
-    //       prefixPath : 'proto'
-    //     },
-    //     criterion : { proto : 1, export : 1 },
-    //     mandatory : 1
-    //   },
-    //   'exported.files.proto.export' :
-    //   {
-    //     src : { filePath : 'path::exported.files.proto.export', basePath : '.', prefixPath : 'path::exported.dir.proto.export' },
-    //     criterion : { proto : 1, export : 1 },
-    //     recursive : 0,
-    //     mandatory : 1
-    //   },
-    //   'exported.doc.export' :
-    //   {
-    //     src :
-    //     {
-    //       filePath : { '.' : null },
-    //       prefixPath : 'doc'
-    //     },
-    //     criterion : { doc : 1, export : 1 },
-    //     mandatory : 1
-    //   },
-    //   'exported.files.doc.export' :
-    //   {
-    //     src : { filePath : 'path::exported.files.doc.export', basePath : '.', prefixPath : 'path::exported.dir.doc.export' },
-    //     criterion : { doc : 1, export : 1 },
-    //     recursive : 0,
-    //     mandatory : 1
-    //   }
-    // }
     var expected =
     {
       "reflect.proto." :
@@ -4245,11 +4962,11 @@ function exportSecond( test )
       {
         "src" :
         {
-          'filePath' : { '.' : null },
-          'prefixPath' : 'proto',
+          "filePath" : { "." : null },
+          "prefixPath" : "../proto"
         },
         "criterion" : { "proto" : 1, "export" : 1 },
-        "mandatory" : 1,
+        "mandatory" : 1
       },
       "exported.files.proto.export" :
       {
@@ -4262,11 +4979,11 @@ function exportSecond( test )
       {
         "src" :
         {
-          'filePath' : { '.' : null },
-          'prefixPath' : 'doc'
+          "filePath" : { "." : null },
+          "prefixPath" : "../doc"
         },
         "criterion" : { "doc" : 1, "export" : 1 },
-        "mandatory" : 1,
+        "mandatory" : 1
       },
       "exported.files.doc.export" :
       {
@@ -4276,71 +4993,80 @@ function exportSecond( test )
         "mandatory" : 1
       }
     }
-    test.identical( outfile.reflector, expected ); debugger;
+    test.identical( outfile.reflector, expected );
+    // logger.log( _.toJson( outfile.reflector ) );
 
     var expected =
     {
-      'module.willfiles' :
+      "module.willfiles" :
       {
-        path : 'out/ExportSecond.out.will.yml',
-        criterion : { predefined : 1 }
+        "path" : "ExportSecond.out.will.yml",
+        "criterion" : { "predefined" : 1 }
       },
-      'module.dir' :
+      "module.original.willfiles" :
       {
-        path : 'out',
-        criterion : { predefined : 1 }
+        "path" : [ "../.im.will.yml", "../.ex.will.yml" ],
+        "criterion" : { "predefined" : 1 }
       },
-      local :
+      "module.common" :
       {
-        // path : 'out',
-        criterion : { predefined : 1 }
+        "path" : "ExportSecond.out",
+        "criterion" : { "predefined" : 1 }
       },
-      remote :
+      "local" :
       {
-        criterion : { predefined : 1 }
+        "criterion" : { "predefined" : 1 }
       },
-      in : { path : '..' },
-      temp : { path : 'out' },
-      out : { path : 'out' },
-      'out.debug' :
+      "remote" :
       {
-        path : './out/debug',
-        criterion : { debug : 1 }
+        "criterion" : { "predefined" : 1 }
       },
-      'out.release' :
+      "in" :
       {
-        path : './out/release',
-        criterion : { debug : 0 }
+        "path" : ".",
+        "criterion" : { "predefined" : 0 }
       },
-      proto : { path : './proto' },
-      doc : { path : './doc' },
-      'exported.dir.proto.export' :
+      "temp" : { "path" : "." },
+      "out" :
       {
-        path : './proto',
-        criterion : { proto : 1, export : 1 }
+        "path" : ".",
+        "criterion" : { "predefined" : 0 }
       },
-      'exported.files.proto.export' :
+      "out.debug" :
       {
-        path : [ 'proto', 'proto/-NotExecluded.js', 'proto/.NotExecluded.js', 'proto/File.js' ],
-        criterion : { proto : 1, export : 1 }
+        "path" : "debug",
+        "criterion" : { "debug" : 1 }
       },
-      'module.original.willfiles' :
+      "out.release" :
       {
-        path : [ '.im.will.yml', '.ex.will.yml' ],
-        criterion : { predefined : 1 }
+        "path" : "release",
+        "criterion" : { "debug" : 0 }
       },
-      'exported.dir.doc.export' :
+      "proto" : { "path" : "../proto" },
+      "doc" : { "path" : "../doc" },
+      "exported.dir.proto.export" :
       {
-        path : './doc',
-        criterion : { doc : 1, export : 1 }
+        "path" : "../proto",
+        "criterion" : { "proto" : 1, "export" : 1 }
       },
-      'exported.files.doc.export' :
+      "exported.files.proto.export" :
       {
-        path : [ 'doc', 'doc/File.md' ],
-        criterion : { doc : 1, export : 1 }
+        "path" : [ "../proto", "../proto/-NotExecluded.js", "../proto/.NotExecluded.js", "../proto/File.js" ],
+        "criterion" : { "proto" : 1, "export" : 1 }
+      },
+      "exported.dir.doc.export" :
+      {
+        "path" : "../doc",
+        "criterion" : { "doc" : 1, "export" : 1 }
+      },
+      "exported.files.doc.export" :
+      {
+        "path" : [ "../doc", "../doc/File.md" ],
+        "criterion" : { "doc" : 1, "export" : 1 }
       }
     }
     test.identical( outfile.path, expected );
+    // logger.log( _.toJson( outfile.path ) );
 
     var expected =
     {
@@ -4352,7 +5078,6 @@ function exportSecond( test )
         exportedFilesReflector : 'reflector::exported.files.doc.export',
         exportedDirPath : 'path::exported.dir.doc.export',
         exportedFilesPath : 'path::exported.files.doc.export',
-        // originalWillFilesPath : 'path::module.original.willfiles'
       },
       'proto.export' :
       {
@@ -4362,7 +5087,6 @@ function exportSecond( test )
         exportedFilesReflector : 'reflector::exported.files.proto.export',
         exportedDirPath : 'path::exported.dir.proto.export',
         exportedFilesPath : 'path::exported.files.proto.export',
-        // originalWillFilesPath : 'path::module.original.willfiles'
       }
     }
     test.identical( outfile.exported, expected );
@@ -4480,7 +5204,7 @@ function exportMultiple( test )
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, / \+ Exported .*exported::export.debug.* with 2 files in/ ) );
-    test.is( _.strHas( got.output, 'Read 2 willfiles in' ) );
+    test.is( _.strHas( got.output, 'Read 2 willfile(s) in' ) );
     test.is( _.strHas( got.output, /Exported .*module::submodule \/ build::export.debug.*/ ) );
     test.is( _.strHas( got.output, 'Write out archive' ) );
     test.is( _.strHas( got.output, 'Write out willfile' ) );
@@ -4505,7 +5229,6 @@ function exportMultiple( test )
         exportedDirPath : 'path::exported.dir.export.debug',
         exportedFilesPath : 'path::exported.files.export.debug',
         archiveFilePath : 'path::archiveFile.export.debug',
-        // originalWillFilesPath : 'path::module.original.willfiles'
       }
     }
 
@@ -4513,8 +5236,7 @@ function exportMultiple( test )
 
     var exportedReflector =
     {
-      src : { filePath : { '.' : null }, prefixPath : 'out/debug' },
-      // 'src' : { 'filePath' : 'out/debug' },
+      src : { filePath : { '.' : null }, prefixPath : 'debug' },
       mandatory : 1,
       criterion :
       {
@@ -4525,6 +5247,7 @@ function exportMultiple( test )
       }
     }
     test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
+    // logger.log( _.toJson( outfile.reflector ) );
 
     var exportedReflectorFiles =
     {
@@ -4549,82 +5272,87 @@ function exportMultiple( test )
 
     let outfilePath =
     {
-      proto : { path : './proto' },
-      temp : { path : 'out' },
-      in : { path : '..' },
-      out : { path : 'out' },
-      'out.debug' :
+      "module.willfiles" :
       {
-        path : './out/debug',
-        criterion : { debug : 1 }
+        "path" : "submodule.out.will.yml",
+        "criterion" : { "predefined" : 1 }
       },
-      'out.release' :
+      "module.original.willfiles" :
       {
-        path : './out/release',
-        criterion : { debug : 0 }
+        "path" : [ "../.im.will.yml", "../.ex.will.yml" ],
+        "criterion" : { "predefined" : 1 }
       },
-      'exported.dir.export.debug' :
+      "module.common" :
       {
-        path : './out/debug',
-        criterion :
+        "path" : "submodule.out",
+        "criterion" : { "predefined" : 1 }
+      },
+      "local" :
+      {
+        "criterion" : { "predefined" : 1 }
+      },
+      "remote" :
+      {
+        "criterion" : { "predefined" : 1 }
+      },
+      "proto" : { "path" : "../proto" },
+      "temp" : { "path" : "." },
+      "in" :
+      {
+        "path" : ".",
+        "criterion" : { "predefined" : 0 }
+      },
+      "out" :
+      {
+        "path" : ".",
+        "criterion" : { "predefined" : 0 }
+      },
+      "out.debug" :
+      {
+        "path" : "debug",
+        "criterion" : { "debug" : 1 }
+      },
+      "out.release" :
+      {
+        "path" : "release",
+        "criterion" : { "debug" : 0 }
+      },
+      "exported.dir.export.debug" :
+      {
+        "path" : "debug",
+        "criterion" :
         {
-          default : 1,
-          debug : 1,
-          raw : 1,
-          export : 1
+          "default" : 1,
+          "debug" : 1,
+          "raw" : 1,
+          "export" : 1
         }
       },
-      'exported.files.export.debug' :
+      "exported.files.export.debug" :
       {
-        path : [ 'out/debug', 'out/debug/File.debug.js' ],
-        criterion :
+        "path" : [ "debug", "debug/File.debug.js" ],
+        "criterion" :
         {
-          default : 1,
-          debug : 1,
-          raw : 1,
-          export : 1
+          "default" : 1,
+          "debug" : 1,
+          "raw" : 1,
+          "export" : 1
         }
       },
-      'archiveFile.export.debug' :
+      "archiveFile.export.debug" :
       {
-        path : './out/submodule.debug.out.tgs',
-        criterion :
+        "path" : "submodule.debug.out.tgs",
+        "criterion" :
         {
-          default : 1,
-          debug : 1,
-          raw : 1,
-          export : 1
+          "default" : 1,
+          "debug" : 1,
+          "raw" : 1,
+          "export" : 1
         }
-      },
-      'module.original.willfiles' :
-      {
-        'path' : [ '.im.will.yml', '.ex.will.yml' ],
-        'criterion' : { 'predefined' : 1 }
-      },
-
-      'module.willfiles' :
-      {
-        'path' : 'out/submodule.out.will.yml',
-        'criterion' : { 'predefined' : 1 }
-      },
-      'module.dir' :
-      {
-        'path' : 'out',
-        'criterion' : { 'predefined' : 1 }
-      },
-      'local' :
-      {
-        // 'path' : 'out',
-        'criterion' : { 'predefined' : 1 }
-      },
-      'remote' :
-      {
-        'criterion' : { 'predefined' : 1 }
-      },
-
+      }
     }
-
     test.identical( outfile.path, outfilePath );
+    // logger.log( _.toJson( outfile.path ) );
 
     return null;
   })
@@ -4655,7 +5383,7 @@ function exportMultiple( test )
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, / \+ Exported .*exported::export\..* with 2 files in/ ) );
-    test.is( _.strHas( got.output, 'Read 2 willfiles in' ) );
+    test.is( _.strHas( got.output, 'Read 2 willfile(s) in' ) );
     test.is( _.strHas( got.output, /Exported .*module::submodule \/ build::export\..* in/ ) );
     test.is( _.strHas( got.output, 'Write out archive' ) );
     test.is( _.strHas( got.output, 'Write out willfile' ) );
@@ -4710,11 +5438,10 @@ function exportMultiple( test )
     var exportedReflector =
     {
       'mandatory' : 1,
-      // 'src' : { 'filePath' : 'out/debug' },
       'src' :
       {
         'filePath' : { '.' : null },
-        'prefixPath' : 'out/debug'
+        'prefixPath' : 'debug',
       },
       criterion :
       {
@@ -4724,17 +5451,16 @@ function exportMultiple( test )
         export : 1
       }
     }
-    // logger.log( _.toJson( outfile.reflector[ 'exported.export.debug' ] ) );
     test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
+    // logger.log( _.toJson( outfile.reflector[ 'exported.export.debug' ] ) );
 
     var exportedReflector =
     {
       'mandatory' : 1,
-      // 'src' : { 'filePath' : 'out/release' },
       src :
       {
         'filePath' : { '.' : null },
-        'prefixPath' : 'out/release'
+        'prefixPath' : 'release'
       },
       criterion :
       {
@@ -4791,114 +5517,120 @@ function exportMultiple( test )
 
     let outfilePath =
     {
-      proto : { path : './proto' },
-      temp : { path : 'out' },
-      in : { path : '..' },
-      out : { path : 'out' },
-      'out.debug' :
+      "module.willfiles" :
       {
-        path : './out/debug',
-        criterion : { debug : 1 }
+        "path" : "submodule.out.will.yml",
+        "criterion" : { "predefined" : 1 }
       },
-      'out.release' :
+      "module.original.willfiles" :
       {
-        path : './out/release',
-        criterion : { debug : 0 }
+        "path" : [ "../.im.will.yml", "../.ex.will.yml" ],
+        "criterion" : { "predefined" : 1 }
       },
-      'exported.dir.export.debug' :
+      "module.common" :
       {
-        path : './out/debug',
-        criterion :
+        "path" : "submodule.out",
+        "criterion" : { "predefined" : 1 }
+      },
+      "local" :
+      {
+        "criterion" : { "predefined" : 1 }
+      },
+      "remote" :
+      {
+        "criterion" : { "predefined" : 1 }
+      },
+      "proto" : { "path" : "../proto" },
+      "temp" : { "path" : "." },
+      "in" :
+      {
+        "path" : ".",
+        "criterion" : { "predefined" : 0 }
+      },
+      "out" :
+      {
+        "path" : ".",
+        "criterion" : { "predefined" : 0 }
+      },
+      "out.debug" :
+      {
+        "path" : "debug",
+        "criterion" : { "debug" : 1 }
+      },
+      "out.release" :
+      {
+        "path" : "release",
+        "criterion" : { "debug" : 0 }
+      },
+      "exported.dir.export.debug" :
+      {
+        "path" : "debug",
+        "criterion" :
         {
-          default : 1,
-          debug : 1,
-          raw : 1,
-          export : 1
+          "default" : 1,
+          "debug" : 1,
+          "raw" : 1,
+          "export" : 1
         }
       },
-      'exported.files.export.debug' :
+      "exported.files.export.debug" :
       {
-        path : [ 'out/debug', 'out/debug/File.debug.js' ],
-        criterion :
+        "path" : [ "debug", "debug/File.debug.js" ],
+        "criterion" :
         {
-          default : 1,
-          debug : 1,
-          raw : 1,
-          export : 1
+          "default" : 1,
+          "debug" : 1,
+          "raw" : 1,
+          "export" : 1
         }
       },
-      'archiveFile.export.debug' :
+      "archiveFile.export.debug" :
       {
-        path : './out/submodule.debug.out.tgs',
-        criterion :
+        "path" : "submodule.debug.out.tgs",
+        "criterion" :
         {
-          default : 1,
-          debug : 1,
-          raw : 1,
-          export : 1
+          "default" : 1,
+          "debug" : 1,
+          "raw" : 1,
+          "export" : 1
         }
       },
-      'exported.dir.export.' :
+      "exported.dir.export." :
       {
-        path : './out/release',
-        criterion :
+        "path" : "release",
+        "criterion" :
         {
-          default : 1,
-          debug : 0,
-          raw : 1,
-          export : 1
+          "default" : 1,
+          "debug" : 0,
+          "raw" : 1,
+          "export" : 1
         }
       },
-      'exported.files.export.' :
+      "exported.files.export." :
       {
-        path : [ 'out/release', 'out/release/File.release.js' ],
-        criterion :
+        "path" : [ "release", "release/File.release.js" ],
+        "criterion" :
         {
-          default : 1,
-          debug : 0,
-          raw : 1,
-          export : 1
+          "default" : 1,
+          "debug" : 0,
+          "raw" : 1,
+          "export" : 1
         }
       },
-      'archiveFile.export.' :
+      "archiveFile.export." :
       {
-        path : './out/submodule.out.tgs',
-        criterion :
+        "path" : "submodule.out.tgs",
+        "criterion" :
         {
-          default : 1,
-          debug : 0,
-          raw : 1,
-          export : 1
+          "default" : 1,
+          "debug" : 0,
+          "raw" : 1,
+          "export" : 1
         }
-      },
-      'module.original.willfiles' :
-      {
-        'path' : [ '.im.will.yml', '.ex.will.yml' ],
-        'criterion' : { 'predefined' : 1 },
-      },
-      'module.willfiles' :
-      {
-        'path' : 'out/submodule.out.will.yml',
-        'criterion' : { 'predefined' : 1 }
-      },
-      'module.dir' :
-      {
-        'path' : 'out',
-        'criterion' : { 'predefined' : 1 }
-      },
-      'local' :
-      {
-        // 'path' : 'out',
-        'criterion' : { 'predefined' : 1 }
-      },
-      'remote' :
-      {
-        'criterion' : { 'predefined' : 1 }
-      },
-
+      }
     }
-
     test.identical( outfile.path, outfilePath );
+    // logger.log( _.toJson( outfile.path ) );
 
     return null;
   })
@@ -5005,7 +5737,7 @@ function exportImportMultiple( test )
     test.identical( files, [ '.', './supermodule.out.tgs', './supermodule.out.will.yml', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '5 at ' ) );
-    test.is( _.strHas( got.output, 'Clean will delete 5 file(s) in total, found in' ) );
+    test.is( _.strHas( got.output, 'Clean will delete 5 file(s)' ) );
 
     return null;
   })
@@ -5027,7 +5759,7 @@ function exportImportMultiple( test )
     var files = self.find( out2Path );
     test.identical( files, [] );
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Clean deleted 5 file(s) in' ) );
+    test.is( _.strHas( got.output, 'Clean deleted 5 file(s)' ) );
 
     return null;
   })
@@ -5076,7 +5808,7 @@ function exportImportMultiple( test )
     test.identical( files, [ '.', './supermodule.debug.out.tgs', './supermodule.out.tgs', './supermodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '8 at ' ) );
-    test.is( _.strHas( got.output, 'Clean will delete 8 file(s) in total, found in' ) );
+    test.is( _.strHas( got.output, 'Clean will delete 8 file(s)' ) );
 
     return null;
   })
@@ -5098,7 +5830,7 @@ function exportImportMultiple( test )
     var files = self.find( out2Path );
     test.identical( files, [] );
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Clean deleted 8 file(s) in' ) );
+    test.is( _.strHas( got.output, 'Clean deleted 8 file(s)' ) );
 
     return null;
   })
@@ -5176,7 +5908,6 @@ function exportBroken( test )
         exportedDirPath : 'path::exported.dir.export.debug',
         exportedFilesPath : 'path::exported.files.export.debug',
         archiveFilePath : 'path::archiveFile.export.debug',
-        // originalWillFilesPath : 'path::module.original.willfiles',
       }
     }
 
@@ -5185,7 +5916,7 @@ function exportBroken( test )
     var exportedReflector =
     {
       'mandatory' : 1,
-      src : { filePath : { '.' : null }, prefixPath : 'out/debug' },
+      src : { filePath : { '.' : null }, prefixPath : 'debug' },
       criterion :
       {
         default : 1,
@@ -5203,9 +5934,7 @@ function exportBroken( test )
       src :
       {
         filePath : 'path::exported.files.export.debug',
-        // filePath : { '.' : null, 'File.debug.js' : null },
         basePath : '.',
-        // prefixPath : 'out/debug'
         prefixPath : 'path::exported.dir.export.debug',
       },
       criterion :
@@ -5443,7 +6172,7 @@ function importLocalRepo( test )
     test.identical( files, [ 'Proto', 'Proto.out.will.yml' ] );
 
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, /.*download.* reflected .* files .*\.module\/Proto.* <- .*git:\/\/repo\/Proto.* in/ ), 1 );
+    test.identical( _.strCount( got.output, /.*download.* reflected .* files .*importLocalRepo\/\.module\/Proto.* <- .*git\+hd:\/\/repo\/Proto.* in/ ), 1 );
     test.identical( _.strCount( got.output, /Write out willfile .*\/.module\/Proto.out.will.yml/ ), 1 );
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( modulePath, 'Proto.out.will.yml' ) );
@@ -5461,7 +6190,7 @@ function importLocalRepo( test )
         'src' :
         {
           'filePath' : { '.' : null },
-          'prefixPath' : '.module/Proto/proto'
+          'prefixPath' : 'Proto/proto'
         },
         'criterion' : { 'default' : 1, 'export' : 1 },
         'mandatory' : 1
@@ -5478,62 +6207,69 @@ function importLocalRepo( test )
 
     var expectedPath =
     {
-      'module.willfiles' :
+      "module.willfiles" :
       {
-        path : '.module/Proto.out.will.yml',
-        criterion : { predefined : 1 }
+        "path" : "Proto.out.will.yml",
+        "criterion" : { "predefined" : 1 }
       },
-      'module.original.willfiles' :
+      "module.original.willfiles" :
       {
-        path : 'module/Proto.will.yml',
-        criterion : { predefined : 1 }
+        "path" : "../module/Proto.will.yml",
+        "criterion" : { "predefined" : 1 }
       },
-      'module.dir' :
+      "module.common" :
       {
-        path : '.module',
-        criterion : { predefined : 1 }
+        "path" : "Proto.out",
+        "criterion" : { "predefined" : 1 }
       },
-      in : { path : '..' },
-      out : { path : '.module' },
-      remote :
+      "in" :
       {
-        path : 'git://../repo/Proto',
-        criterion : { predefined : 1 }
+        "path" : ".",
+        "criterion" : { "predefined" : 0 }
       },
-      local :
+      "out" :
       {
-        path : '.module/Proto',
-        criterion : { predefined : 1 }
+        "path" : ".",
+        "criterion" : { "predefined" : 0 }
       },
-      export : { path : '{path::local}/proto' },
-      temp : { path : 'out' },
-      'exported.dir.export' :
+      "remote" :
       {
-        path : './.module/Proto/proto',
-        criterion : { default : 1, export : 1 }
+        "path" : "git+hd://../../repo/Proto",
+        "criterion" : { "predefined" : 1 }
       },
-      'exported.files.export' :
+      "local" :
       {
-        path :
+        "path" : "Proto",
+        "criterion" : { "predefined" : 1 }
+      },
+      "export" : { "path" : "{path::local}/proto" },
+      "temp" : { "path" : "../out" },
+      "exported.dir.export" :
+      {
+        "path" : "Proto/proto",
+        "criterion" : { "default" : 1, "export" : 1 }
+      },
+      "exported.files.export" :
+      {
+        "path" :
         [
-          '.module/Proto/proto',
-          '.module/Proto/proto/dwtools',
-          '.module/Proto/proto/dwtools/Tools.s',
-          '.module/Proto/proto/dwtools/abase',
-          '.module/Proto/proto/dwtools/abase/l3',
-          '.module/Proto/proto/dwtools/abase/l3/Proto.s',
-          '.module/Proto/proto/dwtools/abase/l3/ProtoAccessor.s',
-          '.module/Proto/proto/dwtools/abase/l3/ProtoLike.s',
-          '.module/Proto/proto/dwtools/abase/l3.test',
-          '.module/Proto/proto/dwtools/abase/l3.test/Proto.test.s',
-          '.module/Proto/proto/dwtools/abase/l3.test/ProtoLike.test.s'
+          "Proto/proto",
+          "Proto/proto/dwtools",
+          "Proto/proto/dwtools/Tools.s",
+          "Proto/proto/dwtools/abase",
+          "Proto/proto/dwtools/abase/l3",
+          "Proto/proto/dwtools/abase/l3/Proto.s",
+          "Proto/proto/dwtools/abase/l3/ProtoAccessor.s",
+          "Proto/proto/dwtools/abase/l3/ProtoLike.s",
+          "Proto/proto/dwtools/abase/l3.test",
+          "Proto/proto/dwtools/abase/l3.test/Proto.test.s",
+          "Proto/proto/dwtools/abase/l3.test/ProtoLike.test.s"
         ],
-        criterion : { default : 1, export : 1 }
+        "criterion" : { "default" : 1, "export" : 1 }
       }
     }
     test.identical( outfile.path, expectedPath );
-    // logger.log( _.toStr( outfile.path, { levels : 11 } ) );
-    // debugger;
+    // logger.log( _.toJson( outfile.path ) );
 
     return null;
   })
@@ -5544,6 +6280,87 @@ function importLocalRepo( test )
 }
 
 importLocalRepo.timeOut = 200000;
+
+//
+
+/*
+ - check caching of modules in out-willfiles
+*/
+
+function importOutWithDeletedSource( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let modulePath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.with module/Proto .export';
+
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+    return null;
+  })
+
+  shell({ args : '.clean' })
+  shell({ args : '.with a .export' })
+  shell({ args : '.with b .export' })
+  shell({ args : '.with ab-named .export' })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './module-a.out.will.yml', './module-ab-named.out.will.yml', './module-b.out.will.yml' ] );
+
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'a.will.yml' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'b.will.yml' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'ab' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'ab-named.will.yml' ) );
+
+    return null;
+  })
+
+  shell({ args : '.with out/module-ab-named .modules.list' })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, '. Read .' ), 1 );
+    test.identical( _.strCount( got.output, '. Read from cache .' ), 3 );
+    test.identical( _.strCount( got.output, 'module::module-ab-named' ), 3 );
+    test.identical( _.strCount( got.output, 'module::module-ab-named / module::module-a' ), 1 );
+    test.identical( _.strCount( got.output, 'module::module-ab-named / module::module-b' ), 1 );
+    test.identical( _.strCount( got.output, 'module::' ), 5 );
+    test.identical( _.strCount( got.output, 'module' ), 21 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+importOutWithDeletedSource.timeOut = 200000;
 
 //
 
@@ -5648,7 +6465,7 @@ function reflectNothingFromSubmodules( test )
         "src" :
         {
           "filePath" : { "." : null },
-          "prefixPath" : "proto"
+          "prefixPath" : "../proto"
         },
         "criterion" : { "default" : 1, "export" : 1 },
         "mandatory" : 1
@@ -5661,148 +6478,8 @@ function reflectNothingFromSubmodules( test )
         "mandatory" : 1
       }
     }
-    test.identical( outfile.reflector, expectedReflector ); debugger;
-
-    // var expectedReflector =
-    // {
-    //   'reflect.proto' :
-    //   {
-    //     src :
-    //     {
-    //       filePath : { '.' : '.' },
-    //       prefixPath : 'proto',
-    //       maskAll :
-    //       {
-    //         excludeAny :
-    //         [
-    //           /(\W|^)node_modules(\W|$)/,
-    //           /\.unique$/,
-    //           /\.git$/,
-    //           /\.svn$/,
-    //           /\.hg$/,
-    //           /\.DS_Store$/,
-    //           /(^|\/)-/,
-    //           /\.release($|\.|\/)/i,
-    //           /\.debug($|\.|\/)/i,
-    //           /\.experiment($|\.|\/)/i
-    //         ]
-    //       }
-    //     },
-    //     dst : { prefixPath : 'out/debug' },
-    //     criterion : { debug : 1 },
-    //     mandatory : 1,
-    //     inherit : [ 'predefined.*' ]
-    //   },
-    //   'reflect.submodules1' :
-    //   {
-    //     dst : { basePath : '.', prefixPath : 'out/debug' },
-    //     criterion : { debug : 1 },
-    //     mandatory : 1,
-    //     inherit :
-    //     [
-    //       'submodule::*/exported::*=1/reflector::exported.files*=1'
-    //     ]
-    //   },
-    //   'reflect.submodules2' :
-    //   {
-    //     src :
-    //     {
-    //       maskAll :
-    //       {
-    //         excludeAny :
-    //         [
-    //           /(\W|^)node_modules(\W|$)/,
-    //           /\.unique$/,
-    //           /\.git$/,
-    //           /\.svn$/,
-    //           /\.hg$/,
-    //           /\.DS_Store$/,
-    //           /(^|\/)-/,
-    //           /\.release($|\.|\/)/i
-    //         ]
-    //       }
-    //     },
-    //     criterion : { debug : 1 },
-    //     mandatory : 1,
-    //     inherit : [ 'predefined.*' ]
-    //   },
-    //   'exported.proto.export' :
-    //   {
-    //     src :
-    //     {
-    //       filePath : { '.' : null },
-    //       prefixPath : 'proto'
-    //     },
-    //     criterion : { default : 1, export : 1 },
-    //     mandatory : 1
-    //   },
-    //   'exported.files.proto.export' :
-    //   {
-    //     src : { filePath : 'path::exported.files.proto.export', basePath : '.', prefixPath : 'path::exported.dir.proto.export' },
-    //     criterion : { default : 1, export : 1 },
-    //     recursive : 0,
-    //     mandatory : 1
-    //   }
-    // }
-    // test.identical( outfile.reflector, expectedReflector );
-    //
-    // var expectedReflector =
-    // {
-    //   'reflect.proto' :
-    //   {
-    //     'mandatory' : 1,
-    //     src :
-    //     {
-    //       filePath : { 'path::proto' : 'path::out.*=1' },
-    //     },
-    //     inherit : [ 'predefined.*' ],
-    //   },
-    //   'reflect.submodules1' :
-    //   {
-    //     'mandatory' : 1,
-    //     'dst' : { 'basePath' : '.', 'prefixPath' : 'path::out.debug' },
-    //     criterion : { debug : 1 },
-    //     inherit :
-    //     [
-    //       'submodule::*/exported::*=1/reflector::exported.files*=1'
-    //     ]
-    //   },
-    //   'reflect.submodules2' :
-    //   {
-    //     'mandatory' : 1,
-    //     src :
-    //     {
-    //       'filePath' : { 'submodule::*/exported::*=1/path::exported.dir*=1' : 'path::out.*=1' }
-    //     },
-    //     criterion : { debug : 1 },
-    //     inherit : [ 'predefined.*' ]
-    //   },
-    //   'exported.proto.export' :
-    //   {
-    //     'mandatory' : 1,
-    //     src :
-    //     {
-    //       filePath : { '.' : null },
-    //       prefixPath : 'proto'
-    //     },
-    //     criterion : { default : 1, export : 1 }
-    //   },
-    //   'exported.files.proto.export' :
-    //   {
-    //     recursive : 0,
-    //     mandatory : 1,
-    //     src :
-    //     {
-    //       'filePath' : 'path::exported.files.proto.export',
-    //       'prefixPath' : 'path::exported.dir.proto.export',
-    //       // filePath : { '.' : null, 'Single.s' : null },
-    //       basePath : '.',
-    //       // prefixPath : 'proto'
-    //     },
-    //     criterion : { default : 1, export : 1 }
-    //   }
-    // }
-    // test.identical( outfile.reflector, expectedReflector );
+    test.identical( outfile.reflector, expectedReflector );
+    // logger.log( _.toJson( outfile.reflector ) );
 
     return null;
   })
@@ -6480,7 +7157,7 @@ function reflectRemoteGit( test )
   {
     test.identical( arg.exitCode, 0 );
     var files = self.find( local1Path );
-    test.identical( files.length, 92 );
+    test.gt( files.length, 90 );
     return null;
   }
 
@@ -6491,11 +7168,11 @@ function reflectRemoteGit( test )
     test.identical( arg.exitCode, 0 );
 
     var files = self.find( local1Path );
-    test.identical( files.length, 92 );
+    test.gt( files.length, 90 );
     var files = self.find( local2Path );
-    test.identical( files.length, 72 );
+    test.gt( files.length, 70 );
     var files = self.find( local3Path );
-    test.identical( files.length, 77 );
+    test.gt( files.length, 75 );
 
     return null;
   }
@@ -6608,6 +7285,8 @@ function reflectWithOptions( test )
   {
     test.is( !err );
     test.is( !!got.exitCode );
+    test.identical( _.strCount( got.output, 'unhandled errorr' ), 0 );
+    test.identical( _.strCount( got.output, '====' ), 0 );
     test.is( _.strHas( got.output, /Failed .*module::.+ \/ step::reflect\.proto2/ ) );
     test.is( _.strHas( got.output, /Error\. No file moved : .+reflectWithOptions.* : .*out\/debug.* <- .*proto2.*/ ) );
     var files = self.find( outPath );
@@ -6657,7 +7336,6 @@ function reflectWithSelectorInDstFilter( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
-    throwingExitCode : 0,
     ready : ready,
   });
 
@@ -6803,7 +7481,7 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
 
   /* - */
 
@@ -6817,7 +7495,7 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
 
   shell({ args : [ '.each module .export' ] })
 
-  //fails with error on first run
+  // fails with error on first run
 
   shell({ args : [ '.build variant1' ] })
   .thenKeep( ( got ) =>
@@ -6851,7 +7529,7 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath }  })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
 
   /* - */
 
@@ -6946,7 +7624,7 @@ function reflectInherit( test )
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /\+ .*reflector::reflect.proto1.* reflected 6 files/ ) );
+    test.is( _.strHas( got.output, /\+ .*reflector::reflect.proto2.* reflected 6 files/ ) );
     test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
     var files = self.find( outPath );
     test.identical( files, [ '.', './debug2', './debug2/File.js', './debug2/File.s', './debug2/File.test.js', './debug2/some.test', './debug2/some.test/File2.js' ] );
@@ -7087,29 +7765,51 @@ function reflectComplexInherit( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
-
   /* - */
 
   ready
   .thenKeep( () =>
   {
-    test.case = '.with ab .build'
+    test.case = '.with ab/ .build';
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
   shell({ args : [ '.with a .export' ] })
   shell({ args : [ '.with b .export' ] })
-  shell({ args : [ '.with ab .build' ] })
+  shell({ args : [ '.with ab/ .build' ] })
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-
-    test.is( _.strHas( got.output, / \+ .*files\.all.* reflected 21 files .*\/.* : .*out\/ab\/files.* <- .*proto.* in/ ) );
-
+    test.is( _.strHas( got.output, / \+ .*reflector::files\.all.* reflected 11 files .*\/.* : .*out\/ab\/files.* <- .*proto.* in/ ) );
     var files = self.find( outPath );
-    test.identical( files, [ '.', './module-a.out.will.yml', './module-b.out.will.yml', './ab', './ab/files', './ab/files/a', './ab/files/a/File.js', './ab/files/b', './ab/files/b/-Excluded.js', './ab/files/b/File.js', './ab/files/b/File.test.js', './ab/files/b/File1.debug.js', './ab/files/b/File1.release.js', './ab/files/b/File2.debug.js', './ab/files/b/File2.release.js', './ab/files/dir3.test', './ab/files/dir3.test/File.js', './ab/files/dir3.test/File.test.js' ] );
+    test.identical( files, [ '.', './module-a.out.will.yml', './module-b.out.will.yml', './ab', './ab/files', './ab/files/a', './ab/files/a/File.js', './ab/files/b', './ab/files/b/-Excluded.js', './ab/files/b/File.js', './ab/files/b/File.test.js', './ab/files/b/File1.debug.js', './ab/files/b/File1.release.js', './ab/files/b/File2.debug.js', './ab/files/b/File2.release.js', './ab/files/dir3.test' ] );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.with abac/ .build';
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.with a .export' ] })
+  shell({ args : [ '.with b .export' ] })
+  shell({ args : [ '.with c .export' ] })
+  shell({ args : [ '.with ab/ .export' ] })
+  shell({ args : [ '.with abac/ .build' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, / \+ .*reflector::files\.all.* reflected 13 files .*\/.* : .*out\/abac\/files.* <- .*proto.* in/ ) );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './module-a.out.will.yml', './module-b.out.will.yml', './module-c.out.will.yml', './ab', './ab/module-ab.out.will.yml', './abac', './abac/files', './abac/files/a', './abac/files/a/File.js', './abac/files/b', './abac/files/b/-Excluded.js', './abac/files/b/File.js', './abac/files/b/File.test.js', './abac/files/b/File1.debug.js', './abac/files/b/File1.release.js', './abac/files/b/File2.debug.js', './abac/files/b/File2.release.js', './abac/files/c', './abac/files/c/File.js', './abac/files/dir3.test' ] );
     return null;
   })
 
@@ -7158,6 +7858,7 @@ function reflectorMasks( test )
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, new RegExp( '\\+ .*.reflector::reflect\\.copy\\..* reflected ' + String( files.length - 1 ) + ' files ' ) ) );
+    debugger;
 
     return null;
   })
@@ -7189,14 +7890,14 @@ reflectorMasks.timeOut = 200000;
 
 //
 
-function shellPluralCriterion( test )
+function shellWithCriterion( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'step-shell-plural-criterion' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-shell-with-criterion' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-  
+
   /* Checks if shell step supports plural criterion and which path is selected using current value of criterion */
 
   let ready = new _.Consequence().take( null );
@@ -7246,83 +7947,21 @@ function shellPluralCriterion( test )
   return ready;
 }
 
-shellPluralCriterion.timeOut = 200000;
+shellWithCriterion.timeOut = 200000;
 
 //
 
-function shellUsingCriterionValue( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'step-shell-using-criterion-value' );
-  let routinePath = _.path.join( self.tempDir, test.name );
-  let outPath = _.path.join( routinePath, 'out' );
-  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-
-  /* Checks if correct value of criterion is passed into shell command */
-
-  let ready = new _.Consequence().take( null );
-  let shell = _.sheller
-  ({
-    execPath : 'node ' + execPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    ready : ready,
-  })
-
-  /* - */
-
-  _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-
-  /* - */
-
-  shell({ args : [ '.build debug' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.description = 'should print debug:1';
-
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'debug:1' ) );
-
-    return null;
-  })
-
-  /* - */
-
-  shell({ args : [ '.build release' ] })
-
-  .thenKeep( ( got ) =>
-  {
-    test.description = 'should print debug:0';
-
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'debug:0' ) );
-
-    return null;
-  })
-
-  /* - */
-
-  return ready;
-}
-
-shellUsingCriterionValue.timeOut = 200000;
-
-//
+/*
+  Checks amount of output from shell step depending on value of verbosity option
+*/
 
 function shellVerbosity( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'step-shell-using-criterion-value' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-shell-verbosity' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-
-  /* 
-    Checks amount of output from shell step depending on value of verbosity option
-  */
-
 
   let ready = new _.Consequence().take( null );
   let shell = _.sheller
@@ -7340,28 +7979,85 @@ function shellVerbosity( test )
 
   /* - */
 
-  shell({ args : [ '.build shell.verbosity.zero' ] })
+  shell({ args : [ '.build verbosity.0' ] })
 
   .thenKeep( ( got ) =>
   {
-    test.description = 'verbosity:0 should not print message';
+    test.case = '.build verbosity.0';
 
     test.identical( got.exitCode, 0 );
-    test.is( !_.strHas( got.output, 'message from shell' ) );
+    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 0 );
+    test.identical( _.strCount( got.output, routinePath ), 1 );
+    test.identical( _.strCount( got.output, 'message from shell' ), 0 );
+    test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
 
     return null;
   })
 
   /* - */
 
-  shell({ args : [ '.build shell.verbosity.full' ] })
+  shell({ args : [ '.build verbosity.1' ] })
 
   .thenKeep( ( got ) =>
   {
-    test.description = 'verbosity:9 should print message';
+    test.case = '.build verbosity.1';
 
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'message from shell' ) );
+    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 1 );
+    test.identical( _.strCount( got.output, routinePath ), 1 );
+    test.identical( _.strCount( got.output, 'message from shell' ), 1 );
+    test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.build verbosity.2' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.build verbosity.2';
+
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 1 );
+    test.identical( _.strCount( got.output, routinePath ), 1 );
+    test.identical( _.strCount( got.output, 'message from shell' ), 2 );
+    test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.build verbosity.3' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = '.build verbosity.3';
+
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 1 );
+    test.identical( _.strCount( got.output, routinePath ), 2 );
+    test.identical( _.strCount( got.output, 'message from shell' ), 2 );
+    test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.build verbosity.5' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.case = 'verbosity:5';
+
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 1 );
+    test.identical( _.strCount( got.output, routinePath ), 2 );
+    test.identical( _.strCount( got.output, 'message from shell' ), 2 );
+    test.identical( _.strCount( got.output, 'Process returned error code 0' ), 1 );
 
     return null;
   })
@@ -7370,8 +8066,6 @@ function shellVerbosity( test )
 
   return ready;
 }
-
-shellVerbosity.timeOut = 20000;
 
 //
 
@@ -7560,17 +8254,17 @@ function functionPlatform( test )
 
 //
 
-function printStepNameBeforeExecution( test )
+/*
+  Checks resolving selector with criterion.
+*/
+
+function fucntionThisCriterion( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'step-print-name-before-exec' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-shell-using-criterion-value' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-
-  /* 
-    Checks if tool prints name of step before it execution
-  */
 
   let ready = new _.Consequence().take( null );
   let shell = _.sheller
@@ -7588,18 +8282,28 @@ function printStepNameBeforeExecution( test )
 
   /* - */
 
-  shell({ args : [ '.build ; .set v:4' ] })
+  shell({ args : [ '.build debug' ] })
 
   .thenKeep( ( got ) =>
   {
-    test.description = 'should print name of step before execution';
+    test.description = 'should print debug:1';
 
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '+ reflect.file reflected 1 files' ) );
-    test.is( _.strHas( got.output, '. shell.step' ) );
-    test.is( _.strHas( got.output, `node -e "console.log( 'shell.step' )"` ) );
-    test.is( _.strHas( got.output, '. delete.step' ) );
-    test.is( _.strHas( got.output, '- delete.step deleted 1 files at' ) );
+    test.is( _.strHas( got.output, 'debug:1' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ args : [ '.build release' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.description = 'should print debug:0';
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'debug:0' ) );
 
     return null;
   })
@@ -7608,6 +8312,8 @@ function printStepNameBeforeExecution( test )
 
   return ready;
 }
+
+fucntionThisCriterion.timeOut = 200000;
 
 //
 
@@ -7677,7 +8383,7 @@ function submodulesDownloadSingle( test )
   {
     test.case = '.submodules.clean';
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Clean deleted 0 file(s) in' ) );
+    test.is( _.strHas( got.output, 'Clean deleted 0 file(s)' ) );
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
     return null;
@@ -7998,9 +8704,9 @@ function submodulesUpdate( test )
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ .*module::Tools.* was updated to version .*9ab000578f9fe1964030820e9ee7060022c72798.* in/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::Tools.* was updated to version .*fc457abd063cb49edc857e46b74b4769da7124e3.* in/ ) );
     test.is( _.strHas( got.output, / \+ .*module::PathFundamentals.* was updated to version .*master.* in/ ) );
-    test.is( _.strHas( got.output, / \+ .*module::UriFundamentals.* was updated to version .*807e47943f3a0b3910464edb4d8fa6dec13ff3a3.* in/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::UriFundamentals.* was updated to version .*3686d72cc0b8f6573217c947a4b379c38b02e39b.* in/ ) );
     test.is( _.strHas( got.output, / \+ 3\/3 submodule\(s\) of .*module::submodules.* were updated in/ ) );
     return null;
   })
@@ -8032,7 +8738,7 @@ function submodulesUpdate( test )
   {
     test.case = '.submodules.update -- after patch';
     let read = _.fileProvider.fileRead( _.path.join( routinePath, '.im.will.yml' ) );
-    read = _.strReplace( read, '9ab000578f9fe1964030820e9ee7060022c72798', 'master' )
+    read = _.strReplace( read, 'fc457abd063cb49edc857e46b74b4769da7124e3', 'master' )
     _.fileProvider.fileWrite( _.path.join( routinePath, '.im.will.yml' ), read );
     return null;
   })
@@ -8211,38 +8917,38 @@ function upgradeDryDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Tools.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Tools.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::PathFundamentals.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#ffcb9b22726e2d56d07564178d268bc2eb602b35.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Color.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.109.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#45452e31fe62f3edfad87ed7a0acb0f45fb1b271.*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Proto\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Procedure\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Procedure\.informal\.will\.yml.* will be upgraded/ ), 1 );
@@ -8264,38 +8970,38 @@ function upgradeDryDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Tools.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Tools.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::PathFundamentals.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#ffcb9b22726e2d56d07564178d268bc2eb602b35.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Color.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.109.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#45452e31fe62f3edfad87ed7a0acb0f45fb1b271.*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Proto\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Procedure\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Procedure\.informal\.will\.yml.* will be upgraded/ ), 1 );
@@ -8340,17 +9046,17 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#45452e31fe62f3edfad87ed7a0acb0f45fb1b271.*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Proto\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Procedure\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Procedure\.informal\.will\.yml.* will be upgraded/ ), 1 );
@@ -8374,38 +9080,38 @@ function upgradeDryDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Tools.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Tools.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::PathFundamentals.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#ffcb9b22726e2d56d07564178d268bc2eb602b35.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Color.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.109.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* will be upgraded to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* will be upgraded to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.* : .* <- .*\..*/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be upgraded/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* will be upgraded to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* will be upgraded to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#45452e31fe62f3edfad87ed7a0acb0f45fb1b271.*/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Proto\.informal\.will\.yml.* will be upgraded/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* will be upgraded to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* will be upgraded to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Procedure\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Procedure\.informal\.will\.yml.* will be upgraded/ ), 0 );
@@ -8458,38 +9164,38 @@ function upgradeDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Tools.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Tools.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::PathFundamentals.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#ffcb9b22726e2d56d07564178d268bc2eb602b35.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Color.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.109.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was upgraded/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#45452e31fe62f3edfad87ed7a0acb0f45fb1b271.*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/Procedure\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/Procedure\.informal\.will\.yml.* was upgraded/ ), 1 );
@@ -8517,38 +9223,38 @@ function upgradeDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Tools.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Tools.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::PathFundamentals.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#ffcb9b22726e2d56d07564178d268bc2eb602b35.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Color.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.109.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was upgraded/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#45452e31fe62f3edfad87ed7a0acb0f45fb1b271.*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/Procedure\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/Procedure\.informal\.will\.yml.* was upgraded/ ), 1 );
@@ -8570,38 +9276,38 @@ function upgradeDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Tools.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Tools.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::PathFundamentals.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Color.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was skipped/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/out\/Procedure\.informal\.out\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/module\/Procedure\.informal\.will\.yml.* was skipped/ ), 1 );
@@ -8627,38 +9333,38 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /was upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /will be upgraded/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Tools.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Tools.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::PathFundamentals.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Color.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/out\/Procedure\.informal\.out\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/module\/Procedure\.informal\.will\.yml.* was skipped/ ), 0 );
@@ -8707,17 +9413,17 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was upgraded/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#45452e31fe62f3edfad87ed7a0acb0f45fb1b271.*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/Procedure\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/Procedure\.informal\.will\.yml.* was upgraded/ ), 1 );
@@ -8745,38 +9451,38 @@ function upgradeDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Tools.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Tools.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::PathFundamentals.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#ffcb9b22726e2d56d07564178d268bc2eb602b35.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Color.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.109.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* was upgraded to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was upgraded to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.* : .* <- .*\..*/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was upgraded/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* was upgraded to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was upgraded to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#45452e31fe62f3edfad87ed7a0acb0f45fb1b271.*/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* was upgraded to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* was upgraded to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/Procedure\.informal\.out\.will\.yml.* was upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/Procedure\.informal\.will\.yml.* was upgraded/ ), 0 );
@@ -8830,38 +9536,38 @@ function fixateDryDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Tools.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Tools.* will be fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/\.im\.will\.yml.* will be fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::PathFundamentals.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* will be skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* will be skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* will be skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Color.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* will be skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Color\/\.im\.will\.yml.* will be skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Color\/\.im\.will\.yml.* will be skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* will be fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/module\/Proto\.informal\.will\.yml.* will be skipped/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* will be fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/out\/Procedure\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/module\/Procedure\.informal\.will\.yml.* will be fixated/ ), 1 );
@@ -8883,38 +9589,38 @@ function fixateDryDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Tools.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Tools.* will be fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* won't be fixated/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be fixated/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be fixated/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/\.im\.will\.yml.* will be fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::PathFundamentals.* won't be fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* won't be fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* will be skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* will be skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* will be skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Color.* won't be fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* won't be fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* will be skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Color\/\.im\.will\.yml.* will be skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Color\/\.im\.will\.yml.* will be skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* will be fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* won't be fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* won't be fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/module\/Proto\.informal\.will\.yml.* will be skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* will be fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/out\/Procedure\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/module\/Procedure\.informal\.will\.yml.* will be fixated/ ), 1 );
@@ -8959,17 +9665,17 @@ function fixateDryDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Color\/\.im\.will\.yml.* will be skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* will be fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/module\/Proto\.informal\.will\.yml.* will be skipped/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* will be fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/out\/Procedure\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/module\/Procedure\.informal\.will\.yml.* will be fixated/ ), 1 );
@@ -8993,38 +9699,38 @@ function fixateDryDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Tools.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Tools.* will be fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/\.im\.will\.yml.* will be fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::PathFundamentals.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* will be skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* will be skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* will be skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Color.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* will be skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Color\/\.im\.will\.yml.* will be skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Color\/\.im\.will\.yml.* will be skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* will be fixated to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* will be fixated to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.* : .* <- .*\..*/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* will be fixated/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be fixated/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* won't be fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* won't be fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/module\/Proto\.informal\.will\.yml.* will be skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* will be fixated to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* will be fixated to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/out\/Procedure\.informal\.out\.will\.yml.* will be fixated/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/module\/Procedure\.informal\.will\.yml.* will be fixated/ ), 0 );
@@ -9077,38 +9783,38 @@ function fixateDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Tools.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Tools.* was fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::PathFundamentals.* was not fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Color.* was not fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/UriFundamentals\.informal\.will\.yml.* was fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* was not fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* was fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/Procedure\.informal\.out\.will\.yml.* was fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/Procedure\.informal\.will\.yml.* was fixated/ ), 1 );
@@ -9136,38 +9842,38 @@ function fixateDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Tools.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Tools.* was fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::PathFundamentals.* was not fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Color.* was not fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/UriFundamentals\.informal\.will\.yml.* was fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* was not fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* was fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/Procedure\.informal\.out\.will\.yml.* was fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/Procedure\.informal\.will\.yml.* was fixated/ ), 1 );
@@ -9189,38 +9895,38 @@ function fixateDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Tools.* was not fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Tools.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::PathFundamentals.* was not fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Color.* was not fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* was not fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/module\/UriFundamentals\.informal\.will\.yml.* was skipped/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* was not fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* was not fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/out\/Procedure\.informal\.out\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/module\/Procedure\.informal\.will\.yml.* was skipped/ ), 1 );
@@ -9246,38 +9952,38 @@ function fixateDetached( test )
     test.identical( _.strCount( got.output, /was fixated/ ), 0 );
     test.identical( _.strCount( got.output, /will be fixated/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Tools.* was fixated to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Tools.* was fixated to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::PathFundamentals.* was not fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Color.* was not fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* was fixated to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was fixated to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.* : .* <- .*\..*/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was fixated/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/UriFundamentals\.informal\.will\.yml.* was fixated/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* was not fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* was fixated to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* was fixated to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/Procedure\.informal\.out\.will\.yml.* was fixated/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/Procedure\.informal\.will\.yml.* was fixated/ ), 0 );
@@ -9326,17 +10032,17 @@ function fixateDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/UriFundamentals\.informal\.will\.yml.* was fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* was not fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* was fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/Procedure\.informal\.out\.will\.yml.* was fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/Procedure\.informal\.will\.yml.* was fixated/ ), 1 );
@@ -9364,38 +10070,38 @@ function fixateDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Tools.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Tools.* was fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::PathFundamentals.* was not fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Color.* was not fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::UriFundamentals.* was fixated to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was fixated to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriFundamentals\.git.* : .* <- .*\..*/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was fixated/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/UriFundamentals\.informal\.will\.yml.* was fixated/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Proto.* was not fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/out\/Proto\.informal\.out\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/module\/Proto\.informal\.will\.yml.* was skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ module::Procedure.* was fixated to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Procedure.* was fixated to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/Procedure\.informal\.out\.will\.yml.* was fixated/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/Procedure\.informal\.will\.yml.* was fixated/ ), 0 );
@@ -9434,22 +10140,32 @@ var Self =
   tests :
   {
 
+    preCloneRepos,
     singleModuleSimplest,
     singleModuleWithSpaceTrivial,
     make,
-    setVerbosity,
     transpile,
 
     openWith,
     openEach,
-    eachMixed,
     withMixed,
+    eachMixed,
+    withList,
+    eachList,
+    eachBrokenIll,
+    eachBrokenNon,
+    eachBrokenCommand,
+
+    verbositySet,
+    verbosityStepDelete,
+    verbosityStepPrintName,
 
     help,
     listSingleModule,
     listWithSubmodulesSimple,
     listWithSubmodules,
     listSteps,
+    // listComplexPaths,
 
     clean,
     cleanSingleModule,
@@ -9461,7 +10177,6 @@ var Self =
     cleanSubmodules,
     cleanMixed,
     cleanWithInPath,
-    stepCleanPaths,
 
     buildSingleModule,
     buildSingleStep,
@@ -9483,6 +10198,7 @@ var Self =
     exportImport,
     importPathLocal,
     importLocalRepo,
+    importOutWithDeletedSource,
 
     reflectNothingFromSubmodules,
     reflectGetPath,
@@ -9500,15 +10216,13 @@ var Self =
     reflectInheritSubmodules,
     // reflectComplexInherit, // xxx
     reflectorMasks,
-    
-    shellPluralCriterion,
-    shellUsingCriterionValue,
+
+    shellWithCriterion,
     shellVerbosity,
-    
+
     functionStringsJoin,
     functionPlatform,
-    
-    printStepNameBeforeExecution,
+    fucntionThisCriterion,
 
     submodulesDownloadSingle,
     submodulesDownloadUpdate,

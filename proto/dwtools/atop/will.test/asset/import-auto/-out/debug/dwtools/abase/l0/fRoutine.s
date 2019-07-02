@@ -584,7 +584,7 @@ function _routinesCompose_body( o )
       _.assert( r !== false /* && r !== undefined */, 'Temporally forbidden type of result', r );
       _.assert( !_.argumentsArrayIs( r ) );
       if( r !== undefined )
-      _.arrayAppendUnrolling( result, r );
+      _.untrollAppend( result, r );
       // args = chainer( r, k, args, o );
       args = chainer( args, r, o, k );
       _.assert( args !== undefined && args !== false );
