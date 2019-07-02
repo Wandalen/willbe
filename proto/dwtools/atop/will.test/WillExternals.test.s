@@ -7688,8 +7688,8 @@ function reflectInheritSubmodules( test )
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
-  
-  /* 
+
+  /*
     Reflecting submodules passing array of export reflectors as 'inherit' option.
     Should copy files 'File1.s' and 'File2.s' into out/debug.
     Should not create any other intermediate directories in out/debug.
@@ -7701,7 +7701,7 @@ function reflectInheritSubmodules( test )
     currentPath : routinePath,
     outputCollecting : 1,
     ready : ready,
-  })
+  });
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
 
@@ -7723,7 +7723,7 @@ function reflectInheritSubmodules( test )
     test.identical( files, [ '.', './.will.yml', './submodule1.out.will.yml', './submodule2.out.will.yml', './module', './module/submodule1.will.yml', './module/submodule2.will.yml', './module/proto', './module/proto/File1.s', './module/proto/File2.s' ] );
     return null;
   })
-  
+
   /* - */
 
   ready
@@ -7742,6 +7742,8 @@ function reflectInheritSubmodules( test )
     test.identical( files, [ '.', './File1.s', './File2.s' ] );
     return null;
   })
+
+  /* - */
 
   return ready;
 }
