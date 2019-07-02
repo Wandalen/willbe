@@ -1111,10 +1111,6 @@ function remoteIsUpdate()
   _.assert( !!opener.willfilesPath || !!opener.dirPath );
   _.assert( arguments.length === 0 );
 
-  // if( opener.remotePath )
-  // return end( true );
-
-  debugger;
   let remoteProvider = fileProvider.providerForPath( opener.remotePath || opener.commonPath );
   if( remoteProvider.isVcs )
   return end( true );

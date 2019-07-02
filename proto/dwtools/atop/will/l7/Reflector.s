@@ -161,7 +161,7 @@ function form2()
 
   reflector.selectorsNormalize();
 
-  // if( reflector.nickName === "reflector::files.all" )
+  // if( reflector.nickName === "reflector::reflect.submodules" )
   // debugger;
 
   let result = Parent.prototype.form2.apply( reflector, arguments );
@@ -185,9 +185,12 @@ function form3()
 
   /* begin */
 
-  // if( reflector.nickName === "reflector::files.all" )
-  // debugger;
+  if( reflector.nickName === "reflector::reflect.submodules" )
+  debugger;
 
+  /* first normalize special case { basePath : . } */
+  reflector.src.basePathDotUnwrap();
+  /* */
   reflector.pathsResolve();
 
   if( reflector.src.hasAnyPath() )
@@ -196,7 +199,14 @@ function form3()
   reflector.src.pairWithDst( reflector.dst );
   reflector.src.pairRefine();
 
+  if( reflector.nickName === "reflector::reflect.submodules" )
+  debugger;
+
   reflector.prefixesApply();
+
+  if( reflector.nickName === "reflector::reflect.submodules" )
+  debugger;
+
   reflector.prefixesRelative();
 
   reflector.src.basePathSimplify();
@@ -205,9 +215,6 @@ function form3()
 
   _.assert( reflector.src.prefixPath === null || path.isAbsolute( reflector.src.prefixPath ) );
   _.assert( reflector.dst.prefixPath === null || path.isAbsolute( reflector.dst.prefixPath ) );
-
-  // if( reflector.nickName === "reflector::exportedFiles.export" )
-  // debugger;
 
   /* end */
 
@@ -237,8 +244,8 @@ function _inheritMultiple( o )
 
   Parent.prototype._inheritMultiple.call( reflector, o );
 
-  // if( reflector.nickName === "reflector::files.all" )
-  // debugger;
+  if( reflector.nickName === "reflector::reflect.submodules" )
+  debugger;
 
   reflector.src.pairWithDst( reflector.dst );
 
@@ -256,6 +263,9 @@ function _inheritMultiple( o )
   reflector.dst.and( reflector._accumulator.dst ).pathsInherit( reflector._accumulator.dst );
   if( reflector.src.filePath !== reflector.dst.filePath )
   reflector.src.pairRefineLight();
+
+  if( reflector.nickName === "reflector::reflect.submodules" )
+  debugger;
 
   return reflector;
 }
@@ -294,9 +304,6 @@ function _inheritSingle( o )
   _.assert( reflector.src.dstFilter === reflector.dst );
   _.assert( reflector.dst.srcFilter === reflector.src );
   _.assert( !!reflector._accumulator );
-
-  // if( reflector.nickName === "reflector::reflect.submodules" )
-  // debugger;
 
   if( reflector2.formed < 3 )
   {
@@ -374,7 +381,7 @@ function _inheritSingle( o )
 
   }
 
-  // if( reflector.nickName === "reflector::exported.files.proto.export" )
+  // if( reflector.nickName === "reflector::reflect.submodules" )
   // debugger;
 
 }

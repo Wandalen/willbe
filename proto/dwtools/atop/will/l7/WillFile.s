@@ -368,9 +368,6 @@ function resourceImport_body( o )
   o2.Importing = 1;
   o2.IsOutFile = willf.isOutFile;
 
-  // if( o2.name === 'module.common' )
-  // debugger;
-
   try
   {
     o.resourceClass.MakeForEachCriterion( o2 );
@@ -518,7 +515,7 @@ function reflectorsImport( Reflector, resources )
   _.each( resources, ( resource, name ) =>
   {
 
-    let resource2 = _.mapExtend( null, resource )
+    let resource2 = _.mapExtend( null, resource );
     if( Reflector.OptionsFrom )
     resource2 = Reflector.OptionsFrom( resource2 );
 

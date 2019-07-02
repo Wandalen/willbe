@@ -142,6 +142,7 @@ function stepRoutineReflect( frame )
   let result;
   try
   {
+    debugger;
     result = will.Predefined.filesReflect.call( fileProvider, opts );
   }
   catch( err )

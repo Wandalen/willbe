@@ -1931,6 +1931,20 @@ path:
       - ../proto/dwtools/atop/will.test/asset/reflect-inherit/proto/some.test
       - >-
         ../proto/dwtools/atop/will.test/asset/reflect-inherit/proto/some.test/File2.js
+      - ../proto/dwtools/atop/will.test/asset/reflect-inherit-submodules
+      - >-
+        ../proto/dwtools/atop/will.test/asset/reflect-inherit-submodules/.will.yml
+      - ../proto/dwtools/atop/will.test/asset/reflect-inherit-submodules/module
+      - >-
+        ../proto/dwtools/atop/will.test/asset/reflect-inherit-submodules/module/submodule1.will.yml
+      - >-
+        ../proto/dwtools/atop/will.test/asset/reflect-inherit-submodules/module/submodule2.will.yml
+      - >-
+        ../proto/dwtools/atop/will.test/asset/reflect-inherit-submodules/module/proto
+      - >-
+        ../proto/dwtools/atop/will.test/asset/reflect-inherit-submodules/module/proto/File1.s
+      - >-
+        ../proto/dwtools/atop/will.test/asset/reflect-inherit-submodules/module/proto/File2.s
       - ../proto/dwtools/atop/will.test/asset/reflect-nothing-from-submodules
       - >-
         ../proto/dwtools/atop/will.test/asset/reflect-nothing-from-submodules/.ex.will.yml
@@ -4557,6 +4571,20 @@ module:
           - proto/dwtools/atop/will.test/asset/reflect-inherit/proto/some.test
           - >-
             proto/dwtools/atop/will.test/asset/reflect-inherit/proto/some.test/File2.js
+          - proto/dwtools/atop/will.test/asset/reflect-inherit-submodules
+          - >-
+            proto/dwtools/atop/will.test/asset/reflect-inherit-submodules/.will.yml
+          - proto/dwtools/atop/will.test/asset/reflect-inherit-submodules/module
+          - >-
+            proto/dwtools/atop/will.test/asset/reflect-inherit-submodules/module/submodule1.will.yml
+          - >-
+            proto/dwtools/atop/will.test/asset/reflect-inherit-submodules/module/submodule2.will.yml
+          - >-
+            proto/dwtools/atop/will.test/asset/reflect-inherit-submodules/module/proto
+          - >-
+            proto/dwtools/atop/will.test/asset/reflect-inherit-submodules/module/proto/File1.s
+          - >-
+            proto/dwtools/atop/will.test/asset/reflect-inherit-submodules/module/proto/File2.s
           - proto/dwtools/atop/will.test/asset/reflect-nothing-from-submodules
           - >-
             proto/dwtools/atop/will.test/asset/reflect-nothing-from-submodules/.ex.will.yml
