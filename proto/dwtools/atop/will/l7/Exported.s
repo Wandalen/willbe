@@ -136,9 +136,7 @@ function readExported()
   try
   {
 
-    debugger;
     opener2.moduleFind();
-    debugger;
     opener2.openedModule.willfilesReadTimeReported = 1;
     opener2.openedModule.stager.stageStatePausing( 'picked', 0 );
     opener2.openedModule.stager.stageStateSkipping( 'submodulesFormed', 1 );
@@ -194,8 +192,8 @@ function readExported()
   }
   catch( err )
   {
-    debugger;
-    _.errLogOnce( err );
+    // debugger;
+    // _.errLogOnce( err );
   }
 
 }
