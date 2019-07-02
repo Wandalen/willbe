@@ -7748,6 +7748,75 @@ function reflectInheritSubmodules( test )
 
 //
 
+function reflectInheritSubmodulesExportedWithReflector( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-inherit-submodules-export-reflector' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+  
+  /* 
+    Submodules are exported using reflector with basePath option
+    Reflecting submodules passing array of export reflectors as 'inherit' option.
+    Should copy files 'File1.s' and 'File2.s' into out/debug.
+    Should not create any other intermediate directories in out/debug.
+  */
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = 'setup'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.each module .export' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( routinePath );
+    test.identical( files, [ '.', './.will.yml', './submodule1.out.will.yml', './submodule2.out.will.yml', './module', './module/submodule1.will.yml', './module/submodule2.will.yml', './module/proto', './module/proto/File1.s', './module/proto/File2.s' ] );
+    return null;
+  })
+  
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = 'reflect submodules'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './File1.s', './File2.s' ] );
+    return null;
+  })
+
+  return ready;
+}
+
+//
+
 function reflectComplexInherit( test )
 {
   let self = this;
@@ -10214,6 +10283,7 @@ var Self =
     reflectSubmodulesWithPluralCriterionAutoExport,
     reflectInherit,
     reflectInheritSubmodules,
+    reflectInheritSubmodulesExportedWithReflector,
     // reflectComplexInherit, // xxx
     reflectorMasks,
 
