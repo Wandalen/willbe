@@ -1,0 +1,24 @@
+
+path :
+
+  proto : './proto'
+  in : '.'
+  out : 'out'
+  out.debug : './out/debug'
+  temp :
+    - 'out'
+    - 'path::out'
+
+reflector :
+
+  reflect.proto :
+    src : path::proto
+    dst : path::out
+
+build :
+
+  def :
+    criterion :
+      default : 1
+    steps :
+      - reflect.proto
