@@ -22,7 +22,7 @@ function onSuiteBegin()
   let self = this;
 
   self.tempDir = _.path.dirTempOpen( _.path.join( __dirname, '../..'  ), 'Will' );
-  self.assetDirPath = _.path.join( __dirname, 'asset' );
+  self.assetDirPath = _.path.join( __dirname, '-asset' );
   self.find = _.fileProvider.filesFinder
   ({
     recursive : 2,
@@ -38,7 +38,6 @@ function onSuiteBegin()
 function onSuiteEnd()
 {
   let self = this;
-  // debugger;
   _.assert( _.strHas( self.tempDir, '/dwtools/tmp.tmp' ) )
   _.fileProvider.filesDelete( self.tempDir );
 }
@@ -48,14 +47,13 @@ function onSuiteEnd()
 function preCloneRepos( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'repo' );
+  let originalDirPath = _.path.join( self.assetDirPath, '-repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
   let shell = _.sheller
   ({
-    // execPath : 'node ' + execPath,
     currentPath : originalDirPath,
     outputCollecting : 1,
     ready : ready,
@@ -6192,7 +6190,7 @@ function importLocalRepo( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'import-auto' );
-  let originalRepoPath = _.path.join( self.assetDirPath, 'repo' );
+  let originalRepoPath = _.path.join( self.assetDirPath, '-repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let repoPath = _.path.join( self.tempDir, 'repo' );
   let outPath = _.path.join( routinePath, 'out' );

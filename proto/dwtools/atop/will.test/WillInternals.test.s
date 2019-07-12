@@ -30,7 +30,7 @@ function onSuiteBegin()
   let self = this;
 
   self.tempDir = _.path.dirTempOpen( _.path.join( __dirname, '../..'  ), 'Will' );
-  self.assetDirPath = _.path.join( __dirname, 'asset' );
+  self.assetDirPath = _.path.join( __dirname, '-asset' );
   self.find = _.fileProvider.filesFinder
   ({
     recursive : 2,
@@ -2752,7 +2752,7 @@ pathsResolveImportIn.timeOut = 130000;
 function pathsResolveOfSubmodules( test )
 {
   let self = this;
-  let originalRepoPath = _.path.join( self.assetDirPath, 'repo' );
+  let originalRepoPath = _.path.join( self.assetDirPath, '-repo' );
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-local-repos' );
   let repoPath = _.path.join( self.tempDir, 'repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
@@ -2847,7 +2847,7 @@ function pathsResolveOfSubmodules( test )
 function pathsResolveOfSubmodulesAndOwn( test )
 {
   let self = this;
-  let originalRepoPath = _.path.join( self.assetDirPath, 'repo' );
+  let originalRepoPath = _.path.join( self.assetDirPath, '-repo' );
   let originalDirPath = _.path.join( self.assetDirPath, 'resolve-path-of-submodules' );
   let repoPath = _.path.join( self.tempDir, 'repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
@@ -4015,7 +4015,7 @@ function pathsResolveFailing( test )
 function submodulesResolve( test )
 {
   let self = this;
-  let originalRepoPath = _.path.join( self.assetDirPath, 'repo' );
+  let originalRepoPath = _.path.join( self.assetDirPath, '-repo' );
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-local-repos' );
   let repoPath = _.path.join( self.tempDir, 'repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
@@ -4122,7 +4122,7 @@ submodulesResolve.timeOut = 300000;
 function submodulesDeleteAndDownload( test )
 {
   let self = this;
-  let originalRepoPath = _.path.join( self.assetDirPath, 'repo' );
+  let originalRepoPath = _.path.join( self.assetDirPath, '-repo' );
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-del-download' );
   let repoPath = _.path.join( self.tempDir, 'repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
