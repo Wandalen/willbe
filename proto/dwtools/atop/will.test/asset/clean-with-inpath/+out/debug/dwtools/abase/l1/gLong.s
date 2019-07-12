@@ -2341,7 +2341,7 @@ arrayUnmask.defaults =
 
 //
 
-function arrayInvestigateUniqueMap( o )
+function longUniqueAre( o )
 {
 
   if( _.longIs( o ) )
@@ -2349,19 +2349,19 @@ function arrayInvestigateUniqueMap( o )
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.longIs( o.src ) );
-  _.assertMapHasOnly( o, arrayInvestigateUniqueMap.defaults );
+  _.assertMapHasOnly( o, longUniqueAre.defaults );
 
   /* */
 
-  if( o.onEvaluate )
-  {
-    o.src = _.entityMap( o.src, ( e ) => o.onEvaluate( e ) );
-  }
+  // if( o.onEvaluate )
+  // {
+  //   o.src = _.entityMap( o.src, ( e ) => o.onEvaluate( e ) );
+  // }
 
   /* */
 
   let number = o.src.length;
-  let isUnique = _.longMake( o.src );
+  let isUnique = [];
   let index;
 
   for( let i = 0 ; i < o.src.length ; i++ )
@@ -2369,24 +2369,31 @@ function arrayInvestigateUniqueMap( o )
 
   for( let i = 0 ; i < o.src.length ; i++ )
   {
-
     index = i;
 
     if( !isUnique[ i ] )
     continue;
 
     let currentUnique = 1;
+    index = _.arrayLeftIndex( o.src, o.src[ i ], index+1, o.onEvaluate );
+    if( index >= 0 )
     do
     {
-      index = o.src.indexOf( o.src[ i ], index+1 );
-      if( index !== -1 )
-      {
-        isUnique[ index ] = 0;
-        number -= 1;
-        currentUnique = 0;
-      }
+      isUnique[ index ] = 0;
+      number -= 1;
+      currentUnique = 0;
+      index = _.arrayLeftIndex( o.src, o.src[ i ], index+1, o.onEvaluate );
     }
-    while( index !== -1 );
+    while( index >= 0 );
+
+    // if( currentUnique && o.src2 )
+    // do
+    // {
+    //   index = o.src2.indexOf( o.src2[ i ], index+1 );
+    //   if( index !== -1 )
+    //   currentUnique = 0;
+    // }
+    // while( index !== -1 );
 
     if( !o.includeFirst )
     if( !currentUnique )
@@ -2397,42 +2404,123 @@ function arrayInvestigateUniqueMap( o )
 
   }
 
-  return { /*ttt*/number, array : isUnique };
+  return { number, is : isUnique };
 }
 
-arrayInvestigateUniqueMap.defaults =
+longUniqueAre.defaults =
 {
   src : null,
+  // src2 : null,
   onEvaluate : null,
   includeFirst : 0,
 }
 
 //
 
-function arrayUnique( src, onEvaluate )
+function longUnduplicate( dst, src, onEvaluate )
 {
 
-  _.assert( arguments.length === 1 || arguments.length === 2 );
-
-  let isUnique = _.arrayInvestigateUniqueMap
-  ({
-    /*ttt*/src,
-    /*ttt*/onEvaluate,
-    includeFirst : 1,
-  });
-
-  let result = _.longMake( src, isUnique.number );
-
-  let c = 0;
-  for( let i = 0 ; i < src.length ; i++ )
-  if( isUnique.array[ i ] )
+  if( _.routineIs( arguments[ 1 ] ) && arguments[ 2 ] === undefined )
   {
-    result[ c ] = src[ i ];
-    c += 1;
+    onEvaluate = arguments[ 1 ];
+    src = undefined;
   }
 
-  return result;
+  _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
+  _.assert( dst === null || _.arrayIs( dst ) );
+  _.assert( src === undefined || _.longIs( src ) );
+  _.assert( onEvaluate === undefined || _.routineIs( onEvaluate ) );
+
+  if( src && dst )
+  {
+    dst = _.arrayAppendArraysOnce( dst, src );
+    src = undefined;
+  }
+
+  if( src )
+  {
+    _.assert( dst === null );
+    let unique = _.longUniqueAre
+    ({
+      src,
+      onEvaluate : onEvaluate,
+      includeFirst : 1,
+    });
+
+    let result = _.longMake( src, unique.number );
+
+    let c = 0;
+    for( let i = 0 ; i < src.length ; i++ )
+    if( unique.is[ i ] )
+    {
+      result[ c ] = src[ i ];
+      c += 1;
+    }
+
+    return result;
+  }
+  else if( dst )
+  {
+    let unique = _.longUniqueAre
+    ({
+      src : dst,
+      onEvaluate : onEvaluate,
+      includeFirst : 1,
+    });
+
+    for( let i = dst.length-1 ; i >= 0 ; i-- )
+    if( !unique.is[ i ] )
+    {
+      dst.splice( i, 1 );
+    }
+
+    return dst;
+  }
+  else _.assert( 0 );
+
 }
+
+//
+// function longUnduplicate( dst, src, onEvaluate )
+// {
+//
+//   _.assert( arguments.length === 2 || arguments.length === 3 );
+//   _.assert( dst === null || _.arrayIs( dst ) );
+//   _.assert( src === null || _.longIs( src ) );
+//
+//   let dstUnique;
+//
+//   if( src && dst )
+//   {
+//     dst = _.arrayAppendArraysOnce( dst, src );
+//   }
+//
+//   x
+//
+//   let srcUnique = _.longUniqueAre
+//   ({
+//     src,
+//     onEvaluate,
+//     includeFirst : 1,
+//   });
+//
+//   let result = _.longMake( src, dstUnique.number + srcUnique.number );
+//
+//   let c = 0;
+//   for( let i = 0 ; i < src.length ; i++ )
+//   if( srcUnique.is[ i ] )
+//   {
+//     result[ c ] = src[ i ];
+//     c += 1;
+//   }
+//
+//   return result;
+// }
+
+/*
+
+*/
+
 
 //
 
@@ -3568,110 +3656,110 @@ let Routines =
 
   // buffer
 
-  /*ttt*/buffersTypedAreEquivalent,
-  /*ttt*/buffersTypedAreIdentical,
-  /*ttt*/buffersRawAreIdentical,
-  /*ttt*/buffersViewAreIdentical,
-  /*ttt*/buffersNodeAreIdentical,
-  /*ttt*/buffersAreEquivalent,
-  /*ttt*/buffersAreIdentical,
+  buffersTypedAreEquivalent,
+  buffersTypedAreIdentical,
+  buffersRawAreIdentical,
+  buffersViewAreIdentical,
+  buffersNodeAreIdentical,
+  buffersAreEquivalent,
+  buffersAreIdentical,
 
-  /*ttt*/bufferMakeSimilar,
-  /*ttt*/bufferButRange,
-  /*ttt*/bufferRelen,
-  /*ttt*/bufferResize,
-  /*ttt*/bufferBytesGet,
-  /*ttt*/bufferRetype,
+  bufferMakeSimilar,
+  bufferButRange,
+  bufferRelen,
+  bufferResize,
+  bufferBytesGet,
+  bufferRetype,
 
-  /*ttt*/bufferJoin,
+  bufferJoin,
 
-  /*ttt*/bufferMove,
-  /*ttt*/bufferToStr,
-  /*ttt*/bufferToDom,
+  bufferMove,
+  bufferToStr,
+  bufferToDom,
 
-  /*ttt*/bufferLeft,
-  /*ttt*/bufferSplit,
-  /*ttt*/bufferCutOffLeft,
+  bufferLeft,
+  bufferSplit,
+  bufferCutOffLeft,
 
-  /*ttt*/bufferFromArrayOfArray,
-  /*ttt*/bufferFrom,
-  /*ttt*/bufferRawFromTyped,
-  /*ttt*/bufferRawFrom,
-  /*ttt*/bufferBytesFrom,
-  /*ttt*/bufferBytesFromNode,
-  /*ttt*/bufferNodeFrom,
+  bufferFromArrayOfArray,
+  bufferFrom,
+  bufferRawFromTyped,
+  bufferRawFrom,
+  bufferBytesFrom,
+  bufferBytesFromNode,
+  bufferNodeFrom,
 
-  /*ttt*/buffersSerialize, /* deprecated */
-  /*ttt*/buffersDeserialize, /* deprecated */
+  buffersSerialize, /* deprecated */
+  buffersDeserialize, /* deprecated */
 
   // array maker
 
-  /*ttt*/arrayMakeRandom,
-  // /*ttt*/scalarToVector,
-  /*ttt*/arrayFromCoercing,
-  // /*ttt*/arrayAs,
+  arrayMakeRandom,
+  // scalarToVector,
+  arrayFromCoercing,
+  // arrayAs,
 
-  /*ttt*/arrayFromRange,
-  /*ttt*/arrayFromProgressionArithmetic,
-  /*ttt*/arrayFromRangeWithStep,
-  /*ttt*/arrayFromRangeWithNumberOfSteps,
+  arrayFromRange,
+  arrayFromProgressionArithmetic,
+  arrayFromRangeWithStep,
+  arrayFromRangeWithNumberOfSteps,
 
   // array converter
 
-  /*ttt*/arrayToMap, /* dubious */
-  /*ttt*/arrayToStr, /* dubious */
+  arrayToMap, /* dubious */
+  arrayToStr, /* dubious */
 
   // array transformer
 
-  /*ttt*/arraySub,
-  /*ttt*/arrayButRange,
+  arraySub,
+  arrayButRange,
 
-  /*ttt*/arraySlice,
-  /*ttt*/arrayGrow,
-  /*ttt*/arrayResize,
-  /*ttt*/arrayMultislice,
-  /*ttt*/arrayDuplicate,
+  arraySlice,
+  arrayGrow,
+  arrayResize,
+  arrayMultislice,
+  arrayDuplicate,
 
-  /*ttt*/arrayMask, /* dubious */
-  /*ttt*/arrayUnmask, /* dubious */
+  arrayMask, /* dubious */
+  arrayUnmask, /* dubious */
 
-  /*ttt*/arrayInvestigateUniqueMap,  /* dubious */
-  /*ttt*/arrayUnique,  /* dubious */
-  /*ttt*/arraySelect,
+  longUniqueAre,
+  longUnduplicate,
+  arraySelect,
 
   // array mutator
 
-  /*ttt*/arraySet,
-  /*ttt*/arraySwap,
+  arraySet,
+  arraySwap,
 
-  /*ttt*/arrayCutin,
-  /*ttt*/arrayPut,
-  /*ttt*/arrayFillTimes,
-  /*ttt*/arrayFillWhole,
+  arrayCutin,
+  arrayPut,
+  arrayFillTimes,
+  arrayFillWhole,
 
-  /*ttt*/arraySupplement, /* experimental */
-  /*ttt*/arrayExtendScreening, /* experimental */
+  arraySupplement, /* experimental */
+  arrayExtendScreening, /* experimental */
 
-  /*ttt*/arrayShuffle,
-  /*ttt*/arraySort,
+  arrayShuffle,
+  arraySort,
 
   // array etc
 
-  /*ttt*/arrayIndicesOfGreatest, /* dubious */
-  /*ttt*/arraySum, /* dubious */
+  arrayIndicesOfGreatest, /* dubious */
+  arraySum, /* dubious */
 
   // array set
 
-  /*ttt*/arraySetDiff,
+  arraySetDiff,
 
-  /*ttt*/arraySetBut,
-  /*ttt*/arraySetIntersection,
-  /*ttt*/arraySetUnion,
+  arraySetBut,
+  arraySetIntersection,
+  arraySetUnion,
 
-  /*ttt*/arraySetContainAll,
-  /*ttt*/arraySetContainAny,
-  /*ttt*/arraySetContainNone,
-  /*ttt*/arraySetIdentical,
+  arraySetContainAll,
+  arraySetContainAny,
+  arraySetContainNone,
+  arraySetIdentical,
 
 }
 

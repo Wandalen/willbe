@@ -267,8 +267,6 @@ function moduleMake( o )
     o.module = will.OpenerModule({ will : will, willfilesPath : o.willfilesPath }).preform();
   }
 
-  // _.assert( o.module.willfilesPath === o.willfilesPath || o.module.willfilesPath === o.dirPath );
-
   o.module.moduleFind();
   o.module.openedModule.stager.stageStatePausing( 'picked', 0 );
   o.module.openedModule.stager.stageStateSkipping( 'resourcesFormed', !o.forming );
@@ -324,7 +322,7 @@ function moduleEachAt( o )
         let module = it1.currentModule;
 
         let it2 = Object.create( null );
-        it2.currentModule = module.openerMake(); // xxx
+        it2.currentModule = module.openerMake(); // zzz
 
         if( _.arrayIs( it1.dst ) || _.strIs( it1.dst ) )
         it2.currentPath = it1.dst;
@@ -379,9 +377,9 @@ function moduleEachAt( o )
       }
 
       let module = will.OpenerModule({ will : will, willfilesPath : file.absolute }).preform();
-      debugger;
+      // debugger;
       module.moduleFind();
-      debugger;
+      // debugger;
 
       let it = Object.create( null );
       it.currentModule = module;
@@ -389,7 +387,7 @@ function moduleEachAt( o )
 
       module.openedModule.stager.stageConsequence( 'preformed' ).then( ( arg ) =>
       {
-        debugger;
+        // debugger;
         if( o.onBegin )
         return o.onBegin( it );
         return arg;
@@ -401,7 +399,7 @@ function moduleEachAt( o )
 
       return module.openedModule.ready.split().keep( function( arg )
       {
-        debugger;
+        // debugger;
         _.assert( module.willfilesArray.length > 0 );
         if( module.willfilesPath )
         _.mapSet( filesMap, module.willfilesPath, true );
@@ -433,7 +431,6 @@ function moduleEachAt( o )
 
   con.finally( ( err, arg ) =>
   {
-    debugger;
     if( err )
     {
       errs.forEach( ( err, index ) => _.errAttend( err ) );
@@ -559,7 +556,11 @@ function modulePathRegister( openedModule )
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( openedModule.commonPath ) );
 
-  _.assert( will.moduleWithPathMap[ openedModule.commonPath ] === openedModule || will.moduleWithPathMap[ openedModule.commonPath ] === undefined );
+  _.assert
+  (
+    will.moduleWithPathMap[ openedModule.commonPath ] === openedModule || will.moduleWithPathMap[ openedModule.commonPath ] === undefined,
+    () => 'Different instance of ' + openedModule.constructor.name + ' is registered at ' + openedModule.commonPath
+  );
   will.moduleWithPathMap[ openedModule.commonPath ] = openedModule;
   _.assert( _.arrayCountElement( _.mapVals( will.moduleWithPathMap ), openedModule ) === 1 );
 

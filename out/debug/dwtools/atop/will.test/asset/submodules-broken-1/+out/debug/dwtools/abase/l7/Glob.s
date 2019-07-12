@@ -932,10 +932,10 @@ function pathsRelateForGlob( filePath, oldPath, newPath )
 // --
 
 /*
-qqq : add support of hashes for pathMapExtend, extend tests
+qqq : add support of hashes for mapExtend, extend tests
 */
 
-function pathMapExtend( dstPathMap, srcPathMap, dstPath )
+function mapExtend( dstPathMap, srcPathMap, dstPath )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3 );
@@ -1031,14 +1031,14 @@ function pathMapExtend( dstPathMap, srcPathMap, dstPath )
       // // if( dstPathMap[ g ] === undefined || dstPathMap[ g ] === null )
       // val = dstPath;
 
-      this.pathMapExtend( dstPathMap, g, val );
+      this.mapExtend( dstPathMap, g, val );
     }
   }
   else if( _.arrayLike( srcPathMap ) )
   {
     for( let g = 0 ; g < srcPathMap.length ; g++ )
     {
-      this.pathMapExtend( dstPathMap, srcPathMap[ g ], dstPath );
+      this.mapExtend( dstPathMap, srcPathMap[ g ], dstPath );
     }
   }
   else _.assert( 0, 'Expects srcPathMap' );
@@ -1065,21 +1065,21 @@ function pathMapPairSrcAndDst( srcFilePath, dstFilePath )
     dstVerify();
 
     if( _.mapIs( dstFilePath ) )
-    srcFilePath = dstFilePath = path.pathMapExtend( null, _.mapExtend( null, srcFilePath, dstFilePath ), null );
+    srcFilePath = dstFilePath = path.mapExtend( null, _.mapExtend( null, srcFilePath, dstFilePath ), null );
     else
-    srcFilePath = dstFilePath = path.pathMapExtend( null, srcFilePath, dstFilePath );
+    srcFilePath = dstFilePath = path.mapExtend( null, srcFilePath, dstFilePath );
 
   }
   else if( srcFilePath )
   {
-    srcFilePath = dstFilePath = path.pathMapExtend( null, srcFilePath, null );
+    srcFilePath = dstFilePath = path.mapExtend( null, srcFilePath, null );
   }
   else if( dstFilePath )
   {
     if( _.mapIs( dstFilePath ) )
-    srcFilePath = dstFilePath = path.pathMapExtend( null, dstFilePath, null );
+    srcFilePath = dstFilePath = path.mapExtend( null, dstFilePath, null );
     else
-    srcFilePath = dstFilePath = path.pathMapExtend( null, '', dstFilePath );
+    srcFilePath = dstFilePath = path.mapExtend( null, '', dstFilePath );
   }
 
   return srcFilePath;
@@ -1091,7 +1091,7 @@ function pathMapPairSrcAndDst( srcFilePath, dstFilePath )
     if( dstFilePath && srcFilePath && Config.debug )
     {
       let srcPath1 = path.pathMapSrcFromSrc( srcFilePath );
-      let srcPath2 = path.pathMapSrcFromDst( dstFilePath );
+      let srcPath2 = path.mapSrcFromDst( dstFilePath );
       _.assert( srcPath1.length === 0 || srcPath2.length === 0 || _.arraySetIdentical( srcPath1, srcPath2 ), () => 'Source paths are inconsistent ' + _.toStr( srcPath1 ) + ' ' + _.toStr( srcPath2 ) );
     }
   }
@@ -1102,7 +1102,7 @@ function pathMapPairSrcAndDst( srcFilePath, dstFilePath )
   {
     if( dstFilePath && srcFilePath && Config.debug )
     {
-      let dstPath1 = path.pathMapDstFromSrc( srcFilePath ).filter( ( e ) => !_.boolLike( e ) && e !== null );
+      let dstPath1 = path.mapDstFromSrc( srcFilePath ).filter( ( e ) => !_.boolLike( e ) && e !== null );
       let dstPath2 = path.pathMapDstFromDst( dstFilePath ).filter( ( e ) => !_.boolLike( e ) && e !== null );
       _.assert( dstPath1.length === 0 || dstPath2.length === 0 || _.arraySetIdentical( dstPath1, dstPath2 ), () => 'Destination paths are inconsistent ' + _.toStr( dstPath1 ) + ' ' + _.toStr( dstPath2 ) );
     }
@@ -1116,7 +1116,7 @@ function pathMapPairSrcAndDst( srcFilePath, dstFilePath )
 qqq : make pathMap*From* optimal and add tests
 */
 
-function pathMapDstFromSrc( pathMap )
+function mapDstFromSrc( pathMap )
 {
   _.assert( arguments.length === 1 );
 
@@ -1169,14 +1169,14 @@ function pathMapSrcFromSrc( pathMap )
   if( !_.mapIs( pathMap ) )
   return _.arrayAs( pathMap );
 
-  pathMap = this.pathMapExtend( null, pathMap );
+  pathMap = this.mapExtend( null, pathMap );
 
   return _.mapKeys( pathMap )
 }
 
 //
 
-function pathMapSrcFromDst( pathMap )
+function mapSrcFromDst( pathMap )
 {
   _.assert( arguments.length === 1 );
 
@@ -1188,7 +1188,7 @@ function pathMapSrcFromDst( pathMap )
 
 //
 
-function pathMapGroupByDst( pathMap )
+function mapGroupByDst( pathMap )
 {
   let path = this;
   let result = Object.create( null );
@@ -1571,8 +1571,8 @@ function areBasePathsEquivalent( basePath1, basePath2 )
 {
   let path = this;
 
-  let filePath1 = path.pathMapSrcFromDst( basePath1 );
-  let filePath2 = path.pathMapSrcFromDst( basePath2 );
+  let filePath1 = path.mapSrcFromDst( basePath1 );
+  let filePath2 = path.mapSrcFromDst( basePath2 );
 
   basePath1 = path.pathMapDstFromDst( basePath1 );
   basePath2 = path.pathMapDstFromDst( basePath2 );
@@ -1640,14 +1640,14 @@ let Routines =
 
   // path map
 
-  pathMapExtend,
+  mapExtend,
   pathMapPairSrcAndDst,
 
-  pathMapDstFromSrc,
+  mapDstFromSrc,
   pathMapDstFromDst,
   pathMapSrcFromSrc,
-  pathMapSrcFromDst,
-  pathMapGroupByDst,
+  mapSrcFromDst,
+  mapGroupByDst,
   pathMapToRegexps,
   areBasePathsEquivalent,
 

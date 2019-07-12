@@ -339,11 +339,22 @@ function transpile( test )
     _.fileProvider.isTerminal( _.path.join( outPath, 'compiled.debug/Main.s' ) );
     _.fileProvider.isTerminal( _.path.join( outPath, 'tests.compiled.debug/Tests.s' ) );
 
-    let read = _.fileProvider.fileRead( _.path.join( outPath, 'compiled.debug/Main.s' ) );
+    var read = _.fileProvider.fileRead( _.path.join( outPath, 'compiled.debug/Main.s' ) );
+    test.is( !_.strHas( read, 'dir2/-Ecluded.js' ) );
     test.is( _.strHas( read, 'dir2/File.js' ) );
+    test.is( !_.strHas( read, 'dir2/File.test.js' ) );
     test.is( _.strHas( read, 'dir2/File1.debug.js' ) );
     test.is( !_.strHas( read, 'dir2/File1.release.js' ) );
     test.is( _.strHas( read, 'dir2/File2.debug.js' ) );
+    test.is( !_.strHas( read, 'dir2/File2.release.js' ) );
+
+    var read = _.fileProvider.fileRead( _.path.join( outPath, 'tests.compiled.debug/Tests.s' ) );
+    test.is( !_.strHas( read, 'dir2/-Ecluded.js' ) );
+    test.is( !_.strHas( read, 'dir2/File.js' ) );
+    test.is( _.strHas( read, 'dir2/File.test.js' ) );
+    test.is( !_.strHas( read, 'dir2/File1.debug.js' ) );
+    test.is( !_.strHas( read, 'dir2/File1.release.js' ) );
+    test.is( !_.strHas( read, 'dir2/File2.debug.js' ) );
     test.is( !_.strHas( read, 'dir2/File2.release.js' ) );
 
     return null;
@@ -386,7 +397,7 @@ function transpile( test )
     _.fileProvider.isTerminal( _.path.join( outPath, './release/Main.s' ) );
     _.fileProvider.isTerminal( _.path.join( outPath, './tests.compiled.release/Tests.s' ) );
 
-    let read = _.fileProvider.fileRead( _.path.join( outPath, './release/Main.s' ) );
+    var read = _.fileProvider.fileRead( _.path.join( outPath, './release/Main.s' ) );
     test.is( _.strHas( read, 'dir2/File.js' ) );
     test.is( !_.strHas( read, 'dir2/File1.debug.js' ) );
     test.is( _.strHas( read, 'dir2/File1.release.js' ) );
@@ -4004,14 +4015,9 @@ function exportSingle( test )
     var outfile = _.fileProvider.fileConfigRead( outWillPath );
 
     let reflector = outfile.reflector[ 'exported.files.proto.export' ];
-    let expectedFilePath =
-    {
-      '.' : null,
-      'Single.s' : null
-    }
     test.identical( reflector.src.basePath, '.' );
     test.identical( reflector.src.prefixPath, 'path::exported.dir.proto.export' );
-    test.identical( reflector.src.filePath, 'path::exported.files.proto.export' );
+    test.identical( reflector.src.filePath, { 'path::exported.files.proto.export' : null } );
 
     return null;
   })
@@ -4053,7 +4059,7 @@ function exportSingle( test )
     }
     test.identical( reflector.src.basePath, '.' );
     test.identical( reflector.src.prefixPath, 'path::exported.dir.proto.export' );
-    test.identical( reflector.src.filePath, 'path::exported.files.proto.export' );
+    test.identical( reflector.src.filePath, { 'path::exported.files.proto.export' : null } );
 
     return null;
   })
@@ -4520,8 +4526,8 @@ function exportMixed( test )
     {
       'download' :
       {
-        'src' : { 'filePath' : 'path::remote' },
-        'dst' : { 'filePath' : 'path::local' },
+        'src' : { 'prefixPath' : 'path::remote', 'filePath' : { '.' : '.' } },
+        'dst' : { 'prefixPath' : 'path::local' },
         'mandatory' : 1,
       },
       'exported.export' :
@@ -4531,18 +4537,19 @@ function exportMixed( test )
           'filePath' : { '.' : null },
           'prefixPath' : '../.module/Proto/proto'
         },
-        'criterion' : { 'default' : 1, 'export' : 1 },
+        'criterion' : { 'export' : 1, 'default' : 1 },
         'mandatory' : 1,
       },
       'exported.files.export' :
       {
         'recursive' : 0,
         'mandatory' : 1,
-        'src' : { 'filePath' : 'path::exported.files.export', 'basePath' : '.', 'prefixPath' : 'path::exported.dir.export' },
+        'src' : { 'filePath' : { 'path::exported.files.export' : null }, 'basePath' : '.', 'prefixPath' : 'path::exported.dir.export' },
         'criterion' : { 'default' : 1, 'export' : 1 }
       }
     }
     test.identical( outfile.reflector, expected );
+    test.identical( outfile.reflector[ 'exported.files.export' ], expected[ 'exported.files.export' ] );
 
     var expected =
     {
@@ -4688,7 +4695,7 @@ function exportMixed( test )
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/UriFundamentals.informal.out.will.yml' ) ) );
 
     var files = self.find( _.path.join( routinePath, 'module' ) );
-    test.identical( files, [ '.', './Proto.informal.will.yml', './UriFundamentals.informal.will.yml' ] );
+    test.identical( files, [ '.', './Proto.informal.will.yml', './UriFundamentals.informal.will.yml' ] ); debugger;
     var files = self.find( _.path.join( routinePath, 'out' ) );
     test.gt( files.length, 80 );
 
@@ -4783,17 +4790,13 @@ function exportSecond( test )
       },
       "exported.proto.export" :
       {
-        "src" :
-        {
-          "filePath" : { "." : null },
-          "prefixPath" : "../proto"
-        },
+        'src' : { 'prefixPath' : '../proto' },
         "criterion" : { "proto" : 1, "export" : 1 },
         "mandatory" : 1
       },
       "exported.files.proto.export" :
       {
-        "src" : { "filePath" : "path::exported.files.proto.export", "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export" },
+        "src" : { "filePath" : { 'path::exported.files.proto.export' : null }, "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export" },
         "criterion" : { "proto" : 1, "export" : 1 },
         "recursive" : 0,
         "mandatory" : 1
@@ -4810,7 +4813,7 @@ function exportSecond( test )
       },
       "exported.files.doc.export" :
       {
-        "src" : { "filePath" : "path::exported.files.doc.export", "basePath" : ".", "prefixPath" : "path::exported.dir.doc.export" },
+        "src" : { "filePath" : { 'path::exported.files.doc.export' : null }, "basePath" : ".", "prefixPath" : "path::exported.dir.doc.export" },
         "criterion" : { "doc" : 1, "export" : 1 },
         "recursive" : 0,
         "mandatory" : 1
@@ -4970,7 +4973,7 @@ function exportSecond( test )
       },
       "exported.files.proto.export" :
       {
-        "src" : { "filePath" : "path::exported.files.proto.export", "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export" },
+        "src" : { "filePath" : { 'path::exported.files.proto.export' : null }, "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export" },
         "criterion" : { "proto" : 1, "export" : 1 },
         "recursive" : 0,
         "mandatory" : 1
@@ -4987,7 +4990,7 @@ function exportSecond( test )
       },
       "exported.files.doc.export" :
       {
-        "src" : { "filePath" : "path::exported.files.doc.export", "basePath" : ".", "prefixPath" : "path::exported.dir.doc.export" },
+        "src" : { "filePath" : { 'path::exported.files.doc.export' : null }, "basePath" : ".", "prefixPath" : "path::exported.dir.doc.export" },
         "criterion" : { "doc" : 1, "export" : 1 },
         "recursive" : 0,
         "mandatory" : 1
@@ -5255,7 +5258,7 @@ function exportMultiple( test )
       mandatory : 1,
       src :
       {
-        filePath : 'path::exported.files.export.debug',
+        filePath : { 'path::exported.files.export.debug' : null },
         basePath : '.',
         prefixPath : 'path::exported.dir.export.debug',
       },
@@ -5413,7 +5416,6 @@ function exportMultiple( test )
         exportedDirPath : 'path::exported.dir.export.debug',
         exportedFilesPath : 'path::exported.files.export.debug',
         archiveFilePath : 'path::archiveFile.export.debug',
-        // originalWillFilesPath : 'path::module.original.willfiles',
       },
       'export.' :
       {
@@ -5430,7 +5432,6 @@ function exportMultiple( test )
         exportedDirPath : 'path::exported.dir.export.',
         exportedFilesPath : 'path::exported.files.export.',
         archiveFilePath : 'path::archiveFile.export.',
-        // originalWillFilesPath : 'path::module.original.willfiles',
       },
     }
     test.identical( outfile.exported, exported );
@@ -5440,7 +5441,7 @@ function exportMultiple( test )
       'mandatory' : 1,
       'src' :
       {
-        'filePath' : { '.' : null },
+        // 'filePath' : { '.' : null },
         'prefixPath' : 'debug',
       },
       criterion :
@@ -5479,7 +5480,7 @@ function exportMultiple( test )
       mandatory : 1,
       src :
       {
-        filePath : 'path::exported.files.export.debug',
+        filePath : { 'path::exported.files.export.debug' : null },
         basePath : '.',
         prefixPath : 'path::exported.dir.export.debug',
       },
@@ -5500,7 +5501,7 @@ function exportMultiple( test )
       mandatory : 1,
       src :
       {
-        filePath : 'path::exported.files.export.',
+        filePath : { 'path::exported.files.export.' : null },
         basePath : '.',
         prefixPath : 'path::exported.dir.export.'
       },
@@ -5933,7 +5934,7 @@ function exportBroken( test )
       mandatory : 1,
       src :
       {
-        filePath : 'path::exported.files.export.debug',
+        filePath : { 'path::exported.files.export.debug' : null },
         basePath : '.',
         prefixPath : 'path::exported.dir.export.debug',
       },
@@ -6068,6 +6069,65 @@ exportImport.timeOut = 200000;
 
 //
 
+function exportBrokenNoreflector( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-broken-noreflector' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  ready
+
+  .thenKeep( () =>
+  {
+    test.case = '.with submodule .reflectors.list predefined:0'
+    return null;
+  })
+
+  shell({ args : [ '.with submodule .reflectors.list predefined:0' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'module::submodule / reflector::' ), 2 );
+    test.identical( _.strCount( got.output, 'module::submodule / reflector::reflect.proto' ), 1 );
+    test.identical( _.strCount( got.output, 'module::submodule / reflector::exported.files.export' ), 1 );
+    return null;
+  })
+
+  shell({ args : [ '.with module/submodule .export' ] })
+  shell({ args : [ '.with submodule .reflectors.list predefined:0' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'module::submodule / reflector::' ), 3 );
+    test.identical( _.strCount( got.output, 'module::submodule / reflector::reflect.proto' ), 1 );
+    test.identical( _.strCount( got.output, 'module::submodule / reflector::exported.export' ), 1 );
+    test.identical( _.strCount( got.output, 'module::submodule / reflector::exported.files.export' ), 1 );
+    return null;
+  })
+
+  return ready;
+}
+
+//
+
 /*
 Import out file with non-importable path local.
 Test importing of non-valid out files.
@@ -6181,9 +6241,9 @@ function importLocalRepo( test )
     {
       'download' :
       {
-        'src' : { 'filePath' : 'path::remote' },
-        'dst' : { 'filePath' : 'path::local' },
-        'mandatory' : 1
+        'src' : { 'filePath' : { '.' : '.' }, 'prefixPath' : 'path::remote' },
+        'dst' : { 'prefixPath' : 'path::local' },
+        'mandatory' : 1,
       },
       'exported.export' :
       {
@@ -6197,7 +6257,7 @@ function importLocalRepo( test )
       },
       'exported.files.export' :
       {
-        'src' : { 'filePath' : 'path::exported.files.export', 'basePath' : '.', 'prefixPath' : 'path::exported.dir.export' },
+        'src' : { 'filePath' : { 'path::exported.files.export' : null }, 'basePath' : '.', 'prefixPath' : 'path::exported.dir.export' },
         'criterion' : { 'default' : 1, 'export' : 1 },
         'recursive' : 0,
         'mandatory' : 1
@@ -6310,7 +6370,7 @@ function importOutWithDeletedSource( test )
   ready
   .thenKeep( ( got ) =>
   {
-    test.case = '.with module/Proto .export';
+    test.case = 'export first';
 
     _.fileProvider.filesDelete( routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -6427,7 +6487,7 @@ function reflectNothingFromSubmodules( test )
     }
     test.identical( reflector.src.basePath, '.' );
     test.identical( reflector.src.prefixPath, 'path::exported.dir.proto.export' );
-    test.identical( reflector.src.filePath, 'path::exported.files.proto.export' );
+    test.identical( reflector.src.filePath, { 'path::exported.files.proto.export' : null } );
 
     var expectedReflector =
     {
@@ -6472,7 +6532,7 @@ function reflectNothingFromSubmodules( test )
       },
       "exported.files.proto.export" :
       {
-        "src" : { "filePath" : "path::exported.files.proto.export", "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export" },
+        "src" : { "filePath" : { 'path::exported.files.proto.export' : null }, "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export" },
         "criterion" : { "default" : 1, "export" : 1 },
         "recursive" : 0,
         "mandatory" : 1
@@ -7587,19 +7647,19 @@ function reflectInherit( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
 
   /* - */
 
   ready
   .thenKeep( () =>
   {
-    test.case = '.build debug1'
+    test.case = '.build reflect.proto1'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  shell({ args : [ '.build debug1' ] })
+  shell({ args : [ '.build reflect.proto1' ] })
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7615,12 +7675,12 @@ function reflectInherit( test )
   ready
   .thenKeep( () =>
   {
-    test.case = '.build debug2'
+    test.case = '.build reflect.proto2'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  shell({ args : [ '.build debug2' ] })
+  shell({ args : [ '.build reflect.proto2' ] })
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7636,12 +7696,62 @@ function reflectInherit( test )
   ready
   .thenKeep( () =>
   {
-    test.case = '.build debug3'
+    test.case = '.build reflect.proto3'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  shell({ args : [ '.build debug3' ] })
+  shell({ args : [ '.build reflect.proto3' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /\+ .*reflector::reflect.proto3.* reflected 6 files/ ) );
+    // test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
+    test.is( _.strHas( got.output, /.*out\/debug1.* <- .*proto.*/ ) );
+    var files = self.find( outPath );
+    // test.identical( files, [ '.', './debug2', './debug2/File.js', './debug2/File.s', './debug2/File.test.js', './debug2/some.test', './debug2/some.test/File2.js' ] );
+    test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.s', './debug1/File.test.js', './debug1/some.test', './debug1/some.test/File2.js' ] );
+    return null;
+  })
+
+  /*
+    not clear
+    should out/debug2 be output dir
+    or out/debug1
+  */
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build reflect.proto4'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build reflect.proto4' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /\+ .*reflector::reflect.proto4.* reflected 6 files/ ) );
+    test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './debug2', './debug2/File.js', './debug2/File.s', './debug2/File.test.js', './debug2/some.test', './debug2/some.test/File2.js' ] );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build not1'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build not1' ] })
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7657,19 +7767,64 @@ function reflectInherit( test )
   ready
   .thenKeep( () =>
   {
-    test.case = '.build debug3'
+    test.case = '.build reflect.files1'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  shell({ args : [ '.build debug3' ] })
+  shell({ args : [ '.build reflect.files1' ] })
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /\+ .*reflector::reflect\.not\.test\.only\.js\.v1.* reflected 6 files/ ) );
     test.is( _.strHas( got.output, /.*out.* <- .*proto.*/ ) );
     var files = self.find( outPath );
-    test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.s', './debug2', './debug2/File.js', './debug2/File.s' ] );
+    test.identical( files, [ 'xxx' ] );
+    // test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.s', './debug2', './debug2/File.js', './debug2/File.s' ] );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build reflect.files2'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build reflect.files2' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /\+ .*reflector::reflect\.not\.test\.only\.js\.v1.* reflected 6 files/ ) );
+    test.is( _.strHas( got.output, /.*out.* <- .*proto.*/ ) );
+    var files = self.find( outPath );
+    test.identical( files, [ 'xxx' ] );
+    // test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.s', './debug2', './debug2/File.js', './debug2/File.s' ] );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.build reflect.files3'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build reflect.files3' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /\+ .*reflector::reflect\.not\.test\.only\.js\.v1.* reflected 6 files/ ) );
+    test.is( _.strHas( got.output, /.*out.* <- .*proto.*/ ) );
+    var files = self.find( outPath );
+    test.identical( files, [ 'xxx' ] );
+    // test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.s', './debug2', './debug2/File.js', './debug2/File.s' ] );
     return null;
   })
 
@@ -7680,6 +7835,12 @@ function reflectInherit( test )
 
 //
 
+/*
+  Check reflector inheritance from multiple ancestors.
+  Check exporting single file with custom base.
+  Check importing single file with custom base.
+*/
+
 function reflectInheritSubmodules( test )
 {
   let self = this;
@@ -7688,12 +7849,6 @@ function reflectInheritSubmodules( test )
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
-
-  /*
-    Reflecting submodules passing array of export reflectors as 'inherit' option.
-    Should copy files 'File1.s' and 'File2.s' into out/debug.
-    Should not create any other intermediate directories in out/debug.
-  */
 
   let shell = _.sheller
   ({
@@ -7720,7 +7875,7 @@ function reflectInheritSubmodules( test )
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( routinePath );
-    test.identical( files, [ '.', './.will.yml', './submodule1.out.will.yml', './submodule2.out.will.yml', './module', './module/submodule1.will.yml', './module/submodule2.will.yml', './module/proto', './module/proto/File1.s', './module/proto/File2.s' ] );
+    test.identical( files, [ '.', './a.will.yml', './b.will.yml', './c.will.yml', './submodule1.out.will.yml', './submodule2.out.will.yml', './submodule3.out.will.yml', './submodule4.out.will.yml', './module', './module/submodule1.will.yml', './module/submodule2.will.yml', './module/submodule3.will.yml', './module/submodule4.will.yml', './module/proto', './module/proto/File1.s', './module/proto/File2.s', './module/proto1', './module/proto1/File1.s', './module/proto2', './module/proto2/File2.s' ] );
     return null;
   })
 
@@ -7729,17 +7884,57 @@ function reflectInheritSubmodules( test )
   ready
   .thenKeep( () =>
   {
-    test.case = 'reflect submodules'
+    test.case = '.with a .build'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  shell({ args : [ '.build' ] })
+  shell({ args : [ '.with a .build' ] })
   .thenKeep( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
-    test.identical( files, [ '.', './File1.s', './File2.s' ] );
+    test.identical( files, [ '.', './debug' ] );
+    var read = _.fileProvider.fileRead( _.path.join( outPath, 'debug' ) );
+    test.equivalent( read, 'console.log( \'File2.s\' );' );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.with b .build'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.with b .build' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './debug', './debug/f1', './debug/f2' ] );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .thenKeep( () =>
+  {
+    test.case = '.with c .build'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.with c .build' ] })
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './debug', './debug/File1.s', './debug/File2.s' ] );
     return null;
   })
 
@@ -8739,7 +8934,7 @@ function submodulesUpdate( test )
   .thenKeep( () =>
   {
     test.case = '.submodules.update -- after patch';
-    let read = _.fileProvider.fileRead( _.path.join( routinePath, '.im.will.yml' ) );
+    var read = _.fileProvider.fileRead( _.path.join( routinePath, '.im.will.yml' ) );
     read = _.strReplace( read, 'fc457abd063cb49edc857e46b74b4769da7124e3', 'master' )
     _.fileProvider.fileWrite( _.path.join( routinePath, '.im.will.yml' ), read );
     return null;
@@ -10198,6 +10393,7 @@ var Self =
     exportBroken,
     exportDoc,
     exportImport,
+    exportBrokenNoreflector,
     importPathLocal,
     importLocalRepo,
     importOutWithDeletedSource,

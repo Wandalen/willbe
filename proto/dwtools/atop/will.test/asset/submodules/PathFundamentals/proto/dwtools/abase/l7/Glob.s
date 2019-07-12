@@ -342,361 +342,6 @@ globFilterKeys.defaults.onEvaluate = function byKey( e, k, src )
   return _.arrayIs( src ) ? e : k;
 }
 
-// //
-//
-// /**
-//  * Turn a *-wildcard style _glob into a regular expression
-//  * @example
-//  * let _glob = '* /www/*.js';
-//  * wTools.globRegexpsForTerminalSimple( _glob );
-//  * // /^.\/[^\/]*\/www\/[^\/]*\.js$/m
-//  * @param {String} _glob *-wildcard style _glob
-//  * @returns {RegExp} RegExp that represent passed _glob
-//  * @throw {Error} If missed argument, or got more than one argumet
-//  * @throw {Error} If _glob is not string
-//  * @function globRegexpsForTerminalSimple
-//  * @memberof wTools.module:Tools/base/Path
-//  */
-//
-// function globRegexpsForTerminalSimple( _glob )
-// {
-//
-//   function strForGlob( _glob )
-//   {
-//
-//     let result = '';
-//     _.assert( arguments.length === 1, 'Expects single argument' );
-//     _.assert( _.strIs( _glob ), 'Expects string {-glob-}' );
-//
-//     let w = 0;
-//     _glob.replace( /(\*\*[\/\\]?)|\?|\*/g, function( matched,a,offset,str )
-//     {
-//
-//       result += _.regexpEscape( _glob.substr( w,offset-w ) );
-//       w = offset + matched.length;
-//
-//       if( matched === '?' )
-//       result += '.';
-//       else if( matched === '*' )
-//       result += '[^\\\/]*';
-//       else if( matched.substr( 0,2 ) === '**' )
-//       result += '.*';
-//       else _.assert( 0,'unexpected' );
-//
-//     });
-//
-//     result += _.regexpEscape( _glob.substr( w,_glob.length-w ) );
-//     if( result[ 0 ] !== '^' )
-//     {
-//       result = _.strPrependOnce( result,'./' );
-//       result = _.strPrependOnce( result,'^' );
-//     }
-//     result = _.strAppendOnce( result,'$' );
-//
-//     return result;
-//   }
-//
-//   _.assert( arguments.length === 1, 'Expects single argument' );
-//   _.assert( _.strIs( _glob ) || _.strsAreAll( _glob ) );
-//
-//   if( _.strIs( _glob ) )
-//   _glob = [ _glob ];
-//
-//   let result = _.entityMap( _glob,( _glob ) => strForGlob( _glob ) );
-//   result = RegExp( '(' + result.join( ')|(' ) + ')','m' );
-//
-//   return result;
-// }
-//
-// //
-//
-// function globRegexpsForTerminalOld( src )
-// {
-//
-//   _.assert( _.strIs( src ) || _.strsAreAll( src ) );
-//   _.assert( arguments.length === 1, 'Expects single argument' );
-//
-// /*
-//   (\*\*\\\/|\*\*)|
-//   (\*)|
-//   (\?)|
-//   (\[.*\])
-// */
-//
-//   let map =
-//   {
-//     0 : '.*', /* doubleAsterix */
-//     1 : '[^\/]*', /* singleAsterix */
-//     2 : '.', /* questionMark */
-//     3 : handleSquareBrackets, /* handleSquareBrackets */
-//     '{' : '(',
-//     '}' : ')',
-//   }
-//
-//   /* */
-//
-//   let result = '';
-//
-//   if( _.strIs( src ) )
-//   {
-//     result = adjustGlobStr( src );
-//   }
-//   else
-//   {
-//     if( src.length > 1 )
-//     for( let i = 0; i < src.length; i++ )
-//     {
-//       let r = adjustGlobStr( src[ i ] );
-//       result += `(${r})`;
-//       if( i + 1 < src.length )
-//       result += '|'
-//     }
-//     else
-//     {
-//       result = adjustGlobStr( src[ 0 ] );
-//     }
-//   }
-//
-//   result = _.strPrependOnce( result,'\\/' );
-//   result = _.strPrependOnce( result,'\\.' );
-//
-//   result = _.strPrependOnce( result,'^' );
-//   result = _.strAppendOnce( result,'$' );
-//
-//   return RegExp( result );
-//
-//   /* */
-//
-//   function handleSquareBrackets( src )
-//   {
-//     debugger;
-//     src = _.strInsideOf( src, '[', ']' );
-//     // src = _.strIsolateInsideOrNone( src, '[', ']' );
-//     /* escape inner [] */
-//     src = src.replace( /[\[\]]/g, ( m ) => '\\' + m );
-//     /* replace ! -> ^ at the beginning */
-//     src = src.replace( /^\\!/g, '^' );
-//     return '[' + src + ']';
-//   }
-//
-//   function curlyBrackets( src )
-//   {
-//     debugger;
-//     src = src.replace( /[\}\{]/g, ( m ) => map[ m ] );
-//     /* replace , with | to separate regexps */
-//     src = src.replace( /,+(?![^[|(]*]|\))/g, '|' );
-//     return src;
-//   }
-//
-//   function _globToRegexp()
-//   {
-//     let args = _.longSlice( arguments );
-//     let i = args.indexOf( args[ 0 ], 1 ) - 1;
-//
-//     /* i - index of captured group from regexp is equivalent to key from map  */
-//
-//     if( _.strIs( map[ i ] ) )
-//     return map[ i ];
-//     else if( _.routineIs( map[ i ] ) )
-//     return map[ i ]( args[ 0 ] );
-//     else _.assert( 0 );
-//   }
-//
-//   function adjustGlobStr( src )
-//   {
-//     _.assert( !_.path.isAbsolute( src ) );
-//
-//     /* espace simple text */
-//     src = src.replace( /[^\*\[\]\{\}\?]+/g, ( m ) => _.regexpEscape( m ) );
-//     /* replace globs with regexps from map */
-//     src = src.replace( /(\*\*\\\/|\*\*)|(\*)|(\?)|(\[.*\])/g, _globToRegexp );
-//     /* replace {} -> () and , -> | to make proper regexp */
-//     src = src.replace( /\{.*\}/g, curlyBrackets );
-//     // src = src.replace( /\{.*\}+(?![^[]*\])/g, curlyBrackets );
-//
-//     return src;
-//   }
-//
-// }
-//
-// //
-//
-// function _globRegexpForTerminal( glob, filePath, basePath )
-// {
-//   let self = this;
-//   _.assert( arguments.length === 3 );
-//   if( basePath === null )
-//   basePath = filePath;
-//   if( filePath === null )
-//   filePath = basePath;
-//   if( basePath === null )
-//   basePath = filePath = this.fromGlob( glob );
-//   return self._globFullToRegexpSingle.apply( self, [ glob, filePath, basePath ] ).actual;
-// }
-//
-// //
-//
-// let _globRegexpsForTerminal = _.routineVectorize_functor
-// ({
-//   routine : _globRegexpForTerminal,
-//   select : 3,
-// });
-//
-// function globRegexpsForTerminal()
-// {
-//   let result = _globRegexpsForTerminal.apply( this, arguments );
-//   return _.regexpsAny( result );
-// }
-//
-// //
-//
-// function _globRegexpForDirectory( glob, filePath, basePath )
-// {
-//   let self = this;
-//   _.assert( arguments.length === 3 );
-//   if( basePath === null )
-//   basePath = filePath;
-//   if( filePath === null )
-//   filePath = basePath;
-//   if( basePath === null )
-//   basePath = filePath = this.fromGlob( glob );
-//   return self._globFullToRegexpSingle.apply( self, [ glob, filePath, basePath ] ).transient;
-// }
-//
-// //
-//
-// let _globRegexpsForDirectory = _.routineVectorize_functor
-// ({
-//   routine : _globRegexpForDirectory,
-//   select : 3,
-// });
-//
-// function globRegexpsForDirectory()
-// {
-//   let result = _globRegexpsForDirectory.apply( this, arguments );
-//   return _.regexpsAny( result );
-// }
-// //
-//
-// function _globSplitsToRegexpSourceGroups( globSplits )
-// {
-//   let self = this;
-//
-//   _.assert( _.arrayIs( globSplits ) );
-//   _.assert( arguments.length === 1, 'Expects single argument' );
-//   _.assert( globSplits.length >= 1 );
-//
-//   let s = 0;
-//   let depth = 0;
-//   let hereEscapedStr = self._globSplitToRegexpSource( self._hereStr );
-//   let downEscapedStr = self._globSplitToRegexpSource( self._downStr );
-//   let levels = levelsEval( globSplits );
-//
-//   for( let s = 0 ; s < globSplits.length ; s++ )
-//   {
-//     let split = globSplits[ s ];
-//     if( _.strHas( split, '.*' ) )
-//     {
-//       let level = levels[ s ];
-//       if( level < 0 )
-//       {
-//         for( let i = s ; i < globSplits.length ; i++ )
-//         levels[ i ] += 1;
-//         levels.splice( s, 0, level );
-//         globSplits.splice( s, 0, '[^\/]*' );
-//       }
-//       else
-//       {
-//         while( levels.indexOf( level, s+1 ) !== -1 )
-//         {
-//           _.assert( 0, 'not tested' ); xxx
-//           levels.splice( s+1, 0, level );
-//           globSplits.splice( s+1, 0, '[^\/]*' );
-//           for( let i = s+1 ; i < globSplits.length ; i++ )
-//           levels[ i ] += 1;
-//         }
-//       }
-//     }
-//   }
-//
-//   let groups = groupWithLevels( globSplits.slice(), levels, 0 );
-//
-//   return groups;
-//
-//   /* - */
-//
-//   function levelsEval()
-//   {
-//     let result = [];
-//     let level = 0;
-//     for( let s = 0 ; s < globSplits.length ; s++ )
-//     {
-//       split = globSplits[ s ];
-//       if( split === downEscapedStr )
-//       level -= 1;
-//       result[ s ] = level;
-//       if( split !== downEscapedStr )
-//       level += 1;
-//     }
-//     return result;
-//   }
-//
-//   /* - */
-//
-//   function groupWithLevels( globSplits, levels, first )
-//   {
-//     let result = [];
-//
-//     for( let b = first ; b < globSplits.length-1 ; b++ )
-//     {
-//       let level = levels[ b ];
-//       let e = levels.indexOf( level, b+1 );
-//
-//       if( e === -1 /*|| ( b === 0 && e === globSplits.length-1 )*/ )
-//       {
-//         continue;
-//       }
-//       else
-//       {
-//         let inside = globSplits.splice( b, e-b+1, null );
-//         globSplits[ b ] = inside;
-//         inside = levels.splice( b, e-b+1, null );
-//         levels[ b ] = inside;
-//         groupWithLevels( globSplits[ b ], levels[ b ], 1 );
-//       }
-//
-//     }
-//
-//     return globSplits;
-//   }
-//
-// }
-//
-// //
-//
-// function pathsRelateForGlob( filePath, oldPath, newPath )
-// {
-//   let length;
-//
-//   let multiplied = _.multipleAll([ filePath, oldPath, newPath ]);
-//
-//   filePath = multiplied[ 0 ];
-//   oldPath = multiplied[ 1 ];
-//   newPath = multiplied[ 2 ];
-//
-//   _.assert( arguments.length === 3, 'Expects exactly three arguments' );
-//
-//   if( _.arrayIs( filePath ) )
-//   {
-//     let result = [];
-//     for( let f = 0 ; f < filePath.length ; f++ )
-//     result[ f ] = this._relateForGlob( filePath[ f ], oldPath[ f ], newPath[ f ] );
-//     return result;
-//   }
-//
-//   return this._relateForGlob( filePath, oldPath, newPath );
-// }
-
 // --
 // full filter
 // --
@@ -756,6 +401,7 @@ function _relateForGlob( glob, filePath, basePath )
   _.assert( _.strIs( glob ), 'Expects string {-glob-}' );
   _.assert( _.strIs( filePath ), 'Expects string' );
   _.assert( _.strIs( basePath ) );
+  _.assert( !self.isRelative( glob ) ^ self.isRelative( filePath ), 'Expects both relative path either absolute' );
 
   let glob0 = this.globNormalize( glob );
   let glob1 = this.join( filePath, glob0 );
@@ -772,7 +418,6 @@ function _relateForGlob( glob, filePath, basePath )
   else
   {
 
-    debugger;
     let downGlob2 = self.relative( filePath, glob1 );
     result.push( downGlob2 );
 
@@ -791,7 +436,6 @@ function _relateForGlob( glob, filePath, basePath )
     let s = 0;
     while( s < globSplits.length )
     {
-      debugger;
       let globSliced = new RegExp( '^' + self._globRegexpSourceSplitsJoinForTerminal( globRegexpSourceSplits.slice( 0, s+1 ) ) + '$' );
       if( globSliced.test( basePathRelativeCommon ) )
       {
@@ -803,8 +447,6 @@ function _relateForGlob( glob, filePath, basePath )
     }
 
   }
-
-  /* */
 
   return result;
 }
@@ -822,9 +464,7 @@ function _globFullToRegexpSingle( glob, filePath, basePath )
 
   glob = this.join( filePath, glob );
 
-  // debugger;
   let related = this._relateForGlob( glob, filePath, basePath );
-  // debugger;
   let maybeHere = '';
   let hereEscapedStr = self._globSplitToRegexpSource( self._hereStr );
   let downEscapedStr = self._globSplitToRegexpSource( self._downStr );
@@ -941,7 +581,8 @@ function pathMapToRegexps( o )
     o.filePathToGlobMap[ srcPath ].push( srcGlob );
     let wasUnglobedFilePath = o.unglobedFilePath[ srcPath ];
     if( wasUnglobedFilePath === undefined || _.boolLike( wasUnglobedFilePath ) )
-    if( !_.boolLike( dstPath ) || dstPath || wasUnglobedFilePath === undefined )
+    // if( !_.boolLike( dstPath ) || dstPath || wasUnglobedFilePath === undefined ) // yyy
+    if( !_.boolLike( dstPath ) )
     {
       _.assert( wasUnglobedFilePath === undefined || _.boolLike( wasUnglobedFilePath ) || wasUnglobedFilePath === dstPath );
       o.unglobedFilePath[ srcPath ] = dstPath;
@@ -1122,291 +763,95 @@ pathMapToRegexps.defaults =
 // path map
 // --
 
-/*
-qqq : add support of hashes for pathMapExtend, extend tests
-*/
-
-function pathMapExtend( dstPathMap, srcPathMap, dstPath )
-{
-
-  _.assert( arguments.length === 2 || arguments.length === 3 );
-  _.assert( dstPathMap === null || _.strIs( dstPathMap ) || _.mapIs( dstPathMap ) );
-  _.assert( !_.mapIs( dstPath ) );
-
-  if( dstPath === undefined )
-  dstPath = null;
-  if( _.boolLike( dstPath ) )
-  dstPath = !!dstPath;
-
-  /* adjust dstPathMap */
-
-  if( dstPathMap === null )
-  {
-    dstPathMap = Object.create( null );
-  }
-  else if( _.strIs( dstPathMap ) )
-  {
-    let originalDstPath = dstPathMap;
-    dstPathMap = Object.create( null );
-    dstPathMap[ originalDstPath ] = dstPath;
-  }
-  else if( _.mapIs( dstPathMap ) )
-  {
-    if( srcPathMap === null )
-    for( let f in dstPathMap )
-    {
-      let val = dstPathMap[ f ];
-      if( val === null )
-      dstPathMap[ f ] = dstPath;
-    }
-  }
-
-  if( srcPathMap === null )
-  return dstPathMap;
-
-  /* extend dstPathMap by srcPathMap */
-
-  if( _.strIs( srcPathMap ) )
-  {
-    srcPathMap = this.normalize( srcPathMap );
-    let element = dstPathMap[ srcPathMap ];
-    if( element === undefined || element === null || !dstPath )
-    {
-      dstPathMap[ srcPathMap ] = dstPath;
-    }
-    else if( _.boolLike( element ) )
-    {
-      dstPathMap[ srcPathMap ] = dstPath;
-    }
-    else if( _.strIs( element ) )
-    {
-      dstPathMap[ srcPathMap ] = _.arrayAppendArraysOnce( [], [ element, dstPath ] );
-    }
-    else if( _.arrayIs( element ) )
-    {
-      // debugger;
-      dstPathMap[ srcPathMap ] = _.arrayAppendArraysOnce( [], [ element, dstPath ] );
-    }
-    else
-    {
-      debugger;
-      dstPathMap[ srcPathMap ] = _.arrayAppendArraysOnce( [], [ element, dstPath ] );
-    }
-    if( _.arrayIs( dstPathMap[ srcPathMap ] ) && dstPathMap[ srcPathMap ].length === 1 )
-    dstPathMap[ srcPathMap ] = dstPathMap[ srcPathMap ][ 0 ];
-  }
-  else if( _.mapIs( srcPathMap ) )
-  {
-    for( let g in srcPathMap )
-    {
-      let val = srcPathMap[ g ];
-
-      if( ( val === null ) )
-      val = dstPath;
-
-      this.pathMapExtend( dstPathMap, g, val );
-    }
-  }
-  else if( _.arrayLike( srcPathMap ) )
-  {
-    for( let g = 0 ; g < srcPathMap.length ; g++ )
-    {
-      this.pathMapExtend( dstPathMap, srcPathMap[ g ], dstPath );
-    }
-  }
-  else _.assert( 0, 'Expects srcPathMap' );
-
-  /* */
-
-  return dstPathMap;
-}
+//
+//
+// function pathMapIterate( o )
+// {
+//
+//   if( arguments[ 1 ] !== undefined )
+//   o = { filePath : arguments[ 0 ], onEach : arguments[ 1 ] }
+//
+//   _.routineOptions( pathMapIterate,o );
+//   _.assert( arguments.length === 1 );
+//   _.assert( o.filePath === null || _.strIs( o.filePath ) || _.arrayIs( o.filePath ) || _.mapIs( o.filePath ) );
+//
+//   let it = o.iteration = o.iteration || Object.create( null );
+//   it.options = it.options;
+//   it.value = o.filePath;
+//   it.side = null;
+//   it.continue = true;
+//   it.result = true;
+//   Object.preventExtensions( it );
+//
+//   if( o.filePath === null || _.strIs( o.filePath ) )
+//   {
+//     let r = o.onEach( it );
+//     _.assert( r === undefined );
+//     _.assert( it.value === null || _.strIs( it.value ) || _.boolLike( it.value ) || _.arrayIs( it.value ) );
+//   }
+//   else if( _.arrayIs( o.filePath ) )
+//   {
+//     for( let p = 0 ; p < o.filePath.length ; p++ )
+//     {
+//       it.value = o.filePath[ p ];
+//       let r = o.onEach( it );
+//       _.assert( r === undefined );
+//       _.assert( _.strIs( it.value ) || _.boolLike( it.value ) );
+//       if( o.writing )
+//       o.filePath[ p ] = it.value;
+//     }
+//     it.value = o.filePath;
+//   }
+//   else if( _.mapIs( o.filePath ) )
+//   for( let src in o.filePath )
+//   {
+//     let dst = o.filePath[ src ];
+//
+//     it.side = 'destination';
+//     it.value = dst;
+//     let r = o.onEach( it );
+//     _.assert( r === undefined );
+//
+//     if( o.writing )
+//     if( it.value !== dst )
+//     {
+//       o.filePath[ src ] = it.value;
+//       dst = it.value;
+//     }
+//
+//     it.side = 'source';
+//     it.value = src;
+//     r = o.onEach( it );
+//     _.assert( r === undefined );
+//     _.assert( _.strIs( it.value ) || _.arrayIs( it.value ) );
+//
+//     if( o.writing )
+//     if( it.value !== src )
+//     delete o.filePath[ src ];
+//     if( _.arrayIs( it.value ) )
+//     for( let i = 0 ; i < it.value.length ; i++ )
+//     o.filePath[ it.value[ i ] ] = dst;
+//     else
+//     o.filePath[ it.value ] = dst;
+//
+//     it.value = o.filePath;
+//   }
+//   else _.assert( 0 );
+//
+//   return it.result;
+// }
+//
+// pathMapIterate.defaults =
+// {
+//   iteration : null,
+//   filePath : null,
+//   onEach : null,
+//   writing : 1,
+// }
 
 //
 
-function pathMapPairSrcAndDst( srcFilePath, dstFilePath )
-{
-  let path = this;
-
-  _.assert( srcFilePath !== undefined );
-  _.assert( dstFilePath !== undefined );
-  _.assert( arguments.length === 2 );
-
-  if( srcFilePath && dstFilePath )
-  {
-
-    srcVerify();
-    dstVerify();
-
-    let srcPath1 = path.pathMapSrcFromSrc( srcFilePath );
-    let srcPath2 = path.pathMapSrcFromDst( dstFilePath );
-    let dstPath1 = path.pathMapDstFromSrc( srcFilePath );
-    let dstPath2 = path.pathMapDstFromDst( dstFilePath );
-
-    let dstPath = dstPath1.slice();
-    _.arrayAppendOnce( dstPath, dstPath2 );
-    if( dstPath.length > 1 )
-    _.arrayRemoveAll( dstPath, null );
-
-    if( _.arraySetIdentical( srcPath1, [ '.' ] ) && srcPath2.length )
-    {
-      // srcFilePath = path.pathMapExtend( null, srcPath2, dstPath1 );
-      srcFilePath = path.pathMapExtend( null, srcPath2, dstPath );
-    }
-    else if( _.arraySetIdentical( srcPath2, [ '.' ] ) && srcPath1.length )
-    {
-      // dstFilePath = path.pathMapExtend( null, srcPath1, dstPath2 );
-      dstFilePath = path.pathMapExtend( null, srcPath1, dstPath );
-    }
-
-    if( _.arraySetIdentical( dstPath1, [ '.' ] ) && srcPath1.length )
-    {
-      // srcFilePath = path.pathMapExtend( null, srcPath1, dstPath2 );
-      srcFilePath = path.pathMapExtend( null, srcPath1, dstPath );
-    }
-    else if( _.arraySetIdentical( dstPath2, [ '.' ] ) && srcPath2.length )
-    {
-      debugger;
-      // dstFilePath = path.pathMapExtend( null, srcPath2, dstPath1 );
-      dstFilePath = path.pathMapExtend( null, srcPath2, dstPath );
-    }
-
-    if( _.mapIs( dstFilePath ) )
-    srcFilePath = dstFilePath = path.pathMapExtend( null, _.mapExtend( null, srcFilePath, dstFilePath ), null );
-    else
-    srcFilePath = dstFilePath = path.pathMapExtend( null, srcFilePath, dstFilePath );
-
-  }
-  else if( srcFilePath )
-  {
-    srcFilePath = dstFilePath = path.pathMapExtend( null, srcFilePath, null );
-  }
-  else if( dstFilePath )
-  {
-    if( _.mapIs( dstFilePath ) )
-    srcFilePath = dstFilePath = path.pathMapExtend( null, dstFilePath, null );
-    else
-    srcFilePath = dstFilePath = path.pathMapExtend( null, '.', dstFilePath );
-  }
-
-  return srcFilePath;
-
-  /* */
-
-  function srcVerify()
-  {
-    if( dstFilePath && srcFilePath && Config.debug )
-    {
-      let srcPath1 = path.pathMapSrcFromSrc( srcFilePath );
-      let srcPath2 = path.pathMapSrcFromDst( dstFilePath );
-      // _.assert( srcPath1.length === 0 || srcPath2.length === 0 || _.arraySetIdentical( srcPath1, srcPath2 ), () => 'Source paths are inconsistent ' + _.toStr( srcPath1 ) + ' ' + _.toStr( srcPath2 ) );
-      _.assert( srcPath1.length === 0 || srcPath2.length === 0 || _.arraySetIdentical( srcPath1, [ '.' ] ) || _.arraySetIdentical( srcPath2, [ '.' ] ) || _.arraySetIdentical( srcPath1, srcPath2 ), () => 'Source paths are inconsistent ' + _.toStr( srcPath1 ) + ' ' + _.toStr( srcPath2 ) );
-    }
-  }
-
-  /* */
-
-  function dstVerify()
-  {
-    if( dstFilePath && srcFilePath && Config.debug )
-    {
-      let dstPath1 = path.pathMapDstFromSrc( srcFilePath ).filter( ( e ) => !_.boolLike( e ) && e !== null );
-      let dstPath2 = path.pathMapDstFromDst( dstFilePath ).filter( ( e ) => !_.boolLike( e ) && e !== null );
-      // _.assert( dstPath1.length === 0 || dstPath2.length === 0 || _.arraySetIdentical( dstPath1, dstPath2 ), () => 'Destination paths are inconsistent ' + _.toStr( dstPath1 ) + ' ' + _.toStr( dstPath2 ) );
-      _.assert( dstPath1.length === 0 || dstPath2.length === 0 || _.arraySetIdentical( dstPath1, [ '.' ] ) || _.arraySetIdentical( dstPath2, [ '.' ] ) || _.arraySetIdentical( dstPath1, dstPath2 ), () => 'Destination paths are inconsistent ' + _.toStr( dstPath1 ) + ' ' + _.toStr( dstPath2 ) );
-    }
-  }
-
-}
-
-//
-
-function pathMapIterate( o )
-{
-
-  if( arguments[ 1 ] !== undefined )
-  o = { filePath : arguments[ 0 ], onEach : arguments[ 1 ] }
-
-  _.routineOptions( pathMapIterate,o );
-  _.assert( arguments.length === 1 );
-  _.assert( o.filePath === null || _.strIs( o.filePath ) || _.arrayIs( o.filePath ) || _.mapIs( o.filePath ) );
-
-  let it = o.iteration = o.iteration || Object.create( null );
-  it.options = it.options;
-  it.value = o.filePath;
-  it.side = null;
-  it.continue = true;
-  it.result = true;
-  Object.preventExtensions( it );
-
-  if( o.filePath === null || _.strIs( o.filePath ) )
-  {
-    let r = o.onEach( it );
-    _.assert( r === undefined );
-    _.assert( it.value === null || _.strIs( it.value ) || _.boolLike( it.value ) || _.arrayIs( it.value ) );
-  }
-  else if( _.arrayIs( o.filePath ) )
-  {
-    for( let p = 0 ; p < o.filePath.length ; p++ )
-    {
-      it.value = o.filePath[ p ];
-      let r = o.onEach( it );
-      _.assert( r === undefined );
-      _.assert( _.strIs( it.value ) || _.boolLike( it.value ) );
-      if( o.writing )
-      o.filePath[ p ] = it.value;
-    }
-    it.value = o.filePath;
-  }
-  else if( _.mapIs( o.filePath ) )
-  for( let src in o.filePath )
-  {
-    let dst = o.filePath[ src ];
-
-    it.side = 'destination';
-    it.value = dst;
-    let r = o.onEach( it );
-    _.assert( r === undefined );
-
-    if( o.writing )
-    if( it.value !== dst )
-    {
-      o.filePath[ src ] = it.value;
-      dst = it.value;
-    }
-
-    it.side = 'source';
-    it.value = src;
-    r = o.onEach( it );
-    _.assert( r === undefined );
-    _.assert( _.strIs( it.value ) || _.arrayIs( it.value ) );
-
-    if( o.writing )
-    if( it.value !== src )
-    delete o.filePath[ src ];
-    if( _.arrayIs( it.value ) )
-    for( let i = 0 ; i < it.value.length ; i++ )
-    o.filePath[ it.value[ i ] ] = dst;
-    else
-    o.filePath[ it.value ] = dst;
-
-    it.value = o.filePath;
-  }
-  else _.assert( 0 );
-
-  return it.result;
-}
-
-pathMapIterate.defaults =
-{
-  iteration : null,
-  filePath : null,
-  onEach : null,
-  writing : 1,
-}
-
-//
-
-function pathMapFilter( filePath, onEach )
+function filterInplace( filePath, onEach )
 {
 
   _.assert( arguments.length === 2 );
@@ -1417,98 +862,10 @@ function pathMapFilter( filePath, onEach )
 
   if( filePath === null || _.strIs( filePath ) )
   {
-    let r = onEach( filePath, it );
-    return r;
-  }
-  else if( _.arrayIs( filePath ) )
-  {
-    let result = [];
-    for( let p = 0 ; p < filePath.length ; p++ )
-    {
-      it.index = p;
-      let r = onEach( filePath[ p ], it );
-      if( r !== undefined )
-      result.push( r );
-    }
-    return result;
-  }
-  else if( _.mapIs( filePath ) )
-  {
-    let result = Object.create( null );
-    for( let src in filePath )
-    {
-      let dst = filePath[ src ];
-
-      if( _.arrayIs( dst ) )
-      {
-        dst = dst.slice();
-        for( let d = 0 ; d < dst.length ; d++ )
-        {
-          it.src = src;
-          it.dst = dst[ d ];
-          it.side = 'src';
-          it.src = onEach( it.src, it );
-          it.side = 'dst';
-          it.dst = onEach( it.dst, it );
-          write( result, it.src, it.dst );
-        }
-      }
-      else
-      {
-        it.src = src;
-        it.dst = dst;
-        it.side = 'src';
-        it.src = onEach( it.src, it );
-        it.side = 'dst';
-        it.dst = onEach( it.dst, it );
-        write( result, it.src, it.dst );
-      }
-
-    }
-
-    return result;
-  }
-  else _.assert( 0 );
-
-  /* */
-
-  function write( pathMap, src, dst )
-  {
-
-    _.assert( src === undefined || _.strIs( src ) || _.arrayIs( src ) );
-
-    if( dst !== undefined )
-    {
-      if( _.arrayIs( src ) )
-      {
-        for( let s = 0 ; s < src.length ; s++ )
-        if( src[ s ] !== undefined )
-        pathMap[ src[ s ] ] = _.scalarAppend( pathMap[ src[ s ] ], dst );
-      }
-      else if( src !== undefined )
-      {
-        pathMap[ src ] = _.scalarAppend( pathMap[ src ], dst );
-      }
-    }
-
-  }
-
-}
-
-//
-
-function pathMapFilterInplace( filePath, onEach )
-{
-
-  _.assert( arguments.length === 2 );
-  _.assert( filePath === null || _.strIs( filePath ) || _.arrayIs( filePath ) || _.mapIs( filePath ) );
-  _.routineIs( onEach );
-
-  let it = Object.create( null );
-
-  if( filePath === null || _.strIs( filePath ) )
-  {
-    let r = onEach( filePath, it );
+    it.value = filePath;
+    let r = onEach( it.value, it );
+    if( r === undefined )
+    return null;
     return r;
   }
   else if( _.arrayIs( filePath ) )
@@ -1516,7 +873,8 @@ function pathMapFilterInplace( filePath, onEach )
     for( let p = 0 ; p < filePath.length ; p++ )
     {
       it.index = p;
-      let r = onEach( filePath[ p ], it );
+      it.value = filePath[ p ];
+      let r = onEach( it.value, it );
       if( r === undefined )
       {
         filePath.splice( p, 1 );
@@ -1544,22 +902,26 @@ function pathMapFilterInplace( filePath, onEach )
         {
           it.src = src;
           it.dst = dst[ d ];
+          it.value = it.src;
           it.side = 'src';
-          it.src = onEach( it.src, it );
+          let srcResult = onEach( it.value, it );
+          it.value = it.dst;
           it.side = 'dst';
-          it.dst = onEach( it.dst, it );
-          write( filePath, it.src, it.dst );
+          let dstResult = onEach( it.value, it );
+          write( filePath, srcResult, dstResult );
         }
       }
       else
       {
         it.src = src;
         it.dst = dst;
+        it.value = it.src;
         it.side = 'src';
-        it.src = onEach( it.src, it );
+        let srcResult = onEach( it.value, it );
         it.side = 'dst';
-        it.dst = onEach( it.dst, it );
-        write( filePath, it.src, it.dst );
+        it.value = it.dst;
+        let dstResult = onEach( it.value, it );
+        write( filePath, srcResult, dstResult );
       }
 
     }
@@ -1595,18 +957,759 @@ function pathMapFilterInplace( filePath, onEach )
 
 //
 
+function filter( filePath, onEach )
+{
+
+  _.assert( arguments.length === 2 );
+  _.assert( filePath === null || _.strIs( filePath ) || _.arrayIs( filePath ) || _.mapIs( filePath ) );
+  _.routineIs( onEach );
+
+  let it = Object.create( null );
+
+  if( filePath === null || _.strIs( filePath ) )
+  {
+    it.value = filePath;
+    let r = onEach( it.value, it );
+    if( r === undefined )
+    return null;
+    return r;
+  }
+  else if( _.arrayIs( filePath ) )
+  {
+    let result = [];
+    for( let p = 0 ; p < filePath.length ; p++ )
+    {
+      it.index = p;
+      it.value = filePath[ p ];
+      let r = onEach( it.value, it );
+      if( r !== undefined )
+      result.push( r );
+    }
+    return result;
+  }
+  else if( _.mapIs( filePath ) )
+  {
+    let result = Object.create( null );
+    for( let src in filePath )
+    {
+      let dst = filePath[ src ];
+
+      if( _.arrayIs( dst ) )
+      {
+        dst = dst.slice();
+        for( let d = 0 ; d < dst.length ; d++ )
+        {
+          it.src = src;
+          it.dst = dst[ d ];
+          it.value = it.src;
+          it.side = 'src';
+          let srcResult = onEach( it.value, it );
+          it.value = it.dst;
+          it.side = 'dst';
+          let dstResult = onEach( it.value, it );
+          write( result, srcResult, dstResult );
+        }
+      }
+      else
+      {
+        it.src = src;
+        it.dst = dst;
+        it.value = it.src;
+        it.side = 'src';
+        let srcResult = onEach( it.value, it );
+        it.value = it.dst;
+        it.side = 'dst';
+        let dstResult = onEach( it.value, it );
+        write( result, srcResult, dstResult );
+      }
+
+    }
+
+    return result;
+  }
+  else _.assert( 0 );
+
+  /* */
+
+  function write( pathMap, src, dst )
+  {
+
+    _.assert( src === undefined || _.strIs( src ) || _.arrayIs( src ) );
+
+    if( dst !== undefined )
+    {
+      if( _.arrayIs( src ) )
+      {
+        for( let s = 0 ; s < src.length ; s++ )
+        if( src[ s ] !== undefined )
+        pathMap[ src[ s ] ] = _.scalarAppend( pathMap[ src[ s ] ], dst );
+      }
+      else if( src !== undefined )
+      {
+        pathMap[ src ] = _.scalarAppend( pathMap[ src ], dst );
+      }
+    }
+
+  }
+
+}
+
+//
+
+function all( filePath, onEach )
+{
+
+  _.assert( arguments.length === 2 );
+  _.assert( filePath === null || _.strIs( filePath ) || _.arrayIs( filePath ) || _.mapIs( filePath ) );
+  _.routineIs( onEach );
+
+  let it = Object.create( null );
+
+  if( filePath === null || _.strIs( filePath ) )
+  {
+    it.value = filePath;
+    let r = onEach( it.value, it );
+    if( !r )
+    return false;
+    return true;
+  }
+  else if( _.arrayIs( filePath ) )
+  {
+    for( let p = 0 ; p < filePath.length ; p++ )
+    {
+      it.index = p;
+      it.value = filePath[ p ];
+      let r = onEach( it.value, it );
+      if( !r )
+      return false;
+    }
+    return true;
+  }
+  else if( _.mapIs( filePath ) )
+  {
+    for( let src in filePath )
+    {
+      let dst = filePath[ src ];
+
+      if( _.arrayIs( dst ) )
+      {
+        dst = dst.slice();
+        for( let d = 0 ; d < dst.length ; d++ )
+        {
+          it.src = src;
+          it.dst = dst[ d ];
+          it.value = it.src;
+          it.side = 'src';
+          var r = onEach( it.value, it );
+          if( !r )
+          return false;
+          it.value = it.dst;
+          it.side = 'dst';
+          var r = onEach( it.value, it );
+          if( !r )
+          return false;
+        }
+      }
+      else
+      {
+        it.src = src;
+        it.dst = dst;
+        it.value = it.src;
+        it.side = 'src';
+        var r = onEach( it.value, it );
+        if( !r )
+        return false;
+        it.value = it.dst;
+        it.side = 'dst';
+        var r = onEach( it.value, it );
+        if( !r )
+        return false;
+      }
+
+    }
+    return true;
+  }
+  else _.assert( 0 );
+
+}
+
+//
+
+function any( filePath, onEach )
+{
+
+  _.assert( arguments.length === 2 );
+  _.assert( filePath === null || _.strIs( filePath ) || _.arrayIs( filePath ) || _.mapIs( filePath ) );
+  _.routineIs( onEach );
+
+  let it = Object.create( null );
+
+  if( filePath === null || _.strIs( filePath ) )
+  {
+    it.value = filePath;
+    let r = onEach( it.value, it );
+    if( r )
+    return true;
+    return false;
+  }
+  else if( _.arrayIs( filePath ) )
+  {
+    for( let p = 0 ; p < filePath.length ; p++ )
+    {
+      it.index = p;
+      it.value = filePath[ p ];
+      let r = onEach( it.value, it );
+      if( r )
+      return true;
+    }
+    return false;
+  }
+  else if( _.mapIs( filePath ) )
+  {
+    for( let src in filePath )
+    {
+      let dst = filePath[ src ];
+
+      if( _.arrayIs( dst ) )
+      {
+        dst = dst.slice();
+        for( let d = 0 ; d < dst.length ; d++ )
+        {
+          it.src = src;
+          it.dst = dst[ d ];
+          it.value = it.src;
+          it.side = 'src';
+          var r = onEach( it.value, it );
+          if( r )
+          return true;
+          it.value = it.dst;
+          it.side = 'dst';
+          var r = onEach( it.value, it );
+          if( r )
+          return true;
+        }
+      }
+      else
+      {
+        it.src = src;
+        it.dst = dst;
+        it.value = it.src;
+        it.side = 'src';
+        var r = onEach( it.value, it );
+        if( r )
+        return true;
+        it.value = it.dst;
+        it.side = 'dst';
+        var r = onEach( it.value, it );
+        if( r )
+        return true;
+      }
+
+    }
+    return false;
+  }
+  else _.assert( 0 );
+
+}
+
+//
+
+function none( filePath, onEach )
+{
+  return !this.any.apply( this, arguments )
+}
+
+//
+
+/*
+qqq : implement good tests for routine isEmpty
+*/
+
+function isEmpty( src )
+{
+  let self = this;
+
+  _.assert( arguments.length === 1 );
+  _.assert( src === null || _.arrayIs( src ) || _.strIs( src ) || _.mapIs( src ) );
+
+  if( src === null || src === '' )
+  return true;
+
+  if( _.strIs( src ) )
+  return false;
+
+  if( _.arrayIs( src ) )
+  {
+    if( src.length === 0 )
+    return true;
+    if( src.length === 1 )
+    if( src[ 0 ] === null || src[ 1 ] === '' || src[ 2 ] === '.' ) // qqq zzz : refactor to remove dot
+    return true;
+    return false;
+  }
+
+  if( _.mapKeys( src ).length === 1 )
+  if( src[ '.' ] === null || src[ '.' ] === '' || src[ '' ] === null || src[ '' ] === '' ) // qqq zzz : refactor to remove dot
+  return true;
+
+  return false;
+}
+
+//
+
+/*
+qqq : add support of hashes for mapExtend, extend tests
+*/
+
+function mapExtend( dstPathMap, srcPathMap, dstPath )
+{
+  let self = this;
+
+  _.assert( arguments.length === 2 || arguments.length === 3 );
+  _.assert( dstPathMap === null || _.strIs( dstPathMap ) || _.arrayIs( dstPathMap ) || _.mapIs( dstPathMap ) );
+  _.assert( !_.mapIs( dstPath ) );
+
+  /* normalize dstPath */
+
+  dstPath = dstPathNormalize( dstPath );
+
+  /* normalize dstPathMap */
+
+  dstPathMap = dstPathMapNormalize( dstPathMap );
+  _.assert( _.mapIs( dstPathMap ) );
+
+  /* normalize srcPathMap */
+
+  /*
+    if no source map then
+    to avoid adding record . : null
+    return
+    if destination path is null and destination map has any record
+  */
+
+  if( srcPathMap === null )
+  if( dstPath === null || _.mapKeys( dstPathMap ).length )
+  return dstPathMap;
+
+  srcPathMap = srcPathMapNormalize( srcPathMap );
+
+  /* extend dstPathMap by srcPathMap */
+
+  dstPathMapExtend( dstPathMap, srcPathMap, dstPath );
+
+  /* */
+
+  return dstPathMap;
+
+  /* */
+
+  function dstPathNormalize( dstPath )
+  {
+    if( dstPath === undefined )
+    dstPath = null;
+    if( _.boolLike( dstPath ) )
+    dstPath = !!dstPath;
+    if( _.arrayIs( dstPath ) && dstPath.length === 1 )
+    dstPath = dstPath[ 0 ];
+    return dstPath;
+  }
+
+  /* */
+
+  function dstPathMapNormalize( dstPathMap )
+  {
+
+    if( dstPathMap === null )
+    {
+      dstPathMap = Object.create( null );
+    }
+    else if( _.strIs( dstPathMap ) )
+    {
+      let originalDstPath = dstPathMap;
+      dstPathMap = Object.create( null );
+      dstPathMap[ originalDstPath ] = dstPath;
+    }
+    else if( _.arrayIs( dstPathMap ) )
+    {
+      let originalDstPath = dstPathMap;
+      dstPathMap = Object.create( null );
+      originalDstPath.forEach( ( p ) => dstPathMap[ p ] = dstPath );
+    }
+    else if( _.mapIs( dstPathMap ) )
+    {
+      if( srcPathMap === null )
+      for( let f in dstPathMap )
+      {
+        let val = dstPathMap[ f ];
+        if( val === null )
+        dstPathMap[ f ] = dstPath;
+      }
+    }
+
+    /* remove . : null if map was dot-map */
+    if( srcPathMap )
+    if( !_.mapIs( srcPathMap ) || ( _.mapIs( srcPathMap ) && _.mapKeys( srcPathMap ).length ) )
+    // if( _.mapIs( srcPathMap ) && _.mapKeys( srcPathMap ).length )
+    if( dstPathMap[ '.' ] === null && _.mapKeys( dstPathMap ).length === 1 )
+    delete dstPathMap[ '.' ];
+
+    return dstPathMap;
+  }
+
+  /* */
+
+  function srcPathMapNormalize( srcPathMap )
+  {
+    if( srcPathMap === null )
+    srcPathMap = '.';
+    return srcPathMap;
+  }
+
+  /* */
+
+  function dstPathMapExtend( dstPathMap, srcPathMap, dstPath )
+  {
+
+    if( _.strIs( srcPathMap ) )
+    {
+      srcPathMap = self.normalize( srcPathMap );
+      dstPathMap[ srcPathMap ] = dstJoin( dstPathMap[ srcPathMap ], dstPath );
+    }
+    else if( _.mapIs( srcPathMap ) )
+    {
+      for( let g in srcPathMap )
+      {
+        let val = srcPathMap[ g ];
+
+        if( ( val === null ) )
+        val = dstPath;
+
+        self.mapExtend( dstPathMap, g, val );
+      }
+    }
+    else if( _.arrayLike( srcPathMap ) )
+    {
+      for( let g = 0 ; g < srcPathMap.length ; g++ )
+      self.mapExtend( dstPathMap, srcPathMap[ g ], dstPath );
+    }
+    else _.assert( 0, 'Expects srcPathMap' );
+
+  }
+
+  /* */
+
+  function dstJoin( dst, src )
+  {
+    let r;
+
+    _.assert( dst === undefined || dst === null || _.arrayIs( dst ) || _.strIs( dst ) || _.boolLike( dst ) || _.objectIs( dst ) );
+    _.assert( src === null || _.arrayIs( src ) || _.strIs( src ) || _.boolLike( src ) || _.objectIs( src ) );
+
+    if( src === null )
+    {
+      r = dst || null;
+    }
+    else if( src === false )
+    {
+      r = src;
+    }
+    else if( dst === undefined || dst === null || dst === true )
+    {
+      r = src;
+    }
+    else if( _.boolLike( dst ) )
+    {
+      r = src;
+    }
+    else if( _.strIs( dst ) || _.objectIs( dst ) )
+    {
+      r = _.arrayAppendArraysOnce( [], [ dst, src ] );
+    }
+    else if( _.arrayIs( dst ) )
+    {
+      r = _.arrayAppendArraysOnce( [], [ dst, src ] );
+    }
+    else _.assert( 0 );
+
+    if( _.arrayIs( r ) )
+    {
+      if( r.length > 1 )
+      r = r.filter( ( e ) => !_.boolLike( e ) );
+      if( r.length === 1 )
+      r = r[ 0 ];
+    }
+
+    return r;
+  }
+
+}
+
+//
+
+function mapsPair( dstFilePath, srcFilePath )
+{
+  let path = this;
+  // let srcPath1;
+  // let srcPath2;
+  // let dstPath1;
+  // let dstPath2;
+
+  _.assert( srcFilePath !== undefined );
+  _.assert( dstFilePath !== undefined );
+  _.assert( arguments.length === 2 );
+
+  if( srcFilePath && dstFilePath )
+  {
+
+    // srcPath1 = path.mapSrcFromSrc( srcFilePath );
+    // srcPath2 = path.mapSrcFromDst( dstFilePath );
+    // dstPath1 = path.mapDstFromSrc( srcFilePath );
+    // dstPath2 = path.mapDstFromDst( dstFilePath );
+
+    // srcPath1 = path.mapSrcFromSrc( srcFilePath ).filter( ( e ) => e !== null );
+    // srcPath2 = path.mapSrcFromDst( dstFilePath ).filter( ( e ) => e !== null );
+    // dstPath1 = path.mapDstFromSrc( srcFilePath ).filter( ( e ) => e !== null );
+    // dstPath2 = path.mapDstFromDst( dstFilePath ).filter( ( e ) => e !== null );
+
+    if( _.mapIs( srcFilePath ) && _.mapIs( dstFilePath ) )
+    {
+      mapsVerify();
+    }
+    else
+    {
+      srcVerify();
+      // dstVerify();
+    }
+
+    if( _.mapIs( dstFilePath ) )
+    {
+      dstFilePath = path.mapExtend( null, dstFilePath, null );
+      srcFilePath = dstFilePath = path.mapExtend( dstFilePath, srcFilePath, null );
+    }
+    else
+    {
+      srcFilePath = dstFilePath = path.mapExtend( null, srcFilePath, dstFilePath );
+    }
+
+  }
+  else if( srcFilePath )
+  {
+    if( path.isEmpty( srcFilePath ) )
+    srcFilePath = dstFilePath = null;
+    else
+    srcFilePath = dstFilePath = path.mapExtend( null, srcFilePath, null );
+  }
+  else if( dstFilePath )
+  {
+    if( path.isEmpty( dstFilePath ) )
+    srcFilePath = dstFilePath = null;
+    else if( _.mapIs( dstFilePath ) )
+    srcFilePath = dstFilePath = path.mapExtend( null, dstFilePath, null );
+    else
+    srcFilePath = dstFilePath = path.mapExtend( null, '.', dstFilePath );
+  }
+  else
+  {
+    srcFilePath = dstFilePath = null;
+    // srcFilePath = dstFilePath = Object.create( null );
+    // srcFilePath[ '.' ] = null;
+  }
+
+  return srcFilePath;
+
+  /* */
+
+  function mapsVerify()
+  {
+    _.assert
+    (
+      _.mapsAreIdentical( srcFilePath, dstFilePath ),
+      () => 'File maps are inconsistent\n' + _.toStr( srcFilePath ) + '\n' + _.toStr( dstFilePath )
+    );
+  }
+
+  /* */
+
+  function srcVerify()
+  {
+    if( dstFilePath && srcFilePath && Config.debug )
+    {
+      let srcPath1 = path.mapSrcFromSrc( srcFilePath ).filter( ( e ) => e !== null );
+      let srcPath2 = path.mapSrcFromDst( dstFilePath ).filter( ( e ) => e !== null );
+      let srcFiltetedPath1 = srcPath1.filter( ( e ) => !_.boolLike( e ) && e !== null );
+      let srcFilteredPath2 = srcPath2.filter( ( e ) => !_.boolLike( e ) && e !== null );
+      _.assert
+      (
+        srcFiltetedPath1.length === 0 || srcFilteredPath2.length === 0 ||
+        _.arraySetIdentical( srcFiltetedPath1, [ '.' ] ) || _.arraySetIdentical( srcFilteredPath2, [ '.' ] ) || _.arraySetIdentical( srcFiltetedPath1, srcFilteredPath2 ),
+        () => 'Source paths are inconsistent ' + _.toStr( srcFiltetedPath1 ) + ' ' + _.toStr( srcFilteredPath2 )
+      );
+    }
+  }
+
+  // /* */
+  //
+  // function dstVerify()
+  // {
+  //   if( dstFilePath && srcFilePath && Config.debug )
+  //   {
+  //     let dstFilteredPath1 = dstPath1.filter( ( e ) => !_.boolLike( e ) && e !== null );
+  //     let dstFilteredPath2 = dstPath2.filter( ( e ) => !_.boolLike( e ) && e !== null );
+  //     _.assert
+  //     (
+  //       dstFilteredPath1.length === 0 || dstFilteredPath2.length === 0 ||
+  //       _.arraySetIdentical( dstFilteredPath1, [ '.' ] ) || _.arraySetIdentical( dstFilteredPath2, [ '.' ] ) || _.arraySetIdentical( dstFilteredPath1, dstFilteredPath2 ),
+  //       () => 'Destination paths are inconsistent ' + _.toStr( dstFilteredPath1 ) + ' ' + _.toStr( dstFilteredPath2 )
+  //     );
+  //   }
+  // }
+
+}
+
+// function mapsPair( srcFilePath, dstFilePath )
+// {
+//   let path = this;
+//   let srcPath1;
+//   let srcPath2;
+//   let dstPath1;
+//   let dstPath2;
+//
+//   _.assert( srcFilePath !== undefined );
+//   _.assert( dstFilePath !== undefined );
+//   _.assert( arguments.length === 2 );
+//
+//   if( srcFilePath && dstFilePath )
+//   {
+//
+//     srcPath1 = path.mapSrcFromSrc( srcFilePath );
+//     srcPath2 = path.mapSrcFromDst( dstFilePath );
+//     dstPath1 = path.mapDstFromSrc( srcFilePath );
+//     dstPath2 = path.mapDstFromDst( dstFilePath );
+//
+//     if( _.mapIs( srcFilePath ) && _.mapIs( dstFilePath ) )
+//     {
+//       mapsVerify();
+//     }
+//     else
+//     {
+//       srcVerify();
+//       dstVerify();
+//     }
+//
+//     let dstPath = dstPath1.slice();
+//     _.arrayAppendOnce( dstPath, dstPath2 );
+//     if( dstPath.length > 1 )
+//     _.arrayRemoveElement( dstPath, null );
+//     // _.arrayRemoveAll( dstPath, null ); // yyy
+//
+//     if( _.arraySetIdentical( srcPath1, [ '.' ] ) && srcPath2.length )
+//     {
+//       // srcFilePath = path.mapExtend( null, srcPath2, dstPath1 );
+//       srcFilePath = path.mapExtend( null, srcPath2, dstPath );
+//     }
+//     else if( _.arraySetIdentical( srcPath2, [ '.' ] ) && srcPath1.length )
+//     {
+//       // dstFilePath = path.mapExtend( null, srcPath1, dstPath2 );
+//       dstFilePath = path.mapExtend( null, srcPath1, dstPath );
+//     }
+//
+//     if( _.arraySetIdentical( dstPath1, [ '.' ] ) && srcPath1.length )
+//     {
+//       // srcFilePath = path.mapExtend( null, srcPath1, dstPath2 );
+//       srcFilePath = path.mapExtend( null, srcPath1, dstPath );
+//     }
+//     else if( _.arraySetIdentical( dstPath2, [ '.' ] ) && srcPath2.length )
+//     {
+//       debugger;
+//       // dstFilePath = path.mapExtend( null, srcPath2, dstPath1 );
+//       dstFilePath = path.mapExtend( null, srcPath2, dstPath );
+//     }
+//
+//     if( _.mapIs( dstFilePath ) )
+//     srcFilePath = dstFilePath = path.mapExtend( null, _.mapExtend( null, srcFilePath, dstFilePath ), null );
+//     else
+//     srcFilePath = dstFilePath = path.mapExtend( null, srcFilePath, dstFilePath );
+//
+//   }
+//   else if( srcFilePath )
+//   {
+//     srcFilePath = dstFilePath = path.mapExtend( null, srcFilePath, null );
+//   }
+//   else if( dstFilePath )
+//   {
+//     if( _.mapIs( dstFilePath ) )
+//     srcFilePath = dstFilePath = path.mapExtend( null, dstFilePath, null );
+//     else
+//     srcFilePath = dstFilePath = path.mapExtend( null, '.', dstFilePath );
+//   }
+//
+//   return srcFilePath;
+//
+//   /* */
+//
+//   function mapsVerify()
+//   {
+//     return _.mapsAreIdentical( srcFilePath, dstFilePath );
+//   }
+//
+//   /* */
+//
+//   function srcVerify()
+//   {
+//     if( dstFilePath && srcFilePath && Config.debug )
+//     {
+//       // let srcPath1 = path.mapSrcFromSrc( srcFilePath );
+//       // let srcPath2 = path.mapSrcFromDst( dstFilePath );
+//       // _.assert( srcPath1.length === 0 || srcPath2.length === 0 || _.arraySetIdentical( srcPath1, srcPath2 ), () => 'Source paths are inconsistent ' + _.toStr( srcPath1 ) + ' ' + _.toStr( srcPath2 ) );
+//       _.assert
+//       (
+//         srcPath1.length === 0 || srcPath2.length === 0 ||
+//         _.arraySetIdentical( srcPath1, [ '.' ] ) || _.arraySetIdentical( srcPath2, [ '.' ] ) || _.arraySetIdentical( srcPath1, srcPath2 ),
+//         () => 'Source paths are inconsistent ' + _.toStr( srcPath1 ) + ' ' + _.toStr( srcPath2 )
+//       );
+//     }
+//   }
+//
+//   /* */
+//
+//   function dstVerify()
+//   {
+//     if( dstFilePath && srcFilePath && Config.debug )
+//     {
+//       let dstFilteredPath1 = dstPath1.filter( ( e ) => !_.boolLike( e ) && e !== null );
+//       let dstFilteredPath2 = dstPath2.filter( ( e ) => !_.boolLike( e ) && e !== null );
+//       // _.assert( dstPath1.length === 0 || dstPath2.length === 0 || _.arraySetIdentical( dstPath1, dstPath2 ), () => 'Destination paths are inconsistent ' + _.toStr( dstPath1 ) + ' ' + _.toStr( dstPath2 ) );
+//       _.assert
+//       (
+//         dstFilteredPath1.length === 0 || dstFilteredPath2.length === 0 ||
+//         _.arraySetIdentical( dstFilteredPath1, [ '.' ] ) || _.arraySetIdentical( dstFilteredPath2, [ '.' ] ) || _.arraySetIdentical( dstFilteredPath1, dstFilteredPath2 ),
+//         () => 'Destination paths are inconsistent ' + _.toStr( dstFilteredPath1 ) + ' ' + _.toStr( dstFilteredPath2 )
+//       );
+//     }
+//   }
+//
+// }
+
+//
+
 /*
 qqq : make pathMap*From* optimal and add tests
 */
 
-function pathMapDstFromSrc( pathMap )
+function mapDstFromSrc( pathMap )
 {
   _.assert( arguments.length === 1 );
 
   // if( _.strIs( pathMap ) )
   // return [ null ];
 
+  // if( !_.mapIs( pathMap ) ) // yyy
+  // return [ null ];
+
   if( !_.mapIs( pathMap ) )
+  if( pathMap === null )
+  return [];
+  else
   return [ null ];
 
   let result = _.mapVals( pathMap );
@@ -1625,12 +1728,18 @@ function pathMapDstFromSrc( pathMap )
 
 //
 
-function pathMapDstFromDst( pathMap )
+function mapDstFromDst( pathMap )
 {
   _.assert( arguments.length === 1 );
 
   if( !_.mapIs( pathMap ) )
-  return _.arrayAs( pathMap );
+  if( pathMap === null )
+  return [];
+  else
+  return _.arrayAsShallowing( pathMap );
+
+  // if( !_.mapIs( pathMap ) )
+  // return _.arrayAs( pathMap );
 
   let result = _.mapVals( pathMap );
 
@@ -1648,33 +1757,45 @@ function pathMapDstFromDst( pathMap )
 
 //
 
-function pathMapSrcFromSrc( pathMap )
+function mapSrcFromSrc( pathMap )
 {
   _.assert( arguments.length === 1 );
 
   if( !_.mapIs( pathMap ) )
-  return _.arrayAs( pathMap );
-
-  pathMap = this.pathMapExtend( null, pathMap );
-
-  return _.mapKeys( pathMap )
-}
-
-//
-
-function pathMapSrcFromDst( pathMap )
-{
-  _.assert( arguments.length === 1 );
-
-  if( !_.mapIs( pathMap ) )
+  if( pathMap === null )
   return [];
+  else
+  return _.arrayAsShallowing( pathMap );
+
+  // if( !_.mapIs( pathMap ) )
+  // return _.arrayAs( pathMap );
+
+  pathMap = this.mapExtend( null, pathMap );
 
   return _.mapKeys( pathMap )
 }
 
 //
 
-function pathMapGroupByDst( pathMap )
+function mapSrcFromDst( pathMap )
+{
+  _.assert( arguments.length === 1 );
+
+  if( !_.mapIs( pathMap ) )
+  if( pathMap === null )
+  return [];
+  else
+  return [ null ];
+
+  // if( !_.mapIs( pathMap ) )
+  // return [];
+
+  return _.mapKeys( pathMap )
+}
+
+//
+
+function mapGroupByDst( pathMap )
 {
   let path = this;
   let result = Object.create( null );
@@ -1776,11 +1897,11 @@ function areBasePathsEquivalent( basePath1, basePath2 )
 {
   let path = this;
 
-  let filePath1 = path.pathMapSrcFromDst( basePath1 );
-  let filePath2 = path.pathMapSrcFromDst( basePath2 );
+  let filePath1 = path.mapSrcFromDst( basePath1 );
+  let filePath2 = path.mapSrcFromDst( basePath2 );
 
-  basePath1 = path.pathMapDstFromDst( basePath1 );
-  basePath2 = path.pathMapDstFromDst( basePath2 );
+  basePath1 = path.mapDstFromDst( basePath1 );
+  basePath2 = path.mapDstFromDst( basePath2 );
 
   if( filePath1.length > 0 && filePath2.length > 0 )
   if( !_.entityIdentical( basePath1, basePath2 ) )
@@ -1823,19 +1944,6 @@ let Routines =
   globFilterVals,
   globFilterKeys,
 
-  // globRegexpsForTerminalSimple,
-  // globRegexpsForTerminalOld,
-  //
-  // _globRegexpForTerminal,
-  // _globRegexpsForTerminal,
-  // globRegexpsForTerminal,
-  //
-  // _globRegexpForDirectory,
-  // _globRegexpsForDirectory,
-  // globRegexpsForDirectory,
-  // _globSplitsToRegexpSourceGroups,
-  // pathsRelateForGlob,
-
   // full filter
 
   _globRegexpSourceSplitsConcatWithSlashes,
@@ -1851,17 +1959,21 @@ let Routines =
 
   /* xxx : move it out */
 
-  pathMapExtend,
-  pathMapPairSrcAndDst,
-  pathMapIterate,
-  pathMapFilter,
-  pathMapFilterInplace,
+  filterInplace,
+  filter,
+  all,
+  any,
+  none,
 
-  pathMapDstFromSrc,
-  pathMapDstFromDst,
-  pathMapSrcFromSrc,
-  pathMapSrcFromDst,
-  pathMapGroupByDst,
+  isEmpty,
+  mapExtend,
+  mapsPair,
+
+  mapDstFromSrc,
+  mapDstFromDst,
+  mapSrcFromSrc,
+  mapSrcFromDst,
+  mapGroupByDst,
 
   areBasePathsEquivalent,
 

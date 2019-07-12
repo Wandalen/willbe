@@ -252,7 +252,10 @@ function performExportedReflectors( exportSelector )
       module : module,
     });
 
+    _.assert( exportedReflector.original === exp.original );
     _.assert( exportedReflector.src !== exp.src );
+
+    exportedReflector.original = null;
 
     let filter2 =
     {
@@ -297,6 +300,8 @@ function performExportedReflectors( exportSelector )
   exportedReflector.form();
   exported.exportedReflector = exportedReflector;
 
+  _.assert( exportedReflector.original === null );
+  _.assert( module.reflectorMap[ exportedReflector.name ] === exportedReflector );
   _.assert( _.mapIs( exportedReflector.criterion ) );
   _.assert( exportedReflector.dst.prefixPath === null );
   _.assert( exportedReflector.dst.basePath === null );
@@ -384,42 +389,68 @@ function performExportedFilesReflector()
 
   /* exportedFilesReflector */
 
-  if( !exported.exportedFilesReflector )
-  exported.exportedFilesReflector = exported.exportedReflector.cloneExtending
-  ({
-    name : module.resourceNameAllocate( 'reflector', 'exported.files.' + exported.name ),
-    module : module,
-  });
-  let exportedFilesReflector = exported.exportedFilesReflector;
+  // if( !exported.exportedFilesReflector )
+  // exported.exportedFilesReflector = exported.exportedReflector.cloneExtending
+  // ({
+  //   name : module.resourceNameAllocate( 'reflector', 'exported.files.' + exported.name ),
+  //   module : module,
+  // });
+  // let exportedFilesReflector = exported.exportedFilesReflector;
+  // exportedFilesReflector.generated = 1;
+  //
+  // debugger;
+  // exportedFilesReflector.src.pairWithDst( exportedFilesReflector.dst );
+  // exportedFilesReflector.src.pairRefineLight();
+  // exportedFilesReflector.prefixesApply();
+  // exportedFilesReflector.src.filteringClear();
+  // _.assert( exportedFilesReflector.src.basePath === null || path.areBasePathsEquivalent( exportedFilesReflector.src.basePath, path.join( module.inPath, exported.exportedDirPath.path ) ) );
+  //
+  // _.assert( exportedFilesReflector.src.prefixPath === module.inPath || exportedFilesReflector.src.prefixPath === null );
+  // exportedFilesReflector.prefixesRelative( path.join( module.inPath, exported.exportedDirPath.path ) );
+  // exportedFilesReflector.src.prefixPath = exported.exportedDirPath.refName;
+  //
+  // /* base path */
+  //
+  // /*
+  // base path is really required!
+  // */
+  //
+  // exportedFilesReflector.src.basePath = exportedFilesReflector.src.basePath || '.';
+  // _.assert( exportedFilesReflector.dst.basePath === null );
+  // exportedFilesReflector.src.basePathSimplify();
+  //
+  // /* etc */
+  //
+  // exportedFilesReflector.dst.filteringClear();
+  // exportedFilesReflector.src.filePath = exported.exportedFilesPath.nickName;
+  // exportedFilesReflector.recursive = 0;
+  // exportedFilesReflector.form1();
+  // debugger;
+  // // exportedFilesReflector.form();
+  // /*
+  // form1 is not enough here, relativizing absolute paths is required
+  // */
+  // xxx
+
+  _.assert( !exported.exportedFilesReflector );
+
+  let exportedFilesReflector = exported.exportedFilesReflector = module.resourceAllocate( 'reflector', 'exported.files.' + exported.name );
   exportedFilesReflector.generated = 1;
-
-  exportedFilesReflector.src.pairWithDst( exportedFilesReflector.dst );
-  exportedFilesReflector.src.pairRefine();
-  exportedFilesReflector.src.prefixesApply();
-  exportedFilesReflector.dst.prefixesApply();
-
-  _.assert( _.objectIs( exportedFilesReflector.criterion ) );
-  exportedFilesReflector.src.filteringClear();
-  _.assert( exportedFilesReflector.src.basePath === null || path.areBasePathsEquivalent( exportedFilesReflector.src.basePath, path.join( module.inPath, exported.exportedDirPath.path ) ) );
-
-  /*
-  base path is really required!
-  */
-
-  exportedFilesReflector.src.basePath = exportedFilesReflector.src.basePath || '.';
-
-  _.assert( exportedFilesReflector.src.prefixPath === module.inPath || exportedFilesReflector.src.prefixPath === null );
-  exportedFilesReflector.src.prefixPath = exported.exportedDirPath.refName;
-
-  _.assert( exportedFilesReflector.dst.basePath === null );
-  exportedFilesReflector.src.basePathSimplify();
-  exportedFilesReflector.dst.filteringClear();
-  exportedFilesReflector.src.filePath = exported.exportedFilesPath.nickName;
-  exportedFilesReflector.dst.filePath = null;
+  _.mapExtend( exportedFilesReflector.criterion, exported.exportedReflector.criterion );
   exportedFilesReflector.recursive = 0;
+  exportedFilesReflector.src.pairWithDst( exportedFilesReflector.dst );
+  exportedFilesReflector.src.pairRefineLight();
+  exportedFilesReflector.src.basePath = '.';
+  exportedFilesReflector.src.prefixPath = exported.exportedDirPath.nickName;
+  exportedFilesReflector.src.filePath = exported.exportedFilesPath.nickName;
   exportedFilesReflector.form1();
 
+  // xxx
+
   _.assert( exportedFilesReflector.dst.prefixPath === null );
+  _.assert( exportedFilesReflector.dst.basePath === null );
+  _.assert( _.objectIs( exportedFilesReflector.criterion ) );
+  _.assert( !!exportedFilesReflector.src.basePath );
   _.assert( exportedFilesReflector.dst.basePath === null );
 
 }
@@ -601,7 +632,7 @@ let Composes =
   exportedDirPath : null,
   exportedFilesPath : null,
   archiveFilePath : null,
-  // originalWillFilesPath : null,
+  // originalWillFilesPath : null, // xxx
 
 }
 
@@ -619,12 +650,12 @@ let Associates =
 let Restricts =
 {
   srcFilter : null,
-  originalWillFilesPath : null, // xxx
+  // originalWillFilesPath : null, // xxx
 }
 
 let Medials =
 {
-  originalWillFilesPath : null, // xxx
+  // originalWillFilesPath : null, // xxx
 }
 
 let Statics =
@@ -637,6 +668,7 @@ let Forbids =
 {
   files : 'files',
   src : 'src',
+  originalWillFilesPath : 'originalWillFilesPath',
 }
 
 let Accessors =

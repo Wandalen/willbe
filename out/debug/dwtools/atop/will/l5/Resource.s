@@ -163,10 +163,11 @@ function init( o )
   if( o )
   resource.copy( o );
 
-  if( _.instanceIs( o ) )
-  {
-    _.assert( resource.willf === null );
-  }
+  // if( _.instanceIs( o ) ) // yyy
+  // {
+  //   _.assert( resource.willf === null );
+  //   _.assert( resource.module === null );
+  // }
 
   return resource;
 }
@@ -238,8 +239,8 @@ function unform()
   if( !resource.original )
   {
     _.assert( module[ resource.MapName ][ resource.name ] === resource );
-    if( willf )
-    _.assert( willf[ resource.MapName ][ resource.name ] === resource );
+    // if( willf )
+    // _.assert( willf[ resource.MapName ][ resource.name ] === resource );
   }
 
   /* begin */
@@ -247,8 +248,8 @@ function unform()
   if( !resource.original )
   {
     delete module[ resource.MapName ][ resource.name ];
-    if( willf )
-    delete willf[ resource.MapName ][ resource.name ];
+    // if( willf )
+    // delete willf[ resource.MapName ][ resource.name ];
   }
 
   /* end */
@@ -312,7 +313,7 @@ function form1()
   if( !resource.original )
   {
     _.sure( !module[ resource.MapName ][ resource.name ], () => 'Module ' + module.dirPath + ' already has ' + resource.nickName );
-    _.assert( !willf || !willf[ resource.MapName ][ resource.name ] );
+    // _.assert( !willf || !willf[ resource.MapName ][ resource.name ] );
   }
 
   /* begin */
@@ -328,8 +329,8 @@ function form1()
   if( !resource.original )
   {
     module[ resource.MapName ][ resource.name ] = resource;
-    if( willf )
-    willf[ resource.MapName ][ resource.name ] = resource;
+    // if( willf )
+    // willf[ resource.MapName ][ resource.name ] = resource;
   }
 
   /* end */
@@ -340,20 +341,23 @@ function form1()
 
 //
 
-function form2()
+function form2( o )
 {
   let resource = this;
   let module = resource.module;
+  o = o || Object.create( null );
 
   if( resource.formed >= 2 )
   return resource;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
   _.assert( resource.formed === 1 );
 
   /* begin */
 
-  resource._inheritForm({ visited : [] })
+  o.visited = o.visited || [];
+  resource._inheritForm( o )
+  // resource._inheritForm({ visited : [] })
 
   /* end */
 
@@ -394,6 +398,7 @@ function _inheritForm( o )
   _.arrayRemoveElementOnceStrictly( o.visited, resource );
   _.assert( original === resource.original );
   _.assert( resource.inherited === 1 );
+
   return resource;
 }
 
@@ -808,6 +813,7 @@ function infoExport()
 var defaults = infoExport.defaults = Object.create( _.Will.OpenedModule.prototype.dataExport.defaults );
 defaults.copyingNonExportable = 1;
 defaults.formed = 1;
+defaults.strict = 0;
 
 //
 
@@ -838,6 +844,7 @@ function dataExport()
   delete o2.module;
   delete o2.rootModule;
   delete o2.formed;
+  delete o2.strict;
 
   let fields = resource.cloneData( o2 );
 
@@ -1059,7 +1066,7 @@ function pathRebase( o )
   let path = fileProvider.path;
   let Resolver = will.Resolver;
 
-  o = _.routineOptions( pathRebase, arguments ); 
+  o = _.routineOptions( pathRebase, arguments );
 
   if( o.filePath )
   if( path.isRelative( o.filePath ) )
@@ -1105,21 +1112,24 @@ let Aggregates =
 
 let Associates =
 {
+  willf : null,
+  module : null,
+  original : null,
 }
 
 let Medials =
 {
-  willf : null,
-  module : null,
-  original : null,
+  // willf : null,
+  // module : null,
+  // original : null,
 }
 
 let Restricts =
 {
+  // willf : null,
+  // module : null,
+  // original : null,
   id : null,
-  willf : null,
-  module : null,
-  original : null,
   formed : 0,
   inherited : 0,
   unformedResource : null,

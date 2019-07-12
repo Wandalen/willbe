@@ -53,6 +53,7 @@ function _isPathFilter( e )
 
 //
 
+
 function vectorize( routine, select )
 {
   _.assert( arguments.length === 1 || arguments.length === 2 );
@@ -406,7 +407,7 @@ let Routines =
 
   refine : vectorize( 'refine' ),
   normalize : vectorize( 'normalize' ),
-  normalizeStrict : vectorize( 'normalizeStrict' ),
+  normalizeCanonical : vectorize( 'normalizeCanonical' ),
   normalizeTolerant : vectorize( 'normalizeTolerant' ),
   nativize : vectorize( 'nativize' ),
   dot : vectorize( 'dot' ),

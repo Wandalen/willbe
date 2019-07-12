@@ -6,8 +6,8 @@ about :
 path :
 
   out : '..'
-  
-reflector : 
+
+reflector :
   reflect.proto :
     filePath :
       . : null

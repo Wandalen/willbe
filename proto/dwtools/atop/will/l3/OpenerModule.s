@@ -695,7 +695,7 @@ function _willfilesExport()
 
 //
 
-function _willfileFindSingle( o )
+function _willfileFindSmartSingle( o )
 {
   let opener = this;
   let will = opener.will;
@@ -706,7 +706,7 @@ function _willfileFindSingle( o )
 
   _.assert( rootModule === null || rootModule instanceof will.OpenedModule );
   _.assert( _.strDefined( o.role ) );
-  _.routineOptions( _willfileFindSingle, arguments );
+  _.routineOptions( _willfileFindSmartSingle, arguments );
 
   /* */
 
@@ -768,7 +768,7 @@ function _willfileFindSingle( o )
   if( isDir )
   {
     /* try to find other split files */
-    let found = opener._willfileFindMultiple
+    let found = opener._willfilesFindSmartMultiple
     ({
       isOutFile : o.isOutFile,
     });
@@ -777,7 +777,7 @@ function _willfileFindSingle( o )
   return willf;
 }
 
-_willfileFindSingle.defaults =
+_willfileFindSmartSingle.defaults =
 {
   role : null,
   isOutFile : 0,
@@ -785,7 +785,7 @@ _willfileFindSingle.defaults =
 
 //
 
-function _willfileFindMultiple( o )
+function _willfilesFindSmartMultiple( o )
 {
   let opener = this;
   let will = opener.will;
@@ -795,13 +795,13 @@ function _willfileFindMultiple( o )
   let roles = [ 'single', 'import', 'export' ];
   let files = Object.create( null );
 
-  _.routineOptions( _willfileFindMultiple, arguments );
+  _.routineOptions( _willfilesFindSmartMultiple, arguments );
 
   for( let r = 0 ; r < roles.length ; r++ )
   {
     let role = roles[ r ];
 
-    files[ role ] = opener._willfileFindSingle
+    files[ role ] = opener._willfileFindSmartSingle
     ({
       role : role,
       isOutFile : o.isOutFile,
@@ -826,7 +826,7 @@ function _willfileFindMultiple( o )
 
 }
 
-_willfileFindMultiple.defaults =
+_willfilesFindSmartMultiple.defaults =
 {
   isOutFile : 0,
 }
@@ -870,7 +870,7 @@ function _willfilesFindSmart( o )
 
     /* isOutFile */
 
-    found = opener._willfileFindMultiple
+    found = opener._willfilesFindSmartMultiple
     ({
       isOutFile : isOutFile,
     });
@@ -898,36 +898,30 @@ function _willfilesFindPicked()
   let result = [];
 
   _.assert( arguments.length === 0 );
-  // _.assert( !!opener.pickedWillfilesPath );
   _.assert( !!opener.willfilesPath );
 
   let willfilesPath = _.arrayAs( opener.willfilesPath );
   _.assert( _.strsAreAll( willfilesPath ) );
-  // opener.pickedWillfilesPath = _.arrayAs( opener.pickedWillfilesPath );
-  // _.assert( _.strsAreAll( opener.pickedWillfilesPath ) );
 
-  debugger;
   willfilesPath.forEach( ( filePath ) =>
   {
 
-    debugger;
     let willfile = will.willfileFor
     ({
       filePath : filePath,
       will : will,
       role : 'single',
       openerModule : opener,
-      data : opener.pickedWillfileData,
+      // data : opener.pickedWillfileData,
     })
 
-    if( willfile.exists() || opener.pickedWillfileData )
+    if( willfile.exists() /*|| opener.pickedWillfileData*/ )
     result.push( willfile );
     else
     willfile.finit();
 
   });
 
-  debugger;
   if( result.length )
   {
     let willfilesPath = _.select( result, '*/filePath' );
@@ -967,7 +961,7 @@ function _willfilesFind()
     }
     else
     {
-      _.assert( !opener.pickedWillfileData );
+      // _.assert( !opener.pickedWillfileData );
       result = opener._willfilesFindSmart({ isOutFile : !!opener.supermodule });
     }
 
@@ -994,22 +988,6 @@ function _willfilesFind()
   }
 
 }
-
-// //
-//
-// function willfilesPick( filePaths )
-// {
-//   let opener = this;
-//   let will = opener.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//   let result = [];
-//
-//   opener.pickedWillfilesPath = filePaths;
-//   opener._willfilesFind();
-//   return opener.willfilesArray.slice();
-// }
 
 // --
 // submodule
@@ -1110,6 +1088,9 @@ function remoteIsUpdate()
 
   _.assert( !!opener.willfilesPath || !!opener.dirPath );
   _.assert( arguments.length === 0 );
+
+  if( opener.aliasName === null ) // xxx
+  return end( false );
 
   let remoteProvider = fileProvider.providerForPath( opener.remotePath || opener.commonPath );
   if( remoteProvider.isVcs )
@@ -1396,7 +1377,7 @@ function _remoteDownload( o )
   })
   .keep( function( arg )
   {
-    debugger;
+    // debugger;
     opener.isDownloaded = true;
     if( downloading && !o.dry )
     opener.isUpToDate = true;
@@ -1408,7 +1389,7 @@ function _remoteDownload( o )
       _.assert( !_.arrayHas( will.willfilesArray, willf ) );
       opener.moduleFind();
 
-      debugger;
+      // debugger;
       opener.openedModule.stager.stageStatePausing( 'picked', 0 );
       opener.openedModule.stager.stageStateSkipping( 'submodulesFormed', 1 );
       opener.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
@@ -1539,7 +1520,7 @@ function _filePathChange( willfilesPath )
   if( dirPath === null )
   dirPath = opener.dirPath;
   if( dirPath )
-  dirPath = path.normalize( dirPath );
+  dirPath = path.normalizeTolerant( dirPath );
 
   let commonPath = opener.CommonPathFor( willfilesPath );
 
@@ -1820,7 +1801,7 @@ let Associates =
 
   rootModule : null,
   supermodule : null,
-  pickedWillfileData : null,
+  // pickedWillfileData : null,
 
   willfilesArray : _.define.own([]),
 
@@ -1860,7 +1841,7 @@ let Forbids =
   submoduleAssociation : 'submoduleAssociation',
   currentRemotePath : 'currentRemotePath',
   opened : 'opened',
-  // pickedWillfileData : 'pickedWillfileData',
+  pickedWillfileData : 'pickedWillfileData',
   pickedWillfilesPath : 'pickedWillfilesPath',
 }
 
@@ -1939,12 +1920,11 @@ let Extend =
   _willfilesReadBegin,
   _willfilesExport,
 
-  _willfileFindSingle,
-  _willfileFindMultiple,
+  _willfileFindSmartSingle,
+  _willfilesFindSmartMultiple,
   _willfilesFindSmart,
   _willfilesFindPicked,
   _willfilesFind,
-  // willfilesPick,
 
   // submodule
 

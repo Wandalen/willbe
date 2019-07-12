@@ -1053,10 +1053,10 @@ function close()
   for( let i = module.willfilesArray.length-1 ; i >= 0 ; i-- )
   {
     let willf = module.willfilesArray[ i ];
-    _.assert( Object.keys( willf.submoduleMap ).length === 0 );
-    _.assert( Object.keys( willf.reflectorMap ).length === 0 );
-    _.assert( Object.keys( willf.stepMap ).length === 0 );
-    _.assert( Object.keys( willf.buildMap ).length === 0 );
+    // _.assert( Object.keys( willf.submoduleMap ).length === 0 );
+    // _.assert( Object.keys( willf.reflectorMap ).length === 0 );
+    // _.assert( Object.keys( willf.stepMap ).length === 0 );
+    // _.assert( Object.keys( willf.buildMap ).length === 0 );
     _.assert( willf.openedModule === module );
     module.willfileUnregister( willf );
     willf.openedModule = null;
@@ -2210,9 +2210,9 @@ function remoteIsDownloadedSet( src )
 {
   let module = this;
 
-  if( module.will )
-  if( module.nickName === "module::wTools" )
-  debugger;
+  // if( module.will )
+  // if( module.nickName === "module::wTools" )
+  // debugger;
 
   src = !!src;
 
@@ -2582,7 +2582,7 @@ function pathsRelative( basePath, filePath )
   if( !path.s.anyAreAbsolute( filePath ) )
   return filePath;
 
-  filePath = path.pathMapFilter( filePath, ( filePath ) =>
+  filePath = path.filter( filePath, ( filePath ) =>
   {
     if( filePath )
     if( path.isAbsolute( filePath ) )
@@ -2611,11 +2611,10 @@ function pathsRebase( o )
   if( inPathResource.path === null )
   inPathResource.path = '.';
 
-  let inPath = path.normalizeStrict( o.inPath );
+  let inPath = path.normalizeCanonical( o.inPath );
   let exInPath = module.inPath;
   let relative = path.relative( inPath, exInPath );
 
-  debugger;
   if( inPath === exInPath )
   {
     debugger;
@@ -2678,7 +2677,6 @@ function pathsRebase( o )
 
   }
 
-  debugger;
 }
 
 pathsRebase.defaults =
@@ -2714,7 +2712,7 @@ function _filePathChange( willfilesPath )
   if( dirPath === null )
   dirPath = module.dirPath;
   if( dirPath )
-  dirPath = path.normalize( dirPath );
+  dirPath = path.normalizeTolerant( dirPath );
 
   let commonPath = willfilesPath ? module.CommonPathFor( willfilesPath ) : null;
 
@@ -2757,7 +2755,12 @@ function inPathGet()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  return path.s.join( module.dirPath, ( module.pathMap.in || '.' ) );
+  let result = path.s.join( module.dirPath, ( module.pathMap.in || '.' ) );
+
+  if( result && _.strHas( result, '//' ) )
+  debugger;
+
+  return result;
 }
 
 //
@@ -2843,7 +2846,6 @@ function predefinedPathAssign_functor( fieldName, resourceName, relativizing, fo
       let basePath = module[ relativizing ];
       _.assert( basePath === null || _.strIs( basePath ) );
 
-      // xxx
       if( filePath && basePath )
       filePath = module.pathsRelative( basePath, filePath );
 
@@ -2853,7 +2855,7 @@ function predefinedPathAssign_functor( fieldName, resourceName, relativizing, fo
       //   let fileProvider = will.fileProvider;
       //   let path = fileProvider.path;
       //   _.assert( path.isAbsolute( basePath ) );
-      //   filePath = path.pathMapFilterInplace( filePath, ( filePath ) =>
+      //   filePath = path.filterInplace( filePath, ( filePath ) =>
       //   {
       //     if( filePath )
       //     if( path.isAbsolute( filePath ) )
@@ -3101,7 +3103,12 @@ function absoluteNameGet()
   let module = this;
   let rootModule = module.rootModule;
   if( rootModule && rootModule !== module )
-  return rootModule.nickName + ' / ' + module.nickName;
+  {
+    if( rootModule === module.original )
+    return rootModule.nickName + ' / ' + 'f::duplicate';
+    else
+    return rootModule.nickName + ' / ' + module.nickName;
+  }
   else
   return module.nickName;
 }
@@ -3778,6 +3785,7 @@ dataExport.defaults =
   copyingNonExportable : 0,
   copyingNonWritable : 1,
   copyingPredefined : 1,
+  strict : 1,
   module : null,
   rootModule : null,
 }
@@ -3808,9 +3816,9 @@ function dataExportForModuleExport( o )
   opener2.rootModule = module;
   opener2.original = module;
 
-  debugger;
+  // debugger;
   let module2 = opener2.moduleClone( module );
-  debugger;
+  // debugger;
 
   module2.pathsRebase({ inPath : module.outPath });
 
@@ -4057,7 +4065,8 @@ function ResourceSetter_functor( op )
 
       if( resource.module !== null )
       resource = resource.clone();
-      _.assert( resource.module === null );
+      _.assert( resource.formed === 0 );
+      // _.assert( resource.module === null );
       resource.module = module;
       resource.form1();
       _.assert( !_.instanceIsFinited( resource ) );

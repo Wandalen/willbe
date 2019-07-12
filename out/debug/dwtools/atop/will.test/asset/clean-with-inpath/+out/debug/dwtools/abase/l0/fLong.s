@@ -749,7 +749,7 @@ function longAreRepeatedProbe( srcArray, onEvaluate )
   //
   // _.assert( arguments.length === 1, 'Expects single argument' );
   // _.assert( _.longIs( o.src ) );
-  // _.assertMapHasOnly( o, arrayInvestigateUniqueMap.defaults );
+  // _.assertMapHasOnly( o, longUniqueAre.defaults );
   //
   // /* */
   //
@@ -800,7 +800,7 @@ function longAreRepeatedProbe( srcArray, onEvaluate )
   // return { number : number, array : isUnique };
 }
 
-// arrayInvestigateUniqueMap.defaults =
+// longUniqueAre.defaults =
 // {
 //   src : null,
 //   onEvaluate : null,

@@ -493,11 +493,8 @@ function _pathsNativize1()
   if( !rop.pathNativizing )
   return;
 
-  debugger;
-
   if( it.selectMultipleOptions )
   {
-    debugger;
     if( !rop.selectorIsPath )
     return;
   }
@@ -741,24 +738,26 @@ function _pathsResolve()
   let currentModule = it.currentModule;
   let resource = it.dst;
 
-  if( it.dst instanceof will.Reflector )
-  {
-    resource = it.dst = it.dst.cloneDerivative();
-
-    _.assert( resource.formed >= 1 );
-
-    let srcHasAnyPath = resource.src.hasAnyPath();
-    let dstHasAnyPath = resource.dst.hasAnyPath();
-
-    if( srcHasAnyPath || dstHasAnyPath )
-    {
-      if( srcHasAnyPath )
-      resource.src.prefixPath = _pathResolve.call( it, resource.src.prefixPath || '.' );
-      if( dstHasAnyPath )
-      resource.dst.prefixPath = _pathResolve.call( it, resource.dst.prefixPath || '.' );
-    }
-
-  }
+  // yyy
+  // if( it.dst instanceof will.Reflector )
+  // {
+  //
+  //   resource = it.dst = it.dst.cloneDerivative();
+  //
+  //   _.assert( resource.formed >= 1 );
+  //
+  //   let srcHasAnyPath = resource.src.hasAnyPath();
+  //   let dstHasAnyPath = resource.dst.hasAnyPath();
+  //
+  //   if( srcHasAnyPath || dstHasAnyPath )
+  //   {
+  //     if( srcHasAnyPath )
+  //     resource.src.prefixPath = _pathResolve.call( it, resource.src.prefixPath || '.' );
+  //     if( dstHasAnyPath )
+  //     resource.dst.prefixPath = _pathResolve.call( it, resource.dst.prefixPath || '.' );
+  //   }
+  //
+  // }
 
   if( it.dst instanceof will.PathResource )
   {
@@ -1567,6 +1566,12 @@ defaults.mapValsUnwrapping = 0;
 defaults.mapFlattening = 0;
 defaults.arrayWrapping = 0;
 defaults.arrayFlattening = 0;
+defaults.missingAction = 'undefine';
+
+/*
+missingAction should be 'undefine'
+alternatively adjust call from finit of class Exported
+*/
 
 //
 

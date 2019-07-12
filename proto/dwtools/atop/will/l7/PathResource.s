@@ -76,18 +76,14 @@ function unform()
   let willf = resource.willf;
 
   _.assert( module[ resource.MapName ][ resource.name ] === resource );
-  if( willf )
-  _.assert( willf[ resource.MapName ][ resource.name ] === resource );
 
   Parent.prototype.unform.apply( resource, arguments )
 
-  delete module[ resource.MapName ][ resource.name ];
-  if( willf )
-  delete willf[ resource.MapName ][ resource.name ];
-
-  delete module.pathMap[ resource.name ];
-  if( willf )
-  delete willf.pathMap[ resource.name ];
+  if( !resource.original )
+  {
+    _.assert( module[ resource.MapName ][ resource.name ] === undefined );
+    delete module.pathMap[ resource.name ];
+  }
 
   return resource;
 }
@@ -103,18 +99,16 @@ function form1()
   if( resource.formed && resource === module[ resource.MapName ][ resource.name ] )
   return resource;
 
+  if( !resource.original )
   _.sure( !module[ resource.MapName ][ resource.name ], () => 'Module ' + module.dirPath + ' already has ' + resource.nickName );
-  _.assert( !willf || !willf[ resource.MapName ][ resource.name ] );
 
   Parent.prototype.form1.apply( resource, arguments )
 
-  module[ resource.MapName ][ resource.name ] = resource;
-  if( willf )
-  willf[ resource.MapName ][ resource.name ] = resource;
-
-  module.pathMap[ resource.name ] = resource.path;
-  if( willf )
-  willf.pathMap[ resource.name ] = resource.path;
+  if( !resource.original )
+  {
+    _.assert( module[ resource.MapName ][ resource.name ] === resource );
+    module.pathMap[ resource.name ] = resource.path;
+  }
 
   return resource;
 }
@@ -263,8 +257,8 @@ function pathsRebase( o )
   _.assert( path.isAbsolute( o.inPath ) );
   _.assert( path.isAbsolute( o.exInPath ) );
 
-  if( resource.name === 'out' )
-  debugger;
+  // if( resource.name === 'out' )
+  // debugger;
 
   if( !o.relative )
   o.relative = path.relative( o.inPath, o.exInPath );
@@ -282,7 +276,7 @@ function pathsRebase( o )
   if( resource.name === 'module.dir' )
   return resource;
 
-  resource.path = path.pathMapFilterInplace( resource.path, ( filePath ) =>
+  resource.path = path.filterInplace( resource.path, ( filePath ) =>
   {
     return resource.pathRebase
     ({

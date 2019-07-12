@@ -3216,43 +3216,43 @@ function _mapOnly( test )
 
 //
 
-function mapIdentical( test )
+function mapsAreIdentical( test )
 {
 
   test.case = 'same values';
-  var got = _.mapIdentical( { a : 7, b : 13 }, { a : 7, b : 13 } );
+  var got = _.mapsAreIdentical( { a : 7, b : 13 }, { a : 7, b : 13 } );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'not the same values in'
-  var got = _.mapIdentical( { 'a' : 7, 'b' : 13 }, { 'a' : 7, 'b': 14 } );
+  var got = _.mapsAreIdentical( { 'a' : 7, 'b' : 13 }, { 'a' : 7, 'b': 14 } );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'different number of keys, more in the first argument'
-  var got = _.mapIdentical( { 'a' : 7, 'b' : 13, 'с' : 15 }, { 'a' : 7, 'b' : 13 } );
+  var got = _.mapsAreIdentical( { 'a' : 7, 'b' : 13, 'с' : 15 }, { 'a' : 7, 'b' : 13 } );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'different number of keys, more in the second argument'
-  var got = _.mapIdentical( { 'a' : 7, 'b' : 13 }, { 'a' : 7, 'b' : 13, 'с' : 15 } );
+  var got = _.mapsAreIdentical( { 'a' : 7, 'b' : 13 }, { 'a' : 7, 'b' : 13, 'с' : 15 } );
   var expected = false;
   test.identical( got, expected );
 
   /* special cases */
 
   test.case = 'empty maps, standrard'
-  var got = _.mapIdentical( {}, {} );
+  var got = _.mapsAreIdentical( {}, {} );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'empty maps, pure'
-  var got = _.mapIdentical( Object.create( null ), Object.create( null ) );
+  var got = _.mapsAreIdentical( Object.create( null ), Object.create( null ) );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'empty maps, one standard another pure'
-  var got = _.mapIdentical( {}, Object.create( null ) );
+  var got = _.mapsAreIdentical( {}, Object.create( null ) );
   var expected = true;
   test.identical( got, expected );
 
@@ -3264,41 +3264,41 @@ function mapIdentical( test )
   test.case = 'no arguments';
   test.shouldThrowError( function()
   {
-    _.mapIdentical();
+    _.mapsAreIdentical();
   });
 
   test.case = 'not object-like arguments';
   test.shouldThrowError( function()
   {
-    _.mapIdentical( [ 'a', 7, 'b', 13 ], [ 'a', 7, 'b', 14 ] );
+    _.mapsAreIdentical( [ 'a', 7, 'b', 13 ], [ 'a', 7, 'b', 14 ] );
   });
   test.shouldThrowError( function()
   {
-    _.mapIdentical( 'a','b' );
+    _.mapsAreIdentical( 'a','b' );
   });
   test.shouldThrowError( function()
   {
-    _.mapIdentical( 1,3 );
+    _.mapsAreIdentical( 1,3 );
   });
   test.shouldThrowError( function()
   {
-    _.mapIdentical( null,null );
+    _.mapsAreIdentical( null,null );
   });
   test.shouldThrowError( function()
   {
-    _.mapIdentical( undefined,undefined );
+    _.mapsAreIdentical( undefined,undefined );
   });
 
   test.case = 'too few arguments';
   test.shouldThrowError( function()
   {
-    _.mapIdentical( {} );
+    _.mapsAreIdentical( {} );
   });
 
   test.case = 'too many arguments';
   test.shouldThrowError( function()
   {
-    _.mapIdentical( {}, {}, 'redundant argument' );
+    _.mapsAreIdentical( {}, {}, 'redundant argument' );
   });
 
 }
@@ -4113,7 +4113,7 @@ var Self =
     mapOnly,
     _mapOnly,
 
-    mapIdentical,
+    mapsAreIdentical,
     mapContain,
 
     mapOwnKey,

@@ -115,7 +115,6 @@ function form3()
   {
     if( submodule.opener && !submodule.opener.isValid() )
     {
-      debugger;
       let opener = submodule.opener;
       submodule.opener = null;
       opener.finit();
@@ -197,7 +196,6 @@ function open()
   submodule._openFrom
   ({
     longPath : longPath,
-    // data : submodule.data,
   });
 
   if( submodule.opener.error )
@@ -228,11 +226,9 @@ function _openFrom( o )
   _.assert( _.strIs( submodule.path ), 'not tested' );
   _.assert( !submodule.original );
   _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
-  // _.assert( !submodule.data );
 
   /* */
 
-  // debugger;
   submodule.opener = will.OpenerModule
   ({
     will : will,
@@ -240,8 +236,6 @@ function _openFrom( o )
     willfilesPath : o.longPath,
     supermodule : module,
     rootModule : module.rootModule,
-    // pickedWillfilesPath : o.data ? o.longPath : null,
-    // pickedWillfileData : o.data,
   }).preform();
 
   if( !submodule.opener.moduleFindTry() )
@@ -271,7 +265,6 @@ function _openFrom( o )
 
 _openFrom.defaults =
 {
-  // data : null,
   longPath : null,
 }
 
@@ -529,7 +522,7 @@ function pathsRebase( o )
 
   /* */
 
-  resource.path = path.pathMapFilterInplace( resource.path, ( filePath ) =>
+  resource.path = path.filterInplace( resource.path, ( filePath ) =>
   {
     return resource.pathRebase
     ({
@@ -583,13 +576,13 @@ let Restricts =
 {
   // data : null, // xxx
   opener : null,
-  own : 1, // xxx
+  // own : 1, // xxx
 }
 
 let Medials =
 {
   // data : null, // xxx
-  own : 1, // xxx
+  // own : 1, // xxx
 }
 
 let Statics =
@@ -613,6 +606,7 @@ let Accessors =
 let Forbids =
 {
   data : 'data',
+  own : 'own',
 }
 
 // --
@@ -633,8 +627,6 @@ let Extend =
   form3,
 
   open,
-  // _openFromData,
-  // _openFromFile,
   _openFrom,
 
   errorNotFound,

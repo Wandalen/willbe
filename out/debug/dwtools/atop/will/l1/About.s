@@ -83,7 +83,7 @@ function copy( o )
 
 //
 
-let _nameGetterSetter = _.accessor.accessor.alias({ containerName : 'values', originalName : 'name' });
+let _nameGetterSetter = _.accessor.suite.alias({ containerName : 'values', originalName : 'name' });
 let nameGetterSetter =
 {
   get : _nameGetterSetter.get,
@@ -169,7 +169,7 @@ let Forbids =
 let Accessors =
 {
   name : { getterSetter : nameGetterSetter },
-  enabled : { getterSetter : _.accessor.accessor.alias({ containerName : 'values', originalName : 'enabled' }) },
+  enabled : { getterSetter : _.accessor.suite.alias({ containerName : 'values', originalName : 'enabled' }) },
 }
 
 // --

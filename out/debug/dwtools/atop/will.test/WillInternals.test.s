@@ -276,9 +276,7 @@ function buildSimple( test )
       var files = self.find( outPath );
       test.identical( files, expected );
 
-      debugger;
       module.finit();
-      debugger;
 
       test.identical( will.modulesArray.length, 0 );
       test.identical( _.mapKeys( will.moduleWithIdMap ).length, 0 );
@@ -311,7 +309,6 @@ function openNamed( test )
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
 
-  debugger;
   var module1 = will.moduleMake({ willfilesPath : modulePath });
   let ready1 = module1.openedModule.ready;
   var module2 = will.moduleMake({ willfilesPath : modulePath });
@@ -426,7 +423,7 @@ function openNamed( test )
     test.identical( module.absoluteName, 'module::supermodule' );
     test.identical( module.inPath, routinePath );
     test.identical( module.outPath, routinePath + '/super.out' );
-    test.identical( module.configName, 'super' ); debugger;
+    test.identical( module.configName, 'super' );
     test.identical( module.aliasName, null );
     test.identical( module.localPath, null );
     test.identical( module.remotePath, null );
@@ -532,7 +529,6 @@ function openAnon( test )
   return _.Consequence.AndTake([ ready1, ready2 ])
   .finallyKeep( ( err, arg ) =>
   {
-    debugger;
     if( err )
     throw err;
     return arg;
@@ -640,7 +636,6 @@ function openOutNamed( test )
 
   module1.openedModule.ready.finallyKeep( ( err, arg ) =>
   {
-    debugger;
     test.case = 'opened filePath : ' + assetName;
     test.is( err === undefined );
     module1.finit();
@@ -671,7 +666,6 @@ function openOutNamed( test )
   return _.Consequence.AndTake([ ready1, ready2 ])
   .finallyKeep( ( err, arg ) =>
   {
-    debugger;
     if( err )
     throw err;
     return arg;
@@ -685,16 +679,16 @@ function openOutNamed( test )
     let pathMap =
     {
 
-      'proto' : './proto',
-      'temp' : [ './super.out', './out' ],
-      'out' : './super.out',
-      'out.debug' : './super.out/debug',
-      'out.release' : './super.out/release',
-      'in' : '..',
-      'exported.dir.export.debug' : './super.out/debug',
-      'exported.files.export.debug' : [ 'super.out/debug', 'super.out/debug/File.debug.js', 'super.out/debug/File.release.js' ],
-      'exported.dir.export.' : './super.out/release',
-      'exported.files.export.' : [ 'super.out/release', 'super.out/release/File.debug.js', 'super.out/release/File.release.js' ],
+      'proto' : '../proto',
+      'temp' : [ '.', '../out' ],
+      'in' : '.',
+      'out' : '.',
+      'out.debug' : 'debug',
+      'out.release' : 'release',
+      'exported.dir.export.debug' : 'debug',
+      'exported.files.export.debug' : [ 'debug', 'debug/File.debug.js', 'debug/File.release.js' ],
+      'exported.dir.export.' : 'release',
+      'exported.files.export.' : [ 'release', 'release/File.debug.js', 'release/File.release.js' ],
 
       'local' : null,
       'remote' : null,
@@ -709,7 +703,7 @@ function openOutNamed( test )
 
     test.identical( module.nickName, 'module::supermodule' );
     test.identical( module.absoluteName, 'module::supermodule' );
-    test.identical( module.inPath, routinePath );
+    test.identical( module.inPath, routinePath + '/super.out' );
     test.identical( module.outPath, routinePath + '/super.out' );
     test.identical( module.dirPath, routinePath + '/super.out/' );
     test.identical( module.localPath, null );
@@ -894,8 +888,8 @@ function clone( test )
       test.is( resource2.module === module2.openedModule );
       if( resource1 instanceof will.Resource )
       {
-        test.is( !!resource1.willf || ( resource1.criterion && resource1.criterion.predefined ) );
-        test.is( !resource2.willf );
+        test.is( !!resource1.willf || ( resource1.criterion && !!resource1.criterion.predefined ) );
+        test.is( resource1.willf === resource2.willf );
       }
     }
 
@@ -1050,7 +1044,7 @@ function reflectorResolve( test )
     resolved.form();
     var expected =
     {
-      'dst' :
+      'src' :
       {
         'filePath' : { 'path::proto' : 'path::out.*=1' }
       },
@@ -1202,11 +1196,7 @@ function reflectorResolve( test )
     resolved.form();
     var expected =
     {
-      'src' :
-      {
-        'filePath' : { '.' : '.' },
-        'prefixPath' : 'proto/dir2/File.test.js',
-      },
+      'src' : { 'prefixPath' : 'proto/dir2/File.test.js' },
       'dst' : { 'prefixPath' : 'out/debug/dir1/File.test.js' },
       'criterion' : { 'debug' : 1, 'variant' : 6 },
       'mandatory' : 1
@@ -1328,8 +1318,6 @@ function superResolve( test )
 
   module.openedModule.ready.thenKeep( ( arg ) =>
   {
-
-    debugger;
 
     test.case = 'build::*';
     var resolved = module.openedModule.resolve( 'build::*' );
@@ -1604,7 +1592,6 @@ function pathsResolve( test )
     test.identical( resolved, expected );
 
     test.case = '{path::in*=1}/proto, pathNativizing : 1';
-    debugger;
     var resolved = module.openedModule.resolve({ selector : '{path::in*=1}/proto', pathNativizing : 1, selectorIsPath : 0 })
     var expected = _.path.nativize( pin( '.' ) ) + '/proto';
     test.identical( resolved, expected );
@@ -2042,9 +2029,14 @@ function pathsResolveImportIn( test )
     return path.s.join( routinePath, filePath );
   }
 
-  function pout( filePath )
+  function sout( filePath )
   {
     return path.s.join( routinePath, 'super.out', filePath );
+  }
+
+  function pout( filePath )
+  {
+    return path.s.join( routinePath, 'out', filePath );
   }
 
   _.fileProvider.filesDelete( routinePath );
@@ -2058,12 +2050,12 @@ function pathsResolveImportIn( test )
 
     test.case = 'submodule::*/path::in*=1, default';
     var resolved = module.openedModule.resolve( 'submodule::*/path::in*=1' )
-    var expected = pin( 'proto' );
+    var expected = pin( 'out' );
     test.identical( resolved, expected );
 
     test.case = 'submodule::*/path::in*=1, pathResolving : 0';
     var resolved = module.openedModule.resolve({ prefixlessAction : 'resolved', selector : 'submodule::*/path::in*=1', pathResolving : 0 })
-    var expected = '../proto';
+    var expected = '.';
     test.identical( resolved, expected );
 
     test.case = 'submodule::*/path::in*=1, strange case';
@@ -2074,7 +2066,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapFlattening : 1,
     });
-    var expected = pin( 'proto' );
+    var expected = pin( 'out' );
     test.identical( resolved, expected );
 
     return null;
@@ -2115,7 +2107,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected = '../proto';
+    var expected = '.';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2130,7 +2122,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = '../proto';
+    var expected = '.';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -2150,7 +2142,7 @@ function pathsResolveImportIn( test )
       mapValsUnwrapping : 1,
       arrayFlattening : 0,
     });
-    var expected = [ [ '../proto' ] ];
+    var expected = [ [ '.' ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2165,7 +2157,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'Submodule/in' : '../proto' };
+    var expected = { 'Submodule/in' : '.' };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -2189,7 +2181,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected = '../proto';
+    var expected = '.';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2204,7 +2196,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = '../proto';
+    var expected = '.';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -2224,7 +2216,7 @@ function pathsResolveImportIn( test )
       mapValsUnwrapping : 1,
       arrayFlattening : 0,
     });
-    var expected = [ [ '../proto' ] ];
+    var expected = [ [ '.' ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2241,7 +2233,7 @@ function pathsResolveImportIn( test )
     });
     var expected =
     {
-      'Submodule' : { 'in' : '../proto' }
+      'Submodule' : { 'in' : '.' }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
@@ -2271,7 +2263,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected = pin( 'proto' );
+    var expected = pout( '.' );
     test.identical( resolved, expected );
 
     test.close( 'mapValsUnwrapping : 1' );
@@ -2287,7 +2279,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = pin( 'proto' );
+    var expected = pout( '.' );
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -2307,7 +2299,7 @@ function pathsResolveImportIn( test )
       mapValsUnwrapping : 1,
       arrayFlattening : 0,
     });
-    var expected = [ [ pin( 'proto' ) ] ];
+    var expected = [ [ pout( '.' ) ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2322,7 +2314,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'Submodule/in' : pin( 'proto' ) };
+    var expected = { 'Submodule/in' : pout( '.' ) };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -2346,7 +2338,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected = pin( 'proto' );
+    var expected = pout( '.' );
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2361,7 +2353,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = pin( 'proto' );
+    var expected = pout( '.' );
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -2381,7 +2373,7 @@ function pathsResolveImportIn( test )
       mapValsUnwrapping : 1,
       arrayFlattening : 0,
     });
-    var expected = [ [ pin( 'proto' ) ] ];
+    var expected = [ [ pout( '.' ) ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2398,7 +2390,7 @@ function pathsResolveImportIn( test )
     });
     var expected =
     {
-      'Submodule' : { 'in' : pin( 'proto' ) }
+      'Submodule' : { 'in' : pout( '.' ) }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
@@ -2437,7 +2429,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected = '.';
+    var expected = '../proto';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2452,7 +2444,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = '.';
+    var expected = '../proto';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -2472,7 +2464,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 0,
       arrayFlattening : 0,
     });
-    var expected = [ [ '.' ] ];
+    var expected = [ [ '../proto' ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2487,7 +2479,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 0,
       mapValsUnwrapping : 0,
     });
-    var expected = { 'Submodule/proto' : '.' };
+    var expected = { 'Submodule/proto' : '../proto' };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -2511,7 +2503,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected = '.';
+    var expected = '../proto';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2526,7 +2518,7 @@ function pathsResolveImportIn( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = '.';
+    var expected = '../proto';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -2546,7 +2538,7 @@ function pathsResolveImportIn( test )
       mapValsUnwrapping : 1,
       arrayFlattening : 0,
     });
-    var expected = [ [ '.' ] ];
+    var expected = [ [ '../proto' ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -2563,7 +2555,7 @@ function pathsResolveImportIn( test )
     });
     var expected =
     {
-      'Submodule' : { 'proto' : '.' }
+      'Submodule' : { 'proto' : '../proto' }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
@@ -2736,7 +2728,6 @@ function pathsResolveImportIn( test )
 
     test.close( 'proto' );
 
-    debugger;
     return null;
   })
 
@@ -2851,8 +2842,6 @@ function pathsResolveOfSubmodules( test )
 
 }
 
-pathsResolveOfSubmodules.timeOut = 300000;
-
 //
 
 function pathsResolveOfSubmodulesAndOwn( test )
@@ -2882,14 +2871,12 @@ function pathsResolveOfSubmodulesAndOwn( test )
   {
 
     test.case = 'path::export';
-    debugger;
     let resolved = module.openedModule.pathResolve
     ({
       selector : 'path::export',
       currentContext : null,
       pathResolving : 'in',
     });
-    debugger;
     var expected =
     [
       'proto/a',
@@ -2955,6 +2942,11 @@ function pathsResolveOutFileOfExports( test )
     return path.s.join( routinePath, 'out', filePath );
   }
 
+  function sout( filePath )
+  {
+    return path.s.join( routinePath, 'super.out', filePath );
+  }
+
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
 
@@ -2967,12 +2959,12 @@ function pathsResolveOutFileOfExports( test )
 
     test.case = 'submodule::*/path::in*=1, default';
     var resolved = module.openedModule.resolve( 'submodule::*/path::in*=1' );
-    var expected = pin( '.' );
+    var expected = sout( '.' );
     test.identical( resolved, expected );
 
     test.case = 'submodule::*/path::in*=1, pathResolving : 0';
     var resolved = module.openedModule.resolve({ prefixlessAction : 'resolved', selector : 'submodule::*/path::in*=1', pathResolving : 0 });
-    var expected = '..';
+    var expected = '.';
     test.identical( resolved, expected );
 
     test.case = 'submodule::*/path::in*=1, strange case';
@@ -2983,7 +2975,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 1,
       mapFlattening : 1,
     });
-    var expected = pin( '.' );
+    var expected = sout( '.' );
     test.identical( resolved, expected );
 
     test.close( 'without export' );
@@ -2994,7 +2986,7 @@ function pathsResolveOutFileOfExports( test )
 
     test.case = 'submodule::*/exported::*=1debug/path::in*=1, default';
     var resolved = module.openedModule.resolve( 'submodule::*/exported::*=1debug/path::in*=1' );
-    var expected = pin( '.' );
+    var expected = sout( '.' );
     test.identical( resolved, expected );
 
     test.case = 'submodule::*/exported::*=1debug/path::in*=1, pathResolving : 0';
@@ -3004,7 +2996,7 @@ function pathsResolveOutFileOfExports( test )
       selector : 'submodule::*/exported::*=1debug/path::in*=1',
       pathResolving : 0,
     })
-    var expected = '..';
+    var expected = '.';
     test.identical( resolved, expected );
 
     test.case = 'submodule::*/exported::*=1debug/path::in*=1, strange case';
@@ -3015,12 +3007,10 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 1,
       mapFlattening : 1,
     });
-    var expected = pin( '.' );
+    var expected = sout( '.' );
     test.identical( resolved, expected );
 
     test.close( 'with export' );
-
-    // "submodule::*/exported::*=1debug/path::exported.dir*=1"
 
     return null;
   });
@@ -3060,7 +3050,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected = '..';
+    var expected = '.';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -3075,7 +3065,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = '..';
+    var expected = '.';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -3095,7 +3085,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 0,
       arrayFlattening : 0,
     });
-    var expected = [ [ '..' ] ];
+    var expected = [ [ '.' ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -3111,7 +3101,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 0,
       arrayFlattening : 0,
     });
-    var expected = { 'Submodule/in' : '..' };
+    var expected = { 'Submodule/in' : '.' };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -3136,7 +3126,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 1,
       arrayFlattening : 0,
     });
-    var expected = '..';
+    var expected = '.';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -3152,7 +3142,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 0,
       arrayFlattening : 0,
     });
-    var expected = '..';
+    var expected = '.';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -3172,7 +3162,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 1,
       arrayFlattening : 0,
     });
-    var expected = [ [ '..' ] ];
+    var expected = [ [ '.' ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -3190,7 +3180,7 @@ function pathsResolveOutFileOfExports( test )
     });
     var expected =
     {
-      'Submodule' : { 'in' : '..' }
+      'Submodule' : { 'in' : '.' }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
@@ -3220,7 +3210,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected = pin( '.' );
+    var expected = sout( '.' );
     test.identical( resolved, expected );
 
     test.close( 'mapValsUnwrapping : 1' );
@@ -3236,7 +3226,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = pin( '.' );
+    var expected = sout( '.' );
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -3256,7 +3246,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 1,
       arrayFlattening : 0,
     });
-    var expected = [ [ pin( '.' ) ] ];
+    var expected = [ [ sout( '.' ) ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -3272,7 +3262,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 0,
       arrayFlattening : 0,
     });
-    var expected = { 'Submodule/in' : pin( '.' ) };
+    var expected = { 'Submodule/in' : sout( '.' ) };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -3297,7 +3287,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 1,
       arrayFlattening : 0,
     });
-    var expected = pin( '.' );
+    var expected = sout( '.' );
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -3313,7 +3303,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 0,
       arrayFlattening : 0,
     });
-    var expected = pin( '.' );
+    var expected = sout( '.' );
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -3333,7 +3323,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 1,
       arrayFlattening : 0,
     });
-    var expected = [ [ pin( '.' ) ] ];
+    var expected = [ [ sout( '.' ) ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -3351,7 +3341,7 @@ function pathsResolveOutFileOfExports( test )
     });
     var expected =
     {
-      'Submodule' : { 'in' : pin( '.' ) }
+      'Submodule' : { 'in' : sout( '.' ) }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
@@ -3391,7 +3381,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 1,
       arrayFlattening : 0,
     });
-    var expected = './proto';
+    var expected = '../proto';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -3407,7 +3397,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 0,
       arrayFlattening : 0,
     });
-    var expected = './proto';
+    var expected = '../proto';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -3427,7 +3417,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 1,
       arrayFlattening : 0,
     });
-    var expected = [ [ './proto' ] ];
+    var expected = [ [ '../proto' ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -3443,7 +3433,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 0,
       arrayFlattening : 0,
     });
-    var expected = { 'Submodule/proto' : './proto' };
+    var expected = { 'Submodule/proto' : '../proto' };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -3468,7 +3458,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 1,
       arrayFlattening : 0,
     });
-    var expected = './proto';
+    var expected = '../proto';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -3484,7 +3474,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 0,
       arrayFlattening : 0,
     });
-    var expected = './proto';
+    var expected = '../proto';
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -3504,7 +3494,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 1,
       arrayFlattening : 0,
     });
-    var expected = [ [ './proto' ] ];
+    var expected = [ [ '../proto' ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -3522,7 +3512,7 @@ function pathsResolveOutFileOfExports( test )
     });
     var expected =
     {
-      'Submodule' : { 'proto' : './proto' }
+      'Submodule' : { 'proto' : '../proto' }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
@@ -3700,7 +3690,6 @@ function pathsResolveOutFileOfExports( test )
 
     test.close( 'proto' );
 
-    debugger;
     return null;
   })
 
@@ -3823,11 +3812,9 @@ function pathsResolveComposite2( test )
   {
 
     test.case = 'path::export';
-    debugger;
     var resolved = module.openedModule.resolve({ selector : 'path::export', pathResolving : 0 })
     var expected = path.join( routinePath, '.module/Proto/proto' );
     test.identical( resolved, expected );
-    debugger;
 
     return null;
   });
@@ -3969,7 +3956,6 @@ function pathsResolveFailing( test )
     test.case = 'path::export';
     test.shouldThrowErrorSync( () =>
     {
-      // debugger;
       var got = module.openedModule.pathResolve
       ({
         /* selector : 'path::export', */
@@ -3978,7 +3964,6 @@ function pathsResolveFailing( test )
         missingAction : 'throw',
         prefixlessAction : 'throw',
       });
-      // debugger;
     });
 
 /*
@@ -4088,7 +4073,6 @@ function submodulesResolve( test )
     test.case = 'trivial';
     var submodule = module.openedModule.submodulesResolve({ selector : 'Tools' });
     test.is( submodule instanceof will.Submodule );
-    debugger;
     test.is( submodule.isDownloaded );
     test.is( submodule.opener.isDownloaded );
     test.is( submodule.opener.openedModule.isDownloaded );
@@ -4198,9 +4182,7 @@ function submodulesDeleteAndDownload( test )
       test.identical( will.willfilesArray.length, 3 );
       test.identical( _.mapKeys( will.willfileWithPathMap ).length, 3 );
 
-      debugger;
       module.finit();
-      debugger;
 
       test.identical( will.modulesArray.length, 0 );
       test.identical( _.mapKeys( will.moduleWithIdMap ).length, 0 );

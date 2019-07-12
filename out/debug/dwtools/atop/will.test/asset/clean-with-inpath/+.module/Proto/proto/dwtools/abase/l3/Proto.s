@@ -53,8 +53,6 @@
 
 */
 
-// debugger;
-
 if( typeof module !== 'undefined' )
 {
 
@@ -210,9 +208,9 @@ function fieldsGroupComposesExtend( dstPrototype, srcMap )
   let fieldsGroupName = 'Composes';
   return _.fieldsGroupDeclare
   ({
-    /*ttt*/fieldsGroupName,
-    /*ttt*/dstPrototype,
-    /*ttt*/srcMap,
+    fieldsGroupName,
+    dstPrototype,
+    srcMap,
     // filter : _.field.mapper.bypass,
   });
 
@@ -243,9 +241,9 @@ function fieldsGroupAggregatesExtend( dstPrototype,srcMap )
   let fieldsGroupName = 'Aggregates';
   return _.fieldsGroupDeclare
   ({
-    /*ttt*/fieldsGroupName,
-    /*ttt*/dstPrototype,
-    /*ttt*/srcMap,
+    fieldsGroupName,
+    dstPrototype,
+    srcMap,
     // filter : _.field.mapper.bypass,
   });
 
@@ -276,9 +274,9 @@ function fieldsGroupAssociatesExtend( dstPrototype,srcMap )
   let fieldsGroupName = 'Associates';
   return _.fieldsGroupDeclare
   ({
-    /*ttt*/fieldsGroupName,
-    /*ttt*/dstPrototype,
-    /*ttt*/srcMap,
+    fieldsGroupName,
+    dstPrototype,
+    srcMap,
     // filter : _.field.mapper.bypass,
   });
 
@@ -309,9 +307,9 @@ function fieldsGroupRestrictsExtend( dstPrototype,srcMap )
   let fieldsGroupName = 'Restricts';
   return _.fieldsGroupDeclare
   ({
-    /*ttt*/fieldsGroupName,
-    /*ttt*/dstPrototype,
-    /*ttt*/srcMap,
+    fieldsGroupName,
+    dstPrototype,
+    srcMap,
     // filter : _.field.mapper.bypass,
   });
 
@@ -342,9 +340,9 @@ function fieldsGroupComposesSupplement( dstPrototype, srcMap )
   let fieldsGroupName = 'Composes';
   return _.fieldsGroupDeclare
   ({
-    /*ttt*/fieldsGroupName,
-    /*ttt*/dstPrototype,
-    /*ttt*/srcMap,
+    fieldsGroupName,
+    dstPrototype,
+    srcMap,
     filter : _.field.mapper.dstNotHas,
   });
 
@@ -375,9 +373,9 @@ function fieldsGroupAggregatesSupplement( dstPrototype,srcMap )
   let fieldsGroupName = 'Aggregates';
   return _.fieldsGroupDeclare
   ({
-    /*ttt*/fieldsGroupName,
-    /*ttt*/dstPrototype,
-    /*ttt*/srcMap,
+    fieldsGroupName,
+    dstPrototype,
+    srcMap,
     filter : _.field.mapper.dstNotHas,
   });
 
@@ -408,9 +406,9 @@ function fieldsGroupAssociatesSupplement( dstPrototype,srcMap )
   let fieldsGroupName = 'Associates';
   return _.fieldsGroupDeclare
   ({
-    /*ttt*/fieldsGroupName,
-    /*ttt*/dstPrototype,
-    /*ttt*/srcMap,
+    fieldsGroupName,
+    dstPrototype,
+    srcMap,
     filter : _.field.mapper.dstNotHas,
   });
 
@@ -441,9 +439,9 @@ function fieldsGroupRestrictsSupplement( dstPrototype,srcMap )
   let fieldsGroupName = 'Restricts';
   return _.fieldsGroupDeclare
   ({
-    /*ttt*/fieldsGroupName,
-    /*ttt*/dstPrototype,
-    /*ttt*/srcMap,
+    fieldsGroupName,
+    dstPrototype,
+    srcMap,
     filter : _.field.mapper.dstNotHas,
   });
 
@@ -761,7 +759,7 @@ fieldsGroupsDeclareForEachFilter.defaults =
 // property
 // --
 
-function propertyDescriptorForAccessor( object, name )
+function propertyDescriptorActiveGet( object, name )
 {
   let result = Object.create( null );
   result.object = null;
@@ -771,7 +769,7 @@ function propertyDescriptorForAccessor( object, name )
 
   do
   {
-    let descriptor = Object.getOwnPropertyDescriptor( object,name );
+    let descriptor = Object.getOwnPropertyDescriptor( object, name );
     if( descriptor && !( 'value' in descriptor ) )
     {
       result.descriptor = descriptor;
@@ -797,7 +795,7 @@ function propertyDescriptorGet( object, name )
 
   do
   {
-    let descriptor = Object.getOwnPropertyDescriptor( object,name );
+    let descriptor = Object.getOwnPropertyDescriptor( object, name );
     if( descriptor )
     {
       result.descriptor = descriptor;
@@ -810,136 +808,223 @@ function propertyDescriptorGet( object, name )
 
   return result;
 }
-
 //
-
-function _propertyGetterSetterNames( propertyName )
-{
-  let result = Object.create( null );
-
-  _.assert( arguments.length === 1 );
-  _.assert( _.strIs( propertyName ) );
-
-  result.set = '_' + propertyName + 'Set';
-  result.get = '_' + propertyName + 'Get';
-
-  /* xxx : use it more extensively */
-
-  return result;
-}
-
+// //
 //
-
-function _propertyGetterSetterMake( o )
-{
-  let result = Object.create( null );
-
-  _.assert( arguments.length === 1 );
-  _.assert( _.objectLikeOrRoutine( o.methods ) );
-  _.assert( _.strIs( o.name ) );
-  _.assert( !o.readOnlyProduct || o.readOnly );
-  _.assert( !!o.object );
-  _.assertRoutineOptions( _propertyGetterSetterMake, o );
-
-  if( o.getterSetter )
-  _.assertMapHasOnly( o.getterSetter, { get : null, set : null } );
-
-  if( o.getter )
-  result.get = o.getter;
-  else if( o.getterSetter && o.getterSetter.get )
-  result.get = o.getterSetter.get;
-  else if( o.methods[ '' + o.name + 'Get' ] )
-  result.get = o.methods[ o.name + 'Get' ];
-  else if( o.methods[ '_' + o.name + 'Get' ] )
-  result.get = o.methods[ '_' + o.name + 'Get' ];
-
-  if( o.setter )
-  result.set = o.setter;
-  else if( o.getterSetter && o.getterSetter.set )
-  result.set = o.getterSetter.set;
-  else if( o.methods[ '' + o.name + 'Set' ] )
-  result.set = o.methods[ o.name + 'Set' ];
-  else if( o.methods[ '_' + o.name + 'Set' ] )
-  result.set = o.methods[ '_' + o.name + 'Set' ];
-
-  let fieldName = '_' + o.name;
-  let fieldSymbol = Symbol.for( o.name );
-
-  if( o.preserveValues )
-  if( _ObjectHasOwnProperty.call( o.methods,o.name ) )
-  o.object[ fieldSymbol ] = o.object[ o.name ];
-
-  /* set */
-
-  if( !result.set && !o.readOnly )
-  result.set = function set( src )
-  {
-    this[ fieldSymbol ] = src;
-    return src;
-  }
-
-  /* get */
-
-  if( !result.get )
-  {
-
-    if( !o.readOnlyProduct )
-    result.get = function get()
-    {
-      return this[ fieldSymbol ];
-    }
-    else if( o.readOnlyProduct )
-    result.get = function get()
-    {
-      let result = this[ fieldSymbol ];
-      debugger;
-      if( !_.primitiveIs( result ) )
-      result = _.proxyReadOnly( result );
-      return result;
-    }
-
-  }
-
-  /* validation */
-
-  _.assert( !result.set || !o.readOnly, () => 'read only, but setter for ' + _.strQuote( o.name ) + ' found in' + _.toStrShort( o.methods ) );
-  _.assert( !!result.set || !!o.readOnly );
-  _.assert( !!result.get );
-
-  return result;
-}
-
-_propertyGetterSetterMake.defaults =
-{
-  name : null,
-  object : null,
-  methods : null,
-  preserveValues : 1,
-  readOnly : 0,
-  readOnlyProduct : 0,
-  getter : null,
-  setter : null,
-  getterSetter : null,
-}
-
+// function _propertyGetterSetterNames( propertyName )
+// {
+//   let result = Object.create( null );
 //
-
-function _propertyGetterSetterGet( object, propertyName )
-{
-  let result = Object.create( null );
-
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.objectIs( object ) );
-  _.assert( _.strIs( propertyName ) );
-
-  result.setName = object[ propertyName + 'Set' ] ? propertyName + 'Set' : '_' + propertyName + 'Set';
-  result.getName = object[ propertyName + 'Get' ] ? propertyName + 'Get' : '_' + propertyName + 'Get';
-
-  result.set = object[ result.setName ];
-  result.get = object[ result.getName ];
-
-  return result;
-}
+//   _.assert( arguments.length === 1 );
+//   _.assert( _.strIs( propertyName ) );
+//
+//   result.set = '_' + propertyName + 'Set';
+//   result.get = '_' + propertyName + 'Get';
+//
+//   /* xxx : use it more extensively */
+//
+//   return result;
+// }
+//
+// //
+//
+// function _propertyGetterSetterMake( o )
+// {
+//   let result = Object.create( null );
+//
+//   _.assert( arguments.length === 1 );
+//   _.assert( _.objectLikeOrRoutine( o.methods ) );
+//   _.assert( _.strIs( o.name ) );
+//   _.assert( !!o.object );
+//   _.assertRoutineOptions( _propertyGetterSetterMake, o );
+//
+//   if( o.getterSetter && o.setter === null && o.getterSetter.set )
+//   o.setter = o.getterSetter.set;
+//   if( _.boolLike( o.setter ) )
+//   o.setter = !!o.setter;
+//
+//   if( o.getterSetter && o.getter === null && o.getterSetter.get )
+//   o.getter = o.getterSetter.get;
+//   if( _.boolLike( o.getter ) )
+//   o.getter = !!o.getter;
+//
+//   if( o.getterSetter )
+//   _.assertMapHasOnly( o.getterSetter, { get : null, set : null, copy : null } );
+//
+//   if( o.getter )
+//   result.get = o.getter;
+//   else if( o.getterSetter && o.getterSetter.get )
+//   result.get = o.getterSetter.get;
+//   else if( o.methods[ '' + o.name + 'Get' ] )
+//   result.get = o.methods[ o.name + 'Get' ];
+//   else if( o.methods[ '_' + o.name + 'Get' ] )
+//   result.get = o.methods[ '_' + o.name + 'Get' ];
+//
+//   if( o.setter )
+//   result.set = o.setter;
+//   else if( o.getterSetter && o.getterSetter.set )
+//   result.set = o.getterSetter.set;
+//   else if( o.methods[ '' + o.name + 'Set' ] )
+//   result.set = o.methods[ o.name + 'Set' ];
+//   else if( o.methods[ '_' + o.name + 'Set' ] )
+//   result.set = o.methods[ '_' + o.name + 'Set' ];
+//
+//   if( o.copy )
+//   result.copy = o.copy;
+//   else if( o.getterSetter && o.getterSetter.copy )
+//   result.copy = o.getterSetter.copy;
+//   else if( o.methods[ '' + o.name + 'Copy' ] )
+//   result.copy = o.methods[ o.name + 'Copy' ];
+//   else if( o.methods[ '_' + o.name + 'Copy' ] )
+//   result.copy = o.methods[ '_' + o.name + 'Copy' ];
+//
+//   let fieldName = '_' + o.name;
+//   let fieldSymbol = Symbol.for( o.name );
+//
+//   if( o.preserveValues )
+//   if( _ObjectHasOwnProperty.call( o.methods, o.name ) )
+//   o.object[ fieldSymbol ] = o.object[ o.name ];
+//
+//   /* copy */
+//
+//   if( result.copy )
+//   {
+//     let copy = result.copy;
+//     let name = o.name;
+//
+//     if( !result.set && o.setter === null )
+//     result.set = function set( src )
+//     {
+//       let it = Object.create( null );
+//       it.dstInstance = this;
+//       it.srcInstance = null;
+//       it.instanceKey = name;
+//       it.srcContainer = null;
+//       it.dstContainer = null;
+//       it.containerKey = null;
+//       it.value = src;
+//       copy.call( this, it );
+//       return it.value;
+//     }
+//
+//     if( !result.get && o.getter === null )
+//     result.get = function get()
+//     {
+//       let it = Object.create( null );
+//       it.dstInstance = null;
+//       it.srcInstance = this;
+//       it.instanceKey = name;
+//       it.srcContainer = null;
+//       it.dstContainer = null;
+//       it.containerKey = null;
+//       it.value = null;
+//       copy.call( this, it );
+//       return it.value;
+//     }
+//
+//   }
+//
+//   /* set */
+//
+//   // if( !result.set && !o.readOnly )
+//   if( !result.set && o.setter === null )
+//   result.set = function set( src )
+//   {
+//     this[ fieldSymbol ] = src;
+//     return src;
+//   }
+//
+//   /* get */
+//
+//   if( !result.get && o.getter === null )
+//   {
+//
+//     result.get = function get()
+//     {
+//       return this[ fieldSymbol ];
+//     }
+//
+//   }
+//
+//   /* readOnlyProduct */
+//
+//   if( o.readOnlyProduct && result.get )
+//   {
+//     let get = result.get;
+//     result.get = function get()
+//     {
+//       debugger;
+//       let result = get.apply( this, arguments );
+//       if( !_.primitiveIs( result ) )
+//       result = _.proxyReadOnly( result );
+//       return result;
+//     }
+//   }
+//
+//   /* validation */
+//
+//   // _.assert( !result.set || !o.readOnly, () => 'read only, but setter for ' + _.strQuote( o.name ) + ' found in' + _.toStrShort( o.methods ) );
+//   // _.assert( !!result.set || !!o.readOnly );
+//
+//   _.assert( !result.set || o.setter !== false, () => 'Field ' + _.strQuote( o.name ) + ' is read only, but setter found in' + _.toStrShort( o.methods ) );
+//   _.assert( !!result.set || o.setter === false, () => 'Field ' + _.strQuote( o.name ) + ' is not read only, but setter not found in' + _.toStrShort( o.methods ) );
+//   _.assert( !!result.get );
+//
+//   return result;
+// }
+//
+// _propertyGetterSetterMake.defaults =
+// {
+//   name : null,
+//   object : null,
+//   methods : null,
+//   preserveValues : 1,
+//   // readOnly : 0,
+//   readOnlyProduct : 0,
+//   copy : null,
+//   setter : null,
+//   getter : null,
+//   getterSetter : null,
+// }
+//
+// //
+//
+// function _propertyGetterSetterGet( object, propertyName )
+// {
+//   let result = Object.create( null );
+//
+//   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+//   _.assert( _.objectIs( object ) );
+//   _.assert( _.strIs( propertyName ) );
+//
+//   result.setName = object[ propertyName + 'Set' ] ? propertyName + 'Set' : '_' + propertyName + 'Set';
+//   result.getName = object[ propertyName + 'Get' ] ? propertyName + 'Get' : '_' + propertyName + 'Get';
+//   result.copyName = object[ propertyName + 'Copy' ] ? propertyName + 'Copy' : '_' + propertyName + 'Copy';
+//
+//   result.set = object[ result.setName ];
+//   result.get = object[ result.getName ];
+//   result.copy = object[ result.getName ];
+//
+//   return result;
+// }
+//
+// //
+//
+// function _propertyCopyGet( srcInstance, name )
+// {
+//   _.assert( arguments.length === 2 );
+//   _.assert( _.strIs( name ) );
+//
+//   if( !_.instanceIs( srcInstance ) )
+//   return null;
+//
+//   if( srcInstance[ '' + name + 'Copy' ] )
+//   return srcInstance[ name + 'Copy' ];
+//   else if( srcInstance[ '_' + name + 'Copy' ] )
+//   return srcInstance[ '_' + name + 'Copy' ];
+//
+//   return null;
+// }
 
 // --
 // proxy
@@ -1911,9 +1996,9 @@ to prioritize ordinary facets adjustment order should be
         name : s,
         value : o.prototype.Statics[ s ],
         prototype : o.prototype,
-        /*ttt*/extending,
-        /*ttt*/dstNotOwn,
-        /*ttt*/fieldsOfRelationsGroups,
+        extending,
+        dstNotOwn,
+        fieldsOfRelationsGroups,
       });
 
     }
@@ -1966,8 +2051,6 @@ function staticDeclare( o )
   _.assert( _.strIs( o.name ) );
   _.assert( arguments.length === 1 );
 
-  // debugger;
-
   if( !o.fieldsOfRelationsGroups )
   o.fieldsOfRelationsGroups = _.fieldsOfRelationsGroupsFromPrototype( o.prototype );
 
@@ -1984,7 +2067,7 @@ function staticDeclare( o )
   return;
 
   let symbol = Symbol.for( o.name );
-  let aname = _._propertyGetterSetterNames( o.name );
+  let aname = _.accessor._propertyGetterSetterNames( o.name );
   let methods = Object.create( null );
 
   /* */
@@ -2022,7 +2105,7 @@ function staticDeclare( o )
       _.accessor.declare
       ({
         object : o.prototype,
-        /*ttt*/methods,
+        methods,
         names : o.name,
         combining : 'rewrite',
         configurable : true,
@@ -2030,21 +2113,6 @@ function staticDeclare( o )
         strict : false,
         readOnly : o.readOnly,
       });
-
-      // Object.defineProperty( o.prototype, o.name,
-      // {
-      //   set : function set( src )
-      //   {
-      //     o.prototype[ symbol ] = src;
-      //     o.prototype.constructor[ symbol] = src;
-      //   },
-      //   get : function get()
-      //   {
-      //     return this[ symbol ];
-      //   },
-      //   enumerable : false,
-      //   configurable : true,
-      // });
 
     }
   }
@@ -2061,18 +2129,10 @@ function staticDeclare( o )
     {
       o.prototype.constructor[ symbol ] = o.value;
 
-      // Object.defineProperty( o.prototype.constructor, o.name,
-      // {
-      //   set : function( src ) { prototype[ symbol ] = src; prototype.constructor[ symbol] = src; },
-      //   get : function(){ return this[ symbol ]; },
-      //   enumerable : true,
-      //   configurable : true,
-      // });
-
       _.accessor.declare
       ({
         object : o.prototype.constructor,
-        /*ttt*/methods,
+        methods,
         names : o.name,
         combining : 'rewrite',
         enumerable : true,
@@ -2296,8 +2356,8 @@ function prototypeUnitedInterface( protos )
       _.accessor.declare
       ({
         object : result,
-        /*ttt*/names,
-        /*ttt*/methods,
+        names,
+        methods,
         strict : 0,
         prime : 0,
       });
@@ -3216,12 +3276,12 @@ Object.freeze( DefaultForbiddenNames );
 
 let Define =
 {
-  /*ttt*/Definition,
-  /*ttt*/common,
-  /*ttt*/own,
-  /*ttt*/instanceOf,
-  /*ttt*/ownMadeBy,
-  /*ttt*/contained,
+  Definition,
+  common,
+  own,
+  instanceOf,
+  ownMadeBy,
+  contained,
 }
 
 //
@@ -3229,15 +3289,15 @@ let Define =
 let Fields =
 {
 
-  /*ttt*/KnownConstructorFields,
+  KnownConstructorFields,
 
-  /*ttt*/DefaultFieldsGroups,
-  /*ttt*/DefaultFieldsGroupsRelations,
-  /*ttt*/DefaultFieldsGroupsCopyable,
-  /*ttt*/DefaultFieldsGroupsTight,
-  /*ttt*/DefaultFieldsGroupsInput,
+  DefaultFieldsGroups,
+  DefaultFieldsGroupsRelations,
+  DefaultFieldsGroupsCopyable,
+  DefaultFieldsGroupsTight,
+  DefaultFieldsGroupsInput,
 
-  /*ttt*/DefaultForbiddenNames,
+  DefaultForbiddenNames,
   CallableObject : wCallableObject,
 
 }
@@ -3278,11 +3338,13 @@ let Routines =
 
   // property
 
-  propertyDescriptorForAccessor,
+  propertyDescriptorActiveGet,
   propertyDescriptorGet,
-  _propertyGetterSetterNames,
-  _propertyGetterSetterMake,
-  _propertyGetterSetterGet,
+
+  // _propertyGetterSetterNames,
+  // _propertyGetterSetterMake,
+  // _propertyGetterSetterGet,
+  // _propertyCopyGet,
 
   // proxy
 

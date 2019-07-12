@@ -142,7 +142,7 @@ function stepRoutineReflect( frame )
   let result;
   try
   {
-    debugger;
+    // debugger;
     result = will.Predefined.filesReflect.call( fileProvider, opts );
   }
   catch( err )
@@ -176,12 +176,17 @@ function stepRoutineReflect( frame )
     if( verbosity < 1 )
     return;
 
-    let dstFilter = opts.dstFilter.clone();
-    let srcFilter = opts.srcFilter.clone().pairWithDst( dstFilter ).form();
-    dstFilter.form();
-    let src = srcFilter.filePathSrcCommon();
-    let dst = dstFilter.filePathDstCommon();
-    logger.log( ' + ' + reflector.decoratedNickName + ' reflected ' + opts.result.length + ' files ' + path.moveTextualReport( dst, src ) + ' in ' + _.timeSpent( time ) );
+    _.assert( opts.src.isPaired() );
+    let mtr = opts.src.moveTextualReport();
+    logger.log( ' + ' + reflector.decoratedNickName + ' reflected ' + opts.result.length + ' files ' + mtr + ' in ' + _.timeSpent( time ) );
+
+    // let /*dstFilter*/dst = opts./*dstFilter*/dst.clone();
+    // let /*srcFilter*/src = opts./*srcFilter*/src.clone().pairWithDst( /*dstFilter*/dst ).form();
+    // /*dstFilter*/dst.form();
+    // let srcPath = /*srcFilter*/src.filePathSrcCommon();
+    // let dstPath = /*dstFilter*/dst.filePathDstCommon();
+    // logger.log( ' + ' + reflector.decoratedNickName + ' reflected ' + opts.result.length + ' files ' + path.moveTextualReport( dst, src ) + ' in ' + _.timeSpent( time ) );
+
   }
 
   /* */
@@ -426,11 +431,12 @@ function stepRoutineTranspile( frame )
   transpilingStrategies = [ 'Nop' ];
 
   let ts = new _.TranspilationStrategy({ logger : logger }).form();
+  debugger;
   let multiple = ts.multiple
   ({
 
-    inputPath : reflectOptions.srcFilter,
-    outputPath : reflectOptions.dstFilter,
+    inputPath : reflectOptions./*srcFilter*/src,
+    outputPath : reflectOptions./*dstFilter*/dst,
     totalReporting : 0,
     transpilingStrategies : transpilingStrategies,
     splittingStrategy : raw ? 'OneToOne' : 'ManyToOne',
@@ -450,6 +456,7 @@ function stepRoutineTranspile( frame )
   // diagnosing : 0,
   // beautifing : 0,
 
+  debugger;
   return multiple.form().perform()
   .finally( ( err, arg ) =>
   {

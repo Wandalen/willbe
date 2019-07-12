@@ -67,7 +67,7 @@ function DirPathFromFilePaths( filePaths )
 
   filePaths = filePaths.map( ( filePath ) =>
   {
-    filePath = _.path.normalizeTolerant( filePath );
+    filePath = _.path.normalize( filePath );
 
     let r1 = /(.*)(?:\.will(?:\.|$))[^\/]*$/;
     let parsed1 = r1.exec( filePath );

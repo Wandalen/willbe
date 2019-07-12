@@ -73,6 +73,7 @@ let AccessorDefaults =
 
   getter : null,
   setter : null,
+  copy : null,
   getterSetter : null,
 
 
@@ -80,6 +81,241 @@ let AccessorDefaults =
 
 // --
 // accessor
+// --
+
+
+//
+
+function _propertyGetterSetterNames( propertyName )
+{
+  let result = Object.create( null );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.strIs( propertyName ) );
+
+  result.set = '_' + propertyName + 'Set';
+  result.get = '_' + propertyName + 'Get';
+
+  /* xxx : use it more extensively */
+
+  return result;
+}
+
+//
+
+function _propertyGetterSetterMake( o )
+{
+  let result = Object.create( null );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectLikeOrRoutine( o.methods ) );
+  _.assert( _.strIs( o.name ) );
+  _.assert( !!o.object );
+  _.assertRoutineOptions( _propertyGetterSetterMake, o );
+
+  if( o.getterSetter && o.setter === null && o.getterSetter.set )
+  o.setter = o.getterSetter.set;
+  if( _.boolLike( o.setter ) )
+  o.setter = !!o.setter;
+
+  if( o.getterSetter && o.getter === null && o.getterSetter.get )
+  o.getter = o.getterSetter.get;
+  if( _.boolLike( o.getter ) )
+  o.getter = !!o.getter;
+
+  if( o.getterSetter )
+  _.assertMapHasOnly( o.getterSetter, { get : null, set : null, copy : null } );
+
+  if( o.getter )
+  result.get = o.getter;
+  else if( o.getterSetter && o.getterSetter.get )
+  result.get = o.getterSetter.get;
+  else if( o.methods[ '' + o.name + 'Get' ] )
+  result.get = o.methods[ o.name + 'Get' ];
+  else if( o.methods[ '_' + o.name + 'Get' ] )
+  result.get = o.methods[ '_' + o.name + 'Get' ];
+
+  if( o.setter )
+  result.set = o.setter;
+  else if( o.getterSetter && o.getterSetter.set )
+  result.set = o.getterSetter.set;
+  else if( o.methods[ '' + o.name + 'Set' ] )
+  result.set = o.methods[ o.name + 'Set' ];
+  else if( o.methods[ '_' + o.name + 'Set' ] )
+  result.set = o.methods[ '_' + o.name + 'Set' ];
+
+  if( o.copy )
+  result.copy = o.copy;
+  else if( o.getterSetter && o.getterSetter.copy )
+  result.copy = o.getterSetter.copy;
+  else if( o.methods[ '' + o.name + 'Copy' ] )
+  result.copy = o.methods[ o.name + 'Copy' ];
+  else if( o.methods[ '_' + o.name + 'Copy' ] )
+  result.copy = o.methods[ '_' + o.name + 'Copy' ];
+
+  let fieldName = '_' + o.name;
+  let fieldSymbol = Symbol.for( o.name );
+
+  if( o.preserveValues )
+  if( _ObjectHasOwnProperty.call( o.methods, o.name ) )
+  o.object[ fieldSymbol ] = o.object[ o.name ];
+
+  /* copy */
+
+  if( result.copy )
+  {
+    let copy = result.copy;
+    let name = o.name;
+
+    if( !result.set && o.setter === null )
+    result.set = function set( src )
+    {
+      let it = _.accessor.copyIterationMake
+      ({
+        dstInstance : this,
+        instanceKey : name,
+        value : src,
+      });
+      copy.call( this, it );
+      return it.value;
+    }
+
+    if( !result.get && o.getter === null )
+    result.get = function get()
+    {
+      let it = _.accessor.copyIterationMake
+      ({
+        srcInstance : this,
+        instanceKey : name,
+      });
+      copy.call( this, it );
+      return it.value;
+    }
+
+  }
+
+  /* set */
+
+  // if( !result.set && !o.readOnly )
+  if( !result.set && o.setter === null )
+  result.set = function set( src )
+  {
+    this[ fieldSymbol ] = src;
+    return src;
+  }
+
+  /* get */
+
+  if( !result.get && o.getter === null )
+  {
+
+    result.get = function get()
+    {
+      return this[ fieldSymbol ];
+    }
+
+  }
+
+  /* readOnlyProduct */
+
+  if( o.readOnlyProduct && result.get )
+  {
+    let get = result.get;
+    result.get = function get()
+    {
+      debugger;
+      let result = get.apply( this, arguments );
+      if( !_.primitiveIs( result ) )
+      result = _.proxyReadOnly( result );
+      return result;
+    }
+  }
+
+  /* validation */
+
+  // _.assert( !result.set || !o.readOnly, () => 'read only, but setter for ' + _.strQuote( o.name ) + ' found in' + _.toStrShort( o.methods ) );
+  // _.assert( !!result.set || !!o.readOnly );
+
+  _.assert( !result.set || o.setter !== false, () => 'Field ' + _.strQuote( o.name ) + ' is read only, but setter found in' + _.toStrShort( o.methods ) );
+  _.assert( !!result.set || o.setter === false, () => 'Field ' + _.strQuote( o.name ) + ' is not read only, but setter not found in' + _.toStrShort( o.methods ) );
+  _.assert( !!result.get );
+
+  return result;
+}
+
+_propertyGetterSetterMake.defaults =
+{
+  name : null,
+  object : null,
+  methods : null,
+  preserveValues : 1,
+  // readOnly : 0,
+  readOnlyProduct : 0,
+  copy : null,
+  setter : null,
+  getter : null,
+  getterSetter : null,
+}
+
+//
+
+function _propertyGetterSetterGet( object, propertyName )
+{
+  let result = Object.create( null );
+
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+  _.assert( _.objectIs( object ) );
+  _.assert( _.strIs( propertyName ) );
+
+  result.setName = object[ propertyName + 'Set' ] ? propertyName + 'Set' : '_' + propertyName + 'Set';
+  result.getName = object[ propertyName + 'Get' ] ? propertyName + 'Get' : '_' + propertyName + 'Get';
+  result.copyName = object[ propertyName + 'Copy' ] ? propertyName + 'Copy' : '_' + propertyName + 'Copy';
+
+  result.set = object[ result.setName ];
+  result.get = object[ result.getName ];
+  result.copy = object[ result.getName ];
+
+  return result;
+}
+
+//
+
+function _propertyCopyGet( srcInstance, name )
+{
+  _.assert( arguments.length === 2 );
+  _.assert( _.strIs( name ) );
+
+  if( !_.instanceIs( srcInstance ) )
+  return null;
+
+  if( srcInstance[ '' + name + 'Copy' ] )
+  return srcInstance[ name + 'Copy' ];
+  else if( srcInstance[ '_' + name + 'Copy' ] )
+  return srcInstance[ '_' + name + 'Copy' ];
+
+  return null;
+}
+
+//
+
+function copyIterationMake( o )
+{
+  return _.routineOptions( copyIterationMake, arguments );
+}
+
+copyIterationMake.defaults =
+{
+  dstInstance : null,
+  srcInstance : null,
+  instanceKey : null,
+  srcContainer : null,
+  dstContainer : null,
+  containerKey : null,
+  value : null,
+}
+
+// --
+//
 // --
 
 /**
@@ -251,7 +487,7 @@ function _accessorDeclareAct( o )
 
   /* */
 
-  let propertyDescriptor = _.propertyDescriptorForAccessor( o.object, o.name );
+  let propertyDescriptor = _.propertyDescriptorActiveGet( o.object, o.name );
   if( propertyDescriptor.descriptor )
   {
 
@@ -271,61 +507,21 @@ function _accessorDeclareAct( o )
     _.assert( o.combining === 'rewrite', 'not implemented' );
     _.assert( propertyDescriptor.object !== o.object, () => 'Attempt to redefine own accessor ' + _.strQuote( o.name ) + ' of ' + _.toStrShort( o.object ) );
 
-    // if( o.combining === 'append' )
-    // {
-    //
-    //   debugger;
-    //
-    //   if( o.methods[ '_' + rawName + 'Set' ] === propertyDescriptor.descriptor.set )
-    //   o.methods[ '_' + rawName + 'Set' ] = null;
-    //   if( o.methods[ rawName + 'Set' ] === propertyDescriptor.descriptor.set )
-    //   o.methods[ rawName + 'Set' ] = null;
-    //   if( o.methods[ '_' + rawName + 'Get' ] === propertyDescriptor.descriptor.get )
-    //   o.methods[ '_' + rawName + 'Get' ] = null;
-    //   if( o.methods[ rawName + 'Get' ] === propertyDescriptor.descriptor.get )
-    //   o.methods[ rawName + 'Get' ] = null;
-    //
-    //   let settrGetterSecond = _propertyGetterSetterMake( o, o.methods, rawName );
-    //
-    //   if( o.methods[ '_' + rawName + 'Set' ] )
-    //   o.methods[ '_' + rawName + 'Set' ] = null;
-    //   if( o.methods[ rawName + 'Set' ] )
-    //   o.methods[ rawName + 'Set' ] = null;
-    //   if( o.methods[ '_' + rawName + 'Get' ] )
-    //   o.methods[ '_' + rawName + 'Get' ] = null;
-    //   if( o.methods[ rawName + 'Get' ] )
-    //   o.methods[ rawName + 'Get' ] = null;
-    //
-    //   o.methods[ '_' + rawName + 'Set' ] = function appendingSet( src )
-    //   {
-    //     debugger;
-    //     src = propertyDescriptor.descriptor.set.call( this, src );
-    //     _.assert( src !== undefined );
-    //     return settrGetterSecond.set.call( this, src );
-    //   }
-    //
-    //   o.methods[ '_' + rawName + 'Get' ] = settrGetterSecond.get;
-    //
-    //   appending = 1;
-    // }
-
   }
 
   /* */
 
-  // if( o.getterSetter )
-  // debugger;
-
-  let getterSetter = _._propertyGetterSetterMake
+  let getterSetter = _.accessor._propertyGetterSetterMake
   ({
     name : o.name,
     methods : o.methods,
     object : o.object,
     preserveValues : o.preserveValues,
-    readOnly : o.readOnly,
+    // readOnly : o.readOnly,
     readOnlyProduct : o.readOnlyProduct,
+    copy : o.copy,
     getter : o.getter,
-    setter : o.setter,
+    setter : o.readOnly ? false : o.setter,
     getterSetter : o.getterSetter,
   });
 
@@ -475,14 +671,12 @@ function _accessorDeclare( o )
 
   if( _.arrayLike( o.object ) )
   {
-    // debugger;
     _.each( o.object, ( object ) =>
     {
       let o2 = _.mapExtend( null, o );
       o2.object = object;
       _accessorDeclare( o2 );
     });
-    // debugger;
     return;
   }
 
@@ -513,7 +707,6 @@ function _accessorDeclare( o )
 
   }
 
-  // debugger;
   _.assert( _.objectLikeOrRoutine( o.object ), () => 'Expects object {-object-}, but got ' + _.toStrShort( o.object ) );
   _.assert( _.objectIs( o.names ), () => 'Expects object {-names-}, but got ' + _.toStrShort( o.names ) );
 
@@ -665,7 +858,7 @@ function accessorForbid( o )
       let name = o.names[ n ];
       let o2 = _.mapExtend( null, o );
       o2.fieldName = name;
-      _.assert( n === name, 'key and value should be the same' );
+      _.assert( n === name, () => 'Key and value should be the same, but ' + _.strQuote( n ) + ' and ' + _.strQuote( name ) + ' are not' );
       if( !_accessorDeclareForbid( o2 ) )
       delete o.names[ name ];
     }
@@ -730,7 +923,7 @@ function _accessorDeclareForbid()
 
   /* */
 
-  let propertyDescriptor = _.propertyDescriptorForAccessor( o.object, o.fieldName );
+  let propertyDescriptor = _.propertyDescriptorActiveGet( o.object, o.fieldName );
   if( propertyDescriptor.descriptor )
   {
     _.assert( _.strIs( o.combining ), 'accessorForbid : if accessor overided expect ( o.combining ) is', _.accessor.Combining.join() );
@@ -757,7 +950,7 @@ function _accessorDeclareForbid()
     else
     {
       // debugger;
-      // let pd = _.propertyDescriptorForAccessor( o.object, '_pathGet' );
+      // let pd = _.propertyDescriptorActiveGet( o.object, '_pathGet' );
       forbidden();
     }
   }
@@ -1018,7 +1211,7 @@ function constant( dstPrototype, name, value )
 
   Object.defineProperty( dstPrototype, name,
   {
-    /*ttt*/value,
+    value,
     enumerable : true,
     writable : false,
     configurable : true,
@@ -1077,7 +1270,7 @@ function hide( dstPrototype, name, value )
 
   Object.defineProperty( dstPrototype, name,
   {
-    /*ttt*/value,
+    value,
     enumerable : false,
     writable : true,
     configurable : true,
@@ -1167,20 +1360,15 @@ function accessorMakerFrom_functor( fop )
   _.routineOptions( accessorMakerFrom_functor, fop );
 
   let defaults;
-
   if( fop.getterFunctor )
   defaults = _.mapExtend( null, fop.getterFunctor.defaults );
   else
   defaults = _.mapExtend( null, fop.setterFunctor.defaults );
 
-  // debugger;
-
   if( fop.getterFunctor && _.entityIdentical )
   _.assert( _.entityIdentical( defaults, _.mapExtend( null, fop.getterFunctor.defaults ) ) );
   if( fop.setterFunctor && _.entityIdentical )
   _.assert( _.entityIdentical( defaults, _.mapExtend( null, fop.setterFunctor.defaults ) ) );
-
-  // debugger;
 
   accessorMaker.defaults = defaults;
 
@@ -1248,12 +1436,12 @@ function toElement( o )
     let index = o.index;
     let storageName = o.storageName;
     let name = o.name;
-    let aname = _._propertyGetterSetterNames( name );
+    let aname = _.accessor._propertyGetterSetterNames( name );
 
     _.assert( _.numberIs( index ) );
     _.assert( index >= 0 );
 
-    // let getterSetter = _._propertyGetterSetterGet( o.object, n );
+    // let getterSetter = _.accessor._propertyGetterSetterGet( o.object, n );
 
     // if( !getterSetter.set )
     r[ aname.setName ] = function accessorToElementSet( src )
@@ -1272,7 +1460,7 @@ function toElement( o )
   // _.accessor.declare
   // ({
   //   object : o.object,
-  //   /*ttt*/names,
+  //   names,
   // });
 
   return r;
@@ -1624,7 +1812,7 @@ function setterBufferFrom_functor( o )
     }
     else
     {
-      data = _.bufferFrom({ src : data, /*ttt*/bufferConstructor });
+      data = _.bufferFrom({ src : data, bufferConstructor });
     }
 
     self[ symbol ] = data;
@@ -1860,7 +2048,7 @@ let aliasAccessor = accessorMakerFrom_functor( aliasGetter_functor_body, aliasSe
 //   _.accessor.declare
 //   ({
 //     object : o.object,
-//     /*ttt*/names,
+//     names,
 //   });
 //
 // }
@@ -1901,9 +2089,9 @@ let Forbids =
 let Fields =
 {
 
-  /*ttt*/AccessorDefaults,
-  /*ttt*/Combining,
-  /*ttt*/DefaultAccessorsMap,
+  AccessorDefaults,
+  Combining,
+  DefaultAccessorsMap,
 
 }
 
@@ -1912,27 +2100,36 @@ let Fields =
 let Routines =
 {
 
-  // accessor
+  /* */
 
-  /*ttt*/_accessorDeclare_pre,
-  /*ttt*/_accessorRegister,
-  /*ttt*/_accessorDeclareAct,
-  /*ttt*/_accessorDeclare,
+  _propertyGetterSetterNames,
+  _propertyGetterSetterMake,
+  _propertyGetterSetterGet,
+  _propertyCopyGet,
+
+  copyIterationMake,
+
+  /* */
+
+  _accessorDeclare_pre,
+  _accessorRegister,
+  _accessorDeclareAct,
+  _accessorDeclare,
 
   declare : accessorDeclare,
   forbid : accessorForbid,
-  /*ttt*/_accessorDeclareForbid,
+  _accessorDeclareForbid,
 
   forbidOwns : accessorForbidOwns,
   readOnly : accessorReadOnly,
 
   supplement : accessorsSupplement,
 
-  /*ttt*/constant,
-  /*ttt*/hide,
-  /*ttt*/restrictReadOnly,
+  constant,
+  hide,
+  restrictReadOnly,
 
-  /*ttt*/accessorHas,
+  accessorHas,
 
   accessorMakerFrom_functor,
 
@@ -1941,8 +2138,8 @@ let Routines =
 let GetterSetter =
 {
 
-  // /*ttt*/accessorToElement,
-  /*ttt*/toElement,
+  // accessorToElement,
+  toElement,
 
 }
 
@@ -1970,7 +2167,7 @@ let Setter =
 
 }
 
-let Accessor =
+let Suite =
 {
 
   alias : aliasAccessor,
@@ -1997,8 +2194,8 @@ _.mapExtend( _.accessor.getter, Getter );
 _.accessor.setter = _.accessor.setter || Object.create( null );
 _.mapExtend( _.accessor.setter, Setter );
 
-_.accessor.accessor = _.accessor.accessor || Object.create( null );
-_.mapExtend( _.accessor.accessor, Accessor );
+_.accessor.suite = _.accessor.suite || Object.create( null );
+_.mapExtend( _.accessor.suite, Suite );
 
 // --
 // export

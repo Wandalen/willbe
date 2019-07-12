@@ -701,13 +701,13 @@ let Composes =
 let Aggregates =
 {
 
-  submoduleMap : _.define.own({}),
-  pathMap : _.define.own({}),
-  pathResourceMap : _.define.own({}),
-  reflectorMap : _.define.own({}),
-  stepMap : _.define.own({}),
-  buildMap : _.define.own({}),
-  exportedMap : _.define.own({}),
+  // submoduleMap : _.define.own({}),
+  // pathMap : _.define.own({}),
+  // pathResourceMap : _.define.own({}),
+  // reflectorMap : _.define.own({}),
+  // stepMap : _.define.own({}),
+  // buildMap : _.define.own({}),
+  // exportedMap : _.define.own({}),
 
 }
 
@@ -715,18 +715,16 @@ let Associates =
 {
   data : null,
   will : null,
+  openerModule : null,
+  openedModule : null,
 }
 
 let Medials =
 {
-  openerModule : null,
-  openedModule : null,
 }
 
 let Restricts =
 {
-  openerModule : null,
-  openedModule : null,
   formed : 0,
   id : 0,
   _found : null,
@@ -742,6 +740,13 @@ let Statics =
 let Forbids =
 {
   module : 'module',
+  submoduleMap : 'submoduleMap',
+  pathMap : 'pathMap',
+  pathResourceMap : 'pathResourceMap',
+  reflectorMap : 'reflectorMap',
+  stepMap : 'stepMap',
+  buildMap : 'buildMap',
+  exportedMap : 'exportedMap',
 }
 
 let Accessors =

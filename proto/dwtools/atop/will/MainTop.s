@@ -381,7 +381,7 @@ function _commandList( e, act, resourceKind )
       resources = module.openedModule.resolve( o2 );
 
       if( _.arrayIs( resources ) )
-      resources = _.arrayUnique( resources );
+      resources = _.longUnduplicate( resources );
 
       // resources = _.filter( resources, ( r ) => r instanceof will.OpenedModule ? undefined : r );
 
