@@ -1,0 +1,821 @@
+( function _Predefined_s_( ) {
+
+'use strict';
+
+if( typeof module !== 'undefined' )
+{
+
+  require( '../IncludeBase.s' );
+
+}
+
+let Tar, Open;
+let _ = wTools;
+let Self = Object.create( null );
+
+// --
+//
+// --
+
+let filesReflect = _.routineFromPreAndBody( _.FileProvider.Find.prototype.filesReflect.pre, _.FileProvider.Find.prototype.filesReflect.body );
+
+let defaults = filesReflect.defaults;
+
+defaults.linking = 'hardLinkMaybe';
+defaults.mandatory = 1;
+defaults.dstRewritingPreserving = 1;
+
+//
+
+function stepRoutineDelete( frame )
+{
+  let step = this;
+  let module = frame.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = frame.opts;
+  let time = _.timeNow();
+  let verbosity = step.verbosityWithDelta( -1 );
+
+  beginLog();
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  let filePath = step.inPathResolve( opts.filePath );
+
+  let o2 =
+  {
+    filePath : filePath,
+    verbosity : 0,
+  }
+
+  if( filePath instanceof will.Reflector )
+  {
+    delete o2.filePath;
+    let o3 = filePath.optionsForFindExport();
+    _.mapExtend( o2, o3 );
+  }
+
+  let result = fileProvider.filesDelete( o2 );
+
+  endLog();
+
+  return result;
+
+  /* */
+
+  function beginLog()
+  {
+
+    if( verbosity < 3 )
+    return;
+
+    logger.log( ' : ' + step.decoratedNickName );
+
+  }
+
+  /* */
+
+  function endLog()
+  {
+
+    if( !verbosity )
+    return;
+
+    let spentTime = _.timeNow() - time;
+    let groupsMap = path.group({ keys : o2.filter.filePath, vals : o2.result });
+    let textualReport = path.groupTextualReport
+    ({
+      explanation : ' - ' + step.decoratedNickName + ' deleted ',
+      groupsMap : groupsMap,
+      verbosity : verbosity,
+      spentTime : spentTime,
+    });
+
+    if( textualReport )
+    logger.log( textualReport );
+
+  }
+
+}
+
+stepRoutineDelete.stepOptions =
+{
+  filePath : null,
+}
+
+//
+
+function stepRoutineReflect( frame )
+{
+  let step = this;
+  let module = frame.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = frame.opts;
+  let time = _.timeNow();
+  let verbosity = step.verbosityWithDelta( -1 );
+
+  _.assert( !!opts.reflector, 'Expects option reflector' );
+  _.assert( arguments.length === 1 );
+
+  let reflector = step.reflectorResolve( opts.reflector );
+
+  _.sure( reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strType( reflector ) )
+  _.assert( reflector.formed === 3, () => reflector.nickName + ' is not formed' );
+
+  beginLog();
+
+  delete opts.reflector ;
+
+  let reflectorOptions = reflector.optionsForReflectExport();
+
+  _.mapSupplement( opts, reflectorOptions );
+
+  opts.verbosity = 0;
+
+  let result;
+  try
+  {
+    // debugger;
+    result = will.Predefined.filesReflect.call( fileProvider, opts );
+  }
+  catch( err )
+  {
+    if( err )
+    throw _.errBriefly( err );
+  }
+
+  _.Consequence.From( result ).then( ( result ) =>
+  {
+    endLog();
+    return result;
+  });
+
+  return result;
+
+  /* */
+
+  function beginLog()
+  {
+    if( verbosity < 3 )
+    return;
+
+    logger.log( ' : ' + reflector.decoratedNickName + '' );
+  }
+
+  /* */
+
+  function endLog()
+  {
+    if( verbosity < 1 )
+    return;
+
+    _.assert( opts.src.isPaired() );
+    let mtr = opts.src.moveTextualReport();
+    logger.log( ' + ' + reflector.decoratedNickName + ' reflected ' + opts.result.length + ' files ' + mtr + ' in ' + _.timeSpent( time ) );
+
+    // let /*dstFilter*/dst = opts./*dstFilter*/dst.clone();
+    // let /*srcFilter*/src = opts./*srcFilter*/src.clone().pairWithDst( /*dstFilter*/dst ).form();
+    // /*dstFilter*/dst.form();
+    // let srcPath = /*srcFilter*/src.filePathSrcCommon();
+    // let dstPath = /*dstFilter*/dst.filePathDstCommon();
+    // logger.log( ' + ' + reflector.decoratedNickName + ' reflected ' + opts.result.length + ' files ' + path.moveTextualReport( dst, src ) + ' in ' + _.timeSpent( time ) );
+
+  }
+
+  /* */
+
+}
+
+stepRoutineReflect.stepOptions =
+{
+  reflector : null,
+  verbosity : null,
+}
+
+//
+
+function stepRoutineTimelapseBegin( frame )
+{
+  let step = this;
+  let module = frame.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = frame.opts;
+
+  _.assert( arguments.length === 1 );
+
+  /* */
+
+  logger.log( 'Timelapse begin' );
+  // fileProvider.providersWithProtocolMap.hd.archive.timelapseBegin();
+
+  return null;
+}
+
+stepRoutineTimelapseBegin.stepOptions =
+{
+}
+
+//
+
+function stepRoutineTimelapseEnd( frame )
+{
+  let step = this;
+  let module = frame.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = frame.opts;
+
+  _.assert( arguments.length === 1 );
+
+  /* */
+
+  logger.log( 'Timelapse end' );
+  // fileProvider.providersWithProtocolMap.hd.archive.timelapseEnd();
+
+  return null;
+}
+
+stepRoutineTimelapseEnd.stepOptions =
+{
+}
+
+//
+
+function stepRoutineJs( frame )
+{
+  let step = this;
+  let module = frame.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = frame.opts;
+
+  _.assert( arguments.length === 1 );
+
+  _.sure( opts.js === null || _.strIs( opts.js ) );
+
+  /* */
+
+  try
+  {
+    opts.js = step.inPathResolve({ selector : opts.js, prefixlessAction : 'resolved' });
+    opts.routine = require( fileProvider.providersWithProtocolMap.hd.path.nativize( opts.js ) );
+    if( !_.routineIs( opts.routine ) )
+    throw _.err( 'JS file should return function, but got', _.strType( opts.routine ) );
+  }
+  catch( err )
+  {
+    debugger;
+    throw _.err( 'Failed to open JS file', _.strQuote( opts.js ), '\n', err );
+  }
+
+  /* */
+
+  try
+  {
+    let result = opts.routine( frame );
+    return result || null;
+  }
+  catch( err )
+  {
+    throw _.err( 'Failed to execute JS file', _.strQuote( opts.js ), '\n', err );
+  }
+
+}
+
+stepRoutineJs.stepOptions =
+{
+  js : null,
+}
+
+stepRoutineJs.uniqueOptions =
+{
+  js : null,
+}
+
+//
+
+function stepRoutineShell( frame )
+{
+  let step = this;
+  let module = frame.module;
+  let will = module.will;
+  let hardDrive = will.fileProvider.providersWithProtocolMap.file;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = frame.opts;
+  let forEachDstReflector, forEachDst;
+  let verbosity = step.verbosityWithDelta( -1 );
+
+  beginLog();
+
+  _.assert( arguments.length === 1 );
+  _.sure( opts.shell === null || _.strIs( opts.shell ) || _.arrayIs( opts.shell ) );
+  _.sure( _.arrayHas( [ 'preserve', 'rebuild' ], opts.upToDate ), () => 'Unknown value of upToDate ' + _.strQuote( opts.upToDate ) );
+
+  if( opts.forEachDst )
+  forEachDst = forEachDstReflector = step.reflectorResolve( opts.forEachDst );
+
+  /* */
+
+  if( opts.upToDate === 'preserve' && forEachDstReflector )
+  {
+
+    _.assert( forEachDstReflector instanceof will.Reflector );
+    forEachDst = will.Resolver.resolveContextPrepare({ currentThis : forEachDstReflector, baseModule : module });
+
+    for( let dst in forEachDst.filesGrouped )
+    {
+      let src = forEachDst.filesGrouped[ dst ];
+      let upToDate = fileProvider.filesAreUpToDate( dst, src );
+      if( upToDate )
+      delete forEachDst.filesGrouped[ dst ];
+    }
+
+    forEachDst.src = [];
+    forEachDst.dst = [];
+    for( let dst in forEachDst.filesGrouped )
+    {
+      forEachDst.dst.push( hardDrive.path.nativize( dst ) );
+      forEachDst.src.push( hardDrive.path.s.nativize( forEachDst.filesGrouped[ dst ] ).join( ' ' ) );
+      // forEachDst.src.push( hardDrive.path.s.nativize( forEachDst.filesGrouped[ dst ] ) );
+    }
+
+  }
+
+  return module.shell
+  ({
+    execPath : opts.shell,
+    currentPath : opts.currentPath,
+    currentThis : forEachDst,
+    currentContext : step,
+    verbosity : verbosity,
+  })
+  .finally( ( err, arg ) =>
+  {
+    if( err )
+    throw _.errBriefly( 'Failed to shell', step.nickName, '\n', err );
+    return arg;
+  });
+
+  /* */
+
+  function beginLog()
+  {
+  }
+
+}
+
+stepRoutineShell.stepOptions =
+{
+  shell : null,
+  currentPath : null,
+  forEachDst : null,
+  upToDate : 'preserve',
+}
+
+stepRoutineShell.uniqueOptions =
+{
+  shell : null,
+}
+
+//
+
+function stepRoutineTranspile( frame )
+{
+  let step = this;
+  let module = frame.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = frame.opts;
+  let verbosity = step.verbosityWithDelta( -1 );
+
+  _.sure( _.arrayHas( [ 'preserve', 'rebuild' ], opts.upToDate ), () => 'Unknown value of upToDate ' + _.strQuote( opts.upToDate ) );
+  _.assert( arguments.length === 1 );
+
+  let reflector = step.reflectorResolve( opts.reflector );
+  let reflectOptions = reflector.optionsForReflectExport();
+
+  _.include( 'wTranspilationStrategy' );
+
+  let debug = false;
+  if( _.strIs( frame.resource.criterion.debug ) )
+  debug = frame.resource.criterion.debug === 'debug';
+  else if( frame.resource.criterion.debug !== undefined )
+  debug = !!frame.resource.criterion.debug;
+
+  let raw = false;
+  if( _.strIs( frame.resource.criterion.raw ) )
+  raw = frame.resource.criterion.raw === 'raw';
+  else if( frame.resource.criterion.raw !== undefined )
+  raw = !!frame.resource.criterion.raw;
+
+  let transpilingStrategies = [ 'Uglify' ];
+  if( debug )
+  transpilingStrategies = [ 'Nop' ];
+
+  let ts = new _.TranspilationStrategy({ logger : logger }).form();
+  debugger;
+  let multiple = ts.multiple
+  ({
+
+    inputPath : reflectOptions./*srcFilter*/src,
+    outputPath : reflectOptions./*dstFilter*/dst,
+    totalReporting : 0,
+    transpilingStrategies : transpilingStrategies,
+    splittingStrategy : raw ? 'OneToOne' : 'ManyToOne',
+    writingTerminalUnderDirectory : 1,
+    upToDate : opts.upToDate,
+    verbosity : verbosity,
+
+    optimization : 9,
+    minification : 8,
+    diagnosing : 1,
+    beautifing : 0,
+
+  });
+
+  // optimization : 9,
+  // minification : 8,
+  // diagnosing : 0,
+  // beautifing : 0,
+
+  debugger;
+  return multiple.form().perform()
+  .finally( ( err, arg ) =>
+  {
+    if( err )
+    throw _.errLogOnce( err );
+    return arg;
+  });
+
+}
+
+stepRoutineTranspile.stepOptions =
+{
+  reflector : null,
+  upToDate : 'preserve',
+}
+
+stepRoutineTranspile.uniqueOptions =
+{
+}
+
+//
+
+function stepRoutineView( frame )
+{
+  let step = this;
+  let module = frame.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = frame.opts;
+  let verbosity = step.verbosityWithDelta( -1 );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  debugger;
+  let filePath = step.resolve
+  ({
+    selector : opts.filePath,
+    prefixlessAction : 'resolved',
+    pathNativizing : 1,
+  });
+  debugger;
+
+  // filePath = _.strReplace( filePath, '///', '//' );
+
+  if( !Open )
+  Open = require( 'open' );
+
+  if( opts.delay )
+  opts.delay = Number( opts.delay );
+
+  if( opts.delay )
+  {
+    _.timeOut( opts.delay, () =>
+    {
+      view( filePath );
+    });
+    return null;
+  }
+
+  return view( filePath );
+
+  function view( filePath )
+  {
+    debugger;
+    if( verbosity >= 1 )
+    logger.log( 'View ' + filePath );
+    let result = Open( filePath );
+    debugger;
+    return result;
+  }
+
+}
+
+stepRoutineView.stepOptions =
+{
+  filePath : null,
+  delay : null,
+}
+
+stepRoutineView.uniqueOptions =
+{
+}
+
+//
+
+function stepRoutineNpmGenerate( frame )
+{
+  let step = this;
+  let module = frame.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = frame.opts;
+  let verbosity = step.verbosityWithDelta( -1 );
+  let about = module.about.dataExport();
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  opts.packagePath = opts.packagePath || '{path::out}/package.json';
+
+  let packagePath = step.resolve
+  ({
+    selector : opts.packagePath,
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+  });
+
+  let config = Object.create( null );
+  config.name = about.name;
+  config.version = about.version;
+  config.enabled = about.enabled;
+
+  if( about.description )
+  config.description = about.description;
+  if( about.keywords )
+  config.keywords = about.keywords;
+  if( about.license )
+  config.license = about.license;
+
+  if( about.interpreters )
+  {
+    let interpreters = _.arrayAs( about.interpreters );
+    interpreters.forEach( ( interpreter ) =>
+    {
+      if( _.strHas( interpreter, 'node' ) )
+      config.engine = interpreter;
+    });
+  }
+
+  if( about.author )
+  config.author = about.author;
+  if( about.contributors )
+  config.contributors = about.contributors;
+
+  for( let n in about )
+  {
+    if( !_.strBegins( n, 'npm.' ) )
+    continue;
+    config[ _.strRemoveBegin( n, 'npm.' ) ] = about[ n ];
+  }
+
+  if( module.pathMap.repository )
+  config.repository = module.pathMap.repository;
+  if( module.pathMap.bugtracker )
+  config.bugs = module.pathMap.bugtracker;
+  if( module.pathMap.entry )
+  config.entry = module.pathMap.entry;
+
+  for( let n in module.pathMap )
+  {
+    if( !_.strBegins( n, 'npm.' ) )
+    continue;
+    config[ _.strRemoveBegin( n, 'npm.' ) ] = module.pathMap[ n ];
+  }
+
+  _.sure( !fileProvider.isDir( packagePath ), () => packagePath + ' is dir, not safe to delete' );
+
+  fileProvider.fileWrite
+  ({
+    filePath : packagePath,
+    data : config,
+    encoding : 'json.fine',
+    verbosity : verbosity ? 5 : 0,
+  });
+
+  debugger;
+  return null;
+}
+
+stepRoutineNpmGenerate.stepOptions =
+{
+  packagePath : '{path::out}/package.json',
+}
+
+stepRoutineNpmGenerate.uniqueOptions =
+{
+}
+
+//
+
+function stepRoutineSubmodulesDownload( frame )
+{
+  let step = this;
+  let module = frame.module;
+
+  _.assert( arguments.length === 1 );
+  _.assert( !!module );
+
+  return module.submodulesDownload();
+}
+
+stepRoutineSubmodulesDownload.stepOptions =
+{
+}
+
+//
+
+function stepRoutineSubmodulesUpdate( frame )
+{
+  let step = this;
+  let module = frame.module;
+
+  _.assert( arguments.length === 1 );
+  _.assert( !!module );
+
+  return module.submodulesUpdate();
+}
+
+stepRoutineSubmodulesUpdate.stepOptions =
+{
+}
+
+//
+
+function stepRoutineSubmodulesReload( frame )
+{
+  let step = this;
+  let module = frame.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = frame.opts;
+  let verbosity = step.verbosityWithDelta( -1 );
+
+  _.assert( arguments.length === 1 );
+  _.assert( !!module );
+
+  if( verbosity )
+  {
+    logger.log( ' . Reloading submodules..' );
+  }
+
+  return module.submodulesReload();
+}
+
+stepRoutineSubmodulesReload.stepOptions =
+{
+}
+
+//
+
+function stepRoutineSubmodulesClean( frame )
+{
+  let step = this;
+  let module = frame.module;
+
+  _.assert( arguments.length === 1 );
+  _.assert( !!module );
+
+  return module.submodulesClean();
+}
+
+stepRoutineSubmodulesClean.stepOptions =
+{
+}
+
+//
+
+function stepRoutineClean( frame )
+{
+  let step = this;
+  let module = frame.module;
+
+  _.assert( arguments.length === 1 );
+  _.assert( !!module );
+
+  return module.clean();
+}
+
+stepRoutineClean.stepOptions =
+{
+}
+
+//
+
+function stepRoutineExport( frame )
+{
+  let step = this;
+  let build = frame.build;
+  let module = frame.module;
+  let will = module.will;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 1 );
+
+  if( module.exportedMap[ build.name ] )
+  {
+    module.exportedMap[ build.name ].finit();
+    _.assert( module.exportedMap[ build.name ] === undefined );
+  }
+
+  let exported = new will.Exported({ module : module, name : build.name }).form1();
+
+  _.assert( module.exportedMap[ build.name ] === exported );
+
+  return exported.perform( frame );
+}
+
+stepRoutineExport.stepOptions =
+{
+  export : null,
+  tar : 1,
+}
+
+stepRoutineExport.uniqueOptions =
+{
+  export : null,
+}
+
+// --
+// declare
+// --
+
+let Extend =
+{
+
+  filesReflect,
+
+  stepRoutineDelete,
+  stepRoutineReflect,
+  stepRoutineTimelapseBegin,
+  stepRoutineTimelapseEnd,
+
+  stepRoutineJs,
+  stepRoutineShell,
+  stepRoutineTranspile,
+  stepRoutineView,
+  stepRoutineNpmGenerate,
+
+  stepRoutineSubmodulesDownload,
+  stepRoutineSubmodulesUpdate,
+  stepRoutineSubmodulesReload,
+  stepRoutineSubmodulesClean,
+
+  stepRoutineClean,
+  stepRoutineExport,
+
+}
+
+//
+
+_.mapExtend( Self, Extend );
+_.staticDeclare
+({
+  prototype : _.Will.prototype,
+  name : 'Predefined',
+  value : Self,
+});
+
+//
+
+if( typeof module !== 'undefined' && module !== null )
+module[ 'exports' ] = _global_.wTools;
+
+})();
