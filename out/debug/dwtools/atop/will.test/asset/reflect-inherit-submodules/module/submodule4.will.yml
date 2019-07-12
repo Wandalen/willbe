@@ -1,18 +1,19 @@
 about :
 
-  name : submodule2
+  name : submodule4
   version : 0.0.1
 
 path :
 
   out : '..'
-  
-reflector : 
+
+reflector :
+
   reflect.proto :
     filePath :
-      . : null
+      proto/File2.s : null
     src :
-      basePath : 'proto2'
+      basePath : 'proto'
 
 step :
 
