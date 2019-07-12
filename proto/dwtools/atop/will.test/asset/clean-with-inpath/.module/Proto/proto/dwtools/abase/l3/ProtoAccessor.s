@@ -316,7 +316,7 @@ function _accessorDeclareAct( o )
   // if( o.getterSetter )
   // debugger;
 
-  let getterSetter = _._propertyGetterSetterMake
+  let getterSetter = _.accessor._propertyGetterSetterMake
   ({
     name : o.name,
     methods : o.methods,
@@ -1248,12 +1248,12 @@ function toElement( o )
     let index = o.index;
     let storageName = o.storageName;
     let name = o.name;
-    let aname = _._propertyGetterSetterNames( name );
+    let aname = _.accessor._propertyGetterSetterNames( name );
 
     _.assert( _.numberIs( index ) );
     _.assert( index >= 0 );
 
-    // let getterSetter = _._propertyGetterSetterGet( o.object, n );
+    // let getterSetter = _.accessor._propertyGetterSetterGet( o.object, n );
 
     // if( !getterSetter.set )
     r[ aname.setName ] = function accessorToElementSet( src )

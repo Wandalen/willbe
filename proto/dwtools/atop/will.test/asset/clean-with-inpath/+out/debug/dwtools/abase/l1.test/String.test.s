@@ -1069,13 +1069,13 @@ function strsEquivalent( test )
 
   test.open( 'vector, true' );
 
-  test.case = 'vector, vecotr';
+  test.case = 'vector, vector';
   var src1 = [ 'abc', /\w+/, 'abc', /\w+/ ];
   var src2 = [ 'abc', 'abc', /\w+/, /\w+/ ];
   var got = _.strsEquivalent( src1, src2 );
   test.identical( got, [ true, true, true, true ] );
 
-  test.case = 'vecotr, scalar';
+  test.case = 'vector, scalar';
   var src1 = [ 'abc', /\w+/, 'abc', /\w+/ ];
   var src2 = 'abc';
   var got = _.strsEquivalent( src1, src2 );
@@ -1184,13 +1184,13 @@ function strsEquivalentAll( test )
 
   test.open( 'vectors' );
 
-  test.case = 'vector, vecotr';
+  test.case = 'vector, vector';
   var src1 = [ 'abc', /\w+/, 'abc', /\w+/ ];
   var src2 = [ 'abc', 'abc', /\w+/, /\w+/ ];
   var got = _.strsEquivalentAll( src1, src2 );
   test.identical( got, true );
 
-  test.case = 'vecotr, scalar';
+  test.case = 'vector, scalar';
   var src1 = [ 'abc', /\w+/, 'abc', /\w+/ ];
   var src2 = 'abc';
   var got = _.strsEquivalentAll( src1, src2 );
@@ -1323,13 +1323,13 @@ function strsEquivalentAny( test )
 
   test.open( 'vectors' );
 
-  test.case = 'vector, vecotr';
+  test.case = 'vector, vector';
   var src1 = [ 'abc', /\w+/, 'abc', /\w+/ ];
   var src2 = [ 'abc', 'abc', /\w+/, /\w+/ ];
   var got = _.strsEquivalentAny( src1, src2 );
   test.identical( got, true );
 
-  test.case = 'vecotr, scalar';
+  test.case = 'vector, scalar';
   var src1 = [ 'abc', /\w+/, 'abc', /\w+/ ];
   var src2 = 'abc';
   var got = _.strsEquivalentAny( src1, src2 );
@@ -1462,13 +1462,13 @@ function strsEquivalentNone( test )
 
   test.open( 'vectors' );
 
-  test.case = 'vector, vecotr';
+  test.case = 'vector, vector';
   var src1 = [ 'abc', /\w+/, 'abc', /\w+/ ];
   var src2 = [ 'abc', 'abc', /\w+/, /\w+/ ];
   var got = _.strsEquivalentNone( src1, src2 );
   test.identical( got, false );
 
-  test.case = 'vecotr, scalar';
+  test.case = 'vector, scalar';
   var src1 = [ 'abc', /\w+/, 'abc', /\w+/ ];
   var src2 = 'abc';
   var got = _.strsEquivalentNone( src1, src2 );

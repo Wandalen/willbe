@@ -183,7 +183,7 @@ function strShort( src )
     }
     else if( _.vectorIs( src ) )
     {
-      result += '[ Vecotr with ' + src.length + ' elements' + ' ]';
+      result += '[ Vector with ' + src.length + ' elements' + ' ]';
     }
     else if( src && !_.objectIs( src ) && _.numberIs( src.length ) )
     {

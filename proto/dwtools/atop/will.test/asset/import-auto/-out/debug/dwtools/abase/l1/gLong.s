@@ -2341,7 +2341,7 @@ arrayUnmask.defaults =
 
 //
 
-function arrayInvestigateUniqueMap( o )
+function longUniqueAre( o )
 {
 
   if( _.longIs( o ) )
@@ -2349,7 +2349,7 @@ function arrayInvestigateUniqueMap( o )
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.longIs( o.src ) );
-  _.assertMapHasOnly( o, arrayInvestigateUniqueMap.defaults );
+  _.assertMapHasOnly( o, longUniqueAre.defaults );
 
   /* */
 
@@ -2400,7 +2400,7 @@ function arrayInvestigateUniqueMap( o )
   return { number : number, array : isUnique };
 }
 
-arrayInvestigateUniqueMap.defaults =
+longUniqueAre.defaults =
 {
   src : null,
   onEvaluate : null,
@@ -2414,7 +2414,7 @@ function arrayUnique( src, onEvaluate )
 
   _.assert( arguments.length === 1 || arguments.length === 2 );
 
-  let isUnique = _.arrayInvestigateUniqueMap
+  let isUnique = _.longUniqueAre
   ({
     src : src,
     onEvaluate : onEvaluate,
@@ -3635,7 +3635,7 @@ let Routines =
   arrayMask : arrayMask, /* dubious */
   arrayUnmask : arrayUnmask, /* dubious */
 
-  arrayInvestigateUniqueMap : arrayInvestigateUniqueMap,  /* dubious */
+  longUniqueAre : longUniqueAre,  /* dubious */
   arrayUnique : arrayUnique,  /* dubious */
   arraySelect : arraySelect,
 

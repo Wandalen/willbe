@@ -180,7 +180,7 @@ function mapLike( src )
 //
 
 /**
- * The mapIdentical() returns true, if the second object (src2)
+ * The mapsAreIdentical() returns true, if the second object (src2)
  * has the same values as the first object(src1).
  *
  * It takes two objects (scr1, src2), checks
@@ -193,24 +193,24 @@ function mapLike( src )
  *
  * @example
  * // returns true
- * mapIdentical( { a : 7, b : 13 }, { a : 7, b : 13 } );
+ * mapsAreIdentical( { a : 7, b : 13 }, { a : 7, b : 13 } );
  *
  * @example
  * returns false
- * _.mapIdentical( { a : 7, b : 13 }, { a : 33, b : 13 } );
+ * _.mapsAreIdentical( { a : 7, b : 13 }, { a : 33, b : 13 } );
  *
  * @example
  * returns false
- * _.mapIdentical( { a : 7, b : 13, c : 33 }, { a : 7, b : 13 } );
+ * _.mapsAreIdentical( { a : 7, b : 13, c : 33 }, { a : 7, b : 13 } );
  *
  * @returns { boolean } Returns true, if the second object (src2)
  * has the same values as the first object(src1).
- * @function mapIdentical
+ * @function mapsAreIdentical
  * @throws Will throw an error if ( arguments.length !== 2 ).
  * @memberof wTools
  */
 
-function mapIdentical( src1, src2 )
+function mapsAreIdentical( src1, src2 )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -5117,7 +5117,7 @@ let Routines =
   mapIsPopulated,
   mapLike,
 
-  mapIdentical,
+  mapsAreIdentical,
   mapContain,
 
   mapSatisfy,

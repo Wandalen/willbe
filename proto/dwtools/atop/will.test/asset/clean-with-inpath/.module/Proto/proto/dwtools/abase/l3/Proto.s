@@ -1984,7 +1984,7 @@ function staticDeclare( o )
   return;
 
   let symbol = Symbol.for( o.name );
-  let aname = _._propertyGetterSetterNames( o.name );
+  let aname = _.accessor._propertyGetterSetterNames( o.name );
   let methods = Object.create( null );
 
   /* */

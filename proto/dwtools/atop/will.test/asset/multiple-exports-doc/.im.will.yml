@@ -4,7 +4,9 @@ submodule :
 path :
 
   proto : './proto'
-  temp : 'out'
+  temp :
+    - 'out'
+    - 'doc.out'
   in : '.'
   out : 'out'
   out.debug :

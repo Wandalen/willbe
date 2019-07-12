@@ -572,16 +572,35 @@ function ends( srcPath,endPath )
 // --
 
 /**
-  * Regularize a path by replacing left slashe by slashes ( \\ to / ), and removing the end slash if trailed.
-  * If the path is an empty string, method returns '.' representing the current working directory.
+  * The routine refine() regularize a Windows paths to posix path format by replacing left slashes to slash ( \\ to / ).
+  * If the path has a disk label, the routine puts slash '/' before and after the disk label.
+  * If the path is an empty string, method returns ''. Otherwise, routine returns original path.
+  *
+  * @param {string} src - path for refinement.
   *
   * @example
-  *  returns '/C/temp//foo/bar/..';
-  *  let path = 'C:\\temp\\\\foo\\bar\\..\\'
+  *  // returns '/foo//bar/../';
+  *  let path = '\\foo\\\\bar\\..\\';
   *  path = wTools.refine( path );
   *
-  * @param {string} src path for refinement
-  * @returns {string}
+  * @example
+  *  // returns '/C/temp//foo/bar/../';
+  *  let path = 'C:\\temp\\\\foo\\bar\\..\\';
+  *  path = wTools.refine( path );
+  *
+  * @example
+  *  // returns '';
+  *  let path = '';
+  *  path = wTools.refine( path );
+  *
+  * @example
+  *  // returns '/foo/bar/';
+  *  let path = '/foo/bar/';
+  *  path = wTools.refine( path );
+  *
+  * @returns {string} Returns refined path.
+  * @throws {Error} If {-arguments.length-} is less or more then one.
+  * @throws {Error} If passed argument is not a string.
   * @function refine
   * @memberof module:Tools/base/Path.wTools.path
   */
@@ -1402,6 +1421,20 @@ function exts( path )
 // joiner
 // --
 
+function join_pre( routine, args )
+{
+  _.assert( args.length > 0, 'Expects argument' )
+  let o = { paths : args };
+
+  _.routineOptions( routine, o );
+  //_.assert( o.paths.length > 0 );
+  _.assert( _.boolLike( o.reroot ) );
+  _.assert( _.boolLike( o.allowingNull ) );
+  _.assert( _.boolLike( o.raw ) );
+
+  return o;
+}
+
 /**
  * Joins filesystem paths fragments or urls fragment into one path/url. Uses '/' level delimeter.
  * @param {Object} o join o.
@@ -1426,9 +1459,9 @@ function join_body( o )
 
   /* */
 
-  _.assert( Object.keys( o ).length === 4 );
-  _.assert( o.paths.length > 0 );
-  _.assert( _.boolLike( o.reroot ) );
+  // _.assert( Object.keys( o ).length === 4 );
+  // _.assert( o.paths.length > 0 );
+  // _.assert( _.boolLike( o.reroot ) );
 
   /* */
 
@@ -1540,35 +1573,57 @@ join_body.defaults =
  * @memberof module:Tools/base/Path.wTools.path
  */
 
-function join()
-{
-
-  let result = this.join_body
-  ({
-    paths : arguments,
-    reroot : 0,
-    allowingNull : 1,
-    raw : 0,
-  });
-
-  return result;
-}
+let join = _.routineFromPreAndBody( join_pre, join_body );
 
 //
 
-function joinRaw()
-{
+let joinRaw = _.routineFromPreAndBody( join_pre, join_body );
+joinRaw.defaults.raw = 1;
 
-  let result = this.join_body
-  ({
-    paths : arguments,
-    reroot : 0,
-    allowingNull : 1,
-    raw : 1,
-  });
+// function join()
+// {
+//
+//   let result = this.join_body
+//   ({
+//     paths : arguments,
+//     reroot : 0,
+//     allowingNull : 1,
+//     raw : 0,
+//   });
+//
+//   return result;
+// }
 
-  return result;
-}
+//
+
+// function joinRaw_body( o )
+// {
+//   let result = this.join.body( o );
+//
+//   return result;
+// }
+//
+// joinRaw_body.defaults =
+// {
+//   paths : null,
+//   reroot : 0,
+//   allowingNull : 1,
+//   raw : 1,
+// }
+
+// function joinRaw()
+// {
+//
+//   let result = this.join_body
+//   ({
+//     paths : arguments,
+//     reroot : 0,
+//     allowingNull : 1,
+//     raw : 1,
+//   });
+//
+//   return result;
+// }
 
 //
 
@@ -1613,17 +1668,26 @@ function joinCross()
  * @memberof module:Tools/base/Path.wTools.path
  */
 
-function reroot()
+let reroot = _.routineFromPreAndBody( join_pre, join_body );
+reroot.defaults =
 {
-  let result = this.join_body
-  ({
-    paths : arguments,
-    reroot : 1,
-    allowingNull : 1,
-    raw : 0,
-  });
-  return result;
+  paths : arguments,
+  reroot : 1,
+  allowingNull : 1,
+  raw : 0,
 }
+
+// function reroot()
+// {
+//   let result = this.join_body
+//   ({
+//     paths : arguments,
+//     reroot : 1,
+//     allowingNull : 1,
+//     raw : 0,
+//   });
+//   return result;
+// }
 
 //
 
@@ -2769,8 +2833,6 @@ let Routines =
   exts,
 
   // joiner
-
-  join_body,
 
   join,
   joinRaw,
