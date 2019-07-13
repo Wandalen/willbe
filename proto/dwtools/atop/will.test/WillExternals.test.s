@@ -5166,7 +5166,7 @@ exportSubmodules.timeOut = 200000;
 function exportMultiple( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
@@ -5646,7 +5646,7 @@ exportMultiple.timeOut = 200000;
 function exportImportMultiple( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
@@ -5846,7 +5846,7 @@ exportImportMultiple.timeOut = 200000;
 function exportBroken( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports-broken' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple-broken' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
@@ -5958,7 +5958,7 @@ function exportBroken( test )
 function exportDoc( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports-doc' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple-doc' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let subOutPath = _.path.join( routinePath, 'out' );

@@ -1,0 +1,54 @@
+
+about :
+
+  name : "shell"
+  description : "Module for testing"
+  version : "0.0.1"
+  enabled : 1
+  interpreters :
+  - nodejs >= 6.0.0
+  - chrome >= 60.0.0
+  - firefox >= 60.0.0
+  keywords :
+  - wTools
+
+submodule :
+
+path :
+
+  script : 'script.js'
+  somePath : 'somePath'
+  in : '.'
+  out : 'out'
+
+
+step :
+
+  shell1 :
+    currentPath : .
+    shell : "node {path::script}"
+    args : [ "{path::somePath}", "arg1", "arg2" ]
+    criterion:
+      variant : 1
+
+  shell2 :
+    currentPath : .
+    shell : "node {path::script} {path::somePath} arg1 arg2"
+    criterion:
+      variant : 2
+
+build :
+
+  debug1:
+    criterion :
+      variant : 1
+    steps :
+      - step::shell*=1
+
+  debug2:
+    criterion :
+      variant : 2
+    steps :
+      - step::shell*=1
+
+

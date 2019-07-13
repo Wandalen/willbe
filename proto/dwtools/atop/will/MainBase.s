@@ -431,6 +431,127 @@ function moduleEachAt( o )
 
   con.finally( ( err, arg ) =>
   {
+    if( errs.length )
+    {
+      errs.forEach( ( err, index ) => index > 0 ? _.errAttend( err ) : null );
+      throw errs[ 0 ];
+    }
+    if( err )
+    {
+      errs.forEach( ( err, index ) => _.errAttend( err ) );
+      throw _.err( err );
+    }
+    return o;
+  });
+
+  /* */
+
+  return con;
+}
+
+moduleEachAt.defaults =
+{
+  currentModule : null,
+  selector : null,
+  onBegin : null,
+  onEnd : null,
+}
+
+//
+
+function moduleWithAt( o )
+{
+  let will = this.form();
+  let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
+  let logger = will.logger;
+  let con;
+
+  _.sure( _.strDefined( o.selector ), 'Expects string' );
+  _.assert( arguments.length === 1 );
+
+  /* */
+
+  o.selector = path.resolve( o.selector );
+  con = new _.Consequence().take( null );
+
+  let it = Object.create( null );
+  it.options = o;
+  it.errs = [];
+  it.modulesMap = Object.create( null );
+
+  let files;
+  try
+  {
+    files = will.willfilesList
+    ({
+      dirPath : o.selector,
+      includingInFiles : 1,
+      includingOutFiles : 1,
+    });
+  }
+  catch( err )
+  {
+    throw _.errBriefly( err );
+  }
+
+  for( let f = 0 ; f < files.length ; f++ ) con
+  .then( ( arg ) => /* !!! replace by concurrent, maybe */
+  {
+    try
+    {
+      let file = files[ f ];
+
+      let opener = will.OpenerModule({ will : will, willfilesPath : file.absolute }).preform();
+      opener.moduleFind();
+
+      if( !opener.openedModule.stager.stageStatePerformed( 'ready' ) )
+      {
+        debugger;
+        opener.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
+        opener.openedModule.stager.stageStatePausing( 'picked', 0 );
+        opener.openedModule.stager.tick();
+      }
+      else
+      {
+        debugger;
+      }
+
+      return opener.openedModule.ready.split()
+      .then( function( arg )
+      {
+        _.assert( opener.willfilesArray.length > 0 );
+        _.mapSetStrictly( it.modulesMap, opener.openedModule.commonPath, opener.openedModule );
+        return r;
+      })
+      .except( function( err )
+      {
+        it.errs.push( _.errBriefly( err ) );
+        opener.finit();
+      });
+    }
+    catch( err )
+    {
+      debugger;
+      it.errs.push( _.errBriefly( err ) );
+      opener.finit();
+      throw err;
+    }
+  })
+  .finally( ( err, arg ) =>
+  {
+    if( err )
+    {
+      debugger;
+      _.assert( 0, 'should not happen' );
+    }
+    return arg;
+  });
+
+  /* */
+
+  con.finally( ( err, arg ) =>
+  {
     if( err )
     {
       errs.forEach( ( err, index ) => _.errAttend( err ) );
@@ -449,7 +570,7 @@ function moduleEachAt( o )
   return con;
 }
 
-moduleEachAt.defaults =
+moduleWithAt.defaults =
 {
   currentModule : null,
   selector : null,
@@ -918,6 +1039,7 @@ let Extend =
 
   moduleMake,
   moduleEachAt,
+  moduleWithAt,
 
   moduleAt,
   moduleIdUnregister,

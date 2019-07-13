@@ -1,0 +1,26 @@
+
+path :
+
+  proto : './proto'
+  in : '.'
+  out : 'out'
+  out.debug : './out/debug'
+
+reflector :
+
+  reflect.proto :
+    filePath :
+      path::proto : path::out.debug
+
+step :
+
+  reflect.proto :
+    inherit : files.reflect
+    reflector :
+      reflector::reflect.proto
+
+build :
+
+  debug :
+    steps :
+      - step::reflect.proto

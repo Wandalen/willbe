@@ -1,0 +1,34 @@
+
+path :
+
+  proto : proto
+  out : out
+  temp : 'path::out'
+  dir.windows :
+    path : '{path::out}/dir.windows'
+    criterion :
+      os : 'windows'
+  dir.posix :
+    path : '{path::out}/dir.posix'
+    criterion :
+      os : 'posix'
+  dir.osx :
+    path : '{path::out}/dir.osx'
+    criterion :
+      os : 'osx'
+
+reflector :
+
+  copy :
+    criterion :
+      os : 'f::os'
+    filePath :
+      'path::proto' : 'path::dir.*'
+
+build :
+
+  build :
+    criterion :
+      default : 1
+    steps :
+      - step::copy

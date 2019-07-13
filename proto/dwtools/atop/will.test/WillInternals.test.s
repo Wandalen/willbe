@@ -1300,7 +1300,7 @@ function reflectorResolve( test )
 function superResolve( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, 'super' );
   let submodulesPath = _.path.join( routinePath, '.module' );
@@ -1398,7 +1398,7 @@ superResolve.timeOut = 130000;
 function buildsResolve( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, 'super' );
   let submodulesPath = _.path.join( routinePath, '.module' );
@@ -1521,7 +1521,7 @@ buildsResolve.timeOut = 130000;
 function pathsResolve( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, 'super' );
   let submodulesPath = _.path.join( routinePath, '.module' );
@@ -2796,13 +2796,13 @@ function pathsResolveOfSubmodules( test )
     test.case = 'path::in, wTools';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::in' );
-    var expected = path.join( submodulesPath, 'Tools' );
+    var expected = path.join( submodulesPath, 'Tools/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::in, wTools, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::in' );
-    var expected = path.join( submodulesPath, 'Tools' );
+    var expected = path.join( submodulesPath, 'Tools/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wTools';
@@ -2926,7 +2926,7 @@ pathsResolveOfSubmodulesAndOwn.timeOut = 300000;
 function pathsResolveOutFileOfExports( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports-exported' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple-exported' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, 'super.out/supermodule' );
   let will = new _.Will;
