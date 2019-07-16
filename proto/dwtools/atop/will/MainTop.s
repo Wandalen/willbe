@@ -811,7 +811,7 @@ function commandWith( e )
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
 
   if( !isolated )
-  throw _.err( 'Format is: .with (payj) .action' );
+  throw _.err( 'Format is: .with {-path-} .action' );
 
   let willfilesPath = path.joinRaw( path.current(), isolated.argument === '.' ? './' : isolated.argument );
 
@@ -850,6 +850,7 @@ function commandWith( e )
     return arg;
   });
 
+
 }
 
 //
@@ -886,7 +887,7 @@ function _commandEach_functor( fop )
     let isolated = ca.commandIsolateSecondFromArgument( e.argument );
 
     if( !isolated )
-    throw _.err( 'Format is: .each (path) .action' );
+    throw _.err( 'Format is: .each {-path-} .action' );
 
     _.assert( _.objectIs( isolated ), 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
 

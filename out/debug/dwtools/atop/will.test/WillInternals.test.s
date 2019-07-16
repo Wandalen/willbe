@@ -30,7 +30,7 @@ function onSuiteBegin()
   let self = this;
 
   self.tempDir = _.path.dirTempOpen( _.path.join( __dirname, '../..'  ), 'Will' );
-  self.assetDirPath = _.path.join( __dirname, 'asset' );
+  self.assetDirPath = _.path.join( __dirname, '-asset' );
   self.find = _.fileProvider.filesFinder
   ({
     recursive : 2,
@@ -1300,7 +1300,7 @@ function reflectorResolve( test )
 function superResolve( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, 'super' );
   let submodulesPath = _.path.join( routinePath, '.module' );
@@ -1398,7 +1398,7 @@ superResolve.timeOut = 130000;
 function buildsResolve( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, 'super' );
   let submodulesPath = _.path.join( routinePath, '.module' );
@@ -1521,7 +1521,7 @@ buildsResolve.timeOut = 130000;
 function pathsResolve( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, 'super' );
   let submodulesPath = _.path.join( routinePath, '.module' );
@@ -2752,7 +2752,7 @@ pathsResolveImportIn.timeOut = 130000;
 function pathsResolveOfSubmodules( test )
 {
   let self = this;
-  let originalRepoPath = _.path.join( self.assetDirPath, 'repo' );
+  let originalRepoPath = _.path.join( self.assetDirPath, '-repo' );
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-local-repos' );
   let repoPath = _.path.join( self.tempDir, 'repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
@@ -2796,13 +2796,13 @@ function pathsResolveOfSubmodules( test )
     test.case = 'path::in, wTools';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::in' );
-    var expected = path.join( submodulesPath, 'Tools' );
+    var expected = path.join( submodulesPath, 'Tools/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::in, wTools, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::in' );
-    var expected = path.join( submodulesPath, 'Tools' );
+    var expected = path.join( submodulesPath, 'Tools/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wTools';
@@ -2847,7 +2847,7 @@ function pathsResolveOfSubmodules( test )
 function pathsResolveOfSubmodulesAndOwn( test )
 {
   let self = this;
-  let originalRepoPath = _.path.join( self.assetDirPath, 'repo' );
+  let originalRepoPath = _.path.join( self.assetDirPath, '-repo' );
   let originalDirPath = _.path.join( self.assetDirPath, 'resolve-path-of-submodules' );
   let repoPath = _.path.join( self.tempDir, 'repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
@@ -2926,7 +2926,7 @@ pathsResolveOfSubmodulesAndOwn.timeOut = 300000;
 function pathsResolveOutFileOfExports( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'multiple-exports-exported' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple-exported' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, 'super.out/supermodule' );
   let will = new _.Will;
@@ -4015,7 +4015,7 @@ function pathsResolveFailing( test )
 function submodulesResolve( test )
 {
   let self = this;
-  let originalRepoPath = _.path.join( self.assetDirPath, 'repo' );
+  let originalRepoPath = _.path.join( self.assetDirPath, '-repo' );
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-local-repos' );
   let repoPath = _.path.join( self.tempDir, 'repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
@@ -4122,7 +4122,7 @@ submodulesResolve.timeOut = 300000;
 function submodulesDeleteAndDownload( test )
 {
   let self = this;
-  let originalRepoPath = _.path.join( self.assetDirPath, 'repo' );
+  let originalRepoPath = _.path.join( self.assetDirPath, '-repo' );
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-del-download' );
   let repoPath = _.path.join( self.tempDir, 'repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
