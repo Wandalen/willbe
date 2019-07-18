@@ -1,0 +1,89 @@
+format: willfile-1.0.0
+about:
+  name: B
+  enabled: 1
+  version: 0.1.0
+path:
+  module.willfiles:
+    path: B.out.will.yml
+    criterion:
+      predefined: 1
+  module.original.willfiles:
+    path: B.will.yml
+    criterion:
+      predefined: 1
+  module.dir:
+    path: .
+    criterion:
+      predefined: 1
+  module.common:
+    path: B.out
+    criterion:
+      predefined: 1
+  remote:
+    criterion:
+      predefined: 1
+  local:
+    path: B
+    criterion:
+      predefined: 1
+  exported.dir.export:
+    path: ./B
+    criterion:
+      default: 1
+      export: 1
+  exported.files.export:
+    path:
+      - B
+      - B/B.js
+    criterion:
+      default: 1
+      export: 1
+  in:
+    path: .
+  out: {}
+submodule: {}
+reflector:
+  exported.export:
+    src:
+      filePath:
+        .: null
+      prefixPath: B
+    criterion:
+      default: 1
+      export: 1
+    mandatory: 1
+  exported.files.export:
+    src:
+      filePath: 'path::exported.files.export'
+      basePath: .
+      prefixPath: 'path::exported.dir.export'
+    criterion:
+      default: 1
+      export: 1
+    recursive: 0
+    mandatory: 1
+step:
+  export.B:
+    opts:
+      export: 'path::local'
+      tar: 0
+    inherit:
+      - module.export
+build:
+  export:
+    criterion:
+      default: 1
+      export: 1
+    steps:
+      - 'step::export.B'
+exported:
+  export:
+    version: 0.1.0
+    criterion:
+      default: 1
+      export: 1
+    exportedReflector: 'reflector::exported.export'
+    exportedFilesReflector: 'reflector::exported.files.export'
+    exportedDirPath: 'path::exported.dir.export'
+    exportedFilesPath: 'path::exported.files.export'
