@@ -216,28 +216,28 @@ function timeOnce( delay, onBegin, onEnd )
  * @example
  * // Simplest, just timer
  * let t = _.timeOut( 1000 );
- * t.got( () => console.log( 'Message with 1000ms delay' ) )
+ * t.give( () => console.log( 'Message with 1000ms delay' ) )
  * console.log( 'Normal message' )
  *
  * @example
  * // Run routine with delay
  * let routine = () => console.log( 'Message with 1000ms delay' );
  * let t = _.timeOut( 1000, routine );
- * t.got( () => console.log( 'Routine finished work' ) );
+ * t.give( () => console.log( 'Routine finished work' ) );
  * console.log( 'Normal message' )
  *
  * @example
  * // Routine returns consequence
  * let routine = () => new _.Consequence().take( 'msg' );
  * let t = _.timeOut( 1000, routine );
- * t.got( ( err, got ) => console.log( 'Message from routine : ', got ) );
+ * t.give( ( err, got ) => console.log( 'Message from routine : ', got ) );
  * console.log( 'Normal message' )
  *
  * @example
  * // timeOut waits for long time routine
  * let routine = () => _.timeOut( 1500, () => 'work done' ) ;
  * let t = _.timeOut( 1000, routine );
- * t.got( ( err, got ) => console.log( 'Message from routine : ', got ) );
+ * t.give( ( err, got ) => console.log( 'Message from routine : ', got ) );
  * console.log( 'Normal message' )
  *
  * @example
@@ -245,7 +245,7 @@ function timeOnce( delay, onBegin, onEnd )
  * let routine = () => console.log( 'This message never appears' );
  * let t = _.timeOut( 5000, routine );
  * t.error( 'stop' );
- * t.got( ( err, got ) => console.log( 'Error returned as regular message : ', got ) );
+ * t.give( ( err, got ) => console.log( 'Error returned as regular message : ', got ) );
  * console.log( 'Normal message' )
  *
  * @example
@@ -258,7 +258,7 @@ function timeOnce( delay, onBegin, onEnd )
  * let context = { x : 5 };
  * let arguments = [ 6 ];
  * let t = _.timeOut( 100, context, routine, arguments );
- * t.got( ( err, got ) => console.log( 'Result of routine execution : ', got ) );
+ * t.give( ( err, got ) => console.log( 'Result of routine execution : ', got ) );
  *
  * @returns {wConsequence} Returns wConsequence instance that resolves message when work is done.
  * @throws {Error} If ( delay ) is not a Number.
@@ -346,7 +346,7 @@ function timeOut_body( o )
     // debugger;
     con.procedure( 'timeOut' ).sourcePath( o.stackLevel + 2 );
     // debugger;
-    con.got( function timeGot( err, arg )
+    con.give( function timeGot( err, arg )
     {
       if( err )
       clearTimeout( timer );
@@ -417,7 +417,7 @@ let timeSoon = typeof process === 'undefined' ? function( h ){ return setTimeout
  * @example
  * // timeOut error after delay
  * let t = _.timeOutError( 1000 );
- * t.got( ( err, got ) => { throw err; } )
+ * t.give( ( err, got ) => { throw err; } )
  *
  * @example
  * // using timeOutError with long time routine
@@ -432,7 +432,7 @@ let timeSoon = typeof process === 'undefined' ? function( h ){ return setTimeout
  * // Consequence returned by 'routine' resolves message in 5000 ms, but timeOutError will do the same in 2500 ms and 'timeOut'.
  * routine()
  * .orKeepingSplit( _.timeOutError( timeOut ) )
- * .got( function( err, got )
+ * .give( function( err, got )
  * {
  *   if( err )
  *   throw err;

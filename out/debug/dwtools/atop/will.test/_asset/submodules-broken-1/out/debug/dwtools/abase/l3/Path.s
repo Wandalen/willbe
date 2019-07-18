@@ -277,6 +277,13 @@ function like( path )
 
 //
 
+function isElement( pathElement )
+{
+  return pathElement === null || _.strIs( pathElement ) || _.arrayIs( pathElement ) || _.mapIs( pathElement ) || _.boolLike( pathElement ) || _.regexpIs( pathElement );
+}
+
+//
+
 /**
  * Checks if string is correct possible for current OS path and represent file/directory that is safe for modification
  * (not hidden for example).
@@ -2782,6 +2789,7 @@ let Routines =
   is,
   are,
   like,
+  isElement,
   isSafe,
   isRefinedMaybeTrailed,
   isRefined,

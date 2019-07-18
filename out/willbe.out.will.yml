@@ -597,6 +597,22 @@ path:
         ../proto/dwtools/atop/will.test/_asset/export-multiple/proto/File.debug.js
       - >-
         ../proto/dwtools/atop/will.test/_asset/export-multiple/proto/File.release.js
+      - ../proto/dwtools/atop/will.test/_asset/export-multiple-broken
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/export-multiple-broken/.ex.will.yml
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/export-multiple-broken/.im.will.yml
+      - ../proto/dwtools/atop/will.test/_asset/export-multiple-broken/out
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/export-multiple-broken/out/submodule.out.will.yml
+      - ../proto/dwtools/atop/will.test/_asset/export-multiple-broken/out-copy
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/export-multiple-broken/out-copy/submodule.out.will.yml
+      - ../proto/dwtools/atop/will.test/_asset/export-multiple-broken/proto
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/export-multiple-broken/proto/File.debug.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/export-multiple-broken/proto/File.release.js
       - ../proto/dwtools/atop/will.test/_asset/export-multiple-doc
       - ../proto/dwtools/atop/will.test/_asset/export-multiple-doc/.ex.will.yml
       - ../proto/dwtools/atop/will.test/_asset/export-multiple-doc/.im.will.yml
@@ -757,8 +773,6 @@ path:
       - >-
         ../proto/dwtools/atop/will.test/_asset/export-with-submodules/bc-named.will.yml
       - ../proto/dwtools/atop/will.test/_asset/export-with-submodules/c.will.yml
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/export-with-submodules/module-ab-named.out.will.yml
       - ../proto/dwtools/atop/will.test/_asset/export-with-submodules/aabc
       - >-
         ../proto/dwtools/atop/will.test/_asset/export-with-submodules/aabc/.will.yml
@@ -803,11 +817,6 @@ path:
         ../proto/dwtools/atop/will.test/_asset/export-with-submodules-few/bc-named.will.yml
       - >-
         ../proto/dwtools/atop/will.test/_asset/export-with-submodules-few/c.will.yml
-      - ../proto/dwtools/atop/will.test/_asset/export-with-submodules-few/out
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/export-with-submodules-few/out/module-b.out.will.yml
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/export-with-submodules-few/out/module-c.out.will.yml
       - ../proto/dwtools/atop/will.test/_asset/export-with-submodules-few/proto
       - >-
         ../proto/dwtools/atop/will.test/_asset/export-with-submodules-few/proto/a
@@ -839,22 +848,6 @@ path:
         ../proto/dwtools/atop/will.test/_asset/export-with-submodules-few/proto/dir3.test/File.js
       - >-
         ../proto/dwtools/atop/will.test/_asset/export-with-submodules-few/proto/dir3.test/File.test.js
-      - ../proto/dwtools/atop/will.test/_asset/exports-multiple-broken
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/exports-multiple-broken/.ex.will.yml
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/exports-multiple-broken/.im.will.yml
-      - ../proto/dwtools/atop/will.test/_asset/exports-multiple-broken/out
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/exports-multiple-broken/out/submodule.out.will.yml
-      - ../proto/dwtools/atop/will.test/_asset/exports-multiple-broken/out-copy
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/exports-multiple-broken/out-copy/submodule.out.will.yml
-      - ../proto/dwtools/atop/will.test/_asset/exports-multiple-broken/proto
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/exports-multiple-broken/proto/File.debug.js
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/exports-multiple-broken/proto/File.release.js
       - ../proto/dwtools/atop/will.test/_asset/function-platform
       - ../proto/dwtools/atop/will.test/_asset/function-platform/.im.will.yml
       - ../proto/dwtools/atop/will.test/_asset/function-platform/proto
@@ -877,6 +870,538 @@ path:
       - ../proto/dwtools/atop/will.test/_asset/import-auto/Auto.im.will.yml
       - ../proto/dwtools/atop/will.test/_asset/import-auto/Informal.ex.will.yml
       - ../proto/dwtools/atop/will.test/_asset/import-auto/Informal.im.will.yml
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/-.module
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto.out.will.yml
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.ex.will.yml
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.gitattributes
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.im.will.yml
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.travis.yml
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/appveyor.yml
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/LICENSE
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/package.json
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/README.md
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/config
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/description
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/FETCH_HEAD
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/HEAD
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/index
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/ORIG_HEAD
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/packed-refs
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/applypatch-msg.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/commit-msg.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/fsmonitor-watchman.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/post-update.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/pre-applypatch.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/pre-commit.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/pre-push.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/pre-rebase.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/pre-receive.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/prepare-commit-msg.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/update.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/info
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/info/exclude
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/logs
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/logs/HEAD
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/logs/refs
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/logs/refs/heads
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/logs/refs/heads/master
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/logs/refs/remotes
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/logs/refs/remotes/origin
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/logs/refs/remotes/origin/HEAD
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/objects
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/objects/info
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/objects/pack
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/objects/pack/pack-78fa7ec50487218ba235535ab19ae0d093d24811.idx
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/objects/pack/pack-78fa7ec50487218ba235535ab19ae0d093d24811.pack
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/refs
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/refs/heads
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/refs/heads/master
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/refs/remotes
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/refs/remotes/origin
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/refs/remotes/origin/HEAD
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/refs/tags
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/wProto.out.will.yml
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools/Tools.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools/abase
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools/abase/l3
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools/abase/l3/Proto.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools/abase/l3/ProtoAccessor.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools/abase/l3/ProtoLike.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools/abase/l3.test
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools/abase/l3.test/Proto.test.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools/abase/l3.test/ProtoLike.test.s
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools/Tools.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools/abase
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools/abase/l3
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools/abase/l3/Proto.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools/abase/l3/ProtoAccessor.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools/abase/l3/ProtoLike.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools/abase/l3.test
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools/abase/l3.test/Proto.test.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools/abase/l3.test/ProtoLike.test.s
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/sample/Sample.html
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/sample/Sample.js
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.ex.will.yml
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.gitattributes
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.gitignore
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.im.will.yml
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/appveyor.yml
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/index.html
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/LICENSE
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/package.json
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/README.md
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/config
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/description
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/HEAD
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/index
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/ORIG_HEAD
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/packed-refs
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/applypatch-msg.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/commit-msg.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/fsmonitor-watchman.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/post-update.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/pre-applypatch.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/pre-commit.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/pre-push.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/pre-rebase.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/pre-receive.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/prepare-commit-msg.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/update.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/info
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/info/exclude
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/logs
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/logs/HEAD
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/logs/refs
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/logs/refs/heads
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/logs/refs/heads/master
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/logs/refs/remotes
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/logs/refs/remotes/origin
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/logs/refs/remotes/origin/HEAD
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/objects
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/objects/info
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/objects/pack
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/objects/pack/pack-e0651f26136c8c9459986f4d5ccea14b848ac012.idx
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/objects/pack/pack-e0651f26136c8c9459986f4d5ccea14b848ac012.pack
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/refs
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/refs/heads
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/refs/heads/master
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/refs/remotes
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/refs/remotes/origin
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/refs/remotes/origin/HEAD
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/refs/tags
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/ArrayAppend.md
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/ArrayFamily.md
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/ArrayRoutines.md
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/CharCodes.md
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/Core-Level.xml
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/junior.introduction.ua.md
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/Types.md
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/img
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/img/1.png
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/img/2.1.png
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/img/2.2.png
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/img/3.png
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/img/5.png
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/img/6.png
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/component_NameTools.s.html
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/component_StringTools.s.html
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/global.html
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/index.html
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/wTools.html
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/wTools.s.html
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Bold-webfont.eot
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Bold-webfont.svg
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Bold-webfont.woff
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-BoldItalic-webfont.eot
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-BoldItalic-webfont.svg
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-BoldItalic-webfont.woff
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Italic-webfont.eot
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Italic-webfont.svg
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Italic-webfont.woff
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Light-webfont.eot
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Light-webfont.svg
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Light-webfont.woff
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-LightItalic-webfont.eot
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-LightItalic-webfont.svg
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-LightItalic-webfont.woff
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Regular-webfont.eot
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Regular-webfont.svg
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Regular-webfont.woff
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/scripts
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/scripts/linenumber.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/scripts/prettify
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/scripts/prettify/Apache-License-2.0.txt
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/scripts/prettify/lang-css.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/scripts/prettify/prettify.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/styles
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/styles/jsdoc-default.css
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/styles/prettify-jsdoc.css
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/styles/prettify-tomorrow.css
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/file1
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/file2
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/file3
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/file4.pdf
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/small
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/small2
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/small3
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/small4
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/small5
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/small6
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/small7
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/test.exe
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/out
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/out/wTools.out.will.yml
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/Tools.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/Layer0.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/Layer1.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/Layer2.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/aPredefined.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/aSetup.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/bPremature.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fBool.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fChecker.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fEntity.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fErr.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fLong.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fMap.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fNumber.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fRange.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fRegexp.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fRoutine.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fString.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fTime.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/iArrayDescriptor.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/iCompose.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/iField.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/cErr.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gBool.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gEntity.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gLong.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gMap.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gNumber.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gRange.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gRegexp.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gRoutine.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gString.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gTime.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/rFundamental.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/zSetup.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1.test
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1.test/Array.test.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1.test/Diagnostics.test.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1.test/Entity.test.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1.test/Map.test.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1.test/Regexp.test.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1.test/Routine.test.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1.test/String.test.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1.test/Typing.test.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l2
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l2/IncludeTools.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l2/ModulesRegistry.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l2/NameTools.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l2/StringTools.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l2.test
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l2.test/StringTools.test.s
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/Experiment.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/Sample.html
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/Sample.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/Sample.test.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/SampleArray.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/SampleArrayFlatten.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/SampleArrayPrepend.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/SampleArrayRemove.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/SampleArrayReplace.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/SampleLines.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/SampleRegExp.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/SampleString.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/Shell.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/Shell2.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/Shell3.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/StrExtractStrips.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/String.toStr.js
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/strTable.js
       - ../proto/dwtools/atop/will.test/_asset/import-auto/-out
       - >-
         ../proto/dwtools/atop/will.test/_asset/import-auto/-out/Informal.out.will.yml
@@ -992,6 +1517,159 @@ path:
         ../proto/dwtools/atop/will.test/_asset/import-auto/-out/debug/dwtools/abase/l2.test
       - >-
         ../proto/dwtools/atop/will.test/_asset/import-auto/-out/debug/dwtools/abase/l2.test/StringTools.test.s
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/.module
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto.out.will.yml
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.ex.will.yml
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.gitattributes
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.im.will.yml
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.travis.yml
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/appveyor.yml
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/LICENSE
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/package.json
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/README.md
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/config
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/description
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/FETCH_HEAD
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/HEAD
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/index
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/ORIG_HEAD
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/packed-refs
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/applypatch-msg.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/commit-msg.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/fsmonitor-watchman.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/post-update.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/pre-applypatch.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/pre-commit.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/pre-push.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/pre-rebase.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/pre-receive.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/prepare-commit-msg.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/update.sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/info
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/info/exclude
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/logs
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/logs/HEAD
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/logs/refs
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/logs/refs/heads
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/logs/refs/heads/master
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/logs/refs/remotes
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/logs/refs/remotes/origin
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/logs/refs/remotes/origin/HEAD
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/objects
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/objects/info
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/objects/pack
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/objects/pack/pack-78fa7ec50487218ba235535ab19ae0d093d24811.idx
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/objects/pack/pack-78fa7ec50487218ba235535ab19ae0d093d24811.pack
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/refs
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/refs/heads
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/refs/heads/master
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/refs/remotes
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/refs/remotes/origin
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/refs/remotes/origin/HEAD
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/refs/tags
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/wProto.out.will.yml
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools/Tools.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools/abase
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools/abase/l3
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools/abase/l3/Proto.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools/abase/l3/ProtoAccessor.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools/abase/l3/ProtoLike.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools/abase/l3.test
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools/abase/l3.test/Proto.test.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools/abase/l3.test/ProtoLike.test.s
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools/Tools.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools/abase
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools/abase/l3
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools/abase/l3/Proto.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools/abase/l3/ProtoAccessor.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools/abase/l3/ProtoLike.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools/abase/l3.test
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools/abase/l3.test/Proto.test.s
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools/abase/l3.test/ProtoLike.test.s
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/sample
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/sample/Sample.html
+      - >-
+        ../proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/sample/Sample.js
       - ../proto/dwtools/atop/will.test/_asset/import-auto/module
       - ../proto/dwtools/atop/will.test/_asset/import-auto/module/Proto.will.yml
       - ../proto/dwtools/atop/will.test/_asset/import-auto/module/.module
@@ -1038,30 +1716,6 @@ path:
         ../proto/dwtools/atop/will.test/_asset/import-in-exported/+super.out/release/File.debug.js
       - >-
         ../proto/dwtools/atop/will.test/_asset/import-in-exported/+super.out/release/File.release.js
-      - ../proto/dwtools/atop/will.test/_asset/import-in-exported/-out
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/import-in-exported/-out/submodule.out.will.yml
-      - ../proto/dwtools/atop/will.test/_asset/import-in-exported/-out/debug
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/import-in-exported/-out/debug/File.debug.js
-      - ../proto/dwtools/atop/will.test/_asset/import-in-exported/-out/release
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/import-in-exported/-out/release/File.release.js
-      - ../proto/dwtools/atop/will.test/_asset/import-in-exported/-super.out
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/import-in-exported/-super.out/supermodule.out.will.yml
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/import-in-exported/-super.out/debug
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/import-in-exported/-super.out/debug/File.debug.js
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/import-in-exported/-super.out/debug/File.release.js
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/import-in-exported/-super.out/release
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/import-in-exported/-super.out/release/File.debug.js
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/import-in-exported/-super.out/release/File.release.js
       - ../proto/dwtools/atop/will.test/_asset/import-in-exported/out
       - >-
         ../proto/dwtools/atop/will.test/_asset/import-in-exported/out/submodule.out.will.yml
@@ -1150,27 +1804,6 @@ path:
       - ../proto/dwtools/atop/will.test/_asset/reflect-get-path/.im.will.yml
       - ../proto/dwtools/atop/will.test/_asset/reflect-inherit
       - ../proto/dwtools/atop/will.test/_asset/reflect-inherit/.will.yml
-      - ../proto/dwtools/atop/will.test/_asset/reflect-inherit/out
-      - ../proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug1
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug1/File.js
-      - ../proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug1/File.s
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug1/File.test.js
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug1/some.test
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug1/some.test/File2.js
-      - ../proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug2
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug2/File.js
-      - ../proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug2/File.s
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug2/File.test.js
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug2/some.test
-      - >-
-        ../proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug2/some.test/File2.js
       - ../proto/dwtools/atop/will.test/_asset/reflect-inherit/proto
       - ../proto/dwtools/atop/will.test/_asset/reflect-inherit/proto/File.js
       - ../proto/dwtools/atop/will.test/_asset/reflect-inherit/proto/File.s
@@ -2492,6 +3125,22 @@ module:
             proto/dwtools/atop/will.test/_asset/export-multiple/proto/File.debug.js
           - >-
             proto/dwtools/atop/will.test/_asset/export-multiple/proto/File.release.js
+          - proto/dwtools/atop/will.test/_asset/export-multiple-broken
+          - >-
+            proto/dwtools/atop/will.test/_asset/export-multiple-broken/.ex.will.yml
+          - >-
+            proto/dwtools/atop/will.test/_asset/export-multiple-broken/.im.will.yml
+          - proto/dwtools/atop/will.test/_asset/export-multiple-broken/out
+          - >-
+            proto/dwtools/atop/will.test/_asset/export-multiple-broken/out/submodule.out.will.yml
+          - proto/dwtools/atop/will.test/_asset/export-multiple-broken/out-copy
+          - >-
+            proto/dwtools/atop/will.test/_asset/export-multiple-broken/out-copy/submodule.out.will.yml
+          - proto/dwtools/atop/will.test/_asset/export-multiple-broken/proto
+          - >-
+            proto/dwtools/atop/will.test/_asset/export-multiple-broken/proto/File.debug.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/export-multiple-broken/proto/File.release.js
           - proto/dwtools/atop/will.test/_asset/export-multiple-doc
           - proto/dwtools/atop/will.test/_asset/export-multiple-doc/.ex.will.yml
           - proto/dwtools/atop/will.test/_asset/export-multiple-doc/.im.will.yml
@@ -2655,8 +3304,6 @@ module:
             proto/dwtools/atop/will.test/_asset/export-with-submodules/bc-named.will.yml
           - >-
             proto/dwtools/atop/will.test/_asset/export-with-submodules/c.will.yml
-          - >-
-            proto/dwtools/atop/will.test/_asset/export-with-submodules/module-ab-named.out.will.yml
           - proto/dwtools/atop/will.test/_asset/export-with-submodules/aabc
           - >-
             proto/dwtools/atop/will.test/_asset/export-with-submodules/aabc/.will.yml
@@ -2701,11 +3348,6 @@ module:
             proto/dwtools/atop/will.test/_asset/export-with-submodules-few/bc-named.will.yml
           - >-
             proto/dwtools/atop/will.test/_asset/export-with-submodules-few/c.will.yml
-          - proto/dwtools/atop/will.test/_asset/export-with-submodules-few/out
-          - >-
-            proto/dwtools/atop/will.test/_asset/export-with-submodules-few/out/module-b.out.will.yml
-          - >-
-            proto/dwtools/atop/will.test/_asset/export-with-submodules-few/out/module-c.out.will.yml
           - proto/dwtools/atop/will.test/_asset/export-with-submodules-few/proto
           - >-
             proto/dwtools/atop/will.test/_asset/export-with-submodules-few/proto/a
@@ -2737,22 +3379,6 @@ module:
             proto/dwtools/atop/will.test/_asset/export-with-submodules-few/proto/dir3.test/File.js
           - >-
             proto/dwtools/atop/will.test/_asset/export-with-submodules-few/proto/dir3.test/File.test.js
-          - proto/dwtools/atop/will.test/_asset/exports-multiple-broken
-          - >-
-            proto/dwtools/atop/will.test/_asset/exports-multiple-broken/.ex.will.yml
-          - >-
-            proto/dwtools/atop/will.test/_asset/exports-multiple-broken/.im.will.yml
-          - proto/dwtools/atop/will.test/_asset/exports-multiple-broken/out
-          - >-
-            proto/dwtools/atop/will.test/_asset/exports-multiple-broken/out/submodule.out.will.yml
-          - proto/dwtools/atop/will.test/_asset/exports-multiple-broken/out-copy
-          - >-
-            proto/dwtools/atop/will.test/_asset/exports-multiple-broken/out-copy/submodule.out.will.yml
-          - proto/dwtools/atop/will.test/_asset/exports-multiple-broken/proto
-          - >-
-            proto/dwtools/atop/will.test/_asset/exports-multiple-broken/proto/File.debug.js
-          - >-
-            proto/dwtools/atop/will.test/_asset/exports-multiple-broken/proto/File.release.js
           - proto/dwtools/atop/will.test/_asset/function-platform
           - proto/dwtools/atop/will.test/_asset/function-platform/.im.will.yml
           - proto/dwtools/atop/will.test/_asset/function-platform/proto
@@ -2775,6 +3401,540 @@ module:
           - proto/dwtools/atop/will.test/_asset/import-auto/Auto.im.will.yml
           - proto/dwtools/atop/will.test/_asset/import-auto/Informal.ex.will.yml
           - proto/dwtools/atop/will.test/_asset/import-auto/Informal.im.will.yml
+          - proto/dwtools/atop/will.test/_asset/import-auto/-.module
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto.out.will.yml
+          - proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.ex.will.yml
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.gitattributes
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.im.will.yml
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.travis.yml
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/appveyor.yml
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/LICENSE
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/package.json
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/README.md
+          - proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/config
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/description
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/FETCH_HEAD
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/HEAD
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/index
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/ORIG_HEAD
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/packed-refs
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/applypatch-msg.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/commit-msg.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/fsmonitor-watchman.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/post-update.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/pre-applypatch.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/pre-commit.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/pre-push.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/pre-rebase.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/pre-receive.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/prepare-commit-msg.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/hooks/update.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/info
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/info/exclude
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/logs
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/logs/HEAD
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/logs/refs
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/logs/refs/heads
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/logs/refs/heads/master
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/logs/refs/remotes
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/logs/refs/remotes/origin
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/logs/refs/remotes/origin/HEAD
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/objects
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/objects/info
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/objects/pack
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/objects/pack/pack-78fa7ec50487218ba235535ab19ae0d093d24811.idx
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/objects/pack/pack-78fa7ec50487218ba235535ab19ae0d093d24811.pack
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/refs
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/refs/heads
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/refs/heads/master
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/refs/remotes
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/refs/remotes/origin
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/refs/remotes/origin/HEAD
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/.git/refs/tags
+          - proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/wProto.out.will.yml
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools/Tools.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools/abase
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools/abase/l3
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools/abase/l3/Proto.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools/abase/l3/ProtoAccessor.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools/abase/l3/ProtoLike.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools/abase/l3.test
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools/abase/l3.test/Proto.test.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/out/debug/dwtools/abase/l3.test/ProtoLike.test.s
+          - proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools/Tools.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools/abase
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools/abase/l3
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools/abase/l3/Proto.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools/abase/l3/ProtoAccessor.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools/abase/l3/ProtoLike.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools/abase/l3.test
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools/abase/l3.test/Proto.test.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/proto/dwtools/abase/l3.test/ProtoLike.test.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/sample/Sample.html
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Proto/sample/Sample.js
+          - proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.ex.will.yml
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.gitattributes
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.gitignore
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.im.will.yml
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/appveyor.yml
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/index.html
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/LICENSE
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/package.json
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/README.md
+          - proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/config
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/description
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/HEAD
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/index
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/ORIG_HEAD
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/packed-refs
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/applypatch-msg.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/commit-msg.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/fsmonitor-watchman.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/post-update.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/pre-applypatch.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/pre-commit.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/pre-push.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/pre-rebase.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/pre-receive.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/prepare-commit-msg.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/hooks/update.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/info
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/info/exclude
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/logs
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/logs/HEAD
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/logs/refs
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/logs/refs/heads
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/logs/refs/heads/master
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/logs/refs/remotes
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/logs/refs/remotes/origin
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/logs/refs/remotes/origin/HEAD
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/objects
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/objects/info
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/objects/pack
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/objects/pack/pack-e0651f26136c8c9459986f4d5ccea14b848ac012.idx
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/objects/pack/pack-e0651f26136c8c9459986f4d5ccea14b848ac012.pack
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/refs
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/refs/heads
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/refs/heads/master
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/refs/remotes
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/refs/remotes/origin
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/refs/remotes/origin/HEAD
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/.git/refs/tags
+          - proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/ArrayAppend.md
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/ArrayFamily.md
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/ArrayRoutines.md
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/CharCodes.md
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/Core-Level.xml
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/junior.introduction.ua.md
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/Types.md
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/img
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/img/1.png
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/img/2.1.png
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/img/2.2.png
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/img/3.png
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/img/5.png
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/img/6.png
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/component_NameTools.s.html
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/component_StringTools.s.html
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/global.html
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/index.html
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/wTools.html
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/wTools.s.html
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Bold-webfont.eot
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Bold-webfont.svg
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Bold-webfont.woff
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-BoldItalic-webfont.eot
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-BoldItalic-webfont.svg
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-BoldItalic-webfont.woff
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Italic-webfont.eot
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Italic-webfont.svg
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Italic-webfont.woff
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Light-webfont.eot
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Light-webfont.svg
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Light-webfont.woff
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-LightItalic-webfont.eot
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-LightItalic-webfont.svg
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-LightItalic-webfont.woff
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Regular-webfont.eot
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Regular-webfont.svg
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/fonts/OpenSans-Regular-webfont.woff
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/scripts
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/scripts/linenumber.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/scripts/prettify
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/scripts/prettify/Apache-License-2.0.txt
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/scripts/prettify/lang-css.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/scripts/prettify/prettify.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/styles
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/styles/jsdoc-default.css
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/styles/prettify-jsdoc.css
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/doc/reference/styles/prettify-tomorrow.css
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/file1
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/file2
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/file3
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/file4.pdf
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/small
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/small2
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/small3
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/small4
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/small5
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/small6
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/small7
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/file.test/test.exe
+          - proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/out
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/out/wTools.out.will.yml
+          - proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/Tools.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/Layer0.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/Layer1.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/Layer2.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/aPredefined.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/aSetup.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/bPremature.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fBool.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fChecker.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fEntity.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fErr.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fLong.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fMap.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fNumber.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fRange.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fRegexp.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fRoutine.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fString.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/fTime.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/iArrayDescriptor.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/iCompose.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l0/iField.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/cErr.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gBool.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gEntity.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gLong.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gMap.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gNumber.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gRange.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gRegexp.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gRoutine.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gString.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/gTime.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/rFundamental.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1/zSetup.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1.test
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1.test/Array.test.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1.test/Diagnostics.test.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1.test/Entity.test.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1.test/Map.test.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1.test/Regexp.test.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1.test/Routine.test.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1.test/String.test.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l1.test/Typing.test.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l2
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l2/IncludeTools.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l2/ModulesRegistry.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l2/NameTools.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l2/StringTools.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l2.test
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/proto/dwtools/abase/l2.test/StringTools.test.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/Experiment.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/Sample.html
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/Sample.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/Sample.test.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/SampleArray.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/SampleArrayFlatten.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/SampleArrayPrepend.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/SampleArrayRemove.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/SampleArrayReplace.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/SampleLines.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/SampleRegExp.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/SampleString.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/Shell.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/Shell2.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/Shell3.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/StrExtractStrips.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/String.toStr.js
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/-.module/Tools/sample/strTable.js
           - proto/dwtools/atop/will.test/_asset/import-auto/-out
           - >-
             proto/dwtools/atop/will.test/_asset/import-auto/-out/Informal.out.will.yml
@@ -2890,6 +4050,160 @@ module:
             proto/dwtools/atop/will.test/_asset/import-auto/-out/debug/dwtools/abase/l2.test
           - >-
             proto/dwtools/atop/will.test/_asset/import-auto/-out/debug/dwtools/abase/l2.test/StringTools.test.s
+          - proto/dwtools/atop/will.test/_asset/import-auto/.module
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto.out.will.yml
+          - proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.ex.will.yml
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.gitattributes
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.im.will.yml
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.travis.yml
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/appveyor.yml
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/LICENSE
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/package.json
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/README.md
+          - proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/config
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/description
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/FETCH_HEAD
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/HEAD
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/index
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/ORIG_HEAD
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/packed-refs
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/applypatch-msg.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/commit-msg.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/fsmonitor-watchman.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/post-update.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/pre-applypatch.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/pre-commit.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/pre-push.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/pre-rebase.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/pre-receive.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/prepare-commit-msg.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/hooks/update.sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/info
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/info/exclude
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/logs
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/logs/HEAD
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/logs/refs
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/logs/refs/heads
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/logs/refs/heads/master
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/logs/refs/remotes
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/logs/refs/remotes/origin
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/logs/refs/remotes/origin/HEAD
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/objects
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/objects/info
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/objects/pack
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/objects/pack/pack-78fa7ec50487218ba235535ab19ae0d093d24811.idx
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/objects/pack/pack-78fa7ec50487218ba235535ab19ae0d093d24811.pack
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/refs
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/refs/heads
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/refs/heads/master
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/refs/remotes
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/refs/remotes/origin
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/refs/remotes/origin/HEAD
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/.git/refs/tags
+          - proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/wProto.out.will.yml
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools/Tools.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools/abase
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools/abase/l3
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools/abase/l3/Proto.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools/abase/l3/ProtoAccessor.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools/abase/l3/ProtoLike.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools/abase/l3.test
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools/abase/l3.test/Proto.test.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/out/debug/dwtools/abase/l3.test/ProtoLike.test.s
+          - proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools/Tools.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools/abase
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools/abase/l3
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools/abase/l3/Proto.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools/abase/l3/ProtoAccessor.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools/abase/l3/ProtoLike.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools/abase/l3.test
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools/abase/l3.test/Proto.test.s
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/proto/dwtools/abase/l3.test/ProtoLike.test.s
+          - proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/sample
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/sample/Sample.html
+          - >-
+            proto/dwtools/atop/will.test/_asset/import-auto/.module/Proto/sample/Sample.js
           - proto/dwtools/atop/will.test/_asset/import-auto/module
           - >-
             proto/dwtools/atop/will.test/_asset/import-auto/module/Proto.will.yml
@@ -2937,30 +4251,6 @@ module:
             proto/dwtools/atop/will.test/_asset/import-in-exported/+super.out/release/File.debug.js
           - >-
             proto/dwtools/atop/will.test/_asset/import-in-exported/+super.out/release/File.release.js
-          - proto/dwtools/atop/will.test/_asset/import-in-exported/-out
-          - >-
-            proto/dwtools/atop/will.test/_asset/import-in-exported/-out/submodule.out.will.yml
-          - proto/dwtools/atop/will.test/_asset/import-in-exported/-out/debug
-          - >-
-            proto/dwtools/atop/will.test/_asset/import-in-exported/-out/debug/File.debug.js
-          - proto/dwtools/atop/will.test/_asset/import-in-exported/-out/release
-          - >-
-            proto/dwtools/atop/will.test/_asset/import-in-exported/-out/release/File.release.js
-          - proto/dwtools/atop/will.test/_asset/import-in-exported/-super.out
-          - >-
-            proto/dwtools/atop/will.test/_asset/import-in-exported/-super.out/supermodule.out.will.yml
-          - >-
-            proto/dwtools/atop/will.test/_asset/import-in-exported/-super.out/debug
-          - >-
-            proto/dwtools/atop/will.test/_asset/import-in-exported/-super.out/debug/File.debug.js
-          - >-
-            proto/dwtools/atop/will.test/_asset/import-in-exported/-super.out/debug/File.release.js
-          - >-
-            proto/dwtools/atop/will.test/_asset/import-in-exported/-super.out/release
-          - >-
-            proto/dwtools/atop/will.test/_asset/import-in-exported/-super.out/release/File.debug.js
-          - >-
-            proto/dwtools/atop/will.test/_asset/import-in-exported/-super.out/release/File.release.js
           - proto/dwtools/atop/will.test/_asset/import-in-exported/out
           - >-
             proto/dwtools/atop/will.test/_asset/import-in-exported/out/submodule.out.will.yml
@@ -3049,29 +4339,6 @@ module:
           - proto/dwtools/atop/will.test/_asset/reflect-get-path/.im.will.yml
           - proto/dwtools/atop/will.test/_asset/reflect-inherit
           - proto/dwtools/atop/will.test/_asset/reflect-inherit/.will.yml
-          - proto/dwtools/atop/will.test/_asset/reflect-inherit/out
-          - proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug1
-          - >-
-            proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug1/File.js
-          - >-
-            proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug1/File.s
-          - >-
-            proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug1/File.test.js
-          - >-
-            proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug1/some.test
-          - >-
-            proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug1/some.test/File2.js
-          - proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug2
-          - >-
-            proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug2/File.js
-          - >-
-            proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug2/File.s
-          - >-
-            proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug2/File.test.js
-          - >-
-            proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug2/some.test
-          - >-
-            proto/dwtools/atop/will.test/_asset/reflect-inherit/out/debug2/some.test/File2.js
           - proto/dwtools/atop/will.test/_asset/reflect-inherit/proto
           - proto/dwtools/atop/will.test/_asset/reflect-inherit/proto/File.js
           - proto/dwtools/atop/will.test/_asset/reflect-inherit/proto/File.s
