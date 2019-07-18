@@ -20,7 +20,7 @@ step :
     tar : 0
 
   view :
-    inherit : predefined.view
+    inherit : predefined.deos.not.exist
     filePath : http://127.0.0.1:3000
     delay : 3000
 

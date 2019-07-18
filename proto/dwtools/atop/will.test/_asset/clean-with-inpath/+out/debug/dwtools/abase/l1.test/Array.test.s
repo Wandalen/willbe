@@ -4,7 +4,7 @@
 
 if( typeof module !== 'undefined' )
 {
-  var _ = require( '../../Tools.s' );
+  let _ = require( '../Layer2.s' );
   _.include( 'wTesting' );
 }
 
@@ -6160,16 +6160,16 @@ function arrayCompare( test )
 
 //
 
-function arrayIdentical( test )
+function arraysAreIdentical( test )
 {
 
   test.case = 'empty arrays';
-  var got = _.arrayIdentical( [  ], [  ] );
+  var got = _.arraysAreIdentical( [  ], [  ] );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'arrays are equal';
-  var got = _.arrayIdentical( [ 1, 2, 3 ], [ 1, 2, 3 ] );
+  var got = _.arraysAreIdentical( [ 1, 2, 3 ], [ 1, 2, 3 ] );
   var expected = true;
   test.identical( got, expected );
 
@@ -6180,17 +6180,17 @@ function arrayIdentical( test )
   function src2() {
     return arguments;
   };
-  var got = _.arrayIdentical( src1( 3, 7, 33 ), src2( 3, 7, 13 ) );
+  var got = _.arraysAreIdentical( src1( 3, 7, 33 ), src2( 3, 7, 13 ) );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'arrays are not equal';
-  var got = _.arrayIdentical( [ 1, 2, 3, 'Hi!' ], [ 1, 2, 3, 'Hello there!' ] );
+  var got = _.arraysAreIdentical( [ 1, 2, 3, 'Hi!' ], [ 1, 2, 3, 'Hello there!' ] );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'arrays length are not equal';
-  var got = _.arrayIdentical( [ 1, 2, 3 ], [ 1, 2 ] );
+  var got = _.arraysAreIdentical( [ 1, 2, 3 ], [ 1, 2 ] );
   var expected = false;
   test.identical( got, expected );
 
@@ -6202,19 +6202,19 @@ function arrayIdentical( test )
   test.case = 'no arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayIdentical();
+    _.arraysAreIdentical();
   });
 
   test.case = 'not enough arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayIdentical( [ 1, 2, 3 ] );
+    _.arraysAreIdentical( [ 1, 2, 3 ] );
   });
 
   test.case = 'extra argument';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayIdentical( [ 1, 2, 3 ], [ 1, 2 ], 'redundant argument' );
+    _.arraysAreIdentical( [ 1, 2, 3 ], [ 1, 2 ], 'redundant argument' );
   });
 
 };
@@ -21515,7 +21515,7 @@ var Self =
     // array checker
 
     arrayCompare,
-    arrayIdentical,
+    arraysAreIdentical,
 
     arrayHasAny,
 

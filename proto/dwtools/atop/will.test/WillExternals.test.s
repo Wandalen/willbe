@@ -6906,8 +6906,8 @@ function reflectSubmodulesWithBase( test )
     test.identical( got.exitCode, 0 );
 
     var expected =
-    // [ '.', './debug', './debug/module', './debug/module/proto', './debug/module/proto/File1.s', './debug/module/proto/File2.s' ];
-    [ '.', './debug', './debug/proto', './debug/proto/File1.s', './debug/proto/File2.s' ]
+    [ '.', './debug', './debug/module', './debug/module/proto', './debug/module/proto/File1.s', './debug/module/proto/File2.s' ];
+    // [ '.', './debug', './debug/proto', './debug/proto/File1.s', './debug/proto/File2.s' ]
 
     var files = self.find( outPath );
     test.identical( files, expected );
@@ -7574,7 +7574,7 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
-    var expected = [ '.', './debug' ];
+    var expected = [ '.', './debug', './debug/File.s' ];
     test.identical( files, expected );
     return null;
   })
@@ -7620,7 +7620,7 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
-    var expected = [ '.', './debug' ];
+    var expected = [ '.', './debug', './debug/File.s' ];
     test.identical( files, expected );
     return null;
   })
@@ -7632,7 +7632,7 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
-    var expected = [ '.', './debug' ];
+    var expected = [ '.', './debug', './debug/File.s' ];
     test.identical( files, expected );
     return null;
   })
@@ -10386,7 +10386,7 @@ var Self =
     listWithSubmodulesSimple,
     listWithSubmodules,
     listSteps,
-    // listComplexPaths,
+    // listComplexPaths, // xxx
 
     clean,
     cleanSingleModule,
