@@ -159,7 +159,7 @@ function optionsForModule()
     will : null,
     rootModule : null,
     willfilesArray : null,
-    willfilesReadBeginTime : null,
+    // willfilesReadBeginTime : null,
 
     willfilesPath : null,
     localPath : null,
@@ -202,7 +202,7 @@ function optionsForSecondModule()
   {
     will : null,
     rootModule : null,
-    willfilesReadBeginTime : null,
+    // willfilesReadBeginTime : null,
   }
 
   let result = _.mapOnly( opener, Import );
@@ -435,7 +435,8 @@ function moduleFind()
 
   _.assert( _.arrayHas( [ 0, 'smart', 'picked' ], opener.finding ) );
 
-  opener._willfilesReadBegin();
+  will._moduleWillfilesReadBegin();
+  // opener._willfilesReadBegin();
   opener.preform();
   opener.remoteForm();
 
@@ -482,7 +483,7 @@ function moduleFind()
     _.assert( opener.openedModule === openedModule || opener.openedModule === null );
     opener.openedModule = openedModule;
 
-    _.assert( !opener.willfilesArray.length || !openedModule.willfilesArray.length || _.arrayIdentical( opener.willfilesArray, openedModule.willfilesArray ) );
+    _.assert( !opener.willfilesArray.length || !openedModule.willfilesArray.length || _.arraysAreIdentical( opener.willfilesArray, openedModule.willfilesArray ) );
     if( opener.willfilesArray.length )
     openedModule.willfilesArray = _.entityShallowClone( opener.willfilesArray );
     else
@@ -503,8 +504,8 @@ function moduleFind()
 
   }
 
-  _.assert( _.arrayIdentical( opener.willfilesArray, opener.openedModule.willfilesArray ) );
-  _.assert( _.arrayIdentical( _.mapVals( opener.willfileWithRoleMap ), _.mapVals( opener.openedModule.willfileWithRoleMap ) ) );
+  _.assert( _.arraysAreIdentical( opener.willfilesArray, opener.openedModule.willfilesArray ) );
+  _.assert( _.arraysAreIdentical( _.mapVals( opener.willfileWithRoleMap ), _.mapVals( opener.openedModule.willfileWithRoleMap ) ) );
 
   if( !opener.openedModule.isUsedBy( opener ) )
   opener.openedModule.usedBy( opener );
@@ -519,7 +520,8 @@ function moduleClone( openedModule )
   let opener = this;
   let will = opener.will;
 
-  opener._willfilesReadBegin();
+  will._moduleWillfilesReadBegin();
+  // opener._willfilesReadBegin();
   opener.preform();
   opener.remoteForm();
 
@@ -661,17 +663,17 @@ function willfileEach( onEach )
 }
 
 //
-
-function _willfilesReadBegin()
-{
-  let opener = this;
-  let will = opener.will;
-  let logger = will.logger;
-
-  opener.willfilesReadBeginTime = _.timeNow();
-
-  return null;
-}
+//
+// function _willfilesReadBegin()
+// {
+//   let opener = this;
+//   let will = opener.will;
+//   let logger = will.logger;
+//
+//   opener.willfilesReadBeginTime = _.timeNow();
+//
+//   return null;
+// }
 
 //
 
@@ -1333,14 +1335,14 @@ function _remoteDownload( o )
   _.assert( !!opener.supermodule );
 
   return con
-  .keep( () =>
+  .then( () =>
   {
     if( o.updating )
     return opener.remoteIsUpToDateUpdate();
     else
     return opener.remoteIsDownloadedUpdate();
   })
-  .keep( function( arg )
+  .then( function( arg )
   {
 
     if( o.updating )
@@ -1360,7 +1362,7 @@ function _remoteDownload( o )
 
     return arg;
   })
-  .keep( () =>
+  .then( () =>
   {
 
     let o2 =
@@ -1375,7 +1377,7 @@ function _remoteDownload( o )
 
     return null;
   })
-  .keep( function( arg )
+  .then( function( arg )
   {
     // debugger;
     opener.isDownloaded = true;
@@ -1824,7 +1826,7 @@ let Restricts =
   openerModule : null,
   unwrappedOpenerModule : null,
 
-  willfilesReadBeginTime : null,
+  // willfilesReadBeginTime : null,
 
 }
 
@@ -1843,6 +1845,8 @@ let Forbids =
   opened : 'opened',
   pickedWillfileData : 'pickedWillfileData',
   pickedWillfilesPath : 'pickedWillfilesPath',
+  willfilesReadBeginTime : 'willfilesReadBeginTime',
+  willfilesReadTimeReported : 'willfilesReadTimeReported',
 }
 
 let Accessors =
@@ -1917,7 +1921,7 @@ let Extend =
   willfileRegister,
   willfileArraySet,
   willfileEach,
-  _willfilesReadBegin,
+  // _willfilesReadBegin,
   _willfilesExport,
 
   _willfileFindSmartSingle,

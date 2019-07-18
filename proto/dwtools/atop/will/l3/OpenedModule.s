@@ -29,6 +29,10 @@ function finit()
   let module = this;
   let will = module.will;
   let rootModule = module.rootModule;
+  let logger = will.logger;
+
+  if( will.verosity >= 5 )
+  logger.log( module.nickName, 'finit.begin' );
 
   module.unform();
   module.about.finit();
@@ -49,8 +53,12 @@ function finit()
 
   _.assert( _.instanceIsFinited( module.about ) );
 
-  return Parent.prototype.finit.apply( module, arguments );
-  // return _.Copyable.prototype.finit.apply( module, arguments );
+  let result = Parent.prototype.finit.apply( module, arguments );
+
+  if( will.verosity >= 5 )
+  logger.log( module.nickName, 'finit.end' );
+
+  return result;
 }
 
 //
@@ -74,6 +82,7 @@ function init( o )
   module.precopy( o );
 
   let will = o.will;
+  let logger = will.logger;
   _.assert( !!will );
 
   module.stager = new _.Stager
@@ -87,11 +96,10 @@ function init( o )
     onEnd : [ null, null, null, module._willfilesReadEnd, null, module._formEnd ],
   });
 
-  // module.stager.stageStatePausing( 'opened', 1 );
   module.stager.stageStatePausing( 'picked', 1 );
+  module.stager.stageStateSkipping( 'resourcesFormed', 1 );
 
   module.predefinedForm();
-
   module.moduleWithNameMap = Object.create( null );
 
   _.assert( !!o );
@@ -103,6 +111,9 @@ function init( o )
 
   module._filePathChanged();
   module._nameChanged();
+
+  if( will.verosity >= 5 )
+  logger.log( module.nickName, 'init' );
 
   // /* */
   //
@@ -1157,7 +1168,7 @@ function _willfilesOpen()
     if( willfile.formed === 3 )
     continue;
 
-    con.keep( ( arg ) => willfile.open() );
+    con.then( ( arg ) => willfile.open() );
   }
 
   /* */
@@ -1183,7 +1194,8 @@ function _willfilesReadBegin()
   let will = module.will;
   let logger = will.logger;
 
-  module.willfilesReadBeginTime = _.timeNow();
+  will._moduleWillfilesReadBegin();
+  // module.willfilesReadBeginTime = _.timeNow();
 
   return null;
 }
@@ -1196,13 +1208,15 @@ function _willfilesReadEnd()
   let will = module.will;
   let logger = will.logger;
 
-  if( will.verbosity >= 2 )
-  if( module === module.rootModule && !module.original )
-  {
-    if( !module.willfilesReadTimeReported )
-    logger.log( ' . Read', module.willfilesResolve().length, 'willfile(s) in', _.timeSpent( module.willfilesReadBeginTime ), '\n' );
-    module.willfilesReadTimeReported = 1;
-  }
+  will._moduleWillfilesReadEnd( module );
+
+  // if( will.verbosity >= 2 )
+  // if( module === module.rootModule && !module.original )
+  // {
+  //   if( !module.willfilesReadTimeReported )
+  //   logger.log( ' . Read', module.willfilesResolve().length, 'willfile(s) in', _.timeSpent( module.willfilesReadBeginTime ), '\n' );
+  //   module.willfilesReadTimeReported = 1;
+  // }
 
   return null;
 }
@@ -1503,7 +1517,7 @@ function _submodulesDownload_body( o )
         let o2 = _.mapExtend( null, o );
         delete o2.downloaded;
         let r = _.Consequence.From( submodule._remoteDownload( o2 ) );
-        return r.keep( ( arg ) =>
+        return r.then( ( arg ) =>
         {
           _.assert( _.boolIs( arg ) );
           _.assert( _.strIs( submodule.remotePath ) );
@@ -2298,9 +2312,9 @@ function _resourcesForm()
   if( module.submodulesAllAreDownloaded() && module.submodulesAllAreValid() )
   {
 
-    con.keep( () => module._resourcesFormAct() );
+    con.then( () => module._resourcesFormAct() );
 
-    con.keep( ( arg ) =>
+    con.then( ( arg ) =>
     {
       // if( !module.supermodule )
       // module._willfilesCacheSave();
@@ -2375,13 +2389,13 @@ function _resourcesAllForm( Resource, con )
   {
     let resource = module[ Resource.MapName ][ s ];
     _.assert( !!resource.formed );
-    con.keep( ( arg ) => resource.form2() );
+    con.then( ( arg ) => resource.form2() );
   }
 
   for( let s in module[ Resource.MapName ] )
   {
     let resource = module[ Resource.MapName ][ s ];
-    con.keep( ( arg ) => resource.form3() );
+    con.then( ( arg ) => resource.form3() );
   }
 
 }
@@ -4110,7 +4124,7 @@ let Composes =
   isUpToDate : null,
 
   verbosity : 0,
-  willfilesReadBeginTime : null,
+  // willfilesReadBeginTime : null,
 
 }
 
@@ -4148,7 +4162,7 @@ let Restricts =
   id : null,
   stager : null,
 
-  willfilesReadTimeReported : 0,
+  // willfilesReadTimeReported : 0,
   _registeredPath : null,
 
   pathMap : _.define.own({}),
@@ -4204,6 +4218,8 @@ let Forbids =
   moduleWithPathMap : 'moduleWithPathMap',
   openedModule : 'openedModule',
   openerModule : 'openerModule',
+  willfilesReadTimeReported : 'willfilesReadTimeReported',
+  willfilesReadBeginTime : 'willfilesReadBeginTime',
 
 }
 
