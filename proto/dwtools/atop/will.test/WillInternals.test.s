@@ -3,9 +3,6 @@
 'use strict';
 
 /*
-
-!!! add test routine openning out-willfile
-
 */
 
 if( typeof module !== 'undefined' )
