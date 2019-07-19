@@ -21,7 +21,7 @@ if( typeof module !== 'undefined' )
 
   require( './l7/Build.s' );
   require( './l7/Exported.s' );
-  require( './l7/Willfile.s' );
+  require( './l7/Willf.s' );
   require( './l7/PathResource.s' );
   require( './l7/Reflector.s' );
   require( './l7/Step.s' );

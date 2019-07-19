@@ -83,7 +83,7 @@ function preCloneRepos( test )
   {
 
     if( !_.fileProvider.isDir( _.path.join( self.repoDirPath, name ) ) )
-    shell( 'git clone https:///github.com/Wandalen/w' + name + '.git ' + name );
+    shell( 'git clone https://github.com/Wandalen/w' + name + '.git ' + name );
     debugger;
     shell({ args : 'git checkout ' + version, currentPath : _.path.join( self.repoDirPath, name ) });
     debugger;
@@ -7639,6 +7639,9 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
 
   return ready;
 }
+
+reflectSubmodulesWithPluralCriterionAutoExport.timeOut = 300000;
+
 
 //
 

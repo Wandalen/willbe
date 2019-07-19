@@ -426,6 +426,7 @@ function stepRoutineTranspile( frame )
 
     inputPath : reflectOptions.src,
     outputPath : reflectOptions.dst,
+    entryPath : opts.entry,
     totalReporting : 0,
     transpilingStrategies : transpilingStrategies,
     splittingStrategy : raw ? 'OneToOne' : 'ManyToOne',
@@ -445,7 +446,6 @@ function stepRoutineTranspile( frame )
   // diagnosing : 0,
   // beautifing : 0,
 
-  debugger;
   return multiple.form().perform()
   .finally( ( err, arg ) =>
   {
@@ -460,6 +460,7 @@ stepRoutineTranspile.stepOptions =
 {
   reflector : null,
   upToDate : 'preserve',
+  entry : null,
 }
 
 stepRoutineTranspile.uniqueOptions =
@@ -594,9 +595,9 @@ function stepRoutineNpmGenerate( frame )
   }
 
   if( module.pathMap.repository )
-  config.repository = module.pathMap.repository;
+  config.repository = pathSimplify( module.pathMap.repository );
   if( module.pathMap.bugtracker )
-  config.bugs = module.pathMap.bugtracker;
+  config.bugs = pathSimplify( module.pathMap.bugtracker );
   if( module.pathMap.entry )
   config.entry = module.pathMap.entry;
 
@@ -619,6 +620,14 @@ function stepRoutineNpmGenerate( frame )
 
   debugger;
   return null;
+
+  function pathSimplify( src )
+  {
+    if( !_.strIs( src ) )
+    return src;
+    return src.replace( '///', '//' );
+  }
+
 }
 
 stepRoutineNpmGenerate.stepOptions =

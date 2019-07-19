@@ -526,18 +526,24 @@ function reflectorsImport( Reflector, resources )
       name : name,
     });
 
+    let o3 = Object.create( null );
+    o3.criterion = _.mapExtend( null, resource.criterion || {} );
+    o3.shell = resource.shell;
+    o3.Importing = 1;
+
+    if( resource.step )
+    {
+      if( !_.mapIs( resource.step ) )
+      resource.step = { inherit : resource.step }
+      _.mapExtend( o3, resource.step );
+    }
+
     if( resource.shell )
     {
 
-      let o3 = Object.create( null );
-      o3.criterion = _.mapExtend( null, resource.criterion || {} );
       o3.forEachDst = 'reflector::' + name + '*';
-      if( resource.step )
-      o3.inherit = resource.step;
-      else
+      if( !o3.inherit )
       o3.inherit = 'shell.run';
-      o3.shell = resource.shell;
-      o3.Importing = 1;
 
       willf.resourceImport
       ({
@@ -550,15 +556,10 @@ function reflectorsImport( Reflector, resources )
     else if( !openedModule.stepMap[ name ] )
     {
 
-      let o3 = Object.create( null );
-      o3.criterion = _.mapExtend( null, resource.criterion || {} );
       o3.reflector = 'reflector::' + name + '*';
-      if( resource.step )
-      o3.inherit = resource.step;
-      else
+      if( !o3.inherit )
       o3.inherit = 'files.reflect';
       o3.Optional = 1;
-      o3.Importing = 1;
 
       willf.resourceImport
       ({
@@ -568,6 +569,55 @@ function reflectorsImport( Reflector, resources )
       });
 
     }
+
+    // if( resource.shell )
+    // {
+    //
+    //   let o3 = Object.create( null );
+    //   o3.criterion = _.mapExtend( null, resource.criterion || {} );
+    //   o3.forEachDst = 'reflector::' + name + '*';
+    //   o3.shell = resource.shell;
+    //   o3.Importing = 1;
+    //
+    //   if( resource.step )
+    //   {
+    //     if( !_.mapIs( resource.step ) )
+    //     resource.step = { inherit : resource.step }
+    //     _.mapExtend( o3, resource.step );
+    //   }
+    //
+    //   if( !o3.inherit )
+    //   o3.inherit = 'shell.run';
+    //
+    //   willf.resourceImport
+    //   ({
+    //     resource : o3,
+    //     resourceClass : will.Step,
+    //     name : name,
+    //   });
+    //
+    // }
+    // else if( !openedModule.stepMap[ name ] )
+    // {
+    //
+    //   let o3 = Object.create( null );
+    //   o3.criterion = _.mapExtend( null, resource.criterion || {} );
+    //   o3.reflector = 'reflector::' + name + '*';
+    //   if( resource.step )
+    //   o3.inherit = resource.step;
+    //   else
+    //   o3.inherit = 'files.reflect';
+    //   o3.Optional = 1;
+    //   o3.Importing = 1;
+    //
+    //   willf.resourceImport
+    //   ({
+    //     resource : o3,
+    //     resourceClass : will.Step,
+    //     name : name,
+    //   });
+    //
+    // }
 
   });
 
