@@ -6140,6 +6140,50 @@ function exportBrokenNoreflector( test )
 
 //
 
+function exportWholeModule( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-whole' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  ready
+
+  .thenKeep( () =>
+  {
+    test.case = 'export whole module using in path'
+    return null;
+  })
+
+  shell({ args : [ '.export' ] })
+
+  .thenKeep( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'export-whole.out.will.yml' ) ) )
+    return null;
+  })
+
+  return ready;
+}
+
+//
+
 /*
 Import out file with non-importable path local.
 Test importing of non-valid out files.
@@ -10421,6 +10465,7 @@ var Self =
     exportDoc,
     exportImport,
     exportBrokenNoreflector,
+    exportWholeModule,
     importPathLocal,
     importLocalRepo,
     importOutWithDeletedSource,
