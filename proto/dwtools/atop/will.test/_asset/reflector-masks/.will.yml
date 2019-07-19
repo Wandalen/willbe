@@ -1,0 +1,52 @@
+about :
+  name : maskFilter
+  description : "To use reflector mask"
+  version : 0.0.1
+
+path :
+
+  in : '.'
+  out : 'out'
+  proto : './proto'
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : './out/release'
+    criterion :
+      debug : 0
+  temp :
+    - out
+
+reflector :
+
+  reflect.copy. :
+    src :
+      filePath : ./proto
+      maskAll :
+        includeAny :
+           - !!js/regexp '/\.two$/'
+    dst :
+       filePath : 'path::out.*=1'
+    criterion :
+      debug : 0
+
+  reflect.copy.debug :
+    src :
+      filePath : ./proto
+      maskAll :
+        excludeAny :
+           - !!js/regexp '/\.two/'
+    dst :
+       filePath : 'path::out.*=1'
+    criterion :
+      debug : 1
+
+build :
+
+  copy :
+    criterion :
+      debug : [ 0,1 ]
+    steps :
+      - reflect.*

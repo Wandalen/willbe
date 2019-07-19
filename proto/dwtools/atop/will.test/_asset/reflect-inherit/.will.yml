@@ -1,0 +1,130 @@
+
+path :
+
+  proto : './proto'
+  temp :
+    - 'out'
+    - 'out2'
+  in : '.'
+  out : 'out'
+  out.debug1 : './out/debug1'
+  out.debug2 : './out/debug2'
+
+reflector :
+
+  reflect.proto1 :
+    src : path::proto
+    dst : path::out.debug1
+
+  reflect.proto2 :
+    inherit : reflect.proto1
+    dst :
+      filePath : path::out.debug2
+
+  reflect.proto3 :
+    inherit : reflect.proto1
+    dst :
+      prefixPath : path::out.debug2
+
+  reflect.proto4 :
+    inherit : reflect.proto1
+    dst :
+      filePath : .
+      prefixPath : path::out.debug2
+
+  reflect.proto5 :
+    inherit : reflect.proto1
+    dst : path::out.debug2
+
+  not.test :
+    filePath :
+      '**.test**' : 0
+
+  only.js :
+    filePath :
+      '**.js' : 1
+
+  reflect.not.test.only.js.v1 :
+    inherit :
+      - not.test
+      - only.js
+    src : path::proto
+    dst :
+      - path::out.debug1
+      - path::out.debug2
+
+  # inheriting of file filter
+
+  files1 : # for src only
+    src :
+      - proto/File.js
+      - proto/File.s
+    dst : out2
+
+  files2 : # for dst only
+    src :
+      - proto/File.test.js
+    dst : path::out
+
+  files3 : # for src/basePath only
+    src :
+      filePath : src1
+      basePath : proto
+    dst : dst1
+
+  reflect.files1 :
+    inherit : reflector::files3
+    src :
+      filePath : reflector::files1
+    dst :
+      filePath : reflector::files2
+
+  reflect.files2 :
+    inherit : reflector::files3
+    src :
+      prefixPath : reflector::files1
+    dst :
+      prefixPath : reflector::files2
+
+  reflect.files3 :
+    inherit : reflector::files3
+    src : reflector::files1
+    dst : reflector::files2
+
+build :
+
+  reflect.proto1 :
+    steps :
+      - step::reflect.proto1
+
+  reflect.proto2 :
+    steps :
+      - step::reflect.proto2
+
+  reflect.proto3 :
+    steps :
+      - step::reflect.proto3
+
+  reflect.proto4 :
+    steps :
+      - step::reflect.proto4
+
+  reflect.proto5 :
+    steps :
+      - step::reflect.proto5
+
+  not1 :
+    steps :
+      - step::reflect.not.test.only.js.v1
+
+  reflect.files1 :
+    steps :
+      - reflect.files1
+
+  reflect.files2 :
+    steps :
+      - reflect.files2
+
+  reflect.files3 :
+    steps :
+      - reflect.files3

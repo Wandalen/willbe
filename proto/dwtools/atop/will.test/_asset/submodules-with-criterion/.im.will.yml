@@ -1,0 +1,52 @@
+
+submodule :
+
+  A :
+    path : ./module/A
+    criterion :
+      debug : 0
+  B :
+    path : ./module/B
+    criterion :
+      debug : 1
+
+path :
+
+  in : '.'
+  out : 'out'
+  out.debug : './out/debug'
+  temp : out
+
+reflector :
+
+  reflect:
+    inherit : submodule::*/exported::*=1/reflector::exported.files*=1
+    dst :
+      basePath : .
+      prefixPath : path::out.debug
+    criterion :
+      debug : [ 0,1 ]
+
+step :
+
+  delete.out :
+    inherit : files.delete
+    filePath : path::out
+
+build :
+
+  A :
+    criterion :
+      debug : 0
+    steps :
+      - submodules.download
+      - delete.out
+      - reflect.*=1
+
+  B :
+    criterion :
+      debug : 1
+    steps :
+      - submodules.download
+      - delete.out
+      - reflect.*=1

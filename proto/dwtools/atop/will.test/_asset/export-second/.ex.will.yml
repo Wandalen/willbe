@@ -1,0 +1,50 @@
+
+about :
+
+  name : "ExportSecond"
+  description : "description"
+  version : "0.0.0"
+
+step :
+
+  proto.export :
+    inherit : module.export
+    export : path::proto
+    tar : 0
+    criterion :
+      debug : 1
+      proto : 1
+
+  doc.export :
+    inherit : module.export
+    export : path::doc
+    tar : 0
+    criterion :
+      debug : 1
+      proto : 1
+
+build :
+
+  proto.export :
+    criterion :
+      proto : 1
+      export : 1
+    steps :
+      # - build::debug.raw
+      - step::proto.export
+
+  doc.export :
+    criterion :
+      doc : 1
+      export : 1
+    steps :
+      # - build::debug.raw
+      - step::doc.export
+
+  export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - build::proto.export
+      - build::doc.export
