@@ -1,0 +1,34 @@
+
+path :
+
+  proto : 'proto'
+  in : '.'
+  out : 'out'
+  'out.debug' : 'out/debug'
+  temp : 'out'
+
+reflector :
+
+  reflect.proto1 :
+    filePath :
+      'path::proto' : 'path::out.debug'
+
+  reflect.proto2 :
+    filePath :
+      proto2 : 'path::out.debug'
+
+  reflect.proto3 :
+    mandatory : 0
+    filePath :
+      proto3 : 'path::out.debug'
+
+build :
+
+  variant1 :
+    steps : reflect.proto1
+
+  variant2 :
+    steps : reflect.proto2
+
+  variant3 :
+    steps : reflect.proto3

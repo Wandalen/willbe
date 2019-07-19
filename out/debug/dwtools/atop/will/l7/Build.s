@@ -28,12 +28,7 @@ function init( o )
 {
   let resource = this;
 
-  // debugger;
   Parent.prototype.init.apply( resource, arguments );
-
-  // if( resource.module && resource.module instanceof _.Will.OpenerModule )
-  // resource.module = resource.module.openedModule;
-  // _.assert( resource.module === null || resource.module instanceof _.Will.OpenedModule );
 
   return resource;
 }
@@ -49,6 +44,9 @@ function form3()
   let path = fileProvider.path;
   let logger = will.logger;
 
+  if( build.formed === 3 )
+  return build;
+
   _.assert( arguments.length === 0 );
   _.assert( build.formed === 2 );
 
@@ -63,32 +61,34 @@ function form3()
   return build;
 }
 
-function form3()
-{
-  let build = this;
-  let module = build.module;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-
-  _.assert( arguments.length === 0 );
-  _.assert( build.formed === 2 );
-
-  /* begin */
-
-  if( build.criterion && build.criterion.default !== undefined )
-  build.criterion.default = build.criterion.default ? 1 : 0;
-
-  // if( _.arrayIs( build.steps ) )
-  // build.steps = [ build.steps ];
-
-  /* end */
-
-  // _.assert( build.steps === null || _.arrayIs( build.steps ) );
-  build.formed = 3;
-  return build;
-}
+//
+//
+// function form3()
+// {
+//   let build = this;
+//   let module = build.module;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//
+//   _.assert( arguments.length === 0 );
+//   _.assert( build.formed === 2 );
+//
+//   /* begin */
+//
+//   if( build.criterion && build.criterion.default !== undefined )
+//   build.criterion.default = build.criterion.default ? 1 : 0;
+//
+//   // if( _.arrayIs( build.steps ) )
+//   // build.steps = [ build.steps ];
+//
+//   /* end */
+//
+//   // _.assert( build.steps === null || _.arrayIs( build.steps ) );
+//   build.formed = 3;
+//   return build;
+// }
 
 //
 

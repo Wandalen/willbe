@@ -100,7 +100,10 @@ function verify()
   {
     let submodule = module.submoduleMap[ s ];
     if( !submodule.opener || !submodule.opener.isOpened() || !submodule.opener.isValid() )
-    throw _.errBriefly( ' ! ' + submodule.decoratedAbsoluteName + ' is broken!' );
+    {
+      debugger;
+      throw _.errBriefly( _.color.strFormat( ' ! ', 'negative' ) + 'Exporting is impossible because ' + submodule.decoratedAbsoluteName + ' is broken!' );
+    }
   }
 
 }
@@ -128,8 +131,6 @@ function readExported()
   })
 
   opener2.preform();
-  // let willfiles = opener2.willfilesPick( outFilePath );
-  // opener2.pickedWillfilesPath = outFilePath;
   opener2.willfilesPath = outFilePath;
   opener2.finding = 'picked';
 
@@ -137,7 +138,7 @@ function readExported()
   {
 
     opener2.moduleFind();
-    opener2.openedModule.willfilesReadTimeReported = 1;
+    // opener2.openedModule.willfilesReadTimeReported = 1;
     opener2.openedModule.stager.stageStatePausing( 'picked', 0 );
     opener2.openedModule.stager.stageStateSkipping( 'submodulesFormed', 1 );
     opener2.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
@@ -323,7 +324,10 @@ function performExportedReflectors( exportSelector )
 
   /* exportedDirPath */
 
-  let exportedDirPath = srcFilter.basePaths[ 0 ];
+  let exportedDirPath = srcFilter.basePaths[ 0 ]; debugger;
+
+  if( hd.isTerminal( exportedDirPath ) )
+  exportedDirPath = path.dir( exportedDirPath );
 
   exported.exportedDirPath = module.resourceAllocate( 'path', 'exported.dir.' + exported.name );
   exported.exportedDirPath.generated = 1;
@@ -389,49 +393,6 @@ function performExportedFilesReflector()
 
   /* exportedFilesReflector */
 
-  // if( !exported.exportedFilesReflector )
-  // exported.exportedFilesReflector = exported.exportedReflector.cloneExtending
-  // ({
-  //   name : module.resourceNameAllocate( 'reflector', 'exported.files.' + exported.name ),
-  //   module : module,
-  // });
-  // let exportedFilesReflector = exported.exportedFilesReflector;
-  // exportedFilesReflector.generated = 1;
-  //
-  // debugger;
-  // exportedFilesReflector.src.pairWithDst( exportedFilesReflector.dst );
-  // exportedFilesReflector.src.pairRefineLight();
-  // exportedFilesReflector.prefixesApply();
-  // exportedFilesReflector.src.filteringClear();
-  // _.assert( exportedFilesReflector.src.basePath === null || path.areBasePathsEquivalent( exportedFilesReflector.src.basePath, path.join( module.inPath, exported.exportedDirPath.path ) ) );
-  //
-  // _.assert( exportedFilesReflector.src.prefixPath === module.inPath || exportedFilesReflector.src.prefixPath === null );
-  // exportedFilesReflector.prefixesRelative( path.join( module.inPath, exported.exportedDirPath.path ) );
-  // exportedFilesReflector.src.prefixPath = exported.exportedDirPath.refName;
-  //
-  // /* base path */
-  //
-  // /*
-  // base path is really required!
-  // */
-  //
-  // exportedFilesReflector.src.basePath = exportedFilesReflector.src.basePath || '.';
-  // _.assert( exportedFilesReflector.dst.basePath === null );
-  // exportedFilesReflector.src.basePathSimplify();
-  //
-  // /* etc */
-  //
-  // exportedFilesReflector.dst.filteringClear();
-  // exportedFilesReflector.src.filePath = exported.exportedFilesPath.nickName;
-  // exportedFilesReflector.recursive = 0;
-  // exportedFilesReflector.form1();
-  // debugger;
-  // // exportedFilesReflector.form();
-  // /*
-  // form1 is not enough here, relativizing absolute paths is required
-  // */
-  // xxx
-
   _.assert( !exported.exportedFilesReflector );
 
   let exportedFilesReflector = exported.exportedFilesReflector = module.resourceAllocate( 'reflector', 'exported.files.' + exported.name );
@@ -444,8 +405,6 @@ function performExportedFilesReflector()
   exportedFilesReflector.src.prefixPath = exported.exportedDirPath.nickName;
   exportedFilesReflector.src.filePath = exported.exportedFilesPath.nickName;
   exportedFilesReflector.form1();
-
-  // xxx
 
   _.assert( exportedFilesReflector.dst.prefixPath === null );
   _.assert( exportedFilesReflector.dst.basePath === null );
@@ -569,7 +528,7 @@ function performWriteOutFile()
 
 //
 
-function perform( frame )
+function _perform( frame )
 {
   let exported = this;
   let module = exported.module;
@@ -598,9 +557,7 @@ function perform( frame )
 
   /* */
 
-  // debugger;
   exported.readExported();
-  // debugger;
   exported.performExportedReflectors( opts.export );
   exported.performExportedFilesReflector();
   exported.performPaths();
@@ -613,6 +570,34 @@ function perform( frame )
   logger.log( ' + Exported', exported.decoratedNickName, 'with', exported.exportedFilesPath.path.length, 'files', 'in', _.timeSpent( time ) );
 
   return exported;
+}
+
+//
+
+function perform( frame )
+{
+  let exported = this;
+  let module = exported.module;
+  let will = module.will;
+  let con = new _.Consequence().take( null );
+
+  _.assert( arguments.length === 1 );
+
+  // debugger;
+  if( !module.stager.stageStatePerformed( 'resourcesFormed' ) )
+  con.then( () => module.stager.stageRerun( 'resourcesFormed' ) )
+
+  // con.tap( () =>
+  // {
+  //   debugger;
+  // });
+  con.then( () => exported._perform( frame ) );
+  // con.tap( () =>
+  // {
+  //   debugger;
+  // });
+
+  return con;
 }
 
 // --
@@ -694,6 +679,8 @@ let Extend =
   performPaths,
   performArchive,
   performWriteOutFile,
+
+  _perform,
   perform,
 
   // relation

@@ -1244,9 +1244,9 @@ function errResolving( o )
   let module = o.baseModule;
   _.assertRoutineOptions( errResolving, arguments );
   if( o.currentContext && o.currentContext.nickName )
-  return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'code' ), 'for', o.currentContext.decoratedNickName, 'in', module.decoratedNickName, '\n', o.err );
+  return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'code' ), 'for', o.currentContext.decoratedAbsoluteName/*, 'for', module.decoratedNickName, '\n'*/, o.err );
   else
-  return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'code' ), 'in', module.decoratedNickName, '\n', o.err );
+  return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'code' ), 'in', module.decoratedAbsoluteName, '\n', o.err );
 }
 
 errResolving.defaults =

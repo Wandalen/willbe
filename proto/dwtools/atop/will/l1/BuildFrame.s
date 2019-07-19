@@ -125,15 +125,15 @@ function run()
   _.assert( arguments.length === 0 );
   _.assert( frame.formed === 1 );
 
-  con.keep( () => resource.form() );
+  con.then( () => resource.form() );
 
-  con.keep( ( arg ) =>
+  con.then( ( arg ) =>
   {
     _.assert( resource.formed === 3 )
     return arg;
   });
 
-  con.keep( () => resource.run( frame ) );
+  con.then( () => resource.run( frame ) );
 
   return con;
 }

@@ -22,7 +22,8 @@ function onSuiteBegin()
   let self = this;
 
   self.tempDir = _.path.dirTempOpen( _.path.join( __dirname, '../..'  ), 'Will' );
-  self.assetDirPath = _.path.join( __dirname, '-asset' );
+  self.assetDirPath = _.path.join( __dirname, '_asset' );
+  self.repoDirPath = _.path.join( self.assetDirPath, '_repo' );
   self.find = _.fileProvider.filesFinder
   ({
     recursive : 2,
@@ -47,33 +48,32 @@ function onSuiteEnd()
 function preCloneRepos( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, '-repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
   let shell = _.sheller
   ({
-    currentPath : originalDirPath,
+    currentPath : self.repoDirPath,
     outputCollecting : 1,
     ready : ready,
   })
 
-  _.fileProvider.dirMake( originalDirPath );
+  _.fileProvider.dirMake( self.repoDirPath );
 
   /* - */
 
   clone( 'Color', '2d408bf82b168a39a29aa1261bf13face8bd3e95' );
   clone( 'PathFundamentals', '95b741c8820a6d6234f59f1fa549c6b59f2d5a5c' );
   clone( 'Procedure', '829ea81d342db66df60edf80c99687a1cd011a96' );
-  clone( 'Proto', '45452e31fe62f3edfad87ed7a0acb0f45fb1b271' );
+  clone( 'Proto', 'c69443a83a476c0ea7254d13ec013d94c99090ba' );
   clone( 'Tools', 'e58dc6a1637603c2151840f5bfb5729eb71d4e34' );
   clone( 'UriFundamentals', '3686d72cc0b8f6573217c947a4b379c38b02e39b' );
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
-    test.is( _.fileProvider.isDir( _.path.join( originalDirPath, 'Tools' ) ) );
+    test.is( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'Tools' ) ) );
     return null;
   })
 
@@ -82,10 +82,10 @@ function preCloneRepos( test )
   function clone( name, version )
   {
 
-    if( !_.fileProvider.isDir( _.path.join( originalDirPath, name ) ) )
-    shell( 'git clone https:///github.com/Wandalen/w' + name + '.git ' + name );
+    if( !_.fileProvider.isDir( _.path.join( self.repoDirPath, name ) ) )
+    shell( 'git clone https://github.com/Wandalen/w' + name + '.git ' + name );
     debugger;
-    shell({ args : 'git checkout ' + version, currentPath : _.path.join( originalDirPath, name ) });
+    shell({ args : 'git checkout ' + version, currentPath : _.path.join( self.repoDirPath, name ) });
     debugger;
 
   }
@@ -116,7 +116,7 @@ function singleModuleSimplest( test )
 
   shell()
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( got.output.length );
@@ -151,7 +151,7 @@ function singleModuleWithSpaceTrivial( test )
 
   shell({ args : [ '.with "single with space/" .resources.list' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.with "single with space/" .resources.list';
     test.identical( got.exitCode, 0 );
@@ -190,7 +190,7 @@ function make( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with v1 .build'
     _.fileProvider.filesDelete( _.fileProvider.path.join( filePath, './Produced.js2' ) );
@@ -199,7 +199,7 @@ function make( test )
   })
 
   shell({ args : [ '.with v1 .build' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Building .+ \/ build::shell1/ ) );
@@ -214,7 +214,7 @@ function make( test )
   })
 
   shell({ args : [ '.with v1 .build' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Building .+ \/ build::shell1/ ) );
@@ -231,7 +231,7 @@ function make( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with v2 .build'
     _.fileProvider.fileDelete( _.fileProvider.path.join( filePath, './Produced.js2' ) );
@@ -240,7 +240,7 @@ function make( test )
   })
 
   shell({ args : [ '.with v2 .build' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Building .+ \/ build::shell1/ ) );
@@ -255,7 +255,7 @@ function make( test )
   })
 
   shell({ args : [ '.with v2 .build' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Building .+ \/ build::shell1/ ) );
@@ -302,14 +302,14 @@ function transpile( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build debug'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
   shell({ args : [ '.build debug' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
@@ -321,14 +321,14 @@ function transpile( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build compiled.debug'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
   shell({ args : [ '.build compiled.debug' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
@@ -361,14 +361,14 @@ function transpile( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build raw.release'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
   shell({ args : [ '.build raw.release' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
@@ -380,14 +380,14 @@ function transpile( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build release';
     _.fileProvider.filesDelete( outPath );
     return null;
   })
   shell({ args : [ '.build release' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
@@ -408,14 +408,14 @@ function transpile( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build all'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
   shell({ args : [ '.build all' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
@@ -455,7 +455,7 @@ function openWith( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.export'
     return null;
@@ -464,7 +464,7 @@ function openWith( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -484,7 +484,7 @@ function openWith( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with . .export'
     return null;
@@ -493,7 +493,7 @@ function openWith( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.with . .export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -513,7 +513,7 @@ function openWith( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with doc .export'
     return null;
@@ -522,7 +522,7 @@ function openWith( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.with doc .export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -542,7 +542,7 @@ function openWith( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with doc .export -- deleted doc.will.yml'
     _.fileProvider.filesDelete( routinePath );
@@ -554,7 +554,7 @@ function openWith( test )
 
   shell({ args : [ '.with doc .export' ], throwingExitCode : 0 })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
 
@@ -564,7 +564,6 @@ function openWith( test )
     test.identical( files, [] );
     var files = self.find( _.path.join( routinePath, 'doc/out' ) );
     test.identical( files, [] );
-    // test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
     var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
     test.identical( files, [] );
 
@@ -578,7 +577,7 @@ function openWith( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with doc. .export'
     return null;
@@ -587,7 +586,7 @@ function openWith( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.with doc. .export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -607,7 +606,7 @@ function openWith( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with doc/. .export'
     return null;
@@ -616,7 +615,7 @@ function openWith( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.with doc/. .export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -636,7 +635,7 @@ function openWith( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with do .export'
     return null;
@@ -645,7 +644,7 @@ function openWith( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.with do .export' ], throwingExitCode : 0 })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.ni( got.exitCode, 0 );
 
@@ -668,7 +667,7 @@ function openWith( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with docx .export'
     return null;
@@ -677,7 +676,7 @@ function openWith( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.with docx .export' ], throwingExitCode : 0 })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.ni( got.exitCode, 0 );
 
@@ -700,7 +699,7 @@ function openWith( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with doc/ .export'
     return null;
@@ -709,7 +708,7 @@ function openWith( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.with doc/ .export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -729,7 +728,7 @@ function openWith( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with doc/ .export -- deleted doc/.will.yml'
 
@@ -744,7 +743,7 @@ function openWith( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.with doc/ .export' ], throwingExitCode : 0 })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.ni( got.exitCode, 0 );
 
@@ -770,7 +769,7 @@ function openWith( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with doc/doc .export'
     return null;
@@ -779,7 +778,7 @@ function openWith( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.with doc/doc .export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -799,7 +798,7 @@ function openWith( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with doc/doc. .export'
     return null;
@@ -808,7 +807,7 @@ function openWith( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.with doc/doc. .export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -856,7 +855,7 @@ function openEach( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.each . .export'
     return null;
@@ -865,7 +864,7 @@ function openEach( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.each . .export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -885,7 +884,7 @@ function openEach( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.each doc/. .export'
     return null;
@@ -894,7 +893,7 @@ function openEach( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.each doc/. .export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -942,14 +941,14 @@ function withMixed( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with module .build'
     return null;
   })
 
   shell({ args : [ '.with module .build' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.is( got.exitCode !== 0 );
     test.is( _.strHas( got.output, 'Found no willfile' ) );
@@ -961,14 +960,14 @@ function withMixed( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with . .build'
     return null;
   })
 
   shell({ args : [ '.with . .export' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.is( got.exitCode === 0 );
     test.identical( _.strCount( got.output, /Exported .*module::submodules-mixed \/ build::proto.export.* in/ ), 1 );
@@ -1006,7 +1005,7 @@ function eachMixed( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.each submodule::*/path::local .shell "git status"'
     return null;
@@ -1015,7 +1014,7 @@ function eachMixed( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.build' ] })
   shell({ args : [ '.each submodule::*/path::local .shell "git status"' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'git status' ) );
@@ -1041,7 +1040,7 @@ function eachMixed( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.each submodule:: .shell ls'
     return null;
@@ -1050,7 +1049,7 @@ function eachMixed( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.build' ] })
   shell({ args : [ '.each submodule:: .shell ls -al' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -1328,12 +1327,26 @@ function eachBrokenIll( test )
   {
     test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
     test.is( !err );
-    test.notIdentical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, 'Failed to resolve' ), 1 );
-    test.identical( _.strCount( got.output, 'eachBrokenIll/' ), 4 );
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Failed to resolve' ), 0 );
+    test.identical( _.strCount( got.output, 'eachBrokenIll/' ), 5 );
 
     return null;
   })
+
+  // /* - */
+  //
+  // shell({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
+  // .finally( ( err, got ) =>
+  // {
+  //   test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
+  //   test.is( !err );
+  //   test.notIdentical( got.exitCode, 0 );
+  //   test.identical( _.strCount( got.output, 'Failed to resolve' ), 1 );
+  //   test.identical( _.strCount( got.output, 'eachBrokenIll/' ), 4 );
+  //
+  //   return null;
+  // })
 
   /* - */
 
@@ -1571,7 +1584,7 @@ function verbosityStepDelete( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.build files.delete.vd';
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -1580,7 +1593,7 @@ function verbosityStepDelete( test )
 
   shell({ args : [ '.build files.delete.vd' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
@@ -1600,7 +1613,7 @@ function verbosityStepDelete( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.build files.delete.v0';
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -1609,7 +1622,7 @@ function verbosityStepDelete( test )
 
   shell({ args : [ '.build files.delete.v0' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
@@ -1630,7 +1643,7 @@ function verbosityStepDelete( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.build files.delete.v1';
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -1639,7 +1652,7 @@ function verbosityStepDelete( test )
 
   shell({ args : [ '.build files.delete.v1' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
@@ -1659,7 +1672,7 @@ function verbosityStepDelete( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.build files.delete.v3';
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -1668,7 +1681,7 @@ function verbosityStepDelete( test )
 
   shell({ args : [ '.build files.delete.v3' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
@@ -1688,7 +1701,7 @@ function verbosityStepDelete( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '".imply v:0 ; .build files.delete.vd"';
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -1697,7 +1710,7 @@ function verbosityStepDelete( test )
 
   shell({ args : [ '".imply v:0 ; .build files.delete.vd"' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
@@ -1718,7 +1731,7 @@ function verbosityStepDelete( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '".imply v:8 ; .build files.delete.v0"';
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -1727,7 +1740,7 @@ function verbosityStepDelete( test )
 
   shell({ args : [ '".imply v:8 ; .build files.delete.v0"' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
@@ -1747,7 +1760,7 @@ function verbosityStepDelete( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '".imply v:9 ; .build files.delete.v0"';
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -1756,7 +1769,7 @@ function verbosityStepDelete( test )
 
   shell({ args : [ '".imply v:9 ; .build files.delete.v0"' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
@@ -1776,7 +1789,7 @@ function verbosityStepDelete( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '".imply v:1 ; .build files.delete.v3"';
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -1785,7 +1798,7 @@ function verbosityStepDelete( test )
 
   shell({ args : [ '".imply v:1 ; .build files.delete.v3"' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
@@ -1805,7 +1818,7 @@ function verbosityStepDelete( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '".imply v:2 ; .build files.delete.v3"';
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -1814,7 +1827,7 @@ function verbosityStepDelete( test )
 
   shell({ args : [ '".imply v:2 ; .build files.delete.v3"' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
@@ -1864,7 +1877,7 @@ function verbosityStepPrintName( test )
   /* - */
 
   ready
-  .thenKeep( ( arg ) =>
+  .then( ( arg ) =>
   {
     _.fileProvider.filesDelete( routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -1873,7 +1886,7 @@ function verbosityStepPrintName( test )
 
   shell({ args : [ '".imply v:4 ; .build"' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.description = '".imply v:4 ; .build"';
 
@@ -1897,7 +1910,7 @@ function verbosityStepPrintName( test )
   /* - */
 
   ready
-  .thenKeep( ( arg ) =>
+  .then( ( arg ) =>
   {
     _.fileProvider.filesDelete( routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -1906,7 +1919,7 @@ function verbosityStepPrintName( test )
 
   shell({ args : [ '".imply v:3 ; .build"' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.description = '".imply v:3 ; .build"';
 
@@ -1930,7 +1943,7 @@ function verbosityStepPrintName( test )
   /* - */
 
   ready
-  .thenKeep( ( arg ) =>
+  .then( ( arg ) =>
   {
     _.fileProvider.filesDelete( routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -1939,7 +1952,7 @@ function verbosityStepPrintName( test )
 
   shell({ args : [ '".imply v:2 ; .build"' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.description = '".imply v:2 ; .build"';
 
@@ -1963,7 +1976,7 @@ function verbosityStepPrintName( test )
   /* - */
 
   ready
-  .thenKeep( ( arg ) =>
+  .then( ( arg ) =>
   {
     _.fileProvider.filesDelete( routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -1972,7 +1985,7 @@ function verbosityStepPrintName( test )
 
   shell({ args : [ '".imply v:1 ; .build"' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.description = '".imply v:1 ; .build"';
 
@@ -2030,7 +2043,7 @@ function help( test )
   /* */
 
   shell({ args : [ '.help' ] })
-  .thenKeep( ( arg ) =>
+  .then( ( arg ) =>
   {
     test.identical( arg.exitCode, 0 );
     test.ge( _.strLinesCount( arg.output ), 24 );
@@ -2040,7 +2053,7 @@ function help( test )
   //
 
   shell({ args : [ '.' ] })
-  .thenKeep( ( arg ) =>
+  .then( ( arg ) =>
   {
     test.identical( arg.exitCode, 0 );
     test.ge( _.strLinesCount( arg.output ), 24 );
@@ -2050,7 +2063,7 @@ function help( test )
   //
 
   shell({ args : [] })
-  .thenKeep( ( arg ) =>
+  .then( ( arg ) =>
   {
     test.identical( arg.exitCode, 0 );
     test.ge( _.strLinesCount( arg.output ), 24 );
@@ -2083,7 +2096,7 @@ function listSingleModule( test )
   /* - */
 
   shell({ args : [ '.resources.list' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'list';
     test.identical( got.exitCode, 0 );
@@ -2096,7 +2109,7 @@ function listSingleModule( test )
   /* - */
 
   shell({ args : [ '.about.list' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.about.list'
 
@@ -2120,7 +2133,7 @@ function listSingleModule( test )
   /* - */
 
   shell({ args : [ '.paths.list' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'module info'
     test.identical( got.exitCode, 0 );
@@ -2141,7 +2154,7 @@ function listSingleModule( test )
   })
 
   shell({ args : [ '.submodules.list' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'submodules list'
     test.identical( got.exitCode, 0 );
@@ -2152,7 +2165,7 @@ function listSingleModule( test )
   /* - */
 
   shell({ args : [ '.reflectors.list' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'reflectors.list'
     test.identical( got.exitCode, 0 );
@@ -2173,7 +2186,7 @@ function listSingleModule( test )
   /* - */
 
   shell({ args : [ '.steps.list' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'steps.list'
     test.identical( got.exitCode, 0 );
@@ -2189,7 +2202,7 @@ function listSingleModule( test )
   /* - */
 
   shell({ args : [ '.builds.list' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.builds.list'
     test.identical( got.exitCode, 0 );
@@ -2205,7 +2218,7 @@ function listSingleModule( test )
   /* - */
 
   shell({ args : [ '.exports.list' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.exports.list'
     test.identical( got.exitCode, 0 );
@@ -2220,7 +2233,7 @@ function listSingleModule( test )
   /* - */ /* To test output by command with glob and criterion args*/
 
   shell({ args : [ '.resources.list *a* predefined:0' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'resources list globs negative';
     test.identical( got.exitCode, 0 );
@@ -2237,7 +2250,7 @@ function listSingleModule( test )
   })
 
   shell({ args : [ '.resources.list *p* debug:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'resources list globs negative';
     test.identical( got.exitCode, 0 );
@@ -2255,7 +2268,7 @@ function listSingleModule( test )
 
   /* Glob using positive test */
   shell({ args : [ '.resources.list *proto*' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'resources list globs';
     test.identical( got.exitCode, 0 );
@@ -2274,7 +2287,7 @@ function listSingleModule( test )
 
   /* Glob and criterion using negative test */
   shell({ args : [ '.resources.list *proto* debug:0' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'globs and criterions negative';
     test.identical( got.exitCode, 0 );
@@ -2288,7 +2301,7 @@ function listSingleModule( test )
 
   /* Glob and criterion using positive test */
   shell({ args : [ '.resources.list *proto* debug:0 predefined:0' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'globs and criterions positive';
     test.identical( got.exitCode, 0 );
@@ -2308,7 +2321,7 @@ function listSingleModule( test )
 
   /* Glob and two criterions using negative test */
   shell({ args : [ '.resources.list * debug:1 raw:0 predefined:0' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.resources.list * debug:1 raw:0 predefined:0';
     test.identical( got.exitCode, 0 );
@@ -2326,7 +2339,7 @@ function listSingleModule( test )
 
   /* Glob and two criterion using positive test */
   shell({ args : [ '.resources.list * debug:0 raw:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.resources.list * debug:0 raw:1';
     test.identical( got.exitCode, 0 );
@@ -2366,7 +2379,7 @@ function listWithSubmodulesSimple( test )
 
   shell({ args : [ '.resources.list' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'module info';
     debugger;
@@ -2407,7 +2420,7 @@ function listWithSubmodules( test )
 
   shell({ args : [ '.submodules.list' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'submodules list'
     test.identical( got.exitCode, 0 );
@@ -2420,7 +2433,7 @@ function listWithSubmodules( test )
 
   shell({ args : [ '.reflectors.list' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'reflectors.list'
     test.identical( got.exitCode, 0 );
@@ -2433,7 +2446,7 @@ function listWithSubmodules( test )
 
   shell({ args : [ '.steps.list' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'steps.list'
     test.identical( got.exitCode, 0 );
@@ -2451,7 +2464,7 @@ function listWithSubmodules( test )
 
   shell({ args : [ '.builds.list' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.builds.list'
     test.identical( got.exitCode, 0 );
@@ -2467,7 +2480,7 @@ function listWithSubmodules( test )
 
   shell({ args : [ '.exports.list' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.exports.list'
     test.identical( got.exitCode, 0 );
@@ -2483,7 +2496,7 @@ function listWithSubmodules( test )
 
   shell({ args : [ '.about.list' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.about.list'
 
@@ -2508,7 +2521,7 @@ function listWithSubmodules( test )
   //
   // shell({ args : [ '.execution.list' ] })
   //
-  // .thenKeep( ( got ) =>
+  // .then( ( got ) =>
   // {
   //   test.case = '.execution.list'
   //   test.identical( got.exitCode, 0 );
@@ -2697,7 +2710,7 @@ function clean( test )
 
   var files;
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     files = self.find( submodulesPath );
     test.is( files.length > 50 );
@@ -2705,7 +2718,7 @@ function clean( test )
   })
 
   shell({ args : [ '.with NoTemp .clean' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.clean';
     test.identical( got.exitCode, 0 );
@@ -2715,7 +2728,7 @@ function clean( test )
   })
 
   shell({ args : [ '.with NoTemp .clean' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.with NoTemp .clean -- second';
     test.identical( got.exitCode, 0 );
@@ -2727,7 +2740,7 @@ function clean( test )
 
   var files = [];
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     _.fileProvider.filesDelete( outPath );
     _.fileProvider.filesDelete( submodulesPath );
@@ -2735,7 +2748,7 @@ function clean( test )
   })
 
   shell({ args : [ '.with NoBuild .clean' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.with NoBuild .clean';
     test.identical( got.exitCode, 0 );
@@ -2748,7 +2761,7 @@ function clean( test )
 
   var files = [];
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     _.fileProvider.filesDelete( outPath );
     _.fileProvider.filesDelete( submodulesPath );
@@ -2757,7 +2770,7 @@ function clean( test )
 
   shell({ args : [ '.with Build .build' ] })
   shell({ args : [ '.with Vector .clean' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.with NoBuild .clean';
     test.identical( got.exitCode, 0 );
@@ -2798,7 +2811,7 @@ function cleanSingleModule( test )
 
   shell({ execPath : [ '.build', '.clean' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     debugger;
     test.case = '.clean '
@@ -2814,7 +2827,7 @@ function cleanSingleModule( test )
 
   shell({ execPath : [ '.build', '.clean dry:1' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.clean dry:1'
     test.identical( got[ 0 ].exitCode, 0 );
@@ -2862,7 +2875,7 @@ function cleanBroken1( test )
 
   /* - */
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.clean ';
 
@@ -2876,7 +2889,7 @@ function cleanBroken1( test )
 
   shell({ args : [ '.clean dry:1' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.clean dry:1';
 
@@ -2897,7 +2910,7 @@ function cleanBroken1( test )
 
   shell({ args : [ '.clean' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.clean';
     test.identical( got.exitCode, 0 );
@@ -2910,7 +2923,7 @@ function cleanBroken1( test )
   /* */
 
   shell({ args : [ '.export' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.export';
 
@@ -2929,7 +2942,7 @@ function cleanBroken1( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     _.fileProvider.filesDelete( routinePath );
@@ -2941,7 +2954,7 @@ function cleanBroken1( test )
   /* */
 
   shell({ args : [ '.export' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.export';
 
@@ -2996,7 +3009,7 @@ function cleanBroken2( test )
 
   /* - */
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.clean ';
 
@@ -3011,7 +3024,7 @@ function cleanBroken2( test )
 
   shell({ args : [ '.clean dry:1' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.clean dry:1';
 
@@ -3031,7 +3044,7 @@ function cleanBroken2( test )
 
   shell({ args : [ '.clean' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.clean';
     test.identical( got.exitCode, 0 );
@@ -3044,7 +3057,7 @@ function cleanBroken2( test )
   /* */
 
   shell({ args : [ '.export' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.export';
 
@@ -3063,7 +3076,7 @@ function cleanBroken2( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     _.fileProvider.filesDelete( routinePath );
@@ -3075,7 +3088,7 @@ function cleanBroken2( test )
   /* */
 
   shell({ args : [ '.export' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.export';
 
@@ -3124,7 +3137,7 @@ function cleanBrokenSubmodules( test )
 
   /* - */
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'setup';
 
@@ -3142,7 +3155,7 @@ function cleanBrokenSubmodules( test )
   /* - */
 
   shell({ args : [ '.clean dry:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.clean dry:1';
 
@@ -3161,7 +3174,7 @@ function cleanBrokenSubmodules( test )
   /* - */
 
   shell({ args : [ '.clean' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.clean';
 
@@ -3209,7 +3222,7 @@ function cleanNoBuild( test )
   /* - */
 
   shell({ args : [ '.clean' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.clean';
     test.identical( got.exitCode, 0 );
@@ -3219,7 +3232,7 @@ function cleanNoBuild( test )
   })
 
   shell({ args : [ '.clean -- second' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.clean';
     test.identical( got.exitCode, 0 );
@@ -3263,7 +3276,7 @@ function cleanDry( test )
     args : [ '.submodules.update' ],
   })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.is( _.strHas( got.output, /2\/2 submodule\(s\) of .*module::submodules.* were updated in/ ) );
     var files = self.find( submodulesPath );
@@ -3275,7 +3288,7 @@ function cleanDry( test )
   ({
     args : [ '.build' ],
   })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.is( _.strHas( got.output, /0\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
     return got;
@@ -3285,7 +3298,7 @@ function cleanDry( test )
 
   shell({ args : [ '.clean dry:1' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.clean dry:1';
 
@@ -3338,7 +3351,7 @@ function cleanSubmodules( test )
   /* */
 
   shell({ args : [ '.submodules.update' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.submodules.update'
     test.identical( got.exitCode, 0 );
@@ -3359,7 +3372,7 @@ function cleanSubmodules( test )
 
   var files;
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     files = self.find( submodulesPath );
     return null;
@@ -3368,7 +3381,7 @@ function cleanSubmodules( test )
   /* */
 
   shell({ args : [ '.submodules.clean' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.submodules.clean';
     test.identical( got.exitCode, 0 );
@@ -3410,7 +3423,7 @@ function cleanMixed( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.clean';
     return null;
@@ -3419,7 +3432,7 @@ function cleanMixed( test )
   shell({ args : [ '.build' ] })
   shell({ args : [ '.clean' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '- Clean deleted' ) ); debugger;
@@ -3464,7 +3477,7 @@ function cleanWithInPath( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.with module/Proto .clean';
 
@@ -3477,7 +3490,7 @@ function cleanWithInPath( test )
 
   shell({ args : [ '.with module/Proto .clean' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     var expectedFiles =
@@ -3615,7 +3628,7 @@ function buildSingleModule( test )
 
   /* - */
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = '.build'
     _.fileProvider.filesDelete( outDebugPath );
@@ -3624,7 +3637,7 @@ function buildSingleModule( test )
 
   shell({ args : [ '.build' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
@@ -3640,7 +3653,7 @@ function buildSingleModule( test )
 
   /* - */
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build debug.raw'
     let outDebugPath = _.path.join( routinePath, 'out/debug' );
@@ -3650,7 +3663,7 @@ function buildSingleModule( test )
 
   shell({ args : [ '.build debug.raw' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Building .*module::single \/ build::debug\.raw.*/ ) );
@@ -3665,7 +3678,7 @@ function buildSingleModule( test )
 
   /* - */
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build release.raw'
     let outDebugPath = _.path.join( routinePath, 'out/release' );
@@ -3675,7 +3688,7 @@ function buildSingleModule( test )
 
   shell({ args : [ '.build release.raw' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Building .*module::single \/ build::release\.raw.*/ ) );
@@ -3690,7 +3703,7 @@ function buildSingleModule( test )
 
   /* - */
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build wrong'
     let buildOutDebugPath = _.path.join( routinePath, 'out/debug' );
@@ -3703,7 +3716,7 @@ function buildSingleModule( test )
       ready : null,
     }
     return test.shouldThrowError( shell( o ) )
-    .thenKeep( ( got ) =>
+    .then( ( got ) =>
     {
       debugger;
       test.is( o.exitCode !== 0 );
@@ -3747,7 +3760,7 @@ function buildSingleStep( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build debug1'
     let outDebugPath = _.path.join( routinePath, 'out/debug' );
@@ -3759,7 +3772,7 @@ function buildSingleStep( test )
 
   shell({ args : [ '.build debug1' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     return null;
@@ -3769,7 +3782,7 @@ function buildSingleStep( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build debug2'
     let outDebugPath = _.path.join( routinePath, 'out/debug' );
@@ -3781,7 +3794,7 @@ function buildSingleStep( test )
 
   shell({ args : [ '.build debug2' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     return null;
@@ -3818,7 +3831,7 @@ function buildSubmodules( test )
 
   /* - */
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = 'build withoud submodules'
     _.fileProvider.filesDelete( outPath );
@@ -3837,7 +3850,7 @@ function buildSubmodules( test )
   /* - */
 
   shell({ args : [ '.submodules.update' ] })
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build'
     _.fileProvider.filesDelete( outPath );
@@ -3845,7 +3858,7 @@ function buildSubmodules( test )
   })
 
   shell({ args : [ '.build' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -3860,14 +3873,14 @@ function buildSubmodules( test )
 
   /* - */
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build wrong'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  .thenKeep( () =>
+  .then( () =>
   {
 
     var o =
@@ -3882,7 +3895,7 @@ function buildSubmodules( test )
     let buildOutReleasePath = _.path.join( routinePath, 'out/release' );
 
     return test.shouldThrowError( _.shell( o ) )
-    .thenKeep( ( got ) =>
+    .then( ( got ) =>
     {
       test.is( o.exitCode !== 0 );
       test.is( o.output.length );
@@ -3926,7 +3939,7 @@ function buildDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build'
     return null;
@@ -3934,15 +3947,15 @@ function buildDetached( test )
 
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.build' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, /\+ .*module::Tools.* was downloaded version .*master.* in/ ) );
-    test.is( _.strHas( got.output, /\+ .*module::PathFundamentals.* was downloaded version .*ffcb9b22726e2d56d07564178d268bc2eb602b35.* in/ ) );
-    test.is( _.strHas( got.output, /\+ .*module::Color.* was downloaded version .*0.3.109.* in/ ) );
+    test.is( _.strHas( got.output, /\+ .*module::PathFundamentals.* was downloaded version .*c94e0130358ba54fc47237e15bac1ab18024c0a9.* in/ ) );
+    test.is( _.strHas( got.output, /\+ .*module::Color.* was downloaded version .*0.3.115.* in/ ) );
     test.is( _.strHas( got.output, /\.module\/Procedure\.informal.+ <- .+npm:\/\/wprocedure/ ) );
-    test.is( _.strHas( got.output, /\.module\/Proto\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wProto\.git#45452e31fe62f3edfad87ed7a0acb0f45fb1b271/ ) );
+    test.is( _.strHas( got.output, /\.module\/Proto\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wProto\.git#c69443a83a476c0ea7254d13ec013d94c99090ba/ ) );
     test.is( _.strHas( got.output, /\.module\/UriFundamentals\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wUriFundamentals\.git/ ) );
 
     var files = _.fileProvider.dirRead( modulePath );
@@ -3987,7 +4000,7 @@ function exportSingle( test )
 
   /* - */
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = '.export'
     _.fileProvider.filesDelete( outDebugPath );
@@ -3997,7 +4010,7 @@ function exportSingle( test )
 
   shell({ args : [ '.export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 2 files' ) );
@@ -4022,7 +4035,7 @@ function exportSingle( test )
 
   /* - */
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.export.proto'
     let outDebugPath = _.path.join( routinePath, 'out/debug' );
@@ -4034,7 +4047,7 @@ function exportSingle( test )
 
   shell({ args : [ '.export proto.export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exported .*module::single \/ build::proto.export.* in/ ) );
@@ -4098,7 +4111,7 @@ function exportNonExportable( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.with super .export debug:1' ], throwingExitCode : 0 })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.is( got.exitCode !== 0 );
 
@@ -4106,6 +4119,7 @@ function exportNonExportable( test )
     test.identical( _.strCount( got.output, '====' ), 0 );
 
     test.identical( _.strCount( got.output, /.*module::supermodule \/ submodule::Submodule.* is broken/ ), 1 );
+    test.identical( _.strCount( got.output, /Exporting is impossible because .*module::supermodule \/ submodule::Submodule.* is broken!/ ), 1 );
     test.identical( _.strCount( got.output, /Failed .*module::supermodule \/ step::export.*/ ), 1 );
 
     return null;
@@ -4143,7 +4157,7 @@ function exportInformal( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with module/Proto.informal .export'
     return null;
@@ -4151,7 +4165,7 @@ function exportInformal( test )
 
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.with module/Proto.informal .export' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, /Exported .*module::Proto.informal \/ build::export.* in/ ), 1 );
@@ -4216,14 +4230,14 @@ function exportInformal( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with module/Proto.informal .export -- second'
     return null;
   })
 
   shell({ args : [ '.with module/Proto.informal .export' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, /Exported .*module::Proto.informal \/ build::export.* in/ ), 1 );
@@ -4289,7 +4303,7 @@ function exportInformal( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with module/UriFundamentals.informal .export'
     return null;
@@ -4297,7 +4311,7 @@ function exportInformal( test )
 
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.with module/UriFundamentals.informal .export' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, /Exported .*module::UriFundamentals.informal \/ build::export.* in/ ), 1 );
@@ -4392,7 +4406,7 @@ function exportWithReflector( test )
 
   /* - */
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = '.export'
     _.fileProvider.filesDelete( outDebugPath );
@@ -4402,7 +4416,7 @@ function exportWithReflector( test )
 
   shell({ args : [ '.export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -4447,7 +4461,7 @@ function exportToRoot( test )
 
   shell({ args : [ '.export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.export'
     test.identical( got.exitCode, 0 );
@@ -4488,7 +4502,7 @@ function exportMixed( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.each module .export';
     return null;
@@ -4496,7 +4510,7 @@ function exportMixed( test )
 
   shell({ args : [ '.each module .export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exporting .*module::UriFundamentals\.informal \/ build::export.*/ ) );
@@ -4659,7 +4673,7 @@ function exportMixed( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.build';
     return null;
@@ -4668,7 +4682,7 @@ function exportMixed( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.build' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
@@ -4740,7 +4754,7 @@ function exportSecond( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.export';
     return null;
@@ -4749,7 +4763,7 @@ function exportSecond( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -4922,7 +4936,7 @@ function exportSecond( test )
 
   shell({ args : [ '.export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -5129,7 +5143,7 @@ function exportSubmodules( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.export'
     _.fileProvider.filesDelete( outPath );
@@ -5138,7 +5152,7 @@ function exportSubmodules( test )
 
   return shell({ args : [ '.export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -5184,7 +5198,7 @@ function exportMultiple( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.export debug:1';
 
@@ -5197,7 +5211,7 @@ function exportMultiple( test )
 
   shell({ args : [ '.export debug:1' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     var files = self.find( outPath );
@@ -5361,7 +5375,7 @@ function exportMultiple( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.export debug:1';
 
@@ -5376,7 +5390,7 @@ function exportMultiple( test )
   shell({ args : [ '.export debug:0' ] })
   shell({ args : [ '.export debug:0' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     var files = self.find( outPath );
@@ -5666,7 +5680,7 @@ function exportImportMultiple( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'export submodule';
 
@@ -5682,7 +5696,7 @@ function exportImportMultiple( test )
   shell({ args : [ '.with . .export debug:0' ] })
   shell({ args : [ '.with . .export debug:1' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     var files = self.find( outPath );
@@ -5696,7 +5710,7 @@ function exportImportMultiple( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.with super .export debug:0';
 
@@ -5707,7 +5721,7 @@ function exportImportMultiple( test )
 
   shell({ args : [ '.with super .export debug:0' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     var files = self.find( out2Path );
@@ -5721,7 +5735,7 @@ function exportImportMultiple( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.with super .clean dry:1';
     return null;
@@ -5729,7 +5743,7 @@ function exportImportMultiple( test )
 
   shell({ args : [ '.with super .clean dry:1' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     var files = self.find( out2Path );
@@ -5744,7 +5758,7 @@ function exportImportMultiple( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.with super .clean';
     return null;
@@ -5752,7 +5766,7 @@ function exportImportMultiple( test )
 
   shell({ args : [ '.with super .clean' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     var files = self.find( out2Path );
@@ -5766,7 +5780,7 @@ function exportImportMultiple( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.with super .export debug:0 ; .with super .export debug:1';
 
@@ -5778,7 +5792,7 @@ function exportImportMultiple( test )
   shell({ args : [ '.with super .export debug:0' ] })
   shell({ args : [ '.with super .export debug:1' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     var files = self.find( out2Path );
@@ -5792,7 +5806,7 @@ function exportImportMultiple( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.with super .clean dry:1';
     return null;
@@ -5800,7 +5814,7 @@ function exportImportMultiple( test )
 
   shell({ args : [ '.with super .clean dry:1' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     var files = self.find( out2Path );
@@ -5815,7 +5829,7 @@ function exportImportMultiple( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.with super .clean';
     return null;
@@ -5823,7 +5837,7 @@ function exportImportMultiple( test )
 
   shell({ args : [ '.with super .clean' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     var files = self.find( out2Path );
@@ -5864,7 +5878,7 @@ function exportBroken( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.export debug:1';
 
@@ -5877,7 +5891,7 @@ function exportBroken( test )
   debugger;
   shell({ args : [ '.export debug:1' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     var files = self.find( outPath );
@@ -5977,7 +5991,7 @@ function exportDoc( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'export submodule';
 
@@ -5994,7 +6008,7 @@ function exportDoc( test )
   shell({ args : [ '.with . .export export.' ] })
   shell({ args : [ '.with doc .build doc:1' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -6040,7 +6054,7 @@ function exportImport( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.export'
     _.fileProvider.filesDelete( outPath );
@@ -6050,7 +6064,7 @@ function exportImport( test )
   shell({ args : [ '.export debug:0' ] })
   shell({ args : [ '.export debug:1' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -6091,7 +6105,7 @@ function exportBrokenNoreflector( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with submodule .reflectors.list predefined:0'
     return null;
@@ -6099,7 +6113,7 @@ function exportBrokenNoreflector( test )
 
   shell({ args : [ '.with submodule .reflectors.list predefined:0' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'module::submodule / reflector::' ), 2 );
@@ -6111,7 +6125,7 @@ function exportBrokenNoreflector( test )
   shell({ args : [ '.with module/submodule .export' ] })
   shell({ args : [ '.with submodule .reflectors.list predefined:0' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'module::submodule / reflector::' ), 3 );
@@ -6153,7 +6167,7 @@ function importPathLocal( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'export submodule';
 
@@ -6166,7 +6180,7 @@ function importPathLocal( test )
 
   shell({ args : [ '.build' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     var files = self.find( outPath );
@@ -6190,7 +6204,6 @@ function importLocalRepo( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'import-auto' );
-  let originalRepoPath = _.path.join( self.assetDirPath, '-repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let repoPath = _.path.join( self.tempDir, 'repo' );
   let outPath = _.path.join( routinePath, 'out' );
@@ -6209,13 +6222,13 @@ function importLocalRepo( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.with module/Proto .export';
 
     _.fileProvider.filesDelete( routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    _.fileProvider.filesReflect({ reflectMap : { [ originalRepoPath ] : repoPath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
 
     return null;
   })
@@ -6223,7 +6236,7 @@ function importLocalRepo( test )
   shell({ args : [ '.with module/Proto .clean' ] })
   shell({ args : [ '.with module/Proto .export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     var files = _.fileProvider.dirRead( modulePath );
@@ -6366,7 +6379,7 @@ function importOutWithDeletedSource( test )
   /* - */
 
   ready
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'export first';
 
@@ -6381,7 +6394,7 @@ function importOutWithDeletedSource( test )
   shell({ args : '.with b .export' })
   shell({ args : '.with ab-named .export' })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -6398,7 +6411,7 @@ function importOutWithDeletedSource( test )
 
   shell({ args : '.with out/module-ab-named .modules.list' })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -6444,10 +6457,9 @@ function reflectNothingFromSubmodules( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
   _.fileProvider.filesDelete( outDebugPath );
 
-
   /* - */
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = '.export'
     _.fileProvider.filesDelete( outDebugPath );
@@ -6462,7 +6474,7 @@ function reflectNothingFromSubmodules( test )
 
   shell({ args : [ '.export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 2 files' ) );
@@ -6495,6 +6507,7 @@ function reflectNothingFromSubmodules( test )
         {
           "filePath" : { "path::proto" : "path::out.*=1" }
         },
+        'criterion' : { 'debug' : 1 },
         "mandatory" : 1,
         "inherit" : [ "predefined.*" ]
       },
@@ -6571,7 +6584,7 @@ function reflectGetPath( test )
 
   /* - */
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = '.build debug1'
     _.fileProvider.filesDelete( outPath );
@@ -6579,11 +6592,11 @@ function reflectGetPath( test )
   })
 
   shell({ args : [ '.build debug1' ] })
-  .thenKeep( ( arg ) => validate( arg ) )
+  .then( ( arg ) => validate( arg ) )
 
   /* - */
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = '.build debug2'
     _.fileProvider.filesDelete( outPath );
@@ -6591,11 +6604,11 @@ function reflectGetPath( test )
   })
 
   shell({ args : [ '.build debug2' ] })
-  .thenKeep( ( arg ) => validate( arg ) )
+  .then( ( arg ) => validate( arg ) )
 
   /* - */
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = '.build debug3'
     _.fileProvider.filesDelete( outPath );
@@ -6603,7 +6616,7 @@ function reflectGetPath( test )
   })
 
   shell({ args : [ '.build debug3' ] })
-  .thenKeep( ( arg ) => validate( arg ) )
+  .then( ( arg ) => validate( arg ) )
 
   /* - */
 
@@ -6667,14 +6680,14 @@ function reflectSubdir( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = 'setup'
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
     return null;
   })
   shell({ args : [ '.each module .export' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'submodule.out.will.yml' ) ) );
@@ -6684,14 +6697,14 @@ function reflectSubdir( test )
 
   /* */
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build variant:1'
     _.fileProvider.filesDelete( outPath );
     return null;
   });
   shell({ args : [ '.build variant:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, './module/proto/File1.s' ) ) );
@@ -6724,14 +6737,14 @@ function reflectSubdir( test )
 
   /* */
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build variant:2'
     _.fileProvider.filesDelete( outPath );
     return null;
   });
   shell({ args : [ '.build variant:2' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, './module/proto/File1.s' ) ) );
@@ -6764,14 +6777,14 @@ function reflectSubdir( test )
 
   /* */
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build variant:3'
     _.fileProvider.filesDelete( outPath );
     return null;
   });
   shell({ args : [ '.build variant:3' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, './module/proto/File1.s' ) ) );
@@ -6817,7 +6830,7 @@ function reflectSubmodulesWithBase( test )
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
   let submodule1OutFilePath = _.path.join( routinePath, 'submodule1.out.will.yml' );
-  let submodule2OutFilePath = _.path.join( routinePath, 'submodule1.out.will.yml' );
+  let submodule2OutFilePath = _.path.join( routinePath, 'submodule2.out.will.yml' );
   let ready = new _.Consequence().take( null )
 
   let shell = _.sheller
@@ -6829,7 +6842,7 @@ function reflectSubmodulesWithBase( test )
   })
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = 'setup'
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
@@ -6839,7 +6852,7 @@ function reflectSubmodulesWithBase( test )
   /* */
 
   shell({ args : [ '.each module .export' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.fileProvider.isTerminal( submodule1OutFilePath ) );
@@ -6849,7 +6862,7 @@ function reflectSubmodulesWithBase( test )
 
   /* */
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = 'variant 0, src basePath : ../..'
     _.fileProvider.filesDelete( outPath )
@@ -6858,7 +6871,7 @@ function reflectSubmodulesWithBase( test )
 
   shell({ args : [ '.build variant:0' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -6879,7 +6892,7 @@ function reflectSubmodulesWithBase( test )
 
   /* */
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = 'variant 1, src basePath : "{submodule::*/exported::*=1/path::exported.dir*=1}/../.."'
     _.fileProvider.filesDelete( outPath )
@@ -6888,12 +6901,13 @@ function reflectSubmodulesWithBase( test )
 
   shell({ args : [ '.build variant:1' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
     var expected =
-    [ '.', './debug', './debug/proto', './debug/proto/File1.s', './debug/proto/File2.s' ]
+    [ '.', './debug', './debug/module', './debug/module/proto', './debug/module/proto/File1.s', './debug/module/proto/File2.s' ];
+    // [ '.', './debug', './debug/proto', './debug/proto/File1.s', './debug/proto/File2.s' ]
 
     var files = self.find( outPath );
     test.identical( files, expected );
@@ -6930,7 +6944,7 @@ function reflectComposite( test )
 
   /* */
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = '.build out* variant:0'
     _.fileProvider.filesDelete( outPath );
@@ -6938,7 +6952,7 @@ function reflectComposite( test )
   })
 
   shell({ args : [ '.build out* variant:0' ] })
-  .thenKeep( ( arg ) =>
+  .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js' ];
     var files = self.find( outPath );
@@ -6950,7 +6964,7 @@ function reflectComposite( test )
 
   /* */
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = '.build out* variant:1'
     _.fileProvider.filesDelete( outPath );
@@ -6958,7 +6972,7 @@ function reflectComposite( test )
   })
 
   shell({ args : [ '.build out* variant:1' ] })
-  .thenKeep( ( arg ) =>
+  .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js' ];
     var files = self.find( outPath );
@@ -6970,7 +6984,7 @@ function reflectComposite( test )
 
   /* */
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = '.build out* variant:2'
     _.fileProvider.filesDelete( outPath );
@@ -6978,7 +6992,7 @@ function reflectComposite( test )
   })
 
   shell({ args : [ '.build out* variant:2' ] })
-  .thenKeep( ( arg ) =>
+  .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js' ];
     var files = self.find( outPath );
@@ -6990,7 +7004,7 @@ function reflectComposite( test )
 
   /* */
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = '.build out* variant:3'
     _.fileProvider.filesDelete( outPath );
@@ -6998,7 +7012,7 @@ function reflectComposite( test )
   })
 
   shell({ args : [ '.build out* variant:3' ] })
-  .thenKeep( ( arg ) =>
+  .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js' ];
     var files = self.find( outPath );
@@ -7010,7 +7024,7 @@ function reflectComposite( test )
 
   /* */
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = '.build out* variant:4'
     _.fileProvider.filesDelete( outPath );
@@ -7018,7 +7032,7 @@ function reflectComposite( test )
   })
 
   shell({ args : [ '.build out* variant:4' ] })
-  .thenKeep( ( arg ) =>
+  .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.js', './debug/dir1/File.test.js', './debug/dir1/File1.debug.js', './debug/dir1/File2.debug.js' ];
     var files = self.find( outPath );
@@ -7030,7 +7044,7 @@ function reflectComposite( test )
 
   /* */
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = '.build out* variant:5'
     _.fileProvider.filesDelete( outPath );
@@ -7038,7 +7052,7 @@ function reflectComposite( test )
   })
 
   shell({ args : [ '.build out* variant:5' ] })
-  .thenKeep( ( arg ) =>
+  .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.js', './debug/dir1/File.test.js', './debug/dir1/File1.debug.js', './debug/dir1/File2.debug.js' ];
     var files = self.find( outPath );
@@ -7050,7 +7064,7 @@ function reflectComposite( test )
 
   /* */
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = '.build out* variant:6'
     _.fileProvider.filesDelete( outPath );
@@ -7058,7 +7072,7 @@ function reflectComposite( test )
   })
 
   shell({ args : [ '.build out* variant:6' ] })
-  .thenKeep( ( arg ) =>
+  .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.test.js' ];
     var files = self.find( outPath );
@@ -7069,7 +7083,7 @@ function reflectComposite( test )
 
   /* */
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = '.build out* variant:7'
     _.fileProvider.filesDelete( outPath );
@@ -7077,7 +7091,7 @@ function reflectComposite( test )
   })
 
   shell({ args : [ '.build out* variant:7' ] })
-  .thenKeep( ( arg ) =>
+  .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.test.js' ];
     var files = self.find( outPath );
@@ -7115,7 +7129,7 @@ function reflectRemoteGit( test )
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = '.build download.* variant:1'
     _.fileProvider.filesDelete( local1Path );
@@ -7123,11 +7137,11 @@ function reflectRemoteGit( test )
   })
 
   shell({ args : [ '.build download.* variant:1' ] })
-  .thenKeep( ( arg ) => validate1( arg ) )
+  .then( ( arg ) => validate1( arg ) )
 
   //
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build download.* variant:2'
     _.fileProvider.filesDelete( local1Path );
@@ -7135,11 +7149,11 @@ function reflectRemoteGit( test )
   })
 
   shell({ args : [ '.build download.* variant:2' ] })
-  .thenKeep( ( arg ) => validate1( arg ) )
+  .then( ( arg ) => validate1( arg ) )
 
   //
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build download.* variant:3'
     _.fileProvider.filesDelete( local1Path );
@@ -7147,11 +7161,11 @@ function reflectRemoteGit( test )
   })
 
   shell({ args : [ '.build download.* variant:3' ] })
-  .thenKeep( ( arg ) => validate1( arg ) )
+  .then( ( arg ) => validate1( arg ) )
 
   //
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build download.* variant:4'
     _.fileProvider.filesDelete( local1Path );
@@ -7159,11 +7173,11 @@ function reflectRemoteGit( test )
   })
 
   shell({ args : [ '.build download.* variant:4' ] })
-  .thenKeep( ( arg ) => validate1( arg ) )
+  .then( ( arg ) => validate1( arg ) )
 
   //
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build download.* variant:5'
     _.fileProvider.filesDelete( local1Path );
@@ -7171,11 +7185,11 @@ function reflectRemoteGit( test )
   })
 
   shell({ args : [ '.build download.* variant:5' ] })
-  .thenKeep( ( arg ) => validate1( arg ) )
+  .then( ( arg ) => validate1( arg ) )
 
   //
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build download.* variant:6'
     _.fileProvider.filesDelete( local1Path );
@@ -7183,11 +7197,11 @@ function reflectRemoteGit( test )
   })
 
   shell({ args : [ '.build download.* variant:6' ] })
-  .thenKeep( ( arg ) => validate1( arg ) )
+  .then( ( arg ) => validate1( arg ) )
 
   //
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build download.* variant:7'
     _.fileProvider.filesDelete( local1Path );
@@ -7195,11 +7209,11 @@ function reflectRemoteGit( test )
   })
 
   shell({ args : [ '.build download.* variant:7' ] })
-  .thenKeep( ( arg ) => validate2( arg ) )
+  .then( ( arg ) => validate2( arg ) )
 
   //
 
-  .thenKeep( () =>
+  .then( () =>
   {
     _.fileProvider.filesDelete( local1Path );
     _.fileProvider.filesDelete( local2Path );
@@ -7262,7 +7276,7 @@ function reflectRemoteHttp( test )
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
 
-  ready.thenKeep( () =>
+  ready.then( () =>
   {
     test.case = '.build download'
     _.fileProvider.filesDelete( outPath );
@@ -7272,7 +7286,7 @@ function reflectRemoteHttp( test )
   // debugger;
   // shell({ args : [ '.builds.list' ] })
   shell({ args : [ '.build download' ] })
-  .thenKeep( ( arg ) =>
+  .then( ( arg ) =>
   {
     debugger;
     test.is( _.fileProvider.isTerminal( localFilePath ) );
@@ -7311,7 +7325,7 @@ function reflectWithOptions( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with mandatory .build variant1';
     return null;
@@ -7319,7 +7333,7 @@ function reflectWithOptions( test )
 
   shell({ args : [ '.with mandatory .clean' ] })
   shell({ args : [ '.with mandatory .build variant1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /\+ .*reflector::reflect\.proto1.* reflected 3 files .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
@@ -7331,7 +7345,7 @@ function reflectWithOptions( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with mandatory .build variant2';
     return null;
@@ -7355,7 +7369,7 @@ function reflectWithOptions( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with mandatory .build variant3';
     return null;
@@ -7363,7 +7377,7 @@ function reflectWithOptions( test )
 
   shell({ args : [ '.with mandatory .clean' ] })
   shell({ args : [ '.with mandatory .build variant3' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /\+ .*reflector::reflect\.proto3.* reflected 0 files .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
@@ -7414,7 +7428,7 @@ function reflectWithSelectorInDstFilter( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build debug';
     _.fileProvider.filesDelete( outPath );
@@ -7422,7 +7436,7 @@ function reflectWithSelectorInDstFilter( test )
   })
 
   shell({ args : [ '.build debug' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
@@ -7433,7 +7447,7 @@ function reflectWithSelectorInDstFilter( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build release';
     _.fileProvider.filesDelete( outPath );
@@ -7441,7 +7455,7 @@ function reflectWithSelectorInDstFilter( test )
   })
 
   shell({ args : [ '.build release' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
@@ -7478,7 +7492,7 @@ function reflectSubmodulesWithCriterion( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = 'reflect only A'
     _.fileProvider.filesDelete( outPath );
@@ -7486,7 +7500,7 @@ function reflectSubmodulesWithCriterion( test )
   })
 
   shell({ args : [ '.build A' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
@@ -7498,7 +7512,7 @@ function reflectSubmodulesWithCriterion( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = 'reflect only B'
     _.fileProvider.filesDelete( outPath );
@@ -7506,7 +7520,7 @@ function reflectSubmodulesWithCriterion( test )
   })
 
   shell({ args : [ '.build B' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
@@ -7544,7 +7558,7 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = 'reflect informal submodule, manual export'
     _.fileProvider.filesDelete( outPath );
@@ -7556,11 +7570,11 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
   // fails with error on first run
 
   shell({ args : [ '.build variant1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
-    var expected = [ '.', './debug' ];
+    var expected = [ '.', './debug', './debug/File.s' ];
     test.identical( files, expected );
     return null;
   })
@@ -7592,7 +7606,7 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = 'reflect informal submodule exported using steps, two builds in a row'
     _.fileProvider.filesDelete( outPath );
@@ -7602,11 +7616,11 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
   //first run works
 
   shell({ args : [ '.build variant2' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
-    var expected = [ '.', './debug' ];
+    var expected = [ '.', './debug', './debug/File.s' ];
     test.identical( files, expected );
     return null;
   })
@@ -7614,17 +7628,20 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
   //second run fails
 
   shell({ args : [ '.build variant2' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
-    var expected = [ '.', './debug' ];
+    var expected = [ '.', './debug', './debug/File.s' ];
     test.identical( files, expected );
     return null;
   })
 
   return ready;
 }
+
+reflectSubmodulesWithPluralCriterionAutoExport.timeOut = 300000;
+
 
 //
 
@@ -7650,7 +7667,7 @@ function reflectInherit( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build reflect.proto1'
     _.fileProvider.filesDelete( outPath );
@@ -7658,20 +7675,20 @@ function reflectInherit( test )
   })
 
   shell({ args : [ '.build reflect.proto1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /\+ .*reflector::reflect.proto1.* reflected 6 files/ ) );
     test.is( _.strHas( got.output, /.*out\/debug1.* <- .*proto.*/ ) );
-    var files = self.find( outPath );
-    test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.s', './debug1/File.test.js', './debug1/some.test', './debug1/some.test/File2.js' ] );
+    var files = self.find( routinePath );
+    test.identical( files, [ '.', './.will.yml', './out', './out/debug1', './out/debug1/File.js', './out/debug1/File.s', './out/debug1/File.test.js', './out/debug1/some.test', './out/debug1/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
   })
 
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build reflect.proto2'
     _.fileProvider.filesDelete( outPath );
@@ -7679,20 +7696,20 @@ function reflectInherit( test )
   })
 
   shell({ args : [ '.build reflect.proto2' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /\+ .*reflector::reflect.proto2.* reflected 6 files/ ) );
     test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
-    var files = self.find( outPath );
-    test.identical( files, [ '.', './debug2', './debug2/File.js', './debug2/File.s', './debug2/File.test.js', './debug2/some.test', './debug2/some.test/File2.js' ] );
+    var files = self.find( routinePath );
+    test.identical( files, [ '.', './.will.yml', './out', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './out/debug2/File.test.js', './out/debug2/some.test', './out/debug2/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
   })
 
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build reflect.proto3'
     _.fileProvider.filesDelete( outPath );
@@ -7700,28 +7717,20 @@ function reflectInherit( test )
   })
 
   shell({ args : [ '.build reflect.proto3' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /\+ .*reflector::reflect.proto3.* reflected 6 files/ ) );
-    // test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
     test.is( _.strHas( got.output, /.*out\/debug1.* <- .*proto.*/ ) );
-    var files = self.find( outPath );
-    // test.identical( files, [ '.', './debug2', './debug2/File.js', './debug2/File.s', './debug2/File.test.js', './debug2/some.test', './debug2/some.test/File2.js' ] );
-    test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.s', './debug1/File.test.js', './debug1/some.test', './debug1/some.test/File2.js' ] );
+    var files = self.find( routinePath );
+    test.identical( files, [ '.', './.will.yml', './out', './out/debug1', './out/debug1/File.js', './out/debug1/File.s', './out/debug1/File.test.js', './out/debug1/some.test', './out/debug1/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
   })
-
-  /*
-    not clear
-    should out/debug2 be output dir
-    or out/debug1
-  */
 
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build reflect.proto4'
     _.fileProvider.filesDelete( outPath );
@@ -7729,20 +7738,41 @@ function reflectInherit( test )
   })
 
   shell({ args : [ '.build reflect.proto4' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /\+ .*reflector::reflect.proto4.* reflected 6 files/ ) );
     test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
-    var files = self.find( outPath );
-    test.identical( files, [ '.', './debug2', './debug2/File.js', './debug2/File.s', './debug2/File.test.js', './debug2/some.test', './debug2/some.test/File2.js' ] );
+    var files = self.find( routinePath );
+    test.identical( files, [ '.', './.will.yml', './out', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './out/debug2/File.test.js', './out/debug2/some.test', './out/debug2/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
   })
 
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
+  {
+    test.case = '.build reflect.proto5'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ args : [ '.build reflect.proto5' ] })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /\+ .*reflector::reflect.proto5.* reflected 6 files/ ) );
+    test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
+    var files = self.find( routinePath );
+    test.identical( files, [ '.', './.will.yml', './out', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './out/debug2/File.test.js', './out/debug2/some.test', './out/debug2/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
   {
     test.case = '.build not1'
     _.fileProvider.filesDelete( outPath );
@@ -7750,20 +7780,20 @@ function reflectInherit( test )
   })
 
   shell({ args : [ '.build not1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /\+ .*reflector::reflect\.not\.test\.only\.js\.v1.* reflected 6 files/ ) );
     test.is( _.strHas( got.output, /.*out.* <- .*proto.*/ ) );
-    var files = self.find( outPath );
-    test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.s', './debug2', './debug2/File.js', './debug2/File.s' ] );
+    var files = self.find( routinePath );
+    test.identical( files, [ '.', './.will.yml', './out', './out/debug1', './out/debug1/File.js', './out/debug1/File.s', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
   })
 
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build reflect.files1'
     _.fileProvider.filesDelete( outPath );
@@ -7771,21 +7801,20 @@ function reflectInherit( test )
   })
 
   shell({ args : [ '.build reflect.files1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /\+ .*reflector::reflect\.not\.test\.only\.js\.v1.* reflected 6 files/ ) );
-    test.is( _.strHas( got.output, /.*out.* <- .*proto.*/ ) );
-    var files = self.find( outPath );
-    test.identical( files, [ 'xxx' ] );
-    // test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.s', './debug2', './debug2/File.js', './debug2/File.s' ] );
+    test.identical( _.strCount( got.output, /\+ .*reflector::reflect\.files1.* reflected 2 files .*:.*out.*<-.*proto/ ), 1 );
+    test.identical( _.strCount( got.output, /.*out.* <- .*proto.*/ ), 1 );
+    var files = self.find( routinePath );
+    test.identical( files, [ '.', './.will.yml', './out', './out/File.js', './out/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
   })
 
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build reflect.files2'
     _.fileProvider.filesDelete( outPath );
@@ -7793,21 +7822,20 @@ function reflectInherit( test )
   })
 
   shell({ args : [ '.build reflect.files2' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /\+ .*reflector::reflect\.not\.test\.only\.js\.v1.* reflected 6 files/ ) );
-    test.is( _.strHas( got.output, /.*out.* <- .*proto.*/ ) );
-    var files = self.find( outPath );
-    test.identical( files, [ 'xxx' ] );
-    // test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.s', './debug2', './debug2/File.js', './debug2/File.s' ] );
+    test.identical( _.strCount( got.output, /\+ .*reflector::reflect\.files2.* reflected 2 files .*:.*out.*<-.*proto/ ), 1 );
+    test.identical( _.strCount( got.output, /.*out.* <- .*proto.*/ ), 1 );
+    var files = self.find( routinePath );
+    test.identical( files, [ '.', './.will.yml', './out', './out/File.js', './out/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
   })
 
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build reflect.files3'
     _.fileProvider.filesDelete( outPath );
@@ -7815,14 +7843,13 @@ function reflectInherit( test )
   })
 
   shell({ args : [ '.build reflect.files3' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /\+ .*reflector::reflect\.not\.test\.only\.js\.v1.* reflected 6 files/ ) );
-    test.is( _.strHas( got.output, /.*out.* <- .*proto.*/ ) );
-    var files = self.find( outPath );
-    test.identical( files, [ 'xxx' ] );
-    // test.identical( files, [ '.', './debug1', './debug1/File.js', './debug1/File.s', './debug2', './debug2/File.js', './debug2/File.s' ] );
+    test.identical( _.strCount( got.output, /\+ .*reflector::reflect\.files3.* reflected 2 files .*:.*out.*<-.*proto/ ), 1 );
+    test.identical( _.strCount( got.output, /.*out.* <- .*proto.*/ ), 1 );
+    var files = self.find( routinePath );
+    test.identical( files, [ '.', './.will.yml', './out', './out/File.js', './out/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
   })
 
@@ -7830,6 +7857,8 @@ function reflectInherit( test )
 
   return ready;
 }
+
+reflectInherit.timeOut = 300000;
 
 //
 
@@ -7861,7 +7890,7 @@ function reflectInheritSubmodules( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = 'setup'
     _.fileProvider.filesDelete( outPath );
@@ -7869,7 +7898,7 @@ function reflectInheritSubmodules( test )
   })
 
   shell({ args : [ '.each module .export' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( routinePath );
@@ -7880,7 +7909,7 @@ function reflectInheritSubmodules( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with a .build'
     _.fileProvider.filesDelete( outPath );
@@ -7888,20 +7917,20 @@ function reflectInheritSubmodules( test )
   })
 
   shell({ args : [ '.with a .build' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
-    test.identical( files, [ '.', './debug' ] );
-    var read = _.fileProvider.fileRead( _.path.join( outPath, 'debug' ) );
-    test.equivalent( read, 'console.log( \'File2.s\' );' );
+    test.identical( files, [ '.', './debug', './debug/File1.s', './debug/File2.s' ] );
+    // var read = _.fileProvider.fileRead( _.path.join( outPath, 'debug' ) );
+    // test.equivalent( read, 'console.log( \'File2.s\' );' );
     return null;
   })
 
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with b .build'
     _.fileProvider.filesDelete( outPath );
@@ -7909,7 +7938,7 @@ function reflectInheritSubmodules( test )
   })
 
   shell({ args : [ '.with b .build' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
@@ -7920,7 +7949,7 @@ function reflectInheritSubmodules( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with c .build'
     _.fileProvider.filesDelete( outPath );
@@ -7928,7 +7957,7 @@ function reflectInheritSubmodules( test )
   })
 
   shell({ args : [ '.with c .build' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
@@ -7963,7 +7992,7 @@ function reflectComplexInherit( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with ab/ .build';
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -7974,7 +8003,7 @@ function reflectComplexInherit( test )
   shell({ args : [ '.with a .export' ] })
   shell({ args : [ '.with b .export' ] })
   shell({ args : [ '.with ab/ .build' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ .*reflector::files\.all.* reflected 11 files .*\/.* : .*out\/ab\/files.* <- .*proto.* in/ ) );
@@ -7986,7 +8015,7 @@ function reflectComplexInherit( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.with abac/ .build';
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -7999,7 +8028,7 @@ function reflectComplexInherit( test )
   shell({ args : [ '.with c .export' ] })
   shell({ args : [ '.with ab/ .export' ] })
   shell({ args : [ '.with abac/ .build' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ .*reflector::files\.all.* reflected 13 files .*\/.* : .*out\/abac\/files.* <- .*proto.* in/ ) );
@@ -8044,7 +8073,7 @@ function reflectorMasks( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.build copy.' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'mask directory';
 
@@ -8063,7 +8092,7 @@ function reflectorMasks( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.build copy.debug' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'mask terminal';
 
@@ -8113,7 +8142,7 @@ function shellWithCriterion( test )
 
   shell({ args : [ '.build A' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.description = 'should execute file A.js';
 
@@ -8127,7 +8156,7 @@ function shellWithCriterion( test )
 
   shell({ args : [ '.build B' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.description = 'should execute file B.js';
 
@@ -8176,7 +8205,7 @@ function shellVerbosity( test )
 
   shell({ args : [ '.build verbosity.0' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.build verbosity.0';
 
@@ -8193,7 +8222,7 @@ function shellVerbosity( test )
 
   shell({ args : [ '.build verbosity.1' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.build verbosity.1';
 
@@ -8210,7 +8239,7 @@ function shellVerbosity( test )
 
   shell({ args : [ '.build verbosity.2' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.build verbosity.2';
 
@@ -8227,7 +8256,7 @@ function shellVerbosity( test )
 
   shell({ args : [ '.build verbosity.3' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.build verbosity.3';
 
@@ -8244,7 +8273,7 @@ function shellVerbosity( test )
 
   shell({ args : [ '.build verbosity.5' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'verbosity:5';
 
@@ -8286,14 +8315,14 @@ function functionStringsJoin( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build strings.join'
     return null;
   })
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.build strings.join' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -8317,14 +8346,14 @@ console.log( 'File1.js' );
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build multiply'
     return null;
   })
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.build multiply' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -8347,14 +8376,14 @@ console.log( 'File1.js' );
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build echo1'
     return null;
   })
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.build echo1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -8370,14 +8399,14 @@ console.log( 'File1.js' );
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build echo2'
     return null;
   })
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.build echo2' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -8417,14 +8446,14 @@ function functionPlatform( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.build'
     return null;
   })
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.build' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, /\+ .*reflector::copy.* reflected 2 files .*functionPlatform\/.* : .*out\/dir\.windows.* <- .*proto.* in/ ), 1 );
@@ -8479,7 +8508,7 @@ function fucntionThisCriterion( test )
 
   shell({ args : [ '.build debug' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.description = 'should print debug:1';
 
@@ -8493,7 +8522,7 @@ function fucntionThisCriterion( test )
 
   shell({ args : [ '.build release' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.description = 'should print debug:0';
 
@@ -8534,7 +8563,7 @@ function submodulesDownloadSingle( test )
 
   shell({ args : [ '.submodules.download' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.submodules.download';
     test.identical( got.exitCode, 0 );
@@ -8546,7 +8575,7 @@ function submodulesDownloadSingle( test )
 
   shell({ args : [ '.submodules.download' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.submodules.download'
     test.identical( got.exitCode, 0 );
@@ -8560,7 +8589,7 @@ function submodulesDownloadSingle( test )
 
   shell({ args : [ '.submodules.update' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.submodules.update'
     test.identical( got.exitCode, 0 );
@@ -8574,7 +8603,7 @@ function submodulesDownloadSingle( test )
 
   shell({ args : [ '.submodules.clean' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = '.submodules.clean';
     test.identical( got.exitCode, 0 );
@@ -8617,7 +8646,7 @@ function submodulesDownloadUpdate( test )
 
   /* */
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.download - first time';
     _.fileProvider.filesDelete( submodulesPath );
@@ -8625,7 +8654,7 @@ function submodulesDownloadUpdate( test )
   })
 
   shell({ args : [ '.submodules.download' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /2\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
@@ -8641,13 +8670,13 @@ function submodulesDownloadUpdate( test )
 
   /* */
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.download - again';
     return null;
   })
   shell({ args : [ '.submodules.download' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
@@ -8667,14 +8696,14 @@ function submodulesDownloadUpdate( test )
 
   /* */
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.update - first time';
     _.fileProvider.filesDelete( submodulesPath );
     return null;
   })
   shell({ args : [ '.submodules.update' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
@@ -8694,13 +8723,13 @@ function submodulesDownloadUpdate( test )
 
   /* */
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.update - again';
     return null;
   })
   shell({ args : [ '.submodules.update' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
@@ -8723,7 +8752,7 @@ function submodulesDownloadUpdate( test )
   var files;
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.clean';
     files = self.find( submodulesPath );
@@ -8731,7 +8760,7 @@ function submodulesDownloadUpdate( test )
   })
 
   shell({ args : [ '.submodules.clean' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
@@ -8772,7 +8801,7 @@ function submodulesDownloadUpdateDry( test )
   /* */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.download dry:1';
     _.fileProvider.filesDelete( submodulesPath );
@@ -8780,12 +8809,12 @@ function submodulesDownloadUpdateDry( test )
   })
 
   shell({ args : [ '.submodules.download dry:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ .*module::Tools.* will be downloaded version .*/ ) );
-    test.is( _.strHas( got.output, / \+ .*module::PathFundamentals.* will be downloaded version .*ffcb9b22726e2d56d07564178d268bc2eb602b35.*/ ) );
-    test.is( _.strHas( got.output, / \+ .*module::Color.* will be downloaded version .*0.3.109.*/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::PathFundamentals.* will be downloaded version .*c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::Color.* will be downloaded version .*0.3.115.*/ ) );
     test.is( _.strHas( got.output, / \+ 3\/6 submodule\(s\) of .*module::submodules-detached.* will be downloaded/ ) );
     var files = self.find( submodulesPath );
     test.is( files.length === 0 );
@@ -8795,7 +8824,7 @@ function submodulesDownloadUpdateDry( test )
   /* */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.download dry:1 -- after download';
     _.fileProvider.filesDelete( submodulesPath );
@@ -8804,7 +8833,7 @@ function submodulesDownloadUpdateDry( test )
 
   shell({ args : [ '.submodules.download' ] })
   shell({ args : [ '.submodules.download dry:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ 0\/6 submodule\(s\) of .*module::submodules-detached.* will be downloaded/ ) );
@@ -8816,7 +8845,7 @@ function submodulesDownloadUpdateDry( test )
   /* */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.update dry:1';
     _.fileProvider.filesDelete( submodulesPath );
@@ -8824,12 +8853,12 @@ function submodulesDownloadUpdateDry( test )
   })
 
   shell({ args : [ '.submodules.update dry:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ .*module::Tools.* will be updated to version .*/ ) );
-    test.is( _.strHas( got.output, / \+ .*module::PathFundamentals.* will be updated to version .*ffcb9b22726e2d56d07564178d268bc2eb602b35.*/ ) );
-    test.is( _.strHas( got.output, / \+ .*module::Color.* will be updated to version .*0.3.109.*/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::PathFundamentals.* will be updated to version .*c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::Color.* will be updated to version .*0.3.115.*/ ) );
     test.is( _.strHas( got.output, / \+ 3\/6 submodule\(s\) of .*module::submodules-detached.* will be update/ ) );
     var files = self.find( submodulesPath );
     test.is( files.length === 0 );
@@ -8839,7 +8868,7 @@ function submodulesDownloadUpdateDry( test )
   /* */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.update dry:1 -- after update';
     _.fileProvider.filesDelete( submodulesPath );
@@ -8848,7 +8877,7 @@ function submodulesDownloadUpdateDry( test )
 
   shell({ args : [ '.submodules.update' ] })
   shell({ args : [ '.submodules.update dry:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ 0\/6 submodule\(s\) of .*module::submodules-detached.* will be updated/ ) );
@@ -8888,7 +8917,7 @@ function submodulesUpdate( test )
   /* */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.update';
     return null;
@@ -8896,7 +8925,7 @@ function submodulesUpdate( test )
 
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.submodules.update' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ .*module::Tools.* was updated to version .*fc457abd063cb49edc857e46b74b4769da7124e3.* in/ ) );
@@ -8909,14 +8938,14 @@ function submodulesUpdate( test )
   /* */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.update -- second';
     return null;
   })
 
   shell({ args : [ '.submodules.update' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, /module::Tools/ ) );
@@ -8929,7 +8958,7 @@ function submodulesUpdate( test )
   /* */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.update -- after patch';
     var read = _.fileProvider.fileRead( _.path.join( routinePath, '.im.will.yml' ) );
@@ -8939,7 +8968,7 @@ function submodulesUpdate( test )
   })
 
   shell({ args : [ '.submodules.update' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ .*module::Tools.* was updated to version .*master.* in/ ) );
@@ -8952,14 +8981,14 @@ function submodulesUpdate( test )
   /* */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.update -- second';
     return null;
   })
 
   shell({ args : [ '.submodules.update' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, /module::Tools/ ) );
@@ -9004,7 +9033,7 @@ function stepSubmodulesDownload( test )
 
   shell()
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'simple run without args'
     test.identical( got.exitCode, 0 );
@@ -9016,7 +9045,7 @@ function stepSubmodulesDownload( test )
 
   shell({ args : [ '.resources.list' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.case = 'list'
     test.identical( got.exitCode, 0 );
@@ -9026,7 +9055,7 @@ function stepSubmodulesDownload( test )
 
   /* - */
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = 'build'
     _.fileProvider.filesDelete( _.path.join( routinePath, '.module' ) );
@@ -9036,7 +9065,7 @@ function stepSubmodulesDownload( test )
 
   shell({ args : [ '.build' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.gt( self.find( _.path.join( routinePath, '.module/Tools' ) ).length, 70 );
@@ -9046,7 +9075,7 @@ function stepSubmodulesDownload( test )
 
   /* - */
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = 'export'
     _.fileProvider.filesDelete( _.path.join( routinePath, '.module' ) );
@@ -9057,7 +9086,7 @@ function stepSubmodulesDownload( test )
 
   shell({ args : [ '.export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.gt( self.find( _.path.join( routinePath, '.module/Tools' ) ).length, 90 );
@@ -9099,7 +9128,7 @@ function upgradeDryDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.upgrade dry:1 negative:1 -- after full update';
     return null;
@@ -9108,7 +9137,7 @@ function upgradeDryDetached( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.export' ] })
   shell({ args : [ '.submodules.upgrade dry:1 negative:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -9120,14 +9149,14 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#ffcb9b22726e2d56d07564178d268bc2eb602b35.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.109.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
@@ -9139,7 +9168,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#45452e31fe62f3edfad87ed7a0acb0f45fb1b271.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#c69443a83a476c0ea7254d13ec013d94c99090ba.*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Proto\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
@@ -9154,14 +9183,14 @@ function upgradeDryDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.upgrade dry:1 negative:0 -- after full update';
     return null;
   })
 
   shell({ args : [ '.submodules.upgrade dry:1 negative:0' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -9173,14 +9202,14 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#ffcb9b22726e2d56d07564178d268bc2eb602b35.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.109.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
@@ -9192,7 +9221,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#45452e31fe62f3edfad87ed7a0acb0f45fb1b271.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#c69443a83a476c0ea7254d13ec013d94c99090ba.*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Proto\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
@@ -9207,7 +9236,7 @@ function upgradeDryDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.upgrade dry:1 negative:1 -- after informal update';
     return null;
@@ -9216,7 +9245,7 @@ function upgradeDryDetached( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.each module .export' ] })
   shell({ args : [ '.submodules.upgrade dry:1 negative:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -9228,14 +9257,14 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#ffcb9b22726e2d56d07564178d268bc2eb602b35.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.109.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
@@ -9247,7 +9276,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#45452e31fe62f3edfad87ed7a0acb0f45fb1b271.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#c69443a83a476c0ea7254d13ec013d94c99090ba.*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Proto\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
@@ -9262,7 +9291,7 @@ function upgradeDryDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.upgrade dry:1 negative:1 -- after formal update';
     return null;
@@ -9271,7 +9300,7 @@ function upgradeDryDetached( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.submodules.update' ] })
   shell({ args : [ '.submodules.upgrade dry:1 negative:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -9283,14 +9312,14 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#ffcb9b22726e2d56d07564178d268bc2eb602b35.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.109.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
@@ -9302,7 +9331,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be upgraded/ ), 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* will be upgraded to version/ ), 0 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#45452e31fe62f3edfad87ed7a0acb0f45fb1b271.*/ ), 0 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#c69443a83a476c0ea7254d13ec013d94c99090ba.*/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Proto\.informal\.will\.yml.* will be upgraded/ ), 0 );
 
@@ -9345,7 +9374,7 @@ function upgradeDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.upgrade dry:0 negative:1 -- after full update';
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
@@ -9355,7 +9384,7 @@ function upgradeDetached( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.export' ] })
   shell({ args : [ '.submodules.upgrade dry:0 negative:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -9367,14 +9396,14 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#ffcb9b22726e2d56d07564178d268bc2eb602b35.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.109.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -9386,7 +9415,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#45452e31fe62f3edfad87ed7a0acb0f45fb1b271.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#c69443a83a476c0ea7254d13ec013d94c99090ba.*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
@@ -9401,7 +9430,7 @@ function upgradeDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.upgrade dry:0 negative:0 -- after full update';
 
@@ -9414,7 +9443,7 @@ function upgradeDetached( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.export' ] })
   shell({ args : [ '.submodules.upgrade dry:0 negative:0' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -9426,14 +9455,14 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#ffcb9b22726e2d56d07564178d268bc2eb602b35.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.109.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 0 );
@@ -9445,7 +9474,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#45452e31fe62f3edfad87ed7a0acb0f45fb1b271.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#c69443a83a476c0ea7254d13ec013d94c99090ba.*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
@@ -9460,14 +9489,14 @@ function upgradeDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.upgrade dry:0 negative:1 -- after full update, second';
     return null;
   })
 
   shell({ args : [ '.submodules.upgrade dry:0 negative:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -9513,14 +9542,14 @@ function upgradeDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.upgrade dry:0 negative:0 -- after full update, second';
     return null;
   })
 
   shell({ args : [ '.submodules.upgrade dry:0 negative:0' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -9570,7 +9599,7 @@ function upgradeDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.upgrade dry:0 negative:1 -- after informal update';
 
@@ -9583,7 +9612,7 @@ function upgradeDetached( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.each module .export' ] })
   shell({ args : [ '.submodules.upgrade dry:0 negative:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -9595,14 +9624,14 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#ffcb9b22726e2d56d07564178d268bc2eb602b35.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.109.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 0 );
@@ -9614,7 +9643,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#45452e31fe62f3edfad87ed7a0acb0f45fb1b271.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#c69443a83a476c0ea7254d13ec013d94c99090ba.*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
@@ -9629,7 +9658,7 @@ function upgradeDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.upgrade dry:0 negative:1 -- after formal update';
 
@@ -9642,7 +9671,7 @@ function upgradeDetached( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.submodules.update' ] })
   shell({ args : [ '.submodules.upgrade dry:0 negative:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -9654,14 +9683,14 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#ffcb9b22726e2d56d07564178d268bc2eb602b35.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathFundamentals\.git\/out\/wPathFundamentals\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/out\/wPathFundamentals\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.109.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -9673,7 +9702,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was upgraded/ ), 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was upgraded to version/ ), 0 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#45452e31fe62f3edfad87ed7a0acb0f45fb1b271.*/ ), 0 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#c69443a83a476c0ea7254d13ec013d94c99090ba.*/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 0 );
 
@@ -9718,7 +9747,7 @@ function fixateDryDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.fixate dry:1 negative:1 -- after full update';
     return null;
@@ -9727,7 +9756,7 @@ function fixateDryDetached( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.export' ] })
   shell({ args : [ '.submodules.fixate dry:1 negative:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -9773,14 +9802,14 @@ function fixateDryDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.fixate dry:1 negative:0 -- after full update';
     return null;
   })
 
   shell({ args : [ '.submodules.fixate dry:1 negative:0' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -9826,7 +9855,7 @@ function fixateDryDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.fixate dry:1 negative:1 -- after informal update';
     return null;
@@ -9835,7 +9864,7 @@ function fixateDryDetached( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.each module .export' ] })
   shell({ args : [ '.submodules.fixate dry:1 negative:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -9881,7 +9910,7 @@ function fixateDryDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.fixate dry:1 negative:1 -- after formal update';
     return null;
@@ -9890,7 +9919,7 @@ function fixateDryDetached( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.submodules.update' ] })
   shell({ args : [ '.submodules.fixate dry:1 negative:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -9964,7 +9993,7 @@ function fixateDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.fixate dry:0 negative:1 -- after full update';
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
@@ -9974,7 +10003,7 @@ function fixateDetached( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.export' ] })
   shell({ args : [ '.submodules.fixate dry:0 negative:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -10020,7 +10049,7 @@ function fixateDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.fixate dry:0 negative:0 -- after full update';
 
@@ -10033,7 +10062,7 @@ function fixateDetached( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.export' ] })
   shell({ args : [ '.submodules.fixate dry:0 negative:0' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -10079,14 +10108,14 @@ function fixateDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.fixate dry:0 negative:1 -- after full update, second';
     return null;
   })
 
   shell({ args : [ '.submodules.fixate dry:0 negative:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -10132,14 +10161,14 @@ function fixateDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.fixate dry:0 negative:0 -- after full update, second';
     return null;
   })
 
   shell({ args : [ '.submodules.fixate dry:0 negative:0' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -10189,7 +10218,7 @@ function fixateDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.fixate dry:0 negative:1 -- after informal update';
 
@@ -10202,7 +10231,7 @@ function fixateDetached( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.each module .export' ] })
   shell({ args : [ '.submodules.fixate dry:0 negative:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -10248,7 +10277,7 @@ function fixateDetached( test )
   /* - */
 
   ready
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = '.submodules.fixate dry:0 negative:1 -- after formal update';
 
@@ -10261,7 +10290,7 @@ function fixateDetached( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.submodules.update' ] })
   shell({ args : [ '.submodules.fixate dry:0 negative:1' ] })
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
@@ -10360,7 +10389,7 @@ var Self =
     listWithSubmodulesSimple,
     listWithSubmodules,
     listSteps,
-    // listComplexPaths,
+    // listComplexPaths, // xxx
 
     clean,
     cleanSingleModule,

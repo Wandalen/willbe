@@ -30,7 +30,8 @@ function onSuiteBegin()
   let self = this;
 
   self.tempDir = _.path.dirTempOpen( _.path.join( __dirname, '../..'  ), 'Will' );
-  self.assetDirPath = _.path.join( __dirname, '-asset' );
+  self.assetDirPath = _.path.join( __dirname, '_asset' );
+  self.repoDirPath = _.path.join( self.assetDirPath, '_repo' );
   self.find = _.fileProvider.filesFinder
   ({
     recursive : 2,
@@ -719,13 +720,13 @@ function openOutNamed( test )
     test.identical( module.openedModule.willfilesArray.length, 1 );
     test.identical( _.mapKeys( module.openedModule.willfileWithRoleMap ), [ 'single' ] );
     test.identical( _.mapKeys( module.openedModule.submoduleMap ), [ 'Submodule' ] );
-    test.identical( _.filter( _.mapKeys( module.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.debug', 'exported.files.export.debug', 'exported.export.', 'exported.files.export.' ] );
+    test.setsIdentical( _.filter( _.mapKeys( module.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.debug', 'exported.files.export.debug', 'exported.export.', 'exported.files.export.' ] );
 
     let steps = _.select( module.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
-    test.identical( steps, [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug', 'exported.export.debug', 'exported.files.export.debug', 'exported.export.', 'exported.files.export.' ] );
+    test.setsIdentical( steps, [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug', 'exported.export.debug', 'exported.files.export.debug', 'exported.export.', 'exported.files.export.' ] );
 
-    test.identical( _.mapKeys( module.openedModule.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
-    test.identical( _.mapKeys( module.openedModule.exportedMap ), [ 'export.', 'export.debug' ] );
+    test.setsIdentical( _.mapKeys( module.openedModule.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
+    test.setsIdentical( _.mapKeys( module.openedModule.exportedMap ), [ 'export.', 'export.debug' ] );
 
   }
 
@@ -1290,7 +1291,244 @@ function reflectorResolve( test )
     test.is( err === undefined );
     module.finit();
     return arg;
-  }).split();
+  });
+
+  return ready.split();
+}
+
+//
+
+function reflectorInheritedResolve( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-inherit' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulePath = _.path.join( routinePath, './' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let outPath = _.path.join( routinePath, 'out' );
+  let will = new _.Will;
+  let path = _.fileProvider.path;
+
+  function pin( filePath )
+  {
+    return path.s.join( routinePath, filePath );
+  }
+
+  function pout( filePath )
+  {
+    return path.s.join( routinePath, 'super.out', filePath );
+  }
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( outPath );
+
+  var module = will.moduleMake({ willfilesPath : modulePath });
+
+  /* - */
+
+  module.openedModule.ready.thenKeep( ( arg ) =>
+  {
+
+    test.case = 'reflector::reflect.proto1 formed:1';
+    var resolved = module.openedModule.resolve( 'reflector::reflect.proto1' )
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'prefixPath' : 'proto'
+      },
+      'dst' : { 'prefixPath' : 'out/debug1' },
+      'mandatory' : 1
+    }
+    resolved.form();
+    var resolvedData = resolved.dataExport({ formed : 1 });
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.proto2 formed:1';
+    var resolved = module.openedModule.resolve( 'reflector::reflect.proto2' )
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'prefixPath' : 'proto'
+      },
+      'dst' : { 'prefixPath' : 'out/debug2' },
+      'mandatory' : 1,
+      'inherit' : [ 'reflect.proto1' ]
+    }
+    resolved.form();
+    var resolvedData = resolved.dataExport({ formed : 1 });
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.proto3 formed:1';
+    var resolved = module.openedModule.resolve( 'reflector::reflect.proto3' )
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'prefixPath' : 'proto'
+      },
+      'dst' : { 'prefixPath' : 'out/debug1' },
+      'mandatory' : 1,
+      'inherit' : [ 'reflect.proto1' ]
+    }
+    resolved.form();
+    var resolvedData = resolved.dataExport({ formed : 1 });
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.proto4 formed:1';
+    var resolved = module.openedModule.resolve( 'reflector::reflect.proto4' )
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'prefixPath' : 'proto'
+      },
+      'dst' : { 'prefixPath' : 'out/debug2' },
+      'mandatory' : 1,
+      'inherit' : [ 'reflect.proto1' ]
+    }
+    resolved.form();
+    var resolvedData = resolved.dataExport({ formed : 1 });
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.proto5 formed:1';
+    var resolved = module.openedModule.resolve( 'reflector::reflect.proto5' )
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { '.' : '.' },
+        'prefixPath' : 'proto'
+      },
+      'dst' : { 'prefixPath' : 'out/debug2' },
+      'mandatory' : 1,
+      'inherit' : [ 'reflect.proto1' ]
+    }
+    resolved.form();
+    var resolvedData = resolved.dataExport({ formed : 1 });
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.not.test.only.js.v1 formed:1';
+    var resolved = module.openedModule.resolve( 'reflector::reflect.not.test.only.js.v1' )
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' :
+        {
+          '.' : [ 'debug1', 'debug2' ],
+          '**.test**' : false
+        },
+        'prefixPath' : 'proto'
+      },
+      'dst' : { 'prefixPath' : 'out' },
+      'mandatory' : 1,
+      'inherit' : [ 'not.test', 'only.js' ]
+    }
+    resolved.form();
+    var resolvedData = resolved.dataExport({ formed : 1 });
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.files1 formed:1';
+    var resolved = module.openedModule.resolve( 'reflector::reflect.files1' )
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { 'File.js' : '.', 'File.s' : '.' },
+        'basePath' : '.',
+        'prefixPath' : 'proto'
+      },
+      'dst' : { 'prefixPath' : 'out' },
+      'mandatory' : 1,
+      'inherit' : [ 'reflector::files3' ]
+    }
+    resolved.form();
+    var resolvedData = resolved.dataExport({ formed : 1 });
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.files2 formed:1';
+    var resolved = module.openedModule.resolve( 'reflector::reflect.files2' )
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { 'File.js' : '.', 'File.s' : '.' },
+        'basePath' : '.',
+        'prefixPath' : 'proto'
+      },
+      'dst' : { 'prefixPath' : 'out' },
+      'mandatory' : 1,
+      'inherit' : [ 'reflector::files3' ]
+    }
+    resolved.form();
+    var resolvedData = resolved.dataExport({ formed : 1 });
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    test.case = 'reflector::reflect.files3 formed:1';
+    var resolved = module.openedModule.resolve( 'reflector::reflect.files3' )
+    var expected =
+    {
+      'src' :
+      {
+        'filePath' : { 'File.js' : '.', 'File.s' : '.' },
+        'basePath' : '.',
+        'prefixPath' : 'proto'
+      },
+      'dst' : { 'prefixPath' : 'out' },
+      'mandatory' : 1,
+      'inherit' : [ 'reflector::files3' ]
+    }
+    resolved.form();
+    var resolvedData = resolved.dataExport({ formed : 1 });
+    if( resolvedData.src && resolvedData.src.maskAll )
+    resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
+    test.identical( resolved.formed, 3 );
+    test.identical( resolvedData, expected );
+
+    return null;
+  });
+
+  /* - */
+
+  let ready = module.openedModule.ready.finallyKeep( ( err, arg ) =>
+  {
+    if( err )
+    throw err;
+    test.is( err === undefined );
+    module.finit();
+    return arg;
+  });
 
   return ready.split();
 }
@@ -1312,6 +1550,7 @@ function superResolve( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
   _.fileProvider.filesDelete( outPath );
 
+  debugger;
   var module = will.moduleMake({ willfilesPath : modulePath });
 
   /* - */
@@ -2752,7 +2991,6 @@ pathsResolveImportIn.timeOut = 130000;
 function pathsResolveOfSubmodules( test )
 {
   let self = this;
-  let originalRepoPath = _.path.join( self.assetDirPath, '-repo' );
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-local-repos' );
   let repoPath = _.path.join( self.tempDir, 'repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
@@ -2764,7 +3002,7 @@ function pathsResolveOfSubmodules( test )
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesDelete( repoPath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-  _.fileProvider.filesReflect({ reflectMap : { [ originalRepoPath ] : repoPath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
   _.fileProvider.filesDelete( outPath );
 
   var module = will.moduleMake({ willfilesPath : routinePath + '/' });
@@ -2847,7 +3085,6 @@ function pathsResolveOfSubmodules( test )
 function pathsResolveOfSubmodulesAndOwn( test )
 {
   let self = this;
-  let originalRepoPath = _.path.join( self.assetDirPath, '-repo' );
   let originalDirPath = _.path.join( self.assetDirPath, 'resolve-path-of-submodules' );
   let repoPath = _.path.join( self.tempDir, 'repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
@@ -4015,7 +4252,6 @@ function pathsResolveFailing( test )
 function submodulesResolve( test )
 {
   let self = this;
-  let originalRepoPath = _.path.join( self.assetDirPath, '-repo' );
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-local-repos' );
   let repoPath = _.path.join( self.tempDir, 'repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
@@ -4027,7 +4263,7 @@ function submodulesResolve( test )
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesDelete( repoPath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-  _.fileProvider.filesReflect({ reflectMap : { [ originalRepoPath ] : repoPath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
   _.fileProvider.filesDelete( outPath );
 
   var module = will.moduleMake({ willfilesPath : modulePath });
@@ -4122,7 +4358,6 @@ submodulesResolve.timeOut = 300000;
 function submodulesDeleteAndDownload( test )
 {
   let self = this;
-  let originalRepoPath = _.path.join( self.assetDirPath, '-repo' );
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-del-download' );
   let repoPath = _.path.join( self.tempDir, 'repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
@@ -4134,7 +4369,7 @@ function submodulesDeleteAndDownload( test )
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesDelete( repoPath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-  _.fileProvider.filesReflect({ reflectMap : { [ originalRepoPath ] : repoPath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
   _.fileProvider.filesDelete( outPath );
 
   var module = will.moduleMake({ willfilesPath : modulePath });
@@ -4239,6 +4474,7 @@ var Self =
     clone,
 
     reflectorResolve,
+    reflectorInheritedResolve,
     superResolve,
     buildsResolve,
     pathsResolve,

@@ -262,24 +262,96 @@ function moduleMake( o )
   if( !o.willfilesPath )
   o.willfilesPath = o.willfilesPath || fileProvider.path.current();
 
-  if( !o.module )
+  if( !o.opener )
   {
-    o.module = will.OpenerModule({ will : will, willfilesPath : o.willfilesPath }).preform();
+    o.opener = will.OpenerModule({ will : will, willfilesPath : o.willfilesPath }).preform();
   }
 
-  o.module.moduleFind();
-  o.module.openedModule.stager.stageStatePausing( 'picked', 0 );
-  o.module.openedModule.stager.stageStateSkipping( 'resourcesFormed', !o.forming );
-  o.module.openedModule.stager.tick();
+  o.opener.moduleFind();
 
-  return o.module;
+  if( o.isMain )
+  {
+    _.assert( will.mainModule === null );
+    will.mainModule = o.opener.openedModule;
+  }
+
+  o.opener.openedModule.stager.stageStatePausing( 'picked', 0 );
+  o.opener.openedModule.stager.stageStateSkipping( 'resourcesFormed', 0 );
+  // o.opener.openedModule.stager.stageStateSkipping( 'resourcesFormed', !o.forming );
+  o.opener.openedModule.stager.tick();
+
+  return o.opener;
 }
 
 moduleMake.defaults =
 {
-  module : null,
+  opener : null,
   willfilesPath : null,
-  forming : 0,
+  isMain : 0,
+  // forming : 0,
+}
+
+//
+
+function _moduleWillfilesReadBegin()
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 0 );
+  _.assert( will.mainModule === null || will.mainModule instanceof will.OpenedModule );
+
+  will.willfilesReadBeginTime = will.willfilesReadBeginTime || _.timeNow();
+
+}
+
+//
+
+function _moduleWillfilesReadEnd( module )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 1 );
+  _.assert( module instanceof will.OpenedModule );
+  _.assert( will.mainModule === null || will.mainModule instanceof will.OpenedModule );
+
+  // debugger;
+  if( module === will.mainModule && !module.original )
+  will._moduleWillfilesReadLog();
+
+  // if( will.verbosity >= 2 )
+  // // if( module === module.rootModule && !module.original )
+  // if( module === will.mainModule && !module.original )
+  // {
+  //   // if( !module.willfilesReadTimeReported )
+  //   logger.log( ' . Read', module.willfilesResolve().length, 'willfile(s) in', _.timeSpent( module.willfilesReadBeginTime ), '\n' );
+  //   // module.willfilesReadTimeReported = 1;
+  // }
+
+}
+
+//
+
+function _moduleWillfilesReadLog()
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 0 );
+  _.assert( will.mainModule === null || will.mainModule instanceof will.OpenedModule );
+
+  if( will.verbosity >= 2 )
+  {
+    logger.log( ' . Read', will.willfilesArray.length, 'willfile(s) in', _.timeSpent( will.willfilesReadBeginTime ), '\n' );
+  }
+
 }
 
 //
@@ -304,25 +376,27 @@ function moduleEachAt( o )
   if( will.Resolver.selectorIs( o.selector ) )
   {
 
-    let module = o.currentModule;
-    if( !o.currentModule )
-    module = o.currentModule = will.OpenerModule({ will : will, willfilesPath : path.trail( path.current() ) }).preform();
-    module.moduleFind();
+    let opener = o.currentOpener;
+    if( !o.currentOpener )
+    opener = o.currentOpener = will.OpenerModule({ will : will, willfilesPath : path.trail( path.current() ) }).preform();
+    opener.moduleFind();
 
-    con = module.openedModule.ready;
+    con = opener.openedModule.ready.split();
     con.then( () =>
     {
       let con2 = new _.Consequence();
-      let resolved = module.openedModule.submodulesResolve({ selector : o.selector, preservingIteration : 1 });
+      let resolved = opener.openedModule.submodulesResolve({ selector : o.selector, preservingIteration : 1 });
       resolved = _.arrayAs( resolved );
 
-      for( let s = 0 ; s < resolved.length ; s++ ) con2.keep( ( arg ) => /* !!! replace by concurrent, maybe */
+      debugger;
+      for( let s = 0 ; s < resolved.length ; s++ ) con2.then( ( arg ) => /* !!! replace by concurrent, maybe */
       {
         let it1 = resolved[ s ];
-        let module = it1.currentModule;
+        let opener = it1.currentModule;
 
+        debugger;
         let it2 = Object.create( null );
-        it2.currentModule = module.openerMake(); // zzz
+        it2.currentOpener = opener.openerMake(); // zzz
 
         if( _.arrayIs( it1.dst ) || _.strIs( it1.dst ) )
         it2.currentPath = it1.dst;
@@ -339,15 +413,15 @@ function moduleEachAt( o )
       return con2;
     });
 
-    module.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
-    module.openedModule.stager.stageStatePausing( 'picked', 0 );
-    module.openedModule.stager.tick();
+    opener.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
+    opener.openedModule.stager.stageStatePausing( 'picked', 0 );
+    opener.openedModule.stager.tick();
 
   }
   else
   {
 
-    o.selector = path.resolve( o.selector );
+    // o.selector = path.resolve( o.selector );
     con = new _.Consequence().take( null );
 
     let files;
@@ -365,27 +439,28 @@ function moduleEachAt( o )
       throw _.errBriefly( err );
     }
 
+    debugger;
     let filesMap = Object.create( null );
     for( let f = 0 ; f < files.length ; f++ ) con
     .then( ( arg ) => /* !!! replace by concurrent, maybe */
     {
-      let file = files[ f ];
+      let file = files[ f ]; debugger;
 
       if( filesMap[ file.absolute ] )
       {
         return true;
       }
 
-      let module = will.OpenerModule({ will : will, willfilesPath : file.absolute }).preform();
+      let opener = will.OpenerModule({ will : will, willfilesPath : file.absolute }).preform();
       // debugger;
-      module.moduleFind();
+      opener.moduleFind();
       // debugger;
 
       let it = Object.create( null );
-      it.currentModule = module;
+      it.currentOpener = opener;
       it.options = o;
 
-      module.openedModule.stager.stageConsequence( 'preformed' ).then( ( arg ) =>
+      opener.openedModule.stager.stageConsequence( 'preformed' ).then( ( arg ) =>
       {
         // debugger;
         if( o.onBegin )
@@ -393,16 +468,16 @@ function moduleEachAt( o )
         return arg;
       });
 
-      module.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
-      module.openedModule.stager.stageStatePausing( 'picked', 0 );
-      module.openedModule.stager.tick();
+      opener.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
+      opener.openedModule.stager.stageStatePausing( 'picked', 0 );
+      opener.openedModule.stager.tick();
 
-      return module.openedModule.ready.split().keep( function( arg )
+      return opener.openedModule.ready.split().then( function( arg )
       {
         // debugger;
-        _.assert( module.willfilesArray.length > 0 );
-        if( module.willfilesPath )
-        _.mapSet( filesMap, module.willfilesPath, true );
+        _.assert( opener.willfilesArray.length > 0 );
+        if( opener.willfilesPath )
+        _.mapSet( filesMap, opener.willfilesPath, true );
 
         let r = null;
         if( o.onEnd )
@@ -414,6 +489,7 @@ function moduleEachAt( o )
     })
     .finally( ( err, arg ) =>
     {
+      debugger;
       if( err )
       {
         debugger;
@@ -431,15 +507,20 @@ function moduleEachAt( o )
 
   con.finally( ( err, arg ) =>
   {
+    debugger;
     if( errs.length )
     {
       errs.forEach( ( err, index ) => index > 0 ? _.errAttend( err ) : null );
-      throw errs[ 0 ];
+      // throw errs[ 0 ];
     }
     if( err )
     {
-      errs.forEach( ( err, index ) => _.errAttend( err ) );
+      // errs.forEach( ( err, index ) => _.errAttend( err ) );
       throw _.err( err );
+    }
+    if( errs.length )
+    {
+      throw errs[ 0 ];
     }
     return o;
   });
@@ -451,7 +532,7 @@ function moduleEachAt( o )
 
 moduleEachAt.defaults =
 {
-  currentModule : null,
+  currentOpener : null,
   selector : null,
   onBegin : null,
   onEnd : null,
@@ -472,13 +553,14 @@ function moduleWithAt( o )
 
   /* */
 
-  o.selector = path.resolve( o.selector );
+  will._moduleWillfilesReadBegin();
+  // o.selector = path.resolve( o.selector );
   con = new _.Consequence().take( null );
 
   let it = Object.create( null );
   it.options = o;
   it.errs = [];
-  it.modulesMap = Object.create( null );
+  it.openers = [];
 
   let files;
   try
@@ -488,6 +570,7 @@ function moduleWithAt( o )
       dirPath : o.selector,
       includingInFiles : 1,
       includingOutFiles : 1,
+      prefferedRecursive : 0,
     });
   }
   catch( err )
@@ -498,71 +581,91 @@ function moduleWithAt( o )
   for( let f = 0 ; f < files.length ; f++ ) con
   .then( ( arg ) => /* !!! replace by concurrent, maybe */
   {
+    let opener;
     try
     {
       let file = files[ f ];
 
-      let opener = will.OpenerModule({ will : will, willfilesPath : file.absolute }).preform();
+      opener = will.OpenerModule({ will : will, willfilesPath : file.absolute }).preform();
       opener.moduleFind();
 
-      if( !opener.openedModule.stager.stageStatePerformed( 'ready' ) )
+      if( !opener.openedModule.stager.stageStatePerformed( 'formed' ) )
       {
-        debugger;
         opener.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
         opener.openedModule.stager.stageStatePausing( 'picked', 0 );
         opener.openedModule.stager.tick();
-      }
-      else
-      {
-        debugger;
       }
 
       return opener.openedModule.ready.split()
       .then( function( arg )
       {
         _.assert( opener.willfilesArray.length > 0 );
-        _.mapSetStrictly( it.modulesMap, opener.openedModule.commonPath, opener.openedModule );
-        return r;
-      })
-      .except( function( err )
-      {
-        it.errs.push( _.errBriefly( err ) );
+        let l = it.openers.length;
+        _.arrayAppendOnce( it.openers, opener, ( e ) => e.openedModule );
+        if( l === it.openers.length )
         opener.finit();
+        _.assert( !_.arrayHas( it.openers, null ) )
+        return arg;
+      })
+      .catch( function( err )
+      {
+        debugger;
+        err = _.errBriefly( err );
+        it.errs.push( err );
+        opener.finit();
+        throw err;
       });
     }
     catch( err )
     {
       debugger;
-      it.errs.push( _.errBriefly( err ) );
+      err = _.errBriefly( err );
+      it.errs.push( err );
+      if( opener )
       opener.finit();
       throw err;
     }
   })
-  .finally( ( err, arg ) =>
-  {
-    if( err )
-    {
-      debugger;
-      _.assert( 0, 'should not happen' );
-    }
-    return arg;
-  });
+  // .finally( ( err, arg ) =>
+  // {
+  //   debugger;
+  //   if( err )
+  //   throw err;
+  //   return it;
+  // });
 
   /* */
 
+  // con.finally( ( err, arg ) =>
+  // {
+  //   if( err )
+  //   {
+  //     it.errs.forEach( ( err, index ) => _.errAttend( err ) );
+  //     throw _.err( err );
+  //   }
+  //   if( errs.length )
+  //   {
+  //     it.errs.forEach( ( err, index ) => index > 0 ? _.errAttend( err ) : null );
+  //     throw errs[ 0 ];
+  //   }
+  //   return o;
+  // });
+
   con.finally( ( err, arg ) =>
   {
+
+    // let modulesArray = _.select( it.openers, '*/openedModule' );
+    // _.arraysAreIdentical( modulesArray, will.modulesArray );
+
+    // debugger;
+    it.sortedModules = will.modulesTopologicalSort( will.modulesArray );
+    // debugger;
+
+    will._moduleWillfilesReadLog();
+
     if( err )
-    {
-      errs.forEach( ( err, index ) => _.errAttend( err ) );
-      throw _.err( err );
-    }
-    if( errs.length )
-    {
-      errs.forEach( ( err, index ) => index > 0 ? _.errAttend( err ) : null );
-      throw errs[ 0 ];
-    }
-    return o;
+    throw err;
+    return it;
   });
 
   /* */
@@ -572,10 +675,7 @@ function moduleWithAt( o )
 
 moduleWithAt.defaults =
 {
-  currentModule : null,
   selector : null,
-  onBegin : null,
-  onEnd : null,
 }
 
 //
@@ -730,8 +830,10 @@ function modulesGraphGroupObtain()
   function onOutNodesFor( module )
   {
     let result = module.submoduleMap ? _.mapVals( module.submoduleMap ) : [];
-    result = result.map( ( module ) => module.opener ? module.opener : module );
-    result = result.map( ( module ) => module.openedModule ? module.openedModule : module );
+    result = result.map( ( module ) => module.opener );
+    result = result.map( ( module ) => module ? module.openedModule : module );
+    result = result.filter( ( module ) => !!module );
+    result.forEach( ( module ) => _.assert( module instanceof will.OpenedModule, () => 'Not module ' + _.strType( module ) ) );
     return result;
   }
 
@@ -748,12 +850,16 @@ function modulesGraphGroupObtain()
 
 //
 
-function modulesTopologicalSort()
+function modulesTopologicalSort( modules )
 {
   let will = this;
 
+  _.assert( arguments.length === 0 || arguments.length === 1 )
+
+  modules = modules || will.modulesArray;
+
   let group = will.modulesGraphGroupObtain();
-  let sorted = group.topologicalSortCycledSourceBased();
+  let sorted = group.topologicalSortCycledSourceBased( modules );
 
   return sorted;
 }
@@ -763,6 +869,10 @@ function modulesTopologicalSort()
 function modulesInfoExportAsTree( modules )
 {
   let will = this;
+
+  _.assert( arguments.length === 0 || arguments.length === 1 )
+
+  modules = modules || will.modulesArray;
 
   let group = will.modulesGraphGroupObtain();
   let info = group.nodesInfoExportAsTree( modules );
@@ -812,12 +922,20 @@ function willfilesList( o )
   if( _.strIs( o ) )
   o = { dirPath : o }
 
+  if( o.dirPath === '.' )
+  o.dirPath = './';
+
+  o.dirPath = path.normalize( o.dirPath );
+  o.dirPath = _.strRemoveEnd( o.dirPath, '.' );
+  o.dirPath = path.resolve( o.dirPath );
+
   _.routineOptions( willfilesList, o );
   _.assert( arguments.length === 1 );
   _.assert( !!will.formed );
 
   let filter =
   {
+    filePath : o.dirPath,
     maskTerminal :
     {
       includeAny : /\.will(\.[^.]*)?$/,
@@ -837,15 +955,23 @@ function willfilesList( o )
 
   let o2 =
   {
-    filePath : o.dirPath,
     recursive : o.recursive,
     filter : filter,
     maskPreset : 0,
   }
 
-  // logger.log( 'willfilesList.begin' );
+  if( !o.prefferedRecursive )
+  if( !path.isGlob( filter.filePath ) )
+  {
+    o2.recursive = 1;
+    if( o.includingOutFiles )
+    filter.filePath = filter.filePath + '?(.out)';
+    filter.filePath = filter.filePath + '(.im|.ex|).will.*';
+  }
+
+  // debugger;
   let files = fileProvider.filesFind( o2 );
-  // logger.log( 'willfilesList.end' );
+  // debugger;
 
   return files;
 }
@@ -856,6 +982,7 @@ willfilesList.defaults =
   includingInFiles : 1,
   includingOutFiles : 1,
   recursive : null,
+  prefferedRecursive : 1,
 }
 
 //
@@ -983,6 +1110,7 @@ let Associates =
   moduleWithIdMap : _.define.own({}),
   moduleWithPathMap : _.define.own({}),
   moduleWithNameMap : _.define.own({}),
+  mainModule : null,
 
   openersArray : _.define.own([]),
   openerModuleWithIdMap : _.define.own({}),
@@ -994,8 +1122,11 @@ let Associates =
 
 let Restricts =
 {
+
   formed : 0,
   graphGroup : null,
+  willfilesReadBeginTime : null,
+
 }
 
 let Statics =
@@ -1038,10 +1169,13 @@ let Extend =
   // module
 
   moduleMake,
+  _moduleWillfilesReadBegin,
+  _moduleWillfilesReadEnd,
+  _moduleWillfilesReadLog,
   moduleEachAt,
   moduleWithAt,
-
   moduleAt,
+
   moduleIdUnregister,
   moduleIdRegister,
   modulePathUnregister,

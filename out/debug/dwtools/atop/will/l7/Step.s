@@ -146,9 +146,8 @@ function run( frame )
   let path = fileProvider.path;
   let logger = will.logger;
   let hub = will.fileProvider;
-  let result;
 
-  try
+  let result = _.Consequence.Try( () =>
   {
 
     _.assert( arguments.length === 1 );
@@ -167,15 +166,16 @@ function run( frame )
     if( step.opts && step.stepRoutine.stepOptions )
     _.routineOptions( step.stepRoutine, frame.opts, step.stepRoutine.stepOptions );
 
-    result = step.stepRoutine( frame );
+    let result = step.stepRoutine( frame );
 
     _.assert( result !== undefined, 'Step should return something' );
 
-  }
-  catch( err )
+    return result;
+  })
+  .catch( ( err ) =>
   {
     throw _.err( '\n', err, '\n', 'Failed', step.decoratedAbsoluteName );
-  }
+  });
 
   return result;
 }

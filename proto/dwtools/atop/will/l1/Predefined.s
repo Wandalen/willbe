@@ -139,25 +139,21 @@ function stepRoutineReflect( frame )
 
   opts.verbosity = 0;
 
-  let result;
-  try
+  return _.Consequence.Try( () =>
   {
-    // debugger;
-    result = will.Predefined.filesReflect.call( fileProvider, opts );
-  }
-  catch( err )
-  {
-    if( err )
-    throw _.errBriefly( err );
-  }
-
-  _.Consequence.From( result ).then( ( result ) =>
+    return will.Predefined.filesReflect.call( fileProvider, opts );
+  })
+  .then( ( result ) =>
   {
     endLog();
     return result;
-  });
-
-  return result;
+  })
+  .catch( ( err ) =>
+  {
+    debugger;
+    err = _.err( err, '\n\n', _.strIndentation( reflector.infoExport(), '  ' ), '\n' );
+    throw _.errBriefly( err );
+  })
 
   /* */
 
@@ -179,13 +175,6 @@ function stepRoutineReflect( frame )
     _.assert( opts.src.isPaired() );
     let mtr = opts.src.moveTextualReport();
     logger.log( ' + ' + reflector.decoratedNickName + ' reflected ' + opts.result.length + ' files ' + mtr + ' in ' + _.timeSpent( time ) );
-
-    // let /*dstFilter*/dst = opts./*dstFilter*/dst.clone();
-    // let /*srcFilter*/src = opts./*srcFilter*/src.clone().pairWithDst( /*dstFilter*/dst ).form();
-    // /*dstFilter*/dst.form();
-    // let srcPath = /*srcFilter*/src.filePathSrcCommon();
-    // let dstPath = /*dstFilter*/dst.filePathDstCommon();
-    // logger.log( ' + ' + reflector.decoratedNickName + ' reflected ' + opts.result.length + ' files ' + path.moveTextualReport( dst, src ) + ' in ' + _.timeSpent( time ) );
 
   }
 
@@ -435,8 +424,8 @@ function stepRoutineTranspile( frame )
   let multiple = ts.multiple
   ({
 
-    inputPath : reflectOptions./*srcFilter*/src,
-    outputPath : reflectOptions./*dstFilter*/dst,
+    inputPath : reflectOptions.src,
+    outputPath : reflectOptions.dst,
     totalReporting : 0,
     transpilingStrategies : transpilingStrategies,
     splittingStrategy : raw ? 'OneToOne' : 'ManyToOne',

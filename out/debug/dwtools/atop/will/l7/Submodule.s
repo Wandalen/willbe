@@ -115,6 +115,7 @@ function form3()
   {
     if( submodule.opener && !submodule.opener.isValid() )
     {
+      debugger;
       let opener = submodule.opener;
       submodule.opener = null;
       opener.finit();
@@ -204,6 +205,15 @@ function open()
     return new _.Consequence().error( submodule.opener.error );
   }
 
+  // submodule.opener.openedModule.ready.finally( ( err, arg ) =>
+  // {
+  //   debugger;
+  //   if( err )
+  //   submodule.errorNotFound( err );
+  //   submodule.formed = 3;
+  //   return arg || null;
+  // });
+
   return submodule.opener.openedModule.ready;
 }
 
@@ -237,6 +247,8 @@ function _openFrom( o )
     supermodule : module,
     rootModule : module.rootModule,
   }).preform();
+
+  // xxx : opener onReady?
 
   if( !submodule.opener.moduleFindTry() )
   {
