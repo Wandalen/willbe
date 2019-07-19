@@ -3939,10 +3939,10 @@ function buildDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, /\+ .*module::Tools.* was downloaded version .*master.* in/ ) );
-    test.is( _.strHas( got.output, /\+ .*module::PathFundamentals.* was downloaded version .*c94e0130358ba54fc47237e15bac1ab18024c0a9.* in/ ) );
-    test.is( _.strHas( got.output, /\+ .*module::Color.* was downloaded version .*0.3.115.* in/ ) );
+    test.is( _.strHas( got.output, /\+ .*module::PathFundamentals.* was downloaded version .*ffcb9b22726e2d56d07564178d268bc2eb602b35.* in/ ) );
+    test.is( _.strHas( got.output, /\+ .*module::Color.* was downloaded version .*0.3.109.* in/ ) );
     test.is( _.strHas( got.output, /\.module\/Procedure\.informal.+ <- .+npm:\/\/wprocedure/ ) );
-    test.is( _.strHas( got.output, /\.module\/Proto\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wProto\.git#c69443a83a476c0ea7254d13ec013d94c99090ba/ ) );
+    test.is( _.strHas( got.output, /\.module\/Proto\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wProto\.git#45452e31fe62f3edfad87ed7a0acb0f45fb1b271/ ) );
     test.is( _.strHas( got.output, /\.module\/UriFundamentals\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wUriFundamentals\.git/ ) );
 
     var files = _.fileProvider.dirRead( modulePath );
