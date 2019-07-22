@@ -54,6 +54,55 @@ function onSuiteEnd()
 // tests
 // --
 
+function preCloneRepos( test )
+{
+  let self = this;
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.sheller
+  ({
+    currentPath : self.repoDirPath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.dirMake( self.repoDirPath );
+
+  /* - */
+
+  clone( 'Color', '2d408bf82b168a39a29aa1261bf13face8bd3e95' );
+  clone( 'PathFundamentals', '95b741c8820a6d6234f59f1fa549c6b59f2d5a5c' );
+  clone( 'Procedure', '829ea81d342db66df60edf80c99687a1cd011a96' );
+  clone( 'Proto', 'c69443a83a476c0ea7254d13ec013d94c99090ba' );
+  clone( 'Tools', 'e58dc6a1637603c2151840f5bfb5729eb71d4e34' );
+  clone( 'UriFundamentals', '3686d72cc0b8f6573217c947a4b379c38b02e39b' );
+
+  ready
+  .then( () =>
+  {
+    test.is( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'Tools' ) ) );
+    return null;
+  })
+
+  return ready;
+
+  function clone( name, version )
+  {
+
+    if( !_.fileProvider.isDir( _.path.join( self.repoDirPath, name ) ) )
+    shell( 'git clone https://github.com/Wandalen/w' + name + '.git ' + name );
+    debugger;
+    shell({ args : 'git checkout ' + version, currentPath : _.path.join( self.repoDirPath, name ) });
+    debugger;
+
+  }
+
+}
+
+//
+
 function selectorParse( test )
 {
   let self = this;
@@ -4460,6 +4509,8 @@ var Self =
 
   tests :
   {
+
+    preCloneRepos,
 
     selectorParse,
     selectorNormalize,

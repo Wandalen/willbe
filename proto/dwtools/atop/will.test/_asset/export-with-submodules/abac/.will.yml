@@ -1,0 +1,58 @@
+
+about :
+
+  name : "module-abac"
+  description : "Module for testing"
+  version : "0.0.1"
+
+submodule :
+
+  sub-ab : ../out/ab/module-ab.out
+  sub-a : ../out/module-a.out
+  sub-c : ../out/module-c.out
+
+path :
+
+  proto : '../proto'
+  out : '../out/abac'
+  files : '{path::out}/files'
+  temp :
+    - ../out
+    - ../out2
+  export :
+    - 'submodule::sub-a/path::exported.files.proto.export'
+    - 'module::sub-b/path::exported.files.proto.export'
+    - 'module::sub-c/path::exported.files.proto.export'
+    - '{path::proto}/dir3.test'
+
+reflector :
+
+  files.all :
+    recursive : 1
+    src :
+      filePath :
+        'submodule::sub-a/reflector::exported.files.proto.export' : '{path::files}/a'
+        'module::sub-b/reflector::exported.files.proto.export' : '{path::files}/b'
+        'module::sub-c/reflector::exported.files.proto.export' : '{path::files}/c'
+        '{path::proto}/dir3.test' : '{path::files}/dir3.test'
+
+step :
+
+  export.proto :
+    export : 'path::export'
+    tar : 0
+
+build :
+
+  files :
+    criterion :
+      default : 1
+    steps :
+      - step::files.all
+
+  proto.export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - step::export.proto

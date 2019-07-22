@@ -1,0 +1,34 @@
+
+path :
+
+  file.A : 
+    path : ./A.js
+    criterion :
+      file : 0
+
+  file.B :
+    path : ./B.js
+    criterion :
+      file : 1
+
+step :
+
+  exec.file :
+    currentPath : .
+    shell : 'node {path::file.*=1}'
+    criterion :
+      file : [ 0,1 ]
+
+build :
+
+  A :
+    criterion :
+      file : 0
+    steps :
+      - exec.file.*=1
+
+  B :
+    criterion :
+      file : 1
+    steps :
+      - exec.file.*=1

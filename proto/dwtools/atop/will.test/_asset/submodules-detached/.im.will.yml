@@ -1,0 +1,86 @@
+
+submodule :
+
+  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals.out.will#c94e0130358ba54fc47237e15bac1ab18024c0a9
+  Color : npm:///wColor/out/wColor.out.will#0.3.115
+  UriFundamentals : out/UriFundamentals.informal.out
+  Proto : out/Proto.informal.out
+  Procedure : out/Procedure.informal.out
+
+path :
+
+  proto : './proto'
+  in : '.'
+  out : 'out'
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : './out/release'
+    criterion :
+      debug : 0
+
+reflector :
+
+  reflect.proto :
+    inherit : predefined.*
+    criterion :
+      debug : [ 0,1 ]
+    filePath :
+      path::proto : path::out.*=1
+
+  reflect.submodules :
+    inherit : submodule::*/exported::*=1/reflector::exported.files*=1
+    dst :
+      basePath : .
+      prefixPath : path::out.debug
+    criterion :
+      debug : 1
+
+  temp :
+    src :
+      - out
+      - module/.module
+      - module/*.out.will.*
+
+step :
+
+  reflect.proto :
+    inherit : files.reflect
+    reflector :
+      reflector::reflect.proto.*=1
+    criterion :
+      debug : [ 0,1 ]
+
+  reflect.submodules :
+    inherit : files.reflect
+    reflector :
+      reflector::reflect.submodules*=1
+    criterion :
+      debug : 1
+
+  delete.out.debug :
+    inherit : files.delete
+    filePath : path::out.debug
+    criterion :
+      debug : 1
+
+  submodules.informal.export :
+    currentPath : path::module.dir
+    shell : 'node {path::will} .each module .export'
+
+build :
+
+  debug :
+    criterion :
+      default : 1
+      debug : 1
+    steps :
+      - submodules.download
+      - submodules.informal.export
+      - submodules.reload
+      - delete.out.debug
+      - reflect.proto.*=1
+      - reflect.submodules*=1

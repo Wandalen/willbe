@@ -1,0 +1,44 @@
+
+path :
+
+  in : '.'
+  temp : 'out'
+  out : 'out'
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : './out/release'
+    criterion :
+      debug : 0
+  proto : './proto'
+  doc : './doc'
+
+reflector :
+
+  reflect.proto :
+    inherit : predefined.*
+    criterion :
+      debug : [ 0,1 ]
+    filePath :
+      path::proto : path::out.*=1
+
+step :
+
+  clean.out :
+    inherit : files.delete
+    filePath : path::out.debug
+    criterion :
+      debug : [ 0,1 ]
+
+build :
+
+  debug.raw :
+    criterion :
+      default : 1
+      debug : 1
+      raw : 1
+    steps :
+      - step::clean.out*=1
+      - step::reflect.proto.*=1
