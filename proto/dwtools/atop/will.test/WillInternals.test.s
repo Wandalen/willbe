@@ -1,6 +1,6 @@
 ( function _WillInternals_test_s_( ) {
 
-'use strict';
+'use strict'; debugger;
 
 /*
 */
@@ -16,6 +16,8 @@ if( typeof module !== 'undefined' )
   require( '../will/MainBase.s' );
 
 }
+
+debugger;
 
 var _global = _global_;
 var _ = _global_.wTools;
