@@ -20,6 +20,7 @@ path :
   protoDir3 : 'prefix/{path::proto}/{path::dir}/dir2'
   protoDir4 : '../prefix/a{path::proto}b{path::dir}c/dir2'
   protoDir4b : '{path::protoDir4}/{path::proto}'
+  protoMain : '{path::proto}/Main.s'
 
 step :
 

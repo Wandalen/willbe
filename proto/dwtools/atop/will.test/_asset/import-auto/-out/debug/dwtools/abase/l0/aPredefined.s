@@ -50,8 +50,8 @@ if( !_global_.WTOOLS_PRIVATE )
 
 // config
 
-if( !_realGlobal.__which__ )
-_realGlobal.__which__ = 'real';
+if( !_realGlobal.__GLOBAL_WHICH__ )
+_realGlobal.__GLOBAL_WHICH__ = 'real';
 
 if( !_realGlobal.Config )
 _realGlobal.Config = { debug : true }
@@ -85,7 +85,7 @@ _realGlobal_.wTools = _realGlobal_.wTools || Object.create( null );
 let Self = _global.wTools;
 let _ = Self;
 
-Self.__which__ = _global.__which__;
+Self.__GLOBAL_WHICH__ = _global.__GLOBAL_WHICH__;
 
 // special globals
 

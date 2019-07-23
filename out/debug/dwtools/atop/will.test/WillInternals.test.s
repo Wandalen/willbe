@@ -4106,7 +4106,9 @@ function pathsResolveComposite( test )
     test.identical( resolved, expected );
 
     test.case = 'path::protoMain';
-    var resolved = module.openedModule.resolve( 'path::protoMain' )
+    debugger;
+    var resolved = module.openedModule.resolve( 'path::protoMain' );
+    debugger;
     var expected = pin( 'proto/Main.s' );
     test.identical( resolved, expected );
 

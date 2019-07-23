@@ -422,9 +422,9 @@ function stepRoutineTranspile( frame )
   else if( frame.resource.criterion.raw !== undefined )
   raw = !!frame.resource.criterion.raw;
 
-  let transpilingStrategies = [ 'Uglify' ];
+  let transpilingStrategy = [ 'Uglify' ];
   if( debug )
-  transpilingStrategies = [ 'Nop' ];
+  transpilingStrategy = [ 'Nop' ];
 
   let ts = new _.TranspilationStrategy({ logger : logger }).form();
   debugger;
@@ -437,7 +437,7 @@ function stepRoutineTranspile( frame )
     externalBeforePath : opts[ 'external.before' ],
     externalAfterPath : opts[ 'external.after' ],
     totalReporting : 0,
-    transpilingStrategies : transpilingStrategies,
+    transpilingStrategy : transpilingStrategy,
     splittingStrategy : raw ? 'OneToOne' : 'ManyToOne',
     writingTerminalUnderDirectory : 1,
     simpleConcatenator : 0,
