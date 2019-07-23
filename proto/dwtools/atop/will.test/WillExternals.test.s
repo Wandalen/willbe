@@ -204,8 +204,16 @@ function make( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Building .+ \/ build::shell1/ ) );
     test.is( _.strHas( got.output, 'node file/Produce.js' ) );
-    test.is( _.strHas( got.output, 'file\\Produced.txt2' ) );
-    test.is( _.strHas( got.output, 'file\\Produced.js2' ) );
+    if( process.platform === 'win32' )
+    {
+      test.identical( _.strCount( got.output, 'file\\Produced.txt2' ), 1 );
+      test.identical( _.strCount( got.output, 'file\\Produced.js2' ), 1 );
+    }
+    else
+    {
+      test.identical( _.strCount( got.output, 'file/Produced.txt2' ), 1 );
+      test.identical( _.strCount( got.output, 'file/Produced.js2' ), 1 );
+    }
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
     var files = self.find( filePath );
@@ -219,8 +227,16 @@ function make( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Building .+ \/ build::shell1/ ) );
     test.is( !_.strHas( got.output, 'node file/Produce.js' ) );
-    test.is( !_.strHas( got.output, 'file\\Produced.txt2' ) );
-    test.is( !_.strHas( got.output, 'file\\Produced.js2' ) );
+    if( process.platform === 'win32' )
+    {
+      test.identical( _.strCount( got.output, 'file\\Produced.txt2' ), 0 );
+      test.identical( _.strCount( got.output, 'file\\Produced.js2' ), 0 );
+    }
+    else
+    {
+      test.identical( _.strCount( got.output, 'file/Produced.txt2' ), 0 );
+      test.identical( _.strCount( got.output, 'file/Produced.js2' ), 0 );
+    }
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
     var files = self.find( filePath );
@@ -245,8 +261,16 @@ function make( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Building .+ \/ build::shell1/ ) );
     test.is( _.strHas( got.output, 'node file/Produce.js' ) );
-    test.is( _.strHas( got.output, 'file\\Produced.txt2' ) );
-    test.is( _.strHas( got.output, 'file\\Produced.js2' ) );
+    if( process.platform === 'win32' )
+    {
+      test.identical( _.strCount( got.output, 'file\\Produced.txt2' ), 1 );
+      test.identical( _.strCount( got.output, 'file\\Produced.js2' ), 1 );
+    }
+    else
+    {
+      test.identical( _.strCount( got.output, 'file/Produced.txt2' ), 1 );
+      test.identical( _.strCount( got.output, 'file/Produced.js2' ), 1 );
+    }
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
     var files = self.find( filePath );
@@ -260,8 +284,16 @@ function make( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Building .+ \/ build::shell1/ ) );
     test.is( !_.strHas( got.output, 'node file/Produce.js' ) );
-    test.is( !_.strHas( got.output, 'file\\Produced.txt2' ) );
-    test.is( !_.strHas( got.output, 'file\\Produced.js2' ) );
+    if( process.platform === 'win32' )
+    {
+      test.identical( _.strCount( got.output, 'file\\Produced.txt2' ), 0 );
+      test.identical( _.strCount( got.output, 'file\\Produced.js2' ), 0 );
+    }
+    else
+    {
+      test.identical( _.strCount( got.output, 'file/Produced.txt2' ), 0 );
+      test.identical( _.strCount( got.output, 'file/Produced.js2' ), 0 );
+    }
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
     var files = self.find( filePath );

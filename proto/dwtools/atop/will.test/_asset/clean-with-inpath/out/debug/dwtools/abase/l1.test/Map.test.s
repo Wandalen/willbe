@@ -75,7 +75,7 @@ function mapCloneAssigning( test )
   };
   var srcMap = new Example();
   var dstMap = { sex : 'Male' };
-  var got = _.mapCloneAssigning({ /*ttt*/srcMap, /*ttt*/dstMap });
+  var got = _.mapCloneAssigning({ srcMap, dstMap });
   var expected = { sex : 'Male', name : 'Peter', age : 27 };
   test.is( dstMap === got );
   test.identical( got, expected );
@@ -888,7 +888,7 @@ function mapsFlatten( test )
   test.case = 'empty map';
   var src = {};
   var expected = {}
-  var got = _.mapsFlatten({ /*ttt*/src });
+  var got = _.mapsFlatten({ src });
   test.identical( got, expected );
 
   test.case = 'empty array';
@@ -912,44 +912,44 @@ function mapsFlatten( test )
   test.case = 'delimeter : .';
   var src = [ { a : 1, dir : { b : 2 } }, { c : 3 } ];
   var expected = { 'a' : 1, 'dir.b' : 2, 'c' : 3 }
-  var got = _.mapsFlatten({ /*ttt*/src, delimeter : '.' });
+  var got = _.mapsFlatten({ src, delimeter : '.' });
   test.identical( got, expected );
 
   test.case = 'delimeter : ';
   var src = [ { a : 1, dir : { b : 2 } }, { c : 3 } ];
   var expected = { 'a' : 1, 'dirb' : 2, 'c' : 3 }
-  var got = _.mapsFlatten({ /*ttt*/src, delimeter : '' });
+  var got = _.mapsFlatten({ src, delimeter : '' });
   test.identical( got, expected );
 
   test.case = 'delimeter : 0';
   var src = [ { a : 1, dir : { b : 2 } }, { c : 3 } ];
   var expected = { 'a' : 1, 'b' : 2, 'c' : 3 }
-  var got = _.mapsFlatten({ /*ttt*/src, delimeter : 0 });
+  var got = _.mapsFlatten({ src, delimeter : 0 });
   test.identical( got, expected );
 
   test.case = 'delimeter : false';
   var src = [ { a : 1, dir : { b : 2 } }, { c : 3 } ];
   var expected = { 'a' : 1, 'b' : 2, 'c' : 3 }
-  var got = _.mapsFlatten({ /*ttt*/src, delimeter : false });
+  var got = _.mapsFlatten({ src, delimeter : false });
   test.identical( got, expected );
 
   test.case = 'allowingCollision : 1';
   var src = [ { a : 1, dir : { b : 2 } }, { a : 3, dir : { b : 4, c : 5 } } ];
   var expected = { 'a' : 3, 'dir/b' : 4, 'dir/c' : 5 }
-  var got = _.mapsFlatten({ /*ttt*/src, allowingCollision : 1 });
+  var got = _.mapsFlatten({ src, allowingCollision : 1 });
   test.identical( got, expected );
 
   test.case = 'delimeter : 0, allowingCollision : 1';
   var src = [ { a : 1, dir : { b : 2 } }, { a : 3, dir : { b : 4, c : 5 } } ];
   var expected = { 'a' : 3, 'b' : 4, 'c' : 5 }
-  var got = _.mapsFlatten({ /*ttt*/src, delimeter : 0, allowingCollision : 1 });
+  var got = _.mapsFlatten({ src, delimeter : 0, allowingCollision : 1 });
   test.identical( got, expected );
 
   test.case = 'delimeter : 0, allowingCollision : 1';
   var dst = { a : 0, d : 6 }
   var src = [ { a : 1, dir : { b : 2 } }, { a : 3, dir : { b : 4, c : 5 } } ];
   var expected = { 'a' : 3, 'b' : 4, 'c' : 5, 'd' : 6 }
-  var got = _.mapsFlatten({ /*ttt*/src, /*ttt*/dst, delimeter : 0, allowingCollision : 1 });
+  var got = _.mapsFlatten({ src, dst, delimeter : 0, allowingCollision : 1 });
   test.identical( got, expected );
 
   if( !Config.debug )
@@ -961,31 +961,31 @@ function mapsFlatten( test )
   {
     var dst = { 'dir/a' : 1 }
     var src = { dir : { a : 2 } };
-    var got = _.mapsFlatten({ /*ttt*/src, /*ttt*/dst });
+    var got = _.mapsFlatten({ src, dst });
   });
 
   test.shouldThrowErrorSync( () =>
   {
     var src = [ { dir : { a : 2 } }, { dir : { a : 2 } } ];
-    var got = _.mapsFlatten({ /*ttt*/src });
+    var got = _.mapsFlatten({ src });
   });
 
   test.shouldThrowErrorSync( () =>
   {
     var src = [ { dir : { a : 2 } }, { dir : { a : 2 } } ];
-    var got = _.mapsFlatten({ /*ttt*/src, allowingCollision : 0 });
+    var got = _.mapsFlatten({ src, allowingCollision : 0 });
   });
 
   test.shouldThrowErrorSync( () =>
   {
     var src = [ { dir : { a : 2 } }, { dir : { a : 2 } } ];
-    var got = _.mapsFlatten({ /*ttt*/src, delimeter : 0 });
+    var got = _.mapsFlatten({ src, delimeter : 0 });
   });
 
   test.shouldThrowErrorSync( () =>
   {
     var src = [ { dir : { a : 2 } }, { dir : { a : 2 } } ];
-    var got = _.mapsFlatten({ /*ttt*/src, delimeter : 0, allowingCollision : 0 });
+    var got = _.mapsFlatten({ src, delimeter : 0, allowingCollision : 0 });
   });
 
   test.case = 'bad arguments';

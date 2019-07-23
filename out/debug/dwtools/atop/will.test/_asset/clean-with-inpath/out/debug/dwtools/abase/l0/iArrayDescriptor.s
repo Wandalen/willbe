@@ -179,12 +179,12 @@ function arrayFromCoercing( src )
 let Extend =
 {
 
-  /*ttt*/makeSimilar,
-  /*ttt*/makeArrayOfLength,
-  /*ttt*/makeArrayOfLengthZeroed,
+  makeSimilar,
+  makeArrayOfLength,
+  makeArrayOfLengthZeroed,
 
   arrayFrom : arrayFromCoercing,
-  /*ttt*/arrayFromCoercing,
+  arrayFromCoercing,
 
   array : nameSpace,
 
@@ -394,10 +394,6 @@ _.assert( _.routineIs( _.array.makeArrayOfLength ) );
 // --
 // export
 // --
-
-// if( typeof module !== 'undefined' )
-// if( _global_.WTOOLS_PRIVATE )
-// { /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

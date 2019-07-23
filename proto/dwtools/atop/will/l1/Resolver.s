@@ -112,6 +112,49 @@ function selectorIsComposite( selector )
 
 }
 
+// //
+//
+// function selectorSplitIsWrapped( selector )
+// {
+//
+//   if( _.arrayIs( selector ) )
+//   {
+//     for( let s = 0 ; s < selector.length ; s++ )
+//     if( isComposite( selector[ s ] ) )
+//     return true;
+//   }
+//   else
+//   {
+//     return isComposite( selector );
+//   }
+//
+//   /* */
+//
+//   function isComposite( selector )
+//   {
+//
+//     let splits = _.strSplitFast
+//     ({
+//       src : selector,
+//       delimeter : [ '{', '}' ],
+//     });
+//
+//     if( splits.length < 3 )
+//     return false;
+//
+//     if( splits[ 0 ] !== '{' )
+//     return false;
+//
+//     if( splits[ splits.length - 1 ] !== '}' )
+//     return false;
+//
+//     return true;
+//   }
+//
+// }
+
+//
+
 function _selectorShortSplit( selector )
 {
   _.assert( !_.strHas( selector, '/' ) );
@@ -296,14 +339,28 @@ function _onSelector( selector )
   if( !_.strIs( selector ) )
   return;
 
+  // debugger;
+
   if( will.Resolver._selectorIs( selector ) )
   {
     return Self._onSelectorComposite.call( it, selector );
   }
 
-  if( rop.prefixlessAction === 'default' )
+  // if( rop.prefixlessAction === 'default' && !it.composite )
+  // {
+  //   debugger;
+  //   let x = Self.selectorLongSplit( selector );
+  //   return xxx;
+  // }
+  // else
+
+  if( rop.prefixlessAction === 'default' && !it.composite )
   {
     return selector;
+  }
+  else if( rop.prefixlessAction === 'resolved' || rop.prefixlessAction === 'default' )
+  {
+    return;
   }
   else if( rop.prefixlessAction === 'throw' || rop.prefixlessAction === 'error' )
   {
@@ -312,17 +369,13 @@ function _onSelector( selector )
     let err = Self.errResolving
     ({
       selector : selector,
-      currentContext : currentContext,
+      currentContext : rop.currentContext,
       err : _.ErrorLooking( 'Resource selector should have prefix' ),
       baseModule : rop.baseModule,
     });
     if( rop.prefixlessAction === 'throw' )
     throw err;
     it.dst = err;
-    return;
-  }
-  else if( rop.prefixlessAction === 'resolved' )
-  {
     return;
   }
   else _.assert( 0 );
@@ -342,7 +395,7 @@ function _onSelectorDown()
   let rop = it.selectMultipleOptions.iteratorExtension.resolveOptions;
   let will = rop.baseModule.will;
 
-  if( it.continue && _.arrayIs( it.dst ) && it.src.rejoin === _.hold )
+  if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.select.composite )
   {
 
     for( let d = 0 ; d < it.dst.length ; d++ )
@@ -935,7 +988,7 @@ function _statusPreUpdate()
   if( !it.src )
   return;
 
-  _.assert( !_.mapHasKey( it.src, 'rejoin' ) );
+  _.assert( !_.mapHasKey( it.src, 'composite' ) );
 
   if( it.src instanceof will.OpenedModule )
   {
@@ -1659,6 +1712,7 @@ let Self =
   _selectorIs,
   selectorIs,
   selectorIsComposite,
+  // selectorSplitIsWrapped,
   _selectorShortSplit,
   selectorShortSplit,
   selectorLongSplit,

@@ -6,18 +6,13 @@ let _global = _global_;
 let _ = _global_.wTools;
 let Self = _global_.wTools;
 
-//
-
-let _FunctionBind = Function.prototype.bind;
-let _ObjectToString = Object.prototype.toString;
-
 // --
 // routine
 // --
 
 function routineIs( src )
 {
-  return _ObjectToString.call( src ) === '[object Function]';
+  return Object.prototype.toString.call( src ) === '[object Function]';
 }
 
 //
@@ -75,9 +70,8 @@ function _routineJoin( o )
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.boolIs( o.sealing ) );
   _.assert( _.boolIs( o.extending ) );
-  _.assert( _.routineIs( o.routine ),'Expects routine' );
+  _.assert( _.routineIs( o.routine ), 'Expects routine' );
   _.assert( _.longIs( o.args ) || o.args === undefined );
-  _.assert( _.routineIs( _FunctionBind ) );
 
   let routine = o.routine;
   let args = o.args;
@@ -115,26 +109,7 @@ function _routineJoin( o )
   function act()
   {
 
-    if( context !== undefined && args === undefined )
-    {
-      if( o.sealing === true )
-      {
-        let name = routine.name || '__sealedContext';
-        let __sealedContext =
-        {
-          [ name ] : function()
-          {
-            return routine.call( context );
-          }
-        }
-        return __sealedContext[ name ];
-      }
-      else
-      {
-        return _FunctionBind.call( routine, context );
-      }
-    }
-    else if( context !== undefined )
+    if( context !== undefined && args !== undefined )
     {
       if( o.sealing === true )
       {
@@ -151,30 +126,43 @@ function _routineJoin( o )
       }
       else
       {
-        let a = _.arrayAppendArray( [ context ],args );
-        return _FunctionBind.apply( routine, a );
+        let a = _.arrayAppendArray( [ context ], args );
+        return Function.prototype.bind.apply( routine, a );
       }
     }
-    else if( args === undefined && !o.sealing )
+    else if( context !== undefined && args === undefined )
     {
-      return routine;
-    }
-    else
-    {
-      if( !args )
-      args = [];
-
       if( o.sealing === true )
       {
-        let name = routine.name || '__sealedArguments';
-        let __sealedArguments =
+        let name = routine.name || '__sealedContext';
+        let __sealedContext =
         {
           [ name ] : function()
           {
-            return routine.apply( undefined, args );
+            return routine.call( context );
           }
         }
-        return __sealedArguments[ name ];
+        return __sealedContext[ name ];
+      }
+      else
+      {
+        return Function.prototype.bind.call( routine, context );
+      }
+    }
+    else if( context === undefined && args !== undefined ) // xxx
+    {
+      if( o.sealing === true )
+      {
+        let name = routine.name || '__sealedArguments';
+        _.assert( _.strIs( name ) );
+        let __sealedContextAndArguments =
+        {
+          [ name ] : function()
+          {
+            return routine.apply( this, args );
+          }
+        }
+        return __sealedContextAndArguments[ name ];
       }
       else
       {
@@ -183,15 +171,38 @@ function _routineJoin( o )
         {
           [ name ] : function()
           {
-            let a = args.slice();
-            _.arrayAppendArray( a,arguments );
-            return routine.apply( this, a );
+            let args2 = _.arrayAppendArrays( null, [ args, arguments ] );
+            return routine.apply( this, args2 );
           }
         }
         return __joinedArguments[ name ];
       }
-
     }
+    else if( context === undefined && args === undefined ) // xxx
+    {
+      return routine;
+      // if( !o.sealing )
+      // {
+      //   return routine;
+      // }
+      // else
+      // {
+      //   if( !args )
+      //   args = [];
+      //
+      //   let name = routine.name || '__sealedArguments';
+      //   let __sealedArguments =
+      //   {
+      //     [ name ] : function()
+      //     {
+      //       return routine.apply( undefined, args );
+      //     }
+      //   }
+      //   return __sealedArguments[ name ];
+      //
+      // }
+    }
+    else _.assert( 0 );
   }
 
 }
@@ -238,7 +249,7 @@ function constructorJoin( routine, args )
    function f1(){ console.log( this ) };
    let f2 = f1.bind( undefined ); // context of new function sealed to undefined (or global object);
    f2.call( o ); // try to call new function with context set to { z: 5 }
-   let f3 = _.routineJoin( undefined,f1 ); // new function.
+   let f3 = _.routineJoin( undefined, f1 ); // new function.
    f3.call( o ) // print  { z: 5 }
 
  * @param {Object} context The value that will be set as 'this' keyword in new function
@@ -260,9 +271,9 @@ function routineJoin( context, routine, args )
 
   return _routineJoin
   ({
-    /*ttt*/routine,
-    /*ttt*/context,
-    /*ttt*/args,
+    routine,
+    context,
+    args,
     sealing : false,
     extending : true,
   });
@@ -291,7 +302,7 @@ function routineJoin( context, routine, args )
    function f1(){ console.log( this ) };
    let f2 = f1.bind( undefined ); // context of new function sealed to undefined (or global object);
    f2.call( o ); // try to call new function with context set to { z: 5 }
-   let f3 = _.routineJoin( undefined,f1 ); // new function.
+   let f3 = _.routineJoin( undefined, f1 ); // new function.
    f3.call( o ) // print  { z: 5 }
 
  * @param {Object} context The value that will be set as 'this' keyword in new function
@@ -308,14 +319,14 @@ function routineJoin( context, routine, args )
 function routineJoin( context, routine, args )
 {
 
-  _.assert( _.routineIs( routine ),'routineJoin :','second argument must be a routine' );
-  _.assert( arguments.length <= 3,'routineJoin :','Expects 3 or less arguments' );
+  _.assert( _.routineIs( routine ), 'routineJoin :', 'second argument must be a routine' );
+  _.assert( arguments.length <= 3, 'routineJoin :', 'Expects 3 or less arguments' );
 
   return _routineJoin
   ({
-    /*ttt*/routine,
-    /*ttt*/context,
-    /*ttt*/args,
+    routine,
+    context,
+    args,
     sealing : false,
     extending : true,
   });
@@ -348,14 +359,14 @@ function routineJoin( context, routine, args )
 function routineSeal( context, routine, args )
 {
 
-  _.assert( _.routineIs( routine ),'routineSeal :','second argument must be a routine' );
-  _.assert( arguments.length <= 3,'routineSeal :','Expects 3 or less arguments' );
+  _.assert( _.routineIs( routine ), 'routineSeal :', 'second argument must be a routine' );
+  _.assert( arguments.length <= 3, 'routineSeal :', 'Expects 3 or less arguments' );
 
   return _routineJoin
   ({
-    /*ttt*/routine,
-    /*ttt*/context,
-    /*ttt*/args,
+    routine,
+    context,
+    args,
     sealing : true,
     extending : true,
   });
@@ -378,7 +389,7 @@ function routineOptions( routine, args, defaults )
   _.assert( _.routineIs( routine ) || routine === null, 'Expects routine' );
   _.assert( _.objectIs( defaults ), 'Expects routine with defined defaults or defaults in third argument' );
   _.assert( _.objectIs( options ), 'Expects object' );
-  _.assert( args.length === 0 || args.length === 1, 'Expects single options map, but got',args.length,'arguments' );
+  _.assert( args.length === 0 || args.length === 1, 'Expects single options map, but got', args.length, 'arguments' );
 
   _.assertMapHasOnly( options, defaults );
   // _.mapSupplementStructureless( options, defaults ); /* xxx qqq : use instead of mapComplement */
@@ -390,7 +401,7 @@ function routineOptions( routine, args, defaults )
 
 //
 
-function assertRoutineOptions( routine,args,defaults )
+function assertRoutineOptions( routine, args, defaults )
 {
 
   if( !_.argumentsArrayIs( args ) )
@@ -398,11 +409,11 @@ function assertRoutineOptions( routine,args,defaults )
   let options = args[ 0 ];
   defaults = defaults || ( routine ? routine.defaults : null );
 
-  _.assert( arguments.length === 2 || arguments.length === 3,'Expects 2 or 3 arguments' );
+  _.assert( arguments.length === 2 || arguments.length === 3, 'Expects 2 or 3 arguments' );
   _.assert( _.routineIs( routine ) || routine === null, 'Expects routine' );
-  _.assert( _.objectIs( defaults ),'Expects routine with defined defaults or defaults in third argument' );
-  _.assert( _.objectIs( options ),'Expects object' );
-  _.assert( args.length === 0 || args.length === 1, 'Expects single options map, but got',args.length,'arguments' );
+  _.assert( _.objectIs( defaults ), 'Expects routine with defined defaults or defaults in third argument' );
+  _.assert( _.objectIs( options ), 'Expects object' );
+  _.assert( args.length === 0 || args.length === 1, 'Expects single options map, but got', args.length, 'arguments' );
 
   _.assertMapHasOnly( options, defaults );
   _.assertMapHasAll( options, defaults );
@@ -423,11 +434,11 @@ function routineOptionsPreservingUndefines( routine, args, defaults )
   options = Object.create( null );
   defaults = defaults || routine.defaults;
 
-  _.assert( arguments.length === 2 || arguments.length === 3,'Expects 2 or 3 arguments' );
-  _.assert( _.routineIs( routine ),'Expects routine' );
-  _.assert( _.objectIs( defaults ),'Expects routine with defined defaults' );
-  _.assert( _.objectIs( options ),'Expects object' );
-  _.assert( args.length === 0 || args.length === 1, 'routineOptions : expects single options map, but got',args.length,'arguments' );
+  _.assert( arguments.length === 2 || arguments.length === 3, 'Expects 2 or 3 arguments' );
+  _.assert( _.routineIs( routine ), 'Expects routine' );
+  _.assert( _.objectIs( defaults ), 'Expects routine with defined defaults' );
+  _.assert( _.objectIs( options ), 'Expects object' );
+  _.assert( args.length === 0 || args.length === 1, 'routineOptions : expects single options map, but got', args.length, 'arguments' );
 
   _.assertMapHasOnly( options, defaults );
   _.mapComplementPreservingUndefines( options, defaults );
@@ -451,7 +462,7 @@ function routineOptionsReplacingUndefines( routine, args, defaults )
   _.assert( _.routineIs( routine ), 'Expects routine' );
   _.assert( _.objectIs( defaults ), 'Expects routine with defined defaults or defaults in third argument' );
   _.assert( _.objectIs( options ), 'Expects object' );
-  _.assert( args.length === 0 || args.length === 1, 'Expects single options map, but got',args.length,'arguments' );
+  _.assert( args.length === 0 || args.length === 1, 'Expects single options map, but got', args.length, 'arguments' );
 
   _.assertMapHasOnly( options, defaults );
   _.mapComplementReplacingUndefines( options, defaults );
@@ -469,14 +480,14 @@ function assertRoutineOptionsPreservingUndefines( routine, args, defaults )
   let options = args[ 0 ];
   defaults = defaults || routine.defaults;
 
-  _.assert( arguments.length === 2 || arguments.length === 3,'Expects 2 or 3 arguments' );
-  _.assert( _.routineIs( routine ),'Expects routine' );
-  _.assert( _.objectIs( defaults ),'Expects routine with defined defaults or defaults in third argument' );
-  _.assert( _.objectIs( options ),'Expects object' );
-  _.assert( args.length === 0 || args.length === 1, 'Expects single options map, but got',args.length,'arguments' );
+  _.assert( arguments.length === 2 || arguments.length === 3, 'Expects 2 or 3 arguments' );
+  _.assert( _.routineIs( routine ), 'Expects routine' );
+  _.assert( _.objectIs( defaults ), 'Expects routine with defined defaults or defaults in third argument' );
+  _.assert( _.objectIs( options ), 'Expects object' );
+  _.assert( args.length === 0 || args.length === 1, 'Expects single options map, but got', args.length, 'arguments' );
 
-  _.assertMapHasOnly( options,defaults );
-  _.assertMapHasAll( options,defaults );
+  _.assertMapHasOnly( options, defaults );
+  _.assertMapHasAll( options, defaults );
 
   return options;
 }
@@ -486,13 +497,13 @@ function assertRoutineOptionsPreservingUndefines( routine, args, defaults )
 function routineOptionsFromThis( routine, _this, constructor )
 {
 
-  _.assert( arguments.length === 3,'routineOptionsFromThis : expects 3 arguments' );
+  _.assert( arguments.length === 3, 'routineOptionsFromThis : expects 3 arguments' );
 
   let options = _this || Object.create( null );
-  if( Object.isPrototypeOf.call( constructor,_this ) || constructor === _this )
+  if( Object.isPrototypeOf.call( constructor, _this ) || constructor === _this )
   options = Object.create( null );
 
-  return _.routineOptions( routine,options );
+  return _.routineOptions( routine, options );
 }
 
 //
@@ -901,10 +912,6 @@ Object.assign( Self, Fields );
 // --
 // export
 // --
-
-// if( typeof module !== 'undefined' )
-// if( _global.WTOOLS_PRIVATE )
-// { /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

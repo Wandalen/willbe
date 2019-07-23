@@ -1,6 +1,6 @@
 ( function _fBool_s_() {
 
-'use strict'; 
+'use strict';
 
 let _global = _global_;
 let _ = _global_.wTools;
@@ -8,7 +8,7 @@ let Self = _global_.wTools;
 
 let _ArraySlice = Array.prototype.slice;
 let _FunctionBind = Function.prototype.bind;
-let _ObjectToString = Object.prototype.toString;
+// let Object.prototype.toString = Object.prototype.toString;
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
 
 // --
@@ -38,7 +38,7 @@ function boolIs( src )
 
 function boolLike( src )
 {
-  let type = _ObjectToString.call( src );
+  let type = Object.prototype.toString.call( src );
   return type === '[object Boolean]' || type === '[object Number]';
 }
 
@@ -154,14 +154,14 @@ let Fields =
 let Routines =
 {
 
-  /*ttt*/boolIs,
-  /*ttt*/boolLike,
-  // /*ttt*/boolFrom,
+  boolIs,
+  boolLike,
+  // boolFrom,
 
-  /*ttt*/boolsAre,
-  /*ttt*/boolsAllAre,
-  /*ttt*/boolsAnyAre,
-  /*ttt*/boolsNoneAre,
+  boolsAre,
+  boolsAllAre,
+  boolsAnyAre,
+  boolsNoneAre,
 
 }
 
@@ -173,10 +173,6 @@ Object.assign( Self, Fields );
 // --
 // export
 // --
-
-if( typeof module !== 'undefined' )
-if( _global.WTOOLS_PRIVATE )
-{ /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

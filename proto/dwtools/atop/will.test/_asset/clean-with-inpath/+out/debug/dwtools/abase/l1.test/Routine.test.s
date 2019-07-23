@@ -193,7 +193,7 @@ function _routineJoin( test )
 //   var got = gotfn( testParam1 );
 //   test.identical( got,expected1 );
 //
-//   test.case = 'simple function without /*ttt*/context test';
+//   test.case = 'simple function without context test';
 //   var gotfn = _.routineBind(testFunction2, undefined, [ testParam2 ]);
 //   var got = gotfn( testParam1 );
 //   test.identical( got, expected2 );
@@ -326,30 +326,80 @@ function constructorJoin( test )
 function routineJoin( test )
 {
 
-  var testParam1 = 2,
-    testParam2 = 4,
-    expected1 = 6,
-    expected2 = undefined,
-    expected3 = 21;
+  /* - */
+
+  test.open( 'array' );
+
+  test.case = 'nothing';
+  var joined = _.routineJoin( undefined, add, undefined );
+  var got = joined( 2 );
+  test.identical( got, 2 );
+
+  test.case = 'no this';
+  var joined = _.routineJoin( undefined, add, [ 4 ] );
+  var got = joined( 2 );
+  test.identical( got, 6 );
+
+  test.case = 'this';
+  var joined = _.routineJoin( 5, add, undefined );
+  var got = joined( 2 );
+  test.identical( got, 7 );
+
+  test.case = 'this and args';
+  var joined = _.routineJoin( 5, add, [ 1, 3 ] );
+  var got = joined( 2, 2 );
+  test.identical( got, 13 );
+
+  test.close( 'array' );
+
+  /* - */
+
+  test.open( 'arguments array' );
+
+  test.case = 'nothing';
+  var joined = _.routineJoin( undefined, add, undefined );
+  var got = joined( 2 );
+  test.identical( got, 2 );
+
+  test.case = 'no this';
+  var joined = _.routineJoin( undefined, add, _.argumentsArrayMake([ 4 ]) );
+  var got = joined( 2 );
+  test.identical( got, 6 );
+
+  test.case = 'this';
+  var joined = _.routineJoin( 5, add, undefined );
+  var got = joined( 2 );
+  test.identical( got, 7 );
+
+  test.case = 'this and args';
+  var joined = _.routineJoin( 5, add, _.argumentsArrayMake([ 1, 3 ]) );
+  var got = joined( 2, 2 );
+  test.identical( got, 13 );
+
+  test.close( 'arguments array' );
+
+  /* - */
+
+  test.open( 'other' );
 
   test.case = 'simple function without context with arguments bind : result check';
-  var gotfn = _.routineJoin( undefined, testFunction1, [ testParam2 ]);
-  var got = gotfn( testParam1 );
-  test.identical( got,expected1 );
+  var gotfn = _.routineJoin( undefined, testFunction1, [ 4 ]);
+  var got = gotfn( 2 );
+  test.identical( got, 6 );
 
-  test.case = 'simple function without /*ttt*/context test';
-  var gotfn = _.routineJoin(undefined, testFunction2, [ testParam2 ]);
-  var got = gotfn( testParam1 );
-  test.identical( got, expected2 );
+  test.case = 'simple function without context test';
+  var gotfn = _.routineJoin(undefined, testFunction2, [ 4 ]);
+  var got = gotfn( 2 );
+  test.identical( got, undefined );
 
   test.case = 'simple function with context and arguments : result check';
-  var gotfn = _.routineJoin(context3, testFunction3, [ testParam2 ]);
-  var got = gotfn( testParam1 );
-  test.identical( got, expected3 );
+  var gotfn = _.routineJoin(context3, testFunction3, [ 4 ]);
+  var got = gotfn( 2 );
+  test.identical( got, 21 );
 
   test.case = 'simple function with context and arguments : context check';
-  var gotfn = _.routineJoin(context3, testFunction4, [ testParam2 ]);
-  var got = gotfn( testParam1 );
+  var gotfn = _.routineJoin(context3, testFunction4, [ 4 ]);
+  var got = gotfn( 2 );
   test.identical( got instanceof contextConstructor3, true );
 
   test.case = 'extending'
@@ -357,6 +407,10 @@ function routineJoin( test )
   srcRoutine.defaults = { a : 10 };
   var gotfn = _.routineJoin( undefined, srcRoutine, [] );
   test.identical( gotfn.defaults, srcRoutine.defaults );
+
+  test.close( 'other' );
+
+  /* - */
 
   if( !Config.debug )
   return;
@@ -370,20 +424,32 @@ function routineJoin( test )
   test.case = 'extra argument';
   test.shouldThrowError( function()
   {
-    _.routineJoin( context3, testFunction4, [ testParam2 ], [ testParam1 ] );
+    _.routineJoin( context3, testFunction4, [ 4 ], [ 2 ] );
   });
 
   test.case = 'passed non callable object';
   test.shouldThrowError( function()
   {
-    _.routineJoin( context3, {}, [ testParam2 ] );
+    _.routineJoin( context3, {}, [ 4 ] );
   });
 
   test.case = 'passed arguments as primitive value';
   test.shouldThrowError( function()
   {
-    _.routineJoin( context3, testFunction4, testParam2 );
+    _.routineJoin( context3, testFunction4, 4 );
   });
+
+  /* */
+
+  function add()
+  {
+    let r = 0;
+    for( let a = 0 ; a < arguments.length ; a++ )
+    r += arguments[ a ];
+    if( this )
+    r += this;
+    return r;
+  }
 
 }
 

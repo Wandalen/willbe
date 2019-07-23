@@ -1,6 +1,6 @@
 ( function _fTime_s_() {
 
-'use strict'; 
+'use strict';
 
 let _global = _global_;
 let _ = _global_.wTools;
@@ -11,7 +11,6 @@ let _ArrayLastIndexOf = Array.prototype.lastIndexOf;
 let _ArraySlice = Array.prototype.slice;
 let _ArraySplice = Array.prototype.splice;
 let _FunctionBind = Function.prototype.bind;
-let _ObjectToString = Object.prototype.toString;
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
 let _propertyIsEumerable = Object.propertyIsEnumerable;
 let _ceil = Math.ceil;
@@ -23,7 +22,7 @@ let _floor = Math.floor;
 
 function dateIs( src )
 {
-  return _ObjectToString.call( src ) === '[object Date]';
+  return Object.prototype.toString.call( src ) === '[object Date]';
 }
 
 //
@@ -58,8 +57,8 @@ let Fields =
 let Routines =
 {
 
-  /*ttt*/dateIs,
-  /*ttt*/datesAreIdentical,
+  dateIs,
+  datesAreIdentical,
 
 }
 
@@ -71,10 +70,6 @@ Object.assign( Self, Fields );
 // --
 // export
 // --
-
-if( typeof module !== 'undefined' )
-if( _global.WTOOLS_PRIVATE )
-{ /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

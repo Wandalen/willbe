@@ -15,21 +15,6 @@ let _ObjectHasOwnProperty = Object.hasOwnProperty;
 // bool
 // --
 
-// function boolIs( src )
-// {
-//   return src === true || src === false;
-// }
-//
-// //
-//
-// function boolLike( src )
-// {
-//   let type = _ObjectToString.call( src );
-//   return type === '[object Boolean]' || type === '[object Number]';
-// }
-
-//
-
 /**
  * @summary Converts argument( src ) to boolean.
  * @function boolFrom
@@ -52,46 +37,6 @@ function boolFrom( src )
   return Boolean( src );
 }
 
-// //
-//
-// function boolsAre( src )
-// {
-//   _.assert( arguments.length === 1 );
-//   if( !_.arrayLike( src ) )
-//   return false;
-//   return src.filter( ( e ) => _.boolIs( e ) );
-// }
-//
-// //
-//
-// function boolsAllAre( src )
-// {
-//   _.assert( arguments.length === 1 );
-//   if( !_.arrayIs( src ) )
-//   return _.boolIs( src );
-//   return _.all( src.filter( ( e ) => _.boolIs( e ) ) );
-// }
-//
-// //
-//
-// function boolsAnyAre( src )
-// {
-//   _.assert( arguments.length === 1 );
-//   if( !_.arrayIs( src ) )
-//   return _.boolIs( src );
-//   return _.any( src.filter( ( e ) => _.boolIs( e ) ) );
-// }
-//
-// //
-//
-// function boolsNoneAre( src )
-// {
-//   _.assert( arguments.length === 1 );
-//   if( !_.arrayIs( src ) )
-//   return _.boolIs( src );
-//   return _.none( src.filter( ( e ) => _.boolIs( e ) ) );
-// }
-
 // --
 // fields
 // --
@@ -107,14 +52,7 @@ let Fields =
 let Routines =
 {
 
-  // /*ttt*/boolIs,
-  // /*ttt*/boolLike,
-  /*ttt*/boolFrom,
-
-  // /*ttt*/boolsAre,
-  // /*ttt*/boolsAllAre,
-  // /*ttt*/boolsAnyAre,
-  // /*ttt*/boolsNoneAre,
+  boolFrom,
 
 }
 
@@ -126,10 +64,6 @@ Object.assign( Self, Fields );
 // --
 // export
 // --
-
-if( typeof module !== 'undefined' )
-if( _global.WTOOLS_PRIVATE )
-{ /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

@@ -3,7 +3,7 @@
 'use strict';
 
 let _FunctionBind = Function.prototype.bind;
-let _ObjectToString = Object.prototype.toString;
+// let Object.prototype.toString = Object.prototype.toString;
 let _global = _global_;
 let _ = _global_.wTools;
 let Self = _global_.wTools;
@@ -22,7 +22,7 @@ let Self = _global_.wTools;
 
 function strIs( src )
 {
-  let result = _ObjectToString.call( src ) === '[object String]';
+  let result = Object.prototype.toString.call( src ) === '[object String]';
   return result;
 }
 
@@ -37,7 +37,7 @@ function strIs( src )
 
 function routineIs( src )
 {
-  return _ObjectToString.call( src ) === '[object Function]';
+  return Object.prototype.toString.call( src ) === '[object Function]';
 }
 
 //
@@ -51,7 +51,7 @@ function routineIs( src )
 
 function objectIs( src )
 {
-  return _ObjectToString.call( src ) === '[object Object]';
+  return Object.prototype.toString.call( src ) === '[object Object]';
 }
 
 //
@@ -65,7 +65,7 @@ function objectIs( src )
 
 function argumentsArrayIs( src )
 {
-  return _ObjectToString.call( src ) === '[object Arguments]';
+  return Object.prototype.toString.call( src ) === '[object Arguments]';
 }
 
 //
@@ -889,10 +889,6 @@ Object.assign( Self, Fields );
 // --
 // export
 // --
-
-// if( typeof module !== 'undefined' )
-// if( _global.WTOOLS_PRIVATE )
-// { /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

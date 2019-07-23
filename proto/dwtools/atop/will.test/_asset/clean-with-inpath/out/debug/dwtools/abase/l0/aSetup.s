@@ -1,6 +1,6 @@
 (function _aSetup_s_() {
 
-'use strict'; 
+'use strict';
 
 let _global = _global_;
 let _realGlobal = _global._realGlobal_
@@ -143,7 +143,7 @@ let Routines =
 
   _handleUnhandledError0 : null,
   _handleUnhandledError1 : null,
-  /*ttt*/_setupUnhandledErrorHandler0,
+  _setupUnhandledErrorHandler0,
   _setup0,
 
 }
@@ -156,10 +156,6 @@ Self._setup0();
 // --
 // export
 // --
-
-// if( typeof module !== 'undefined' )
-// if( _global_.WTOOLS_PRIVATE )
-// { /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

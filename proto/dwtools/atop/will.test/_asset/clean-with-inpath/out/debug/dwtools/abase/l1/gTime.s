@@ -109,19 +109,14 @@ function timeReady( onReady )
 
 function timeReadyJoin( context, routine, args )
 {
-
-  routine = _.routineJoin( context, routine, args );
-
-  let result = _.routineJoin( undefined, _.timeReady, [ routine ] );
-
+  let joinedRoutine = _.routineJoin( context, routine, args );
+  return _timeReady;
   function _timeReady()
   {
     let args = arguments;
-    routine = _.routineJoin( context === undefined ? this : this, routine, args );
-    return _.timeReady( routine );
+    let joinedRoutine2 = _.routineSeal( this, joinedRoutine, args );
+    return _.timeReady( joinedRoutine2 );
   }
-
-  return _timeReady;
 }
 
 //
@@ -312,7 +307,7 @@ function timeOut_pre( routine, args )
     if( args[ 2 ] !== undefined || args[ 3 ] !== undefined )
     onEnd = _.routineJoin.call( _, args[ 1 ], args[ 2 ], args[ 3 ] );
 
-    o = { /*ttt*/delay, /*ttt*/onEnd }
+    o = { delay, onEnd }
 
   }
   else
@@ -727,10 +722,6 @@ Object.assign( Self, Fields );
 // --
 // export
 // --
-
-// if( typeof module !== 'undefined' )
-// if( _global.WTOOLS_PRIVATE )
-// { /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

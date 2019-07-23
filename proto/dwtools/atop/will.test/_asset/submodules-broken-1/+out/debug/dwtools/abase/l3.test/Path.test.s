@@ -4874,449 +4874,449 @@ function normalizeTolerant( test )
 
 //
 
-function normalizeCanonical( test )
+function canonize( test )
 {
 
   var path = 'a/foo/../b';
   var expected = 'a/b';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   test.case = 'posix path'; /* */
 
   var path = '/aa/bb/cc/./';
   var expected = '/aa/bb/cc';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '//b//././c/../d/..e';
   var expected = '//b//d/..e';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/aa/bb/cc/';
   var expected = '/aa/bb/cc';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/foo/bar//baz/asdf/quux/..';
   var expected = '/foo/bar//baz/asdf';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/foo/bar//baz/asdf/quux/.';
   var expected = '/foo/bar//baz/asdf/quux';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/foo/bar//baz/asdf/quux/./';
   var expected = '/foo/bar//baz/asdf/quux';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/foo/bar//baz/asdf/quux/../';
   var expected = '/foo/bar//baz/asdf';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '//foo/bar//baz/asdf/quux/..//';
   var expected = '//foo/bar//baz/asdf//';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'foo/bar//baz/asdf/quux/.';
   var expected = 'foo/bar//baz/asdf/quux';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'foo/bar//baz/asdf/quux/..//.';
   var expected = 'foo/bar//baz/asdf';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   test.case = 'windows path'; /* */
 
   var path = '/C:\\temp\\\\foo\\bar\\..\\';
   var expected = '/C:/temp//foo';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '\\C:\\temp\\\\foo\\bar\\..\\';
   var expected = '/C:/temp//foo';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'C:\\temp\\\\foo\\bar\\..\\';
   var expected = '/C/temp//foo';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'C:\\temp\\\\foo\\bar\\..\\\\';
   var expected = '/C/temp//foo//';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'C:\\temp\\\\foo\\bar\\..\\\\';
   var expected = '/C/temp//foo//';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'C:\\temp\\\\foo\\bar\\..\\..';
   var expected = '/C/temp';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'C:\\temp\\\\foo\\bar\\..\\..';
   var expected = '/C/temp';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'C:\\temp\\\\foo\\bar\\..\\..\\';
   var expected = '/C/temp';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'C:\\temp\\\\foo\\bar\\..\\..\\.';
   var expected = '/C/temp';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   test.case = 'empty path'; /* */
 
   var path = '';
   var expected = '';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/';
   var expected = '/';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '//';
   var expected = '//';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '///';
   var expected = '///';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/.';
   var expected = '/';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/./.';
   var expected = '/';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '.';
   var expected = '.';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = './';
   var expected = '.';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = './.';
   var expected = '.';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   test.case = 'path with "." in the middle'; /* */
 
   var path = 'foo/./bar/baz';
   var expected = 'foo/bar/baz';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'foo/././bar/baz/';
   var expected = 'foo/bar/baz';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'foo/././bar/././baz/';
   var expected = 'foo/bar/baz';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/foo/././bar/././baz/';
   var expected = '/foo/bar/baz';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/foo/.x./baz/';
   var expected = '/foo/.x./baz';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   test.case = 'path with "." in the beginning'; /* */
 
   var path = './foo/bar';
   var expected = 'foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '././foo/bar/';
   var expected = 'foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = './././foo/bar/';
   var expected = 'foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '.\\foo\\bar';
   var expected = 'foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = './/.//foo/bar/';
   var expected = './//foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/.//.//foo/bar/';
   var expected = '///foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '.x/foo/bar';
   var expected = '.x/foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '.x./foo/bar';
   var expected = '.x./foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = './x/.';
   var expected = 'x';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   test.case = 'path with "." in the end'; /* */
 
   var path = 'foo/bar.';
   var expected = 'foo/bar.';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'foo/.bar.';
   var expected = 'foo/.bar.';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'foo/bar/.';
   var expected = 'foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'foo/bar/./.';
   var expected = 'foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'foo/bar/././';
   var expected = 'foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/foo/bar/././';
   var expected = '/foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/foo/baz/.x./';
   var expected = '/foo/baz/.x.';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   test.case = 'path with ".." in the middle'; /* */
 
   var path = 'foo/../bar/baz';
   var expected = 'bar/baz';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'foo/../../bar/baz/';
   var expected = '../bar/baz';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'foo/../../bar/../../baz/';
   var expected = '../../baz';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/foo/../../bar/../../baz/';
   var expected = '/../../baz';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   test.case = 'path with ".." in the beginning'; /* */
 
   var path = '../foo/bar';
   var expected = '../foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '../../foo/bar/';
   var expected = '../../foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '..//..//foo/bar/';
   var expected = '..//foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/..//..//foo/bar/';
   var expected = '/..//foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '..x/foo/bar';
   var expected = '..x/foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '..x../foo/bar';
   var expected = '..x../foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   test.case = 'path with ".." in the end'; /* */
 
   var path = 'foo/bar..';
   var expected = 'foo/bar..';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'foo/..bar..';
   var expected = 'foo/..bar..';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'foo/bar/..';
   var expected = 'foo';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'foo/bar/../..';
   var expected = '.';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'foo/bar/../../';
   var expected = '.';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/foo/bar/../../';
   var expected = '/';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'foo/bar/../../..';
   var expected = '..';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'foo/bar/../../../..';
   var expected = '../..';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'foo/../bar/../../../..';
   var expected = '../../..';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   test.case = 'path with ".." and "." combined'; /* */
 
   var path = '/abc/./../a/b';
   var expected = '/a/b';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/abc/.././a/b';
   var expected = '/a/b';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/abc/./.././a/b';
   var expected = '/a/b';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/a/b/abc/../.';
   var expected = '/a/b';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/a/b/abc/./..';
   var expected = '/a/b';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '/a/b/abc/./../.';
   var expected = '/a/b';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = './../.';
   var expected = '..';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = './.././';
   var expected = '..';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = './..';
   var expected = '..';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '../.';
   var expected = '..';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   test.case = 'path with \/'; /* */
 
   var path = 'foo/bar\/';
   var expected = 'foo/bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = 'foo/\/bar\/';
   var expected = 'foo//bar';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '\/foo/bar/..';
   var expected = '/foo';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '\/foo\/bar/../..';
   var expected = '/';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   var path = '\/foo\/bar/../../';
   var expected = '/';
-  var got = _.path.normalizeCanonical( path );
+  var got = _.path.canonize( path );
   test.identical( got, expected );
 
   /* */
@@ -5325,424 +5325,424 @@ function normalizeCanonical( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.normalizeCanonical( ) );
+  test.shouldThrowError( () => _.path.canonize( ) );
 
   test.case = 'Two arguments';
-  test.shouldThrowError( () => _.path.normalizeCanonical( 'a', 'b' ) );
+  test.shouldThrowError( () => _.path.canonize( 'a', 'b' ) );
 
   // Input is not path
 
   test.case = 'No path - regexp';
-  test.shouldThrowError( () => _.path.normalizeCanonical( /foo/ ) );
+  test.shouldThrowError( () => _.path.canonize( /foo/ ) );
 
   test.case = 'No path - number';
-  test.shouldThrowError( () => _.path.normalizeCanonical( 3 ) );
+  test.shouldThrowError( () => _.path.canonize( 3 ) );
 
   test.case = 'No path - array';
-  test.shouldThrowError( () => _.path.normalizeCanonical( [ '/C/', 'work/f' ] ) );
+  test.shouldThrowError( () => _.path.canonize( [ '/C/', 'work/f' ] ) );
 
   test.case = 'No path - object';
-  test.shouldThrowError( () => _.path.normalizeCanonical( { Path : 'C:/foo/baz/bar' } ) );
+  test.shouldThrowError( () => _.path.canonize( { Path : 'C:/foo/baz/bar' } ) );
 
   test.case = 'No path - undefined';
-  test.shouldThrowError( () => _.path.normalizeCanonical( undefined ) );
+  test.shouldThrowError( () => _.path.canonize( undefined ) );
 
   test.case = 'No path - null';
-  test.shouldThrowError( () => _.path.normalizeCanonical( null ) );
+  test.shouldThrowError( () => _.path.canonize( null ) );
 
   test.case = 'No path - NaN';
-  test.shouldThrowError( () => _.path.normalizeCanonical( NaN ) );
+  test.shouldThrowError( () => _.path.canonize( NaN ) );
 
 }
 
 //
 
-function normalizeCanonicalTolerant( test )
+function canonizeTolerant( test )
 {
 
   test.case = 'posix path'; /* */
 
   var path = '/aa/bb/cc/./';
   var expected = '/aa/bb/cc';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '//b//././c/../d/..e';
   var expected = '/b/d/..e';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/aa/bb/cc/';
   var expected = '/aa/bb/cc';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/foo/bar//baz/asdf/quux/..';
   var expected = '/foo/bar/baz/asdf';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/foo/bar//baz/asdf/quux/.';
   var expected = '/foo/bar/baz/asdf/quux';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/foo/bar//baz/asdf/quux/./';
   var expected = '/foo/bar/baz/asdf/quux';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/foo/bar//baz/asdf/quux/../';
   var expected = '/foo/bar/baz/asdf';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '//foo/bar//baz/asdf/quux/..//';
   var expected = '/foo/bar/baz/asdf';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'foo/bar//baz/asdf/quux/..//.';
   var expected = 'foo/bar/baz/asdf';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   test.case = 'winoows path'; /* */
 
   var path = 'C:\\temp\\\\foo\\bar\\..\\';
   var expected = '/C/temp/foo';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'C:\\temp\\\\foo\\bar\\..\\\\';
   var expected = '/C/temp/foo';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'C:\\temp\\\\foo\\bar\\..\\\\';
   var expected = '/C/temp/foo';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'C:\\temp\\\\foo\\bar\\..\\..';
   var expected = '/C/temp';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'C:\\temp\\\\foo\\bar\\..\\..\\';
   var expected = '/C/temp';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'C:\\temp\\\\foo\\bar\\..\\..\\.';
   var expected = '/C/temp';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   test.case = 'empty path'; /* */
 
   var path = '';
   var expected = '';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/';
   var expected = '/';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '//';
   var expected = '/';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '///';
   var expected = '/';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/.';
   var expected = '/';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/./.';
   var expected = '/';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '.';
   var expected = '.';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = './.';
   var expected = '.';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = './';
   var expected = '.';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   test.case = 'path with "." in the middle'; /* */
 
   var path = 'foo/./bar/baz';
   var expected = 'foo/bar/baz';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'foo/././bar/baz/';
   var expected = 'foo/bar/baz';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'foo/././bar/././baz/';
   var expected = 'foo/bar/baz';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/foo/././bar/././baz/';
   var expected = '/foo/bar/baz';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/foo/.x./baz/';
   var expected = '/foo/.x./baz';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   test.case = 'path with "." in the beginning'; /* */
 
   var path = './foo/bar';
   var expected = 'foo/bar';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '././foo/bar/';
   var expected = 'foo/bar';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = './/.//foo/bar/';
   var expected = 'foo/bar';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/.//.//foo/bar/';
   var expected = '/foo/bar';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '.x/foo/bar';
   var expected = '.x/foo/bar';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '.x./foo/bar';
   var expected = '.x./foo/bar';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = './x/.';
   var expected = 'x';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   test.case = 'path with "." in the end'; /* */
 
   var path = 'foo/bar.';
   var expected = 'foo/bar.';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'foo/.bar.';
   var expected = 'foo/.bar.';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'foo/bar/.';
   var expected = 'foo/bar';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'foo/bar/./.';
   var expected = 'foo/bar';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'foo/bar/././';
   var expected = 'foo/bar';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/foo/bar/././';
   var expected = '/foo/bar';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/foo/baz/.x./';
   var expected = '/foo/baz/.x.';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   test.case = 'path with ".." in the middle'; /* */
 
   var path = 'foo/../bar/baz';
   var expected = 'bar/baz';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'foo/../../bar/baz/';
   var expected = '../bar/baz';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'foo/../../bar/../../baz/';
   var expected = '../../baz';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/foo/../../bar/../../baz/';
   var expected = '/../../baz';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   test.case = 'path with ".." in the beginning'; /* */
 
   var path = '../foo/bar';
   var expected = '../foo/bar';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '../../foo/bar/';
   var expected = '../../foo/bar';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '..//..//foo/bar/';
   var expected = '../../foo/bar';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/..//..//foo/bar/';
   var expected = '/../../foo/bar';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '..x/foo/bar';
   var expected = '..x/foo/bar';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '..x../foo/bar';
   var expected = '..x../foo/bar';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   test.case = 'path with ".." in the end'; /* */
 
   var path = 'foo/bar..';
   var expected = 'foo/bar..';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'foo/..bar..';
   var expected = 'foo/..bar..';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'foo/bar/..';
   var expected = 'foo';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'foo/bar/../../';
   var expected = '.';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'foo/bar/../..';
   var expected = '.';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/foo/bar/../../';
   var expected = '/';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'foo/bar/../../..';
   var expected = '..';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'foo/bar/../../../..';
   var expected = '../..';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = 'foo/../bar/../../../..';
   var expected = '../../..';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   test.case = 'path with ".." and "." combined'; /* */
 
   var path = '/abc/./../a/b';
   var expected = '/a/b';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/abc/.././a/b';
   var expected = '/a/b';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/abc/./.././a/b';
   var expected = '/a/b';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/a/b/abc/../.';
   var expected = '/a/b';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/a/b/abc/./..';
   var expected = '/a/b';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '/a/b/abc/./../.';
   var expected = '/a/b';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = './../.';
   var expected = '..';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = './.././';
   var expected = '..';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = './..';
   var expected = '..';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '../.';
   var expected = '..';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
   var path = '.././';
   var expected = '..';
-  var got = _.path.normalizeCanonicalTolerant( path );
+  var got = _.path.canonizeTolerant( path );
   test.identical( got, expected );
 
 }
@@ -9378,8 +9378,8 @@ var Self =
 
     normalize,
     normalizeTolerant,
-    normalizeCanonical,
-    normalizeCanonicalTolerant,
+    canonize,
+    canonizeTolerant,
 
     from,
 

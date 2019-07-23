@@ -39,6 +39,9 @@ function MakeForEachCriterion( o )
   let counter = 0;
   let single = 1;
 
+  if( o.name === "reflect.submodules" )
+  debugger;
+
   if( o.criterion )
   o.criterion = Cls.CriterionMapResolve( module, o.criterion );
 
@@ -163,12 +166,6 @@ function init( o )
   if( o )
   resource.copy( o );
 
-  // if( _.instanceIs( o ) ) // yyy
-  // {
-  //   _.assert( resource.willf === null );
-  //   _.assert( resource.module === null );
-  // }
-
   return resource;
 }
 
@@ -233,14 +230,9 @@ function unform()
   _.assert( arguments.length === 0 );
   _.assert( resource.formed );
 
-  if( resource.absoluteName === "module::super / reflector::reflect.submodules." )
-  debugger;
-
   if( !resource.original )
   {
     _.assert( module[ resource.MapName ][ resource.name ] === resource );
-    // if( willf )
-    // _.assert( willf[ resource.MapName ][ resource.name ] === resource );
   }
 
   /* begin */
@@ -248,8 +240,6 @@ function unform()
   if( !resource.original )
   {
     delete module[ resource.MapName ][ resource.name ];
-    // if( willf )
-    // delete willf[ resource.MapName ][ resource.name ];
   }
 
   /* end */
@@ -313,7 +303,6 @@ function form1()
   if( !resource.original )
   {
     _.sure( !module[ resource.MapName ][ resource.name ], () => 'Module ' + module.dirPath + ' already has ' + resource.nickName );
-    // _.assert( !willf || !willf[ resource.MapName ][ resource.name ] );
   }
 
   /* begin */
@@ -329,8 +318,6 @@ function form1()
   if( !resource.original )
   {
     module[ resource.MapName ][ resource.name ] = resource;
-    // if( willf )
-    // willf[ resource.MapName ][ resource.name ] = resource;
   }
 
   /* end */
@@ -863,7 +850,6 @@ function compactField( it )
 
   if( it.src instanceof Self )
   {
-    // debugger;
     _.assert( resource instanceof _.Will.Exported, 'not tested' );
     it.dst = it.src.nickName;
     return it.dst;
@@ -877,9 +863,6 @@ function compactField( it )
 
   if( _.mapIs( it.dst ) && !_.mapKeys( it.dst ).length )
   return;
-
-  // if( _.objectIs( it.src ) && !_.mapIs( it.src ) )
-  // debugger;
 
   return it.dst;
 }
@@ -1119,16 +1102,10 @@ let Associates =
 
 let Medials =
 {
-  // willf : null,
-  // module : null,
-  // original : null,
 }
 
 let Restricts =
 {
-  // willf : null,
-  // module : null,
-  // original : null,
   id : null,
   formed : 0,
   inherited : 0,

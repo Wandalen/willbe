@@ -21,179 +21,6 @@ let _floor = Math.floor;
 // number
 // --
 
-// /**
-//  * Function numberIs checks incoming param whether it is number.
-//  * Returns "true" if incoming param is object. Othervise "false" returned.
-//  *
-//  * @example
-//  * //returns true
-//  * numberIs( 5 );
-//  * @example
-//  * // returns false
-//  * numberIs( 'song' );
-//  *
-//  * @param {*} src.
-//  * @return {Boolean}.
-//  * @function numberIs.
-//  * @memberof wTools
-//  */
-//
-// function numberIs( src )
-// {
-//   return typeof src === 'number';
-//   return _ObjectToString.call( src ) === '[object Number]';
-// }
-//
-// //
-//
-// function numberIsNotNan( src )
-// {
-//   return _.numberIs( src ) && !isNaN( src );
-// }
-//
-// //
-//
-// function numberIsFinite( src )
-// {
-//
-//   if( !_.numberIs( src ) )
-//   return false;
-//
-//   return isFinite( src );
-// }
-//
-// //
-//
-// function numberIsInfinite( src )
-// {
-//
-//   if( !_.numberIs( src ) )
-//   return false;
-//
-//   return src === +Infinity || src === -Infinity;
-// }
-//
-// //
-//
-// function numberIsInt( src )
-// {
-//
-//   if( !_.numberIs( src ) )
-//   return false;
-//
-//   return Math.floor( src ) === src;
-// }
-//
-// //
-//
-// function numbersAre( src )
-// {
-//   _.assert( arguments.length === 1 );
-//
-//   if( _.bufferTypedIs( src ) )
-//   return true;
-//
-//   if( _.arrayLike( src ) )
-//   {
-//     for( let s = 0 ; s < src.length ; s++ )
-//     if( !_.numberIs( src[ s ] ) )
-//     return false;
-//     return true;
-//   }
-//
-//   return false;
-// }
-//
-// //
-//
-// function numbersAreIdentical( src1, src2 )
-// {
-//   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-//   return Object.is( src1, src2 );
-// }
-//
-// //
-//
-// function numbersAreEquivalent( src1, src2, accuracy )
-// {
-//   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-//   if( accuracy === undefined )
-//   accuracy = _.accuracy;
-//   return Math.abs( src1-src2 ) <= accuracy;
-// }
-//
-// //
-//
-// function numbersAreFinite( src )
-// {
-//
-//   if( _.longIs( src ) )
-//   {
-//     for( let s = 0 ; s < src.length ; s++ )
-//     if( !numbersAreFinite( src[ s ] ) )
-//     return false;
-//     return true;
-//   }
-//
-//   if( !_.numberIs( src ) )
-//   return false;
-//
-//   return isFinite( src );
-// }
-//
-// //
-//
-// function numbersArePositive( src )
-// {
-//
-//   if( _.longIs( src ) )
-//   {
-//     for( let s = 0 ; s < src.length ; s++ )
-//     if( !numbersArePositive( src[ s ] ) )
-//     return false;
-//     return true;
-//   }
-//
-//   if( !_.numberIs( src ) )
-//   return false;
-//
-//   return src >= 0;
-// }
-//
-// //
-//
-// function numbersAreInt( src )
-// {
-//
-//   if( _.longIs( src ) )
-//   {
-//     for( let s = 0 ; s < src.length ; s++ )
-//     if( !numbersAreInt( src[ s ] ) )
-//     return false;
-//     return true;
-//   }
-//
-//   if( !_.numberIs( src ) )
-//   return false;
-//
-//   return Math.floor( src ) === src;
-// }
-//
-// //
-//
-// function numberInRange( n,range )
-// {
-//   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-//   _.assert( range.length === 2 );
-//   _.assert( _.numberIs( range[ 0 ] ) );
-//   _.assert( _.numberIs( range[ 1 ] ) );
-//   if( !_.numberIs( n ) )
-//   return false;
-//   return range[ 0 ] <= n && n <= range[ 1 ];
-// }
-
-//
-
 function numbersTotal( numbers )
 {
   let result = 0;
@@ -336,10 +163,6 @@ function numberRandomIntBut( range )
     return result;
   }
 
-  // debugger;
-  // console.warn( 'numberRandomIntBut :','NaN' );
-  // throw _.err( 'numberRandomIntBut :','NaN' );
-
   result = NaN;
   return result;
 }
@@ -454,36 +277,6 @@ function numbersFrom_functor( length )
   return numbersFrom;
 }
 
-//
-//
-// function numberClamp( src,low,high )
-// {
-//   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-//
-//   if( arguments.length === 2 )
-//   {
-//     _.assert( arguments[ 1 ].length === 2 );
-//     low = arguments[ 1 ][ 0 ];
-//     high = arguments[ 1 ][ 1 ];
-//   }
-//
-//   if( src > high )
-//   return high;
-//
-//   if( src < low )
-//   return low;
-//
-//   return src;
-// }
-//
-// //
-//
-// function numberMix( ins1, ins2, progress )
-// {
-//   _.assert( arguments.length === 3, 'Expects exactly three arguments' );
-//   return ins1*( 1-progress ) + ins2*( progress );
-// }
-
 // --
 // fields
 // --
@@ -499,42 +292,24 @@ let Fields =
 let Routines =
 {
 
-  // /*ttt*/numberIs,
-  // /*ttt*/numberIsNotNan,
-  // /*ttt*/numberIsFinite,
-  // /*ttt*/numberIsInfinite,
-  // /*ttt*/numberIsInt,
-  //
-  // /*ttt*/numbersAre,
-  // /*ttt*/numbersAreIdentical,
-  // /*ttt*/numbersAreEquivalent,
-  // /*ttt*/numbersAreFinite,
-  // /*ttt*/numbersArePositive,
-  // /*ttt*/numbersAreInt,
-  //
-  // /*ttt*/numberInRange,
+  numbersTotal,
 
-  /*ttt*/numbersTotal,
+  numberFrom,
+  numbersFrom, /* qqq : add test coverage */
+  numberFromStr,
 
-  /*ttt*/numberFrom,
-  /*ttt*/numbersFrom, /* qqq : add test coverage */
-  /*ttt*/numberFromStr,
+  numbersSlice,
 
-  /*ttt*/numbersSlice,
+  numberRandomInRange,
+  numberRandomInt,
+  numberRandomIntBut, /* dubious */
 
-  /*ttt*/numberRandomInRange,
-  /*ttt*/numberRandomInt,
-  /*ttt*/numberRandomIntBut, /* dubious */
+  numbersMake,
+  numbersFromNumber,
+  numbersFromInt,
 
-  /*ttt*/numbersMake,
-  /*ttt*/numbersFromNumber,
-  /*ttt*/numbersFromInt,
-
-  /*ttt*/numbersMake_functor,
-  /*ttt*/numbersFrom_functor,
-
-  // /*ttt*/numberClamp,
-  // /*ttt*/numberMix,
+  numbersMake_functor,
+  numbersFrom_functor,
 
 }
 
@@ -546,10 +321,6 @@ Object.assign( Self, Fields );
 // --
 // export
 // --
-
-if( typeof module !== 'undefined' )
-if( _global.WTOOLS_PRIVATE )
-{ /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

@@ -6,10 +6,10 @@ let _global = _global_;
 let _ = _global_.wTools;
 let Self = _global_.wTools;
 
-let _ArraySlice = Array.prototype.slice;
-let _FunctionBind = Function.prototype.bind;
-let _ObjectToString = Object.prototype.toString;
-let _ObjectHasOwnProperty = Object.hasOwnProperty;
+// let _ArraySlice = Array.prototype.slice;
+// let _FunctionBind = Function.prototype.bind;
+// // let Object.prototype.toString = Object.prototype.toString;
+// let Object.hasOwnProperty = Object.hasOwnProperty;
 
 // --
 // str
@@ -34,7 +34,7 @@ let _ObjectHasOwnProperty = Object.hasOwnProperty;
 
 function strIs( src )
 {
-  let result = _ObjectToString.call( src ) === '[object String]';
+  let result = Object.prototype.toString.call( src ) === '[object String]';
   return result;
 }
 
@@ -89,7 +89,7 @@ function strDefined( src )
 {
   if( !src )
   return false;
-  let result = _ObjectToString.call( src ) === '[object String]';
+  let result = Object.prototype.toString.call( src ) === '[object String]';
   return result;
 }
 
@@ -149,7 +149,7 @@ function str()
   {
     let src = arguments[ a ];
 
-    if( src && src.toStr && !_ObjectHasOwnProperty.call( src, 'constructor' ) )
+    if( src && src.toStr && !Object.hasOwnProperty.call( src, 'constructor' ) )
     line = src.toStr();
     else try
     {
@@ -279,7 +279,7 @@ function strType( src )
 function strPrimitiveType( src )
 {
 
-  let name = _ObjectToString.call( src );
+  let name = Object.prototype.toString.call( src );
   let result = /\[(\w+) (\w+)\]/.exec( name );
 
   if( !result )
@@ -1255,10 +1255,6 @@ Object.assign( Self, Fields );
 // --
 // export
 // --
-
-// if( typeof module !== 'undefined' )
-// if( _global.WTOOLS_PRIVATE )
-// { /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

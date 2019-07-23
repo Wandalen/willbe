@@ -155,7 +155,10 @@ function _setupUnhandledErrorHandler1()
 function _setupConfig()
 {
 
-  if( _global.WTOOLS_PRIVATE )
+  // if( _global.WTOOLS_PRIVATE )
+  // return;
+
+  if( _global.__GLOBAL_WHICH__ !== 'real' )
   return;
 
   if( !_global.Config )
@@ -277,13 +280,13 @@ function _setup1()
 let Routines =
 {
 
-  /*ttt*/_setupUnhandledErrorHandler1,
+  _setupUnhandledErrorHandler1,
 
-  /*ttt*/_setupConfig,
-  /*ttt*/_setupLoggerPlaceholder,
-  /*ttt*/_setupTesterPlaceholder,
+  _setupConfig,
+  _setupLoggerPlaceholder,
+  _setupTesterPlaceholder,
 
-  /*ttt*/_setup1,
+  _setup1,
 
 }
 
@@ -294,10 +297,6 @@ Self._setup1();
 // --
 // export
 // --
-
-if( typeof module !== 'undefined' )
-if( _global_.WTOOLS_PRIVATE )
-{ /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

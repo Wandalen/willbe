@@ -493,18 +493,19 @@ function openNamed( test )
     test.identical( module.openedModule.commonPath, path.join( routinePath, 'super' ) );
     test.identical( module.openedModule.willfilesPath, path.s.join( routinePath, [ './super.im.will.yml', './super.ex.will.yml' ] ) );
     test.identical( module.openedModule.willfilesArray.length, 2 );
-    test.identical( _.mapKeys( module.openedModule.willfileWithRoleMap ), [ 'import', 'export' ] );
+    test.setsAreIdentical( _.mapKeys( module.openedModule.willfileWithRoleMap ), [ 'import', 'export' ] );
 
     test.is( !!module.openedModule.about );
     test.identical( module.openedModule.about.name, 'supermodule' );
     test.identical( module.openedModule.pathMap, pathMap );
-    test.identical( _.mapKeys( module.openedModule.submoduleMap ), [ 'Submodule' ] );
-    test.identical( _.filter( _.mapKeys( module.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug' ] );
+    test.setsAreIdentical( _.mapKeys( module.openedModule.submoduleMap ), [ 'Submodule' ] );
+    debugger;
+    test.setsAreIdentical( _.filter( _.mapKeys( module.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug' ] );
 
     let steps = _.select( module.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
-    test.identical( steps, [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
-    test.identical( _.mapKeys( module.openedModule.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
-    test.identical( _.mapKeys( module.openedModule.exportedMap ), [] );
+    test.setsAreIdentical( steps, [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
+    test.setsAreIdentical( _.mapKeys( module.openedModule.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
+    test.setsAreIdentical( _.mapKeys( module.openedModule.exportedMap ), [] );
 
   }
 
@@ -766,13 +767,13 @@ function openOutNamed( test )
     test.identical( module.openedModule.willfilesArray.length, 1 );
     test.identical( _.mapKeys( module.openedModule.willfileWithRoleMap ), [ 'single' ] );
     test.identical( _.mapKeys( module.openedModule.submoduleMap ), [ 'Submodule' ] );
-    test.setsIdentical( _.filter( _.mapKeys( module.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.debug', 'exported.files.export.debug', 'exported.export.', 'exported.files.export.' ] );
+    test.setsAreIdentical( _.filter( _.mapKeys( module.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.debug', 'exported.files.export.debug', 'exported.export.', 'exported.files.export.' ] );
 
     let steps = _.select( module.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
-    test.setsIdentical( steps, [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug', 'exported.export.debug', 'exported.files.export.debug', 'exported.export.', 'exported.files.export.' ] );
+    test.setsAreIdentical( steps, [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug', 'exported.export.debug', 'exported.files.export.debug', 'exported.export.', 'exported.files.export.' ] );
 
-    test.setsIdentical( _.mapKeys( module.openedModule.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
-    test.setsIdentical( _.mapKeys( module.openedModule.exportedMap ), [ 'export.', 'export.debug' ] );
+    test.setsAreIdentical( _.mapKeys( module.openedModule.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
+    test.setsAreIdentical( _.mapKeys( module.openedModule.exportedMap ), [ 'export.', 'export.debug' ] );
 
   }
 
@@ -921,7 +922,7 @@ function clone( test )
     test.open( mapName );
 
     test.is( module.openedModule[ mapName ] !== module2.openedModule[ mapName ] );
-    test.setsIdentical( _.mapKeys( module.openedModule[ mapName ] ), _.mapKeys( module2.openedModule[ mapName ] ) );
+    test.setsAreIdentical( _.mapKeys( module.openedModule[ mapName ] ), _.mapKeys( module2.openedModule[ mapName ] ) );
     for( var k in module.openedModule[ mapName ] )
     {
       var resource1 = module.openedModule[ mapName ][ k ];
@@ -946,6 +947,64 @@ function clone( test )
 }
 
 clone.timeOut = 130000;
+
+//
+
+function resolve( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'make' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let modulePath = _.path.join( routinePath, 'v1' );
+  let will = new _.Will;
+  let path = _.fileProvider.path;
+
+  function pin( filePath )
+  {
+    return path.s.join( routinePath, '', filePath );
+  }
+
+  function pout( filePath )
+  {
+    return path.s.join( routinePath, 'out', filePath );
+  }
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  var module = will.moduleMake({ willfilesPath : modulePath });
+
+  /* - */
+
+  module.openedModule.ready.thenKeep( ( arg ) =>
+  {
+
+    test.case = 'array of numbers';
+    debugger;
+    var got = module.openedModule.resolve
+    ({
+      selector : [ 1, 3 ],
+      prefixlessAction : 'resolved',
+    });
+    var expected = [ 1, 3 ];
+    test.identical( got, expected );
+
+    return null;
+  });
+
+  /* - */
+
+  let ready = module.openedModule.ready.finallyKeep( ( err, arg ) =>
+  {
+    if( err )
+    throw err;
+    test.is( err === undefined );
+    module.finit();
+    return arg;
+  });
+
+  return ready.split();
+}
 
 //
 
@@ -4046,6 +4105,38 @@ function pathsResolveComposite( test )
     var expected = pin( '../prefix/aprotobdirc/dir2/proto' );
     test.identical( resolved, expected );
 
+    test.case = 'path::protoMain';
+    var resolved = module.openedModule.resolve( 'path::protoMain' )
+    var expected = pin( 'proto/Main.s' );
+    test.identical( resolved, expected );
+
+    test.case = 'path::protoMain with options defaultResourceKind';
+    var resolved = module.openedModule.resolve
+    ({
+      selector : 'path::protoMain',
+      defaultResourceKind : 'path',
+      prefixlessAction : 'default',
+      pathResolving : 'in',
+    })
+    var expected = pin( 'proto/Main.s' );
+    test.identical( resolved, expected );
+
+    test.case = '{path::proto}/Main.s';
+    var resolved = module.openedModule.resolve( '{path::proto}/Main.s' )
+    var expected = pin( 'proto/Main.s' );
+    test.identical( resolved, expected );
+
+    test.case = '{path::proto}/Main.s with options defaultResourceKind';
+    var resolved = module.openedModule.resolve
+    ({
+      selector : '{path::proto}/Main.s',
+      defaultResourceKind : 'path',
+      prefixlessAction : 'default',
+      pathResolving : 'in',
+    })
+    var expected = pin( 'proto/Main.s' );
+    test.identical( resolved, expected );
+
     return null;
   });
 
@@ -4521,6 +4612,7 @@ var Self =
     openOutNamed,
     clone,
 
+    resolve,
     reflectorResolve,
     reflectorInheritedResolve,
     superResolve,

@@ -474,7 +474,7 @@ function diagnosticCode( o )
     });
 
     if( result && _.strIndentation )
-    result = _.strIndentation( result, o.identation );
+    result = o.identation + _.strIndentation( result, o.identation );
 
     if( o.withPath )
     result = o.location.full + '\n' + result;
@@ -1309,7 +1309,7 @@ let ErrorAbort = _.error_functor( 'ErrorAbort' );
 
 let error =
 {
-  /*ttt*/ErrorAbort,
+  ErrorAbort,
 }
 
 let Extend =
@@ -1340,10 +1340,6 @@ Object.assign( Self.error, error );
 // --
 // export
 // --
-
-// if( typeof module !== 'undefined' )
-// if( _global_.WTOOLS_PRIVATE )
-// { /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

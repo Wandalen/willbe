@@ -1,6 +1,6 @@
 ( function _fRange_s_() {
 
-'use strict'; 
+'use strict';
 
 let _global = _global_;
 let _ = _global_.wTools;
@@ -8,7 +8,7 @@ let Self = _global_.wTools;
 
 let _ArraySlice = Array.prototype.slice;
 let _FunctionBind = Function.prototype.bind;
-let _ObjectToString = Object.prototype.toString;
+// let Object.prototype.toString = Object.prototype.toString;
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
 
 // --
@@ -152,14 +152,14 @@ let Routines =
 
   // range
 
-  /*ttt*/rangeIs,
-  /*ttt*/rangeFrom,
-  /*ttt*/rangeClamp,
-  /*ttt*/rangeNumberElements,
-  /*ttt*/rangeFirstGet,
-  /*ttt*/rangeLastGet,
+  rangeIs,
+  rangeFrom,
+  rangeClamp,
+  rangeNumberElements,
+  rangeFirstGet,
+  rangeLastGet,
 
-  /*ttt*/rangeToStr,
+  rangeToStr,
 
 }
 
@@ -171,10 +171,6 @@ Object.assign( Self, Fields );
 // --
 // export
 // --
-
-if( typeof module !== 'undefined' )
-if( _global.WTOOLS_PRIVATE )
-{ /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

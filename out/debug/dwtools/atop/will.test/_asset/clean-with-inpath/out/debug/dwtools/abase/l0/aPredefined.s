@@ -1,6 +1,6 @@
 ( function _aPredefined_s_() {
 
-'use strict'; 
+'use strict';
 
 /**
  * @file aPredefined.s.
@@ -30,28 +30,29 @@ _global._global_ = _wasGlobal;
 
 // verification
 
-if( !_global_.WTOOLS_PRIVATE )
+// if( !_global_.WTOOLS_PRIVATE )
+if( _global_.__GLOBAL_WHICH__ === 'real' )
 {
 
   if( _global_.wBase )
   {
     if( _global_.wTools.usePath )
-    _global_.wTools.usePath( __dirname + '/../..' );
+    _global_.wTools.usePath( __dirname + '/../..' ); /* xxx : remove later */
     module[ 'exports' ] = _global_.wBase;
     return;
   }
 
   if( _global_.wBase )
   {
-    throw new Error( 'wTools included several times' );
+    throw new Error( 'wTools was included several times' );
   }
 
 }
 
 // config
 
-if( !_realGlobal.__which__ )
-_realGlobal.__which__ = 'real';
+if( _realGlobal.__GLOBAL_WHICH__ === undefined )
+_realGlobal.__GLOBAL_WHICH__ = 'real';
 
 if( !_realGlobal.Config )
 _realGlobal.Config = { debug : true }
@@ -71,9 +72,14 @@ _global_.Config.platform = ( ( typeof module !== 'undefined' ) && ( typeof proce
 if( _global_.Config.isWorker === undefined )
 _global_.Config.isWorker = !!( typeof self !== 'undefined' && self.self === self && typeof importScripts !== 'undefined' );
 
-if( !_global_.WTOOLS_PRIVATE  )
-if( !_global_.Underscore && _global_._ )
-_global_.Underscore = _global_._;
+// if( !_global_.WTOOLS_PRIVATE  )
+if( _global_.__GLOBAL_WHICH__ === 'real' )
+// if( !_global_.Underscore && _global_._ )
+if( _global_._ )
+{
+  _global_.Underscore = _global_._;
+  delete _global_._;
+}
 
 if( Object.hasOwnProperty.call( _global, 'wTools' ) && _global !== _realGlobal_ )
 throw Error( 'wTools was already defined' );
@@ -85,7 +91,7 @@ _realGlobal_.wTools = _realGlobal_.wTools || Object.create( null );
 let Self = _global.wTools;
 let _ = Self;
 
-Self.__which__ = _global.__which__;
+Self.__GLOBAL_WHICH__ = _global.__GLOBAL_WHICH__;
 
 // special globals
 
@@ -94,7 +100,7 @@ Self.nothing = Symbol.for( 'nothing' );
 Self.maybe = Symbol.for( 'maybe' );
 Self.dont = Symbol.for( 'dont' );
 Self.unroll = Symbol.for( 'unroll' );
-Self.hold = Symbol.for( 'hold' );
+// Self.hold = Symbol.for( 'hold' );
 
 // type aliases
 
@@ -119,10 +125,6 @@ _global_.Fx = _global_.F32x;
 _global[ 'wTools' ] = Self;
 _global.wTools = Self;
 _global.wBase = Self;
-
-// if( typeof module !== 'undefined' )
-// if( _global.WTOOLS_PRIVATE )
-// { /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

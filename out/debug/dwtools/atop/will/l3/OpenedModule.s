@@ -2625,7 +2625,7 @@ function pathsRebase( o )
   if( inPathResource.path === null )
   inPathResource.path = '.';
 
-  let inPath = path.normalizeCanonical( o.inPath );
+  let inPath = path.canonize( o.inPath );
   let exInPath = module.inPath;
   let relative = path.relative( inPath, exInPath );
 

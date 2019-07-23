@@ -41,10 +41,6 @@ Object.assign( Self, Fields );
 // export
 // --
 
-// if( typeof module !== 'undefined' )
-// if( _global.WTOOLS_PRIVATE )
-// { /* delete require.cache[ module.id ]; */ }
-
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;
 

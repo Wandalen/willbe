@@ -1,12 +1,12 @@
 ( function _fRegexp_s_() {
 
-'use strict'; 
+'use strict';
 
 let _global = _global_;
 let _ = _global_.wTools;
 let Self = _global_.wTools;
 
-let _ObjectToString = Object.prototype.toString;
+// // let Object.prototype.toString = Object.prototype.toString;
 let _ceil = Math.ceil;
 let _floor = Math.floor;
 
@@ -16,7 +16,7 @@ let _floor = Math.floor;
 
 function regexpIs( src )
 {
-  return _ObjectToString.call( src ) === '[object RegExp]';
+  return Object.prototype.toString.call( src ) === '[object RegExp]';
 }
 
 //
@@ -233,10 +233,6 @@ Object.assign( Self, Fields );
 // --
 // export
 // --
-
-// if( typeof module !== 'undefined' )
-// if( _global.WTOOLS_PRIVATE )
-// { /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

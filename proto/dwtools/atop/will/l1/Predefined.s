@@ -330,7 +330,7 @@ function stepRoutineShell( frame )
     for( let dst in forEachDst.filesGrouped )
     {
       let src = forEachDst.filesGrouped[ dst ];
-      let upToDate = fileProvider.filesAreUpToDate( dst, src );
+      let upToDate = fileProvider.filesAreUpToDate2({ dst : dst, src : src });
       if( upToDate )
       delete forEachDst.filesGrouped[ dst ];
     }
@@ -398,6 +398,13 @@ function stepRoutineTranspile( frame )
   _.sure( _.arrayHas( [ 'preserve', 'rebuild' ], opts.upToDate ), () => 'Unknown value of upToDate ' + _.strQuote( opts.upToDate ) );
   _.assert( arguments.length === 1 );
 
+  if( opts.entry )
+  opts.entry = step.inPathResolve( opts.entry );
+  if( opts[ 'external.before' ] )
+  opts[ 'external.before' ] = step.inPathResolve( opts[ 'external.before' ] );
+  if( opts[ 'external.after' ] )
+  opts[ 'external.after' ] = step.inPathResolve( opts[ 'external.after' ] );
+
   let reflector = step.reflectorResolve( opts.reflector );
   let reflectOptions = reflector.optionsForReflectExport();
 
@@ -427,10 +434,13 @@ function stepRoutineTranspile( frame )
     inputPath : reflectOptions.src,
     outputPath : reflectOptions.dst,
     entryPath : opts.entry,
+    externalBeforePath : opts[ 'external.before' ],
+    externalAfterPath : opts[ 'external.after' ],
     totalReporting : 0,
     transpilingStrategies : transpilingStrategies,
     splittingStrategy : raw ? 'OneToOne' : 'ManyToOne',
     writingTerminalUnderDirectory : 1,
+    simpleConcatenator : 0,
     upToDate : opts.upToDate,
     verbosity : verbosity,
 
@@ -440,11 +450,6 @@ function stepRoutineTranspile( frame )
     beautifing : 0,
 
   });
-
-  // optimization : 9,
-  // minification : 8,
-  // diagnosing : 0,
-  // beautifing : 0,
 
   return multiple.form().perform()
   .finally( ( err, arg ) =>
@@ -461,6 +466,8 @@ stepRoutineTranspile.stepOptions =
   reflector : null,
   upToDate : 'preserve',
   entry : null,
+  'external.before' : null,
+  'external.after' : null,
 }
 
 stepRoutineTranspile.uniqueOptions =

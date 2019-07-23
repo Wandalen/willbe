@@ -8,7 +8,7 @@
 
 */
 
-let _ObjectToString = Object.prototype.toString;
+// let Object.prototype.toString = Object.prototype.toString;
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
 
 let _global = _global_;
@@ -55,7 +55,7 @@ function diagnosticCode()
 
 function errIs( src )
 {
-  return src instanceof Error || _ObjectToString.call( src ) === '[object Error]';
+  return src instanceof Error || Object.prototype.toString.call( src ) === '[object Error]';
 }
 
 //
@@ -166,7 +166,7 @@ function _err( o )
   {
     let arg = o.args[ a ];
 
-    if( _.routineIs( arg ) )
+    if( !_.errIs( arg ) && _.routineIs( arg ) )
     {
       if( arg.length === 0 )
       {}
@@ -174,15 +174,15 @@ function _err( o )
       debugger;
       if( arg.length === 0 )
       arg = o.args[ a ] = arg();
-      if( _.argumentsArrayIs( arg ) )
+      if( _.unrollIs( arg ) )
       {
-        o.args = _.longButRange( o.args, [ a,a+1 ], arg );
+        o.args = _.longButRange( o.args, [ a, a+1 ], arg );
         a -= 1;
         continue;
       }
     }
 
-    if( arg instanceof Error )
+    if( _.errIs( arg ) )
     {
 
       if( !result )
@@ -190,7 +190,7 @@ function _err( o )
         result = arg;
         catches = result.catches || '';
         sourceCode = result.sourceCode || '';
-        if( o.args.length === 1 )
+        // if( o.args.length === 1 )
         attended = result.attended;
       }
 
@@ -245,8 +245,6 @@ function _err( o )
 
   /* level */
 
-  // if( !_.numberIs( o.level ) )
-  // o.level = result.level;
   if( !_.numberIs( o.level ) )
   o.level = _err.defaults.level;
 
@@ -278,7 +276,6 @@ function _err( o )
       }
       else
       {
-        // debugger;
         stack = _.diagnosticStack( result );
       }
     }
@@ -338,39 +335,6 @@ function _err( o )
 
   }
 
-  /* line number */
-
-  if( o.location.line !== undefined )
-  {
-    Object.defineProperty( result, 'lineNumber',
-    {
-      enumerable : false,
-      configurable : true,
-      writable : true,
-      value : o.location.line,
-    });
-  }
-
-  /* file name */
-
-  // if( o.location.path !== undefined && !result.fileName )
-  // {
-  //   Object.defineProperty( result, 'fileName',
-  //   {
-  //     enumerable : false,
-  //     configurable : true,
-  //     writable : true,
-  //     value : o.location.path,
-  //   });
-  //   Object.defineProperty( result, 'LocationFull',
-  //   {
-  //     enumerable : false,
-  //     configurable : true,
-  //     writable : true,
-  //     value : o.location.full,
-  //   });
-  // }
-
   /* source code */
 
   if( o.usingSourceCode )
@@ -380,7 +344,7 @@ function _err( o )
     o.location = _.diagnosticLocation
     ({
       error : result,
-      /*ttt*/stack,
+      stack,
       location : o.location,
     });
     c = _.diagnosticCode
@@ -388,205 +352,91 @@ function _err( o )
       location : o.location,
       sourceCode : o.sourceCode,
     });
-    // debugger;
     if( c && c.length < 400 )
     {
-      // sourceCode += '\n';
       sourceCode += c;
-      // sourceCode += '\n ';
     }
   }
 
   /* where it was caught */
 
   let floc = _.diagnosticLocation( o.level );
-  // if( floc.fullWithRoutine.indexOf( 'errLogOnce' ) !== -1 )
-  // debugger;
   if( !floc.service || floc.service === 1 )
   catches = '    caught at ' + floc.fullWithRoutine + '\n' + catches;
 
   /* message */
 
-  let message = '';
+  let briefly = result.briefly || o.briefly;
+  let message = messageForm();
 
-  let briefly = result.briefly && ( result.briefly === undefined || result.briefly === null || result.briefly );
-  briefly = briefly || o.briefly;
-  if( briefly )
-  {
-    message += originalMessage;
-  }
-  else
-  {
-    message += ' = Message\n' + originalMessage + '\n';
-    if( o.condensingStack )
-    message += '\n = Condensed calls stack\n' + stackCondensed + '';
-    else
-    message += '\n = Functions stack\n' + stack + '';
-    message += '\n = Catches stack\n' + catches + '\n';
+  /* fields */
 
-    if( sourceCode )
-    message += ' = Source code from ' + sourceCode + '\n';
-
-  }
-
-  // if( sourceCode && !briefly )
-  // debugger;
-  // if( sourceCode && !briefly )
-  // message += '* Source code ' + sourceCode + '\n';
-
-  try
-  {
-    Object.defineProperty( result, 'toString',
-    {
-      enumerable : false,
-      configurable : true,
-      writable : true,
-      value : function() { return this.message },
-      // value : function() { return '--\n' + this.message + '\n--' },
-    });
-  }
-  catch( e )
-  {
-    if( _.debuggerEnabled )
-    debugger;
-    // result = new Error( message );
-  }
-
-  try
-  {
-    Object.defineProperty( result, 'message',
-    {
-      enumerable : false,
-      configurable : true,
-      writable : true,
-      value : message,
-    });
-  }
-  catch( e )
-  {
-    console.error( e );
-    if( _.debuggerEnabled )
-    debugger;
-    // result = new Error( message );
-  }
-
-  /* original message */
-
-  Object.defineProperty( result, 'originalMessage',
-  {
-    enumerable : false,
-    configurable : true,
-    writable : true,
-    value : originalMessage,
-  });
-
-  /* level */
-
-  Object.defineProperty( result, 'level',
-  {
-    enumerable : false,
-    configurable : true,
-    writable : true,
-    value : o.level,
-  });
-
-  /* stack */
-
-  try
-  {
-    Object.defineProperty( result, 'stack',
-    {
-      enumerable : false,
-      configurable : true,
-      writable : true,
-      value : stack,
-    });
-  }
-  catch( err )
-  {
-  }
-
-  Object.defineProperty( result, 'stackCondensed',
-  {
-    enumerable : false,
-    configurable : true,
-    writable : true,
-    value : stackCondensed,
-  });
-
-  /* briefly */
-
+  if( o.location.line !== undefined )
+  nonenurable( 'lineNumber', o.location.line );
+  nonenurable( 'toString', function() { return this.message } );
+  nonenurable( 'message', message );
+  nonenurable( 'originalMessage', originalMessage );
+  nonenurable( 'level', o.level );
+  nonenurable( 'stack', stack );
+  nonenurable( 'stackCondensed', stackCondensed );
   if( o.briefly )
-  Object.defineProperty( result, 'briefly',
-  {
-    enumerable : false,
-    configurable : true,
-    writable : true,
-    value : o.briefly,
-  });
-
-  /* source code */
-
-  Object.defineProperty( result, 'sourceCode',
-  {
-    enumerable : false,
-    configurable : true,
-    writable : true,
-    value : sourceCode || null,
-  });
-
-  /* location */
-
+  nonenurable( 'briefly', o.briefly );
+  nonenurable( 'sourceCode', sourceCode || null );
   if( result.location === undefined )
-  Object.defineProperty( result, 'location',
-  {
-    enumerable : false,
-    configurable : true,
-    writable : true,
-    value : o.location,
-  });
-
-  if( attended === 1 )
-  debugger;
-
-  Object.defineProperty( result, 'attended',
-  {
-    enumerable : false,
-    configurable : true,
-    writable : true,
-    value : attended,
-  });
-
-  /* catches */
-
-  Object.defineProperty( result, 'catches',
-  {
-    enumerable : false,
-    configurable : true,
-    writable : true,
-    value : catches,
-  });
-
-  /* catch count */
-
-  Object.defineProperty( result, 'catchCounter',
-  {
-    enumerable : false,
-    configurable : true,
-    writable : true,
-    value : result.catchCounter ? result.catchCounter+1 : 1,
-  });
-
-  if( originalMessage.indexOf( 'caught at' ) !== -1 )
-  {
-    debugger;
-    // console.error( '-' );
-    // console.error( result.toString() );
-    // console.error( '-' );
-    // throw Error( 'err : originalMessage should have no "caught at"' );
-  }
+  nonenurable( 'location', o.location );
+  nonenurable( 'attended', attended );
+  nonenurable( 'catches', catches );
+  nonenurable( 'catchCounter', result.catchCounter ? result.catchCounter+1 : 1 );
 
   return result;
+
+  /* */
+
+  function nonenurable( fieldName, value )
+  {
+    try
+    {
+      Object.defineProperty( result, fieldName,
+      {
+        enumerable : false,
+        configurable : true,
+        writable : true,
+        value : value,
+      });
+    }
+    catch( err )
+    {
+      console.error( err );
+      debugger;
+      if( _.debuggerEnabled )
+      debugger;
+    }
+  }
+
+  /* */
+
+  function messageForm()
+  {
+    let message = '';
+    if( briefly )
+    {
+      message += originalMessage;
+    }
+    else
+    {
+      message += ' = Message\n' + originalMessage + '\n';
+      if( o.condensingStack )
+      message += '\n = Condensed calls stack\n' + stackCondensed + '';
+      else
+      message += '\n = Functions stack\n' + stack + '';
+      message += '\n = Catches stack\n' + catches + '\n';
+
+      if( sourceCode )
+      message += ' = Source code from ' + sourceCode + '\n';
+    }
+    return message;
+  }
+
 }
 
 _err.defaults =
@@ -748,7 +598,6 @@ function error_functor( name, onMake )
         let err1 = new ErrorConstructor();
         let args1 = onMake.apply( err1, arguments );
         _.assert( _.arrayLike( args1 ) );
-        // let args2 = _.arrayAppendArrays( [], [ args1, [ ( arguments.length ? '\n' : '' ), err1 ] ] );
         let args2 = _.arrayAppendArrays( [], [ [ err1, ( arguments.length ? '\n' : '' ) ], args1 ] );
         let err2 = _._err({ args : args2, level : 3 });
 
@@ -966,7 +815,7 @@ function sure( condition )
 
   function boolLike( src )
   {
-    let type = _ObjectToString.call( src );
+    let type = Object.prototype.toString.call( src );
     return type === '[object Boolean]' || type === '[object Number]';
   }
 
@@ -1007,7 +856,7 @@ function sureBriefly( condition )
 
   function boolLike( src )
   {
-    let type = _ObjectToString.call( src );
+    let type = Object.prototype.toString.call( src );
     return type === '[object Boolean]' || type === '[object Number]';
   }
 
@@ -1044,7 +893,7 @@ function sureWithoutDebugger( condition )
 
   function boolLike( src )
   {
-    let type = _ObjectToString.call( src );
+    let type = Object.prototype.toString.call( src );
     return type === '[object Boolean]' || type === '[object Number]';
   }
 
@@ -1179,7 +1028,7 @@ function assert( condition )
 
   function boolLike( src )
   {
-    let type = _ObjectToString.call( src );
+    let type = Object.prototype.toString.call( src );
     return type === '[object Boolean]' || type === '[object Number]';
   }
 
@@ -1306,7 +1155,7 @@ function assertOwnNoConstructor( ins )
 //
 // let error =
 // {
-//   /*ttt*/ErrorAbort,
+//   ErrorAbort,
 // }
 
 // --
@@ -1324,7 +1173,7 @@ function assertOwnNoConstructor( ins )
 
 let Fields =
 {
-  // /*ttt*/error,
+  // error,
   error : Object.create( null ),
   debuggerEnabled : !!Config.debug,
 }
@@ -1399,10 +1248,6 @@ Error.stackTraceLimit = Infinity;
 // --
 // export
 // --
-
-// if( typeof module !== 'undefined' )
-// if( _global.WTOOLS_PRIVATE )
-// { /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

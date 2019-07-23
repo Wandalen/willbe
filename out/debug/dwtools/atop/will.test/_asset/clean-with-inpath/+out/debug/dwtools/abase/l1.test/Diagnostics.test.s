@@ -1993,40 +1993,40 @@ var Self =
 
     _err   : _err,
     err    : err,
-    /*ttt*/errLog,
+    errLog,
     
     // test sureMap*
       
-    /*ttt*/sureMapHasExactly,
-    /*ttt*/sureMapOwnExactly,
+    sureMapHasExactly,
+    sureMapOwnExactly,
       
-    /*ttt*/sureMapHasOnly,
-    /*ttt*/sureMapOwnOnly,
+    sureMapHasOnly,
+    sureMapOwnOnly,
       
-    /*ttt*/sureMapHasAll,
-    /*ttt*/sureMapOwnAll,
+    sureMapHasAll,
+    sureMapOwnAll,
       
-    /*ttt*/sureMapHasNone,
-    /*ttt*/sureMapOwnNone,
+    sureMapHasNone,
+    sureMapOwnNone,
       
-    /*ttt*/sureMapHasNoUndefine,
+    sureMapHasNoUndefine,
     
     // test assertMap*  
       
-    /*ttt*/assertMapHasFields,
-    /*ttt*/assertMapOwnFields,
+    assertMapHasFields,
+    assertMapOwnFields,
       
-    /*ttt*/assertMapHasOnly,
-    /*ttt*/assertMapOwnOnly,
+    assertMapHasOnly,
+    assertMapOwnOnly,
     
-    /*ttt*/assertMapHasNone,
-    /*ttt*/assertMapOwnNone,
+    assertMapHasNone,
+    assertMapOwnNone,
       
-    /*ttt*/assertMapHasNoUndefine,
+    assertMapHasNoUndefine,
       
     //
 
-    /*ttt*/assert,
+    assert,
     diagnosticStack  : diagnosticStack
 
   }

@@ -65,7 +65,7 @@ function vectorize( routine, select )
     vectorizingArray : 1,
     vectorizingMapVals : 0,
     vectorizingMapKeys : 1,
-    /*ttt*/select,
+    select,
   });
 }
 
@@ -83,7 +83,7 @@ function vectorizeAsArray( routine, select )
     vectorizingArray : 1,
     vectorizingMapVals : 0,
     vectorizingMapKeys : 0,
-    /*ttt*/select,
+    select,
   });
 
   return wrap;
@@ -350,8 +350,8 @@ let Fields =
 let Routines =
 {
 
-  /*ttt*/_keyEndsPathFilter,
-  /*ttt*/_isPathFilter,
+  _keyEndsPathFilter,
+  _isPathFilter,
 
   // checker
 
@@ -407,7 +407,7 @@ let Routines =
 
   refine : vectorize( 'refine' ),
   normalize : vectorize( 'normalize' ),
-  normalizeCanonical : vectorize( 'normalizeCanonical' ),
+  canonize : vectorize( 'canonize' ),
   normalizeTolerant : vectorize( 'normalizeTolerant' ),
   nativize : vectorize( 'nativize' ),
   dot : vectorize( 'dot' ),
@@ -466,10 +466,6 @@ _.path.s = Self;
 // --
 // export
 // --
-
-// if( typeof module !== 'undefined' )
-// if( _global_.WTOOLS_PRIVATE )
-// { /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

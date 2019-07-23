@@ -1,6 +1,6 @@
 ( function _fNumbers_s_() {
 
-'use strict'; 
+'use strict';
 
 let _global = _global_;
 let _ = _global_.wTools;
@@ -11,7 +11,7 @@ let _ArrayLastIndexOf = Array.prototype.lastIndexOf;
 let _ArraySlice = Array.prototype.slice;
 let _ArraySplice = Array.prototype.splice;
 let _FunctionBind = Function.prototype.bind;
-let _ObjectToString = Object.prototype.toString;
+// let Object.prototype.toString = Object.prototype.toString;
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
 let _propertyIsEumerable = Object.propertyIsEnumerable;
 let _ceil = Math.ceil;
@@ -41,7 +41,7 @@ let _floor = Math.floor;
 function numberIs( src )
 {
   return typeof src === 'number';
-  return _ObjectToString.call( src ) === '[object Number]';
+  return Object.prototype.toString.call( src ) === '[object Number]';
 }
 
 //
@@ -237,22 +237,22 @@ let Fields =
 let Routines =
 {
 
-  /*ttt*/numberIs,
-  /*ttt*/numberIsNotNan,
-  /*ttt*/numberIsFinite,
-  /*ttt*/numberIsInfinite,
-  /*ttt*/numberIsInt,
+  numberIs,
+  numberIsNotNan,
+  numberIsFinite,
+  numberIsInfinite,
+  numberIsInt,
 
-  /*ttt*/numbersAre,
-  /*ttt*/numbersAreIdentical,
-  /*ttt*/numbersAreEquivalent,
-  /*ttt*/numbersAreFinite,
-  /*ttt*/numbersArePositive,
-  /*ttt*/numbersAreInt,
+  numbersAre,
+  numbersAreIdentical,
+  numbersAreEquivalent,
+  numbersAreFinite,
+  numbersArePositive,
+  numbersAreInt,
 
-  /*ttt*/numberInRange,
-  /*ttt*/numberClamp,
-  /*ttt*/numberMix,
+  numberInRange,
+  numberClamp,
+  numberMix,
 
 }
 
@@ -264,10 +264,6 @@ Object.assign( Self, Fields );
 // --
 // export
 // --
-
-// if( typeof module !== 'undefined' )
-// if( _global.WTOOLS_PRIVATE )
-// { /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

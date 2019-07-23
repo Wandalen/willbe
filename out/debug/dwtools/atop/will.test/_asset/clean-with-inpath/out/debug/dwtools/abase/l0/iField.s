@@ -1,6 +1,6 @@
 ( function _Field_s_() {
 
-'use strict'; 
+'use strict';
 
 let Self = _global_.wTools.field = _global_.wTools.field || Object.create( null );
 let _global = _global_;
@@ -8,7 +8,7 @@ let _ = _global_.wTools;
 
 let _ArraySlice = Array.prototype.slice;
 let _FunctionBind = Function.prototype.bind;
-let _ObjectToString = Object.prototype.toString;
+// let Object.prototype.toString = Object.prototype.toString;
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
 
 // --
@@ -1151,71 +1151,71 @@ let make =
 
   //
 
-  /*ttt*/bypass,
-  /*ttt*/assigning,
-  /*ttt*/primitive,
-  /*ttt*/hiding,
-  /*ttt*/appendingAnything,
-  /*ttt*/appendingArrays,
-  /*ttt*/appendingOnce,
-  /*ttt*/removing,
-  /*ttt*/notPrimitiveAssigning,
-  /*ttt*/assigningRecursive,
-  /*ttt*/drop,
+  bypass,
+  assigning,
+  primitive,
+  hiding,
+  appendingAnything,
+  appendingArrays,
+  appendingOnce,
+  removing,
+  notPrimitiveAssigning,
+  assigningRecursive,
+  drop,
 
   // src
 
-  /*ttt*/srcDefined,
-  /*ttt*/srcNull,
+  srcDefined,
+  srcNull,
 
   // dst
 
-  /*ttt*/dstNotConstant,
-  /*ttt*/dstAndSrcOwn,
-  /*ttt*/dstUndefinedSrcNotUndefined,
+  dstNotConstant,
+  dstAndSrcOwn,
+  dstUndefinedSrcNotUndefined,
 
   // dstNotHas
 
-  /*ttt*/dstNotHas,
-  /*ttt*/dstNotHasOrHasNull,
-  /*ttt*/dstNotHasOrHasNil,
+  dstNotHas,
+  dstNotHasOrHasNull,
+  dstNotHasOrHasNil,
 
-  /*ttt*/dstNotHasAssigning,
-  /*ttt*/dstNotHasAppending,
-  /*ttt*/dstNotHasSrcPrimitive,
+  dstNotHasAssigning,
+  dstNotHasAppending,
+  dstNotHasSrcPrimitive,
 
-  /*ttt*/dstNotHasSrcOwn,
-  /*ttt*/dstNotHasSrcOwnAssigning,
-  /*ttt*/dstNotHasSrcOwnRoutines,
-  /*ttt*/dstNotHasAssigningRecursive,
+  dstNotHasSrcOwn,
+  dstNotHasSrcOwnAssigning,
+  dstNotHasSrcOwnRoutines,
+  dstNotHasAssigningRecursive,
 
   // dstNotOwn
 
-  /*ttt*/dstNotOwn,
-  /*ttt*/dstNotOwnSrcOwn,
-  /*ttt*/dstNotOwnSrcOwnAssigning,
-  /*ttt*/dstNotOwnOrUndefinedAssigning,
-  /*ttt*/dstNotOwnAssigning,
-  /*ttt*/dstNotOwnAppending,
-  /*ttt*/dstNotOwnFromDefinition,
-  /*ttt*/dstNotOwnFromDefinitionStrictlyPrimitive,
+  dstNotOwn,
+  dstNotOwnSrcOwn,
+  dstNotOwnSrcOwnAssigning,
+  dstNotOwnOrUndefinedAssigning,
+  dstNotOwnAssigning,
+  dstNotOwnAppending,
+  dstNotOwnFromDefinition,
+  dstNotOwnFromDefinitionStrictlyPrimitive,
 
   // dstHas
 
-  /*ttt*/dstHasMaybeUndefined,
-  /*ttt*/dstHasButUndefined,
-  /*ttt*/dstHasSrcOwn,
-  /*ttt*/dstHasSrcNotOwn,
+  dstHasMaybeUndefined,
+  dstHasButUndefined,
+  dstHasSrcOwn,
+  dstHasSrcNotOwn,
 
   // srcOwn
 
-  /*ttt*/srcOwn,
-  /*ttt*/srcOwnRoutines,
-  /*ttt*/srcOwnAssigning,
-  /*ttt*/srcOwnPrimitive,
-  /*ttt*/srcOwnNotPrimitiveAssigning,
-  /*ttt*/srcOwnNotPrimitiveAssigningRecursive,
-  /*ttt*/srcOwnAssigningRecursive,
+  srcOwn,
+  srcOwnRoutines,
+  srcOwnAssigning,
+  srcOwnPrimitive,
+  srcOwnNotPrimitiveAssigning,
+  srcOwnNotPrimitiveAssigningRecursive,
+  srcOwnAssigningRecursive,
 
 }
 
@@ -1226,11 +1226,11 @@ let make =
 let Extend =
 {
 
-  /*ttt*/make,
+  make,
   mapper : Object.create( null ),
   filter : Object.create( null ),
-  /*ttt*/and,
-  /*ttt*/mapperFromFilter,
+  and,
+  mapperFromFilter,
 
 }
 
@@ -1241,10 +1241,6 @@ Object.assign( Self, Extend );
 // --
 // export
 // --
-
-if( typeof module !== 'undefined' )
-if( _global_.WTOOLS_PRIVATE )
-{ /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

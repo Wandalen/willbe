@@ -49,19 +49,17 @@ function Init()
   if( !this._downUpStr )
   this._downUpStr = this._downStr + this._upStr; /* ../ */
 
-  this._upEscapedStr = _.regexpEscape( this._upStr );
-  this._downEscapedStr = _.regexpEscape( this._downStr );
+  // this._upEscapedStr = _.regexpEscape( this._upStr );
+  // this._downEscapedStr = _.regexpEscape( this._downStr );
 
-  this._butDownUpEscapedStr = '(?!' + this._downEscapedStr + this._upEscapedStr + ')';
-  this._delDownEscapedStr = this._butDownUpEscapedStr + '(?:(?!' + this._upEscapedStr + ').)*' + this._upEscapedStr + this._downEscapedStr + '(' + this._upEscapedStr + '|$)';
-  this._delDownEscapedNonEmptyStr = this._butDownUpEscapedStr + '((?!' + this._upEscapedStr + ').)+' + this._upEscapedStr + this._downEscapedStr + '(' + this._upEscapedStr + '|$)';
+  // this._butDownUpEscapedStr = '(?!' + this._downEscapedStr + this._upEscapedStr + ')';
+  // this._delDownEscapedStr = this._butDownUpEscapedStr + '(?:(?!' + this._upEscapedStr + ').)*' + this._upEscapedStr + this._downEscapedStr + '(' + this._upEscapedStr + '|$)';
+  // this._delDownEscapedNonEmptyStr = this._butDownUpEscapedStr + '((?!' + this._upEscapedStr + ').)+' + this._upEscapedStr + this._downEscapedStr + '(' + this._upEscapedStr + '|$)';
 
-  this._delUpRegexp = new RegExp( this._upEscapedStr + '+$' );
+  // this._delUpRegexp = new RegExp( this._upEscapedStr + '+$' );
 
-  this._delHereRegexp = new RegExp( this._upEscapedStr + _.regexpEscape( this._hereStr ) + '(' + this._upEscapedStr + '|$)' );
-
-  let up = this._upEscapedStr;
-  let down = this._downEscapedStr;
+  let up = _.regexpEscape( this._upStr );
+  let down = _.regexpEscape( this._downStr );
   let beginOrChar = '(?:.|^)';
   let butUp = `(?:(?!${up}).)+`;
   // let notDownUp = `(?!${down}${up})`;
@@ -71,11 +69,14 @@ function Init()
   let splitOrUp = `(?:(?:${up}${up})|((${upOrBegin})${notDownUp}${butUp}${up}))`; /* split or / */
 
   this._delDownRegexp = new RegExp( `(${beginOrChar})${splitOrUp}${down}(${upOrEnd})`, '' );
+
+  this._delHereRegexp = new RegExp( up + _.regexpEscape( this._hereStr ) + '(' + up + '|$)' );
+
   // this._delDownRegexp = new RegExp( notDownUp + upOrBegin + '(' + notDownUp + splitUpDown + ')' + upOrEnd, '' );
   // this._delDownRegexp = new RegExp( '(?:' + this._upEscapedStr + ')?' + this._delDownEscapedStr, '' );
 
-  this._delDownFirstRegexp = new RegExp( '^' + '(' + this._upStr + ')?' + this._delDownEscapedNonEmptyStr, '' );
-  this._delDownSecondRegexp = new RegExp( '(?!^)' + '(' + this._upEscapedStr + ')?' + '(' + this._upEscapedStr + ')' + this._delDownEscapedStr, '' ); /* ../ x */
+  // this._delDownFirstRegexp = new RegExp( '^' + '(' + this._upStr + ')?' + this._delDownEscapedNonEmptyStr, '' );
+  // this._delDownSecondRegexp = new RegExp( '(?!^)' + '(' + this._upEscapedStr + ')?' + '(' + this._upEscapedStr + ')' + this._delDownEscapedStr, '' ); /* ../ x */
 
   // this._delDownRegexp2 = new RegExp( '^' + '(' + this._upStr + ')?' + this._delDownEscapedNonEmptyStr, '' );
 
@@ -618,9 +619,6 @@ function refine( src )
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.strIs( src ) );
 
-  // if( !src.length ) // yyy
-  // return this._hereStr;
-
   let result = src;
 
   if( result[ 1 ] === ':' )
@@ -639,12 +637,6 @@ function refine( src )
   }
 
   result = result.replace( /\\/g, '/' );
-
-  // if( result !== this._upStr && !_.strEnds( result, this._upStr + this._upStr ) ) // yyy
-  // result = _.strRemoveEnd( result, this._upStr );
-
-  // if( result !== this._upStr )
-  // result = result.replace( this._delUpRegexp, '' );
 
   return result;
 }
@@ -667,9 +659,6 @@ function _normalize( o )
 
   result = this.refine( result );
 
-  // let endsWithUp = o.src === this._upStr || _.strEnds( o.src, this._upStr );
-  // let beginsWithHere = o.src === this._hereStr || _.strBegins( o.src, this._hereUpStr ) || _.strBegins( o.src,this._hereStr + '\\' );
-
   if( debug )
   console.log( 'normalize.refined : ' + result );
 
@@ -680,20 +669,12 @@ function _normalize( o )
     /* remove "/" duplicates */
     result = result.replace( this._delUpDupRegexp, this._upStr );
   }
-  else
-  {
-    // /* remove right "/" */
-    // if( o.detrailing )
-    // if( result !== this._upStr && !_.strEnds( result,this._upStr + this._upStr ) )
-    // result = _.strRemoveEnd( result, this._upStr );
-  }
 
   let endsWithUp = false;
   let beginsWithHere = false;
 
   /* remove right "/" */
 
-  // if( o.detrailing )
   if( result !== this._upStr && !_.strEnds( result, this._upStr + this._upStr ) && _.strEnds( result, this._upStr ) )
   {
     endsWithUp = true;
@@ -707,9 +688,6 @@ function _normalize( o )
     beginsWithHere = true;
     result = _.strRemoveBegin( result, this._hereUpStr );
   }
-
-  if( debug )
-  console.log( 'normalize.naked : ' + result );
 
   /* remove second "." */
 
@@ -726,51 +704,14 @@ function _normalize( o )
 
   }
 
-  if( debug )
-  console.log( 'normalize.re.dot : ' + result );
-
-  // if( result.indexOf( this._hereStr ) !== -1 )
-  // {
-  //   while( this._delHereRegexp.test( result ) )
-  //   result = result.replace( this._delHereRegexp, ( match, a, b, c, d ) =>
-  //   {
-  //
-  //     if( a )
-  //     return a;
-  //     if( b && c === undefined )
-  //     return b;
-  //     return d || '';
-  //
-  //   });
-  // }
-
-  // if( _.strBegins( result, this._hereUpStr ) && !_.strBegins( result,this._hereUpStr + this._upStr ) )
-  // result = _.strRemoveBegin( result, this._hereUpStr );
-
-  // /* remove right "/" */
-  //
-  // if( o.detrailing )
-  // if( result !== this._upStr && !_.strEnds( result, this._upStr + this._upStr ) )
-  // result = _.strRemoveEnd( result, this._upStr );
-  //
-  // /* undoting */
-  //
-  // // if( o.undoting )
-  // // if( _.strBegins( result, this._hereUpStr ) && !_.strBegins( result, this._hereUpStr + this._upStr ) )
-  // if( !_.strBegins( result, this._hereUpStr + this._upStr ) )
-  // result = _.strRemoveBegin( result, this._hereUpStr );
-
   /* remove .. */
 
   if( result.indexOf( this._downStr ) !== -1 )
   {
 
-    // debugger;
-    // if( this._delDownRegexp.test( result ) )
     while( this._delDownRegexp.test( result ) )
     result = result.replace( this._delDownRegexp, ( match, notBegin, split, preSlash, postSlash ) =>
     {
-      // debugger;
       if( preSlash === '' )
       return notBegin;
       if( !notBegin )
@@ -778,87 +719,8 @@ function _normalize( o )
       else
       return notBegin + ( postSlash || '' );
     });
-    // debugger;
-
-    // while( this._delDownFirstRegexp.test( result ) )
-    // result = result.replace( this._delDownFirstRegexp,'' );
-
-    // if( !_.strBegins( result, this._hereUpStr + this._upStr ) )
-    // result = _.strRemoveBegin( result, this._hereUpStr );
 
   }
-
-  // /* remove second ".." */
-  //
-  // if( result.indexOf( this._downStr ) !== -1 )
-  // {
-  //   // debugger;
-  //   while( this._delDownSecondRegexp.test( result ) )
-  //   result = result.replace( this._delDownSecondRegexp, function( match, preSlash1, preSlash2, postSlash )
-  //   {
-  //     // debugger;
-  //     _.assert( arguments.length === 6 );
-  //     let pre = '';
-  //     if( preSlash1 && preSlash2 )
-  //     {
-  //       pre = preSlash1 + preSlash2;
-  //       postSlash = '';
-  //     }
-  //     return pre + ( postSlash || '' );
-  //   });
-  //   // debugger;
-  // }
-  //
-  // if( debug )
-  // console.log( 'normalize.re.ddot1 : ' + result );
-  //
-  // /* remove first ".." */
-  //
-  // if( result.indexOf( this._downStr ) !== -1 )
-  // {
-  //
-  //   if( this._delDownFirstRegexp.test( result ) )
-  //   result = result.replace( this._delDownFirstRegexp, ( match, a, b, c ) =>
-  //   {
-  //     let r = '';
-  //     if( a )
-  //     r = a;
-  //     else if( c )
-  //     r = '.' + c;
-  //     return r;
-  //   });
-  //
-  //   // while( this._delDownFirstRegexp.test( result ) )
-  //   // result = result.replace( this._delDownFirstRegexp,'' );
-  //
-  //   if( !_.strBegins( result, this._hereUpStr + this._upStr ) )
-  //   result = _.strRemoveBegin( result, this._hereUpStr );
-  //
-  // }
-
-  if( debug )
-  console.log( 'normalize.re.ddot : ' + result );
-
-  /* remove "." */
-
-  // if( result !== this._hereUpStr )
-  // if( _.strBegins( result, this._hereUpStr ) && !_.strBegins( result,this._hereUpStr + this._upStr ) )
-  // result = _.strRemoveBegin( result, this._hereUpStr );
-
-  // /* detrailing */
-  //
-  // if( o.tolerant )
-  // {
-  //   /* remove "/" duplicates */
-  //   result = result.replace( this._delUpDupRegexp, this._upStr );
-  // }
-  // else
-  // {
-  //   /* remove right "/" */
-  //   if( o.detrailing )
-  //   if( result !== this._upStr && !_.strEnds( result,this._upStr + this._upStr ) )
-  //   result = _.strRemoveEnd( result, this._upStr );
-  // }
 
   /* nothing left */
 
@@ -949,7 +811,7 @@ function normalizeTolerant( src )
 
 //
 
-function normalizeCanonical( src )
+function canonize( src )
 {
   let result = this._normalize({ src, tolerant : false, detrailing : true, undoting : true });
 
@@ -970,7 +832,7 @@ function normalizeCanonical( src )
 
 //
 
-function normalizeCanonicalTolerant( src )
+function canonizeTolerant( src )
 {
   _.assert( _.strIs( src ),'Expects string' );
 
@@ -1137,7 +999,7 @@ function dir_body( o )
   if( o.first )
   o.filePath = this.normalize( o.filePath );
   else
-  o.filePath = this.normalizeCanonical( o.filePath );
+  o.filePath = this.canonize( o.filePath );
 
   if( o.first )
   if( isTrailed )
@@ -1258,7 +1120,7 @@ function name_body( o )
   o = _.assertRoutineOptions( name, arguments );
   _.assert( o && _.strIs( o.path ), 'Expects strings {-o.path-}' );
 
-  o.path = this.normalizeCanonical( o.path );
+  o.path = this.canonize( o.path );
 
   let i = o.path.lastIndexOf( '/' );
   if( i !== -1 )
@@ -2164,7 +2026,7 @@ function _relative( o )
     if( o.resolving )
     _.assert( this.resolve( o.basePath, result ) === this.resolve( o.filePath ), () => o.basePath + ' + ' + result + ' <> ' + this.resolve( o.filePath ) );
     else
-    _.assert( this.normalizeCanonical( this.join( o.basePath, result ) ) === this.normalizeCanonical( o.filePath ), () => o.basePath + ' + ' + result + ' <> ' + this.normalize( o.filePath ) );
+    _.assert( this.canonize( this.join( o.basePath, result ) ) === this.canonize( o.filePath ), () => o.basePath + ' + ' + result + ' <> ' + this.normalize( o.filePath ) );
   }
 
   return result;
@@ -2741,17 +2603,17 @@ let Parameters = // xxx
   _hereUpStr : null,
   _downUpStr : null,
 
-  _upEscapedStr : null,
+  // _upEscapedStr : null,
   _downEscapedStr : null,
-  _butDownUpEscapedStr : null,
-  _delDownEscapedStr : null,
-  _delDownEscapedNonEmptyStr : null,
-  _delUpRegexp : null,
+  // _butDownUpEscapedStr : null,
+  // _delDownEscapedStr : null,
+  // _delDownEscapedNonEmptyStr : null,
+  // _delUpRegexp : null,
   _delHereRegexp : null,
   // _delHere1Regexp : null,
   // _delHere2Regexp : null,
   _delDownRegexp : null,
-  _delDownFirstRegexp : null,
+  // _delDownFirstRegexp : null,
   _delUpDupRegexp : null,
 
 }
@@ -2809,12 +2671,11 @@ let Routines =
   // reformer
 
   refine,
-
   _normalize,
   normalize,
   normalizeTolerant,
-  normalizeCanonical,
-  normalizeCanonicalTolerant,
+  canonize,
+  canonizeTolerant,
 
   _pathNativizeWindows,
   _pathNativizeUnix,
@@ -2893,10 +2754,6 @@ Self.Init();
 // --
 // export
 // --
-
-// if( typeof module !== 'undefined' )
-// if( _global_.WTOOLS_PRIVATE )
-// { /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

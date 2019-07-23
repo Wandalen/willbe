@@ -1,6 +1,6 @@
 ( function _iCompose_s_() {
 
-'use strict'; 
+'use strict';
 
 let _global = _global_;
 let _ = _global_.wTools;
@@ -8,7 +8,7 @@ let Self = _global_.wTools.compose = _global_.wTools.compose || Object.create( n
 
 let _ArraySlice = Array.prototype.slice;
 let _FunctionBind = Function.prototype.bind;
-let _ObjectToString = Object.prototype.toString;
+// let Object.prototype.toString = Object.prototype.toString;
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
 
 // --
@@ -122,8 +122,8 @@ let supervisor =
 let Extend =
 {
 
-  /*ttt*/chainer,
-  /*ttt*/supervisor
+  chainer,
+  supervisor
 
 }
 
@@ -132,10 +132,6 @@ Object.assign( Self, Extend );
 // --
 // export
 // --
-
-if( typeof module !== 'undefined' )
-if( _global_.WTOOLS_PRIVATE )
-{ /* delete require.cache[ module.id ]; */ }
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;
