@@ -1676,6 +1676,10 @@ path:
       - ../proto/dwtools/atop/will.test/_asset/export-to-root/.will.yml
       - ../proto/dwtools/atop/will.test/_asset/export-to-root/proto
       - ../proto/dwtools/atop/will.test/_asset/export-to-root/proto/Single.s
+      - ../proto/dwtools/atop/will.test/_asset/export-whole
+      - ../proto/dwtools/atop/will.test/_asset/export-whole/.will.yml
+      - ../proto/dwtools/atop/will.test/_asset/export-whole/proto
+      - ../proto/dwtools/atop/will.test/_asset/export-whole/proto/Single.s
       - ../proto/dwtools/atop/will.test/_asset/export-with-reflector
       - >-
         ../proto/dwtools/atop/will.test/_asset/export-with-reflector/.ex.will.yml
@@ -2533,6 +2537,11 @@ path:
       - >-
         ../proto/dwtools/atop/will.test/_asset/verbosity-step-print-name/.will.yml
       - ../proto/dwtools/atop/will.test/_asset/verbosity-step-print-name/file
+      - ../proto/dwtools/atop/will.test/asset
+      - ../proto/dwtools/atop/will.test/asset/submodules-detached
+      - ../proto/dwtools/atop/will.test/asset/submodules-detached/module
+      - >-
+        ../proto/dwtools/atop/will.test/asset/submodules-detached/module/Proto.informal.will.yml
       - ../proto/dwtools/tmp.tmp
       - ../proto/dwtools/tmp.tmp/Will-6127-205-d81
       - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed
@@ -4581,6 +4590,10 @@ module:
           - proto/dwtools/atop/will.test/_asset/export-to-root/.will.yml
           - proto/dwtools/atop/will.test/_asset/export-to-root/proto
           - proto/dwtools/atop/will.test/_asset/export-to-root/proto/Single.s
+          - proto/dwtools/atop/will.test/_asset/export-whole
+          - proto/dwtools/atop/will.test/_asset/export-whole/.will.yml
+          - proto/dwtools/atop/will.test/_asset/export-whole/proto
+          - proto/dwtools/atop/will.test/_asset/export-whole/proto/Single.s
           - proto/dwtools/atop/will.test/_asset/export-with-reflector
           - >-
             proto/dwtools/atop/will.test/_asset/export-with-reflector/.ex.will.yml
@@ -5452,6 +5465,11 @@ module:
           - >-
             proto/dwtools/atop/will.test/_asset/verbosity-step-print-name/.will.yml
           - proto/dwtools/atop/will.test/_asset/verbosity-step-print-name/file
+          - proto/dwtools/atop/will.test/asset
+          - proto/dwtools/atop/will.test/asset/submodules-detached
+          - proto/dwtools/atop/will.test/asset/submodules-detached/module
+          - >-
+            proto/dwtools/atop/will.test/asset/submodules-detached/module/Proto.informal.will.yml
           - proto/dwtools/tmp.tmp
           - proto/dwtools/tmp.tmp/Will-6127-205-d81
           - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed
