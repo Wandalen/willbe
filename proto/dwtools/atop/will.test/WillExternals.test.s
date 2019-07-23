@@ -66,7 +66,7 @@ function preCloneRepos( test )
   clone( 'Color', '2d408bf82b168a39a29aa1261bf13face8bd3e95' );
   clone( 'PathFundamentals', '95b741c8820a6d6234f59f1fa549c6b59f2d5a5c' );
   clone( 'Procedure', '829ea81d342db66df60edf80c99687a1cd011a96' );
-  clone( 'Proto', 'c69443a83a476c0ea7254d13ec013d94c99090ba' );
+  clone( 'Proto', 'f4c04dbe078f3c00c84ff13edcc67478d320fddf' );
   clone( 'Tools', 'e58dc6a1637603c2151840f5bfb5729eb71d4e34' );
   clone( 'UriFundamentals', '3686d72cc0b8f6573217c947a4b379c38b02e39b' );
 
@@ -3987,7 +3987,7 @@ function buildDetached( test )
     test.is( _.strHas( got.output, /\+ .*module::PathFundamentals.* was downloaded version .*c94e0130358ba54fc47237e15bac1ab18024c0a9.* in/ ) );
     test.is( _.strHas( got.output, /\+ .*module::Color.* was downloaded version .*0.3.115.* in/ ) );
     test.is( _.strHas( got.output, /\.module\/Procedure\.informal.+ <- .+npm:\/\/wprocedure/ ) );
-    test.is( _.strHas( got.output, /\.module\/Proto\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wProto\.git#c69443a83a476c0ea7254d13ec013d94c99090ba/ ) );
+    test.is( _.strHas( got.output, /\.module\/Proto\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wProto\.git#f4c04dbe078f3c00c84ff13edcc67478d320fddf/ ) );
     test.is( _.strHas( got.output, /\.module\/UriFundamentals\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wUriFundamentals\.git/ ) );
 
     var files = _.fileProvider.dirRead( modulePath );
@@ -9244,7 +9244,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#c69443a83a476c0ea7254d13ec013d94c99090ba.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#f4c04dbe078f3c00c84ff13edcc67478d320fddf.*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Proto\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
@@ -9297,7 +9297,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#c69443a83a476c0ea7254d13ec013d94c99090ba.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#f4c04dbe078f3c00c84ff13edcc67478d320fddf.*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Proto\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
@@ -9352,7 +9352,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#c69443a83a476c0ea7254d13ec013d94c99090ba.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#f4c04dbe078f3c00c84ff13edcc67478d320fddf.*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Proto\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
@@ -9407,7 +9407,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be upgraded/ ), 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* will be upgraded to version/ ), 0 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#c69443a83a476c0ea7254d13ec013d94c99090ba.*/ ), 0 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#f4c04dbe078f3c00c84ff13edcc67478d320fddf.*/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Proto\.informal\.will\.yml.* will be upgraded/ ), 0 );
 
@@ -9491,7 +9491,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#c69443a83a476c0ea7254d13ec013d94c99090ba.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#f4c04dbe078f3c00c84ff13edcc67478d320fddf.*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
@@ -9550,7 +9550,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#c69443a83a476c0ea7254d13ec013d94c99090ba.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#f4c04dbe078f3c00c84ff13edcc67478d320fddf.*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
@@ -9719,7 +9719,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#c69443a83a476c0ea7254d13ec013d94c99090ba.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#f4c04dbe078f3c00c84ff13edcc67478d320fddf.*/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
@@ -9778,7 +9778,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was upgraded/ ), 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was upgraded to version/ ), 0 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#c69443a83a476c0ea7254d13ec013d94c99090ba.*/ ), 0 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#f4c04dbe078f3c00c84ff13edcc67478d320fddf.*/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 0 );
 
