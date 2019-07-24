@@ -10416,6 +10416,102 @@ function fixateDetached( test )
 
 fixateDetached.timeOut = 500000;
 
+//
+
+function execWillbe( test )
+{ 
+  
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'execWillbe' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let execUnrestrictedPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/ExecUnrestricted' ) );
+  let ready = new _.Consequence().take( null );
+  
+  /* This test routine checks if willbe can be terminated on early start from terminal when executed as child process using ExecUnrestricted script */
+  
+  let shell = _.sheller
+  ({
+    execPath : 'node',
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  });
+  
+  ready
+  .then( () =>
+  { 
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    return null;
+  })
+  
+  .then( () => 
+  { 
+    test.case = 'execUnrestricted: terminate utility during heavy load of will files, should be terminated'
+    let o = { args : [ execUnrestrictedPath, '.submodules.list' ], ready : null };
+    
+    let con = shell( o );
+    
+    o.process.stdout.on( 'data', ( data ) => 
+    {
+      if( _.bufferAnyIs( data ) )
+      data = _.bufferToStr( data );
+      
+      if( _.strHas( data, 'wTools.out.will.yml' ) )
+      { 
+        console.log( 'Terminating willbe...' );
+        o.process.kill( 'SIGINT' )
+      }
+    });
+    
+    return test.shouldThrowErrorAsync( con )
+    .then( () => 
+    {
+      test.identical( o.exitCode, 255 );
+      test.is( !_.strHas( o.output, 'wLogger.out.will.yml' ) )
+      test.is( !_.strHas( o.output, 'wLoggerToJs.out.will.yml' ) )
+      test.is( !_.strHas( o.output, 'wConsequence.out.will.yml' ) )
+      test.is( !_.strHas( o.output, 'wInstancing.out.will.yml' ) )
+      return null;
+    })
+  })
+  
+  /* */
+  
+  .then( () => 
+  { 
+    test.case = 'Exec: terminate utility during heavy load of will files, should fail'
+    let o = { args : [ execPath, '.submodules.list' ], ready : null };
+    
+    let con = shell( o );
+    
+    o.process.stdout.on( 'data', ( data ) => 
+    {
+      if( _.bufferAnyIs( data ) )
+      data = _.bufferToStr( data );
+      
+      if( _.strHas( data, 'wTools.out.will.yml' ) )
+      { 
+        console.log( 'Terminating willbe...' );
+        o.process.kill( 'SIGINT' )
+      }
+    });
+    
+    return test.mustNotThrowError( con )
+    .then( () => 
+    {
+      test.identical( o.exitCode, 0 );
+      test.is( _.strHas( o.output, 'wLogger.out.will.yml' ) )
+      test.is( _.strHas( o.output, 'wLoggerToJs.out.will.yml' ) )
+      test.is( _.strHas( o.output, 'wConsequence.out.will.yml' ) )
+      test.is( _.strHas( o.output, 'wInstancing.out.will.yml' ) )
+      return null;
+    })
+  })
+  
+  return ready;
+}
+
 // --
 //
 // --
@@ -10535,6 +10631,8 @@ var Self =
     upgradeDetached,
     fixateDryDetached,
     fixateDetached,
+    
+    execWillbe
 
   }
 
