@@ -1078,6 +1078,26 @@ function submodulesAllAreValid()
 }
 
 // --
+// local
+// --
+
+function switchLocalBranchToRemote()
+{
+  let opener = this;
+  let will = opener.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  
+  let path = opener.remotePath || opener.commonPath;
+  
+  let remoteProvider = fileProvider.providerForPath( path );
+  
+  let parsed = remoteProvider.pathParse( path );
+  
+  return remoteProvider.versionLocalChange({ localPath : opener.localPath, version : parsed.hash })
+}
+
+// --
 // remote
 // --
 
@@ -1335,6 +1355,12 @@ function _remoteDownload( o )
   _.assert( !!opener.supermodule );
 
   return con
+  .then( () => 
+  { 
+    if( o.updating )
+    return opener.switchLocalBranchToRemote();
+    return null;
+  })
   .then( () =>
   {
     if( o.updating )
@@ -1939,6 +1965,10 @@ let Extend =
 
   submodulesAllAreDownloaded,
   submodulesAllAreValid,
+  
+  // local
+  
+  switchLocalBranchToRemote,
 
   // remote
 
