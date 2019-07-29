@@ -1086,12 +1086,8 @@ function switchLocalBranchToRemote()
   let opener = this;
   let will = opener.will;
   let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  
   let path = opener.remotePath || opener.commonPath;
-  
   let remoteProvider = fileProvider.providerForPath( path );
-  
   let parsed = remoteProvider.pathParse( path );
   
   return remoteProvider.versionLocalChange({ localPath : opener.localPath, version : parsed.hash })
