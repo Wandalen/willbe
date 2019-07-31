@@ -9185,7 +9185,11 @@ function submodulesUpdateSwitchBranch( test )
     return null;
   })
   
-  shell({ args : [ '.submodules.update' ] })
+  .then( () => 
+  { 
+    let con = shell({ args : [ '.submodules.update' ], ready : null });
+    return test.shouldThrowErrorAsync( con );
+  })
   
   _.shell
   ({ 
