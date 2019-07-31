@@ -1,0 +1,6 @@
+about : 
+  name : submodules-update-downloaded
+
+submodule :
+  local-module : './out/exportedModule'
+  willbe-experiment : git+https:///github.com/volodymyrmigdal/willbe-experiment.git/out/willbe-experiment#dev

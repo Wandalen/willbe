@@ -8971,6 +8971,107 @@ submodulesDownloadUpdateDry.timeOut = 300000;
 
 //
 
+function submodulesDownloadedUpdate( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-downloaded-update' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  
+  /* 
+    Informal module has submodule willbe-experiment#master
+    Supermodule has informal module and willbe-experiment#dev in submodules list
+    First download of submodules works fine.
+    After updating submodules of supermodule, branch dev of willbe-experiment is changed to master.
+    This is wrong, because willbe-experiment should stay on branch dev as its defined in willfile of supermodule.
+  */
+
+  let ready = new _.Consequence().take( null )
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* */
+
+  ready
+  .then( () =>
+  {
+    test.case = 'setup';
+    return null;
+  })
+  
+  shell({ args : [ '.each module .export' ] })
+  shell({ args : [ '.submodules.download' ] })
+  
+  .then( ( got ) => 
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, / \+ 1\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    return got;
+  })
+  
+  /* */
+  
+  .then( () =>
+  {
+    test.case = 'check module branch after download';
+    return null;
+  })
+  
+  _.shell
+  ({ 
+    execPath : 'git rev-parse --abbrev-ref HEAD', 
+    currentPath : _.path.join( routinePath, '.module/willbe-experiment' ),
+    ready : ready,
+    outputCollecting : 1,
+  })
+  
+  .then( ( got ) => 
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'dev' ) );
+    return got;
+  })
+  
+  /* */
+  
+  .then( ( got ) => 
+  {
+    test.case = 'update downloaded module and check branch';
+    return got; 
+  })
+  
+  shell({ args : [ '.submodules.update' ] })
+  
+  _.shell
+  ({ 
+    execPath : 'git rev-parse --abbrev-ref HEAD', 
+    currentPath : _.path.join( routinePath, '.module/willbe-experiment' ),
+    ready : ready,
+    outputCollecting : 1,
+  })
+  
+  .then( ( got ) => 
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'dev' ) );
+    return got;
+  })
+  
+  return ready;
+}
+
+submodulesDownloadedUpdate.timeOut = 60000;
+
+//
+
 function submodulesUpdate( test )
 {
   let self = this;
@@ -9290,6 +9391,8 @@ function submodulesUpdateSwitchBranch( test )
   
   return ready;
 }
+
+submodulesUpdateSwitchBranch.timeOut = 300000;
 
 //
 
@@ -10835,6 +10938,7 @@ var Self =
     submodulesDownloadSingle,
     submodulesDownloadUpdate,
     submodulesDownloadUpdateDry,
+    submodulesDownloadedUpdate,
     submodulesUpdate,
     submodulesUpdateSwitchBranch,
     stepSubmodulesDownload,
