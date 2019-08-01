@@ -730,7 +730,7 @@ function dstNotOwnFromDefinition()
 
     let srcElement = srcContainer[ key ];
     if( _.definitionIs( srcElement ) )
-    dstContainer[ key ] = srcElement.valueGet();
+    dstContainer[ key ] = srcElement.initialValueGet();
     else
     dstContainer[ key ] = srcElement;
 
@@ -757,7 +757,7 @@ function dstNotOwnFromDefinitionStrictlyPrimitive()
     let srcElement = srcContainer[ key ];
     if( _.definitionIs( srcElement ) )
     {
-      dstContainer[ key ] = srcElement.valueGet();
+      dstContainer[ key ] = srcElement.initialValueGet();
     }
     else
     {

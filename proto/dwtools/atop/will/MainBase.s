@@ -48,7 +48,7 @@ let _ = wTools;
 let Parent = null;
 let Self = function wWill( o )
 {
-  return _.instanceConstructor( Self, this, arguments );
+  return _.workpiece.construct( Self, this, arguments );
 }
 
 Self.shortName = 'Will';
@@ -74,7 +74,7 @@ function init( o )
 
   let logger = will.logger = new _.Logger({ output : _global_.logger, name : 'will' });
 
-  _.instanceInit( will );
+  _.workpiece.initFields( will );
   Object.preventExtensions( will );
 
   _.assert( logger === will.logger );
@@ -439,12 +439,11 @@ function moduleEachAt( o )
       throw _.errBriefly( err );
     }
 
-    debugger;
     let filesMap = Object.create( null );
     for( let f = 0 ; f < files.length ; f++ ) con
     .then( ( arg ) => /* !!! replace by concurrent, maybe */
     {
-      let file = files[ f ]; debugger;
+      let file = files[ f ];
 
       if( filesMap[ file.absolute ] )
       {
@@ -489,7 +488,6 @@ function moduleEachAt( o )
     })
     .finally( ( err, arg ) =>
     {
-      debugger;
       if( err )
       {
         debugger;
@@ -507,15 +505,12 @@ function moduleEachAt( o )
 
   con.finally( ( err, arg ) =>
   {
-    debugger;
     if( errs.length )
     {
       errs.forEach( ( err, index ) => index > 0 ? _.errAttend( err ) : null );
-      // throw errs[ 0 ];
     }
     if( err )
     {
-      // errs.forEach( ( err, index ) => _.errAttend( err ) );
       throw _.err( err );
     }
     if( errs.length )
@@ -554,7 +549,6 @@ function moduleWithAt( o )
   /* */
 
   will._moduleWillfilesReadBegin();
-  // o.selector = path.resolve( o.selector );
   con = new _.Consequence().take( null );
 
   let it = Object.create( null );
@@ -626,40 +620,13 @@ function moduleWithAt( o )
       throw err;
     }
   })
-  // .finally( ( err, arg ) =>
-  // {
-  //   debugger;
-  //   if( err )
-  //   throw err;
-  //   return it;
-  // });
 
   /* */
-
-  // con.finally( ( err, arg ) =>
-  // {
-  //   if( err )
-  //   {
-  //     it.errs.forEach( ( err, index ) => _.errAttend( err ) );
-  //     throw _.err( err );
-  //   }
-  //   if( errs.length )
-  //   {
-  //     it.errs.forEach( ( err, index ) => index > 0 ? _.errAttend( err ) : null );
-  //     throw errs[ 0 ];
-  //   }
-  //   return o;
-  // });
 
   con.finally( ( err, arg ) =>
   {
 
-    // let modulesArray = _.select( it.openers, '*/openedModule' );
-    // _.arraysAreIdentical( modulesArray, will.modulesArray );
-
-    // debugger;
     it.sortedModules = will.modulesTopologicalSort( will.modulesArray );
-    // debugger;
 
     will._moduleWillfilesReadLog();
 

@@ -1,6 +1,6 @@
 ( function _WillExternals_test_s_( ) {
 
-'use strict'; debugger;
+'use strict';
 
 if( typeof module !== 'undefined' )
 {
@@ -345,7 +345,7 @@ function transpile( test )
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
-    test.identical( files, [ '.', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js', './debug/dir3.test', './debug/dir3.test/File.js', './debug/dir3.test/File.test.js' ] );
+    test.identical( files, [ '.', './debug', './debug/dir1', './debug/dir1/Text.txt', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js', './debug/dir3.test', './debug/dir3.test/File.js', './debug/dir3.test/File.test.js' ] );
     _.fileProvider.isTerminal( _.path.join( outPath, 'debug/dir3.test/File.js' ) );
     return null;
   })
@@ -404,7 +404,7 @@ function transpile( test )
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
-    test.identical( files, [ '.', './raw.release', './raw.release/dir2', './raw.release/dir2/File.js', './raw.release/dir2/File.test.js', './raw.release/dir2/File1.release.js', './raw.release/dir2/File2.release.js', './raw.release/dir3.test', './raw.release/dir3.test/File.js', './raw.release/dir3.test/File.test.js' ] );
+    test.identical( files, [ '.', './raw.release', './raw.release/dir1', './raw.release/dir1/Text.txt', './raw.release/dir2', './raw.release/dir2/File.js', './raw.release/dir2/File.test.js', './raw.release/dir2/File1.release.js', './raw.release/dir2/File2.release.js', './raw.release/dir3.test', './raw.release/dir3.test/File.js', './raw.release/dir3.test/File.test.js' ] );
     _.fileProvider.isTerminal( _.path.join( outPath, './raw.release/dir3.test/File.test.js' ) );
     return null;
   })
@@ -451,7 +451,7 @@ function transpile( test )
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
-    test.identical( files, [ '.', './compiled.debug', './compiled.debug/Main.s', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js', './debug/dir3.test', './debug/dir3.test/File.js', './debug/dir3.test/File.test.js', './raw.release', './raw.release/dir2', './raw.release/dir2/File.js', './raw.release/dir2/File.test.js', './raw.release/dir2/File1.release.js', './raw.release/dir2/File2.release.js', './raw.release/dir3.test', './raw.release/dir3.test/File.js', './raw.release/dir3.test/File.test.js', './release', './release/Main.s', './tests.compiled.debug', './tests.compiled.debug/Tests.s', './tests.compiled.release', './tests.compiled.release/Tests.s' ] );
+    test.identical( files, [ '.', './compiled.debug', './compiled.debug/Main.s', './debug', './debug/dir1', './debug/dir1/Text.txt', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js', './debug/dir3.test', './debug/dir3.test/File.js', './debug/dir3.test/File.test.js', './raw.release', './raw.release/dir1', './raw.release/dir1/Text.txt', './raw.release/dir2', './raw.release/dir2/File.js', './raw.release/dir2/File.test.js', './raw.release/dir2/File1.release.js', './raw.release/dir2/File2.release.js', './raw.release/dir3.test', './raw.release/dir3.test/File.js', './raw.release/dir3.test/File.test.js', './release', './release/Main.s', './tests.compiled.debug', './tests.compiled.debug/Tests.s', './tests.compiled.release', './tests.compiled.release/Tests.s' ] );
     return null;
   })
 
@@ -680,7 +680,7 @@ function openWith( test )
   {
     test.ni( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, 'unhandled errorr' ), 0 );
+    test.identical( _.strCount( got.output, 'unhandled error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
 
     var files = self.find( _.path.join( routinePath, 'out' ) );
@@ -712,7 +712,7 @@ function openWith( test )
   {
     test.ni( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, 'unhandled errorr' ), 0 );
+    test.identical( _.strCount( got.output, 'unhandled error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
 
     var files = self.find( _.path.join( routinePath, 'out' ) );
@@ -779,7 +779,7 @@ function openWith( test )
   {
     test.ni( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, 'unhandled errorr' ), 0 );
+    test.identical( _.strCount( got.output, 'unhandled error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
 
     var files = self.find( _.path.join( routinePath, 'out' ) );
@@ -984,7 +984,7 @@ function withMixed( test )
   {
     test.is( got.exitCode !== 0 );
     test.is( _.strHas( got.output, 'Found no willfile' ) );
-    test.identical( _.strCount( got.output, 'unhandled errorr' ), 0 );
+    test.identical( _.strCount( got.output, 'unhandled error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
     return null;
   })
@@ -4060,7 +4060,7 @@ function exportSingle( test )
     let reflector = outfile.reflector[ 'exported.files.proto.export' ];
     test.identical( reflector.src.basePath, '.' );
     test.identical( reflector.src.prefixPath, 'path::exported.dir.proto.export' );
-    test.identical( reflector.src.filePath, { 'path::exported.files.proto.export' : null } );
+    test.identical( reflector.src.filePath, { 'path::exported.files.proto.export' : '' } );
 
     return null;
   })
@@ -4097,12 +4097,12 @@ function exportSingle( test )
     let reflector = outfile.reflector[ 'exported.files.proto.export' ];
     let expectedFilePath =
     {
-      '.' : null,
-      'Single.s' : null
+      '.' : '',
+      'Single.s' : '',
     }
     test.identical( reflector.src.basePath, '.' );
     test.identical( reflector.src.prefixPath, 'path::exported.dir.proto.export' );
-    test.identical( reflector.src.filePath, { 'path::exported.files.proto.export' : null } );
+    test.identical( reflector.src.filePath, { 'path::exported.files.proto.export' : '' } );
 
     return null;
   })
@@ -4147,7 +4147,7 @@ function exportNonExportable( test )
   {
     test.is( got.exitCode !== 0 );
 
-    test.identical( _.strCount( got.output, 'unhandled errorr' ), 0 );
+    test.identical( _.strCount( got.output, 'unhandled error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
 
     test.identical( _.strCount( got.output, /.*module::supermodule \/ submodule::Submodule.* is broken/ ), 1 );
@@ -4578,7 +4578,7 @@ function exportMixed( test )
       {
         'src' :
         {
-          'filePath' : { '.' : null },
+          'filePath' : { '.' : '' },
           'prefixPath' : '../.module/Proto/proto'
         },
         'criterion' : { 'export' : 1, 'default' : 1 },
@@ -4588,7 +4588,7 @@ function exportMixed( test )
       {
         'recursive' : 0,
         'mandatory' : 1,
-        'src' : { 'filePath' : { 'path::exported.files.export' : null }, 'basePath' : '.', 'prefixPath' : 'path::exported.dir.export' },
+        'src' : { 'filePath' : { 'path::exported.files.export' : '' }, 'basePath' : '.', 'prefixPath' : 'path::exported.dir.export' },
         'criterion' : { 'default' : 1, 'export' : 1 }
       }
     }
@@ -4840,7 +4840,7 @@ function exportSecond( test )
       },
       "exported.files.proto.export" :
       {
-        "src" : { "filePath" : { 'path::exported.files.proto.export' : null }, "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export" },
+        "src" : { "filePath" : { 'path::exported.files.proto.export' : '' }, "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export" },
         "criterion" : { "proto" : 1, "export" : 1 },
         "recursive" : 0,
         "mandatory" : 1
@@ -4849,7 +4849,7 @@ function exportSecond( test )
       {
         "src" :
         {
-          "filePath" : { "." : null },
+          "filePath" : { "." : "" },
           "prefixPath" : "../doc"
         },
         "criterion" : { "doc" : 1, "export" : 1 },
@@ -4857,7 +4857,7 @@ function exportSecond( test )
       },
       "exported.files.doc.export" :
       {
-        "src" : { "filePath" : { 'path::exported.files.doc.export' : null }, "basePath" : ".", "prefixPath" : "path::exported.dir.doc.export" },
+        "src" : { "filePath" : { 'path::exported.files.doc.export' : '' }, "basePath" : ".", "prefixPath" : "path::exported.dir.doc.export" },
         "criterion" : { "doc" : 1, "export" : 1 },
         "recursive" : 0,
         "mandatory" : 1
@@ -5009,7 +5009,7 @@ function exportSecond( test )
       {
         "src" :
         {
-          "filePath" : { "." : null },
+          "filePath" : { "." : "" },
           "prefixPath" : "../proto"
         },
         "criterion" : { "proto" : 1, "export" : 1 },
@@ -5017,7 +5017,7 @@ function exportSecond( test )
       },
       "exported.files.proto.export" :
       {
-        "src" : { "filePath" : { 'path::exported.files.proto.export' : null }, "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export" },
+        "src" : { "filePath" : { 'path::exported.files.proto.export' : '' }, "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export" },
         "criterion" : { "proto" : 1, "export" : 1 },
         "recursive" : 0,
         "mandatory" : 1
@@ -5026,7 +5026,7 @@ function exportSecond( test )
       {
         "src" :
         {
-          "filePath" : { "." : null },
+          "filePath" : { "." : "" },
           "prefixPath" : "../doc"
         },
         "criterion" : { "doc" : 1, "export" : 1 },
@@ -5034,7 +5034,7 @@ function exportSecond( test )
       },
       "exported.files.doc.export" :
       {
-        "src" : { "filePath" : { 'path::exported.files.doc.export' : null }, "basePath" : ".", "prefixPath" : "path::exported.dir.doc.export" },
+        "src" : { "filePath" : { 'path::exported.files.doc.export' : '' }, "basePath" : ".", "prefixPath" : "path::exported.dir.doc.export" },
         "criterion" : { "doc" : 1, "export" : 1 },
         "recursive" : 0,
         "mandatory" : 1
@@ -5283,7 +5283,7 @@ function exportMultiple( test )
 
     var exportedReflector =
     {
-      src : { filePath : { '.' : null }, prefixPath : 'debug' },
+      src : { filePath : { '.' : '' }, prefixPath : 'debug' },
       mandatory : 1,
       criterion :
       {
@@ -5302,7 +5302,7 @@ function exportMultiple( test )
       mandatory : 1,
       src :
       {
-        filePath : { 'path::exported.files.export.debug' : null },
+        filePath : { 'path::exported.files.export.debug' : '' },
         basePath : '.',
         prefixPath : 'path::exported.dir.export.debug',
       },
@@ -5485,7 +5485,6 @@ function exportMultiple( test )
       'mandatory' : 1,
       'src' :
       {
-        // 'filePath' : { '.' : null },
         'prefixPath' : 'debug',
       },
       criterion :
@@ -5504,7 +5503,7 @@ function exportMultiple( test )
       'mandatory' : 1,
       src :
       {
-        'filePath' : { '.' : null },
+        'filePath' : { '.' : '' },
         'prefixPath' : 'release'
       },
       criterion :
@@ -5524,7 +5523,7 @@ function exportMultiple( test )
       mandatory : 1,
       src :
       {
-        filePath : { 'path::exported.files.export.debug' : null },
+        filePath : { 'path::exported.files.export.debug' : '' },
         basePath : '.',
         prefixPath : 'path::exported.dir.export.debug',
       },
@@ -5545,7 +5544,7 @@ function exportMultiple( test )
       mandatory : 1,
       src :
       {
-        filePath : { 'path::exported.files.export.' : null },
+        filePath : { 'path::exported.files.export.' : '' },
         basePath : '.',
         prefixPath : 'path::exported.dir.export.'
       },
@@ -5961,7 +5960,7 @@ function exportBroken( test )
     var exportedReflector =
     {
       'mandatory' : 1,
-      src : { filePath : { '.' : null }, prefixPath : 'debug' },
+      src : { filePath : { '.' : '' }, prefixPath : 'debug' },
       criterion :
       {
         default : 1,
@@ -5978,7 +5977,7 @@ function exportBroken( test )
       mandatory : 1,
       src :
       {
-        filePath : { 'path::exported.files.export.debug' : null },
+        filePath : { 'path::exported.files.export.debug' : '' },
         basePath : '.',
         prefixPath : 'path::exported.dir.export.debug',
       },
@@ -6196,7 +6195,7 @@ function exportWholeModule( test )
 
   ready
 
-  .thenKeep( () =>
+  .then( () =>
   {
     test.case = 'export whole module using in path'
     return null;
@@ -6204,12 +6203,14 @@ function exportWholeModule( test )
 
   shell({ args : [ '.export' ] })
 
-  .thenKeep( ( got ) =>
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'export-whole.out.will.yml' ) ) )
     return null;
   })
+
+  /* - */
 
   return ready;
 }
@@ -6336,7 +6337,7 @@ function importLocalRepo( test )
       {
         'src' :
         {
-          'filePath' : { '.' : null },
+          'filePath' : { '.' : '' },
           'prefixPath' : 'Proto/proto'
         },
         'criterion' : { 'default' : 1, 'export' : 1 },
@@ -6344,7 +6345,7 @@ function importLocalRepo( test )
       },
       'exported.files.export' :
       {
-        'src' : { 'filePath' : { 'path::exported.files.export' : null }, 'basePath' : '.', 'prefixPath' : 'path::exported.dir.export' },
+        'src' : { 'filePath' : { 'path::exported.files.export' : '' }, 'basePath' : '.', 'prefixPath' : 'path::exported.dir.export' },
         'criterion' : { 'default' : 1, 'export' : 1 },
         'recursive' : 0,
         'mandatory' : 1
@@ -6568,12 +6569,12 @@ function reflectNothingFromSubmodules( test )
     var reflector = outfile.reflector[ 'exported.files.proto.export' ];
     var expectedFilePath =
     {
-      '.' : null,
-      'Single.s' : null
+      '.' : '',
+      'Single.s' : ''
     }
     test.identical( reflector.src.basePath, '.' );
     test.identical( reflector.src.prefixPath, 'path::exported.dir.proto.export' );
-    test.identical( reflector.src.filePath, { 'path::exported.files.proto.export' : null } );
+    test.identical( reflector.src.filePath, { 'path::exported.files.proto.export' : '' } );
 
     var expectedReflector =
     {
@@ -6611,7 +6612,7 @@ function reflectNothingFromSubmodules( test )
       {
         "src" :
         {
-          "filePath" : { "." : null },
+          "filePath" : { "." : "" },
           "prefixPath" : "../proto"
         },
         "criterion" : { "default" : 1, "export" : 1 },
@@ -6619,7 +6620,7 @@ function reflectNothingFromSubmodules( test )
       },
       "exported.files.proto.export" :
       {
-        "src" : { "filePath" : { 'path::exported.files.proto.export' : null }, "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export" },
+        "src" : { "filePath" : { 'path::exported.files.proto.export' : '' }, "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export" },
         "criterion" : { "default" : 1, "export" : 1 },
         "recursive" : 0,
         "mandatory" : 1
@@ -7433,7 +7434,7 @@ function reflectWithOptions( test )
   {
     test.is( !err );
     test.is( !!got.exitCode );
-    test.identical( _.strCount( got.output, 'unhandled errorr' ), 0 );
+    test.identical( _.strCount( got.output, 'unhandled error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
     test.is( _.strHas( got.output, /Failed .*module::.+ \/ step::reflect\.proto2/ ) );
     test.is( _.strHas( got.output, /Error\. No file moved : .+reflectWithOptions.* : .*out\/debug.* <- .*proto2.*/ ) );

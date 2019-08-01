@@ -2561,7 +2561,7 @@ function prototypeEach( proto,onEach )
 // --
 
 /*
-  usage : return _.instanceConstructor( Self, this, arguments );
+  usage : return _.workpiece.construct( Self, this, arguments );
   replacement for :
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
@@ -2574,7 +2574,7 @@ function prototypeEach( proto,onEach )
 
 */
 
-function instanceConstructor( cls, context, args )
+function workpiece.construct( cls, context, args )
 {
 
   _.assert( args.length === 0 || args.length === 1 );
@@ -3330,7 +3330,7 @@ let Routines =
 
   // instance
 
-  instanceConstructor,
+  workpiece.construct,
 
   instanceIsFinited,
   instanceFinit,

@@ -426,8 +426,8 @@ function stepRoutineTranspile( frame )
   if( debug )
   transpilingStrategy = [ 'Nop' ];
 
+  // debugger;
   let ts = new _.TranspilationStrategy({ logger : logger }).form();
-  debugger;
   let multiple = ts.multiple
   ({
 
@@ -436,13 +436,14 @@ function stepRoutineTranspile( frame )
     entryPath : opts.entry,
     externalBeforePath : opts[ 'external.before' ],
     externalAfterPath : opts[ 'external.after' ],
-    totalReporting : 0,
+    // totalReporting : 0,
     transpilingStrategy : transpilingStrategy,
     splittingStrategy : raw ? 'OneToOne' : 'ManyToOne',
     writingTerminalUnderDirectory : 1,
     simpleConcatenator : 0,
     upToDate : opts.upToDate,
     verbosity : verbosity,
+    // verbosity : 1,
 
     optimization : 9,
     minification : 8,
@@ -454,8 +455,10 @@ function stepRoutineTranspile( frame )
   return multiple.form().perform()
   .finally( ( err, arg ) =>
   {
+    debugger;
     if( err )
-    throw _.errLogOnce( err );
+    throw _.err( err );
+    // throw _.errLogOnce( err );
     return arg;
   });
 
@@ -557,15 +560,29 @@ function stepRoutineNpmGenerate( frame )
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
 
-  opts.packagePath = opts.packagePath || '{path::out}/package.json';
-
-  let packagePath = step.resolve
+  opts.packagePath = module.pathResolve
   ({
-    selector : opts.packagePath,
+    selector : opts.packagePath || '{path::out}/package.json',
     prefixlessAction : 'resolved',
     pathNativizing : 0,
     selectorIsPath : 1,
+    currentContext : step,
   });
+
+  debugger;
+  opts.entryPath = module.filesFromResource({ selector : opts.entryPath, currentContext : step, });
+  opts.filesPath = module.filesFromResource({ selector : opts.filesPath, currentContext : step, });
+
+  // debugger;
+  // opts.entryPath = module.pathResolve
+  // ({
+  //   selector : opts.entryPath,
+  //   prefixlessAction : 'resolved',
+  //   pathResolving : 'in',
+  //   pathNativizing : 0,
+  //   selectorIsPath : 1,
+  //   currentContext : step,
+  // });
 
   let config = Object.create( null );
   config.name = about.name;
@@ -601,6 +618,12 @@ function stepRoutineNpmGenerate( frame )
     config[ _.strRemoveBegin( n, 'npm.' ) ] = about[ n ];
   }
 
+  if( opts.entryPath )
+  {
+    //_.assert( path.s.allAreRelative( opts.entryPath ) )
+    config.main = path.s.relative( path.dir( opts.packagePath ), opts.entryPath );
+  }
+
   if( module.pathMap.repository )
   config.repository = pathSimplify( module.pathMap.repository );
   if( module.pathMap.bugtracker )
@@ -615,11 +638,11 @@ function stepRoutineNpmGenerate( frame )
     config[ _.strRemoveBegin( n, 'npm.' ) ] = module.pathMap[ n ];
   }
 
-  _.sure( !fileProvider.isDir( packagePath ), () => packagePath + ' is dir, not safe to delete' );
+  _.sure( !fileProvider.isDir( opts.packagePath ), () => packagePath + ' is dir, not safe to delete' );
 
   fileProvider.fileWrite
   ({
-    filePath : packagePath,
+    filePath : opts.packagePath,
     data : config,
     encoding : 'json.fine',
     verbosity : verbosity ? 5 : 0,
@@ -640,6 +663,8 @@ function stepRoutineNpmGenerate( frame )
 stepRoutineNpmGenerate.stepOptions =
 {
   packagePath : '{path::out}/package.json',
+  entryPath : null,
+  filesPath : null,
 }
 
 stepRoutineNpmGenerate.uniqueOptions =

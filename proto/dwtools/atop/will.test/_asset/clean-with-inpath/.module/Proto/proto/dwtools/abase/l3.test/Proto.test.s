@@ -1887,7 +1887,7 @@ function staticFieldsPreserving( test )
 
   var DerivedConstructor1 = function DerivedConstructor1()
   {
-    return _.instanceConstructor( DerivedConstructor1, this, arguments );
+    return _.workpiece.construct( DerivedConstructor1, this, arguments );
   }
 
   function derivedSet()
@@ -1931,12 +1931,12 @@ function staticFieldsPreserving( test )
 
 //
 
-function instanceConstructor( test )
+function workpiece.construct( test )
 {
 
   function BasicConstructor()
   {
-    return _.instanceConstructor( BasicConstructor, this, arguments );
+    return _.workpiece.construct( BasicConstructor, this, arguments );
   }
 
   function init()
@@ -2060,7 +2060,7 @@ var Self =
     customFieldsGroups,
 
     staticFieldsPreserving,
-    instanceConstructor,
+    workpiece.construct,
 
   },
 

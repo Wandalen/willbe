@@ -15,7 +15,7 @@
 // let Parent = null;
 // let Self = function wWillParagraphExecution( o )
 // {
-//   return _.instanceConstructor( Self, this, arguments );
+//   return _.workpiece.construct( Self, this, arguments );
 // }
 //
 // Self.shortName = 'ParagraphExecution';
@@ -39,7 +39,7 @@
 //
 //   _.assert( arguments.length === 0 || arguments.length === 1 );
 //
-//   _.instanceInit( execution );
+//   _.workpiece.initFields( execution );
 //   Object.preventExtensions( execution );
 //
 //   if( o )

@@ -1,6 +1,6 @@
 {
   "name": "willbe",
-  "version": "0.4.24",
+  "version": "0.4.31",
   "description": "Utility to manage modules of complex modular systems",
   "author": "Kostiantyn Wandalen <wanalen@willbe.so>",
   "contributors": [
@@ -32,7 +32,7 @@
     "will": "proto/dwtools/atop/will/ExecUnrestricted"
   },
   "scripts": {
-    "test": "wtest proto",
+    "test": "wtest .run proto/**",
     "docgen": "wdocgen proto",
     "single-process-will": "node proto/dwtools/atop/will/Exec",
     "debug-will": "node proto/dwtools/atop/will/ExecDebug",

@@ -392,8 +392,8 @@ function routineOptions( routine, args, defaults )
   _.assert( args.length === 0 || args.length === 1, 'Expects single options map, but got', args.length, 'arguments' );
 
   _.assertMapHasOnly( options, defaults );
-  // _.mapSupplementStructureless( options, defaults ); /* xxx qqq : use instead of mapComplement */
-  _.mapComplement( options, defaults );
+  _.mapSupplementStructureless( options, defaults ); /* xxx qqq : use instead of mapComplement */
+  // _.mapComplement( options, defaults );
   _.assertMapHasNoUndefine( options );
 
   return options;

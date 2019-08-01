@@ -15,7 +15,7 @@ let _ = wTools;
 let Parent = null;
 let Self = function wWillResource( o )
 {
-  return _.instanceConstructor( Self, this, arguments );
+  return _.workpiece.construct( Self, this, arguments );
 }
 
 Self.shortName = 'Resource';
@@ -24,77 +24,165 @@ Self.shortName = 'Resource';
 // inter
 // --
 
-function MakeForEachCriterion( o )
+function MakeFor_pre( routine, args )
+{
+  let o = args[ 0 ];
+
+  _.routineOptions( routine, o );
+  _.assert( args.length === 1 || args.length === 2 );
+  _.assert( arguments.length === 2 );
+
+  return o;
+}
+
+function MakeFor_body( o )
 {
   let Cls = this;
 
+  _.assertRoutineOptions( MakeFor_body, arguments );
+
+  if( !o.resource )
+  return;
+
+  _.assert( _.constructorIs( Cls ) );
   _.assert( arguments.length === 1 );
-  _.assert( _.mapIs( o ) );
-  _.assert( _.objectIs( o.module ) );
-  _.assert( _.strDefined( o.name ) );
+  _.assert( !!o.resource );
+  _.assert( !!o.willf );
+  _.assert( !!o.module );
 
+  let o2 = Object.create( null );
+
+  o2.Optional = o.Optional;
+  o2.Rewriting = o.Rewriting;
+  o2.Importing = o.Importing;
+  o2.IsOutFile = o.IsOutFile;
+
+  if( Cls.ResouceDataFrom )
+  o2.resource = Cls.ResouceDataFrom( o.resource );
+  else
+  o2.resource = _.mapExtend( null, o.resource );
+
+  _.assert( o.resource !== o2.resource );
+
+  o2.resource.willf = o.willf;
+  o2.resource.module = o.module;
+  o2.resource.name = o.name;
+
+  if( o2.Importing === null )
+  o2.Importing = 1;
+  if( o2.IsOutFile === null )
+  o2.IsOutFile = o.willf.isOutFile;
+
+  Cls.MakeForEachCriterion( o2 );
+
+}
+
+MakeFor_body.defaults =
+{
+
+  module : null,
+  willf : null,
+  resource : null,
+  name : null,
+
+  Optional : null,
+  Rewriting : null,
+  Importing : null,
+  IsOutFile : null,
+
+}
+
+let MakeFor = _.routineFromPreAndBody( MakeFor_pre, MakeFor_body );
+
+//
+
+function MakeForEachCriterion( o )
+{
+  let Cls = this;
+  let args = arguments;
   let result = [];
-  let module = o.module;
+  let module = o.resource.module;
   let will = module.will;
-  let counter = 0;
-  let single = 1;
 
-  if( o.name === "reflect.submodules" )
-  debugger;
-
-  if( o.criterion )
-  o.criterion = Cls.CriterionMapResolve( module, o.criterion );
-
-  if( o.criterion )
-  o.criterion = Cls.CriterionNormalize( o.criterion );
-
-  if( o.criterion && _.mapKeys( o.criterion ).length > 0 )
+  try
   {
-    let samples = _.eachSample({ sets : o.criterion });
-    if( samples.length > 1 )
-    for( let index = 0 ; index < samples.length ; index++ )
-    {
-      let criterion = samples[ index ];
-      let o2 = _.mapExtend( null, o );
-      let postfix = Cls.CriterionPostfixFor( samples, criterion );
-
-      o2.criterion = criterion;
-      o2.name = o.name + '.' + postfix;
-
-      single = 0;
-
-      if( o2.Optional )
-      if( module[ Cls.MapName ][ o2.name ] )
-      continue;
-
-      make( o2 );
-      counter += 1;
-    }
+    return safe();
   }
-
-  if( single )
+  catch( err )
   {
-    make( o );
+    debugger;
+    throw _.err( 'Cant form', Cls.KindName + '::' + o.name, '\n', err );
   }
-
-  return result;
 
   /* */
 
-  function make( o )
+  function safe()
   {
-    let onExist = Cls.OnInstanceExists;
+    let counter = 0;
+    let isSingle = true;
+
+    _.assert( args.length === 1 );
+    _.assert( _.mapIs( o ) );
+    _.assert( _.mapIs( o.resource ) );
+    _.assert( _.objectIs( o.resource.module ) );
+    _.assert( _.strDefined( o.resource.name ) );
+
+    if( o.resource.criterion )
+    o.resource.criterion = Cls.CriterionMapResolve( module, o.resource.criterion );
+
+    if( o.resource.criterion )
+    o.resource.criterion = Cls.CriterionNormalize( o.resource.criterion );
+
+    if( o.resource.criterion && _.mapKeys( o.resource.criterion ).length > 0 )
+    {
+      let samples = _.eachSample({ sets : o.resource.criterion });
+      if( samples.length > 1 )
+      for( let index = 0 ; index < samples.length ; index++ )
+      {
+        let criterion = samples[ index ];
+        let o2 = _.mapExtend( null, o );
+        o2.resource = _.mapExtend( null, o.resource );
+        let postfix = Cls.CriterionPostfixFor( samples, criterion );
+
+        o2.resource.criterion = criterion;
+        o2.resource.name = o.resource.name + '.' + postfix;
+
+        isSingle = false;
+
+        if( o2.Optional )
+        if( module[ Cls.MapName ][ o2.resource.name ] )
+        continue;
+
+        single( o2 );
+        counter += 1;
+      }
+    }
+
+    if( isSingle )
+    {
+      single( o );
+      counter += 1;
+    }
+
+    return result;
+  }
+
+  /* */
+
+  function single( o )
+  {
 
     try
     {
 
-      _.assert( o.module instanceof will.OpenedModule );
-
-      let instance = o.module[ Cls.MapName ][ o.name ];
+      _.assert( o.resource.module instanceof will.OpenedModule );
+      _.assert( !!o.resource.module[ Cls.MapName ] );
+      let instance = o.resource.module[ Cls.MapName ][ o.resource.name ];
       if( instance )
       {
-        _.assert( !!onExist );
-        onExist( instance, o );
+        _.sure( !!Cls.OnInstanceExists, 'Instance ' + Cls.KindName + '::' + o.resource.name + ' already exists' );
+        o.instance = instance;
+        Cls.OnInstanceExists( o );
       }
 
       let optional = !!o.Optional;
@@ -102,12 +190,7 @@ function MakeForEachCriterion( o )
       let importing = !!o.Importing;
       let isOutFile = !!o.IsOutFile;
 
-      delete o.Optional;
-      delete o.Rewriting;
-      delete o.Importing;
-      delete o.IsOutFile;
-
-      if( o.importable !== undefined && !o.importable )
+      if( o.resource.importable !== undefined && !o.resource.importable )
       if( importing )
       {
         return;
@@ -116,25 +199,34 @@ function MakeForEachCriterion( o )
       if( instance && rewriting )
       instance.finit();
 
-      let r = Cls( o ).form1();
+      let r = Cls( o.resource ).form1();
       result.push( r );
       return r;
     }
     catch( err )
     {
-      throw _.err( 'Error forming', Cls.KindName + '::' + o.name, '\n', err );
+      throw _.err( 'Criterions\n', _.toStr( o.resource.criterion ), '\n', err );
     }
 
   }
 
 }
 
+MakeForEachCriterion.defaults =
+{
+  Optional : null,
+  Rewriting : null,
+  Importing : null,
+  IsOutFile : null,
+  resource : null,
+}
+
 //
 
-function OptionsFrom( o )
+function ResouceDataFrom( o )
 {
   _.assert( arguments.length === 1 );
-  return o;
+  return _.mapExtend( null, o );
 }
 
 //
@@ -142,7 +234,7 @@ function OptionsFrom( o )
 function finit()
 {
   let resource = this;
-  _.assert( !_.instanceIsFinited( resource ) );
+  _.assert( !_.workpiece.isFinited( resource ) );
   if( resource.formed )
   resource.unform();
   resource.module = null;
@@ -159,8 +251,9 @@ function init( o )
 
   _.Will.ResourceCounter += 1;
   resource.id = _.Will.ResourceCounter;
+  resource.criterion = Object.create( null );
 
-  _.instanceInit( resource );
+  _.workpiece.initFields( resource );
   Object.preventExtensions( resource );
 
   if( o )
@@ -773,13 +866,13 @@ function CriterionValueNormalize( criterionValue )
 // export
 // --
 
-function _infoExport( fields )
+function _infoExport( o )
 {
   let resource = this;
   let result = '';
 
   result += resource.decoratedAbsoluteName + '\n';
-  result += _.toStr( fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '', multiline : 1 } );
+  result += _.toStr( o.fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '', multiline : 1 } );
 
   return result;
 }
@@ -792,7 +885,7 @@ function infoExport()
   let o = _.routineOptions( infoExport, arguments );
 
   let fields = resource.dataExport( o );
-  let result = resource._infoExport( fields );
+  let result = resource._infoExport({ fields });
 
   return result;
 }
@@ -1083,6 +1176,11 @@ let moduleSymbol = Symbol.for( 'module' );
 
 let Composes =
 {
+
+  description : null,
+  criterion : null,
+  inherit : _.define.own([]),
+
 }
 
 let Aggregates =
@@ -1115,8 +1213,10 @@ let Restricts =
 let Statics =
 {
 
+  MakeFor,
   MakeForEachCriterion,
-  OptionsFrom,
+  ResouceDataFrom,
+
   CriterionVariable,
   CriterionPostfixFor,
   CriterionMapResolve,
@@ -1155,8 +1255,9 @@ let Extend =
 
   // inter
 
+  MakeFor,
   MakeForEachCriterion,
-  OptionsFrom,
+  ResouceDataFrom,
 
   finit,
   init,
@@ -1181,6 +1282,7 @@ let Extend =
   criterionSattisfyStrict,
   criterionInherit,
   criterionVariable,
+
   CriterionVariable,
   CriterionPostfixFor,
   CriterionNormalize,

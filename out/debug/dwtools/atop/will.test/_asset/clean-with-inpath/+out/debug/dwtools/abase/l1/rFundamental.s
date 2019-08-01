@@ -15,7 +15,7 @@
 // let _FunctionBind = Function.prototype.bind;
 // let _ObjectToString = Object.prototype.toString;
 // let _ObjectHasOwnProperty = Object.hasOwnProperty;
-// let _propertyIsEumerable = Object.propertyIsEnumerable;
+// let _ObjectPropertyIsEumerable = Object.propertyIsEnumerable;
 // let _ceil = Math.ceil;
 // let _floor = Math.floor;
 //

@@ -12,19 +12,19 @@ about:
     - wTools
 path:
   module.willfiles:
+    criterion:
+      predefined: 1
     path: willbe.out.will.yml
-    criterion:
-      predefined: 1
   module.common:
-    path: willbe.out
     criterion:
       predefined: 1
+    path: willbe.out
   module.original.willfiles:
+    criterion:
+      predefined: 1
     path:
       - ../.im.will.yml
       - ../.ex.will.yml
-    criterion:
-      predefined: 1
   local:
     criterion:
       predefined: 1
@@ -32,23 +32,23 @@ path:
     criterion:
       predefined: 1
   in:
-    path: .
     criterion:
       predefined: 0
+    path: .
   temp:
     path: .
   out:
-    path: .
     criterion:
       predefined: 0
+    path: .
   out.debug:
-    path: debug
     criterion:
       debug: 1
+    path: debug
   out.release:
-    path: release
     criterion:
       debug: 0
+    path: release
   doc:
     path: ../doc
   proto:
@@ -58,7 +58,6 @@ path:
   bugs:
     path: 'https:///github.com/Wandalen/willbe/issues'
   exported.dir.proto.export:
-    path: ../proto
     criterion:
       default: 1
       debug: 1
@@ -68,11 +67,23 @@ path:
       export: 1
       tar: 1
       public: 1
+    path: ../proto
   exported.files.proto.export:
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      doc: 0
+      export: 1
+      tar: 1
+      public: 1
     path:
       - ../proto
       - ../proto/dwtools
       - ../proto/dwtools/Tools.s
+      - ../proto/dwtools/abase
+      - ../proto/dwtools/amid
       - ../proto/dwtools/atop
       - ../proto/dwtools/atop/will
       - ../proto/dwtools/atop/will/Exec
@@ -191,6 +202,7 @@ path:
         ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/+.module/Proto/sample/Sample.html
       - >-
         ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/+.module/Proto/sample/Sample.js
+      - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/+.module/Tools
       - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/+out
       - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/+out/debug
       - >-
@@ -353,9 +365,14 @@ path:
         ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/.module/Proto/sample/Sample.html
       - >-
         ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/.module/Proto/sample/Sample.js
+      - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/.module/Tools
       - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module
       - >-
         ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/Proto.will.yml
+      - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/+.module
+      - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/+out
+      - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/.module
+      - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/out
       - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/out
       - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/out/debug
       - >-
@@ -478,6 +495,7 @@ path:
       - ../proto/dwtools/atop/will.test/_asset/composite-reflector
       - ../proto/dwtools/atop/will.test/_asset/composite-reflector/.will.yml
       - ../proto/dwtools/atop/will.test/_asset/composite-reflector/proto
+      - ../proto/dwtools/atop/will.test/_asset/composite-reflector/proto/dir1
       - ../proto/dwtools/atop/will.test/_asset/composite-reflector/proto/dir2
       - >-
         ../proto/dwtools/atop/will.test/_asset/composite-reflector/proto/dir2/-Excluded.js
@@ -992,6 +1010,8 @@ path:
         ../proto/dwtools/atop/will.test/_asset/import-auto/-out/debug/dwtools/abase/l2.test/StringTools.test.s
       - ../proto/dwtools/atop/will.test/_asset/import-auto/module
       - ../proto/dwtools/atop/will.test/_asset/import-auto/module/Proto.will.yml
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/module/.module
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/module/.module/Proto
       - ../proto/dwtools/atop/will.test/_asset/import-auto/proto
       - >-
         ../proto/dwtools/atop/will.test/_asset/import-auto/proto/WithSubmodules.s
@@ -1586,6 +1606,8 @@ path:
       - ../proto/dwtools/atop/will.test/_asset/transpile/.ex.will.yml
       - ../proto/dwtools/atop/will.test/_asset/transpile/.im.will.yml
       - ../proto/dwtools/atop/will.test/_asset/transpile/proto
+      - ../proto/dwtools/atop/will.test/_asset/transpile/proto/dir1
+      - ../proto/dwtools/atop/will.test/_asset/transpile/proto/dir1/Text.txt
       - ../proto/dwtools/atop/will.test/_asset/transpile/proto/dir2
       - ../proto/dwtools/atop/will.test/_asset/transpile/proto/dir2/-Excluded.js
       - ../proto/dwtools/atop/will.test/_asset/transpile/proto/dir2/File.js
@@ -1609,53 +1631,199 @@ path:
       - ../proto/dwtools/atop/will.test/_asset/verbosity-step-delete/+proto/A
       - >-
         ../proto/dwtools/atop/will.test/_asset/verbosity-step-delete/+proto/A/file
+      - ../proto/dwtools/atop/will.test/_asset/verbosity-step-delete/proto
       - ../proto/dwtools/atop/will.test/_asset/verbosity-step-print-name
       - >-
         ../proto/dwtools/atop/will.test/_asset/verbosity-step-print-name/.will.yml
       - ../proto/dwtools/atop/will.test/_asset/verbosity-step-print-name/file
-    criterion:
-      default: 1
-      debug: 1
-      raw: 1
-      proto: 1
-      doc: 0
-      export: 1
-      tar: 1
-      public: 1
+      - ../proto/dwtools/tmp.tmp
+      - ../proto/dwtools/tmp.tmp/Will-113957-117-da08
+      - ../proto/dwtools/tmp.tmp/Will-113957-117-da08/make
+      - ../proto/dwtools/tmp.tmp/Will-152952-467-796a
+      - ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile
+      - ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/.ex.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/.im.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto
+      - ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir1
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir1/Text.txt
+      - ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/-Excluded.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File.test.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File1.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File1.release.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File2.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File2.release.js
+      - ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir3.test
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir3.test/File.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir3.test/File.test.js
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/.ex.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/.im.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.ex.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.im.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/submodule.out.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/debug
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/debug/File.debug.js
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/release
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/release/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/supermodule.out.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/debug
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/debug/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/debug/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/release
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/release/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/release/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/submodule.out.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/debug
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/debug/File.debug.js
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/release
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/release/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/proto
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/proto/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/proto/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/supermodule.out.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/debug
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/debug/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/debug/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/release
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/release/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/release/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/.ex.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/.im.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.ex.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.im.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/submodule.out.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/debug
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/debug/File.debug.js
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/release
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/release/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/supermodule.out.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/debug
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/debug/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/debug/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/release
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/release/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/release/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/submodule.out.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/debug
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/debug/File.debug.js
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/release
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/release/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/proto
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/proto/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/proto/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/supermodule.out.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/debug
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/debug/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/debug/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/release
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/release/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/release/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/v1.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/v2.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/File.js
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/File.test.js
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Produce.js
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Produced.js2
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Produced.txt2
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Src1.txt
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Src2.txt
+      - ../proto/dwtools/tmp.tmp/Will-819-139-39c3
 submodule: {}
 reflector:
   reflect.proto.:
     src:
       filePath:
         'path::proto': 'path::out.*=1'
+    mandatory: 1
     criterion:
       debug: 0
-    mandatory: 1
     inherit:
       - predefined.*
   reflect.proto.debug:
     src:
       filePath:
         'path::proto': 'path::out.*=1'
+    mandatory: 1
     criterion:
       debug: 1
-    mandatory: 1
     inherit:
       - predefined.*
   reflect.submodules:
     src:
       filePath:
         'submodule::*/exported::*=1/path::exportedDir*=1': 'path::out.*=1'
+    mandatory: 1
     criterion:
       debug: 1
-    mandatory: 1
     inherit:
       - predefined.*
   exported.proto.export:
     src:
       filePath:
-        .: null
+        .: ''
       prefixPath: ../proto
+    mandatory: 1
     criterion:
       default: 1
       debug: 1
@@ -1665,13 +1833,14 @@ reflector:
       export: 1
       tar: 1
       public: 1
-    mandatory: 1
   exported.files.proto.export:
     src:
       filePath:
-        'path::exported.files.proto.export': null
+        'path::exported.files.proto.export': ''
       basePath: .
       prefixPath: 'path::exported.dir.proto.export'
+    recursive: 0
+    mandatory: 1
     criterion:
       default: 1
       debug: 1
@@ -1681,132 +1850,133 @@ reflector:
       export: 1
       tar: 1
       public: 1
-    recursive: 0
-    mandatory: 1
 step:
   clean.out.:
-    criterion:
-      debug: 0
     opts:
       filePath: 'path::out.debug'
+    criterion:
+      debug: 0
     inherit:
       - files.delete
   clean.out.debug:
-    criterion:
-      debug: 1
     opts:
       filePath: 'path::out.debug'
+    criterion:
+      debug: 1
     inherit:
       - files.delete
   reflect.proto.:
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
     criterion:
       debug: 0
       raw: 0
-    opts:
-      reflector: 'reflector::reflect.proto.*=1'
     inherit:
       - files.reflect
   reflect.proto.debug:
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
     criterion:
       debug: 1
       raw: 0
-    opts:
-      reflector: 'reflector::reflect.proto.*=1'
     inherit:
       - files.reflect
   reflect.proto.raw:
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
     criterion:
       debug: 0
       raw: 1
-    opts:
-      reflector: 'reflector::reflect.proto.*=1'
     inherit:
       - files.reflect
   reflect.proto.debug.raw:
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
     criterion:
       debug: 1
       raw: 1
-    opts:
-      reflector: 'reflector::reflect.proto.*=1'
     inherit:
       - files.reflect
   reflect.submodules.:
+    opts:
+      reflector: 'reflector::reflect.submodules*=1'
     criterion:
       debug: 1
       raw: 0
-    opts:
-      reflector: 'reflector::reflect.submodules*=1'
     inherit:
       - files.reflect
   reflect.submodules.raw:
+    opts:
+      reflector: 'reflector::reflect.submodules*=1'
     criterion:
       debug: 1
       raw: 1
-    opts:
-      reflector: 'reflector::reflect.submodules*=1'
     inherit:
       - files.reflect
   reflect.submodules:
-    criterion:
-      debug: 1
     opts:
       reflector: 'reflector::reflect.submodules*'
+    criterion:
+      debug: 1
     inherit:
       - files.reflect
   export.proto:
+    opts:
+      export: 'path::proto'
+      tar: 0
     criterion:
       debug: 1
       proto: 1
       doc: 0
-    opts:
-      export: 'path::proto'
-      tar: 0
     inherit:
       - module.export
   export.doc:
-    criterion:
-      debug: 1
-      doc: 1
     opts:
       export: 'path::doc'
       tar: 0
+    criterion:
+      debug: 1
+      doc: 1
     inherit:
       - module.export
 build:
   debug.raw:
+    steps:
+      - 'step::clean.out*=1'
+      - 'step::reflect.proto.*=1'
     criterion:
       default: 1
       debug: 1
       raw: 1
+  debug.compiled:
     steps:
       - 'step::clean.out*=1'
       - 'step::reflect.proto.*=1'
-  debug.compiled:
     criterion:
       debug: 1
       raw: 0
+  release.raw:
     steps:
       - 'step::clean.out*=1'
       - 'step::reflect.proto.*=1'
-  release.raw:
     criterion:
       debug: 0
       raw: 1
+  release.compiled:
     steps:
       - 'step::clean.out*=1'
       - 'step::reflect.proto.*=1'
-  release.compiled:
     criterion:
       debug: 0
       raw: 0
-    steps:
-      - 'step::clean.out*=1'
-      - 'step::reflect.proto.*=1'
   all:
     steps:
       - 'build::debug.raw'
       - 'build::release.compiled'
   proto.export:
+    steps:
+      - 'build::debug.raw'
+      - 'step::export.proto'
     criterion:
       default: 1
       debug: 1
@@ -1816,19 +1986,20 @@ build:
       export: 1
       tar: 1
       public: 1
-    steps:
-      - 'build::debug.raw'
-      - 'step::export.proto'
   doc.export:
+    steps:
+      - 'step::export.doc'
     criterion:
       export: 1
       debug: 1
       doc: 1
-    steps:
-      - 'step::export.doc'
 exported:
   proto.export:
     version: 0.4.0
+    exportedReflector: 'reflector::exported.proto.export'
+    exportedFilesReflector: 'reflector::exported.files.proto.export'
+    exportedDirPath: 'path::exported.dir.proto.export'
+    exportedFilesPath: 'path::exported.files.proto.export'
     criterion:
       default: 1
       debug: 1
@@ -1838,10 +2009,6 @@ exported:
       export: 1
       tar: 1
       public: 1
-    exportedReflector: 'reflector::exported.proto.export'
-    exportedFilesReflector: 'reflector::exported.files.proto.export'
-    exportedDirPath: 'path::exported.dir.proto.export'
-    exportedFilesPath: 'path::exported.files.proto.export'
 module:
   ../:
     about:
@@ -1853,21 +2020,21 @@ module:
       keywords: *ref_1
     path:
       module.willfiles:
+        criterion:
+          predefined: 1
         path:
           - .im.will.yml
           - .ex.will.yml
-        criterion:
-          predefined: 1
       module.original.willfiles:
+        criterion:
+          predefined: 1
         path:
           - .im.will.yml
           - .ex.will.yml
-        criterion:
-          predefined: 1
       module.common:
-        path: ./
         criterion:
           predefined: 1
+        path: ./
       local:
         criterion:
           predefined: 1
@@ -1875,23 +2042,23 @@ module:
         criterion:
           predefined: 1
       in:
-        path: .
         criterion:
           predefined: 0
+        path: .
       temp:
         path: out
       out:
-        path: out
         criterion:
           predefined: 0
+        path: out
       out.debug:
-        path: ./out/debug
         criterion:
           debug: 1
+        path: ./out/debug
       out.release:
-        path: ./out/release
         criterion:
           debug: 0
+        path: ./out/release
       doc:
         path: ./doc
       proto:
@@ -1901,7 +2068,6 @@ module:
       bugs:
         path: 'https:///github.com/Wandalen/willbe/issues'
       exported.dir.proto.export:
-        path: ./proto
         criterion:
           default: 1
           debug: 1
@@ -1911,11 +2077,23 @@ module:
           export: 1
           tar: 1
           public: 1
+        path: ./proto
       exported.files.proto.export:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          doc: 0
+          export: 1
+          tar: 1
+          public: 1
         path:
           - proto
           - proto/dwtools
           - proto/dwtools/Tools.s
+          - proto/dwtools/abase
+          - proto/dwtools/amid
           - proto/dwtools/atop
           - proto/dwtools/atop/will
           - proto/dwtools/atop/will/Exec
@@ -2034,6 +2212,7 @@ module:
             proto/dwtools/atop/will.test/_asset/clean-with-inpath/+.module/Proto/sample/Sample.html
           - >-
             proto/dwtools/atop/will.test/_asset/clean-with-inpath/+.module/Proto/sample/Sample.js
+          - proto/dwtools/atop/will.test/_asset/clean-with-inpath/+.module/Tools
           - proto/dwtools/atop/will.test/_asset/clean-with-inpath/+out
           - proto/dwtools/atop/will.test/_asset/clean-with-inpath/+out/debug
           - >-
@@ -2196,9 +2375,15 @@ module:
             proto/dwtools/atop/will.test/_asset/clean-with-inpath/.module/Proto/sample/Sample.html
           - >-
             proto/dwtools/atop/will.test/_asset/clean-with-inpath/.module/Proto/sample/Sample.js
+          - proto/dwtools/atop/will.test/_asset/clean-with-inpath/.module/Tools
           - proto/dwtools/atop/will.test/_asset/clean-with-inpath/module
           - >-
             proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/Proto.will.yml
+          - >-
+            proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/+.module
+          - proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/+out
+          - proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/.module
+          - proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/out
           - proto/dwtools/atop/will.test/_asset/clean-with-inpath/out
           - proto/dwtools/atop/will.test/_asset/clean-with-inpath/out/debug
           - >-
@@ -2321,6 +2506,7 @@ module:
           - proto/dwtools/atop/will.test/_asset/composite-reflector
           - proto/dwtools/atop/will.test/_asset/composite-reflector/.will.yml
           - proto/dwtools/atop/will.test/_asset/composite-reflector/proto
+          - proto/dwtools/atop/will.test/_asset/composite-reflector/proto/dir1
           - proto/dwtools/atop/will.test/_asset/composite-reflector/proto/dir2
           - >-
             proto/dwtools/atop/will.test/_asset/composite-reflector/proto/dir2/-Excluded.js
@@ -2842,6 +3028,8 @@ module:
           - proto/dwtools/atop/will.test/_asset/import-auto/module
           - >-
             proto/dwtools/atop/will.test/_asset/import-auto/module/Proto.will.yml
+          - proto/dwtools/atop/will.test/_asset/import-auto/module/.module
+          - proto/dwtools/atop/will.test/_asset/import-auto/module/.module/Proto
           - proto/dwtools/atop/will.test/_asset/import-auto/proto
           - >-
             proto/dwtools/atop/will.test/_asset/import-auto/proto/WithSubmodules.s
@@ -3443,6 +3631,8 @@ module:
           - proto/dwtools/atop/will.test/_asset/transpile/.ex.will.yml
           - proto/dwtools/atop/will.test/_asset/transpile/.im.will.yml
           - proto/dwtools/atop/will.test/_asset/transpile/proto
+          - proto/dwtools/atop/will.test/_asset/transpile/proto/dir1
+          - proto/dwtools/atop/will.test/_asset/transpile/proto/dir1/Text.txt
           - proto/dwtools/atop/will.test/_asset/transpile/proto/dir2
           - >-
             proto/dwtools/atop/will.test/_asset/transpile/proto/dir2/-Excluded.js
@@ -3469,53 +3659,201 @@ module:
           - proto/dwtools/atop/will.test/_asset/verbosity-step-delete/+proto/A
           - >-
             proto/dwtools/atop/will.test/_asset/verbosity-step-delete/+proto/A/file
+          - proto/dwtools/atop/will.test/_asset/verbosity-step-delete/proto
           - proto/dwtools/atop/will.test/_asset/verbosity-step-print-name
           - >-
             proto/dwtools/atop/will.test/_asset/verbosity-step-print-name/.will.yml
           - proto/dwtools/atop/will.test/_asset/verbosity-step-print-name/file
-        criterion:
-          default: 1
-          debug: 1
-          raw: 1
-          proto: 1
-          doc: 0
-          export: 1
-          tar: 1
-          public: 1
+          - proto/dwtools/tmp.tmp
+          - proto/dwtools/tmp.tmp/Will-113957-117-da08
+          - proto/dwtools/tmp.tmp/Will-113957-117-da08/make
+          - proto/dwtools/tmp.tmp/Will-152952-467-796a
+          - proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile
+          - proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/.ex.will.yml
+          - proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/.im.will.yml
+          - proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto
+          - proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir1
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir1/Text.txt
+          - proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/-Excluded.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File.test.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File1.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File1.release.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File2.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File2.release.js
+          - proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir3.test
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir3.test/File.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir3.test/File.test.js
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/.ex.will.yml
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/.im.will.yml
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.ex.will.yml
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.im.will.yml
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/submodule.out.will.yml
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/debug
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/debug/File.debug.js
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/release
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/release/File.release.js
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/supermodule.out.will.yml
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/debug
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/debug/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/debug/File.release.js
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/release
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/release/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/release/File.release.js
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/submodule.out.will.yml
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/debug
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/debug/File.debug.js
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/release
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/release/File.release.js
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/proto
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/proto/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/proto/File.release.js
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/supermodule.out.will.yml
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/debug
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/debug/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/debug/File.release.js
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/release
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/release/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/release/File.release.js
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/.ex.will.yml
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/.im.will.yml
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.ex.will.yml
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.im.will.yml
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/submodule.out.will.yml
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/debug
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/debug/File.debug.js
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/release
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/release/File.release.js
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/supermodule.out.will.yml
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/debug
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/debug/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/debug/File.release.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/release
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/release/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/release/File.release.js
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/submodule.out.will.yml
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/debug
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/debug/File.debug.js
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/release
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/release/File.release.js
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/proto
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/proto/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/proto/File.release.js
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/supermodule.out.will.yml
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/debug
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/debug/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/debug/File.release.js
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/release
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/release/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/release/File.release.js
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/v1.will.yml
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/v2.will.yml
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/File.js
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/File.test.js
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Produce.js
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Produced.js2
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Produced.txt2
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Src1.txt
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Src2.txt
+          - proto/dwtools/tmp.tmp/Will-819-139-39c3
     submodule: {}
     reflector:
       reflect.proto.:
         src:
           filePath:
             'path::proto': 'path::out.*=1'
+        mandatory: 1
         criterion:
           debug: 0
-        mandatory: 1
         inherit:
           - predefined.*
       reflect.proto.debug:
         src:
           filePath:
             'path::proto': 'path::out.*=1'
+        mandatory: 1
         criterion:
           debug: 1
-        mandatory: 1
         inherit:
           - predefined.*
       reflect.submodules:
         src:
           filePath:
             'submodule::*/exported::*=1/path::exportedDir*=1': 'path::out.*=1'
+        mandatory: 1
         criterion:
           debug: 1
-        mandatory: 1
         inherit:
           - predefined.*
       exported.proto.export:
         src:
           filePath:
-            .: null
+            .: ''
           prefixPath: proto
+        mandatory: 1
         criterion:
           default: 1
           debug: 1
@@ -3525,13 +3863,14 @@ module:
           export: 1
           tar: 1
           public: 1
-        mandatory: 1
       exported.files.proto.export:
         src:
           filePath:
-            'path::exported.files.proto.export': null
+            'path::exported.files.proto.export': ''
           basePath: .
           prefixPath: 'path::exported.dir.proto.export'
+        recursive: 0
+        mandatory: 1
         criterion:
           default: 1
           debug: 1
@@ -3541,132 +3880,133 @@ module:
           export: 1
           tar: 1
           public: 1
-        recursive: 0
-        mandatory: 1
     step:
       clean.out.:
-        criterion:
-          debug: 0
         opts:
           filePath: 'path::out.debug'
+        criterion:
+          debug: 0
         inherit:
           - files.delete
       clean.out.debug:
-        criterion:
-          debug: 1
         opts:
           filePath: 'path::out.debug'
+        criterion:
+          debug: 1
         inherit:
           - files.delete
       reflect.proto.:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
         criterion:
           debug: 0
           raw: 0
-        opts:
-          reflector: 'reflector::reflect.proto.*=1'
         inherit:
           - files.reflect
       reflect.proto.debug:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
         criterion:
           debug: 1
           raw: 0
-        opts:
-          reflector: 'reflector::reflect.proto.*=1'
         inherit:
           - files.reflect
       reflect.proto.raw:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
         criterion:
           debug: 0
           raw: 1
-        opts:
-          reflector: 'reflector::reflect.proto.*=1'
         inherit:
           - files.reflect
       reflect.proto.debug.raw:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
         criterion:
           debug: 1
           raw: 1
-        opts:
-          reflector: 'reflector::reflect.proto.*=1'
         inherit:
           - files.reflect
       reflect.submodules.:
+        opts:
+          reflector: 'reflector::reflect.submodules*=1'
         criterion:
           debug: 1
           raw: 0
-        opts:
-          reflector: 'reflector::reflect.submodules*=1'
         inherit:
           - files.reflect
       reflect.submodules.raw:
+        opts:
+          reflector: 'reflector::reflect.submodules*=1'
         criterion:
           debug: 1
           raw: 1
-        opts:
-          reflector: 'reflector::reflect.submodules*=1'
         inherit:
           - files.reflect
       reflect.submodules:
-        criterion:
-          debug: 1
         opts:
           reflector: 'reflector::reflect.submodules*'
+        criterion:
+          debug: 1
         inherit:
           - files.reflect
       export.proto:
+        opts:
+          export: 'path::proto'
+          tar: 0
         criterion:
           debug: 1
           proto: 1
           doc: 0
-        opts:
-          export: 'path::proto'
-          tar: 0
         inherit:
           - module.export
       export.doc:
-        criterion:
-          debug: 1
-          doc: 1
         opts:
           export: 'path::doc'
           tar: 0
+        criterion:
+          debug: 1
+          doc: 1
         inherit:
           - module.export
     build:
       debug.raw:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
         criterion:
           default: 1
           debug: 1
           raw: 1
+      debug.compiled:
         steps:
           - 'step::clean.out*=1'
           - 'step::reflect.proto.*=1'
-      debug.compiled:
         criterion:
           debug: 1
           raw: 0
+      release.raw:
         steps:
           - 'step::clean.out*=1'
           - 'step::reflect.proto.*=1'
-      release.raw:
         criterion:
           debug: 0
           raw: 1
+      release.compiled:
         steps:
           - 'step::clean.out*=1'
           - 'step::reflect.proto.*=1'
-      release.compiled:
         criterion:
           debug: 0
           raw: 0
-        steps:
-          - 'step::clean.out*=1'
-          - 'step::reflect.proto.*=1'
       all:
         steps:
           - 'build::debug.raw'
           - 'build::release.compiled'
       proto.export:
+        steps:
+          - 'build::debug.raw'
+          - 'step::export.proto'
         criterion:
           default: 1
           debug: 1
@@ -3676,19 +4016,20 @@ module:
           export: 1
           tar: 1
           public: 1
-        steps:
-          - 'build::debug.raw'
-          - 'step::export.proto'
       doc.export:
+        steps:
+          - 'step::export.doc'
         criterion:
           export: 1
           debug: 1
           doc: 1
-        steps:
-          - 'step::export.doc'
     exported:
       proto.export:
         version: 0.4.0
+        exportedReflector: 'reflector::exported.proto.export'
+        exportedFilesReflector: 'reflector::exported.files.proto.export'
+        exportedDirPath: 'path::exported.dir.proto.export'
+        exportedFilesPath: 'path::exported.files.proto.export'
         criterion:
           default: 1
           debug: 1
@@ -3698,8 +4039,4 @@ module:
           export: 1
           tar: 1
           public: 1
-        exportedReflector: 'reflector::exported.proto.export'
-        exportedFilesReflector: 'reflector::exported.files.proto.export'
-        exportedDirPath: 'path::exported.dir.proto.export'
-        exportedFilesPath: 'path::exported.files.proto.export'
   willbe.out: root

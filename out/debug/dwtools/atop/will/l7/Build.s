@@ -15,7 +15,7 @@ let _ = wTools;
 let Parent = _.Will.Resource;
 let Self = function wWillBuild( o )
 {
-  return _.instanceConstructor( Self, this, arguments );
+  return _.workpiece.construct( Self, this, arguments );
 }
 
 Self.shortName = 'Build';
@@ -344,10 +344,10 @@ function archiveFilePathFor()
 let Composes =
 {
 
-  description : null,
-  criterion : null,
+  // description : null,
+  // criterion : null,
   steps : null,
-  inherit : _.define.own([]),
+  // inherit : _.define.own([]),
 
 }
 

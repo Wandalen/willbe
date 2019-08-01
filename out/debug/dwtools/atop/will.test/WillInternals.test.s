@@ -1,6 +1,6 @@
 ( function _WillInternals_test_s_( ) {
 
-'use strict'; debugger;
+'use strict';
 
 /*
 */
@@ -16,8 +16,6 @@ if( typeof module !== 'undefined' )
   require( '../will/MainBase.s' );
 
 }
-
-debugger;
 
 var _global = _global_;
 var _ = _global_.wTools;
@@ -365,7 +363,7 @@ function openNamed( test )
 
   /* - */
 
-  module1.openedModule.ready.thenKeep( ( arg ) =>
+  module1.openedModule.ready.then( ( arg ) =>
   {
     test.case = 'opened filePath : ' + assetName;
     check( module1 );
@@ -385,7 +383,7 @@ function openNamed( test )
 
   /* - */
 
-  module2.openedModule.ready.thenKeep( ( arg ) =>
+  module2.openedModule.ready.then( ( arg ) =>
   {
     test.case = 'opened dirPath : ' + assetName;
     check( module2 );
@@ -501,7 +499,6 @@ function openNamed( test )
     test.identical( module.openedModule.about.name, 'supermodule' );
     test.identical( module.openedModule.pathMap, pathMap );
     test.setsAreIdentical( _.mapKeys( module.openedModule.submoduleMap ), [ 'Submodule' ] );
-    debugger;
     test.setsAreIdentical( _.filter( _.mapKeys( module.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug' ] );
 
     let steps = _.select( module.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
@@ -536,7 +533,7 @@ function openAnon( test )
 
   /* - */
 
-  module1.openedModule.ready.thenKeep( ( arg ) =>
+  module1.openedModule.ready.then( ( arg ) =>
   {
     test.case = 'opened filePath : ' + assetName;
     check( module1 );
@@ -557,7 +554,7 @@ function openAnon( test )
 
   /* - */
 
-  module2.openedModule.ready.thenKeep( ( arg ) =>
+  module2.openedModule.ready.then( ( arg ) =>
   {
     test.case = 'opened dirPath : ' + assetName;
     check( module2 );
@@ -677,7 +674,7 @@ function openOutNamed( test )
 
   /* - */
 
-  module1.openedModule.ready.thenKeep( ( arg ) =>
+  module1.openedModule.ready.then( ( arg ) =>
   {
     test.case = 'opened filePath : ' + assetName;
     check( module1 );
@@ -696,7 +693,7 @@ function openOutNamed( test )
 
   /* - */
 
-  module2.openedModule.ready.thenKeep( ( arg ) =>
+  module2.openedModule.ready.then( ( arg ) =>
   {
     test.case = 'opened dirPath : ' + assetName;
     check( module2 );
@@ -765,7 +762,7 @@ function openOutNamed( test )
     test.is( !!module.openedModule.about );
     test.identical( module.openedModule.about.name, 'supermodule' );
 
-    test.identical( module.openedModule.pathMap, pathMap );
+    test.identical( module.openedModule.pathMap, pathMap ); debugger; // xxx
     test.identical( module.openedModule.willfilesArray.length, 1 );
     test.identical( _.mapKeys( module.openedModule.willfileWithRoleMap ), [ 'single' ] );
     test.identical( _.mapKeys( module.openedModule.submoduleMap ), [ 'Submodule' ] );
@@ -802,7 +799,7 @@ function clone( test )
 
   /* - */
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
     test.case = 'clone';
 
@@ -846,7 +843,7 @@ function clone( test )
 
   /* - */
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
     test.case = 'clone extending';
 
@@ -978,7 +975,7 @@ function resolve( test )
 
   /* - */
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
 
     test.case = 'array of numbers';
@@ -1039,7 +1036,7 @@ function reflectorResolve( test )
 
   /* - */
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
 
     test.case = 'reflector::reflect.proto.0.debug formed:1';
@@ -1434,7 +1431,7 @@ function reflectorInheritedResolve( test )
 
   /* - */
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
 
     test.case = 'reflector::reflect.proto1 formed:1';
@@ -1662,7 +1659,7 @@ function superResolve( test )
 
   /* - */
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
 
     test.case = 'build::*';
@@ -1760,7 +1757,7 @@ function buildsResolve( test )
 
   /* - */
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
 
     test.case = 'build::*'; /* */
@@ -1898,7 +1895,7 @@ function pathsResolve( test )
 
   /* - */
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
 
     test.case = 'resolved, .';
@@ -1909,7 +1906,7 @@ function pathsResolve( test )
     return null;
   })
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
 
     test.case = 'path::in*=1, pathResolving : 0';
@@ -1947,7 +1944,7 @@ function pathsResolve( test )
 
   /* - */
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
 
     test.case = 'path::* - implicit'; /* */
@@ -2391,7 +2388,7 @@ function pathsResolveImportIn( test )
 
   var module = will.moduleMake({ willfilesPath : modulePath });
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
 
     test.case = 'submodule::*/path::in*=1, default';
@@ -2418,7 +2415,7 @@ function pathsResolveImportIn( test )
     return null;
   });
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
 
 /*
@@ -3116,7 +3113,7 @@ function pathsResolveOfSubmodules( test )
 
   /* - */
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
     let builds = module.openedModule.buildsResolve({ name : 'debug.raw' });
     test.identical( builds.length, 1 );
@@ -3126,7 +3123,7 @@ function pathsResolveOfSubmodules( test )
 
   /* - */
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
 
     test.case = 'resolve submodules';
@@ -3187,6 +3184,8 @@ function pathsResolveOfSubmodules( test )
 
 }
 
+pathsResolveOfSubmodules.timeOut = 130000;
+
 //
 
 function pathsResolveOfSubmodulesAndOwn( test )
@@ -3211,7 +3210,7 @@ function pathsResolveOfSubmodulesAndOwn( test )
 
   /* - */
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
 
     test.case = 'path::export';
@@ -3296,7 +3295,7 @@ function pathsResolveOutFileOfExports( test )
 
   var module = will.moduleMake({ willfilesPath : modulePath });
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
 
     test.open( 'without export' );
@@ -3359,7 +3358,7 @@ function pathsResolveOutFileOfExports( test )
     return null;
   });
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
 
 /*
@@ -4079,7 +4078,7 @@ function pathsResolveComposite( test )
 
   var module = will.moduleMake({ willfilesPath : modulePath });
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
 
     test.case = 'path::protoDir1';
@@ -4186,12 +4185,13 @@ function pathsResolveComposite2( test )
 
   var module = will.moduleMake({ willfilesPath : modulePath });
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
 
     test.case = 'path::export';
-    var resolved = module.openedModule.resolve({ selector : 'path::export', pathResolving : 0 })
-    var expected = path.join( routinePath, '.module/Proto/proto' );
+    var resolved = module.openedModule.resolve({ selector : 'path::export', pathResolving : 0 });
+    var expected = '.module/Proto/proto';
+    // var expected = path.join( routinePath, '.module/Proto/proto' );
     test.identical( resolved, expected );
 
     return null;
@@ -4241,7 +4241,7 @@ function pathsResolveArray( test )
 
   /* - */
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
 
     test.case = 'path::produced.js';
@@ -4318,8 +4318,46 @@ function pathsResolveFailing( test )
 
   /* - */
 
-  module.openedModule.ready.thenKeep( ( arg ) =>
+  module.openedModule.ready.then( ( arg ) =>
   {
+
+    test.case = 'path::entry.*=1: null';
+    debugger;
+    var got = module.openedModule.pathResolve
+    ({
+      selector : { 'path::entry.*=1' : null },
+      missingAction : 'undefine',
+      mapValsUnwrapping : 0,
+      singleUnwrapping : 0,
+    });
+    var expected = { 'path::entry.*=1' : null };
+    test.identical( got, expected );
+    debugger;
+
+    test.case = 'path::entry.*=1: null';
+    var got = module.openedModule.pathResolve
+    ({
+      selector : { 'path::entry.*=1' : null },
+      missingAction : 'undefine',
+      mapValsUnwrapping : 1,
+    });
+    var expected = null;
+    test.identical( got, expected );
+
+    test.case = 'path::entry.*=1: null';
+    var got = module.openedModule.pathResolve
+    ({
+      selector : { 'path::entry.*=1' : null },
+      missingAction : 'undefine',
+      prefixlessAction : 'resolved',
+      pathResolving : 0,
+      pathNativizing : 0,
+      selectorIsPath : 1,
+      mapValsUnwrapping : 0,
+      singleUnwrapping : 0,
+    });
+    var expected = { 'path::entry.*=1' : null };
+    test.identical( got, expected );
 
     test.case = 'path::proto';
     var got = module.openedModule.pathResolve

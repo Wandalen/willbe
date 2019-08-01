@@ -13,7 +13,7 @@ let _ = wTools;
 let Parent = _.Will.Resource;
 let Self = function wWillPathResource( o )
 {
-  return _.instanceConstructor( Self, this, arguments );
+  return _.workpiece.construct( Self, this, arguments );
 }
 
 Self.shortName = 'PathResource';
@@ -22,39 +22,86 @@ Self.shortName = 'PathResource';
 // inter
 // --
 
-function OptionsFrom( o )
+function ResouceDataFrom( o )
 {
   _.assert( arguments.length === 1 );
   if( _.strIs( o ) || _.arrayIs( o ) )
   return { path : o }
-  return o;
+  return _.mapExtend( null, o );
 }
+
+// //
+//
+// function MakeFor_body( o )
+// {
+//   let Cls = this;
+//   let willf = o.willf;
+//   let module = o.module;
+//   let will = willf.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//
+//   _.assert( arguments.length === 1 );
+//
+//   let result = Parent.MakeFor.body.apply( Cls, arguments );
+//
+//   // if( result.criterion.predefined && !path.isEmpty( result.path ) && result.name !== 'in' )
+//   // {
+//   //   debugger;
+//   //   result.path = path.join( module.inPath, result.path );
+//   // }
+//
+//   return result;
+// }
+//
+// _.routineExtend( MakeFor_body, Parent.MakeFor.body );
+//
+// let MakeFor = _.routineFromPreAndBody( Parent.MakeFor.pre, MakeFor_body );
 
 //
 
-function OnInstanceExists( instance, options )
+function OnInstanceExists( o )
 {
-  let module = instance.module;
+  let module = o.instance.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
-  options.criterion = options.criterion || Object.create( null );
-  _.mapSupplement( options.criterion, instance.criterion );
-  options.exportable = instance.exportable;
-  options.importable = instance.importable;
-  options.writable = instance.writable;
-  if( !options.path )
-  options.path = instance.path;
+  _.routineOptions( OnInstanceExists, arguments );
 
-  options.Rewriting = 1;
+  o.resource.criterion = o.resource.criterion || Object.create( null );
+  _.mapSupplement( o.resource.criterion, o.instance.criterion );
+  o.resource.exportable = o.instance.exportable;
+  o.resource.importable = o.instance.importable;
+  o.resource.writable = o.instance.writable;
+  if( !o.resource.path )
+  o.resource.path = o.instance.path;
 
-  if( instance.path !== null )
-  if( options.name === 'local' && options.IsOutFile )
-  options.importable = false;
+  o.Rewriting = 1;
+
+  if( o.instance.path !== null )
+  if( o.resource.name === 'local' && o.IsOutFile )
+  o.resource.importable = false;
+
+  // debugger;
+  // // if( o.instance.path !== null )
+  // if( o.resource.name === 'module.willfiles' )
+  // debugger;
+
+  if( o.instance.path !== null )
+  if( o.resource.name === 'module.willfiles' )
+  o.resource.importable = false;
+
+  if( o.instance.path !== null )
+  if( o.resource.name === 'module.dir' )
+  o.resource.importable = false;
 
 }
+
+OnInstanceExists.defaults = Object.create( Parent.MakeForEachCriterion.defaults );
+OnInstanceExists.defaults.instance = null;
 
 //
 
@@ -87,6 +134,25 @@ function unform()
 
   return resource;
 }
+
+// //
+//
+// function copy( o )
+// {
+//   let resource = this;
+//   _.assert( _.objectIs( o ) );
+//   _.assert( arguments.length === 1 );
+//
+//
+//
+//   let result = Parent.prototype.copy.call( resource, o );
+//
+//   let module = o.module !== undefined ? o.module : resource.module;
+//   if( o.unformedResource )
+//   resource.unformedResource = o.unformedResource.cloneExtending({ original : resource, module : module });
+//
+//   return result;
+// }
 
 //
 
@@ -183,15 +249,25 @@ function _pathSet( src )
 
   _.assert( src === null || _.strIs( src ) || _.arrayLike( src ) );
 
-  // if( resource.id === 140 )
-  // debugger;
-
   if( _.arrayLike( src ) )
   src = _.arraySlice( src );
 
+  // if( resource.name === 'module.original.willfiles' && src )
+  // debugger;
+
+  if( module && resource.name && !resource.original && src )
+  if( resource.name !== 'in' )
+  if( resource.criterion.predefined && !resource.writable )
+  {
+    // _.assert( !!module.pathResourceMap.in ); // xxx
+    let fileProvider = module.will.fileProvider;
+    let path = fileProvider.path;
+    src = path.s.join( module.inPath, src );
+  }
+
   if( module && resource.name && !resource.original )
   {
-    _.assert( module.pathMap[ resource.name ] === resource.path || resource.path === null );
+    _.assert( resource.path === null || _.entityIdentical( module.pathMap[ resource.name ], resource.path ) );
     delete module.pathMap[ resource.name ];
   }
 
@@ -257,9 +333,6 @@ function pathsRebase( o )
   _.assert( path.isAbsolute( o.inPath ) );
   _.assert( path.isAbsolute( o.exInPath ) );
 
-  // if( resource.name === 'out' )
-  // debugger;
-
   if( !o.relative )
   o.relative = path.relative( o.inPath, o.exInPath );
 
@@ -306,10 +379,11 @@ let pathSymbol = Symbol.for( 'path' );
 let Composes =
 {
 
-  path : null,
-  description : null,
-  criterion : null,
-  inherit : _.define.own([]),
+  path : _.define.field({ ini : null, order : 1 }),
+  // path : null,
+  // description : null,
+  // criterion : null,
+  // inherit : _.define.own([]),
 
 }
 
@@ -328,8 +402,9 @@ let Restricts =
 
 let Statics =
 {
-  OptionsFrom : OptionsFrom,
-  OnInstanceExists : OnInstanceExists,
+  ResouceDataFrom,
+  // MakeFor,
+  OnInstanceExists,
   MapName : 'pathResourceMap',
   KindName : 'path',
 }
@@ -354,11 +429,14 @@ let Extend =
 
   // inter
 
-  OptionsFrom,
+  ResouceDataFrom,
+  // MakeFor,
   OnInstanceExists,
 
   init,
   unform,
+  // copy,
+
   form1,
   form2,
   form3,

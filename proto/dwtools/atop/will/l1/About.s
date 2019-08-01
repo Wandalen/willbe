@@ -15,7 +15,7 @@ let _ = wTools;
 let Parent = null;
 let Self = function wWillParagraphAbout( o )
 {
-  return _.instanceConstructor( Self, this, arguments );
+  return _.workpiece.construct( Self, this, arguments );
 }
 
 Self.shortName = 'ParagraphAbout';
@@ -43,7 +43,7 @@ function init( o )
   about.values.enabled = 1;
   about.values.name = null;
 
-  _.instanceInit( about );
+  _.workpiece.initFields( about );
   Object.preventExtensions( about );
 
   if( o && o.module )

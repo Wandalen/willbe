@@ -5,9 +5,10 @@ os:
   - linux
   - osx
 node_js:
-  - '8'
   - '9'
-  - 'node'
+  - '10'
+  - '11'
+  - 'lts/*'
 script:
   - npm test
 

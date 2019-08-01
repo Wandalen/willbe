@@ -1317,13 +1317,17 @@ function strIndentation( test )
   /**/
 
   got = _.strIndentation( '', '_' );
-  expected = '_';
+  expected = '';
   test.identical( got, expected );
 
   /* no new lines, returns tab + source */
 
   got = _.strIndentation( 'abc', '_' );
-  expected = '_abc';
+  expected = 'abc';
+  test.identical( got, expected );
+
+  got = _.strIndentation( 'ab\ncd', '_' );
+  expected = 'ab\n_cd';
   test.identical( got, expected );
 
   /* - */
@@ -1333,25 +1337,25 @@ function strIndentation( test )
   /**/
 
   got = _.strIndentation( 'a\nb', '_' );
-  expected = '_a\n_b';
+  expected = 'a\n_b';
   test.identical( got, expected );
 
   /* tab before first and each new line */
 
   got = _.strIndentation( '\na\nb\nc', '_' );
-  expected = '_\n_a\n_b\n_c';
+  expected = '\n_a\n_b\n_c';
   test.identical( got, expected );
 
   /* tabs count = new lines count + 1 for first line */
 
   got = _.strIndentation( '\n\n\n', '_' );
-  expected = '_\n_\n_\n_';
+  expected = '\n_\n_\n_';
   test.identical( got, expected );
 
   /**/
 
   got = _.strIndentation( 'a\nb\nc','\t' );
-  expected = '\ta\n\tb\n\tc';
+  expected = 'a\n\tb\n\tc';
   test.identical( got, expected );
 
   /* - */
@@ -1361,14 +1365,14 @@ function strIndentation( test )
   /**/
 
   got = _.strIndentation( [ 'a', 'b', 'c' ],'_' );
-  expected = '_a\n_b\n_c';
+  expected = 'a\n_b\n_c';
   test.identical( got, expected );
 
   /* join array to string */
 
   var arr = [ 'a\nb', 'b\nc', 'c\nd' ];
   got = _.strIndentation( arr.join( '\n' ), '_' );
-  expected = '_a\n_b\n_b\n_c\n_c\n_d';
+  expected = 'a\n_b\n_b\n_c\n_c\n_d';
   test.identical( got, expected );
 
 

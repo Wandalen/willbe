@@ -11,6 +11,8 @@ if( typeof module !== 'undefined' )
 
   require( '../l3/Path.s' );
 
+  // _.include( 'wFiles' );
+
 }
 
 /*
@@ -7713,9 +7715,11 @@ function relativeWithOptions( test )
   {
     var outOfCurrent = _.path.relative( current, upStr );
     var toNormalized = _.path.normalize( to );
-    expected = outOfCurrent + '/../../../../../..' + toNormalized;
+    expected = outOfCurrent + '../../../../../..' + toNormalized;
   }
-  var got = _.path.relative({ basePath :  from, filePath : to, resolving : 1 });
+  test.identical( from, 'a/b/files/x/y/z.txt' );
+  test.identical( to, 'c:/x/y' );
+  var got = _.path.relative({ basePath : from, filePath : to, resolving : 1 });
   test.identical( got, expected );
 
   test.case = 'one relative, resolving 0'; /* */
@@ -7725,14 +7729,14 @@ function relativeWithOptions( test )
   var expected = '../../../files/x/y/z.txt';
   test.shouldThrowErrorSync( function()
   {
-    _.path.relative({ basePath :  from, filePath : to, resolving : 0 });
+    _.path.relative({ basePath : from, filePath : to, resolving : 0 });
   })
 
   test.close( 'old cases' )
 
-  //
+  /* - */
 
-  if( !Config.debug ) //
+  if( !Config.debug )
   return;
 
   test.open( 'relative, resolving : 0' )
@@ -7774,32 +7778,36 @@ function relativeWithOptions( test )
   test.case = '../a/b - .'; /* */
   var from = prefixFrom + '../a/b';
   var to = '.';
-  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
 
-  test.case = '../a/b - ./c/d'; /* */
-  var from = prefixFrom + '../a/b';
-  var to = './c/d';
-  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
+  if( _.path.current() === '/' )
+  {
 
-  test.case = '../a/b - ../c/d'; /* */
-  var from = prefixFrom + '../a/b';
-  var to = '../c/d';
-  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
+    test.case = '../a/b - ./c/d'; /* */
+    var from = prefixFrom + '../a/b';
+    var to = './c/d';
+    test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
 
-  test.case = '.. - .'; /* */
-  var from = prefixFrom + '..';
-  var to = '.';
-  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
+    test.case = '../a/b - ../c/d'; /* */
+    var from = prefixFrom + '../a/b';
+    var to = '../c/d';
+    test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
 
-  test.case = '.. - ./a'; /* */
-  var from = prefixFrom + '..';
-  var to = './a';
-  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
+    test.case = '.. - .'; /* */
+    var from = prefixFrom + '..';
+    var to = '.';
+    test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
 
-  test.case = '../a - a'; /* */
-  var from = prefixFrom + '../a';
-  var to = 'a';
-  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
+    test.case = '.. - ./a'; /* */
+    var from = prefixFrom + '..';
+    var to = './a';
+    test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
+
+    test.case = '../a - a'; /* */
+    var from = prefixFrom + '../a';
+    var to = 'a';
+    test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
+
+  }
 
   test.close( 'relative, resolving : 1' )
 
@@ -8343,14 +8351,22 @@ function mapExtend( test )
   /* - */
 
   test.case = 'dstMap=str, srcMap=str, dstPath=undefined';
-  var expected = { 'a' : null, 'b' : null }
+  var expected = { '/' : '/dst' }
+  var dstMap = null;
+  var srcMap = { '/' : '' };
+  var dstPath = '/dst';
+  var got = path.mapExtend( dstMap, srcMap, dstPath );
+  test.identical( got, expected );
+
+  test.case = 'dstMap=str, srcMap=str, dstPath=undefined';
+  var expected = { 'a' : '', 'b' : '' }
   var dstMap = 'a';
   var srcMap = 'b';
   var got = path.mapExtend( dstMap, srcMap );
   test.identical( got, expected );
 
   test.case = 'dstMap=str, srcMap=str, dstPath=null';
-  var expected = { 'a' : null, 'b' : null }
+  var expected = { 'a' : '', 'b' : '' }
   var dstMap = 'a';
   var srcMap = 'b';
   var got = path.mapExtend( dstMap, srcMap, null );
@@ -8398,7 +8414,7 @@ function mapExtend( test )
   /* - */
 
   test.case = 'dstMap=dot map, srcMap=map, dstPath=null';
-  var expected = { '/a/b1' : null, '/a/b2' : null };
+  var expected = { '/a/b1' : '', '/a/b2' : '' };
   var dstMap = { '.' : null };
   var srcMap = { '/a/b1' : null, '/a/b2' : null };
   var dstPath = null;
@@ -8406,7 +8422,7 @@ function mapExtend( test )
   test.identical( got, expected );
 
   test.case = 'dstMap=dot str, srcMap=map, dstPath=null';
-  var expected = { '/a/b1' : null, '/a/b2' : null };
+  var expected = { '/a/b1' : '', '/a/b2' : '' };
   var dstMap = '.';
   var srcMap = { '/a/b1' : null, '/a/b2' : null };
   var dstPath = null;
@@ -8525,7 +8541,7 @@ function mapExtend( test )
   test.open( 'src<>map, dst<>map' );
 
   test.case = 'src=str, dst=str, dstPath=null';
-  var expected = { '/a' : null, '/b' : null }
+  var expected = { '/a' : '', '/b' : '' }
   var dstMap = '/a';
   var srcMap = '/b';
   var dstPath = null;
@@ -8533,7 +8549,7 @@ function mapExtend( test )
   test.identical( got, expected );
 
   test.case = 'src=arr, dst=str, dstPath=arr';
-  var expected = { '/a' : null, '/b' : null }
+  var expected = { '/a' : '', '/b' : '' }
   var dstMap = '/a';
   var srcMap = [ '/b' ];
   var dstPath = [ null ];
@@ -8541,10 +8557,34 @@ function mapExtend( test )
   test.identical( got, expected );
 
   test.case = 'src=arr, dst=arr, dstPath=arr';
-  var expected = { '/a' : null, '/b' : null }
+  var expected = { '/a' : '', '/b' : '' }
   var dstMap = [ '/a' ];
   var srcMap = [ '/b' ];
   var dstPath = [ null ];
+  var got = path.mapExtend( dstMap, srcMap, dstPath );
+  test.identical( got, expected );
+
+  test.case = 'src=str, dst=str, dstPath=null';
+  var expected = { '/a' : '', '/b' : '' }
+  var dstMap = '/a';
+  var srcMap = '/b';
+  var dstPath = '';
+  var got = path.mapExtend( dstMap, srcMap, dstPath );
+  test.identical( got, expected );
+
+  test.case = 'src=arr, dst=str, dstPath=arr';
+  var expected = { '/a' : '', '/b' : '' }
+  var dstMap = '/a';
+  var srcMap = [ '/b' ];
+  var dstPath = [ '' ];
+  var got = path.mapExtend( dstMap, srcMap, dstPath );
+  test.identical( got, expected );
+
+  test.case = 'src=arr, dst=arr, dstPath=arr';
+  var expected = { '/a' : '', '/b' : '' }
+  var dstMap = [ '/a' ];
+  var srcMap = [ '/b' ];
+  var dstPath = [ '' ];
   var got = path.mapExtend( dstMap, srcMap, dstPath );
   test.identical( got, expected );
 
@@ -8622,7 +8662,7 @@ function mapExtend( test )
   test.is( got === dst );
 
   test.case = 'src:null, dstPath:null';
-  var expected = { '/wasTrue' : true, '/wasFalse' : false, '/wasNull' : null }
+  var expected = { '/wasTrue' : true, '/wasFalse' : false, '/wasNull' : '' }
   var dst = { '/wasTrue' : true, '/wasFalse' : false, '/wasNull' : null }
   var got = path.mapExtend( dst, null, null );
   test.identical( got, expected );
@@ -9342,6 +9382,36 @@ function mapDstFromDst( test )
 
 }
 
+//
+
+function mapGroupByDst( test )
+{
+  let path = _.path;
+
+  test.case = '.';
+  var exp =
+  {
+    '/dir2/Output.js' :
+    {
+      '/dir/**' : '',
+      '/dir/Exec' : false,
+    },
+  }
+  var src =
+  {
+    '/dir/**' : `/dir2/Output.js`,
+    '/dir/Exec' : 0,
+  }
+  debugger;
+  var got = path.mapGroupByDst( src );
+  debugger;
+  test.identical( got, exp );
+  test.is( got !== src );
+
+  debugger;
+
+}
+
 // --
 // declare
 // --
@@ -9414,6 +9484,7 @@ var Self =
     mapExtend,
     mapsPair,
     mapDstFromDst,
+    mapGroupByDst,
 
   },
 

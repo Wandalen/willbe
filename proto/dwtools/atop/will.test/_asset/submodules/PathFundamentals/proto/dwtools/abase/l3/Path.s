@@ -49,37 +49,17 @@ function Init()
   if( !this._downUpStr )
   this._downUpStr = this._downStr + this._upStr; /* ../ */
 
-  // this._upEscapedStr = _.regexpEscape( this._upStr );
-  // this._downEscapedStr = _.regexpEscape( this._downStr );
-
-  // this._butDownUpEscapedStr = '(?!' + this._downEscapedStr + this._upEscapedStr + ')';
-  // this._delDownEscapedStr = this._butDownUpEscapedStr + '(?:(?!' + this._upEscapedStr + ').)*' + this._upEscapedStr + this._downEscapedStr + '(' + this._upEscapedStr + '|$)';
-  // this._delDownEscapedNonEmptyStr = this._butDownUpEscapedStr + '((?!' + this._upEscapedStr + ').)+' + this._upEscapedStr + this._downEscapedStr + '(' + this._upEscapedStr + '|$)';
-
-  // this._delUpRegexp = new RegExp( this._upEscapedStr + '+$' );
-
   let up = _.regexpEscape( this._upStr );
   let down = _.regexpEscape( this._downStr );
   let beginOrChar = '(?:.|^)';
   let butUp = `(?:(?!${up}).)+`;
-  // let notDownUp = `(?!${down}${up})`;
   let notDownUp = `(?!${down}(?:${up}|$))`;
   let upOrBegin = `(?:^|${up})`;
   let upOrEnd = `(?:${up}|$)`;
   let splitOrUp = `(?:(?:${up}${up})|((${upOrBegin})${notDownUp}${butUp}${up}))`; /* split or / */
 
   this._delDownRegexp = new RegExp( `(${beginOrChar})${splitOrUp}${down}(${upOrEnd})`, '' );
-
   this._delHereRegexp = new RegExp( up + _.regexpEscape( this._hereStr ) + '(' + up + '|$)' );
-
-  // this._delDownRegexp = new RegExp( notDownUp + upOrBegin + '(' + notDownUp + splitUpDown + ')' + upOrEnd, '' );
-  // this._delDownRegexp = new RegExp( '(?:' + this._upEscapedStr + ')?' + this._delDownEscapedStr, '' );
-
-  // this._delDownFirstRegexp = new RegExp( '^' + '(' + this._upStr + ')?' + this._delDownEscapedNonEmptyStr, '' );
-  // this._delDownSecondRegexp = new RegExp( '(?!^)' + '(' + this._upEscapedStr + ')?' + '(' + this._upEscapedStr + ')' + this._delDownEscapedStr, '' ); /* ../ x */
-
-  // this._delDownRegexp2 = new RegExp( '^' + '(' + this._upStr + ')?' + this._delDownEscapedNonEmptyStr, '' );
-
   this._delUpDupRegexp = /\/{2,}/g;
 
 }
@@ -1579,7 +1559,7 @@ function resolve()
 
   _.assert( arguments.length > 0 );
 
-  path = this.join.apply( this,arguments );
+  path = this.join.apply( this, arguments );
 
   if( path === null )
   return path;
@@ -1796,6 +1776,7 @@ function split( path )
 function current()
 {
   _.assert( arguments.length === 0 );
+  // return this._hereStr;
   return this._upStr;
 }
 
@@ -1938,25 +1919,51 @@ function _relative( o )
   o.basePath = this.from( o.basePath );
   o.filePath = this.from( o.filePath );
 
-  if( !o.resolving )
+  //
+
+  if( o.resolving )
   {
-    basePath = this.normalize( basePath );
-    filePath = this.normalize( filePath );
-
-    let relativeIsAbsolute = this.isAbsolute( basePath );
-    let isAbsoulute = this.isAbsolute( filePath );
-
-    /* makes common style for relative paths, each should begin from './' */
-
-    if( !relativeIsAbsolute && basePath !== this._hereStr )
-    basePath = _.strPrependOnce( basePath, this._hereUpStr );
-    if( !isAbsoulute && filePath !== this._hereStr )
-    filePath = _.strPrependOnce( filePath, this._hereUpStr );
-
-    _.assert( relativeIsAbsolute && isAbsoulute || !relativeIsAbsolute && !isAbsoulute, 'Both paths must be either absolute or relative.' );
+    basePath = this.resolve( basePath );
+    filePath = this.resolve( filePath );
   }
   else
   {
+    basePath = this.normalize( basePath );
+    filePath = this.normalize( filePath );
+  }
+
+  let baseIsAbsolute = this.isAbsolute( basePath );
+  let fileIsAbsolute = this.isAbsolute( filePath );
+
+  /* makes common style for relative paths, each should begin from './' */
+
+  // if( !baseIsAbsolute && basePath !== this._hereStr )
+  // basePath = _.strPrependOnce( basePath, this._hereUpStr );
+  // if( !fileIsAbsolute && filePath !== this._hereStr )
+  // filePath = _.strPrependOnce( filePath, this._hereUpStr );
+  //
+  // _.assert
+  // (
+  //   ( baseIsAbsolute && fileIsAbsolute ) || ( !baseIsAbsolute && !fileIsAbsolute ),
+  //   'Both paths must be either absolute or relative.'
+  // );
+  //
+  // // }
+  // // else
+  // // {
+  // //   basePath = this.resolve( basePath );
+  // //   filePath = this.resolve( filePath );
+  // //
+  // //   _.assert( this.isAbsolute( basePath ) );
+  // //   _.assert( this.isAbsolute( filePath ) );
+  // //
+  // //   _.assert( !_.strBegins( basePath, this._upStr + this._downStr ), 'Resolved o.basePath:', basePath, 'leads out of file system.' );
+  // //   _.assert( !_.strBegins( filePath, this._upStr + this._downStr ), 'Resolved o.filePath:', filePath, 'leads out of file system.' );
+  // // }
+
+  if( o.resolving )
+  {
+
     basePath = this.resolve( basePath );
     filePath = this.resolve( filePath );
 
@@ -1965,6 +1972,29 @@ function _relative( o )
 
     _.assert( !_.strBegins( basePath, this._upStr + this._downStr ), 'Resolved o.basePath:', basePath, 'leads out of file system.' );
     _.assert( !_.strBegins( filePath, this._upStr + this._downStr ), 'Resolved o.filePath:', filePath, 'leads out of file system.' );
+
+  }
+  else
+  {
+    basePath = this.normalize( basePath );
+    filePath = this.normalize( filePath );
+
+    let baseIsAbsolute = this.isAbsolute( basePath );
+    let fileIsAbsolute = this.isAbsolute( filePath );
+
+    /* makes common style for relative paths, each should begin from './' */
+
+    if( !baseIsAbsolute && basePath !== this._hereStr )
+    basePath = _.strPrependOnce( basePath, this._hereUpStr );
+    if( !fileIsAbsolute && filePath !== this._hereStr )
+    filePath = _.strPrependOnce( filePath, this._hereUpStr );
+
+    _.assert
+    (
+      ( baseIsAbsolute && fileIsAbsolute ) || ( !baseIsAbsolute && !fileIsAbsolute ),
+      'Both paths must be either absolute or relative.'
+    );
+
   }
 
   _.assert( basePath.length > 0 );
@@ -2593,7 +2623,7 @@ let ErrorNotSafe = _.error_functor( 'ErrorNotSafe', _onErrorNotSafe );
 // fields
 // --
 
-let Parameters = // xxx
+let Parameters =
 {
 
   _rootStr : '/',
@@ -2603,17 +2633,9 @@ let Parameters = // xxx
   _hereUpStr : null,
   _downUpStr : null,
 
-  // _upEscapedStr : null,
   _downEscapedStr : null,
-  // _butDownUpEscapedStr : null,
-  // _delDownEscapedStr : null,
-  // _delDownEscapedNonEmptyStr : null,
-  // _delUpRegexp : null,
   _delHereRegexp : null,
-  // _delHere1Regexp : null,
-  // _delHere2Regexp : null,
   _delDownRegexp : null,
-  // _delDownFirstRegexp : null,
   _delUpDupRegexp : null,
 
 }

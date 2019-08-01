@@ -572,6 +572,10 @@ function pathMapToRegexps( o )
   for( let srcGlob in o.filePath )
   {
     let dstPath = o.filePath[ srcGlob ];
+
+    if( dstPath === null )
+    dstPath = '';
+
     _.assert( path.isAbsolute( srcGlob ), () => 'Expects absolute path, but ' + _.strQuote( srcGlob ) + ' is not' );
 
     let srcPath = path.fromGlob( srcGlob );
@@ -611,31 +615,6 @@ function pathMapToRegexps( o )
     else
     unglobedBasePathAdd( fileGlob, filePath, basePath )
 
-  }
-
-  /* */
-
-  function unglobedBasePathAdd( fileGlob, filePath, basePath )
-  {
-    _.assert( _.strIs( fileGlob ) );
-    _.assert( filePath === undefined || _.strIs( filePath ) );
-    _.assert( _.strIs( basePath ) );
-    _.assert( o.filePath[ fileGlob ] !== undefined, () => 'No file path for file glob ' + g );
-
-    if( _.boolLike( o.filePath[ fileGlob ] ) )
-    return;
-
-    if( !filePath )
-    filePath = path.fromGlob( fileGlob );
-
-    _.assert
-    (
-      o.unglobedBasePath[ filePath ] === undefined || o.unglobedBasePath[ filePath ] === basePath,
-      () => 'The same file path ' + _.strQuote( filePath ) + ' has several different base paths:' +
-      '\n - ' + _.strQuote( o.unglobedBasePath[ filePath ] ),
-      '\n - ' + _.strQuote( basePath )
-    );
-    o.unglobedBasePath[ filePath ] = basePath;
   }
 
   /* group by path */
@@ -733,7 +712,7 @@ function pathMapToRegexps( o )
       let regexps = path._globFullToRegexpSingle( fileGlob, commonPath, basePath );
       // debugger;
 
-      if( value || value === null )
+      if( value || value === null || value === '' )
       {
         if( _.boolLike( value ) )
         r.actualAll.push( regexps.actual );
@@ -750,6 +729,32 @@ function pathMapToRegexps( o )
   }
 
   return o;
+
+  /* */
+
+  function unglobedBasePathAdd( fileGlob, filePath, basePath )
+  {
+    _.assert( _.strIs( fileGlob ) );
+    _.assert( filePath === undefined || _.strIs( filePath ) );
+    _.assert( _.strIs( basePath ) );
+    _.assert( o.filePath[ fileGlob ] !== undefined, () => 'No file path for file glob ' + g );
+
+    if( _.boolLike( o.filePath[ fileGlob ] ) )
+    return;
+
+    if( !filePath )
+    filePath = path.fromGlob( fileGlob );
+
+    _.assert
+    (
+      o.unglobedBasePath[ filePath ] === undefined || o.unglobedBasePath[ filePath ] === basePath,
+      () => 'The same file path ' + _.strQuote( filePath ) + ' has several different base paths:' +
+      '\n - ' + _.strQuote( o.unglobedBasePath[ filePath ] ),
+      '\n - ' + _.strQuote( basePath )
+    );
+    o.unglobedBasePath[ filePath ] = basePath;
+  }
+
 }
 
 pathMapToRegexps.defaults =
@@ -1309,12 +1314,12 @@ function mapExtend( dstPathMap, srcPathMap, dstPath )
 
   function dstPathNormalize( dstPath )
   {
-    if( dstPath === undefined )
-    dstPath = null;
     if( _.boolLike( dstPath ) )
     dstPath = !!dstPath;
     if( _.arrayIs( dstPath ) && dstPath.length === 1 )
     dstPath = dstPath[ 0 ];
+    if( dstPath === undefined || dstPath === null )
+    dstPath = '';
     return dstPath;
   }
 
@@ -1341,11 +1346,11 @@ function mapExtend( dstPathMap, srcPathMap, dstPath )
     }
     else if( _.mapIs( dstPathMap ) )
     {
-      if( srcPathMap === null )
+      if( srcPathMap === null || srcPathMap === '' ) // yyy
       for( let f in dstPathMap )
       {
         let val = dstPathMap[ f ];
-        if( val === null )
+        if( val === null || val === '' ) // yyy
         dstPathMap[ f ] = dstPath;
       }
     }
@@ -1353,12 +1358,11 @@ function mapExtend( dstPathMap, srcPathMap, dstPath )
     /* remove . : null if map was dot-map */
     if( srcPathMap )
     if( !_.mapIs( srcPathMap ) || ( _.mapIs( srcPathMap ) && _.mapKeys( srcPathMap ).length ) )
-    // if( _.mapIs( srcPathMap ) && _.mapKeys( srcPathMap ).length )
-    if( _.mapKeys( dstPathMap ).length === 1 ) // yyy
+    if( _.mapKeys( dstPathMap ).length === 1 )
     {
-      if( dstPathMap[ '.' ] === null || dstPathMap[ '.' ] === '' )
+      if( dstPathMap[ '.' ] === null || dstPathMap[ '.' ] === '' ) // xxx
       delete dstPathMap[ '.' ];
-      else if( dstPathMap[ '' ] === '' || dstPathMap[ '' ] === null )
+      else if( dstPathMap[ '' ] === '' || dstPathMap[ '' ] === null ) // xxx
       delete dstPathMap[ '' ];
     }
 
@@ -1385,9 +1389,7 @@ function mapExtend( dstPathMap, srcPathMap, dstPath )
   function srcPathMapNormalize( srcPathMap )
   {
     if( srcPathMap === null )
-    srcPathMap = ''; // yyy
-    // if( srcPathMap === null )
-    // srcPathMap = '.';
+    srcPathMap = '';
     return srcPathMap;
   }
 
@@ -1395,25 +1397,6 @@ function mapExtend( dstPathMap, srcPathMap, dstPath )
 
   function dstPathMapExtend( dstPathMap, srcPathMap, dstPath )
   {
-
-    // if( dstPath === null || dstPath === '' )
-    // if( _.strIs( srcPathMap ) || _.arrayIs( srcPathMap ) )
-    // {
-    //   let srcArray = _.mapKeys( dstPathMap );
-    //   if( _.arrayHas( srcArray, '' ) )
-    //   {
-    //     for( let src in dstPathMap )
-    //     if( src === '' )
-    //     {
-    //       if( _.strIs( srcPathMap ) )
-    //       dstPathMap[ srcPathMap ] = dstPath;
-    //       else if( _.arrayIs( srcPathMap ) )
-    //       for( let g = 0 ; g < srcPathMap.length ; g++ )
-    //       dstPathMap[ srcPathMap[ g ] ] = dstPath;
-    //     }
-    //     return;
-    //   }
-    // }
 
     if( _.strIs( srcPathMap ) )
     {
@@ -1437,7 +1420,7 @@ function mapExtend( dstPathMap, srcPathMap, dstPath )
       {
         let val = srcPathMap[ g ];
 
-        if( ( val === null ) )
+        if( ( val === null ) || ( val === '' ) )
         val = dstPath;
 
         self.mapExtend( dstPathMap, g, val );
@@ -1461,15 +1444,17 @@ function mapExtend( dstPathMap, srcPathMap, dstPath )
     _.assert( dst === undefined || dst === null || _.arrayIs( dst ) || _.strIs( dst ) || _.boolLike( dst ) || _.objectIs( dst ) );
     _.assert( src === null || _.arrayIs( src ) || _.strIs( src ) || _.boolLike( src ) || _.objectIs( src ) );
 
-    if( src === null )
+    // if( src === null ) yyy
+    if( src === null || src === '' )
     {
-      r = dst || null;
+      r = dst || '';
     }
     else if( src === false )
     {
       r = src;
     }
-    else if( dst === undefined || dst === null || dst === true )
+    // else if( dst === undefined || dst === null || dst === true ) yyy
+    else if( dst === undefined || dst === null || dst === '' || dst === true )
     {
       r = src;
     }
@@ -1795,9 +1780,6 @@ function mapDstFromDst( pathMap )
   else
   return _.arrayAsShallowing( pathMap );
 
-  // if( !_.mapIs( pathMap ) )
-  // return _.arrayAs( pathMap );
-
   let result = _.mapVals( pathMap );
 
   result = _.filter( result, ( e ) =>
@@ -1870,38 +1852,21 @@ function mapGroupByDst( pathMap )
     if( _.boolLike( dst ) )
     continue;
 
-    // if( _.boolLike( dst ) && !dst )
-    // continue;
-
     if( _.strIs( dst ) )
     {
       extend( dst, src );
     }
-    // else if( _.boolLike( dst )
-    // {
-    //   if( !dst )
-    //   continue;
-    //   x
-    // }
     else
     {
-      // if( _.boolLike( dst ) && dst )
-      // dst = [ '.' ];
       _.assert( _.arrayIs( dst ) );
       for( var d = 0 ; d < dst.length ; d++ )
       extend( dst[ d ], src );
-      // {
-      //   let dstPath = path.normalize( dst[ d ] );
-      //   result[ dstPath ] = result[ dstPath ] || Object.create( null );
-      //   result[ dstPath ][ src ] = true;
-      // }
     }
 
   }
 
   /* */
 
-  // debugger;
   for( let src in pathMap )
   {
     let dst = pathMap[ src ];
@@ -1909,21 +1874,19 @@ function mapGroupByDst( pathMap )
     if( !_.boolLike( dst ) )
     continue;
 
-    // if( !_.boolLike( dst ) || dst )
-    // continue;
-
     for( var dst2 in result )
     {
 
       for( var src2 in result[ dst2 ]  )
       {
-        if( true ^ path.isRelative( src ) ^ path.isRelative( src2 ) )
+        if( path.isRelative( src ) ^ path.isRelative( src2 ) )
         {
-          if( path.begins( src2, path.fromGlob( src ) ) )
           result[ dst2 ][ src ] = !!dst;
         }
         else
         {
+          // if( path.begins( src2, path.fromGlob( src ) ) )
+          if( path.begins( path.fromGlob( src ), path.fromGlob( src2 ) ) )
           result[ dst2 ][ src ] = !!dst;
         }
       }
@@ -1934,7 +1897,6 @@ function mapGroupByDst( pathMap )
 
   /* */
 
-  // debugger;
   return result;
 
   /* */
@@ -1943,7 +1905,7 @@ function mapGroupByDst( pathMap )
   {
     dst = path.normalize( dst );
     result[ dst ] = result[ dst ] || Object.create( null );
-    result[ dst ][ src ] = null;
+    result[ dst ][ src ] = '';
   }
 
 }

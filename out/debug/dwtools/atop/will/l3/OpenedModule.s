@@ -15,7 +15,7 @@ let _ = wTools;
 let Parent = _.Will.AbstractModule;
 let Self = function wWillOpenedModule( o )
 {
-  return _.instanceConstructor( Self, this, arguments );
+  return _.workpiece.construct( Self, this, arguments );
 }
 
 Self.shortName = 'OpenedModule';
@@ -34,7 +34,14 @@ function finit()
   if( will.verosity >= 5 )
   logger.log( module.nickName, 'finit.begin' );
 
-  module.unform();
+  try
+  {
+    module.unform();
+  }
+  catch( err )
+  {
+    _.errLogOnce( err );
+  }
   module.about.finit();
 
   let finited = _.err( 'Finited' );
@@ -51,7 +58,7 @@ function finit()
   _.assert( Object.keys( module.pathResourceMap ).length === 0 );
   _.assert( Object.keys( module.submoduleMap ).length === 0 );
 
-  _.assert( _.instanceIsFinited( module.about ) );
+  _.assert( _.workpiece.isFinited( module.about ) );
 
   let result = Parent.prototype.finit.apply( module, arguments );
 
@@ -545,6 +552,7 @@ function predefinedForm()
     exportable : 0,
     importable : 0,
   })
+  _.assert( will.fileProvider.path.s.allAreAbsolute( module.pathResourceMap[ 'will' ].path ) );
 
   /* */
 
@@ -852,15 +860,17 @@ function predefinedForm()
       }
     }
 
-    o.criterion = o.criterion || Object.create( null );
+    let o2 = Object.create( null );
+    o2.resource = _.mapExtend( null, defaults, o );
+    o2.resource.criterion = _.mapExtend( null, defaults.criterion, o.criterion || {} );
 
-    _.mapSupplement( o, defaults );
-    _.mapSupplement( o.criterion, defaults.criterion );
+    // _.mapSupplement( o, defaults );
+    // _.mapSupplement( o.criterion, defaults.criterion );
 
     _.assert( o.criterion !== defaults.criterion );
     _.assert( arguments.length === 1 );
 
-    let result = will.Reflector.MakeForEachCriterion( o );
+    let result = will.Reflector.MakeForEachCriterion( o2 );
     return result;
   }
 
@@ -3417,15 +3427,30 @@ _.routineExtend( resolveMaybe, _.Will.Resolver.resolveMaybe );
 
 //
 
+let resolveRaw = _.routineFromPreAndBody( resolve_pre, resolve_body );
+
+_.routineExtend( resolveRaw, _.Will.Resolver.resolveRaw );
+
+//
+
 let pathResolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
 _.routineExtend( pathResolve, _.Will.Resolver.pathResolve );
 
 //
 
-let resolveRaw = _.routineFromPreAndBody( resolve_pre, resolve_body );
+function filesFromResource_body( o )
+{
+  let module = this;
+  let will = module.will;
+  _.assert( o.baseModule === module );
+  let result = will.Resolver.filesFromResource.body.call( will.Resolver, o );
+  return result;
+}
 
-_.routineExtend( resolveRaw, _.Will.Resolver.resolveRaw );
+_.routineExtend( filesFromResource_body, _.Will.Resolver.filesFromResource );
+
+let filesFromResource = _.routineFromPreAndBody( resolve_pre, filesFromResource_body );
 
 //
 
@@ -3611,13 +3636,13 @@ function willfilesResolve()
 // exporter
 // --
 
-function _infoExport( o )
+function infoExport( o )
 {
   let module = this;
   let will = module.will;
   let result = '';
 
-  o = _.assertRoutineOptions( _infoExport, arguments );
+  o = _.routineOptions( infoExport, arguments );
 
   if( o.verbosity >= 1 )
   result += module.decoratedAbsoluteName;
@@ -3654,22 +3679,22 @@ function _infoExport( o )
   return result;
 }
 
-_infoExport.defaults =
+infoExport.defaults =
 {
   verbosity : 9,
 }
 
+// //
 //
-
-function infoExport( o )
-{
-  let module = this;
-  let will = module.will;
-  o = _.routineOptions( _infoExport, arguments );
-  return module._infoExport( o );
-}
-
-_.routineExtend( infoExport, _infoExport );
+// function infoExport( o )
+// {
+//   let module = this;
+//   let will = module.will;
+//   o = _.routineOptions( _infoExport, arguments );
+//   return module._infoExport( o );
+// }
+//
+// _.routineExtend( infoExport, _infoExport );
 
 //
 
@@ -4083,7 +4108,7 @@ function ResourceSetter_functor( op )
       // _.assert( resource.module === null );
       resource.module = module;
       resource.form1();
-      _.assert( !_.instanceIsFinited( resource ) );
+      _.assert( !_.workpiece.isFinited( resource ) );
     }
 
     return resourceMap;
@@ -4414,6 +4439,7 @@ let Extend =
   resolveMaybe,
   resolveRaw,
   pathResolve,
+  filesFromResource,
   submodulesResolve,
   reflectorResolve,
 
@@ -4426,7 +4452,7 @@ let Extend =
 
   // exporter
 
-  _infoExport,
+  // _infoExport,
   infoExport,
   infoExportPaths,
   infoExportResource,

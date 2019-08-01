@@ -15,7 +15,7 @@ let _ = wTools;
 let Parent = _.Will.Resource;
 let Self = function wWillStep( o )
 {
-  return _.instanceConstructor( Self, this, arguments );
+  return _.workpiece.construct( Self, this, arguments );
 }
 
 Self.shortName = 'Step';
@@ -174,7 +174,8 @@ function run( frame )
   })
   .catch( ( err ) =>
   {
-    throw _.err( '\n', err, '\n', 'Failed', step.decoratedAbsoluteName );
+    debugger;
+    throw _.err( 'Failed', step.decoratedAbsoluteName, '\n', err, '\n' );
   });
 
   return result;
@@ -225,12 +226,12 @@ function uniqueOptionsGet()
 let Composes =
 {
 
-  description : null,
-  criterion : null,
+  // description : null,
+  // criterion : null,
   opts : null,
   verbosity : null,
 
-  inherit : _.define.own([]),
+  // inherit : _.define.own([]),
 
 }
 
