@@ -126,8 +126,6 @@ function buffersViewAreIdentical( src1, src2 )
 function buffersNodeAreIdentical( src1, src2 )
 {
 
-  debugger;
-
   if( !_.bufferNodeIs( src1 ) )
   return false;
   if( !_.bufferNodeIs( src2 ) )

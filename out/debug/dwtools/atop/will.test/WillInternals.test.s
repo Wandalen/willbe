@@ -36,6 +36,7 @@ function onSuiteBegin()
     includingDirs : 1,
     includingTransient : 1,
     allowingMissed : 1,
+    maskPreset : 0,
     outputFormat : 'relative',
   });
 

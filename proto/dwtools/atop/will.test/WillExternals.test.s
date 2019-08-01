@@ -31,6 +31,7 @@ function onSuiteBegin()
     includingDirs : 1,
     includingTransient : 1,
     allowingMissed : 1,
+    maskPreset : 0,
     outputFormat : 'relative',
   });
 
@@ -1465,7 +1466,7 @@ function eachBrokenCommand( test )
     test.case = '.each */* .resource.list path::module.common';
     test.is( !err );
     test.notIdentical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, 'Unknown subject ".resource.list"' ), 1 );
+    test.identical( _.strCount( got.output, 'Unknown command ".resource.list"' ), 1 );
     test.identical( _.strCount( got.output, 'Module at' ), 3 );
     test.identical( _.strCount( got.output, '      ' ), 0 );
     return null;
@@ -2745,7 +2746,7 @@ function clean( test )
   .then( () =>
   {
     files = self.find( submodulesPath );
-    test.is( files.length > 50 );
+    test.is( files.length > 350 );
     return files;
   })
 
@@ -8979,8 +8980,8 @@ function submodulesDownloadedUpdate( test )
   let routinePath = _.path.join( self.tempDir, test.name );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-  
-  /* 
+
+  /*
     Informal module has submodule willbe-experiment#master
     Supermodule has informal module and willbe-experiment#dev in submodules list
     First download of submodules works fine.
@@ -9007,65 +9008,65 @@ function submodulesDownloadedUpdate( test )
     test.case = 'setup';
     return null;
   })
-  
+
   shell({ args : [ '.each module .export' ] })
   shell({ args : [ '.submodules.download' ] })
-  
-  .then( ( got ) => 
+
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ 1\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
     return got;
   })
-  
+
   /* */
-  
+
   .then( () =>
   {
     test.case = 'check module branch after download';
     return null;
   })
-  
+
   _.shell
-  ({ 
-    execPath : 'git rev-parse --abbrev-ref HEAD', 
+  ({
+    execPath : 'git rev-parse --abbrev-ref HEAD',
     currentPath : _.path.join( routinePath, '.module/willbe-experiment' ),
     ready : ready,
     outputCollecting : 1,
   })
-  
-  .then( ( got ) => 
+
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'dev' ) );
     return got;
   })
-  
+
   /* */
-  
-  .then( ( got ) => 
+
+  .then( ( got ) =>
   {
     test.case = 'update downloaded module and check branch';
-    return got; 
+    return got;
   })
-  
+
   shell({ args : [ '.submodules.update' ] })
-  
+
   _.shell
-  ({ 
-    execPath : 'git rev-parse --abbrev-ref HEAD', 
+  ({
+    execPath : 'git rev-parse --abbrev-ref HEAD',
     currentPath : _.path.join( routinePath, '.module/willbe-experiment' ),
     ready : ready,
     outputCollecting : 1,
   })
-  
-  .then( ( got ) => 
+
+  .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'dev' ) );
     return got;
   })
-  
+
   return ready;
 }
 
@@ -9287,12 +9288,12 @@ function submodulesUpdateSwitchBranch( test )
     return null;
   })
 
-  .then( () => 
-  { 
+  .then( () =>
+  {
     let con = shell({ args : [ '.submodules.update' ], ready : null });
     return test.shouldThrowErrorAsync( con );
   })
-  
+
   //shell({ args : [ '.submodules.update' ] })
 
   _.shell
