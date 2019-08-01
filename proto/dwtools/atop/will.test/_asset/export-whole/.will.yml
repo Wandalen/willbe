@@ -9,11 +9,12 @@ path :
 
   in : '.'
   out : '.'
+  temp : '*out*'
 
 step :
 
   export.proto :
-    inherit : module.export
+
     export : path::in
     tar : 0
 

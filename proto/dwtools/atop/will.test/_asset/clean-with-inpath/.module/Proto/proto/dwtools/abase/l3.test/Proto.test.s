@@ -361,7 +361,7 @@ function accessorIsClean( test )
 
   function BasicConstructor()
   {
-    _.instanceInit( this );
+    _.workpiece.initFields( this );
   }
 
   var Accessors =
@@ -608,7 +608,7 @@ function forbids( test )
 
   function BasicConstructor()
   {
-    _.instanceInit( this );
+    _.workpiece.initFields( this );
   }
 
   var Forbids =
@@ -661,28 +661,28 @@ function constant( test )
 
   test.case = 'second argument is map';
   var dstMap = {};
-  _.accessor.constant( dstMap, { a : 5 } );
+  _.propertyConstant( dstMap, { a : 5 } );
   var descriptor = Object.getOwnPropertyDescriptor( dstMap, 'a' );
   test.identical( descriptor.writable, false );
   test.identical( dstMap.a, 5 );
 
   test.case = 'rewrites existing field';
   var dstMap = { a : 5 };
-  _.accessor.constant( dstMap, { a : 1 } );
+  _.propertyConstant( dstMap, { a : 1 } );
   var descriptor = Object.getOwnPropertyDescriptor( dstMap, 'a' );
   test.identical( descriptor.writable, false );
   test.identical( dstMap.a, 1 );
 
   test.case = '3 arguments';
   var dstMap = {};
-  _.accessor.constant( dstMap, 'a', 5 );
+  _.propertyConstant( dstMap, 'a', 5 );
   var descriptor = Object.getOwnPropertyDescriptor( dstMap, 'a' );
   test.identical( descriptor.writable, false );
   test.identical( dstMap.a, 5 );
 
   test.case = '2 arguments, no value';
   var dstMap = {};
-  _.accessor.constant( dstMap, 'a' );
+  _.propertyConstant( dstMap, 'a' );
   var descriptor = Object.getOwnPropertyDescriptor( dstMap, 'a' );
   test.identical( descriptor.writable, false );
   test.identical( dstMap.a, undefined );
@@ -690,7 +690,7 @@ function constant( test )
 
   test.case = 'second argument is array';
   var dstMap = {};
-  _.accessor.constant( dstMap, [ 'a' ], 5 );
+  _.propertyConstant( dstMap, [ 'a' ], 5 );
   var descriptor = Object.getOwnPropertyDescriptor( dstMap, 'a' );
   test.identical( descriptor.writable, false );
   test.identical( dstMap.a, 5 );
@@ -701,19 +701,19 @@ function constant( test )
   test.case = 'empty call';
   test.shouldThrowError( function()
   {
-    _.accessor.constant( );
+    _.propertyConstant( );
   });
 
   test.case = 'invalid first argument type';
   test.shouldThrowError( function()
   {
-    _.accessor.constant( 1, { a : 'a' } );
+    _.propertyConstant( 1, { a : 'a' } );
   });
 
   test.case = 'invalid second argument type';
   test.shouldThrowError( function()
   {
-    _.accessor.constant( {}, 13 );
+    _.propertyConstant( {}, 13 );
   });
 
 }
@@ -1237,7 +1237,7 @@ function staticsDeclare( test )
 
   function BasicConstructor()
   {
-    _.instanceInit( this );
+    _.workpiece.initFields( this );
   }
 
   var Associates =
@@ -1352,7 +1352,7 @@ function staticsOverwrite( test )
 
   function BasicConstructor()
   {
-    _.instanceInit( this );
+    _.workpiece.initFields( this );
     this.instances.push( this );
   }
 
@@ -1378,7 +1378,7 @@ function staticsOverwrite( test )
 
   function DerivedConstructor1()
   {
-    _.instanceInit( this );
+    _.workpiece.initFields( this );
     this.instances.push( this );
   }
 
@@ -1405,7 +1405,7 @@ function staticsOverwrite( test )
 
   function DerivedConstructor2()
   {
-    _.instanceInit( this );
+    _.workpiece.initFields( this );
     this.instances.push( this );
   }
 
@@ -1506,7 +1506,7 @@ function mixinStaticsWithDefinition( test )
 
   function Class1()
   {
-    _.instanceInit( this );
+    _.workpiece.initFields( this );
   }
 
   _.classDeclare
@@ -1526,7 +1526,7 @@ function mixinStaticsWithDefinition( test )
 
   function Class2()
   {
-    _.instanceInit( this );
+    _.workpiece.initFields( this );
   }
 
   _.classDeclare
@@ -1931,7 +1931,7 @@ function staticFieldsPreserving( test )
 
 //
 
-function workpiece.construct( test )
+function instanceConstructor( test )
 {
 
   function BasicConstructor()
@@ -2060,7 +2060,7 @@ var Self =
     customFieldsGroups,
 
     staticFieldsPreserving,
-    workpiece.construct,
+    instanceConstructor,
 
   },
 

@@ -23,7 +23,7 @@
     "production"
   ],
   "scripts": {
-    "test": "wtest .run proto/**",
+    "test": "wtest proto",
     "docgen": "wdocgen proto"
   },
   "repository": {

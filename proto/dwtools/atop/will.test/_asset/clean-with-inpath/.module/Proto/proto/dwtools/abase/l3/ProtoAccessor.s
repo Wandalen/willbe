@@ -7,7 +7,7 @@ let _global = _global_;
 let _ = _global_.wTools;
 
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
-let _propertyIsEumerable = Object.propertyIsEnumerable;
+let _ObjectPropertyIsEumerable = Object.propertyIsEnumerable;
 let _nameFielded = _.nameFielded;
 
 _.assert( _.objectIs( _.field ), 'wProto needs wTools/staging/dwtools/abase/l1/FieldMapper.s' );
@@ -83,7 +83,7 @@ let AccessorDefaults =
 // --
 
 /**
- * Generates options object for _accessorDeclare, _accessorDeclareForbid functions.
+ * Generates options object for _declare, _accessorDeclareForbid functions.
  * Can be called in three ways:
  * - First by passing all options in one object;
  * - Second by passing object and name options;
@@ -98,14 +98,14 @@ let AccessorDefaults =
  * // message: [ 'set/get call' ] }
  *
  * let Self = function ClassName( o ) { };
- * _.accessor._accessorDeclare_pre( Self, { a : 'a', b : 'b' }, 'set/get call' );
+ * _.accessor._declare_pre( Self, { a : 'a', b : 'b' }, 'set/get call' );
  *
  * @private
- * @function _accessorDeclare_pre
+ * @function _declare_pre
  * @memberof module:Tools/base/Proto.wTools.accessor
  */
 
-function _accessorDeclare_pre( routine, args )
+function _declare_pre( routine, args )
 {
   let o;
 
@@ -163,14 +163,14 @@ function _accessorDeclare_pre( routine, args )
  * @param {String} o.declaratorKind
  * @param {String} o.combining - combining method
  * @private
- * @function _accessorRegister
+ * @function _register
  * @memberof module:Tools/base/Proto.wTools.accessor
  */
 
-function _accessorRegister( o )
+function _register( o )
 {
 
-  _.routineOptions( _accessorRegister, arguments );
+  _.routineOptions( _register, arguments );
   _.assert( _.prototypeIsStandard( o.proto ), 'Expects formal prototype' );
   _.assert( _.strDefined( o.declaratorName ) );
   _.assert( _.arrayIs( o.declaratorArgs ) );
@@ -227,7 +227,7 @@ function _accessorRegister( o )
   return descriptor;
 }
 
-_accessorRegister.defaults =
+_register.defaults =
 {
   name : null,
   proto : null,
@@ -239,12 +239,12 @@ _accessorRegister.defaults =
 
 //
 
-function _accessorDeclareAct( o )
+function _declareAct( o )
 {
 
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( o.name ) );
-  _.assertRoutineOptions( _accessorDeclareAct, arguments );
+  _.assertRoutineOptions( _declareAct, arguments );
 
   if( o.combining === 'append' )
   debugger;
@@ -345,7 +345,7 @@ function _accessorDeclareAct( o )
     if( getterSetter.get )
     o2.methods[ '_' + o.name + 'Get' ] = getterSetter.get;
 
-    _.accessor._accessorRegister
+    _.accessor._register
     ({
       proto : o.object,
       name : o.name,
@@ -403,7 +403,7 @@ function _accessorDeclareAct( o )
 
 }
 
-var defaults = _accessorDeclareAct.defaults = Object.create( AccessorDefaults );
+var defaults = _declareAct.defaults = Object.create( AccessorDefaults );
 
 defaults.name = null;
 defaults.object = null;
@@ -446,8 +446,8 @@ defaults.methods = null;
  *
  * @example
  * let Self = function ClassName( o ) { };
- * let o = _.accessor._accessorDeclare_pre( Self, { a : 'a', b : 'b' }, [ 'set/get call' ] );
- * _.accessor._accessorDeclare( o );
+ * let o = _.accessor._declare_pre( Self, { a : 'a', b : 'b' }, [ 'set/get call' ] );
+ * _.accessor._declare( o );
  * Self.a = 1; // returns [ 'set/get call' ]
  * Self.b = 2; // returns [ 'set/get call' ]
  * console.log( Self.a );
@@ -457,7 +457,7 @@ defaults.methods = null;
  * // returns [ 'set/get call' ]
  * // 2
  *
- * @function _accessorDeclare
+ * @function _declare
  * @throws {exception} If( o.object ) is not a Object.
  * @throws {exception} If( o.names ) is not a Object.
  * @throws {exception} If( o.methods ) is not a Object.
@@ -468,10 +468,10 @@ defaults.methods = null;
  * @memberof module:Tools/base/Proto.wTools.accessor
  */
 
-function _accessorDeclare( o )
+function _declare( o )
 {
 
-  _.assertRoutineOptions( _accessorDeclare, arguments );
+  _.assertRoutineOptions( _declare, arguments );
 
   if( _.arrayLike( o.object ) )
   {
@@ -480,7 +480,7 @@ function _accessorDeclare( o )
     {
       let o2 = _.mapExtend( null, o );
       o2.object = object;
-      _accessorDeclare( o2 );
+      _declare( o2 );
     });
     // debugger;
     return;
@@ -541,21 +541,21 @@ function _accessorDeclare( o )
     o2.name = n;
     delete o2.names;
 
-    _.accessor._accessorDeclareAct( o2 );
+    _.accessor._declareAct( o2 );
 
   }
 
 }
 
-var defaults = _accessorDeclare.defaults = Object.create( _accessorDeclareAct.defaults );
+var defaults = _declare.defaults = Object.create( _declareAct.defaults );
 defaults.names = null;
 
 //
 
 /**
- * Short-cut for {@link module:Tools/base/Proto.wTools.accessor._accessorDeclare } function.
+ * Short-cut for {@link module:Tools/base/Proto.wTools.accessor._declare } function.
  * Defines set/get functions on source object( o.object ) properties if they dont have them.
- * For more details {@link module:Tools/base/Proto.wTools.accessor._accessorDeclare }.
+ * For more details {@link module:Tools/base/Proto.wTools.accessor._declare }.
  * Can be called in three ways:
  * - First by passing all options in one object( o );
  * - Second by passing ( object ) and ( names ) options;
@@ -578,11 +578,11 @@ defaults.names = null;
 
 function accessorDeclare( o )
 {
-  o = _accessorDeclare_pre( accessorDeclare, arguments );
-  return _accessorDeclare( o );
+  o = _declare_pre( accessorDeclare, arguments );
+  return _declare( o );
 }
 
-accessorDeclare.defaults = Object.create( _accessorDeclare.defaults );
+accessorDeclare.defaults = Object.create( _declare.defaults );
 
 //
 
@@ -604,7 +604,7 @@ accessorDeclare.defaults = Object.create( _accessorDeclare.defaults );
 function accessorForbid( o )
 {
 
-  o = _accessorDeclare_pre( accessorForbid, arguments );
+  o = _declare_pre( accessorForbid, arguments );
 
   if( !o.methods )
   o.methods = Object.create( null );
@@ -700,10 +700,10 @@ function accessorForbid( o )
   o.strict = 0;
   o.prime = 0;
 
-  return _accessorDeclare( _.mapOnly( o, _accessorDeclare.defaults ) );
+  return _declare( _.mapOnly( o, _declare.defaults ) );
 }
 
-var defaults = accessorForbid.defaults = Object.create( _accessorDeclare.defaults );
+var defaults = accessorForbid.defaults = Object.create( _declare.defaults );
 
 defaults.preserveValues = 0;
 defaults.enumerable = 0;
@@ -749,7 +749,7 @@ function _accessorDeclareForbid()
   // if( _ObjectHasOwnProperty.call( o.object, o.fieldName ) )
   if( propertyDescriptor.object === o.object )
   {
-    if( _.accessor.forbidOwns( o.object, o.fieldName ) )
+    if( _.accessor.ownForbid( o.object, o.fieldName ) )
     {
       // delete names[ encodedName ];
       return false;
@@ -794,7 +794,7 @@ function _accessorDeclareForbid()
     delete o2.protoName;
     delete o2.fieldName;
 
-    _.accessor._accessorRegister
+    _.accessor._register
     ({
       proto : o.object,
       name : o.fieldName,
@@ -835,8 +835,8 @@ defaults.protoName = null;
  * @example
  * let Self = function ClassName( o ) { };
  * _.accessor.forbid( Self, { a : 'a' } );
- * _.accessor.forbidOwns( Self, 'a' ) // returns true
- * _.accessor.forbidOwns( Self, 'b' ) // returns false
+ * _.accessor.ownForbid( Self, 'a' ) // returns true
+ * _.accessor.ownForbid( Self, 'b' ) // returns false
  *
  * @function accessorForbidOwns
  * @memberof module:Tools/base/Proto.wTools.accessor
@@ -884,12 +884,12 @@ function accessorForbidOwns( object, name )
 
 function accessorReadOnly( object, names )
 {
-  let o = _accessorDeclare_pre( accessorReadOnly, arguments );
+  let o = _declare_pre( accessorReadOnly, arguments );
   _.assert( o.readOnly );
-  return _accessorDeclare( o );
+  return _declare( o );
 }
 
-var defaults = accessorReadOnly.defaults = Object.create( _accessorDeclare.defaults );
+var defaults = accessorReadOnly.defaults = Object.create( _declare.defaults );
 
 defaults.readOnly = true;
 
@@ -999,9 +999,9 @@ function constant( dstPrototype, name, value )
     _.eachKey( name, ( n, v ) =>
     {
       if( value !== undefined )
-      _.accessor.constant( dstPrototype, n, value );
+      _.propertyConstant( dstPrototype, n, value );
       else
-      _.accessor.constant( dstPrototype, n, v );
+      _.propertyConstant( dstPrototype, n, v );
     });
     return;
   }
@@ -1058,9 +1058,9 @@ function hide( dstPrototype, name, value )
     _.eachKey( name, ( n, v ) =>
     {
       if( value !== undefined )
-      _.accessor.hide( dstPrototype, n, value );
+      _.propertyHide( dstPrototype, n, value );
       else
-      _.accessor.hide( dstPrototype, n, v );
+      _.propertyHide( dstPrototype, n, v );
     });
     return;
   }
@@ -1144,11 +1144,11 @@ function restrictReadOnly( dstPrototype, namesObject )
  * Returns true if source object( proto ) has accessor with name( name ).
  * @param {Object} proto - target object
  * @param {String} name - name of accessor
- * @function accessorHas
+ * @function has
  * @memberof module:Tools/base/Proto.wTools.accessor
  */
 
-function accessorHas( proto, name )
+function has( proto, name )
 {
   let accessors = proto._Accessors;
   if( !accessors )
@@ -1158,13 +1158,13 @@ function accessorHas( proto, name )
 
 //
 
-function accessorMakerFrom_functor( fop )
+function suiteMakerFrom_functor( fop )
 {
 
   if( arguments.length === 2 )
   fop = { getterFunctor : arguments[ 0 ], setterFunctor : arguments[ 1 ] }
 
-  _.routineOptions( accessorMakerFrom_functor, fop );
+  _.routineOptions( suiteMakerFrom_functor, fop );
 
   let defaults;
 
@@ -1201,7 +1201,7 @@ function accessorMakerFrom_functor( fop )
 
 }
 
-accessorMakerFrom_functor.defaults =
+suiteMakerFrom_functor.defaults =
 {
   getterFunctor : null,
   setterFunctor : null,
@@ -1786,7 +1786,7 @@ let aliasGetter_functor = _.routineFromPreAndBody( alias_pre, aliasGetter_functo
 
 //
 
-let aliasAccessor = accessorMakerFrom_functor( aliasGetter_functor_body, aliasSetter_functor );
+let aliasAccessor = suiteMakerFrom_functor( aliasGetter_functor_body, aliasSetter_functor );
 
 // //
 //
@@ -1914,16 +1914,16 @@ let Routines =
 
   // accessor
 
-  _accessorDeclare_pre : _accessorDeclare_pre,
-  _accessorRegister : _accessorRegister,
-  _accessorDeclareAct : _accessorDeclareAct,
-  _accessorDeclare : _accessorDeclare,
+  _declare_pre : _declare_pre,
+  _register : _register,
+  _declareAct : _declareAct,
+  _declare : _declare,
 
   declare : accessorDeclare,
   forbid : accessorForbid,
   _accessorDeclareForbid : _accessorDeclareForbid,
 
-  forbidOwns : accessorForbidOwns,
+  ownForbid : accessorForbidOwns,
   readOnly : accessorReadOnly,
 
   supplement : accessorsSupplement,
@@ -1932,9 +1932,9 @@ let Routines =
   hide : hide,
   restrictReadOnly : restrictReadOnly,
 
-  accessorHas : accessorHas,
+  has : has,
 
-  accessorMakerFrom_functor,
+  suiteMakerFrom_functor,
 
 }
 

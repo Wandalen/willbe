@@ -76,7 +76,7 @@ let _global = _global_;
 let _ = _global_.wTools;
 
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
-let _propertyIsEumerable = Object.propertyIsEnumerable;
+let _ObjectPropertyIsEumerable = Object.propertyIsEnumerable;
 let _nameFielded = _.nameFielded;
 
 _.assert( _.objectIs( _.field ),'wProto needs wTools/staging/dwtools/abase/l1/FieldMapper.s' );
@@ -194,15 +194,15 @@ fieldsGroupDeclare.defaults =
  * @example
  * let Self = function ClassName( o ) { };
  * let Composes = { tree : null };
- * _.fieldsGroupComposesExtend( Self.prototype, Composes );
+ * _._.workpiece.fieldsGroupComposesExtend( Self.prototype, Composes );
  * console.log( Self.prototype ); // returns { Composes: { tree: null } }
  *
- * @function fieldsGroupComposesExtend
+ * @function _.workpiece.fieldsGroupComposesExtend
  * @throws {exception} If no arguments provided.
  * @memberof module:Tools/base/Proto.Tools( module::Proto )
  */
 
-function fieldsGroupComposesExtend( dstPrototype, srcMap )
+function _.workpiece.fieldsGroupComposesExtend( dstPrototype, srcMap )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -227,7 +227,7 @@ function fieldsGroupComposesExtend( dstPrototype, srcMap )
  * @example
  * let Self = function ClassName( o ) { };
  * let Aggregates = { tree : null };
- * _.fieldsGroupAggregatesExtend( Self.prototype, Aggregates );
+ * _.workpiece.fieldsGroupAggregatesExtend( Self.prototype, Aggregates );
  * console.log( Self.prototype ); // returns { Aggregates: { tree: null } }
  *
  * @function fieldsGroupAggregatesExtend
@@ -260,7 +260,7 @@ function fieldsGroupAggregatesExtend( dstPrototype,srcMap )
  * @example
  * let Self = function ClassName( o ) { };
  * let Associates = { tree : null };
- * _.fieldsGroupAssociatesExtend( Self.prototype, Associates );
+ * _.workpiece.fieldsGroupAssociatesExtend( Self.prototype, Associates );
  * console.log( Self.prototype ); // returns { Associates: { tree: null } }
  *
  * @function fieldsGroupAssociatesExtend
@@ -326,7 +326,7 @@ function fieldsGroupRestrictsExtend( dstPrototype,srcMap )
  * @example
  * let Self = function ClassName( o ) { };
  * let Composes = { tree : null };
- * _.fieldsGroupComposesSupplement( Self.prototype, Composes );
+ * _.workpiece.fieldsGroupComposesSupplement( Self.prototype, Composes );
  * console.log( Self.prototype ); // returns { Composes: { tree: null } }
  *
  * @function fieldsGroupComposesSupplement
@@ -392,7 +392,7 @@ function fieldsGroupAggregatesSupplement( dstPrototype,srcMap )
  * @example
  * let Self = function ClassName( o ) { };
  * let Associates = { tree : null };
- * _.fieldsGroupAssociatesSupplement( Self.prototype, Associates );
+ * _.workpiece.fieldsGroupAssociatesSupplement( Self.prototype, Associates );
  * console.log( Self.prototype ); // returns { Associates: { tree: null } }
  *
  * @function fieldsGroupAssociatesSupplement
@@ -553,7 +553,7 @@ function fieldsOfRelationsGroups( src )
   let prototype = src;
 
   if( !_.prototypeIs( prototype ) )
-  prototype = _.prototypeGet( src );
+  prototype = _.prototypeOf( src );
 
   _.assert( _.prototypeIs( prototype ) );
   _.assert( _.prototypeIsStandard( prototype ),'Expects standard prototype' );
@@ -561,10 +561,10 @@ function fieldsOfRelationsGroups( src )
 
   if( _.instanceIs( src ) )
   {
-    return _.mapOnly( src, _.fieldsOfRelationsGroupsFromPrototype( prototype ) );
+    return _.mapOnly( src, _.workpiece.fieldsOfRelationsGroupsFromPrototype( prototype ) );
   }
 
-  return _.fieldsOfRelationsGroupsFromPrototype( prototype );
+  return _.workpiece.fieldsOfRelationsGroupsFromPrototype( prototype );
 }
 
 //
@@ -574,16 +574,16 @@ function fieldsOfCopyableGroups( src )
   let prototype = src;
 
   if( !_.prototypeIs( prototype ) )
-  prototype = _.prototypeGet( src );
+  prototype = _.prototypeOf( src );
 
   _.assert( _.prototypeIs( prototype ) );
   _.assert( _.prototypeIsStandard( prototype ),'Expects standard prototype' );
   _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( _.instanceIs( src ) )
-  return _.mapOnly( src, _.fieldsOfCopyableGroupsFromPrototype( prototype ) );
+  return _.mapOnly( src, _.workpiece.fieldsOfCopyableGroupsFromPrototype( prototype ) );
 
-  return _.fieldsOfCopyableGroupsFromPrototype( prototype );
+  return _.workpiece.fieldsOfCopyableGroupsFromPrototype( prototype );
 }
 
 //
@@ -593,17 +593,17 @@ function fieldsOfTightGroups( src )
   let prototype = src;
 
   if( !_.prototypeIs( prototype ) )
-  prototype = _.prototypeGet( src );
+  prototype = _.prototypeOf( src );
 
   _.assert( _.prototypeIs( prototype ) );
   _.assert( _.prototypeIsStandard( prototype ),'Expects standard prototype' );
   _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( _.instanceIs( src ) )
-  return _.mapOnly( src, _.fieldsOfTightGroupsFromPrototype( prototype ) );
+  return _.mapOnly( src, _.workpiece.fieldsOfTightGroupsFromPrototype( prototype ) );
 
   debugger;
-  return _.fieldsOfTightGroupsFromPrototype( prototype );
+  return _.workpiece.fieldsOfTightGroupsFromPrototype( prototype );
 }
 
 //
@@ -613,16 +613,16 @@ function fieldsOfInputGroups( src )
   let prototype = src;
 
   if( !_.prototypeIs( prototype ) )
-  prototype = _.prototypeGet( src );
+  prototype = _.prototypeOf( src );
 
   _.assert( _.prototypeIs( prototype ) );
   _.assert( _.prototypeIsStandard( prototype ),'Expects standard prototype' );
   _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( _.instanceIs( src ) )
-  return _.mapOnly( src, _.fieldsOfInputGroupsFromPrototype( prototype ) );
+  return _.mapOnly( src, _.workpiece.fieldsOfInputGroupsFromPrototype( prototype ) );
 
-  return _.fieldsOfInputGroupsFromPrototype( prototype );
+  return _.workpiece.fieldsOfInputGroupsFromPrototype( prototype );
 }
 
 //
@@ -638,7 +638,7 @@ function fieldsGroupsDeclare( o )
   return;
 
   if( !o.fieldsGroups )
-  o.fieldsGroups = _.fieldsGroupsGet( o.dstPrototype );
+  o.fieldsGroups = _.workpiece.fieldsGroupsGet( o.dstPrototype );
 
   _.assert( _.subPrototypeOf( o.fieldsGroups, _.DefaultFieldsGroups ) );
 
@@ -693,7 +693,7 @@ function fieldsGroupsDeclareForEachFilter( o )
   _.assertRoutineOptions( fieldsGroupsDeclareForEachFilter, arguments );
   _.assertMapHasNoUndefine( o );
 
-  let oldFieldsGroups = _.fieldsGroupsGet( o.dstPrototype );
+  let oldFieldsGroups = _.workpiece.fieldsGroupsGet( o.dstPrototype );
   let newFieldsGroups = Object.create( oldFieldsGroups )
   if( ( o.extendMap && o.extendMap.Groups ) || ( o.supplementOwnMap && o.supplementOwnMap.Groups ) || ( o.supplementMap && o.supplementMap.Groups ) )
   {
@@ -721,14 +721,14 @@ function fieldsGroupsDeclareForEachFilter( o )
   //   filter : _.field.mapper.bypass,
   // });
 
-  _.fieldsGroupsDeclare
+  _.workpiece.fieldsGroupsDeclare
   ({
     dstPrototype : o.dstPrototype,
     srcMap : o.extendMap,
     fieldsGroups : newFieldsGroups,
     filter : _.field.mapper.bypass,
   });
-  _.fieldsGroupsDeclare
+  _.workpiece.fieldsGroupsDeclare
   ({
     dstPrototype : o.dstPrototype,
     srcMap : o.supplementOwnMap,
@@ -739,7 +739,7 @@ function fieldsGroupsDeclareForEachFilter( o )
   // if( o.dstPrototype.constructor.name === 'wPrinterBase' )
   // debugger;
 
-  _.fieldsGroupsDeclare
+  _.workpiece.fieldsGroupsDeclare
   ({
     dstPrototype : o.dstPrototype,
     srcMap : o.supplementMap,
@@ -1248,7 +1248,7 @@ function mixinApply( mixinDescriptor, dstPrototype )
 function mixinHas( proto,mixin )
 {
   if( _.constructorIs( proto ) )
-  proto = _.prototypeGet( proto );
+  proto = _.prototypeOf( proto );
 
   _.assert( _.prototypeIsStandard( proto ) );
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -1701,7 +1701,7 @@ function classExtend( o )
 
   /* fields groups */
 
-  _.fieldsGroupsDeclareForEachFilter
+  _.workpiece.fieldsGroupsDeclareForEachFilter
   ({
     dstPrototype : o.prototype,
     extendMap : o.extend,
@@ -1718,7 +1718,7 @@ function classExtend( o )
 
   let staticsOwn = _.mapOwnProperties( o.prototype.Statics );
   let staticsAll = staticsAllGet();
-  let fieldsGroups = _.fieldsGroupsGet( o.prototype );
+  let fieldsGroups = _.workpiece.fieldsGroupsGet( o.prototype );
 
   /* xxx : investigate */
   // if( _.mapKeys( staticsOwn ).length )
@@ -1787,7 +1787,7 @@ to prioritize ordinary facets adjustment order should be
 
   /* statics */
 
-  let fieldsOfRelationsGroups = _.fieldsOfRelationsGroupsFromPrototype( o.prototype );
+  let fieldsOfRelationsGroups = _.workpiece.fieldsOfRelationsGroupsFromPrototype( o.prototype );
 
   if( o.supplement && o.supplement.Statics )
   declareStaticsForClass( o.supplement.Statics, 0, 0 );
@@ -1969,7 +1969,7 @@ function staticDeclare( o )
   // debugger;
 
   if( !o.fieldsOfRelationsGroups )
-  o.fieldsOfRelationsGroups = _.fieldsOfRelationsGroupsFromPrototype( o.prototype );
+  o.fieldsOfRelationsGroups = _.workpiece.fieldsOfRelationsGroupsFromPrototype( o.prototype );
 
   let pd = _.propertyDescriptorGet( o.prototype, o.name );
   let cd = _.propertyDescriptorGet( o.prototype.constructor, o.name );
@@ -2103,7 +2103,7 @@ defaults.readOnly = 0;
 
 //
 
-function constructorGet( src )
+function constructorOf( src )
 {
   let proto;
 
@@ -2133,7 +2133,7 @@ function constructorGet( src )
 
 //
 
-function subclassOf( subCls, cls )
+function isSubClassOf( subCls, cls )
 {
 
   _.assert( _.routineIs( cls ) );
@@ -2166,13 +2166,13 @@ function subPrototypeOf( sub, parent )
 
 /**
  * Get parent's constructor.
- * @function parentGet
+ * @function parentOf
  * @memberof wCopyable#
  */
 
-function parentGet( src )
+function parentOf( src )
 {
-  let c = constructorGet( src );
+  let c = constructorOf( src );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
 
@@ -2227,13 +2227,13 @@ function _classConstructorAndPrototypeGet( o )
 // prototype
 // --
 
-function prototypeGet( src )
+function prototypeOf( src )
 {
 
   if( !( 'constructor' in src ) )
   return null;
 
-  let c = constructorGet( src );
+  let c = constructorOf( src );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
 
@@ -2420,7 +2420,7 @@ function prototypeArchyGet( srcPrototype )
 
 function prototypeHasField( src, fieldName )
 {
-  let prototype = _.prototypeGet( src );
+  let prototype = _.prototypeOf( src );
 
   _.assert( _.prototypeIs( prototype ) );
   _.assert( _.prototypeIsStandard( prototype ),'Expects standard prototype' );
@@ -2543,7 +2543,7 @@ function prototypeEach( proto,onEach )
 
     result.push( proto );
 
-    let parent = _.parentGet( proto );
+    let parent = _.parentOf( proto );
 
     proto = parent ? parent.prototype : null;
 
@@ -2574,7 +2574,7 @@ function prototypeEach( proto,onEach )
 
 */
 
-function workpiece.construct( cls, context, args )
+function instanceConstructor( cls, context, args )
 {
 
   _.assert( args.length === 0 || args.length === 1 );
@@ -2679,7 +2679,7 @@ function instanceFinit( src )
  *     extend: Proto,
  * });
  * let obj = new Self();
- * console.log( _.instanceInit( obj ) ); //returns Alpha { a: 1, b: 2 }
+ * console.log( _.workpiece.initFields( obj ) ); //returns Alpha { a: 1, b: 2 }
  *
  * @return {object} Returns complemented instance.
  * @function instanceInit
@@ -2734,7 +2734,7 @@ function instanceFilterInit( o )
 
   _.routineOptions( instanceFilterInit,o );
 
-  // let self = _.instanceFilterInit
+  // let self = _.workpiece.initFilter
   // ({
   //   cls : Self,
   //   parent : Parent,
@@ -2747,7 +2747,7 @@ function instanceFilterInit( o )
 
   let result = Object.create( null );
 
-  _.instanceInit( result,o.cls.prototype );
+  _.workpiece.initFields( result,o.cls.prototype );
 
   if( o.args[ 0 ] )
   _.Copyable.prototype.copyCustom.call( o.cls.prototype,
@@ -2923,7 +2923,7 @@ function defaultProxyFlatteningToArray( src )
   @see {@link module:Tools/base/Proto.wTools.define.own}
   @see {@link module:Tools/base/Proto.wTools.define.common}
   @see {@link module:Tools/base/Proto.wTools.define.instanceOf}
-  @see {@link module:Tools/base/Proto.wTools.define.ownMadeBy}
+  @see {@link module:Tools/base/Proto.wTools.define.makeWith}
   @see {@link module:Tools/base/Proto.wTools.define.contained}
 * @class Definition
 * @memberof module:Tools/base/Proto.wTools.define
@@ -2960,7 +2960,7 @@ function common( src )
 
   definition.valueGet = function get() { return this.value }
 
-  _.accessor.hide( definition, 'valueGet' );
+  _.propertyHide( definition, 'valueGet' );
 
   Object.freeze( definition );
   return definition;
@@ -2986,7 +2986,7 @@ function own( src )
   // definition.valueGet = function get() { return _.entityShallowClone( this.value ) }
   definition.valueGet = function get() { return _.cloneJust( this.value ) }
 
-  _.accessor.hide( definition, 'valueGet' );
+  _.propertyHide( definition, 'valueGet' );
 
   Object.freeze( definition );
   return definition;
@@ -3011,7 +3011,7 @@ function instanceOf( src )
 
   definition.valueGet = function get() { return new this.value() }
 
-  _.accessor.hide( definition, 'valueGet' );
+  _.propertyHide( definition, 'valueGet' );
 
   Object.freeze( definition );
   return definition;
@@ -3023,11 +3023,11 @@ function instanceOf( src )
 * Creates property-like entity with getter that returns result of source routine call.
 * @param {Function} src - source routine
 * @returns {module:Tools/base/Proto.wTools.define.Definition}
-* @function ownMadeBy
+* @function makeWith
 * @memberof module:Tools/base/Proto.wTools.define
 */
 
-function ownMadeBy( src )
+function makeWith( src )
 {
   let definition = new Definition({ value : src });
 
@@ -3036,7 +3036,7 @@ function ownMadeBy( src )
 
   definition.valueGet = function get() { return this.value() }
 
-  _.accessor.hide( definition, 'valueGet' );
+  _.propertyHide( definition, 'valueGet' );
 
   Object.freeze( definition );
   return definition;
@@ -3078,7 +3078,7 @@ function contained( src )
     return result;
   }
 
-  _.accessor.hide( definition, 'valueGet' );
+  _.propertyHide( definition, 'valueGet' );
   Object.freeze( definition );
   return definition;
 }
@@ -3220,7 +3220,7 @@ let Define =
   common : common,
   own : own,
   instanceOf : instanceOf,
-  ownMadeBy : ownMadeBy,
+  makeWith : makeWith,
   contained : contained,
 }
 
@@ -3253,7 +3253,7 @@ let Routines =
   fieldsGroupFor, /* experimental */
   fieldsGroupDeclare, /* experimental */
 
-  fieldsGroupComposesExtend, /* experimental */
+  _.workpiece.fieldsGroupComposesExtend, /* experimental */
   fieldsGroupAggregatesExtend, /* experimental */
   fieldsGroupAssociatesExtend, /* experimental */
   fieldsGroupRestrictsExtend, /* experimental */
@@ -3305,17 +3305,17 @@ let Routines =
 
   staticDeclare,
 
-  constructorGet,
+  constructorOf,
 
-  subclassOf,
+  isSubClassOf,
   subPrototypeOf,
 
-  parentGet,
+  parentOf,
   _classConstructorAndPrototypeGet,
 
   // prototype
 
-  prototypeGet,
+  prototypeOf,
 
   prototypeUnitedInterface, /* experimental */
 
@@ -3330,7 +3330,7 @@ let Routines =
 
   // instance
 
-  workpiece.construct,
+  instanceConstructor,
 
   instanceIsFinited,
   instanceFinit,
