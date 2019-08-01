@@ -1931,7 +1931,7 @@ function staticFieldsPreserving( test )
 
 //
 
-function instanceConstructor( test )
+function workpieceConstruct( test )
 {
 
   function BasicConstructor()
@@ -2060,7 +2060,7 @@ var Self =
     customFieldsGroups,
 
     staticFieldsPreserving,
-    instanceConstructor,
+    workpieceConstruct,
 
   },
 
