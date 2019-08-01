@@ -15,7 +15,7 @@ let _ = wTools;
 let Parent = null;
 let Self = function wWillBuildFrame( o )
 {
-  return _.instanceConstructor( Self, this, arguments );
+  return _.workpiece.construct( Self, this, arguments );
 }
 
 Self.shortName = 'BuildFrame';
@@ -40,7 +40,7 @@ function init( o )
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  _.instanceInit( frame );
+  _.workpiece.initFields( frame );
   Object.preventExtensions( frame );
 
   if( o )

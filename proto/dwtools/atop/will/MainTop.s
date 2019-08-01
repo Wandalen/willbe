@@ -15,7 +15,7 @@ let _ = wTools;
 let Parent = _.Will;
 let Self = function wWillCli( o )
 {
-  return _.instanceConstructor( Self, this, arguments );
+  return _.workpiece.construct( Self, this, arguments );
 }
 
 Self.shortName = 'WillCli';
@@ -375,14 +375,11 @@ function _commandsEnd( command )
   if( will.topCommand !== command )
   return false;
 
-  // logger.log( '_commandsEnd' );
-
   try
   {
 
     will.topCommand = null;
 
-    debugger;
     if( will.currentOpener )
     will.currentOpener.finit();
     will.currentOpenerChange( null );
@@ -690,7 +687,6 @@ function commandEach( e )
 
     return r.finally( ( err, arg ) =>
     {
-      debugger;
       logger.down();
       levelUp = 0;
 
@@ -738,8 +734,6 @@ function _commandList( e, act, resourceKind )
 
   return will.moduleReadyThen( function( module )
   {
-
-    debugger;
 
     let resources = null;
     if( resourceKind )

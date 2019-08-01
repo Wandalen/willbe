@@ -31,7 +31,7 @@ function init()
 {
   var self = this; /* context */
 
-  _.instanceInit( self );/* extends object by fields from relationships */
+  _.workpiece.initFields( self );/* extends object by fields from relationships */
 
   Object.preventExtensions( self ); /* disables object extending */
 

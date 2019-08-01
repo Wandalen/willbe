@@ -15,7 +15,6 @@ var _ = _global_.wTools;
 
 function objectLike( t )
 {
-  debugger;
 
   t.description = 'array-like entities should not overlap with array-like entities set';
 
@@ -34,7 +33,6 @@ function objectLike( t )
   t.identical( _.objectLike( {} ),true );
   t.identical( _.objectLike( Object.create( null ) ),true );
 
-  debugger;
 }
 
 //

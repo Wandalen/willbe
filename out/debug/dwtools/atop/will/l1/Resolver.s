@@ -339,20 +339,10 @@ function _onSelector( selector )
   if( !_.strIs( selector ) )
   return;
 
-  // debugger;
-
   if( will.Resolver._selectorIs( selector ) )
   {
     return Self._onSelectorComposite.call( it, selector );
   }
-
-  // if( rop.prefixlessAction === 'default' && !it.composite )
-  // {
-  //   debugger;
-  //   let x = Self.selectorLongSplit( selector );
-  //   return xxx;
-  // }
-  // else
 
   if( rop.prefixlessAction === 'default' && !it.composite )
   {
@@ -1633,8 +1623,81 @@ let pathResolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 var defaults = pathResolve.defaults;
 defaults.pathResolving = 'in';
 defaults.prefixlessAction = 'resolved';
-defaults.selectorIsPath = 1;
 defaults.arrayFlattening = 1;
+defaults.selectorIsPath = 1;
+defaults.mapValsUnwrapping = 1;
+
+//
+
+function filesFromResource_body( o )
+{
+  let module = o.baseModule;
+  let will = module.will;
+  let result = [];
+  let fileProvider = will.fileProvider
+  let path = fileProvider.path;
+
+  // let resource = module.pathResolve( o );
+  // ({
+  //   selector : o.selector,
+  //   prefixlessAction : 'resolved',
+  //   pathResolving : 'in',
+  //   pathNativizing : 0,
+  //   selectorIsPath : 1,
+  // });
+
+  let o2 = _.mapExtend( null, o );
+  let resources = module.resolve( o2 );
+
+  if( _.arrayIs( resources ) )
+  resources.forEach( ( resource ) => resourceHandle( resource ) );
+  else
+  resourceHandle( resources );
+
+  return result;
+
+  function resourceHandle( resource )
+  {
+
+    if( resource instanceof will.Reflector )
+    {
+      let o2 = resource.optionsForFindExport();
+      o2.outputFormat = 'absolute';
+      o2.distinct = 1;
+      let files = fileProvider.filesFind( o2 );
+      filesAdd( files );
+    }
+    else if( resource instanceof will.PathResource )
+    {
+      let o2 = Object.create( null );
+      o2.filter = Object.create( null );
+      o2.filter.filePath = resource.path;
+      o2.outputFormat = 'absolute';
+      o2.distinct = 1;
+      let files = fileProvider.filesFind( o2 );
+      filesAdd( files );
+    }
+    else _.assert( 0, 'Unknown type of resource ' + _.strType( resource ) );
+
+  }
+
+  function filesAdd( files )
+  {
+    _.arrayAppendArrayOnce( result, files );
+  }
+
+}
+
+var defaults = filesFromResource_body.defaults = Object.create( resolve.defaults );
+defaults.selector = null;
+defaults.prefixlessAction = 'resolved';
+defaults.currentContext = null;
+defaults.pathResolving = 'in';
+defaults.pathNativizing = 0;
+defaults.selectorIsPath = 1;
+defaults.pathUnwrapping = 0;
+
+let filesFromResource = _.routineFromPreAndBody( resolve_pre, filesFromResource_body );
 
 //
 
@@ -1773,6 +1836,7 @@ let Self =
 
   resolveRaw,
   pathResolve,
+  filesFromResource,
   reflectorResolve,
   submodulesResolve,
 

@@ -17,7 +17,7 @@ let _ = wTools;
 let Parent = _.Will.Resource;
 let Self = function wWillExported( o )
 {
-  return _.instanceConstructor( Self, this, arguments );
+  return _.workpiece.construct( Self, this, arguments );
 }
 
 Self.shortName = 'Exported';
@@ -46,7 +46,7 @@ function finit()
       if( !( exported[ name ] instanceof _.Will.Resource ) )
       exported[ name ] = module.resolveRaw( exported[ name ] );
       if( exported[ name ] instanceof _.Will.Resource )
-      if( !_.instanceIsFinited( exported[ name ] ) )
+      if( !_.workpiece.isFinited( exported[ name ] ) )
       exported[ name ].finit();
     }
   }
@@ -277,8 +277,8 @@ function performExportedReflectors( exportSelector )
     for( let p = 0 ; p < exp.length ; p++ )
     {
       _.assert( !_.strHas( exp[ p ], '::' ) );
-      if( path.isAbsolute( exp[ p ] ) )
-      exp[ p ] = path.relative( module.inPath, exp[ p ] );
+      // if( path.isAbsolute( exp[ p ] ) ) // yyy
+      // exp[ p ] = path.relative( module.inPath, exp[ p ] );
       exportedReflector.src.filePath[ exp[ p ] ] = true;
     }
     exportedReflector.src.basePath = commonPath;
@@ -289,8 +289,8 @@ function performExportedReflectors( exportSelector )
 
     _.assert( !_.strHas( exp, '::' ) );
     exportedReflector = module.resourceAllocate( 'reflector', 'exported.' + exported.name );
-    if( path.isAbsolute( exp ) )
-    exp = path.relative( module.inPath, exp )
+    // if( path.isAbsolute( exp ) ) // yyy
+    // exp = path.relative( module.inPath, exp );
     exportedReflector.src.filePath = exp;
 
   }
@@ -298,7 +298,9 @@ function performExportedReflectors( exportSelector )
 
   exportedReflector.criterion = _.mapExtend( null, exported.criterion );
   exportedReflector.generated = 1;
+  // debugger;
   exportedReflector.form();
+  // debugger;
   exported.exportedReflector = exportedReflector;
 
   _.assert( exportedReflector.original === null );
@@ -324,7 +326,7 @@ function performExportedReflectors( exportSelector )
 
   /* exportedDirPath */
 
-  let exportedDirPath = srcFilter.basePaths[ 0 ]; debugger;
+  let exportedDirPath = srcFilter.basePaths[ 0 ];
 
   if( hd.isTerminal( exportedDirPath ) )
   exportedDirPath = path.dir( exportedDirPath );
@@ -608,9 +610,9 @@ let Composes =
 {
 
   version : null,
-  description : null,
-  criterion : null,
-  inherit : _.define.own([]),
+  // description : null,
+  // criterion : null,
+  // inherit : _.define.own([]),
 
   exportedReflector : null,
   exportedFilesReflector : null,

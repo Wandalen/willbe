@@ -15,7 +15,7 @@ let _ = wTools;
 let Parent = null;
 let Self = function wWillAbstractModule( o )
 {
-  return _.instanceConstructor( Self, this, arguments );
+  return _.workpiece.construct( Self, this, arguments );
 }
 
 Self.shortName = 'AbstractModule';
@@ -35,7 +35,7 @@ function finit()
 function init()
 {
   let module = this;
-  _.instanceInit( module );
+  _.workpiece.initFields( module );
   Object.preventExtensions( module );
   _.Will.ResourceCounter += 1;
   module.id = _.Will.ResourceCounter;
@@ -183,8 +183,6 @@ function modulesOpenFromData( o )
   let module = this;
   let will = module.will;
 
-  // logger.log( 'modulesOpenFromData' ); debugger;
-
   o = _.routineOptions( modulesOpenFromData, arguments );
 
   for( let f = 0 ; f < o.willfilesArray.length ; f++ )
@@ -194,7 +192,7 @@ function modulesOpenFromData( o )
 
     for( let modulePath in willfile.data.module )
     {
-      let data = willfile.data.module[ modulePath ]; debugger;
+      let data = willfile.data.module[ modulePath ];
       if( data === 'root' )
       continue;
       module.moduleOpenFromData
@@ -384,9 +382,9 @@ let Extend =
 
   // etc
 
-  modulesAttachedOpen,
-  modulesOpenFromData,
-  moduleOpenFromData,
+  modulesAttachedOpen, // xxx
+  modulesOpenFromData, // xxx
+  moduleOpenFromData, // xxx
 
   // name
 

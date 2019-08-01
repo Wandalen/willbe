@@ -279,7 +279,7 @@ function constructorIsStandard( cls )
 
   _.assert( _.constructorIs( cls ) );
 
-  let prototype = _.prototypeGet( cls );
+  let prototype = _.prototypeOf( cls );
 
   return _.prototypeIsStandard( prototype );
 }
@@ -320,7 +320,7 @@ function instanceIsStandard( src )
   if( !_.instanceIs( src ) )
   return false;
 
-  let proto = _.prototypeGet( src );
+  let proto = _.prototypeOf( src );
 
   if( !proto )
   return false;

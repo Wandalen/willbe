@@ -69,8 +69,8 @@ function _setupUnhandledErrorHandler1()
 
   function handleError( err )
   {
-    let prefix = '------------------------------- unhandled errorr ------------------------------->\n';
-    let postfix = '------------------------------- unhandled errorr -------------------------------<\n';
+    let prefix = '------------------------------- unhandled error ------------------------------->\n';
+    let postfix = '------------------------------- unhandled error -------------------------------<\n';
 
     /* */
 

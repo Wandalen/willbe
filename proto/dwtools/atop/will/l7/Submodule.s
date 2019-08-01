@@ -15,7 +15,7 @@ let _ = wTools;
 let Parent = _.Will.Resource;
 let Self = function wWillSubmodule( o )
 {
-  return _.instanceConstructor( Self, this, arguments );
+  return _.workpiece.construct( Self, this, arguments );
 }
 
 Self.shortName = 'Submodule';
@@ -51,12 +51,12 @@ function copy( o )
 
 //
 
-function OptionsFrom( o )
+function ResouceDataFrom( o )
 {
   _.assert( arguments.length === 1 );
   if( _.strIs( o ) || _.arrayIs( o ) )
   return { path : o }
-  return o;
+  return _.mapExtend( null, o );
 }
 
 //
@@ -500,7 +500,7 @@ function infoExport()
   resultMap.isDownloaded = submodule.isDownloaded;
   resultMap.isAvailable = submodule.isAvailable;
 
-  let result = submodule._infoExport( resultMap );
+  let result = submodule._infoExport({ fields : resultMap });
 
   return result;
 }
@@ -567,9 +567,9 @@ let pathSymbol = Symbol.for( 'path' );
 let Composes =
 {
 
-  description : null,
-  criterion : null,
-  inherit : _.define.own([]),
+  // description : null,
+  // criterion : null,
+  // inherit : _.define.own([]),
   path : null,
   autoExporting : 0,
 
@@ -599,7 +599,7 @@ let Medials =
 
 let Statics =
 {
-  OptionsFrom : OptionsFrom,
+  ResouceDataFrom : ResouceDataFrom,
   MapName : 'submoduleMap',
   KindName : 'submodule',
 }
@@ -633,7 +633,7 @@ let Extend =
   init,
   copy,
 
-  OptionsFrom,
+  ResouceDataFrom,
   unform,
   form1,
   form3,

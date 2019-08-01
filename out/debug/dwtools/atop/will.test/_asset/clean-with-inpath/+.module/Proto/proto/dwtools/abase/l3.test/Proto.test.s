@@ -1,6 +1,6 @@
 ( function _Proto_test_s_( ) {
 
-'use strict'; 
+'use strict';
 
 if( typeof module !== 'undefined' )
 {
@@ -361,7 +361,7 @@ function accessorIsClean( test )
 
   function BasicConstructor()
   {
-    _.instanceInit( this );
+    _.workpiece.initFields( this );
   }
 
   var Accessors =
@@ -608,7 +608,7 @@ function forbids( test )
 
   function BasicConstructor()
   {
-    _.instanceInit( this );
+    _.workpiece.initFields( this );
   }
 
   var Forbids =
@@ -656,33 +656,33 @@ function forbids( test )
 
 //
 
-function constant( test )
+function propertyConstant( test )
 {
 
   test.case = 'second argument is map';
   var dstMap = {};
-  _.accessor.constant( dstMap, { a : 5 } );
+  _.propertyConstant( dstMap, { a : 5 } );
   var descriptor = Object.getOwnPropertyDescriptor( dstMap, 'a' );
   test.identical( descriptor.writable, false );
   test.identical( dstMap.a, 5 );
 
   test.case = 'rewrites existing field';
   var dstMap = { a : 5 };
-  _.accessor.constant( dstMap, { a : 1 } );
+  _.propertyConstant( dstMap, { a : 1 } );
   var descriptor = Object.getOwnPropertyDescriptor( dstMap, 'a' );
   test.identical( descriptor.writable, false );
   test.identical( dstMap.a, 1 );
 
   test.case = '3 arguments';
   var dstMap = {};
-  _.accessor.constant( dstMap, 'a', 5 );
+  _.propertyConstant( dstMap, 'a', 5 );
   var descriptor = Object.getOwnPropertyDescriptor( dstMap, 'a' );
   test.identical( descriptor.writable, false );
   test.identical( dstMap.a, 5 );
 
   test.case = '2 arguments, no value';
   var dstMap = {};
-  _.accessor.constant( dstMap, 'a' );
+  _.propertyConstant( dstMap, 'a' );
   var descriptor = Object.getOwnPropertyDescriptor( dstMap, 'a' );
   test.identical( descriptor.writable, false );
   test.identical( dstMap.a, undefined );
@@ -690,7 +690,7 @@ function constant( test )
 
   test.case = 'second argument is array';
   var dstMap = {};
-  _.accessor.constant( dstMap, [ 'a' ], 5 );
+  _.propertyConstant( dstMap, [ 'a' ], 5 );
   var descriptor = Object.getOwnPropertyDescriptor( dstMap, 'a' );
   test.identical( descriptor.writable, false );
   test.identical( dstMap.a, 5 );
@@ -701,19 +701,19 @@ function constant( test )
   test.case = 'empty call';
   test.shouldThrowError( function()
   {
-    _.accessor.constant( );
+    _.propertyConstant( );
   });
 
   test.case = 'invalid first argument type';
   test.shouldThrowError( function()
   {
-    _.accessor.constant( 1, { a : 'a' } );
+    _.propertyConstant( 1, { a : 'a' } );
   });
 
   test.case = 'invalid second argument type';
   test.shouldThrowError( function()
   {
-    _.accessor.constant( {}, 13 );
+    _.propertyConstant( {}, 13 );
   });
 
 }
@@ -1237,7 +1237,7 @@ function staticsDeclare( test )
 
   function BasicConstructor()
   {
-    _.instanceInit( this );
+    _.workpiece.initFields( this );
   }
 
   var Associates =
@@ -1307,7 +1307,7 @@ function staticsDeclare( test )
   test.is( BasicConstructor.f2 === Statics.f2 );
   test.is( BasicConstructor.prototype.Statics.f2 === Statics.f2 );
   test.is( BasicConstructor.prototype.Associates.f2 === Associates.f2 );
-  test.is( instance.f2 === Associates.f2.value );
+  test.is( instance.f2 === Associates.f2.ini );
 
   test.case = 'set prototype.f2';
 
@@ -1318,8 +1318,8 @@ function staticsDeclare( test )
   test.is( BasicConstructor.f2 !== BasicConstructor.prototype.f2 );
   test.is( BasicConstructor.prototype.f2 === newF2 );
   test.is( BasicConstructor.f2 === Statics.f2 );
-  test.is( instance.f2 === Associates.f2.value );
-  test.is( instance2.f2 === Associates.f2.value );
+  test.is( instance.f2 === Associates.f2.ini );
+  test.is( instance2.f2 === Associates.f2.ini );
 
   test.case = 'set constructor.f2';
 
@@ -1329,8 +1329,8 @@ function staticsDeclare( test )
 
   test.is( BasicConstructor.f2 !== BasicConstructor.prototype.f2 );
   test.is( BasicConstructor.f2 === newF2 );
-  test.is( instance.f2 === Associates.f2.value );
-  test.is( instance2.f2 === Associates.f2.value );
+  test.is( instance.f2 === Associates.f2.ini );
+  test.is( instance2.f2 === Associates.f2.ini );
 
   test.close( 'basic' );
 
@@ -1352,7 +1352,7 @@ function staticsOverwrite( test )
 
   function BasicConstructor()
   {
-    _.instanceInit( this );
+    _.workpiece.initFields( this );
     this.instances.push( this );
   }
 
@@ -1378,7 +1378,7 @@ function staticsOverwrite( test )
 
   function DerivedConstructor1()
   {
-    _.instanceInit( this );
+    _.workpiece.initFields( this );
     this.instances.push( this );
   }
 
@@ -1405,7 +1405,7 @@ function staticsOverwrite( test )
 
   function DerivedConstructor2()
   {
-    _.instanceInit( this );
+    _.workpiece.initFields( this );
     this.instances.push( this );
   }
 
@@ -1475,10 +1475,10 @@ function mixinStaticsWithDefinition( test )
   var map = { 0 : wrap };
   var Statics =
   {
-    array : _.define.contained({ value : array, readOnly : 1, shallowCloning : 1 }),
-    map : _.define.contained({ value : map, readOnly : 1, shallowCloning : 1 }),
-    bool : _.define.contained({ value : 0 }),
-    wrap : _.define.contained({ value : wrap }),
+    array : _.define.contained({ ini : array, readOnly : 1, shallowCloning : 1 }),
+    map : _.define.contained({ ini : map, readOnly : 1, shallowCloning : 1 }),
+    bool : _.define.contained({ ini : 0 }),
+    wrap : _.define.contained({ ini : wrap }),
   }
 
   var Extend =
@@ -1506,7 +1506,7 @@ function mixinStaticsWithDefinition( test )
 
   function Class1()
   {
-    _.instanceInit( this );
+    _.workpiece.initFields( this );
   }
 
   _.classDeclare
@@ -1526,7 +1526,7 @@ function mixinStaticsWithDefinition( test )
 
   function Class2()
   {
-    _.instanceInit( this );
+    _.workpiece.initFields( this );
   }
 
   _.classDeclare
@@ -1562,14 +1562,14 @@ function mixinStaticsWithDefinition( test )
   test.case = 'wrap';
 
   test.is( wrap === Mixin.wrap );
-  test.is( wrap === Mixin.prototype.Statics.wrap.value );
+  test.is( wrap === Mixin.prototype.Statics.wrap.ini );
   test.is( wrap === Mixin.prototype.wrap );
-  test.is( wrap === Class1.prototype.Statics.wrap.value );
+  test.is( wrap === Class1.prototype.Statics.wrap.ini );
   test.is( wrap === Class1.prototype.wrap );
   test.is( wrap === Class1.wrap );
   test.is( wrap === instance1.wrap );
 
-  test.is( wrap === Class2.prototype.Statics.wrap.value );
+  test.is( wrap === Class2.prototype.Statics.wrap.ini );
   test.is( wrap === Class2.prototype.wrap );
   test.is( wrap === Class2.wrap );
   test.is( wrap === instance2.wrap );
@@ -1579,13 +1579,13 @@ function mixinStaticsWithDefinition( test )
   var wrap2 = Mixin.wrap = [ 'wrap2' ];
 
   test.is( wrap2 === Mixin.wrap );
-  test.is( wrap == Mixin.prototype.Statics.wrap.value );
+  test.is( wrap == Mixin.prototype.Statics.wrap.ini );
   test.is( wrap2 === Mixin.prototype.wrap );
-  test.is( wrap === Class1.prototype.Statics.wrap.value );
+  test.is( wrap === Class1.prototype.Statics.wrap.ini );
   test.is( wrap === Class1.prototype.wrap );
   test.is( wrap === Class1.wrap );
   test.is( wrap === instance1.wrap );
-  test.is( wrap == Class2.prototype.Statics.wrap.value );
+  test.is( wrap == Class2.prototype.Statics.wrap.ini );
   test.is( wrap == Class2.prototype.wrap );
   test.is( wrap == Class2.wrap );
   test.is( wrap == instance2.wrap );
@@ -1595,13 +1595,13 @@ function mixinStaticsWithDefinition( test )
   var wrap3 = Class1.wrap = [ 'wrap3' ];
 
   test.is( wrap2 === Mixin.wrap );
-  test.is( wrap === Mixin.prototype.Statics.wrap.value );
+  test.is( wrap === Mixin.prototype.Statics.wrap.ini );
   test.is( wrap2 === Mixin.prototype.wrap );
-  test.is( wrap === Class1.prototype.Statics.wrap.value );
+  test.is( wrap === Class1.prototype.Statics.wrap.ini );
   test.is( wrap3 === Class1.prototype.wrap );
   test.is( wrap3 === Class1.wrap );
   test.is( wrap3 === instance1.wrap );
-  test.is( wrap === Class2.prototype.Statics.wrap.value );
+  test.is( wrap === Class2.prototype.Statics.wrap.ini );
   test.is( wrap === Class2.prototype.wrap );
   test.is( wrap === Class2.wrap );
   test.is( wrap === instance2.wrap );
@@ -1611,16 +1611,16 @@ function mixinStaticsWithDefinition( test )
   test.case = 'array';
 
   test.is( array !== Mixin.array );
-  test.is( array === Mixin.prototype.Statics.array.value );
+  test.is( array === Mixin.prototype.Statics.array.ini );
   test.is( Mixin.array === Mixin.prototype.array );
 
-  test.is( array === Class1.prototype.Statics.array.value );
+  test.is( array === Class1.prototype.Statics.array.ini );
   test.is( Class1.array === Class1.prototype.array );
   test.is( array !== Class1.array );
   test.is( Mixin.array !== Class1.array );
   test.is( Class1.array === instance1.array );
 
-  test.is( array === Class2.prototype.Statics.array.value );
+  test.is( array === Class2.prototype.Statics.array.ini );
   test.is( Class2.array === Class2.prototype.array );
   test.is( array !== Class2.array );
   test.is( Mixin.array !== Class2.array );
@@ -1629,13 +1629,13 @@ function mixinStaticsWithDefinition( test )
   test.case = 'wrap in array';
 
   test.is( array[ 0 ] === Mixin.array[ 0 ] );
-  test.is( array[ 0 ] === Mixin.prototype.Statics.array.value[ 0 ] );
+  test.is( array[ 0 ] === Mixin.prototype.Statics.array.ini[ 0 ] );
   test.is( array[ 0 ] === Mixin.prototype.array[ 0 ] );
-  test.is( array[ 0 ] === Class1.prototype.Statics.array.value[ 0 ] );
+  test.is( array[ 0 ] === Class1.prototype.Statics.array.ini[ 0 ] );
   test.is( array[ 0 ] === Class1.prototype.array[ 0 ] );
   test.is( array[ 0 ] === Class1.array[ 0 ] );
   test.is( array[ 0 ] === instance1.array[ 0 ] );
-  test.is( array[ 0 ] === Class2.prototype.Statics.array.value[ 0 ] );
+  test.is( array[ 0 ] === Class2.prototype.Statics.array.ini[ 0 ] );
   test.is( array[ 0 ] === Class2.prototype.array[ 0 ] );
   test.is( array[ 0 ] === Class2.array[ 0 ] );
   test.is( array[ 0 ] === instance2.array[ 0 ] );
@@ -1645,16 +1645,16 @@ function mixinStaticsWithDefinition( test )
   test.case = 'map';
 
   test.is( map !== Mixin.map );
-  test.is( map === Mixin.prototype.Statics.map.value );
+  test.is( map === Mixin.prototype.Statics.map.ini );
   test.is( Mixin.map === Mixin.prototype.map );
 
-  test.is( map === Class1.prototype.Statics.map.value );
+  test.is( map === Class1.prototype.Statics.map.ini );
   test.is( Class1.map === Class1.prototype.map );
   test.is( map !== Class1.map );
   test.is( Mixin.map !== Class1.map );
   test.is( Class1.map === instance1.map );
 
-  test.is( map === Class2.prototype.Statics.map.value );
+  test.is( map === Class2.prototype.Statics.map.ini );
   test.is( Class2.map === Class2.prototype.map );
   test.is( map !== Class2.map );
   test.is( Mixin.map !== Class2.map );
@@ -1663,13 +1663,13 @@ function mixinStaticsWithDefinition( test )
   test.case = 'wrap in map';
 
   test.is( map[ 0 ] === Mixin.map[ 0 ] );
-  test.is( map[ 0 ] === Mixin.prototype.Statics.map.value[ 0 ] );
+  test.is( map[ 0 ] === Mixin.prototype.Statics.map.ini[ 0 ] );
   test.is( map[ 0 ] === Mixin.prototype.map[ 0 ] );
-  test.is( map[ 0 ] === Class1.prototype.Statics.map.value[ 0 ] );
+  test.is( map[ 0 ] === Class1.prototype.Statics.map.ini[ 0 ] );
   test.is( map[ 0 ] === Class1.prototype.map[ 0 ] );
   test.is( map[ 0 ] === Class1.map[ 0 ] );
   test.is( map[ 0 ] === instance1.map[ 0 ] );
-  test.is( map[ 0 ] === Class2.prototype.Statics.map.value[ 0 ] );
+  test.is( map[ 0 ] === Class2.prototype.Statics.map.ini[ 0 ] );
   test.is( map[ 0 ] === Class2.prototype.map[ 0 ] );
   test.is( map[ 0 ] === Class2.map[ 0 ] );
   test.is( map[ 0 ] === instance2.map[ 0 ] );
@@ -1887,7 +1887,7 @@ function staticFieldsPreserving( test )
 
   var DerivedConstructor1 = function DerivedConstructor1()
   {
-    return _.instanceConstructor( DerivedConstructor1, this, arguments );
+    return _.workpiece.construct( DerivedConstructor1, this, arguments );
   }
 
   function derivedSet()
@@ -1936,7 +1936,7 @@ function instanceConstructor( test )
 
   function BasicConstructor()
   {
-    return _.instanceConstructor( BasicConstructor, this, arguments );
+    return _.workpiece.construct( BasicConstructor, this, arguments );
   }
 
   function init()
@@ -2050,7 +2050,7 @@ var Self =
     accessorReadOnly,
     forbids,
 
-    constant,
+    propertyConstant,
 
     classDeclare,
     staticsDeclare,
