@@ -1,0 +1,6 @@
+about : 
+  name : submodules-update-switch-branch
+
+submodule :
+
+  experiment : git+https:///github.com/volodymyrmigdal/willbe-experiment.git/out/willbe-experiment#master

@@ -14,3 +14,14 @@ let o =
 }
 _.appExitHandlerRepair();
 let shell = _.shellNodePassingThrough( o );
+
+// let o =
+// {
+//   execPath : _.path.join( __dirname, 'MainTop.s' ),
+//   verbosity : 0,
+//   passingThrough : 1,
+//   throwingExitCode : 0,
+//   mode : 'fork'
+// }
+// process.on( 'SIGINT', () => o.process.kill( 'SIGKILL' ) );
+// let shell = _.shellNodePassingThrough( o );
