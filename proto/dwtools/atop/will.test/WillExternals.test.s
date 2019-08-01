@@ -9093,7 +9093,7 @@ function submodulesUpdateSwitchBranch( test )
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let experimentModulePath = _.path.join( submodulesPath, 'experiment' );
   let willfilePath = _.path.join( routinePath, '.will.yml' );
-  
+
   let ready = new _.Consequence().take( null )
   let shell = _.sheller
   ({
@@ -9104,23 +9104,23 @@ function submodulesUpdateSwitchBranch( test )
   })
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-  
+
   ready
   .then( () =>
   {
     test.case = 'download master branch';
     return null;
   })
-  
+
   shell({ args : [ '.submodules.update' ] })
-  
-  .then( () => 
+
+  .then( () =>
   {
     let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
-  
+
   .then( () =>
   {
     test.case = 'switch master to dev';
@@ -9129,16 +9129,16 @@ function submodulesUpdateSwitchBranch( test )
     _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
-  
+
   shell({ args : [ '.submodules.update' ] })
-  
-  .then( () => 
+
+  .then( () =>
   {
     let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
     return null;
   })
-  
+
   .then( () =>
   {
     test.case = 'switch dev to detached state';
@@ -9147,16 +9147,16 @@ function submodulesUpdateSwitchBranch( test )
     _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
-  
+
   shell({ args : [ '.submodules.update' ] })
-  
-  .then( () => 
+
+  .then( () =>
   {
     let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'cfaa3c7782b9ff59cdcd28cb0f25d421e67f99ce' ) );
     return null;
   })
-  
+
   .then( () =>
   {
     test.case = 'switch detached state to master';
@@ -9165,16 +9165,16 @@ function submodulesUpdateSwitchBranch( test )
     _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
-  
+
   shell({ args : [ '.submodules.update' ] })
-  
-  .then( () => 
+
+  .then( () =>
   {
     let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
-  
+
   .then( () =>
   {
     test.case = 'master has local change, cause conflict when switch to dev';
@@ -9185,43 +9185,43 @@ function submodulesUpdateSwitchBranch( test )
     _.fileProvider.fileWrite({ filePath : readmePath, data : 'master' });
     return null;
   })
-  
+
   shell({ args : [ '.submodules.update' ] })
-  
+
   _.shell
-  ({ 
-    execPath : 'git status', 
+  ({
+    execPath : 'git status',
     currentPath : experimentModulePath,
-    ready : ready, 
-    outputCollecting : 1 
+    ready : ready,
+    outputCollecting : 1
   })
-  
-  .then( ( got ) => 
-  { 
+
+  .then( ( got ) =>
+  {
     test.is( _.strHas( got.output, 'both modified:   README.md' ) )
-    
+
     let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
     return null;
   })
-  
+
   /**/
-  
-  ready.then( () => 
-  { 
+
+  ready.then( () =>
+  {
     test.case = 'master has new commit, changing branch to dev';
-    _.fileProvider.filesDelete( routinePath ); 
+    _.fileProvider.filesDelete( routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
     return null;
   })
-  
+
   shell({ args : [ '.submodules.update' ] })
-  
+
   _.shell
-  ({ 
-    execPath : 'git commit --allow-empty -m commitofmaster', 
-    currentPath : experimentModulePath, 
-    ready : ready 
+  ({
+    execPath : 'git commit --allow-empty -m commitofmaster',
+    currentPath : experimentModulePath,
+    ready : ready
   })
   .then( () =>
   {
@@ -9230,44 +9230,44 @@ function submodulesUpdateSwitchBranch( test )
     _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
-  
+
   shell({ args : [ '.submodules.update' ] })
-  
+
   .then( () =>
   {
     let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
     return null;
   })
-  
+
   /**/
-  
-  ready.then( () => 
-  { 
+
+  ready.then( () =>
+  {
     test.case = 'master and remote master have new commits';
-    _.fileProvider.filesDelete( routinePath ); 
+    _.fileProvider.filesDelete( routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
     return null;
   })
-  
+
   shell({ args : [ '.submodules.update' ] })
-  
+
   _.shell
   ({
     execPath : 'git reset --hard HEAD~1',
     currentPath : experimentModulePath,
     ready : ready
   })
-  
+
   _.shell
   ({
     execPath : 'git commit --allow-empty -m emptycommit',
     currentPath : experimentModulePath,
     ready : ready
   })
-  
+
   shell({ args : [ '.submodules.update' ] })
-  
+
   _.shell
   ({
     execPath : 'git status',
@@ -9275,16 +9275,16 @@ function submodulesUpdateSwitchBranch( test )
     outputCollecting : 1,
     ready : ready
   })
-  
-  .then( ( got ) => 
+
+  .then( ( got ) =>
   {
     test.is( _.strHas( got.output, `Your branch is ahead of 'origin/master' by 2 commits` ) );
-    
+
     let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
-  
+
   return ready;
 }
 
@@ -10626,17 +10626,17 @@ fixateDetached.timeOut = 500000;
 //
 
 function execWillbe( test )
-{ 
-  
+{
+
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'execWillbe' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let execUnrestrictedPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/ExecUnrestricted' ) );
   let ready = new _.Consequence().take( null );
-  
+
   /* This test routine checks if willbe can be terminated on early start from terminal when executed as child process using ExecUnrestricted script */
-  
+
   let shell = _.sheller
   ({
     execPath : 'node',
@@ -10644,35 +10644,35 @@ function execWillbe( test )
     outputCollecting : 1,
     ready : ready,
   });
-  
+
   ready
   .then( () =>
-  { 
+  {
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
     return null;
   })
-  
-  .then( () => 
-  { 
+
+  .then( () =>
+  {
     test.case = 'execUnrestricted: terminate utility during heavy load of will files, should be terminated'
     let o = { args : [ execUnrestrictedPath, '.submodules.list' ], ready : null };
-    
+
     let con = shell( o );
-    
-    o.process.stdout.on( 'data', ( data ) => 
+
+    o.process.stdout.on( 'data', ( data ) =>
     {
       if( _.bufferAnyIs( data ) )
       data = _.bufferToStr( data );
-      
+
       if( _.strHas( data, 'wTools.out.will.yml' ) )
-      { 
+      {
         console.log( 'Terminating willbe...' );
         o.process.kill( 'SIGINT' )
       }
     });
-    
+
     return test.shouldThrowErrorAsync( con )
-    .then( () => 
+    .then( () =>
     {
       test.identical( o.exitCode, 255 );
       test.is( !_.strHas( o.output, 'wLogger.out.will.yml' ) )
@@ -10682,30 +10682,30 @@ function execWillbe( test )
       return null;
     })
   })
-  
+
   /* */
-  
-  .then( () => 
-  { 
+
+  .then( () =>
+  {
     test.case = 'Exec: terminate utility during heavy load of will files, should fail'
     let o = { args : [ execPath, '.submodules.list' ], ready : null };
-    
+
     let con = shell( o );
-    
-    o.process.stdout.on( 'data', ( data ) => 
+
+    o.process.stdout.on( 'data', ( data ) =>
     {
       if( _.bufferAnyIs( data ) )
       data = _.bufferToStr( data );
-      
+
       if( _.strHas( data, 'wTools.out.will.yml' ) )
-      { 
+      {
         console.log( 'Terminating willbe...' );
         o.process.kill( 'SIGINT' )
       }
     });
-    
+
     return test.mustNotThrowError( con )
-    .then( () => 
+    .then( () =>
     {
       test.identical( o.exitCode, 0 );
       test.is( _.strHas( o.output, 'wLogger.out.will.yml' ) )
@@ -10715,7 +10715,7 @@ function execWillbe( test )
       return null;
     })
   })
-  
+
   return ready;
 }
 
@@ -10839,7 +10839,7 @@ var Self =
     upgradeDetached,
     fixateDryDetached,
     fixateDetached,
-    
+
     execWillbe
 
   }
