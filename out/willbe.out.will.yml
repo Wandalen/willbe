@@ -73,6 +73,8 @@ path:
       - ../proto
       - ../proto/dwtools
       - ../proto/dwtools/Tools.s
+      - ../proto/dwtools/abase
+      - ../proto/dwtools/amid
       - ../proto/dwtools/atop
       - ../proto/dwtools/atop/will
       - ../proto/dwtools/atop/will/Exec
@@ -191,6 +193,7 @@ path:
         ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/+.module/Proto/sample/Sample.html
       - >-
         ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/+.module/Proto/sample/Sample.js
+      - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/+.module/Tools
       - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/+out
       - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/+out/debug
       - >-
@@ -353,9 +356,14 @@ path:
         ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/.module/Proto/sample/Sample.html
       - >-
         ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/.module/Proto/sample/Sample.js
+      - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/.module/Tools
       - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module
       - >-
         ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/Proto.will.yml
+      - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/+.module
+      - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/+out
+      - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/.module
+      - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/out
       - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/out
       - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/out/debug
       - >-
@@ -478,6 +486,7 @@ path:
       - ../proto/dwtools/atop/will.test/_asset/composite-reflector
       - ../proto/dwtools/atop/will.test/_asset/composite-reflector/.will.yml
       - ../proto/dwtools/atop/will.test/_asset/composite-reflector/proto
+      - ../proto/dwtools/atop/will.test/_asset/composite-reflector/proto/dir1
       - ../proto/dwtools/atop/will.test/_asset/composite-reflector/proto/dir2
       - >-
         ../proto/dwtools/atop/will.test/_asset/composite-reflector/proto/dir2/-Excluded.js
@@ -992,6 +1001,8 @@ path:
         ../proto/dwtools/atop/will.test/_asset/import-auto/-out/debug/dwtools/abase/l2.test/StringTools.test.s
       - ../proto/dwtools/atop/will.test/_asset/import-auto/module
       - ../proto/dwtools/atop/will.test/_asset/import-auto/module/Proto.will.yml
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/module/.module
+      - ../proto/dwtools/atop/will.test/_asset/import-auto/module/.module/Proto
       - ../proto/dwtools/atop/will.test/_asset/import-auto/proto
       - >-
         ../proto/dwtools/atop/will.test/_asset/import-auto/proto/WithSubmodules.s
@@ -1586,6 +1597,8 @@ path:
       - ../proto/dwtools/atop/will.test/_asset/transpile/.ex.will.yml
       - ../proto/dwtools/atop/will.test/_asset/transpile/.im.will.yml
       - ../proto/dwtools/atop/will.test/_asset/transpile/proto
+      - ../proto/dwtools/atop/will.test/_asset/transpile/proto/dir1
+      - ../proto/dwtools/atop/will.test/_asset/transpile/proto/dir1/Text.txt
       - ../proto/dwtools/atop/will.test/_asset/transpile/proto/dir2
       - ../proto/dwtools/atop/will.test/_asset/transpile/proto/dir2/-Excluded.js
       - ../proto/dwtools/atop/will.test/_asset/transpile/proto/dir2/File.js
@@ -1609,10 +1622,164 @@ path:
       - ../proto/dwtools/atop/will.test/_asset/verbosity-step-delete/+proto/A
       - >-
         ../proto/dwtools/atop/will.test/_asset/verbosity-step-delete/+proto/A/file
+      - ../proto/dwtools/atop/will.test/_asset/verbosity-step-delete/proto
       - ../proto/dwtools/atop/will.test/_asset/verbosity-step-print-name
       - >-
         ../proto/dwtools/atop/will.test/_asset/verbosity-step-print-name/.will.yml
       - ../proto/dwtools/atop/will.test/_asset/verbosity-step-print-name/file
+      - ../proto/dwtools/tmp.tmp
+      - ../proto/dwtools/tmp.tmp/Will-113957-117-da08
+      - ../proto/dwtools/tmp.tmp/Will-113957-117-da08/make
+      - ../proto/dwtools/tmp.tmp/Will-152952-467-796a
+      - ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile
+      - ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/.ex.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/.im.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto
+      - ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir1
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir1/Text.txt
+      - ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/-Excluded.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File.test.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File1.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File1.release.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File2.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File2.release.js
+      - ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir3.test
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir3.test/File.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir3.test/File.test.js
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/.ex.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/.im.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.ex.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.im.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/submodule.out.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/debug
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/debug/File.debug.js
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/release
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/release/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/supermodule.out.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/debug
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/debug/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/debug/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/release
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/release/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/release/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/submodule.out.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/debug
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/debug/File.debug.js
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/release
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/release/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/proto
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/proto/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/proto/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/supermodule.out.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/debug
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/debug/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/debug/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/release
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/release/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/release/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/.ex.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/.im.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.ex.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.im.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/submodule.out.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/debug
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/debug/File.debug.js
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/release
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/release/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/supermodule.out.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/debug
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/debug/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/debug/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/release
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/release/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/release/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/submodule.out.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/debug
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/debug/File.debug.js
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/release
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/release/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/proto
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/proto/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/proto/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/supermodule.out.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/debug
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/debug/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/debug/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/release
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/release/File.debug.js
+      - >-
+        ../proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/release/File.release.js
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/v1.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/v2.will.yml
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/File.js
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/File.test.js
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Produce.js
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Produced.js2
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Produced.txt2
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Src1.txt
+      - ../proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Src2.txt
+      - ../proto/dwtools/tmp.tmp/Will-819-139-39c3
     criterion:
       default: 1
       debug: 1
@@ -1916,6 +2083,8 @@ module:
           - proto
           - proto/dwtools
           - proto/dwtools/Tools.s
+          - proto/dwtools/abase
+          - proto/dwtools/amid
           - proto/dwtools/atop
           - proto/dwtools/atop/will
           - proto/dwtools/atop/will/Exec
@@ -2034,6 +2203,7 @@ module:
             proto/dwtools/atop/will.test/_asset/clean-with-inpath/+.module/Proto/sample/Sample.html
           - >-
             proto/dwtools/atop/will.test/_asset/clean-with-inpath/+.module/Proto/sample/Sample.js
+          - proto/dwtools/atop/will.test/_asset/clean-with-inpath/+.module/Tools
           - proto/dwtools/atop/will.test/_asset/clean-with-inpath/+out
           - proto/dwtools/atop/will.test/_asset/clean-with-inpath/+out/debug
           - >-
@@ -2196,9 +2366,15 @@ module:
             proto/dwtools/atop/will.test/_asset/clean-with-inpath/.module/Proto/sample/Sample.html
           - >-
             proto/dwtools/atop/will.test/_asset/clean-with-inpath/.module/Proto/sample/Sample.js
+          - proto/dwtools/atop/will.test/_asset/clean-with-inpath/.module/Tools
           - proto/dwtools/atop/will.test/_asset/clean-with-inpath/module
           - >-
             proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/Proto.will.yml
+          - >-
+            proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/+.module
+          - proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/+out
+          - proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/.module
+          - proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/out
           - proto/dwtools/atop/will.test/_asset/clean-with-inpath/out
           - proto/dwtools/atop/will.test/_asset/clean-with-inpath/out/debug
           - >-
@@ -2321,6 +2497,7 @@ module:
           - proto/dwtools/atop/will.test/_asset/composite-reflector
           - proto/dwtools/atop/will.test/_asset/composite-reflector/.will.yml
           - proto/dwtools/atop/will.test/_asset/composite-reflector/proto
+          - proto/dwtools/atop/will.test/_asset/composite-reflector/proto/dir1
           - proto/dwtools/atop/will.test/_asset/composite-reflector/proto/dir2
           - >-
             proto/dwtools/atop/will.test/_asset/composite-reflector/proto/dir2/-Excluded.js
@@ -2842,6 +3019,8 @@ module:
           - proto/dwtools/atop/will.test/_asset/import-auto/module
           - >-
             proto/dwtools/atop/will.test/_asset/import-auto/module/Proto.will.yml
+          - proto/dwtools/atop/will.test/_asset/import-auto/module/.module
+          - proto/dwtools/atop/will.test/_asset/import-auto/module/.module/Proto
           - proto/dwtools/atop/will.test/_asset/import-auto/proto
           - >-
             proto/dwtools/atop/will.test/_asset/import-auto/proto/WithSubmodules.s
@@ -3443,6 +3622,8 @@ module:
           - proto/dwtools/atop/will.test/_asset/transpile/.ex.will.yml
           - proto/dwtools/atop/will.test/_asset/transpile/.im.will.yml
           - proto/dwtools/atop/will.test/_asset/transpile/proto
+          - proto/dwtools/atop/will.test/_asset/transpile/proto/dir1
+          - proto/dwtools/atop/will.test/_asset/transpile/proto/dir1/Text.txt
           - proto/dwtools/atop/will.test/_asset/transpile/proto/dir2
           - >-
             proto/dwtools/atop/will.test/_asset/transpile/proto/dir2/-Excluded.js
@@ -3469,10 +3650,166 @@ module:
           - proto/dwtools/atop/will.test/_asset/verbosity-step-delete/+proto/A
           - >-
             proto/dwtools/atop/will.test/_asset/verbosity-step-delete/+proto/A/file
+          - proto/dwtools/atop/will.test/_asset/verbosity-step-delete/proto
           - proto/dwtools/atop/will.test/_asset/verbosity-step-print-name
           - >-
             proto/dwtools/atop/will.test/_asset/verbosity-step-print-name/.will.yml
           - proto/dwtools/atop/will.test/_asset/verbosity-step-print-name/file
+          - proto/dwtools/tmp.tmp
+          - proto/dwtools/tmp.tmp/Will-113957-117-da08
+          - proto/dwtools/tmp.tmp/Will-113957-117-da08/make
+          - proto/dwtools/tmp.tmp/Will-152952-467-796a
+          - proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile
+          - proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/.ex.will.yml
+          - proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/.im.will.yml
+          - proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto
+          - proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir1
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir1/Text.txt
+          - proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/-Excluded.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File.test.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File1.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File1.release.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File2.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir2/File2.release.js
+          - proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir3.test
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir3.test/File.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-152952-467-796a/transpile/proto/dir3.test/File.test.js
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/.ex.will.yml
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/.im.will.yml
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.ex.will.yml
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.im.will.yml
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/submodule.out.will.yml
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/debug
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/debug/File.debug.js
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/release
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+out/release/File.release.js
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/supermodule.out.will.yml
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/debug
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/debug/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/debug/File.release.js
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/release
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/release/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/+super.out/release/File.release.js
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/submodule.out.will.yml
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/debug
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/debug/File.debug.js
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/release
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/out/release/File.release.js
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/proto
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/proto/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/proto/File.release.js
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/supermodule.out.will.yml
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/debug
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/debug/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/debug/File.release.js
+          - proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/release
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/release/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-6127-205-d81/openNamed/super.out/release/File.release.js
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/.ex.will.yml
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/.im.will.yml
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.ex.will.yml
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.im.will.yml
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/submodule.out.will.yml
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/debug
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/debug/File.debug.js
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/release
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+out/release/File.release.js
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/supermodule.out.will.yml
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/debug
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/debug/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/debug/File.release.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/release
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/release/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/+super.out/release/File.release.js
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/submodule.out.will.yml
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/debug
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/debug/File.debug.js
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/release
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/out/release/File.release.js
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/proto
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/proto/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/proto/File.release.js
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/supermodule.out.will.yml
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/debug
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/debug/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/debug/File.release.js
+          - proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/release
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/release/File.debug.js
+          - >-
+            proto/dwtools/tmp.tmp/Will-61430-383-e64/openNamed/super.out/release/File.release.js
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/v1.will.yml
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/v2.will.yml
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/File.js
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/File.test.js
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Produce.js
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Produced.js2
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Produced.txt2
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Src1.txt
+          - proto/dwtools/tmp.tmp/Will-62621-748-5fd2/resolve/file/Src2.txt
+          - proto/dwtools/tmp.tmp/Will-819-139-39c3
         criterion:
           default: 1
           debug: 1
