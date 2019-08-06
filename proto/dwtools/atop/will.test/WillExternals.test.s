@@ -7720,6 +7720,57 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
 
 reflectSubmodulesWithPluralCriterionAutoExport.timeOut = 300000;
 
+//
+
+function relfectSubmodulesWithNotExistingFile( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-reflect-with-not-existing' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+  
+  /* 
+    moduleA exports:
+    proto
+      amid 
+        Tools.s
+        
+    moduleB exports:
+      proto
+        amid
+    
+    proto/amid of moduleB doesn't exist on harddrive, but its listed in out file
+    
+    main module reflects files of these modules, when assert fails
+  */
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* - */
+  
+  ready
+  .then( () =>
+  {
+    test.case = 'reflect submodules'
+    return null;
+  })
+  
+  shell({ args : [ '.build' ] })
+  
+  return test.shouldThrowErrorAsync( ready );
+}
+
+relfectSubmodulesWithNotExistingFile.timeOut = 30000;
 
 //
 
@@ -10927,6 +10978,7 @@ var Self =
     reflectSubmodulesWithCriterion,
     reflectSubmodulesWithPluralCriterionManualExport,
     reflectSubmodulesWithPluralCriterionAutoExport,
+    relfectSubmodulesWithNotExistingFile,
     reflectInherit,
     reflectInheritSubmodules,
     // reflectComplexInherit, // xxx
