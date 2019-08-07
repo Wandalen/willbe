@@ -10801,12 +10801,12 @@ function execWillbe( test )
   let ready = new _.Consequence().take( null );
 
   /* This test routine checks if willbe can be terminated on early start from terminal when executed as child process using ExecUnrestricted script */
-
+  
   let shell = _.sheller
   ({
-    execPath : 'node',
     currentPath : routinePath,
     outputCollecting : 1,
+    mode : 'fork',
     ready : ready,
   });
 
@@ -10838,45 +10838,17 @@ function execWillbe( test )
 
     return test.shouldThrowErrorAsync( con )
     .then( () =>
-    {
+    { 
+      if( process.platform === 'win32' )
+      test.identical( o.exitCode, null );
+      else
       test.identical( o.exitCode, 255 );
+      
+      test.identical( o.exitSignal, 'SIGINT' );
       test.is( !_.strHas( o.output, 'wLogger.out.will.yml' ) )
       test.is( !_.strHas( o.output, 'wLoggerToJs.out.will.yml' ) )
       test.is( !_.strHas( o.output, 'wConsequence.out.will.yml' ) )
       test.is( !_.strHas( o.output, 'wInstancing.out.will.yml' ) )
-      return null;
-    })
-  })
-
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'Exec: terminate utility during heavy load of will files, should fail'
-    let o = { args : [ execPath, '.submodules.list' ], ready : null };
-
-    let con = shell( o );
-
-    o.process.stdout.on( 'data', ( data ) =>
-    {
-      if( _.bufferAnyIs( data ) )
-      data = _.bufferToStr( data );
-
-      if( _.strHas( data, 'wTools.out.will.yml' ) )
-      {
-        console.log( 'Terminating willbe...' );
-        o.process.kill( 'SIGINT' )
-      }
-    });
-
-    return test.mustNotThrowError( con )
-    .then( () =>
-    {
-      test.identical( o.exitCode, 0 );
-      test.is( _.strHas( o.output, 'wLogger.out.will.yml' ) )
-      test.is( _.strHas( o.output, 'wLoggerToJs.out.will.yml' ) )
-      test.is( _.strHas( o.output, 'wConsequence.out.will.yml' ) )
-      test.is( _.strHas( o.output, 'wInstancing.out.will.yml' ) )
       return null;
     })
   })
