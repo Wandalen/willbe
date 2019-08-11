@@ -1,4 +1,4 @@
-( function _Paths_test_s_( ) {
+( function _PathsBasic_test_s_( ) {
 
 'use strict';
 
@@ -8,7 +8,7 @@ if( typeof module !== 'undefined' )
   let _ = require( '../../Tools.s' );
 
   _.include( 'wTesting' );
-  require( '../l3/Path.s' );
+  require( '../l3/PathBasic.s' );
 
 }
 
@@ -1104,7 +1104,7 @@ function common( test )
   test.case = 'empty';
 
   var got = _.path.s.common();
-  test.identical( got, [] );
+  test.identical( got, null );
 
   var got = _.path.s.common([]);
   test.identical( got, [] );
@@ -1141,13 +1141,13 @@ function common( test )
   test.identical( got, '/.a./.b./' );
 
   var got = _.path.s.common( '//a//b//c', '/a/b' );
-  test.identical( got, '/a/b' );
+  test.identical( got, '/' );
 
   var got = _.path.s.common( '/a//b', '/a//b' );
-  test.identical( got, '/a/b' );
+  test.identical( got, '/a//b' );
 
   var got = _.path.s.common( '/a//', '/a//' );
-  test.identical( got, '/a/' );
+  test.identical( got, '/a//' );
 
   var got = _.path.s.common( '/./a/./b/./c', '/a/b' );
   test.identical( got, '/a/b' );
@@ -1359,7 +1359,7 @@ function commonVectors( test )
 var Self =
 {
 
-  name : 'Tools/base/l3/path/S',
+  name : 'Tools/base/l4/path/S',
   silencing : 1,
   // verbosity : 7,
   // routine : 'relative',

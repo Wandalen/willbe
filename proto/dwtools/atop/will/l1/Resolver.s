@@ -2,387 +2,30 @@
 
 'use strict';
 
+// let ResolverAbstract = require( '../l0/Resolver.s' );
+
 if( typeof module !== 'undefined' )
 {
 
   require( '../IncludeBase.s' );
 
+
+
 }
 
 let _ = wTools;
+let Parent = _.Resolver;
+let Self = Object.create( Parent );
 
 // --
-// parser
+// handler
 // --
-
-function strRequestParse( srcStr )
-{
-
-  if( Self._selectorIs( srcStr ) )
-  {
-    let left, right;
-    let splits = _.strSplit( srcStr );
-
-    if( splits.length > 1 )
-    debugger;
-
-    for( let s = splits.length - 1 ; s >= 0 ; s-- )
-    {
-      let split = splits[ s ];
-      if( Self._selectorIs( split ) )
-      {
-        left = splits.slice( 0, s+1 ).join( ' ' );
-        right = splits.slice( s+1 ).join( ' ' );
-      }
-    }
-    let result = _.strRequestParse( right );
-    result.subject = left + result.subject;
-    result.subjects = [ result.subject ];
-    return result;
-  }
-
-  let result = _.strRequestParse( srcStr );
-  return result;
-}
-
-//
-
-function _selectorIs( selector )
-{
-  if( !_.strIs( selector ) )
-  return false;
-  if( !_.strHas( selector, '::' ) )
-  return false;
-  return true;
-}
-
-//
-
-function selectorIs( selector )
-{
-  if( _.arrayIs( selector ) )
-  {
-    for( let s = 0 ; s < selector.length ; s++ )
-    if( this.selectorIs( selector[ s ] ) )
-    return true;
-  }
-  return this._selectorIs( selector );
-}
-
-//
-
-function selectorIsComposite( selector )
-{
-
-  if( !this.selectorIs( selector ) )
-  return false;
-
-  if( _.arrayIs( selector ) )
-  {
-    for( let s = 0 ; s < selector.length ; s++ )
-    if( isComposite( selector[ s ] ) )
-    return true;
-  }
-  else
-  {
-    return isComposite( selector );
-  }
-
-  /* */
-
-  function isComposite( selector )
-  {
-
-    let splits = _.strSplitFast
-    ({
-      src : selector,
-      delimeter : [ '{', '}' ],
-    });
-
-    if( splits.length < 5 )
-    return false;
-
-    splits = _.strSplitsCoupledGroup({ splits : splits, prefix : '{', postfix : '}' });
-
-    if( !splits.some( ( split ) => _.arrayIs( split ) ) )
-    return false;
-
-    return true;
-  }
-
-}
-
-// //
-//
-// function selectorSplitIsWrapped( selector )
-// {
-//
-//   if( _.arrayIs( selector ) )
-//   {
-//     for( let s = 0 ; s < selector.length ; s++ )
-//     if( isComposite( selector[ s ] ) )
-//     return true;
-//   }
-//   else
-//   {
-//     return isComposite( selector );
-//   }
-//
-//   /* */
-//
-//   function isComposite( selector )
-//   {
-//
-//     let splits = _.strSplitFast
-//     ({
-//       src : selector,
-//       delimeter : [ '{', '}' ],
-//     });
-//
-//     if( splits.length < 3 )
-//     return false;
-//
-//     if( splits[ 0 ] !== '{' )
-//     return false;
-//
-//     if( splits[ splits.length - 1 ] !== '}' )
-//     return false;
-//
-//     return true;
-//   }
-//
-// }
-
-//
-
-function _selectorShortSplit( selector )
-{
-  _.assert( !_.strHas( selector, '/' ) );
-  let result = _.strIsolateLeftOrNone( selector, '::' );
-  _.assert( result.length === 3 );
-  result[ 1 ] = result[ 1 ] || '';
-  return result;
-}
-
-//
-
-function selectorShortSplit( o )
-{
-  let result;
-
-  _.assertRoutineOptions( selectorShortSplit, o );
-  _.assert( arguments.length === 1 );
-  _.assert( !_.strHas( o.selector, '/' ) );
-  _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
-
-  let splits = this._selectorShortSplit( o.selector );
-
-  if( !splits[ 0 ] && o.defaultResourceKind )
-  {
-    splits = [ o.defaultResourceKind, '::', o.selector ];
-  }
-
-  return splits;
-}
-
-var defaults = selectorShortSplit.defaults = Object.create( null )
-defaults.selector = null
-defaults.defaultResourceKind = null;
-
-//
-
-function selectorLongSplit( o )
-{
-  let result = [];
-
-  if( _.strIs( o ) )
-  o = { selector : o }
-
-  _.routineOptions( selectorLongSplit, o );
-  _.assert( arguments.length === 1 );
-  _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
-
-  let selectors = o.selector.split( '/' );
-
-  selectors.forEach( ( selector ) =>
-  {
-    let o2 = _.mapExtend( null, o );
-    o2.selector = selector;
-    result.push( this.selectorShortSplit( o2 ) );
-  });
-
-  return result;
-}
-
-var defaults = selectorLongSplit.defaults = Object.create( null )
-defaults.selector = null
-defaults.defaultResourceKind = null;
-
-//
-
-function selectorParse( o )
-{
-  let self = this;
-  let result = [];
-
-  if( _.strIs( o ) )
-  o = { selector : o }
-
-  _.routineOptions( selectorParse, o );
-  _.assert( arguments.length === 1 );
-  _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
-
-  let splits = _.strSplitFast
-  ({
-    src : o.selector,
-    delimeter : [ '{', '}' ],
-  });
-
-  splits = _.strSplitsCoupledGroup({ splits : splits, prefix : '{', postfix : '}' });
-
-  if( splits[ 0 ] === '' )
-  splits.splice( 0, 1 );
-  if( splits[ splits.length-1 ] === '' )
-  splits.splice( splits.length-1, 1 );
-
-  splits = splits.map( ( split ) =>
-  {
-    if( !_.arrayIs( split ) )
-    return split;
-    _.assert( split.length === 3 )
-    if( !this.selectorIs( split[ 1 ] ) )
-    return split.join( '' );
-
-    let o2 = _.mapExtend( null, o );
-    o2.selector = split[ 1 ];
-    return this.selectorLongSplit( o2 );
-  });
-
-  splits = _.strSplitsUngroupedJoin( splits );
-
-  if( splits.length === 1 && _.strIs( splits[ 0 ] ) && self.selectorIs( splits[ 0 ] ) )
-  {
-    let o2 = _.mapExtend( null, o );
-    o2.selector = splits[ 0 ];
-    splits[ 0 ] = self.selectorLongSplit( o2 );
-  }
-
-  return splits;
-}
-
-var defaults = selectorParse.defaults = Object.create( null )
-defaults.selector = null
-defaults.defaultResourceKind = null;
-
-//
-
-function selectorStr( parsedSelector )
-{
-  let self = this;
-
-  if( _.strIs( parsedSelector ) )
-  return parsedSelector;
-
-  let result = '';
-
-  for( let i = 0 ; i < parsedSelector.length ; i++ )
-  {
-    let inline = parsedSelector[ i ];
-    if( _.strIs( inline ) )
-    {
-      result += inline;
-    }
-    else
-    {
-      _.arrayIs( inline )
-      result += '{';
-      for( let s = 0 ; s < inline.length ; s++ )
-      {
-        let split = inline[ s ];
-        _.assert( _.arrayIs( split ) && split.length === 3 );
-        if( s > 0 )
-        result += '/';
-        result += split.join( '' );
-      }
-      result += '}';
-    }
-  }
-
-  return result;
-}
-
-//
-
-function selectorNormalize( src )
-{
-  let self = this;
-
-  if( !self.selectorIs( src ) )
-  return src;
-
-  let parsed = self.selectorParse( src );
-  let result = self.selectorStr( parsed );
-
-  return result;
-}
-
-// --
-// iterator methods
-// --
-
-function _onSelector( selector )
-{
-  let it = this;
-  let rop = it.selectMultipleOptions.iteratorExtension.resolveOptions;
-  let will = rop.baseModule.will;
-
-  if( !_.strIs( selector ) )
-  return;
-
-  if( will.Resolver._selectorIs( selector ) )
-  {
-    return Self._onSelectorComposite.call( it, selector );
-  }
-
-  if( rop.prefixlessAction === 'default' && !it.composite )
-  {
-    return selector;
-  }
-  else if( rop.prefixlessAction === 'resolved' || rop.prefixlessAction === 'default' )
-  {
-    return;
-  }
-  else if( rop.prefixlessAction === 'throw' || rop.prefixlessAction === 'error' )
-  {
-    debugger;
-    it.iterator.continue = false;
-    let err = Self.errResolving
-    ({
-      selector : selector,
-      currentContext : rop.currentContext,
-      err : _.ErrorLooking( 'Resource selector should have prefix' ),
-      baseModule : rop.baseModule,
-    });
-    if( rop.prefixlessAction === 'throw' )
-    throw err;
-    it.dst = err;
-    return;
-  }
-  else _.assert( 0 );
-
-}
-
-//
-
-let _onSelectorComposite = _.select.functor.onSelectorComposite({ isStrippedSelector : 1 });
-/* let _onSelectorDown = _.select.functor.onSelectorDownComposite({}); */
-
-//
 
 function _onSelectorDown()
 {
   let it = this;
   let rop = it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
   let will = rop.baseModule.will;
 
   if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.select.composite )
@@ -394,15 +37,17 @@ function _onSelectorDown()
 
     it.dst = _.strJoin( it.dst );
 
-    _pathsNativize1.call( it );
+    resolver._pathsNativize.call( it );
 
   }
-  else
-  {
+  // else // xxx
+  // {
+  //
+  //   resolver._arrayFlatten.call( it );
+  //
+  // }
 
-    _arrayFlatten.call( it );
-
-  }
+  Parent._onSelectorDown.call( it );
 
 }
 
@@ -412,10 +57,11 @@ function _onUpBegin()
 {
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
   let will = rop.baseModule.will;
 
-  _statusPreUpdate.call( it );
-  _globCriterionFilter.call( it );
+  resolver._statusPreUpdate.call( it );
+  resolver._globCriterionFilter.call( it );
 
   if( !it.dstWritingDown )
   return;
@@ -424,9 +70,9 @@ function _onUpBegin()
   _resourceMapSelect, _statusPostUpdate should go after _queryParse
   */
 
-  _queryParse.call( it );
-  _resourceMapSelect.call( it );
-  _statusPostUpdate.call( it );
+  resolver._queryParse.call( it );
+  resolver._resourceMapSelect.call( it );
+  resolver._statusPostUpdate.call( it );
 
 }
 
@@ -436,26 +82,32 @@ function _onUpEnd()
 {
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-  let will = rop.baseModule.will;
-
-  // if( rop.selector === 'path::export' )
-  // debugger;
+  let resolver = rop.Resolver;
 
   if( !it.dstWritingDown )
   return;
 
-  _exportedWriteThrough.call( it );
-  _currentExclude.call( it );
+  resolver._exportedWriteThrough.call( it );
+  resolver._currentExclude.call( it );
 
-  if( it.dstWritingDown )
-  _pathsCompositeResolve.call( it );
+  if( !it.dstWritingDown )
+  return;
 
-  if( it.dstWritingDown )
+  // if( it.dstWritingDown ) // xxx
+  resolver._pathsCompositeResolve.call( it );
+
+  if( !it.dstWritingDown )
+  return;
+
+  // if( it.dstWritingDown ) // xxx
   if( rop.pathResolving || it.isFunction )
-  _pathsResolve.call( it );
+  resolver._pathsResolve.call( it );
+
+  if( !it.dstWritingDown )
+  return;
 
   if( rop.pathUnwrapping )
-  _pathsUnwrap.call( it );
+  resolver._pathsUnwrap.call( it );
 
 }
 
@@ -465,22 +117,15 @@ function _onDownEnd()
 {
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-  let will = rop.baseModule.will;
+  let resolver = rop.Resolver;
 
   if( !it.dstWritingDown )
   return;
 
-  if( it.dstWritingDown )
   if( rop.pathNativizing || it.isFunction )
-  _pathsNativize1.call( it );
-  // _pathsNativize2.call( it );
+  resolver._pathsNativize.call( it );
 
-  _functionStringsJoinDown.call( it );
-  _mapsFlatten.call( it );
-  _mapValsUnwrap.call( it );
-  _arrayFlatten.call( it );
-  _singleUnwrap.call( it );
-
+  return Parent._onDownEnd.call( it );
 }
 
 //
@@ -489,7 +134,6 @@ function _onQuantitativeFail( err )
 {
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-  let will = rop.baseModule.will;
 
   debugger;
 
@@ -524,450 +168,9 @@ function _onQuantitativeFail( err )
   throw err;
 }
 
+// --
 //
-
-function _pathsNativize1()
-{
-  let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-  let will = rop.baseModule.will;
-  let resource = it.dst;
-
-  if( !rop.pathNativizing )
-  return;
-
-  if( it.selectMultipleOptions )
-  {
-    if( !rop.selectorIsPath )
-    return;
-  }
-  else
-  {
-    if( !it.selectorIsPath )
-    return;
-    if( it.down && it.down.selectorIsPath )
-    return;
-  }
-
-  if( it.dst )
-  it.dst = _.map( it.dst, ( resource ) =>
-  {
-    if( _.strIs( resource ) )
-    return _pathNativize1.call( it, resource );
-    if( resource instanceof will.PathResource )
-    {
-      resource = resource.cloneDerivative();
-      _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
-      if( resource.path )
-      resource.path = _pathNativize1.call( it, resource.path );
-    }
-    else debugger;
-    return resource;
-  });
-
-}
-
-// //
-//
-// function _pathsNativize2()
-// {
-//   let it = this;
-//   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-//   let will = rop.baseModule.will;
-//   let currentModule = it.currentModule;
-//   let resource = it.dst;
-//
-//   if( it.selectorIsPath )
-//   {
-//     if( it.down && it.down.selectorIsPath )
-//     return;
-//     if( it.dst )
-//     it.dst = _.map( it.dst, ( resource ) =>
-//     {
-//       if( _.strIs( resource ) )
-//       return _pathNativize2.call( it, resource );
-//       if( resource instanceof will.PathResource )
-//       {
-//         resource = resource.cloneDerivative();
-//         _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
-//         if( resource.path )
-//         resource.path = _pathNativize2.call( it, resource.path );
-//       }
-//       else debugger;
-//       return resource;
-//     });
-//     return;
-//   }
-//
-// }
-//
-//
-
-function _pathNativize1( filePath )
-{
-  let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-  let will = rop.baseModule.will;
-  let currentModule = it.currentModule;
-  let path = will.fileProvider.providersWithProtocolMap.file.path;
-  let result = filePath;
-
-  _.assert( _.strIs( result ) || _.strsAreAll( result ) );
-
-  if( _.arrayIs( filePath ) )
-  {
-    return filePath.map( ( e ) => nativize( e ) );
-  }
-  else
-  {
-    return nativize( filePath );
-  }
-
-  function nativize( filePath )
-  {
-    if( path.isGlobal( filePath ) )
-    return filePath
-    else
-    return path.nativize( filePath );
-  }
-
-}
-
-// //
-//
-// function _pathNativize2( filePath )
-// {
-//   let it = this;
-//   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-//   let will = rop.baseModule.will;
-//   let currentModule = it.currentModule;
-//   let result = filePath;
-//
-//   _.assert( _.strIs( filePath ) || _.strsAreAll( filePath ) );
-//
-//   result = will.fileProvider.providersWithProtocolMap.file.path.s.nativize( result );
-//
-//   return result;
-// }
-//
-//
-
-function _pathCompositeResolve( currentModule, currentResource, filePath, resolving )
-{
-  let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-  let will = rop.baseModule.will;
-  let result = filePath;
-
-  _.assert( _.strIs( result ) || _.strsAreAll( result ) );
-  _.assert( arguments.length === 4 );
-
-  if( will.Resolver.selectorIsComposite( result ) )
-  {
-
-    result = currentModule.pathResolve
-    ({
-      selector : result,
-      visited : _.arrayFlatten( null, [ rop.visited, result ] ),
-      pathResolving : resolving ? rop.pathResolving : 0,
-      currentContext : currentResource,
-      pathNativizing : rop.pathNativizing,
-      missingAction : rop.missingAction,
-    });
-
-  }
-
-  return result;
-}
-
-//
-
-function _pathsCompositeResolve()
-{
-  let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-  let will = rop.baseModule.will;
-  let currentModule = it.currentModule;
-  let resource = it.dst;
-
-  if( resource instanceof will.Reflector )
-  {
-    if( will.Resolver.selectorIsComposite( resource.src.prefixPath ) || will.Resolver.selectorIsComposite( resource.dst.prefixPath ) )
-    {
-      resource = it.dst = resource.cloneDerivative();
-      if( resource.src.prefixPath )
-      resource.src.prefixPath = _pathCompositeResolve.call( it, currentModule, resource, resource.src.prefixPath, 'in' );
-      if( resource.dst.prefixPath )
-      resource.dst.prefixPath = _pathCompositeResolve.call( it, currentModule, resource, resource.dst.prefixPath, 'in' );
-    }
-  }
-
-  if( resource instanceof will.PathResource )
-  {
-    if( will.Resolver.selectorIsComposite( resource.path ) )
-    {
-      resource = it.dst = resource.cloneDerivative();
-      resource.path = _pathCompositeResolve.call( it, currentModule, resource, resource.path, 'in' );
-    }
-  }
-
-}
-
-//
-
-function _pathResolve( filePath, resourceName )
-{
-  let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-  let will = rop.baseModule.will;
-  let currentModule = it.currentModule;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let result = filePath;
-
-  if( _.arrayIs( filePath ) )
-  filePath = _.arrayFlattenOnce( filePath );
-
-  if( _.errIs( filePath ) )
-  {
-    if( rop.missingAction === 'error' )
-    return filePath;
-    else
-    throw filePath;
-  }
-  else if( _.arrayIs( filePath ) )
-  for( let f = 0 ; f < filePath.length ; f++ )
-  if( _.errIs( filePath[ f ] ) )
-  {
-    if( rop.missingAction === 'error' )
-    return filePath[ f ];
-    else
-    throw filePath[ f ];
-  }
-
-  _.assert( _.strIs( filePath ) || _.strsAreAll( filePath ) );
-
-  if( it.replicateIteration.composite )
-  if( it.replicateIteration.compositeRoot !== it.replicateIteration )
-  if( it.replicateIteration.compositeRoot === it.replicateIteration.down )
-  {
-    if( it.replicateIteration.key !== 0 )
-    return result;
-  }
-
-  let prefixPath = '.';
-  if( rop.pathResolving === 'in' && resourceName !== 'in' )
-  prefixPath = currentModule.inPath || '.';
-  else if( rop.pathResolving === 'out' && resourceName !== 'out' )
-  prefixPath = currentModule.outPath || '.';
-
-  if( will.Resolver.selectorIs( prefixPath ) )
-  prefixPath = currentModule.pathResolve({ selector : prefixPath, currentContext : it.dst });
-  if( will.Resolver.selectorIs( result ) )
-  result = currentModule.pathResolve({ selector : result, currentContext : it.dst });
-
-  result = path.s.join( currentModule.dirPath, prefixPath, result );
-
-  return result;
-}
-
-//
-
-function _pathsResolve()
-{
-  let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-  let will = rop.baseModule.will;
-  let currentModule = it.currentModule;
-  let resource = it.dst;
-
-  // yyy
-  // if( it.dst instanceof will.Reflector )
-  // {
-  //
-  //   resource = it.dst = it.dst.cloneDerivative();
-  //
-  //   _.assert( resource.formed >= 1 );
-  //
-  //   let srcHasAnyPath = resource.src.hasAnyPath();
-  //   let dstHasAnyPath = resource.dst.hasAnyPath();
-  //
-  //   if( srcHasAnyPath || dstHasAnyPath )
-  //   {
-  //     if( srcHasAnyPath )
-  //     resource.src.prefixPath = _pathResolve.call( it, resource.src.prefixPath || '.' );
-  //     if( dstHasAnyPath )
-  //     resource.dst.prefixPath = _pathResolve.call( it, resource.dst.prefixPath || '.' );
-  //   }
-  //
-  // }
-
-  if( it.dst instanceof will.PathResource )
-  {
-    resource = it.dst = resource.cloneDerivative();
-    _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
-    if( resource.path )
-    resource.path = _pathResolve.call( it, resource.path, resource.name )
-  }
-
-}
-
-//
-
-function _pathsUnwrap()
-{
-  let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-  let will = rop.baseModule.will;
-  let currentModule = it.currentModule;
-
-  if( it.dst instanceof will.PathResource )
-  it.dst = it.dst.path;
-
-}
-
-//
-
-function _arrayFlatten()
-{
-  let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-  let will = rop.baseModule.will;
-  let currentModule = it.currentModule;
-
-  _.assert( _.mapIs( rop ) );
-
-  if( !rop.arrayFlattening || !_.arrayIs( it.dst ) )
-  return;
-
-  it.dst = _.arrayFlattenDefined( it.dst );
-
-}
-
-//
-
-function _arrayWrap( result )
-{
-  let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-  let will = rop.baseModule.will;
-
-  if( !rop.arrayWrapping )
-  return;
-
-  if( !_.mapIs( it.dst ) )
-  it.dst = _.arrayAs( it.dst );
-
-}
-
-//
-
-function _mapsFlatten()
-{
-  let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-  let will = rop.baseModule.will;
-
-  if( !rop.mapFlattening || !_.mapIs( it.dst ) )
-  return;
-
-  it.dst = _.mapsFlatten([ it.dst ]);
-
-}
-
-// //
-//
-// function _mapsFlatten2( result )
-// {
-//   if( o.mapFlattening && _.mapIs( result ) )
-//   result = _.mapsFlatten([ result ]);
-//   return result;
-// }
-
-//
-
-function _mapValsUnwrap()
-{
-  let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-  let will = rop.baseModule.will;
-
-  if( !rop.mapValsUnwrapping )
-  return;
-  if( !_.mapIs( it.dst ) )
-  return;
-  if( !_.all( it.dst, ( e ) => _.instanceIs( e ) || _.primitiveIs( e ) ) )
-  return;
-
-  it.dst = _.mapVals( it.dst );
-}
-
-// //
-//
-// function _mapValsUnwrap2( result )
-// {
-//   if( !o.mapValsUnwrapping )
-//   return result
-//   if( !_.mapIs( result ) )
-//   return result;
-//   if( !_.all( result, ( e ) => _.instanceIs( e ) || _.primitiveIs( e ) ) )
-//   return result;
-//   return _.mapVals( result );
-// }
-
-//
-
-function _singleUnwrap()
-{
-  let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-  let will = rop.baseModule.will;
-
-  if( !rop.singleUnwrapping )
-  return;
-
-  if( _.any( it.dst, ( e ) => _.mapIs( e ) || _.arrayIs( e ) ) )
-  return;
-
-  if( _.mapIs( it.dst ) )
-  {
-    if( _.mapKeys( it.dst ).length === 1 )
-    it.dst = _.mapVals( it.dst )[ 0 ];
-  }
-  else if( _.arrayIs( it.dst ) )
-  {
-    if( it.dst.length === 1 )
-    it.dst = it.dst[ 0 ];
-  }
-
-}
-
-// //
-//
-// function _singleUnwrap2( result )
-// {
-//
-//   if( !o.singleUnwrapping )
-//   return result;
-//
-//   if( _.any( result, ( e ) => _.mapIs( e ) || _.arrayIs( e ) ) )
-//   return result;
-//
-//   if( _.mapIs( result ) )
-//   {
-//     if( _.mapKeys( result ).length === 1 )
-//     result = _.mapVals( result )[ 0 ];
-//   }
-//   else if( _.arrayIs( result ) )
-//   {
-//     if( result.length === 1 )
-//     result = result[ 0 ];
-//   }
-//
-//   return result;
-// }
-
-//
+// --
 
 function _statusPreUpdate()
 {
@@ -1046,45 +249,13 @@ function _globCriterionFilter()
 
 //
 
-function _queryParse()
-{
-  let it = this;
-  let rop = it.resolveOptions;
-  let will = rop.baseModule.will;
-
-  if( !it.selector )
-  return;
-
-  _.assert( it.currentModule instanceof will.OpenedModule );
-
-  let splits = will.Resolver.selectorShortSplit
-  ({
-    selector : it.selector,
-    defaultResourceKind : rop.defaultResourceKind,
-  });
-
-  it.parsedSelector = Object.create( null );
-  it.parsedSelector.kind = splits[ 0 ];
-
-  if( !it.parsedSelector.kind )
-  {
-    if( splits[ 1 ] !== undefined )
-    it.parsedSelector.kind = null;
-  }
-
-  it.parsedSelector.full = splits.join( '' );
-  it.selector = it.parsedSelector.name = splits[ 2 ];
-
-}
-
-//
-
 function _resourceMapSelect()
 {
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
   let will = rop.baseModule.will;
-  let sop = it.selectOptions;
+  // let sop = it.selectOptions;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
@@ -1099,17 +270,18 @@ function _resourceMapSelect()
   else if( kind === 'f' )
   {
 
+    it.isFunction = it.selector;
     if( it.selector === 'strings.join' )
     {
-      _functionStringsJoinUp.call( it );
+      resolver._functionStringsJoinUp.call( it );
     }
     else if( it.selector === 'os' )
     {
-      _functionOsGetUp.call( it );
+      resolver._functionOsGetUp.call( it );
     }
     else if( it.selector === 'this' )
     {
-      _functionThisUp.call( it );
+      resolver._functionThisUp.call( it );
     }
     else _.sure( 0, 'Unknown function', it.parsedSelector.full );
 
@@ -1117,24 +289,14 @@ function _resourceMapSelect()
   else
   {
 
-    // if( _.path.isGlob( kind ) )
-    // it.src = it.currentModule.resourceMaps();
-    // else
-    // it.src = it.currentModule.resourceMapForKind( kind );
-
     it.src = it.currentModule.resourceMapsForKind( kind );
-
-    // if( !_.path.isGlob( resourceSelector ) )
-    // return module.resourceMapForKind( resourceSelector );
-    // let resources = module.resourceMaps();
-    // let result = _.path.globFilterKeys( resources, resourceSelector );
-    // return result;
 
     if( _.strIs( kind ) && path.isGlob( kind ) )
     {
-      sop.selectorArray.splice( it.logicalLevel-1, 1, '*', it.selector );
-      it.selector = sop.selectorArray[ it.logicalLevel-1 ];
-      sop.selectorChanged.call( it );
+      debugger;
+      it.selectorArray.splice( it.logicalLevel-1, 1, '*', it.selector );
+      it.selector = it.selectorArray[ it.logicalLevel-1 ];
+      it.selectorChanged();
     }
 
     if( !it.src )
@@ -1143,9 +305,10 @@ function _resourceMapSelect()
       throw _.ErrorLooking( 'No resource map', _.strQuote( it.parsedSelector.full ) );
     }
 
+    it.srcChanged();
   }
 
-  it.srcChanged();
+  // it.srcChanged();
 }
 
 //
@@ -1154,6 +317,7 @@ function _exportedWriteThrough()
 {
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
   let will = rop.baseModule.will;
 
   if( it.down && it.parsedSelector && it.parsedSelector.kind === 'exported' )
@@ -1174,6 +338,7 @@ function _currentExclude()
 {
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
   let will = rop.baseModule.will;
 
   if( rop.currentExcluding )
@@ -1182,58 +347,255 @@ function _currentExclude()
 
 }
 
-//
+// --
+// path
+// --
 
-function _functionStringsJoinUp()
+function _pathsNativize()
 {
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
   let will = rop.baseModule.will;
-  let sop = it.selectOptions;
+  let resource = it.dst;
 
-  _.sure( !!it.down, () => it.parsedSelector.full + ' expects context to join it' );
-
-  it.src = [ it.src ];
-  it.src[ functionSymbol ] = it.selector;
-
-  it.selector = 0;
-  it.isFunction = it.selector;
-  sop.selectorChanged.call( it );
-
-}
-
-//
-
-function _functionStringsJoinDown()
-{
-  let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-  let will = rop.baseModule.will;
-  let sop = it.selectOptions;
-
-  if( !_.arrayIs( it.src ) || !it.src[ functionSymbol ] )
+  if( !rop.pathNativizing )
   return;
 
-  debugger;
-  if( _.arrayIs( it.dst ) && it.dst.every( ( e ) => _.arrayIs( e ) ) )
+  if( it.selectMultipleOptions )
   {
-    it.dst = it.dst.map( ( e ) => e.join( ' ' ) );
+    if( !rop.selectorIsPath )
+    return;
   }
   else
   {
-    it.dst = it.dst.join( ' ' );
+    if( !it.selectorIsPath )
+    return;
+    if( it.down && it.down.selectorIsPath )
+    return;
+  }
+
+  if( it.dst )
+  it.dst = _.map( it.dst, ( resource ) =>
+  {
+    if( _.strIs( resource ) )
+    return _pathNativize.call( it, resource );
+    if( resource instanceof will.PathResource )
+    {
+      resource = resource.cloneDerivative();
+      _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
+      if( resource.path )
+      resource.path = _pathNativize.call( it, resource.path );
+    }
+    else debugger;
+    return resource;
+  });
+
+}
+
+//
+
+function _pathNativize( filePath )
+{
+  let it = this;
+  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
+  let will = rop.baseModule.will;
+  let currentModule = it.currentModule;
+  let path = will.fileProvider.providersWithProtocolMap.file.path;
+  let result = filePath;
+
+  _.assert( _.strIs( result ) || _.strsAreAll( result ) );
+
+  if( _.arrayIs( filePath ) )
+  {
+    return filePath.map( ( e ) => nativize( e ) );
+  }
+  else
+  {
+    return nativize( filePath );
+  }
+
+  function nativize( filePath )
+  {
+    if( path.isGlobal( filePath ) )
+    return filePath
+    else
+    return path.nativize( filePath );
   }
 
 }
 
 //
+
+function _pathCompositeResolve( currentModule, currentResource, filePath, resolving )
+{
+  let it = this;
+  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
+  let will = rop.baseModule.will;
+  let result = filePath;
+
+  _.assert( _.strIs( result ) || _.strsAreAll( result ) );
+  _.assert( arguments.length === 4 );
+
+  if( resolver.selectorIsComposite( result ) )
+  {
+
+    result = currentModule.pathResolve
+    ({
+      selector : result,
+      visited : _.arrayFlatten( null, [ rop.visited, result ] ),
+      pathResolving : resolving ? rop.pathResolving : 0,
+      currentContext : currentResource,
+      pathNativizing : rop.pathNativizing,
+      missingAction : rop.missingAction,
+    });
+
+  }
+
+  return result;
+}
+
+//
+
+function _pathsCompositeResolve()
+{
+  let it = this;
+  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
+  let will = rop.baseModule.will;
+  let currentModule = it.currentModule;
+  let resource = it.dst;
+
+  if( resource instanceof will.Reflector )
+  {
+    if( resolver.selectorIsComposite( resource.src.prefixPath ) || resolver.selectorIsComposite( resource.dst.prefixPath ) )
+    {
+      resource = it.dst = resource.cloneDerivative();
+      if( resource.src.prefixPath )
+      resource.src.prefixPath = _pathCompositeResolve.call( it, currentModule, resource, resource.src.prefixPath, 'in' );
+      if( resource.dst.prefixPath )
+      resource.dst.prefixPath = _pathCompositeResolve.call( it, currentModule, resource, resource.dst.prefixPath, 'in' );
+    }
+  }
+
+  if( resource instanceof will.PathResource )
+  {
+    if( resolver.selectorIsComposite( resource.path ) )
+    {
+      resource = it.dst = resource.cloneDerivative();
+      resource.path = _pathCompositeResolve.call( it, currentModule, resource, resource.path, 'in' );
+    }
+  }
+
+}
+
+//
+
+function _pathResolve( filePath, resourceName )
+{
+  let it = this;
+  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
+  let will = rop.baseModule.will;
+  let currentModule = it.currentModule;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let result = filePath;
+
+  if( _.arrayIs( filePath ) )
+  filePath = _.arrayFlattenOnce( filePath );
+
+  if( _.errIs( filePath ) )
+  {
+    if( rop.missingAction === 'error' )
+    return filePath;
+    else
+    throw filePath;
+  }
+  else if( _.arrayIs( filePath ) )
+  for( let f = 0 ; f < filePath.length ; f++ )
+  if( _.errIs( filePath[ f ] ) )
+  {
+    if( rop.missingAction === 'error' )
+    return filePath[ f ];
+    else
+    throw filePath[ f ];
+  }
+
+  _.assert( _.strIs( filePath ) || _.strsAreAll( filePath ) );
+
+  if( it.replicateIteration.composite )
+  if( it.replicateIteration.compositeRoot !== it.replicateIteration )
+  if( it.replicateIteration.compositeRoot === it.replicateIteration.down )
+  {
+    if( it.replicateIteration.key !== 0 )
+    return result;
+  }
+
+  let prefixPath = '.';
+  if( rop.pathResolving === 'in' && resourceName !== 'in' )
+  prefixPath = currentModule.inPath || '.';
+  else if( rop.pathResolving === 'out' && resourceName !== 'out' )
+  prefixPath = currentModule.outPath || '.';
+
+  if( resolver.selectorIs( prefixPath ) )
+  prefixPath = currentModule.pathResolve({ selector : prefixPath, currentContext : it.dst });
+  if( resolver.selectorIs( result ) )
+  result = currentModule.pathResolve({ selector : result, currentContext : it.dst });
+
+  result = path.s.join( currentModule.dirPath, prefixPath, result );
+
+  return result;
+}
+
+//
+
+function _pathsResolve()
+{
+  let it = this;
+  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
+  let will = rop.baseModule.will;
+  let currentModule = it.currentModule;
+  let resource = it.dst;
+
+  if( it.dst instanceof will.PathResource )
+  {
+    resource = it.dst = resource.cloneDerivative();
+    _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
+    if( resource.path )
+    resource.path = _pathResolve.call( it, resource.path, resource.name )
+  }
+
+}
+
+//
+
+function _pathsUnwrap()
+{
+  let it = this;
+  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
+  let will = rop.baseModule.will;
+  let currentModule = it.currentModule;
+
+  if( it.dst instanceof will.PathResource )
+  it.dst = it.dst.path;
+
+}
+
+// --
+// function
+// --
 
 function _functionOsGetUp()
 {
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
   let will = rop.baseModule.will;
-  let sop = it.selectOptions;
+  // let sop = it.selectOptions;
   let Os = require( 'os' );
   let os = 'posix';
 
@@ -1242,11 +604,12 @@ function _functionOsGetUp()
   else if( Os.platform() === 'darwin' )
   os = 'osx';
 
+  it.isFunction = it.selector;
   it.src = os;
   it.dst = os;
   it.selector = undefined;
-  sop.selectorChanged.call( it );
-
+  it.selectorChanged();
+  it.srcChanged();
 }
 
 //
@@ -1255,14 +618,13 @@ function _functionThisUp()
 {
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
   let will = rop.baseModule.will;
-  let sop = it.selectOptions;
+  // let sop = it.selectOptions;
   let currentThis = rop.currentThis;
 
-  debugger;
-
   if( currentThis === null )
-  currentThis = Self.resolveContextPrepare
+  currentThis = resolver.resolveContextPrepare
   ({
     baseModule : rop.baseModule,
     currentThis : currentThis,
@@ -1270,11 +632,12 @@ function _functionThisUp()
     force : 1,
   });
 
+  it.isFunction = it.selector;
   it.src = [ currentThis ];
   it.selector = 0;
 
-  sop.selectorChanged.call( it );
-
+  it.selectorChanged();
+  it.srcChanged();
 }
 
 // --
@@ -1283,63 +646,30 @@ function _functionThisUp()
 
 function errResolving( o )
 {
-  let Self = this;
-  let module = o.baseModule;
+  let resolver = this;
+  let module = o.rop.baseModule;
   _.assertRoutineOptions( errResolving, arguments );
-  if( o.currentContext && o.currentContext.nickName )
-  return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'code' ), 'for', o.currentContext.decoratedAbsoluteName/*, 'for', module.decoratedNickName, '\n'*/, o.err );
+  _.assert( arguments.length === 1 );
+  if( o.rop.currentContext && o.rop.currentContext.nickName )
+  return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'code' ), 'for', o.rop.currentContext.decoratedAbsoluteName, '\n', o.err );
   else
   return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'code' ), 'in', module.decoratedAbsoluteName, '\n', o.err );
 }
 
 errResolving.defaults =
 {
-  err : null,
   selector : null,
-  currentContext : null,
-  baseModule : null,
-}
-
-//
-
-function errThrow( o )
-{
-  let Self = this;
-  let module = o.baseModule;
-  _.assertRoutineOptions( errThrow, arguments );
-  if( o.missingAction === 'undefine' )
-  return;
-  debugger;
-  let err = Self.errResolving
-  ({
-    selector : o.selector,
-    currentContext : o.currentContext,
-    err : o.err,
-    baseModule : o.baseModule,
-  });
-  if( o.missingAction === 'throw' )
-  throw err;
-  else
-  return err;
-
-}
-
-errThrow.defaults =
-{
-  missingAction : null,
+  rop : null,
   err : null,
-  selector : null,
-  currentContext : null,
-  baseModule : null,
 }
 
 // --
-// Self
+// resolve
 // --
 
 function resolveContextPrepare( o )
 {
-  let Self = this;
+  let resolver = this;
   _.assert( !!o.baseModule );
   let will = o.baseModule.will;
   let hardDrive = will.fileProvider.providersWithProtocolMap.file;
@@ -1397,24 +727,19 @@ resolveContextPrepare.defaults =
 
 function resolve_pre( routine, args )
 {
-  let Self = this;
+  let resolver = this;
   let o = args[ 0 ];
 
-  if( _.strIs( o ) || _.arrayIs( o ) )
-  o = { selector : o }
+  if( o.Resolver === null || o.Resolver === undefined )
+  o.Resolver = Self;
 
-  _.routineOptions( routine, o );
+  Parent.resolve.pre.call( resolver, routine, args );
 
-  if( o.visited === null )
-  o.visited = [];
+  _.assert( _.arrayHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ), () => 'Unknown value of option path resolving ' + o.pathResolving );
+  _.assert( !o.defaultResourceKind || !_.path.isGlob( o.defaultResourceKind ), () => 'Expects non glob {-defaultResourceKind-}, but got ' + _.strQuote( o.defaultResourceKind ) );
 
-  _.assert( arguments.length === 2 );
-  _.assert( args.length === 1 );
-  _.assert( _.arrayHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ), 'Unknown value of option path resolving', o.pathResolving );
-  _.assert( _.arrayHas( [ 'undefine', 'throw', 'error' ], o.missingAction ), 'Unknown value of option missing action', o.missingAction );
-  _.assert( _.arrayHas( [ 'default', 'resolved', 'throw', 'error' ], o.prefixlessAction ), 'Unknown value of option prefixless action', o.prefixlessAction );
-  _.assert( _.arrayIs( o.visited ) );
-  _.assert( !o.defaultResourceKind || !_.path.isGlob( o.defaultResourceKind ), 'Expects non glob {-defaultResourceKind-}' );
+  if( o.src === null )
+  o.src = o.baseModule;
 
   return o;
 }
@@ -1423,7 +748,7 @@ function resolve_pre( routine, args )
 
 function resolve_body( o )
 {
-  let Self = this;
+  let resolver = this;
   let module = o.baseModule;
   let will = module.will;
   let hardDrive = will.fileProvider.providersWithProtocolMap.file;
@@ -1431,82 +756,31 @@ function resolve_body( o )
   let path = fileProvider.path;
   let currentContext = o.currentContext = o.currentContext || module;
 
-  _.assert( !!Self._resolveAct );
-  _.assert( o.prefixlessAction === 'default' || o.defaultResourceKind === null, 'Prefixless action should be "default" if default resource is provided' );
+  _.assert( o.src instanceof will.OpenedModule );
 
-  o.currentThis = Self.resolveContextPrepare
+  o.currentThis = resolver.resolveContextPrepare
   ({
     currentThis : o.currentThis,
     currentContext : o.currentContext,
     baseModule : o.baseModule,
   });
 
-  let result = Self._resolveAct( o );
-
-  if( result === undefined )
-  {
-    result = Self.errResolving
-    ({
-      selector : o.selector,
-      currentContext : o.currentContext,
-      err : _.ErrorLooking( o.selector, 'was not found' ),
-      baseModule : o.baseModule,
-    })
-  }
-
-  if( _.errIs( result ) )
-  {
-    return Self.errThrow
-    ({
-      selector : o.selector,
-      missingAction : o.missingAction,
-      err : result,
-      currentContext : o.currentContext,
-      baseModule : o.baseModule,
-    });
-  }
-
-  let it =
-  {
-    dst : result,
-    resolveOptions : o,
-  }
-
-  _mapsFlatten.call( it );
-  _mapValsUnwrap.call( it );
-  _singleUnwrap.call( it );
-  _arrayWrap.call( it );
-
-  return it.dst;
+  return Parent.resolve.body.call( resolver, o );
 }
 
-resolve_body.defaults =
-{
-  selector : null,
-  defaultResourceKind : null,
-  prefixlessAction : 'resolved',
-  missingAction : 'throw',
-  visited : null,
-  currentThis : null,
-  currentContext : null,
-  baseModule : null,
-  criterion : null,
-  // submodulesUniquing : 1,
-  pathResolving : 'in',
-  pathNativizing : 0,
-  pathUnwrapping : 1,
-  singleUnwrapping : 1,
-  mapValsUnwrapping : 1,
-  mapFlattening : 1,
-  arrayWrapping : 0,
-  arrayFlattening : 1,
-  // arrayUniquing : 0,
-  preservingIteration : 0,
-  strictCriterion : 0,
-  currentExcluding : 1,
-  hasPath : null,
-  selectorIsPath : 0,
-}
+var defaults = resolve_body.defaults = Object.create( Parent.resolve.body.defaults );
+
+defaults.currentThis = null;
+defaults.currentContext = null;
+defaults.baseModule = null;
+defaults.criterion = null;
+defaults.pathResolving = 'in';
+defaults.pathNativizing = 0;
+defaults.pathUnwrapping = 1;
+defaults.strictCriterion = 0;
+defaults.currentExcluding = 1;
+defaults.hasPath = null;
+defaults.selectorIsPath = 0;
 
 let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 let resolveMaybe = _.routineFromPreAndBody( resolve_pre, resolve_body );
@@ -1518,74 +792,24 @@ defaults.missingAction = 'undefine';
 
 function _resolveAct( o )
 {
-  let Self = this;
+  let resolver = this;
   let module = o.baseModule;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let result;
   let currentContext = o.currentContext;
 
   if( !( o.currentContext instanceof will.AbstractModule ) )
   if( o.criterion === null && o.currentContext && o.currentContext.criterion )
   o.criterion = o.currentContext.criterion;
 
-  _.assert( arguments.length === 1 );
-  _.assertRoutineOptions( _resolveAct, arguments );
   _.assert( o.criterion === null || _.mapIs( o.criterion ) );
-  _.assert( _.arrayIs( o.visited ) );
   _.assert( o.baseModule instanceof will.AbstractModule );
-  _.assert( Self === will.Resolver );
 
-  /* */
+  o.iterationPreserve = o.iterationPreserve || Object.create( null );
+  o.iterationPreserve.exported = null;
+  o.iterationPreserve.currentModule = o.baseModule;
+  o.iterationPreserve.selectorIsPath = 0;
 
-  try
-  {
-
-    result = _.select
-    ({
-      src : module,
-      selector : o.selector,
-      preservingIteration : o.preservingIteration,
-      missingAction : o.missingAction,
-      // missingAction : o.missingAction === 'undefine' ? 'undefine' : 'error', // yyy
-
-      onSelector : _onSelector,
-      onSelectorDown : _onSelectorDown,
-      onUpBegin : _onUpBegin,
-      onUpEnd : _onUpEnd,
-      onDownEnd : _onDownEnd,
-      onQuantitativeFail : _onQuantitativeFail,
-
-      iteratorExtension :
-      {
-        resolveOptions : o,
-      },
-      iterationExtension :
-      {
-      },
-      iterationPreserve :
-      {
-        currentModule : o.baseModule,
-        exported : null,
-        isFunction : null,
-        selectorIsPath : 0,
-      },
-    });
-
-  }
-  catch( err )
-  {
-    debugger;
-    throw Self.errResolving
-    ({
-      selector : o.selector,
-      currentContext : currentContext,
-      err : err,
-      baseModule : o.baseModule,
-    });
-  }
+  let result = Parent._resolveAct.call( resolver, o );
 
   return result;
 }
@@ -1593,6 +817,27 @@ function _resolveAct( o )
 var defaults = _resolveAct.defaults = Object.create( resolve.defaults )
 
 defaults.visited = null;
+
+// --
+// special
+// --
+
+// function _onResolveBegin( o )
+// {
+//
+//   let module = o.baseModule;
+//   let will = module.will;
+//   let currentContext = o.currentContext;
+//
+//   if( !( o.currentContext instanceof will.AbstractModule ) )
+//   if( o.criterion === null && o.currentContext && o.currentContext.criterion )
+//   o.criterion = o.currentContext.criterion;
+//
+//   _.assert( o.criterion === null || _.mapIs( o.criterion ) );
+//   _.assert( o.baseModule instanceof will.AbstractModule );
+//   _.assert( Self === will.Resolver );
+//
+// }
 
 // --
 // wraps
@@ -1637,15 +882,6 @@ function filesFromResource_body( o )
   let fileProvider = will.fileProvider
   let path = fileProvider.path;
 
-  // let resource = module.pathResolve( o );
-  // ({
-  //   selector : o.selector,
-  //   prefixlessAction : 'resolved',
-  //   pathResolving : 'in',
-  //   pathNativizing : 0,
-  //   selectorIsPath : 1,
-  // });
-
   let o2 = _.mapExtend( null, o );
   let resources = module.resolve( o2 );
 
@@ -1663,7 +899,7 @@ function filesFromResource_body( o )
     {
       let o2 = resource.optionsForFindExport();
       o2.outputFormat = 'absolute';
-      o2.distinct = 1;
+      o2.mode = 'distinct';
       let files = fileProvider.filesFind( o2 );
       filesAdd( files );
     }
@@ -1673,7 +909,7 @@ function filesFromResource_body( o )
       o2.filter = Object.create( null );
       o2.filter.filePath = resource.path;
       o2.outputFormat = 'absolute';
-      o2.distinct = 1;
+      o2.mode = 'distinct';
       let files = fileProvider.filesFind( o2 );
       filesAdd( files );
     }
@@ -1761,71 +997,50 @@ let submodulesResolve = _.routineFromPreAndBody( resolve.pre, submodulesResolve_
 // declare
 // --
 
-let functionSymbol = Symbol.for( 'function' );
-let Self =
+let Extend =
 {
 
   name : 'wWillResolver',
   shortName : 'Resolver',
 
-  // parser
+  // handler
 
-  strRequestParse,
-
-  _selectorIs,
-  selectorIs,
-  selectorIsComposite,
-  // selectorSplitIsWrapped,
-  _selectorShortSplit,
-  selectorShortSplit,
-  selectorLongSplit,
-  selectorParse,
-  selectorStr,
-  selectorNormalize,
-
-  // iterator methods
-
-  _onSelector,
-  _onSelectorComposite,
   _onSelectorDown,
   _onUpBegin,
   _onUpEnd,
   _onDownEnd,
   _onQuantitativeFail,
 
-  _pathNativize1,
-  _pathsNativize1,
+  //
+
+  _statusPreUpdate,
+  _statusPostUpdate,
+  _globCriterionFilter,
+  _resourceMapSelect,
+
+  _exportedWriteThrough,
+  _currentExclude,
+
+  // path
+
+  _pathsNativize,
+  _pathNativize,
   _pathCompositeResolve,
   _pathsCompositeResolve,
   _pathResolve,
   _pathsResolve,
   _pathsUnwrap,
 
-  _arrayFlatten,
-  _arrayWrap,
-  _mapsFlatten,
-  _mapValsUnwrap,
-  _singleUnwrap,
+  // function
 
-  _statusPreUpdate,
-  _statusPostUpdate,
-  _globCriterionFilter,
-  _queryParse,
-  _resourceMapSelect,
-  _exportedWriteThrough,
-  _currentExclude,
-
-  _functionStringsJoinUp,
-  _functionStringsJoinDown,
   _functionOsGetUp,
   _functionThisUp,
 
   // err
 
   errResolving,
-  errThrow,
 
-  // Self
+  // resolve
 
   resolveContextPrepare,
   resolve,
@@ -1841,6 +1056,8 @@ let Self =
   submodulesResolve,
 
 }
+
+_.mapExtend( Self, Extend );
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

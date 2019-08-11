@@ -280,59 +280,9 @@ _openFrom.defaults =
   longPath : null,
 }
 
-//
-
-function errorNotFound( err )
-{
-  let submodule = this;
-  let module = submodule.module;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  if( will.verbosity >= 3 )
-  logger.error( ' ' + _.color.strFormat( '!', 'negative' ) + ' Failed to read ' + submodule.decoratedNickName + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading' );
-
-  if( will.verbosity >= 5 || !submodule.opener || submodule.opener.isOpened() )
-  {
-    if( will.verbosity < 5 )
-    _.errLogOnce( _.errBriefly( err ) );
-    else
-    _.errLogOnce( err );
-  }
-  else
-  {
-    _.errAttend( err );
-  }
-
-  return err;
-}
-
-//
-
-function resolve_body( o )
-{
-  let submodule = this;
-  let module = submodule.module;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let module2 = submodule.opener || module;
-
-  _.assert( arguments.length === 1 );
-  _.assert( o.currentContext === null || o.currentContext === submodule )
-
-  o.currentContext = submodule;
-
-  let resolved = module2.openedModule.resolve( o );
-
-  return resolved;
-}
-
-_.routineExtend( resolve_body, _.Will.Resource.prototype.resolve.body );
-let resolve = _.routineFromPreAndBody( _.Will.Resource.prototype.resolve.pre, resolve_body );
-
-//
+// --
+// accessor
+// --
 
 function isAvailableGet()
 {
@@ -440,7 +390,9 @@ function moduleSet( src )
   return src;
 }
 
-//
+// --
+// exporter
+// --
 
 function dataExport( o )
 {
@@ -454,19 +406,6 @@ function dataExport( o )
 
   if( result === undefined )
   return result;
-
-  // if( 0 )
-  // if( o.module === module && rootModule === module )
-  // {
-  //   if( submodule.data )
-  //   {
-  //     result.data = submodule.data;
-  //   }
-  //   else if( submodule.opener && submodule.opener.isValid() )
-  //   {
-  //     result.data = submodule.opener.dataExport();
-  //   }
-  // }
 
   return result;
 }
@@ -555,6 +494,89 @@ pathsRebase.defaults =
   exInPath : null,
 }
 
+//
+
+function errorNotFound( err )
+{
+  let submodule = this;
+  let module = submodule.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  if( will.verbosity >= 3 )
+  logger.error( ' ' + _.color.strFormat( '!', 'negative' ) + ' Failed to read ' + submodule.decoratedNickName + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading' );
+
+  if( will.verbosity >= 5 || !submodule.opener || submodule.opener.isOpened() )
+  {
+    if( will.verbosity < 5 )
+    _.errLogOnce( _.errBriefly( err ) );
+    else
+    _.errLogOnce( err );
+  }
+  else
+  {
+    _.errAttend( err );
+  }
+
+  return err;
+}
+
+// --
+// resolver
+// --
+
+// function resolve_body( o )
+// {
+//   let submodule = this;
+//   let module = submodule.module;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let module2 = submodule.opener || module;
+//
+//   _.assert( arguments.length === 1 );
+//   _.assert( o.currentContext === null || o.currentContext === submodule )
+//
+//   o.currentContext = submodule;
+//
+//   let resolved = module2.openedModule.resolve( o );
+//
+//   return resolved;
+// }
+//
+// _.routineExtend( resolve_body, _.Will.Resource.prototype.resolve.body );
+// let resolve = _.routineFromPreAndBody( _.Will.Resource.prototype.resolve.pre, resolve_body );
+
+function resolve_pre( routine, args )
+{
+  let resource = this;
+  let module = resource.module;
+  if( resource.opener && resource.opener.openedModule )
+  module = resource.opener.openedModule;
+  return module.resolve.pre.apply( module, arguments );
+  // return Parent.prototype.resolve.pre.apply( resource, arguments );
+}
+
+function resolve_body( o )
+{
+  let resource = this;
+  let module = resource.module;
+  if( resource.opener && resource.opener.openedModule )
+  module = resource.opener.openedModule;
+
+  _.assert( arguments.length === 1 );
+  _.assert( o.currentContext === null || o.currentContext === resource )
+
+  o.currentContext = resource;
+  return module.resolve.body.call( module, o );
+  // return Parent.prototype.resolve.body.call( resource, o );
+}
+
+_.routineExtend( resolve_body, Parent.prototype.resolve.body );
+
+let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
+
 // --
 // relations
 // --
@@ -567,9 +589,6 @@ let pathSymbol = Symbol.for( 'path' );
 let Composes =
 {
 
-  // description : null,
-  // criterion : null,
-  // inherit : _.define.own([]),
   path : null,
   autoExporting : 0,
 
@@ -586,15 +605,11 @@ let Associates =
 
 let Restricts =
 {
-  // data : null, // xxx
   opener : null,
-  // own : 1, // xxx
 }
 
 let Medials =
 {
-  // data : null, // xxx
-  // own : 1, // xxx
 }
 
 let Statics =
@@ -611,7 +626,6 @@ let Accessors =
   opener : { setter : openedModuleSet },
   longPath : { getter : longPathGet },
   path : { setter : pathSet },
-  // data : { getter : dataGet, setter : dataSet },
   module : { combining : 'rewrite' },
 }
 
@@ -641,8 +655,7 @@ let Extend =
   open,
   _openFrom,
 
-  errorNotFound,
-  resolve,
+  // accessor
 
   isAvailableGet,
   isDownloadedGet,
@@ -653,10 +666,19 @@ let Extend =
   dataSet,
   moduleSet,
 
+  // exporter
+
   dataExport,
   infoExport,
 
+  // etc
+
   pathsRebase,
+  errorNotFound,
+
+  // resolver
+
+  resolve,
 
   // relation
 

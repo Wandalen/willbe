@@ -1,7 +1,7 @@
 about :
   name : exportedModule
   version : 0.0.1
-  
+
 submodule :
   willbe-experiment : git+https:///github.com/volodymyrmigdal/willbe-experiment.git/out/willbe-experiment#master
 

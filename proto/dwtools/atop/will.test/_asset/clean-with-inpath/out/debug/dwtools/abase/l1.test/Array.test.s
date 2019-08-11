@@ -14,134 +14,339 @@ var _ = wTools;
 // buffer
 // --
 
-function bufferFrom( test )
+function bufferRawIs( test )
 {
-  /*src: number,str,array,raw,typed,node */
-  /*bufferConstructor: typed,raw,node */
+  test.case = 'array buffer';
+  var src = new ArrayBuffer( [ 1, 2 ] );
+  var got = _.bufferRawIs( src );
+  test.identical( got, true );
+  test.isNot( _.bufferTypedIs( src ) );
+  test.isNot( _.bufferNodeIs( src ) );
+  test.isNot( _.bufferViewIs( src ) );
 
-  /* typed buffer */
+  test.case = 'shared array buffer';
+  var src = new SharedArrayBuffer( [ 1, 2 ] );
+  var got = _.bufferRawIs( src );
+  test.identical( got, true );
+  test.isNot( _.bufferTypedIs( src ) );
+  test.isNot( _.bufferNodeIs( src ) );
+  test.isNot( _.bufferViewIs( src ) );
 
-  test.case = 'src:number,bufferConstructor:typed buffer';
-  var src = 1;
-  var got = _.bufferFrom({ src, bufferConstructor : Uint8Array });
-  var expected = new Uint8Array([ src ]);
-  test.identical( got, expected );
+  test.case = 'typed array';
+  var src = new Float32Array( [ 1, 2 ] );
+  var got = _.bufferRawIs( src );
+  test.identical( got, false );
 
-  test.case = 'src:str,bufferConstructor:typed buffer';
-  var src = 'abc';
-  var got = _.bufferFrom({ src, bufferConstructor : Uint8Array });
-  var expected = new Uint8Array([ 97,98,99 ]);
-  test.identical( got, expected );
-
-  test.case = 'src:array,bufferConstructor:typed buffer';
-  var src = [ 97,98,99 ];
-  var got = _.bufferFrom({ src, bufferConstructor : Uint8Array });
-  var expected = new Uint8Array([ 97,98,99 ]);
-  test.identical( got, expected );
-
-  test.case = 'src:raw buffer,bufferConstructor:typed buffer';
-  var src = new ArrayBuffer( 3 );
-  var got = _.bufferFrom({ src, bufferConstructor : Uint8Array });
-  var expected = new Uint8Array([ 0, 0, 0 ]);
-  test.identical( got, expected );
-
-  test.case = 'src:typed,bufferConstructor:typed buffer';
-  var src = new Int32Array([ 97,98,99 ]);
-  var got = _.bufferFrom({ src, bufferConstructor : Uint8Array });
-  var expected = new Uint8Array([ 97,98,99 ]);
-  test.identical( got, expected );
+  var src = new Uint8ClampedArray( 10*10*4 );
+  var got = _.bufferRawIs( src );
+  test.identical( got, false );
 
   if( Config.platform === 'nodejs' )
   {
-    test.case = 'src:node buffer,bufferConstructor:typed buffer';
-    var src = Buffer.from([ 97,98,99 ]);
-    var got = _.bufferFrom({ src, bufferConstructor : Uint8Array });
-    var expected = new Uint8Array([ 97,98,99 ]);
-    test.identical( got, expected );
+  test.case = 'node buffer';
+  var src = Buffer.alloc( 10 );
+  var got = _.bufferRawIs( src );
+  test.identical( got, false );
+
+  var src = Buffer.from( [ 2, 4 ] );
+  var got = _.bufferRawIs( src );
+  test.identical( got, false );
   }
 
-  /* raw buffer */
+  test.case = 'view buffer, ArrayBuffer';
+  var src = new DataView( new ArrayBuffer( [ 10 ] ) );
+  var got = _.bufferRawIs( src );
+  test.identical( got, false );
 
-  test.case = 'src:number,bufferConstructor:raw buffer';
-  var src = 1;
-  var got = _.bufferFrom({ src, bufferConstructor : ArrayBuffer });
-  var expected = new Uint8Array([ 1 ]).buffer;
-  test.identical( got, expected );
+  test.case = 'view buffer, SharedArrayBuffer';
+  var src = new DataView( new SharedArrayBuffer( [ 10 ] ) );
+  var got = _.bufferRawIs( src );
+  test.identical( got, false );
 
-  test.case = 'src:str,bufferConstructor:raw buffer';
-  var src = 'abc';
-  var got = _.bufferFrom({ src, bufferConstructor : ArrayBuffer });
-  var expected = new Uint8Array([ 97,98,99 ]).buffer;
-  test.identical( got, expected );
+  if( !Config.debug )
+  return;
 
-  test.case = 'src:array,bufferConstructor:raw buffer';
-  var src = [ 97,98,99 ];
-  var got = _.bufferFrom({ src, bufferConstructor : ArrayBuffer });
-  var expected = new Uint8Array([ 97,98,99 ]).buffer;
-  test.identical( got, expected );
+  test.case = 'no arguments';
+  var got = _.bufferRawIs();
+  test.identical( got, false );
 
-  test.case = 'src:raw buffer,bufferConstructor:raw buffer';
-  var src = new ArrayBuffer( 3 );
-  var got = _.bufferFrom({ src, bufferConstructor : ArrayBuffer });
-  var expected = src;
-  test.identical( got, expected );
+  test.case = 'extra arguments';
+  var src = new ArrayBuffer( [ 1, 2 ] );
+  var got = _.bufferRawIs( src, new Uint8Array( 1 ) );
+  test.identical( got, true );
+}
 
-  test.case = 'src:typed,bufferConstructor:raw buffer';
-  var src = new Int32Array([ 97,98,99 ]);
-  var got = _.bufferFrom({ src, bufferConstructor : ArrayBuffer });
-  var expected = new Int32Array([ 97,98,99 ]).buffer;
-  test.identical( got, expected );
+//
+
+function bufferTypedIs( test )
+{
+  test.case = 'typed array';
+  var src = new Float32Array( [ 1, 2 ] );
+  var got = _.bufferTypedIs( src );
+  test.identical( got, true );
+  test.isNot( _.bufferRawIs( src ) );
+  test.isNot( _.bufferNodeIs( src ) );
+  test.isNot( _.bufferViewIs( src ) );
+
+  var src = new Uint8ClampedArray( 10*10*4 );
+  var got = _.bufferTypedIs( src );
+  test.identical( got, true );
+  test.isNot( _.bufferRawIs( src ) );
+  test.isNot( _.bufferNodeIs( src ) );
+  test.isNot( _.bufferViewIs( src ) );
+
+  test.case = 'array buffer';
+  var src = new ArrayBuffer( [ 1, 2 ] );
+  var got = _.bufferTypedIs( src );
+  test.identical( got, false );
+
+  test.case = 'shared array buffer';
+  var src = new SharedArrayBuffer( [ 1, 2 ] );
+  var got = _.bufferTypedIs( src );
+  test.identical( got, false );
 
   if( Config.platform === 'nodejs' )
   {
-    test.case = 'src:node buffer,bufferConstructor:raw buffer';
-    var src = Buffer.from([ 97,98,99 ]);
-    var got = _.bufferFrom({ src, bufferConstructor : ArrayBuffer });
-    var expected = new Uint8Array([ 97,98,99 ]).buffer;
-    test.identical( got, expected );
+  test.case = 'node buffer';
+  var src = Buffer.alloc( 10 );
+  var got = _.bufferTypedIs( src );
+  test.identical( got, false );
+
+  var src = Buffer.from( [ 2, 4 ] );
+  var got = _.bufferTypedIs( src );
+  test.identical( got, false );
   }
 
+  test.case = 'view buffer, ArrayBuffer';
+  var src = new DataView( new ArrayBuffer( [ 10 ] ) );
+  var got = _.bufferTypedIs( src );
+  test.identical( got, false );
+
+  test.case = 'view buffer, SharedArrayBuffer';
+  var src = new DataView( new SharedArrayBuffer( [ 10 ] ) );
+  var got = _.bufferTypedIs( src );
+  test.identical( got, false );
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'no arguments';
+  var got = _.bufferTypedIs();
+  test.identical( got, false );
+
+  test.case = 'extra arguments';
+  var src = new Int16Array( [ 1, 2 ] );
+  var got = _.bufferTypedIs( src, new SharedArrayBuffer( 1 ) );
+  test.identical( got, true );
+}
+
+//
+
+function bufferNodeIs( test )
+{
   if( !Config.platform === 'nodejs' )
   return;
 
-  /* node buffer */
+  test.case = 'node buffer';
+  var src = Buffer.alloc( 10 );
+  var got = _.bufferNodeIs( src );
+  test.identical( got, true );
+  test.isNot( _.bufferRawIs( src ) );
+  test.isNot( _.bufferTypedIs( src ) );
+  test.isNot( _.bufferViewIs( src ) );
 
-  test.case = 'src:number,bufferConstructor:node buffer';
-  var src = 1;
-  var got = _.bufferFrom({ src, bufferConstructor : Buffer });
-  var expected = Buffer.from( [ src ] );
-  test.identical( got, expected );
+  var src = Buffer.from( [ 2, 4 ] );
+  var got = _.bufferNodeIs( src );
+  test.identical( got, true );
+  test.isNot( _.bufferRawIs( src ) );
+  test.isNot( _.bufferTypedIs( src ) );
+  test.isNot( _.bufferViewIs( src ) );
 
-  test.case = 'src:str,bufferConstructor:node buffer';
-  var src = 'abc';
-  var got = _.bufferFrom({ src, bufferConstructor : Buffer });
-  var expected = Buffer.from( src );
-  test.identical( got, expected );
+  test.case = 'typed array';
+  var src = new Float32Array( [ 1, 2 ] );
+  var got = _.bufferNodeIs( src );
+  test.identical( got, false );
 
-  test.case = 'src:array,bufferConstructor:node buffer';
-  var src = [ 97,98,99 ];
-  var got = _.bufferFrom({ src, bufferConstructor : Buffer });
-  var expected = Buffer.from( src );
-  test.identical( got, expected );
+  var src = new Uint8ClampedArray( 10*10*4 );
+  var got = _.bufferNodeIs( src );
+  test.identical( got, false );
 
-  test.case = 'src:raw buffer,bufferConstructor:node buffer';
-  var src = new ArrayBuffer( 3 );
-  var got = _.bufferFrom({ src, bufferConstructor : Buffer });
-  var expected = Buffer.from( src );
-  test.identical( got, expected );
+  test.case = 'array buffer';
+  var src = new ArrayBuffer( [ 1, 2 ] );
+  var got = _.bufferNodeIs( src );
+  test.identical( got, false );
 
-  test.case = 'src:typed,bufferConstructor:node buffer';
-  var src = new Int32Array([ 97,98,99 ]);
-  var got = _.bufferFrom({ src, bufferConstructor : Buffer });
-  var expected = Buffer.from( src.buffer, src.buteOffset, src.byteLength );
-  test.identical( got, expected );
+  test.case = 'shared array buffer';
+  var src = new SharedArrayBuffer( [ 1, 2 ] );
+  var got = _.bufferNodeIs( src );
+  test.identical( got, false );
 
-  test.case = 'src:node buffer,bufferConstructor:node buffer';
-  var src = Buffer.from([ 97,98,99 ]);
-  var got = _.bufferFrom({ src, bufferConstructor : Buffer });
-  var expected = src;
-  test.identical( got, expected );
+  test.case = 'view buffer, ArrayBuffer';
+  var src = new DataView( new ArrayBuffer( [ 10 ] ) );
+  var got = _.bufferNodeIs( src );
+  test.identical( got, false );
 
+  test.case = 'view buffer, SharedArrayBuffer';
+  var src = new DataView( new SharedArrayBuffer( [ 10 ] ) );
+  var got = _.bufferNodeIs( src );
+  test.identical( got, false );
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'no arguments';
+  var got = _.bufferNodeIs();
+  test.identical( got, false );
+
+  test.case = 'extra arguments';
+  var src = Buffer.from( [ 1, 2 ] );
+  var got = _.bufferNodeIs( src, new SharedArrayBuffer( 1 ) );
+  test.identical( got, true );
+}
+
+//
+
+function bufferViewIs( test )
+{
+  test.case = 'view buffer, ArrayBuffer';
+  var src = new DataView( new ArrayBuffer( [ 10 ] ) );
+  var got = _.bufferViewIs( src );
+  test.identical( got, true );
+  test.isNot( _.bufferRawIs( src ) );
+  test.isNot( _.bufferNodeIs( src ) );
+  test.isNot( _.bufferTypedIs( src ) );
+
+  test.case = 'view buffer, SharedArrayBuffer';
+  var src = new DataView( new SharedArrayBuffer( [ 10 ] ) );
+  var got = _.bufferViewIs( src );
+  test.identical( got, true );
+  test.isNot( _.bufferRawIs( src ) );
+  test.isNot( _.bufferNodeIs( src ) );
+  test.isNot( _.bufferTypedIs( src ) );
+
+  test.case = 'typed array';
+  var src = new Float32Array( [ 1, 2 ] );
+  var got = _.bufferViewIs( src );
+  test.identical( got, false );
+
+  var src = new Uint8ClampedArray( 10*10*4 );
+  var got = _.bufferViewIs( src );
+  test.identical( got, false );
+
+  test.case = 'array buffer';
+  var src = new ArrayBuffer( [ 1, 2 ] );
+  var got = _.bufferViewIs( src );
+  test.identical( got, false );
+
+  test.case = 'shared array buffer';
+  var src = new SharedArrayBuffer( [ 1, 2 ] );
+  var got = _.bufferViewIs( src );
+  test.identical( got, false );
+
+  if( Config.platform === 'nodejs' )
+  {
+  test.case = 'node buffer';
+  var src = Buffer.alloc( 10 );
+  var got = _.bufferViewIs( src );
+  test.identical( got, false );
+
+  var src = Buffer.from( [ 2, 4 ] );
+  var got = _.bufferViewIs( src );
+  test.identical( got, false );
+  }
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'no arguments';
+  var got = _.bufferViewIs();
+  test.identical( got, false );
+
+  test.case = 'extra arguments';
+  var src = new DataView( new ArrayBuffer( [ 1, 2 ] ) );
+  var got = _.bufferViewIs( src, new Uint8Array( 1 ) );
+  test.identical( got, true );
+}
+
+//
+
+function bufferButRange( test )
+{
+  test.case = 'ins is undefined';
+  var src = new Int16Array( [ 0, 1, 2, 3 ] );
+  var got = _.bufferButRange( src, [ 1, 2 ] );
+  test.identical( got, new Int16Array( [ 0, 2, 3 ] ) );
+
+  test.case = 'ins is long';
+  var src = new Uint16Array( [ 0, 1, 2, 3 ] );
+  var ins = new Array( 1, 2, 3 );
+  var got = _.bufferButRange( src, [ 1, 2 ], ins );
+  test.identical( got, new Uint16Array( [ 0, 1, 2, 3, 2, 3 ] ) );
+
+  var src = new Uint8Array( [ 0, 1, 2, 3 ] );
+  var ins = _.unrollMake( [ 1, 2, 3 ] );
+  var got = _.bufferButRange( src, [ 1, 2 ], ins );
+  test.identical( got, new Uint8Array( [ 0, 1, 2, 3, 2, 3 ] ) );
+
+  var src = new Int8Array( [ 0, 1, 2, 3 ] );
+  var ins = _.argumentsArrayMake( [ 1, 2, 3 ] );
+  var got = _.bufferButRange( src, [ 1, 2 ], ins );
+  test.identical( got, new Int8Array( [ 0, 1, 2, 3, 2, 3 ] ) );
+
+  if( Config.platform === 'nodejs' )
+  {
+  var src = new Uint8ClampedArray( [ 0, 1, 2, 3 ] );
+  var ins = Buffer.from( [ 1, 2, 3 ] );
+  var got = _.bufferButRange( src, [ 1, 2 ], ins );
+  test.identical( got, new Uint8ClampedArray( [ 0, 1, 2, 3, 2, 3 ] ) );
+  }
+
+  var src = new Float32Array( [ 0, 1, 2, 3 ] );
+  var ins = new Int32Array( 2 );
+  var got = _.bufferButRange( src, [ 1, 2 ], ins );
+  test.identical( got, new Float32Array( [ 0, 0, 0, 2, 3 ] ) );
+
+  test.case = 'cut not elements';
+  var src = new Uint32Array( [ 0, 1, 2, 3 ] );
+  var got = _.bufferButRange( src, [ 2, 2 ], [ 1 ] );
+  test.identical( got, new Uint32Array( [ 0, 1, 1, 2, 3 ] ) );
+
+  test.case = 'cut all elements';
+  var src = new Uint32Array( [ 0, 1, 2, 3 ] );
+  var got = _.bufferButRange( src, [ 0, src.length ], [ 1 ] );
+  test.identical( got, new Uint32Array( [ 1 ] ) );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.bufferButRange() );
+
+  test.case = 'extra arguments';
+  var src = new Int16Array( 10 );
+  test.shouldThrowErrorSync( () => _.bufferButRange( src, [ 1, 2 ], [ 1 ], [ 4 ] ) );
+
+  test.case = 'wrong value in range';
+  var src = new Int16Array( 10 );
+  test.shouldThrowErrorSync( () => _.bufferButRange( src, true, [ 2 ] ) );
+  test.shouldThrowErrorSync( () => _.bufferButRange( src, null, [ 2 ] ) );
+  test.shouldThrowErrorSync( () => _.bufferButRange( src, 'str', [ 2 ] ) );
+  test.shouldThrowErrorSync( () => _.bufferButRange( src, [ 'str', 1 ], [ 2 ] ) );
+  test.shouldThrowErrorSync( () => _.bufferButRange( src, [], [ 2 ] ) );
+
+  test.case = 'wrong value in ins';
+  test.shouldThrowErrorSync( () => _.bufferButRange( src, [ 1, 3 ], 'str' ) );
+  test.shouldThrowErrorSync( () => _.bufferButRange( src, [ 1, 3 ], { a : 1 } ) );
+
+  test.case = 'wrong type of src';
+  var buffer = new ArrayBuffer( 10 );
+  test.shouldThrowErrorSync( () => _.bufferButRange( buffer, [ 1, 3 ], [ 1 ] ) );
+  test.shouldThrowErrorSync( () => _.bufferButRange( Buffer.alloc( 10 ), [ 1, 3 ], [ 1 ] ) );
+  test.shouldThrowErrorSync( () => _.bufferButRange( new DataView( buffer ), [ 1, 3 ], [ 1 ] ) );
+  test.shouldThrowErrorSync( () => _.bufferButRange( 'str', [ 1, 3 ], [ 1 ] ) );
+  test.shouldThrowErrorSync( () => _.bufferButRange( [ buffer ], [ 1, 3 ], [ 1 ] ) );
 }
 
 //
@@ -183,8 +388,280 @@ function bufferRelen( test )
   {
     _.bufferRelen();
   });
-
 };
+
+//
+
+function bufferResize( test )
+{
+  /* typed buffer */
+
+  test.case = 'typed buffer, size < length';
+  var src = new Uint16Array( 3 );
+  var got = _.bufferResize( src, 1 );
+  test.identical( got, new Uint16Array( 1 ) );
+  test.is( _.bufferTypedIs( got ) );
+
+  var src = new Int8Array( [ 1, 2, 3 ] );
+  var got = _.bufferResize( src, 1 );
+  test.identical( got, new Int8Array( [ 1 ] ) );
+  test.is( _.bufferTypedIs( got ) );
+
+  test.case = 'typed buffer, size > length';
+  var src = new Uint32Array( 1 );
+  var got = _.bufferResize( src, 4 );
+  test.identical( got, new Uint32Array( 4 ) );
+  test.is( _.bufferTypedIs( got ) );
+
+  var src = new Float32Array( [ 1, 2, 3 ] );
+  var got = _.bufferResize( src, 5 );
+  test.identical( got, new Float32Array( [ 1, 2, 3, 0, 0 ] ) );
+  test.is( _.bufferTypedIs( got ) );
+
+  /* raw buffer */
+
+  test.case = 'raw buffer, size < length';
+  var src = new ArrayBuffer( 6 );
+  var got = _.bufferResize( src, 1 );
+  test.identical( got, new ArrayBuffer( 1 ) );
+  test.is( _.bufferRawIs( got ) );
+
+  var src = new ArrayBuffer( 6 );
+  var view1 = new Uint8Array( src );
+  view1[ 0 ] = 200;
+  var got = _.bufferResize( src, 1 );
+  var view2 = new Uint8Array( got );
+  test.notIdentical( got, new ArrayBuffer( 1 ) );
+  test.identical( view2[ 0 ], 200 );
+  test.is( _.bufferRawIs( got ) );
+
+  var src = new SharedArrayBuffer( 6 );
+  var got = _.bufferResize( src, 1 );
+  test.identical( got, new SharedArrayBuffer( 1 ) );
+  test.is( _.bufferRawIs( got ) );
+
+  var src = new SharedArrayBuffer( 100 );
+  var view1 = new Uint16Array( src );
+  view1[ 5 ] = 200;
+  var got = _.bufferResize( src, 20 );
+  var view2 = new Uint8Array( got );
+  // test.notIdentical( got, new SharedArrayBuffer( 20 ) );
+  test.identical( view2[ 10 ], 200 );
+  test.is( _.bufferRawIs( got ) );
+
+  test.case = 'raw buffer, size > length';
+  var src = new ArrayBuffer( 6 );
+  var got = _.bufferResize( src, 8 );
+  test.identical( got, new ArrayBuffer( 8 ) );
+  test.is( _.bufferRawIs( got ) );
+
+  var src = new ArrayBuffer( 10 );
+  var view1 = new Uint8Array( src );
+  view1[ 1 ] = 200;
+  var got = _.bufferResize( src, 20 );
+  var view2 = new Uint8Array( got );
+  test.notIdentical( got, new ArrayBuffer( 20 ) );
+  test.identical( view2[ 1 ], 200 );
+  test.is( _.bufferRawIs( got ) );
+
+  var src = new SharedArrayBuffer( 6 );
+  var got = _.bufferResize( src, 10 );
+  debugger;
+  test.identical( got, new SharedArrayBuffer( 10 ) );
+  test.is( _.bufferRawIs( got ) );
+
+  var src = new SharedArrayBuffer( 16 );
+  var view1 = new Uint16Array( src );
+  view1[ 5 ] = 200;
+  var got = _.bufferResize( src, 30 );
+  var view2 = new Uint8Array( got );
+  debugger;
+  // test.notIdentical( got, new SharedArrayBuffer( 30 ) );
+  test.identical( view2[ 10 ], 200 );
+  test.is( _.bufferRawIs( got ) );
+
+  /* view buffer */
+
+  test.case = 'view buffer, size < length';
+  var src = new DataView( new ArrayBuffer( 6 ) );
+  var got = _.bufferResize( src, 1 );
+  test.identical( got, new DataView( new ArrayBuffer( 1 ) ) );
+  test.identical( got.byteLength, 1 );
+  test.is( _.bufferViewIs( got ) );
+
+  var buffer = new ArrayBuffer( 10 );
+  var view = new DataView( buffer );
+  view.setUint8( 2, 200 );
+  var src = new DataView( buffer );
+  var got = _.bufferResize( src, 3 );
+  test.notIdentical( got, new DataView( new ArrayBuffer( 3 ) ) );
+  test.identical( got.byteLength, 3 );
+  test.identical( got.getUint8( 2 ), 200 );
+  test.is( _.bufferViewIs( got ) );
+
+  test.case = 'view buffer, size > length';
+  var src = new DataView( new ArrayBuffer( 6 ) );
+  var got = _.bufferResize( src, 8 );
+  test.identical( got, new DataView( new ArrayBuffer( 8 ) ) );
+  test.identical( got.byteLength, 8 );
+  test.is( _.bufferViewIs( got ) );
+
+  test.case = 'view buffer, size > length';
+  var buffer = new ArrayBuffer( 10 );
+  var view = new DataView( buffer );
+  view.setUint8( 4, 15 );
+  var src = new DataView( buffer );
+  var got = _.bufferResize( src, 20 );
+  test.notIdentical( got, new DataView( new ArrayBuffer( 20 ) ) );
+  test.identical( got.getUint8( 4 ), 15 );
+  test.identical( got.byteLength, 20 );
+  test.is( _.bufferViewIs( got ) );
+
+  /* node buffer */
+  if( Config.platform === 'nodejs' )
+  {
+  test.case = 'node buffer, size < length, alloc method';
+  var src = Buffer.alloc( 6 );
+  var got = _.bufferResize( src, 1 );
+  test.identical( got, Buffer.alloc( 1 ) );
+  test.is( _.bufferNodeIs( got ) );
+
+  var src = Buffer.allocUnsafe( 6 );
+  var got = _.bufferResize( src, 1 );
+  test.identical( got.length, 1 );
+  test.is( _.bufferNodeIs( got ) );
+
+  test.case = 'node buffer, size < length, from array';
+  var src = Buffer.from( [ 1, 2, 3, 4 ] );
+  var got = _.bufferResize( src, 1 );
+  test.identical( got, Buffer.from( [ 1 ] ) );
+  test.is( _.bufferNodeIs( got ) );
+
+  test.case = 'node buffer, size < length, from buffer';
+  var buffer = new ArrayBuffer( 10 );
+  var src = Buffer.from( buffer );
+  var got = _.bufferResize( src, 1 );
+  test.identical( got, Buffer.alloc( 1 ) );
+  test.is( _.bufferNodeIs( got ) );
+
+  var buffer = new ArrayBuffer( 10 );
+  var view = new Uint8Array( buffer );
+  view[ 0 ] = 10;
+  var src = Buffer.from( buffer );
+  var got = _.bufferResize( src, 1 );
+  test.identical( got, Buffer.from( [ 10 ] ) );
+  test.is( _.bufferNodeIs( got ) );
+
+  var buffer = new ArrayBuffer( 10 );
+  var view = new Uint8Array( buffer );
+  view[ 0 ] = 10;
+  var src = Buffer.from( buffer );
+  var got = _.bufferResize( src, 1 );
+  test.identical( got, Buffer.from( [ 10 ] ) );
+  test.is( _.bufferNodeIs( got ) );
+
+  test.case = 'node buffer, size < length, from string';
+  var src = Buffer.from( 'str' );
+  var got = _.bufferResize( src, 1 );
+  test.identical( got, Buffer.from( 's' ) );
+  test.is( _.bufferNodeIs( got ) );
+
+  var src = Buffer.from( 'str', 'latin1' );
+  var got = _.bufferResize( src, 2 );
+  test.identical( got, Buffer.from( 'st', 'latin1' ) );
+  test.is( _.bufferNodeIs( got ) );
+
+  test.case = 'node buffer, size > length, alloc method';
+  var src = Buffer.alloc( 6 );
+  var got = _.bufferResize( src, 8 );
+  test.identical( got, Buffer.alloc( 8 ) );
+  test.is( _.bufferNodeIs( got ) );
+
+  var src = Buffer.allocUnsafe( 6 );
+  var got = _.bufferResize( src, 20 );
+  test.identical( got.length, 20 );
+  test.notIdentical( got, Buffer.allocUnsafe( 20 ) );
+
+  test.case = 'node buffer, size > length, from array';
+  var src = Buffer.from( [ 1, 2, 3, 4 ] );
+  var got = _.bufferResize( src, 7 );
+  test.identical( got, Buffer.from( [ 1, 2, 3, 4, 0, 0, 0 ] ) );
+  test.is( _.bufferNodeIs( got ) );
+
+  test.case = 'node buffer, size > length, from buffer';
+  var buffer = new ArrayBuffer( 10 );
+  var src = Buffer.from( buffer );
+  var got = _.bufferResize( src, 20 );
+  test.identical( got, Buffer.alloc( 20 ) );
+  test.is( _.bufferNodeIs( got ) );
+
+  var buffer = Buffer.alloc( 10 );
+  buffer[ 5 ] = 12;
+  var src = Buffer.from( buffer );
+  var got = _.bufferResize( src, 20 );
+  test.notIdentical( got, Buffer.alloc( 20 ) );
+  test.identical( got[ 5 ], 12 );
+  test.is( _.bufferNodeIs( got ) );
+
+  var buffer = new ArrayBuffer( 10 );
+  var view = new Uint8Array( buffer );
+  view[ 0 ] = 10;
+  var src = Buffer.from( buffer );
+  var got = _.bufferResize( src, 30 );
+  test.notIdentical( got, Buffer.alloc( 30 ) );
+  test.identical( got[ 0 ], 10 );
+  test.is( _.bufferNodeIs( got ) );
+
+  test.case = 'node buffer, size > length, from string';
+  var src = Buffer.from( 'str' );
+  var got = _.bufferResize( src, 5 );
+  test.identical( got, Buffer.from( [ 115, 116, 114, 0, 0 ] ) );
+  test.is( _.bufferNodeIs( got ) );
+
+  var src = Buffer.from( 'str', 'base64' );
+  var got = _.bufferResize( src, 7 );
+  test.identical( got, Buffer.from( [ 178, 218, 0, 0, 0, 0, 0 ] ) );
+  test.is( _.bufferNodeIs( got ) );
+  }
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.bufferResize() );
+
+  test.case = 'extra arguments';
+  var buffer = new ArrayBuffer( 5 );
+  test.shouldThrowErrorSync( () => _.bufferResize( buffer, 1 , 2 ) );
+
+  test.case = 'not a buffer';
+  test.shouldThrowErrorSync( () => _.bufferResize( [ 1, 2 ], 1 ) );
+
+  test.case = 'wrong buffers';
+  var buffer = new ArrayBuffer();
+  test.shouldThrowErrorSync( () => _.bufferResize( new DataView() ) );
+  test.shouldThrowErrorSync( () => _.bufferResize( new DataView( 1 ) ) );
+  test.shouldThrowErrorSync( () => _.bufferResize( new DataView( buffer, 1, 2, 3 ) ) );
+  test.shouldThrowErrorSync( () => _.bufferResize( new Float32Array( 1, 2, 3, 4 ) ) );
+}
+
+//
+
+function bufferResizeExperiment( test )
+{
+  var src = new SharedArrayBuffer( 16 );
+  var view1 = new Uint8Array( src );
+  view1[ 5 ] = 200;
+  var got = _.bufferResize( src, 30 );
+  var expected = new SharedArrayBuffer( 30 );
+  var view2 = new Uint8Array( got );
+  debugger;
+  test.notIdentical( got, expected );
+  debugger;
+}
+bufferResizeExperiment.experimental = 1;
 
 //
 
@@ -221,6 +698,176 @@ function bufferRetype( test )
   });
 
 };
+
+//
+
+function bufferFrom( test )
+{
+  /*src: number,str,array,raw,typed,node */
+  /*bufferConstructor: typed,raw,node */
+
+  /* typed buffer */
+
+  test.case = 'src:number,bufferConstructor:typed buffer';
+  var src = 1;
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Uint8Array });
+  var expected = new Uint8Array([ src ]);
+  test.identical( got, expected );
+
+  test.case = 'src:str,bufferConstructor:typed buffer';
+  var src = 'abc';
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Uint8Array });
+  var expected = new Uint8Array([ 97,98,99 ]);
+  test.identical( got, expected );
+
+  test.case = 'src:array,bufferConstructor:typed buffer';
+  var src = [ 97,98,99 ];
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Uint8Array });
+  var expected = new Uint8Array([ 97,98,99 ]);
+  test.identical( got, expected );
+
+  test.case = 'src:raw buffer,bufferConstructor:typed buffer';
+  var src = new ArrayBuffer( 3 );
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Uint8Array });
+  var expected = new Uint8Array([ 0, 0, 0 ]);
+  test.identical( got, expected );
+
+  test.case = 'src:typed,bufferConstructor:typed buffer';
+  var src = new Int32Array([ 97,98,99 ]);
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Uint8Array });
+  var expected = new Uint8Array([ 97,98,99 ]);
+  test.identical( got, expected );
+
+  if( Config.platform === 'nodejs' )
+  {
+    test.case = 'src:node buffer,bufferConstructor:typed buffer';
+    var src = Buffer.from([ 97,98,99 ]);
+    var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Uint8Array });
+    var expected = new Uint8Array([ 97,98,99 ]);
+    test.identical( got, expected );
+  }
+
+  /* raw buffer */
+
+  test.case = 'src:number,bufferConstructor:raw buffer';
+  var src = 1;
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : ArrayBuffer });
+  var expected = new Uint8Array([ 1 ]).buffer;
+  test.identical( got, expected );
+
+  test.case = 'src:str,bufferConstructor:raw buffer';
+  var src = 'abc';
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : ArrayBuffer });
+  var expected = new Uint8Array([ 97,98,99 ]).buffer;
+  test.identical( got, expected );
+
+  test.case = 'src:array,bufferConstructor:raw buffer';
+  var src = [ 97,98,99 ];
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : ArrayBuffer });
+  var expected = new Uint8Array([ 97,98,99 ]).buffer;
+  test.identical( got, expected );
+
+  test.case = 'src:raw buffer,bufferConstructor:raw buffer';
+  var src = new ArrayBuffer( 3 );
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : ArrayBuffer });
+  var expected = src;
+  test.identical( got, expected );
+
+  test.case = 'src:typed,bufferConstructor:raw buffer';
+  var src = new Int32Array([ 97,98,99 ]);
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : ArrayBuffer });
+  var expected = new Int32Array([ 97,98,99 ]).buffer;
+  test.identical( got, expected );
+
+  if( Config.platform === 'nodejs' )
+  {
+    test.case = 'src:node buffer,bufferConstructor:raw buffer';
+    var src = Buffer.from([ 97,98,99 ]);
+    var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : ArrayBuffer });
+    var expected = new Uint8Array([ 97,98,99 ]).buffer;
+    test.identical( got, expected );
+  }
+
+  if( !Config.platform === 'nodejs' )
+  return;
+
+  /* node buffer */
+
+  test.case = 'src:number,bufferConstructor:node buffer';
+  var src = 1;
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Buffer });
+  var expected = Buffer.from( [ src ] );
+  test.identical( got, expected );
+
+  test.case = 'src:str,bufferConstructor:node buffer';
+  var src = 'abc';
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Buffer });
+  var expected = Buffer.from( src );
+  test.identical( got, expected );
+
+  test.case = 'src:array,bufferConstructor:node buffer';
+  var src = [ 97,98,99 ];
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Buffer });
+  var expected = Buffer.from( src );
+  test.identical( got, expected );
+
+  test.case = 'src:raw buffer,bufferConstructor:node buffer';
+  var src = new ArrayBuffer( 3 );
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Buffer });
+  var expected = Buffer.from( src );
+  test.identical( got, expected );
+
+  test.case = 'src:typed,bufferConstructor:node buffer';
+  var src = new Int32Array([ 97,98,99 ]);
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Buffer });
+  var expected = Buffer.from( src.buffer, src.buteOffset, src.byteLength );
+  test.identical( got, expected );
+
+  test.case = 'src:node buffer,bufferConstructor:node buffer';
+  var src = Buffer.from([ 97,98,99 ]);
+  var got = _.bufferFrom({ /*ttt*/src, bufferConstructor : Buffer });
+  var expected = src;
+  test.identical( got, expected );
+
+}
+
+//
+
+function bufferRawFromTyped( test )
+{
+
+  var buffer1 = new ArrayBuffer(10);
+  var view1 = new Int8Array( buffer1 );
+  test.case = 'returns the same length of typed array';
+  var got = _.bufferRawFromTyped( view1 );
+  var expected = got; // [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+  test.identical( got, expected );
+
+  var buffer2 = new ArrayBuffer(10);
+  var view2 = new Int8Array( buffer2, 2 );
+  test.case = 'returns the new sub typed array';
+  var got = _.bufferRawFromTyped( view2 );
+  var expected = got; // [ 0, 0, 0, 0, 0, 0 ]
+  test.identical( got, expected );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'no arguments';
+  test.shouldThrowErrorSync( function()
+  {
+    _.bufferRawFromTyped();
+  });
+
+  test.case = 'arguments are wrong';
+  test.shouldThrowErrorSync( function()
+  {
+    _.bufferRawFromTyped( 'wrong argument' );
+  });
+
+}
 
 //
 
@@ -403,44 +1050,6 @@ function bufferNodeFrom( test )
   test.shouldThrowErrorSync( () => _.bufferNodeFrom( 5 ) );
   // test.shouldThrowErrorSync( () => _.bufferNodeFrom( [] ) );
   test.shouldThrowErrorSync( () => _.bufferNodeFrom( {} ) );
-
-}
-
-//
-
-function bufferRawFromTyped( test )
-{
-
-  var buffer1 = new ArrayBuffer(10);
-  var view1 = new Int8Array( buffer1 );
-  test.case = 'returns the same length of typed array';
-  var got = _.bufferRawFromTyped( view1 );
-  var expected = got; // [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
-  test.identical( got, expected );
-
-  var buffer2 = new ArrayBuffer(10);
-  var view2 = new Int8Array( buffer2, 2 );
-  test.case = 'returns the new sub typed array';
-  var got = _.bufferRawFromTyped( view2 );
-  var expected = got; // [ 0, 0, 0, 0, 0, 0 ]
-  test.identical( got, expected );
-
-  /* - */
-
-  if( !Config.debug )
-  return;
-
-  test.case = 'no arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.bufferRawFromTyped();
-  });
-
-  test.case = 'arguments are wrong';
-  test.shouldThrowErrorSync( function()
-  {
-    _.bufferRawFromTyped( 'wrong argument' );
-  });
 
 }
 
@@ -21425,15 +22034,25 @@ var Self =
   tests :
   {
 
-    // buffer
+    // buffer, layer0
 
-    bufferFrom,
+    bufferRawIs,
+    bufferTypedIs,
+    bufferNodeIs,
+    bufferViewIs,
+
+    // buffer, layer1
+
+    bufferButRange,
     bufferRelen,
+    bufferResize,
+    bufferResizeExperiment,
     bufferRetype,
+    bufferFrom,
+    bufferRawFromTyped,
     bufferRawFrom,
     bufferBytesFrom,
     bufferNodeFrom,
-    bufferRawFromTyped,
 
     // type test
 

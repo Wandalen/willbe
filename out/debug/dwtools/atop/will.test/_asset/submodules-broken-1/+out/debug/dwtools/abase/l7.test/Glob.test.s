@@ -7,7 +7,7 @@ if( typeof module !== 'undefined' )
 
   let _ = require( '../../Tools.s' );
   _.include( 'wTesting' );
-  require( '../l3/Path.s' );
+  require( '../l5/PathTools.s' );
 
 }
 

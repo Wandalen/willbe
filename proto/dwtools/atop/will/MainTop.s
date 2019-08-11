@@ -202,7 +202,7 @@ function _commandsMake()
   {
 
     'help' :                    { e : _.routineJoin( will, will.commandHelp ),                        h : 'Get help.' },
-    'imply' :                   { e : _.routineJoin( will, will.commandImply ),                         h : 'Change state or imply variable value' },
+    'imply' :                   { e : _.routineJoin( will, will.commandImply ),                       h : 'Change state or imply value of a variable' },
 
     'resources list' :          { e : _.routineJoin( will, will.commandResourcesList ),               h : 'List information about resources of the current module.' },
     'paths list' :              { e : _.routineJoin( will, will.commandPathsList ),                   h : 'List paths of the current module.' },
@@ -850,7 +850,7 @@ function commandSubmodulesDownload( e )
 {
   let will = this;
 
-  let propertiesMap = _.strToMap( e.argument );
+  let propertiesMap = _.strStructureParse( e.argument );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
   return will.moduleReadyThen( function( module )
@@ -870,7 +870,7 @@ function commandSubmodulesUpdate( e )
 {
   let will = this;
 
-  let propertiesMap = _.strToMap( e.argument );
+  let propertiesMap = _.strStructureParse( e.argument );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
   return will.moduleReadyThen( function( module )
@@ -890,7 +890,7 @@ function commandSubmodulesFixate( e )
 {
   let will = this;
 
-  let propertiesMap = _.strToMap( e.argument );
+  let propertiesMap = _.strStructureParse( e.argument );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
@@ -915,7 +915,7 @@ function commandSubmodulesUpgrade( e )
 {
   let will = this;
 
-  let propertiesMap = _.strToMap( e.argument );
+  let propertiesMap = _.strStructureParse( e.argument );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
   _.assert( e.propertiesMap.upgrading === undefined, 'Unknown option upgrading' );
@@ -961,7 +961,7 @@ function commandClean( e )
 {
   let will = this;
 
-  let propertiesMap = _.strToMap( e.argument );
+  let propertiesMap = _.strStructureParse( e.argument );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
   return will.moduleReadyThen( function( module )
@@ -1152,6 +1152,7 @@ if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;
 wTools[ Self.shortName ] = Self;
 
+// _.appExitHandlerRepair();
 if( !module.parent )
 Self.Exec();
 

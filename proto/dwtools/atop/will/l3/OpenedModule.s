@@ -1324,6 +1324,106 @@ function willfileEach( onEach )
 
 }
 
+//
+
+function modulesAttachedOpen()
+{
+  let module = this;
+  let will = module.will;
+  let result = null;
+  let openedModule = module instanceof _.Will.OpenerModule ? module.openedModule : module;
+
+  if( module.rootModule === null || module.rootModule === openedModule )
+  if( module.willfilesArray.length )
+  result = module.modulesOpenFromData
+  ({
+    willfilesArray : module.willfilesArray.slice(),
+    rootModule : openedModule.rootModule,
+  });
+
+  return result;
+}
+
+//
+
+function modulesOpenFromData( o )
+{
+  let module = this;
+  let will = module.will;
+
+  o = _.routineOptions( modulesOpenFromData, arguments );
+
+  for( let f = 0 ; f < o.willfilesArray.length ; f++ )
+  {
+    let willfile = o.willfilesArray[ f ];
+    willfile._read();
+
+    for( let modulePath in willfile.data.module )
+    {
+      let data = willfile.data.module[ modulePath ];
+      if( data === 'root' )
+      continue;
+      module.moduleOpenFromData
+      ({
+        modulePath : modulePath,
+        data : data,
+        rootModule : o.rootModule,
+      });
+    }
+
+  }
+
+  return null;
+}
+
+modulesOpenFromData.defaults =
+{
+  willfilesArray : null,
+  rootModule : null,
+}
+
+//
+
+function moduleOpenFromData( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  o = _.routineOptions( moduleOpenFromData, arguments );
+
+  let modulePath = path.join( module.dirPath, o.modulePath );
+  let willf = will.willfileFor
+  ({
+    filePath : modulePath + '.will.cached!',
+    will : will,
+    role : 'single',
+    data : o.data,
+  });
+
+  let opener2 = will.OpenerModule
+  ({
+    will : will,
+    willfilesPath : modulePath,
+    willfilesArray : [ willf ],
+    finding : 0,
+    rootModule : o.rootModule,
+  }).preform();
+
+  opener2.moduleFind();
+
+  return opener2.openedModule;
+}
+
+moduleOpenFromData.defaults =
+{
+  modulePath : null,
+  data : null,
+  rootModule : null,
+}
+
 // --
 // submodule
 // --
@@ -1509,8 +1609,6 @@ function _submodulesDownload_body( o )
     {
       let submodule = module.submoduleMap[ n ].opener;
 
-      // debugger;
-      // _.assert( !!submodule && submodule.stager.stageStatePerformed( 'preformed' ), 'Submodule', ( submodule ? submodule.nickName : n ), 'was not preformed' );
       _.assert( !!submodule && submodule.preformed, 'Submodule', ( submodule ? submodule.nickName : n ), 'was not preformed' );
 
       if( !submodule.isRemote )
@@ -3241,7 +3339,7 @@ function cleanWhat( o )
 
   }
 
-  filePaths.sort();
+  filePathsBasic.sort();
 
   return result;
 
@@ -3391,7 +3489,7 @@ function resolve_pre( routine, args )
 
   o.baseModule = module;
 
-  _.Will.Resolver.resolve.pre.call( _.Will.Resolver, routine, args );
+  _.Will.Resolver.resolve.pre.call( _.Will.Resolver, routine, [ o ] );
 
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
@@ -3410,7 +3508,7 @@ function resolve_body( o )
 {
   let module = this;
   let will = module.will;
-  _.assert( o.baseModule === module );
+  _.assert( o.baseModule === module ); 
   let result = will.Resolver.resolve.body.call( will.Resolver, o );
   return result;
 }
@@ -4332,6 +4430,10 @@ let Extend =
   willfileUnregister,
   _willfilesExport,
   willfileEach,
+
+  modulesAttachedOpen,
+  modulesOpenFromData,
+  moduleOpenFromData,
 
   // submodule
 

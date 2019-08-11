@@ -15,112 +15,9 @@ let _ = _global.wTools;
 let _err = _._err;
 let Self = _;
 
-//
-
-// function diagnosticVariate( o )
-// {
-//   _.routineOptions( diagnosticVariate,o );
-//
-//   if( _.arrayIs( o.routine ) )
-//   {
-//     _.assert( _.routineIs( o.routine[ 1 ] ) );
-//     if( !o.variates && o.routine[ 1 ].variates )
-//     o.variates = o.routine[ 1 ].variates;
-//     o.routine = _.routineJoin.apply( _,o.routine );
-//   }
-//
-//   _.assert( _.routineIs( o.routine ) );
-//   _.assert( _.objectIs( o.variates ) );
-//
-//   let vals = _.mapExtend( null,o.variates );
-//   vals = _.proxyNoUndefined( vals );
-//
-//   if( o.test === null )
-//   o.test = function vtest( got,o )
-//   {
-//     return _.entityEquivalent( got,o.expected,{ /*eps*/accuracy : o./*eps*/accuracy } );
-//   }
-//
-//   let found = 0;
-//   let nsamples = _.eachSample
-//   ({
-//
-//     onEach : function( sample,i )
-//     {
-//       let got = o.routine( sample );
-//       let res = o.test( got,o );
-//       if( res )
-//       found += 1;
-//       if( res || !o.printingValidOnly )
-//       {
-//         logger.log( 'routine',o.routine.name,'gave',got,'expected',o.expected,'#',i );
-//         if( res )
-//         {
-//           logger.log( 'sample :',sample );
-//           logger.log( got );
-//         }
-//       }
-//     },
-//
-//     sets : o.variates,
-//     sample : vals,
-//     result : null,
-//
-//   });
-//
-//   logger.log( 'Found',found,'/',nsamples );
-//
-// }
-//
-// diagnosticVariate.defaults =
-// {
-//   routine : null,
-//   test : null,
-//
-//   expected : null,
-//   variates : null,
-//   accuracy : 1e-3,
-//   printingValidOnly : 1,
-// }
-
 // --
 // diagnostics
 // --
-
-// function _diagnosticStripPath( src )
-// {
-//   _.assert( arguments.length === 1, 'Expects single argument' );
-//
-//   if( _.strIs( src ) )
-//   {
-//     src = src.replace( /^\s+/,'' );
-//     // src = src.replace( /^at/,'' );
-//     // src = src.replace( /^\s+/,'' );
-//   }
-//
-//   return src;
-// }
-
-//
-
-// function diagnosticScript( path )
-// {
-//
-//   if( typeof document !== 'undefined' && document.scripts )
-//   {
-//     let scripts = document.scripts;
-//     for( let s = 0 ; s < scripts.length ; s++ )
-//     if( scripts[ s ].src === path )
-//     return scripts[ s ];
-//   }
-//   else
-//   {
-//     debugger;
-//   }
-//
-// }
-
-//
 
 function diagnosticLocation( o )
 {
@@ -154,9 +51,9 @@ function diagnosticLocation( o )
   if( !( _.objectIs( o ) ) )
   throw Error( 'Expects options map' );
 
-  // _.routineOptions( diagnosticLocation,o );
+  // _.routineOptions( diagnosticLocation, o );
   // _.assert( arguments.length === 0 || arguments.length === 1 );
-  // _.assert( _.objectIs( o ),'diagnosticLocation expects integer {-level-} or string ( stack ) or object ( options )' );
+  // _.assert( _.objectIs( o ), 'diagnosticLocation expects integer {-level-} or string ( stack ) or object ( options )' );
 
   /* */
 
@@ -320,19 +217,19 @@ function diagnosticLocation( o )
     if( !_.strIs( path ) )
     return end();
 
-    path = path.replace( /^\s+/,'' );
-    path = path.replace( /^\w+@/,'' );
-    path = path.replace( /^at/,'' );
-    path = path.replace( /^\s+/,'' );
-    path = path.replace( /\s+$/,'' );
+    path = path.replace( /^\s+/, '' );
+    path = path.replace( /^\w+@/, '' );
+    path = path.replace( /^at/, '' );
+    path = path.replace( /^\s+/, '' );
+    path = path.replace( /\s+$/, '' );
 
     let regexp = /^.*\((.*)\)$/;
     var parsed = regexp.exec( path );
     if( parsed )
     path = parsed[ 1 ];
 
-    // if( _.strEnds( path,')' ) )
-    // path = _.strIsolateInsideOrAll( path,'(',')' )[ 2 ];
+    // if( _.strEnds( path, ')' ) )
+    // path = _.strIsolateInsideOrAll( path, '(', ')' )[ 2 ];
 
     return path;
   }
@@ -342,7 +239,7 @@ function diagnosticLocation( o )
   function lineColFromPath( path )
   {
 
-    let lineNumber,colNumber;
+    let lineNumber, colNumber;
     let postfix = /(.+?):(\d+)(?::(\d+))?[^:/]*$/;
     let parsed = postfix.exec( path );
 
@@ -357,12 +254,12 @@ function diagnosticLocation( o )
     // colNumber = postfix.exec( o.location.path );
     // if( colNumber )
     // {
-    //   o.location.path = _.strRemoveEnd( o.location.path,colNumber[ 0 ] );
+    //   o.location.path = _.strRemoveEnd( o.location.path, colNumber[ 0 ] );
     //   colNumber = colNumber[ 1 ];
     //   lineNumber = postfix.exec( o.location.path );
     //   if( lineNumber )
     //   {
-    //     o.location.path = _.strRemoveEnd( o.location.path,lineNumber[ 0 ] );
+    //     o.location.path = _.strRemoveEnd( o.location.path, lineNumber[ 0 ] );
     //     lineNumber = lineNumber[ 1 ];
     //   }
     //   else
@@ -400,7 +297,7 @@ let _diagnosticCodeExecuting = 0;
 function diagnosticCode( o )
 {
 
-  _.routineOptions( diagnosticCode,o );
+  _.routineOptions( diagnosticCode, o );
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
   if( _diagnosticCodeExecuting )
@@ -544,7 +441,6 @@ diagnosticCode.defaults =
  * @memberof wTools
  */
 
-// function diagnosticStack( stack, first, last )
 function diagnosticStack( stack, range )
 {
 
@@ -567,35 +463,11 @@ function diagnosticStack( stack, range )
   if( range === undefined )
   range = [ 0, Infinity ];
 
-  // if( last-first === 1 )
-  // debugger;
-
-  // if( _.numberIs( arguments[ 0 ] ) || arguments[ 0 ] === undefined )
-  // {
-  //
-  //   first = arguments[ 0 ] ? arguments[ 0 ] + 1 : 1;
-  //   last = arguments[ 1 ] >= 0 ? arguments[ 1 ] + 1 : arguments[ 1 ];
-  //
-  //   return diagnosticStack( new Error(), first, last );
-  // }
-
   if( arguments.length !== 0 && arguments.length !== 1 && arguments.length !== 2 )
   {
     debugger;
     throw Error( 'diagnosticStack : expects one or two or none arguments' );
   }
-
-  // if( !_.numberIs( first ) && first !== undefined )
-  // {
-  //   debugger;
-  //   throw Error( 'diagnosticStack : expects number {-first-}, got ' + _.strType( first ) );
-  // }
-  //
-  // if( !_.numberIs( last ) && last !== undefined )
-  // {
-  //   debugger;
-  //   throw Error( 'diagnosticStack : expects number {-last-}, got ' + _.strType( last ) );
-  // }
 
   if( !_.rangeIs( range ) )
   {
@@ -637,8 +509,6 @@ function diagnosticStack( stack, range )
     throw Error( 'diagnosticStack expects array or string' );
   }
 
-  // debugger;
-
   if( !_.arrayIs( stack ) )
   stack = stack.split( '\n' );
 
@@ -659,18 +529,11 @@ function diagnosticStack( stack, range )
       splice |= stack[ 0 ].indexOf( '(module.js:' ) !== -1;
       splice |= stack[ 0 ].indexOf( '(internal/module.js:' ) !== -1;
       if( splice )
-      stack.splice( 0,1 );
+      stack.splice( 0, 1 );
       else break;
     }
   }
 
-  // if( stack[ 0 ].indexOf( '@' ) === -1 )
-  // stack[ 0 ] = _.strIsolateLeftOrNone( stack[ 0 ],'@' )[ 1 ];
-
-  // if( !stack[ 0 ] )
-  // return '... stack is empty ...';
-
-  // debugger;
   if( stack[ 0 ] )
   if( stack[ 0 ].indexOf( 'at ' ) === -1 && stack[ 0 ].indexOf( '@' ) === -1 )
   {
@@ -693,22 +556,9 @@ function diagnosticStack( stack, range )
 
   /* */
 
-  // if( last-first === 1 )
-  // {
-  //   debugger;
-  //   // stack = stack[ first ];
-  //   //
-  //   // if( _.strIs( stack ) )
-  //   // {
-  //   //   stack = _._diagnosticStripPath( stack );
-  //   // }
-  //   //
-  //   // return stack;
-  // }
-
   if( first !== 0 || last !== stack.length )
   {
-    stack = stack.slice( first || 0,last );
+    stack = stack.slice( first || 0, last );
   }
 
   /* */
@@ -731,17 +581,26 @@ function diagnosticStackCondense( stack )
 
   stack = stack.split( '\n' );
 
-  for( let s = 1 ; s < stack.length ; s++ )
-  if( /(\w)_entry(\W|$)/.test( stack[ s ] ) )
-  {
-    stack.splice( s+1,stack.length );
-    break;
-  }
+  // for( let s = 1 ; s < stack.length ; s++ )
+  // if( /(\w)_entry(\W|$)/.test( stack[ s ] ) )
+  // {
+  //   stack.splice( s+1, stack.length );
+  //   break;
+  // }
 
   for( let s = stack.length-1 ; s >= 1 ; s-- )
   {
-    if( /(\W|^)__\w+/.test( stack[ s ] ) )
-    stack.splice( s,1 )
+    let line = stack[ s ];
+    if( /(\W|^)__\w+/.test( line ) )
+    {
+      stack.splice( s, 1 );
+      continue;
+    }
+    // if( _.strHas( line, '.test.' ) )
+    // line = '  *' + _.strRemoveBegin( line, '   ' );
+    if( _.strHas( line, '.test.' ) )
+    line += ' *';
+    stack[ s ] = line;
   }
 
   return stack.join( '\n' );
@@ -835,7 +694,7 @@ function diagnosticWatchFields( o )
 
   if( arguments[ 1 ] !== undefined )
   o = { target : arguments[ 0 ], names : arguments[ 1 ] }
-  o = _.routineOptions( diagnosticWatchFields,o );
+  o = _.routineOptions( diagnosticWatchFields, o );
 
   if( o.names )
   o.names = o.names;
@@ -890,7 +749,7 @@ function diagnosticWatchFields( o )
     debugger;
 
     if( o.verbosity > 1 )
-    console.log( 'watching for',fieldName,'in',o.target );
+    console.log( 'watching for', fieldName, 'in', o.target );
     Object.defineProperty( o.target, fieldName,
     {
       enumerable : true,
@@ -933,7 +792,7 @@ function diagnosticProxyFields( o )
 
   if( arguments[ 1 ] !== undefined )
   o = { target : arguments[ 0 ], names : arguments[ 1 ] }
-  o = _.routineOptions( diagnosticWatchFields,o );
+  o = _.routineOptions( diagnosticWatchFields, o );
 
   // if( o.names )
   // o.names = _.nameFielded( o.names );
@@ -961,7 +820,7 @@ function diagnosticProxyFields( o )
 
   let result = new Proxy( o.target, handler );
   if( o.verbosity > 1 )
-  console.log( 'watching for',o.target );
+  console.log( 'watching for', o.target );
 
   if( o.debug )
   debugger;
@@ -1156,7 +1015,7 @@ function diagnosticsStructureGenerate( o )
     {
       currentLevel[ 'regexp1'] = /ab|cd/,
       currentLevel[ 'regexp2'] = /a[bc]d/,
-      currentLevel[ 'regexp3'] = /ab{1,}bc/,
+      currentLevel[ 'regexp3'] = /ab{1, }bc/,
       currentLevel[ 'regexp4'] = /\.js$/,
       currentLevel[ 'regexp5'] = /.regexp/
     }
@@ -1194,7 +1053,7 @@ function diagnosticsStructureGenerate( o )
 
     if( o.mapComplex || o.structure > 1 )
     {
-      let map = currentLevel[ 'mapComplex' ] = { 0 : '1', 1 : { b : 2 }, 2 : [ 1,2,3 ] };
+      let map = currentLevel[ 'mapComplex' ] = { 0 : '1', 1 : { b : 2 }, 2 : [ 1, 2, 3 ] };
       if( o.mapSize )
       currentLevel[ 'mapComplex' ] = mapForSize( map, [ 0, 3 ] );
     }
@@ -1204,7 +1063,7 @@ function diagnosticsStructureGenerate( o )
 
     if( o.arrayComplex || o.structure > 1 )
     {
-      let src = { a : '1', dir : { b : 2 }, c : [ 1,2,3 ] }
+      let src = { a : '1', dir : { b : 2 }, c : [ 1, 2, 3 ] }
       currentLevel[ 'arrayComplex' ] = _.arrayFillTimes( [], o.arraySize || o.fieldSize, src )
     }
 
@@ -1315,7 +1174,6 @@ let error =
 let Extend =
 {
 
-  // _diagnosticStripPath,
   diagnosticLocation,
   diagnosticCode,
   diagnosticStack,

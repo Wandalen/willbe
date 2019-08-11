@@ -176,6 +176,43 @@ function preform()
 
 //
 
+function _inPathsForm()
+{
+  let willf = this;
+  let openerModule = willf.openerModule;
+  let will = willf.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 0 );
+  _.assert( !!will );
+  _.assert( !!will.formed );
+  _.assert( !!openerModule );
+  _.assert( openerModule.preformed > 0 );
+  _.assert( !!willf.formed );
+
+  if( !willf.filePath )
+  {
+    if( !willf.dirPath )
+    willf.dirPath = openerModule.dirPath;
+    _.assert( _.strIs( willf.dirPath ) );
+    willf.filePath = path.join( willf.dirPath, openerModule.prefixPathForRole( willf.role, willf.isOutFile ) );
+  }
+
+  willf.dirPath = path.dir( willf.filePath );
+
+  if( willf.isOutFile === null )
+  {
+    willf.isOutFile = _.strHas( willf.filePath, /\.out\.\w+\.\w+$/ );
+  }
+
+}
+
+// --
+// open
+// --
+
 function open()
 {
   let willf = this;
@@ -193,7 +230,7 @@ function open()
 
   /* read */
 
-  willf.read();
+  willf._read();
   willf.importToModule();
 
   _.assert( willf.formed === 3 );
@@ -203,7 +240,7 @@ function open()
 
 //
 
-function read()
+function _read()
 {
   let willf = this;
   let will = willf.will;
@@ -302,18 +339,8 @@ function importToModule()
 
   willf.resourcesImport( will.Exported, willf.data.exported );
   willf.resourcesImport( will.Submodule, willf.data.submodule );
-
-  // if( willf.id === 54 )
-  // debugger;
-
   willf.resourcesImport( will.PathResource, willf.data.path );
-  // willf.pathsImport( will.PathResource, willf.data.path );
-
-  // if( willf.id === 54 )
-  // debugger;
-
   willf.resourcesImport( will.Step, willf.data.step );
-  // willf.reflectorsImport( will.Reflector, willf.data.reflector );
   willf.resourcesImport( will.Reflector, willf.data.reflector );
   willf.resourcesImport( will.Build, willf.data.build );
 
@@ -324,78 +351,6 @@ function importToModule()
   willf.formed = 3;
   return true;
 }
-
-// //
-//
-// function resourceImport_pre( routine, args )
-// {
-//   let willf = this;
-//   let will = willf.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   let o = args[ 0 ]
-//   if( args.length > 1 )
-//   o = { resourceClass : args[ 0 ], resource : args[ 1 ] }
-//
-//   _.routineOptions( routine, o );
-//   _.assert( args.length === 1 || args.length === 2 );
-//   _.assert( arguments.length === 2 );
-//
-//   return o;
-// }
-//
-// function resourceImport_body( o )
-// {
-//   let willf = this;
-//   let openedModule = willf.openedModule;
-//   let will = openedModule.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   _.assertRoutineOptions( resourceImport, arguments );
-//
-//   if( !o.resource )
-//   return;
-//
-//   _.assert( !!o.resource );
-//   _.assert( _.constructorIs( o.resourceClass ) );
-//   _.assert( arguments.length === 1 );
-//
-//   let o2;
-//   if( o.resourceClass.ResouceDataFrom )
-//   o2 = o.resourceClass.ResouceDataFrom( o.resource );
-//   else
-//   o2 = _.mapExtend( null, o.resource );
-//
-//   o2.willf = willf;
-//   o2.module = openedModule;
-//   o2.name = o.name;
-//   o2.Importing = 1;
-//   o2.IsOutFile = willf.isOutFile;
-//
-//   try
-//   {
-//     o.resourceClass.MakeForEachCriterion( o2 );
-//   }
-//   catch( err )
-//   {
-//     debugger;
-//     throw _.err( 'Cant form', o.resourceClass.KindName + '::' + o2.name, '\n', err );
-//   }
-//
-// }
-//
-// resourceImport_body.defaults =
-// {
-//   resourceClass : null,
-//   resource : null,
-//   name : null,
-// }
-//
-// let resourceImport = _.routineFromPreAndBody( resourceImport_pre, resourceImport_body );
 
 //
 
@@ -450,42 +405,34 @@ function resourcesImport_body( o )
       name : k,
     });
 
-    // willf.resourceImport
-    // ({
-    //   resource : resource,
-    //   resourceClass : o.resourceClass,
-    //   name : k,
-    // });
-
   });
 
-  /* xxx : remove the hack? */
-
-  if( dirPath && path.isAbsolute( dirPath ) && dirPath !== openedModule.dirPath )
-  {
-    debugger; xxx
-    openedModule._dirPathChange( dirPath );
-
-    _.assert( path.isAbsolute( openedModule.inPath ) );
-
-    for( let r in openedModule.pathResourceMap )
-    {
-      let resource = openedModule.pathResourceMap[ r ];
-
-      if( !resource.exportable )
-      continue;
-      if( !resource.criterion.predefined )
-      continue;
-      if( !resource.path )
-      continue;
-      if( path.s.anyAreGlobal( resource.path ) )
-      continue;
-
-      resource.path = path.s.join( openedModule.inPath, resource.path );
-
-    }
-
-  }
+  // /* xxx : remove the hack? */
+  //
+  // if( dirPath && path.isAbsolute( dirPath ) && dirPath !== openedModule.dirPath )
+  // {
+  //   openedModule._dirPathChange( dirPath );
+  //
+  //   _.assert( path.isAbsolute( openedModule.inPath ) );
+  //
+  //   for( let r in openedModule.pathResourceMap )
+  //   {
+  //     let resource = openedModule.pathResourceMap[ r ];
+  //
+  //     if( !resource.exportable )
+  //     continue;
+  //     if( !resource.criterion.predefined )
+  //     continue;
+  //     if( !resource.path )
+  //     continue;
+  //     if( path.s.anyAreGlobal( resource.path ) )
+  //     continue;
+  //
+  //     resource.path = path.s.join( openedModule.inPath, resource.path );
+  //
+  //   }
+  //
+  // }
 
 }
 
@@ -496,167 +443,6 @@ resourcesImport_body.defaults =
 }
 
 let resourcesImport = _.routineFromPreAndBody( resourcesImport_pre, resourcesImport_body );
-
-// xxx
-
-// //
-//
-// function pathsImport_body( o )
-// {
-//   let willf = this;
-//   let openedModule = willf.openedModule;
-//   let will = openedModule.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//   let dirPath = openedModule.dirPath;
-//
-//   let result = willf.resourcesImport.body.call( willf, o );
-//
-//   if( dirPath && path.isAbsolute( dirPath ) && dirPath !== openedModule.dirPath )
-//   {
-//     openedModule._dirPathChange( dirPath );
-//   }
-//
-//   _.assert( path.isAbsolute( openedModule.inPath ) );
-//
-//   for( let r in openedModule.pathResourceMap )
-//   {
-//     let resource = openedModule.pathResourceMap[ r ];
-//
-//     if( !resource.exportable )
-//     continue;
-//     if( !resource.criterion.predefined )
-//     continue;
-//     if( !resource.path )
-//     continue;
-//     if( path.s.anyAreGlobal( resource.path ) )
-//     continue;
-//
-//     resource.path = path.s.join( openedModule.inPath, resource.path );
-//
-//   }
-//
-//   return result;
-// }
-//
-// pathsImport_body.defaults = Object.create( resourcesImport.defaults );
-//
-// let pathsImport = _.routineFromPreAndBody( resourcesImport_pre, pathsImport_body );
-//
-// //
-//
-// function reflectorsImport( Reflector, resources )
-// {
-//   let willf = this;
-//   let openedModule = willf.openedModule;
-//   let will = willf.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   _.assert( _.mapIs( resources ) || resources === null || resources === undefined );
-//   _.assert( arguments.length === 2 );
-//
-//   if( !resources )
-//   return;
-//
-//   _.each( resources, ( resource, name ) =>
-//   {
-//
-//     let resource2 = _.mapExtend( null, resource );
-//     if( Reflector.ResouceDataFrom )
-//     resource2 = Reflector.ResouceDataFrom( resource2 );
-//
-//     willf.resourceImport
-//     ({
-//       resource : resource2,
-//       resourceClass : Reflector,
-//       name : name,
-//     });
-//
-//     let o3 = Object.create( null );
-//     o3.criterion = _.mapExtend( null, resource.criterion || {} );
-//     o3.shell = resource.shell;
-//     o3.Importing = 1;
-//
-//     if( resource.step )
-//     {
-//       if( !_.mapIs( resource.step ) )
-//       resource.step = { inherit : resource.step }
-//       _.mapExtend( o3, resource.step );
-//     }
-//
-//     if( resource.shell )
-//     {
-//
-//       o3.forEachDst = 'reflector::' + name + '*';
-//       if( !o3.inherit )
-//       o3.inherit = 'shell.run';
-//
-//       willf.resourceImport
-//       ({
-//         resource : o3,
-//         resourceClass : will.Step,
-//         name : name,
-//       });
-//
-//     }
-//     else if( !openedModule.stepMap[ name ] )
-//     {
-//
-//       o3.reflector = 'reflector::' + name + '*';
-//       if( !o3.inherit )
-//       o3.inherit = 'files.reflect';
-//       o3.Optional = 1;
-//
-//       willf.resourceImport
-//       ({
-//         resource : o3,
-//         resourceClass : will.Step,
-//         name : name,
-//       });
-//
-//     }
-//
-//   });
-//
-// }
-
-//
-
-function _inPathsForm()
-{
-  let willf = this;
-  let openerModule = willf.openerModule;
-  let will = willf.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-
-  _.assert( arguments.length === 0 );
-  _.assert( !!will );
-  _.assert( !!will.formed );
-  _.assert( !!openerModule );
-  _.assert( openerModule.preformed > 0 );
-  _.assert( !!willf.formed );
-
-  if( !willf.filePath )
-  {
-    if( !willf.dirPath )
-    willf.dirPath = openerModule.dirPath;
-    _.assert( _.strIs( willf.dirPath ) );
-    willf.filePath = path.join( willf.dirPath, openerModule.prefixPathForRole( willf.role, willf.isOutFile ) );
-  }
-
-  willf.dirPath = path.dir( willf.filePath );
-
-  if( willf.isOutFile === null )
-  {
-    willf.isOutFile = _.strHas( willf.filePath, /\.out\.\w+\.\w+$/ );
-  }
-
-}
 
 //
 
@@ -750,15 +536,6 @@ let Composes =
 
 let Aggregates =
 {
-
-  // submoduleMap : _.define.own({}),
-  // pathMap : _.define.own({}),
-  // pathResourceMap : _.define.own({}),
-  // reflectorMap : _.define.own({}),
-  // stepMap : _.define.own({}),
-  // buildMap : _.define.own({}),
-  // exportedMap : _.define.own({}),
-
 }
 
 let Associates =
@@ -822,16 +599,16 @@ let Extend =
   unform,
   form,
   preform,
+  _inPathsForm,
+
+  // open
+
   open,
-  read,
+  _read,
   importToModule,
 
-  // resourceImport,
   resourcesImport,
-  // pathsImport,
-  // reflectorsImport,
 
-  _inPathsForm,
   CommonPathFor,
   commonPathGet,
   exists,

@@ -1,7 +1,0 @@
-submodule :
-
-  Tools : ./wTools
-  Logger : ./wLogger
-  LoggerToJs : ./wLoggerToJs
-  Consequence : ./wConsequence
-  Instancing : ./wInstancing

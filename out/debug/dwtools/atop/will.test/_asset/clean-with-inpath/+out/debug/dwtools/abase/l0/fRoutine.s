@@ -378,7 +378,7 @@ function routineSeal( context, routine, args )
 function routineOptions( routine, args, defaults )
 {
 
-  if( !_.argumentsArrayIs( args ) )
+  if( !_.arrayLike( args ) )
   args = [ args ];
   let options = args[ 0 ];
   if( options === undefined )
@@ -404,7 +404,7 @@ function routineOptions( routine, args, defaults )
 function assertRoutineOptions( routine, args, defaults )
 {
 
-  if( !_.argumentsArrayIs( args ) )
+  if( !_.arrayLike( args ) )
   args = [ args ];
   let options = args[ 0 ];
   defaults = defaults || ( routine ? routine.defaults : null );
@@ -427,7 +427,7 @@ function assertRoutineOptions( routine, args, defaults )
 function routineOptionsPreservingUndefines( routine, args, defaults )
 {
 
-  if( !_.argumentsArrayIs( args ) )
+  if( !_.arrayLike( args ) )
   args = [ args ];
   let options = args[ 0 ];
   if( options === undefined )
@@ -451,7 +451,7 @@ function routineOptionsPreservingUndefines( routine, args, defaults )
 function routineOptionsReplacingUndefines( routine, args, defaults )
 {
 
-  if( !_.argumentsArrayIs( args ) )
+  if( !_.arrayLike( args ) )
   args = [ args ];
   let options = args[ 0 ];
   if( options === undefined )
@@ -475,7 +475,7 @@ function routineOptionsReplacingUndefines( routine, args, defaults )
 function assertRoutineOptionsPreservingUndefines( routine, args, defaults )
 {
 
-  if( !_.argumentsArrayIs( args ) )
+  if( !_.arrayLike( args ) )
   args = [ args ];
   let options = args[ 0 ];
   defaults = defaults || routine.defaults;

@@ -60,6 +60,8 @@
     "wstatestorage": "",
     "wstatesession": "",
     "wstager": "",
+    "wselector": "",
+    "wresolver": "",
     "wcommandsaggregator": "",
     "wcommandsconfig": "",
     "wnamemapper": "",

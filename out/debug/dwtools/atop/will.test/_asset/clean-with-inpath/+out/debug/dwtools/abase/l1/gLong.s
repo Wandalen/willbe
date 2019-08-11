@@ -148,7 +148,9 @@ function buffersAreEquivalent( src1, src2, accuracy )
   else if( _.bufferViewIs( src1 ) )
   return _.buffersViewAreIdentical( src1, src2 );
   else if( _.bufferNodeIs( src1 ) )
-  return _.buffersNodeAreIdentica( src1, src2 );
+  // Dmytro : correct misprint
+  // return _.buffersNodeAreIdentica( src1, src2 );
+  return _.buffersNodeAreIdentical( src1, src2 );
   else return false;
 
 }
@@ -267,7 +269,9 @@ function bufferMakeSimilar( ins, src )
 
 //
 
-/* qqq : implement */
+/* qqq : implement
+   Dmytro : implemented for typed buffers
+*/
 
 function bufferButRange( src, range, ins )
 {
@@ -278,11 +282,23 @@ function bufferButRange( src, range, ins )
   _.assert( ins === undefined || _.longIs( ins ) );
   _.assert( arguments.length === 2 || arguments.length === 3 );
 
-  throw _.err( 'not implemented' )
+  if( ins === undefined )
+  ins = [];
 
-  if( range[ 1 ] - range[ 0 ] <= 0 )
-  return _.bufferSlice( src );
+  let bufferStart = src.slice( 0, range[ 0 ] );
+  let bufferEnd = src.slice( range[ 1 ] );
+  result = _.longMake( src, bufferStart.length + ins.length + bufferEnd.length );
+  result.set( bufferStart );
+  result.set( ins, range[ 0 ] );
+  result.set( bufferEnd, range[ 0 ] + ins.length );
 
+  return result;
+
+  // throw _.err( 'not implemented' )
+  //
+  // if( range[ 1 ] - range[ 0 ] <= 0 )
+  // return _.bufferSlice( src );
+  //
   // if( size > src.byteLength )
   // {
   //   result = longMake( src, size );
@@ -294,8 +310,8 @@ function bufferButRange( src, range, ins )
   // {
   //   result = src.slice( 0, size );
   // }
-
-  return result;
+  //
+  // return result;
 }
 
 //
@@ -358,30 +374,89 @@ function bufferRelen( src, len )
 
 //
 
-/* qqq : implement for 2 other types of buffer and do code test coverage */
+/* qqq : implement for 2 other types of buffer and do code test coverage
+   Dmytro : implemented. This odious code maked this way because different
+   buffers has different implementations
+   Previus implementation of routine bufferResize() has bug when size > length
+*/
 
 function bufferResize( srcBuffer, size )
 {
   let result = srcBuffer;
 
-  _.assert( _.bufferRawIs( srcBuffer ) || _.bufferTypedIs( srcBuffer ) );
+  _.assert( _.bufferAnyIs( srcBuffer ) );
   _.assert( srcBuffer.byteLength >= 0 );
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
-  if( size > srcBuffer.byteLength )
+  if( _.bufferRawIs( srcBuffer ) || _.bufferViewIs( srcBuffer ) )
+  srcBuffer.length = srcBuffer.byteLength;
+
+  if( size > srcBuffer.length )
   {
-    result = _.longMake( srcBuffer, size );
-    let resultTyped = new Uint8Array( result, 0, result.byteLength );
-    let srcTyped = new Uint8Array( srcBuffer, 0, srcBuffer.byteLength );
-    resultTyped.set( srcTyped );
+    if( _.bufferTypedIs( srcBuffer ) )
+    {
+      result = _.longMake( srcBuffer, size );
+      result.set( srcBuffer );
+    }
+    if( _.bufferRawIs( srcBuffer ) )
+    {
+      let resultTyped = new Uint8Array( _.longMake( srcBuffer, size ) );
+      let srcTyped = new Uint8Array( srcBuffer );
+      resultTyped.set( srcTyped );
+      result = _.bufferRawFrom( resultTyped );
+    }
+    if( _.bufferViewIs( srcBuffer ) )
+    {
+      let resultTyped = new Uint8Array( size );
+      let srcTyped = new Uint8Array( srcBuffer.buffer );
+      resultTyped.set( srcTyped );
+      result = new DataView( _.bufferRawFrom( resultTyped ) );
+    }
+    if( _.bufferNodeIs( srcBuffer ) )
+    {
+      if( parseInt( process.version[ 1 ] ) === 1 )
+      result = Buffer.alloc( size );
+      else
+      result = _.longMake( srcBuffer, size );
+
+      result.set( srcBuffer );
+    }
   }
-  else if( size < srcBuffer.byteLength )
+  else if( size < srcBuffer.length )
   {
+    if( _.bufferViewIs( srcBuffer ) )
+    {
+      result = new DataView( srcBuffer.buffer, 0, size );
+    }
+    else
     result = srcBuffer.slice( 0, size );
   }
 
   return result;
 }
+
+// function bufferResize( srcBuffer, size )
+// {
+//   let result = srcBuffer;
+//
+//   _.assert( _.bufferRawIs( srcBuffer ) || _.bufferTypedIs( srcBuffer ) );
+//   _.assert( srcBuffer.byteLength >= 0 );
+//   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+//
+//   if( size > srcBuffer.byteLength )
+//   {
+//     result = _.longMake( srcBuffer, size );
+//     let resultTyped = new Uint8Array( result, 0, result.byteLength );
+//     let srcTyped = new Uint8Array( srcBuffer, 0, srcBuffer.byteLength );
+//     resultTyped.set( srcTyped );
+//   }
+//   else if( size < srcBuffer.byteLength )
+//   {
+//     result = srcBuffer.slice( 0, size );
+//   }
+//
+//   return result;
+// }
 
 //
 
@@ -783,7 +858,7 @@ function bufferFromArrayOfArray( array, options )
 
   if( options.BufferType === undefined ) options.BufferType = Float32Array;
   if( options.sameLength === undefined ) options.sameLength = 1;
-  if( !options.sameLength ) throw _.err( '_.bufferFromArrayOfArray :', 'differemt length of arrays is not implemented' );
+  if( !options.sameLength ) throw _.err( '_.bufferFromArrayOfArray :', 'different length of arrays is not implemented' );
 
   if( !array.length ) return new options.BufferType();
 

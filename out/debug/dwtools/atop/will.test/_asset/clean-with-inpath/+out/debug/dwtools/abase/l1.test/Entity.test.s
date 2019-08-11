@@ -225,10 +225,10 @@ function eachSample( test )
 
   test.case = 'simplest, leftToRight : 1';
 
-  var got = _.eachSample(
-    {
-      sets : [ [ 0, 1 ], [ 2, 3 ] ]
-    });
+  var got = _.eachSample
+  ({
+    sets : [ [ 0, 1 ], [ 2, 3 ] ]
+  });
   var expected =
   [
     [ 0, 2 ], [ 1, 2 ],
@@ -236,10 +236,10 @@ function eachSample( test )
   ];
   test.identical( got, expected );
 
-  var got = _.eachSample(
-    {
-      sets : { a : [ 0, 1 ], b : [ 2, 3 ] }
-    });
+  var got = _.eachSample
+  ({
+    sets : { a : [ 0, 1 ], b : [ 2, 3 ] }
+  });
   var expected =
   [
     { a : 0, b : 2 }, { a : 1, b : 2 },
@@ -247,10 +247,10 @@ function eachSample( test )
   ];
   test.identical( got, expected );
 
-  var got = _.eachSample(
-    {
-      sets : [ [ 0, 1 ], [ 2, 3 ], 6 ]
-    });
+  var got = _.eachSample
+  ({
+    sets : [ [ 0, 1 ], [ 2, 3 ], 6 ]
+  });
   var expected =
   [
     [ 0, 2, 6 ], [ 1, 2, 6 ],
@@ -258,10 +258,10 @@ function eachSample( test )
   ];
   test.identical( got, expected );
 
-  var got = _.eachSample(
-    {
-      sets : { a : [ 0, 1 ], b : [ 2, 3 ],  c : 6 }
-    });
+  var got = _.eachSample
+  ({
+    sets : { a : [ 0, 1 ], b : [ 2, 3 ],  c : 6 }
+  });
   var expected =
   [
     { a : 0, b : 2, c : 6 },
@@ -271,10 +271,10 @@ function eachSample( test )
   ];
   test.identical( got, expected );
 
-  var got = _.eachSample(
-    {
-      sets : [ [ 0, 1 ], [ 2, 3 ], [ 6, null ] ]
-    });
+  var got = _.eachSample
+  ({
+    sets : [ [ 0, 1 ], [ 2, 3 ], [ 6, null ] ]
+  });
   var expected =
   [
     [ 0, 2, 6 ], [ 1, 2, 6 ],
@@ -284,10 +284,10 @@ function eachSample( test )
   ];
   test.identical( got, expected );
 
-  var got = _.eachSample(
-    {
-      sets : { a : [ 0, 1 ], b : [ 2, 3 ], c: [ 6, null ] }
-    });
+  var got = _.eachSample
+  ({
+    sets : { a : [ 0, 1 ], b : [ 2, 3 ], c: [ 6, null ] }
+  });
   var expected =
   [
     { a : 0, b : 2, c : 6 }, { a : 1, b : 2, c : 6 },
@@ -297,10 +297,10 @@ function eachSample( test )
   ];
   test.identical( got, expected );
 
-  var got = _.eachSample(
-    {
-      sets : [ _.argumentsArrayMake( [ 0, 1 ] ), _.argumentsArrayMake( [ 2, 3 ] ) ]
-    });
+  var got = _.eachSample
+  ({
+    sets : [ _.argumentsArrayMake( [ 0, 1 ] ), _.argumentsArrayMake( [ 2, 3 ] ) ]
+  });
   var expected =
   [
     [ 0, 2 ], [ 1, 2 ],
@@ -309,20 +309,20 @@ function eachSample( test )
   test.identical( got, expected );
   test.is( _.arrayIs( got ) );
 
-  var got = _.eachSample(
-    {
-      sets : [ new Array( [ 0, 1 ] ), new Array( [ 2, 3 ] ) ]
-    });
+  var got = _.eachSample
+  ({
+    sets : [ new Array( [ 0, 1 ] ), new Array( [ 2, 3 ] ) ]
+  });
   var expected = [ [ [ 0, 1 ], [ 2, 3 ] ] ];
   test.identical( got, expected );
   test.is( _.arrayIs( got ) );
 
   var a = _.arrayFrom( new Float32Array( [ 0, 1 ] ) );
   var b = _.arrayFrom( new Float32Array( [ 2, 3 ] ) );
-  var got = _.eachSample(
-    {
-      sets : [ a, b ]
-    });
+  var got = _.eachSample
+  ({
+    sets : [ a, b ]
+  });
   var expected =
   [
     [ 0, 2 ], [ 1, 2 ],
@@ -377,92 +377,168 @@ function eachSample( test )
 
   test.case = 'simplest, leftToRight : 1, result : 0';
 
-  var got = _.eachSample(
-    {
-      sets : [ [ 0, 1 ], [ 2, 3 ] ],
-      result : 0,
-    });
+  var got = _.eachSample
+  ({
+    sets : [ [ 0, 1 ], [ 2, 3 ] ],
+    result : 0,
+  });
   var expected = 3;
   test.identical( got, expected );
 
-  var got = _.eachSample(
-    {
-      sets : { a : [ 0, 1 ], b : [ 2, 3 ] },
-      result : 0,
-    });
+  var got = _.eachSample
+  ({
+    sets : { a : [ 0, 1 ], b : [ 2, 3 ] },
+    result : 0,
+  });
   var expected = 3;
   test.identical( got, expected );
 
-  var got = _.eachSample(
-    {
-      sets : [ [ 0, 1 ], [ 2, 3 ], 6 ],
-      result : 0,
-    });
+  var got = _.eachSample
+  ({
+    sets : [ [ 0, 1 ], [ 2, 3 ], 6 ],
+    result : 0,
+  });
   var expected = 3;
   test.identical( got, expected );
 
-  var got = _.eachSample(
-    {
-      sets : { a : [ 0, 1 ], b : [ 2, 3 ],  c : 6 },
-      result : 0,
-    });
+  var got = _.eachSample
+  ({
+    sets : { a : [ 0, 1 ], b : [ 2, 3 ],  c : 6 },
+    result : 0,
+  });
   var expected = 3;
   test.identical( got, expected );
 
-  var got = _.eachSample(
-    {
-      sets : [ [ 0, 1 ], [ 2, 3 ], [ 6, null ] ],
-      result : 0,
-    });
+  var got = _.eachSample
+  ({
+    sets : [ [ 0, 1 ], [ 2, 3 ], [ 6, null ] ],
+    result : 0,
+  });
   var expected = 7;
   test.identical( got, expected );
 
-  var got = _.eachSample(
-    {
-      sets : { a : [ 0, 1 ], b : [ 2, 3 ], c: [ 6, null ] },
-      result : 0,
-    });
+  var got = _.eachSample
+  ({
+    sets : { a : [ 0, 1 ], b : [ 2, 3 ], c: [ 6, null ] },
+    result : 0,
+  });
   var expected = 7;
   test.identical( got, expected );
 
   test.case = 'simplest, leftToRight : 1, unroll, Array';
-  var got = _.eachSample(
-    {
-      sets : [ _.unrollMake( [ 0, 1 ] ), _.unrollMake( [ 2, 3 ] ) ],
-      result : 0,
-    });
+  var got = _.eachSample
+  ({
+    sets : [ _.unrollMake( [ 0, 1 ] ), _.unrollMake( [ 2, 3 ] ) ],
+    result : 0,
+  });
   var expected = 3;
   test.identical( got, expected );
   test.is( _.primitiveIs( got ) );
 
-  var got = _.eachSample(
-    {
-      sets : [ _.argumentsArrayMake( [ 0, 1 ] ), _.argumentsArrayMake( [ 2, 3 ] ) ],
-      result : 0,
-    });
+  var got = _.eachSample
+  ({
+    sets : [ _.argumentsArrayMake( [ 0, 1 ] ), _.argumentsArrayMake( [ 2, 3 ] ) ],
+    result : 0,
+  });
   var expected = 3;
   test.identical( got, expected );
   test.is( _.primitiveIs( got ) );
 
-  var got = _.eachSample(
-    {
-      sets : [ new Array( [ 0, 1 ] ), new Array( [ 2, 3 ] ) ],
-      result : 0,
-    });
+  var got = _.eachSample
+  ({
+    sets : [ new Array( [ 0, 1 ] ), new Array( [ 2, 3 ] ) ],
+    result : 0,
+  });
   var expected = 0;
   test.identical( got, expected );
   test.is( _.primitiveIs( got ) );
 
   var a = _.arrayFrom( new Float32Array( [ 0, 1 ] ) );
   var b = _.arrayFrom( new Float32Array( [ 2, 3 ] ) );
-  var got = _.eachSample(
-    {
-      sets : [ a, b ],
-      result : 0,
-    });
+  var got = _.eachSample
+  ({
+    sets : [ a, b ],
+    result : 0,
+  });
   var expected = 3;
   test.identical( got, expected );
   test.is( _.primitiveIs( got ) );
+
+  test.case = 'not default sample, equal length of vectors';
+  var got = _.eachSample
+  ({
+    sets : [ [ 0, 1 ], [ 2, 3 ] ],
+    sample : [ 1, 2 ]
+  });
+  var expected =
+  [
+    [ 0, 2 ], [ 1, 2 ],
+    [ 0, 3 ], [ 1, 3 ],
+  ];
+  test.identical( got, expected );
+
+  test.case = 'not default sample, sample.length > vector.length';
+  var got = _.eachSample
+  ({
+    sets : [ [ 0, 1 ], [ 2, 3 ] ],
+    sample : [ 1, 2, 3 ]
+  });
+  var expected =
+  [
+    [ 0, 2, 3 ], [ 1, 2, 3 ],
+    [ 0, 3, 3 ], [ 1, 3, 3 ],
+  ];
+  test.identical( got, expected );
+
+  var got = _.eachSample
+  ({
+    sets : { a : [ 0, 1 ], b : [ 2, 3 ] },
+    sample : { a : 1, b : 2, c : 3 }
+  });
+  var expected =
+  [
+    { a : 0, b : 2, c : 3 }, { a : 1, b : 2, c : 3 },
+    { a : 0, b : 3, c : 3 }, { a : 1, b : 3, c : 3 },
+  ];
+  test.identical( got, expected );
+
+  test.case = 'onEach is used';
+  var onEach = function( sample, i )
+  {
+    return sample[ i ] = sample[ i ] + 12;
+  }
+  var got = _.eachSample
+  ({
+    sets : [ [ 0, 1 ], [ 2, 3 ] ],
+    onEach : onEach,
+    sample : [ 1, 2, 3 ]
+  });
+  var expected =
+  [
+    [ 0, 2, 3 ], [ 1, 2, 3 ],
+    [ 0, 3, 3 ], [ 1, 3, 15 ],
+  ];
+  test.identical( got, expected );
+
+  test.case = 'onEach is used';
+  var result = [];
+  var onEach = function( sample, i )
+  {
+    _.arrayAppend( result, sample[ i ] );
+  }
+  var got = _.eachSample
+  ({
+    sets : [ [ 0, 1 ], [ 2, 3 ] ],
+    onEach : onEach,
+    sample : [ 1, 2, 3, 4 ]
+  });
+  var expected =
+  [
+    [ 0, 2, 3, 4 ], [ 1, 2, 3, 4 ],
+    [ 0, 3, 3, 4 ], [ 1, 3, 3, 4 ],
+  ];
+  test.identical( got, expected );
+  test.identical( result, [ 0, 2, 3, 4 ] );
 
   /* - */
 

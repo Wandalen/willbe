@@ -2656,6 +2656,10 @@ defaults.preservingDelimeters = 0;
 
 /*
 qqq : cover it by test
+Dmytro : covered,
+maybe, routine needs assertion
+_.assert( arguments.lenght === 1, 'Expects one argument' );
+if assertion will be accepted, then test.case = 'a few arguments' will throw error
 */
 
 function strSplitCamel( src )
@@ -3418,6 +3422,47 @@ let strJoin = _.routineFromPreAndBody( strJoin_pre, strJoin_body );
 
 //
 
+/**
+ * Routine strJoinPath() joins objects inside the source array, by concatenating their values in order that they are specified.
+ * The source array can contain strings, numbers and arrays. If arrays are provided, they must have same length.
+ * Joins arrays by concatenating all elements with same index into one string and puts it into new array at same position.
+ * Joins array with other object by concatenating each array element with that object value.
+ * Examples: ( [ [ 1, 2 ], 3 ], '' ) -> ( [ '13', '23' ] ), ( [ [ 1, 2 ], [ 1, 2] ] ) -> ( [ '11', '22' ], '' ).
+ * Second argument should be string type. This argument ( joiner ) defines the string that joins the
+ * srcArray objects.  Examples: ( [ [ 1, 2 ], 3 ], '*' ) -> ( [ '1*3', '2*3' ] ),
+ * ( [ [ 1, 2 ], [ 1, 2 ] ], ' to ' ) -> ( [ '1 to 1', '2 to 2' ] ).
+ * If the ( srcs ) objects has ( joiner ) at begin or end, ( joiner ) will be replaced. ( joiner ) replaced only between joined objects.
+ * Example: ( [ '/11/', '//22//', '/3//' ], '/' ) --> '/11//22//3//'
+ *
+ * @param { Array-like } srcs - Source array with the provided objects.
+ * @param { String } joiner - Joiner parameter.
+ *
+ * @example
+ * //returns '123'
+ * _.strJoinPath( [ 1, 2, 3 ], '' );
+ *
+ * @example
+ * //returns '/a//b//c//'
+ * _.strJoinPath( [ [ '/a//', 'b', '//c//' ], 2 ], '/' );
+ *
+ * @example
+ * //returns [ '1.1', '2.3' ]
+ * _.strJoinPath( [ [ 1, 2 ], [ 1, 3 ] ], '.');
+ *
+ * @example
+ * //returns [ '1,2,3,6', '1,2,4,7', '1,2,5,8' ]
+ * _.strJoinPath( [ 1, 2, [ 3, 4, 5 ], [ 6, 7, 8 ] ], ',');
+ *
+ * @method strJoinPath
+ * @returns { String|Array-like } Returns concatenated objects as string or array. Return type depends from arguments type.
+ * @throws { Exception } If ( arguments.length ) is less or more than two.
+ * @throws { Exception } If some object from ( srcs ) is not a Array, String or Number.
+ * @throws { Exception } If length of arrays in ( srcs ) is different.
+ * @throws { Exception } If ( joiner ) is not a string.
+ * @memberof wTools
+ *
+ */
+
 function strJoinPath( srcs, joiner )
 {
   let result = [ '' ];
@@ -3620,6 +3665,8 @@ strConcat.defaults =
 
 /*
 qqq : extend coverage of strIndentation
+Dmytro : coverage NOT extended. Description and realisation of routine is not identical.
+So, test routine is corrected corresponds to actual state of routine. 
 */
 
 function strIndentation( src, tab )
@@ -4444,7 +4491,7 @@ let Proto =
 
   strDup : _.routineVectorize_functor( _strDup ), /* document me */
   strJoin,
-  strJoinPath, /* qqq : cover and document me */
+  strJoinPath, /* qqq : cover and document me // Dmytro : covered and documented */
   strConcat,
 
   // liner
