@@ -8,7 +8,7 @@ if( typeof module !== 'undefined' )
   let _ = require( '../../Tools.s' );
 
   _.include( 'wTesting' );
-  _.include( 'wComparator' );
+  _.include( 'wEqualer' );
 
   require( '../../abase/l3/Proto.s' );
 

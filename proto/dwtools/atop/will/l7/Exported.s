@@ -138,7 +138,6 @@ function readExported()
   {
 
     opener2.moduleFind();
-    // opener2.openedModule.willfilesReadTimeReported = 1;
     opener2.openedModule.stager.stageStatePausing( 'picked', 0 );
     opener2.openedModule.stager.stageStateSkipping( 'submodulesFormed', 1 );
     opener2.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
@@ -277,8 +276,6 @@ function performExportedReflectors( exportSelector )
     for( let p = 0 ; p < exp.length ; p++ )
     {
       _.assert( !_.strHas( exp[ p ], '::' ) );
-      // if( path.isAbsolute( exp[ p ] ) ) // yyy
-      // exp[ p ] = path.relative( module.inPath, exp[ p ] );
       exportedReflector.src.filePath[ exp[ p ] ] = true;
     }
     exportedReflector.src.basePath = commonPath;
@@ -289,8 +286,6 @@ function performExportedReflectors( exportSelector )
 
     _.assert( !_.strHas( exp, '::' ) );
     exportedReflector = module.resourceAllocate( 'reflector', 'exported.' + exported.name );
-    // if( path.isAbsolute( exp ) ) // yyy
-    // exp = path.relative( module.inPath, exp );
     exportedReflector.src.filePath = exp;
 
   }
@@ -298,9 +293,7 @@ function performExportedReflectors( exportSelector )
 
   exportedReflector.criterion = _.mapExtend( null, exported.criterion );
   exportedReflector.generated = 1;
-  // debugger;
   exportedReflector.form();
-  // debugger;
   exported.exportedReflector = exportedReflector;
 
   _.assert( exportedReflector.original === null );
@@ -585,19 +578,10 @@ function perform( frame )
 
   _.assert( arguments.length === 1 );
 
-  // debugger;
   if( !module.stager.stageStatePerformed( 'resourcesFormed' ) )
   con.then( () => module.stager.stageRerun( 'resourcesFormed' ) )
 
-  // con.tap( () =>
-  // {
-  //   debugger;
-  // });
   con.then( () => exported._perform( frame ) );
-  // con.tap( () =>
-  // {
-  //   debugger;
-  // });
 
   return con;
 }
@@ -610,16 +594,12 @@ let Composes =
 {
 
   version : null,
-  // description : null,
-  // criterion : null,
-  // inherit : _.define.own([]),
 
   exportedReflector : null,
   exportedFilesReflector : null,
   exportedDirPath : null,
   exportedFilesPath : null,
   archiveFilePath : null,
-  // originalWillFilesPath : null, // xxx
 
 }
 
@@ -637,12 +617,10 @@ let Associates =
 let Restricts =
 {
   srcFilter : null,
-  // originalWillFilesPath : null, // xxx
 }
 
 let Medials =
 {
-  // originalWillFilesPath : null, // xxx
 }
 
 let Statics =

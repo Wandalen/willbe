@@ -60,7 +60,7 @@ path:
       - ./dwtools/abase/l3.test/Path.test.html
       - ./dwtools/abase/l3.test/Path.test.s
       - ./dwtools/abase/l4
-      - ./dwtools/abase/l4/Paths.s
+      - ./dwtools/abase/l4/PathsBasic.s
       - ./dwtools/abase/l4.test
       - ./dwtools/abase/l4.test/Paths.test.s
       - ./dwtools/abase/l7
@@ -158,7 +158,7 @@ reflector:
       ./dwtools/abase/l3.test/Path.test.html: true
       ./dwtools/abase/l3.test/Path.test.s: true
       ./dwtools/abase/l4: true
-      ./dwtools/abase/l4/Paths.s: true
+      ./dwtools/abase/l4/PathsBasic.s: true
       ./dwtools/abase/l4.test: true
       ./dwtools/abase/l4.test/Paths.test.s: true
       ./dwtools/abase/l7: true
@@ -179,7 +179,7 @@ reflector:
         ./dwtools/abase/l3.test/Path.test.html: true
         ./dwtools/abase/l3.test/Path.test.s: true
         ./dwtools/abase/l4: true
-        ./dwtools/abase/l4/Paths.s: true
+        ./dwtools/abase/l4/PathsBasic.s: true
         ./dwtools/abase/l4.test: true
         ./dwtools/abase/l4.test/Paths.test.s: true
         ./dwtools/abase/l7: true

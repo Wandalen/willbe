@@ -14,6 +14,8 @@ if( typeof module !== 'undefined' )
   _.include( 'wTemplateTreeEnvironment' );
   _.include( 'wStager' );
   _.include( 'wGraph' );
+  _.include( 'wSelector' );
+  _.include( 'wResolver' );
 
   _.include( 'wFiles' );
   _.include( 'wFilesArchive' );

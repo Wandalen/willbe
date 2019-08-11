@@ -1,9 +1,9 @@
-( function _Path_s_() {
+( function _PathBasic_s_() {
 
 'use strict';
 
 /**
- * Collection of routines to operate paths in the reliable and consistent way. Path leverages parsing,joining,extracting,normalizing,nativizing,resolving paths. Use the module to get uniform experience from playing with paths on different platforms.
+ * Collection of routines to operate paths reliably and consistently. Path leverages parsing,joining,extracting,normalizing,nativizing,resolving paths. Use the module to get uniform experience from playing with paths on different platforms.
   @module Tools/base/Path
 */
 
@@ -12,9 +12,9 @@
  */
 
 /**
- * @summary Collection of routines to operate paths in the reliable and consistent way.
+ * @summary Collection of routines to operate paths reliably and consistently.
  * @namespace "wTools.path"
- * @memberof module:Tools/base/Path
+ * @memberof module:Tools/PathBasic
  */
 
 if( typeof module !== 'undefined' )
@@ -70,155 +70,155 @@ function CloneExtending( o )
 {
   _.assert( arguments.length === 1 );
   let result = Object.create( this )
-  _.mapExtend( result,Parameters,o );
+  _.mapExtend( result, Parameters,o );
   result.Init();
   return result;
 }
 
 //
 
-/*
-qqq : use routineVectorize_functor instead
-*/
-
-function _pathMultiplicator_functor( o )
-{
-
-  if( _.routineIs( o ) || _.strIs( o ) )
-  o = { routine : o }
-
-  _.routineOptions( _pathMultiplicator_functor, o );
-  _.assert( _.routineIs( o.routine ) );
-  _.assert( o.fieldNames === null || _.longIs( o.fieldNames ) )
-
-  /* */
-
-  let routine = o.routine;
-  let fieldNames = o.fieldNames;
-
-  function supplement( src,l )
-  {
-    if( !_.longIs( src ) )
-    src = _.arrayFillTimes( [], l,src );
-    _.assert( src.length === l, 'routine expects arrays with same length' );
-    return src;
-  }
-
-  function inputMultiplicator( o )
-  {
-    let result = [];
-    let l = 0;
-    let onlyScalars = true;
-
-    if( arguments.length > 1 )
-    {
-      let args = [].slice.call( arguments );
-
-      for( let i = 0; i < args.length; i++ )
-      {
-        if( onlyScalars && _.longIs( args[ i ] ) )
-        onlyScalars = false;
-
-        l = Math.max( l,_.arrayAs( args[ i ] ).length );
-      }
-
-      for( let i = 0; i < args.length; i++ )
-      args[ i ] = supplement( args[ i ], l );
-
-      for( let i = 0; i < l; i++ )
-      {
-        let argsForCall = [];
-
-        for( let j = 0; j < args.length; j++ )
-        argsForCall.push( args[ j ][ i ] );
-
-        let r = routine.apply( this,argsForCall );
-        result.push( r )
-      }
-    }
-    else
-    {
-      if( fieldNames === null || !_.objectIs( o ) )
-      {
-        if( _.longIs( o ) )
-        {
-          for( let i = 0; i < o.length; i++ )
-          result.push( routine.call( this,o[ i ] ) );
-        }
-        else
-        {
-          result = routine.call( this,o );
-        }
-
-        return result;
-      }
-
-      let fields = [];
-
-      for( let i = 0; i < fieldNames.length; i++ )
-      {
-        let field = o[ fieldNames[ i ] ];
-
-        if( onlyScalars && _.longIs( field ) )
-        onlyScalars = false;
-
-        l = Math.max( l,_.arrayAs( field ).length );
-        fields.push( field );
-      }
-
-      for( let i = 0; i < fields.length; i++ )
-      fields[ i ] = supplement( fields[ i ], l );
-
-      for( let i = 0; i < l; i++ )
-      {
-        let options = _.mapExtend( null,o );
-        for( let j = 0; j < fieldNames.length; j++ )
-        {
-          let fieldName = fieldNames[ j ];
-          options[ fieldName ] = fields[ j ][ i ];
-        }
-
-        result.push( routine.call( this,options ) );
-      }
-    }
-
-    _.assert( result.length === l );
-
-    if( onlyScalars )
-    return result[ 0 ];
-
-    return result;
-  }
-
-  return inputMultiplicator;
-}
-
-_pathMultiplicator_functor.defaults =
-{
-  routine : null,
-  fieldNames : null
-}
-
+// /*
+// qqq : use routineVectorize_functor instead
+// */
 //
-
-function _filterNoInnerArray( arr )
-{
-  return arr.every( ( e ) => !_.arrayIs( e ) );
-}
-
+// function _pathMultiplicator_functor( o )
+// {
 //
-
-function _filterOnlyPath( e, k, c )
-{
-  if( _.strIs( k ) )
-  {
-    if( _.strEnds( k,'Path' ) )
-    return true;
-    else
-    return false
-  }
-  return this.is( e );
-}
+//   if( _.routineIs( o ) || _.strIs( o ) )
+//   o = { routine : o }
+//
+//   _.routineOptions( _pathMultiplicator_functor, o );
+//   _.assert( _.routineIs( o.routine ) );
+//   _.assert( o.fieldNames === null || _.longIs( o.fieldNames ) )
+//
+//   /* */
+//
+//   let routine = o.routine;
+//   let fieldNames = o.fieldNames;
+//
+//   function supplement( src,l )
+//   {
+//     if( !_.longIs( src ) )
+//     src = _.arrayFillTimes( [], l,src );
+//     _.assert( src.length === l, 'routine expects arrays with same length' );
+//     return src;
+//   }
+//
+//   function inputMultiplicator( o )
+//   {
+//     let result = [];
+//     let l = 0;
+//     let onlyScalars = true;
+//
+//     if( arguments.length > 1 )
+//     {
+//       let args = [].slice.call( arguments );
+//
+//       for( let i = 0; i < args.length; i++ )
+//       {
+//         if( onlyScalars && _.longIs( args[ i ] ) )
+//         onlyScalars = false;
+//
+//         l = Math.max( l,_.arrayAs( args[ i ] ).length );
+//       }
+//
+//       for( let i = 0; i < args.length; i++ )
+//       args[ i ] = supplement( args[ i ], l );
+//
+//       for( let i = 0; i < l; i++ )
+//       {
+//         let argsForCall = [];
+//
+//         for( let j = 0; j < args.length; j++ )
+//         argsForCall.push( args[ j ][ i ] );
+//
+//         let r = routine.apply( this,argsForCall );
+//         result.push( r )
+//       }
+//     }
+//     else
+//     {
+//       if( fieldNames === null || !_.objectIs( o ) )
+//       {
+//         if( _.longIs( o ) )
+//         {
+//           for( let i = 0; i < o.length; i++ )
+//           result.push( routine.call( this,o[ i ] ) );
+//         }
+//         else
+//         {
+//           result = routine.call( this,o );
+//         }
+//
+//         return result;
+//       }
+//
+//       let fields = [];
+//
+//       for( let i = 0; i < fieldNames.length; i++ )
+//       {
+//         let field = o[ fieldNames[ i ] ];
+//
+//         if( onlyScalars && _.longIs( field ) )
+//         onlyScalars = false;
+//
+//         l = Math.max( l,_.arrayAs( field ).length );
+//         fields.push( field );
+//       }
+//
+//       for( let i = 0; i < fields.length; i++ )
+//       fields[ i ] = supplement( fields[ i ], l );
+//
+//       for( let i = 0; i < l; i++ )
+//       {
+//         let options = _.mapExtend( null,o );
+//         for( let j = 0; j < fieldNames.length; j++ )
+//         {
+//           let fieldName = fieldNames[ j ];
+//           options[ fieldName ] = fields[ j ][ i ];
+//         }
+//
+//         result.push( routine.call( this,options ) );
+//       }
+//     }
+//
+//     _.assert( result.length === l );
+//
+//     if( onlyScalars )
+//     return result[ 0 ];
+//
+//     return result;
+//   }
+//
+//   return inputMultiplicator;
+// }
+//
+// _pathMultiplicator_functor.defaults =
+// {
+//   routine : null,
+//   fieldNames : null
+// }
+//
+// //
+//
+// function _filterNoInnerArray( arr )
+// {
+//   return arr.every( ( e ) => !_.arrayIs( e ) );
+// }
+//
+// //
+//
+// function _filterOnlyPath( e, k, c )
+// {
+//   if( _.strIs( k ) )
+//   {
+//     if( _.strEnds( k,'Path' ) )
+//     return true;
+//     else
+//     return false
+//   }
+//   return this.is( e );
+// }
 
 // --
 // path tester
@@ -271,7 +271,7 @@ function isElement( pathElement )
  * @param {String} filePath Source path for check
  * @returns {boolean}
  * @function isSafe
- * @memberof module:Tools/base/Path.wTools.path
+ * @memberof module:Tools/PathBasic.wTools.path
  */
 
 function isSafe( filePath,level )
@@ -341,7 +341,7 @@ function isSafe( filePath,level )
  * @param {String} filePath Source path for check
  * @returns {boolean}
  * @function isRefinedMaybeTrailed
- * @memberof module:Tools/base/Path.wTools.path
+ * @memberof module:Tools/PathBasic.wTools.path
  */
 
 function isRefinedMaybeTrailed( path )
@@ -376,7 +376,7 @@ function isRefinedMaybeTrailed( path )
  * @param {String} filePath Source path for check
  * @returns {boolean}
  * @function isRefined
- * @memberof module:Tools/base/Path.wTools.path
+ * @memberof module:Tools/PathBasic.wTools.path
  */
 
 function isRefined( path )
@@ -403,7 +403,7 @@ function isRefined( path )
  * @param {String} filePath Source path for check
  * @returns {boolean}
  * @function isNormalizedMaybeTrailed
- * @memberof module:Tools/base/Path.wTools.path
+ * @memberof module:Tools/PathBasic.wTools.path
  */
 
 function isNormalizedMaybeTrailed( filePath )
@@ -422,7 +422,7 @@ function isNormalizedMaybeTrailed( filePath )
  * @param {String} filePath Source path for check
  * @returns {boolean}
  * @function isNormalized
- * @memberof module:Tools/base/Path.wTools.path
+ * @memberof module:Tools/PathBasic.wTools.path
  */
 
 function isNormalized( filePath )
@@ -590,7 +590,7 @@ function ends( srcPath,endPath )
   * @throws {Error} If {-arguments.length-} is less or more then one.
   * @throws {Error} If passed argument is not a string.
   * @function refine
-  * @memberof module:Tools/base/Path.wTools.path
+  * @memberof module:Tools/PathBasic.wTools.path
   */
 
 function refine( src )
@@ -747,7 +747,7 @@ _normalize.defaults =
  * @param {string} src path for normalization
  * @returns {string}
  * @function normalize
- * @memberof module:Tools/base/Path.wTools.path
+ * @memberof module:Tools/PathBasic.wTools.path
  */
 
 function normalize( src )
@@ -848,20 +848,29 @@ function _pathNativizeWindows( filePath )
 
 //
 
-function _pathNativizeUnix( filePath )
+function _pathNativizePosix( filePath )
 {
   let self = this;
-  _.assert( _.strIs( filePath ), 'Expects string' );
+  _.assert( _.strIs( filePath ), 'Expects string' );n
   return filePath;
 }
 
 //
+//
+// let nativize;
+// if( _global.process && _global.process.platform === 'win32' )
+// nativize = _pathNativizeWindows;
+// else
+// nativize = _pathNativizePosix;
 
-let nativize;
-if( _global.process && _global.process.platform === 'win32' )
-nativize = _pathNativizeWindows;
-else
-nativize = _pathNativizeUnix;
+function nativize()
+{
+  if( _global.process && _global.process.platform === 'win32' )
+  this.nativize = this._pathNativizeWindows;
+  else
+  this.nativize = this._pathNativizePosix;
+  return this.nativize.apply( this, arguments );
+}
 
 // --
 // transformer
@@ -952,7 +961,7 @@ function detrail( path )
  * @returns {string}
  * @throws {Error} If argument is not string
  * @function dir
- * @memberof module:Tools/base/Path.wTools.path
+ * @memberof module:Tools/PathBasic.wTools.path
  */
 
 function dir_pre( routine, args )
@@ -1041,14 +1050,13 @@ dirFirst.defaults.first = 1;
  * @returns {string}
  * @throws {Error} If passed argument is not string.
  * @function prefixGet
- * @memberof module:Tools/base/Path.wTools.path
+ * @memberof module:Tools/PathBasic.wTools.path
  */
 
 function prefixGet( path )
 {
 
-  if( !_.strIs( path ) )
-  throw _.err( 'prefixGet :','Expects strings as path' );
+  _.assert( _.strIs( path ), 'Expects string as path' );
 
   let n = path.lastIndexOf( '/' );
   if( n === -1 ) n = 0;
@@ -1075,7 +1083,7 @@ function prefixGet( path )
  * @returns {string}
  * @throws {Error} If passed argument is not string
  * @function name
- * @memberof module:Tools/base/Path.wTools.path
+ * @memberof module:Tools/PathBasic.wTools.path
  */
 
 function name_pre( routine, args )
@@ -1087,6 +1095,8 @@ function name_pre( routine, args )
   _.routineOptions( routine, o );
   _.assert( args.length === 1 );
   _.assert( arguments.length === 2 );
+  _.assert( _.strIs( o.path ), 'Expects string {-o.path-}' );
+  // _.assert( _.strIs( o.path ), 'Expects strings {-o.path-}' ); /* qqq : string, not strings. _.strIs( o.path ) is singular */
 
   return o;
 }
@@ -1097,8 +1107,8 @@ function name_body( o )
   if( _.strIs( o ) )
   o = { path : o };
 
-  o = _.assertRoutineOptions( name, arguments );
-  _.assert( o && _.strIs( o.path ), 'Expects strings {-o.path-}' );
+  // o = _.assertRoutineOptions( name, arguments ); /* qqq : no imply with asserts */
+  _.assertRoutineOptions( name, arguments );
 
   o.path = this.canonize( o.path );
 
@@ -1137,7 +1147,7 @@ fullName.defaults.full = 1;
  * @returns {string}
  * @throws {Error} If passed argument is not string
  * @function withoutExt
- * @memberof module:Tools/base/Path.wTools.path
+ * @memberof module:Tools/PathBasic.wTools.path
  */
 
 function withoutExt( path )
@@ -1168,7 +1178,7 @@ function withoutExt( path )
  * @returns {string}
  * @throws {Error} If passed argument is not string
  * @function changeExt
- * @memberof module:Tools/base/Path.wTools.path
+ * @memberof module:Tools/PathBasic.wTools.path
  */
 
 // qqq : extend tests
@@ -1223,7 +1233,7 @@ function _pathsChangeExt( src )
  * @returns {string} file extension
  * @throws {Error} If passed argument is not string.
  * @function ext
- * @memberof module:Tools/base/Path.wTools.path
+ * @memberof module:Tools/PathBasic.wTools.path
  */
 
 function ext( path )
@@ -1297,7 +1307,7 @@ function join_pre( routine, args )
  * @throws {Error} If elements of `paths` are not strings
  * @throws {Error} If o has extra parameters.
  * @function join_body
- * @memberof module:Tools/base/Path.wTools.path
+ * @memberof module:Tools/PathBasic.wTools.path
  */
 
 function join_body( o )
@@ -1419,7 +1429,7 @@ join_body.defaults =
  * @returns {string} Result path is the concatenation of all `paths` with '/' directory delimeter.
  * @throws {Error} If one of passed arguments is not string
  * @function join
- * @memberof module:Tools/base/Path.wTools.path
+ * @memberof module:Tools/PathBasic.wTools.path
  */
 
 let join = _.routineFromPreAndBody( join_pre, join_body );
@@ -1514,7 +1524,7 @@ function joinCross()
  * @returns {string} Result path is the concatenation of all `paths` with '/' directory delimeter.
  * @throws {Error} If one of passed arguments is not string
  * @function reroot
- * @memberof module:Tools/base/Path.wTools.path
+ * @memberof module:Tools/PathBasic.wTools.path
  */
 
 let reroot = _.routineFromPreAndBody( join_pre, join_body );
@@ -1550,7 +1560,7 @@ reroot.defaults =
  * @param [...string] paths A sequence of paths or path segments
  * @returns {string}
  * @function resolve
- * @memberof module:Tools/base/Path.wTools.path
+ * @memberof module:Tools/PathBasic.wTools.path
  */
 
 function resolve()
@@ -1789,12 +1799,12 @@ function current()
 * accessed to confirm the existence or nature of path or start.
 
 * * If `o.relative` and `o.path` each resolve to the same path method returns `.`.
-* * If `o.resolving` is enabled -- paths `o.relative` and `o.path` are resolved before computation, uses result of {@link module:Tools/base/Path.Path.current _.path.current} as base.
+* * If `o.resolving` is enabled -- paths `o.relative` and `o.path` are resolved before computation, uses result of {@link module:Tools/PathBasic.Path.current _.path.current} as base.
 * * If `o.resolving` is disabled -- paths `o.relative` and `o.path` are not resolved and must be both relative or absolute.
 *
 * **Examples of how result is computed and how to chech the result:**
 *
-* Result is checked by a formula : from + result === to, where '+' means join operation {@link module:Tools/base/Path.Path.join _.path.join}
+* Result is checked by a formula : from + result === to, where '+' means join operation {@link module:Tools/PathBasic.Path.join _.path.join}
 *
 * **Note** :
 * * `from` -- `o.relative`
@@ -1903,7 +1913,7 @@ function current()
 * //'./d'
 *
 * @function _relative
-* @memberof module:Tools/base/Path.wTools.path
+* @memberof module:Tools/PathBasic.wTools.path
 */
 
 function _relative( o )
@@ -2072,13 +2082,13 @@ _relative.defaults =
 //
 
 /**
-* Short-cut for routine relative {@link module:Tools/base/Path.Path._relative _.path._relative}.
+* Short-cut for routine relative {@link module:Tools/PathBasic.Path._relative _.path._relative}.
 * Returns a relative path to `path` from an `relative`. Does not resolve paths {o.relative} and {o.path} before computation.
 *
 * @param {string|wFileRecord} relative Start path.
 * @param {string|string[]} path Target path(s).
 * @returns {string|string[]} Returns relative path as String or array of Strings.
-* For more details please see {@link module:Tools/base/Path.Path._relative _.path._relative}.
+* For more details please see {@link module:Tools/PathBasic.Path._relative _.path._relative}.
 *
 * @example
 * let from = '/a';
@@ -2122,7 +2132,7 @@ _relative.defaults =
 * //'../../c/d'
 *
 * @function relative
-* @memberof module:Tools/base/Path.wTools.path
+* @memberof module:Tools/PathBasic.wTools.path
 */
 
 function relative_pre( routine, args )
@@ -2519,15 +2529,6 @@ function moveTextualReport_pre( routine, args )
   _.assert( args.length === 1 || args.length === 2 );
   _.assert( arguments.length === 2 );
 
-  return o;
-}
-
-function moveTextualReport_body( o )
-{
-  let result = '';
-
-  _.assertRoutineOptions( moveTextualReport_body, arguments );
-
   let srcIsAbsolute = false;
   if( o.srcPath && this.s.anyAreAbsolute( o.srcPath ) )
   srcIsAbsolute = true;
@@ -2541,12 +2542,14 @@ function moveTextualReport_body( o )
   if( !o.dstPath )
   o.dstPath = srcIsAbsolute ? '/{null}' : '{null}';
 
-  if( dstIsAbsolute )
-  if( o.srcPath === '' || o.srcPath === '.' )
-  o.srcPath = '/{null}';
+  return o;
+}
 
-  // o.dstPath = o.dstPath || '{null}';
-  // let c = this.isGlobal( o.srcPath ) ? '' : this.common( o.dstPath, o.srcPath );
+function moveTextualReport_body( o )
+{
+  let result = '';
+
+  _.assertRoutineOptions( moveTextualReport_body, arguments );
 
   let common = this.common( o.dstPath, o.srcPath );
 
@@ -2664,9 +2667,9 @@ let Routines =
   Init,
   CloneExtending,
 
-  _pathMultiplicator_functor,
-  _filterNoInnerArray,
-  _filterOnlyPath,
+  // _pathMultiplicator_functor,
+  // _filterNoInnerArray,
+  // _filterOnlyPath,
 
   // path tester
 
@@ -2700,7 +2703,7 @@ let Routines =
   canonizeTolerant,
 
   _pathNativizeWindows,
-  _pathNativizeUnix,
+  _pathNativizePosix,
   nativize,
 
   // transformer
@@ -2767,9 +2770,9 @@ let Routines =
 
 }
 
-_.mapSupplement( Self,Parameters );
-_.mapSupplement( Self,Fields );
-_.mapSupplement( Self,Routines );
+_.mapSupplement( Self, Parameters );
+_.mapSupplement( Self, Fields );
+_.mapSupplement( Self, Routines );
 
 Self.Init();
 
@@ -2782,8 +2785,8 @@ module[ 'exports' ] = Self;
 
 if( typeof module !== 'undefined' )
 {
-  require( '../l4/Paths.s' );
-  require( '../l7/Glob.s' );
+  // require( '../l4/PathsBasic.s' );
+  // require( '../l7/Glob.s' );
 }
 
 })();
