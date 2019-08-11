@@ -4643,16 +4643,17 @@ function exportMixed( test )
       {
         "path" :
         [
-          "../.module/Proto/proto",
-          "../.module/Proto/proto/dwtools",
-          "../.module/Proto/proto/dwtools/Tools.s",
-          "../.module/Proto/proto/dwtools/abase",
-          "../.module/Proto/proto/dwtools/abase/l3",
-          "../.module/Proto/proto/dwtools/abase/l3/Proto.s",
-          "../.module/Proto/proto/dwtools/abase/l3/ProtoAccessor.s",
-          "../.module/Proto/proto/dwtools/abase/l3/ProtoLike.s",
+          "../.module/Proto/proto", 
+          "../.module/Proto/proto/dwtools", 
+          "../.module/Proto/proto/dwtools/Tools.s", 
+          "../.module/Proto/proto/dwtools/abase", 
+          "../.module/Proto/proto/dwtools/abase/l3", 
+          "../.module/Proto/proto/dwtools/abase/l3/Proto.s", 
+          "../.module/Proto/proto/dwtools/abase/l3/Proto0Workpiece.s", 
+          "../.module/Proto/proto/dwtools/abase/l3/ProtoAccessor.s", 
+          "../.module/Proto/proto/dwtools/abase/l3/ProtoLike.s", 
           "../.module/Proto/proto/dwtools/abase/l3.test",
-          "../.module/Proto/proto/dwtools/abase/l3.test/Proto.test.s",
+          "../.module/Proto/proto/dwtools/abase/l3.test/Proto.test.s", 
           "../.module/Proto/proto/dwtools/abase/l3.test/ProtoLike.test.s"
         ],
         "criterion" : { "default" : 1, "export" : 1 }
@@ -6402,16 +6403,17 @@ function importLocalRepo( test )
       {
         "path" :
         [
-          "Proto/proto",
-          "Proto/proto/dwtools",
-          "Proto/proto/dwtools/Tools.s",
-          "Proto/proto/dwtools/abase",
-          "Proto/proto/dwtools/abase/l3",
-          "Proto/proto/dwtools/abase/l3/Proto.s",
-          "Proto/proto/dwtools/abase/l3/ProtoAccessor.s",
-          "Proto/proto/dwtools/abase/l3/ProtoLike.s",
+          "Proto/proto", 
+          "Proto/proto/dwtools", 
+          "Proto/proto/dwtools/Tools.s", 
+          "Proto/proto/dwtools/abase", 
+          "Proto/proto/dwtools/abase/l3", 
+          "Proto/proto/dwtools/abase/l3/Proto.s", 
+          "Proto/proto/dwtools/abase/l3/Proto0Workpiece.s", 
+          "Proto/proto/dwtools/abase/l3/ProtoAccessor.s", 
+          "Proto/proto/dwtools/abase/l3/ProtoLike.s", 
           "Proto/proto/dwtools/abase/l3.test",
-          "Proto/proto/dwtools/abase/l3.test/Proto.test.s",
+          "Proto/proto/dwtools/abase/l3.test/Proto.test.s", 
           "Proto/proto/dwtools/abase/l3.test/ProtoLike.test.s"
         ],
         "criterion" : { "default" : 1, "export" : 1 }
@@ -7720,6 +7722,57 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
 
 reflectSubmodulesWithPluralCriterionAutoExport.timeOut = 300000;
 
+//
+
+function relfectSubmodulesWithNotExistingFile( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-reflect-with-not-existing' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let outPath = _.path.join( routinePath, 'out' );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+  
+  /* 
+    moduleA exports:
+    proto
+      amid 
+        Tools.s
+        
+    moduleB exports:
+      proto
+        amid
+    
+    proto/amid of moduleB doesn't exist on harddrive, but its listed in out file
+    
+    main module reflects files of these modules, when assert fails
+  */
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* - */
+  
+  ready
+  .then( () =>
+  {
+    test.case = 'reflect submodules'
+    return null;
+  })
+  
+  shell({ args : [ '.build' ] })
+  
+  return test.shouldThrowErrorAsync( ready );
+}
+
+relfectSubmodulesWithNotExistingFile.timeOut = 30000;
 
 //
 
@@ -8532,19 +8585,21 @@ function functionPlatform( test )
   shell({ args : [ '.clean' ] })
   shell({ args : [ '.build' ] })
   .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, /\+ .*reflector::copy.* reflected 2 files .*functionPlatform\/.* : .*out\/dir\.windows.* <- .*proto.* in/ ), 1 );
-
+  { 
     var Os = require( 'os' );
+    let platform = 'posix';
+    
+    if( Os.platform() === 'win32' )
+    platform = 'windows'
+    if( Os.platform() === 'darwin' )
+    platform = 'osx'
+    
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, /\+ .*reflector::copy.* reflected 2 files .*functionPlatform\/.* : .*out\/dir\..* <- .*proto.* in/ ), 1 );
+
     var files = self.find( outPath );
 
-    if( Os.platform() === 'win32' )
-    test.identical( files, [ '.', './dir.windows', './dir.windows/File.js' ] );
-    else if( Os.platform() === 'darwin' )
-    test.identical( files, [ '.', './dir.osx', './dir.osx/File.js' ] );
-    else
-    test.identical( files, [ '.', './dir.posix', './dir.posix/File.js' ] );
+    test.identical( files, [ '.', `./dir.${platform}`, `./dir.${platform}/File.js` ] );
 
     return null;
   })
@@ -10764,9 +10819,9 @@ function runWillbe( test )
 
   let shell = _.sheller
   ({
-    execPath : 'node',
     currentPath : routinePath,
     outputCollecting : 1,
+    mode : 'fork',
     ready : ready,
     mode : 'shell',
   });
@@ -10802,13 +10857,18 @@ function runWillbe( test )
 
     return test.shouldThrowErrorAsync( con )
     .then( () =>
-    {
+    { 
+      if( process.platform === 'win32' )
+      test.identical( o.exitCode, null );
+      else
       test.identical( o.exitCode, 255 );
+      test.identical( o.exitSignal, 'SIGINT' );
       test.is( _.strHas( o.output, 'wTools.out.will.yml' ) );
       test.is( !_.strHas( o.output, 'wLogger.out.will.yml' ) );
       test.is( !_.strHas( o.output, 'wLoggerToJs.out.will.yml' ) );
       test.is( !_.strHas( o.output, 'wConsequence.out.will.yml' ) );
       test.is( !_.strHas( o.output, 'wInstancing.out.will.yml' ) );
+
       return null;
     })
   })
@@ -10851,7 +10911,7 @@ function runWillbe( test )
   })
 
   /* */
-
+  
   return ready;
 }
 
@@ -10953,6 +11013,7 @@ var Self =
     reflectSubmodulesWithCriterion,
     reflectSubmodulesWithPluralCriterionManualExport,
     reflectSubmodulesWithPluralCriterionAutoExport,
+    relfectSubmodulesWithNotExistingFile,
     reflectInherit,
     reflectInheritSubmodules,
     // reflectComplexInherit, // xxx
