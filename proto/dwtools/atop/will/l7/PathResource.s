@@ -30,35 +30,6 @@ function ResouceDataFrom( o )
   return _.mapExtend( null, o );
 }
 
-// //
-//
-// function MakeFor_body( o )
-// {
-//   let Cls = this;
-//   let willf = o.willf;
-//   let module = o.module;
-//   let will = willf.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   _.assert( arguments.length === 1 );
-//
-//   let result = Parent.MakeFor.body.apply( Cls, arguments );
-//
-//   // if( result.criterion.predefined && !path.isEmpty( result.path ) && result.name !== 'in' )
-//   // {
-//   //   debugger;
-//   //   result.path = path.join( module.inPath, result.path );
-//   // }
-//
-//   return result;
-// }
-//
-// _.routineExtend( MakeFor_body, Parent.MakeFor.body );
-//
-// let MakeFor = _.routineFromPreAndBody( Parent.MakeFor.pre, MakeFor_body );
-
 //
 
 function OnInstanceExists( o )
@@ -84,11 +55,6 @@ function OnInstanceExists( o )
   if( o.instance.path !== null )
   if( o.resource.name === 'local' && o.IsOutFile )
   o.resource.importable = false;
-
-  // debugger;
-  // // if( o.instance.path !== null )
-  // if( o.resource.name === 'module.willfiles' )
-  // debugger;
 
   if( o.instance.path !== null )
   if( o.resource.name === 'module.willfiles' )
@@ -134,25 +100,6 @@ function unform()
 
   return resource;
 }
-
-// //
-//
-// function copy( o )
-// {
-//   let resource = this;
-//   _.assert( _.objectIs( o ) );
-//   _.assert( arguments.length === 1 );
-//
-//
-//
-//   let result = Parent.prototype.copy.call( resource, o );
-//
-//   let module = o.module !== undefined ? o.module : resource.module;
-//   if( o.unformedResource )
-//   resource.unformedResource = o.unformedResource.cloneExtending({ original : resource, module : module });
-//
-//   return result;
-// }
 
 //
 
@@ -281,7 +228,9 @@ function _pathSet( src )
 
 }
 
-//
+// --
+// exporter
+// --
 
 function dataExport()
 {
@@ -314,6 +263,19 @@ function dataExport()
 }
 
 dataExport.defaults = Object.create( Parent.prototype.dataExport.defaults );
+
+//
+
+function compactField( it )
+{
+  let resource = this;
+  let module = resource.module;
+
+  if( it.dst === '' )
+  return;
+
+  return Parent.prototype.compactField.call( resource, it );
+}
 
 // --
 // etc
@@ -403,7 +365,6 @@ let Restricts =
 let Statics =
 {
   ResouceDataFrom,
-  // MakeFor,
   OnInstanceExists,
   MapName : 'pathResourceMap',
   KindName : 'path',
@@ -430,18 +391,19 @@ let Extend =
   // inter
 
   ResouceDataFrom,
-  // MakeFor,
   OnInstanceExists,
 
   init,
   unform,
-  // copy,
 
   form1,
   form2,
   form3,
 
+  // exporter
+
   dataExport,
+  compactField,
 
   // etc
 

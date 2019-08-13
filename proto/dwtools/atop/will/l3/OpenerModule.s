@@ -899,10 +899,9 @@ function _willfilesFindPicked()
       will : will,
       role : 'single',
       openerModule : opener,
-      // data : opener.pickedWillfileData,
     })
 
-    if( willfile.exists() /*|| opener.pickedWillfileData*/ )
+    if( willfile.exists() )
     result.push( willfile );
     else
     willfile.finit();
@@ -948,7 +947,6 @@ function _willfilesFind()
     }
     else
     {
-      // _.assert( !opener.pickedWillfileData );
       result = opener._willfilesFindSmart({ isOutFile : !!opener.supermodule });
     }
 
@@ -1761,7 +1759,6 @@ let Composes =
   aliasName : null,
 
   willfilesPath : null,
-  // pickedWillfilesPath : null,
   inPath : null,
   outPath : null,
   localPath : null,
@@ -1787,7 +1784,6 @@ let Associates =
 
   rootModule : null,
   supermodule : null,
-  // pickedWillfileData : null,
 
   willfilesArray : _.define.own([]),
 

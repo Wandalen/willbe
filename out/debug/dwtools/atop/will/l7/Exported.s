@@ -100,6 +100,7 @@ function verify()
   {
     let submodule = module.submoduleMap[ s ];
     if( !submodule.opener || !submodule.opener.isOpened() || !submodule.opener.isValid() )
+    if( !submodule.criterion.optional && !submodule.criterion.dev && submodule.enabled )
     {
       debugger;
       throw _.errBriefly( _.color.strFormat( ' ! ', 'negative' ) + 'Exporting is impossible because ' + submodule.decoratedAbsoluteName + ' is broken!' );

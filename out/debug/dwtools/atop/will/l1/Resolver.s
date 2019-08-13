@@ -2,14 +2,10 @@
 
 'use strict';
 
-// let ResolverAbstract = require( '../l0/Resolver.s' );
-
 if( typeof module !== 'undefined' )
 {
 
   require( '../IncludeBase.s' );
-
-
 
 }
 
@@ -37,18 +33,12 @@ function _onSelectorDown()
 
     it.dst = _.strJoin( it.dst );
 
+    it.src.composite = null;
     resolver._pathsNativize.call( it );
 
   }
-  // else // xxx
-  // {
-  //
-  //   resolver._arrayFlatten.call( it );
-  //
-  // }
 
   Parent._onSelectorDown.call( it );
-
 }
 
 //
@@ -895,7 +885,10 @@ function filesFromResource_body( o )
   function resourceHandle( resource )
   {
 
-    if( resource instanceof will.Reflector )
+    if( resource === null )
+    {
+    }
+    else if( resource instanceof will.Reflector )
     {
       let o2 = resource.optionsForFindExport();
       o2.outputFormat = 'absolute';
@@ -903,11 +896,12 @@ function filesFromResource_body( o )
       let files = fileProvider.filesFind( o2 );
       filesAdd( files );
     }
-    else if( resource instanceof will.PathResource )
+    else if( _.strIs( resource ) || _.arrayIs( resource ) || _.mapIs( resource ) )
     {
       let o2 = Object.create( null );
       o2.filter = Object.create( null );
-      o2.filter.filePath = resource.path;
+      // o2.filter.filePath = resource.path;
+      o2.filter.filePath = resource;
       o2.outputFormat = 'absolute';
       o2.mode = 'distinct';
       let files = fileProvider.filesFind( o2 );
@@ -931,7 +925,7 @@ defaults.currentContext = null;
 defaults.pathResolving = 'in';
 defaults.pathNativizing = 0;
 defaults.selectorIsPath = 1;
-defaults.pathUnwrapping = 0;
+defaults.pathUnwrapping = 1;
 
 let filesFromResource = _.routineFromPreAndBody( resolve_pre, filesFromResource_body );
 

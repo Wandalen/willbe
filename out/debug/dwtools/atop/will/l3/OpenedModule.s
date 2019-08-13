@@ -897,6 +897,7 @@ function shell( o )
 
   /* */
 
+  debugger;
   o.execPath = module.resolve
   ({
     selector : o.execPath,
@@ -906,6 +907,7 @@ function shell( o )
     pathNativizing : 1,
     arrayFlattening : 0, /* required for f::this and feature make */
   });
+  debugger;
 
   /* */
 
@@ -1607,29 +1609,36 @@ function _submodulesDownload_body( o )
 
     for( let n in module.submoduleMap )
     {
-      let submodule = module.submoduleMap[ n ].opener;
+      let submodule = module.submoduleMap[ n ];
 
-      _.assert( !!submodule && submodule.preformed, 'Submodule', ( submodule ? submodule.nickName : n ), 'was not preformed' );
+      _.assert
+      (
+        !!submodule.opener && submodule.opener.preformed,
+        () => 'Submodule' + ( submodule.opener ? submodule.opener.nickName : n ) + 'was not preformed'
+      );
 
-      if( !submodule.isRemote )
+      if( !submodule.opener.isRemote )
+      continue;
+      if( !submodule.enabled )
       continue;
 
       con.then( () =>
       {
 
-        if( o.downloaded[ submodule.remotePath ] )
+        if( o.downloaded[ submodule.opener.remotePath ] )
         return null;
 
         remoteNumber += 1;
 
         let o2 = _.mapExtend( null, o );
         delete o2.downloaded;
-        let r = _.Consequence.From( submodule._remoteDownload( o2 ) );
+        debugger;
+        let r = _.Consequence.From( submodule.opener._remoteDownload( o2 ) );
         return r.then( ( arg ) =>
         {
           _.assert( _.boolIs( arg ) );
-          _.assert( _.strIs( submodule.remotePath ) );
-          o.downloaded[ submodule.remotePath ] = submodule;
+          _.assert( _.strIs( submodule.opener.remotePath ) );
+          o.downloaded[ submodule.opener.remotePath ] = submodule.opener;
 
           if( arg )
           downloadedNumber += 1;
@@ -3339,7 +3348,7 @@ function cleanWhat( o )
 
   }
 
-  filePathsBasic.sort();
+  filePaths.sort();
 
   return result;
 
@@ -3508,7 +3517,7 @@ function resolve_body( o )
 {
   let module = this;
   let will = module.will;
-  _.assert( o.baseModule === module ); 
+  _.assert( o.baseModule === module );
   let result = will.Resolver.resolve.body.call( will.Resolver, o );
   return result;
 }
@@ -3781,18 +3790,6 @@ infoExport.defaults =
 {
   verbosity : 9,
 }
-
-// //
-//
-// function infoExport( o )
-// {
-//   let module = this;
-//   let will = module.will;
-//   o = _.routineOptions( _infoExport, arguments );
-//   return module._infoExport( o );
-// }
-//
-// _.routineExtend( infoExport, _infoExport );
 
 //
 
@@ -4247,7 +4244,6 @@ let Composes =
   isUpToDate : null,
 
   verbosity : 0,
-  // willfilesReadBeginTime : null,
 
 }
 
@@ -4554,7 +4550,6 @@ let Extend =
 
   // exporter
 
-  // _infoExport,
   infoExport,
   infoExportPaths,
   infoExportResource,

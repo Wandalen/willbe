@@ -8,7 +8,7 @@ if( typeof module !== 'undefined' )
   let _ = require( '../../Tools.s' );
 
   _.include( 'wTesting' );
-  require( '../l3/PathBasic.s' );
+  require( '../l4/PathsBasic.s' );
 
 }
 

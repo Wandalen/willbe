@@ -46,7 +46,19 @@ function exec()
   let appArgs = _.appArgs({ keyValDelimeter : 0 });
   let ca = will._commandsMake();
 
-  return ca.appArgsPerform({ appArgs : appArgs });
+
+  return _.Consequence
+  .Try( () =>
+  {
+    return ca.appArgsPerform({ appArgs });
+  })
+  .catch( ( err ) =>
+  {
+    _.appExitCode( -1 );
+    return _.errLogOnce( err );
+  });
+
+  // return ca.appArgsPerform({ appArgs : appArgs });
 }
 
 //
@@ -851,6 +863,7 @@ function commandSubmodulesDownload( e )
   let will = this;
 
   let propertiesMap = _.strStructureParse( e.argument );
+  _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
   return will.moduleReadyThen( function( module )
@@ -871,6 +884,7 @@ function commandSubmodulesUpdate( e )
   let will = this;
 
   let propertiesMap = _.strStructureParse( e.argument );
+  _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
   return will.moduleReadyThen( function( module )
@@ -891,6 +905,7 @@ function commandSubmodulesFixate( e )
   let will = this;
 
   let propertiesMap = _.strStructureParse( e.argument );
+  _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
@@ -916,6 +931,7 @@ function commandSubmodulesUpgrade( e )
   let will = this;
 
   let propertiesMap = _.strStructureParse( e.argument );
+  _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
   _.assert( e.propertiesMap.upgrading === undefined, 'Unknown option upgrading' );
@@ -962,7 +978,8 @@ function commandClean( e )
   let will = this;
 
   let propertiesMap = _.strStructureParse( e.argument );
-  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
+  _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
 
   return will.moduleReadyThen( function( module )
   {

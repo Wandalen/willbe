@@ -17,6 +17,7 @@ if( typeof module !== 'undefined' )
 
   let _ = require( '../../Tools.s' );
 
+  // debugger;
   require( '../l3/PathBasic.s' );
 
 }

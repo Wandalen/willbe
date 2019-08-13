@@ -141,6 +141,7 @@ function stepRoutineReflect( frame )
 
   return _.Consequence.Try( () =>
   {
+    // debugger;
     return will.Predefined.filesReflect.call( fileProvider, opts );
   })
   .then( ( result ) =>
@@ -570,20 +571,13 @@ function stepRoutineNpmGenerate( frame )
     currentContext : step,
   });
 
-  debugger;
+  if( opts.entryPath )
   opts.entryPath = module.filesFromResource({ selector : opts.entryPath, currentContext : step, });
+  debugger;
+  if( opts.filesPath )
   opts.filesPath = module.filesFromResource({ selector : opts.filesPath, currentContext : step, });
 
-  // debugger;
-  // opts.entryPath = module.pathResolve
-  // ({
-  //   selector : opts.entryPath,
-  //   prefixlessAction : 'resolved',
-  //   pathResolving : 'in',
-  //   pathNativizing : 0,
-  //   selectorIsPath : 1,
-  //   currentContext : step,
-  // });
+  /* */
 
   let config = Object.create( null );
   config.name = about.name;
@@ -602,8 +596,8 @@ function stepRoutineNpmGenerate( frame )
     let interpreters = _.arrayAs( about.interpreters );
     interpreters.forEach( ( interpreter ) =>
     {
-      if( _.strHas( interpreter, 'node' ) )
-      config.engine = interpreter;
+      if( _.strHas( interpreter, 'njs' ) )
+      config.engine = _.strReplace( interpreter, 'njs', 'node' );
     });
   }
 
@@ -619,10 +613,14 @@ function stepRoutineNpmGenerate( frame )
     config[ _.strRemoveBegin( n, 'npm.' ) ] = about[ n ];
   }
 
-  if( opts.entryPath )
+  if( opts.entryPath && opts.entryPath.length )
   {
-    //_.assert( path.s.allAreRelative( opts.entryPath ) )
-    config.main = path.s.relative( path.dir( opts.packagePath ), opts.entryPath );
+    config.main = _.scalarFrom( path.s.relative( path.dir( opts.packagePath ), opts.entryPath ) );
+  }
+
+  if( opts.filesPath && opts.filesPath.length )
+  {
+    config.files = path.s.relative( path.dir( opts.packagePath ), opts.filesPath );
   }
 
   if( module.pathMap.repository )
@@ -639,6 +637,24 @@ function stepRoutineNpmGenerate( frame )
     config[ _.strRemoveBegin( n, 'npm.' ) ] = module.pathMap[ n ];
   }
 
+  for( let s in module.submoduleMap )
+  {
+    let submodule = module.submoduleMap[ s ];
+    let p = submodule.path;
+
+    _.assert( _.strHas( p, 'npm:///' ), () => 'Implemented only for NPM dependencies, but got' + p );
+
+    p = path.parseFull( p ); debugger;
+
+    if( submodule.criterion.optional )
+    depAdd( 'optionalDependencies', p );
+    else if( submodule.criterion.development )
+    depAdd( 'devDependencies', p );
+    else
+    depAdd( 'dependencies', p );
+
+  }
+
   _.sure( !fileProvider.isDir( opts.packagePath ), () => packagePath + ' is dir, not safe to delete' );
 
   fileProvider.fileWrite
@@ -652,19 +668,33 @@ function stepRoutineNpmGenerate( frame )
   debugger;
   return null;
 
+  /* */
+
   function pathSimplify( src )
   {
-    if( !_.strIs( src ) )
-    return src;
-    return src.replace( '///', '//' );
+    let r = src;
+    if( !_.strIs( r ) )
+    return r;
+
+    r = r.replace( '///', '//' );
+    r = r.replace( 'npm://', '' );
+
+    return r;
+  }
+
+  function depAdd( section, npmPath )
+  {
+    let name = path.relative( '/', npmPath.longPath );
+    config[ section ] = config[ section ] || Object.create( null );
+    config[ section ][ name ] = '';
   }
 
 }
 
 stepRoutineNpmGenerate.stepOptions =
 {
-  packagePath : '{path::out}/package.json',
-  entryPath : null,
+  packagePath : 'package.json',
+  entryPath : 'Index.js',
   filesPath : null,
 }
 

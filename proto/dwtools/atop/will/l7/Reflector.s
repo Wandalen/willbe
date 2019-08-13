@@ -58,7 +58,6 @@ function MakeFor_body( o )
 
   if( o.resource.step )
   {
-    debugger;
     if( !_.mapIs( o.resource.step ) )
     o.resource.step = { inherit : o.resource.step }
     _.mapExtend( o3.resource, o.resource.step );
@@ -229,6 +228,19 @@ function form2( o )
   _.assert( reflector.src === reflector.dst.src );
   _.assert( reflector.src.filePath === reflector.dst.filePath );
 
+  // if( reflector.nickName === 'reflector::exported.export' )
+  // debugger;
+
+  if( reflector.src.hasAnyPath() ) // yyy
+  {
+    reflector.src.prefixPath = _.filter( reflector.src.prefixPath, ( prefixPath ) =>
+    {
+      if( will.Resolver.selectorIs( prefixPath ) )
+      return prefixPath;
+      return path.s.join( module.inPath, prefixPath || '.' )
+    });
+  }
+
   let result = Parent.prototype.form2.apply( reflector, arguments );
   return result;
 }
@@ -253,13 +265,15 @@ function form3()
   if( reflector.formed === 3 )
   return reflector;
 
+  // if( reflector.nickName === 'reflector::exported.export' )
+  // debugger;
+
   _.assert( arguments.length === 0 );
   _.assert( reflector.formed === 2 );
 
   /* begin */
 
   reflector.pathsResolve();
-
   if( reflector.src.hasAnyPath() )
   reflector.src.prefixPath = path.s.join( module.inPath, reflector.src.prefixPath || '.' );
 
@@ -322,6 +336,9 @@ function _inheritMultiple( o )
 
   reflector.prefixesApply();
   reflector._accumulator.prefixesApply();
+
+  // if( reflector.nickName === 'reflector::exported.export' )
+  // debugger;
 
   reflector.src.and( reflector._accumulator.src ).pathsInherit( reflector._accumulator.src );
   _.assert( reflector.src.filePath === reflector.dst.filePath );
@@ -406,6 +423,9 @@ function _inheritSingle( o )
   }
 
   /* */
+
+  // if( reflector.nickName === 'reflector::reflect.submodules.variant3' )
+  // debugger;
 
   if( o.extending )
   {
@@ -495,7 +515,8 @@ function _inheritPathMapAct1( o )
   {
     let dst = o.pathMap[ src ];
 
-    if( will.Resolver.selectorIs( src ) )
+    // if( will.Resolver.selectorIs( src ) )
+    if( will.Resolver.selectorIs( src ) || will.Resolver.selectorIs( dst ) )
     {
       reflector._inheritPathMapAct2
       ({
@@ -525,6 +546,9 @@ function _inheritPathMapAct1( o )
             _.strQuote( reflector.filePath[ resolvedSrc ] ) + ' <> ' +
             _.strQuote( dst )
     );
+    if( resolvedSrc === '' )
+    path.mapExtend( reflector.filePath, { '' : dst } );
+    else
     path.mapExtend( reflector.filePath, resolvedSrc, dst );
   }
 
@@ -662,6 +686,9 @@ function _inheritPathMapAct3( o )
             _.strQuote( reflector.filePath[ resolvedSrc ] ) + ' <> ' +
             _.strQuote( dst )
     );
+    if( resolvedSrc === '' )
+    path.mapExtend( reflector.filePath, { '' : dst } );
+    else
     path.mapExtend( reflector.filePath, resolvedSrc, dst );
   }
 
@@ -713,6 +740,12 @@ function _inheritPrefixes( o )
     return inherit( prefixPath, 1 );
     return prefixPath;
   });
+
+  if( reflector.src.prefixPath === '' )
+  reflector.src.prefixPath = null;
+
+  if( reflector.dst.prefixPath === '' )
+  reflector.dst.prefixPath = null;
 
   function inherit( prefixPath, isDst )
   {
@@ -894,11 +927,23 @@ function pathsResolve( o )
   if( _.mapIs( reflector.src.filePath ) )
   reflector.src.filePathNullizeMaybe();
 
+  // if( reflector.nickName === "reflector::reflect.files2" )
+  // debugger;
+
+  /* yyy */
+  if( !reflector.src.prefixPath )
+  if( reflector.src.filePath )
+  if( path.s.anyAreAbsolute( reflector.src.filePath ) )
+  reflector.src.prefixPath = reflector.src.prefixPathFromFilePath({ usingBools : 0 });
+  /* yyy */
+
   if( reflector.src.basePath )
   reflector.src.basePath = resolve( reflector.src.basePath );
   if( reflector.src.filePath )
   {
-    let r = resolve( reflector.src.filePath, 1, 'src' );
+
+    // let r = resolve( reflector.src.filePath, 1, 'src' ); // yyy
+    let r = resolve( reflector.src.filePath, 1 );
 
     reflector.src.filePath = null;
 
@@ -906,11 +951,28 @@ function pathsResolve( o )
     {
       reflector.src.pathsInherit( r );
     }
+    else if( r instanceof will.Reflector )
+    {
+    }
     else
     {
+      _.assert( _.path.isElement( r ) );
       reflector.src.filePath = r;
     }
   }
+
+  // if( reflector.src.prefixPath || reflector.src.hasAnyPath() ) // yyy
+  // {
+  //   reflector.src.prefixPath = _.filter( reflector.src.prefixPath, ( prefixPath ) =>
+  //   {
+  //     if( will.Resolver.selectorIs( prefixPath ) )
+  //     return prefixPath;
+  //     let r = reflector.src.prefixPath = resolve( prefixPath || '.', 'in' );
+  //     r = path.s.join( reflector.module.inPath, r || '.' );
+  //     return r;
+  //   });
+  // }
+
   if( reflector.src.prefixPath || reflector.src.hasAnyPath() )
   reflector.src.prefixPath = resolve( reflector.src.prefixPath || '.', 'in' );
   if( reflector.src.prefixPath || reflector.src.hasAnyPath() )
@@ -951,7 +1013,7 @@ function pathsResolve( o )
   function resolve( src, pathResolving, side )
   {
 
-    return path.filterInplace( src, ( filePath ) =>
+    return path.filterInplace( src, ( filePath, it ) =>
     {
       if( _.instanceIs( filePath ) )
       return filePath;
@@ -972,14 +1034,16 @@ function pathsResolve( o )
         r = r.cloneDerivative();
         r.form();
         _.assert( !!r.original );
-      }
 
-      if( r instanceof will.Reflector && side )
-      {
-        if( side === 'src' )
-        return r.src;
-        else
-        return r.dst;
+        if( side )
+        {
+          if( side === 'src' )
+          return r.src;
+          else
+          return r.dst;
+        }
+
+        return filePath;
       }
 
       return r;
@@ -1174,6 +1238,11 @@ function optionsForFindGroupExport( o )
   result.src = reflector.src.clone();
   result.src = result.src || Object.create( null );
   result.src.prefixPath = path.s.resolve( module.inPath, result.src.prefixPath || '.' );
+
+  if( reflector.dst )
+  result.dst = reflector.dst.clone();
+  result.dst = result.dst || Object.create( null );
+  result.dst.prefixPath = path.s.resolve( module.inPath, result.dst.prefixPath || '.' );
 
   return result;
 }

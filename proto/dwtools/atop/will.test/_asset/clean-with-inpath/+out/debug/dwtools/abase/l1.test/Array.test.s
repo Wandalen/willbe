@@ -580,7 +580,6 @@ function bufferResize( test )
   var src = Buffer.allocUnsafe( 6 );
   var got = _.bufferResize( src, 20 );
   test.identical( got.length, 20 );
-  test.notIdentical( got, Buffer.allocUnsafe( 20 ) );
 
   test.case = 'node buffer, size > length, from array';
   var src = Buffer.from( [ 1, 2, 3, 4 ] );

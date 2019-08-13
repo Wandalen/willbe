@@ -37,7 +37,7 @@ function includeAny( filePath, name )
 
 let wEntityFundamentals =
 {
-  includeAny : includeAny( 'abase/l3/Entity.s', 'wentityfundamentals' ),
+  includeAny : includeAny( 'abase/l3/EntityBasic.s', 'wentityfundamentals' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.entityVals; },
 }
 
@@ -50,7 +50,7 @@ let wLooker =
 let wPathFundamentals =
 {
   includeAny : includeAny( 'abase/l4/PathsBasic.s', 'wpathfundamentals' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.path },
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.path && !!_global.wTools.path.s },
 }
 
 let wRoutineFundamentals =
@@ -105,8 +105,8 @@ let wExternalFundamentals =
 
 let wUriFundamentals =
 {
-  includeAny : includeAny( 'abase/l4/Uri.s', 'wurifundamentals' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.uri },
+  includeAny : includeAny( 'abase/l5/Uris.s', 'wurifundamentals' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.uri && !!_global.wTools.uri.s && !!_global.wTools.uri.s.parse },
 }
 
 let wTraverser =
@@ -459,12 +459,6 @@ let wCollectionOfInstances =
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.CollectionOfInstances },
 }
 
-let wStarter =
-{
-  includeAny : includeAny( 'amid/starter/MainTop.s', 'wstartermaker' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.StarterMaker },
-}
-
 // mid
 
 let wServletTools =
@@ -508,6 +502,12 @@ let wMathConcepts =
 }
 
 // top
+
+let wStarter =
+{
+  includeAny : includeAny( 'atop/starter/MainTop.s', 'wstartermaker' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.StarterMaker },
+}
 
 let wTesting =
 {
@@ -560,6 +560,7 @@ let Extend =
 
   // base / l3
 
+  wEntityFundamentals,
   wLooker,
   wPathFundamentals,
   wRoutineFundamentals,
@@ -653,7 +654,6 @@ let Extend =
   wCommunicator,
   wIncubator,
   wCollectionOfInstances,
-  wStarter,
 
   // amid / l5
 
@@ -669,6 +669,7 @@ let Extend =
 
   // top
 
+  wStarter,
   wTesting,
   wTranspilationStrategy,
   wFilesOperationsDirector,

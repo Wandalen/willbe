@@ -5,8 +5,12 @@ path :
   in : '.'
   out : 'out'
   temp :
+    - '{path::out}/Produced.txt2'
+    - '{path::out}/Produced.js2'
     - '{path::file}/Produced.txt2'
     - '{path::file}/Produced.js2'
+    - 'Produced.txt2'
+    - 'Produced.js2'
 
 reflector :
 
@@ -16,6 +20,8 @@ reflector :
       '*.js' : 'Produced.js2'
     src :
       prefixPath : 'file'
+    dst :
+      prefixPath : '{path::out}'
     shell :
       node file/Produce.js {f::this/src} {f::this/dst}
 

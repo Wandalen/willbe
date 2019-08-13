@@ -93,6 +93,17 @@ function form1()
   _.assert( arguments.length === 0 );
   _.assert( submodule.module instanceof will.OpenedModule );
 
+  /* */
+
+  submodule.opener = will.OpenerModule
+  ({
+    will : will,
+    aliasName : submodule.name,
+    willfilesPath : submodule.longPath,
+    supermodule : module,
+    rootModule : module.rootModule,
+  }).preform();
+
   /* end */
 
   Parent.prototype.form1.call( submodule );
@@ -116,9 +127,10 @@ function form3()
     if( submodule.opener && !submodule.opener.isValid() )
     {
       debugger;
-      let opener = submodule.opener;
-      submodule.opener = null;
-      opener.finit();
+      // let opener = submodule.opener;
+      // submodule.opener = null;
+      // opener.finit();
+      submodule.opener.close();
       submodule.formed = 2;
     }
     else
@@ -134,7 +146,11 @@ function form3()
 
   /* begin */
 
+  // debugger;
+  if( submodule.enabled )
   result = submodule.open();
+  else
+  result = new _.Consequence().take( null );
 
   result.finally( ( err, arg ) =>
   {
@@ -187,39 +203,35 @@ function open()
 
   _.assert( arguments.length === 0 );
   _.assert( submodule.formed === 2 );
-  _.assert( submodule.opener === null );
+  _.assert( !!submodule.opener );
   _.assert( _.strIs( submodule.path ), 'not tested' );
   _.assert( !submodule.original );
   _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
 
-  let longPath = submodule.longPath;
-
-  submodule._openFrom
+  submodule._openAct
   ({
-    longPath : longPath,
+    longPath : submodule.longPath,
   });
+
+  if( !submodule.opener.openedModule && !submodule.opener.error )
+  {
+    if( !submodule.enabled )
+    submodule.opener.error = _.err( 'Module is disabled' );
+    else
+    submodule.opener.error = _.err( 'Cant open module. Reason is unknown.' );
+  }
 
   if( submodule.opener.error )
   {
-    _.assert( !!submodule.opener.error );
     return new _.Consequence().error( submodule.opener.error );
   }
-
-  // submodule.opener.openedModule.ready.finally( ( err, arg ) =>
-  // {
-  //   debugger;
-  //   if( err )
-  //   submodule.errorNotFound( err );
-  //   submodule.formed = 3;
-  //   return arg || null;
-  // });
 
   return submodule.opener.openedModule.ready;
 }
 
 //
 
-function _openFrom( o )
+function _openAct( o )
 {
   let submodule = this;
   let module = submodule.module;
@@ -229,35 +241,37 @@ function _openFrom( o )
   let logger = will.logger;
   let rootModule = module.rootModule;
 
-  _.routineOptions( _openFrom, arguments );
+  _.routineOptions( _openAct, arguments );
   _.assert( arguments.length === 1 );
   _.assert( submodule.formed === 2 );
-  _.assert( submodule.opener === null );
+  _.assert( !!submodule.opener );
   _.assert( _.strIs( submodule.path ), 'not tested' );
   _.assert( !submodule.original );
   _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
 
   /* */
 
-  submodule.opener = will.OpenerModule
-  ({
-    will : will,
-    aliasName : submodule.name,
-    willfilesPath : o.longPath,
-    supermodule : module,
-    rootModule : module.rootModule,
-  }).preform();
+  submodule.opener.willfilesPath = o.longPath;
+
+  // submodule.opener = will.OpenerModule
+  // ({
+  //   will : will,
+  //   aliasName : submodule.name,
+  //   willfilesPath : o.longPath,
+  //   supermodule : module,
+  //   rootModule : module.rootModule,
+  // }).preform();
 
   // xxx : opener onReady?
 
-  if( !submodule.opener.moduleFindTry() )
-  {
-    submodule.opener.error = submodule.opener.error;
-    return submodule.opener;
-  }
+  if( !submodule.enabled )
+  return submodule.opener;
 
-  if( module.stager.stageStateSkipping( 'opened' ) )
-  submodule.opener.openedModule.stager.stageStateSkipping( 'opened', 1 );
+  if( !submodule.opener.moduleFindTry() )
+  return submodule.opener;
+
+  // if( module.stager.stageStateSkipping( 'opened' ) ) // yyy
+  // submodule.opener.openedModule.stager.stageStateSkipping( 'opened', 1 );
 
   submodule.opener.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
   submodule.opener.openedModule.stager.stageStatePausing( 'picked', 0 );
@@ -275,7 +289,7 @@ function _openFrom( o )
   return submodule.opener;
 }
 
-_openFrom.defaults =
+_openAct.defaults =
 {
   longPath : null,
 }
@@ -526,28 +540,6 @@ function errorNotFound( err )
 // resolver
 // --
 
-// function resolve_body( o )
-// {
-//   let submodule = this;
-//   let module = submodule.module;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let module2 = submodule.opener || module;
-//
-//   _.assert( arguments.length === 1 );
-//   _.assert( o.currentContext === null || o.currentContext === submodule )
-//
-//   o.currentContext = submodule;
-//
-//   let resolved = module2.openedModule.resolve( o );
-//
-//   return resolved;
-// }
-//
-// _.routineExtend( resolve_body, _.Will.Resource.prototype.resolve.body );
-// let resolve = _.routineFromPreAndBody( _.Will.Resource.prototype.resolve.pre, resolve_body );
-
 function resolve_pre( routine, args )
 {
   let resource = this;
@@ -555,7 +547,6 @@ function resolve_pre( routine, args )
   if( resource.opener && resource.opener.openedModule )
   module = resource.opener.openedModule;
   return module.resolve.pre.apply( module, arguments );
-  // return Parent.prototype.resolve.pre.apply( resource, arguments );
 }
 
 function resolve_body( o )
@@ -570,7 +561,6 @@ function resolve_body( o )
 
   o.currentContext = resource;
   return module.resolve.body.call( module, o );
-  // return Parent.prototype.resolve.body.call( resource, o );
 }
 
 _.routineExtend( resolve_body, Parent.prototype.resolve.body );
@@ -591,6 +581,7 @@ let Composes =
 
   path : null,
   autoExporting : 0,
+  enabled : 1,
 
 }
 
@@ -653,7 +644,7 @@ let Extend =
   form3,
 
   open,
-  _openFrom,
+  _openAct,
 
   // accessor
 

@@ -848,7 +848,6 @@ function strBeginOf( src, begin )
     return result;
   }
 
-  debugger;
   for( let b = 0, blen = begin.length ; b < blen; b++ )
   {
     let result = _._strBeginOf( src, begin[ b ] );

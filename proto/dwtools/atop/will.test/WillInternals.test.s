@@ -1388,6 +1388,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflector::files3' ]
     }
+    debugger;
     resolved.form();
     var resolvedData = resolved.dataExport({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -4080,7 +4081,15 @@ function pathsResolveArray( test )
       pathResolving : 'in',
       missingAction : 'undefine',
     });
-    var expected = pin( [ 'file/Produced.txt2', 'file/Produced.js2' ] );
+    var expected = pin
+    ([
+      'out/Produced.txt2',
+      'out/Produced.js2',
+      'file/Produced.txt2',
+      'file/Produced.js2',
+      'Produced.txt2',
+      'Produced.js2'
+    ]);
     test.identical( got, expected );
 
     return null;

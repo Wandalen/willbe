@@ -1,0 +1,216 @@
+format: willfile-1.0.0
+about:
+  name: moduleA
+  enabled: 1
+  version: 0.0.1
+path:
+  module.willfiles:
+    criterion:
+      predefined: 1
+    path: moduleA.out.will.yml
+  module.common:
+    criterion:
+      predefined: 1
+    path: moduleA.out
+  module.original.willfiles:
+    criterion:
+      predefined: 1
+    path: moduleA/moduleA.will.yml
+  local:
+    criterion:
+      predefined: 1
+  remote:
+    criterion:
+      predefined: 1
+  in:
+    criterion:
+      predefined: 0
+    path: .
+  out:
+    criterion:
+      predefined: 0
+    path: .
+  proto:
+    path: moduleA/proto
+  exported.dir.export.single:
+    criterion:
+      default: 1
+      export: 1
+    path: moduleA/proto
+  exported.files.export.single:
+    criterion:
+      default: 1
+      export: 1
+    path:
+      - moduleA/proto
+      - moduleA/proto/amid
+      - moduleA/proto/amid/Tools.s
+submodule: {}
+reflector:
+  reflect.proto:
+    src:
+      filePath:
+        .: .
+      prefixPath: 'path::proto'
+    dst:
+      prefixPath: out/debug
+    mandatory: 1
+  exported.export.single:
+    src:
+      filePath:
+        .: ''
+      prefixPath: moduleA/proto
+    mandatory: 1
+    criterion:
+      default: 1
+      export: 1
+  exported.files.export.single:
+    src:
+      filePath:
+        'path::exported.files.export.single': ''
+      basePath: .
+      prefixPath: 'path::exported.dir.export.single'
+    recursive: 0
+    mandatory: 1
+    criterion:
+      default: 1
+      export: 1
+step:
+  export.single:
+    opts:
+      export: 'path::proto'
+      tar: 0
+    inherit:
+      - module.export
+  reflect.proto:
+    opts:
+      reflector: 'reflector::reflect.proto*'
+    inherit:
+      - files.reflect
+build:
+  export.single:
+    steps:
+      - reflect.proto
+      - export.single
+    criterion:
+      default: 1
+      export: 1
+exported:
+  export.single:
+    version: 0.0.1
+    exportedReflector: 'reflector::exported.export.single'
+    exportedFilesReflector: 'reflector::exported.files.export.single'
+    exportedDirPath: 'path::exported.dir.export.single'
+    exportedFilesPath: 'path::exported.files.export.single'
+    criterion:
+      default: 1
+      export: 1
+module:
+  moduleA/moduleA:
+    about:
+      name: moduleA
+      enabled: 1
+      version: 0.0.1
+    path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path: moduleA.will.yml
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path: moduleA.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: moduleA
+      local:
+        criterion:
+          predefined: 1
+      remote:
+        criterion:
+          predefined: 1
+      in:
+        criterion:
+          predefined: 0
+        path: .
+      out:
+        criterion:
+          predefined: 0
+        path: ..
+      proto:
+        path: proto
+      exported.dir.export.single:
+        criterion:
+          default: 1
+          export: 1
+        path: ./proto
+      exported.files.export.single:
+        criterion:
+          default: 1
+          export: 1
+        path:
+          - proto
+          - proto/amid
+          - proto/amid/Tools.s
+    submodule: {}
+    reflector:
+      reflect.proto:
+        src:
+          filePath:
+            .: .
+          prefixPath: 'path::proto'
+        dst:
+          prefixPath: out/debug
+        mandatory: 1
+      exported.export.single:
+        src:
+          filePath:
+            .: ''
+          prefixPath: proto
+        mandatory: 1
+        criterion:
+          default: 1
+          export: 1
+      exported.files.export.single:
+        src:
+          filePath:
+            'path::exported.files.export.single': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.export.single'
+        recursive: 0
+        mandatory: 1
+        criterion:
+          default: 1
+          export: 1
+    step:
+      export.single:
+        opts:
+          export: 'path::proto'
+          tar: 0
+        inherit:
+          - module.export
+      reflect.proto:
+        opts:
+          reflector: 'reflector::reflect.proto*'
+        inherit:
+          - files.reflect
+    build:
+      export.single:
+        steps:
+          - reflect.proto
+          - export.single
+        criterion:
+          default: 1
+          export: 1
+    exported:
+      export.single:
+        version: 0.0.1
+        exportedReflector: 'reflector::exported.export.single'
+        exportedFilesReflector: 'reflector::exported.files.export.single'
+        exportedDirPath: 'path::exported.dir.export.single'
+        exportedFilesPath: 'path::exported.files.export.single'
+        criterion:
+          default: 1
+          export: 1
+  moduleA.out: root
