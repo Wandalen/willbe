@@ -1,7 +1,7 @@
 {
   "name": "wProto",
   "version": "0.4.154",
-  "engine": "node >= 8.0.0",
+  "engine": "node >= 6.0.0",
   "description": "Relations module. Collection of routines to define classes and relations between them. Proto leverages multiple inheritances, mixins, accessors, fields groups defining, introspection and more. Use it as a skeleton of the application.",
   "author": "Kostiantyn Wandalen <wanalen@willbe.so>",
   "license": "MIT",
@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "wProto": "file:.",
-    "wequaler": "",
+    "wcomparator": "",
     "wTesting": ""
   },
   "keywords": [

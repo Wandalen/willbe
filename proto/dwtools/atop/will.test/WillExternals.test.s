@@ -4154,6 +4154,56 @@ exportSingle.timeOut = 200000;
 
 //
 
+function exportItself( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-itself' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* - */
+
+  ready.then( () =>
+  {
+    test.case = '.export'
+    return null;
+  })
+
+  shell( '.with v1 .clean' )
+  shell( '.with v1 .submodules.download' )
+  shell( '.with v1 .export' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( routinePath );
+    test.gt( files.length, 450 );
+
+    test.is( _.strHas( got.output, '+ Write out willfile' ) );
+    test.is( _.strHas( got.output, new RegExp( `\\+ Exported .*exported::export.* with ${files.length-2} files in` ) ) );
+
+    return null;
+  })
+
+  /* */
+
+  return ready;
+}
+
+//
+
 /*
   Submodule Submodule is deleted, so exporting should fail.
 */
@@ -9468,7 +9518,7 @@ function submodulesUpdateSwitchBranch( test )
     execPath : 'git status',
     currentPath : experimentModulePath,
     outputCollecting : 1,
-    ready : ready
+    ready : ready,
   })
 
   .then( ( got ) =>
@@ -10971,91 +11021,92 @@ var Self =
   tests :
   {
 
-    // preCloneRepos,
-    // singleModuleWithSpaceTrivial,
-    // make, // xxx
-    // // transpile, xxx
-    //
-    // openWith,
-    // openEach,
-    // withMixed,
-    // eachMixed,
-    // withList,
-    // eachList,
-    // eachBrokenIll,
-    // eachBrokenNon,
-    // eachBrokenCommand,
-    //
-    // verbositySet,
-    // verbosityStepDelete,
-    // verbosityStepPrintName,
-    //
-    // help,
-    // listSingleModule,
-    // listWithSubmodulesSimple,
-    // listWithSubmodules,
-    // listSteps,
-    // // listComplexPaths, // xxx
-    //
-    // clean,
-    // cleanSingleModule,
-    // cleanBroken1,
-    // cleanBroken2,
-    // cleanBrokenSubmodules,
-    // cleanNoBuild,
-    // cleanDry,
-    // cleanSubmodules,
-    // cleanMixed,
-    // cleanWithInPath,
-    //
-    // buildSingleModule,
-    // buildSingleStep,
-    // buildSubmodules,
-    // // buildDetached, /* qqq : fix and cover _.uri.commonTextualReport and similar routines */
-    //
-    // exportSingle,
-    // exportNonExportable,
-    // exportInformal,
-    // exportWithReflector,
-    // exportToRoot,
-    // exportMixed,
-    // exportSecond,
-    // // exportSubmodules, // xxx
-    // exportMultiple,
-    // exportImportMultiple,
-    // exportBroken,
-    // exportDoc,
-    // exportImport,
-    // exportBrokenNoreflector,
-    // exportWholeModule,
-    // importPathLocal,
-    // // importLocalRepo, /* qqq : fix and cover _.uri.commonTextualReport and similar routines */
-    // importOutWithDeletedSource,
-    //
-    // reflectNothingFromSubmodules,
-    // reflectGetPath,
-    // reflectSubdir,
-    // reflectSubmodulesWithBase,
-    // reflectComposite,
-    // reflectRemoteGit,
-    // reflectRemoteHttp,
-    // reflectWithOptions,
-    // reflectWithSelectorInDstFilter,
-    // reflectSubmodulesWithCriterion,
-    // reflectSubmodulesWithPluralCriterionManualExport,
-    // reflectSubmodulesWithPluralCriterionAutoExport,
-    // // relfectSubmodulesWithNotExistingFile, // xxx qqq : explain
-    // reflectInherit,
-    // reflectInheritSubmodules,
-    // // reflectComplexInherit, // xxx
-    // reflectorMasks,
-    //
-    // shellWithCriterion,
-    // shellVerbosity,
-    //
-    // functionStringsJoin,
-    // functionPlatform,
-    // fucntionThisCriterion,
+    preCloneRepos,
+    singleModuleWithSpaceTrivial,
+    make, // xxx
+    // transpile, xxx
+
+    openWith,
+    openEach,
+    withMixed,
+    eachMixed,
+    withList,
+    eachList,
+    eachBrokenIll,
+    eachBrokenNon,
+    eachBrokenCommand,
+
+    verbositySet,
+    verbosityStepDelete,
+    verbosityStepPrintName,
+
+    help,
+    listSingleModule,
+    listWithSubmodulesSimple,
+    listWithSubmodules,
+    listSteps,
+    // listComplexPaths, // xxx
+
+    clean,
+    cleanSingleModule,
+    cleanBroken1,
+    cleanBroken2,
+    cleanBrokenSubmodules,
+    cleanNoBuild,
+    cleanDry,
+    cleanSubmodules,
+    cleanMixed,
+    cleanWithInPath,
+
+    buildSingleModule,
+    buildSingleStep,
+    buildSubmodules,
+    // buildDetached, /* qqq : fix and cover _.uri.commonTextualReport and similar routines */
+
+    exportSingle,
+    exportItself,
+    exportNonExportable,
+    exportInformal,
+    exportWithReflector,
+    exportToRoot,
+    exportMixed,
+    exportSecond,
+    // exportSubmodules, // xxx
+    exportMultiple,
+    exportImportMultiple,
+    exportBroken,
+    exportDoc,
+    exportImport,
+    exportBrokenNoreflector,
+    exportWholeModule,
+    importPathLocal,
+    // importLocalRepo, /* qqq : fix and cover _.uri.commonTextualReport and similar routines */
+    importOutWithDeletedSource,
+
+    reflectNothingFromSubmodules,
+    reflectGetPath,
+    reflectSubdir,
+    reflectSubmodulesWithBase,
+    reflectComposite,
+    reflectRemoteGit,
+    reflectRemoteHttp,
+    reflectWithOptions,
+    reflectWithSelectorInDstFilter,
+    reflectSubmodulesWithCriterion,
+    reflectSubmodulesWithPluralCriterionManualExport,
+    reflectSubmodulesWithPluralCriterionAutoExport,
+    // relfectSubmodulesWithNotExistingFile, // xxx qqq : explain
+    reflectInherit,
+    reflectInheritSubmodules,
+    // reflectComplexInherit, // xxx
+    reflectorMasks,
+
+    shellWithCriterion,
+    shellVerbosity,
+
+    functionStringsJoin,
+    functionPlatform,
+    fucntionThisCriterion,
 
     submodulesDownloadSingle,
     submodulesDownloadUpdate,

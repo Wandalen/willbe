@@ -1581,6 +1581,8 @@ function _submodulesDownload_body( o )
 
   logger.up();
 
+  logger.log( 'submodulesDownload in', module.nickName ); // xxx
+
   downloadAgain();
 
   con.finally( ( err, arg ) =>

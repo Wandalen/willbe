@@ -1,0 +1,27 @@
+
+about :
+
+  name : experiment
+  version : 0.0.0
+
+path :
+
+  temp : experiment.out.*
+
+submodule :
+
+  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will#master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic.out.will#master
+
+step :
+
+  export :
+    export : .
+
+build :
+
+  export :
+    steps : export
+    criterion :
+      export : 1
+      default : 1

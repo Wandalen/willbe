@@ -541,7 +541,7 @@ function _perform( frame )
   _.assert( arguments.length === 1 );
   _.assert( step instanceof will.Step );
   _.assert( exported.step === null || exported.step === step );
-  _.assert( _.strDefined( opts.export ), () => step.nickName + ' should have options option export, path to directory to export or reflector' )
+  _.assert( _.strDefined( opts.export ), () => step.nickName + ' should have option export, path to directory to export or reflector' )
   _.assert( module.stager.stageStatePerformed( 'resourcesFormed' ), 'Resources should be formed' );
 
   exported.verify();

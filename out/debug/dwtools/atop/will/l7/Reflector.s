@@ -273,6 +273,9 @@ function form3()
 
   /* begin */
 
+  // if( reflector.nickName === 'reflector::exported.export' )
+  // debugger;
+
   reflector.pathsResolve();
   if( reflector.src.hasAnyPath() )
   reflector.src.prefixPath = path.s.join( module.inPath, reflector.src.prefixPath || '.' );
@@ -288,8 +291,16 @@ function form3()
   reflector.dst.basePathSimplify();
   reflector.sureRelativeOrGlobal();
 
-  _.assert( reflector.src.prefixPath === null || path.s.allAreAbsolute( reflector.src.prefixPath ) );
-  _.assert( reflector.dst.prefixPath === null || path.s.allAreAbsolute( reflector.dst.prefixPath ) );
+  _.assert
+  (
+    reflector.src.prefixPath === null || path.s.allAreAbsolute( reflector.src.prefixPath ),
+    () => 'Formed reflector should have absolute prefix or none, but source of ' + reflector.absoluteName + ' has ' + _.toStrShort( reflector.src.prefixPath )
+  );
+  _.assert
+  (
+    reflector.dst.prefixPath === null || path.s.allAreAbsolute( reflector.dst.prefixPath ),
+    () => 'Formed reflector should have absolute prefix or none, but destination of ' + reflector.absoluteName + ' has ' + _.toStrShort( reflector.src.prefixPath )
+  );
 
   /* end */
 
