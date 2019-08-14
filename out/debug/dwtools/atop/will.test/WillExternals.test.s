@@ -71,7 +71,7 @@ function preCloneRepos( test )
   clone( 'Procedure', '829ea81d342db66df60edf80c99687a1cd011a96' );
   clone( 'Proto', 'f4c04dbe078f3c00c84ff13edcc67478d320fddf' );
   clone( 'Tools', 'e58dc6a1637603c2151840f5bfb5729eb71d4e34' );
-  clone( 'UriFundamentals', '3686d72cc0b8f6573217c947a4b379c38b02e39b' );
+  clone( 'UriBasic', 'df28c5245b2e01bcc0dbc9693bed070a58268e77' );
 
   ready
   .then( () =>
@@ -1028,8 +1028,8 @@ function eachMixed( test )
     test.is( _.strHas( got.output, /eachMixed\/\.module\/Tools[^d]/ ) );
     test.is( _.strHas( got.output, /eachMixed\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml[^d]/ ) );
     test.is( _.strHas( got.output, /eachMixed\/\.module\/PathBasic[^d]/ ) );
-    test.is( _.strHas( got.output, /eachMixed\/out\/UriFundamentals\.informal\.out\.will\.yml[^d]/ ) );
-    test.is( _.strHas( got.output, /eachMixed\/out\/UriFundamentals[^d]/ ) );
+    test.is( _.strHas( got.output, /eachMixed\/out\/UriBasic\.informal\.out\.will\.yml[^d]/ ) );
+    test.is( _.strHas( got.output, /eachMixed\/out\/UriBasic[^d]/ ) );
     test.is( _.strHas( got.output, /eachMixed\/out\/Proto\.informal\.out\.will\.yml[^d]/ ) );
     test.is( _.strHas( got.output, /eachMixed\/out\/Proto\.informal\.out\.will\.yml[^d]/ ) );
     test.is( _.strHas( got.output, /eachMixed\/out\/Proto[^d]/ ) );
@@ -1058,12 +1058,12 @@ function eachMixed( test )
 
     test.identical( _.strCount( got.output, '.module/Tools/out/wTools.out.will.yml' ), 1 );
     test.identical( _.strCount( got.output, '.module/PathBasic/out/wPathBasic.out.will.yml' ), 1 );
-    test.identical( _.strCount( got.output, 'out/UriFundamentals.informal.out.will.yml' ), 1 );
+    test.identical( _.strCount( got.output, 'out/UriBasic.informal.out.will.yml' ), 1 );
     test.identical( _.strCount( got.output, 'out/Proto.informal.out.will.yml' ), 1 );
 
     test.identical( _.strCount( got.output, '.module/Tools/out/wTools' ), 2 );
     test.identical( _.strCount( got.output, '.module/PathBasic/out/wPathBasic' ), 2 );
-    test.identical( _.strCount( got.output, 'out/UriFundamentals.informal' ), 2 );
+    test.identical( _.strCount( got.output, 'out/UriBasic.informal' ), 2 );
     test.identical( _.strCount( got.output, 'out/Proto.informal' ), 2 );
 
     return null;
@@ -3512,7 +3512,7 @@ function cleanMixed( test )
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'out' ) ) );
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
 
-    var expected = [ '.', './Proto.informal.will.yml', './UriFundamentals.informal.will.yml' ];
+    var expected = [ '.', './Proto.informal.will.yml', './UriBasic.informal.will.yml' ];
     var files = self.find( _.path.join( routinePath, 'module' ) );
     test.identical( files, expected );
 
@@ -4024,17 +4024,17 @@ function buildDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, /\+ .*module::Tools.* was downloaded version .*master.* in/ ) );
-    test.is( _.strHas( got.output, /\+ .*module::PathBasic.* was downloaded version .*c94e0130358ba54fc47237e15bac1ab18024c0a9.* in/ ) );
+    test.is( _.strHas( got.output, /\+ .*module::PathBasic.* was downloaded version .*90330e25698210c8fa1a58d90c9468c0e23a72fd.* in/ ) );
     test.is( _.strHas( got.output, /\+ .*module::Color.* was downloaded version .*0.3.115.* in/ ) );
     test.is( _.strHas( got.output, /\.module\/Procedure\.informal.+ <- .+npm:\/\/wprocedure/ ) );
     test.is( _.strHas( got.output, /\.module\/Proto\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wProto\.git#f4c04dbe078f3c00c84ff13edcc67478d320fddf/ ) );
-    test.is( _.strHas( got.output, /\.module\/UriFundamentals\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wUriBasic\.git/ ) );
+    test.is( _.strHas( got.output, /\.module\/UriBasic\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wUriBasic\.git/ ) );
 
     var files = _.fileProvider.dirRead( modulePath );
-    test.identical( files, [ 'Color', 'PathBasic', 'Procedure.informal', 'Proto.informal', 'Tools', 'UriFundamentals.informal' ] );
+    test.identical( files, [ 'Color', 'PathBasic', 'Procedure.informal', 'Proto.informal', 'Tools', 'UriBasic.informal' ] );
 
     var files = _.fileProvider.dirRead( outPath );
-    test.identical( files, [ 'debug', 'Procedure.informal.out.will.yml', 'Proto.informal.out.will.yml', 'UriFundamentals.informal.out.will.yml' ] );
+    test.identical( files, [ 'debug', 'Procedure.informal.out.will.yml', 'Proto.informal.out.will.yml', 'UriBasic.informal.out.will.yml' ] );
 
     return null;
   })
@@ -4377,36 +4377,36 @@ function exportInformal( test )
   ready
   .then( () =>
   {
-    test.case = '.with module/UriFundamentals.informal .export'
+    test.case = '.with module/UriBasic.informal .export'
     return null;
   })
 
   shell({ args : [ '.clean' ] })
-  shell({ args : [ '.with module/UriFundamentals.informal .export' ] })
+  shell({ args : [ '.with module/UriBasic.informal .export' ] })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, /Exported .*module::UriFundamentals.informal \/ build::export.* in/ ), 1 );
+    test.identical( _.strCount( got.output, /Exported .*module::UriBasic.informal \/ build::export.* in/ ), 1 );
 
     var files = self.find( outPath );
-    test.identical( files, [ '.', './UriFundamentals.informal.out.will.yml' ] );
+    test.identical( files, [ '.', './UriBasic.informal.out.will.yml' ] );
 
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( outPath, './UriFundamentals.informal.out.will.yml' ) );
+    var outfile = _.fileProvider.fileConfigRead( _.path.join( outPath, './UriBasic.informal.out.will.yml' ) );
     var expected =
     {
       "module.willfiles" :
       {
-        "path" : "UriFundamentals.informal.out.will.yml",
+        "path" : "UriBasic.informal.out.will.yml",
         "criterion" : { "predefined" : 1 }
       },
       "module.original.willfiles" :
       {
-        "path" : "../module/UriFundamentals.informal.will.yml",
+        "path" : "../module/UriBasic.informal.will.yml",
         "criterion" : { "predefined" : 1 }
       },
       "module.common" :
       {
-        "path" : "UriFundamentals.informal.out",
+        "path" : "UriBasic.informal.out",
         "criterion" : { "predefined" : 1 }
       },
       "in" :
@@ -4426,19 +4426,19 @@ function exportInformal( test )
       },
       "local" :
       {
-        "path" : "../.module/UriFundamentals",
+        "path" : "../.module/UriBasic",
         "criterion" : { "predefined" : 1 }
       },
       "export" : { "path" : "{path::local}/proto" },
       "exported.dir.export" :
       {
-        "path" : "../.module/UriFundamentals/proto",
+        "path" : "../.module/UriBasic/proto",
         "criterion" : { "default" : 1, "export" : 1 }
       }
     }
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
-    test.identical( outfile.path.local.path, '../.module/UriFundamentals' );
+    test.identical( outfile.path.local.path, '../.module/UriBasic' );
     test.identical( outfile.path.remote.path, 'npm:///wuribasic' );
     // logger.log( _.toJson( outfile.path ) );
 
@@ -4585,22 +4585,22 @@ function exportMixed( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /Exporting .*module::UriFundamentals\.informal \/ build::export.*/ ) );
+    test.is( _.strHas( got.output, /Exporting .*module::UriBasic\.informal \/ build::export.*/ ) );
     test.is( _.strHas( got.output, /\+ .*reflector::download.* reflected/ ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
-    test.is( _.strHas( got.output, /Exported .*module::UriFundamentals\.informal \/ build::export.* in/ ) );
+    test.is( _.strHas( got.output, /Exported .*module::UriBasic\.informal \/ build::export.* in/ ) );
     test.is( _.strHas( got.output, 'out/Proto.informal.out.will.yml' ) );
-    test.is( _.strHas( got.output, 'out/UriFundamentals.informal.out.will.yml' ) );
+    test.is( _.strHas( got.output, 'out/UriBasic.informal.out.will.yml' ) );
 
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/Proto.informal.out.will.yml' ) ) );
-    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/UriFundamentals.informal.out.will.yml' ) ) );
+    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/UriBasic.informal.out.will.yml' ) ) );
 
     var files = self.find( _.path.join( routinePath, 'module' ) );
-    test.identical( files, [ '.', './Proto.informal.will.yml', './UriFundamentals.informal.will.yml' ] );
+    test.identical( files, [ '.', './Proto.informal.will.yml', './UriBasic.informal.will.yml' ] );
     var files = self.find( _.path.join( routinePath, 'out' ) );
-    test.identical( files, [ '.', './Proto.informal.out.will.yml', './UriFundamentals.informal.out.will.yml' ] );
+    test.identical( files, [ '.', './Proto.informal.out.will.yml', './UriBasic.informal.out.will.yml' ] );
 
-    var expected = [ 'Proto.informal.will.yml', 'UriFundamentals.informal.will.yml' ];
+    var expected = [ 'Proto.informal.will.yml', 'UriBasic.informal.will.yml' ];
     var files = _.fileProvider.dirRead( modulePath );
     test.identical( files, expected );
 
@@ -4759,12 +4759,12 @@ function exportMixed( test )
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /Exporting .*module::UriFundamentals.informal.* \/ build::export/ ) );
+    test.is( _.strHas( got.output, /Exporting .*module::UriBasic.informal.* \/ build::export/ ) );
     test.is( _.strHas( got.output, /\+ .*reflector::download.* reflected/ ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
-    test.is( _.strHas( got.output, /Exported .*module::UriFundamentals.informal.* \/ build::export/ ) );
+    test.is( _.strHas( got.output, /Exported .*module::UriBasic.informal.* \/ build::export/ ) );
     test.is( _.strHas( got.output, 'out/Proto.informal.out.will.yml' ) );
-    test.is( _.strHas( got.output, 'out/UriFundamentals.informal.out.will.yml' ) );
+    test.is( _.strHas( got.output, 'out/UriBasic.informal.out.will.yml' ) );
     test.is( _.strHas( got.output, 'Reloading submodules' ) );
 
     test.is( _.strHas( got.output, /- .*step::delete.out.debug.* deleted 0 file\(s\), at/ ) );
@@ -4773,18 +4773,18 @@ function exportMixed( test )
 
     test.is( _.strHas( got.output, /.*!.* Failed to read .+submodule::Tools.+/ ) );
     test.is( _.strHas( got.output, /.*!.* Failed to read .+submodule::PathBasic.+/ ) );
-    test.is( _.strHas( got.output, /.*!.* Failed to read .+submodule::UriFundamentals.+/ ) );
+    test.is( _.strHas( got.output, /.*!.* Failed to read .+submodule::UriBasic.+/ ) );
     test.is( _.strHas( got.output, /.*!.* Failed to read .+submodule::Proto.+/ ) );
 
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/Proto.informal.out.will.yml' ) ) );
-    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/UriFundamentals.informal.out.will.yml' ) ) );
+    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/UriBasic.informal.out.will.yml' ) ) );
 
     var files = self.find( _.path.join( routinePath, 'module' ) );
-    test.identical( files, [ '.', './Proto.informal.will.yml', './UriFundamentals.informal.will.yml' ] ); debugger;
+    test.identical( files, [ '.', './Proto.informal.will.yml', './UriBasic.informal.will.yml' ] ); debugger;
     var files = self.find( _.path.join( routinePath, 'out' ) );
     test.gt( files.length, 70 );
 
-    var expected = [ 'Proto.informal.will.yml', 'UriFundamentals.informal.will.yml' ];
+    var expected = [ 'Proto.informal.will.yml', 'UriBasic.informal.will.yml' ];
     var files = _.fileProvider.dirRead( modulePath );
     test.identical( files, expected );
 
@@ -8980,7 +8980,7 @@ function submodulesDownloadUpdateDry( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ .*module::Tools.* will be downloaded version .*/ ) );
-    test.is( _.strHas( got.output, / \+ .*module::PathBasic.* will be downloaded version .*c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::PathBasic.* will be downloaded version .*90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ) );
     test.is( _.strHas( got.output, / \+ .*module::Color.* will be downloaded version .*0.3.115.*/ ) );
     test.is( _.strHas( got.output, / \+ 3\/6 submodule\(s\) of .*module::submodules-detached.* will be downloaded/ ) );
     var files = self.find( submodulesPath );
@@ -9024,7 +9024,7 @@ function submodulesDownloadUpdateDry( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ .*module::Tools.* will be updated to version .*/ ) );
-    test.is( _.strHas( got.output, / \+ .*module::PathBasic.* will be updated to version .*c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::PathBasic.* will be updated to version .*90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ) );
     test.is( _.strHas( got.output, / \+ .*module::Color.* will be updated to version .*0.3.115.*/ ) );
     test.is( _.strHas( got.output, / \+ 3\/6 submodule\(s\) of .*module::submodules-detached.* will be update/ ) );
     var files = self.find( submodulesPath );
@@ -9196,7 +9196,7 @@ function submodulesUpdate( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ .*module::Tools.* was updated to version .*fc457abd063cb49edc857e46b74b4769da7124e3.* in/ ) );
     test.is( _.strHas( got.output, / \+ .*module::PathBasic.* was updated to version .*master.* in/ ) );
-    test.is( _.strHas( got.output, / \+ .*module::UriFundamentals.* was updated to version .*3686d72cc0b8f6573217c947a4b379c38b02e39b.* in/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::UriBasic.* was updated to version .*df28c5245b2e01bcc0dbc9693bed070a58268e77.* in/ ) );
     test.is( _.strHas( got.output, / \+ 3\/3 submodule\(s\) of .*module::submodules.* were updated in/ ) );
     return null;
   })
@@ -9216,7 +9216,7 @@ function submodulesUpdate( test )
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, /module::Tools/ ) );
     test.is( !_.strHas( got.output, /module::PathBasic/ ) );
-    test.is( !_.strHas( got.output, /module::UriFundamentals/ ) );
+    test.is( !_.strHas( got.output, /module::UriBasic/ ) );
     test.is( _.strHas( got.output, / \+ 0\/3 submodule\(s\) of .*module::submodules.* were updated in/ ) );
     return null;
   })
@@ -9239,7 +9239,7 @@ function submodulesUpdate( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ .*module::Tools.* was updated to version .*master.* in/ ) );
     test.is( !_.strHas( got.output, /module::PathBasic/ ) );
-    test.is( !_.strHas( got.output, /module::UriFundamentals/ ) );
+    test.is( !_.strHas( got.output, /module::UriBasic/ ) );
     test.is( _.strHas( got.output, / \+ 1\/3 submodule\(s\) of .*module::submodules.* were updated in/ ) );
     return null;
   })
@@ -9259,7 +9259,7 @@ function submodulesUpdate( test )
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, /module::Tools/ ) );
     test.is( !_.strHas( got.output, /module::PathBasic/ ) );
-    test.is( !_.strHas( got.output, /module::UriFundamentals/ ) );
+    test.is( !_.strHas( got.output, /module::UriBasic/ ) );
     test.is( _.strHas( got.output, / \+ 0\/3 submodule\(s\) of .*module::submodules.* were updated in/ ) );
     return null;
   })
@@ -9629,7 +9629,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
@@ -9642,10 +9642,10 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/UriBasic\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriBasic\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#f4c04dbe078f3c00c84ff13edcc67478d320fddf.*/ ), 1 );
@@ -9682,7 +9682,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
@@ -9695,10 +9695,10 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/UriBasic\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriBasic\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#f4c04dbe078f3c00c84ff13edcc67478d320fddf.*/ ), 1 );
@@ -9737,7 +9737,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
@@ -9750,10 +9750,10 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/UriBasic\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriBasic\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#f4c04dbe078f3c00c84ff13edcc67478d320fddf.*/ ), 1 );
@@ -9792,7 +9792,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
@@ -9805,10 +9805,10 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* will be upgraded to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* will be upgraded to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/UriBasic\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriBasic\.informal\.will\.yml.* will be upgraded/ ), 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* will be upgraded to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#f4c04dbe078f3c00c84ff13edcc67478d320fddf.*/ ), 0 );
@@ -9876,7 +9876,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -9889,10 +9889,10 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/UriBasic\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriBasic\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#f4c04dbe078f3c00c84ff13edcc67478d320fddf.*/ ), 1 );
@@ -9935,7 +9935,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 0 );
@@ -9948,10 +9948,10 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/UriBasic\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriBasic\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#f4c04dbe078f3c00c84ff13edcc67478d320fddf.*/ ), 1 );
@@ -10001,10 +10001,10 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/out\/UriBasic\.informal\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/module\/UriBasic\.informal\.will\.yml.* was skipped/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
@@ -10058,10 +10058,10 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.*/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/out\/UriBasic\.informal\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/module\/UriBasic\.informal\.will\.yml.* was skipped/ ), 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
@@ -10104,7 +10104,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 0 );
@@ -10117,10 +10117,10 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/UriBasic\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriBasic\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#f4c04dbe078f3c00c84ff13edcc67478d320fddf.*/ ), 1 );
@@ -10163,7 +10163,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -10176,10 +10176,10 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Color\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was upgraded to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* was upgraded to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriFundamentals\.informal\.will\.yml.* was upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/out\/UriBasic\.informal\.out\.will\.yml.* was upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/module\/UriBasic\.informal\.will\.yml.* was upgraded/ ), 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was upgraded to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#f4c04dbe078f3c00c84ff13edcc67478d320fddf.*/ ), 0 );
@@ -10261,10 +10261,10 @@ function fixateDryDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Color\/\.im\.will\.yml.* will be skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* will be fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/out\/UriBasic\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/module\/UriBasic\.informal\.will\.yml.* will be fixated/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
@@ -10314,10 +10314,10 @@ function fixateDryDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Color\/\.im\.will\.yml.* will be skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* will be fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/out\/UriBasic\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/module\/UriBasic\.informal\.will\.yml.* will be fixated/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* won't be fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
@@ -10369,10 +10369,10 @@ function fixateDryDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Color\/\.im\.will\.yml.* will be skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* will be fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* will be fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/out\/UriBasic\.informal\.out\.will\.yml.* will be fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/module\/UriBasic\.informal\.will\.yml.* will be fixated/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
@@ -10424,10 +10424,10 @@ function fixateDryDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Color\/\.im\.will\.yml.* will be skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* will be fixated to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* will be fixated to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* will be fixated/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/module\/UriFundamentals\.informal\.will\.yml.* will be fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/out\/UriBasic\.informal\.out\.will\.yml.* will be fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/module\/UriBasic\.informal\.will\.yml.* will be fixated/ ), 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* won't be fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
@@ -10508,10 +10508,10 @@ function fixateDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* was fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was fixated/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/UriFundamentals\.informal\.will\.yml.* was fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/UriBasic\.informal\.out\.will\.yml.* was fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/UriBasic\.informal\.will\.yml.* was fixated/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
@@ -10567,10 +10567,10 @@ function fixateDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* was fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was fixated/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/UriFundamentals\.informal\.will\.yml.* was fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/UriBasic\.informal\.out\.will\.yml.* was fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/UriBasic\.informal\.will\.yml.* was fixated/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
@@ -10620,10 +10620,10 @@ function fixateDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was not fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/module\/UriFundamentals\.informal\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/out\/UriBasic\.informal\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/module\/UriBasic\.informal\.will\.yml.* was skipped/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
@@ -10677,10 +10677,10 @@ function fixateDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was fixated to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* was fixated to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was fixated/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/UriFundamentals\.informal\.will\.yml.* was fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/UriBasic\.informal\.out\.will\.yml.* was fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/UriBasic\.informal\.will\.yml.* was fixated/ ), 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
@@ -10736,10 +10736,10 @@ function fixateDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was fixated to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* was fixated to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was fixated/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/UriFundamentals\.informal\.will\.yml.* was fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/UriBasic\.informal\.out\.will\.yml.* was fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/UriBasic\.informal\.will\.yml.* was fixated/ ), 1 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 1 );
@@ -10795,10 +10795,10 @@ function fixateDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Color\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriFundamentals.* was fixated to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::UriBasic.* was fixated to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/UriFundamentals\.informal\.out\.will\.yml.* was fixated/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/UriFundamentals\.informal\.will\.yml.* was fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/out\/UriBasic\.informal\.out\.will\.yml.* was fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*fixateDetached\/module\/UriBasic\.informal\.will\.yml.* was fixated/ ), 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Proto.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.*/ ), 0 );
@@ -10971,91 +10971,91 @@ var Self =
   tests :
   {
 
-    preCloneRepos,
-    singleModuleWithSpaceTrivial,
-    make, // xxx
-    // transpile, xxx
-
-    openWith,
-    openEach,
-    withMixed,
-    eachMixed,
-    withList,
-    eachList,
-    eachBrokenIll,
-    eachBrokenNon,
-    eachBrokenCommand,
-
-    verbositySet,
-    verbosityStepDelete,
-    verbosityStepPrintName,
-
-    help,
-    listSingleModule,
-    listWithSubmodulesSimple,
-    listWithSubmodules,
-    listSteps,
-    // listComplexPaths, // xxx
-
-    clean,
-    cleanSingleModule,
-    cleanBroken1,
-    cleanBroken2,
-    cleanBrokenSubmodules,
-    cleanNoBuild,
-    cleanDry,
-    cleanSubmodules,
-    cleanMixed,
-    cleanWithInPath,
-
-    buildSingleModule,
-    buildSingleStep,
-    buildSubmodules,
-    // buildDetached, /* qqq : fix and cover _.uri.commonTextualReport and similar routines */
-
-    exportSingle,
-    exportNonExportable,
-    exportInformal,
-    exportWithReflector,
-    exportToRoot,
-    exportMixed,
-    exportSecond,
-    // exportSubmodules, // xxx
-    exportMultiple,
-    exportImportMultiple,
-    exportBroken,
-    exportDoc,
-    exportImport,
-    exportBrokenNoreflector,
-    exportWholeModule,
-    importPathLocal,
-    // importLocalRepo, /* qqq : fix and cover _.uri.commonTextualReport and similar routines */
-    importOutWithDeletedSource,
-
-    reflectNothingFromSubmodules,
-    reflectGetPath,
-    reflectSubdir,
-    reflectSubmodulesWithBase,
-    reflectComposite,
-    reflectRemoteGit,
-    reflectRemoteHttp,
-    reflectWithOptions,
-    reflectWithSelectorInDstFilter,
-    reflectSubmodulesWithCriterion,
-    reflectSubmodulesWithPluralCriterionManualExport,
-    reflectSubmodulesWithPluralCriterionAutoExport,
-    // relfectSubmodulesWithNotExistingFile, // xxx qqq : explain
-    reflectInherit,
-    reflectInheritSubmodules,
-    // reflectComplexInherit, // xxx
-    reflectorMasks,
-
-    shellWithCriterion,
-    shellVerbosity,
-
-    functionStringsJoin,
-    functionPlatform,
-    fucntionThisCriterion,
+    // preCloneRepos,
+    // singleModuleWithSpaceTrivial,
+    // make, // xxx
+    // // transpile, xxx
+    //
+    // openWith,
+    // openEach,
+    // withMixed,
+    // eachMixed,
+    // withList,
+    // eachList,
+    // eachBrokenIll,
+    // eachBrokenNon,
+    // eachBrokenCommand,
+    //
+    // verbositySet,
+    // verbosityStepDelete,
+    // verbosityStepPrintName,
+    //
+    // help,
+    // listSingleModule,
+    // listWithSubmodulesSimple,
+    // listWithSubmodules,
+    // listSteps,
+    // // listComplexPaths, // xxx
+    //
+    // clean,
+    // cleanSingleModule,
+    // cleanBroken1,
+    // cleanBroken2,
+    // cleanBrokenSubmodules,
+    // cleanNoBuild,
+    // cleanDry,
+    // cleanSubmodules,
+    // cleanMixed,
+    // cleanWithInPath,
+    //
+    // buildSingleModule,
+    // buildSingleStep,
+    // buildSubmodules,
+    // // buildDetached, /* qqq : fix and cover _.uri.commonTextualReport and similar routines */
+    //
+    // exportSingle,
+    // exportNonExportable,
+    // exportInformal,
+    // exportWithReflector,
+    // exportToRoot,
+    // exportMixed,
+    // exportSecond,
+    // // exportSubmodules, // xxx
+    // exportMultiple,
+    // exportImportMultiple,
+    // exportBroken,
+    // exportDoc,
+    // exportImport,
+    // exportBrokenNoreflector,
+    // exportWholeModule,
+    // importPathLocal,
+    // // importLocalRepo, /* qqq : fix and cover _.uri.commonTextualReport and similar routines */
+    // importOutWithDeletedSource,
+    //
+    // reflectNothingFromSubmodules,
+    // reflectGetPath,
+    // reflectSubdir,
+    // reflectSubmodulesWithBase,
+    // reflectComposite,
+    // reflectRemoteGit,
+    // reflectRemoteHttp,
+    // reflectWithOptions,
+    // reflectWithSelectorInDstFilter,
+    // reflectSubmodulesWithCriterion,
+    // reflectSubmodulesWithPluralCriterionManualExport,
+    // reflectSubmodulesWithPluralCriterionAutoExport,
+    // // relfectSubmodulesWithNotExistingFile, // xxx qqq : explain
+    // reflectInherit,
+    // reflectInheritSubmodules,
+    // // reflectComplexInherit, // xxx
+    // reflectorMasks,
+    //
+    // shellWithCriterion,
+    // shellVerbosity,
+    //
+    // functionStringsJoin,
+    // functionPlatform,
+    // fucntionThisCriterion,
 
     submodulesDownloadSingle,
     submodulesDownloadUpdate,

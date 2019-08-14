@@ -1,6 +1,6 @@
 about :
 
-  name : UriFundamentals.informal
+  name : UriBasic.informal
   version : 0.1.0
 
 path :
@@ -8,7 +8,7 @@ path :
   in : ..
   out : out
   remote : 'git+https:///github.com/Wandalen/wUriBasic.git'
-  local : '.module/UriFundamentals'
+  local : '.module/UriBasic'
   export : '{path::local}/proto'
 
 reflector :
