@@ -1327,7 +1327,6 @@ function _remoteDownload( o )
   })
   .then( function( arg )
   {
-    debugger;
 
     if( o.updating )
     downloading = !opener.isUpToDate;

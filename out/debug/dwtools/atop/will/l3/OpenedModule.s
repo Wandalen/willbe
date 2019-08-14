@@ -1632,7 +1632,7 @@ function _submodulesDownload_body( o )
 
         let o2 = _.mapExtend( null, o );
         delete o2.downloaded;
-        debugger;
+
         let r = _.Consequence.From( submodule.opener._remoteDownload( o2 ) );
         return r.then( ( arg ) =>
         {
