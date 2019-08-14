@@ -32,8 +32,8 @@
     "will": "proto/dwtools/atop/will/ExecUnrestricted"
   },
   "scripts": {
-    "test": "wtest .run proto/**",
-    "docgen": "wdocgen proto",
+    "test": "wtest .run proto/** v:5",
+    "docgen": "wdocgen .build proto",
     "single-process-will": "node proto/dwtools/atop/will/Exec",
     "debug-will": "node proto/dwtools/atop/will/ExecDebug",
     "unrestricted-will": "node proto/dwtools/atop/will/ExecUnrestricted",
