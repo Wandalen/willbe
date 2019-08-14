@@ -8032,6 +8032,332 @@ function common( test )
 
 }
 
+function groupTextualReport( test )
+{
+  let defaults = 
+  {
+    explanation : '',
+    groupsMap : null,
+    verbosity : 3,
+    spentTime : null,
+  }
+  
+  test.case = 'defaults';
+  var got = _.path.groupTextualReport( _.mapExtend( null,defaults ) );
+  var expected = '0 file(s)';
+  test.identical( got,expected );
+  
+  test.case = 'explanation only';
+  var o = 
+  {
+    explanation : '- Deleted '
+  }
+  var got = _.path.groupTextualReport( _.mapExtend( null,defaults, o ) );
+  var expected = '- Deleted 0 file(s)';
+  test.identical( got,expected );
+  
+  test.case = 'spentTime only';
+  var o = 
+  {
+    spentTime : 5000
+  }
+  var got = _.path.groupTextualReport( _.mapExtend( null,defaults, o ) );
+  var expected = '0 file(s), found in 5.000s';
+  test.identical( got,expected );
+  
+  test.open( 'locals' )
+  
+  test.case = 'groupsMap only';
+  var o = 
+  {
+    groupsMap : 
+    {
+      '/' : [ '/a', '/a/b', '/b', '/b/c', ], 
+      '/a' : [ '/a', '/a/b' ],
+      '/b' : [ '/b', '/b/c' ]
+    }
+  }
+  var got = _.path.groupTextualReport( _.mapExtend( null,defaults, o ) );
+  var expected = 
+  [
+    '   4 at /',
+    '   2 at ./a',
+    '   2 at ./b',
+    '4 file(s), at /'
+  ].join( '\n' )
+  test.identical( got,expected );
+  
+  test.case = 'explanation + groupsMap + spentTime, verbosity : 3';
+  var o = 
+  {
+    groupsMap : 
+    {
+      '/' : [ '/a', '/a/b', '/b', '/b/c', ], 
+      '/a' : [ '/a', '/a/b' ],
+      '/b' : [ '/b', '/b/c' ]
+    },
+    spentTime : 5000,
+    explanation : '- Deleted ',
+    verbosity : 3
+  }
+  var got = _.path.groupTextualReport( _.mapExtend( null,defaults, o ) );
+  var expected = 
+  [ 
+    '   4 at /',
+    '   2 at ./a',
+    '   2 at ./b',
+    '- Deleted 4 file(s), at /, found in 5.000s'
+  ].join( '\n' )
+  test.identical( got,expected );
+  
+  test.case = 'explanation + groupsMap + spentTime, verbosity : 5';
+  var o = 
+  {
+    groupsMap : 
+    {
+      '/' : [ '/a', '/a/b', '/b', '/b/c', ], 
+      '/a' : [ '/a', '/a/b' ],
+      '/b' : [ '/b', '/b/c' ]
+    },
+    spentTime : 5000,
+    explanation : '- Deleted ',
+    verbosity : 5
+  }
+  var got = _.path.groupTextualReport( _.mapExtend( null,defaults, o ) );
+  var expected = 
+  [ 
+    '/a,/a/b,/b,/b/c ',
+    '   4 at /',
+    '   2 at ./a',
+    '   2 at ./b',
+    '- Deleted 4 file(s), at /, found in 5.000s'
+  ].join( '\n' )
+  test.identical( got,expected );
+  
+  test.case = 'relative, explanation + groupsMap + spentTime, verbosity : 5';
+  var o = 
+  {
+    groupsMap : 
+    {
+      '/' : [ './a', './a/b', './b','./b/c', ], 
+      './a' : [ './a', './a/b' ],
+      './b' : [ './b', './b/c' ]
+    },
+    spentTime : 5000,
+    explanation : '- Deleted ',
+    verbosity : 5
+  }
+  var got = _.path.groupTextualReport( _.mapExtend( null,defaults, o ) );
+  var expected = 
+  [ 
+    './a,./a/b,./b,./b/c ',
+    '   4 at .',
+    '   2 at ./a',
+    '   2 at ./b',
+    '- Deleted 4 file(s), at ., found in 5.000s'
+  ].join( '\n' )
+  test.identical( got,expected );
+  
+  test.close( 'locals' );
+}
+
+//
+
+function commonTextualReport( test )
+{
+  test.open( 'locals' );
+  
+  test.case = 'single';
+  var filePath = [ '/wprocedure#0.3.19' ];
+  var expected = filePath[ 0 ];
+  var got = _.path.commonTextualReport( filePath );
+  test.identical( got, expected );
+  
+  test.case = 'two, same';
+  var filePath = [ '/wprocedure#0.3.19', '/wprocedure#0.3.19' ];
+  var expected = '( /wprocedure#0.3.19 + [ . , . ] )';
+  var got = _.path.commonTextualReport( filePath );
+  test.identical( got, expected );
+  
+  test.case = 'two, same protocol and path, diffent hash';
+  var filePath = [ '/wprocedure#0.3.19', '/wprocedure#0.3.18' ];
+  var expected = '( / + [ wprocedure#0.3.19 , wprocedure#0.3.18 ] )';
+  var got = _.path.commonTextualReport( filePath );
+  test.identical( got, expected );
+  
+  test.case = 'two, different';
+  var filePath = [ '/wprocedure#0.3.19', '/wfiles#0.3.19' ];
+  var expected = '( / + [ wprocedure#0.3.19 , wfiles#0.3.19 ] )';
+  var got = _.path.commonTextualReport( filePath );
+  test.identical( got, expected );
+  
+  test.case = 'two, different';
+  var filePath = [ '/wprocedure#0.3.19', '/wfiles#0.3.18' ];
+  var expected = '( / + [ wprocedure#0.3.19 , wfiles#0.3.18 ] )';
+  var got = _.path.commonTextualReport( filePath );
+  test.identical( got, expected );
+  
+  test.case = 'two, different';
+  var filePath = [ '/wprocedure', '/wfiles#0.3.18' ];
+  var expected = '( / + [ wprocedure , wfiles#0.3.18 ] )';
+  var got = _.path.commonTextualReport( filePath );
+  test.identical( got, expected );
+  
+  test.case = 'two, different';
+  var filePath = [ '/wprocedure', '/a/b/c' ];
+  var expected = '( / + [ wprocedure , a/b/c ] )';
+  var got = _.path.commonTextualReport( filePath );
+  test.identical( got, expected );
+  
+  test.case = 'three, commot part of path';
+  var filePath = [ '/wprocedure', '/a/b/c', '/wfiles' ];
+  var expected = '( / + [ wprocedure , a/b/c , wfiles ] )'
+  var got = _.path.commonTextualReport( filePath );
+  test.identical( got, expected );
+  
+  test.case = 'two, part of path is diffent';
+  var filePath = [ '/a/b/c', '/a/x/c' ];
+  var expected = '( /a/ + [ b/c , x/c ] )';
+  var got = _.path.commonTextualReport( filePath );
+  test.identical( got, expected );
+  
+  test.case = 'two relatives, common part of path';
+  var filePath = [ 'a/b/c', 'a/x/c' ];
+  var expected = '( a/ + [ b/c , x/c ] )';
+  var got = _.path.commonTextualReport( filePath );
+  test.identical( got, expected );
+  
+  test.case = 'two different relatives';
+  var filePath = [ 'a/b', 'c/d' ];
+  var expected = '[ a/b , c/d ]';
+  var got = _.path.commonTextualReport( filePath );
+  test.identical( got, expected );
+  
+  test.close( 'locals' );
+  
+  /*  */
+  
+  if( !Config.debug )
+  return
+  
+  test.shouldThrowErrorSync( () => _.path.commonTextualReport( null ) )
+  test.shouldThrowErrorSync( () => _.path.commonTextualReport([ '/a/b/c', null ]) )
+  test.shouldThrowErrorSync( () => _.path.commonTextualReport([ '/a/b/c', './c/d'  ]) )
+}
+
+//
+
+function moveTextualReport( test )
+{ 
+  test.open( 'locals' );
+  
+  test.case = 'same, absolute';
+  var expected = '/a : . <- .';
+  var dst = '/a';
+  var src = '/a';
+  var got = _.path.moveTextualReport( dst, src );
+  test.identical( got, expected );
+  
+  test.case = 'different, absolute, with common';
+  var expected = '/a/ : dst <- src';
+  var dst = '/a/dst';
+  var src = '/a/src';
+  var got = _.path.moveTextualReport( dst, src );
+  test.identical( got, expected );
+  
+  test.case = 'different, absolute, without common';
+  var expected = '/b/dst <- /a/src';
+  var dst = '/b/dst';
+  var src = '/a/src';
+  var got = _.path.moveTextualReport( dst, src );
+  test.identical( got, expected );
+  
+  test.case = 'same, relative';
+  var expected = 'a/src : . <- .';
+  var dst = 'a/src';
+  var src = 'a/src';
+  var got = _.path.moveTextualReport( dst, src );
+  test.identical( got, expected );
+  
+  test.case = 'different, relative, with common';
+  var expected = 'a/ : dst <- src';
+  var dst = 'a/dst';
+  var src = 'a/src';
+  var got = _.path.moveTextualReport( dst, src );
+  test.identical( got, expected );
+  
+  test.case = 'different, relative, without common';
+  var expected = 'b/dst <- a/src';
+  var dst = 'b/dst';
+  var src = 'a/src';
+  var got = _.path.moveTextualReport( dst, src );
+  test.identical( got, expected );
+  
+  test.case = 'same, relative dotted';
+  var expected = 'a/src : . <- .';
+  var dst = './a/src';
+  var src = './a/src';
+  var got = _.path.moveTextualReport( dst, src );
+  test.identical( got, expected );
+  
+  test.case = 'different, relative dotted, with common';
+  var expected = 'a/ : dst <- src';
+  var dst = './a/dst';
+  var src = './a/src';
+  var got = _.path.moveTextualReport( dst, src );
+  test.identical( got, expected );
+  
+  test.case = 'different, relative dotted, without common';
+  var expected = './b/dst <- ./a/src';
+  var dst = './b/dst';
+  var src = './a/src';
+  var got = _.path.moveTextualReport( dst, src );
+  test.identical( got, expected );
+  
+  test.close( 'locals' );
+  
+  test.open( 'null' );
+  
+  test.case = 'both null';
+  var expected = '{null} : . <- .';
+  var dst = null;
+  var src = null;
+  var got = _.path.moveTextualReport( dst, src );
+  test.identical( got, expected );
+  
+  test.case = 'dst relative, src null';
+  var expected = './a/dst <- {null}';
+  var dst = './a/dst';
+  var src = null;
+  var got = _.path.moveTextualReport( dst, src );
+  test.identical( got, expected );
+  
+  test.case = 'src relative, dst null';
+  var expected = '{null} <- ./a/src';
+  var src = './a/src';
+  var dst = null;
+  var got = _.path.moveTextualReport( dst, src );
+  test.identical( got, expected );
+  
+  test.case = 'src absolute, dst null';
+  var expected = '/{null} <- /a/src';
+  var src = '/a/src';
+  var dst = null;
+  var got = _.path.moveTextualReport( dst, src );
+  test.identical( got, expected );
+  
+  test.case = 'dst absolute, src null';
+  var expected = '/a/dst <- /{null}';
+  var dst = '/a/dst';
+  var src = null;
+  var got = _.path.moveTextualReport( dst, src );
+  test.identical( got, expected );
+  
+  test.close( 'null' );
+  
+
+}
+
 // --
 // declare
 // --
@@ -8096,6 +8422,10 @@ var Self =
     relativeWithOptions,
 
     common,
+    
+    groupTextualReport,
+    commonTextualReport,
+    moveTextualReport
 
   },
 

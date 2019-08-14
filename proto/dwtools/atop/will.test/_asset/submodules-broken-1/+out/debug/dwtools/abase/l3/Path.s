@@ -2432,15 +2432,33 @@ function rebase( filePath, oldPath, newPath )
 // textual reporter
 // --
 
-function groupTextualReport( o )
+function groupTextualReport_pre( routine, args )
+{
+  let o = args[ 0 ];
+
+  _.routineOptions( routine, o );
+  _.assert( args.length === 1  );
+  
+  o.verbosity = _.numberIs( o.verbosity ) ? o.verbosity : o.verbosity;
+  
+  if( !o.onRelative )
+  o.onRelative = _.routineJoin( this, this.relative );
+  
+  _.assert( _.routineIs( o.onRelative ) );
+  
+  return o;
+}
+
+//
+
+function groupTextualReport_body( o )
 {
   let self = this;
   let r = '';
   let commonPath;
 
-  _.routineOptions( groupTextualReport, arguments );
-  o.verbosity = _.numberIs( o.verbosity ) ? o.verbosity : o.verbosity;
-
+  _.assertRoutineOptions( groupTextualReport_body, arguments );
+  
   if( o.verbosity >= 5 && o.groupsMap )
   r +=  _.toStr( o.groupsMap[ '/' ], { multiline : 1, wrap : 0, levels : 2 } ) + '\n';
 
@@ -2459,7 +2477,7 @@ function groupTextualReport( o )
       return;
       if( !filesPath.length )
       return;
-      return '   ' + filesPath.length + ' at ' + self.dot( self.relative( commonPath, basePath ) );
+      return '   ' + filesPath.length + ' at ' + self.dot( o.onRelative( commonPath, basePath ) );
     });
     if( _.mapVals( details ).length )
     r += _.mapVals( details ).join( '\n' ) + '\n';
@@ -2477,25 +2495,50 @@ function groupTextualReport( o )
   return r;
 }
 
-groupTextualReport.defaults =
+groupTextualReport_body.defaults =
 {
   explanation : '',
   groupsMap : null,
   verbosity : 3,
   spentTime : null,
+  onRelative : null
+}
+
+let groupTextualReport = _.routineFromPreAndBody( groupTextualReport_pre, groupTextualReport_body );
+
+//
+
+function commonTextualReport_pre( routine, args )
+{
+  let o = args[ 0 ];
+  
+  if( !_.objectIs( o ) )
+  o = { filePath : args[ 0 ] };
+
+  _.routineOptions( routine, o );
+  _.assert( args.length === 1  );
+  
+  if( _.mapIs( o.filePath ) )
+  filePath = _.mapKeys( o.filePath );
+  
+  _.assert( _.strIs( o.filePath ) || _.arrayIs( o.filePath ) );
+  
+  if( !o.onRelative )
+  o.onRelative = _.routineJoin( this, this.relative );
+  
+  _.assert( _.routineIs( o.onRelative ) );
+  
+  return o;
 }
 
 //
 
-function commonTextualReport( filePath )
-{
-
-  if( _.mapIs( filePath ) )
-  filePath = _.mapKeys( filePath );
-
-  _.assert( _.strIs( filePath ) || _.arrayIs( filePath ) );
-  _.assert( arguments.length === 1 );
-
+function commonTextualReport_body( o )
+{ 
+  _.assertRoutineOptions( commonTextualReport_body, arguments );
+  
+  let filePath = o.filePath;
+  
   if( _.arrayIs( filePath ) && filePath.length === 0 )
   return '()';
 
@@ -2513,7 +2556,7 @@ function commonTextualReport( filePath )
   let relativePath = [];
 
   for( let i = 0 ; i < filePath.length ; i++ )
-  relativePath[ i ] = this.relative( commonPath,filePath[ i ] );
+  relativePath[ i ] = o.onRelative( commonPath,filePath[ i ] );
 
   if( commonPath === '.' )
   return '[ ' + relativePath.join( ' , ' ) + ' ]';
@@ -2521,11 +2564,20 @@ function commonTextualReport( filePath )
   return '( ' + commonPath + ' + ' + '[ ' + relativePath.join( ' , ' ) + ' ]' + ' )';
 }
 
+commonTextualReport_body.defaults =
+{
+  filePath : null,
+  onRelative : null
+}
+
+let commonTextualReport = _.routineFromPreAndBody( commonTextualReport_pre, commonTextualReport_body );
+
 //
 
 function moveTextualReport_pre( routine, args )
 {
-
+  let self = this;
+  
   let o = args[ 0 ];
   if( args[ 1 ] !== undefined )
   o = { dstPath : args[ 0 ], srcPath : args[ 1 ] }
@@ -2535,17 +2587,22 @@ function moveTextualReport_pre( routine, args )
   _.assert( arguments.length === 2 );
 
   let srcIsAbsolute = false;
-  if( o.srcPath && this.s.anyAreAbsolute( o.srcPath ) )
+  if( o.srcPath && self.s.anyAreAbsolute( o.srcPath ) )
   srcIsAbsolute = true;
 
   let dstIsAbsolute = false;
-  if( o.dstPath && this.s.anyAreAbsolute( o.dstPath ) )
+  if( o.dstPath && self.s.anyAreAbsolute( o.dstPath ) )
   dstIsAbsolute = true;
 
   if( !o.srcPath )
   o.srcPath = dstIsAbsolute ? '/{null}' : '{null}';
   if( !o.dstPath )
   o.dstPath = srcIsAbsolute ? '/{null}' : '{null}';
+  
+  if( !o.onRelative )
+  o.onRelative = _.routineJoin( self, self.relative );
+  
+  _.assert( _.routineIs( o.onRelative ) );
 
   return o;
 }
@@ -2561,14 +2618,14 @@ function moveTextualReport_body( o )
   if( o.decorating && _.color )
   {
     if( common.length > 1 )
-    result = _.color.strFormat( common, 'path' ) + ' : ' + _.color.strFormat( this.relative( common, o.dstPath ), 'path' ) + ' <- ' + _.color.strFormat( this.relative( common, o.srcPath ), 'path' );
+    result = _.color.strFormat( common, 'path' ) + ' : ' + _.color.strFormat( o.onRelative( common, o.dstPath ), 'path' ) + ' <- ' + _.color.strFormat( o.onRelative( common, o.srcPath ), 'path' );
     else
     result = _.color.strFormat( o.dstPath, 'path' ) + ' <- ' + _.color.strFormat( o.srcPath, 'path' );
   }
   else
   {
     if( common.length > 1 )
-    result = common + ' : ' + this.relative( common, o.dstPath ) + ' <- ' + this.relative( common, o.srcPath );
+    result = common + ' : ' + o.onRelative( common, o.dstPath ) + ' <- ' + o.onRelative( common, o.srcPath );
     else
     result = o.dstPath + ' <- ' + o.srcPath;
   }
@@ -2580,7 +2637,8 @@ moveTextualReport_body.defaults =
 {
   dstPath : null,
   srcPath : null,
-  decorating : 1
+  decorating : 1,
+  onRelative : null
 }
 
 let moveTextualReport = _.routineFromPreAndBody( moveTextualReport_pre, moveTextualReport_body );
