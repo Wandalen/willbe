@@ -32,7 +32,7 @@ about :
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#ec60e39ded1669e27abaa6fc2798ee13804c400a
-  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
 
 ```
 
@@ -49,7 +49,7 @@ submodule :
 [user@user ~]$ will .submodules.update dry:1
 ...
   + module::Tools will be updated to version ec60e39ded1669e27abaa6fc2798ee13804c400a
-  + module::PathFundamentals will be updated to version aa4b10e291c0cb0e79961b6ece128da544f00568
+  + module::PathBasic will be updated to version aa4b10e291c0cb0e79961b6ece128da544f00568
 
 ```
 
@@ -59,7 +59,7 @@ submodule :
 
 Вивід показує (на момент створення туторіалу):
 - для підмодуля `Tools` буде здійснено оновлення до вказаної версії коміту `#ec60e39ded1669e27abaa6fc2798ee13804c400a`;
-- в підмодулі `PathFundamentals` буде здійснено оновлення до версії `#d95a35b7ef1568df823c12efa5bd5e1f4ceec8b7`.
+- в підмодулі `PathBasic` буде здійснено оновлення до версії `#d95a35b7ef1568df823c12efa5bd5e1f4ceec8b7`.
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.update</code></u></summary>
@@ -69,8 +69,8 @@ submodule :
 ...
   . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
    + module::Tools version ec60e39ded1669e27abaa6fc2798ee13804c400a was updated in 13.440s
-   . Read : /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
-   + module::PathFundamentals version master was updated in 5.047s
+   . Read : /path_to_file/.module/PathBasic/out/wPathBasic.out.will.yml
+   + module::PathBasic version master was updated in 5.047s
 
    + 2/2 submodule(s) of module::submodulesCommands were updated in 18.487s
 
@@ -95,7 +95,7 @@ submodulesUpdate
 
 З'явилася директорія для підмодулів `.module`.
 
-Утиліта завантажила оновлення для обох підмодулів згідно встановлених версій: `#master` для підмодуля `PathFundamentals` i `#ec60e39ded1669e27abaa6fc2798ee13804c400a` для підмодуля `Tools`.  
+Утиліта завантажила оновлення для обох підмодулів згідно встановлених версій: `#master` для підмодуля `PathBasic` i `#ec60e39ded1669e27abaa6fc2798ee13804c400a` для підмодуля `Tools`.  
 
 Версія підмодуля `Tools` застаріла. Здійсніть його оновлення.
 
@@ -110,7 +110,7 @@ Module at /path_to_file/.will.yml
   Remote path of module::submodulesCommands / module::Tools fixated
   git+https:///github.com/Wandalen/wTools.git/out/wTools : .#7db7bd21ac76fc495aae44cc8b1c4474ce5012a4 <- .#ec60e39ded1669e27abaa6fc2798ee13804c400a
   in /path_to_file/submodulesUpgrade/.will.yml
-Remote path of module::submodulesCommands / module::PathFundamentals fixated
+Remote path of module::submodulesCommands / module::PathBasic fixated
   git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic : .#d95a35b7ef1568df823c12efa5bd5e1f4ceec8b7 <- .#master
   in /path_to_file/submodulesUpgrade/.will.yml
 

@@ -5,13 +5,13 @@ about :
   version : 0.0.1
 
 submodule :
-  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
 
 path :
 
   out : 'out'
 
-  submodule.pathfundamental : '.module/PathFundamentals'
+  submodule.pathfundamental : '.module/PathBasic'
 
 step  :
 

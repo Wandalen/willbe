@@ -1359,7 +1359,7 @@ function commonVectors( test )
 var Self =
 {
 
-  name : 'Tools/base/l4/path/S',
+  name : 'Tools/base/l4/path/basic/S',
   silencing : 1,
   // verbosity : 7,
   // routine : 'relative',

@@ -32,7 +32,7 @@ about :
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#ec60e39ded1669e27abaa6fc2798ee13804c400a
-  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
 
 ```
 
@@ -49,7 +49,7 @@ The submodule `Tools` has the specified version.
 [user@user ~]$ will .submodules.update dry:1
 ...
   + module::Tools will be updated to version ec60e39ded1669e27abaa6fc2798ee13804c400a
-  + module::PathFundamentals will be updated to version aa4b10e291c0cb0e79961b6ece128da544f00568
+  + module::PathBasic will be updated to version aa4b10e291c0cb0e79961b6ece128da544f00568
 ```
 
 </details>
@@ -58,7 +58,7 @@ Use `will .submodules.update dry:1` to get information about submodules, version
 
 The command output shows (at the time of creating the tutorial):
 - the `Tools` submodule will be updated to the specified version of the commit - `#ec60e39ded1669e27abaa6fc2798ee13804c400a`;
-- the version of `PathFundamentals` submodule will be updated to  `#d95a35b7ef1568df823c12efa5bd5e1f4ceec8b7`.
+- the version of `PathBasic` submodule will be updated to  `#d95a35b7ef1568df823c12efa5bd5e1f4ceec8b7`.
 
 <details>
   <summary><u>Command output <code>will .submodules.update</code></u></summary>
@@ -68,8 +68,8 @@ The command output shows (at the time of creating the tutorial):
 ...
   . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
    + module::Tools version ec60e39ded1669e27abaa6fc2798ee13804c400a was updated in 13.440s
-   . Read : /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
-   + module::PathFundamentals version master was updated in 5.047s
+   . Read : /path_to_file/.module/PathBasic/out/wPathBasic.out.will.yml
+   + module::PathBasic version master was updated in 5.047s
 
    + 2/2 submodule(s) of module::submodulesCommands were updated in 18.487s
 
@@ -94,7 +94,7 @@ submodulesUpdate
 
 The `.module` directory for submodules has appeared.
 
-The utility has downloaded updates for both submodules according to the installed versions: `#master` for the submodule` PathFundamentals` and `#ec60e39ded1669e27abaa6fc2798ee13804c400a` for the `Tools` submodule.  
+The utility has downloaded updates for both submodules according to the installed versions: `#master` for the submodule` PathBasic` and `#ec60e39ded1669e27abaa6fc2798ee13804c400a` for the `Tools` submodule.  
 
 The version of the `Tools` submodule is outdated. Update it.
 
@@ -109,7 +109,7 @@ Module at /path_to_file/.will.yml
   Remote path of module::submodulesCommands / module::Tools fixated
   git+https:///github.com/Wandalen/wTools.git/out/wTools : .#7db7bd21ac76fc495aae44cc8b1c4474ce5012a4 <- .#ec60e39ded1669e27abaa6fc2798ee13804c400a
   in /path_to_file/submodulesUpgrade/.will.yml
-Remote path of module::submodulesCommands / module::PathFundamentals fixated
+Remote path of module::submodulesCommands / module::PathBasic fixated
   git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic : .#d95a35b7ef1568df823c12efa5bd5e1f4ceec8b7 <- .#master
   in /path_to_file/submodulesUpgrade/.will.yml
 

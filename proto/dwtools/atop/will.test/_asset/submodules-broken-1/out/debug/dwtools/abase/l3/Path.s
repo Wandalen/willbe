@@ -851,7 +851,7 @@ function _pathNativizeWindows( filePath )
 function _pathNativizePosix( filePath )
 {
   let self = this;
-  _.assert( _.strIs( filePath ), 'Expects string' );n
+  _.assert( _.strIs( filePath ), 'Expects string' );
   return filePath;
 }
 
@@ -2438,14 +2438,14 @@ function groupTextualReport_pre( routine, args )
 
   _.routineOptions( routine, o );
   _.assert( args.length === 1  );
-  
+
   o.verbosity = _.numberIs( o.verbosity ) ? o.verbosity : o.verbosity;
-  
+
   if( !o.onRelative )
   o.onRelative = _.routineJoin( this, this.relative );
-  
+
   _.assert( _.routineIs( o.onRelative ) );
-  
+
   return o;
 }
 
@@ -2458,7 +2458,7 @@ function groupTextualReport_body( o )
   let commonPath;
 
   _.assertRoutineOptions( groupTextualReport_body, arguments );
-  
+
   if( o.verbosity >= 5 && o.groupsMap )
   r +=  _.toStr( o.groupsMap[ '/' ], { multiline : 1, wrap : 0, levels : 2 } ) + '\n';
 
@@ -2511,34 +2511,34 @@ let groupTextualReport = _.routineFromPreAndBody( groupTextualReport_pre, groupT
 function commonTextualReport_pre( routine, args )
 {
   let o = args[ 0 ];
-  
+
   if( !_.objectIs( o ) )
   o = { filePath : args[ 0 ] };
 
   _.routineOptions( routine, o );
   _.assert( args.length === 1  );
-  
+
   if( _.mapIs( o.filePath ) )
   filePath = _.mapKeys( o.filePath );
-  
+
   _.assert( _.strIs( o.filePath ) || _.arrayIs( o.filePath ) );
-  
+
   if( !o.onRelative )
   o.onRelative = _.routineJoin( this, this.relative );
-  
+
   _.assert( _.routineIs( o.onRelative ) );
-  
+
   return o;
 }
 
 //
 
 function commonTextualReport_body( o )
-{ 
+{
   _.assertRoutineOptions( commonTextualReport_body, arguments );
-  
+
   let filePath = o.filePath;
-  
+
   if( _.arrayIs( filePath ) && filePath.length === 0 )
   return '()';
 
@@ -2577,7 +2577,7 @@ let commonTextualReport = _.routineFromPreAndBody( commonTextualReport_pre, comm
 function moveTextualReport_pre( routine, args )
 {
   let self = this;
-  
+
   let o = args[ 0 ];
   if( args[ 1 ] !== undefined )
   o = { dstPath : args[ 0 ], srcPath : args[ 1 ] }
@@ -2598,10 +2598,10 @@ function moveTextualReport_pre( routine, args )
   o.srcPath = dstIsAbsolute ? '/{null}' : '{null}';
   if( !o.dstPath )
   o.dstPath = srcIsAbsolute ? '/{null}' : '{null}';
-  
+
   if( !o.onRelative )
   o.onRelative = _.routineJoin( self, self.relative );
-  
+
   _.assert( _.routineIs( o.onRelative ) );
 
   return o;

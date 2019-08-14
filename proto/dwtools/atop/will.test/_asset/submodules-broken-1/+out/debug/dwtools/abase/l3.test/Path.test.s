@@ -8365,7 +8365,7 @@ function moveTextualReport( test )
 var Self =
 {
 
-  name : 'Tools/base/l3/path/Fundamentals',
+  name : 'Tools/base/l3/path/Basic',
   silencing : 1,
 
   tests :

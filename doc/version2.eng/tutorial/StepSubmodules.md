@@ -19,7 +19,7 @@ about :
 submodule :
   
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
 
 step :
 
@@ -96,8 +96,8 @@ build :
 ...
      . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
      + module::Tools was downloaded in 12.741s
-     . Read : /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
-     + module::PathFundamentals was downloaded in 4.903s
+     . Read : /path_to_file/.module/PathBasic/out/wPathBasic.out.will.yml
+     + module::PathBasic was downloaded in 4.903s
    + 2/2 submodule(s) of module::predefinedSteps were downloaded in 17.652s
   Built module::first / build::download in 17.698s
 
@@ -111,7 +111,7 @@ build :
 predefinedSteps
      ├── .module
      │      ├── Tools
-     │      └── PathFundamentals
+     │      └── PathBasic
      └── .will.yml
 
 ```
@@ -149,8 +149,8 @@ predefinedSteps
   Building module::first / build::upgrade
      . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
      + module::Tools version master was updated in 13.922s
-     . Read : /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
-     + module::PathFundamentals version master was updated in 3.553s
+     . Read : /path_to_file/.module/PathBasic/out/wPathBasic.out.will.yml
+     + module::PathBasic version master was updated in 3.553s
    + 2/2 submodule(s) of module::first were updated in 17.484s
   Built module::first / build::update in 17.538s
 
@@ -165,7 +165,7 @@ predefinedSteps
 predefinedSteps
      ├── .module
      │      ├── Tools
-     │      └── PathFundamentals
+     │      └── PathBasic
      └── .will.yml
 
 ```
@@ -181,7 +181,7 @@ predefinedSteps
    - Clean deleted 344 file(s) in 1.155s
    . Reloading submodules..
      + module::Tools was downloaded in 13.699s
-     + module::PathFundamentals was downloaded in 2.903s
+     + module::PathBasic was downloaded in 2.903s
    + 2/2 submodule(s) of module::predefinedSteps were downloaded in 16.610s
  > echo "Done"
 Done
@@ -198,7 +198,7 @@ Done
 predefinedSteps
      ├── .module
      │      ├── Tools
-     │      └── PathFundamentals
+     │      └── PathBasic
      └── .will.yml
 
 ```

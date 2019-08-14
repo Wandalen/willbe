@@ -80,13 +80,13 @@ about :
 
 submodule :
 
-  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
 
 ```
 
 </details>
 
-В файлі `submodules.will.yml` містяться URI-посилання на віддалений підмодуль `PathFundamentals`. 
+В файлі `submodules.will.yml` містяться URI-посилання на віддалений підмодуль `PathBasic`. 
 
 <details>
     <summary><u>Код <code>export.will.yml</code></u></summary>
@@ -132,11 +132,11 @@ build :
 [user@user ~]$ will .with submodule .submodules.download
 ...
  . Read : /path_to_file/submodule.will.yml
- ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even .clean it before downloading
+ ! Failed to read submodule::PathBasic, try to download it with .submodules.download or even .clean it before downloading
  . Read 1 will-files in 1.152s 
 
-   . Read : /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
-   + module::PathFundamentals version master was downloaded in 4.748s
+   . Read : /path_to_file/.module/PathBasic/out/wPathBasic.out.will.yml
+   + module::PathBasic version master was downloaded in 4.748s
  + 1/1 submodule(s) of module::submodules were downloaded in 4.756s
 
 ```
@@ -151,7 +151,7 @@ build :
 ```
 named 
   ├── .module
-  │     └── PathFundamentals
+  │     └── PathBasic
   ├── proto
   │     └── file.txt
   ├── submodule.will.yml
@@ -162,7 +162,7 @@ named
 
 </details>
 
-Виконавши команду, утиліта завантажила підмодуль `PathFundamentals` в директорію `.module` за 4.756s.
+Виконавши команду, утиліта завантажила підмодуль `PathBasic` в директорію `.module` за 4.756s.
 
 <details>
   <summary><u>Вивід команди <code>will .with export.will.yml .export export</code></u></summary>
@@ -190,7 +190,7 @@ named
 ```
 named 
   ├── .module
-  │     └── PathFundamentals
+  │     └── PathBasic
   ├── out
   │    ├── export.out.tgs
   │    └── export.out.will.yml
@@ -228,7 +228,7 @@ named
 ```
 named 
   ├── .module
-  │     └── PathFundamentals
+  │     └── PathBasic
   ├── proto
   │     └── file.txt
   ├── submodule.will.yml

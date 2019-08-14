@@ -21,10 +21,10 @@
 ```yaml
 submodule :
     Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-    PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
+    PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
     Color : npm:///wColor/out/wColor#0.3.102
 ```
-Модуль підключає підмодулі `Tools` i `PathFundamentals`.
+Модуль підключає підмодулі `Tools` i `PathBasic`.
 
 ### Засоби управліяння віддаленими підмодулями
 

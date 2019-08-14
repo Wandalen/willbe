@@ -2248,7 +2248,7 @@ function arrayFromCoercing( test )
   var expected = [ 3, 7, 13, 'abc', false, undefined, null, { greeting: 'Hello there!' } ];
   test.identical( got, expected );
 
-  /**/
+  /* */
 
   if( !Config.debug )
   return;
@@ -2278,20 +2278,8 @@ function arrayFromCoercing( test )
 function scalarAppend( test )
 {
 
-  test.case = 'none arguments';
-  var got = _.scalarAppend();
-  test.identical( got, [] );
-
-  test.case = 'single undefined';
-  var got = _.scalarAppend( undefined );
-  test.identical( got, [] );
-
   test.case = 'two undefined';
   var got = _.scalarAppend( undefined, undefined );
-  test.identical( got, [] );
-
-  test.case = 'three undefined';
-  var got = _.scalarAppend( undefined, undefined, undefined );
   test.identical( got, [] );
 
   test.case = 'dstArray is undefined, src is scalar';
@@ -2345,10 +2333,10 @@ function scalarAppend( test )
   test.identical( dst, [ 1, 1, 1, 1, 1 ] );
   test.is( got === dst );
 
-  var dst = [ 1, 2, 3 ];
-  var got = _.scalarAppend( dst, [ 1 ], [ 2 ], [ 3, [ 5 ] ] );
-  test.identical( dst, [ 1, 2, 3, 1, 2, 3, [ 5 ] ] );
-  test.is( got === dst );
+  // var dst = [ 1, 2, 3 ];
+  // var got = _.scalarAppend( dst, [ 1 ], [ 2 ], [ 3, [ 5 ] ] );
+  // test.identical( dst, [ 1, 2, 3, 1, 2, 3, [ 5 ] ] );
+  // test.is( got === dst );
 
   var dst = [ 1, 2, 3 ];
   var insArray = [ [ 1 ], [ 2 ], [ 3, [ 5 ] ] ];
@@ -2371,9 +2359,15 @@ function scalarAppend( test )
 
   test.case = 'mixed arguments types';
   var dst = [ 1 ];
-  var got = _.scalarAppend( dst, 'a', 1, [ { a : 1 } ], { b : 2 } );
-  test.identical( dst, [  1, 'a', 1, { a : 1 }, { b : 2 } ] );
+  var got = _.scalarAppend( dst, [ 'a', 1, [ { a : 1 }, { b : 2 } ] ] );
+  test.identical( dst, [  1, 'a', 1, [ { a : 1 }, { b : 2 } ] ] );
   test.is( got === dst );
+
+  // test.case = 'mixed arguments types';
+  // var dst = [ 1 ];
+  // var got = _.scalarAppend( dst, 'a', 1, [ { a : 1 } ], { b : 2 } );
+  // test.identical( dst, [  1, 'a', 1, { a : 1 }, { b : 2 } ] );
+  // test.is( got === dst );
 
   test.case = 'argument is undefined';
   var dst = [ 1 ];
@@ -2382,14 +2376,8 @@ function scalarAppend( test )
   test.is( got === dst );
 
   test.case = 'argument is undefined';
-  var dst = [];
-  var got = _.scalarAppend( dst, [ 1 ], [ 3 ] );
-  test.identical( dst, [ 1, 3 ] );
-  test.is( got === dst );
-
-  test.case = 'argument is undefined';
   var dst = [ 0 ];
-  var got = _.scalarAppend( dst, [ 1 ], [ 3 ] );
+  var got = _.scalarAppend( dst, [ 1, 3 ] );
   test.identical( dst, [ 0, 1, 3 ] );
   test.is( got === dst );
 
@@ -2419,6 +2407,27 @@ function scalarAppend( test )
   // {
   //   _.scalarAppend();
   // });
+
+  test.shouldThrowErrorSync( function()
+  {
+    test.case = 'none arguments';
+    var got = _.scalarAppend();
+    test.identical( got, [] );
+  });
+
+  test.shouldThrowErrorSync( function()
+  {
+    test.case = 'single undefined';
+    var got = _.scalarAppend( undefined );
+    test.identical( got, [] );
+  });
+
+  test.shouldThrowErrorSync( function()
+  {
+    test.case = 'three undefined';
+    var got = _.scalarAppend( undefined, undefined, undefined );
+    test.identical( got, [] );
+  });
 
 }
 

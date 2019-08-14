@@ -69,7 +69,7 @@ about :
 
 submodule :
 
-  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
 
 ```
 
@@ -116,11 +116,11 @@ build :
 [user@user ~]$ will .with submodule .submodules.download
 ...
  . Read : /path_to_file/submodule.will.yml
- ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even .clean it before downloading
+ ! Failed to read submodule::PathBasic, try to download it with .submodules.download or even .clean it before downloading
  . Read 1 willfiles in 1.152s 
 
-   . Read : /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
-   + module::PathFundamentals version master was downloaded in 4.748s
+   . Read : /path_to_file/.module/PathBasic/out/wPathBasic.out.will.yml
+   + module::PathBasic version master was downloaded in 4.748s
  + 1/1 submodule(s) of module::submodules were downloaded in 4.756s
 
 ```
@@ -132,7 +132,7 @@ build :
 ```
 named 
   ├── .module
-  │     └── PathFundamentals
+  │     └── PathBasic
   ├── proto
   │     └── file.txt
   ├── submodule.will.yml
@@ -166,7 +166,7 @@ named
 ```
 named 
   ├── .module
-  │     └── PathFundamentals
+  │     └── PathBasic
   ├── out
   │    ├── export.out.tgs
   │    └── export.out.will.yml
@@ -201,7 +201,7 @@ named
 ```
 named 
   ├── .module
-  │     └── PathFundamentals
+  │     └── PathBasic
   ├── proto
   │     └── file.txt
   ├── submodule.will.yml

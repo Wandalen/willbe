@@ -38,7 +38,7 @@ about :
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
   One : module.test/one
 
 build :
@@ -76,8 +76,8 @@ about :
   Building module::shellCommand / build::download
      . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
      + module::Tools version master was downloaded in 12.011s
-     . Read : /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
-     + module::PathFundamentals version master was downloaded in 4.239s
+     . Read : /path_to_file/.module/PathBasic/out/wPathBasic.out.will.yml
+     + module::PathBasic version master was downloaded in 4.239s
    + 2/4 submodule(s) of module::shellCommand were downloaded in 16.262s
   Built module::shellCommand / build::download in 16.313s
 
@@ -91,7 +91,7 @@ about :
 shellCommand
     ├── .module
     │      ├── Tools
-    │      └── PathFundamentals
+    │      └── PathBasic
     ├── module.test
     │        ├── one.will.yml
     │        └── two.will.yml
@@ -119,7 +119,7 @@ drwxr-xr-x 3 user user   4096 Apr 17 11:16 debug
 -rw-r--r-- 1 user user   7526 Apr 17 11:16 wTools.out.will.yml
 -rw-r--r-- 1 user user 215828 Apr 17 11:16 wTools.proto.export.out.tgs
 
-Module at /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
+Module at /path_to_file/.module/PathBasic/out/wPathBasic.out.will.yml
 > ls -al
 total 20
 drwxr-xr-x 3 user user 4096 Apr 17 11:16 .
@@ -139,7 +139,7 @@ drwxr-xr-x 4 user user 4096 Apr 17 11:16 ..
 
 </details>
 
-Підмодулі `Tools` i `PathFundamentals` завантажені з Git-репозиторію. Для них можна виконувати git-команди. Наприклад, дізнайтесь статус підмодулів командою `git status`:
+Підмодулі `Tools` i `PathBasic` завантажені з Git-репозиторію. Для них можна виконувати git-команди. Наприклад, дізнайтесь статус підмодулів командою `git status`:
 
 <details>
   <summary><u>Вивід команди <code>will .each submodule::*s .shell git status</code></u></summary>
@@ -153,7 +153,7 @@ Module at /path_to_file/.module/Tools/out/wTools.out.will.yml
 Ваша ветка обновлена в соответствии с «origin/master».
 нечего коммитить, нет изменений в рабочем каталоге
 
-Module at /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
+Module at /path_to_file/.module/PathBasic/out/wPathBasic.out.will.yml
  > git status
 На ветке master
 Ваша ветка обновлена в соответствии с «origin/master».

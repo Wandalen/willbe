@@ -35,7 +35,7 @@ about :
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
   Files : git+https:///github.com/Wandalen/wFiles.git/out/wFiles#master
 
 ```
@@ -52,7 +52,7 @@ submodule :
 Remote path of module::submodulesCommands / module::Tools will be fixated
   git+https:///github.com/Wandalen/wTools.git/out/wTools : .#56afe924c2680301078ccb8ad24a9e7be7008485 <- .#master
   in /path_to_file/.will.yml
-Remote path of module::submodulesCommands / module::PathFundamentals will be fixated
+Remote path of module::submodulesCommands / module::PathBasic will be fixated
   git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic : .#84dd78771fd257bf8599dafe3cc37a9407a29896 <- .#master
   in /path_to_file/.will.yml
 Remote path of module::submodulesCommands / module::Files will be fixated
@@ -76,7 +76,7 @@ Remote path of module::submodulesCommands / module::Files will be fixated
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#ec60e39ded1669e27abaa6fc2798ee13804c400a
-  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
   Files : git+https:///github.com/Wandalen/wFiles.git/out/wFiles#master
 
 ```
@@ -91,7 +91,7 @@ submodule :
 ```
 [user@user ~]$ will .submodules.fixate
 ...
-Remote path of module::submodulesCommands / module::PathFundamentals fixated
+Remote path of module::submodulesCommands / module::PathBasic fixated
   git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic : .#84dd78771fd257bf8599dafe3cc37a9407a29896 <- .#master
   in /path_to_file/submodulesFixate/.will.yml
 Remote path of module::submodulesCommands / module::Files fixated

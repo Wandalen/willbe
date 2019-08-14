@@ -39,7 +39,7 @@ about :
 
 submodule :
 
-  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
   localOne : ./modules/localOne/
   localTwo : ./modules/localTwo/local
 
@@ -49,7 +49,7 @@ submodule :
 
 Помістіть в файл `.will.yml` приведений вище код.
 
-В секції підключено неіменований локальний підмодуль за шляхом `./modules/localOne` та іменований з назвою `local` за шляхом `./modules/localTwo/out`. Для порівняння роботи команд з віддаленими і локальними підмодулями, в `вілфайл` введено віддалений підмодуль `PathFundamentals`.  
+В секції підключено неіменований локальний підмодуль за шляхом `./modules/localOne` та іменований з назвою `local` за шляхом `./modules/localTwo/out`. Для порівняння роботи команд з віддаленими і локальними підмодулями, в `вілфайл` введено віддалений підмодуль `PathBasic`.  
 
 <details>
   <summary><u>Код файла <code>.will.yml</code> в директорії <code>localOne</code></u></summary>
@@ -95,7 +95,7 @@ build :
 ```
 [user@user ~]$ will .submodules.list
 ...
-submodule::PathFundamentals
+submodule::PathBasic
   path : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
   isDownloaded : false
   Exported builds : []
@@ -114,7 +114,7 @@ submodule::localTwo
 
 Перевірте конфігурацію підмодулів командою `will .submodules.list`.   
 
-Поле `isDownloaded` віддаленого підмодуля `PathFundamentals` має значення `false`, тобто,не завантажений. А статус завантаження локальних підмодулів має значення `1`.
+Поле `isDownloaded` віддаленого підмодуля `PathBasic` має значення `false`, тобто,не завантажений. А статус завантаження локальних підмодулів має значення `1`.
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.download</code></u></summary>
@@ -122,7 +122,7 @@ submodule::localTwo
 ```
 [user@user ~]$ will .submodules.download
 ...
-   + module::PathFundamentals was downloaded in 4.872s
+   + module::PathBasic was downloaded in 4.872s
  + 1/3 submodule(s) of module::local.import were downloaded in 4.877s
 
 ```
@@ -137,7 +137,7 @@ submodule::localTwo
 ```
 .
 ├── .modules
-│      └── PathFundamentals
+│      └── PathBasic
 ├── modules
 │      ├── localOne
 │      │     └── .will.yml
@@ -150,7 +150,7 @@ submodule::localTwo
 
 </details>
 
-Після завантаження з'явилась директорія `.module` з підмодулем `PathFundamentals`.    
+Після завантаження з'явилась директорія `.module` з підмодулем `PathBasic`.    
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.list</code></u></summary>
@@ -158,7 +158,7 @@ submodule::localTwo
 ```
 [user@user ~]$ will .submodules.list
 ...
-submodule::PathFundamentals
+submodule::PathBasic
   path : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
   isDownloaded : true
   Exported builds : [ 'proto.export' ]
@@ -179,7 +179,7 @@ submodule::localTwo
 
 Локальні підмодулі завжди мають статус завантажені `isDownloaded : 1`, a в виводі інформації про віддалені підмодулі вказується `true` або `false`.  
 
-Віддалений підмодуль завантажується за `out-вілфайлом`, відповідно, в полі `Exported builds` вказується за якою збіркою він експортований. Аналогічно до віддалених підмодулів, для локальних підмодулів з `out-вілфайлом` в полі `Exported builds` виводиться назва збірки експорту. В приведеному виводі консолі віддалений підомодуль `PathFundamentals` експортований за збіркою `proto.export`, а локальний підмодуль `localTwo` за збіркою `export`.   
+Віддалений підмодуль завантажується за `out-вілфайлом`, відповідно, в полі `Exported builds` вказується за якою збіркою він експортований. Аналогічно до віддалених підмодулів, для локальних підмодулів з `out-вілфайлом` в полі `Exported builds` виводиться назва збірки експорту. В приведеному виводі консолі віддалений підомодуль `PathBasic` експортований за збіркою `proto.export`, а локальний підмодуль `localTwo` за збіркою `export`.   
 
 <details>
   <summary><u>Вивід команди <code>will .submodules.clean</code></u></summary>

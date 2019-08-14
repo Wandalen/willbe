@@ -63,7 +63,7 @@ about :
 
 submodule :
 
-  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
   
 build : 
   
@@ -140,8 +140,8 @@ Module at /path_to_file/.will.yml
 ...
 
     Building module::submodules / build::download
-       . Read : /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
-       + module::PathFundamentals version master was downloaded in 5.974s
+       . Read : /path_to_file/.module/PathBasic/out/wPathBasic.out.will.yml
+       + module::PathBasic version master was downloaded in 5.974s
      + 1/1 submodule(s) of module::submodules were downloaded in 5.981s
     Built module::submodules / build::download in 6.019s
 
@@ -153,7 +153,7 @@ Module at /path_to_file/.will.yml
 ```  
 named 
   ├── .module
-  │     └── PathFundamentals
+  │     └── PathBasic
   ├── proto
   │     └── file.txt
   ├── out

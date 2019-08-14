@@ -7,7 +7,7 @@ about :
 submodule :
   
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
 
 step :
 

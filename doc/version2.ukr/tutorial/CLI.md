@@ -158,7 +158,7 @@ about :
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
 
 path :
 
@@ -304,12 +304,12 @@ Command ".submodules.list"
    . Read : /path_to_file/submodules/.will.yml
  . Read 1 will-files in 0.084s
  ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
- ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
+ ! Failed to read submodule::PathBasic, try to download it with .submodules.download or even clean it before downloading
 submodule::Tools
   path : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
   isDownloaded : false
   Exported builds : []
-submodule::PathFundamentals
+submodule::PathBasic
   path : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
   isDownloaded : false
   Exported builds : []
@@ -324,7 +324,7 @@ submodule::PathFundamentals
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
 
 ```
 
@@ -339,7 +339,7 @@ submodule :
 
 ```
 ! Failed to read submodule::Tools, try to download it with .submodules.download or even clean it before downloading
-! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
+! Failed to read submodule::PathBasic, try to download it with .submodules.download or even clean it before downloading
 
 ```
 
@@ -354,7 +354,7 @@ submodule :
 [user@user ~]$ will .resources.list
   . Read : /path_to_file/.will.yml
  ! Failed to read submodule::Tools, try to download it with .submodules.download or even .clean it before downloading
- ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even .clean it before downloading
+ ! Failed to read submodule::PathBasic, try to download it with .submodules.download or even .clean it before downloading
  . Read 1 will-files in 1.865s
 
 About
@@ -375,7 +375,7 @@ submodule::Tools
   isDownloaded : false
   Exported builds : []
 
-submodule::PathFundamentals
+submodule::PathBasic
   path : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
   isDownloaded : false
   Exported builds : []

@@ -67,7 +67,7 @@ function preCloneRepos( test )
   /* - */
 
   clone( 'Color', '2d408bf82b168a39a29aa1261bf13face8bd3e95' );
-  clone( 'PathFundamentals', '95b741c8820a6d6234f59f1fa549c6b59f2d5a5c' );
+  clone( 'PathBasic', '95b741c8820a6d6234f59f1fa549c6b59f2d5a5c' );
   clone( 'Procedure', '829ea81d342db66df60edf80c99687a1cd011a96' );
   clone( 'Proto', 'f4c04dbe078f3c00c84ff13edcc67478d320fddf' );
   clone( 'Tools', 'e58dc6a1637603c2151840f5bfb5729eb71d4e34' );
@@ -1026,8 +1026,8 @@ function eachMixed( test )
 
     test.is( _.strHas( got.output, /eachMixed\/\.module\/Tools\/out\/wTools\.out\.will\.yml[^d]/ ) );
     test.is( _.strHas( got.output, /eachMixed\/\.module\/Tools[^d]/ ) );
-    test.is( _.strHas( got.output, /eachMixed\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml[^d]/ ) );
-    test.is( _.strHas( got.output, /eachMixed\/\.module\/PathFundamentals[^d]/ ) );
+    test.is( _.strHas( got.output, /eachMixed\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml[^d]/ ) );
+    test.is( _.strHas( got.output, /eachMixed\/\.module\/PathBasic[^d]/ ) );
     test.is( _.strHas( got.output, /eachMixed\/out\/UriFundamentals\.informal\.out\.will\.yml[^d]/ ) );
     test.is( _.strHas( got.output, /eachMixed\/out\/UriFundamentals[^d]/ ) );
     test.is( _.strHas( got.output, /eachMixed\/out\/Proto\.informal\.out\.will\.yml[^d]/ ) );
@@ -1057,12 +1057,12 @@ function eachMixed( test )
     test.identical( _.strCount( got.output, 'Module at' ), 4 );
 
     test.identical( _.strCount( got.output, '.module/Tools/out/wTools.out.will.yml' ), 1 );
-    test.identical( _.strCount( got.output, '.module/PathFundamentals/out/wPathBasic.out.will.yml' ), 1 );
+    test.identical( _.strCount( got.output, '.module/PathBasic/out/wPathBasic.out.will.yml' ), 1 );
     test.identical( _.strCount( got.output, 'out/UriFundamentals.informal.out.will.yml' ), 1 );
     test.identical( _.strCount( got.output, 'out/Proto.informal.out.will.yml' ), 1 );
 
     test.identical( _.strCount( got.output, '.module/Tools/out/wTools' ), 2 );
-    test.identical( _.strCount( got.output, '.module/PathFundamentals/out/wPathBasic' ), 2 );
+    test.identical( _.strCount( got.output, '.module/PathBasic/out/wPathBasic' ), 2 );
     test.identical( _.strCount( got.output, 'out/UriFundamentals.informal' ), 2 );
     test.identical( _.strCount( got.output, 'out/Proto.informal' ), 2 );
 
@@ -1482,7 +1482,7 @@ function verbositySet( test )
     test.is( _.strHas( got.output, / \. Read .+\/\.im\.will\.yml/ ) );
     test.is( _.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
     test.is( _.strHas( got.output, / .*!.* Failed to read .+submodule::Tools.+/ ) );
-    test.is( _.strHas( got.output, / .*!.* Failed to read .+submodule::PathFundamentals.+/ ) );
+    test.is( _.strHas( got.output, / .*!.* Failed to read .+submodule::PathBasic.+/ ) );
     test.is( _.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
@@ -1509,7 +1509,7 @@ function verbositySet( test )
     test.is( !_.strHas( got.output, / \. Read .+\/\.im\.will\.yml/ ) );
     test.is( !_.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
     test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::Tools.+/ ) );
-    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::PathFundamentals.+/ ) );
+    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::PathBasic.+/ ) );
     test.is( _.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
@@ -1536,7 +1536,7 @@ function verbositySet( test )
     test.is( !_.strHas( got.output, / \. Read .+\/\.im\.will\.yml/ ) );
     test.is( !_.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
     test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::Tools.+/ ) );
-    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::PathFundamentals.+/ ) );
+    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::PathBasic.+/ ) );
     test.is( !_.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( !_.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
@@ -2485,7 +2485,7 @@ function listWithSubmodules( test )
     test.case = 'submodules list'
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'submodule::Tools' ) );
-    test.is( _.strHas( got.output, 'submodule::PathFundamentals' ) );
+    test.is( _.strHas( got.output, 'submodule::PathBasic' ) );
     return null;
   })
 
@@ -3428,13 +3428,13 @@ function cleanSubmodules( test )
     test.case = '.submodules.update'
     test.identical( got.exitCode, 0 );
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathFundamentals' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathBasic' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
 
     var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
     test.is( files.length );
 
-    var files = self.find( _.path.join( submodulesPath, 'PathFundamentals' ) );
+    var files = self.find( _.path.join( submodulesPath, 'PathBasic' ) );
     test.is( files.length );
 
     return null;
@@ -4024,14 +4024,14 @@ function buildDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, /\+ .*module::Tools.* was downloaded version .*master.* in/ ) );
-    test.is( _.strHas( got.output, /\+ .*module::PathFundamentals.* was downloaded version .*c94e0130358ba54fc47237e15bac1ab18024c0a9.* in/ ) );
+    test.is( _.strHas( got.output, /\+ .*module::PathBasic.* was downloaded version .*c94e0130358ba54fc47237e15bac1ab18024c0a9.* in/ ) );
     test.is( _.strHas( got.output, /\+ .*module::Color.* was downloaded version .*0.3.115.* in/ ) );
     test.is( _.strHas( got.output, /\.module\/Procedure\.informal.+ <- .+npm:\/\/wprocedure/ ) );
     test.is( _.strHas( got.output, /\.module\/Proto\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wProto\.git#f4c04dbe078f3c00c84ff13edcc67478d320fddf/ ) );
     test.is( _.strHas( got.output, /\.module\/UriFundamentals\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wUriBasic\.git/ ) );
 
     var files = _.fileProvider.dirRead( modulePath );
-    test.identical( files, [ 'Color', 'PathFundamentals', 'Procedure.informal', 'Proto.informal', 'Tools', 'UriFundamentals.informal' ] );
+    test.identical( files, [ 'Color', 'PathBasic', 'Procedure.informal', 'Proto.informal', 'Tools', 'UriFundamentals.informal' ] );
 
     var files = _.fileProvider.dirRead( outPath );
     test.identical( files, [ 'debug', 'Procedure.informal.out.will.yml', 'Proto.informal.out.will.yml', 'UriFundamentals.informal.out.will.yml' ] );
@@ -4772,7 +4772,7 @@ function exportMixed( test )
     test.is( _.strHas( got.output, /\+ .*reflector::reflect.submodules.* reflected/ ) );
 
     test.is( _.strHas( got.output, /.*!.* Failed to read .+submodule::Tools.+/ ) );
-    test.is( _.strHas( got.output, /.*!.* Failed to read .+submodule::PathFundamentals.+/ ) );
+    test.is( _.strHas( got.output, /.*!.* Failed to read .+submodule::PathBasic.+/ ) );
     test.is( _.strHas( got.output, /.*!.* Failed to read .+submodule::UriFundamentals.+/ ) );
     test.is( _.strHas( got.output, /.*!.* Failed to read .+submodule::Proto.+/ ) );
 
@@ -7230,7 +7230,7 @@ function reflectRemoteGit( test )
   let submodulesPath = _.path.join( routinePath, 'module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
-  let local1Path = _.path.join( routinePath, 'PathFundamentals' );
+  let local1Path = _.path.join( routinePath, 'PathBasic' );
   let local2Path = _.path.join( routinePath, 'Looker' );
   let local3Path = _.path.join( routinePath, 'Proto' );
 
@@ -8831,7 +8831,7 @@ function submodulesDownloadUpdate( test )
     test.is( files.length > 30 );
 
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathFundamentals' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathBasic' ) ) )
     return null;
   })
 
@@ -8849,13 +8849,13 @@ function submodulesDownloadUpdate( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /0\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathFundamentals' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathBasic' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
 
     var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
     test.is( files.length > 3 );
 
-    var files = self.find( _.path.join( submodulesPath, 'PathFundamentals' ) );
+    var files = self.find( _.path.join( submodulesPath, 'PathBasic' ) );
     test.is( files.length > 3 );
 
     return null;
@@ -8876,13 +8876,13 @@ function submodulesDownloadUpdate( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /2\/2 submodule\(s\) of .*module::submodules.* were updated in/ ) );
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathFundamentals' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathBasic' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
 
     var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
     test.is( files.length );
 
-    var files = self.find( _.path.join( submodulesPath, 'PathFundamentals' ) );
+    var files = self.find( _.path.join( submodulesPath, 'PathBasic' ) );
     test.is( files.length );
 
     return null;
@@ -8902,13 +8902,13 @@ function submodulesDownloadUpdate( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /0\/2 submodule\(s\) of .*module::submodules.* were updated in/ ) );
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathFundamentals' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathBasic' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
 
     var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
     test.is( files.length );
 
-    var files = self.find( _.path.join( submodulesPath, 'PathFundamentals' ) );
+    var files = self.find( _.path.join( submodulesPath, 'PathBasic' ) );
     test.is( files.length );
 
     return null;
@@ -8980,7 +8980,7 @@ function submodulesDownloadUpdateDry( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ .*module::Tools.* will be downloaded version .*/ ) );
-    test.is( _.strHas( got.output, / \+ .*module::PathFundamentals.* will be downloaded version .*c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::PathBasic.* will be downloaded version .*c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ) );
     test.is( _.strHas( got.output, / \+ .*module::Color.* will be downloaded version .*0.3.115.*/ ) );
     test.is( _.strHas( got.output, / \+ 3\/6 submodule\(s\) of .*module::submodules-detached.* will be downloaded/ ) );
     var files = self.find( submodulesPath );
@@ -9024,7 +9024,7 @@ function submodulesDownloadUpdateDry( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ .*module::Tools.* will be updated to version .*/ ) );
-    test.is( _.strHas( got.output, / \+ .*module::PathFundamentals.* will be updated to version .*c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::PathBasic.* will be updated to version .*c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ) );
     test.is( _.strHas( got.output, / \+ .*module::Color.* will be updated to version .*0.3.115.*/ ) );
     test.is( _.strHas( got.output, / \+ 3\/6 submodule\(s\) of .*module::submodules-detached.* will be update/ ) );
     var files = self.find( submodulesPath );
@@ -9195,7 +9195,7 @@ function submodulesUpdate( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ .*module::Tools.* was updated to version .*fc457abd063cb49edc857e46b74b4769da7124e3.* in/ ) );
-    test.is( _.strHas( got.output, / \+ .*module::PathFundamentals.* was updated to version .*master.* in/ ) );
+    test.is( _.strHas( got.output, / \+ .*module::PathBasic.* was updated to version .*master.* in/ ) );
     test.is( _.strHas( got.output, / \+ .*module::UriFundamentals.* was updated to version .*3686d72cc0b8f6573217c947a4b379c38b02e39b.* in/ ) );
     test.is( _.strHas( got.output, / \+ 3\/3 submodule\(s\) of .*module::submodules.* were updated in/ ) );
     return null;
@@ -9215,7 +9215,7 @@ function submodulesUpdate( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, /module::Tools/ ) );
-    test.is( !_.strHas( got.output, /module::PathFundamentals/ ) );
+    test.is( !_.strHas( got.output, /module::PathBasic/ ) );
     test.is( !_.strHas( got.output, /module::UriFundamentals/ ) );
     test.is( _.strHas( got.output, / \+ 0\/3 submodule\(s\) of .*module::submodules.* were updated in/ ) );
     return null;
@@ -9238,7 +9238,7 @@ function submodulesUpdate( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ .*module::Tools.* was updated to version .*master.* in/ ) );
-    test.is( !_.strHas( got.output, /module::PathFundamentals/ ) );
+    test.is( !_.strHas( got.output, /module::PathBasic/ ) );
     test.is( !_.strHas( got.output, /module::UriFundamentals/ ) );
     test.is( _.strHas( got.output, / \+ 1\/3 submodule\(s\) of .*module::submodules.* were updated in/ ) );
     return null;
@@ -9258,7 +9258,7 @@ function submodulesUpdate( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, /module::Tools/ ) );
-    test.is( !_.strHas( got.output, /module::PathFundamentals/ ) );
+    test.is( !_.strHas( got.output, /module::PathBasic/ ) );
     test.is( !_.strHas( got.output, /module::UriFundamentals/ ) );
     test.is( _.strHas( got.output, / \+ 0\/3 submodule\(s\) of .*module::submodules.* were updated in/ ) );
     return null;
@@ -9628,11 +9628,11 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* will be upgraded to version/ ), 1 );
@@ -9681,11 +9681,11 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* will be upgraded to version/ ), 1 );
@@ -9736,11 +9736,11 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* will be upgraded to version/ ), 1 );
@@ -9791,11 +9791,11 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* will be upgraded to version/ ), 1 );
@@ -9875,11 +9875,11 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was upgraded to version/ ), 1 );
@@ -9934,11 +9934,11 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was upgraded to version/ ), 1 );
@@ -9987,11 +9987,11 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was not upgraded/ ), 1 );
@@ -10044,11 +10044,11 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.*/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was not upgraded/ ), 0 );
@@ -10103,11 +10103,11 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was upgraded to version/ ), 1 );
@@ -10162,11 +10162,11 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#c94e0130358ba54fc47237e15bac1ab18024c0a9.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was upgraded to version/ ), 1 );
@@ -10247,11 +10247,11 @@ function fixateDryDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/\.im\.will\.yml.* will be fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* will be skipped/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* will be skipped/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* will be skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* won't be fixated/ ), 1 );
@@ -10300,11 +10300,11 @@ function fixateDryDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be fixated/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/\.im\.will\.yml.* will be fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* won't be fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* won't be fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.*/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* will be skipped/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* will be skipped/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* will be skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* won't be fixated/ ), 0 );
@@ -10355,11 +10355,11 @@ function fixateDryDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be fixated/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/\.im\.will\.yml.* will be fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* will be skipped/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* will be skipped/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* will be skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* will be skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* won't be fixated/ ), 1 );
@@ -10410,11 +10410,11 @@ function fixateDryDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDryDetached\/\.im\.will\.yml.* will be fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* won't be fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* will be skipped/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* will be skipped/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* will be skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* will be skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.im\.will\.yml.* will be skipped/ ), 2 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* won't be fixated/ ), 1 );
@@ -10494,11 +10494,11 @@ function fixateDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was not fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was not fixated/ ), 1 );
@@ -10553,11 +10553,11 @@ function fixateDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was not fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.*/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was not fixated/ ), 0 );
@@ -10606,11 +10606,11 @@ function fixateDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was not fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was not fixated/ ), 1 );
@@ -10663,11 +10663,11 @@ function fixateDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was not fixated/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.*/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was not fixated/ ), 0 );
@@ -10722,11 +10722,11 @@ function fixateDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was not fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was skipped/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was skipped/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was not fixated/ ), 1 );
@@ -10781,11 +10781,11 @@ function fixateDetached( test )
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*fixateDetached\/\.im\.will\.yml.* was fixated/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathFundamentals.* was not fixated/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/out\/wPathBasic\.out\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathFundamentals\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was skipped/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was skipped/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.im\.will\.yml.* was skipped/ ), 2 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::Color.* was not fixated/ ), 1 );

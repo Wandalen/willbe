@@ -31,7 +31,7 @@ about :
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
 
 ```
 
@@ -51,8 +51,8 @@ To use the `.submodules.clean` command you need to have downloaded submodules.
 ...
    . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
    + module::Tools version 7db7bd21ac76fc495aae44cc8b1c4474ce5012a4 was downloaded in 16.504s
-   . Read : /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
-   + module::PathFundamentals version d95a35b7ef1568df823c12efa5bd5e1f4ceec8b7 was downloaded in 5.986s
+   . Read : /path_to_file/.module/PathBasic/out/wPathBasic.out.will.yml
+   + module::PathBasic version d95a35b7ef1568df823c12efa5bd5e1f4ceec8b7 was downloaded in 5.986s
 
 ```
 
@@ -66,7 +66,7 @@ Download the submodules using the `will .submodules.download` command.
 ```
 submodulesCommands
         ├── .module
-        │      ├── PathFundamentals
+        │      ├── PathBasic
         │      └── Tools
         └── .will.yml
 
@@ -76,7 +76,7 @@ submodulesCommands
 
 Check the changes in the `submodulesClean` directory after the build. Compare file structure with the above.
 
-Utility created the `.module` directory where the `Tools` and `PathFundamentals` remote submodules files are downloaded.   
+Utility created the `.module` directory where the `Tools` and `PathBasic` remote submodules files are downloaded.   
 
 <details>
   <summary><u>Command output <code>will .submodules.clean</code></u></summary>

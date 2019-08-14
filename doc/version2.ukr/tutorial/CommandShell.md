@@ -42,7 +42,7 @@ about :
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
   One : module.test/one
 
 build :
@@ -59,7 +59,7 @@ build :
 
 Помістіть в файл `.will.yml` приведений вище код.
 
-Модуль складається з двох віддалених підмодулів і одного локального. Приведена збірка `download` виконує завантаження віддалених підмодулів `Tools`, `PathFundamentals`. 
+Модуль складається з двох віддалених підмодулів і одного локального. Приведена збірка `download` виконує завантаження віддалених підмодулів `Tools`, `PathBasic`. 
 
 <details>
   <summary><u>Код файлів <code>one.ex.will.yml</code>, <code>one.im.will.yml</code> і <code>two.will.yml</code></u></summary>
@@ -87,8 +87,8 @@ about :
   Building module::shellCommand / build::download
      . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
      + module::Tools version master was downloaded in 12.011s
-     . Read : /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
-     + module::PathFundamentals version master was downloaded in 4.239s
+     . Read : /path_to_file/.module/PathBasic/out/wPathBasic.out.will.yml
+     + module::PathBasic version master was downloaded in 4.239s
    + 2/4 submodule(s) of module::shellCommand were downloaded in 16.262s
   Built module::shellCommand / build::download in 16.313s
 
@@ -105,7 +105,7 @@ about :
 shellCommand
     ├── .module
     │      ├── Tools
-    │      └── PathFundamentals
+    │      └── PathBasic
     ├── module.test
     │        ├── one.ex.will.yml
     │        ├── one.im.will.yml
@@ -131,7 +131,7 @@ drwxr-xr-x 2 user user  4096 May 30 19:48 .
 drwxr-xr-x 8 user user  4096 May 30 19:48 ..
 -rw-r--r-- 1 user user 21642 May 30 19:48 wTools.out.will.yml
 
-Module at /path_to_file/.module/PathFundamentals/out/wPathBasic.out
+Module at /path_to_file/.module/PathBasic/out/wPathBasic.out
  > ls -al
 total 20
 drwxr-xr-x 3 user user 4096 May 30 19:48 .
@@ -154,7 +154,7 @@ drwxr-xr-x 4 user user 4096 May 30 19:47 ..
 
 З командою `.shell` можна виконати будь-які зовнішні операції над модулем. Для прикладу, виведіть інформацію про вміст директорій, в яких поміщені `вілфайли` підмодулів. Для цього використовуйте команду `.will .each submodule::* .shell ls -al`. 
 
-Утиліта виконала команду `ls -al` для кожного з підмодулів. В директорії підмодуля `Tools` є два файла та директорія `debug`, в директорії підмодуля `PathFundamentals` один файл та одна директорія `debug`, а в директорії локального підмодуля `One` знаходяться три `вілфайла`.  
+Утиліта виконала команду `ls -al` для кожного з підмодулів. В директорії підмодуля `Tools` є два файла та директорія `debug`, в директорії підмодуля `PathBasic` один файл та одна директорія `debug`, а в директорії локального підмодуля `One` знаходяться три `вілфайла`.  
 
 <details>
   <summary><u>Вивід команди <code>will .each submodule::*s .shell git status</code></u></summary>
@@ -167,7 +167,7 @@ Module at /path_to_file/.module/Tools/out/wTools.out.will.yml
 On branch master
 nothing to commit, working tree clean
 
-Module at /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
+Module at /path_to_file/.module/PathBasic/out/wPathBasic.out.will.yml
  > git status
 On branch master
 nothing to commit, working tree clean   
@@ -176,9 +176,9 @@ nothing to commit, working tree clean
 
 </details>
 
-Підмодулі `Tools` i `PathFundamentals` завантажені з Git-репозиторію. Для них можна виконувати git-команди. Дізнайтесь статус підмодулів командою `will .each submodule::*s .shell git status`. 
+Підмодулі `Tools` i `PathBasic` завантажені з Git-репозиторію. Для них можна виконувати git-команди. Дізнайтесь статус підмодулів командою `will .each submodule::*s .shell git status`. 
 
-Утиліта перевірила статус підмодулів `Tools` i `PathFundamentals` тому, що їх назви закінчуються на `s` (селектор `submodule::*s`). В указаних модулях ніяких змін не було - `On branch master`, `nothing to commit, working tree clean`.
+Утиліта перевірила статус підмодулів `Tools` i `PathBasic` тому, що їх назви закінчуються на `s` (селектор `submodule::*s`). В указаних модулях ніяких змін не було - `On branch master`, `nothing to commit, working tree clean`.
 
 <details>
   <summary><u>Вивід команди <code>will .each module.test .shell ls</code></u></summary>

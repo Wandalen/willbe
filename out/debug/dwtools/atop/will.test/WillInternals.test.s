@@ -74,7 +74,7 @@ function preCloneRepos( test )
   /* - */
 
   clone( 'Color', '2d408bf82b168a39a29aa1261bf13face8bd3e95' );
-  clone( 'PathFundamentals', '95b741c8820a6d6234f59f1fa549c6b59f2d5a5c' );
+  clone( 'PathBasic', '95b741c8820a6d6234f59f1fa549c6b59f2d5a5c' );
   clone( 'Procedure', '829ea81d342db66df60edf80c99687a1cd011a96' );
   clone( 'Proto', 'f4c04dbe078f3c00c84ff13edcc67478d320fddf' );
   clone( 'Tools', 'e58dc6a1637603c2151840f5bfb5729eb71d4e34' );
@@ -4345,12 +4345,12 @@ function submodulesResolve( test )
     test.identical( submodule.name, 'Tools' );
 
     test.case = 'mask, two modules';
-    var submodules = module.openedModule.submodulesResolve({ selector : '*ls' });
+    var submodules = module.openedModule.submodulesResolve({ selector : '*s*' });
     test.identical( submodules.length, 2 );
     test.is( submodules[ 0 ] instanceof will.Submodule );
     test.identical( submodules[ 0 ].name, 'Tools' );
     test.is( submodules[ 1 ] instanceof will.Submodule );
-    test.identical( submodules[ 1 ].name, 'PathFundamentals' );
+    test.identical( submodules[ 1 ].name, 'PathBasic' );
 
     test.close( 'downloaded' );
     return null;
@@ -4397,7 +4397,7 @@ function submodulesDeleteAndDownload( test )
     {
       var files = self.find( submodulesPath );
       test.is( _.arrayHas( files, './Tools' ) );
-      test.is( _.arrayHas( files, './PathFundamentals' ) );
+      test.is( _.arrayHas( files, './PathBasic' ) );
       test.gt( files.length, 280 );
       return arg;
     })
@@ -4408,7 +4408,7 @@ function submodulesDeleteAndDownload( test )
     {
       var files = self.find( submodulesPath );
       test.is( _.arrayHas( files, './Tools' ) );
-      test.is( _.arrayHas( files, './PathFundamentals' ) );
+      test.is( _.arrayHas( files, './PathBasic' ) );
       test.gt( files.length, 280 );
       return arg;
     })

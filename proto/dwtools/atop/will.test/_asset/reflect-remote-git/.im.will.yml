@@ -1,8 +1,8 @@
 
 path :
 
-  PathFundamentals.remote : git+https:///github.com/Wandalen/wPathBasic.git
-  PathFundamentals.local : 'PathFundamentals'
+  PathBasic.remote : git+https:///github.com/Wandalen/wPathBasic.git
+  PathBasic.local : 'PathBasic'
 
   Looker.remote : git+https:///github.com/Wandalen/wLooker.git
   Looker.local : 'Looker'
@@ -16,52 +16,52 @@ reflector :
     criterion :
       variant : 1
     filePath :
-      path::PathFundamentals.remote : path::PathFundamentals.local
+      path::PathBasic.remote : path::PathBasic.local
 
   download.2 :
     criterion :
       variant : 2
     src :
       filePath :
-        path::PathFundamentals.remote : path::PathFundamentals.local
+        path::PathBasic.remote : path::PathBasic.local
 
   download.3 :
     criterion :
       variant : 3
     dst :
       filePath :
-        path::PathFundamentals.remote : path::PathFundamentals.local
+        path::PathBasic.remote : path::PathBasic.local
 
   download.4 :
     criterion :
       variant : 4
     src :
-      prefixPath : path::PathFundamentals.remote
+      prefixPath : path::PathBasic.remote
       filePath :
-        path::PathFundamentals.remote : path::PathFundamentals.local
+        path::PathBasic.remote : path::PathBasic.local
 
   download.5 :
     criterion :
       variant : 5
     src :
-      prefixPath : path::PathFundamentals.remote
+      prefixPath : path::PathBasic.remote
     filePath :
-      path::PathFundamentals.remote : path::PathFundamentals.local
+      path::PathBasic.remote : path::PathBasic.local
 
   download.6 :
     criterion :
       variant : 6
     src :
-      prefixPath : path::PathFundamentals.remote
+      prefixPath : path::PathBasic.remote
     dst :
       basePath : .
-      prefixPath : path::PathFundamentals.local
+      prefixPath : path::PathBasic.local
 
   download.7 :
     criterion :
       variant : 7
     filePath :
-      path::PathFundamentals.remote : path::PathFundamentals.local
+      path::PathBasic.remote : path::PathBasic.local
       path::Looker.remote : path::Looker.local
       path::Proto.remote : path::Proto.local
 
