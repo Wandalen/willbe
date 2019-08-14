@@ -7,7 +7,7 @@ path :
 
   in : ..
   out : out
-  remote : 'npm:///wurifundamentals'
+  remote : 'npm:///wuribasic'
   local : '.module/UriFundamentals'
   export : '{path::local}/proto'
 

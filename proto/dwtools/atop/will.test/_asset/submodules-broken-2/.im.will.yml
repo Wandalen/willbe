@@ -1,7 +1,7 @@
 
 submodule :
 
-  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals.out.will#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic.out.will#master
 
 path :
 

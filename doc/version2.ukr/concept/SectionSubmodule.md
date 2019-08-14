@@ -10,12 +10,12 @@
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  Path : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#d95a35b
+  Path : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#d95a35b
   Uri : out/UriFundamentals.informal.out
   Proto : out/Proto.informal.out
 ```
 
-Підключається 4-ри підмодуля, 2-ва [локальних](SubmodulesLocalAndRemote.md#Локальний-підмодуль) `out/UriFundamentals.informal.out`, `out/Proto.informal.out` та 2-ва [віддалених](SubmodulesLocalAndRemote.md#Віддалений-підмодуль) `git+https:///github.com/Wandalen/wTools.git/out/wTools#master`, `git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#d95a35b`. Віддалені модулі підключаються із вказанням версії (вітки і номера коміта).
+Підключається 4-ри підмодуля, 2-ва [локальних](SubmodulesLocalAndRemote.md#Локальний-підмодуль) `out/UriFundamentals.informal.out`, `out/Proto.informal.out` та 2-ва [віддалених](SubmodulesLocalAndRemote.md#Віддалений-підмодуль) `git+https:///github.com/Wandalen/wTools.git/out/wTools#master`, `git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#d95a35b`. Віддалені модулі підключаються із вказанням версії (вітки і номера коміта).
 
 ### Поля ресурсів секції `submodule`
 

@@ -6,9 +6,9 @@ about:
     extend JavaScript without corrupting it, so may be used solely or in
     conjunction with another module of such kind
   enabled: 1
-  version: 0.8.500
+  version: 0.8.502
   interpreters: &ref_0
-    - nodejs >= 8.0.0
+    - njs >= 8.0.0
     - chrome >= 60.0.0
     - firefox >= 60.0.0
   keywords: &ref_1
@@ -23,13 +23,15 @@ about:
   license: MIT
   author: Kostiantyn Wandalen <wanalen@willbe.so>
   contributors: &ref_2
-    - name: Kostiantyn Wandalen
-      email: wanalen@willbe.so
-    - name: Volodymyr M.
-      email: volodymyr.migdal@gmail.com
-    - name: Ihor O.
-      email: iostashvxi@gmail.com
+    - Kostiantyn Wandalen <wanalen@willbe.so>
+    - Volodymyr M. <volodymyr.migdal@gmail.com>
+    - Ihor O. <iostashvxi@gmail.com>
+    - Pablo Garcimartin <pablogarcimartinruiz@gmail.com>
+    - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
   npm.name: wtools.experiment
+  npm.scripts: &ref_3
+    test: wtest .run proto/**
+    docgen: wdocgen .build proto
 path:
   module.willfiles:
     criterion:
@@ -381,6 +383,46 @@ reflector:
       content: proto
       export: 1
 step:
+  npm.generate.debug.raw:
+    opts:
+      entryPath: 'path::entry.out.*=1'
+      packagePath: '{path::out.*=1}/package.json'
+      filesPath: '{path::out.*=1}/source/**'
+    criterion:
+      debug: debug
+      raw: raw
+    inherit:
+      - npm.generate
+  npm.generate.release.raw:
+    opts:
+      entryPath: 'path::entry.out.*=1'
+      packagePath: '{path::out.*=1}/package.json'
+      filesPath: '{path::out.*=1}/source/**'
+    criterion:
+      debug: release
+      raw: raw
+    inherit:
+      - npm.generate
+  npm.generate.debug.compiled:
+    opts:
+      entryPath: 'path::entry.out.*=1'
+      packagePath: '{path::out.*=1}/package.json'
+      filesPath: '{path::out.*=1}/source/**'
+    criterion:
+      debug: debug
+      raw: compiled
+    inherit:
+      - npm.generate
+  npm.generate.release.compiled:
+    opts:
+      entryPath: 'path::entry.out.*=1'
+      packagePath: '{path::out.*=1}/package.json'
+      filesPath: '{path::out.*=1}/source/**'
+    criterion:
+      debug: release
+      raw: compiled
+    inherit:
+      - npm.generate
   clean.out.debug.raw.no.tests.prime:
     opts:
       filePath: '{path::out.*=1}/source'
@@ -729,10 +771,10 @@ build:
       content: prime
   npm:
     steps:
-      - npm.generate
+      - npm.generate.*=1
     criterion:
       debug: debug
-      raw: compiled
+      raw: raw
       content: npm
   all:
     steps:
@@ -767,7 +809,7 @@ build:
       export: 1
 exported:
   proto.export:
-    version: 0.8.500
+    version: 0.8.502
     exportedReflector: 'reflector::exported.proto.export'
     exportedFilesReflector: 'reflector::exported.files.proto.export'
     exportedDirPath: 'path::exported.dir.proto.export'
@@ -784,13 +826,14 @@ module:
         extend JavaScript without corrupting it, so may be used solely or in
         conjunction with another module of such kind
       enabled: 1
-      version: 0.8.500
+      version: 0.8.502
       interpreters: *ref_0
       keywords: *ref_1
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
       contributors: *ref_2
       npm.name: wtools.experiment
+      npm.scripts: *ref_3
     path:
       module.willfiles:
         criterion:
@@ -1117,6 +1160,46 @@ module:
           content: proto
           export: 1
     step:
+      npm.generate.debug.raw:
+        opts:
+          entryPath: 'path::entry.out.*=1'
+          packagePath: '{path::out.*=1}/package.json'
+          filesPath: '{path::out.*=1}/source/**'
+        criterion:
+          debug: debug
+          raw: raw
+        inherit:
+          - npm.generate
+      npm.generate.release.raw:
+        opts:
+          entryPath: 'path::entry.out.*=1'
+          packagePath: '{path::out.*=1}/package.json'
+          filesPath: '{path::out.*=1}/source/**'
+        criterion:
+          debug: release
+          raw: raw
+        inherit:
+          - npm.generate
+      npm.generate.debug.compiled:
+        opts:
+          entryPath: 'path::entry.out.*=1'
+          packagePath: '{path::out.*=1}/package.json'
+          filesPath: '{path::out.*=1}/source/**'
+        criterion:
+          debug: debug
+          raw: compiled
+        inherit:
+          - npm.generate
+      npm.generate.release.compiled:
+        opts:
+          entryPath: 'path::entry.out.*=1'
+          packagePath: '{path::out.*=1}/package.json'
+          filesPath: '{path::out.*=1}/source/**'
+        criterion:
+          debug: release
+          raw: compiled
+        inherit:
+          - npm.generate
       clean.out.debug.raw.no.tests.prime:
         opts:
           filePath: '{path::out.*=1}/source'
@@ -1465,10 +1548,10 @@ module:
           content: prime
       npm:
         steps:
-          - npm.generate
+          - npm.generate.*=1
         criterion:
           debug: debug
-          raw: compiled
+          raw: raw
           content: npm
       all:
         steps:
@@ -1503,7 +1586,7 @@ module:
           export: 1
     exported:
       proto.export:
-        version: 0.8.500
+        version: 0.8.502
         exportedReflector: 'reflector::exported.proto.export'
         exportedFilesReflector: 'reflector::exported.files.proto.export'
         exportedDirPath: 'path::exported.dir.proto.export'

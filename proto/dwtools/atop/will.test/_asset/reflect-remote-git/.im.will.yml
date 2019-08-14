@@ -1,7 +1,7 @@
 
 path :
 
-  PathFundamentals.remote : git+https:///github.com/Wandalen/wPathFundamentals.git
+  PathFundamentals.remote : git+https:///github.com/Wandalen/wPathBasic.git
   PathFundamentals.local : 'PathFundamentals'
 
   Looker.remote : git+https:///github.com/Wandalen/wLooker.git

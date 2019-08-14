@@ -1,7 +1,7 @@
 format: willfile-1.0.0
 brokenFile : '!'
 about:
-  name: wPathFundamentals
+  name: wPathBasic
   description: >-
     Collection of routines to operate paths in the reliable and consistent way.
     PathFundamentals leverages parsing, joining, extracting, normalizing,
@@ -35,9 +35,9 @@ path:
     criterion:
       debug: 0
   repository:
-    path: 'git+https://github.com/Wandalen/wPathFundamentals.git'
+    path: 'git+https://github.com/Wandalen/wPathBasic.git'
   bugs:
-    path: 'https://github.com/Wandalen/wPathFundamentals/issues'
+    path: 'https://github.com/Wandalen/wPathBasic/issues'
   exported.dir.0:
     path: ./proto
     criterion:

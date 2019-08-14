@@ -1427,7 +1427,7 @@ path:
       - >-
         ../proto/dwtools/atop/will.test/-_asset/submodules-broken-1/+.module/PathFundamentals/out
       - >-
-        ../proto/dwtools/atop/will.test/-_asset/submodules-broken-1/+.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+        ../proto/dwtools/atop/will.test/-_asset/submodules-broken-1/+.module/PathFundamentals/out/wPathBasic.out.will.yml
       - ../proto/dwtools/atop/will.test/-_asset/submodules-broken-1/+out
       - ../proto/dwtools/atop/will.test/-_asset/submodules-broken-1/+out/debug
       - >-
@@ -1470,7 +1470,7 @@ path:
       - >-
         ../proto/dwtools/atop/will.test/-_asset/submodules-broken-1/.module/PathFundamentals/out
       - >-
-        ../proto/dwtools/atop/will.test/-_asset/submodules-broken-1/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+        ../proto/dwtools/atop/will.test/-_asset/submodules-broken-1/.module/PathFundamentals/out/wPathBasic.out.will.yml
       - ../proto/dwtools/atop/will.test/-_asset/submodules-broken-1/out
       - ../proto/dwtools/atop/will.test/-_asset/submodules-broken-1/out/debug
       - >-
@@ -1519,14 +1519,14 @@ path:
       - >-
         ../proto/dwtools/atop/will.test/-_asset/submodules-broken-2/.module/PathFundamentals/out
       - >-
-        ../proto/dwtools/atop/will.test/-_asset/submodules-broken-2/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+        ../proto/dwtools/atop/will.test/-_asset/submodules-broken-2/.module/PathFundamentals/out/wPathBasic.out.will.yml
       - ../proto/dwtools/atop/will.test/-_asset/submodules-broken-2/.module-copy
       - >-
         ../proto/dwtools/atop/will.test/-_asset/submodules-broken-2/.module-copy/PathFundamentals
       - >-
         ../proto/dwtools/atop/will.test/-_asset/submodules-broken-2/.module-copy/PathFundamentals/out
       - >-
-        ../proto/dwtools/atop/will.test/-_asset/submodules-broken-2/.module-copy/PathFundamentals/out/wPathFundamentals.out.will.yml
+        ../proto/dwtools/atop/will.test/-_asset/submodules-broken-2/.module-copy/PathFundamentals/out/wPathBasic.out.will.yml
       - ../proto/dwtools/atop/will.test/-_asset/submodules-broken-2/proto
       - >-
         ../proto/dwtools/atop/will.test/-_asset/submodules-broken-2/proto/WithSubmodules.s
@@ -1855,7 +1855,7 @@ path:
         ../proto/dwtools/atop/will.test/_asset/_repo/PathFundamentals/.git/refs/tags
       - ../proto/dwtools/atop/will.test/_asset/_repo/PathFundamentals/out
       - >-
-        ../proto/dwtools/atop/will.test/_asset/_repo/PathFundamentals/out/wPathFundamentals.out.will.yml
+        ../proto/dwtools/atop/will.test/_asset/_repo/PathFundamentals/out/wPathBasic.out.will.yml
       - ../proto/dwtools/atop/will.test/_asset/_repo/PathFundamentals/out/debug
       - >-
         ../proto/dwtools/atop/will.test/_asset/_repo/PathFundamentals/out/debug/dwtools
@@ -2534,7 +2534,7 @@ path:
         ../proto/dwtools/atop/will.test/_asset/_repo/UriFundamentals/.git/refs/tags
       - ../proto/dwtools/atop/will.test/_asset/_repo/UriFundamentals/out
       - >-
-        ../proto/dwtools/atop/will.test/_asset/_repo/UriFundamentals/out/wUriFundamentals.out.will.yml
+        ../proto/dwtools/atop/will.test/_asset/_repo/UriFundamentals/out/wUriBasic.out.will.yml
       - ../proto/dwtools/atop/will.test/_asset/_repo/UriFundamentals/out/debug
       - >-
         ../proto/dwtools/atop/will.test/_asset/_repo/UriFundamentals/out/debug/dwtools
@@ -3768,7 +3768,7 @@ path:
       - >-
         ../proto/dwtools/atop/will.test/_asset/submodules-broken-1/+.module/PathFundamentals/out
       - >-
-        ../proto/dwtools/atop/will.test/_asset/submodules-broken-1/+.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+        ../proto/dwtools/atop/will.test/_asset/submodules-broken-1/+.module/PathFundamentals/out/wPathBasic.out.will.yml
       - ../proto/dwtools/atop/will.test/_asset/submodules-broken-1/+out
       - ../proto/dwtools/atop/will.test/_asset/submodules-broken-1/+out/debug
       - >-
@@ -3811,7 +3811,7 @@ path:
       - >-
         ../proto/dwtools/atop/will.test/_asset/submodules-broken-1/.module/PathFundamentals/out
       - >-
-        ../proto/dwtools/atop/will.test/_asset/submodules-broken-1/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+        ../proto/dwtools/atop/will.test/_asset/submodules-broken-1/.module/PathFundamentals/out/wPathBasic.out.will.yml
       - ../proto/dwtools/atop/will.test/_asset/submodules-broken-1/out
       - ../proto/dwtools/atop/will.test/_asset/submodules-broken-1/out/debug
       - >-
@@ -3860,14 +3860,14 @@ path:
       - >-
         ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module/PathFundamentals/out
       - >-
-        ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+        ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module/PathFundamentals/out/wPathBasic.out.will.yml
       - ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module-copy
       - >-
         ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module-copy/PathFundamentals
       - >-
         ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module-copy/PathFundamentals/out
       - >-
-        ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module-copy/PathFundamentals/out/wPathFundamentals.out.will.yml
+        ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module-copy/PathFundamentals/out/wPathBasic.out.will.yml
       - ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/proto
       - >-
         ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/proto/WithSubmodules.s
@@ -5824,7 +5824,7 @@ module:
           - >-
             proto/dwtools/atop/will.test/-_asset/submodules-broken-1/+.module/PathFundamentals/out
           - >-
-            proto/dwtools/atop/will.test/-_asset/submodules-broken-1/+.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+            proto/dwtools/atop/will.test/-_asset/submodules-broken-1/+.module/PathFundamentals/out/wPathBasic.out.will.yml
           - proto/dwtools/atop/will.test/-_asset/submodules-broken-1/+out
           - proto/dwtools/atop/will.test/-_asset/submodules-broken-1/+out/debug
           - >-
@@ -5867,7 +5867,7 @@ module:
           - >-
             proto/dwtools/atop/will.test/-_asset/submodules-broken-1/.module/PathFundamentals/out
           - >-
-            proto/dwtools/atop/will.test/-_asset/submodules-broken-1/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+            proto/dwtools/atop/will.test/-_asset/submodules-broken-1/.module/PathFundamentals/out/wPathBasic.out.will.yml
           - proto/dwtools/atop/will.test/-_asset/submodules-broken-1/out
           - proto/dwtools/atop/will.test/-_asset/submodules-broken-1/out/debug
           - >-
@@ -5918,7 +5918,7 @@ module:
           - >-
             proto/dwtools/atop/will.test/-_asset/submodules-broken-2/.module/PathFundamentals/out
           - >-
-            proto/dwtools/atop/will.test/-_asset/submodules-broken-2/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+            proto/dwtools/atop/will.test/-_asset/submodules-broken-2/.module/PathFundamentals/out/wPathBasic.out.will.yml
           - >-
             proto/dwtools/atop/will.test/-_asset/submodules-broken-2/.module-copy
           - >-
@@ -5926,7 +5926,7 @@ module:
           - >-
             proto/dwtools/atop/will.test/-_asset/submodules-broken-2/.module-copy/PathFundamentals/out
           - >-
-            proto/dwtools/atop/will.test/-_asset/submodules-broken-2/.module-copy/PathFundamentals/out/wPathFundamentals.out.will.yml
+            proto/dwtools/atop/will.test/-_asset/submodules-broken-2/.module-copy/PathFundamentals/out/wPathBasic.out.will.yml
           - proto/dwtools/atop/will.test/-_asset/submodules-broken-2/proto
           - >-
             proto/dwtools/atop/will.test/-_asset/submodules-broken-2/proto/WithSubmodules.s
@@ -6262,7 +6262,7 @@ module:
             proto/dwtools/atop/will.test/_asset/_repo/PathFundamentals/.git/refs/tags
           - proto/dwtools/atop/will.test/_asset/_repo/PathFundamentals/out
           - >-
-            proto/dwtools/atop/will.test/_asset/_repo/PathFundamentals/out/wPathFundamentals.out.will.yml
+            proto/dwtools/atop/will.test/_asset/_repo/PathFundamentals/out/wPathBasic.out.will.yml
           - proto/dwtools/atop/will.test/_asset/_repo/PathFundamentals/out/debug
           - >-
             proto/dwtools/atop/will.test/_asset/_repo/PathFundamentals/out/debug/dwtools
@@ -6953,7 +6953,7 @@ module:
             proto/dwtools/atop/will.test/_asset/_repo/UriFundamentals/.git/refs/tags
           - proto/dwtools/atop/will.test/_asset/_repo/UriFundamentals/out
           - >-
-            proto/dwtools/atop/will.test/_asset/_repo/UriFundamentals/out/wUriFundamentals.out.will.yml
+            proto/dwtools/atop/will.test/_asset/_repo/UriFundamentals/out/wUriBasic.out.will.yml
           - proto/dwtools/atop/will.test/_asset/_repo/UriFundamentals/out/debug
           - >-
             proto/dwtools/atop/will.test/_asset/_repo/UriFundamentals/out/debug/dwtools
@@ -8200,7 +8200,7 @@ module:
           - >-
             proto/dwtools/atop/will.test/_asset/submodules-broken-1/+.module/PathFundamentals/out
           - >-
-            proto/dwtools/atop/will.test/_asset/submodules-broken-1/+.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+            proto/dwtools/atop/will.test/_asset/submodules-broken-1/+.module/PathFundamentals/out/wPathBasic.out.will.yml
           - proto/dwtools/atop/will.test/_asset/submodules-broken-1/+out
           - proto/dwtools/atop/will.test/_asset/submodules-broken-1/+out/debug
           - >-
@@ -8243,7 +8243,7 @@ module:
           - >-
             proto/dwtools/atop/will.test/_asset/submodules-broken-1/.module/PathFundamentals/out
           - >-
-            proto/dwtools/atop/will.test/_asset/submodules-broken-1/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+            proto/dwtools/atop/will.test/_asset/submodules-broken-1/.module/PathFundamentals/out/wPathBasic.out.will.yml
           - proto/dwtools/atop/will.test/_asset/submodules-broken-1/out
           - proto/dwtools/atop/will.test/_asset/submodules-broken-1/out/debug
           - >-
@@ -8292,14 +8292,14 @@ module:
           - >-
             proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module/PathFundamentals/out
           - >-
-            proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+            proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module/PathFundamentals/out/wPathBasic.out.will.yml
           - proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module-copy
           - >-
             proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module-copy/PathFundamentals
           - >-
             proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module-copy/PathFundamentals/out
           - >-
-            proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module-copy/PathFundamentals/out/wPathFundamentals.out.will.yml
+            proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module-copy/PathFundamentals/out/wPathBasic.out.will.yml
           - proto/dwtools/atop/will.test/_asset/submodules-broken-2/proto
           - >-
             proto/dwtools/atop/will.test/_asset/submodules-broken-2/proto/WithSubmodules.s

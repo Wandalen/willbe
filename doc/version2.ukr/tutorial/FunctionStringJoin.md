@@ -52,7 +52,7 @@ about :
   package.list :
     main :
       - wTools
-      - wpathfundamentals
+      - wpathbasic
     optional :
       - wColor
       - wProto
@@ -120,14 +120,14 @@ build :
 [user@user ~]$ will .build
 ...
   Building module::stringsJoin / build::echo.strings
- > echo wTools wpathfundamentals
-wTools wpathfundamentals
+ > echo wTools wpathbasic
+wTools wpathbasic
 
  > echo wColor wProto
 wColor wProto
 
- > echo wTools,wpathfundamentals
-wTools,wpathfundamentals
+ > echo wTools,wpathbasic
+wTools,wpathbasic
 
  > echo wColor,wProto
 wColor,wProto
@@ -147,8 +147,8 @@ three
 
 Запустіть побудову збірки `echo.strings` виконавши команду `will .build`.
 
-Проаналізувавши вивід, можна побачити, що функція `f::strings.join` об'єднує елементи останнього порядку вкладеності. В прикладі це другий порядок і виведено два рядки: `wTools wpathfundamentals` з елементу `main`; `wColor wProto` з елементу `optional`.  
-Вивід без функції `f::strings.join` відрізняється в залежності від порядку масива. Якщо використовується одномірний масив, то команда застосовується до кожного окремого рядка. В виводі це команди `echo one`, `echo two`, `echo three`. Поведінка команди буде такою ж, якщо вказати елемент останнього порядку вкладеності. Якщо використовуються рядкові масиви вищих порядків, то утиліта виводить рядок із елементів, що вкладені в масив указаного порядку. Елементи рядка розділені комою. В виводі це два значення - `wTools,wpathfundamentals` з масиву першого порядку `main` i `wColor,wProto` в масиві `optional`.
+Проаналізувавши вивід, можна побачити, що функція `f::strings.join` об'єднує елементи останнього порядку вкладеності. В прикладі це другий порядок і виведено два рядки: `wTools wpathbasic` з елементу `main`; `wColor wProto` з елементу `optional`.  
+Вивід без функції `f::strings.join` відрізняється в залежності від порядку масива. Якщо використовується одномірний масив, то команда застосовується до кожного окремого рядка. В виводі це команди `echo one`, `echo two`, `echo three`. Поведінка команди буде такою ж, якщо вказати елемент останнього порядку вкладеності. Якщо використовуються рядкові масиви вищих порядків, то утиліта виводить рядок із елементів, що вкладені в масив указаного порядку. Елементи рядка розділені комою. В виводі це два значення - `wTools,wpathbasic` з масиву першого порядку `main` i `wColor,wProto` в масиві `optional`.
 
 <details>
   <summary><u>Вивід команди <code>will .build install.strings</code></u></summary>
@@ -157,10 +157,10 @@ three
 [user@user ~]$ will .build install.strings
 ...
   Building module::stringsJoin / build::install.strings
- > npm install wTools wpathfundamentals
+ > npm install wTools wpathbasic
 ...
 + wTools@0.8.450
-+ wpathfundamentals@0.6.173
++ wpathbasic@0.6.173
 added 1 package from 2 contributors, updated 1 package and audited 5 packages in 3.276s
 found 0 vulnerabilities
 ...
@@ -183,10 +183,10 @@ updated 1 package and audited 7 packages in 0.72s
 found 0 vulnerabilities
 ...
 
- > npm install wpathfundamentals
+ > npm install wpathbasic
 npm
 ...
-+ wpathfundamentals@0.6.173
++ wpathbasic@0.6.173
 updated 1 package and audited 7 packages in 0.716s
 found 0 vulnerabilities
 ...
@@ -205,7 +205,7 @@ found 0 vulnerabilities
 defaultBuild
      ├── node_modules
      │         ├── wColor
-     │         ├── wpathfundamentals
+     │         ├── wpathbasic
      │         ├── wProto
      │         └── wTools
      ├── package-lock.json

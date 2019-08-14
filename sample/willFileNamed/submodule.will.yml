@@ -6,4 +6,4 @@ about :
 
 submodule :
 
-  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master

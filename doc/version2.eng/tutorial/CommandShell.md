@@ -38,7 +38,7 @@ about :
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
   One : module.test/one
 
 build :
@@ -76,7 +76,7 @@ about :
   Building module::shellCommand / build::download
      . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
      + module::Tools version master was downloaded in 12.011s
-     . Read : /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+     . Read : /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
      + module::PathFundamentals version master was downloaded in 4.239s
    + 2/4 submodule(s) of module::shellCommand were downloaded in 16.262s
   Built module::shellCommand / build::download in 16.313s
@@ -119,13 +119,13 @@ drwxr-xr-x 3 user user   4096 Apr 17 11:16 debug
 -rw-r--r-- 1 user user   7526 Apr 17 11:16 wTools.out.will.yml
 -rw-r--r-- 1 user user 215828 Apr 17 11:16 wTools.proto.export.out.tgs
 
-Module at /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+Module at /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
 > ls -al
 total 20
 drwxr-xr-x 3 user user 4096 Apr 17 11:16 .
 drwxr-xr-x 6 user user 4096 Apr 17 11:16 ..
 drwxr-xr-x 3 user user 4096 Apr 17 11:16 debug
--rw-r--r-- 1 user user 5970 Apr 17 11:16 wPathFundamentals.out.will.yml
+-rw-r--r-- 1 user user 5970 Apr 17 11:16 wPathBasic.out.will.yml
 
 Module at /path_to_file/module.test/one.will.yml
 > ls -al
@@ -153,7 +153,7 @@ Module at /path_to_file/.module/Tools/out/wTools.out.will.yml
 Ваша ветка обновлена в соответствии с «origin/master».
 нечего коммитить, нет изменений в рабочем каталоге
 
-Module at /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+Module at /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
  > git status
 На ветке master
 Ваша ветка обновлена в соответствии с «origin/master».

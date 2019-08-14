@@ -24,7 +24,7 @@ To connect the remote submodule, the URI-path resource is specified in the secti
 ```yaml
 submodule :
     Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-    PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+    PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
     Color : npm:///wColor/out/wColor#0.3.102
 
 ```

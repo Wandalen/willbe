@@ -162,7 +162,7 @@ about :
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
 
 path :
 
@@ -315,7 +315,7 @@ submodule::Tools
   isDownloaded : false
   Exported builds : []
 submodule::PathFundamentals
-  path : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  path : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
   isDownloaded : false
   Exported builds : []
 
@@ -330,7 +330,7 @@ submodule::PathFundamentals
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
 
 ```
 
@@ -383,7 +383,7 @@ submodule::Tools
   Exported builds : []
 
 submodule::PathFundamentals
-  path : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  path : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
   isDownloaded : false
   Exported builds : []
 

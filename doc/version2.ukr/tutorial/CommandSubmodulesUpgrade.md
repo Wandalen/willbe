@@ -34,7 +34,7 @@ about :
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#ec60e39ded1669e27abaa6fc2798ee13804c400a
-  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
   Files : git+https:///github.com/Wandalen/wFiles.git/out/wFiles#master
 
 ```
@@ -56,7 +56,7 @@ Module at /path_to_file/.will.yml
   git+https:///github.com/Wandalen/wTools.git/out/wTools : .#7db7bd21ac76fc495aae44cc8b1c4474ce5012a4 <- .#ec60e39ded1669e27abaa6fc2798ee13804c400a
   in /path_to_file/submodulesUpgrade/.will.yml
 Remote path of module::submodulesCommands / module::PathFundamentals fixated
-  git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals : .#d95a35b7ef1568df823c12efa5bd5e1f4ceec8b7 <- .#master
+  git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic : .#d95a35b7ef1568df823c12efa5bd5e1f4ceec8b7 <- .#master
   in /path_to_file/submodulesUpgrade/.will.yml
 Remote path of module::submodulesCommands / module::Files fixated
   git+https:///github.com/Wandalen/wFiles.git/out/wFiles : .#075ce0ca21af083bc879b0d1a4091a29ed4a16d2 <- .#master

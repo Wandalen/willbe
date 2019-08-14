@@ -31,7 +31,7 @@ about :
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
 
 ```
 
@@ -51,7 +51,7 @@ To use the `.submodules.clean` command you need to have downloaded submodules.
 ...
    . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
    + module::Tools version 7db7bd21ac76fc495aae44cc8b1c4474ce5012a4 was downloaded in 16.504s
-   . Read : /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+   . Read : /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
    + module::PathFundamentals version d95a35b7ef1568df823c12efa5bd5e1f4ceec8b7 was downloaded in 5.986s
 
 ```

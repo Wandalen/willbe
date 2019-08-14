@@ -31,7 +31,7 @@ about :
   version : 0.0.1
 
 submodule :
-  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
 
 path :
 
@@ -99,18 +99,18 @@ Trying to open /path_to_module/UsingSetCommand/.ex.will
  s module::PathFundamentals preformed 3
  s module::PathFundamentals willFilesFound 1
  s module::PathFundamentals willFilesFound 2
-Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals.out.will
-Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals.out.im.will
-Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals.out.ex.will
-Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals/.out.will
-Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals/.out.im.will
-Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals/.out.ex.will
-Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals.will
-Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals.im.will
-Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals.ex.will
-Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals/.will
-Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals/.im.will
-Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals/.ex.will
+Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic.out.will
+Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic.out.im.will
+Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic.out.ex.will
+Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic/.out.will
+Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic/.out.im.will
+Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic/.out.ex.will
+Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic.will
+Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic.im.will
+Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic.ex.will
+Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic/.will
+Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic/.im.will
+Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic/.ex.will
  !s module::PathFundamentals willFilesFound failed
  s module::PathFundamentals willFilesOpened 1
  !s module::PathFundamentals willFilesOpened failed
@@ -120,31 +120,31 @@ Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPat
  !s module::PathFundamentals resourcesFormed failed
  s module::setVerbosity resourcesFormed 1
  ! Failed to read submodule::PathFundamentals, try to download it with .submodules.download or even clean it before downloading
-Failed to open submodule::PathFundamentals at "/path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals"
-Found no .out.will file for module::setVerbosity at "/path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals"             
+Failed to open submodule::PathFundamentals at "/path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic"
+Found no .out.will file for module::setVerbosity at "/path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic"             
  s module::setVerbosity submodulesFormed 3
  s module::setVerbosity resourcesFormed 2
  s module::setVerbosity resourcesFormed 3
 
   Building submodules.download
      - filesDelete 1 files at /path_to_module/UsingSetCommand/.module/PathFundamentals in 0.017s
- > git clone https://github.com/Wandalen/wPathFundamentals.git/ .
+ > git clone https://github.com/Wandalen/wPathBasic.git/ .
 Клонирование в «.»…
  > git checkout master
 Уже на «master»
 Ваша ветка обновлена в соответствии с «origin/master».
  > git merge
 Уже обновлено.
-     + Reflect 92 files /path_to_module/UsingSetCommand/.module/PathFundamentals <- git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master in 3.612s
+     + Reflect 92 files /path_to_module/UsingSetCommand/.module/PathFundamentals <- git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master in 3.612s
  s module::PathFundamentals willFilesFound 1
  s module::PathFundamentals willFilesFound 2
-    Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals.out.will
-    Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals.out.im.will
-    Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals.out.ex.will
+    Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic.out.will
+    Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic.out.im.will
+    Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic.out.ex.will
  s module::PathFundamentals willFilesFound 3
  s module::PathFundamentals willFilesOpened 1
  s module::PathFundamentals willFilesOpened 2
-     . Read : /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+     . Read : /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic.out.will.yml
  s module::PathFundamentals willFilesOpened 3
  s module::PathFundamentals submodulesFormed 1
  s module::PathFundamentals submodulesFormed 2
@@ -187,10 +187,10 @@ Trying to open /path_to_module/UsingSetCommand/.im.will
 Trying to open /path_to_module/UsingSetCommand/.ex.will
    . Read : /path_to_module/UsingSetCommand/.will.yml
  . Read 1 willfiles in 0.104s
-Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals.out.will
-Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals.out.im.will
-Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals.out.ex.will
- . Read : /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic.out.will
+Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic.out.im.will
+Trying to open /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic.out.ex.will
+ . Read : /path_to_module/UsingSetCommand/.module/PathFundamentals/out/wPathBasic.out.will.yml
 
   Exporting submodules.export
      . Read : /path_to_module/UsingSetCommand/out/setVerbosity.out.will.yml

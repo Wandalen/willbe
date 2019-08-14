@@ -5,7 +5,7 @@ about :
   package.list :
     main :
       - wTools
-      - wpathfundamentals
+      - wpathbasic
     optional :
       - wColor
       - wProto

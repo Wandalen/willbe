@@ -10,7 +10,7 @@ if( typeof module !== 'undefined' )
 {
 
   let _ = require( '../../Tools.s' );
-  _.include( 'wPathFundamentals' );
+  _.include( 'wPathBasic' );
   _.include( 'wStringsExtra' );
 
 }

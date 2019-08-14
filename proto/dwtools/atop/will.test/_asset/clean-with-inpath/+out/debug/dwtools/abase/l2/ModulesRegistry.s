@@ -35,9 +35,9 @@ function includeAny( filePath, name )
 //   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.idWithInt; },
 // }
 
-let wEntityFundamentals =
+let wEntityBasic =
 {
-  includeAny : includeAny( 'abase/l3/EntityBasic.s', 'wentityfundamentals' ),
+  includeAny : includeAny( 'abase/l3/EntityBasic.s', 'wentitybasic' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.entityVals; },
 }
 
@@ -47,15 +47,15 @@ let wLooker =
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.look; },
 }
 
-let wPathFundamentals =
+let wPathBasic =
 {
-  includeAny : includeAny( 'abase/l4/PathsBasic.s', 'wpathfundamentals' ),
+  includeAny : includeAny( 'abase/l4/PathsBasic.s', 'wpathbasic' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.path && !!_global.wTools.path.s },
 }
 
-let wRoutineFundamentals =
+let wRoutineBasic =
 {
-  includeAny : includeAny( 'abase/l3/RoutineFundamentals.s', 'wroutinefundamentals' ),
+  includeAny : includeAny( 'abase/l3/RoutineFundamentals.s', 'wroutinebasic' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.exec },
 }
 
@@ -97,15 +97,15 @@ let wArraySparse =
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.sparse },
 }
 
-let wExternalFundamentals =
+let wAppBasic =
 {
-  includeAny : includeAny( 'abase/l4/External.s', 'wexternalfundamentals' ),
+  includeAny : includeAny( 'abase/l4/External.s', 'wappbasic' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.shell },
 }
 
-let wUriFundamentals =
+let wUriBasic =
 {
-  includeAny : includeAny( 'abase/l5/Uris.s', 'wurifundamentals' ),
+  includeAny : includeAny( 'abase/l5/Uris.s', 'wuribasic' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.uri && !!_global.wTools.uri.s && !!_global.wTools.uri.s.parse },
 }
 
@@ -135,9 +135,9 @@ let wSelector =
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.select; },
 }
 
-let wWebUriFundamentals =
+let wWebUriBasic =
 {
-  includeAny : includeAny( 'abase/l5/WebUri.s', 'wweburifundamentals' ),
+  includeAny : includeAny( 'abase/l5/WebUri.s', 'wweburibasic' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.weburi },
 }
 
@@ -560,10 +560,10 @@ let Extend =
 
   // base / l3
 
-  wEntityFundamentals,
+  wEntityBasic,
   wLooker,
-  wPathFundamentals,
-  wRoutineFundamentals,
+  wPathBasic,
+  wRoutineBasic,
   wProto,
 
   // base / l4
@@ -572,8 +572,8 @@ let Extend =
   wLookerExtra,
   wArraySorted,
   wArraySparse,
-  wExternalFundamentals,
-  wUriFundamentals,
+  wAppBasic,
+  wUriBasic,
   wTraverser,
   wStringer,
   wRoutineTransform,
@@ -582,7 +582,7 @@ let Extend =
 
   wPathTools,
   wSelector,
-  wWebUriFundamentals,
+  wWebUriBasic,
   wCloner,
   wStringsExtra,
 
@@ -690,3 +690,23 @@ if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;
 
 })();
+
+/*
+- wequaler -> wequaler
+- wpathbasic -> wpathbasic
+- wuribasic -> wuribasic
+- wappbasic -> wappbasic
+- wentitybasic -> wentitybasic
+- wweburibasic -> wweburibasic
+- wroutinebasic -> wroutinebasic
+- wdombasic -> wdombasic
+
+- wEqualer -> wEqualer
+- wPathBasic -> wPathBasic
+- wUriBasic -> wUriBasic
+- wAppBasic -> wAppBasic
+- wEntityBasic -> wEntityBasic
+- wWebUriBasic -> wWebUriBasic
+- wRoutineBasic -> wRoutineBasic
+- wDomBasic -> wDomBasic
+*/

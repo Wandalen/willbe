@@ -7,7 +7,7 @@ path :
 
   in : ..
   out : out
-  remote : 'git+https:///github.com/Wandalen/wUriFundamentals.git'
+  remote : 'git+https:///github.com/Wandalen/wUriBasic.git'
   local : '.module/UriFundamentals'
   export : '{path::local}/proto'
 

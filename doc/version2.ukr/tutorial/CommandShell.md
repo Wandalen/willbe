@@ -42,7 +42,7 @@ about :
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
-  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
   One : module.test/one
 
 build :
@@ -87,7 +87,7 @@ about :
   Building module::shellCommand / build::download
      . Read : /path_to_file/.module/Tools/out/wTools.out.will.yml
      + module::Tools version master was downloaded in 12.011s
-     . Read : /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+     . Read : /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
      + module::PathFundamentals version master was downloaded in 4.239s
    + 2/4 submodule(s) of module::shellCommand were downloaded in 16.262s
   Built module::shellCommand / build::download in 16.313s
@@ -131,13 +131,13 @@ drwxr-xr-x 2 user user  4096 May 30 19:48 .
 drwxr-xr-x 8 user user  4096 May 30 19:48 ..
 -rw-r--r-- 1 user user 21642 May 30 19:48 wTools.out.will.yml
 
-Module at /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out
+Module at /path_to_file/.module/PathFundamentals/out/wPathBasic.out
  > ls -al
 total 20
 drwxr-xr-x 3 user user 4096 May 30 19:48 .
 drwxr-xr-x 6 user user 4096 May 30 19:48 ..
 drwxr-xr-x 3 user user 4096 May 30 19:48 debug
--rw-r--r-- 1 user user 7762 May 30 19:48 wPathFundamentals.out.will.yml
+-rw-r--r-- 1 user user 7762 May 30 19:48 wPathBasic.out.will.yml
 
 Module at /path_to_file/module.test/one
  > ls -al
@@ -167,7 +167,7 @@ Module at /path_to_file/.module/Tools/out/wTools.out.will.yml
 On branch master
 nothing to commit, working tree clean
 
-Module at /path_to_file/.module/PathFundamentals/out/wPathFundamentals.out.will.yml
+Module at /path_to_file/.module/PathFundamentals/out/wPathBasic.out.will.yml
  > git status
 On branch master
 nothing to commit, working tree clean   
