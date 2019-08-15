@@ -1,0 +1,698 @@
+format: willfile-1.0.0
+about:
+  name: wStarter
+  description: >-
+    Collection of tools to generate background service to start and pack
+    application. Use the module to keep files structure of the application and
+    make code aware wherein the file system is it executed.
+  enabled: 1
+  version: 0.3.56
+  interpreters: &ref_0
+    - nodejs >= 8.0.0
+    - chrome >= 60.0.0
+    - firefox >= 60.0.0
+  keywords: &ref_1
+    - wTools
+path:
+  module.willfiles:
+    criterion:
+      predefined: 1
+    path: wStarter.out.will.yml
+  module.common:
+    criterion:
+      predefined: 1
+    path: wStarter.out
+  module.original.willfiles:
+    criterion:
+      predefined: 1
+    path:
+      - ../.im.will.yml
+      - ../.ex.will.yml
+  local:
+    criterion:
+      predefined: 1
+  remote:
+    criterion:
+      predefined: 1
+  in:
+    criterion:
+      predefined: 0
+    path: .
+  temp:
+    path: .
+  out:
+    criterion:
+      predefined: 0
+    path: .
+  out.debug:
+    criterion:
+      debug: 1
+    path: debug
+  out.release:
+    criterion:
+      debug: 0
+    path: release
+  proto:
+    path: ../proto
+  repository:
+    path: 'git+https:///github.com/Wandalen/wStarter.git'
+  bugs:
+    path: 'https:///github.com/Wandalen/wStarter/issues'
+  exported.dir.proto.export:
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+      public: 1
+    path: ../proto
+  exported.files.proto.export:
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+      public: 1
+    path:
+      - ../proto
+      - ../proto/dwtools
+      - ../proto/dwtools/Tools.s
+      - ../proto/dwtools/atop
+      - ../proto/dwtools/atop/starter
+      - ../proto/dwtools/atop/starter/Exec
+      - ../proto/dwtools/atop/starter/ExecDebug
+      - ../proto/dwtools/atop/starter/ExecUnrestricted
+      - ../proto/dwtools/atop/starter/IncludeBase.s
+      - ../proto/dwtools/atop/starter/IncludeMid.s
+      - ../proto/dwtools/atop/starter/IncludeTop.s
+      - ../proto/dwtools/atop/starter/MainBase.s
+      - ../proto/dwtools/atop/starter/MainTop.s
+      - ../proto/dwtools/atop/starter/legacy
+      - ../proto/dwtools/atop/starter/legacy/StarterConfigBegin.raw.s
+      - ../proto/dwtools/atop/starter/legacy/StarterInitBegin.raw.s
+      - ../proto/dwtools/atop/starter/legacy/StarterInitEnd.raw.s
+      - ../proto/dwtools/atop/starter/legacy/StarterMaker.s
+      - ../proto/dwtools/atop/starter/legacy/StarterPreloadEnd.raw.s
+      - ../proto/dwtools/atop/starter/legacy/StarterServer.ss
+      - ../proto/dwtools/atop/starter/legacy/StarterStart.raw.s
+      - ../proto/dwtools/atop/starter/light
+      - ../proto/dwtools/atop/starter/light/Servlet.ss
+      - ../proto/dwtools/atop/starter/tools
+      - ../proto/dwtools/atop/starter/tools/BrowserCode.s
+      - ../proto/dwtools/atop/starter/tools/Maker.s
+      - ../proto/dwtools/atop/starter/tools/StarterCode.s
+      - ../proto/dwtools/atop/starter/tools/WareCode.s
+      - ../proto/dwtools/atop/starter.test
+      - ../proto/dwtools/atop/starter.test/StarterLegacy.test.s
+      - ../proto/dwtools/atop/starter.test/StarterMaker.test.s
+      - ../proto/dwtools/atop/starter.test/_asset
+      - ../proto/dwtools/atop/starter.test/_asset/complex
+      - ../proto/dwtools/atop/starter.test/_asset/complex/package.json
+      - ../proto/dwtools/atop/starter.test/_asset/complex/app0
+      - ../proto/dwtools/atop/starter.test/_asset/complex/app0/File1.js
+      - ../proto/dwtools/atop/starter.test/_asset/complex/app0/File2.js
+      - ../proto/dwtools/atop/starter.test/_asset/complex/app1
+      - ../proto/dwtools/atop/starter.test/_asset/complex/app1/File1.js
+      - ../proto/dwtools/atop/starter.test/_asset/complex/app1/File2.js
+      - ../proto/dwtools/atop/starter.test/_asset/complex/app2
+      - ../proto/dwtools/atop/starter.test/_asset/complex/app2/File1.js
+      - ../proto/dwtools/atop/starter.test/_asset/complex/app2/File2.js
+      - ../proto/dwtools/atop/starter.test/_asset/dep
+      - ../proto/dwtools/atop/starter.test/_asset/dep/package.json
+      - ../proto/dwtools/atop/starter.test/_asset/dep/app0
+      - ../proto/dwtools/atop/starter.test/_asset/dep/app0/File1.js
+      - ../proto/dwtools/atop/starter.test/_asset/dep/app0/File2.js
+      - ../proto/dwtools/atop/starter.test/_asset/dep/app2
+      - ../proto/dwtools/atop/starter.test/_asset/dep/app2/File1.js
+      - ../proto/dwtools/atop/starter.test/_asset/dep/app2/File2.js
+      - ../proto/dwtools/atop/starter.test/_asset/dep/ext
+      - ../proto/dwtools/atop/starter.test/_asset/dep/ext/RequireApp2File2.js
+      - ../proto/dwtools/atop/starter.test/_asset/dep2
+      - ../proto/dwtools/atop/starter.test/_asset/dep2/Index.html
+      - ../proto/dwtools/atop/starter.test/_asset/dep2/package.json
+      - ../proto/dwtools/atop/starter.test/_asset/dep2/app0
+      - ../proto/dwtools/atop/starter.test/_asset/dep2/app0/File1.js
+      - ../proto/dwtools/atop/starter.test/_asset/dep2/app0/File2.js
+      - ../proto/dwtools/atop/starter.test/_asset/dep2/app2
+      - ../proto/dwtools/atop/starter.test/_asset/dep2/app2/File1.js
+      - ../proto/dwtools/atop/starter.test/_asset/dep2/app2/File2.js
+      - ../proto/dwtools/atop/starter.test/_asset/dep2/ext
+      - ../proto/dwtools/atop/starter.test/_asset/dep2/ext/RequireApp2File2.js
+      - ../proto/dwtools/atop/starter.test/_asset/processes
+      - ../proto/dwtools/atop/starter.test/_asset/processes/Experiment.js
+      - ../proto/dwtools/atop/starter.test/_asset/processes/Experiment2.js
+      - ../proto/dwtools/atop/starter.test/_asset/several
+      - ../proto/dwtools/atop/starter.test/_asset/several/File1.js
+      - ../proto/dwtools/atop/starter.test/_asset/several/File2.js
+submodule: {}
+reflector:
+  reflect.proto.:
+    src:
+      filePath:
+        'path::proto': 'path::out.*=1'
+    mandatory: 1
+    criterion:
+      debug: 0
+    inherit:
+      - predefined.*
+  reflect.proto.debug:
+    src:
+      filePath:
+        'path::proto': 'path::out.*=1'
+    mandatory: 1
+    criterion:
+      debug: 1
+    inherit:
+      - predefined.*
+  reflect.submodules:
+    src:
+      filePath:
+        'submodule::*/exported::*=1/path::exportedDir*=1': 'path::out.*=1'
+    mandatory: 1
+    criterion:
+      debug: 1
+    inherit:
+      - predefined.*
+  exported.proto.export:
+    src:
+      filePath:
+        .: ''
+      prefixPath: ../proto
+    mandatory: 1
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+      public: 1
+  exported.files.proto.export:
+    src:
+      filePath:
+        'path::exported.files.proto.export': ''
+      basePath: .
+      prefixPath: 'path::exported.dir.proto.export'
+    recursive: 0
+    mandatory: 1
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+      public: 1
+step:
+  clean.out.:
+    opts:
+      filePath: 'path::out.debug'
+    criterion:
+      debug: 0
+    inherit:
+      - files.delete
+  clean.out.debug:
+    opts:
+      filePath: 'path::out.debug'
+    criterion:
+      debug: 1
+    inherit:
+      - files.delete
+  reflect.proto.:
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
+    criterion:
+      debug: 0
+      raw: 0
+    inherit:
+      - files.reflect
+  reflect.proto.debug:
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
+    criterion:
+      debug: 1
+      raw: 0
+    inherit:
+      - files.reflect
+  reflect.proto.raw:
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
+    criterion:
+      debug: 0
+      raw: 1
+    inherit:
+      - files.reflect
+  reflect.proto.debug.raw:
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
+    criterion:
+      debug: 1
+      raw: 1
+    inherit:
+      - files.reflect
+  reflect.submodules.:
+    opts:
+      reflector: 'reflector::reflect.submodules*=1'
+    criterion:
+      debug: 1
+      raw: 0
+    inherit:
+      - files.reflect
+  reflect.submodules.raw:
+    opts:
+      reflector: 'reflector::reflect.submodules*=1'
+    criterion:
+      debug: 1
+      raw: 1
+    inherit:
+      - files.reflect
+  reflect.submodules:
+    opts:
+      reflector: 'reflector::reflect.submodules*'
+    criterion:
+      debug: 1
+    inherit:
+      - files.reflect
+  export.proto:
+    opts:
+      export: 'path::proto'
+      tar: 0
+    criterion:
+      debug: 1
+      proto: 1
+    inherit:
+      - module.export
+build:
+  debug.raw:
+    steps:
+      - 'step::clean.out*=1'
+      - 'step::reflect.proto.*=1'
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+  debug.compiled:
+    steps:
+      - 'step::clean.out*=1'
+      - 'step::reflect.proto.*=1'
+    criterion:
+      debug: 1
+      raw: 0
+  release.raw:
+    steps:
+      - 'step::clean.out*=1'
+      - 'step::reflect.proto.*=1'
+    criterion:
+      debug: 0
+      raw: 1
+  release.compiled:
+    steps:
+      - 'step::clean.out*=1'
+      - 'step::reflect.proto.*=1'
+    criterion:
+      debug: 0
+      raw: 0
+  all:
+    steps:
+      - 'build::debug.raw'
+      - 'build::release.compiled'
+  proto.export:
+    steps:
+      - 'build::debug.raw'
+      - 'step::export.proto'
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+      public: 1
+exported:
+  proto.export:
+    version: 0.3.56
+    exportedReflector: 'reflector::exported.proto.export'
+    exportedFilesReflector: 'reflector::exported.files.proto.export'
+    exportedDirPath: 'path::exported.dir.proto.export'
+    exportedFilesPath: 'path::exported.files.proto.export'
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+      public: 1
+module:
+  ../:
+    about:
+      name: wStarter
+      description: >-
+        Collection of tools to generate background service to start and pack
+        application. Use the module to keep files structure of the application
+        and make code aware wherein the file system is it executed.
+      enabled: 1
+      version: 0.3.56
+      interpreters: *ref_0
+      keywords: *ref_1
+    path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path:
+          - .im.will.yml
+          - .ex.will.yml
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path:
+          - .im.will.yml
+          - .ex.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: ./
+      local:
+        criterion:
+          predefined: 1
+      remote:
+        criterion:
+          predefined: 1
+      in:
+        criterion:
+          predefined: 0
+        path: .
+      temp:
+        path: out
+      out:
+        criterion:
+          predefined: 0
+        path: out
+      out.debug:
+        criterion:
+          debug: 1
+        path: ./out/debug
+      out.release:
+        criterion:
+          debug: 0
+        path: ./out/release
+      proto:
+        path: ./proto
+      repository:
+        path: 'git+https:///github.com/Wandalen/wStarter.git'
+      bugs:
+        path: 'https:///github.com/Wandalen/wStarter/issues'
+      exported.dir.proto.export:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        path: ./proto
+      exported.files.proto.export:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        path:
+          - proto
+          - proto/dwtools
+          - proto/dwtools/Tools.s
+          - proto/dwtools/atop
+          - proto/dwtools/atop/starter
+          - proto/dwtools/atop/starter/Exec
+          - proto/dwtools/atop/starter/ExecDebug
+          - proto/dwtools/atop/starter/ExecUnrestricted
+          - proto/dwtools/atop/starter/IncludeBase.s
+          - proto/dwtools/atop/starter/IncludeMid.s
+          - proto/dwtools/atop/starter/IncludeTop.s
+          - proto/dwtools/atop/starter/MainBase.s
+          - proto/dwtools/atop/starter/MainTop.s
+          - proto/dwtools/atop/starter/legacy
+          - proto/dwtools/atop/starter/legacy/StarterConfigBegin.raw.s
+          - proto/dwtools/atop/starter/legacy/StarterInitBegin.raw.s
+          - proto/dwtools/atop/starter/legacy/StarterInitEnd.raw.s
+          - proto/dwtools/atop/starter/legacy/StarterMaker.s
+          - proto/dwtools/atop/starter/legacy/StarterPreloadEnd.raw.s
+          - proto/dwtools/atop/starter/legacy/StarterServer.ss
+          - proto/dwtools/atop/starter/legacy/StarterStart.raw.s
+          - proto/dwtools/atop/starter/light
+          - proto/dwtools/atop/starter/light/Servlet.ss
+          - proto/dwtools/atop/starter/tools
+          - proto/dwtools/atop/starter/tools/BrowserCode.s
+          - proto/dwtools/atop/starter/tools/Maker.s
+          - proto/dwtools/atop/starter/tools/StarterCode.s
+          - proto/dwtools/atop/starter/tools/WareCode.s
+          - proto/dwtools/atop/starter.test
+          - proto/dwtools/atop/starter.test/StarterLegacy.test.s
+          - proto/dwtools/atop/starter.test/StarterMaker.test.s
+          - proto/dwtools/atop/starter.test/_asset
+          - proto/dwtools/atop/starter.test/_asset/complex
+          - proto/dwtools/atop/starter.test/_asset/complex/package.json
+          - proto/dwtools/atop/starter.test/_asset/complex/app0
+          - proto/dwtools/atop/starter.test/_asset/complex/app0/File1.js
+          - proto/dwtools/atop/starter.test/_asset/complex/app0/File2.js
+          - proto/dwtools/atop/starter.test/_asset/complex/app1
+          - proto/dwtools/atop/starter.test/_asset/complex/app1/File1.js
+          - proto/dwtools/atop/starter.test/_asset/complex/app1/File2.js
+          - proto/dwtools/atop/starter.test/_asset/complex/app2
+          - proto/dwtools/atop/starter.test/_asset/complex/app2/File1.js
+          - proto/dwtools/atop/starter.test/_asset/complex/app2/File2.js
+          - proto/dwtools/atop/starter.test/_asset/dep
+          - proto/dwtools/atop/starter.test/_asset/dep/package.json
+          - proto/dwtools/atop/starter.test/_asset/dep/app0
+          - proto/dwtools/atop/starter.test/_asset/dep/app0/File1.js
+          - proto/dwtools/atop/starter.test/_asset/dep/app0/File2.js
+          - proto/dwtools/atop/starter.test/_asset/dep/app2
+          - proto/dwtools/atop/starter.test/_asset/dep/app2/File1.js
+          - proto/dwtools/atop/starter.test/_asset/dep/app2/File2.js
+          - proto/dwtools/atop/starter.test/_asset/dep/ext
+          - proto/dwtools/atop/starter.test/_asset/dep/ext/RequireApp2File2.js
+          - proto/dwtools/atop/starter.test/_asset/dep2
+          - proto/dwtools/atop/starter.test/_asset/dep2/Index.html
+          - proto/dwtools/atop/starter.test/_asset/dep2/package.json
+          - proto/dwtools/atop/starter.test/_asset/dep2/app0
+          - proto/dwtools/atop/starter.test/_asset/dep2/app0/File1.js
+          - proto/dwtools/atop/starter.test/_asset/dep2/app0/File2.js
+          - proto/dwtools/atop/starter.test/_asset/dep2/app2
+          - proto/dwtools/atop/starter.test/_asset/dep2/app2/File1.js
+          - proto/dwtools/atop/starter.test/_asset/dep2/app2/File2.js
+          - proto/dwtools/atop/starter.test/_asset/dep2/ext
+          - proto/dwtools/atop/starter.test/_asset/dep2/ext/RequireApp2File2.js
+          - proto/dwtools/atop/starter.test/_asset/processes
+          - proto/dwtools/atop/starter.test/_asset/processes/Experiment.js
+          - proto/dwtools/atop/starter.test/_asset/processes/Experiment2.js
+          - proto/dwtools/atop/starter.test/_asset/several
+          - proto/dwtools/atop/starter.test/_asset/several/File1.js
+          - proto/dwtools/atop/starter.test/_asset/several/File2.js
+    submodule: {}
+    reflector:
+      reflect.proto.:
+        src:
+          filePath:
+            'path::proto': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 0
+        inherit:
+          - predefined.*
+      reflect.proto.debug:
+        src:
+          filePath:
+            'path::proto': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 1
+        inherit:
+          - predefined.*
+      reflect.submodules:
+        src:
+          filePath:
+            'submodule::*/exported::*=1/path::exportedDir*=1': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 1
+        inherit:
+          - predefined.*
+      exported.proto.export:
+        src:
+          filePath:
+            .: ''
+          prefixPath: proto
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+      exported.files.proto.export:
+        src:
+          filePath:
+            'path::exported.files.proto.export': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.proto.export'
+        recursive: 0
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+    step:
+      clean.out.:
+        opts:
+          filePath: 'path::out.debug'
+        criterion:
+          debug: 0
+        inherit:
+          - files.delete
+      clean.out.debug:
+        opts:
+          filePath: 'path::out.debug'
+        criterion:
+          debug: 1
+        inherit:
+          - files.delete
+      reflect.proto.:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.proto.debug:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+        criterion:
+          debug: 1
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.proto.raw:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.proto.debug.raw:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+        criterion:
+          debug: 1
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.submodules.:
+        opts:
+          reflector: 'reflector::reflect.submodules*=1'
+        criterion:
+          debug: 1
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.submodules.raw:
+        opts:
+          reflector: 'reflector::reflect.submodules*=1'
+        criterion:
+          debug: 1
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.submodules:
+        opts:
+          reflector: 'reflector::reflect.submodules*'
+        criterion:
+          debug: 1
+        inherit:
+          - files.reflect
+      export.proto:
+        opts:
+          export: 'path::proto'
+          tar: 0
+        criterion:
+          debug: 1
+          proto: 1
+        inherit:
+          - module.export
+    build:
+      debug.raw:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+      debug.compiled:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 1
+          raw: 0
+      release.raw:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 1
+      release.compiled:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 0
+      all:
+        steps:
+          - 'build::debug.raw'
+          - 'build::release.compiled'
+      proto.export:
+        steps:
+          - 'build::debug.raw'
+          - 'step::export.proto'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+    exported:
+      proto.export:
+        version: 0.3.56
+        exportedReflector: 'reflector::exported.proto.export'
+        exportedFilesReflector: 'reflector::exported.files.proto.export'
+        exportedDirPath: 'path::exported.dir.proto.export'
+        exportedFilesPath: 'path::exported.files.proto.export'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+  wStarter.out: root
