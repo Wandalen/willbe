@@ -11175,7 +11175,7 @@ var Self =
     buildSingleModule,
     buildSingleStep,
     buildSubmodules,
-    // buildDetached, /* qqq : fix and cover _.uri.commonTextualReport and similar routines */
+    buildDetached,
 
     exportSingle,
     exportItself,
@@ -11185,7 +11185,7 @@ var Self =
     exportToRoot,
     exportMixed,
     exportSecond,
-    // exportSubmodules, // xxx
+    exportSubmodules,
     exportMultiple,
     exportImportMultiple,
     exportBroken,
@@ -11194,7 +11194,7 @@ var Self =
     exportBrokenNoreflector,
     exportWholeModule,
     importPathLocal,
-    // importLocalRepo, /* qqq : fix and cover _.uri.commonTextualReport and similar routines */
+    importLocalRepo,
     importOutWithDeletedSource,
 
     reflectNothingFromSubmodules,
@@ -11209,7 +11209,7 @@ var Self =
     reflectSubmodulesWithCriterion,
     reflectSubmodulesWithPluralCriterionManualExport,
     reflectSubmodulesWithPluralCriterionAutoExport,
-    // relfectSubmodulesWithNotExistingFile, // xxx qqq : explain
+    relfectSubmodulesWithNotExistingFile, // xxx qqq : explain, propose?
     reflectInherit,
     reflectInheritSubmodules,
     // reflectComplexInherit, // xxx
@@ -11225,7 +11225,7 @@ var Self =
     submodulesDownloadSingle,
     submodulesDownloadUpdate,
     submodulesDownloadUpdateDry,
-    // submodulesDownloadedUpdate, // qqq : please help to fix
+    submodulesDownloadedUpdate, // qqq : not sure how to fix. please help to fix,
     submodulesUpdate,
     submodulesUpdateSwitchBranch,
     stepSubmodulesDownload,
@@ -11234,7 +11234,7 @@ var Self =
     fixateDryDetached,
     fixateDetached,
 
-    // runWillbe, /* qqq : help to fix, please */
+    runWillbe, /* qqq : help to fix, please */
 
     resourcesFormReflectorsExperiment,
 
