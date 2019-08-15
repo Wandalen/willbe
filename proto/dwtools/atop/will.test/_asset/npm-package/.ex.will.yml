@@ -1,0 +1,124 @@
+
+about :
+
+  name : 'wTools'
+  description : 'Collection of general purpose tools for solving problems. Fundamentally extend JavaScript without corrupting it, so may be used solely or in conjunction with another module of such kind'
+  version : '0.8.500'
+  enabled : 1
+  interpreters :
+  - nodejs >= 6.0.0
+  - chrome >= 60.0.0
+  - firefox >= 60.0.0
+  keywords :
+  - base
+  - basic
+  - core
+  - platform
+  - tools
+  - wTools
+  - wBase
+  - generic
+  license : MIT
+  author : 'Kostiantyn Wandalen <wanalen@willbe.so>'
+  contributors :
+  -
+    name : 'Kostiantyn Wandalen'
+    email : 'wanalen@willbe.so'
+  -
+    name : 'Volodymyr M.'
+    email : 'volodymyr.migdal@gmail.com'
+  -
+    name : 'Ihor O.'
+    email : 'iostashvxi@gmail.com'
+
+  npm.name : 'wtools.experiment'
+  npm.dependencies : []
+  npm.devDependencies :
+    wFiles : ''
+    wcloner : ''
+    wstringer : ''
+    wTesting : ''
+
+execution :
+
+  scripts :
+    test : wtest .run proto/**
+    docgen : wdocgen staging
+
+path :
+
+  repository : git+https:///github.com/Wandalen/wTools.git
+  bugtracker : https:///github.com/Wandalen/wTools/issues
+  entry.no.tests :
+    path : proto/dwtools/abase/Layer2.s
+    criterion :
+      tests : 'no.tests'
+  entry.only.tests :
+    path : proto/dwtools/abase/**/*.test.s
+    criterion :
+      tests : 'only.tests'
+  npm.entry : proto/dwtools/abase/Layer2.s
+  npm.files : proto
+
+step :
+
+  proto.export :
+    inherit : module.export
+    export : path::proto
+    tar : 0
+    criterion :
+      content : 'proto'
+
+  doc.export :
+    inherit : module.export
+    export : path::doc
+    tar : 0
+    criterion :
+      content : 'doc'
+
+  npm.export :
+    inherit : module.export
+    export : out.npm
+    tar : 0
+    criterion :
+      content : 'npm'
+
+  npm.publish :
+    shell : npm publish
+
+build :
+
+  proto.export :
+    criterion :
+      content : 'proto'
+      export : 1
+    steps :
+      # - build::debug.raw
+      - step::proto.export
+
+  doc.export :
+    criterion :
+      content : 'doc'
+      export : 1
+    steps :
+      # - build::debug.raw
+      - step::doc.export
+
+  npm.export :
+    criterion :
+      content : 'npm'
+      export : 1
+    steps :
+      # - build::debug.raw
+      # - step::npm.export
+      - step::npm.publish
+
+  export :
+
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      # - build::npm
+      - build::proto.export
+      # - build::doc.export
