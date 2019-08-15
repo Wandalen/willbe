@@ -11002,6 +11002,15 @@ function runWillbe( test )
 
 //
 
+/*
+
+Performance issue. Related with
+- path map handling
+- file filter forming
+Disappeared as mystically as appeared.
+
+*/
+
 function resourcesFormReflectorsExperiment( test )
 {
   let self = this;
@@ -11045,57 +11054,57 @@ function resourcesFormReflectorsExperiment( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'module::new-out-file / submodule::Starter' ) );
+    test.is( _.strHas( got.output, 'module::old-out-file / submodule::Starter' ) );
     test.is( _.strHas( got.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter#master' ) );
     test.is( _.strHas( got.output, 'autoExporting : 0' ) );
     test.is( _.strHas( got.output, 'enabled : 1' ) );
     test.is( _.strHas( got.output, "Exported builds : [ 'proto.export' ]" ) );
-    test.is( _.strHas( got.output, "isDownloaded : true" ) );
-    test.is( _.strHas( got.output, "isAvailable : true" ) );
+    test.is( _.strHas( got.output, "isDownloaded : false" ) );
+    test.is( _.strHas( got.output, "isAvailable : false" ) );
 
     return null;
   })
 
   /* */
 
-  // ready.then( () =>
-  // {
-  //   /* This case uses new out file of Starter forming of reflector reflect.submodules from supermode is fast */
-  //
-  //   test.case = 'new version of out file from Starter module, works fast';
-  //
-  //   let o2 =
-  //   {
-  //     execPath : execPath,
-  //     currentPath : moduleNewPath,
-  //     args : [ '.submodules.list' ],
-  //     mode : 'fork',
-  //     outputCollecting : 1
-  //   };
-  //
-  //   let con = _.shell( o2 );
-  //   let t = _.timeOut( 10000, () =>
-  //   {
-  //     o2.process.kill( 'SIGKILL' );
-  //     throw _.err( 'TimeOut : 10000, resources forming takes too long' );
-  //   });
-  //
-  //   return con.orKeepingSplit( t );
-  // })
-  //
-  // .then( ( got ) =>
-  // {
-  //   test.identical( got.exitCode, 0 );
-  //   test.is( _.strHas( got.output, 'module::new-out-file / submodule::Starter' ) );
-  //   test.is( _.strHas( got.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter#master' ) );
-  //   test.is( _.strHas( got.output, 'autoExporting : 0' ) );
-  //   test.is( _.strHas( got.output, 'enabled : 1' ) );
-  //   test.is( _.strHas( got.output, "Exported builds : [ 'proto.export' ]" ) );
-  //   test.is( _.strHas( got.output, "isDownloaded : true" ) );
-  //   test.is( _.strHas( got.output, "isAvailable : true" ) );
-  //
-  //   return null;
-  // })
+  ready.then( () =>
+  {
+    /* This case uses new out file of Starter forming of reflector reflect.submodules from supermode is fast */
+
+    test.case = 'new version of out file from Starter module, works fast';
+
+    let o2 =
+    {
+      execPath : execPath,
+      currentPath : moduleNewPath,
+      args : [ '.submodules.list' ],
+      mode : 'fork',
+      outputCollecting : 1
+    };
+
+    let con = _.shell( o2 );
+    let t = _.timeOut( 10000, () =>
+    {
+      o2.process.kill( 'SIGKILL' );
+      throw _.err( 'TimeOut : 10000, resources forming takes too long' );
+    });
+
+    return con.orKeepingSplit( t );
+  })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'module::new-out-file / submodule::Starter' ) );
+    test.is( _.strHas( got.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter#master' ) );
+    test.is( _.strHas( got.output, 'autoExporting : 0' ) );
+    test.is( _.strHas( got.output, 'enabled : 1' ) );
+    test.is( _.strHas( got.output, "Exported builds : [ 'proto.export' ]" ) );
+    test.is( _.strHas( got.output, "isDownloaded : false" ) );
+    test.is( _.strHas( got.output, "isAvailable : false" ) );
+
+    return null;
+  })
 
   /* */
 
@@ -11128,7 +11137,7 @@ var Self =
 
     preCloneRepos,
     singleModuleWithSpaceTrivial,
-    make, // xxx
+    make,
     // transpile, xxx
 
     openWith,
@@ -11166,7 +11175,7 @@ var Self =
     buildSingleModule,
     buildSingleStep,
     buildSubmodules,
-    // buildDetached, /* qqq : fix and cover _.uri.commonTextualReport and similar routines */
+    buildDetached, /* qqq : fix and cover _.uri.commonTextualReport and similar routines */
 
     exportSingle,
     exportItself,
