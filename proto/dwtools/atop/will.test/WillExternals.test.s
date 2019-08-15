@@ -11138,7 +11138,7 @@ var Self =
     preCloneRepos,
     singleModuleWithSpaceTrivial,
     make,
-    // transpile, xxx
+    transpile,
 
     openWith,
     openEach,
@@ -11175,7 +11175,7 @@ var Self =
     buildSingleModule,
     buildSingleStep,
     buildSubmodules,
-    buildDetached, /* qqq : fix and cover _.uri.commonTextualReport and similar routines */
+    // buildDetached, /* qqq : fix and cover _.uri.commonTextualReport and similar routines */
 
     exportSingle,
     exportItself,
