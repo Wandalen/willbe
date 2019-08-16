@@ -221,7 +221,7 @@ submodule:
     enabled: 0
     criterion:
       development: 1
-  Self:
+  wTools:
     path: 'hd://..'
     autoExporting: 0
     enabled: 0
@@ -1031,7 +1031,7 @@ module:
         enabled: 0
         criterion:
           development: 1
-      Self:
+      wTools:
         path: 'hd://.'
         autoExporting: 0
         enabled: 0

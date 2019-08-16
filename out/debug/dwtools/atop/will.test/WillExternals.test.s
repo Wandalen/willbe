@@ -1196,10 +1196,10 @@ function eachList( test )
 
   /* - */
 
-  shell({ args : '".imply v:1 ; .each . .resources.list about::name"' })
+  shell({ args : '.imply v:1 ; .each . .resources.list about::name' })
   .finally( ( err, got ) =>
   {
-    test.case = '".imply v:1 ; .each . .resources.list about::name"';
+    test.case = '.imply v:1 ; .each . .resources.list about::name';
     test.is( !err );
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'Module at' ), 0 );
@@ -1224,10 +1224,10 @@ function eachList( test )
 
   /* - */
 
-  shell({ args : '".imply v:1 ; .each . .resources.list path::module.common"' })
+  shell({ args : '.imply v:1 ; .each . .resources.list path::module.common' })
   .finally( ( err, got ) =>
   {
-    test.case = '".imply v:1 ; .each . .resources.list path::module.common"';
+    test.case = '.imply v:1 ; .each . .resources.list path::module.common';
     test.is( !err );
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'Module at' ), 0 );
@@ -1246,10 +1246,10 @@ function eachList( test )
 
   /* - */
 
-  shell({ args : '".imply v:1 ; .each * .resources.list path::module.common"' })
+  shell({ args : '.imply v:1 ; .each * .resources.list path::module.common' })
   .finally( ( err, got ) =>
   {
-    test.case = '".imply v:1 ; .each * .resources.list path::module.common"';
+    test.case = '.imply v:1 ; .each * .resources.list path::module.common';
     test.is( !err );
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'Module at' ), 0 );
@@ -1268,10 +1268,10 @@ function eachList( test )
 
   /* - */
 
-  shell({ args : '".imply v:1 ; .each */* .resources.list path::module.common"' })
+  shell({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
   .finally( ( err, got ) =>
   {
-    test.case = '".imply v:1 ; .each */* .resources.list path::module.common"';
+    test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
     test.is( !err );
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'Module at' ), 0 );
@@ -1706,12 +1706,12 @@ function verbosityStepDelete( test )
   ready
   .then( ( got ) =>
   {
-    test.case = '".imply v:0 ; .build files.delete.vd"';
+    test.case = '.imply v:0 ; .build files.delete.vd';
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
     return null;
   })
 
-  shell({ execPath : '".imply v:0 ; .build files.delete.vd"' })
+  shell({ execPath : '.imply v:0 ; .build files.delete.vd' })
 
   .then( ( got ) =>
   {
@@ -1736,12 +1736,12 @@ function verbosityStepDelete( test )
   ready
   .then( ( got ) =>
   {
-    test.case = '".imply v:8 ; .build files.delete.v0"';
+    test.case = '.imply v:8 ; .build files.delete.v0';
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
     return null;
   })
 
-  shell({ execPath : '".imply v:8 ; .build files.delete.v0"' })
+  shell({ execPath : '.imply v:8 ; .build files.delete.v0' })
 
   .then( ( got ) =>
   {
@@ -1765,12 +1765,12 @@ function verbosityStepDelete( test )
   ready
   .then( ( got ) =>
   {
-    test.case = '".imply v:9 ; .build files.delete.v0"';
+    test.case = '.imply v:9 ; .build files.delete.v0';
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
     return null;
   })
 
-  shell({ execPath : '".imply v:9 ; .build files.delete.v0"' })
+  shell({ execPath : '.imply v:9 ; .build files.delete.v0' })
 
   .then( ( got ) =>
   {
@@ -1794,12 +1794,12 @@ function verbosityStepDelete( test )
   ready
   .then( ( got ) =>
   {
-    test.case = '".imply v:1 ; .build files.delete.v3"';
+    test.case = '.imply v:1 ; .build files.delete.v3';
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
     return null;
   })
 
-  shell({ execPath : '".imply v:1 ; .build files.delete.v3"' })
+  shell({ execPath : '.imply v:1 ; .build files.delete.v3' })
 
   .then( ( got ) =>
   {
@@ -1823,12 +1823,12 @@ function verbosityStepDelete( test )
   ready
   .then( ( got ) =>
   {
-    test.case = '".imply v:2 ; .build files.delete.v3"';
+    test.case = '.imply v:2 ; .build files.delete.v3';
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
     return null;
   })
 
-  shell({ execPath : '".imply v:2 ; .build files.delete.v3"' })
+  shell({ execPath : '.imply v:2 ; .build files.delete.v3' })
 
   .then( ( got ) =>
   {
@@ -1887,11 +1887,11 @@ function verbosityStepPrintName( test )
     return arg;
   })
 
-  shell({ execPath : '".imply v:4 ; .build"' })
+  shell({ execPath : '.imply v:4 ; .build' })
 
   .then( ( got ) =>
   {
-    test.description = '".imply v:4 ; .build"';
+    test.description = '.imply v:4 ; .build';
 
     test.identical( got.exitCode, 0 );
 
@@ -1920,11 +1920,11 @@ function verbosityStepPrintName( test )
     return arg;
   })
 
-  shell({ execPath : '".imply v:3 ; .build"' })
+  shell({ execPath : '.imply v:3 ; .build' })
 
   .then( ( got ) =>
   {
-    test.description = '".imply v:3 ; .build"';
+    test.description = '.imply v:3 ; .build';
 
     test.identical( got.exitCode, 0 );
 
@@ -1953,11 +1953,11 @@ function verbosityStepPrintName( test )
     return arg;
   })
 
-  shell({ execPath : '".imply v:2 ; .build"' })
+  shell({ execPath : '.imply v:2 ; .build' })
 
   .then( ( got ) =>
   {
-    test.description = '".imply v:2 ; .build"';
+    test.description = '.imply v:2 ; .build';
 
     test.identical( got.exitCode, 0 );
 
@@ -1986,11 +1986,11 @@ function verbosityStepPrintName( test )
     return arg;
   })
 
-  shell({ execPath : '".imply v:1 ; .build"' })
+  shell({ execPath : '.imply v:1 ; .build' })
 
   .then( ( got ) =>
   {
-    test.description = '".imply v:1 ; .build"';
+    test.description = '.imply v:1 ; .build';
 
     test.identical( got.exitCode, 0 );
 
@@ -6502,6 +6502,7 @@ function importLocalRepo( test )
           'Proto/proto/dwtools/abase',
           'Proto/proto/dwtools/abase/l3',
           'Proto/proto/dwtools/abase/l3/Proto.s',
+          'Proto/proto/dwtools/abase/l3/Proto0Workpiece.s',
           'Proto/proto/dwtools/abase/l3/ProtoAccessor.s',
           'Proto/proto/dwtools/abase/l3/ProtoLike.s',
           'Proto/proto/dwtools/abase/l3.test',
@@ -11138,7 +11139,7 @@ var Self =
     preCloneRepos,
     singleModuleWithSpaceTrivial,
     make,
-    transpile,
+    // transpile, // xxx
 
     openWith,
     openEach,
@@ -11204,12 +11205,12 @@ var Self =
     reflectComposite,
     reflectRemoteGit,
     reflectRemoteHttp,
-    reflectWithOptions,
+    reflectWithOptions, // qqq : please fix. related with path routines
     reflectWithSelectorInDstFilter,
     reflectSubmodulesWithCriterion,
     reflectSubmodulesWithPluralCriterionManualExport,
     reflectSubmodulesWithPluralCriterionAutoExport,
-    relfectSubmodulesWithNotExistingFile, // xxx qqq : explain, propose?
+    // relfectSubmodulesWithNotExistingFile, // xxx
     reflectInherit,
     reflectInheritSubmodules,
     // reflectComplexInherit, // xxx
@@ -11234,7 +11235,7 @@ var Self =
     fixateDryDetached,
     fixateDetached,
 
-    runWillbe, /* qqq : help to fix, please */
+    runWillbe, // qqq : help to fix, please
 
     resourcesFormReflectorsExperiment,
 

@@ -897,7 +897,6 @@ function shell( o )
 
   /* */
 
-  // debugger;
   o.execPath = module.resolve
   ({
     selector : o.execPath,
@@ -907,7 +906,6 @@ function shell( o )
     pathNativizing : 1,
     arrayFlattening : 0, /* required for f::this and feature make */
   });
-  // debugger;
 
   /* */
 
@@ -919,6 +917,7 @@ function shell( o )
 
   let ready = new _.Consequence().take( null );
 
+  debugger;
   _.shell
   ({
     execPath : o.execPath,
