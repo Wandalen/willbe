@@ -94,9 +94,7 @@ function preCloneRepos( test )
 
     if( !_.fileProvider.isDir( _.path.join( self.repoDirPath, name ) ) )
     shell( 'git clone https://github.com/Wandalen/w' + name + '.git ' + name );
-    debugger;
-    shell({ args : 'git checkout ' + version, currentPath : _.path.join( self.repoDirPath, name ) });
-    debugger;
+    shell({ execPath : 'git checkout ' + version, currentPath : _.path.join( self.repoDirPath, name ) });
 
   }
 
@@ -4373,6 +4371,13 @@ function submodulesDeleteAndDownload( test )
   let outPath = _.path.join( routinePath, 'out' );
   let will = new _.Will;
 
+  function abs()
+  {
+    let args = _.longSlice( arguments );
+    args.unshift( routinePath );
+    return _.uri.s.join.apply( _.uri.s, args );
+  }
+
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesDelete( repoPath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -4416,13 +4421,29 @@ function submodulesDeleteAndDownload( test )
     con.finally( ( err, arg ) =>
     {
 
+      debugger;
       test.identical( will.modulesArray.length, 3 );
       test.identical( _.mapKeys( will.moduleWithIdMap ).length, 3 );
       test.identical( _.mapKeys( will.moduleWithPathMap ).length, 3 );
-      test.identical( will.openersArray.length, 3 );
-      test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, 3 );
       test.identical( will.willfilesArray.length, 3 );
       test.identical( _.mapKeys( will.willfileWithPathMap ).length, 3 );
+      debugger;
+
+      test.identical( will.openersArray.length, 7 );
+      test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, 7 );
+
+      var expected = abs
+      ([
+        '.will.yml',
+        '.module/Tools/out/wTools.out.will.yml',
+        '.module/PathBasic/out/wPathBasic.out.will.yml',
+        'npm:///wFiles',
+        'npm:///wcloner',
+        'npm:///wstringer',
+        'npm:///wTesting',
+      ])
+      var got = _.select( will.openersArray, '*/willfilesPath' )
+      test.identical( got, expected );
 
       module.finit();
 

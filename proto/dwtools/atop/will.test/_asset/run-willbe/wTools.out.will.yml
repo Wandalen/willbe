@@ -98,7 +98,7 @@ path:
   entry.proto.only.tests:
     criterion:
       tests: only.tests
-    path: ../proto/dwtools/abase/**/*.test.s
+    path: ../proto/**/*.test.*
   entry.out.raw.debug.debug:
     criterion:
       debug: debug
@@ -217,6 +217,12 @@ submodule:
       development: 1
   wTesting:
     path: 'npm:///wTesting'
+    autoExporting: 0
+    enabled: 0
+    criterion:
+      development: 1
+  Self:
+    path: 'hd://..'
     autoExporting: 0
     enabled: 0
     criterion:
@@ -902,7 +908,7 @@ module:
       entry.proto.only.tests:
         criterion:
           tests: only.tests
-        path: proto/dwtools/abase/**/*.test.s
+        path: proto/**/*.test.*
       entry.out.raw.debug.debug:
         criterion:
           debug: debug
@@ -1021,6 +1027,12 @@ module:
           development: 1
       wTesting:
         path: 'npm:///wTesting'
+        autoExporting: 0
+        enabled: 0
+        criterion:
+          development: 1
+      Self:
+        path: 'hd://.'
         autoExporting: 0
         enabled: 0
         criterion:

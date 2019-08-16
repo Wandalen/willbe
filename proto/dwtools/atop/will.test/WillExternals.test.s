@@ -88,7 +88,7 @@ function preCloneRepos( test )
     if( !_.fileProvider.isDir( _.path.join( self.repoDirPath, name ) ) )
     shell( 'git clone https://github.com/Wandalen/w' + name + '.git ' + name );
     debugger;
-    shell({ args : 'git checkout ' + version, currentPath : _.path.join( self.repoDirPath, name ) });
+    shell({ execPath : 'git checkout ' + version, currentPath : _.path.join( self.repoDirPath, name ) });
     debugger;
 
   }
@@ -116,7 +116,7 @@ function singleModuleWithSpaceTrivial( test )
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
 
-  shell({ args : [ '.with "single with space/" .resources.list' ] })
+  shell({ execPath : '.with "single with space/" .resources.list' })
 
   .then( ( got ) =>
   {
@@ -168,7 +168,7 @@ function make( test )
     return null;
   })
 
-  shell({ args : [ '.with v1 .build' ] })
+  shell({ execPath : '.with v1 .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -191,7 +191,7 @@ function make( test )
     return null;
   })
 
-  shell({ args : [ '.with v1 .build' ] })
+  shell({ execPath : '.with v1 .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -225,7 +225,7 @@ function make( test )
     return null;
   })
 
-  shell({ args : [ '.with v2 .build' ] })
+  shell({ execPath : '.with v2 .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -248,7 +248,7 @@ function make( test )
     return null;
   })
 
-  shell({ args : [ '.with v2 .build' ] })
+  shell({ execPath : '.with v2 .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -310,7 +310,7 @@ function transpile( test )
     _.fileProvider.filesDelete( outPath );
     return null;
   })
-  shell({ args : [ '.build debug' ] })
+  shell({ execPath : '.build debug' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -329,7 +329,7 @@ function transpile( test )
     _.fileProvider.filesDelete( outPath );
     return null;
   })
-  shell({ args : [ '.build compiled.debug' ] })
+  shell({ execPath : '.build compiled.debug' })
   .then( ( got ) =>
   {
 
@@ -369,7 +369,7 @@ function transpile( test )
     _.fileProvider.filesDelete( outPath );
     return null;
   })
-  shell({ args : [ '.build raw.release' ] })
+  shell({ execPath : '.build raw.release' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -388,7 +388,7 @@ function transpile( test )
     _.fileProvider.filesDelete( outPath );
     return null;
   })
-  shell({ args : [ '.build release' ] })
+  shell({ execPath : '.build release' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -416,7 +416,7 @@ function transpile( test )
     _.fileProvider.filesDelete( outPath );
     return null;
   })
-  shell({ args : [ '.build all' ] })
+  shell({ execPath : '.build all' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -463,8 +463,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.export' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -492,8 +492,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.with . .export' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.with . .export' })
 
   .then( ( got ) =>
   {
@@ -521,8 +521,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.with doc .export' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.with doc .export' })
 
   .then( ( got ) =>
   {
@@ -585,8 +585,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.with doc. .export' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.with doc. .export' })
 
   .then( ( got ) =>
   {
@@ -614,8 +614,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.with doc/. .export' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.with doc/. .export' })
 
   .then( ( got ) =>
   {
@@ -643,7 +643,7 @@ function openWith( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
+  shell({ execPath : '.clean' })
   shell({ args : [ '.with do .export' ], throwingExitCode : 0 })
 
   .then( ( got ) =>
@@ -675,7 +675,7 @@ function openWith( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
+  shell({ execPath : '.clean' })
   shell({ args : [ '.with docx .export' ], throwingExitCode : 0 })
 
   .then( ( got ) =>
@@ -707,8 +707,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.with doc/ .export' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.with doc/ .export' })
 
   .then( ( got ) =>
   {
@@ -742,7 +742,7 @@ function openWith( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
+  shell({ execPath : '.clean' })
   shell({ args : [ '.with doc/ .export' ], throwingExitCode : 0 })
 
   .then( ( got ) =>
@@ -777,8 +777,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.with doc/doc .export' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.with doc/doc .export' })
 
   .then( ( got ) =>
   {
@@ -806,8 +806,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.with doc/doc. .export' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.with doc/doc. .export' })
 
   .then( ( got ) =>
   {
@@ -863,8 +863,8 @@ function openEach( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.each . .export' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.each . .export' })
 
   .then( ( got ) =>
   {
@@ -892,8 +892,8 @@ function openEach( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.each doc/. .export' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.each doc/. .export' })
 
   .then( ( got ) =>
   {
@@ -949,7 +949,7 @@ function withMixed( test )
     return null;
   })
 
-  shell({ args : [ '.with module .build' ] })
+  shell({ execPath : '.with module .build' })
   .then( ( got ) =>
   {
     test.is( got.exitCode !== 0 );
@@ -968,7 +968,7 @@ function withMixed( test )
     return null;
   })
 
-  shell({ args : [ '.with . .export' ] })
+  shell({ execPath : '.with . .export' })
   .then( ( got ) =>
   {
     test.is( got.exitCode === 0 );
@@ -1013,9 +1013,9 @@ function eachMixed( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.build' ] })
-  shell({ args : [ '.each submodule::*/path::local .shell "git status"' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.build' })
+  shell({ execPath : '.each submodule::*/path::local .shell "git status"' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1049,9 +1049,9 @@ function eachMixed( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.build' ] })
-  shell({ args : [ '.each submodule:: .shell ls -al' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.build' })
+  shell({ execPath : '.each submodule:: .shell ls -al' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1473,8 +1473,8 @@ function verbositySet( test )
 
   /* - */
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.imply verbosity:3 ; .build' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.imply verbosity:3 ; .build' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply verbosity:3 ; .build';
@@ -1500,8 +1500,8 @@ function verbositySet( test )
 
   /* - */
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.imply verbosity:2 ; .build' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.imply verbosity:2 ; .build' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply verbosity:2 ; .build';
@@ -1527,8 +1527,8 @@ function verbositySet( test )
 
   /* - */
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.imply verbosity:1 ; .build' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.imply verbosity:1 ; .build' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply verbosity:1 ; .build';
@@ -1594,7 +1594,7 @@ function verbosityStepDelete( test )
     return null;
   })
 
-  shell({ args : [ '.build files.delete.vd' ] })
+  shell({ execPath : '.build files.delete.vd' })
 
   .then( ( got ) =>
   {
@@ -1623,7 +1623,7 @@ function verbosityStepDelete( test )
     return null;
   })
 
-  shell({ args : [ '.build files.delete.v0' ] })
+  shell({ execPath : '.build files.delete.v0' })
 
   .then( ( got ) =>
   {
@@ -1653,7 +1653,7 @@ function verbosityStepDelete( test )
     return null;
   })
 
-  shell({ args : [ '.build files.delete.v1' ] })
+  shell({ execPath : '.build files.delete.v1' })
 
   .then( ( got ) =>
   {
@@ -1682,7 +1682,7 @@ function verbosityStepDelete( test )
     return null;
   })
 
-  shell({ args : [ '.build files.delete.v3' ] })
+  shell({ execPath : '.build files.delete.v3' })
 
   .then( ( got ) =>
   {
@@ -1711,7 +1711,7 @@ function verbosityStepDelete( test )
     return null;
   })
 
-  shell({ args : [ '".imply v:0 ; .build files.delete.vd"' ] })
+  shell({ execPath : '".imply v:0 ; .build files.delete.vd"' })
 
   .then( ( got ) =>
   {
@@ -1741,7 +1741,7 @@ function verbosityStepDelete( test )
     return null;
   })
 
-  shell({ args : [ '".imply v:8 ; .build files.delete.v0"' ] })
+  shell({ execPath : '".imply v:8 ; .build files.delete.v0"' })
 
   .then( ( got ) =>
   {
@@ -1770,7 +1770,7 @@ function verbosityStepDelete( test )
     return null;
   })
 
-  shell({ args : [ '".imply v:9 ; .build files.delete.v0"' ] })
+  shell({ execPath : '".imply v:9 ; .build files.delete.v0"' })
 
   .then( ( got ) =>
   {
@@ -1799,7 +1799,7 @@ function verbosityStepDelete( test )
     return null;
   })
 
-  shell({ args : [ '".imply v:1 ; .build files.delete.v3"' ] })
+  shell({ execPath : '".imply v:1 ; .build files.delete.v3"' })
 
   .then( ( got ) =>
   {
@@ -1828,7 +1828,7 @@ function verbosityStepDelete( test )
     return null;
   })
 
-  shell({ args : [ '".imply v:2 ; .build files.delete.v3"' ] })
+  shell({ execPath : '".imply v:2 ; .build files.delete.v3"' })
 
   .then( ( got ) =>
   {
@@ -1887,7 +1887,7 @@ function verbosityStepPrintName( test )
     return arg;
   })
 
-  shell({ args : [ '".imply v:4 ; .build"' ] })
+  shell({ execPath : '".imply v:4 ; .build"' })
 
   .then( ( got ) =>
   {
@@ -1920,7 +1920,7 @@ function verbosityStepPrintName( test )
     return arg;
   })
 
-  shell({ args : [ '".imply v:3 ; .build"' ] })
+  shell({ execPath : '".imply v:3 ; .build"' })
 
   .then( ( got ) =>
   {
@@ -1953,7 +1953,7 @@ function verbosityStepPrintName( test )
     return arg;
   })
 
-  shell({ args : [ '".imply v:2 ; .build"' ] })
+  shell({ execPath : '".imply v:2 ; .build"' })
 
   .then( ( got ) =>
   {
@@ -1986,7 +1986,7 @@ function verbosityStepPrintName( test )
     return arg;
   })
 
-  shell({ args : [ '".imply v:1 ; .build"' ] })
+  shell({ execPath : '".imply v:1 ; .build"' })
 
   .then( ( got ) =>
   {
@@ -2105,7 +2105,7 @@ function help( test )
 
   /* */
 
-  shell({ args : [ '.help' ] })
+  shell({ execPath : '.help' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -2115,7 +2115,7 @@ function help( test )
 
   /* */
 
-  shell({ args : [ '.' ] })
+  shell({ execPath : '.' })
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
@@ -2158,7 +2158,7 @@ function listSingleModule( test )
 
   /* - */
 
-  shell({ args : [ '.resources.list' ] })
+  shell({ execPath : '.resources.list' })
   .then( ( got ) =>
   {
     test.case = 'list';
@@ -2171,7 +2171,7 @@ function listSingleModule( test )
 
   /* - */
 
-  shell({ args : [ '.about.list' ] })
+  shell({ execPath : '.about.list' })
   .then( ( got ) =>
   {
     test.case = '.about.list'
@@ -2195,7 +2195,7 @@ function listSingleModule( test )
 
   /* - */
 
-  shell({ args : [ '.paths.list' ] })
+  shell({ execPath : '.paths.list' })
   .then( ( got ) =>
   {
     test.case = 'module info'
@@ -2216,7 +2216,7 @@ function listSingleModule( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.list' ] })
+  shell({ execPath : '.submodules.list' })
   .then( ( got ) =>
   {
     test.case = 'submodules list'
@@ -2227,7 +2227,7 @@ function listSingleModule( test )
 
   /* - */
 
-  shell({ args : [ '.reflectors.list' ] })
+  shell({ execPath : '.reflectors.list' })
   .then( ( got ) =>
   {
     test.case = 'reflectors.list'
@@ -2248,7 +2248,7 @@ function listSingleModule( test )
 
   /* - */
 
-  shell({ args : [ '.steps.list' ] })
+  shell({ execPath : '.steps.list' })
   .then( ( got ) =>
   {
     test.case = 'steps.list'
@@ -2264,7 +2264,7 @@ function listSingleModule( test )
 
   /* - */
 
-  shell({ args : [ '.builds.list' ] })
+  shell({ execPath : '.builds.list' })
   .then( ( got ) =>
   {
     test.case = '.builds.list'
@@ -2280,7 +2280,7 @@ function listSingleModule( test )
 
   /* - */
 
-  shell({ args : [ '.exports.list' ] })
+  shell({ execPath : '.exports.list' })
   .then( ( got ) =>
   {
     test.case = '.exports.list'
@@ -2295,7 +2295,7 @@ function listSingleModule( test )
 
   /* - */ /* To test output by command with glob and criterion args*/
 
-  shell({ args : [ '.resources.list *a* predefined:0' ] })
+  shell({ execPath : '.resources.list *a* predefined:0' })
   .then( ( got ) =>
   {
     test.case = 'resources list globs negative';
@@ -2312,7 +2312,7 @@ function listSingleModule( test )
     return null;
   })
 
-  shell({ args : [ '.resources.list *p* debug:1' ] })
+  shell({ execPath : '.resources.list *p* debug:1' })
   .then( ( got ) =>
   {
     test.case = 'resources list globs negative';
@@ -2330,7 +2330,7 @@ function listSingleModule( test )
   })
 
   /* Glob using positive test */
-  shell({ args : [ '.resources.list *proto*' ] })
+  shell({ execPath : '.resources.list *proto*' })
   .then( ( got ) =>
   {
     test.case = 'resources list globs';
@@ -2349,7 +2349,7 @@ function listSingleModule( test )
   })
 
   /* Glob and criterion using negative test */
-  shell({ args : [ '.resources.list *proto* debug:0' ] })
+  shell({ execPath : '.resources.list *proto* debug:0' })
   .then( ( got ) =>
   {
     test.case = 'globs and criterions negative';
@@ -2363,7 +2363,7 @@ function listSingleModule( test )
   })
 
   /* Glob and criterion using positive test */
-  shell({ args : [ '.resources.list *proto* debug:0 predefined:0' ] })
+  shell({ execPath : '.resources.list *proto* debug:0 predefined:0' })
   .then( ( got ) =>
   {
     test.case = 'globs and criterions positive';
@@ -2383,7 +2383,7 @@ function listSingleModule( test )
   })
 
   /* Glob and two criterions using negative test */
-  shell({ args : [ '.resources.list * debug:1 raw:0 predefined:0' ] })
+  shell({ execPath : '.resources.list * debug:1 raw:0 predefined:0' })
   .then( ( got ) =>
   {
     test.case = '.resources.list * debug:1 raw:0 predefined:0';
@@ -2401,7 +2401,7 @@ function listSingleModule( test )
   })
 
   /* Glob and two criterion using positive test */
-  shell({ args : [ '.resources.list * debug:0 raw:1' ] })
+  shell({ execPath : '.resources.list * debug:0 raw:1' })
   .then( ( got ) =>
   {
     test.case = '.resources.list * debug:0 raw:1';
@@ -2440,7 +2440,7 @@ function listWithSubmodulesSimple( test )
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
 
-  shell({ args : [ '.resources.list' ] })
+  shell({ execPath : '.resources.list' })
 
   .then( ( got ) =>
   {
@@ -2481,7 +2481,7 @@ function listWithSubmodules( test )
 
   /* - */
 
-  shell({ args : [ '.submodules.list' ] })
+  shell({ execPath : '.submodules.list' })
 
   .then( ( got ) =>
   {
@@ -2494,7 +2494,7 @@ function listWithSubmodules( test )
 
   /* - */
 
-  shell({ args : [ '.reflectors.list' ] })
+  shell({ execPath : '.reflectors.list' })
 
   .then( ( got ) =>
   {
@@ -2507,7 +2507,7 @@ function listWithSubmodules( test )
 
   /* - */
 
-  shell({ args : [ '.steps.list' ] })
+  shell({ execPath : '.steps.list' })
 
   .then( ( got ) =>
   {
@@ -2525,7 +2525,7 @@ function listWithSubmodules( test )
 
   /* - */
 
-  shell({ args : [ '.builds.list' ] })
+  shell({ execPath : '.builds.list' })
 
   .then( ( got ) =>
   {
@@ -2541,7 +2541,7 @@ function listWithSubmodules( test )
 
   /* - */
 
-  shell({ args : [ '.exports.list' ] })
+  shell({ execPath : '.exports.list' })
 
   .then( ( got ) =>
   {
@@ -2557,7 +2557,7 @@ function listWithSubmodules( test )
 
   /* - */
 
-  shell({ args : [ '.about.list' ] })
+  shell({ execPath : '.about.list' })
 
   .then( ( got ) =>
   {
@@ -2582,7 +2582,7 @@ function listWithSubmodules( test )
 
   // /* - */
   //
-  // shell({ args : [ '.execution.list' ] })
+  // shell({ execPath : '.execution.list' })
   //
   // .then( ( got ) =>
   // {
@@ -2623,7 +2623,7 @@ function listSteps( test )
 
   /* - */
 
-  shell({ args : [ '.steps.list' ] })
+  shell({ execPath : '.steps.list' })
   .finally( ( err, got ) =>
   {
     test.case = '.steps.list';
@@ -2641,7 +2641,7 @@ function listSteps( test )
 
   /* - */
 
-  shell({ args : [ '.steps.list *' ] })
+  shell({ execPath : '.steps.list *' })
   .finally( ( err, got ) =>
   {
     test.case = '.steps.list';
@@ -2659,7 +2659,7 @@ function listSteps( test )
 
   /* - */
 
-  shell({ args : [ '.steps.list *proto*' ] })
+  shell({ execPath : '.steps.list *proto*' })
   .finally( ( err, got ) =>
   {
     test.case = '.steps.list';
@@ -2677,7 +2677,7 @@ function listSteps( test )
 
   /* - */
 
-  shell({ args : [ '.steps.list *proto* debug:1' ] })
+  shell({ execPath : '.steps.list *proto* debug:1' })
   .finally( ( err, got ) =>
   {
     test.case = '.steps.list';
@@ -2722,8 +2722,8 @@ function listComplexPaths( test )
 
   /* - */
 
-  shell({ args : [ '.each */* .export' ] })
-  shell({ args : [ '.with ab/ .resources.list' ] })
+  shell({ execPath : '.each */* .export' })
+  shell({ execPath : '.with ab/ .resources.list' })
   .finally( ( err, got ) =>
   {
     test.case = '.with ab/ .resources.list';
@@ -2780,7 +2780,7 @@ function clean( test )
     return files;
   })
 
-  shell({ args : [ '.with NoTemp .clean' ] })
+  shell({ execPath : '.with NoTemp .clean' })
   .then( ( got ) =>
   {
     test.case = '.clean';
@@ -2790,7 +2790,7 @@ function clean( test )
     return null;
   })
 
-  shell({ args : [ '.with NoTemp .clean' ] })
+  shell({ execPath : '.with NoTemp .clean' })
   .then( ( got ) =>
   {
     test.case = '.with NoTemp .clean -- second';
@@ -2810,7 +2810,7 @@ function clean( test )
     return null;
   })
 
-  shell({ args : [ '.with NoBuild .clean' ] })
+  shell({ execPath : '.with NoBuild .clean' })
   .then( ( got ) =>
   {
     test.case = '.with NoBuild .clean';
@@ -2831,8 +2831,8 @@ function clean( test )
     return null;
   })
 
-  shell({ args : [ '.with Build .build' ] })
-  shell({ args : [ '.with Vector .clean' ] })
+  shell({ execPath : '.with Build .build' })
+  shell({ execPath : '.with Vector .clean' })
   .then( ( got ) =>
   {
     test.case = '.with NoBuild .clean';
@@ -2950,7 +2950,7 @@ function cleanBroken1( test )
 
   /* - */
 
-  shell({ args : [ '.clean dry:1' ] })
+  shell({ execPath : '.clean dry:1' })
 
   .then( ( got ) =>
   {
@@ -2971,7 +2971,7 @@ function cleanBroken1( test )
 
   /* - */
 
-  shell({ args : [ '.clean' ] })
+  shell({ execPath : '.clean' })
 
   .then( ( got ) =>
   {
@@ -2985,7 +2985,7 @@ function cleanBroken1( test )
 
   /* */
 
-  shell({ args : [ '.export' ] })
+  shell({ execPath : '.export' })
   .then( ( got ) =>
   {
     test.case = '.export';
@@ -3016,7 +3016,7 @@ function cleanBroken1( test )
 
   /* */
 
-  shell({ args : [ '.export' ] })
+  shell({ execPath : '.export' })
   .then( ( got ) =>
   {
     test.case = '.export';
@@ -3085,7 +3085,7 @@ function cleanBroken2( test )
 
   /* - */
 
-  shell({ args : [ '.clean dry:1' ] })
+  shell({ execPath : '.clean dry:1' })
 
   .then( ( got ) =>
   {
@@ -3105,7 +3105,7 @@ function cleanBroken2( test )
 
   /* - */
 
-  shell({ args : [ '.clean' ] })
+  shell({ execPath : '.clean' })
 
   .then( ( got ) =>
   {
@@ -3119,7 +3119,7 @@ function cleanBroken2( test )
 
   /* */
 
-  shell({ args : [ '.export' ] })
+  shell({ execPath : '.export' })
   .then( ( got ) =>
   {
     test.case = '.export';
@@ -3150,7 +3150,7 @@ function cleanBroken2( test )
 
   /* */
 
-  shell({ args : [ '.export' ] })
+  shell({ execPath : '.export' })
   .then( ( got ) =>
   {
     test.case = '.export';
@@ -3217,7 +3217,7 @@ function cleanBrokenSubmodules( test )
 
   /* - */
 
-  shell({ args : [ '.clean dry:1' ] })
+  shell({ execPath : '.clean dry:1' })
   .then( ( got ) =>
   {
     test.case = '.clean dry:1';
@@ -3236,7 +3236,7 @@ function cleanBrokenSubmodules( test )
 
   /* - */
 
-  shell({ args : [ '.clean' ] })
+  shell({ execPath : '.clean' })
   .then( ( got ) =>
   {
     test.case = '.clean';
@@ -3285,7 +3285,7 @@ function cleanNoBuild( test )
 
   /* - */
 
-  shell({ args : [ '.clean' ] })
+  shell({ execPath : '.clean' })
   .then( ( got ) =>
   {
     test.case = '.clean -- second';
@@ -3295,7 +3295,7 @@ function cleanNoBuild( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
+  shell({ execPath : '.clean' })
   .then( ( got ) =>
   {
     test.case = '.clean';
@@ -3306,7 +3306,7 @@ function cleanNoBuild( test )
 
   /* - */
 
-  shell({ args : [ '.clean -- badarg' ] })
+  shell({ execPath : '.clean -- badarg' })
   .then( ( got ) =>
   {
     test.case = '.clean -- badarg';
@@ -3371,7 +3371,7 @@ function cleanDry( test )
 
   var wasFiles;
 
-  shell({ args : [ '.clean dry:1' ] })
+  shell({ execPath : '.clean dry:1' })
 
   .then( ( got ) =>
   {
@@ -3425,7 +3425,7 @@ function cleanSubmodules( test )
 
   /* */
 
-  shell({ args : [ '.submodules.update' ] })
+  shell({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
     test.case = '.submodules.update'
@@ -3455,7 +3455,7 @@ function cleanSubmodules( test )
 
   /* */
 
-  shell({ args : [ '.submodules.clean' ] })
+  shell({ execPath : '.submodules.clean' })
   .then( ( got ) =>
   {
     test.case = '.submodules.clean';
@@ -3504,8 +3504,8 @@ function cleanMixed( test )
     return null;
   })
 
-  shell({ args : [ '.build' ] })
-  shell({ args : [ '.clean' ] })
+  shell({ execPath : '.build' })
+  shell({ execPath : '.clean' })
 
   .then( ( got ) =>
   {
@@ -3563,7 +3563,7 @@ function cleanWithInPath( test )
   })
 
 
-  shell({ args : [ '.with module/Proto .clean' ] })
+  shell({ execPath : '.with module/Proto .clean' })
 
   .then( ( got ) =>
   {
@@ -3710,7 +3710,7 @@ function buildSingleModule( test )
     return null;
   })
 
-  shell({ args : [ '.build' ] })
+  shell({ execPath : '.build' })
 
   .then( ( got ) =>
   {
@@ -3736,7 +3736,7 @@ function buildSingleModule( test )
     return null;
   })
 
-  shell({ args : [ '.build debug.raw' ] })
+  shell({ execPath : '.build debug.raw' })
 
   .then( ( got ) =>
   {
@@ -3761,7 +3761,7 @@ function buildSingleModule( test )
     return null;
   })
 
-  shell({ args : [ '.build release.raw' ] })
+  shell({ execPath : '.build release.raw' })
 
   .then( ( got ) =>
   {
@@ -3845,7 +3845,7 @@ function buildSingleStep( test )
     return null;
   })
 
-  shell({ args : [ '.build debug1' ] })
+  shell({ execPath : '.build debug1' })
 
   .then( ( got ) =>
   {
@@ -3867,7 +3867,7 @@ function buildSingleStep( test )
     return null;
   })
 
-  shell({ args : [ '.build debug2' ] })
+  shell({ execPath : '.build debug2' })
 
   .then( ( got ) =>
   {
@@ -3913,7 +3913,7 @@ function buildSubmodules( test )
     return null;
   })
 
-  shell({ args : [ '.build' ] })
+  shell({ execPath : '.build' })
   .finally( ( err, got ) =>
   {
     test.is( !err );
@@ -3924,7 +3924,7 @@ function buildSubmodules( test )
 
   /* - */
 
-  shell({ args : [ '.submodules.update' ] })
+  shell({ execPath : '.submodules.update' })
   .then( () =>
   {
     test.case = '.build'
@@ -3932,7 +3932,7 @@ function buildSubmodules( test )
     return null;
   })
 
-  shell({ args : [ '.build' ] })
+  shell({ execPath : '.build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -4020,8 +4020,8 @@ function buildDetached( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.build' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -4083,7 +4083,7 @@ function exportSingle( test )
     return null;
   })
 
-  shell({ args : [ '.export' ] })
+  shell({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -4120,7 +4120,7 @@ function exportSingle( test )
     return null;
   })
 
-  shell({ args : [ '.export proto.export' ] })
+  shell({ execPath : '.export proto.export' })
 
   .then( ( got ) =>
   {
@@ -4233,7 +4233,7 @@ function exportNonExportable( test )
 
   /* - */
 
-  shell({ args : [ '.clean' ] })
+  shell({ execPath : '.clean' })
   shell({ args : [ '.with super .export debug:1' ], throwingExitCode : 0 })
 
   .then( ( got ) =>
@@ -4288,8 +4288,8 @@ function exportInformal( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.with module/Proto.informal .export' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.with module/Proto.informal .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -4361,7 +4361,7 @@ function exportInformal( test )
     return null;
   })
 
-  shell({ args : [ '.with module/Proto.informal .export' ] })
+  shell({ execPath : '.with module/Proto.informal .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -4434,8 +4434,8 @@ function exportInformal( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.with module/UriBasic.informal .export' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.with module/UriBasic.informal .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -4539,7 +4539,7 @@ function exportWithReflector( test )
     return null;
   })
 
-  shell({ args : [ '.export' ] })
+  shell({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -4584,7 +4584,7 @@ function exportToRoot( test )
 
   /* - */
 
-  shell({ args : [ '.export' ] })
+  shell({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -4633,7 +4633,7 @@ function exportMixed( test )
     return null;
   })
 
-  shell({ args : [ '.each module .export' ] })
+  shell({ execPath : '.each module .export' })
 
   .then( ( got ) =>
   {
@@ -4805,8 +4805,8 @@ function exportMixed( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.build' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.build' })
 
   .then( ( got ) =>
   {
@@ -4886,8 +4886,8 @@ function exportSecond( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.export' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -5060,7 +5060,7 @@ function exportSecond( test )
 
   /* - */
 
-  shell({ args : [ '.export' ] })
+  shell({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -5276,7 +5276,7 @@ function exportSubmodules( test )
     return null;
   })
 
-  return shell({ args : [ '.export' ] })
+  return shell({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -5335,7 +5335,7 @@ function exportMultiple( test )
     return null;
   })
 
-  shell({ args : [ '.export debug:1' ] })
+  shell({ execPath : '.export debug:1' })
 
   .then( ( got ) =>
   {
@@ -5512,9 +5512,9 @@ function exportMultiple( test )
     return null;
   })
 
-  shell({ args : [ '.export debug:1' ] })
-  shell({ args : [ '.export debug:0' ] })
-  shell({ args : [ '.export debug:0' ] })
+  shell({ execPath : '.export debug:1' })
+  shell({ execPath : '.export debug:0' })
+  shell({ execPath : '.export debug:0' })
 
   .then( ( got ) =>
   {
@@ -5818,8 +5818,8 @@ function exportImportMultiple( test )
     return null;
   })
 
-  shell({ args : [ '.with . .export debug:0' ] })
-  shell({ args : [ '.with . .export debug:1' ] })
+  shell({ execPath : '.with . .export debug:0' })
+  shell({ execPath : '.with . .export debug:1' })
 
   .then( ( got ) =>
   {
@@ -5844,7 +5844,7 @@ function exportImportMultiple( test )
     return null;
   })
 
-  shell({ args : [ '.with super .export debug:0' ] })
+  shell({ execPath : '.with super .export debug:0' })
 
   .then( ( got ) =>
   {
@@ -5866,7 +5866,7 @@ function exportImportMultiple( test )
     return null;
   })
 
-  shell({ args : [ '.with super .clean dry:1' ] })
+  shell({ execPath : '.with super .clean dry:1' })
 
   .then( ( got ) =>
   {
@@ -5889,7 +5889,7 @@ function exportImportMultiple( test )
     return null;
   })
 
-  shell({ args : [ '.with super .clean' ] })
+  shell({ execPath : '.with super .clean' })
 
   .then( ( got ) =>
   {
@@ -5914,8 +5914,8 @@ function exportImportMultiple( test )
     return null;
   })
 
-  shell({ args : [ '.with super .export debug:0' ] })
-  shell({ args : [ '.with super .export debug:1' ] })
+  shell({ execPath : '.with super .export debug:0' })
+  shell({ execPath : '.with super .export debug:1' })
 
   .then( ( got ) =>
   {
@@ -5937,7 +5937,7 @@ function exportImportMultiple( test )
     return null;
   })
 
-  shell({ args : [ '.with super .clean dry:1' ] })
+  shell({ execPath : '.with super .clean dry:1' })
 
   .then( ( got ) =>
   {
@@ -5960,7 +5960,7 @@ function exportImportMultiple( test )
     return null;
   })
 
-  shell({ args : [ '.with super .clean' ] })
+  shell({ execPath : '.with super .clean' })
 
   .then( ( got ) =>
   {
@@ -6014,7 +6014,7 @@ function exportBroken( test )
   })
 
   debugger;
-  shell({ args : [ '.export debug:1' ] })
+  shell({ execPath : '.export debug:1' })
 
   .then( ( got ) =>
   {
@@ -6128,10 +6128,10 @@ function exportDoc( test )
     return null;
   })
 
-  shell({ args : [ '.with . .export export.doc' ] })
-  shell({ args : [ '.with . .export export.debug' ] })
-  shell({ args : [ '.with . .export export.' ] })
-  shell({ args : [ '.with doc .build doc:1' ] })
+  shell({ execPath : '.with . .export export.doc' })
+  shell({ execPath : '.with . .export export.debug' })
+  shell({ execPath : '.with . .export export.' })
+  shell({ execPath : '.with doc .build doc:1' })
 
   .then( ( got ) =>
   {
@@ -6186,8 +6186,8 @@ function exportImport( test )
     return null;
   })
 
-  shell({ args : [ '.export debug:0' ] })
-  shell({ args : [ '.export debug:1' ] })
+  shell({ execPath : '.export debug:0' })
+  shell({ execPath : '.export debug:1' })
 
   .then( ( got ) =>
   {
@@ -6236,7 +6236,7 @@ function exportBrokenNoreflector( test )
     return null;
   })
 
-  shell({ args : [ '.with submodule .reflectors.list predefined:0' ] })
+  shell({ execPath : '.with submodule .reflectors.list predefined:0' })
 
   .then( ( got ) =>
   {
@@ -6247,8 +6247,8 @@ function exportBrokenNoreflector( test )
     return null;
   })
 
-  shell({ args : [ '.with module/submodule .export' ] })
-  shell({ args : [ '.with submodule .reflectors.list predefined:0' ] })
+  shell({ execPath : '.with module/submodule .export' })
+  shell({ execPath : '.with submodule .reflectors.list predefined:0' })
 
   .then( ( got ) =>
   {
@@ -6295,7 +6295,7 @@ function exportWholeModule( test )
     return null;
   })
 
-  shell({ args : [ '.export' ] })
+  shell({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -6349,7 +6349,7 @@ function importPathLocal( test )
     return null;
   })
 
-  shell({ args : [ '.build' ] })
+  shell({ execPath : '.build' })
 
   .then( ( got ) =>
   {
@@ -6404,8 +6404,8 @@ function importLocalRepo( test )
     return null;
   })
 
-  shell({ args : [ '.with module/Proto .clean' ] })
-  shell({ args : [ '.with module/Proto .export' ] })
+  shell({ execPath : '.with module/Proto .clean' })
+  shell({ execPath : '.with module/Proto .export' })
 
   .then( ( got ) =>
   {
@@ -6644,7 +6644,7 @@ function reflectNothingFromSubmodules( test )
     Throws error if none submodule is defined
   */
 
-  shell({ args : [ '.export' ] })
+  shell({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -6763,7 +6763,7 @@ function reflectGetPath( test )
     return null;
   })
 
-  shell({ args : [ '.build debug1' ] })
+  shell({ execPath : '.build debug1' })
   .then( ( arg ) => validate( arg ) )
 
   /* - */
@@ -6775,7 +6775,7 @@ function reflectGetPath( test )
     return null;
   })
 
-  shell({ args : [ '.build debug2' ] })
+  shell({ execPath : '.build debug2' })
   .then( ( arg ) => validate( arg ) )
 
   /* - */
@@ -6787,7 +6787,7 @@ function reflectGetPath( test )
     return null;
   })
 
-  shell({ args : [ '.build debug3' ] })
+  shell({ execPath : '.build debug3' })
   .then( ( arg ) => validate( arg ) )
 
   /* - */
@@ -6854,7 +6854,7 @@ function reflectSubdir( test )
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
     return null;
   })
-  shell({ args : [ '.each module .export' ] })
+  shell({ execPath : '.each module .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -6871,7 +6871,7 @@ function reflectSubdir( test )
     _.fileProvider.filesDelete( outPath );
     return null;
   });
-  shell({ args : [ '.build variant:1' ] })
+  shell({ execPath : '.build variant:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -6911,7 +6911,7 @@ function reflectSubdir( test )
     _.fileProvider.filesDelete( outPath );
     return null;
   });
-  shell({ args : [ '.build variant:2' ] })
+  shell({ execPath : '.build variant:2' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -6951,7 +6951,7 @@ function reflectSubdir( test )
     _.fileProvider.filesDelete( outPath );
     return null;
   });
-  shell({ args : [ '.build variant:3' ] })
+  shell({ execPath : '.build variant:3' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7019,7 +7019,7 @@ function reflectSubmodulesWithBase( test )
 
   /* */
 
-  shell({ args : [ '.each module .export' ] })
+  shell({ execPath : '.each module .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7037,7 +7037,7 @@ function reflectSubmodulesWithBase( test )
     return null;
   });
 
-  shell({ args : [ '.build variant:0' ] })
+  shell({ execPath : '.build variant:0' })
 
   .then( ( got ) =>
   {
@@ -7067,7 +7067,7 @@ function reflectSubmodulesWithBase( test )
     return null;
   });
 
-  shell({ args : [ '.build variant:1' ] })
+  shell({ execPath : '.build variant:1' })
 
   .then( ( got ) =>
   {
@@ -7119,7 +7119,7 @@ function reflectComposite( test )
     return null;
   })
 
-  shell({ args : [ '.build out* variant:0' ] })
+  shell({ execPath : '.build out* variant:0' })
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js' ];
@@ -7139,7 +7139,7 @@ function reflectComposite( test )
     return null;
   })
 
-  shell({ args : [ '.build out* variant:1' ] })
+  shell({ execPath : '.build out* variant:1' })
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js' ];
@@ -7159,7 +7159,7 @@ function reflectComposite( test )
     return null;
   })
 
-  shell({ args : [ '.build out* variant:2' ] })
+  shell({ execPath : '.build out* variant:2' })
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js' ];
@@ -7179,7 +7179,7 @@ function reflectComposite( test )
     return null;
   })
 
-  shell({ args : [ '.build out* variant:3' ] })
+  shell({ execPath : '.build out* variant:3' })
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js' ];
@@ -7199,7 +7199,7 @@ function reflectComposite( test )
     return null;
   })
 
-  shell({ args : [ '.build out* variant:4' ] })
+  shell({ execPath : '.build out* variant:4' })
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.js', './debug/dir1/File.test.js', './debug/dir1/File1.debug.js', './debug/dir1/File2.debug.js' ];
@@ -7219,7 +7219,7 @@ function reflectComposite( test )
     return null;
   })
 
-  shell({ args : [ '.build out* variant:5' ] })
+  shell({ execPath : '.build out* variant:5' })
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.js', './debug/dir1/File.test.js', './debug/dir1/File1.debug.js', './debug/dir1/File2.debug.js' ];
@@ -7239,7 +7239,7 @@ function reflectComposite( test )
     return null;
   })
 
-  shell({ args : [ '.build out* variant:6' ] })
+  shell({ execPath : '.build out* variant:6' })
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.test.js' ];
@@ -7258,7 +7258,7 @@ function reflectComposite( test )
     return null;
   })
 
-  shell({ args : [ '.build out* variant:7' ] })
+  shell({ execPath : '.build out* variant:7' })
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.test.js' ];
@@ -7304,7 +7304,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  shell({ args : [ '.build download.* variant:1' ] })
+  shell({ execPath : '.build download.* variant:1' })
   .then( ( arg ) => validate1( arg ) )
 
   //
@@ -7316,7 +7316,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  shell({ args : [ '.build download.* variant:2' ] })
+  shell({ execPath : '.build download.* variant:2' })
   .then( ( arg ) => validate1( arg ) )
 
   //
@@ -7328,7 +7328,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  shell({ args : [ '.build download.* variant:3' ] })
+  shell({ execPath : '.build download.* variant:3' })
   .then( ( arg ) => validate1( arg ) )
 
   //
@@ -7340,7 +7340,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  shell({ args : [ '.build download.* variant:4' ] })
+  shell({ execPath : '.build download.* variant:4' })
   .then( ( arg ) => validate1( arg ) )
 
   //
@@ -7352,7 +7352,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  shell({ args : [ '.build download.* variant:5' ] })
+  shell({ execPath : '.build download.* variant:5' })
   .then( ( arg ) => validate1( arg ) )
 
   //
@@ -7364,7 +7364,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  shell({ args : [ '.build download.* variant:6' ] })
+  shell({ execPath : '.build download.* variant:6' })
   .then( ( arg ) => validate1( arg ) )
 
   //
@@ -7376,7 +7376,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  shell({ args : [ '.build download.* variant:7' ] })
+  shell({ execPath : '.build download.* variant:7' })
   .then( ( arg ) => validate2( arg ) )
 
   //
@@ -7452,8 +7452,8 @@ function reflectRemoteHttp( test )
   })
 
   // debugger;
-  // shell({ args : [ '.builds.list' ] })
-  shell({ args : [ '.build download' ] })
+  // shell({ execPath : '.builds.list' })
+  shell({ execPath : '.build download' })
   .then( ( arg ) =>
   {
     debugger;
@@ -7499,8 +7499,8 @@ function reflectWithOptions( test )
     return null;
   })
 
-  shell({ args : [ '.with mandatory .clean' ] })
-  shell({ args : [ '.with mandatory .build variant1' ] })
+  shell({ execPath : '.with mandatory .clean' })
+  shell({ execPath : '.with mandatory .build variant1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7519,8 +7519,8 @@ function reflectWithOptions( test )
     return null;
   })
 
-  shell({ args : [ '.with mandatory .clean' ] })
-  shell({ args : [ '.with mandatory .build variant2' ] })
+  shell({ execPath : '.with mandatory .clean' })
+  shell({ execPath : '.with mandatory .build variant2' })
   .finally( ( err, got ) =>
   {
     test.is( !err );
@@ -7543,8 +7543,8 @@ function reflectWithOptions( test )
     return null;
   })
 
-  shell({ args : [ '.with mandatory .clean' ] })
-  shell({ args : [ '.with mandatory .build variant3' ] })
+  shell({ execPath : '.with mandatory .clean' })
+  shell({ execPath : '.with mandatory .build variant3' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7603,7 +7603,7 @@ function reflectWithSelectorInDstFilter( test )
     return null;
   })
 
-  shell({ args : [ '.build debug' ] })
+  shell({ execPath : '.build debug' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7622,7 +7622,7 @@ function reflectWithSelectorInDstFilter( test )
     return null;
   })
 
-  shell({ args : [ '.build release' ] })
+  shell({ execPath : '.build release' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7667,7 +7667,7 @@ function reflectSubmodulesWithCriterion( test )
     return null;
   })
 
-  shell({ args : [ '.build A' ] })
+  shell({ execPath : '.build A' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7687,7 +7687,7 @@ function reflectSubmodulesWithCriterion( test )
     return null;
   })
 
-  shell({ args : [ '.build B' ] })
+  shell({ execPath : '.build B' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7733,11 +7733,11 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
     return null;
   })
 
-  shell({ args : [ '.each module .export' ] })
+  shell({ execPath : '.each module .export' })
 
   // fails with error on first run
 
-  shell({ args : [ '.build variant1' ] })
+  shell({ execPath : '.build variant1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7783,7 +7783,7 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
 
   //first run works
 
-  shell({ args : [ '.build variant2' ] })
+  shell({ execPath : '.build variant2' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7795,7 +7795,7 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
 
   //second run fails
 
-  shell({ args : [ '.build variant2' ] })
+  shell({ execPath : '.build variant2' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7855,7 +7855,7 @@ function relfectSubmodulesWithNotExistingFile( test )
     return null;
   })
 
-  shell({ args : [ '.build' ] })
+  shell({ execPath : '.build' })
 
   return test.shouldThrowErrorAsync( ready );
 }
@@ -7891,7 +7891,7 @@ function reflectInherit( test )
     return null;
   })
 
-  shell({ args : [ '.build reflect.proto1' ] })
+  shell({ execPath : '.build reflect.proto1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7912,7 +7912,7 @@ function reflectInherit( test )
     return null;
   })
 
-  shell({ args : [ '.build reflect.proto2' ] })
+  shell({ execPath : '.build reflect.proto2' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7933,7 +7933,7 @@ function reflectInherit( test )
     return null;
   })
 
-  shell({ args : [ '.build reflect.proto3' ] })
+  shell({ execPath : '.build reflect.proto3' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7954,7 +7954,7 @@ function reflectInherit( test )
     return null;
   })
 
-  shell({ args : [ '.build reflect.proto4' ] })
+  shell({ execPath : '.build reflect.proto4' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7975,7 +7975,7 @@ function reflectInherit( test )
     return null;
   })
 
-  shell({ args : [ '.build reflect.proto5' ] })
+  shell({ execPath : '.build reflect.proto5' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7996,7 +7996,7 @@ function reflectInherit( test )
     return null;
   })
 
-  shell({ args : [ '.build not1' ] })
+  shell({ execPath : '.build not1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -8017,7 +8017,7 @@ function reflectInherit( test )
     return null;
   })
 
-  shell({ args : [ '.build reflect.files1' ] })
+  shell({ execPath : '.build reflect.files1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -8038,7 +8038,7 @@ function reflectInherit( test )
     return null;
   })
 
-  shell({ args : [ '.build reflect.files2' ] })
+  shell({ execPath : '.build reflect.files2' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -8059,7 +8059,7 @@ function reflectInherit( test )
     return null;
   })
 
-  shell({ args : [ '.build reflect.files3' ] })
+  shell({ execPath : '.build reflect.files3' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -8114,7 +8114,7 @@ function reflectInheritSubmodules( test )
     return null;
   })
 
-  shell({ args : [ '.each module .export' ] })
+  shell({ execPath : '.each module .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -8133,7 +8133,7 @@ function reflectInheritSubmodules( test )
     return null;
   })
 
-  shell({ args : [ '.with a .build' ] })
+  shell({ execPath : '.with a .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -8154,7 +8154,7 @@ function reflectInheritSubmodules( test )
     return null;
   })
 
-  shell({ args : [ '.with b .build' ] })
+  shell({ execPath : '.with b .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -8173,7 +8173,7 @@ function reflectInheritSubmodules( test )
     return null;
   })
 
-  shell({ args : [ '.with c .build' ] })
+  shell({ execPath : '.with c .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -8217,9 +8217,9 @@ function reflectComplexInherit( test )
     return null;
   })
 
-  shell({ args : [ '.with a .export' ] })
-  shell({ args : [ '.with b .export' ] })
-  shell({ args : [ '.with ab/ .build' ] })
+  shell({ execPath : '.with a .export' })
+  shell({ execPath : '.with b .export' })
+  shell({ execPath : '.with ab/ .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -8240,11 +8240,11 @@ function reflectComplexInherit( test )
     return null;
   })
 
-  shell({ args : [ '.with a .export' ] })
-  shell({ args : [ '.with b .export' ] })
-  shell({ args : [ '.with c .export' ] })
-  shell({ args : [ '.with ab/ .export' ] })
-  shell({ args : [ '.with abac/ .build' ] })
+  shell({ execPath : '.with a .export' })
+  shell({ execPath : '.with b .export' })
+  shell({ execPath : '.with c .export' })
+  shell({ execPath : '.with ab/ .export' })
+  shell({ execPath : '.with abac/ .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -8287,8 +8287,8 @@ function reflectorMasks( test )
 
   /* - */
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.build copy.' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.build copy.' })
 
   .then( ( got ) =>
   {
@@ -8306,8 +8306,8 @@ function reflectorMasks( test )
 
   /* - */
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.build copy.debug' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.build copy.debug' })
 
   .then( ( got ) =>
   {
@@ -8357,7 +8357,7 @@ function shellWithCriterion( test )
 
   /* - */
 
-  shell({ args : [ '.build A' ] })
+  shell({ execPath : '.build A' })
 
   .then( ( got ) =>
   {
@@ -8371,7 +8371,7 @@ function shellWithCriterion( test )
 
   /* - */
 
-  shell({ args : [ '.build B' ] })
+  shell({ execPath : '.build B' })
 
   .then( ( got ) =>
   {
@@ -8420,7 +8420,7 @@ function shellVerbosity( test )
 
   /* - */
 
-  // shell({ args : [ '.build verbosity.0' ] })
+  // shell({ execPath : '.build verbosity.0' })
   //
   // .then( ( got ) =>
   // {
@@ -8438,7 +8438,7 @@ function shellVerbosity( test )
 
   /* - */
 
-  shell({ args : [ '.build verbosity.1' ] })
+  shell({ execPath : '.build verbosity.1' })
 
   .then( ( got ) =>
   {
@@ -8455,7 +8455,7 @@ function shellVerbosity( test )
 
   /* - */
 
-  shell({ args : [ '.build verbosity.2' ] })
+  shell({ execPath : '.build verbosity.2' })
 
   .then( ( got ) =>
   {
@@ -8472,7 +8472,7 @@ function shellVerbosity( test )
 
   /* - */
 
-  shell({ args : [ '.build verbosity.3' ] })
+  shell({ execPath : '.build verbosity.3' })
 
   .then( ( got ) =>
   {
@@ -8489,7 +8489,7 @@ function shellVerbosity( test )
 
   /* - */
 
-  shell({ args : [ '.build verbosity.5' ] })
+  shell({ execPath : '.build verbosity.5' })
 
   .then( ( got ) =>
   {
@@ -8538,8 +8538,8 @@ function functionStringsJoin( test )
     test.case = '.build strings.join'
     return null;
   })
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.build strings.join' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.build strings.join' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -8569,8 +8569,8 @@ console.log( 'File1.js' );
     test.case = '.build multiply'
     return null;
   })
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.build multiply' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.build multiply' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -8599,8 +8599,8 @@ console.log( 'File1.js' );
     test.case = '.build echo1'
     return null;
   })
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.build echo1' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.build echo1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -8622,8 +8622,8 @@ console.log( 'File1.js' );
     test.case = '.build echo2'
     return null;
   })
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.build echo2' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.build echo2' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -8669,8 +8669,8 @@ function functionPlatform( test )
     test.case = '.build'
     return null;
   })
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.build' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.build' })
   .then( ( got ) =>
   {
     var Os = require( 'os' );
@@ -8726,7 +8726,7 @@ function fucntionThisCriterion( test )
 
   /* - */
 
-  shell({ args : [ '.build debug' ] })
+  shell({ execPath : '.build debug' })
 
   .then( ( got ) =>
   {
@@ -8740,7 +8740,7 @@ function fucntionThisCriterion( test )
 
   /* - */
 
-  shell({ args : [ '.build release' ] })
+  shell({ execPath : '.build release' })
 
   .then( ( got ) =>
   {
@@ -8781,7 +8781,7 @@ function submodulesDownloadSingle( test )
 
   /* - */
 
-  shell({ args : [ '.submodules.download' ] })
+  shell({ execPath : '.submodules.download' })
 
   .then( ( got ) =>
   {
@@ -8793,7 +8793,7 @@ function submodulesDownloadSingle( test )
 
   /* - */
 
-  shell({ args : [ '.submodules.download' ] })
+  shell({ execPath : '.submodules.download' })
 
   .then( ( got ) =>
   {
@@ -8807,7 +8807,7 @@ function submodulesDownloadSingle( test )
 
   /* - */
 
-  shell({ args : [ '.submodules.update' ] })
+  shell({ execPath : '.submodules.update' })
 
   .then( ( got ) =>
   {
@@ -8821,7 +8821,7 @@ function submodulesDownloadSingle( test )
 
   /* - */
 
-  shell({ args : [ '.submodules.clean' ] })
+  shell({ execPath : '.submodules.clean' })
 
   .then( ( got ) =>
   {
@@ -8873,7 +8873,7 @@ function submodulesDownloadUpdate( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.download' ] })
+  shell({ execPath : '.submodules.download' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -8895,7 +8895,7 @@ function submodulesDownloadUpdate( test )
     test.case = '.submodules.download - again';
     return null;
   })
-  shell({ args : [ '.submodules.download' ] })
+  shell({ execPath : '.submodules.download' })
   .then( ( got ) =>
   {
 
@@ -8922,7 +8922,7 @@ function submodulesDownloadUpdate( test )
     _.fileProvider.filesDelete( submodulesPath );
     return null;
   })
-  shell({ args : [ '.submodules.update' ] })
+  shell({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
 
@@ -8948,7 +8948,7 @@ function submodulesDownloadUpdate( test )
     test.case = '.submodules.update - again';
     return null;
   })
-  shell({ args : [ '.submodules.update' ] })
+  shell({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
 
@@ -8979,7 +8979,7 @@ function submodulesDownloadUpdate( test )
     return files;
   })
 
-  shell({ args : [ '.submodules.clean' ] })
+  shell({ execPath : '.submodules.clean' })
   .then( ( got ) =>
   {
 
@@ -9028,7 +9028,7 @@ function submodulesDownloadUpdateDry( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.download dry:1' ] })
+  shell({ execPath : '.submodules.download dry:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -9051,8 +9051,8 @@ function submodulesDownloadUpdateDry( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.download' ] })
-  shell({ args : [ '.submodules.download dry:1' ] })
+  shell({ execPath : '.submodules.download' })
+  shell({ execPath : '.submodules.download dry:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -9072,7 +9072,7 @@ function submodulesDownloadUpdateDry( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.update dry:1' ] })
+  shell({ execPath : '.submodules.update dry:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -9095,8 +9095,8 @@ function submodulesDownloadUpdateDry( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.update' ] })
-  shell({ args : [ '.submodules.update dry:1' ] })
+  shell({ execPath : '.submodules.update' })
+  shell({ execPath : '.submodules.update dry:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -9151,8 +9151,8 @@ function submodulesDownloadedUpdate( test )
     return null;
   })
 
-  shell({ args : [ '.each module .export' ] })
-  shell({ args : [ '.submodules.download' ] })
+  shell({ execPath : '.each module .export' })
+  shell({ execPath : '.submodules.download' })
 
   .then( ( got ) =>
   {
@@ -9192,7 +9192,7 @@ function submodulesDownloadedUpdate( test )
     return got;
   })
 
-  shell({ args : [ '.submodules.update' ] })
+  shell({ execPath : '.submodules.update' })
 
   _.shell
   ({
@@ -9242,8 +9242,8 @@ function submodulesUpdate( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.submodules.update' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -9263,7 +9263,7 @@ function submodulesUpdate( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.update' ] })
+  shell({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -9286,7 +9286,7 @@ function submodulesUpdate( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.update' ] })
+  shell({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -9306,7 +9306,7 @@ function submodulesUpdate( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.update' ] })
+  shell({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -9354,7 +9354,7 @@ function submodulesUpdateSwitchBranch( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.update' ] })
+  shell({ execPath : '.submodules.update' })
 
   .then( () =>
   {
@@ -9372,7 +9372,7 @@ function submodulesUpdateSwitchBranch( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.update' ] })
+  shell({ execPath : '.submodules.update' })
 
   .then( () =>
   {
@@ -9390,7 +9390,7 @@ function submodulesUpdateSwitchBranch( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.update' ] })
+  shell({ execPath : '.submodules.update' })
 
   .then( () =>
   {
@@ -9408,7 +9408,7 @@ function submodulesUpdateSwitchBranch( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.update' ] })
+  shell({ execPath : '.submodules.update' })
 
   .then( () =>
   {
@@ -9434,7 +9434,7 @@ function submodulesUpdateSwitchBranch( test )
     return test.shouldThrowErrorAsync( con );
   })
 
-  //shell({ args : [ '.submodules.update' ] }) qqq?
+  //shell({ execPath : '.submodules.update' }) qqq?
 
   _.shell
   ({
@@ -9463,7 +9463,7 @@ function submodulesUpdateSwitchBranch( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.update' ] })
+  shell({ execPath : '.submodules.update' })
 
   _.shell
   ({
@@ -9479,7 +9479,7 @@ function submodulesUpdateSwitchBranch( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.update' ] })
+  shell({ execPath : '.submodules.update' })
 
   .then( () =>
   {
@@ -9498,7 +9498,7 @@ function submodulesUpdateSwitchBranch( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.update' ] })
+  shell({ execPath : '.submodules.update' })
 
   _.shell
   ({
@@ -9514,7 +9514,7 @@ function submodulesUpdateSwitchBranch( test )
     ready : ready
   })
 
-  shell({ args : [ '.submodules.update' ] })
+  shell({ execPath : '.submodules.update' })
 
   _.shell
   ({
@@ -9576,7 +9576,7 @@ function stepSubmodulesDownload( test )
 
   /* - */
 
-  shell({ args : [ '.resources.list' ] })
+  shell({ execPath : '.resources.list' })
 
   .then( ( got ) =>
   {
@@ -9596,7 +9596,7 @@ function stepSubmodulesDownload( test )
     return null;
   })
 
-  shell({ args : [ '.build' ] })
+  shell({ execPath : '.build' })
 
   .then( ( got ) =>
   {
@@ -9617,7 +9617,7 @@ function stepSubmodulesDownload( test )
     return null;
   })
 
-  shell({ args : [ '.export' ] })
+  shell({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -9667,9 +9667,9 @@ function upgradeDryDetached( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.export' ] })
-  shell({ args : [ '.submodules.upgrade dry:1 negative:1' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.export' })
+  shell({ execPath : '.submodules.upgrade dry:1 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -9722,7 +9722,7 @@ function upgradeDryDetached( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.upgrade dry:1 negative:0' ] })
+  shell({ execPath : '.submodules.upgrade dry:1 negative:0' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -9775,9 +9775,9 @@ function upgradeDryDetached( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.each module .export' ] })
-  shell({ args : [ '.submodules.upgrade dry:1 negative:1' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.each module .export' })
+  shell({ execPath : '.submodules.upgrade dry:1 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -9830,9 +9830,9 @@ function upgradeDryDetached( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.submodules.update' ] })
-  shell({ args : [ '.submodules.upgrade dry:1 negative:1' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.submodules.update' })
+  shell({ execPath : '.submodules.upgrade dry:1 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -9914,9 +9914,9 @@ function upgradeDetached( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.export' ] })
-  shell({ args : [ '.submodules.upgrade dry:0 negative:1' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.export' })
+  shell({ execPath : '.submodules.upgrade dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -9973,9 +9973,9 @@ function upgradeDetached( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.export' ] })
-  shell({ args : [ '.submodules.upgrade dry:0 negative:0' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.export' })
+  shell({ execPath : '.submodules.upgrade dry:0 negative:0' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -10028,7 +10028,7 @@ function upgradeDetached( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.upgrade dry:0 negative:1' ] })
+  shell({ execPath : '.submodules.upgrade dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -10081,7 +10081,7 @@ function upgradeDetached( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.upgrade dry:0 negative:0' ] })
+  shell({ execPath : '.submodules.upgrade dry:0 negative:0' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -10142,9 +10142,9 @@ function upgradeDetached( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.each module .export' ] })
-  shell({ args : [ '.submodules.upgrade dry:0 negative:1' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.each module .export' })
+  shell({ execPath : '.submodules.upgrade dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -10201,9 +10201,9 @@ function upgradeDetached( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.submodules.update' ] })
-  shell({ args : [ '.submodules.upgrade dry:0 negative:1' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.submodules.update' })
+  shell({ execPath : '.submodules.upgrade dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -10286,9 +10286,9 @@ function fixateDryDetached( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.export' ] })
-  shell({ args : [ '.submodules.fixate dry:1 negative:1' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.export' })
+  shell({ execPath : '.submodules.fixate dry:1 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -10341,7 +10341,7 @@ function fixateDryDetached( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.fixate dry:1 negative:0' ] })
+  shell({ execPath : '.submodules.fixate dry:1 negative:0' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -10394,9 +10394,9 @@ function fixateDryDetached( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.each module .export' ] })
-  shell({ args : [ '.submodules.fixate dry:1 negative:1' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.each module .export' })
+  shell({ execPath : '.submodules.fixate dry:1 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -10449,9 +10449,9 @@ function fixateDryDetached( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.submodules.update' ] })
-  shell({ args : [ '.submodules.fixate dry:1 negative:1' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.submodules.update' })
+  shell({ execPath : '.submodules.fixate dry:1 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -10533,9 +10533,9 @@ function fixateDetached( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.export' ] })
-  shell({ args : [ '.submodules.fixate dry:0 negative:1' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.export' })
+  shell({ execPath : '.submodules.fixate dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -10592,9 +10592,9 @@ function fixateDetached( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.export' ] })
-  shell({ args : [ '.submodules.fixate dry:0 negative:0' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.export' })
+  shell({ execPath : '.submodules.fixate dry:0 negative:0' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -10647,7 +10647,7 @@ function fixateDetached( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.fixate dry:0 negative:1' ] })
+  shell({ execPath : '.submodules.fixate dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -10700,7 +10700,7 @@ function fixateDetached( test )
     return null;
   })
 
-  shell({ args : [ '.submodules.fixate dry:0 negative:0' ] })
+  shell({ execPath : '.submodules.fixate dry:0 negative:0' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -10761,9 +10761,9 @@ function fixateDetached( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.each module .export' ] })
-  shell({ args : [ '.submodules.fixate dry:0 negative:1' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.each module .export' })
+  shell({ execPath : '.submodules.fixate dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -10820,9 +10820,9 @@ function fixateDetached( test )
     return null;
   })
 
-  shell({ args : [ '.clean' ] })
-  shell({ args : [ '.submodules.update' ] })
-  shell({ args : [ '.submodules.fixate dry:0 negative:1' ] })
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.submodules.update' })
+  shell({ execPath : '.submodules.fixate dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );

@@ -897,7 +897,7 @@ function shell( o )
 
   /* */
 
-  debugger;
+  // debugger;
   o.execPath = module.resolve
   ({
     selector : o.execPath,
@@ -907,7 +907,7 @@ function shell( o )
     pathNativizing : 1,
     arrayFlattening : 0, /* required for f::this and feature make */
   });
-  debugger;
+  // debugger;
 
   /* */
 
@@ -1581,7 +1581,7 @@ function _submodulesDownload_body( o )
 
   logger.up();
 
-  logger.log( 'submodulesDownload in', module.nickName ); // xxx
+  // logger.log( 'submodulesDownload in', module.nickName ); // xxx
 
   downloadAgain();
 
