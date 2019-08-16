@@ -433,8 +433,8 @@ function stepRoutineTranspile( frame )
   let multiple = ts.multiple
   ({
 
-    inputPath : reflectOptions.src,
-    outputPath : reflectOptions.dst,
+    inPath : reflectOptions.src,
+    outPath : reflectOptions.dst,
     entryPath : opts.entry,
     externalBeforePath : opts[ 'external.before' ],
     externalAfterPath : opts[ 'external.after' ],
@@ -573,7 +573,6 @@ function stepRoutineNpmGenerate( frame )
 
   if( opts.entryPath )
   opts.entryPath = module.filesFromResource({ selector : opts.entryPath, currentContext : step, });
-  debugger;
   if( opts.filesPath )
   opts.filesPath = module.filesFromResource({ selector : opts.filesPath, currentContext : step, });
 
@@ -641,17 +640,23 @@ function stepRoutineNpmGenerate( frame )
   {
     let submodule = module.submoduleMap[ s ];
     let p = submodule.path;
+    p = path.parseFull( p );
 
-    _.assert( _.strHas( p, 'npm:///' ), () => 'Implemented only for NPM dependencies, but got' + p );
+    _.assert
+    (
+      p.protocol === 'npm' || p.protocol === 'hd',
+      () => 'Implemented only for "npm" and "hd" dependencies, but got ' + p.full
+    );
 
-    p = path.parseFull( p ); debugger;
-
-    if( submodule.criterion.optional )
-    depAdd( 'optionalDependencies', p );
-    else if( submodule.criterion.development )
-    depAdd( 'devDependencies', p );
-    else
-    depAdd( 'dependencies', p );
+    if( p.protocol === 'npm' )
+    {
+      depAdd( submodule, path.relative( '/', p.longPath ) );
+    }
+    else if( p.protocol === 'hd' )
+    {
+      depAdd( submodule, 'file:' + p.longPath );
+    }
+    else _.assert( 0 );
 
   }
 
@@ -682,9 +687,18 @@ function stepRoutineNpmGenerate( frame )
     return r;
   }
 
-  function depAdd( section, npmPath )
+  function depAdd( submodule, name )
   {
-    let name = path.relative( '/', npmPath.longPath );
+    if( submodule.criterion.optional )
+    _depAdd( 'optionalDependencies', name );
+    else if( submodule.criterion.development )
+    _depAdd( 'devDependencies', name );
+    else
+    _depAdd( 'dependencies', name );
+  }
+
+  function _depAdd( section, name )
+  {
     config[ section ] = config[ section ] || Object.create( null );
     config[ section ][ name ] = '';
   }

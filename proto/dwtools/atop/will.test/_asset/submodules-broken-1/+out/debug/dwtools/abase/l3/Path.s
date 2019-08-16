@@ -486,7 +486,15 @@ function isRoot( filePath )
 function isDotted( srcPath )
 {
   _.assert( arguments.length === 1, 'Expects single argument' );
-  return _.strBegins( srcPath,this._hereStr );
+  if( srcPath === this._hereStr )
+  return true;
+  if( srcPath === this._downStr )
+  return true;
+  if( _.strBegins( srcPath, this._hereStr + this._upStr ) )
+  return true;
+  if( _.strBegins( srcPath, this._downStr + this._upStr ) )
+  return true;
+  return false;
 }
 
 //
@@ -2310,68 +2318,6 @@ function _commonPair( src1, src2 )
 
 //
 
-function group( o )
-{
-  let self = this;
-
-  _.routineOptions( group, arguments );
-  _.assert( _.arrayIs( o.vals ) );
-  _.assert( o.result === null || _.mapIs( o.result ) );
-
-  o.result = o.result || Object.create( null );
-  o.result[ '/' ] = o.result[ '/' ] || [];
-
-  o.keys = self.s.from( o.keys );
-  o.vals = self.s.from( o.vals );
-
-  let keys = self.mapSrcFromSrc( o.keys );
-  let vals = _.arrayFlattenOnce( null, o.vals );
-
-  _.assert( _.arrayIs( keys ) );
-  _.assert( _.arrayIs( vals ) );
-
-  // if( o.vals && o.vals.length )
-  // debugger;
-
-  /* */
-
-  for( let k = 0 ; k < keys.length ; k++ )
-  {
-    let key = keys[ k ];
-    let res = o.result[ key ] = o.result[ key ] || [];
-  }
-
-  /* */
-
-  for( let key in o.result )
-  {
-    let res = o.result[ key ];
-    for( let v = 0 ; v < vals.length ; v++ )
-    {
-      let val = vals[ v ];
-      if( _.strBegins( val, key ) )
-      _.arrayAppendOnce( res, val );
-    }
-
-  }
-
-  /* */
-
-  // if( o.vals && o.vals.length )
-  // debugger;
-
-  return o.result;
-}
-
-group.defaults =
-{
-  keys : null,
-  vals : null,
-  result : null,
-}
-
-//
-
 /*
 qqq : teach common to work with path maps and cover it by tests
 */
@@ -2508,36 +2454,16 @@ let groupTextualReport = _.routineFromPreAndBody( groupTextualReport_pre, groupT
 
 //
 
-function commonTextualReport_pre( routine, args )
+function _commonTextualReport( o )
 {
-  let o = args[ 0 ];
-
-  if( !_.objectIs( o ) )
-  o = { filePath : args[ 0 ] };
-
-  _.routineOptions( routine, o );
-  _.assert( args.length === 1  );
-
-  if( _.mapIs( o.filePath ) )
-  filePath = _.mapKeys( o.filePath );
-
-  _.assert( _.strIs( o.filePath ) || _.arrayIs( o.filePath ) );
-
-  if( !o.onRelative )
-  o.onRelative = _.routineJoin( this, this.relative );
-
+  _.routineOptions( _commonTextualReport, o );
+  _.assert( arguments.length === 1  );
   _.assert( _.routineIs( o.onRelative ) );
 
-  return o;
-}
-
-//
-
-function commonTextualReport_body( o )
-{
-  _.assertRoutineOptions( commonTextualReport_body, arguments );
-
   let filePath = o.filePath;
+
+  if( _.mapIs( filePath ) )
+  filePath = _.mapKeys( filePath );
 
   if( _.arrayIs( filePath ) && filePath.length === 0 )
   return '()';
@@ -2564,13 +2490,21 @@ function commonTextualReport_body( o )
   return '( ' + commonPath + ' + ' + '[ ' + relativePath.join( ' , ' ) + ' ]' + ' )';
 }
 
-commonTextualReport_body.defaults =
+_commonTextualReport.defaults =
 {
   filePath : null,
   onRelative : null
 }
 
-let commonTextualReport = _.routineFromPreAndBody( commonTextualReport_pre, commonTextualReport_body );
+//
+
+function commonTextualReport( filePath )
+{
+  let self = this;
+  _.assert( arguments.length === 1  );
+  let onRelative = _.routineJoin( this, this.relative );
+  return self._commonTextualReport({ filePath : filePath, onRelative : onRelative });
+}
 
 //
 
@@ -2642,27 +2576,6 @@ moveTextualReport_body.defaults =
 }
 
 let moveTextualReport = _.routineFromPreAndBody( moveTextualReport_pre, moveTextualReport_body );
-
-// --
-//
-// --
-
-function chainToRoot( filePath )
-{
-  let self = this;
-  let result = [];
-
-  _.assert( arguments.length === 1 );
-  _.assert( _.strIs( filePath ) );
-
-  while( !self.isRoot( filePath ) )
-  {
-    result.unshift( self.detrail( filePath ) );
-    filePath = self.dir( filePath );
-  }
-
-  return result;
-}
 
 // --
 // exception
@@ -2814,18 +2727,14 @@ let Routines =
 
   _commonPair,
   common,
-  group,
   rebase,
 
   // textual reporter
 
   groupTextualReport,
+  _commonTextualReport,
   commonTextualReport,
   moveTextualReport,
-
-  //
-
-  chainToRoot, /* qqq : add basic test coverage */
 
   // exception
 
