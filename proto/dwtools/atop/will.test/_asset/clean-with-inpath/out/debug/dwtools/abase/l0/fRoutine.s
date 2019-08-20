@@ -648,6 +648,10 @@ routinesCompose.defaults = Object.create( routinesCompose.body.defaults );
 
 //
 
+/*
+qqq implement and cover _.routineExtend( null, routine );
+*/
+
 /**
  * The routineExtend() is used to copy the values of all properties
  * from source routine to a target routine.

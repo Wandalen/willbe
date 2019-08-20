@@ -464,8 +464,8 @@ function _strRemoved( srcStr, insStr )
 {
   let result = srcStr;
 
-  _.assert( arguments.length === 2, 'expects exactly two arguments' );
-  _.assert( _.strIs( srcStr ), 'expects string {-src-}' );
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+  _.assert( _.strIs( srcStr ), 'Expects string {-src-}' );
 
   if( !_.longIs( insStr ) )
   {
@@ -508,11 +508,16 @@ function _strRemoved( srcStr, insStr )
 *
 */
 
+/*
+qqq : extend coverage of routines strRemove, strReplace
+      make sure tests cover regexp cases
+*/
+
 function strRemove( srcStr, insStr )
 {
-  _.assert( arguments.length === 2, 'expects exactly two arguments' );
-  _.assert( _.longIs( srcStr ) || _.strIs( srcStr ), 'expects string or array of strings {-src-}' );
-  _.assert( _.longIs( insStr ) || _.strIs( insStr ) || _.regexpIs( insStr ), 'expects string/regexp or array of strings/regexps {-begin-}' );
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+  _.assert( _.longIs( srcStr ) || _.strLike( srcStr ), () => 'Expects string or array of strings {-srcStr-}, but got ' + _.strType( srcStr ) );
+  _.assert( _.longIs( insStr ) || _.strLike( insStr ), () => 'Expects string/regexp or array of strings/regexps {-begin-}' );
 
   let result = [];
   let srcIsArray = _.longIs( srcStr );
@@ -593,14 +598,14 @@ function strReplaceEnd( src, end, ins )
 
 function _strReplaced( srcStr, insStr, subStr )
 {
-  _.assert( arguments.length === 3, 'expects exactly three arguments' );
-  _.assert( _.strIs( srcStr ), 'expects string {-src-}' );
+  _.assert( arguments.length === 3, 'Expects exactly three arguments' );
+  _.assert( _.strIs( srcStr ), 'Expects string {-src-}' );
 
   let result = srcStr;
 
   if( !_.longIs( insStr ) )
   {
-    _.assert( _.strIs( subStr ), 'expects string {-sub-}' );
+    _.assert( _.strIs( subStr ), 'Expects string {-sub-}' );
 
     result = result.replace( insStr, subStr );
   }
@@ -609,7 +614,7 @@ function _strReplaced( srcStr, insStr, subStr )
     _.assert( insStr.length === subStr.length, 'Search and replace strings must have same length' );
     for( let i = 0; i < insStr.length; i++ )
     {
-      _.assert( _.strIs( subStr[ i ] ), 'expects string {-sub-}' );
+      _.assert( _.strIs( subStr[ i ] ), 'Expects string {-sub-}' );
 
       result = result.replace( insStr[ i ], subStr[ i ] );
     }
@@ -649,10 +654,10 @@ function _strReplaced( srcStr, insStr, subStr )
 
 function strReplace( srcStr, insStr, subStr )
 {
-  _.assert( arguments.length === 3, 'expects exactly three arguments' );
-  _.assert( _.longIs( srcStr ) || _.strIs( srcStr ), 'expects string or array of strings {-src-}' );
-  _.assert( _.longIs( insStr ) || _.strIs( insStr ) || _.regexpIs( insStr ), 'expects string/regexp or array of strings/regexps {-begin-}' );
-  _.assert( _.longIs( subStr ) || _.strIs( subStr ), 'expects string or array of strings {-src-}' );
+  _.assert( arguments.length === 3, 'Expects exactly three arguments' );
+  _.assert( _.longIs( srcStr ) || _.strIs( srcStr ), 'Expects string or array of strings {-src-}' );
+  _.assert( _.longIs( insStr ) || _.strIs( insStr ) || _.regexpIs( insStr ), 'Expects string/regexp or array of strings/regexps {-begin-}' );
+  _.assert( _.longIs( subStr ) || _.strIs( subStr ), 'Expects string or array of strings {-src-}' );
 
   let result = [];
   let srcIsArray = _.longIs( srcStr );
@@ -3666,7 +3671,7 @@ strConcat.defaults =
 /*
 qqq : extend coverage of strIndentation
 Dmytro : coverage NOT extended. Description and realisation of routine is not identical.
-So, test routine is corrected corresponds to actual state of routine. 
+So, test routine is corrected corresponds to actual state of routine.
 */
 
 function strIndentation( src, tab )

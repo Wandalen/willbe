@@ -1099,9 +1099,9 @@ function strRemoveEnd( src, end )
 
 function strRemove( srcStr, insStr )
 {
-  _.assert( arguments.length === 2, 'expects exactly two arguments' );
-  _.assert( _.strIs( srcStr ), 'expects string {-src-}' );
-  _.assert( _.strIs( insStr ) || _.regexpIs( insStr ), 'expects string/regexp {-begin-}' );
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+  _.assert( _.strIs( srcStr ), 'Expects string {-src-}' );
+  _.assert( _.strIs( insStr ) || _.regexpIs( insStr ), 'Expects string/regexp {-begin-}' );
 
   let result = srcStr;
   debugger;
@@ -1151,9 +1151,9 @@ function strReplaceEnd( src, end, ins )
 
 function strReplace( srcStr, insStr, subStr )
 {
-  _.assert( arguments.length === 3, 'expects exactly three arguments' );
-  _.assert( _.strIs( srcStr ), 'expects string {-src-}' );
-  _.assert( _.strIs( subStr ), 'expects string {-sub-}' );
+  _.assert( arguments.length === 3, 'Expects exactly three arguments' );
+  _.assert( _.strIs( srcStr ), 'Expects string {-src-}' );
+  _.assert( _.strIs( subStr ), 'Expects string {-sub-}' );
 
   let result = srcStr;
   debugger;

@@ -36,21 +36,30 @@ let Self = _.path = _.path || Object.create( null );
 
 function Init()
 {
+  let self = this;
 
-  _.assert( _.strIs( this._rootStr ) );
-  _.assert( _.strIs( this._upStr ) );
-  _.assert( _.strIs( this._hereStr ) );
-  _.assert( _.strIs( this._downStr ) );
+  _.assert( _.strIs( self._rootStr ) );
+  _.assert( _.strIs( self._upStr ) );
+  _.assert( _.strIs( self._hereStr ) );
+  _.assert( _.strIs( self._downStr ) );
 
-  let notBeginning = '(?!^)';
+  if( !self._downUpStr )
+  self._downUpStr = self._downStr + self._upStr; /* ../ */
+  if( !self._hereUpStr )
+  self._hereUpStr = self._hereStr + self._upStr; /* ./ */
 
-  if( !this._hereUpStr )
-  this._hereUpStr = this._hereStr + this._upStr; /* ./ */
-  if( !this._downUpStr )
-  this._downUpStr = this._downStr + this._upStr; /* ../ */
+  self._rootRegSource = _.regexpEscape( self._rootStr );
+  self._upRegSource = _.regexpEscape( self._upStr );
+  self._downRegSource = _.regexpEscape( self._downStr );
+  self._hereRegSource = _.regexpEscape( self._hereStr );
+  self._downUpRegSource = _.regexpEscape( self._downUpStr );
+  self._hereUpRegSource = _.regexpEscape( self._hereUpStr );
 
-  let up = _.regexpEscape( this._upStr );
-  let down = _.regexpEscape( this._downStr );
+  let root = self._rootRegSource;
+  let up = self._upRegSource;
+  let down = self._downRegSource;
+  let here = self._hereRegSource;
+
   let beginOrChar = '(?:.|^)';
   let butUp = `(?:(?!${up}).)+`;
   let notDownUp = `(?!${down}(?:${up}|$))`;
@@ -58,9 +67,9 @@ function Init()
   let upOrEnd = `(?:${up}|$)`;
   let splitOrUp = `(?:(?:${up}${up})|((${upOrBegin})${notDownUp}${butUp}${up}))`; /* split or / */
 
-  this._delDownRegexp = new RegExp( `(${beginOrChar})${splitOrUp}${down}(${upOrEnd})`, '' );
-  this._delHereRegexp = new RegExp( up + _.regexpEscape( this._hereStr ) + '(' + up + '|$)' );
-  this._delUpDupRegexp = /\/{2,}/g;
+  self._delDownRegexp = new RegExp( `(${beginOrChar})${splitOrUp}${down}(${upOrEnd})`, '' );
+  self._delHereRegexp = new RegExp( up + here + '(' + up + '|$)' );
+  self._delUpDupRegexp = /\/{2,}/g;
 
 }
 
@@ -2612,7 +2621,13 @@ let Parameters =
   _hereUpStr : null,
   _downUpStr : null,
 
-  _downEscapedStr : null,
+  _rootRegSource : null,
+  _upRegSource : null,
+  _downRegSource : null,
+  _hereRegSource : null,
+  _downUpRegSource : null,
+  _hereUpRegSource : null,
+
   _delHereRegexp : null,
   _delDownRegexp : null,
   _delUpDupRegexp : null,
