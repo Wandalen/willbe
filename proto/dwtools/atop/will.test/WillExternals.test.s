@@ -10907,7 +10907,6 @@ function runWillbe( test )
   ({
     currentPath : routinePath,
     outputCollecting : 1,
-    mode : 'fork',
     ready : ready,
     mode : 'shell',
   });
@@ -10959,12 +10958,12 @@ function runWillbe( test )
     })
   })
 
-  /* xxx */
+  /* */
 
   .then( () =>
   {
     test.case = 'Exec: terminate utility during heavy load of will files, should fail'
-    let o = { args : [ execPath, '.submodules.list' ], ready : null };
+    let o = { execPath : 'node', args : [ execPath, '.submodules.list' ], ready : null };
     let con = shell( o );
 
     o.process.stdout.on( 'data', ( data ) =>
@@ -10985,12 +10984,14 @@ function runWillbe( test )
     return test.shouldThrowErrorAsync( con )
     .then( () =>
     {
-      test.identical( o.exitCode, 0 );
-      test.is( _.strHas( o.output, 'wTools.out.will.yml' ) );
-      test.is( _.strHas( o.output, 'wLogger.out.will.yml' ) );
-      test.is( _.strHas( o.output, 'wLoggerToJs.out.will.yml' ) );
-      test.is( _.strHas( o.output, 'wConsequence.out.will.yml' ) );
-      test.is( _.strHas( o.output, 'wInstancing.out.will.yml' ) );
+      if( process.platform === 'win32' )
+      test.identical( o.exitCode, null );
+      else
+      test.identical( o.exitCode, 255 );
+      test.identical( o.exitSignal, 'SIGINT' );
+      test.is( _.strHas( o.output, 'module::runWillbe / submodule::Tools' ) );
+      test.is( _.strHas( o.output, 'module::runWillbe / submodule::Logger' ) );
+      test.is( _.strHas( o.output, 'module::runWillbe / submodule::LoggerToJs' ) );
       return null;
     })
 
