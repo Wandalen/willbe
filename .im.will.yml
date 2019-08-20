@@ -3,78 +3,78 @@ submodule :
 
   wTools :
     path : npm:///wTools
-    enabled : 0
+    enabled : 0 # submodule
   wCopyable :
     path : npm:///wCopyable
-    enabled : 0
+    enabled : 0 # submodule
   wLogger :
     path : npm:///wLogger
-    enabled : 0
-  wverbal :
+    enabled : 0 # submodule
+  wVerbal :
     path : npm:///wverbal
-    enabled : 0
-  wtemplatetreeenvironment :
+    enabled : 0 # submodule
+  wTemplateTreeEnvironment :
     path : npm:///wtemplatetreeenvironment
-    enabled : 0
-  wappbasic :
+    enabled : 0 # submodule
+  wAppBasic :
     path : npm:///wappbasic
-    enabled : 0
-  wgraphbase :
+    enabled : 0 # submodule
+  wGraphBase :
     path : npm:///wgraphbase
-    enabled : 0
+    enabled : 0 # submodule
   wFiles :
     path : npm:///wFiles
-    enabled : 0
-  wfilesarchive :
+    enabled : 0 # submodule
+  wFilesArchive :
     path : npm:///wfilesarchive
-    enabled : 0
-  wfilesencoders :
+    enabled : 0 # submodule
+  wFilesEncoders :
     path : npm:///wfilesencoders
-    enabled : 0
-  wstatestorage :
+    enabled : 0 # submodule
+  wStateStorage :
     path : npm:///wstatestorage
-    enabled : 0
-  wstatesession :
+    enabled : 0 # submodule
+  wStateSession :
     path : npm:///wstatesession
-    enabled : 0
-  wstager :
+    enabled : 0 # submodule
+  wStager :
     path : npm:///wstager
-    enabled : 0
-  wselector :
+    enabled : 0 # submodule
+  wSelector :
     path : npm:///wselector
-    enabled : 0
-  wresolver :
+    enabled : 0 # submodule
+  wResolver :
     path : npm:///wresolver
-    enabled : 0
-  wcommandsaggregator :
+    enabled : 0 # submodule
+  wCommandsAggregator :
     path : npm:///wcommandsaggregator
-    enabled : 0
-  wcommandsconfig :
+    enabled : 0 # submodule
+  wCommandsConfig :
     path : npm:///wcommandsconfig
-    enabled : 0
-  wnamemapper :
+    enabled : 0 # submodule
+  wNameMapper :
     path : npm:///wnamemapper
-    enabled : 0
-  wtranspilationstrategy :
+    enabled : 0 # submodule
+  wTranspilationStrategy :
     path : npm:///wtranspilationstrategy
-    enabled : 0
+    enabled : 0 # submodule
   tar :
     path : npm:///tar
-    enabled : 0
+    enabled : 0 # submodule
   gitconfiglocal :
     path : npm:///gitconfiglocal
-    enabled : 0
+    enabled : 0 # submodule
   open :
     path : npm:///open
-    enabled : 0
+    enabled : 0 # submodule
   willbe :
     path : hd://.
-    enabled : 0
+    enabled : 0 # submodule
     criterion :
       development : 1
   wTesting :
     path : npm:///wTesting
-    enabled : 0
+    enabled : 0 # submodule
     criterion :
       development : 1
 
