@@ -1,67 +1,100 @@
 
 about :
 
-  name : "willbe"
-  description : "Utility to manage modules of complex modular systems"
-  version : "0.4.0"
+  name : 'willbe'
+  description : 'Utility to manage modules of complex modular systems.'
+  version : '0.6.0'
   enabled : 1
   interpreters :
-  - nodejs >= 8.0.0
+  - njs >= 8.0.0
   - chrome >= 60.0.0
   - firefox >= 60.0.0
   keywords :
   - wTools
-
-execution :
-
-  scripts :
-    test : wtest .run proto/**
-    docgen : wdocgen staging
+  license : MIT
+  author : 'Kostiantyn Wandalen <wanalen@willbe.so>'
+  contributors :
+  - 'Kostiantyn Wandalen <wanalen@willbe.so>'
+  - 'Volodymyr M. <volodymyr.migdal@gmail.com>'
+  - 'Dmytro Kryvoruchko <dm.vict.kr@gmail.com>'
+  npm.name : 'willbe'
+  npm.scripts :
+    test : wtest .run proto/** v:5
+    docgen : wdocgen .build proto
+    single-process-will : node proto/dwtools/atop/will/Exec
+    debug-will : node proto/dwtools/atop/will/ExecDebug
+    unrestricted-will : node proto/dwtools/atop/will/ExecUnrestricted
+    will : node proto/dwtools/atop/will/ExecUnrestricted
+  npm.bin :
+    single-process-will : proto/dwtools/atop/will/Exec
+    debug-will : proto/dwtools/atop/will/ExecDebug
+    unrestricted-will : proto/dwtools/atop/will/ExecUnrestricted
+    will : proto/dwtools/atop/will/ExecUnrestricted
 
 path :
 
   repository : git+https:///github.com/Wandalen/willbe.git
-  bugs : https:///github.com/Wandalen/willbe/issues
+  bugtracker : https:///github.com/Wandalen/willbe/issues
 
 step :
 
-  export.proto :
+  proto.export :
     inherit : module.export
     export : path::proto
     tar : 0
     criterion :
-      debug : 1
-      proto : 1
-      doc : 0
+      content : 'proto'
 
-  export.doc :
+  doc.export :
     inherit : module.export
     export : path::doc
     tar : 0
     criterion :
-      debug : 1
-      doc : 1
+      content : 'doc'
+
+  npm.export :
+    inherit : module.export
+    export : out.npm
+    tar : 0
+    criterion :
+      content : 'npm'
+
+  npm.publish :
+    shell : npm publish
 
 build :
 
   proto.export :
     criterion :
-      default : 1
-      debug : 1
-      raw : 1
-      proto : 1
-      doc : 0
+      content : 'proto'
       export : 1
-      tar : 1
-      public : 1
     steps :
-      - build::debug.raw
-      - step::export.proto
+      # - build::debug.raw
+      - step::proto.export
 
   doc.export :
     criterion :
+      content : 'doc'
       export : 1
-      debug : 1
-      doc : 1
     steps :
-      - step::export.doc
+      # - build::debug.raw
+      - step::doc.export
+
+  npm.export :
+    criterion :
+      content : 'npm'
+      export : 1
+    steps :
+      # - build::debug.raw
+      # - step::npm.export
+      - step::npm.publish
+
+  export :
+
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      # - build::npm
+      - build::proto.export
+      # - build::doc.export
