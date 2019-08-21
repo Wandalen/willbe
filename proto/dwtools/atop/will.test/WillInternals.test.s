@@ -2912,7 +2912,7 @@ function pathsResolveOfSubmodules( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-local-repos' );
-  let repoPath = _.path.join( self.tempDir, 'repo' );
+  let repoPath = _.path.join( self.tempDir, '_repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
@@ -2934,6 +2934,7 @@ function pathsResolveOfSubmodules( test )
     let builds = module.openedModule.buildsResolve({ name : 'debug.raw' });
     test.identical( builds.length, 1 );
     let build = builds[ 0 ];
+    debugger;
     return build.perform();
   })
 
@@ -2941,6 +2942,7 @@ function pathsResolveOfSubmodules( test )
 
   module.openedModule.ready.then( ( arg ) =>
   {
+    debugger;
 
     test.case = 'resolve submodules';
     var submodules = module.openedModule.submodulesResolve({ selector : '*' });
@@ -2984,6 +2986,7 @@ function pathsResolveOfSubmodules( test )
 
   let ready = module.openedModule.ready.finallyKeep( ( err, arg ) =>
   {
+    debugger;
     if( err )
     throw err;
     test.is( err === undefined );
@@ -2993,6 +2996,7 @@ function pathsResolveOfSubmodules( test )
 
   return ready.split().finally( ( err, arg ) =>
   {
+    debugger;
     if( err && err.finited )
     return null;
     if( err )
@@ -3010,7 +3014,7 @@ function pathsResolveOfSubmodulesAndOwn( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'resolve-path-of-submodules' );
-  let repoPath = _.path.join( self.tempDir, 'repo' );
+  let repoPath = _.path.join( self.tempDir, '_repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
@@ -4258,7 +4262,7 @@ function submodulesResolve( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-local-repos' );
-  let repoPath = _.path.join( self.tempDir, 'repo' );
+  let repoPath = _.path.join( self.tempDir, '_repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, './' );
   let submodulesPath = _.path.join( routinePath, '.module' );
@@ -4364,7 +4368,7 @@ function submodulesDeleteAndDownload( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-del-download' );
-  let repoPath = _.path.join( self.tempDir, 'repo' );
+  let repoPath = _.path.join( self.tempDir, '_repo' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let modulePath = _.path.join( routinePath, './' );
   let submodulesPath = _.path.join( routinePath, '.module' );

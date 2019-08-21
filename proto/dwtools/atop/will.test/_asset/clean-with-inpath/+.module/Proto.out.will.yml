@@ -21,7 +21,7 @@ path:
   out:
     path: .module
   remote:
-    path: 'git+hd://../repo/Proto'
+    path: 'git+hd://../_repo/Proto'
     criterion:
       predefined: 1
   local:
