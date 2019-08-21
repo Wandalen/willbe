@@ -3551,6 +3551,7 @@ function cleanWithInPath( test )
 
   /* - */
 
+  var hadFiles;
   ready
   .then( ( got ) =>
   {
@@ -3558,6 +3559,7 @@ function cleanWithInPath( test )
 
     _.fileProvider.filesDelete( routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    hadFiles = self.find( routinePath + '/out' ).length + self.find( routinePath + '/.module' ).length;
 
     return null;
   })
@@ -3571,104 +3573,24 @@ function cleanWithInPath( test )
     var expectedFiles =
     [
       '.',
-      './+.module',
-      './+.module/Proto.out.will.yml',
-      './+.module/Proto',
-      './+.module/Proto/.ex.will.yml',
-      './+.module/Proto/.gitattributes',
-      './+.module/Proto/.im.will.yml',
-      './+.module/Proto/.travis.yml',
-      './+.module/Proto/appveyor.yml',
-      './+.module/Proto/LICENSE',
-      './+.module/Proto/package.json',
-      './+.module/Proto/README.md',
-      './+.module/Proto/proto',
-      './+.module/Proto/proto/dwtools',
-      './+.module/Proto/proto/dwtools/Tools.s',
-      './+.module/Proto/proto/dwtools/abase',
-      './+.module/Proto/proto/dwtools/abase/l3',
-      './+.module/Proto/proto/dwtools/abase/l3/Proto.s',
-      './+.module/Proto/proto/dwtools/abase/l3/ProtoAccessor.s',
-      './+.module/Proto/proto/dwtools/abase/l3/ProtoLike.s',
-      './+.module/Proto/proto/dwtools/abase/l3.test',
-      './+.module/Proto/proto/dwtools/abase/l3.test/Proto.test.s',
-      './+.module/Proto/proto/dwtools/abase/l3.test/ProtoLike.test.s',
-      './+.module/Proto/sample',
-      './+.module/Proto/sample/Sample.html',
-      './+.module/Proto/sample/Sample.js',
-      './+.module/Tools',
-      './+out',
-      './+out/debug',
-      './+out/debug/WithSubmodules.s',
-      './+out/debug/dwtools',
-      './+out/debug/dwtools/Tools.s',
-      './+out/debug/dwtools/abase',
-      './+out/debug/dwtools/abase/Layer0.s',
-      './+out/debug/dwtools/abase/Layer1.s',
-      './+out/debug/dwtools/abase/Layer2.s',
-      './+out/debug/dwtools/abase/l0',
-      './+out/debug/dwtools/abase/l0/aPredefined.s',
-      './+out/debug/dwtools/abase/l0/aSetup.s',
-      './+out/debug/dwtools/abase/l0/bPremature.s',
-      './+out/debug/dwtools/abase/l0/fBool.s',
-      './+out/debug/dwtools/abase/l0/fChecker.s',
-      './+out/debug/dwtools/abase/l0/fEntity.s',
-      './+out/debug/dwtools/abase/l0/fErr.s',
-      './+out/debug/dwtools/abase/l0/fLong.s',
-      './+out/debug/dwtools/abase/l0/fMap.s',
-      './+out/debug/dwtools/abase/l0/fNumber.s',
-      './+out/debug/dwtools/abase/l0/fRange.s',
-      './+out/debug/dwtools/abase/l0/fRegexp.s',
-      './+out/debug/dwtools/abase/l0/fRoutine.s',
-      './+out/debug/dwtools/abase/l0/fString.s',
-      './+out/debug/dwtools/abase/l0/fTime.s',
-      './+out/debug/dwtools/abase/l0/iArrayDescriptor.s',
-      './+out/debug/dwtools/abase/l0/iCompose.s',
-      './+out/debug/dwtools/abase/l0/iField.s',
-      './+out/debug/dwtools/abase/l1',
-      './+out/debug/dwtools/abase/l1/cErr.s',
-      './+out/debug/dwtools/abase/l1/gBool.s',
-      './+out/debug/dwtools/abase/l1/gEntity.s',
-      './+out/debug/dwtools/abase/l1/gLong.s',
-      './+out/debug/dwtools/abase/l1/gMap.s',
-      './+out/debug/dwtools/abase/l1/gNumber.s',
-      './+out/debug/dwtools/abase/l1/gRange.s',
-      './+out/debug/dwtools/abase/l1/gRegexp.s',
-      './+out/debug/dwtools/abase/l1/gRoutine.s',
-      './+out/debug/dwtools/abase/l1/gString.s',
-      './+out/debug/dwtools/abase/l1/gTime.s',
-      './+out/debug/dwtools/abase/l1/rFundamental.s',
-      './+out/debug/dwtools/abase/l1/zSetup.s',
-      './+out/debug/dwtools/abase/l1.test',
-      './+out/debug/dwtools/abase/l1.test/Array.test.s',
-      './+out/debug/dwtools/abase/l1.test/Diagnostics.test.s',
-      './+out/debug/dwtools/abase/l1.test/Entity.test.s',
-      './+out/debug/dwtools/abase/l1.test/Map.test.s',
-      './+out/debug/dwtools/abase/l1.test/Regexp.test.s',
-      './+out/debug/dwtools/abase/l1.test/Routine.test.s',
-      './+out/debug/dwtools/abase/l1.test/String.test.s',
-      './+out/debug/dwtools/abase/l1.test/Typing.test.s',
-      './+out/debug/dwtools/abase/l2',
-      './+out/debug/dwtools/abase/l2/IncludeTools.s',
-      './+out/debug/dwtools/abase/l2/ModulesRegistry.s',
-      './+out/debug/dwtools/abase/l2/NameTools.s',
-      './+out/debug/dwtools/abase/l2/StringTools.s',
-      './+out/debug/dwtools/abase/l2.test',
-      './+out/debug/dwtools/abase/l2.test/StringTools.test.s',
       './module',
       './module/Proto.will.yml',
       './module/+.module',
+      './module/+.module/ForGit.txt',
       './module/+out',
+      './module/+out/ForGit.txt',
       './module/.module',
+      './module/.module/ForGit.txt',
       './module/out',
+      './module/out/ForGit.txt',
       './proto',
       './proto/WithSubmodules.s'
     ]
-    var files = self.find( routinePath );
+    var files = self.find({ filePath : { [ routinePath ] : '', '+**' : 0 } });
     test.identical( files, expectedFiles );
 
-    test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '- Clean deleted 84 file(s)' ), 1 );
+    test.identical( got.exitCode, 0 ); debugger;
+    test.identical( _.strCount( got.output, '- Clean deleted ' + hadFiles + ' file(s)' ), 1 );
 
     return null;
   })
@@ -7123,7 +7045,18 @@ function reflectComposite( test )
   shell({ execPath : '.build out* variant:0' })
   .then( ( arg ) =>
   {
-    var expected = [ '.', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js' ];
+    var expected =
+    [
+      '.',
+      './debug',
+      './debug/dir1',
+      './debug/dir1/for-git.txt',
+      './debug/dir2',
+      './debug/dir2/File.js',
+      './debug/dir2/File.test.js',
+      './debug/dir2/File1.debug.js',
+      './debug/dir2/File2.debug.js'
+    ]
     var files = self.find( outPath );
     test.is( files.length > 5 );
     test.identical( files, expected );
@@ -7143,7 +7076,18 @@ function reflectComposite( test )
   shell({ execPath : '.build out* variant:1' })
   .then( ( arg ) =>
   {
-    var expected = [ '.', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js' ];
+    var expected =
+    [
+      '.',
+      './debug',
+      './debug/dir1',
+      './debug/dir1/for-git.txt',
+      './debug/dir2',
+      './debug/dir2/File.js',
+      './debug/dir2/File.test.js',
+      './debug/dir2/File1.debug.js',
+      './debug/dir2/File2.debug.js'
+    ]
     var files = self.find( outPath );
     test.is( files.length > 5 );
     test.identical( files, expected );
@@ -7163,7 +7107,18 @@ function reflectComposite( test )
   shell({ execPath : '.build out* variant:2' })
   .then( ( arg ) =>
   {
-    var expected = [ '.', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js' ];
+    var expected =
+    [
+      '.',
+      './debug',
+      './debug/dir1',
+      './debug/dir1/for-git.txt',
+      './debug/dir2',
+      './debug/dir2/File.js',
+      './debug/dir2/File.test.js',
+      './debug/dir2/File1.debug.js',
+      './debug/dir2/File2.debug.js'
+    ]
     var files = self.find( outPath );
     test.is( files.length > 5 );
     test.identical( files, expected );
@@ -7183,7 +7138,18 @@ function reflectComposite( test )
   shell({ execPath : '.build out* variant:3' })
   .then( ( arg ) =>
   {
-    var expected = [ '.', './debug', './debug/dir1', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js' ];
+    var expected =
+    [
+      '.',
+      './debug',
+      './debug/dir1',
+      './debug/dir1/for-git.txt',
+      './debug/dir2',
+      './debug/dir2/File.js',
+      './debug/dir2/File.test.js',
+      './debug/dir2/File1.debug.js',
+      './debug/dir2/File2.debug.js'
+    ]
     var files = self.find( outPath );
     test.is( files.length > 5 );
     test.identical( files, expected );
@@ -7203,7 +7169,8 @@ function reflectComposite( test )
   shell({ execPath : '.build out* variant:4' })
   .then( ( arg ) =>
   {
-    var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.js', './debug/dir1/File.test.js', './debug/dir1/File1.debug.js', './debug/dir1/File2.debug.js' ];
+    var expected =
+    [ '.', './debug', './debug/dir1', './debug/dir1/File.js', './debug/dir1/File.test.js', './debug/dir1/File1.debug.js', './debug/dir1/File2.debug.js' ]
     var files = self.find( outPath );
     test.is( files.length > 5 );
     test.identical( files, expected );
@@ -7262,7 +7229,7 @@ function reflectComposite( test )
   shell({ execPath : '.build out* variant:7' })
   .then( ( arg ) =>
   {
-    var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.test.js' ];
+    var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.test.js' ]
     var files = self.find( outPath );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
