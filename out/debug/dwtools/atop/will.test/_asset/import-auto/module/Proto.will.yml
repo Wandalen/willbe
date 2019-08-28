@@ -7,7 +7,7 @@ path :
 
   in : ..
   out : .module
-  remote : 'git+hd://../repo/Proto'
+  remote : 'git+hd://../_repo/Proto'
   # remote : 'git+https:///github.com/Wandalen/wProto.git'
   # git:///git@bitbucket.org:group/repo.git/out/Repo#master
   local : '.module/Proto'

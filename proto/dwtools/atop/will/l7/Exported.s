@@ -263,7 +263,7 @@ function performExportedReflectors( exportSelector )
       // maskTransientDirectory : { excludeAny : [ /\.git$/, /node_modules$/ ] },
     }
 
-    exportedReflector.src.and( filter2 ).pathsInherit( filter2 );
+    exportedReflector.src.and( filter2 ).pathsSupplementJoining( filter2 );
     exportedReflector.src.filePath = exportedReflector.filePath;
 
   }

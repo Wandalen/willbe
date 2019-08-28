@@ -351,10 +351,10 @@ function _inheritMultiple( o )
   // if( reflector.nickName === 'reflector::exported.export' )
   // debugger;
 
-  reflector.src.and( reflector._accumulator.src ).pathsInherit( reflector._accumulator.src );
+  reflector.src.and( reflector._accumulator.src ).pathsSupplementJoining( reflector._accumulator.src );
   _.assert( reflector.src.filePath === reflector.dst.filePath );
 
-  reflector.dst.and( reflector._accumulator.dst ).pathsInherit( reflector._accumulator.dst );
+  reflector.dst.and( reflector._accumulator.dst ).pathsSupplementJoining( reflector._accumulator.dst );
   _.assert( reflector.src.filePath === reflector.dst.filePath );
 
   return reflector;
@@ -960,7 +960,7 @@ function pathsResolve( o )
 
     if( r instanceof _.FileRecordFilter )
     {
-      reflector.src.pathsInherit( r );
+      reflector.src.pathsSupplementJoining( r );
     }
     else if( r instanceof will.Reflector )
     {
@@ -997,7 +997,7 @@ function pathsResolve( o )
     if( r instanceof _.FileRecordFilter )
     {
       debugger;
-      reflector.dst.pathsInherit( r );
+      reflector.dst.pathsSupplementJoining( r );
     }
     else
     {

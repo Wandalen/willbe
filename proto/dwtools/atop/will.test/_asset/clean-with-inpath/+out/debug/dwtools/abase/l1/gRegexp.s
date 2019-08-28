@@ -242,7 +242,7 @@ function regexpFrom( src, flags )
 
 function regexpMaybeFrom( o )
 {
-  if( !_.objectIs( o ) )
+  if( !_.mapIs( o ) )
   o = { srcStr : arguments[ 0 ] }
 
   _.assert( arguments.length === 1, 'Expects single argument' );
@@ -367,7 +367,7 @@ regexpsSources.defaults =
 
 function regexpsJoin( o )
 {
-  if( !_.objectIs( o ) )
+  if( !_.mapIs( o ) )
   o = { sources : o }
 
   _.routineOptions( regexpsJoin, o );
@@ -394,7 +394,7 @@ regexpsJoin.defaults =
 
 function regexpsJoinEscaping( o )
 {
-  if( !_.objectIs( o ) )
+  if( !_.mapIs( o ) )
   o = { sources : o }
 
   _.routineOptions( regexpsJoinEscaping, o );
@@ -413,7 +413,7 @@ defaults.escaping = 1;
 function regexpsAtLeastFirst( o )
 {
 
-  if( !_.objectIs( o ) )
+  if( !_.mapIs( o ) )
   o = { sources : o }
 
   _.routineOptions( regexpsAtLeastFirst, o );
@@ -460,7 +460,7 @@ regexpsAtLeastFirst.defaults =
 function regexpsAtLeastFirstOnly( o )
 {
 
-  if( !_.objectIs( o ) )
+  if( !_.mapIs( o ) )
   o = { sources : o }
 
   _.routineOptions( regexpsAtLeastFirst, o );
@@ -526,7 +526,7 @@ regexpsAtLeastFirst.defaults =
 
 function regexpsNone( o )
 {
-  if( !_.objectIs( o ) )
+  if( !_.mapIs( o ) )
   o = { sources : o }
 
   _.routineOptions( regexpsNone, o );
@@ -554,7 +554,7 @@ regexpsNone.defaults =
 
 function regexpsAny( o )
 {
-  if( !_.objectIs( o ) )
+  if( !_.mapIs( o ) )
   o = { sources : o }
 
   _.routineOptions( regexpsAny, o );
@@ -590,7 +590,7 @@ regexpsAny.defaults =
 
 function regexpsAll( o )
 {
-  if( !_.objectIs( o ) )
+  if( !_.mapIs( o ) )
   o = { sources : o }
 
   _.routineOptions( regexpsAll, o );
