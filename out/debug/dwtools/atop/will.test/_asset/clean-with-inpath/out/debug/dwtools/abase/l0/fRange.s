@@ -27,7 +27,108 @@ function rangeIs( range )
 
 //
 
-function rangeFrom( range )
+function rangeInInclusive( range, srcNumber )
+{
+
+  if( _.longIs( srcNumber ) )
+  srcNumber = srcNumber.length;
+
+  _.assert( arguments.length === 2 );
+  _.assert( _.rangeIs( range ) );
+  _.assert( _.numberIs( srcNumber ) );
+
+  if( srcNumber < range[ 0 ] )
+  return false;
+  if( srcNumber > range[ 1 ] )
+  return false;
+
+  return true;
+}
+
+//
+
+function rangeInExclusive( range, srcNumber )
+{
+  if( _.longIs( srcNumber ) )
+  srcNumber = srcNumber.length;
+
+  _.assert( arguments.length === 2 );
+  _.assert( _.rangeIs( range ) );
+  _.assert( _.numberIs( srcNumber ) );
+
+  if( srcNumber <= range[ 0 ] )
+  return false;
+  if( srcNumber >= range[ 1 ] )
+  return false;
+
+  return true;
+}
+
+//
+
+function rangeInInclusiveLeft( range, srcNumber )
+{
+  if( _.longIs( srcNumber ) )
+  srcNumber = srcNumber.length;
+
+  _.assert( arguments.length === 2 );
+  _.assert( _.rangeIs( range ) );
+  _.assert( _.numberIs( srcNumber ) );
+
+  if( srcNumber < range[ 0 ] )
+  return false;
+  if( srcNumber >= range[ 1 ] )
+  return false;
+
+  return true;
+}
+
+//
+
+function rangeInInclusiveRight( range, srcNumber )
+{
+  if( _.longIs( srcNumber ) )
+  srcNumber = srcNumber.length;
+
+  _.assert( arguments.length === 2 );
+  _.assert( _.rangeIs( range ) );
+  _.assert( _.numberIs( srcNumber ) );
+
+  if( srcNumber < range[ 0 ] )
+  return false;
+  if( srcNumber >= range[ 1 ] )
+  return false;
+
+  return true;
+}
+
+//
+
+function sureInRange( src, range )
+{
+  _.assert( arguments.length >= 2 );
+  if( arguments.length !== 2 )
+  debugger;
+  let args = _.unrollFrom([ _.rangeIn( range, src ), () => 'Out of range' + _.rangeToStr( range ), _.unrollSelect( arguments, 2 ) ]);
+  _.assert.apply( _, args );
+  return true;
+}
+
+//
+
+function assertInRange( src, range )
+{
+  _.assert( arguments.length >= 2 );
+  if( arguments.length !== 2 )
+  debugger;
+  let args = _.unrollFrom([ _.rangeIn( range, src ), () => 'Out of range' + _.rangeToStr( range ), _.unrollSelect( arguments, 2 ) ]);
+  _.assert.apply( _, args );
+  return true;
+}
+
+//
+
+function rangeFromLeft( range )
 {
   _.assert( arguments.length === 1 );
   if( _.numberIs( range ) )
@@ -40,6 +141,48 @@ function rangeFrom( range )
   return [ 0, range[ 1 ] ];
   if( range[ 1 ] === undefined )
   return [ range[ 0 ], Infinity ];
+  return range;
+}
+
+//
+
+function rangeFromRight( range )
+{
+  _.assert( arguments.length === 1 );
+  if( _.numberIs( range ) )
+  return [ range, Infinity ];
+  _.assert( _.longIs( range ) );
+  _.assert( range.length === 1 || range.length === 2 );
+  _.assert( range[ 0 ] === undefined || _.numberIs( range[ 0 ] ) );
+  _.assert( range[ 1 ] === undefined || _.numberIs( range[ 1 ] ) );
+  if( range[ 0 ] === undefined )
+  return [ 0, range[ 1 ] ];
+  if( range[ 1 ] === undefined )
+  return [ range[ 0 ], Infinity ];
+  return range;
+}
+
+//
+
+function rangeFromSingle( range )
+{
+  _.assert( arguments.length === 1 );
+  if( _.numberIs( range ) )
+  return [ range, range + 1 ];
+
+  _.assert( _.longIs( range ) );
+  _.assert( range.length === 1 || range.length === 2 );
+  _.assert( range[ 0 ] === undefined || _.numberIs( range[ 0 ] ) );
+  _.assert( range[ 1 ] === undefined || _.numberIs( range[ 1 ] ) );
+
+  if( range[ 0 ] === undefined )
+  if( range[ 1 ] !== undefined )
+  return [ range[ 1 ]-1, range[ 1 ] ];
+  else
+  return [ 0, 1 ];
+
+  if( range[ 1 ] === undefined )
+  return [ range[ 0 ], range[ 0 ] + 1 ];
   return range;
 }
 
@@ -152,8 +295,23 @@ let Routines =
 
   // range
 
+  /* qqq : good coverage of each routine is required */
+
   rangeIs,
-  rangeFrom,
+
+  rangeInInclusive,
+  rangeInExclusive,
+  rangeInInclusiveLeft,
+  rangeInInclusiveRight,
+  rangeIn : rangeInInclusiveLeft,
+
+  sureInRange,
+  assertInRange,
+
+  rangeFromLeft,
+  rangeFromRight,
+  rangeFromSingle,
+
   rangeClamp,
   rangeNumberElements,
   rangeFirstGet,

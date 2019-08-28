@@ -358,7 +358,7 @@ function performExportedFilesReflector()
 
     exportedFilesPath = hd.filesFind
     ({
-      recursive : 2,
+      // recursive : 2,
       includingDirs : 1,
       includingTerminals : 1,
       mandatory : 0,

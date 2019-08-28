@@ -108,7 +108,7 @@ function CloneExtending( o )
 //   function supplement( src,l )
 //   {
 //     if( !_.longIs( src ) )
-//     src = _.arrayFillTimes( [], l,src );
+//     src = _.longFillTimes( [], l,src );
 //     _.assert( src.length === l, 'routine expects arrays with same length' );
 //     return src;
 //   }
@@ -518,30 +518,39 @@ function isTrailed( srcPath )
 
 //
 
-function isGlob( src )
+let isGlob = (function functor()
 {
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.strIs( src ) );
 
-  if( this.fileProvider && !this.fileProvider.globing )
+  let _pathIsGlobRegexpStr = '';
+  _pathIsGlobRegexpStr += '(?:[?*]+)'; /* asterix,question mark */
+  _pathIsGlobRegexpStr += '|(?:([!?*@+]*)\\((.*?(?:\\|(.*?))*)\\))'; /* parentheses */
+  _pathIsGlobRegexpStr += '|(?:\\[(.+?)\\])'; /* square brackets */
+  _pathIsGlobRegexpStr += '|(?:\\{(.*)\\})'; /* curly brackets */
+  _pathIsGlobRegexpStr += '|(?:\0)'; /* zero */
+
+  let _pathIsGlobRegexp = new RegExp( _pathIsGlobRegexpStr );
+
+  isGlob.functor = functor;
+
+  return isGlob;
+
+  function isGlob( src )
   {
-    // debugger;
-    return false;
+    _.assert( arguments.length === 1, 'Expects single argument' );
+    _.assert( _.strIs( src ) );
+
+    if( this.fileProvider && !this.fileProvider.globing )
+    {
+      // debugger;
+      return false;
+    }
+
+    /* let regexp = /(\*\*)|([!?*])|(\[.*\])|(\(.*\))|\{.*\}+(?![^[]*\])/g; */
+
+    return _pathIsGlobRegexp.test( src );
   }
 
-  /* let regexp = /(\*\*)|([!?*])|(\[.*\])|(\(.*\))|\{.*\}+(?![^[]*\])/g; */
-
-  return _pathIsGlobRegexp.test( src );
-}
-
-let _pathIsGlobRegexpStr = '';
-_pathIsGlobRegexpStr += '(?:[?*]+)'; /* asterix,question mark */
-_pathIsGlobRegexpStr += '|(?:([!?*@+]*)\\((.*?(?:\\|(.*?))*)\\))'; /* parentheses */
-_pathIsGlobRegexpStr += '|(?:\\[(.+?)\\])'; /* square brackets */
-_pathIsGlobRegexpStr += '|(?:\\{(.*)\\})'; /* curly brackets */
-_pathIsGlobRegexpStr += '|(?:\0)'; /* zero */
-
-let _pathIsGlobRegexp = new RegExp( _pathIsGlobRegexpStr );
+})();
 
 //
 
@@ -2247,7 +2256,7 @@ function _commonPair( src1, src2 )
 
     if( levelsDown > 0 )
     {
-      let prefix = _.arrayFillTimes( [], levelsDown,self._downStr );
+      let prefix = _.longFillTimes( [], levelsDown,self._downStr );
       prefix = prefix.join( '/' );
       result = prefix + result;
     }
@@ -2302,7 +2311,7 @@ function _commonPair( src1, src2 )
     if( result.splitted[ 0 ] === self._downStr )
     {
       result.levelsDown = _.arrayCountElement( result.splitted,self._downStr );
-      let substr = _.arrayFillTimes( [], result.levelsDown,self._downStr ).join( '/' );
+      let substr = _.longFillTimes( [], result.levelsDown,self._downStr ).join( '/' );
       let withoutLevels = _.strRemoveBegin( result.normalized,substr );
       result.splitted = split( withoutLevels );
       result.isRelativeDown = true;

@@ -231,7 +231,7 @@ function numbersFromInt( dst,length )
 
   if( _.numberIs( dst ) )
   {
-    dst = _.arrayFillTimes( [], length , dst );
+    dst = _.longFillTimes( [], length , dst );
   }
   else
   {

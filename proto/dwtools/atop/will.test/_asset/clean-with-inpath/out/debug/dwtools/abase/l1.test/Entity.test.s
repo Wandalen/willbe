@@ -1,6 +1,6 @@
 ( function _Entity_test_s_( ) {
 
-'use strict';
+'use strict'; /* aaa */
 
 if( typeof module !== 'undefined' )
 {
@@ -45,7 +45,7 @@ function eachSample( test )
   test.identical( got, expected );
   test.is( _.arrayIs( got ) );
 
-  var src = _.arrayFrom( new Float32Array() )
+  var src = _.arrayFrom( new F32x() )
   var got = _.eachSample( src );
   var expected = [ [] ];
   test.identical( got, expected );
@@ -87,7 +87,7 @@ function eachSample( test )
   test.identical( got, expected );
   test.is( _.arrayIs( got ) );
 
-  var src = _.arrayFrom( new Float32Array( [ 1 ] ) );
+  var src = _.arrayFrom( new F32x( [ 1 ] ) );
   var got = _.eachSample( src );
   var expected = [ [ 1 ] ];
   test.identical( got, expected );
@@ -137,7 +137,7 @@ function eachSample( test )
   test.identical( got, expected );
   test.is( _.arrayIs( got ) );
 
-  var src = _.arrayFrom( new Float32Array( [ [], [], [] ] ) );
+  var src = _.arrayFrom( new F32x( [ [], [], [] ] ) );
   var got = _.eachSample( src );
   var expected = [ [ 0, 0, 0 ] ];
   test.identical( got, expected );
@@ -171,7 +171,7 @@ function eachSample( test )
   test.identical( got, expected );
   test.is( _.primitiveIs( got ) );
 
-  var src = _.arrayFrom( new Float32Array( [ 1, 2, 3 ] ) );
+  var src = _.arrayFrom( new F32x( [ 1, 2, 3 ] ) );
   var got = _.eachSample( { sets : src, result : 0 } );
   var expected = 0;
   test.identical( got, expected );
@@ -216,7 +216,7 @@ function eachSample( test )
   test.identical( got, expected );
   test.is( _.arrayIs( got ) );
 
-  var src = _.arrayFrom( new Float32Array( [ [ 1, 2, 3 ] ] ) );
+  var src = _.arrayFrom( new F32x( [ [ 1, 2, 3 ] ] ) );
   var got = _.eachSample( src );
   test.notIdentical( got, [ [ [ 1, 2, 3 ] ] ] );
   test.is( _.arrayIs( got ) );
@@ -317,8 +317,8 @@ function eachSample( test )
   test.identical( got, expected );
   test.is( _.arrayIs( got ) );
 
-  var a = _.arrayFrom( new Float32Array( [ 0, 1 ] ) );
-  var b = _.arrayFrom( new Float32Array( [ 2, 3 ] ) );
+  var a = _.arrayFrom( new F32x( [ 0, 1 ] ) );
+  var b = _.arrayFrom( new F32x( [ 2, 3 ] ) );
   var got = _.eachSample
   ({
     sets : [ a, b ]
@@ -453,8 +453,8 @@ function eachSample( test )
   test.identical( got, expected );
   test.is( _.primitiveIs( got ) );
 
-  var a = _.arrayFrom( new Float32Array( [ 0, 1 ] ) );
-  var b = _.arrayFrom( new Float32Array( [ 2, 3 ] ) );
+  var a = _.arrayFrom( new F32x( [ 0, 1 ] ) );
+  var b = _.arrayFrom( new F32x( [ 2, 3 ] ) );
   var got = _.eachSample
   ({
     sets : [ a, b ],
@@ -637,7 +637,7 @@ function entityEach( test )
   test.is( _.arrayIs( got ) );
 
   var got = [];
-  var src = new Float32Array( 0 );
+  var src = new F32x( 0 );
   _.entityEach( src, ( v, i ) => got[ i ] = v + i );
   test.identical( got, [] );
   test.is( _.arrayIs( got ) );
@@ -671,7 +671,7 @@ function entityEach( test )
   test.is( _.longIs( src ) );
 
   var got = [];
-  var src = new Float32Array( [ 0, 1, 2 ] );
+  var src = new F32x( [ 0, 1, 2 ] );
   _.entityEach( src, ( v, i ) => got[ i ] = v * v + i );
   test.identical( got, [ 0, 2, 6 ] );
   test.is( _.longIs( src ) );
@@ -720,7 +720,7 @@ function entityEach( test )
   test.identical( got, 8 );
 
   var got = 0;
-  var src = new Float32Array( [ 1, 1, [ 2 ] ] );
+  var src = new F32x( [ 1, 1, [ 2 ] ] );
   _.entityEach( src, onEach );
   test.identical( got, -3 );
 
@@ -758,7 +758,7 @@ function entityEach( test )
   test.is( _.longIs( got ) );
 
   var got;
-  var src = new Float32Array( [ 1, 2, 1, 3 ] );
+  var src = new F32x( [ 1, 2, 1, 3 ] );
   _.entityEach( src, onEach );
   test.equivalent( got, [ 1, 2, 1, 3 ] );
   test.is( _.longIs( got ) );
@@ -900,7 +900,7 @@ function entityEachKey( test )
   test.is( _.longIs( src ) );
 
   var got = [];
-  var src = new Float32Array( 0 );
+  var src = new F32x( 0 );
   _.entityEachKey( src, ( v, i ) => got[ i ] = v + i );
   test.identical( got, [] );
 
@@ -933,7 +933,7 @@ function entityEachKey( test )
   test.is( _.longIs( src ) );
 
   var got = [];
-  var src = new Float32Array( [ 0, 1, 2 ] );
+  var src = new F32x( [ 0, 1, 2 ] );
   _.entityEachKey( src, ( v, u, i ) => got[ i ] = v * v );
   test.identical( got, [ 0, 1, 4 ] );
   test.is( _.longIs( src ) );
@@ -978,7 +978,7 @@ function entityEachKey( test )
   test.identical( got, 8 );
 
   var got = 0;
-  var src = new Float32Array( [ 1, 1, [ 2 ] ] );
+  var src = new F32x( [ 1, 1, [ 2 ] ] );
   _.entityEachKey( src, onEach );
   test.identical( got, -3 );
 
@@ -1016,7 +1016,7 @@ function entityEachKey( test )
   test.is( _.longIs( got ) );
 
   var got;
-  var src = new Float32Array( [ 1, 2, 1, 3 ] );
+  var src = new F32x( [ 1, 2, 1, 3 ] );
   _.entityEachKey( src, onEach );
   test.equivalent( got, [ 1, 2, 1, 3 ] );
   test.is( _.longIs( got ) );
@@ -1154,7 +1154,7 @@ function entityEachOwn( test )
   test.is( _.arrayIs( got ) );
 
   var got = [];
-  var src = new Float32Array( 0 );
+  var src = new F32x( 0 );
   _.entityEachOwn( src, ( v, i ) => got[ i ] = v + i );
   test.identical( got, [] );
   test.is( _.arrayIs( got ) );
@@ -1188,7 +1188,7 @@ function entityEachOwn( test )
   test.is( _.longIs( src ) );
 
   var got = [];
-  var src = new Float32Array( [ 0, 1, 2 ] );
+  var src = new F32x( [ 0, 1, 2 ] );
   _.entityEachOwn( src, ( v, i ) => got[ i ] = v * v + i );
   test.identical( got, [ 0, 2, 6 ] );
   test.is( _.longIs( src ) );
@@ -1237,7 +1237,7 @@ function entityEachOwn( test )
   test.identical( got, 8 );
 
   var got = 0;
-  var src = new Float32Array( [ 1, 1, [ 2 ] ] );
+  var src = new F32x( [ 1, 1, [ 2 ] ] );
   _.entityEachOwn( src, onEach );
   test.identical( got, -3 );
 
@@ -1275,7 +1275,7 @@ function entityEachOwn( test )
   test.is( _.longIs( got ) );
 
   var got;
-  var src = new Float32Array( [ 1, 2, 1, 3 ] );
+  var src = new F32x( [ 1, 2, 1, 3 ] );
   _.entityEachOwn( src, onEach );
   test.equivalent( got, [ 1, 2, 1, 3 ] );
   test.is( _.longIs( got ) );
@@ -1482,21 +1482,21 @@ function entityAll( test )
   var got = _.entityAll( src, () => undefined );
   test.identical( got, undefined );
 
-  test.case = 'Float32Array';
+  test.case = 'F32x';
 
-  var src = new Float32Array( [ 1, 2, [ 8 ], 3, 4 ] );
+  var src = new F32x( [ 1, 2, [ 8 ], 3, 4 ] );
   var got = _.entityAll( src, ( v, i ) => !!v && i + 2 < 4 );
   test.identical( got, false );
 
-  var src = new Float32Array( [ 1, 2, [ 8 ], 3, 4 ] );
+  var src = new F32x( [ 1, 2, [ 8 ], 3, 4 ] );
   var got = _.entityAll( src, ( v, i ) => !!v && i + 2 < 7 );
   test.identical( got, true );
 
-  var src = new Float32Array( [ 1, 2, [ 8 ], false, 4 ] );
+  var src = new F32x( [ 1, 2, [ 8 ], false, 4 ] );
   var got = _.entityAll( src, ( v, i ) => !!v && i + 2 < 7 );
   test.identical( got, false );
 
-  var src = new Float32Array( [ 1, 2, [ 8 ], 3, 4 ] );
+  var src = new F32x( [ 1, 2, [ 8 ], 3, 4 ] );
   var got = _.entityAll( src, () => undefined );
   test.identical( got, undefined );
 
@@ -1605,17 +1605,17 @@ function entityAll( test )
   var got = _.entityAll( src );
   test.identical( got, false );
 
-  test.case = 'Float32Array';
+  test.case = 'F32x';
 
-  var src = new Float32Array( [ null, 2, [ 8 ], 3, 4 ] );
+  var src = new F32x( [ null, 2, [ 8 ], 3, 4 ] );
   var got = _.entityAll( src );
   test.identical( got, 0 );
 
-  var src = new Float32Array( [ 1, 2, [ 8 ], 3, 4 ] );
+  var src = new F32x( [ 1, 2, [ 8 ], 3, 4 ] );
   var got = _.entityAll( src );
   test.identical( got, true );
 
-  var src = new Float32Array( [ 1, 2, [ 8 ], 'str', 4 ] );
+  var src = new F32x( [ 1, 2, [ 8 ], 'str', 4 ] );
   var got = _.entityAll( src );
   test.identical( got, NaN );
 
@@ -1750,21 +1750,21 @@ function entityAny( test )
   var got = _.entityAny( src, () => undefined );
   test.identical( got, false );
 
-  test.case = 'Float32Array';
+  test.case = 'F32x';
 
-  var src = new Float32Array( [ 1, 2, [ 8 ], 3, 4 ] );
+  var src = new F32x( [ 1, 2, [ 8 ], 3, 4 ] );
   var got = _.entityAny( src, ( v, i ) => !!v && i + 2 < 4 );
   test.identical( got, true );
 
-  var src = new Float32Array( [ 'a', undefined, false, null ] );
+  var src = new F32x( [ 'a', undefined, false, null ] );
   var got = _.entityAny( src, ( v, i ) => !!v && i + 2 < 7 );
   test.identical( got, false );
 
-  var src = new Float32Array( [ 1, 2, [ 8 ], false, 4 ] );
+  var src = new F32x( [ 1, 2, [ 8 ], false, 4 ] );
   var got = _.entityAny( src, ( v, i ) => !!v && i + 2 < 7 );
   test.identical( got, true );
 
-  var src = new Float32Array( [ 1, 2, [ 8 ], 3, 4 ] );
+  var src = new F32x( [ 1, 2, [ 8 ], 3, 4 ] );
   var got = _.entityAny( src, () => undefined );
   test.identical( got, false );
 
@@ -1870,17 +1870,17 @@ function entityAny( test )
   var got = _.entityAny( src );
   test.identical( got, false );
 
-  test.case = 'Float32Array';
+  test.case = 'F32x';
 
-  var src = new Float32Array( [ 5, 2, [ 'str' ], 3, 4 ] );
+  var src = new F32x( [ 5, 2, [ 'str' ], 3, 4 ] );
   var got = _.entityAny( src );
   test.identical( got, 5 );
 
-  var src = new Float32Array( [ undefined, [ 8 ], 3, 4 ] );
+  var src = new F32x( [ undefined, [ 8 ], 3, 4 ] );
   var got = _.entityAny( src );
   test.identical( got, 8 );
 
-  var src = new Float32Array( [ 'str', undefined, { a : 2 } ] );
+  var src = new F32x( [ 'str', undefined, { a : 2 } ] );
   var got = _.entityAny( src );
   test.identical( got, false );
 
@@ -2015,21 +2015,21 @@ function entityNone( test )
   var got = _.entityNone( src, () => undefined );
   test.identical( got, true );
 
-  test.case = 'Float32Array';
+  test.case = 'F32x';
 
-  var src = new Float32Array( [ 1, 2, [ 8 ], 3, 4 ] );
+  var src = new F32x( [ 1, 2, [ 8 ], 3, 4 ] );
   var got = _.entityNone( src, ( v, i ) => !!v && i + 2 < 4 );
   test.identical( got, false );
 
-  var src = new Float32Array( [ 'a', undefined, false, null ] );
+  var src = new F32x( [ 'a', undefined, false, null ] );
   var got = _.entityNone( src, ( v, i ) => !!v && i + 2 < 7 );
   test.identical( got, true );
 
-  var src = new Float32Array( [ 1, 2, [ 8 ], false, 4 ] );
+  var src = new F32x( [ 1, 2, [ 8 ], false, 4 ] );
   var got = _.entityNone( src, ( v, i ) => !!v && i + 2 < 7 );
   test.identical( got, false );
 
-  var src = new Float32Array( [ 1, 2, [ 8 ], 3, 4 ] );
+  var src = new F32x( [ 1, 2, [ 8 ], 3, 4 ] );
   var got = _.entityNone( src, () => undefined );
   test.identical( got, true );
 
@@ -2136,17 +2136,17 @@ function entityNone( test )
   var got = _.entityNone( src );
   test.identical( got, true );
 
-  test.case = 'Float32Array';
+  test.case = 'F32x';
 
-  var src = new Float32Array( [ 5, 2, [ 'str' ], 3, 4 ] );
+  var src = new F32x( [ 5, 2, [ 'str' ], 3, 4 ] );
   var got = _.entityNone( src );
   test.identical( got, false );
 
-  var src = new Float32Array( [ undefined, [ 8 ], 3, 4 ] );
+  var src = new F32x( [ undefined, [ 8 ], 3, 4 ] );
   var got = _.entityNone( src );
   test.identical( got, false );
 
-  var src = new Float32Array( [ 'str', undefined, { a : 2 } ] );
+  var src = new F32x( [ 'str', undefined, { a : 2 } ] );
   var got = _.entityNone( src );
   test.identical( got, true );
 
@@ -2241,8 +2241,8 @@ function entityMap( test )
   test.identical( got, [ 1, 3, 'str2', 6, 8 ] );
   test.is( _.arrayIs( got ) );
 
-  test.case = 'Float32Array';
-  var src1 = new Float32Array( [ 1, 2, [ 8 ], 3, 4 ] );
+  test.case = 'F32x';
+  var src1 = new F32x( [ 1, 2, [ 8 ], 3, 4 ] );
   var got = _.entityMap( src1, ( v, i, s ) => v + i );
   test.equivalent( got, [ 1, 3, 10, 6, 8 ] );
   test.is( _.longIs( got ) );
@@ -2361,7 +2361,7 @@ function entityFilter( test )
   var got = _.entityFilter( src, callback );
   test.identical( got, [ 3, 5, 6 ] );
 
-  var src = new Float32Array( [ 9, -16, 25, 36, -49 ] );
+  var src = new F32x( [ 9, -16, 25, 36, -49 ] );
   var src = Array.from( src );
   var got = _.entityFilter( src, callback );
   test.identical( got, [ 3, 5, 6 ] );
@@ -2489,7 +2489,7 @@ function entityFilterDeep( test )
   var got = _.entityFilterDeep( src, callback );
   test.identical( got, [ 3, 5, 6 ] );
 
-  var src = new Float32Array( [ 9, -16, 25, 36, -49 ] );
+  var src = new F32x( [ 9, -16, 25, 36, -49 ] );
   var src = Array.from( src );
   var got = _.entityFilterDeep( src, callback );
   test.identical( got, [ 3, 5, 6 ] );
@@ -3145,7 +3145,7 @@ function entitySize( test )
   test.identical( got, expected );
 
   test.case = 'buffer';
-  var got = _.entitySize( new ArrayBuffer( 10 ) );
+  var got = _.entitySize( new BufferRaw( 10 ) );
   var expected = 10;
   test.identical( got, expected );
 

@@ -40,13 +40,13 @@ function instanceIs( t )
 
   t.will = 'routine';
   t.is( !_.instanceIs( Date ) );
-  t.is( !_.instanceIs( Float32Array ) );
+  t.is( !_.instanceIs( F32x ) );
   t.is( !_.instanceIs( function(){} ) );
   t.is( !_.instanceIs( Self.constructor ) );
 
   t.will = 'long';
   t.is( _.instanceIs( [] ) );
-  t.is( _.instanceIs( new Float32Array() ) );
+  t.is( _.instanceIs( new F32x() ) );
 
   t.will = 'object-like';
   t.is( _.instanceIs( /x/ ) );
@@ -58,7 +58,7 @@ function instanceIs( t )
   t.is( !_.instanceIs( Object.getPrototypeOf( [] ) ) );
   t.is( !_.instanceIs( Object.getPrototypeOf( /x/ ) ) );
   t.is( !_.instanceIs( Object.getPrototypeOf( new Date() ) ) );
-  t.is( !_.instanceIs( Object.getPrototypeOf( new Float32Array() ) ) );
+  t.is( !_.instanceIs( Object.getPrototypeOf( new F32x() ) ) );
   t.is( !_.instanceIs( Object.getPrototypeOf( new (function(){})() ) ) );
   t.is( !_.instanceIs( Object.getPrototypeOf( Self ) ) );
 
@@ -85,13 +85,13 @@ function instanceIsStandard( t )
 
   t.will = 'routine';
   t.is( !_.instanceIsStandard( Date ) );
-  t.is( !_.instanceIsStandard( Float32Array ) );
+  t.is( !_.instanceIsStandard( F32x ) );
   t.is( !_.instanceIsStandard( function(){} ) );
   t.is( !_.instanceIsStandard( Self.constructor ) );
 
   t.will = 'long';
   t.is( !_.instanceIsStandard( [] ) );
-  t.is( !_.instanceIsStandard( new Float32Array() ) );
+  t.is( !_.instanceIsStandard( new F32x() ) );
 
   t.will = 'object-like';
   t.is( !_.instanceIsStandard( /x/ ) );
@@ -103,7 +103,7 @@ function instanceIsStandard( t )
   t.is( !_.instanceIsStandard( Object.getPrototypeOf( [] ) ) );
   t.is( !_.instanceIsStandard( Object.getPrototypeOf( /x/ ) ) );
   t.is( !_.instanceIsStandard( Object.getPrototypeOf( new Date() ) ) );
-  t.is( !_.instanceIsStandard( Object.getPrototypeOf( new Float32Array() ) ) );
+  t.is( !_.instanceIsStandard( Object.getPrototypeOf( new F32x() ) ) );
   t.is( !_.instanceIsStandard( Object.getPrototypeOf( new (function(){})() ) ) );
   t.is( !_.instanceIsStandard( Object.getPrototypeOf( Self ) ) );
 
@@ -130,7 +130,7 @@ function prototypeIs( t )
 
   t.will = 'routine';
   t.is( !_.prototypeIs( Date ) );
-  t.is( !_.prototypeIs( Float32Array ) );
+  t.is( !_.prototypeIs( F32x ) );
   t.is( !_.prototypeIs( function(){} ) );
   t.is( !_.prototypeIs( Self.constructor ) );
 
@@ -138,7 +138,7 @@ function prototypeIs( t )
   t.is( !_.prototypeIs( [] ) );
   t.is( !_.prototypeIs( /x/ ) );
   t.is( !_.prototypeIs( new Date() ) );
-  t.is( !_.prototypeIs( new Float32Array() ) );
+  t.is( !_.prototypeIs( new F32x() ) );
   t.is( !_.prototypeIs( new (function(){})() ) );
   t.is( !_.prototypeIs( Self ) );
 
@@ -146,7 +146,7 @@ function prototypeIs( t )
   t.is( _.prototypeIs( Object.getPrototypeOf( [] ) ) );
   t.is( _.prototypeIs( Object.getPrototypeOf( /x/ ) ) );
   t.is( _.prototypeIs( Object.getPrototypeOf( new Date() ) ) );
-  t.is( _.prototypeIs( Object.getPrototypeOf( new Float32Array() ) ) );
+  t.is( _.prototypeIs( Object.getPrototypeOf( new F32x() ) ) );
   t.is( _.prototypeIs( Object.getPrototypeOf( new (function(){})() ) ) );
   t.is( _.prototypeIs( Object.getPrototypeOf( Self ) ) );
 
@@ -173,7 +173,7 @@ function constructorIs( t )
 
   t.will = 'routine';
   t.is( _.constructorIs( Date ) );
-  t.is( _.constructorIs( Float32Array ) );
+  t.is( _.constructorIs( F32x ) );
   t.is( _.constructorIs( function(){} ) );
   t.is( _.constructorIs( Self.constructor ) );
 
@@ -181,7 +181,7 @@ function constructorIs( t )
   t.is( !_.constructorIs( [] ) );
   t.is( !_.constructorIs( /x/ ) );
   t.is( !_.constructorIs( new Date() ) );
-  t.is( !_.constructorIs( new Float32Array() ) );
+  t.is( !_.constructorIs( new F32x() ) );
   t.is( !_.constructorIs( new (function(){})() ) );
   t.is( !_.constructorIs( Self ) );
 
@@ -189,7 +189,7 @@ function constructorIs( t )
   t.is( !_.constructorIs( Object.getPrototypeOf( [] ) ) );
   t.is( !_.constructorIs( Object.getPrototypeOf( /x/ ) ) );
   t.is( !_.constructorIs( Object.getPrototypeOf( new Date() ) ) );
-  t.is( !_.constructorIs( Object.getPrototypeOf( new Float32Array() ) ) );
+  t.is( !_.constructorIs( Object.getPrototypeOf( new F32x() ) ) );
   t.is( !_.constructorIs( Object.getPrototypeOf( new (function(){})() ) ) );
   t.is( !_.constructorIs( Object.getPrototypeOf( Self ) ) );
 
@@ -216,7 +216,7 @@ function prototypeIsStandard( t )
 
   t.will = 'routine';
   t.is( !_.prototypeIsStandard( Date ) );
-  t.is( !_.prototypeIsStandard( Float32Array ) );
+  t.is( !_.prototypeIsStandard( F32x ) );
   t.is( !_.prototypeIsStandard( function(){} ) );
   t.is( !_.prototypeIsStandard( Self.constructor ) );
 
@@ -224,7 +224,7 @@ function prototypeIsStandard( t )
   t.is( !_.prototypeIsStandard( [] ) );
   t.is( !_.prototypeIsStandard( /x/ ) );
   t.is( !_.prototypeIsStandard( new Date() ) );
-  t.is( !_.prototypeIsStandard( new Float32Array() ) );
+  t.is( !_.prototypeIsStandard( new F32x() ) );
   t.is( !_.prototypeIsStandard( new (function(){})() ) );
   t.is( !_.prototypeIsStandard( Self ) );
 
@@ -232,7 +232,7 @@ function prototypeIsStandard( t )
   t.is( !_.prototypeIsStandard( Object.getPrototypeOf( [] ) ) );
   t.is( !_.prototypeIsStandard( Object.getPrototypeOf( /x/ ) ) );
   t.is( !_.prototypeIsStandard( Object.getPrototypeOf( new Date() ) ) );
-  t.is( !_.prototypeIsStandard( Object.getPrototypeOf( new Float32Array() ) ) );
+  t.is( !_.prototypeIsStandard( Object.getPrototypeOf( new F32x() ) ) );
   t.is( !_.prototypeIsStandard( Object.getPrototypeOf( new (function(){})() ) ) );
   t.is( _.prototypeIsStandard( Object.getPrototypeOf( Self ) ) );
 

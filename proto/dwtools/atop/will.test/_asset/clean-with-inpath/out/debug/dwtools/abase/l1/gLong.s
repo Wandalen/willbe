@@ -61,8 +61,6 @@ function buffersTypedAreIdentical( src1, src2 )
   return false;
 
   if( src1.length !== src2.length )
-  debugger;
-  if( src1.length !== src2.length )
   return false;
 
   for( let i = 0 ; i < src1.length ; i++ )
@@ -87,8 +85,8 @@ function buffersRawAreIdentical( src1, src2 )
   if( src1.byteLength !== src2.byteLength )
   return false;
 
-  src1 = new Uint8Array( src1 );
-  src2 = new Uint8Array( src2 );
+  src1 = new U8x( src1 );
+  src2 = new U8x( src2 );
 
   for( let i = 0 ; i < src1.length ; i++ )
   if( src1[ i ] !== src2[ i ] )
@@ -182,7 +180,7 @@ function buffersAreIdentical( src1, src2 )
 //
 
 /**
- * The bufferMakeSimilar() routine returns a new array or a new TypedArray with length equal (length)
+ * The bufferMake() routine returns a new array or a new TypedArray with length equal (length)
  * or new TypedArray with the same length of the initial array if second argument is not provided.
  *
  * @param { longIs } ins - The instance of an array.
@@ -190,14 +188,14 @@ function buffersAreIdentical( src1, src2 )
  *
  * @example
  * // returns [ , ,  ]
- * let arr = _.bufferMakeSimilar( [ 1, 2, 3 ] );
+ * let arr = _.bufferMake( [ 1, 2, 3 ] );
  *
  * @example
  * // returns [ , , ,  ]
- * let arr = _.bufferMakeSimilar( [ 1, 2, 3 ], 4 );
+ * let arr = _.bufferMake( [ 1, 2, 3 ], 4 );
  *
  * @returns { longIs }  Returns an array with a certain (length).
- * @function bufferMakeSimilar
+ * @function bufferMake
  * @throws { Error } If the passed arguments is less than two.
  * @throws { Error } If the (length) is not a number.
  * @throws { Error } If the first argument in not an array like object.
@@ -205,9 +203,72 @@ function buffersAreIdentical( src1, src2 )
  * @memberof wTools
  */
 
-/* qqq : implement */
+/* qqq : implement, cover, document */
 
-function bufferMakeSimilar( ins, src )
+function bufferMake( ins, src )
+{
+  let result, length;
+
+  if( _.routineIs( ins ) )
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+
+  if( src === undefined )
+  {
+    length = _.definedIs( ins.length ) ? ins.length : ins.byteLength;
+  }
+  else
+  {
+    if( _.longIs( src ) )
+    length = src.length;
+    else if( _.bufferRawIs( src ) )
+    length = src.byteLength;
+    else if( _.numberIs( src ) )
+    length = src;
+    else _.assert( 0 );
+  }
+
+  if( _.argumentsArrayIs( ins ) )
+  ins = [];
+
+  _.assert( arguments.length === 1 || arguments.length === 2 );
+  _.assert( _.numberIsFinite( length ) );
+  _.assert( _.routineIs( ins ) || _.longIs( ins ) || _.bufferRawIs( ins ), 'unknown type of array', _.strType( ins ) );
+
+  if( _.longIs( src ) || _.bufferAnyIs( src ) )
+  {
+
+    if( ins.constructor === Array )
+    {
+      result = new( _.constructorJoin( ins.constructor, src ) );
+    }
+    else if( _.routineIs( ins ) )
+    {
+      if( ins.prototype.constructor.name === 'Array' )
+      result = _ArraySlice.call( src );
+      else
+      result = new ins( src );
+    }
+    else
+    result = new ins.constructor( src );
+
+  }
+  else
+  {
+    if( _.routineIs( ins ) )
+    result = new ins( length );
+    else
+    result = new ins.constructor( length );
+  }
+
+  return result;
+}
+
+//
+
+/* qqq : implement, cover, document */
+/* qqq :  */
+
+function bufferMakeUndefined( ins, src )
 {
   let result, length;
 
@@ -269,49 +330,200 @@ function bufferMakeSimilar( ins, src )
 
 //
 
+/**
+ * Removes range( range ) of elements from provided array( dstArray ) and adds elements from array( srcArray )
+ * at the start position of provided range( range ) if( srcArray ) was provided.
+ * On success returns array with deleted element(s), otherwise returns empty array.
+ * For TypedArray's and buffers returns modified copy of ( dstArray ) or original array if nothing changed.
+ *
+ * @param { Array|TypedArray|BufferNode } dstArray - The target array, TypedArray( I8x, I16x, U8x ... etc ) or BufferNode( BufferRaw, BufferNode ).
+ * @param { Array|Number } range - The range of elements or index of single element to remove from ( dstArray ).
+ * @param { Array } srcArray - The array of elements to add to( dstArray ) at the start position of provided range( range ).
+ * If one of ( range ) indexies is not specified it will be setted to zero.
+ * If ( range ) start index is greater than the length of the array ( dstArray ), actual starting index will be set to the length of the array ( dstArray ).
+ * If ( range ) start index is negative, will be setted to zero.
+ * If ( range ) start index is greater than end index, the last will be setted to value of start index.
+ *
+ * @example
+ * _.bufferBut( [ 1, 2, 3, 4 ], 2 );
+ * // returns [ 3 ]
+ *
+ * @example
+ * _.bufferBut( [ 1, 2, 3, 4 ], [ 1, 2 ] );
+ * // returns [ 2 ]
+ *
+ * @example
+ * _.bufferBut( [ 1, 2, 3, 4 ], [ 0, 5 ] );
+ * // returns [ 1, 2, 3, 4 ]
+ *
+ * @example
+ * _.bufferBut( [ 1, 2, 3, 4 ], [ -1, 5 ] );
+ * // returns [ 1, 2, 3, 4 ]
+ *
+ * @example
+ * let dst = [ 1, 2, 3, 4 ];
+ * _.bufferBut( dst, [ 0, 3 ], [ 0, 0, 0 ] );
+ * console.log( dst );
+ * // returns [ 0, 0, 0, 4 ]
+ *
+ * @example
+ * let dst = new I32x( 4 );
+ * dst.set( [ 1, 2, 3, 4 ] )
+ * _.bufferBut( dst, 0 );
+ * // returns [ 2, 3, 4 ]
+ *
+ * @returns { Array|TypedArray|BufferNode } For array returns array with deleted element(s), otherwise returns empty array.
+ * For other types returns modified copy or origin( dstArray ).
+ * @function bufferBut
+ * @throws { Error } If ( arguments.length ) is not equal to two or three.
+ * @throws { Error } If ( dstArray ) is not an Array.
+ * @throws { Error } If ( srcArray ) is not an Array.
+ * @throws { Error } If ( range ) is not an Array.
+ * @memberof wTools
+ */
+
+// function bufferBut( src, range, ins )
+// {
+//   let result;
+//   range = _.rangeFromLeft( range );
+//
+//   _.assert( _.bufferTypedIs( src ) );
+//   _.assert( ins === undefined || _.longIs( ins ) );
+//   _.assert( arguments.length === 2 || arguments.length === 3 );
+//
+//   if( ins === undefined )
+//   ins = [];
+//
+//   let bufferStart = src.slice( 0, range[ 0 ] );
+//   let bufferEnd = src.slice( range[ 1 ] );
+//   result = _.longMakeUndefined( src, bufferStart.length + ins.length + bufferEnd.length );
+//   result.set( bufferStart );
+//   result.set( ins, range[ 0 ] );
+//   result.set( bufferEnd, range[ 0 ] + ins.length );
+//
+//   return result;
+//
+//   // throw _.err( 'not implemented' )
+//   //
+//   // if( range[ 1 ] - range[ 0 ] <= 0 )
+//   // return _.bufferSlice( src );
+//   //
+//   // if( size > src.byteLength )
+//   // {
+//   //   result = longMakeUndefined( src, size );
+//   //   let resultTyped = new U8x( result, 0, result.byteLength );
+//   //   let srcTyped = new U8x( src, 0, src.byteLength );
+//   //   resultTyped.set( srcTyped );
+//   // }
+//   // else if( size < src.byteLength )
+//   // {
+//   //   result = src.slice( 0, size );
+//   // }
+//   //
+//   // return result;
+// }
+
+/* qqq : routine bufferBut requires good test coverage and documentation */
+/* qqq : implement cover and document routine bufferButInplace */
+
 /* qqq : implement
    Dmytro : implemented for typed buffers
+  qqq : no
+      src can be any long or any buffer
+      ins can be any long or any buffer
 */
 
-function bufferButRange( src, range, ins )
+function bufferBut( dstArray, range, srcArray )
 {
+
+  if( !_.bufferAnyIs( dstArray ) )
+  return _.longBut( dstArray, range, srcArray );
+
+  if( _.numberIs( range ) )
+  range = [ range, range + 1 ];
+
+  _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
+  _.assert( _.arrayIs( dstArray ) || _.bufferAnyIs( dstArray ) );
+  _.assert( _.rangeIs( range ) );
+  // _.assert( srcArray === undefined || _.arrayIs( srcArray ) );
+  _.assert( srcArray === undefined || _.longIs( srcArray ) || _.bufferAnyIs( srcArray ) );
+
+  /* qqq : jeed separate if fo BufferRaw, bufferNode and bufferView */
+  let length = _.definedIs( dstArray.length ) ? dstArray.length : dstArray.byteLength;
+  let first = range[ 0 ] !== undefined ? range[ 0 ] : 0;
+  let last = range[ 1 ] !== undefined ? range[ 1 ] : length;
   let result;
-  range = _.rangeFrom( range );
 
-  _.assert( _.bufferTypedIs( src ) );
-  _.assert( ins === undefined || _.longIs( ins ) );
-  _.assert( arguments.length === 2 || arguments.length === 3 );
+  if( first < 0 )
+  first = 0;
+  if( first > length)
+  first = length;
+  if( last > length)
+  last = length;
+  if( last < first )
+  last = first;
 
-  if( ins === undefined )
-  ins = [];
+  // if( _.bufferAnyIs( dstArray ) )
+  // {
 
-  let bufferStart = src.slice( 0, range[ 0 ] );
-  let bufferEnd = src.slice( range[ 1 ] );
-  result = _.longMake( src, bufferStart.length + ins.length + bufferEnd.length );
-  result.set( bufferStart );
-  result.set( ins, range[ 0 ] );
-  result.set( bufferEnd, range[ 0 ] + ins.length );
+    // if( first === last )
+    // return _.bufferMake( dstArray );
+
+    // if( first === last )
+    // return dstArray;
+
+    // if( first === last )
+    // debugger;
+
+    let newLength = length - last + first;
+    let srcArrayLength = 0;
+
+    if( srcArray )
+    {
+      srcArrayLength = _.definedIs( srcArray.length ) ? srcArray.length : srcArray.byteLength;
+      newLength += srcArrayLength;
+    }
+
+    if( _.bufferRawIs( dstArray ) )
+    {
+      result = new BufferRaw( newLength );
+    }
+    else if( _.bufferNodeIs( dstArray ) )
+    {
+      result = BufferNode.alloc( newLength );
+    }
+    else
+    {
+      result = _.longMakeUndefined( dstArray, newLength );
+    }
+
+    if( first > 0 )
+    for( let i = 0; i < first; ++i )
+    result[ i ] = dstArray[ i ];
+
+    if( srcArray )
+    for( let i = first, j = 0; j < srcArrayLength; )
+    result[ i++ ] = srcArray[ j++ ];
+
+    for( let j = last, i = first + srcArrayLength; j < length; )
+    result[ i++ ] = dstArray[ j++ ];
+
+    return result;
+
+  // }
+  // else
+  // {
+  //
+  //   return _.longBut( srcArray,  );
+  //
+  //   let args = srcArray ? srcArray.slice() : [];
+  //   args.unshift( last-first );
+  //   args.unshift( first );
+  //
+  //   result = dstArray.splice.apply( dstArray, args );
+  // }
 
   return result;
-
-  // throw _.err( 'not implemented' )
-  //
-  // if( range[ 1 ] - range[ 0 ] <= 0 )
-  // return _.bufferSlice( src );
-  //
-  // if( size > src.byteLength )
-  // {
-  //   result = longMake( src, size );
-  //   let resultTyped = new Uint8Array( result, 0, result.byteLength );
-  //   let srcTyped = new Uint8Array( src, 0, src.byteLength );
-  //   resultTyped.set( srcTyped );
-  // }
-  // else if( size < src.byteLength )
-  // {
-  //   result = src.slice( 0, size );
-  // }
-  //
-  // return result;
 }
 
 //
@@ -320,29 +532,29 @@ function bufferButRange( src, range, ins )
  * The bufferRelen() routine returns a new or the same typed array {-srcMap-} with a new or the same length (len).
  *
  * It creates the variable (result) checks, if (len) is more than (src.length),
- * if true, it creates and assigns to (result) a new typed array with the new length (len) by call the function(longMake(src, len))
+ * if true, it creates and assigns to (result) a new typed array with the new length (len) by call the function(longMakeUndefined(src, len))
  * and copies each element from the {-srcMap-} into the (result) array while ensuring only valid data types, if data types are invalid they are replaced with zero.
  * Otherwise, if (len) is less than (src.length) it returns a new typed array from 0 to the (len) indexes, but not including (len).
  * Otherwise, it returns an initial typed array.
  *
- * @see {@link wTools.longMake} - See for more information.
+ * @see {@link wTools.longMakeUndefined} - See for more information.
  *
  * @param { typedArray } src - The source typed array.
  * @param { Number } len - The length of a typed array.
  *
  * @example
  * // returns [ 3, 7, 13, 0 ]
- * let ints = new Int8Array( [ 3, 7, 13 ] );
+ * let ints = new I8x( [ 3, 7, 13 ] );
  * _.bufferRelen( ints, 4 );
  *
  * @example
  * // returns [ 3, 7, 13 ]
- * let ints2 = new Int16Array( [ 3, 7, 13, 33, 77 ] );
+ * let ints2 = new I16x( [ 3, 7, 13, 33, 77 ] );
  * _.bufferRelen( ints2, 3 );
  *
  * @example
  * // returns [ 3, 0, 13, 0, 77, 0 ]
- * let ints3 = new Int32Array( [ 3, 7, 13, 33, 77 ] );
+ * let ints3 = new I32x( [ 3, 7, 13, 33, 77 ] );
  * _.bufferRelen( ints3, 6 );
  *
  * @returns { typedArray } - Returns a new or the same typed array {-srcMap-} with a new or the same length (len).
@@ -361,7 +573,7 @@ function bufferRelen( src, len )
 
   if( len > src.length )
   {
-    result = _.longMake( src, len );
+    result = _.longMakeUndefined( src, len );
     result.set( src );
   }
   else if( len < src.length )
@@ -380,107 +592,113 @@ function bufferRelen( src, len )
    Previus implementation of routine bufferResize() has bug when size > length
 */
 
-function bufferResize( srcBuffer, size )
-{
-  let result = srcBuffer;
-
-  _.assert( _.bufferAnyIs( srcBuffer ) );
-  _.assert( srcBuffer.byteLength >= 0 );
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-
-  if( _.bufferRawIs( srcBuffer ) || _.bufferViewIs( srcBuffer ) )
-  srcBuffer.length = srcBuffer.byteLength;
-
-  if( size > srcBuffer.length )
-  {
-    if( _.bufferTypedIs( srcBuffer ) )
-    {
-      result = _.longMake( srcBuffer, size );
-      result.set( srcBuffer );
-    }
-    if( _.bufferRawIs( srcBuffer ) )
-    {
-      let resultTyped = new Uint8Array( _.longMake( srcBuffer, size ) );
-      let srcTyped = new Uint8Array( srcBuffer );
-      resultTyped.set( srcTyped );
-      result = _.bufferRawFrom( resultTyped );
-    }
-    if( _.bufferViewIs( srcBuffer ) )
-    {
-      let resultTyped = new Uint8Array( size );
-      let srcTyped = new Uint8Array( srcBuffer.buffer );
-      resultTyped.set( srcTyped );
-      result = new DataView( _.bufferRawFrom( resultTyped ) );
-    }
-    if( _.bufferNodeIs( srcBuffer ) )
-    {
-      if( parseInt( process.version[ 1 ] ) === 1 )
-      result = Buffer.alloc( size );
-      else
-      result = _.longMake( srcBuffer, size );
-
-      result.set( srcBuffer );
-    }
-  }
-  else if( size < srcBuffer.length )
-  {
-    if( _.bufferViewIs( srcBuffer ) )
-    {
-      result = new DataView( srcBuffer.buffer, 0, size );
-    }
-    else
-    result = srcBuffer.slice( 0, size );
-  }
-
-  return result;
-}
+/*
+  qqq : wrong! Size and length are different concepts.
+*/
 
 // function bufferResize( srcBuffer, size )
 // {
 //   let result = srcBuffer;
 //
-//   _.assert( _.bufferRawIs( srcBuffer ) || _.bufferTypedIs( srcBuffer ) );
+//   _.assert( _.bufferAnyIs( srcBuffer ) );
 //   _.assert( srcBuffer.byteLength >= 0 );
 //   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 //
-//   if( size > srcBuffer.byteLength )
+//   if( _.bufferRawIs( srcBuffer ) || _.bufferViewIs( srcBuffer ) )
+//   srcBuffer.length = srcBuffer.byteLength;
+//
+//   if( size > srcBuffer.length )
 //   {
-//     result = _.longMake( srcBuffer, size );
-//     let resultTyped = new Uint8Array( result, 0, result.byteLength );
-//     let srcTyped = new Uint8Array( srcBuffer, 0, srcBuffer.byteLength );
-//     resultTyped.set( srcTyped );
+//     if( _.bufferTypedIs( srcBuffer ) )
+//     {
+//       result = _.longMakeUndefined( srcBuffer, size );
+//       result.set( srcBuffer );
+//     }
+//     if( _.bufferRawIs( srcBuffer ) )
+//     {
+//       let resultTyped = new U8x( _.longMakeUndefined( srcBuffer, size ) );
+//       let srcTyped = new U8x( srcBuffer );
+//       resultTyped.set( srcTyped );
+//       result = _.bufferRawFrom( resultTyped );
+//     }
+//     if( _.bufferViewIs( srcBuffer ) )
+//     {
+//       let resultTyped = new U8x( size );
+//       let srcTyped = new U8x( srcBuffer.buffer );
+//       resultTyped.set( srcTyped );
+//       result = new BufferView( _.bufferRawFrom( resultTyped ) );
+//     }
+//     if( _.bufferNodeIs( srcBuffer ) )
+//     {
+//       // qqq : ?
+//       _.assert( 0, 'not tested' );
+//       if( parseInt( process.version[ 1 ] ) === 1 )
+//       result = BufferNode.alloc( size );
+//       else
+//       result = _.longMakeUndefined( srcBuffer, size );
+//
+//       result.set( srcBuffer );
+//     }
 //   }
-//   else if( size < srcBuffer.byteLength )
+//   else if( size < srcBuffer.length )
 //   {
+//     if( _.bufferViewIs( srcBuffer ) )
+//     {
+//       result = new BufferView( srcBuffer.buffer, 0, size );
+//     }
+//     else
 //     result = srcBuffer.slice( 0, size );
 //   }
 //
 //   return result;
 // }
 
+function bufferResize( srcBuffer, size )
+{
+  let result = srcBuffer;
+
+  _.assert( _.bufferRawIs( srcBuffer ) || _.bufferTypedIs( srcBuffer ) );
+  _.assert( srcBuffer.byteLength >= 0 );
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+
+  if( size > srcBuffer.byteLength )
+  {
+    result = _.longMakeUndefined( srcBuffer, size );
+    let resultTyped = new U8x( result, 0, result.byteLength );
+    let srcTyped = new U8x( srcBuffer, 0, srcBuffer.byteLength );
+    resultTyped.set( srcTyped );
+  }
+  else if( size < srcBuffer.byteLength )
+  {
+    result = srcBuffer.slice( 0, size );
+  }
+
+  return result;
+}
+
 //
 
 function bufferBytesGet( src )
 {
 
-  if( src instanceof ArrayBuffer )
+  if( src instanceof BufferRaw )
   {
-    return new Uint8Array( src );
+    return new U8x( src );
   }
-  else if( typeof Buffer !== 'undefined' && src instanceof Buffer )
+  else if( typeof BufferNode !== 'undefined' && src instanceof BufferNode )
   {
-    return new Uint8Array( src.buffer, src.byteOffset, src.byteLength );
+    return new U8x( src.buffer, src.byteOffset, src.byteLength );
   }
   else if( _.bufferTypedIs( src ) )
   {
-    return new Uint8Array( src.buffer, src.byteOffset, src.byteLength );
+    return new U8x( src.buffer, src.byteOffset, src.byteLength );
   }
   else if( _.strIs( src ) )
   {
-    if( _global_.Buffer )
-    return new Uint8Array( _.bufferRawFrom( Buffer.from( src, 'utf8' ) ) );
+    if( _global_.BufferNode )
+    return new U8x( _.bufferRawFrom( BufferNode.from( src, 'utf8' ) ) );
     else
-    return new Uint8Array( _.encode.utf8ToBuffer( src ) );
+    return new U8x( _.encode.utf8ToBuffer( src ) );
   }
   else _.assert( 0, 'wrong argument' );
 
@@ -496,13 +714,13 @@ function bufferBytesGet( src )
    *
    * @example
    * // returns [ 513, 1027, 1541 ]
-   * let view1 = new Int8Array( [ 1, 2, 3, 4, 5, 6 ] );
-   * _.bufferRetype(view1, Int16Array);
+   * let view1 = new I8x( [ 1, 2, 3, 4, 5, 6 ] );
+   * _.bufferRetype(view1, I16x);
    *
    * @example
    * // returns [ 1, 2, 3, 4, 5, 6 ]
-   * let view2 = new Int16Array( [ 513, 1027, 1541 ] );
-   * _.bufferRetype(view2, Int8Array);
+   * let view2 = new I16x( [ 513, 1027, 1541 ] );
+   * _.bufferRetype(view2, I8x);
    *
    * @returns { typedArray } Returns a new instance of (bufferType) constructor.
    * @function bufferRetype
@@ -547,15 +765,15 @@ function bufferJoin()
 
     if( _.bufferRawIs( src ) )
     {
-      srcs.push( new Uint8Array( src ) );
+      srcs.push( new U8x( src ) );
     }
-    else if( src instanceof Uint8Array )
+    else if( src instanceof U8x )
     {
       srcs.push( src );
     }
     else
     {
-      srcs.push( new Uint8Array( src.buffer, src.byteOffset, src.byteLength ) );
+      srcs.push( new U8x( src.buffer, src.byteOffset, src.byteLength ) );
     }
 
     _.assert( src.byteLength >= 0, 'Expects buffers, but got', _.strType( src ) );
@@ -571,9 +789,9 @@ function bufferJoin()
 
   /* */
 
-  let resultBuffer = new ArrayBuffer( size );
+  let resultBuffer = new BufferRaw( size );
   let result = _.bufferRawIs( firstSrc ) ? resultBuffer : new firstSrc.constructor( resultBuffer );
-  let resultBytes = result.constructor === Uint8Array ? result : new Uint8Array( resultBuffer );
+  let resultBytes = result.constructor === U8x ? result : new U8x( resultBuffer );
 
   /* */
 
@@ -627,9 +845,9 @@ function bufferMove( dst, src )
 
     if( _.bufferRawIs( dst ) )
     {
-      dst = new Uint8Array( dst );
-      if( _.bufferTypedIs( src ) && !( src instanceof Uint8Array ) )
-      src = new Uint8Array( src.buffer, src.byteOffset, src.byteLength );
+      dst = new U8x( dst );
+      if( _.bufferTypedIs( src ) && !( src instanceof U8x ) )
+      src = new U8x( src.buffer, src.byteOffset, src.byteLength );
     }
 
     _.assert( _.longIs( dst ) );
@@ -665,8 +883,8 @@ function bufferToStr( src )
 {
   let result = '';
 
-  if( src instanceof ArrayBuffer )
-  src = new Uint8Array( src, 0, src.byteLength );
+  if( src instanceof BufferRaw )
+  src = new U8x( src, 0, src.byteLength );
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.bufferAnyIs( src ) );
@@ -856,7 +1074,7 @@ function bufferFromArrayOfArray( array, options )
 
   //
 
-  if( options.BufferType === undefined ) options.BufferType = Float32Array;
+  if( options.BufferType === undefined ) options.BufferType = F32x;
   if( options.sameLength === undefined ) options.sameLength = 1;
   if( !options.sameLength ) throw _.err( '_.bufferFromArrayOfArray :', 'different length of arrays is not implemented' );
 
@@ -910,10 +1128,10 @@ function bufferFrom( o )
   if( _.numberIs( o.src ) )
   o.src = [ o.src ];
 
-  if( o.bufferConstructor.name === 'ArrayBuffer' )
+  if( o.bufferConstructor.name === 'BufferRaw' )
   return _.bufferRawFrom( o.src );
 
-  if( o.bufferConstructor.name === 'Buffer' )
+  if( o.bufferConstructor.name === 'BufferNode' )
   return _.bufferNodeFrom( o.src );
 
   /* str / buffer.node / buffer.raw */
@@ -978,24 +1196,24 @@ bufferFrom.defaults =
 //
 
 /**
- * The bufferRawFromTyped() routine returns a new ArrayBuffer from (buffer.byteOffset) to the end of an ArrayBuffer of a typed array (buffer)
- * or returns the same ArrayBuffer of the (buffer), if (buffer.byteOffset) is not provided.
+ * The bufferRawFromTyped() routine returns a new BufferRaw from (buffer.byteOffset) to the end of an BufferRaw of a typed array (buffer)
+ * or returns the same BufferRaw of the (buffer), if (buffer.byteOffset) is not provided.
  *
  * @param { typedArray } buffer - Entity to check.
  *
  * @example
  * // returns [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
- * let buffer1 = new ArrayBuffer( 10 );
- * let view1 = new Int8Array( buffer1 );
+ * let buffer1 = new BufferRaw( 10 );
+ * let view1 = new I8x( buffer1 );
  * _.bufferRawFromTyped( view1 );
  *
  * @example
  * // returns [ 0, 0, 0, 0, 0, 0 ]
- * let buffer2 = new ArrayBuffer( 10 );
- * let view2 = new Int8Array( buffer2, 2 );
+ * let buffer2 = new BufferRaw( 10 );
+ * let view2 = new I8x( buffer2, 2 );
  * _.bufferRawFromTyped( view2 );
  *
- * @returns { ArrayBuffer } Returns a new or the same ArrayBuffer.
+ * @returns { BufferRaw } Returns a new or the same BufferRaw.
  * If (buffer) is instance of '[object ArrayBuffer]', it returns buffer.
  * @function bufferRawFromTyped
  * @throws { Error } Will throw an Error if (arguments.length) is not equal to the 1.
@@ -1030,14 +1248,14 @@ function bufferRawFrom( buffer )
 
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-  if( buffer instanceof ArrayBuffer )
+  if( buffer instanceof BufferRaw )
   return buffer;
 
   if( _.bufferNodeIs( buffer ) || _.arrayIs( buffer ) )
   {
 
     // result = buffer.buffer;
-    result = new Uint8Array( buffer ).buffer;
+    result = new U8x( buffer ).buffer;
 
   }
   else if( _.bufferTypedIs( buffer ) || _.bufferViewIs( buffer ) )
@@ -1053,9 +1271,9 @@ function bufferRawFrom( buffer )
   else if( _.strIs( buffer ) )
   {
 
-    if( _global_.Buffer )
+    if( _global_.BufferNode )
     {
-      result = _.bufferRawFrom( Buffer.from( buffer, 'utf8' ) );
+      result = _.bufferRawFrom( BufferNode.from( buffer, 'utf8' ) );
     }
     else
     {
@@ -1087,6 +1305,7 @@ function bufferBytesFrom( buffer )
   if( _.bufferNodeIs( buffer ) )
   {
 
+    debugger;
     _.assert( _.bufferRawIs( buffer.buffer ) )
     result = new U8x( buffer.buffer, buffer.byteOffset, buffer.byteLength );
 
@@ -1128,7 +1347,7 @@ function bufferBytesFrom( buffer )
 function bufferBytesFromNode( src )
 {
   _.assert( _.bufferNodeIs( src ) );
-  let result = new Uint8Array( buffer );
+  let result = new U8x( buffer );
   return result;
 }
 
@@ -1166,8 +1385,8 @@ function bufferNodeFrom( buffer )
   if( buffer.length === 0 || buffer.byteLength === 0 )
   {
     // _.assert( 0, 'not tested' );
-    // result = new Buffer([]);
-    result = Buffer.from([]);
+    // result = new BufferNode([]);
+    result = BufferNode.from([]);
   }
   else if( _.strIs( buffer ) )
   {
@@ -1176,17 +1395,17 @@ function bufferNodeFrom( buffer )
   }
   else if( buffer.buffer )
   {
-    result = Buffer.from( buffer.buffer, buffer.byteOffset, buffer.byteLength );
+    result = BufferNode.from( buffer.buffer, buffer.byteOffset, buffer.byteLength );
   }
   else
   {
     // _.assert( 0, 'not tested' );
-    result = Buffer.from( buffer );
+    result = BufferNode.from( buffer );
   }
 
   // if( !buffer.length && !buffer.byteLength )
   // {
-  //   buffer = new Buffer([]);
+  //   buffer = new BufferNode([]);
   // }
   // else if( toBuffer )
   // try
@@ -1201,9 +1420,9 @@ function bufferNodeFrom( buffer )
   // else
   // {
   //   if( _.bufferTypedIs( buffer ) )
-  //   buffer = Buffer.from( buffer.buffer );
+  //   buffer = BufferNode.from( buffer.buffer );
   //   else
-  //   buffer = Buffer.from( buffer );
+  //   buffer = BufferNode.from( buffer );
   // }
 
   _.assert( _.bufferNodeIs( result ) );
@@ -1260,7 +1479,7 @@ function buffersSerialize( o )
   /* make buffer */
 
   if( !store[ 'buffer' ] )
-  store[ 'buffer' ] = new ArrayBuffer( size );
+  store[ 'buffer' ] = new BufferRaw( size );
 
   let dstBuffer = _.bufferBytesGet( store[ 'buffer' ] );
 
@@ -1284,7 +1503,7 @@ function buffersSerialize( o )
     let name = buffers[ b ].name;
     let attribute = buffers[ b ].attribute;
     let buffer = buffers[ b ].buffer;
-    let bytes = buffer ? _.bufferBytesGet( buffer ) : new Uint8Array();
+    let bytes = buffer ? _.bufferBytesGet( buffer ) : new U8x();
     let bufferSize = buffers[ b ].bufferSize;
 
     if( o.dropAttribute && o.dropAttribute[ name ] )
@@ -1396,6 +1615,864 @@ buffersDeserialize.defaults =
     attributeOptions.buffer = buffer;
     new this.AttributeOfGeometry( attributeOptions ).addTo( this );
   },
+}
+
+// --
+// long transformer
+// --
+
+/**
+ * The longDuplicate() routine returns an array with duplicate values of a certain number of times.
+ *
+ * @param { objectLike } [ o = {  } ] o - The set of arguments.
+ * @param { longIs } o.src - The given initial array.
+ * @param { longIs } o.result - To collect all data.
+ * @param { Number } [ o.numberOfAtomsPerElement = 1 ] o.numberOfAtomsPerElement - The certain number of times
+ * to append the next value from (srcArray or o.src) to the (o.result).
+ * If (o.numberOfAtomsPerElement) is greater that length of a (srcArray or o.src) it appends the 'undefined'.
+ * @param { Number } [ o.numberOfDuplicatesPerElement = 2 ] o.numberOfDuplicatesPerElement = 2 - The number of duplicates per element.
+ *
+ * @example
+ * // returns [ 'a', 'a', 'b', 'b', 'c', 'c' ]
+ * _.longDuplicate( [ 'a', 'b', 'c' ] );
+ *
+ * @example
+ * // returns [ 'abc', 'def', 'abc', 'def', 'abc', 'def' ]
+ * let options = {
+ *   src : [ 'abc', 'def' ],
+ *   result : [  ],
+ *   numberOfAtomsPerElement : 2,
+ *   numberOfDuplicatesPerElement : 3
+ * };
+ * _.longDuplicate( options, {} );
+ *
+ * @example
+ * // returns [ 'abc', 'def', undefined, 'abc', 'def', undefined, 'abc', 'def', undefined ]
+ * let options = {
+ *   src : [ 'abc', 'def' ],
+ *   result : [  ],
+ *   numberOfAtomsPerElement : 3,
+ *   numberOfDuplicatesPerElement : 3
+ * };
+ * _.longDuplicate( options, { a : 7, b : 13 } );
+ *
+ * @returns { Array } Returns an array with duplicate values of a certain number of times.
+ * @function longDuplicate
+ * @throws { Error } Will throw an Error if ( o ) is not an objectLike.
+ * @memberof wTools
+ */
+
+function longDuplicate( o )
+{
+  _.assert( arguments.length === 1 || arguments.length === 2 );
+
+  if( arguments.length === 2 )
+  {
+    o = { src : arguments[ 0 ], numberOfDuplicatesPerElement : arguments[ 1 ] };
+  }
+  else
+  {
+    if( !_.objectIs( o ) )
+    o = { src : o };
+  }
+
+  _.assert( _.numberIs( o.numberOfDuplicatesPerElement ) || o.numberOfDuplicatesPerElement === undefined );
+  _.routineOptions( longDuplicate, o );
+  _.assert( _.longIs( o.src ), 'Уxpects o.src as longIs entity' );
+  _.assert( _.numberIsInt( o.src.length / o.numberOfAtomsPerElement ) );
+
+  if( o.numberOfDuplicatesPerElement === 1 )
+  {
+    if( o.result )
+    {
+      _.assert( _.longIs( o.result ) || _.bufferTypedIs( o.result ), 'Expects o.result as longIs or TypedArray if numberOfDuplicatesPerElement equals 1' );
+
+      if( _.bufferTypedIs( o.result ) )
+      o.result = _.longShallowClone( o.result, o.src );
+      else if( _.longIs( o.result ) )
+      o.result.push.apply( o.result, o.src );
+    }
+    else
+    {
+      o.result = o.src;
+    }
+    return o.result;
+  }
+
+  let length = o.src.length * o.numberOfDuplicatesPerElement;
+  let numberOfElements = o.src.length / o.numberOfAtomsPerElement;
+
+  if( o.result )
+  _.assert( o.result.length >= length );
+
+  o.result = o.result || _.longMakeUndefined( o.src, length );
+
+  let rlength = o.result.length;
+
+  for( let c = 0, cl = numberOfElements ; c < cl ; c++ )
+  {
+
+    for( let d = 0, dl = o.numberOfDuplicatesPerElement ; d < dl ; d++ )
+    {
+
+      for( let e = 0, el = o.numberOfAtomsPerElement ; e < el ; e++ )
+      {
+        let indexDst = c*o.numberOfAtomsPerElement*o.numberOfDuplicatesPerElement + d*o.numberOfAtomsPerElement + e;
+        let indexSrc = c*o.numberOfAtomsPerElement+e;
+        o.result[ indexDst ] = o.src[ indexSrc ];
+      }
+
+    }
+
+  }
+
+  _.assert( o.result.length === rlength );
+
+  return o.result;
+}
+
+longDuplicate.defaults =
+{
+  src : null,
+  result : null,
+  numberOfAtomsPerElement : 1,
+  numberOfDuplicatesPerElement : 2,
+}
+
+//
+
+/**
+ * The longUnduplicate( dstLong, onEvaluator ) routine returns the dstlong with the duplicated elements removed.
+ * The dstLong instance will be returned when possible, if not a new instance of the same type is created.
+ *
+ * @param { longIs } dstLong - The source and destination long.
+ * @param { Function } [ onEvaluate = function( e ) { return e } ] - A callback function.
+ *
+ * @example
+ * // returns [ 1, 2, 'abc', 4, true ]
+ * _.longUnduplicate( [ 1, 1, 2, 'abc', 'abc', 4, true, true ] );
+ *
+ * @example
+ * // [ 1, 2, 3, 4, 5 ]
+ * _.longUnduplicate( [ 1, 2, 3, 4, 5 ] );
+ *
+ * @returns { Number } - Returns the source long without the duplicated elements.
+ * @function longUnduplicate
+ * @throws { Error } If passed arguments is less than one or more than two.
+ * @throws { Error } If the first argument is not an long.
+ * @throws { Error } If the second argument is not a Function.
+ * @memberof wTools
+ */
+
+/* qqq : routine longUnduplicate requires good test coverage and documentation */
+
+// function longUnduplicate( dstLong, onEvaluate )
+// {
+//   _.assert( 1 <= arguments.length || arguments.length <= 2 );
+//   _.assert( _.longIs( dstLong ), 'Expects Long' );
+//
+//   if( _.arrayIs( dstLong ) )
+//   return _.arrayRemoveDuplicates( dstLong, onEvaluate );
+//
+//   if( !dstLong.length )
+//   return dstLong;
+//
+//   let length = dstLong.length;
+//
+//   for( let i = 0; i < dstLong.length; i++ )
+//   if( _.arrayLeftIndex( dstLong, dstLong[ i ], i+1, onEvaluate ) !== -1 )
+//   length--;
+//
+//   if( length === dstLong.length )
+//   return dstLong;
+//
+//   let result = _.longMakeUndefined( dstLong, length );
+//   result[ 0 ] = dstLong[ 0 ];
+//
+//   let j = 1;
+//   for( let i = 1; i < dstLong.length && j < length; i++ )
+//   if( _.arrayRightIndex( result, dstLong[ i ], j-1, onEvaluate ) === -1 )
+//   result[ j++ ] = dstLong[ i ];
+//
+//   _.assert( j === length );
+//
+//   return result;
+// }
+
+//
+
+function longUnduplicate( dst, src, onEvaluate )
+{
+
+  if( _.routineIs( arguments[ 1 ] ) && arguments[ 2 ] === undefined )
+  {
+    onEvaluate = arguments[ 1 ];
+    src = undefined;
+  }
+
+  _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
+  _.assert( dst === null || _.arrayIs( dst ) );
+  _.assert( src === undefined || _.longIs( src ) );
+  _.assert( onEvaluate === undefined || _.routineIs( onEvaluate ) );
+
+  if( src && dst )
+  {
+    dst = _.arrayAppendArraysOnce( dst, src );
+    src = undefined;
+  }
+
+  if( src )
+  {
+    _.assert( dst === null );
+    let unique = _.longHasUniques
+    ({
+      src,
+      onEvaluate : onEvaluate,
+      includeFirst : 1,
+    });
+
+    let result = _.longMakeUndefined( src, unique.number );
+
+    let c = 0;
+    for( let i = 0 ; i < src.length ; i++ )
+    if( unique.is[ i ] )
+    {
+      result[ c ] = src[ i ];
+      c += 1;
+    }
+
+    return result;
+  }
+  else if( dst )
+  {
+    let unique = _.longHasUniques
+    ({
+      src : dst,
+      onEvaluate : onEvaluate,
+      includeFirst : 1,
+    });
+
+    for( let i = dst.length-1 ; i >= 0 ; i-- )
+    if( !unique.is[ i ] )
+    {
+      dst.splice( i, 1 );
+    }
+
+    return dst;
+  }
+  else _.assert( 0 );
+
+}
+
+
+// function longUnduplicate( dstLong, onEvaluate )
+// {
+//   _.assert( 1 <= arguments.length || arguments.length <= 3 );
+//   _.assert( _.longIs( dstLong ), 'longUnduplicate :', 'Expects Long' );
+//
+//   if( _.arrayIs( dstLong ) )
+//   {
+//     _.arrayRemoveDuplicates( dstLong, onEvaluate );
+//   }
+//   else if( Object.prototype.toString.call( dstLong ) === "[object Arguments]")
+//   {
+//     let newElement;
+//     for( let i = 0; i < dstLong.length; i++ )
+//     {
+//       newElement = dstLong[ i ];
+//       for( let j = i + 1; j < dstLong.length; j++ )
+//       {
+//         if( newElement === dstLong[ j ] )
+//         {
+//           let array = Array.from( dstLong );
+//           _.arrayRemoveDuplicates( array, onEvaluate );
+//           dstLong = new dstLong.constructor( array ); // xxx : result = _.longMakeUndefined( array, l-f );
+//         }
+//       }
+//     }
+//   }
+//   else
+//   {
+//     if( !onEvaluate )
+//     {
+//       for( let i = 0 ; i < dstLong.length ; i++ )
+//       {
+//         function isDuplicated( element, index, array )
+//         {
+//           return ( element !== dstLong[ i ] || index === i );
+//         }
+//         dstLong = dstLong.filter( isDuplicated );
+//       }
+//     }
+//     else
+//     {
+//       if( onEvaluate.length === 2 )
+//       {
+//         for( let i = 0 ; i < dstLong.length ; i++ )
+//         {
+//           function isDuplicated( element, index, array )
+//           {
+//             return ( !onEvaluate( element, dstLong[ i ] ) || index === i );
+//           }
+//           dstLong = dstLong.filter( isDuplicated );
+//         }
+//       }
+//       else
+//       {
+//         for( let i = 0 ; i < dstLong.length ; i++ )
+//         {
+//           function isDuplicated( element, index, array )
+//           {
+//             return ( onEvaluate( element ) !== onEvaluate( dstLong[ i ] ) || index === i );
+//           }
+//           dstLong = dstLong.filter( isDuplicated );
+//         }
+//       }
+//     }
+//   }
+//
+//   return dstLong;
+// }
+
+// /* qqq : not optimal, no redundant copy */
+// /*
+// function longUnduplicate( dstLong, onEvaluate )
+// {
+//   _.assert( 1 <= arguments.length || arguments.length <= 3 );
+//   _.assert( _.longIs( dstLong ), 'longUnduplicate :', 'Expects Long' );
+//
+//   if( _.arrayIs( dstLong ) )
+//   {
+//     _.arrayRemoveDuplicates( dstLong, onEvaluate )
+//     return dstLong;
+//   }
+//
+//   let array = Array.from( dstLong );
+//   _.arrayRemoveDuplicates( array, onEvaluate )
+//
+//   if( array.length === dstLong.length )
+//   {
+//     return dstLong;
+//   }
+//   else
+//   {
+//     return new dstLong.constructor( array ); // xxx : result = _.longMakeUndefined( array, l-f );
+//   }
+//
+// }
+// */
+
+//
+// function longUnduplicate( dst, src, onEvaluate )
+// {
+//
+//   _.assert( arguments.length === 2 || arguments.length === 3 );
+//   _.assert( dst === null || _.arrayIs( dst ) );
+//   _.assert( src === null || _.longIs( src ) );
+//
+//   let dstUnique;
+//
+//   if( src && dst )
+//   {
+//     dst = _.arrayAppendArraysOnce( dst, src );
+//   }
+//
+//   x
+//
+//   let srcUnique = _.longHasUniques
+//   ({
+//     src,
+//     onEvaluate,
+//     includeFirst : 1,
+//   });
+//
+//   let result = _.longMakeUndefined( src, dstUnique.number + srcUnique.number );
+//
+//   let c = 0;
+//   for( let i = 0 ; i < src.length ; i++ )
+//   if( srcUnique.is[ i ] )
+//   {
+//     result[ c ] = src[ i ];
+//     c += 1;
+//   }
+//
+//   return result;
+// }
+
+//
+
+function longHasUniques( o )
+{
+
+  if( _.longIs( o ) )
+  o = { src : o };
+
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.assert( _.longIs( o.src ) );
+  _.assertMapHasOnly( o, longHasUniques.defaults );
+
+  /* */
+
+  // if( o.onEvaluate )
+  // {
+  //   o.src = _.entityMap( o.src, ( e ) => o.onEvaluate( e ) );
+  // }
+
+  /* */
+
+  let number = o.src.length;
+  let isUnique = [];
+  let index;
+
+  for( let i = 0 ; i < o.src.length ; i++ )
+  isUnique[ i ] = 1;
+
+  for( let i = 0 ; i < o.src.length ; i++ )
+  {
+    index = i;
+
+    if( !isUnique[ i ] )
+    continue;
+
+    let currentUnique = 1;
+    index = _.arrayLeftIndex( o.src, o.src[ i ], index+1, o.onEvaluate );
+    if( index >= 0 )
+    do
+    {
+      isUnique[ index ] = 0;
+      number -= 1;
+      currentUnique = 0;
+      index = _.arrayLeftIndex( o.src, o.src[ i ], index+1, o.onEvaluate );
+    }
+    while( index >= 0 );
+
+    // if( currentUnique && o.src2 )
+    // do
+    // {
+    //   index = o.src2.indexOf( o.src2[ i ], index+1 );
+    //   if( index !== -1 )
+    //   currentUnique = 0;
+    // }
+    // while( index !== -1 );
+
+    if( !o.includeFirst )
+    if( !currentUnique )
+    {
+      isUnique[ i ] = 0;
+      number -= 1;
+    }
+
+  }
+
+  return { number, is : isUnique };
+}
+
+longHasUniques.defaults =
+{
+  src : null,
+  // src2 : null,
+  onEvaluate : null,
+  includeFirst : 0,
+}
+
+
+//
+
+// /**
+//  * Routine performs two operations: slice and grow.
+//  * "Slice" means returning a copy of original array( array ) that contains elements from index( f ) to index( l ),
+//  * but not including ( l ).
+//  * "Grow" means returning a bigger copy of original array( array ) with free space supplemented by elements with value of ( val )
+//  * argument.
+//  *
+//  * Returns result of operation as new array with same type as original array, original array is not modified.
+//  *
+//  * If ( f ) > ( l ), end index( l ) becomes equal to begin index( f ).
+//  * If ( l ) === ( f ) - returns empty array.
+//  *
+//  * To run "Slice", first ( f ) and last ( l ) indexes must be in range [ 0, array.length ], otherwise routine will run "Grow" operation.
+//  *
+//  * Rules for "Slice":
+//  * If ( f ) >= 0  and ( l ) <= ( array.length ) - returns array that contains elements with indexies from ( f ) to ( l ) but not including ( l ).
+//  *
+//  * Rules for "Grow":
+//  *
+//  * If ( f ) < 0 - prepends some number of elements with value of argument( val ) to the result array.
+//  * If ( l ) > ( array.length ) - returns array that contains elements with indexies from ( f ) to ( array.length ),
+//  * and free space filled by value of ( val ) if it was provided.
+//  * If ( l ) < 0, ( l ) > ( f ) - returns array filled with some amount of elements with value of argument( val ).
+//  *
+//  * @param { Array/BufferNode } array - Source array or buffer.
+//  * @param { Number } [ f = 0 ] f - begin zero-based index at which to begin extraction.
+//  * @param { Number } [ l = array.length ] l - end zero-based index at which to end extraction.
+//  * @param { * } val - value used to fill the space left after copying elements of the original array.
+//  *
+//  * @example
+//  * _.longResize( [ 1, 2, 3, 4, 5, 6, 7 ], 2, 6 );
+//  * // returns [ 3, 4, 5, 6 ]
+//  *
+//  * @example
+//  * // begin index is less then zero
+//  * _.longResize( [ 1, 2, 3, 4, 5, 6, 7 ], -1, 2 );
+//  * // returns [ 1, 2 ]
+//  *
+//  * @example
+//  * //end index is bigger then length of array
+//  * _.longResize( [ 1, 2, 3, 4, 5, 6, 7 ], 5, 100 );
+//  * // returns [ 6, 7 ]
+//  *
+//  * @example
+//  * //Increase size, fill empty with zeroes
+//  * let arr = [ 1 ]
+//  * let result = _.longResize( arr, 0, 5, 0 );
+//  * console.log( result );
+//  * //[ 1, 0, 0, 0, 0 ]
+//  *
+//  * @example
+//  * //Take two last elements from original, other fill with zeroes
+//  * let arr = [ 1, 2, 3, 4, 5 ]
+//  * let result = _.longResize( arr, 3, 8, 0 );
+//  * console.log( result );
+//  * //[ 4, 5, 0, 0, 0 ]
+//  *
+//  * @example
+//  * //Add two zeroes at the beginning
+//  * let arr = [ 1, 2, 3, 4, 5 ]
+//  * let result = _.longResize( arr, -2, arr.length, 0 );
+//  * console.log( result );
+//  * //[ 0, 0, 1, 2, 3, 4, 5 ]
+//  *
+//  * @example
+//  * //Add two zeroes at the beginning and two at end
+//  * let arr = [ 1, 2, 3, 4, 5 ]
+//  * let result = _.longResize( arr, -2, arr.length + 2, 0 );
+//  * console.log( result );
+//  * //[ 0, 0, 1, 2, 3, 4, 5, 0, 0 ]
+//  *
+//  * @example
+//  * //Source can be also a BufferNode
+//  * let buffer = BufferNode.from( '123' );
+//  * let result = _.longResize( buffer, 0, buffer.length + 2, 0 );
+//  * console.log( result );
+//  * //[ 49, 50, 51, 0, 0 ]
+//  *
+//  * @returns { Array } Returns a shallow copy of elements from the original array supplemented with value of( val ) if needed.
+//  * @function longResize
+//  * @throws { Error } Will throw an Error if ( array ) is not an Array-like or BufferNode.
+//  * @throws { Error } Will throw an Error if ( f ) is not a Number.
+//  * @throws { Error } Will throw an Error if ( l ) is not a Number.
+//  * @throws { Error } Will throw an Error if no arguments provided.
+//  * @memberof wTools
+// */
+//
+// function longResize( array, range, val )
+// {
+//
+//   _.assert( _.longIs( array ) );
+//   _.assert( _.rangeIs( f ) );
+//   _.assert( 1 <= arguments.length && arguments.length <= 3 );
+//
+//   let result;
+//   let f = range ? range[ 0 ] : undefined;
+//   let l = range ? range[ 1 ] : undefined;
+//
+//   f = f !== undefined ? f : 0;
+//   l = l !== undefined ? l : array.length;
+//
+//   if( l < f )
+//   l = f;
+//   let lsrc = Math.min( array.length, l );
+//
+//   // if( _.bufferTypedIs( array ) )
+//   // result = new array.constructor( l-f );
+//   // else
+//   // result = new Array( l-f );
+//
+//   result = _.longMakeUndefined( array, l-f );
+//
+//   let f2 = Math.max( f, 0 );
+//   let l2 = Math.min( array.length, l );
+//
+//   for( let r = f2 ; r < l2 ; r++ )
+//   result[ r - f ] = array[ r ];
+//
+//   if( val !== undefined )
+//   if( f < 0 || l > array.length )
+//   {
+//     for( let r = 0 ; r < -f ; r++ )
+//     {
+//       result[ r ] = val;
+//     }
+//     let r = Math.max( l2 - f, 0 );
+//     for( ; r < result.length ; r++ )
+//     {
+//       result[ r ] = val;
+//     }
+//   }
+//
+//   return result;
+// }
+
+// //
+//
+// /* srcBuffer = _.arrayMultislice( [ originalBuffer, f ], [ originalBuffer, 0, srcAttribute.atomsPerElement ] ); */
+//
+// function arrayMultislice()
+// {
+//   let length = 0;
+//
+//   if( arguments.length === 0 )
+//   return [];
+//
+//   for( let a = 0 ; a < arguments.length ; a++ )
+//   {
+//
+//     let src = arguments[ a ];
+//     let f = src[ 1 ];
+//     let l = src[ 2 ];
+//
+//     _.assert( _.longIs( src ) && _.longIs( src[ 0 ] ), 'Expects array of array' );
+//     f = f !== undefined ? f : 0;
+//     l = l !== undefined ? l : src[ 0 ].length;
+//     if( l < f )
+//     l = f;
+//
+//     _.assert( _.numberIs( f ) );
+//     _.assert( _.numberIs( l ) );
+//
+//     src[ 1 ] = f;
+//     src[ 2 ] = l;
+//
+//     length += l-f;
+//
+//   }
+//
+//   let result = new arguments[ 0 ][ 0 ].constructor( length ); // xxx : result = _.longMakeUndefined( array, l-f );
+//   let r = 0;
+//
+//   for( let a = 0 ; a < arguments.length ; a++ )
+//   {
+//
+//     let src = arguments[ a ];
+//     let f = src[ 1 ];
+//     let l = src[ 2 ];
+//
+//     for( let i = f ; i < l ; i++, r++ )
+//     result[ r ] = src[ 0 ][ i ];
+//
+//   }
+//
+//   return result;
+// }
+
+function longAreRepeatedProbe( srcArray, onEvaluate )
+{
+  let isUnique = _.longMakeUndefined( srcArray );
+  let result = Object.create( null );
+  result.array = _.arrayMake( srcArray.length );
+  result.uniques = srcArray.length;
+  result.condensed = srcArray.length;
+
+  _.assert( arguments.length === 1 || arguments.length === 2 );
+  _.assert( _.longIs( srcArray ) );
+
+  for( let i = 0 ; i < srcArray.length ; i++ )
+  {
+    let element = srcArray[ i ];
+
+    if( result.array[ i ] > 0 )
+    continue;
+
+    result.array[ i ] = 0;
+
+    let left = _.arrayLeftIndex( srcArray, element, i+1, onEvaluate );
+    if( left >= 0 )
+    {
+      result.array[ i ] = 1;
+      result.uniques -= 1;
+      do
+      {
+        result.uniques -= 1;
+        result.condensed -= 1;
+        result.array[ left ] = 1;
+        left = _.arrayLeftIndex( srcArray, element, left+1, onEvaluate );
+      }
+      while( left >= 0 );
+    }
+
+  }
+
+  return result;
+
+}
+
+//
+
+function longAllAreRepeated( src, onEvalutate )
+{
+  let areRepated = _.longAreRepeatedProbe.apply( this, arguments );
+  return !areRepated.uniques;
+}
+
+//
+
+function longAnyAreRepeated( src, onEvalutate )
+{
+  let areRepated = _.longAreRepeatedProbe.apply( this, arguments );
+  return areRepated.uniques !== src.length;
+}
+
+//
+
+function longNoneAreRepeated( src, onEvalutate )
+{
+  let areRepated = _.longAreRepeatedProbe.apply( this, arguments );
+  return areRepated.uniques === src.length;
+}
+
+//
+
+/**
+ * The longMask() routine returns a new instance of array that contains the certain value(s) from array (srcArray),
+ * if an array (mask) contains the truth-value(s).
+ *
+ * The longMask() routine checks, how much an array (mask) contain the truth value(s),
+ * and from that amount of truth values it builds a new array, that contains the certain value(s) of an array (srcArray),
+ * by corresponding index(es) (the truth value(s)) of the array (mask).
+ * If amount is equal 0, it returns an empty array.
+ *
+ * @param { longIs } srcArray - The source array.
+ * @param { longIs } mask - The target array.
+ *
+ * @example
+ * // returns [  ]
+ * _.longMask( [ 1, 2, 3, 4 ], [ undefined, null, 0, '' ] );
+ *
+ * @example
+ * // returns [ "c", 4, 5 ]
+ * _longMask( [ 'a', 'b', 'c', 4, 5 ], [ 0, '', 1, 2, 3 ] );
+ *
+ * @example
+ * // returns [ 'a', 'b', 5, 'd' ]
+ * _.longMask( [ 'a', 'b', 'c', 4, 5, 'd' ], [ 3, 7, 0, '', 13, 33 ] );
+ *
+ * @returns { longIs } Returns a new instance of array that contains the certain value(s) from array (srcArray),
+ * if an array (mask) contains the truth-value(s).
+ * If (mask) contains all falsy values, it returns an empty array.
+ * Otherwise, it returns a new array with certain value(s) of an array (srcArray).
+ * @function longMask
+ * @throws { Error } Will throw an Error if (arguments.length) is less or more that two.
+ * @throws { Error } Will throw an Error if (srcArray) is not an array-like.
+ * @throws { Error } Will throw an Error if (mask) is not an array-like.
+ * @throws { Error } Will throw an Error if length of both (srcArray and mask) is not equal.
+ * @memberof wTools
+ */
+
+function longMask( srcArray, mask )
+{
+
+  let atomsPerElement = mask.length;
+  let length = srcArray.length / atomsPerElement;
+
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+  _.assert( _.longIs( srcArray ), 'longMask :', 'Expects array-like as srcArray' );
+  _.assert( _.longIs( mask ), 'longMask :', 'Expects array-like as mask' );
+  _.assert
+  (
+    _.numberIsInt( length ),
+    'longMask :', 'Expects mask that has component for each atom of srcArray',
+    _.toStr
+    ({
+      'atomsPerElement' : atomsPerElement,
+      'srcArray.length' : srcArray.length,
+    })
+  );
+
+  let preserve = 0;
+  for( let m = 0 ; m < mask.length ; m++ )
+  if( mask[ m ] )
+  preserve += 1;
+
+  // let dstArray = new srcArray.constructor( length*preserve );
+  let dstArray = _.longMakeUndefined( srcArray, length*preserve );
+
+  if( !preserve )
+  return dstArray;
+
+  let c = 0;
+  for( let i = 0 ; i < length ; i++ )
+  for( let m = 0 ; m < mask.length ; m++ )
+  if( mask[ m ] )
+  {
+    dstArray[ c ] = srcArray[ i*atomsPerElement + m ];
+    c += 1;
+  }
+
+  return dstArray;
+}
+
+//
+
+function longUnmask( o )
+{
+
+  _.assert( arguments.length === 1 || arguments.length === 2 );
+
+  if( arguments.length === 2 )
+  o =
+  {
+    src : arguments[ 0 ],
+    mask : arguments[ 1 ],
+  }
+
+  _.assertMapHasOnly( o, longUnmask.defaults );
+  _.assert( _.longIs( o.src ), 'Expects o.src as ArrayLike' );
+
+  let atomsPerElement = o.mask.length;
+
+  let atomsPerElementPreserved = 0;
+  for( let m = 0 ; m < o.mask.length ; m++ )
+  if( o.mask[ m ] )
+  atomsPerElementPreserved += 1;
+
+  let length = o.src.length / atomsPerElementPreserved;
+  if( Math.floor( length ) !== length )
+  throw _.err( 'longMask :', 'Expects mask that has component for each atom of o.src', _.toStr({ 'atomsPerElementPreserved' : atomsPerElementPreserved, 'o.src.length' : o.src.length  }) );
+
+  let dstArray = _.longMakeUndefined( o.src, atomsPerElement*length );
+  // let dstArray = new o.src.constructor( atomsPerElement*length );
+
+  let e = [];
+  for( let i = 0 ; i < length ; i++ )
+  {
+
+    for( let m = 0, p = 0 ; m < o.mask.length ; m++ )
+    if( o.mask[ m ] )
+    {
+      e[ m ] = o.src[ i*atomsPerElementPreserved + p ];
+      p += 1;
+    }
+    else
+    {
+      e[ m ] = 0;
+    }
+
+    if( o.onEach )
+    o.onEach( e, i );
+
+    for( let m = 0 ; m < o.mask.length ; m++ )
+    dstArray[ i*atomsPerElement + m ] = e[ m ];
+
+  }
+
+  return dstArray;
+}
+
+longUnmask.defaults =
+{
+  src : null,
+  mask : null,
+  onEach : null,
 }
 
 // --
@@ -1673,954 +2750,138 @@ function arrayFromRangeWithNumberOfSteps( range , numberOfSteps )
 // array converter
 // --
 
-/**
- * The arrayToMap() converts an (array) into Object.
- *
- * @param { longIs } array - To convert into Object.
- *
- * @example
- * // returns {  }
- * _.arrayToMap( [  ] );
- *
- * @example
- * // returns { '0' : 3, '1' : [ 1, 2, 3 ], '2' : 'abc', '3' : false, '4' : undefined, '5' : null, '6' : {} }
- * _.arrayToMap( [ 3, [ 1, 2, 3 ], 'abc', false, undefined, null, {} ] );
- *
- * @example
- * // returns { '0' : 3, '1' : 'abc', '2' : false, '3' : undefined, '4' : null, '5' : { greeting: 'Hello there!' } }
- * let args = ( function() {
- *   return arguments;
- * } )( 3, 'abc', false, undefined, null, { greeting: 'Hello there!' } );
- * _.arrayToMap( args );
- *
- * @returns { Object } Returns an Object.
- * @function arrayToMap
- * @throws { Error } Will throw an Error if (array) is not an array-like.
- * @memberof wTools
- */
-
-function arrayToMap( array )
-{
-  let result = Object.create( null );
-
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.longIs( array ) );
-
-  for( let a = 0 ; a < array.length ; a++ )
-  result[ a ] = array[ a ];
-  return result;
-}
-
+// /**
+//  * The arrayToMap() converts an (array) into Object.
+//  *
+//  * @param { longIs } array - To convert into Object.
+//  *
+//  * @example
+//  * // returns {  }
+//  * _.arrayToMap( [  ] );
+//  *
+//  * @example
+//  * // returns { '0' : 3, '1' : [ 1, 2, 3 ], '2' : 'abc', '3' : false, '4' : undefined, '5' : null, '6' : {} }
+//  * _.arrayToMap( [ 3, [ 1, 2, 3 ], 'abc', false, undefined, null, {} ] );
+//  *
+//  * @example
+//  * // returns { '0' : 3, '1' : 'abc', '2' : false, '3' : undefined, '4' : null, '5' : { greeting: 'Hello there!' } }
+//  * let args = ( function() {
+//  *   return arguments;
+//  * } )( 3, 'abc', false, undefined, null, { greeting: 'Hello there!' } );
+//  * _.arrayToMap( args );
+//  *
+//  * @returns { Object } Returns an Object.
+//  * @function arrayToMap
+//  * @throws { Error } Will throw an Error if (array) is not an array-like.
+//  * @memberof wTools
+//  */
 //
-
-/**
- * The arrayToStr() routine joins an array {-srcMap-} and returns one string containing each array element separated by space,
- * only types of integer or floating point.
- *
- * @param { longIs } src - The source array.
- * @param { objectLike } [ options = {  } ] options - The options.
- * @param { Number } [ options.precision = 5 ] - The precision of numbers.
- * @param { String } [ options.type = 'mixed' ] - The type of elements.
- *
- * @example
- * // returns "1 2 3 "
- * _.arrayToStr( [ 1, 2, 3 ], { type : 'int' } );
- *
- * @example
- * // returns "3.500 13.77 7.330"
- * _.arrayToStr( [ 3.5, 13.77, 7.33 ], { type : 'float', precission : 4 } );
- *
- * @returns { String } Returns one string containing each array element separated by space,
- * only types of integer or floating point.
- * If (src.length) is empty, it returns the empty string.
- * @function arrayToStr
- * @throws { Error } Will throw an Error If (options.type) is not the number or float.
- * @memberof wTools
- */
-
-function arrayToStr( src, options )
-{
-
-  let result = '';
-  options = options || Object.create( null );
-
-  if( options.precission === undefined ) options.precission = 5;
-  if( options.type === undefined ) options.type = 'mixed';
-
-  if( !src.length ) return result;
-
-  if( options.type === 'float' )
-  {
-    for( var s = 0 ; s < src.length-1 ; s++ )
-    {
-      result += src[ s ].toPrecision( options.precission ) + ' ';
-    }
-    result += src[ s ].toPrecision( options.precission );
-  }
-  else if( options.type === 'int' )
-  {
-    for( var s = 0 ; s < src.length-1 ; s++ )
-    {
-      result += String( src[ s ] ) + ' ';
-    }
-    result += String( src[ s ] ) + ' ';
-  }
-  else
-  {
-    throw _.err( 'not tested' );
-    for( let s = 0 ; s < src.length-1 ; s++ )
-    {
-      result += String( src[ s ] ) + ' ';
-    }
-    result += String( src[ s ] ) + ' ';
-  }
-
-  return result;
-}
+// function arrayToMap( array )
+// {
+//   let result = Object.create( null );
+//
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   _.assert( _.longIs( array ) );
+//
+//   for( let a = 0 ; a < array.length ; a++ )
+//   result[ a ] = array[ a ];
+//   return result;
+// }
+//
+// //
+//
+// /**
+//  * The arrayToStr() routine joins an array {-srcMap-} and returns one string containing each array element separated by space,
+//  * only types of integer or floating point.
+//  *
+//  * @param { longIs } src - The source array.
+//  * @param { objectLike } [ options = {  } ] options - The options.
+//  * @param { Number } [ options.precision = 5 ] - The precision of numbers.
+//  * @param { String } [ options.type = 'mixed' ] - The type of elements.
+//  *
+//  * @example
+//  * // returns "1 2 3 "
+//  * _.arrayToStr( [ 1, 2, 3 ], { type : 'int' } );
+//  *
+//  * @example
+//  * // returns "3.500 13.77 7.330"
+//  * _.arrayToStr( [ 3.5, 13.77, 7.33 ], { type : 'float', precission : 4 } );
+//  *
+//  * @returns { String } Returns one string containing each array element separated by space,
+//  * only types of integer or floating point.
+//  * If (src.length) is empty, it returns the empty string.
+//  * @function arrayToStr
+//  * @throws { Error } Will throw an Error If (options.type) is not the number or float.
+//  * @memberof wTools
+//  */
+//
+// function arrayToStr( src, options )
+// {
+//
+//   let result = '';
+//   options = options || Object.create( null );
+//
+//   if( options.precission === undefined ) options.precission = 5;
+//   if( options.type === undefined ) options.type = 'mixed';
+//
+//   if( !src.length ) return result;
+//
+//   if( options.type === 'float' )
+//   {
+//     for( var s = 0 ; s < src.length-1 ; s++ )
+//     {
+//       result += src[ s ].toPrecision( options.precission ) + ' ';
+//     }
+//     result += src[ s ].toPrecision( options.precission );
+//   }
+//   else if( options.type === 'int' )
+//   {
+//     for( var s = 0 ; s < src.length-1 ; s++ )
+//     {
+//       result += String( src[ s ] ) + ' ';
+//     }
+//     result += String( src[ s ] ) + ' ';
+//   }
+//   else
+//   {
+//     throw _.err( 'not tested' );
+//     for( let s = 0 ; s < src.length-1 ; s++ )
+//     {
+//       result += String( src[ s ] ) + ' ';
+//     }
+//     result += String( src[ s ] ) + ' ';
+//   }
+//
+//   return result;
+// }
 
 // --
 // array transformer
 // --
 
 /**
- * The arraySub() routine returns a shallow copy of a portion of an array
- * or a new TypedArray that contains
- * the elements from (begin) index to the (end) index,
- * but not including (end).
- *
- * @param { Array } src - Source array.
- * @param { Number } begin - Index at which to begin extraction.
- * @param { Number } end - Index at which to end extraction.
- *
- * @example
- * // returns [ 3, 4 ]
- * let arr = _.arraySub( [ 1, 2, 3, 4, 5 ], 2, 4 );
- *
- * @example
- * // returns [ 2, 3 ]
- * _.arraySub( [ 1, 2, 3, 4, 5 ], -4, -2 );
- *
- * @example
- * // returns [ 1, 2, 3, 4, 5 ]
- * _.arraySub( [ 1, 2, 3, 4, 5 ] );
- *
- * @returns { Array } - Returns a shallow copy of a portion of an array into a new Array.
- * @function arraySub
- * @throws { Error } If the passed arguments is more than three.
- * @throws { Error } If the first argument is not an array.
- * @memberof wTools
- */
-
-/* xxx : not array */
-function arraySub( src, begin, end )
-{
-
-  _.assert( arguments.length <= 3 );
-  _.assert( _.longIs( src ), 'unknown type of (-src-) argument' );
-  _.assert( _.routineIs( src.slice ) || _.routineIs( src.subarray ) );
-
-  if( _.routineIs( src.subarray ) )
-  return src.subarray( begin, end );
-
-  return src.slice( begin, end );
-}
-
-//
-
-function arrayButRange( src, range, ins )
-{
-  _.assert( _.arrayLikeResizable( src ) );
-  _.assert( ins === undefined || _.longIs( ins ) );
-  _.assert( arguments.length === 2 || arguments.length === 3 );
-
-  let args = [ range[ 0 ], range[ 1 ]-range[ 0 ] ];
-
-  if( ins )
-  _.arrayAppendArray( args, ins );
-
-  let result = src.slice();
-  result.splice.apply( result, args );
-  return result;
-}
-
-//
-
-/* qqq : requires good test coverage */
-
-function arraySlice( srcArray, f, l )
-{
-
-  _.assert( _.arrayLikeResizable( srcArray ) );
-  _.assert( 1 <= arguments.length && arguments.length <= 3 );
-
-  return srcArray.slice( f, l );
-}
-
-//
-
-/**
- * Changes length of provided array( array ) by copying it elements to newly created array using begin( f ),
- * end( l ) positions of the original array and value to fill free space after copy( val ). Length of new array is equal to ( l ) - ( f ).
- * If ( l ) < ( f ) - value of index ( f ) will be assigned to ( l ).
- * If ( l ) === ( f ) - returns empty array.
- * If ( l ) > ( array.length ) - returns array that contains elements with indexies from ( f ) to ( array.length ),
- * and free space filled by value of ( val ) if it was provided.
- * If ( l ) < ( array.length ) - returns array that contains elements with indexies from ( f ) to ( l ).
- * If ( l ) < 0 and ( l ) > ( f ) - returns array filled with some amount of elements with value of argument( val ).
- * If ( f ) < 0 - prepends some number of elements with value of argument( let ) to the result array.
- * @param { Array/Buffer } array - source array or buffer;
- * @param { Number } [ f = 0 ] - index of a first element to copy into new array;
- * @param { Number } [ l = array.length ] - index of a last element to copy into new array;
- * @param { * } val - value used to fill the space left after copying elements of the original array.
- *
- * @example
- * //Just partial copy of origin array
- * let arr = [ 1, 2, 3, 4 ]
- * let result = _.arrayGrow( arr, 0, 2 );
- * console.log( result );
- * //[ 1, 2 ]
- *
- * @example
- * //Increase size, fill empty with zeroes
- * let arr = [ 1 ]
- * let result = _.arrayGrow( arr, 0, 5, 0 );
- * console.log( result );
- * //[ 1, 0, 0, 0, 0 ]
- *
- * @example
- * //Take two last elements from original, other fill with zeroes
- * let arr = [ 1, 2, 3, 4, 5 ]
- * let result = _.arrayGrow( arr, 3, 8, 0 );
- * console.log( result );
- * //[ 4, 5, 0, 0, 0 ]
- *
- * @example
- * //Add two zeroes at the beginning
- * let arr = [ 1, 2, 3, 4, 5 ]
- * let result = _.arrayGrow( arr, -2, arr.length, 0 );
- * console.log( result );
- * //[ 0, 0, 1, 2, 3, 4, 5 ]
- *
- * @example
- * //Add two zeroes at the beginning and two at end
- * let arr = [ 1, 2, 3, 4, 5 ]
- * let result = _.arrayGrow( arr, -2, arr.length + 2, 0 );
- * console.log( result );
- * //[ 0, 0, 1, 2, 3, 4, 5, 0, 0 ]
- *
- * @example
- * //Source can be also a Buffer
- * let buffer = Buffer.from( '123' );
- * let result = _.arrayGrow( buffer, 0, buffer.length + 2, 0 );
- * console.log( result );
- * //[ 49, 50, 51, 0, 0 ]
- *
- * @returns { Array } Returns resized copy of a part of an original array.
- * @function arrayGrow
- * @throws { Error } Will throw an Error if( array ) is not a Array or Buffer.
- * @throws { Error } Will throw an Error if( f ) or ( l ) is not a Number.
- * @throws { Error } Will throw an Error if not enough arguments provided.
- * @memberof wTools
- */
-
-function arrayGrow( array, f, l, val )
-{
-
-  let result;
-
-  f = f !== undefined ? f : 0;
-  l = l !== undefined ? l : array.length;
-
-  _.assert( _.longIs( array ) );
-  _.assert( _.numberIs( f ) );
-  _.assert( _.numberIs( l ) );
-  _.assert( 1 <= arguments.length && arguments.length <= 4 );
-
-  if( l < f )
-  l = f;
-
-  if( _.bufferTypedIs( array ) )
-  result = new array.constructor( l-f );
-  else
-  result = new Array( l-f );
-
-  /* */
-
-  let lsrc = Math.min( array.length, l );
-  for( let r = Math.max( f, 0 ) ; r < lsrc ; r++ )
-  result[ r-f ] = array[ r ];
-
-  /* */
-
-  if( val !== undefined )
-  {
-    for( let r = 0 ; r < -f ; r++ )
-    {
-      result[ r ] = val;
-    }
-    for( let r = lsrc - f; r < result.length ; r++ )
-    {
-      result[ r ] = val;
-    }
-  }
-
-  return result;
-}
-
-//
-
-/**
- * Routine performs two operations: slice and grow.
- * "Slice" means returning a copy of original array( array ) that contains elements from index( f ) to index( l ),
- * but not including ( l ).
- * "Grow" means returning a bigger copy of original array( array ) with free space supplemented by elements with value of ( val )
- * argument.
- *
- * Returns result of operation as new array with same type as original array, original array is not modified.
- *
- * If ( f ) > ( l ), end index( l ) becomes equal to begin index( f ).
- * If ( l ) === ( f ) - returns empty array.
- *
- * To run "Slice", first ( f ) and last ( l ) indexes must be in range [ 0, array.length ], otherwise routine will run "Grow" operation.
- *
- * Rules for "Slice":
- * If ( f ) >= 0  and ( l ) <= ( array.length ) - returns array that contains elements with indexies from ( f ) to ( l ) but not including ( l ).
- *
- * Rules for "Grow":
- *
- * If ( f ) < 0 - prepends some number of elements with value of argument( val ) to the result array.
- * If ( l ) > ( array.length ) - returns array that contains elements with indexies from ( f ) to ( array.length ),
- * and free space filled by value of ( val ) if it was provided.
- * If ( l ) < 0, ( l ) > ( f ) - returns array filled with some amount of elements with value of argument( val ).
- *
- * @param { Array/Buffer } array - Source array or buffer.
- * @param { Number } [ f = 0 ] f - begin zero-based index at which to begin extraction.
- * @param { Number } [ l = array.length ] l - end zero-based index at which to end extraction.
- * @param { * } val - value used to fill the space left after copying elements of the original array.
- *
- * @example
- * _.arrayResize( [ 1, 2, 3, 4, 5, 6, 7 ], 2, 6 );
- * // returns [ 3, 4, 5, 6 ]
- *
- * @example
- * // begin index is less then zero
- * _.arrayResize( [ 1, 2, 3, 4, 5, 6, 7 ], -1, 2 );
- * // returns [ 1, 2 ]
- *
- * @example
- * //end index is bigger then length of array
- * _.arrayResize( [ 1, 2, 3, 4, 5, 6, 7 ], 5, 100 );
- * // returns [ 6, 7 ]
- *
- * @example
- * //Increase size, fill empty with zeroes
- * let arr = [ 1 ]
- * let result = _.arrayResize( arr, 0, 5, 0 );
- * console.log( result );
- * //[ 1, 0, 0, 0, 0 ]
- *
- * @example
- * //Take two last elements from original, other fill with zeroes
- * let arr = [ 1, 2, 3, 4, 5 ]
- * let result = _.arrayResize( arr, 3, 8, 0 );
- * console.log( result );
- * //[ 4, 5, 0, 0, 0 ]
- *
- * @example
- * //Add two zeroes at the beginning
- * let arr = [ 1, 2, 3, 4, 5 ]
- * let result = _.arrayResize( arr, -2, arr.length, 0 );
- * console.log( result );
- * //[ 0, 0, 1, 2, 3, 4, 5 ]
- *
- * @example
- * //Add two zeroes at the beginning and two at end
- * let arr = [ 1, 2, 3, 4, 5 ]
- * let result = _.arrayResize( arr, -2, arr.length + 2, 0 );
- * console.log( result );
- * //[ 0, 0, 1, 2, 3, 4, 5, 0, 0 ]
- *
- * @example
- * //Source can be also a Buffer
- * let buffer = Buffer.from( '123' );
- * let result = _.arrayResize( buffer, 0, buffer.length + 2, 0 );
- * console.log( result );
- * //[ 49, 50, 51, 0, 0 ]
- *
- * @returns { Array } Returns a shallow copy of elements from the original array supplemented with value of( val ) if needed.
- * @function arrayResize
- * @throws { Error } Will throw an Error if ( array ) is not an Array-like or Buffer.
- * @throws { Error } Will throw an Error if ( f ) is not a Number.
- * @throws { Error } Will throw an Error if ( l ) is not a Number.
- * @throws { Error } Will throw an Error if no arguments provided.
- * @memberof wTools
-*/
-
-function arrayResize( array, f, l, val )
-{
-  _.assert( _.longIs( array ) );
-
-  let result;
-
-  f = f !== undefined ? f : 0;
-  l = l !== undefined ? l : array.length;
-
-  _.assert( _.numberIs( f ) );
-  _.assert( _.numberIs( l ) );
-  _.assert( 1 <= arguments.length && arguments.length <= 4 );
-
-  if( l < f )
-  l = f;
-  let lsrc = Math.min( array.length, l );
-
-  if( _.bufferTypedIs( array ) )
-  result = new array.constructor( l-f );
-  else
-  result = new Array( l-f );
-
-  for( let r = Math.max( f, 0 ) ; r < lsrc ; r++ )
-  result[ r-f ] = array[ r ];
-
-  if( val !== undefined )
-  if( f < 0 || l > array.length )
-  {
-    for( let r = 0 ; r < -f ; r++ )
-    {
-      result[ r ] = val;
-    }
-    let r = Math.max( lsrc-f, 0 );
-    for( ; r < result.length ; r++ )
-    {
-      result[ r ] = val;
-    }
-  }
-
-  return result;
-}
-
-//
-
-/* srcBuffer = _.arrayMultislice( [ originalBuffer, f ], [ originalBuffer, 0, srcAttribute.atomsPerElement ] ); */
-
-function arrayMultislice()
-{
-  let length = 0;
-
-  if( arguments.length === 0 )
-  return [];
-
-  for( let a = 0 ; a < arguments.length ; a++ )
-  {
-
-    let src = arguments[ a ];
-    let f = src[ 1 ];
-    let l = src[ 2 ];
-
-    _.assert( _.longIs( src ) && _.longIs( src[ 0 ] ), 'Expects array of array' );
-    f = f !== undefined ? f : 0;
-    l = l !== undefined ? l : src[ 0 ].length;
-    if( l < f )
-    l = f;
-
-    _.assert( _.numberIs( f ) );
-    _.assert( _.numberIs( l ) );
-
-    src[ 1 ] = f;
-    src[ 2 ] = l;
-
-    length += l-f;
-
-  }
-
-  let result = new arguments[ 0 ][ 0 ].constructor( length );
-  let r = 0;
-
-  for( let a = 0 ; a < arguments.length ; a++ )
-  {
-
-    let src = arguments[ a ];
-    let f = src[ 1 ];
-    let l = src[ 2 ];
-
-    for( let i = f ; i < l ; i++, r++ )
-    result[ r ] = src[ 0 ][ i ];
-
-  }
-
-  return result;
-}
-
-//
-
-/**
- * The arrayDuplicate() routine returns an array with duplicate values of a certain number of times.
- *
- * @param { objectLike } [ o = {  } ] o - The set of arguments.
- * @param { longIs } o.src - The given initial array.
- * @param { longIs } o.result - To collect all data.
- * @param { Number } [ o.numberOfAtomsPerElement = 1 ] o.numberOfAtomsPerElement - The certain number of times
- * to append the next value from (srcArray or o.src) to the (o.result).
- * If (o.numberOfAtomsPerElement) is greater that length of a (srcArray or o.src) it appends the 'undefined'.
- * @param { Number } [ o.numberOfDuplicatesPerElement = 2 ] o.numberOfDuplicatesPerElement = 2 - The number of duplicates per element.
- *
- * @example
- * // returns [ 'a', 'a', 'b', 'b', 'c', 'c' ]
- * _.arrayDuplicate( [ 'a', 'b', 'c' ] );
- *
- * @example
- * // returns [ 'abc', 'def', 'abc', 'def', 'abc', 'def' ]
- * let options = {
- *   src : [ 'abc', 'def' ],
- *   result : [  ],
- *   numberOfAtomsPerElement : 2,
- *   numberOfDuplicatesPerElement : 3
- * };
- * _.arrayDuplicate( options, {} );
- *
- * @example
- * // returns [ 'abc', 'def', undefined, 'abc', 'def', undefined, 'abc', 'def', undefined ]
- * let options = {
- *   src : [ 'abc', 'def' ],
- *   result : [  ],
- *   numberOfAtomsPerElement : 3,
- *   numberOfDuplicatesPerElement : 3
- * };
- * _.arrayDuplicate( options, { a : 7, b : 13 } );
- *
- * @returns { Array } Returns an array with duplicate values of a certain number of times.
- * @function arrayDuplicate
- * @throws { Error } Will throw an Error if ( o ) is not an objectLike.
- * @memberof wTools
- */
-
-function arrayDuplicate( o )
-{
-  _.assert( arguments.length === 1 || arguments.length === 2 );
-
-  if( arguments.length === 2 )
-  {
-    o = { src : arguments[ 0 ], numberOfDuplicatesPerElement : arguments[ 1 ] };
-  }
-  else
-  {
-    if( !_.objectIs( o ) )
-    o = { src : o };
-  }
-
-  _.assert( _.numberIs( o.numberOfDuplicatesPerElement ) || o.numberOfDuplicatesPerElement === undefined );
-  _.routineOptions( arrayDuplicate, o );
-  _.assert( _.longIs( o.src ), 'arrayDuplicate expects o.src as longIs entity' );
-  _.assert( _.numberIsInt( o.src.length / o.numberOfAtomsPerElement ) );
-
-  if( o.numberOfDuplicatesPerElement === 1 )
-  {
-    if( o.result )
-    {
-      _.assert( _.longIs( o.result ) || _.bufferTypedIs( o.result ), 'Expects o.result as longIs or TypedArray if numberOfDuplicatesPerElement equals 1' );
-
-      if( _.bufferTypedIs( o.result ) )
-      o.result = _.longShallowClone( o.result, o.src );
-      else if( _.longIs( o.result ) )
-      o.result.push.apply( o.result, o.src );
-    }
-    else
-    {
-      o.result = o.src;
-    }
-    return o.result;
-  }
-
-  let length = o.src.length * o.numberOfDuplicatesPerElement;
-  let numberOfElements = o.src.length / o.numberOfAtomsPerElement;
-
-  if( o.result )
-  _.assert( o.result.length >= length );
-
-  o.result = o.result || _.longMake( o.src, length );
-
-  let rlength = o.result.length;
-
-  for( let c = 0, cl = numberOfElements ; c < cl ; c++ )
-  {
-
-    for( let d = 0, dl = o.numberOfDuplicatesPerElement ; d < dl ; d++ )
-    {
-
-      for( let e = 0, el = o.numberOfAtomsPerElement ; e < el ; e++ )
-      {
-        let indexDst = c*o.numberOfAtomsPerElement*o.numberOfDuplicatesPerElement + d*o.numberOfAtomsPerElement + e;
-        let indexSrc = c*o.numberOfAtomsPerElement+e;
-        o.result[ indexDst ] = o.src[ indexSrc ];
-      }
-
-    }
-
-  }
-
-  _.assert( o.result.length === rlength );
-
-  return o.result;
-}
-
-arrayDuplicate.defaults =
-{
-  src : null,
-  result : null,
-  numberOfAtomsPerElement : 1,
-  numberOfDuplicatesPerElement : 2,
-}
-
-//
-
-/**
- * The arrayMask() routine returns a new instance of array that contains the certain value(s) from array (srcArray),
- * if an array (mask) contains the truth-value(s).
- *
- * The arrayMask() routine checks, how much an array (mask) contain the truth value(s),
- * and from that amount of truth values it builds a new array, that contains the certain value(s) of an array (srcArray),
- * by corresponding index(es) (the truth value(s)) of the array (mask).
- * If amount is equal 0, it returns an empty array.
- *
- * @param { longIs } srcArray - The source array.
- * @param { longIs } mask - The target array.
- *
- * @example
- * // returns [  ]
- * _.arrayMask( [ 1, 2, 3, 4 ], [ undefined, null, 0, '' ] );
- *
- * @example
- * // returns [ "c", 4, 5 ]
- * _arrayMask( [ 'a', 'b', 'c', 4, 5 ], [ 0, '', 1, 2, 3 ] );
- *
- * @example
- * // returns [ 'a', 'b', 5, 'd' ]
- * _.arrayMask( [ 'a', 'b', 'c', 4, 5, 'd' ], [ 3, 7, 0, '', 13, 33 ] );
- *
- * @returns { longIs } Returns a new instance of array that contains the certain value(s) from array (srcArray),
- * if an array (mask) contains the truth-value(s).
- * If (mask) contains all falsy values, it returns an empty array.
- * Otherwise, it returns a new array with certain value(s) of an array (srcArray).
- * @function arrayMask
- * @throws { Error } Will throw an Error if (arguments.length) is less or more that two.
- * @throws { Error } Will throw an Error if (srcArray) is not an array-like.
- * @throws { Error } Will throw an Error if (mask) is not an array-like.
- * @throws { Error } Will throw an Error if length of both (srcArray and mask) is not equal.
- * @memberof wTools
- */
-
-function arrayMask( srcArray, mask )
-{
-
-  let atomsPerElement = mask.length;
-  let length = srcArray.length / atomsPerElement;
-
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.longIs( srcArray ), 'arrayMask :', 'Expects array-like as srcArray' );
-  _.assert( _.longIs( mask ), 'arrayMask :', 'Expects array-like as mask' );
-  _.assert
-  (
-    _.numberIsInt( length ),
-    'arrayMask :', 'Expects mask that has component for each atom of srcArray',
-    _.toStr
-    ({
-      'atomsPerElement' : atomsPerElement,
-      'srcArray.length' : srcArray.length,
-    })
-  );
-
-  let preserve = 0;
-  for( let m = 0 ; m < mask.length ; m++ )
-  if( mask[ m ] )
-  preserve += 1;
-
-  let dstArray = new srcArray.constructor( length*preserve );
-
-  if( !preserve )
-  return dstArray;
-
-  let c = 0;
-  for( let i = 0 ; i < length ; i++ )
-  for( let m = 0 ; m < mask.length ; m++ )
-  if( mask[ m ] )
-  {
-    dstArray[ c ] = srcArray[ i*atomsPerElement + m ];
-    c += 1;
-  }
-
-  return dstArray;
-}
-
-//
-
-function arrayUnmask( o )
-{
-
-  _.assert( arguments.length === 1 || arguments.length === 2 );
-
-  if( arguments.length === 2 )
-  o =
-  {
-    src : arguments[ 0 ],
-    mask : arguments[ 1 ],
-  }
-
-  _.assertMapHasOnly( o, arrayUnmask.defaults );
-  _.assert( _.longIs( o.src ), 'arrayUnmask : expects o.src as ArrayLike' );
-
-  let atomsPerElement = o.mask.length;
-
-  let atomsPerElementPreserved = 0;
-  for( let m = 0 ; m < o.mask.length ; m++ )
-  if( o.mask[ m ] )
-  atomsPerElementPreserved += 1;
-
-  let length = o.src.length / atomsPerElementPreserved;
-  if( Math.floor( length ) !== length )
-  throw _.err( 'arrayMask :', 'Expects mask that has component for each atom of o.src', _.toStr({ 'atomsPerElementPreserved' : atomsPerElementPreserved, 'o.src.length' : o.src.length  }) );
-
-  let dstArray = new o.src.constructor( atomsPerElement*length );
-
-  let e = [];
-  for( let i = 0 ; i < length ; i++ )
-  {
-
-    for( let m = 0, p = 0 ; m < o.mask.length ; m++ )
-    if( o.mask[ m ] )
-    {
-      e[ m ] = o.src[ i*atomsPerElementPreserved + p ];
-      p += 1;
-    }
-    else
-    {
-      e[ m ] = 0;
-    }
-
-    if( o.onEach )
-    o.onEach( e, i );
-
-    for( let m = 0 ; m < o.mask.length ; m++ )
-    dstArray[ i*atomsPerElement + m ] = e[ m ];
-
-  }
-
-  return dstArray;
-}
-
-arrayUnmask.defaults =
-{
-  src : null,
-  mask : null,
-  onEach : null,
-}
-
-//
-
-function longUniqueAre( o )
-{
-
-  if( _.longIs( o ) )
-  o = { src : o };
-
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.longIs( o.src ) );
-  _.assertMapHasOnly( o, longUniqueAre.defaults );
-
-  /* */
-
-  // if( o.onEvaluate )
-  // {
-  //   o.src = _.entityMap( o.src, ( e ) => o.onEvaluate( e ) );
-  // }
-
-  /* */
-
-  let number = o.src.length;
-  let isUnique = [];
-  let index;
-
-  for( let i = 0 ; i < o.src.length ; i++ )
-  isUnique[ i ] = 1;
-
-  for( let i = 0 ; i < o.src.length ; i++ )
-  {
-    index = i;
-
-    if( !isUnique[ i ] )
-    continue;
-
-    let currentUnique = 1;
-    index = _.arrayLeftIndex( o.src, o.src[ i ], index+1, o.onEvaluate );
-    if( index >= 0 )
-    do
-    {
-      isUnique[ index ] = 0;
-      number -= 1;
-      currentUnique = 0;
-      index = _.arrayLeftIndex( o.src, o.src[ i ], index+1, o.onEvaluate );
-    }
-    while( index >= 0 );
-
-    // if( currentUnique && o.src2 )
-    // do
-    // {
-    //   index = o.src2.indexOf( o.src2[ i ], index+1 );
-    //   if( index !== -1 )
-    //   currentUnique = 0;
-    // }
-    // while( index !== -1 );
-
-    if( !o.includeFirst )
-    if( !currentUnique )
-    {
-      isUnique[ i ] = 0;
-      number -= 1;
-    }
-
-  }
-
-  return { number, is : isUnique };
-}
-
-longUniqueAre.defaults =
-{
-  src : null,
-  // src2 : null,
-  onEvaluate : null,
-  includeFirst : 0,
-}
-
-//
-
-function longUnduplicate( dst, src, onEvaluate )
-{
-
-  if( _.routineIs( arguments[ 1 ] ) && arguments[ 2 ] === undefined )
-  {
-    onEvaluate = arguments[ 1 ];
-    src = undefined;
-  }
-
-  _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
-  _.assert( dst === null || _.arrayIs( dst ) );
-  _.assert( src === undefined || _.longIs( src ) );
-  _.assert( onEvaluate === undefined || _.routineIs( onEvaluate ) );
-
-  if( src && dst )
-  {
-    dst = _.arrayAppendArraysOnce( dst, src );
-    src = undefined;
-  }
-
-  if( src )
-  {
-    _.assert( dst === null );
-    let unique = _.longUniqueAre
-    ({
-      src,
-      onEvaluate : onEvaluate,
-      includeFirst : 1,
-    });
-
-    let result = _.longMake( src, unique.number );
-
-    let c = 0;
-    for( let i = 0 ; i < src.length ; i++ )
-    if( unique.is[ i ] )
-    {
-      result[ c ] = src[ i ];
-      c += 1;
-    }
-
-    return result;
-  }
-  else if( dst )
-  {
-    let unique = _.longUniqueAre
-    ({
-      src : dst,
-      onEvaluate : onEvaluate,
-      includeFirst : 1,
-    });
-
-    for( let i = dst.length-1 ; i >= 0 ; i-- )
-    if( !unique.is[ i ] )
-    {
-      dst.splice( i, 1 );
-    }
-
-    return dst;
-  }
-  else _.assert( 0 );
-
-}
-
-//
-// function longUnduplicate( dst, src, onEvaluate )
-// {
-//
-//   _.assert( arguments.length === 2 || arguments.length === 3 );
-//   _.assert( dst === null || _.arrayIs( dst ) );
-//   _.assert( src === null || _.longIs( src ) );
-//
-//   let dstUnique;
-//
-//   if( src && dst )
-//   {
-//     dst = _.arrayAppendArraysOnce( dst, src );
-//   }
-//
-//   x
-//
-//   let srcUnique = _.longUniqueAre
-//   ({
-//     src,
-//     onEvaluate,
-//     includeFirst : 1,
-//   });
-//
-//   let result = _.longMake( src, dstUnique.number + srcUnique.number );
-//
-//   let c = 0;
-//   for( let i = 0 ; i < src.length ; i++ )
-//   if( srcUnique.is[ i ] )
-//   {
-//     result[ c ] = src[ i ];
-//     c += 1;
-//   }
-//
-//   return result;
-// }
-
-/*
-
-*/
-
-
-//
-
-/**
- * The arraySelect() routine selects elements from (srcArray) by indexes of (indicesArray).
+ * The longSelectWithIndices() routine selects elements from (srcArray) by indexes of (indicesArray).
  *
  * @param { longIs } srcArray - Values for the new array.
  * @param { ( longIs | object ) } [ indicesArray = indicesArray.indices ] - Indexes of elements from the (srcArray) or options object.
  *
  * @example
  * // returns [ 3, 4, 5 ]
- * let arr = _.arraySelect( [ 1, 2, 3, 4, 5 ], [ 2, 3, 4 ] );
+ * let arr = _.longSelectWithIndices( [ 1, 2, 3, 4, 5 ], [ 2, 3, 4 ] );
  *
  * @example
  * // returns [ undefined, undefined ]
- * let arr = _.arraySelect( [ 1, 2, 3 ], [ 4, 5 ] );
+ * let arr = _.longSelectWithIndices( [ 1, 2, 3 ], [ 4, 5 ] );
  *
  * @returns { longIs } - Returns a new array with the length equal (indicesArray.length) and elements from (srcArray).
    If there is no element with necessary index than the value will be undefined.
- * @function arraySelect
+ * @function longSelectWithIndices
  * @throws { Error } If passed arguments is not array like object.
  * @throws { Error } If the atomsPerElement property is not equal to 1.
  * @memberof wTools
  */
 
-function arraySelect( srcArray, indicesArray )
+function longSelectWithIndices( srcArray, indicesArray )
 {
   let atomsPerElement = 1;
 
@@ -2631,10 +2892,11 @@ function arraySelect( srcArray, indicesArray )
   }
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.bufferTypedIs( srcArray ) || _.arrayIs( srcArray ) );
-  _.assert( _.bufferTypedIs( indicesArray ) || _.arrayIs( indicesArray ) );
+  _.assert( _.longIs( srcArray ) );
+  _.assert( _.longIs( indicesArray ) );
 
-  let result = new srcArray.constructor( indicesArray.length );
+  // let result = new srcArray.constructor( indicesArray.length );
+  let result = _.longMakeUndefined( srcArray, indicesArray.length );
 
   if( atomsPerElement === 1 )
   for( let i = 0, l = indicesArray.length ; i < l ; i += 1 )
@@ -2644,7 +2906,6 @@ function arraySelect( srcArray, indicesArray )
   else
   for( let i = 0, l = indicesArray.length ; i < l ; i += 1 )
   {
-    // throw _.err( 'not tested' );
     for( let a = 0 ; a < atomsPerElement ; a += 1 )
     result[ i*atomsPerElement+a ] = srcArray[ indicesArray[ i ]*atomsPerElement+a ];
   }
@@ -2653,21 +2914,47 @@ function arraySelect( srcArray, indicesArray )
 }
 
 // --
+// long mutator
+// --
+
+function longShuffle( dst, times )
+{
+  _.assert( arguments.length === 1 || arguments.length === 2 );
+  _.assert( _.longIs( dst ) );
+
+  if( times === undefined )
+  times = dst.length;
+
+  let l = dst.length;
+  let e1, e2;
+  for( let t1 = 0 ; t1 < times ; t1++ )
+  {
+    let t2 = Math.floor( Math.random() * l );
+    e1 = dst[ t1 ];
+    e2 = dst[ t2 ];
+    dst[ t1 ] = e2;
+    dst[ t2 ] = e1;
+  }
+
+  return dst;
+}
+
+// --
 // array mutator
 // --
 
-function arraySet( dst, index, value )
-{
-  _.assert( arguments.length === 3, 'Expects exactly three arguments' );
-  _.assert( dst.length > index );
-  dst[ index ] = value;
-  return dst;
-}
+// function longAssign( dst, index, value )
+// {
+//   _.assert( arguments.length === 3, 'Expects exactly three arguments' );
+//   _.assert( dst.length > index );
+//   dst[ index ] = value;
+//   return dst;
+// }
 
 //
 
 /**
- * The arraySwap() routine reverses the elements by indices (index1) and (index2) in the (dst) array.
+ * The longSwapElements() routine reverses the elements by indices (index1) and (index2) in the (dst) array.
  *
  * @param { Array } dst - The initial array.
  * @param { Number } index1 - The first index.
@@ -2675,17 +2962,17 @@ function arraySet( dst, index, value )
  *
  * @example
  * // returns [ 5, 2, 3, 4, 1 ]
- * let arr = _.arraySwap( [ 1, 2, 3, 4, 5 ], 0, 4 );
+ * let arr = _.longSwapElements( [ 1, 2, 3, 4, 5 ], 0, 4 );
  *
  * @returns { Array } - Returns the (dst) array that has been modified in place by indexes (index1) and (index2).
- * @function arraySwap
+ * @function longSwapElements
  * @throws { Error } If the first argument in not an array.
  * @throws { Error } If the second argument is less than 0 and more than a length initial array.
  * @throws { Error } If the third argument is less than 0 and more than a length initial array.
  * @memberof wTools
  */
 
-function arraySwap( dst, index1, index2 )
+function longSwapElements( dst, index1, index2 )
 {
 
   if( arguments.length === 1 )
@@ -2695,9 +2982,9 @@ function arraySwap( dst, index1, index2 )
   }
 
   _.assert( arguments.length === 1 || arguments.length === 3 );
-  _.assert( _.longIs( dst ), 'arraySwap :', 'argument must be array' );
-  _.assert( 0 <= index1 && index1 < dst.length, 'arraySwap :', 'index1 is out of bound' );
-  _.assert( 0 <= index2 && index2 < dst.length, 'arraySwap :', 'index2 is out of bound' );
+  _.assert( _.longIs( dst ), 'Expects long' );
+  _.assert( 0 <= index1 && index1 < dst.length, 'index1 is out of bound' );
+  _.assert( 0 <= index2 && index2 < dst.length, 'index2 is out of bound' );
 
   let e = dst[ index1 ];
   dst[ index1 ] = dst[ index2 ];
@@ -2709,139 +2996,7 @@ function arraySwap( dst, index1, index2 )
 //
 
 /**
- * Removes range( range ) of elements from provided array( dstArray ) and adds elements from array( srcArray )
- * at the start position of provided range( range ) if( srcArray ) was provided.
- * On success returns array with deleted element(s), otherwise returns empty array.
- * For TypedArray's and buffers returns modified copy of ( dstArray ) or original array if nothing changed.
- *
- * @param { Array|TypedArray|Buffer } dstArray - The target array, TypedArray( Int8Array, Int16Array, Uint8Array ... etc ) or Buffer( ArrayBuffer, Buffer ).
- * @param { Array|Number } range - The range of elements or index of single element to remove from ( dstArray ).
- * @param { Array } srcArray - The array of elements to add to( dstArray ) at the start position of provided range( range ).
- * If one of ( range ) indexies is not specified it will be setted to zero.
- * If ( range ) start index is greater than the length of the array ( dstArray ), actual starting index will be set to the length of the array ( dstArray ).
- * If ( range ) start index is negative, will be setted to zero.
- * If ( range ) start index is greater than end index, the last will be setted to value of start index.
- *
- * @example
- * _.arrayCutin( [ 1, 2, 3, 4 ], 2 );
- * // returns [ 3 ]
- *
- * @example
- * _.arrayCutin( [ 1, 2, 3, 4 ], [ 1, 2 ] );
- * // returns [ 2 ]
- *
- * @example
- * _.arrayCutin( [ 1, 2, 3, 4 ], [ 0, 5 ] );
- * // returns [ 1, 2, 3, 4 ]
- *
- * @example
- * _.arrayCutin( [ 1, 2, 3, 4 ], [ -1, 5 ] );
- * // returns [ 1, 2, 3, 4 ]
- *
- * @example
- * let dst = [ 1, 2, 3, 4 ];
- * _.arrayCutin( dst, [ 0, 3 ], [ 0, 0, 0 ] );
- * console.log( dst );
- * // returns [ 0, 0, 0, 4 ]
- *
- * @example
- * let dst = new Int32Array( 4 );
- * dst.set( [ 1, 2, 3, 4 ] )
- * _.arrayCutin( dst, 0 );
- * // returns [ 2, 3, 4 ]
- *
- * @returns { Array|TypedArray|Buffer } For array returns array with deleted element(s), otherwise returns empty array.
- * For other types returns modified copy or origin( dstArray ).
- * @function arrayCutin
- * @throws { Error } If ( arguments.length ) is not equal to two or three.
- * @throws { Error } If ( dstArray ) is not an Array.
- * @throws { Error } If ( srcArray ) is not an Array.
- * @throws { Error } If ( range ) is not an Array.
- * @memberof wTools
- */
-
-function arrayCutin( dstArray, range, srcArray )
-{
-
-  if( _.numberIs( range ) )
-  range = [ range, range + 1 ];
-
-  _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.arrayIs( dstArray ) || _.bufferAnyIs( dstArray ) );
-  _.assert( _.arrayIs( range ) );
-  _.assert( srcArray === undefined || _.arrayIs( srcArray ) );
-
-  let length = _.definedIs( dstArray.length ) ? dstArray.length : dstArray.byteLength;
-  let first = range[ 0 ] !== undefined ? range[ 0 ] : 0;
-  let last = range[ 1 ] !== undefined ? range[ 1 ] : length;
-  let result;
-
-  if( first < 0 )
-  first = 0;
-  if( first > length)
-  first = length;
-  if( last > length)
-  last = length;
-  if( last < first )
-  last = first;
-
-  if( _.bufferAnyIs( dstArray ) )
-  {
-    if( first === last )
-    return dstArray;
-
-    let newLength = length - last + first;
-    let srcArrayLength = 0;
-
-    if( srcArray )
-    {
-      srcArrayLength = _.definedIs( srcArray.length ) ? srcArray.length : srcArray.byteLength;
-      newLength += srcArrayLength;
-    }
-
-    if( _.bufferRawIs( dstArray ) )
-    {
-      result = new ArrayBuffer( newLength );
-    }
-    else if( _.bufferNodeIs( dstArray ) )
-    {
-      result = Buffer.alloc( newLength );
-    }
-    else
-    {
-      result = _.longMake( dstArray, newLength );
-    }
-
-    if( first > 0 )
-    for( let i = 0; i < first; ++i )
-    result[ i ] = dstArray[ i ];
-
-    if( srcArray )
-    for( let i = first, j = 0; j < srcArrayLength; )
-    result[ i++ ] = srcArray[ j++ ];
-
-    for( let j = last, i = first + srcArrayLength; j < length; )
-    result[ i++ ] = dstArray[ j++ ];
-
-    return result;
-  }
-  else
-  {
-
-    let args = srcArray ? srcArray.slice() : [];
-    args.unshift( last-first );
-    args.unshift( first );
-
-    result = dstArray.splice.apply( dstArray, args );
-  }
-
-  return result;
-}
-
-//
-
-/**
- * The arrayPut() routine puts all values of (arguments[]) after the second argument to the (dstArray)
+ * The longPut() routine puts all values of (arguments[]) after the second argument to the (dstArray)
  * in the position (dstOffset) and changes values of the following index.
  *
  * @param { longIs } dstArray - The source array.
@@ -2852,21 +3007,21 @@ function arrayCutin( dstArray, range, srcArray )
  *
  * @example
  * // returns [ 1, 2, 'str', true, 7, 8, 9 ]
- * let arr = _.arrayPut( [ 1, 2, 3, 4, 5, 6, 9 ], 2, 'str', true, [ 7, 8 ] );
+ * let arr = _.longPut( [ 1, 2, 3, 4, 5, 6, 9 ], 2, 'str', true, [ 7, 8 ] );
  *
  * @example
  * // returns [ 'str', true, 7, 8, 5, 6, 9 ]
- * let arr = _.arrayPut( [ 1, 2, 3, 4, 5, 6, 9 ], 0, 'str', true, [ 7, 8 ] );
+ * let arr = _.longPut( [ 1, 2, 3, 4, 5, 6, 9 ], 0, 'str', true, [ 7, 8 ] );
  *
  * @returns { longIs } - Returns an array containing the changed values.
- * @function arrayPut
+ * @function longPut
  * @throws { Error } Will throw an Error if (arguments.length) is less than one.
  * @throws { Error } Will throw an Error if (dstArray) is not an array-like.
  * @throws { Error } Will throw an Error if (dstOffset) is not a Number.
  * @memberof wTools
  */
 
-function arrayPut( dstArray, dstOffset )
+function longPut( dstArray, dstOffset )
 {
   _.assert( arguments.length >= 1, 'Expects at least one argument' );
   _.assert( _.longIs( dstArray ) );
@@ -2932,47 +3087,101 @@ function arrayPut( dstArray, dstOffset )
  * @memberof wTools
  */
 
-function arrayFillTimes( result, times, value )
+/* qqq : routine longFill requires good test coverage and documentation */
+
+function longFill( result, value, range )
 {
 
-  _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
+  if( range === undefined )
+  range = [ 0, result.length ];
+
+  let l = range[ 0 ];
+  let r = range[ 1 ];
+
+  _.assert( 1 <= arguments.length && arguments.length <= 3 );
+  // _.assert( arguments.length === 2 || arguments.length === 3 );
   _.assert( _.longIs( result ) );
+  _.assert( _.rangeIs( range ) );
 
   if( value === undefined )
   value = 0;
 
-  if( result.length < times )
-  result = _.arrayGrow( result , 0 , times );
+  // if( result.length < times )
+  // result = _.longGrowInplace( result, [ 0, times ] );
+
+  result = _.longGrowInplace( result, range );
 
   if( _.routineIs( result.fill ) )
   {
-    result.fill( value, 0, times );
+    // result.fill( value, 0, times );
+    result.fill( value, range[ 0 ], range[ 1 ] );
   }
   else
   {
     debugger;
-    if( times < 0 )
-    times = result.length + times;
+    // if( times < 0 )
+    // times = result.length + times;
+    // for( let t = 0 ; t < times ; t++ )
+    // result[ t ] = value;
 
-    for( let t = 0 ; t < times ; t++ )
+    if( l < 0 )
+    {
+      r = r - l;
+      l = 0;
+    }
+    for( let t = 0 ; t < r ; t++ )
     result[ t ] = value;
+
   }
 
-  _.assert( times <= 0 || result[ times-1 ] === value );
+  // _.assert( times <= 0 || result[ times-1 ] === value );
 
   return result;
 }
 
 //
-
-function arrayFillWhole( result, value )
-{
-  _.assert( _.longIs( result ) );
-  _.assert( arguments.length === 1 || arguments.length === 2 );
-  if( value === undefined )
-  value = 0;
-  return _.arrayFillTimes( result, result.length, value );
-}
+//
+// function longFillTimes( result, times, value )
+// {
+//
+//   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
+//   _.assert( _.longIs( result ) );
+//
+//   if( value === undefined )
+//   value = 0;
+//
+//   if( result.length < times )
+//   result = _.longGrowInplace( result, [ 0, times ] );
+//
+//   if( _.routineIs( result.fill ) )
+//   {
+//     result.fill( value, 0, times );
+//   }
+//   else
+//   {
+//     debugger;
+//     if( times < 0 )
+//     times = result.length + times;
+//
+//     for( let t = 0 ; t < times ; t++ )
+//     result[ t ] = value;
+//   }
+//
+//   _.assert( times <= 0 || result[ times-1 ] === value );
+//
+//   return result;
+// }
+//
+// //
+//
+// function longFillWhole( result, value )
+// {
+//   _.assert( _.longIs( result ) );
+//   _.assert( arguments.length === 1 || arguments.length === 2 );
+//   if( value === undefined )
+//   value = 0;
+//   return _.longFillTimes( result, result.length, value );
+// }
 
 // {
 //   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
@@ -3024,7 +3233,7 @@ function arrayFillWhole( result, value )
 //
 
 /**
- * The arraySupplement() routine returns an array (dstArray), that contains values from following arrays only type of numbers.
+ * The longSupplement() routine returns an array (dstArray), that contains values from following arrays only type of numbers.
  * If the initial (dstArray) isn't contain numbers, they are replaced.
  *
  * It finds among the arrays the biggest array, and assigns to the variable (length), iterates over from 0 to the (length),
@@ -3040,15 +3249,15 @@ function arrayFillWhole( result, value )
  *
  * @example
  * // returns ?
- * _.arraySupplement( [ 4, 5 ], [ 1, 2, 3 ], [ 6, 7, 8, true, 9 ], [ 'a', 'b', 33, 13, 'e', 7 ] );
+ * _.longSupplement( [ 4, 5 ], [ 1, 2, 3 ], [ 6, 7, 8, true, 9 ], [ 'a', 'b', 33, 13, 'e', 7 ] );
  * @returns { longIs } - Returns an array that contains values only type of numbers.
- * @function arraySupplement
+ * @function longSupplement
  * @throws { Error } Will throw an Error if (dstArray) is not an array-like.
  * @throws { Error } Will throw an Error if (arguments[...]) is/are not the array-like.
  * @memberof wTools
  */
 
-function arraySupplement( dstArray )
+function longSupplement( dstArray )
 {
   let result = dstArray;
   if( result === null )
@@ -3094,7 +3303,7 @@ function arraySupplement( dstArray )
 //
 
 /**
- * The arrayExtendScreening() routine iterates over (arguments[...]) from the right to the left (arguments[1]),
+ * The longExtendScreening() routine iterates over (arguments[...]) from the right to the left (arguments[1]),
  * and returns a (dstArray) containing the values of the following arrays,
  * if the following arrays contains the indexes of the (screenArray).
  *
@@ -3106,37 +3315,38 @@ function arraySupplement( dstArray )
  *
  * @example
  * // returns [ 5, 6, 2 ]
- * _.arrayExtendScreening( [ 1, 2, 3 ], [  ], [ 0, 1, 2 ], [ 3, 4 ], [ 5, 6 ] );
+ * _.longExtendScreening( [ 1, 2, 3 ], [  ], [ 0, 1, 2 ], [ 3, 4 ], [ 5, 6 ] );
  *
  * @example
  * // returns [ 'a', 6, 2, 13 ]
- * _.arrayExtendScreening( [ 1, 2, 3 ], [ 3, 'abc', 7, 13 ], [ 0, 1, 2 ], [ 3, 4 ], [ 'a', 6 ] );
+ * _.longExtendScreening( [ 1, 2, 3 ], [ 3, 'abc', 7, 13 ], [ 0, 1, 2 ], [ 3, 4 ], [ 'a', 6 ] );
  *
  * @example
  * // returns [ 3, 'abc', 7, 13 ]
- * _.arrayExtendScreening( [  ], [ 3, 'abc', 7, 13 ], [ 0, 1, 2 ], [ 3, 4 ], [ 'a', 6 ] )
+ * _.longExtendScreening( [  ], [ 3, 'abc', 7, 13 ], [ 0, 1, 2 ], [ 3, 4 ], [ 'a', 6 ] )
  *
  * @returns { longIs } Returns a (dstArray) containing the values of the following arrays,
  * if the following arrays contains the indexes of the (screenArray).
  * If (screenArray) is empty, it returns a (dstArray).
  * If (dstArray) is equal to the null, it creates a new array,
  * and returns the corresponding values of the following arrays by the indexes of a (screenArray).
- * @function arrayExtendScreening
+ * @function longExtendScreening
  * @throws { Error } Will throw an Error if (screenArray) is not an array-like.
  * @throws { Error } Will throw an Error if (dstArray) is not an array-like.
  * @throws { Error } Will throw an Error if (arguments[...]) is/are not an array-like.
  * @memberof wTools
  */
 
-function arrayExtendScreening( screenArray, dstArray )
+function longExtendScreening( screenArray, dstArray )
 {
   let result = dstArray;
-  if( result === null ) result = [];
+  if( result === null )
+  result = [];
 
   _.assert( _.longIs( screenArray ), 'Expects object as screenArray' );
   _.assert( _.longIs( result ), 'Expects object as argument' );
   for( let a = arguments.length-1 ; a >= 2 ; a-- )
-  _.assert( arguments[ a ], 'argument is not defined :', a );
+  _.assert( arguments[ a ], 'Argument is not defined :', a );
 
   for( let k = 0 ; k < screenArray.length ; k++ )
   {
@@ -3159,47 +3369,24 @@ function arrayExtendScreening( screenArray, dstArray )
 
 //
 
-function arrayShuffle( dst, times )
-{
-  _.assert( arguments.length === 1 || arguments.length === 2 );
-  _.assert( _.longIs( dst ) );
-
-  if( times === undefined )
-  times = dst.length;
-
-  let l = dst.length;
-  let e1, e2;
-  for( let t1 = 0 ; t1 < times ; t1++ )
-  {
-    let t2 = Math.floor( Math.random() * l );
-    e1 = dst[ t1 ];
-    e2 = dst[ t2 ];
-    dst[ t1 ] = e2;
-    dst[ t2 ] = e1;
-  }
-
-  return dst;
-}
-
-//
-
-function arraySort( srcArray, onEvaluate )
+function longSort( srcLong, onEvaluate )
 {
   _.assert( arguments.length === 1 || arguments.length === 2 );
   _.assert( onEvaluate === undefined || _.routineIs( onEvaluate ) );
+  _.assert( _.longIs( srcLong ) )
 
   if( onEvaluate === undefined )
   {
     debugger;
-    srcArray.sort();
+    srcLong.sort();
   }
   else if( onEvaluate.length === 2 )
   {
-    srcArray.sort( onEvaluate );
+    srcLong.sort( onEvaluate );
   }
   else if( onEvaluate.length === 1 )
   {
-    srcArray.sort( function( a, b )
+    srcLong.sort( function( a, b )
     {
       a = onEvaluate( a );
       b = onEvaluate( b );
@@ -3210,92 +3397,92 @@ function arraySort( srcArray, onEvaluate )
   }
   else _.assert( 0, 'Expects signle-arguments evaluator or two-argument comparator' );
 
-  return srcArray;
+  return srcLong;
 }
 
 // --
 // array etc
 // --
 
-function arrayIndicesOfGreatest( srcArray, numberOfElements, comparator )
-{
-  let result = [];
-  let l = srcArray.length;
-
-  debugger;
-  throw _.err( 'not tested' );
-
-  comparator = _._comparatorFromEvaluator( comparator );
-
-  function rcomparator( a, b )
-  {
-    return comparator( srcArray[ a ], srcArray[ b ] );
-  };
-
-  for( let i = 0 ; i < l ; i += 1 )
-  {
-
-    if( result.length < numberOfElements )
-    {
-      _.sorted.add( result, i, rcomparator );
-      continue;
-    }
-
-    _.sorted.add( result, i, rcomparator );
-    result.splice( result.length-1, 1 );
-
-  }
-
-  return result;
-}
-
+// function arrayIndicesOfGreatest( srcArray, numberOfElements, comparator )
+// {
+//   let result = [];
+//   let l = srcArray.length;
 //
-
-/**
- * The arraySum() routine returns the sum of an array {-srcMap-}.
- *
- * @param { longIs } src - The source array.
- * @param { Function } [ onEvaluate = function( e ) { return e } ] - A callback function.
- *
- * @example
- * // returns 15
- * _.arraySum( [ 1, 2, 3, 4, 5 ] );
- *
- * @example
- * // returns 29
- * _.arraySum( [ 1, 2, 3, 4, 5 ], function( e ) { return e * 2 } );
- *
- * @example
- * // returns 94
- * _.arraySum( [ true, false, 13, '33' ], function( e ) { return e * 2 } );
- *
- * @returns { Number } - Returns the sum of an array {-srcMap-}.
- * @function arraySum
- * @throws { Error } If passed arguments is less than one or more than two.
- * @throws { Error } If the first argument is not an array-like object.
- * @throws { Error } If the second argument is not a Function.
- * @memberof wTools
- */
-
-function arraySum( src, onEvaluate )
-{
-  let result = 0;
-
-  _.assert( arguments.length === 1 || arguments.length === 2 );
-  _.assert( _.longIs( src ), 'arraySum :', 'Expects ArrayLike' );
-
-  if( onEvaluate === undefined )
-  onEvaluate = function( e ){ return e; };
-
-  _.assert( _.routineIs( onEvaluate ) );
-
-  for( let i = 0 ; i < src.length ; i++ )
-  {
-    result += onEvaluate( src[ i ], i, src );
-  }
-
-  return result;
-}
+//   debugger;
+//   throw _.err( 'not tested' );
+//
+//   comparator = _._comparatorFromEvaluator( comparator );
+//
+//   function rcomparator( a, b )
+//   {
+//     return comparator( srcArray[ a ], srcArray[ b ] );
+//   };
+//
+//   for( let i = 0 ; i < l ; i += 1 )
+//   {
+//
+//     if( result.length < numberOfElements )
+//     {
+//       _.sorted.add( result, i, rcomparator );
+//       continue;
+//     }
+//
+//     _.sorted.add( result, i, rcomparator );
+//     result.splice( result.length-1, 1 );
+//
+//   }
+//
+//   return result;
+// }
+//
+// //
+//
+// /**
+//  * The arraySum() routine returns the sum of an array {-srcMap-}.
+//  *
+//  * @param { longIs } src - The source array.
+//  * @param { Function } [ onEvaluate = function( e ) { return e } ] - A callback function.
+//  *
+//  * @example
+//  * // returns 15
+//  * _.arraySum( [ 1, 2, 3, 4, 5 ] );
+//  *
+//  * @example
+//  * // returns 29
+//  * _.arraySum( [ 1, 2, 3, 4, 5 ], function( e ) { return e * 2 } );
+//  *
+//  * @example
+//  * // returns 94
+//  * _.arraySum( [ true, false, 13, '33' ], function( e ) { return e * 2 } );
+//  *
+//  * @returns { Number } - Returns the sum of an array {-srcMap-}.
+//  * @function arraySum
+//  * @throws { Error } If passed arguments is less than one or more than two.
+//  * @throws { Error } If the first argument is not an array-like object.
+//  * @throws { Error } If the second argument is not a Function.
+//  * @memberof wTools
+//  */
+//
+// function arraySum( src, onEvaluate )
+// {
+//   let result = 0;
+//
+//   _.assert( arguments.length === 1 || arguments.length === 2 );
+//   _.assert( _.longIs( src ), 'Expects ArrayLike' );
+//
+//   if( onEvaluate === undefined )
+//   onEvaluate = function( e ){ return e; };
+//
+//   _.assert( _.routineIs( onEvaluate ) );
+//
+//   for( let i = 0 ; i < src.length ; i++ )
+//   {
+//     result += onEvaluate( src[ i ], i, src );
+//   }
+//
+//   return result;
+// }
 
 // --
 // array set
@@ -3738,8 +3925,9 @@ let Routines =
   buffersAreEquivalent,
   buffersAreIdentical,
 
-  bufferMakeSimilar,
-  bufferButRange,
+  bufferMake,
+
+  bufferBut,
   bufferRelen,
   bufferResize,
   bufferBytesGet,
@@ -3766,61 +3954,60 @@ let Routines =
   buffersSerialize, /* deprecated */
   buffersDeserialize, /* deprecated */
 
+  // long repeater
+
+  longDuplicate,
+  longUnduplicate,
+
+  longHasUniques,
+  longAreRepeatedProbe,
+  longAllAreRepeated,
+  longAnyAreRepeated,
+  longNoneAreRepeated,
+
+  longMask, /* dubious */
+  longUnmask, /* dubious */
+
   // array maker
 
-  arrayMakeRandom,
-  // scalarToVector,
+  arrayMakeRandom, /* xxx : split */
   arrayFromCoercing,
-  // arrayAs,
 
   arrayFromRange,
   arrayFromProgressionArithmetic,
   arrayFromRangeWithStep,
   arrayFromRangeWithNumberOfSteps,
 
-  // array converter
+  // // array converter
+  //
+  // arrayToMap, /* dubious */
+  // arrayToStr, /* dubious */
 
-  arrayToMap, /* dubious */
-  arrayToStr, /* dubious */
+  // long transformer
 
-  // array transformer
+  longSelectWithIndices,
 
-  arraySub,
-  arrayButRange,
+  // long mutator
 
-  arraySlice,
-  arrayGrow,
-  arrayResize,
-  arrayMultislice,
-  arrayDuplicate,
+  longShuffle,
 
-  arrayMask, /* dubious */
-  arrayUnmask, /* dubious */
+  // long mutator
 
-  longUniqueAre,
-  longUnduplicate,
-  arraySelect,
+  longSwapElements,
+  longPut,
+  longFill,
+  // longFillTimes,
+  // longFillWhole,
 
-  // array mutator
+  longSupplement, /* experimental */
+  longExtendScreening, /* experimental */
 
-  arraySet,
-  arraySwap,
+  longSort,
 
-  arrayCutin,
-  arrayPut,
-  arrayFillTimes,
-  arrayFillWhole,
-
-  arraySupplement, /* experimental */
-  arrayExtendScreening, /* experimental */
-
-  arrayShuffle,
-  arraySort,
-
-  // array etc
-
-  arrayIndicesOfGreatest, /* dubious */
-  arraySum, /* dubious */
+  // // array etc
+  //
+  // arrayIndicesOfGreatest, /* dubious */
+  // arraySum, /* dubious */
 
   // array set
 

@@ -164,7 +164,7 @@ function form1()
   reflector.src = reflector.src || Object.create( null );
   if( reflector.src )
   {
-    reflector.src.hubFileProvider = fileProvider;
+    reflector.src.system = fileProvider;
     if( !reflector.src.formed )
     reflector.src._formAssociations();
   }
@@ -172,7 +172,7 @@ function form1()
   reflector.dst = reflector.dst || Object.create( null );
   if( reflector.dst )
   {
-    reflector.dst.hubFileProvider = fileProvider;
+    reflector.dst.system = fileProvider;
     if( !reflector.dst.formed )
     reflector.dst._formAssociations();
   }
@@ -287,8 +287,8 @@ function form3()
   reflector.prefixesApply();
   reflector.prefixesRelative();
 
-  reflector.src.basePathSimplify();
-  reflector.dst.basePathSimplify();
+  reflector.src.basePath = reflector.src.basePathSimplest();
+  reflector.dst.basePath = reflector.dst.basePathSimplest();
   reflector.sureRelativeOrGlobal();
 
   _.assert
@@ -1210,11 +1210,10 @@ function optionsForFindExport( o )
   _.assert( reflector.dst === null || !reflector.dst.hasFiltering() );
   _.assert( !o.resolving );
 
-  result.recursive = reflector.recursive === null ? 2 : reflector.recursive;
-
   if( reflector.src )
   result.filter = reflector.src.clone();
   result.filter = result.filter || Object.create( null );
+  result.filter.recursive = reflector.src.recursive === null ? 2 : reflector.src.recursive;
   result.filter.prefixPath = path.s.resolve( module.inPath, result.filter.prefixPath || '.' );
   result.mandatory = reflector.mandatory;
 
@@ -1242,13 +1241,13 @@ function optionsForFindGroupExport( o )
   o = _.routineOptions( optionsForFindGroupExport, arguments );
   _.assert( !o.resolving );
 
-  result.recursive = reflector.recursive === null ? 2 : reflector.recursive;
   result.mandatory = reflector.mandatory;
 
   if( reflector.src )
   result.src = reflector.src.clone();
   result.src = result.src || Object.create( null );
   result.src.prefixPath = path.s.resolve( module.inPath, result.src.prefixPath || '.' );
+  result.src.recursive = reflector.src.recursive === null ? 2 : reflector.src.recursive;
 
   if( reflector.dst )
   result.dst = reflector.dst.clone();
@@ -1279,7 +1278,6 @@ function optionsForReflectExport( o )
   o = _.routineOptions( optionsForReflectExport, arguments );
   _.assert( !o.resolving );
 
-  result.recursive = reflector.recursive === null ? 2 : reflector.recursive;
   result.mandatory = reflector.mandatory;
 
   /* */
@@ -1288,6 +1286,7 @@ function optionsForReflectExport( o )
   result.src = reflector.src.clone();
   result.src = result.src || Object.create( null );
   result.src.prefixPath = path.s.resolve( module.inPath, result.src.prefixPath || '.' );
+  result.src.recursive = reflector.src.recursive === null ? 2 : reflector.src.recursive;
 
   if( reflector.dst )
   result.dst = reflector.dst.clone();
@@ -1409,6 +1408,28 @@ function filePathSet( src )
   return reflector.src.filePath;
 }
 
+//
+
+function recursiveGet()
+{
+  let reflector = this;
+  if( !reflector.src )
+  return null;
+  return reflector.src.recursive;
+}
+
+//
+
+function recursiveSet( src )
+{
+  let reflector = this;
+  if( !reflector.src && src === null )
+  return src;
+  _.assert( _.objectIs( reflector.src ), 'Reflector should have src to set filePath' );
+  reflector.src.recursive = src;
+  return reflector.src.recursive;
+}
+
 // --
 // relations
 // --
@@ -1455,11 +1476,13 @@ let Forbids =
   reflectMap : 'reflectMap',
   srcFilter : 'srcFilter',
   dstFilter : 'dstFilter',
+  // recursive : 'recursive',
 }
 
 let Accessors =
 {
   filePath : { setter : filePathSet, getter : filePathGet },
+  recursive : { setter : recursiveSet, getter : recursiveGet },
   src : { setter : _.accessor.setter.copyable({ name : 'src', maker : _.routineJoin( _.FileRecordFilter, _.FileRecordFilter.Clone ) }) },
   dst : { setter : _.accessor.setter.copyable({ name : 'dst', maker : _.routineJoin( _.FileRecordFilter, _.FileRecordFilter.Clone ) }) },
 }
@@ -1511,6 +1534,8 @@ let Extend =
 
   filePathGet,
   filePathSet,
+  recursiveGet,
+  recursiveSet,
 
   // relation
 

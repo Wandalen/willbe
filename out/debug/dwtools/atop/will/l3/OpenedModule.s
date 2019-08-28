@@ -1681,7 +1681,7 @@ _submodulesDownload_body.defaults =
 {
   updating : 0,
   forming : 1,
-  recursive : 1,
+  recursive : 0,
   dry : 0,
   downloaded : null,
 }
@@ -3368,7 +3368,6 @@ function cleanWhat( o )
     {
       verbosity : 0,
       allowingMissed : 1,
-      recursive : 2,
       includingDirs : 1,
       includingTerminals : 1,
       maskPreset : 0,
@@ -3378,6 +3377,9 @@ function cleanWhat( o )
     }
 
     _.mapSupplement( op, def );
+
+    op.filter = op.filter || Object.create( null );
+    op.filter.recursive = 2;
 
     let found = fileProvider.filesDelete( op );
     _.assert( op.filter.formed === 5 );

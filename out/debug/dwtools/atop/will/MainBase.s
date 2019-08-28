@@ -138,7 +138,7 @@ function formAssociates()
   if( !will.fileProvider )
   {
 
-    let hub = _.FileProvider.Hub({ providers : [] });
+    let hub = _.FileProvider.System({ providers : [] });
 
     _.FileProvider.Git().providerRegisterTo( hub );
     _.FileProvider.Npm().providerRegisterTo( hub );
@@ -424,6 +424,18 @@ function moduleEachAt( o )
     // o.selector = path.resolve( o.selector );
     con = new _.Consequence().take( null );
 
+    if( !path.isGlob( o.selector ) )
+    {
+      if( _.strEnds( o.selector, '/.' ) )
+      o.selector = _.strRemoveEnd( o.selector, '/.' ) + '/*';
+      else if( o.selector === '.' )
+      o.selector = '*';
+      else if( _.strEnds( o.selector, '/' ) )
+      o.selector += '*';
+      else
+      o.selector += '/*';
+    }
+
     let files;
     try
     {
@@ -564,7 +576,7 @@ function moduleWithAt( o )
       dirPath : o.selector,
       includingInFiles : 1,
       includingOutFiles : 1,
-      prefferedRecursive : 0,
+      // prefferedRecursive : 0,
     });
   }
   catch( err )
@@ -899,6 +911,7 @@ function willfilesList( o )
   _.routineOptions( willfilesList, o );
   _.assert( arguments.length === 1 );
   _.assert( !!will.formed );
+  _.assert( _.boolIs( o.recursive ) );
 
   let filter =
   {
@@ -920,25 +933,53 @@ function willfilesList( o )
   if( !o.includingOutFiles )
   filter.maskTerminal.excludeAny.push( /\.out(\.|$)/ )
 
+  if( !path.isGlob( o.dirPath ) )
+  filter.recursive = o.recursive ? 2 : 1;
+
   let o2 =
   {
-    recursive : o.recursive,
     filter : filter,
     maskPreset : 0,
+    mandatory : 0,
+    mode : 'distinct',
   }
 
-  if( !o.prefferedRecursive )
-  if( !path.isGlob( filter.filePath ) )
+  // if( !o.prefferedRecursive )
+  // if( !path.isGlob( filter.filePath ) )
+  // {
+  //   o2.recursive = 1;
+  //   if( o.includingOutFiles )
+  //   filter.filePath = filter.filePath + '?(.out)';
+  //   filter.filePath = filter.filePath + '(.im|.ex|).will.*';
+  // }
+
+  filter.filePath = path.mapExtend( filter.filePath );
+
+  let postfix = '';
+  if( o.includingOutFiles && o.includingInFiles )
+  postfix += '?(.im|.ex|)?(.out).will.*';
+  else if( o.includingInFiles )
+  postfix += '?(.im|.ex|).will.*';
+  else if( o.includingOutFiles )
+  postfix += '?(.im|.ex|).out.will.*';
+
+  filter.filePath = path.filterPairs( filter.filePath, ( it ) =>
   {
-    o2.recursive = 1;
-    if( o.includingOutFiles )
-    filter.filePath = filter.filePath + '?(.out)';
-    filter.filePath = filter.filePath + '(.im|.ex|).will.*';
-  }
+    if( _.strIs( it.dst ) )
+    it.src += postfix;
+    return { [ it.src ] : it.dst };
+  });
 
-  // debugger;
+  // if( !o.includingOutFiles )
+  // filter.filePath[ '/**.out*' ] = 0;
+  // if( o.includingInFiles )
+  // filter.filePath[ '/**(.im|.ex|).will.*' ] = 1;
+  // else
+  // filter.filePath[ '/**(.im|.ex|).out.will.*' ] = 1;
+
+  debugger;
   let files = fileProvider.filesFind( o2 );
-  // debugger;
+  debugger;
 
   return files;
 }
@@ -948,8 +989,8 @@ willfilesList.defaults =
   dirPath : null,
   includingInFiles : 1,
   includingOutFiles : 1,
-  recursive : null,
-  prefferedRecursive : 1,
+  recursive : false,
+  // prefferedRecursive : 1,
 }
 
 //
