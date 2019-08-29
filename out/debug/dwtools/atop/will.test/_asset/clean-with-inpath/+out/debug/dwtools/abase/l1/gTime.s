@@ -640,7 +640,7 @@ function dateToStr( date )
 
 //
 
-// let _timeSleepBuffer = new Int32Array( new SharedArrayBuffer( 4 ) );
+// let _timeSleepBuffer = new I32x( new SharedArrayBuffer( 4 ) );
 // function timeSleep( time )
 // {
 //   _.assert( time >= 0 );

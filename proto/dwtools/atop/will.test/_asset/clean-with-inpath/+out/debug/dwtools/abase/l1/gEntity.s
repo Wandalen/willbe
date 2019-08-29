@@ -56,7 +56,7 @@ function entityLength( src )
 /**
  * Returns "size" of entity( src ). Representation of "size" depends on type of( src ):
  *  - For string returns value of it own length property;
- *  - For array-like entity returns value of it own byteLength property for( ArrayBuffer, TypedArray, etc )
+ *  - For array-like entity returns value of it own byteLength property for( BufferRaw, TypedArray, etc )
  *    or length property for other;
  *  - In other cases returns null.
  *
@@ -73,7 +73,7 @@ function entityLength( src )
  *
  * @example
  * //returns 8
- * _.entitySize( new ArrayBuffer( 8 ) );
+ * _.entitySize( new BufferRaw( 8 ) );
  *
  * @example
  * //returns null

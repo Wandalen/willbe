@@ -28,8 +28,8 @@ path :
 reflector :
 
   files.all :
-    recursive : 1
     src :
+      recursive : 1
       filePath :
         'submodule::sub-a/reflector::exported.files.proto.export' : '{path::files}/a'
         'module::sub-b/reflector::exported.files.proto.export' : '{path::files}/b'

@@ -251,7 +251,7 @@ function vectorize_body( o )
   let routine = o.routine;
   let fieldFilter = o.fieldFilter;
   let bypassingFilteredOut = o.bypassingFilteredOut;
-  let bypassingEmpty = o.bypassingEmpty;
+  let processingNoArguments = o.processingNoArguments;
   let vectorizingArray = o.vectorizingArray;
   let vectorizingMapVals = o.vectorizingMapVals;
   let vectorizingMapKeys = o.vectorizingMapKeys;
@@ -711,7 +711,7 @@ function vectorize_body( o )
     }
 
     // yyy
-    if( !bypassingEmpty && !arguments.length )
+    if( !processingNoArguments && !arguments.length )
     return [];
     // yyy
 
@@ -723,15 +723,15 @@ function vectorize_body( o )
 /* qqq : implement options combination vectorizingMapVals : 1, vectorizingMapKeys : 1, vectorizingArray : [ 0, 1 ] */
 /* qqq : cover it */
 
-/* qqq : implement bypassingEmpty for all combinations of options */
-/* qqq : options bypassingEmpty of routine _.vectorize requires good coverage */
+/* qqq : implement processingNoArguments for all combinations of options */
+/* qqq : options processingNoArguments of routine _.vectorize requires good coverage */
 
 vectorize_body.defaults =
 {
   routine : null,
   fieldFilter : null,
   bypassingFilteredOut : 1,
-  bypassingEmpty : 0,
+  processingNoArguments : 0,
   vectorizingArray : 1,
   vectorizingMapVals : 0,
   vectorizingMapKeys : 0,

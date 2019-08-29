@@ -31,7 +31,10 @@ function onSuiteBegin()
   self.repoDirPath = _.path.join( self.assetDirPath, '_repo' );
   self.find = _.fileProvider.filesFinder
   ({
-    recursive : 2,
+    filter :
+    {
+      recursive : 2,
+    },
     includingTerminals : 1,
     includingDirs : 1,
     includingTransient : 1,
@@ -4425,16 +4428,14 @@ function submodulesDeleteAndDownload( test )
     con.finally( ( err, arg ) =>
     {
 
-      debugger;
       test.identical( will.modulesArray.length, 3 );
       test.identical( _.mapKeys( will.moduleWithIdMap ).length, 3 );
       test.identical( _.mapKeys( will.moduleWithPathMap ).length, 3 );
       test.identical( will.willfilesArray.length, 3 );
       test.identical( _.mapKeys( will.willfileWithPathMap ).length, 3 );
-      debugger;
 
-      test.identical( will.openersArray.length, 7 );
-      test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, 7 );
+      test.identical( will.openersArray.length, 8 );
+      test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, 8 );
 
       var expected = abs
       ([
@@ -4445,6 +4446,7 @@ function submodulesDeleteAndDownload( test )
         'npm:///wcloner',
         'npm:///wstringer',
         'npm:///wTesting',
+        'hd://' + abs( '.module/Tools' ),
       ])
       var got = _.select( will.openersArray, '*/willfilesPath' )
       test.identical( got, expected );

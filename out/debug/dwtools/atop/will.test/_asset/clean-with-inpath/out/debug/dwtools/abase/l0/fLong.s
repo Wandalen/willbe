@@ -205,7 +205,7 @@ function longIsPopulated( src )
 //
 
 /**
- * The longMake() routine returns a new array or a new TypedArray with length equal (length)
+ * The longMakeEmpty() routine returns a new array or a new TypedArray with length equal (length)
  * or new TypedArray with the same length of the initial array if second argument is not provided.
  *
  * @param { longIs } ins - The instance of an array.
@@ -213,14 +213,14 @@ function longIsPopulated( src )
  *
  * @example
  * // returns [ , ,  ]
- * let arr = _.longMake( [ 1, 2, 3 ] );
+ * let arr = _.longMakeEmpty( [ 1, 2, 3 ] );
  *
  * @example
  * // returns [ , , ,  ]
- * let arr = _.longMake( [ 1, 2, 3 ], 4 );
+ * let arr = _.longMakeEmpty( [ 1, 2, 3 ], 4 );
  *
  * @returns { longIs }  Returns an array with a certain (length).
- * @function longMake
+ * @function longMakeEmpty
  * @throws { Error } If the passed arguments is less than two.
  * @throws { Error } If the (length) is not a number.
  * @throws { Error } If the first argument in not an array like object.
@@ -228,7 +228,7 @@ function longIsPopulated( src )
  * @memberof wTools
  */
 
-function longMake( ins, src )
+function longMakeEmpty( ins, src )
 {
   let result, length;
 
@@ -340,7 +340,7 @@ function _longClone( src )
   debugger;
 
   if( _.bufferRawIs( src ) )
-  return new Uint8Array( new Uint8Array( src ) ).buffer;
+  return new U8x( new U8x( src ) ).buffer;
   else if( _.bufferTypedIs( src ) || _.bufferNodeIs( src ) )
   return new src.constructor( src );
   else if( _.arrayIs( src ) )
@@ -380,15 +380,15 @@ function longShallowClone()
   /* make result */
 
   if( _.arrayIs( arguments[ 0 ] ) || _.bufferTypedIs( arguments[ 0 ] ) )
-  result = _.longMake( arguments[ 0 ], length );
+  result = _.longMakeEmpty( arguments[ 0 ], length );
   else if( _.bufferRawIs( arguments[ 0 ] ) )
-  result = new ArrayBuffer( length );
+  result = new BufferRaw( length );
 
   let bufferDst;
   let offset = 0;
   if( _.bufferRawIs( arguments[ 0 ] ) )
   {
-    bufferDst = new Uint8Array( result );
+    bufferDst = new U8x( result );
   }
 
   /* copy */
@@ -398,7 +398,7 @@ function longShallowClone()
     let argument = arguments[ a ];
     if( _.bufferRawIs( argument ) )
     {
-      bufferDst.set( new Uint8Array( argument ), offset );
+      bufferDst.set( new U8x( argument ), offset );
       offset += argument.byteLength;
     }
     else if( _.bufferTypedIs( arguments[ 0 ] ) )
@@ -432,7 +432,7 @@ function longShallowClone()
  * If ( f ) > ( l ), end index( l ) becomes equal to begin index( f ).
  * If ( f ) < 0, zero is assigned to begin index( f ).
 
- * @param { Array/Buffer } array - Source array or buffer.
+ * @param { Array/BufferNode } array - Source array or buffer.
  * @param { Number } [ f = 0 ] f - begin zero-based index at which to begin extraction.
  * @param { Number } [ l = array.length ] l - end zero-based index at which to end extraction.
  *
@@ -452,7 +452,7 @@ function longShallowClone()
  *
  * @returns { Array } Returns a shallow copy of elements from the original array.
  * @function longSlice
- * @throws { Error } Will throw an Error if ( array ) is not an Array or Buffer.
+ * @throws { Error } Will throw an Error if ( array ) is not an Array or BufferNode.
  * @throws { Error } Will throw an Error if ( f ) is not a Number.
  * @throws { Error } Will throw an Error if ( l ) is not a Number.
  * @throws { Error } Will throw an Error if no arguments provided.
@@ -516,7 +516,7 @@ function longSlice( array, f, l )
 
 //
 
-function longButRange( src, range, ins )
+function longBut( src, range, ins )
 {
 
   _.assert( _.longIs( src ) );
@@ -524,16 +524,16 @@ function longButRange( src, range, ins )
   _.assert( arguments.length === 2 || arguments.length === 3 );
 
   if( _.arrayIs( src ) )
-  return _.arrayButRange( src, range, ins );
+  return _.arrayBut( src, range, ins );
 
   let result;
-  range = _.rangeFrom( range );
+  range = _.rangeFromLeft( range );
 
   _.rangeClamp( range, [ 0, src.length ] );
   let d = range[ 1 ] - range[ 0 ];
   let l = src.length - d + ( ins ? ins.length : 0 );
 
-  result = _.longMake( src, l );
+  result = _.longMakeEmpty( src, l );
 
   debugger;
   _.assert( 0, 'not tested' )
@@ -550,7 +550,7 @@ function longButRange( src, range, ins )
 //
 
 /**
- * The longRemoveDuplicates( dstLong, onEvaluator ) routine returns the dstlong with the duplicated elements removed.
+ * The longUnduplicate/*longRemoveDuplicates*/( dstLong, onEvaluator ) routine returns the dstlong with the duplicated elements removed.
  * The dstLong instance will be returned when possible, if not a new instance of the same type is created.
  *
  * @param { longIs } dstLong - The source and destination long.
@@ -558,24 +558,24 @@ function longButRange( src, range, ins )
  *
  * @example
  * // returns [ 1, 2, 'abc', 4, true ]
- * _.longRemoveDuplicates( [ 1, 1, 2, 'abc', 'abc', 4, true, true ] );
+ * _.longUnduplicate/*longRemoveDuplicates*/( [ 1, 1, 2, 'abc', 'abc', 4, true, true ] );
  *
  * @example
  * // [ 1, 2, 3, 4, 5 ]
- * _.longRemoveDuplicates( [ 1, 2, 3, 4, 5 ] );
+ * _.longUnduplicate/*longRemoveDuplicates*/( [ 1, 2, 3, 4, 5 ] );
  *
  * @returns { Number } - Returns the source long without the duplicated elements.
- * @function longRemoveDuplicates
+ * @function longUnduplicate/*longRemoveDuplicates*/
  * @throws { Error } If passed arguments is less than one or more than two.
  * @throws { Error } If the first argument is not an long.
  * @throws { Error } If the second argument is not a Function.
  * @memberof wTools
  */
 
-// function longRemoveDuplicates( dstLong, onEvaluate )
+// function longUnduplicate/*longRemoveDuplicates*/( dstLong, onEvaluate )
 // {
 //   _.assert( 1 <= arguments.length || arguments.length <= 3 );
-//   _.assert( _.longIs( dstLong ), 'longRemoveDuplicates :', 'Expects Long' );
+//   _.assert( _.longIs( dstLong ), 'longUnduplicate/*longRemoveDuplicates*/ :', 'Expects Long' );
 
 //   if( _.arrayIs( dstLong ) )
 //   {
@@ -641,10 +641,10 @@ function longButRange( src, range, ins )
 //   return dstLong;
 // }
 
-function longRemoveDuplicates( dstLong, onEvaluate )
+function longUnduplicate/*longRemoveDuplicates*/( dstLong, onEvaluate )
 {
   _.assert( 1 <= arguments.length || arguments.length <= 3 );
-  _.assert( _.longIs( dstLong ), 'longRemoveDuplicates :', 'Expects Long' );
+  _.assert( _.longIs( dstLong ), 'longUnduplicate/*longRemoveDuplicates*/ :', 'Expects Long' );
 
   if( _.arrayIs( dstLong ) )
   return _.arrayRemoveDuplicates( dstLong, onEvaluate );
@@ -661,7 +661,7 @@ function longRemoveDuplicates( dstLong, onEvaluate )
   if( length === dstLong.length )
   return dstLong;
 
-  let result = _.longMake( dstLong, length );
+  let result = _.longMakeEmpty( dstLong, length );
   result[ 0 ] = dstLong[ 0 ];
 
   let j = 1;
@@ -676,10 +676,10 @@ function longRemoveDuplicates( dstLong, onEvaluate )
 
 /* qqq : not optimal, no redundant copy */
 /*
-function longRemoveDuplicates( dstLong, onEvaluate )
+function longUnduplicate/*longRemoveDuplicates*/( dstLong, onEvaluate )
 {
   _.assert( 1 <= arguments.length || arguments.length <= 3 );
-  _.assert( _.longIs( dstLong ), 'longRemoveDuplicates :', 'Expects Long' );
+  _.assert( _.longIs( dstLong ), 'longUnduplicate/*longRemoveDuplicates*/ :', 'Expects Long' );
 
   if( _.arrayIs( dstLong ) )
   {
@@ -707,7 +707,7 @@ function longRemoveDuplicates( dstLong, onEvaluate )
 
 function longAreRepeatedProbe( srcArray, onEvaluate )
 {
-  let isUnique = _.longMake( srcArray );
+  let isUnique = _.longMakeEmpty( srcArray );
   let result = Object.create( null );
   result.array = _.arrayMake( srcArray.length );
   result.uniques = srcArray.length;
@@ -749,7 +749,7 @@ function longAreRepeatedProbe( srcArray, onEvaluate )
   //
   // _.assert( arguments.length === 1, 'Expects single argument' );
   // _.assert( _.longIs( o.src ) );
-  // _.assertMapHasOnly( o, longUniqueAre.defaults );
+  // _.assertMapHasOnly( o, longHasUniques.defaults );
   //
   // /* */
   //
@@ -761,7 +761,7 @@ function longAreRepeatedProbe( srcArray, onEvaluate )
   // /* */
   //
   // let number = o.src.length;
-  // let isUnique = _.longMake( o.src );
+  // let isUnique = _.longMakeEmpty( o.src );
   // let index;
   //
   // for( let i = 0 ; i < o.src.length ; i++ )
@@ -800,7 +800,7 @@ function longAreRepeatedProbe( srcArray, onEvaluate )
   // return { number : number, array : isUnique };
 }
 
-// longUniqueAre.defaults =
+// longHasUniques.defaults =
 // {
 //   src : null,
 //   onEvaluate : null,
@@ -867,8 +867,8 @@ function bufferViewIs( src )
 
 function bufferNodeIs( src )
 {
-  if( typeof Buffer !== 'undefined' )
-  return src instanceof Buffer;
+  if( typeof BufferNode !== 'undefined' )
+  return src instanceof BufferNode;
   return false;
 }
 
@@ -888,7 +888,7 @@ function bufferBytesIs( src )
 {
   if( _.bufferNodeIs( src ) )
   return false;
-  return src instanceof Uint8Array;
+  return src instanceof U8x;
 }
 
 //
@@ -1402,7 +1402,7 @@ function scalarToVector( dst, length )
 
   if( _.numberIs( dst ) )
   {
-    dst = _.arrayFillTimes( [], length, dst );
+    dst = _.longFillTimes( [], length, dst );
   }
   else
   {
@@ -5579,16 +5579,16 @@ let Routines =
   longIs,
   longIsPopulated,
 
-  longMake,
+  longMakeEmpty,
   longMakeZeroed,
 
   _longClone,
   longShallowClone,
 
   longSlice,
-  longButRange,
+  longBut,
 
-  longRemoveDuplicates,
+  longUnduplicate/*longRemoveDuplicates*/,
 
   longAreRepeatedProbe,
   longAllAreRepeated,

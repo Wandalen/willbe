@@ -831,7 +831,7 @@ function entityFilter( src, onEach )
 
   if( _.longIs( src ) )
   {
-    result = _.longMake( src, 0 );
+    result = _.longMakeEmpty( src, 0 );
     let s, d;
     for( s = 0, d = 0 ; s < src.length ; s++ )
     {
@@ -882,7 +882,7 @@ function _entityFilterDeep( o )
 
   if( _.longIs( o.src ) )
   {
-    result = _.longMake( o.src, 0 );
+    result = _.longMakeEmpty( o.src, 0 );
     for( let s = 0, d = 0 ; s < o.src.length ; s++, d++ )
     {
       let r = onEach.call( o.src, o.src[ s ], s, o.src );
