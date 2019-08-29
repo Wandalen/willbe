@@ -9082,6 +9082,104 @@ submodulesDownloadUpdateDry.timeOut = 300000;
 
 //
 
+function submodulesDownloadSwitchBranch( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-update-switch-branch' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let experimentModulePath = _.path.join( submodulesPath, 'experiment' );
+  let willfilePath = _.path.join( routinePath, '.will.yml' );
+
+  let ready = new _.Consequence().take( null )
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  ready
+  .then( () =>
+  {
+    test.case = 'download master branch';
+    return null;
+  })
+
+  shell({ execPath : '.submodules.download' })
+
+  .then( () =>
+  {
+    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
+    test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
+    return null;
+  })
+
+  .then( () =>
+  {
+    test.case = 'switch master to dev';
+    let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    willFile.submodule.experiment = _.strReplaceAll( willFile.submodule.experiment, '#master', '#dev' );
+    _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    return null;
+  })
+
+  shell({ execPath : '.submodules.download' })
+
+  .then( () =>
+  {
+    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
+    test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
+    return null;
+  })
+
+  .then( () =>
+  {
+    test.case = 'switch dev to detached state';
+    let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    willFile.submodule.experiment = _.strReplaceAll( willFile.submodule.experiment, '#dev', '#cfaa3c7782b9ff59cdcd28cb0f25d421e67f99ce' );
+    _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    return null;
+  })
+
+  shell({ execPath : '.submodules.download' })
+
+  .then( () =>
+  {
+    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
+    test.is( _.strHas( currentVersion, 'cfaa3c7782b9ff59cdcd28cb0f25d421e67f99ce' ) );
+    return null;
+  })
+
+  .then( () =>
+  {
+    test.case = 'switch detached state to master';
+    let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    willFile.submodule.experiment = _.strReplaceAll( willFile.submodule.experiment, '#cfaa3c7782b9ff59cdcd28cb0f25d421e67f99ce', '#master' );
+    _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    return null;
+  })
+
+  shell({ execPath : '.submodules.download' })
+
+  .then( () =>
+  {
+    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
+    test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
+    return null;
+  })
+
+  return ready;
+}
+
+submodulesDownloadSwitchBranch.timeOut = 300000;
+
+//
+
 /*
   Informal module has submodule willbe-experiment#master
   Supermodule has informal module and willbe-experiment#dev in submodules list
@@ -11193,6 +11291,7 @@ var Self =
     submodulesDownloadSingle,
     submodulesDownloadUpdate,
     submodulesDownloadUpdateDry,
+    submodulesDownloadSwitchBranch,
     // submodulesDownloadedUpdate, // qqq : not sure how to fix. please help to fix,
     submodulesUpdate,
     submodulesUpdateSwitchBranch,
