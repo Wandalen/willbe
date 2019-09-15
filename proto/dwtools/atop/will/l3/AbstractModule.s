@@ -35,6 +35,16 @@ function finit()
 function init()
 {
   let module = this;
+
+  module[ willfileWithRoleMapSymbol ] = Object.create( null );
+  module[ willfileArraySymbol ] = [];
+  module[ fileNameSymbol ] = null;
+
+  module[ willfilesPathSymbol ] = null;
+  // module[ dirPathSymbol ] = null;
+  module[ commonPathSymbol ] = null;
+  module[ willPathSymbol ] = _.path.join( __dirname, '../Exec' );
+
   _.workpiece.initFields( module );
   Object.preventExtensions( module );
   _.Will.ResourceCounter += 1;
@@ -93,10 +103,10 @@ function DirPathFromFilePaths( filePaths )
 
 //
 
-function prefixPathForRole( role, isOut )
+function PrefixPathForRole( role, isOut )
 {
-  let module = this;
-  let result = module.prefixPathForRoleMaybe( role, isOut );
+  let cls = this;
+  let result = cls.PrefixPathForRoleMaybe( role, isOut );
 
   _.assert( arguments.length === 2 );
   _.sure( _.strIs( result ), 'Unknown role', _.strQuote( role ) );
@@ -106,9 +116,9 @@ function prefixPathForRole( role, isOut )
 
 //
 
-function prefixPathForRoleMaybe( role, isOut )
+function PrefixPathForRoleMaybe( role, isOut )
 {
-  let module = this;
+  let cls = this;
   let result = '';
 
   _.assert( arguments.length === 2 );
@@ -125,6 +135,47 @@ function prefixPathForRoleMaybe( role, isOut )
   result += '.will';
 
   return result;
+}
+
+// //
+//
+// function CommonPathFor( willfilesPath )
+// {
+//   return _.Will.CommonPathFor.apply( _.Will, arguments );
+// }
+
+//
+
+function CommonPathFor( willfilesPath )
+{
+
+  if( _.arrayIs( willfilesPath ) )
+  {
+    if( !willfilesPath.length )
+    return null;
+    willfilesPath = willfilesPath[ 0 ];
+  }
+
+  _.assert( arguments.length === 1 );
+
+  if( willfilesPath === null )
+  return null;
+
+  _.assert( _.strIs( willfilesPath ) );
+
+  // let common = willfilesPath.replace( /\.will(\.\w+)?$/, '' );
+  //
+  // common = common.replace( /(\.im|\.ex)$/, '' );
+
+  let common = willfilesPath.replace( /(\.(im|ex))?\.will(\.out)?(\.\w+)?$/, '' );
+
+  if( _.strEnds( common, [ '/im', '/ex' ] ) )
+  {
+    common = _.uri.trail( _.uri.dir( common ) );
+    _.assert( _.uri.isTrailed( common ) );
+  }
+
+  return common;
 }
 
 //
@@ -148,9 +199,66 @@ function OutfilePathFor( outPath, name )
 
 //
 
-function CommonPathFor( willfilesPath )
+function _filePathChange( willfilesPath )
 {
-  return _.Will.CommonPathFor.apply( _.Will, arguments );
+  let r = Object.create( null );
+  r.willfilesPath = willfilesPath;
+
+  if( _.arrayIs( r.willfilesPath ) )
+  {
+    if( r.willfilesPath.length === 1 )
+    r.willfilesPath = r.willfilesPath[ 0 ];
+    else if( r.willfilesPath.length === 0 )
+    r.willfilesPath = null;
+  }
+
+  if( !this.will )
+  return r;
+
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  if( r.willfilesPath )
+  r.willfilesPath = path.s.normalizeTolerant( r.willfilesPath );
+
+  r.dirPath = r.willfilesPath;
+  if( _.arrayIs( r.dirPath ) )
+  r.dirPath = r.dirPath[ 0 ];
+  if( _.strIs( r.dirPath ) )
+  r.dirPath = path.dir( r.dirPath );
+  if( r.dirPath === null )
+  r.dirPath = module.dirPath;
+  if( r.dirPath )
+  r.dirPath = path.normalizeTolerant( r.dirPath );
+
+  r.commonPath = module.CommonPathFor( r.willfilesPath );
+
+  _.assert( arguments.length === 1 );
+  _.assert( r.dirPath === null || _.strDefined( r.dirPath ) );
+  _.assert( r.dirPath === null || path.isAbsolute( r.dirPath ) );
+  _.assert( r.dirPath === null || path.isNormalized( r.dirPath ) );
+  _.assert( r.willfilesPath === null || path.s.allAreAbsolute( r.willfilesPath ) );
+
+  if( r.commonPath !== null )
+  module[ fileNameSymbol ] = path.fullName( r.commonPath );
+  module[ willfilesPathSymbol ] = r.willfilesPath;
+
+  return r;
+}
+
+//
+
+function _filePathChanged()
+{
+  let module = this;
+
+  _.assert( arguments.length === 0 );
+
+  module._filePathChange( module.willfilesPath );
+
 }
 
 // --
@@ -183,12 +291,127 @@ function decoratedAbsoluteNameGet()
 }
 
 // --
+// willfile
+// --
+
+function willfileArraySet( willfilesArray )
+{
+  let module = this;
+  _.assert( _.arrayIs( willfilesArray ) );
+
+  if( module.willfilesArray === willfilesArray )
+  return module.willfilesArray;
+
+  for( let w = module.willfilesArray.length-1 ; w >= 0 ; w-- )
+  {
+    let willf = module.willfilesArray[ w ];
+    module.willfileUnregister( willf );
+  }
+
+  for( let w = 0 ; w < willfilesArray.length ; w++ )
+  {
+    let willf = willfilesArray[ w ];
+    module.willfileRegister( willf );
+  }
+
+  return module.willfilesArray;
+}
+
+//
+
+function willfileUnregister( willf )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.arrayRemoveElementOnceStrictly( module.willfilesArray, willf );
+  // _.arrayRemoveElementOnceStrictly( willf.openers, module );
+
+  if( willf.role )
+  {
+    _.assert( module.willfileWithRoleMap[ willf.role ] === willf )
+    delete module.willfileWithRoleMap[ willf.role ];
+  }
+
+  let willfilesPath = _.arrayFlatten( _.select( module.willfilesArray, '*/filePath' ) );
+  module.willfilesPath = willfilesPath;
+
+}
+
+//
+
+function willfileRegister( willf )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 1 );
+
+  if( _.arrayIs( willf ) )
+  {
+    debugger;
+    willf.forEach( ( willf ) => module.willfileRegister( willf ) );
+    return;
+  }
+
+  _.arrayAppendOnce( module.willfilesArray, willf );
+
+  if( willf.role )
+  {
+    _.assert( !module.willfileWithRoleMap[ willf.role ] || module.willfileWithRoleMap[ willf.role ] === willf, 'Module already has willfile with role', willf.role )
+    module.willfileWithRoleMap[ willf.role ] = willf;
+  }
+
+  _.assert( !!module.willfilesArray.length );
+
+  let willfilesPath = _.arrayFlatten( _.select( module.willfilesArray, '*/filePath' ) );
+  module.willfilesPath = willfilesPath;
+
+  module.isOut = _.any( module.willfilesArray, ( wfile ) => wfile.isOut );
+
+}
+
+//
+
+function _willfilesRelease( willfilesArray )
+{
+  let opener = this;
+  let will = opener.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  willfilesArray = willfilesArray || opener.willfilesArray;
+  willfilesArray = willfilesArray.slice();
+
+  for( let i = willfilesArray.length-1 ; i >= 0 ; i-- )
+  {
+    let willf = willfilesArray[ i ];
+    opener.willfileUnregister( willf );
+    _.assert( !willf.finitedIs() );
+    if( !willf.isUsed() )
+    willf.finit();
+  }
+
+}
+
+// --
 // relations
 // --
 
-let functionSymbol = Symbol.for( 'function' );
-let aliasNameSymbol = Symbol.for( 'aliasName' );
-let dirPathSymbol = Symbol.for( 'dirPath' );
+let willfileWithRoleMapSymbol = Symbol.for( 'willfileWithRoleMap' );
+let willfileArraySymbol = Symbol.for( 'willfilesArray' );
+let fileNameSymbol = Symbol.for( 'fileName' );
+
+let willfilesPathSymbol = Symbol.for( 'willfilesPath' );
+let commonPathSymbol = Symbol.for( 'commonPath' );
+let willPathSymbol = Symbol.for( 'willPath' );
 
 let Composes =
 {
@@ -201,6 +424,7 @@ let Aggregates =
 let Associates =
 {
   will : null,
+  peerModule : null,
 }
 
 let Medials =
@@ -211,7 +435,6 @@ let Restricts =
 {
 
   id : null,
-  userArray : _.define.own([]),
 
 }
 
@@ -220,6 +443,9 @@ let Statics =
 
   WillfilePathIs,
   DirPathFromFilePaths,
+  PrefixPathForRole,
+  PrefixPathForRoleMaybe,
+
   CommonPathFor,
   CloneDirPathFor,
   OutfilePathFor,
@@ -229,6 +455,7 @@ let Statics =
 let Forbids =
 {
 
+  mainOpener : 'mainOpener',
   exportMap : 'exportMap',
   exported : 'exported',
   export : 'export',
@@ -241,7 +468,9 @@ let Forbids =
   allModuleMap : 'allModuleMap',
   opener : 'opener',
   Counter : 'Counter',
-  moduleWithPathMap : 'moduleWithPathMap',
+  moduleWithCommonPathMap : 'moduleWithCommonPathMap',
+  supermoduleSubmodule : 'supermoduleSubmodule',
+  configName : 'configName',
 
 }
 
@@ -249,8 +478,12 @@ let Accessors =
 {
 
   nickName : { getter : nickNameGet, combining : 'rewrite', readOnly : 1 },
+  fileName : { readOnly : 1 },
   decoratedNickName : { getter : decoratedNickNameGet, combining : 'rewrite', readOnly : 1 },
   decoratedAbsoluteName : { getter : decoratedAbsoluteNameGet, readOnly : 1 },
+
+  willfilesArray : { setter : willfileArraySet },
+  willfileWithRoleMap : { readOnly : 1 },
 
 }
 
@@ -270,18 +503,29 @@ let Extend =
 
   WillfilePathIs,
   DirPathFromFilePaths,
-  prefixPathForRole,
-  prefixPathForRoleMaybe,
+  PrefixPathForRole,
+  PrefixPathForRoleMaybe,
 
   CommonPathFor,
   CloneDirPathFor,
   OutfilePathFor,
+
+  _filePathChange,
+  _filePathChanged,
 
   // name
 
   nickNameGet,
   decoratedNickNameGet,
   decoratedAbsoluteNameGet,
+
+  // willfile
+
+  willfileArraySet,
+  willfileUnregister,
+  willfileRegister,
+
+  _willfilesRelease,
 
   // relation
 

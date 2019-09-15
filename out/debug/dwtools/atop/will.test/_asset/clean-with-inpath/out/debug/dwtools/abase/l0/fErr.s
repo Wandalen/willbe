@@ -19,27 +19,545 @@ let Self = _global_.wTools;
 // stub
 // --
 
-function diagnosticStack( stack )
+// function diagnosticStack( stack )
+// {
+//   if( _.errIs( stack ) )
+//   return stack.stack || stack;
+//   return new Error().stack;
+// }
+//
+// //
+//
+// function diagnosticStackRemoveBegin( stack, include, exclude )
+// {
+//   return stack;
+// }
+//
+// //
+//
+// function diagnosticStackCondense( stack )
+// {
+//   if( _.errIs( stack ) )
+//   return stack.stack || stack;
+//   return new Error().stack;
+// }
+//
+// //
+//
+// function diagnosticLocation()
+// {
+//   return Object.create( null );
+// }
+
+
+function diagnosticLocation( o )
 {
+
+  if( _.numberIs( o ) )
+  o = { level : o }
+  else if( _.strIs( o ) )
+  o = { stack : o, level : 0 }
+  else if( _.errIs( o ) )
+  o = { error : o, level : 0 }
+  else if( o === undefined )
+  o = { stack : _.diagnosticStack([ 1, Infinity ]) };
+
+  /* */
+
+  if( diagnosticLocation.defaults )
+  for( let e in o )
+  {
+    if( diagnosticLocation.defaults[ e ] === undefined )
+    throw Error( 'Unknown option ' + e );
+  }
+
+  if( diagnosticLocation.defaults )
+  for( let e in diagnosticLocation.defaults )
+  {
+    if( o[ e ] === undefined )
+    o[ e ] = diagnosticLocation.defaults[ e ];
+  }
+
+  if( !( arguments.length === 0 || arguments.length === 1 ) )
+  throw Error( 'Expects single argument or none' );
+
+  if( !( _.objectIs( o ) ) )
+  throw Error( 'Expects options map' );
+
+  if( !o.level )
+  o.level = 0;
+
+  // _.routineOptions( diagnosticLocation, o );
+  // _.assert( arguments.length === 0 || arguments.length === 1 );
+  // _.assert( _.objectIs( o ), 'diagnosticLocation expects integer {-level-} or string ( stack ) or object ( options )' );
+
+  /* */
+
+  if( !o.location )
+  o.location = Object.create( null );
+
+  /* */
+
+  if( o.error )
+  {
+    let location2 = o.error.location || Object.create( null );
+
+    o.location.path = _.arrayLeftDefined([ location2.path, o.location.path, o.error.filename, o.error.fileName ]).element;
+    o.location.line = _.arrayLeftDefined([ location2.line, o.location.line, o.error.line, o.error.linenumber, o.error.lineNumber, o.error.lineNo, o.error.lineno ]).element;
+    o.location.col = _.arrayLeftDefined([ location2.col, o.location.col, o.error.col, o.error.colnumber, o.error.colNumber, o.error.colNo, o.error.colno ]).element;
+
+    if( o.location.path && _.numberIs( o.location.line ) )
+    return end();
+  }
+
+  /* */
+
+  if( !o.stack )
+  {
+    if( o.error )
+    {
+      o.stack = _.diagnosticStack( o.error, undefined );
+    }
+    else
+    {
+      o.stack = _.diagnosticStack();
+      o.level += 1;
+    }
+  }
+
+  routineFromStack( o.stack );
+
+  let had = !!o.location.path;
+  if( !had )
+  o.location.path = fromStack( o.stack );
+
+  if( !_.strIs( o.location.path ) )
+  return end();
+
+  if( !_.numberIs( o.location.line ) )
+  o.location.path = lineColFromPath( o.location.path );
+
+  if( !_.numberIs( o.location.line ) && had )
+  {
+    let path = fromStack( o.stack );
+    if( path )
+    lineColFromPath( path );
+  }
+
+  return end();
+
+  /* end */
+
+  function end()
+  {
+
+    let path = o.location.path;
+
+    /* full */
+
+    // if( path )
+    {
+      o.location.full = path || '';
+      if( o.location.line !== undefined )
+      o.location.full += ':' + o.location.line;
+    }
+
+    /* name long */
+
+    if( o.location.full )
+    {
+      try
+      {
+        o.location.fullWithRoutine = o.location.routine + ' @ ' + o.location.full;
+      }
+      catch( err )
+      {
+        o.location.fullWithRoutine = '';
+      }
+    }
+
+    /* name */
+
+    if( path )
+    {
+      let name = path;
+      let i = name.lastIndexOf( '/' );
+      if( i !== -1 )
+      name = name.substr( i+1 );
+      o.location.name = name;
+    }
+
+    /* name long */
+
+    if( path )
+    {
+      let nameLong = o.location.name;
+      if( o.location.line !== undefined )
+      {
+        nameLong += ':' + o.location.line;
+        if( o.location.col !== undefined )
+        nameLong += ':' + o.location.col;
+      }
+      o.location.nameLong = nameLong;
+    }
+
+    return o.location;
+  }
+
+  /* routine from stack */
+
+  function routineFromStack( stack )
+  {
+    let path;
+
+    if( !stack )
+    return;
+
+    if( _.strIs( stack ) )
+    stack = stack.split( '\n' );
+
+    path = stack[ o.level ];
+
+    if( !_.strIs( path ) )
+    return '(-routine anonymous-)';
+
+    // debugger;
+
+    let t = /^\s*(at\s+)?([\w\.]+)\s*.+/;
+    let executed = t.exec( path );
+    if( executed )
+    path = executed[ 2 ] || '';
+
+    if( _.strEnds( path, '.' ) )
+    path += '?';
+
+    o.location.routine = path;
+    o.location.service = 0;
+    if( o.location.service === 0 )
+    if( _.strBegins( path , '__' ) || path.indexOf( '.__' ) !== -1 )
+    o.location.service = 2;
+    if( o.location.service === 0 )
+    if( _.strBegins( path , '_' ) || path.indexOf( '._' ) !== -1 )
+    o.location.service = 1;
+
+    return path;
+  }
+
+  /* path from stack */
+
+  function fromStack( stack )
+  {
+    let path;
+
+    if( !stack )
+    return;
+
+    if( _.strIs( stack ) )
+    stack = stack.split( '\n' );
+
+    path = stack[ o.level ];
+
+    if( !_.strIs( path ) )
+    return end();
+
+    path = path.replace( /^\s+/, '' );
+    path = path.replace( /^\w+@/, '' );
+    path = path.replace( /^at/, '' );
+    path = path.replace( /^\s+/, '' );
+    path = path.replace( /\s+$/, '' );
+
+    let regexp = /^.*\((.*)\)$/;
+    var parsed = regexp.exec( path );
+    if( parsed )
+    path = parsed[ 1 ];
+
+    // if( _.strEnds( path, ')' ) )
+    // path = _.strIsolateInsideOrAll( path, '(', ')' )[ 2 ];
+
+    return path;
+  }
+
+  /* line / col number from path */
+
+  function lineColFromPath( path )
+  {
+
+    let lineNumber, colNumber;
+    let postfix = /(.+?):(\d+)(?::(\d+))?[^:/]*$/;
+    let parsed = postfix.exec( path );
+
+    if( parsed )
+    {
+      path = parsed[ 1 ];
+      lineNumber = parsed[ 2 ];
+      colNumber = parsed[ 3 ];
+    }
+
+    // let postfix = /:(\d+)$/;
+    // colNumber = postfix.exec( o.location.path );
+    // if( colNumber )
+    // {
+    //   o.location.path = _.strRemoveEnd( o.location.path, colNumber[ 0 ] );
+    //   colNumber = colNumber[ 1 ];
+    //   lineNumber = postfix.exec( o.location.path );
+    //   if( lineNumber )
+    //   {
+    //     o.location.path = _.strRemoveEnd( o.location.path, lineNumber[ 0 ] );
+    //     lineNumber = lineNumber[ 1 ];
+    //   }
+    //   else
+    //   {
+    //     lineNumber = colNumber;
+    //     colNumber = undefined;
+    //   }
+    // }
+
+    lineNumber = parseInt( lineNumber );
+    colNumber = parseInt( colNumber );
+
+    if( isNaN( o.location.line ) && !isNaN( lineNumber ) )
+    o.location.line = lineNumber;
+
+    if( isNaN( o.location.col ) && !isNaN( colNumber ) )
+    o.location.col = colNumber;
+
+    return path;
+  }
+
+}
+
+diagnosticLocation.defaults =
+{
+  level : 0,
+  stack : null,
+  error : null,
+  location : null,
+}
+
+//
+
+/**
+ * Return stack trace as string.
+ * @example
+ * let stack;
+ * function function1()
+ * {
+ *   function2();
+ * }
+ *
+ * function function2()
+ * {
+ *   function3();
+ * }
+ *
+ * function function3()
+ * {
+ *   stack = _.diagnosticStack();
+ * }
+ *
+ * function1();
+ * console.log( stack );
+ * // log
+ * //"    at function3 (<anonymous>:10:17)
+ * // at function2 (<anonymous>:6:2)
+ * // at function1 (<anonymous>:2:2)
+ * // at <anonymous>:1:1"
+ *
+ * @returns {String} Return stack trace from call point.
+ * @function diagnosticStack
+ * @memberof wTools
+ */
+
+function diagnosticStack( stack, range )
+{
+
+  if( arguments.length === 1 )
+  {
+    if( !_.errIs( stack ) )
+    if( !_.strIs( stack ) )
+    {
+      range = arguments[ 0 ];
+      stack = undefined;
+    }
+  }
+
+  if( stack === undefined )
+  {
+    stack = new Error();
+    if( range === undefined )
+    range = [ 1, Infinity ];
+  }
+
+  if( range === undefined )
+  range = [ 0, Infinity ];
+
+  if( arguments.length !== 0 && arguments.length !== 1 && arguments.length !== 2 )
+  {
+    debugger;
+    throw Error( 'diagnosticStack : expects one or two or none arguments' );
+  }
+
+  if( !_.rangeIs( range ) )
+  {
+    debugger;
+    throw Error( 'diagnosticStack : expects range but, got ' + _.strType( range ) );
+  }
+
+  let first = range[ 0 ];
+  let last = range[ 1 ];
+
+  if( !_.numberIs( first ) )
+  {
+    debugger;
+    throw Error( 'diagnosticStack : expects number range[ 0 ], but got ' + _.strType( first ) );
+  }
+
+  if( !_.numberIs( last ) )
+  {
+    debugger;
+    throw Error( 'diagnosticStack : expects number range[ 0 ], but got ' + _.strType( last ) );
+  }
+
+  let errIs = 0;
   if( _.errIs( stack ) )
-  return stack.stack || stack;
-  return new Error().stack;
+  {
+    stack = stack.originalStack || stack[ stackSymbol ] || stack.stack;
+    errIs = 1;
+  }
+
+  if( !stack )
+  return '';
+
+  if( !_.arrayIs( stack ) && !_.strIs( stack ) )
+  return;
+
+  if( !_.arrayIs( stack ) && !_.strIs( stack ) )
+  {
+    debugger;
+    throw Error( 'diagnosticStack expects array or string' );
+  }
+
+  if( !_.arrayIs( stack ) )
+  stack = stack.split( '\n' );
+
+  /* remove redundant lines */
+
+  // if( !errIs )
+  // console.debug( 'REMINDER : problem here if !errIs' ); /* xxx */
+  // if( !errIs )
+  // debugger;
+
+  // if( errIs )
+  {
+    while( stack.length )
+    {
+      let splice = 0;
+      splice |= ( stack[ 0 ].indexOf( '  at ' ) === -1 && stack[ 0 ].indexOf( '@' ) === -1 );
+      splice |= stack[ 0 ].indexOf( '(vm.js:' ) !== -1;
+      splice |= stack[ 0 ].indexOf( '(module.js:' ) !== -1;
+      splice |= stack[ 0 ].indexOf( '(internal/module.js:' ) !== -1;
+      if( splice )
+      stack.splice( 0, 1 );
+      else break;
+    }
+  }
+
+  if( stack[ 0 ] )
+  if( stack[ 0 ].indexOf( 'at ' ) === -1 && stack[ 0 ].indexOf( '@' ) === -1 )
+  {
+    console.error( 'diagnosticStack : failed to parse stack' );
+    debugger;
+  }
+
+  /* */
+
+  first = first === undefined ? 0 : first;
+  last = last === undefined ? stack.length : last;
+
+  if( _.numberIs( first ) )
+  if( first < 0 )
+  first = stack.length + first;
+
+  if( _.numberIs( last ) )
+  if( last < 0 )
+  last = stack.length + last + 1;
+
+  /* */
+
+  if( first !== 0 || last !== stack.length )
+  {
+    stack = stack.slice( first || 0, last );
+  }
+
+  /* */
+
+  stack = String( stack.join( '\n' ) );
+
+  return stack;
+}
+
+//
+
+function diagnosticStackRemoveBegin( stack, include, exclude )
+{
+  if( arguments.length !== 3 )
+  throw Error( 'Expects two arguments' );
+  if( !_.regexpIs( include ) && include !== null )
+  throw Error( 'Expects regexp either null as the second argument' );
+  if( !_.regexpIs( exclude ) && exclude !== null )
+  throw Error( 'Expects regexp either null as the third argument' );
+
+  if( !_.strIs( stack ) )
+  return stack;
+
+  stack = stack.split( '\n' );
+
+  for( let s = stack.length-1 ; s >= 0 ; s-- )
+  {
+    let line = stack[ s ];
+    if( include && include.test( line ) )
+    {
+      stack.splice( s, 1 );
+      continue;
+    }
+    if( exclude && exclude.test( line ) )
+    {
+      stack.splice( s, 1 );
+      continue;
+    }
+  }
+
+  return stack.join( '\n' );
 }
 
 //
 
 function diagnosticStackCondense( stack )
 {
-  if( _.errIs( stack ) )
-  return stack.stack || stack;
-  return new Error().stack;
-}
 
-//
+  if( arguments.length !== 1 )
+  throw Error( 'Expects single arguments' );
 
-function diagnosticLocation()
-{
-  return Object.create( null );
+  if( !_.strIs( stack ) )
+  throw Error( 'Expects string' );
+
+  stack = stack.split( '\n' );
+
+  for( let s = stack.length-1 ; s >= 0 ; s-- )
+  {
+    let line = stack[ s ];
+    if( s > 0 )
+    if( /(\W|^)__\w+/.test( line ) )
+    {
+      stack.splice( s, 1 );
+      continue;
+    }
+    if( _.strHas( line, '.test.' ) )
+    line += ' *';
+    stack[ s ] = line;
+  }
+
+  return stack.join( '\n' );
 }
 
 //
@@ -78,40 +596,102 @@ function errIsAttended( src )
 
 //
 
-function errIsAttentionRequested( src )
+function errIsLogged( src )
 {
   if( _.errIs( src ) === false )
   return false;
-  return src.attentionRequested;
+  return !!src.logged;
+}
+
+// //
+//
+// function errIsAttentionRequested( src )
+// {
+//   if( _.errIs( src ) === false )
+//   return false;
+//   return src.attentionRequested;
+// }
+//
+// //
+//
+// function errAttentionRequest( err )
+// {
+//
+//   if( arguments.length !== 1 )
+//   throw Error( 'errAttentionRequest : Expects one argument' );
+//   if( !_.errIs( err ) )
+//   throw Error( 'errAttentionRequest : Expects error as the first argument' );
+//
+//   Object.defineProperty( err, 'attended',
+//   {
+//     enumerable : false,
+//     configurable : true,
+//     writable : true,
+//     value : 0,
+//   });
+//
+//   Object.defineProperty( err, 'attentionRequested',
+//   {
+//     enumerable : false,
+//     configurable : true,
+//     writable : true,
+//     value : 1,
+//   });
+//
+//   return err;
+// }
+
+//
+
+function errOriginalMessage( err )
+{
+
+  if( arguments.length !== 1 )
+  throw Error( 'errOriginalMessage : Expects single argument' );
+
+  if( _.strIs( err ) )
+  return err;
+
+  if( !err )
+  return;
+
+  if( err.originalMessage )
+  return err.originalMessage;
+
+  let message = err.message;
+
+  if( !message && message !== '' )
+  message = err.msg;
+  if( !message && message !== '' )
+  message = err.name;
+
+  // fallBackMessage = fallBackMessage || err.constructor.name;
+
+  if( _.mapFields )
+  {
+    let fields = _.mapFields( err );
+    if( Object.keys( fields ).length )
+    message += '\n' + _.toStr( fields, { wrap : 0, multiline : 1, levels : 2 } );
+  }
+
+  return message;
 }
 
 //
 
-function errAttentionRequest( err )
+function errOriginalStack( err )
 {
 
   if( arguments.length !== 1 )
-  throw Error( 'errAttentionRequest : Expects one argument' );
+  throw Error( 'errOriginalStack : Expects single argument' );
+
   if( !_.errIs( err ) )
-  throw Error( 'errAttentionRequest : Expects error as the first argument' );
+  throw Error( 'errOriginalStack : Expects error' );
 
-  Object.defineProperty( err, 'attended',
-  {
-    enumerable : false,
-    configurable : true,
-    writable : true,
-    value : 0,
-  });
+  if( err.originalMessage )
+  return err.originalMessage;
 
-  Object.defineProperty( err, 'attentionRequested',
-  {
-    enumerable : false,
-    configurable : true,
-    writable : true,
-    value : 1,
-  });
-
-  return err;
+  return err.message;
 }
 
 //
@@ -135,16 +715,30 @@ function _err( o )
   let result;
 
   if( arguments.length !== 1 )
-  throw Error( '_err : expects single argument' );
+  throw Error( '_err : Expects single argument' );
 
   if( !_.longIs( o.args ) )
   throw Error( '_err : o.args should be array like' );
 
-  if( o.usingSourceCode === undefined )
-  o.usingSourceCode = _err.defaults ? _err.defaults.usingSourceCode : 0;
+  // if( _err.defaults )
+  for( let e in o )
+  {
+    if( _err.defaults[ e ] === undefined )
+    throw Error( 'Unknown option ' + e );
+  }
 
-  if( o.condensingStack === undefined )
-  o.condensingStack = _err.defaults ? _err.defaults.condensingStack : 0;
+  // if( _err.defaults )
+  for( let e in _err.defaults )
+  {
+    if( o[ e ] === undefined )
+    o[ e ] = _err.defaults[ e ];
+  }
+
+  // if( o.usingSourceCode === undefined )
+  // o.usingSourceCode = _err.defaults ? _err.defaults.usingSourceCode : 0;
+  //
+  // if( o.condensingStack === undefined )
+  // o.condensingStack = _err.defaults ? _err.defaults.condensingStack : 0;
 
   if( o.args[ 0 ] === 'not implemented' || o.args[ 0 ] === 'not tested' || o.args[ 0 ] === 'unexpected' )
   if( _.debuggerEnabled )
@@ -153,251 +747,363 @@ function _err( o )
   /* let */
 
   let originalMessage = '';
+  let fallBackMessage = '';
   let catches = '';
   let sourceCode = '';
   let errors = [];
-  let attended = 0;
-
-  /* Error.stackTraceLimit = 99; */
-
-  /* find error in arguments */
-
-  for( let a = 0 ; a < o.args.length ; a++ )
-  {
-    let arg = o.args[ a ];
-
-    if( !_.errIs( arg ) && _.routineIs( arg ) )
-    {
-      if( arg.length === 0 )
-      {}
-      else
-      debugger;
-      if( arg.length === 0 )
-      arg = o.args[ a ] = arg();
-      if( _.unrollIs( arg ) )
-      {
-        o.args = _.longBut( o.args, [ a, a+1 ], arg );
-        a -= 1;
-        continue;
-      }
-    }
-
-    if( _.errIs( arg ) )
-    {
-
-      if( !result )
-      {
-        result = arg;
-        catches = result.catches || '';
-        sourceCode = result.sourceCode || '';
-        // if( o.args.length === 1 )
-        attended = result.attended;
-      }
-
-      if( arg.attentionRequested === undefined )
-      {
-        Object.defineProperty( arg, 'attentionRequested',
-        {
-          enumerable : false,
-          configurable : true,
-          writable : true,
-          value : 0,
-        });
-      }
-
-      if( arg.originalMessage !== undefined )
-      {
-        o.args[ a ] = arg.originalMessage;
-      }
-      else
-      {
-        o.args[ a ] = arg.message || arg.msg || arg.constructor.name || 'unknown error';
-        let fields = _.mapFields( arg );
-        if( Object.keys( fields ).length )
-        o.args[ a ] += '\n' + _.toStr( fields, { wrap : 0, multiline : 1, levels : 2 } );
-      }
-
-      if( errors.length > 0 )
-      o.args[ a ] = '\n' + o.args[ a ];
-      errors.push( arg );
-
-      o.location = _.diagnosticLocation({ error : arg, location : o.location });
-
-    }
-
-  }
-
-  /* look into non-error arguments to find location */
-
-  if( !result )
-  for( let a = 0 ; a < o.args.length ; a++ )
-  {
-    let arg = o.args[ a ];
-
-    if( !_.primitiveIs( arg ) && _.objectLike( arg ) )
-    {
-      o.location = _.diagnosticLocation({ error : arg, location : o.location });
-    }
-
-  }
-
-  o.location = o.location || Object.create( null );
-
-  /* level */
-
-  if( !_.numberIs( o.level ) )
-  o.level = _err.defaults ? _err.defaults.level : 1;
-
-  /* make new one if no error in arguments */
-
-  let stack = o.stack;
+  let attended = false;
+  let logged = false;
   let stackCondensed = '';
+  let message = null;
+  // let briefly = o.briefly;
 
-  if( !result )
+  /* algorithm */
+
+  // if( o.args[ 0 ] && o.args[ 0 ].originalMessage && _.strHas( o.args[ 0 ].originalMessage, 'Please, re-export modules' ) )
+  // debugger;
+
+  try
   {
-    if( !stack )
-    stack = o.fallBackStack;
-    result = new Error( originalMessage + '\n' );
-    if( !stack )
-    {
-      stack = _.diagnosticStack( result, [ o.level, -1 ] );
-      if( o.location.full && stack.indexOf( '\n' ) === -1 )
-      stack = o.location.full;
-    }
+
+    argumentsPreprocess();
+    locationForm();
+    stackAndErrorForm();
+
+    // let briefly = result.briefly || o.briefly;
+
+    catchesForm();
+    sourceCodeForm();
+
+    originalMessageForm();
+    messageForm();
+    fieldsForm();
+
   }
-  else
+  catch( err2 )
   {
-    if( result.stack !== undefined )
+    debugger;
+    logger.log( err2.message );
+    logger.log( err2.stack );
+  }
+
+  return result;
+
+  /* */
+
+  function argumentsPreprocess()
+  {
+
+    for( let a = 0 ; a < o.args.length ; a++ )
     {
+      let arg = o.args[ a ];
+
+      if( !_.errIs( arg ) && _.routineIs( arg ) )
+      {
+        if( arg.length === 0 )
+        debugger;
+        else
+        debugger;
+        if( arg.length === 0 )
+        arg = o.args[ a ] = arg();
+        if( _.unrollIs( arg ) )
+        {
+          o.args = _.longBut( o.args, [ a, a+1 ], arg );
+          a -= 1;
+          continue;
+        }
+      }
+
+      if( _.errIs( arg ) )
+      {
+
+        if( !result )
+        {
+          result = arg;
+          catches = result.catches || '';
+          sourceCode = result.sourceCode || '';
+          attended = result.attended || false;
+          logged = result.logged || false;
+        }
+
+        if( arg.constructor )
+        fallBackMessage = fallBackMessage || arg.constructor.name;
+        errors.push( arg );
+
+        o.location = _.diagnosticLocation({ error : arg, location : o.location });
+        o.args[ a ] = _.errOriginalMessage( arg )
+
+      }
+
+    }
+
+  }
+
+  /* */
+
+  function locationForm()
+  {
+
+    if( !result )
+    for( let a = 0 ; a < o.args.length ; a++ )
+    {
+      let arg = o.args[ a ];
+      if( !_.primitiveIs( arg ) && _.objectLike( arg ) )
+      o.location = _.diagnosticLocation({ error : arg, location : o.location });
+    }
+
+    o.location = o.location || Object.create( null );
+
+  }
+
+  /* */
+
+  function stackAndErrorForm()
+  {
+
+    if( !result )
+    {
+      if( !o.stack )
+      o.stack = o.fallBackStack;
+      result = new Error( originalMessage + '\n' );
+      if( !o.stack )
+      {
+        o.stack = _.diagnosticStack( result, [ o.level, Infinity ] );
+        if( !o.stack || o.stack.indexOf( '\n' ) === -1 )
+        if( o.location.full )
+        o.stack = o.location.full;
+      }
+    }
+    else
+    {
+
       if( result.originalMessage !== undefined )
       {
         if( result.originalStack )
-        stack = result.originalStack;
+        o.stack = result.originalStack;
+        else if( result[ stackSymbol ] )
+        o.stack = result[ stackSymbol ];
         else
-        stack = result.stack;
+        o.stack = result.stack;
         stackCondensed = result.stackCondensed;
+      }
+      else if( _.strDefined( result.stack ) )
+      {
+        // debugger;
+        // o.stack = result.stack;
+        o.stack = _.diagnosticStack( result.stack );
+        // o.stack = _.diagnosticStack( result.stack, [ o.level, Infinity ] );
       }
       else
       {
-        stack = _.diagnosticStack( result );
+        debugger;
+        o.stack = _.diagnosticStack([ o.level, Infinity ]);
       }
-    }
-    else
-    {
-      stack = _.diagnosticStack([ o.level, Infinity ]);
-    }
-  }
-
-  if( !stack )
-  stack = o.fallBackStack;
-
-  if( _.strIs( stack ) && !_.strEnds( stack, '\n' ) )
-  stack = stack + '\n';
-
-  if( stack && !stackCondensed )
-  {
-    stackCondensed = _.diagnosticStackCondense( stack );
-  }
-
-  /* collect data */
-
-  for( let a = 0 ; a < o.args.length ; a++ )
-  {
-    let argument = o.args[ a ];
-    let str;
-
-    if( argument && !_.primitiveIs( argument ) )
-    {
-
-      if( _.primitiveIs( argument ) )
-      str = String( argument );
-      else if( _.routineIs( argument.toStr ) )
-      str = argument.toStr();
-      else if( _.errIs( argument ) || _.strIs( argument.message ) )
-      {
-        if( _.strIs( argument.originalMessage ) ) str = argument.originalMessage;
-        else if( _.strIs( argument.message ) ) str = argument.message;
-        else str = _.toStr( argument );
-      }
-      else str = _.toStr( argument,{ levels : 2 } );
 
     }
-    else if( argument === undefined )
-    {
-      str = '\n' + String( argument ) + '\n';
-    }
-    else
-    {
-      str = String( argument );
-    }
 
-    if( _.strIs( str ) && str[ str.length-1 ] === '\n' )
-    originalMessage += str;
-    else
-    originalMessage += str + ' ';
+    if( ( o.stackRemobeBeginInclude || o.stackRemobeBeginExclude ) && o.stack )
+    o.stack = _.diagnosticStackRemoveBegin( o.stack, o.stackRemobeBeginInclude || null, o.stackRemobeBeginExclude || null );
 
-  }
+    if( !o.stack )
+    o.stack = o.fallBackStack;
 
-  /* source code */
+    if( _.strIs( o.stack ) && !_.strEnds( o.stack, '\n' ) )
+    o.stack = o.stack + '\n';
 
-  if( o.usingSourceCode )
-  if( result.sourceCode === undefined )
-  {
-    let c = '';
+    if( o.stack && !stackCondensed )
+    stackCondensed = _.diagnosticStackCondense( o.stack );
+
     o.location = _.diagnosticLocation
     ({
       error : result,
-      stack,
+      stack : o.stack,
       location : o.location,
     });
-    c = _.diagnosticCode
-    ({
-      location : o.location,
-      sourceCode : o.sourceCode,
-    });
-    if( c && c.length < 400 )
-    {
-      sourceCode += c;
-    }
+
+    if( o.briefly === null || o.briefly === undefined )
+    o.briefly = result.briefly;
+    o.briefly = !!o.briefly;
+
   }
 
-  /* where it was caught */
+  /* */
 
-  let floc = _.diagnosticLocation( o.level );
-  if( !floc.service || floc.service === 1 )
-  catches = '    caught at ' + floc.fullWithRoutine + '\n' + catches;
+  function catchesForm()
+  {
+    let floc = _.diagnosticLocation({ level : o.level });
+    if( !floc.service || floc.service === 1 )
+    catches = '    caught at ' + floc.fullWithRoutine + '\n' + catches;
+  }
 
-  /* message */
+  /* */
 
-  let briefly = result.briefly || o.briefly;
-  let message = messageForm();
+  function sourceCodeForm()
+  {
 
-  /* fields */
+    if( o.usingSourceCode )
+    if( result.sourceCode === undefined )
+    {
+      let c = '';
+      // o.location = _.diagnosticLocation
+      // ({
+      //   error : result,
+      //   stack : o.stack,
+      //   location : o.location,
+      // });
+      c = _.diagnosticCode
+      ({
+        location : o.location,
+        sourceCode : o.sourceCode,
+      });
+      if( c && c.length < 400 )
+      {
+        sourceCode += c;
+      }
+    }
 
-  if( o.location.line !== undefined )
-  nonenurable( 'lineNumber', o.location.line );
-  nonenurable( 'toString', function() { return this.message } );
-  nonenurable( 'message', message );
-  nonenurable( 'originalMessage', originalMessage );
-  nonenurable( 'level', o.level );
 
-  if( Config.platform === 'browser' )
-  nonenurable( 'stack', message );
-  else
-  nonenurable( 'stack', stack );
+  }
 
-  nonenurable( 'originalStack', stack );
-  nonenurable( 'stackCondensed', stackCondensed );
-  if( o.briefly )
-  nonenurable( 'briefly', o.briefly );
-  nonenurable( 'sourceCode', sourceCode || null );
-  if( result.location === undefined )
-  nonenurable( 'location', o.location );
-  nonenurable( 'attended', attended );
-  nonenurable( 'catches', catches );
-  nonenurable( 'catchCounter', result.catchCounter ? result.catchCounter+1 : 1 );
+  /* */
 
-  return result;
+  function originalMessageForm()
+  {
+    let multiline = false;
+    let result = [];
+
+    for( let a = 0 ; a < o.args.length ; a++ )
+    {
+      let arg = o.args[ a ];
+      let str;
+
+      if( arg && !_.primitiveIs( arg ) )
+      {
+
+        if( _.primitiveIs( arg ) )
+        {
+          str = String( arg );
+        }
+        else if( _.routineIs( arg.toStr ) )
+        {
+          str = arg.toStr();
+        }
+        else if( _.errIs( arg ) && _.strIs( arg.originalMessage ) )
+        {
+          str = arg.originalMessage;
+        }
+        else if( _.errIs( arg ) )
+        {
+          if( _.strIs( arg.originalMessage ) )
+          str = arg.originalMessage;
+          else if( _.strIs( arg.message ) )
+          str = arg.message;
+          else
+          str = _.toStr( arg );
+        }
+        else
+        {
+          str = _.toStr( arg, { levels : 2 } );
+        }
+      }
+      else if( arg === undefined )
+      {
+        str = '\n' + String( arg ) + '\n';
+      }
+      else
+      {
+        str = String( arg );
+      }
+
+      let currentIsMultiline = _.strHas( str, '\n' );
+      if( currentIsMultiline )
+      multiline = true;
+
+      result[ a ] = str;
+
+      // if( _.strIs( str ) && str[ str.length-1 ] === '\n' )
+      // originalMessage += str;
+      // else
+      // originalMessage += str + ' ';
+
+    }
+
+    for( let a = 0 ; a < result.length ; a++ )
+    {
+      let str = result[ a ];
+
+      if( _.strEnds( originalMessage, '\n' ) || _.strBegins( str, '\n' ) )
+      {
+        originalMessage = originalMessage.replace( /\s+$/m, '' ) + '\n' + str.replace( /^\s+/m, '' );
+      }
+      else
+      {
+        originalMessage = originalMessage.replace( /\s+$/m, '' ) + ' ' + str.replace( /^\s+/m, '' );
+      }
+
+    }
+
+    /*
+      remove redundant eol from begin and end of message
+    */
+
+    originalMessage = originalMessage || fallBackMessage || 'UnknownError';
+    originalMessage = originalMessage.replace( /^\x20*\n/m, '' );
+    originalMessage = originalMessage.replace( /\x20*\n$/m, '' );
+
+  }
+
+  /* */
+
+  function messageForm()
+  {
+    let result = '';
+
+    if( o.briefly )
+    {
+      result += originalMessage;
+    }
+    else
+    {
+      result += ' = Message\n' + originalMessage + '\n';
+      if( o.condensingStack )
+      result += '\n = Condensed calls stack\n' + stackCondensed + '';
+      else
+      result += '\n = Functions stack\n' + o.stack + '';
+      result += '\n = Catches stack\n' + catches + '\n';
+
+      if( sourceCode )
+      result += ' = Source code from ' + sourceCode + '\n';
+    }
+
+    message = result;
+    return result;
+  }
+
+  /* */
+
+  function fieldsForm()
+  {
+
+    nonenurable( 'toString', function() { return this.message } );
+    logging( 'message', message );
+    nonenurable( 'originalMessage', originalMessage );
+    logging( 'stack', message );
+    nonenurable( 'originalStack', o.stack );
+    nonenurable( 'stackCondensed', stackCondensed );
+    nonenurable( 'catches', catches );
+    nonenurable( 'catchCounter', result.catchCounter ? result.catchCounter+1 : 1 );
+    nonenurable( 'attended', attended );
+    nonenurable( 'logged', logged );
+    nonenurable( 'briefly', o.briefly );
+
+    if( o.location.line !== undefined )
+    nonenurable( 'lineNumber', o.location.line );
+    nonenurable( 'level', o.level );
+    nonenurable( 'sourceCode', sourceCode || null );
+    if( result.location === undefined )
+    nonenurable( 'location', o.location );
+
+  }
 
   /* */
 
@@ -424,26 +1130,43 @@ function _err( o )
 
   /* */
 
-  function messageForm()
+  function logging( fieldName, value )
   {
-    let message = '';
-    if( briefly )
+    let symbol = Symbol.for( fieldName );
+    try
     {
-      message += originalMessage;
+      result[ symbol ] = value;
+      Object.defineProperty( result, fieldName,
+      {
+        enumerable : false,
+        configurable : true,
+        get : get,
+        set : set,
+      });
     }
-    else
+    catch( err )
     {
-      message += ' = Message\n' + originalMessage + '\n';
-      if( o.condensingStack )
-      message += '\n = Condensed calls stack\n' + stackCondensed + '';
-      else
-      message += '\n = Functions stack\n' + stack + '';
-      message += '\n = Catches stack\n' + catches + '\n';
-
-      if( sourceCode )
-      message += ' = Source code from ' + sourceCode + '\n';
+      debugger;
+      console.error( err );
+      debugger;
+      if( _.debuggerEnabled )
+      debugger;
     }
-    return message;
+    function get()
+    {
+      // if( !this.logged )
+      // debugger;
+      // if( !this.logged )
+      // logger.log( this.originalMessage, '- logged\n' );
+      _.errLogEnd( this );
+      return this[ symbol ];
+    }
+    function set( src )
+    {
+      debugger;
+      return this[ symbol ] = src;
+      return src;
+    }
   }
 
 }
@@ -452,6 +1175,8 @@ _err.defaults =
 {
   /* to make catch stack work properly it should be 1 */
   level : 1,
+  stackRemobeBeginInclude : null,
+  stackRemobeBeginExclude : null,
   usingSourceCode : 1,
   condensingStack : 1,
   location : null,
@@ -506,7 +1231,7 @@ function err()
 
 //
 
-function errBriefly()
+function errBrief()
 {
   return _._err
   ({
@@ -518,10 +1243,24 @@ function errBriefly()
 
 //
 
-function errAttend( err, val )
+function errUnbrief()
+{
+  return _._err
+  ({
+    args : arguments,
+    level : 2,
+    briefly : 0,
+  });
+}
+
+//
+
+function errAttend( err )
 {
 
-  if( arguments.length !== 1 || !_.errIsRefined( err ) )
+  _.assert( arguments.length === 1 );
+
+  if( !_.errIsRefined( err ) )
   err = _._err
   ({
     args : arguments,
@@ -533,27 +1272,27 @@ function errAttend( err, val )
   try
   {
 
-    if( val )
-    Object.defineProperty( err, 'attentionRequested',
-    {
-      enumerable : false,
-      configurable : true,
-      writable : true,
-      value : 0,
-    });
+    // Object.defineProperty( err, 'attentionRequested',
+    // {
+    //   enumerable : false,
+    //   configurable : true,
+    //   writable : true,
+    //   value : 0,
+    // });
 
+    let value = Config.debug ? _.diagnosticStack([ 1, Infinity ]) : true;
     Object.defineProperty( err, 'attended',
     {
       enumerable : false,
       configurable : true,
       writable : true,
-      value : Config.debug ? _.diagnosticStack([ 1, Infinity ]) : 1,
+      value : value,
     });
 
   }
   catch( err )
   {
-    logger.warn( 'Cant assign attentionRequested and attended properties to error ' + err.toString() );
+    logger.warn( 'Cant assign attended property to error\n' + err.toString() );
   }
 
   /* */
@@ -563,78 +1302,127 @@ function errAttend( err, val )
 
 //
 
-function errRestack( err,level )
+function errLogEnd( err )
 {
-  if( level === undefined )
-  level = 1;
 
-  let err2 = _._err
+  _.assert( arguments.length === 1 );
+
+  if( !_.errIsRefined( err ) )
+  err = _._err
   ({
-    args : [],
-    level : level+1,
+    args : arguments,
+    level : 2,
   });
 
-  return _.err( err2,err );
+  /* */
+
+  try
+  {
+
+    // Object.defineProperty( err, 'attentionRequested',
+    // {
+    //   enumerable : false,
+    //   configurable : true,
+    //   writable : true,
+    //   value : 0,
+    // });
+
+    let value = Config.debug ? _.diagnosticStack([ 1, Infinity ]) : true;
+    Object.defineProperty( err, 'logged',
+    {
+      enumerable : false,
+      configurable : true,
+      writable : true,
+      value : value,
+    });
+
+  }
+  catch( err )
+  {
+    logger.warn( 'Cant assign logged property to error\n' + err.toString() );
+  }
+
+  _.errAttend( err );
+
+  /* */
+
+  return err;
 }
 
 //
 
-function error_functor( name, onMake )
+function errRestack( err, level )
 {
 
-  if( _.strIs( onMake ) || _.arrayIs( onMake ) )
+  if( !( arguments.length === 1 || arguments.length === 2 ) )
+  throw Error( 'Expects single argument or none' );
+
+  if( level === undefined )
+  level = 1;
+
+  if( !_.numberDefined( level ) )
+  throw Error( 'Expects defined number' );
+
+  let err2 = _._err
+  ({
+    args : [],
+    level : level + 1,
+  });
+
+  return _.err( err2, err );
+}
+
+//
+
+function errOnce( err )
+{
+
+  err = _._err
+  ({
+    args : arguments,
+    level : 2,
+  });
+
+  if( err.logged )
+  return undefined;
+
+  _.errAttend( err );
+
+  return err;
+}
+
+//
+
+function _errLog( err )
+{
+  let c = _global.logger || _global.console;
+
+  /* */
+
+  debugger;
+  if( _.routineIs( err.toString ) )
   {
-    let prepend = onMake;
-    onMake = function onErrorMake()
-    {
-      debugger;
-      let arg = _.arrayAppendArrays( [], [ prepend, arguments ] );
-      return args;
-    }
+    let str = err.toString();
+    if( _.loggerIs( c ) )
+    c.error( str )
+    // c.error( '#inputRaw : 1#' + str + '#inputRaw : 0#' )
+    else
+    c.error( str );
   }
-  else if( !onMake )
-  onMake = function onErrorMake()
+  else
   {
-    return arguments;
+    debugger;
+    c.error( 'Error does not have toString' );
+    c.error( err );
   }
 
-  let Error =
-  {
-    [ name ] : function()
-    {
+  /* */
 
-      if( !( this instanceof ErrorConstructor ) )
-      {
-        let err1 = new ErrorConstructor();
-        let args1 = onMake.apply( err1, arguments );
-        _.assert( _.arrayLike( args1 ) );
-        let args2 = _.arrayAppendArrays( [], [ [ err1, ( arguments.length ? '\n' : '' ) ], args1 ] );
-        let err2 = _._err({ args : args2, level : 3 });
+  _.errLogEnd( err );
 
-        _.assert( err1 === err2 );
-        _.assert( err2 instanceof _global.Error );
-        _.assert( err2 instanceof ErrorConstructor );
-        _.assert( !!err2.stack );
+  /* */
 
-        return err2;
-      }
-      else
-      {
-        _.assert( arguments.length === 0 );
-        return this;
-      }
-    }
-  }
-
-  let ErrorConstructor = Error[ name ];
-
-  _.assert( ErrorConstructor.name === name, 'Looks like your interpreter does not support dynamice naming of functions. Please use ES2015 or later interpreter.' );
-
-  ErrorConstructor.prototype = Object.create( _global.Error.prototype );
-  ErrorConstructor.prototype.constructor = ErrorConstructor;
-  ErrorConstructor.constructor = ErrorConstructor;
-
-  return ErrorConstructor;
+  return err;
 }
 
 //
@@ -675,7 +1463,6 @@ function error_functor( name, onMake )
 function errLog()
 {
 
-  let c = _global.logger || _global.console;
   let err = _._err
   ({
     args : arguments,
@@ -696,7 +1483,7 @@ function errLogOnce( err )
     level : 2,
   });
 
-  if( err.attended )
+  if( err.logged )
   return err;
 
   return _._errLog( err );
@@ -704,88 +1491,65 @@ function errLogOnce( err )
 
 //
 
-function _errLog( err )
+function error_functor( name, onMake )
 {
-  let c = _global.logger || _global.console;
 
-  debugger;
-
-  /* */
-
-  if( _.routineIs( err.toString ) )
+  if( _.strIs( onMake ) || _.arrayIs( onMake ) )
   {
-    let str = err.toString();
-    if( _.loggerIs( c ) )
-    c.error( str )
-    // c.error( '#inputRaw : 1#' + str + '#inputRaw : 0#' )
-    else
-    c.error( str );
+    let prepend = onMake;
+    onMake = function onErrorMake()
+    {
+      debugger;
+      let arg = _.arrayAppendArrays( [], [ prepend, arguments ] );
+      return args;
+    }
   }
-  else
+  else if( !onMake )
+  onMake = function onErrorMake()
   {
-    debugger;
-    c.error( 'Error does not have toString' );
-    c.error( err );
+    return arguments;
   }
 
-  /* */
+  let Error =
+  {
+    [ name ] : function()
+    {
+      if( !( this instanceof ErrorConstructor ) )
+      {
+        let err1 = new ErrorConstructor();
+        let args1 = onMake.apply( err1, arguments );
+        _.assert( _.arrayLike( args1 ) );
+        let args2 = _.arrayAppendArrays( [], [ [ err1, ( arguments.length ? '\n' : '' ) ], args1 ] );
+        let err2 = _._err({ args : args2, level : 3 });
 
-  _.errAttend( err );
+        _.assert( err1 === err2 );
+        _.assert( err2 instanceof _global.Error );
+        _.assert( err2 instanceof ErrorConstructor );
+        // _.assert( !!err2.stack );
 
-  /* */
+        return err2;
+      }
+      else
+      {
+        _.assert( arguments.length === 0 );
+        return this;
+      }
+    }
+  }
 
-  return err;
-}
+  let ErrorConstructor = Error[ name ];
 
-//
+  _.assert( ErrorConstructor.name === name, 'Looks like your interpreter does not support dynamice naming of functions. Please use ES2015 or later interpreter.' );
 
-function errOnce( err )
-{
+  ErrorConstructor.prototype = Object.create( _global.Error.prototype );
+  ErrorConstructor.prototype.constructor = ErrorConstructor;
+  ErrorConstructor.constructor = ErrorConstructor;
 
-  err = _._err
-  ({
-    args : arguments,
-    level : 2,
-  });
-
-  if( err.attended )
-  return undefined;
-
-  _.errAttend( err );
-
-  return err;
-}
-
-// --
-// checker
-// --
-
-function checkInstanceOrClass( _constructor, _this )
-{
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  debugger;
-  let result =
-  (
-    _this === _constructor ||
-    _this instanceof _constructor ||
-    Object.isPrototypeOf.call( _constructor,_this ) ||
-    Object.isPrototypeOf.call( _constructor,_this.prototype )
-  );
-  return result;
-}
-
-//
-
-function checkOwnNoConstructor( ins )
-{
-  _.assert( _.objectLikeOrRoutine( ins ) );
-  _.assert( arguments.length === 1 );
-  let result = !_ObjectHasOwnProperty.call( ins,'constructor' );
-  return result;
+  return ErrorConstructor;
 }
 
 // --
-// sure
+// surer
 // --
 
 function _sureDebugger( condition )
@@ -918,7 +1682,7 @@ function sureWithoutDebugger( condition )
 function sureInstanceOrClass( _constructor, _this )
 {
   _.sure( arguments.length === 2, 'Expects exactly two arguments' );
-  _.sure( _.checkInstanceOrClass( _constructor, _this ) );
+  _.sure( _.isInstanceOrClass( _constructor, _this ) );
 }
 
 //
@@ -928,7 +1692,7 @@ function sureOwnNoConstructor( ins )
   _.sure( _.objectLikeOrRoutine( ins ) );
   // let args = _.longSlice( arguments );
   let args = Array.prototype.slice.call( arguments );
-  args[ 0 ] = _.checkOwnNoConstructor( ins );
+  args[ 0 ] = _.isOwnNoConstructor( ins );
   _.sure.apply( _, args );
 }
 
@@ -1137,7 +1901,7 @@ function assertWarn( condition )
 function assertInstanceOrClass( _constructor, _this )
 {
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.checkInstanceOrClass( _constructor, _this ) );
+  _.assert( _.isInstanceOrClass( _constructor, _this ) );
 }
 
 //
@@ -1147,7 +1911,7 @@ function assertOwnNoConstructor( ins )
   _.assert( _.objectLikeOrRoutine( ins ) );
   // let args = _.longSlice( arguments );
   let args = Array.prototype.slice.call( arguments );
-  args[ 0 ] = _.checkOwnNoConstructor( ins );
+  args[ 0 ] = _.isOwnNoConstructor( ins );
 
   if( args.length === 1 )
   args.push( () => 'Entity should not own constructor, but own ' + _.toStrShort( ins ) );
@@ -1184,7 +1948,11 @@ function assertOwnNoConstructor( ins )
 // fields
 // --
 
+let stackSymbol = Symbol.for( 'stack' );
+
 // let error = Object.create( null );
+
+/* Error.stackTraceLimit = 99; */
 
 /**
  * @property {Object} error={}
@@ -1195,7 +1963,6 @@ function assertOwnNoConstructor( ins )
 
 let Fields =
 {
-  // error,
   error : Object.create( null ),
   debuggerEnabled : !!Config.debug,
 }
@@ -1207,11 +1974,12 @@ let Fields =
 let Routines =
 {
 
-  // stub
+  // stack
 
-  diagnosticStack,
-  diagnosticStackCondense,
   diagnosticLocation,
+  diagnosticStack,
+  diagnosticStackRemoveBegin,
+  diagnosticStackCondense,
   diagnosticCode,
 
   // error
@@ -1219,34 +1987,30 @@ let Routines =
   errIs,
   errIsRefined,
   errIsAttended,
-  errIsAttentionRequested,
-  errAttentionRequest,
+  errIsLogged,
+  errOriginalMessage,
+  errOriginalStack,
 
   _err,
   err,
-  errBriefly,
+  errBrief,
+  errUnbrief,
   errAttend,
+  errLogEnd,
   errRestack,
-  error_functor,
-
-  errLog,
-  errLogOnce,
-  _errLog,
-
   errOnce,
 
-  // checker
+  _errLog,
+  errLog,
+  errLogOnce,
 
-  checkInstanceOrClass,
-  checkOwnNoConstructor,
+  error_functor,
 
   // sure
 
   sure,
   sureBriefly,
   sureWithoutDebugger,
-  sureInstanceOrClass,
-  sureOwnNoConstructor,
 
   // assert
 
@@ -1254,9 +2018,6 @@ let Routines =
   assertWithoutBreakpoint,
   assertNotTested,
   assertWarn,
-
-  assertInstanceOrClass,
-  assertOwnNoConstructor,
 
 }
 

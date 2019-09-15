@@ -2306,18 +2306,18 @@ function entityMap( test )
   return;
 
   test.case = 'missed arguments';
-  test.shouldThrowError( () => _.entityMap() );
+  test.shouldThrowErrorOfAnyKind( () => _.entityMap() );
 
   test.case = 'extra argument';
-  test.shouldThrowError( () => _.entityMap( [ 1,3 ], callback1, callback2 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.entityMap( [ 1,3 ], callback1, callback2 ) );
 
   test.case = 'passed argument has undefines';
-  test.shouldThrowError( () => _.entityMap( [ 1, undefined ], ( v, i ) => v ) );
-  test.shouldThrowError( () => _.entityMap( { a : 2, b : undefined }, ( v, i ) => v ) );
-  test.shouldThrowError( () => _.entityMap( undefined, ( v, i ) => v ) );
+  test.shouldThrowErrorOfAnyKind( () => _.entityMap( [ 1, undefined ], ( v, i ) => v ) );
+  test.shouldThrowErrorOfAnyKind( () => _.entityMap( { a : 2, b : undefined }, ( v, i ) => v ) );
+  test.shouldThrowErrorOfAnyKind( () => _.entityMap( undefined, ( v, i ) => v ) );
 
   test.case = 'second argument is not routine';
-  test.shouldThrowError( () => _.entityMap( [ 1, 2 ], {} ) );
+  test.shouldThrowErrorOfAnyKind( () => _.entityMap( [ 1, 2 ], {} ) );
 }
 
 //
@@ -2665,34 +2665,34 @@ function enityExtend( test )
   return;
 
   test.case = 'missed arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.enityExtend();
   });
 
   test.case = 'extra argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.enityExtend( [ 1,3 ], [ 1,3 ], [ 1,3 ] );
   });
 
   test.case = 'dst is undefined';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.enityExtend( undefined, [ 0, 1 ] );
   });
 
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.enityExtend( undefined, { a : 1, b : 2 } );
   });
 
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.enityExtend( null, [ 0, 1 ] );
   });
 
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.enityExtend( null, { a : 1, b : 2 } );
   });
@@ -2771,13 +2771,13 @@ function entityAssign( test )
   return;
 
   test.case = 'missed arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.entityAssign( );
   });
 
   test.case = 'src.clone throws "unexpected"';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     var dst = {};
     var src = { src : 'string', num : 123, clone : function() { var clone = _.cloneObject( { src : this } ); return clone; } }
@@ -2824,7 +2824,7 @@ function entityAssignFieldFromContainer( test )
   return;
 
   test.case = 'argument missed';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.entityAssignFieldFromContainer( );
   });
@@ -2883,19 +2883,19 @@ function _entityMost( test )
   return;
 
   test.case = 'missed arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _._entityMost();
   });
 
   test.case = 'extra argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _._entityMost( [ 1,3 ], sqr, true, false );
   });
 
   test.case = 'second argument is not routine';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _._entityMost( [ 1,3 ], 'callback', true );
   });
@@ -2942,19 +2942,19 @@ function entityMin( test )
   return;
 
   test.case = 'missed arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.entityMin();
   });
 
   test.case = 'extra argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.entityMin( [ 1,3 ], sqr, true );
   });
 
   test.case = 'second argument is not routine';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.entityMin( [ 1,3 ], 'callback' );
   });
@@ -2998,19 +2998,19 @@ function entityMax( test )
   return;
 
   test.case = 'missed arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.entityMax();
   });
 
   test.case = 'extra argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.entityMax( [ 1,3 ], sqr, true );
   });
 
   test.case = 'second argument is not routine';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.entityMax( [ 1,3 ], 'callback' );
   });
@@ -3202,25 +3202,25 @@ function entitySize( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.entitySize();
   });
 
   test.case = 'redundant arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.entitySize( 1,2 );
   });
 
   test.case = 'redundant arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.entitySize( 1,undefined );
   });
 
   test.case = 'redundant arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.entitySize( [],undefined );
   });
@@ -3235,7 +3235,7 @@ var Self =
   name : 'Tools/base/l1/Entity',
   silencing : 1,
   // verbosity : 4,
-  // importanceOfNegative : 3,
+  // negativity : 3,
 
   tests :
   {

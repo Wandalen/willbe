@@ -94,19 +94,19 @@ function _err( test )
   return;
 
   test.case = 'missed argument';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _._err( );
   } );
 
   test.case = 'extra argument';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _._err( optionsObj1, optionsObj2 );
   } );
 
   test.case = 'options.args not array';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _._err( optionsObj1 );
   } );

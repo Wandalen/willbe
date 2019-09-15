@@ -123,7 +123,7 @@ function timeReadyJoin( context, routine, args )
 
 function timeOnce( delay, onBegin, onEnd )
 {
-  let con = _.Consequence ? new _.Consequence() : undefined;
+  let con = _.Consequence ? new _.Consequence({ sourcePath : 2 }) : undefined;
   let taken = false;
   let options;
   let optionsDefault =
@@ -209,20 +209,20 @@ function timeOnce( delay, onBegin, onEnd )
  * @param {Function|wConsequence} onReady - Routine that will be executed with delay.
  *
  * @example
- * // Simplest, just timer
+ * // simplest, just timer
  * let t = _.timeOut( 1000 );
  * t.give( () => console.log( 'Message with 1000ms delay' ) )
  * console.log( 'Normal message' )
  *
  * @example
- * // Run routine with delay
+ * // run routine with delay
  * let routine = () => console.log( 'Message with 1000ms delay' );
  * let t = _.timeOut( 1000, routine );
  * t.give( () => console.log( 'Routine finished work' ) );
  * console.log( 'Normal message' )
  *
  * @example
- * // Routine returns consequence
+ * // routine returns consequence
  * let routine = () => new _.Consequence().take( 'msg' );
  * let t = _.timeOut( 1000, routine );
  * t.give( ( err, got ) => console.log( 'Message from routine : ', got ) );
@@ -328,7 +328,7 @@ function timeOut_pre( routine, args )
 
 function timeOut_body( o )
 {
-  let con = _.Consequence ? new _.Consequence() : undefined;
+  let con = _.Consequence ? new _.Consequence({ sourcePath : 3 }) : undefined;
   let timer = null;
   let handleCalled = false;
 
@@ -338,9 +338,7 @@ function timeOut_body( o )
 
   if( con )
   {
-    // debugger;
     con.procedure( 'timeOut' ).sourcePath( o.stackLevel + 2 );
-    // debugger;
     con.give( function timeGot( err, arg )
     {
       if( err )
@@ -352,11 +350,6 @@ function timeOut_body( o )
   /* */
 
   timer = _.timeBegin( o.delay, timeEnd );
-
-  // if( o.delay > 0 )
-  // timer = _.timeBegin( o.delay, timeEnd );
-  // else
-  // timeSoon( timeEnd );
 
   return con;
 
@@ -452,7 +445,7 @@ function timeOutError_body( o )
   let con = _.timeOut.body.call( _, o );
 
   con.tag = 'TimeOutError';
-  con.procedure( 'timeOutError' ).sourcePath( stackLevel + 2 );
+  let procedure = con.procedure( 'timeOutError' ).sourcePath( stackLevel + 2 );
   con.finally( function( err, arg )
   {
     if( err )
@@ -470,6 +463,8 @@ function timeOutError_body( o )
 
     return _.Consequence().error( err );
   });
+
+  // procedure.end();
 
   return con;
 }

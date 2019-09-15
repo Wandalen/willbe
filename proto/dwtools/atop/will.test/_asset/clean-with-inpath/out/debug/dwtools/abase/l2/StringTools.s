@@ -188,12 +188,12 @@ function strsNoneHas( srcs, ins )
  * @returns {Number} Returns number of occurrences of a substring in a string.
  *
  * @example
- * //returns 2
  * _.strCount( 'aabab', 'ab' );
+ * // returns 2
  *
  * @example
- * //returns 0
  * _.strCount( 'aabab', '' );
+ * // returns 0
  *
  * @method strCount
  * @throws { Exception } Throw an exception if( src ) is not a String.
@@ -332,12 +332,12 @@ function _strRemovedBegin( src, begin )
  * @returns { String } Returns string with result of prefix removement.
  *
  * @example
- * //returns mple
  * _.strRemoveBegin( 'example', 'exa' );
+ * // returns mple
  *
  * @example
- * //returns example
  * _.strRemoveBegin( 'example', 'abc' );
+ * // returns example
  *
  * @function strRemoveBegin
  * @throws { Exception } Throws a exception if( src ) is not a String.
@@ -407,12 +407,12 @@ function _strRemovedEnd( src, end )
  * @returns { String } Returns string with result of postfix removement.
  *
  * @example
- * //returns examp
  * _.strRemoveEnd( 'example', 'le' );
+ * // returns examp
  *
  * @example
- * //returns example
  * _.strRemoveEnd( 'example', 'abc' );
+ * // returns example
  *
  * @function strRemoveEnd
  * @throws { Exception } Throws a exception if( src ) is not a String.
@@ -493,12 +493,12 @@ function _strRemoved( srcStr, insStr )
 * @returns { String } Returns string with result of substring removement.
 *
 * @example
-* //returns ource tring
 * _.strRemove( 'source string', 's' );
+* // returns ource tring
 *
 * @example
-* //returns example
 * _.strRemove( 'example', 's' );
+* // returns example
 *
 * @function strRemove
 * @throws { Exception } Throws a exception if( srcStr ) is not a String.
@@ -636,12 +636,12 @@ function _strReplaced( srcStr, insStr, subStr )
 * @returns { String } Returns string with result of substring replacement.
 *
 * @example
-* //returns Source string
 * _.strReplace( 'source string', 's', 'S' );
+* // returns Source string
 *
 * @example
-* //returns example
 * _.strReplace( 'example', 's' );
+* // returns example
 *
 * @function strReplace
 * @throws { Exception } Throws a exception if( srcStr ) is not a String.
@@ -690,11 +690,11 @@ function strReplace( srcStr, insStr, subStr )
   *
   * @example
   * _.strPrependOnce( 'test', 'test' );
-  * //returns 'test'
+  * // returns 'test'
   *
   * @example
   * _.strPrependOnce( 'abc', 'x' );
-  * //returns 'xabc'
+  * // returns 'xabc'
   *
   * @returns { String } Returns result of prepending string( begin ) to source( src ) or original string.
   * @function strPrependOnce
@@ -720,11 +720,11 @@ function strPrependOnce( src, begin )
   *
   * @example
   * _.strAppendOnce( 'test', 'test' );
-  * //returns 'test'
+  * // returns 'test'
   *
   * @example
   * _.strAppendOnce( 'abc', 'x' );
-  * //returns 'abcx'
+  * // returns 'abcx'
   *
   * @returns {string} Returns result of appending string( end ) to source( src ) or original string.
   * @function strAppendOnce
@@ -753,8 +753,8 @@ function strAppendOnce( src, end )
  * @returns {string} Returns string with result of replacements.
  *
  * @example
- * //returns ' your cars are'
  * _.strReplaceWords( ' my name is', [ 'my', 'name', 'is' ], [ 'your', 'cars', 'are' ] )
+ * // returns ' your cars are'
  *
  * @method strReplaceWords
  * @throws { Exception } Throws a exception if( ins ) is not a Array.
@@ -805,16 +805,16 @@ function strReplaceWords( src, ins, sub )
  * @returns {string} Returns found common symbols.
  *
  * @example
- * //returns 'a'
  * _.strCommonLeft( 'abcd', 'ab', 'abc', 'a' );
+ * // returns 'a'
  *
  * @example
- * //returns 'abc'
  * _.strCommonLeft( 'abcd', 'abc', 'abcd' );
+ * // returns 'abc'
  *
  * @example
- * //returns ''
  * _.strCommonLeft( 'abcd', 'abc', 'd' )
+ * // returns ''
  *
  * @method strCommonLeft
  * @throws {exception} If ( ins ) is not a String.
@@ -862,14 +862,17 @@ function strCommonLeft( ins )
  * @param { String } ins - Sequence of possible symbols.
  * @returns { String } Returns found common symbols.
  *
- * @example 'ame'
+ * @example
  * _.strCommonRight( 'ame', 'same', 'name' );
+ * // returns 'ame'
  *
- * @example 'c'
+ * @example
  * _.strCommonRight( 'abc', 'dbc', 'ddc', 'aac' );
+ * // returns 'c'
  *
- * @example ''
+ * @example
  * _.strCommonRight( 'abc', 'dba', 'abc' );
+ * // returns ''
  *
  * @method strCommonRight
  * @throws {exception} If( ins ) is not a String.
@@ -973,32 +976,32 @@ function strForCall( nameOfRoutine, args, ret, o )
  * @returns {string} Returns simplified source string.
  *
  * @example
- * //returns ''st' ... 'ng''
  * _.strStrShort( 'string', 4 );
+ * // returns ''st' ... 'ng''
  *
  * @example
- * //returns ''s' ... 'ng''
  * _.strStrShort( 's\ntring', 4 );
+ * // returns ''s' ... 'ng''
  *
  * @example
- * //returns 'string'
  * _.strStrShort( 'string', 0 );
+ * // returns 'string'
  *
  * @example
- * //returns ''st' ... 'ng''
  * _.strStrShort( { src : 'string', limit : 4, wrap : '\'' } );
+ * // returns ''st' ... 'ng''
  *
  * @example
- * //returns 'si ... le'
  *  _.strStrShort( { src : 'simple', limit : 4, wrap : 0 } );
+ * // returns 'si ... le'
  *
  * @example
- * //returns ''si' ... 'le''
  *  _.strStrShort( { src : 'si\x01mple', limit : 5, wrap : '\'' } );
+ * // returns ''si' ... 'le''
  *
  * @example
- * //returns ''s\u0001' ... ' string''
  *  _.strStrShort( 's\x01t\x01ing string string', 14 );
+ * // returns ''s\u0001' ... ' string''
  *
  * @method strStrShort
  * @throws { Exception } If no argument provided.
@@ -1118,12 +1121,12 @@ function strDifference( src1, src2, o )
  * @returns {String} Returns a string with the first letter capitalized.
  *
  * @example
- * //returns Test string
  * _.strCapitalize( 'test string' );
+ * // returns Test string
  *
  * @example
- * //returns Another_test_string
  * _.strCapitalize( 'another_test_string' );
+ * // returns Another_test_string
  *
  * @method strCapitalize
  * @throws { Exception } Throw an exception if( src ) is not a String.
@@ -1169,20 +1172,20 @@ function strDecapitalize( src )
  * @returns {string} Returns string with disabled escaped characters.
  *
  * @example
- * //returns '\nhello\u001bworld\n'
  * _.strEscape( '\nhello\u001bworld\n' );
+ * // returns '\nhello\u001bworld\n'
  *
  * @example
- * //returns 'string'
  * _.strEscape( 'string' );
+ * // returns 'string'
  *
  * @example
- * //returns 'str\''
  * _.strEscape( 'str\'' );
+ * // returns 'str\''
  *
  * @example
- * //returns ''
  * _.strEscape( '' );
+ * // returns ''
  *
  * @method strEscape
  * @throw { Exception } If( src ) is not a String.
@@ -1305,16 +1308,16 @@ strEscape.defaults =
  * @returns {string} Returns string with result of conversion.
  *
  * @example
- * //returns \u0061\u0062\u0063;
  * _.strUnicodeEscape( 'abc' );
+ * // returns \u0061\u0062\u0063;
  *
  * @example
- * //returns \u0077\u006f\u0072\u006c\u0064
  * _.strUnicodeEscape( 'world' );
+ * // returns \u0077\u006f\u0072\u006c\u0064
  *
  * @example
- * //returns \u002f\u002f\u0074\u0065\u0073\u0074\u002f\u002f
  * _.strUnicodeEscape( '//test//' );
+ * // returns \u002f\u002f\u0074\u0065\u0073\u0074\u002f\u002f
  *
  * @method strUnicodeEscape
  * @throws { Exception } Throws a exception if no argument provided.
@@ -1347,16 +1350,16 @@ function strCodeUnicodeEscape( code )
  * @returns {string} Returns string with result of conversion.
  *
  * @example
- * //returns \u0061\u0062\u0063;
  * _.strUnicodeEscape( 'abc' );
+ * // returns \u0061\u0062\u0063;
  *
  * @example
- * //returns \u0077\u006f\u0072\u006c\u0064
  * _.strUnicodeEscape( 'world' );
+ * // returns \u0077\u006f\u0072\u006c\u0064
  *
  * @example
- * //returns \u002f\u002f\u0074\u0065\u0073\u0074\u002f\u002f
  * _.strUnicodeEscape( '//test//' );
+ * // returns \u002f\u002f\u0074\u0065\u0073\u0074\u002f\u002f
  *
  * @method strUnicodeEscape
  * @throws { Exception } Throws a exception if no argument provided.
@@ -1409,16 +1412,16 @@ function strReverse( srcStr )
  * @returns {string} Returns result of removement in a string.
  *
  * @example
- * //returns 'b'
  * _.strStrip( { src : 'aabaa', stripper : 'a' } );
+ * // returns 'b'
  *
  * @example
- * //returns 'b'
  * _.strStrip( { src : 'xaabaax', stripper : [ 'a', 'x' ] } )
+ * // returns 'b'
  *
  * @example
- * //returns 'b'
  * _.strStrip( { src : '   b  \n' } )
+ * // returns 'b'
  *
  * @method strStrip
  * @throws { Exception } Throw an exception if( arguments.length ) is not equal 1.
@@ -1505,8 +1508,8 @@ strStrip.defaults =
  * If( o.stripper ) is not defined, function removes only leading whitespaces and escaped characters from( o.src ).
  *
  * @example
- * //returns 'a '
  * _.strStripLeft( ' a ' )
+ * // returns 'a '
  *
  * @method strStripLeft
  * @memberof wTools
@@ -1539,8 +1542,8 @@ strStripLeft.defaults.__proto__ = strStrip.defaults;
  * If( o.stripper ) is not defined, function removes only trailing whitespaces and escaped characters from( o.src ).
  *
  * @example
- * //returns ' a'
  * _.strStripRight( ' a ' )
+ * // returns ' a'
  *
  * @method strStripRight
  * @memberof wTools
@@ -1577,12 +1580,12 @@ strStripRight.defaults.__proto__ = strStrip.defaults;
  * @returns {string} Returns a string with removed whitespaces.
  *
  * @example
- * //returns abcde
  * _.strRemoveAllSpaces( 'a b c d e' );
+ * // returns abcde
  *
  * @example
- * //returns a*b*c*d*e
  * _.strRemoveAllSpaces( 'a b c d e', '*' );
+ * // returns a*b*c*d*e
  *
  * @method strRemoveAllSpaces
  * @memberof wTools
@@ -1610,17 +1613,17 @@ function _strRemoveAllSpaces( src, sub )
  * @returns {string} Returns a string with empty lines removed.
  *
  * @example
- * //returns
- * //first
- * //second
  * _.strStripEmptyLines( 'first\n\nsecond' );
+ * // returns
+ * // first
+ * // second
  *
  * @example
- * //returns
- * //zero
- * //first
- * //second
  * _.strStripEmptyLines( 'zero\n\nfirst\n\nsecond' );
+ * // returns
+ * // zero
+ * // first
+ * // second
  *
  * @method strStripEmptyLines
  * @throws { Exception } Throw an exception if( srcStr ) is not a String.
@@ -1665,12 +1668,12 @@ function _strStripEmptyLines( srcStr )
  * function returns the object with value of string( src ).
  *
  * @example
- * //returns { str: 'bd', number: 1 }
  * _.strSplitStrNumber( 'bd1' );
+ * // returns { str: 'bd', number: 1 }
  *
  * @example
- * //returns { str: 'bdxf' }
  * _.strSplitStrNumber( 'bdxf' );
+ * // returns { str: 'bdxf' }
  *
  * @method strSplitStrNumber
  * @throws { Exception } Throw an exception if( src ) is not a String.
@@ -2489,28 +2492,28 @@ strSplitFast_body.defaults =
  * @returns {object} Returns an array of strings separated by( o.delimeter ).
  *
  * @example
- * //returns [ 'first', 'second', 'third' ]
  * _.strSplitFast( ' first second third ' );
+ * // returns [ 'first', 'second', 'third' ]
  *
  * @example
- * //returns [ 'a', 'b', 'c', 'd' ]
  * _.strSplitFast( { src : 'a, b, c, d', delimeter : ', '  } );
+ * // returns [ 'a', 'b', 'c', 'd' ]
  *
  * @example
- * //returns [ 'a', 'b', 'c', 'd' ]
  * _.strSplitFast( { src : 'a.b, c.d', delimeter : [ '.', ', ' ]  } );
+ * // returns [ 'a', 'b', 'c', 'd' ]
  *
  * @example
- * //returns [ '    a', 'b', 'c', 'd   ' ]
    * _.strSplitFast( { src : '    a, b, c, d   ', delimeter : [ ', ' ], stripping : 0  } );
+   * // returns [ '    a', 'b', 'c', 'd   ' ]
  *
  * @example
- * //returns [ 'a', ', ', 'b', ', ', 'c', ', ', 'd' ]
  * _.strSplitFast( { src : 'a, b, c, d', delimeter : [ ', ' ], preservingDelimeters : 1  } );
+ * // returns [ 'a', ', ', 'b', ', ', 'c', ', ', 'd' ]
  *
  * @example
- * //returns [ 'a', '', 'b', '', 'c', '', 'd' ]
  * _.strSplitFast( { src : 'a ., b ., c ., d', delimeter : [ ', ', '.' ], preservingEmpty : 1  } );
+ * // returns [ 'a', '', 'b', '', 'c', '', 'd' ]
  *
  * @method strSplitFast
  * @throws { Exception } Throw an exception if( arguments.length ) is not equal 1 or 2.
@@ -2608,28 +2611,28 @@ defaults.onQuote = null;
  * @returns {object} Returns an array of strings separated by( o.delimeter ).
  *
  * @example
- * //returns [ 'first', 'second', 'third' ]
  * _.strSplit( ' first second third ' );
+ * // returns [ 'first', 'second', 'third' ]
  *
  * @example
- * //returns [ 'a', 'b', 'c', 'd' ]
  * _.strSplit( { src : 'a, b, c, d', delimeter : ', '  } );
+ * // returns [ 'a', 'b', 'c', 'd' ]
  *
  * @example
- * //returns [ 'a', 'b', 'c', 'd' ]
  * _.strSplit( { src : 'a.b, c.d', delimeter : [ '.', ', ' ]  } );
+ * // returns [ 'a', 'b', 'c', 'd' ]
  *
  * @example
- * //returns [ '    a', 'b', 'c', 'd   ' ]
-   * _.strSplit( { src : '    a, b, c, d   ', delimeter : [ ', ' ], stripping : 0  } );
+ * _.strSplit( { src : '    a, b, c, d   ', delimeter : [ ', ' ], stripping : 0  } );
+ * // returns [ '    a', 'b', 'c', 'd   ' ]
  *
  * @example
- * //returns [ 'a', ', ', 'b', ', ', 'c', ', ', 'd' ]
  * _.strSplit( { src : 'a, b, c, d', delimeter : [ ', ' ], preservingDelimeters : 1  } );
+ * // returns [ 'a', ', ', 'b', ', ', 'c', ', ', 'd' ]
  *
  * @example
- * //returns [ 'a', '', 'b', '', 'c', '', 'd' ]
  * _.strSplit( { src : 'a ., b ., c ., d', delimeter : [ ', ', '.' ], preservingEmpty : 1  } );
+ * // returns [ 'a', '', 'b', '', 'c', '', 'd' ]
  *
  * @method strSplit
  * @throws { Exception } Throw an exception if( arguments.length ) is not equal 1 or 2.
@@ -2695,8 +2698,8 @@ function strSplitCamel( src )
  * @returns {string} Returns the corresponding substring.
  *
  * @example
- * //returns [ 'first', [ 0, 2 ] ]
  * _.strSub( 'fi' );
+ * // returns [ 'first', [ 0, 2 ] ]
  *
  * @method strSub
  * @throws { Exception } Throw an exception if( arguments.length ) is not equal 2.
@@ -2969,11 +2972,11 @@ _strExtractInlinedStereo_body.defaults =
  *
  * @example
  * _.strExtractInlinedStereo( '#abc#' );
- * //returns [ '', 'abc', '' ]
+ * // returns [ '', 'abc', '' ]
  *
  * @example
  * _.strExtractInlinedStereo.call( { prefix : '#', postfix : '$' }, '#abc$' );
- * //returns [ 'abc' ]
+ * // returns [ 'abc' ]
  *
  * @example
  * function onInlined( strip )
@@ -2982,7 +2985,7 @@ _strExtractInlinedStereo_body.defaults =
  *   return strip.toUpperCase();
  * }
  * _.strExtractInlinedStereo.call( { postfix : '$', onInlined }, '#abc$' );
- * //returns [ 'ABC' ]
+ * // returns [ 'ABC' ]
  *
  * @method strExtractInlinedStereo
  * @throws { Exception } Throw an exception if( arguments.length ) is not equal 1 or 2.
@@ -3074,24 +3077,24 @@ strExtractInlinedStereo.defaults =
  * @returns {array} Returns array with unjoined string part.
  *
  * @example
- * //returns [ 'prefix', '_something_', 'postfix' ]
  * _.strUnjoin( 'prefix_something_postfix', [ 'prefix', _.strUnjoin.any, 'postfix' ] );
+ * // returns [ 'prefix', '_something_', 'postfix' ]
  *
  * @example
- * //returns [ 'prefix_', 'something', '_', 'postfix' ]
  * _.strUnjoin( 'prefix_something_postfix', [ _.strUnjoin.any, 'something', _.strUnjoin.any, 'postfix' ] );
+ * // returns [ 'prefix_', 'something', '_', 'postfix' ]
  *
  * @example
- * //returns [ 'prefix_something_', 'postfix' ]
  * _.strUnjoin( 'prefix_something_postfix', [ _.strUnjoin.any, 'postfix' ] );
+ * // returns [ 'prefix_something_', 'postfix' ]
  *
  * @example
- * //returns [ 'prefix', '_something_postfix' ]
  * _.strUnjoin( 'prefix_something_postfix', [ 'prefix', _.strUnjoin.any ] );
+ * // returns [ 'prefix', '_something_postfix' ]
  *
  * @example
- * //returns [ 'prefi', 'x', '_something_', 'p', 'ostfix' ]
  * _.strUnjoin( 'prefix_something_postfix', [ _.strUnjoin.any, 'x', _.strUnjoin.any, 'p', _.strUnjoin.any ] );
+ * // returns [ 'prefi', 'x', '_something_', 'p', 'ostfix' ]
  *
  * @method strUnjoin
  * @throws { Exception } If no arguments provided.
@@ -3206,16 +3209,16 @@ _.assert( _.routineIs( strUnjoin.any ) );
  * @returns { String } - Returns a string containing the src string concatenated n-times.
  *
  * @example
- * //returns WordWordWordWordWord
  * _.strDup( 'Word', 5 );
+ * // returns WordWordWordWordWord
  *
  * @example
- * //returns 1 21 2
  * _.strDup( '1 '+'2', 2 );
+ * // returns 1 21 2
  *
  * @example
- * //returns [ 'abab', 'dd', '3 43 4']
  * _.strDup( [ 'ab', 'd', '3 4'], 2 );
+ * // returns [ 'abab', 'dd', '3 43 4']
  *
  * @method strDup
  * @throws { Exception } Throw an exception if( s ) is not a String or an array of strings.
@@ -3256,24 +3259,24 @@ function _strDup( s, times )
  * @returns { Object } Returns concatenated objects as string or array. Return type depends from arguments type.
  *
  * @example
- * //returns '123'
  * _.strJoin([ 1, 2, 3 ]);
+ * // returns '123'
  *
  * @example
- * //returns [ '12', '22', '32' ]
  * _.strJoin([ [ 1, 2, 3 ], 2 ]);
+ * // returns [ '12', '22', '32' ]
  *
  * @example
- * //returns [ '11', '23' ]
  * _.strJoin([ [ 1, 2 ], [ 1, 3 ] ]);
+ * // returns [ '11', '23' ]
  *
  * @example
- * //returns [ '1236', '1247', '1258' ]
  * _.strJoin([ 1, 2, [ 3, 4, 5 ], [ 6, 7, 8 ] ]);
+ * // returns [ '1236', '1247', '1258' ]
  *
  * @example
- * //returns [ '1 2 3 6', '1 2 4 7', '1 2 5 8' ]
  * _.strJoin([ 1, 2, [ 3, 4, 5 ], [ 6, 7, 8 ] ], ' ');
+ * // returns [ '1 2 3 6', '1 2 4 7', '1 2 5 8' ]
  *
  * @method strJoin
  * @throws { Exception } If ( arguments.length ) is not one or two.
@@ -3443,20 +3446,20 @@ let strJoin = _.routineFromPreAndBody( strJoin_pre, strJoin_body );
  * @param { String } joiner - Joiner parameter.
  *
  * @example
- * //returns '123'
  * _.strJoinPath( [ 1, 2, 3 ], '' );
+ * // returns '123'
  *
  * @example
- * //returns '/a//b//c//'
  * _.strJoinPath( [ [ '/a//', 'b', '//c//' ], 2 ], '/' );
+ * // returns '/a//b//c//'
  *
  * @example
- * //returns [ '1.1', '2.3' ]
  * _.strJoinPath( [ [ 1, 2 ], [ 1, 3 ] ], '.');
+ * // returns [ '1.1', '2.3' ]
  *
  * @example
- * //returns [ '1,2,3,6', '1,2,4,7', '1,2,5,8' ]
  * _.strJoinPath( [ 1, 2, [ 3, 4, 5 ], [ 6, 7, 8 ] ], ',');
+ * // returns [ '1,2,3,6', '1,2,4,7', '1,2,5,8' ]
  *
  * @method strJoinPath
  * @returns { String|Array-like } Returns concatenated objects as string or array. Return type depends from arguments type.
@@ -3635,30 +3638,30 @@ strConcat.defaults =
  *
  * @example
  *  _.strIndentation( 'abc', '_' )
- * //returns '_abc'
+ * // returns '_abc'
  *
  * @example
  * _.strIndentation( 'a\nb\nc', '_' )
- * //returns
- * _a
- * _b
- * _c
+ * // returns
+ * // _a
+ * // _b
+ * // _c
  *
  * @example
  * _.strIndentation( [ 'a', 'b', 'c' ], '_' )
- * //returns
- * _a
- * _b
- * _c
+ * // returns
+ * // _a
+ * // _b
+ * // _c
  *
  * @example
  * let array = [ 'a\nb', 'c\nd' ];
  * _.strIndentation( array.join( '\n' ), '_' )
- * //returns
- * _a
- * _b
- * _c
- * _d
+ * // returns
+ * // _a
+ * // _b
+ * // _c
+ * // _d
  *
  * @method strIndentation
  * @throws { Exception } Throw an exception if( src ) is not a String or Array.
@@ -3769,19 +3772,19 @@ function strLinesJoin( src )
  *
  * @example input string
  * _.strLinesStrip( '  Hello \r\n\t World \n\n ' );
- * //returns 'Hello\nWorld'
+ * // returns 'Hello\nWorld'
  *
  * @example input array
  * _.strLinesStrip( [ '  Hello \r\n\t world \n\n ', '\n! \n' ] );
- * //returns  [ 'Hello \r\n\t world', '!' ]
+ * // returns  [ 'Hello \r\n\t world', '!' ]
  *
  * @example input strings
  * _.strLinesStrip( '  Hello \r\n\t', ' World \n\n  ! \n\n', '\n\n' );
- * //returns [ 'Hello', 'World\n!', '' ]
+ * // returns [ 'Hello', 'World\n!', '' ]
  *
  * @example input arrays
  * _.strLinesStrip( [ '  Hello \r\n\t world \n\n ', '\n! \n' ], [ '\n\nHow\n\nAre  ', '  \r\nyou ? \n'], [ '\t\r\n  ' ] );
- * //returns [ [ 'Hello \r\n\t world', '!' ], [ 'How\n\nAre', 'you ?' ], [] ]
+ * // returns [ [ 'Hello \r\n\t world', '!' ], [ 'How\n\nAre', 'you ?' ], [] ]
  *
  * @method strLinesStrip
  * @throws { Exception } Throw an exception if( src ) is not a String or Array.
@@ -3832,25 +3835,25 @@ function strLinesStrip( src )
  *
  * @example
  * _.strLinesNumber( 'line' );
- * //returns '1 : line'
+ * // returns '1 : line'
  *
  * @example
  * _.strLinesNumber( 'line1\nline2\nline3' );
- * //returns
+ * // returns
  * // 1: line1
  * // 2: line2
  * // 3: line3
  *
  * @example
  * _.strLinesNumber( [ 'line', 'line', 'line' ] );
- * //returns
+ * // returns
  * // 1: line1
  * // 2: line2
  * // 3: line3
  *
  * @example
  * _.strLinesNumber( { src:'line1\nline2\nline3', first : 2 } );
- * //returns
+ * // returns
  * // 2: line1
  * // 3: line2
  * // 4: line3
@@ -3965,47 +3968,47 @@ strLinesNumber.defaults =
  * @returns {string} Returns selected lines as new string or empty if nothing selected.
  *
  * @example
- * //selecting single line
+ * // selecting single line
  * _.strLinesSelect( 'a\nb\nc', 1 );
- * //returns 'a'
+ * // returns 'a'
  *
  * @example
- * //selecting first two lines
+ * // selecting first two lines
  * _.strLinesSelect( 'a\nb\nc', [ 1, 3 ] );
- * //returns
- * 'a
- * b'
+ * // returns
+ * // 'a
+ * // b'
  *
  * @example
- * //selecting first two lines, second way
+ * // selecting first two lines, second way
  * _.strLinesSelect( 'a\nb\nc', 1, 3 );
- * //returns
- * 'a
- * b'
+ * // returns
+ * // 'a
+ * // b'
  *
  * @example
- * //custom new line character
+ * // custom new line character
  * _.strLinesSelect({ src : 'a b c', range : [ 1, 3 ], delimteter : ' ' });
- * //returns 'a b'
+ * // returns 'a b'
  *
  * @example
- * //setting preferred number of lines to select, line option must be specified
+ * // setting preferred number of lines to select, line option must be specified
  * _.strLinesSelect({ src : 'a\nb\nc', line : 2, numberOfLines : 1 });
- * //returns 'b'
+ * // returns 'b'
  *
  * @example
- * //selecting 2 two next lines starting from second
+ * // selecting 2 two next lines starting from second
  * _.strLinesSelect({ src : 'a\nb\nc', line : 2, numberOfLines : 2, selectMode : 'begin' });
- * //returns
- * 'b
- * c'
+ * // returns
+ * // 'b
+ * // c'
  *
  * @example
- * //selecting 2 two lines starting from second in backward direction
+ * // selecting 2 two lines starting from second in backward direction
  * _.strLinesSelect({ src : 'a\nb\nc', line : 2, numberOfLines : 2, selectMode : 'end' });
- * //returns
- * 'a
- * b'
+ * // returns
+ * // 'a
+ * // b'
  *
  * @method strLinesSelect
  * @throws { Exception } Throw an exception if no argument provided.
@@ -4132,26 +4135,26 @@ strLinesSelect.defaults =
  * @returns { Array } [ o.spans ] - Array with indexes of begin and end of nearest lines.
  *
  * @example
- * //selecting single line
+ * // selecting single line
  * _.strLinesNearest
  * ({
  *   src : `\na\nbc\ndef\nghij\n\n`,
  *   charsRange : [ 2, 4 ],
  *   numberOfLines : 1,
  * });
- * //returns o.splits = [ 'a', '\nb', 'c' ];
- * //returns o.spans = [ 1, 2, 4, 5 ];
+ * // returns o.splits = [ 'a', '\nb', 'c' ];
+ * // returns o.spans = [ 1, 2, 4, 5 ];
  *
  * @example
- * //selecting single line
+ * // selecting single line
  * _.strLinesNearest
  * ({
  *   src : `\na\nbc\ndef\nghij\n\n`,
  *   charsRange : 3,
  *   numberOfLines : 2,
  * });
- * //returns o.splits = [ 'a\n', 'b', 'c' ];
- * //returns o.spans = [ 1, 3, 4, 5 ];
+ * // returns o.splits = [ 'a\n', 'b', 'c' ];
+ * // returns o.spans = [ 1, 3, 4, 5 ];
  *
  * @method strLinesNearest
  * @throws { Exception } Throw an exception if no argument provided.
@@ -4322,12 +4325,12 @@ let strLinesNearestReport = _.routineFromPreAndBody( strLinesNearest_pre, strLin
  * @returns {number} Returns a number of lines in string.
  *
  * @example
- * //returns 2
  * _.strLinesCount( 'first\nsecond' );
+ * // returns 2
  *
  * @example
- * //returns 4
  * _.strLinesCount( 'first\nsecond\nthird\n' );
+ * // returns 4
  *
  * @method strLinesCount
  * @throws { Exception } Throw an exception if( src ) is not a String.

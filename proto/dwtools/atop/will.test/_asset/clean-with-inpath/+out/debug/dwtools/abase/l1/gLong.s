@@ -187,12 +187,12 @@ function buffersAreIdentical( src1, src2 )
  * @param { Number } [ length = ins.length ] - The length of the new array.
  *
  * @example
+ * _.bufferMake( [ 1, 2, 3 ] );
  * // returns [ , ,  ]
- * let arr = _.bufferMake( [ 1, 2, 3 ] );
  *
  * @example
+ * _.bufferMake( [ 1, 2, 3 ], 4 );
  * // returns [ , , ,  ]
- * let arr = _.bufferMake( [ 1, 2, 3 ], 4 );
  *
  * @returns { longIs }  Returns an array with a certain (length).
  * @function bufferMake
@@ -212,23 +212,23 @@ function bufferMake( ins, src )
   if( _.routineIs( ins ) )
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
+  if( _.argumentsArrayIs( ins ) )
+  ins = [];
+
   if( src === undefined )
   {
     length = _.definedIs( ins.length ) ? ins.length : ins.byteLength;
   }
   else
   {
-    if( _.longIs( src ) )
+    if( _.longIs( src ) || _.bufferNodeIs( src ) )
     length = src.length;
-    else if( _.bufferRawIs( src ) )
+    else if( _.bufferRawIs( src ) || _.bufferViewIs( src ) )
     length = src.byteLength;
     else if( _.numberIs( src ) )
     length = src;
     else _.assert( 0 );
   }
-
-  if( _.argumentsArrayIs( ins ) )
-  ins = [];
 
   _.assert( arguments.length === 1 || arguments.length === 2 );
   _.assert( _.numberIsFinite( length ) );
@@ -272,8 +272,6 @@ function bufferMakeUndefined( ins, src )
 {
   let result, length;
 
-  throw _.err( 'not tested' );
-
   if( _.routineIs( ins ) )
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
@@ -283,7 +281,7 @@ function bufferMakeUndefined( ins, src )
   }
   else
   {
-    if( _.longIs( src ) )
+    if( _.longIs( src ) || _.bufferNodeIs( src ) )
     length = src.length;
     else if( _.bufferRawIs( src ) )
     length = src.byteLength;
@@ -297,7 +295,7 @@ function bufferMakeUndefined( ins, src )
 
   _.assert( arguments.length === 1 || arguments.length === 2 );
   _.assert( _.numberIsFinite( length ) );
-  _.assert( _.routineIs( ins ) || _.longIs( ins ) || _.bufferRawIs( ins ), 'unknown type of array', _.strType( ins ) );
+  _.assert( _.routineIs( ins ) || _.longIs( ins ) || _.bufferAnyIs( ins ), 'unknown type of array', _.strType( ins ) );
 
   if( _.longIs( src ) || _.bufferAnyIs( src ) )
   {
@@ -313,6 +311,8 @@ function bufferMakeUndefined( ins, src )
       else
       result = new ins( src );
     }
+    else if( ins.constructor.name === 'Buffer' )
+    result = BufferNode.from( src );
     else
     result = new ins.constructor( src );
 
@@ -321,12 +321,74 @@ function bufferMakeUndefined( ins, src )
   {
     if( _.routineIs( ins ) )
     result = new ins( length );
+    else if( ins.constructor.name === 'Buffer' )
+    result = BufferNode.alloc( length );
     else
     result = new ins.constructor( length );
   }
 
   return result;
 }
+
+// function bufferMakeUndefined( ins, src )
+// {
+//   let result, length;
+//
+//   throw _.err( 'not tested' );
+//
+//   if( _.routineIs( ins ) )
+//   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+//
+//   if( src === undefined )
+//   {
+//     length = _.definedIs( ins.length ) ? ins.length : ins.byteLength;
+//   }
+//   else
+//   {
+//     if( _.longIs( src ) )
+//     length = src.length;
+//     else if( _.bufferRawIs( src ) )
+//     length = src.byteLength;
+//     else if( _.numberIs( src ) )
+//     length = src;
+//     else _.assert( 0 );
+//   }
+//
+//   if( _.argumentsArrayIs( ins ) )
+//   ins = [];
+//
+//   _.assert( arguments.length === 1 || arguments.length === 2 );
+//   _.assert( _.numberIsFinite( length ) );
+//   _.assert( _.routineIs( ins ) || _.longIs( ins ) || _.bufferRawIs( ins ), 'unknown type of array', _.strType( ins ) );
+//
+//   if( _.longIs( src ) || _.bufferAnyIs( src ) )
+//   {
+//
+//     if( ins.constructor === Array )
+//     {
+//       result = new( _.constructorJoin( ins.constructor, src ) );
+//     }
+//     else if( _.routineIs( ins ) )
+//     {
+//       if( ins.prototype.constructor.name === 'Array' )
+//       result = _ArraySlice.call( src );
+//       else
+//       result = new ins( src );
+//     }
+//     else
+//     result = new ins.constructor( src );
+//
+//   }
+//   else
+//   {
+//     if( _.routineIs( ins ) )
+//     result = new ins( length );
+//     else
+//     result = new ins.constructor( length );
+//   }
+//
+//   return result;
+// }
 
 //
 
@@ -364,7 +426,7 @@ function bufferMakeUndefined( ins, src )
  * let dst = [ 1, 2, 3, 4 ];
  * _.bufferBut( dst, [ 0, 3 ], [ 0, 0, 0 ] );
  * console.log( dst );
- * // returns [ 0, 0, 0, 4 ]
+ * // log [ 0, 0, 0, 4 ]
  *
  * @example
  * let dst = new I32x( 4 );
@@ -382,46 +444,77 @@ function bufferMakeUndefined( ins, src )
  * @memberof wTools
  */
 
-// function bufferBut( src, range, ins )
-// {
-//   let result;
-//   range = _.rangeFromLeft( range );
-//
-//   _.assert( _.bufferTypedIs( src ) );
-//   _.assert( ins === undefined || _.longIs( ins ) );
-//   _.assert( arguments.length === 2 || arguments.length === 3 );
-//
-//   if( ins === undefined )
-//   ins = [];
-//
-//   let bufferStart = src.slice( 0, range[ 0 ] );
-//   let bufferEnd = src.slice( range[ 1 ] );
-//   result = _.longMakeUndefined( src, bufferStart.length + ins.length + bufferEnd.length );
-//   result.set( bufferStart );
-//   result.set( ins, range[ 0 ] );
-//   result.set( bufferEnd, range[ 0 ] + ins.length );
-//
-//   return result;
-//
-//   // throw _.err( 'not implemented' )
-//   //
-//   // if( range[ 1 ] - range[ 0 ] <= 0 )
-//   // return _.bufferSlice( src );
-//   //
-//   // if( size > src.byteLength )
-//   // {
-//   //   result = longMakeUndefined( src, size );
-//   //   let resultTyped = new U8x( result, 0, result.byteLength );
-//   //   let srcTyped = new U8x( src, 0, src.byteLength );
-//   //   resultTyped.set( srcTyped );
-//   // }
-//   // else if( size < src.byteLength )
-//   // {
-//   //   result = src.slice( 0, size );
-//   // }
-//   //
-//   // return result;
-// }
+ function bufferBut( dstArray, range, srcArray )
+ {
+
+   if( !_.bufferAnyIs( dstArray ) )
+   return _.longBut( dstArray, range, srcArray );
+
+   if( range === undefined )
+   range = [ 0, 0 ];
+   if( _.numberIs( range ) )
+   range = [ range, range + 1 ];
+
+   _.assert( 1 <= arguments.length && arguments.length <= 3 );
+   _.assert( _.arrayIs( dstArray ) || _.bufferAnyIs( dstArray ) );
+   _.assert( _.rangeIs( range ) );
+   _.assert( srcArray === undefined || _.longIs( srcArray ) || _.bufferAnyIs( srcArray ) );
+
+   let length = _.definedIs( dstArray.length ) ? dstArray.length : dstArray.byteLength;
+   let first = range[ 0 ] !== undefined ? range[ 0 ] : 0;
+   let last = range[ 1 ] !== undefined ? range[ 1 ] : length;
+   let result;
+
+   if( first < 0 )
+   first = 0;
+   if( first > length)
+   first = length;
+   if( last > length)
+   last = length;
+   if( last < first )
+   last = first;
+
+   let newLength = length - last + first;
+   let srcArrayLength = 0;
+
+   if( srcArray )
+   {
+     srcArrayLength = _.definedIs( srcArray.length ) ? srcArray.length : srcArray.byteLength;
+     newLength += srcArrayLength;
+   }
+
+   if( _.bufferViewIs( dstArray ) || _.bufferRawIs( dstArray ) || _.bufferNodeIs( dstArray ) )
+   {
+     result = new U8x( newLength );
+   }
+   else
+   {
+     result = _.longMakeUndefined( dstArray, newLength );
+   }
+
+   let dstArrayTyped = _.bufferRawIs( dstArray ) ? new U8x( dstArray ) : dstArray;
+
+   if( first > 0 )
+   for( let i = 0; i < first; ++i )
+   result[ i ] = dstArrayTyped[ i ];
+
+   if( srcArray )
+   for( let i = first, j = 0; j < srcArrayLength; )
+   result[ i++ ] = srcArray[ j++ ];
+
+   for( let j = last, i = first + srcArrayLength; j < length; )
+   result[ i++ ] = dstArrayTyped[ j++ ];
+
+   //
+   if( _.bufferRawIs( dstArray ) )
+   return result.buffer;
+   if( _.bufferNodeIs( dstArray ) )
+   return BufferNode.from( result );
+   if( _.bufferViewIs( dstArray ) )
+   return new BufferView( result.buffer );
+   else
+   return result;
+ }
 
 /* qqq : routine bufferBut requires good test coverage and documentation */
 /* qqq : implement cover and document routine bufferButInplace */
@@ -433,26 +526,120 @@ function bufferMakeUndefined( ins, src )
       ins can be any long or any buffer
 */
 
-function bufferBut( dstArray, range, srcArray )
+// Dmytro : not a my template
+
+// function bufferBut( dstArray, range, srcArray )
+// {
+//
+//   if( !_.bufferAnyIs( dstArray ) )
+//   return _.longBut( dstArray, range, srcArray );
+//
+//   if( _.numberIs( range ) )
+//   range = [ range, range + 1 ];
+//
+//   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
+//   _.assert( _.arrayIs( dstArray ) || _.bufferAnyIs( dstArray ) );
+//   _.assert( _.rangeIs( range ) );
+//   // _.assert( srcArray === undefined || _.arrayIs( srcArray ) );
+//   _.assert( srcArray === undefined || _.longIs( srcArray ) || _.bufferAnyIs( srcArray ) );
+//
+//   /* qqq : jeed separate if fo BufferRaw, bufferNode and bufferView */
+//   let length = _.definedIs( dstArray.length ) ? dstArray.length : dstArray.byteLength;
+//   let first = range[ 0 ] !== undefined ? range[ 0 ] : 0;
+//   let last = range[ 1 ] !== undefined ? range[ 1 ] : length;
+//   let result;
+//
+//   if( first < 0 )
+//   first = 0;
+//   if( first > length)
+//   first = length;
+//   if( last > length)
+//   last = length;
+//   if( last < first )
+//   last = first;
+//
+//   // if( _.bufferAnyIs( dstArray ) )
+//   // {
+//
+//     // if( first === last )
+//     // return _.bufferMake( dstArray );
+//
+//     // if( first === last )
+//     // return dstArray;
+//
+//     // if( first === last )
+//     // debugger;
+//
+//     let newLength = length - last + first;
+//     let srcArrayLength = 0;
+//
+//     if( srcArray )
+//     {
+//       srcArrayLength = _.definedIs( srcArray.length ) ? srcArray.length : srcArray.byteLength;
+//       newLength += srcArrayLength;
+//     }
+//
+//     if( _.bufferRawIs( dstArray ) )
+//     {
+//       result = new BufferRaw( newLength );
+//     }
+//     else if( _.bufferNodeIs( dstArray ) )
+//     {
+//       result = BufferNode.alloc( newLength );
+//     }
+//     else
+//     {
+//       result = _.longMakeUndefined( dstArray, newLength );
+//     }
+//
+//     if( first > 0 )
+//     for( let i = 0; i < first; ++i )
+//     result[ i ] = dstArray[ i ];
+//
+//     if( srcArray )
+//     for( let i = first, j = 0; j < srcArrayLength; )
+//     result[ i++ ] = srcArray[ j++ ];
+//
+//     for( let j = last, i = first + srcArrayLength; j < length; )
+//     result[ i++ ] = dstArray[ j++ ];
+//
+//     return result;
+//
+//   // }
+//   // else
+//   // {
+//   //
+//   //   return _.longBut( srcArray,  );
+//   //
+//   //   let args = srcArray ? srcArray.slice() : [];
+//   //   args.unshift( last-first );
+//   //   args.unshift( first );
+//   //
+//   //   result = dstArray.splice.apply( dstArray, args );
+//   // }
+//
+//   return result;
+// }
+
+//
+
+function bufferButInplace( dstArray, range, srcArray )
 {
+  _.assert( 1 <= arguments.length && arguments.length <= 3 );
 
   if( !_.bufferAnyIs( dstArray ) )
-  return _.longBut( dstArray, range, srcArray );
+  return _.longButInplace( dstArray, range, srcArray );
 
+  if( range === undefined )
+  return dstArray;
   if( _.numberIs( range ) )
   range = [ range, range + 1 ];
 
-  _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.arrayIs( dstArray ) || _.bufferAnyIs( dstArray ) );
-  _.assert( _.rangeIs( range ) );
-  // _.assert( srcArray === undefined || _.arrayIs( srcArray ) );
-  _.assert( srcArray === undefined || _.longIs( srcArray ) || _.bufferAnyIs( srcArray ) );
-
-  /* qqq : jeed separate if fo BufferRaw, bufferNode and bufferView */
   let length = _.definedIs( dstArray.length ) ? dstArray.length : dstArray.byteLength;
   let first = range[ 0 ] !== undefined ? range[ 0 ] : 0;
   let last = range[ 1 ] !== undefined ? range[ 1 ] : length;
-  let result;
+
+  _.assert( _.rangeIs( range ) );
 
   if( first < 0 )
   first = 0;
@@ -463,67 +650,321 @@ function bufferBut( dstArray, range, srcArray )
   if( last < first )
   last = first;
 
-  // if( _.bufferAnyIs( dstArray ) )
-  // {
+  if( last === first && srcArray === undefined )
+  return dstArray;
+  else
+  return _.bufferBut( dstArray, range, srcArray );
 
-    // if( first === last )
-    // return _.bufferMake( dstArray );
+}
 
-    // if( first === last )
-    // return dstArray;
+//
 
-    // if( first === last )
-    // debugger;
+function bufferSelect( dstArray, range, srcArray )
+{
 
-    let newLength = length - last + first;
-    let srcArrayLength = 0;
+  let result;
 
-    if( srcArray )
-    {
-      srcArrayLength = _.definedIs( srcArray.length ) ? srcArray.length : srcArray.byteLength;
-      newLength += srcArrayLength;
-    }
+  if( !_.bufferAnyIs( dstArray ) )
+  return _.longSelect( dstArray, range, srcArray );
 
-    if( _.bufferRawIs( dstArray ) )
-    {
-      result = new BufferRaw( newLength );
-    }
-    else if( _.bufferNodeIs( dstArray ) )
-    {
-      result = BufferNode.alloc( newLength );
-    }
-    else
-    {
-      result = _.longMakeUndefined( dstArray, newLength );
-    }
+  let length = _.definedIs( dstArray.length ) ? dstArray.length : dstArray.byteLength;
 
-    if( first > 0 )
-    for( let i = 0; i < first; ++i )
-    result[ i ] = dstArray[ i ];
+  if( range === undefined )
+  range = [ 0, length ];
+  else if( _.numberIs( range ) )
+  range = [ range, length ];
 
-    if( srcArray )
-    for( let i = first, j = 0; j < srcArrayLength; )
-    result[ i++ ] = srcArray[ j++ ];
+  let first = range[ 0 ] !== undefined ? range[ 0 ] : 0;
+  let last = range[ 1 ] !== undefined ? range[ 1 ] : length;
 
-    for( let j = last, i = first + srcArrayLength; j < length; )
-    result[ i++ ] = dstArray[ j++ ];
+  _.assert( 1 <= arguments.length && arguments.length <= 3 );
+  _.assert( _.arrayIs( dstArray ) || _.bufferAnyIs( dstArray ) );
+  _.assert( _.rangeIs( range ) );
+  _.assert( srcArray === undefined || _.longIs( srcArray ) || _.bufferAnyIs( srcArray ) );
 
-    return result;
+  if( first < 0 )
+  first = 0;
+  if( first > length)
+  first = length;
+  if( last > length)
+  last = length;
+  if( last < first )
+  last = first;
 
-  // }
-  // else
-  // {
+  let newLength = last - first;
+
+  if( _.bufferViewIs( dstArray ) || _.bufferRawIs( dstArray ) || _.bufferNodeIs( dstArray ) )
+  {
+    result = new U8x( newLength );
+  }
+  else
+  {
+    result = _.longMakeUndefined( dstArray, newLength );
+  }
+
+  let dstArrayTyped = _.bufferRawIs( dstArray ) ? new U8x( dstArray ) : dstArray;
+
+  let first2 = Math.max( first, 0 );
+  let last2 = Math.min( length, last );
+  for( let r = first2 ; r < last2 ; r++ )
+  result[ r-first2 ] = dstArrayTyped[ r ];
+
   //
-  //   return _.longBut( srcArray,  );
-  //
-  //   let args = srcArray ? srcArray.slice() : [];
-  //   args.unshift( last-first );
-  //   args.unshift( first );
-  //
-  //   result = dstArray.splice.apply( dstArray, args );
-  // }
-
+  if( _.bufferRawIs( dstArray ) )
+  return result.buffer;
+  if( _.bufferNodeIs( dstArray ) )
+  return BufferNode.from( result );
+  if( _.bufferViewIs( dstArray ) )
+  return new BufferView( result.buffer );
+  else
   return result;
+}
+
+//
+
+function bufferSelectInplace( dstArray, range, srcArray )
+{
+  _.assert( 1 <= arguments.length && arguments.length <= 3 );
+
+  if( !_.bufferAnyIs( dstArray ) )
+  return _.longSelectInplace( dstArray, range, srcArray );
+
+  let length = _.definedIs( dstArray.length ) ? dstArray.length : dstArray.byteLength;
+
+  if( range === undefined )
+  range = [ 0, length ];
+  if( _.numberIs( range ) )
+  range = [ range, length ];
+
+  let first = range[ 0 ] !== undefined ? range[ 0 ] : 0;
+  let last = range[ 1 ] !== undefined ? range[ 1 ] : length;
+
+  _.assert( _.rangeIs( range ) );
+
+  if( first < 0 )
+  first = 0;
+  if( last > length)
+  last = length;
+
+  if( first === 0 && last === length )
+  return dstArray;
+  else
+  return _.bufferSelect( dstArray, range, srcArray );
+
+}
+
+//
+
+function bufferGrow( dstArray, range, srcArray )
+{
+
+  let result;
+
+  if( !_.bufferAnyIs( dstArray ) )
+  return _.longGrow( dstArray, range, srcArray );
+
+  let length = _.definedIs( dstArray.length ) ? dstArray.length : dstArray.byteLength;
+
+  if( range === undefined )
+  range = [ 0, length ];
+  if( _.numberIs( range ) )
+  range = [ 0, range ];
+
+  let first = range[ 0 ] !== undefined ? range[ 0 ] : 0;
+  let last = range[ 1 ] !== undefined ? range[ 1 ] : length;
+
+  _.assert( 1 <= arguments.length && arguments.length <= 3, 'Expects two or three arguments' );
+  _.assert( _.arrayIs( dstArray ) || _.bufferAnyIs( dstArray ) );
+  _.assert( _.rangeIs( range ) );
+
+  if( first < 0 )
+  {
+    last -= first;
+    first -= first;
+  }
+  if( last < first )
+  last = first;
+  if( first > 0 )
+  first = 0;
+  if( last < length )
+  last = length;
+
+  let newLength = last - first;
+
+  if( _.bufferViewIs( dstArray ) || _.bufferRawIs( dstArray ) || _.bufferNodeIs( dstArray ) )
+  {
+    result = new U8x( newLength );
+  }
+  else
+  {
+    result = _.longMakeUndefined( dstArray, newLength );
+  }
+
+  let dstArrayTyped = _.bufferRawIs( dstArray ) ? new U8x( dstArray ) : dstArray;
+
+  let first2 = Math.max( first, 0 );
+  let last2 = Math.min( length, last );
+  for( let r = first2 ; r < last2 ; r++ )
+  result[ r-first2 ] = dstArrayTyped[ r ];
+
+  if( srcArray !== undefined )
+  {
+    for( let r = last2; r < newLength ; r++ )
+    {
+      result[ r ] = srcArray;
+    }
+  }
+
+  //
+  if( _.bufferRawIs( dstArray ) )
+  return result.buffer;
+  if( _.bufferNodeIs( dstArray ) )
+  return BufferNode.from( result );
+  if( _.bufferViewIs( dstArray ) )
+  return new BufferView( result.buffer );
+  else
+  return result;
+}
+
+//
+
+function bufferGrowInplace( dstArray, range, srcArray )
+{
+  _.assert( 1 <= arguments.length && arguments.length <= 3 );
+
+  if( !_.bufferAnyIs( dstArray ) )
+  return _.longGrowInplace( dstArray, range, srcArray );
+
+  let length = _.definedIs( dstArray.length ) ? dstArray.length : dstArray.byteLength;
+
+  if( range === undefined )
+  range = [ 0, length ];
+  if( _.numberIs( range ) )
+  range = [ 0, range ];
+
+  let first = range[ 0 ] !== undefined ? range[ 0 ] : 0;
+  let last = range[ 1 ] !== undefined ? range[ 1 ] : length;
+
+  _.assert( _.rangeIs( range ) );
+
+  if( first < 0 )
+  {
+    last -= first;
+    first -= first;
+  }
+  if( first > 0 )
+  first = 0;
+  if( last < length )
+  last = length;
+
+  if( first === 0 && last === length )
+  return dstArray;
+  else
+  return _.bufferGrow( dstArray, range, srcArray );
+
+}
+
+//
+
+function bufferRelength( dstArray, range, srcArray )
+{
+
+  let result;
+
+  if( !_.bufferAnyIs( dstArray ) )
+  return _.longRelength( dstArray, range, srcArray );
+
+  let length = _.definedIs( dstArray.length ) ? dstArray.length : dstArray.byteLength;
+
+  if( range === undefined )
+  range = [ 0, length ];
+  if( _.numberIs( range ) )
+  range = [ range, length ];
+
+  let first = range[ 0 ] !== undefined ? range[ 0 ] : 0;
+  let last = range[ 1 ] !== undefined ? range[ 1 ] : length;
+
+  _.assert( 1 <= arguments.length && arguments.length <= 3, 'Expects two or three arguments' );
+  _.assert( _.arrayIs( dstArray ) || _.bufferAnyIs( dstArray ) );
+  _.assert( _.rangeIs( range ) );
+
+  if( first < 0 )
+  first = 0;
+  if( first > length )
+  first = length;
+  if( last < first )
+  last = first;
+
+  let newLength = last - first;
+
+  if( _.bufferViewIs( dstArray ) || _.bufferRawIs( dstArray ) || _.bufferNodeIs( dstArray ) )
+  {
+    result = new U8x( newLength );
+  }
+  else
+  {
+    result = _.longMakeUndefined( dstArray, newLength );
+  }
+
+  let dstArrayTyped = _.bufferRawIs( dstArray ) ? new U8x( dstArray ) : dstArray;
+
+  let first2 = Math.max( first, 0 );
+  let last2 = Math.min( length, last );
+  for( let r = first2 ; r < last2 ; r++ )
+  result[ r-first2 ] = dstArrayTyped[ r ];
+
+  if( srcArray !== undefined )
+  {
+    for( let r = last2 -first2; r < newLength ; r++ )
+    {
+      result[ r ] = srcArray;
+    }
+  }
+
+  //
+  if( _.bufferRawIs( dstArray ) )
+  return result.buffer;
+  if( _.bufferNodeIs( dstArray ) )
+  return BufferNode.from( result );
+  if( _.bufferViewIs( dstArray ) )
+  return new BufferView( result.buffer );
+  else
+  return result;
+}
+
+//
+
+function bufferRelengthInplace( dstArray, range, srcArray )
+{
+  _.assert( 1 <= arguments.length && arguments.length <= 3 );
+
+  if( !_.bufferAnyIs( dstArray ) )
+  return _.longRelengthInplace( dstArray, range, srcArray );
+
+  let length = _.definedIs( dstArray.length ) ? dstArray.length : dstArray.byteLength;
+
+  if( range === undefined )
+  range = [ 0, length ];
+  if( _.numberIs( range ) )
+  range = [ range, length ];
+
+  let first = range[ 0 ] !== undefined ? range[ 0 ] : 0;
+  let last = range[ 1 ] !== undefined ? range[ 1 ] : length;
+
+  _.assert( _.rangeIs( range ) );
+
+  if( first < 0 )
+  first = 0;
+  if( first > length )
+  first = length;
+  if( last < first )
+  last = first;
+
+  if( first === 0 && last === length )
+  return dstArray;
+  else
+  return _.bufferRelength( dstArray, range, srcArray );
+
 }
 
 //
@@ -543,19 +984,19 @@ function bufferBut( dstArray, range, srcArray )
  * @param { Number } len - The length of a typed array.
  *
  * @example
- * // returns [ 3, 7, 13, 0 ]
  * let ints = new I8x( [ 3, 7, 13 ] );
  * _.bufferRelen( ints, 4 );
+ * // returns [ 3, 7, 13, 0 ]
  *
  * @example
- * // returns [ 3, 7, 13 ]
  * let ints2 = new I16x( [ 3, 7, 13, 33, 77 ] );
  * _.bufferRelen( ints2, 3 );
+ * // returns [ 3, 7, 13 ]
  *
  * @example
- * // returns [ 3, 0, 13, 0, 77, 0 ]
  * let ints3 = new I32x( [ 3, 7, 13, 33, 77 ] );
  * _.bufferRelen( ints3, 6 );
+ * // returns [ 3, 0, 13, 0, 77, 0 ]
  *
  * @returns { typedArray } - Returns a new or the same typed array {-srcMap-} with a new or the same length (len).
  * @function bufferRelen
@@ -586,94 +1027,103 @@ function bufferRelen( src, len )
 
 //
 
-/* qqq : implement for 2 other types of buffer and do code test coverage
-   Dmytro : implemented. This odious code maked this way because different
-   buffers has different implementations
-   Previus implementation of routine bufferResize() has bug when size > length
+/*
+qqq : implement for 2 other types of buffer and do code test coverage
+Dmytro : implemented for all buffer types
 */
 
 /*
   qqq : wrong! Size and length are different concepts.
+  Dmytro : use concept size in routine
 */
+
+function bufferResize( srcBuffer, size )
+{
+  let result = srcBuffer;
+
+  let range = _.rangeIs( size ) ? size : [ 0, size ];
+  size = range[ 1 ] - range[ 0 ];
+
+  if( range[ 1 ] < range[ 0 ] )
+  range[ 1 ] = range[ 0 ];
+
+  _.assert( _.bufferAnyIs( srcBuffer ) );
+  _.assert( srcBuffer.byteLength >= 0 );
+  _.assert( _.rangeIs( range ) );
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+
+  var newOffset = srcBuffer.byteOffset ? srcBuffer.byteOffset + range[ 0 ] : range[ 0 ];
+
+  if( !_.bufferRawIs( srcBuffer ) && newOffset >= 0 && newOffset + size <= srcBuffer.buffer.byteLength )
+  {
+    if( srcBuffer.constructor.name === 'Buffer' )
+    result = BufferNode.from( srcBuffer.buffer, newOffset, size );
+    if( srcBuffer.constructor.name === 'DataView' )
+    result = new BufferView( srcBuffer.buffer, newOffset, size );
+    else
+    result = new srcBuffer.constructor( srcBuffer.buffer, newOffset, size / srcBuffer.BYTES_PER_ELEMENT );
+  }
+  else
+  {
+    let resultTyped = new U8x( size );
+    let srcBufferToU8x = _.bufferRawIs( srcBuffer ) ? new U8x( srcBuffer ) : new U8x( srcBuffer.buffer );
+
+    let first = Math.max( newOffset, 0 );
+    let last = Math.min( srcBufferToU8x.byteLength, newOffset + size );
+    newOffset = newOffset < 0 ? -newOffset : 0;
+    for( let r = first ; r < last ; r++ )
+    resultTyped[ r - first + newOffset ] = srcBufferToU8x[ r ];
+
+    if( srcBuffer.constructor.name === 'Buffer' )
+    result = BufferNode.from( resultTyped.buffer );
+    if( srcBuffer.constructor.name === 'DataView' )
+    result = new BufferView( resultTyped.buffer );
+    if( srcBuffer.constructor.name === 'ArrayBuffer' )
+    result = resultTyped.buffer;
+    else
+    result = new srcBuffer.constructor( resultTyped.buffer );
+  }
+
+  return result;
+}
 
 // function bufferResize( srcBuffer, size )
 // {
 //   let result = srcBuffer;
 //
-//   _.assert( _.bufferAnyIs( srcBuffer ) );
+//   _.assert( _.bufferRawIs( srcBuffer ) || _.bufferTypedIs( srcBuffer ) );
 //   _.assert( srcBuffer.byteLength >= 0 );
 //   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 //
-//   if( _.bufferRawIs( srcBuffer ) || _.bufferViewIs( srcBuffer ) )
-//   srcBuffer.length = srcBuffer.byteLength;
-//
-//   if( size > srcBuffer.length )
+//   if( size > srcBuffer.byteLength )
 //   {
-//     if( _.bufferTypedIs( srcBuffer ) )
-//     {
-//       result = _.longMakeUndefined( srcBuffer, size );
-//       result.set( srcBuffer );
-//     }
-//     if( _.bufferRawIs( srcBuffer ) )
-//     {
-//       let resultTyped = new U8x( _.longMakeUndefined( srcBuffer, size ) );
-//       let srcTyped = new U8x( srcBuffer );
-//       resultTyped.set( srcTyped );
-//       result = _.bufferRawFrom( resultTyped );
-//     }
-//     if( _.bufferViewIs( srcBuffer ) )
-//     {
-//       let resultTyped = new U8x( size );
-//       let srcTyped = new U8x( srcBuffer.buffer );
-//       resultTyped.set( srcTyped );
-//       result = new BufferView( _.bufferRawFrom( resultTyped ) );
-//     }
-//     if( _.bufferNodeIs( srcBuffer ) )
-//     {
-//       // qqq : ?
-//       _.assert( 0, 'not tested' );
-//       if( parseInt( process.version[ 1 ] ) === 1 )
-//       result = BufferNode.alloc( size );
-//       else
-//       result = _.longMakeUndefined( srcBuffer, size );
-//
-//       result.set( srcBuffer );
-//     }
+//     result = _.longMakeUndefined( srcBuffer, size );
+//     let resultTyped = new U8x( result, 0, result.byteLength );
+//     let srcTyped = new U8x( srcBuffer, 0, srcBuffer.byteLength );
+//     resultTyped.set( srcTyped );
 //   }
-//   else if( size < srcBuffer.length )
+//   else if( size < srcBuffer.byteLength )
 //   {
-//     if( _.bufferViewIs( srcBuffer ) )
-//     {
-//       result = new BufferView( srcBuffer.buffer, 0, size );
-//     }
-//     else
 //     result = srcBuffer.slice( 0, size );
 //   }
 //
 //   return result;
 // }
 
-function bufferResize( srcBuffer, size )
-{
-  let result = srcBuffer;
+//
 
-  _.assert( _.bufferRawIs( srcBuffer ) || _.bufferTypedIs( srcBuffer ) );
+function bufferResizeInplace( srcBuffer, size )
+{
+  _.assert( _.bufferAnyIs( srcBuffer ) );
   _.assert( srcBuffer.byteLength >= 0 );
+  _.assert( _.numberIs( size ) || _.rangeIs( size ) );
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
-  if( size > srcBuffer.byteLength )
-  {
-    result = _.longMakeUndefined( srcBuffer, size );
-    let resultTyped = new U8x( result, 0, result.byteLength );
-    let srcTyped = new U8x( srcBuffer, 0, srcBuffer.byteLength );
-    resultTyped.set( srcTyped );
-  }
-  else if( size < srcBuffer.byteLength )
-  {
-    result = srcBuffer.slice( 0, size );
-  }
-
-  return result;
+  let range = _.rangeIs( size ) ? size : [ 0, size ];
+  if( range[ 0 ] === 0 && range[ 1 ] === srcBuffer.byteLength )
+  return srcBuffer;
+  else
+  return bufferResize( srcBuffer, range );
 }
 
 //
@@ -713,14 +1163,14 @@ function bufferBytesGet( src )
    * @param { typedArray } bufferType - The type of typed array.
    *
    * @example
-   * // returns [ 513, 1027, 1541 ]
    * let view1 = new I8x( [ 1, 2, 3, 4, 5, 6 ] );
    * _.bufferRetype(view1, I16x);
+   * // returns [ 513, 1027, 1541 ]
    *
    * @example
-   * // returns [ 1, 2, 3, 4, 5, 6 ]
    * let view2 = new I16x( [ 513, 1027, 1541 ] );
    * _.bufferRetype(view2, I8x);
+   * // returns [ 1, 2, 3, 4, 5, 6 ]
    *
    * @returns { typedArray } Returns a new instance of (bufferType) constructor.
    * @function bufferRetype
@@ -883,11 +1333,13 @@ function bufferToStr( src )
 {
   let result = '';
 
-  if( src instanceof BufferRaw )
-  src = new U8x( src, 0, src.byteLength );
-
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.bufferAnyIs( src ) );
+
+  if( typeof BufferNode !== 'undefined' )
+  src = _.bufferNodeFrom( src );
+  else if( src instanceof BufferRaw )
+  src = new U8x( src, 0, src.byteLength );
 
   if( _.bufferNodeIs( src ) )
   return src.toString( 'utf8' );
@@ -1202,16 +1654,16 @@ bufferFrom.defaults =
  * @param { typedArray } buffer - Entity to check.
  *
  * @example
- * // returns [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
  * let buffer1 = new BufferRaw( 10 );
  * let view1 = new I8x( buffer1 );
  * _.bufferRawFromTyped( view1 );
+ * // returns [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
  *
  * @example
- * // returns [ 0, 0, 0, 0, 0, 0 ]
  * let buffer2 = new BufferRaw( 10 );
  * let view2 = new I8x( buffer2, 2 );
  * _.bufferRawFromTyped( view2 );
+ * // returns [ 0, 0, 0, 0, 0, 0 ]
  *
  * @returns { BufferRaw } Returns a new or the same BufferRaw.
  * If (buffer) is instance of '[object ArrayBuffer]', it returns buffer.
@@ -1246,6 +1698,8 @@ function bufferRawFrom( buffer )
 {
   let result;
 
+  /* qqq : should do not copying when possible! */
+
   _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( buffer instanceof BufferRaw )
@@ -1261,11 +1715,12 @@ function bufferRawFrom( buffer )
   else if( _.bufferTypedIs( buffer ) || _.bufferViewIs( buffer ) )
   {
 
-    debugger;
     // _.assert( 0, 'not implemented' );
     result = buffer.buffer;
     if( buffer.byteOffset || buffer.byteLength !== result.byteLength )
-    result = result.slice( buffer.byteOffset || 0, buffer.byteLength );
+    // Dmytro : works not correctly, offset + length = right bound of new bufferRaw
+    result = result.slice( buffer.byteOffset, buffer.byteOffset + buffer.byteLength );
+    // result = result.slice( buffer.byteOffset || 0, buffer.byteLength );
 
   }
   else if( _.strIs( buffer ) )
@@ -1300,12 +1755,15 @@ function bufferBytesFrom( buffer )
 {
   let result;
 
+  // Dmytro : missed
+  if( _.bufferBytesIs( buffer ) )
+  return buffer;
+
   _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( _.bufferNodeIs( buffer ) )
   {
 
-    debugger;
     _.assert( _.bufferRawIs( buffer.buffer ) )
     result = new U8x( buffer.buffer, buffer.byteOffset, buffer.byteLength );
 
@@ -1355,16 +1813,20 @@ function bufferBytesFromNode( src )
 
 /*
 qqq : cover it
+Dmytro : coverage is extended
 */
 
 function bufferNodeFrom( buffer )
 {
-
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.bufferViewIs( buffer ) || _.bufferTypedIs( buffer ) || _.bufferRawIs( buffer ) || _.bufferNodeIs( buffer ) || _.strIs( buffer ) || _.arrayIs( buffer ), 'Expects typed or raw buffer, but got', _.strType( buffer ) );
-
   if( _.bufferNodeIs( buffer ) )
   return buffer;
+
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.assert( _.bufferAnyIs( buffer ) || _.strIs( buffer ) || _.arrayIs( buffer ), 'Expects buffer, string of array, but got', _.strType( buffer ) );
+  // _.assert( _.bufferViewIs( buffer ) || _.bufferTypedIs( buffer ) || _.bufferRawIs( buffer ) || _.bufferNodeIs( buffer ) || _.strIs( buffer ) || _.arrayIs( buffer ), 'Expects typed or raw buffer, but got', _.strType( buffer ) );
+
+  // if( _.bufferNodeIs( buffer ) )
+  // return buffer;
 
   /* */
 
@@ -1633,11 +2095,10 @@ buffersDeserialize.defaults =
  * @param { Number } [ o.numberOfDuplicatesPerElement = 2 ] o.numberOfDuplicatesPerElement = 2 - The number of duplicates per element.
  *
  * @example
- * // returns [ 'a', 'a', 'b', 'b', 'c', 'c' ]
  * _.longDuplicate( [ 'a', 'b', 'c' ] );
+ * // returns [ 'a', 'a', 'b', 'b', 'c', 'c' ]
  *
  * @example
- * // returns [ 'abc', 'def', 'abc', 'def', 'abc', 'def' ]
  * let options = {
  *   src : [ 'abc', 'def' ],
  *   result : [  ],
@@ -1645,9 +2106,9 @@ buffersDeserialize.defaults =
  *   numberOfDuplicatesPerElement : 3
  * };
  * _.longDuplicate( options, {} );
+ * // returns [ 'abc', 'def', 'abc', 'def', 'abc', 'def' ]
  *
  * @example
- * // returns [ 'abc', 'def', undefined, 'abc', 'def', undefined, 'abc', 'def', undefined ]
  * let options = {
  *   src : [ 'abc', 'def' ],
  *   result : [  ],
@@ -1655,6 +2116,7 @@ buffersDeserialize.defaults =
  *   numberOfDuplicatesPerElement : 3
  * };
  * _.longDuplicate( options, { a : 7, b : 13 } );
+ * // returns [ 'abc', 'def', undefined, 'abc', 'def', undefined, 'abc', 'def', undefined ]
  *
  * @returns { Array } Returns an array with duplicate values of a certain number of times.
  * @function longDuplicate
@@ -1742,133 +2204,133 @@ longDuplicate.defaults =
 //
 
 /**
- * The longUnduplicate( dstLong, onEvaluator ) routine returns the dstlong with the duplicated elements removed.
+ * The longOnce( dstLong, onEvaluator ) routine returns the dstlong with the duplicated elements removed.
  * The dstLong instance will be returned when possible, if not a new instance of the same type is created.
  *
  * @param { longIs } dstLong - The source and destination long.
  * @param { Function } [ onEvaluate = function( e ) { return e } ] - A callback function.
  *
  * @example
+ * _.longOnce( [ 1, 1, 2, 'abc', 'abc', 4, true, true ] );
  * // returns [ 1, 2, 'abc', 4, true ]
- * _.longUnduplicate( [ 1, 1, 2, 'abc', 'abc', 4, true, true ] );
  *
  * @example
- * // [ 1, 2, 3, 4, 5 ]
- * _.longUnduplicate( [ 1, 2, 3, 4, 5 ] );
+ * _.longOnce( [ 1, 2, 3, 4, 5 ] );
+ * // returns [ 1, 2, 3, 4, 5 ]
  *
  * @returns { Number } - Returns the source long without the duplicated elements.
- * @function longUnduplicate
+ * @function longOnce
  * @throws { Error } If passed arguments is less than one or more than two.
  * @throws { Error } If the first argument is not an long.
  * @throws { Error } If the second argument is not a Function.
  * @memberof wTools
  */
 
-/* qqq : routine longUnduplicate requires good test coverage and documentation */
+/* qqq : routine longOnce requires good test coverage and documentation */
 
-// function longUnduplicate( dstLong, onEvaluate )
-// {
-//   _.assert( 1 <= arguments.length || arguments.length <= 2 );
-//   _.assert( _.longIs( dstLong ), 'Expects Long' );
-//
-//   if( _.arrayIs( dstLong ) )
-//   return _.arrayRemoveDuplicates( dstLong, onEvaluate );
-//
-//   if( !dstLong.length )
-//   return dstLong;
-//
-//   let length = dstLong.length;
-//
-//   for( let i = 0; i < dstLong.length; i++ )
-//   if( _.arrayLeftIndex( dstLong, dstLong[ i ], i+1, onEvaluate ) !== -1 )
-//   length--;
-//
-//   if( length === dstLong.length )
-//   return dstLong;
-//
-//   let result = _.longMakeUndefined( dstLong, length );
-//   result[ 0 ] = dstLong[ 0 ];
-//
-//   let j = 1;
-//   for( let i = 1; i < dstLong.length && j < length; i++ )
-//   if( _.arrayRightIndex( result, dstLong[ i ], j-1, onEvaluate ) === -1 )
-//   result[ j++ ] = dstLong[ i ];
-//
-//   _.assert( j === length );
-//
-//   return result;
-// }
-
-//
-
-function longUnduplicate( dst, src, onEvaluate )
+function longOnce( dstLong, onEvaluate )
 {
+  _.assert( 1 <= arguments.length || arguments.length <= 2 );
+  _.assert( arguments.length === 1, 'not tested' );
+  _.assert( _.longIs( dstLong ), 'Expects Long' );
 
-  if( _.routineIs( arguments[ 1 ] ) && arguments[ 2 ] === undefined )
-  {
-    onEvaluate = arguments[ 1 ];
-    src = undefined;
-  }
+  if( _.arrayIs( dstLong ) )
+  return _.arrayRemoveDuplicates( dstLong, onEvaluate );
 
-  _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
-  _.assert( dst === null || _.arrayIs( dst ) );
-  _.assert( src === undefined || _.longIs( src ) );
-  _.assert( onEvaluate === undefined || _.routineIs( onEvaluate ) );
+  if( !dstLong.length )
+  return dstLong;
 
-  if( src && dst )
-  {
-    dst = _.arrayAppendArraysOnce( dst, src );
-    src = undefined;
-  }
+  let length = dstLong.length;
 
-  if( src )
-  {
-    _.assert( dst === null );
-    let unique = _.longHasUniques
-    ({
-      src,
-      onEvaluate : onEvaluate,
-      includeFirst : 1,
-    });
+  for( let i = 0; i < dstLong.length; i++ )
+  if( _.arrayLeftIndex( dstLong, dstLong[ i ], i+1, onEvaluate ) !== -1 )
+  length--;
 
-    let result = _.longMakeUndefined( src, unique.number );
+  if( length === dstLong.length )
+  return dstLong;
 
-    let c = 0;
-    for( let i = 0 ; i < src.length ; i++ )
-    if( unique.is[ i ] )
-    {
-      result[ c ] = src[ i ];
-      c += 1;
-    }
+  let result = _.longMakeUndefined( dstLong, length );
+  result[ 0 ] = dstLong[ 0 ];
 
-    return result;
-  }
-  else if( dst )
-  {
-    let unique = _.longHasUniques
-    ({
-      src : dst,
-      onEvaluate : onEvaluate,
-      includeFirst : 1,
-    });
+  let j = 1;
+  for( let i = 1; i < dstLong.length && j < length; i++ )
+  if( _.arrayRightIndex( result, dstLong[ i ], j-1, onEvaluate ) === -1 )
+  result[ j++ ] = dstLong[ i ];
 
-    for( let i = dst.length-1 ; i >= 0 ; i-- )
-    if( !unique.is[ i ] )
-    {
-      dst.splice( i, 1 );
-    }
+  _.assert( j === length );
 
-    return dst;
-  }
-  else _.assert( 0 );
-
+  return result;
 }
 
+//
 
-// function longUnduplicate( dstLong, onEvaluate )
+// function longOnce( dst, src, onEvaluate )
+// {
+//
+//   if( _.routineIs( arguments[ 1 ] ) && arguments[ 2 ] === undefined )
+//   {
+//     onEvaluate = arguments[ 1 ];
+//     src = undefined;
+//   }
+//
+//   _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
+//   _.assert( dst === null || _.arrayIs( dst ) );
+//   _.assert( src === undefined || _.longIs( src ) );
+//   _.assert( onEvaluate === undefined || _.routineIs( onEvaluate ) );
+//
+//   if( src && dst )
+//   {
+//     dst = _.arrayAppendArraysOnce( dst, src );
+//     src = undefined;
+//   }
+//
+//   if( src )
+//   {
+//     _.assert( dst === null );
+//     let unique = _.longHasUniques
+//     ({
+//       src,
+//       onEvaluate : onEvaluate,
+//       includeFirst : 1,
+//     });
+//
+//     let result = _.longMakeUndefined( src, unique.number );
+//
+//     let c = 0;
+//     for( let i = 0 ; i < src.length ; i++ )
+//     if( unique.is[ i ] )
+//     {
+//       result[ c ] = src[ i ];
+//       c += 1;
+//     }
+//
+//     return result;
+//   }
+//   else if( dst )
+//   {
+//     let unique = _.longHasUniques
+//     ({
+//       src : dst,
+//       onEvaluate : onEvaluate,
+//       includeFirst : 1,
+//     });
+//
+//     for( let i = dst.length-1 ; i >= 0 ; i-- )
+//     if( !unique.is[ i ] )
+//     {
+//       dst.splice( i, 1 );
+//     }
+//
+//     return dst;
+//   }
+//   else _.assert( 0 );
+//
+// }
+
+// function longOnce( dstLong, onEvaluate )
 // {
 //   _.assert( 1 <= arguments.length || arguments.length <= 3 );
-//   _.assert( _.longIs( dstLong ), 'longUnduplicate :', 'Expects Long' );
+//   _.assert( _.longIs( dstLong ), 'longOnce :', 'Expects Long' );
 //
 //   if( _.arrayIs( dstLong ) )
 //   {
@@ -1936,10 +2398,10 @@ function longUnduplicate( dst, src, onEvaluate )
 
 // /* qqq : not optimal, no redundant copy */
 // /*
-// function longUnduplicate( dstLong, onEvaluate )
+// function longOnce( dstLong, onEvaluate )
 // {
 //   _.assert( 1 <= arguments.length || arguments.length <= 3 );
-//   _.assert( _.longIs( dstLong ), 'longUnduplicate :', 'Expects Long' );
+//   _.assert( _.longIs( dstLong ), 'longOnce :', 'Expects Long' );
 //
 //   if( _.arrayIs( dstLong ) )
 //   {
@@ -1963,7 +2425,7 @@ function longUnduplicate( dst, src, onEvaluate )
 // */
 
 //
-// function longUnduplicate( dst, src, onEvaluate )
+// function longOnce( dst, src, onEvaluate )
 // {
 //
 //   _.assert( arguments.length === 2 || arguments.length === 3 );
@@ -2126,35 +2588,35 @@ longHasUniques.defaults =
 //  * let arr = [ 1 ]
 //  * let result = _.longResize( arr, 0, 5, 0 );
 //  * console.log( result );
-//  * //[ 1, 0, 0, 0, 0 ]
+//  * // log [ 1, 0, 0, 0, 0 ]
 //  *
 //  * @example
 //  * //Take two last elements from original, other fill with zeroes
 //  * let arr = [ 1, 2, 3, 4, 5 ]
 //  * let result = _.longResize( arr, 3, 8, 0 );
 //  * console.log( result );
-//  * //[ 4, 5, 0, 0, 0 ]
+//  * // log [ 4, 5, 0, 0, 0 ]
 //  *
 //  * @example
 //  * //Add two zeroes at the beginning
 //  * let arr = [ 1, 2, 3, 4, 5 ]
 //  * let result = _.longResize( arr, -2, arr.length, 0 );
 //  * console.log( result );
-//  * //[ 0, 0, 1, 2, 3, 4, 5 ]
+//  * // log [ 0, 0, 1, 2, 3, 4, 5 ]
 //  *
 //  * @example
 //  * //Add two zeroes at the beginning and two at end
 //  * let arr = [ 1, 2, 3, 4, 5 ]
 //  * let result = _.longResize( arr, -2, arr.length + 2, 0 );
 //  * console.log( result );
-//  * //[ 0, 0, 1, 2, 3, 4, 5, 0, 0 ]
+//  * // log [ 0, 0, 1, 2, 3, 4, 5, 0, 0 ]
 //  *
 //  * @example
 //  * //Source can be also a BufferNode
 //  * let buffer = BufferNode.from( '123' );
 //  * let result = _.longResize( buffer, 0, buffer.length + 2, 0 );
 //  * console.log( result );
-//  * //[ 49, 50, 51, 0, 0 ]
+//  * // log [ 49, 50, 51, 0, 0 ]
 //  *
 //  * @returns { Array } Returns a shallow copy of elements from the original array supplemented with value of( val ) if needed.
 //  * @function longResize
@@ -2345,16 +2807,16 @@ function longNoneAreRepeated( src, onEvalutate )
  * @param { longIs } mask - The target array.
  *
  * @example
- * // returns [  ]
  * _.longMask( [ 1, 2, 3, 4 ], [ undefined, null, 0, '' ] );
+ * // returns []
  *
  * @example
- * // returns [ "c", 4, 5 ]
  * _longMask( [ 'a', 'b', 'c', 4, 5 ], [ 0, '', 1, 2, 3 ] );
+ * // returns [ "c", 4, 5 ]
  *
  * @example
- * // returns [ 'a', 'b', 5, 'd' ]
  * _.longMask( [ 'a', 'b', 'c', 4, 5, 'd' ], [ 3, 7, 0, '', 13, 33 ] );
+ * // returns [ 'a', 'b', 5, 'd' ]
  *
  * @returns { longIs } Returns a new instance of array that contains the certain value(s) from array (srcArray),
  * if an array (mask) contains the truth-value(s).
@@ -2488,13 +2950,13 @@ longUnmask.defaults =
  * @param { Boolean } [ o.int = false ] - Floating point numbers or not.
  *
  * @example
- * // returns [ 6, 2, 4, 7, 8 ]
- * let arr = _.arrayMakeRandom
+ * _.arrayMakeRandom
  * ({
  *   length : 5,
  *   range : [ 1, 9 ],
  *   int : true,
  * });
+ * // returns [ 6, 2, 4, 7, 8 ]
  *
  * @returns { Array } - Returns an array of random numbers.
  * @function arrayMakeRandom
@@ -2541,23 +3003,23 @@ arrayMakeRandom.defaults =
  * @param { * } src - To convert into Array.
  *
  * @example
- * // returns [ 3, 7, 13, 'abc', false, undefined, null, {} ]
  * _.arrayFromCoercing( [ 3, 7, 13, 'abc', false, undefined, null, {} ] );
+ * // returns [ 3, 7, 13, 'abc', false, undefined, null, {} ]
  *
  * @example
- * // returns [ [ 'a', 3 ], [ 'b', 7 ], [ 'c', 13 ] ]
  * _.arrayFromCoercing( { a : 3, b : 7, c : 13 } );
+ * // returns [ [ 'a', 3 ], [ 'b', 7 ], [ 'c', 13 ] ]
  *
  * @example
- * // returns [ 3, 7, 13, 3.5, 5, 7.5, 13 ]
  * _.arrayFromCoercing( "3, 7, 13, 3.5abc, 5def, 7.5ghi, 13jkl" );
+ * // returns [ 3, 7, 13, 3.5, 5, 7.5, 13 ]
  *
  * @example
- * // returns [ 3, 7, 13, 'abc', false, undefined, null, { greeting: 'Hello there!' } ]
  * let args = ( function() {
  *   return arguments;
  * } )( 3, 7, 13, 'abc', false, undefined, null, { greeting: 'Hello there!' } );
  * _.arrayFromCoercing( args );
+ * // returns [ 3, 7, 13, 'abc', false, undefined, null, { greeting: 'Hello there!' } ]
  *
  * @returns { Array } Returns an Array.
  * @function arrayFromCoercing
@@ -2600,12 +3062,12 @@ function arrayFromCoercing( src )
  * @param { longIs } range - The first (range[ 0 ]) and the last (range[ 1 ] - range[ 0 ]) elements of the progression.
  *
  * @example
+ * _.arrayFromRange( [ 1, 5 ] );
  * // returns [ 1, 2, 3, 4 ]
- * let range = _.arrayFromRange( [ 1, 5 ] );
  *
  * @example
+ * _.arrayFromRange( 5 );
  * // returns [ 0, 1, 2, 3, 4 ]
- * let range = _.arrayFromRange( 5 );
  *
  * @returns { array } Returns an array of numbers for the requested range with increment 1.
  * May be an empty array if adding the step would not converge toward the end value.
@@ -2756,19 +3218,19 @@ function arrayFromRangeWithNumberOfSteps( range , numberOfSteps )
 //  * @param { longIs } array - To convert into Object.
 //  *
 //  * @example
-//  * // returns {  }
-//  * _.arrayToMap( [  ] );
+//  * _.arrayToMap( [] );
+//  * // returns {}
 //  *
 //  * @example
-//  * // returns { '0' : 3, '1' : [ 1, 2, 3 ], '2' : 'abc', '3' : false, '4' : undefined, '5' : null, '6' : {} }
 //  * _.arrayToMap( [ 3, [ 1, 2, 3 ], 'abc', false, undefined, null, {} ] );
+//  * // returns { '0' : 3, '1' : [ 1, 2, 3 ], '2' : 'abc', '3' : false, '4' : undefined, '5' : null, '6' : {} }
 //  *
 //  * @example
-//  * // returns { '0' : 3, '1' : 'abc', '2' : false, '3' : undefined, '4' : null, '5' : { greeting: 'Hello there!' } }
 //  * let args = ( function() {
 //  *   return arguments;
 //  * } )( 3, 'abc', false, undefined, null, { greeting: 'Hello there!' } );
 //  * _.arrayToMap( args );
+//  * // returns { '0' : 3, '1' : 'abc', '2' : false, '3' : undefined, '4' : null, '5' : { greeting: 'Hello there!' } }
 //  *
 //  * @returns { Object } Returns an Object.
 //  * @function arrayToMap
@@ -2800,12 +3262,12 @@ function arrayFromRangeWithNumberOfSteps( range , numberOfSteps )
 //  * @param { String } [ options.type = 'mixed' ] - The type of elements.
 //  *
 //  * @example
-//  * // returns "1 2 3 "
 //  * _.arrayToStr( [ 1, 2, 3 ], { type : 'int' } );
+//  * // returns "1 2 3 "
 //  *
 //  * @example
-//  * // returns "3.500 13.77 7.330"
 //  * _.arrayToStr( [ 3.5, 13.77, 7.33 ], { type : 'float', precission : 4 } );
+//  * // returns "3.500 13.77 7.330"
 //  *
 //  * @returns { String } Returns one string containing each array element separated by space,
 //  * only types of integer or floating point.
@@ -2866,12 +3328,12 @@ function arrayFromRangeWithNumberOfSteps( range , numberOfSteps )
  * @param { ( longIs | object ) } [ indicesArray = indicesArray.indices ] - Indexes of elements from the (srcArray) or options object.
  *
  * @example
+ * _.longSelectWithIndices( [ 1, 2, 3, 4, 5 ], [ 2, 3, 4 ] );
  * // returns [ 3, 4, 5 ]
- * let arr = _.longSelectWithIndices( [ 1, 2, 3, 4, 5 ], [ 2, 3, 4 ] );
  *
  * @example
+ * _.longSelectWithIndices( [ 1, 2, 3 ], [ 4, 5 ] );
  * // returns [ undefined, undefined ]
- * let arr = _.longSelectWithIndices( [ 1, 2, 3 ], [ 4, 5 ] );
  *
  * @returns { longIs } - Returns a new array with the length equal (indicesArray.length) and elements from (srcArray).
    If there is no element with necessary index than the value will be undefined.
@@ -2961,8 +3423,8 @@ function longShuffle( dst, times )
  * @param { Number } index2 - The second index.
  *
  * @example
+ * _.longSwapElements( [ 1, 2, 3, 4, 5 ], 0, 4 );
  * // returns [ 5, 2, 3, 4, 1 ]
- * let arr = _.longSwapElements( [ 1, 2, 3, 4, 5 ], 0, 4 );
  *
  * @returns { Array } - Returns the (dst) array that has been modified in place by indexes (index1) and (index2).
  * @function longSwapElements
@@ -3006,12 +3468,12 @@ function longSwapElements( dst, index1, index2 )
  * Otherwise, it adds each (argument) to the next (dstOffset++) index of the (dstArray).
  *
  * @example
+ * _.longPut( [ 1, 2, 3, 4, 5, 6, 9 ], 2, 'str', true, [ 7, 8 ] );
  * // returns [ 1, 2, 'str', true, 7, 8, 9 ]
- * let arr = _.longPut( [ 1, 2, 3, 4, 5, 6, 9 ], 2, 'str', true, [ 7, 8 ] );
  *
  * @example
+ * _.longPut( [ 1, 2, 3, 4, 5, 6, 9 ], 0, 'str', true, [ 7, 8 ] );
  * // returns [ 'str', true, 7, 8, 5, 6, 9 ]
- * let arr = _.longPut( [ 1, 2, 3, 4, 5, 6, 9 ], 0, 'str', true, [ 7, 8 ] );
  *
  * @returns { longIs } - Returns an array containing the changed values.
  * @function longPut
@@ -3068,16 +3530,16 @@ function longPut( dstArray, dstOffset )
  * @param { Number } [ o.value = 0 ] - The value for the filling.
  *
  * @example
+ * _.arrayFill( { times : 5, value : 3 } );
  * // returns [ 3, 3, 3, 3, 3 ]
- * let arr = _.arrayFill( { times : 5, value : 3 } );
  *
  * @example
+ * _.arrayFill( 4 );
  * // returns [ 0, 0, 0, 0 ]
- * let arr = _.arrayFill( 4 );
  *
  * @example
+ * _.arrayFill( [ 1, 2, 3 ] );
  * // returns [ 0, 0, 0 ]
- * let arr = _.arrayFill( [ 1, 2, 3 ] );
  *
  * @returns { Array } - Returns an array filled with a static value.
  * @function arrayFill
@@ -3094,9 +3556,11 @@ function longFill( result, value, range )
 
   if( range === undefined )
   range = [ 0, result.length ];
+  if( _.numberIs( range ) )
+  range = [ 0, range ];
 
-  let l = range[ 0 ];
-  let r = range[ 1 ];
+  // let l = range[ 0 ];
+  // let r = range[ 1 ];
 
   _.assert( 1 <= arguments.length && arguments.length <= 3 );
   // _.assert( arguments.length === 2 || arguments.length === 3 );
@@ -3111,6 +3575,12 @@ function longFill( result, value, range )
 
   result = _.longGrowInplace( result, range );
 
+  if( range[ 0 ] < 0 )
+  {
+    range[ 1 ] = range[ 1 ] - range[ 0 ];
+    range[ 0 ] = 0;
+  }
+
   if( _.routineIs( result.fill ) )
   {
     // result.fill( value, 0, times );
@@ -3124,12 +3594,7 @@ function longFill( result, value, range )
     // for( let t = 0 ; t < times ; t++ )
     // result[ t ] = value;
 
-    if( l < 0 )
-    {
-      r = r - l;
-      l = 0;
-    }
-    for( let t = 0 ; t < r ; t++ )
+    for( let t = 0 ; t < range[ 1 ] ; t++ )
     result[ t ] = value;
 
   }
@@ -3248,8 +3713,9 @@ function longFill( result, value, range )
  * @param { ...longIs } arguments[...] - The following array(s).
  *
  * @example
- * // returns ?
  * _.longSupplement( [ 4, 5 ], [ 1, 2, 3 ], [ 6, 7, 8, true, 9 ], [ 'a', 'b', 33, 13, 'e', 7 ] );
+ * // returns ?
+ *
  * @returns { longIs } - Returns an array that contains values only type of numbers.
  * @function longSupplement
  * @throws { Error } Will throw an Error if (dstArray) is not an array-like.
@@ -3314,16 +3780,16 @@ function longSupplement( dstArray )
  * @param { ...longIs } arguments[...] - The following arrays.
  *
  * @example
- * // returns [ 5, 6, 2 ]
  * _.longExtendScreening( [ 1, 2, 3 ], [  ], [ 0, 1, 2 ], [ 3, 4 ], [ 5, 6 ] );
+ * // returns [ 5, 6, 2 ]
  *
  * @example
- * // returns [ 'a', 6, 2, 13 ]
  * _.longExtendScreening( [ 1, 2, 3 ], [ 3, 'abc', 7, 13 ], [ 0, 1, 2 ], [ 3, 4 ], [ 'a', 6 ] );
+ * // returns [ 'a', 6, 2, 13 ]
  *
  * @example
+ * _.longExtendScreening( [  ], [ 3, 'abc', 7, 13 ], [ 0, 1, 2 ], [ 3, 4 ], [ 'a', 6 ] );
  * // returns [ 3, 'abc', 7, 13 ]
- * _.longExtendScreening( [  ], [ 3, 'abc', 7, 13 ], [ 0, 1, 2 ], [ 3, 4 ], [ 'a', 6 ] )
  *
  * @returns { longIs } Returns a (dstArray) containing the values of the following arrays,
  * if the following arrays contains the indexes of the (screenArray).
@@ -3445,16 +3911,16 @@ function longSort( srcLong, onEvaluate )
 //  * @param { Function } [ onEvaluate = function( e ) { return e } ] - A callback function.
 //  *
 //  * @example
-//  * // returns 15
 //  * _.arraySum( [ 1, 2, 3, 4, 5 ] );
+//  * // returns 15
 //  *
 //  * @example
-//  * // returns 29
 //  * _.arraySum( [ 1, 2, 3, 4, 5 ], function( e ) { return e * 2 } );
+//  * // returns 29
 //  *
 //  * @example
-//  * // returns 94
 //  * _.arraySum( [ true, false, 13, '33' ], function( e ) { return e * 2 } );
+//  * // returns 94
 //  *
 //  * @returns { Number } - Returns the sum of an array {-srcMap-}.
 //  * @function arraySum
@@ -3495,12 +3961,12 @@ function longSort( srcLong, onEvaluate )
  * @param { longIs} src2 - array to compare with ( src1 ).
  *
  * @example
- * // returns [ 1, 2, 3, 4, 5, 6 ]
  * _.arraySetDiff( [ 1, 2, 3 ], [ 4, 5, 6 ] );
+ * // returns [ 1, 2, 3, 4, 5, 6 ]
  *
  * @example
- * // returns [ 2, 4, 3, 5 ]
  * _.arraySetDiff( [ 1, 2, 4 ], [ 1, 3, 5 ] );
+ * // returns [ 2, 4, 3, 5 ]
  *
  * @returns { Array } Array with unique elements from both arrays.
  * @function arraySetDiff
@@ -3541,12 +4007,12 @@ function arraySetDiff( src1, src2 )
  * @param { longIs} but - array of elements to ignore.
  *
  * @example
- * // returns []
  * _.arraySetBut( [ 1, 1, 1 ], [ 1 ] );
+ * // returns []
  *
  * @example
- * // returns [ 2, 2 ]
  * _.arraySetBut( [ 1, 1, 2, 2, 3, 3 ], [ 1, 3 ] );
+ * // returns [ 2, 2 ]
  *
  * @returns { Array } Source array without elements from ( but ).
  * @function arraySetBut
@@ -3601,12 +4067,12 @@ function arraySetBut( dst )
  * @param { ...longIs } - sequence of arrays to compare with ( src ).
  *
  * @example
- * // returns [ 1, 3 ]
  * _.arraySetIntersection( [ 1, 2, 3 ], [ 1 ], [ 3 ] );
+ * // returns [ 1, 3 ]
  *
  * @example
- * // returns [ 1, 1, 2, 2, 3, 3 ]
  * _.arraySetIntersection( [ 1, 1, 2, 2, 3, 3 ], [ 1 ], [ 2 ], [ 3 ], [ 4 ] );
+ * // returns [ 1, 1, 2, 2, 3, 3 ]
  *
  * @returns { Array } Array with elements that are a part of at least one of the provided arrays.
  * @function arraySetIntersection
@@ -3731,12 +4197,12 @@ function arraySetContainAll( src )
    * @param { ...longIs } arguments[...] - The target array.
    *
    * @example
-   * // returns true
    * _.arraySetContainAll( [ 1, 'b', 'c', 4 ], [ 1, 2, 3, 4, 5, 'b', 'c' ] );
+   * // returns true
    *
    * @example
-   * // returns false
    * _.arraySetContainAll( [ 'abc', 'def', true, 26 ], [ 1, 2, 3, 4 ], [ 26, 'abc', 'def', true ] );
+   * // returns false
    *
    * @returns { boolean } Returns true, if at least one of the following arrays (arguments[...]),
    * contains all the same values as in the {-srcMap-} array.
@@ -3779,16 +4245,16 @@ function arraySetContainAll( src )
  * @param { ...longIs } arguments[...] - The target array.
  *
  * @example
- * // returns true
  * _.arraySetContainAny( [ 33, 4, 5, 'b', 'c' ], [ 1, 'b', 'c', 4 ], [ 33, 13, 3 ] );
- *
- * @example
  * // returns true
- * _.arraySetContainAny( [ 'abc', 'def', true, 26 ], [ 1, 2, 3, 4 ], [ 26, 'abc', 'def', true ] );
  *
  * @example
- * // returns false
+ * _.arraySetContainAny( [ 'abc', 'def', true, 26 ], [ 1, 2, 3, 4 ], [ 26, 'abc', 'def', true ] );
+ * // returns true
+ *
+ * @example
  * _.arraySetContainAny( [ 1, 'b', 'c', 4 ], [ 3, 5, 'd', 'e' ], [ 'abc', 33, 7 ] );
+ * // returns false
  *
  * @returns { Boolean } Returns true, if at least one of the following arrays (arguments[...]),
  * contains the first matching value from {-srcMap-}.
@@ -3862,12 +4328,12 @@ function arraySetContainNone( src )
  * @param { longIs} ins2 - array to compare with.
  *
  * @example
- * // returns false
  * _.arraySetIdentical( [ 1, 2, 3 ], [ 4, 5, 6 ] );
+ * // returns false
  *
  * @example
- * // returns true
  * _.arraySetIdentical( [ 1, 2, 4 ], [ 4, 2, 1 ] );
+ * // returns true
  *
  * @returns { Boolean } Result of comparison as boolean.
  * @function arraySetIdentical
@@ -3926,10 +4392,19 @@ let Routines =
   buffersAreIdentical,
 
   bufferMake,
+  bufferMakeUndefined,
 
   bufferBut,
+  bufferButInplace,
+  bufferSelect,
+  bufferSelectInplace,
+  bufferGrow,
+  bufferGrowInplace,
+  bufferRelength,
+  bufferRelengthInplace,
   bufferRelen,
   bufferResize,
+  bufferResizeInplace,
   bufferBytesGet,
   bufferRetype,
 
@@ -3957,7 +4432,7 @@ let Routines =
   // long repeater
 
   longDuplicate,
-  longUnduplicate,
+  longOnce,
 
   longHasUniques,
   longAreRepeatedProbe,

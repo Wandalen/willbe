@@ -72,10 +72,12 @@ function makeSimilar( src,length )
  * @param {Number} length Lengthof new array.
  *
  * @example
- * _.array.makeArrayOfLength(1);// return instance of Array
+ * _.array.makeArrayOfLength(1);
+ * // returns instance of Array
  *
  * @example
- * _.withArray.Float32.makeArrayOfLength(1);// return instance of F32x
+ * _.withArray.Float32.makeArrayOfLength(1);
+ * // returns instance of F32x
  *
  * @function makeArrayOfLength
  * @memberof wTools."wTools.array"
@@ -103,10 +105,12 @@ function makeArrayOfLength( length )
  * @param {Number} length Lengthof new array.
  *
  * @example
- * _.array.makeArrayOfLengthZeroed( 2 );//Array [ 0,0 ]
+ * _.array.makeArrayOfLengthZeroed( 2 );
+ * // returns Array [ 0,0 ]
  *
  * @example
- * _.withArray.Float32.makeArrayOfLength( 2 );// F32x [ 0,0 ]
+ * _.withArray.Float32.makeArrayOfLength( 2 );
+ * // returns F32x [ 0,0 ]
  *
  * @function makeArrayOfLengthZeroed
  * @memberof wTools."wTools.array"
@@ -140,15 +144,18 @@ function makeArrayOfLengthZeroed( length )
  *
  * @example
  * let src =  _.withArray.Float32.makeArrayOfLength( 2 );
- * _.array.arrayFromCoercing( src );//Array [ 0,0 ]
+ * _.array.arrayFromCoercing( src );
+ * // returns Array [ 0,0 ]
  *
  * @example
  * let src =  _.array.makeArrayOfLength( 2 );
- * _.withArray.Float32.arrayFromCoercing( src );// F32x [ 0,0 ]
+ * _.withArray.Float32.arrayFromCoercing( src );
+ * // returns F32x [ 0,0 ]
  *
  * @example
  * let src =  _.array.makeArrayOfLength( 2 );
- * _.array.arrayFromCoercing( src );// returns src
+ * _.array.arrayFromCoercing( src );
+ * // returns src
  *
  * @function arrayFromCoercing
  * @memberof wTools."wTools.array"

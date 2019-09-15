@@ -7,6 +7,9 @@ submodule :
   wPathBasic :
     path : npm:///wpathbasic
     enabled : 0 # submodule
+  wArraySorted :
+    path : npm:///warraysorted
+    enabled : 0 # submodule
   wPathTools :
     path : hd://.
     enabled : 0 # submodule

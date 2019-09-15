@@ -1,14 +1,14 @@
 
 submodule :
 
-  Submodule : ./out/submodule.out
+  Submodule : ./sub.out/sub.out
 
 path :
 
   proto : './proto'
   temp :
     - './super.out'
-    - './out'
+    - './sub.out'
   in : '.'
   out : './super.out'
   out.debug :

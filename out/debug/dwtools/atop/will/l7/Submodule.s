@@ -67,8 +67,13 @@ function unform()
   let module = submodule.module;
 
   if( submodule.opener )
-  submodule.opener.finit();
-  submodule.opener = null;
+  {
+    let opener = submodule.opener;
+    _.assert( opener.supermodule === submodule );
+    opener.supermodule = null;
+    submodule.opener = null;
+    opener.finit();
+  }
 
   return Parent.prototype.unform.call( submodule );
 }
@@ -92,17 +97,33 @@ function form1()
 
   _.assert( arguments.length === 0 );
   _.assert( submodule.module instanceof will.OpenedModule );
+  // _.assert( !!module.mainOpener, 'Expects specified {- module.mainOpener -} at the point' );
 
   /* */
 
-  submodule.opener = will.OpenerModule
+  // submodule.opener = will.ModuleOpener
+  // ({
+  //   will : will,
+  //   aliasName : submodule.name,
+  //   willfilesPath : submodule.longPath,
+  //   supermodule : module,
+  //   rootModule : module.rootModule,
+  // }).preform();
+
+  submodule.opener = will.ModuleOpener
   ({
     will : will,
     aliasName : submodule.name,
     willfilesPath : submodule.longPath,
-    supermodule : module,
+    supermodule : submodule,
+    // supermodule : module,
+    // supermoduleSubmodule : submodule,
     rootModule : module.rootModule,
-  }).preform();
+    // mainOpener : module.mainOpener,
+    // isMain : false,
+  });
+
+  submodule.opener = will.openerMake({ opener : submodule.opener });
 
   /* end */
 
@@ -130,8 +151,9 @@ function form3()
       // let opener = submodule.opener;
       // submodule.opener = null;
       // opener.finit();
-      submodule.opener.close();
-      submodule.formed = 2;
+      // submodule.opener.close();
+      // submodule.formed = 2;
+      submodule.close();
     }
     else
     {
@@ -151,6 +173,7 @@ function form3()
   result = submodule.open();
   else
   result = new _.Consequence().take( null );
+  // debugger;
 
   result.finally( ( err, arg ) =>
   {
@@ -179,14 +202,60 @@ function close()
   let logger = will.logger;
   let rootModule = module.rootModule;
 
-  if( !submodule.opener )
-  return submodule;
+  submodule._wantedOpened = 0;
 
-  debugger;
-  _.assert( 0, 'not tesed' );
+  if( submodule.opener )
   submodule.opener.close();
+  else
+  submodule._closeEnd();
+
+  _.assert( submodule.formed <= 2 );
 
   return submodule;
+}
+
+//
+
+function _closeEnd()
+{
+  let submodule = this;
+  let module = submodule.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let rootModule = module.rootModule;
+
+  if( submodule.formed > 2 )
+  submodule.formed = 2;
+
+  return submodule;
+}
+
+//
+
+function _moduleAdoptEnd()
+{
+  let submodule = this;
+  let module = submodule.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let rootModule = module.rootModule;
+
+  _.assert( submodule.formed < 3 );
+  _.assert( !!submodule.opener.openedModule );
+
+  if( submodule.formed === 2 && submodule._wantedOpened )
+  {
+    submodule.formed = 3;
+  }
+  else
+  {
+    debugger;
+  }
+
 }
 
 //
@@ -208,25 +277,27 @@ function open()
   _.assert( !submodule.original );
   _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
 
-  submodule._openAct
+  submodule._wantedOpened = 1;
+
+  return submodule._openAct
   ({
     longPath : submodule.longPath,
-  });
+  })
 
-  if( !submodule.opener.openedModule && !submodule.opener.error )
-  {
-    if( !submodule.enabled )
-    submodule.opener.error = _.err( 'Module is disabled' );
-    else
-    submodule.opener.error = _.err( 'Cant open module. Reason is unknown.' );
-  }
-
-  if( submodule.opener.error )
-  {
-    return new _.Consequence().error( submodule.opener.error );
-  }
-
-  return submodule.opener.openedModule.ready;
+  // if( !submodule.opener.openedModule && !submodule.opener.error )
+  // {
+  //   if( !submodule.enabled )
+  //   submodule.opener.error = _.err( 'Module is disabled' );
+  //   else
+  //   submodule.opener.error = _.err( 'Cant open module. Reason is unknown.' );
+  // }
+  //
+  // if( submodule.opener.error )
+  // {
+  //   return new _.Consequence().error( submodule.opener.error );
+  // }
+  //
+  // return submodule.opener.openedModule.ready;
 }
 
 //
@@ -253,40 +324,23 @@ function _openAct( o )
 
   submodule.opener.willfilesPath = o.longPath;
 
-  // submodule.opener = will.OpenerModule
-  // ({
-  //   will : will,
-  //   aliasName : submodule.name,
-  //   willfilesPath : o.longPath,
-  //   supermodule : module,
-  //   rootModule : module.rootModule,
-  // }).preform();
-
-  // xxx : opener onReady?
-
   if( !submodule.enabled )
   return submodule.opener;
 
-  if( !submodule.opener.moduleFindTry() )
-  return submodule.opener;
+  // if( !submodule.opener.find({ throwing : 0 }) )
+  // return submodule.opener;
 
-  // if( module.stager.stageStateSkipping( 'opened' ) ) // yyy
-  // submodule.opener.openedModule.stager.stageStateSkipping( 'opened', 1 );
-
-  submodule.opener.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
-  submodule.opener.openedModule.stager.stageStatePausing( 'picked', 0 );
-  submodule.opener.openedModule.stager.tick();
-
-  submodule.opener.openedModule.ready.finally( ( err, arg ) =>
+  return submodule.opener.open({ throwing : 1 })
+  .finally( ( err, arg ) =>
   {
     if( err )
-    throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.opener.dirPath ), '\n', err );
+    {
+      // if( !submodule.enabled )
+      // submodule.opener.error = _.err( 'Module is disabled' );
+      throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.opener.dirPath ), '\n', err );
+    }
     return arg;
   });
-
-  /* */
-
-  return submodule.opener;
 }
 
 _openAct.defaults =
@@ -333,20 +387,18 @@ function isDownloadedGet()
 
 //
 
-function openedModuleSet( opener )
+function openerSet( opener )
 {
   let submodule = this;
 
-  if( opener === submodule[ openedModuleSymbol ] )
+  if( opener === submodule[ openerSymbol ] )
   return;
 
-  submodule[ openedModuleSymbol ] = null;
+  submodule[ openerSymbol ] = null;
 
   if( opener )
   {
-
-    submodule[ openedModuleSymbol ] = opener;
-
+    submodule[ openerSymbol ] = opener;
   }
 
 }
@@ -408,7 +460,7 @@ function moduleSet( src )
 // exporter
 // --
 
-function dataExport( o )
+function structureExport( o )
 {
   let submodule = this;
   let module = submodule.module;
@@ -416,7 +468,7 @@ function dataExport( o )
   let will = module.will;
   let rootModule = module.rootModule;
 
-  let result = Parent.prototype.dataExport.apply( this, arguments );
+  let result = Parent.prototype.structureExport.apply( this, arguments );
 
   if( result === undefined )
   return result;
@@ -424,7 +476,7 @@ function dataExport( o )
   return result;
 }
 
-dataExport.defaults = Object.create( _.Will.Resource.prototype.dataExport.defaults );
+structureExport.defaults = Object.create( _.Will.Resource.prototype.structureExport.defaults );
 
 //
 
@@ -436,7 +488,7 @@ function infoExport()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let resultMap = Parent.prototype.dataExport.call( submodule );
+  let resultMap = Parent.prototype.structureExport.call( submodule );
   let tab = '  ';
 
   if( submodule.opener )
@@ -517,16 +569,25 @@ function errorNotFound( err )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
+  let logger = will.logger;
 
   if( will.verbosity >= 3 )
-  logger.error( ' ' + _.color.strFormat( '!', 'negative' ) + ' Failed to read ' + submodule.decoratedNickName + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading' );
+  if( !submodule.module.rootModule || submodule.module.rootModule === submodule.module )
+  logger.error
+  (
+      // ' ' + _.color.strFormat( '!', 'negative' ) + ' Failed to read ' + submodule.decoratedNickName
+    ' ' + '!' + ' Failed to read ' + submodule.decoratedNickName
+    + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading'
+    // + '\n' + err.originalMessage
+  );
+
+  err = _.err( err );
 
   if( will.verbosity >= 5 || !submodule.opener || submodule.opener.isOpened() )
   {
     if( will.verbosity < 5 )
-    _.errLogOnce( _.errBriefly( err ) );
-    else
-    _.errLogOnce( err );
+    err = _.errBrief( err );
+    logger.log( _.errOnce( err ) );
   }
   else
   {
@@ -571,7 +632,7 @@ let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 // relations
 // --
 
-let openedModuleSymbol = Symbol.for( 'opener' );
+let openerSymbol = Symbol.for( 'opener' );
 let dataSymbol = Symbol.for( 'data' );
 let moduleSymbol = Symbol.for( 'module' );
 let pathSymbol = Symbol.for( 'path' );
@@ -597,6 +658,7 @@ let Associates =
 let Restricts =
 {
   opener : null,
+  _wantedOpened : 0,
 }
 
 let Medials =
@@ -614,7 +676,7 @@ let Accessors =
 {
   isAvailable : { getter : isAvailableGet, readOnly : 1 },
   isDownloaded : { getter : isDownloadedGet, readOnly : 1 },
-  opener : { setter : openedModuleSet },
+  opener : { setter : openerSet },
   longPath : { getter : longPathGet },
   path : { setter : pathSet },
   module : { combining : 'rewrite' },
@@ -643,6 +705,9 @@ let Extend =
   form1,
   form3,
 
+  close,
+  _closeEnd,
+  _moduleAdoptEnd,
   open,
   _openAct,
 
@@ -650,7 +715,7 @@ let Extend =
 
   isAvailableGet,
   isDownloadedGet,
-  openedModuleSet,
+  openerSet,
   longPathGet,
   pathSet,
   dataGet,
@@ -659,7 +724,7 @@ let Extend =
 
   // exporter
 
-  dataExport,
+  structureExport,
   infoExport,
 
   // etc

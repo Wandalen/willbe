@@ -6,9 +6,9 @@
  * @file aPredefined.s.
  */
 
-// /**
-//   @module Tools/base/Fundamental - Collection of general purpose tools for solving problems. Fundamentally extend JavaScript without corrupting it, so may be used solely or in conjunction with another module of such kind. Tools contain hundreds of routines to operate effectively with Array, SortedArray, Map, RegExp, Buffer, Time, String, Number, Routine, Error and other fundamental types. The module provides advanced tools for diagnostics and errors handling. Use it to have a stronger foundation for the application.
-// */
+/**
+  @module Tools/base/Fundamental - Collection of general purpose tools for solving problems. Fundamentally extend JavaScript without corrupting it, so may be used solely or in conjunction with another module of such kind. Tools contain hundreds of routines to operate effectively with Array, SortedArray, Map, RegExp, Buffer, Time, String, Number, Routine, Error and other fundamental types. The module provides advanced tools for diagnostics and errors handling. Use it to have a stronger foundation for the application.
+*/
 
 /**
  * wTools - Generic purpose tools of base level for solving problems in Java Script.
@@ -27,10 +27,8 @@ let _wasGlobal = _global._global_ || _global;
 _global = _wasGlobal;
 _global._global_ = _wasGlobal;
 
-
 // verification
 
-// if( !_global_.WTOOLS_PRIVATE )
 if( _global_.__GLOBAL_WHICH__ === 'real' )
 {
 
@@ -58,23 +56,27 @@ if( !_realGlobal.Config )
 _realGlobal.Config = { debug : true }
 if( _realGlobal.Config.debug === undefined )
 _realGlobal.Config.debug = true;
-if( _realGlobal.Config.platform === undefined )
-_realGlobal.Config.platform = ( ( typeof module !== 'undefined' ) && ( typeof process !== 'undefined' ) ) ? 'nodejs' : 'browser';
+if( _realGlobal.Config.interpreter === undefined )
+if( ( ( typeof module !== 'undefined' ) && ( typeof process !== 'undefined' ) ) )
+_realGlobal.Config.interpreter = 'njs';
+else
+_realGlobal.Config.interpreter = 'browser';
 if( _realGlobal.Config.isWorker === undefined )
-_realGlobal.Config.isWorker = !!( typeof self !== 'undefined' && self.self === self && typeof importScripts !== 'undefined' );
+if( !!( typeof self !== 'undefined' && self.self === self && typeof importScripts !== 'undefined' ) )
+_realGlobal.Config.isWorker = true;
+else
+_realGlobal.Config.isWorker = false;
 
 if( !_global_.Config )
 _global_.Config = { debug : true }
 if( _global_.Config.debug === undefined )
 _global_.Config.debug = true;
-if( _global_.Config.platform === undefined )
-_global_.Config.platform = ( ( typeof module !== 'undefined' ) && ( typeof process !== 'undefined' ) ) ? 'nodejs' : 'browser';
+if( _global_.Config.interpreter === undefined )
+_global_.Config.interpreter = _realGlobal.Config.interpreter;
 if( _global_.Config.isWorker === undefined )
-_global_.Config.isWorker = !!( typeof self !== 'undefined' && self.self === self && typeof importScripts !== 'undefined' );
+_global_.Config.isWorker = _realGlobal.Config.isWorker
 
-// if( !_global_.WTOOLS_PRIVATE  )
 if( _global_.__GLOBAL_WHICH__ === 'real' )
-// if( !_global_.Underscore && _global_._ )
 if( _global_._ )
 {
   _global_.Underscore = _global_._;
@@ -104,27 +106,27 @@ Self.unroll = Symbol.for( 'unroll' );
 
 // type aliases
 
-_global_.U32x = Uint32Array;
-_global_.U16x = Uint16Array;
-_global_.U8x = Uint8Array;
-_global_.U8ClampedX = Uint8ClampedArray;
+_realGlobal_.U32x = Uint32Array;
+_realGlobal_.U16x = Uint16Array;
+_realGlobal_.U8x = Uint8Array;
+_realGlobal_.U8ClampedX = Uint8ClampedArray;
 
-_global_.Ux = _global_.U32x;
+_realGlobal_.Ux = _realGlobal_.U32x;
 
-_global_.I32x = Int32Array;
-_global_.I16x = Int16Array;
-_global_.I8x = Int8Array;
-_global_.Ix = _global_.I32x;
+_realGlobal_.I32x = Int32Array;
+_realGlobal_.I16x = Int16Array;
+_realGlobal_.I8x = Int8Array;
+_realGlobal_.Ix = _realGlobal_.I32x;
 
-_global_.F64x = Float64Array;
-_global_.F32x = Float32Array;
-_global_.Fx = _global_.F32x;
+_realGlobal_.F64x = Float64Array;
+_realGlobal_.F32x = Float32Array;
+_realGlobal_.Fx = _realGlobal_.F32x;
 
 if( typeof Buffer !== 'undefined' )
-_global_.BufferNode = Buffer;
-_global_.BufferRaw = ArrayBuffer;
-_global_.BufferRawShared = SharedArrayBuffer;
-_global_.BufferView = DataView;
+_realGlobal_.BufferNode = Buffer;
+_realGlobal_.BufferRaw = ArrayBuffer;
+_realGlobal_.BufferRawShared = SharedArrayBuffer;
+_realGlobal_.BufferView = DataView;
 
 // --
 // export

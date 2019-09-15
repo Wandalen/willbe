@@ -47,7 +47,7 @@ function strCount( test )
 
   test.close( 'string' );
 
-  /* */
+  /* - */
 
   test.open( 'regexp' );
 
@@ -78,55 +78,55 @@ function strCount( test )
 
   test.close( 'regexp' );
 
-  /* */
+  /* - */
 
   if( !Config.debug )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCount( );
   } );
 
   test.case = 'first argument is wrong';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCount( [  ], '\n' );
   } );
 
   test.case = 'second argument is wrong';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCount( 'abc\ndef\nghi', 13 );
   } );
 
   test.case = 'not enough arguments';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCount( 'abc\ndef\nghi' );
   } );
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strCount( '1', '2', '3' );
   });
 
   test.case = 'invalid first argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strCount( 123, '1' );
   });
 
   test.case = 'invalid second arg type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strCount( 'one two', 123 );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strCount();
   });
@@ -342,26 +342,26 @@ function strRemoveBegin( test )
   return;
 
   test.case = 'without arguments';
-  test.shouldThrowError( () => _.strRemoveBegin() );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemoveBegin() );
 
   test.case = 'extra arguments';
-  test.shouldThrowError( () => _.strRemoveBegin( 'abcd','a','a' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemoveBegin( 'abcd','a','a' ) );
 
   test.case = 'invalid type of src argument';
-  test.shouldThrowError( () => _.strRemoveBegin( 1, '' ) );
-  test.shouldThrowError( () => _.strRemoveBegin( 1,'2' ) );
-  test.shouldThrowError( () => _.strRemoveBegin( [ 'str', 1 ], '2' ) );
-  test.shouldThrowError( () => _.strRemoveBegin( [ 'str', /ex/ ], '2' ) );
-  test.shouldThrowError( () => _.strRemoveBegin( [ 'str', true ], '2' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemoveBegin( 1, '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemoveBegin( 1,'2' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemoveBegin( [ 'str', 1 ], '2' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemoveBegin( [ 'str', /ex/ ], '2' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemoveBegin( [ 'str', true ], '2' ) );
 
   test.case = 'invalid type of begin argument';
-  test.shouldThrowError( () => _.strRemoveBegin( 'a', 1 ) );
-  test.shouldThrowError( () => _.strRemoveBegin( 'a', null ) );
-  test.shouldThrowError( () => _.strRemoveBegin( 'aaa', [ ' a', 2 ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemoveBegin( 'a', 1 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemoveBegin( 'a', null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemoveBegin( 'aaa', [ ' a', 2 ] ) );
 
   test.case = 'invalid type of arguments';
-  test.shouldThrowError( () => _.strRemoveBegin( undefined, undefined ) );
-  test.shouldThrowError( () => _.strRemoveBegin( null, null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemoveBegin( undefined, undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemoveBegin( null, null ) );
 }
 
 //
@@ -542,32 +542,32 @@ function strRemoveEnd( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strRemoveEnd( 1, '' ) );
-  test.shouldThrowError( () => _.strRemoveEnd( 'a', 1 ) );
-  test.shouldThrowError( () => _.strRemoveEnd() );
-  test.shouldThrowError( () => _.strRemoveEnd( undefined, undefined ) );
-  test.shouldThrowError( () => _.strRemoveEnd( null, null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemoveEnd( 1, '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemoveEnd( 'a', 1 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemoveEnd() );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemoveEnd( undefined, undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemoveEnd( null, null ) );
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strRemoveEnd( 'one','two','three' );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strRemoveEnd( );
   });
 
   test.case = 'first argument is wrong';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strRemoveEnd( 1,'second' );
   });
 
   test.case = 'second argument is wrong';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strRemoveEnd( 'first',2 );
   });
@@ -755,32 +755,32 @@ function strRemove( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strRemove( 1, '' ) );
-  test.shouldThrowError( () => _.strRemove( 'a', 1 ) );
-  test.shouldThrowError( () => _.strRemove() );
-  test.shouldThrowError( () => _.strRemove( undefined, undefined ) );
-  test.shouldThrowError( () => _.strRemove( null, null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemove( 1, '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemove( 'a', 1 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemove() );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemove( undefined, undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strRemove( null, null ) );
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strRemove( 'one','two','three' );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strRemove( );
   });
 
   test.case = 'first argument is wrong';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strRemove( 1,'second' );
   });
 
   test.case = 'second argument is wrong';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strRemove( 'first',2 );
   });
@@ -900,19 +900,19 @@ function strReplaceBegin( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strReplaceBegin() );
-  test.shouldThrowError( () => _.strReplaceBegin( 1, '', '' ) );
-  test.shouldThrowError( () => _.strReplaceBegin( '' ) );
-  test.shouldThrowError( () => _.strReplaceBegin( 1, '', '', '' ) );
-  test.shouldThrowError( () => _.strReplaceBegin( 'a', 1, '' ) );
-  test.shouldThrowError( () => _.strReplaceBegin( 'a', 'a', 1 ) );
-  test.shouldThrowError( () => _.strReplaceBegin( 'a', [ 'x', 1 ], 'a' ) );
-  test.shouldThrowError( () => _.strReplaceBegin( 'a', [ 'b', 'a' ], [ 'x', 1 ] ) );
-  test.shouldThrowError( () => _.strReplaceBegin( 'a', [ 'a' ], [ 'x', '1' ] ) );
-  test.shouldThrowError( () => _.strReplaceBegin( 'string', 'begin', null ) );
-  test.shouldThrowError( () => _.strReplaceBegin( 'string', 'begin', undefined ) );
-  test.shouldThrowError( () => _.strReplaceBegin( 'string', undefined, 'ins' ) );
-  test.shouldThrowError( () => _.strReplaceBegin( undefined, 'begin', 'ins' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceBegin() );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceBegin( 1, '', '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceBegin( '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceBegin( 1, '', '', '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceBegin( 'a', 1, '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceBegin( 'a', 'a', 1 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceBegin( 'a', [ 'x', 1 ], 'a' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceBegin( 'a', [ 'b', 'a' ], [ 'x', 1 ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceBegin( 'a', [ 'a' ], [ 'x', '1' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceBegin( 'string', 'begin', null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceBegin( 'string', 'begin', undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceBegin( 'string', undefined, 'ins' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceBegin( undefined, 'begin', 'ins' ) );
 }
 
 //
@@ -1028,19 +1028,19 @@ function strReplaceEnd( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strReplaceEnd() );
-  test.shouldThrowError( () => _.strReplaceEnd( 1, '', '' ) );
-  test.shouldThrowError( () => _.strReplaceEnd( '' ) );
-  test.shouldThrowError( () => _.strReplaceEnd( 1, '', '', '' ) );
-  test.shouldThrowError( () => _.strReplaceEnd( 'a', 1, '' ) );
-  test.shouldThrowError( () => _.strReplaceEnd( 'a', 'a', 1 ) );
-  test.shouldThrowError( () => _.strReplaceEnd( 'a', [ 'x', 1 ], 'a' ) );
-  test.shouldThrowError( () => _.strReplaceEnd( 'a', [ 'a' ], [ 1 ] ) );
-  test.shouldThrowError( () => _.strReplaceEnd( 'a', [ 'b', 'c' ], [ 'c' ] ) );
-  test.shouldThrowError( () => _.strReplaceEnd( 'string', 'end', null ) );
-  test.shouldThrowError( () => _.strReplaceEnd( 'string', 'end', undefined ) );
-  test.shouldThrowError( () => _.strReplaceEnd( 'string', undefined, 'ins' ) );
-  test.shouldThrowError( () => _.strReplaceEnd( undefined, 'end', 'ins' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceEnd() );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceEnd( 1, '', '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceEnd( '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceEnd( 1, '', '', '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceEnd( 'a', 1, '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceEnd( 'a', 'a', 1 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceEnd( 'a', [ 'x', 1 ], 'a' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceEnd( 'a', [ 'a' ], [ 1 ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceEnd( 'a', [ 'b', 'c' ], [ 'c' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceEnd( 'string', 'end', null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceEnd( 'string', 'end', undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceEnd( 'string', undefined, 'ins' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplaceEnd( undefined, 'end', 'ins' ) );
 }
 
 //
@@ -1138,21 +1138,21 @@ function strReplace( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strReplace() );
-  test.shouldThrowError( () => _.strReplace( 1, '', '' ) );
-  test.shouldThrowError( () => _.strReplace( '' ) );
-  test.shouldThrowError( () => _.strReplace( 1, '', '', '' ) );
-  test.shouldThrowError( () => _.strReplace( 'a', 1, '' ) );
-  test.shouldThrowError( () => _.strReplace( 'a', 'a', 1 ) );
-  test.shouldThrowError( () => _.strReplace( 'a', [ 'x', 1 ], 'a' ) );
-  test.shouldThrowError( () => _.strReplace( 'a', [ 'a' ], [ 1 ] ) );
-  test.shouldThrowError( () => _.strReplace( 'a', [ 'b', 'c' ], [ 'c' ] ) );
-  test.shouldThrowError( () => _.strReplace( 'string', 'sub', null ) );
-  test.shouldThrowError( () => _.strReplace( 'string', 'sub', undefined ) );
-  test.shouldThrowError( () => _.strReplace( 'string', null, 'ins' ) );
-  test.shouldThrowError( () => _.strReplace( 'string', undefined, 'ins' ) );
-  test.shouldThrowError( () => _.strReplace( null, 'sub', 'ins' ) );
-  test.shouldThrowError( () => _.strReplace( undefined, 'sub', 'ins' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplace() );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplace( 1, '', '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplace( '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplace( 1, '', '', '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplace( 'a', 1, '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplace( 'a', 'a', 1 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplace( 'a', [ 'x', 1 ], 'a' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplace( 'a', [ 'a' ], [ 1 ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplace( 'a', [ 'b', 'c' ], [ 'c' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplace( 'string', 'sub', null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplace( 'string', 'sub', undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplace( 'string', null, 'ins' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplace( 'string', undefined, 'ins' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplace( null, 'sub', 'ins' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strReplace( undefined, 'sub', 'ins' ) );
 }
 
 //
@@ -1218,15 +1218,15 @@ function strPrependOnce( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strPrependOnce() );
-  test.shouldThrowError( () => _.strPrependOnce( null, '' ) );
-  test.shouldThrowError( () => _.strPrependOnce( '', null ) );
-  test.shouldThrowError( () => _.strPrependOnce( NaN, '' ) );
-  test.shouldThrowError( () => _.strPrependOnce( '', NaN ) );
-  test.shouldThrowError( () => _.strPrependOnce( 3, '' ) );
-  test.shouldThrowError( () => _.strPrependOnce( '', 3 ) );
-  test.shouldThrowError( () => _.strPrependOnce( [], '' ) );
-  test.shouldThrowError( () => _.strPrependOnce( '', [] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strPrependOnce() );
+  test.shouldThrowErrorOfAnyKind( () => _.strPrependOnce( null, '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strPrependOnce( '', null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strPrependOnce( NaN, '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strPrependOnce( '', NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strPrependOnce( 3, '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strPrependOnce( '', 3 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strPrependOnce( [], '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strPrependOnce( '', [] ) );
 
 }
 
@@ -1293,15 +1293,15 @@ function strAppendOnce( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strAppendOnce() );
-  test.shouldThrowError( () => _.strAppendOnce( null, '' ) );
-  test.shouldThrowError( () => _.strAppendOnce( '', null ) );
-  test.shouldThrowError( () => _.strAppendOnce( NaN, '' ) );
-  test.shouldThrowError( () => _.strAppendOnce( '', NaN ) );
-  test.shouldThrowError( () => _.strAppendOnce( 3, '' ) );
-  test.shouldThrowError( () => _.strAppendOnce( '', 3 ) );
-  test.shouldThrowError( () => _.strAppendOnce( [], '' ) );
-  test.shouldThrowError( () => _.strAppendOnce( '', [] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strAppendOnce() );
+  test.shouldThrowErrorOfAnyKind( () => _.strAppendOnce( null, '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strAppendOnce( '', null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strAppendOnce( NaN, '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strAppendOnce( '', NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strAppendOnce( 3, '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strAppendOnce( '', 3 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strAppendOnce( [], '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strAppendOnce( '', [] ) );
 
 }
 
@@ -1326,31 +1326,31 @@ function strReplaceWords( test )
   return;
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strReplaceWords( '1', '2');
   });
 
   test.case = 'invalid argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strReplaceWords( 123,[],[] );
   });
 
   test.case = 'invalid arrays length';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strReplaceWords( 'one two',[ 'one' ],[ 'one', 'two' ] );
   });
 
   test.case = 'invalid second arg type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strReplaceWords( 'one two',5,[ 'one', 'two' ] );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strReplaceWords();
   });
@@ -1447,49 +1447,49 @@ function strCommonLeft( test )
   return;
 
   test.case = 'ins is array';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCommonLeft( ['a','b','c'], 'abd', 'abc', 'ada' );
   });
 
   test.case = 'ins is number';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCommonLeft( 3, 'abd', 'abc', 'ada' );
   });
 
   test.case = 'ins is regExp';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCommonLeft( /^a/, 'abd', 'abc', 'ada' );
   });
 
   test.case = 'ins is NaN';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCommonLeft( NaN, 'abd', 'abc', 'ada' );
   });
 
   test.case = 'ins is null';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCommonLeft( null, 'abd', 'abc', 'ada' );
   });
 
   test.case = 'One arg null';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCommonLeft( 'abd', 'abc', 'ada', null );
   });
 
   test.case = 'ins is undefined';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCommonLeft( undefined, 'abd', 'abc', 'ada' );
   });
 
   test.case = 'One arg undefined';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCommonLeft( 'abd', 'abc', 'ada', undefined );
   });
@@ -1584,49 +1584,49 @@ function strCommonRight( test )
   return;
 
   test.case = 'ins is array';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCommonRight( ['a','b','c'], 'abd', 'abc', 'ada' );
   });
 
   test.case = 'ins is number';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCommonRight( 3, 'abd', 'abc', 'ada' );
   });
 
   test.case = 'ins is regExp';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCommonRight( /^a/, 'abd', 'abc', 'ada' );
   });
 
   test.case = 'ins is NaN';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCommonRight( NaN, 'abd', 'abc', 'ada' );
   });
 
   test.case = 'ins is null';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCommonRight( null, 'abd', 'abc', 'ada' );
   });
 
   test.case = 'One arg null';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCommonRight( 'abd', 'abc', 'ada', null );
   });
 
   test.case = 'ins is undefined';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCommonRight( undefined, 'abd', 'abc', 'ada' );
   });
 
   test.case = 'One arg undefined';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCommonRight( 'abd', 'abc', 'ada', undefined );
   });
@@ -1656,19 +1656,19 @@ function strForRange( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strForRange( );
   } );
 
   test.case = 'argument is wrong';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strForRange( 'wrong argument' );
   } );
 
   test.case = 'too many arguments';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strForRange( [ 1, 10 ], 'redundant argument' );
   } );
@@ -1736,25 +1736,25 @@ function strStrShort( test )
   return;
 
   test.case = 'invalid first argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strStrShort( 1, 5 );
   });
 
   test.case = 'invalid second argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strStrShort( 'string', '0' );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strStrShort();
   });
 
   test.case = 'unknown property provided';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strStrShort( { src : 'string', limit : 4, wrap : 0, fixed : 5 } );
   });
@@ -1788,37 +1788,37 @@ function strCapitalize( test )
   return;
 
   test.case = 'invalid arguments length';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strCapitalize( 'first','wrond argument' );
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strCapitalize( 777 );
   });
 
   test.case = 'no argument provided';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strCapitalize();
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCapitalize( );
   } );
 
   test.case = 'argument is wrong';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCapitalize( 33 );
   } );
 
   test.case = 'too many arguments';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strCapitalize( 'object', 'redundant argument' );
   } );
@@ -1851,19 +1851,19 @@ function strUnicodeEscape( test )
   return;
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strUnicodeEscape( '1', '2', '3' );
   });
 
   test.case = 'invalid  argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strUnicodeEscape( 123 );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strUnicodeEscape();
   });
@@ -2351,49 +2351,49 @@ function strRemoveAllSpaces( test )
   return;
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strRemoveAllSpaces( '1', '2', '3' );
   });
 
   test.case = 'invalid argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strRemoveAllSpaces( 123 );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strRemoveAllSpaces();
   });
 
   test.case = 'argument is wrong';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strRemoveAllSpaces( 13 );
   } );
 
   test.case = 'too many arguments';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strRemoveAllSpaces( 'a b c d e f', ',', 'redundant argument' );
   } );
 
   test.case = 'Null argument';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strRemoveAllSpaces( null );
   } );
 
   test.case = 'NaN argument';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strRemoveAllSpaces( NaN );
   } );
 
   test.case = 'Regexp argument';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strRemoveAllSpaces( /^a/ );
   } );
@@ -2452,43 +2452,43 @@ function strStripEmptyLines( test )
   return;
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strStripEmptyLines( '1', '2', '3' );
   });
 
   test.case = 'invalid argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strStripEmptyLines( 123 );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strStripEmptyLines();
   });
 
   test.case = 'null argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strStripEmptyLines( null );
   });
 
   test.case = 'NaN argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strStripEmptyLines( NaN );
   });
 
   test.case = 'Regexp argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strStripEmptyLines( /a?$/ );
   });
 
   test.case = 'Array with wrong arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strStripEmptyLines( [ null, NaN, 3, /a?$/ ] );
   });
@@ -2518,25 +2518,25 @@ function strSplitStrNumber( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strSplitStrNumber( );
   } );
 
   test.case = 'argument is wrong';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strSplitStrNumber( [  ] );
   } );
 
   test.case = 'argument is wrong';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strSplitStrNumber( 13 );
   } );
 
   test.case = 'too many arguments';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strSplitStrNumber( 'abc3', 'redundant argument' );
   } );
@@ -2810,7 +2810,7 @@ function strSplitsCoupledGroup( test )
   /* - */
 
   test.case = 'uncoupled postfix';
-  test.shouldThrowError( () =>
+  test.shouldThrowErrorOfAnyKind( () =>
   {
     _.strSplitsCoupledGroup
     ({
@@ -2821,7 +2821,7 @@ function strSplitsCoupledGroup( test )
   });
 
   test.case = 'uncoupled prefix';
-  test.shouldThrowError( () =>
+  test.shouldThrowErrorOfAnyKind( () =>
   {
     _.strSplitsCoupledGroup
     ({
@@ -4037,49 +4037,49 @@ function strSplitFast( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strSplitFast( );
   } );
 
   test.case = 'argument is wrong';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strSplitFast( [  ] );
   } );
 
   test.case = 'argument is wrong';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strSplitFast( 13 );
   } );
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSplitFast( '1', '2', '3' );
   });
 
   test.case = 'invalid argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSplitFast( 123 );
   });
 
   test.case = 'invalid option type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSplitFast( { src : 3 } );
   });
 
   test.case = 'invalid option defined';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSplitFast( { src : 'word', delimeter : 0, left : 1 } );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSplitFast();
   });
@@ -5044,7 +5044,7 @@ function strSplitFastRegexp( test )
   return;
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSplitFast( /1/, /2/, '3' );
   });
@@ -6900,19 +6900,19 @@ function strSplitCamel( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( () => _.strSplitCamel() );
+  test.shouldThrowErrorOfAnyKind( () => _.strSplitCamel() );
 
   test.case = 'argument is wrong';
-  test.shouldThrowError( () => _.strSplitCamel( [] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strSplitCamel( [] ) );
 
   test.case = 'argument is wrong';
-  test.shouldThrowError( () => _.strSplitCamel( 13 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strSplitCamel( 13 ) );
 
   test.case = 'invalid option type';
-  test.shouldThrowError( () => _.strSplitCamel( { src : null } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strSplitCamel( { src : null } ) );
 
   test.case = 'invalid option defined';
-  test.shouldThrowError( () => _.strSplitCamel( [ { src : 'word' } ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strSplitCamel( [ { src : 'word' } ] ) );
 }
 
 //
@@ -7307,49 +7307,49 @@ function strSplitCamel( test )
 //   return;
 //
 //   test.case = 'no arguments';
-//   test.shouldThrowError( function( )
+//   test.shouldThrowErrorOfAnyKind( function( )
 //   {
 //     _.strSplitNaive( );
 //   } );
 //
 //   test.case = 'argument is wrong';
-//   test.shouldThrowError( function( )
+//   test.shouldThrowErrorOfAnyKind( function( )
 //   {
 //     _.strSplitNaive( [  ] );
 //   } );
 //
 //   test.case = 'argument is wrong';
-//   test.shouldThrowError( function( )
+//   test.shouldThrowErrorOfAnyKind( function( )
 //   {
 //     _.strSplitNaive( 13 );
 //   } );
 //
 //   test.case = 'invalid arguments count';
-//   test.shouldThrowError( function()
+//   test.shouldThrowErrorOfAnyKind( function()
 //   {
 //     _.strSplitNaive( '1', '2', '3' );
 //   });
 //
 //   test.case = 'invalid argument type';
-//   test.shouldThrowError( function()
+//   test.shouldThrowErrorOfAnyKind( function()
 //   {
 //     _.strSplitNaive( 123 );
 //   });
 //
 //   test.case = 'invalid option type';
-//   test.shouldThrowError( function()
+//   test.shouldThrowErrorOfAnyKind( function()
 //   {
 //     _.strSplitNaive( { src : 3 } );
 //   });
 //
 //   test.case = 'invalid option defined';
-//   test.shouldThrowError( function()
+//   test.shouldThrowErrorOfAnyKind( function()
 //   {
 //     _.strSplitNaive( { src : 'word', delimeter : 0, left : 1 } );
 //   });
 //
 //   test.case = 'no arguments';
-//   test.shouldThrowError( function()
+//   test.shouldThrowErrorOfAnyKind( function()
 //   {
 //     _.strSplitNaive();
 //   });
@@ -7410,103 +7410,103 @@ function strSub( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSub();
   });
 
   test.case = 'Too many arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSub( '1', '2', '3' );
   });
 
   test.case = 'Too many ranges';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSub( 'Hello world', [ 0, 1 ], [ 2, 3 ] );
   });
 
   test.case = 'Not enough arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSub( '1' );
   });
 
   test.case = 'invalid argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSub( 123, [ 0, 1 ] );
   });
 
   test.case = 'null argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSub( null, [ 0, 1 ] );
   });
 
   test.case = 'NaN argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSub( NaN, [ 0, 1 ] );
   });
 
   test.case = 'Regexp argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSub( /a?$/, [ 0, 1 ] );
   });
 
   test.case = 'invalid argument range';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSub( 'hi ', 123 );
   });
 
   test.case = 'null range';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSub( 'good morning', null );
   });
 
   test.case = 'NaN range';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSub( 'good afternoon', NaN );
   });
 
   test.case = 'Regexp range';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSub( 'good night', /a?$/ );
   });
 
   test.case = 'Array with wrong arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSub( [ null, NaN, 3, /a?$/ ], [ 0, 1 ] );
   });
 
   test.case = 'Range array with wrong arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSub( [ 'Hello', 'world' ], [ null, NaN ] );
   });
 
   test.case = 'Range array empty';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSub( [ 'Hello', 'world' ], [ ] );
   });
 
   test.case = 'Range array with not enough arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSub( [ 'Hello', 'world' ], [ 2 ] );
   });
 
   test.case = 'Range array with too many arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strSub( [ 'Hello', 'world' ], [ 2, 3, 4 ] );
   });
@@ -7755,7 +7755,7 @@ function strExtractInlined( test )
   return;
 
   test.case = 'too many arguments';
-  test.shouldThrowError( () => { debugger; _.strExtractInlined( '',{},'' ) } );
+  test.shouldThrowErrorOfAnyKind( () => { debugger; _.strExtractInlined( '',{},'' ) } );
 
 }
 
@@ -7916,91 +7916,91 @@ function strUnjoin( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strUnjoin();
   });
 
   test.case = 'Not enough arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strUnjoin( '1' );
   });
 
   test.case = 'Too many arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strUnjoin( '1', '2', '3' );
   });
 
   test.case = 'invalid first argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strUnjoin( 123, [] );
   });
 
   test.case = 'invalid second arg type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strUnjoin( 'one two', 123 );
   });
 
   test.case = 'invalid array element type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strUnjoin( 'one two', [ 1, 'two' ] );
   });
 
   test.case = 'null first argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strUnjoin( null, [] );
   });
 
   test.case = 'null second arg type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strUnjoin( 'one two', null );
   });
 
   test.case = 'null array element type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strUnjoin( 'one two', [ null, 'two' ] );
   });
 
   test.case = 'NaN first argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strUnjoin( NaN, [] );
   });
 
   test.case = 'NaN second arg type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strUnjoin( 'one two', NaN );
   });
 
   test.case = 'NaN array element type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strUnjoin( 'one two', [ NaN, 'two' ] );
   });
 
   test.case = 'RegExp first argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strUnjoin( /\d$/, [] );
   });
 
   test.case = 'RegExp second arg type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strUnjoin( 'one two', /\D$/ );
   });
 
   test.case = 'RegExp array element type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strUnjoin( 'one two', [ /^\d/, 'two' ] );
   });
@@ -8114,127 +8114,127 @@ function strDup( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strDup();
   });
 
   test.case = 'second argument is not provided';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strDup( 'a' );
   } );
 
   test.case = 'first argument is not provided';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strDup( 3 );
   } );
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strDup( '1' );
   });
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strDup( '1', '2', 3 );
   });
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strDup( '1', '2', '3' );
   });
 
   test.case = 'invalid first argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strDup( 123, 1 );
   });
 
   test.case = 'times is not number';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strDup( 'ab', [ 3, 4 ] );
   });
 
   test.case = 'invalid second arg type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strDup( 'one', 'two'  );
   });
 
   test.case = 'second argument is wrong';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strDup( 'a', 'wrong argument' );
   } );
 
   test.case = 'invalid first argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strDup( 1, 2 );
   });
 
   test.case = 'invalid first argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strDup( [ 1, 2 ], 2 );
   });
 
   test.case = 'invalid first argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strDup( [ '1', 2 ], 2 );
   });
 
   test.case = 'invalid second argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strDup( '1', '2' );
   });
 
   test.case = 'null argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strDup( null, 2 );
   });
 
   test.case = 'null second argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strDup( '2', null );
   });
 
   test.case = 'undefined argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strDup( undefined, 2 );
   });
 
   test.case = 'undefined second argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strDup( '2', undefined );
   });
 
   test.case = 'NaN argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strDup( NaN, 2 );
   });
 
   test.case = 'Regexp argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strDup( /^\d/, 2 );
   });
 
   test.case = 'regExp second argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strDup( '2', /^\d/ );
   });
@@ -8380,85 +8380,85 @@ function strJoin( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strJoin( );
   });
 
   test.case = 'Too many arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strJoin( '1', '2', '3' );
   });
 
   test.case = 'Empty arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strJoin( [ ], [ ] );
   });
 
   test.case = 'invalid argument type in array';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strJoin([ { a : 1 }, [ 1 ], [ 2 ] ]);
   });
 
   test.case = 'null argument in array';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strJoin([ '1', null ]);
   });
 
   test.case = 'null argument in array';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strJoin([ '1', undefined ]);
   });
 
   test.case = 'RegExp argument in array';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strJoin([ '1', /a?/ ]);
   });
 
   test.case = 'arrays with different lengths in array';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strJoin([ [ 1, 2 ], [ 1 ], [ 2 ] ]);
   });
 
   test.case = 'invalid argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strJoin( { a : 1 }, [ 1 ] );
   });
 
   test.case = 'null argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strJoin( [ '1' ], null, null );
   });
 
   test.case = 'NaN argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strJoin( [ '1' ], NaN );
   });
 
   test.case = 'Wrong argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strJoin( '1', 2 );
   });
 
   test.case = 'RegExp argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strJoin( '1', /a?/ );
   });
 
   test.case = 'arrays with different length';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strJoin( [ 1, 2 ], [ 1 ] );
   });
@@ -8718,16 +8718,16 @@ function strIndentation( test )
   return;
 
   test.case = 'without arguments';
-  test.shouldThrowError( () => _.strIndentation() );
+  test.shouldThrowErrorOfAnyKind( () => _.strIndentation() );
 
   test.case = 'extra arguments';
-  test.shouldThrowError( () => _.strIndentation( 'one','two','three' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strIndentation( 'one','two','three' ) );
 
   test.case = 'first argument type is wrong';
-  test.shouldThrowError( () => _.strIndentation( 12, 'two' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strIndentation( 12, 'two' ) );
 
   test.case = 'second argument type is wrong';
-  test.shouldThrowError( () => _.strIndentation( 'one', 12 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strIndentation( 'one', 12 ) );
 }
 
 //
@@ -8919,15 +8919,15 @@ function strLinesStrip( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( () =>  _.strLinesStrip() );
+  test.shouldThrowErrorOfAnyKind( () =>  _.strLinesStrip() );
 
   test.case = 'Wrong type of argument';
-  test.shouldThrowError( () =>  _.strLinesStrip( null ) );
-  test.shouldThrowError( () =>  _.strLinesStrip( undefined ) );
-  test.shouldThrowError( () =>  _.strLinesStrip( NaN ) );
-  test.shouldThrowError( () =>  _.strLinesStrip( 3 ) );
-  test.shouldThrowError( () =>  _.strLinesStrip( [ 3 ] ) );
-  test.shouldThrowError( () =>  _.strLinesStrip( /^a/ ) );
+  test.shouldThrowErrorOfAnyKind( () =>  _.strLinesStrip( null ) );
+  test.shouldThrowErrorOfAnyKind( () =>  _.strLinesStrip( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () =>  _.strLinesStrip( NaN ) );
+  test.shouldThrowErrorOfAnyKind( () =>  _.strLinesStrip( 3 ) );
+  test.shouldThrowErrorOfAnyKind( () =>  _.strLinesStrip( [ 3 ] ) );
+  test.shouldThrowErrorOfAnyKind( () =>  _.strLinesStrip( /^a/ ) );
 
 }
 
@@ -9039,25 +9039,25 @@ function strLinesNumber( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strLinesNumber();
   } );
 
   test.case = 'argument is wrong';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strLinesNumber( 13 );
   } );
 
   test.case = 'invalid  argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strLinesNumber( 123 );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strLinesNumber();
   });
@@ -9533,25 +9533,25 @@ function strLinesSelect( test )
   return;
 
   test.case = 'invalid first argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strLinesSelect( 1, 1 );
   });
 
   test.case = 'invalid second argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strLinesSelect( 'lorem\nipsum\n', 'second'  );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strLinesSelect( );
   });
 
   test.case = 'unknown property provided';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strLinesSelect( { src : 'lorem\nipsum\n', range : [ 0, 1 ], x : 1 } );
   });
@@ -10272,43 +10272,43 @@ function strLinesCount( test )
   return;
 
   test.case = 'invalid arguments count';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strLinesCount( '1', '2' );
   });
 
   test.case = 'invalid argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strLinesCount( 123 );
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.strLinesCount();
   });
 
   test.case = 'no arguments';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strLinesCount( );
   } );
 
   test.case = 'argument is wrong';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strLinesCount( [ 1, '\n', 2 ] );
   } );
 
   test.case = 'argument is wrong';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strLinesCount( 13 );
   } );
 
   test.case = 'too many arguments';
-  test.shouldThrowError( function( )
+  test.shouldThrowErrorOfAnyKind( function( )
   {
     _.strLinesCount( 'function( x, y ) \n { \n   return x + y; \n }', 'redundant argument' );
   } );

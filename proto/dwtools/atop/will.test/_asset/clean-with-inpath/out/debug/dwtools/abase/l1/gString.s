@@ -56,16 +56,16 @@ function strIsolate_pre( routine, args )
  * @returns {array} Returns array with separated parts of string( o.src ) or original string if nothing finded.
  *
  * @example
- * //returns [ 'sample', 'string' ]
  * _.strIsolate( { src : 'sample, string', delimeter : [ ',' ] } );
+ * // returns [ 'sample', 'string' ]
  *
  * @example
- * //returns [ 'sample', 'string' ]
  *_.strIsolate( { src : 'sample string', delimeter : ' ' } )
+ * // returns [ 'sample', 'string' ]
  *
  * @example
- * //returns [ 'sample string, name', 'string' ]
  * _.strIsolate( { src : 'sample string, name string', delimeter : [ ',', ' ' ] } )
+ * // returns [ 'sample string, name', 'string' ]
  *
  * @method strIsolate
  * @throws { Exception } Throw an exception if no argument provided.
@@ -321,16 +321,16 @@ strIsolate_body.defaults =
  * @returns {array} Returns array with separated parts of string( o.src ) or original string if nothing finded.
  *
  * @example
- * //returns [ 'sample', 'string' ]
  * _.strIsolateLeftOrNone( { src : 'sample, string', delimeter : [ ', ' ] } );
+ * // returns [ 'sample', 'string' ]
  *
  * @example
- * //returns [ 'sample', 'string' ]
  *_.strIsolateLeftOrNone( { src : 'sample string', delimeter : ' ' } )
+ * // returns [ 'sample', 'string' ]
  *
  * @example
- * //returns [ 'sample string, name', 'string' ]
  * _.strIsolateLeftOrNone( 'sample string, name string', ',' )
+ * // returns [ 'sample string, name', 'string' ]
  *
  * @method strIsolateLeftOrNone
  * @throws { Exception } Throw an exception if no argument provided.
@@ -384,12 +384,12 @@ strIsolateLeftOrAll_body.defaults =
  * @returns {array} Returns array with separated parts of string( o.src ) or original string if nothing finded.
  *
  * @example
- * //returns [ 'sample', 'string' ]
  * _.strIsolateRightOrNone( { src : 'sample, string', delimeter : [ ',' ] } );
+ * // returns [ 'sample', 'string' ]
  *
  * @example
- * //returns [ 'sample', 'string' ]
  *_.strIsolateRightOrNone( { src : 'sample string', delimeter : ' ' } )
+ * // returns [ 'sample', 'string' ]
  *
  * @method strIsolateRightOrNone
  * @throws { Exception } Throw an exception if no argument provided.
@@ -446,28 +446,28 @@ strIsolateRightOrAll_body.defaults =
   *
   * @example
   * _.strIsolateInsideOrNone( 'abcd', 'a', 'd' );
-  * //returns 'bc'
+  * // returns 'bc'
   *
   * @example
   * _.strIsolateInsideOrNone( 'aabcc', 'a', 'c' );
-  * //returns 'aabcc'
+  * // returns 'aabcc'
   *
   * @example
   * _.strIsolateInsideOrNone( 'aabcc', 'a', 'a' );
-  * //returns 'a'
+  * // returns 'a'
   *
   * @example
   * _.strIsolateInsideOrNone( 'abc', 'a', 'a' );
-  * //returns undefined
+  * // returns undefined
   *
   * @example
   * _.strIsolateInsideOrNone( 'abcd', 'x', 'y' )
-  * //returns undefined
+  * // returns undefined
   *
   * @example
   * //index of begin is bigger then index of end
   * _.strIsolateInsideOrNone( 'abcd', 'c', 'a' )
-  * //returns undefined
+  * // returns undefined
   *
   * @returns { string } Returns part of source string between ( begin ) and ( end ) or undefined.
   * @throws { Exception } If all arguments are not strings;

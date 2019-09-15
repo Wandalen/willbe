@@ -3158,13 +3158,13 @@ function strIsolateInsideOrNone( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strIsolateInsideOrNone() );
-  test.shouldThrowError( () => _.strIsolateInsideOrNone( '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrNone( '', '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrNone( '', '', '', '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrNone( 1, '', '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrNone( '123', 1, '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrNone( '123', '', 3 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strIsolateInsideOrNone() );
+  test.shouldThrowErrorOfAnyKind( () => _.strIsolateInsideOrNone( '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strIsolateInsideOrNone( '', '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strIsolateInsideOrNone( '', '', '', '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strIsolateInsideOrNone( 1, '', '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strIsolateInsideOrNone( '123', 1, '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strIsolateInsideOrNone( '123', '', 3 ) );
 
 }
 
@@ -3474,13 +3474,13 @@ function strIsolateInsideOrAll( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strIsolateInsideOrAll() );
-  test.shouldThrowError( () => _.strIsolateInsideOrAll( '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrAll( '', '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrAll( '', '', '', '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrAll( 1, '', '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrAll( '123', 1, '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrAll( '123', '', 3 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strIsolateInsideOrAll() );
+  test.shouldThrowErrorOfAnyKind( () => _.strIsolateInsideOrAll( '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strIsolateInsideOrAll( '', '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strIsolateInsideOrAll( '', '', '', '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strIsolateInsideOrAll( 1, '', '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strIsolateInsideOrAll( '123', 1, '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strIsolateInsideOrAll( '123', '', 3 ) );
 
 }
 
@@ -3575,11 +3575,11 @@ function strBeginOf( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strBeginOf( 1, '' ) );
-  test.shouldThrowError( () => _.strBeginOf( 'abc', 1 ) );
-  test.shouldThrowError( () => _.strBeginOf() );
-  test.shouldThrowError( () => _.strBeginOf( undefined, undefined ) );
-  test.shouldThrowError( () => _.strBeginOf( null, null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strBeginOf( 1, '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strBeginOf( 'abc', 1 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strBeginOf() );
+  test.shouldThrowErrorOfAnyKind( () => _.strBeginOf( undefined, undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strBeginOf( null, null ) );
 }
 
 //
@@ -3673,11 +3673,11 @@ function strEndOf( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strEndOf( 1, '' ) );
-  test.shouldThrowError( () => _.strEndOf( 'abc', 1 ) );
-  test.shouldThrowError( () => _.strEndOf() );
-  test.shouldThrowError( () => _.strEndOf( undefined, undefined ) );
-  test.shouldThrowError( () => _.strEndOf( null, null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strEndOf( 1, '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strEndOf( 'abc', 1 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strEndOf() );
+  test.shouldThrowErrorOfAnyKind( () => _.strEndOf( undefined, undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strEndOf( null, null ) );
 
 }
 
@@ -3760,9 +3760,9 @@ function strBegins( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strBegins( 1, '' ) );
-  test.shouldThrowError( () => _.strBegins( 'a', 1 ) );
-  test.shouldThrowError( () => _.strBegins( 'abc', [ 1, 'b', 'a' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strBegins( 1, '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strBegins( 'a', 1 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strBegins( 'abc', [ 1, 'b', 'a' ] ) );
 
 }
 
@@ -3839,8 +3839,8 @@ function strEnds( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strEnds( 1, '' ) );
-  test.shouldThrowError( () => _.strEnds( 'a', 1 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strEnds( 1, '' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.strEnds( 'a', 1 ) );
 }
 
 //

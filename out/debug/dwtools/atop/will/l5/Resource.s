@@ -323,10 +323,10 @@ function unform()
   _.assert( arguments.length === 0 );
   _.assert( resource.formed );
 
-  if( !resource.original )
-  {
-    _.assert( module[ resource.MapName ][ resource.name ] === resource );
-  }
+  if( resource.original )
+  _.assert( module[ resource.MapName ][ resource.name ] === resource.original );
+  else
+  _.assert( module[ resource.MapName ][ resource.name ] === resource );
 
   /* begin */
 
@@ -589,7 +589,7 @@ function _inheritSingle( o )
     resource2._inheritForm({ visited : o.visited });
   }
 
-  let extend = _.mapOnly( resource2, _.mapNulls( resource.dataExport({ compact : 0, copyingAggregates : 1 }) ) );
+  let extend = _.mapOnly( resource2, _.mapNulls( resource.structureExport({ compact : 0, copyingAggregates : 1 }) ) );
   delete extend.criterion;
   resource.copy( extend );
   resource.criterionInherit( resource2.criterion );
@@ -884,27 +884,27 @@ function infoExport()
   let resource = this;
   let o = _.routineOptions( infoExport, arguments );
 
-  let fields = resource.dataExport( o );
+  let fields = resource.structureExport( o );
   let result = resource._infoExport({ fields });
 
   return result;
 }
 
-var defaults = infoExport.defaults = Object.create( _.Will.OpenedModule.prototype.dataExport.defaults );
+var defaults = infoExport.defaults = Object.create( _.Will.OpenedModule.prototype.structureExport.defaults );
 defaults.copyingNonExportable = 1;
 defaults.formed = 1;
 defaults.strict = 0;
 
 //
 
-function dataExport()
+function structureExport()
 {
   let resource = this;
-  let o = _.routineOptions( dataExport, arguments );
+  let o = _.routineOptions( structureExport, arguments );
 
   if( !o.formed )
   if( resource.unformedResource )
-  return resource.unformedResource.dataExport.call( resource.unformedResource, o );
+  return resource.unformedResource.structureExport.call( resource.unformedResource, o );
 
   if( !o.copyingNonExportable )
   if( !resource.exportable )
@@ -925,6 +925,7 @@ function dataExport()
   delete o2.rootModule;
   delete o2.formed;
   delete o2.strict;
+  delete o2.exportModule;
 
   let fields = resource.cloneData( o2 );
 
@@ -932,7 +933,7 @@ function dataExport()
   return fields;
 }
 
-dataExport.defaults = Object.create( _.Will.OpenedModule.prototype.dataExport.defaults );
+structureExport.defaults = Object.create( _.Will.OpenedModule.prototype.structureExport.defaults );
 
 //
 
@@ -993,7 +994,8 @@ function absoluteNameGet()
 {
   let resource = this;
   let module = resource.module;
-  return module.absoluteName + ' / ' + resource.nickName;
+
+  return ( module ? module.absoluteName : '...' ) + ' / ' + resource.nickName;
 }
 
 //
@@ -1031,7 +1033,7 @@ function moduleSet( src )
 {
   let resource = this;
 
-  if( src && src instanceof _.Will.OpenerModule )
+  if( src && src instanceof _.Will.ModuleOpener )
   src = src.openedModule;
 
   resource[ moduleSymbol ] = src;
@@ -1292,7 +1294,7 @@ let Extend =
 
   _infoExport,
   infoExport,
-  dataExport,
+  structureExport,
   compactField,
 
   // accessor

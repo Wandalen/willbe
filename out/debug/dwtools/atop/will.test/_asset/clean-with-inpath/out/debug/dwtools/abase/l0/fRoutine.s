@@ -231,27 +231,31 @@ function constructorJoin( routine, args )
 
 /**
  * The routineJoin() routine creates a new function with its 'this' ( context ) set to the provided `context`
- value. Argumetns `args` of target function which are passed before arguments of binded function during
- calling of target function. Unlike bind routine, position of `context` parameter is more intuitive.
+ * value. Argumetns `args` of target function which are passed before arguments of binded function during
+ * calling of target function. Unlike bind routine, position of `context` parameter is more intuitive.
+ *
  * @example
-   let o = {
-        z: 5
-    };
-
-   let y = 4;
-
-   function sum(x, y) {
-       return x + y + this.z;
-    }
-   let newSum = wTools.routineJoin(o, sum, [3]);
-   newSum(y); // 12
-
-   function f1(){ console.log( this ) };
-   let f2 = f1.bind( undefined ); // context of new function sealed to undefined (or global object);
-   f2.call( o ); // try to call new function with context set to { z: 5 }
-   let f3 = _.routineJoin( undefined, f1 ); // new function.
-   f3.call( o ) // print  { z: 5 }
-
+ * let o = { z: 5 };
+ * let y = 4;
+ * function sum( x, y )
+ * {
+ *   return x + y + this.z;
+ * }
+ * let newSum = _.routineJoin( o, sum, [ 3 ] );
+ * newSum( y );
+ * // returns 12
+ *
+ * @example
+ * function f1()
+ * {
+ *   console.log( this )
+ * };
+ * let f2 = f1.bind( undefined ); // context of new function sealed to undefined (or global object);
+ * f2.call( o ); // try to call new function with context set to { z: 5 }
+ * let f3 = _.routineJoin( undefined, f1 ); // new function.
+ * f3.call( o )
+ * // log { z: 5 }
+ *
  * @param {Object} context The value that will be set as 'this' keyword in new function
  * @param {Function} routine Function which will be used as base for result function.
  * @param {Array<*>} args Argumetns of target function which are passed before arguments of binded function during
@@ -284,27 +288,31 @@ function routineJoin( context, routine, args )
 
 /**
  * The routineJoin() routine creates a new function with its 'this' ( context ) set to the provided `context`
- value. Argumetns `args` of target function which are passed before arguments of binded function during
- calling of target function. Unlike bind routine, position of `context` parameter is more intuitive.
+ * value. Argumetns `args` of target function which are passed before arguments of binded function during
+ * calling of target function. Unlike bind routine, position of `context` parameter is more intuitive.
+ *
  * @example
-   let o = {
-        z: 5
-    };
-
-   let y = 4;
-
-   function sum(x, y) {
-       return x + y + this.z;
-    }
-   let newSum = wTools.routineJoin(o, sum, [3]);
-   newSum(y); // 12
-
-   function f1(){ console.log( this ) };
-   let f2 = f1.bind( undefined ); // context of new function sealed to undefined (or global object);
-   f2.call( o ); // try to call new function with context set to { z: 5 }
-   let f3 = _.routineJoin( undefined, f1 ); // new function.
-   f3.call( o ) // print  { z: 5 }
-
+ * let o = { z: 5 };
+ * let y = 4;
+ * function sum( x, y )
+ * {
+ *   return x + y + this.z;
+ * }
+ * let newSum = _.routineJoin( o, sum, [ 3 ] );
+ * newSum( y );
+ * // returns 12
+ *
+ * @example
+ * function f1()
+ * {
+ *   console.log( this )
+ * };
+ * let f2 = f1.bind( undefined ); // context of new function sealed to undefined (or global object);
+ * f2.call( o ); // try to call new function with context set to { z: 5 }
+ * let f3 = _.routineJoin( undefined, f1 ); // new function.
+ * f3.call( o )
+ * // log { z: 5 }
+ *
  * @param {Object} context The value that will be set as 'this' keyword in new function
  * @param {Function} routine Function which will be used as base for result function.
  * @param {Array<*>} args Argumetns of target function which are passed before arguments of binded function during
@@ -335,26 +343,26 @@ function routineJoin( context, routine, args )
 
 //
 
-  /**
-   * Return new function with sealed context and arguments.
-   *
-   * @example
-   let o = {
-        z: 5
-    };
-
-   function sum(x, y) {
-       return x + y + this.z;
-    }
-   let newSum = wTools.routineSeal(o, sum, [3, 4]);
-   newSum(y); // 12
-   * @param {Object} context The value that will be set as 'this' keyword in new function
-   * @param {Function} routine Function which will be used as base for result function.
-   * @param {Array<*>} args Arguments wrapped into array. Will be used as argument to `routine` function
-   * @returns {Function} Result function with sealed context and arguments.
-   * @function routineJoin
-   * @memberof wTools
-   */
+/**
+ * Return new function with sealed context and arguments.
+ *
+ * @example
+ * let o = { z: 5 };
+ * function sum(x, y)
+ * {
+ *   return x + y + this.z;
+ * }
+ * let newSum = _.routineSeal( o, sum, [ 3, 4 ] );
+ * newSum( y );
+ * // returns 12
+ *
+ * @param {Object} context The value that will be set as 'this' keyword in new function
+ * @param {Function} routine Function which will be used as base for result function.
+ * @param {Array<*>} args Arguments wrapped into array. Will be used as argument to `routine` function
+ * @returns {Function} Result function with sealed context and arguments.
+ * @function routineJoin
+ * @memberof wTools
+ */
 
 function routineSeal( context, routine, args )
 {
@@ -670,7 +678,6 @@ qqq implement and cover _.routineExtend( null, routine );
  * @param{ * } src - The source routine or object to copy.
  *
  * @example
- * // returns [ routine routinesCompose ], got.option === 1
  * var src =
  * {
  *   pre : _.routinesCompose.pre,
@@ -678,19 +685,20 @@ qqq implement and cover _.routineExtend( null, routine );
  *   someOption : 1,
  * }
  * var got = _.routineExtend( null, src );
+ * // returns [ routine routinesCompose ], got.option === 1
  *
  * @example
- * // returns [ routine routinesCompose ]
  * _.routineExtend( null, _.routinesCompose );
+ * // returns [ routine routinesCompose ]
  *
  * @example
- * // returns [ routine routinesCompose ], routinesCompose.someOption === 1
  * _.routineExtend( _.routinesCompose, { someOption : 1 } );
+ * // returns [ routine routinesCompose ], routinesCompose.someOption === 1
  *
  * @example
- * // returns [ routine routinesCompose ], routinesCompose.someOption === 1
  * _.routinesComposes.someOption = 22;
  * _.routineExtend( _.routinesCompose, { someOption : 1 } );
+ * // returns [ routine routinesCompose ], routinesCompose.someOption === 1
  *
  * @returns { routine } It will return the target routine with extended properties.
  * @function routineExtend

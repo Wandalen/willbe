@@ -86,25 +86,25 @@ function mapCloneAssigning( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapCloneAssigning();
   });
 
   test.case = 'redundant argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapCloneAssigning( {}, {}, 'wrong arguments' );
   });
 
   test.case = 'wrong type of array';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapCloneAssigning( [] );
   });
 
   test.case = 'wrong type of arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapCloneAssigning( 'wrong arguments' );
   });
@@ -128,25 +128,25 @@ function mapExtendConditional( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapExtendConditional();
   });
 
   test.case = 'few argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapExtendConditional( _.field.mapper.dstNotHas );
   });
 
   test.case = 'wrong type of array';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapExtendConditional( [] );
   });
 
   test.case = 'wrong type of arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapExtendConditional( 'wrong arguments' );
   });
@@ -384,37 +384,37 @@ function mapExtend( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapExtend();
   });
 
   test.case = 'few arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapExtend( {} );
   });
 
   test.case = 'wrong type of array';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapExtend( [] );
   });
 
   test.case = 'wrong type of number';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapExtend( 13 );
   });
 
   test.case = 'wrong type of boolean';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapExtend( true );
   });
 
   test.case = 'first argument is wrong';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapExtend( 'wrong argument' );
   });
@@ -437,19 +437,19 @@ function mapSupplement( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapSupplement();
   });
 
   // test.case = 'wrong type of array';
-  // test.shouldThrowError( function()
+  // test.shouldThrowErrorOfAnyKind( function()
   // {
   //   _.mapSupplement( [] );
   // });
 
   test.case = 'wrong type of arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapSupplement( 'wrong arguments' );
   });
@@ -472,19 +472,19 @@ function mapComplement( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapComplement();
   });
 
   test.case = 'wrong type of array';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapComplement( [] );
   });
 
   test.case = 'wrong type of arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapComplement( 'wrong arguments' );
   });
@@ -558,21 +558,21 @@ function mapMake( test )
 
   test.case = 'bad arguments'; /**/
 
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapMake( '' );
   });
 
   test.case = 'bad arguments'; /**/
 
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapMake( 'x' );
   });
 
   test.case = 'bad arguments'; /**/
 
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapMake( null, 'x' );
   });
@@ -703,13 +703,13 @@ function mapFirstPair( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapFirstPair();
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapFirstPair( 'wrong argument' );
   });
@@ -747,30 +747,30 @@ function mapValWithIndex( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function() {
+  test.shouldThrowErrorOfAnyKind( function() {
     _.mapValWithIndex();
   });
 
   test.case = 'few argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapValWithIndex( [ [] ] );
   });
 
   test.case = 'first the four argument not wrapped into array';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapValWithIndex( 3, 13, 'c', 7 , 2 );
   });
 
   test.case = 'redundant argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapValWithIndex( [ [] ], 2, 'wrong arguments' );
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapValWithIndex( 'wrong argumetns' );
   });
@@ -798,25 +798,25 @@ function mapKeyWithIndex( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapKeyWithIndex();
   });
 
   test.case = 'few arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapKeyWithIndex( [] );
   });
 
   test.case = 'redundant argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapKeyWithIndex( [  ], 2, 'wrong arguments' );
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapKeyWithIndex( 'wrong argumetns' );
   });
@@ -861,19 +861,19 @@ function mapToStr( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapToStr();
   });
 
   test.case = 'wrong type of number';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapToStr( 13 );
   });
 
   test.case = 'wrong type of arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapToStr( true );
   });
@@ -1086,19 +1086,19 @@ function mapKeys( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapKeys();
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapKeys( 'wrong arguments' );
   });
 
   test.case = 'unknown option';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     debugger;
     _.mapKeys.call( { x : 1 }, {} );
@@ -1171,19 +1171,19 @@ function mapOwnKeys( test )
   return;
 
   test.case = 'no args';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnKeys();
   })
 
   test.case = 'invalid type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnKeys( 1 );
   })
 
   test.case = 'unknown option';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnKeys.call( { own : 0 }, {} );
   })
@@ -1259,19 +1259,19 @@ function mapAllKeys( test )
   return;
 
   test.case = 'no args';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllKeys();
   })
 
   test.case = 'invalid argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllKeys();
   })
 
   test.case = 'unknown option';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllKeys.call( { own : 0 }, {} );
   })
@@ -1354,19 +1354,19 @@ function mapVals( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapVals();
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapVals( 'wrong argument' );
   });
 
   test.case = 'wrong option';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapVals.call( { a : 1 }, {} );
   });
@@ -1423,19 +1423,19 @@ function mapOwnVals( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnVals();
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnVals( 'wrong argument' );
   });
 
   test.case = 'wrong option';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnVals.call( { a : 1 }, {} );
   });
@@ -1484,19 +1484,19 @@ function mapAllVals( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllVals();
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllVals( 'wrong argument' );
   });
 
   test.case = 'wrong option';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllVals.call( { a : 1 }, {} );
   });
@@ -1583,31 +1583,31 @@ function mapPairs( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapPairs();
   });
 
   test.case = 'primitive';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapPairs( 1 );
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapPairs( 'wrong argument' );
   });
 
   test.case = 'redundant argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapPairs( {}, 'wrong arguments' );
   });
 
   test.case = 'wrong type of array';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapPairs( null );
   });
@@ -1669,19 +1669,19 @@ function mapOwnPairs( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnPairs();
   });
 
   test.case = 'primitive';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnPairs( 1 );
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnPairs( 'wrong argument' );
   });
@@ -1741,19 +1741,19 @@ function mapAllPairs( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllPairs();
   });
 
   test.case = 'primitive';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllPairs( 1 );
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllPairs( 'wrong argument' );
   });
@@ -1839,25 +1839,25 @@ function mapProperties( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapProperties();
   });
 
   test.case = 'primitive';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapProperties( 1 );
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapProperties( 'wrong argument' );
   });
 
   test.case = 'unknown option';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapProperties.call( { x : 1 }, {} );
   });
@@ -1925,25 +1925,25 @@ function mapOwnProperties( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnProperties();
   });
 
   test.case = 'primitive';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnProperties( 1 );
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnProperties( 'wrong argument' );
   });
 
   test.case = 'unknown option';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnProperties.call( { x : 1 }, {} );
   });
@@ -2024,25 +2024,25 @@ function mapAllProperties( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllProperties();
   });
 
   test.case = 'primitive';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllProperties( 1 );
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllProperties( 'wrong argument' );
   });
 
   test.case = 'unknown option';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllProperties.call( { x : 1 }, {} );
   });
@@ -2145,25 +2145,25 @@ function mapRoutines( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapRoutines();
   });
 
   test.case = 'primitive';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapRoutines( 1 );
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapRoutines( 'wrong argument' );
   });
 
   test.case = 'unknown option';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapRoutines.call( { x : 1 }, {} );
   });
@@ -2247,25 +2247,25 @@ function mapOwnRoutines( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnRoutines();
   });
 
   test.case = 'primitive';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnRoutines( 1 );
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnRoutines( 'wrong argument' );
   });
 
   test.case = 'unknown option';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnRoutines.call( { x : 1 }, {} );
   });
@@ -2347,25 +2347,25 @@ function mapAllRoutines( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllRoutines();
   });
 
   test.case = 'primitive';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllRoutines( 1 );
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllRoutines( 'wrong argument' );
   });
 
   test.case = 'unknown option';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllRoutines.call( { x : 1 }, {} );
   });
@@ -2469,25 +2469,25 @@ function mapFields( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapFields();
   });
 
   test.case = 'primitive';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapFields( 1 );
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapFields( 'wrong argument' );
   });
 
   test.case = 'unknown option';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapFields.call( { x : 1 }, {} );
   });
@@ -2558,31 +2558,31 @@ function mapOwnFields( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnFields();
   });
 
   test.case = 'primitive';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnFields( 'x' );
   });
 
   test.case = 'primitive';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnFields( 1 );
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnFields( 'wrong argument' );
   });
 
   test.case = 'unknown option';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnFields.call( { x : 1 }, {} );
   });
@@ -2658,25 +2658,25 @@ function mapAllFields( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllFields();
   });
 
   test.case = 'primitive';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllFields( 1 );
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllFields( 'wrong argument' );
   });
 
   test.case = 'unknown option';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapAllFields.call( { x : 1 }, {} );
   });
@@ -2741,13 +2741,13 @@ function mapOnlyPrimitives( test )
   return;
 
   test.case = 'invalid arg type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOnlyPrimitives( null )
   });
 
   test.case = 'no args';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOnlyPrimitives()
   })
@@ -2770,25 +2770,25 @@ function mapButConditional( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapButConditional();
   });
 
   test.case = 'few arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapButConditional( _.field.mapper.primitive );
   });
 
   test.case = 'second argument is wrong type of array';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapButConditional( _.field.mapper.primitive, [] );
   });
 
   test.case = 'wrong type of arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapButConditional( 'wrong arguments' );
   });
@@ -2908,49 +2908,49 @@ function mapBut( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapBut();
   });
 
   test.case = 'wrong type of arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapBut( 'wrong arguments' );
   });
 
   test.case = 'only src map';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapBut( srcMap );
   });
 
   test.case = 'first argument is not an object-like';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapBut( 3, [] );
   });
 
   test.case = 'second argument is not an object-like';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapBut( [], '' );
   });
 
   test.case = 'redundant arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapBut( [], [], {} );
   });
 
   test.case = 'wrong type of arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapBut( {}, 'wrong arguments' );
   });
 
   test.case = 'wrong type of arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapBut( 'wrong arguments', {} );
   });
@@ -2983,25 +2983,25 @@ function mapOwnBut( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnBut();
   });
 
   test.case = 'not enough arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnBut( {} );
   });
 
   test.case = 'not enough arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnBut( [] );
   });
 
   test.case = 'wrong type of arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnBut( 'wrong arguments' );
   });
@@ -3119,43 +3119,43 @@ function mapOnly( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOnly();
   });
 
   test.case = 'wrong type of arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOnly( 'wrong arguments' );
   });
 
   test.case = 'first argument is not an object-like';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOnly( 3, [] );
   });
 
   test.case = 'second argument is not an object-like';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOnly( [], '' );
   });
 
   test.case = 'redundant arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOnly( [], [], {} );
   });
 
   test.case = 'wrong type of arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOnly( {}, 'wrong arguments' );
   });
 
   test.case = 'wrong type of arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOnly( 'wrong arguments', {} );
   });
@@ -3189,25 +3189,25 @@ function _mapOnly( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _._mapOnly();
   });
 
   test.case = 'redundant arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _._mapOnly( {}, 'wrong arguments' );
   });
 
   test.case = 'wrong type of array';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _._mapOnly( [] );
   });
 
   test.case = 'wrong type of arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _._mapOnly( 'wrong arguments' );
   });
@@ -3262,41 +3262,41 @@ function mapsAreIdentical( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapsAreIdentical();
   });
 
   test.case = 'not object-like arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapsAreIdentical( [ 'a', 7, 'b', 13 ], [ 'a', 7, 'b', 14 ] );
   });
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapsAreIdentical( 'a','b' );
   });
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapsAreIdentical( 1,3 );
   });
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapsAreIdentical( null,null );
   });
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapsAreIdentical( undefined,undefined );
   });
 
   test.case = 'too few arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapsAreIdentical( {} );
   });
 
   test.case = 'too many arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapsAreIdentical( {}, {}, 'redundant argument' );
   });
@@ -3329,19 +3329,19 @@ function mapContain( test )
   return;
 
   test.case = 'no arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapContain();
   });
 
   test.case = 'few arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapContain( {} );
   });
 
   test.case = 'too many arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapContain( {}, {}, 'redundant argument' );
   });
@@ -3380,37 +3380,37 @@ function mapOwnKey( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnKey();
   });
 
   test.case = 'few arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnKey( {}, 'a', 'b' );
   });
 
   test.case = 'wrong type of key';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnKey( [], 1 );
   });
 
   test.case = 'wrong type of argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnKey( 1 );
   });
 
   test.case = 'wrong type of second argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnKey( {}, 13 );
   });
 
   test.case = 'wrong type of arguments';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.mapOwnKey( '', 7 );
   });
@@ -3490,19 +3490,19 @@ function mapHasAll( test )
   if( Config.degub )
   {
     test.case = 'src is no object like';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       _.mapHasAll( 1, {} );
     });
 
     test.case = 'screen is no object like';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       _.mapHasAll( {}, 1 );
     });
 
     test.case = 'too much args';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       _.mapHasAll( {}, {}, {} );
     });
@@ -3587,19 +3587,19 @@ function mapHasAny( test )
   if( Config.degub )
   {
     test.case = 'src is no object like';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       _.mapHasAny( 1, {} );
     });
 
     test.case = 'screen is no object like';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       _.mapHasAny( {}, 1 );
     });
 
     test.case = 'too much args';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       _.mapHasAny( {}, {}, {} );
     });
@@ -3690,19 +3690,19 @@ function mapHasNone( test )
   if( Config.degub )
   {
     test.case = 'src is no object like';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       _.mapHasNone( 1, {} );
     });
 
     test.case = 'screen is no object like';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       _.mapHasNone( {}, 1 );
     });
 
     test.case = 'too much args';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       _.mapHasNone( {}, {}, {} );
     });
@@ -3780,25 +3780,25 @@ function mapOwnAll( test )
   if( Config.degub )
   {
     test.case = 'src is no object like';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       _.mapOwnAll( 1, {} );
     });
 
     test.case = 'screen is no object like';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       _.mapOwnAll( {}, 1 );
     });
 
     test.case = 'too much args';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       _.mapOwnAll( {}, {}, {} );
     });
 
     test.case = 'src is not a map';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       var a = {};
       var b = { a : 1 };
@@ -3807,7 +3807,7 @@ function mapOwnAll( test )
     });
 
     test.case = 'screen is not a map';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       var a = {};
       var b = { a : 1 };
@@ -3888,25 +3888,25 @@ function mapOwnAny( test )
   if( Config.degub )
   {
     test.case = 'src is no object like';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       _.mapOwnAny( 1, {} );
     });
 
     test.case = 'screen is no object like';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       _.mapOwnAny( {}, 1 );
     });
 
     test.case = 'too much args';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       _.mapOwnAny( {}, {}, {} );
     });
 
     test.case = 'src is not a map';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       var a = {};
       var b = { a : 1 };
@@ -3915,7 +3915,7 @@ function mapOwnAny( test )
     });
 
     test.case = 'screen is not a map';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       var a = {};
       var b = { a : 1 };
@@ -3996,25 +3996,25 @@ function mapOwnNone( test )
   if( Config.degub )
   {
     test.case = 'src is no object like';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       _.mapOwnNone( 1, {} );
     });
 
     test.case = 'screen is no object like';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       _.mapOwnNone( {}, 1 );
     });
 
     test.case = 'too much args';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       _.mapOwnNone( {}, {}, {} );
     });
 
     test.case = 'src is not a map';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       var a = {};
       var b = { a : 1 };
@@ -4023,7 +4023,7 @@ function mapOwnNone( test )
     });
 
     test.case = 'screen is not a map';
-    test.shouldThrowError( function()
+    test.shouldThrowErrorOfAnyKind( function()
     {
       var a = {};
       var b = { a : 1 };

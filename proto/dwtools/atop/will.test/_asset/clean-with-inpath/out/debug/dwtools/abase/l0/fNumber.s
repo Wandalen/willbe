@@ -26,11 +26,12 @@ let _floor = Math.floor;
  * @returns Returns true if ( src ) is a Number, otherwise returns false.
  *
  * @example
- * //returns true
  * numberIs( 5 );
+ * // returns true
+ *
  * @example
- * // returns false
  * numberIs( 'song' );
+ * // returns false
  *
  * @param {*} src.
  * @return {Boolean}.
@@ -55,10 +56,8 @@ function numberIsNotNan( src )
 
 function numberIsFinite( src )
 {
-
   if( !_.numberIs( src ) )
   return false;
-
   return isFinite( src );
 }
 
@@ -240,6 +239,7 @@ let Routines =
   numberIs,
   numberIsNotNan,
   numberIsFinite,
+  numberDefined : numberIsFinite,
   numberIsInfinite,
   numberIsInt,
 

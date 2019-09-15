@@ -3,17 +3,17 @@ path :
 
   proto : '.'
   in : 'proto'
-  out : '../out'
+  out : '../sub.out'
   out.debug :
-    path : '../out/debug'
+    path : '../sub.out/debug'
     criterion :
       debug : 1
   out.release :
-    path : '../out/release'
+    path : '../sub.out/release'
     criterion :
       debug : 0
   temp :
-    - ../out
+    - ../sub.out
     - ../super.out
 
 reflector :

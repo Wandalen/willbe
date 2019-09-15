@@ -62,45 +62,23 @@ function form3()
 }
 
 //
-//
-// function form3()
-// {
-//   let build = this;
-//   let module = build.module;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   _.assert( arguments.length === 0 );
-//   _.assert( build.formed === 2 );
-//
-//   /* begin */
-//
-//   if( build.criterion && build.criterion.default !== undefined )
-//   build.criterion.default = build.criterion.default ? 1 : 0;
-//
-//   // if( _.arrayIs( build.steps ) )
-//   // build.steps = [ build.steps ];
-//
-//   /* end */
-//
-//   // _.assert( build.steps === null || _.arrayIs( build.steps ) );
-//   build.formed = 3;
-//   return build;
-// }
 
-//
-
-function stepsEach( onEach )
+function stepsEach( o )
 {
   let build = this;
   let module = build.module;
   let will = module.will;
+  let result = [];
+
+  if( _.routineIs( arguments[ 0 ] ) )
+  o = { onEach : arguments[ 0 ] }
+  o = _.routineOptions( stepsEach, o );
 
   each( build.steps );
 
-  return build;
+  return result;
+
+  /* */
 
   function each( step )
   {
@@ -138,7 +116,8 @@ function stepsEach( onEach )
     _.assert( step instanceof will.Step || step instanceof will.Build, () => 'Cant find ' + arguments[ 0 ] );
     let it = Object.create( null );
     it.element = step;
-    onEach( it );
+    handleEach( it )
+    // onEach( it );
   }
 
   function inArray( steps )
@@ -155,19 +134,35 @@ function stepsEach( onEach )
   {
     _.assert( _.mapIs( steps ) );
     _.assertMapHasOnly( steps, { concurrent : null } );
-    onEach({ concurrent : steps.concurrent });
+    // onEach({ concurrent : steps.concurrent });
+    handleEach({ concurrent : steps.concurrent });
     inArray( steps.concurrent );
+  }
+
+  function handleEach( it )
+  {
+    _.assert( !!it.element );
+    result.push( it.element );
+    if( o.onEach )
+    o.onEach( it );
   }
 
 }
 
+stepsEach.defaults =
+{
+  onEach : null,
+}
+
 //
 
-function run( frame )
+function framePerform( frame )
 {
   let build = this;
+  let run = frame.run;
   let resource = frame.resource;
-  let module = frame.module;
+  let module = run.module;
+  // let module = frame.module;
   let will = module.will;
   let logger = will.logger;
   let con = new _.Consequence().take( null );
@@ -179,22 +174,26 @@ function run( frame )
   _.assert( module.preformed > 0  );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
-  _.assert( resource.formed === 3 );
   _.assert( resource === build );
-  _.assert( frame.build === build );
+  // _.assert( frame.build === build );
 
   /*
-    to make sure all steps exist
+    first run to make sure all steps exist
   */
-  build.stepsEach( function( it )
-  {
-  });
 
-  build.stepsEach( function( it )
+  // debugger;
+  let steps = build.stepsEach();
+  // debugger;
+
+  steps.forEach( function( step )
   {
     let frame2;
-    con.then( ( arg ) => frame2 = frame.cloneUp( it.element ) );
-    con.then( ( arg ) => frame2.run() );
+    con.then( ( arg ) => frame2 = frame.frameUp( step ) );
+    // con.then( ( arg ) => frame2.resourceFormAndPerform() );
+
+    con.then( () => step.form() );
+    con.then( () => step.framePerform( frame2 ) );
+
     con.finally( ( err, arg ) =>
     {
       if( frame2 )
@@ -204,6 +203,37 @@ function run( frame )
       return arg;
     });
   });
+
+  // con.then( () => resource.form() );
+  // con.then( ( arg ) =>
+  // {
+  //   _.assert( resource.formed === 3 );
+  //   return arg;
+  // });
+  // con.then( () => resource.framePerform( frame ) );
+
+  // /*
+  //   first run to make sure all steps exist
+  // */
+  //
+  // build.stepsEach( function( it )
+  // {
+  // });
+  //
+  // build.stepsEach( function( it )
+  // {
+  //   let frame2;
+  //   con.then( ( arg ) => frame2 = frame.frameUp( it.element ) );
+  //   con.then( ( arg ) => frame2.run() );
+  //   con.finally( ( err, arg ) =>
+  //   {
+  //     if( frame2 )
+  //     frame2.finit();
+  //     if( err )
+  //     throw err;
+  //     return arg;
+  //   });
+  // });
 
   return con;
 }
@@ -219,30 +249,49 @@ function perform( o )
   let path = fileProvider.path;
   let logger = will.logger;
   let isExport = build.isExport();
+  let con = new _.Consequence().take( null );
   let time = _.timeNow();
 
-  let frame = new will.BuildFrame
-  ({
-    module : module,
-    build : build,
-    resource : build,
-  }).form();
+  will.readingEnd();
 
+  _.assert( !!will.willfilesReadEndTime, 'Please, call "will.readingEnd" first' );
   o = _.routineOptions( build.perform, arguments );
+
+  if( !o.run )
+  o.run = new will.BuildRun
+  ({
+    build : build,
+  });
+
+  _.assert( o.run instanceof will.BuildRun );
+
+  o.run.form();
+
+  let frame = o.run.frameUp( build );
 
   logPre();
 
-  return frame.run()
+  con
+  .then( () => build.form() )
+  .then( () => build.framePerform( frame ) )
   .finally( ( err, arg ) =>
   {
     frame.finit();
+
     if( err )
-    throw _.errLogOnce( err );
+    {
+      err = _.err( err );
+      logger.log( _.errOnce( err ) );
+      throw err;
+    }
+    // throw _.errLogOnce( err );
 
     logPost();
 
     return arg;
   });
+
+  return con;
 
   /* */
 
@@ -262,10 +311,14 @@ function perform( o )
 
     if( logger.verbosity >= 1 )
     {
-      logger.log( ( isExport ? 'Exported' : 'Built' ), build.decoratedAbsoluteName, 'in', _.timeSpent( time ) );
+      let withFiles = '';
+      if( o.run.exported )
+      withFiles = 'with ' + o.run.exported.exportedFilesPath.path.length + ' file(s)';
+      logger.log( ( isExport ? 'Exported' : 'Built' ), build.decoratedAbsoluteName, withFiles, 'in', _.timeSpent( time ) );
       if( logger.verbosity >= 2 )
       logger.log();
     }
+
     logger.down();
 
   }
@@ -274,6 +327,7 @@ function perform( o )
 
 perform.defaults =
 {
+  run : null,
 }
 
 //
@@ -314,29 +368,6 @@ function archiveFilePathFor()
 
   return hd.path.resolve( module.outPath, name );
 }
-//
-// //
-//
-// function outFilePathFor()
-// {
-//   let build = this
-//   let module = build.module;
-//   let will = module.will;
-//   let hub = will.fileProvider;
-//   let hd = hub.providersWithProtocolMap.file;
-//   let inExportFile = module.willfileWithRoleMap.export || module.willfileWithRoleMap.single;
-//   let inFileDirPath = hd.path.dir( inExportFile.filePath )
-//
-//   _.assert( arguments.length === 0 );
-//   _.assert( _.strDefined( build.name ) );
-//   _.assert( inExportFile instanceof will.Willfile );
-//   _.assert( _.strDefined( module.about.name ), 'Module should have name, declare about.name' );
-//
-//   let name = _.strJoinPath( [ module.about.name, '.out.will.yml' ], '.' );
-//
-//   return hd.path.resolve( module.outPath, name );
-// }
-
 // --
 // relations
 // --
@@ -344,10 +375,7 @@ function archiveFilePathFor()
 let Composes =
 {
 
-  // description : null,
-  // criterion : null,
   steps : null,
-  // inherit : _.define.own([]),
 
 }
 
@@ -392,12 +420,11 @@ let Extend =
   form3,
 
   stepsEach,
-  run,
+  framePerform,
   perform,
   isExport,
 
   archiveFilePathFor,
-  // outFilePathFor,
 
   // relation
 

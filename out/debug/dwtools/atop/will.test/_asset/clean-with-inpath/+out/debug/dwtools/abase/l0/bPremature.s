@@ -3,7 +3,6 @@
 'use strict';
 
 let _FunctionBind = Function.prototype.bind;
-// let Object.prototype.toString = Object.prototype.toString;
 let _global = _global_;
 let _ = _global_.wTools;
 let Self = _global_.wTools;
@@ -81,7 +80,9 @@ function argumentsArrayIs( src )
  * * If ( msg ) has any other type - uses it as argument for 'throw' statement
  *
  * @example
+ * src = 10;
  * _.assert( _.strIs( src ), 'Src is not a string' );
+ * // throws error, log 'Src is not a string'
  *
  * @function assert
  * @param {} condition - condition to check
@@ -144,9 +145,12 @@ function assert( condition, msg )
  *  b : 0
  * }
  *
- * add({ a : 1, b : 1 }) // 2
- * add({ b : 1 }) // 1
- * add({ a : 1, c : 3 }) // throws an error, option "c" is unknown
+ * add({ a : 1, b : 1 });
+ * // returns 2
+ * add({ b : 1 })
+ * // returns 1
+ * add({ a : 1, c : 3 });
+ * // throws an error, option "c" is unknown
  *
  * @function routineOptions
  * @param {Function} routine - target routine
@@ -233,7 +237,7 @@ function vectorize_pre( routine, args )
   assert( arguments.length === 2, 'Expects exactly two arguments' );
   assert( routineIs( o.routine ) || strIs( o.routine ) || _.strsAreAll( o.routine ), () => 'Expects routine {-o.routine-}, but got ' + o.routine );
   assert( args.length === 1 || args.length === 2 );
-  assert( o.select >= 1 || strIs( o.select ) || _.arrayIs( o.select ), () => 'Expects {-o.select-} as number >= 1, string or array, but got ' + o.select );
+  assert( o.select >= 1 || strIs( o.select ) || _.arrayLike( o.select ), () => 'Expects {-o.select-} as number >= 1, string or array, but got ' + o.select );
 
   return o;
 }
@@ -245,13 +249,13 @@ function vectorize_body( o )
 
   _.assertRoutineOptions( vectorize_body, arguments );
 
-  if( _.arrayIs( o.routine ) && o.routine.length === 1 )
+  if( _.arrayLike( o.routine ) && o.routine.length === 1 )
   o.routine = o.routine[ 0 ];
 
   let routine = o.routine;
   let fieldFilter = o.fieldFilter;
   let bypassingFilteredOut = o.bypassingFilteredOut;
-  let processingNoArguments = o.processingNoArguments;
+  let bypassingEmpty = o.bypassingEmpty;
   let vectorizingArray = o.vectorizingArray;
   let vectorizingMapVals = o.vectorizingMapVals;
   let vectorizingMapKeys = o.vectorizingMapKeys;
@@ -345,7 +349,7 @@ function vectorize_body( o )
         return this[ routine ].apply( this, arguments );
       }
     }
-    else if( _.arrayIs( routine ) )
+    else if( _.arrayLike( routine ) )
     {
       assert( routine.length === 2 );
       return function methodCall()
@@ -382,7 +386,7 @@ function vectorize_body( o )
 
     for( let d = 0 ; d < select ; d++ )
     {
-      if( vectorizingArray && _.arrayIs( args[ d ] ) )
+      if( vectorizingArray && _.arrayLike( args[ d ] ) )
       {
         length = args[ d ].length;
         break;
@@ -430,6 +434,8 @@ function vectorize_body( o )
 
   function vectorizeArray()
   {
+    if( bypassingEmpty && !arguments.length )
+    return [];
 
     let args = arguments;
     let src = args[ 0 ];
@@ -453,6 +459,8 @@ function vectorize_body( o )
 
   function vectorizeArrayMultiplying()
   {
+    if( bypassingEmpty && !arguments.length )
+    return [];
 
     let args = multiply( arguments );
     let src = args[ 0 ];
@@ -477,6 +485,9 @@ function vectorize_body( o )
 
   function vectorizeForOptionsMap( srcMap )
   {
+    if( bypassingEmpty && !arguments.length )
+    return [];
+
     let src = srcMap[ select ];
 
     assert( arguments.length === 1, 'Expects single argument' );
@@ -508,6 +519,9 @@ function vectorize_body( o )
   {
     let result = [];
 
+    if( bypassingEmpty && !arguments.length )
+    return result;
+
     for( let i = 0; i < o.select.length; i++ )
     {
       select = o.select[ i ];
@@ -520,6 +534,8 @@ function vectorize_body( o )
 
   function vectorizeMapOrArray()
   {
+    if( bypassingEmpty && !arguments.length )
+    return [];
 
     let args = multiply( arguments );
     let src = args[ 0 ];
@@ -557,6 +573,9 @@ function vectorize_body( o )
 
   function vectorizeMapWithKeysOrArray()
   {
+    if( bypassingEmpty && !arguments.length )
+    return [];
+
     let args = multiply( arguments );
     let srcs = args[ 0 ];
 
@@ -573,7 +592,7 @@ function vectorize_body( o )
       }
       return result;
     }
-    else if( vectorizingArray && _.arrayIs( srcs ) )
+    else if( vectorizingArray && _.arrayLike( srcs ) )
     {
       let result = [];
       for( let s = 0 ; s < srcs.length ; s++ )
@@ -640,6 +659,11 @@ function vectorize_body( o )
 
   function vectorizeKeysOrArray()
   {
+    // yyy
+    if( bypassingEmpty && !arguments.length )
+    return [];
+    // yyy
+
     let args = multiply( arguments );
     let src = args[ 0 ];
     let args2;
@@ -654,7 +678,7 @@ function vectorize_body( o )
     {
       for( let d = 0; d < select; d++ )
       {
-        if( vectorizingArray && _.arrayIs( args[ d ] ) )
+        if( vectorizingArray && _.arrayLike( args[ d ] ) )
         arr = args[ d ];
         else if( _.mapIs( args[ d ] ) )
         {
@@ -670,7 +694,7 @@ function vectorize_body( o )
       result = Object.create( null );
       args2 = _.longSlice( args );
 
-      if( vectorizingArray && _.arrayIs( arr ) )
+      if( vectorizingArray && _.arrayLike( arr ) )
       {
         for( let i = 0; i < arr.length; i++ )
         {
@@ -710,11 +734,6 @@ function vectorize_body( o )
       return result;
     }
 
-    // yyy
-    if( !processingNoArguments && !arguments.length )
-    return [];
-    // yyy
-
     return routine.apply( this, arguments );
   }
 
@@ -723,15 +742,15 @@ function vectorize_body( o )
 /* qqq : implement options combination vectorizingMapVals : 1, vectorizingMapKeys : 1, vectorizingArray : [ 0, 1 ] */
 /* qqq : cover it */
 
-/* qqq : implement processingNoArguments for all combinations of options */
-/* qqq : options processingNoArguments of routine _.vectorize requires good coverage */
+/* qqq : implement bypassingEmpty for all combinations of options */
+/* qqq : options bypassingEmpty of routine _.vectorize requires good coverage */
 
 vectorize_body.defaults =
 {
   routine : null,
   fieldFilter : null,
   bypassingFilteredOut : 1,
-  processingNoArguments : 0,
+  bypassingEmpty : 0,
   vectorizingArray : 1,
   vectorizingMapVals : 0,
   vectorizingMapKeys : 0,

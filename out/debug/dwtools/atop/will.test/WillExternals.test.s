@@ -15,20 +15,22 @@ if( typeof module !== 'undefined' )
 var _global = _global_;
 var _ = _global_.wTools;
 
-//
+// --
+// context
+// --
 
 function onSuiteBegin()
 {
   let self = this;
 
-  self.tempDir = _.path.dirTempOpen( _.path.join( __dirname, '../..'  ), 'Will' );
+  self.tempDir = _.path.pathDirTempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
   self.assetDirPath = _.path.join( __dirname, '_asset' );
   self.repoDirPath = _.path.join( self.assetDirPath, '_repo' );
   self.find = _.fileProvider.filesFinder
   ({
-    includingTerminals : 1,
-    includingDirs : 1,
-    includingTransient : 1,
+    withTerminals : 1,
+    withDirs : 1,
+    withTransient/*maybe withStem*/ : 1,
     allowingMissed : 1,
     maskPreset : 0,
     outputFormat : 'relative',
@@ -41,7 +43,7 @@ function onSuiteBegin()
 function onSuiteEnd()
 {
   let self = this;
-  _.assert( _.strHas( self.tempDir, '/dwtools/tmp.tmp' ) )
+  _.assert( _.strHas( self.tempDir, '/willbe-' ) )
   _.fileProvider.filesDelete( self.tempDir );
 }
 
@@ -132,7 +134,9 @@ function singleModuleWithSpaceTrivial( test )
 
 singleModuleWithSpaceTrivial.timeOut = 200000;
 
-//
+// --
+// tests
+// --
 
 function make( test )
 {
@@ -524,7 +528,9 @@ function openWith( test )
   {
     test.identical( got.exitCode, 0 );
 
+    debugger;
     var files = self.find( _.path.join( routinePath, 'out' ) );
+    debugger;
     test.identical( files, [] );
     var files = self.find( _.path.join( routinePath, 'doc.out' ) );
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
@@ -1426,7 +1432,7 @@ function eachBrokenCommand( test )
 
   /* - */
 
-  shell({ args : '.each */* .resource.list path::module.common' })
+  shell( '.each */* .resource.list path::module.common' )
   .finally( ( err, got ) =>
   {
     test.case = '.each */* .resource.list path::module.common';
@@ -1441,7 +1447,74 @@ function eachBrokenCommand( test )
   /* - */
 
   return ready;
-}
+} /* end of function openExportClean */
+
+//
+
+/*
+  check internal stat of will
+  several commands separated with ";"" should works
+*/
+
+function openExportClean( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'open' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    throwingExitCode : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesDelete({ filePath : outPath })
+
+  /* - */
+
+  shell( '".with . .export ; .clean"' )
+  .then( ( got ) =>
+  {
+    test.case = '.with . .export ; .clean';
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, /Command .*\.with \. \.export ; \.clean.*/ ), 1 );
+    test.identical( _.strCount( got.output, /Exported .*module::submodule \/ build::export.*/ ), 1 );
+    test.identical( _.strCount( got.output, 'Clean deleted 5 file' ), 1 );
+
+    var exp =
+    [
+      '.',
+      './.ex.will.yml',
+      './.im.will.yml',
+      './doc.ex.will.yml',
+      './doc.im.will.yml',
+      './doc',
+      './doc/.ex.will.yml',
+      './doc/.im.will.yml',
+      './doc/doc.ex.will.yml',
+      './doc/doc.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js'
+    ]
+    var got = self.find( routinePath );
+    test.identical( got, exp );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function openExportClean */
 
 //
 
@@ -3600,6 +3673,83 @@ cleanWithInPath.timeOut = 200000;
 
 //
 
+/*
+  check there is no annoying information about lack of remote submodules of submodules
+*/
+
+function cleanRecursive( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = 'export first'
+    return null;
+  })
+
+  shell( '.with group1/group10/a0 .export' )
+  shell( '.with group1/a .export' )
+  shell( '.with group1/b .export' )
+  shell( '.with group2/c .export' )
+  shell( '.with z .export' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'Failed to read' ), 1 );
+    test.identical( _.strCount( got.output, 'try to' ), 1 );
+    test.identical( _.strCount( got.output, '. Read .' ), 6 );
+    test.identical( _.strCount( got.output, /1\/4 submodule\(s\) of .*module::z.* were downloaded/ ), 1 );
+
+    return null;
+  })
+
+  shell( '.with z .clean recursive:2' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'Failed to read' ), 0 );
+    test.identical( _.strCount( got.output, 'try to' ), 0 );
+    test.identical( _.strCount( got.output, '. Read .' ), 6 );
+
+    var files = self.find( routinePath );
+    test.identical( files, [ 'xxx' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function cleanRecursive */
+
+cleanRecursive.timeOut = 300000;
+
+//
+
 function buildSingleModule( test )
 {
   let self = this;
@@ -3708,7 +3858,7 @@ function buildSingleModule( test )
       args : [ '.build wrong' ],
       ready : null,
     }
-    return test.shouldThrowError( shell( o ) )
+    return test.shouldThrowErrorOfAnyKind( shell( o ) )
     .then( ( got ) =>
     {
       debugger;
@@ -3887,7 +4037,7 @@ function buildSubmodules( test )
     let buildOutDebugPath = _.path.join( routinePath, 'out/debug' );
     let buildOutReleasePath = _.path.join( routinePath, 'out/release' );
 
-    return test.shouldThrowError( _.shell( o ) )
+    return test.shouldThrowErrorOfAnyKind( _.shell( o ) )
     .then( ( got ) =>
     {
       test.is( o.exitCode !== 0 );
@@ -4132,7 +4282,7 @@ function exportItself( test )
 function exportNonExportable( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'import-in-exported' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
@@ -4751,7 +4901,7 @@ function exportMixed( test )
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/UriBasic.informal.out.will.yml' ) ) );
 
     var files = self.find( _.path.join( routinePath, 'module' ) );
-    test.identical( files, [ '.', './Proto.informal.will.yml', './UriBasic.informal.will.yml' ] ); debugger;
+    test.identical( files, [ '.', './Proto.informal.will.yml', './UriBasic.informal.will.yml' ] );
     var files = self.find( _.path.join( routinePath, 'out' ) );
     test.gt( files.length, 70 );
 
@@ -6080,7 +6230,7 @@ exportDoc.timeOut = 200000;
 function exportImport( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'import-in-exported' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
@@ -6183,7 +6333,217 @@ function exportBrokenNoreflector( test )
   })
 
   return ready;
-}
+} /* end of function exportBrokenNoreflector */
+
+//
+
+function exportCourrputedOutfileUnknownSection( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'corrupted-outfile-unknown-section' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'sub.out' );
+  let outFilePath = _.path.join( routinePath, 'sub.out/sub.out.will.yml' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.with sub .export debug:1';
+    return null;
+  })
+
+  shell( '.with sub .export debug:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './sub.out.will.yml' ] );
+
+    var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    var exported = _.mapKeys( _.select( outfile, 'exported/*' ) );
+    var exp = [ 'export.debug' ];
+    test.setsAreIdentical( exported, exp );
+
+    test.identical( _.strCount( got.output, '. Read 2 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, '! Failed to read .' ), 1 );
+    test.identical( _.strCount( got.output, 'Failed to read willfile' ), 1 );
+    test.identical( _.strCount( got.output, 'Willfile should not have section(s) : "unknown_section"' ), 1 );
+    test.identical( _.strCount( got.output, /Exported .*module::sub \/ build::export.debug.*/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function exportCourrputedOutfileUnknownSection */
+
+//
+
+function exportCourruptedOutfileSyntax( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'corrupted-outfile-syntax' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'sub.out' );
+  let outFilePath = _.path.join( routinePath, 'sub.out/sub.out.will.yml' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.with sub .export debug:1';
+    return null;
+  })
+
+  shell( '.with sub .export debug:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './sub.out.will.yml' ] );
+
+    var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    var exported = _.mapKeys( _.select( outfile, 'exported/*' ) );
+    var exp = [ 'export.debug' ];
+    test.setsAreIdentical( exported, exp );
+
+    test.identical( _.strCount( got.output, '. Read 2 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, '! Failed to read .' ), 1 );
+    test.identical( _.strCount( got.output, 'Failed to read willfile' ), 1 );
+    test.identical( _.strCount( got.output, 'Failed to format "string" by encoder yaml-string->structure' ), 1 );
+    test.identical( _.strCount( got.output, /Exported .*module::sub \/ build::export.debug.*/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function exportCourruptedOutfileSyntax */
+
+//
+
+function exportInconsistent( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'inconsistent-outfile' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'sub.out' );
+  let outFilePath = _.path.join( routinePath, 'sub.out/sub.out.will.yml' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.with sub .export debug:1';
+    return null;
+  })
+
+  shell( '.with sub .export debug:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './sub.out.will.yml' ] );
+
+    var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    var exported = _.mapKeys( _.select( outfile, 'exported/*' ) );
+    var exp = [ 'export.debug' ];
+    test.setsAreIdentical( exported, exp );
+
+    test.identical( _.strCount( got.output, '. Read 2 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, /Exported .*module::sub \/ build::export.debug.*/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = 'export release, but input willfile is changed';
+    _.fileProvider.fileAppend( _.path.join( routinePath, 'sub.ex.will.yml' ), '\n' );
+    return null;
+  })
+
+  shell( '.with sub .export debug:0' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './sub.out.will.yml' ] );
+
+    var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    var exported = _.mapKeys( _.select( outfile, 'exported/*' ) );
+    var exp = [ 'export.' ];
+    test.setsAreIdentical( exported, exp );
+
+    test.identical( _.strCount( got.output, '. Read 2 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, '! Failed to read .' ), 1 );
+    test.identical( _.strCount( got.output, 'Failed to read willfile' ), 1 );
+    test.identical( _.strCount( got.output, 'Out-willfile is inconsistent with its in-willfiles' ), 1 );
+    test.identical( _.strCount( got.output, /Exported .*module::sub \/ build::export.*/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function exportInconsistent */
 
 //
 
@@ -6230,6 +6590,71 @@ function exportWholeModule( test )
 
   return ready;
 }
+
+//
+
+/*
+  check there is no annoying information about lack of remote submodules of submodules
+*/
+
+function exportWithRemoteSubmodules( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = 'export'
+    return null;
+  })
+
+  shell( '.with group1/group10/a0 .clean' )
+  shell( '.with group1/a .clean' )
+  shell( '.with group1/b .clean' )
+  shell( '.with group2/c .clean' )
+  shell( '.with group1/group10/a0 .export' )
+  shell( '.with group1/a .export' )
+  shell( '.with group1/b .export' )
+  shell( '.with group2/c .export' )
+  shell( '.with z .export' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'Failed to read' ), 1 );
+    test.identical( _.strCount( got.output, 'try to' ), 1 );
+    test.identical( _.strCount( got.output, '. Read .' ), 6 );
+    test.identical( _.strCount( got.output, /1\/4 submodule\(s\) of .*module::z.* were downloaded/ ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function exportWithRemoteSubmodules */
+
+exportWithRemoteSubmodules.timeOut = 300000;
 
 //
 
@@ -11079,7 +11504,7 @@ function resourcesFormReflectorsExperiment( test )
 }
 
 // --
-//
+// declare
 // --
 
 var Self =
@@ -11116,6 +11541,7 @@ var Self =
     eachBrokenIll,
     eachBrokenNon,
     eachBrokenCommand,
+    openExportClean,
 
     verbositySet,
     verbosityStepDelete,
@@ -11138,6 +11564,7 @@ var Self =
     cleanSubmodules,
     cleanMixed,
     cleanWithInPath,
+    // cleanRecursive, // xxx
 
     buildSingleModule,
     // buildSingleStep, // qqq : repair _.shell please
@@ -11159,7 +11586,11 @@ var Self =
     exportDoc,
     exportImport,
     exportBrokenNoreflector,
+    exportCourrputedOutfileUnknownSection,
+    exportCourruptedOutfileSyntax,
+    exportInconsistent,
     exportWholeModule,
+    // exportWithRemoteSubmodules, // xxx
     importPathLocal,
     importLocalRepo,
     importOutWithDeletedSource,
