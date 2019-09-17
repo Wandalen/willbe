@@ -1213,7 +1213,7 @@ function strEscape( o )
     // \v 	vertical tab 	byte 0x0b in ASCII encoding
     // source : http://en.cppreference.com/w/cpp/language/escape
 
-  // console.log( _.appMemoryUsageInfo(), o.src.length );
+  // console.log( _.process.memoryUsageInfo(), o.src.length );
   // if( o.src.length === 111691 )
   // debugger;
 
@@ -3594,6 +3594,8 @@ function strConcat( srcs, o )
     }
     if( src.length )
     nl = src[ src.length-1 ] === o.lineDelimter;
+    // if( _.errIs( src ) )
+    // debugger;
     result += src;
   }
 

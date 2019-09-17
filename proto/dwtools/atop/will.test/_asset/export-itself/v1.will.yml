@@ -16,7 +16,7 @@ submodule :
 step :
 
   export :
-    export : .
+    export : '**'
 
 build :
 

@@ -265,7 +265,7 @@ function _filePathChanged()
 // name
 // --
 
-function nickNameGet()
+function qualifiedNameGet()
 {
   let module = this;
   let name = module.name;
@@ -274,10 +274,10 @@ function nickNameGet()
 
 //
 
-function decoratedNickNameGet()
+function decoratedQualifiedNameGet()
 {
   let module = this;
-  let result = module.nickName;
+  let result = module.qualifiedName;
   return _.color.strFormat( result, 'entity' );
 }
 
@@ -402,6 +402,163 @@ function _willfilesRelease( willfilesArray )
 }
 
 // --
+// remote
+// --
+
+function remoteIsUpdate()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( !!module.willfilesPath || !!module.dirPath );
+  _.assert( arguments.length === 0 );
+
+  let remoteProvider = fileProvider.providerForPath( module.commonPath );
+  if( remoteProvider.isVcs )
+  return end( true );
+
+  return end( false );
+
+  /* */
+
+  function end( result )
+  {
+    module.isRemote = result;
+    return result;
+  }
+}
+
+//
+
+function remoteIsDownloadedUpdate()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( _.strDefined( module.localPath ) );
+  _.assert( !!module.willfilesPath );
+  _.assert( module.isRemote === true );
+
+  let remoteProvider = fileProvider.providerForPath( module.remotePath );
+  _.assert( !!remoteProvider.isVcs );
+
+  let result = remoteProvider.isDownloaded
+  ({
+    localPath : module.localPath,
+  });
+
+  _.assert( !_.consequenceIs( result ) );
+
+  if( !result )
+  return end( result );
+
+  return _.Consequence.From( result )
+  .finally( ( err, arg ) =>
+  {
+    end( arg );
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  /* */
+
+  function end( result )
+  {
+    module.isDownloaded = !!result;
+    return result;
+  }
+
+}
+
+//
+
+function remoteIsUpToDateUpdate()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( _.strDefined( module.localPath ) );
+  _.assert( !!module.willfilesPath );
+  _.assert( module.isRemote === true );
+
+  let remoteProvider = fileProvider.providerForPath( module.remotePath );
+
+  _.assert( !!remoteProvider.isVcs );
+
+  debugger;
+  let result = remoteProvider.isUpToDate
+  ({
+    remotePath : module.remotePath,
+    localPath : module.localPath,
+    verbosity : will.verbosity - 3,
+  });
+
+  if( !result )
+  return end( result );
+
+  return _.Consequence.From( result )
+  .finally( ( err, arg ) =>
+  {
+    end( arg );
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  /* */
+
+  function end( result )
+  {
+    module.isUpToDate = !!result;
+    return result;
+  }
+
+}
+
+//
+
+function remoteCurrentVersion()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( !!module.willfilesPath || !!module.dirPath );
+  _.assert( arguments.length === 0 );
+
+  debugger;
+  let remoteProvider = fileProvider.providerForPath( module.commonPath );
+  debugger;
+  return remoteProvider.versionLocalRetrive( module.localPath );
+}
+
+//
+
+function remoteLatestVersion()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( !!module.willfilesPath || !!module.dirPath );
+  _.assert( arguments.length === 0 );
+
+  debugger;
+  let remoteProvider = fileProvider.providerForPath( module.commonPath );
+  debugger;
+  return remoteProvider.versionRemoteLatestRetrive( module.localPath )
+}
+
+// --
 // relations
 // --
 
@@ -477,9 +634,9 @@ let Forbids =
 let Accessors =
 {
 
-  nickName : { getter : nickNameGet, combining : 'rewrite', readOnly : 1 },
+  qualifiedName : { getter : qualifiedNameGet, combining : 'rewrite', readOnly : 1 },
   fileName : { readOnly : 1 },
-  decoratedNickName : { getter : decoratedNickNameGet, combining : 'rewrite', readOnly : 1 },
+  decoratedQualifiedName : { getter : decoratedQualifiedNameGet, combining : 'rewrite', readOnly : 1 },
   decoratedAbsoluteName : { getter : decoratedAbsoluteNameGet, readOnly : 1 },
 
   willfilesArray : { setter : willfileArraySet },
@@ -515,8 +672,8 @@ let Extend =
 
   // name
 
-  nickNameGet,
-  decoratedNickNameGet,
+  qualifiedNameGet,
+  decoratedQualifiedNameGet,
   decoratedAbsoluteNameGet,
 
   // willfile
@@ -526,6 +683,15 @@ let Extend =
   willfileRegister,
 
   _willfilesRelease,
+
+  // remote
+
+  remoteIsUpdate,
+  remoteIsDownloadedUpdate,
+  remoteIsUpToDateUpdate,
+
+  remoteCurrentVersion,
+  remoteLatestVersion,
 
   // relation
 

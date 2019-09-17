@@ -10482,7 +10482,7 @@ ghij`
 var Self =
 {
 
-  name : 'Tools/base/l2/String',
+  name : 'Tools.base.l2.String',
   silencing : 1,
   enabled : 1,
 

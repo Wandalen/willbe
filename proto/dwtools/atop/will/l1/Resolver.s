@@ -144,8 +144,8 @@ function _onQuantitativeFail( err )
     {
       if( _.strIs( e ) )
       return e;
-      if( _.strIs( e.nickName ) )
-      return e.nickName;
+      if( _.strIs( e.qualifiedName ) )
+      return e.qualifiedName;
       isString = 0
     });
 
@@ -643,10 +643,10 @@ function errResolving( o )
   let module = o.rop.baseModule;
   _.assertRoutineOptions( errResolving, arguments );
   _.assert( arguments.length === 1 );
-  if( o.rop.currentContext && o.rop.currentContext.nickName )
-  return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'code' ), 'for', o.rop.currentContext.decoratedAbsoluteName, '\n', o.err );
+  if( o.rop.currentContext && o.rop.currentContext.qualifiedName )
+  return _.err( o.err, '\nFailed to resolve', _.color.strFormat( o.selector, 'code' ), 'for', o.rop.currentContext.decoratedAbsoluteName );
   else
-  return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'code' ), 'in', module.decoratedAbsoluteName, '\n', o.err );
+  return _.err( o.err, '\nFailed to resolve', _.color.strFormat( o.selector, 'code' ), 'in', module.decoratedAbsoluteName );
 }
 
 errResolving.defaults =
@@ -1073,7 +1073,7 @@ function reflectorResolve_body( o )
   {
     _.sure( reflector instanceof will.Reflector, () => 'Reflector ' + o.selector + ' was not found' + _.strType( reflector ) );
     reflector.form();
-    _.assert( reflector.formed === 3, () => reflector.nickName + ' is not formed' );
+    _.assert( reflector.formed === 3, () => reflector.qualifiedName + ' is not formed' );
   }
 
   return reflector;

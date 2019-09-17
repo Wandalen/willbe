@@ -4041,7 +4041,7 @@ function mapOwnNone( test )
 var Self =
 {
 
-  name : 'Tools/base/l1/Map',
+  name : 'Tools.base.l1.Map',
   silencing : 1,
 
   tests :

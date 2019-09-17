@@ -228,7 +228,7 @@ function form2( o )
   _.assert( reflector.src === reflector.dst.src );
   _.assert( reflector.src.filePath === reflector.dst.filePath );
 
-  // if( reflector.nickName === 'reflector::exported.export' )
+  // if( reflector.qualifiedName === 'reflector::exported.export' )
   // debugger;
 
   if( reflector.src.hasAnyPath() ) // yyy
@@ -265,7 +265,7 @@ function form3()
   if( reflector.formed === 3 )
   return reflector;
 
-  // if( reflector.nickName === 'reflector::exported.export' )
+  // if( reflector.qualifiedName === 'reflector::exported.export' )
   // debugger;
 
   _.assert( arguments.length === 0 );
@@ -273,7 +273,7 @@ function form3()
 
   /* begin */
 
-  // if( reflector.nickName === 'reflector::exported.export' )
+  // if( reflector.qualifiedName === 'reflector::exported.export' )
   // debugger;
 
   reflector.pathsResolve();
@@ -348,7 +348,7 @@ function _inheritMultiple( o )
   reflector.prefixesApply();
   reflector._accumulator.prefixesApply();
 
-  // if( reflector.nickName === 'reflector::exported.export' )
+  // if( reflector.qualifiedName === 'reflector::exported.export' )
   // debugger;
 
   reflector.src.and( reflector._accumulator.src ).pathsSupplementJoining( reflector._accumulator.src );
@@ -398,7 +398,7 @@ function _inheritSingle( o )
 
   if( reflector2.formed < 3 )
   {
-    _.sure( !_.arrayHas( o.visited, reflector2.name ), () => 'Cyclic dependency ' + reflector.nickName + ' of ' + reflector2.nickName );
+    _.sure( !_.arrayHas( o.visited, reflector2.name ), () => 'Cyclic dependency ' + reflector.qualifiedName + ' of ' + reflector2.qualifiedName );
     if( reflector2.formed < 2 )
     {
       reflector2.form2({ visited : o.visited });
@@ -435,7 +435,7 @@ function _inheritSingle( o )
 
   /* */
 
-  // if( reflector.nickName === 'reflector::reflect.submodules.variant3' )
+  // if( reflector.qualifiedName === 'reflector::reflect.submodules.variant3' )
   // debugger;
 
   if( o.extending )
@@ -607,12 +607,12 @@ function _inheritPathMapAct2( o )
   if( _.errIs( resolvedSrc ) )
   {
     debugger;
-    throw _.err( 'Failed to form', reflector.nickName, '\n', resolvedSrc );
+    throw _.err( resolvedSrc, '\nFailed to form', reflector.qualifiedName );
   }
   if( _.errIs( resolvedDst ) )
   {
     debugger;
-    throw _.err( 'Failed to form', reflector.nickName, '\n', resolvedDst );
+    throw _.err( resolvedDst, '\nFailed to form', reflector.qualifiedName );
   }
 
   return reflector._inheritPathMapAct3
@@ -814,7 +814,7 @@ function sureRelativeOrGlobal( o )
   }
   catch( err )
   {
-    throw _.err( 'Source filter is ill-formed\n', err );
+    throw _.err( err, '\nSource filter is ill-formed' );
   }
 
   try
@@ -823,7 +823,7 @@ function sureRelativeOrGlobal( o )
   }
   catch( err )
   {
-    throw _.err( 'Destination filter is ill-formed\n', err );
+    throw _.err( err, '\nDestination filter is ill-formed' );
   }
 
   return true;
@@ -938,7 +938,7 @@ function pathsResolve( o )
   if( _.mapIs( reflector.src.filePath ) )
   reflector.src.filePathNullizeMaybe();
 
-  // if( reflector.nickName === "reflector::reflect.files2" )
+  // if( reflector.qualifiedName === "reflector::reflect.files2" )
   // debugger;
 
   /* yyy */
@@ -1305,7 +1305,7 @@ optionsForReflectExport.defaults =
 
 //
 
-function dataExport()
+function structureExport()
 {
   let reflector = this;
   let module = reflector.module;
@@ -1313,11 +1313,11 @@ function dataExport()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let o = _.routineOptions( dataExport, arguments );
+  let o = _.routineOptions( structureExport, arguments );
 
   _.assert( reflector.src instanceof _.FileRecordFilter );
 
-  let result = Parent.prototype.dataExport.apply( this, arguments );
+  let result = Parent.prototype.structureExport.apply( this, arguments );
 
   if( result === undefined )
   return result;
@@ -1384,7 +1384,7 @@ function dataExport()
 
 }
 
-dataExport.defaults = Object.create( _.Will.Resource.prototype.dataExport.defaults );
+structureExport.defaults = Object.create( _.Will.Resource.prototype.structureExport.defaults );
 
 //
 
@@ -1528,7 +1528,7 @@ let Extend =
   optionsForFindExport,
   optionsForFindGroupExport,
   optionsForReflectExport,
-  dataExport,
+  structureExport,
 
   // accessor
 

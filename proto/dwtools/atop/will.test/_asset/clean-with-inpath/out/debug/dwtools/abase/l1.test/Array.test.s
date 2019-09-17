@@ -33059,7 +33059,7 @@ function loggerProblemExperiment( test )
 var Self =
 {
 
-  name : 'Tools/base/l1/Long',
+  name : 'Tools.base.l1.Long',
   silencing : 1,
   enabled : 1,
   // verbosity : 9,

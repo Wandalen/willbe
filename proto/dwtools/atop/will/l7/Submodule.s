@@ -177,10 +177,17 @@ function form3()
 
   result.finally( ( err, arg ) =>
   {
+    submodule.formed = 3;
 
     if( err )
-    submodule.errorNotFound( err );
-    submodule.formed = 3;
+    {
+      debugger;
+      err = _.err( err, `\nFailed to open ${submodule.absoluteName}` );
+      if( _.strHas( err.message, 'xxx' ) )
+      submodule.errorNotFound( err );
+      else
+      throw err;
+    }
 
     return arg || null;
   });
@@ -283,21 +290,6 @@ function open()
   ({
     longPath : submodule.longPath,
   })
-
-  // if( !submodule.opener.openedModule && !submodule.opener.error )
-  // {
-  //   if( !submodule.enabled )
-  //   submodule.opener.error = _.err( 'Module is disabled' );
-  //   else
-  //   submodule.opener.error = _.err( 'Cant open module. Reason is unknown.' );
-  // }
-  //
-  // if( submodule.opener.error )
-  // {
-  //   return new _.Consequence().error( submodule.opener.error );
-  // }
-  //
-  // return submodule.opener.openedModule.ready;
 }
 
 //
@@ -327,18 +319,11 @@ function _openAct( o )
   if( !submodule.enabled )
   return submodule.opener;
 
-  // if( !submodule.opener.find({ throwing : 0 }) )
-  // return submodule.opener;
-
   return submodule.opener.open({ throwing : 1 })
   .finally( ( err, arg ) =>
   {
     if( err )
-    {
-      // if( !submodule.enabled )
-      // submodule.opener.error = _.err( 'Module is disabled' );
-      throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.opener.dirPath ), '\n', err );
-    }
+    throw _.err( err, '\n', 'Failed to open', submodule.qualifiedName, 'at', _.strQuote( submodule.opener.dirPath ) );
     return arg;
   });
 }
@@ -575,8 +560,8 @@ function errorNotFound( err )
   if( !submodule.module.rootModule || submodule.module.rootModule === submodule.module )
   logger.error
   (
-      // ' ' + _.color.strFormat( '!', 'negative' ) + ' Failed to read ' + submodule.decoratedNickName
-    ' ' + '!' + ' Failed to read ' + submodule.decoratedNickName
+      // ' ' + _.color.strFormat( '!', 'negative' ) + ' Failed to read ' + submodule.decoratedQualifiedName
+    ' ' + '!' + ' Failed to read ' + submodule.decoratedQualifiedName
     + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading'
     // + '\n' + err.originalMessage
   );

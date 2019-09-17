@@ -371,7 +371,8 @@ function _read()
   }
   catch( err )
   {
-    err = _.err( `Failed to read willfile ${willf.filePath}\n`, _.errBrief( err ) );
+    err = _.err( err, `\nFailed to read willfile ${willf.filePath}` );
+    // err = _.err( _.errBrief( err ), `\nFailed to read willfile ${willf.filePath}` );
 
     willf.error = willf.error || err;
 
@@ -402,6 +403,9 @@ function _open()
   let path = fileProvider.path;
   let logger = will.logger;
   let inconsistent = 0;
+
+  if( willf.formed === 2 )
+  willf._read();
 
   if( willf.formed > 3 )
   return true;
@@ -465,10 +469,17 @@ function _open()
 
     _.assert( _.mapIs( willf.structure ), `Something wrong with content of willfile ${willf.filePath}` );
 
-    if( willf.structure.format )
-    _.sureMapHasOnly( willf.structure, willf.KnownSectionsOfOut, () => 'Out-willfile should not have section(s) :' );
-    else
-    _.sureMapHasOnly( willf.structure, willf.KnownSectionsOfIn, () => 'Willfile should not have section(s) :' );
+    try
+    {
+      if( willf.structure.format )
+      _.sureMapHasOnly( willf.structure, willf.KnownSectionsOfOut, () => 'Out-willfile should not have section(s) :' );
+      else
+      _.sureMapHasOnly( willf.structure, willf.KnownSectionsOfIn, () => 'Willfile should not have section(s) :' );
+    }
+    catch( err )
+    {
+      throw _.errBrief( err );
+    }
 
     willf[ moduleStructureSymbol ] = willf.structure;
     if( willf.structure.format )
@@ -479,7 +490,6 @@ function _open()
       inconsistent = 1;
       let peerWillfilesPath = willf.peerWillfilesPathGet();
       peerWillfilesPath = _.arrayAs( peerWillfilesPath );
-      debugger;
       throw _.errBrief
       (
           `Out-willfile is inconsistent with its in-willfiles:`
@@ -499,7 +509,8 @@ function _open()
   }
   catch( err )
   {
-    err = _.err( `Failed to open willfile ${willf.filePath}\n`, _.errBrief( err ) );
+    err = _.err( err, `\nFailed to open willfile ${willf.filePath}` );
+    // err = _.err( _.errBrief( err ), `Failed to open willfile ${willf.filePath}\n` );
 
     willf.error = willf.error || err;
     willf._readLog( 0, inconsistent ? 2 : 1 );
@@ -592,7 +603,6 @@ function _importToModule()
   _.assert( !!logger );
   _.assert( !!will.formed );
   _.assert( _.mapIs( structure ) );
-  // _.assert( willf.dirPath === path.detrail( path.dir( willf.filePath ) ) );
 
   try
   {
@@ -644,7 +654,9 @@ function _importToModule()
   }
   catch( err )
   {
-    err = _.err( `Failed to import willfile ${willf.filePath}\n`, err );
+    // debugger;
+    // err = _.err( err, `\nFailed to import willfile ${willf.filePath}` );
+    throw _.err( err, `\nFailed to import willfile ${willf.filePath}` );
   }
 
   willf.formed = 5;
@@ -864,11 +876,12 @@ function hashDescriptorFor( filePath )
   if( filePath instanceof Self )
   filePath = willf.filePath;
 
-  // if( _.arrayIs( filePath ) )
-  // filePath = filePath[ 0 ];
+  if( willf.storageWillfile && willf.storageWillfile.formed < 4 )
+  willf.storageWillfile._open();
 
   _.assert( arguments.length === 1 );
   _.assert( !!willf.storageWillfile );
+  _.assert( willf.storageWillfile.formed >= 4, `Storage willfile ${willf.storageWillfile.filePath} is not formed` );
   _.assert( _.mapIs( willf.storageWillfile.structure ), 'Does not have structure to get hash for a willfile from it' );
   _.assert( _.strIs( filePath ) );
 
@@ -1093,8 +1106,6 @@ function _attachedModulesOpen()
   if( !willf.structure.module )
   return;
 
-  debugger;
-
   for( let relativePath in willf.structure.module )
   {
     let moduleStructure = willf.structure.module[ relativePath ];
@@ -1116,7 +1127,6 @@ function _attachedModulesOpen()
     let got = will.willfileFor({ willf : willfOptions, combining : 'supplement' });
   }
 
-  debugger;
 }
 
 //
@@ -1141,7 +1151,7 @@ function structureOf( object )
 
   let relativePath = path.relative( willf.dirPath, commonPath );
 
-  _.assert( _.mapIs( willf.structure.module ) );
+  _.sure( _.mapIs( willf.structure.module ), `Structure of willfile ${willf.filePath} does not have section "module"` );
   if( !willf.structure.module[ relativePath ] )
   debugger;
 

@@ -2349,7 +2349,7 @@ function vectorizeBypassingEmpty( test )
 var Self =
 {
 
-  name : 'Tools/base/l1/Routine',
+  name : 'Tools.base.l1.Routine',
   silencing : 1,
 
   tests :

@@ -718,7 +718,7 @@ function globFilterKeys( test )
 var Self =
 {
 
-  name : 'Tools/base/l3/path/Glob',
+  name : 'Tools.base.l3.path.Glob',
   silencing : 1,
   // verbosity : 7,
   // routine : 'relative',

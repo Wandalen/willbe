@@ -43,7 +43,7 @@ function exec()
 
   let logger = will.logger;
   let fileProvider = will.fileProvider;
-  let appArgs = _.appArgs({ keyValDelimeter : 0 });
+  let appArgs = _.process.args({ keyValDelimeter : 0 });
   let ca = will._commandsMake();
 
 
@@ -54,7 +54,7 @@ function exec()
   })
   .catch( ( err ) =>
   {
-    _.appExitCode( -1 );
+    _.process.exitCode( -1 );
     err = _.err( err );
     logger.log( _.errOnce( err ) );
     throw err;
@@ -353,7 +353,7 @@ function _commandsMake()
   let will = this;
   let logger = will.logger;
   let fileProvider = will.fileProvider;
-  let appArgs = _.appArgs();
+  let appArgs = _.process.args();
 
   _.assert( _.instanceIs( will ) );
   _.assert( arguments.length === 0 );
@@ -460,7 +460,7 @@ function _commandsEnd( command )
     will.currentOpenerChange( null );
     if( will.beeping )
     _.diagnosticBeep();
-    _.appExit( -1 );
+    _.process.exit( -1 );
   }
 
   return true;
@@ -475,7 +475,7 @@ function errEncounter( error )
   let path = will.fileProvider.path;
   let logger = will.logger;
 
-  _.appExitCode( -1 );
+  _.process.exitCode( -1 );
   logger.log( _.errOnce( err ) );
   // _.errLogOnce( error );
 
@@ -548,7 +548,7 @@ function commandImply( e )
 
   let request = will.Resolver.strRequestParse( e.argument );
 
-  _.appArgsReadTo
+  _.process.argsReadTo
   ({
     dst : will,
     propertiesMap : request.map,
@@ -1179,7 +1179,7 @@ function commandClean( e )
     {
       will.currentOpenerChange( null );
       if( err )
-      throw _.err( `Failed to clean ${it.commonPath}\n`, err );
+      throw _.err( err, `\nFailed to clean ${it.commonPath}` );
       return arg;
     });
 
@@ -1276,7 +1276,7 @@ function commandExport( e )
     {
       will.currentOpenerChange( null );
       if( err )
-      throw _.err( `Failed to export ${it.commonPath}\n`, err );
+      throw _.err( err, `\nFailed to export ${it.commonPath}` );
       return arg;
     });
 
@@ -1404,7 +1404,7 @@ if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;
 wTools[ Self.shortName ] = Self;
 
-// _.appExitHandlerRepair();
+// _.process.exitHandlerRepair();
 if( !module.parent )
 Self.Exec();
 

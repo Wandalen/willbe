@@ -3232,7 +3232,7 @@ function entitySize( test )
 var Self =
 {
 
-  name : 'Tools/base/l1/Entity',
+  name : 'Tools.base.l1.Entity',
   silencing : 1,
   // verbosity : 4,
   // negativity : 3,
