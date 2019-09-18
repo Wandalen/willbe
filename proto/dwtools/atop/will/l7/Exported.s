@@ -309,7 +309,8 @@ function _performBefore()
   {
     let submodule = module.submoduleMap[ s ];
     if( !submodule.opener || !submodule.opener.isOpened() || !submodule.opener.isValid() )
-    if( !submodule.criterion.optional && !submodule.criterion.dev && submodule.enabled )
+    // if( !submodule.criterion.optional && !submodule.criterion.dev && submodule.enabled )
+    if( submodule.isMandatory() )
     {
       debugger;
       if( submodule.opener && submodule.opener.error )
@@ -841,8 +842,8 @@ function perform( frame )
 
   con.finally( ( err, arg ) =>
   {
-    if( err )
-    debugger;
+    // if( err )
+    // debugger;
     if( err )
     throw _.err( err, `\nFailed to export ${exported.absoluteName}` );
 

@@ -90,8 +90,8 @@ function _verify()
   _.assert( exported.step instanceof will.Step );
   _.assert( exported.recursive === 0 || exported.recursive === 1 || exported.recursive === 2 );
   _.assert( exported.withIntegrated === 0 || exported.withIntegrated === 1 || exported.withIntegrated === 2 );
-  // _.assert( _.strDefined( exported.exportPath ) || _.arrayIs( exported.exportFiles ), () => exported.step.nickName + ' should have option export, path to directory to export or reflector' );
-  // _.assert( _.strDefined( exported.exportPath ), () => exported.step.nickName + ' should have option export, path to directory to export or reflector' );
+  // _.assert( _.strDefined( exported.exportPath ) || _.arrayIs( exported.exportFiles ), () => exported.step.qualifiedName + ' should have option export, path to directory to export or reflector' );
+  // _.assert( _.strDefined( exported.exportPath ), () => exported.step.qualifiedName + ' should have option export, path to directory to export or reflector' );
   // _.assert( exported.exportPath === null || exported.exportFiles === null );
   _.assert( _.boolLike( exported.tar ), 'Expects bool-like {- exported.tar -}' );
 
@@ -106,13 +106,13 @@ function _verify()
   _.sure
   (
     _.strDefined( exported.exportPath )
-    , () => exported.step.nickName + ' should have defined path or reflector to export. Alternatively module could have defined path::export or reflecotr::export.'
+    , () => exported.step.qualifiedName + ' should have defined path or reflector to export. Alternatively module could have defined path::export or reflecotr::export.'
   );
 
   // _.sure
   // (
   //   !will.Resolver.selectorIsComposite( exported.exportPath )
-  //   , () => `${exported.step.decoratedNickName} has composite export path ${_.color.strFormat( exported.exportPath, 'path' )}. Export path could be a selector, but only simple.`
+  //   , () => `${exported.step.decoratedQualifiedName} has composite export path ${_.color.strFormat( exported.exportPath, 'path' )}. Export path could be a selector, but only simple.`
   // );
 
 }
@@ -160,7 +160,7 @@ function _performPrepare( frame )
 
     let exportFiles = module.pathOrReflectorResolve( 'export' );
     if( exportFiles )
-    exported.exportPath = exportFiles.nickName;
+    exported.exportPath = exportFiles.qualifiedName;
 
     // exported.exportFiles = module.pathOrReflectorResolve( 'export' );
     // exported.exportFiles = module.filesFromResource
@@ -202,6 +202,27 @@ function _performReset()
 
 //
 
+function _performSubmodulesPeersOpen()
+{
+  let exported = this;
+  let module = exported.module;
+  let will = module.will;
+
+  _.assert( exported.recursive === 0 || exported.recursive === 1 || exported.recursive === 2 );
+
+  // return module.submodulesPeersOpen({ throwing : 0, recursive : 1 })
+  return module.submodulesPeersOpen({ throwing : 0, recursive : Math.max( exported.recursive, 1 ) })
+  .finally( ( err, arg ) =>
+  {
+    if( err )
+    throw err;
+    return arg;
+  });
+
+}
+
+//
+
 function _performRecursive()
 {
   let exported = this;
@@ -214,11 +235,12 @@ function _performRecursive()
   if( !exported.recursive )
   return null;
 
-  return module.submodulesPeersOpen({ throwing : 0 }).then( () =>
+  // return module.submodulesPeersOpen({ throwing : 0, recursive : exported.recursive })
+  return new _.Consequence().take( null )
+  .then( () =>
   {
     let con = new _.Consequence().take( null );
 
-    debugger;
     let modules = module.submodulesEach
     ({
       recursive : exported.recursive,
@@ -227,7 +249,6 @@ function _performRecursive()
       withOut : 0,
       withIn : 1,
     });
-    debugger;
 
     modules.forEach( ( module2 ) =>
     {
@@ -282,19 +303,28 @@ function _performBefore()
   let logger = will.logger;
 
   _.assert( module.stager.stageStatePerformed( 'resourcesFormed' ), 'Resources should be formed' );
-  _.assert( module.isFull() && module.isValid(), `${module.nickName} is not fully formed to be exported` );
+  _.assert( module.isFull() && module.isValid(), `${module.qualifiedName} is not fully formed to be exported` );
 
   for( let s in module.submoduleMap )
   {
     let submodule = module.submoduleMap[ s ];
     if( !submodule.opener || !submodule.opener.isOpened() || !submodule.opener.isValid() )
-    if( !submodule.criterion.optional && !submodule.criterion.dev && submodule.enabled )
+    // if( !submodule.criterion.optional && !submodule.criterion.dev && submodule.enabled )
+    if( submodule.isMandatory() )
     {
       debugger;
       if( submodule.opener && submodule.opener.error )
       logger.log( submodule.opener.error );
       throw _.errBrief( 'Exporting is impossible because ' + submodule.decoratedAbsoluteName + ' is broken!' );
     }
+
+    if( submodule.opener.openedModule && !submodule.opener.openedModule.isOut )
+    {
+      let peerModule = submodule.opener.openedModule.peerModule;
+      if( !peerModule || !peerModule.isValid() )
+      throw _.errBrief( 'Exporting is impossible because out-willfile of ' + submodule.decoratedAbsoluteName + ' is broken! Please re-export it, first.' );
+    }
+
   }
 
   return null;
@@ -312,7 +342,7 @@ function _performReadExported()
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
   let logger = will.logger;
-  let outFilePath = module.outfilePathGet(); debugger;
+  let outFilePath = module.outfilePathGet();
 
   let o2 =
   {
@@ -328,19 +358,21 @@ function _performReadExported()
   opener2.find({ throwing : 0 });
 
   return opener2.open({ throwing : 1, forming : 0 })
-  .then( ( arg ) =>
+  .then( ( module2 ) =>
   {
+
+    _.assert( !!will.formed );
 
     if( !opener2.openedModule.isValid() )
     {
       logger.log( _.errBrief( `Module ${opener2.absoluteName} was not valid` ) );
-      return arg;
+      return module2;
     }
 
     if( !opener2.openedModule.isConsistent() )
     {
       logger.log( _.errBrief( `Module ${opener2.absoluteName} was not consistent, re-exporting from scratch was required` ) );
-      return arg;
+      return module2;
     }
 
     let willfile = opener2.openedModule.willfilesArray[ 0 ];
@@ -360,9 +392,9 @@ function _performReadExported()
       module.resourceImport({ srcResource : exported2 });
     }
 
-    return arg;
+    return module2;
   })
-  .finally( ( err, arg ) =>
+  .finally( ( err, module2 ) =>
   {
 
     err = err || opener2.error;
@@ -376,10 +408,12 @@ function _performReadExported()
       verbosity = 3;
       if( verbosity <= will.verbosity )
       {
-        debugger;
-        logger.up( 2 );
-        logger.log( _.errBrief( err ) );
-        logger.down( 2 );
+        if( !_.errIsLogged( err ) )
+        {
+          logger.up( 2 );
+          logger.log( _.errBrief( err ) );
+          logger.down( 2 );
+        }
       }
     }
 
@@ -398,7 +432,7 @@ function _performReadExported()
 
     if( err )
     _.errAttend( err );
-    return arg || null;
+    return module2 || null;
   })
 
 }
@@ -462,7 +496,7 @@ function _performExportedReflectors()
 
     _.assert( exp.formed >= 1 );
     _.assert( exp.src.formed === 1 );
-    _.sure( !!exp.filePath, () => exp.nickName + ' should have filePath' );
+    _.sure( !!exp.filePath, () => exp.qualifiedName + ' should have filePath' );
 
     exportedReflector = exp.cloneExtending
     ({
@@ -536,7 +570,7 @@ function _performExportedReflectors()
   _.sure
   (
     srcFilter.basePaths.length === 1,
-    () => 'Source filter for ' + exported.nickName + ' for ' + exported.exportPath + ' should have single-path reflect map or defined base path'
+    () => 'Source filter for ' + exported.qualifiedName + ' for ' + exported.exportPath + ' should have single-path reflect map or defined base path'
   );
 
   /* exportedDirPath */
@@ -593,7 +627,7 @@ function _performExportedFilesReflector()
   }
   catch( err )
   {
-    throw _.err( 'Cant collect files for export\n', err );
+    throw _.err( err, '\nCant collect files for export' );
   }
 
   exportedFilesPath = _.filter( exportedFilesPath, ( r ) => r.absolute );
@@ -620,8 +654,8 @@ function _performExportedFilesReflector()
   exportedFilesReflector.src.pairWithDst( exportedFilesReflector.dst );
   exportedFilesReflector.src.pairRefineLight();
   exportedFilesReflector.src.basePath = '.';
-  exportedFilesReflector.src.prefixPath = exported.exportedDirPath.nickName;
-  exportedFilesReflector.src.filePath = exported.exportedFilesPath.nickName;
+  exportedFilesReflector.src.prefixPath = exported.exportedDirPath.qualifiedName;
+  exportedFilesReflector.src.filePath = exported.exportedFilesPath.qualifiedName;
   exportedFilesReflector.form1();
 
   _.assert( exportedFilesReflector.dst.prefixPath === null );
@@ -774,7 +808,7 @@ function _performWriteOutFile()
 //   /* log */
 //
 //   if( will.verbosity >= 3 )
-//   logger.log( ' + Exported', exported.decoratedNickName, 'with', exported.exportedFilesPath.path.length, 'files', 'in', _.timeSpent( time ) );
+//   logger.log( ' + Exported', exported.decoratedQualifiedName, 'with', exported.exportedFilesPath.path.length, 'files', 'in', _.timeSpent( time ) );
 //
 //   return exported;
 // }
@@ -794,6 +828,7 @@ function perform( frame )
 
   con.then( () => exported._performPrepare( frame ) );
   con.then( () => exported._performReset() );
+  con.then( () => exported._performSubmodulesPeersOpen() );
   con.then( () => exported._performRecursive() );
   con.then( () => exported._performReadExported() );
   con.then( () => exported._performBefore() );
@@ -807,15 +842,15 @@ function perform( frame )
 
   con.finally( ( err, arg ) =>
   {
+    // if( err )
+    // debugger;
     if( err )
-    debugger;
-    if( err )
-    throw _.err( `Failed to export ${exported.absoluteName}\n`, err );
+    throw _.err( err, `\nFailed to export ${exported.absoluteName}` );
 
     // debugger;
     frame.run.exported = exported;
     // if( will.verbosity >= 3 )
-    // logger.log( ' + Exported', exported.decoratedNickName, 'with', exported.exportedFilesPath.path.length, 'files', 'in', _.timeSpent( time ) );
+    // logger.log( ' + Exported', exported.decoratedQualifiedName, 'with', exported.exportedFilesPath.path.length, 'files', 'in', _.timeSpent( time ) );
 
     return arg;
   });
@@ -898,6 +933,7 @@ let Extend =
   _verify,
   _performPrepare,
   _performReset,
+  _performSubmodulesPeersOpen,
   _performRecursive,
   _performBefore,
   _performReadExported,

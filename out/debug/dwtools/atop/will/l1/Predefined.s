@@ -75,7 +75,7 @@ function stepRoutineDelete( frame )
     if( verbosity < 3 )
     return;
 
-    logger.log( ' : ' + step.decoratedNickName );
+    logger.log( ' : ' + step.decoratedQualifiedName );
 
   }
 
@@ -91,7 +91,7 @@ function stepRoutineDelete( frame )
     let groupsMap = path.group({ keys : o2.filter.filePath, vals : o2.result });
     let textualReport = path.groupTextualReport
     ({
-      explanation : ' - ' + step.decoratedNickName + ' deleted ',
+      explanation : ' - ' + step.decoratedQualifiedName + ' deleted ',
       groupsMap : groupsMap,
       verbosity : verbosity,
       spentTime : spentTime,
@@ -130,7 +130,7 @@ function stepRoutineReflect( frame )
   let reflector = step.reflectorResolve( opts.reflector );
 
   _.sure( reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strType( reflector ) )
-  _.assert( reflector.formed === 3, () => reflector.nickName + ' is not formed' );
+  _.assert( reflector.formed === 3, () => reflector.qualifiedName + ' is not formed' );
 
   beginLog();
 
@@ -167,7 +167,7 @@ function stepRoutineReflect( frame )
     if( verbosity < 3 )
     return;
 
-    logger.log( ' : ' + reflector.decoratedNickName + '' );
+    logger.log( ' : ' + reflector.decoratedQualifiedName + '' );
   }
 
   /* */
@@ -179,7 +179,7 @@ function stepRoutineReflect( frame )
 
     _.assert( opts.src.isPaired() );
     let mtr = opts.src.moveTextualReport();
-    logger.log( ' + ' + reflector.decoratedNickName + ' reflected ' + opts.result.length + ' file(s) ' + mtr + ' in ' + _.timeSpent( time ) );
+    logger.log( ' + ' + reflector.decoratedQualifiedName + ' reflected ' + opts.result.length + ' file(s) ' + mtr + ' in ' + _.timeSpent( time ) );
 
   }
 
@@ -276,7 +276,7 @@ function stepRoutineJs( frame )
   catch( err )
   {
     debugger;
-    throw _.err( 'Failed to open JS file', _.strQuote( opts.js ), '\n', err );
+    throw _.err( err, '\nFailed to open JS file', _.strQuote( opts.js ) );
   }
 
   /* */
@@ -288,7 +288,7 @@ function stepRoutineJs( frame )
   }
   catch( err )
   {
-    throw _.err( 'Failed to execute JS file', _.strQuote( opts.js ), '\n', err );
+    throw _.err( err, '\nFailed to execute JS file', _.strQuote( opts.js ) );
   }
 
 }
@@ -366,7 +366,7 @@ function stepRoutineShell( frame )
   .finally( ( err, arg ) =>
   {
     if( err )
-    throw _.errBrief( 'Failed to shell', step.nickName, '\n', err );
+    throw _.errBrief( 'Failed to shell', step.qualifiedName, '\n', err );
     return arg;
   });
 

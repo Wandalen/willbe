@@ -734,12 +734,6 @@ function _err( o )
     o[ e ] = _err.defaults[ e ];
   }
 
-  // if( o.usingSourceCode === undefined )
-  // o.usingSourceCode = _err.defaults ? _err.defaults.usingSourceCode : 0;
-  //
-  // if( o.condensingStack === undefined )
-  // o.condensingStack = _err.defaults ? _err.defaults.condensingStack : 0;
-
   if( o.args[ 0 ] === 'not implemented' || o.args[ 0 ] === 'not tested' || o.args[ 0 ] === 'unexpected' )
   if( _.debuggerEnabled )
   debugger;
@@ -755,12 +749,8 @@ function _err( o )
   let logged = false;
   let stackCondensed = '';
   let message = null;
-  // let briefly = o.briefly;
 
   /* algorithm */
-
-  // if( o.args[ 0 ] && o.args[ 0 ].originalMessage && _.strHas( o.args[ 0 ].originalMessage, 'Please, re-export modules' ) )
-  // debugger;
 
   try
   {
@@ -768,8 +758,6 @@ function _err( o )
     argumentsPreprocess();
     locationForm();
     stackAndErrorForm();
-
-    // let briefly = result.briefly || o.briefly;
 
     catchesForm();
     sourceCodeForm();
@@ -799,10 +787,6 @@ function _err( o )
 
       if( !_.errIs( arg ) && _.routineIs( arg ) )
       {
-        if( arg.length === 0 )
-        debugger;
-        else
-        debugger;
         if( arg.length === 0 )
         arg = o.args[ a ] = arg();
         if( _.unrollIs( arg ) )
@@ -895,7 +879,7 @@ function _err( o )
       }
       else
       {
-        debugger;
+        // debugger;
         o.stack = _.diagnosticStack([ o.level, Infinity ]);
       }
 
@@ -924,13 +908,17 @@ function _err( o )
     o.briefly = result.briefly;
     o.briefly = !!o.briefly;
 
+    if( o.debugging === null || o.debugging === undefined )
+    o.debugging = result.debugging;
+    o.debugging = !!o.debugging;
+
   }
 
   /* */
 
   function catchesForm()
   {
-    let floc = _.diagnosticLocation({ level : o.level });
+    let floc = _.diagnosticLocation({ level : o.level+1 });
     if( !floc.service || floc.service === 1 )
     catches = '    caught at ' + floc.fullWithRoutine + '\n' + catches;
   }
@@ -1031,9 +1019,14 @@ function _err( o )
     {
       let str = result[ a ];
 
-      if( _.strEnds( originalMessage, '\n' ) || _.strBegins( str, '\n' ) )
+      if( !originalMessage.replace( /\s*/m, '' ) )
       {
-        originalMessage = originalMessage.replace( /\s+$/m, '' ) + '\n' + str.replace( /^\s+/m, '' );
+        originalMessage = str;
+      }
+      else if( _.strEnds( originalMessage, '\n' ) || _.strBegins( str, '\n' ) )
+      {
+        originalMessage = originalMessage.replace( /\s+$/m, '' ) + '\n' + str;
+        // originalMessage = originalMessage.replace( /\s+$/m, '' ) + '\n' + str.replace( /^\s+/m, '' );
       }
       else
       {
@@ -1064,6 +1057,9 @@ function _err( o )
     }
     else
     {
+      if( _.strIndentation )
+      result += ' = Message\n    ' + _.strIndentation( originalMessage, '    ' )  + '\n';
+      else
       result += ' = Message\n' + originalMessage + '\n';
       if( o.condensingStack )
       result += '\n = Condensed calls stack\n' + stackCondensed + '';
@@ -1084,8 +1080,10 @@ function _err( o )
   function fieldsForm()
   {
 
-    nonenurable( 'toString', function() { return this.message } );
-    logging( 'message', message );
+    // nonenurable( 'toString', function() { return '\n-\n' + this.message + '\n-\n' } );
+    // nonenurable( 'toString', function() { return this.message } );
+    nonenurable( 'toString', function() { return this.stack } );
+    nonenurable( 'message', message );
     nonenurable( 'originalMessage', originalMessage );
     logging( 'stack', message );
     nonenurable( 'originalStack', o.stack );
@@ -1098,10 +1096,16 @@ function _err( o )
 
     if( o.location.line !== undefined )
     nonenurable( 'lineNumber', o.location.line );
-    nonenurable( 'level', o.level );
-    nonenurable( 'sourceCode', sourceCode || null );
     if( result.location === undefined )
     nonenurable( 'location', o.location );
+    nonenurable( 'level', o.level );
+    nonenurable( 'sourceCode', sourceCode || null );
+    nonenurable( 'debugging', o.debugging );
+
+    // if( !o. )
+    // debugger;
+    if( o.debugging )
+    debugger;
 
   }
 
@@ -1109,6 +1113,7 @@ function _err( o )
 
   function nonenurable( fieldName, value )
   {
+    // return rw( fieldName, value );
     try
     {
       Object.defineProperty( result, fieldName,
@@ -1125,6 +1130,42 @@ function _err( o )
       debugger;
       if( _.debuggerEnabled )
       debugger;
+    }
+  }
+
+  /* */
+
+  function rw( fieldName, value )
+  {
+    let symbol = Symbol.for( fieldName );
+    try
+    {
+      result[ symbol ] = value;
+      Object.defineProperty( result, fieldName,
+      {
+        enumerable : false,
+        configurable : true,
+        get : get,
+        set : set,
+      });
+    }
+    catch( err )
+    {
+      console.error( err );
+      debugger;
+      if( _.debuggerEnabled )
+      debugger;
+    }
+    function get()
+    {
+      logger.log( `${fieldName} get ${this[ symbol ]}` );
+      return this[ symbol ];
+    }
+    function set( src )
+    {
+      logger.log( `${fieldName} set` );
+      this[ symbol ] = src;
+      return src;
     }
   }
 
@@ -1157,14 +1198,14 @@ function _err( o )
       // if( !this.logged )
       // debugger;
       // if( !this.logged )
-      // logger.log( this.originalMessage, '- logged\n' );
+      // logger.log( this.originalMessage.split( '\n' )[ 0 ], '- logged\n' );
       _.errLogEnd( this );
       return this[ symbol ];
     }
     function set( src )
     {
       debugger;
-      return this[ symbol ] = src;
+      this[ symbol ] = src;
       return src;
     }
   }
@@ -1179,6 +1220,7 @@ _err.defaults =
   stackRemobeBeginExclude : null,
   usingSourceCode : 1,
   condensingStack : 1,
+  debugging : null,
   location : null,
   sourceCode : null,
   briefly : null,
@@ -1272,14 +1314,6 @@ function errAttend( err )
   try
   {
 
-    // Object.defineProperty( err, 'attentionRequested',
-    // {
-    //   enumerable : false,
-    //   configurable : true,
-    //   writable : true,
-    //   value : 0,
-    // });
-
     let value = Config.debug ? _.diagnosticStack([ 1, Infinity ]) : true;
     Object.defineProperty( err, 'attended',
     {
@@ -1319,14 +1353,6 @@ function errLogEnd( err )
   try
   {
 
-    // Object.defineProperty( err, 'attentionRequested',
-    // {
-    //   enumerable : false,
-    //   configurable : true,
-    //   writable : true,
-    //   value : 0,
-    // });
-
     let value = Config.debug ? _.diagnosticStack([ 1, Infinity ]) : true;
     Object.defineProperty( err, 'logged',
     {
@@ -1353,6 +1379,9 @@ function errLogEnd( err )
 
 function errRestack( err, level )
 {
+
+  if( err && err.debugging )
+  debugger;
 
   if( !( arguments.length === 1 || arguments.length === 2 ) )
   throw Error( 'Expects single argument or none' );
@@ -1398,6 +1427,9 @@ function _errLog( err )
   let c = _global.logger || _global.console;
 
   /* */
+
+  if( err && err.debugging )
+  debugger;
 
   debugger;
   if( _.routineIs( err.toString ) )
@@ -1546,6 +1578,60 @@ function error_functor( name, onMake )
   ErrorConstructor.constructor = ErrorConstructor;
 
   return ErrorConstructor;
+}
+
+// --
+// try
+// --
+
+function tryCatch( routine )
+{
+  _.assert( arguments.length === 1 );
+  _.assert( _.routineIs( routine ) )
+  debugger;
+  try
+  {
+    return routine();
+  }
+  catch( err )
+  {
+    debugger;
+    throw _._err({ args : [ err ] });
+  }
+}
+
+//
+
+function tryCatchBrief( routine )
+{
+  _.assert( arguments.length === 1 );
+  _.assert( _.routineIs( routine ) )
+  debugger;
+  try
+  {
+    return routine();
+  }
+  catch( err )
+  {
+    debugger;
+    throw _._err({ args : [ err ], brief : 1 });
+  }
+}
+
+//
+
+function tryCatchDebug( routine )
+{
+  _.assert( arguments.length === 1 );
+  _.assert( _.routineIs( routine ) )
+  try
+  {
+    return routine();
+  }
+  catch( err )
+  {
+    throw _._err({ args : [ err ], debugging : 1 });
+  }
 }
 
 // --
@@ -2005,6 +2091,12 @@ let Routines =
   errLogOnce,
 
   error_functor,
+
+  // try
+
+  tryCatch,
+  tryCatchBrief,
+  tryCatchDebug,
 
   // sure
 

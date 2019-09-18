@@ -550,7 +550,7 @@ function longBut( src, range, ins )
 //
 
 /**
- * The longUnduplicate/*longRemoveDuplicates*/( dstLong, onEvaluator ) routine returns the dstlong with the duplicated elements removed.
+ * The longOnce/*longRemoveDuplicates*/( dstLong, onEvaluator ) routine returns the dstlong with the duplicated elements removed.
  * The dstLong instance will be returned when possible, if not a new instance of the same type is created.
  *
  * @param { longIs } dstLong - The source and destination long.
@@ -558,24 +558,24 @@ function longBut( src, range, ins )
  *
  * @example
  * // returns [ 1, 2, 'abc', 4, true ]
- * _.longUnduplicate/*longRemoveDuplicates*/( [ 1, 1, 2, 'abc', 'abc', 4, true, true ] );
+ * _.longOnce/*longRemoveDuplicates*/( [ 1, 1, 2, 'abc', 'abc', 4, true, true ] );
  *
  * @example
  * // [ 1, 2, 3, 4, 5 ]
- * _.longUnduplicate/*longRemoveDuplicates*/( [ 1, 2, 3, 4, 5 ] );
+ * _.longOnce/*longRemoveDuplicates*/( [ 1, 2, 3, 4, 5 ] );
  *
  * @returns { Number } - Returns the source long without the duplicated elements.
- * @function longUnduplicate/*longRemoveDuplicates*/
+ * @function longOnce/*longRemoveDuplicates*/
  * @throws { Error } If passed arguments is less than one or more than two.
  * @throws { Error } If the first argument is not an long.
  * @throws { Error } If the second argument is not a Function.
  * @memberof wTools
  */
 
-// function longUnduplicate/*longRemoveDuplicates*/( dstLong, onEvaluate )
+// function longOnce/*longRemoveDuplicates*/( dstLong, onEvaluate )
 // {
 //   _.assert( 1 <= arguments.length || arguments.length <= 3 );
-//   _.assert( _.longIs( dstLong ), 'longUnduplicate/*longRemoveDuplicates*/ :', 'Expects Long' );
+//   _.assert( _.longIs( dstLong ), 'longOnce/*longRemoveDuplicates*/ :', 'Expects Long' );
 
 //   if( _.arrayIs( dstLong ) )
 //   {
@@ -641,10 +641,10 @@ function longBut( src, range, ins )
 //   return dstLong;
 // }
 
-function longUnduplicate/*longRemoveDuplicates*/( dstLong, onEvaluate )
+function longOnce/*longRemoveDuplicates*/( dstLong, onEvaluate )
 {
   _.assert( 1 <= arguments.length || arguments.length <= 3 );
-  _.assert( _.longIs( dstLong ), 'longUnduplicate/*longRemoveDuplicates*/ :', 'Expects Long' );
+  _.assert( _.longIs( dstLong ), 'longOnce/*longRemoveDuplicates*/ :', 'Expects Long' );
 
   if( _.arrayIs( dstLong ) )
   return _.arrayRemoveDuplicates( dstLong, onEvaluate );
@@ -676,10 +676,10 @@ function longUnduplicate/*longRemoveDuplicates*/( dstLong, onEvaluate )
 
 /* qqq : not optimal, no redundant copy */
 /*
-function longUnduplicate/*longRemoveDuplicates*/( dstLong, onEvaluate )
+function longOnce/*longRemoveDuplicates*/( dstLong, onEvaluate )
 {
   _.assert( 1 <= arguments.length || arguments.length <= 3 );
-  _.assert( _.longIs( dstLong ), 'longUnduplicate/*longRemoveDuplicates*/ :', 'Expects Long' );
+  _.assert( _.longIs( dstLong ), 'longOnce/*longRemoveDuplicates*/ :', 'Expects Long' );
 
   if( _.arrayIs( dstLong ) )
   {
@@ -5588,7 +5588,7 @@ let Routines =
   longSlice,
   longBut,
 
-  longUnduplicate/*longRemoveDuplicates*/,
+  longOnce/*longRemoveDuplicates*/,
 
   longAreRepeatedProbe,
   longAllAreRepeated,

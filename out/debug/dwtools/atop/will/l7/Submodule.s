@@ -170,17 +170,25 @@ function form3()
 
   // debugger;
   if( submodule.enabled )
-  result = submodule.open();
+  result = submodule._openAct();
   else
   result = new _.Consequence().take( null );
   // debugger;
 
   result.finally( ( err, arg ) =>
   {
+    submodule.formed = 3;
 
     if( err )
-    submodule.errorNotFound( err );
-    submodule.formed = 3;
+    {
+      debugger;
+      // err = _.err( err, `\nFailed to open ${submodule.absoluteName}` );
+      err = _.err( err );
+      // if( _.strHas( err.message, 'xxx' ) )
+      submodule.errorNotFound( err );
+      // else
+      // throw err;
+    }
 
     return arg || null;
   });
@@ -259,46 +267,32 @@ function _moduleAdoptEnd()
 }
 
 //
-
-function open()
-{
-  let submodule = this;
-  let module = submodule.module;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let rootModule = module.rootModule;
-
-  _.assert( arguments.length === 0 );
-  _.assert( submodule.formed === 2 );
-  _.assert( !!submodule.opener );
-  _.assert( _.strIs( submodule.path ), 'not tested' );
-  _.assert( !submodule.original );
-  _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
-
-  submodule._wantedOpened = 1;
-
-  return submodule._openAct
-  ({
-    longPath : submodule.longPath,
-  })
-
-  // if( !submodule.opener.openedModule && !submodule.opener.error )
-  // {
-  //   if( !submodule.enabled )
-  //   submodule.opener.error = _.err( 'Module is disabled' );
-  //   else
-  //   submodule.opener.error = _.err( 'Cant open module. Reason is unknown.' );
-  // }
-  //
-  // if( submodule.opener.error )
-  // {
-  //   return new _.Consequence().error( submodule.opener.error );
-  // }
-  //
-  // return submodule.opener.openedModule.ready;
-}
+//
+// function open()
+// {
+//   let submodule = this;
+//   let module = submodule.module;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//   let rootModule = module.rootModule;
+//
+//   _.assert( arguments.length === 0 );
+//   _.assert( submodule.formed === 2 );
+//   _.assert( !!submodule.opener );
+//   _.assert( _.strIs( submodule.path ), 'not tested' );
+//   _.assert( !submodule.original );
+//   _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
+//
+//   submodule._wantedOpened = 1;
+//
+//   return submodule._openAct
+//   ({
+//     longPath : submodule.longPath,
+//   })
+//
+// }
 
 //
 
@@ -312,33 +306,28 @@ function _openAct( o )
   let logger = will.logger;
   let rootModule = module.rootModule;
 
-  _.routineOptions( _openAct, arguments );
-  _.assert( arguments.length === 1 );
+  o = _.routineOptions( _openAct, arguments );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
   _.assert( submodule.formed === 2 );
   _.assert( !!submodule.opener );
   _.assert( _.strIs( submodule.path ), 'not tested' );
   _.assert( !submodule.original );
   _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
 
-  /* */
+  if( o.longPath === null )
+  o.longPath = submodule.longPath;
 
+  submodule._wantedOpened = 1;
   submodule.opener.willfilesPath = o.longPath;
 
   if( !submodule.enabled )
   return submodule.opener;
 
-  // if( !submodule.opener.find({ throwing : 0 }) )
-  // return submodule.opener;
-
   return submodule.opener.open({ throwing : 1 })
   .finally( ( err, arg ) =>
   {
     if( err )
-    {
-      // if( !submodule.enabled )
-      // submodule.opener.error = _.err( 'Module is disabled' );
-      throw _.err( 'Failed to open', submodule.nickName, 'at', _.strQuote( submodule.opener.dirPath ), '\n', err );
-    }
+    throw _.err( err, '\n', 'Failed to open', submodule.absoluteName );
     return arg;
   });
 }
@@ -514,6 +503,27 @@ function infoExport()
 // etc
 // --
 
+function isMandatory()
+{
+  let resource = this;
+  let module = resource.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  if( !submodule.enabled )
+  return false;
+  if( submodule.criterion.dev )
+  return false;
+  if( submodule.criterion.optional )
+  return false;
+
+  return true;
+}
+
+//
+
 function pathsRebase( o )
 {
   let resource = this;
@@ -575,8 +585,8 @@ function errorNotFound( err )
   if( !submodule.module.rootModule || submodule.module.rootModule === submodule.module )
   logger.error
   (
-      // ' ' + _.color.strFormat( '!', 'negative' ) + ' Failed to read ' + submodule.decoratedNickName
-    ' ' + '!' + ' Failed to read ' + submodule.decoratedNickName
+      // ' ' + _.color.strFormat( '!', 'negative' ) + ' Failed to read ' + submodule.decoratedQualifiedName
+    ' ' + '!' + ' Failed to read ' + submodule.decoratedQualifiedName
     + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading'
     // + '\n' + err.originalMessage
   );
@@ -708,7 +718,6 @@ let Extend =
   close,
   _closeEnd,
   _moduleAdoptEnd,
-  open,
   _openAct,
 
   // accessor
@@ -729,6 +738,7 @@ let Extend =
 
   // etc
 
+  isMandatory,
   pathsRebase,
   errorNotFound,
 

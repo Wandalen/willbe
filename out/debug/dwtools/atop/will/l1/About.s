@@ -101,7 +101,7 @@ let nameGetterSetter =
 function infoExport()
 {
   let about = this;
-  let fields = about.dataExport();
+  let fields = about.structureExport();
 
   if( Object.keys( fields ).length === 0 )
   return '';
@@ -117,7 +117,7 @@ function infoExport()
 
 //
 
-function dataExport()
+function structureExport()
 {
   let about = this;
   let fields = about.cloneData({ compact : 1, copyingAggregates : 0 });
@@ -186,7 +186,7 @@ let Extend =
   copy,
 
   infoExport,
-  dataExport,
+  structureExport,
 
   // relation
 

@@ -111,7 +111,7 @@ function MakeForEachCriterion( o )
   catch( err )
   {
     debugger;
-    throw _.err( 'Cant form', Cls.KindName + '::' + o.name, '\n', err );
+    throw _.err( err, '\nCant form', Cls.KindName + '::' + o.name );
   }
 
   /* */
@@ -205,7 +205,10 @@ function MakeForEachCriterion( o )
     }
     catch( err )
     {
-      throw _.err( 'Criterions\n', _.toStr( o.resource.criterion ), '\n', err );
+      let cirterion = '';
+      if( o.resource.criterion )
+      cirterion += '\nCriterions\n' + _.toStr( o.resource.criterion );
+      throw _.err( err, `\nFailed to make resource ${Cls.KindName}::${o.resource.name}`, cirterion );
     }
 
   }
@@ -395,7 +398,7 @@ function form1()
 
   if( !resource.original )
   {
-    _.sure( !module[ resource.MapName ][ resource.name ], () => 'Module ' + module.dirPath + ' already has ' + resource.nickName );
+    _.sure( !module[ resource.MapName ][ resource.name ], () => 'Module ' + module.dirPath + ' already has ' + resource.qualifiedName );
   }
 
   /* begin */
@@ -585,7 +588,7 @@ function _inheritSingle( o )
 
   if( resource2.formed < 2 )
   {
-    _.sure( !_.arrayHas( o.visited, resource2.name ), () => 'Cyclic dependency ' + resource.nickName + ' of ' + resource2.nickName );
+    _.sure( !_.arrayHas( o.visited, resource2.name ), () => 'Cyclic dependency ' + resource.qualifiedName + ' of ' + resource2.qualifiedName );
     resource2._inheritForm({ visited : o.visited });
   }
 
@@ -637,7 +640,7 @@ function criterionValidate()
   for( let c in resource.criterion )
   {
     let crit = resource.criterion[ c ];
-    _.sure( _.strIs( crit ) || _.numberIs( crit ), () => 'Criterion ' + c + ' of ' + resource.nickName + ' should be number or string, but is ' + _.strType( crit ) );
+    _.sure( _.strIs( crit ) || _.numberIs( crit ), () => 'Criterion ' + c + ' of ' + resource.qualifiedName + ' should be number or string, but is ' + _.strType( crit ) );
   }
 
 }
@@ -945,7 +948,7 @@ function compactField( it )
   if( it.src instanceof Self )
   {
     _.assert( resource instanceof _.Will.Exported, 'not tested' );
-    it.dst = it.src.nickName;
+    it.dst = it.src.qualifiedName;
     return it.dst;
   }
 
@@ -965,7 +968,7 @@ function compactField( it )
 // accessor
 // --
 
-function nickNameGet()
+function qualifiedNameGet()
 {
   let resource = this;
   return resource.refName;
@@ -973,10 +976,10 @@ function nickNameGet()
 
 //
 
-function decoratedNickNameGet()
+function decoratedQualifiedNameGet()
 {
   let module = this;
-  let result = module.nickName;
+  let result = module.qualifiedName;
   return _.color.strFormat( result, 'entity' );
 }
 
@@ -995,7 +998,7 @@ function absoluteNameGet()
   let resource = this;
   let module = resource.module;
 
-  return ( module ? module.absoluteName : '...' ) + ' / ' + resource.nickName;
+  return ( module ? module.absoluteName : '...' ) + ' / ' + resource.qualifiedName;
 }
 
 //
@@ -1239,8 +1242,8 @@ let Forbids =
 let Accessors =
 {
   willf : { setter : willfSet },
-  nickName : { getter : nickNameGet, readOnly : 1 },
-  decoratedNickName : { getter : decoratedNickNameGet, readOnly : 1 },
+  qualifiedName : { getter : qualifiedNameGet, readOnly : 1 },
+  decoratedQualifiedName : { getter : decoratedQualifiedNameGet, readOnly : 1 },
   refName : { getter : _refNameGet, readOnly : 1 },
   absoluteName : { getter : absoluteNameGet, readOnly : 1 },
   decoratedAbsoluteName : { getter : decoratedAbsoluteNameGet, readOnly : 1 },
@@ -1299,8 +1302,8 @@ let Extend =
 
   // accessor
 
-  nickNameGet,
-  decoratedNickNameGet,
+  qualifiedNameGet,
+  decoratedQualifiedNameGet,
   _refNameGet,
   absoluteNameGet,
   decoratedAbsoluteNameGet,

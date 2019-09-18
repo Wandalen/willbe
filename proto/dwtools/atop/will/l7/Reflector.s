@@ -615,6 +615,18 @@ function _inheritPathMapAct2( o )
     throw _.err( resolvedDst, '\nFailed to form', reflector.qualifiedName );
   }
 
+  if( resolvedSrc && resolvedSrc instanceof will.Reflector )
+  {
+    resolvedSrc = resolvedSrc.cloneDerivative();
+    resolvedSrc.form(); /* xxx : implement assert against recrusion */
+  }
+
+  if( resolvedDst && resolvedDst instanceof will.Reflector )
+  {
+    resolvedDst = resolvedDst.cloneDerivative();
+    resolvedDst.form(); /* xxx : implement assert against recrusion */
+  }
+
   return reflector._inheritPathMapAct3
   ({
     dst : resolvedDst,

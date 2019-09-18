@@ -184,7 +184,7 @@ function framePerform( frame )
   })
   .catch( ( err ) =>
   {
-    debugger;
+    // debugger;
     throw _.err( err, '\nFailed', step.decoratedAbsoluteName );
   });
 

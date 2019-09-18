@@ -520,7 +520,7 @@ function open( o )
   try
   {
 
-    _.assert( opener.formed <= 3 );
+    // _.assert( opener.formed <= 3, () => `${opener.absoluteName} was already opened` );
 
     if( opener.error )
     throw opener.error;
@@ -530,7 +530,7 @@ function open( o )
 
     defaultsApply( o );
 
-    _.assert( opener.formed === 3 );
+    _.assert( opener.formed >= 3 );
 
     if( opener.error )
     throw opener.error;
@@ -570,13 +570,13 @@ function open( o )
 
     }
 
-    if( processing )
-    {
-      if( opener.formed === 3 )
-      opener.formed = 4;
-      ready.take( opener.openedModule );
-    }
-    else
+    // if( processing )
+    // {
+    //   // if( opener.formed === 3 )
+    //   // opener.formed = 4;
+    //   ready.take( opener.openedModule );
+    // }
+    // else
     opener.openedModule.ready.finally( ( err, arg ) =>
     {
       if( err )

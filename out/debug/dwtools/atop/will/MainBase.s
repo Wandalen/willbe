@@ -875,7 +875,7 @@ function modulesGraphGroupObtain()
   let sys = new _.graph.AbstractGraphSystem();
   group = will.graphGroup = sys.groupMake
   ({
-    onNodeNameGet : ( module ) => module.nickName,
+    onNodeNameGet : ( module ) => module.qualifiedName,
     onOutNodesFor : onOutNodesFor,
     onInNodesFor : onInNodesFor,
   });
@@ -1031,7 +1031,7 @@ function openerMake_body( o )
     // }
 
     if( o.throwing )
-    throw _.err( `Failed to make module ${o.willfilesPath}\n`, err );
+    throw _.err( err, `\nFailed to make module ${o.willfilesPath}` );
 
     return null;
   }

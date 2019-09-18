@@ -53,7 +53,7 @@
 // {
 //   let execution = this;
 //   let result = '';
-//   let fields = execution.dataExport();
+//   let fields = execution.structureExport();
 //
 //   if( Object.keys( fields ).length === 0 )
 //   return result;
@@ -67,7 +67,7 @@
 //
 // //
 //
-// function dataExport()
+// function structureExport()
 // {
 //   let execution = this;
 //   let fields = execution.cloneData({ compact : 1, copyingAggregates : 0 });
@@ -130,7 +130,7 @@
 //   init,
 //
 //   infoExport,
-//   dataExport,
+//   structureExport,
 //
 //   // relation
 //

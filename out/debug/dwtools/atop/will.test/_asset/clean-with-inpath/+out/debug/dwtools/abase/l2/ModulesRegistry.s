@@ -99,8 +99,8 @@ let wArraySparse =
 
 let wAppBasic =
 {
-  includeAny : includeAny( 'abase/l4/AppBasic.s', 'wappbasic' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.shell },
+  includeAny : includeAny( 'abase/l4/ProcessBasic.s', 'wappbasic' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.process },
 }
 
 let wUriBasic =
