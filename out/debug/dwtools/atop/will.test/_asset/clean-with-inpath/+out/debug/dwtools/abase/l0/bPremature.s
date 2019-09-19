@@ -69,6 +69,46 @@ function argumentsArrayIs( src )
 
 //
 
+function arrayIs( src )
+{
+  return Object.prototype.toString.call( src ) === '[object Array]';
+}
+
+//
+
+function arrayLike( src )
+{
+  if( _.arrayIs( src ) )
+  return true;
+  if( _.argumentsArrayIs( src ) )
+  return true;
+  return false;
+}
+
+//
+
+function objectLike( src )
+{
+
+  if( _.objectIs( src ) )
+  return true;
+  if( _.primitiveIs( src ) )
+  return false;
+  if( _.longIs( src ) )
+  return false;
+  if( _.routineIsPure( src ) )
+  return false;
+  if( _.strIs( src ) )
+  return false;
+
+  for( let k in src )
+  return true;
+
+  return false;
+}
+
+//
+
 /**
  * @summary Tests if provided condidion is true.
  *
@@ -887,7 +927,10 @@ let Routines =
   strIs,
   routineIs,
   objectIs,
+  objectLike,
   argumentsArrayIs,
+  arrayIs,
+  arrayLike,
 
   assert,
   routineOptions,

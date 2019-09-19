@@ -576,10 +576,11 @@ function diagnosticCode( o )
         // if( _global._starter_ )
         // _global._starter_.fileProvider.fileRead( _.weburi.parse( o.location.path ).localWebPath );
         // o.location.path = codeProvider.path.normalize( o.location.path );
-        if( codeProvider.path.isAbsolute( codeProvider.path.normalize( o.location.path ) ) )
+        let filePath = codeProvider.path.normalize( o.location.path );
+        if( codeProvider.path.isAbsolute( filePath ) )
         o.sourceCode = codeProvider.fileRead
         ({
-          filePath : o.location.path,
+          filePath : filePath,
           sync : 1,
           throwing : 0,
         })
@@ -587,7 +588,7 @@ function diagnosticCode( o )
       }
       catch( err )
       {
-        o.sourceCode = 'CANT LOAD SOURCE CODE ' + _.strQuote( o.location.path );
+        o.sourceCode = ' ! Cant load source code of ' + _.strQuote( o.location.path );
       }
 
       if( !o.sourceCode )
@@ -635,7 +636,7 @@ function diagnosticCode( o )
 diagnosticCode.defaults =
 {
   level : 0,
-  numberOfLines : 3,
+  numberOfLines : 5,
   withPath : 1,
   selectMode : 'center',
   identation : '    ',

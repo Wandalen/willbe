@@ -1649,7 +1649,7 @@ function propertyDescriptorGet( object, name )
  *
  * @throws {Exception} If number of arguments is not supported.
  * @throws {Exception} If dstPrototype is not an Object
- * @function propertyHide
+   * @function propertyHide
  *
  * @memberof module:Tools/base/Proto.wTools.accessor
  */
@@ -1660,9 +1660,25 @@ function propertyHide( dstPrototype, name, value )
   _.assert( arguments.length === 2 || arguments.length === 3 );
   _.assert( !_.primitiveIs( dstPrototype ), () => 'dstPrototype is needed, but got ' + _.toStrShort( dstPrototype ) );
 
+  // if( _.containerIs( name ) )
+  // {
+  //   _.eachKey( name, ( n, v ) =>
+  //   {
+  //     if( value !== undefined )
+  //     _.propertyHide( dstPrototype, n, value );
+  //     else
+  //     _.propertyHide( dstPrototype, n, v );
+  //   });
+  //   return;
+  // }
+
   if( _.containerIs( name ) )
   {
-    _.eachKey( name, ( n, v ) =>
+    if( !_.objectIs( name ) )
+    debugger;
+    if( !_.objectIs( name ) )
+    name = _.indexExtending( name, ( e ) => { return { [ e ] : undefined } } );
+    _.each( name, ( v, n ) =>
     {
       if( value !== undefined )
       _.propertyHide( dstPrototype, n, value );
@@ -1714,9 +1730,25 @@ function propertyConstant( dstPrototype, name, value )
   _.assert( arguments.length === 2 || arguments.length === 3 );
   _.assert( !_.primitiveIs( dstPrototype ), () => 'dstPrototype is needed, but got ' + _.toStrShort( dstPrototype ) );
 
+  // if( _.containerIs( name ) )
+  // {
+  //   _.eachKey( name, ( n, v ) =>
+  //   {
+  //     if( value !== undefined )
+  //     _.propertyConstant( dstPrototype, n, value );
+  //     else
+  //     _.propertyConstant( dstPrototype, n, v );
+  //   });
+  //   return;
+  // }
+
   if( _.containerIs( name ) )
   {
-    _.eachKey( name, ( n, v ) =>
+    if( !_.objectIs( name ) )
+    debugger;
+    if( !_.objectIs( name ) )
+    name = _.indexExtending( name, ( e ) => { return { [ e ] : undefined } } );
+    _.each( name, ( v, n ) =>
     {
       if( value !== undefined )
       _.propertyConstant( dstPrototype, n, value );
@@ -1740,116 +1772,6 @@ function propertyConstant( dstPrototype, name, value )
   });
 
 }
-
-// {
-//
-//   _.assert( _.strIs( names ) || _.strsAreAll( names ) );
-//
-//   if( _.arrayIs( names ) )
-//   {
-//     names.forEach( ( name ) =>
-//     {
-//       propertyConstant.call( this, dstPrototype, name, value );
-//     });
-//     return;
-//   }
-//
-//   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-//   _.assert( !_.primitiveIs( dstPrototype ), () => 'Expects {-dstPrototype-}, but got' + _.strType( dstPrototype ) );
-//   _.assert( _.strIs( names ), 'Expects string names' );
-//
-//   Object.defineProperty( dstPrototype, name,
-//   {
-//     value : dstPrototype[ n ],
-//     enumerable : true,
-//     writable : false,
-//   });
-//
-// }
-//
-// /**
-//  * Makes constants properties on object by creating new or replacing existing properties.
-//  * @param {object} dstPrototype - prototype of class which will get new constant property.
-//  * @param {object} namesObject - name/value map of constants.
-//  *
-//  * @example
-//  * let Self = function ClassName( o ) { };
-//  * let Constants = { num : 100  };
-//  * _.constant ( Self.prototype, Constants );
-//  * console.log( Self.prototype ); // returns { num: 100 }
-//  * Self.prototype.num = 1;// error assign to read only property
-//  *
-//  * @function constant
-//  * @throws {exception} If no argument provided.
-//  * @throws {exception} If( dstPrototype ) is not a Object.
-//  * @throws {exception} If( name ) is not a Map.
-//  * @memberof module:Tools/base/Proto.wTools.accessor
-//  */
-//
-// function constant( dstPrototype, name, value )
-// {
-//
-//   _.assert( arguments.length === 2 || arguments.length === 3 );
-//   _.assert( !_.primitiveIs( dstPrototype ), () => 'dstPrototype is needed, but got ' + _.toStrShort( dstPrototype ) );
-//
-//   if( _.containerIs( name ) )
-//   {
-//     _.eachKey( name, ( n, v ) =>
-//     {
-//       if( value !== undefined )
-//       _.propertyConstant( dstPrototype, n, value );
-//       else
-//       _.propertyConstant( dstPrototype, n, v );
-//     });
-//     return;
-//   }
-//
-//   if( value === undefined )
-//   value = dstPrototype[ name ];
-//
-//   _.assert( _.strIs( name ), 'name is needed, but got', name );
-//
-//   Object.defineProperty( dstPrototype, name,
-//   {
-//     value,
-//     enumerable : true,
-//     writable : false,
-//     configurable : true,
-//   });
-//
-// }
-//
-// {
-//
-//   _.assert( arguments.length === 2 || arguments.length === 3 );
-//   _.assert( !_.primitiveIs( dstPrototype ), () => 'dstPrototype is needed, but got ' + _.toStrShort( dstPrototype ) );
-//
-//   if( _.containerIs( name ) )
-//   {
-//     _.eachKey( name, ( n, v ) =>
-//     {
-//       if( value !== undefined )
-//       _.propertyConstant( dstPrototype, n, value );
-//       else
-//       _.propertyConstant( dstPrototype, n, v );
-//     });
-//     return;
-//   }
-//
-//   if( value === undefined )
-//   value = dstPrototype[ name ];
-//
-//   _.assert( _.strIs( name ), 'name is needed, but got', name );
-//
-//   Object.defineProperty( dstPrototype, name,
-//   {
-//     value,
-//     enumerable : true,
-//     writable : false,
-//     configurable : true,
-//   });
-//
-// }
 
 // --
 // proxy

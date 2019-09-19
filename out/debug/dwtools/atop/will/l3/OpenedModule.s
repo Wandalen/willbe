@@ -1583,6 +1583,10 @@ function submodulesEach_pre( routine, args )
 function submodulesEach_body( o )
 {
   let module = this;
+  let will = module.will;
+  let logger = will.logger;
+  let visitedModulesMap = Object.create( null );
+  let visitedModulesArray = [];
 
   _.assertRoutineOptions( submodulesEach, o );
 
@@ -1607,10 +1611,12 @@ function submodulesEach_body( o )
 
         if( o.withPeers && record2.module && record2.module.peerModule )
         {
-          result.push( record2.module.peerModule );
+          // result.push( record2.module.peerModule );
+          result.push( recordFromModule( record2.module.peerModule ) );
         }
 
       }
+      // logger.log( `list ${record.module ? record.module.absoluteName : record.relation.absoluteName} ${result.length}` );
       return result;
     }
   });
@@ -1619,6 +1625,9 @@ function submodulesEach_body( o )
   let nodes = [ recordFromModule( module ) ];
   if( o.withPeers && module.peerModule )
   nodes.push( recordFromModule( module.peerModule ) );
+
+  // if( module.absoluteName === "module::supermodule / f::duplicate" )
+  // debugger;
 
   // debugger;
   let result = group.each
@@ -1631,7 +1640,9 @@ function submodulesEach_body( o )
   });
   // debugger;
 
+  // if( module.absoluteName === "module::supermodule / f::duplicate" )
   // debugger;
+
   if( o.outputFormat !== '/' )
   return result.map( ( record ) => outputFrom( record ) );
 
@@ -1639,25 +1650,33 @@ function submodulesEach_body( o )
 
   /* */
 
-  function handleUp( record, it )
+  function isActual( record )
   {
-    // debugger;
-
-    if( !o.withOut )
+    if( !o.withOut && record.module )
     if( record.module.isOut )
-    it.continueNode = false;
+    return false;
 
-    if( !o.withIn )
+    if( !o.withIn && record.module )
     if( !record.module.isOut )
-    it.continueNode = false;
+    return false;
 
     if( !o.withOptional && record.relation )
     if( record.relation.isOptional() )
-    it.continueNode = false;
+    return false;
 
-    if( !o.withMandatory )
+    if( !o.withMandatory && record.relation )
     if( !record.relation || !record.relation.isOptional() )
-    it.continueNode = false;
+    return false;
+
+    return true;
+  }
+
+  /* */
+
+  function handleUp( record, it )
+  {
+
+    it.continueNode = isActual( record );
 
     if( o.onUp )
     o.onUp.call( module, outputFrom( record ), it );
@@ -1680,20 +1699,77 @@ function submodulesEach_body( o )
     return record;
   }
 
+  /* */
+
   function recordFromRelation( relation )
   {
-    let record = Object.create( null );
+    let record;
+
+    // debugger;
+    if( relation.opener )
+    {
+      // if( visitedModulesMap[ relation.opener.commonPath ] )
+      // debugger;
+      record = visitedModulesMap[ relation.opener.commonPath ];
+    }
+    else
+    {
+      debugger;
+    }
+
+    if( !record )
+    {
+      record = Object.create( null );
+      record.relation = null;
+      record.opener = null;
+      record.module = null;
+      visitedModulesArray.push( record );
+      if( relation.opener )
+      visitedModulesMap[ relation.opener.commonPath ] = record;
+      // logger.log( `record for relation ${relation.absoluteName} was made` );
+    }
+    else
+    {
+      // logger.log( `record for relation ${relation.absoluteName} was found` );
+    }
+
+    if( relation.opener )
+    record.opener = relation.opener;
+
+    // if( record.relation && record.relation !== relation )
+    // debugger;
+
     record.relation = relation;
-    record.opener = null;
-    record.module = null;
     return record;
   }
 
+  /* */
+
   function recordFromModule( module )
   {
-    let record = Object.create( null );
-    record.relation = null;
-    record.opener = null;
+    let record;
+
+    // debugger;
+    if( visitedModulesMap[ module.commonPath ] )
+    debugger;
+    record = visitedModulesMap[ module.commonPath ];
+
+    if( !record )
+    {
+      record = Object.create( null );
+      record.relation = null;
+      record.opener = null;
+      record.module = null;
+      visitedModulesArray.push( record );
+      visitedModulesMap[ module.commonPath ] = record;
+      // logger.log( `record for module ${module.absoluteName} was made` );
+    }
+    else
+    {
+      // logger.log( `record for module ${module.absoluteName} was found` );
+    }
+
+    _.assert( !record.module || record.module === module );
     record.module = module;
     return record;
   }
@@ -1735,8 +1811,10 @@ function submodulesAreDownloaded( o )
   o2.outputFormat = '*/relation';
   let relations = module.submodulesEach( o2 );
   debugger;
+  relations = _.index( relations, '*/commonPath' );
+  debugger;
 
-  return relations.map( ( relation ) =>
+  return _.map( relations, ( relation ) =>
   {
     if( !relation.opener )
     return false;
@@ -1752,7 +1830,7 @@ delete defaults.onDown;
 
 //
 
-function submodulesAllAreDownloaded()
+function submodulesAllAreDownloaded( o )
 {
   let module = this;
   let will = module.will;
@@ -1764,11 +1842,11 @@ function submodulesAllAreDownloaded()
   _.assert( module === module.rootModule );
   _.assert( arguments.length === 0 );
 
-  debugger;
+  // debugger;
   let o2 = _.mapExtend( null, o );
   o2.outputFormat = '*/relation';
   let relations = module.submodulesEach( o2 );
-  debugger;
+  // debugger;
 
   return relations.every( ( relation ) =>
   {
@@ -1797,9 +1875,9 @@ function submodulesAreValid( o )
   let o2 = _.mapExtend( null, o );
   o2.outputFormat = '*/relation';
   let relations = module.submodulesEach( o2 );
-  relations = _.mapFilter( relations, '*/commonPath' );
+  relations = _.index( relations, '*/absoluteName' );
 
-  return relations.map( ( relation ) =>
+  return _.map( relations, ( relation ) =>
   {
     if( !relation.opener )
     return false;
@@ -1807,6 +1885,7 @@ function submodulesAreValid( o )
     return false;
     return relation.opener.openedModule.isValid();
   });
+
 }
 
 var defaults = submodulesAreValid.defaults = _.mapExtend( null, submodulesEach.defaults );
@@ -1832,7 +1911,6 @@ function submodulesAllAreValid( o )
   let o2 = _.mapExtend( null, o );
   o2.outputFormat = '*/relation';
   let relations = module.submodulesEach( o2 );
-  debugger;
 
   return relations.every( ( relation ) =>
   {
@@ -2004,7 +2082,7 @@ function _subModulesDownload_body( o )
 _subModulesDownload_body.defaults =
 {
   updating : 0,
-  forming : 1,
+  // forming : 1,
   recursive : 0,
   dry : 0,
   downloaded : null,
@@ -3193,19 +3271,16 @@ function resourceMapForKind( resourceKind )
 
   _.assert( module.rootModule instanceof will.OpenedModule );
 
-  logger.log( 'resourceMapForKind', resourceKind );
+  // logger.log( 'resourceMapForKind', resourceKind );
   if( resourceKind === 'submodule' )
   {
     let valid = module.submodulesAreValid();
-    debugger;
-    let xxx = _.but( valid );
-    debugger;
     if( !_.all( valid ) )
     throw _.err
     (
-        `Cant do select in submodules.`
-      , `\nOne or several submodules of ${module.absoluteName} are not valid :`
-      , _.mapKeys( _.but( valid ) ).join( ', ' )
+        `Cant do select in non-valid submodules.`
+      , `\nOne or several submodules of ${module.absoluteName} are not opened or invalid :`
+      , '\n  ' + _.mapKeys( _.but( valid ) ).join( '\n  ' )
     );
   }
 
@@ -4801,6 +4876,8 @@ function structureExportOut( o )
 
   o.dst.format = will.Willfile.FormatVersion;
 
+  // if( module.absoluteName === "module::supermodule / f::duplicate" )
+  // debugger;
   let submodules = module.submodulesEach({ withPeers : 1, withStem : 1, recursive : 2 })
   module.structureExportModules( submodules, o );
 
@@ -4965,6 +5042,7 @@ function structureExportModules( modules, op )
 
   _.each( modules, ( module2 ) =>
   {
+    _.assert( !!module2 );
     let absolute = module2.commonPath;
     let relative = absolute;
     if( !path.isGlobal( relative ) )

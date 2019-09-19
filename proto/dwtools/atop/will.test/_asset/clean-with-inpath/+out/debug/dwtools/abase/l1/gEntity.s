@@ -43,12 +43,13 @@ let Self = _global_.wTools;
 
 function entityLength( src )
 {
-  if( src === undefined ) return 0;
+  if( src === undefined )
+  return 0;
   if( _.longIs( src ) )
   return src.length;
-  else if( _.objectLike( src ) )
+  if( _.objectLike( src ) )
   return _.mapOwnKeys( src ).length;
-  else return 1;
+  return 1;
 }
 
 //

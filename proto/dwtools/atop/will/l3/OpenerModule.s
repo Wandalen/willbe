@@ -544,7 +544,9 @@ function open( o )
     skipping.subModulesFormed = !o.formingSubModules;
     skipping.resourcesFormed = !o.formingResources;
 
-    let processing = stager.stageStateBegun( 'opened' ) || ( stager.stageStateEnded( 'opened' ) && !stager.stageStateEnded( 'formed' ) );
+    // let processing = stager.stageStateBegun( 'opened' ) || ( stager.stageStateEnded( 'opened' ) && !stager.stageStateEnded( 'formed' ) );
+    let processing = stager.stageStateBegun( 'opened' ) && !stager.stageStateEnded( 'formed' );
+    _.assert( !processing, 'not tested' );
 
     for( let s in skipping )
     if( stager.stageStatePerformed( s ) )
@@ -1292,7 +1294,7 @@ function _remoteFormAct()
 
   _.assert( remoteProvider.isVcs && _.routineIs( remoteProvider.pathParse ), () => 'Seems file provider ' + remoteProvider.qualifiedName + ' does not have version control system features' );
 
-  let submodulesDir = opener.supermodule.cloneDirPathGet();
+  let submodulesDir = opener.supermodule.module.cloneDirPathGet();
   let parsed = remoteProvider.pathParse( willfilesPath );
 
   opener.remotePath = willfilesPath;

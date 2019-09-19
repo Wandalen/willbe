@@ -476,7 +476,7 @@ function errEncounter( error )
   let logger = will.logger;
 
   _.process.exitCode( -1 );
-  logger.log( _.errOnce( err ) );
+  logger.log( _.errOnce( error ) );
   // _.errLogOnce( error );
 
 }
@@ -1179,7 +1179,7 @@ function commandClean( e )
     {
       will.currentOpenerChange( null );
       if( err )
-      throw _.err( err, `\nFailed to clean ${it.commonPath}` );
+      throw _.err( err, `\nFailed to clean ${it.opener ? it.opener.commonPath : ''}` );
       return arg;
     });
 
@@ -1250,11 +1250,13 @@ function commandExport( e )
     ready.then( () =>
     {
       will.currentOpenerChange( it.opener );
+      debugger;
       return it.opener.open({ forming : 1 });
     });
 
     ready.then( () =>
     {
+      debugger;
       let builds = it.opener.openedModule.exportsResolve( request.subject, request.map );
 
       if( logger.verbosity >= 2 && builds.length > 1 )
@@ -1274,9 +1276,9 @@ function commandExport( e )
 
     ready.finally( ( err, arg ) =>
     {
-      will.currentOpenerChange( null );
+      will.currentOpenerChange( null ); debugger;
       if( err )
-      throw _.err( err, `\nFailed to export ${it.commonPath}` );
+      throw _.err( err, `\nFailed to export ${it.opener ? it.opener.commonPath : ''}` );
       return arg;
     });
 

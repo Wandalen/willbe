@@ -389,6 +389,7 @@ function routineOptions( routine, args, defaults )
   if( !_.arrayLike( args ) )
   args = [ args ];
   let options = args[ 0 ];
+  let name = routine ? routine.name : '';
   if( options === undefined )
   options = Object.create( null );
   defaults = defaults || ( routine ? routine.defaults : null );
@@ -398,11 +399,9 @@ function routineOptions( routine, args, defaults )
   _.assert( _.objectIs( defaults ), 'Expects routine with defined defaults or defaults in third argument' );
   _.assert( _.objectIs( options ), 'Expects object' );
   _.assert( args.length === 0 || args.length === 1, 'Expects single options map, but got', args.length, 'arguments' );
-
-  _.assertMapHasOnly( options, defaults );
-  _.mapSupplementStructureless( options, defaults ); /* xxx qqq : use instead of mapComplement */
-  // _.mapComplement( options, defaults );
-  _.assertMapHasNoUndefine( options );
+  _.assertMapHasOnly( options, defaults, `Routine ${name} does not expect options:` );
+  _.mapSupplementStructureless( options, defaults );
+  _.assertMapHasNoUndefine( options, `Options map for routine ${name} should have no undefined fileds, but it does have` );
 
   return options;
 }

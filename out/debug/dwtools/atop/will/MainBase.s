@@ -347,37 +347,44 @@ function prefer( o )
 
   o = _.routineOptions( prefer, arguments );
 
+  forward();
   will.instanceDefaultsApply( o );
-
-  if( _.boolLike( o.formingOfMain ) )
-  {
-    o.formingOfMain = !!o.formingOfMain;
-    if( o.formingAttachedWillfilesOfMain === null )
-    o.formingAttachedWillfilesOfMain = o.formingOfMain;
-    if( o.formingPeerModulesOfMain === null )
-    o.formingPeerModulesOfMain = o.formingOfMain;
-    if( o.formingSubModulesOfMain === null )
-    o.formingSubModulesOfMain = o.formingOfMain;
-    if( o.formingResourcesOfMain === null )
-    o.formingResourcesOfMain = o.formingOfMain;
-  }
-
-  if( _.boolLike( o.formingOfSub ) )
-  {
-    o.formingOfSub = !!o.formingOfSub;
-    if( o.formingAttachedWillfilesOfSub === null )
-    o.formingAttachedWillfilesOfSub = o.formingOfSub;
-    if( o.formingPeerModulesOfSub === null )
-    o.formingPeerModulesOfSub = o.formingOfSub;
-    if( o.formingSubModulesOfSub === null )
-    o.formingSubModulesOfSub = o.formingOfSub;
-    if( o.formingResourcesOfSub === null )
-    o.formingResourcesOfSub = o.formingOfSub;
-  }
-
+  forward();
   will.instanceDefaultsExtend( o );
 
   return will;
+
+  function forward()
+  {
+
+    if( _.boolLike( o.formingOfMain ) )
+    {
+      o.formingOfMain = !!o.formingOfMain;
+      if( o.formingAttachedWillfilesOfMain === null )
+      o.formingAttachedWillfilesOfMain = o.formingOfMain;
+      if( o.formingPeerModulesOfMain === null )
+      o.formingPeerModulesOfMain = o.formingOfMain;
+      if( o.formingSubModulesOfMain === null )
+      o.formingSubModulesOfMain = o.formingOfMain;
+      if( o.formingResourcesOfMain === null )
+      o.formingResourcesOfMain = o.formingOfMain;
+    }
+
+    if( _.boolLike( o.formingOfSub ) )
+    {
+      o.formingOfSub = !!o.formingOfSub;
+      if( o.formingAttachedWillfilesOfSub === null )
+      o.formingAttachedWillfilesOfSub = o.formingOfSub;
+      if( o.formingPeerModulesOfSub === null )
+      o.formingPeerModulesOfSub = o.formingOfSub;
+      if( o.formingSubModulesOfSub === null )
+      o.formingSubModulesOfSub = o.formingOfSub;
+      if( o.formingResourcesOfSub === null )
+      o.formingResourcesOfSub = o.formingOfSub;
+    }
+
+  }
+
 }
 
 prefer.defaults =
@@ -1549,8 +1556,8 @@ let Aggregates =
   formingResourcesOfMain : null,
   formingOfMain : null,
 
-  formingAttachedWillfilesOfSub : 1,
-  formingPeerModulesOfSub : 1,
+  formingAttachedWillfilesOfSub : true,
+  formingPeerModulesOfSub : true,
   formingSubModulesOfSub : null,
   formingResourcesOfSub : null,
   formingOfSub : null,

@@ -734,6 +734,10 @@ function _err( o )
     o[ e ] = _err.defaults[ e ];
   }
 
+  if( o.level === undefined || o.level === null )
+  o.level = 1;
+  o.level += 1;
+
   if( o.args[ 0 ] === 'not implemented' || o.args[ 0 ] === 'not tested' || o.args[ 0 ] === 'unexpected' )
   if( _.debuggerEnabled )
   debugger;
@@ -918,7 +922,7 @@ function _err( o )
 
   function catchesForm()
   {
-    let floc = _.diagnosticLocation({ level : o.level+1 });
+    let floc = _.diagnosticLocation({ level : o.level });
     if( !floc.service || floc.service === 1 )
     catches = '    caught at ' + floc.fullWithRoutine + '\n' + catches;
   }
@@ -1098,7 +1102,7 @@ function _err( o )
     nonenurable( 'lineNumber', o.location.line );
     if( result.location === undefined )
     nonenurable( 'location', o.location );
-    nonenurable( 'level', o.level );
+    // nonenurable( 'level', o.level );
     nonenurable( 'sourceCode', sourceCode || null );
     nonenurable( 'debugging', o.debugging );
 
