@@ -2893,7 +2893,9 @@ function submodulesPeersOpen_body( o )
 
   let o2 = _.mapExtend( null, o );
   delete o2.throwing;
+  debugger;
   let submodules = module.submodulesEach.body.call( module, o2 );
+  debugger;
 
   submodules.forEach( ( submodule ) =>
   {
