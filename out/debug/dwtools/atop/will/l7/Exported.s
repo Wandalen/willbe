@@ -103,23 +103,11 @@ function _verify()
   _.sure( _.strDefined( module.about.name ), 'Expects defined name of the module as astring' );
   _.sure( _.strDefined( module.about.version ), 'Expects defined version of the module as string' );
 
-  _.sure
-  (
-    _.strDefined( exported.exportPath )
-    , () => exported.step.qualifiedName + ' should have defined path or reflector to export. Alternatively module could have defined path::export or reflecotr::export.'
-  );
-
-  // _.sure
-  // (
-  //   !will.Resolver.selectorIsComposite( exported.exportPath )
-  //   , () => `${exported.step.decoratedQualifiedName} has composite export path ${_.color.strFormat( exported.exportPath, 'path' )}. Export path could be a selector, but only simple.`
-  // );
-
 }
 
 //
 
-function _performPrepare( frame )
+function _performPrepare1( frame )
 {
   let exported = this;
   let module = exported.module;
@@ -155,24 +143,24 @@ function _performPrepare( frame )
   exported.withIntegrated = run.withIntegrated;
 
   exported.exportPath = opts.export;
-  if( exported.exportPath === null )
-  {
-
-    let exportFiles = module.pathOrReflectorResolve( 'export' );
-    if( exportFiles )
-    exported.exportPath = exportFiles.qualifiedName;
-
-    // exported.exportFiles = module.pathOrReflectorResolve( 'export' );
-    // exported.exportFiles = module.filesFromResource
-    // ({
-    //   selector : 'export',
-    //   prefixlessAction : 'pathOrReflector',
-    //   pathResolving : 'in',
-    //   globOnly : 1,
-    //   withDirs : 1,
-    // });
-
-  }
+  // if( exported.exportPath === null )
+  // {
+  //
+  //   let exportFiles = module.pathOrReflectorResolve( 'export' );
+  //   if( exportFiles )
+  //   exported.exportPath = exportFiles.qualifiedName;
+  //
+  //   // exported.exportFiles = module.pathOrReflectorResolve( 'export' );
+  //   // exported.exportFiles = module.filesFromResource
+  //   // ({
+  //   //   selector : 'export',
+  //   //   prefixlessAction : 'pathOrReflector',
+  //   //   pathResolving : 'in',
+  //   //   globOnly : 1,
+  //   //   withDirs : 1,
+  //   // });
+  //
+  // }
 
   exported._verify();
 
@@ -186,7 +174,6 @@ function _performReset()
   let exported = this;
   let module = exported.module;
   let will = module.will;
-  debugger;
 
   if( !module.stager.stageStatePerformed( 'attachedWillfilesFormed' ) )
   module.stager.stageReset( 'attachedWillfilesFormed' );
@@ -211,7 +198,6 @@ function _performSubmodulesPeersOpen()
 
   _.assert( exported.recursive === 0 || exported.recursive === 1 || exported.recursive === 2 );
 
-  debugger;
   return module.submodulesPeersOpen({ throwing : 0, recursive : Math.max( exported.recursive, 1 ) })
   .finally( ( err, arg ) =>
   {
@@ -296,7 +282,7 @@ function _performRecursive()
 
 //
 
-function _performBefore()
+function _performPrepare2()
 {
   let exported = this;
   let module = exported.module;
@@ -305,6 +291,41 @@ function _performBefore()
 
   _.assert( module.stager.stageStatePerformed( 'resourcesFormed' ), 'Resources should be formed' );
   _.assert( module.isFull() && module.isValid(), `${module.qualifiedName} is not fully formed to be exported` );
+
+  /* */
+
+  if( exported.exportPath === null )
+  {
+
+    let exportFiles = module.pathOrReflectorResolve( 'export' );
+    if( exportFiles )
+    exported.exportPath = exportFiles.qualifiedName;
+
+    // exported.exportFiles = module.pathOrReflectorResolve( 'export' );
+    // exported.exportFiles = module.filesFromResource
+    // ({
+    //   selector : 'export',
+    //   prefixlessAction : 'pathOrReflector',
+    //   pathResolving : 'in',
+    //   globOnly : 1,
+    //   withDirs : 1,
+    // });
+
+  }
+
+  /* */
+
+  _.sure
+  (
+    _.strDefined( exported.exportPath )
+    , () => exported.step.qualifiedName + ' should have defined path or reflector to export. Alternatively module could have defined path::export or reflecotr::export.'
+  );
+
+  // _.sure
+  // (
+  //   !will.Resolver.selectorIsComposite( exported.exportPath )
+  //   , () => `${exported.step.decoratedQualifiedName} has composite export path ${_.color.strFormat( exported.exportPath, 'path' )}. Export path could be a selector, but only simple.`
+  // );
 
   for( let s in module.submoduleMap )
   {
@@ -827,12 +848,12 @@ function perform( frame )
 
   _.assert( arguments.length === 1 );
 
-  con.then( () => exported._performPrepare( frame ) );
+  con.then( () => exported._performPrepare1( frame ) );
   con.then( () => exported._performReset() );
   con.then( () => exported._performSubmodulesPeersOpen() );
   con.then( () => exported._performRecursive() );
   con.then( () => exported._performReadExported() );
-  con.then( () => exported._performBefore() );
+  con.then( () => exported._performPrepare2() );
   con.then( () => exported._performExportedReflectors() );
   con.then( () => exported._performExportedFilesReflector() );
   con.then( () => exported._performPaths() );
@@ -932,11 +953,11 @@ let Extend =
   // inter
 
   _verify,
-  _performPrepare,
+  _performPrepare1,
   _performReset,
   _performSubmodulesPeersOpen,
   _performRecursive,
-  _performBefore,
+  _performPrepare2,
   _performReadExported,
   _performExportedReflectors,
   _performExportedFilesReflector,

@@ -16,7 +16,7 @@ path :
 step :
 
   export.proto :
-    export : '{path::proto}/a'
+    export : '{path::proto}/a/**'
     tar : 0
 
 build :

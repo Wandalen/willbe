@@ -6647,7 +6647,62 @@ function exportWholeModule( test )
   /* - */
 
   return ready;
-}
+} /* end of function exportWholeModule */
+
+//
+
+function exportRecursive( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'resolve-path-of-submodules' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let inPath = abs( 'ab/' );
+  let outTerminalPath = abs( 'out/ab/module-ab.out.will.yml' );
+  let outDirPath = abs( 'out' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.with ab/ .export.recursive'
+    return null;
+  })
+
+  shell({ execPath : '.with ab/ .export.recursive' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.description = 'files';
+    var exp = [ '.', './module-a.out.will.yml', './module-b.out.will.yml', './ab', './ab/module-ab.out.will.yml' ];
+    var files = self.find( outDirPath );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( got.output, 'xxx' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function exportRecursive */
 
 //
 
@@ -11650,6 +11705,7 @@ var Self =
     exportCourruptedSubmodulesDisabled,
     exportInconsistent,
     exportWholeModule,
+    exportRecursive,
     // exportWithRemoteSubmodules, // xxx
     importPathLocal,
     importLocalRepo,

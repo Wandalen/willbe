@@ -1265,7 +1265,8 @@ function remoteForm()
   }
   else
   {
-    opener.localPath = path.detrail( path.common( opener.willfilesPath ) );
+    // opener.localPath = path.detrail( path.common( opener.willfilesPath ) );
+    opener.localPath = opener.dirPath;
     opener.isDownloaded = null;
   }
 

@@ -7,8 +7,8 @@ about :
 
 submodule :
 
-  sub-a : ../out/module-a
-  sub-b : ../out/module-b
+  sub-a : ../a
+  sub-b : ../b
 
 path :
 
@@ -19,9 +19,9 @@ path :
     - ../out
     - ../out2
   export :
-    - 'submodule::sub-a/path::exported.files.proto.export'
-    - 'submodule::sub-b/path::exported.files.proto.export'
-    - '{path::proto}/dir3.test'
+    - '{submodule::sub-a/path::exported.files.proto.export}/**'
+    - '{submodule::sub-b/path::exported.files.proto.export}/**'
+    - '{path::proto}/dir3.test/**'
 
 reflector :
 
@@ -32,12 +32,6 @@ reflector :
         'submodule::sub-a/reflector::exported.files.proto.export' : '{path::files}/a'
         'submodule::sub-b/reflector::exported.files.proto.export' : '{path::files}/b'
         '{path::proto}/dir3.test' : '{path::files}/dir3.test'
-
-step :
-
-  export.proto :
-    export : 'path::export'
-    tar : 0
 
 build :
 
@@ -52,4 +46,4 @@ build :
       default : 1
       export : 1
     steps :
-      - step::export.proto
+      - step::module.export

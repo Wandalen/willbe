@@ -39,7 +39,7 @@ module:
       local:
         criterion:
           predefined: 1
-        path: sub.out.will.yml
+        path: .
       remote:
         criterion:
           predefined: 1
@@ -311,7 +311,7 @@ module:
       local:
         criterion:
           predefined: 1
-        path: ../sub.ex.will.yml
+        path: ..
       remote:
         criterion:
           predefined: 1

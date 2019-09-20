@@ -2893,18 +2893,12 @@ function submodulesPeersOpen_body( o )
 
   let o2 = _.mapExtend( null, o );
   delete o2.throwing;
-  debugger;
   let submodules = module.submodulesEach.body.call( module, o2 );
-  debugger;
 
   submodules.forEach( ( submodule ) =>
   {
     ready.then( () => submodule.peerModuleOpen({ throwing : o.throwing }) );
   });
-  // ready.tap( ( err, arg ) =>
-  // {
-  //   debugger;
-  // });
 
   return ready;
 }
@@ -3495,6 +3489,10 @@ function pathsRebase( o )
   if( inPathResource.path === null )
   inPathResource.path = '.';
 
+  let localPathResource = module.resourceObtain( 'path', 'local' );
+  // if( localPathResource.path === null )
+  localPathResource.path = '.'; /* xxx : warkaround */
+
   let inPath = path.canonize( o.inPath );
   let exInPath = module.inPath;
   let relative = path.relative( inPath, exInPath );
@@ -3511,6 +3509,8 @@ function pathsRebase( o )
     if( p === 'in' )
     continue;
     if( p === 'module.dir' )
+    continue;
+    if( p === 'local' )
     continue;
 
     resource.pathsRebase
@@ -4958,6 +4958,7 @@ function structureExportForModuleExport( o )
   module2.pathsRebase({ inPath : module.outPath });
 
   _.assert( module2.dirPath === path.detrail( module.outPath ) );
+  _.assert( module2.dirPath === module2.localPath );
   _.assert( module2.original === module );
   _.assert( module2.rootModule === module.rootModule );
   _.assert( module2.willfilesArray.length === 0 );

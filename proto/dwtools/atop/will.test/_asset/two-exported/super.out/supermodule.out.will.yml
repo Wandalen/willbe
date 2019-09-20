@@ -9,8 +9,8 @@ consistency:
     hash: a325f69b8a30ad02f91c7cb6e022b4d5
     size: 883
   ../sub.out/sub.out.will.yml: &ref_2
-    hash: e5e8e9550f95889144b3e0f0917e88b8
-    size: 12889
+    hash: 6d7e8aeef5cd324f143a5e3bc712e709
+    size: 12857
   ../sub.ex.will.yml: &ref_3
     hash: 868b5a57eaff621b4f9717b65569eabf
     size: 381
@@ -48,7 +48,7 @@ module:
       local:
         criterion:
           predefined: 1
-        path: supermodule.out.will.yml
+        path: .
       remote:
         criterion:
           predefined: 1
@@ -307,7 +307,7 @@ module:
       local:
         criterion:
           predefined: 1
-        path: sub.out.will.yml
+        path: ..
       remote:
         criterion:
           predefined: 1
@@ -595,7 +595,7 @@ module:
       local:
         criterion:
           predefined: 1
-        path: ../sub.ex.will.yml
+        path: ..
       remote:
         criterion:
           predefined: 1
@@ -886,7 +886,7 @@ module:
       local:
         criterion:
           predefined: 1
-        path: super.ex.will.yml
+        path: .
       remote:
         criterion:
           predefined: 1

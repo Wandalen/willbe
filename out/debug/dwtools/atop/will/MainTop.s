@@ -418,7 +418,8 @@ function _commandsMake()
     'shell' :                   { e : _.routineJoin( will, will.commandShell ),                       h : 'Execute shell command on the module.' },
     'clean' :                   { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
     'build' :                   { e : _.routineJoin( will, will.commandBuild ),                       h : 'Build current module with spesified criterion.' },
-    'export' :                  { e : _.routineJoin( will, will.commandExport ),                      h : 'Export selected the module with spesified criterion. Save output to output file and archive.' },
+    'export' :                  { e : _.routineJoin( will, will.commandExport ),                      h : 'Export selected the module with spesified criterion. Save output to output willfile and archive.' },
+    'export recursive' :        { e : _.routineJoin( will, will.commandExportRecursive ),             h : 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.' },
     'with' :                    { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
     'each' :                    { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
 
@@ -1242,45 +1243,44 @@ commandClean.commandProperties =
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
 }
 
+// //
+//
+// function commandBuild( e )
+// {
+//   let will = this;
+//   return will.openersCurrentEach( function( module )
+//   {
+//     let request = will.Resolver.strRequestParse( e.argument );
+//     let builds = module.openedModule.buildsResolve( request.subject, request.map );
+//     let logger = will.logger;
+//
+//     if( logger.verbosity >= 2 && builds.length > 1 )
+//     {
+//       logger.up();
+//       logger.log( module.openedModule.infoExportResource( builds ) );
+//       logger.down();
+//     }
+//
+//     if( builds.length !== 1 )
+//     throw will.errTooMany( builds, 'build scenario' );
+//
+//     let build = builds[ 0 ];
+//     return build.perform();
+//   });
+// }
+
 //
 
 function commandBuild( e )
-{
-  let will = this;
-  return will.openersCurrentEach( function( module )
-  {
-    let request = will.Resolver.strRequestParse( e.argument );
-    let builds = module.openedModule.buildsResolve( request.subject, request.map );
-    let logger = will.logger;
-
-    if( logger.verbosity >= 2 && builds.length > 1 )
-    {
-      logger.up();
-      logger.log( module.openedModule.infoExportResource( builds ) );
-      logger.down();
-    }
-
-    if( builds.length !== 1 )
-    throw errTooMany( builds, 'build scenario' );
-
-    let build = builds[ 0 ];
-    return build.perform();
-  });
-}
-
-//
-
-function commandExport( e )
 {
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
   let request = will.Resolver.strRequestParse( e.argument );
 
-  will._commandsBegin( commandExport );
+  will._commandsBegin( commandBuild );
 
-  // if( will.currentOpeners === null )
-  // debugger;
+  _.assert( will.currentOpener === null );
   if( will.currentOpeners === null )
   ready.then( () => will.openersFind() );
 
@@ -1291,14 +1291,12 @@ function commandExport( e )
     ready2.then( () =>
     {
       will.currentOpenerChange( it.opener );
-      // debugger;
       return it.opener.open({ forming : 1 });
     });
 
     ready2.then( () =>
     {
-      // debugger;
-      let builds = it.opener.openedModule.exportsResolve( request.subject, request.map );
+      let builds = it.opener.openedModule.buildsResolve( request.subject, request.map );
 
       if( logger.verbosity >= 2 && builds.length > 1 )
       {
@@ -1308,7 +1306,7 @@ function commandExport( e )
       }
 
       if( builds.length !== 1 )
-      throw errTooMany( builds, 'export scenario' );
+      throw will.errTooMany( builds, 'build' );
 
       let build = builds[ 0 ];
       will._willfilesReadEnd( it.opener.openedModule );
@@ -1327,8 +1325,144 @@ function commandExport( e )
   }))
   .finally( ( err, arg ) =>
   {
-    debugger;
+    will._commandsEnd( commandBuild );
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  return ready;
+}
+
+//
+
+function commandExport( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let request = will.Resolver.strRequestParse( e.argument );
+
+  will._commandsBegin( commandExport );
+
+  _.assert( will.currentOpener === null );
+  if( will.currentOpeners === null )
+  ready.then( () => will.openersFind() );
+
+  ready.then( () => will.openersCurrentEach( function( it )
+  {
+    let ready2 = new _.Consequence().take( null );
+
+    ready2.then( () =>
+    {
+      will.currentOpenerChange( it.opener );
+      return it.opener.open({ forming : 1 });
+    });
+
+    ready2.then( () =>
+    {
+      let builds = it.opener.openedModule.exportsResolve( request.subject, request.map );
+
+      if( logger.verbosity >= 2 && builds.length > 1 )
+      {
+        logger.up();
+        logger.log( it.opener.openedModule.infoExportResource( builds ) );
+        logger.down();
+      }
+
+      if( builds.length !== 1 )
+      throw will.errTooMany( builds, 'export scenario' );
+
+      let build = builds[ 0 ];
+      will._willfilesReadEnd( it.opener.openedModule );
+      return build.perform();
+    });
+
+    ready2.finally( ( err, arg ) =>
+    {
+      will.currentOpenerChange( null ); debugger;
+      if( err )
+      throw _.err( err, `\nFailed to export ${it.opener ? it.opener.commonPath : ''}` );
+      return arg;
+    });
+
+    return ready2;
+  }))
+  .finally( ( err, arg ) =>
+  {
     will._commandsEnd( commandExport );
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  return ready;
+}
+
+//
+
+function commandExportRecursive( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let request = will.Resolver.strRequestParse( e.argument );
+
+  will._commandsBegin( commandExportRecursive );
+
+  _.assert( will.currentOpener === null );
+  if( will.currentOpeners === null )
+  ready.then( () => will.openersFind() );
+
+  ready.then( () => will.openersCurrentEach( function( it )
+  {
+    let ready2 = new _.Consequence().take( null );
+
+    ready2.then( () =>
+    {
+      will.currentOpenerChange( it.opener );
+      return it.opener.open({ forming : 1 });
+    });
+
+    ready2.then( () =>
+    {
+      let builds = it.opener.openedModule.exportsResolve( request.subject, request.map );
+
+      if( logger.verbosity >= 2 && builds.length > 1 )
+      {
+        logger.up();
+        logger.log( it.opener.openedModule.infoExportResource( builds ) );
+        logger.down();
+      }
+
+      if( builds.length !== 1 )
+      throw will.errTooMany( builds, 'export scenario' );
+
+      let build = builds[ 0 ];
+      will._willfilesReadEnd( it.opener.openedModule );
+
+      let run = new will.BuildRun
+      ({
+        build,
+        recursive : 2,
+      });
+
+      return build.perform({ run });
+    });
+
+    ready2.finally( ( err, arg ) =>
+    {
+      will.currentOpenerChange( null ); debugger;
+      if( err )
+      throw _.err( err, `\nFailed to export ${it.opener ? it.opener.commonPath : ''}` );
+      return arg;
+    });
+
+    return ready2;
+  }))
+  .finally( ( err, arg ) =>
+  {
+    will._commandsEnd( commandExportRecursive );
     if( err )
     throw err;
     return arg;
@@ -1429,6 +1563,7 @@ let Extend =
   commandClean,
   commandBuild,
   commandExport,
+  commandExportRecursive,
 
   // relation
 

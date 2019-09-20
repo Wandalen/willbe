@@ -107,7 +107,7 @@ function stepsEach( o )
     if( _.errIs( step ) )
     {
       debugger;
-      throw _.err( step, '\nNo such step ' + stepName + ' for build ' + build.qualifiedName );
+      throw _.err( step, '\nFound no ' + stepName + ' for ' + build.qualifiedName );
     }
 
     if( _.arrayIs( step ) )

@@ -228,11 +228,16 @@ function _filePathChange( willfilesPath )
   if( _.arrayIs( r.dirPath ) )
   r.dirPath = r.dirPath[ 0 ];
   if( _.strIs( r.dirPath ) )
-  r.dirPath = path.dir( r.dirPath );
+  r.dirPath = path.dirFirst( r.dirPath );
   if( r.dirPath === null )
   r.dirPath = module.dirPath;
+  // if( r.dirPath && path.isGlobal( r.dirPath ) )
+  // debugger;
   if( r.dirPath )
-  r.dirPath = path.normalizeTolerant( r.dirPath );
+  r.dirPath = path.canonize( r.dirPath );
+  // r.dirPath = path.canonizeTolerant( r.dirPath );
+  // if( r.willfilesPath )
+  // debugger;
 
   r.commonPath = module.CommonPathFor( r.willfilesPath );
 
