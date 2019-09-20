@@ -186,6 +186,7 @@ function _performReset()
   let exported = this;
   let module = exported.module;
   let will = module.will;
+  debugger;
 
   if( !module.stager.stageStatePerformed( 'attachedWillfilesFormed' ) )
   module.stager.stageReset( 'attachedWillfilesFormed' );
@@ -210,7 +211,7 @@ function _performSubmodulesPeersOpen()
 
   _.assert( exported.recursive === 0 || exported.recursive === 1 || exported.recursive === 2 );
 
-  // return module.submodulesPeersOpen({ throwing : 0, recursive : 1 })
+  debugger;
   return module.submodulesPeersOpen({ throwing : 0, recursive : Math.max( exported.recursive, 1 ) })
   .finally( ( err, arg ) =>
   {

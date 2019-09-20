@@ -1382,7 +1382,7 @@ function _remoteDownload( o )
     if( o.opening && !o.dry && downloading )
     {
 
-      debugger;
+      // debugger;
       let willf = opener.willfilesArray[ 0 ];
       opener.close();
       _.assert( !_.arrayHas( will.willfilesArray, willf ) );

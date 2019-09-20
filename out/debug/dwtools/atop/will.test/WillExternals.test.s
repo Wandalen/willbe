@@ -6458,6 +6458,63 @@ function exportCourruptedOutfileSyntax( test )
 
 //
 
+function exportCourruptedSubmodulesDisabled( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'corrupted-submodules-disabled' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'super.out' );
+  let outFilePath = _.path.join( routinePath, 'super.out/supermodule.out.will.yml' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.with super .export debug:1';
+    return null;
+  })
+
+  shell( '.with super .export debug:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './supermodule.out.will.yml' ] );
+
+    var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    var exported = _.mapKeys( _.select( outfile.module[ outfile.root[ 0 ] ], 'exported/*' ) );
+    var exp = [ 'export.debug' ];
+    test.setsAreIdentical( exported, exp );
+
+    test.identical( _.strCount( got.output, '. Read 2 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / build::export.debug with 3 file(s) in' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function exportCourruptedSubmodulesDisabled */
+
+//
+
 function exportInconsistent( test )
 {
   let self = this;
@@ -11590,6 +11647,7 @@ var Self =
     exportBrokenNoreflector,
     exportCourrputedOutfileUnknownSection,
     exportCourruptedOutfileSyntax,
+    exportCourruptedSubmodulesDisabled,
     exportInconsistent,
     exportWholeModule,
     // exportWithRemoteSubmodules, // xxx

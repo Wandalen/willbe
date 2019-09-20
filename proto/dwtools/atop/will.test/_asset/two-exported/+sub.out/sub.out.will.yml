@@ -1,0 +1,376 @@
+format: willfile-1.0.0
+about:
+  name: sub
+  description: Module for testing
+  enabled: 1
+  version: 0.0.1
+path:
+  module.willfiles:
+    criterion:
+      predefined: 1
+    path: sub.out.will.yml
+  module.common:
+    criterion:
+      predefined: 1
+    path: sub.out
+  module.original.willfiles:
+    criterion:
+      predefined: 1
+    path:
+      - ../sub.ex.will.yml
+      - ../sub.im.will.yml
+  module.peer.willfiles:
+    criterion:
+      predefined: 1
+    path:
+      - ../sub.ex.will.yml
+      - ../sub.im.will.yml
+  local:
+    criterion:
+      predefined: 1
+    path: sub.out.will.yml
+  remote:
+    criterion:
+      predefined: 1
+  proto:
+    path: ../proto
+  in:
+    criterion:
+      predefined: 0
+    path: .
+  out:
+    criterion:
+      predefined: 0
+    path: .
+  out.debug:
+    criterion:
+      debug: 1
+    path: debug
+  out.release:
+    criterion:
+      debug: 0
+    path: release
+  temp:
+    path:
+      - .
+      - ../super.out
+  exported.dir.export.:
+    criterion:
+      default: 1
+      debug: 0
+      raw: 1
+      export: 1
+    path: release
+  exported.files.export.:
+    criterion:
+      default: 1
+      debug: 0
+      raw: 1
+      export: 1
+    path:
+      - release
+      - release/File.release.js
+submodule: {}
+reflector:
+  reflect.proto.:
+    src:
+      filePath:
+        'path::proto': 'path::out.*=1'
+    mandatory: 1
+    criterion:
+      debug: 0
+    inherit:
+      - predefined.*
+  reflect.proto.debug:
+    src:
+      filePath:
+        'path::proto': 'path::out.*=1'
+    mandatory: 1
+    criterion:
+      debug: 1
+    inherit:
+      - predefined.*
+  exported.export.:
+    src:
+      filePath:
+        '**': ''
+      prefixPath: release
+    mandatory: 1
+    criterion:
+      default: 1
+      debug: 0
+      raw: 1
+      export: 1
+  exported.files.export.:
+    src:
+      filePath:
+        'path::exported.files.export.': ''
+      basePath: .
+      prefixPath: 'path::exported.dir.export.'
+      recursive: 0
+    recursive: 0
+    mandatory: 1
+    criterion:
+      default: 1
+      debug: 0
+      raw: 1
+      export: 1
+step:
+  export.:
+    opts:
+      export: '{path::out.*=1}/**'
+      tar: 0
+    criterion:
+      debug: 0
+    inherit:
+      - module.export
+  export.debug:
+    opts:
+      export: '{path::out.*=1}/**'
+      tar: 0
+    criterion:
+      debug: 1
+    inherit:
+      - module.export
+  reflect.proto.:
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
+    criterion:
+      debug: 0
+      raw: 0
+    inherit:
+      - files.reflect
+  reflect.proto.debug:
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
+    criterion:
+      debug: 1
+      raw: 0
+    inherit:
+      - files.reflect
+  reflect.proto.raw:
+    opts:
+      mandatory: 1
+      src:
+        filePath:
+          /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/_asset/import-in-exported/proto: >-
+            /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/_asset/import-in-exported/sub.out/release
+        basePath:
+          /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/_asset/import-in-exported/proto: >-
+            /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/_asset/import-in-exported/proto
+        recursive: 2
+        maskAll:
+          excludeAny:
+            - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
+            - !<tag:yaml.org,2002:js/regexp> /\.unique$/
+            - !<tag:yaml.org,2002:js/regexp> /\.git$/
+            - !<tag:yaml.org,2002:js/regexp> /\.svn$/
+            - !<tag:yaml.org,2002:js/regexp> /\.hg$/
+            - !<tag:yaml.org,2002:js/regexp> /\.DS_Store$/
+            - !<tag:yaml.org,2002:js/regexp> /(^|\/)-/
+            - !<tag:yaml.org,2002:js/regexp> /\.debug($|\.|\/)/i
+            - !<tag:yaml.org,2002:js/regexp> /\.experiment($|\.|\/)/i
+      dst:
+        filePath:
+          /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/_asset/import-in-exported/proto: >-
+            /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/_asset/import-in-exported/sub.out/release
+        recursive: 2
+      verbosity: 0
+      linking: hardLinkMaybe
+      dstRewritingOnlyPreserving: 1
+      onWriteDstUp: !<tag:yaml.org,2002:js/function> |-
+        function empty()
+          {
+            return [];
+          }
+      onWriteDstDown: !<tag:yaml.org,2002:js/function> |-
+        function empty()
+          {
+            return [];
+          }
+      onWriteSrcUp: !<tag:yaml.org,2002:js/function> |-
+        function empty()
+          {
+            return [];
+          }
+      onWriteSrcDown: !<tag:yaml.org,2002:js/function> |-
+        function empty()
+          {
+            return [];
+          }
+      breakingSrcHardLink: null
+      resolvingSrcSoftLink: null
+      resolvingSrcTextLink: null
+      breakingDstHardLink: null
+      resolvingDstSoftLink: null
+      resolvingDstTextLink: null
+      rebasingLink: 0
+      filter: null
+      reflectMap: null
+      outputFormat: record
+      filesGraph: null
+      result:
+        - dst:
+            absolute: >-
+              /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/_asset/import-in-exported/sub.out/release
+            relative: .
+            input: .
+          src:
+            absolute: >-
+              /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/_asset/import-in-exported/proto
+            relative: .
+            input: >-
+              /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/_asset/import-in-exported/proto
+            included: 1
+          effective:
+            absolute: >-
+              /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/_asset/import-in-exported/proto
+            relative: .
+            input: >-
+              /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/_asset/import-in-exported/proto
+            included: 1
+          goingUp: true
+          upToDate: false
+          srcAction: null
+          srcAllow: true
+          reason: srcLooking
+          action: dirMake
+          allow: true
+          preserve: false
+          deleteFirst: false
+          touch: constructive
+          include: true
+        - dst:
+            absolute: >-
+              /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/_asset/import-in-exported/sub.out/release/File.release.js
+            relative: ./File.release.js
+            input: ./File.release.js
+          src:
+            absolute: >-
+              /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/_asset/import-in-exported/proto/File.release.js
+            relative: ./File.release.js
+            input: >-
+              /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/_asset/import-in-exported/proto/File.release.js
+            included: 1
+          effective:
+            absolute: >-
+              /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/_asset/import-in-exported/proto/File.release.js
+            relative: ./File.release.js
+            input: >-
+              /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/_asset/import-in-exported/proto/File.release.js
+            included: 1
+          goingUp: true
+          upToDate: false
+          srcAction: null
+          srcAllow: true
+          reason: srcLooking
+          action: hardLink
+          allow: true
+          preserve: false
+          deleteFirst: false
+          touch: constructive
+          include: true
+      visitedMap: null
+      extra: null
+      allowingMissed: 0
+      allowingCycled: 0
+      withTerminals: 1
+      withDirs: 1
+      includingNonAllowed: 1
+      includingDst: 0
+      revisiting: null
+      resolvingSoftLink: 0
+      resolvingTextLink: 0
+      writing: 1
+      srcDeleting: 0
+      dstDeleting: 0
+      dstDeletingCleanedDirs: 1
+      dstRewriting: 1
+      dstRewritingByDistinct: 1
+      preservingTime: 0
+      preservingSame: 0
+      onUp: !<tag:yaml.org,2002:js/function> |-
+        function compositionSupervise()
+            {
+              let result = supervisor( this, arguments, act, o );
+              return result;
+            }
+      onDown: !<tag:yaml.org,2002:js/function> |-
+        function compositionSupervise()
+            {
+              let result = supervisor( this, arguments, act, o );
+              return result;
+            }
+      onDstName: null
+    criterion:
+      debug: 0
+      raw: 1
+    inherit:
+      - files.reflect
+  reflect.proto.debug.raw:
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
+    criterion:
+      debug: 1
+      raw: 1
+    inherit:
+      - files.reflect
+build:
+  export.:
+    steps:
+      - 'build::*=1.raw'
+      - 'step::export*=1'
+    criterion:
+      default: 1
+      debug: 0
+      raw: 1
+      export: 1
+  export.debug:
+    steps:
+      - 'build::*=1.raw'
+      - 'step::export*=1'
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      export: 1
+  debug.raw:
+    steps:
+      - 'step::reflect.proto.*=1'
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+  release.raw:
+    steps:
+      - 'step::reflect.proto.*=1'
+    criterion:
+      default: 1
+      debug: 0
+      raw: 1
+exported:
+  export.:
+    version: 0.0.1
+    recursive: 0
+    withIntegrated: 2
+    tar: 0
+    exportPath: '{path::out.*=1}/**'
+    exportedReflector: 'reflector::exported.export.'
+    exportedFilesReflector: 'reflector::exported.files.export.'
+    exportedDirPath: 'path::exported.dir.export.'
+    exportedFilesPath: 'path::exported.files.export.'
+    criterion:
+      default: 1
+      debug: 0
+      raw: 1
+      export: 1
+consistency:
+  ../sub.ex.will.yml:
+    hash: 868b5a57eaff621b4f9717b65569eabf
+    size: 381
+  ../sub.im.will.yml:
+    hash: 55717cb3e0b6611f938c3386956467c7
+    size: 827
+module:
+  sub.out: root
+  ../sub: root

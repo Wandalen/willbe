@@ -32,6 +32,7 @@ path :
   out : 'out'
   temp : 'path::out'
   proto : './proto'
+  export : '{path::export}/**'
   doc : './doc'
 
   out.raw.debug :

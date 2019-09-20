@@ -1,0 +1,27 @@
+
+about :
+
+  name : "sub"
+  description : "Module for testing"
+  version : "0.0.1"
+
+step :
+
+  export :
+    inherit : module.export
+    export : '{path::out.*=1}/**'
+    tar : 0
+    criterion :
+      debug : [ 0,1 ]
+
+build :
+
+  export :
+    criterion :
+      default : 1
+      debug : [ 0,1 ]
+      raw : 1
+      export : 1
+    steps :
+      - build::*=1.raw
+      - step::export*=1

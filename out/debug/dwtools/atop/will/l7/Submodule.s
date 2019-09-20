@@ -168,12 +168,10 @@ function form3()
 
   /* begin */
 
-  // debugger;
   if( submodule.enabled )
   result = submodule._openAct();
   else
   result = new _.Consequence().take( null );
-  // debugger;
 
   result.finally( ( err, arg ) =>
   {
@@ -505,8 +503,8 @@ function infoExport()
 
 function isMandatory()
 {
-  let resource = this;
-  let module = resource.module;
+  let submodule = this;
+  let module = submodule.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;

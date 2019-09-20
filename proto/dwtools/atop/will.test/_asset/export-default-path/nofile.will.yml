@@ -1,0 +1,21 @@
+
+about :
+
+  name : "nofile"
+  version : "0.0.1"
+
+path :
+
+  in : './out'
+  out : '../out'
+  export : '{path::in}/x/**'
+  temp : '{path::out}'
+
+build :
+
+  export :
+    criterion :
+      debug : [ 0,1 ]
+      export : 1
+    steps :
+      - step::module.export

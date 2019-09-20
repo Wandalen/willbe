@@ -1,0 +1,54 @@
+
+path :
+
+  proto : '.'
+  in : 'proto'
+  out : '../sub.out'
+  out.debug :
+    path : '../sub.out/debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : '../sub.out/release'
+    criterion :
+      debug : 0
+  temp :
+    - ../sub.out
+    - ../super.out
+
+reflector :
+
+  reflect.proto :
+    inherit : predefined.*
+    criterion :
+      debug : [ 0,1 ]
+    filePath :
+      path::proto : path::out.*=1
+
+step :
+
+  reflect.proto :
+    inherit : files.reflect
+    reflector :
+      reflector::reflect.proto.*=1
+    criterion :
+      debug : [ 0,1 ]
+      raw : [ 0,1 ]
+
+build :
+
+  debug.raw :
+    criterion :
+      default : 1
+      debug : 1
+      raw : 1
+    steps :
+      - step::reflect.proto.*=1
+
+  release.raw :
+    criterion :
+      default : 1
+      debug : 0
+      raw : 1
+    steps :
+      - step::reflect.proto.*=1

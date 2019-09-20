@@ -1595,7 +1595,6 @@ function submodulesEach_body( o )
     onNodeNameGet : ( record ) => record.module ? record.module.qualifiedName : record.relation.qualifiedName,
     onOutNodesFor : ( record ) =>
     {
-      // debugger;
       let result = [];
       if( record.module )
       for( let s in record.module.submoduleMap )
@@ -1611,7 +1610,6 @@ function submodulesEach_body( o )
 
         if( o.withPeers && record2.module && record2.module.peerModule )
         {
-          // result.push( record2.module.peerModule );
           result.push( recordFromModule( record2.module.peerModule ) );
         }
 
@@ -1626,10 +1624,6 @@ function submodulesEach_body( o )
   if( o.withPeers && module.peerModule )
   nodes.push( recordFromModule( module.peerModule ) );
 
-  // if( module.absoluteName === "module::supermodule / f::duplicate" )
-  // debugger;
-
-  // debugger;
   let result = group.each
   ({
     nodes : nodes,
@@ -1638,10 +1632,6 @@ function submodulesEach_body( o )
     recursive : o.recursive,
     withStem : o.withStem,
   });
-  // debugger;
-
-  // if( module.absoluteName === "module::supermodule / f::duplicate" )
-  // debugger;
 
   if( o.outputFormat !== '/' )
   return result.map( ( record ) => outputFrom( record ) );
@@ -1660,12 +1650,20 @@ function submodulesEach_body( o )
     if( !record.module.isOut )
     return false;
 
-    if( !o.withOptional && record.relation )
-    if( record.relation.isOptional() )
+    if( !o.withOptional )
+    if( !record.relation || record.relation.isOptional() )
     return false;
 
     if( !o.withMandatory && record.relation )
-    if( !record.relation || !record.relation.isOptional() )
+    if( !record.relation.isOptional() )
+    return false;
+
+    if( !o.withEnabled && record.relation )
+    if( record.relation.enabled )
+    return false;
+
+    if( !o.withDisabled && record.relation )
+    if( !record.relation.enabled )
     return false;
 
     return true;
@@ -1788,6 +1786,8 @@ submodulesEach_body.defaults =
   withIn : 1,
   withOptional : 1,
   withMandatory : 1,
+  withEnabled : 1,
+  withDisabled : 0,
 }
 
 let submodulesEach = _.routineFromPreAndBody( submodulesEach_pre, submodulesEach_body );
@@ -3665,7 +3665,7 @@ function cloneDirPathGet( rootModule )
 
 //
 
-function predefinedPathGet_functor( fieldName, resourceName )
+function predefinedPathGet_functor( fieldName, resourceName, absolutize )
 {
 
   return function predefinedPathGet()
@@ -3675,7 +3675,17 @@ function predefinedPathGet_functor( fieldName, resourceName )
     if( !module.will)
     return null;
 
-    return module.pathMap[ resourceName ] || null;
+    let result = module.pathMap[ resourceName ] || null;
+
+    if( absolutize && result )
+    {
+      let will = module.will;
+      let fileProvider = will.fileProvider;
+      let path = fileProvider.path;
+      result = path.join( module.inPath, result );
+    }
+
+    return result;
   }
 
 }
@@ -3752,7 +3762,7 @@ function predefinedPathSet_functor( fieldName, resourceName )
 let willfilesPathGet = predefinedPathGet_functor( 'willfilesPath', 'module.willfiles' );
 let dirPathGet = predefinedPathGet_functor( 'dirPath', 'module.dir' );
 let commonPathGet = predefinedPathGet_functor( 'commonPath', 'module.common' );
-let localPathGet = predefinedPathGet_functor( 'localPath', 'local' );
+let localPathGet = predefinedPathGet_functor( 'localPath', 'local', 1 );
 let remotePathGet = predefinedPathGet_functor( 'remotePath', 'remote' );
 let currentRemotePathGet = predefinedPathGet_functor( 'currentRemotePath', 'current.remote' );
 let willPathGet = predefinedPathGet_functor( 'willPath', 'will' );

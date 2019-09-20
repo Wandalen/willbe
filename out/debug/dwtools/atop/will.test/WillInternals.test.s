@@ -1197,8 +1197,8 @@ function openOutNamed( test )
 
     test.identical( opener.qualifiedName, 'module::supermodule' );
     test.identical( opener.absoluteName, 'module::supermodule' );
-    test.identical( opener.dirPath, abs( './super.out' ) );
-    test.identical( opener.localPath, 'supermodule.out.will.yml' );
+    test.identical( relopener.dirPath, abs( './super.out' ) );
+    test.identical( opener.localPath, abs( 'supermodule.out.will.yml' ) );
     test.identical( opener.willfilesPath, abs( './super.out/supermodule.out.will.yml' ) );
     test.identical( opener.commonPath, abs( 'super.out/supermodule.out' ) );
     test.identical( opener.fileName, 'supermodule.out' );
@@ -3496,6 +3496,128 @@ function exportCourruptedOutfileSyntax( test )
   return ready;
 
 } /* end of function exportCourruptedOutfileSyntax */
+
+//
+
+/*
+test
+  - exporing of module with disabled corrupted submodules works
+  - Disabled modules are not in default submodules
+*/
+
+function exportCourruptedSubmodulesDisabled( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'corrupted-submodules-disabled' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let superInPath = abs( 'super' );
+  let superOutFilePath = abs( 'super.out/supermodule.out.will.yml' );
+  let will = new _.Will;
+  let path = _.fileProvider.path;
+  let ready = _.Consequence().take( null );
+  let opener;
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = 'export super';
+
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+    opener = will.openerMake({ willfilesPath : superInPath });
+
+    will.prefer
+    ({
+      formingOfMain : 0,
+      formingOfSub : 0,
+    });
+
+    will.readingBegin();
+
+    return opener.open({ forming : 0, formingPeerModules : 1 });
+  })
+
+  .then( ( module ) =>
+  {
+    return opener.open({ forming : 1 });
+  })
+
+  .then( ( module ) =>
+  {
+
+    test.case = 'submodulesEach';
+    var exp = [];
+    var got = opener.openedModule.submodulesEach({ outputFormat : '/' });
+    var commonPath = _.filter( got, ( e ) => e.opener ? e.opener.commonPath : e.module.commonPath );
+    test.identical( commonPath, exp );
+
+    test.case = 'submodulesEach, withDisabled';
+    var exp =
+    [
+      'git+https:///github.com/X1/X1.git#master',
+      'git+https:///github.com/X2/X2.git#master',
+      'git+https:///github.com/X3/X3.git#master',
+    ];
+    var got = opener.openedModule.submodulesEach({ outputFormat : '/', withDisabled : 1 });
+    var commonPath = _.filter( got, ( e ) => e.opener ? e.opener.commonPath : e.module.commonPath );
+    test.identical( commonPath, exp );
+
+    let builds = module.exportsResolve({ criterion : { debug : 1 } });
+    let build = builds[ 0 ];
+    return build.perform();
+  })
+
+  .then( ( arg ) =>
+  {
+    var module = opener.openedModule;
+
+    test.description = 'outfile';
+    var outfile = _.fileProvider.fileConfigRead( superOutFilePath );
+    var modulePaths = _.mapKeys( outfile.module );
+    var exp = [ 'supermodule.out', '../super' ];
+    test.setsAreIdentical( modulePaths, exp );
+    var exported = _.mapKeys( _.select( outfile.module[ outfile.root[ 0 ] ], 'exported/*' ) );
+    var exp = [ 'export.debug' ];
+    test.setsAreIdentical( exported, exp );
+    var sections = _.mapKeys( outfile );
+    var exp = [ 'format', 'root', 'consistency', 'module' ];
+    test.setsAreIdentical( sections, exp );
+    var exp = [ 'supermodule.out' ];
+    test.setsAreIdentical( outfile.root, exp );
+
+    test.description = 'finit';
+    module.finit();
+    test.is( module.finitedIs() );
+    test.is( opener.finitedIs() );
+
+    test.description = '1st attempt to open sub.out on opening, 2nd attempt to open sub.out on exporing';
+    test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 2 );
+    will.openersErrorsRemoveAll();
+    test.identical( will.openersErrorsArray.length, 0 );
+
+    test.description = 'no grabage left';
+    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), [] );
+    test.setsAreIdentical( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ), [] );
+    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), [] );
+    test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), [] );
+    test.setsAreIdentical( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ), [] );
+    test.setsAreIdentical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), [] );
+    test.setsAreIdentical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), [] );
+    test.setsAreIdentical( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), [] );
+    test.setsAreIdentical( _.mapKeys( will.moduleWithNameMap ), [] );
+
+    return null;
+  });
+
+  /* - */
+
+  return ready;
+} /* end of function exportCourruptedSubmodulesDisabled */
 
 //
 
@@ -6162,21 +6284,19 @@ function pathsResolveOfSubmodules( test )
 
     test.case = 'path::in, wTools, through opener';
     var submodule = submodules[ 0 ].opener;
-    var resolved = subopener.openedModule.resolve( 'path::in' );
+    var resolved = submodule.openedModule.resolve( 'path::in' );
     var expected = path.join( submodulesPath, 'Tools/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wTools';
     var submodule = submodules[ 0 ];
-    debugger;
     var resolved = submodule.resolve( 'path::out' );
-    debugger;
     var expected = path.join( submodulesPath, 'Tools/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wTools, through opener';
     var submodule = submodules[ 0 ].opener;
-    var resolved = subopener.openedModule.resolve( 'path::out' );
+    var resolved = submodule.openedModule.resolve( 'path::out' );
     var expected = path.join( submodulesPath, 'Tools/out' );
     test.identical( resolved, expected );
 
@@ -6185,11 +6305,10 @@ function pathsResolveOfSubmodules( test )
 
   ready.finally( ( err, arg ) =>
   {
-    debugger;
     if( err )
     throw err;
     test.is( err === undefined );
-    module.finit();
+    opener.finit();
     return arg;
   })
 
@@ -7919,6 +8038,7 @@ var Self =
     exportInconsistent,
     exportCourrputedOutfileUnknownSection,
     exportCourruptedOutfileSyntax,
+    exportCourruptedSubmodulesDisabled,
     exportCourrputedSubmoduleOutfileUnknownSection,
     exportCourrputedSubmoduleOutfileFormatVersion,
 

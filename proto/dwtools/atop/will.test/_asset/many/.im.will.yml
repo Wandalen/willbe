@@ -1,0 +1,131 @@
+
+submodule :
+
+  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
+  Logger : git+https:///github.com/Wandalen/wLogger.git/out/wLogger#master
+  # PrinterToFile : git+https:///github.com/Wandalen/wPrinterToFile.git/out/wPrinterToFile#master
+  LoggerToJs : git+https:///github.com/Wandalen/wLoggerToJs.git/out/wLoggerToJs#master
+  Consequence : git+https:///github.com/Wandalen/wConsequence.git/out/wConsequence#master
+  # Consequizer : git+https:///github.com/Wandalen/wConsequizer.git/out/wConsequizer#master
+  Instancing : git+https:///github.com/Wandalen/wInstancing.git/out/wInstancing#master
+  EventHandler : git+https:///github.com/Wandalen/wEventHandler.git/out/wEventHandler#master
+  Copyable : git+https:///github.com/Wandalen/wCopyable.git/out/wCopyable#master
+  FieldsStack : git+https:///github.com/Wandalen/wFieldsStack.git/out/wFieldsStack#master
+  # NameTools : git+https:///github.com/Wandalen/wNameTools.git/out/wNameTools#master
+  Looker : git+https:///github.com/Wandalen/wLooker.git/out/wLooker#master
+  PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/out/wPathFundamentals#master
+  Proto : git+https:///github.com/Wandalen/wProto.git/out/wProto#master
+  Selector : git+https:///github.com/Wandalen/wSelector.git/out/wSelector#master
+  SelectorExtra : git+https:///github.com/Wandalen/wSelectorExtra.git/out/wSelectorExtra#master
+
+  Stringer : git+https:///github.com/Wandalen/wStringer.git/out/wStringer#master
+  ArraySorted : git+https:///github.com/Wandalen/wArraySorted.git/out/wArraySorted#master
+  ArraySparse : git+https:///github.com/Wandalen/wArraySparse.git/out/wArraySparse#master
+  ProcessBasic : git+https:///github.com/Wandalen/wProcessBasic.git/out/wProcessBasic#master
+  UriFundamentals : git+https:///github.com/Wandalen/wUriFundamentals.git/out/wUriFundamentals#master
+  # Comparator : git+https:///github.com/Wandalen/wComparator.git/out/wComparator#master
+
+  LookerExtra : git+https:///github.com/Wandalen/wLookerExtra.git/out/wLookerExtra#master
+  Traverser : git+https:///github.com/Wandalen/wTraverser.git/out/wTraverser#master
+  # BaseEncoder : git+https:///github.com/Wandalen/wBaseEncoder.git/out/wBaseEncoder#master
+  # RoutineTransform : git+https:///github.com/Wandalen/wRoutineTransform.git/out/wRoutineTransform#master
+  WebUriFundamentals : git+https:///github.com/Wandalen/wWebUriFundamentals.git/out/wWebUriFundamentals#master
+  Cloner : git+https:///github.com/Wandalen/wCloner.git/out/wCloner#master
+  StringsExtra : git+https:///github.com/Wandalen/wStringsExtra.git/out/wStringsExtra#master
+  Procedure : git+https:///github.com/Wandalen/wProcedure.git/out/wProcedure#master
+
+  Gdf : git+https:///github.com/Wandalen/wGdfStrategy.git/out/wGdfStrategy#master
+  Replicator : git+https:///github.com/Wandalen/wReplicator.git/out/wReplicator#master
+  RoutineFundamentals : git+https:///github.com/Wandalen/wRoutineFundamentals.git/out/wRoutineFundamentals#master
+  EntityFundamentals : git+https:///github.com/Wandalen/wEntityFundamentals.git/out/wEntityFundamentals#master
+
+  # --
+
+  # DomBaseLayer : git+https:///github.com/Wandalen/wDomBaseLayer.git/out/wDomBaseLayer#master
+
+  RegexpObject : git+https:///github.com/Wandalen/wRegexpObject.git/out/wRegexpObject#master
+  Color : git+https:///github.com/Wandalen/wColor.git/out/wColor#master
+  Color256 : git+https:///github.com/Wandalen/wColor256.git/out/wColor256#master
+  ChangeTransactor : git+https:///github.com/Wandalen/wChangeTransactor.git/out/wChangeTransactor#master
+  Vocabulary : git+https:///github.com/Wandalen/wVocabulary.git/out/wVocabulary#master
+  CommandsAggregator : git+https:///github.com/Wandalen/wCommandsAggregator.git/out/wCommandsAggregator#master
+  CommandsConfig : git+https:///github.com/Wandalen/wCommandsConfig.git/out/wCommandsConfig#master
+  Files : git+https:///github.com/Wandalen/wFiles.git/out/wFiles#master
+  FilesArchive : git+https:///github.com/Wandalen/wFilesArchive.git/out/wFilesArchive#master
+  # FilesTransformers : git+https:///github.com/Wandalen/wFilesTransformers.git/out/wFilesTransformers#master
+  # FilesSvn : git+https:///github.com/Wandalen/wFilesSvn.git/out/wFilesSvn#master
+  # TimeMarker : git+https:///github.com/Wandalen/wTimeMarker.git/out/wTimeMarker#master
+  Verbal : git+https:///github.com/Wandalen/wVerbal.git/out/wVerbal#master
+  StateStorage : git+https:///github.com/Wandalen/wStateStorage.git/out/wStateStorage#master
+  StateSession : git+https:///github.com/Wandalen/wStateSession.git/out/wStateSession#master
+  PathTranslator : git+https:///github.com/Wandalen/wPathTranslator.git/out/wPathTranslator#master
+  # FileExecutor : git+https:///github.com/Wandalen/wFileExecutor.git/out/wFileExecutor#master
+  # FileExecutorHtmlFormatters : git+https:///github.com/Wandalen/wFileExecutorHtmlFormatters.git/out/wFileExecutorHtmlFormatters#master
+  TranspilationStrategy : git+https:///github.com/Wandalen/wTranspilationStrategy.git/out/wTranspilationStrategy#master
+  NameMapper : git+https:///github.com/Wandalen/wNameMapper.git/out/wNameMapper#master
+  TemplateTreeResolver : git+https:///github.com/Wandalen/wTemplateTreeResolver.git/out/wTemplateTreeResolver#master
+  TemplateTreeEnvironment : git+https:///github.com/Wandalen/wTemplateTreeEnvironment.git/out/wTemplateTreeEnvironment#master
+  TemplateFileWriter : git+https:///github.com/Wandalen/wTemplateFileWriter.git/out/wTemplateFileWriter#master
+  # Graph : git+https:///github.com/Wandalen/wGraphBase.git/out/wGraph#master
+  # GraphLive : git+https:///github.com/Wandalen/wGraphLive.git/out/wGraphLive#master
+  # Schema : git+https:///github.com/Wandalen/wSchema.git/out/wSchema#master
+  # ScriptLauncher : git+https:///github.com/Wandalen/wScriptLauncher.git/out/wScriptLauncher#master
+  # ExchangePoint : git+https:///github.com/Wandalen/wExchangePoint.git/out/wExchangePoint#master
+  # Communicator : git+https:///github.com/Wandalen/wCommunicator.git/out/wCommunicator#master
+  # Incubator : git+https:///github.com/Wandalen/wIncubator.git/out/wIncubator#master
+  # CollectionOfInstances : git+https:///github.com/Wandalen/wCollectionOfInstances.git/out/wCollectionOfInstances#master
+  # StarterMaker : git+https:///github.com/Wandalen/wStarterMaker.git/out/wStarterMaker#master
+
+  MathScalar : git+https:///github.com/Wandalen/wMathScalar.git/out/wMathScalar#master
+  MathVector : git+https:///github.com/Wandalen/wMathVector.git/out/wMathVector#master
+  MathSpace : git+https:///github.com/Wandalen/wMathSpace.git/out/wMathSpace#master
+  MathConcepts : git+https:///github.com/Wandalen/wMathConcepts.git/out/wMathConcepts#master
+
+  # Testing : git+https:///github.com/Wandalen/wTesting.git/out/wTesting#master
+  # FilesOperationsDirector : git+https:///github.com/Wandalen/wFilesOperationsDirector.git/out/wFilesOperationsDirector#master
+  # FilesLinker : git+https:///github.com/Wandalen/wFilesLinker.git/out/wFilesLinker#master
+  # Baker : git+https:///github.com/Wandalen/wBaker.git/out/wBaker#master
+  # BakerWithFileExecutor : git+https:///github.com/Wandalen/wBakerWithFileExecutor.git/out/wBakerWithFileExecutor#master
+  # Maker : git+https:///github.com/Wandalen/wMaker.git/out/wMaker#master
+  # Servlet : git+https:///github.com/Wandalen/wServlet.git/out/wServlet#master
+
+path :
+
+  proto : './proto'
+  temp : 'out'
+  in : '.'
+  out : 'out'
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : 1
+
+reflector :
+
+  reflect.submodules :
+    inherit : submodule::*/exported::*=1/reflector::exported.files*=1
+    dst :
+      prefixPath : "{path::out.*=1}"
+    criterion :
+      content: proto
+
+step :
+
+  clean.out :
+    inherit : files.delete
+    filePath : path::out.*=1
+    criterion :
+      debug : [ 0,1 ]
+
+build :
+
+  debug.raw :
+    criterion :
+      default : 1
+      debug : 1
+      raw : 1
+      content: proto
+    steps :
+      - submodules.download
+      - clean.out.*=1
+      - reflect.submodules*=1

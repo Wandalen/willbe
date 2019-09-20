@@ -1,0 +1,49 @@
+
+about :
+  name : c
+  version : '0.0.0'
+
+submodule :
+
+  GdfStrategy : git+https:///github.com/Wandalen/wStarter.git/out/wStarter.out.will
+  AppBasic : git+https:///github.com/Wandalen/wAppBasic.git/out/wAppBasic.out.will
+
+path :
+
+  out : out
+  out.debug :
+    path : '{path::out}/debug'
+    criterion :
+      debug : 1
+  temp : '{path::out}'
+
+reflector :
+
+  reflect.submodules :
+    inherit : submodule::*/exported::*=1/reflector::exported.files*=1
+    criterion :
+      debug : 1
+    dst :
+      basePath : .
+      prefixPath : path::out.debug
+
+step :
+
+  export :
+    inherit : module.export
+    export : path::out.*=1
+    tar : 0
+    criterion :
+      debug : 1
+
+build :
+
+  export :
+    steps :
+      - submodules.download
+      - reflect.submodules
+      - export
+    criterion :
+      debug : 1
+      default : 1
+      export : 1

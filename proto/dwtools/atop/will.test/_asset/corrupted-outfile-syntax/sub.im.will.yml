@@ -1,0 +1,6 @@
+
+path :
+
+  out : 'sub.out'
+  temp :
+    - sub.out

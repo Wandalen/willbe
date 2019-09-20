@@ -1,0 +1,1807 @@
+format: willfile-1.0.0
+about:
+  name: c
+  enabled: 1
+  version: 0.0.0
+path:
+  module.willfiles:
+    criterion:
+      predefined: 1
+    path: c.out.will.yml
+  module.common:
+    criterion:
+      predefined: 1
+    path: c.out
+  in:
+    criterion:
+      predefined: 0
+    path: .
+  module.original.willfiles:
+    criterion:
+      predefined: 1
+    path: ../c.will.yml
+  local:
+    criterion:
+      predefined: 1
+  remote:
+    criterion:
+      predefined: 1
+  out:
+    criterion:
+      predefined: 0
+    path: .
+  out.debug:
+    criterion:
+      debug: 1
+    path: '{path::out}/debug'
+  temp:
+    path: '{path::out}'
+  exported.dir.export:
+    criterion:
+      debug: 1
+      default: 1
+      export: 1
+    path: debug
+  exported.files.export:
+    criterion:
+      debug: 1
+      default: 1
+      export: 1
+    path:
+      - debug
+      - debug/dwtools
+      - debug/dwtools/Tools.s
+      - debug/dwtools/abase
+      - debug/dwtools/abase/l4
+      - debug/dwtools/abase/l4/AppBasic.s
+      - debug/dwtools/abase/l4.test
+      - debug/dwtools/abase/l4.test/AppBasic.test.s
+      - debug/dwtools/atop
+      - debug/dwtools/atop/starter
+      - debug/dwtools/atop/starter/Exec
+      - debug/dwtools/atop/starter/ExecDebug
+      - debug/dwtools/atop/starter/ExecUnrestricted
+      - debug/dwtools/atop/starter/IncludeBase.s
+      - debug/dwtools/atop/starter/IncludeMid.s
+      - debug/dwtools/atop/starter/IncludeTop.s
+      - debug/dwtools/atop/starter/MainBase.s
+      - debug/dwtools/atop/starter/MainTop.s
+      - debug/dwtools/atop/starter/legacy
+      - debug/dwtools/atop/starter/legacy/StarterConfigBegin.raw.s
+      - debug/dwtools/atop/starter/legacy/StarterInitBegin.raw.s
+      - debug/dwtools/atop/starter/legacy/StarterInitEnd.raw.s
+      - debug/dwtools/atop/starter/legacy/StarterMaker.s
+      - debug/dwtools/atop/starter/legacy/StarterPreloadEnd.raw.s
+      - debug/dwtools/atop/starter/legacy/StarterServer.ss
+      - debug/dwtools/atop/starter/legacy/StarterStart.raw.s
+      - debug/dwtools/atop/starter/light
+      - debug/dwtools/atop/starter/light/Servlet.ss
+      - debug/dwtools/atop/starter/tools
+      - debug/dwtools/atop/starter/tools/Maker.s
+      - debug/dwtools/atop/starter/tools/StarterCode.s
+      - debug/dwtools/atop/starter/tools/WareCode.s
+      - debug/dwtools/atop/starter.test
+      - debug/dwtools/atop/starter.test/StarterLegacy.test.s
+      - debug/dwtools/atop/starter.test/StarterMaker.test.s
+      - debug/dwtools/atop/starter.test/_asset
+      - debug/dwtools/atop/starter.test/_asset/complex
+      - debug/dwtools/atop/starter.test/_asset/complex/package.json
+      - debug/dwtools/atop/starter.test/_asset/complex/app0
+      - debug/dwtools/atop/starter.test/_asset/complex/app0/File1.js
+      - debug/dwtools/atop/starter.test/_asset/complex/app0/File2.js
+      - debug/dwtools/atop/starter.test/_asset/complex/app1
+      - debug/dwtools/atop/starter.test/_asset/complex/app1/File1.js
+      - debug/dwtools/atop/starter.test/_asset/complex/app1/File2.js
+      - debug/dwtools/atop/starter.test/_asset/complex/app2
+      - debug/dwtools/atop/starter.test/_asset/complex/app2/File1.js
+      - debug/dwtools/atop/starter.test/_asset/complex/app2/File2.js
+      - debug/dwtools/atop/starter.test/_asset/dep
+      - debug/dwtools/atop/starter.test/_asset/dep/package.json
+      - debug/dwtools/atop/starter.test/_asset/dep/app0
+      - debug/dwtools/atop/starter.test/_asset/dep/app0/File1.js
+      - debug/dwtools/atop/starter.test/_asset/dep/app0/File2.js
+      - debug/dwtools/atop/starter.test/_asset/dep/app2
+      - debug/dwtools/atop/starter.test/_asset/dep/app2/File1.js
+      - debug/dwtools/atop/starter.test/_asset/dep/app2/File2.js
+      - debug/dwtools/atop/starter.test/_asset/dep/ext
+      - debug/dwtools/atop/starter.test/_asset/dep/ext/RequireApp2File2.js
+      - debug/dwtools/atop/starter.test/_asset/dep2
+      - debug/dwtools/atop/starter.test/_asset/dep2/Index.html
+      - debug/dwtools/atop/starter.test/_asset/dep2/package.json
+      - debug/dwtools/atop/starter.test/_asset/dep2/app0
+      - debug/dwtools/atop/starter.test/_asset/dep2/app0/File1.js
+      - debug/dwtools/atop/starter.test/_asset/dep2/app0/File2.js
+      - debug/dwtools/atop/starter.test/_asset/dep2/app2
+      - debug/dwtools/atop/starter.test/_asset/dep2/app2/File1.js
+      - debug/dwtools/atop/starter.test/_asset/dep2/app2/File2.js
+      - debug/dwtools/atop/starter.test/_asset/dep2/ext
+      - debug/dwtools/atop/starter.test/_asset/dep2/ext/RequireApp2File2.js
+      - debug/dwtools/atop/starter.test/_asset/processes
+      - debug/dwtools/atop/starter.test/_asset/processes/Experiment.js
+      - debug/dwtools/atop/starter.test/_asset/processes/Experiment2.js
+      - debug/dwtools/atop/starter.test/_asset/several
+      - debug/dwtools/atop/starter.test/_asset/several/File1.js
+      - debug/dwtools/atop/starter.test/_asset/several/File2.js
+submodule:
+  GdfStrategy:
+    path: 'git+https:///github.com/Wandalen/wStarter.git/out/wStarter.out.will'
+    autoExporting: 0
+    enabled: 1
+  AppBasic:
+    path: 'git+https:///github.com/Wandalen/wAppBasic.git/out/wAppBasic.out.will'
+    autoExporting: 0
+    enabled: 1
+reflector:
+  reflect.submodules:
+    dst:
+      basePath: .
+      prefixPath: 'path::out.debug'
+    mandatory: 1
+    criterion:
+      debug: 1
+    inherit:
+      - 'submodule::*/exported::*=1/reflector::exported.files*=1'
+  exported.export:
+    src:
+      filePath:
+        .: ''
+      prefixPath: debug
+    mandatory: 1
+    criterion:
+      debug: 1
+      default: 1
+      export: 1
+  exported.files.export:
+    src:
+      filePath:
+        'path::exported.files.export': ''
+      basePath: .
+      prefixPath: 'path::exported.dir.export'
+      recursive: 0
+    recursive: 0
+    mandatory: 1
+    criterion:
+      debug: 1
+      default: 1
+      export: 1
+step:
+  export:
+    opts:
+      export: 'path::out.*=1'
+      tar: 0
+    criterion:
+      debug: 1
+    inherit:
+      - module.export
+  reflect.submodules:
+    opts:
+      reflector: 'reflector::reflect.submodules*'
+    criterion:
+      debug: 1
+    inherit:
+      - files.reflect
+build:
+  export:
+    steps:
+      - submodules.download
+      - reflect.submodules
+      - export
+    criterion:
+      debug: 1
+      default: 1
+      export: 1
+exported:
+  export:
+    version: 0.0.0
+    exportedReflector: 'reflector::exported.export'
+    exportedFilesReflector: 'reflector::exported.files.export'
+    exportedDirPath: 'path::exported.dir.export'
+    exportedFilesPath: 'path::exported.files.export'
+    criterion:
+      debug: 1
+      default: 1
+      export: 1
+module:
+  ../c:
+    about:
+      name: c
+      enabled: 1
+      version: 0.0.0
+    path:
+      in:
+        criterion:
+          predefined: 0
+        path: .
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path: c.will.yml
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path: c.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: c
+      local:
+        criterion:
+          predefined: 1
+      remote:
+        criterion:
+          predefined: 1
+      out:
+        criterion:
+          predefined: 0
+        path: out
+      out.debug:
+        criterion:
+          debug: 1
+        path: '{path::out}/debug'
+      temp:
+        path: '{path::out}'
+      exported.dir.export:
+        criterion:
+          debug: 1
+          default: 1
+          export: 1
+        path: ./out/debug
+      exported.files.export:
+        criterion:
+          debug: 1
+          default: 1
+          export: 1
+        path:
+          - out/debug
+          - out/debug/dwtools
+          - out/debug/dwtools/Tools.s
+          - out/debug/dwtools/abase
+          - out/debug/dwtools/abase/l4
+          - out/debug/dwtools/abase/l4/AppBasic.s
+          - out/debug/dwtools/abase/l4.test
+          - out/debug/dwtools/abase/l4.test/AppBasic.test.s
+          - out/debug/dwtools/atop
+          - out/debug/dwtools/atop/starter
+          - out/debug/dwtools/atop/starter/Exec
+          - out/debug/dwtools/atop/starter/ExecDebug
+          - out/debug/dwtools/atop/starter/ExecUnrestricted
+          - out/debug/dwtools/atop/starter/IncludeBase.s
+          - out/debug/dwtools/atop/starter/IncludeMid.s
+          - out/debug/dwtools/atop/starter/IncludeTop.s
+          - out/debug/dwtools/atop/starter/MainBase.s
+          - out/debug/dwtools/atop/starter/MainTop.s
+          - out/debug/dwtools/atop/starter/legacy
+          - out/debug/dwtools/atop/starter/legacy/StarterConfigBegin.raw.s
+          - out/debug/dwtools/atop/starter/legacy/StarterInitBegin.raw.s
+          - out/debug/dwtools/atop/starter/legacy/StarterInitEnd.raw.s
+          - out/debug/dwtools/atop/starter/legacy/StarterMaker.s
+          - out/debug/dwtools/atop/starter/legacy/StarterPreloadEnd.raw.s
+          - out/debug/dwtools/atop/starter/legacy/StarterServer.ss
+          - out/debug/dwtools/atop/starter/legacy/StarterStart.raw.s
+          - out/debug/dwtools/atop/starter/light
+          - out/debug/dwtools/atop/starter/light/Servlet.ss
+          - out/debug/dwtools/atop/starter/tools
+          - out/debug/dwtools/atop/starter/tools/Maker.s
+          - out/debug/dwtools/atop/starter/tools/StarterCode.s
+          - out/debug/dwtools/atop/starter/tools/WareCode.s
+          - out/debug/dwtools/atop/starter.test
+          - out/debug/dwtools/atop/starter.test/StarterLegacy.test.s
+          - out/debug/dwtools/atop/starter.test/StarterMaker.test.s
+          - out/debug/dwtools/atop/starter.test/_asset
+          - out/debug/dwtools/atop/starter.test/_asset/complex
+          - out/debug/dwtools/atop/starter.test/_asset/complex/package.json
+          - out/debug/dwtools/atop/starter.test/_asset/complex/app0
+          - out/debug/dwtools/atop/starter.test/_asset/complex/app0/File1.js
+          - out/debug/dwtools/atop/starter.test/_asset/complex/app0/File2.js
+          - out/debug/dwtools/atop/starter.test/_asset/complex/app1
+          - out/debug/dwtools/atop/starter.test/_asset/complex/app1/File1.js
+          - out/debug/dwtools/atop/starter.test/_asset/complex/app1/File2.js
+          - out/debug/dwtools/atop/starter.test/_asset/complex/app2
+          - out/debug/dwtools/atop/starter.test/_asset/complex/app2/File1.js
+          - out/debug/dwtools/atop/starter.test/_asset/complex/app2/File2.js
+          - out/debug/dwtools/atop/starter.test/_asset/dep
+          - out/debug/dwtools/atop/starter.test/_asset/dep/package.json
+          - out/debug/dwtools/atop/starter.test/_asset/dep/app0
+          - out/debug/dwtools/atop/starter.test/_asset/dep/app0/File1.js
+          - out/debug/dwtools/atop/starter.test/_asset/dep/app0/File2.js
+          - out/debug/dwtools/atop/starter.test/_asset/dep/app2
+          - out/debug/dwtools/atop/starter.test/_asset/dep/app2/File1.js
+          - out/debug/dwtools/atop/starter.test/_asset/dep/app2/File2.js
+          - out/debug/dwtools/atop/starter.test/_asset/dep/ext
+          - >-
+            out/debug/dwtools/atop/starter.test/_asset/dep/ext/RequireApp2File2.js
+          - out/debug/dwtools/atop/starter.test/_asset/dep2
+          - out/debug/dwtools/atop/starter.test/_asset/dep2/Index.html
+          - out/debug/dwtools/atop/starter.test/_asset/dep2/package.json
+          - out/debug/dwtools/atop/starter.test/_asset/dep2/app0
+          - out/debug/dwtools/atop/starter.test/_asset/dep2/app0/File1.js
+          - out/debug/dwtools/atop/starter.test/_asset/dep2/app0/File2.js
+          - out/debug/dwtools/atop/starter.test/_asset/dep2/app2
+          - out/debug/dwtools/atop/starter.test/_asset/dep2/app2/File1.js
+          - out/debug/dwtools/atop/starter.test/_asset/dep2/app2/File2.js
+          - out/debug/dwtools/atop/starter.test/_asset/dep2/ext
+          - >-
+            out/debug/dwtools/atop/starter.test/_asset/dep2/ext/RequireApp2File2.js
+          - out/debug/dwtools/atop/starter.test/_asset/processes
+          - out/debug/dwtools/atop/starter.test/_asset/processes/Experiment.js
+          - out/debug/dwtools/atop/starter.test/_asset/processes/Experiment2.js
+          - out/debug/dwtools/atop/starter.test/_asset/several
+          - out/debug/dwtools/atop/starter.test/_asset/several/File1.js
+          - out/debug/dwtools/atop/starter.test/_asset/several/File2.js
+    submodule:
+      GdfStrategy:
+        path: 'git+https:///github.com/Wandalen/wStarter.git/out/wStarter.out.will'
+        autoExporting: 0
+        enabled: 1
+      AppBasic:
+        path: 'git+https:///github.com/Wandalen/wAppBasic.git/out/wAppBasic.out.will'
+        autoExporting: 0
+        enabled: 1
+    reflector:
+      reflect.submodules:
+        dst:
+          basePath: .
+          prefixPath: 'path::out.debug'
+        mandatory: 1
+        criterion:
+          debug: 1
+        inherit:
+          - 'submodule::*/exported::*=1/reflector::exported.files*=1'
+      exported.export:
+        src:
+          filePath:
+            .: ''
+          prefixPath: out/debug
+        mandatory: 1
+        criterion:
+          debug: 1
+          default: 1
+          export: 1
+      exported.files.export:
+        src:
+          filePath:
+            'path::exported.files.export': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.export'
+          recursive: 0
+        recursive: 0
+        mandatory: 1
+        criterion:
+          debug: 1
+          default: 1
+          export: 1
+    step:
+      export:
+        opts:
+          export: 'path::out.*=1'
+          tar: 0
+        criterion:
+          debug: 1
+        inherit:
+          - module.export
+      reflect.submodules:
+        opts:
+          reflector: 'reflector::reflect.submodules*'
+        criterion:
+          debug: 1
+        inherit:
+          - files.reflect
+    build:
+      export:
+        steps:
+          - submodules.download
+          - reflect.submodules
+          - export
+        criterion:
+          debug: 1
+          default: 1
+          export: 1
+    exported:
+      export:
+        version: 0.0.0
+        exportedReflector: 'reflector::exported.export'
+        exportedFilesReflector: 'reflector::exported.files.export'
+        exportedDirPath: 'path::exported.dir.export'
+        exportedFilesPath: 'path::exported.files.export'
+        criterion:
+          debug: 1
+          default: 1
+          export: 1
+  ../.module/GdfStrategy/out/wStarter.out:
+    about:
+      name: wStarter
+      description: >-
+        Collection of tools to generate background service to start and pack
+        application. Use the module to keep files structure of the application
+        and make code aware wherein the file system is it executed.
+      enabled: 1
+      version: 0.3.56
+      interpreters:
+        - nodejs >= 8.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - wTools
+    path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path: wStarter.out.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: wStarter.out
+      local:
+        criterion:
+          predefined: 1
+        path: ..
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path:
+          - ../.im.will.yml
+          - ../.ex.will.yml
+      remote:
+        criterion:
+          predefined: 1
+        path: 'git+https:///github.com/Wandalen/wStarter.git/out/wStarter.out.will'
+      in:
+        criterion:
+          predefined: 0
+        path: .
+      temp:
+        path: .
+      out:
+        criterion:
+          predefined: 0
+        path: .
+      out.debug:
+        criterion:
+          debug: 1
+        path: debug
+      out.release:
+        criterion:
+          debug: 0
+        path: release
+      proto:
+        path: ../proto
+      repository:
+        path: 'git+https:///github.com/Wandalen/wStarter.git'
+      bugs:
+        path: 'https:///github.com/Wandalen/wStarter/issues'
+      exported.dir.proto.export:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        path: ../proto
+      exported.files.proto.export:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        path:
+          - ../proto
+          - ../proto/dwtools
+          - ../proto/dwtools/Tools.s
+          - ../proto/dwtools/abase
+          - ../proto/dwtools/amid
+          - ../proto/dwtools/amid/---starter
+          - ../proto/dwtools/amid/---starter/Exec
+          - ../proto/dwtools/amid/---starter/ExecDebug
+          - ../proto/dwtools/amid/---starter/ExecUnrestricted
+          - ../proto/dwtools/amid/---starter/IncludeBase.s
+          - ../proto/dwtools/amid/---starter/IncludeMid.s
+          - ../proto/dwtools/amid/---starter/IncludeTop.s
+          - ../proto/dwtools/amid/---starter/MainBase.s
+          - ../proto/dwtools/amid/---starter/MainTop.s
+          - ../proto/dwtools/amid/---starter/legacy
+          - ../proto/dwtools/amid/---starter/legacy/StarterConfigBegin.raw.s
+          - ../proto/dwtools/amid/---starter/legacy/StarterInitBegin.raw.s
+          - ../proto/dwtools/amid/---starter/legacy/StarterInitEnd.raw.s
+          - ../proto/dwtools/amid/---starter/legacy/StarterMaker.s
+          - ../proto/dwtools/amid/---starter/legacy/StarterPreloadEnd.raw.s
+          - ../proto/dwtools/amid/---starter/legacy/StarterServer.ss
+          - ../proto/dwtools/amid/---starter/legacy/StarterStart.raw.s
+          - ../proto/dwtools/amid/---starter/light
+          - ../proto/dwtools/amid/---starter/light/Servlet.ss
+          - ../proto/dwtools/amid/---starter/light/StarterMaker.s
+          - ../proto/dwtools/amid/---starter/light/StarterWare.s
+          - ../proto/dwtools/amid/---starter.test
+          - ../proto/dwtools/amid/---starter.test/Starter.test.s
+          - ../proto/dwtools/amid/--starter
+          - ../proto/dwtools/amid/--starter/StarterConfigBegin.raw.s
+          - ../proto/dwtools/amid/--starter/StarterInitBegin.raw.s
+          - ../proto/dwtools/amid/--starter/StarterInitEnd.raw.s
+          - ../proto/dwtools/amid/--starter/StarterMaker.s
+          - ../proto/dwtools/amid/--starter/StarterPreloadEnd.raw.s
+          - ../proto/dwtools/amid/--starter/StarterServer.ss
+          - ../proto/dwtools/amid/--starter/StarterStart.raw.s
+          - ../proto/dwtools/amid/--starter/light
+          - ../proto/dwtools/amid/--starter/light/StarterMaker.s
+          - ../proto/dwtools/amid/--starter/light/StarterWare.s
+          - ../proto/dwtools/amid/-starter
+          - ../proto/dwtools/amid/-starter/StarterConfigBegin.raw.s
+          - ../proto/dwtools/amid/-starter/StarterInitBegin.raw.s
+          - ../proto/dwtools/amid/-starter/StarterInitEnd.raw.s
+          - ../proto/dwtools/amid/-starter/StarterMaker.s
+          - ../proto/dwtools/amid/-starter/StarterPreloadEnd.raw.s
+          - ../proto/dwtools/amid/-starter/StarterServer.ss
+          - ../proto/dwtools/amid/-starter/StarterStart.raw.s
+          - ../proto/dwtools/atop
+          - ../proto/dwtools/atop/starter
+          - ../proto/dwtools/atop/starter/Exec
+          - ../proto/dwtools/atop/starter/ExecDebug
+          - ../proto/dwtools/atop/starter/ExecUnrestricted
+          - ../proto/dwtools/atop/starter/IncludeBase.s
+          - ../proto/dwtools/atop/starter/IncludeMid.s
+          - ../proto/dwtools/atop/starter/IncludeTop.s
+          - ../proto/dwtools/atop/starter/MainBase.s
+          - ../proto/dwtools/atop/starter/MainTop.s
+          - ../proto/dwtools/atop/starter/legacy
+          - ../proto/dwtools/atop/starter/legacy/StarterConfigBegin.raw.s
+          - ../proto/dwtools/atop/starter/legacy/StarterInitBegin.raw.s
+          - ../proto/dwtools/atop/starter/legacy/StarterInitEnd.raw.s
+          - ../proto/dwtools/atop/starter/legacy/StarterMaker.s
+          - ../proto/dwtools/atop/starter/legacy/StarterPreloadEnd.raw.s
+          - ../proto/dwtools/atop/starter/legacy/StarterServer.ss
+          - ../proto/dwtools/atop/starter/legacy/StarterStart.raw.s
+          - ../proto/dwtools/atop/starter/light
+          - ../proto/dwtools/atop/starter/light/Servlet.ss
+          - ../proto/dwtools/atop/starter/tools
+          - ../proto/dwtools/atop/starter/tools/BrowserCode.s
+          - ../proto/dwtools/atop/starter/tools/Maker.s
+          - ../proto/dwtools/atop/starter/tools/StarterCode.s
+          - ../proto/dwtools/atop/starter/tools/WareCode.s
+          - ../proto/dwtools/atop/starter.test
+          - ../proto/dwtools/atop/starter.test/StarterLegacy.test.s
+          - ../proto/dwtools/atop/starter.test/StarterMaker.test.s
+          - ../proto/dwtools/atop/starter.test/_asset
+          - ../proto/dwtools/atop/starter.test/_asset/complex
+          - ../proto/dwtools/atop/starter.test/_asset/complex/package.json
+          - ../proto/dwtools/atop/starter.test/_asset/complex/app0
+          - ../proto/dwtools/atop/starter.test/_asset/complex/app0/File1.js
+          - ../proto/dwtools/atop/starter.test/_asset/complex/app0/File2.js
+          - ../proto/dwtools/atop/starter.test/_asset/complex/app1
+          - ../proto/dwtools/atop/starter.test/_asset/complex/app1/File1.js
+          - ../proto/dwtools/atop/starter.test/_asset/complex/app1/File2.js
+          - ../proto/dwtools/atop/starter.test/_asset/complex/app2
+          - ../proto/dwtools/atop/starter.test/_asset/complex/app2/File1.js
+          - ../proto/dwtools/atop/starter.test/_asset/complex/app2/File2.js
+          - ../proto/dwtools/atop/starter.test/_asset/complex/node_modules
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/LICENSE
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/package.json
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/README.md
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/package.json
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/wTools.out.will.yml
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/compiled.debug
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/compiled.debug/Main.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/compiled.debug/Tests.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/debug
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/debug/package.json
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/Tools.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/Layer0.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/Layer1.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/Layer2.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0/aPredefined.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0/aSetup.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0/bPremature.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0/fBool.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0/fChecker.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0/fEntity.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0/fErr.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0/fLong.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0/fMap.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0/fNumber.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0/fRange.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0/fRegexp.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0/fRoutine.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0/fString.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0/fTime.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0/iArrayDescriptor.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0/iCompose.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l0/iField.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1/cErr.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1/gBool.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1/gEntity.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1/gLong.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1/gMap.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1/gNumber.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1/gRange.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1/gRegexp.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1/gRoutine.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1/gString.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1/gTime.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1/rFundamental.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1/zSetup.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1.test
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Diagnostics.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Entity.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Long.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Map.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Regexp.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Routine.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/String.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Time.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Typing.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l2
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l2/IncludeTools.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l2/ModulesRegistry.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l2/NameTools.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l2/StringTools.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l2.test
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/raw.release/dwtools/abase/l2.test/StringTools.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/release
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/release/Main.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/out/release/Tests.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/Layer0.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/Layer1.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/Layer2.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0/aPredefined.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0/aSetup.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0/bPremature.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0/fBool.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0/fChecker.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0/fEntity.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0/fErr.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0/fLong.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0/fMap.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0/fNumber.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0/fRange.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0/fRegexp.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0/fRoutine.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0/fString.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0/fTime.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0/iArrayDescriptor.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0/iCompose.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l0/iField.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l1
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l1/cErr.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l1/gBool.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l1/gEntity.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l1/gLong.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l1/gMap.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l1/gNumber.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l1/gRange.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l1/gRegexp.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l1/gRoutine.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l1/gString.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l1/gTime.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l1/rFundamental.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l1/zSetup.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l2
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l2/IncludeTools.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l2/ModulesRegistry.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l2/NameTools.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wTools/proto/dwtools/abase/l2/StringTools.s
+          - ../proto/dwtools/atop/starter.test/_asset/dep
+          - ../proto/dwtools/atop/starter.test/_asset/dep/package.json
+          - ../proto/dwtools/atop/starter.test/_asset/dep/app0
+          - ../proto/dwtools/atop/starter.test/_asset/dep/app0/File1.js
+          - ../proto/dwtools/atop/starter.test/_asset/dep/app0/File2.js
+          - ../proto/dwtools/atop/starter.test/_asset/dep/app2
+          - ../proto/dwtools/atop/starter.test/_asset/dep/app2/File1.js
+          - ../proto/dwtools/atop/starter.test/_asset/dep/app2/File2.js
+          - ../proto/dwtools/atop/starter.test/_asset/dep/ext
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/ext/RequireApp2File2.js
+          - ../proto/dwtools/atop/starter.test/_asset/dep/node_modules
+          - ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/LICENSE
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/package.json
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/README.md
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/package.json
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/wTools.out.will.yml
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/compiled.debug
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/compiled.debug/Main.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/compiled.debug/Tests.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/debug
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/debug/package.json
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/Tools.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/Layer0.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/Layer1.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/Layer2.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0/aPredefined.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0/aSetup.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0/bPremature.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0/fBool.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0/fChecker.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0/fEntity.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0/fErr.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0/fLong.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0/fMap.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0/fNumber.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0/fRange.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0/fRegexp.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0/fRoutine.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0/fString.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0/fTime.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0/iArrayDescriptor.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0/iCompose.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l0/iField.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1/cErr.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1/gBool.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1/gEntity.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1/gLong.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1/gMap.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1/gNumber.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1/gRange.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1/gRegexp.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1/gRoutine.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1/gString.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1/gTime.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1/rFundamental.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1/zSetup.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1.test
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Diagnostics.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Entity.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Long.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Map.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Regexp.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Routine.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/String.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Time.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Typing.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l2
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l2/IncludeTools.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l2/ModulesRegistry.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l2/NameTools.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l2/StringTools.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l2.test
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/raw.release/dwtools/abase/l2.test/StringTools.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/release
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/release/Main.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/out/release/Tests.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/Layer0.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/Layer1.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/Layer2.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0/aPredefined.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0/aSetup.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0/bPremature.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0/fBool.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0/fChecker.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0/fEntity.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0/fErr.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0/fLong.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0/fMap.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0/fNumber.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0/fRange.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0/fRegexp.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0/fRoutine.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0/fString.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0/fTime.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0/iArrayDescriptor.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0/iCompose.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l0/iField.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l1
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l1/cErr.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l1/gBool.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l1/gEntity.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l1/gLong.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l1/gMap.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l1/gNumber.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l1/gRange.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l1/gRegexp.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l1/gRoutine.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l1/gString.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l1/gTime.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l1/rFundamental.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l1/zSetup.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l2
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l2/IncludeTools.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l2/ModulesRegistry.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l2/NameTools.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wTools/proto/dwtools/abase/l2/StringTools.s
+          - ../proto/dwtools/atop/starter.test/_asset/dep2
+          - ../proto/dwtools/atop/starter.test/_asset/dep2/Index.html
+          - ../proto/dwtools/atop/starter.test/_asset/dep2/package.json
+          - ../proto/dwtools/atop/starter.test/_asset/dep2/app0
+          - ../proto/dwtools/atop/starter.test/_asset/dep2/app0/File1.js
+          - ../proto/dwtools/atop/starter.test/_asset/dep2/app0/File2.js
+          - ../proto/dwtools/atop/starter.test/_asset/dep2/app2
+          - ../proto/dwtools/atop/starter.test/_asset/dep2/app2/File1.js
+          - ../proto/dwtools/atop/starter.test/_asset/dep2/app2/File2.js
+          - ../proto/dwtools/atop/starter.test/_asset/dep2/ext
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/ext/RequireApp2File2.js
+          - ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules
+          - ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/LICENSE
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/package.json
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/README.md
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/package.json
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/wTools.out.will.yml
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/compiled.debug
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/compiled.debug/Main.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/compiled.debug/Tests.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/debug
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/debug/package.json
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/Tools.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/Layer0.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/Layer1.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/Layer2.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0/aPredefined.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0/aSetup.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0/bPremature.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0/fBool.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0/fChecker.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0/fEntity.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0/fErr.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0/fLong.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0/fMap.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0/fNumber.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0/fRange.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0/fRegexp.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0/fRoutine.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0/fString.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0/fTime.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0/iArrayDescriptor.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0/iCompose.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l0/iField.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1/cErr.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1/gBool.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1/gEntity.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1/gLong.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1/gMap.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1/gNumber.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1/gRange.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1/gRegexp.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1/gRoutine.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1/gString.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1/gTime.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1/rFundamental.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1/zSetup.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1.test
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Diagnostics.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Entity.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Long.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Map.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Regexp.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Routine.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/String.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Time.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l1.test/Typing.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l2
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l2/IncludeTools.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l2/ModulesRegistry.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l2/NameTools.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l2/StringTools.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l2.test
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/raw.release/dwtools/abase/l2.test/StringTools.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/release
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/release/Main.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/out/release/Tests.test.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/Layer0.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/Layer1.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/Layer2.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0/aPredefined.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0/aSetup.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0/bPremature.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0/fBool.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0/fChecker.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0/fEntity.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0/fErr.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0/fLong.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0/fMap.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0/fNumber.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0/fRange.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0/fRegexp.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0/fRoutine.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0/fString.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0/fTime.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0/iArrayDescriptor.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0/iCompose.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l0/iField.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l1
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l1/cErr.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l1/gBool.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l1/gEntity.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l1/gLong.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l1/gMap.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l1/gNumber.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l1/gRange.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l1/gRegexp.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l1/gRoutine.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l1/gString.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l1/gTime.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l1/rFundamental.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l1/zSetup.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l2
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l2/IncludeTools.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l2/ModulesRegistry.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l2/NameTools.s
+          - >-
+            ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wTools/proto/dwtools/abase/l2/StringTools.s
+          - ../proto/dwtools/atop/starter.test/_asset/processes
+          - ../proto/dwtools/atop/starter.test/_asset/processes/Experiment.js
+          - ../proto/dwtools/atop/starter.test/_asset/processes/Experiment2.js
+          - ../proto/dwtools/atop/starter.test/_asset/several
+          - ../proto/dwtools/atop/starter.test/_asset/several/File1.js
+          - ../proto/dwtools/atop/starter.test/_asset/several/File2.js
+    submodule: {}
+    reflector:
+      reflect.proto.:
+        src:
+          filePath:
+            'path::proto': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 0
+        inherit:
+          - predefined.*
+      reflect.proto.debug:
+        src:
+          filePath:
+            'path::proto': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 1
+        inherit:
+          - predefined.*
+      reflect.submodules:
+        src:
+          filePath:
+            'submodule::*/exported::*=1/path::exportedDir*=1': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 1
+        inherit:
+          - predefined.*
+      exported.proto.export:
+        src:
+          prefixPath: ../proto
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+      exported.files.proto.export:
+        src:
+          filePath:
+            'path::exported.files.proto.export': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.proto.export'
+          recursive: 0
+        recursive: 0
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+    step:
+      clean.out.:
+        criterion:
+          debug: 0
+        inherit:
+          - files.delete
+      clean.out.debug:
+        criterion:
+          debug: 1
+        inherit:
+          - files.delete
+      reflect.proto.:
+        criterion:
+          debug: 0
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.proto.debug:
+        criterion:
+          debug: 1
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.proto.raw:
+        criterion:
+          debug: 0
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.proto.debug.raw:
+        criterion:
+          debug: 1
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.submodules.:
+        criterion:
+          debug: 1
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.submodules.raw:
+        criterion:
+          debug: 1
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.submodules:
+        criterion:
+          debug: 1
+        inherit:
+          - files.reflect
+      export.proto:
+        criterion:
+          debug: 1
+          proto: 1
+        inherit:
+          - module.export
+      exported.proto.export:
+        opts:
+          reflector: 'reflector::exported.proto.export*'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        inherit:
+          - files.reflect
+      exported.files.proto.export:
+        opts:
+          reflector: 'reflector::exported.files.proto.export*'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        inherit:
+          - files.reflect
+    build:
+      debug.raw:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+      debug.compiled:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 1
+          raw: 0
+      release.raw:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 1
+      release.compiled:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 0
+      all:
+        steps:
+          - 'build::debug.raw'
+          - 'build::release.compiled'
+      proto.export:
+        steps:
+          - 'build::debug.raw'
+          - 'step::export.proto'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+    exported:
+      proto.export:
+        version: 0.3.56
+        exportedReflector: 'reflector::exported.proto.export'
+        exportedFilesReflector: 'reflector::exported.files.proto.export'
+        exportedDirPath: 'path::exported.dir.proto.export'
+        exportedFilesPath: 'path::exported.files.proto.export'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+  ../.module/AppBasic/out/wAppBasic.out:
+    about:
+      name: wAppBasic
+      description: >-
+        Collection of routines to execute system commands, run shell, batches,
+        launch external processes from JavaScript application. ExecTools
+        leverages not only outputting data from an application but also
+        inputting, makes application arguments parsing and accounting easier.
+        Use the module to get uniform experience from interaction with an
+        external processes on different platforms and operating systems.
+      enabled: 1
+      version: 0.3.143
+      interpreters:
+        - nodejs >= 8.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - wTools
+    path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path: wAppBasic.out.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: wAppBasic.out
+      local:
+        criterion:
+          predefined: 1
+        path: ..
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path:
+          - ../.im.will.yml
+          - ../.ex.will.yml
+      remote:
+        criterion:
+          predefined: 1
+        path: 'git+https:///github.com/Wandalen/wAppBasic.git/out/wAppBasic.out.will'
+      in:
+        criterion:
+          predefined: 0
+        path: .
+      temp:
+        path: .
+      out:
+        criterion:
+          predefined: 0
+        path: .
+      out.debug:
+        criterion:
+          debug: 1
+        path: debug
+      out.release:
+        criterion:
+          debug: 0
+        path: release
+      proto:
+        path: ../proto
+      repository:
+        path: 'git+https:///github.com/Wandalen/wAppBasic.git'
+      bugs:
+        path: 'https:///github.com/Wandalen/wAppBasic/issues'
+      exported.dir.proto.export:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        path: ../proto
+      exported.files.proto.export:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        path:
+          - ../proto
+          - ../proto/dwtools
+          - ../proto/dwtools/Tools.s
+          - ../proto/dwtools/abase
+          - ../proto/dwtools/abase/l4
+          - ../proto/dwtools/abase/l4/AppBasic.s
+          - ../proto/dwtools/abase/l4.test
+          - ../proto/dwtools/abase/l4.test/AppBasic.test.s
+          - ../proto/dwtools/amid
+          - ../proto/dwtools/atop
+          - ../proto/dwtools/tmp.tmp
+    submodule: {}
+    reflector:
+      reflect.proto.:
+        src:
+          filePath:
+            'path::proto': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 0
+        inherit:
+          - predefined.*
+      reflect.proto.debug:
+        src:
+          filePath:
+            'path::proto': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 1
+        inherit:
+          - predefined.*
+      reflect.submodules:
+        src:
+          filePath:
+            'submodule::*/exported::*=1/path::exportedDir*=1': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 1
+        inherit:
+          - predefined.*
+      exported.proto.export:
+        src:
+          prefixPath: ../proto
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+      exported.files.proto.export:
+        src:
+          filePath:
+            'path::exported.files.proto.export': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.proto.export'
+          recursive: 0
+        recursive: 0
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+    step:
+      clean.out.:
+        criterion:
+          debug: 0
+        inherit:
+          - files.delete
+      clean.out.debug:
+        criterion:
+          debug: 1
+        inherit:
+          - files.delete
+      reflect.proto.:
+        criterion:
+          debug: 0
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.proto.debug:
+        criterion:
+          debug: 1
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.proto.raw:
+        criterion:
+          debug: 0
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.proto.debug.raw:
+        criterion:
+          debug: 1
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.submodules.:
+        criterion:
+          debug: 1
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.submodules.raw:
+        criterion:
+          debug: 1
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.submodules:
+        criterion:
+          debug: 1
+        inherit:
+          - files.reflect
+      export.proto:
+        criterion:
+          debug: 1
+          proto: 1
+        inherit:
+          - module.export
+      exported.proto.export:
+        opts:
+          reflector: 'reflector::exported.proto.export*'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        inherit:
+          - files.reflect
+      exported.files.proto.export:
+        opts:
+          reflector: 'reflector::exported.files.proto.export*'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        inherit:
+          - files.reflect
+    build:
+      debug.raw:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+      debug.compiled:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 1
+          raw: 0
+      release.raw:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 1
+      release.compiled:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 0
+      all:
+        steps:
+          - 'build::debug.raw'
+          - 'build::release.compiled'
+      proto.export:
+        steps:
+          - 'build::debug.raw'
+          - 'step::export.proto'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+    exported:
+      proto.export:
+        version: 0.3.143
+        exportedReflector: 'reflector::exported.proto.export'
+        exportedFilesReflector: 'reflector::exported.files.proto.export'
+        exportedDirPath: 'path::exported.dir.proto.export'
+        exportedFilesPath: 'path::exported.files.proto.export'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+  c.out: root

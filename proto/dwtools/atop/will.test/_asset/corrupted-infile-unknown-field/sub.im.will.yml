@@ -1,0 +1,11 @@
+
+path :
+
+  out : 'sub.out'
+  temp :
+    - sub.out
+
+submodule :
+
+  Subodule1 :
+    unknown_field : 'unknown_field'

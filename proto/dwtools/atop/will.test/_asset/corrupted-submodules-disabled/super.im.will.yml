@@ -1,0 +1,18 @@
+
+submodule :
+
+  Submodule1 :
+    path : git+https:///github.com/X1/X1.git#master
+    enabled : 0
+  Submodule2 :
+    path : git+https:///github.com/X2/X2.git#master
+    enabled : 0
+  Submodule3 :
+    path : git+https:///github.com/X3/X3.git#master
+    enabled : 0
+
+path :
+
+  temp : '{path::out}'
+  in : '.'
+  out : './super.out'

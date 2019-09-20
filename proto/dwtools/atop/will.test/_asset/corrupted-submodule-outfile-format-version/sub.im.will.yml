@@ -1,0 +1,7 @@
+
+path :
+
+  in : './sub.out'
+  out : '../sub.out'
+  export : '{path::in}/../**'
+  temp : '{path::out}'
