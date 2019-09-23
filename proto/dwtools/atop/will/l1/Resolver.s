@@ -129,8 +129,6 @@ function _onQuantitativeFail( err )
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
 
-  debugger;
-
   let result = it.dst;
   if( _.mapIs( result ) )
   result = _.mapVals( result );
@@ -177,14 +175,50 @@ function _statusPreUpdate()
 
   _.assert( !_.mapHasKey( it.src, 'composite' ) );
 
+  if( it.down && it.down.src && it.down.src instanceof will.Submodule )
+  {
+    _.assert( it.src instanceof will.OpenedModule )
+    // let valid = it.down.src.module.submodulesAreValid();
+    // if( !_.all( valid ) )
+    let valid = it.src.isValid();
+    if( !valid )
+    throw _.errBrief
+    (
+        `Cant select in non-valid submodules.`
+      , `\n ${it.src.absoluteName} is not opened or invalid`
+    );
+  }
+
   if( it.src instanceof will.OpenedModule )
   {
     it.currentModule = it.src;
   }
   else if( it.src instanceof will.Submodule )
   {
-    if( it.src.opener && it.src.opener.openedModule )
-    it.currentModule = it.src.opener.openedModule;
+    _.sure( !!it.src.opener, `${it.src.decoratedAbsoluteName} is not formed` );
+    _.sure( !!it.src.opener.openedModule, `${it.src.decoratedAbsoluteName} is not opened` );
+    // _.sure( !!it.src.opener.openedModule.isValid(), `${it.src.decoratedAbsoluteName} is not valid` );
+
+    let opener = it.src.opener;
+    let module2;
+
+    if( opener.isOut )
+    module2 = opener.openedModule;
+    else
+    module2 = opener.peerModule;
+
+    if( !module2 )
+    {
+      debugger;
+      throw _.err( `Out-willfile of ${it.src.decoratedAbsoluteName} is not opened or does not exist` );
+    }
+
+    // if( !module2.stager.stageStatePerformed( 'resourcesFormed' ) )
+    // {
+    // throw _.err( `${module2.decoratedAbsoluteName} at ${module2.decoratedCommonPath} is not formed to be used for resolving` );
+    // }
+    it.currentModule = module2;
+
   }
   else if( it.src instanceof will.Exported )
   {
@@ -644,9 +678,9 @@ function errResolving( o )
   _.assertRoutineOptions( errResolving, arguments );
   _.assert( arguments.length === 1 );
   if( o.rop.currentContext && o.rop.currentContext.qualifiedName )
-  return _.err( o.err, '\nFailed to resolve', _.color.strFormat( o.selector, 'code' ), 'for', o.rop.currentContext.decoratedAbsoluteName );
+  return _.err( o.err, '\nFailed to resolve', _.color.strFormat( o.selector, 'path' ), 'for', o.rop.currentContext.decoratedAbsoluteName );
   else
-  return _.err( o.err, '\nFailed to resolve', _.color.strFormat( o.selector, 'code' ), 'in', module.decoratedAbsoluteName );
+  return _.err( o.err, '\nFailed to resolve', _.color.strFormat( o.selector, 'path' ), 'in', module.decoratedAbsoluteName );
 }
 
 errResolving.defaults =
@@ -1125,7 +1159,7 @@ let Extend =
   _onDownEnd,
   _onQuantitativeFail,
 
-  //
+  // etc
 
   _statusPreUpdate,
   _statusPostUpdate,

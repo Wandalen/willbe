@@ -36,8 +36,9 @@ function init( o )
   {
     if( _.mapIs( o ) )
     {
-      o.opts = _.mapBut( o, step.constructor.FieldsOfInputGroups );
-      _.mapDelete( o, o.opts );
+      let opts2 = _.mapBut( o, step.constructor.FieldsOfInputGroups );
+      _.mapDelete( o, opts2 );
+      o.opts = _.mapExtend( o.opts || null, opts2 )
     }
     if( o )
     step.copy( o );
@@ -128,6 +129,11 @@ function form3()
   _.assert( step.formed === 2 );
   _.assert( _.routineIs( step.stepRoutine ), () => step.qualifiedName + ' does not have {- stepRoutine -}. Failed to deduce it, try specifying "inherit" field explicitly' );
   _.assert( step.stepRoutine.stepOptions !== undefined, () => 'Field {- stepRoutine -} of ' + step.qualifiedName + ' deos not have defined {- stepOptions -}' );
+
+  // if( step.id === 154 )
+  // debugger;
+
+  _.mapSupplement( step.opts, step.stepRoutine.stepOptions );
 
   if( step.opts && step.stepRoutine.stepOptions )
   {

@@ -1,7 +1,7 @@
 
 submodule :
 
-  Submodule : ./sub.out/sub.out
+  Submodule : ./sub/
 
 path :
 

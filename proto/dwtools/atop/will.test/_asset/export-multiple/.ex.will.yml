@@ -9,7 +9,7 @@ step :
 
   export :
     inherit : module.export
-    export : path::out.*=1
+    export : '{path::out.*=1}/**'
     tar : 1
     criterion :
       debug : [ 0,1 ]

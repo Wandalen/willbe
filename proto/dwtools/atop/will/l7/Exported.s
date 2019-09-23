@@ -98,8 +98,8 @@ function _verify()
   _.sure( _.strDefined( module.dirPath ), 'Expects directory path of the module' );
   _.sure( _.objectIs( build.criterion ), 'Expects criterion of export' );
   _.sure( _.strDefined( build.name ), 'Expects name of export' );
-  _.sure( _.objectIs( module.willfileWithRoleMap.import ) || _.objectIs( module.willfileWithRoleMap.single ), 'Expects import in fine' );
-  _.sure( _.objectIs( module.willfileWithRoleMap.export ) || _.objectIs( module.willfileWithRoleMap.single ), 'Expects export in fine' );
+  _.sure( _.objectIs( module.willfileWithRoleMap.import ) || _.objectIs( module.willfileWithRoleMap.single ), 'Expects import-willfile' );
+  _.sure( _.objectIs( module.willfileWithRoleMap.export ) || _.objectIs( module.willfileWithRoleMap.single ), 'Expects export-willfile' );
   _.sure( _.strDefined( module.about.name ), 'Expects defined name of the module as astring' );
   _.sure( _.strDefined( module.about.version ), 'Expects defined version of the module as string' );
 
@@ -169,23 +169,12 @@ function _performPrepare1( frame )
 
 //
 
-function _performReset()
+function _performReform()
 {
   let exported = this;
   let module = exported.module;
   let will = module.will;
-
-  if( !module.stager.stageStatePerformed( 'attachedWillfilesFormed' ) )
-  module.stager.stageReset( 'attachedWillfilesFormed' );
-  if( !module.stager.stageStatePerformed( 'peerModulesFormed' ) )
-  module.stager.stageReset( 'peerModulesFormed' );
-  if( !module.stager.stageStatePerformed( 'subModulesFormed' ) )
-  module.stager.stageReset( 'subModulesFormed' );
-  if( !module.stager.stageStatePerformed( 'resourcesFormed' ) )
-  module.stager.stageReset( 'resourcesFormed' );
-
-  module.stager.tick();
-  return module.ready;
+  return module.upform({ all : 1, resourcesFormed : 0 });
 }
 
 //
@@ -289,8 +278,12 @@ function _performPrepare2()
   let will = module.will;
   let logger = will.logger;
 
-  _.assert( module.stager.stageStatePerformed( 'resourcesFormed' ), 'Resources should be formed' );
-  _.assert( module.isFull() && module.isValid(), `${module.qualifiedName} is not fully formed to be exported` );
+  // _.assert( module.stager.stageStatePerformed( 'resourcesFormed' ), 'Resources should be formed' );
+  _.assert
+  (
+      module.isFull({ all : { resourcesFormed : 0 } }) && module.isValid()
+    , `${module.decoratedQualifiedName} is not fully formed to be exported`
+  );
 
   /* */
 
@@ -318,7 +311,7 @@ function _performPrepare2()
   _.sure
   (
     _.strDefined( exported.exportPath )
-    , () => exported.step.qualifiedName + ' should have defined path or reflector to export. Alternatively module could have defined path::export or reflecotr::export.'
+    , () => exported.step.decoratedQualifiedName + ' should have defined path or reflector to export. Alternatively module could have defined path::export or reflecotr::export.'
   );
 
   // _.sure
@@ -329,6 +322,7 @@ function _performPrepare2()
 
   for( let s in module.submoduleMap )
   {
+
     let submodule = module.submoduleMap[ s ];
     if( !submodule.opener || !submodule.opener.isOpened() || !submodule.opener.isValid() )
     // if( !submodule.criterion.optional && !submodule.criterion.dev && submodule.enabled )
@@ -337,14 +331,14 @@ function _performPrepare2()
       debugger;
       if( submodule.opener && submodule.opener.error )
       logger.log( submodule.opener.error );
-      throw _.errBrief( 'Exporting is impossible because ' + submodule.decoratedAbsoluteName + ' is broken!' );
+      throw _.errBrief( 'Exporting is impossible because ' + submodule.decoratedAbsoluteName + ' is not downloaded or not valid!' );
     }
 
     if( submodule.opener.openedModule && !submodule.opener.openedModule.isOut )
     {
       let peerModule = submodule.opener.openedModule.peerModule;
       if( !peerModule || !peerModule.isValid() )
-      throw _.errBrief( 'Exporting is impossible because out-willfile of ' + submodule.decoratedAbsoluteName + ' is broken! Please re-export it, first.' );
+      throw _.errBrief( 'Exporting is impossible because found no out-willfile of ' + submodule.decoratedAbsoluteName + '! Please re-export it, first.' );
     }
 
   }
@@ -379,7 +373,7 @@ function _performReadExported()
   opener2.preform();
   opener2.find({ throwing : 0 });
 
-  return opener2.open({ throwing : 1, forming : 0 })
+  return opener2.open({ throwing : 1, all : 0 })
   .then( ( module2 ) =>
   {
 
@@ -423,6 +417,7 @@ function _performReadExported()
 
     if( err )
     {
+      err = _.err( err, `\nFailed to read exported out-willfile ${opener2.willfilesPath} to extend it` );
       let verbosity = 5;
       if( _.strIs( err.originalMessage ) )
       if( !_.strHas( err.originalMessage, 'Found no willfile at' ) )
@@ -433,7 +428,8 @@ function _performReadExported()
         if( !_.errIsLogged( err ) )
         {
           logger.up( 2 );
-          logger.log( _.errBrief( err ) );
+          // logger.log( _.errBrief( err ) );
+          logger.log( err );
           logger.down( 2 );
         }
       }
@@ -542,6 +538,7 @@ function _performExportedReflectors()
   }
   else if( _.arrayIs( exp ) )
   {
+
     let commonPath = path.common.apply( path, exp );
     if( path.isAbsolute( commonPath ) )
     commonPath = path.relative( module.inPath, commonPath );
@@ -558,7 +555,8 @@ function _performExportedReflectors()
   else if( _.strIs( exp ) )
   {
 
-    _.sure( path.isGlob( exp ), `${exp} is not glob. Expects glob path to export in export step.` );
+    if( !path.isGlob( exp ) )
+    throw _.errBrief( `Expects glob path to export in export step. ${exported.exportPath} is not glob\n${exp}` );
     _.assert( !_.strHas( exp, '::' ) );
     exportedReflector = module.resourceAllocate( 'reflector', 'exported.' + exported.name );
     exportedReflector.src.filePath = exp;
@@ -708,7 +706,8 @@ function _performPaths()
 
   _.assert( !originalWillFilesPath.writable );
   _.assert( !!originalWillFilesPath.exportable );
-  _.assert( !!originalWillFilesPath.importable );
+  _.assert( !originalWillFilesPath.importableFromIn );
+  _.assert( !!originalWillFilesPath.importableFromOut );
 
   return null;
 }
@@ -806,36 +805,6 @@ function _performWriteOutFile()
 }
 
 //
-//
-// function _perform( frame )
-// {
-//   let exported = this;
-//   let module = exported.module;
-//   let will = module.will;
-//   let opts = frame.opts
-//   let logger = will.logger;
-//   let time = _.timeNow();
-//
-//   _.assert( arguments.length === 1 );
-//
-//   /* */
-//
-//   exported._performReadExported();
-//   exported._performExportedReflectors( opts.export );
-//   exported._performExportedFilesReflector();
-//   exported._performPaths();
-//   exported._performArchive( opts.tar === undefined || opts.tar );
-//   exported._performWriteOutFile();
-//
-//   /* log */
-//
-//   if( will.verbosity >= 3 )
-//   logger.log( ' + Exported', exported.decoratedQualifiedName, 'with', exported.exportedFilesPath.path.length, 'files', 'in', _.timeSpent( time ) );
-//
-//   return exported;
-// }
-
-//
 
 function perform( frame )
 {
@@ -849,7 +818,7 @@ function perform( frame )
   _.assert( arguments.length === 1 );
 
   con.then( () => exported._performPrepare1( frame ) );
-  con.then( () => exported._performReset() );
+  con.then( () => exported._performReform() );
   con.then( () => exported._performSubmodulesPeersOpen() );
   con.then( () => exported._performRecursive() );
   con.then( () => exported._performReadExported() );
@@ -864,16 +833,9 @@ function perform( frame )
 
   con.finally( ( err, arg ) =>
   {
-    // if( err )
-    // debugger;
     if( err )
-    throw _.err( err, `\nFailed to export ${exported.absoluteName}` );
-
-    // debugger;
+    throw _.err( err, `\nFailed to export ${exported.decoratedAbsoluteName}` );
     frame.run.exported = exported;
-    // if( will.verbosity >= 3 )
-    // logger.log( ' + Exported', exported.decoratedQualifiedName, 'with', exported.exportedFilesPath.path.length, 'files', 'in', _.timeSpent( time ) );
-
     return arg;
   });
 
@@ -954,7 +916,7 @@ let Extend =
 
   _verify,
   _performPrepare1,
-  _performReset,
+  _performReform,
   _performSubmodulesPeersOpen,
   _performRecursive,
   _performPrepare2,

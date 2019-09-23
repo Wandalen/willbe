@@ -34,14 +34,28 @@ function finit()
   if( will.verosity >= 5 )
   logger.log( module.qualifiedName, 'finit.begin' );
 
+  _.assert( !module.finitedIs() );
+
   try
   {
+
+    if( module.peerModule )
+    {
+      let peerModule = module.peerModule;
+      _.assert( !peerModule.finitedIs() );
+      _.assert( peerModule.peerModule === module );
+      peerModule.peerModule = null;
+      module.peerModule = null;
+      if( !peerModule.isUsed() )
+      peerModule.finit();
+    }
+
     module.unform();
   }
   catch( err )
   {
     logger.log( _.errOnce( err ) );
-    // _.errLogOnce( err );
+    debugger;
   }
 
   try
@@ -53,12 +67,9 @@ function finit()
     let finited = _.err( 'Finited' );
     _.errAttend( finited );
     finited.finited = true;
-    // module.stager.stageCancel( 'preformed' );
-    // module.stager.stageCancel( 'formed' );
     module.stager.cancel();
     module.stager.stagesState( 'skipping', true );
     module.stager.stageError( 'formed', finited );
-    // module.stager.finit(); // yyy xxx
 
     let userArray = module.userArray.slice();
     userArray.forEach( ( opener ) =>
@@ -88,7 +99,7 @@ function finit()
   catch( err )
   {
     logger.log( _.errOnce( err ) );
-    // _.errLogOnce( err );
+    debugger;
   }
 
   _.assert( Object.keys( module.exportedMap ).length === 0 );
@@ -166,6 +177,9 @@ function init( o )
   if( will.verosity >= 5 )
   logger.log( module.qualifiedName, 'init' );
 
+  // if( module.id === 55 )
+  // debugger;
+
 }
 
 //
@@ -183,20 +197,20 @@ function openerMake()
   return opener;
 }
 
+// //
 //
-
-function finitMaybe( user )
-{
-  let module = this;
-
-  if( !module.isUsed() )
-  {
-    module.finit();
-    return true;
-  }
-
-  return false;
-}
+// function finitMaybe( user )
+// {
+//   let module = this;
+//
+//   if( !module.isUsed() )
+//   {
+//     module.finit();
+//     return true;
+//   }
+//
+//   return false;
+// }
 
 //
 
@@ -223,6 +237,8 @@ function isUsedBy( user )
 {
   let module = this;
   let will = module.will;
+  if( user instanceof Self )
+  return user.peerModule === module;
   return _.arrayHas( module.userArray, user );
 }
 
@@ -232,6 +248,8 @@ function isUsed()
 {
   let module = this;
   if( module.userArray.length )
+  return true;
+  if( module.peerModule && module.peerModule.userArray.length )
   return true;
   return false;
 }
@@ -245,8 +263,8 @@ function precopy( o )
   if( o.will )
   module.will = o.will;
 
-  if( o.supermodules )
-  module.supermodules = o.supermodules;
+  if( o.superModules )
+  module.superModules = o.superModules;
 
   if( o.original )
   module.original = o.original;
@@ -330,6 +348,15 @@ function unform()
   let will = module.will;
 
   _.assert( arguments.length === 0 );
+
+  if( module.peerModule )
+  {
+    let peerModule = module.peerModule;
+    _.assert( !peerModule.finitedIs() );
+    _.assert( peerModule.peerModule === module );
+    peerModule.peerModule = null;
+    module.peerModule = null;
+  }
 
   module.close();
   will.modulePathUnregister( module );
@@ -440,7 +467,8 @@ function predefinedForm()
     path : '.',
     writable : 1,
     exportable : 1,
-    importable : 1,
+    importableFromIn : 1,
+    importableFromOut : 1,
     criterion :
     {
       predefined : 0,
@@ -453,7 +481,8 @@ function predefinedForm()
     path : '.',
     writable : 1,
     exportable : 1,
-    importable : 1,
+    importableFromIn : 1,
+    importableFromOut : 1,
     criterion :
     {
       predefined : 0,
@@ -466,7 +495,8 @@ function predefinedForm()
     path : null,
     writable : 0,
     exportable : 1,
-    importable : 0,
+    importableFromIn : 0,
+    importableFromOut : 0,
   })
 
   path
@@ -475,7 +505,8 @@ function predefinedForm()
     path : null,
     writable : 0,
     exportable : 1,
-    importable : 1,
+    importableFromIn : 0,
+    importableFromOut : 1,
   })
 
   path
@@ -484,7 +515,8 @@ function predefinedForm()
     path : null,
     writable : 0,
     exportable : 1,
-    importable : 1,
+    importableFromIn : 0,
+    importableFromOut : 1,
   })
 
   path
@@ -493,7 +525,8 @@ function predefinedForm()
     path : null,
     writable : 0,
     exportable : 0,
-    importable : 0,
+    importableFromIn : 0,
+    importableFromOut : 0,
   })
 
   path
@@ -502,7 +535,8 @@ function predefinedForm()
     path : null,
     writable : 0,
     exportable : 1,
-    importable : 0,
+    importableFromIn : 0,
+    importableFromOut : 0,
   });
 
   path
@@ -511,7 +545,8 @@ function predefinedForm()
     path : null,
     writable : 1,
     exportable : 1,
-    importable : 1,
+    importableFromIn : 1,
+    importableFromOut : 0,
   })
 
   path
@@ -520,7 +555,8 @@ function predefinedForm()
     path : null,
     writable : 1,
     exportable : 1,
-    importable : 1,
+    importableFromIn : 0,
+    importableFromOut : 1,
   })
 
   path
@@ -529,7 +565,8 @@ function predefinedForm()
     path : null,
     writable : 0,
     exportable : 0,
-    importable : 0,
+    importableFromIn : 0,
+    importableFromOut : 0,
   })
 
   path
@@ -538,7 +575,8 @@ function predefinedForm()
     path : _.path.join( __dirname, '../Exec' ),
     writable : 0,
     exportable : 0,
-    importable : 0,
+    importableFromIn : 0,
+    importableFromOut : 0,
   })
   _.assert( will.fileProvider.path.s.allAreAbsolute( module.pathResourceMap[ 'will' ].path ) );
 
@@ -723,7 +761,9 @@ function predefinedForm()
     },
   });
 
-  _.assert( !module.pathResourceMap['module.common'].importable );
+  // _.assert( module.pathResourceMap[ 'module.common' ].importable === undefined );
+  _.assert( !module.pathResourceMap[ 'module.common' ].importableFromIn );
+  _.assert( !module.pathResourceMap[ 'module.common' ].importableFromOut );
 
 /*
   .predefined.common :
@@ -751,30 +791,50 @@ function predefinedForm()
 
   /* - */
 
-  function path( o )
+  function prepare( defaults, o )
   {
 
-    // if( module.pathResourceMap[ o.name ] )
-    // return module.pathResourceMap[ o.name ].form1();
+    o.criterion = o.criterion || Object.create( null );
+
+    if( o.importable !== undefined && o.importable !== null )
+    {
+      if( o.importableFromIn === undefined || o.importableFromIn === null )
+      o.importableFromIn = o.importable;
+      if( o.importableFromOut === undefined || o.importableFromOut === null )
+      o.importableFromOut = o.importable;
+    }
+
+    delete o.importable;
+
+    _.mapSupplement( o, defaults );
+    _.mapSupplement( o.criterion, defaults.criterion );
+
+    _.assert( o.criterion !== defaults.criterion );
+    _.assert( arguments.length === 2 );
+
+    return o;
+  }
+
+  /* */
+
+  function path( o )
+  {
 
     let defaults =
     {
       module : module,
       writable : 0,
       exportable : 0,
-      importable : 1,
+      importableFromIn : 1,
+      importableFromOut : 1,
       criterion :
       {
         predefined : 1,
       }
     }
 
-    o.criterion = o.criterion || Object.create( null );
+    o = prepare( defaults, o );
 
-    _.mapSupplement( o, defaults );
-    _.mapSupplement( o.criterion, defaults.criterion );
-
-    _.assert( o.criterion !== defaults.criterion );
     _.assert( arguments.length === 1 );
 
     let result = module.pathResourceMap[ o.name ];
@@ -809,19 +869,23 @@ function predefinedForm()
       module : module,
       writable : 0,
       exportable : 0,
-      importable : 0,
+      importableFromIn : 0,
+      importableFromOut : 0,
       criterion :
       {
         predefined : 1,
       }
     }
 
-    o.criterion = o.criterion || Object.create( null );
+    // o.criterion = o.criterion || Object.create( null );
+    //
+    // _.mapSupplement( o, defaults );
+    // _.mapSupplement( o.criterion, defaults.criterion );
+    //
+    // _.assert( o.criterion !== defaults.criterion );
 
-    _.mapSupplement( o, defaults );
-    _.mapSupplement( o.criterion, defaults.criterion );
+    o = prepare( defaults, o );
 
-    _.assert( o.criterion !== defaults.criterion );
     _.assert( arguments.length === 1 );
 
     let result = new will.Step( o ).form1();
@@ -841,7 +905,8 @@ function predefinedForm()
       module : module,
       writable : 0,
       exportable : 0,
-      importable : 0,
+      importableFromIn : 0,
+      importableFromOut : 0,
       criterion :
       {
         predefined : 1,
@@ -849,13 +914,16 @@ function predefinedForm()
     }
 
     let o2 = Object.create( null );
-    o2.resource = _.mapExtend( null, defaults, o );
-    o2.resource.criterion = _.mapExtend( null, defaults.criterion, o.criterion || {} );
+    o2.resource = o;
+    // o2.resource = _.mapExtend( null, defaults, o );
+    // o2.resource.criterion = _.mapExtend( null, defaults.criterion, o.criterion || {} );
 
     // _.mapSupplement( o, defaults );
     // _.mapSupplement( o.criterion, defaults.criterion );
 
-    _.assert( o.criterion !== defaults.criterion );
+    o = prepare( defaults, o2.resource );
+
+    _.assert( !!o2.resource.criterion );
     _.assert( arguments.length === 1 );
 
     let result = will.Reflector.MakeForEachCriterion( o2 );
@@ -864,144 +932,86 @@ function predefinedForm()
 
 }
 
-// --
-// etc
-// --
+//
 
-function shell( o )
+function upform( o )
 {
   let module = this;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
 
-  if( !_.mapIs( arguments[ 0 ] ) )
-  o = { execPath : arguments[ 0 ] }
+  o = _.routineOptions( upform, arguments );
+  module.optionsFormingForward( o );
 
-  o = _.routineOptions( shell, o );
-  _.assert( _.strIs( o.execPath ) );
-  _.assert( arguments.length === 1 );
-  _.assert( o.verbosity === null || _.numberIs( o.verbosity ) );
+  // debugger;
 
-  /* */
+  if( o.attachedWillfilesFormed )
+  if( !module.stager.stageStatePerformed( 'attachedWillfilesFormed' ) )
+  module.stager.stageReset( 'attachedWillfilesFormed' );
 
-  o.execPath = module.resolve
-  ({
-    selector : o.execPath,
-    prefixlessAction : 'resolved',
-    currentThis : o.currentThis,
-    currentContext : o.currentContext,
-    pathNativizing : 1,
-    arrayFlattening : 0, /* required for f::this and feature make */
-  });
+  if( o.peerModulesFormed )
+  if( !module.stager.stageStatePerformed( 'peerModulesFormed' ) )
+  module.stager.stageReset( 'peerModulesFormed' );
 
-  /* */
+  if( o.subModulesFormed )
+  if( !module.stager.stageStatePerformed( 'subModulesFormed' ) )
+  module.stager.stageReset( 'subModulesFormed' );
 
-  if( o.currentPath )
-  o.currentPath = module.pathResolve({ selector : o.currentPath, prefixlessAction : 'resolved', currentContext : o.currentContext });
-  _.sure( o.currentPath === null || _.strIs( o.currentPath ) || _.strsAreAll( o.currentPath ), 'Current path should be string if defined' );
+  if( o.resourcesFormed )
+  if( !module.stager.stageStatePerformed( 'resourcesFormed' ) )
+  module.stager.stageReset( 'resourcesFormed' );
 
-  /* */
-
-  let ready = new _.Consequence().take( null );
-
-  debugger;
-  _.process.start
-  ({
-    execPath : o.execPath,
-    currentPath : o.currentPath,
-    verbosity : o.verbosity !== null ? o.verbosity : will.verbosity - 1,
-    ready : ready,
-  });
-
-  return ready;
+  module.stager.tick();
+  return module.ready;
 }
 
-shell.defaults =
-{
-  execPath : null,
-  currentPath : null,
-  currentThis : null,
-  currentContext : null,
-  verbosity : null,
-}
+var defaults = upform.defaults = _.mapExtend( null, Parent.prototype.optionsFormingForward.defaults );
+defaults.all = 1;
+
+// {
+//   all : 1,
+//   attachedWillfilesFormed : null,
+//   peerModulesFormed : null,
+//   subModulesFormed : null,
+//   resourcesFormed : null,
+// }
 
 //
 
-function exportAuto()
+function reform_( o )
 {
   let module = this;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let clonePath = module.cloneDirPathGet();
 
-  debugger;
-  _.assert( 'not implemented' );
+  o = _.routineOptions( reform_, arguments );
+  module.optionsFormingForward( o );
 
-  // _.assert( arguments.length === 0 );
-  // _.assert( !!module.submoduleAssociation );
-  // _.assert( !!module.submoduleAssociation.autoExporting );
-  // _.assert( !module.pickedWillfileData );
-  // _.assert( !module.pickedWillfilesPath );
-  //
-  // let autoWillfileData =
-  // {
-  //   'about' :
-  //   {
-  //     'name' : 'Extend',
-  //     'version' : '0.1.0'
-  //   },
-  //   'path' :
-  //   {
-  //     'in' : '..',
-  //     'out' : '.module',
-  //     'remote' : 'git+https :///github.com/Wandalen/wProto.git',
-  //     'local' : '.module/Extend',
-  //     'export' : '{path::local}/proto'
-  //   },
-  //   'reflector' :
-  //   {
-  //     'download' :
-  //     {
-  //       'src' : 'path::remote',
-  //       'dst' : 'path::local'
-  //     }
-  //   },
-  //   'step' :
-  //   {
-  //     'export.common' :
-  //     {
-  //       'export' : 'path::export',
-  //       'tar' : 0
-  //     }
-  //   },
-  //   'build' :
-  //   {
-  //     'export' :
-  //     {
-  //       'criterion' :
-  //       {
-  //         'default' : 1,
-  //         'export' : 1
-  //       },
-  //       'steps' :
-  //       [
-  //         'step::download',
-  //         'step::export.common'
-  //       ]
-  //     }
-  //   }
-  // }
-  //
-  // module.pickedWillfileData = autoWillfileData;
-  // module.pickedWillfilesPath = clonePath + module.aliasName;
-  // module._willfilesFindPickedFile()
-  //
-  // debugger;
+  if( o.attachedWillfilesFormed )
+  module.stager.stageReset( 'attachedWillfilesFormed' );
 
+  if( o.peerModulesFormed )
+  module.stager.stageReset( 'peerModulesFormed' );
+
+  if( o.subModulesFormed )
+  module.stager.stageReset( 'subModulesFormed' );
+
+  if( o.resourcesFormed )
+  module.stager.stageReset( 'resourcesFormed' );
+
+  module.stager.tick();
+  return module.ready;
 }
+
+var defaults = reform_.defaults = _.mapExtend( null, Parent.prototype.optionsFormingForward.defaults );
+defaults.all = 0;
+
+// reform_.defaults =
+// {
+//   all : 0,
+//   attachedWillfilesFormed : null,
+//   peerModulesFormed : null,
+//   subModulesFormed : null,
+//   resourcesFormed : null,
+// }
 
 // --
 // opener
@@ -1057,13 +1067,26 @@ isConsistent.defaults =
 
 //
 
-function isFull()
+function isFull( o )
 {
   let module = this;
   if( !module.isOpened() )
   return false;
-  return _.all( module.stager.stagesState( 'performed' ) );
+
+  o = _.routineOptions( isFull, arguments );
+  o.all = o.all || Object.create( null );
+  o.all.all = 1;
+  o.all = module.optionsFormingForward( o.all );
+
+  let states = module.stager.stagesState( 'performed' )
+  _.mapSupplement( o.all, _.map( states, () => true ) );
+  states = _.only( states, o.all ); /* xxx : review mapOnly / mapBut */
+
+  return _.all( states );
 }
+
+var defaults = isFull.defaults = Object.create( null );
+defaults.all = null;
 
 //
 
@@ -1552,14 +1575,14 @@ function rootModuleSet( src )
 
 //
 
-function supermodulesSet( src )
+function superModulesSet( src )
 {
   let module = this;
 
   _.assert( src === null || _.arrayIs( src ) );
   _.assert( src === null || src.every( ( supermodule ) => supermodule instanceof _.Will.Submodule ) );
 
-  module[ supermodulesSymbol ] = src;
+  module[ superModulesSymbol ] = src;
 
   return src;
 }
@@ -1748,8 +1771,8 @@ function submodulesEach_body( o )
     let record;
 
     // debugger;
-    if( visitedModulesMap[ module.commonPath ] )
-    debugger;
+    // if( visitedModulesMap[ module.commonPath ] )
+    // debugger;
     record = visitedModulesMap[ module.commonPath ];
 
     if( !record )
@@ -1803,14 +1826,13 @@ function submodulesAreDownloaded( o )
   let result = Object.create( null );
 
   o = _.routineOptions( submodulesAreDownloaded, arguments );
-  _.assert( module === module.rootModule );
+  // _.assert( module === module.rootModule );
   _.assert( arguments.length === 0 );
 
   debugger;
   let o2 = _.mapExtend( null, o );
   o2.outputFormat = '*/relation';
   let relations = module.submodulesEach( o2 );
-  debugger;
   relations = _.index( relations, '*/commonPath' );
   debugger;
 
@@ -1818,6 +1840,7 @@ function submodulesAreDownloaded( o )
   {
     if( !relation.opener )
     return false;
+    _.assert( _.boolLike( relation.opener.isDownloaded ) );
     return relation.opener.isDownloaded;
   });
 }
@@ -1839,7 +1862,7 @@ function submodulesAllAreDownloaded( o )
   let result = Object.create( null );
 
   o = _.routineOptions( submodulesAllAreDownloaded, arguments );
-  _.assert( module === module.rootModule );
+  // _.assert( module === module.rootModule );
   _.assert( arguments.length === 0 );
 
   // debugger;
@@ -1852,6 +1875,8 @@ function submodulesAllAreDownloaded( o )
   {
     if( !relation.opener )
     return false;
+    // debugger;
+    _.assert( _.boolLike( relation.opener.isDownloaded ) );
     return relation.opener.isDownloaded;
   });
 }
@@ -1869,7 +1894,7 @@ function submodulesAreValid( o )
   let result = Object.create( null );
 
   o = _.routineOptions( submodulesAreValid, arguments );
-  _.assert( module === module.rootModule );
+  // _.assert( module === module.rootModule );
   _.assert( arguments.length === 0 );
 
   let o2 = _.mapExtend( null, o );
@@ -1905,7 +1930,7 @@ function submodulesAllAreValid( o )
   let result = Object.create( null );
 
   o = _.routineOptions( submodulesAllAreValid, arguments );
-  _.assert( module === module.rootModule );
+  // _.assert( module === module.rootModule );
   _.assert( arguments.length === 0 );
 
   let o2 = _.mapExtend( null, o );
@@ -2082,7 +2107,6 @@ function _subModulesDownload_body( o )
 _subModulesDownload_body.defaults =
 {
   updating : 0,
-  // forming : 1,
   recursive : 0,
   dry : 0,
   downloaded : null,
@@ -2162,13 +2186,13 @@ function moduleFixate( o )
   _.assert( _.boolLike( o.upgrading ) );
   _.assert( o.module  === null || o.module instanceof will.OpenedModule );
   _.assert( o.submodule === null || o.submodule instanceof will.Submodule );
-  _.assert( o.module  === null || o.module.rootModule === o.module || _.arrayHas( o.module.supermodules, module ) );
+  _.assert( o.module  === null || o.module.rootModule === o.module || _.arrayHas( o.module.superModules, module ) );
 
   if( o.module )
   superModuleFixate( o.module );
 
   // if( o.module )
-  // o.module.supermodules.forEach( ( supermodule ) =>
+  // o.module.superModules.forEach( ( supermodule ) =>
   // {
   // });
 
@@ -2913,142 +2937,25 @@ let submodulesPeersOpen = _.routineFromPreAndBody( submodulesEach_pre, submodule
 // remote
 // --
 
-// function remoteIsUpdate()
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//
-//   _.assert( !!module.willfilesPath || !!module.dirPath );
-//   _.assert( arguments.length === 0 );
-//
-//   let remoteProvider = fileProvider.providerForPath( module.commonPath );
-//   if( remoteProvider.isVcs )
-//   return end( true );
-//
-//   return end( false );
-//
-//   /* */
-//
-//   function end( result )
-//   {
-//     module.isRemote = result;
-//     return result;
-//   }
-// }
-//
-// //
-//
-// function remoteIsUpToDateUpdate()
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//
-//   _.assert( _.strDefined( module.localPath ) );
-//   _.assert( !!module.willfilesPath );
-//   _.assert( module.isRemote === true );
-//
-//   let remoteProvider = fileProvider.providerForPath( module.remotePath );
-//
-//   _.assert( !!remoteProvider.isVcs );
-//
-//   debugger;
-//   let result = remoteProvider.isUpToDate
-//   ({
-//     remotePath : module.remotePath,
-//     localPath : module.localPath,
-//     verbosity : will.verbosity - 3,
-//   });
-//
-//   if( !result )
-//   return end( result );
-//
-//   return _.Consequence.From( result )
-//   .finally( ( err, arg ) =>
-//   {
-//     end( arg );
-//     if( err )
-//     throw err;
-//     return arg;
-//   });
-//
-//   /* */
-//
-//   function end( result )
-//   {
-//     module.isUpToDate = !!result;
-//     return result;
-//   }
-//
-// }
-
-//
-
-// function remoteIsDownloadedUpdate()
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//
-//   _.assert( _.strDefined( module.localPath ) );
-//   _.assert( !!module.willfilesPath );
-//   _.assert( module.isRemote === true );
-//
-//   let remoteProvider = fileProvider.providerForPath( module.remotePath );
-//   _.assert( !!remoteProvider.isVcs );
-//
-//   let result = remoteProvider.isDownloaded
-//   ({
-//     localPath : module.localPath,
-//   });
-//
-//   _.assert( !_.consequenceIs( result ) );
-//
-//   if( !result )
-//   return end( result );
-//
-//   return _.Consequence.From( result )
-//   .finally( ( err, arg ) =>
-//   {
-//     end( arg );
-//     if( err )
-//     throw err;
-//     return arg;
-//   });
-//
-//   /* */
-//
-//   function end( result )
-//   {
-//     module.isDownloaded = !!result;
-//     return result;
-//   }
-//
-// }
-
-//
-
-function remoteIsDownloadedChanged()
+function _remoteChanged()
 {
   let module = this;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
+  let logger = will.logger;
 
   _.assert( !!module.pathResourceMap[ 'current.remote' ] );
 
+  // logger.log( module.absoluteName, '_remoteChanged' ); debugger;
+
   /* */
 
-  if( module.isDownloaded &&  module.remotePath )
+  // if( module.isDownloaded && module.remotePath )
+  if( module.remotePath )
   {
-
     let remoteProvider = fileProvider.providerForPath( module.remotePath );
     _.assert( !!remoteProvider.isVcs );
-
     let version = remoteProvider.versionLocalRetrive( module.localPath );
     if( version )
     {
@@ -3066,56 +2973,56 @@ function remoteIsDownloadedChanged()
 
 //
 
-function remoteIsDownloadedSet( src )
-{
-  let module = this;
-
-  src = !!src;
-
-  let changed = module[ isDownloadedSymbol ] !== undefined && module[ isDownloadedSymbol ] !== src;
-
-  module[ isDownloadedSymbol ] = src;
-
-  if( changed )
-  module.remoteIsDownloadedChanged();
-
-}
-
-//
-// //
-//
-// function remoteCurrentVersion()
+// function remoteIsDownloadedChanged()
 // {
 //   let module = this;
 //   let will = module.will;
 //   let fileProvider = will.fileProvider;
 //   let path = fileProvider.path;
 //
-//   _.assert( !!module.willfilesPath || !!module.dirPath );
-//   _.assert( arguments.length === 0 );
+//   _.assert( !!module.pathResourceMap[ 'current.remote' ] );
 //
-//   debugger;
-//   let remoteProvider = fileProvider.providerForPath( module.commonPath );
-//   debugger;
-//   return remoteProvider.versionLocalRetrive( module.localPath );
+//   /* */
+//
+//   if( module.isDownloaded && module.remotePath )
+//   {
+//
+//     let remoteProvider = fileProvider.providerForPath( module.remotePath );
+//     _.assert( !!remoteProvider.isVcs );
+//
+//     let version = remoteProvider.versionLocalRetrive( module.localPath );
+//     if( version )
+//     {
+//       let remotePath = _.uri.parseConsecutive( module.remotePath );
+//       remotePath.hash = version;
+//       module.pathResourceMap[ 'current.remote' ].path = _.uri.str( remotePath );
+//     }
+//   }
+//   else
+//   {
+//     module.pathResourceMap[ 'current.remote' ].path = null;
+//   }
+//
 // }
 //
 // //
 //
-// function remoteLatestVersion()
+// function remoteIsDownloadedSet( src )
 // {
 //   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
 //
-//   _.assert( !!module.willfilesPath || !!module.dirPath );
-//   _.assert( arguments.length === 0 );
+//   _.assert( _.boolLike( src ) );
 //
-//   debugger;
-//   let remoteProvider = fileProvider.providerForPath( module.commonPath );
-//   debugger;
-//   return remoteProvider.versionRemoteLatestRetrive( module.localPath )
+//   if( src !== null )
+//   src = !!src;
+//
+//   let changed = module[ isDownloadedSymbol ] !== undefined && module[ isDownloadedSymbol ] !== src;
+//
+//   module[ isDownloadedSymbol ] = src;
+//
+//   if( changed )
+//   module.remoteIsDownloadedChanged();
+//
 // }
 
 // --
@@ -3151,7 +3058,8 @@ function _resourcesForm()
 
   // logger.log( module.absoluteName, '_resourcesForm' ); debugger;
 
-  if( module.rootModule === module )
+  // debugger;
+  // if( module.rootModule === module )
   if( module.submodulesAllAreDownloaded() && module.submodulesAllAreValid() )
   {
 
@@ -3167,8 +3075,8 @@ function _resourcesForm()
   }
   else
   {
-    if( will.verbosity === 2 )
-    logger.error( ' ! One or more submodules of ' + module.decoratedQualifiedName + ' were not downloaded!'  );
+    if( will.verbosity === 2 ) /* xxx : throw error instead? */
+    logger.error( ' ! One or several submodules of ' + module.decoratedQualifiedName + ' were not downloaded!'  );
   }
 
   return con;
@@ -3268,17 +3176,17 @@ function resourceMapForKind( resourceKind )
   _.assert( module.rootModule instanceof will.OpenedModule );
 
   // logger.log( 'resourceMapForKind', resourceKind );
-  if( resourceKind === 'submodule' )
-  {
-    let valid = module.submodulesAreValid();
-    if( !_.all( valid ) )
-    throw _.err
-    (
-        `Cant do select in non-valid submodules.`
-      , `\nOne or several submodules of ${module.absoluteName} are not opened or invalid :`
-      , '\n  ' + _.mapKeys( _.but( valid ) ).join( '\n  ' )
-    );
-  }
+  // if( resourceKind === 'submodule' )
+  // {
+  //   let valid = module.submodulesAreValid();
+  //   if( !_.all( valid ) )
+  //   throw _.errBrief
+  //   (
+  //       `Cant do select in non-valid submodules.`
+  //     , `\nOne or several submodules of ${module.absoluteName} are not opened or invalid :`
+  //     , '\n  ' + _.mapKeys( _.but( valid ) ).join( '\n  ' )
+  //   );
+  // }
 
   if( resourceKind === 'export' )
   result = module.buildMap;
@@ -3739,6 +3647,28 @@ function predefinedPathAssign_functor( fieldName, resourceName, relativizing )
 
 //
 
+function decoratedPathGet_functor( fieldName )
+{
+
+  return function decoratedPathGet()
+  {
+    let module = this;
+    let result = module[ fieldName ];
+    if( result !== null )
+    {
+      let will = module.will;
+      let fileProvider = will.fileProvider;
+      let path = fileProvider.path;
+      _.assert( _.strIs( result ) || _.arrayIs( result ) )
+      result = path.filter( result, ( p ) => _.color.strFormat( p, 'path' ) );
+    }
+    return result;
+  }
+
+}
+
+//
+
 function predefinedPathSet_functor( fieldName, resourceName )
 {
 
@@ -3751,6 +3681,9 @@ function predefinedPathSet_functor( fieldName, resourceName )
 
     module[ assignMethodName ]( filePath );
     module._filePathChanged();
+
+    if( resourceName === 'remote' && filePath !== null )
+    module._remoteChanged();
 
     return filePath;
   }
@@ -3768,6 +3701,18 @@ let currentRemotePathGet = predefinedPathGet_functor( 'currentRemotePath', 'curr
 let willPathGet = predefinedPathGet_functor( 'willPath', 'will' );
 let originalWillfilesPathGet = predefinedPathGet_functor( 'originalWillfilesPath', 'module.original.willfiles' );
 let peerWillfilesPathGet = predefinedPathGet_functor( 'peerWillfilesPath', 'module.peer.willfiles' );
+
+let decoratedWillfilesPathGet = decoratedPathGet_functor( 'willfilesPath' );
+let decoratedInPathGet = decoratedPathGet_functor( 'inPath' );
+let decoratedOutPathGet = decoratedPathGet_functor( 'outPath' );
+let decoratedDirPathGet = decoratedPathGet_functor( 'dirPath' );
+let decoratedCommonPathGet = decoratedPathGet_functor( 'commonPath' );
+let decoratedLocalPathGet = decoratedPathGet_functor( 'localPath' );
+let decoratedRemotePathGet = decoratedPathGet_functor( 'remotePath' );
+let decoratedCurrentRemotePathGet = decoratedPathGet_functor( 'currentRemotePath' );
+let decoratedWillPathGet = decoratedPathGet_functor( 'willPath' );
+let decoratedOriginalWillfilesPathGet = decoratedPathGet_functor( 'originalWillfilesPath' );
+let decoratedPeerWillfilesPathGet = decoratedPathGet_functor( 'peerWillfilesPath' );
 
 let _inPathAssign = predefinedPathAssign_functor( 'inPath', 'in', 'dirPath', 0 );
 let _outPathAssign = predefinedPathAssign_functor( 'outPath', 'out', 'inPath', 0 );
@@ -4011,7 +3956,7 @@ function cleanWhatSingle( o )
   if( o.cleaningSubmodules )
   {
 
-    debugger;
+    // debugger;
     find( module.cloneDirPathGet() );
     if( module.rootModule !== module )
     find( module.cloneDirPathGet( module ) );
@@ -4041,9 +3986,9 @@ function cleanWhatSingle( o )
 
   /* temp dir */
 
-  if( o.cleaningTemp ) // xxx
+  if( o.cleaningTemp )
   {
-    debugger;
+    // debugger;
     let resource = module.pathOrReflectorResolve( 'temp' );
 
     if( resource && resource instanceof _.Will.Reflector )
@@ -4054,7 +3999,7 @@ function cleanWhatSingle( o )
     }
     else if( resource && resource instanceof _.Will.PathResource )
     {
-      debugger;
+      // debugger;
       let filePath = resource.path;
       if( !filePath )
       filePath = [];
@@ -4501,7 +4446,7 @@ function _buildsResolve_pre( routine, args )
   o = args[ 0 ];
 
   o = _.routineOptions( routine, o );
-  _.assert( _.arrayHas( [ 'build', 'export' ], o.resource ) );
+  _.assert( _.arrayHas( [ 'build', 'export' ], o.kind ) );
   _.assert( _.arrayHas( [ 'default', 'more' ], o.preffering ) );
   _.assert( o.criterion === null || _.routineIs( o.criterion ) || _.mapIs( o.criterion ) );
 
@@ -4513,12 +4458,12 @@ function _buildsResolve_pre( routine, args )
 
 //
 
-function _buildsSelect_body( o )
+function _buildsResolve_body( o )
 {
   let module = this;
   let elements = module.buildMap;
 
-  _.assertRoutineOptions( _buildsSelect_body, arguments );
+  _.assertRoutineOptions( _buildsResolve_body, arguments );
   _.assert( arguments.length === 1 );
 
   if( o.name )
@@ -4550,9 +4495,9 @@ function _buildsSelect_body( o )
 
   }
 
-  if( o.resource === 'export' )
+  if( o.kind === 'export' )
   elements = elements.filter( ( element ) => element.criterion && element.criterion.export );
-  else if( o.resource === 'build' )
+  else if( o.kind === 'build' )
   elements = elements.filter( ( element ) => !element.criterion || !element.criterion.export );
 
   return elements;
@@ -4600,28 +4545,28 @@ function _buildsSelect_body( o )
 
 }
 
-_buildsSelect_body.defaults =
+_buildsResolve_body.defaults =
 {
-  resource : null,
+  kind : null,
   name : null,
   criterion : null,
   preffering : 'default',
   strictCriterion : 1,
 }
 
-let _buildsResolve = _.routineFromPreAndBody( _buildsResolve_pre, _buildsSelect_body );
+let _buildsResolve = _.routineFromPreAndBody( _buildsResolve_pre, _buildsResolve_body );
 
 //
 
-let buildsResolve = _.routineFromPreAndBody( _buildsResolve_pre, _buildsSelect_body );
+let buildsResolve = _.routineFromPreAndBody( _buildsResolve_pre, _buildsResolve_body );
 var defaults = buildsResolve.defaults;
-defaults.resource = 'build';
+defaults.kind = 'build';
 
 //
 
-let exportsResolve = _.routineFromPreAndBody( _buildsResolve_pre, _buildsSelect_body );
+let exportsResolve = _.routineFromPreAndBody( _buildsResolve_pre, _buildsResolve_body );
 var defaults = exportsResolve.defaults;
-defaults.resource = 'export';
+defaults.kind = 'export';
 
 //
 
@@ -4667,13 +4612,14 @@ function optionsForOpenerExport()
     remotePath : null,
 
     isRemote : null,
-    isDownloaded : null,
+    // isDownloaded : null,
     isUpToDate : null,
 
   }
 
   let result = _.mapOnly( module, fields );
 
+  result.isDownloaded = true;
   result.willfilesArray = _.entityShallowClone( result.willfilesArray );
 
   return result;
@@ -4874,7 +4820,6 @@ function structureExportOut( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  o.dst = o.dst || Object.create( null );
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
   o = _.routineOptions( structureExportOut, arguments );
@@ -4886,10 +4831,9 @@ function structureExportOut( o )
   _.assert( o.exportModule === module )
   _.assert( o.exportModule.isOut );
 
+  o.dst = o.dst || Object.create( null );
   o.dst.format = will.Willfile.FormatVersion;
 
-  // if( module.absoluteName === "module::supermodule / f::duplicate" )
-  // debugger;
   let submodules = module.submodulesEach({ withPeers : 1, withStem : 1, recursive : 2 })
   module.structureExportModules( submodules, o );
 
@@ -4927,7 +4871,6 @@ function structureExportForModuleExport( o )
   let o2 = module.optionsForOpenerExport();
   o2.willfilesPath = o.willfilesPath;
   o2.willfilesArray = [];
-  // o2.inPath = path.relative( module.outPath, module.inPath );
   o2.isOut = true;
   o2.peerModule = module;
 
@@ -4944,10 +4887,8 @@ function structureExportForModuleExport( o )
 
   /* */
 
-  // let module2 = opener2.moduleClone( module );
-
   let o3 = opener2.optionsForModuleExport();
-  let rootModule = o3.rootModule = opener2.rootModule;
+  let rootModule = o3.rootModule = opener2.rootModule; /* xxx : remove rootModule? */
   let module2 = module.cloneExtending( o3 );
   opener2.moduleAdopt( module2 );
   _.assert( rootModule === opener2.rootModule );
@@ -4981,15 +4922,8 @@ function structureExportForModuleExport( o )
   if( module2.ready.errorsCount() )
   module2.ready.sync();
 
-  let structure = Object.create( null );
-  // structure.format = will.Willfile.FormatVersion;
-
-  // debugger;
-  module2.structureExportOut({ dst : structure });
-  // module2.structureExport({ dst : structure });
-  // debugger;
-
-  let rootModuleStructure = structure.module[ module2.fileName ]
+  let structure = module2.structureExportOut();
+  let rootModuleStructure = structure.module[ module2.fileName ];
 
   _.assert( !rootModuleStructure.path || !!rootModuleStructure.path[ 'module.original.willfiles' ] );
   _.assert( !rootModuleStructure.path || !!rootModuleStructure.path[ 'module.peer.willfiles' ] );
@@ -5004,6 +4938,9 @@ function structureExportForModuleExport( o )
   _.assert( !module2.finitedIs() )
 
   will.openersAdoptModule( module2 );
+
+  if( !module2.isUsed() )
+  module2.finit();
 
   return structure;
 }
@@ -5215,22 +5152,21 @@ function resourceImport( o )
     resourceData[ k ] = value;
   }
 
-  // if( _.strHas( o.srcResource.name, 'export.debug' ) )
-  // debugger;
-
   if( o.overriding )
   {
-    // let oldResource = module.resolveRaw
-    // ({
-    //   selector : o.srcResource.KindName + '::' + o.srcResource.name,
-    //   missingAction : 'undefine',
-    // });
     let oldResource = module.resourceGet( o.srcResource.KindName, o.srcResource.name );
     if( oldResource )
     {
-      resourceData.writable = oldResource.writable;
-      resourceData.exportable = oldResource.exportable;
-      resourceData.importable = oldResource.importable;
+      debugger;
+      let extra = oldResource.extraExport();
+      debugger;
+      _.mapExtend( resourceData, extra );
+
+      // resourceData.writable = oldResource.writable;
+      // resourceData.exportable = oldResource.exportable;
+      // resourceData.importableFromIn = oldResource.importableFromIn;
+      // resourceData.importableFromOut = oldResource.importableFromOut;
+
       oldResource.finit();
     }
   }
@@ -5280,7 +5216,7 @@ function ResourceSetter_functor( op )
       _.assert( _.instanceIs( resource ) );
       _.assert( resource.module === module );
 
-      if( !resource.importable )
+      if( !resource.importableFromIn && !resource.importableFromOut )
       continue;
       resource.finit();
       _.assert( resourceMap[ m ] === undefined );
@@ -5321,13 +5257,531 @@ ResourceSetter_functor.defaults =
 }
 
 // --
+// etc
+// --
+
+function shell( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  if( !_.mapIs( arguments[ 0 ] ) )
+  o = { execPath : arguments[ 0 ] }
+
+  o = _.routineOptions( shell, o );
+  _.assert( _.strIs( o.execPath ) );
+  _.assert( arguments.length === 1 );
+  _.assert( o.verbosity === null || _.numberIs( o.verbosity ) );
+
+  /* */
+
+  o.execPath = module.resolve
+  ({
+    selector : o.execPath,
+    prefixlessAction : 'resolved',
+    currentThis : o.currentThis,
+    currentContext : o.currentContext,
+    pathNativizing : 1,
+    arrayFlattening : 0, /* required for f::this and feature make */
+  });
+
+  /* */
+
+  if( o.currentPath )
+  o.currentPath = module.pathResolve({ selector : o.currentPath, prefixlessAction : 'resolved', currentContext : o.currentContext });
+  _.sure( o.currentPath === null || _.strIs( o.currentPath ) || _.strsAreAll( o.currentPath ), 'Current path should be string if defined' );
+
+  /* */
+
+  let ready = new _.Consequence().take( null );
+
+  debugger;
+  _.process.start
+  ({
+    execPath : o.execPath,
+    currentPath : o.currentPath,
+    verbosity : o.verbosity !== null ? o.verbosity : will.verbosity - 1,
+    ready : ready,
+  });
+
+  return ready;
+}
+
+shell.defaults =
+{
+  execPath : null,
+  currentPath : null,
+  currentThis : null,
+  currentContext : null,
+  verbosity : null,
+}
+
+//
+
+function errTooMany( builds, what )
+{
+  let module = this;
+  let will = module.will;
+  let logger = will.logger;
+  let prefix = '';
+  let err;
+
+  if( logger.verbosity >= 2 && builds.length > 1 )
+  {
+    // logger.up();
+    // logger.log( module.infoExportResource( builds ) );
+    // logger.down();
+    prefix = module.infoExportResource( builds );
+  }
+
+  if( builds.length !== 1 )
+  {
+    debugger;
+    if( builds.length === 0 )
+    err = _.errBrief( prefix, '\nPlease specify exactly one ' + what + ', none satisfies passed arguments' );
+    else
+    err = _.errBrief( prefix, '\nPlease specify exactly one ' + what + ', ' + builds.length + ' satisfy(s)' + '\nFound : ' + _.strQuote( _.select( builds, '*/name' ) ) );
+    return err;
+  }
+
+  return false;
+}
+
+//
+
+function exportAuto()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let clonePath = module.cloneDirPathGet();
+
+  debugger;
+  _.assert( 'not implemented' );
+
+  // _.assert( arguments.length === 0 );
+  // _.assert( !!module.submoduleAssociation );
+  // _.assert( !!module.submoduleAssociation.autoExporting );
+  // _.assert( !module.pickedWillfileData );
+  // _.assert( !module.pickedWillfilesPath );
+  //
+  // let autoWillfileData =
+  // {
+  //   'about' :
+  //   {
+  //     'name' : 'Extend',
+  //     'version' : '0.1.0'
+  //   },
+  //   'path' :
+  //   {
+  //     'in' : '..',
+  //     'out' : '.module',
+  //     'remote' : 'git+https :///github.com/Wandalen/wProto.git',
+  //     'local' : '.module/Extend',
+  //     'export' : '{path::local}/proto'
+  //   },
+  //   'reflector' :
+  //   {
+  //     'download' :
+  //     {
+  //       'src' : 'path::remote',
+  //       'dst' : 'path::local'
+  //     }
+  //   },
+  //   'step' :
+  //   {
+  //     'export.common' :
+  //     {
+  //       'export' : 'path::export',
+  //       'tar' : 0
+  //     }
+  //   },
+  //   'build' :
+  //   {
+  //     'export' :
+  //     {
+  //       'criterion' :
+  //       {
+  //         'default' : 1,
+  //         'export' : 1
+  //       },
+  //       'steps' :
+  //       [
+  //         'step::download',
+  //         'step::export.common'
+  //       ]
+  //     }
+  //   }
+  // }
+  //
+  // module.pickedWillfileData = autoWillfileData;
+  // module.pickedWillfilesPath = clonePath + module.aliasName;
+  // module._willfilesFindPickedFile()
+  //
+  // debugger;
+
+}
+
+//
+
+function moduleBuild_pre( routine, args )
+{
+  let o = _.routineOptions( routine, args );
+  return o;
+}
+
+function moduleBuild_body( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let con = new _.Consequence().take( null );
+
+  let builds = module._buildsResolve
+  ({
+    name : o.name,
+    criterion : o.criterion,
+    kind : o.kind,
+  });
+
+  // if( logger.verbosity >= 2 && builds.length > 1 )
+  // {
+  //   logger.up();
+  //   logger.log( module.infoExportResource( builds ) );
+  //   logger.down();
+  // }
+
+  if( builds.length !== 1 )
+  throw module.errTooMany( builds, 'export scenario' );
+
+  let build = builds[ 0 ];
+  will._willfilesReadEnd( module );
+
+  let run = new will.BuildRun
+  ({
+    build,
+    recursive : 0,
+  });
+
+  return con
+  .then( () =>
+  {
+    _.assert( !module.isOut );
+    debugger;
+    return module.modulesUpform({ all : 0, subModulesFormed : 1, peerModulesFormed : 1 });
+    // return module.upform({ all : 0, subModulesFormed : 1, peerModulesFormed : 1 });
+    // return null;
+  })
+  .then( () => build.perform({ run }) )
+  .then( () =>
+  {
+    _.assert( !module.peerModule || module.peerModule.isOut );
+    debugger;
+    // return module.peerModule.upform({ all : 1, resourcesFormed : 0 });
+    return null;
+  });
+}
+
+moduleBuild_body.defaults =
+{
+  name : null,
+  criterion : null,
+  kind : 'export',
+}
+
+let moduleBuild = _.routineFromPreAndBody( moduleBuild_pre, moduleBuild_body );
+moduleBuild.defaults.kind = 'build';
+let moduleExport = _.routineFromPreAndBody( moduleBuild_pre, moduleBuild_body );
+moduleExport.defaults.kind = 'export';
+
+//
+
+function modulesEachDo( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let modules;
+  let con = new _.Consequence().take( null );
+
+  o = _.routineOptions( modulesEachDo, arguments );
+
+  con.then( () =>
+  {
+    return module.upform({ all : 0, subModulesFormed : 1 });
+  });
+
+  con.then( () =>
+  {
+
+    let o2 = _.mapOnly( o, module.submodulesEach.defaults );
+    o2.outputFormat = '/';
+    debugger;
+    modules = module.submodulesEach( o2 );
+
+    return modules;
+  });
+
+  con.then( () =>
+  {
+    let con2 = new _.Consequence().take( null );
+    for( let m = modules.length-1 ; m >= 0 ; m-- ) ( function( r )
+    {
+      con2
+      .then( () =>
+      {
+        if( !r.module )
+        throw _.err
+        (
+            `Cant ${o.actionName} ${module.absoluteName} because ${r.relation ? r.relation.absoluteName : r.opener.absoluteName} is not available.`
+          , `\nLooked at ${r.opener ? r.opener.commonPath : r.relation.path}`
+        );
+        return o.onEach( r, o );
+        // let o3 = _.mapOnly( o, module.moduleExport.defaults );
+        // return r.module.moduleExport( o3 );
+      })
+    })( modules[ m ] );
+
+    return con2;
+  });
+
+  return con;
+}
+
+var defaults = modulesEachDo.defaults = _.mapExtend( null, submodulesEach.defaults );
+
+defaults.recursive = 0;
+defaults.withStem = 1;
+defaults.withPeers = 1;
+defaults.onEach = null;
+defaults.actionName = null;
+
+delete defaults.outputFormat;
+
+//
+
+function modulesBuild_pre( routine, args )
+{
+  let o = _.routineOptions( routine, args );
+  return o;
+}
+
+function modulesBuild_body( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  o = _.routineOptions( modulesBuild_body, arguments );
+  let o2 = _.mapOnly( o, module.modulesEachDo.defaults );
+  o2.onEach = handleEach;
+  o2.actionName = o.kind;
+  return module.modulesEachDo( o2 );
+
+  /* */
+
+  function handleEach( record, op )
+  {
+    let o3 = _.mapOnly( o, module.moduleExport.defaults );
+    return record.module.moduleExport( o3 );
+  }
+
+}
+
+var defaults = modulesBuild_body.defaults = _.mapExtend( null, moduleBuild.defaults, submodulesEach.defaults );
+
+defaults.recursive = 0;
+defaults.withStem = 1;
+defaults.withPeers = 0;
+defaults.withOut = 0;
+defaults.withIn = 1;
+
+delete defaults.outputFormat;
+
+let modulesBuild = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
+modulesBuild.defaults.kind = 'build';
+let modulesExport = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
+modulesExport.defaults.kind = 'export';
+
+//
+
+function modulesUpform( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  o = _.routineOptions( modulesUpform, arguments );
+  let o2 = _.mapOnly( o, module.modulesEachDo.defaults );
+  o2.onEach = handleEach;
+  o2.actionName = 'upform';
+  return module.modulesEachDo( o2 );
+
+  /* */
+
+  function handleEach( record, op )
+  {
+    let o3 = _.mapOnly( o, module.upform.defaults );
+    debugger;
+    return record.module.upform( o3 );
+  }
+
+}
+
+var defaults = modulesUpform.defaults = _.mapExtend( null, upform.defaults, submodulesEach.defaults );
+
+defaults.recursive = 2;
+defaults.withStem = 1;
+defaults.withPeers = 1;
+
+delete defaults.outputFormat;
+
+// //
+//
+// function modulesExport( o )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//   let modules;
+//   let con = new _.Consequence().take( null );
+//
+//   o = _.routineOptions( modulesExport, arguments );
+//
+//   con.then( () =>
+//   {
+//     return module.upform({ all : 0, subModulesFormed : 1 });
+//   });
+//
+//   con.then( () =>
+//   {
+//
+//     let o2 = _.mapOnly( o, module.submodulesEach.defaults );
+//     o2.outputFormat = '/';
+//     modules = module.submodulesEach( o2 );
+//
+//     return modules;
+//   });
+//
+//   con.then( () =>
+//   {
+//     let con2 = new _.Consequence().take( null );
+//     for( let m = modules.length-1 ; m >= 0 ; m-- ) ( function( r )
+//     {
+//       con2
+//       .then( () =>
+//       {
+//         if( !r.module )
+//         throw _.err
+//         (
+//             `Cant ${o.kind} ${module.absoluteName} because ${r.relation ? r.relation.absoluteName : r.opener.absoluteName} is not available.`
+//           , `\nLooked at ${r.opener ? r.opener.commonPath : r.relation.path}`
+//         );
+//         let o3 = _.mapOnly( o, module.moduleExport.defaults );
+//         return r.module.moduleExport( o3 );
+//       })
+//     })( modules[ m ] );
+//
+//     return con2;
+//   });
+//
+//   return con;
+// }
+//
+// var defaults = modulesExport.defaults = _.mapExtend( null, moduleExport.defaults, submodulesEach.defaults );
+//
+// defaults.recursive = 0;
+// defaults.withStem = 1;
+// defaults.withPeers = 0;
+// defaults.withOut = 0;
+// defaults.withIn = 1;
+//
+// delete defaults.outputFormat;
+//
+// //
+//
+// function modulesUpform( o )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//   let modules;
+//   let con = new _.Consequence().take( null );
+//
+//   o = _.routineOptions( modulesUpform, arguments );
+//
+//   con.then( () =>
+//   {
+//     return module.upform({ all : 0, subModulesFormed : 1 });
+//   });
+//
+//   con.then( () =>
+//   {
+//
+//     let o2 = _.mapOnly( o, module.submodulesEach.defaults );
+//     o2.outputFormat = '/';
+//     modules = module.submodulesEach( o2 );
+//
+//     return modules;
+//   });
+//
+//   con.then( () =>
+//   {
+//     let con2 = new _.Consequence().take( null );
+//     for( let m = modules.length-1 ; m >= 0 ; m-- ) ( function( r )
+//     {
+//       con2
+//       .then( () =>
+//       {
+//         if( !r.module )
+//         throw _.err
+//         (
+//             `Cant upform ${module.absoluteName} because ${r.relation ? r.relation.absoluteName : r.opener.absoluteName} is not available.`
+//           , `\nLooked at ${r.opener ? r.opener.commonPath : r.relation.path}`
+//         );
+//         let o3 = _.mapOnly( o, module.upform.defaults );
+//         return r.module.upform( o3 );
+//       })
+//     })( modules[ m ] );
+//
+//     return con2;
+//   });
+//
+//   return con;
+// }
+//
+// var defaults = modulesUpform.defaults = _.mapExtend( null, upform.defaults, submodulesEach.defaults );
+//
+// defaults.recursive = 0;
+// defaults.withStem = 1;
+// defaults.withPeers = 1;
+//
+// delete defaults.outputFormat;
+
+// --
 // relations
 // --
 
-let isDownloadedSymbol = Symbol.for( 'isDownloaded' );
+// let isDownloadedSymbol = Symbol.for( 'isDownloaded' );
 let rootModuleSymbol = Symbol.for( 'rootModule' );
 let peerModuleSymbol = Symbol.for( 'peerModule' );
-let supermodulesSymbol = Symbol.for( 'supermodules' );
+let superModulesSymbol = Symbol.for( 'superModules' );
 
 let Composes =
 {
@@ -5339,7 +5793,7 @@ let Composes =
   remotePath : null,
 
   isRemote : null,
-  isDownloaded : null,
+  // isDownloaded : null,
   isUpToDate : null,
   isOut : null,
 
@@ -5365,7 +5819,7 @@ let Associates =
 
   will : null,
   rootModule : null,
-  supermodules : _.define.own([]),
+  superModules : _.define.own([]),
   original : null,
   willfilesArray : _.define.own([]),
   storedWillfilesArray : _.define.own([]),
@@ -5444,6 +5898,8 @@ let Forbids =
   openerModule : 'openerModule',
   willfilesReadTimeReported : 'willfilesReadTimeReported',
   willfilesReadBeginTime : 'willfilesReadBeginTime',
+  isDownloaded : 'isDownloaded',
+  isOutFile : 'isOutFile',
 
 }
 
@@ -5453,7 +5909,7 @@ let Accessors =
   about : { setter : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.Will.ParagraphAbout }) },
   rootModule : { getter : rootModuleGet, setter : rootModuleSet },
   peerModule : { setter : peerModuleSet },
-  isDownloaded : { setter : remoteIsDownloadedSet },
+  // isDownloaded : { setter : remoteIsDownloadedSet },
   // willfilesArray : { setter : willfileArraySet },
   // willfileWithRoleMap : { readOnly : 1 },
 
@@ -5463,7 +5919,7 @@ let Accessors =
   stepMap : { setter : ResourceSetter_functor({ resourceName : 'Step', mapName : 'stepMap' }) },
   buildMap : { setter : ResourceSetter_functor({ resourceName : 'Build', mapName : 'buildMap' }) },
   exportedMap : { setter : ResourceSetter_functor({ resourceName : 'Exported', mapName : 'exportedMap' }) },
-  supermodules : { setter : supermodulesSet },
+  superModules : { setter : superModulesSet },
 
   name : { getter : nameGet, readOnly : 1 },
   absoluteName : { getter : absoluteNameGet, readOnly : 1 },
@@ -5482,6 +5938,18 @@ let Accessors =
   originalWillfilesPath : { getter : originalWillfilesPathGet, readOnly : 1 },
   peerWillfilesPath : { getter : peerWillfilesPathGet, readOnly : 1 },
 
+  decoratedWillfilesPath : { getter : decoratedWillfilesPathGet, readOnly : 1, },
+  decoratedInPath : { getter : decoratedInPathGet, readOnly : 1, },
+  decoratedOutPath : { getter : decoratedOutPathGet, readOnly : 1, },
+  decoratedLocalPath : { getter : decoratedLocalPathGet, readOnly : 1, },
+  decoratedRemotePath : { getter : decoratedRemotePathGet, readOnly : 1, },
+  decoratedDirPath : { getter : decoratedDirPathGet, readOnly : 1 },
+  decoratedCommonPath : { getter : decoratedCommonPathGet, readOnly : 1 },
+  decoratedCurrentRemotePath : { getter : decoratedCurrentRemotePathGet, readOnly : 1 },
+  decoratedWillPath : { getter : decoratedWillPathGet, readOnly : 1 },
+  decoratedOriginalWillfilesPath : { getter : decoratedOriginalWillfilesPathGet, readOnly : 1 },
+  decoratedPeerWillfilesPath : { getter : decoratedPeerWillfilesPathGet, readOnly : 1 },
+
 }
 
 // --
@@ -5497,7 +5965,6 @@ let Extend =
   init,
 
   openerMake,
-  finitMaybe,
   releasedBy,
   usedBy,
   isUsedBy,
@@ -5511,11 +5978,8 @@ let Extend =
   preform,
   _preform,
   predefinedForm,
-
-  // etc
-
-  shell,
-  exportAuto,
+  upform,
+  reform_,
 
   // opener
 
@@ -5550,7 +6014,7 @@ let Extend =
 
   rootModuleGet,
   rootModuleSet,
-  supermodulesSet,
+  superModulesSet,
 
   submodulesEach,
   submodulesAreDownloaded,
@@ -5587,15 +6051,9 @@ let Extend =
 
   // remote
 
-  // remoteIsUpdate,
-  // remoteIsUpToDateUpdate,
-  //
-  // remoteIsDownloadedUpdate,
-  remoteIsDownloadedChanged,
-  remoteIsDownloadedSet,
-
-  // remoteCurrentVersion,
-  // remoteLatestVersion,
+  _remoteChanged,
+  // remoteIsDownloadedChanged,
+  // remoteIsDownloadedSet,
 
   // resource
 
@@ -5631,6 +6089,20 @@ let Extend =
   remotePathGet,
   currentRemotePathGet,
   willPathGet,
+  originalWillfilesPathGet,
+  peerWillfilesPathGet,
+
+  decoratedWillfilesPathGet,
+  decoratedInPathGet,
+  decoratedOutPathGet,
+  decoratedDirPathGet,
+  decoratedCommonPathGet,
+  decoratedLocalPathGet,
+  decoratedRemotePathGet,
+  decoratedCurrentRemotePathGet,
+  decoratedWillPathGet,
+  decoratedOriginalWillfilesPathGet,
+  decoratedPeerWillfilesPathGet,
 
   _inPathAssign,
   _outPathAssign,
@@ -5700,6 +6172,19 @@ let Extend =
   structureExportConsistency,
 
   resourceImport,
+
+  // etc
+
+  shell,
+  errTooMany,
+  exportAuto,
+  moduleBuild,
+  moduleExport,
+
+  modulesEachDo,
+  modulesBuild,
+  modulesExport,
+  modulesUpform,
 
   // relation
 

@@ -29,6 +29,18 @@ function finit()
 {
   let willf = this;
 
+  if( willf.storageWillfile )
+  {
+    _.arrayRemoveOnce( willf.storageWillfile.storedWillfiles, willf );
+    _.assert( !willf.storageWillfile || willf.storageWillfile === willf || _.arrayCountElement( willf.storageWillfile.storedWillfiles, willf ) === 0 );
+    if( willf.storageWillfile && willf.storageWillfile !== willf )
+    if( !willf.storageWillfile.isUsed() )
+    {
+      willf.storageWillfile.finit();
+      willf.storageWillfile = null;
+    }
+  }
+
   if( willf.storedWillfiles )
   {
     let storedWillfiles = willf.storedWillfiles.slice();
@@ -919,7 +931,6 @@ function hashGet()
 
   if( hash )
   {
-    debugger;
     willf.hash = hash;
     return willf.hash;
   }
@@ -952,6 +963,7 @@ function hashFullGet()
   let willf = this;
 
   _.assert( arguments.length === 0 );
+  _.assert( _.bufferAnyIs( willf.data ) && _.numberIs( willf.data.byteLength ), `Willfile does not have data to get its hash` );
 
   let descriptor = Object.create( null );
   descriptor.hash = willf.hashGet();
@@ -973,7 +985,6 @@ function hashFor( filePath )
   if( !desc )
   return null;
 
-  debugger;
   return desc.hash;
 }
 
@@ -1003,7 +1014,7 @@ function isConsistentWith( willf2, opening )
   _.assert( willf.isOut );
 
   if( opening === undefined )
-  opening = willf2 instanceof Self;
+  opening = willf2 instanceof Self && !!willf2.data;
 
   if( opening )
   {
@@ -1433,6 +1444,7 @@ let Forbids =
   exportedMap : 'exportedMap',
   openerModule : 'openerModule',
   storageModule : 'storageModule',
+  isOutFile : 'isOutFile',
   KnownSections : 'KnownSections',
 }
 

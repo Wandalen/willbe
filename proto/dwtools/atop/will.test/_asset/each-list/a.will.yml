@@ -13,6 +13,14 @@ path :
     - path::out
     - out2
 
+reflector :
+
+  files :
+    src :
+      recursive : 1
+      filePath :
+        '{path::proto}/a/**' : '{path::out}/a'
+
 step :
 
   export.proto :
@@ -20,6 +28,12 @@ step :
     tar : 0
 
 build :
+
+  files :
+    criterion :
+      default : 1
+    steps :
+      - step::files
 
   proto.export :
     criterion :

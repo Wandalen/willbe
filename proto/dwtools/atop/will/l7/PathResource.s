@@ -45,24 +45,43 @@ function OnInstanceExists( o )
   o.resource.criterion = o.resource.criterion || Object.create( null );
   _.mapSupplement( o.resource.criterion, o.instance.criterion );
   o.resource.exportable = o.instance.exportable;
-  o.resource.importable = o.instance.importable;
+  o.resource.importableFromIn = o.instance.importableFromIn;
+  o.resource.importableFromOut = o.instance.importableFromOut;
   o.resource.writable = o.instance.writable;
   if( !o.resource.path )
   o.resource.path = o.instance.path;
 
   o.Rewriting = 1;
 
-  if( o.instance.path !== null )
-  if( o.resource.name === 'local' && o.IsOutFile )
-  o.resource.importable = false;
+  // if( o.resource.name === 'local' )
+  // debugger;
+  //
+  // if( o.instance.path !== null )
+  // if( o.resource.name === 'local' && o.IsOut )
+  // debugger;
+  // // o.Importing = false;
+  //
+  // if( o.instance.path !== null )
+  // if( o.resource.name === 'module.willfiles' )
+  // debugger;
+  // // o.Importing = false;
+  //
+  // if( o.instance.path !== null )
+  // if( o.resource.name === 'module.dir' )
+  // debugger;
+  // // o.Importing = false;
 
-  if( o.instance.path !== null )
-  if( o.resource.name === 'module.willfiles' )
-  o.resource.importable = false;
-
-  if( o.instance.path !== null )
-  if( o.resource.name === 'module.dir' )
-  o.resource.importable = false;
+  // if( o.instance.path !== null )
+  // if( o.resource.name === 'local' && o.IsOut )
+  // o.resource.importable = false;
+  //
+  // if( o.instance.path !== null )
+  // if( o.resource.name === 'module.willfiles' )
+  // o.resource.importable = false;
+  //
+  // if( o.instance.path !== null )
+  // if( o.resource.name === 'module.dir' )
+  // o.resource.importable = false;
 
 }
 
