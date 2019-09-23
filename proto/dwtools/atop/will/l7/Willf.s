@@ -290,12 +290,13 @@ function _inPathsForm()
 
     if( willf.role === null )
     {
-      if( _.strHas( filePath, /\.im\.will(\.|$)/ ) )
-      willf.role = 'import';
-      else if( _.strHas( filePath, /\.ex\.will(\.|$)/ ) )
-      willf.role = 'export';
-      else
-      willf.role = 'single';
+      willf.role = will.AbstractModule.PathToRole( filePath );
+      // if( _.strHas( filePath, /\.im\.will(\.|$)/ ) )
+      // willf.role = 'import';
+      // else if( _.strHas( filePath, /\.ex\.will(\.|$)/ ) )
+      // willf.role = 'export';
+      // else
+      // willf.role = 'single';
     }
 
     if( willf.storagePath === null )
@@ -653,7 +654,7 @@ function _importToModule()
     /* */
 
     willf._resourcesImport( will.Exported, mstructure.exported );
-    willf._resourcesImport( will.Submodule, mstructure.submodule );
+    willf._resourcesImport( will.ModulesRelation, mstructure.submodule );
     willf._resourcesImport( will.PathResource, mstructure.path );
     willf._resourcesImport( will.Step, mstructure.step );
     willf._resourcesImport( will.Reflector, mstructure.reflector );

@@ -6,8 +6,8 @@ consistency:
     hash: 868b5a57eaff621b4f9717b65569eabf
     size: 381
   ../sub.im.will.yml: &ref_1
-    hash: 55717cb3e0b6611f938c3386956467c7
-    size: 827
+    hash: c6233389a466d4e36531c056e1b59784
+    size: 810
 module:
   sub.out:
     about:
@@ -64,7 +64,6 @@ module:
       temp:
         path:
           - .
-          - ../super.out
       exported.dir.export.debug:
         criterion:
           default: 1
@@ -112,6 +111,9 @@ module:
         src:
           filePath:
             'path::proto': 'path::out.*=1'
+          prefixPath: ''
+        dst:
+          prefixPath: ''
         mandatory: 1
         criterion:
           debug: 1
@@ -203,6 +205,7 @@ module:
       reflect.proto.raw:
         opts:
           reflector: 'reflector::reflect.proto.*=1'
+          verbosity: null
         criterion:
           debug: 0
           raw: 1
@@ -320,7 +323,7 @@ module:
       in:
         criterion:
           predefined: 0
-        path: proto
+        path: ./proto
       out:
         criterion:
           predefined: 0
@@ -336,7 +339,6 @@ module:
       temp:
         path:
           - ../sub.out
-          - ../super.out
       exported.dir.export.debug:
         criterion:
           default: 1
@@ -475,6 +477,7 @@ module:
       reflect.proto.raw:
         opts:
           reflector: 'reflector::reflect.proto.*=1'
+          verbosity: null
         criterion:
           debug: 0
           raw: 1
@@ -555,5 +558,5 @@ module:
         hash: 868b5a57eaff621b4f9717b65569eabf
         size: 381
       ../sub.im.will.yml:
-        hash: 55717cb3e0b6611f938c3386956467c7
-        size: 827
+        hash: c6233389a466d4e36531c056e1b59784
+        size: 810

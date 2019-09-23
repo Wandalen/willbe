@@ -3547,12 +3547,20 @@ function strJoinPath( srcs, joiner )
 
 //
 
+/* qqq : cover routine strConcat and extend it. ask how to */
+
 function strConcat( srcs, o )
 {
 
   o = _.routineOptions( strConcat, o || Object.create( null ) );
   _.assert( arguments.length === 1 || arguments.length === 2 );
   _.assert( this.strConcat === strConcat );
+
+  if( o.onToStr === null )
+  o.onToStr = function onToStr( src, op )
+  {
+    return _.toStr( src, op.optionsForToStr );
+  }
 
   let defaultOptionsForToStr =
   {
@@ -3562,7 +3570,7 @@ function strConcat( srcs, o )
   o.optionsForToStr = _.mapSupplement( o.optionsForToStr, defaultOptionsForToStr, strConcat.defaults.optionsForToStr );
 
   if( _.routineIs( srcs ) )
-  return srcs();
+  srcs = srcs();
 
   if( !_.arrayLike( srcs ) )
   srcs = [ srcs ];
@@ -3573,31 +3581,54 @@ function strConcat( srcs, o )
 
   /* */
 
-  let nl = 1;
   for( let a = 0 ; a < srcs.length ; a++ )
   {
     let src = srcs[ a ];
-    src = _.toStr( src, o.optionsForToStr );
-    if( !nl )
+
+    src = o.onToStr( src, o );
+
+    result = result.replace( /\s*$/m, '' );
+
+    if( !result )
     {
-      let i = src.trim().lastIndexOf( o.lineDelimter );
-      if( i === -1 )
-      {
-        if( result[ result.length-1 ] !== ' ' && src[ 0 ] !== ' ' )
-        result += o.delimeter;
-      }
-      else
-      {
-        if( i !== 0 )
-        result += o.lineDelimter;
-      }
+      result = src;
     }
-    if( src.length )
-    nl = src[ src.length-1 ] === o.lineDelimter;
-    // if( _.errIs( src ) )
-    // debugger;
-    result += src;
+    else if( _.strEnds( result, o.lineDelimter ) || _.strBegins( src, o.lineDelimter ) )
+    {
+      result = result + o.lineDelimter + src;
+    }
+    else
+    {
+      result = result + ' ' + src.replace( /^\s+/m, '' );
+    }
+
   }
+
+  // let nl = 1;
+  // for( let a = 0 ; a < srcs.length ; a++ )
+  // {
+  //   let src = srcs[ a ];
+  //   src = _.toStr( src, o.optionsForToStr );
+  //   if( !nl )
+  //   {
+  //     let i = src.trim().lastIndexOf( o.lineDelimter );
+  //     if( i === -1 )
+  //     {
+  //       if( result[ result.length-1 ] !== ' ' && src[ 0 ] !== ' ' )
+  //       result += o.delimeter;
+  //     }
+  //     else
+  //     {
+  //       if( i !== 0 )
+  //       result += o.lineDelimter;
+  //     }
+  //   }
+  //   if( src.length )
+  //   nl = src[ src.length-1 ] === o.lineDelimter;
+  //   // if( _.errIs( src ) )
+  //   // debugger;
+  //   result += src;
+  // }
 
   /* */
 
@@ -3617,8 +3648,9 @@ strConcat.defaults =
   linePrefix : '',
   linePostfix : '',
   lineDelimter : '\n',
-  delimeter : ' ',
+  // delimeter : ' ',
   optionsForToStr : null,
+  onToStr : null,
 }
 
 // --

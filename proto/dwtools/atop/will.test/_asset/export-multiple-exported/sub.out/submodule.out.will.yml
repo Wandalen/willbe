@@ -1,0 +1,550 @@
+format: outwillfile-2.0
+root:
+  - submodule.out
+consistency:
+  ../.ex.will.yml: &ref_0
+    hash: 4d8b91d25fda3e1a06ea28397539a8f1
+    size: 387
+  ../.im.will.yml: &ref_1
+    hash: 63b09dfb89584a32ab3cbc9ae0a31cf4
+    size: 610
+module:
+  submodule.out:
+    about:
+      name: submodule
+      description: Module for testing
+      enabled: 1
+      version: 0.0.1
+    path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path: submodule.out.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: submodule.out
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path:
+          - ../.ex.will.yml
+          - ../.im.will.yml
+      module.peer.willfiles:
+        criterion:
+          predefined: 1
+        path:
+          - ../.ex.will.yml
+          - ../.im.will.yml
+      local:
+        criterion:
+          predefined: 1
+        path: .
+      remote:
+        criterion:
+          predefined: 1
+      proto:
+        path: ../proto
+      in:
+        criterion:
+          predefined: 0
+        path: .
+      out:
+        criterion:
+          predefined: 0
+        path: .
+      out.debug:
+        criterion:
+          debug: 1
+        path: debug
+      out.release:
+        criterion:
+          debug: 0
+        path: release
+      exported.dir.export.:
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+        path: release
+      exported.files.export.:
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+        path:
+          - release
+          - release/File.release.js
+      archiveFile.export.:
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+        path: submodule.out.tgs
+      exported.dir.export.debug:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+        path: debug
+      exported.files.export.debug:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+        path:
+          - debug
+          - debug/File.debug.js
+      archiveFile.export.debug:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+        path: submodule.debug.out.tgs
+    submodule: {}
+    reflector:
+      reflect.proto.:
+        src:
+          filePath:
+            'path::proto': 'path::out.*=1'
+          prefixPath: ''
+        dst:
+          prefixPath: ''
+        mandatory: 1
+        criterion:
+          debug: 0
+        inherit:
+          - predefined.*
+      reflect.proto.debug:
+        src:
+          filePath:
+            'path::proto': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 1
+        inherit:
+          - predefined.*
+      exported.export.:
+        src:
+          filePath:
+            '**': ''
+          prefixPath: release
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+      exported.files.export.:
+        src:
+          filePath:
+            'path::exported.files.export.': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.export.'
+          recursive: 0
+        recursive: 0
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+      exported.export.debug:
+        src:
+          filePath:
+            '**': ''
+          prefixPath: debug
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+      exported.files.export.debug:
+        src:
+          filePath:
+            'path::exported.files.export.debug': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.export.debug'
+          recursive: 0
+        recursive: 0
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+    step:
+      export.:
+        opts:
+          export: '{path::out.*=1}/**'
+          tar: 1
+        criterion:
+          debug: 0
+        inherit:
+          - module.export
+      export.debug:
+        opts:
+          export: '{path::out.*=1}/**'
+          tar: 1
+        criterion:
+          debug: 1
+        inherit:
+          - module.export
+      reflect.proto.:
+        opts:
+          reflector: 'reflector::reflect.proto*'
+        criterion:
+          debug: 0
+        inherit:
+          - files.reflect
+      reflect.proto.debug:
+        opts:
+          reflector: 'reflector::reflect.proto*'
+          verbosity: null
+        criterion:
+          debug: 1
+        inherit:
+          - files.reflect
+    build:
+      export.:
+        steps:
+          - 'build::*=1.raw'
+          - 'step::export*=1'
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+      export.debug:
+        steps:
+          - 'build::*=1.raw'
+          - 'step::export*=1'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+      debug.raw:
+        steps:
+          - 'step::reflect.proto.*=1'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+      release.raw:
+        steps:
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 1
+    exported:
+      export.debug:
+        version: 0.0.1
+        recursive: 0
+        withIntegrated: 2
+        tar: 1
+        exportedReflector: 'reflector::exported.export.debug'
+        exportedFilesReflector: 'reflector::exported.files.export.debug'
+        exportedDirPath: 'path::exported.dir.export.debug'
+        exportedFilesPath: 'path::exported.files.export.debug'
+        archiveFilePath: 'path::archiveFile.export.debug'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+      export.:
+        version: 0.0.1
+        recursive: 0
+        withIntegrated: 2
+        tar: 1
+        exportedReflector: 'reflector::exported.export.'
+        exportedFilesReflector: 'reflector::exported.files.export.'
+        exportedDirPath: 'path::exported.dir.export.'
+        exportedFilesPath: 'path::exported.files.export.'
+        archiveFilePath: 'path::archiveFile.export.'
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+    consistency:
+      ../.ex.will.yml: *ref_0
+      ../.im.will.yml: *ref_1
+  ../:
+    about:
+      name: submodule
+      description: Module for testing
+      enabled: 1
+      version: 0.0.1
+    path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path:
+          - .ex.will.yml
+          - .im.will.yml
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path:
+          - .ex.will.yml
+          - .im.will.yml
+      module.peer.willfiles:
+        criterion:
+          predefined: 1
+        path: sub.out/submodule.out.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: ./
+      local:
+        criterion:
+          predefined: 1
+        path: .
+      remote:
+        criterion:
+          predefined: 1
+      proto:
+        path: ./proto
+      in:
+        criterion:
+          predefined: 0
+        path: .
+      out:
+        criterion:
+          predefined: 0
+        path: sub.out
+      out.debug:
+        criterion:
+          debug: 1
+        path: ./sub.out/debug
+      out.release:
+        criterion:
+          debug: 0
+        path: ./sub.out/release
+      exported.dir.export.:
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+        path: sub.out/release
+      exported.files.export.:
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+        path:
+          - sub.out/release
+          - sub.out/release/File.release.js
+      archiveFile.export.:
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+        path: sub.out/submodule.out.tgs
+      exported.dir.export.debug:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+        path: ./sub.out/debug
+      exported.files.export.debug:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+        path:
+          - sub.out/debug
+          - sub.out/debug/File.debug.js
+      archiveFile.export.debug:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+        path: ./sub.out/submodule.debug.out.tgs
+    submodule: {}
+    reflector:
+      reflect.proto.:
+        src:
+          filePath:
+            'path::proto': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 0
+        inherit:
+          - predefined.*
+      reflect.proto.debug:
+        src:
+          filePath:
+            'path::proto': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 1
+        inherit:
+          - predefined.*
+      exported.export.:
+        src:
+          filePath:
+            '**': ''
+          prefixPath: sub.out/release
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+      exported.files.export.:
+        src:
+          filePath:
+            'path::exported.files.export.': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.export.'
+          recursive: 0
+        recursive: 0
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+      exported.export.debug:
+        src:
+          filePath:
+            '**': ''
+          prefixPath: sub.out/debug
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+      exported.files.export.debug:
+        src:
+          filePath:
+            'path::exported.files.export.debug': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.export.debug'
+          recursive: 0
+        recursive: 0
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+    step:
+      export.:
+        opts:
+          export: '{path::out.*=1}/**'
+          tar: 1
+        criterion:
+          debug: 0
+        inherit:
+          - module.export
+      export.debug:
+        opts:
+          export: '{path::out.*=1}/**'
+          tar: 1
+        criterion:
+          debug: 1
+        inherit:
+          - module.export
+      reflect.proto.:
+        opts:
+          reflector: 'reflector::reflect.proto*'
+        criterion:
+          debug: 0
+        inherit:
+          - files.reflect
+      reflect.proto.debug:
+        opts:
+          reflector: 'reflector::reflect.proto*'
+          verbosity: null
+        criterion:
+          debug: 1
+        inherit:
+          - files.reflect
+    build:
+      export.:
+        steps:
+          - 'build::*=1.raw'
+          - 'step::export*=1'
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+      export.debug:
+        steps:
+          - 'build::*=1.raw'
+          - 'step::export*=1'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+      debug.raw:
+        steps:
+          - 'step::reflect.proto.*=1'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+      release.raw:
+        steps:
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 1
+    exported:
+      export.debug:
+        version: 0.0.1
+        recursive: 0
+        withIntegrated: 2
+        tar: 1
+        exportedReflector: 'reflector::exported.export.debug'
+        exportedFilesReflector: 'reflector::exported.files.export.debug'
+        exportedDirPath: 'path::exported.dir.export.debug'
+        exportedFilesPath: 'path::exported.files.export.debug'
+        archiveFilePath: 'path::archiveFile.export.debug'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+      export.:
+        version: 0.0.1
+        recursive: 0
+        withIntegrated: 2
+        tar: 1
+        exportedReflector: 'reflector::exported.export.'
+        exportedFilesReflector: 'reflector::exported.files.export.'
+        exportedDirPath: 'path::exported.dir.export.'
+        exportedFilesPath: 'path::exported.files.export.'
+        archiveFilePath: 'path::archiveFile.export.'
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+    consistency:
+      ../.ex.will.yml:
+        hash: 4d8b91d25fda3e1a06ea28397539a8f1
+        size: 387
+      ../.im.will.yml:
+        hash: 63b09dfb89584a32ab3cbc9ae0a31cf4
+        size: 610

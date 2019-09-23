@@ -2804,7 +2804,8 @@ function __handleResourceNow()
       if( competitor.keeping && result === undefined )
       {
         debugger;
-        let err = _.err( `Thenning callback of consequence should return something, but ${competitor.competitorRoutine.name} returned undefined` )
+        let err = _.err( `Callback of then of consequence should return something, but callback::${competitor.competitorRoutine.name} returned undefined` )
+        err = _.err( competitor.competitorRoutine.toString(), '\n', err );
         throwenErr = self.__handleError( err, competitor.competitorRoutine )
       }
 

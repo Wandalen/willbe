@@ -2,7 +2,7 @@
 path :
 
   proto : '.'
-  in : '../proto'
+  in : './proto'
   out : '../sub.out'
   out.debug :
     path : '../sub.out/debug'

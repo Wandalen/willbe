@@ -907,10 +907,10 @@ function modulesGraphGroupObtain()
 
   function onInNodesFor( module )
   {
-    if( module.superModules )
-    return module.superModules;
-    if( module.supermodule )
-    return [ module.supermodule ];
+    if( module.superRelations )
+    return module.superRelations;
+    if( module.subRelation )
+    return [ module.subRelation ];
     return [];
   }
 
@@ -1307,10 +1307,12 @@ function willfilesList( o )
     let hasWill = /\.will\./.test( it.src );
     let hasImEx = /(^|\.|\/)(im|ex)\./.test( it.src );
 
+    debugger;
+
     let postfix = '';
     if( !hasWill )
     {
-      postfix += '?(.im|.ex|)';
+      postfix += '?(.im|.ex|im|ex)';
       if( o.includingOutFiles && o.includingInFiles )
       {
         postfix += '?(.out)';
@@ -1334,7 +1336,9 @@ function willfilesList( o )
     return { [ it.src ] : it.dst };
   });
 
+  debugger;
   let files = fileProvider.filesFind( o2 );
+  debugger;
 
   return files;
 }
@@ -1499,7 +1503,7 @@ function willfileRegister( willf )
 let ResourceKindToClassName = new _.NameMapper({ leftName : 'resource kind', rightName : 'resource class name' }).set
 ({
 
-  'submodule' : 'Submodule',
+  'submodule' : 'ModulesRelation',
   'step' : 'Step',
   'path' : 'PathResource',
   'reflector' : 'Reflector',

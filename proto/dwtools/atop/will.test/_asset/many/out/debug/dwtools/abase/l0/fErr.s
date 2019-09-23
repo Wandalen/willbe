@@ -1030,7 +1030,6 @@ function _err( o )
       else if( _.strEnds( originalMessage, '\n' ) || _.strBegins( str, '\n' ) )
       {
         originalMessage = originalMessage.replace( /\s+$/m, '' ) + '\n' + str;
-        // originalMessage = originalMessage.replace( /\s+$/m, '' ) + '\n' + str.replace( /^\s+/m, '' );
       }
       else
       {

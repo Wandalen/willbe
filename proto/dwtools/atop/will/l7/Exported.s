@@ -217,7 +217,7 @@ function _performRecursive()
   {
     let con = new _.Consequence().take( null );
 
-    let modules = module.submodulesEach
+    let modules = module.modulesEach
     ({
       recursive : exported.recursive,
       withPeers : 1,
