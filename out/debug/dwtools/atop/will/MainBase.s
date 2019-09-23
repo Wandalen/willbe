@@ -357,30 +357,30 @@ function prefer( o )
   function forward()
   {
 
-    if( _.boolLike( o.formingOfMain ) )
+    if( _.boolLike( o.allOfMain ) )
     {
-      o.formingOfMain = !!o.formingOfMain;
-      if( o.formingAttachedWillfilesOfMain === null )
-      o.formingAttachedWillfilesOfMain = o.formingOfMain;
-      if( o.formingPeerModulesOfMain === null )
-      o.formingPeerModulesOfMain = o.formingOfMain;
-      if( o.formingSubModulesOfMain === null )
-      o.formingSubModulesOfMain = o.formingOfMain;
-      if( o.formingResourcesOfMain === null )
-      o.formingResourcesOfMain = o.formingOfMain;
+      o.allOfMain = !!o.allOfMain;
+      if( o.attachedWillfilesFormedOfMain === null )
+      o.attachedWillfilesFormedOfMain = o.allOfMain;
+      if( o.peerModulesFormedOfMain === null )
+      o.peerModulesFormedOfMain = o.allOfMain;
+      if( o.subModulesFormedOfMain === null )
+      o.subModulesFormedOfMain = o.allOfMain;
+      if( o.resourcesFormedOfMain === null )
+      o.resourcesFormedOfMain = o.allOfMain;
     }
 
-    if( _.boolLike( o.formingOfSub ) )
+    if( _.boolLike( o.allOfSub ) )
     {
-      o.formingOfSub = !!o.formingOfSub;
-      if( o.formingAttachedWillfilesOfSub === null )
-      o.formingAttachedWillfilesOfSub = o.formingOfSub;
-      if( o.formingPeerModulesOfSub === null )
-      o.formingPeerModulesOfSub = o.formingOfSub;
-      if( o.formingSubModulesOfSub === null )
-      o.formingSubModulesOfSub = o.formingOfSub;
-      if( o.formingResourcesOfSub === null )
-      o.formingResourcesOfSub = o.formingOfSub;
+      o.allOfSub = !!o.allOfSub;
+      if( o.attachedWillfilesFormedOfSub === null )
+      o.attachedWillfilesFormedOfSub = o.allOfSub;
+      if( o.peerModulesFormedOfSub === null )
+      o.peerModulesFormedOfSub = o.allOfSub;
+      if( o.subModulesFormedOfSub === null )
+      o.subModulesFormedOfSub = o.allOfSub;
+      if( o.resourcesFormedOfSub === null )
+      o.resourcesFormedOfSub = o.allOfSub;
     }
 
   }
@@ -390,17 +390,17 @@ function prefer( o )
 prefer.defaults =
 {
 
-  formingAttachedWillfilesOfMain : null,
-  formingPeerModulesOfMain : null,
-  formingSubModulesOfMain : null,
-  formingResourcesOfMain : null,
-  formingOfMain : null,
+  attachedWillfilesFormedOfMain : null,
+  peerModulesFormedOfMain : null,
+  subModulesFormedOfMain : null,
+  resourcesFormedOfMain : null,
+  allOfMain : null,
 
-  formingAttachedWillfilesOfSub : null,
-  formingPeerModulesOfSub : null,
-  formingSubModulesOfSub : null,
-  formingResourcesOfSub : null,
-  formingOfSub : null,
+  attachedWillfilesFormedOfSub : null,
+  peerModulesFormedOfSub : null,
+  subModulesFormedOfSub : null,
+  resourcesFormedOfSub : null,
+  allOfSub : null,
 
   verbosity : null,
   // recursiveExport : null,
@@ -907,10 +907,10 @@ function modulesGraphGroupObtain()
 
   function onInNodesFor( module )
   {
-    if( module.supermodules )
-    return module.supermodules;
-    if( module.supermodule )
-    return [ module.supermodule ];
+    if( module.superRelations )
+    return module.superRelations;
+    if( module.subRelation )
+    return [ module.subRelation ];
     return [];
   }
 
@@ -1081,6 +1081,12 @@ function openersAdoptModule( module )
     _.assert( opener.openedModule === null );
     opener.moduleAdopt( module );
     result += 1;
+
+    if( !opener.isDownloaded )
+    {
+      debugger;
+      opener.isDownloaded = true;
+    }
 
   });
 
@@ -1301,10 +1307,12 @@ function willfilesList( o )
     let hasWill = /\.will\./.test( it.src );
     let hasImEx = /(^|\.|\/)(im|ex)\./.test( it.src );
 
+    debugger;
+
     let postfix = '';
     if( !hasWill )
     {
-      postfix += '?(.im|.ex|)';
+      postfix += '?(.im|.ex|im|ex)';
       if( o.includingOutFiles && o.includingInFiles )
       {
         postfix += '?(.out)';
@@ -1328,7 +1336,9 @@ function willfilesList( o )
     return { [ it.src ] : it.dst };
   });
 
+  debugger;
   let files = fileProvider.filesFind( o2 );
+  debugger;
 
   return files;
 }
@@ -1493,7 +1503,7 @@ function willfileRegister( willf )
 let ResourceKindToClassName = new _.NameMapper({ leftName : 'resource kind', rightName : 'resource class name' }).set
 ({
 
-  'submodule' : 'Submodule',
+  'submodule' : 'ModulesRelation',
   'step' : 'Step',
   'path' : 'PathResource',
   'reflector' : 'Reflector',
@@ -1523,17 +1533,17 @@ let ResourceKinds = [ 'submodule', 'step', 'path', 'reflector', 'build', 'about'
 let Defaults =
 {
 
-  formingAttachedWillfilesOfMain : null,
-  formingPeerModulesOfMain : null,
-  formingSubModulesOfMain : null,
-  formingResourcesOfMain : null,
-  formingOfMain : null,
+  attachedWillfilesFormedOfMain : null,
+  peerModulesFormedOfMain : null,
+  subModulesFormedOfMain : null,
+  resourcesFormedOfMain : null,
+  allOfMain : null,
 
-  formingAttachedWillfilesOfSub : null,
-  formingPeerModulesOfSub : null,
-  formingSubModulesOfSub : null,
-  formingResourcesOfSub : null,
-  formingOfSub : null,
+  attachedWillfilesFormedOfSub : null,
+  peerModulesFormedOfSub : null,
+  subModulesFormedOfSub : null,
+  resourcesFormedOfSub : null,
+  allOfSub : null,
 
   verbosity : null,
   // recursiveExport : null,
@@ -1550,17 +1560,17 @@ let Composes =
 let Aggregates =
 {
 
-  formingAttachedWillfilesOfMain : null,
-  formingPeerModulesOfMain : null,
-  formingSubModulesOfMain : null,
-  formingResourcesOfMain : null,
-  formingOfMain : null,
+  attachedWillfilesFormedOfMain : null,
+  peerModulesFormedOfMain : null,
+  subModulesFormedOfMain : null,
+  resourcesFormedOfMain : null,
+  allOfMain : null,
 
-  formingAttachedWillfilesOfSub : true,
-  formingPeerModulesOfSub : true,
-  formingSubModulesOfSub : null,
-  formingResourcesOfSub : null,
-  formingOfSub : null,
+  attachedWillfilesFormedOfSub : true,
+  peerModulesFormedOfSub : true,
+  subModulesFormedOfSub : null,
+  resourcesFormedOfSub : null,
+  allOfSub : null,
 
 }
 

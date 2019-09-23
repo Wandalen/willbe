@@ -55,7 +55,7 @@ function MakeFor_body( o )
   o2.Optional = o.Optional;
   o2.Rewriting = o.Rewriting;
   o2.Importing = o.Importing;
-  o2.IsOutFile = o.IsOutFile;
+  o2.IsOut = o.IsOut;
 
   if( Cls.ResouceDataFrom )
   o2.resource = Cls.ResouceDataFrom( o.resource );
@@ -70,8 +70,11 @@ function MakeFor_body( o )
 
   if( o2.Importing === null )
   o2.Importing = 1;
-  if( o2.IsOutFile === null )
-  o2.IsOutFile = o.willf.isOutFile;
+  if( o2.IsOut === null )
+  o2.IsOut = o.willf.isOut;
+
+  _.assert( _.boolLike( o2.Importing ) );
+  _.assert( _.boolLike( o2.IsOut ) );
 
   Cls.MakeForEachCriterion( o2 );
 
@@ -88,7 +91,7 @@ MakeFor_body.defaults =
   Optional : null,
   Rewriting : null,
   Importing : null,
-  IsOutFile : null,
+  IsOut : null,
 
 }
 
@@ -121,6 +124,7 @@ function MakeForEachCriterion( o )
     let counter = 0;
     let isSingle = true;
 
+    o = _.routineOptions( MakeForEachCriterion, args );
     _.assert( args.length === 1 );
     _.assert( _.mapIs( o ) );
     _.assert( _.mapIs( o.resource ) );
@@ -188,10 +192,16 @@ function MakeForEachCriterion( o )
       let optional = !!o.Optional;
       let rewriting = !!o.Rewriting;
       let importing = !!o.Importing;
-      let isOutFile = !!o.IsOutFile;
+      let isOut = !!o.IsOut;
 
-      if( o.resource.importable !== undefined && !o.resource.importable )
-      if( importing )
+      if( o.resource.importableFromIn !== undefined && !o.resource.importableFromIn )
+      if( importing && !isOut )
+      {
+        return;
+      }
+
+      if( o.resource.importableFromOut !== undefined && !o.resource.importableFromOut )
+      if( importing && isOut )
       {
         return;
       }
@@ -220,7 +230,7 @@ MakeForEachCriterion.defaults =
   Optional : null,
   Rewriting : null,
   Importing : null,
-  IsOutFile : null,
+  IsOut : null,
   resource : null,
 }
 
@@ -586,6 +596,9 @@ function _inheritSingle( o )
   _.assert( !!resource2.formed );
   _.assertRoutineOptions( _inheritSingle, arguments );
 
+  // if( resource.id === 154 )
+  // debugger;
+
   if( resource2.formed < 2 )
   {
     _.sure( !_.arrayHas( o.visited, resource2.name ), () => 'Cyclic dependency ' + resource.qualifiedName + ' of ' + resource2.qualifiedName );
@@ -873,12 +886,16 @@ function _infoExport( o )
 {
   let resource = this;
   let result = '';
+  o = _.routineOptions( _infoExport, arguments );   
 
   result += resource.decoratedAbsoluteName + '\n';
   result += _.toStr( o.fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '', multiline : 1 } );
 
   return result;
 }
+
+var defaults = _infoExport.defaults = Object.create( null );
+defaults.fields = 1;
 
 //
 
@@ -937,6 +954,28 @@ function structureExport()
 }
 
 structureExport.defaults = Object.create( _.Will.OpenedModule.prototype.structureExport.defaults );
+
+//
+
+function extraExport()
+{
+  let resource = this;
+  let o = _.routineOptions( structureExport, arguments );
+
+  o.dst = o.dst || Object.create( null );
+
+  o.dst.writable = resource.writable;
+  o.dst.exportable = resource.exportable;
+  o.dst.importableFromIn = resource.importableFromIn;
+  o.dst.importableFromOut = resource.importableFromOut;
+
+  return o.dst;
+}
+
+extraExport.defaults =
+{
+  dst : null,
+}
 
 //
 
@@ -1192,7 +1231,8 @@ let Aggregates =
 {
   writable : 1,
   exportable : 1,
-  importable : 1,
+  importableFromIn : 1,
+  importableFromOut : 1,
   generated : 0,
 }
 
@@ -1237,6 +1277,7 @@ let Forbids =
 {
   default : 'default',
   predefined : 'predefined',
+  importable : 'importable',
 }
 
 let Accessors =
@@ -1298,6 +1339,7 @@ let Extend =
   _infoExport,
   infoExport,
   structureExport,
+  extraExport,
   compactField,
 
   // accessor

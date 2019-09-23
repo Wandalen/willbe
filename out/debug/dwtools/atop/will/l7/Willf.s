@@ -29,6 +29,18 @@ function finit()
 {
   let willf = this;
 
+  if( willf.storageWillfile )
+  {
+    _.arrayRemoveOnce( willf.storageWillfile.storedWillfiles, willf );
+    _.assert( !willf.storageWillfile || willf.storageWillfile === willf || _.arrayCountElement( willf.storageWillfile.storedWillfiles, willf ) === 0 );
+    if( willf.storageWillfile && willf.storageWillfile !== willf )
+    if( !willf.storageWillfile.isUsed() )
+    {
+      willf.storageWillfile.finit();
+      willf.storageWillfile = null;
+    }
+  }
+
   if( willf.storedWillfiles )
   {
     let storedWillfiles = willf.storedWillfiles.slice();
@@ -278,12 +290,13 @@ function _inPathsForm()
 
     if( willf.role === null )
     {
-      if( _.strHas( filePath, /\.im\.will(\.|$)/ ) )
-      willf.role = 'import';
-      else if( _.strHas( filePath, /\.ex\.will(\.|$)/ ) )
-      willf.role = 'export';
-      else
-      willf.role = 'single';
+      willf.role = will.AbstractModule.PathToRole( filePath );
+      // if( _.strHas( filePath, /\.im\.will(\.|$)/ ) )
+      // willf.role = 'import';
+      // else if( _.strHas( filePath, /\.ex\.will(\.|$)/ ) )
+      // willf.role = 'export';
+      // else
+      // willf.role = 'single';
     }
 
     if( willf.storagePath === null )
@@ -438,7 +451,7 @@ function _open()
       _.assert( _.strIs( willf._found[ 0 ].ext ), `Cant open ${willf.filePath}` );
 
 /*
-      xxx qqq : make it working
+      zzz qqq : make it working
       let encoder = _.Gdf.Select
       ({
         in : 'buffer.raw',
@@ -641,7 +654,7 @@ function _importToModule()
     /* */
 
     willf._resourcesImport( will.Exported, mstructure.exported );
-    willf._resourcesImport( will.Submodule, mstructure.submodule );
+    willf._resourcesImport( will.ModulesRelation, mstructure.submodule );
     willf._resourcesImport( will.PathResource, mstructure.path );
     willf._resourcesImport( will.Step, mstructure.step );
     willf._resourcesImport( will.Reflector, mstructure.reflector );
@@ -919,7 +932,6 @@ function hashGet()
 
   if( hash )
   {
-    debugger;
     willf.hash = hash;
     return willf.hash;
   }
@@ -931,7 +943,7 @@ function hashGet()
 
   return willf.hash;
 
-  /* xxx : move out, maybe */
+  /* zzz : move out, maybe */
 
   function hashFor( data )
   {
@@ -952,6 +964,7 @@ function hashFullGet()
   let willf = this;
 
   _.assert( arguments.length === 0 );
+  _.assert( _.bufferAnyIs( willf.data ) && _.numberIs( willf.data.byteLength ), `Willfile does not have data to get its hash` );
 
   let descriptor = Object.create( null );
   descriptor.hash = willf.hashGet();
@@ -973,7 +986,6 @@ function hashFor( filePath )
   if( !desc )
   return null;
 
-  debugger;
   return desc.hash;
 }
 
@@ -1003,7 +1015,7 @@ function isConsistentWith( willf2, opening )
   _.assert( willf.isOut );
 
   if( opening === undefined )
-  opening = willf2 instanceof Self;
+  opening = willf2 instanceof Self && !!willf2.data;
 
   if( opening )
   {
@@ -1433,6 +1445,7 @@ let Forbids =
   exportedMap : 'exportedMap',
   openerModule : 'openerModule',
   storageModule : 'storageModule',
+  isOutFile : 'isOutFile',
   KnownSections : 'KnownSections',
 }
 

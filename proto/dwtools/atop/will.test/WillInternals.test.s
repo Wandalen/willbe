@@ -2283,7 +2283,7 @@ function exportSuper( test )
       'module.common',
       'module.original.willfiles',
       'module.peer.willfiles',
-      'local', // xxx
+      'local', // yyy
       'remote',
       'proto',
       'in',
@@ -3016,7 +3016,7 @@ function exportDefaultPath( test )
     var modulePaths = _.select( outfile.module[ outfile.root[ 0 ] ], 'path/exported.files.export.debug/path' );
     var exp = [ '..', '../File.txt', '../nofile.will.yml', '../nonglob.will.yml', '../nopath.will.yml', '../path.will.yml', '../reflector.will.yml' ];
     test.setsAreIdentical( modulePaths, exp );
-    /* xxx : should include out willfile? */
+    /* zzz : should include out willfile? */
 
     test.description = 'files';
     var exp = [ '.', './path.out.will.yml' ]
@@ -3897,7 +3897,7 @@ function exportSteps( test )
   {
     var module = opener.openedModule;
     return module.modulesExport({ recursive : 2, kind : 'export', criterion : { debug : 1 } });
-    /* xxx : make possible drop criterion to export multiple exports */
+    /* zzz : make possible drop criterion to export multiple exports */
   })
 
   .then( () =>
@@ -4913,7 +4913,7 @@ buildsResolve.timeOut = 130000;
 
 //
 
-function resolve( test )
+function trivialResolve( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'make' );
@@ -4977,7 +4977,70 @@ function resolve( test )
   /* - */
 
   return ready;
-}
+} /* end of function trivialResolve */
+
+//
+
+function detailedResolve( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let inPath = abs( 'super' );
+  let outSuperDirPath = abs( 'super.out' );
+  let outSubDirPath = abs( 'sub.out' );
+  let will = new _.Will;
+  let path = _.fileProvider.path;
+  let ready = _.Consequence().take( null );
+  let opener;
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    opener = will.openerMake({ willfilesPath : inPath });
+    return opener.open({ all : 1 });
+  })
+
+  .then( ( arg ) =>
+  {
+    var module = opener.openedModule;
+
+    test.case = 'step::*export*';
+    var exp =
+    [
+      'module::supermodule / step::module.export',
+      'module::supermodule / step::export.',
+      'module::supermodule / step::export.debug'
+    ];
+    var got = module.resolve( 'step::*export*' );
+    test.setsAreIdentical( _.select( got, '*/absoluteName' ), exp );
+
+    test.case = 'step::*export*/absoluteName';
+    var exp =
+    [
+      'module::supermodule / step::module.export',
+      'module::supermodule / step::export.',
+      'module::supermodule / step::export.debug'
+    ];
+    var got = module.resolve( 'step::*export*/absoluteName' );
+    test.setsAreIdentical( got, exp );
+
+    will.openersErrorsRemoveAll();
+    opener.finit();
+    return null;
+  });
+
+  /* - */
+
+  return ready;
+
+} /* end of function detailedResolve */
 
 //
 
@@ -8806,7 +8869,8 @@ var Self =
     exportsResolve,
     buildsResolve,
 
-    resolve,
+    trivialResolve,
+    detailedResolve,
     reflectorResolve,
     reflectorInheritedResolve,
     superResolve,

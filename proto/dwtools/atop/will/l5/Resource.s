@@ -886,7 +886,7 @@ function _infoExport( o )
 {
   let resource = this;
   let result = '';
-  o = _.routineOptions( infoExport, arguments );
+  o = _.routineOptions( _infoExport, arguments );   
 
   result += resource.decoratedAbsoluteName + '\n';
   result += _.toStr( o.fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '', multiline : 1 } );

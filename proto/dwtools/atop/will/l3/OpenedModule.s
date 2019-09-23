@@ -263,8 +263,8 @@ function precopy( o )
   if( o.will )
   module.will = o.will;
 
-  if( o.superModules )
-  module.superModules = o.superModules;
+  if( o.superRelations )
+  module.superRelations = o.superRelations;
 
   if( o.original )
   module.original = o.original;
@@ -1098,6 +1098,7 @@ function close()
   let path = fileProvider.path;
   let logger = will.logger;
 
+  _.assert( !module.finitedIs() );
   _.assert( arguments.length === 0 );
 
   // /* update openers first, maybe */
@@ -1376,7 +1377,7 @@ function willfilesEach( o )
   o2.withPeers = o.withPeers;
   o2.onUp = handleUp;
 
-  module.submodulesEach( o2 );
+  module.modulesEach( o2 );
 
   return result;
 
@@ -1554,42 +1555,163 @@ _attachedWillfileOpenFromData.defaults =
 }
 
 // --
-// submodule
+// build / export
 // --
 
-function rootModuleGet()
+function exportAuto()
 {
   let module = this;
-  return module[ rootModuleSymbol ];
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let clonePath = module.cloneDirPathGet();
+
+  debugger;
+  _.assert( 'not implemented' );
+
+  // _.assert( arguments.length === 0 );
+  // _.assert( !!module.submoduleAssociation );
+  // _.assert( !!module.submoduleAssociation.autoExporting );
+  // _.assert( !module.pickedWillfileData );
+  // _.assert( !module.pickedWillfilesPath );
+  //
+  // let autoWillfileData =
+  // {
+  //   'about' :
+  //   {
+  //     'name' : 'Extend',
+  //     'version' : '0.1.0'
+  //   },
+  //   'path' :
+  //   {
+  //     'in' : '..',
+  //     'out' : '.module',
+  //     'remote' : 'git+https :///github.com/Wandalen/wProto.git',
+  //     'local' : '.module/Extend',
+  //     'export' : '{path::local}/proto'
+  //   },
+  //   'reflector' :
+  //   {
+  //     'download' :
+  //     {
+  //       'src' : 'path::remote',
+  //       'dst' : 'path::local'
+  //     }
+  //   },
+  //   'step' :
+  //   {
+  //     'export.common' :
+  //     {
+  //       'export' : 'path::export',
+  //       'tar' : 0
+  //     }
+  //   },
+  //   'build' :
+  //   {
+  //     'export' :
+  //     {
+  //       'criterion' :
+  //       {
+  //         'default' : 1,
+  //         'export' : 1
+  //       },
+  //       'steps' :
+  //       [
+  //         'step::download',
+  //         'step::export.common'
+  //       ]
+  //     }
+  //   }
+  // }
+  //
+  // module.pickedWillfileData = autoWillfileData;
+  // module.pickedWillfilesPath = clonePath + module.aliasName;
+  // module._willfilesFindPickedFile()
+  //
+  // debugger;
+
 }
 
 //
 
-function rootModuleSet( src )
+function moduleBuild_pre( routine, args )
 {
-  let module = this;
-  _.assert( src === null || src instanceof _.Will.OpenedModule );
-  module[ rootModuleSymbol ] = src;
-  return src;
+  let o = _.routineOptions( routine, args );
+  return o;
 }
 
-//
-
-function superModulesSet( src )
+function moduleBuild_body( o )
 {
   let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let con = new _.Consequence().take( null );
 
-  _.assert( src === null || _.arrayIs( src ) );
-  _.assert( src === null || src.every( ( supermodule ) => supermodule instanceof _.Will.Submodule ) );
+  let builds = module._buildsResolve
+  ({
+    name : o.name,
+    criterion : o.criterion,
+    kind : o.kind,
+  });
 
-  module[ superModulesSymbol ] = src;
+  // if( logger.verbosity >= 2 && builds.length > 1 )
+  // {
+  //   logger.up();
+  //   logger.log( module.infoExportResource( builds ) );
+  //   logger.down();
+  // }
 
-  return src;
+  if( builds.length !== 1 )
+  throw module.errTooMany( builds, `${o.kind} scenario` );
+
+  let build = builds[ 0 ];
+  will._willfilesReadEnd( module );
+
+  let run = new will.BuildRun
+  ({
+    build,
+    recursive : 0,
+  });
+
+  return con
+  .then( () =>
+  {
+    _.assert( !module.isOut );
+    // debugger;
+    return module.modulesUpform({ all : 0, subModulesFormed : 1, peerModulesFormed : 1 });
+    // return module.upform({ all : 0, subModulesFormed : 1, peerModulesFormed : 1 });
+    // return null;
+  })
+  .then( () => build.perform({ run }) )
+  .then( () =>
+  {
+    _.assert( !module.peerModule || module.peerModule.isOut );
+    debugger;
+    // return module.peerModule.upform({ all : 1, resourcesFormed : 0 });
+    return null;
+  });
 }
 
-//
+moduleBuild_body.defaults =
+{
+  name : null,
+  criterion : null,
+  kind : 'export',
+}
 
-function submodulesEach_pre( routine, args )
+let moduleBuild = _.routineFromPreAndBody( moduleBuild_pre, moduleBuild_body );
+moduleBuild.defaults.kind = 'build';
+let moduleExport = _.routineFromPreAndBody( moduleBuild_pre, moduleBuild_body );
+moduleExport.defaults.kind = 'export';
+
+// --
+// batcher
+// --
+
+function modulesEach_pre( routine, args )
 {
   let module = this;
 
@@ -1603,7 +1725,7 @@ function submodulesEach_pre( routine, args )
   return o;
 }
 
-function submodulesEach_body( o )
+function modulesEach_body( o )
 {
   let module = this;
   let will = module.will;
@@ -1611,7 +1733,7 @@ function submodulesEach_body( o )
   let visitedModulesMap = Object.create( null );
   let visitedModulesArray = [];
 
-  _.assertRoutineOptions( submodulesEach, o );
+  _.assertRoutineOptions( modulesEach, o );
 
   var sys = new _.graph.AbstractGraphSystem
   ({
@@ -1797,7 +1919,7 @@ function submodulesEach_body( o )
 
 }
 
-submodulesEach_body.defaults =
+modulesEach_body.defaults =
 {
   outputFormat : '*/module', /* / | * / module | * / relation */
   onUp : null,
@@ -1813,7 +1935,201 @@ submodulesEach_body.defaults =
   withDisabled : 0,
 }
 
-let submodulesEach = _.routineFromPreAndBody( submodulesEach_pre, submodulesEach_body );
+let modulesEach = _.routineFromPreAndBody( modulesEach_pre, modulesEach_body );
+
+//
+
+function modulesEachDo( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let modules;
+  let con = new _.Consequence().take( null );
+
+  o = _.routineOptions( modulesEachDo, arguments );
+
+  con.then( () =>
+  {
+    // debugger;
+    if( !o.downloading )
+    return null;
+    return module.subModulesDownload();
+  });
+
+  con.then( () =>
+  {
+    // debugger;
+    return module.upform({ all : 0, subModulesFormed : 1 });
+  });
+
+  con.then( () =>
+  {
+
+    let o2 = _.mapOnly( o, module.modulesEach.defaults );
+    o2.outputFormat = '/';
+    modules = module.modulesEach( o2 ); debugger;
+    return modules;
+  });
+
+  con.then( () =>
+  {
+    let con2 = new _.Consequence().take( null );
+    for( let m = modules.length-1 ; m >= 0 ; m-- ) ( function( r )
+    {
+      con2
+      .then( () =>
+      {
+        if( !r.module )
+        debugger;
+        if( !r.module && o.allowingMissing )
+        return null;
+        if( !r.module )
+        throw _.err
+        (
+            `Cant ${o.actionName} ${module.absoluteName} because ${r.relation ? r.relation.absoluteName : r.opener.absoluteName} is not available.`
+          , `\nLooked at ${r.opener ? r.opener.commonPath : r.relation.path}`
+        );
+        return o.onEach( r, o );
+      })
+    })( modules[ m ] );
+
+    return con2;
+  });
+
+  return con;
+}
+
+var defaults = modulesEachDo.defaults = _.mapExtend( null, modulesEach.defaults );
+
+defaults.recursive = 0;
+defaults.withStem = 1;
+defaults.withPeers = 1;
+defaults.allowingMissing = 0;
+defaults.downloading = 0;
+defaults.onEach = null;
+defaults.actionName = null;
+
+delete defaults.outputFormat;
+
+//
+
+function modulesBuild_pre( routine, args )
+{
+  let o = _.routineOptions( routine, args );
+  return o;
+}
+
+function modulesBuild_body( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  o = _.routineOptions( modulesBuild_body, arguments );
+  let o2 = _.mapOnly( o, module.modulesEachDo.defaults );
+  o2.onEach = handleEach;
+  o2.actionName = o.kind;
+  return module.modulesEachDo( o2 );
+
+  /* */
+
+  function handleEach( record, op )
+  {
+    let o3 = _.mapOnly( o, module.moduleBuild.defaults );
+    return record.module.moduleBuild( o3 );
+  }
+
+}
+
+var defaults = modulesBuild_body.defaults = _.mapExtend( null, moduleBuild.defaults, modulesEach.defaults );
+
+defaults.recursive = 0;
+defaults.withStem = 1;
+defaults.withPeers = 0;
+defaults.withOut = 0;
+defaults.withIn = 1;
+
+delete defaults.outputFormat;
+
+let modulesBuild = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
+modulesBuild.defaults.kind = 'build';
+let modulesExport = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
+modulesExport.defaults.kind = 'export';
+
+//
+
+function modulesUpform( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  o = _.routineOptions( modulesUpform, arguments );
+  let o2 = _.mapOnly( o, module.modulesEachDo.defaults );
+  o2.onEach = handleEach;
+  o2.actionName = 'upform';
+  return module.modulesEachDo( o2 );
+
+  /* */
+
+  function handleEach( record, op )
+  {
+    let o3 = _.mapOnly( o, module.upform.defaults );
+    return record.module.upform( o3 );
+  }
+
+}
+
+var defaults = modulesUpform.defaults = _.mapExtend( null, upform.defaults, modulesEach.defaults );
+
+defaults.recursive = 2;
+defaults.withStem = 1;
+defaults.withPeers = 1;
+defaults.downloading = 0;
+defaults.allowingMissing = 1;
+
+delete defaults.outputFormat;
+
+// --
+// submodule
+// --
+
+function rootModuleGet()
+{
+  let module = this;
+  return module[ rootModuleSymbol ];
+}
+
+//
+
+function rootModuleSet( src )
+{
+  let module = this;
+  _.assert( src === null || src instanceof _.Will.OpenedModule );
+  module[ rootModuleSymbol ] = src;
+  return src;
+}
+
+//
+
+function superRelationsSet( src )
+{
+  let module = this;
+
+  _.assert( src === null || _.arrayIs( src ) );
+  _.assert( src === null || src.every( ( superRelation ) => superRelation instanceof _.Will.ModulesRelation ) );
+
+  module[ superRelationsSymbol ] = src;
+
+  return src;
+}
 
 //
 
@@ -1832,7 +2148,7 @@ function submodulesAreDownloaded( o )
   debugger;
   let o2 = _.mapExtend( null, o );
   o2.outputFormat = '*/relation';
-  let relations = module.submodulesEach( o2 );
+  let relations = module.modulesEach( o2 );
   relations = _.index( relations, '*/commonPath' );
   debugger;
 
@@ -1845,7 +2161,7 @@ function submodulesAreDownloaded( o )
   });
 }
 
-var defaults = submodulesAreDownloaded.defaults = _.mapExtend( null, submodulesEach.defaults );
+var defaults = submodulesAreDownloaded.defaults = _.mapExtend( null, modulesEach.defaults );
 
 delete defaults.outputFormat;
 delete defaults.onUp;
@@ -1868,7 +2184,7 @@ function submodulesAllAreDownloaded( o )
   // debugger;
   let o2 = _.mapExtend( null, o );
   o2.outputFormat = '*/relation';
-  let relations = module.submodulesEach( o2 );
+  let relations = module.modulesEach( o2 );
   // debugger;
 
   return relations.every( ( relation ) =>
@@ -1899,7 +2215,7 @@ function submodulesAreValid( o )
 
   let o2 = _.mapExtend( null, o );
   o2.outputFormat = '*/relation';
-  let relations = module.submodulesEach( o2 );
+  let relations = module.modulesEach( o2 );
   relations = _.index( relations, '*/absoluteName' );
 
   return _.map( relations, ( relation ) =>
@@ -1913,7 +2229,7 @@ function submodulesAreValid( o )
 
 }
 
-var defaults = submodulesAreValid.defaults = _.mapExtend( null, submodulesEach.defaults );
+var defaults = submodulesAreValid.defaults = _.mapExtend( null, modulesEach.defaults );
 
 delete defaults.outputFormat;
 delete defaults.onUp;
@@ -1935,7 +2251,7 @@ function submodulesAllAreValid( o )
 
   let o2 = _.mapExtend( null, o );
   o2.outputFormat = '*/relation';
-  let relations = module.submodulesEach( o2 );
+  let relations = module.modulesEach( o2 );
 
   return relations.every( ( relation ) =>
   {
@@ -2000,8 +2316,7 @@ function _subModulesDownload_body( o )
   let totalNumber = _.mapKeys( module.submoduleMap ).length;
   let time = _.timeNow();
   let con = new _.Consequence().take( null );
-
-  o.downloaded = o.downloaded || Object.create( null );
+  let downloadedMap = Object.create( null );
 
   _.assert( module.preformed > 0  );
   _.assert( arguments.length === 1 );
@@ -2009,7 +2324,10 @@ function _subModulesDownload_body( o )
 
   logger.up();
 
-  downloadAgain();
+  let o2 = _.mapOnly( o, module.modulesEach );
+  o2.outputFormat = '/';
+  let modules = module.modulesEach( o2 );
+  downloadAgain( modules );
 
   con.finally( ( err, arg ) =>
   {
@@ -2029,44 +2347,58 @@ function _subModulesDownload_body( o )
 
   /* */
 
-  function downloadAgain()
+  function downloadAgain( modules )
   {
     let remoteNumberWas;
 
+    _.assert( _.arrayIs( modules ) );
+
     remoteNumberWas = remoteNumber;
 
-    for( let n in module.submoduleMap )
+    // for( let n in submoduleMap )
+    modules.forEach( ( r ) =>
     {
-      let submodule = module.submoduleMap[ n ];
+      // let submodule = submoduleMap[ n ];
 
       _.assert
       (
-        !!submodule.opener && submodule.opener.formed >= 1,
-        () => 'Submodule' + ( submodule.opener ? submodule.opener.qualifiedName : n ) + ' was not preformed to download it'
+        !!r.opener,
+        () => 'Submodule' + ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ) + ' was not opened or downloaded'
       );
 
-      if( !submodule.opener.isRemote )
-      continue;
-      if( !submodule.enabled )
-      continue;
+      // debugger;
+      if( r.opener.formed < 2 )
+      r.opener.remoteForm();
 
+      _.assert
+      (
+        !!r.opener && r.opener.formed >= 2,
+        () => 'Submodule' + ( r.opener ? r.opener.qualifiedName : n ) + ' was not preformed to download it'
+      );
+
+      if( !r.opener.isRemote )
+      return;
+      if( r.relation && !r.relation.enabled )
+      return;
+
+      // debugger;
       con.then( () =>
       {
 
-        if( o.downloaded[ submodule.opener.remotePath ] )
+        if( downloadedMap[ r.opener.remotePath ] )
         return null;
 
         remoteNumber += 1;
 
-        let o2 = _.mapExtend( null, o );
-        delete o2.downloaded;
-
-        let r = _.Consequence.From( submodule.opener._remoteDownload( o2 ) );
-        return r.then( ( arg ) =>
+        let o2 = _.mapOnly( o, r.opener._remoteDownload.defaults );
+        // let o2 = _.mapExtend( null, o );
+        // delete o2.downloadedMap;
+        let result = _.Consequence.From( r.opener._remoteDownload( o2 ) );
+        return result.then( ( arg ) =>
         {
           _.assert( _.boolIs( arg ) );
-          _.assert( _.strIs( submodule.opener.remotePath ) );
-          o.downloaded[ submodule.opener.remotePath ] = submodule.opener;
+          _.assert( _.strIs( r.opener.remotePath ) );
+          downloadedMap[ r.opener.remotePath ] = r.opener;
 
           if( arg )
           downloadedNumber += 1;
@@ -2076,48 +2408,55 @@ function _subModulesDownload_body( o )
 
       });
 
-    }
+    });
 
   }
 
   /* */
 
-  function downloadRecursive()
-  {
-    let remoteNumberWas;
-
-    remoteNumberWas = remoteNumber;
-
-    for( let n in module.submoduleMap )
-    {
-      let submodule = module.submoduleMap[ n ];
-
-      if( !submodule.opener )
-      {
-        debugger;
-        submodule.form();
-      }
-
-    }
-
-  }
+  // function downloadRecursive()
+  // {
+  //   let remoteNumberWas;
+  //
+  //   remoteNumberWas = remoteNumber;
+  //
+  //   for( let n in module.submoduleMap )
+  //   {
+  //     let submodule = module.submoduleMap[ n ];
+  //
+  //     if( !submodule.opener )
+  //     {
+  //       debugger;
+  //       submodule.form();
+  //     }
+  //
+  //   }
+  //
+  // }
 
 }
 
-_subModulesDownload_body.defaults =
-{
-  updating : 0,
-  recursive : 0,
-  dry : 0,
-  downloaded : null,
-}
+var defaults = _subModulesDownload_body.defaults = _.mapExtend( null, modulesEach.defaults );
+
+defaults.withPeers = 0;
+defaults.updating = 0;
+defaults.dry = 0;
+
+delete defaults.outputFormat;
+
+// {
+//   updating : 0,
+//   recursive : 0,
+//   dry : 0,
+//   downloadedMap : null,
+// }
 
 let _subModulesDownload = _.routineFromPreAndBody( _subModulesDownload_pre, _subModulesDownload_body );
 
 //
 
-let submodulesDownload = _.routineFromPreAndBody( _subModulesDownload_pre, _subModulesDownload_body, 'submodulesDownload' );
-submodulesDownload.defaults.updating = 0;
+let subModulesDownload = _.routineFromPreAndBody( _subModulesDownload_pre, _subModulesDownload_body, 'subModulesDownload' );
+subModulesDownload.defaults.updating = 0;
 
 //
 
@@ -2185,16 +2524,11 @@ function moduleFixate( o )
   _.assert( _.boolLike( o.dry ) );
   _.assert( _.boolLike( o.upgrading ) );
   _.assert( o.module  === null || o.module instanceof will.OpenedModule );
-  _.assert( o.submodule === null || o.submodule instanceof will.Submodule );
-  _.assert( o.module  === null || o.module.rootModule === o.module || _.arrayHas( o.module.superModules, module ) );
+  _.assert( o.submodule === null || o.submodule instanceof will.ModulesRelation );
+  // _.assert( o.module  === null || o.module.rootModule === o.module || _.arrayHas( o.module.superRelations, module ) );
 
   if( o.module )
   superModuleFixate( o.module );
-
-  // if( o.module )
-  // o.module.superModules.forEach( ( supermodule ) =>
-  // {
-  // });
 
   if( o.submodule )
   submoduleFixate( o.submodule );
@@ -2373,7 +2707,7 @@ function moduleFixateAct( o )
   _.assert( _.boolLike( o.dry ) );
   _.assert( _.boolLike( o.upgrading ) );
   _.assert( o.module  === null || o.module instanceof will.OpenedModule );
-  _.assert( o.submodule === null || o.submodule instanceof will.Submodule );
+  _.assert( o.submodule === null || o.submodule instanceof will.ModulesRelation );
   _.assert( _.strIs( o.willfilePath ) || _.strsAreAll( o.willfilePath ) );
   _.assert( _.strIs( o.originalPath ) );
   _.assert( !o.fixatedPath || _.strIs( o.fixatedPath ) );
@@ -2596,7 +2930,7 @@ function _subModulesForm()
 
   let con = _.Consequence().take( null );
 
-  module._resourcesAllForm( will.Submodule, con );
+  module._resourcesAllForm( will.ModulesRelation, con );
 
   con.finally( ( err, arg ) =>
   {
@@ -2917,7 +3251,7 @@ function submodulesPeersOpen_body( o )
 
   let o2 = _.mapExtend( null, o );
   delete o2.throwing;
-  let submodules = module.submodulesEach.body.call( module, o2 );
+  let submodules = module.modulesEach.body.call( module, o2 );
 
   submodules.forEach( ( submodule ) =>
   {
@@ -2927,11 +3261,11 @@ function submodulesPeersOpen_body( o )
   return ready;
 }
 
-var defaults = submodulesPeersOpen_body.defaults = _.mapExtend( null, submodulesEach.body.defaults );
+var defaults = submodulesPeersOpen_body.defaults = _.mapExtend( null, modulesEach.body.defaults );
 
 defaults.throwing = 1;
 
-let submodulesPeersOpen = _.routineFromPreAndBody( submodulesEach_pre, submodulesPeersOpen_body );
+let submodulesPeersOpen = _.routineFromPreAndBody( modulesEach_pre, submodulesPeersOpen_body );
 
 // --
 // remote
@@ -3056,10 +3390,6 @@ function _resourcesForm()
   let logger = will.logger;
   let con = new _.Consequence().take( null );
 
-  // logger.log( module.absoluteName, '_resourcesForm' ); debugger;
-
-  // debugger;
-  // if( module.rootModule === module )
   if( module.submodulesAllAreDownloaded() && module.submodulesAllAreValid() )
   {
 
@@ -3067,8 +3397,6 @@ function _resourcesForm()
 
     con.then( ( arg ) =>
     {
-      // if( !module.supermodule )
-      // module._willfilesCacheSave();
       return arg;
     });
 
@@ -3104,7 +3432,7 @@ function _resourcesFormAct()
 
   /* */
 
-  module._resourcesAllForm( will.Submodule, con );
+  module._resourcesAllForm( will.ModulesRelation, con );
   module._resourcesAllForm( will.Exported, con );
   module._resourcesAllForm( will.PathResource, con );
   module._resourcesAllForm( will.Reflector, con );
@@ -4118,7 +4446,7 @@ function cleanWhat( o )
   o.result = Object.create( null );
   o.result[ '/' ] = o.result[ '/' ] || [];
 
-  let submodules = module.submodulesEach
+  let submodules = module.modulesEach
   ({
     recursive : o.recursive,
     withStem : 1,
@@ -4790,7 +5118,7 @@ function structureExport( o )
 
   // if( o.rootModule === module )
   // {
-  //   let submodules = module.submodulesEach({ withPeers : 1, withStem : 1, recursive : 2 })
+  //   let submodules = module.modulesEach({ withPeers : 1, withStem : 1, recursive : 2 })
   //   o.dst.module = module.structureExportModules( submodules, o2 );
   //   // o.dst.module = module.structureExportModules( will.moduleWithCommonPathMap, o2 );
   // }
@@ -4834,7 +5162,7 @@ function structureExportOut( o )
   o.dst = o.dst || Object.create( null );
   o.dst.format = will.Willfile.FormatVersion;
 
-  let submodules = module.submodulesEach({ withPeers : 1, withStem : 1, recursive : 2 })
+  let submodules = module.modulesEach({ withPeers : 1, withStem : 1, recursive : 2 })
   module.structureExportModules( submodules, o );
 
   return o.dst;
@@ -4876,7 +5204,7 @@ function structureExportForModuleExport( o )
 
   let opener2 = will.openerMake({ opener : o2, searching : 'exact' });
   _.assert( opener2.isOut === true );
-  _.assert( opener2.supermodule === null );
+  _.assert( opener2.superRelation === null );
   _.assert( opener2.rootModule === null );
   _.assert( opener2.openedModule === null );
   _.assert( opener2.willfilesArray.length === 0 );
@@ -4909,7 +5237,7 @@ function structureExportForModuleExport( o )
   _.assert( opener2.peerModule === module );
   _.assert( opener2.dirPath === path.detrail( module.outPath ) );
   _.assert( opener2.original === module );
-  _.assert( opener2.supermodule === null );
+  _.assert( opener2.superRelation === null );
   _.assert( opener2.willfilesArray.length === 0 );
 
   module2.stager.stageStateSkipping( 'picked', 1 );
@@ -5297,7 +5625,6 @@ function shell( o )
 
   let ready = new _.Consequence().take( null );
 
-  debugger;
   _.process.start
   ({
     execPath : o.execPath,
@@ -5349,439 +5676,13 @@ function errTooMany( builds, what )
   return false;
 }
 
-//
-
-function exportAuto()
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let clonePath = module.cloneDirPathGet();
-
-  debugger;
-  _.assert( 'not implemented' );
-
-  // _.assert( arguments.length === 0 );
-  // _.assert( !!module.submoduleAssociation );
-  // _.assert( !!module.submoduleAssociation.autoExporting );
-  // _.assert( !module.pickedWillfileData );
-  // _.assert( !module.pickedWillfilesPath );
-  //
-  // let autoWillfileData =
-  // {
-  //   'about' :
-  //   {
-  //     'name' : 'Extend',
-  //     'version' : '0.1.0'
-  //   },
-  //   'path' :
-  //   {
-  //     'in' : '..',
-  //     'out' : '.module',
-  //     'remote' : 'git+https :///github.com/Wandalen/wProto.git',
-  //     'local' : '.module/Extend',
-  //     'export' : '{path::local}/proto'
-  //   },
-  //   'reflector' :
-  //   {
-  //     'download' :
-  //     {
-  //       'src' : 'path::remote',
-  //       'dst' : 'path::local'
-  //     }
-  //   },
-  //   'step' :
-  //   {
-  //     'export.common' :
-  //     {
-  //       'export' : 'path::export',
-  //       'tar' : 0
-  //     }
-  //   },
-  //   'build' :
-  //   {
-  //     'export' :
-  //     {
-  //       'criterion' :
-  //       {
-  //         'default' : 1,
-  //         'export' : 1
-  //       },
-  //       'steps' :
-  //       [
-  //         'step::download',
-  //         'step::export.common'
-  //       ]
-  //     }
-  //   }
-  // }
-  //
-  // module.pickedWillfileData = autoWillfileData;
-  // module.pickedWillfilesPath = clonePath + module.aliasName;
-  // module._willfilesFindPickedFile()
-  //
-  // debugger;
-
-}
-
-//
-
-function moduleBuild_pre( routine, args )
-{
-  let o = _.routineOptions( routine, args );
-  return o;
-}
-
-function moduleBuild_body( o )
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let con = new _.Consequence().take( null );
-
-  let builds = module._buildsResolve
-  ({
-    name : o.name,
-    criterion : o.criterion,
-    kind : o.kind,
-  });
-
-  // if( logger.verbosity >= 2 && builds.length > 1 )
-  // {
-  //   logger.up();
-  //   logger.log( module.infoExportResource( builds ) );
-  //   logger.down();
-  // }
-
-  if( builds.length !== 1 )
-  throw module.errTooMany( builds, 'export scenario' );
-
-  let build = builds[ 0 ];
-  will._willfilesReadEnd( module );
-
-  let run = new will.BuildRun
-  ({
-    build,
-    recursive : 0,
-  });
-
-  return con
-  .then( () =>
-  {
-    _.assert( !module.isOut );
-    debugger;
-    return module.modulesUpform({ all : 0, subModulesFormed : 1, peerModulesFormed : 1 });
-    // return module.upform({ all : 0, subModulesFormed : 1, peerModulesFormed : 1 });
-    // return null;
-  })
-  .then( () => build.perform({ run }) )
-  .then( () =>
-  {
-    _.assert( !module.peerModule || module.peerModule.isOut );
-    debugger;
-    // return module.peerModule.upform({ all : 1, resourcesFormed : 0 });
-    return null;
-  });
-}
-
-moduleBuild_body.defaults =
-{
-  name : null,
-  criterion : null,
-  kind : 'export',
-}
-
-let moduleBuild = _.routineFromPreAndBody( moduleBuild_pre, moduleBuild_body );
-moduleBuild.defaults.kind = 'build';
-let moduleExport = _.routineFromPreAndBody( moduleBuild_pre, moduleBuild_body );
-moduleExport.defaults.kind = 'export';
-
-//
-
-function modulesEachDo( o )
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let modules;
-  let con = new _.Consequence().take( null );
-
-  o = _.routineOptions( modulesEachDo, arguments );
-
-  con.then( () =>
-  {
-    return module.upform({ all : 0, subModulesFormed : 1 });
-  });
-
-  con.then( () =>
-  {
-
-    let o2 = _.mapOnly( o, module.submodulesEach.defaults );
-    o2.outputFormat = '/';
-    debugger;
-    modules = module.submodulesEach( o2 );
-
-    return modules;
-  });
-
-  con.then( () =>
-  {
-    let con2 = new _.Consequence().take( null );
-    for( let m = modules.length-1 ; m >= 0 ; m-- ) ( function( r )
-    {
-      con2
-      .then( () =>
-      {
-        if( !r.module )
-        throw _.err
-        (
-            `Cant ${o.actionName} ${module.absoluteName} because ${r.relation ? r.relation.absoluteName : r.opener.absoluteName} is not available.`
-          , `\nLooked at ${r.opener ? r.opener.commonPath : r.relation.path}`
-        );
-        return o.onEach( r, o );
-        // let o3 = _.mapOnly( o, module.moduleExport.defaults );
-        // return r.module.moduleExport( o3 );
-      })
-    })( modules[ m ] );
-
-    return con2;
-  });
-
-  return con;
-}
-
-var defaults = modulesEachDo.defaults = _.mapExtend( null, submodulesEach.defaults );
-
-defaults.recursive = 0;
-defaults.withStem = 1;
-defaults.withPeers = 1;
-defaults.onEach = null;
-defaults.actionName = null;
-
-delete defaults.outputFormat;
-
-//
-
-function modulesBuild_pre( routine, args )
-{
-  let o = _.routineOptions( routine, args );
-  return o;
-}
-
-function modulesBuild_body( o )
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-
-  o = _.routineOptions( modulesBuild_body, arguments );
-  let o2 = _.mapOnly( o, module.modulesEachDo.defaults );
-  o2.onEach = handleEach;
-  o2.actionName = o.kind;
-  return module.modulesEachDo( o2 );
-
-  /* */
-
-  function handleEach( record, op )
-  {
-    let o3 = _.mapOnly( o, module.moduleExport.defaults );
-    return record.module.moduleExport( o3 );
-  }
-
-}
-
-var defaults = modulesBuild_body.defaults = _.mapExtend( null, moduleBuild.defaults, submodulesEach.defaults );
-
-defaults.recursive = 0;
-defaults.withStem = 1;
-defaults.withPeers = 0;
-defaults.withOut = 0;
-defaults.withIn = 1;
-
-delete defaults.outputFormat;
-
-let modulesBuild = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
-modulesBuild.defaults.kind = 'build';
-let modulesExport = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
-modulesExport.defaults.kind = 'export';
-
-//
-
-function modulesUpform( o )
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-
-  o = _.routineOptions( modulesUpform, arguments );
-  let o2 = _.mapOnly( o, module.modulesEachDo.defaults );
-  o2.onEach = handleEach;
-  o2.actionName = 'upform';
-  return module.modulesEachDo( o2 );
-
-  /* */
-
-  function handleEach( record, op )
-  {
-    let o3 = _.mapOnly( o, module.upform.defaults );
-    debugger;
-    return record.module.upform( o3 );
-  }
-
-}
-
-var defaults = modulesUpform.defaults = _.mapExtend( null, upform.defaults, submodulesEach.defaults );
-
-defaults.recursive = 2;
-defaults.withStem = 1;
-defaults.withPeers = 1;
-
-delete defaults.outputFormat;
-
-// //
-//
-// function modulesExport( o )
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//   let modules;
-//   let con = new _.Consequence().take( null );
-//
-//   o = _.routineOptions( modulesExport, arguments );
-//
-//   con.then( () =>
-//   {
-//     return module.upform({ all : 0, subModulesFormed : 1 });
-//   });
-//
-//   con.then( () =>
-//   {
-//
-//     let o2 = _.mapOnly( o, module.submodulesEach.defaults );
-//     o2.outputFormat = '/';
-//     modules = module.submodulesEach( o2 );
-//
-//     return modules;
-//   });
-//
-//   con.then( () =>
-//   {
-//     let con2 = new _.Consequence().take( null );
-//     for( let m = modules.length-1 ; m >= 0 ; m-- ) ( function( r )
-//     {
-//       con2
-//       .then( () =>
-//       {
-//         if( !r.module )
-//         throw _.err
-//         (
-//             `Cant ${o.kind} ${module.absoluteName} because ${r.relation ? r.relation.absoluteName : r.opener.absoluteName} is not available.`
-//           , `\nLooked at ${r.opener ? r.opener.commonPath : r.relation.path}`
-//         );
-//         let o3 = _.mapOnly( o, module.moduleExport.defaults );
-//         return r.module.moduleExport( o3 );
-//       })
-//     })( modules[ m ] );
-//
-//     return con2;
-//   });
-//
-//   return con;
-// }
-//
-// var defaults = modulesExport.defaults = _.mapExtend( null, moduleExport.defaults, submodulesEach.defaults );
-//
-// defaults.recursive = 0;
-// defaults.withStem = 1;
-// defaults.withPeers = 0;
-// defaults.withOut = 0;
-// defaults.withIn = 1;
-//
-// delete defaults.outputFormat;
-//
-// //
-//
-// function modulesUpform( o )
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//   let modules;
-//   let con = new _.Consequence().take( null );
-//
-//   o = _.routineOptions( modulesUpform, arguments );
-//
-//   con.then( () =>
-//   {
-//     return module.upform({ all : 0, subModulesFormed : 1 });
-//   });
-//
-//   con.then( () =>
-//   {
-//
-//     let o2 = _.mapOnly( o, module.submodulesEach.defaults );
-//     o2.outputFormat = '/';
-//     modules = module.submodulesEach( o2 );
-//
-//     return modules;
-//   });
-//
-//   con.then( () =>
-//   {
-//     let con2 = new _.Consequence().take( null );
-//     for( let m = modules.length-1 ; m >= 0 ; m-- ) ( function( r )
-//     {
-//       con2
-//       .then( () =>
-//       {
-//         if( !r.module )
-//         throw _.err
-//         (
-//             `Cant upform ${module.absoluteName} because ${r.relation ? r.relation.absoluteName : r.opener.absoluteName} is not available.`
-//           , `\nLooked at ${r.opener ? r.opener.commonPath : r.relation.path}`
-//         );
-//         let o3 = _.mapOnly( o, module.upform.defaults );
-//         return r.module.upform( o3 );
-//       })
-//     })( modules[ m ] );
-//
-//     return con2;
-//   });
-//
-//   return con;
-// }
-//
-// var defaults = modulesUpform.defaults = _.mapExtend( null, upform.defaults, submodulesEach.defaults );
-//
-// defaults.recursive = 0;
-// defaults.withStem = 1;
-// defaults.withPeers = 1;
-//
-// delete defaults.outputFormat;
-
 // --
 // relations
 // --
 
-// let isDownloadedSymbol = Symbol.for( 'isDownloaded' );
 let rootModuleSymbol = Symbol.for( 'rootModule' );
 let peerModuleSymbol = Symbol.for( 'peerModule' );
-let superModulesSymbol = Symbol.for( 'superModules' );
+let superRelationsSymbol = Symbol.for( 'superRelations' );
 
 let Composes =
 {
@@ -5819,7 +5720,7 @@ let Associates =
 
   will : null,
   rootModule : null,
-  superModules : _.define.own([]),
+  superRelations : _.define.own([]),
   original : null,
   willfilesArray : _.define.own([]),
   storedWillfilesArray : _.define.own([]),
@@ -5913,13 +5814,13 @@ let Accessors =
   // willfilesArray : { setter : willfileArraySet },
   // willfileWithRoleMap : { readOnly : 1 },
 
-  submoduleMap : { setter : ResourceSetter_functor({ resourceName : 'Submodule', mapName : 'submoduleMap' }) },
+  submoduleMap : { setter : ResourceSetter_functor({ resourceName : 'ModulesRelation', mapName : 'submoduleMap' }) },
   pathResourceMap : { setter : ResourceSetter_functor({ resourceName : 'PathResource', mapName : 'pathResourceMap' }) },
   reflectorMap : { setter : ResourceSetter_functor({ resourceName : 'Reflector', mapName : 'reflectorMap' }) },
   stepMap : { setter : ResourceSetter_functor({ resourceName : 'Step', mapName : 'stepMap' }) },
   buildMap : { setter : ResourceSetter_functor({ resourceName : 'Build', mapName : 'buildMap' }) },
   exportedMap : { setter : ResourceSetter_functor({ resourceName : 'Exported', mapName : 'exportedMap' }) },
-  superModules : { setter : superModulesSet },
+  superRelations : { setter : superRelationsSet },
 
   name : { getter : nameGet, readOnly : 1 },
   absoluteName : { getter : absoluteNameGet, readOnly : 1 },
@@ -6010,13 +5911,26 @@ let Extend =
   _attachedWillfilesOpenFromData,
   _attachedWillfileOpenFromData,
 
+  // build / export
+
+  exportAuto,
+  moduleBuild,
+  moduleExport,
+
+  // batcher
+
+  modulesEach,
+  modulesEachDo,
+  modulesBuild,
+  modulesExport,
+  modulesUpform,
+
   // submodule
 
   rootModuleGet,
   rootModuleSet,
-  superModulesSet,
+  superRelationsSet,
 
-  submodulesEach,
   submodulesAreDownloaded,
   submodulesAllAreDownloaded,
   submodulesAreValid,
@@ -6024,7 +5938,7 @@ let Extend =
   submodulesClean,
 
   _subModulesDownload,
-  submodulesDownload,
+  subModulesDownload,
   submodulesUpdate,
 
   submodulesFixate,
@@ -6177,14 +6091,6 @@ let Extend =
 
   shell,
   errTooMany,
-  exportAuto,
-  moduleBuild,
-  moduleExport,
-
-  modulesEachDo,
-  modulesBuild,
-  modulesExport,
-  modulesUpform,
 
   // relation
 

@@ -26,7 +26,7 @@ if( typeof module !== 'undefined' )
   require( './l7/PathResource.s' );
   require( './l7/Reflector.s' );
   require( './l7/Step.s' );
-  require( './l7/Submodule.s' );
+  require( './l7/ModulesRelation.s' );
 
 }
 

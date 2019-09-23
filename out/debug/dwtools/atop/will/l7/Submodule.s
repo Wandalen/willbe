@@ -1,4 +1,4 @@
-( function _Submodule_s_( ) {
+( function _ModulesRelation_s_( ) {
 
 'use strict';
 
@@ -13,12 +13,12 @@ if( typeof module !== 'undefined' )
 
 let _ = wTools;
 let Parent = _.Will.Resource;
-let Self = function wWillSubmodule( o )
+let Self = function wWillModulesRelation( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }
 
-Self.shortName = 'Submodule';
+Self.shortName = 'ModulesRelation';
 
 // --
 // inter
@@ -69,8 +69,8 @@ function unform()
   if( submodule.opener )
   {
     let opener = submodule.opener;
-    _.assert( opener.supermodule === submodule );
-    opener.supermodule = null;
+    _.assert( opener.superRelation === submodule );
+    opener.superRelation = null;
     submodule.opener = null;
     opener.finit();
   }
@@ -97,30 +97,16 @@ function form1()
 
   _.assert( arguments.length === 0 );
   _.assert( submodule.module instanceof will.OpenedModule );
-  // _.assert( !!module.mainOpener, 'Expects specified {- module.mainOpener -} at the point' );
 
   /* */
-
-  // submodule.opener = will.ModuleOpener
-  // ({
-  //   will : will,
-  //   aliasName : submodule.name,
-  //   willfilesPath : submodule.longPath,
-  //   supermodule : module,
-  //   rootModule : module.rootModule,
-  // }).preform();
 
   submodule.opener = will.ModuleOpener
   ({
     will : will,
     aliasName : submodule.name,
     willfilesPath : submodule.longPath,
-    supermodule : submodule,
-    // supermodule : module,
-    // supermoduleSubmodule : submodule,
+    superRelation : submodule,
     rootModule : module.rootModule,
-    // mainOpener : module.mainOpener,
-    // isMain : false,
   });
 
   submodule.opener = will.openerMake({ opener : submodule.opener });
@@ -171,7 +157,9 @@ function form3()
   if( submodule.enabled )
   result = submodule._openAct();
   else
-  result = new _.Consequence().take( null );
+  result = null;
+
+  result = _.Consequence.From( result );
 
   result.finally( ( err, arg ) =>
   {
@@ -316,6 +304,14 @@ function _openAct( o )
   o.longPath = submodule.longPath;
 
   submodule._wantedOpened = 1;
+
+  if( submodule.opener.isOpened() )
+  {
+    _.assert( submodule.opener.formed === 4 );
+    _.assert( !!submodule.opener.willfilesPath );
+    return submodule.opener;
+  }
+
   submodule.opener.willfilesPath = o.longPath;
 
   if( !submodule.enabled )

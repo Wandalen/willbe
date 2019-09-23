@@ -51,6 +51,40 @@ function init()
   module.id = _.Will.ResourceCounter;
 }
 
+//
+
+function optionsFormingForward( o )
+{
+  let module = this;
+
+  _.assert( arguments.length === 1 );
+  o = _.mapSupplementStructureless( o, optionsFormingForward.defaults );
+
+  if( _.boolLike( o.all ) )
+  {
+    o.all = !!o.all;
+    if( o.attachedWillfilesFormed === null )
+    o.attachedWillfilesFormed = o.all;
+    if( o.peerModulesFormed === null )
+    o.peerModulesFormed = o.all;
+    if( o.subModulesFormed === null )
+    o.subModulesFormed = o.all;
+    if( o.resourcesFormed === null )
+    o.resourcesFormed = o.all;
+  }
+
+  return o;
+}
+
+optionsFormingForward.defaults =
+{
+  all : null,
+  attachedWillfilesFormed : null,
+  peerModulesFormed : null,
+  subModulesFormed : null,
+  resourcesFormed : null,
+}
+
 // --
 // path
 // --
@@ -135,6 +169,22 @@ function PrefixPathForRoleMaybe( role, isOut )
   result += '.will';
 
   return result;
+}
+
+//
+
+function PathToRole( filePath )
+{
+  let role = null;
+
+  if( _.strHas( filePath, /(^|\.|\/)im\.will(\.|$)/ ) )
+  role = 'import';
+  else if( _.strHas( filePath, /(^|\.|\/)ex\.will(\.|$)/ ) )
+  role = 'export';
+  else
+  role = 'single';
+
+  return role;
 }
 
 // //
@@ -420,7 +470,11 @@ function remoteIsUpdate()
   _.assert( !!module.willfilesPath || !!module.dirPath );
   _.assert( arguments.length === 0 );
 
-  let remoteProvider = fileProvider.providerForPath( module.commonPath );
+  // if( module.isRemote !== null )
+  // return end( module.isRemote );
+
+  let remotePath = module.remotePath ? path.common( module.remotePath ) : module.commonPath;
+  let remoteProvider = fileProvider.providerForPath( remotePath );
   if( remoteProvider.isVcs )
   return end( true );
 
@@ -607,6 +661,7 @@ let Statics =
   DirPathFromFilePaths,
   PrefixPathForRole,
   PrefixPathForRoleMaybe,
+  PathToRole,
 
   CommonPathFor,
   CloneDirPathFor,
@@ -633,6 +688,7 @@ let Forbids =
   moduleWithCommonPathMap : 'moduleWithCommonPathMap',
   supermoduleSubmodule : 'supermoduleSubmodule',
   configName : 'configName',
+  superModules : 'superModules',
 
 }
 
@@ -660,6 +716,7 @@ let Extend =
 
   finit,
   init,
+  optionsFormingForward,
 
   // path
 

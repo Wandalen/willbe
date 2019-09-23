@@ -72,7 +72,7 @@ function unform()
   if( !opener.formed )
   return opener;
 
-  _.assert( opener.supermodule === null );
+  _.assert( opener.superRelation === null );
 
   if( opener.openedModule )
   {
@@ -152,8 +152,8 @@ function optionsForModuleExport()
 
   let result = _.mapOnly( opener, Import );
 
-  if( opener.supermodule )
-  result.superModules = [ opener.supermodule ];
+  if( opener.superRelation )
+  result.superRelations = [ opener.superRelation ]; // xxx
 
   result.willfilesArray = _.entityShallowClone( result.willfilesArray );
 
@@ -169,8 +169,8 @@ function precopy( o )
   let opener = this;
   if( o.will )
   opener.will = o.will;
-  if( o.superModules )
-  opener.superModules = o.superModules;
+  if( o.superRelation )
+  opener.superRelation = o.superRelation;
   if( o.original )
   opener.original = o.original;
   if( o.rootModule )
@@ -269,8 +269,8 @@ function moduleAdopt( module )
 
   opener.openedModule = module;
 
-  if( opener.supermodule )
-  opener.supermodule._moduleAdoptEnd();
+  if( opener.superRelation )
+  opener.superRelation._moduleAdoptEnd();
 
   _.assert( opener.openedModule === module );
   _.assert( _.arrayHas( module.userArray, opener ) );
@@ -350,20 +350,37 @@ function close()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+  let module = opener.openedModule;
 
+  _.assert( !opener.finitedIs() );
   _.assert( arguments.length === 0 );
+  _.assert( opener.formed >= 0 );
 
-  if( opener.openedModule )
-  opener.openedModule.close();
+  if( module )
+  {
+    debugger;
+    module.close();
+    _.assert( module.isUsedBy( opener ) );
+    opener.openedModule = null;
+    _.assert( opener.openedModule === null );
+    _.assert( !module.isUsedBy( opener ) );
+  }
 
   if( opener.error )
   opener.error = null
 
   opener._willfilesRelease();
 
-  if( opener.supermodule )
-  opener.supermodule._closeEnd();
+  if( opener.superRelation )
+  opener.superRelation._closeEnd();
 
+  if( opener.formed > 1 )
+  opener.formed = 1;
+
+  if( module )
+  {
+    module.finit();
+  }
 }
 
 //
@@ -671,7 +688,7 @@ function isUsed()
 
   if( opener.openedModule )
   return true;
-  if( opener.supermodule )
+  if( opener.superRelation )
   return true;
 
   return false;
@@ -864,7 +881,7 @@ function _willfilesFind()
     // }
     // else
     // {
-    //   // result = opener._willfilesFindSmart({ isOut : !!opener.supermodule });
+    //   // result = opener._willfilesFindSmart({ isOut : !!opener.superRelation });
       result = opener._willfilesFindSmart();
     // }
 
@@ -884,8 +901,8 @@ function _willfilesFind()
   if( opener.willfilesArray.length === 0 )
   {
     let err;
-    if( opener.supermodule )
-    err = _.errBrief( 'Found no .out.will file for',  opener.supermodule.qualifiedName, 'at', _.strQuote( opener.commonPath ) );
+    if( opener.superRelation )
+    err = _.errBrief( 'Found no .out.will file for',  opener.superRelation.qualifiedName, 'at', _.strQuote( opener.commonPath ) );
     else
     err = _.errBrief( 'Found no willfile at', _.strQuote( opener.commonPath ) );
     opener.error = opener.error || err;
@@ -949,24 +966,23 @@ let rootModuleSet = sharedModuleSet_functor( 'rootModule' );
 
 //
 
-function supermoduleGet()
+function superRelationGet()
 {
   let opener = this;
-  _.assert( opener[ supermoduleSymbol ] === null || opener[ supermoduleSymbol ] instanceof _.Will.Submodule );
-  return opener[ supermoduleSymbol ];
+  _.assert( opener[ superRelationSymbol ] === null || opener[ superRelationSymbol ] instanceof _.Will.ModulesRelation );
+  return opener[ superRelationSymbol ];
 }
 
 //
 
-function supermoduleSet( src )
+function superRelationSet( src )
 {
   let opener = this;
-  // _.assert( src === null || src instanceof _.Will.OpenedModule );
-  _.assert( src === null || src instanceof _.Will.Submodule );
 
+  _.assert( src === null || src instanceof _.Will.ModulesRelation );
   _.assert( src === null || src.opener === null || src.opener === opener )
 
-  opener[ supermoduleSymbol ] = src;
+  opener[ superRelationSymbol ] = src;
   return src;
 }
 
@@ -999,7 +1015,7 @@ function supermoduleSet( src )
 //   let fileProvider = will.fileProvider;
 //   let path = fileProvider.path;
 //
-//   _.assert( !opener.supermodule );
+//   _.assert( !opener.superRelation );
 //
 //   for( let n in opener.submoduleMap )
 //   {
@@ -1022,7 +1038,7 @@ function supermoduleSet( src )
 //   let fileProvider = will.fileProvider;
 //   let path = fileProvider.path;
 //
-//   _.assert( !opener.supermodule );
+//   _.assert( !opener.superRelation );
 //
 //   for( let n in opener.submoduleMap )
 //   {
@@ -1048,6 +1064,8 @@ function remoteForm()
   let path = fileProvider.path;
   let logger = will.logger;
 
+  _.assert( opener.formed >= 1 );
+
   opener.remoteIsUpdate();
 
   if( opener.isRemote )
@@ -1063,6 +1081,7 @@ function remoteForm()
 
   _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
 
+  if( opener.formed < 2 )
   opener.formed = 2;
   return opener;
 }
@@ -1079,14 +1098,14 @@ function _remoteFormAct()
   let willfilesPath = opener.remotePath || opener.willfilesPath;
 
   _.assert( _.strDefined( opener.aliasName ) );
-  _.assert( !!opener.supermodule );
+  _.assert( !!opener.superRelation );
   _.assert( _.strIs( willfilesPath ) );
 
   let remoteProvider = fileProvider.providerForPath( opener.remotePath || opener.commonPath );
 
   _.assert( remoteProvider.isVcs && _.routineIs( remoteProvider.pathParse ), () => 'Seems file provider ' + remoteProvider.qualifiedName + ' does not have version control system features' );
 
-  let submodulesDir = opener.supermodule.module.cloneDirPathGet();
+  let submodulesDir = opener.superRelation.module.cloneDirPathGet();
   let parsed = remoteProvider.pathParse( willfilesPath );
 
   opener.remotePath = willfilesPath;
@@ -1121,7 +1140,7 @@ function _remoteDownload( o )
   _.assert( _.strDefined( opener.aliasName ) );
   _.assert( _.strDefined( opener.remotePath ) );
   _.assert( _.strDefined( opener.localPath ) );
-  _.assert( !!opener.supermodule );
+  _.assert( !!opener.superRelation );
 
   return con
   .then( () =>
@@ -1134,10 +1153,13 @@ function _remoteDownload( o )
   .then( function( arg )
   {
 
+    // debugger;
     if( o.updating )
-    downloading = !opener.isUpToDate;
+    downloading = opener.isUpToDate;
     else
-    downloading = !opener.isDownloaded;
+    downloading = opener.isDownloaded;
+    _.assert( _.boolLike( downloading ) );
+    downloading = !downloading;
 
     /*
     delete old remote opener if it has a critical error or downloaded files are corrupted
@@ -1176,6 +1198,8 @@ function _remoteDownload( o )
 
       // debugger;
       let willf = opener.willfilesArray[ 0 ];
+      // if( willf )
+      // debugger;
       opener.close();
       _.assert( !_.arrayHas( will.willfilesArray, willf ) );
       opener.find();
@@ -1410,9 +1434,9 @@ function aliasNameSet( src )
 function absoluteNameGet()
 {
   let opener = this;
-  let supermodule = opener.supermodule;
-  if( supermodule )
-  return supermodule.qualifiedName + ' / ' + opener.qualifiedName;
+  let superRelation = opener.superRelation;
+  if( superRelation )
+  return superRelation.qualifiedName + ' / ' + opener.qualifiedName;
   else
   return opener.qualifiedName;
 }
@@ -1422,10 +1446,10 @@ function absoluteNameGet()
 function shortNameArrayGet()
 {
   let opener = this;
-  let supermodule = opener.openedModule.supermodule;
-  if( !supermodule )
+  let superRelation = opener.openedModule.superRelation;
+  if( !superRelation )
   return [ opener.name ];
-  let result = supermodule.shortNameArrayGet();
+  let result = superRelation.shortNameArrayGet();
   result.push( opener.name );
   return result;
 }
@@ -1543,7 +1567,7 @@ let isOutSet = accessorSet_functor( 'isOut' );
 let dirPathSymbol = Symbol.for( 'dirPath' );
 let commonPathSymbol = Symbol.for( 'commonPath' );
 let aliasNameSymbol = Symbol.for( 'aliasName' );
-let supermoduleSymbol = Symbol.for( 'supermodule' );
+let superRelationSymbol = Symbol.for( 'superRelation' );
 let rootModuleSymbol = Symbol.for( 'rootModule' );
 let openedModuleSymbol = Symbol.for( 'openedModule' );
 let errorSymbol = Symbol.for( 'error' );
@@ -1579,11 +1603,8 @@ let Associates =
 
   original : null,
   will : null,
-
   rootModule : null,
-  supermodule : null,
-  // supermoduleSubmodule : null,
-
+  superRelation : null,
   willfilesArray : _.define.own([]),
 
 }
@@ -1597,11 +1618,9 @@ let Restricts =
 {
 
   id : null,
-  // preformed : 0,
   formed : 0,
   found : 0,
   error : null,
-
   openedModule : null,
   unwrappedModuleOpener : null,
 
@@ -1627,10 +1646,10 @@ let Forbids =
   finding : 'finding',
   inPath : 'inPath',
   outPath : 'outPath',
-  // localPath : 'localPath',
-  // remotePath : 'remotePath',
   willPath : 'willPath',
   preformed : 'preformed',
+  supermoduleSubmodule : 'supermoduleSubmodule',
+  supermodule : 'supermodule',
 }
 
 let Accessors =
@@ -1639,24 +1658,19 @@ let Accessors =
   willfilesPath : { getter : willfilesPathGet, setter : willfilesPathSet },
   dirPath : { getter : dirPathGet, readOnly : 1 },
   commonPath : { getter : commonPathGet, readOnly : 1 },
-  // inPath : { getter : inPathGet, setter : inPathSet },
-  // outPath : { getter : outPathGet, setter : outPathSet },
   localPath : { getter : localPathGet, setter : localPathSet },
   remotePath : { getter : remotePathGet, setter : remotePathSet },
-  // willPath : { getter : willPathGet, readOnly : 1 },
 
   name : { getter : nameGet, readOnly : 1 },
   aliasName : { setter : aliasNameSet },
-  // configName : { readOnly : 1 },
   absoluteName : { getter : absoluteNameGet, readOnly : 1 },
 
   isRemote : { getter : isRemoteGet, setter : isRemoteSet },
-  // isDownloaded : { getter : isDownloadedGet, setter : isDownloadedSet },
   isUpToDate : { getter : isUpToDateGet, setter : isUpToDateSet },
   isOut : { getter : isOutGet, setter : isOutSet },
   isMain : { getter : isMainGet, setter : isMainSet },
 
-  supermodule : {},
+  superRelation : {},
   rootModule : {},
   openedModule : {},
   peerModule : {},
@@ -1718,8 +1732,8 @@ let Extend =
   peerModuleSet,
   rootModuleGet,
   rootModuleSet,
-  supermoduleGet,
-  supermoduleSet,
+  superRelationGet,
+  superRelationSet,
 
   // submodulesAllAreDownloaded,
   // submodulesAllAreValid,

@@ -50,10 +50,49 @@ function onSuiteEnd()
 
 //
 
+function abs_functor( routinePath )
+{
+  _.assert( _.strIs( routinePath ) );
+  _.assert( arguments.length === 1 );
+  return function abs( filePath )
+  {
+    if( arguments.length === 1 && filePath === null )
+    return filePath;
+    let args = _.longSlice( arguments );
+    args.unshift( routinePath );
+    return _.uri.s.join.apply( _.uri.s, args );
+  }
+}
+
+//
+
+function rel_functor( routinePath )
+{
+  _.assert( _.strIs( routinePath ) );
+  _.assert( arguments.length === 1 );
+  return function rel( filePath )
+  {
+    _.assert( arguments.length === 1 );
+    if( filePath === null )
+    return filePath;
+    if( _.arrayIs( filePath ) || _.mapIs( filePath ) )
+    {
+      return _.filter( filePath, ( filePath ) => rel( filePath ) );
+    }
+    if( _.uri.isRelative( filePath ) && !_.uri.isRelative( routinePath ) )
+    return filePath;
+    return _.uri.s.relative.apply( _.uri.s, [ routinePath, filePath ] );
+  }
+}
+
+//
+
 function preCloneRepos( test )
 {
   let self = this;
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
@@ -61,6 +100,7 @@ function preCloneRepos( test )
   ({
     currentPath : self.repoDirPath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -104,6 +144,8 @@ function singleModuleWithSpaceTrivial( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'single with space' );
   let routinePath = _.path.join( self.suitePath, test.name, 'single with space' );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
@@ -113,6 +155,7 @@ function singleModuleWithSpaceTrivial( test )
     execPath : 'node ' + execPath,
     currentPath : _.path.dir( routinePath ),
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -144,6 +187,8 @@ function make( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'make' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let filePath = _.path.join( routinePath, '.' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
@@ -153,6 +198,7 @@ function make( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -288,6 +334,8 @@ function transpile( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'transpile' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
@@ -297,6 +345,7 @@ function transpile( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -440,6 +489,8 @@ function openWith( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'open' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, 'module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
@@ -449,6 +500,7 @@ function openWith( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -529,9 +581,7 @@ function openWith( test )
   {
     test.identical( got.exitCode, 0 );
 
-    debugger;
     var files = self.find( _.path.join( routinePath, 'out' ) );
-    debugger;
     test.identical( files, [] );
     var files = self.find( _.path.join( routinePath, 'doc.out' ) );
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
@@ -842,6 +892,8 @@ function openEach( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'open' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, 'module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
@@ -851,6 +903,7 @@ function openEach( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -928,6 +981,8 @@ function withMixed( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let filePath = _.path.join( routinePath, 'file' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
@@ -937,6 +992,7 @@ function withMixed( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     throwingExitCode : 0,
     ready : ready,
   });
@@ -993,6 +1049,8 @@ function eachMixed( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-git' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let filePath = _.path.join( routinePath, 'file' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
@@ -1002,6 +1060,7 @@ function eachMixed( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   });
 
@@ -1089,6 +1148,8 @@ function withList( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
 
   let ready = new _.Consequence().take( null );
@@ -1097,6 +1158,7 @@ function withList( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -1153,6 +1215,8 @@ function eachList( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'each-list' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
 
   let ready = new _.Consequence().take( null );
@@ -1161,6 +1225,7 @@ function eachList( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -1312,6 +1377,8 @@ function eachBrokenIll( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'each-broken' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
 
   let ready = new _.Consequence().take( null );
@@ -1320,6 +1387,7 @@ function eachBrokenIll( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     throwingExitCode : 0,
     ready : ready,
   })
@@ -1370,6 +1438,8 @@ function eachBrokenNon( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'open-non-willfile' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
 
   let ready = new _.Consequence().take( null );
@@ -1378,6 +1448,7 @@ function eachBrokenNon( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     throwingExitCode : 0,
     ready : ready,
   })
@@ -1415,6 +1486,8 @@ function eachBrokenCommand( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules-few' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
 
@@ -1424,6 +1497,7 @@ function eachBrokenCommand( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     throwingExitCode : 0,
     ready : ready,
   })
@@ -1462,6 +1536,8 @@ function openExportClean( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'open' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
 
@@ -1471,6 +1547,7 @@ function openExportClean( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     throwingExitCode : 1,
     ready : ready,
   })
@@ -1524,6 +1601,8 @@ function verbositySet( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
@@ -1534,6 +1613,7 @@ function verbositySet( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -1641,6 +1721,8 @@ function verbosityStepDelete( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'verbosity-step-delete' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let modulePath = _.path.join( routinePath, 'module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
@@ -1651,6 +1733,7 @@ function verbosityStepDelete( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -1935,6 +2018,8 @@ function verbosityStepPrintName( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'verbosity-step-print-name' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
 
@@ -1944,6 +2029,7 @@ function verbosityStepPrintName( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -2110,6 +2196,7 @@ function help( test )
   ({
     execPath : 'node ' + execPath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
     throwingExitCode : 0,
   })
@@ -2125,6 +2212,7 @@ function help( test )
   //   execPath : 'node ' + execPath,
   //   currentPath : routinePath,
   //   outputCollecting : 1,
+  //   outputGraying : 1,
   //   throwingExitCode : 0,
   //   ready : ready,
   // })
@@ -2213,6 +2301,8 @@ function listSingleModule( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'single' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
@@ -2221,6 +2311,7 @@ function listSingleModule( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -2496,6 +2587,8 @@ function listWithSubmodulesSimple( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
@@ -2505,6 +2598,7 @@ function listWithSubmodulesSimple( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -2535,6 +2629,8 @@ function listWithSubmodules( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
@@ -2544,6 +2640,7 @@ function listWithSubmodules( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -2674,6 +2771,8 @@ function listSteps( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
@@ -2684,6 +2783,7 @@ function listSteps( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -2775,6 +2875,8 @@ function listComplexPaths( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
@@ -2785,6 +2887,7 @@ function listComplexPaths( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -2819,6 +2922,8 @@ function clean( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'clean' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
@@ -2829,6 +2934,7 @@ function clean( test )
     execPath : 'node ' + execPath + '',
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -2927,6 +3033,8 @@ function cleanSingleModule( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'single' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
@@ -2937,6 +3045,7 @@ function cleanSingleModule( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -2983,6 +3092,8 @@ function cleanBroken1( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-broken-1' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
@@ -2996,6 +3107,7 @@ function cleanBroken1( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -3117,6 +3229,8 @@ function cleanBroken2( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-broken-2' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
@@ -3130,6 +3244,7 @@ function cleanBroken2( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -3251,6 +3366,8 @@ function cleanBrokenSubmodules( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'clean-broken-submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
@@ -3261,6 +3378,7 @@ function cleanBrokenSubmodules( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -3337,6 +3455,8 @@ function cleanNoBuild( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'clean' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
@@ -3347,6 +3467,7 @@ function cleanNoBuild( test )
     execPath : 'node ' + execPath + ' .with NoBuild',
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     throwingExitCode : 0,
     ready : ready,
   })
@@ -3399,6 +3520,8 @@ function cleanDry( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'clean' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
@@ -3409,6 +3532,7 @@ function cleanDry( test )
     execPath : 'node ' + execPath + ' .with NoTemp',
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -3478,6 +3602,8 @@ function cleanSubmodules( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'clean' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
@@ -3488,6 +3614,7 @@ function cleanSubmodules( test )
     execPath : 'node ' + execPath + ' .with NoTemp',
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -3550,6 +3677,8 @@ function cleanMixed( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let modulePath = _.path.join( routinePath, 'module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
@@ -3560,6 +3689,7 @@ function cleanMixed( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -3606,6 +3736,8 @@ function cleanWithInPath( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'clean-with-inpath' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let modulePath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
@@ -3616,6 +3748,7 @@ function cleanWithInPath( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -3683,6 +3816,8 @@ function cleanRecursive( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
@@ -3693,6 +3828,7 @@ function cleanRecursive( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -3756,6 +3892,8 @@ function buildSingleModule( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'single' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
   let ready = new _.Consequence().take( null )
@@ -3765,6 +3903,7 @@ function buildSingleModule( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -3886,6 +4025,8 @@ function buildSingleStep( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'step-shell' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, 'module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
@@ -3895,6 +4036,7 @@ function buildSingleStep( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -3956,6 +4098,8 @@ function buildSubmodules( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
@@ -3966,6 +4110,7 @@ function buildSubmodules( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -4032,6 +4177,7 @@ function buildSubmodules( test )
       execPath : 'node ' + execPath,
       currentPath : routinePath,
       outputCollecting : 1,
+    outputGraying : 1,
       args : [ '.build wrong' ]
     }
 
@@ -4064,6 +4210,8 @@ function buildDetached( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-detached' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let filePath = _.path.join( routinePath, 'file' );
   let modulePath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
@@ -4075,6 +4223,7 @@ function buildDetached( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   });
 
@@ -4125,6 +4274,8 @@ function exportSingle( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'single' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
   let outPath = _.path.join( routinePath, 'out' );
@@ -4136,6 +4287,7 @@ function exportSingle( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -4231,6 +4383,8 @@ function exportItself( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'export-itself' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
 
@@ -4239,6 +4393,7 @@ function exportItself( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -4285,6 +4440,8 @@ function exportNonExportable( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
@@ -4293,6 +4450,7 @@ function exportNonExportable( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -4334,6 +4492,8 @@ function exportInformal( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
@@ -4343,6 +4503,7 @@ function exportInformal( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   });
 
@@ -4581,6 +4742,8 @@ function exportWithReflector( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'export-with-reflector' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
   let outPath = _.path.join( routinePath, 'out' );
@@ -4592,6 +4755,7 @@ function exportWithReflector( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -4638,6 +4802,8 @@ function exportToRoot( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'export-to-root' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
@@ -4646,6 +4812,7 @@ function exportToRoot( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -4678,6 +4845,8 @@ function exportMixed( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let modulePath = _.path.join( routinePath, 'module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
@@ -4688,6 +4857,7 @@ function exportMixed( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -4931,6 +5101,8 @@ function exportSecond( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'export-second' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let modulePath = _.path.join( routinePath, 'module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
@@ -4941,6 +5113,7 @@ function exportSecond( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -5318,6 +5491,8 @@ function exportSubmodules( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
@@ -5329,6 +5504,7 @@ function exportSubmodules( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -5377,6 +5553,8 @@ function exportMultiple( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
@@ -5387,6 +5565,7 @@ function exportMultiple( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   });
 
@@ -5859,6 +6038,8 @@ function exportImportMultiple( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let out2Path = _.path.join( routinePath, 'super.out' );
@@ -5871,6 +6052,7 @@ function exportImportMultiple( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -6059,6 +6241,8 @@ function exportBroken( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple-broken' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
@@ -6069,6 +6253,7 @@ function exportBroken( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   });
 
@@ -6172,6 +6357,8 @@ function exportDoc( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple-doc' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let subOutPath = _.path.join( routinePath, 'out' );
   let supOutPath = _.path.join( routinePath, 'doc.out' );
@@ -6183,6 +6370,7 @@ function exportDoc( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -6233,6 +6421,8 @@ function exportImport( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
@@ -6243,6 +6433,7 @@ function exportImport( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -6284,6 +6475,8 @@ function exportBrokenNoreflector( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'export-broken-noreflector' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
@@ -6294,6 +6487,7 @@ function exportBrokenNoreflector( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -6343,6 +6537,8 @@ function exportCourrputedOutfileUnknownSection( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'corrupted-outfile-unknown-section' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'sub.out' );
   let outFilePath = _.path.join( routinePath, 'sub.out/sub.out.will.yml' );
@@ -6353,6 +6549,7 @@ function exportCourrputedOutfileUnknownSection( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -6403,6 +6600,8 @@ function exportCourruptedOutfileSyntax( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'corrupted-outfile-syntax' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'sub.out' );
   let outFilePath = _.path.join( routinePath, 'sub.out/sub.out.will.yml' );
@@ -6413,6 +6612,7 @@ function exportCourruptedOutfileSyntax( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -6463,6 +6663,8 @@ function exportCourruptedSubmodulesDisabled( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'corrupted-submodules-disabled' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'super.out' );
   let outFilePath = _.path.join( routinePath, 'super.out/supermodule.out.will.yml' );
@@ -6473,6 +6675,8 @@ function exportCourruptedSubmodulesDisabled( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -6520,6 +6724,8 @@ function exportInconsistent( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'inconsistent-outfile' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'sub.out' );
   let outFilePath = _.path.join( routinePath, 'sub.out/sub.out.will.yml' );
@@ -6530,6 +6736,7 @@ function exportInconsistent( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -6610,6 +6817,8 @@ function exportWholeModule( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'export-whole' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
@@ -6620,6 +6829,7 @@ function exportWholeModule( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -6654,8 +6864,10 @@ function exportWholeModule( test )
 function exportRecursive( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'resolve-path-of-submodules' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'resolve-path-of-submodules-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let inPath = abs( 'ab/' );
@@ -6668,10 +6880,13 @@ function exportRecursive( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( outDirPath );
 
   /* - */
 
@@ -6679,7 +6894,7 @@ function exportRecursive( test )
 
   .then( () =>
   {
-    test.case = '.with ab/ .export.recursive'
+    test.case = '.with ab/ .export.recursive -- first'
     return null;
   })
 
@@ -6694,7 +6909,37 @@ function exportRecursive( test )
     var files = self.find( outDirPath );
     test.identical( files, exp )
 
-    test.identical( _.strCount( got.output, 'xxx' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported module::module-ab / module::module-a / build::proto.export with 2 file(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported module::module-ab / module::module-b / build::proto.export with 8 file(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported module::module-ab / build::proto.export with 13 file(s) in' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.with ab/ .export.recursive -- second'
+    return null;
+  })
+
+  shell({ execPath : '.with ab/ .export.recursive' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.description = 'files';
+    var exp = [ '.', './module-a.out.will.yml', './module-b.out.will.yml', './ab', './ab/module-ab.out.will.yml' ];
+    var files = self.find( outDirPath );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( got.output, 'Exported module::module-ab / module::module-a / build::proto.export with 2 file(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported module::module-ab / module::module-b / build::proto.export with 8 file(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported module::module-ab / build::proto.export with 13 file(s) in' ), 1 );
 
     return null;
   })
@@ -6703,6 +6948,379 @@ function exportRecursive( test )
 
   return ready;
 } /* end of function exportRecursive */
+
+//
+
+function exportRecursiveUsingSubmodule( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple-exported' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let inPath = abs( 'super' );
+  let outSuperDirPath = abs( 'super.out' );
+  let outSubDirPath = abs( 'sub.out' );
+  let outSuperTerminalPath = abs( 'super.out/supermodule.out.will.yml' );
+  let outSubTerminalPath = abs( 'sub.out/submodule.out.will.yml' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( outSuperDirPath );
+  _.fileProvider.filesDelete( outSubDirPath );
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.with super .export.recursive debug:1 -- first'
+    return null;
+  })
+
+  shell({ execPath : '.with super .export.recursive debug:1' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.description = 'files';
+    var exp =
+    [
+      '.',
+      './.ex.will.yml',
+      './.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub.out',
+      './sub.out/submodule.debug.out.tgs',
+      './sub.out/submodule.out.will.yml',
+      './sub.out/debug',
+      './sub.out/debug/File.debug.js',
+      './super.out',
+      './super.out/supermodule.debug.out.tgs',
+      './super.out/supermodule.out.will.yml',
+      './super.out/debug',
+      './super.out/debug/File.debug.js'
+    ]
+    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / module::submodule / build::export.debug with 2 file(s)' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / build::export.debug with 2 file(s) in' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.with super .export.recursive debug:1 -- second'
+    return null;
+  })
+
+  shell({ execPath : '.with super .export.recursive debug:1' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.description = 'files';
+    var exp =
+    [
+      '.',
+      './.ex.will.yml',
+      './.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub.out',
+      './sub.out/submodule.debug.out.tgs',
+      './sub.out/submodule.out.will.yml',
+      './sub.out/debug',
+      './sub.out/debug/File.debug.js',
+      './super.out',
+      './super.out/supermodule.debug.out.tgs',
+      './super.out/supermodule.out.will.yml',
+      './super.out/debug',
+      './super.out/debug/File.debug.js'
+    ]
+    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / module::submodule / build::export.debug with 2 file(s)' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / build::export.debug with 2 file(s) in' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.with super .export.recursive debug:0 -- first'
+    return null;
+  })
+
+  shell({ execPath : '.with super .export.recursive debug:0' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.description = 'files';
+    var exp =
+    [
+      '.',
+      './.ex.will.yml',
+      './.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub.out',
+      './sub.out/submodule.debug.out.tgs',
+      './sub.out/submodule.out.tgs',
+      './sub.out/submodule.out.will.yml',
+      './sub.out/debug',
+      './sub.out/debug/File.debug.js',
+      './sub.out/release',
+      './sub.out/release/File.release.js',
+      './super.out',
+      './super.out/supermodule.debug.out.tgs',
+      './super.out/supermodule.out.tgs',
+      './super.out/supermodule.out.will.yml',
+      './super.out/debug',
+      './super.out/debug/File.debug.js',
+      './super.out/release',
+      './super.out/release/File.release.js'
+    ]
+    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / module::submodule / build::export. with 2 file(s)' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / build::export. with 2 file(s) in' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.with super .export.recursive debug:0 -- second'
+    return null;
+  })
+
+  shell({ execPath : '.with super .export.recursive debug:0' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.description = 'files';
+    var exp =
+    [
+      '.',
+      './.ex.will.yml',
+      './.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub.out',
+      './sub.out/submodule.debug.out.tgs',
+      './sub.out/submodule.out.tgs',
+      './sub.out/submodule.out.will.yml',
+      './sub.out/debug',
+      './sub.out/debug/File.debug.js',
+      './sub.out/release',
+      './sub.out/release/File.release.js',
+      './super.out',
+      './super.out/supermodule.debug.out.tgs',
+      './super.out/supermodule.out.tgs',
+      './super.out/supermodule.out.will.yml',
+      './super.out/debug',
+      './super.out/debug/File.debug.js',
+      './super.out/release',
+      './super.out/release/File.release.js'
+    ]
+    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / module::submodule / build::export. with 2 file(s)' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / build::export. with 2 file(s) in' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function exportRecursiveUsingSubmodule */
+
+exportRecursiveUsingSubmodule.timeOut = 300000;
+
+//
+
+function exportDotless( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'two-dotless-exported' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let inPath = abs( './' );
+  let outSuperDirPath = abs( 'super.out' );
+  let outSubDirPath = abs( 'sub.out' );
+  let outSuperTerminalPath = abs( 'super.out/supermodule.out.will.yml' );
+  let outSubTerminalPath = abs( 'sub.out/sub.out.will.yml' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( outSuperDirPath );
+  _.fileProvider.filesDelete( outSubDirPath );
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.export.recursive debug:1'
+    return null;
+  })
+
+  shell({ execPath : '.export.recursive debug:1' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.description = 'files';
+    var exp =
+    [
+      '.',
+      './ex.will.yml',
+      './im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/ex.will.yml',
+      './sub/im.will.yml',
+      './sub.out',
+      './sub.out/sub.out.will.yml',
+      './sub.out/debug',
+      './sub.out/debug/File.debug.js',
+      './super.out',
+      './super.out/supermodule.out.will.yml',
+      './super.out/debug',
+      './super.out/debug/File.debug.js',
+      './super.out/debug/File.release.js'
+    ]
+    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / module::sub / build::export.debug with 2 file(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / build::export.debug with 3 file(s) in' ), 1 );
+
+    return null;
+  })
+
+  .then( () =>
+  {
+    test.case = '.with . .export.recursive debug:0'
+    return null;
+  })
+
+  shell({ execPath : '.with . .export.recursive debug:0' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.description = 'files';
+    var exp =
+    [
+      '.',
+      './ex.will.yml',
+      './im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/ex.will.yml',
+      './sub/im.will.yml',
+      './sub.out',
+      './sub.out/sub.out.will.yml',
+      './sub.out/debug',
+      './sub.out/debug/File.debug.js',
+      './sub.out/release',
+      './sub.out/release/File.release.js',
+      './super.out',
+      './super.out/supermodule.out.will.yml',
+      './super.out/debug',
+      './super.out/debug/File.debug.js',
+      './super.out/debug/File.release.js',
+      './super.out/release',
+      './super.out/release/File.debug.js',
+      './super.out/release/File.release.js'
+    ]
+    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / module::sub / build::export. with 2 file(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / build::export. with 3 file(s) in' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function exportDotless */
+
+exportDotless.timeOut = 300000;
 
 //
 
@@ -6715,6 +7333,8 @@ function exportWithRemoteSubmodules( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
@@ -6725,6 +7345,7 @@ function exportWithRemoteSubmodules( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -6782,6 +7403,8 @@ function importPathLocal( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'import-path-local' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
@@ -6792,6 +7415,7 @@ function importPathLocal( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -6836,6 +7460,8 @@ function importLocalRepo( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'import-auto' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let repoPath = _.path.join( self.suitePath, '_repo' );
   let outPath = _.path.join( routinePath, 'out' );
   let modulePath = _.path.join( routinePath, '.module' );
@@ -6847,6 +7473,7 @@ function importLocalRepo( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -6995,6 +7622,8 @@ function importOutWithDeletedSource( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let modulePath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
@@ -7005,6 +7634,7 @@ function importOutWithDeletedSource( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -7072,6 +7702,8 @@ function reflectNothingFromSubmodules( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflect-nothing-from-submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
   let outPath = _.path.join( routinePath, 'out' );
@@ -7083,6 +7715,7 @@ function reflectNothingFromSubmodules( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -7199,6 +7832,8 @@ function reflectGetPath( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflect-get-path' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, 'module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
@@ -7209,6 +7844,7 @@ function reflectGetPath( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -7293,6 +7929,8 @@ function reflectSubdir( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflect-subdir' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
@@ -7302,6 +7940,7 @@ function reflectSubdir( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -7455,6 +8094,8 @@ function reflectSubmodulesWithBase( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflect-submodules-with-base' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
   let submodule1OutFilePath = _.path.join( routinePath, 'submodule1.out.will.yml' );
@@ -7466,6 +8107,7 @@ function reflectSubmodulesWithBase( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -7556,6 +8198,8 @@ function reflectComposite( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'composite-reflector' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
@@ -7565,6 +8209,7 @@ function reflectComposite( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -7785,6 +8430,8 @@ function reflectRemoteGit( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflect-remote-git' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, 'module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
@@ -7797,6 +8444,7 @@ function reflectRemoteGit( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -7933,6 +8581,8 @@ function reflectRemoteHttp( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflect-remote-http' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, 'module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
@@ -7944,6 +8594,7 @@ function reflectRemoteHttp( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -7979,6 +8630,8 @@ function reflectWithOptions( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflect-with-options' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let filePath = _.path.join( routinePath, 'file' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
@@ -7989,6 +8642,7 @@ function reflectWithOptions( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     throwingExitCode : 0,
     ready : ready,
   });
@@ -8071,6 +8725,8 @@ function reflectWithSelectorInDstFilter( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflect-selecting-dst' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let filePath = _.path.join( routinePath, 'file' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
@@ -8081,6 +8737,7 @@ function reflectWithSelectorInDstFilter( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   });
 
@@ -8148,6 +8805,8 @@ function reflectSubmodulesWithCriterion( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-with-criterion' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out/debug' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
@@ -8157,6 +8816,7 @@ function reflectSubmodulesWithCriterion( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -8214,6 +8874,8 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflect-submodules-with-plural-criterion' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
@@ -8223,6 +8885,7 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -8262,6 +8925,8 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflect-submodules-with-plural-criterion' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
@@ -8271,6 +8936,7 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -8337,6 +9003,8 @@ function relfectSubmodulesWithNotExistingFile( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-reflect-with-not-existing' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
@@ -8346,6 +9014,7 @@ function relfectSubmodulesWithNotExistingFile( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -8372,6 +9041,8 @@ function reflectInherit( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflect-inherit' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
@@ -8381,6 +9052,7 @@ function reflectInherit( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -8595,6 +9267,8 @@ function reflectInheritSubmodules( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflect-inherit-submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
@@ -8604,6 +9278,7 @@ function reflectInheritSubmodules( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   });
 
@@ -8699,6 +9374,8 @@ function reflectComplexInherit( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
@@ -8708,6 +9385,7 @@ function reflectComplexInherit( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -8771,6 +9449,8 @@ function reflectorMasks( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflector-masks' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
 
@@ -8782,6 +9462,7 @@ function reflectorMasks( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -8841,6 +9522,8 @@ function shellWithCriterion( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'step-shell-with-criterion' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
 
@@ -8852,6 +9535,7 @@ function shellWithCriterion( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -8906,6 +9590,8 @@ function shellVerbosity( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'step-shell-verbosity' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
 
@@ -8915,6 +9601,7 @@ function shellVerbosity( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -9021,6 +9708,8 @@ function functionStringsJoin( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'function-strings-join' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
@@ -9030,6 +9719,7 @@ function functionStringsJoin( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -9152,6 +9842,8 @@ function functionPlatform( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'function-platform' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
@@ -9161,6 +9853,7 @@ function functionPlatform( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -9212,6 +9905,8 @@ function fucntionThisCriterion( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'step-shell-using-criterion-value' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
 
@@ -9221,6 +9916,7 @@ function fucntionThisCriterion( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -9271,6 +9967,8 @@ function submodulesDownloadSingle( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'single' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
@@ -9279,6 +9977,7 @@ function submodulesDownloadSingle( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready
   })
 
@@ -9351,6 +10050,8 @@ function submodulesDownloadUpdate( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
 
@@ -9360,6 +10061,7 @@ function submodulesDownloadUpdate( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -9509,6 +10211,8 @@ function submodulesDownloadUpdateDry( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-detached' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
 
@@ -9518,6 +10222,7 @@ function submodulesDownloadUpdateDry( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -9633,6 +10338,8 @@ function submodulesDownloadedUpdate( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-downloaded-update' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
 
@@ -9642,6 +10349,7 @@ function submodulesDownloadedUpdate( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -9680,6 +10388,7 @@ function submodulesDownloadedUpdate( test )
     currentPath : _.path.join( routinePath, '.module/willbe-experiment' ),
     ready : ready,
     outputCollecting : 1,
+    outputGraying : 1,
   })
 
   .then( ( got ) =>
@@ -9705,6 +10414,7 @@ function submodulesDownloadedUpdate( test )
     currentPath : _.path.join( routinePath, '.module/willbe-experiment' ),
     ready : ready,
     outputCollecting : 1,
+    outputGraying : 1,
   })
 
   .then( ( got ) =>
@@ -9724,6 +10434,8 @@ function submodulesUpdate( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-update' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
 
@@ -9733,6 +10445,7 @@ function submodulesUpdate( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -9836,6 +10549,8 @@ function submodulesUpdateSwitchBranch( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-update-switch-branch' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let experimentModulePath = _.path.join( submodulesPath, 'experiment' );
@@ -9847,6 +10562,7 @@ function submodulesUpdateSwitchBranch( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -10026,6 +10742,7 @@ function submodulesUpdateSwitchBranch( test )
     execPath : 'git status',
     currentPath : experimentModulePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -10050,6 +10767,8 @@ function stepSubmodulesDownload( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'step-submodules-download' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
   _.fileProvider.filesDelete( _.path.join( routinePath, '.module' ) );
@@ -10063,6 +10782,7 @@ function stepSubmodulesDownload( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     verbosity : 3,
     ready : ready
   })
@@ -10147,6 +10867,8 @@ function upgradeDryDetached( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-detached' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let filePath = _.path.join( routinePath, 'file' );
   let modulePath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
@@ -10158,6 +10880,7 @@ function upgradeDryDetached( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   });
 
@@ -10395,6 +11118,8 @@ function upgradeDetached( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-detached' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let filePath = _.path.join( routinePath, 'file' );
   let modulePath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
@@ -10406,6 +11131,7 @@ function upgradeDetached( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   });
 
@@ -10766,6 +11492,8 @@ function fixateDryDetached( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-detached' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let filePath = _.path.join( routinePath, 'file' );
   let modulePath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
@@ -10777,6 +11505,7 @@ function fixateDryDetached( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   });
 
@@ -11014,6 +11743,8 @@ function fixateDetached( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-detached' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let filePath = _.path.join( routinePath, 'file' );
   let modulePath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
@@ -11025,6 +11756,7 @@ function fixateDetached( test )
     execPath : 'node ' + execPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   });
 
@@ -11394,6 +12126,8 @@ function runWillbe( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'run-willbe' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let execUnrestrictedPath = _.path.nativize( _.path.join( __dirname, '../will/ExecUnrestricted' ) );
   let ready = new _.Consequence().take( null );
@@ -11403,6 +12137,7 @@ function runWillbe( test )
     // execPath : 'node',
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
     mode : 'fork',
   });
@@ -11411,6 +12146,7 @@ function runWillbe( test )
   ({
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     mode : 'fork',
     ready : ready,
     mode : 'shell',
@@ -11521,6 +12257,8 @@ function resourcesFormReflectorsExperiment( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'performance2' );
   let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let moduleOldPath = _.path.join( routinePath, './old-out-file/' );
   let moduleNewPath = _.path.join( routinePath, './new-out-file/' );
@@ -11636,6 +12374,8 @@ var Self =
     assetDirPath : null,
     repoDirPath : null,
     find : null,
+    abs_functor,
+    rel_functor
   },
 
   tests :
@@ -11706,6 +12446,8 @@ var Self =
     exportInconsistent,
     exportWholeModule,
     exportRecursive,
+    exportRecursiveUsingSubmodule,
+    exportDotless,
     // exportWithRemoteSubmodules, // xxx
     importPathLocal,
     importLocalRepo,

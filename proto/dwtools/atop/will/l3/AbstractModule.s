@@ -171,6 +171,22 @@ function PrefixPathForRoleMaybe( role, isOut )
   return result;
 }
 
+//
+
+function PathToRole( filePath )
+{
+  let role = null;
+
+  if( _.strHas( filePath, /(^|\.|\/)im\.will(\.|$)/ ) )
+  role = 'import';
+  else if( _.strHas( filePath, /(^|\.|\/)ex\.will(\.|$)/ ) )
+  role = 'export';
+  else
+  role = 'single';
+
+  return role;
+}
+
 // //
 //
 // function CommonPathFor( willfilesPath )
@@ -645,6 +661,7 @@ let Statics =
   DirPathFromFilePaths,
   PrefixPathForRole,
   PrefixPathForRoleMaybe,
+  PathToRole,
 
   CommonPathFor,
   CloneDirPathFor,
@@ -671,6 +688,7 @@ let Forbids =
   moduleWithCommonPathMap : 'moduleWithCommonPathMap',
   supermoduleSubmodule : 'supermoduleSubmodule',
   configName : 'configName',
+  superModules : 'superModules',
 
 }
 

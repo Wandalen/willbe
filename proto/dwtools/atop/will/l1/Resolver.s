@@ -175,7 +175,7 @@ function _statusPreUpdate()
 
   _.assert( !_.mapHasKey( it.src, 'composite' ) );
 
-  if( it.down && it.down.src && it.down.src instanceof will.Submodule )
+  if( it.down && it.down.src && it.down.src instanceof will.ModulesRelation )
   {
     _.assert( it.src instanceof will.OpenedModule )
     // let valid = it.down.src.module.submodulesAreValid();
@@ -193,7 +193,7 @@ function _statusPreUpdate()
   {
     it.currentModule = it.src;
   }
-  else if( it.src instanceof will.Submodule )
+  else if( it.src instanceof will.ModulesRelation )
   {
     _.sure( !!it.src.opener, `${it.src.decoratedAbsoluteName} is not formed` );
     _.sure( !!it.src.opener.openedModule, `${it.src.decoratedAbsoluteName} is not opened` );

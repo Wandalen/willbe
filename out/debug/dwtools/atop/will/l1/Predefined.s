@@ -737,7 +737,7 @@ function stepRoutineSubmodulesDownload( frame )
   _.assert( arguments.length === 1 );
   _.assert( !!module );
 
-  return module.submodulesDownload();
+  return module.subModulesDownload();
 }
 
 stepRoutineSubmodulesDownload.stepOptions =
