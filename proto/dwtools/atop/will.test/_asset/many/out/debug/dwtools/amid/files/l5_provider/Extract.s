@@ -559,6 +559,7 @@ function statReadAct( o )
       result.ctime = new Date( extraStat.ctime );
       result.birthtime = new Date( extraStat.birthtime );
       result.ino = extraStat.ino || null;
+      result.dev = extraStat.dev || null;
     }
 
     result.filePath = filePath;

@@ -382,8 +382,8 @@ function _commandBuildLike( o )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  // let request = will.Resolver.strRequestParse( e.argument );
 
+  _.routineOptions( _commandBuildLike, arguments );
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
   _.assert( _.strIs( o.name ) );
@@ -408,18 +408,10 @@ function _commandBuildLike( o )
     {
       let it2 = _.mapExtend( null, o, it );
       return o.onEach.call( will, it2 );
-      // return it.opener.openedModule.modulesExport
-      // ({
-      //   name : request.subject,
-      //   criterion : request.map,
-      //   recursive : 0,
-      //   kind : 'build',
-      // });
     });
 
     ready2.finally( ( err, arg ) =>
     {
-      debugger;
       will.currentOpenerChange( null );
       if( err )
       throw _.err( err, `\nFailed to ${o.name} ${it.opener ? it.opener.commonPath : ''}` );
@@ -451,17 +443,81 @@ _commandBuildLike.defaults =
 
 //
 
+function _commandWhichLike( o )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+
+  _.routineOptions( _commandWhichLike, arguments );
+  _.assert( _.routineIs( o.commandRoutine ) );
+  _.assert( _.routineIs( o.onAll ) );
+  _.assert( _.strIs( o.name ) );
+  _.assert( _.objectIs( o.event ) );
+
+  will._commandsBegin( o.commandRoutine );
+
+  _.assert( will.currentOpener === null );
+  if( will.currentOpeners === null )
+  ready.then( () => will.openersFind() );
+
+  ready.then( () =>
+  {
+    let ready2 = new _.Consequence().take( null );
+
+    will.currentOpeners.forEach( ( opener ) => ready2.then( () =>
+    {
+      // opener.open({ all : 1, resourcesFormed : 0 });
+      _.assert( !!opener.openedModule );
+      return opener.openedModule.modulesUpform({ recursive : 2, all : 1, resourcesFormed : 0 });
+    }));
+
+    ready2.then( () =>
+    {
+      let it2 = _.mapExtend( null, o );
+      it2.modules = will.modulesArray;
+      return o.onAll.call( will, it2 );
+    });
+
+    return ready2;
+  })
+  .finally( ( err, arg ) =>
+  {
+    will._commandsEnd( o.commandRoutine );
+    if( err )
+    err = _.err( err, `\nFailed to ${o.name}` );
+    if( err )
+    logger.log( _.errOnce( err ) );
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  return ready;
+}
+
+_commandWhichLike.defaults =
+{
+  event : null,
+  onAll : null,
+  commandRoutine : null,
+  name : null,
+}
+
+//
+
 function openersFind()
 {
   let will = this;
   let logger = will.logger;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
 
   _.assert( will.currentOpener === null );
   _.assert( will.currentOpeners === null );
+  _.assert( arguments.length === 0 );
 
-  // will._commandsBegin( commandWith );
-
-  return will.moduleWithAt({ selector : './' })
+  return will.moduleWithAt({ selector : './', tracing : 1 })
   .finally( function( err, it )
   {
 
@@ -474,7 +530,7 @@ function openersFind()
     if( !will.currentOpeners.length )
     debugger;
     if( !will.currentOpeners.length )
-    throw _.errBrief( 'Found no willfile at ?' );
+    throw _.errBrief( `Found no willfile at ${path.resolve( './' )}` );
 
     return will.currentOpeners;
   })
@@ -504,7 +560,7 @@ function _commandsMake()
     'submodules list' :         { e : _.routineJoin( will, will.commandSubmodulesList ),              h : 'List submodules of the current module.' },
     'modules list' :            { e : _.routineJoin( will, will.commandModulesList ),                 h : 'List all modules.' },
     'modules topological list' :{ e : _.routineJoin( will, will.commandModulesTopologicalList ),      h : 'List all modules topologically.' },
-    'modules tree list' :       { e : _.routineJoin( will, will.commandModulesTreeList ),             h : 'List all modules as tree.' },
+    'modules which' :           { e : _.routineJoin( will, will.commandModulesWhich ),                h : 'List all found modules as a tree.' },
     'reflectors list' :         { e : _.routineJoin( will, will.commandReflectorsList ),              h : 'List avaialable reflectors the current module.' },
     'steps list' :              { e : _.routineJoin( will, will.commandStepsList ),                   h : 'List avaialable steps the current module.' },
     'builds list' :             { e : _.routineJoin( will, will.commandBuildsList ),                  h : 'List avaialable builds the current module.' },
@@ -620,24 +676,6 @@ function errEncounter( error )
 
 //
 
-// function errTooMany( elements, what )
-// {
-//   let will = this;
-//
-//   if( elements.length !== 1 )
-//   {
-//     debugger;
-//     if( elements.length === 0 )
-//     return _.errBrief( 'Please specify exactly one ' + what + ', none satisfies passed arguments' );
-//     else
-//     return _.errBrief( 'Please specify exactly one ' + what + ', ' + elements.length + ' satisfy(s)' + '\nFound : ' + _.strQuote( _.select( elements, '*/name' ) ) );
-//   }
-//
-//   return false;
-// }
-
-//
-
 function currentOpenerChange( src )
 {
   let will = this;
@@ -727,7 +765,7 @@ function commandWith( e )
     will.currentOpeners = it.openers;
 
     if( !will.currentOpeners.length )
-    throw _.errBrief( 'Found no willfile at ' + _.strQuote( isolated.argument ) );
+    throw _.errBrief( 'Found no willfile at ' + _.strQuote( path.resolve( isolated.argument ) ) );
 
     return ca.commandPerform
     ({
@@ -862,7 +900,7 @@ function commandEach( e )
       will.mainOpener = null;
 
       if( err )
-      logger.log( _.errOnce( _.errBrief( '\n', err, '\n' ) ) );
+      logger.log( _.errOnce( _.errBrie( '\n', err, '\n' ) ) );
       if( err )
       throw _.err( err );
       return arg;
@@ -1044,18 +1082,44 @@ function commandModulesTopologicalList( e )
 
 //
 
-function commandModulesTreeList( e )
+function commandModulesWhich( e )
 {
   let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let request = will.Resolver.strRequestParse( e.argument );
 
-  function act( module, resources )
+  return will._commandWhichLike
+  ({
+    event : e,
+    name : 'which',
+    onAll : handleAll,
+    commandRoutine : commandModulesWhich,
+  });
+
+  function handleAll( it )
   {
-    let logger = will.logger;
-    logger.log( will.modulesInfoExportAsTree( resources ) );
+    let modules = it.modules;
+    debugger;
+    logger.log( will.graphInfoExportAsTree( modules ) );
+    debugger;
+    return null;
   }
 
-  return will._commandList( e, act, 'module' );
 }
+
+// function commandModulesWhich( e )
+// {
+//   let will = this;
+//
+//   function act( module, resources )
+//   {
+//     let logger = will.logger;
+//     logger.log( will.graphInfoExportAsTree( resources ) );
+//   }
+//
+//   return will._commandList( e, act, 'module' );
+// }
 
 //
 
@@ -1804,6 +1868,7 @@ let Extend =
   _openersCurrentEach,
   openersCurrentEach,
   _commandBuildLike,
+  _commandWhichLike,
   openersFind,
 
   _commandsMake,
@@ -1824,7 +1889,7 @@ let Extend =
   commandSubmodulesList,
   commandModulesList,
   commandModulesTopologicalList,
-  commandModulesTreeList,
+  commandModulesWhich,
   commandReflectorsList,
   commandStepsList,
   commandBuildsList,

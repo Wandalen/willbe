@@ -2537,7 +2537,7 @@ let moveTextualReport = _.routineFromPreAndBody( moveTextualReport_pre, moveText
 // exception
 // --
 
-function _onErrorNotSafe( prefix,filePath,level )
+function _onErrorNotSafe( prefix, filePath, level )
 {
   _.assert( arguments.length === 3 );
   _.assert( _.strIs( prefix ) );
@@ -2547,7 +2547,7 @@ function _onErrorNotSafe( prefix,filePath,level )
   [
     prefix + ( prefix ? '. ' : '' ),
     'Not safe to use file ' + _.strQuote( filePath ) + '.',
-    'Please decrease {- safe -} if you know what you do,current {- safe = ' + level + ' -}'
+    `Please decrease safity level explicitly if you know what you do, current safity level is ${level}`
   ];
   return args;
 }

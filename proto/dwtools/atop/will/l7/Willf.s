@@ -339,8 +339,8 @@ function _read()
     if( !willf.structure )
     if( !willf.exists() )
     {
-      debugger;
-      throw _.err( `No willfile at ${willf.filePath}` );
+      // debugger;
+      throw _.errBrief( `Found no willfile at ${willf.filePath}` );
     }
 
     if( willf.structure )
@@ -451,7 +451,7 @@ function _open()
       _.assert( _.strIs( willf._found[ 0 ].ext ), `Cant open ${willf.filePath}` );
 
 /*
-      xxx qqq : make it working
+      zzz qqq : make it working
       let encoder = _.Gdf.Select
       ({
         in : 'buffer.raw',
@@ -943,7 +943,7 @@ function hashGet()
 
   return willf.hash;
 
-  /* xxx : move out, maybe */
+  /* zzz : move out, maybe */
 
   function hashFor( data )
   {

@@ -339,8 +339,8 @@ function _read()
     if( !willf.structure )
     if( !willf.exists() )
     {
-      debugger;
-      throw _.err( `No willfile at ${willf.filePath}` );
+      // debugger;
+      throw _.errBrief( `Found no willfile at ${willf.filePath}` );
     }
 
     if( willf.structure )

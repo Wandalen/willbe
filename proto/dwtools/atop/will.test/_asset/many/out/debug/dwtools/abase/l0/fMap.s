@@ -8,7 +8,6 @@ let Self = _global_.wTools;
 
 let _ArraySlice = Array.prototype.slice;
 let _FunctionBind = Function.prototype.bind;
-// let Object.prototype.toString = Object.prototype.toString;
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
 
 // --
@@ -118,6 +117,26 @@ function mapIs( src )
   _.assert( proto === null || !!proto, 'unexpected' );
 
   return false;
+}
+
+//
+
+function hashMapIs( src )
+{
+  if( !src )
+  return false;
+  debugger;
+  return src instanceof HashMap;
+}
+
+//
+
+function setIs( src )
+{
+  if( !src )
+  return false;
+  debugger;
+  return src instanceof Set;
 }
 
 //
@@ -5504,6 +5523,8 @@ let Routines =
   mapIsPure,
   mapIsPopulated,
   mapIsHeritated,
+  hashMapIs,
+  setIs,
   mapLike,
 
   mapsAreIdentical,

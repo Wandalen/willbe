@@ -217,7 +217,7 @@ function CommonPathFor( willfilesPath )
   //
   // common = common.replace( /(\.im|\.ex)$/, '' );
 
-  let common = willfilesPath.replace( /(\.(im|ex))?\.will(\.out)?(\.\w+)?$/, '' );
+  let common = willfilesPath.replace( /(\.)?((im|ex)\.)?(will\.)(out\.)?(\w+)?$/, '' );
 
   if( _.strEnds( common, [ '/im', '/ex' ] ) )
   {

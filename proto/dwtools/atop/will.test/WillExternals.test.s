@@ -7324,6 +7324,240 @@ exportDotless.timeOut = 300000;
 
 //
 
+function exportDotlessSingle( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'two-dotless-single-exported' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let inPath = abs( './' );
+  let outSuperDirPath = abs( 'super.out' );
+  let outSubDirPath = abs( 'sub.out' );
+  let outSuperTerminalPath = abs( 'super.out/supermodule.out.will.yml' );
+  let outSubTerminalPath = abs( 'sub.out/sub.out.will.yml' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( outSuperDirPath );
+  _.fileProvider.filesDelete( outSubDirPath );
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.export.recursive debug:1'
+    return null;
+  })
+
+  shell({ execPath : '.export.recursive debug:1' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.description = 'files';
+    var exp =
+    [
+      '.',
+      './will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/will.yml',
+      './sub.out',
+      './sub.out/sub.out.will.yml',
+      './sub.out/debug',
+      './sub.out/debug/File.debug.js',
+      './super.out',
+      './super.out/supermodule.out.will.yml',
+      './super.out/debug',
+      './super.out/debug/File.debug.js',
+      './super.out/debug/File.release.js'
+    ]
+    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / module::sub / build::export.debug with 2 file(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / build::export.debug with 3 file(s) in' ), 1 );
+
+    return null;
+  })
+
+  .then( () =>
+  {
+    test.case = '.with . .export.recursive debug:0'
+    return null;
+  })
+
+  shell({ execPath : '.with . .export.recursive debug:0' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.description = 'files';
+    var exp =
+    [
+      '.',
+      './will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/will.yml',
+      './sub.out',
+      './sub.out/sub.out.will.yml',
+      './sub.out/debug',
+      './sub.out/debug/File.debug.js',
+      './sub.out/release',
+      './sub.out/release/File.release.js',
+      './super.out',
+      './super.out/supermodule.out.will.yml',
+      './super.out/debug',
+      './super.out/debug/File.debug.js',
+      './super.out/debug/File.release.js',
+      './super.out/release',
+      './super.out/release/File.debug.js',
+      './super.out/release/File.release.js'
+    ]
+    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / module::sub / build::export. with 2 file(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / build::export. with 3 file(s) in' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function exportDotlessSingle */
+
+exportDotlessSingle.timeOut = 300000;
+
+//
+
+function exportTracing( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'two-dotless-single-exported' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let inPath = abs( './' );
+  let outSuperDirPath = abs( 'super.out' );
+  let outSubDirPath = abs( 'sub.out' );
+  let outSuperTerminalPath = abs( 'super.out/supermodule.out.will.yml' );
+  let outSubTerminalPath = abs( 'sub.out/sub.out.will.yml' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath + '/proto',
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( outSuperDirPath );
+  _.fileProvider.filesDelete( outSubDirPath );
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.export.recursive debug:1'
+    return null;
+  })
+
+  shell({ execPath : '.export.recursive debug:1' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.description = 'files';
+    var exp =
+    [
+      '.',
+      './will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/will.yml',
+      './sub.out',
+      './sub.out/sub.out.will.yml',
+      './sub.out/debug',
+      './sub.out/debug/File.debug.js',
+      './super.out',
+      './super.out/supermodule.out.will.yml',
+      './super.out/debug',
+      './super.out/debug/File.debug.js',
+      './super.out/debug/File.release.js'
+    ]
+    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / module::sub / build::export.debug with 2 file(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'Exported module::supermodule / build::export.debug with 3 file(s) in' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.with . .export.recursive debug:1'
+    return null;
+  })
+
+  shell({ execPath : '.with . .export.recursive debug:1' })
+
+  .finally( ( err, op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Found no willfile at' ), 1 );
+    _.errAttend( err );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function exportTracing */
+
+exportTracing.timeOut = 300000;
+
+//
+
 /*
   check there is no annoying information about lack of remote submodules of submodules
 */
@@ -12448,6 +12682,8 @@ var Self =
     exportRecursive,
     exportRecursiveUsingSubmodule,
     exportDotless,
+    exportDotlessSingle,
+    exportTracing,
     // exportWithRemoteSubmodules, // xxx
     importPathLocal,
     importLocalRepo,

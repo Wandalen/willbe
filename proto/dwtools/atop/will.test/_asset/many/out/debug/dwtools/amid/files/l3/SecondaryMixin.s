@@ -622,7 +622,8 @@ function systemBitrateTimeGet()
   if( _.FileProvider.HardDrive && self instanceof _.FileProvider.HardDrive )
   {
     // let testDir = self.path.dirTempAtOpen( self.path.join( __dirname, '../../..'  ), 'SecondaryMixin' );
-    let testDir = self.path.pathDirTempOpen( self.path.join( __dirname, '../../..'  ), 'SecondaryMixin' );
+    debugger
+    let testDir = self.path.pathDirTempOpen({ filePath : self.path.join( __dirname, '../../..'  ), name :'SecondaryMixin' });
     let tempFile = self.path.join( testDir, 'systemBitrateTimeGet' );
     self.fileWrite( tempFile, tempFile );
     let ostat = self.statResolvedRead( tempFile );
@@ -647,9 +648,10 @@ function systemBitrateTimeGet()
     }
     finally
     {
-      self.filesDelete( testDir );
-      let statDir = self.statResolvedRead( testDir );
-      _.assert( !statDir );
+      // self.filesDelete( testDir );
+      self.path.pathDirTempClose( testDir );
+      // let statDir = self.statResolvedRead( testDir );
+      // _.assert( !statDir );
     }
   }
 

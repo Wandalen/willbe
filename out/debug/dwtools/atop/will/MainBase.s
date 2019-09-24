@@ -95,6 +95,8 @@ function unform()
 
   /* begin */
 
+  will.graphSystemFinit();
+
   /* end */
 
   will.formed = 0;
@@ -111,6 +113,7 @@ function form()
   return will;
 
   will.formAssociates();
+  will.graphSystemForm();
 
   _.assert( arguments.length === 0 );
   _.assert( !will.formed );
@@ -515,7 +518,7 @@ function moduleEachAt( o )
     }
     catch( err )
     {
-      throw _.errBrief( err );
+      throw _.err( err );
     }
 
     let filesMap = Object.create( null );
@@ -582,7 +585,7 @@ function moduleEachAt( o )
         debugger;
         if( o.onError )
         o.onError( err );
-        errs.push( _.errBrief( err ) );
+        errs.push( _.err( err ) );
         return null;
       }
       return arg;
@@ -646,50 +649,44 @@ function moduleWithAt( o )
   it.errs = [];
   it.openers = [];
 
+  let visitedFilesHash = new Map();
   let files;
   try
   {
     files = will.willfilesList
     ({
       dirPath : o.selector,
+      tracing : o.tracing,
       includingInFiles : 1,
       includingOutFiles : 1,
-      // prefferedRecursive : 0,
     });
   }
   catch( err )
   {
-    throw _.errBrief( err );
+    throw _.err( err );
   }
 
-  // debugger;
-  for( let f = 0 ; f < files.length ; f++ ) con
-  .then( ( arg ) => /* !!! replace by concurrent, maybe */
+  files.forEach( ( file ) => con.then( ( arg ) => /* !!! replace by concurrent, maybe */
   {
     let opener;
     try
     {
-      let file = files[ f ];
+      if( visitedFilesHash.has( file ) )
+      debugger;
+      if( visitedFilesHash.has( file ) )
+      return null;
 
-      // debugger;
+      let selectedFiles = will.willfilesSelectPaired( file, files );
+      selectedFiles.forEach( ( file ) => visitedFilesHash.set( file, true ) );
+
       let opener = will.openerMake
       ({
         willfilesPath : file.absolute,
-        searching : 'smart',
+        searching : 'exact',
       });
+
       opener.find();
       opener.open();
-
-      // opener = will.ModuleOpener({ will : will, willfilesPath : file.absolute })
-      // opener.preform();
-      // opener.find();
-      //
-      // if( !opener.openedModule.stager.stageStatePerformed( 'formed' ) )
-      // {
-      //   opener.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
-      //   opener.openedModule.stager.stageStatePausing( 'picked', 0 );
-      //   opener.openedModule.stager.tick();
-      // }
 
       return opener.openedModule.ready.split()
       .then( function( arg )
@@ -697,6 +694,7 @@ function moduleWithAt( o )
         _.assert( opener.willfilesArray.length > 0 );
         let l = it.openers.length;
         _.arrayAppendOnce( it.openers, opener, ( e ) => e.openedModule );
+        _.assert( l < it.openers.length );
         if( l === it.openers.length )
         opener.finit();
         _.assert( !_.arrayHas( it.openers, null ) )
@@ -705,7 +703,7 @@ function moduleWithAt( o )
       .catch( function( err )
       {
         debugger;
-        err = _.errBrief( err );
+        err = _.err( err );
         it.errs.push( err );
         opener.finit();
         throw err;
@@ -714,23 +712,19 @@ function moduleWithAt( o )
     catch( err )
     {
       debugger;
-      err = _.errBrief( err );
+      err = _.err( err );
       it.errs.push( err );
       if( opener )
       opener.finit();
       throw err;
     }
-  })
+  }));
 
   /* */
 
   con.finally( ( err, arg ) =>
   {
-
-    it.sortedModules = will.modulesTopologicalSort( will.modulesArray );
-
-    // will._willfilesReadLog();
-
+    it.sortedModules = will.graphTopologicalSort( will.modulesArray );
     if( err )
     throw err;
     return it;
@@ -744,6 +738,7 @@ function moduleWithAt( o )
 moduleWithAt.defaults =
 {
   selector : null,
+  tracing : 0,
 }
 
 //
@@ -779,7 +774,7 @@ function moduleIdUnregister( openedModule )
   _.assert( _.arrayCountElement( _.mapVals( will.moduleWithIdMap ), openedModule ) === 0 );
   _.arrayRemoveOnceStrictly( will.modulesArray, openedModule );
 
-  will.modulesGraphInvalidate();
+  // will.graphSystemFinit();
 }
 
 //
@@ -800,7 +795,7 @@ function moduleIdRegister( openedModule )
   _.assert( _.arrayCountElement( _.mapVals( will.moduleWithIdMap ), openedModule ) === 1 );
   _.arrayAppendOnceStrictly( will.modulesArray, openedModule );
 
-  will.modulesGraphInvalidate();
+  // will.graphSystemFinit();
 }
 
 //
@@ -857,21 +852,24 @@ function modulePathRegister( openedModule )
 
 //
 
-function modulesGraphInvalidate()
+function graphSystemFinit()
 {
   let will = this;
 
-  if( will.graphGroup )
-  {
-    will.graphGroup.sys.finit();
-    will.graphGroup = null;
-  }
+  // if( will.graphGroup )
+  // {
+  //   will.graphGroup.sys.finit();
+  //   will.graphGroup = null;
+  // }
+
+  if( will.graphSystem )
+  will.graphSystem.finit();
 
 }
 
 //
 
-function modulesGraphGroupObtain()
+function graphSystemForm()
 {
   let will = this;
 
@@ -879,21 +877,27 @@ function modulesGraphGroupObtain()
   if( group )
   return group;
 
-  let sys = new _.graph.AbstractGraphSystem();
-  group = will.graphGroup = sys.groupMake
+  will.graphSystem = new _.graph.AbstractGraphSystem
   ({
     onNodeNameGet : ( module ) => module.qualifiedName,
     onOutNodesFor : onOutNodesFor,
     onInNodesFor : onInNodesFor,
   });
 
-  group.nodesAdd( will.modulesArray );
+  // group = will.graphGroup = sys.nodesGroup
+  // ({
+  //   onNodeNameGet : ( module ) => module.qualifiedName,
+  //   onOutNodesFor : onOutNodesFor,
+  //   onInNodesFor : onInNodesFor,
+  // });
+  //
+  // group.nodesAdd( will.modulesArray );
 
   // debugger;
   // logger.log( group.exportInfo() );
   // debugger;
 
-  return group;
+  // return group;
 
   function onOutNodesFor( module )
   {
@@ -918,7 +922,7 @@ function modulesGraphGroupObtain()
 
 //
 
-function modulesTopologicalSort( modules )
+function graphTopologicalSort( modules )
 {
   let will = this;
 
@@ -926,7 +930,9 @@ function modulesTopologicalSort( modules )
 
   modules = modules || will.modulesArray;
 
-  let group = will.modulesGraphGroupObtain();
+  debugger;
+  // let group = will.graphSystemForm();
+  let group = will.graphSystem.nodesGroup();
   let sorted = group.topologicalSortCycledSourceBased( modules );
 
   return sorted;
@@ -934,7 +940,7 @@ function modulesTopologicalSort( modules )
 
 //
 
-function modulesInfoExportAsTree( modules )
+function graphInfoExportAsTree( modules )
 {
   let will = this;
 
@@ -942,7 +948,8 @@ function modulesInfoExportAsTree( modules )
 
   modules = modules || will.modulesArray;
 
-  let group = will.modulesGraphGroupObtain();
+  // let group = will.graphSystemForm();
+  let group = will.graphSystem.nodesGroup();
   let info = group.nodesExportInfoTree( modules );
 
   return info;
@@ -1266,81 +1273,100 @@ function willfilesList( o )
   _.assert( !!will.formed );
   _.assert( _.boolIs( o.recursive ) );
 
-  let filter =
+  if( !o.tracing )
+  return findFor( o.dirPath );
+
+  let dirPaths = path.traceToRoot( o.dirPath );
+  for( let d = dirPaths.length-1 ; d >= 0 ; d-- )
   {
-    filePath : o.dirPath,
-    maskTerminal :
-    {
-      includeAny : /(\.|(\.will(\.[^.]*)?))$/,
-      excludeAny :
-      [
-        /\.DS_Store$/,
-        /(^|\/)-/,
-      ],
-      includeAll : []
-    }
-  };
-
-  if( !o.includingInFiles )
-  filter.maskTerminal.includeAll.push( /\.out(\.|$)/ )
-  if( !o.includingOutFiles )
-  filter.maskTerminal.excludeAny.push( /\.out(\.|$)/ )
-
-  if( !path.isGlob( o.dirPath ) )
-  filter.recursive = o.recursive ? 2 : 1;
-
-  let o2 =
-  {
-    filter : filter,
-    maskPreset : 0,
-    mandatory : 0,
-    mode : 'distinct',
+    let dirPath = dirPaths[ d ];
+    if( !path.isSafe( dirPath, 2 ) )
+    continue;
+    let result = findFor( path.trail( dirPath ) );
+    if( result.length )
+    return result;
   }
 
-  filter.filePath = path.mapExtend( filter.filePath );
-  filter.filePath = path.filterPairs( filter.filePath, ( it ) =>
+  return [];
+
+  function findFor( dirPath )
   {
-    if( !_.strIs( it.dst ) )
-    return { [ it.src ] : it.dst };
 
-    let hasExt = /\.will\.[^\.]+$/.test( it.src );
-    let hasWill = /\.will\./.test( it.src );
-    let hasImEx = /(^|\.|\/)(im|ex)\./.test( it.src );
-
-    debugger;
-
-    let postfix = '';
-    if( !hasWill )
+    let filter =
     {
-      postfix += '?(.im|.ex|im|ex)';
-      if( o.includingOutFiles && o.includingInFiles )
+      filePath : dirPath,
+      maskTerminal :
       {
-        postfix += '?(.out)';
+        includeAny : /(\.|((^|\.|\/)will(\.[^.]*)?))$/,
+        excludeAny :
+        [
+          /\.DS_Store$/,
+          /(^|\/)-/,
+        ],
+        includeAll : []
       }
-      else if( o.includingInFiles )
-      {
-        postfix += '';
-      }
-      else if( o.includingOutFiles )
-      {
-        postfix += '.out';
-      }
-      postfix += '.will';
+    };
+
+    if( !o.includingInFiles )
+    filter.maskTerminal.includeAll.push( /(^|\.|\/)out(\.)/ )
+    if( !o.includingOutFiles )
+    filter.maskTerminal.excludeAny.push( /(^|\.|\/)out(\.)/ )
+
+    if( !path.isGlob( dirPath ) )
+    filter.recursive = o.recursive ? 2 : 1;
+
+    let o2 =
+    {
+      filter : filter,
+      maskPreset : 0,
+      mandatory : 0,
+      mode : 'distinct',
     }
 
-    if( !hasExt )
-    postfix += '.*';
+    filter.filePath = path.mapExtend( filter.filePath );
+    filter.filePath = path.filterPairs( filter.filePath, ( it ) =>
+    {
+      if( !_.strIs( it.dst ) )
+      return { [ it.src ] : it.dst };
 
-    it.src += postfix;
+      _.sure( !o.tracing || !path.isGlob( it.src ) )
 
-    return { [ it.src ] : it.dst };
-  });
+      let hasExt = /(^|\.|\/)will\.[^\.\/]+$/.test( it.src );
+      let hasWill = /(^|\.|\/)will(\.)?[^\.\/]*$/.test( it.src );
+      let hasImEx = /(^|\.|\/)(im|ex)[^\/]*$\./.test( it.src );
 
-  debugger;
-  let files = fileProvider.filesFind( o2 );
-  debugger;
+      let postfix = '?(.)';
+      if( !hasWill )
+      {
+        postfix += '?(im.|ex.)';
+        if( o.includingOutFiles && o.includingInFiles )
+        {
+          postfix += '?(out.)';
+        }
+        else if( o.includingInFiles )
+        {
+          postfix += '';
+        }
+        else if( o.includingOutFiles )
+        {
+          postfix += 'out.';
+        }
+        postfix += 'will';
+      }
 
-  return files;
+      if( !hasExt )
+      postfix += '.*';
+
+      it.src += postfix;
+
+      return { [ it.src ] : it.dst };
+    });
+
+    let files = fileProvider.filesFind( o2 );
+    // debugger;
+
+    return files;
+  }
 }
 
 willfilesList.defaults =
@@ -1349,6 +1375,36 @@ willfilesList.defaults =
   includingInFiles : 1,
   includingOutFiles : 1,
   recursive : false,
+  tracing : false,
+}
+
+//
+
+function willfilesSelectPaired( record, records )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let result = [ record ];
+  let commonPathMap = Object.create( null );
+
+  _.assert( arguments.length === 2 );
+  _.assert( record instanceof _.FileRecord );
+  _.assert( _.arrayIs( records ) );
+
+  records.forEach( ( record ) =>
+  {
+    let commonPath = will.AbstractModule.CommonPathFor( record.absolute );
+    let array = commonPathMap[ commonPath ] = commonPathMap[ commonPath ] || [];
+    _.arrayAppendOnce( array, record );
+  });
+
+  let commonPath = will.AbstractModule.CommonPathFor( record.absolute );
+  let array = commonPathMap[ commonPath ] = commonPathMap[ commonPath ] || [];
+  _.arrayAppendOnce( array, record );
+
+  return array;
 }
 
 //
@@ -1601,7 +1657,8 @@ let Restricts =
 {
 
   formed : 0,
-  graphGroup : null,
+  // graphGroup : null,
+  graphSystem : null,
   willfilesReadBeginTime : null,
   willfilesReadEndTime : null,
 
@@ -1622,6 +1679,7 @@ let Forbids =
 {
   mainModule : 'mainModule',
   recursiveExport : 'recursiveExport',
+  graphGroup : 'graphGroup',
 }
 
 // --
@@ -1664,10 +1722,10 @@ let Extend =
   modulePathUnregister,
   modulePathRegister,
 
-  modulesGraphInvalidate,
-  modulesGraphGroupObtain,
-  modulesTopologicalSort,
-  modulesInfoExportAsTree,
+  graphSystemFinit,
+  graphSystemForm,
+  graphTopologicalSort,
+  graphInfoExportAsTree,
 
   // opener
 
@@ -1688,6 +1746,7 @@ let Extend =
   _willfilesReadLog,
 
   willfilesList,
+  willfilesSelectPaired,
   willfileWithCommon,
   _willfileWithFilePath,
   willfileWithFilePath,

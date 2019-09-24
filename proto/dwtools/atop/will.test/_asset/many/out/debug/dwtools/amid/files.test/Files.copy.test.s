@@ -1,6 +1,6 @@
 ( function _Files_copy_test_s_( ) {
 
-'use strict';  
+'use strict';
 
 if( typeof module !== 'undefined' )
 {
@@ -48,7 +48,7 @@ function onSuiteEnd()
 {
   if( !this.isBrowser )
   {
-    _.assert( _.strEnds( this.suitePath, 'FilesCopy' ) );
+    _.assert( _.strHas( this.suitePath, 'FilesCopy' ) );
     _.path.pathDirTempClose( this.suitePath );
   }
 }
@@ -673,7 +673,7 @@ var Self =
   name : 'Tools.mid.files.FilesCopy',
   // verbosity : 0,
   silencing : 1,
-  
+
   enabled : 0,
 
   onSuiteBegin,

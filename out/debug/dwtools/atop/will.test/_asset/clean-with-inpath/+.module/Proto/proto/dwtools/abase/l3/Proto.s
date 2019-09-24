@@ -2263,18 +2263,18 @@ class wCallableObject extends Function
 {
   constructor()
   {
-    super( 'return this.self.__call__.apply( this.self, arguments );' );
-
+    super( 'return this.routine.__call__.apply( this.routine, arguments );' );
     let context = Object.create( null );
-    let self = this.bind( context );
-    context.self = self;
+    let routine = this.bind( context );
+    context.routine = routine;
     Object.freeze( context );
-
-    return self;
+    return routine;
   }
+  static shortName = 'CallableObject';
 }
 
-wCallableObject.shortName = 'CallableObject';
+// wCallableObject.shortName = 'CallableObject';
+_.assert( wCallableObject.shortName === 'CallableObject' );
 
 // --
 // fields

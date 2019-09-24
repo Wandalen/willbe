@@ -3453,7 +3453,7 @@ function exportRecursive( test )
 
 /*
 test
-  - dotless anonimous naming works
+  - dotless anonimous coupled naming works
 */
 
 function exportDotless( test )
@@ -3575,6 +3575,131 @@ function exportDotless( test )
   return ready;
 
 } /* end of function exportDotless */
+
+//
+
+/*
+test
+  - dotless anonimous single-file naming works
+*/
+
+function exportDotlessSingle( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'two-dotless-single-exported' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let inPath = abs( './' );
+  let outSuperDirPath = abs( 'super.out' );
+  let outSubDirPath = abs( 'sub.out' );
+  let outSuperTerminalPath = abs( 'super.out/supermodule.out.will.yml' );
+  let outSubTerminalPath = abs( 'sub.out/sub.out.will.yml' );
+  let will = new _.Will;
+  let path = _.fileProvider.path;
+  let ready = _.Consequence().take( null );
+  let opener;
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = 'export debug';
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesDelete( outSuperDirPath );
+    _.fileProvider.filesDelete( outSubDirPath );
+    opener = will.openerMake({ willfilesPath : inPath });
+    return opener.open();
+  })
+
+  .then( () =>
+  {
+    let module = opener.openedModule;
+    return module.modulesExport({ recursive : 2, kind : 'export', criterion : { debug : 1 } });
+  })
+
+  .then( () =>
+  {
+    let module = opener.openedModule;
+    return module.modulesExport({ recursive : 2, kind : 'export', criterion : { debug : 0 } });
+  })
+
+  .then( ( arg ) =>
+  {
+    var module = opener.openedModule;
+
+    test.description = 'in-willfile';
+    var module = opener.openedModule;
+    test.is( !module.isOut );
+
+    test.description = 'files';
+    var exp =
+    [
+      '.',
+      './will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/will.yml',
+      './sub.out',
+      './sub.out/sub.out.will.yml',
+      './sub.out/debug',
+      './sub.out/debug/File.debug.js',
+      './sub.out/release',
+      './sub.out/release/File.release.js',
+      './super.out',
+      './super.out/supermodule.out.will.yml',
+      './super.out/debug',
+      './super.out/debug/File.debug.js',
+      './super.out/debug/File.release.js',
+      './super.out/release',
+      './super.out/release/File.debug.js',
+      './super.out/release/File.release.js'
+    ]
+    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    test.identical( files, exp );
+
+    test.description = 'super outfile';
+    var outfile = _.fileProvider.fileConfigRead( outSuperTerminalPath );
+    var modulePaths = _.mapKeys( outfile.module );
+    var exp = [ 'supermodule.out', '../sub/', '../sub.out/sub.out', '../' ];
+    test.setsAreIdentical( modulePaths, exp );
+    var exported = _.mapKeys( _.select( outfile.module[ outfile.root[ 0 ] ], 'exported/*' ) );
+    var exp = [ 'export.', 'export.debug' ];
+    test.setsAreIdentical( exported, exp );
+
+    test.description = 'sub outfile';
+    var outfile = _.fileProvider.fileConfigRead( outSubTerminalPath );
+    var modulePaths = _.mapKeys( outfile.module );
+    var exp = [ 'sub.out', '../sub/' ];
+    test.setsAreIdentical( modulePaths, exp );
+    var exported = _.mapKeys( _.select( outfile.module[ outfile.root[ 0 ] ], 'exported/*' ) );
+    var exp = [ 'export.', 'export.debug' ];
+    test.setsAreIdentical( exported, exp );
+
+    will.openersErrorsRemoveAll();
+    opener.finit();
+    test.description = 'no grabage left';
+    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), [] );
+    test.setsAreIdentical( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ), [] );
+    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), [] );
+    test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), [] );
+    test.setsAreIdentical( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ), [] );
+    test.setsAreIdentical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), [] );
+    test.setsAreIdentical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), [] );
+    test.setsAreIdentical( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), [] );
+    test.setsAreIdentical( _.mapKeys( will.moduleWithNameMap ), [] );
+    return null;
+  });
+
+  /* - */
+
+  return ready;
+
+} /* end of function exportDotlessSingle */
 
 //
 
@@ -8857,6 +8982,7 @@ var Self =
     exportInconsistent,
     exportRecursive,
     exportDotless,
+    exportDotlessSingle,
     exportStepOpts,
     exportRecursiveUsingSubmodule,
     exportSteps,

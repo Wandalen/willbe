@@ -418,12 +418,13 @@ function _performReadExported()
     if( err )
     {
       err = _.err( err, `\nFailed to read exported out-willfile ${opener2.willfilesPath} to extend it` );
-      let verbosity = 5;
+      let requireVerbosity = 5;
       if( _.strIs( err.originalMessage ) )
       if( !_.strHas( err.originalMessage, 'Found no willfile at' ) )
+      if( !_.strHas( err.originalMessage, 'Found no out-willfile' ) )
       if( !_.strHas( err.originalMessage, 'Out-willfile is inconsistent with its in-willfiles' ) )
-      verbosity = 3;
-      if( verbosity <= will.verbosity )
+      requireVerbosity = 3;
+      if( requireVerbosity <= will.verbosity )
       {
         if( !_.errIsLogged( err ) )
         {

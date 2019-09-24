@@ -102,7 +102,7 @@ Self.nothing = Symbol.for( 'nothing' );
 Self.maybe = Symbol.for( 'maybe' );
 Self.dont = Symbol.for( 'dont' );
 Self.unroll = Symbol.for( 'unroll' );
-// Self.hold = Symbol.for( 'hold' );
+
 
 // type aliases
 
@@ -127,6 +127,9 @@ _realGlobal_.BufferNode = Buffer;
 _realGlobal_.BufferRaw = ArrayBuffer;
 _realGlobal_.BufferRawShared = SharedArrayBuffer;
 _realGlobal_.BufferView = DataView;
+
+_realGlobal_.HashMap = Map;
+_realGlobal_.HashMapWeak = WeakMap;
 
 // --
 // export

@@ -744,7 +744,7 @@ function willfileRegister( willf )
 
 //
 
-function _willfilesFindSmart( o )
+function _willfilesFindAct( o )
 {
   let opener = this;
   let will = opener.will;
@@ -754,20 +754,22 @@ function _willfilesFindSmart( o )
   let filePaths;
   let records;
 
-  o = _.routineOptions( _willfilesFindSmart, arguments );
+  o = _.routineOptions( _willfilesFindAct, arguments );
   o.willfilesPath = o.willfilesPath || opener.willfilesPath;
 
   _.assert( opener.willfilesArray.length === 0, 'not tested' );
 
-  if( opener.searching = 'smart' )
+  if( opener.searching === 'smart' )
   o.willfilesPath = _.Will.AbstractModule.CommonPathFor( o.willfilesPath );
 
   if( opener.searching === 'exact' )
   {
-    debugger;
-    records = fileProvider.record({ filePath : o.willfilesPath });
-    records = _.arrayAs( records );
-    debugger;
+    // debugger;
+    o.willfilesPath = _.arrayAs( o.willfilesPath );
+    records = o.willfilesPath.map( ( willfilePath ) => fileProvider.record( willfilePath ) );
+    // records = fileProvider.record({ filePath : o.willfilesPath });
+    // records = _.arrayAs( records );
+    // debugger;
   }
   else
   {
@@ -795,7 +797,7 @@ function _willfilesFindSmart( o )
 
 }
 
-_willfilesFindSmart.defaults =
+_willfilesFindAct.defaults =
 {
   willfilesPath : null,
   includingInFiles : 1,
@@ -881,8 +883,8 @@ function _willfilesFind()
     // }
     // else
     // {
-    //   // result = opener._willfilesFindSmart({ isOut : !!opener.superRelation });
-      result = opener._willfilesFindSmart();
+    //   // result = opener._willfilesFindAct({ isOut : !!opener.superRelation });
+      result = opener._willfilesFindAct();
     // }
 
     _.assert( !_.consequenceIs( result ) );
@@ -902,7 +904,7 @@ function _willfilesFind()
   {
     let err;
     if( opener.superRelation )
-    err = _.errBrief( 'Found no .out.will file for',  opener.superRelation.qualifiedName, 'at', _.strQuote( opener.commonPath ) );
+    err = _.errBrief( 'Found no out-willfile file for',  opener.superRelation.qualifiedName, 'at', _.strQuote( opener.commonPath ) );
     else
     err = _.errBrief( 'Found no willfile at', _.strQuote( opener.commonPath ) );
     opener.error = opener.error || err;
@@ -1723,7 +1725,7 @@ let Extend =
 
   willfileUnregister,
   willfileRegister,
-  _willfilesFindSmart,
+  _willfilesFindAct,
   _willfilesFind,
 
   // submodule

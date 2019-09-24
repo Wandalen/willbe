@@ -37,16 +37,17 @@ function onSuiteBegin( test )
 
   let path = context.providerDst.path;
 
-  context.suitePath = path.pathDirTempOpen( 'FileProviderGit' );
+  context.suitePath = path.pathDirTempOpen( path.join( __dirname, '../..'  ),'FileProviderGit' );
   context.suitePath = context.providerDst.pathResolveLinkFull({ filePath : context.suitePath, resolvingSoftLink : 1 });
   context.suitePath = context.suitePath.absolutePath;
+
 }
 
 function onSuiteEnd( test )
 {
   let context = this;
   let path = context.providerDst.path;
-  _.assert( _.strHas( context.suitePath, 'FileProviderGit' ) );
+  _.assert( _.strHas( context.suitePath, 'FileProviderGit' ), context.suitePath );
   path.pathDirTempClose( context.suitePath );
 }
 
@@ -98,7 +99,7 @@ function filesReflectTrivial( test )
       './proto',
       './sample'
     ]
-    
+
     test.is( _.arraySetContainAll( files, expected ) )
     return got;
   })
@@ -324,7 +325,7 @@ function filesReflectTrivial( test )
       './proto',
       './sample'
     ]
-    
+
     test.is( _.arraySetContainAll( files, expected ) )
     let packagePath = providerDst.path.join( localPath, 'package.json' );
     let packageRead = providerDst.fileRead

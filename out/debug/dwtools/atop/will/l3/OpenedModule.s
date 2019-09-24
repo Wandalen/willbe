@@ -1689,7 +1689,7 @@ function moduleBuild_body( o )
   .then( () =>
   {
     _.assert( !module.peerModule || module.peerModule.isOut );
-    debugger;
+    // debugger;
     // return module.peerModule.upform({ all : 1, resourcesFormed : 0 });
     return null;
   });
@@ -1763,7 +1763,7 @@ function modulesEach_body( o )
       return result;
     }
   });
-  var group = sys.groupMake();
+  var group = sys.nodesGroup();
 
   let nodes = [ recordFromModule( module ) ];
   if( o.withPeers && module.peerModule )
@@ -1967,10 +1967,9 @@ function modulesEachDo( o )
 
   con.then( () =>
   {
-
     let o2 = _.mapOnly( o, module.modulesEach.defaults );
     o2.outputFormat = '/';
-    modules = module.modulesEach( o2 ); debugger;
+    modules = module.modulesEach( o2 );
     return modules;
   });
 
@@ -5070,7 +5069,7 @@ function infoExportModulesTopological()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  let sorted = will.modulesTopologicalSort();
+  let sorted = will.graphTopologicalSort();
   debugger;
 
   let result = sorted.map( ( modules ) =>

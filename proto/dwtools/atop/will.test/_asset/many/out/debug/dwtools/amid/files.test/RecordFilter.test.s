@@ -47,7 +47,7 @@ var suitePath;
 function onSuiteBegin()
 {
   if( Config.interpreter === 'njs' )
-  suitePath = _.path.dirTempOpen( _.path.join( __dirname, '../..' ), 'FileRecordFilter' );
+  suitePath = _.path.pathDirTempOpen( _.path.join( __dirname, '../..' ), 'FileRecordFilter' );
   else
   suitePath = _.path.current();
 }
@@ -58,7 +58,7 @@ function onSuiteEnd()
 {
   if( Config.interpreter === 'njs' )
   {
-    _.assert( _.strHas( suitePath, 'FileRecordFilter' ) );
+    _.assert( _.strHas( suitePath, '.tmp' ), suitePath );
     _.path.pathDirTempClose( suitePath );
   }
 }
