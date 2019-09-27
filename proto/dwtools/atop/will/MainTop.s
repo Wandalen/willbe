@@ -944,15 +944,25 @@ function commandGitPreservingHardLinks( e )
   {
     let sourceCode = '#!/usr/bin/env node\n' +  restoreHardLinks.toString() + '\nrestoreHardLinks()';
     let tempPath = _.process.tempOpen({ sourceCode : sourceCode });
-    _.GitHooks.hookRegister
-    ({
-      filePath : tempPath,
-      handlerName : 'post-merge.restoreHardLinks',
-      hookName : 'post-merge',
-      throwing : 1,
-      rewriting : 0
-    })
-    _.process.tempClose({ filePath : tempPath });
+    try
+    {
+      _.GitHooks.hookRegister
+      ({
+        filePath : tempPath,
+        handlerName : 'post-merge.restoreHardLinks',
+        hookName : 'post-merge',
+        throwing : 1,
+        rewriting : 0
+      })
+    }
+    catch( err )
+    {
+      throw err;
+    }
+    finally
+    {
+      _.process.tempClose({ filePath : tempPath });
+    }
   }
   else
   {
