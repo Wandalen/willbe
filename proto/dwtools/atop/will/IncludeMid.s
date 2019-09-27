@@ -15,8 +15,8 @@ if( typeof module !== 'undefined' )
   require( './l1/Resolver.s' );
 
   require( './l3/AbstractModule.s' );
-  require( './l3/Module.s' );
-  require( './l3/ModuleOpener.s' );
+  require( './l3/OpenedModule.s' );
+  require( './l3/OpenerModule.s' );
 
   require( './l5/Resource.s' );
 
@@ -28,6 +28,7 @@ if( typeof module !== 'undefined' )
   require( './l7/Step.s' );
   require( './l7/ModulesRelation.s' );
 
+  require( './l7/GitHooks.s' );
 }
 
 })();

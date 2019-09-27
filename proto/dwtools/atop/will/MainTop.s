@@ -582,6 +582,7 @@ function _commandsMake()
     'with' :                    { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
     'each' :                    { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
 
+    'git config preserving hard links' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ), h : 'Use "git config preserving hard links" to preserve hardlinks during "git pull".' }
   }
 
   let ca = _.CommandsAggregator
@@ -927,6 +928,72 @@ function commandEach( e )
 
   }
 
+}
+
+//
+
+function commandGitPreservingHardLinks( e )
+{
+  let will = this;
+  let ca = e.ca;
+  let logger = will.logger;
+
+  let enable = _.numberFrom( e.argument );
+
+  if( enable )
+  {
+    let sourceCode = '#!/usr/bin/env node\n' +  restoreHardLinks.toString() + '\nrestoreHardLinks()';
+    let tempPath = _.process.tempOpen({ sourceCode : sourceCode });
+    _.GitHooks.hookRegister
+    ({
+      filePath : tempPath,
+      handlerName : 'post-merge.restoreHardLinks',
+      hookName : 'post-merge',
+      throwing : 1,
+      rewriting : 0
+    })
+    _.process.tempClose({ filePath : tempPath });
+  }
+  else
+  {
+    _.GitHooks.hookUnregister
+    ({
+      handlerName : 'post-merge.restoreHardLinks',
+      force : 0,
+      throwing : 1
+    })
+  }
+
+  /*  */
+
+  function restoreHardLinks()
+  {
+    try
+    {
+      try
+      {
+        var _ = require( '../../proto/dwtools/Tools.s' );
+      }
+      catch( err )
+      {
+        var _ = require( 'wTools' );
+      }
+      _.include( 'wFilesArchive' );
+    }
+    catch( err )
+    {
+      console.log( 'Git post pull hook fails to preserve hardlinks due missing dependency.' );
+      return;
+    }
+
+    let provider = _.FileFilter.Archive();
+    provider.archive.basePath = _.path.join( __dirname, '../..' );
+    provider.archive.fileMapAutosaving = 0;
+    provider.archive.filesUpdate();
+    provider.archive.filesLinkSame({ consideringFileName : 0 });
+    provider.finit();
+    provider.archive.finit();
+  }
 }
 
 //
@@ -1908,6 +1975,8 @@ let Extend =
   commandBuild,
   commandExport,
   commandExportRecursive,
+
+  commandGitPreservingHardLinks,
 
   // relation
 
