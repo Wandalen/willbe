@@ -23,7 +23,7 @@
   "files": [
     "proto/dwtools/atop/will",
     "proto/dwtools/Tools.s",
-    "production"
+    "out"
   ],
   "bin": {
     "single-process-will": "proto/dwtools/atop/will/Exec",

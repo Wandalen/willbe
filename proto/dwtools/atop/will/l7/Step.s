@@ -36,8 +36,9 @@ function init( o )
   {
     if( _.mapIs( o ) )
     {
-      o.opts = _.mapBut( o, step.constructor.FieldsOfInputGroups );
-      _.mapDelete( o, o.opts );
+      let opts2 = _.mapBut( o, step.constructor.FieldsOfInputGroups );
+      _.mapDelete( o, opts2 );
+      o.opts = _.mapExtend( o.opts || null, opts2 )
     }
     if( o )
     step.copy( o );
@@ -58,6 +59,11 @@ function form2()
   _.assert( arguments.length === 0 );
   _.assert( step.formed === 1 );
   _.assert( _.objectIs( step.opts ) || step.opts === null );
+
+  if( step.stepRoutine )
+  {
+    _.mapSupplement( step.opts, step.stepRoutine.stepOptions );
+  }
 
   /* */
 
@@ -91,7 +97,7 @@ function form2()
       if( step.inherit.length > 1 )
       throw _.err
       (
-        'Cant deduce ancestors of', step.nickName, ' to inherit them\n',
+        'Cant deduce ancestors of', step.qualifiedName, ' to inherit them\n',
         'Several steps have such unique options', _.mapKeys( _.mapOnly( step.opts, step2.uniqueOptions ) )
       );
 
@@ -121,12 +127,17 @@ function form3()
 
   _.assert( arguments.length === 0 );
   _.assert( step.formed === 2 );
-  _.assert( _.routineIs( step.stepRoutine ), () => step.nickName + ' does not have {- stepRoutine -}. Failed to deduce it, try specifying "inherit" field explicitly' );
-  _.assert( step.stepRoutine.stepOptions !== undefined, () => 'Field {- stepRoutine -} of ' + step.nickName + ' deos not have defined {- stepOptions -}' );
+  _.assert( _.routineIs( step.stepRoutine ), () => step.qualifiedName + ' does not have {- stepRoutine -}. Failed to deduce it, try specifying "inherit" field explicitly' );
+  _.assert( step.stepRoutine.stepOptions !== undefined, () => 'Field {- stepRoutine -} of ' + step.qualifiedName + ' deos not have defined {- stepOptions -}' );
+
+  // if( step.id === 154 )
+  // debugger;
+
+  _.mapSupplement( step.opts, step.stepRoutine.stepOptions );
 
   if( step.opts && step.stepRoutine.stepOptions )
   {
-    _.sureMapHasOnly( step.opts, step.stepRoutine.stepOptions, () => step.nickName + ' should not have options' );
+    _.sureMapHasOnly( step.opts, step.stepRoutine.stepOptions, () => step.qualifiedName + ' should not have options' );
   }
 
   step.formed = 3;
@@ -135,12 +146,15 @@ function form3()
 
 //
 
-function run( frame )
+function framePerform( frame )
 {
   let step = this;
+  let run = frame.run;
   let resource = frame.resource;
-  let build = frame.build;
-  let module = frame.module;
+  let module = run.module;
+  // let resource = frame.resource;
+  let build = run.build;
+  // let module = frame.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -158,13 +172,15 @@ function run( frame )
     _.assert( will.formed === 1 );
     _.assert( build.formed === 3 );
     _.assert( step.formed === 3 );
+    _.assert( resource.formed === 3 );
     _.assert( resource === step );
-    _.assert( _.objectIs( frame.opts ) );
-    _.assert( _.routineIs( step.stepRoutine ), () => step.nickName + ' does not have step routine' );
+    // _.assert( _.mapIs( run.opts ) );
+    _.assert( _.routineIs( step.stepRoutine ), () => step.qualifiedName + ' does not have step routine' );
 
-    _.mapExtend( frame.opts, step.opts );
-    if( step.opts && step.stepRoutine.stepOptions )
-    _.routineOptions( step.stepRoutine, frame.opts, step.stepRoutine.stepOptions );
+    // frame.opts = _.mapExtend( null, run.opts, step.opts );
+    // if( step.opts && step.stepRoutine.stepOptions )
+    // _.routineOptions( step.stepRoutine, frame.opts );
+    // _.routineOptions( step.stepRoutine, run.opts, step.stepRoutine.stepOptions );
 
     let result = step.stepRoutine( frame );
 
@@ -174,8 +190,8 @@ function run( frame )
   })
   .catch( ( err ) =>
   {
-    debugger;
-    throw _.err( 'Failed', step.decoratedAbsoluteName, '\n', err, '\n' );
+    // debugger;
+    throw _.err( err, '\nFailed', step.decoratedAbsoluteName );
   });
 
   return result;
@@ -225,14 +241,8 @@ function uniqueOptionsGet()
 
 let Composes =
 {
-
-  // description : null,
-  // criterion : null,
   opts : null,
   verbosity : null,
-
-  // inherit : _.define.own([]),
-
 }
 
 let Aggregates =
@@ -280,7 +290,7 @@ let Extend =
   init,
   form2,
   form3,
-  run,
+  framePerform,
 
   // etc
 

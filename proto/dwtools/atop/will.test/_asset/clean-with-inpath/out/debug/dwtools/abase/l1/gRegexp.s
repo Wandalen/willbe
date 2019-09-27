@@ -191,7 +191,9 @@ let _floor = Math.floor;
  * Escapes special characters with a slash ( \ ). Supports next set of characters : .*+?^=! :${}()|[]/\
  *
  * @example
- * wTools.regexpEscape( 'Hello. How are you?' ); // "Hello\. How are you\?"
+ * _.regexpEscape( 'Hello. How are you?' );
+ * // returns "Hello\. How are you\?"
+ *
  * @param {String} src Regexp string
  * @returns {String} Escaped string
  * @function regexpEscape
@@ -215,7 +217,9 @@ let regexpsEscape = null;
  * Make regexp from string.
  *
  * @example
- * wTools.regexpFrom( 'Hello. How are you?' ); // /Hello\. How are you\?/
+ * _.regexpFrom( 'Hello. How are you?' );
+ * // returns /Hello\. How are you\?/
+ *
  * @param {RegexpLike} src - string or regexp
  * @returns {String} Regexp
  * @throws {Error} Throw error with message 'unknown type of expression, expects regexp or string, but got' error
@@ -503,14 +507,16 @@ regexpsAtLeastFirst.defaults =
  *  The result regexp matches the strings that do not contain any of those words.
  *
  * @example
- * wTools.regexpsNone( 'yellow', 'red', 'green' ); //   /^(?:(?!yellow|red|green).)+$/
+ * _.regexpsNone( 'yellow', 'red', 'green' );
+ * // returns /^(?:(?!yellow|red|green).)+$/
  *
  * let options =
  * {
  *    but : [ 'yellow', 'red', 'green' ],
  *    atLeastOnce : false
  * };
- * wTools.regexpsNone(options); // /^(?:(?!yellow|red|green).)*$/
+ * _.regexpsNone(options);
+ * // returns /^(?:(?!yellow|red|green).)*$/
  *
  * @param {Object} [options] options for generate regexp. If this argument omitted then default options will be used
  * @param {String[]} [options.but=null] a list of words,from each will consist regexp
@@ -641,7 +647,9 @@ regexpsAll.defaults =
  * Wraps regexp(s) into array and returns it. If in `src` passed string - turn it into regexp
  *
  * @example
- * wTools.regexpArrayMake( ['red', 'white', /[a-z]/] ); // [ /red/, /white/, /[a-z]/ ]
+ * _.regexpArrayMake( ['red', 'white', /[a-z]/] );
+ * // returns [ /red/, /white/, /[a-z]/ ]
+ *
  * @param {String[]|String} src - array of strings/regexps or single string/regexp
  * @returns {RegExp[]} Array of regexps
  * @throw {Error} if `src` in not string, regexp, or array
@@ -676,14 +684,15 @@ function regexpArrayMake( src )
 //
 
 /**
- * regexpArrayIndex() returns the index of the first regular expression that matches substring
-  Otherwise, it returns -1.
- * @example
+ * Routine regexpArrayIndex() returns the index of the first regular expression that matches substring
+ * Otherwise, it returns -1.
  *
-   let str = "The RGB color model is an additive color model in which red, green, and blue light are added together in various ways to reproduce a broad array of colors";
-   let regArr1 = [/white/, /green/, /blue/];
-   wTools.regexpArrayIndex(regArr1, str); // 1
-
+ * @example
+ * let str = "The RGB color model is an additive color model in which red, green, and blue light are added together in various ways to reproduce a broad array of colors";
+ * let regArr1 = [/white/, /green/, /blue/];
+ * _.regexpArrayIndex(regArr1, str);
+ * // returns 1
+ *
  * @param {RegExp[]} arr Array for regular expressions.
  * @param {String} ins String, inside which will be execute search
  * @returns {number} Index of first matching or -1.
@@ -720,12 +729,15 @@ function regexpArrayIndex( arr,ins )
  *
  * @example
  * let str = "The RGB color model is an additive color model in which red, green, and blue light are added together in various ways to reproduce a broad array of colors";
- *
  * let regArr2 = [/yellow/, /blue/, /red/];
- * wTools.regexpArrayAny(regArr2, str, false); // 1
+ * _.regexpArrayAny(regArr2, str, false);
+ * // returns 1
  *
+ * @example
  * let regArr3 = [/yellow/, /white/, /greey/]
- * wTools.regexpArrayAny(regArr3, str, false); // false
+ * _.regexpArrayAny(regArr3, str, false);
+ * // returns false
+ *
  * @param {String[]} arr Array of regular expressions strings
  * @param {String} ins - string that is tested by regular expressions passed in `arr` parameter
  * @param {*} none - Default return value if array is empty
@@ -762,12 +774,15 @@ function regexpArrayAny( arr, ins, ifEmpty )
  *
  * @example
  * let str = "The RGB color model is an additive color model in which red, green, and blue light are added together in various ways to reproduce a broad array of colors";
- *
  * let regArr1 = [/red/, /green/, /blue/];
- * wTools.regexpArrayAll(regArr1, str, false); // true
+ * _.regexpArrayAll(regArr1, str, false);
+ * // returns true
  *
+ * @example
  * let regArr2 = [/yellow/, /blue/, /red/];
- * wTools.regexpArrayAll(regArr2, str, false); // 0
+ * _.regexpArrayAll(regArr2, str, false);
+ * // returns 0
+ *
  * @param {String[]} arr Array of regular expressions strings
  * @param {String} ins - string that is tested by regular expressions passed in `arr` parameter
  * @param {*} none - Default return value if array is empty

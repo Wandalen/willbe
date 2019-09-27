@@ -43,7 +43,7 @@ function exec()
 
   let logger = will.logger;
   let fileProvider = will.fileProvider;
-  let appArgs = _.appArgs({ keyValDelimeter : 0 });
+  let appArgs = _.process.args({ keyValDelimeter : 0 });
   let ca = will._commandsMake();
 
 
@@ -54,11 +54,12 @@ function exec()
   })
   .catch( ( err ) =>
   {
-    _.appExitCode( -1 );
-    return _.errLogOnce( err );
+    _.process.exitCode( -1 );
+    err = _.err( err );
+    logger.log( _.errOnce( err ) );
+    throw err;
   });
 
-  // return ca.appArgsPerform({ appArgs : appArgs });
 }
 
 //
@@ -73,129 +74,467 @@ function init( o )
 }
 
 //
+//
+// function _openersCurrentEach( o )
+// {
+//   let will = this.form();
+//   let fileProvider = will.fileProvider;
+//   let path = will.fileProvider.path;
+//   let logger = will.logger;
+//   let willfilesPath = fileProvider.path.trail( fileProvider.path.current() );
+//   let con = new _.Consequence();
+//
+//   _.assert( arguments.length === 1 );
+//   _.assert( _.routineIs( o.onReady ) );
+//   _.assert( will.currentOpener === null || will.currentOpeners === null );
+//   _.routineOptions( _openersCurrentEach, arguments );
+//
+//   // debugger;
+//   if( will.currentOpeners )
+//   {
+//
+//     will.currentOpeners.forEach( ( opener ) =>
+//     {
+//       con.then( ( arg ) =>
+//       {
+//         _.assert( will.currentOpener === null );
+//         _.assert( will.currentPath === null );
+//         // _.assert( will.mainModule === null );
+//         _.assert( will.mainOpener === null || will.mainOpener === opener );
+//         will.currentOpenerChange( opener );
+//         will.mainOpener = opener;
+//         return ready( opener );
+//       });
+//       con.then( ( arg ) =>
+//       {
+//         _.assert( will.currentOpener === opener );
+//         _.assert( will.currentPath === null );
+//         // _.assert( will.mainModule === null );
+//         _.assert( will.mainOpener === null || will.mainOpener === opener );
+//         will.currentOpenerChange( null );
+//         return arg;
+//       });
+//     });
+//
+//   }
+//   else
+//   {
+//
+//     let made = false;
+//     con.then( ( arg ) =>
+//     {
+//       let opener = will.currentOpener;
+//       if( !opener )
+//       {
+//         opener = will.openerMake
+//         ({
+//           willfilesPath : willfilesPath,
+//           isMain : 1,
+//         });
+//         _.assert( will.currentOpener === null );
+//         _.assert( will.currentPath === null );
+//         _.assert( will.mainOpener === opener );
+//         // _.assert( will.mainModule === opener.openedModule );
+//         will.currentOpenerChange( opener );
+//         made = true;
+//       }
+//       return ready( opener );
+//     });
+//     con.then( ( arg ) =>
+//     {
+//       if( made )
+//       {
+//         _.assert( will.currentPath === null );
+//         // _.assert( will.mainModule === will.currentOpener.openedModule );
+//         _.assert( will.mainOpener === will.currentOpener );
+//         will.currentOpenerChange( null );
+//       }
+//       return arg;
+//     });
+//
+//   }
+//
+//   con.take( null );
+//   con.finally( ( err, arg ) =>
+//   {
+//     if( err )
+//     throw err;
+//     return arg;
+//   });
+//
+//   return con;
+//
+//   /* */
+//
+//   function ready( opener )
+//   {
+//     // debugger;
+//     return opener.openedModule.ready.split()
+//     .then( function( arg )
+//     {
+//       let result = o.onReady( opener );
+//       _.assert( result !== undefined );
+//       return result;
+//     })
+//     .finally( ( err, arg ) =>
+//     {
+//       if( err )
+//       will.errEncounter( err );
+//       if( err )
+//       throw _.errLogOnce( err );
+//       return arg;
+//     })
+//     ;
+//   }
+//
+// }
+//
+// _openersCurrentEach.defaults =
+// {
+//   // onReady : null,
+// }
 
-function _moduleReadyThen( o )
+//
+
+function _openersCurrentEach( o )
 {
   let will = this.form();
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
-  let willfilesPath = fileProvider.path.trail( fileProvider.path.current() );
-  let con = new _.Consequence();
+  let ready = new _.Consequence().take( null );
 
-  _.assert( arguments.length === 1 );
-  _.assert( _.routineIs( o.onReady ) );
+  _.assert( will.currentOpener === null );
   _.assert( will.currentOpener === null || will.currentOpeners === null );
-  _.routineOptions( _moduleReadyThen, arguments );
+  _.assert( _.arrayIs( will.currentOpeners ) );
+  _.routineOptions( _openersCurrentEach, arguments );
 
-  if( will.currentOpeners )
+  will.currentOpeners.forEach( ( opener ) =>
   {
+    let it = Object.create( null );
+    it.opener = opener;
+    ready.then( () => o.onEach.call( will, it ) );
+  });
 
-    will.currentOpeners.forEach( ( opener ) =>
+  return ready;
+}
+
+_openersCurrentEach.defaults =
+{
+  onEach : null,
+}
+
+// //
+//
+// function _openersCurrentEach( o )
+// {
+//   let will = this.form();
+//   let fileProvider = will.fileProvider;
+//   let path = will.fileProvider.path;
+//   let logger = will.logger;
+//   let willfilesPath = fileProvider.path.trail( fileProvider.path.current() );
+//   // let con = new _.Consequence();
+//
+//   // _.assert( arguments.length === 1 );
+//   // _.assert( _.routineIs( o.onReady ) );
+//   _.assert( will.currentOpener === null || will.currentOpeners === null );
+//   _.assert( _.arrayIs( will.currentOpeners ) );
+//   _.routineOptions( _openersCurrentEach, arguments );
+//
+//   // debugger;
+//   if( will.currentOpeners )
+//   {
+//
+//     // debugger;
+//     will.currentOpeners.forEach( ( opener ) =>
+//     {
+//
+//       let it = Object.create( null );
+//       it.opener = opener;
+//
+//       o.onEach.call( will, it );
+//
+//     //   con.then( ( arg ) =>
+//     //   {
+//     //     _.assert( will.currentOpener === null );
+//     //     _.assert( will.currentPath === null );
+//     //     // _.assert( will.mainModule === null );
+//     //     _.assert( will.mainOpener === null || will.mainOpener === opener );
+//     //     will.currentOpenerChange( opener );
+//     //     will.mainOpener = opener;
+//     //     // return ready( opener );
+//     //     return will.mainOpener;
+//     //   });
+//     //   con.then( ( arg ) =>
+//     //   {
+//     //     _.assert( will.currentOpener === opener );
+//     //     _.assert( will.currentPath === null );
+//     //     // _.assert( will.mainModule === null );
+//     //     _.assert( will.mainOpener === null || will.mainOpener === opener );
+//     //     will.currentOpenerChange( null );
+//     //     return arg;
+//     //   });
+//     });
+//
+//   }
+//   else
+//   {
+//
+//     debugger; xxx
+//     let made = false;
+//     con.then( ( arg ) =>
+//     {
+//       let opener = will.currentOpener;
+//       if( !opener )
+//       {
+//         opener = will.openerMake
+//         ({
+//           willfilesPath : willfilesPath,
+//           isMain : 1,
+//         });
+//         _.assert( will.currentOpener === null );
+//         _.assert( will.currentPath === null );
+//         _.assert( will.mainOpener === opener );
+//         // _.assert( will.mainModule === opener.openedModule );
+//         will.currentOpenerChange( opener );
+//         made = true;
+//       }
+//       // return ready( opener );
+//       return will.mainOpener;
+//     });
+//
+//     // con.then( ( arg ) =>
+//     // {
+//     //   if( made )
+//     //   {
+//     //     _.assert( will.currentPath === null );
+//     //     // _.assert( will.mainModule === will.currentOpener.openedModule );
+//     //     _.assert( will.mainOpener === will.currentOpener );
+//     //     will.currentOpenerChange( null );
+//     //   }
+//     //   return arg;
+//     // });
+//
+//   }
+//
+//   // con.take( null );
+//   // con.finally( ( err, arg ) =>
+//   // {
+//   //   if( err )
+//   //   throw err;
+//   //   return arg;
+//   // });
+//   //
+//   // return con;
+//
+//   /* */
+//
+//   function ready( opener )
+//   {
+//     // debugger;
+//     return opener.openedModule.ready.split()
+//     .then( function( arg )
+//     {
+//       let result = o.onEach( opener );
+//       _.assert( result !== undefined );
+//       return result;
+//     })
+//     .finally( ( err, arg ) =>
+//     {
+//       if( err )
+//       will.errEncounter( err );
+//       if( err )
+//       {
+//         err = _.err( err );
+//         logger.log( _.errOnce( err ) );
+//         throw err;
+//         // throw _.errLogOnce( err );
+//       }
+//       return arg;
+//     })
+//     ;
+//   }
+//
+// }
+//
+// _openersCurrentEach.defaults =
+// {
+//   onEach : null,
+// }
+
+//
+
+function openersCurrentEach( onEach )
+{
+  let will = this.form();
+  _.assert( arguments.length === 1 );
+  return will._openersCurrentEach
+  ({
+    onEach,
+  });
+  // return null; // xxx
+}
+
+//
+
+function _commandBuildLike( o )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+
+  _.routineOptions( _commandBuildLike, arguments );
+  _.assert( _.routineIs( o.commandRoutine ) );
+  _.assert( _.routineIs( o.onEach ) );
+  _.assert( _.strIs( o.name ) );
+  _.assert( _.objectIs( o.event ) );
+
+  will._commandsBegin( o.commandRoutine );
+
+  _.assert( will.currentOpener === null );
+  if( will.currentOpeners === null )
+  ready.then( () => will.openersFind() );
+
+  ready.then( () => will.openersCurrentEach( function( it )
+  {
+    let ready2 = new _.Consequence().take( null );
+
+    ready2.then( () =>
     {
-      con.then( ( arg ) =>
-      {
-        _.assert( will.currentOpener === null );
-        _.assert( will.currentPath === null );
-        _.assert( will.mainModule === null );
-        will.currentOpenerChange( opener );
-        return ready( opener );
-      });
-      con.then( ( arg ) =>
-      {
-        _.assert( will.currentOpener === opener );
-        _.assert( will.currentPath === null );
-        _.assert( will.mainModule === null );
-        will.currentOpenerChange( null );
-        return arg;
-      });
+      return will.currentOpenerChange( it.opener );
     });
 
-  }
-  else
-  {
-
-    let made = false;
-    con.then( ( arg ) =>
+    ready2.then( () =>
     {
-      let opener = will.currentOpener;
-      if( !opener )
-      {
-        opener = will.moduleMake
-        ({
-          willfilesPath : willfilesPath,
-          isMain : 1,
-        });
-        _.assert( will.currentOpener === null );
-        _.assert( will.currentPath === null );
-        _.assert( will.mainModule === opener.openedModule );
-        will.currentOpenerChange( opener );
-        made = true;
-      }
-      return ready( opener );
+      let it2 = _.mapExtend( null, o, it );
+      return o.onEach.call( will, it2 );
     });
-    con.then( ( arg ) =>
+
+    ready2.finally( ( err, arg ) =>
     {
-      if( made )
-      {
-        _.assert( will.currentPath === null );
-        _.assert( will.mainModule === will.currentOpener.openedModule );
-        will.currentOpenerChange( null );
-      }
+      will.currentOpenerChange( null );
+      if( err )
+      throw _.err( err, `\nFailed to ${o.name} ${it.opener ? it.opener.commonPath : ''}` );
       return arg;
     });
 
-  }
-
-  con.take( null );
-  con.finally( ( err, arg ) =>
+    return ready2;
+  }))
+  .finally( ( err, arg ) =>
   {
+    will._commandsEnd( o.commandRoutine );
+    if( err )
+    logger.log( _.errOnce( err ) );
     if( err )
     throw err;
     return arg;
   });
 
-  return con;
-
-  /* */
-
-  function ready( opener )
-  {
-    return opener.openedModule.ready.split()
-    .then( function( arg )
-    {
-      let result = o.onReady( opener );
-      _.assert( result !== undefined );
-      return result;
-    })
-    .finally( ( err, arg ) =>
-    {
-      if( err )
-      will.errEncounter( err );
-      if( err )
-      throw _.errLogOnce( err );
-      return arg;
-    })
-    ;
-  }
-
+  return ready;
 }
 
-_moduleReadyThen.defaults =
+_commandBuildLike.defaults =
 {
-  onReady : null,
+  event : null,
+  onEach : null,
+  commandRoutine : null,
+  name : null,
 }
 
 //
 
-function moduleReadyThen( onReady )
+function _commandWhichLike( o )
 {
-  let will = this.form();
-  _.assert( arguments.length === 1 );
-  return will._moduleReadyThen
-  ({
-    onReady : onReady,
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+
+  _.routineOptions( _commandWhichLike, arguments );
+  _.assert( _.routineIs( o.commandRoutine ) );
+  _.assert( _.routineIs( o.onAll ) );
+  _.assert( _.strIs( o.name ) );
+  _.assert( _.objectIs( o.event ) );
+
+  will._commandsBegin( o.commandRoutine );
+
+  _.assert( will.currentOpener === null );
+  if( will.currentOpeners === null )
+  ready.then( () => will.openersFind() );
+
+  ready.then( () =>
+  {
+    let ready2 = new _.Consequence().take( null );
+
+    will.currentOpeners.forEach( ( opener ) => ready2.then( () =>
+    {
+      // opener.open({ all : 1, resourcesFormed : 0 });
+      _.assert( !!opener.openedModule );
+      return opener.openedModule.modulesUpform({ recursive : 2, all : 1, resourcesFormed : 0 });
+    }));
+
+    ready2.then( () =>
+    {
+      let it2 = _.mapExtend( null, o );
+      it2.modules = will.modulesArray;
+      return o.onAll.call( will, it2 );
+    });
+
+    return ready2;
+  })
+  .finally( ( err, arg ) =>
+  {
+    will._commandsEnd( o.commandRoutine );
+    if( err )
+    err = _.err( err, `\nFailed to ${o.name}` );
+    if( err )
+    logger.log( _.errOnce( err ) );
+    if( err )
+    throw err;
+    return arg;
   });
+
+  return ready;
+}
+
+_commandWhichLike.defaults =
+{
+  event : null,
+  onAll : null,
+  commandRoutine : null,
+  name : null,
+}
+
+//
+
+function openersFind()
+{
+  let will = this;
+  let logger = will.logger;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( will.currentOpener === null );
+  _.assert( will.currentOpeners === null );
+  _.assert( arguments.length === 0 );
+
+  return will.moduleWithAt({ selector : './', tracing : 1 })
+  .finally( function( err, it )
+  {
+
+    if( err )
+    debugger;
+    if( err )
+    throw _.err( err );
+
+    will.currentOpeners = it.openers;
+    if( !will.currentOpeners.length )
+    debugger;
+    if( !will.currentOpeners.length )
+    throw _.errBrief( `Found no willfile at ${path.resolve( './' )}` );
+
+    return will.currentOpeners;
+  })
+
 }
 
 //
@@ -205,7 +544,7 @@ function _commandsMake()
   let will = this;
   let logger = will.logger;
   let fileProvider = will.fileProvider;
-  let appArgs = _.appArgs();
+  let appArgs = _.process.args();
 
   _.assert( _.instanceIs( will ) );
   _.assert( arguments.length === 0 );
@@ -221,7 +560,7 @@ function _commandsMake()
     'submodules list' :         { e : _.routineJoin( will, will.commandSubmodulesList ),              h : 'List submodules of the current module.' },
     'modules list' :            { e : _.routineJoin( will, will.commandModulesList ),                 h : 'List all modules.' },
     'modules topological list' :{ e : _.routineJoin( will, will.commandModulesTopologicalList ),      h : 'List all modules topologically.' },
-    'modules tree list' :       { e : _.routineJoin( will, will.commandModulesTreeList ),             h : 'List all modules as tree.' },
+    'modules which' :           { e : _.routineJoin( will, will.commandModulesWhich ),                h : 'List all found modules as a tree.' },
     'reflectors list' :         { e : _.routineJoin( will, will.commandReflectorsList ),              h : 'List avaialable reflectors the current module.' },
     'steps list' :              { e : _.routineJoin( will, will.commandStepsList ),                   h : 'List avaialable steps the current module.' },
     'builds list' :             { e : _.routineJoin( will, will.commandBuildsList ),                  h : 'List avaialable builds the current module.' },
@@ -236,8 +575,10 @@ function _commandsMake()
 
     'shell' :                   { e : _.routineJoin( will, will.commandShell ),                       h : 'Execute shell command on the module.' },
     'clean' :                   { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
+    'clean recursive' :         { e : _.routineJoin( will, will.commandCleanRecursive ),              h : 'Clean modules recursively. Delete genrated artifacts, temp files and downloaded submodules.' },
     'build' :                   { e : _.routineJoin( will, will.commandBuild ),                       h : 'Build current module with spesified criterion.' },
-    'export' :                  { e : _.routineJoin( will, will.commandExport ),                      h : 'Export selected the module with spesified criterion. Save output to output file and archive.' },
+    'export' :                  { e : _.routineJoin( will, will.commandExport ),                      h : 'Export selected the module with spesified criterion. Save output to output willfile and archive.' },
+    'export recursive' :        { e : _.routineJoin( will, will.commandExportRecursive ),             h : 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.' },
     'with' :                    { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
     'each' :                    { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
 
@@ -298,6 +639,7 @@ function _commandsEnd( command )
 
     if( will.currentOpeners )
     will.currentOpeners.forEach( ( opener ) => opener.finitedIs() ? null : opener.finit() );
+    will.currentOpeners = null;
 
     if( will.beeping )
     _.diagnosticBeep();
@@ -311,7 +653,7 @@ function _commandsEnd( command )
     will.currentOpenerChange( null );
     if( will.beeping )
     _.diagnosticBeep();
-    _.appExit( -1 );
+    _.process.exit( -1 );
   }
 
   return true;
@@ -326,27 +668,10 @@ function errEncounter( error )
   let path = will.fileProvider.path;
   let logger = will.logger;
 
-  _.appExitCode( -1 );
-  _.errLogOnce( error );
+  _.process.exitCode( -1 );
+  logger.log( _.errOnce( error ) );
+  // _.errLogOnce( error );
 
-}
-
-//
-
-function errTooMany( elements, what )
-{
-  let will = this;
-
-  if( elements.length !== 1 )
-  {
-    debugger;
-    if( elements.length === 0 )
-    return _.errBriefly( 'Please specify exactly one ' + what + ', none satisfies passed arguments' );
-    else
-    return _.errBriefly( 'Please specify exactly one ' + what + ', ' + elements.length + ' satisfy(s)' + '\nFound : ' + _.strQuote( _.select( elements, '*/name' ) ) );
-  }
-
-  return false;
 }
 
 //
@@ -355,7 +680,7 @@ function currentOpenerChange( src )
 {
   let will = this;
 
-  _.assert( src === null || src instanceof will.OpenerModule );
+  _.assert( src === null || src instanceof will.ModuleOpener );
   _.assert( arguments.length === 1 );
 
   will[ currentOpenerSymbol ] = src;
@@ -398,7 +723,7 @@ function commandImply( e )
 
   let request = will.Resolver.strRequestParse( e.argument );
 
-  _.appArgsReadTo
+  _.process.argsReadTo
   ({
     dst : will,
     propertiesMap : request.map,
@@ -431,7 +756,7 @@ function commandWith( e )
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
 
   if( !isolated )
-  throw _.err( 'Format is: .with {-path-} .action' );
+  throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
 
   return will.moduleWithAt({ selector : isolated.argument })
   .then( function( it )
@@ -440,7 +765,7 @@ function commandWith( e )
     will.currentOpeners = it.openers;
 
     if( !will.currentOpeners.length )
-    throw _.errBriefly( 'Found no willfile at ' + _.strQuote( isolated.argument ) );
+    throw _.errBrief( 'Found no willfile at ' + _.strQuote( path.resolve( isolated.argument ) ) );
 
     return ca.commandPerform
     ({
@@ -453,7 +778,12 @@ function commandWith( e )
     will.errEncounter( err );
     will._commandsEnd( commandWith );
     if( err )
-    throw _.errLogOnce( err );
+    {
+      err = _.err( err );
+      logger.log( _.errOnce( err ) );
+      throw err;
+      // throw _.errLogOnce( err );
+    }
     return arg;
   });
 
@@ -484,7 +814,7 @@ function commandEach( e )
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
 
   if( !isolated )
-  throw _.err( 'Format is: .each {-path-} .action' );
+  throw _.errBrief( 'Format of .each command should be: .each {-path-} .command' );
 
   _.assert( _.objectIs( isolated ), 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
 
@@ -502,7 +832,12 @@ function commandEach( e )
     will.errEncounter( err );
     will._commandsEnd( commandEach );
     if( err )
-    throw _.errLogOnce( err );
+    {
+      err = _.err( err );
+      logger.log( _.errOnce( err ) );
+      throw err;
+    }
+    // throw _.errLogOnce( err );
     return arg;
   });
 
@@ -515,7 +850,8 @@ function commandEach( e )
 
     _.assert( will.currentOpener === null );
     _.assert( will.currentPath === null );
-    _.assert( will.mainModule === null );
+    // _.assert( will.mainModule === null );
+    _.assert( will.mainOpener === null );
 
     if( will.verbosity > 1 )
     {
@@ -527,7 +863,8 @@ function commandEach( e )
 
     will.currentOpenerChange( it.currentOpener );
     will.currentPath = it.currentPath || null;
-    will.mainModule = it.currentOpener.openedModule;
+    // will.mainModule = it.currentOpener.openedModule;
+    will.mainOpener === it.currentOpener;
 
     return null;
   }
@@ -555,13 +892,15 @@ function commandEach( e )
       levelUp = 0;
 
       _.assert( will.currentOpener === it.currentOpener );
-      _.assert( will.mainModule === will.currentOpener.openedModule );
+      // _.assert( will.mainModule === will.currentOpener.openedModule );
+      _.assert( will.mainOpener === will.currentOpener );
       will.currentOpener.finit();
       will.currentOpenerChange( null );
-      will.mainModule = null;
+      // will.mainModule = null;
+      will.mainOpener = null;
 
       if( err )
-      logger.log( _.errOnce( _.errBriefly( '\n', err, '\n' ) ) );
+      logger.log( _.errOnce( _.errBrie( '\n', err, '\n' ) ) );
       if( err )
       throw _.err( err );
       return arg;
@@ -577,7 +916,9 @@ function commandEach( e )
     if( will.currentOpener )
     will.currentOpener.finit();
     will.currentOpenerChange( null );
-    will.mainModule = null;
+    // will.mainModule = null;
+    will.mainOpener = null;
+
     if( levelUp )
     {
       levelUp = 0;
@@ -596,7 +937,7 @@ function _commandList( e, act, resourceKind )
 
   _.assert( arguments.length === 3 );
 
-  return will.moduleReadyThen( function( module )
+  return will.openersCurrentEach( function( module )
   {
 
     let resources = null;
@@ -643,7 +984,7 @@ function _commandList( e, act, resourceKind )
       resources = module.openedModule.resolve( o2 );
 
       if( _.arrayIs( resources ) )
-      resources = _.longUnduplicate( resources );
+      resources = _.longOnce( resources );
 
     }
 
@@ -741,18 +1082,44 @@ function commandModulesTopologicalList( e )
 
 //
 
-function commandModulesTreeList( e )
+function commandModulesWhich( e )
 {
   let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let request = will.Resolver.strRequestParse( e.argument );
 
-  function act( module, resources )
+  return will._commandWhichLike
+  ({
+    event : e,
+    name : 'which',
+    onAll : handleAll,
+    commandRoutine : commandModulesWhich,
+  });
+
+  function handleAll( it )
   {
-    let logger = will.logger;
-    logger.log( will.modulesInfoExportAsTree( resources ) );
+    let modules = it.modules;
+    debugger;
+    logger.log( will.graphInfoExportAsTree( modules ) );
+    debugger;
+    return null;
   }
 
-  return will._commandList( e, act, 'module' );
 }
+
+// function commandModulesWhich( e )
+// {
+//   let will = this;
+//
+//   function act( module, resources )
+//   {
+//     let logger = will.logger;
+//     logger.log( will.graphInfoExportAsTree( resources ) );
+//   }
+//
+//   return will._commandList( e, act, 'module' );
+// }
 
 //
 
@@ -850,7 +1217,7 @@ function commandAboutList( e )
 function commandSubmodulesClean( e )
 {
   let will = this;
-  return will.moduleReadyThen( function( module )
+  return will.openersCurrentEach( function( module )
   {
     return module.openedModule.submodulesClean();
   });
@@ -866,9 +1233,9 @@ function commandSubmodulesDownload( e )
   _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
-  return will.moduleReadyThen( function( module )
+  return will.openersCurrentEach( function( module )
   {
-    return module.openedModule.submodulesDownload({ dry : e.propertiesMap.dry });
+    return module.openedModule.subModulesDownload({ dry : e.propertiesMap.dry });
   });
 }
 
@@ -887,7 +1254,7 @@ function commandSubmodulesUpdate( e )
   _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
-  return will.moduleReadyThen( function( module )
+  return will.openersCurrentEach( function( module )
   {
     return module.openedModule.submodulesUpdate({ dry : e.propertiesMap.dry });
   });
@@ -911,7 +1278,7 @@ function commandSubmodulesFixate( e )
   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
   delete e.propertiesMap.negative;
 
-  return will.moduleReadyThen( function( module )
+  return will.openersCurrentEach( function( module )
   {
     return module.openedModule.submodulesFixate( e.propertiesMap );
   });
@@ -940,7 +1307,7 @@ function commandSubmodulesUpgrade( e )
   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
   delete e.propertiesMap.negative;
 
-  return will.moduleReadyThen( function( module )
+  return will.openersCurrentEach( function( module )
   {
     return module.openedModule.submodulesFixate( e.propertiesMap );
   });
@@ -958,97 +1325,492 @@ commandSubmodulesUpgrade.commandProperties =
 function commandShell( e )
 {
   let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
 
-  return will.moduleReadyThen( function( module )
-  {
-    let logger = will.logger;
-    return module.openedModule.shell
-    ({
-      execPath : e.argument,
-      currentPath : will.currentPath || module.openedModule.dirPath,
-    });
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'shell',
+    onEach : handleEach,
+    commandRoutine : commandShell,
   });
 
+  function handleEach( it )
+  {
+    let logger = will.logger;
+    return it.opener.openedModule.shell
+    ({
+      execPath : e.argument,
+      currentPath : will.currentPath || it.opener.openedModule.dirPath,
+    });
+  }
+
 }
+
+// function commandShell( e )
+// {
+//   let will = this;
+//
+//   return will.openersCurrentEach( function( module )
+//   {
+//     let logger = will.logger;
+//     return module.openedModule.shell
+//     ({
+//       execPath : e.argument,
+//       currentPath : will.currentPath || module.openedModule.dirPath,
+//     });
+//   });
+//
+// }
+
+//
+// function commandClean( e )
+// {
+//   let will = this;
+//   let logger = will.logger;
+//   let ready = new _.Consequence().take( null );
+//
+//   let propertiesMap = _.strStructureParse( e.argument );
+//   _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+//   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
+//
+//   let dry = !!e.propertiesMap.dry;
+//   delete e.propertiesMap.dry;
+//
+//   if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
+//   e.propertiesMap.fast = !dry;
+//   e.propertiesMap.fast = 0;
+//
+//   will.openersCurrentEach( function( it )
+//   {
+//
+//     ready.then( () =>
+//     {
+//       return will.currentOpenerChange( it.opener );
+//     });
+//
+//     ready.then( () =>
+//     {
+//
+//       if( dry )
+//       return it.opener.openedModule.openedModule.cleanWhatReport( e.propertiesMap );
+//       else
+//       return it.opener.openedModule.clean( e.propertiesMap );
+//
+//     });
+//
+//     ready.finally( ( err, arg ) =>
+//     {
+//       will.currentOpenerChange( null );
+//       if( err )
+//       throw _.err( err, `\nFailed to clean ${it.opener ? it.opener.commonPath : ''}` );
+//       return arg;
+//     });
+//
+//     return null;
+//   });
+//
+//   return ready;
+// }
 
 //
 
 function commandClean( e )
 {
   let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
 
   let propertiesMap = _.strStructureParse( e.argument );
   _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
+  let dry = !!e.propertiesMap.dry;
+  delete e.propertiesMap.dry;
+  if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
+  e.propertiesMap.fast = !dry;
+  e.propertiesMap.fast = 0;
 
-  return will.moduleReadyThen( function( module )
-  {
-    let logger = will.logger;
-
-    if( e.propertiesMap.dry )
-    return module.openedModule.cleanWhatReport();
-    else
-    return module.openedModule.clean();
-
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'clean',
+    onEach : handleEach,
+    commandRoutine : commandClean,
   });
+
+  function handleEach( it )
+  {
+    if( dry )
+    return it.opener.openedModule.openedModule.cleanWhatReport( e.propertiesMap );
+    else
+    return it.opener.openedModule.clean( e.propertiesMap );
+  }
 
 }
 
 commandClean.commandProperties =
 {
   dry : 'Dry run without deleting. Default is dry:0.',
+  cleaningSubmodules : 'Deleting directory ".module" dir with remote submodules. Default is cleaningSubmodules:1.',
+  cleaningOut : 'Deleting generated out files. Default is cleaningOut:1.',
+  cleaningTemp : 'Deleting module-specific temporary directory. Default is cleaningTemp:1.',
+  recursive : 'Recursive cleaning. 0 - only curremt module, 1 - current module and its submodules, 2 - current module and all submodules, direct and indirect. Default is recursive:0.',
+  fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
 }
+
+//
+
+function commandCleanRecursive( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+
+  let propertiesMap = _.strStructureParse( e.argument );
+  _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
+  let dry = !!e.propertiesMap.dry;
+  delete e.propertiesMap.dry;
+  if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
+  e.propertiesMap.fast = !dry;
+  e.propertiesMap.fast = 0;
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'clean',
+    onEach : handleEach,
+    commandRoutine : commandCleanRecursive,
+  });
+
+  function handleEach( it )
+  {
+    if( dry )
+    return it.opener.openedModule.openedModule.cleanWhatReport( e.propertiesMap );
+    else
+    return it.opener.openedModule.clean( e.propertiesMap );
+  }
+
+}
+
+var defaults = commandCleanRecursive.commandProperties = Object.create( commandClean.commandProperties );
+
+defaults.recursive = 'Recursive cleaning. 0 - only curremt module, 1 - current module and its submodules, 2 - current module and all submodules, direct and indirect. Default is recursive:2.';
+
+// function commandCleanRecursive( e )
+// {
+//   let will = this;
+//   let logger = will.logger;
+//   let ready = new _.Consequence().take( null );
+//
+//   let propertiesMap = _.strStructureParse( e.argument );
+//   _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+//   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
+//
+//   let dry = !!e.propertiesMap.dry;
+//   delete e.propertiesMap.dry;
+//
+//   if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
+//   e.propertiesMap.fast = !dry;
+//   e.propertiesMap.fast = 0;
+//
+//   will.openersCurrentEach( function( it )
+//   {
+//
+//     ready.then( () =>
+//     {
+//       return will.currentOpenerChange( it.opener );
+//     });
+//
+//     ready.then( () =>
+//     {
+//
+//       if( dry )
+//       return it.opener.openedModule.openedModule.cleanWhatReport( e.propertiesMap );
+//       else
+//       return it.opener.openedModule.clean( e.propertiesMap );
+//
+//     });
+//
+//     ready.finally( ( err, arg ) =>
+//     {
+//       will.currentOpenerChange( null );
+//       if( err )
+//       throw _.err( err, `\nFailed to clean ${it.opener ? it.opener.commonPath : ''}` );
+//       return arg;
+//     });
+//
+//     return null;
+//   });
+//
+//   return ready;
+// }
+//
+// var defaults = commandCleanRecursive.commandProperties = Object.create( commandClean.commandProperties );
+//
+// defaults.recursive = 'Recursive cleaning. 0 - only curremt module, 1 - current module and its submodules, 2 - current module and all submodules, direct and indirect. Default is recursive:2.';
 
 //
 
 function commandBuild( e )
 {
   let will = this;
-  return will.moduleReadyThen( function( module )
-  {
-    let request = will.Resolver.strRequestParse( e.argument );
-    let builds = module.openedModule.buildsResolve( request.subject, request.map );
-    let logger = will.logger;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let request = will.Resolver.strRequestParse( e.argument );
 
-    if( logger.verbosity >= 2 && builds.length > 1 )
-    {
-      logger.up();
-      logger.log( module.openedModule.infoExportResource( builds ) );
-      logger.down();
-    }
-
-    if( builds.length !== 1 )
-    throw errTooMany( builds, 'build scenario' );
-
-    let build = builds[ 0 ];
-    return build.perform();
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'build',
+    onEach : handleEach,
+    commandRoutine : commandBuild,
   });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.modulesBuild
+    ({
+      name : request.subject,
+      criterion : request.map,
+      recursive : 0,
+      kind : 'build',
+    });
+  }
+
 }
+
+// function commandBuild( e )
+// {
+//   let will = this;
+//   let logger = will.logger;
+//   let ready = new _.Consequence().take( null );
+//   let request = will.Resolver.strRequestParse( e.argument );
+//
+//   will._commandsBegin( commandBuild );
+//
+//   _.assert( will.currentOpener === null );
+//   if( will.currentOpeners === null )
+//   ready.then( () => will.openersFind() );
+//
+//   ready.then( () => will.openersCurrentEach( function( it )
+//   {
+//     let ready2 = new _.Consequence().take( null );
+//
+//     ready2.then( () =>
+//     {
+//       return will.currentOpenerChange( it.opener );
+//     });
+//
+//     ready2.then( () =>
+//     {
+//       return it.opener.openedModule.modulesExport
+//       ({
+//         name : request.subject,
+//         criterion : request.map,
+//         recursive : 0,
+//         kind : 'build',
+//       });
+//     });
+//
+//     ready2.finally( ( err, arg ) =>
+//     {
+//       debugger;
+//       will.currentOpenerChange( null );
+//       if( err )
+//       throw _.err( err, `\nFailed to build ${it.opener ? it.opener.commonPath : ''}` );
+//       return arg;
+//     });
+//
+//     return ready2;
+//   }))
+//   .finally( ( err, arg ) =>
+//   {
+//     will._commandsEnd( commandBuild );
+//     if( err )
+//     logger.log( _.errOnce( err ) );
+//     if( err )
+//     throw err;
+//     return arg;
+//   });
+//
+//   return ready;
+// }
 
 //
 
 function commandExport( e )
 {
   let will = this;
-  return will.moduleReadyThen( function( module )
-  {
-    let request = will.Resolver.strRequestParse( e.argument );
-    let builds = module.openedModule.exportsResolve( request.subject, request.map );
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let request = will.Resolver.strRequestParse( e.argument );
 
-    if( logger.verbosity >= 2 && builds.length > 1 )
-    {
-      logger.up();
-      logger.log( module.openedModule.infoExportResource( builds ) );
-      logger.down();
-    }
-
-    if( builds.length !== 1 )
-    throw errTooMany( builds, 'export scenario' );
-
-    let build = builds[ 0 ];
-    return build.perform()
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'export',
+    onEach : handleEach,
+    commandRoutine : commandExport,
   });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.modulesExport
+    ({
+      name : request.subject,
+      criterion : request.map,
+      recursive : 0,
+      kind : 'export',
+    });
+  }
+
 }
+
+// function commandExport( e )
+// {
+//   let will = this;
+//   let logger = will.logger;
+//   let ready = new _.Consequence().take( null );
+//   let request = will.Resolver.strRequestParse( e.argument );
+//
+//   will._commandsBegin( commandExport );
+//
+//   _.assert( will.currentOpener === null );
+//   if( will.currentOpeners === null )
+//   ready.then( () => will.openersFind() );
+//
+//   ready.then( () => will.openersCurrentEach( function( it )
+//   {
+//     let ready2 = new _.Consequence().take( null );
+//
+//     ready2.then( () =>
+//     {
+//       return will.currentOpenerChange( it.opener );
+//       // return it.opener.open({ all : 1 });
+//     });
+//
+//     ready2.then( () =>
+//     {
+//       return it.opener.openedModule.modulesExport
+//       ({
+//         name : request.subject,
+//         criterion : request.map,
+//         recursive : 0,
+//         kind : 'export',
+//       });
+//     });
+//
+//     ready2.finally( ( err, arg ) =>
+//     {
+//       will.currentOpenerChange( null );
+//       if( err )
+//       throw _.err( err, `\nFailed to export ${it.opener ? it.opener.commonPath : ''}` );
+//       return arg;
+//     });
+//
+//     return ready2;
+//   }))
+//   .finally( ( err, arg ) =>
+//   {
+//     will._commandsEnd( commandExport );
+//     if( err )
+//     logger.log( _.errOnce( err ) );
+//     if( err )
+//     throw err;
+//     return arg;
+//   });
+//
+//   return ready;
+// }
+
+//
+
+function commandExportRecursive( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let request = will.Resolver.strRequestParse( e.argument );
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'export',
+    onEach : handleEach,
+    commandRoutine : commandExportRecursive,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.modulesExport
+    ({
+      name : request.subject,
+      criterion : request.map,
+      recursive : 2,
+      kind : 'export',
+    });
+  }
+
+}
+
+// function commandExportRecursive( e )
+// {
+//   let will = this;
+//   let logger = will.logger;
+//   let ready = new _.Consequence().take( null );
+//   let request = will.Resolver.strRequestParse( e.argument );
+//
+//   will._commandsBegin( commandExportRecursive );
+//
+//   _.assert( will.currentOpener === null );
+//   if( will.currentOpeners === null )
+//   ready.then( () => will.openersFind() );
+//
+//   ready.then( () => will.openersCurrentEach( function( it )
+//   {
+//     let ready2 = new _.Consequence().take( null );
+//
+//     ready2.then( () =>
+//     {
+//       return will.currentOpenerChange( it.opener );
+//       // return it.opener.open({ all : 1 });
+//     });
+//
+//     ready2.then( () =>
+//     {
+//       return it.opener.openedModule.modulesExport
+//       ({
+//         name : request.subject,
+//         criterion : request.map,
+//         recursive : 2,
+//         kind : 'export',
+//       });
+//     });
+//
+//     ready2.finally( ( err, arg ) =>
+//     {
+//       will.currentOpenerChange( null );
+//       if( err )
+//       throw _.err( err, `\nFailed to export ${it.opener ? it.opener.commonPath : ''}` );
+//       return arg;
+//     });
+//
+//     return ready2;
+//   }))
+//   .finally( ( err, arg ) =>
+//   {
+//     will._commandsEnd( commandExportRecursive );
+//     if( err )
+//     logger.log( _.errOnce( err ) );
+//     if( err )
+//     throw err;
+//     return arg;
+//   });
+//
+//   return ready;
+// }
 
 // --
 // relations
@@ -1103,14 +1865,17 @@ let Extend =
   exec,
   init,
 
-  _moduleReadyThen,
-  moduleReadyThen,
+  _openersCurrentEach,
+  openersCurrentEach,
+  _commandBuildLike,
+  _commandWhichLike,
+  openersFind,
 
   _commandsMake,
   _commandsBegin,
   _commandsEnd,
   errEncounter,
-  errTooMany,
+  // errTooMany,
   currentOpenerChange,
 
   commandHelp,
@@ -1124,7 +1889,7 @@ let Extend =
   commandSubmodulesList,
   commandModulesList,
   commandModulesTopologicalList,
-  commandModulesTreeList,
+  commandModulesWhich,
   commandReflectorsList,
   commandStepsList,
   commandBuildsList,
@@ -1139,8 +1904,10 @@ let Extend =
 
   commandShell,
   commandClean,
+  commandCleanRecursive,
   commandBuild,
   commandExport,
+  commandExportRecursive,
 
   // relation
 
@@ -1169,7 +1936,7 @@ if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;
 wTools[ Self.shortName ] = Self;
 
-// _.appExitHandlerRepair();
+// _.process.exitHandlerRepair();
 if( !module.parent )
 Self.Exec();
 

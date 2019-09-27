@@ -231,7 +231,9 @@ function numbersFromInt( dst,length )
 
   if( _.numberIs( dst ) )
   {
-    dst = _.longFillTimes( [], length , dst );
+    debugger;
+    // dst = _.longFillTimes( [], length , dst );
+    dst = _.longFill( [], dst, length );
   }
   else
   {

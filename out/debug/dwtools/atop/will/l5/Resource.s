@@ -55,7 +55,7 @@ function MakeFor_body( o )
   o2.Optional = o.Optional;
   o2.Rewriting = o.Rewriting;
   o2.Importing = o.Importing;
-  o2.IsOutFile = o.IsOutFile;
+  o2.IsOut = o.IsOut;
 
   if( Cls.ResouceDataFrom )
   o2.resource = Cls.ResouceDataFrom( o.resource );
@@ -70,8 +70,11 @@ function MakeFor_body( o )
 
   if( o2.Importing === null )
   o2.Importing = 1;
-  if( o2.IsOutFile === null )
-  o2.IsOutFile = o.willf.isOutFile;
+  if( o2.IsOut === null )
+  o2.IsOut = o.willf.isOut;
+
+  _.assert( _.boolLike( o2.Importing ) );
+  _.assert( _.boolLike( o2.IsOut ) );
 
   Cls.MakeForEachCriterion( o2 );
 
@@ -88,7 +91,7 @@ MakeFor_body.defaults =
   Optional : null,
   Rewriting : null,
   Importing : null,
-  IsOutFile : null,
+  IsOut : null,
 
 }
 
@@ -111,7 +114,7 @@ function MakeForEachCriterion( o )
   catch( err )
   {
     debugger;
-    throw _.err( 'Cant form', Cls.KindName + '::' + o.name, '\n', err );
+    throw _.err( err, '\nCant form', Cls.KindName + '::' + o.name );
   }
 
   /* */
@@ -121,6 +124,7 @@ function MakeForEachCriterion( o )
     let counter = 0;
     let isSingle = true;
 
+    o = _.routineOptions( MakeForEachCriterion, args );
     _.assert( args.length === 1 );
     _.assert( _.mapIs( o ) );
     _.assert( _.mapIs( o.resource ) );
@@ -188,10 +192,16 @@ function MakeForEachCriterion( o )
       let optional = !!o.Optional;
       let rewriting = !!o.Rewriting;
       let importing = !!o.Importing;
-      let isOutFile = !!o.IsOutFile;
+      let isOut = !!o.IsOut;
 
-      if( o.resource.importable !== undefined && !o.resource.importable )
-      if( importing )
+      if( o.resource.importableFromIn !== undefined && !o.resource.importableFromIn )
+      if( importing && !isOut )
+      {
+        return;
+      }
+
+      if( o.resource.importableFromOut !== undefined && !o.resource.importableFromOut )
+      if( importing && isOut )
       {
         return;
       }
@@ -205,7 +215,10 @@ function MakeForEachCriterion( o )
     }
     catch( err )
     {
-      throw _.err( 'Criterions\n', _.toStr( o.resource.criterion ), '\n', err );
+      let cirterion = '';
+      if( o.resource.criterion )
+      cirterion += '\nCriterions\n' + _.toStr( o.resource.criterion );
+      throw _.err( err, `\nFailed to make resource ${Cls.KindName}::${o.resource.name}`, cirterion );
     }
 
   }
@@ -217,7 +230,7 @@ MakeForEachCriterion.defaults =
   Optional : null,
   Rewriting : null,
   Importing : null,
-  IsOutFile : null,
+  IsOut : null,
   resource : null,
 }
 
@@ -323,10 +336,10 @@ function unform()
   _.assert( arguments.length === 0 );
   _.assert( resource.formed );
 
-  if( !resource.original )
-  {
-    _.assert( module[ resource.MapName ][ resource.name ] === resource );
-  }
+  if( resource.original )
+  _.assert( module[ resource.MapName ][ resource.name ] === resource.original );
+  else
+  _.assert( module[ resource.MapName ][ resource.name ] === resource );
 
   /* begin */
 
@@ -395,7 +408,7 @@ function form1()
 
   if( !resource.original )
   {
-    _.sure( !module[ resource.MapName ][ resource.name ], () => 'Module ' + module.dirPath + ' already has ' + resource.nickName );
+    _.sure( !module[ resource.MapName ][ resource.name ], () => 'Module ' + module.dirPath + ' already has ' + resource.qualifiedName );
   }
 
   /* begin */
@@ -583,13 +596,16 @@ function _inheritSingle( o )
   _.assert( !!resource2.formed );
   _.assertRoutineOptions( _inheritSingle, arguments );
 
+  // if( resource.id === 154 )
+  // debugger;
+
   if( resource2.formed < 2 )
   {
-    _.sure( !_.arrayHas( o.visited, resource2.name ), () => 'Cyclic dependency ' + resource.nickName + ' of ' + resource2.nickName );
+    _.sure( !_.arrayHas( o.visited, resource2.name ), () => 'Cyclic dependency ' + resource.qualifiedName + ' of ' + resource2.qualifiedName );
     resource2._inheritForm({ visited : o.visited });
   }
 
-  let extend = _.mapOnly( resource2, _.mapNulls( resource.dataExport({ compact : 0, copyingAggregates : 1 }) ) );
+  let extend = _.mapOnly( resource2, _.mapNulls( resource.structureExport({ compact : 0, copyingAggregates : 1 }) ) );
   delete extend.criterion;
   resource.copy( extend );
   resource.criterionInherit( resource2.criterion );
@@ -637,7 +653,7 @@ function criterionValidate()
   for( let c in resource.criterion )
   {
     let crit = resource.criterion[ c ];
-    _.sure( _.strIs( crit ) || _.numberIs( crit ), () => 'Criterion ' + c + ' of ' + resource.nickName + ' should be number or string, but is ' + _.strType( crit ) );
+    _.sure( _.strIs( crit ) || _.numberIs( crit ), () => 'Criterion ' + c + ' of ' + resource.qualifiedName + ' should be number or string, but is ' + _.strType( crit ) );
   }
 
 }
@@ -870,12 +886,16 @@ function _infoExport( o )
 {
   let resource = this;
   let result = '';
+  o = _.routineOptions( _infoExport, arguments );   
 
   result += resource.decoratedAbsoluteName + '\n';
   result += _.toStr( o.fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '', multiline : 1 } );
 
   return result;
 }
+
+var defaults = _infoExport.defaults = Object.create( null );
+defaults.fields = 1;
 
 //
 
@@ -884,27 +904,27 @@ function infoExport()
   let resource = this;
   let o = _.routineOptions( infoExport, arguments );
 
-  let fields = resource.dataExport( o );
+  let fields = resource.structureExport( o );
   let result = resource._infoExport({ fields });
 
   return result;
 }
 
-var defaults = infoExport.defaults = Object.create( _.Will.OpenedModule.prototype.dataExport.defaults );
+var defaults = infoExport.defaults = Object.create( _.Will.OpenedModule.prototype.structureExport.defaults );
 defaults.copyingNonExportable = 1;
 defaults.formed = 1;
 defaults.strict = 0;
 
 //
 
-function dataExport()
+function structureExport()
 {
   let resource = this;
-  let o = _.routineOptions( dataExport, arguments );
+  let o = _.routineOptions( structureExport, arguments );
 
   if( !o.formed )
   if( resource.unformedResource )
-  return resource.unformedResource.dataExport.call( resource.unformedResource, o );
+  return resource.unformedResource.structureExport.call( resource.unformedResource, o );
 
   if( !o.copyingNonExportable )
   if( !resource.exportable )
@@ -925,6 +945,7 @@ function dataExport()
   delete o2.rootModule;
   delete o2.formed;
   delete o2.strict;
+  delete o2.exportModule;
 
   let fields = resource.cloneData( o2 );
 
@@ -932,7 +953,29 @@ function dataExport()
   return fields;
 }
 
-dataExport.defaults = Object.create( _.Will.OpenedModule.prototype.dataExport.defaults );
+structureExport.defaults = Object.create( _.Will.OpenedModule.prototype.structureExport.defaults );
+
+//
+
+function extraExport()
+{
+  let resource = this;
+  let o = _.routineOptions( structureExport, arguments );
+
+  o.dst = o.dst || Object.create( null );
+
+  o.dst.writable = resource.writable;
+  o.dst.exportable = resource.exportable;
+  o.dst.importableFromIn = resource.importableFromIn;
+  o.dst.importableFromOut = resource.importableFromOut;
+
+  return o.dst;
+}
+
+extraExport.defaults =
+{
+  dst : null,
+}
 
 //
 
@@ -944,7 +987,7 @@ function compactField( it )
   if( it.src instanceof Self )
   {
     _.assert( resource instanceof _.Will.Exported, 'not tested' );
-    it.dst = it.src.nickName;
+    it.dst = it.src.qualifiedName;
     return it.dst;
   }
 
@@ -964,7 +1007,7 @@ function compactField( it )
 // accessor
 // --
 
-function nickNameGet()
+function qualifiedNameGet()
 {
   let resource = this;
   return resource.refName;
@@ -972,10 +1015,10 @@ function nickNameGet()
 
 //
 
-function decoratedNickNameGet()
+function decoratedQualifiedNameGet()
 {
   let module = this;
-  let result = module.nickName;
+  let result = module.qualifiedName;
   return _.color.strFormat( result, 'entity' );
 }
 
@@ -993,7 +1036,8 @@ function absoluteNameGet()
 {
   let resource = this;
   let module = resource.module;
-  return module.absoluteName + ' / ' + resource.nickName;
+
+  return ( module ? module.absoluteName : '...' ) + ' / ' + resource.qualifiedName;
 }
 
 //
@@ -1031,7 +1075,7 @@ function moduleSet( src )
 {
   let resource = this;
 
-  if( src && src instanceof _.Will.OpenerModule )
+  if( src && src instanceof _.Will.ModuleOpener )
   src = src.openedModule;
 
   resource[ moduleSymbol ] = src;
@@ -1187,7 +1231,8 @@ let Aggregates =
 {
   writable : 1,
   exportable : 1,
-  importable : 1,
+  importableFromIn : 1,
+  importableFromOut : 1,
   generated : 0,
 }
 
@@ -1232,13 +1277,14 @@ let Forbids =
 {
   default : 'default',
   predefined : 'predefined',
+  importable : 'importable',
 }
 
 let Accessors =
 {
   willf : { setter : willfSet },
-  nickName : { getter : nickNameGet, readOnly : 1 },
-  decoratedNickName : { getter : decoratedNickNameGet, readOnly : 1 },
+  qualifiedName : { getter : qualifiedNameGet, readOnly : 1 },
+  decoratedQualifiedName : { getter : decoratedQualifiedNameGet, readOnly : 1 },
   refName : { getter : _refNameGet, readOnly : 1 },
   absoluteName : { getter : absoluteNameGet, readOnly : 1 },
   decoratedAbsoluteName : { getter : decoratedAbsoluteNameGet, readOnly : 1 },
@@ -1292,13 +1338,14 @@ let Extend =
 
   _infoExport,
   infoExport,
-  dataExport,
+  structureExport,
+  extraExport,
   compactField,
 
   // accessor
 
-  nickNameGet,
-  decoratedNickNameGet,
+  qualifiedNameGet,
+  decoratedQualifiedNameGet,
   _refNameGet,
   absoluteNameGet,
   decoratedAbsoluteNameGet,

@@ -1,4 +1,4 @@
-( function _OpenerModule_s_( ) {
+( function _ModuleOpener_s_( ) {
 
 'use strict';
 
@@ -13,12 +13,12 @@ if( typeof opener !== 'undefined' )
 
 let _ = wTools;
 let Parent = _.Will.AbstractModule;
-let Self = function wWillOpenerModule( o )
+let Self = function wWillModuleOpener( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }
 
-Self.shortName = 'OpenerModule';
+Self.shortName = 'ModuleOpener';
 
 // --
 // inter
@@ -29,13 +29,12 @@ function finit()
   let opener = this;
   let will = opener.will;
 
-  // opener.submoduleAssociation.forEach( ( submodule ) =>
-  // {
-  //   _.assert( submodule.opener === opener );
-  //   submodule.finit();
-  // });
-
   opener.unform();
+
+  if( will && will.mainOpener === opener )
+  will.mainOpener = null;
+
+  // will.openersErrorsRemoveOf( opener );
 
   return Parent.prototype.finit.apply( opener, arguments );
 }
@@ -47,168 +46,118 @@ function init( o )
   let opener = this;
 
   opener[ dirPathSymbol ] = null;
-  opener[ commonPathSymbol ] = null;
-  opener[ willPathSymbol ] = _.path.join( __dirname, '../Exec' );
-  opener[ willfileWithRoleMapSymbol ] = Object.create( null );
-  opener[ willfileArraySymbol ] = [];
-  opener[ configNameSymbol ] = null;
+
+  if( o )
+  opener.precopy( o );
 
   Parent.prototype.init.apply( opener, arguments );
 
-  _.assert( !!o );
   if( o )
-  {
-    opener.copy( o );
-  }
+  opener.copy( o );
 
-  _.assert( opener.openerModule !== undefined );
-  _.assert( opener.unwrappedOpenerModule !== undefined );
+  _.assert( !!o );
+  _.assert( opener.unwrappedModuleOpener !== undefined );
   _.assert( opener.openedModule !== undefined );
 
   return opener;
 }
 
-// function init( o )
-// {
-//   let opener = this;
-//
-//   opener[ Symbol.for( 'dirPath' ) ] = null;
-//
-//   // _.assert( arguments.length <= 1 );
-//   // _.workpiece.initFields( opener )
-//   // Object.preventExtensions( opener );
-//   //
-//   // _.Will.ResourceCounter += 1;
-//   // opener.id = _.Will.ResourceCounter;
-//
-//   Parent.prototype.init.apply( opener, arguments );
-//
-//   _.assert( !!o );
-//   if( o )
-//   {
-//     if( !o.supermodule )
-//     {
-//       // opener.moduleWithPathMap = Object.create( null );
-//       opener.moduleWithNameMap = Object.create( null );
-//       opener.allSubmodulesMap = Object.create( null );
-//     }
-//     opener.copy( o );
-//   }
-//
-//   let accessors =
-//   {
-//     get : function( opener, k, proxy )
-//     {
-//       let result;
-//       if( opener[ k ] !== undefined )
-//       result = opener[ k ];
-//       else if( opener.openedModule && opener.openedModule[ k ] !== undefined )
-//       result = opener.openedModule[ k ];
-//       else _.assert( 0, 'Module does not have field', k );
-//       if( k !== 'unwrappedOpenerModule' && result === opener )
-//       return proxy;
-//       return result;
-//     },
-//     set : function( opener, k, val, proxy )
-//     {
-//       if( opener[ k ] !== undefined )
-//       opener[ k ] = val;
-//       else if( opener.openedModule && opener.openedModule[ k ] !== undefined )
-//       opener.openedModule[ k ] = val;
-//       else _.assert( 0, 'Module does not have field', k );
-//       return true;
-//     },
-//   };
-//
-//   let proxy = new Proxy( opener, accessors );
-//
-//   opener.openerModule = proxy;
-//   opener.unwrappedOpenerModule = opener;
-//
-//   _.assert( opener.openerModule !== undefined );
-//   _.assert( opener.unwrappedOpenerModule !== undefined );
-//   _.assert( opener.openedModule !== undefined );
-//   _.assert( proxy.openerModule !== undefined );
-//   _.assert( proxy.unwrappedOpenerModule !== undefined );
-//   _.assert( proxy.openedModule !== undefined );
-//
-//   return proxy;
-// }
-
-// {
-//   let opener = this;
-//
-//   _.assert( arguments.length === 0 || arguments.length === 1 );
-//
-//   opener.pathResourceMap = opener.pathResourceMap || Object.create( null );
-//
-//   _.workpiece.initFields( opener );
-//   Object.preventExtensions( opener );
-//
-// }
-
 //
 
-function optionsForModule()
+function unform()
 {
   let opener = this;
+  let will = opener.will;
 
-  let Import =
+  if( !opener.formed )
+  return opener;
+
+  _.assert( opener.superRelation === null );
+
+  if( opener.openedModule )
   {
-
-    will : null,
-    rootModule : null,
-    willfilesArray : null,
-    // willfilesReadBeginTime : null,
-
-    willfilesPath : null,
-    localPath : null,
-    remotePath : null,
-    inPath : null,
-    outPath : null,
-
-    // configName : null,
-    // aliasName : null,
-
-    isRemote : null,
-    isDownloaded : null,
-    isUpToDate : null,
-
+    let openedModule = opener.openedModule;
+    opener.openedModule = null;
+    if( !openedModule.isUsed() )
+    openedModule.finit();
   }
 
-  let result = _.mapOnly( opener, Import );
+  opener._willfilesRelease();
+  will.openerUnregister( opener );
 
-  if( opener.supermodule )
-  result.supermodules = [ opener.supermodule ];
-
-  // result.aliasesNames = [];
-  // if( opener.aliasName )
-  // result.aliasesNames.push( opener.aliasName );
-  // if( opener.configName )
-  // result.aliasesNames.push( opener.configName );
-
-  result.willfilesArray = _.entityShallowClone( result.willfilesArray );
-
-  return result;
+  opener.formed = 0;
+  return opener;
 }
 
 //
 
-function optionsForSecondModule()
+function preform()
+{
+  let opener = this;
+  let will = opener.will;
+
+  if( opener.formed )
+  return opener;
+
+  /* */
+
+  _.assert( arguments.length === 0 );
+  _.assert( !!opener.will );
+  _.assert( _.strsAreAll( opener.willfilesPath ) || _.strIs( opener.dirPath ), 'Expects willfilesPath or dirPath' );
+  _.assert( opener.formed === 0 );
+
+  /* */
+
+  opener._filePathChanged();
+  will.openerRegister( opener );
+  will._willfilesReadBegin();
+
+  /* */
+
+  _.assert( arguments.length === 0 );
+  _.assert( !!opener.will );
+  _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
+  _.assert( opener.dirPath === null || _.strDefined( opener.dirPath ) );
+  _.assert( !!opener.willfilesPath || !!opener.dirPath );
+
+  /* */
+
+  opener.formed = 1;
+  return opener;
+}
+
+//
+
+function optionsForModuleExport()
 {
   let opener = this;
 
   let Import =
   {
+
     will : null,
     rootModule : null,
-    // willfilesReadBeginTime : null,
+    peerModule : null,
+    willfilesArray : null,
+
+    willfilesPath : null,
+    localPath : null,
+    remotePath : null,
+
+    isRemote : null,
+    isUpToDate : null,
+    isOut : null,
+
   }
 
   let result = _.mapOnly( opener, Import );
 
-  // if( opener.supermodule )
-  // result.supermodules = [ opener.supermodule ];
+  if( opener.superRelation )
+  result.superRelations = [ opener.superRelation ]; // xxx
+
+  result.willfilesArray = _.entityShallowClone( result.willfilesArray );
+
+  _.assert( _.boolLike( opener.isOut ), 'Expects defined {- opener.isOut -}' );
 
   return result;
 }
@@ -220,8 +169,8 @@ function precopy( o )
   let opener = this;
   if( o.will )
   opener.will = o.will;
-  if( o.supermodules )
-  opener.supermodules = o.supermodules;
+  if( o.superRelation )
+  opener.superRelation = o.superRelation;
   if( o.original )
   opener.original = o.original;
   if( o.rootModule )
@@ -262,8 +211,12 @@ function cloneExtending( o )
 
   if( o.original === undefined )
   o.original = opener.original;
-  if( o.moduleWithPathMap === undefined )
-  o.moduleWithPathMap = module.moduleWithPathMap;
+  if( opener.isMain && o.isMain === undefined )
+  o.isMain = false;
+  if( o.willfilesArray === undefined )
+  o.willfilesArray = [];
+  // if( o.moduleWithCommonPathMap === undefined )
+  // o.moduleWithCommonPathMap = opener.moduleWithCommonPathMap;
 
   let result = _.Copyable.prototype.cloneExtending.call( opener, o );
 
@@ -271,110 +224,124 @@ function cloneExtending( o )
 }
 
 // --
-// opener
+// module
 // --
 
-function unform()
+// function moduleClone( module )
+// {
+//   let opener = this;
+//   let will = opener.will;
+//
+//   _.assert( !module.finitedIs() );
+//   _.assert( arguments.length === 1 );
+//   _.assert( module instanceof _.Will.OpenedModule );
+//
+//   opener.preform();
+//   opener.remoteForm();
+//
+//   let o2 = opener.optionsForModuleExport();
+//   let rootModule = o2.rootModule = opener.rootModule;
+//   let module2 = module.cloneExtending( o2 );
+//   opener.moduleAdopt( module2 );
+//   _.assert( rootModule === opener.rootModule );
+//   _.assert( rootModule === opener.openedModule.rootModule );
+//
+//   return module2;
+// }
+
+//
+
+function moduleAdopt( module )
 {
   let opener = this;
   let will = opener.will;
-  if( !opener.preformed )
-  return opener;
 
-  // opener.close();
+  _.assert( !module.finitedIs() );
+  _.assert( opener.openedModule === null );
+  _.assert( arguments.length === 1 );
+  _.assert( module instanceof _.Will.OpenedModule );
 
-  /* */
+  let o2 = module.optionsForOpenerExport();
+  _.mapExtend( opener, o2 );
 
-  // if( opener.openedModule )
-  // if( opener.openedModule.releasedBy( opener ) )
-  // {
-  //   debugger;
-  //   opener.openedModule = null;
-  // }
+  opener.preform();
+  opener.remoteForm();
 
-  // if( opener.openedModule )
-  // {
-  //   // opener.openedModule.finit();
-  //   // opener.openedModule = null;
-  //   opener.openedModule.close();
-  // }
-  //
-  // if( opener.error )
-  // opener.error = null
+  opener.openedModule = module;
 
-  for( let i = opener.willfilesArray.length-1 ; i >= 0 ; i-- )
-  {
-    let willf = opener.willfilesArray[ i ];
-    opener.willfileUnregister( willf );
-    willf.openerModule = null;
-    if( willf.openedModule === null )
-    willf.finit();
-    _.assert( willf.openerModule === null );
-  }
+  if( opener.superRelation )
+  opener.superRelation._moduleAdoptEnd();
 
-  /* */
+  _.assert( opener.openedModule === module );
+  _.assert( _.arrayHas( module.userArray, opener ) );
+
+  return module;
+}
+
+//
+
+function openedModuleSet( module )
+{
+  let opener = this;
+
+  _.assert( arguments.length === 1 );
+  _.assert( module === null || module instanceof _.Will.OpenedModule )
+
+  if( opener.openedModule === module )
+  return module ;
 
   if( opener.openedModule )
+  opener.openedModule.releasedBy( opener );
+
+  if( module )
   {
-    opener.openedModule.releasedBy( opener );
-    opener.openedModule = null;
+    module.usedBy( opener );
+    opener.moduleUsePaths( module );
+    opener.moduleUseError( module );
   }
 
-  will.openerUnregister( opener );
+  opener[ openedModuleSymbol ] = module;
 
-  opener.preformed = 0;
-  return opener;
+  return module;
 }
 
 //
 
-function preform()
+function moduleUsePaths( module )
 {
   let opener = this;
-  let will = opener.will;
 
-  if( opener.preformed )
-  return opener;
+  _.assert( arguments.length === 1 );
+  _.assert( module instanceof _.Will.OpenedModule );
 
-  /* */
+  opener[ dirPathSymbol ] = module.dirPath;
+  opener[ commonPathSymbol ] = module.commonPath;
 
-  _.assert( arguments.length === 0 );
-  _.assert( !!opener.will );
-  _.assert( _.strsAreAll( opener.willfilesPath ) || _.strIs( opener.dirPath ), 'Expects willfilesPath or dirPath' );
-  _.assert( opener.preformed === 0 );
+  opener.willfilesPath = module.willfilesPath;
+  // opener.dirPath = module.dirPath;
+  // opener.commonPath = module.commonPath;
+  opener.localPath = module.localPath;
+  opener.remotePath = module.remotePath;
 
-  /* */
-
-  opener._filePathChanged();
-
-  /* */
-
-  // _.assert( opener.id > 0 );
-  // will.openerModuleWithIdMap[ opener.id ] = opener;
-  // _.arrayAppendOnceStrictly( will.openersArray, opener );
-  // _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
-
-  will.openerRegister( opener );
-
-  /* */
-
-  _.assert( arguments.length === 0 );
-  _.assert( !!opener.will );
-  _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
-  _.assert( opener.dirPath === null || _.strDefined( opener.dirPath ) );
-  _.assert( !!opener.willfilesPath || !!opener.dirPath );
-
-  /* */
-
-  // opener.remoteForm();
-
-  /* */
-
-  opener.preformed = 1;
-  return opener;
 }
 
 //
+
+function moduleUseError( module )
+{
+  let opener = this;
+
+  _.assert( arguments.length === 1 );
+  _.assert( module instanceof _.Will.OpenedModule );
+
+  if( module.ready.errorsCount() )
+  opener.error = opener.error || module.ready.errorsGet()[ 0 ];
+
+}
+
+// --
+// opener
+// --
 
 function close()
 {
@@ -383,156 +350,314 @@ function close()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+  let module = opener.openedModule;
 
+  _.assert( !opener.finitedIs() );
   _.assert( arguments.length === 0 );
+  _.assert( opener.formed >= 0 );
 
-  if( opener.openedModule )
+  if( module )
   {
-    opener.openedModule.close();
+    debugger;
+    module.close();
+    _.assert( module.isUsedBy( opener ) );
+    opener.openedModule = null;
+    _.assert( opener.openedModule === null );
+    _.assert( !module.isUsedBy( opener ) );
   }
 
   if( opener.error )
   opener.error = null
 
-  for( let i = opener.willfilesArray.length-1 ; i >= 0 ; i-- )
-  {
-    let willf = opener.willfilesArray[ i ];
-    opener.willfileUnregister( willf );
-    if( willf.openerModule === opener )
-    willf.openerModule = null;
-    if( willf.openedModule === null )
-    willf.finit();
-  }
+  opener._willfilesRelease();
 
+  if( opener.superRelation )
+  opener.superRelation._closeEnd();
+
+  if( opener.formed > 1 )
+  opener.formed = 1;
+
+  if( module )
+  {
+    module.finit();
+  }
 }
 
 //
 
-function moduleFindTry()
+function find( o )
 {
   let opener = this;
   let will = opener.will;
+
+  o = _.routineOptions( find, arguments );
+  _.assert( _.arrayHas( [ 'smart', 'strict', 'exact' ], opener.searching ) );
+  _.assert( opener.formed <= 2 );
+
+  if( opener.openedModule )
+  return opener.openedModule;
 
   try
   {
-    opener.moduleFind();
+
+    opener.preform();
+    opener.remoteForm();
+
+    _.assert( opener.formed >= 2 );
+
+    let openedModule = opener.openedModule;
+    if( !openedModule )
+    openedModule = will.moduleAt( opener.willfilesPath );
+
+    /* */
+
+    // if( _.arrayHas( [ 'smart', 'strict' ], opener.searching ) )
+    if( !openedModule || !openedModule.willfilesArray.length )
+    {
+
+      opener._willfilesFind();
+
+      if( !opener.error )
+      if( !opener.willfilesArray.length )
+      {
+        debugger;
+        opener.error = _.err( 'Found no will file at ' + _.strQuote( opener.dirPath ) );
+      }
+
+      /* get module from opened willfile, maybe */
+
+      if( opener.willfilesArray.length )
+      if( opener.willfilesArray[ 0 ].openedModule )
+      openedModule = opener.willfilesArray[ 0 ].openedModule;
+
+    }
+
+    // if( openedModule && opener.isMain )
+    // openedModule.mainOpener = opener;
+
+    /* */
+
+    if( opener.error )
+    {
+      throw opener.error;
+    }
+
+    /* */
+
+    if( openedModule )
+    {
+
+      _.assert( openedModule.rootModule === opener.rootModule || opener.rootModule === null );
+      _.assert( opener.openedModule === openedModule || opener.openedModule === null );
+      opener.openedModule = openedModule;
+
+      _.assert( !opener.willfilesArray.length || !openedModule.willfilesArray.length || _.arraysAreIdentical( opener.willfilesArray, openedModule.willfilesArray ) );
+      if( opener.willfilesArray.length )
+      openedModule.willfilesArray = _.entityShallowClone( opener.willfilesArray );
+      else
+      opener.willfilesArray = _.entityShallowClone( openedModule.willfilesArray );
+
+    }
+    else
+    {
+
+      _.assert( opener.openedModule === null );
+      let o2 = opener.optionsForModuleExport();
+      // debugger;
+      openedModule = opener.openedModule = new will.OpenedModule( o2 );
+      // debugger;
+      if( openedModule.rootModule === null )
+      openedModule.rootModule = openedModule;
+      openedModule.preform();
+
+      // opener.modulesAttachedOpen();
+
+    }
+
+    _.assert( _.arraysAreIdentical( opener.willfilesArray, opener.openedModule.willfilesArray ) );
+    _.assert( _.arraysAreIdentical( _.mapVals( opener.willfileWithRoleMap ), _.mapVals( opener.openedModule.willfileWithRoleMap ) ) );
+
+    if( !opener.openedModule.isUsedBy( opener ) )
+    opener.openedModule.usedBy( opener );
+
+    opener.formed = 3;
+
+    return opener.openedModule;
   }
   catch( err )
   {
-    opener.error = err;
+    err = _.err( err, `\nError looking for willfiles for module at ${opener.commonPath}` );
+    opener.error = opener.error || err;
+    if( o.throwing )
+    throw err;
     return null;
   }
 
-  return opener.openedModule;
+}
+
+find.defaults =
+{
+  throwing : 1,
 }
 
 //
 
-function moduleFind()
+function open( o )
 {
   let opener = this;
   let will = opener.will;
+  let ready = new _.Consequence();
 
-  _.assert( _.arrayHas( [ 0, 'smart', 'picked' ], opener.finding ) );
+  o = _.routineOptions( open, arguments );
 
-  will._moduleWillfilesReadBegin();
-  opener.preform();
-  opener.remoteForm();
-
-  let openedModule = opener.openedModule;
-  if( !openedModule )
-  openedModule = will.moduleAt( opener.willfilesPath );
-
-  /* */
-
-  if( opener.finding )
-  if( !openedModule || !openedModule.willfilesArray.length )
+  try
   {
 
-    opener._willfilesFind();
+    // _.assert( opener.formed <= 3, () => `${opener.absoluteName} was already opened` );
 
-    if( !opener.error )
-    if( !opener.willfilesArray.length )
+    if( opener.error )
+    throw opener.error;
+
+    if( !opener.openedModule )
+    opener.find();
+
+    defaultsApply( o );
+
+    _.assert( opener.formed >= 3 );
+
+    if( opener.error )
+    throw opener.error;
+
+    let stager = opener.openedModule.stager;
+    let rerun = false;
+
+    let skipping = Object.create( null );
+    skipping.attachedWillfilesFormed = !o.attachedWillfilesFormed;
+    skipping.peerModulesFormed = !o.peerModulesFormed;
+    skipping.subModulesFormed = !o.subModulesFormed;
+    skipping.resourcesFormed = !o.resourcesFormed;
+
+    // let processing = stager.stageStateBegun( 'opened' ) || ( stager.stageStateEnded( 'opened' ) && !stager.stageStateEnded( 'formed' ) );
+    let processing = stager.stageStateBegun( 'opened' ) && !stager.stageStateEnded( 'formed' );
+    _.assert( !processing, 'not tested' );
+
+    for( let s in skipping )
+    if( stager.stageStatePerformed( s ) )
+    skipping[ s ] = false;
+    else
+    rerun = rerun || !skipping[ s ];
+
+    if( !stager.stageStateEnded( 'opened' ) || rerun )
     {
-      debugger;
-      opener.error = _.err( 'Found no will file at ' + _.strQuote( opener.dirPath ) );
+
+      stager.stageStatePausing( 'picked', 0 );
+
+      for( let s in skipping )
+      {
+        stager.stageStateSkipping( s, skipping[ s ] );
+        if( !processing )
+        if( !skipping[ s ] )
+        if( stager.stageStateEnded( s ) && !stager.stageStatePerformed( s ) )
+        stager.stageReset( s );
+      }
+
+      stager.tick();
+
     }
 
-    /* get module from opened willfile, maybe */
-
-    if( opener.willfilesArray.length )
-    if( opener.willfilesArray[ 0 ].openedModule )
-    openedModule = opener.willfilesArray[ 0 ].openedModule;
+    // if( processing )
+    // {
+    //   // if( opener.formed === 3 )
+    //   // opener.formed = 4;
+    //   ready.take( opener.openedModule );
+    // }
+    // else
+    opener.openedModule.ready.finally( ( err, arg ) =>
+    {
+      if( err )
+      {
+        handleError( err );
+        throw err;
+      }
+      if( opener.formed === 3 )
+      opener.formed = 4;
+      ready.take( opener.openedModule );
+      return arg;
+    });
 
   }
+  catch( err )
+  {
+    handleError( err );
+    return ready;
+  }
+
+  return ready;
 
   /* */
 
-  if( opener.error )
-  {
-    throw opener.error;
-  }
-
-  /* */
-
-  if( openedModule )
+  function handleError( err )
   {
 
-    _.assert( openedModule.rootModule === opener.rootModule || opener.rootModule === null );
-    _.assert( opener.openedModule === openedModule || opener.openedModule === null );
-    opener.openedModule = openedModule;
+    if( !err || !_.strIs( err.originalMessage ) || !_.strHas( err.originalMessage, 'Failed to open module at' ) )
+    {
+      err = _.err( err, `\nFailed to open module at ${opener.commonPath}` );
+    }
+    opener.error = opener.error || err;
 
-    _.assert( !opener.willfilesArray.length || !openedModule.willfilesArray.length || _.arraysAreIdentical( opener.willfilesArray, openedModule.willfilesArray ) );
-    if( opener.willfilesArray.length )
-    openedModule.willfilesArray = _.entityShallowClone( opener.willfilesArray );
+    if( !o.throwing )
+    _.errAttend( err );
+
+    if( o.throwing )
+    ready.error( err );
     else
-    opener.willfilesArray = _.entityShallowClone( openedModule.willfilesArray );
+    ready.take( null );
 
   }
-  else
+
+  /* */
+
+  function defaultsApply( o )
   {
 
-    _.assert( opener.openedModule === null );
-    let o2 = opener.optionsForModule();
-    openedModule = opener.openedModule = new will.OpenedModule( o2 );
-    if( openedModule.rootModule === null )
-    openedModule.rootModule = openedModule;
-    openedModule.preform();
+    will.instanceDefaultsApply( o );
 
-    // opener.modulesAttachedOpen();
+    let isMain = opener.isMain;
 
+    if( !isMain && opener.openedModule && will.mainOpener && will.mainOpener.openedModule === opener.openedModule )
+    isMain = true;
+
+    opener.optionsFormingForward( o );
+
+    if( o.attachedWillfilesFormed === null )
+    o.attachedWillfilesFormed = isMain ? will.attachedWillfilesFormedOfMain : will.attachedWillfilesFormedOfSub;
+    if( o.peerModulesFormed === null )
+    o.peerModulesFormed = isMain ? will.peerModulesFormedOfMain : will.peerModulesFormedOfSub;
+    if( o.subModulesFormed === null )
+    o.subModulesFormed = isMain ? will.subModulesFormedOfMain : will.subModulesFormedOfSub;
+    if( o.resourcesFormed === null )
+    o.resourcesFormed = isMain ? will.resourcesFormedOfMain : will.resourcesFormedOfSub;
+
+    o.attachedWillfilesFormed = !!o.attachedWillfilesFormed;
+    o.peerModulesFormed = !!o.peerModulesFormed;
+    o.subModulesFormed = !!o.subModulesFormed;
+    o.resourcesFormed = !!o.resourcesFormed;
+
+    return o;
   }
 
-  _.assert( _.arraysAreIdentical( opener.willfilesArray, opener.openedModule.willfilesArray ) );
-  _.assert( _.arraysAreIdentical( _.mapVals( opener.willfileWithRoleMap ), _.mapVals( opener.openedModule.willfileWithRoleMap ) ) );
-
-  if( !opener.openedModule.isUsedBy( opener ) )
-  opener.openedModule.usedBy( opener );
-
-  return opener.openedModule;
 }
 
-//
-
-function moduleClone( openedModule )
+open.defaults =
 {
-  let opener = this;
-  let will = opener.will;
 
-  will._moduleWillfilesReadBegin();
-  opener.preform();
-  opener.remoteForm();
+  throwing : 1,
+  attachedWillfilesFormed : null,
+  peerModulesFormed : null,
+  subModulesFormed : null,
+  resourcesFormed : null,
+  all : null,
 
-  let o2 = opener.optionsForModule();
-  o2.rootModule = opener.rootModule;
-  let openedModule2 = openedModule.cloneExtending( o2 );
-  opener.openedModule = openedModule2;
-  if( openedModule2.rootModule === null )
-  openedModule2.rootModule = openedModule2;
-
-  _.assert( opener.openedModule === openedModule2 );
-  openedModule2.usedBy( opener );
-  return openedModule2;
 }
 
 //
@@ -540,7 +665,7 @@ function moduleClone( openedModule )
 function isOpened()
 {
   let opener = this;
-  return opener.openedModule && opener.openedModule.stager.stageStatePerformed( 'formed' );
+  return !!opener.openedModule && opener.openedModule.stager.stageStatePerformed( 'formed' );
 }
 
 //
@@ -557,13 +682,21 @@ function isValid()
 
 //
 
-function _openEnd()
+function isUsed()
 {
   let opener = this;
-  return null;
+
+  if( opener.openedModule )
+  return true;
+  if( opener.superRelation )
+  return true;
+
+  return false;
 }
 
-//
+// --
+// willfiles
+// --
 
 function willfileUnregister( willf )
 {
@@ -573,14 +706,16 @@ function willfileUnregister( willf )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.arrayRemoveElementOnceStrictly( opener.willfilesArray, willf );
+  // _.arrayRemoveElementOnceStrictly( opener.willfilesArray, willf );
+  _.arrayRemoveElementOnceStrictly( willf.openers, opener );
 
-  if( willf.role )
-  {
-    _.assert( opener.willfileWithRoleMap[ willf.role ] === willf )
-    delete opener.willfileWithRoleMap[ willf.role ];
-  }
+  // if( willf.role )
+  // {
+  //   _.assert( opener.willfileWithRoleMap[ willf.role ] === willf )
+  //   delete opener.willfileWithRoleMap[ willf.role ];
+  // }
 
+  Parent.prototype.willfileUnregister.apply( opener, arguments );
 }
 
 //
@@ -593,234 +728,23 @@ function willfileRegister( willf )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.arrayAppendOnceStrictly( opener.willfilesArray, willf );
+  _.assert( arguments.length === 1 );
 
-  if( willf.role )
+  if( _.arrayIs( willf ) )
   {
-    _.assert( !opener.willfileWithRoleMap[ willf.role ], 'Module already has willfile with role', willf.role )
-    opener.willfileWithRoleMap[ willf.role ] = willf;
+    debugger;
+    willf.forEach( ( willf ) => opener.willfileRegister( willf ) );
+    return;
   }
 
-  if( willf.openerModule === null )
-  willf.openerModule = opener;
+  _.arrayAppendOnce( willf.openers, opener );
 
+  Parent.prototype.willfileRegister.apply( opener, arguments );
 }
 
 //
 
-function willfileArraySet( willfilesArray )
-{
-  let opener = this;
-  _.assert( _.arrayIs( willfilesArray ) );
-
-  if( opener.willfilesArray === willfilesArray )
-  return opener.willfilesArray;
-
-  for( let w = opener.willfilesArray.length-1 ; w >= 0 ; w-- )
-  {
-    let willf = opener.willfilesArray[ w ];
-    opener.willfileUnregister( willf );
-  }
-
-  for( let w = 0 ; w < willfilesArray.length ; w++ )
-  {
-    let willf = willfilesArray[ w ];
-    opener.willfileRegister( willf );
-  }
-
-  return opener.willfilesArray;
-}
-
-//
-
-function willfileEach( onEach )
-{
-  let opener = this;
-  let will = opener.will;
-
-  for( let w = 0 ; w < opener.willfilesArray.length ; w++ )
-  {
-    let willfile = opener.willfilesArray[ w ];
-    onEach( willfile )
-  }
-
-  for( let s in opener.submoduleMap )
-  {
-    let submodule = opener.submoduleMap[ s ];
-    if( !submodule.opener )
-    continue;
-
-    for( let w = 0 ; w < submodule.opener.willfilesArray.length ; w++ )
-    {
-      let willfile = submodule.opener.willfilesArray[ w ];
-      onEach( willfile )
-    }
-
-  }
-
-}
-
-//
-
-function _willfilesExport()
-{
-  let opener = this;
-  let will = opener.will;
-  let result = Object.create( null );
-
-  opener.willfileEach( handeWillFile );
-
-  return result;
-
-  function handeWillFile( willfile )
-  {
-    _.assert( _.objectIs( willfile.data ) );
-    result[ willfile.filePath ] = willfile.data;
-  }
-
-}
-
-//
-
-function _willfileFindSmartSingle( o )
-{
-  let opener = this;
-  let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let rootModule = opener.rootModule;
-
-  _.assert( rootModule === null || rootModule instanceof will.OpenedModule );
-  _.assert( _.strDefined( o.role ) );
-  _.routineOptions( _willfileFindSmartSingle, arguments );
-
-  /* */
-
-  if( opener.willfileWithRoleMap[ o.role ] )
-  return opener.willfileWithRoleMap[ o.role ];
-
-  let willfilesPath = _.strCommonLeft.apply( _, _.arrayAs( opener.willfilesPath ) );
-  let isDir = path.isTrailed( willfilesPath );
-  let name = '';
-
-  if( !isDir )
-  {
-    name = path.fullName( willfilesPath );
-    name = _.strRemoveEnd( name, '.' );
-    name = _.strReplace( name, /(\.ex|\.im|)?\.will(\.\w+)?$/, '' );
-    name = _.strReplace( name, /(\.out)?$/, '' );
-    willfilesPath = path.dir( willfilesPath );
-  }
-
-  let fullName = name;
-  fullName += opener.prefixPathForRole( o.role, o.isOutFile );
-
-  let filePath = path.resolve( willfilesPath, fullName );
-
-  /* */
-
-  if( will.verbosity >= 5 )
-  logger.log( ' . Trying to open', filePath );
-
-  _.assert( opener.willfileWithRoleMap[ o.role ] === undefined );
-
-  let willf;
-  let commonPath = will.Willfile.CommonPathFor( filePath );
-  if( will.willfileWithPathMap[ commonPath ] )
-  {
-    willf = will.willfileWithPathMap[ commonPath ];
-    opener.willfileRegister( willf );
-  }
-  else
-  {
-    willf = will.willfileFor
-    ({
-      filePath : filePath,
-      role : o.role,
-      isOutFile : o.isOutFile,
-      openerModule : opener,
-      will : will,
-    })
-  }
-
-  _.assert( willf === opener.willfileWithRoleMap[ o.role ] );
-
-  if( !willf.exists() )
-  {
-    willf.finit();
-    return null;
-  }
-
-  if( isDir )
-  {
-    /* try to find other split files */
-    let found = opener._willfilesFindSmartMultiple
-    ({
-      isOutFile : o.isOutFile,
-    });
-  }
-
-  return willf;
-}
-
-_willfileFindSmartSingle.defaults =
-{
-  role : null,
-  isOutFile : 0,
-}
-
-//
-
-function _willfilesFindSmartMultiple( o )
-{
-  let opener = this;
-  let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let roles = [ 'single', 'import', 'export' ];
-  let files = Object.create( null );
-
-  _.routineOptions( _willfilesFindSmartMultiple, arguments );
-
-  for( let r = 0 ; r < roles.length ; r++ )
-  {
-    let role = roles[ r ];
-
-    files[ role ] = opener._willfileFindSmartSingle
-    ({
-      role : role,
-      isOutFile : o.isOutFile,
-    });
-
-  }
-
-  if( opener.willfilesArray.length )
-  return end( opener.willfilesArray );
-
-  return false;
-
-  /* */
-
-  function end( willfilesArray )
-  {
-    _.assert( willfilesArray.length > 0 );
-    let filePaths = _.select( willfilesArray, '*/filePath' );
-    opener._filePathChange( filePaths );
-    return true;
-  }
-
-}
-
-_willfilesFindSmartMultiple.defaults =
-{
-  isOutFile : 0,
-}
-
-//
-
-function _willfilesFindSmart( o )
+function _willfilesFindAct( o )
 {
   let opener = this;
   let will = opener.will;
@@ -828,94 +752,104 @@ function _willfilesFindSmart( o )
   let path = fileProvider.path;
   let logger = will.logger;
   let filePaths;
-  let found;
+  let records;
 
-  o = _.routineOptions( _willfilesFindSmart, arguments );
+  o = _.routineOptions( _willfilesFindAct, arguments );
+  o.willfilesPath = o.willfilesPath || opener.willfilesPath;
 
   _.assert( opener.willfilesArray.length === 0, 'not tested' );
 
-  /* specific terminal file */
+  if( opener.searching === 'smart' )
+  o.willfilesPath = _.Will.AbstractModule.CommonPathFor( o.willfilesPath );
 
-  if( _.arrayIs( opener.willfilesPath ) && opener.willfilesPath.length === 1 )
-  opener.willfilesPath = opener.willfilesPath[ 0 ];
-
-  if( !found )
-  find( o.isOutFile );
-
-  if( !o.isOutFile )
-  if( !found )
-  find( !o.isOutFile );
-
-  /* */
-
-  return found;
-
-  /* */
-
-  function find( isOutFile )
+  if( opener.searching === 'exact' )
   {
-
-    /* isOutFile */
-
-    found = opener._willfilesFindSmartMultiple
+    // debugger;
+    o.willfilesPath = _.arrayAs( o.willfilesPath );
+    records = o.willfilesPath.map( ( willfilePath ) => fileProvider.record( willfilePath ) );
+    // records = fileProvider.record({ filePath : o.willfilesPath });
+    // records = _.arrayAs( records );
+    // debugger;
+  }
+  else
+  {
+    records = will.willfilesList
     ({
-      isOutFile : isOutFile,
+      dirPath : o.willfilesPath,
+      includingInFiles : o.includingInFiles,
+      includingOutFiles : o.includingOutFiles,
     });
-    if( found )
-    return found;
+  }
+
+  for( let r = 0 ; r < records.length ; r++ )
+  {
+    let record = records[ r ];
+
+    let willfOptions =
+    {
+      filePath : record.absolute,
+      // dirPath : opener.dirPath,
+    }
+    let got = will.willfileFor({ willf : willfOptions, combining : 'supplement' });
+    opener.willfileRegister( got.willf );
 
   }
 
 }
 
-_willfilesFindSmart.defaults =
+_willfilesFindAct.defaults =
 {
-  isOutFile : 0,
+  willfilesPath : null,
+  includingInFiles : 1,
+  includingOutFiles : 1,
 }
 
 //
 
-function _willfilesFindPicked()
-{
-  let opener = this;
-  let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let result = [];
-
-  _.assert( arguments.length === 0 );
-  _.assert( !!opener.willfilesPath );
-
-  let willfilesPath = _.arrayAs( opener.willfilesPath );
-  _.assert( _.strsAreAll( willfilesPath ) );
-
-  willfilesPath.forEach( ( filePath ) =>
-  {
-
-    let willfile = will.willfileFor
-    ({
-      filePath : filePath,
-      will : will,
-      role : 'single',
-      openerModule : opener,
-    })
-
-    if( willfile.exists() )
-    result.push( willfile );
-    else
-    willfile.finit();
-
-  });
-
-  if( result.length )
-  {
-    let willfilesPath = _.select( result, '*/filePath' );
-    opener._filePathChange( willfilesPath );
-  }
-
-  return result;
-}
+// function _willfilesFindPicked()
+// {
+//   let opener = this;
+//   let will = opener.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//   let result = [];
+//
+//   _.assert( arguments.length === 0 );
+//   _.assert( !!opener.willfilesPath );
+//   _.assert( 0, 'deprecated' );
+//
+//   let willfilesPath = _.arrayAs( opener.willfilesPath );
+//   _.assert( _.strsAreAll( willfilesPath ) );
+//
+//   willfilesPath.forEach( ( filePath ) =>
+//   {
+//
+//     let willfOptions =
+//     {
+//       filePath : filePath,
+//       willfilesPath : opener.dirPath,
+//       role : 'single',
+//     }
+//     let r = will.willfileFor({ willf : willfOptions });
+//
+//     opener.willfileRegister( r.willfile );
+//
+//     if( willfile.exists() )
+//     result.push( willfile );
+//     else
+//     willfile.finit();
+//
+//   });
+//
+//   if( result.length )
+//   {
+//     let willfilesPath = _.select( result, '*/filePath' );
+//     opener._filePathChange( willfilesPath );
+//   }
+//
+//   return result;
+// }
 
 //
 
@@ -935,20 +869,23 @@ function _willfilesFind()
   try
   {
 
+    // debugger;
     // if( opener.submoduleAssociation && opener.submoduleAssociation.autoExporting ) // xxx
     // {
     //   result = opener.exportAuto();
     // }
     // else
     // if( opener.pickedWillfilesPath )
-    if( opener.finding === 'picked' )
-    {
-      result = opener._willfilesFindPicked(); /* xxx : remove maybe the routine? */
-    }
-    else
-    {
-      result = opener._willfilesFindSmart({ isOutFile : !!opener.supermodule });
-    }
+
+    // if( opener.searching === 'picked' )
+    // {
+    //   result = opener._willfilesFindPicked(); /* xxx : remove maybe the routine? */
+    // }
+    // else
+    // {
+    //   // result = opener._willfilesFindAct({ isOut : !!opener.superRelation });
+      result = opener._willfilesFindAct();
+    // }
 
     _.assert( !_.consequenceIs( result ) );
 
@@ -958,18 +895,20 @@ function _willfilesFind()
   }
   catch( err )
   {
-    err = _.err( 'Error looking for will files for', opener.nickName, 'at', _.strQuote( opener.commonPath ), '\n', err );
-    opener.error = err;
+    err = _.err( err, '\nError looking for will files for', opener.qualifiedName, 'at', _.strQuote( opener.commonPath ) );
+    opener.error = opener.error || err;
   }
 
+  if( !opener.error )
   if( opener.willfilesArray.length === 0 )
   {
     let err;
-    if( opener.supermodule )
-    err = _.errBriefly( 'Found no .out.will file for',  opener.supermodule.nickName, 'at', _.strQuote( opener.commonPath ) );
+    if( opener.superRelation )
+    err = _.errBrief( 'Found no out-willfile file for',  opener.superRelation.qualifiedName, 'at', _.strQuote( opener.commonPath ) );
     else
-    err = _.errBriefly( 'Found no willfile at', _.strQuote( opener.commonPath ) );
-    opener.error = err;
+    err = _.errBrief( 'Found no willfile at', _.strQuote( opener.commonPath ) );
+    opener.error = opener.error || err;
+    // debugger;
   }
 
 }
@@ -978,265 +917,146 @@ function _willfilesFind()
 // submodule
 // --
 
-function supermoduleGet()
+function sharedFieldGet_functor( fieldName )
 {
-  let opener = this;
-  return opener[ supermoduleSymbol ];
+  let symbol = Symbol.for( fieldName );
+
+  return function sharedFieldGet()
+  {
+    let opener = this;
+    let openedModule = opener.openedModule;
+    let will = opener.will;
+
+    if( openedModule )
+    return openedModule[ fieldName ];
+
+    let result = opener[ symbol ];
+
+    return result;
+  }
+
 }
 
 //
 
-function supermoduleSet( src )
+function sharedModuleSet_functor( fieldName )
+{
+  let symbol = Symbol.for( fieldName );
+
+  return function sharedModuleSet( src )
+  {
+    let opener = this;
+    let openedModule = opener.openedModule;
+
+    _.assert( src === null || src instanceof _.Will.OpenedModule );
+
+    opener[ symbol ] = src;
+
+    if( openedModule )
+    openedModule[ fieldName ] = src;
+
+    return src;
+  }
+
+}
+
+let peerModuleGet = sharedFieldGet_functor( 'peerModule' );
+let peerModuleSet = sharedModuleSet_functor( 'peerModule' );
+
+let rootModuleGet = sharedFieldGet_functor( 'rootModule' );
+let rootModuleSet = sharedModuleSet_functor( 'rootModule' );
+
+//
+
+function superRelationGet()
 {
   let opener = this;
-  _.assert( src === null || src instanceof _.Will.OpenedModule );
-  opener[ supermoduleSymbol ] = src;
+  _.assert( opener[ superRelationSymbol ] === null || opener[ superRelationSymbol ] instanceof _.Will.ModulesRelation );
+  return opener[ superRelationSymbol ];
+}
+
+//
+
+function superRelationSet( src )
+{
+  let opener = this;
+
+  _.assert( src === null || src instanceof _.Will.ModulesRelation );
+  _.assert( src === null || src.opener === null || src.opener === opener )
+
+  opener[ superRelationSymbol ] = src;
   return src;
 }
 
+// //
 //
-
-function rootModuleGet()
-{
-  let opener = this;
-  if( opener.openedModule )
-  return opener.openedModule.rootModule;
-  return opener[ rootModuleSymbol ];
-}
-
+// function rootModuleGet()
+// {
+//   let opener = this;
+//   if( opener.openedModule )
+//   return opener.openedModule.rootModule;
+//   return opener[ rootModuleSymbol ];
+// }
 //
-
-function rootModuleSet( src )
-{
-  let opener = this;
-  _.assert( src === null || src instanceof _.Will.OpenedModule );
-  opener[ rootModuleSymbol ] = src;
-  return src;
-}
-
+// //
 //
-
-function submodulesAllAreDownloaded()
-{
-  let opener = this;
-  let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  _.assert( !opener.supermodule );
-
-  for( let n in opener.submoduleMap )
-  {
-    let submodule = opener.submoduleMap[ n ].opener;
-    if( !submodule )
-    return false;
-    if( !submodule.isDownloaded )
-    return false;
-  }
-
-  return true;
-}
-
+// function rootModuleSet( src )
+// {
+//   let opener = this;
+//   _.assert( src === null || src instanceof _.Will.OpenedModule );
+//   opener[ rootModuleSymbol ] = src;
+//   return src;
+// }
 //
-
-function submodulesAllAreValid()
-{
-  let opener = this;
-  let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  _.assert( !opener.supermodule );
-
-  for( let n in opener.submoduleMap )
-  {
-    let submodule = opener.submoduleMap[ n ].opener;
-    if( !submodule )
-    continue;
-    if( !submodule.isValid() )
-    return false;
-  }
-
-  return true;
-}
+// //
+//
+// function submodulesAllAreDownloaded()
+// {
+//   let opener = this;
+//   let will = opener.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//
+//   _.assert( !opener.superRelation );
+//
+//   for( let n in opener.submoduleMap )
+//   {
+//     let submodule = opener.submoduleMap[ n ].opener;
+//     if( !submodule )
+//     return false;
+//     if( !submodule.isDownloaded )
+//     return false;
+//   }
+//
+//   return true;
+// }
+//
+// //
+//
+// function submodulesAllAreValid()
+// {
+//   let opener = this;
+//   let will = opener.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//
+//   _.assert( !opener.superRelation );
+//
+//   for( let n in opener.submoduleMap )
+//   {
+//     let submodule = opener.submoduleMap[ n ].opener;
+//     if( !submodule )
+//     continue;
+//     if( !submodule.isValid() )
+//     return false;
+//   }
+//
+//   return true;
+// }
 
 // --
 // remote
 // --
-
-function remoteIsUpdate()
-{
-  let opener = this;
-  let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  _.assert( !!opener.willfilesPath || !!opener.dirPath );
-  _.assert( arguments.length === 0 );
-
-  if( opener.aliasName === null ) // xxx
-  return end( false );
-
-  let remoteProvider = fileProvider.providerForPath( opener.remotePath || opener.commonPath );
-  if( remoteProvider.isVcs )
-  return end( true );
-
-  return end( false );
-
-  /* */
-
-  function end( result )
-  {
-    opener.isRemote = result;
-    return result;
-  }
-
-}
-
-//
-
-function remoteIsUpToDateUpdate()
-{
-  let opener = this;
-  let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  _.assert( _.strDefined( opener.localPath ) );
-  _.assert( !!opener.willfilesPath );
-  _.assert( opener.isRemote === true );
-
-  let remoteProvider = fileProvider.providerForPath( opener.remotePath );
-
-  _.assert( !!remoteProvider.isVcs );
-
-  debugger;
-  let result = remoteProvider.isUpToDate
-  ({
-    remotePath : opener.remotePath,
-    localPath : opener.localPath,
-    verbosity : will.verbosity - 3,
-  });
-
-  if( !result )
-  return end( result );
-
-  return _.Consequence.From( result )
-  .finally( ( err, arg ) =>
-  {
-    end( arg );
-    if( err )
-    throw err;
-    return arg;
-  });
-
-  /* */
-
-  function end( result )
-  {
-    opener.isUpToDate = !!result;
-    return result;
-  }
-
-}
-
-//
-
-function remoteIsDownloadedUpdate()
-{
-  let opener = this;
-  let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  _.assert( _.strDefined( opener.localPath ) );
-  _.assert( !!opener.willfilesPath );
-  _.assert( opener.isRemote === true );
-
-  let remoteProvider = fileProvider.providerForPath( opener.remotePath );
-  _.assert( !!remoteProvider.isVcs );
-
-  let result = remoteProvider.isDownloaded
-  ({
-    localPath : opener.localPath,
-  });
-
-  _.assert( !_.consequenceIs( result ) );
-
-  if( !result )
-  return end( result );
-
-  return _.Consequence.From( result )
-  .finally( ( err, arg ) =>
-  {
-    end( arg );
-    if( err )
-    throw err;
-    return arg;
-  });
-
-  /* */
-
-  function end( result )
-  {
-    opener.isDownloaded = !!result;
-    return result;
-  }
-
-}
-
-//
-
-function remoteIsDownloadedChanged()
-{
-  let opener = this;
-  let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  _.assert( !!opener.pathResourceMap[ 'current.remote' ] );
-
-  /* */
-
-  if( opener.isDownloaded &&  opener.remotePath )
-  {
-
-    let remoteProvider = fileProvider.providerForPath( opener.remotePath );
-    _.assert( !!remoteProvider.isVcs );
-
-    let version = remoteProvider.versionLocalRetrive( opener.localPath );
-    if( version )
-    {
-      let remotePath = _.uri.parseConsecutive( opener.remotePath );
-      remotePath.hash = version;
-      opener.pathResourceMap[ 'current.remote' ].path = _.uri.str( remotePath );
-    }
-  }
-  else
-  {
-    opener.pathResourceMap[ 'current.remote' ].path = null;
-  }
-
-}
-
-//
-
-function remoteIsDownloadedSet( src )
-{
-  let opener = this;
-
-  src = !!src;
-
-  let changed = opener[ isDownloadedSymbol ] !== undefined && opener[ isDownloadedSymbol ] !== src;
-
-  opener[ isDownloadedSymbol ] = src;
-
-  if( changed )
-  opener.remoteIsDownloadedChanged();
-
-}
-
-//
 
 function remoteForm()
 {
@@ -1246,6 +1066,8 @@ function remoteForm()
   let path = fileProvider.path;
   let logger = will.logger;
 
+  _.assert( opener.formed >= 1 );
+
   opener.remoteIsUpdate();
 
   if( opener.isRemote )
@@ -1254,9 +1076,15 @@ function remoteForm()
   }
   else
   {
-    opener.isDownloaded = null;
+    // opener.localPath = path.detrail( path.common( opener.willfilesPath ) );
+    opener.localPath = opener.dirPath;
+    opener.isDownloaded = true;
   }
 
+  _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
+
+  if( opener.formed < 2 )
+  opener.formed = 2;
   return opener;
 }
 
@@ -1272,14 +1100,14 @@ function _remoteFormAct()
   let willfilesPath = opener.remotePath || opener.willfilesPath;
 
   _.assert( _.strDefined( opener.aliasName ) );
-  _.assert( !!opener.supermodule );
+  _.assert( !!opener.superRelation );
   _.assert( _.strIs( willfilesPath ) );
 
   let remoteProvider = fileProvider.providerForPath( opener.remotePath || opener.commonPath );
 
-  _.assert( remoteProvider.isVcs && _.routineIs( remoteProvider.pathParse ), () => 'Seems file provider ' + remoteProvider.nickName + ' does not have version control system features' );
+  _.assert( remoteProvider.isVcs && _.routineIs( remoteProvider.pathParse ), () => 'Seems file provider ' + remoteProvider.qualifiedName + ' does not have version control system features' );
 
-  let submodulesDir = opener.supermodule.cloneDirPathGet();
+  let submodulesDir = opener.superRelation.module.cloneDirPathGet();
   let parsed = remoteProvider.pathParse( willfilesPath );
 
   opener.remotePath = willfilesPath;
@@ -1287,7 +1115,6 @@ function _remoteFormAct()
 
   let willfilesPath2 = path.resolve( opener.localPath, parsed.localVcsPath );
   opener._filePathChange( willfilesPath2 );
-
   opener.remoteIsDownloadedUpdate();
 
   _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
@@ -1310,12 +1137,12 @@ function _remoteDownload( o )
 
   _.routineOptions( _remoteDownload, o );
   _.assert( arguments.length === 1 );
-  _.assert( opener.preformed > 0  );
+  _.assert( opener.formed >= 2 );
   _.assert( !!opener.willfilesPath );
   _.assert( _.strDefined( opener.aliasName ) );
   _.assert( _.strDefined( opener.remotePath ) );
   _.assert( _.strDefined( opener.localPath ) );
-  _.assert( !!opener.supermodule );
+  _.assert( !!opener.superRelation );
 
   return con
   .then( () =>
@@ -1328,10 +1155,13 @@ function _remoteDownload( o )
   .then( function( arg )
   {
 
+    // debugger;
     if( o.updating )
-    downloading = !opener.isUpToDate;
+    downloading = opener.isUpToDate;
     else
-    downloading = !opener.isDownloaded;
+    downloading = opener.isDownloaded;
+    _.assert( _.boolLike( downloading ) );
+    downloading = !downloading;
 
     /*
     delete old remote opener if it has a critical error or downloaded files are corrupted
@@ -1365,45 +1195,51 @@ function _remoteDownload( o )
     opener.isDownloaded = true;
     if( downloading && !o.dry )
     opener.isUpToDate = true;
-    if( o.forming && !o.dry && downloading )
+    if( o.opening && !o.dry && downloading )
     {
 
+      // debugger;
       let willf = opener.willfilesArray[ 0 ];
+      // if( willf )
+      // debugger;
       opener.close();
       _.assert( !_.arrayHas( will.willfilesArray, willf ) );
-      opener.moduleFind();
+      opener.find();
 
-      opener.openedModule.stager.stageStatePausing( 'picked', 0 );
-      opener.openedModule.stager.stageStateSkipping( 'submodulesFormed', 1 );
-      opener.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
-      opener.openedModule.stager.tick();
+      // opener.openedModule.stager.stageStatePausing( 'picked', 0 );
+      // opener.openedModule.stager.stageStateSkipping( 'peerModulesFormed', 1 );
+      // opener.openedModule.stager.stageStateSkipping( 'subModulesFormed', 1 );
+      // opener.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
+      // opener.openedModule.stager.tick();
 
-      return opener.openedModule.ready
-      .finallyGive( function( err, arg )
-      {
-        this.take( err, arg );
-      })
-      .split();
+      // return opener.openedModule.ready
+      // .finallyGive( function( err, arg )
+      // {
+      //   this.take( err, arg );
+      // })
+      // .split();
+
+      return opener.open();
     }
     return null;
   })
-  .finallyKeep( function( err, arg )
+  .finally( function( err, arg )
   {
     if( err )
-    throw _.err( 'Failed to', ( o.updating ? 'update' : 'download' ), opener.decoratedAbsoluteName, '\n', err );
+    throw _.err( err, '\nFailed to', ( o.updating ? 'update' : 'download' ), opener.decoratedAbsoluteName );
     if( will.verbosity >= 3 && downloading )
     {
       if( o.dry )
       {
         let remoteProvider = fileProvider.providerForPath( opener.remotePath );
         let version = remoteProvider.versionRemoteCurrentRetrive( opener.remotePath );
-        logger.log( ' + ' + opener.decoratedNickName + ' will be ' + ( o.updating ? 'updated to' : 'downloaded' ) + ' version ' + _.color.strFormat( version, 'path' ) );
+        logger.log( ' + ' + opener.decoratedQualifiedName + ' will be ' + ( o.updating ? 'updated to' : 'downloaded' ) + ' version ' + _.color.strFormat( version, 'path' ) );
       }
       else
       {
         let remoteProvider = fileProvider.providerForPath( opener.remotePath );
         let version = remoteProvider.versionLocalRetrive( opener.localPath );
-        logger.log( ' + ' + opener.decoratedNickName + ' was ' + ( o.updating ? 'updated to' : 'downloaded' ) + ' version ' + _.color.strFormat( version, 'path' ) + ' in ' + _.timeSpent( time ) );
+        logger.log( ' + ' + opener.decoratedQualifiedName + ' was ' + ( o.updating ? 'updated to' : 'downloaded' ) + ' version ' + _.color.strFormat( version, 'path' ) + ' in ' + _.timeSpent( time ) );
       }
     }
     return downloading;
@@ -1415,7 +1251,7 @@ _remoteDownload.defaults =
 {
   updating : 0,
   dry : 0,
-  forming : 1,
+  opening : 1,
   recursive : 0,
 }
 
@@ -1481,104 +1317,44 @@ function _filePathChange( willfilesPath )
 {
 
   if( !this.will )
-  return;
+  return willfilesPath;
 
   let opener = this;
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
 
-  if( _.arrayIs( willfilesPath ) && willfilesPath.length === 1 )
-  willfilesPath = willfilesPath[ 0 ];
+  let r = Parent.prototype._filePathChange.call( opener, willfilesPath );
 
-  if( willfilesPath )
-  willfilesPath = path.s.normalizeTolerant( willfilesPath );
+  opener[ dirPathSymbol ] = r.dirPath;
 
-  let dirPath = willfilesPath;
-  if( _.arrayIs( dirPath ) )
-  dirPath = dirPath[ 0 ];
-  if( _.strIs( dirPath ) )
-  dirPath = path.dir( dirPath );
-  if( dirPath === null )
-  dirPath = opener.dirPath;
-  if( dirPath )
-  dirPath = path.normalizeTolerant( dirPath );
-
-  let commonPath = opener.CommonPathFor( willfilesPath );
-
-  _.assert( arguments.length === 1 );
-  _.assert( dirPath === null || _.strDefined( dirPath ) );
-  _.assert( dirPath === null || path.isAbsolute( dirPath ) );
-  _.assert( dirPath === null || path.isNormalized( dirPath ) );
-  _.assert( willfilesPath === null || path.s.allAreAbsolute( willfilesPath ) );
-
-  opener[ willfilesPathSymbol ] = willfilesPath;
-  opener[ dirPathSymbol ] = dirPath;
-  opener[ commonPathSymbol ] = commonPath;
-  opener[ configNameSymbol ] = path.fullName( commonPath );
-
-  if( opener.openedModule )
-  debugger;
-  if( opener.openedModule )
-  opener.openedModule._filePathChange( willfilesPath );
-
-}
-
-//
-
-function _filePathChanged()
-{
-  let opener = this;
-
-  _.assert( arguments.length === 0 );
-
-  opener._filePathChange( opener.willfilesPath );
-
-}
-
-//
-
-function predefinedPathGet_functor( fieldName )
-{
-  let symbol = Symbol.for( fieldName );
-
-  return function predefinedPathGet()
+  if( r.commonPath )
   {
-    let opener = this;
-    let openedModule = opener.openedModule;
-    let will = opener.will;
-
-    if( openedModule )
-    return openedModule[ fieldName ];
-
-    let result = opener[ symbol ];
-    // if( will )
-    // {
-    //   let fileProvider = will.fileProvider;
-    //   let path = fileProvider.path;
-    //   if( fieldName !== 'dirPath' && result )
-    //   result = path.s.join( opener.dirPath, result );
-    // }
-
-    return result;
+    opener[ commonPathSymbol ] = r.commonPath;
   }
 
+  if( opener.openedModule )
+  opener.openedModule._filePathChange( r.willfilesPath );
+
+  return r.willfilesPath;
 }
 
 //
 
-function predefinedPathSet_functor( fieldName )
+function sharedPathSet_functor( fieldName )
 {
   let symbol = Symbol.for( fieldName );
 
-  return function predefinedPathSet( filePath )
+  return function sharedPathSet( filePath )
   {
     let opener = this;
     let openedModule = opener.openedModule;
 
     filePath = _.entityShallowClone( filePath );
     opener[ symbol ] = filePath;
+
+    // if( fieldName === 'localPath' && filePath )
+    // debugger;
 
     opener._filePathChanged();
 
@@ -1589,20 +1365,22 @@ function predefinedPathSet_functor( fieldName )
 
 }
 
-let willfilesPathGet = predefinedPathGet_functor( 'willfilesPath' );
-let dirPathGet = predefinedPathGet_functor( 'dirPath' );
-let commonPathGet = predefinedPathGet_functor( 'commonPath' );
-let inPathGet = predefinedPathGet_functor( 'inPath' );
-let outPathGet = predefinedPathGet_functor( 'outPath' );
-let localPathGet = predefinedPathGet_functor( 'localPath' );
-let remotePathGet = predefinedPathGet_functor( 'remotePath' );
-let willPathGet = predefinedPathGet_functor( 'willPath' );
+//
 
-let willfilesPathSet = predefinedPathSet_functor( 'willfilesPath' );
-let inPathSet = predefinedPathSet_functor( 'inPath' );
-let outPathSet = predefinedPathSet_functor( 'outPath' );
-let localPathSet = predefinedPathSet_functor( 'localPath' );
-let remotePathSet = predefinedPathSet_functor( 'remotePath' );
+let willfilesPathGet = sharedFieldGet_functor( 'willfilesPath' );
+let dirPathGet = sharedFieldGet_functor( 'dirPath' );
+let commonPathGet = sharedFieldGet_functor( 'commonPath' );
+// let inPathGet = sharedFieldGet_functor( 'inPath' );
+// let outPathGet = sharedFieldGet_functor( 'outPath' );
+let localPathGet = sharedFieldGet_functor( 'localPath' );
+let remotePathGet = sharedFieldGet_functor( 'remotePath' );
+// let willPathGet = sharedFieldGet_functor( 'willPath' );
+
+let willfilesPathSet = sharedPathSet_functor( 'willfilesPath' );
+// let inPathSet = sharedPathSet_functor( 'inPath' );
+// let outPathSet = sharedPathSet_functor( 'outPath' );
+let localPathSet = sharedPathSet_functor( 'localPath' );
+let remotePathSet = sharedPathSet_functor( 'remotePath' );
 
 // --
 // name
@@ -1611,28 +1389,22 @@ let remotePathSet = predefinedPathSet_functor( 'remotePath' );
 function nameGet()
 {
   let opener = this;
-  let will = opener.will;
-
-  _.assert( !!will );
-
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
   let name = null;
 
   if( !name && opener.aliasName )
   return opener.aliasName;
 
-  if( !name && opener.openedModule && opener.openedModule.about )
+  if( !name && opener.openedModule && opener.openedModule.about && opener.openedModule.about.name )
   return opener.openedModule.about.name;
 
-  if( !name && opener.configName )
-  return opener.configName;
+  if( !name && opener.fileName )
+  return opener.fileName;
 
   if( !name && opener.openedModule )
   return opener.openedModule.name;
 
   if( !name && opener.commonPath )
-  return path.fullName( opener.commonPath );
+  return _.uri.fullName( opener.commonPath );
 
   return null;
 }
@@ -1664,11 +1436,11 @@ function aliasNameSet( src )
 function absoluteNameGet()
 {
   let opener = this;
-  let supermodule = opener.supermodule;
-  if( supermodule )
-  return supermodule.nickName + ' / ' + opener.nickName;
+  let superRelation = opener.superRelation;
+  if( superRelation )
+  return superRelation.qualifiedName + ' / ' + opener.qualifiedName;
   else
-  return opener.nickName;
+  return opener.qualifiedName;
 }
 
 //
@@ -1676,10 +1448,10 @@ function absoluteNameGet()
 function shortNameArrayGet()
 {
   let opener = this;
-  let supermodule = opener.openerModule.supermodule;
-  if( !supermodule )
+  let superRelation = opener.openedModule.superRelation;
+  if( !superRelation )
   return [ opener.name ];
-  let result = supermodule.shortNameArrayGet();
+  let result = superRelation.shortNameArrayGet();
   result.push( opener.name );
   return result;
 }
@@ -1687,6 +1459,57 @@ function shortNameArrayGet()
 // --
 // other accessor
 // --
+
+function errorSet( err )
+{
+  let opener = this;
+  let will = opener.will;
+
+  if( opener.error === err )
+  return;
+
+  opener[ errorSymbol ] = err;
+
+  // if( will && err )
+  // debugger;
+  if( will && err )
+  will.openersErrorsArray.push({ err : err, opener : opener });
+
+  return err;
+}
+
+//
+
+function isMainGet()
+{
+  let opener = this;
+  let will = opener.will;
+  return will.mainOpener === opener;
+}
+
+//
+
+function isMainSet( src )
+{
+  let opener = this;
+  let will = opener.will;
+
+  if( !will )
+  return src;
+
+  _.assert( src === null || _.boolLike( src ) );
+  _.assert( will.mainOpener === null || will.mainOpener === opener || !src );
+
+  if( src )
+  will.mainOpener = opener;
+  else if( will.mainOpener === opener )
+  will.mainOpener = null;
+
+  return src;
+  // return opener.mainOpener === opener;
+}
+
+//
 
 function accessorGet_functor( fieldName )
 {
@@ -1728,29 +1551,28 @@ function accessorSet_functor( fieldName )
 }
 
 let isRemoteGet = accessorGet_functor( 'isRemote' );
-let isDownloadedGet = accessorGet_functor( 'isDownloaded' );
+// let isDownloadedGet = accessorGet_functor( 'isDownloaded' );
 let isUpToDateGet = accessorGet_functor( 'isUpToDate' );
+let isOutGet = accessorGet_functor( 'isOut' );
 
 let isRemoteSet = accessorSet_functor( 'isRemote' );
-let isDownloadedSet = accessorSet_functor( 'isDownloaded' );
+// let isDownloadedSet = accessorSet_functor( 'isDownloaded' );
 let isUpToDateSet = accessorSet_functor( 'isUpToDate' );
+let isOutSet = accessorSet_functor( 'isOut' );
 
 // --
 // relations
 // --
 
-let outPathSymbol = Symbol.for( 'outPath' );
-let inPathSymbol = Symbol.for( 'inPath' );
-let willfilesPathSymbol = Symbol.for( 'willfilesPath' );
+// let outPathSymbol = Symbol.for( 'outPath' );
+// let inPathSymbol = Symbol.for( 'inPath' );
 let dirPathSymbol = Symbol.for( 'dirPath' );
 let commonPathSymbol = Symbol.for( 'commonPath' );
 let aliasNameSymbol = Symbol.for( 'aliasName' );
-let configNameSymbol = Symbol.for( 'configName' );
-let supermoduleSymbol = Symbol.for( 'supermodule' );
+let superRelationSymbol = Symbol.for( 'superRelation' );
 let rootModuleSymbol = Symbol.for( 'rootModule' );
-let willPathSymbol = Symbol.for( 'willPath' );
-let willfileWithRoleMapSymbol = Symbol.for( 'willfileWithRoleMap' );
-let willfileArraySymbol = Symbol.for( 'willfilesArray' );
+let openedModuleSymbol = Symbol.for( 'openedModule' );
+let errorSymbol = Symbol.for( 'error' );
 
 let Composes =
 {
@@ -1758,16 +1580,19 @@ let Composes =
   aliasName : null,
 
   willfilesPath : null,
-  inPath : null,
-  outPath : null,
+  // inPath : null,
+  // outPath : null,
   localPath : null,
   remotePath : null,
 
   isRemote : null,
   isDownloaded : null,
   isUpToDate : null,
+  isOut : null,
+  isMain : null,
 
-  finding : 'smart',
+  searching : 'strict', // 'smart', 'strict', 'exact'
+  // searching : 'smart',
 
 }
 
@@ -1780,32 +1605,26 @@ let Associates =
 
   original : null,
   will : null,
-
   rootModule : null,
-  supermodule : null,
-
+  superRelation : null,
   willfilesArray : _.define.own([]),
 
 }
 
 let Medials =
 {
-  moduleWithPathMap : null,
+  moduleWithCommonPathMap : null,
 }
 
 let Restricts =
 {
 
   id : null,
-  preformed : 0,
+  formed : 0,
   found : 0,
   error : null,
-
   openedModule : null,
-  openerModule : null,
-  unwrappedOpenerModule : null,
-
-  // willfilesReadBeginTime : null,
+  unwrappedModuleOpener : null,
 
 }
 
@@ -1815,7 +1634,7 @@ let Statics =
 
 let Forbids =
 {
-  moduleWithPathMap : 'moduleWithPathMap',
+  moduleWithCommonPathMap : 'moduleWithCommonPathMap',
   allSubmodulesMap : 'allSubmodulesMap',
   moduleWithNameMap : 'moduleWithNameMap',
   willfilesReadTimeReported : 'willfilesReadTimeReported',
@@ -1826,6 +1645,13 @@ let Forbids =
   pickedWillfilesPath : 'pickedWillfilesPath',
   willfilesReadBeginTime : 'willfilesReadBeginTime',
   willfilesReadTimeReported : 'willfilesReadTimeReported',
+  finding : 'finding',
+  inPath : 'inPath',
+  outPath : 'outPath',
+  willPath : 'willPath',
+  preformed : 'preformed',
+  supermoduleSubmodule : 'supermoduleSubmodule',
+  supermodule : 'supermodule',
 }
 
 let Accessors =
@@ -1834,25 +1660,24 @@ let Accessors =
   willfilesPath : { getter : willfilesPathGet, setter : willfilesPathSet },
   dirPath : { getter : dirPathGet, readOnly : 1 },
   commonPath : { getter : commonPathGet, readOnly : 1 },
-  inPath : { getter : inPathGet, setter : inPathSet },
-  outPath : { getter : outPathGet, setter : outPathSet },
   localPath : { getter : localPathGet, setter : localPathSet },
   remotePath : { getter : remotePathGet, setter : remotePathSet },
-  willPath : { getter : willPathGet, readOnly : 1 },
 
   name : { getter : nameGet, readOnly : 1 },
   aliasName : { setter : aliasNameSet },
-  configName : { readOnly : 1 },
   absoluteName : { getter : absoluteNameGet, readOnly : 1 },
 
   isRemote : { getter : isRemoteGet, setter : isRemoteSet },
-  isDownloaded : { getter : isDownloadedGet, setter : isDownloadedSet },
   isUpToDate : { getter : isUpToDateGet, setter : isUpToDateSet },
+  isOut : { getter : isOutGet, setter : isOutSet },
+  isMain : { getter : isMainGet, setter : isMainSet },
 
-  supermodule : { getter : supermoduleGet, setter : supermoduleSet },
-  rootModule : { getter : rootModuleGet, setter : rootModuleSet },
-  willfilesArray : { setter : willfileArraySet },
-  willfileWithRoleMap : { readOnly : 1 },
+  superRelation : {},
+  rootModule : {},
+  openedModule : {},
+  peerModule : {},
+
+  error : { setter : errorSet },
 
 }
 
@@ -1867,61 +1692,55 @@ let Extend =
 
   finit,
   init,
-  optionsForModule,
-  optionsForSecondModule,
+  unform,
+  preform,
+
+  optionsForModuleExport,
   precopy,
   copy,
   clone,
   cloneExtending,
 
-  [ Symbol.toStringTag ] : Object.prototype.toString,
+  // [ Symbol.toStringTag ] : Object.prototype.toString,
+
+  // module
+
+  // moduleClone,
+  moduleAdopt,
+  openedModuleSet,
+  moduleUsePaths,
+  moduleUseError,
 
   // opener
 
-  unform,
-  preform,
-
   close,
-  moduleFindTry,
-  moduleFind,
-  moduleClone,
+  find,
+  open,
 
   isOpened,
   isValid,
-  _openEnd,
+  isUsed,
 
   // willfile
 
   willfileUnregister,
   willfileRegister,
-  willfileArraySet,
-  willfileEach,
-  _willfilesExport,
-
-  _willfileFindSmartSingle,
-  _willfilesFindSmartMultiple,
-  _willfilesFindSmart,
-  _willfilesFindPicked,
+  _willfilesFindAct,
   _willfilesFind,
 
   // submodule
 
-  supermoduleGet,
-  supermoduleSet,
+  peerModuleGet,
+  peerModuleSet,
   rootModuleGet,
   rootModuleSet,
+  superRelationGet,
+  superRelationSet,
 
-  submodulesAllAreDownloaded,
-  submodulesAllAreValid,
+  // submodulesAllAreDownloaded,
+  // submodulesAllAreValid,
 
   // remote
-
-  remoteIsUpdate,
-  remoteIsUpToDateUpdate,
-
-  remoteIsDownloadedUpdate,
-  remoteIsDownloadedChanged,
-  remoteIsDownloadedSet,
 
   remoteForm,
   _remoteFormAct,
@@ -1934,21 +1753,20 @@ let Extend =
   // path
 
   _filePathChange,
-  _filePathChanged,
 
   willfilesPathGet,
   dirPathGet,
   commonPathGet,
 
-  inPathGet,
-  outPathGet,
+  // inPathGet,
+  // outPathGet,
   localPathGet,
   remotePathGet,
-  willPathGet,
+  // willPathGet,
 
   willfilesPathSet,
-  inPathSet,
-  outPathSet,
+  // inPathSet,
+  // outPathSet,
   localPathSet,
   remotePathSet,
 
@@ -1962,13 +1780,19 @@ let Extend =
 
   // other accessor
 
+  errorSet,
+
+  isMainGet,
+  isMainSet,
   isRemoteGet,
-  isDownloadedGet,
+  // isDownloadedGet,
   isUpToDateGet,
+  isOutGet,
 
   isRemoteSet,
-  isDownloadedSet,
+  // isDownloadedSet,
   isUpToDateSet,
+  isOutSet,
 
   // relation
 
@@ -1991,8 +1815,6 @@ _.classDeclare
 });
 
 Self.prototype[ Symbol.toStringTag ] = Object.prototype.toString;
-
-// _.Copyable.mixin( Self );
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = _global_.wTools;

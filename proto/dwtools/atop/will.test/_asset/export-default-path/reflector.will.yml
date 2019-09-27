@@ -1,0 +1,25 @@
+
+about :
+
+  name : "reflector"
+  version : "0.0.1"
+
+path :
+
+  in : './out'
+  out : '../out'
+  temp : '{path::out}'
+
+reflector :
+
+  export :
+    src : '{path::in}/../**'
+
+build :
+
+  export :
+    criterion :
+      debug : [ 0,1 ]
+      export : 1
+    steps :
+      - step::module.export

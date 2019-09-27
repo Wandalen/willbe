@@ -5,13 +5,13 @@ path :
 
   proto : './proto'
   in : '.'
-  out : 'out'
+  out : 'sub.out'
   out.debug :
-    path : './out/debug'
+    path : './sub.out/debug'
     criterion :
       debug : 1
   out.release :
-    path : './out/release'
+    path : './sub.out/release'
     criterion :
       debug : 0
 
@@ -23,16 +23,6 @@ reflector :
       debug : [ 0,1 ]
     filePath :
       path::proto : path::out.*=1
-
-step :
-
-  reflect.proto :
-    inherit : files.reflect
-    reflector :
-      reflector::reflect.proto.*=1
-    criterion :
-      debug : [ 0,1 ]
-      raw : [ 0,1 ]
 
 build :
 

@@ -55,7 +55,7 @@ let wPathBasic =
 
 let wRoutineBasic =
 {
-  includeAny : includeAny( 'abase/l3/RoutineFundamentals.s', 'wroutinebasic' ),
+  includeAny : includeAny( 'abase/l3/RoutineBasic.s', 'wroutinebasic' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.exec },
 }
 
@@ -99,8 +99,8 @@ let wArraySparse =
 
 let wAppBasic =
 {
-  includeAny : includeAny( 'abase/l4/AppBasic.s', 'wappbasic' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.shell },
+  includeAny : includeAny( 'abase/l4/ProcessBasic.s', 'wappbasic' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.process },
 }
 
 let wUriBasic =
@@ -113,12 +113,6 @@ let wTraverser =
 {
   includeAny : includeAny( 'abase/l4/Traverser.s', 'wtraverser' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools._traverse },
-}
-
-let wRoutineTransform =
-{
-  includeAny : includeAny( 'abase/l4/RoutineTransform.s', 'wroutinetransform' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.routineNew },
 }
 
 // base / l5
@@ -411,17 +405,23 @@ let wTemplateFileWriter =
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.TemplateFileWriter },
 }
 
-let wGraph =
+let wGraphBasic =
 {
-  includeAny : includeAny( 'amid/agraph/UseTop.s', 'wgraphbase' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.graph },
+  includeAny : includeAny( 'amid/l1/graphBasic/IncludeTop.s', 'wgraphbasic' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.graph && !!_global.wTools.graph.AbstractGraphSystem },
 }
 
-let wGraphLive =
+let wGraphTools =
 {
-  includeAny : includeAny( 'amid/agraph/UseLive.s', 'wgraphlive' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.LiveSystem },
+  includeAny : includeAny( 'amid/l1/graphTools/IncludeTop.s', 'wgraphtools' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.graph && !!_global.wTools.graph.GraphSystem },
 }
+
+// let wGraphLive =
+// {
+//   includeAny : includeAny( 'amid/l1/graphTools/IncludeLive', 'wgraphlive' ),
+//   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.LiveSystem },
+// }
 
 let wSchema =
 {
@@ -576,7 +576,6 @@ let Extend =
   wUriBasic,
   wTraverser,
   wStringer,
-  wRoutineTransform,
 
   // base / l5
 
@@ -646,8 +645,12 @@ let Extend =
   wTemplateTreeEnvironment,
   wTemplateFileWriter,
 
-  wGraph,
-  wGraphLive,
+  // wGraph,
+  // wGraphLive,
+
+  wGraphBasic,
+  wGraphTools,
+
   wSchema,
   wScriptLauncher,
   wExchangePoint,

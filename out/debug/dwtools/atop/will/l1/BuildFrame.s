@@ -46,6 +46,8 @@ function init( o )
   if( o )
   frame.copy( o );
 
+  _.assert( frame.run instanceof _.Will.BuildRun );
+
 }
 
 //
@@ -53,18 +55,11 @@ function init( o )
 function unform()
 {
   let frame = this;
-  let module = frame.module;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
+  let run = frame.run;
+  let module = run.module;
 
   _.assert( arguments.length === 0 );
   _.assert( frame.formed );
-
-  /* begin */
-
-  /* end */
 
   return frame;
 }
@@ -74,10 +69,12 @@ function unform()
 function form()
 {
   let frame = this;
-  let module = frame.module;
-  let build = frame.build;
+  let run = frame.run;
+  let module = run.module;
+  // let build = frame.build;
   let resource = frame.resource;
   let down = frame.down;
+  // let run = frame.run;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -88,17 +85,19 @@ function form()
   _.assert( !!will );
   _.assert( !!module );
   _.assert( module.preformed > 0  );
-  _.assert( build instanceof will.Build );
+  // _.assert( build instanceof will.Build );
   _.assert( !!resource );
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !!will.formed );
   _.assert( down === null || down instanceof Self );
+  _.assert( run instanceof will.BuildRun );
+  // _.assert( _.mapIs( run.opts ) );
   _.assert( module.preformed >= 1 );
 
   /* begin */
 
-  frame.opts = Object.create( null );
+  // frame.opts = Object.create( null );
 
   /* end */
 
@@ -108,52 +107,61 @@ function form()
 }
 
 //
-
-function run()
-{
-  let frame = this;
-  let module = frame.module;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let build = frame.build;
-  let resource = frame.resource;
-  let steps = build.steps;
-  let con = new _.Consequence().take( null );
-
-  _.assert( arguments.length === 0 );
-  _.assert( frame.formed === 1 );
-
-  con.then( () => resource.form() );
-
-  con.then( ( arg ) =>
-  {
-    _.assert( resource.formed === 3 )
-    return arg;
-  });
-
-  con.then( () => resource.run( frame ) );
-
-  return con;
-}
+//
+// function resourceFormAndPerform()
+// {
+//   let frame = this;
+//   let module = frame.module;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//   // let build = frame.build;
+//   // let run = frame.run;
+//   // let build = run.build;
+//   let resource = frame.resource;
+//   // let steps = build.steps;
+//   let con = new _.Consequence().take( null );
+//
+//   _.assert( arguments.length === 0 );
+//   _.assert( frame.formed === 1 );
+//
+//   con.then( () => resource.form() );
+//
+//   con.then( ( arg ) =>
+//   {
+//     _.assert( resource.formed === 3 )
+//     return arg;
+//   });
+//
+//   con.then( () => resource.framePerform( frame ) );
+//
+//   return con;
+// }
 
 //
 
-function cloneUp( resource2 )
+function frameUp( resource2 )
 {
   let frame = this;
-  let module = frame.module;
+  let run = frame.run;
+  let module = run.module;
   let will = module.will;
   let logger = will.logger;
-  let build = frame.build;
+  // let build = frame.build;
   let resource = frame.resource;
 
   _.assert( arguments.length === 1 );
   _.assert( frame.formed === 1 );
 
-  let build2 = resource2 instanceof will.Build ? resource2 : build;
-  let frame2 = frame.cloneExtending({ resource : resource2, build : build2, down : frame });
+  // let build2 = resource2 instanceof will.Build ? resource2 : build;
+  // let frame2 = frame.cloneExtending({ resource : resource2, build : build2, down : frame });
+
+  let frame2 = frame.cloneExtending
+  ({
+    resource : resource2,
+    down : frame,
+  });
 
   _.assert( frame2.resource === resource2 );
 
@@ -176,12 +184,14 @@ let Aggregates =
 
 let Associates =
 {
-  module : null,
+  // module : null,
   down : null,
-  build : null,
   resource : null,
-  opts : null,
-  context : null,
+  run : null,
+  // build : null,
+  // opts : null,
+  // context : null,
+  // exported : null,
 }
 
 let Restricts =
@@ -195,6 +205,12 @@ let Statics =
 
 let Forbids =
 {
+  root : 'root',
+  context : 'context',
+  exported : 'exported',
+  opts : 'opts',
+  build : 'build',
+  module : 'module',
 }
 
 let Accessors =
@@ -214,9 +230,9 @@ let Extend =
   init,
   unform,
   form,
-  run,
 
-  cloneUp,
+  // resourceFormAndPerform,
+  frameUp,
 
   // relation
 

@@ -103,10 +103,10 @@ function is( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.is( ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.is( ) );
 
   test.case = 'Two arguments';
-  test.shouldThrowError( () => _.path.is( 'a', 'b' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.is( 'a', 'b' ) );
 
 }
 
@@ -202,10 +202,10 @@ function are( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.are( ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.are( ) );
 
   test.case = 'Two arguments';
-  test.shouldThrowError( () => _.path.are( 'a', 'b' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.are( 'a', 'b' ) );
 
 }
 //
@@ -293,10 +293,10 @@ function like( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.like( ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.like( ) );
 
   test.case = 'Two arguments';
-  test.shouldThrowError( () => _.path.like( 'a', 'b' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.like( 'a', 'b' ) );
 
 }
 
@@ -1068,31 +1068,31 @@ function isRefinedMaybeTrailed( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.isRefinedMaybeTrailed( ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRefinedMaybeTrailed( ) );
 
   test.case = 'Two arguments';
-  test.shouldThrowError( () => _.path.isRefinedMaybeTrailed( 'a', 'b' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRefinedMaybeTrailed( 'a', 'b' ) );
 
   test.case = 'No path - regexp';
-  test.shouldThrowError( () => _.path.isRefinedMaybeTrailed( /foo/ ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRefinedMaybeTrailed( /foo/ ) );
 
   test.case = 'No path - number';
-  test.shouldThrowError( () => _.path.isRefinedMaybeTrailed( 3 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRefinedMaybeTrailed( 3 ) );
 
   test.case = 'No path - array';
-  test.shouldThrowError( () => _.path.isRefinedMaybeTrailed( [ '/C/', 'work/f' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRefinedMaybeTrailed( [ '/C/', 'work/f' ] ) );
 
   test.case = 'No path - object';
-  test.shouldThrowError( () => _.path.isRefinedMaybeTrailed( { Path : 'C:/foo/baz/bar' } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRefinedMaybeTrailed( { Path : 'C:/foo/baz/bar' } ) );
 
   test.case = 'No path - undefined';
-  test.shouldThrowError( () => _.path.isRefinedMaybeTrailed( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRefinedMaybeTrailed( undefined ) );
 
   test.case = 'No path - null';
-  test.shouldThrowError( () => _.path.isRefinedMaybeTrailed( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRefinedMaybeTrailed( null ) );
 
   test.case = 'No path - NaN';
-  test.shouldThrowError( () => _.path.isRefinedMaybeTrailed( NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRefinedMaybeTrailed( NaN ) );
 
 }
 
@@ -1544,31 +1544,31 @@ function isRefined( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.isRefined( ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRefined( ) );
 
   test.case = 'Two arguments';
-  test.shouldThrowError( () => _.path.isRefined( 'a', 'b' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRefined( 'a', 'b' ) );
 
   test.case = 'No path - regexp';
-  test.shouldThrowError( () => _.path.isRefined( /foo/ ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRefined( /foo/ ) );
 
   test.case = 'No path - number';
-  test.shouldThrowError( () => _.path.isRefined( 3 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRefined( 3 ) );
 
   test.case = 'No path - array';
-  test.shouldThrowError( () => _.path.isRefined( [ '/C/', 'work/f' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRefined( [ '/C/', 'work/f' ] ) );
 
   test.case = 'No path - object';
-  test.shouldThrowError( () => _.path.isRefined( { Path : 'C:/foo/baz/bar' } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRefined( { Path : 'C:/foo/baz/bar' } ) );
 
   test.case = 'No path - undefined';
-  test.shouldThrowError( () => _.path.isRefined( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRefined( undefined ) );
 
   test.case = 'No path - null';
-  test.shouldThrowError( () => _.path.isRefined( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRefined( null ) );
 
   test.case = 'No path - NaN';
-  test.shouldThrowError( () => _.path.isRefined( NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRefined( NaN ) );
 
 }
 
@@ -1886,33 +1886,33 @@ function isNormalizedMaybeTrailed( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.isNormalizedMaybeTrailed( ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isNormalizedMaybeTrailed( ) );
 
   test.case = 'Two arguments';
-  test.shouldThrowError( () => _.path.isNormalizedMaybeTrailed( 'a', 'b' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isNormalizedMaybeTrailed( 'a', 'b' ) );
 
   // Input is not path
 
   test.case = 'No path - regexp';
-  test.shouldThrowError( () => _.path.isNormalizedMaybeTrailed( /foo/ ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isNormalizedMaybeTrailed( /foo/ ) );
 
   test.case = 'No path - number';
-  test.shouldThrowError( () => _.path.isNormalizedMaybeTrailed( 3 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isNormalizedMaybeTrailed( 3 ) );
 
   test.case = 'No path - array';
-  test.shouldThrowError( () => _.path.isNormalizedMaybeTrailed( [ '/C/', 'work/f' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isNormalizedMaybeTrailed( [ '/C/', 'work/f' ] ) );
 
   test.case = 'No path - object';
-  test.shouldThrowError( () => _.path.isNormalizedMaybeTrailed( { Path : 'C:/foo/baz/bar' } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isNormalizedMaybeTrailed( { Path : 'C:/foo/baz/bar' } ) );
 
   test.case = 'No path - undefined';
-  test.shouldThrowError( () => _.path.isNormalizedMaybeTrailed( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isNormalizedMaybeTrailed( undefined ) );
 
   test.case = 'No path - null';
-  test.shouldThrowError( () => _.path.isNormalizedMaybeTrailed( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isNormalizedMaybeTrailed( null ) );
 
   test.case = 'No path - NaN';
-  test.shouldThrowError( () => _.path.isNormalizedMaybeTrailed( NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isNormalizedMaybeTrailed( NaN ) );
 
 }
 
@@ -2225,33 +2225,33 @@ function isNormalized( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.isNormalized( ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isNormalized( ) );
 
   test.case = 'Two arguments';
-  test.shouldThrowError( () => _.path.isNormalized( 'a', 'b' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isNormalized( 'a', 'b' ) );
 
   // Input is not path
 
   test.case = 'No path - regexp';
-  test.shouldThrowError( () => _.path.isNormalized( /foo/ ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isNormalized( /foo/ ) );
 
   test.case = 'No path - number';
-  test.shouldThrowError( () => _.path.isNormalized( 3 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isNormalized( 3 ) );
 
   test.case = 'No path - array';
-  test.shouldThrowError( () => _.path.isNormalized( [ '/C/', 'work/f' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isNormalized( [ '/C/', 'work/f' ] ) );
 
   test.case = 'No path - object';
-  test.shouldThrowError( () => _.path.isNormalized( { Path : 'C:/foo/baz/bar' } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isNormalized( { Path : 'C:/foo/baz/bar' } ) );
 
   test.case = 'No path - undefined';
-  test.shouldThrowError( () => _.path.isNormalized( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isNormalized( undefined ) );
 
   test.case = 'No path - null';
-  test.shouldThrowError( () => _.path.isNormalized( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isNormalized( null ) );
 
   test.case = 'No path - NaN';
-  test.shouldThrowError( () => _.path.isNormalized( NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isNormalized( NaN ) );
 
 }
 
@@ -2407,44 +2407,44 @@ function isAbsolute( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.isAbsolute( ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isAbsolute( ) );
 
   test.case = 'Two arguments';
-  test.shouldThrowError( () => _.path.isAbsolute( 'a', 'b' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isAbsolute( 'a', 'b' ) );
 
   // Input is not path
 
   test.case = 'No path - regexp';
-  test.shouldThrowError( () => _.path.isAbsolute( /foo/ ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isAbsolute( /foo/ ) );
 
   test.case = 'No path - number';
-  test.shouldThrowError( () => _.path.isAbsolute( 3 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isAbsolute( 3 ) );
 
   test.case = 'No path - array';
-  test.shouldThrowError( () => _.path.isAbsolute( [ '/C/', 'work/f' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isAbsolute( [ '/C/', 'work/f' ] ) );
 
   test.case = 'No path - object';
-  test.shouldThrowError( () => _.path.isAbsolute( { Path : 'C:/foo/baz/bar' } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isAbsolute( { Path : 'C:/foo/baz/bar' } ) );
 
   test.case = 'No path - undefined';
-  test.shouldThrowError( () => _.path.isAbsolute( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isAbsolute( undefined ) );
 
   test.case = 'No path - null';
-  test.shouldThrowError( () => _.path.isAbsolute( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isAbsolute( null ) );
 
   test.case = 'No path - NaN';
-  test.shouldThrowError( () => _.path.isAbsolute( NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isAbsolute( NaN ) );
 
   // // Input is not Refined
   //
   // test.case = '\\ in the beggining';
-  // test.shouldThrowError( () => _.path.isAbsolute( '\\C:/foo/baz/bar' ) );
+  // test.shouldThrowErrorOfAnyKind( () => _.path.isAbsolute( '\\C:/foo/baz/bar' ) );
   //
   // test.case = '\\ in the middle';
-  // test.shouldThrowError( () => _.path.isAbsolute( 'C:/foo\\baz\\bar' ) );
+  // test.shouldThrowErrorOfAnyKind( () => _.path.isAbsolute( 'C:/foo\\baz\\bar' ) );
   //
   // test.case = '\\ in the end';
-  // test.shouldThrowError( () => _.path.isAbsolute( 'C:/foo/baz/bar\\' ) );
+  // test.shouldThrowErrorOfAnyKind( () => _.path.isAbsolute( 'C:/foo/baz/bar\\' ) );
 
 }
 
@@ -2598,44 +2598,44 @@ function isRelative( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.isRelative( ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRelative( ) );
 
   test.case = 'Two arguments';
-  test.shouldThrowError( () => _.path.isRelative( 'a', 'b' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRelative( 'a', 'b' ) );
 
   // Input is not path
 
   test.case = 'No path - regexp';
-  test.shouldThrowError( () => _.path.isRelative( /foo/ ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRelative( /foo/ ) );
 
   test.case = 'No path - number';
-  test.shouldThrowError( () => _.path.isRelative( 3 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRelative( 3 ) );
 
   test.case = 'No path - array';
-  test.shouldThrowError( () => _.path.isRelative( [ '/C/', 'work/f' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRelative( [ '/C/', 'work/f' ] ) );
 
   test.case = 'No path - object';
-  test.shouldThrowError( () => _.path.isRelative( { Path : 'C:/foo/baz/bar' } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRelative( { Path : 'C:/foo/baz/bar' } ) );
 
   test.case = 'No path - undefined';
-  test.shouldThrowError( () => _.path.isRelative( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRelative( undefined ) );
 
   test.case = 'No path - null';
-  test.shouldThrowError( () => _.path.isRelative( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRelative( null ) );
 
   test.case = 'No path - NaN';
-  test.shouldThrowError( () => _.path.isRelative( NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRelative( NaN ) );
 
   // // Input is not Normalized
   //
   // test.case = '\\ in the beggining';
-  // test.shouldThrowError( () => _.path.isRelative( '\\C:/foo/baz/bar' ) );
+  // test.shouldThrowErrorOfAnyKind( () => _.path.isRelative( '\\C:/foo/baz/bar' ) );
   //
   // test.case = '\\ in the middle';
-  // test.shouldThrowError( () => _.path.isRelative( 'C:/foo\\baz\\bar' ) );
+  // test.shouldThrowErrorOfAnyKind( () => _.path.isRelative( 'C:/foo\\baz\\bar' ) );
   //
   // test.case = '\\ in the end';
-  // test.shouldThrowError( () => _.path.isRelative( 'C:/foo/baz/bar\\' ) );
+  // test.shouldThrowErrorOfAnyKind( () => _.path.isRelative( 'C:/foo/baz/bar\\' ) );
 
 }
 
@@ -2788,33 +2788,33 @@ function isGlobal( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.isGlobal( ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isGlobal( ) );
 
   test.case = 'Two arguments';
-  test.shouldThrowError( () => _.path.isGlobal( 'a', 'b' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isGlobal( 'a', 'b' ) );
 
   // Input is not path
 
   test.case = 'No path - regexp';
-  test.shouldThrowError( () => _.path.isGlobal( /foo/ ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isGlobal( /foo/ ) );
 
   test.case = 'No path - number';
-  test.shouldThrowError( () => _.path.isGlobal( 3 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isGlobal( 3 ) );
 
   test.case = 'No path - array';
-  test.shouldThrowError( () => _.path.isGlobal( [ '/C/', 'work/f' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isGlobal( [ '/C/', 'work/f' ] ) );
 
   test.case = 'No path - object';
-  test.shouldThrowError( () => _.path.isGlobal( { Path : 'C:/foo/baz/bar' } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isGlobal( { Path : 'C:/foo/baz/bar' } ) );
 
   test.case = 'No path - undefined';
-  test.shouldThrowError( () => _.path.isGlobal( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isGlobal( undefined ) );
 
   test.case = 'No path - null';
-  test.shouldThrowError( () => _.path.isGlobal( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isGlobal( null ) );
 
   test.case = 'No path - NaN';
-  test.shouldThrowError( () => _.path.isGlobal( NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isGlobal( NaN ) );
 
 }
 
@@ -2889,33 +2889,33 @@ function isRoot( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.isRoot( ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRoot( ) );
 
   test.case = 'Two arguments';
-  test.shouldThrowError( () => _.path.isRoot( 'a', 'b' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRoot( 'a', 'b' ) );
 
   // Input is not path
 
   test.case = 'No path - regexp';
-  test.shouldThrowError( () => _.path.isRoot( /foo/ ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRoot( /foo/ ) );
 
   test.case = 'No path - number';
-  test.shouldThrowError( () => _.path.isRoot( 3 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRoot( 3 ) );
 
   test.case = 'No path - array';
-  test.shouldThrowError( () => _.path.isRoot( [ '/C/', 'work/f' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRoot( [ '/C/', 'work/f' ] ) );
 
   test.case = 'No path - object';
-  test.shouldThrowError( () => _.path.isRoot( { Path : 'C:/foo/baz/bar' } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRoot( { Path : 'C:/foo/baz/bar' } ) );
 
   test.case = 'No path - undefined';
-  test.shouldThrowError( () => _.path.isRoot( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRoot( undefined ) );
 
   test.case = 'No path - null';
-  test.shouldThrowError( () => _.path.isRoot( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRoot( null ) );
 
   test.case = 'No path - NaN';
-  test.shouldThrowError( () => _.path.isRoot( NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isRoot( NaN ) );
 
 }
 
@@ -3072,33 +3072,33 @@ function isDotted( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.isDotted( ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isDotted( ) );
 
   test.case = 'Two arguments';
-  test.shouldThrowError( () => _.path.isDotted( 'a', 'b' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isDotted( 'a', 'b' ) );
 
   // Input is not path
 
   test.case = 'No path - regexp';
-  test.shouldThrowError( () => _.path.isDotted( /foo/ ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isDotted( /foo/ ) );
 
   test.case = 'No path - number';
-  test.shouldThrowError( () => _.path.isDotted( 3 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isDotted( 3 ) );
 
   test.case = 'No path - array';
-  test.shouldThrowError( () => _.path.isDotted( [ '/C/', 'work/f' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isDotted( [ '/C/', 'work/f' ] ) );
 
   test.case = 'No path - object';
-  test.shouldThrowError( () => _.path.isDotted( { Path : 'C:/foo/baz/bar' } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isDotted( { Path : 'C:/foo/baz/bar' } ) );
 
   test.case = 'No path - undefined';
-  test.shouldThrowError( () => _.path.isDotted( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isDotted( undefined ) );
 
   test.case = 'No path - null';
-  test.shouldThrowError( () => _.path.isDotted( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isDotted( null ) );
 
   test.case = 'No path - NaN';
-  test.shouldThrowError( () => _.path.isDotted( NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isDotted( NaN ) );
 
 }
 
@@ -3197,33 +3197,33 @@ function isTrailed( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.isTrailed( ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isTrailed( ) );
 
   test.case = 'Two arguments';
-  test.shouldThrowError( () => _.path.isTrailed( 'a', 'b' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isTrailed( 'a', 'b' ) );
 
   // Input is not path
 
   test.case = 'No path - regexp';
-  test.shouldThrowError( () => _.path.isTrailed( /foo/ ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isTrailed( /foo/ ) );
 
   test.case = 'No path - number';
-  test.shouldThrowError( () => _.path.isTrailed( 3 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isTrailed( 3 ) );
 
   test.case = 'No path - array';
-  test.shouldThrowError( () => _.path.isTrailed( [ '/C/', 'work/f' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isTrailed( [ '/C/', 'work/f' ] ) );
 
   test.case = 'No path - object';
-  test.shouldThrowError( () => _.path.isTrailed( { Path : 'C:/foo/baz/bar' } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isTrailed( { Path : 'C:/foo/baz/bar' } ) );
 
   test.case = 'No path - undefined';
-  test.shouldThrowError( () => _.path.isTrailed( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isTrailed( undefined ) );
 
   test.case = 'No path - null';
-  test.shouldThrowError( () => _.path.isTrailed( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isTrailed( null ) );
 
   test.case = 'No path - NaN';
-  test.shouldThrowError( () => _.path.isTrailed( NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.isTrailed( NaN ) );
 
 }
 
@@ -3378,42 +3378,42 @@ function begins( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.begins( ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.begins( ) );
 
   test.case = 'One argument';
-  test.shouldThrowError( () => _.path.begins( 'a' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.begins( 'a' ) );
 
   test.case = 'Three arguments';
-  test.shouldThrowError( () => _.path.begins( 'a', 'b', 'c' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.begins( 'a', 'b', 'c' ) );
 
   // Input is not path
 
   test.case = 'No path - regexp';
-  test.shouldThrowError( () => _.path.begins( /foo/,  /foo/ ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.begins( /foo/,  /foo/ ) );
 
   test.case = 'No path - array';
-  test.shouldThrowError( () => _.path.begins( [ ], [ ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.begins( [ ], [ ] ) );
 
   test.case = 'No path - number';
-  test.shouldThrowError( () => _.path.begins( 3, 3 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.begins( 3, 3 ) );
 
   test.case = 'No path - object';
-  test.shouldThrowError( () => _.path.begins( { Path : 'C:/' }, { Path : 'C:/' } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.begins( { Path : 'C:/' }, { Path : 'C:/' } ) );
 
   test.case = 'No path - undefined';
-  test.shouldThrowError( () => _.path.begins( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.begins( undefined ) );
 
   test.case = 'No path - null';
-  test.shouldThrowError( () => _.path.begins( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.begins( null ) );
 
   test.case = 'No path - null';
-  test.shouldThrowError( () => _.path.begins( null, null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.begins( null, null ) );
 
   test.case = 'No path - NaN';
-  test.shouldThrowError( () => _.path.begins( NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.begins( NaN ) );
 
   test.case = 'No path - NaN';
-  test.shouldThrowError( () => _.path.begins( NaN, NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.begins( NaN, NaN ) );
 
 }
 
@@ -3536,42 +3536,42 @@ function ends( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.ends( ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.ends( ) );
 
   test.case = 'One argument';
-  test.shouldThrowError( () => _.path.ends( 'a' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.ends( 'a' ) );
 
   test.case = 'Three arguments';
-  test.shouldThrowError( () => _.path.ends( 'a', 'b', 'c' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.ends( 'a', 'b', 'c' ) );
 
   // Input is not path
 
   test.case = 'No path - regexp';
-  test.shouldThrowError( () => _.path.ends( /foo/,  /foo/ ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.ends( /foo/,  /foo/ ) );
 
   test.case = 'No path - array';
-  test.shouldThrowError( () => _.path.ends( [ ], [ ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.ends( [ ], [ ] ) );
 
   test.case = 'No path - object';
-  test.shouldThrowError( () => _.path.ends( { Path : 'C:/' }, { Path : 'C:/' } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.ends( { Path : 'C:/' }, { Path : 'C:/' } ) );
 
   test.case = 'No path - undefined';
-  test.shouldThrowError( () => _.path.ends( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.ends( undefined ) );
 
   test.case = 'No path - undefined';
-  test.shouldThrowError( () => _.path.ends( undefined, undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.ends( undefined, undefined ) );
 
   test.case = 'No path - null';
-  test.shouldThrowError( () => _.path.ends( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.ends( null ) );
 
   test.case = 'No path - null';
-  test.shouldThrowError( () => _.path.ends( null, null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.ends( null, null ) );
 
   test.case = 'No path - NaN';
-  test.shouldThrowError( () => _.path.ends( NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.ends( NaN ) );
 
   test.case = 'No path - NaN';
-  test.shouldThrowError( () => _.path.ends( NaN, NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.ends( NaN, NaN ) );
 
 
 
@@ -3944,31 +3944,31 @@ function refine( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.refine( ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.refine( ) );
 
   test.case = 'Two arguments';
-  test.shouldThrowError( () => _.path.refine( 'a', 'b' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.refine( 'a', 'b' ) );
 
   test.case = 'No path - regexp';
-  test.shouldThrowError( () => _.path.refine( /foo/ ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.refine( /foo/ ) );
 
   test.case = 'No path - number';
-  test.shouldThrowError( () => _.path.refine( 3 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.refine( 3 ) );
 
   test.case = 'No path - array';
-  test.shouldThrowError( () => _.path.refine( [ '/C/', 'work/f' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.refine( [ '/C/', 'work/f' ] ) );
 
   test.case = 'No path - object';
-  test.shouldThrowError( () => _.path.refine( { Path : 'C:/foo/baz/bar' } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.refine( { Path : 'C:/foo/baz/bar' } ) );
 
   test.case = 'No path - undefined';
-  test.shouldThrowError( () => _.path.refine( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.refine( undefined ) );
 
   test.case = 'No path - null';
-  test.shouldThrowError( () => _.path.refine( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.refine( null ) );
 
   test.case = 'No path - NaN';
-  test.shouldThrowError( () => _.path.refine( NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.refine( NaN ) );
 
 }
 
@@ -4505,33 +4505,33 @@ function normalize( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.normalize( ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.normalize( ) );
 
   test.case = 'Two arguments';
-  test.shouldThrowError( () => _.path.normalize( 'a', 'b' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.normalize( 'a', 'b' ) );
 
   // Input is not path
 
   test.case = 'No path - regexp';
-  test.shouldThrowError( () => _.path.normalize( /foo/ ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.normalize( /foo/ ) );
 
   test.case = 'No path - number';
-  test.shouldThrowError( () => _.path.normalize( 3 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.normalize( 3 ) );
 
   test.case = 'No path - array';
-  test.shouldThrowError( () => _.path.normalize( [ '/C/', 'work/f' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.normalize( [ '/C/', 'work/f' ] ) );
 
   test.case = 'No path - object';
-  test.shouldThrowError( () => _.path.normalize( { Path : 'C:/foo/baz/bar' } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.normalize( { Path : 'C:/foo/baz/bar' } ) );
 
   test.case = 'No path - undefined';
-  test.shouldThrowError( () => _.path.normalize( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.normalize( undefined ) );
 
   test.case = 'No path - null';
-  test.shouldThrowError( () => _.path.normalize( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.normalize( null ) );
 
   test.case = 'No path - NaN';
-  test.shouldThrowError( () => _.path.normalize( NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.normalize( NaN ) );
 
 }
 
@@ -5380,33 +5380,33 @@ function canonize( test )
   return;
 
   test.case = 'No arguments';
-  test.shouldThrowError( () => _.path.canonize( ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.canonize( ) );
 
   test.case = 'Two arguments';
-  test.shouldThrowError( () => _.path.canonize( 'a', 'b' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.canonize( 'a', 'b' ) );
 
   // Input is not path
 
   test.case = 'No path - regexp';
-  test.shouldThrowError( () => _.path.canonize( /foo/ ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.canonize( /foo/ ) );
 
   test.case = 'No path - number';
-  test.shouldThrowError( () => _.path.canonize( 3 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.canonize( 3 ) );
 
   test.case = 'No path - array';
-  test.shouldThrowError( () => _.path.canonize( [ '/C/', 'work/f' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.canonize( [ '/C/', 'work/f' ] ) );
 
   test.case = 'No path - object';
-  test.shouldThrowError( () => _.path.canonize( { Path : 'C:/foo/baz/bar' } ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.canonize( { Path : 'C:/foo/baz/bar' } ) );
 
   test.case = 'No path - undefined';
-  test.shouldThrowError( () => _.path.canonize( undefined ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.canonize( undefined ) );
 
   test.case = 'No path - null';
-  test.shouldThrowError( () => _.path.canonize( null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.canonize( null ) );
 
   test.case = 'No path - NaN';
-  test.shouldThrowError( () => _.path.canonize( NaN ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.canonize( NaN ) );
 
 }
 
@@ -5848,7 +5848,7 @@ function dot( test )
     {
       if( !Config.debug )
       continue;
-      test.shouldThrowError( () => _.path.dot( c.src ) )
+      test.shouldThrowErrorOfAnyKind( () => _.path.dot( c.src ) )
     }
     else
     test.identical( _.path.dot( c.src ), c.expected );
@@ -5879,7 +5879,7 @@ function undot( test )
     {
       if( !Config.debug )
       continue;
-      test.shouldThrowError( () => _.path.undot( c.src ) )
+      test.shouldThrowErrorOfAnyKind( () => _.path.undot( c.src ) )
     }
     else
     test.identical( _.path.undot( c.src ), c.expected );
@@ -6004,82 +6004,198 @@ function join( test )
   test.case = 'join empty';
   var paths = [ '' ];
   var expected = '';
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
 
   test.case = 'join several empties';
   var paths = [ '', '' ];
   var expected = '';
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
+
+  test.case = 'root with absolute';
+  var paths = [ '/', '/a/b' ];
+  var expected = '/a/b';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'root with relative';
+  var paths = [ '/', 'a/b' ];
+  var expected = '/a/b';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with absolute';
+  var paths = [ '/dir', '/a/b' ];
+  var expected = '/a/b';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with relative';
+  var paths = [ '/dir', 'a/b' ];
+  var expected = '/dir/a/b';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed dir with absolute';
+  var paths = [ '/dir/', '/a/b' ];
+  var expected = '/a/b';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed dir with relative';
+  var paths = [ '/dir/', 'a/b' ];
+  var expected = '/dir/a/b';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with absolute';
+  var paths = [ '/dir', '/a/b' ];
+  var expected = '/a/b';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with relative';
+  var paths = [ '/dir', 'a/b' ];
+  var expected = '/dir/a/b';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with down';
+  var paths = [ '/dir', '../a/b' ];
+  var expected = '/a/b';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed dir with down';
+  var paths = [ '/dir/', '../a/b' ];
+  var expected = '/dir/a/b';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with several down';
+  var paths = [ '/dir/dir2', '../../a/b' ];
+  var expected = '/a/b';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed dir with several down';
+  var paths = [ '/dir/', '../../a/b' ];
+  var expected = '/a/b';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with several down, go out of root';
+  var paths = [ '/dir', '../../a/b' ];
+  var expected = '/../a/b';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed absolute with trailed down';
+  var paths = [ '/a/b/', '../' ];
+  var expected = '/a/b/';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'absolute with trailed down';
+  var paths = [ '/a/b', '../' ];
+  var expected = '/a/';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed absolute with down';
+  var paths = [ '/a/b/', '..' ];
+  var expected = '/a/b';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed absolute with trailed here';
+  var paths = [ '/a/b/', './' ];
+  var expected = '/a/b/';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'absolute with trailed here';
+  var paths = [ '/a/b', './' ];
+  var expected = '/a/b/';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed absolute with here';
+  var paths = [ '/a/b/', '.' ];
+  var expected = '/a/b';
+  var got = _.path.join( ... paths );
+  test.identical( got, expected );
+
+  /* */
 
   test.case = 'join with empty';
   var paths = [ '', 'a/b', '', 'c', '' ];
   var expected = 'a/b/c';
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
 
   test.case = 'join windows os paths';
   var paths = [ 'c:\\', 'foo\\', 'bar\\' ];
   var expected = '/c/foo/bar/';
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
 
   test.case = 'join unix os paths';
   var paths = [ '/bar/', '/baz', 'foo/', '.' ];
   var expected = '/baz/foo';
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
 
   test.case = 'join unix os paths';
   var paths = [ '/bar/', '/baz', 'foo/', '.', 'z' ];
   var expected = '/baz/foo/z';
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
 
   test.case = 'more complicated cases'; /* */
 
   var paths = [  '/aa', 'bb//', 'cc' ];
   var expected = '/aa/bb//cc';
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
 
   var paths = [  '/aa', '/bb', 'cc' ];
   var expected = '/bb/cc';
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
 
   var paths = [  '//aa', 'bb//', 'cc//' ];
   var expected = '//aa/bb//cc//';
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
 
   var paths = [  '/aa', 'bb//', 'cc','.' ];
   var expected = '/aa/bb//cc';
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
 
   var paths = [  '/','a', '//b//', '././c', '../d', '..e' ];
   var expected = '//b//d/..e';
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
 
   test.case = 'join trailed';
   var paths = [ '/a/b/', '.' ];
   var expected = '/a/b';
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
 
   test.case = 'join trailed';
   var paths = [ '/a/b/', './' ];
   var expected = '/a/b/';
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
 
   test.case = 'join trailed';
   var paths = [ '/a/b', './' ];
   var expected = '/a/b/';
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
 
   /* - */
@@ -6088,27 +6204,27 @@ function join( test )
 
   var paths = [ 'a', null ];
   var expected = null;
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
 
   var paths = [ '/', null ];
   var expected = null;
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
 
   var paths = [ 'a', null, 'b' ];
   var expected = 'b';
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
 
   var paths = [ '/a', null, 'b' ];
   var expected = 'b';
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
 
   var paths = [ '/a', null, '/b' ];
   var expected = '/b';
-  var got = _.path.join.apply( _.path, paths );
+  var got = _.path.join( ... paths );
   test.identical( got, expected );
 
   test.close( 'with nulls' );
@@ -6132,61 +6248,189 @@ function join( test )
 function joinRaw( test )
 {
 
+  test.case = 'join empty';
+  var paths = [ '' ];
+  var expected = '';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'join several empties';
+  var paths = [ '', '' ];
+  var expected = '';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'root with absolute';
+  var paths = [ '/', '/a/b' ];
+  var expected = '/a/b';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'root with relative';
+  var paths = [ '/', 'a/b' ];
+  var expected = '/a/b';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with absolute';
+  var paths = [ '/dir', '/a/b' ];
+  var expected = '/a/b';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with relative';
+  var paths = [ '/dir', 'a/b' ];
+  var expected = '/dir/a/b';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed dir with absolute';
+  var paths = [ '/dir/', '/a/b' ];
+  var expected = '/a/b';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed dir with relative';
+  var paths = [ '/dir/', 'a/b' ];
+  var expected = '/dir/a/b';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with absolute';
+  var paths = [ '/dir', '/a/b' ];
+  var expected = '/a/b';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with relative';
+  var paths = [ '/dir', 'a/b' ];
+  var expected = '/dir/a/b';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with down';
+  var paths = [ '/dir', '../a/b' ];
+  var expected = '/dir/../a/b';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed dir with down';
+  var paths = [ '/dir/', '../a/b' ];
+  var expected = '/dir/a/b';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with several down';
+  var paths = [ '/dir/dir2', '../../a/b' ];
+  var expected = '/dir/dir2/../../a/b';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed dir with several down';
+  var paths = [ '/dir/', '../../a/b' ];
+  var expected = '/dir/../a/b';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with several down, go out of root';
+  var paths = [ '/dir', '../../a/b' ];
+  var expected = '/dir/../../a/b';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed absolute with trailed down';
+  var paths = [ '/a/b/', '../' ];
+  var expected = '/a/b/./';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'absolute with trailed down';
+  var paths = [ '/a/b', '../' ];
+  var expected = '/a/b/../';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed absolute with down';
+  var paths = [ '/a/b/', '..' ];
+  var expected = '/a/b/.';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed absolute with trailed here';
+  var paths = [ '/a/b/', './' ];
+  var expected = '/a/b/./';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'absolute with trailed here';
+  var paths = [ '/a/b', './' ];
+  var expected = '/a/b/./';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed absolute with here';
+  var paths = [ '/a/b/', '.' ];
+  var expected = '/a/b/.';
+  var got = _.path.joinRaw( ... paths );
+  test.identical( got, expected );
+
+  /* */
+
   test.case = 'second trailed';
   var paths = [ '/a/b', 'c/' ];
   var expected = '/a/b/c/';
-  var got = _.path.joinRaw.apply( _.path, paths );
+  var got = _.path.joinRaw( ... paths );
   test.identical( got, expected );
 
   test.case = 'both trained';
   var paths = [ '/a/b/', 'c/' ];
   var expected = '/a/b/c/';
-  var got = _.path.joinRaw.apply( _.path, paths );
+  var got = _.path.joinRaw( ... paths );
   test.identical( got, expected );
 
   test.case = 'with empty';
   var paths = [ '', 'a/b', '', 'c', '' ];
   var expected = 'a/b/c';
-  var got = _.path.joinRaw.apply( _.path, paths );
+  var got = _.path.joinRaw( ... paths );
   test.identical( got, expected );
 
   test.case = 'windows os paths';
   var paths = [ 'c:\\', 'foo\\', 'bar\\' ];
   var expected = '/c/foo/bar/';
-  var got = _.path.joinRaw.apply( _.path, paths );
+  var got = _.path.joinRaw( ... paths );
   test.identical( got, expected );
 
   test.case = 'unix os paths';
   var paths = [ '/bar/', '/baz', 'foo/', '.' ];
   var expected = '/baz/foo/.';
-  var got = _.path.joinRaw.apply( _.path, paths );
+  var got = _.path.joinRaw( ... paths );
   test.identical( got, expected );
 
   test.case = 'more complicated cases'; /* */
 
   var paths = [  '/aa', 'bb//', 'cc' ];
   var expected = '/aa/bb//cc';
-  var got = _.path.joinRaw.apply( _.path, paths );
+  var got = _.path.joinRaw( ... paths );
   test.identical( got, expected );
 
   var paths = [  '/aa', '/bb', 'cc' ];
   var expected = '/bb/cc';
-  var got = _.path.joinRaw.apply( _.path, paths );
+  var got = _.path.joinRaw( ... paths );
   test.identical( got, expected );
 
   var paths = [  '//aa', 'bb//', 'cc//' ];
   var expected = '//aa/bb//cc//';
-  var got = _.path.joinRaw.apply( _.path, paths );
+  var got = _.path.joinRaw( ... paths );
   test.identical( got, expected );
 
   var paths = [  '/aa', 'bb//', 'cc','.' ];
   var expected = '/aa/bb//cc/.';
-  var got = _.path.joinRaw.apply( _.path, paths );
+  var got = _.path.joinRaw( ... paths );
   test.identical( got, expected );
 
   var paths = [  '/','a', '//b//', '././c', '../d', '..e' ];
   var expected = '//b//././c/../d/..e';
-  var got = _.path.joinRaw.apply( _.path, paths );
+  var got = _.path.joinRaw( ... paths );
   test.identical( got, expected );
 
   /* - */
@@ -6195,27 +6439,27 @@ function joinRaw( test )
 
   var paths = [ 'a', null ];
   var expected = null;
-  var got = _.path.joinRaw.apply( _.path, paths );
+  var got = _.path.joinRaw( ... paths );
   test.identical( got, expected );
 
   var paths = [ '/', null ];
   var expected = null;
-  var got = _.path.joinRaw.apply( _.path, paths );
+  var got = _.path.joinRaw( ... paths );
   test.identical( got, expected );
 
   var paths = [ 'a', null, 'b' ];
   var expected = 'b';
-  var got = _.path.joinRaw.apply( _.path, paths );
+  var got = _.path.joinRaw( ... paths );
   test.identical( got, expected );
 
   var paths = [ '/a', null, 'b' ];
   var expected = 'b';
-  var got = _.path.joinRaw.apply( _.path, paths );
+  var got = _.path.joinRaw( ... paths );
   test.identical( got, expected );
 
   var paths = [ '/a', null, '/b' ];
   var expected = '/b';
-  var got = _.path.joinRaw.apply( _.path, paths );
+  var got = _.path.joinRaw( ... paths );
   test.identical( got, expected );
 
   test.close( 'with nulls' );
@@ -6282,16 +6526,144 @@ function joinCross( test )
 function reroot( test )
 {
 
+  test.case = 'join empty';
+  var paths = [ '' ];
+  var expected = '';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'join several empties';
+  var paths = [ '', '' ];
+  var expected = '';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'root with absolute';
+  var paths = [ '/', '/a/b' ];
+  var expected = '//a/b';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'root with relative';
+  var paths = [ '/', 'a/b' ];
+  var expected = '/a/b';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with absolute';
+  var paths = [ '/dir', '/a/b' ];
+  var expected = '/dir/a/b';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with relative';
+  var paths = [ '/dir', 'a/b' ];
+  var expected = '/dir/a/b';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed dir with absolute';
+  var paths = [ '/dir/', '/a/b' ];
+  var expected = '/dir/a/b';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed dir with relative';
+  var paths = [ '/dir/', 'a/b' ];
+  var expected = '/dir/a/b';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with absolute';
+  var paths = [ '/dir', '/a/b' ];
+  var expected = '/dir/a/b';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with relative';
+  var paths = [ '/dir', 'a/b' ];
+  var expected = '/dir/a/b';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with down';
+  var paths = [ '/dir', '../a/b' ];
+  var expected = '/a/b';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed dir with down';
+  var paths = [ '/dir/', '../a/b' ];
+  var expected = '/dir/a/b';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with several down';
+  var paths = [ '/dir/dir2', '../../a/b' ];
+  var expected = '/a/b';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed dir with several down';
+  var paths = [ '/dir/', '../../a/b' ];
+  var expected = '/a/b';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'dir with several down, go out of root';
+  var paths = [ '/dir', '../../a/b' ];
+  var expected = '/../a/b';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed absolute with trailed down';
+  var paths = [ '/a/b/', '../' ];
+  var expected = '/a/b/';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'absolute with trailed down';
+  var paths = [ '/a/b', '../' ];
+  var expected = '/a/';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed absolute with down';
+  var paths = [ '/a/b/', '..' ];
+  var expected = '/a/b';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed absolute with trailed here';
+  var paths = [ '/a/b/', './' ];
+  var expected = '/a/b/';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'absolute with trailed here';
+  var paths = [ '/a/b', './' ];
+  var expected = '/a/b/';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  test.case = 'trailed absolute with here';
+  var paths = [ '/a/b/', '.' ];
+  var expected = '/a/b';
+  var got = _.path.reroot( ... paths );
+  test.identical( got, expected );
+
+  /* */
+
   test.case = 'join windows os paths';
   var paths1 = [ 'c:\\', 'foo\\', 'bar\\' ];
   var expected1 = '/c/foo/bar/';
-  var got = _.path.reroot.apply( _.path, paths1 );
+  var got = _.path.reroot( ...  paths1 );
   test.identical( got, expected1 );
 
   test.case = 'join unix os paths';
   var paths2 = [ '/bar/', '/baz', 'foo/', '.' ];
   var expected2 = '/bar/baz/foo';
-  var got = _.path.reroot.apply( _.path, paths2 );
+  var got = _.path.reroot( ...  paths2 );
   test.identical( got, expected2 );
 
   test.case = 'reroot';
@@ -6639,14 +7011,14 @@ function joinNames( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.path.joinNames( 'a', 1 ) );
-  test.shouldThrowError( () => _.path.joinNames( 'a', null, 1 ) );
-  test.shouldThrowError( () => _.path.joinNames( 'a', 1, null ) );
-  test.shouldThrowError( () => _.path.joinNames( 1, 'a' ) );
-  test.shouldThrowError( () => _.path.joinNames( [ '1' ], 'a' ) );
-  test.shouldThrowError( () => _.path.joinNames( undefined, 'a' ) );
-  test.shouldThrowError( () => _.path.joinNames( [ '1', 'a' ] ) );
-  test.shouldThrowError( () => _.path.joinNames( '/a/a', '/b/b', 'c/c' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.joinNames( 'a', 1 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.joinNames( 'a', null, 1 ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.joinNames( 'a', 1, null ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.joinNames( 1, 'a' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.joinNames( [ '1' ], 'a' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.joinNames( undefined, 'a' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.joinNames( [ '1', 'a' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.joinNames( '/a/a', '/b/b', 'c/c' ) );
 
 };
 
@@ -6655,32 +7027,46 @@ function joinNames( test )
 function dir( test )
 {
 
+  test.case = '.';
   var src = '.';
-  var expected = '../';
+  var expected = '..';
   var got = _.path.dir( src );
   test.identical( got, expected );
 
+  test.case = './';
   var src = './';
   var expected = '../';
   var got = _.path.dir( src );
   test.identical( got, expected );
 
-  test.case = 'simple absolute path'; /* */
+  test.case = 'a/b';
+  var src = 'a/b';
+  var expected = 'a';
+  var got = _.path.dir( src );
+  test.identical( got, expected );
 
+  test.case = 'a/b/';
+  var src = 'a/b/';
+  var expected = 'a/';
+  var got = _.path.dir( src );
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'simple absolute path';
   var src = '/foo';
   var expected = '/';
   var got = _.path.dir( src );
   test.identical( got, expected );
 
   test.case = 'absolute path : nested dirs'; /* */
-
   var src = '/foo/bar/baz/text.txt';
-  var expected = '/foo/bar/baz/';
+  var expected = '/foo/bar/baz';
   var got = _.path.dir( src );
   test.identical( got, expected );
 
   var src = '/aa/bb';
-  var expected = '/aa/';
+  var expected = '/aa';
   var got = _.path.dir( src );
   test.identical( got, expected );
 
@@ -6690,34 +7076,34 @@ function dir( test )
   test.identical( got, expected );
 
   var src = '/';
-  var expected = '/../';
+  var expected = '/..';
   var got = _.path.dir( src );
   test.identical( got, expected );
 
   test.case = 'relative path : nested dirs'; /* */
 
   var src = 'aa/bb';
-  var expected = 'aa/';
+  var expected = 'aa';
   var got = _.path.dir( src );
   test.identical( got, expected );
 
   var src = 'aa';
-  var expected = './';
+  var expected = '.';
   var got = _.path.dir( src );
   test.identical( got, expected );
 
   var src = 'aa/.';
-  var expected = './';
+  var expected = '.';
   var got = _.path.dir( src );
   test.identical( got, expected );
 
   var src = '.';
-  var expected = '../';
+  var expected = '..';
   var got = _.path.dir( src );
   test.identical( got, expected );
 
   var src = '..';
-  var expected = '../../';
+  var expected = '../..';
   var got = _.path.dir( src );
   test.identical( got, expected );
 
@@ -6731,7 +7117,7 @@ function dir( test )
   test.identical( got, expected );
 
   var src = '/a/b/.';
-  var expected = '/a/';
+  var expected = '/a';
   var got = _.path.dir( src );
   test.identical( got, expected );
 
@@ -6746,7 +7132,7 @@ function dir( test )
   test.identical( got, expected );
 
   var src = 'a/b/.';
-  var expected = 'a/';
+  var expected = 'a';
   var got = _.path.dir( src );
   test.identical( got, expected );
 
@@ -6787,15 +7173,37 @@ function dir( test )
 function dirFirst( test )
 {
 
-  test.case = 'simple absolute path'; /* */
+  test.case = '.';
+  var src = '.';
+  var expected = '../';
+  var got = _.path.dirFirst( src );
+  test.identical( got, expected );
 
+  test.case = './';
+  var src = './';
+  var expected = './';
+  var got = _.path.dirFirst( src );
+  test.identical( got, expected );
+
+  test.case = 'a/b';
+  var src = 'a/b';
+  var expected = 'a/';
+  var got = _.path.dirFirst( src );
+  test.identical( got, expected );
+
+  test.case = 'a/b/';
+  var src = 'a/b/';
+  var expected = 'a/b/';
+  var got = _.path.dirFirst( src );
+  test.identical( got, expected );
+
+  test.case = 'simple absolute path'; /* */
   var src = '/foo';
   var expected2 = '/';
   var got = _.path.dirFirst( src );
   test.identical( got, expected2 );
 
   test.case = 'absolute path : nested dirs'; /* */
-
   var src = '/foo/bar/baz/text.txt';
   var expected = '/foo/bar/baz/';
   var got = _.path.dirFirst( src );
@@ -6840,6 +7248,7 @@ function dirFirst( test )
 
   var src = '..';
   var expected = '../../';
+  debugger;
   var got = _.path.dirFirst( src );
   test.identical( got, expected );
 
@@ -7395,7 +7804,7 @@ function relative( test )
   var got = _.path.relative( from, to );
   test.identical( got, expected );
 
-  test.case = 'two absolute paths'; /* */
+  test.case = 'two trailed absolute paths'; /* */
   var from = '/a/b/';
   var to = '/a/b/';
   var expected = './';
@@ -7433,21 +7842,21 @@ function relative( test )
   test.case = 'same path'; /* */
   var from = '/a/';
   var to = '//b/';
-  var expected = '..//b/';
+  var expected = './..//b/';
   var got = _.path.relative( from, to );
   test.identical( got, expected );
 
-  test.case = 'same path'; /* */
+  test.case = 'same length'; /* */
   var from = '/aa//bb/cc';
   var to = '//xx/yy/zz';
   var expected = '../../../..//xx/yy/zz';
   var got = _.path.relative( from, to );
   test.identical( got, expected );
 
-  test.case = 'same path'; /* */
+  test.case = 'same length, both trailed'; /* */
   var from = '/aa//bb/cc/';
   var to = '//xx/yy/zz/';
-  var expected = '../../../..//xx/yy/zz/';
+  var expected = './../../../..//xx/yy/zz/';
   var got = _.path.relative( from, to );
   test.identical( got, expected );
 
@@ -7458,24 +7867,24 @@ function relative( test )
   var got = _.path.relative( from, to );
   test.identical( got, expected );
 
-  test.case = 'relative to parent directory'; /* */
+  test.case = 'relative to parent directory, base is trailed'; /* */
   var from = '/aa/bb/cc/';
   var to = '/aa/bb';
-  var expected = '..';
+  var expected = './..';
   var got = _.path.relative( from, to );
   test.identical( got, expected );
 
-  test.case = 'relative to parent directory'; /* */
+  test.case = 'relative to parent directory, file is trailed'; /* */
   var from = '/aa/bb/cc';
   var to = '/aa/bb/';
   var expected = '../';
   var got = _.path.relative( from, to );
   test.identical( got, expected );
 
-  test.case = 'relative to parent directory'; /* */
+  test.case = 'relative to parent directory, both are trailed'; /* */
   var from = '/aa/bb/cc/';
   var to = '/aa/bb/';
-  var expected = '../';
+  var expected = './../';
   var got = _.path.relative( from, to );
   test.identical( got, expected );
 
@@ -7646,7 +8055,41 @@ function relative( test )
   var got = _.path.relative( from, to );
   test.identical( got, expected );
 
-  test.case = 'a/../b/.. - b'; /* */
+  /* */
+
+  test.case = '. - b';
+  var from = '.';
+  var to = 'b';
+  var expected = 'b';
+  var got = _.path.relative( from, to );
+  test.identical( got, expected );
+
+  test.case = './ - b';
+  var from = './';
+  var to = 'b';
+  var expected = './b';
+  var got = _.path.relative( from, to );
+  test.identical( got, expected );
+
+  test.case = '. - b/';
+  var from = '.';
+  var to = 'b/';
+  var expected = 'b/';
+  var got = _.path.relative( from, to );
+  test.identical( got, expected );
+
+  test.case = './ - b/';
+  var from = './';
+  var to = 'b/';
+  var expected = './b/';
+  var got = _.path.relative( from, to );
+  test.identical( got, expected );
+
+  /* */
+
+  /* */
+
+  test.case = 'a/../b/.. - b';
   var from = 'a/../b/..';
   var to = 'b';
   var expected = 'b';
@@ -7655,39 +8098,78 @@ function relative( test )
 
   test.close( 'relative' );
 
-  //
+  /* - */
 
-  if( !Config.debug ) //
+  if( !Config.debug )
   return;
 
   test.open( 'relative' );
 
-  // must be fails
+  test.shouldThrowErrorSync( () =>
+  {
+    test.case = '.. - b';
+    var from = '..';
+    var to = 'b';
+    var expected = '../b';
+    var got = _.path.relative( from, to );
+    test.identical( got, expected );
+  });
+
+  test.shouldThrowErrorSync( () =>
+  {
+    test.case = '../ - b';
+    var from = '../';
+    var to = 'b';
+    var expected = '../b';
+    var got = _.path.relative( from, to );
+    test.identical( got, expected );
+  });
+
+  test.shouldThrowErrorSync( () =>
+  {
+    test.case = '.. - b/';
+    var from = '..';
+    var to = 'b/';
+    var expected = '../b';
+    var got = _.path.relative( from, to );
+    test.identical( got, expected );
+  });
+
+  test.shouldThrowErrorSync( () =>
+  {
+    test.case = '../ - b/';
+    var from = '../';
+    var to = 'b/';
+    var expected = '../b';
+    debugger;
+    var got = _.path.relative( from, to );
+    test.identical( got, expected );
+  });
 
   test.case = '../a/b - .'; /* */
   var from = '../a/b';
   var to = '.';
-  test.shouldThrowError( () => _.path.relative( from, to ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.relative( from, to ) );
 
   test.case = '../a/b - ./c/d'; /* */
   var from = '../a/b';
   var to = './c/d';
-  test.shouldThrowError( () => _.path.relative( from, to ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.relative( from, to ) );
 
   test.case = '.. - .'; /* */
   var from = '..';
   var to = '.';
-  test.shouldThrowError( () => _.path.relative( from, to ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.relative( from, to ) );
 
   test.case = '.. - ./a'; /* */
   var from = '..';
   var to = './a';
-  test.shouldThrowError( () => _.path.relative( from, to ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.relative( from, to ) );
 
   test.case = '../a - a'; /* */
   var from = '../a';
   var to = 'a';
-  test.shouldThrowError( () => _.path.relative( from, to ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.relative( from, to ) );
 
   test.close( 'relative' );
 
@@ -7797,27 +8279,27 @@ function relativeWithOptions( test )
   test.case = '../a/b - .'; /* */
   var from = '../a/b';
   var to = '.';
-  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 0 }) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.relative({ basePath : from, filePath : to, resolving : 0 }) );
 
   test.case = '../a/b - ./c/d'; /* */
   var from = '../a/b';
   var to = './c/d';
-  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 0 }) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.relative({ basePath : from, filePath : to, resolving : 0 }) );
 
   test.case = '.. - .'; /* */
   var from = '..';
   var to = '.';
-  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 0 }) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.relative({ basePath : from, filePath : to, resolving : 0 }) );
 
   test.case = '.. - ./a'; /* */
   var from = '..';
   var to = './a';
-  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 0 }) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.relative({ basePath : from, filePath : to, resolving : 0 }) );
 
   test.case = '../a - a'; /* */
   var from = '../a';
   var to = 'a';
-  test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 0 }) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.relative({ basePath : from, filePath : to, resolving : 0 }) );
 
   test.close( 'relative, resolving : 0' )
 
@@ -7838,27 +8320,27 @@ function relativeWithOptions( test )
     test.case = '../a/b - ./c/d'; /* */
     var from = prefixFrom + '../a/b';
     var to = './c/d';
-    test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
+    test.shouldThrowErrorOfAnyKind( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
 
     test.case = '../a/b - ../c/d'; /* */
     var from = prefixFrom + '../a/b';
     var to = '../c/d';
-    test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
+    test.shouldThrowErrorOfAnyKind( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
 
     test.case = '.. - .'; /* */
     var from = prefixFrom + '..';
     var to = '.';
-    test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
+    test.shouldThrowErrorOfAnyKind( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
 
     test.case = '.. - ./a'; /* */
     var from = prefixFrom + '..';
     var to = './a';
-    test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
+    test.shouldThrowErrorOfAnyKind( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
 
     test.case = '../a - a'; /* */
     var from = prefixFrom + '../a';
     var to = 'a';
-    test.shouldThrowError( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
+    test.shouldThrowErrorOfAnyKind( () => _.path.relative({ basePath : from, filePath : to, resolving : 1 }) );
 
   }
 
@@ -7958,10 +8440,10 @@ function common( test )
 
   if( Config.debug )
   {
-    test.shouldThrowError( () => _.path.common( '/a', '..' ) );
-    test.shouldThrowError( () => _.path.common( '/a', '.' ) );
-    test.shouldThrowError( () => _.path.common( '/a', 'x' ) );
-    test.shouldThrowError( () => _.path.common( '/a', '../..' ) );
+    test.shouldThrowErrorOfAnyKind( () => _.path.common( '/a', '..' ) );
+    test.shouldThrowErrorOfAnyKind( () => _.path.common( '/a', '.' ) );
+    test.shouldThrowErrorOfAnyKind( () => _.path.common( '/a', 'x' ) );
+    test.shouldThrowErrorOfAnyKind( () => _.path.common( '/a', '../..' ) );
   }
 
   test.case = 'relative-relative'
@@ -8084,11 +8566,11 @@ function common( test )
   if( Config.debug )
   {
 
-    test.shouldThrowError( () => _.path.common( '/a/b/c', '/a/b/c', './' ) );
-    test.shouldThrowError( () => _.path.common( '/a/b/c', '/a/b/c', '.' ) );
-    test.shouldThrowError( () => _.path.common( 'x', '/a/b/c', '/a' ) );
-    test.shouldThrowError( () => _.path.common( '/a/b/c', '..', '/a' ) );
-    test.shouldThrowError( () => _.path.common( '../..', '../../b/c', '/a' ) );
+    test.shouldThrowErrorOfAnyKind( () => _.path.common( '/a/b/c', '/a/b/c', './' ) );
+    test.shouldThrowErrorOfAnyKind( () => _.path.common( '/a/b/c', '/a/b/c', '.' ) );
+    test.shouldThrowErrorOfAnyKind( () => _.path.common( 'x', '/a/b/c', '/a' ) );
+    test.shouldThrowErrorOfAnyKind( () => _.path.common( '/a/b/c', '..', '/a' ) );
+    test.shouldThrowErrorOfAnyKind( () => _.path.common( '../..', '../../b/c', '/a' ) );
 
   }
 
@@ -8283,13 +8765,13 @@ function commonTextualReport( test )
 
   test.case = 'two, part of path is diffent';
   var filePath = [ '/a/b/c', '/a/x/c' ];
-  var expected = '( /a/ + [ b/c , x/c ] )';
+  var expected = '( /a/ + [ ./b/c , ./x/c ] )';
   var got = _.path.commonTextualReport( filePath );
   test.identical( got, expected );
 
   test.case = 'two relatives, common part of path';
   var filePath = [ 'a/b/c', 'a/x/c' ];
-  var expected = '( a/ + [ b/c , x/c ] )';
+  var expected = '( a/ + [ ./b/c , ./x/c ] )';
   var got = _.path.commonTextualReport( filePath );
   test.identical( got, expected );
 
@@ -8348,13 +8830,13 @@ function commonTextualReport( test )
 
   test.case = 'two, part of path is diffent';
   var filePath = { '/a/b/c' : 1, '/a/x/c' : 0 };
-  var expected = '( /a/ + [ b/c , x/c ] )';
+  var expected = '( /a/ + [ ./b/c , ./x/c ] )';
   var got = _.path.commonTextualReport( filePath );
   test.identical( got, expected );
 
   test.case = 'two relatives, common part of path';
   var filePath = { 'a/b/c' : 1, 'a/x/c' : 0 };
-  var expected = '( a/ + [ b/c , x/c ] )';
+  var expected = '( a/ + [ ./b/c , ./x/c ] )';
   var got = _.path.commonTextualReport( filePath );
   test.identical( got, expected );
 
@@ -8390,7 +8872,7 @@ function moveTextualReport( test )
   test.identical( got, expected );
 
   test.case = 'different, absolute, with common';
-  var expected = '/a/ : dst <- src';
+  var expected = '/a/ : ./dst <- ./src';
   var dst = '/a/dst';
   var src = '/a/src';
   var got = _.path.moveTextualReport( dst, src );
@@ -8411,7 +8893,7 @@ function moveTextualReport( test )
   test.identical( got, expected );
 
   test.case = 'different, relative, with common';
-  var expected = 'a/ : dst <- src';
+  var expected = 'a/ : ./dst <- ./src';
   var dst = 'a/dst';
   var src = 'a/src';
   var got = _.path.moveTextualReport( dst, src );
@@ -8432,7 +8914,7 @@ function moveTextualReport( test )
   test.identical( got, expected );
 
   test.case = 'different, relative dotted, with common';
-  var expected = 'a/ : dst <- src';
+  var expected = 'a/ : ./dst <- ./src';
   var dst = './a/dst';
   var src = './a/src';
   var got = _.path.moveTextualReport( dst, src );
@@ -8496,7 +8978,7 @@ function moveTextualReport( test )
 var Self =
 {
 
-  name : 'Tools/base/l3/path/Basic',
+  name : 'Tools.base.l3.path.Basic',
   silencing : 1,
 
   tests :

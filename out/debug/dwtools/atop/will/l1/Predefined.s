@@ -14,28 +14,30 @@ let _ = wTools;
 let Self = Object.create( null );
 
 // --
-//
+// routines
 // --
 
-let filesReflect = _.routineFromPreAndBody( _.FileProvider.Find.prototype.filesReflect.pre, _.FileProvider.Find.prototype.filesReflect.body );
+// let filesReflect = _.routineFromPreAndBody( _.FileProvider.Find.prototype.filesReflect.pre, _.FileProvider.Find.prototype.filesReflect.body );
+let filesReflect = _.routineExtend( null, _.FileProvider.Find.prototype.filesReflect );
 
 let defaults = filesReflect.defaults;
 
 defaults.linking = 'hardLinkMaybe';
 defaults.mandatory = 1;
-defaults.dstRewritingPreserving = 1;
+defaults.dstRewritingOnlyPreserving = 1;
 
 //
 
 function stepRoutineDelete( frame )
 {
   let step = this;
-  let module = frame.module;
+  let run = frame.run;
+  let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let opts = frame.opts;
+  let opts = _.mapExtend( null, step.opts );
   let time = _.timeNow();
   let verbosity = step.verbosityWithDelta( -1 );
 
@@ -73,7 +75,7 @@ function stepRoutineDelete( frame )
     if( verbosity < 3 )
     return;
 
-    logger.log( ' : ' + step.decoratedNickName );
+    logger.log( ' : ' + step.decoratedQualifiedName );
 
   }
 
@@ -89,7 +91,7 @@ function stepRoutineDelete( frame )
     let groupsMap = path.group({ keys : o2.filter.filePath, vals : o2.result });
     let textualReport = path.groupTextualReport
     ({
-      explanation : ' - ' + step.decoratedNickName + ' deleted ',
+      explanation : ' - ' + step.decoratedQualifiedName + ' deleted ',
       groupsMap : groupsMap,
       verbosity : verbosity,
       spentTime : spentTime,
@@ -112,12 +114,13 @@ stepRoutineDelete.stepOptions =
 function stepRoutineReflect( frame )
 {
   let step = this;
-  let module = frame.module;
+  let run = frame.run;
+  let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let opts = frame.opts;
+  let opts = _.mapExtend( null, step.opts );
   let time = _.timeNow();
   let verbosity = step.verbosityWithDelta( -1 );
 
@@ -127,7 +130,7 @@ function stepRoutineReflect( frame )
   let reflector = step.reflectorResolve( opts.reflector );
 
   _.sure( reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strType( reflector ) )
-  _.assert( reflector.formed === 3, () => reflector.nickName + ' is not formed' );
+  _.assert( reflector.formed === 3, () => reflector.qualifiedName + ' is not formed' );
 
   beginLog();
 
@@ -154,7 +157,7 @@ function stepRoutineReflect( frame )
     debugger;
     err = _.err( err, '\n\n', _.strIndentation( reflector.infoExport(), '  ' ), '\n' );
     throw _.err( err );
-    // throw _.errBriefly( err );
+    // throw _.errBrief( err );
   })
 
   /* */
@@ -164,7 +167,7 @@ function stepRoutineReflect( frame )
     if( verbosity < 3 )
     return;
 
-    logger.log( ' : ' + reflector.decoratedNickName + '' );
+    logger.log( ' : ' + reflector.decoratedQualifiedName + '' );
   }
 
   /* */
@@ -176,7 +179,7 @@ function stepRoutineReflect( frame )
 
     _.assert( opts.src.isPaired() );
     let mtr = opts.src.moveTextualReport();
-    logger.log( ' + ' + reflector.decoratedNickName + ' reflected ' + opts.result.length + ' files ' + mtr + ' in ' + _.timeSpent( time ) );
+    logger.log( ' + ' + reflector.decoratedQualifiedName + ' reflected ' + opts.result.length + ' file(s) ' + mtr + ' in ' + _.timeSpent( time ) );
 
   }
 
@@ -195,12 +198,13 @@ stepRoutineReflect.stepOptions =
 function stepRoutineTimelapseBegin( frame )
 {
   let step = this;
-  let module = frame.module;
+  let run = frame.run;
+  let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let opts = frame.opts;
+  let opts = _.mapExtend( null, step.opts );
 
   _.assert( arguments.length === 1 );
 
@@ -221,12 +225,13 @@ stepRoutineTimelapseBegin.stepOptions =
 function stepRoutineTimelapseEnd( frame )
 {
   let step = this;
-  let module = frame.module;
+  let run = frame.run;
+  let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let opts = frame.opts;
+  let opts = _.mapExtend( null, step.opts );
 
   _.assert( arguments.length === 1 );
 
@@ -247,12 +252,13 @@ stepRoutineTimelapseEnd.stepOptions =
 function stepRoutineJs( frame )
 {
   let step = this;
-  let module = frame.module;
+  let run = frame.run;
+  let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let opts = frame.opts;
+  let opts = _.mapExtend( null, step.opts );
 
   _.assert( arguments.length === 1 );
 
@@ -270,7 +276,7 @@ function stepRoutineJs( frame )
   catch( err )
   {
     debugger;
-    throw _.err( 'Failed to open JS file', _.strQuote( opts.js ), '\n', err );
+    throw _.err( err, '\nFailed to open JS file', _.strQuote( opts.js ) );
   }
 
   /* */
@@ -282,7 +288,7 @@ function stepRoutineJs( frame )
   }
   catch( err )
   {
-    throw _.err( 'Failed to execute JS file', _.strQuote( opts.js ), '\n', err );
+    throw _.err( err, '\nFailed to execute JS file', _.strQuote( opts.js ) );
   }
 
 }
@@ -302,13 +308,14 @@ stepRoutineJs.uniqueOptions =
 function stepRoutineShell( frame )
 {
   let step = this;
-  let module = frame.module;
+  let run = frame.run;
+  let module = run.module;
   let will = module.will;
   let hardDrive = will.fileProvider.providersWithProtocolMap.file;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let opts = frame.opts;
+  let opts = _.mapExtend( null, step.opts );
   let forEachDstReflector, forEachDst;
   let verbosity = step.verbosityWithDelta( -1 );
 
@@ -359,7 +366,7 @@ function stepRoutineShell( frame )
   .finally( ( err, arg ) =>
   {
     if( err )
-    throw _.errBriefly( 'Failed to shell', step.nickName, '\n', err );
+    throw _.errBrief( 'Failed to shell', step.qualifiedName, '\n', err );
     return arg;
   });
 
@@ -389,12 +396,13 @@ stepRoutineShell.uniqueOptions =
 function stepRoutineTranspile( frame )
 {
   let step = this;
-  let module = frame.module;
+  let run = frame.run;
+  let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let opts = frame.opts;
+  let opts = _.mapExtend( null, step.opts );
   let verbosity = step.verbosityWithDelta( -1 );
 
   _.sure( _.arrayHas( [ 'preserve', 'rebuild' ], opts.upToDate ), () => 'Unknown value of upToDate ' + _.strQuote( opts.upToDate ) );
@@ -484,12 +492,13 @@ stepRoutineTranspile.uniqueOptions =
 function stepRoutineView( frame )
 {
   let step = this;
-  let module = frame.module;
+  let run = frame.run;
+  let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let opts = frame.opts;
+  let opts = _.mapExtend( null, step.opts );
   let verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
@@ -550,14 +559,15 @@ stepRoutineView.uniqueOptions =
 function stepRoutineNpmGenerate( frame )
 {
   let step = this;
-  let module = frame.module;
+  let run = frame.run;
+  let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let opts = frame.opts;
+  let opts = _.mapExtend( null, step.opts );
   let verbosity = step.verbosityWithDelta( -1 );
-  let about = module.about.dataExport();
+  let about = module.about.structureExport();
 
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
@@ -572,9 +582,9 @@ function stepRoutineNpmGenerate( frame )
   });
 
   if( opts.entryPath )
-  opts.entryPath = module.filesFromResource({ selector : opts.entryPath, currentContext : step, });
+  opts.entryPath = module.filesFromResource({ selector : opts.entryPath, currentContext : step });
   if( opts.filesPath )
-  opts.filesPath = module.filesFromResource({ selector : opts.filesPath, currentContext : step, });
+  opts.filesPath = module.filesFromResource({ selector : opts.filesPath, currentContext : step });
 
   /* */
 
@@ -721,12 +731,13 @@ stepRoutineNpmGenerate.uniqueOptions =
 function stepRoutineSubmodulesDownload( frame )
 {
   let step = this;
-  let module = frame.module;
+  let run = frame.run;
+  let module = run.module;
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
 
-  return module.submodulesDownload();
+  return module.subModulesDownload();
 }
 
 stepRoutineSubmodulesDownload.stepOptions =
@@ -738,7 +749,8 @@ stepRoutineSubmodulesDownload.stepOptions =
 function stepRoutineSubmodulesUpdate( frame )
 {
   let step = this;
-  let module = frame.module;
+  let run = frame.run;
+  let module = run.module;
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
@@ -755,12 +767,13 @@ stepRoutineSubmodulesUpdate.stepOptions =
 function stepRoutineSubmodulesReload( frame )
 {
   let step = this;
-  let module = frame.module;
+  let run = frame.run;
+  let module = run.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let opts = frame.opts;
+  let opts = _.mapExtend( null, step.opts );
   let verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( arguments.length === 1 );
@@ -783,7 +796,8 @@ stepRoutineSubmodulesReload.stepOptions =
 function stepRoutineSubmodulesClean( frame )
 {
   let step = this;
-  let module = frame.module;
+  let run = frame.run;
+  let module = run.module;
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
@@ -800,7 +814,8 @@ stepRoutineSubmodulesClean.stepOptions =
 function stepRoutineClean( frame )
 {
   let step = this;
-  let module = frame.module;
+  let run = frame.run;
+  let module = run.module;
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
@@ -817,8 +832,9 @@ stepRoutineClean.stepOptions =
 function stepRoutineExport( frame )
 {
   let step = this;
-  let build = frame.build;
-  let module = frame.module;
+  let run = frame.run;
+  let module = run.module;
+  let build = run.build;
   let will = module.will;
   let logger = will.logger;
 
@@ -840,7 +856,7 @@ function stepRoutineExport( frame )
 stepRoutineExport.stepOptions =
 {
   export : null,
-  tar : 1,
+  tar : 0,
 }
 
 stepRoutineExport.uniqueOptions =

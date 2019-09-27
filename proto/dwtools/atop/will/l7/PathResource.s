@@ -45,24 +45,43 @@ function OnInstanceExists( o )
   o.resource.criterion = o.resource.criterion || Object.create( null );
   _.mapSupplement( o.resource.criterion, o.instance.criterion );
   o.resource.exportable = o.instance.exportable;
-  o.resource.importable = o.instance.importable;
+  o.resource.importableFromIn = o.instance.importableFromIn;
+  o.resource.importableFromOut = o.instance.importableFromOut;
   o.resource.writable = o.instance.writable;
   if( !o.resource.path )
   o.resource.path = o.instance.path;
 
   o.Rewriting = 1;
 
-  if( o.instance.path !== null )
-  if( o.resource.name === 'local' && o.IsOutFile )
-  o.resource.importable = false;
+  // if( o.resource.name === 'local' )
+  // debugger;
+  //
+  // if( o.instance.path !== null )
+  // if( o.resource.name === 'local' && o.IsOut )
+  // debugger;
+  // // o.Importing = false;
+  //
+  // if( o.instance.path !== null )
+  // if( o.resource.name === 'module.willfiles' )
+  // debugger;
+  // // o.Importing = false;
+  //
+  // if( o.instance.path !== null )
+  // if( o.resource.name === 'module.dir' )
+  // debugger;
+  // // o.Importing = false;
 
-  if( o.instance.path !== null )
-  if( o.resource.name === 'module.willfiles' )
-  o.resource.importable = false;
-
-  if( o.instance.path !== null )
-  if( o.resource.name === 'module.dir' )
-  o.resource.importable = false;
+  // if( o.instance.path !== null )
+  // if( o.resource.name === 'local' && o.IsOut )
+  // o.resource.importable = false;
+  //
+  // if( o.instance.path !== null )
+  // if( o.resource.name === 'module.willfiles' )
+  // o.resource.importable = false;
+  //
+  // if( o.instance.path !== null )
+  // if( o.resource.name === 'module.dir' )
+  // o.resource.importable = false;
 
 }
 
@@ -88,6 +107,9 @@ function unform()
   let module = resource.module;
   let willf = resource.willf;
 
+  if( resource.original )
+  _.assert( module[ resource.MapName ][ resource.name ] === resource.original );
+  else
   _.assert( module[ resource.MapName ][ resource.name ] === resource );
 
   Parent.prototype.unform.apply( resource, arguments )
@@ -113,12 +135,15 @@ function form1()
   return resource;
 
   if( !resource.original )
-  _.sure( !module[ resource.MapName ][ resource.name ], () => 'Module ' + module.dirPath + ' already has ' + resource.nickName );
+  _.sure( !module[ resource.MapName ][ resource.name ], () => 'Module ' + module.dirPath + ' already has ' + resource.qualifiedName );
 
   Parent.prototype.form1.apply( resource, arguments )
 
   if( !resource.original )
   {
+    if( resource.original )
+    _.assert( module[ resource.MapName ][ resource.name ] === resource.original );
+    else
     _.assert( module[ resource.MapName ][ resource.name ] === resource );
     module.pathMap[ resource.name ] = resource.path;
   }
@@ -169,7 +194,7 @@ function form3()
     _.assert
     (
       _.all( resource.path, ( p ) => path.isRelative( p ) || path.isGlobal( p ) ),
-      () => resource.nickName + ' should not have absolute paths, but have ' + _.toStr( resource.path )
+      () => resource.qualifiedName + ' should not have absolute paths, but have ' + _.toStr( resource.path )
     );
 
   }
@@ -232,7 +257,7 @@ function _pathSet( src )
 // exporter
 // --
 
-function dataExport()
+function structureExport()
 {
   let resource = this;
   let module = resource.module;
@@ -241,7 +266,7 @@ function dataExport()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  let result = Parent.prototype.dataExport.apply( resource, arguments );
+  let result = Parent.prototype.structureExport.apply( resource, arguments );
 
   if( result )
   {
@@ -262,7 +287,7 @@ function dataExport()
   return result;
 }
 
-dataExport.defaults = Object.create( Parent.prototype.dataExport.defaults );
+structureExport.defaults = Object.create( Parent.prototype.structureExport.defaults );
 
 //
 
@@ -402,7 +427,7 @@ let Extend =
 
   // exporter
 
-  dataExport,
+  structureExport,
   compactField,
 
   // etc

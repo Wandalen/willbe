@@ -87,10 +87,10 @@ function _setupUnhandledErrorHandler1()
 
     /* */
 
-    if( _.appExitCode )
+    if( _.process && _.process.exitCode )
     try
     {
-      _.appExitCode( -1 )
+      _.process.exitCode( -1 )
     }
     catch( err2 )
     {

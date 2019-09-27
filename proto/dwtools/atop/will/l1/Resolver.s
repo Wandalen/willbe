@@ -28,8 +28,12 @@ function _onSelectorDown()
   {
 
     for( let d = 0 ; d < it.dst.length ; d++ )
-    if( _.errIs( it.dst[ d ] ) )
-    throw it.dst[ d ];
+    {
+      if( it.dst[ d ] && it.dst[ d ] instanceof will.PathResource )
+      it.dst[ d ] = it.dst[ d ].path;
+      if( _.errIs( it.dst[ d ] ) )
+      throw it.dst[ d ];
+    }
 
     it.dst = _.strJoin( it.dst );
 
@@ -125,8 +129,6 @@ function _onQuantitativeFail( err )
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
 
-  debugger;
-
   let result = it.dst;
   if( _.mapIs( result ) )
   result = _.mapVals( result );
@@ -140,8 +142,8 @@ function _onQuantitativeFail( err )
     {
       if( _.strIs( e ) )
       return e;
-      if( _.strIs( e.nickName ) )
-      return e.nickName;
+      if( _.strIs( e.qualifiedName ) )
+      return e.qualifiedName;
       isString = 0
     });
 
@@ -173,14 +175,50 @@ function _statusPreUpdate()
 
   _.assert( !_.mapHasKey( it.src, 'composite' ) );
 
+  if( it.down && it.down.src && it.down.src instanceof will.ModulesRelation )
+  {
+    _.assert( it.src instanceof will.OpenedModule )
+    // let valid = it.down.src.module.submodulesAreValid();
+    // if( !_.all( valid ) )
+    let valid = it.src.isValid();
+    if( !valid )
+    throw _.errBrief
+    (
+        `Cant select in non-valid submodules.`
+      , `\n ${it.src.absoluteName} is not opened or invalid`
+    );
+  }
+
   if( it.src instanceof will.OpenedModule )
   {
     it.currentModule = it.src;
   }
-  else if( it.src instanceof will.Submodule )
+  else if( it.src instanceof will.ModulesRelation )
   {
-    if( it.src.opener && it.src.opener.openedModule )
-    it.currentModule = it.src.opener.openedModule;
+    _.sure( !!it.src.opener, `${it.src.decoratedAbsoluteName} is not formed` );
+    _.sure( !!it.src.opener.openedModule, `${it.src.decoratedAbsoluteName} is not opened` );
+    // _.sure( !!it.src.opener.openedModule.isValid(), `${it.src.decoratedAbsoluteName} is not valid` );
+
+    let opener = it.src.opener;
+    let module2;
+
+    if( opener.isOut )
+    module2 = opener.openedModule;
+    else
+    module2 = opener.peerModule;
+
+    if( !module2 )
+    {
+      debugger;
+      throw _.err( `Out-willfile of ${it.src.decoratedAbsoluteName} is not opened or does not exist` );
+    }
+
+    // if( !module2.stager.stageStatePerformed( 'resourcesFormed' ) )
+    // {
+    // throw _.err( `${module2.decoratedAbsoluteName} at ${module2.decoratedCommonPath} is not formed to be used for resolving` );
+    // }
+    it.currentModule = module2;
+
   }
   else if( it.src instanceof will.Exported )
   {
@@ -283,7 +321,6 @@ function _resourceMapSelect()
 
     if( _.strIs( kind ) && path.isGlob( kind ) )
     {
-      debugger;
       it.selectorArray.splice( it.logicalLevel-1, 1, '*', it.selector );
       it.selector = it.selectorArray[ it.logicalLevel-1 ];
       it.selectorChanged();
@@ -640,10 +677,10 @@ function errResolving( o )
   let module = o.rop.baseModule;
   _.assertRoutineOptions( errResolving, arguments );
   _.assert( arguments.length === 1 );
-  if( o.rop.currentContext && o.rop.currentContext.nickName )
-  return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'code' ), 'for', o.rop.currentContext.decoratedAbsoluteName, '\n', o.err );
+  if( o.rop.currentContext && o.rop.currentContext.qualifiedName )
+  return _.err( o.err, '\nFailed to resolve', _.color.strFormat( o.selector, 'path' ), 'for', o.rop.currentContext.decoratedAbsoluteName );
   else
-  return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'code' ), 'in', module.decoratedAbsoluteName, '\n', o.err );
+  return _.err( o.err, '\nFailed to resolve', _.color.strFormat( o.selector, 'path' ), 'in', module.decoratedAbsoluteName );
 }
 
 errResolving.defaults =
@@ -698,7 +735,7 @@ function resolveContextPrepare( o )
   }
   else if( o.currentThis instanceof will.Resource )
   {
-    o.currentThis = o.currentThis.dataExport();
+    o.currentThis = o.currentThis.structureExport();
   }
   else _.assert( 0 );
 
@@ -733,8 +770,6 @@ function resolve_pre( routine, args )
 
   return o;
 }
-
-//
 
 function resolve_body( o )
 {
@@ -864,6 +899,72 @@ defaults.mapValsUnwrapping = 1;
 
 //
 
+function pathOrReflectorResolve_body( o )
+{
+  let resolver = this;
+  let module = o.baseModule;
+  let will = module.will;
+  let resource;
+
+  // debugger;
+  // if( _.strIs( o ) )
+  // o = { selector : arguments[ 0 ] }
+  // _.assert( _.strIs( o.selector ) );
+  // _.routineOptions( pathOrReflectorResolve, o );
+  _.assertRoutineOptions( pathOrReflectorResolve_body, arguments );
+  _.assert( !resolver.selectorIs( o.selector ) );
+  _.assert( o.pathResolving === 'in' );
+  _.assert( !o.pathUnwrapping );
+
+  let o2 = _.mapExtend( null, o );
+  o2.missingAction = 'undefine';
+  o2.selector = 'reflector::' + o.selector;
+  resource = module.reflectorResolve( o2 );
+
+  if( resource )
+  return resource;
+
+  let o3 = _.mapExtend( null, o );
+  o3.missingAction = 'undefine';
+  o3.selector = 'path::' + o.selector;
+  resource = module.reflectorResolve( o3 );
+
+  return resource;
+}
+
+var defaults = pathOrReflectorResolve_body.defaults = Object.create( resolve_body.defaults );
+
+defaults.pathResolving = 'in';
+defaults.missingAction = 'undefine';
+defaults.pathUnwrapping = 0;
+
+// {
+//   selector : null,
+//   baseModule : null,
+//   Resolver : null,
+// }
+
+let pathOrReflectorResolve = _.routineFromPreAndBody( resolve_pre, pathOrReflectorResolve_body );
+
+//
+
+function filesFromResource_pre( routine, args )
+{
+  let resolver = this;
+  let o =_.routineOptions( routine, args );
+
+  let prefixlessAction = o.prefixlessAction;
+  if( prefixlessAction === 'pathOrReflector' )
+  o.prefixlessAction = 'resolved';
+
+  resolve_pre.call( resolver, routine, [ o ] );
+
+  if( prefixlessAction === 'pathOrReflector' )
+  o.prefixlessAction = prefixlessAction;
+
+  return o;
+}
+
 function filesFromResource_body( o )
 {
   let module = o.baseModule;
@@ -871,9 +972,45 @@ function filesFromResource_body( o )
   let result = [];
   let fileProvider = will.fileProvider
   let path = fileProvider.path;
+  let resources;
 
-  let o2 = _.mapExtend( null, o );
-  let resources = module.resolve( o2 );
+  if( o.prefixlessAction === 'pathOrReflector' )
+  {
+    let o2 = _.mapOnly( o, module.resolve.defaults );
+    o2.prefixlessAction = 'default';
+    o2.missingAction = 'undefine';
+    o2.defaultResourceKind = 'path';
+    resources = module.resolve( o2 );
+    if( !resources )
+    {
+      debugger;
+      let o2 = _.mapOnly( o, module.resolve.defaults );
+      o2.prefixlessAction = 'default';
+      o2.missingAction = 'undefine';
+      o2.defaultResourceKind = 'reflector';
+      resources = module.resolve( o2 );
+      debugger;
+    }
+
+    if( resources === undefined )
+    {
+      debugger;
+      let err = _.err( `No path::${o.selector}, neither reflecotr::${o.selector} exists` );
+      if( o.missingAction === 'throw' )
+      throw err;
+      else if( o.missingAction === 'error' )
+      return err;
+      else
+      return undefined;
+    }
+
+  }
+  else
+  {
+    let o2 = _.mapOnly( o, module.resolve.defaults );
+    resources = module.resolve( o2 );
+    debugger; xxx
+  }
 
   if( _.arrayIs( resources ) )
   resources.forEach( ( resource ) => resourceHandle( resource ) );
@@ -891,24 +1028,36 @@ function filesFromResource_body( o )
     else if( resource instanceof will.Reflector )
     {
       let o2 = resource.optionsForFindExport();
-      o2.outputFormat = 'absolute';
-      o2.mode = 'distinct';
-      let files = fileProvider.filesFind( o2 );
+      let files = filesFind( o2 );
       filesAdd( files );
     }
     else if( _.strIs( resource ) || _.arrayIs( resource ) || _.mapIs( resource ) )
     {
+      if( o.globOnly )
+      if( _.strIs( resource ) )
+      _.sure( path.isGlob( resource ), `${resource} is not glob. Only glob allowed` );
       let o2 = Object.create( null );
       o2.filter = Object.create( null );
-      // o2.filter.filePath = resource.path;
       o2.filter.filePath = resource;
-      o2.outputFormat = 'absolute';
-      o2.mode = 'distinct';
-      let files = fileProvider.filesFind( o2 );
+      let files = filesFind( o2 );
       filesAdd( files );
     }
     else _.assert( 0, 'Unknown type of resource ' + _.strType( resource ) );
 
+  }
+
+  function filesFind( o2 )
+  {
+    o2.outputFormat = 'absolute';
+    o2.mode = 'distinct';
+    if( o.withDirs !== null )
+    o2.withDirs = o.withDirs;
+    if( o.withTerminals !== null )
+    o2.withTerminals = o.withTerminals;
+    if( o.withStem !== null )
+    o2.withStem = o.withStem;
+    let files = fileProvider.filesFind( o2 );
+    return files;
   }
 
   function filesAdd( files )
@@ -927,7 +1076,12 @@ defaults.pathNativizing = 0;
 defaults.selectorIsPath = 1;
 defaults.pathUnwrapping = 1;
 
-let filesFromResource = _.routineFromPreAndBody( resolve_pre, filesFromResource_body );
+defaults.globOnly = 0;
+defaults.withDirs = null;
+defaults.withTerminals = null;
+defaults.withStem = null;
+
+let filesFromResource = _.routineFromPreAndBody( filesFromResource_pre, filesFromResource_body );
 
 //
 
@@ -953,7 +1107,7 @@ function reflectorResolve_body( o )
   {
     _.sure( reflector instanceof will.Reflector, () => 'Reflector ' + o.selector + ' was not found' + _.strType( reflector ) );
     reflector.form();
-    _.assert( reflector.formed === 3, () => reflector.nickName + ' is not formed' );
+    _.assert( reflector.formed === 3, () => reflector.qualifiedName + ' is not formed' );
   }
 
   return reflector;
@@ -1005,7 +1159,7 @@ let Extend =
   _onDownEnd,
   _onQuantitativeFail,
 
-  //
+  // etc
 
   _statusPreUpdate,
   _statusPostUpdate,
@@ -1045,6 +1199,7 @@ let Extend =
 
   resolveRaw,
   pathResolve,
+  pathOrReflectorResolve,
   filesFromResource,
   reflectorResolve,
   submodulesResolve,

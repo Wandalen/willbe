@@ -1,0 +1,26 @@
+
+about :
+
+  name : "module-a"
+  description : "Module for testing"
+  version : "0.0.1"
+
+path :
+
+  out : 'out'
+  temp : 'path::out'
+
+step :
+
+  export.proto :
+    export : '{path::in}/**'
+    tar : 1
+
+build :
+
+  proto.export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - step::export.proto

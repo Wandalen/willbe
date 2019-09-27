@@ -13,7 +13,9 @@ if( typeof module !== 'undefined' )
   _.include( 'wLogger' );
   _.include( 'wTemplateTreeEnvironment' );
   _.include( 'wStager' );
-  _.include( 'wGraph' );
+  // _.include( 'wGraph' );
+  _.include( 'wGraphBasic' );
+  // _.include( 'wGraphTools' );
   _.include( 'wSelector' );
   _.include( 'wResolver' );
 

@@ -19,289 +19,514 @@ let Self = _;
 // diagnostics
 // --
 
-function diagnosticLocation( o )
-{
-
-  if( _.numberIs( o ) )
-  o = { level : o }
-  else if( _.strIs( o ) )
-  o = { stack : o, level : 0 }
-  else if( _.errIs( o ) )
-  o = { error : o, level : 0 }
-  else if( o === undefined )
-  o = { stack : _.diagnosticStack([ 1, Infinity ]) };
-
-  /* */
-
-  if( diagnosticLocation.defaults )
-  for( let e in o )
-  {
-    if( diagnosticLocation.defaults[ e ] === undefined )
-    throw Error( 'Unknown option ' + e );
-  }
-
-  if( diagnosticLocation.defaults )
-  for( let e in diagnosticLocation.defaults )
-  {
-    if( o[ e ] === undefined )
-    o[ e ] = diagnosticLocation.defaults[ e ];
-  }
-
-  if( !( arguments.length === 0 || arguments.length === 1 ) )
-  throw Error( 'Expects single argument or none' );
-
-  if( !( _.objectIs( o ) ) )
-  throw Error( 'Expects options map' );
-
-  if( !o.level )
-  o.level = 0;
-
-  // _.routineOptions( diagnosticLocation, o );
-  // _.assert( arguments.length === 0 || arguments.length === 1 );
-  // _.assert( _.objectIs( o ), 'diagnosticLocation expects integer {-level-} or string ( stack ) or object ( options )' );
-
-  /* */
-
-  if( !o.location )
-  o.location = Object.create( null );
-
-  /* */
-
-  if( o.error )
-  {
-    let location2 = o.error.location || Object.create( null );
-
-    o.location.path = _.arrayLeftDefined([ location2.path, o.location.path, o.error.filename, o.error.fileName ]).element;
-    o.location.line = _.arrayLeftDefined([ location2.line, o.location.line, o.error.line, o.error.linenumber, o.error.lineNumber, o.error.lineNo, o.error.lineno ]).element;
-    o.location.col = _.arrayLeftDefined([ location2.col, o.location.col, o.error.col, o.error.colnumber, o.error.colNumber, o.error.colNo, o.error.colno ]).element;
-
-    if( o.location.path && _.numberIs( o.location.line ) )
-    return end();
-  }
-
-  /* */
-
-  if( !o.stack )
-  {
-    if( o.error )
-    {
-      o.stack = _.diagnosticStack( o.error, undefined );
-    }
-    else
-    {
-      o.stack = _.diagnosticStack();
-      o.level += 1;
-    }
-  }
-
-  routineFromStack( o.stack );
-
-  let had = !!o.location.path;
-  if( !had )
-  o.location.path = fromStack( o.stack );
-
-  if( !_.strIs( o.location.path ) )
-  return end();
-
-  if( !_.numberIs( o.location.line ) )
-  o.location.path = lineColFromPath( o.location.path );
-
-  if( !_.numberIs( o.location.line ) && had )
-  {
-    let path = fromStack( o.stack );
-    if( path )
-    lineColFromPath( path );
-  }
-
-  return end();
-
-  /* end */
-
-  function end()
-  {
-
-    let path = o.location.path;
-
-    /* full */
-
-    // if( path )
-    {
-      o.location.full = path || '';
-      if( o.location.line !== undefined )
-      o.location.full += ':' + o.location.line;
-    }
-
-    /* name long */
-
-    if( o.location.full )
-    {
-      try
-      {
-        o.location.fullWithRoutine = o.location.routine + ' @ ' + o.location.full;
-      }
-      catch( err )
-      {
-        o.location.fullWithRoutine = '';
-      }
-    }
-
-    /* name */
-
-    if( path )
-    {
-      let name = path;
-      let i = name.lastIndexOf( '/' );
-      if( i !== -1 )
-      name = name.substr( i+1 );
-      o.location.name = name;
-    }
-
-    /* name long */
-
-    if( path )
-    {
-      let nameLong = o.location.name;
-      if( o.location.line !== undefined )
-      {
-        nameLong += ':' + o.location.line;
-        if( o.location.col !== undefined )
-        nameLong += ':' + o.location.col;
-      }
-      o.location.nameLong = nameLong;
-    }
-
-    return o.location;
-  }
-
-  /* routine from stack */
-
-  function routineFromStack( stack )
-  {
-    let path;
-
-    if( !stack )
-    return;
-
-    if( _.strIs( stack ) )
-    stack = stack.split( '\n' );
-
-    path = stack[ o.level ];
-
-    if( !_.strIs( path ) )
-    return '(-routine anonymous-)';
-
-    // debugger;
-
-    let t = /^\s*(at\s+)?([\w\.]+)\s*.+/;
-    let executed = t.exec( path );
-    if( executed )
-    path = executed[ 2 ] || '';
-
-    if( _.strEnds( path, '.' ) )
-    path += '?';
-
-    o.location.routine = path;
-    o.location.service = 0;
-    if( o.location.service === 0 )
-    if( _.strBegins( path , '__' ) || path.indexOf( '.__' ) !== -1 )
-    o.location.service = 2;
-    if( o.location.service === 0 )
-    if( _.strBegins( path , '_' ) || path.indexOf( '._' ) !== -1 )
-    o.location.service = 1;
-
-    return path;
-  }
-
-  /* path from stack */
-
-  function fromStack( stack )
-  {
-    let path;
-
-    if( !stack )
-    return;
-
-    if( _.strIs( stack ) )
-    stack = stack.split( '\n' );
-
-    path = stack[ o.level ];
-
-    if( !_.strIs( path ) )
-    return end();
-
-    path = path.replace( /^\s+/, '' );
-    path = path.replace( /^\w+@/, '' );
-    path = path.replace( /^at/, '' );
-    path = path.replace( /^\s+/, '' );
-    path = path.replace( /\s+$/, '' );
-
-    let regexp = /^.*\((.*)\)$/;
-    var parsed = regexp.exec( path );
-    if( parsed )
-    path = parsed[ 1 ];
-
-    // if( _.strEnds( path, ')' ) )
-    // path = _.strIsolateInsideOrAll( path, '(', ')' )[ 2 ];
-
-    return path;
-  }
-
-  /* line / col number from path */
-
-  function lineColFromPath( path )
-  {
-
-    let lineNumber, colNumber;
-    let postfix = /(.+?):(\d+)(?::(\d+))?[^:/]*$/;
-    let parsed = postfix.exec( path );
-
-    if( parsed )
-    {
-      path = parsed[ 1 ];
-      lineNumber = parsed[ 2 ];
-      colNumber = parsed[ 3 ];
-    }
-
-    // let postfix = /:(\d+)$/;
-    // colNumber = postfix.exec( o.location.path );
-    // if( colNumber )
-    // {
-    //   o.location.path = _.strRemoveEnd( o.location.path, colNumber[ 0 ] );
-    //   colNumber = colNumber[ 1 ];
-    //   lineNumber = postfix.exec( o.location.path );
-    //   if( lineNumber )
-    //   {
-    //     o.location.path = _.strRemoveEnd( o.location.path, lineNumber[ 0 ] );
-    //     lineNumber = lineNumber[ 1 ];
-    //   }
-    //   else
-    //   {
-    //     lineNumber = colNumber;
-    //     colNumber = undefined;
-    //   }
-    // }
-
-    lineNumber = parseInt( lineNumber );
-    colNumber = parseInt( colNumber );
-
-    if( isNaN( o.location.line ) && !isNaN( lineNumber ) )
-    o.location.line = lineNumber;
-
-    if( isNaN( o.location.col ) && !isNaN( colNumber ) )
-    o.location.col = colNumber;
-
-    return path;
-  }
-
-}
-
-diagnosticLocation.defaults =
-{
-  level : 0,
-  stack : null,
-  error : null,
-  location : null,
-}
+// function diagnosticLocation( o )
+// {
+//
+//   if( _.numberIs( o ) )
+//   o = { level : o }
+//   else if( _.strIs( o ) )
+//   o = { stack : o, level : 0 }
+//   else if( _.errIs( o ) )
+//   o = { error : o, level : 0 }
+//   else if( o === undefined )
+//   o = { stack : _.diagnosticStack([ 1, Infinity ]) };
+//
+//   /* */
+//
+//   if( diagnosticLocation.defaults )
+//   for( let e in o )
+//   {
+//     if( diagnosticLocation.defaults[ e ] === undefined )
+//     throw Error( 'Unknown option ' + e );
+//   }
+//
+//   if( diagnosticLocation.defaults )
+//   for( let e in diagnosticLocation.defaults )
+//   {
+//     if( o[ e ] === undefined )
+//     o[ e ] = diagnosticLocation.defaults[ e ];
+//   }
+//
+//   if( !( arguments.length === 0 || arguments.length === 1 ) )
+//   throw Error( 'Expects single argument or none' );
+//
+//   if( !( _.objectIs( o ) ) )
+//   throw Error( 'Expects options map' );
+//
+//   if( !o.level )
+//   o.level = 0;
+//
+//   // _.routineOptions( diagnosticLocation, o );
+//   // _.assert( arguments.length === 0 || arguments.length === 1 );
+//   // _.assert( _.objectIs( o ), 'diagnosticLocation expects integer {-level-} or string ( stack ) or object ( options )' );
+//
+//   /* */
+//
+//   if( !o.location )
+//   o.location = Object.create( null );
+//
+//   /* */
+//
+//   if( o.error )
+//   {
+//     let location2 = o.error.location || Object.create( null );
+//
+//     o.location.path = _.arrayLeftDefined([ location2.path, o.location.path, o.error.filename, o.error.fileName ]).element;
+//     o.location.line = _.arrayLeftDefined([ location2.line, o.location.line, o.error.line, o.error.linenumber, o.error.lineNumber, o.error.lineNo, o.error.lineno ]).element;
+//     o.location.col = _.arrayLeftDefined([ location2.col, o.location.col, o.error.col, o.error.colnumber, o.error.colNumber, o.error.colNo, o.error.colno ]).element;
+//
+//     if( o.location.path && _.numberIs( o.location.line ) )
+//     return end();
+//   }
+//
+//   /* */
+//
+//   if( !o.stack )
+//   {
+//     if( o.error )
+//     {
+//       o.stack = _.diagnosticStack( o.error, undefined );
+//     }
+//     else
+//     {
+//       o.stack = _.diagnosticStack();
+//       o.level += 1;
+//     }
+//   }
+//
+//   routineFromStack( o.stack );
+//
+//   let had = !!o.location.path;
+//   if( !had )
+//   o.location.path = fromStack( o.stack );
+//
+//   if( !_.strIs( o.location.path ) )
+//   return end();
+//
+//   if( !_.numberIs( o.location.line ) )
+//   o.location.path = lineColFromPath( o.location.path );
+//
+//   if( !_.numberIs( o.location.line ) && had )
+//   {
+//     let path = fromStack( o.stack );
+//     if( path )
+//     lineColFromPath( path );
+//   }
+//
+//   return end();
+//
+//   /* end */
+//
+//   function end()
+//   {
+//
+//     let path = o.location.path;
+//
+//     /* full */
+//
+//     // if( path )
+//     {
+//       o.location.full = path || '';
+//       if( o.location.line !== undefined )
+//       o.location.full += ':' + o.location.line;
+//     }
+//
+//     /* name long */
+//
+//     if( o.location.full )
+//     {
+//       try
+//       {
+//         o.location.fullWithRoutine = o.location.routine + ' @ ' + o.location.full;
+//       }
+//       catch( err )
+//       {
+//         o.location.fullWithRoutine = '';
+//       }
+//     }
+//
+//     /* name */
+//
+//     if( path )
+//     {
+//       let name = path;
+//       let i = name.lastIndexOf( '/' );
+//       if( i !== -1 )
+//       name = name.substr( i+1 );
+//       o.location.name = name;
+//     }
+//
+//     /* name long */
+//
+//     if( path )
+//     {
+//       let nameLong = o.location.name;
+//       if( o.location.line !== undefined )
+//       {
+//         nameLong += ':' + o.location.line;
+//         if( o.location.col !== undefined )
+//         nameLong += ':' + o.location.col;
+//       }
+//       o.location.nameLong = nameLong;
+//     }
+//
+//     return o.location;
+//   }
+//
+//   /* routine from stack */
+//
+//   function routineFromStack( stack )
+//   {
+//     let path;
+//
+//     if( !stack )
+//     return;
+//
+//     if( _.strIs( stack ) )
+//     stack = stack.split( '\n' );
+//
+//     path = stack[ o.level ];
+//
+//     if( !_.strIs( path ) )
+//     return '(-routine anonymous-)';
+//
+//     // debugger;
+//
+//     let t = /^\s*(at\s+)?([\w\.]+)\s*.+/;
+//     let executed = t.exec( path );
+//     if( executed )
+//     path = executed[ 2 ] || '';
+//
+//     if( _.strEnds( path, '.' ) )
+//     path += '?';
+//
+//     o.location.routine = path;
+//     o.location.service = 0;
+//     if( o.location.service === 0 )
+//     if( _.strBegins( path , '__' ) || path.indexOf( '.__' ) !== -1 )
+//     o.location.service = 2;
+//     if( o.location.service === 0 )
+//     if( _.strBegins( path , '_' ) || path.indexOf( '._' ) !== -1 )
+//     o.location.service = 1;
+//
+//     return path;
+//   }
+//
+//   /* path from stack */
+//
+//   function fromStack( stack )
+//   {
+//     let path;
+//
+//     if( !stack )
+//     return;
+//
+//     if( _.strIs( stack ) )
+//     stack = stack.split( '\n' );
+//
+//     path = stack[ o.level ];
+//
+//     if( !_.strIs( path ) )
+//     return end();
+//
+//     path = path.replace( /^\s+/, '' );
+//     path = path.replace( /^\w+@/, '' );
+//     path = path.replace( /^at/, '' );
+//     path = path.replace( /^\s+/, '' );
+//     path = path.replace( /\s+$/, '' );
+//
+//     let regexp = /^.*\((.*)\)$/;
+//     var parsed = regexp.exec( path );
+//     if( parsed )
+//     path = parsed[ 1 ];
+//
+//     // if( _.strEnds( path, ')' ) )
+//     // path = _.strIsolateInsideOrAll( path, '(', ')' )[ 2 ];
+//
+//     return path;
+//   }
+//
+//   /* line / col number from path */
+//
+//   function lineColFromPath( path )
+//   {
+//
+//     let lineNumber, colNumber;
+//     let postfix = /(.+?):(\d+)(?::(\d+))?[^:/]*$/;
+//     let parsed = postfix.exec( path );
+//
+//     if( parsed )
+//     {
+//       path = parsed[ 1 ];
+//       lineNumber = parsed[ 2 ];
+//       colNumber = parsed[ 3 ];
+//     }
+//
+//     // let postfix = /:(\d+)$/;
+//     // colNumber = postfix.exec( o.location.path );
+//     // if( colNumber )
+//     // {
+//     //   o.location.path = _.strRemoveEnd( o.location.path, colNumber[ 0 ] );
+//     //   colNumber = colNumber[ 1 ];
+//     //   lineNumber = postfix.exec( o.location.path );
+//     //   if( lineNumber )
+//     //   {
+//     //     o.location.path = _.strRemoveEnd( o.location.path, lineNumber[ 0 ] );
+//     //     lineNumber = lineNumber[ 1 ];
+//     //   }
+//     //   else
+//     //   {
+//     //     lineNumber = colNumber;
+//     //     colNumber = undefined;
+//     //   }
+//     // }
+//
+//     lineNumber = parseInt( lineNumber );
+//     colNumber = parseInt( colNumber );
+//
+//     if( isNaN( o.location.line ) && !isNaN( lineNumber ) )
+//     o.location.line = lineNumber;
+//
+//     if( isNaN( o.location.col ) && !isNaN( colNumber ) )
+//     o.location.col = colNumber;
+//
+//     return path;
+//   }
+//
+// }
+//
+// diagnosticLocation.defaults =
+// {
+//   level : 0,
+//   stack : null,
+//   error : null,
+//   location : null,
+// }
+//
+// //
+//
+// /**
+//  * Return stack trace as string.
+//  * @example
+//  * let stack;
+//  * function function1()
+//  * {
+//  *   function2();
+//  * }
+//  *
+//  * function function2()
+//  * {
+//  *   function3();
+//  * }
+//  *
+//  * function function3()
+//  * {
+//  *   stack = _.diagnosticStack();
+//  * }
+//  *
+//  * function1();
+//  * console.log( stack );
+//  * // log
+//  * //"    at function3 (<anonymous>:10:17)
+//  * // at function2 (<anonymous>:6:2)
+//  * // at function1 (<anonymous>:2:2)
+//  * // at <anonymous>:1:1"
+//  *
+//  * @returns {String} Return stack trace from call point.
+//  * @function diagnosticStack
+//  * @memberof wTools
+//  */
+//
+// function diagnosticStack( stack, range )
+// {
+//
+//   if( arguments.length === 1 )
+//   {
+//     if( !_.errIs( stack ) )
+//     {
+//       range = arguments[ 0 ];
+//       stack = undefined;
+//     }
+//   }
+//
+//   if( stack === undefined )
+//   {
+//     stack = new Error();
+//     if( range === undefined )
+//     range = [ 1, Infinity ];
+//   }
+//
+//   if( range === undefined )
+//   range = [ 0, Infinity ];
+//
+//   if( arguments.length !== 0 && arguments.length !== 1 && arguments.length !== 2 )
+//   {
+//     debugger;
+//     throw Error( 'diagnosticStack : expects one or two or none arguments' );
+//   }
+//
+//   if( !_.rangeIs( range ) )
+//   {
+//     debugger;
+//     throw Error( 'diagnosticStack : expects range but, got ' + _.strType( range ) );
+//   }
+//
+//   let first = range[ 0 ];
+//   let last = range[ 1 ];
+//
+//   if( !_.numberIs( first ) )
+//   {
+//     debugger;
+//     throw Error( 'diagnosticStack : expects number range[ 0 ], but got ' + _.strType( first ) );
+//   }
+//
+//   if( !_.numberIs( last ) )
+//   {
+//     debugger;
+//     throw Error( 'diagnosticStack : expects number range[ 0 ], but got ' + _.strType( last ) );
+//   }
+//
+//   let errIs = 0;
+//   if( _.errIs( stack ) )
+//   {
+//     stack = stack.originalStack || stack.stack;
+//     errIs = 1;
+//   }
+//
+//   if( !stack )
+//   return '';
+//
+//   if( !_.arrayIs( stack ) && !_.strIs( stack ) )
+//   return;
+//
+//   if( !_.arrayIs( stack ) && !_.strIs( stack ) )
+//   {
+//     debugger;
+//     throw Error( 'diagnosticStack expects array or string' );
+//   }
+//
+//   if( !_.arrayIs( stack ) )
+//   stack = stack.split( '\n' );
+//
+//   /* remove redundant lines */
+//
+//   if( !errIs )
+//   console.debug( 'REMINDER : problem here if !errIs' ); /* xxx */
+//   if( !errIs )
+//   debugger;
+//
+//   if( errIs )
+//   {
+//     while( stack.length )
+//     {
+//       let splice = 0;
+//       splice |= ( stack[ 0 ].indexOf( '  at ' ) === -1 && stack[ 0 ].indexOf( '@' ) === -1 );
+//       splice |= stack[ 0 ].indexOf( '(vm.js:' ) !== -1;
+//       splice |= stack[ 0 ].indexOf( '(module.js:' ) !== -1;
+//       splice |= stack[ 0 ].indexOf( '(internal/module.js:' ) !== -1;
+//       if( splice )
+//       stack.splice( 0, 1 );
+//       else break;
+//     }
+//   }
+//
+//   if( stack[ 0 ] )
+//   if( stack[ 0 ].indexOf( 'at ' ) === -1 && stack[ 0 ].indexOf( '@' ) === -1 )
+//   {
+//     debugger;
+//     console.error( 'diagnosticStack : cant parse stack\n' + stack );
+//   }
+//
+//   /* */
+//
+//   first = first === undefined ? 0 : first;
+//   last = last === undefined ? stack.length : last;
+//
+//   if( _.numberIs( first ) )
+//   if( first < 0 )
+//   first = stack.length + first;
+//
+//   if( _.numberIs( last ) )
+//   if( last < 0 )
+//   last = stack.length + last + 1;
+//
+//   /* */
+//
+//   if( first !== 0 || last !== stack.length )
+//   {
+//     stack = stack.slice( first || 0, last );
+//   }
+//
+//   /* */
+//
+//   stack = String( stack.join( '\n' ) );
+//
+//   return stack;
+// }
+//
+// //
+//
+// function diagnosticStackRemoveBegin( stack, include, exclude )
+// {
+//   if( arguments.length !== 3 )
+//   throw Error( 'Expects two arguments' );
+//   if( !_.regexpIs( include ) && include !== null )
+//   throw Error( 'Expects regexp either null as the second argument' );
+//   if( !_.regexpIs( exclude ) && exclude !== null )
+//   throw Error( 'Expects regexp either null as the third argument' );
+//
+//   if( !_.strIs( stack ) )
+//   return stack;
+//
+//   stack = stack.split( '\n' );
+//
+//   for( let s = stack.length-1 ; s >= 0 ; s-- )
+//   {
+//     let line = stack[ s ];
+//     if( include && include.test( line ) )
+//     {
+//       stack.splice( s, 1 );
+//       continue;
+//     }
+//     if( exclude && exclude.test( line ) )
+//     {
+//       stack.splice( s, 1 );
+//       continue;
+//     }
+//   }
+//
+//   return stack.join( '\n' );
+// }
+//
+// //
+//
+// function diagnosticStackCondense( stack )
+// {
+//
+//   if( arguments.length !== 1 )
+//   throw Error( 'Expects single arguments' );
+//
+//   if( !_.strIs( stack ) )
+//   throw Error( 'Expects string' );
+//
+//   stack = stack.split( '\n' );
+//
+//   for( let s = stack.length-1 ; s >= 0 ; s-- )
+//   {
+//     let line = stack[ s ];
+//     if( s > 0 )
+//     if( /(\W|^)__\w+/.test( line ) )
+//     {
+//       stack.splice( s, 1 );
+//       continue;
+//     }
+//     if( _.strHas( line, '.test.' ) )
+//     line += ' *';
+//     stack[ s ] = line;
+//   }
+//
+//   return stack.join( '\n' );
+// }
 
 //
 
@@ -351,10 +576,11 @@ function diagnosticCode( o )
         // if( _global._starter_ )
         // _global._starter_.fileProvider.fileRead( _.weburi.parse( o.location.path ).localWebPath );
         // o.location.path = codeProvider.path.normalize( o.location.path );
-        if( codeProvider.path.isAbsolute( codeProvider.path.normalize( o.location.path ) ) )
+        let filePath = codeProvider.path.normalize( o.location.path );
+        if( codeProvider.path.isAbsolute( filePath ) )
         o.sourceCode = codeProvider.fileRead
         ({
-          filePath : o.location.path,
+          filePath : filePath,
           sync : 1,
           throwing : 0,
         })
@@ -362,7 +588,7 @@ function diagnosticCode( o )
       }
       catch( err )
       {
-        o.sourceCode = 'CANT LOAD SOURCE CODE ' + _.strQuote( o.location.path );
+        o.sourceCode = ' ! Cant load source code of ' + _.strQuote( o.location.path );
       }
 
       if( !o.sourceCode )
@@ -410,7 +636,7 @@ function diagnosticCode( o )
 diagnosticCode.defaults =
 {
   level : 0,
-  numberOfLines : 3,
+  numberOfLines : 5,
   withPath : 1,
   selectMode : 'center',
   identation : '    ',
@@ -418,195 +644,6 @@ diagnosticCode.defaults =
   error : null,
   location : null,
   sourceCode : null,
-}
-
-//
-
-/**
- * Return stack trace as string.
- * @example
-  let stack;
-  function function1()
-  {
-    function2();
-  }
-
-  function function2()
-  {
-    function3();
-  }
-
-  function function3()
-  {
-    stack = wTools.diagnosticStack();
-  }
-
-  function1();
-  console.log( stack );
- //"    at function3 (<anonymous>:10:17)
- // at function2 (<anonymous>:6:2)
- // at function1 (<anonymous>:2:2)
- // at <anonymous>:1:1"
- *
- * @returns {String} Return stack trace from call point.
- * @function stack
- * @memberof wTools
- */
-
-function diagnosticStack( stack, range )
-{
-
-  if( arguments.length === 1 )
-  {
-    if( !_.errIs( stack ) )
-    {
-      range = arguments[ 0 ];
-      stack = undefined;
-    }
-  }
-
-  if( stack === undefined )
-  {
-    stack = new Error();
-    if( range === undefined )
-    range = [ 1, Infinity ];
-  }
-
-  if( range === undefined )
-  range = [ 0, Infinity ];
-
-  if( arguments.length !== 0 && arguments.length !== 1 && arguments.length !== 2 )
-  {
-    debugger;
-    throw Error( 'diagnosticStack : expects one or two or none arguments' );
-  }
-
-  if( !_.rangeIs( range ) )
-  {
-    debugger;
-    throw Error( 'diagnosticStack : expects range but, got ' + _.strType( range ) );
-  }
-
-  let first = range[ 0 ];
-  let last = range[ 1 ];
-
-  if( !_.numberIs( first ) )
-  {
-    debugger;
-    throw Error( 'diagnosticStack : expects number range[ 0 ], but got ' + _.strType( first ) );
-  }
-
-  if( !_.numberIs( last ) )
-  {
-    debugger;
-    throw Error( 'diagnosticStack : expects number range[ 0 ], but got ' + _.strType( last ) );
-  }
-
-  let errIs = 0;
-  if( _.errIs( stack ) )
-  {
-    stack = stack.originalStack || stack.stack;
-    errIs = 1;
-  }
-
-  if( !stack )
-  return '';
-
-  if( !_.arrayIs( stack ) && !_.strIs( stack ) )
-  return;
-
-  if( !_.arrayIs( stack ) && !_.strIs( stack ) )
-  {
-    debugger;
-    throw Error( 'diagnosticStack expects array or string' );
-  }
-
-  if( !_.arrayIs( stack ) )
-  stack = stack.split( '\n' );
-
-  /* remove redundant lines */
-
-  if( !errIs )
-  console.debug( 'REMINDER : problem here if !errIs' ); /* xxx */
-  if( !errIs )
-  debugger;
-
-  if( errIs )
-  {
-    while( stack.length )
-    {
-      let splice = 0;
-      splice |= ( stack[ 0 ].indexOf( '  at ' ) === -1 && stack[ 0 ].indexOf( '@' ) === -1 );
-      splice |= stack[ 0 ].indexOf( '(vm.js:' ) !== -1;
-      splice |= stack[ 0 ].indexOf( '(module.js:' ) !== -1;
-      splice |= stack[ 0 ].indexOf( '(internal/module.js:' ) !== -1;
-      if( splice )
-      stack.splice( 0, 1 );
-      else break;
-    }
-  }
-
-  if( stack[ 0 ] )
-  if( stack[ 0 ].indexOf( 'at ' ) === -1 && stack[ 0 ].indexOf( '@' ) === -1 )
-  {
-    debugger;
-    console.error( 'diagnosticStack : cant parse stack\n' + stack );
-  }
-
-  /* */
-
-  first = first === undefined ? 0 : first;
-  last = last === undefined ? stack.length : last;
-
-  if( _.numberIs( first ) )
-  if( first < 0 )
-  first = stack.length + first;
-
-  if( _.numberIs( last ) )
-  if( last < 0 )
-  last = stack.length + last + 1;
-
-  /* */
-
-  if( first !== 0 || last !== stack.length )
-  {
-    stack = stack.slice( first || 0, last );
-  }
-
-  /* */
-
-  stack = String( stack.join( '\n' ) );
-
-  return stack;
-}
-
-//
-
-function diagnosticStackCondense( stack )
-{
-
-  if( arguments.length !== 1 )
-  throw Error( 'Expects single arguments' );
-
-  if( !_.strIs( stack ) )
-  throw Error( 'Expects string' );
-
-  stack = stack.split( '\n' );
-
-  for( let s = stack.length-1 ; s >= 1 ; s-- )
-  {
-    let line = stack[ s ];
-    if( /(\W|^)__\w+/.test( line ) )
-    {
-      stack.splice( s, 1 );
-      continue;
-    }
-    if( _.strHas( line, '.test.' ) )
-    line += ' *';
-    stack[ s ] = line;
-  }
-
-  return stack.join( '\n' );
 }
 
 //
@@ -1163,6 +1200,76 @@ diagnosticsStructureGenerate.defaults =
 }
 
 // --
+// checker
+// --
+
+function isInstanceOrClass( _constructor, _this )
+{
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+  debugger;
+  let result =
+  (
+    _this === _constructor ||
+    _this instanceof _constructor ||
+    Object.isPrototypeOf.call( _constructor,_this ) ||
+    Object.isPrototypeOf.call( _constructor,_this.prototype )
+  );
+  return result;
+}
+
+//
+
+function isOwnNoConstructor( ins )
+{
+  _.assert( _.objectLikeOrRoutine( ins ) );
+  _.assert( arguments.length === 1 );
+  let result = !_ObjectHasOwnProperty.call( ins,'constructor' );
+  return result;
+}
+
+//
+
+function sureInstanceOrClass( _constructor, _this )
+{
+  _.sure( arguments.length === 2, 'Expects exactly two arguments' );
+  _.sure( _.isInstanceOrClass( _constructor, _this ) );
+}
+
+//
+
+function sureOwnNoConstructor( ins )
+{
+  _.sure( _.objectLikeOrRoutine( ins ) );
+  // let args = _.longSlice( arguments );
+  let args = Array.prototype.slice.call( arguments );
+  args[ 0 ] = _.isOwnNoConstructor( ins );
+  _.sure.apply( _, args );
+}
+
+//
+
+function assertInstanceOrClass( _constructor, _this )
+{
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+  _.assert( _.isInstanceOrClass( _constructor, _this ) );
+}
+
+//
+
+function assertOwnNoConstructor( ins )
+{
+  _.assert( _.objectLikeOrRoutine( ins ) );
+  // let args = _.longSlice( arguments );
+  let args = Array.prototype.slice.call( arguments );
+  args[ 0 ] = _.isOwnNoConstructor( ins );
+
+  if( args.length === 1 )
+  args.push( () => 'Entity should not own constructor, but own ' + _.toStrShort( ins ) );
+
+  _.assert.apply( _, args );
+}
+
+// --
 // errrors
 // --
 
@@ -1180,10 +1287,12 @@ let error =
 let Extend =
 {
 
-  diagnosticLocation,
+  // diagnosticLocation,
+  // diagnosticStack,
+  // diagnosticStackRemoveBegin,
+  // diagnosticStackCondense,
+
   diagnosticCode,
-  diagnosticStack,
-  diagnosticStackCondense,
   diagnosticBeep,
 
   diagnosticApplicationEntryPointData,
@@ -1194,7 +1303,22 @@ let Extend =
   diagnosticEachLongType,
   diagnosticEachElementComparator,
 
-  diagnosticsStructureGenerate
+  diagnosticsStructureGenerate,
+
+  // checker
+
+  isInstanceOrClass,
+  isOwnNoConstructor,
+
+  // sure
+
+  sureInstanceOrClass,
+  sureOwnNoConstructor,
+
+  // assert
+
+  assertInstanceOrClass,
+  assertOwnNoConstructor,
 
 }
 

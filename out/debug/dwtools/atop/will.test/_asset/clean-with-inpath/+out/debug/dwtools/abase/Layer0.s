@@ -9,11 +9,13 @@ if( typeof module !== 'undefined' && module !== null )
   require( './l0/aPredefined.s' );
   require( './l0/aSetup.s' );
   require( './l0/bPremature.s' );
+  require( './l0/bChecker.s' );
 
   require( './l0/fBool.s' );
-  require( './l0/fChecker.s' );
+  require( './l0/fBuffer.s' );
   require( './l0/fEntity.s' );
   require( './l0/fErr.s' );
+  require( './l0/fFunctional.s' );
   require( './l0/fLong.s' );
   require( './l0/fMap.s' );
   require( './l0/fNumber.s' );

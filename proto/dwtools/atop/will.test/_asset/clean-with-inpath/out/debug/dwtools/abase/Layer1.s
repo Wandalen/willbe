@@ -11,7 +11,9 @@ if( typeof module !== 'undefined' && module !== null )
   require( './l1/cErr.s' );
 
   require( './l1/gBool.s' );
+  require( './l1/gBuffer.s' );
   require( './l1/gEntity.s' );
+  require( './l1/gFunctional.s' );
   require( './l1/gLong.s' );
   require( './l1/gMap.s' );
   require( './l1/gNumber.s' );

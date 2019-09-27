@@ -1,0 +1,10 @@
+
+submodule :
+
+  Submodule : ./sub.out/sub.out
+
+path :
+
+  temp : '{path::out}'
+  in : '.'
+  out : './super.out'

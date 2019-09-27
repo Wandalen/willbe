@@ -1,6 +1,6 @@
 ( function _String_test_s_() {
 
-'use strict'; /* aaa */
+'use strict'; 
 
 if( typeof module !== 'undefined' )
 {
@@ -3158,13 +3158,13 @@ function strIsolateInsideOrNone( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strIsolateInsideOrNone() );
-  test.shouldThrowError( () => _.strIsolateInsideOrNone( '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrNone( '', '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrNone( '', '', '', '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrNone( 1, '', '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrNone( '123', 1, '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrNone( '123', '', 3 ) );
+  test.shouldThrowErrorSync( () => _.strIsolateInsideOrNone() );
+  test.shouldThrowErrorSync( () => _.strIsolateInsideOrNone( '' ) );
+  test.shouldThrowErrorSync( () => _.strIsolateInsideOrNone( '', '' ) );
+  test.shouldThrowErrorSync( () => _.strIsolateInsideOrNone( '', '', '', '' ) );
+  test.shouldThrowErrorSync( () => _.strIsolateInsideOrNone( 1, '', '' ) );
+  test.shouldThrowErrorSync( () => _.strIsolateInsideOrNone( '123', 1, '' ) );
+  test.shouldThrowErrorSync( () => _.strIsolateInsideOrNone( '123', '', 3 ) );
 
 }
 
@@ -3474,13 +3474,13 @@ function strIsolateInsideOrAll( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strIsolateInsideOrAll() );
-  test.shouldThrowError( () => _.strIsolateInsideOrAll( '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrAll( '', '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrAll( '', '', '', '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrAll( 1, '', '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrAll( '123', 1, '' ) );
-  test.shouldThrowError( () => _.strIsolateInsideOrAll( '123', '', 3 ) );
+  test.shouldThrowErrorSync( () => _.strIsolateInsideOrAll() );
+  test.shouldThrowErrorSync( () => _.strIsolateInsideOrAll( '' ) );
+  test.shouldThrowErrorSync( () => _.strIsolateInsideOrAll( '', '' ) );
+  test.shouldThrowErrorSync( () => _.strIsolateInsideOrAll( '', '', '', '' ) );
+  test.shouldThrowErrorSync( () => _.strIsolateInsideOrAll( 1, '', '' ) );
+  test.shouldThrowErrorSync( () => _.strIsolateInsideOrAll( '123', 1, '' ) );
+  test.shouldThrowErrorSync( () => _.strIsolateInsideOrAll( '123', '', 3 ) );
 
 }
 
@@ -3575,11 +3575,11 @@ function strBeginOf( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strBeginOf( 1, '' ) );
-  test.shouldThrowError( () => _.strBeginOf( 'abc', 1 ) );
-  test.shouldThrowError( () => _.strBeginOf() );
-  test.shouldThrowError( () => _.strBeginOf( undefined, undefined ) );
-  test.shouldThrowError( () => _.strBeginOf( null, null ) );
+  test.shouldThrowErrorSync( () => _.strBeginOf( 1, '' ) );
+  test.shouldThrowErrorSync( () => _.strBeginOf( 'abc', 1 ) );
+  test.shouldThrowErrorSync( () => _.strBeginOf() );
+  test.shouldThrowErrorSync( () => _.strBeginOf( undefined, undefined ) );
+  test.shouldThrowErrorSync( () => _.strBeginOf( null, null ) );
 }
 
 //
@@ -3673,11 +3673,11 @@ function strEndOf( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strEndOf( 1, '' ) );
-  test.shouldThrowError( () => _.strEndOf( 'abc', 1 ) );
-  test.shouldThrowError( () => _.strEndOf() );
-  test.shouldThrowError( () => _.strEndOf( undefined, undefined ) );
-  test.shouldThrowError( () => _.strEndOf( null, null ) );
+  test.shouldThrowErrorSync( () => _.strEndOf( 1, '' ) );
+  test.shouldThrowErrorSync( () => _.strEndOf( 'abc', 1 ) );
+  test.shouldThrowErrorSync( () => _.strEndOf() );
+  test.shouldThrowErrorSync( () => _.strEndOf( undefined, undefined ) );
+  test.shouldThrowErrorSync( () => _.strEndOf( null, null ) );
 
 }
 
@@ -3760,9 +3760,9 @@ function strBegins( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strBegins( 1, '' ) );
-  test.shouldThrowError( () => _.strBegins( 'a', 1 ) );
-  test.shouldThrowError( () => _.strBegins( 'abc', [ 1, 'b', 'a' ] ) );
+  test.shouldThrowErrorSync( () => _.strBegins( 1, '' ) );
+  test.shouldThrowErrorSync( () => _.strBegins( 'a', 1 ) );
+  test.shouldThrowErrorSync( () => _.strBegins( 'abc', [ 1, 'b', 'a' ] ) );
 
 }
 
@@ -3839,8 +3839,8 @@ function strEnds( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.strEnds( 1, '' ) );
-  test.shouldThrowError( () => _.strEnds( 'a', 1 ) );
+  test.shouldThrowErrorSync( () => _.strEnds( 1, '' ) );
+  test.shouldThrowErrorSync( () => _.strEnds( 'a', 1 ) );
 }
 
 //
@@ -3848,7 +3848,7 @@ function strEnds( test )
 var Self =
 {
 
-  name : 'Tools/base/l1/String',
+  name : 'Tools.base.l1.String',
   silencing : 1,
 
   tests :

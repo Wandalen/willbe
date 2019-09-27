@@ -152,25 +152,25 @@ function _routineJoin( test )
   return;
 
   test.case = 'missed argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorSync( function()
   {
     _._routineJoin();
   });
 
   test.case = 'extra argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorSync( function()
   {
     _._routineJoin( options1, options2 );
   });
 
   test.case = 'passed non callable object';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorSync( function()
   {
     _._routineJoin( wrongOpt1 );
   });
 
   test.case = 'passed arguments as primitive value';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorSync( function()
   {
     _._routineJoin( wrongOpt2 );
   });
@@ -212,25 +212,25 @@ function _routineJoin( test )
 //   return;
 //
 //   test.case = 'missed argument';
-//   test.shouldThrowError( function()
+//   test.shouldThrowErrorSync( function()
 //   {
 //     _.routineBind();
 //   });
 //
 //   test.case = 'extra argument';
-//   test.shouldThrowError( function()
+//   test.shouldThrowErrorSync( function()
 //   {
 //     _.routineBind( testFunction4, context3, [ testParam2 ], [ testParam1 ] );
 //   });
 //
 //   test.case = 'passed non callable object';
-//   test.shouldThrowError( function()
+//   test.shouldThrowErrorSync( function()
 //   {
 //     _.routineBind( {}, context3, [ testParam2 ] );
 //   });
 //
 //   test.case = 'passed arguments as primitive value';
-//   test.shouldThrowError( function()
+//   test.shouldThrowErrorSync( function()
 //   {
 //     _.routineBind( testFunction4, context3, testParam2 );
 //   });
@@ -316,9 +316,9 @@ function constructorJoin( test )
   if( !Config.debug )
   return;
 
-  test.shouldThrowError( () => _.constructorJoin() )
-  test.shouldThrowError( () => _.constructorJoin( [], [] ) )
-  test.shouldThrowError( () => _.constructorJoin( srcRoutine, srcRoutine ) )
+  test.shouldThrowErrorSync( () => _.constructorJoin() )
+  test.shouldThrowErrorSync( () => _.constructorJoin( [], [] ) )
+  test.shouldThrowErrorSync( () => _.constructorJoin( srcRoutine, srcRoutine ) )
 }
 
 //
@@ -362,25 +362,25 @@ function routineJoin( test )
   return;
 
   test.case = 'missed argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorSync( function()
   {
     _.routineJoin();
   });
 
   test.case = 'extra argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorSync( function()
   {
     _.routineJoin( context3, testFunction4, [ testParam2 ], [ testParam1 ] );
   });
 
   test.case = 'passed non callable object';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorSync( function()
   {
     _.routineJoin( context3, {}, [ testParam2 ] );
   });
 
   test.case = 'passed arguments as primitive value';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorSync( function()
   {
     _.routineJoin( context3, testFunction4, testParam2 );
   });
@@ -433,25 +433,25 @@ function routineSeal(test)
   return;
 
   test.case = 'missed argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorSync( function()
   {
     _.routineSeal();
   });
 
   test.case = 'extra argument';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorSync( function()
   {
     _.routineSeal( context3, testFunction4, [ testParam2 ], [ testParam1 ] );
   });
 
   test.case = 'passed non callable object';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorSync( function()
   {
     _.routineSeal( context3, {}, [ testParam1, testParam2 ] );
   });
 
   test.case = 'passed arguments as primitive value';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorSync( function()
   {
     _.routineSeal( context3, testFunction4, testParam2 );
   });
@@ -1425,7 +1425,7 @@ function vectorize( test )
   test.case = 'multiple argument';
 
   if( Config.debug )
-  test.shouldThrowError( () => routine({ a : 0, b : [ 1 ] }, 2 ) );
+  test.shouldThrowErrorSync( () => routine({ a : 0, b : [ 1 ] }, 2 ) );
 
   test.close( 'vectorizingArray : 1, select : key ' );
 
@@ -1502,7 +1502,7 @@ function vectorize( test )
   test.case = 'multiple argument';
 
   if( Config.debug )
-  test.shouldThrowError( () => routine({ a : 0, b : [ 1 ] }, 2 ) );
+  test.shouldThrowErrorSync( () => routine({ a : 0, b : [ 1 ] }, 2 ) );
 
   test.close( 'vectorizingArray : 1, select : multiple keys ' );
 
@@ -1534,10 +1534,10 @@ function vectorize( test )
 
   if( Config.debug )
   {
-    test.shouldThrowError( () => routine( 1 ) );
-    test.shouldThrowError( () => routine( 1,2,3 ) );
-    test.shouldThrowError( () => routine( [ 1,2 ], [ 1,2,3 ] ) );
-    test.shouldThrowError( () => routine( [ 1 ], [ 2 ], [ 3 ] ) );
+    test.shouldThrowErrorSync( () => routine( 1 ) );
+    test.shouldThrowErrorSync( () => routine( 1,2,3 ) );
+    test.shouldThrowErrorSync( () => routine( [ 1,2 ], [ 1,2,3 ] ) );
+    test.shouldThrowErrorSync( () => routine( [ 1 ], [ 2 ], [ 3 ] ) );
   }
 
   test.close( 'vectorizingArray : 1,select : 2' );
@@ -1567,8 +1567,8 @@ function vectorize( test )
 
   if( Config.debug )
   {
-    test.shouldThrowError( () => routine( 1 ) );
-    test.shouldThrowError( () => routine( { a : 1 }, { b : 1 } ) );
+    test.shouldThrowErrorSync( () => routine( 1 ) );
+    test.shouldThrowErrorSync( () => routine( { a : 1 }, { b : 1 } ) );
   }
 
   test.close( 'vectorizingMapVals : 1,select : 2' );
@@ -1598,15 +1598,15 @@ function vectorize( test )
 
   if( Config.debug )
   {
-    test.shouldThrowError( () => routine( [ 1,2 ], [ 1,2,3 ] ) )
-    test.shouldThrowError( () => routine( 1,2,3 ) );
-    test.shouldThrowError( () => routine( { a : 1 }, { b : 1 } ) );
-    test.shouldThrowError( () => routine( [ 1 ], { b : 1 } ) );
-    test.shouldThrowError( () => routine( { b : 1 }, [ 1 ] ) );
-    test.shouldThrowError( () => routine( 1, [ 1 ], { b : 1 } ) );
-    test.shouldThrowError( () => routine( [ 1 ], 1, { b : 1 } ) );
-    test.shouldThrowError( () => routine( { b : 1 }, 1, [ 1 ] ) );
-    test.shouldThrowError( () => routine( { b : 1 }, [ 1 ], 1 ) );
+    test.shouldThrowErrorSync( () => routine( [ 1,2 ], [ 1,2,3 ] ) )
+    test.shouldThrowErrorSync( () => routine( 1,2,3 ) );
+    test.shouldThrowErrorSync( () => routine( { a : 1 }, { b : 1 } ) );
+    test.shouldThrowErrorSync( () => routine( [ 1 ], { b : 1 } ) );
+    test.shouldThrowErrorSync( () => routine( { b : 1 }, [ 1 ] ) );
+    test.shouldThrowErrorSync( () => routine( 1, [ 1 ], { b : 1 } ) );
+    test.shouldThrowErrorSync( () => routine( [ 1 ], 1, { b : 1 } ) );
+    test.shouldThrowErrorSync( () => routine( { b : 1 }, 1, [ 1 ] ) );
+    test.shouldThrowErrorSync( () => routine( { b : 1 }, [ 1 ], 1 ) );
   }
 
   test.close( 'vectorizingArray : 1, vectorizingMapVals : 1,select : 2' );
@@ -1628,7 +1628,7 @@ function vectorize( test )
   test.identical( routine( { a : 1 } ), { a : 1 } );
 
   if( Config.debug )
-  test.shouldThrowError( () => routine( 1, 2 ) )
+  test.shouldThrowErrorSync( () => routine( 1, 2 ) )
 
   test.close( ' vectorizingMapKeys : 1' );
 
@@ -1652,7 +1652,7 @@ function vectorize( test )
   test.identical( routine( { b : 1, c : 2 }, [ 'a' ] ), { 'b,a' : 1, 'c,a' : 2 } );
 
   if( Config.debug )
-  test.shouldThrowError( () => routine( 1,2,3 ) );
+  test.shouldThrowErrorSync( () => routine( 1,2,3 ) );
 
   test.close( 'vectorizingMapKeys : 1, select : 2' );
 
@@ -1684,14 +1684,14 @@ function vectorize( test )
 
   if( Config.debug )
   {
-    test.shouldThrowError( () => routine( 1,2,3 ) );
-    test.shouldThrowError( () => routine( { a : 1 }, { b : 1 } ) );
-    // test.shouldThrowError( () => routine( [ 1 ], { b : 1 } ) );
-    // test.shouldThrowError( () => routine( { b : 1 }, [ 1 ] ) );
-    // test.shouldThrowError( () => routine( 1, [ 1 ], { b : 1 } ) );
-    test.shouldThrowError( () => routine( [ 1 ], 1, { b : 1 } ) );
-    test.shouldThrowError( () => routine( { b : 1 }, 1, [ 1 ] ) );
-    test.shouldThrowError( () => routine( { b : 1 }, [ 1 ], 1 ) );
+    test.shouldThrowErrorSync( () => routine( 1,2,3 ) );
+    test.shouldThrowErrorSync( () => routine( { a : 1 }, { b : 1 } ) );
+    // test.shouldThrowErrorSync( () => routine( [ 1 ], { b : 1 } ) );
+    // test.shouldThrowErrorSync( () => routine( { b : 1 }, [ 1 ] ) );
+    // test.shouldThrowErrorSync( () => routine( 1, [ 1 ], { b : 1 } ) );
+    test.shouldThrowErrorSync( () => routine( [ 1 ], 1, { b : 1 } ) );
+    test.shouldThrowErrorSync( () => routine( { b : 1 }, 1, [ 1 ] ) );
+    test.shouldThrowErrorSync( () => routine( { b : 1 }, [ 1 ], 1 ) );
   }
 
   test.close( 'vectorizingMapKeys : 1, vectorizingArray : 1, select : 2' );
@@ -1894,8 +1894,8 @@ function vectorize( test )
 
   if( Config.debug )
   {
-    test.shouldThrowError( () => routine( { a : 1 }, 'c', { b : 1 } ) );
-    test.shouldThrowError( () => routine( [ 1 ], { b : true }, [ 'c', 'd' ] ) );
+    test.shouldThrowErrorSync( () => routine( { a : 1 }, 'c', { b : 1 } ) );
+    test.shouldThrowErrorSync( () => routine( [ 1 ], { b : true }, [ 'c', 'd' ] ) );
   }
 
   test.close( 'vectorizingMapKeys : 1, vectorizingArray : 1, select : 3' );
@@ -2349,7 +2349,7 @@ function vectorizeBypassingEmpty( test )
 var Self =
 {
 
-  name : 'Tools/base/l1/Routine',
+  name : 'Tools.base.l1.Routine',
   silencing : 1,
 
   tests :

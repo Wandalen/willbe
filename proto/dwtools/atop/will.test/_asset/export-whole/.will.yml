@@ -15,7 +15,7 @@ step :
 
   export.proto :
 
-    export : path::in
+    export : '{path::in}/**'
     tar : 0
 
 build :

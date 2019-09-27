@@ -95,6 +95,8 @@ function appendingAnything()
   {
     if( dstContainer[ key ] === undefined )
     dstContainer[ key ] = srcContainer[ key ];
+    else if( _.arrayIs( dstContainer[ key ] ) )
+    dstContainer[ key ] = _.arrayAppendArrays( dstContainer[ key ], [ srcContainer[ key ] ] );
     else
     dstContainer[ key ] = _.arrayAppendArrays( [], [ dstContainer[ key ], srcContainer[ key ] ] );
   }
@@ -107,10 +109,31 @@ appendingAnything.functionFamily = 'field-mapper';
 
 //
 
-function appendingArrays()
+function prependingAnything()
 {
 
-  let routine = function appendingArrays( dstContainer, srcContainer, key )
+  let routine = function prependingAnything( dstContainer, srcContainer, key )
+  {
+    if( dstContainer[ key ] === undefined )
+    dstContainer[ key ] = srcContainer[ key ];
+    else if( _.arrayIs( dstContainer[ key ] ) )
+    dstContainer[ key ] = _.arrayPrependArrays( dstContainer[ key ], [ srcContainer[ key ] ] );
+    else
+    dstContainer[ key ] = _.arrayPrependArrays( [], [ dstContainer[ key ], srcContainer[ key ] ] );
+  }
+
+  routine.functionFamily = 'field-mapper';
+  return routine;
+}
+
+prependingAnything.functionFamily = 'field-mapper';
+
+//
+
+function appendingOnlyArrays()
+{
+
+  let routine = function appendingOnlyArrays( dstContainer, srcContainer, key )
   {
     if( _.arrayIs( dstContainer[ key ] ) && _.arrayIs( srcContainer[ key ] ) )
     _.arrayAppendArray( dstContainer[ key ], srcContainer[ key ] );
@@ -122,7 +145,7 @@ function appendingArrays()
   return routine;
 }
 
-appendingArrays.functionFamily = 'field-mapper';
+appendingOnlyArrays.functionFamily = 'field-mapper';
 
 //
 
@@ -1156,7 +1179,8 @@ let make =
   primitive,
   hiding,
   appendingAnything,
-  appendingArrays,
+  prependingAnything,
+  appendingOnlyArrays,
   appendingOnce,
   removing,
   notPrimitiveAssigning,

@@ -7,6 +7,9 @@ submodule :
   wPathBasic :
     path : npm:///wpathbasic
     enabled : 0 # submodule
+  wArraySorted :
+    path : npm:///warraysorted
+    enabled : 0 # submodule
   wPathTools :
     path : hd://.
     enabled : 0 # submodule
@@ -29,6 +32,7 @@ path :
   out : 'out'
   temp : 'path::out'
   proto : './proto'
+  export : '{path::export}/**'
   doc : './doc'
 
   out.raw.debug :

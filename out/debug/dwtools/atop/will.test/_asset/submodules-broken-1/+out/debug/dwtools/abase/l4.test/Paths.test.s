@@ -462,10 +462,10 @@ function join( test )
   return;
 
   test.case = 'arrays with different length';
-  test.shouldThrowError( () => _.paths.join( [ '/b', '.c' ], [ '/b' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.paths.join( [ '/b', '.c' ], [ '/b' ] ) );
 
   test.case = 'numbers';
-  test.shouldThrowError( () => _.paths.join( [ 1, 2 ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.paths.join( [ 1, 2 ] ) );
 
   // test.case = 'nothing passed';
   // test.shouldThrowErrorSync( () => _.paths.join( ) );
@@ -474,7 +474,7 @@ function join( test )
   // test.shouldThrowErrorSync( () => _.paths.join( {} ) );
 
   test.case = 'inner arrays';
-  test.shouldThrowError( () => _.paths.join( [ '/b', '.c' ], [ '/b', [ 'x' ] ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.paths.join( [ '/b', '.c' ], [ '/b', [ 'x' ] ] ) );
 }
 
 //
@@ -529,13 +529,13 @@ function reroot( test )
   return;
 
   test.case = 'arrays with different length';
-  test.shouldThrowError( () => _.paths.reroot( [ '/b', '.c' ], [ '/b' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.paths.reroot( [ '/b', '.c' ], [ '/b' ] ) );
 
   test.case = 'inner arrays';
-  test.shouldThrowError( () => _.paths.reroot( [ '/b', '.c' ], [ '/b', [ 'x' ] ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.paths.reroot( [ '/b', '.c' ], [ '/b', [ 'x' ] ] ) );
 
   test.case = 'numbers';
-  test.shouldThrowError( () => _.paths.reroot( [ 1, 2 ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.paths.reroot( [ 1, 2 ] ) );
 }
 
 //
@@ -645,13 +645,13 @@ function resolve( test )
   return
 
   test.case = 'arrays with different length';
-  test.shouldThrowError( () => _.paths.resolve( [ '/b', '.c' ], [ '/b' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.paths.resolve( [ '/b', '.c' ], [ '/b' ] ) );
 
   // test.case = 'empty';
-  // test.shouldThrowError( () => _.paths.resolve() );
+  // test.shouldThrowErrorOfAnyKind( () => _.paths.resolve() );
 
   test.case = 'inner arrays';
-  test.shouldThrowError( () => _.paths.resolve( [ '/b', '.c' ], [ '/b', [ 'x' ] ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.paths.resolve( [ '/b', '.c' ], [ '/b', [ 'x' ] ] ) );
 }
 
 //
@@ -701,17 +701,17 @@ function dir( test )
   return;
 
   test.case = 'no argument';
-  test.shouldThrowError( () => _.paths.dir() );
+  test.shouldThrowErrorOfAnyKind( () => _.paths.dir() );
 
   test.case = 'inner array';
-  test.shouldThrowError( () => _.paths.dir( [ './a/../b', [ 'a/b/c' ] ]) );
+  test.shouldThrowErrorOfAnyKind( () => _.paths.dir( [ './a/../b', [ 'a/b/c' ] ]) );
 
   test.case = 'two arguments';
-  test.shouldThrowError( () => _.paths.dir( [ '/aa/b' ], [ 'b/c' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.paths.dir( [ '/aa/b' ], [ 'b/c' ] ) );
 
   test.case = 'not a string, empty string';
-  test.shouldThrowError( () => _.paths.dir( [ 'aa/bb', 1 ] ) );
-  test.shouldThrowError( () => _.paths.dir( [ '' ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.paths.dir( [ 'aa/bb', 1 ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.paths.dir( [ '' ] ) );
 
 }
 
@@ -1307,17 +1307,17 @@ function common( test )
   return;
 
   test.case = 'two arguments';
-  test.shouldThrowError( () => _.path.s.common( '/a', '..' ) );
-  test.shouldThrowError( () => _.path.s.common( '/a', '.' ) );
-  test.shouldThrowError( () => _.path.s.common( '/a', 'x' ) );
-  test.shouldThrowError( () => _.path.s.common( '/a', '../..' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.s.common( '/a', '..' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.s.common( '/a', '.' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.s.common( '/a', 'x' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.s.common( '/a', '../..' ) );
 
   test.case = 'three arguments'
-  test.shouldThrowError( () => _.path.s.common( '/a/b/c', '/a/b/c', './' ) );
-  test.shouldThrowError( () => _.path.s.common( '/a/b/c', '/a/b/c', '.' ) );
-  test.shouldThrowError( () => _.path.s.common( 'x', '/a/b/c', '/a' ) );
-  test.shouldThrowError( () => _.path.s.common( '/a/b/c', '..', '/a' ) );
-  test.shouldThrowError( () => _.path.s.common( '../..', '../../b/c', '/a' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.s.common( '/a/b/c', '/a/b/c', './' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.s.common( '/a/b/c', '/a/b/c', '.' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.s.common( 'x', '/a/b/c', '/a' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.s.common( '/a/b/c', '..', '/a' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.path.s.common( '../..', '../../b/c', '/a' ) );
 }
 
 //
@@ -1359,7 +1359,7 @@ function commonVectors( test )
 var Self =
 {
 
-  name : 'Tools/base/l4/path/basic/S',
+  name : 'Tools.base.l4.path.basic.S',
   silencing : 1,
   // verbosity : 7,
   // routine : 'relative',

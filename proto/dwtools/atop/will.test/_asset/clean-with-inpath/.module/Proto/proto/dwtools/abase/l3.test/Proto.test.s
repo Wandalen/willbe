@@ -40,13 +40,13 @@ function instanceIs( t )
 
   t.will = 'routine';
   t.is( !_.instanceIs( Date ) );
-  t.is( !_.instanceIs( Float32Array ) );
+  t.is( !_.instanceIs( F32x ) );
   t.is( !_.instanceIs( function(){} ) );
   t.is( !_.instanceIs( Self.constructor ) );
 
   t.will = 'long';
   t.is( _.instanceIs( [] ) );
-  t.is( _.instanceIs( new Float32Array() ) );
+  t.is( _.instanceIs( new F32x() ) );
 
   t.will = 'object-like';
   t.is( _.instanceIs( /x/ ) );
@@ -58,7 +58,7 @@ function instanceIs( t )
   t.is( !_.instanceIs( Object.getPrototypeOf( [] ) ) );
   t.is( !_.instanceIs( Object.getPrototypeOf( /x/ ) ) );
   t.is( !_.instanceIs( Object.getPrototypeOf( new Date() ) ) );
-  t.is( !_.instanceIs( Object.getPrototypeOf( new Float32Array() ) ) );
+  t.is( !_.instanceIs( Object.getPrototypeOf( new F32x() ) ) );
   t.is( !_.instanceIs( Object.getPrototypeOf( new (function(){})() ) ) );
   t.is( !_.instanceIs( Object.getPrototypeOf( Self ) ) );
 
@@ -85,13 +85,13 @@ function instanceIsStandard( t )
 
   t.will = 'routine';
   t.is( !_.instanceIsStandard( Date ) );
-  t.is( !_.instanceIsStandard( Float32Array ) );
+  t.is( !_.instanceIsStandard( F32x ) );
   t.is( !_.instanceIsStandard( function(){} ) );
   t.is( !_.instanceIsStandard( Self.constructor ) );
 
   t.will = 'long';
   t.is( !_.instanceIsStandard( [] ) );
-  t.is( !_.instanceIsStandard( new Float32Array() ) );
+  t.is( !_.instanceIsStandard( new F32x() ) );
 
   t.will = 'object-like';
   t.is( !_.instanceIsStandard( /x/ ) );
@@ -103,7 +103,7 @@ function instanceIsStandard( t )
   t.is( !_.instanceIsStandard( Object.getPrototypeOf( [] ) ) );
   t.is( !_.instanceIsStandard( Object.getPrototypeOf( /x/ ) ) );
   t.is( !_.instanceIsStandard( Object.getPrototypeOf( new Date() ) ) );
-  t.is( !_.instanceIsStandard( Object.getPrototypeOf( new Float32Array() ) ) );
+  t.is( !_.instanceIsStandard( Object.getPrototypeOf( new F32x() ) ) );
   t.is( !_.instanceIsStandard( Object.getPrototypeOf( new (function(){})() ) ) );
   t.is( !_.instanceIsStandard( Object.getPrototypeOf( Self ) ) );
 
@@ -130,7 +130,7 @@ function prototypeIs( t )
 
   t.will = 'routine';
   t.is( !_.prototypeIs( Date ) );
-  t.is( !_.prototypeIs( Float32Array ) );
+  t.is( !_.prototypeIs( F32x ) );
   t.is( !_.prototypeIs( function(){} ) );
   t.is( !_.prototypeIs( Self.constructor ) );
 
@@ -138,7 +138,7 @@ function prototypeIs( t )
   t.is( !_.prototypeIs( [] ) );
   t.is( !_.prototypeIs( /x/ ) );
   t.is( !_.prototypeIs( new Date() ) );
-  t.is( !_.prototypeIs( new Float32Array() ) );
+  t.is( !_.prototypeIs( new F32x() ) );
   t.is( !_.prototypeIs( new (function(){})() ) );
   t.is( !_.prototypeIs( Self ) );
 
@@ -146,7 +146,7 @@ function prototypeIs( t )
   t.is( _.prototypeIs( Object.getPrototypeOf( [] ) ) );
   t.is( _.prototypeIs( Object.getPrototypeOf( /x/ ) ) );
   t.is( _.prototypeIs( Object.getPrototypeOf( new Date() ) ) );
-  t.is( _.prototypeIs( Object.getPrototypeOf( new Float32Array() ) ) );
+  t.is( _.prototypeIs( Object.getPrototypeOf( new F32x() ) ) );
   t.is( _.prototypeIs( Object.getPrototypeOf( new (function(){})() ) ) );
   t.is( _.prototypeIs( Object.getPrototypeOf( Self ) ) );
 
@@ -173,7 +173,7 @@ function constructorIs( t )
 
   t.will = 'routine';
   t.is( _.constructorIs( Date ) );
-  t.is( _.constructorIs( Float32Array ) );
+  t.is( _.constructorIs( F32x ) );
   t.is( _.constructorIs( function(){} ) );
   t.is( _.constructorIs( Self.constructor ) );
 
@@ -181,7 +181,7 @@ function constructorIs( t )
   t.is( !_.constructorIs( [] ) );
   t.is( !_.constructorIs( /x/ ) );
   t.is( !_.constructorIs( new Date() ) );
-  t.is( !_.constructorIs( new Float32Array() ) );
+  t.is( !_.constructorIs( new F32x() ) );
   t.is( !_.constructorIs( new (function(){})() ) );
   t.is( !_.constructorIs( Self ) );
 
@@ -189,7 +189,7 @@ function constructorIs( t )
   t.is( !_.constructorIs( Object.getPrototypeOf( [] ) ) );
   t.is( !_.constructorIs( Object.getPrototypeOf( /x/ ) ) );
   t.is( !_.constructorIs( Object.getPrototypeOf( new Date() ) ) );
-  t.is( !_.constructorIs( Object.getPrototypeOf( new Float32Array() ) ) );
+  t.is( !_.constructorIs( Object.getPrototypeOf( new F32x() ) ) );
   t.is( !_.constructorIs( Object.getPrototypeOf( new (function(){})() ) ) );
   t.is( !_.constructorIs( Object.getPrototypeOf( Self ) ) );
 
@@ -216,7 +216,7 @@ function prototypeIsStandard( t )
 
   t.will = 'routine';
   t.is( !_.prototypeIsStandard( Date ) );
-  t.is( !_.prototypeIsStandard( Float32Array ) );
+  t.is( !_.prototypeIsStandard( F32x ) );
   t.is( !_.prototypeIsStandard( function(){} ) );
   t.is( !_.prototypeIsStandard( Self.constructor ) );
 
@@ -224,7 +224,7 @@ function prototypeIsStandard( t )
   t.is( !_.prototypeIsStandard( [] ) );
   t.is( !_.prototypeIsStandard( /x/ ) );
   t.is( !_.prototypeIsStandard( new Date() ) );
-  t.is( !_.prototypeIsStandard( new Float32Array() ) );
+  t.is( !_.prototypeIsStandard( new F32x() ) );
   t.is( !_.prototypeIsStandard( new (function(){})() ) );
   t.is( !_.prototypeIsStandard( Self ) );
 
@@ -232,7 +232,7 @@ function prototypeIsStandard( t )
   t.is( !_.prototypeIsStandard( Object.getPrototypeOf( [] ) ) );
   t.is( !_.prototypeIsStandard( Object.getPrototypeOf( /x/ ) ) );
   t.is( !_.prototypeIsStandard( Object.getPrototypeOf( new Date() ) ) );
-  t.is( !_.prototypeIsStandard( Object.getPrototypeOf( new Float32Array() ) ) );
+  t.is( !_.prototypeIsStandard( Object.getPrototypeOf( new F32x() ) ) );
   t.is( !_.prototypeIsStandard( Object.getPrototypeOf( new (function(){})() ) ) );
   t.is( _.prototypeIsStandard( Object.getPrototypeOf( Self ) ) );
 
@@ -317,31 +317,31 @@ function accessor( test )
   return;
 
   test.case = 'empty call'; /**/
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.declare( );
   });
 
   test.case = 'invalid first argument type'; /**/
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.declare( 1, { a : 'a' } );
   });
 
   test.case = 'invalid second argument type'; /**/
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.declare( {}, [] );
   });
 
   test.case = 'does not have Composes'; /**/
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.declare( { constructor : function(){}, },{ a : 'a' } );
   });
 
   test.case = 'does not have constructor'; /**/
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.declare( { Composes : {}, },{ a : 'a' } );
   });
@@ -454,7 +454,7 @@ function accessorForbid( test )
   return;
 
   test.case = 'forbid get';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     var Alpha = { };
     _.accessor.forbid( Alpha, { a : 'a' } );
@@ -462,7 +462,7 @@ function accessorForbid( test )
   });
 
   test.case = 'forbid set';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     var Alpha = { };
     _.accessor.forbid( Alpha, { a : 'a' } );
@@ -470,19 +470,19 @@ function accessorForbid( test )
   });
 
   test.case = 'empty call';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.forbid( );
   });
 
   test.case = 'invalid first argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.forbid( 1, { a : 'a' } );
   });
 
   test.case = 'invalid second argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.forbid( {}, 1 );
   });
@@ -504,7 +504,7 @@ function accessorReadOnly( test )
   });
   _.accessor.readOnly( Alpha.prototype,{ a : 'a' });
   var x = new Alpha();
-  test.shouldThrowError( () => x.a = 1 );
+  test.shouldThrowErrorOfAnyKind( () => x.a = 1 );
   var descriptor = Object.getOwnPropertyDescriptor( Alpha.prototype, 'a' );
   var got = descriptor.set ? true : false;
   var expected = false;
@@ -523,7 +523,7 @@ function accessorReadOnly( test )
   });
   _.accessor.readOnly( Alpha.prototype, { a : 'a' } );
   var x = new Alpha( 5 );
-  test.shouldThrowError( () => x.a = 1 );
+  test.shouldThrowErrorOfAnyKind( () => x.a = 1 );
   var descriptor = Object.getOwnPropertyDescriptor( Alpha.prototype, 'a' );
   var got = !descriptor.set && x.a === 5;
   var expected = true;
@@ -533,7 +533,7 @@ function accessorReadOnly( test )
   return;
 
   test.case = 'readonly';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     var Alpha = { };
     _.accessor.readOnly( Alpha, { a : 'a' } );
@@ -541,26 +541,26 @@ function accessorReadOnly( test )
   });
 
   test.case = 'setter defined';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     var Alpha = { _aSet : function() { } };
     _.accessor.readOnly( Alpha, { a : 'a' } );
   });
 
   test.case = 'empty call';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.readOnly( );
   });
 
   test.case = 'invalid first argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.readOnly( 1, { a : 'a' } );
   });
 
   test.case = 'invalid second argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.readOnly( {}, [] );
   });
@@ -595,7 +595,7 @@ function forbids( test )
 
   if( Config.debug )
   {
-    test.shouldThrowError( () => instance.f1 );
+    test.shouldThrowErrorOfAnyKind( () => instance.f1 );
   }
 
   test.close( 'pure map' );
@@ -644,8 +644,8 @@ function forbids( test )
 
   if( Config.debug )
   {
-    test.shouldThrowError( () => instance.f1 );
-    test.shouldThrowError( () => BasicConstructor.prototype.f1 );
+    test.shouldThrowErrorOfAnyKind( () => instance.f1 );
+    test.shouldThrowErrorOfAnyKind( () => BasicConstructor.prototype.f1 );
   }
 
   test.close( 'with class' );
@@ -699,19 +699,19 @@ function constant( test )
   return;
 
   test.case = 'empty call';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.propertyConstant( );
   });
 
   test.case = 'invalid first argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.propertyConstant( 1, { a : 'a' } );
   });
 
   test.case = 'invalid second argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.propertyConstant( {}, 13 );
   });
@@ -859,7 +859,7 @@ function classDeclare( test )
 
   test.case = 'attempt to extend statics without order';
 
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
 
     function C3()
@@ -1681,7 +1681,7 @@ function mixinStaticsWithDefinition( test )
 
   test.will = 'constructor in extend';
 
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
 
     function Mixin()
@@ -2029,7 +2029,7 @@ function instanceConstructor( test )
 var Self =
 {
 
-  name : 'Tools/base/l3/proto',
+  name : 'Tools.base.l3.proto',
   silencing : 1,
   // verbosity : 7,
   // routineTimeOut : 300000,

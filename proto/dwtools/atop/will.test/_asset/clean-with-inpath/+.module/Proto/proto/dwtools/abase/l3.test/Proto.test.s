@@ -317,31 +317,31 @@ function accessor( test )
   return;
 
   test.case = 'empty call'; /**/
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.declare( );
   });
 
   test.case = 'invalid first argument type'; /**/
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.declare( 1, { a : 'a' } );
   });
 
   test.case = 'invalid second argument type'; /**/
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.declare( {}, [] );
   });
 
   test.case = 'does not have Composes'; /**/
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.declare( { constructor : function(){}, },{ a : 'a' } );
   });
 
   test.case = 'does not have constructor'; /**/
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.declare( { Composes : {}, },{ a : 'a' } );
   });
@@ -454,7 +454,7 @@ function accessorForbid( test )
   return;
 
   test.case = 'forbid get';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     var Alpha = { };
     _.accessor.forbid( Alpha, { a : 'a' } );
@@ -462,7 +462,7 @@ function accessorForbid( test )
   });
 
   test.case = 'forbid set';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     var Alpha = { };
     _.accessor.forbid( Alpha, { a : 'a' } );
@@ -470,19 +470,19 @@ function accessorForbid( test )
   });
 
   test.case = 'empty call';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.forbid( );
   });
 
   test.case = 'invalid first argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.forbid( 1, { a : 'a' } );
   });
 
   test.case = 'invalid second argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.forbid( {}, 1 );
   });
@@ -504,7 +504,7 @@ function accessorReadOnly( test )
   });
   _.accessor.readOnly( Alpha.prototype,{ a : 'a' });
   var x = new Alpha();
-  test.shouldThrowError( () => x.a = 1 );
+  test.shouldThrowErrorOfAnyKind( () => x.a = 1 );
   var descriptor = Object.getOwnPropertyDescriptor( Alpha.prototype, 'a' );
   var got = descriptor.set ? true : false;
   var expected = false;
@@ -523,7 +523,7 @@ function accessorReadOnly( test )
   });
   _.accessor.readOnly( Alpha.prototype, { a : 'a' } );
   var x = new Alpha( 5 );
-  test.shouldThrowError( () => x.a = 1 );
+  test.shouldThrowErrorOfAnyKind( () => x.a = 1 );
   var descriptor = Object.getOwnPropertyDescriptor( Alpha.prototype, 'a' );
   var got = !descriptor.set && x.a === 5;
   var expected = true;
@@ -533,7 +533,7 @@ function accessorReadOnly( test )
   return;
 
   test.case = 'readonly';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     var Alpha = { };
     _.accessor.readOnly( Alpha, { a : 'a' } );
@@ -541,26 +541,26 @@ function accessorReadOnly( test )
   });
 
   test.case = 'setter defined';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     var Alpha = { _aSet : function() { } };
     _.accessor.readOnly( Alpha, { a : 'a' } );
   });
 
   test.case = 'empty call';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.readOnly( );
   });
 
   test.case = 'invalid first argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.readOnly( 1, { a : 'a' } );
   });
 
   test.case = 'invalid second argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.readOnly( {}, [] );
   });
@@ -595,7 +595,7 @@ function forbids( test )
 
   if( Config.debug )
   {
-    test.shouldThrowError( () => instance.f1 );
+    test.shouldThrowErrorOfAnyKind( () => instance.f1 );
   }
 
   test.close( 'pure map' );
@@ -644,8 +644,8 @@ function forbids( test )
 
   if( Config.debug )
   {
-    test.shouldThrowError( () => instance.f1 );
-    test.shouldThrowError( () => BasicConstructor.prototype.f1 );
+    test.shouldThrowErrorOfAnyKind( () => instance.f1 );
+    test.shouldThrowErrorOfAnyKind( () => BasicConstructor.prototype.f1 );
   }
 
   test.close( 'with class' );
@@ -699,19 +699,19 @@ function propertyConstant( test )
   return;
 
   test.case = 'empty call';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.propertyConstant( );
   });
 
   test.case = 'invalid first argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.propertyConstant( 1, { a : 'a' } );
   });
 
   test.case = 'invalid second argument type';
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
     _.propertyConstant( {}, 13 );
   });
@@ -859,7 +859,7 @@ function classDeclare( test )
 
   test.case = 'attempt to extend statics without order';
 
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
 
     function C3()
@@ -1681,7 +1681,7 @@ function mixinStaticsWithDefinition( test )
 
   test.will = 'constructor in extend';
 
-  test.shouldThrowError( function()
+  test.shouldThrowErrorOfAnyKind( function()
   {
 
     function Mixin()
@@ -2029,7 +2029,7 @@ function workpieceConstruct( test )
 var Self =
 {
 
-  name : 'Tools/base/l3/proto',
+  name : 'Tools.base.l3.proto',
   silencing : 1,
   // verbosity : 7,
   // routineTimeOut : 300000,
