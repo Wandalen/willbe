@@ -1164,14 +1164,47 @@ function _remoteDownload( o )
     downloading = !downloading;
 
     /*
+      possible alternative for deleting old remote when its not valid
+    */
+
+    if( opener.isDownloaded )
+    {
+      let gitProvider = will.fileProvider.providerForPath( opener.remotePath );
+      let result = gitProvider.isDownloadedFromRemote
+      ({
+        localPath : opener.localPath,
+        remotePath : opener.remotePath
+      });
+      if( !result.downloadedFromRemote )
+      throw _.err
+      (
+        'Module', opener.decoratedAbsoluteName, 'is aleady downloaded, but has different origin url:',
+        _.strQuote( result.originVcsPath ), ', expected url:', _.strQuote( result.remoteVcsPath )
+      );
+    }
+    else if( fileProvider.fileExists( opener.localPath ) )
+    {
+      throw _.err
+      (
+        'Module', opener.decoratedAbsoluteName, 'is not downloaded, but local path:', _.strQuote( opener.localPath ), 'exits.',
+        'Rename/remove path:', _.strQuote( opener.localPath ), 'and try again.'
+      )
+    }
+
+    if( !opener.isValid() )
+    throw _.err( 'Module', opener.decoratedAbsoluteName, 'is broken!' ); //Vova: this error needs more details
+
+    /*
     delete old remote opener if it has a critical error or downloaded files are corrupted
     */
 
-    if( !o.dry )
-    if( !opener.isValid() || !opener.isDownloaded )
-    {
-      fileProvider.filesDelete({ filePath : opener.localPath, throwing : 0, sync : 1 });
-    }
+    // if( !o.dry )
+    // {
+    //   if( !opener.isValid() || !opener.isDownloaded )
+    //   {
+    //     fileProvider.filesDelete({ filePath : opener.localPath, throwing : 0, sync : 1 });
+    //   }
+    // }
 
     return arg;
   })
