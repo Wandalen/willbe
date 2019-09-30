@@ -672,6 +672,12 @@ function predefinedForm()
     stepRoutine : Predefined.stepRoutineExport,
   })
 
+  step
+  ({
+    name : 'willbe.version.check',
+    stepRoutine : Predefined.stepRoutineWillbeIsUpToDate,
+  })
+
   /* */
 
   reflector

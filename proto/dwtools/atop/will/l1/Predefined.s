@@ -864,6 +864,58 @@ stepRoutineExport.uniqueOptions =
   export : null,
 }
 
+//
+
+function stepRoutineWillbeIsUpToDate( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 1 );
+
+  /* */
+
+  let packageJson = require( '../../../../../package.json' );
+  let currentVersion = packageJson.version;
+
+  let ready = _.process.start
+  ({
+    execPath : 'npm show willbe version',
+    outputCollecting : 1,
+  });
+
+  ready.finally( ( err, got ) =>
+  {
+    if( err )
+    throw _.err( err, '\nFailed to check version of utility willbe' );
+
+    let latestVersion = _.strStrip( result.output );
+
+    if( latestVersion !== currentVersion )
+    {
+      debugger
+      throw _.errBrief( 'Utility willbe is out of date, please run: "npm r -g willbe && npm i -g willbe" for update.' );
+    }
+
+    return true;
+  })
+
+  return ready;
+}
+
+stepRoutineWillbeIsUpToDate.stepOptions =
+{
+}
+
+stepRoutineWillbeIsUpToDate.uniqueOptions =
+{
+}
+
 // --
 // declare
 // --
@@ -891,6 +943,8 @@ let Extend =
 
   stepRoutineClean,
   stepRoutineExport,
+
+  stepRoutineWillbeIsUpToDate
 
 }
 
