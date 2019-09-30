@@ -1181,6 +1181,9 @@ function _remoteDownload( o )
         'Module', opener.decoratedAbsoluteName, 'is aleady downloaded, but has different origin url:',
         _.strQuote( result.originVcsPath ), ', expected url:', _.strQuote( result.remoteVcsPath )
       );
+
+      if( !opener.isValid() )
+      throw _.err( 'Module', opener.decoratedAbsoluteName, 'is aleady downloaded, but its broken:\n', _.errAttentionRequest( opener.error ) ); //Vova: this error needs more details
     }
     else if( fileProvider.fileExists( opener.localPath ) )
     {
@@ -1190,9 +1193,6 @@ function _remoteDownload( o )
         'Rename/remove path:', _.strQuote( opener.localPath ), 'and try again.'
       )
     }
-
-    if( !opener.isValid() )
-    throw _.err( 'Module', opener.decoratedAbsoluteName, 'is broken!' ); //Vova: this error needs more details
 
     /*
     delete old remote opener if it has a critical error or downloaded files are corrupted
