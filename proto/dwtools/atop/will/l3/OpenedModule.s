@@ -650,6 +650,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'submodules.are.updated',
+    stepRoutine : Predefined.stepRoutineSubmodulesAreUpdated,
+  })
+
+  step
+  ({
     name : 'submodules.reload',
     stepRoutine : Predefined.stepRoutineSubmodulesReload,
   })

@@ -764,6 +764,80 @@ stepRoutineSubmodulesUpdate.stepOptions =
 
 //
 
+function stepRoutineSubmodulesAreUpdated( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let will = module.will;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 1 );
+  _.assert( !!module );
+
+  let relations = module.modulesEach({ outputFormat : '*/relation' });
+  let totalNumber = _.mapKeys( module.submoduleMap ).length;
+  let upToDateNumber = 0;
+
+  let con = new _.Consequence().take( null );
+
+  _.each( relations, ( relation ) =>
+  {
+    con.then( () =>
+    {
+      if( !isDownloaded() )
+      {
+        logger.error( ' ! Submodule ' + relation.opener.decoratedQualifiedName + ' is not downloaded!'  );
+        return false;
+      }
+
+      return relation.opener.remoteIsUpToDateUpdate()
+      .then( ( arg ) =>
+      {
+        if( !relation.opener.isUpToDate )
+        logger.error( ' ! Submodule ' + relation.opener.decoratedQualifiedName + ' is not up to date!'  );
+        else
+        upToDateNumber += 1;
+        return arg;
+      })
+    })
+
+    function isDownloaded()
+    {
+      if( !relation.opener )
+      return false;
+
+      _.assert( _.boolLike( relation.opener.isDownloaded ) );
+      return relation.opener.isDownloaded;
+    }
+  });
+
+  con.finally( ( err, got ) =>
+  {
+    if( err )
+    throw _.err( err, '\nFailed to check if modules are up to date' );
+
+    let message = upToDateNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' are up to date';
+
+    let allAreUpToDate = upToDateNumber === totalNumber;
+
+    if( allAreUpToDate )
+    throw _.errBrief( message );
+    else
+    logger.log( message );
+
+    return allAreUpToDate;
+  })
+
+  return con;
+}
+
+stepRoutineSubmodulesAreUpdated.stepOptions =
+{
+}
+
+//
+
 function stepRoutineSubmodulesReload( frame )
 {
   let step = this;
@@ -938,6 +1012,7 @@ let Extend =
 
   stepRoutineSubmodulesDownload,
   stepRoutineSubmodulesUpdate,
+  stepRoutineSubmodulesAreUpdated,
   stepRoutineSubmodulesReload,
   stepRoutineSubmodulesClean,
 
