@@ -959,11 +959,11 @@ function stepRoutineWillbeIsUpToDate( frame )
 
   let ready = _.process.start
   ({
-    execPath : 'npm show willbe version',
+    execPath : 'npm view willbe version',
     outputCollecting : 1,
   });
 
-  ready.finally( ( err, got ) =>
+  ready.finally( ( err, result ) =>
   {
     if( err )
     throw _.err( err, '\nFailed to check version of utility willbe' );
@@ -973,7 +973,11 @@ function stepRoutineWillbeIsUpToDate( frame )
     if( latestVersion !== currentVersion )
     {
       debugger
-      throw _.errBrief( 'Utility willbe is out of date, please run: "npm r -g willbe && npm i -g willbe" for update.' );
+      throw _.errBrief
+      ( 'Utility willbe is out of date!',
+        '\nCurrent version:', currentVersion, '\nLatest:', latestVersion,
+        '\nPlease run: "npm r -g willbe && npm i -g willbe" to update.'
+      );
     }
 
     return true;

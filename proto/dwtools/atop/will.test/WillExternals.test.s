@@ -11194,6 +11194,76 @@ stepSubmodulesDownload.timeOut = 300000;
 
 //
 
+function stepWillbeVersionCheck( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'willbe-version-check' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let willbeRootPath = _.path.join( __dirname, '../../../..' );
+
+  let assetDstPath = _.path.join( routinePath, 'asset' );
+  let willbeDstPath = _.path.join( routinePath, 'willbe' );
+
+  _.fileProvider.filesReflect
+  ({
+    reflectMap :
+    {
+      'proto' : 'proto',
+      'package.json' : 'package.json',
+    },
+    src : { prefixPath : willbeRootPath },
+    dst : { prefixPath : willbeDstPath },
+  })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : assetDstPath } })
+
+  let execPath = _.path.nativize( _.path.join( willbeDstPath, 'proto/dwtools/atop/will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : assetDstPath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    verbosity : 3,
+    ready : ready
+  })
+
+  /* */
+
+  shell( '.build' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Built .+ \/ build::debug/ ) );
+    return null;
+  })
+
+  .then( ( ) =>
+  {
+    let packageJsonPath = _.path.join( willbeDstPath, 'package.json' );
+    let packageJson = _.fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
+    packageJson.version = '0.0.0';
+    _.fileProvider.fileWrite({ filePath : packageJsonPath, encoding : 'json', data : packageJson });
+    return null;
+  })
+
+  shell( '.build' )
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'npm r -g willbe && npm i -g willbe' ) );
+    test.is( _.strHas( got.output, /Failed .+ \/ step::willbe.version.check/ ) );
+    return null;
+  })
+
+  return ready;
+}
+
+stepWillbeVersionCheck.timeOut = 15000;
+
+//
+
 function upgradeDryDetached( test )
 {
   let self = this;
@@ -12822,6 +12892,7 @@ var Self =
     submodulesUpdate,
     submodulesUpdateSwitchBranch,
     stepSubmodulesDownload,
+    stepWillbeVersionCheck,
     upgradeDryDetached,
     upgradeDetached,
     fixateDryDetached,
