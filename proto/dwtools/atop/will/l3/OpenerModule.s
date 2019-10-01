@@ -1164,8 +1164,7 @@ function _remoteDownload( o )
     downloading = !downloading;
 
     /*
-      possible alternative for deleting old remote when its not valid
-    */
+    // Vova: possible alternative for deleting old remote when its not valid
 
     if( opener.isDownloaded )
     {
@@ -1193,18 +1192,19 @@ function _remoteDownload( o )
         'Rename/remove path:', _.strQuote( opener.localPath ), 'and try again.'
       )
     }
+    */
 
     /*
     delete old remote opener if it has a critical error or downloaded files are corrupted
     */
 
-    // if( !o.dry )
-    // {
-    //   if( !opener.isValid() || !opener.isDownloaded )
-    //   {
-    //     fileProvider.filesDelete({ filePath : opener.localPath, throwing : 0, sync : 1 });
-    //   }
-    // }
+    if( !o.dry )
+    {
+      if( !opener.isValid() || !opener.isDownloaded )
+      {
+        fileProvider.filesDelete({ filePath : opener.localPath, throwing : 0, sync : 1 });
+      }
+    }
 
     return arg;
   })
