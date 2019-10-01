@@ -12615,6 +12615,151 @@ fixateDetached.timeOut = 500000;
 
 //
 
+function versionsVerify( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'command-versions-verify' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let localModulePathSrc = _.path.join( routinePath, 'module' );
+  let localModulePathDst = _.path.join( routinePath, '.module/local' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  let shell2 = _.sheller
+  ({
+    currentPath : localModulePathSrc,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  let shell3 = _.sheller
+  ({
+    currentPath : localModulePathDst,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  ready.then( () =>
+  {
+    test.case = 'setup';
+    return null;
+  })
+
+  shell( '.with ./module/ .export' )
+  shell2( 'git init' )
+  shell2( 'git add -fA .' )
+  shell2( 'git commit -m init' )
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'verify not downloaded';
+    return null;
+  })
+
+  shell( '.versions.verify' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Submodule .*local.* is not downloaded/ ) );
+    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were vefified in/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'first verify after download';
+    return null;
+  })
+
+  shell( '.submodules.download' )
+  shell( '.versions.verify' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were vefified in/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'second verify';
+    return null;
+  })
+
+  shell( '.versions.verify' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were vefified in/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'new commit on local copy, try to verify';
+    return null;
+  })
+
+  shell3( 'git commit --allow-empty -m test' )
+
+  shell( '.versions.verify' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were vefified in/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'change branch';
+    return null;
+  })
+
+  shell3( 'git checkout -b testbranch' )
+
+  shell( '.versions.verify' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Submodule .*local.* is on branch different from that is specified in will-file/ ) );
+    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were vefified in/ ) );
+    return null;
+  })
+
+  return ready;
+}
+
+versionsVerify.timeOut = 60000;
+
+//
+
 /*
   runWillbe checks if willbe can be terminated on early start from terminal when executed as child process using ExecUnrestricted script
 */
@@ -12999,6 +13144,8 @@ var Self =
     upgradeDetached,
     fixateDryDetached,
     fixateDetached,
+
+    versionsVerify
 
     // runWillbe, // qqq : help to fix, please
 

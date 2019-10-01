@@ -2886,6 +2886,101 @@ defaults.upgrading = null;
 
 //
 
+function versionsVerify()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let totalNumber = _.mapKeys( module.submoduleMap ).length;
+  let verifiedNumber = 0;
+
+  let time = _.timeNow();
+
+  _.assert( module.preformed > 0  );
+  _.assert( arguments.length === 0 );
+
+  logger.up();
+
+  let modules = module.modulesEach({ outputFormat : '/' });
+
+  modules.forEach( ( r ) =>
+  {
+    let verified = onEach( r );
+    if( verified )
+    verifiedNumber += 1;
+  })
+
+  logger.log( verifiedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' were verified in ' + _.timeSpent( time ) );
+
+  logger.down();
+
+  return verifiedNumber === totalNumber;
+
+  /* */
+
+  function onEach( r )
+  {
+    if( !r.opener.isDownloaded )
+    {
+      logger.error( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is not downloaded' );
+      return false;
+    }
+
+    if( r.opener.formed < 2 )
+    r.opener.remoteForm();
+
+    _.assert
+    (
+      !!r.opener && r.opener.formed >= 2,
+      () => 'Submodule', ( r.opener ? r.opener.qualifiedName : n ), 'was not preformed to verify'
+    );
+
+    if( !r.opener.isRemote )
+    return true;
+    if( r.relation && !r.relation.enabled )
+    return true;
+
+    let remoteProvider = fileProvider.providerForPath( r.opener.remotePath );
+    let remoteParsed = remoteProvider.pathParse( r.opener.remotePath );
+    let remoteVersion = remoteParsed.hash || 'master';
+    let localVersion = remoteProvider.versionLocalRetrive( r.opener.localPath );
+
+    let onSameVersion = remoteVersion === localVersion;
+
+    if( onSameVersion )
+    {
+      logger.log( 'Submodule', r.opener.qualifiedName, 'has correct version:', localVersion );
+    }
+    else
+    {
+      if( remoteParsed.isFixated )
+      {
+        logger.error
+        (
+          '! Submodule', r.opener.qualifiedName, 'has version different from that is specified in will-file!',
+          '\nCurrent:', localVersion,
+          '\nExpected:', remoteVersion
+        );
+      }
+      else
+      {
+        logger.error
+        (
+          '! Submodule', r.opener.qualifiedName, 'is on branch different from that is specified in will-file!',
+          '\nCurrent:', localVersion,
+          '\nExpected:', remoteVersion
+        );
+      }
+    }
+
+    return onSameVersion;
+  }
+}
+
+//
+
 function submodulesReload()
 {
   let module = this;
@@ -5956,6 +6051,8 @@ let Extend =
   moduleFixate,
   moduleFixateAct,
   moduleFixatePathFor,
+
+  versionsVerify,
 
   submodulesReload,
   submodulesForm,

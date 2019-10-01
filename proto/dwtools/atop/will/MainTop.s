@@ -573,6 +573,11 @@ function _commandsMake()
     'submodules fixate' :       { e : _.routineJoin( will, will.commandSubmodulesFixate ),            h : 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.' },
     'submodules upgrade' :      { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),           h : 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.' },
 
+    'versions download' :       { e : _.routineJoin( will, will.commandSubmodulesDownload ),          h : 'Download each submodule if such was not downloaded so far.' },
+    'versions update' :         { e : _.routineJoin( will, will.commandSubmodulesUpdate ),            h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
+    'versions verify' :         { e : _.routineJoin( will, will.commandVersionsVerify ),            h : 'Check whether each submodule is on branch which is specified in willfile' },
+    // 'versions agree' :          { e : _.routineJoin( will, will.commandSubmodulesAgree ),             h : '' },
+
     'shell' :                   { e : _.routineJoin( will, will.commandShell ),                       h : 'Execute shell command on the module.' },
     'clean' :                   { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
     'clean recursive' :         { e : _.routineJoin( will, will.commandCleanRecursive ),              h : 'Clean modules recursively. Delete genrated artifacts, temp files and downloaded submodules.' },
@@ -1399,6 +1404,26 @@ commandSubmodulesUpgrade.commandProperties =
 
 //
 
+function commandVersionsVerify( e )
+{
+  let will = this;
+
+  let propertiesMap = _.strStructureParse( e.argument );
+  _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
+
+  return will.openersCurrentEach( function( module )
+  {
+    return module.openedModule.versionsVerify();
+  });
+}
+
+commandVersionsVerify.commandProperties =
+{
+}
+
+//
+
 function commandShell( e )
 {
   let will = this;
@@ -1978,6 +2003,8 @@ let Extend =
   commandSubmodulesUpdate,
   commandSubmodulesFixate,
   commandSubmodulesUpgrade,
+
+  commandVersionsVerify,
 
   commandShell,
   commandClean,
