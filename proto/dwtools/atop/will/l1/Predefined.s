@@ -821,7 +821,7 @@ function stepRoutineSubmodulesAreUpdated( frame )
 
     let allAreUpToDate = upToDateNumber === totalNumber;
 
-    if( allAreUpToDate )
+    if( !allAreUpToDate )
     throw _.errBrief( message );
     else
     logger.log( message );

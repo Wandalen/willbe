@@ -11264,6 +11264,107 @@ stepWillbeVersionCheck.timeOut = 15000;
 
 //
 
+function stepSubmodulesAreUpdated( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-submodules-are-updated' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let localModulePath = _.path.join( routinePath, 'module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  let shell2 = _.process.starter
+  ({
+    currentPath : localModulePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  ready.then( () =>
+  {
+    test.case = 'setup';
+    return null;
+  })
+
+  shell( '.with ./module/ .export' )
+  shell2( 'git init' )
+  shell2( 'git add -fA .' )
+  shell2( 'git commit -m init' )
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'first build';
+    return null;
+  })
+
+  shell( '.build' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, / \+ 1\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of submodules are up to date/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'second build';
+    return null;
+  })
+
+  shell( '.build' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, / \+ 1\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of submodules are up to date/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'new commit on remote, try to build';
+    return null;
+  })
+
+  shell2( 'git commit --allow-empty -m test' )
+
+  shell( '.build' )
+
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, / \+ 0\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.is( _.strHas( got.output, /Submodule .*local is not up to date/ ) );
+    return null;
+  })
+
+  return ready;
+}
+
+stepSubmodulesAreUpdated.timeOut = 60000;
+
+//
+
 function upgradeDryDetached( test )
 {
   let self = this;
@@ -12893,6 +12994,7 @@ var Self =
     submodulesUpdateSwitchBranch,
     stepSubmodulesDownload,
     stepWillbeVersionCheck,
+    stepSubmodulesAreUpdated,
     upgradeDryDetached,
     upgradeDetached,
     fixateDryDetached,
