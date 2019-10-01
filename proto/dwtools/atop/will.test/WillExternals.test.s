@@ -11197,7 +11197,7 @@ stepSubmodulesDownload.timeOut = 300000;
 function stepWillbeVersionCheck( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'willbe-version-check' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-willbe-version-check' );
   let routinePath = _.path.join( self.tempDir, test.name );
   let willbeRootPath = _.path.join( __dirname, '../../../..' );
 
