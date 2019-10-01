@@ -575,8 +575,8 @@ function _commandsMake()
 
     'versions download' :       { e : _.routineJoin( will, will.commandSubmodulesDownload ),          h : 'Download each submodule if such was not downloaded so far.' },
     'versions update' :         { e : _.routineJoin( will, will.commandSubmodulesUpdate ),            h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
-    'versions verify' :         { e : _.routineJoin( will, will.commandVersionsVerify ),            h : 'Check whether each submodule is on branch which is specified in willfile' },
-    // 'versions agree' :          { e : _.routineJoin( will, will.commandSubmodulesAgree ),             h : '' },
+    'versions verify' :         { e : _.routineJoin( will, will.commandVersionsVerify ),              h : 'Check whether each submodule is on branch which is specified in willfile' },
+    'versions agree' :          { e : _.routineJoin( will, will.commandVersionsAgree ),               h : 'Update each submodule, checking for available updates for each submodule. Does not change state of module if update is needed and module has local changes.' },
 
     'shell' :                   { e : _.routineJoin( will, will.commandShell ),                       h : 'Execute shell command on the module.' },
     'clean' :                   { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
@@ -1424,6 +1424,27 @@ commandVersionsVerify.commandProperties =
 
 //
 
+function commandVersionsAgree( e )
+{
+  let will = this;
+
+  let propertiesMap = _.strStructureParse( e.argument );
+  _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
+
+  return will.openersCurrentEach( function( module )
+  {
+    return module.openedModule.versionsAgree({ dry : e.propertiesMap.dry });
+  });
+}
+
+commandVersionsVerify.commandProperties =
+{
+  dry : 'Dry run without writing. Default is dry:0.',
+}
+
+//
+
 function commandShell( e )
 {
   let will = this;
@@ -2005,6 +2026,7 @@ let Extend =
   commandSubmodulesUpgrade,
 
   commandVersionsVerify,
+  commandVersionsAgree,
 
   commandShell,
   commandClean,

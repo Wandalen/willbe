@@ -12760,6 +12760,143 @@ versionsVerify.timeOut = 60000;
 
 //
 
+function versionsAgree( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'command-versions-agree' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let localModulePathSrc = _.path.join( routinePath, 'module' );
+  let localModulePathDst = _.path.join( routinePath, '.module/local' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  let shell2 = _.sheller
+  ({
+    currentPath : localModulePathSrc,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  let shell3 = _.sheller
+  ({
+    currentPath : localModulePathDst,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  ready.then( () =>
+  {
+    test.case = 'setup';
+    return null;
+  })
+
+  shell( '.with ./module/ .export' )
+  shell2( 'git init' )
+  shell2( 'git add -fA .' )
+  shell2( 'git commit -m init' )
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'agree not downloaded';
+    return null;
+  })
+
+  shell( '.versions.agree' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'agree after download';
+    return null;
+  })
+
+  shell( '.versions.agree' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'local is up to date with remote but has local commit';
+    return null;
+  })
+
+  shell3( 'git commit --allow-empty -m test' )
+  shell( '.versions.agree' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    return null;
+  })
+  shell3( 'git status' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Your branch is ahead of \'origin\/master\' by 1 commit/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'local is not up to date with remote but has local commit';
+    return null;
+  })
+
+  shell2( 'git commit --allow-empty -m test' )
+  shell( '.versions.agree' )
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, /Module .*module::submodules \/ module::local.* needs to be updated, but has local changes/ ) );
+    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    return null;
+  })
+  shell3( 'git status' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Your branch and \'origin\/master\' have diverged/ ) );
+    return null;
+  })
+
+  return ready;
+}
+
+versionsAgree.timeOut = 60000;
+
+//
+
 /*
   runWillbe checks if willbe can be terminated on early start from terminal when executed as child process using ExecUnrestricted script
 */
@@ -13145,7 +13282,8 @@ var Self =
     fixateDryDetached,
     fixateDetached,
 
-    versionsVerify
+    versionsVerify,
+    versionsAgree
 
     // runWillbe, // qqq : help to fix, please
 

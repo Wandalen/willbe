@@ -2451,6 +2451,7 @@ var defaults = _subModulesDownload_body.defaults = _.mapExtend( null, modulesEac
 
 defaults.withPeers = 0;
 defaults.updating = 0;
+defaults.agree = 0;
 defaults.dry = 0;
 
 delete defaults.outputFormat;
@@ -2978,6 +2979,12 @@ function versionsVerify()
     return onSameVersion;
   }
 }
+
+//
+
+let versionsAgree = _.routineFromPreAndBody( _submodulesDownload_pre, _submodulesDownload_body, 'versionsAgree' );
+versionsAgree.defaults.updating = 1;
+versionsAgree.defaults.agree = 1;
 
 //
 
@@ -6053,6 +6060,7 @@ let Extend =
   moduleFixatePathFor,
 
   versionsVerify,
+  versionsAgree,
 
   submodulesReload,
   submodulesForm,
