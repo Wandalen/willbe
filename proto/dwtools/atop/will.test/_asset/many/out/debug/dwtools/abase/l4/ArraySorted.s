@@ -160,7 +160,7 @@ function lookUpIndex( arr,ins,comparator )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.longIs( arr ) );
+  _.assert( _.longIs( arr ), 'Expect a Long' );
 
   comparator = _._comparatorFromEvaluator( comparator );
   let index = this._lookUpAct( arr,ins,comparator,0,arr.length );
@@ -270,7 +270,7 @@ function lookUpClosestIndex( arr,ins,comparator )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.longIs( arr ) );
+  _.assert( _.longIs( arr ), 'Expect a Long' );
 
   comparator = _._comparatorFromEvaluator( comparator );
   let index = this._lookUpAct( arr,ins,comparator,0,arr.length );
@@ -377,7 +377,7 @@ function lookUpClosest( arr,ins,comparator )
 function lookUpInterval( arr,range,comparator )
 {
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.longIs( arr ) );
+  _.assert( _.longIs( arr ), 'Expect a Long' );
 
   comparator = _._comparatorFromEvaluator( comparator );
   let length = arr.length;
@@ -417,7 +417,7 @@ function lookUpIntervalNarrowest( arr, range, comparator )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.longIs( arr ) );
+  _.assert( _.longIs( arr ), 'Expect a Long' );
 
   comparator = _._comparatorFromEvaluator( comparator );
 
@@ -468,7 +468,7 @@ function lookUpIntervalNarrowestOld( arr, range, comparator )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.longIs( arr ) );
+  _.assert( _.longIs( arr ), 'Expect a Long' );
 
   comparator = _._comparatorFromEvaluator( comparator );
   let length = arr.length;
@@ -517,7 +517,7 @@ function lookUpIntervalHaving( arr, range, comparator )
   comparator = _._comparatorFromEvaluator( comparator );
 
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.longIs( arr ) );
+  _.assert( _.longIs( arr ), 'Expect a Long' );
 
   let length = arr.length;
   let b = _.sorted._leftMostAtMostIndex( arr, range[ 0 ], comparator, 0, length );
@@ -541,7 +541,7 @@ function lookUpIntervalHaving( arr, range, comparator )
 function lookUpIntervalEmbracingAtLeast( arr, range, comparator )
 {
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.longIs( arr ) );
+  _.assert( _.longIs( arr ), 'Expect a Long' );
 
   comparator = _._comparatorFromEvaluator( comparator );
 
@@ -586,7 +586,7 @@ function lookUpIntervalEmbracingAtLeast( arr, range, comparator )
 function lookUpIntervalEmbracingAtLeastOld( arr, range, comparator )
 {
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.longIs( arr ) );
+  _.assert( _.longIs( arr ), 'Expect a Long' );
 
   comparator = _._comparatorFromEvaluator( comparator );
   let length = arr.length;
@@ -671,7 +671,7 @@ function leftMostAtLeastIndex( arr,ins,comparator )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.longIs( arr ) );
+  _.assert( _.longIs( arr ), 'Expect a Long' );
 
   if( !arr.length )
   return 0;
@@ -756,7 +756,7 @@ function leftMostAtMostIndex( arr,ins,comparator )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.longIs( arr ) );
+  _.assert( _.longIs( arr ), 'Expect a Long' );
 
   if( !arr.length )
   return 0;
@@ -829,7 +829,7 @@ function rightMostAtLeastIndex( arr,ins,comparator )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.longIs( arr ) );
+  _.assert( _.longIs( arr ), 'Expect a Long' );
 
   if( !arr.length )
   return 0;
@@ -905,7 +905,7 @@ function rightMostAtMostIndex( arr,ins,comparator )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.longIs( arr ) );
+  _.assert( _.longIs( arr ), 'Expect a Long' );
 
   if( !arr.length )
   return 0;
@@ -977,7 +977,7 @@ function remove( arr,ins,comparator )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.longIs( arr ) );
+  _.assert( _.longIs( arr ), 'Expect a Long' );
 
   comparator = _._comparatorFromEvaluator( comparator );
   let l = arr.length;
@@ -1029,7 +1029,7 @@ function addOnce( arr,ins,comparator )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.longIs( arr ) );
+  _.assert( _.longIs( arr ), 'Expect a Long' );
 
   comparator = _._comparatorFromEvaluator( comparator );
   let l = arr.length;
@@ -1080,7 +1080,7 @@ function add( arr,ins,comparator )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3, 'Expects two or three arguments' );
-  _.assert( _.longIs( arr ) );
+  _.assert( _.longIs( arr ), 'Expect a Long' );
 
   comparator = _._comparatorFromEvaluator( comparator );
   let l = arr.length;

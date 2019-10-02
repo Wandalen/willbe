@@ -280,7 +280,7 @@ function minimize( sparse )
 
   if( sparse.length === 0 )
   {
-    return _.entityMake( sparse, 0 );
+    return _.entityMakeConstructing( sparse, 0 );
   }
 
   let l = 0;
@@ -298,7 +298,7 @@ function minimize( sparse )
 
   l += 2;
 
-  let result = _.entityMake( sparse, l );
+  let result = _.entityMakeConstructing( sparse, l );
   let b = sparse[ 0 ];
   let e = sparse[ 1 ];
   let r = 0;
@@ -351,10 +351,10 @@ function invertFinite( sparse )
   _.assert( _.sparse.is( sparse ) )
 
   if( !sparse.length )
-  return _.entityMake( sparse, 0 );
+  return _.entityMakeConstructing( sparse, 0 );
 
   if( sparse.length === 2 && sparse[ 0 ] === sparse[ 1 ] )
-  return _.entityShallowClone( sparse );
+  return _.entityMake( sparse );
 
   let needPre = 0;
   let needPost = 0;
@@ -366,7 +366,7 @@ function invertFinite( sparse )
   }
 
   let l = sparse.length + needPre*2 + needPost*2 - 2;
-  let result = _.entityMake( sparse, l );
+  let result = _.entityMakeConstructing( sparse, l );
   let r = 0;
 
   _.assert( l % 2 === 0 );

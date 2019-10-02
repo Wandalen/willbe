@@ -8,6 +8,7 @@ if( typeof module !== 'undefined' )
   let _ = require( '../../Tools.s' );
 
   _.include( 'wTesting' );
+  _.include( 'wStringer' );
   require( '../l4/Uri.s' );
 
 }
@@ -3616,99 +3617,99 @@ function localFromGlobal( test )
   var expected = '/some/staging/index.html'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
   var src = '/some/staging/index.html/'
   var expected =     '/some/staging/index.html/'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
   var src = '//some/staging/index.html'
   var expected =     '//some/staging/index.html'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
   var src = '//some/staging/index.html/'
   var expected =     '//some/staging/index.html/'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
   var src = '///some/staging/index.html'
   var expected =     '///some/staging/index.html'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
   var src = '///some/staging/index.html/'
   var expected =     '///some/staging/index.html/'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
   var src = 'file:///some/staging/index.html'
   var expected =     '/some/staging/index.html'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
   var src = 'file:///some/staging/index.html/'
   var expected =     '/some/staging/index.html/'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
   var src = 'http://some.come/staging/index.html'
   var expected =     'some.come/staging/index.html'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
   var src = 'http://some.come/staging/index.html/'
   var expected =     'some.come/staging/index.html/'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
   var src = 'svn+https://user@subversion.com/svn/trunk'
   var expected =     'user@subversion.com/svn/trunk'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
   var src = 'svn+https://user@subversion.com/svn/trunk/'
   var expected =     'user@subversion.com/svn/trunk/'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
   var src = 'complex+protocol://www.site.com:13/path/name/?query=here&and=here#anchor'
   var expected =     'www.site.com:13/path/name/'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
   var src = 'complex+protocol://www.site.com:13/path/name?query=here&and=here#anchor'
   var expected =     'www.site.com:13/path/name'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
   var src = 'https://web.archive.org/web/*/http://www.heritage.org/index/ranking'
   var expected =     'web.archive.org/web/*/http://www.heritage.org/index/ranking'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
   var src = 'https://web.archive.org//web//*//http://www.heritage.org//index//ranking'
   var expected =     'web.archive.org//web//*//http://www.heritage.org//index//ranking'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
   var src = '://www.site.com:13/path//name//?query=here&and=here#anchor'
   var expected =     'www.site.com:13/path//name//'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
   var src = ':///www.site.com:13/path//name/?query=here&and=here#anchor'
   var expected =     '/www.site.com:13/path//name/'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
   /*  */
-  
+
   var src = _.uri.parse( ':///www.site.com:13/path//name/?query=here&and=here#anchor' );
   var expected =     '/www.site.com:13/path//name/'
   var got = _.uri.localFromGlobal( src );
   test.identical( got, expected );
-  
+
 }
 
 //
@@ -5418,10 +5419,10 @@ function relativeLocalPaths( test )
   var got = _.uri.relative( basePath, filePath );
   test.identical( got, expected );
 
-  test.case = 'same path'; /* */
+  test.case = '4 down'; /* */
   var basePath = '/aa//bb/cc/';
   var filePath = '//xx/yy/zz/';
-  var expected = '../../../..//xx/yy/zz/';
+  var expected = './../../../..//xx/yy/zz/';
   var got = _.uri.relative( basePath, filePath );
   test.identical( got, expected );
 
@@ -5435,14 +5436,14 @@ function relativeLocalPaths( test )
   test.case = 'relative filePath parent directory'; /* */
   var basePath = '/aa/bb/cc/';
   var filePath = '/aa/bb';
-  var expected = '..';
+  var expected = './..';
   var got = _.uri.relative( basePath, filePath );
   test.identical( got, expected );
 
   test.case = 'relative filePath parent directory'; /* */
   var basePath = '/aa/bb/cc/';
   var filePath = '/aa/bb/';
-  var expected = '../';
+  var expected = './../';
   var got = _.uri.relative( basePath, filePath );
   test.identical( got, expected );
 
@@ -5752,7 +5753,7 @@ function relative( test )
   test.case = 'same path'; /* */
   var basePath = 'file:///aa//bb/cc/';
   var filePath = 'file:////xx/yy/zz/';
-  var expected = 'file://../../../..//xx/yy/zz/';
+  var expected = 'file://./../../../..//xx/yy/zz/';
   var got = _.uri.relative( basePath, filePath );
   test.identical( got, expected );
 
@@ -5766,14 +5767,14 @@ function relative( test )
   test.case = 'relative filePath parent directory'; /* */
   var basePath = 'file:///aa/bb/cc/';
   var filePath = 'file:///aa/bb';
-  var expected = 'file://..';
+  var expected = 'file://./..';
   var got = _.uri.relative( basePath, filePath );
   test.identical( got, expected );
 
   test.case = 'relative filePath parent directory'; /* */
   var basePath = 'file:///aa/bb/cc/';
   var filePath = 'file:///aa/bb/';
-  var expected = 'file://../';
+  var expected = 'file://./../';
   var got = _.uri.relative( basePath, filePath );
   test.identical( got, expected );
 
@@ -6016,7 +6017,7 @@ function relative( test )
   test.case = 'same path'; /* */
   var basePath = 'file:///aa//bb/cc/';
   var filePath = 'file:////xx/yy/zz/';
-  var expected = 'file://../../../..//xx/yy/zz/';
+  var expected = 'file://./../../../..//xx/yy/zz/';
   var got = _.uri.relative({ basePath, filePath });
   test.identical( got, expected );
 
@@ -6030,14 +6031,14 @@ function relative( test )
   test.case = 'relative filePath parent directory'; /* */
   var basePath = 'file:///aa/bb/cc/';
   var filePath = 'file:///aa/bb';
-  var expected = 'file://..';
+  var expected = 'file://./..';
   var got = _.uri.relative({ basePath, filePath });
   test.identical( got, expected );
 
   test.case = 'relative filePath parent directory'; /* */
   var basePath = 'file:///aa/bb/cc/';
   var filePath = 'file:///aa/bb/';
-  var expected = 'file://../';
+  var expected = 'file://./../';
   var got = _.uri.relative({ basePath, filePath });
   test.identical( got, expected );
 
@@ -6280,7 +6281,7 @@ function relative( test )
   test.case = 'same path'; /* */
   var basePath = 'file:///aa//bb/cc/';
   var filePath = 'file:////xx/yy/zz/';
-  var expected = '../../../..//xx/yy/zz/';
+  var expected = './../../../..//xx/yy/zz/';
   var got = _.uri.relative({ basePath, filePath, global : 0 });
   test.identical( got, expected );
 
@@ -6294,14 +6295,14 @@ function relative( test )
   test.case = 'relative filePath parent directory'; /* */
   var basePath = 'file:///aa/bb/cc/';
   var filePath = 'file:///aa/bb';
-  var expected = '..';
+  var expected = './..';
   var got = _.uri.relative({ basePath, filePath, global : 0 });
   test.identical( got, expected );
 
   test.case = 'relative filePath parent directory'; /* */
   var basePath = 'file:///aa/bb/cc/';
   var filePath = 'file:///aa/bb/';
-  var expected = '../';
+  var expected = './../';
   var got = _.uri.relative({ basePath, filePath, global : 0 });
   test.identical( got, expected );
 
@@ -6558,388 +6559,6 @@ function relative( test )
 
 //
 
-function common( test )
-{
-
-  test.case = 'empty';
-
-  var got = _.uri.common();
-  test.identical( got, null );
-
-  var got = _.uri.common([]);
-  test.identical( got, null );
-
-  test.case = 'array';
-
-  var got = _.uri.common([ '/a1/b2', '/a1/b' ]);
-  test.identical( got, '/a1/' );
-
-  var got = _.uri.common( [ '/a1/b1/c', '/a1/b1/d' ], '/a1/b2' );
-  test.identical( got, '/a1/' );
-
-  test.case = 'other';
-
-  var got = _.uri.common( 'npm:///wprocedure#0.3.19', 'npm:///wprocedure' );
-  test.identical( got, 'npm:///wprocedure' );
-
-  var got = _.uri.common( 'npm:///wprocedure', 'npm:///wprocedure#0.3.19' );
-  test.identical( got, 'npm:///wprocedure' );
-
-  var got = _.uri.common( 'npm:///wprocedure#0.3.19', 'npm:///wprocedure#' );
-  test.identical( got, 'npm:///wprocedure' );
-
-  var got = _.uri.common( 'npm:///wprocedure#', 'npm:///wprocedure#0.3.19' );
-  test.identical( got, 'npm:///wprocedure' );
-
-  var got = _.uri.common( 'git+https:///github.com/repo/wTools#bd9094b83', 'git+https:///github.com/repo/wTools#master' );
-  test.identical( got, 'git+https:///github.com/repo/wTools' );
-
-  var got = _.uri.common( '://a1/b2', '://some/staging/index.html' );
-  test.identical( got, '://.' );
-
-  var got = _.uri.common( '://some/staging/index.html', '://a1/b2' );
-  test.identical( got, '://.' );
-
-  var got = _.uri.common( '://some/staging/index.html', '://some/staging/' );
-  test.identical( got, '://some/staging/' );
-
-  var got = _.uri.common( '://some/staging/index.html', '://some/stagi' );
-  test.identical( got, '://some/' );
-
-  var got = _.uri.common( 'file:///some/staging/index.html', ':///some/stagi' );
-  test.identical( got, ':///some/' );
-
-  var got = _.uri.common( 'file://some/staging/index.html', '://some/stagi' );
-  test.identical( got, '://some/' );
-
-  var got = _.uri.common( 'file:///some/staging/index.html', '/some/stagi' );
-  test.identical( got, ':///some/' );
-
-  var got = _.uri.common( 'file:///some/staging/index.html', 'file:///some/staging' );
-  test.identical( got, 'file:///some/staging' );
-
-  var got = _.uri.common( 'http://some', 'some/staging' );
-  test.identical( got, '://some' );
-
-  var got = _.uri.common( 'some/staging', 'http://some' );
-  test.identical( got, '://some' );
-
-  var got = _.uri.common( 'http://some.come/staging/index.html', 'some/staging' );
-  test.identical( got, '://.' );
-
-  var got = _.uri.common( 'http:///some.come/staging/index.html', '/some/staging' );
-  test.identical( got, ':///' );
-
-  var got = _.uri.common( 'http://some.come/staging/index.html', 'file://some/staging' );
-  test.identical( got, '' );
-
-  var got = _.uri.common( 'http:///some.come/staging/index.html', 'file:///some/staging' );
-  test.identical( got, '' );
-
-  var got = _.uri.common( 'http:///some.come/staging/index.html', 'http:///some/staging/file.html' );
-  test.identical( got, 'http:///' );
-
-  var got = _.uri.common( 'http://some.come/staging/index.html', 'http://some.come/some/staging/file.html' );
-  test.identical( got, 'http://some.come/' );
-
-  // qqq !!! : implement
-  // var got = _.uri.common( 'complex+protocol://www.site.com:13/path/name?query=here&and=here#anchor', 'complex+protocol://www.site.com:13/path' );
-  // test.identical( got, 'complex+protocol://www.site.com:13/path' );
-  //
-  // var got = _.uri.common( 'complex+protocol://www.site.com:13/path', 'complex+protocol://www.site.com:13/path/name?query=here&and=here#anchor' );
-  // test.identical( got, 'complex+protocol://www.site.com:13/path' );
-  //
-  // var got = _.uri.common( 'complex+protocol://www.site.com:13/path/name?query=here&and=here#anchor', 'complex+protocol://www.site.com:13/path?query=here' );
-  // test.identical( got, 'complex+protocol://www.site.com:13/path' );
-  //
-  // var got = _.uri.common( 'complex+protocol://www.site.com:13/path?query=here', 'complex+protocol://www.site.com:13/path/name?query=here&and=here#anchor' );
-  // test.identical( got, 'complex+protocol://www.site.com:13/path' );
-  //
-  // var got = _.uri.common( 'https://user:pass@sub.host.com:8080/p/a/t/h?query=string#hash', 'https://user:pass@sub.host.com:8080/p/a' );
-  // test.identical( got, 'https://user:pass@sub.host.com:8080/p/a' );
-
-  var got = _.uri.common( '://some/staging/a/b/c', '://some/staging/a/b/c/index.html', '://some/staging/a/x' );
-  test.identical( got, '://some/staging/a/' );
-
-  var got = _.uri.common( 'http:///', 'http:///' );
-  test.identical( got, 'http:///' );
-
-  var got = _.uri.common( '/some/staging/a/b/c' );
-  test.identical( got, '/some/staging/a/b/c' );
-
-  test.case = 'combination of diff strcutures';
-
-  var got = _.uri.common( [ 'http:///' ], [ 'http:///' ] )
-  test.identical( got, 'http:///' );
-
-  var got = _.uri.common( [ 'http:///x' ], [ 'http:///y' ] )
-  test.identical( got, 'http:///' );
-
-  var got = _.uri.common( [ 'http:///a/x' ], [ 'http:///a/y' ] )
-  test.identical( got, 'http:///a/' );
-
-  var got = _.uri.common( [ 'http:///a/x' ], 'http:///a/y' )
-  test.identical( got, 'http:///a/' );
-
-  var got = _.uri.common( 'http:///a/x', [ 'http:///a/y' ] )
-  test.identical( got, 'http:///a/' );
-
-  var got = _.uri.common( 'http:///a/x', 'http:///a/y' )
-  test.identical( got, 'http:///a/' );
-
-  var got = _.uri.common( [ [ 'http:///a/x' ], 'http:///a/y' ], 'http:///a/z' )
-  test.identical( got, 'http:///a/' );
-
-/*
-  var got = _.uri.common( 'http://some.come/staging/index.html', 'file:///some/staging' );
-  var got = _.uri.common( 'http://some.come/staging/index.html', 'http:///some/staging/file.html' );
-
-*/
-
-  /* */
-
-  if( !Config.debug )
-  return
-
-  test.shouldThrowErrorOfAnyKind( () => _.uri.common( 'http://some.come/staging/index.html', 'file:///some/staging' ) );
-  test.shouldThrowErrorOfAnyKind( () => _.uri.common( 'http://some.come/staging/index.html', 'http:///some/staging/file.html' ) );
-  // test.shouldThrowErrorOfAnyKind( () => _.uri.common([]) );
-  // test.shouldThrowErrorOfAnyKind( () => _.uri.common() );
-  // test.shouldThrowErrorOfAnyKind( () => _.uri.common( [ 'http:///' ], [ 'http:///' ] ) );
-  // test.shouldThrowErrorOfAnyKind( () => _.uri.common( [ 'http:///' ], 'http:///' ) );
-
-}
-
-//
-
-function groupTextualReport( test )
-{
-  let defaults =
-  {
-    explanation : '',
-    groupsMap : null,
-    verbosity : 3,
-    spentTime : null,
-  }
-
-  test.case = 'defaults';
-  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults ) );
-  var expected = '0 file(s)';
-  test.identical( got,expected );
-
-  test.case = 'explanation only';
-  var o =
-  {
-    explanation : '- Deleted '
-  }
-  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
-  var expected = '- Deleted 0 file(s)';
-  test.identical( got,expected );
-
-  test.case = 'spentTime only';
-  var o =
-  {
-    spentTime : 5000
-  }
-  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
-  var expected = '0 file(s), found in 5.000s';
-  test.identical( got,expected );
-
-  test.open( 'locals' )
-
-  test.case = 'groupsMap only';
-  var o =
-  {
-    groupsMap :
-    {
-      '/' : [ '/a', '/a/b', '/b', '/b/c', ],
-      '/a' : [ '/a', '/a/b' ],
-      '/b' : [ '/b', '/b/c' ]
-    }
-  }
-  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
-  var expected =
-  [
-    '   4 at /',
-    '   2 at ./a',
-    '   2 at ./b',
-    '4 file(s), at /'
-  ].join( '\n' )
-  test.identical( got,expected );
-
-  test.case = 'explanation + groupsMap + spentTime, verbosity : 3';
-  var o =
-  {
-    groupsMap :
-    {
-      '/' : [ '/a', '/a/b', '/b', '/b/c', ],
-      '/a' : [ '/a', '/a/b' ],
-      '/b' : [ '/b', '/b/c' ]
-    },
-    spentTime : 5000,
-    explanation : '- Deleted ',
-    verbosity : 3
-  }
-  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
-  var expected =
-  [
-    '   4 at /',
-    '   2 at ./a',
-    '   2 at ./b',
-    '- Deleted 4 file(s), at /, found in 5.000s'
-  ].join( '\n' )
-  test.identical( got,expected );
-
-  test.case = 'explanation + groupsMap + spentTime, verbosity : 5';
-  var o =
-  {
-    groupsMap :
-    {
-      '/' : [ '/a', '/a/b', '/b', '/b/c', ],
-      '/a' : [ '/a', '/a/b' ],
-      '/b' : [ '/b', '/b/c' ]
-    },
-    spentTime : 5000,
-    explanation : '- Deleted ',
-    verbosity : 5
-  }
-  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
-  var expected =
-  [
-    '/a,/a/b,/b,/b/c ',
-    '   4 at /',
-    '   2 at ./a',
-    '   2 at ./b',
-    '- Deleted 4 file(s), at /, found in 5.000s'
-  ].join( '\n' )
-  test.identical( got,expected );
-
-  test.case = 'relative, explanation + groupsMap + spentTime, verbosity : 5';
-  var o =
-  {
-    groupsMap :
-    {
-      '/' : [ './a', './a/b', './b','./b/c', ],
-      './a' : [ './a', './a/b' ],
-      './b' : [ './b', './b/c' ]
-    },
-    spentTime : 5000,
-    explanation : '- Deleted ',
-    verbosity : 5
-  }
-  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
-  var expected =
-  [
-    './a,./a/b,./b,./b/c ',
-    '   4 at .',
-    '   2 at ./a',
-    '   2 at ./b',
-    '- Deleted 4 file(s), at ., found in 5.000s'
-  ].join( '\n' )
-  test.identical( got,expected );
-
-  test.close( 'locals' );
-
-  /*  */
-
-  test.open( 'globals' );
-
-  test.case = 'groupsMap only';
-  var o =
-  {
-    groupsMap :
-    {
-      '/' : [ 'file:///a', 'file:///a/b', 'file:///b', 'file:///b/c', ],
-      'file:///a' : [ 'file:///a', 'file:///a/b' ],
-      'file:///b' : [ 'file:///b', 'file:///b/c' ]
-    },
-  }
-  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
-  var expected =
-  [
-    '   4 at file:///',
-    '   2 at ./a',
-    '   2 at ./b',
-    '4 file(s), at file:///'
-  ].join( '\n' )
-  test.identical( got,expected );
-
-  test.case = 'explanation + groupsMap + spentTime, verbosity : 3';
-  var o =
-  {
-    groupsMap :
-    {
-      '/' : [ 'file:///a', 'file:///a/b', 'file:///b', 'file:///b/c', ],
-      'file:///a' : [ 'file:///a', 'file:///a/b' ],
-      'file:///b' : [ 'file:///b', 'file:///b/c' ]
-    },
-    spentTime : 5000,
-    explanation : '- Deleted ',
-    verbosity : 3
-  }
-  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
-  var expected =
-  [
-    '   4 at file:///',
-    '   2 at ./a',
-    '   2 at ./b',
-    '- Deleted 4 file(s), at file:///, found in 5.000s'
-  ].join( '\n' )
-  test.identical( got,expected );
-
-  test.case = 'explanation + groupsMap + spentTime, verbosity : 5';
-  var o =
-  {
-    groupsMap :
-    {
-      '/' : [ 'file:///a', 'file:///a/b', 'file:///b', 'file:///b/c', ],
-      'file:///a' : [ 'file:///a', 'file:///a/b' ],
-      'file:///b' : [ 'file:///b', 'file:///b/c' ]
-    },
-    spentTime : 5000,
-    explanation : '- Deleted ',
-    verbosity : 5
-  }
-  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
-  var expected =
-  [
-    'file:///a,file:///a/b,file:///b,file:///b/c ',
-    '   4 at file:///',
-    '   2 at ./a',
-    '   2 at ./b',
-    '- Deleted 4 file(s), at file:///, found in 5.000s'
-  ].join( '\n' )
-  test.identical( got,expected );
-
-  test.case = 'relative, explanation + groupsMap + spentTime, verbosity : 5';
-  var o =
-  {
-    groupsMap :
-    {
-      '/' : [ 'file://a', 'file://a/b', 'file://b', 'file://b/c', ],
-      'file://a' : [ 'file://a', 'file://a/b' ],
-      'file://b' : [ 'file://b', 'file://b/c' ]
-    },
-    spentTime : 5000,
-    explanation : '- Deleted ',
-    verbosity : 5
-  }
-  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
-  var expected =
-  [
-    'file://a,file://a/b,file://b,file://b/c ',
-    '   4 at file://.',
-    '   2 at ./a',
-    '   2 at ./b',
-    '- Deleted 4 file(s), at file://., found in 5.000s'
-  ].join( '\n' )
-  test.identical( got,expected );
-
-  test.close( 'globals' );
-}
-
-//
-
 function commonLocalPaths( test )
 {
   test.case = 'absolute-absolute'
@@ -7140,6 +6759,398 @@ function commonLocalPaths( test )
 
 //
 
+function common( test )
+{
+
+  test.case = 'empty';
+
+  var got = _.uri.common();
+  test.identical( got, null );
+
+  var got = _.uri.common([]);
+  test.identical( got, null );
+
+  test.case = 'array';
+
+  var got = _.uri.common([ '/a1/b2', '/a1/b' ]);
+  test.identical( got, '/a1/' );
+
+  var got = _.uri.common( [ '/a1/b1/c', '/a1/b1/d' ], '/a1/b2' );
+  test.identical( got, '/a1/' );
+
+  test.case = 'other';
+
+  var got = _.uri.common( 'npm:///wprocedure#0.3.19', 'npm:///wprocedure' );
+  test.identical( got, 'npm:///wprocedure' );
+
+  var got = _.uri.common( 'npm:///wprocedure', 'npm:///wprocedure#0.3.19' );
+  test.identical( got, 'npm:///wprocedure' );
+
+  var got = _.uri.common( 'npm:///wprocedure#0.3.19', 'npm:///wprocedure#' );
+  test.identical( got, 'npm:///wprocedure' );
+
+  var got = _.uri.common( 'npm:///wprocedure#', 'npm:///wprocedure#0.3.19' );
+  test.identical( got, 'npm:///wprocedure' );
+
+  var got = _.uri.common( 'git+https:///github.com/repo/wTools#bd9094b83', 'git+https:///github.com/repo/wTools#master' );
+  test.identical( got, 'git+https:///github.com/repo/wTools' );
+
+  var got = _.uri.common( '://a1/b2', '://some/staging/index.html' );
+  test.identical( got, '://.' );
+
+  var got = _.uri.common( '://some/staging/index.html', '://a1/b2' );
+  test.identical( got, '://.' );
+
+  var got = _.uri.common( '://some/staging/index.html', '://some/staging/' );
+  test.identical( got, '://some/staging/' );
+
+  var got = _.uri.common( '://some/staging/index.html', '://some/stagi' );
+  test.identical( got, '://some/' );
+
+  var got = _.uri.common( 'file:///some/staging/index.html', ':///some/stagi' );
+  test.identical( got, ':///some/' );
+
+  var got = _.uri.common( 'file://some/staging/index.html', '://some/stagi' );
+  test.identical( got, '://some/' );
+
+  var got = _.uri.common( 'file:///some/staging/index.html', '/some/stagi' );
+  test.identical( got, ':///some/' );
+
+  var got = _.uri.common( 'file:///some/staging/index.html', 'file:///some/staging' );
+  test.identical( got, 'file:///some/staging' );
+
+  var got = _.uri.common( 'http://some', 'some/staging' );
+  test.identical( got, '://some' );
+
+  var got = _.uri.common( 'some/staging', 'http://some' );
+  test.identical( got, '://some' );
+
+  var got = _.uri.common( 'http://some.come/staging/index.html', 'some/staging' );
+  test.identical( got, '://.' );
+
+  var got = _.uri.common( 'http:///some.come/staging/index.html', '/some/staging' );
+  test.identical( got, ':///' );
+
+  var got = _.uri.common( 'http://some.come/staging/index.html', 'file://some/staging' );
+  test.identical( got, '' );
+
+  var got = _.uri.common( 'http:///some.come/staging/index.html', 'file:///some/staging' );
+  test.identical( got, '' );
+
+  var got = _.uri.common( 'http:///some.come/staging/index.html', 'http:///some/staging/file.html' );
+  test.identical( got, 'http:///' );
+
+  var got = _.uri.common( 'http://some.come/staging/index.html', 'http://some.come/some/staging/file.html' );
+  test.identical( got, 'http://some.come/' );
+
+  // qqq !!! : implement
+  // var got = _.uri.common( 'complex+protocol://www.site.com:13/path/name?query=here&and=here#anchor', 'complex+protocol://www.site.com:13/path' );
+  // test.identical( got, 'complex+protocol://www.site.com:13/path' );
+  //
+  // var got = _.uri.common( 'complex+protocol://www.site.com:13/path', 'complex+protocol://www.site.com:13/path/name?query=here&and=here#anchor' );
+  // test.identical( got, 'complex+protocol://www.site.com:13/path' );
+  //
+  // var got = _.uri.common( 'complex+protocol://www.site.com:13/path/name?query=here&and=here#anchor', 'complex+protocol://www.site.com:13/path?query=here' );
+  // test.identical( got, 'complex+protocol://www.site.com:13/path' );
+  //
+  // var got = _.uri.common( 'complex+protocol://www.site.com:13/path?query=here', 'complex+protocol://www.site.com:13/path/name?query=here&and=here#anchor' );
+  // test.identical( got, 'complex+protocol://www.site.com:13/path' );
+  //
+  // var got = _.uri.common( 'https://user:pass@sub.host.com:8080/p/a/t/h?query=string#hash', 'https://user:pass@sub.host.com:8080/p/a' );
+  // test.identical( got, 'https://user:pass@sub.host.com:8080/p/a' );
+
+  var got = _.uri.common( '://some/staging/a/b/c', '://some/staging/a/b/c/index.html', '://some/staging/a/x' );
+  test.identical( got, '://some/staging/a/' );
+
+  var got = _.uri.common( 'http:///', 'http:///' );
+  test.identical( got, 'http:///' );
+
+  var got = _.uri.common( '/some/staging/a/b/c' );
+  test.identical( got, '/some/staging/a/b/c' );
+
+  test.case = 'combination of diff strcutures';
+
+  var got = _.uri.common( [ 'http:///' ], [ 'http:///' ] )
+  test.identical( got, 'http:///' );
+
+  var got = _.uri.common( [ 'http:///x' ], [ 'http:///y' ] )
+  test.identical( got, 'http:///' );
+
+  var got = _.uri.common( [ 'http:///a/x' ], [ 'http:///a/y' ] )
+  test.identical( got, 'http:///a/' );
+
+  var got = _.uri.common( [ 'http:///a/x' ], 'http:///a/y' )
+  test.identical( got, 'http:///a/' );
+
+  var got = _.uri.common( 'http:///a/x', [ 'http:///a/y' ] )
+  test.identical( got, 'http:///a/' );
+
+  var got = _.uri.common( 'http:///a/x', 'http:///a/y' )
+  test.identical( got, 'http:///a/' );
+
+  var got = _.uri.common( [ [ 'http:///a/x' ], 'http:///a/y' ], 'http:///a/z' )
+  test.identical( got, 'http:///a/' );
+
+/*
+  var got = _.uri.common( 'http://some.come/staging/index.html', 'file:///some/staging' );
+  var got = _.uri.common( 'http://some.come/staging/index.html', 'http:///some/staging/file.html' );
+
+*/
+
+  /* */
+
+  if( !Config.debug )
+  return
+
+  test.shouldThrowErrorOfAnyKind( () => _.uri.common( 'http://some.come/staging/index.html', 'file:///some/staging' ) );
+  test.shouldThrowErrorOfAnyKind( () => _.uri.common( 'http://some.come/staging/index.html', 'http:///some/staging/file.html' ) );
+  // test.shouldThrowErrorOfAnyKind( () => _.uri.common([]) );
+  // test.shouldThrowErrorOfAnyKind( () => _.uri.common() );
+  // test.shouldThrowErrorOfAnyKind( () => _.uri.common( [ 'http:///' ], [ 'http:///' ] ) );
+  // test.shouldThrowErrorOfAnyKind( () => _.uri.common( [ 'http:///' ], 'http:///' ) );
+
+}
+
+//
+
+function groupTextualReport( test )
+{
+  let defaults =
+  {
+    explanation : '',
+    groupsMap : null,
+    verbosity : 3,
+    spentTime : null,
+  }
+
+  test.case = 'defaults';
+  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults ) );
+  var expected = '0 file(s)';
+  test.identical( got, expected );
+
+  test.case = 'explanation only';
+  var o =
+  {
+    explanation : '- Deleted '
+  }
+  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
+  var expected = '- Deleted 0 file(s)';
+  test.identical( got, expected );
+
+  test.case = 'spentTime only';
+  var o =
+  {
+    spentTime : 5000
+  }
+  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
+  var expected = '0 file(s), found in 5.000s';
+  test.identical( got, expected );
+
+  test.open( 'locals' )
+
+  test.case = 'groupsMap only';
+  var o =
+  {
+    groupsMap :
+    {
+      '/' : [ '/a', '/a/b', '/b', '/b/c', ],
+      '/a' : [ '/a', '/a/b' ],
+      '/b' : [ '/b', '/b/c' ]
+    }
+  }
+  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
+  var expected =
+  [
+    '   4 at /',
+    '   2 at ./a',
+    '   2 at ./b',
+    '4 file(s), at /'
+  ].join( '\n' )
+  test.identical( got, expected );
+
+  test.case = 'explanation + groupsMap + spentTime, verbosity : 3';
+  var o =
+  {
+    groupsMap :
+    {
+      '/' : [ '/a', '/a/b', '/b', '/b/c', ],
+      '/a' : [ '/a', '/a/b' ],
+      '/b' : [ '/b', '/b/c' ]
+    },
+    spentTime : 5000,
+    explanation : '- Deleted ',
+    verbosity : 3
+  }
+  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
+  var expected =
+  [
+    '   4 at /',
+    '   2 at ./a',
+    '   2 at ./b',
+    '- Deleted 4 file(s), at /, found in 5.000s'
+  ].join( '\n' )
+  test.identical( got, expected );
+
+  test.case = 'explanation + groupsMap + spentTime, verbosity : 5';
+  var o =
+  {
+    groupsMap :
+    {
+      '/' : [ '/a', '/a/b', '/b', '/b/c', ],
+      '/a' : [ '/a', '/a/b' ],
+      '/b' : [ '/b', '/b/c' ]
+    },
+    spentTime : 5000,
+    explanation : '- Deleted ',
+    verbosity : 5
+  }
+  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
+  var expected =
+`  '/a'
+            '/a/b'
+            '/b'
+            '/b/c'
+             4 at /
+             2 at ./a
+             2 at ./b
+          - Deleted 4 file(s), at /, found in 5.000s
+`
+  test.equivalent( got, expected );
+
+  test.case = 'relative, explanation + groupsMap + spentTime, verbosity : 5';
+  var o =
+  {
+    groupsMap :
+    {
+      '/' : [ './a', './a/b', './b','./b/c', ],
+      './a' : [ './a', './a/b' ],
+      './b' : [ './b', './b/c' ]
+    },
+    spentTime : 5000,
+    explanation : '- Deleted ',
+    verbosity : 5
+  }
+  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
+  var expected =
+  `
+    './a'
+    './a/b'
+    './b'
+    './b/c'
+     4 at .
+     2 at ./a
+     2 at ./b
+  - Deleted 4 file(s), at ., found in 5.000s`
+  test.equivalent( got, expected );
+
+  test.close( 'locals' );
+
+  /*  */
+
+  test.open( 'globals' );
+
+  test.case = 'groupsMap only';
+  var o =
+  {
+    groupsMap :
+    {
+      '/' : [ 'file:///a', 'file:///a/b', 'file:///b', 'file:///b/c', ],
+      'file:///a' : [ 'file:///a', 'file:///a/b' ],
+      'file:///b' : [ 'file:///b', 'file:///b/c' ]
+    },
+  }
+  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
+  var expected =
+  [
+    '   4 at file:///',
+    '   2 at ./a',
+    '   2 at ./b',
+    '4 file(s), at file:///'
+  ].join( '\n' )
+  test.equivalent( got, expected );
+
+  test.case = 'explanation + groupsMap + spentTime, verbosity : 3';
+  var o =
+  {
+    groupsMap :
+    {
+      '/' : [ 'file:///a', 'file:///a/b', 'file:///b', 'file:///b/c', ],
+      'file:///a' : [ 'file:///a', 'file:///a/b' ],
+      'file:///b' : [ 'file:///b', 'file:///b/c' ]
+    },
+    spentTime : 5000,
+    explanation : '- Deleted ',
+    verbosity : 3
+  }
+  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
+  var expected =
+  [
+    '   4 at file:///',
+    '   2 at ./a',
+    '   2 at ./b',
+    '- Deleted 4 file(s), at file:///, found in 5.000s'
+  ].join( '\n' )
+  test.equivalent( got, expected );
+
+  test.case = 'explanation + groupsMap + spentTime, verbosity : 5';
+  var o =
+  {
+    groupsMap :
+    {
+      '/' : [ 'file:///a', 'file:///a/b', 'file:///b', 'file:///b/c', ],
+      'file:///a' : [ 'file:///a', 'file:///a/b' ],
+      'file:///b' : [ 'file:///b', 'file:///b/c' ]
+    },
+    spentTime : 5000,
+    explanation : '- Deleted ',
+    verbosity : 5
+  }
+  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
+  var expected =
+  `
+    'file:///a'
+    'file:///a/b'
+    'file:///b'
+    'file:///b/c'
+     4 at file:///
+     2 at ./a
+     2 at ./b
+  - Deleted 4 file(s), at file:///, found in 5.000s
+`
+  test.equivalent( got, expected );
+
+  test.case = 'relative, explanation + groupsMap + spentTime, verbosity : 5';
+  var o =
+  {
+    groupsMap :
+    {
+      '/' : [ 'file://a', 'file://a/b', 'file://b', 'file://b/c', ],
+      'file://a' : [ 'file://a', 'file://a/b' ],
+      'file://b' : [ 'file://b', 'file://b/c' ]
+    },
+    spentTime : 5000,
+    explanation : '- Deleted ',
+    verbosity : 5
+  }
+  var got = _.uri.groupTextualReport( _.mapExtend( null,defaults, o ) );
+  var expected =
+  `
+    'file://a'
+    'file://a/b'
+    'file://b'
+    'file://b/c'
+     4 at file://.
+     2 at ./a
+     2 at ./b
+  - Deleted 4 file(s), at file://., found in 5.000s
+  `
+  test.equivalent( got, expected );
+
+  test.close( 'globals' );
+}
+
+//
+
 function commonTextualReport( test )
 {
   test.open( 'globals' )
@@ -7205,13 +7216,13 @@ function commonTextualReport( test )
 
   test.case = 'two, part of path is diffent, common protocol';
   var filePath = [ 'file:///a/b/c', 'file:///a/x/c' ];
-  var expected = '( file:///a/ + [ b/c , x/c ] )';
+  var expected = '( file:///a/ + [ ./b/c , ./x/c ] )';
   var got = _.uri.commonTextualReport( filePath );
   test.identical( got, expected );
 
   test.case = 'two relatives, common protocol and part of path';
   var filePath = [ 'file://a/b/c', 'file://a/x/c' ];
-  var expected = '( file://a/ + [ b/c , x/c ] )';
+  var expected = '( file://a/ + [ ./b/c , ./x/c ] )';
   var got = _.uri.commonTextualReport( filePath );
   test.identical( got, expected );
 
@@ -7277,13 +7288,13 @@ function commonTextualReport( test )
 
   test.case = 'two, part of path is diffent';
   var filePath = [ '/a/b/c', '/a/x/c' ];
-  var expected = '( /a/ + [ b/c , x/c ] )';
+  var expected = '( /a/ + [ ./b/c , ./x/c ] )';
   var got = _.uri.commonTextualReport( filePath );
   test.identical( got, expected );
 
   test.case = 'two relatives, common part of path';
   var filePath = [ 'a/b/c', 'a/x/c' ];
-  var expected = '( a/ + [ b/c , x/c ] )';
+  var expected = '( a/ + [ ./b/c , ./x/c ] )';
   var got = _.uri.commonTextualReport( filePath );
   test.identical( got, expected );
 
@@ -7349,13 +7360,13 @@ function commonTextualReport( test )
 
   test.case = 'two, part of path is diffent, common protocol';
   var filePath = { 'file:///a/b/c' : 1, 'file:///a/x/c' : 1 };
-  var expected = '( file:///a/ + [ b/c , x/c ] )';
+  var expected = '( file:///a/ + [ ./b/c , ./x/c ] )';
   var got = _.uri.commonTextualReport( filePath );
   test.identical( got, expected );
 
   test.case = 'two relatives, common protocol and part of path';
   var filePath = { 'file://a/b/c' : 1, 'file://a/x/c' : 1 };
-  var expected = '( file://a/ + [ b/c , x/c ] )';
+  var expected = '( file://a/ + [ ./b/c , ./x/c ] )';
   var got = _.uri.commonTextualReport( filePath );
   test.identical( got, expected );
 
@@ -7368,43 +7379,43 @@ function commonTextualReport( test )
   test.close( 'map' );
 
   /*  */
-  
+
   test.case = 'with hash and query';
   var filePath = ['npm:///wprocedure?query=1#0.3.19' , 'npm:///wprocedure?query=1#0.3.18' ];
   var expected = '( npm:///wprocedure?query=1 + [ .#0.3.19 , .#0.3.18 ] )';
   var got = _.uri.commonTextualReport( filePath );
   test.identical( got, expected );
-  
+
   test.case = 'with hash and query';
   var filePath = ['npm:///wprocedure?query=2#0.3.19' , 'npm:///wprocedure?query=1#0.3.19' ];
   var expected = '( npm:///wprocedure#0.3.19 + [ .?query=2 , .?query=1 ] )';
   var got = _.uri.commonTextualReport( filePath );
   test.identical( got, expected );
-  
+
   test.case = 'with hash and query';
   var filePath = ['npm:///wprocedure?query=2#0.3.19' , 'npm:///wprocedure?query=1#0.3.18' ];
   var expected = '( npm:///wprocedure + [ .?query=2#0.3.19 , .?query=1#0.3.18 ] )';
   var got = _.uri.commonTextualReport( filePath );
   test.identical( got, expected );
-  
+
   test.case = 'with hash and query';
   var filePath = ['npm:///wprocedure?query=2#0.3.19' , 'npm:///wfiles?query=1#0.3.18' ];
   var expected = '( npm:/// + [ wprocedure?query=2#0.3.19 , wfiles?query=1#0.3.18 ] )';
   var got = _.uri.commonTextualReport( filePath );
   test.identical( got, expected );
-  
+
   test.case = 'with hash and query';
   var filePath = ['npm:///wprocedure?query=1#0.3.19' , 'npm:///wfiles?query=1#0.3.19' ];
   var expected = '( npm:///?query=1#0.3.19 + [ wprocedure , wfiles ] )';
   var got = _.uri.commonTextualReport( filePath );
   test.identical( got, expected );
-  
+
   test.case = 'with hash and query';
   var filePath = ['npm:///wprocedure?query=1#0.3.18' , 'npm:///wfiles?query=1#0.3.19' ];
   var expected = '( npm:///?query=1 + [ wprocedure#0.3.18 , wfiles#0.3.19 ] )';
   var got = _.uri.commonTextualReport( filePath );
   test.identical( got, expected );
-  
+
   if( !Config.debug )
   return
 
@@ -7504,7 +7515,7 @@ function moveTextualReport( test )
   test.identical( got, expected );
 
   test.case = 'dst relative, src relative, with common';
-  var expected = 'npm://a/ : dst <- src';
+  var expected = 'npm://a/ : ./dst <- ./src';
   var dst = 'npm://a/dst';
   var src = 'npm://a/src';
   var got = _.uri.moveTextualReport( dst, src );
@@ -7524,7 +7535,7 @@ function moveTextualReport( test )
   test.identical( got, expected );
 
   test.case = 'different, absolute, with common';
-  var expected = '/a/ : dst <- src';
+  var expected = '/a/ : ./dst <- ./src';
   var dst = '/a/dst';
   var src = '/a/src';
   var got = _.uri.moveTextualReport( dst, src );
@@ -7545,7 +7556,7 @@ function moveTextualReport( test )
   test.identical( got, expected );
 
   test.case = 'different, relative, with common';
-  var expected = 'a/ : dst <- src';
+  var expected = 'a/ : ./dst <- ./src';
   var dst = 'a/dst';
   var src = 'a/src';
   var got = _.uri.moveTextualReport( dst, src );
@@ -7566,7 +7577,7 @@ function moveTextualReport( test )
   test.identical( got, expected );
 
   test.case = 'different, relative dotted, with common';
-  var expected = 'a/ : dst <- src';
+  var expected = 'a/ : ./dst <- ./src';
   var dst = './a/dst';
   var src = './a/src';
   var got = _.uri.moveTextualReport( dst, src );
@@ -8237,20 +8248,20 @@ function dir( test )
 
   var expected =
   [
-    './',
-    '/foo/bar/',
-    '/foo/bar/',
+    '.',
+    '/foo/bar',
+    '/foo/bar',
     '/',
-    '/foo/bar/',
-    '/some/staging/',
-    '//some/staging/',
-    '///some/staging/',
-    'file:///some/staging/',
-    'http://some.come/staging/',
-    'svn+https://user@subversion.com/svn/trunk/',
-    'complex+protocol://www.site.com:13/path/?query=here&and=here#anchor',
-    '://www.site.com:13/path/?query=here&and=here#anchor',
-    ':///www.site.com:13/path/?query=here&and=here#anchor',
+    '/foo/bar',
+    '/some/staging',
+    '//some/staging',
+    '///some/staging',
+    'file:///some/staging',
+    'http://some.come/staging',
+    'svn+https://user@subversion.com/svn/trunk',
+    'complex+protocol://www.site.com:13/path?query=here&and=here#anchor',
+    '://www.site.com:13/path?query=here&and=here#anchor',
+    ':///www.site.com:13/path?query=here&and=here#anchor',
   ]
 
   test.case = 'dir test'
@@ -8272,7 +8283,7 @@ function dir( test )
   test.identical( got, expected );
 
   var src = '/a/b/.';
-  var expected = '/a/';
+  var expected = '/a';
   var got = _.uri.dir( src );
   test.identical( got, expected );
 
@@ -8287,7 +8298,7 @@ function dir( test )
   test.identical( got, expected );
 
   var src = '/a/b/./.';
-  var expected = '/a/';
+  var expected = '/a';
   var got = _.uri.dir( src );
   test.identical( got, expected );
 
@@ -8297,7 +8308,7 @@ function dir( test )
   test.identical( got, expected );
 
   var src = 'a/b/.';
-  var expected = 'a/';
+  var expected = 'a';
   var got = _.uri.dir( src );
   test.identical( got, expected );
 
@@ -8312,7 +8323,7 @@ function dir( test )
   test.identical( got, expected );
 
   var src = 'http:///a/b/.';
-  var expected = 'http:///a/';
+  var expected = 'http:///a';
   var got = _.uri.dir( src );
   test.identical( got, expected );
 
@@ -8327,7 +8338,7 @@ function dir( test )
   test.identical( got, expected );
 
   var src = 'http://a/b/.';
-  var expected = 'http://a/';
+  var expected = 'http://a';
   var got = _.uri.dir( src );
   test.identical( got, expected );
 
@@ -8739,7 +8750,7 @@ https://user:pass@sub.host.com:8080/p/a/t/h?query=string#hash
 var Self =
 {
 
-  name : 'Tools.base.l4.UriFundamentals',
+  name : 'Tools.base.l4.Uri',
   silencing : 1,
 
   tests :
@@ -8760,7 +8771,7 @@ var Self =
     parseConsecutive,
     parseFull,
     parseGlob,
-    
+
     localFromGlobal,
 
     str,

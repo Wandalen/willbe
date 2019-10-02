@@ -1,6 +1,6 @@
 ( function _String_test_s_() {
 
-'use strict'; 
+'use strict';
 
 if( typeof module !== 'undefined' )
 {
@@ -3848,7 +3848,7 @@ function strEnds( test )
 var Self =
 {
 
-  name : 'Tools.base.l1.String',
+  name : 'Tools.base.Str',
   silencing : 1,
 
   tests :

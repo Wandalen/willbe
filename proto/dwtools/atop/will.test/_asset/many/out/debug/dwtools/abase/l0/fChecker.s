@@ -1,4 +1,4 @@
-( function _bChecker_s_() {
+( function _iType_s_() {
 
 'use strict';
 
@@ -6,9 +6,6 @@ let _global = _global_;
 let _ = _global_.wTools;
 let Self = _global_.wTools;
 
-let _ArraySlice = Array.prototype.slice;
-let _FunctionBind = Function.prototype.bind;
-// let Object.prototype.toString = Object.prototype.toString;
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
 
 // --
@@ -45,28 +42,6 @@ function primitiveIs( src )
 
 //
 
-function containerIs( src )
-{
-  if( _.arrayLike( src ) )
-  return true;
-  if( _.objectIs( src ) )
-  return true;
-  return false;
-}
-
-//
-
-function containerLike( src )
-{
-  if( _.longIs( src ) )
-  return true;
-  if( _.objectLike( src ) )
-  return true;
-  return false;
-}
-
-//
-
 function symbolIs( src )
 {
   let result = Object.prototype.toString.call( src ) === '[object Symbol]';
@@ -81,9 +56,11 @@ function bigIntIs( src )
   return result;
 }
 
-//
+// --
+// math
+// --
 
-function vectorIs( src )
+function vectorAdapterIs( src )
 {
   if( !_.objectIs( src ) )
   return false;
@@ -487,16 +464,17 @@ let Routines =
 
   /* qqq : requires good tests */
 
+  // primitive
+
   nothingIs,
   definedIs,
   primitiveIs,
-  containerIs,
-  containerLike,
-
   symbolIs,
   bigIntIs,
 
-  vectorIs,
+  //
+
+  vectorAdapterIs,
   constructorIsVector,
   spaceIs,
   constructorIsSpace,

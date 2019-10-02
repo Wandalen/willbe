@@ -164,7 +164,7 @@ function _from( capsule )
 function is( capsule )
 {
   _.assert( arguments.length === 1, 'Expects single argument' );
-  return ( _.longIs( capsule ) || _.vectorIs( capsule ) ) && ( capsule.length >= 0 ) && ( ( capsule.length - 1 ) % 2 === 0 );
+  return ( _.longIs( capsule ) || _.vectorAdapterIs( capsule ) ) && ( capsule.length >= 0 ) && ( ( capsule.length - 1 ) % 2 === 0 );
 }
 
 //
@@ -350,7 +350,7 @@ function radiusSet( capsule, radius )
 function pointContains( srcCapsule, srcPoint )
 {
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.longIs( srcPoint ) || _.vectorIs( srcPoint ) );
+  _.assert( _.longIs( srcPoint ) || _.vectorAdapterIs( srcPoint ) );
 
   if( srcCapsule === null )
   srcCapsule = _.capsule.make( srcPoint.length );

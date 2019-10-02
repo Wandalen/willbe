@@ -180,62 +180,84 @@ function buffersAreIdentical( src1, src2 )
 //
 
 /**
- * The bufferMake() routine returns a new array or a new TypedArray with length equal (length)
- * or new TypedArray with the same length of the initial array if second argument is not provided.
+ * The routine bufferMake() returns a new buffer with the same type as source buffer {-ins-}. New buffer makes from inserted buffer {-src-}
+ * or if {-src-} is number, the buffer makes from {-ins-} with length equal to {-src-}. If {-src-} is not provided, routine returns copy of {-ins-}.
  *
- * @param { longIs } ins - The instance of an array.
- * @param { Number } [ length = ins.length ] - The length of the new array.
- *
- * @example
- * _.bufferMake( [ 1, 2, 3 ] );
- * // returns [ , ,  ]
+ * @param { BufferAny|Long|Function } ins - Instance of any buffer, Long or constructor, defines type of returned buffer. If not a buffer is provided, routine returns instance of default ArrayType.
+ * @param { Number|Long|Buffer } src - Defines length of new buffer. If buffer of Long is provided, routine makes new buffer from {-src-} with {-ins-} type.
  *
  * @example
- * _.bufferMake( [ 1, 2, 3 ], 4 );
- * // returns [ , , ,  ]
+ * let ins = BufferNode.from( [ 1, 2, 3, 4 ] );
+ * let got = _.bufferMake( ins );
+ * console.log( got );
+ * // log Buffer[ 1, 2, 3 ];
+ * console.log( _.bufferNodeIs( got ) );
+ * // log true
  *
- * @returns { longIs }  Returns an array with a certain (length).
+ * @example
+ * let ins = _.unrollMake( [] )
+ * let got = _.bufferMake( ins, [ 1, 2, 3 ] );
+ * console.log( got );
+ * // log [ 1, 2, 3 ];
+ * console.log( _.unrollIs( got ) );
+ * // log false
+ *
+ * @example
+ * let ins = new BufferRaw( 0 );
+ * let got = _.bufferMake( ins, new U32x( [ 1, 2, 3 ] ) );
+ * console.log( got );
+ * // log ArrayBuffer[ 0x1, 0x2, 0x3 ];
+ * console.log( _.bufferRawIs( got ) );
+ * // log true
+ *
+ * @example
+ * let ins = new F32x( [ 1, 2, 3, 4, 5 ] );
+ * let got = _.bufferMake( ins, 2 );
+ * console.log( got );
+ * // log Float32Array[ 1, 2 ];
+ * console.log( _.bufferTypedIs( got ) );
+ * // log true
+ *
+ * @returns { BufferAny|Array }  Returns a buffer ( array ) from {-src-} with {-ins-} type.
  * @function bufferMake
- * @throws { Error } If the passed arguments is less than two.
- * @throws { Error } If the (length) is not a number.
- * @throws { Error } If the first argument in not an array like object.
- * @throws { Error } If the (length === undefined) and (_.numberIs(ins.length)) is not a number.
+ * @throws { Error } If arguments.length is less then one or more than two.
+ * @throws { Error } If {-ins-} is constructor and second argument {-src-} is not provided.
+ * @throws { Error } If {-src-} is not a number, not a Long, not a buffer.
+ * @throws { Error } If {-ins-} is not a Long, not a buffer or not a constructor.
+ * @throws { Error } If {-src-} or src.length has a not finite value.
  * @memberof wTools
  */
 
-/* qqq : implement, cover, document */
+/*
+qqq : implement, cover, document
+Dmytro : implemented, covered, documented. If ins is not a buffer, routine returns default ArrayType.
+*/
 
 function bufferMake( ins, src )
 {
   let result, length;
 
-  if( _.argumentsArrayIs( ins ) )
-  ins = _.arrayMake( ins );
-
   if( _.routineIs( ins ) )
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
   if( src === undefined )
+  length = ins.length !== undefined ? ins.length : ins.byteLength;
+  else if( _.longIs( src ) || _.bufferNodeIs( src ) )
+  length = src.length;
+  else if( _.bufferRawIs( src ) || _.bufferViewIs( src ) )
   {
-    length = _.definedIs( ins.length ) ? ins.length : ins.byteLength;
+    length = src.byteLength;
+    src = _.bufferViewIs( src ) ? new U8x( src.buffer ) : new U8x( src );
   }
-  else
-  {
-    if( _.longIs( src ) || _.bufferNodeIs( src ) )
-    length = src.length;
-    else if( _.bufferRawIs( src ) || _.bufferViewIs( src ) )
-    {
-      length = src.byteLength;
-      src = _.bufferViewIs( src ) ? new U8x( src.buffer ) : new U8x( src );
-    }
-    else if( _.numberIs( src ) )
-    length = src;
-    else _.assert( 0 );
-  }
+  else if( _.numberIs( src ) )
+  length = src;
+  else _.assert( 0 );
 
   _.assert( arguments.length === 1 || arguments.length === 2 );
   _.assert( _.numberIsFinite( length ) );
   _.assert( _.routineIs( ins ) || _.longIs( ins ) || _.bufferAnyIs( ins ), 'unknown type of array', _.strType( ins ) );
+
+
 
   if( _.longIs( src ) || _.bufferAnyIs( src ) )
   {
@@ -245,10 +267,8 @@ function bufferMake( ins, src )
       for( let i = 0 ; i < length ; i++ )
       result[ i ] = src[ i ];
     }
-    else if( ins.constructor === Array )
-    {
-      result = _.unrollIs( ins ) ? _.unrollMake( src ) : new( _.constructorJoin( ins.constructor, src ) );
-    }
+    else if( !_.bufferAnyIs( ins ) && src !== undefined )
+    result = this.array.ArrayType.apply( this.array.ArrayType, src );
     else if( _.bufferRawIs( ins ) )
     result = new U8x( src ).buffer;
     else if( _.bufferViewIs( ins ) )
@@ -273,8 +293,8 @@ function bufferMake( ins, src )
     result = BufferNode.alloc( length );
     else if( _.bufferViewIs( ins ) || _.bufferRawIs( ins ) )
     result = new U8x( length );
-    else if( _.unrollIs( ins ) )
-    result = _.unrollMake( length );
+    else if( !_.bufferAnyIs( ins ) )
+    result = this.array.ArrayType( length );
     else
     result = new ins.constructor( length );
 
@@ -353,7 +373,7 @@ function bufferMake( ins, src )
 
 /**
  * The routine bufferMakeUndefined() returns a new buffer with the same type as buffer in argument {-ins-}.
- * New buffer has length equal to the length of second argument {-src-} or it has length of initial array {-ins-}
+ * New buffer has length equal to the length of second argument {-src-} or it has length of initial buffer {-ins-}
  * if second argument is not provided.
  *
  * @param { Buffer|Long|Routine } ins - Buffer, Long or constructor, defines type of returned buffer.
@@ -2264,7 +2284,7 @@ function longDuplicate( o )
   _.assert( _.numberIs( o.numberOfDuplicatesPerElement ) || o.numberOfDuplicatesPerElement === undefined );
   _.routineOptions( longDuplicate, o );
   _.assert( _.longIs( o.src ), 'Уxpects o.src as longIs entity' );
-  _.assert( _.numberIsInt( o.src.length / o.numberOfAtomsPerElement ) );
+  _.assert( _.intIs( o.src.length / o.numberOfAtomsPerElement ) );
 
   if( o.numberOfDuplicatesPerElement === 1 )
   {
@@ -2354,7 +2374,7 @@ longDuplicate.defaults =
 function longOnce( dstLong, onEvaluate )
 {
   _.assert( 1 <= arguments.length || arguments.length <= 2 );
-  _.assert( arguments.length === 1, 'not tested' );
+  // _.assert( arguments.length === 1, 'not tested' );
   _.assert( _.longIs( dstLong ), 'Expects Long' );
 
   if( _.arrayIs( dstLong ) )
@@ -2964,7 +2984,7 @@ function longMask( srcArray, mask )
   _.assert( _.longIs( mask ), 'longMask :', 'Expects array-like as mask' );
   _.assert
   (
-    _.numberIsInt( length ),
+    _.intIs( length ),
     'longMask :', 'Expects mask that has component for each atom of srcArray',
     _.toStr
     ({
@@ -3065,7 +3085,7 @@ longUnmask.defaults =
 // --
 
 /**
- * The arrayMakeRandom() routine returns an array which contains random numbers.
+ * The arrayRandom() routine returns an array which contains random numbers.
  *
  * @param { Object } o - The options for getting random numbers.
  * @param { Number } o.length - The length of an array.
@@ -3073,7 +3093,7 @@ longUnmask.defaults =
  * @param { Boolean } [ o.int = false ] - Floating point numbers or not.
  *
  * @example
- * _.arrayMakeRandom
+ * _.arrayRandom
  * ({
  *   length : 5,
  *   range : [ 1, 9 ],
@@ -3082,40 +3102,56 @@ longUnmask.defaults =
  * // returns [ 6, 2, 4, 7, 8 ]
  *
  * @returns { Array } - Returns an array of random numbers.
- * @function arrayMakeRandom
+ * @function arrayRandom
  * @memberof wTools
  */
 
-function arrayMakeRandom( o )
+function arrayRandom( o )
 {
-  let result = [];
 
-  if( _.numberIs( o ) )
+  if( arguments[ 2 ] !== undefined )
+  o = { dst : arguments[ 0 ], range : arguments[ 1 ], length : arguments[ 2 ] }
+  else if( _.numberIs( o ) || _.rangeIs( o ) )
   o = { length : o }
-
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routineOptions( arrayMakeRandom, o );
-
+  _.assert( arguments.length === 1 || arguments.length === 3 );
+  _.routineOptions( arrayRandom, o );
+  if( o.onEach === null )
+  o.onEach = ( range ) => _.numberRandom( range );
   if( o.range === null )
-  o.range = [ 0, 1 ]
+  o.range = [ 0, 1 ];
+  if( _.numberIs( o.range ) )
+  o.range = [ o.range, o.range ]
 
-  debugger;
+  if( _.rangeIs( o.length ) )
+  o.length = _.intRandom( o.length );
+  if( o.length === null && o.dst )
+  o.length = o.dst.length;
+  if( o.length === null )
+  o.length = 1;
+
+  _.assert( _.intIs( o.length ) );
+
+  if( o.dst === null || o.dst.length < o.length )
+  o.dst = _.longMake( o.dst, o.length );
 
   for( let i = 0 ; i < o.length ; i++ )
   {
-    result[ i ] = o.range[ 0 ] + Math.random()*( o.range[ 1 ] - o.range[ 0 ] );
-    if( o.int )
-    result[ i ] = Math.floor( result[ i ] );
+    o.dst[ i ] = o.onEach( o.range, i, o );
+    // o.dst[ i ] = o.range[ 0 ] + Math.random()*( o.range[ 1 ] - o.range[ 0 ] );
+    // if( o.int )
+    // o.dst[ i ] = Math.floor( o.dst[ i ] );
   }
 
-  return result;
+  return o.dst;
 }
 
-arrayMakeRandom.defaults =
+arrayRandom.defaults =
 {
-  int : 0,
+  // int : 0,
+  dst : null,
+  onEach : null,
   range : null,
-  length : 1,
+  length : null,
 }
 
 //
@@ -3958,24 +3994,35 @@ function longExtendScreening( screenArray, dstArray )
 
 //
 
-function longSort( srcLong, onEvaluate )
+function longSort( dstLong, srcLong, onEvaluate )
 {
-  _.assert( arguments.length === 1 || arguments.length === 2 );
+
+  if( _.routineIs( arguments[ 1 ] ) )
+  {
+    onEvaluate = arguments[ 1 ];
+    srcLong = dstLong;
+  }
+
+  _.assert( arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
   _.assert( onEvaluate === undefined || _.routineIs( onEvaluate ) );
-  _.assert( _.longIs( srcLong ) )
+  _.assert( _.longIs( srcLong ) );
+  _.assert( dstLong === null || _.longIs( dstLong ) );
+
+  if( dstLong === null )
+  dstLong = _.arrayMake( srcLong )
 
   if( onEvaluate === undefined )
   {
     debugger;
-    srcLong.sort();
+    dstLong.sort();
   }
   else if( onEvaluate.length === 2 )
   {
-    srcLong.sort( onEvaluate );
+    dstLong.sort( onEvaluate );
   }
   else if( onEvaluate.length === 1 )
   {
-    srcLong.sort( function( a, b )
+    dstLong.sort( function( a, b )
     {
       a = onEvaluate( a );
       b = onEvaluate( b );
@@ -3984,9 +4031,9 @@ function longSort( srcLong, onEvaluate )
       else return 0;
     });
   }
-  else _.assert( 0, 'Expects signle-arguments evaluator or two-argument comparator' );
+  else _.assert( 0, 'Expects signle-argument evaluator or two-argument comparator' );
 
-  return srcLong;
+  return dstLong;
 }
 
 // --
@@ -4555,7 +4602,7 @@ let Routines =
   // long repeater
 
   longDuplicate,
-  longOnce,
+  longOnce, /* xxx : review */
 
   longHasUniques,
   longAreRepeatedProbe,
@@ -4568,7 +4615,7 @@ let Routines =
 
   // array maker
 
-  arrayMakeRandom, /* xxx : split */
+  arrayRandom, /* qqq : cover and document please */
   arrayFromCoercing,
 
   arrayFromRange,
@@ -4600,7 +4647,7 @@ let Routines =
   longSupplement, /* experimental */
   longExtendScreening, /* experimental */
 
-  longSort,
+  longSort, /* qqq : implement good coverage, document routine longSort */
 
   // // array etc
   //

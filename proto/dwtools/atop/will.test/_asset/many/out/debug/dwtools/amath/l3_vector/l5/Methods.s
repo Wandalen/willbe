@@ -96,7 +96,7 @@ function copy( src )
 // {
 //   let self = this;
 //   _.assert( arguments.length === 0 );
-//   _.assert( _.vectorIs( self ) );
+//   _.assert( _.vectorAdapterIs( self ) );
 //   return vector.clone( self );
 // }
 
@@ -116,7 +116,7 @@ function slice( b,e )
   let self = this;
 
   _.assert( arguments.length <= 2 );
-  _.assert( _.vectorIs( self ) );
+  _.assert( _.vectorAdapterIs( self ) );
 
   return vector.slice( self,b,e );
 }
@@ -128,7 +128,7 @@ function slicedArray( b,e )
   let self = this;
 
   _.assert( arguments.length <= 2 );
-  _.assert( _.vectorIs( self ) );
+  _.assert( _.vectorAdapterIs( self ) );
 
   return vector.slicedArray( self,b,e );
 }
@@ -140,7 +140,7 @@ function slicedVector( b,e )
   let self = this;
 
   _.assert( arguments.length <= 2 );
-  _.assert( _.vectorIs( self ) );
+  _.assert( _.vectorAdapterIs( self ) );
 
   return vector.slicedVector( self,b,e );
 }
@@ -181,7 +181,7 @@ function toArray()
   let self = this;
 
   _.assert( arguments.length === 0 );
-  _.assert( _.vectorIs( self ) );
+  _.assert( _.vectorAdapterIs( self ) );
 
   return vector.toArray( self );
 }
@@ -194,7 +194,7 @@ function toStr( o )
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
   _.assert( _.mapIs( o ) || o === undefined );
-  _.assert( _.vectorIs( self ) );
+  _.assert( _.vectorAdapterIs( self ) );
 
   return vector._toStr( self,o );
 }
@@ -361,7 +361,7 @@ function declareSingleArgumentRoutine( routine, r )
   Self.prototype[ r ] = function singleArgumentRoutine()
   {
     _.assert( arguments.length === 0 );
-    _.assert( _.vectorIs( this ) );
+    _.assert( _.vectorAdapterIs( this ) );
     return routine.call( vector,this );
   }
 
@@ -387,7 +387,7 @@ function declareTwoArgumentsRoutine( routine, r )
   Self.prototype[ r ] = function scalarRoutine( scalar )
   {
     _.assert( arguments.length === 1, 'Expects single argument' );
-    _.assert( _.vectorIs( this ) );
+    _.assert( _.vectorAdapterIs( this ) );
     return routine.call( vector,this,scalar );
   }
 

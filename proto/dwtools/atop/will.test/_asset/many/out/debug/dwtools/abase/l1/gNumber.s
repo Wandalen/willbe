@@ -105,14 +105,14 @@ function numberRandomInRange( range )
 
 //
 
-function numberRandomInt( range )
+function intRandom( range )
 {
 
   if( _.numberIs( range ) )
   range = range >= 0 ? [ 0,range ] : [ range,0 ];
   else if( _.arrayIs( range ) )
   range = range;
-  else _.assert( 0,'numberRandomInt','Expects range' );
+  else _.assert( 0,'intRandom','Expects range' );
 
   _.assert( _.arrayIs( range ) || _.numberIs( range ) );
   _.assert( range.length === 2 );
@@ -124,7 +124,7 @@ function numberRandomInt( range )
 
 //
 
-function numberRandomIntBut( range )
+function intRandomBut( range )
 {
   let result;
   let attempts = 50;
@@ -133,7 +133,7 @@ function numberRandomIntBut( range )
   range = [ 0,range ];
   else if( _.arrayIs( range ) )
   range = range;
-  else throw _.err( 'numberRandomInt','unexpected argument' );
+  else throw _.err( 'intRandom','unexpected argument' );
 
   for( let attempt = 0 ; attempt < attempts ; attempt++ )
   {
@@ -142,7 +142,7 @@ function numberRandomIntBut( range )
     // if( attempt === attempts-1 )
     // debugger;
 
-    /*result = _.numberRandomInt( range ); */
+    /*result = _.intRandom( range ); */
     let result = Math.floor( range[ 0 ] + Math.random()*( range[ 1 ] - range[ 0 ] ) );
 
     let bad = false;
@@ -173,7 +173,7 @@ function numbersMake( src,length )
 {
   let result;
 
-  if( _.vectorIs( src ) )
+  if( _.vectorAdapterIs( src ) )
   src = _.vector.slice( src );
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -201,7 +201,7 @@ function numbersMake( src,length )
 function numbersFromNumber( src,length )
 {
 
-  if( _.vectorIs( src ) )
+  if( _.vectorAdapterIs( src ) )
   src = _.vector.slice( src );
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -226,7 +226,7 @@ function numbersFromInt( dst,length )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.numberIsInt( dst ) || _.arrayIs( dst ),'Expects array of number as argument' );
+  _.assert( _.intIs( dst ) || _.arrayIs( dst ),'Expects array of number as argument' );
   _.assert( length >= 0 );
 
   if( _.numberIs( dst ) )
@@ -236,7 +236,7 @@ function numbersFromInt( dst,length )
   else
   {
     for( let i = 0 ; i < dst.length ; i++ )
-    _.assert( _.numberIsInt( dst[ i ] ),'Expects integer, but got',dst[ i ] );
+    _.assert( _.intIs( dst[ i ] ),'Expects integer, but got',dst[ i ] );
     _.assert( dst.length === length,'Expects array of length',length,'but got',dst );
   }
 
@@ -301,8 +301,8 @@ let Routines =
   numbersSlice,
 
   numberRandomInRange,
-  numberRandomInt,
-  numberRandomIntBut, /* dubious */
+  intRandom,
+  intRandomBut, /* dubious */
 
   numbersMake,
   numbersFromNumber,

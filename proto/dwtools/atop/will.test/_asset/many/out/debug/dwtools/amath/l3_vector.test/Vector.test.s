@@ -60,7 +60,7 @@ function comparator( test )
 
 //
 
-function vectorIs( test )
+function vectorAdapterIs( test )
 {
 
   var a = [ 1,2,3 ];
@@ -75,18 +75,18 @@ function vectorIs( test )
   var v4 = vector.fromArrayWithStride( [ 1,-1,2,-1,3 ],2 );
   var v5 = vector.from([ 1,2,3 ]);
 
-  test.case = 'vectorIs'; /* */
+  test.case = 'vectorAdapterIs'; /* */
 
-  test.is( !_.vectorIs( a ) );
-  test.is( !_.vectorIs( n1 ) );
-  test.is( !_.vectorIs( n2 ) );
-  test.is( !_.vectorIs( n3 ) );
+  test.is( !_.vectorAdapterIs( a ) );
+  test.is( !_.vectorAdapterIs( n1 ) );
+  test.is( !_.vectorAdapterIs( n2 ) );
+  test.is( !_.vectorAdapterIs( n3 ) );
 
-  test.is( _.vectorIs( v1 ) );
-  test.is( _.vectorIs( v2 ) );
-  test.is( _.vectorIs( v3 ) );
-  test.is( _.vectorIs( v4 ) );
-  test.is( _.vectorIs( v5 ) );
+  test.is( _.vectorAdapterIs( v1 ) );
+  test.is( _.vectorAdapterIs( v2 ) );
+  test.is( _.vectorAdapterIs( v3 ) );
+  test.is( _.vectorAdapterIs( v4 ) );
+  test.is( _.vectorAdapterIs( v5 ) );
 
   test.case = 'constructorIsVector'; /* */
 
@@ -6065,7 +6065,7 @@ var Self =
   {
 
     comparator : comparator,
-    vectorIs : vectorIs,
+    vectorAdapterIs : vectorAdapterIs,
 
     allFinite : allFinite,
     anyNan : anyNan,

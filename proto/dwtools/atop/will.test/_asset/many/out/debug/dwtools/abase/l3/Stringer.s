@@ -564,7 +564,7 @@ function _toStr( src,o )
     else throw _.err( 'unexpected' );
 
   }
-  else if( _.vectorIs( src ) )
+  else if( _.vectorAdapterIs( src ) )
   {
     result += _.vector.toStr( src,o );
   }
@@ -699,7 +699,7 @@ function _toStrShort( src,o )
   try
   {
 
-    if( _.vectorIs( src ) )
+    if( _.vectorAdapterIs( src ) )
     {
       result += '[ Row with ' + src.length + ' elements' + ' ]';
     }
@@ -800,7 +800,7 @@ function _toStrIsVisibleElement( src,o )
 
     return true;
   }
-  else if( _.vectorIs( src ) )
+  else if( _.vectorAdapterIs( src ) )
   {
     if( o.noRow )
     return false;

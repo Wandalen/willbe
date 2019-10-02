@@ -872,7 +872,7 @@ function CriterionNormalize( criterionMap )
 function CriterionValueNormalize( criterionValue )
 {
   _.assert( arguments.length === 1 );
-  _.assert( _.numberIsInt( criterionValue ) || _.boolIs( criterionValue ) || _.strIs( criterionValue ) );
+  _.assert( _.intIs( criterionValue ) || _.boolIs( criterionValue ) || _.strIs( criterionValue ) );
   if( !_.boolIs( criterionValue ) )
   return criterionValue;
   return criterionValue === true ? 1 : 0;

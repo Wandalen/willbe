@@ -1465,7 +1465,7 @@ function setterOwn_functor( op )
 
     _.assert( arguments.length === 1 );
 
-    self[ symbol ] = _.entityShallowClone( src );
+    self[ symbol ] = _.entityMake( src );
 
     return self[ symbol ];
   }

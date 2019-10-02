@@ -742,7 +742,7 @@ function isFinited( src )
 function finit( src )
 {
 
-  _.assert( !Object.isFrozen( src ) );
+  _.assert( !Object.isFrozen( src ), `Seems instance ${_.workpiece.qualifiedNameTry( src )} is already finited` );
   _.assert( _.objectLikeOrRoutine( src ) );
   _.assert( arguments.length === 1, 'Expects single argument' );
 
@@ -954,6 +954,21 @@ function className( instance )
   let cls = _.constructorOf( instance );
   _.assert( cls === null || _.strIs( cls.name ) || _.strIs( cls._name ) );
   return cls ? ( cls.name || cls._name ) : '';
+}
+
+//
+
+function qualifiedNameTry( instance )
+{
+  try
+  {
+    let result = _.workpiece.qualifiedName( instance );
+    return result;
+  }
+  catch( err )
+  {
+    return '';
+  }
 }
 
 //
@@ -1192,6 +1207,7 @@ let Routines =
 
   lowClassName,
   className,
+  qualifiedNameTry,
   qualifiedName,
   uname,
   toStr,

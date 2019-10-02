@@ -216,7 +216,7 @@ fromPair.shaderChunk =
 function is( line )
 {
   _.assert( arguments.length === 1, 'Expects single argument' );
-  return ( _.longIs( line ) || _.vectorIs( line ) ) && ( line.length >= 0 ) && ( line.length % 2 === 0 );
+  return ( _.longIs( line ) || _.vectorAdapterIs( line ) ) && ( line.length >= 0 ) && ( line.length % 2 === 0 );
 }
 
 //

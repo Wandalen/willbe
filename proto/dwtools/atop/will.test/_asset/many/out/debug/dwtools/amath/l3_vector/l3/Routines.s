@@ -497,7 +497,7 @@ function _vectorizeDst( o )
   {
     let src = o.args[ a ];
 
-    if( _.vectorIs( src ) )
+    if( _.vectorAdapterIs( src ) )
     {
       if( dst === null )
       {
@@ -512,7 +512,7 @@ function _vectorizeDst( o )
         dst = o.dstContainer;
       }
       o.args[ 0 ] = dst;
-      _.assert( _.vectorIs( dst ) );
+      _.assert( _.vectorAdapterIs( dst ) );
       return dst;
     }
 
@@ -520,7 +520,7 @@ function _vectorizeDst( o )
 
   /* */
 
-  if( !_.vectorIs( dst ) )
+  if( !_.vectorAdapterIs( dst ) )
   {
     if( dst === null )
     {
@@ -543,7 +543,7 @@ function _vectorizeDst( o )
 function _vectorizeSrcs( o,first )
 {
 
-  if( _.vectorIs( o.dstContainer ) )
+  if( _.vectorAdapterIs( o.dstContainer ) )
   for( let a = first ; a < o.args.length ; a++ )
   {
     let src = o.args[ a ];
@@ -563,7 +563,7 @@ function _vectorsCallBegin( o,dop )
 
   if( Config.debug )
   {
-    _.assert(  _.vectorIs( o.dstContainer ) || o.dstContainer === null || _.numberIs( o.dstContainer ) || _.boolIs( o.dstContainer ) );
+    _.assert(  _.vectorAdapterIs( o.dstContainer ) || o.dstContainer === null || _.numberIs( o.dstContainer ) || _.boolIs( o.dstContainer ) );
     _.assert( o.dstContainer !== null || o.args.length > dop.takingArguments[ 0 ] );
     if( dop.usingExtraSrcs )
     _.assert( dop.takingArguments[ 0 ] < dop.takingArguments[ 1 ] );
@@ -650,12 +650,12 @@ function _vectorsCallBegin( o,dop )
 
   if( Config.debug )
   {
-    _.assert( _.vectorIs( dst ) || _.numberIs( dst ) );
+    _.assert( _.vectorAdapterIs( dst ) || _.numberIs( dst ) );
     _.assert( dop.takingArguments[ 0 ] <= o.args.length && o.args.length <= dop.takingArguments[ 1 ],'Expects ', dop.takingArguments, ' arguments' );
     for( let a = 0 ; a < o.args.length ; a++ )
     {
       let src = o.args[ a ];
-      _.assert( _.vectorIs( src ) || _.numberIs( src ) );
+      _.assert( _.vectorAdapterIs( src ) || _.numberIs( src ) );
       _.assert( _.numberIs( src ) || dst.length === src.length,'src and dst should have same length' );
     }
   }
@@ -790,13 +790,13 @@ function _onVectorsForRoutine_functor( dop )
 
       if( Config.debug )
       {
-        _.assert( _.vectorIs( dst ) );
+        _.assert( _.vectorAdapterIs( dst ) );
         _.assert( arguments.length >= 1,'Expects at least one argument' );
         _.assert( takingArguments[ 0 ] <= arguments.length && arguments.length <= takingArguments[ 1 ],'Expects ', takingArguments, ' arguments' );
         for( let a = 0 ; a < o.srcContainers.length ; a++ )
         {
           let src = o.srcContainers[ a ];
-          _.assert( _.vectorIs( src ) );
+          _.assert( _.vectorAdapterIs( src ) );
           _.assert( dst.length === src.length,'src and dst should have same length' );
         }
       }
@@ -859,9 +859,9 @@ function _onVectorsForRoutine_functor( dop )
       {
         _.assert( arguments.length === 2,'Expects 2 arguments' );
         if( allowingDstScalar )
-        _.assert( _.vectorIs( dst ) || _.numberIs( dst ) );
+        _.assert( _.vectorAdapterIs( dst ) || _.numberIs( dst ) );
         else
-        _.assert( _.vectorIs( dst ) );
+        _.assert( _.vectorAdapterIs( dst ) );
         _.assert( _.numberIs( src ) );
       }
 
@@ -1072,8 +1072,8 @@ function assignVector( dst,src )
 
   _.assert( !!dst && !!src,'vector :','Expects {-src-} and ( dst )' );
   _.assert( dst.length === src.length,'vector :','src and dst should have same length' );
-  _.assert( _.vectorIs( dst ) );
-  _.assert( _.vectorIs( src ) );
+  _.assert( _.vectorAdapterIs( dst ) );
+  _.assert( _.vectorAdapterIs( src ) );
 
   for( let s = 0 ; s < length ; s++ )
   {
@@ -1381,7 +1381,7 @@ function toArray( src )
   let result;
   let length = src.length;
 
-  _.assert( _.vectorIs( src ) || _.longIs( src ), 'Expects vector as a single argument' );
+  _.assert( _.vectorAdapterIs( src ) || _.longIs( src ), 'Expects vector as a single argument' );
   _.assert( arguments.length === 1 );
 
   if( _.longIs( src ) )
@@ -1465,7 +1465,7 @@ function gather( dst,srcs )
   let l = dst.length / srcs.length;
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.vectorIs( dst ) );
+  _.assert( _.vectorAdapterIs( dst ) );
   _.assert( _.arrayIs( srcs ) );
   _.assert( _.numberIsInt( l ) );
 
@@ -1476,7 +1476,7 @@ function gather( dst,srcs )
   for( let s = 0 ; s < srcs.length ; s++ )
   {
     let src = srcs[ s ];
-    _.assert( _.numberIs( src ) || _.vectorIs( src ) || _.longIs( src ) );
+    _.assert( _.numberIs( src ) || _.vectorAdapterIs( src ) || _.longIs( src ) );
     if( _.numberIs( src ) )
     continue;
     if( _.longIs( src ) )
@@ -1847,8 +1847,8 @@ function reflect( v,normal )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.vectorIs( v ) );
-  _.assert( _.vectorIs( normal ) );
+  _.assert( _.vectorAdapterIs( v ) );
+  _.assert( _.vectorAdapterIs( normal ) );
 
   debugger;
   throw _.err( 'not tested' );
@@ -2226,7 +2226,7 @@ function _operationReturningSelfTakingVariantsComponentWiseAct_functor( operatio
   {
 
     if( operation.assigning )
-    _.assert( _.vectorIs( dst ) );
+    _.assert( _.vectorAdapterIs( dst ) );
 
     let args = _.vector.variants( arguments );
 
@@ -2239,7 +2239,7 @@ function _operationReturningSelfTakingVariantsComponentWiseAct_functor( operatio
 
     let length = dst.length;
     _.assert( takingArguments[ 0 ] <= args.length && args.length <= takingArguments[ 1 ],args.length,operation.assigning );
-    _.assert( _.vectorIs( dst ) );
+    _.assert( _.vectorAdapterIs( dst ) );
 
     onVectorsBegin.apply( args,args,length );
 
@@ -3327,7 +3327,7 @@ function __operationReduceToScalar_functor( operation )
     {
 
       op.container = arguments[ a ]
-      _.assert( _.vectorIs( op.container ),'Expects vector' );
+      _.assert( _.vectorAdapterIs( op.container ),'Expects vector' );
 
       let length = op.container.length;
       for( let key = 0 ; key < length ; key++ )
@@ -3357,7 +3357,7 @@ function __operationReduceToScalar_functor( operation )
     {
 
       op.container = arguments[ a ]
-      _.assert( _.vectorIs( op.container ),'Expects vector' );
+      _.assert( _.vectorAdapterIs( op.container ),'Expects vector' );
 
       let length = op.container.length;
       for( let key = 0 ; key < length ; key++ )
@@ -4029,8 +4029,8 @@ function dot( dst,src )
   let result = 0;
   let length = dst.length;
 
-  _.assert( _.vectorIs( dst ) );
-  _.assert( _.vectorIs( src ) );
+  _.assert( _.vectorAdapterIs( dst ) );
+  _.assert( _.vectorAdapterIs( src ) );
   _.assert( dst.length === src.length,'src and dst should have same length' );
   _.assert( arguments.length === 2 );
 
@@ -4301,9 +4301,9 @@ function _equalAre( it )
   if( !( it.src2.length >= 0 ) )
   return false;
 
-  if( !_.vectorIs( it.src ) )
+  if( !_.vectorAdapterIs( it.src ) )
   return false;
-  if( !_.vectorIs( it.src2 ) )
+  if( !_.vectorAdapterIs( it.src2 ) )
   return false;
 
   if( it.context.strictTyping )

@@ -475,7 +475,8 @@ function _commandWhichLike( o )
     ready2.then( () =>
     {
       let it2 = _.mapExtend( null, o );
-      it2.modules = will.modulesArray;
+      // it2.modules = will.modulesArray;
+      it2.modules = will.modulesFilter();
       return o.onAll.call( will, it2 );
     });
 

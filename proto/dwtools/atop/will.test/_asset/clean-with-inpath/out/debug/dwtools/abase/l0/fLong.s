@@ -1514,7 +1514,7 @@ function arrayLeftIndex( arr, ins, evaluator1, evaluator2 )
   }
 
   _.assert( 2 <= arguments.length && arguments.length <= 5 );
-  _.assert( _.longIs( arr ) );
+  _.assert( _.longIs( arr ), 'Expect a Long' );
   _.assert( _.numberIs( fromIndex ) );
   _.assert( !evaluator1 || evaluator1.length === 1 || evaluator1.length === 2 );
   _.assert( !evaluator1 || _.routineIs( evaluator1 ) );

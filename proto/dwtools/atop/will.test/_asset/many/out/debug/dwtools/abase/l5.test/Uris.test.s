@@ -89,7 +89,7 @@ function common( test )
 {
 
   test.case = 'empty';
-  
+
   var got = _.uri.s.common();
   test.identical( got, null );
 

@@ -49,7 +49,7 @@ and axis1, axis2, axis3 the corresponding axes of rotation.
 function is( euler )
 {
   _.assert( arguments.length === 1, 'Expects single argument' );
-  return ( _.longIs( euler ) || _.vectorIs( euler ) ) && ( euler.length === 6 );
+  return ( _.longIs( euler ) || _.vectorAdapterIs( euler ) ) && ( euler.length === 6 );
 }
 
 //
@@ -135,7 +135,7 @@ function from( euler )
   if( euler === null )
   return _.euler.make();
 
-  if( _.vectorIs( euler ) )
+  if( _.vectorAdapterIs( euler ) )
   {
     debugger;
 

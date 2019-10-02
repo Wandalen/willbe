@@ -8,9 +8,9 @@ let vector = _.vector;
 let Self = _.box = _.box || Object.create( null );
 
 /**
- * @description 
+ * @description
  * A box is the space enclosed by orthogonal planes:
- *  
+ *
  * For the following functions, boxes must have the shape [ minX, minY, minZ, maxX, maxY, maxZ ],
  * where the dimension equals the object´s length divided by two.
  *
@@ -42,7 +42,7 @@ qqq
 */
 
 /*
- 
+
   A box is the space enclosed by orthogonal planes:
 
   For the following functions, boxes must have the shape [ minX, minY, minZ, maxX, maxY, maxZ ],
@@ -56,8 +56,6 @@ and maxX, maxY, maxZ the coordinates of the front, top right corner.
 // --
 //
 // --
-
-//
 
 /**
   *Create a box of dimension dim. Returns the created box. Box is stored in Array data structure.
@@ -78,6 +76,7 @@ and maxX, maxY, maxZ the coordinates of the front, top right corner.
   * @throws { Error } An Error if ( arguments.length ) is different than zero or one.
   * @memberof module:Tools/math/Concepts.wTools.box
   */
+
 function make( dim )
 {
   _.assert( arguments.length === 0 || arguments.length === 1 );
@@ -268,7 +267,7 @@ function centeredOfSize( box, size )
 
   /* qqq : in routines like this "box" and "null" are only valid first argument */
 
-  _.assert( _.numberIs( size ) || _.longIs( size ) || _.vectorIs( size ) );
+  _.assert( _.numberIs( size ) || _.longIs( size ) || _.vectorAdapterIs( size ) );
 
   if( !_.box.is( box ) )
   box = _.box.make( box );
@@ -324,7 +323,7 @@ function from( box )
   if( box === null )
   return _.box.make();
 
-  // if( _.vectorIs( box ) )
+  // if( _.vectorAdapterIs( box ) )
   // {
   //   debugger;
   //   throw _.err( 'not implemented' );
@@ -386,7 +385,7 @@ function fromPoints( box, points )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.vectorIs( points ) || _.arrayIs( points ) || _.longIs( points ) );
+  _.assert( _.vectorAdapterIs( points ) || _.arrayIs( points ) || _.longIs( points ) );
 
   let dimp = points[0].length;
 
@@ -442,8 +441,8 @@ function fromCenterAndSize( box, center, size )
   if( box === null )
   box = _.box.make( center.length );
 
-  _.assert( _.longIs( center ) || _.vectorIs( center ) );
-  _.assert( _.numberIs( size ) || _.longIs( size ) || _.vectorIs( size ) );
+  _.assert( _.longIs( center ) || _.vectorAdapterIs( center ) );
+  _.assert( _.numberIs( size ) || _.longIs( size ) || _.vectorAdapterIs( size ) );
 
   let boxView = _.box._from( box );
   let min = _.box.cornerLeftGet( boxView );
@@ -551,7 +550,7 @@ function fromCube( box, size )
   if( box === null )
   box = _.box.make();
 
-  _.assert( _.numberIs( size ) || _.longIs( size ) || _.vectorIs( size ) );
+  _.assert( _.numberIs( size ) || _.longIs( size ) || _.vectorAdapterIs( size ) );
 
   let boxView = _.box._from( box );
   let min = _.box.cornerLeftGet( boxView );
@@ -587,7 +586,7 @@ function is( box )
 {
   _.assert( arguments.length === 1, 'Expects single argument' );
   // _.assert( !box.some( isNaN ) );
-  return ( _.longIs( box ) || _.vectorIs( box ) ) && ( box.length >= 0 ) && ( box.length % 2 === 0 );
+  return ( _.longIs( box ) || _.vectorAdapterIs( box ) ) && ( box.length >= 0 ) && ( box.length % 2 === 0 );
 }
 
 //
@@ -965,7 +964,7 @@ function expand( box , expand )
   if( box === null )
   box = _.box.make();
 
-  _.assert( _.numberIs( expand ) || _.longIs( expand ) || _.vectorIs( expand ) );
+  _.assert( _.numberIs( expand ) || _.longIs( expand ) || _.vectorAdapterIs( expand ) );
 
   let boxView = _.box._from( box );
   let dim = _.box.dimGet( boxView );
@@ -1168,7 +1167,7 @@ function pointExpand( dstBox , point )
   if( dstBox === null )
   dstBox = _.box.makeNil();
 
-  _.assert( _.longIs( point ) || _.vectorIs( point ) );
+  _.assert( _.longIs( point ) || _.vectorAdapterIs( point ) );
 
   let boxView = _.box._from( dstBox );
   let dim = _.box.dimGet( boxView );

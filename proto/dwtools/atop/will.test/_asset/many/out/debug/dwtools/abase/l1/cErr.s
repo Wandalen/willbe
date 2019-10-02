@@ -949,10 +949,10 @@ diagnosticEachElementComparator.defaults =
 
 //
 
-function diagnosticsStructureGenerate( o )
+function diagnosticStructureGenerate( o )
 {
   _.assert( arguments.length === 1 )
-  _.routineOptions( diagnosticsStructureGenerate, o );
+  _.routineOptions( diagnosticStructureGenerate, o );
   _.assert( _.numberIs( o.breadth ) );
   _.assert( _.numberIs( o.depth ) );
   _.assert( o._pre === null || _.routineIs( o._pre ) );
@@ -1105,7 +1105,7 @@ function diagnosticsStructureGenerate( o )
       let map = {};
       for( var i = 0; i < o.mapSize; i++ )
       {
-        let k = _.numberRandomInt( range );
+        let k = _.intRandom( range );
         map[ i ] = src[ k ];
       }
       return map;
@@ -1114,7 +1114,7 @@ function diagnosticsStructureGenerate( o )
 
 }
 
-diagnosticsStructureGenerate.defaults =
+diagnosticStructureGenerate.defaults =
 {
   _pre : null,
   depth : null,
@@ -1195,7 +1195,7 @@ let Extend =
   diagnosticEachLongType,
   diagnosticEachElementComparator,
 
-  diagnosticsStructureGenerate
+  diagnosticStructureGenerate
 
 }
 

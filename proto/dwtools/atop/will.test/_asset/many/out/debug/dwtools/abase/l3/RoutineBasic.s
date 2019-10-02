@@ -156,7 +156,7 @@ function routinesJoin()
     if( _.routineIs( routines ) )
     routines = [ routines ];
 
-    result = _.entityMake( routines );
+    result = _.entityMakeConstructing( routines );
 
   }
 
@@ -320,7 +320,7 @@ function _routinesCall( o )
     if( _.routineIs( routines ) )
     routines = [ routines ];
 
-    result = _.entityMake( routines );
+    result = _.entityMakeConstructing( routines );
 
   }
 

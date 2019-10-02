@@ -60,7 +60,7 @@ function filesUpdate()
   archive.fileModifiedMap = Object.create( null );
   archive.hashReadMap = null;
 
-  _.assert( _.strDefined( archive.basePath ) || _.strsAreNotEmpty( archive.basePath ) );
+  _.assert( _.strDefined( archive.basePath ) || _.strsDefined( archive.basePath ) );
 
   let filePath = _.strJoin([ archive.basePath, '/**' ]);
   if( archive.verbosity >= 3 )

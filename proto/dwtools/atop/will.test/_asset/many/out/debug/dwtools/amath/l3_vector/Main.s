@@ -3,7 +3,7 @@
 'use strict';
 
 /**
- * Collection of functions for vector math. MathVector introduces missing in JavaScript type VectorImage. VectorImage is a reference, it does not contain data but only refer on actual ( aka Long ) container of lined data. VectorImage could have offset, length and stride what makes look original container differently. Length of VectorImage is not necessarily equal to the length of the original container, siblings elements of VectorImage is not necessarily sibling in the original container, so storage format of vectors does not make a big difference for math algorithms. MathVector implements functions for the VectorImage and mirrors them for Array/Buffer. Use MathVector to be more functional with math and less constrained with storage format.
+ * Collection of functions for vector math. MathVector introduces missing in JavaScript type VectorAdapter. VectorAdapter is a reference, it does not contain data but only refer on actual ( aka Long ) container of lined data. VectorAdapter could have offset, length and stride what makes look original container differently. Length of VectorAdapter is not necessarily equal to the length of the original container, siblings elements of VectorAdapter is not necessarily sibling in the original container, so storage format of vectors does not make a big difference for math algorithms. MathVector implements functions for the VectorAdapter and mirrors them for Array/Buffer. Use MathVector to be more functional with math and less constrained with storage format.
   @module Tools/math/Vector
 */
 
@@ -144,7 +144,7 @@ function fromMaybeNumber( number,length )
 
   let numberIs = _.numberIs( number );
 
-  _.assert( numberIs || _.longIs( number ) || _.vectorIs( number ) );
+  _.assert( numberIs || _.longIs( number ) || _.vectorAdapterIs( number ) );
 
   if( !numberIs )
   {
@@ -181,7 +181,7 @@ function from( srcArray )
 
   _.assert( arguments.length === 1,'from expects single arguments { srcArray }' );
 
-  if( _.vectorIs( srcArray ) )
+  if( _.vectorAdapterIs( srcArray ) )
   return srcArray;
   else if( _.longIs( srcArray ) )
   return fromArray( srcArray );
@@ -245,7 +245,7 @@ function fromArray( srcArray )
 {
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.vectorIs( srcArray ) || _.longIs( srcArray ) );
+  _.assert( _.vectorAdapterIs( srcArray ) || _.longIs( srcArray ) );
 
   if( srcArray._vectorBuffer )
   return srcArray;
@@ -410,7 +410,7 @@ function variants( variants )
   {
     let variant = result[ v ];
 
-    _.assert( _.numberIs( variant ) || _.longIs( variant ) || _.vectorIs( variant ) );
+    _.assert( _.numberIs( variant ) || _.longIs( variant ) || _.vectorAdapterIs( variant ) );
 
     if( _.numberIs( variant ) )
     continue;
@@ -431,7 +431,7 @@ function variants( variants )
   {
     let variant = result[ v ];
 
-    if( _.vectorIs( variant ) )
+    if( _.vectorAdapterIs( variant ) )
     continue;
 
     if( _.longIs( variant ) )
@@ -549,7 +549,7 @@ function withWrapper( o )
     for( ; d < takingVectors[ 0 ] ; d++, s++ )
     {
       args[ d ] = makeVector( arguments[ s ] );
-      _.assert( _.vectorIs( args[ d ] ) || ( d === 0 && returningNew ) );
+      _.assert( _.vectorAdapterIs( args[ d ] ) || ( d === 0 && returningNew ) );
     }
 
     let optionalLength;

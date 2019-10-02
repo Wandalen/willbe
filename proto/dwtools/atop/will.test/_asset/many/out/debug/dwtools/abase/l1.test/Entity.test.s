@@ -481,7 +481,7 @@ function entitySize( test )
 var Self =
 {
 
-  name : 'Tools.base.l1.Entity',
+  name : 'Tools.base.Entity',
   silencing : 1,
 
   tests :
