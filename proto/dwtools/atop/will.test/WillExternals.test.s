@@ -7558,6 +7558,99 @@ exportTracing.timeOut = 300000;
 
 //
 
+function exportRewritesOutFile( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-rewrites-out-file' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+  let outFilePath = _.path.join( routinePath, 'out/export-rewrites-out-file.out.will.yml' );
+  let willFilePath = _.path.join( routinePath, '.will.yml' );
+  let willSingleExportFilePath = _.path.join( routinePath, '.will.single-export.yml' );
+  let willCopyFilePath = _.path.join( routinePath, 'copy.will.yml' );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.fileCopy( willCopyFilePath, willFilePath );
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = 'export module with two exports'
+    return null;
+  })
+
+  shell({ execPath : '.export export1' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.fileExists( outFilePath ) );
+    let outFile = _.fileProvider.fileRead({ filePath : outFilePath, encoding : 'yaml' });
+    test.identical( _.mapKeys( outFile.build ), [ 'export1', 'export2' ] );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'remove second export build then export again';
+    _.fileProvider.fileCopy( willFilePath, willSingleExportFilePath )
+    return null;
+  })
+
+  shell({ execPath : '.export export1' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.fileExists( outFilePath ) );
+    let outFile = _.fileProvider.fileRead({ filePath : outFilePath, encoding : 'yaml' });
+    test.identical( _.mapKeys( outFile.build ), [ 'export1' ] );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'restore second export, then export again';
+    _.fileProvider.fileCopy( willFilePath, willCopyFilePath )
+    return null;
+  })
+
+  shell({ execPath : '.export export1' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.fileExists( outFilePath ) );
+    let outFile = _.fileProvider.fileRead({ filePath : outFilePath, encoding : 'yaml' });
+    test.identical( _.mapKeys( outFile.build ), [ 'export1', 'export2' ] );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+exportRewritesOutFile.timeOut = 30000;
+
+//
+
 /*
   check there is no annoying information about lack of remote submodules of submodules
 */
@@ -13237,6 +13330,7 @@ var Self =
     exportDotless,
     exportDotlessSingle,
     exportTracing,
+    exportRewritesOutFile,
     // exportWithRemoteSubmodules, // xxx
     importPathLocal,
     importLocalRepo,
