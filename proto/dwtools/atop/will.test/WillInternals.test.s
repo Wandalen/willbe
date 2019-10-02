@@ -8935,6 +8935,83 @@ function submodulesDeleteAndDownload( test )
 
 submodulesDeleteAndDownload.timeOut = 300000;
 
+//
+
+function customLogger( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'simple' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let modulePath = abs( './' );
+  let submodulesPath = abs( '.module' );
+  let outDirPath = abs( 'out' );
+  let logger = new _.Logger({ output : null, name : 'willCustomLogger', onTransformEnd, verbosity : 2 });
+  let loggerOutput = [];
+  let will = new _.Will({ logger });
+
+  _.fileProvider.filesDelete( routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( outDirPath );
+
+  var opener = will.openerMake({ willfilesPath : modulePath });
+  opener.find();
+
+  return opener.open().split().then( () =>
+  {
+
+    var expected = [];
+    var files = self.find( outDirPath );
+    let builds = opener.openedModule.buildsResolve();
+
+    test.identical( builds.length, 1 );
+
+    let build = builds[ 0 ];
+
+    return build.perform()
+    .finally( ( err, arg ) =>
+    {
+
+      test.description = 'files';
+      var expected = [ '.', './debug', './debug/File.js' ];
+      var files = self.find( outDirPath );
+      test.identical( files, expected );
+
+      opener.finit();
+
+      test.description = 'no garbage left';
+      test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), [] );
+      test.setsAreIdentical( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ), [] );
+      test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), [] );
+      test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), [] );
+      test.setsAreIdentical( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ), [] );
+      test.setsAreIdentical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), [] );
+      test.setsAreIdentical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), [] );
+      test.setsAreIdentical( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), [] );
+      test.setsAreIdentical( _.mapKeys( will.moduleWithNameMap ), [] );
+
+      let output = loggerOutput.join( '\n' );
+      test.is( _.strHas( output, /Building .*module::customLogger \/ build::debug.*/ ) );
+      test.is( _.strHas( output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
+      test.is( _.strHas( output, / \+ .*reflector::reflect.proto.* reflected 2 files/ ) );
+      test.is( _.strHas( output, /Built .*module::customLogger \/ build::debug.*/ ) );
+
+      if( err )
+      throw err;
+      return arg;
+    });
+
+  });
+
+  /*  */
+
+  function onTransformEnd( o )
+  {
+    loggerOutput.push( o.outputForPrinter[ 0 ] )
+  }
+}
+
 // --
 // define class
 // --
@@ -9013,6 +9090,8 @@ var Self =
     modulesEach,
     submodulesResolve,
     submodulesDeleteAndDownload,
+
+    customLogger,
 
   }
 
