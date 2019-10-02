@@ -6845,12 +6845,14 @@ function exportWholeModule( test )
     return null;
   })
 
-  shell({ execPath : '.export' })
+  shell({ execPath : '.with module/ .export' })
+  shell({ execPath : '.build' })
 
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'export-whole.out.will.yml' ) ) )
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './.will.yml', './proto', './proto/File1.s', './proto/dir', './proto/dir/File2.s' ] );
     return null;
   })
 
