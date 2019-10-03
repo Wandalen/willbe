@@ -1191,7 +1191,7 @@ function inodeExperiment( test )
   hash2 = provider.hashRead( pathsSameIno[ 1 ] );
   test.notIdentical( hash1, hash2 );
   test.case = 'restored files should not be same';
-  test.is( !provider.filesAreSame.apply( provider, pathsSameIno ) );
+  test.is( !provider.filesCanBeSame.apply( provider, pathsSameIno ) );
 
   provider.finit();
   provider.archive.finit();

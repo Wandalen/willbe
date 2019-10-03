@@ -8297,7 +8297,7 @@ function pathsResolveComposite2( test )
   {
     test.case = 'path::export';
     var resolved = opener.openedModule.resolve({ selector : 'path::export', pathResolving : 0 });
-    var expected = '.module/Proto/proto';
+    var expected = '.module/Proto/proto/**';
     test.identical( resolved, expected );
     return null;
   });

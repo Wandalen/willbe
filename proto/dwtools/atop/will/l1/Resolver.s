@@ -196,7 +196,7 @@ function _statusPreUpdate()
   else if( it.src instanceof will.ModulesRelation )
   {
     _.sure( !!it.src.opener, `${it.src.decoratedAbsoluteName} is not formed` );
-    _.sure( !!it.src.opener.openedModule, `${it.src.decoratedAbsoluteName} is not opened` );
+    _.sure( !it.selector || !!it.src.opener.openedModule, `${it.src.decoratedAbsoluteName} is not opened` );
     // _.sure( !!it.src.opener.openedModule.isValid(), `${it.src.decoratedAbsoluteName} is not valid` );
 
     let opener = it.src.opener;
@@ -208,9 +208,17 @@ function _statusPreUpdate()
     module2 = opener.peerModule;
 
     if( !module2 )
+    debugger;
+    if( !module2 ) /* yyy */
+    opener.openedModule;
+
+    if( !module2 )
     {
       debugger;
+      if( it.selector !== undefined )
       throw _.err( `Out-willfile of ${it.src.decoratedAbsoluteName} is not opened or does not exist` );
+      else
+      module2 = it.currentModule;
     }
 
     // if( !module2.stager.stageStatePerformed( 'resourcesFormed' ) )

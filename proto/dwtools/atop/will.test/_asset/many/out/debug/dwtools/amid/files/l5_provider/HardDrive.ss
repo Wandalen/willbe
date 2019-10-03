@@ -2,7 +2,7 @@
 
 'use strict';
 
-let File, StandardFile, Os;
+let File, StandardFile, Os, LockFile;
 
 if( typeof module !== 'undefined' )
 {
@@ -15,6 +15,8 @@ if( typeof module !== 'undefined' )
   File = require( 'fs' );
   StandardFile = require( 'fs' );
   Os = require( 'os' );
+
+  LockFile = require( 'proper-lockfile' )
 
 }
 
@@ -1285,6 +1287,171 @@ _.routineExtend( dirMakeAct, Parent.prototype.dirMakeAct );
 
 //
 
+let lockFileCounterMap = Object.create( null );
+
+function fileLockAct( o )
+{
+  let self = this;
+  let fileNativePath = self.path.nativize( o.filePath );
+
+  _.assert( !o.locking, 'not implemented' );
+  _.assert( !o.sharing || o.sharing === 'process', 'not implemented' );
+  _.assert( self.path.isNormalized( o.filePath ) );
+  _.assert( !o.waiting || o.timeOut >= 1000 );
+  _.assertRoutineOptions( fileLockAct, arguments );
+
+  let con = _.Consequence.Try( () =>
+  {
+    if( !self.fileExistsAct({ filePath : o.filePath }) )
+    throw _.error( 'File:', o.filePath, 'doesn\'t exist.' );
+
+    if( lockFileCounterMap[ o.filePath ] )
+    if( self.fileExistsAct({ filePath : o.filePath + '.lock' } ) )
+    {
+      if( !o.sharing )
+      throw _.err( 'File', fileNativePath, 'is already locked by current process' );
+
+      if( !o.waiting )
+      {
+        return true;
+      }
+      else if( o.sync )
+      {
+        throw _.err
+        ( 'File', fileNativePath, 'is already locked by current process.',
+          'With option {-o.waiting-} enabled, lock will be waiting for itself.',
+          'Please use existing lock or execute method with {-o.sync-} set to 0.'
+        )
+      }
+    }
+
+    let lockOptions = Object.create( null );
+
+    if( o.sync )
+    {
+      LockFile.lockSync( fileNativePath, lockOptions );
+      return true;
+    }
+    else
+    {
+      if( o.waiting )
+      lockOptions.retries =
+      {
+        retries : o.timeOut / 1000,
+        minTimeout : 1000,
+        maxRetryTime : o.timeOut
+      }
+      return _.Consequence.From( LockFile.lock( fileNativePath, lockOptions ) );
+    }
+  })
+
+  con.then( ( got ) =>
+  {
+    if( lockFileCounterMap[ o.filePath ] === undefined )
+    lockFileCounterMap[ o.filePath ] = 0;
+
+    lockFileCounterMap[ o.filePath ] += 1;
+
+    return true;
+  })
+
+  if( o.sync )
+  return con.syncMaybe();
+
+  return con;
+}
+
+_.routineExtend( fileLockAct, Parent.prototype.fileLockAct );
+
+//
+
+function fileUnlockAct( o )
+{
+  let self = this;
+  let fileNativePath = self.path.nativize( o.filePath );
+
+  _.assert( self.path.isNormalized( o.filePath ) );
+  _.assertRoutineOptions( fileUnlockAct, arguments );
+
+  let con = _.Consequence.Try( () =>
+  {
+    if( !self.fileExistsAct({ filePath : o.filePath }) )
+    throw _.error( 'File:', o.filePath, 'doesn\'t exist.' );
+
+    if( lockFileCounterMap[ o.filePath ] !== undefined )
+    {
+      _.assert( lockFileCounterMap[ o.filePath ] > 0 );
+
+      lockFileCounterMap[ o.filePath ] -= 1;
+
+      if( lockFileCounterMap[ o.filePath ] > 0 )
+      return true;
+    }
+
+    if( o.sync )
+    {
+      LockFile.unlockSync( fileNativePath );
+      return true;
+    }
+    else
+    {
+      return _.Consequence.From( LockFile.unlock( fileNativePath ) );
+    }
+
+  })
+
+  con.then( ( got ) =>
+  {
+    if( lockFileCounterMap[ o.filePath ] === 0 )
+    {
+      delete lockFileCounterMap[ o.filePath ];
+    }
+
+    return true;
+  })
+
+  if( o.sync )
+  return con.syncMaybe();
+
+  return con;
+}
+
+_.routineExtend( fileUnlockAct, Parent.prototype.fileUnlockAct );
+
+//
+
+function fileIsLockedAct( o )
+{
+  let self = this;
+  let fileNativePath = self.path.nativize( o.filePath );
+
+  _.assertRoutineOptions( fileIsLockedAct, arguments );
+  _.assert( self.path.isNormalized( o.filePath ) );
+
+  let con = _.Consequence.Try( () =>
+  {
+    debugger
+    if( o.sync )
+    {
+      return LockFile.checkSync( fileNativePath );
+    }
+    else
+    {
+      return _.Consequence.From( LockFile.check( fileNativePath ) );
+    }
+  })
+
+  if( o.sync )
+  return con.syncMaybe();
+
+  return con;
+}
+
+_.routineExtend( fileIsLockedAct, Parent.prototype.fileIsLockedAct );
+
+
+//
+
 function fileRenameAct( o )
 {
   let self = this;
@@ -1884,6 +2051,12 @@ let Extend =
   fileTimeSetAct,
   fileDeleteAct,
   dirMakeAct,
+
+  // locking
+
+  fileLockAct,
+  fileUnlockAct,
+  fileIsLockedAct,
 
   // linking
 

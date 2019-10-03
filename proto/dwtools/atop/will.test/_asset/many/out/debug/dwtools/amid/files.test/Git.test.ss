@@ -669,6 +669,79 @@ filesReflectTrivial.timeOut = 60000;
 
 //
 
+function filesReflectNoStashing( test )
+{
+  let context = this;
+  let providerSrc = context.providerSrc;
+  let providerDst = context.providerDst;
+  let system = context.system;
+  let path = context.providerDst.path;
+  let testPath = path.join( context.suitePath, 'routine-' + test.name );
+  let localPath = path.join( testPath, 'wPathBasic' );
+  debugger;
+  let clonePathGlobal = providerDst.path.globalFromPreferred( localPath );
+
+  let con = new _.Consequence().take( null )
+
+  .then( () =>
+  {
+    test.case = 'local has changes, remote have one new commit, error expected';
+    providerDst.filesDelete( localPath );
+    let remotePath = 'git+https:///github.com/Wandalen/wPathBasic.git';
+
+    let ready = system.filesReflect({ reflectMap : { [ remotePath ] : clonePathGlobal }, verbosity : 5 });
+
+    _.process.start
+    ({
+      execPath : 'git reset --hard HEAD~1',
+      currentPath : localPath,
+      ready
+    })
+
+    ready.then( () =>
+    {
+      _.fileProvider.fileWrite( _.path.join( localPath, 'README.md' ), '' );
+      return null;
+    })
+
+    ready.then( () =>
+    {
+      let con = system.filesReflect
+      ({
+        reflectMap : { [ remotePath ] : clonePathGlobal },
+        verbosity : 5,
+        extra : { stashing : 0 }
+      });
+      return test.shouldThrowErrorAsync( con );
+    });
+
+    _.process.start
+    ({
+      execPath : 'git status',
+      currentPath : localPath,
+      ready,
+      outputCollecting : 1
+    })
+
+    ready.then( ( got ) =>
+    {
+      test.identical( got.exitCode, 0 );
+      test.is( _.strHas( got.output, `modified:   README.md` ) )
+      return null;
+    })
+
+    return ready;
+  })
+
+  return con;
+
+}
+
+filesReflectNoStashing.timeOut = 60000;
+
+
+//
+
 function isUpToDate( test )
 {
   let context = this;
@@ -905,6 +978,58 @@ function isUpToDate( test )
 
 isUpToDate.timeOut = 30000;
 
+//
+
+function isDownloadedFromRemote( test )
+{
+  let context = this;
+  let providerSrc = context.providerSrc;
+  let providerDst = context.providerDst;
+  let system = context.system;
+  let path = context.providerDst.path;
+  let testPath = path.join( context.suitePath, 'routine-' + test.name );
+  let localPath = path.join( testPath, 'wPathBasic' );
+  let clonePathGlobal = providerDst.path.globalFromPreferred( localPath );
+  let remotePath = 'git+https:///github.com/Wandalen/wPathBasic.git';
+  let remotePath2 = 'git+https:///github.com/Wandalen/wTools.git';
+
+  let con = new _.Consequence().take( null )
+
+
+  .then( () =>
+  {
+    let got = providerSrc.isDownloadedFromRemote({ localPath, remotePath : remotePath });
+    test.identical( got.downloaded, false )
+    test.identical( got.downloadedFromRemote, false )
+    return null;
+  })
+
+  .then( () =>
+  {
+    test.case = 'setup';
+    providerDst.filesDelete( localPath );
+    return system.filesReflect({ reflectMap : { [ remotePath ] : clonePathGlobal }});
+  })
+
+  .then( () =>
+  {
+    let got = providerSrc.isDownloadedFromRemote({ localPath, remotePath });
+    test.identical( got.downloaded, true )
+    test.identical( got.downloadedFromRemote, true )
+    return null;
+  })
+
+  .then( () =>
+  {
+    let got = providerSrc.isDownloadedFromRemote({ localPath, remotePath : remotePath2 });
+    test.identical( got.downloaded, true )
+    test.identical( got.downloadedFromRemote, false )
+    return null;
+  })
+
+  return con;
+}
+
 // --
 // declare
 // --
@@ -932,7 +1057,9 @@ var Proto =
   tests :
   {
     filesReflectTrivial,
+    filesReflectNoStashing,
     isUpToDate,
+    isDownloadedFromRemote
   },
 
 }
