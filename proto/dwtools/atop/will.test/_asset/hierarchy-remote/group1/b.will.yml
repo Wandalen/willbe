@@ -5,8 +5,8 @@ about :
 
 submodule :
 
-  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic.out.will
-  UriBasic : git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out.will
+  PathTools : git+https:///github.com/Wandalen/wPathTools.git/
+  Proto : git+https:///github.com/Wandalen/wProto.git/
 
 path :
 

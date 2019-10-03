@@ -597,13 +597,13 @@ _commandBuildLike.defaults =
 
 //
 
-function _commandWhichLike( o )
+function _commandTreeLike( o )
 {
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  _.routineOptions( _commandWhichLike, arguments );
+  _.routineOptions( _commandTreeLike, arguments );
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onAll ) );
   _.assert( _.strIs( o.name ) );
@@ -651,7 +651,7 @@ function _commandWhichLike( o )
   return ready;
 }
 
-_commandWhichLike.defaults =
+_commandTreeLike.defaults =
 {
   event : null,
   onAll : null,
@@ -715,7 +715,7 @@ function _commandsMake()
     'submodules list' :         { e : _.routineJoin( will, will.commandSubmodulesList ),              h : 'List submodules of the current module.' },
     'modules list' :            { e : _.routineJoin( will, will.commandModulesList ),                 h : 'List all modules.' },
     'modules topological list' :{ e : _.routineJoin( will, will.commandModulesTopologicalList ),      h : 'List all modules topologically.' },
-    'modules which' :           { e : _.routineJoin( will, will.commandModulesWhich ),                h : 'List all found modules as a tree.' },
+    'modules tree' :            { e : _.routineJoin( will, will.commandModulesTree ),                h : 'List all found modules as a tree.' },
     'reflectors list' :         { e : _.routineJoin( will, will.commandReflectorsList ),              h : 'List avaialable reflectors the current module.' },
     'steps list' :              { e : _.routineJoin( will, will.commandStepsList ),                   h : 'List avaialable steps the current module.' },
     'builds list' :             { e : _.routineJoin( will, will.commandBuildsList ),                  h : 'List avaialable builds the current module.' },
@@ -1174,93 +1174,6 @@ function commandSubmodulesList( e )
 
 //
 
-function commandModulesList( e )
-{
-  let will = this;
-
-  return will._commandListLike
-  ({
-    event : e,
-    name : 'list modules',
-    onEach : act,
-    commandRoutine : commandModulesList,
-    resourceKind : 'module',
-  });
-
-  function act( module, resources )
-  {
-    let logger = will.logger;
-    logger.log( module.openedModule.infoExportResource( resources ) );
-  }
-
-  // return will._commandListLike( e, act, 'module' );
-}
-
-//
-
-function commandModulesTopologicalList( e )
-{
-  let will = this;
-
-  return will._commandListLike
-  ({
-    event : e,
-    name : 'list topological sorted order',
-    onEach : act,
-    commandRoutine : commandModulesTopologicalList,
-    resourceKind : 'module',
-  });
-
-  function act( module, resources )
-  {
-    let logger = will.logger; // xxx
-    logger.log( module.openedModule.infoExportModulesTopological( resources ) );
-  }
-
-  // return will._commandListLike( e, act, 'module' );
-}
-
-//
-
-function commandModulesWhich( e )
-{
-  let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
-  let request = will.Resolver.strRequestParse( e.argument );
-
-  return will._commandWhichLike
-  ({
-    event : e,
-    name : 'which',
-    onAll : handleAll,
-    commandRoutine : commandModulesWhich,
-  });
-
-  function handleAll( it )
-  {
-    let modules = it.modules;
-    logger.log( will.graphInfoExportAsTree( modules ) );
-    return null;
-  }
-
-}
-
-// function commandModulesWhich( e )
-// {
-//   let will = this;
-//
-//   function act( module, resources )
-//   {
-//     let logger = will.logger;
-//     logger.log( will.graphInfoExportAsTree( resources ) );
-//   }
-//
-//   return will._commandListLike( e, act, 'module' );
-// }
-
-//
-
 function commandReflectorsList( e )
 {
   let will = this;
@@ -1396,6 +1309,80 @@ function commandAboutList( e )
 
 //
 
+function commandModulesList( e )
+{
+  let will = this;
+
+  return will._commandListLike
+  ({
+    event : e,
+    name : 'list modules',
+    onEach : act,
+    commandRoutine : commandModulesList,
+    resourceKind : 'module',
+  });
+
+  function act( module, resources )
+  {
+    let logger = will.logger;
+    logger.log( module.openedModule.infoExportResource( resources ) );
+  }
+
+  // return will._commandListLike( e, act, 'module' );
+}
+
+//
+
+function commandModulesTopologicalList( e )
+{
+  let will = this;
+
+  return will._commandListLike
+  ({
+    event : e,
+    name : 'list topological sorted order',
+    onEach : act,
+    commandRoutine : commandModulesTopologicalList,
+    resourceKind : 'module',
+  });
+
+  function act( module, resources )
+  {
+    let logger = will.logger; // xxx
+    logger.log( module.openedModule.infoExportModulesTopological( resources ) );
+  }
+
+  // return will._commandListLike( e, act, 'module' );
+}
+
+//
+
+function commandModulesTree( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let request = will.Resolver.strRequestParse( e.argument );
+
+  return will._commandTreeLike
+  ({
+    event : e,
+    name : 'which',
+    onAll : handleAll,
+    commandRoutine : commandModulesTree,
+  });
+
+  function handleAll( it )
+  {
+    let modules = it.modules;
+    logger.log( will.graphInfoExportAsTree( modules ) );
+    return null;
+  }
+
+}
+
+//
+
 function commandSubmodulesClean( e )
 {
   let will = this;
@@ -1410,16 +1397,40 @@ function commandSubmodulesClean( e )
 function commandSubmodulesDownload( e )
 {
   let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
 
   let propertiesMap = _.strStructureParse( e.argument );
-  _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
-  return will.openersCurrentEach( function( it )
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'download submodules',
+    onEach : handleEach,
+    commandRoutine : commandSubmodulesDownload,
+  });
+
+  function handleEach( it )
   {
     return it.opener.openedModule.subModulesDownload({ dry : e.propertiesMap.dry });
-  });
+  }
+
 }
+
+// {
+//   let will = this;
+//
+//   let propertiesMap = _.strStructureParse( e.argument );
+//   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+//   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
+//
+//   return will.openersCurrentEach( function( it )
+//   {
+//     return it.opener.openedModule.subModulesDownload({ dry : e.propertiesMap.dry });
+//   });
+// }
 
 commandSubmodulesDownload.commandProperties =
 {
@@ -1431,16 +1442,41 @@ commandSubmodulesDownload.commandProperties =
 function commandSubmodulesUpdate( e )
 {
   let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
 
   let propertiesMap = _.strStructureParse( e.argument );
-  _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
-  return will.openersCurrentEach( function( it )
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'update submodules',
+    onEach : handleEach,
+    commandRoutine : commandSubmodulesUpdate,
+  });
+
+  function handleEach( it )
   {
     return it.opener.openedModule.submodulesUpdate({ dry : e.propertiesMap.dry });
-  });
+  }
+
 }
+
+// {
+//   let will = this;
+//
+//   let propertiesMap = _.strStructureParse( e.argument );
+//   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+//   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
+//
+//   return will.openersCurrentEach( function( it )
+//   {
+//     return it.opener.openedModule.submodulesUpdate({ dry : e.propertiesMap.dry });
+//   });
+//
+// }
 
 commandSubmodulesUpdate.commandProperties =
 {
@@ -1452,25 +1488,52 @@ commandSubmodulesUpdate.commandProperties =
 function commandSubmodulesFixate( e )
 {
   let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
 
   let propertiesMap = _.strStructureParse( e.argument );
-  _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
-
   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
+  e.propertiesMap.upgrading = 0;
   delete e.propertiesMap.negative;
 
-  return will.openersCurrentEach( function( it )
-  {
-    return it.opener.openedModule.submodulesFixate( e.propertiesMap );
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'fixate submodules',
+    onEach : handleEach,
+    commandRoutine : commandSubmodulesFixate,
   });
 
+  function handleEach( it )
+  {
+    return it.opener.openedModule.submodulesFixate({ dry : e.propertiesMap.dry });
+  }
+
 }
+
+// {
+//   let will = this;
+//
+//   let propertiesMap = _.strStructureParse( e.argument );
+//   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+//   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
+//
+//   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
+//   delete e.propertiesMap.negative;
+//
+//   return will.openersCurrentEach( function( it )
+//   {
+//     return it.opener.openedModule.submodulesFixate( e.propertiesMap );
+//   });
+//
+// }
 
 commandSubmodulesFixate.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
-  negative : 'Reporting attempt of upgrade with negative outcome. Default is negative:0.',
+  negative : 'Reporting attempt of fixation with negative outcome. Default is negative:0.',
 }
 
 //
@@ -1478,23 +1541,49 @@ commandSubmodulesFixate.commandProperties =
 function commandSubmodulesUpgrade( e )
 {
   let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
 
   let propertiesMap = _.strStructureParse( e.argument );
-  _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
-
-  _.assert( e.propertiesMap.upgrading === undefined, 'Unknown option upgrading' );
-
   e.propertiesMap.upgrading = 1;
   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
   delete e.propertiesMap.negative;
 
-  return will.openersCurrentEach( function( it )
-  {
-    return it.opener.openedModule.submodulesFixate( e.propertiesMap );
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'upgrade submodules',
+    onEach : handleEach,
+    commandRoutine : commandSubmodulesUpgrade,
   });
 
+  function handleEach( it )
+  {
+    return it.opener.openedModule.submodulesFixate({ dry : e.propertiesMap.dry });
+  }
+
 }
+// {
+//   let will = this;
+//
+//   let propertiesMap = _.strStructureParse( e.argument );
+//   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+//   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
+//
+//   _.assert( e.propertiesMap.upgrading === undefined, 'Unknown option upgrading' );
+//
+//   e.propertiesMap.upgrading = 1;
+//   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
+//   delete e.propertiesMap.negative;
+//
+//   return will.openersCurrentEach( function( it )
+//   {
+//     return it.opener.openedModule.submodulesFixate( e.propertiesMap );
+//   });
+//
+// }
 
 commandSubmodulesUpgrade.commandProperties =
 {
@@ -1554,7 +1643,7 @@ function commandShell( e )
 //   let ready = new _.Consequence().take( null );
 //
 //   let propertiesMap = _.strStructureParse( e.argument );
-//   _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+//   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
 //   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
 //
 //   let dry = !!e.propertiesMap.dry;
@@ -1605,7 +1694,7 @@ function commandClean( e )
   let ready = new _.Consequence().take( null );
 
   let propertiesMap = _.strStructureParse( e.argument );
-  _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
   let dry = !!e.propertiesMap.dry;
   delete e.propertiesMap.dry;
@@ -1650,7 +1739,7 @@ function commandCleanRecursive( e )
   let ready = new _.Consequence().take( null );
 
   let propertiesMap = _.strStructureParse( e.argument );
-  _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
   let dry = !!e.propertiesMap.dry;
   delete e.propertiesMap.dry;
@@ -1687,7 +1776,7 @@ defaults.recursive = 'Recursive cleaning. 0 - only curremt module, 1 - current m
 //   let ready = new _.Consequence().take( null );
 //
 //   let propertiesMap = _.strStructureParse( e.argument );
-//   _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+//   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
 //   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
 //
 //   let dry = !!e.propertiesMap.dry;
@@ -2052,7 +2141,7 @@ let Extend =
 
   _commandListLike,
   _commandBuildLike,
-  _commandWhichLike,
+  _commandTreeLike,
 
   openersFind,
 
@@ -2071,14 +2160,15 @@ let Extend =
   commandResourcesList,
   commandPathsList,
   commandSubmodulesList,
-  commandModulesList,
-  commandModulesTopologicalList,
-  commandModulesWhich,
   commandReflectorsList,
   commandStepsList,
   commandBuildsList,
   commandExportsList,
   commandAboutList,
+
+  commandModulesList,
+  commandModulesTopologicalList,
+  commandModulesTree,
 
   commandSubmodulesClean,
   commandSubmodulesDownload,

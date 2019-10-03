@@ -5,10 +5,10 @@ about :
 
 submodule :
 
-  a : group1/out/a.out.will
-  b : group1/out/b.out.will
-  c : group2/out/c.out.will
-  PathTools : git+https:///github.com/Wandalen/wPathTools.git/out/wPathTools.out.will
+  a : group1/a
+  b : group1/b
+  c : group2/c
+  PathTools : git+https:///github.com/Wandalen/wPathTools.git/
 
 path :
 

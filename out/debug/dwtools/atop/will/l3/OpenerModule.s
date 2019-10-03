@@ -1502,8 +1502,8 @@ function isMainSet( src )
   _.assert( src === null || _.boolLike( src ) );
   _.assert( will.mainOpener === null || will.mainOpener === opener || !src );
 
-  if( src )
-  debugger;
+  // if( src )
+  // debugger;
 
   if( src )
   will.mainOpener = opener;

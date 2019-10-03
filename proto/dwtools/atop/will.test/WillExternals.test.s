@@ -2226,11 +2226,11 @@ function modulesWhichDotless( test )
 
   .then( () =>
   {
-    test.case = '.imply v:1 ; .modules.which'
+    test.case = '.imply v:1 ; .modules.tree'
     return null;
   })
 
-  shell({ execPath : '.imply v:1 ; .modules.which' })
+  shell({ execPath : '.imply v:1 ; .modules.tree' })
 
   .then( ( got ) =>
   {
@@ -2249,13 +2249,13 @@ function modulesWhichDotless( test )
 
   .then( () =>
   {
-    test.case = '.modules.which'
+    test.case = '.modules.tree'
     _.fileProvider.filesDelete( outSuperDirPath );
     _.fileProvider.filesDelete( outSubDirPath );
     return null;
   })
 
-  shell({ execPath : '.modules.which' })
+  shell({ execPath : '.modules.tree' })
 
   .then( ( got ) =>
   {
@@ -12789,12 +12789,12 @@ var Self =
     cleanSubmodules,
     cleanMixed,
     cleanWithInPath,
-    // cleanRecursive, // xxx
+    cleanRecursive, // xxx
 
     buildSingleModule,
-    // buildSingleStep, // qqq : repair _.process.start please
+    buildSingleStep,
     buildSubmodules,
-    buildDetached,
+    // buildDetached, // xxx : uncomment later
 
     exportSingle,
     exportItself,

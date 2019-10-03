@@ -357,7 +357,7 @@ function strRemoveBegin( test )
   test.case = 'invalid type of begin argument';
   test.shouldThrowErrorSync( () => _.strRemoveBegin( 'a', 1 ) );
   test.shouldThrowErrorSync( () => _.strRemoveBegin( 'a', null ) );
-  test.shouldThrowErrorSync( () => _.strRemoveBegin( 'aaa', [ ' a', 2 ] ) );
+  test.shouldThrowErrorSync( () => _.strRemoveBegin( 'aa', [ ' a', 2 ] ) );
 
   test.case = 'invalid type of arguments';
   test.shouldThrowErrorSync( () => _.strRemoveBegin( undefined, undefined ) );
@@ -1075,8 +1075,8 @@ function strReplace( test )
   expected = [];
   test.identical( got, expected );
 
-  got = _.strReplace( [ 'aaa', 'ba', 'c' ], 'a', 'c' );
-  expected = [ 'caa', 'bc', 'c' ];
+  got = _.strReplace( [ 'aa', 'ba', 'c' ], 'a', 'c' );
+  expected = [ 'ca', 'bc', 'c' ];
   test.identical( got, expected );
 
   got = _.strReplace( [ 'abc', 'cab', 'cba' ], [ 'a', 'b', 'c' ], [ 'c', 'c', 'c' ] );

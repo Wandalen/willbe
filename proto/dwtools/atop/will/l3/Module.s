@@ -1730,26 +1730,11 @@ function modulesEach_body( o )
   let module = this;
   let will = module.will;
   let logger = will.logger;
-  // let visitedModulesMap = Object.create( null );
-  // let visitedModulesArray = [];
 
-  _.assertRoutineOptions( modulesEach, o );
-
-  // var sys = new _.graph.AbstractGraphSystem
-  // ({
-  //   onNodeNameGet : recordName,
-  //   onOutNodesGet : recordSubmodules,
-  // });
-
-  // let sys = will.graphSystem;
-  // let group = sys.nodesGroup();
+  _.assert( !( !o.nodesMap ^ !o.visitedContainer ), 'Expects both nodesMap and visitedContainer or none' );
 
   let graph = will.graphSystemMake({ withPeers : o.withPeers, nodesMap : o.nodesMap });
   let group = graph.nodesGroup();
-
-  // let nodes = [ recordFromModule( module ) ];
-  // if( o.withPeers && module.peerModule )
-  // nodes.push( recordFromModule( module.peerModule ) );
 
   let nodes = [ group.nodeFrom( module ) ];
   if( o.withPeers && module.peerModule )
@@ -1761,52 +1746,12 @@ function modulesEach_body( o )
   o2.onDown = handleDown;
   let result = group.each( o2 );
 
-  // ({
-  //   roots : nodes,
-  //   onUp : handleUp,
-  //   onDown : handleDown,
-  //   recursive : o.recursive,
-  //   withStem : o.withStem,
-  // });
-
   if( o.outputFormat !== '/' )
   return result.map( ( record ) => outputFrom( record ) );
 
   return result;
 
   /* */
-
-  // function recordName( record )
-  // {
-  //   return record.module ? record.module.qualifiedName : record.relation.qualifiedName;
-  // }
-  //
-  // /* */
-  //
-  // function recordSubmodules( record )
-  // {
-  //   let result = [];
-  //   if( record.module )
-  //   for( let s in record.module.submoduleMap )
-  //   {
-  //     let record2 = recordFromRelation( record.module.submoduleMap[ s ] );
-  //
-  //     if( record2.relation )
-  //     record2.opener = record2.relation.opener;
-  //     if( record2.opener )
-  //     record2.module = record2.opener.openedModule;
-  //
-  //     result.push( record2 );
-  //
-  //     if( o.withPeers && record2.module && record2.module.peerModule )
-  //     {
-  //       result.push( recordFromModule( record2.module.peerModule ) );
-  //     }
-  //
-  //   }
-  //   // logger.log( `list ${record.module ? record.module.absoluteName : record.relation.absoluteName} ${result.length}` );
-  //   return result;
-  // }
 
   /* */
 
@@ -1869,72 +1814,9 @@ function modulesEach_body( o )
 
   /* */
 
-  // function recordFromRelation( relation )
-  // {
-  //   let record;
-  //
-  //   if( relation.opener )
-  //   {
-  //     record = visitedModulesMap[ relation.opener.commonPath ];
-  //   }
-  //   else
-  //   {
-  //     debugger;
-  //   }
-  //
-  //   if( !record )
-  //   {
-  //     // record = Object.create( null );
-  //     // record.relation = null;
-  //     // record.opener = null;
-  //     // record.module = null;
-  //     record = will.graphRecordFrom( relation );
-  //     visitedModulesArray.push( record );
-  //     if( relation.opener )
-  //     visitedModulesMap[ relation.opener.commonPath ] = record;
-  //   }
-  //   else
-  //   {
-  //   }
-  //
-  //   if( relation.opener )
-  //   record.opener = relation.opener;
-  //
-  //   record.relation = relation;
-  //   return record;
-  // }
-  //
-  // /* */
-  //
-  // function recordFromModule( module )
-  // {
-  //   let record;
-  //
-  //   record = visitedModulesMap[ module.commonPath ];
-  //
-  //   if( !record )
-  //   {
-  //     // record = Object.create( null );
-  //     // record.relation = null;
-  //     // record.opener = null;
-  //     // record.module = null;
-  //     record = will.graphRecordFrom( module );
-  //     visitedModulesArray.push( record );
-  //     visitedModulesMap[ module.commonPath ] = record;
-  //   }
-  //   else
-  //   {
-  //   }
-  //
-  //   _.assert( !record.module || record.module === module );
-  //   record.module = module;
-  //   return record;
-  // }
-
 }
 
 var defaults = modulesEach_body.defaults = _.mapExtend( null, _.graph.AbstractNodesGroup.prototype.each.defaults );
-// var defaults = modulesEach_body.defaults = Object.create( null );
 
 defaults.outputFormat = '*/module'; /* / | * / module | * / relation */
 defaults.onUp = null;
@@ -2955,112 +2837,6 @@ function _subModulesForm()
 
   return con.split();
 }
-
-//
-//
-// function _attachedModulesOpen()
-// {
-//   let module = this;
-//   let will = module.will;
-//   let result = null;
-//   let openedModule = module instanceof _.Will.ModuleOpener ? module.openedModule : module;
-//
-//   if( module.rootModule === null || module.rootModule === openedModule )
-//   if( module.willfilesArray.length )
-//   result = module._attachedModulesOpenFromData
-//   ({
-//     willfilesArray : module.willfilesArray.slice(),
-//     rootModule : openedModule.rootModule,
-//   });
-//
-//   return result;
-// }
-//
-// //
-//
-// function _attachedModulesOpenFromData( o )
-// {
-//   let module = this;
-//   let will = module.will;
-//
-//   o = _.routineOptions( _attachedModulesOpenFromData, arguments );
-//
-//   for( let f = 0 ; f < o.willfilesArray.length ; f++ )
-//   {
-//     let willfile = o.willfilesArray[ f ];
-//     willfile._read();
-//
-//     for( let modulePath in willfile.structure.module )
-//     {
-//       let data = willfile.structure.module[ modulePath ];
-//       if( data === 'root' )
-//       continue;
-//       module._attachedModuleOpenFromData
-//       ({
-//         modulePath : modulePath,
-//         data : data,
-//         rootModule : o.rootModule,
-//         storagePath : willfile.filePath,
-//       });
-//     }
-//
-//   }
-//
-//   return null;
-// }
-//
-// _attachedModulesOpenFromData.defaults =
-// {
-//   willfilesArray : null,
-//   rootModule : null,
-// }
-//
-// //
-//
-// function _attachedModuleOpenFromData( o )
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   o = _.routineOptions( _attachedModuleOpenFromData, arguments ); debugger; xxx
-//
-//   let modulePath = path.join( module.dirPath, o.modulePath );
-//   // let willf = will.willfileFor
-//   // ({
-//   //   // filePath : modulePath + '.will.cached!',
-//   //   filePath : modulePath + '.will.yml',
-//   //   will : will,
-//   //   role : 'single',
-//   //   data : o.data,
-//   //   storagePath : o.storagePath,
-//   // });
-//
-//   // let opener2 = will.openerMake({ opener : o2 ]);
-//
-//   // let opener2 = will.ModuleOpener
-//   // ({
-//   //   will : will,
-//   //   willfilesPath : modulePath,
-//   //   willfilesArray : [ willf ],
-//   //   finding : 0,
-//   //   rootModule : o.rootModule,
-//   // }).preform();
-//
-//   opener2.find();
-//
-//   return opener2.openedModule;
-// }
-//
-// _attachedModuleOpenFromData.defaults =
-// {
-//   modulePath : null,
-//   storagePath : null,
-//   data : null,
-//   rootModule : null,
-// }
 
 // --
 // peer
@@ -5968,10 +5744,6 @@ let Extend =
   submodulesReload,
   submodulesForm,
   _subModulesForm,
-
-  // _attachedModulesOpen,
-  // _attachedModulesOpenFromData,
-  // _attachedModuleOpenFromData,
 
   // peer
 
