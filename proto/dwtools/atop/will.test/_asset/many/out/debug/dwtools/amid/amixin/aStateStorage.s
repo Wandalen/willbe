@@ -481,9 +481,10 @@ function storageFilePathToLoadGet( o )
 
   /* */
 
+  debugger;
   _.sure
   (
-    result.storageFilePath === null || _.all( result.storageFilePath, ( storageFilePath ) => fileProvider.statResolvedRead( storageFilePath ) ),
+    result.storageFilePath === null || !!_.all( result.storageFilePath, ( storageFilePath ) => fileProvider.statResolvedRead( storageFilePath ) ),
     () => 'Storage file does not exist ' + _.toStr( o )
   );
 

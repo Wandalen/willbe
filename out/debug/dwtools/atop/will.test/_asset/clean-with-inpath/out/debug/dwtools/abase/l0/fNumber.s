@@ -74,7 +74,7 @@ function numberIsInfinite( src )
 
 //
 
-function numberIsInt( src )
+function intIs( src )
 {
 
   if( !_.numberIs( src ) )
@@ -241,7 +241,7 @@ let Routines =
   numberIsFinite,
   numberDefined : numberIsFinite,
   numberIsInfinite,
-  numberIsInt,
+  intIs,
 
   numbersAre,
   numbersAreIdentical,

@@ -95,7 +95,7 @@ function unform()
 
   /* begin */
 
-  will.graphSystemFinit();
+  // will.graphSystemUnform();
 
   /* end */
 
@@ -113,7 +113,7 @@ function form()
   return will;
 
   will.formAssociates();
-  will.graphSystemForm();
+  // will.graphSystemMake();
 
   _.assert( arguments.length === 0 );
   _.assert( !will.formed );
@@ -532,12 +532,31 @@ function moduleEachAt( o )
         return true;
       }
 
-      debugger;
-      opener = will.openerMake
-      ({
-        willfilesPath : file.absolute,
-        searching : 'smart',
+      // debugger;
+      // let opener = will.openerMake
+      // ({
+      //   willfilesPath : file.absolute,
+      //   searching : 'smart',
+      // });
+
+      let selectedFiles = will.willfilesSelectPaired( file, files );
+      let willfilesPath = selectedFiles.map( ( file ) =>
+      {
+        // visitedFilesHash.set( file, true );
+        filesMap[ file.absolute ] = true;
+        return file.absolute;
       });
+
+      if( willfilesPath.length === 1 )
+      willfilesPath = willfilesPath[ 0 ];
+
+      // debugger;
+      let opener = will.openerMake
+      ({
+        willfilesPath : willfilesPath,
+        searching : 'exact',
+      });
+
       opener.find();
 
       // let opener = will.openerMake({ willfilesPath : file.absolute });
@@ -551,7 +570,7 @@ function moduleEachAt( o )
 
       opener.openedModule.stager.stageConsequence( 'preformed' ).then( ( arg ) =>
       {
-        debugger;
+        // debugger;
         if( o.onBegin )
         return o.onBegin( it );
         return arg;
@@ -565,7 +584,7 @@ function moduleEachAt( o )
 
       return opener.openedModule.ready.split().then( function( arg )
       {
-        debugger;
+        // debugger;
         _.assert( opener.willfilesArray.length > 0 );
         if( opener.willfilesPath )
         _.mapSet( filesMap, opener.willfilesPath, true );
@@ -671,17 +690,25 @@ function moduleWithAt( o )
     let opener;
     try
     {
-      if( visitedFilesHash.has( file ) )
-      debugger;
+      // if( visitedFilesHash.has( file ) )
+      // debugger;
       if( visitedFilesHash.has( file ) )
       return null;
 
       let selectedFiles = will.willfilesSelectPaired( file, files );
-      selectedFiles.forEach( ( file ) => visitedFilesHash.set( file, true ) );
+      let willfilesPath = selectedFiles.map( ( file ) =>
+      {
+        visitedFilesHash.set( file, true );
+        return file.absolute;
+      });
 
+      if( willfilesPath.length === 1 )
+      willfilesPath = willfilesPath[ 0 ];
+
+      // debugger;
       let opener = will.openerMake
       ({
-        willfilesPath : file.absolute,
+        willfilesPath : willfilesPath,
         searching : 'exact',
       });
 
@@ -758,6 +785,77 @@ function moduleAt( willfilesPath )
 
 //
 
+function modulesFilter( modules, opts )
+{
+  let will = this;
+  let visitedContainer = _.containerAdapter.from( new Set );
+  let result = _.containerAdapter.from( new Array );
+  let nodesMap = Object.create( null );
+
+  if( modules === null || modules === undefined )
+  modules = will.modulesArray;
+
+  _.assert( _.longIs( modules ) );
+  _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 );
+  opts = _.routineOptions( modulesFilter, opts );
+
+  _.each( modules, ( module ) =>
+  {
+    if( !module.isOut )
+    module.modulesEach
+    ({
+      withStem : 1,
+      withPeers : 1,
+      revisiting : 0,
+      outputFormat : '/',
+      onUp : onUp1,
+      visitedContainer,
+      nodesMap,
+    });
+  });
+
+  _.each( modules, ( module ) =>
+  {
+    if( module.isOut )
+    module.modulesEach
+    ({
+      withStem : 1,
+      withPeers : 1,
+      revisiting : 0,
+      outputFormat : '/',
+      onUp : onUp2,
+      visitedContainer,
+      nodesMap,
+    });
+  });
+
+  return result.original;
+
+  /* */
+
+  function onUp1( r, it )
+  {
+    let module = r.module || r.opener;
+    if( module && !module.isOut && it.level === 0 )
+    result.append( r );
+  }
+
+  /* */
+
+  function onUp2( r, it )
+  {
+    debugger;
+    result.appendOnce( r );
+  }
+
+}
+
+modulesFilter.defaults =
+{
+}
+
+//
+
 function moduleIdUnregister( openedModule )
 {
   let will = this;
@@ -774,7 +872,7 @@ function moduleIdUnregister( openedModule )
   _.assert( _.arrayCountElement( _.mapVals( will.moduleWithIdMap ), openedModule ) === 0 );
   _.arrayRemoveOnceStrictly( will.modulesArray, openedModule );
 
-  // will.graphSystemFinit();
+  // will.graphSystemUnform();
 }
 
 //
@@ -795,7 +893,7 @@ function moduleIdRegister( openedModule )
   _.assert( _.arrayCountElement( _.mapVals( will.moduleWithIdMap ), openedModule ) === 1 );
   _.arrayAppendOnceStrictly( will.modulesArray, openedModule );
 
-  // will.graphSystemFinit();
+  // will.graphSystemUnform();
 }
 
 //
@@ -850,66 +948,306 @@ function modulePathRegister( openedModule )
 
 }
 
+// //
+//
+// function graphSystemUnform()
+// {
+//   let will = this;
+//
+//   // if( will.graphGroup )
+//   // {
+//   //   will.graphGroup.sys.finit();
+//   //   will.graphGroup = null;
+//   // }
+//
+//   if( will.graphSystem )
+//   will.graphSystem.finit();
+//
+// }
+
 //
 
-function graphSystemFinit()
+function graphSystemMake( o )
 {
   let will = this;
+  let Record = { opener : null, module : null, relation : null, commonPath : null, object : null };
+  // let visitedModulesArray = []; /* xxx : remove */
 
-  // if( will.graphGroup )
-  // {
-  //   will.graphGroup.sys.finit();
-  //   will.graphGroup = null;
-  // }
+  o = _.routineOptions( graphSystemMake, arguments );
 
-  if( will.graphSystem )
-  will.graphSystem.finit();
+  if( !o.nodesMap )
+  o.nodesMap = Object.create( null );
 
-}
+  // if( !will.graphSystem )
+  // will.graphSystem = new _.graph.AbstractGraphSystem
 
-//
-
-function graphSystemForm()
-{
-  let will = this;
-
-  let group = will.graphGroup;
-  if( group )
-  return group;
-
-  will.graphSystem = new _.graph.AbstractGraphSystem
+  let sys = new _.graph.AbstractGraphSystem
   ({
-    onNodeNameGet : ( module ) => module.qualifiedName,
-    onOutNodesFor : onOutNodesFor,
-    onInNodesFor : onInNodesFor,
+    onNodeIs : recordIs,
+    onNodeFrom : recordFrom,
+    onNodeNameGet : recordName,
+    onOutNodesGet : recordSubmodules,
   });
+
+  return sys;
+
+  // let group = will.graphGroup;
+  // if( group )
+  // return group;
+
+  // if( !will.graphSystem )
+  // will.graphSystem = new _.graph.AbstractGraphSystem
+  // ({
+  //   onNodeNameGet : moduleName,
+  //   onOutNodesGet : onOutNodesGet,
+  //   onInNodesGet : onInNodesGet,
+  // });
 
   // group = will.graphGroup = sys.nodesGroup
   // ({
   //   onNodeNameGet : ( module ) => module.qualifiedName,
-  //   onOutNodesFor : onOutNodesFor,
-  //   onInNodesFor : onInNodesFor,
+  //   onOutNodesGet : onOutNodesGet,
+  //   onInNodesGet : onInNodesGet,
   // });
   //
   // group.nodesAdd( will.modulesArray );
 
   // debugger;
-  // logger.log( group.exportInfo() );
+  // logger.log( group.infoExport() );
   // debugger;
 
-  // return group;
+  /* */
 
-  function onOutNodesFor( module )
+  function recordName( record )
   {
-    let result = module.submoduleMap ? _.mapVals( module.submoduleMap ) : [];
-    result = result.map( ( module ) => module.opener );
-    result = result.map( ( module ) => module ? module.openedModule : module );
-    result = result.filter( ( module ) => !!module );
-    result.forEach( ( module ) => _.assert( module instanceof will.OpenedModule, () => 'Not module ' + _.strType( module ) ) );
+    if( record.module )
+    return record.module.qualifiedName;
+    return record.relation.qualifiedName;
+  }
+
+  /* */
+
+  function recordIs( r )
+  {
+    if( !_.mapIs( r ) )
+    return false;
+    if( r.module !== undefined && _.lengthOf( r ) === 5 )
+    return true;
+    return false;
+  }
+
+  /* */
+
+  function recordFrom( r )
+  {
+    let result;
+    let made = false;
+
+    _.assert( arguments.length === 1 );
+    _.assert( !!r );
+
+    if( _.mapIs( r ) )
+    {
+      // debugger;
+      _.assertMapHasOnly( r, Record  );
+      _.assertMapHasAll( r, Record );
+      result = r;
+    }
+    else if( r instanceof will.OpenedModule )
+    {
+      // if( o.nodesMap[ r.commonPath ] )
+      // debugger;
+      if( o.nodesMap[ r.commonPath ] )
+      result = o.nodesMap[ r.commonPath ];
+      else
+      result = make();
+      _.assert( !result.module || result.module === r );
+      result.module = r;
+    }
+    else if( r instanceof will.ModuleOpener )
+    {
+      debugger;
+      if( o.nodesMap[ r.commonPath ] )
+      result = o.nodesMap[ r.commonPath ];
+      else
+      result = make();
+      // _.assert( !result.opener || result.opener === r );
+      result.opener = r;
+    }
+    else if( r instanceof will.ModulesRelation )
+    {
+      if( o.nodesMap[ r.path ] )
+      debugger;
+      if( o.nodesMap[ r.path ] )
+      result = o.nodesMap[ r.path ];
+      else
+      result = make();
+      result.relation = r;
+    }
+    else _.assert( 0, `Not clear how to get graph record from ${_.strShort( r )}` );
+
+    if( result.opener && result.opener.superRelation && !result.relation )
+    result.relation = result.opener.superRelation;
+    if( result.relation && result.relation.opener && !result.opener )
+    result.opener = result.relation.opener;
+
+    let commonPath;
+    if( result.module )
+    {
+      commonPath = result.module.commonPath;
+      result.object = result.module;
+    }
+    else if( result.opener )
+    {
+      commonPath = result.opener.commonPath;
+      result.object = result.opener;
+    }
+    else if( result.relation )
+    {
+      commonPath = result.relation.path;
+      result.object = result.relation;
+    }
+
+    _.assert( result.commonPath === null || result.commonPath === commonPath );
+    result.commonPath = commonPath;
+
+    _.assert( o.nodesMap[ commonPath ] === undefined || o.nodesMap[ commonPath ] === result );
+    o.nodesMap[ commonPath ] = result;
+
+    // logger.log( ( made ? 'made' : 'retrived' ) + ' record for ' + commonPath );
+
+    return result;
+
+    function make()
+    {
+      let record = _.mapExtend( null, Record );
+      made = true;
+      return record;
+    }
+  }
+
+  /* */
+
+  // function recordsFrom( records )
+  // {
+  //   let will = this;
+  //
+  //   _.assert( arguments.length === 1 )
+  //   let result = _.filter( records, ( record ) => will.graphRecordFrom( record ) );
+  //
+  //   return result;
+  // }
+
+  /* */
+
+  function recordSubmodules( record )
+  {
+    let result = [];
+    if( record.module )
+    for( let s in record.module.submoduleMap )
+    {
+      let record2 = recordFromRelation( record.module.submoduleMap[ s ] );
+
+      if( record2.relation )
+      record2.opener = record2.relation.opener;
+      if( record2.opener )
+      record2.module = record2.opener.openedModule;
+
+      result.push( record2 );
+
+      if( o.withPeers && record2.module && record2.module.peerModule )
+      // if( record2.module && record2.module.peerModule )
+      {
+        result.push( recordFromModule( record2.module.peerModule ) );
+      }
+
+    }
+    // logger.log( `list ${record.module ? record.module.absoluteName : record.relation.absoluteName} ${result.length}` );
     return result;
   }
 
-  function onInNodesFor( module )
+  // function moduleName( module )
+  // {
+  //   return module.qualifiedName;
+  // }
+  //
+  // function onOutNodesGet( module )
+  // {
+  //   let result = module.submoduleMap ? _.mapVals( module.submoduleMap ) : [];
+  //   result = result.map( ( module ) => module.opener );
+  //   result = result.map( ( module ) => module ? module.openedModule : module );
+  //   result = result.filter( ( module ) => !!module );
+  //   result.forEach( ( module ) => _.assert( module instanceof will.OpenedModule, () => 'Not module ' + _.strType( module ) ) );
+  //   return result;
+  // }
+
+  /* */
+
+  function recordFromRelation( relation )
+  {
+    let record;
+
+    if( relation.opener )
+    {
+      record = o.nodesMap[ relation.opener.commonPath ];
+    }
+    else
+    {
+      debugger;
+    }
+
+    if( !record )
+    {
+      // record = Object.create( null );
+      // record.relation = null;
+      // record.opener = null;
+      // record.module = null;
+      record = recordFrom( relation );
+      // visitedModulesArray.push( record );
+      if( relation.opener )
+      o.nodesMap[ relation.opener.commonPath ] = record;
+    }
+    else
+    {
+    }
+
+    if( relation.opener )
+    record.opener = relation.opener;
+
+    record.relation = relation;
+    return record;
+  }
+
+  /* */
+
+  function recordFromModule( module )
+  {
+    let record;
+
+    record = o.nodesMap[ module.commonPath ];
+
+    if( !record )
+    {
+      // record = Object.create( null );
+      // record.relation = null;
+      // record.opener = null;
+      // record.module = null;
+      record = recordFrom( module );
+      // visitedModulesArray.push( record );
+      o.nodesMap[ module.commonPath ] = record;
+    }
+    else
+    {
+    }
+
+    _.assert( !record.module || record.module === module );
+    record.module = module;
+    return record;
+  }
+
+  /* */
+
+  function onInNodesGet( module ) /* xxx : make it working */
   {
     if( module.superRelations )
     return module.superRelations;
@@ -920,6 +1258,77 @@ function graphSystemForm()
 
 }
 
+graphSystemMake.defaults =
+{
+  withPeers : 1,
+  nodesMap : null,
+}
+
+//
+// //
+//
+// function graphRecordFrom( r )
+// {
+//   let will = this;
+//   let result;
+//
+//   _.assert( arguments.length === 1 )
+//   _.assert( !!r );
+//
+//   debugger;
+//   if( _.mapIs( r ) )
+//   {
+//     _.assertMapHasOnly( r, { opener : null, module : null, relation : null } );
+//     _.assertMapHasAll( r, { opener : null, module : null, relation : null } );
+//     result = r;
+//   }
+//   else if( r instanceof will.OpenedModule )
+//   {
+//     result = make();
+//     result.module = r;
+//   }
+//   else if( r instanceof will.ModuleOpener )
+//   {
+//     result = make();
+//     result.opener = r;
+//   }
+//   else if( r instanceof will.ModulesRelation )
+//   {
+//     result = make();
+//     result.relation = r;
+//   }
+//   else _.assert( 0, `Not clear how to get graph record from ${_.strShort( r )}` );
+//
+//   debugger;
+//   if( result.opener && result.opener.superRelation && !result.relation )
+//   result.relation = result.opener.superRelation;
+//   if( result.relation && result.relation.opener && !result.opener )
+//   result.opener = result.relation.opener;
+//
+//   return result;
+//
+//   function make()
+//   {
+//     let record = Object.create( null );
+//     record.relation = null;
+//     record.opener = null;
+//     record.module = null;
+//     return record;
+//   }
+// }
+//
+// //
+//
+// function graphRecordsFrom( records )
+// {
+//   let will = this;
+//
+//   _.assert( arguments.length === 1 )
+//   let result = _.filter( records, ( record ) => will.graphRecordFrom( record ) );
+//
+//   return result;
+// }
+
 //
 
 function graphTopologicalSort( modules )
@@ -929,31 +1338,74 @@ function graphTopologicalSort( modules )
   _.assert( arguments.length === 0 || arguments.length === 1 )
 
   modules = modules || will.modulesArray;
+  // modules = will.graphRecordsFrom( modules );
 
-  debugger;
-  // let group = will.graphSystemForm();
-  let group = will.graphSystem.nodesGroup();
-  let sorted = group.topologicalSortCycledSourceBased( modules );
+  // let group = will.graphSystem.nodesGroup();
+  let graph = will.graphSystemMake();
+  let group = graph.nodesGroup();
+
+  modules = group.nodesFrom( modules );
+  modules = group.rootsToAllReachable( modules );
+
+  // debugger;
+  let sorted = group.topSort( modules );
+  // debugger;
 
   return sorted;
 }
 
 //
 
-function graphInfoExportAsTree( modules )
+function graphInfoExportAsTree( modules, opts )
 {
   let will = this;
 
-  _.assert( arguments.length === 0 || arguments.length === 1 )
+  _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 )
+  opts = _.routineOptions( graphInfoExportAsTree, opts );
+  if( opts.onNodeName === null )
+  opts.onNodeName = moduleNameAndPath;
+  if( opts.onUp === null )
+  opts.onUp = moduleUp;
 
   modules = modules || will.modulesArray;
+  // modules = will.graphRecordsFrom( modules );
 
-  // let group = will.graphSystemForm();
-  let group = will.graphSystem.nodesGroup();
-  let info = group.nodesExportInfoTree( modules );
+  // let group = will.graphSystem.nodesGroup();
+  let graph = will.graphSystemMake();
+  let group = graph.nodesGroup();
+
+  modules = group.nodesFrom( modules );
+  // modules = group.rootsToAllReachable( modules );
+
+  debugger;
+  let info = group.rootsExportInfoTree( modules, opts );
+  debugger;
 
   return info;
+
+  /* */
+
+  function moduleUp( r, it )
+  {
+    debugger;
+    let module = r.module || r.opener;
+    if( module )
+    if( module.isOut && it.level !== 0 )
+    {
+      debugger;
+      it.continueNode = false;
+    }
+    return r;
+  }
+
+  function moduleNameAndPath( r )
+  {
+    return r.object.qualifiedName + ' - ' + _.color.strFormat( r.commonPath, 'path' );
+  }
+
 }
+
+graphInfoExportAsTree.defaults = _.mapExtend( null, _.graph.AbstractNodesGroup.prototype.rootsExportInfoTree.defaults );
 
 // --
 // opener
@@ -1362,6 +1814,7 @@ function willfilesList( o )
       return { [ it.src ] : it.dst };
     });
 
+    // debugger;
     let files = fileProvider.filesFind( o2 );
     // debugger;
 
@@ -1658,7 +2111,7 @@ let Restricts =
 
   formed : 0,
   // graphGroup : null,
-  graphSystem : null,
+  // graphSystem : null,
   willfilesReadBeginTime : null,
   willfilesReadEndTime : null,
 
@@ -1680,6 +2133,7 @@ let Forbids =
   mainModule : 'mainModule',
   recursiveExport : 'recursiveExport',
   graphGroup : 'graphGroup',
+  graphSystem : 'graphSystem',
 }
 
 // --
@@ -1716,14 +2170,17 @@ let Extend =
   moduleEachAt,
   moduleWithAt,
   moduleAt,
+  modulesFilter,
 
   moduleIdUnregister,
   moduleIdRegister,
   modulePathUnregister,
   modulePathRegister,
 
-  graphSystemFinit,
-  graphSystemForm,
+  // graphSystemUnform,
+  graphSystemMake,
+  // graphRecordFrom,
+  // graphRecordsFrom,
   graphTopologicalSort,
   graphInfoExportAsTree,
 

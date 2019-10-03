@@ -47,9 +47,101 @@ function entityLength( src )
   return 0;
   if( _.longIs( src ) )
   return src.length;
+  if( _.setLike( src ) )
+  return src.size;
+  if( _.hashMapLike( src ) )
+  return src.size;
   if( _.objectLike( src ) )
   return _.mapOwnKeys( src ).length;
   return 1;
+}
+
+//
+
+/**
+ * Returns "size" of entity( src ). Representation of "size" depends on type of( src ):
+ *  - For string returns value of it own length property;
+ *  - For array-like entity returns value of it own byteLength property for( BufferRaw, TypedArray, etc )
+ *    or length property for other;
+ *  - In other cases returns null.
+ *
+ * @param {*} src - Source entity.
+ * @returns {number} Returns "size" of entity.
+ *
+ * @example
+ * _.uncountableSize( 'string' );
+ * // returns 6
+ *
+ * @example
+ * _.uncountableSize( new BufferRaw( 8 ) );
+ * // returns 8
+ *
+ * @example
+ * _.uncountableSize( 123 );
+ * // returns null
+ *
+ * @function uncountableSize
+ * @memberof wTools
+*/
+
+function uncountableSize( src )
+{
+  _.assert( arguments.length === 1, 'Expects single argument' );
+
+  if( _.primitiveIs( src ) )
+  return 8;
+
+  if( _.strIs( src ) )
+  {
+    if( src.length )
+    return _.bufferBytesFrom( src ).byteLength;
+    return src.length;
+  }
+
+  if( _.numberIs( src.byteLength ) )
+  return src.byteLength;
+
+  // if( _.numberIs( src ) )
+  // return 8;
+  //
+  // if( !_.definedIs( src ) )
+  // return 8;
+  //
+  // if( _.boolIs( src ) || _.dateIs( src ) )
+  // return 8;
+
+  if( _.regexpIs( src ) )
+  return _.uncountableSize( src.source ) + src.flags.length * 1;
+
+  if( !_.countableIs( src ) )
+  return 8;
+
+  // if( _.longIs( src ) )
+  // {
+  //   let result = 0;
+  //   for( let i = 0; i < src.length; i++ )
+  //   {
+  //     result += _.uncountableSize( src[ i ] );
+  //     if( isNaN( result ) )
+  //     break;
+  //   }
+  //   return result;
+  // }
+  //
+  // if( _.mapIs( src ) )
+  // {
+  //   let result = 0;
+  //   for( let k in src )
+  //   {
+  //     result += _.uncountableSize( k );
+  //     result += _.uncountableSize( src[ k ] );
+  //     if( isNaN( result ) )
+  //     break;
+  //   }
+  //   return result;
+  // }
+
+  return NaN;
 }
 
 //
@@ -86,56 +178,111 @@ function entityLength( src )
 
 function entitySize( src )
 {
+  let result = 0;
+
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-  if( _.strIs( src ) )
+  if( _.primitiveIs( src ) || !_.countableIs( src ) || _.bufferAnyIs( src ) )
+  return _.uncountableSize( src );
+
+  if( _.look )
+  if( _.containerIs( src ) || _.countableIs( src ) )
   {
-    if( src.length )
-    return _.bufferBytesFrom( src ).byteLength;
-    return src.length;
+    _.look( src, onEach );
   }
 
-  if( _.numberIs( src ) )
-  return 8;
+  return result;
+  // if( _.longLike( src ) )
+  // {
+  //   let result = 0;
+  //   for( let i = 0; i < src.length; i++ )
+  //   {
+  //     result += _.entitySize( src[ i ] );
+  //     if( isNaN( result ) )
+  //     break;
+  //   }
+  //   return result;
+  // }
+  //
+  // if( _.mapLike( src ) )
+  // {
+  //   let result = 0;
+  //   for( let k in src )
+  //   {
+  //     result += _.entitySize( k );
+  //     result += _.entitySize( src[ k ] );
+  //     if( isNaN( result ) )
+  //     break;
+  //   }
+  //   return result;
+  // }
+  //
+  // if( _.setLike( src ) )
+  // {
+  //   let result = 0; debugger; xxx
+  //   for( let e of src )
+  //   {
+  //     result += _.entitySize( e );
+  //     if( isNaN( result ) )
+  //     break;
+  //   }
+  //   return result;
+  // }
+  //
+  // if( _.countableIs( src ) )
+  // {
+  //   let result = 0;
+  //   for( let k in src )
+  //   {
+  //     result += _.entitySize( k );
+  //     result += _.entitySize( src[ k ] );
+  //     if( isNaN( result ) )
+  //     break;
+  //   }
+  //   return result;
+  // }
+  //
+  // return NaN;
 
-  if( !_.definedIs( src ) )
-  return 8;
-
-  if( _.boolIs( src ) || _.dateIs( src ) )
-  return 8;
-
-  if( _.numberIs( src.byteLength ) )
-  return src.byteLength;
-
-  if( _.regexpIs( src ) )
-  return entitySize( src.source ) + src.flags.length * 2;
-
-  if( _.longIs( src ) )
+  function onEach( e, k, it )
   {
-    let result = 0;
-    for( let i = 0; i < src.length; i++ )
+
+    if( !_.numberDefined( result ) )
     {
-      result += _.entitySize( src[ i ] );
-      if( isNaN( result ) )
-      break;
+      it.iterator.continue = false;
+      return;
     }
-    return result;
-  }
 
-  if( _.mapIs( src ) )
-  {
-    let result = 0;
-    for( let k in src )
+    if( !it.down )
+    return;
+
+    if( it.down.iterable === 'map-like' || it.down.iterable === 'hash-map-like' )
     {
-      result += _.entitySize( k );
-      result += _.entitySize( src[ k ] );
-      if( isNaN( result ) )
-      break;
+      result += _.uncountableSize( k );
     }
-    return result;
+
+    if( _.primitiveIs( e ) || !_.countableIs( e ) || _.bufferAnyIs( e ) )
+    result += _.uncountableSize( e );
+
   }
 
-  return NaN;
+}
+
+//
+
+function containerEmpty( dstContainer )
+{
+  if( _.longIs( dstContainer ) )
+  _.longEmpty( dstContainer );
+  else if( _.setIs( dstContainer ) )
+  dstContainer.clear();
+  else if( _.hashMapIs( dstContainer ) )
+  dstContainer.clear();
+  else if( _.mapLike( dstContainer ) )
+  _.mapEmpty( dstContainer );
+  else
+  _.assert( 0, `Not clear how to empty non-container ${_.strType( dstContainer )}` );
+  return dstContainer;
 }
 
 // --
@@ -153,8 +300,15 @@ let Fields =
 let Routines =
 {
 
-  entityLength,
-  entitySize,
+  entityLength, /* qqq : implement good coverage */
+  lengthOf : entityLength,
+
+  uncountableSize, /* qqq : implement good coverage */
+  entitySize, /* qqq : implement good coverage */
+  sizeOf : entitySize,
+
+  containerEmpty, /* qqq : implement good coverage */
+  empty : containerEmpty,
 
 }
 

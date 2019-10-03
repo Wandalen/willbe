@@ -132,7 +132,7 @@ function from( segment )
   _.assert( _.segment.is( segment ) || segment === null );
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-//  if( _.vectorIs( segment ) )
+//  if( _.vectorAdapterIs( segment ) )
 //  {
 //    debugger;
 //    throw _.err( 'not implemented' );
@@ -173,7 +173,7 @@ function _from( segment )
 function is( segment )
 {
   _.assert( arguments.length === 1, 'Expects single argument' );
-  return ( _.longIs( segment ) || _.vectorIs( segment ) ) && ( segment.length >= 0 ) && ( segment.length % 2 === 0 );
+  return ( _.longIs( segment ) || _.vectorAdapterIs( segment ) ) && ( segment.length >= 0 ) && ( segment.length % 2 === 0 );
 }
 
 //

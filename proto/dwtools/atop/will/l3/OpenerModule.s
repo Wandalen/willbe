@@ -29,6 +29,8 @@ function finit()
   let opener = this;
   let will = opener.will;
 
+  _.assert( !opener.finitedIs() );
+
   opener.unform();
 
   if( will && will.mainOpener === opener )
@@ -155,7 +157,7 @@ function optionsForModuleExport()
   if( opener.superRelation )
   result.superRelations = [ opener.superRelation ]; // xxx
 
-  result.willfilesArray = _.entityShallowClone( result.willfilesArray );
+  result.willfilesArray = _.entityMake( result.willfilesArray );
 
   _.assert( _.boolLike( opener.isOut ), 'Expects defined {- opener.isOut -}' );
 
@@ -453,9 +455,9 @@ function find( o )
 
       _.assert( !opener.willfilesArray.length || !openedModule.willfilesArray.length || _.arraysAreIdentical( opener.willfilesArray, openedModule.willfilesArray ) );
       if( opener.willfilesArray.length )
-      openedModule.willfilesArray = _.entityShallowClone( opener.willfilesArray );
+      openedModule.willfilesArray = _.entityMake( opener.willfilesArray );
       else
-      opener.willfilesArray = _.entityShallowClone( openedModule.willfilesArray );
+      opener.willfilesArray = _.entityMake( openedModule.willfilesArray );
 
     }
     else
@@ -1421,7 +1423,7 @@ function sharedPathSet_functor( fieldName )
     let opener = this;
     let openedModule = opener.openedModule;
 
-    filePath = _.entityShallowClone( filePath );
+    filePath = _.entityMake( filePath );
     opener[ symbol ] = filePath;
 
     // if( fieldName === 'localPath' && filePath )
@@ -1570,6 +1572,9 @@ function isMainSet( src )
 
   _.assert( src === null || _.boolLike( src ) );
   _.assert( will.mainOpener === null || will.mainOpener === opener || !src );
+
+  if( src )
+  debugger;
 
   if( src )
   will.mainOpener = opener;

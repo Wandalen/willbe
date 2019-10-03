@@ -2983,7 +2983,7 @@ function own( src )
   _.assert( src !== undefined, () => 'Expects object-like or long, but got ' + _.strType( src ) );
   _.assert( arguments.length === 1 );
 
-  // definition.valueGet = function get() { return _.entityShallowClone( this.value ) }
+  // definition.valueGet = function get() { return _.entityMake( this.value ) }
   definition.valueGet = function get() { return _.cloneJust( this.value ) }
 
   _.propertyHide( definition, 'valueGet' );
@@ -3067,7 +3067,7 @@ function contained( src )
   definition.valueGet = function get()
   {
     let result = this.container;
-    result.value = _.entityShallowClone( definition.value );
+    result.value = _.entityMake( definition.value );
     return result;
   }
   else

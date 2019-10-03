@@ -133,7 +133,7 @@ function _factorial( src )
 function factorial( src )
 {
   _.assert( src < 10000 );
-  _.assert( _.numberIsInt( src ) );
+  _.assert( _.intIs( src ) );
   _.assert( src >= 0 );
   _.assert( arguments.length === 1, 'Expects single argument' );
   if( src === 0 )

@@ -89,9 +89,9 @@ function testApp()
   var o2 = _.mapExtend( { depth : 20, breadth : 90 }, commonTypes );
   var o3 = _.mapExtend( { depth : 150, breadth : 1100 }, commonTypes );
 
-  _.diagnosticsStructureGenerate( o1 );
-  _.diagnosticsStructureGenerate( o2 );
-  _.diagnosticsStructureGenerate( o3 );
+  _.diagnosticStructureGenerate( o1 );
+  _.diagnosticStructureGenerate( o2 );
+  _.diagnosticStructureGenerate( o3 );
 
   let srcs =
   {

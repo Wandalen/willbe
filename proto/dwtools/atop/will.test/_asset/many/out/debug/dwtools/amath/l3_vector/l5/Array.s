@@ -53,7 +53,7 @@ for( let r in routines )
     {
       return result.toArray();
     }
-    else if( op.returningNew && _.vectorIs( result ) )
+    else if( op.returningNew && _.vectorAdapterIs( result ) )
     {
       return result.toArray();
     }

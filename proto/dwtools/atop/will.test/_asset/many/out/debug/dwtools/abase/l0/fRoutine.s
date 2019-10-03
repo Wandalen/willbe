@@ -45,7 +45,7 @@ function routineIsPure( src )
 
 //
 
-function routineHasName( src )
+function routineWithName( src )
 {
   if( !routineIs( src ) )
   return false;
@@ -896,7 +896,7 @@ let Routines =
   routineIs,
   routinesAre,
   routineIsPure,
-  routineHasName,
+  routineWithName,
 
   _routineJoin,
   constructorJoin,

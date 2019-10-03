@@ -12,12 +12,6 @@ about :
   keywords :
   - wTools
 
-execution :
-
-  scripts :
-    # test : wtest staging
-    # docgen : wdocgen staging
-
 path :
 
   # repository : git+https://github.com/Wandalen/willbe.git
@@ -27,7 +21,7 @@ step :
 
   export.proto :
     inherit : module.export
-    export : path::proto
+    export : '{path::proto}/**'
     tar : 0
     criterion :
       debug : 1

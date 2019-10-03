@@ -312,9 +312,9 @@ function from( sphere )
     _.assert( arguments.length === 1, 'Expects single argument' );
   }
 
-  _.assert( _.vectorIs( sphere ) || _.longIs( sphere ) );
+  _.assert( _.vectorAdapterIs( sphere ) || _.longIs( sphere ) );
 
-  if( _.vectorIs( sphere ) )
+  if( _.vectorAdapterIs( sphere ) )
   {
     debugger;
     throw _.err( 'not implemented' );
@@ -529,7 +529,7 @@ function fromCenterAndRadius( sphere, center, radius )
 function is( sphere )
 {
   _.assert( arguments.length === 1, 'Expects single argument' );
-  return ( _.longIs( sphere ) || _.vectorIs( sphere ) ) && sphere.length > 0;
+  return ( _.longIs( sphere ) || _.vectorAdapterIs( sphere ) ) && sphere.length > 0;
 }
 
 //
@@ -751,7 +751,7 @@ function radiusSet( sphere, radius )
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
   _.assert( _.numberIs( radius ) );
 
-  //if( _.vectorIs( sphere ) )
+  //if( _.vectorAdapterIs( sphere ) )
   //{
   let sphereView = _.sphere._from( sphere );
   //return sphereView.eSet( sphere.length-1, radius );
@@ -938,7 +938,7 @@ function pointClosestPoint( sphere, srcPoint, dstPoint )
 function pointExpand( sphere , point )
 {
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.longIs( point ) || _.vectorIs( point ) );
+  _.assert( _.longIs( point ) || _.vectorAdapterIs( point ) );
   let sphereView = _.sphere._from( sphere );
   let center = _.sphere.centerGet( sphereView );
   let radius = _.sphere.radiusGet( sphereView );

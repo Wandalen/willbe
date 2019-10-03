@@ -1968,7 +1968,7 @@ function longDuplicate( o )
   _.assert( _.numberIs( o.numberOfDuplicatesPerElement ) || o.numberOfDuplicatesPerElement === undefined );
   _.routineOptions( longDuplicate, o );
   _.assert( _.longIs( o.src ), 'Уxpects o.src as longIs entity' );
-  _.assert( _.numberIsInt( o.src.length / o.numberOfAtomsPerElement ) );
+  _.assert( _.intIs( o.src.length / o.numberOfAtomsPerElement ) );
 
   if( o.numberOfDuplicatesPerElement === 1 )
   {
@@ -2668,7 +2668,7 @@ function longMask( srcArray, mask )
   _.assert( _.longIs( mask ), 'longMask :', 'Expects array-like as mask' );
   _.assert
   (
-    _.numberIsInt( length ),
+    _.intIs( length ),
     'longMask :', 'Expects mask that has component for each atom of srcArray',
     _.toStr
     ({

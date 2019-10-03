@@ -6,9 +6,57 @@ let _global = _global_;
 let _ = _global_.wTools;
 let Self = _global_.wTools;
 
-let _ArraySlice = Array.prototype.slice;
-let _FunctionBind = Function.prototype.bind;
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
+
+// --
+// set
+// --
+
+function setFrom( src )
+{
+  _.assert( arguments.length === 1 );
+  if( _.setAkin( src ) )
+  return src;
+  if( src === null )
+  return new Set();
+  if( _.containerAdapter.is( src ) )
+  src = src.toArray().original;
+  _.assert( _.longIs( src ) );
+  return new Set([ ... src ]);
+}
+
+//
+
+function setsFrom( srcs )
+{
+  _.assert( arguments.length === 1 );
+  _.assert( _.longIs( srcs ) );
+  let result = [];
+  for( let s = 0, l = srcs.length ; s < l ; s++ )
+  result[ s ] = _.setFrom( srcs[ s ] );
+  return result;
+}
+
+//
+
+function setToArray( src )
+{
+  _.assert( arguments.length === 1 );
+  _.assert( _.setLike( src ) );
+  return [ ... src ];
+}
+
+//
+
+function setsToArrays( srcs )
+{
+  _.assert( arguments.length === 1 );
+  _.assert( _.longIs( srcs ) );
+  let result = [];
+  for( let s = 0, l = srcs.length ; s < l ; s++ )
+  result[ s ] = _.setToArray( srcs[ s ] );
+  return result;
+}
 
 // --
 // entity modifier
@@ -75,7 +123,7 @@ function enityExtendAppending( dst, src )
 
 //
 
-function entityMake( src, length )
+function entityMakeConstructing( src, length )
 {
 
   _.assert( arguments.length === 1 || arguments.length === 2 );
@@ -86,10 +134,12 @@ function entityMake( src, length )
   }
   else if( _.longIs( src ) )
   {
-    if( _.bufferTypedIs( src ) || _.bufferNodeIs( src ) )
-    return new src.constructor( length !== undefined ? length : src.length );
-    else
-    return new Array( length !== undefined ? length : src.length );
+    debugger;
+    return _.longMake( src, length );
+    // if( _.bufferTypedIs( src ) || _.bufferNodeIs( src ) )
+    // return new src.constructor( length !== undefined ? length : src.length );
+    // else
+    // return new Array( length !== undefined ? length : src.length );
   }
   else if( _.mapIs( src ) )
   {
@@ -99,48 +149,106 @@ function entityMake( src, length )
   {
     return new src.constructor();
   }
-  else _.assert( 0, 'unexpected' );
+  else if( _.primitiveIs( src ) )
+  {
+    return src;
+  }
+  else _.assert( 0, 'Not clear how to make a object of ', _.strType( src ) );
 
 }
 
 //
 
-function entityMakeTrivial( src, length )
+function entityMakeEmpty( srcContainer )
+{
+
+  _.assert( arguments.length === 1 );
+
+  if( _.arrayIs( srcContainer ) )
+  {
+    return new Array();
+  }
+  else if( _.longIs( srcContainer ) )
+  {
+    return _.longMakeEmpty( srcContainer );
+  }
+  else if( _.setIs( srcContainer ) )
+  {
+    return new srcContainer.constructor();
+  }
+  else if( _.hashMapIs( srcContainer ) )
+  {
+    debugger;
+    return new srcContainer.constructor();
+  }
+  else if( _.mapLike( srcContainer ) )
+  {
+    return Object.create( null );
+  }
+  else if( _.primitiveIs( srcContainer ) )
+  {
+    return srcContainer;
+  }
+  else _.assert( 0, 'Not clear how to make a new object of ', _.strType( srcContainer ) );
+
+}
+
+//
+
+function entityMakeUndefined( srcContainer, length )
 {
 
   _.assert( arguments.length === 1 || arguments.length === 2 );
 
-  if( _.arrayIs( src ) )
+  if( _.arrayIs( srcContainer ) )
   {
-    return new Array( length !== undefined ? length : src.length );
+    return new Array( length !== undefined ? length : srcContainer.length );
   }
-  else if( _.longIs( src ) )
+  else if( _.longIs( srcContainer ) )
   {
-    if( _.bufferTypedIs( src ) || _.bufferNodeIs( src ) )
-    return new src.constructor( length !== undefined ? length : src.length );
-    else
-    return new Array( length !== undefined ? length : src.length );
+    debugger;
+    return _.longMake( srcContainer, length );
+    // if( _.bufferTypedIs( srcContainer ) || _.bufferNodeIs( srcContainer ) )
+    // return new srcContainer.constructor( length !== undefined ? length : srcContainer.length );
+    // else
+    // return new Array( length !== undefined ? length : srcContainer.length );
   }
-  else if( _.objectIs( src ) )
+  else if( _.setIs( srcContainer ) )
+  {
+    debugger;
+    return new srcContainer.constructor();
+  }
+  else if( _.hashMapIs( srcContainer ) )
+  {
+    debugger;
+    return new srcContainer.constructor();
+  }
+  else if( _.mapLike( srcContainer ) )
   {
     return Object.create( null );
   }
-  else _.assert( 0, 'unexpected' );
+  else if( _.primitiveIs( src ) )
+  {
+    return src;
+  }
+  else _.assert( 0, 'Not clear how to make a new object of ', _.strType( src ) );
 
 }
 
 //
 
-function entityShallowClone( src )
+function entityMake( src )
 {
 
-  if( _.primitiveIs( src ) )
-  return src;
-  else if( _.mapIs( src ) )
-  return _.mapShallowClone( src )
-  else if( _.longIs( src ) )
+  if( _.longLike( src ) )
   return _.longShallowClone( src );
-  else _.assert( 0, 'Not clear how to shallow clone', _.strType( src ) );
+  else if( _.hashMapLike( src ) || _.setLike( src ) )
+  return new src.constructor( src );
+  else if( _.mapLike( src ) )
+  return _.mapShallowClone( src )
+  else if( _.primitiveIs( src ) )
+  return src;
+  else _.assert( 0, 'Not clear how to make a new element of ', _.strType( src ) );
 
 }
 
@@ -378,14 +486,25 @@ let Fields =
 let Routines =
 {
 
+  // set
+
+  setFrom,
+  setsFrom,
+  setToArray,
+  setsToArrays,
+
   // entity modifier
 
   enityExtend,
   enityExtendAppending,
 
+  entityMakeConstructing,
+  entityMakeEmpty,
+  makeEmpty : entityMakeEmpty,
+  entityMakeUndefined,
+  makeUndefined : entityMakeUndefined,
   entityMake,
-  entityMakeTrivial,
-  entityShallowClone,
+  make : entityMake,
 
   entityAssign, /* refactor!!! */
   entityAssignFieldFromContainer, /* dubious */

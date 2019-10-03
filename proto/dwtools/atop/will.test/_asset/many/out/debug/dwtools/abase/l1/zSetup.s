@@ -1,4 +1,4 @@
-(function _zSetup_s_() {
+(function _Setup_s_() {
 
 'use strict';
 

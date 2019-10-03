@@ -51,7 +51,7 @@ function is( axisAndAngle,angle )
 {
   _.assert( arguments.length === 1 || arguments.length === 2 );
 
-  if( !_.longIs( axisAndAngle ) && !_.vectorIs( axisAndAngle ) )
+  if( !_.longIs( axisAndAngle ) && !_.vectorAdapterIs( axisAndAngle ) )
   return false;
 
   return ( ( axisAndAngle.length === 4 ) && ( angle === undefined ) ) || ( ( axisAndAngle.length === 3 ) && ( _.numberIs( angle ) ) );
@@ -77,7 +77,7 @@ function like( axisAndAngle,angle )
   if( axisAndAngle === null )
   return true;
 
-  if( !_.longIs( axisAndAngle ) && !_.vectorIs( axisAndAngle ) )
+  if( !_.longIs( axisAndAngle ) && !_.vectorAdapterIs( axisAndAngle ) )
   return false;
 
   return ( ( axisAndAngle.length === 4 ) && ( angle === undefined ) ) || ( ( axisAndAngle.length === 3 ) && ( _.numberIs( angle ) || angle === null ) );
@@ -104,7 +104,7 @@ function isZero( axisAndAngle,angle )
   if( axisAndAngle && axisAndAngle.length === 3 )
   return angle === 0;
 
-  if( _.vectorIs( axisAndAngle ) )
+  if( _.vectorAdapterIs( axisAndAngle ) )
   return axisAndAngle.eGet( 3 ) === 0;
   else if( _.arrayIs( axisAndAngle ) )
   return axisAndAngle[ 3 ] === 0;
@@ -182,7 +182,7 @@ function from( axisAndAngle,angle )
   if( axisAndAngle === null )
   return _.axisAndAngle.make( axisAndAngle,angle );
 
-  if( _.vectorIs( axisAndAngle ) )
+  if( _.vectorAdapterIs( axisAndAngle ) )
   {
     if( axisAndAngle.length === 4 )
     {
@@ -220,7 +220,7 @@ function _from( axisAndAngle,angle )
   {
     axisAndAngle = _.axisAndAngle.make( axisAndAngle,angle );
   }
-  else if( _.vectorIs( axisAndAngle ) )
+  else if( _.vectorAdapterIs( axisAndAngle ) )
   {
     if( axisAndAngle.length === 4 )
     {
@@ -253,7 +253,7 @@ function _from( axisAndAngle,angle )
 //   if( axisAndAngle === null )
 //   axisAndAngle = _.axisAndAngle.make( axisAndAngle,angle );
 //
-//   if( _.vectorIs( axisAndAngle ) )
+//   if( _.vectorAdapterIs( axisAndAngle ) )
 //   {
 //     debugger;
 //     throw _.err( 'not implemented' );

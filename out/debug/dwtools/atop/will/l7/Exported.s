@@ -702,7 +702,7 @@ function _performPaths()
   let build = module.buildMap[ exported.name ];
 
   let originalWillFilesPath = module.resourceObtain( 'path', 'module.original.willfiles' );
-  originalWillFilesPath.path = path.s.relative( module.inPath, _.entityShallowClone( module.willfilesPath ) );
+  originalWillFilesPath.path = path.s.relative( module.inPath, _.entityMake( module.willfilesPath ) );
   originalWillFilesPath.criterion.predefined = 1;
 
   _.assert( !originalWillFilesPath.writable );

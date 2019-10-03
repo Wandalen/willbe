@@ -9,7 +9,7 @@ path :
   out : out
   remote : 'git+https:///github.com/Wandalen/wUriBasic.git'
   local : '.module/{about::name}'
-  export : '{path::local}/proto'
+  export : '{path::local}/proto/**'
 
 reflector :
 

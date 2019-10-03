@@ -134,7 +134,7 @@ function from( ray )
   _.assert( _.ray.is( ray ) || ray === null );
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-//  if( _.vectorIs( ray ) )
+//  if( _.vectorAdapterIs( ray ) )
 //  {
 //    debugger;
 //    throw _.err( 'not implemented' );
@@ -232,7 +232,7 @@ fromPair.shaderChunk =
 function is( ray )
 {
   _.assert( arguments.length === 1, 'Expects single argument' );
-  return ( _.longIs( ray ) || _.vectorIs( ray ) ) && ( ray.length >= 0 ) && ( ray.length % 2 === 0 );
+  return ( _.longIs( ray ) || _.vectorAdapterIs( ray ) ) && ( ray.length >= 0 ) && ( ray.length % 2 === 0 );
 }
 
 //

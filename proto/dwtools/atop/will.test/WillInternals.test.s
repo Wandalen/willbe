@@ -8571,14 +8571,14 @@ function modulesEach( test )
     var exp =
     [
       'module::supermodule',
+      'module::supermodule / module::supermodule',
       'module::supermodule / module::supermodule / submodule::Submodule',
       'module::supermodule / module::sub',
-      'module::supermodule / module::supermodule'
     ]
     var got3 = _.index( got, ( e ) => e.relation ? e.relation.absoluteName : e.module.absoluteName );
     test.identical( rel( _.mapKeys( got3 ) ), exp );
 
-    var exp = [ 'super', 'sub', 'sub.out/sub.out', 'super.out/supermodule.out' ]
+    var exp = [ 'super', 'super.out/supermodule.out', 'sub', 'sub.out/sub.out' ];
     var commonPath = _.index( got, ( e ) => e.opener ? e.opener.commonPath : e.module.commonPath );
     test.identical( rel( _.mapKeys( commonPath ) ), exp );
 
@@ -8591,14 +8591,14 @@ function modulesEach( test )
     var exp =
     [
       'module::supermodule / module::supermodule',
-      'module::supermodule / submodule::Submodule',
       'module::supermodule',
-      'module::supermodule / module::sub'
+      'module::supermodule / submodule::Submodule',
+      'module::supermodule / module::sub',
     ]
     var got3 = _.index( got, ( e ) => e.relation ? e.relation.absoluteName : e.module.absoluteName );
     test.identical( rel( _.mapKeys( got3 ) ), exp );
 
-    var exp = [ 'super.out/supermodule.out', 'sub', 'super', 'sub.out/sub.out' ]
+    var exp = [ 'super.out/supermodule.out', 'super', 'sub', 'sub.out/sub.out' ];
     var commonPath = _.index( got, ( e ) => e.opener ? e.opener.commonPath : e.module.commonPath );
     test.identical( rel( _.mapKeys( commonPath ) ), exp );
 

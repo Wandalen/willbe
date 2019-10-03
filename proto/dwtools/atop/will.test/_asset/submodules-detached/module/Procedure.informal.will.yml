@@ -9,7 +9,7 @@ path :
   out : out
   remote : 'npm:///wprocedure'
   local : '.module/{about::name}'
-  export : '{path::local}/proto'
+  export : '{path::local}/proto/**'
 
 reflector :
 

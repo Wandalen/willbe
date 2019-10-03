@@ -9,7 +9,7 @@ path :
   out : out
   remote : 'npm:///wuribasic'
   local : '.module/UriBasic'
-  export : '{path::local}/proto'
+  export : '{path::local}/proto/**'
 
 reflector :
 

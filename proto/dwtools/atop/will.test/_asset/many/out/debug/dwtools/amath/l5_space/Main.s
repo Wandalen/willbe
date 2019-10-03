@@ -3,7 +3,7 @@
 'use strict';
 
 /**
- * Collection of functions for matrix math. MathSpace introduces class Space which is a multidimensional structure which in the most trivial case is Matrix of scalars. A matrix of specific form could also be classified as a vector. MathSpace heavily relly on MathVector, which introduces VectorImage. VectorImage is a reference, it does not contain data but only refer on actual ( aka Long ) container of lined data.  Use MathSpace for arithmetic operations with matrices, to triangulate, permutate or transform matrix, to get a specific or the general solution of a system of linear equations, to get LU, QR decomposition, for SVD or PCA. Also, Space is a convenient and efficient data container, you may use it to continuously store huge an array of arrays or for matrix computation.
+ * Collection of functions for matrix math. MathSpace introduces class Space which is a multidimensional structure which in the most trivial case is Matrix of scalars. A matrix of specific form could also be classified as a vector. MathSpace heavily relly on MathVector, which introduces VectorAdapter. VectorAdapter is a reference, it does not contain data but only refer on actual ( aka Long ) container of lined data.  Use MathSpace for arithmetic operations with matrices, to triangulate, permutate or transform matrix, to get a specific or the general solution of a system of linear equations, to get LU, QR decomposition, for SVD or PCA. Also, Space is a convenient and efficient data container, you may use it to continuously store huge an array of arrays or for matrix computation.
   @module Tools/math/Space
 */
 
@@ -52,7 +52,7 @@ _.assert( _.objectIs( vector ), 'wSpace requires vector module' );
 _.assert( !!_.all );
 
 /**
- * @classdesc Multidimensional structure which in the most trivial case is Matrix of scalars. A matrix of specific form could also be classified as a vector. MathSpace heavily relly on MathVector, which introduces VectorImage. VectorImage is a reference, it does not contain data but only refer on actual ( aka Long ) container of lined data.  Use MathSpace for arithmetic operations with matrices, to triangulate, permutate or transform matrix, to get a specific or the general solution of a system of linear equations, to get LU, QR decomposition, for SVD or PCA. Also, Space is a convenient and efficient data container, you may use it to continuously store huge an array of arrays or for matrix computation.
+ * @classdesc Multidimensional structure which in the most trivial case is Matrix of scalars. A matrix of specific form could also be classified as a vector. MathSpace heavily relly on MathVector, which introduces VectorAdapter. VectorAdapter is a reference, it does not contain data but only refer on actual ( aka Long ) container of lined data.  Use MathSpace for arithmetic operations with matrices, to triangulate, permutate or transform matrix, to get a specific or the general solution of a system of linear equations, to get LU, QR decomposition, for SVD or PCA. Also, Space is a convenient and efficient data container, you may use it to continuously store huge an array of arrays or for matrix computation.
  * @class wSpace
  * @memberof module:Tools/math/Space
  */
@@ -113,7 +113,7 @@ function init( o )
           o.dims = [ o.atomsPerElement, ( o.buffer.length - o.offset ) / o.atomsPerElement ];
           o.dims[ 1 ] = Math.floor( o.dims[ 1 ] );
         }
-        _.assert( _.numberIsInt( o.dims[ 1 ] ) );
+        _.assert( _.intIs( o.dims[ 1 ] ) );
         delete o.atomsPerElement;
       }
 
@@ -405,7 +405,7 @@ function copyTo( dst,src )
     if( _.longIs( dst ) )
     dst = vector.from( dst );
 
-    if( _.vectorIs( dst ) )
+    if( _.vectorAdapterIs( dst ) )
     for( let s = 0 ; s < src.length ; s += 1 )
     dst.eSet( s,src.eGet( s ) )
     else if( _.spaceIs( dst ) )
@@ -426,7 +426,7 @@ function copyTo( dst,src )
     {
       dst.atomSet( it.indexNd , it.atom );
     });
-    else if( _.vectorIs( dst ) )
+    else if( _.vectorAdapterIs( dst ) )
     src.atomEach( function( it )
     {
       dst.eSet( it.indexFlat , it.atom );
@@ -1024,7 +1024,7 @@ function _adjustAct()
       self[ dimsSymbol ] = dims;
 
       _.assert( l >= 0 );
-      _.assert( _.numberIsInt( l ) );
+      _.assert( _.intIs( l ) );
 
     }
     else if( self.strides )
@@ -1168,7 +1168,7 @@ function _adjustValidate()
   _.assert( _.numbersAreInt( self.dims ) );
   _.assert( _.numbersArePositive( self.dims ) );
 
-  _.assert( _.numberIsInt( self.length ) );
+  _.assert( _.intIs( self.length ) );
   _.assert( self.length >= 0 );
   _.assert( self.dims[ self.dims.length-1 ] === self.length );
 
@@ -1202,7 +1202,7 @@ function _adjustValidate()
 //
 //   _.assert( breadth.length === 1,'not tested' );
 //   _.assert( l >= 0 );
-//   _.assert( _.numberIsInt( l ) );
+//   _.assert( _.intIs( l ) );
 //
 //   return dims;
 // }
@@ -1653,7 +1653,7 @@ function toStr( o )
   let isInt = true;
   self.atomEach( function( it )
   {
-    isInt = isInt && _.numberIsInt( it.atom );
+    isInt = isInt && _.intIs( it.atom );
   });
 
   /* */
@@ -1763,12 +1763,12 @@ function _bufferFrom( src )
   let dst = src;
 
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.longIs( src ) || _.vectorIs( src ) );
+  _.assert( _.longIs( src ) || _.vectorAdapterIs( src ) );
 
   if( !_.constructorIsBuffer( proto.array.ArrayType ) )
   return dst;
 
-  if( _.vectorIs( dst ) && _.arrayIs( dst._vectorBuffer ) )
+  if( _.vectorAdapterIs( dst ) && _.arrayIs( dst._vectorBuffer ) )
   {
     dst = this.array.makeArrayOfLength( src.length );
     for( let i = 0 ; i < src.length ; i++ )
@@ -2445,7 +2445,7 @@ function _lineEachCollecting( o )
   }
 
   if( o.returningNumber )
-  if( !_.vectorIs( o.args[ 0 ] ) )
+  if( !_.vectorAdapterIs( o.args[ 0 ] ) )
   o.args[ 0 ] = vector.fromArray( o.args[ 0 ] );
 
   let result = o.args[ 0 ];

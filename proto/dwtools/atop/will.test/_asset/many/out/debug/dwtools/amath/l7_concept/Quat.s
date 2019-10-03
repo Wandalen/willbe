@@ -119,7 +119,7 @@ function from( quat )
   if( quat === null )
   return _.quat.make();
 
-  if( _.vectorIs( quat ) )
+  if( _.vectorAdapterIs( quat ) )
   {
     debugger;
     xxx
@@ -816,7 +816,7 @@ function toMatrix( quat, mat )
 function is( quat )
 {
   _.assert( arguments.length === 1, 'Expects single argument' );
-  return ( _.longIs( quat ) || _.vectorIs( quat ) ) && ( quat.length === 4 );
+  return ( _.longIs( quat ) || _.vectorAdapterIs( quat ) ) && ( quat.length === 4 );
 }
 
 //

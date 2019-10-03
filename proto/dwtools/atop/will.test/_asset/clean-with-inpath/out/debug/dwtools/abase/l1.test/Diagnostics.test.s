@@ -1985,7 +1985,7 @@ function diagnosticStack( test )
 var Self =
 {
 
-  name : 'Tools.base.l1.Diagnostics',
+  name : 'Tools.base.Diagnostics',
   silencing : 1,
 
   tests :

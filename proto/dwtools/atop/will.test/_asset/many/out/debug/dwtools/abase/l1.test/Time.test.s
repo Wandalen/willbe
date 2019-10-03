@@ -57,7 +57,7 @@ function timeReadyJoin( test )
 var Self =
 {
 
-  name : 'Tools.base.l1.Time',
+  name : 'Tools.base.Time',
   silencing : 1,
 
   tests :

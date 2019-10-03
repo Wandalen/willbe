@@ -9,7 +9,7 @@ path :
   out : out
   remote : 'git+https:///github.com/Wandalen/wProto.git'
   local : '.module/Proto'
-  export : '{path::local}/proto'
+  export : '{path::local}/proto/**'
 
 reflector :
 

@@ -162,7 +162,7 @@ function cornersGet( srcfrustum )
   let near = srcfrustum.colVectorGet( 5 );
 
   let point = _.plane.threeIntersectionPoint( far, top, right );
-  if( ! _.vectorIs(point) )
+  if( ! _.vectorAdapterIs(point) )
   {
     return false;
   }
@@ -172,7 +172,7 @@ function cornersGet( srcfrustum )
   }
 
   point =  _.plane.threeIntersectionPoint( far, top, left );
-  if( ! _.vectorIs( point ) )
+  if( ! _.vectorAdapterIs( point ) )
   {
     return false;
   }
@@ -182,7 +182,7 @@ function cornersGet( srcfrustum )
   }
 
   point =  _.plane.threeIntersectionPoint( far, bottom, right );
-  if( ! _.vectorIs( point) )
+  if( ! _.vectorAdapterIs( point) )
   {
     return false;
   }
@@ -192,7 +192,7 @@ function cornersGet( srcfrustum )
   }
 
   point =  _.plane.threeIntersectionPoint( far, bottom, left );
-  if( ! _.vectorIs( point) )
+  if( ! _.vectorAdapterIs( point) )
   {
     return false;
   }
@@ -202,7 +202,7 @@ function cornersGet( srcfrustum )
   }
 
   point = _.plane.threeIntersectionPoint( near, top, right );
-  if( ! _.vectorIs( point) )
+  if( ! _.vectorAdapterIs( point) )
   {
     return false;
   }
@@ -212,7 +212,7 @@ function cornersGet( srcfrustum )
   }
 
   point =  _.plane.threeIntersectionPoint( near, top, left );
-  if( ! _.vectorIs(point) )
+  if( ! _.vectorAdapterIs(point) )
   {
     return false;
   }
@@ -222,7 +222,7 @@ function cornersGet( srcfrustum )
   }
 
   point =  _.plane.threeIntersectionPoint( near, bottom, right );
-  if( ! _.vectorIs(point) )
+  if( ! _.vectorAdapterIs(point) )
   {
     return false;
   }
@@ -232,7 +232,7 @@ function cornersGet( srcfrustum )
   }
 
   point = _.plane.threeIntersectionPoint( near, bottom, left );
-  if( ! _.vectorIs(point) )
+  if( ! _.vectorAdapterIs(point) )
   {
     return false;
   }

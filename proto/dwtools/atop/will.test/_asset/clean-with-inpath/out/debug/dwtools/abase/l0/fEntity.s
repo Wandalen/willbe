@@ -103,7 +103,7 @@ function eachSample( o )
   /* sample */
 
   if( !o.sample )
-  o.sample = _.entityMakeTrivial( o.sets );
+  o.sample = _.entityMakeUndefined( o.sets );
 
   /* */
 
@@ -784,7 +784,7 @@ function entityMap( src, onEach )
 
   if( _.longIs( src ) )
   {
-    result = _.entityMakeTrivial( src );
+    result = _.entityMakeUndefined( src );
     for( let s = 0 ; s < src.length ; s++ )
     {
       result[ s ] = onEach( src[ s ], s, src );
@@ -793,7 +793,7 @@ function entityMap( src, onEach )
   }
   else if( _.objectLike( src ) )
   {
-    result = _.entityMakeTrivial( src );
+    result = _.entityMakeUndefined( src );
     for( let s in src )
     {
       result[ s ] = onEach( src[ s ], s, src );
@@ -852,7 +852,7 @@ function entityFilter( src, onEach )
   }
   else
   {
-    result = _.entityMakeTrivial( src );
+    result = _.entityMakeUndefined( src );
     for( let s in src )
     {
       let r = onEach.call( src, src[ s ], s, src );
@@ -910,7 +910,7 @@ function _entityFilterDeep( o )
   }
   else
   {
-    result = _.entityMakeTrivial( o.src );
+    result = _.entityMakeUndefined( o.src );
     for( let s in o.src )
     {
       r = onEach.call( o.src, o.src[ s ], s, o.src );
@@ -1009,7 +1009,7 @@ function enityExtendAppending( dst, src )
 
 //
 
-function entityMake( src, length )
+function entityMakeConstructing( src, length )
 {
 
   _.assert( arguments.length === 1 || arguments.length === 2 );
@@ -1039,7 +1039,7 @@ function entityMake( src, length )
 
 //
 
-function entityMakeTrivial( src, length )
+function entityMakeUndefined( src, length )
 {
 
   _.assert( arguments.length === 1 || arguments.length === 2 );
@@ -1065,7 +1065,7 @@ function entityMakeTrivial( src, length )
 
 //
 
-function entityShallowClone( src )
+function entityMake( src )
 {
 
   if( _.primitiveIs( src ) )
@@ -1526,9 +1526,9 @@ let Routines =
   enityExtend,
   enityExtendAppending,
 
+  entityMakeConstructing,
+  entityMakeUndefined,
   entityMake,
-  entityMakeTrivial,
-  entityShallowClone,
 
   entityAssign, /* refactor!!! */
   entityAssignFieldFromContainer, /* dubious */

@@ -46,7 +46,7 @@ function make( dim )
 function _from( plane )
 {
   _.assert( _.plane.is( plane ) );
-  _.assert( _.vectorIs( plane ) || _.longIs( plane ) );
+  _.assert( _.vectorAdapterIs( plane ) || _.longIs( plane ) );
   _.assert( arguments.length === 1, 'Expects single argument' );
   return _.vector.from( plane );
 }
@@ -56,7 +56,7 @@ function _from( plane )
 function is( plane )
 {
   _.assert( arguments.length === 1, 'Expects single argument' );
-  return ( _.longIs( plane ) || _.vectorIs( plane ) ) && plane.length >= 1;
+  return ( _.longIs( plane ) || _.vectorAdapterIs( plane ) ) && plane.length >= 1;
 }
 
 //

@@ -274,7 +274,7 @@ function makeSimilar( m , dims )
     result = _.longMake( m, dims[ 0 ] );
 
   }
-  else if( _.vectorIs( m ) )
+  else if( _.vectorAdapterIs( m ) )
   {
 
     _.assert( dims[ 1 ] === 1 );
@@ -293,11 +293,11 @@ function makeLine( o )
   let proto = this ? this.Self.prototype : Self.prototype;
   let strides = null;
   let offset = 0;
-  let length = ( _.longIs( o.buffer ) || _.vectorIs( o.buffer ) ) ? o.buffer.length : o.buffer;
+  let length = ( _.longIs( o.buffer ) || _.vectorAdapterIs( o.buffer ) ) ? o.buffer.length : o.buffer;
   let dims = null;
 
   _.assert( !this.instanceIs() );
-  _.assert( _.spaceIs( o.buffer ) || _.vectorIs( o.buffer ) || _.arrayIs( o.buffer ) || _.bufferTypedIs( o.buffer ) || _.numberIs( o.buffer ) );
+  _.assert( _.spaceIs( o.buffer ) || _.vectorAdapterIs( o.buffer ) || _.arrayIs( o.buffer ) || _.bufferTypedIs( o.buffer ) || _.numberIs( o.buffer ) );
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.routineOptions( makeLine,o );
 
@@ -329,13 +329,13 @@ function makeLine( o )
     o.buffer = length;
   }
 
-  if( _.vectorIs( o.buffer ) )
+  if( _.vectorAdapterIs( o.buffer ) )
   {
     length = o.buffer.length;
     o.buffer = proto._bufferFrom( o.buffer );
   }
 
-  if( _.vectorIs( o.buffer ) )
+  if( _.vectorAdapterIs( o.buffer ) )
   {
 
     offset = o.buffer.offset;
@@ -527,14 +527,14 @@ function convertToClass( cls,src )
 
 //
 
-function fromVectorImage( src )
+function fromVectorAdapter( src )
 {
   let result;
 
   _.assert( !this.instanceIs() );
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-  if( _.vectorIs( src ) )
+  if( _.vectorAdapterIs( src ) )
   {
     result = new this.Self
     ({
@@ -627,7 +627,7 @@ function from( src,dims )
   }
   else
   {
-    result = this.fromVectorImage( src );
+    result = this.fromVectorAdapter( src );
   }
 
   _.assert( !dims || result.hasShape( dims ) );
@@ -656,7 +656,7 @@ function fromForReading( src,dims )
   }
   else
   {
-    let result = this.fromVectorImage( src );
+    let result = this.fromVectorAdapter( src );
   }
 
   _.assert( !dims || result.hasShape( dims ) );
@@ -3235,7 +3235,7 @@ let Statics =
   makeRow : makeRow,
   makeRowZeroed : makeRowZeroed,
 
-  fromVectorImage : fromVectorImage,
+  fromVectorAdapter : fromVectorAdapter,
   fromScalar : fromScalar,
   fromScalarForReading : fromScalarForReading,
   from : from,
@@ -3340,7 +3340,7 @@ let Extend =
 
   convertToClass : convertToClass,
 
-  fromVectorImage : fromVectorImage,
+  fromVectorAdapter : fromVectorAdapter,
   fromScalar : fromScalar,
   fromScalarForReading : fromScalarForReading,
   from : from,

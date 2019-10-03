@@ -265,7 +265,7 @@ let isInt = dop = Object.create( null );
 
 dop.onAtom = function isInt( o )
 {
-  o.dstElement = _.numberIsInt( o.srcElement );
+  o.dstElement = _.intIs( o.srcElement );
 }
 
 //
