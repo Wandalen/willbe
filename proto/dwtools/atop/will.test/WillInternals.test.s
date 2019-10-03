@@ -8994,7 +8994,7 @@ function customLogger( test )
       let output = loggerOutput.join( '\n' );
       test.is( _.strHas( output, /Building .*module::customLogger \/ build::debug.*/ ) );
       test.is( _.strHas( output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
-      test.is( _.strHas( output, / \+ .*reflector::reflect.proto.* reflected 2 files/ ) );
+      test.is( _.strHas( output, / \+ .*reflector::reflect.proto.* reflected 2 file\(s\)/ ) );
       test.is( _.strHas( output, /Built .*module::customLogger \/ build::debug.*/ ) );
 
       if( err )
