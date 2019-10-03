@@ -40,7 +40,7 @@ step :
 
   export.proto :
     inherit : module.export
-    export : path::proto
+    export : '{path::proto}/**'
     tar : 0
 
 build :

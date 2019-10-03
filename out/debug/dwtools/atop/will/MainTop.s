@@ -204,17 +204,35 @@ function _openersCurrentEach( o )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  _.assert( will.currentOpener === null );
   _.assert( will.currentOpener === null || will.currentOpeners === null );
-  _.assert( _.arrayIs( will.currentOpeners ) );
   _.routineOptions( _openersCurrentEach, arguments );
 
-  will.currentOpeners.forEach( ( opener ) =>
+  if( will.currentOpener )
   {
+
+    _.assert( will.currentOpeners === null );
+    _.assert( will.currentOpener instanceof will.ModuleOpener );
+
+    let opener = will.currentOpener;
     let it = Object.create( null );
     it.opener = opener;
     ready.then( () => o.onEach.call( will, it ) );
-  });
+
+  }
+  else
+  {
+
+    _.assert( will.currentOpener === null );
+    _.assert( _.arrayIs( will.currentOpeners ) );
+
+    will.currentOpeners.forEach( ( opener ) =>
+    {
+      let it = Object.create( null );
+      it.opener = opener;
+      ready.then( () => o.onEach.call( will, it ) );
+    });
+
+  }
 
   return ready;
 }
@@ -377,21 +395,39 @@ function openersCurrentEach( onEach )
 
 //
 
-function _commandListLike( e, act, resourceKind )
+// function _commandListLike( e, act, resourceKind )
+function _commandListLike( o )
 {
   let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let e = o.event;
 
-  _.assert( arguments.length === 3 );
+  _.assert( arguments.length === 1 );
+  _.routineOptions( _commandListLike, arguments );
+  _.assert( _.routineIs( o.commandRoutine ) );
+  _.assert( _.routineIs( o.onEach ) );
+  _.assert( _.strIs( o.name ) );
+  _.assert( _.objectIs( o.event ) );
+  _.assert( o.resourceKind !== undefined );
 
-  debugger;
-  return will.openersCurrentEach( function( it ) /* xxx : find all openersCurrentEach */
+  will._commandsBegin( o.commandRoutine );
+
+  if( will.currentOpeners === null && will.currentOpener === null )
+  ready.then( () => will.openersFind() );
+
+  // debugger;
+  ready
+  .then( () => will.openersCurrentEach( function( it )
   {
 
+    will.readingEnd();
+
     let resources = null;
-    if( resourceKind )
+    if( o.resourceKind )
     {
 
-      let resourceKindIsGlob = _.path.isGlob( resourceKind );
+      let resourceKindIsGlob = _.path.isGlob( o.resourceKind );
       _.assert( e.request === undefined );
       e.request = will.Resolver.strRequestParse( e.argument );
 
@@ -400,10 +436,10 @@ function _commandListLike( e, act, resourceKind )
         let splits = will.Resolver.selectorShortSplit
         ({
           selector : e.request.subject,
-          defaultResourceKind : resourceKind,
+          defaultResourceKind : o.resourceKind,
         });
-        resourceKind = splits[ 0 ];
-        resourceKindIsGlob = _.path.isGlob( resourceKind );
+        o.resourceKind = splits[ 0 ];
+        resourceKindIsGlob = _.path.isGlob( o.resourceKind );
       }
 
       if( resourceKindIsGlob && e.request.subject && !will.Resolver.selectorIs( e.request.subject ) )
@@ -415,7 +451,7 @@ function _commandListLike( e, act, resourceKind )
       {
         selector : resourceKindIsGlob ? ( e.request.subject || '*::*' ) : ( e.request.subject || '*' ),
         criterion : e.request.map,
-        defaultResourceKind : resourceKindIsGlob ? null : resourceKind,
+        defaultResourceKind : resourceKindIsGlob ? null : o.resourceKind,
         prefixlessAction : resourceKindIsGlob ? 'throw' : 'default',
         arrayWrapping : 1,
         pathUnwrapping : resourceKindIsGlob ? 0 : 1,
@@ -425,8 +461,12 @@ function _commandListLike( e, act, resourceKind )
         currentExcluding : 0,
       }
 
-      if( resourceKind === 'path' )
+      if( o.resourceKind === 'path' )
       o2.mapValsUnwrapping = 0;
+
+      o2.criterion = _.mapExtend( null, o2.criterion );
+      // if( o2.criterion.predefined === undefined )
+      // o2.criterion.predefined = false;
 
       debugger;
       resources = it.opener.openedModule.resolve( o2 );
@@ -436,9 +476,27 @@ function _commandListLike( e, act, resourceKind )
 
     }
 
-    return act( it.opener, resources ) || null;
+    return o.onEach( it.opener, resources ) || null;
+  }))
+  .finally( ( err, arg ) =>
+  {
+    will._commandsEnd( o.commandRoutine );
+    if( err )
+    logger.log( _.errOnce( err ) );
+    if( err )
+    throw err;
+    return arg;
   });
 
+}
+
+_commandListLike.defaults =
+{
+  event : null,
+  onEach : null,
+  commandRoutine : null,
+  name : null,
+  resourceKind : null,
 }
 
 //
@@ -457,11 +515,30 @@ function _commandBuildLike( o )
 
   will._commandsBegin( o.commandRoutine );
 
-  _.assert( will.currentOpener === null );
-  if( will.currentOpeners === null )
-  ready.then( () => will.openersFind() );
+  // if( will.currentOpener )
+  // {
+  //
+  //   ready
+  //   .then( () => forSingle({ opener : will.currentOpener }) )
+  //   .finally( end );
+  //
+  // }
+  // else
+  // {
+    // _.assert( will.currentOpener === null );
+    if( will.currentOpeners === null && will.currentOpener === null )
+    ready.then( () => will.openersFind() );
 
-  ready.then( () => will.openersCurrentEach( function( it )
+    ready
+    .then( () => will.openersCurrentEach( forSingle ) )
+    .finally( end );
+  // }
+
+  return ready;
+
+  /* */
+
+  function forSingle( it )
   {
     let ready2 = new _.Consequence().take( null );
 
@@ -485,8 +562,11 @@ function _commandBuildLike( o )
     });
 
     return ready2;
-  }))
-  .finally( ( err, arg ) =>
+  }
+
+  /* */
+
+  function end( err, arg )
   {
     will._commandsEnd( o.commandRoutine );
     if( err )
@@ -494,9 +574,8 @@ function _commandBuildLike( o )
     if( err )
     throw err;
     return arg;
-  });
+  }
 
-  return ready;
 }
 
 _commandBuildLike.defaults =
@@ -915,10 +994,11 @@ function commandEach( e )
   function handleBegin( it )
   {
 
+    debugger;
     _.assert( will.currentOpener === null );
     _.assert( will.currentPath === null );
     // _.assert( will.mainModule === null );
-    _.assert( will.mainOpener === null );
+    // _.assert( will.mainOpener === null ); // yyy
 
     if( will.verbosity > 1 )
     {
@@ -931,7 +1011,7 @@ function commandEach( e )
     will.currentOpenerChange( it.currentOpener );
     will.currentPath = it.currentPath || null;
     // will.mainModule = it.currentOpener.openedModule;
-    will.mainOpener === it.currentOpener;
+    // will.mainOpener === it.currentOpener; // yyy
 
     return null;
   }
@@ -941,6 +1021,7 @@ function commandEach( e )
   function handleEnd( it )
   {
 
+    debugger;
     logger.up();
     levelUp = 1;
 
@@ -958,16 +1039,18 @@ function commandEach( e )
       logger.down();
       levelUp = 0;
 
-      _.assert( will.currentOpener === it.currentOpener );
+      debugger;
+      _.assert( will.currentOpener === it.currentOpener || will.currentOpener === null );
+      // _.assert( will.currentOpener === it.currentOpener ); // xxx
       // _.assert( will.mainModule === will.currentOpener.openedModule );
-      _.assert( will.mainOpener === will.currentOpener );
-      will.currentOpener.finit();
+      _.assert( will.mainOpener === it.currentOpener );
+      it.currentOpener.finit();
       will.currentOpenerChange( null );
       // will.mainModule = null;
-      will.mainOpener = null;
+      // will.mainOpener = null; // yyy
 
       if( err )
-      logger.log( _.errOnce( _.errBrie( '\n', err, '\n' ) ) );
+      logger.log( _.errOnce( _.errBrief( '\n', err, '\n' ) ) );
       if( err )
       throw _.err( err );
       return arg;
@@ -1002,6 +1085,15 @@ function commandResourcesList( e )
 {
   let will = this;
 
+  return will._commandListLike
+  ({
+    event : e,
+    name : 'list resources',
+    onEach : act,
+    commandRoutine : commandResourcesList,
+    resourceKind : '*',
+  });
+
   function act( module, resources )
   {
     let logger = will.logger;
@@ -1018,7 +1110,7 @@ function commandResourcesList( e )
 
   }
 
-  return will._commandListLike( e, act, '*' );
+  // return will._commandListLike( e, act, '*' );
 }
 
 //
@@ -1026,6 +1118,15 @@ function commandResourcesList( e )
 function commandPathsList( e )
 {
   let will = this;
+
+  return will._commandListLike
+  ({
+    event : e,
+    name : 'list paths',
+    onEach : act,
+    commandRoutine : commandPathsList,
+    resourceKind : 'path',
+  });
 
   function act( module, resources )
   {
@@ -1035,7 +1136,7 @@ function commandPathsList( e )
 
   }
 
-  return will._commandListLike( e, act, 'path' );
+  // return will._commandListLike( e, act, 'path' );
 }
 
 //
@@ -1044,13 +1145,22 @@ function commandSubmodulesList( e )
 {
   let will = this;
 
+  return will._commandListLike
+  ({
+    event : e,
+    name : 'list submodules',
+    onEach : act,
+    commandRoutine : commandSubmodulesList,
+    resourceKind : 'submodule',
+  });
+
   function act( module, resources )
   {
     let logger = will.logger;
     logger.log( module.openedModule.infoExportResource( resources ) );
   }
 
-  return will._commandListLike( e, act, 'submodule' );
+  // return will._commandListLike( e, act, 'submodule' );
 }
 
 //
@@ -1059,13 +1169,22 @@ function commandModulesList( e )
 {
   let will = this;
 
+  return will._commandListLike
+  ({
+    event : e,
+    name : 'list modules',
+    onEach : act,
+    commandRoutine : commandModulesList,
+    resourceKind : 'module',
+  });
+
   function act( module, resources )
   {
     let logger = will.logger;
     logger.log( module.openedModule.infoExportResource( resources ) );
   }
 
-  return will._commandListLike( e, act, 'module' );
+  // return will._commandListLike( e, act, 'module' );
 }
 
 //
@@ -1074,13 +1193,22 @@ function commandModulesTopologicalList( e )
 {
   let will = this;
 
+  return will._commandListLike
+  ({
+    event : e,
+    name : 'list topological sorted order',
+    onEach : act,
+    commandRoutine : commandModulesTopologicalList,
+    resourceKind : 'module',
+  });
+
   function act( module, resources )
   {
-    let logger = will.logger;
+    let logger = will.logger; // xxx
     logger.log( module.openedModule.infoExportModulesTopological( resources ) );
   }
 
-  return will._commandListLike( e, act, 'module' );
+  // return will._commandListLike( e, act, 'module' );
 }
 
 //
@@ -1103,9 +1231,7 @@ function commandModulesWhich( e )
   function handleAll( it )
   {
     let modules = it.modules;
-    // debugger;
     logger.log( will.graphInfoExportAsTree( modules ) );
-    // debugger;
     return null;
   }
 
@@ -1130,13 +1256,22 @@ function commandReflectorsList( e )
 {
   let will = this;
 
+  return will._commandListLike
+  ({
+    event : e,
+    name : 'list reflectors',
+    onEach : act,
+    commandRoutine : commandReflectorsList,
+    resourceKind : 'reflector',
+  });
+
   function act( module, resources )
   {
     let logger = will.logger;
     logger.log( module.openedModule.infoExportResource( resources ) );
   }
 
-  return will._commandListLike( e, act, 'reflector' );
+  // return will._commandListLike( e, act, 'reflector' );
 }
 
 //
@@ -1145,14 +1280,22 @@ function commandStepsList( e )
 {
   let will = this;
 
+  return will._commandListLike
+  ({
+    event : e,
+    name : 'list steps',
+    onEach : act,
+    commandRoutine : commandStepsList,
+    resourceKind : 'step',
+  });
+
   function act( module, resources )
   {
     let logger = will.logger;
-
     logger.log( module.openedModule.infoExportResource( resources ) );
   }
 
-  return will._commandListLike( e, act, 'step' );
+  // return will._commandListLike( e, act, 'step' );
 }
 
 //
@@ -1160,6 +1303,15 @@ function commandStepsList( e )
 function commandBuildsList( e )
 {
   let will = this;
+
+  return will._commandListLike
+  ({
+    event : e,
+    name : 'list builds',
+    onEach : act,
+    commandRoutine : commandBuildsList,
+    resourceKind : null,
+  });
 
   function act( module )
   {
@@ -1174,7 +1326,7 @@ function commandBuildsList( e )
     logger.log( module.openedModule.infoExportResource( builds ) );
   }
 
-  return will._commandListLike( e, act, null );
+  // return will._commandListLike( e, act, null );
 }
 
 //
@@ -1182,6 +1334,15 @@ function commandBuildsList( e )
 function commandExportsList( e )
 {
   let will = this;
+
+  return will._commandListLike
+  ({
+    event : e,
+    name : 'list exports',
+    onEach : act,
+    commandRoutine : commandExportsList,
+    resourceKind : null,
+  });
 
   function act( module )
   {
@@ -1196,7 +1357,7 @@ function commandExportsList( e )
     logger.log( module.openedModule.infoExportResource( builds ) );
   }
 
-  return will._commandListLike( e, act, null );
+  // return will._commandListLike( e, act, null );
 }
 
 //
@@ -1205,6 +1366,15 @@ function commandAboutList( e )
 {
   let will = this;
 
+  return will._commandListLike
+  ({
+    event : e,
+    name : 'list about',
+    onEach : act,
+    commandRoutine : commandAboutList,
+    resourceKind : null,
+  });
+
   function act( module )
   {
     let logger = will.logger;
@@ -1212,7 +1382,7 @@ function commandAboutList( e )
     logger.log( module.openedModule.about.infoExport() );
   }
 
-  return will._commandListLike( e, act, null );
+  // return will._commandListLike( e, act, null );
 }
 
 //
@@ -1220,9 +1390,9 @@ function commandAboutList( e )
 function commandSubmodulesClean( e )
 {
   let will = this;
-  return will.openersCurrentEach( function( module )
+  return will.openersCurrentEach( function( it )
   {
-    return module.openedModule.submodulesClean();
+    return it.opener.openedModule.submodulesClean();
   });
 }
 
@@ -1236,9 +1406,9 @@ function commandSubmodulesDownload( e )
   _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
-  return will.openersCurrentEach( function( module )
+  return will.openersCurrentEach( function( it )
   {
-    return module.openedModule.subModulesDownload({ dry : e.propertiesMap.dry });
+    return it.opener.openedModule.subModulesDownload({ dry : e.propertiesMap.dry });
   });
 }
 
@@ -1257,9 +1427,9 @@ function commandSubmodulesUpdate( e )
   _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
-  return will.openersCurrentEach( function( module )
+  return will.openersCurrentEach( function( it )
   {
-    return module.openedModule.submodulesUpdate({ dry : e.propertiesMap.dry });
+    return it.opener.openedModule.submodulesUpdate({ dry : e.propertiesMap.dry });
   });
 }
 
@@ -1281,9 +1451,9 @@ function commandSubmodulesFixate( e )
   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
   delete e.propertiesMap.negative;
 
-  return will.openersCurrentEach( function( module )
+  return will.openersCurrentEach( function( it )
   {
-    return module.openedModule.submodulesFixate( e.propertiesMap );
+    return it.opener.openedModule.submodulesFixate( e.propertiesMap );
   });
 
 }
@@ -1310,9 +1480,9 @@ function commandSubmodulesUpgrade( e )
   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
   delete e.propertiesMap.negative;
 
-  return will.openersCurrentEach( function( module )
+  return will.openersCurrentEach( function( it )
   {
-    return module.openedModule.submodulesFixate( e.propertiesMap );
+    return it.opener.openedModule.submodulesFixate( e.propertiesMap );
   });
 
 }
@@ -1355,13 +1525,13 @@ function commandShell( e )
 // {
 //   let will = this;
 //
-//   return will.openersCurrentEach( function( module )
+//   return will.openersCurrentEach( function( it )
 //   {
 //     let logger = will.logger;
-//     return module.openedModule.shell
+//     return it.opener.openedModule.shell
 //     ({
 //       execPath : e.argument,
-//       currentPath : will.currentPath || module.openedModule.dirPath,
+//       currentPath : will.currentPath || it.opener.openedModule.dirPath,
 //     });
 //   });
 //
@@ -1397,7 +1567,7 @@ function commandShell( e )
 //     {
 //
 //       if( dry )
-//       return it.opener.openedModule.openedModule.cleanWhatReport( e.propertiesMap );
+//       return it.opener.openedModule.cleanWhatReport( e.propertiesMap );
 //       else
 //       return it.opener.openedModule.clean( e.propertiesMap );
 //
@@ -1445,7 +1615,7 @@ function commandClean( e )
   function handleEach( it )
   {
     if( dry )
-    return it.opener.openedModule.openedModule.cleanWhatReport( e.propertiesMap );
+    return it.opener.openedModule.cleanWhatReport( e.propertiesMap );
     else
     return it.opener.openedModule.clean( e.propertiesMap );
   }
@@ -1490,7 +1660,7 @@ function commandCleanRecursive( e )
   function handleEach( it )
   {
     if( dry )
-    return it.opener.openedModule.openedModule.cleanWhatReport( e.propertiesMap );
+    return it.opener.openedModule.cleanWhatReport( e.propertiesMap );
     else
     return it.opener.openedModule.clean( e.propertiesMap );
   }
@@ -1530,7 +1700,7 @@ defaults.recursive = 'Recursive cleaning. 0 - only curremt module, 1 - current m
 //     {
 //
 //       if( dry )
-//       return it.opener.openedModule.openedModule.cleanWhatReport( e.propertiesMap );
+//       return it.opener.openedModule.cleanWhatReport( e.propertiesMap );
 //       else
 //       return it.opener.openedModule.clean( e.propertiesMap );
 //

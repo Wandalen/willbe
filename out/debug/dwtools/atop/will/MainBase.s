@@ -532,12 +532,31 @@ function moduleEachAt( o )
         return true;
       }
 
-      debugger;
-      opener = will.openerMake
-      ({
-        willfilesPath : file.absolute,
-        searching : 'smart',
+      // debugger;
+      // let opener = will.openerMake
+      // ({
+      //   willfilesPath : file.absolute,
+      //   searching : 'smart',
+      // });
+
+      let selectedFiles = will.willfilesSelectPaired( file, files );
+      let willfilesPath = selectedFiles.map( ( file ) =>
+      {
+        // visitedFilesHash.set( file, true );
+        filesMap[ file.absolute ] = true;
+        return file.absolute;
       });
+
+      if( willfilesPath.length === 1 )
+      willfilesPath = willfilesPath[ 0 ];
+
+      // debugger;
+      let opener = will.openerMake
+      ({
+        willfilesPath : willfilesPath,
+        searching : 'exact',
+      });
+
       opener.find();
 
       // let opener = will.openerMake({ willfilesPath : file.absolute });
@@ -551,7 +570,7 @@ function moduleEachAt( o )
 
       opener.openedModule.stager.stageConsequence( 'preformed' ).then( ( arg ) =>
       {
-        debugger;
+        // debugger;
         if( o.onBegin )
         return o.onBegin( it );
         return arg;
@@ -565,7 +584,7 @@ function moduleEachAt( o )
 
       return opener.openedModule.ready.split().then( function( arg )
       {
-        debugger;
+        // debugger;
         _.assert( opener.willfilesArray.length > 0 );
         if( opener.willfilesPath )
         _.mapSet( filesMap, opener.willfilesPath, true );
@@ -686,7 +705,7 @@ function moduleWithAt( o )
       if( willfilesPath.length === 1 )
       willfilesPath = willfilesPath[ 0 ];
 
-      debugger;
+      // debugger;
       let opener = will.openerMake
       ({
         willfilesPath : willfilesPath,

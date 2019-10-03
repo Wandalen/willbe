@@ -29,6 +29,8 @@ function finit()
   let opener = this;
   let will = opener.will;
 
+  _.assert( !opener.finitedIs() );
+
   opener.unform();
 
   if( will && will.mainOpener === opener )
@@ -1499,6 +1501,9 @@ function isMainSet( src )
 
   _.assert( src === null || _.boolLike( src ) );
   _.assert( will.mainOpener === null || will.mainOpener === opener || !src );
+
+  if( src )
+  debugger;
 
   if( src )
   will.mainOpener = opener;

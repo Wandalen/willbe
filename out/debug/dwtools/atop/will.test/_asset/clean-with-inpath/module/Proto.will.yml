@@ -9,7 +9,7 @@ path :
   out : .module
   remote : 'git+hd://../_repo/Proto'
   local : '.module/Proto'
-  export : '{path::local}/proto'
+  export : '{path::local}/proto/**'
   temp : out
 
 reflector :

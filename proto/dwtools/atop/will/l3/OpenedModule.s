@@ -1996,8 +1996,8 @@ function modulesEachDo( o )
       con2
       .then( () =>
       {
-        if( !r.module )
-        debugger;
+        // if( !r.module )
+        // debugger;
         if( !r.module && o.allowingMissing )
         return null;
         if( !r.module )
@@ -4335,9 +4335,12 @@ function cleanWhatSingle( o )
 
     if( resource && resource instanceof _.Will.Reflector )
     {
-      debugger;
-      let o2 = temp.optionsForFindExport();
+      // debugger;
+      let o2 = resource.optionsForFindExport();
+      o2.mandatory = 0;
+      // debugger;
       find( o2 );
+      // debugger;
     }
     else if( resource && resource instanceof _.Will.PathResource )
     {
@@ -4421,7 +4424,9 @@ function cleanWhatSingle( o )
     op.filter = op.filter || Object.create( null );
     op.filter.recursive = 2;
 
+    // debugger;
     let found = fileProvider.filesDelete( op );
+    // debugger;
     _.assert( op.filter.formed === 5 );
 
     let r = path.group

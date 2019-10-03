@@ -678,6 +678,11 @@ function criterionSattisfy( criterion2 )
   {
     if( criterion1[ c ] === undefined )
     continue;
+
+    if( criterion1[ c ] === 0 || criterion1[ c ] === false )
+    if( criterion2[ c ] === 0 || criterion2[ c ] === false )
+    continue;
+
     if( criterion1[ c ] !== criterion2[ c ] )
     return false;
   }
@@ -705,6 +710,10 @@ function criterionSattisfyStrict( criterion2 )
   {
 
     if( criterion1[ c ] === undefined && !criterion2[ c ] )
+    continue;
+
+    if( criterion1[ c ] === 0 || criterion1[ c ] === false )
+    if( criterion2[ c ] === 0 || criterion2[ c ] === false )
     continue;
 
     if( criterion1[ c ] !== criterion2[ c ] )
@@ -886,7 +895,7 @@ function _infoExport( o )
 {
   let resource = this;
   let result = '';
-  o = _.routineOptions( _infoExport, arguments );   
+  o = _.routineOptions( _infoExport, arguments );
 
   result += resource.decoratedAbsoluteName + '\n';
   result += _.toStr( o.fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '', multiline : 1 } );

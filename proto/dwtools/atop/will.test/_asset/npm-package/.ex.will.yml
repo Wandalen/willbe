@@ -58,7 +58,7 @@ step :
 
   proto.export :
     inherit : module.export
-    export : path::proto
+    export : '{path::proto}/**'
     tar : 0
     criterion :
       content : 'proto'

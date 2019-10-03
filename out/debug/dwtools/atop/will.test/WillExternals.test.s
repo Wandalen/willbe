@@ -1199,7 +1199,7 @@ function withList( test )
     test.is( !err );
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'withList/.will.yml' ), 1 );
-    test.identical( _.strCount( got.output, routinePath + '/' ), 2 );
+    test.identical( _.strCount( got.output, routinePath ), 2 );
     return null;
   })
 
@@ -1404,10 +1404,10 @@ function eachBrokenIll( test )
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'Failed to resolve' ), 0 );
     test.identical( _.strCount( got.output, 'eachBrokenIll/' ), 5 );
-
     return null;
   })
 
+  // xxx
   // /* - */
   //
   // shell({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
@@ -1632,17 +1632,17 @@ function verbositySet( test )
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, '.imply verbosity:3 ; .build' ) );
-    test.is( _.strHas( got.output, / \. Read .+\/\.im\.will\.yml/ ) );
-    test.is( _.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
-    test.is( _.strHas( got.output, / .*!.* Failed to read .+submodule::Tools.+/ ) );
-    test.is( _.strHas( got.output, / .*!.* Failed to read .+submodule::PathBasic.+/ ) );
+    test.is( _.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
+    test.is( _.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
+    test.is( _.strHas( got.output, 'Failed to read submodule::Tools' ) ); debugger;
+    test.is( _.strHas( got.output, 'Failed to read submodule::PathBasic' ) );
     test.is( _.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
     test.is( _.strHas( got.output, / \+ 2\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
     test.is( _.strHas( got.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
-    test.is( _.strHas( got.output, / \+ .*reflector::reflect.proto.debug.* reflected 2 files/ ) );
-    test.is( _.strHas( got.output, / \+ .*reflector::reflect.submodules.* reflected/ ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto.debug reflected 2 file(s)' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.submodules reflected' ) );
     test.is( _.strHas( got.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
 
     return null;
@@ -1659,17 +1659,17 @@ function verbositySet( test )
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, '.imply verbosity:2 ; .build' ) );
-    test.is( !_.strHas( got.output, / \. Read .+\/\.im\.will\.yml/ ) );
-    test.is( !_.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
-    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::Tools.+/ ) );
-    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::PathBasic.+/ ) );
+    test.is( !_.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
+    test.is( !_.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
+    test.is( !_.strHas( got.output, 'Failed to read submodule::Tools' ) );
+    test.is( !_.strHas( got.output, 'Failed to read submodule::PathBasic' ) );
     test.is( _.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
     test.is( _.strHas( got.output, / \+ 2\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
     test.is( _.strHas( got.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
-    test.is( _.strHas( got.output, / \+ .*reflector::reflect.proto.debug.* reflected 2 files/ ) );
-    test.is( _.strHas( got.output, / \+ .*reflector::reflect.submodules.* reflected/ ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto.debug reflected 2 file(s)' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.submodules reflected' ) );
     test.is( _.strHas( got.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
 
     return null;
@@ -1686,16 +1686,16 @@ function verbositySet( test )
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, '.imply verbosity:1 ; .build' ) );
-    test.is( !_.strHas( got.output, / \. Read .+\/\.im\.will\.yml/ ) );
-    test.is( !_.strHas( got.output, / \. Read .+\/\.ex\.will\.yml/ ) );
-    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::Tools.+/ ) );
-    test.is( !_.strHas( got.output, / .*!.* Failed to read .+submodule::PathBasic.+/ ) );
+    test.is( !_.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
+    test.is( !_.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
+    test.is( !_.strHas( got.output, ' ! Failed to read submodule::Tools' ) );
+    test.is( !_.strHas( got.output, ' ! Failed to read submodule::PathBasic' ) );
     test.is( !_.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( !_.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
     test.is( !_.strHas( got.output, / \+ 2\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
     test.is( !_.strHas( got.output, ' - Deleted' ) );
-    test.is( !_.strHas( got.output, ' + reflect.proto.debug reflected 2 files ' ) );
+    test.is( !_.strHas( got.output, ' + reflect.proto.debug reflected 2 file(s) ' ) );
     test.is( !_.strHas( got.output, ' + reflect.submodules reflected' ) );
     test.is( _.strHas( got.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
 
@@ -2053,7 +2053,8 @@ function verbosityStepPrintName( test )
 
     test.identical( _.strCount( got.output, /Building .*module::verbosityStepPrintName \/ build::debug/ ), 1 );
     test.identical( _.strCount( got.output, /: .*reflector::reflect.file.*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*reflector::reflect.file.* reflected 1 files .* : .*out.* <- .*file.* in / ), 1 );
+    test.identical( _.strCount( got.output, '+ reflector::reflect.file reflected 1 file(s)' ), 1 );
+    test.identical( _.strCount( got.output, '/verbosityStepPrintName/ : ./out <- ./file in' ), 1 );
     test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 1 );
     test.identical( _.strCount( got.output, /at.* .*verbosityStepPrintName/ ), 3 );
     test.identical( _.strCount( got.output, 'shell.step' ), 2 );
@@ -2086,7 +2087,8 @@ function verbosityStepPrintName( test )
 
     test.identical( _.strCount( got.output, /Building .*module::verbosityStepPrintName \/ build::debug/ ), 1 );
     test.identical( _.strCount( got.output, /: .*reflector::reflect.file.*/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*reflector::reflect.file.* reflected 1 files .* : .*out.* <- .*file.* in / ), 1 );
+    test.identical( _.strCount( got.output, '+ reflector::reflect.file reflected 1 file(s)' ), 1 );
+    test.identical( _.strCount( got.output, '/verbosityStepPrintName/ : ./out <- ./file' ), 1 );
     test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 1 );
     test.identical( _.strCount( got.output, /at.* .*verbosityStepPrintName/ ), 1 );
     test.identical( _.strCount( got.output, 'shell.step' ), 2 );
@@ -2119,7 +2121,7 @@ function verbosityStepPrintName( test )
 
     test.identical( _.strCount( got.output, /Building .*module::verbosityStepPrintName \/ build::debug/ ), 1 );
     test.identical( _.strCount( got.output, /: .*reflector::reflect.file.*/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*reflector::reflect.file.* reflected 1 files .* : .*out.* <- .*file.* in / ), 1 );
+    test.identical( _.strCount( got.output, ' + reflector::reflect.file.* reflected 1 file(s) .* : .*out.* <- file in ' ), 1 );
     test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 1 );
     test.identical( _.strCount( got.output, /at.* .*verbosityStepPrintName/ ), 1 );
     test.identical( _.strCount( got.output, 'shell.step' ), 1 );
@@ -2152,7 +2154,7 @@ function verbosityStepPrintName( test )
 
     test.identical( _.strCount( got.output, /Building .*module::verbosityStepPrintName \/ build::debug/ ), 0 );
     test.identical( _.strCount( got.output, /: .*reflector::reflect.file.*/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*reflector::reflect.file.* reflected 1 files .* : .*out.* <- .*file.* in / ), 0 );
+    test.identical( _.strCount( got.output, ' + reflector::reflect.file.* reflected 1 file(s) .* : .*out.* <- .*file.* in ' ), 0 );
     test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 0 );
     test.identical( _.strCount( got.output, /at.* .*verbosityStepPrintName/ ), 0 );
     test.identical( _.strCount( got.output, 'shell.step' ), 0 );
@@ -2170,7 +2172,7 @@ function verbosityStepPrintName( test )
 /*
   Building module::verbosity-step-print-name / build::debug
    : reflector::reflect.file
-   + reflector::reflect.file reflected 1 files /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/asset/verbosity-step-print-name/ : out <- file in 0.290s
+   + reflector::reflect.file reflected 1 file(s) /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/asset/verbosity-step-print-name/ : out <- file in 0.290s
  > node -e "console.log( 'shell.step' )"
    at /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/asset/verbosity-step-print-name
 shell.step
@@ -2445,7 +2447,7 @@ function listSingleModule( test )
   shell({ execPath : '.paths.list' })
   .then( ( got ) =>
   {
-    test.case = 'module info'
+    test.case = '.paths.list';
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, `proto : ./proto` ) );
@@ -2454,14 +2456,58 @@ function listSingleModule( test )
     test.is( _.strHas( got.output, `out.debug : ./out/debug` ) );
     test.is( _.strHas( got.output, `out.release : ./out/release` ) );
 
-    // test.is( _.strHas( got.output, `proto : './proto'` ) );
-    // test.is( _.strHas( got.output, `in : '.'` ) );
-    // test.is( _.strHas( got.output, `out : 'out'` ) );
-    // test.is( _.strHas( got.output, `out.debug : './out/debug'` ) );
-    // test.is( _.strHas( got.output, `out.release : './out/release'` ) );
+    return null;
+  })
+
+  /* - */
+
+  shell({ execPath : '.paths.list predefined:1' })
+  .then( ( got ) =>
+  {
+    test.case = '.paths.list predefined:1';
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, `module.willfiles :` ) );
+    test.is( _.strHas( got.output, `module.peer.willfiles :` ) );
+    test.is( _.strHas( got.output, `module.dir : .` ) );
+    test.is( _.strHas( got.output, `module.common : ./` ) );
+    test.is( _.strHas( got.output, `local : .` ) );
+    test.is( _.strHas( got.output, `will :` ) );
+    test.is( !_.strHas( got.output, `proto : ./proto` ) );
+    test.is( !_.strHas( got.output, `in : .` ) );
+    test.is( !_.strHas( got.output, `out : out` ) );
+    test.is( !_.strHas( got.output, `out.debug : ./out/debug` ) );
+    test.is( !_.strHas( got.output, `out.release : ./out/release` ) );
+    test.identical( _.strCount( got.output, ':' ), 10 );
 
     return null;
   })
+
+  /* - */
+
+  shell({ execPath : '.paths.list predefined:0' })
+  .then( ( got ) =>
+  {
+    test.case = '.paths.list predefined:0';
+    test.identical( got.exitCode, 0 );
+
+    test.is( !_.strHas( got.output, `module.willfiles :` ) );
+    test.is( !_.strHas( got.output, `module.peer.willfiles :` ) );
+    test.is( !_.strHas( got.output, `module.dir : .` ) );
+    test.is( !_.strHas( got.output, `module.common : ./` ) );
+    test.is( !_.strHas( got.output, `local : .` ) );
+    test.is( !_.strHas( got.output, `will :` ) );
+    test.is( _.strHas( got.output, `proto : ./proto` ) );
+    test.is( _.strHas( got.output, `in : .` ) );
+    test.is( _.strHas( got.output, `out : out` ) );
+    test.is( _.strHas( got.output, `out.debug : ./out/debug` ) );
+    test.is( _.strHas( got.output, `out.release : ./out/release` ) );
+    test.identical( _.strCount( got.output, ':' ), 6 );
+
+    return null;
+  })
+
+  /* - */
 
   shell({ execPath : '.submodules.list' })
   .then( ( got ) =>
@@ -2481,14 +2527,16 @@ function listSingleModule( test )
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, 'reflector::reflect.proto.' ) );
-    test.is( _.strHas( got.output, `. : .` ) );
-    test.is( _.strHas( got.output, `prefixPath : proto` ) );
-    test.is( _.strHas( got.output, `prefixPath : out/release` ) );
+    test.is( _.strHas( got.output, `path::proto : path::out.*=1` ) );
+    // test.is( _.strHas( got.output, `. : .` ) );
+    // test.is( _.strHas( got.output, `prefixPath : proto` ) );
+    // test.is( _.strHas( got.output, `prefixPath : out/release` ) );
 
     test.is( _.strHas( got.output, `reflector::reflect.proto.debug` ) );
-    test.is( _.strHas( got.output, `. : .` ) );
-    test.is( _.strHas( got.output, `prefixPath : proto` ) );
-    test.is( _.strHas( got.output, `prefixPath : out/debug` ) );
+    test.is( _.strHas( got.output, `path::proto : path::out.*=1` ) );
+    // test.is( _.strHas( got.output, `. : .` ) );
+    // test.is( _.strHas( got.output, `prefixPath : proto` ) );
+    // test.is( _.strHas( got.output, `prefixPath : out/debug` ) );
 
     return null;
   })
@@ -2565,6 +2613,7 @@ function listSingleModule( test )
     test.case = 'resources list globs negative';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflector::predefined.debug.v1'  ) );
+    test.is( _.strHas( got.output, 'reflector::predefined.debug.v2'  ) );
     test.is( _.strHas( got.output, 'reflector::reflect.proto.debug' ) );
     test.is( _.strHas( got.output, 'step::reflect.proto.debug' ) );
     test.is( _.strHas( got.output, 'step::reflect.proto.debug.raw' ) );
@@ -2694,7 +2743,7 @@ function listWithSubmodulesSimple( test )
 
   .then( ( got ) =>
   {
-    test.case = 'module info';
+    test.case = '.resources.list';
     debugger;
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, `name : 'submodules'` ) );
@@ -3942,7 +3991,7 @@ function cleanRecursive( test )
 
     test.identical( _.strCount( got.output, 'Failed to read' ), 1 );
     test.identical( _.strCount( got.output, 'try to' ), 1 );
-    test.identical( _.strCount( got.output, '. Read .' ), 6 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 6 );
     test.identical( _.strCount( got.output, /1\/4 submodule\(s\) of .*module::z.* were downloaded/ ), 1 );
 
     return null;
@@ -3956,7 +4005,7 @@ function cleanRecursive( test )
 
     test.identical( _.strCount( got.output, 'Failed to read' ), 0 );
     test.identical( _.strCount( got.output, 'try to' ), 0 );
-    test.identical( _.strCount( got.output, '. Read .' ), 6 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 6 );
 
     var files = self.find( routinePath );
     test.identical( files, [ 'xxx' ] );
@@ -4011,7 +4060,7 @@ function buildSingleModule( test )
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Building .*module::single \/ build::debug\.raw.*/ ) );
-    test.is( _.strHas( got.output, 'reflected 2 files' ) );
+    test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, /Built .*module::single \/ build::debug\.raw.* in/ ) );
 
     var files = self.find( outDebugPath );
@@ -4036,7 +4085,7 @@ function buildSingleModule( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Building .*module::single \/ build::debug\.raw.*/ ) );
-    test.is( _.strHas( got.output, 'reflected 2 files' ) );
+    test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, /Built .*module::single \/ build::debug\.raw.* in/ ) );
 
     var files = self.find( outDebugPath );
@@ -4061,7 +4110,7 @@ function buildSingleModule( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Building .*module::single \/ build::release\.raw.*/ ) );
-    test.is( _.strHas( got.output, 'reflected 2 files' ) );
+    test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, /Built .*module::single \/ build::release\.raw.* in/ ) );
 
     var files = self.find( outDebugPath );
@@ -4395,7 +4444,7 @@ function exportSingle( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'reflected 2 files' ) );
+    test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, /\+ Exported .*exported::proto.export.* with 2 files in/ ) );
 
@@ -4433,7 +4482,7 @@ function exportSingle( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exported .*module::single \/ build::proto.export.* in/ ) );
-    test.is( _.strHas( got.output, 'reflected 2 files' ) );
+    test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, / \+ Exported .*exported::proto\.export.* with 2 files/ ) );
 
     var files = self.find( outDebugPath );
@@ -4964,7 +5013,7 @@ function exportMixed( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exporting .*module::UriBasic\.informal \/ build::export.*/ ) );
-    test.is( _.strHas( got.output, /\+ .*reflector::download.* reflected/ ) );
+    test.is( _.strHas( got.output, ' + reflector::download.* reflected' ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, /Exported .*module::UriBasic\.informal \/ build::export.* in/ ) );
     test.is( _.strHas( got.output, 'out/Proto.informal.out.will.yml' ) );
@@ -5138,7 +5187,7 @@ function exportMixed( test )
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exporting .*module::UriBasic.informal.* \/ build::export/ ) );
-    test.is( _.strHas( got.output, /\+ .*reflector::download.* reflected/ ) );
+    test.is( _.strHas( got.output, ' + reflector::download.* reflected' ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, /Exported .*module::UriBasic.informal.* \/ build::export/ ) );
     test.is( _.strHas( got.output, 'out/Proto.informal.out.will.yml' ) );
@@ -5146,13 +5195,13 @@ function exportMixed( test )
     test.is( _.strHas( got.output, 'Reloading submodules' ) );
 
     test.is( _.strHas( got.output, /- .*step::delete.out.debug.* deleted 0 file\(s\), at/ ) );
-    test.is( _.strHas( got.output, /\+ .*reflector::reflect.proto.debug.* reflected 2 files/ ) );
-    test.is( _.strHas( got.output, /\+ .*reflector::reflect.submodules.* reflected/ ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto.debug.* reflected 2 file(s)' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.submodules.* reflected' ) );
 
-    test.is( _.strHas( got.output, /.*!.* Failed to read .+submodule::Tools.+/ ) );
-    test.is( _.strHas( got.output, /.*!.* Failed to read .+submodule::PathBasic.+/ ) );
-    test.is( _.strHas( got.output, /.*!.* Failed to read .+submodule::UriBasic.+/ ) );
-    test.is( _.strHas( got.output, /.*!.* Failed to read .+submodule::Proto.+/ ) );
+    test.is( _.strHas( got.output, ' ! Failed to read submodule::Tools' ) );
+    test.is( _.strHas( got.output, ' ! Failed to read submodule::PathBasic' ) );
+    test.is( _.strHas( got.output, ' ! Failed to read submodule::UriBasic' ) );
+    test.is( _.strHas( got.output, ' ! Failed to read submodule::Proto' ) );
 
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/Proto.informal.out.will.yml' ) ) );
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/UriBasic.informal.out.will.yml' ) ) );
@@ -7697,7 +7746,7 @@ function exportWithRemoteSubmodules( test )
 
     test.identical( _.strCount( got.output, 'Failed to read' ), 1 );
     test.identical( _.strCount( got.output, 'try to' ), 1 );
-    test.identical( _.strCount( got.output, '. Read .' ), 6 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 6 );
     test.identical( _.strCount( got.output, /1\/4 submodule\(s\) of .*module::z.* were downloaded/ ), 1 );
 
     return null;
@@ -7997,7 +8046,7 @@ function importOutWithDeletedSource( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, '. Read .' ), 1 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 1 );
     test.identical( _.strCount( got.output, '. Read from cache .' ), 3 );
     test.identical( _.strCount( got.output, 'module::module-ab-named' ), 3 );
     test.identical( _.strCount( got.output, 'module::module-ab-named / module::module-a' ), 1 );
@@ -8062,7 +8111,7 @@ function reflectNothingFromSubmodules( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'reflected 2 files' ) );
+    test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, / \+ Exported .*exported::proto.export.* with 2 files in/ ) );
 
@@ -8983,7 +9032,7 @@ function reflectWithOptions( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /\+ .*reflector::reflect\.proto1.* reflected 3 files .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect\.proto1.* reflected 3 file(s) .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in' ) );
     var files = self.find( outPath );
     test.identical( files, [ '.', './debug', './debug/File.js', './debug/File.test.js' ] );
     return null;
@@ -9027,7 +9076,7 @@ function reflectWithOptions( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /\+ .*reflector::reflect\.proto3.* reflected 0 files .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect\.proto3.* reflected 0 file(s) .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in' ) );
     var files = self.find( outPath );
     test.identical( files, [] );
     return null;
@@ -9392,7 +9441,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /\+ .*reflector::reflect.proto1.* reflected 6 files/ ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto1.* reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug1.* <- .*proto.*/ ) );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug1', './out/debug1/File.js', './out/debug1/File.s', './out/debug1/File.test.js', './out/debug1/some.test', './out/debug1/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -9413,7 +9462,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /\+ .*reflector::reflect.proto2.* reflected 6 files/ ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto2.* reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './out/debug2/File.test.js', './out/debug2/some.test', './out/debug2/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -9434,7 +9483,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /\+ .*reflector::reflect.proto3.* reflected 6 files/ ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto3.* reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug1.* <- .*proto.*/ ) );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug1', './out/debug1/File.js', './out/debug1/File.s', './out/debug1/File.test.js', './out/debug1/some.test', './out/debug1/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -9455,7 +9504,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /\+ .*reflector::reflect.proto4.* reflected 6 files/ ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto4.* reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './out/debug2/File.test.js', './out/debug2/some.test', './out/debug2/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -9476,7 +9525,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /\+ .*reflector::reflect.proto5.* reflected 6 files/ ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto5.* reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './out/debug2/File.test.js', './out/debug2/some.test', './out/debug2/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -9497,7 +9546,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /\+ .*reflector::reflect\.not\.test\.only\.js\.v1.* reflected 6 files/ ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect\.not\.test\.only\.js\.v1.* reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out.* <- .*proto.*/ ) );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug1', './out/debug1/File.js', './out/debug1/File.s', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -9518,7 +9567,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, /\+ .*reflector::reflect\.files1.* reflected 2 files .*:.*out.*<-.*proto/ ), 1 );
+    test.identical( _.strCount( got.output, ' + reflector::reflect\.files1.* reflected 2 file(s) .*:.*out.*<-.*proto' ), 1 );
     test.identical( _.strCount( got.output, /.*out.* <- .*proto.*/ ), 1 );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/File.js', './out/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -9539,7 +9588,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, /\+ .*reflector::reflect\.files2.* reflected 2 files .*:.*out.*<-.*proto/ ), 1 );
+    test.identical( _.strCount( got.output, ' + reflector::reflect\.files2.* reflected 2 file(s) .*:.*out.*<-.*proto' ), 1 );
     test.identical( _.strCount( got.output, /.*out.* <- .*proto.*/ ), 1 );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/File.js', './out/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -9560,7 +9609,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, /\+ .*reflector::reflect\.files3.* reflected 2 files .*:.*out.*<-.*proto/ ), 1 );
+    test.identical( _.strCount( got.output, ' + reflector::reflect\.files3.* reflected 2 file(s) .*:.*out.*<-.*proto' ), 1 );
     test.identical( _.strCount( got.output, /.*out.* <- .*proto.*/ ), 1 );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/File.js', './out/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -9726,7 +9775,7 @@ function reflectComplexInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ .*reflector::files\.all.* reflected 11 files .*\/.* : .*out\/ab\/files.* <- .*proto.* in/ ) );
+    test.is( _.strHas( got.output, ' + reflector::files.all reflected 11 file(s) .*\/.* : .*out\/ab\/files.* <- proto in' ) );
     var files = self.find( outPath );
     test.identical( files, [ '.', './module-a.out.will.yml', './module-b.out.will.yml', './ab', './ab/files', './ab/files/a', './ab/files/a/File.js', './ab/files/b', './ab/files/b/-Excluded.js', './ab/files/b/File.js', './ab/files/b/File.test.js', './ab/files/b/File1.debug.js', './ab/files/b/File1.release.js', './ab/files/b/File2.debug.js', './ab/files/b/File2.release.js', './ab/files/dir3.test' ] );
     return null;
@@ -9751,7 +9800,7 @@ function reflectComplexInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ .*reflector::files\.all.* reflected 13 files .*\/.* : .*out\/abac\/files.* <- .*proto.* in/ ) );
+    test.is( _.strHas( got.output, ' + reflector::files\.all.* reflected 13 file(s) .*\/.* : .*out\/abac\/files <- proto in' ) );
     var files = self.find( outPath );
     test.identical( files, [ '.', './module-a.out.will.yml', './module-b.out.will.yml', './module-c.out.will.yml', './ab', './ab/module-ab.out.will.yml', './abac', './abac/files', './abac/files/a', './abac/files/a/File.js', './abac/files/b', './abac/files/b/-Excluded.js', './abac/files/b/File.js', './abac/files/b/File.test.js', './abac/files/b/File1.debug.js', './abac/files/b/File1.release.js', './abac/files/b/File2.debug.js', './abac/files/b/File2.release.js', './abac/files/c', './abac/files/c/File.js', './abac/files/dir3.test' ] );
     return null;
@@ -10200,7 +10249,7 @@ function functionPlatform( test )
     platform = 'osx'
 
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, /\+ .*reflector::copy.* reflected 2 files .*functionPlatform\/.* : .*out\/dir\..* <- .*proto.* in/ ), 1 );
+    test.identical( _.strCount( got.output, ' + reflector::copy reflected 2 file(s) .*functionPlatform\/.* : .*out\/dir\..* <- proto in' ), 1 );
 
     var files = self.find( outPath );
 
@@ -12709,9 +12758,9 @@ var Self =
     openWith,
     openEach,
     withMixed,
-    eachMixed,
+    // eachMixed, // xxx : later
     withList,
-    eachList,
+    // eachList,
     eachBrokenIll,
     eachBrokenNon,
     eachBrokenCommand,
