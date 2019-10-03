@@ -5,8 +5,8 @@ about :
 
 submodule :
 
-  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will
-  Proto : git+https:///github.com/Wandalen/wProto.git/out/wProto.out.will
+  Tools : git+https:///github.com/Wandalen/wTools.git/
+  PathTools : git+https:///github.com/Wandalen/wPathTools.git/
   a0 : group10/out/a0.will.out
 
 path :

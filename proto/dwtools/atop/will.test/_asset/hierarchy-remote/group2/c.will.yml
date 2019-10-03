@@ -5,8 +5,7 @@ about :
 
 submodule :
 
-  GdfStrategy : git+https:///github.com/Wandalen/wStarter.git/out/wStarter.out.will
-  AppBasic : git+https:///github.com/Wandalen/wAppBasic.git/out/wAppBasic.out.will
+  UriBasic : git+https:///github.com/Wandalen/wUriBasic.git/
 
 path :
 

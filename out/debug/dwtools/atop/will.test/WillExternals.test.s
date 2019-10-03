@@ -112,7 +112,7 @@ function preCloneRepos( test )
   clone( 'PathBasic', '95b741c8820a6d6234f59f1fa549c6b59f2d5a5c' );
   clone( 'Procedure', '829ea81d342db66df60edf80c99687a1cd011a96' );
   clone( 'Proto', 'f4c04dbe078f3c00c84ff13edcc67478d320fddf' );
-  clone( 'Tools', 'e58dc6a1637603c2151840f5bfb5729eb71d4e34' );
+  clone( 'Tools', '8db8861e59d31a041ea9d4356728f3d646786134' );
   clone( 'UriBasic', 'df28c5245b2e01bcc0dbc9693bed070a58268e77' );
 
   ready
@@ -2121,7 +2121,8 @@ function verbosityStepPrintName( test )
 
     test.identical( _.strCount( got.output, /Building .*module::verbosityStepPrintName \/ build::debug/ ), 1 );
     test.identical( _.strCount( got.output, /: .*reflector::reflect.file.*/ ), 0 );
-    test.identical( _.strCount( got.output, ' + reflector::reflect.file.* reflected 1 file(s) .* : .*out.* <- file in ' ), 1 );
+    test.identical( _.strCount( got.output, ' + reflector::reflect.file reflected 1 file(s)' ), 1 );
+    test.identical( _.strCount( got.output, '/verbosityStepPrintName/ : ./out <- ./file in' ), 1 );
     test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 1 );
     test.identical( _.strCount( got.output, /at.* .*verbosityStepPrintName/ ), 1 );
     test.identical( _.strCount( got.output, 'shell.step' ), 1 );
@@ -2225,11 +2226,11 @@ function modulesWhichDotless( test )
 
   .then( () =>
   {
-    test.case = '.imply v:1 ; .modules.which'
+    test.case = '.imply v:1 ; .modules.tree'
     return null;
   })
 
-  shell({ execPath : '.imply v:1 ; .modules.which' })
+  shell({ execPath : '.imply v:1 ; .modules.tree' })
 
   .then( ( got ) =>
   {
@@ -2248,13 +2249,13 @@ function modulesWhichDotless( test )
 
   .then( () =>
   {
-    test.case = '.modules.which'
+    test.case = '.modules.tree'
     _.fileProvider.filesDelete( outSuperDirPath );
     _.fileProvider.filesDelete( outSubDirPath );
     return null;
   })
 
-  shell({ execPath : '.modules.which' })
+  shell({ execPath : '.modules.tree' })
 
   .then( ( got ) =>
   {
@@ -2787,7 +2788,7 @@ function listWithSubmodules( test )
 
   .then( ( got ) =>
   {
-    test.case = 'submodules list'
+    test.case = '.submodules.list'
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'submodule::Tools' ) );
     test.is( _.strHas( got.output, 'submodule::PathBasic' ) );
@@ -2895,7 +2896,7 @@ function listWithSubmodules( test )
   // })
 
   return ready;
-}
+} /* end of function listWithSubmodules */
 
 listWithSubmodules.timeOut = 200000;
 
@@ -3708,7 +3709,7 @@ function cleanDry( test )
 
     debugger;
     var files = self.find( outPath );
-    test.is( files.length > 25 );
+    test.gt( files.length, 20 );
     var files = wasFiles = self.find( submodulesPath );
     test.gt( files.length, 100 );
     debugger;
@@ -12788,12 +12789,12 @@ var Self =
     cleanSubmodules,
     cleanMixed,
     cleanWithInPath,
-    // cleanRecursive, // xxx
+    cleanRecursive, // xxx
 
     buildSingleModule,
-    // buildSingleStep, // qqq : repair _.process.start please
+    buildSingleStep,
     buildSubmodules,
-    buildDetached,
+    // buildDetached, // xxx : uncomment later
 
     exportSingle,
     exportItself,

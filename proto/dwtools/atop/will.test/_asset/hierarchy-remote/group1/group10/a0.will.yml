@@ -6,8 +6,7 @@ about :
 
 submodule :
 
-  Looker : git+https:///github.com/Wandalen/wLooker.git/out/wLooker.out.will
-  Selector : git+https:///github.com/Wandalen/wSelector.git/out/wSelector.out.will
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/
 
 path :
 
