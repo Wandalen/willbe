@@ -1744,7 +1744,7 @@ function modulesEach_body( o )
   // let sys = will.graphSystem;
   // let group = sys.nodesGroup();
 
-  let graph = will.graphSystemMake({ withPeers : o.withPeers });
+  let graph = will.graphSystemMake({ withPeers : o.withPeers, nodesMap : o.nodesMap });
   let group = graph.nodesGroup();
 
   // let nodes = [ recordFromModule( module ) ];
@@ -1934,10 +1934,12 @@ function modulesEach_body( o )
 }
 
 var defaults = modulesEach_body.defaults = _.mapExtend( null, _.graph.AbstractNodesGroup.prototype.each.defaults );
+// var defaults = modulesEach_body.defaults = Object.create( null );
 
 defaults.outputFormat = '*/module'; /* / | * / module | * / relation */
 defaults.onUp = null;
 defaults.onDown = null;
+defaults.nodesMap = null;
 defaults.recursive = 1;
 defaults.withStem = 0;
 defaults.withPeers = 0;

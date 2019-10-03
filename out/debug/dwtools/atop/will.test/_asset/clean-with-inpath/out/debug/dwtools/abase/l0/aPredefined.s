@@ -1,9 +1,9 @@
-( function _aPredefined_s_() {
+( function _Predefined_s_() {
 
 'use strict';
 
 /**
- * @file aPredefined.s.
+ * @file Predefined.s.
  */
 
 /**
@@ -102,7 +102,7 @@ Self.nothing = Symbol.for( 'nothing' );
 Self.maybe = Symbol.for( 'maybe' );
 Self.dont = Symbol.for( 'dont' );
 Self.unroll = Symbol.for( 'unroll' );
-
+Self.self = Symbol.for( 'self' );
 
 // type aliases
 

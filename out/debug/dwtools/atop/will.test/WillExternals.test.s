@@ -220,7 +220,7 @@ function make( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Building .+ \/ build::shell1/ ) );
-    test.is( _.strHas( got.output, 'node file/Produce.js' ) );
+    test.is( _.strHas( got.output, `node ${ _.path.nativize( 'file/Produce.js' )}` ) );
     if( process.platform === 'win32' )
     {
       test.identical( _.strCount( got.output, 'out\\Produced.txt2' ), 1 );
@@ -277,7 +277,7 @@ function make( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Building .+ \/ build::shell1/ ) );
-    test.is( _.strHas( got.output, 'node file/Produce.js' ) );
+    test.is( _.strHas( got.output, `node ${ _.path.nativize( 'file/Produce.js' )}` ) );
     if( process.platform === 'win32' )
     {
       test.identical( _.strCount( got.output, 'out\\Produced.txt2' ), 1 );
@@ -2182,7 +2182,93 @@ shell.step
 */
 
   return ready;
-}
+} /* end of function verbosityStepPrintName */
+
+
+//
+
+function modulesWhichDotless( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'two-dotless-single-exported' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let inPath = abs( './' );
+  let outSuperDirPath = abs( 'super.out' );
+  let outSubDirPath = abs( 'sub.out' );
+  let outSuperTerminalPath = abs( 'super.out/supermodule.out.will.yml' );
+  let outSubTerminalPath = abs( 'sub.out/sub.out.will.yml' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  // _.fileProvider.filesDelete( outSuperDirPath );
+  // _.fileProvider.filesDelete( outSubDirPath );
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.imply v:1 ; .modules.which'
+    return null;
+  })
+
+  shell({ execPath : '.imply v:1 ; .modules.which' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, '+-- module::' ), 2 );
+    test.identical( _.strCount( got.output, 'modulesWhichDotless/' ), 2 );
+    test.identical( _.strCount( got.output, 'modulesWhichDotless/sub' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.modules.which'
+    _.fileProvider.filesDelete( outSuperDirPath );
+    _.fileProvider.filesDelete( outSubDirPath );
+    return null;
+  })
+
+  shell({ execPath : '.modules.which' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, '+-- module::' ), 2 );
+    test.identical( _.strCount( got.output, 'modulesWhichDotless/' ), 4 );
+    test.identical( _.strCount( got.output, 'modulesWhichDotless/sub' ), 2 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function modulesWhichDotless */
 
 //
 
@@ -12634,6 +12720,7 @@ var Self =
     verbositySet,
     verbosityStepDelete,
     verbosityStepPrintName,
+    modulesWhichDotless,
 
     help,
     listSingleModule,

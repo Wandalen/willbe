@@ -8,6 +8,7 @@ if( typeof module !== 'undefined' )
   let _ = require( '../../Tools.s' );
 
   _.include( 'wTesting' );
+  _.include( 'wStringer' );
 
   require( '../l4/PathsBasic.s' );
 
@@ -7846,11 +7847,11 @@ function relative( test )
   var got = _.path.relative( from, to );
   test.identical( got, expected );
 
-  test.case = 'same length'; /* */
-  var from = '/aa//bb/cc';
-  var to = '//xx/yy/zz';
-  var expected = '../../../..//xx/yy/zz';
-  var got = _.path.relative( from, to );
+  test.case = '4 down'; /* */
+  var basePath = '/aa//bb/cc/';
+  var filePath = '//xx/yy/zz/';
+  var expected = './../../../..//xx/yy/zz/';
+  var got = _.path.relative( basePath, filePath );
   test.identical( got, expected );
 
   test.case = 'same length, both trailed'; /* */
@@ -8671,16 +8672,21 @@ function groupTextualReport( test )
     explanation : '- Deleted ',
     verbosity : 5
   }
-  var got = _.path.groupTextualReport( _.mapExtend( null,defaults, o ) );
+
+  debugger;
+  var got = _.path.groupTextualReport( _.mapExtend( null, defaults, o ) );
+  debugger;
   var expected =
-  [
-    '/a,/a/b,/b,/b/c ',
-    '   4 at /',
-    '   2 at ./a',
-    '   2 at ./b',
-    '- Deleted 4 file(s), at /, found in 5.000s'
-  ].join( '\n' )
-  test.identical( got,expected );
+`
+  '/a'
+  '/a/b'
+  '/b'
+  '/b/c'
+   4 at /
+   2 at ./a
+   2 at ./b
+- Deleted 4 file(s), at /, found in 5.000s`;
+  test.equivalent( got, expected );
 
   test.case = 'relative, explanation + groupsMap + spentTime, verbosity : 5';
   var o =
@@ -8697,14 +8703,17 @@ function groupTextualReport( test )
   }
   var got = _.path.groupTextualReport( _.mapExtend( null,defaults, o ) );
   var expected =
-  [
-    './a,./a/b,./b,./b/c ',
-    '   4 at .',
-    '   2 at ./a',
-    '   2 at ./b',
-    '- Deleted 4 file(s), at ., found in 5.000s'
-  ].join( '\n' )
-  test.identical( got,expected );
+`
+  './a'
+  './a/b'
+  './b'
+  './b/c'
+   4 at .
+   2 at ./a
+   2 at ./b
+- Deleted 4 file(s), at ., found in 5.000s
+`
+  test.equivalent( got, expected );
 
   test.close( 'locals' );
 }

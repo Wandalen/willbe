@@ -1067,15 +1067,18 @@ function routineExtend( test )
   test.identical( got.b, 2 );
 
   test.case = 'src is an array';
-  var dst = function( o )
+  test.shouldThrowErrorSync( () =>
   {
-  };
-  var got = _.routineExtend( dst, [ 'a', 1 ] );
-  test.identical( typeof got, 'function' );
-  test.identical( got[ 0 ], 'a' );
-  test.identical( got[ 1 ], 1 );
+    var dst = function( o )
+    {
+    };
+    var got = _.routineExtend( dst, [ 'a', 1 ] );
+    test.identical( typeof got, 'function' );
+    test.identical( got[ 0 ], 'a' );
+    test.identical( got[ 1 ], 1 );
+  });
 
-  test.open( 'a few extends');
+  test.open( 'few extends');
 
   test.case = 'null extends other routine, null extends result';
   var src = _.routineExtend( null, _.routinesCompose );
@@ -1187,7 +1190,29 @@ function routineExtend( test )
   test.identical( dst.c, got.c );
   test.identical( typeof got, 'function' );
 
-  test.close( 'a few extends');
+  test.case = 'extend by map';
+  var dst = function()
+  {
+  };
+  Object.defineProperties( dst, {
+    'b' : {
+      value : { a : 2 },
+      enumerable : true,
+      writable : true,
+    }
+  });
+  var got = _.routineExtend( dst );
+  test.equivalent( got.b, { a : 2 } );
+
+  test.case = 'extend by map';
+  var dst = function( o )
+  {
+  };
+  dst.b = { map : 2 };
+  var got = _.routineExtend( dst, { b : { map : 3 } } );
+  test.equivalent( got.b, { map : 3 } );
+
+  test.close( 'few extends');
 
   if( !Config.debug )
   return;
@@ -1242,32 +1267,82 @@ function routineExtend( test )
 
 //
 
-function routineExtendExperiment( test )
+function routineDefaults( test )
 {
-  test.case = 'map saves';
-  var dst = function()
-  {
-  };
-  Object.defineProperties( dst, {
-    'b' : {
-      value : { a : 2 },
-      enumerable : true,
-      writable : true,
-    }
-  });
-  var got = _.routineExtend( dst );
-  test.identical( got.b, { a : 2 } );
 
-  test.case = 'resulted map is empty, but should not';
-  var dst = function( o )
+  test.case = 'make new routine';
+
+  function add1_pre( routine, args )
   {
-  };
-  dst.b = { map : 2 };
-  var got = _.routineExtend( dst, { b : { map : 3 } } );
-  test.identical( got.b, { map : 2 } );
+    return _.routineOptions( routine, args );
+  }
+  function add1_body( o )
+  {
+    o = _.assertRoutineOptions( add1, arguments );
+    return o.a + o.b;
+  }
+  add1_body.defaults =
+  {
+    a : 1,
+    b : 3,
+  }
+  let add1 = _.routineFromPreAndBody( add1_pre, add1_body );
+
+  test.description = 'control call';
+  var got = add1();
+  test.identical( got, 4 );
+
+  test.description = 'generate';
+  let add2 = _.routineDefaults( null, add1, { b : 5 } );
+  test.is( add1 !== add2 );
+  test.is( add1.defaults !== add2.defaults );
+  test.is( _.mapLike( add1.defaults ) );
+  test.is( _.mapLike( add2.defaults ) );
+  test.is( add1.defaults.b === 3 );
+  test.is( add2.defaults.b === 5 );
+
+  test.description = 'trivial call';
+  var got = add2();
+  test.identical( got, 6 );
+
+  /* */
+
+  test.case = 'adjust routine defaults';
+
+  function add3_pre( routine, args )
+  {
+    return _.routineOptions( routine, args );
+  }
+  function add3_body( o )
+  {
+    o = _.assertRoutineOptions( add1, arguments );
+    return o.a + o.b;
+  }
+  add3_body.defaults =
+  {
+    a : 1,
+    b : 3,
+  }
+  let add3 = _.routineFromPreAndBody( add3_pre, add3_body );
+
+  test.description = 'control call';
+  var got = add3();
+  test.identical( got, 4 );
+
+  test.description = 'generate';
+  let add4 = _.routineDefaults( add3, { b : 5 } );
+  test.is( add3 === add4 );
+  test.is( add3.defaults === add4.defaults );
+  test.is( _.mapLike( add3.defaults ) );
+  test.is( _.mapLike( add4.defaults ) );
+  test.is( add3.defaults.b === 5 );
+  test.is( add4.defaults.b === 5 );
+
+  test.description = 'trivial call';
+  var got = add4();
+  test.identical( got, 6 );
+
 }
-
-routineExtendExperiment.experimental = 1;
 
 //
 
@@ -2349,7 +2424,7 @@ function vectorizeBypassingEmpty( test )
 var Self =
 {
 
-  name : 'Tools.base.l1.Routine',
+  name : 'Tools.base.Routine',
   silencing : 1,
 
   tests :
@@ -2368,7 +2443,7 @@ var Self =
     routinesChain,
 
     routineExtend,
-    routineExtendExperiment,
+    routineDefaults,
 
     vectorize,
     /* qqq : split test routine vectorize */

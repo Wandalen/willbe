@@ -377,6 +377,72 @@ function openersCurrentEach( onEach )
 
 //
 
+function _commandListLike( e, act, resourceKind )
+{
+  let will = this;
+
+  _.assert( arguments.length === 3 );
+
+  debugger;
+  return will.openersCurrentEach( function( it ) /* xxx : find all openersCurrentEach */
+  {
+
+    let resources = null;
+    if( resourceKind )
+    {
+
+      let resourceKindIsGlob = _.path.isGlob( resourceKind );
+      _.assert( e.request === undefined );
+      e.request = will.Resolver.strRequestParse( e.argument );
+
+      if( will.Resolver.selectorIs( e.request.subject ) )
+      {
+        let splits = will.Resolver.selectorShortSplit
+        ({
+          selector : e.request.subject,
+          defaultResourceKind : resourceKind,
+        });
+        resourceKind = splits[ 0 ];
+        resourceKindIsGlob = _.path.isGlob( resourceKind );
+      }
+
+      if( resourceKindIsGlob && e.request.subject && !will.Resolver.selectorIs( e.request.subject ) )
+      {
+        e.request.subject = '*::' + e.request.subject;
+      }
+
+      let o2 =
+      {
+        selector : resourceKindIsGlob ? ( e.request.subject || '*::*' ) : ( e.request.subject || '*' ),
+        criterion : e.request.map,
+        defaultResourceKind : resourceKindIsGlob ? null : resourceKind,
+        prefixlessAction : resourceKindIsGlob ? 'throw' : 'default',
+        arrayWrapping : 1,
+        pathUnwrapping : resourceKindIsGlob ? 0 : 1,
+        pathResolving : 0,
+        mapValsUnwrapping : resourceKindIsGlob ? 0 : 1,
+        strictCriterion : 1,
+        currentExcluding : 0,
+      }
+
+      if( resourceKind === 'path' )
+      o2.mapValsUnwrapping = 0;
+
+      debugger;
+      resources = it.opener.openedModule.resolve( o2 );
+
+      if( _.arrayIs( resources ) )
+      resources = _.longOnce( resources );
+
+    }
+
+    return act( it.opener, resources ) || null;
+  });
+
+}
+
+//
+
 function _commandBuildLike( o )
 {
   let will = this;
@@ -475,7 +541,8 @@ function _commandWhichLike( o )
     ready2.then( () =>
     {
       let it2 = _.mapExtend( null, o );
-      it2.modules = will.modulesArray;
+      // it2.modules = will.modulesArray;
+      it2.modules = will.modulesFilter();
       return o.onAll.call( will, it2 );
     });
 
@@ -931,70 +998,6 @@ function commandEach( e )
 
 //
 
-function _commandList( e, act, resourceKind )
-{
-  let will = this;
-
-  _.assert( arguments.length === 3 );
-
-  return will.openersCurrentEach( function( module )
-  {
-
-    let resources = null;
-    if( resourceKind )
-    {
-
-      let resourceKindIsGlob = _.path.isGlob( resourceKind );
-      _.assert( e.request === undefined );
-      e.request = will.Resolver.strRequestParse( e.argument );
-
-      if( will.Resolver.selectorIs( e.request.subject ) )
-      {
-        let splits = will.Resolver.selectorShortSplit
-        ({
-          selector : e.request.subject,
-          defaultResourceKind : resourceKind,
-        });
-        resourceKind = splits[ 0 ];
-        resourceKindIsGlob = _.path.isGlob( resourceKind );
-      }
-
-      if( resourceKindIsGlob && e.request.subject && !will.Resolver.selectorIs( e.request.subject ) )
-      {
-        e.request.subject = '*::' + e.request.subject;
-      }
-
-      let o2 =
-      {
-        selector : resourceKindIsGlob ? ( e.request.subject || '*::*' ) : ( e.request.subject || '*' ),
-        criterion : e.request.map,
-        defaultResourceKind : resourceKindIsGlob ? null : resourceKind,
-        prefixlessAction : resourceKindIsGlob ? 'throw' : 'default',
-        arrayWrapping : 1,
-        pathUnwrapping : resourceKindIsGlob ? 0 : 1,
-        pathResolving : 0,
-        mapValsUnwrapping : resourceKindIsGlob ? 0 : 1,
-        strictCriterion : 1,
-        currentExcluding : 0,
-      }
-
-      if( resourceKind === 'path' )
-      o2.mapValsUnwrapping = 0;
-
-      resources = module.openedModule.resolve( o2 );
-
-      if( _.arrayIs( resources ) )
-      resources = _.longOnce( resources );
-
-    }
-
-    return act( module, resources ) || null;
-  });
-
-}
-
-//
-
 function commandResourcesList( e )
 {
   let will = this;
@@ -1015,7 +1018,7 @@ function commandResourcesList( e )
 
   }
 
-  return will._commandList( e, act, '*' );
+  return will._commandListLike( e, act, '*' );
 }
 
 //
@@ -1032,7 +1035,7 @@ function commandPathsList( e )
 
   }
 
-  return will._commandList( e, act, 'path' );
+  return will._commandListLike( e, act, 'path' );
 }
 
 //
@@ -1047,7 +1050,7 @@ function commandSubmodulesList( e )
     logger.log( module.openedModule.infoExportResource( resources ) );
   }
 
-  return will._commandList( e, act, 'submodule' );
+  return will._commandListLike( e, act, 'submodule' );
 }
 
 //
@@ -1062,7 +1065,7 @@ function commandModulesList( e )
     logger.log( module.openedModule.infoExportResource( resources ) );
   }
 
-  return will._commandList( e, act, 'module' );
+  return will._commandListLike( e, act, 'module' );
 }
 
 //
@@ -1077,7 +1080,7 @@ function commandModulesTopologicalList( e )
     logger.log( module.openedModule.infoExportModulesTopological( resources ) );
   }
 
-  return will._commandList( e, act, 'module' );
+  return will._commandListLike( e, act, 'module' );
 }
 
 //
@@ -1100,9 +1103,9 @@ function commandModulesWhich( e )
   function handleAll( it )
   {
     let modules = it.modules;
-    debugger;
+    // debugger;
     logger.log( will.graphInfoExportAsTree( modules ) );
-    debugger;
+    // debugger;
     return null;
   }
 
@@ -1118,7 +1121,7 @@ function commandModulesWhich( e )
 //     logger.log( will.graphInfoExportAsTree( resources ) );
 //   }
 //
-//   return will._commandList( e, act, 'module' );
+//   return will._commandListLike( e, act, 'module' );
 // }
 
 //
@@ -1133,7 +1136,7 @@ function commandReflectorsList( e )
     logger.log( module.openedModule.infoExportResource( resources ) );
   }
 
-  return will._commandList( e, act, 'reflector' );
+  return will._commandListLike( e, act, 'reflector' );
 }
 
 //
@@ -1149,7 +1152,7 @@ function commandStepsList( e )
     logger.log( module.openedModule.infoExportResource( resources ) );
   }
 
-  return will._commandList( e, act, 'step' );
+  return will._commandListLike( e, act, 'step' );
 }
 
 //
@@ -1171,7 +1174,7 @@ function commandBuildsList( e )
     logger.log( module.openedModule.infoExportResource( builds ) );
   }
 
-  return will._commandList( e, act, null );
+  return will._commandListLike( e, act, null );
 }
 
 //
@@ -1193,7 +1196,7 @@ function commandExportsList( e )
     logger.log( module.openedModule.infoExportResource( builds ) );
   }
 
-  return will._commandList( e, act, null );
+  return will._commandListLike( e, act, null );
 }
 
 //
@@ -1209,7 +1212,7 @@ function commandAboutList( e )
     logger.log( module.openedModule.about.infoExport() );
   }
 
-  return will._commandList( e, act, null );
+  return will._commandListLike( e, act, null );
 }
 
 //
@@ -1867,8 +1870,11 @@ let Extend =
 
   _openersCurrentEach,
   openersCurrentEach,
+
+  _commandListLike,
   _commandBuildLike,
   _commandWhichLike,
+
   openersFind,
 
   _commandsMake,
@@ -1883,7 +1889,6 @@ let Extend =
   commandWith,
   commandEach,
 
-  _commandList,
   commandResourcesList,
   commandPathsList,
   commandSubmodulesList,

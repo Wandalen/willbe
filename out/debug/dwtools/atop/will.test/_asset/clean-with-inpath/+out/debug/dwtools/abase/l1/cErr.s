@@ -1,15 +1,8 @@
-(function _cErr_s_() {
+(function _gErr_s_() {
 
 'use strict';
 
-let _ArraySlice = Array.prototype.slice;
-let _FunctionBind = Function.prototype.bind;
-let _ObjectToString = Object.prototype.toString;
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
-let _ObjectPropertyIsEumerable = Object.propertyIsEnumerable;
-let _ceil = Math.ceil;
-let _floor = Math.floor;
-
 let _global = _global_;
 let _ = _global.wTools;
 let _err = _._err;
@@ -18,517 +11,6 @@ let Self = _;
 // --
 // diagnostics
 // --
-
-// function diagnosticLocation( o )
-// {
-//
-//   if( _.numberIs( o ) )
-//   o = { level : o }
-//   else if( _.strIs( o ) )
-//   o = { stack : o, level : 0 }
-//   else if( _.errIs( o ) )
-//   o = { error : o, level : 0 }
-//   else if( o === undefined )
-//   o = { stack : _.diagnosticStack([ 1, Infinity ]) };
-//
-//   /* */
-//
-//   if( diagnosticLocation.defaults )
-//   for( let e in o )
-//   {
-//     if( diagnosticLocation.defaults[ e ] === undefined )
-//     throw Error( 'Unknown option ' + e );
-//   }
-//
-//   if( diagnosticLocation.defaults )
-//   for( let e in diagnosticLocation.defaults )
-//   {
-//     if( o[ e ] === undefined )
-//     o[ e ] = diagnosticLocation.defaults[ e ];
-//   }
-//
-//   if( !( arguments.length === 0 || arguments.length === 1 ) )
-//   throw Error( 'Expects single argument or none' );
-//
-//   if( !( _.objectIs( o ) ) )
-//   throw Error( 'Expects options map' );
-//
-//   if( !o.level )
-//   o.level = 0;
-//
-//   // _.routineOptions( diagnosticLocation, o );
-//   // _.assert( arguments.length === 0 || arguments.length === 1 );
-//   // _.assert( _.objectIs( o ), 'diagnosticLocation expects integer {-level-} or string ( stack ) or object ( options )' );
-//
-//   /* */
-//
-//   if( !o.location )
-//   o.location = Object.create( null );
-//
-//   /* */
-//
-//   if( o.error )
-//   {
-//     let location2 = o.error.location || Object.create( null );
-//
-//     o.location.path = _.arrayLeftDefined([ location2.path, o.location.path, o.error.filename, o.error.fileName ]).element;
-//     o.location.line = _.arrayLeftDefined([ location2.line, o.location.line, o.error.line, o.error.linenumber, o.error.lineNumber, o.error.lineNo, o.error.lineno ]).element;
-//     o.location.col = _.arrayLeftDefined([ location2.col, o.location.col, o.error.col, o.error.colnumber, o.error.colNumber, o.error.colNo, o.error.colno ]).element;
-//
-//     if( o.location.path && _.numberIs( o.location.line ) )
-//     return end();
-//   }
-//
-//   /* */
-//
-//   if( !o.stack )
-//   {
-//     if( o.error )
-//     {
-//       o.stack = _.diagnosticStack( o.error, undefined );
-//     }
-//     else
-//     {
-//       o.stack = _.diagnosticStack();
-//       o.level += 1;
-//     }
-//   }
-//
-//   routineFromStack( o.stack );
-//
-//   let had = !!o.location.path;
-//   if( !had )
-//   o.location.path = fromStack( o.stack );
-//
-//   if( !_.strIs( o.location.path ) )
-//   return end();
-//
-//   if( !_.numberIs( o.location.line ) )
-//   o.location.path = lineColFromPath( o.location.path );
-//
-//   if( !_.numberIs( o.location.line ) && had )
-//   {
-//     let path = fromStack( o.stack );
-//     if( path )
-//     lineColFromPath( path );
-//   }
-//
-//   return end();
-//
-//   /* end */
-//
-//   function end()
-//   {
-//
-//     let path = o.location.path;
-//
-//     /* full */
-//
-//     // if( path )
-//     {
-//       o.location.full = path || '';
-//       if( o.location.line !== undefined )
-//       o.location.full += ':' + o.location.line;
-//     }
-//
-//     /* name long */
-//
-//     if( o.location.full )
-//     {
-//       try
-//       {
-//         o.location.fullWithRoutine = o.location.routine + ' @ ' + o.location.full;
-//       }
-//       catch( err )
-//       {
-//         o.location.fullWithRoutine = '';
-//       }
-//     }
-//
-//     /* name */
-//
-//     if( path )
-//     {
-//       let name = path;
-//       let i = name.lastIndexOf( '/' );
-//       if( i !== -1 )
-//       name = name.substr( i+1 );
-//       o.location.name = name;
-//     }
-//
-//     /* name long */
-//
-//     if( path )
-//     {
-//       let nameLong = o.location.name;
-//       if( o.location.line !== undefined )
-//       {
-//         nameLong += ':' + o.location.line;
-//         if( o.location.col !== undefined )
-//         nameLong += ':' + o.location.col;
-//       }
-//       o.location.nameLong = nameLong;
-//     }
-//
-//     return o.location;
-//   }
-//
-//   /* routine from stack */
-//
-//   function routineFromStack( stack )
-//   {
-//     let path;
-//
-//     if( !stack )
-//     return;
-//
-//     if( _.strIs( stack ) )
-//     stack = stack.split( '\n' );
-//
-//     path = stack[ o.level ];
-//
-//     if( !_.strIs( path ) )
-//     return '(-routine anonymous-)';
-//
-//     // debugger;
-//
-//     let t = /^\s*(at\s+)?([\w\.]+)\s*.+/;
-//     let executed = t.exec( path );
-//     if( executed )
-//     path = executed[ 2 ] || '';
-//
-//     if( _.strEnds( path, '.' ) )
-//     path += '?';
-//
-//     o.location.routine = path;
-//     o.location.service = 0;
-//     if( o.location.service === 0 )
-//     if( _.strBegins( path , '__' ) || path.indexOf( '.__' ) !== -1 )
-//     o.location.service = 2;
-//     if( o.location.service === 0 )
-//     if( _.strBegins( path , '_' ) || path.indexOf( '._' ) !== -1 )
-//     o.location.service = 1;
-//
-//     return path;
-//   }
-//
-//   /* path from stack */
-//
-//   function fromStack( stack )
-//   {
-//     let path;
-//
-//     if( !stack )
-//     return;
-//
-//     if( _.strIs( stack ) )
-//     stack = stack.split( '\n' );
-//
-//     path = stack[ o.level ];
-//
-//     if( !_.strIs( path ) )
-//     return end();
-//
-//     path = path.replace( /^\s+/, '' );
-//     path = path.replace( /^\w+@/, '' );
-//     path = path.replace( /^at/, '' );
-//     path = path.replace( /^\s+/, '' );
-//     path = path.replace( /\s+$/, '' );
-//
-//     let regexp = /^.*\((.*)\)$/;
-//     var parsed = regexp.exec( path );
-//     if( parsed )
-//     path = parsed[ 1 ];
-//
-//     // if( _.strEnds( path, ')' ) )
-//     // path = _.strIsolateInsideOrAll( path, '(', ')' )[ 2 ];
-//
-//     return path;
-//   }
-//
-//   /* line / col number from path */
-//
-//   function lineColFromPath( path )
-//   {
-//
-//     let lineNumber, colNumber;
-//     let postfix = /(.+?):(\d+)(?::(\d+))?[^:/]*$/;
-//     let parsed = postfix.exec( path );
-//
-//     if( parsed )
-//     {
-//       path = parsed[ 1 ];
-//       lineNumber = parsed[ 2 ];
-//       colNumber = parsed[ 3 ];
-//     }
-//
-//     // let postfix = /:(\d+)$/;
-//     // colNumber = postfix.exec( o.location.path );
-//     // if( colNumber )
-//     // {
-//     //   o.location.path = _.strRemoveEnd( o.location.path, colNumber[ 0 ] );
-//     //   colNumber = colNumber[ 1 ];
-//     //   lineNumber = postfix.exec( o.location.path );
-//     //   if( lineNumber )
-//     //   {
-//     //     o.location.path = _.strRemoveEnd( o.location.path, lineNumber[ 0 ] );
-//     //     lineNumber = lineNumber[ 1 ];
-//     //   }
-//     //   else
-//     //   {
-//     //     lineNumber = colNumber;
-//     //     colNumber = undefined;
-//     //   }
-//     // }
-//
-//     lineNumber = parseInt( lineNumber );
-//     colNumber = parseInt( colNumber );
-//
-//     if( isNaN( o.location.line ) && !isNaN( lineNumber ) )
-//     o.location.line = lineNumber;
-//
-//     if( isNaN( o.location.col ) && !isNaN( colNumber ) )
-//     o.location.col = colNumber;
-//
-//     return path;
-//   }
-//
-// }
-//
-// diagnosticLocation.defaults =
-// {
-//   level : 0,
-//   stack : null,
-//   error : null,
-//   location : null,
-// }
-//
-// //
-//
-// /**
-//  * Return stack trace as string.
-//  * @example
-//  * let stack;
-//  * function function1()
-//  * {
-//  *   function2();
-//  * }
-//  *
-//  * function function2()
-//  * {
-//  *   function3();
-//  * }
-//  *
-//  * function function3()
-//  * {
-//  *   stack = _.diagnosticStack();
-//  * }
-//  *
-//  * function1();
-//  * console.log( stack );
-//  * // log
-//  * //"    at function3 (<anonymous>:10:17)
-//  * // at function2 (<anonymous>:6:2)
-//  * // at function1 (<anonymous>:2:2)
-//  * // at <anonymous>:1:1"
-//  *
-//  * @returns {String} Return stack trace from call point.
-//  * @function diagnosticStack
-//  * @memberof wTools
-//  */
-//
-// function diagnosticStack( stack, range )
-// {
-//
-//   if( arguments.length === 1 )
-//   {
-//     if( !_.errIs( stack ) )
-//     {
-//       range = arguments[ 0 ];
-//       stack = undefined;
-//     }
-//   }
-//
-//   if( stack === undefined )
-//   {
-//     stack = new Error();
-//     if( range === undefined )
-//     range = [ 1, Infinity ];
-//   }
-//
-//   if( range === undefined )
-//   range = [ 0, Infinity ];
-//
-//   if( arguments.length !== 0 && arguments.length !== 1 && arguments.length !== 2 )
-//   {
-//     debugger;
-//     throw Error( 'diagnosticStack : expects one or two or none arguments' );
-//   }
-//
-//   if( !_.rangeIs( range ) )
-//   {
-//     debugger;
-//     throw Error( 'diagnosticStack : expects range but, got ' + _.strType( range ) );
-//   }
-//
-//   let first = range[ 0 ];
-//   let last = range[ 1 ];
-//
-//   if( !_.numberIs( first ) )
-//   {
-//     debugger;
-//     throw Error( 'diagnosticStack : expects number range[ 0 ], but got ' + _.strType( first ) );
-//   }
-//
-//   if( !_.numberIs( last ) )
-//   {
-//     debugger;
-//     throw Error( 'diagnosticStack : expects number range[ 0 ], but got ' + _.strType( last ) );
-//   }
-//
-//   let errIs = 0;
-//   if( _.errIs( stack ) )
-//   {
-//     stack = stack.originalStack || stack.stack;
-//     errIs = 1;
-//   }
-//
-//   if( !stack )
-//   return '';
-//
-//   if( !_.arrayIs( stack ) && !_.strIs( stack ) )
-//   return;
-//
-//   if( !_.arrayIs( stack ) && !_.strIs( stack ) )
-//   {
-//     debugger;
-//     throw Error( 'diagnosticStack expects array or string' );
-//   }
-//
-//   if( !_.arrayIs( stack ) )
-//   stack = stack.split( '\n' );
-//
-//   /* remove redundant lines */
-//
-//   if( !errIs )
-//   console.debug( 'REMINDER : problem here if !errIs' ); /* xxx */
-//   if( !errIs )
-//   debugger;
-//
-//   if( errIs )
-//   {
-//     while( stack.length )
-//     {
-//       let splice = 0;
-//       splice |= ( stack[ 0 ].indexOf( '  at ' ) === -1 && stack[ 0 ].indexOf( '@' ) === -1 );
-//       splice |= stack[ 0 ].indexOf( '(vm.js:' ) !== -1;
-//       splice |= stack[ 0 ].indexOf( '(module.js:' ) !== -1;
-//       splice |= stack[ 0 ].indexOf( '(internal/module.js:' ) !== -1;
-//       if( splice )
-//       stack.splice( 0, 1 );
-//       else break;
-//     }
-//   }
-//
-//   if( stack[ 0 ] )
-//   if( stack[ 0 ].indexOf( 'at ' ) === -1 && stack[ 0 ].indexOf( '@' ) === -1 )
-//   {
-//     debugger;
-//     console.error( 'diagnosticStack : cant parse stack\n' + stack );
-//   }
-//
-//   /* */
-//
-//   first = first === undefined ? 0 : first;
-//   last = last === undefined ? stack.length : last;
-//
-//   if( _.numberIs( first ) )
-//   if( first < 0 )
-//   first = stack.length + first;
-//
-//   if( _.numberIs( last ) )
-//   if( last < 0 )
-//   last = stack.length + last + 1;
-//
-//   /* */
-//
-//   if( first !== 0 || last !== stack.length )
-//   {
-//     stack = stack.slice( first || 0, last );
-//   }
-//
-//   /* */
-//
-//   stack = String( stack.join( '\n' ) );
-//
-//   return stack;
-// }
-//
-// //
-//
-// function diagnosticStackRemoveBegin( stack, include, exclude )
-// {
-//   if( arguments.length !== 3 )
-//   throw Error( 'Expects two arguments' );
-//   if( !_.regexpIs( include ) && include !== null )
-//   throw Error( 'Expects regexp either null as the second argument' );
-//   if( !_.regexpIs( exclude ) && exclude !== null )
-//   throw Error( 'Expects regexp either null as the third argument' );
-//
-//   if( !_.strIs( stack ) )
-//   return stack;
-//
-//   stack = stack.split( '\n' );
-//
-//   for( let s = stack.length-1 ; s >= 0 ; s-- )
-//   {
-//     let line = stack[ s ];
-//     if( include && include.test( line ) )
-//     {
-//       stack.splice( s, 1 );
-//       continue;
-//     }
-//     if( exclude && exclude.test( line ) )
-//     {
-//       stack.splice( s, 1 );
-//       continue;
-//     }
-//   }
-//
-//   return stack.join( '\n' );
-// }
-//
-// //
-//
-// function diagnosticStackCondense( stack )
-// {
-//
-//   if( arguments.length !== 1 )
-//   throw Error( 'Expects single arguments' );
-//
-//   if( !_.strIs( stack ) )
-//   throw Error( 'Expects string' );
-//
-//   stack = stack.split( '\n' );
-//
-//   for( let s = stack.length-1 ; s >= 0 ; s-- )
-//   {
-//     let line = stack[ s ];
-//     if( s > 0 )
-//     if( /(\W|^)__\w+/.test( line ) )
-//     {
-//       stack.splice( s, 1 );
-//       continue;
-//     }
-//     if( _.strHas( line, '.test.' ) )
-//     line += ' *';
-//     stack[ s ] = line;
-//   }
-//
-//   return stack.join( '\n' );
-// }
-
-//
 
 let _diagnosticCodeExecuting = 0;
 function diagnosticCode( o )
@@ -985,21 +467,84 @@ diagnosticEachElementComparator.defaults =
 
 //
 
-function diagnosticsStructureGenerate( o )
+function diagnosticStructureGenerate( o )
 {
-  _.assert( arguments.length === 1 )
-  _.routineOptions( diagnosticsStructureGenerate, o );
-  _.assert( _.numberIs( o.breadth ) );
-  _.assert( _.numberIs( o.depth ) );
-  _.assert( o._pre === null || _.routineIs( o._pre ) );
 
-  /* qqq: pre */
+  o = _.routineOptions( diagnosticStructureGenerate, arguments );
+
+  if( o.arrayLength === null )
+  o.arrayLength = o.defaultLength;
+  if( o.mapLength === null )
+  o.mapLength = o.defaultLength;
+  if( o.hashMapLength === null )
+  o.hashMapLength = o.defaultLength;
+  if( o.setLength === null )
+  o.setLength = o.defaultLength;
+
+  if( o.stringSize === null )
+  o.stringSize = o.defaultSize;
+  if( o.bufferSize === null )
+  o.bufferSize = o.defaultSize;
+  if( o.regexpSize === null )
+  o.regexpSize = o.defaultSize;
+
+  if( o.primitiveComplexity === null )
+  o.primitiveComplexity = from( o.defaultComplexity );
+
+  if( o.nullComplexity === null )
+  o.nullComplexity = from( o.primitiveComplexity );
+  if( o.undefinedComplexity === null )
+  o.undefinedComplexity = from( o.primitiveComplexity );
+  if( o.booleanComplexity === null )
+  o.booleanComplexity = from( o.primitiveComplexity );
+  if( o.stringComplexity === null )
+  o.stringComplexity = from( o.primitiveComplexity );
+  if( o.bigIntComplexity === null )
+  o.bigIntComplexity = from( o.primitiveComplexity );
+
+  if( o.numberComplexity === null )
+  o.numberComplexity = from( o.primitiveComplexity );
+  if( o.numberInfinityComplexity === null )
+  o.numberInfinityComplexity = from( o.numberComplexity );
+  if( o.numberNanComplexity === null )
+  o.numberNanComplexity = from( o.numberComplexity );
+  if( o.numberSignedZeroComplexity === null )
+  o.numberSignedZeroComplexity = from( o.numberComplexity );
+
+  if( o.objectComplexity === null )
+  o.objectComplexity = from( o.defaultComplexity );
+  if( o.dateComplexity === null )
+  o.dateComplexity = from( o.objectComplexity );
+  if( o.regexpComplexity === null )
+  o.regexpComplexity = from( o.objectComplexity );
+  if( o.bufferNodeComplexity === null )
+  o.bufferNodeComplexity = from( o.objectComplexity );
+  if( o.bufferRawComplexity === null )
+  o.bufferRawComplexity = from( o.objectComplexity );
+  if( o.bufferBytesComplexity === null )
+  o.bufferBytesComplexity = from( o.objectComplexity );
+
+  if( o.containerComplexity === null )
+  o.containerComplexity = from( o.defaultComplexity );
+  if( o.recursionComplexity === null )
+  o.recursionComplexity = from( o.containerComplexity );
+  if( o.arrayComplexity === null )
+  o.arrayComplexity = from( o.containerComplexity );
+  if( o.mapComplexity === null )
+  o.mapComplexity = from( o.containerComplexity );
+  if( o.setComplexity === null )
+  o.setComplexity = from( o.containerComplexity );
+  if( o.hashMapComplexity === null )
+  o.hashMapComplexity = from( o.containerComplexity );
+
+  _.assert( arguments.length === 0 || arguments.length === 1 )
+  _.assert( _.numberIs( o.depth ) );
+
+  /* qqq : implement pre */
 
   /**/
 
-  let depth = 0;
-
-  o.structure = structureMake();
+  o.structure = structureMake( 0 );
   o.size = _.entitySize( o.structure );
 
   // console.log( 'entitySize:', _.strMetricFormatBytes( o.size ) );
@@ -1008,194 +553,302 @@ function diagnosticsStructureGenerate( o )
 
   /*  */
 
-  function structureMake()
+  function structureMake( level )
   {
-    let currentLevel = Object.create( null );
+    let struct = Object.create( null );
+    // let string = _.strDup( 'a', o.stringSize );
 
-    let string = _.strDup( 'a', o.stringSize || o.fieldSize );
-
-    if( o.boolean || o.primitive )
-    currentLevel[ 'boolean' ] = true;
-
-    if( o.number || o.primitive )
-    currentLevel[ 'number' ] = 0;
-
-    if( o.signedNumber || o.primitive > 2 )
+    if( !( level <= o.depth ) )
     {
-      currentLevel[ '-0' ] = -0;
-      currentLevel[ '+0' ] = +0;
+      return null;
     }
 
-    if( o.string || o.primitive )
-    currentLevel[ 'string' ] = string;
-
-    if( o.null || o.primitive > 1 )
-    currentLevel[ 'null' ] = null;
-
-    if( o.infinity || o.primitive > 1 )
+    if( o.nullComplexity >= 2 )
     {
-      currentLevel[ '+infinity' ] = +Infinity;
-      currentLevel[ '-infinity' ] = -Infinity;
+      struct[ 'null' ] = null;
     }
 
-    if( o.nan || o.primitive > 1 )
-    currentLevel[ 'nan' ] = NaN;
+    if( o.undefinedComplexity >= 3 )
+    {
+      struct[ 'undefined' ] = undefined;
+    }
 
-    if( o.undefined || o.primitive > 2 )
-    currentLevel[ 'undefined' ] = undefined;
+    if( o.booleanComplexity )
+    {
+      struct[ 'boolean.true' ] = true;
+      struct[ 'boolean.false' ] = false;
+    }
 
-    if( o.date || o.primitive > 2 )
-    currentLevel[ 'date' ] = new Date();
+    if( o.stringComplexity )
+    {
+      struct[ 'string.defined' ] = _.strRandom( o.stringSize );
+      struct[ 'string.empty' ] = '';
+    }
 
-    if( o.bigInt || o.primitive > 2 )
+    if( o.numberComplexity )
+    {
+      struct[ 'number.zero' ] = 0;
+      struct[ 'number.small' ] = 13;
+    }
+
+    if( o.numberComplexity >= 2 )
+    {
+      struct[ 'number.big' ] = 1 << 30;
+    }
+
+    if( o.numberInfinityComplexity >= 2 )
+    {
+      struct[ 'number.infinity.positive' ] = +Infinity;
+      struct[ 'number.infinity.negative' ] = -Infinity;
+    }
+
+    if( o.numberNanComplexity >= 2 )
+    {
+      struct[ 'number.nan' ] = NaN;
+    }
+
+    if( o.numberSignedZeroComplexity >= 3 )
+    {
+      struct[ 'number.signed.zero.negative' ] = -0;
+      struct[ 'number.signed.zero.positive' ] = +0;
+    }
+
+    if( o.bigIntComplexity >= 3 )
     if( typeof BigInt !== 'undefined' )
-    currentLevel[ 'bigInt' ] = BigInt( 1 );
-
-    if( o.regexp )
     {
-      currentLevel[ 'regexp1'] = /ab|cd/,
-      currentLevel[ 'regexp2'] = /a[bc]d/,
-      currentLevel[ 'regexp3'] = /ab{1, }bc/,
-      currentLevel[ 'regexp4'] = /\.js$/,
-      currentLevel[ 'regexp5'] = /.regexp/
+      struct[ 'bigInt.zero' ] = BigInt( 0 );
+      struct[ 'bigInt.small' ] = BigInt( 1 );
+      struct[ 'bigInt.big' ] = BigInt( 1 ) << BigInt( 100 );
     }
 
-    if( o.regexpComplex || o.regexp > 1 )
+    if( o.regexpComplexity >= 2 )
     {
-      currentLevel[ 'complexRegexp0' ] = /^(?:(?!ab|cd).)+$/gm,
-      currentLevel[ 'complexRegexp1' ] = /\/\*[\s\S]*?\*\/|\/\/.*/g,
-      currentLevel[ 'complexRegexp2' ] = /^[1-9]+[0-9]*$/gm,
-      currentLevel[ 'complexRegexp3' ] = /aBc/i,
-      currentLevel[ 'complexRegexp4' ] = /^\d+/gm,
-      currentLevel[ 'complexRegexp5' ] = /^a.*c$/g,
-      currentLevel[ 'complexRegexp6' ] = /[a-z]/m,
-      currentLevel[ 'complexRegexp7' ] = /^[A-Za-z0-9]$/
+      struct[ 'regexp.simple1'] = /ab|cd/,
+      struct[ 'regexp.simple2'] = /a[bc]d/,
+      struct[ 'regexp.simple3'] = /ab{1, }bc/,
+      struct[ 'regexp.simple4'] = /\.js$/,
+      struct[ 'regexp.simple5'] = /.reg/
     }
 
-    // let bufferSrc = _.longFillTimes( [], o.bufferSize || o.fieldSize, 0 );
-    let bufferSrc = _.longFill( [], 0, [ 0, o.bufferSize || o.fieldSize ] );
+    if( o.regexpComplexity >= 3 )
+    {
+      struct[ 'regexp.complex0' ] = /^(?:(?!ab|cd).)+$/gm,
+      struct[ 'regexp.complex1' ] = /\/\*[\s\S]*?\*\/|\/\/.*/g,
+      struct[ 'regexp.complex2' ] = /^[1-9]+[0-9]*$/gm,
+      struct[ 'regexp.complex3' ] = /aBc/i,
+      struct[ 'regexp.complex4' ] = /^\d+/gm,
+      struct[ 'regexp.complex5' ] = /^a.*c$/g,
+      struct[ 'regexp.complex6' ] = /[a-z]/m,
+      struct[ 'regexp.complex7' ] = /^[A-Za-z0-9]$/
+    }
 
-    if( o.bufferNode || o.buffer && o.buffer !== 2 )
+    if( o.dateComplexity >= 3 )
+    {
+      struct[ 'date.now' ] = new Date();
+      struct[ 'date.fixed' ] = new Date( 1987, 1, 4, 5, 13, 0 );
+    }
+
+    // let bufferSrc = _.longFillTimes( [], o.bufferSize || o.defaultSize, 0 );
+    let bufferSrc = _.arrayRandom( [], [ 0, 1 ], [ 0, o.bufferSize ] );
+
+    if( o.bufferNodeComplexity >= 4 )
     if( typeof BufferNode !== 'undefined' )
-    currentLevel[ 'bufferNode'] = BufferNode.from( bufferSrc );
+    struct[ 'buffer.node'] = BufferNode.from( bufferSrc );
 
-    if( o.bufferRaw || o.buffer )
-    currentLevel[ 'bufferRaw'] = new BufferRaw( bufferSrc );
+    if( o.bufferRawComplexity >= 3 )
+    struct[ 'buffer.raw'] = new U8x( bufferSrc ).buffer;
 
-    if( o.bufferBytes || o.buffer && o.buffer !== 2)
-    currentLevel[ 'bufferBytes'] = new U8x( bufferSrc );
+    if( o.bufferBytesComplexity >= 3 )
+    struct[ 'buffer.bytes'] = new U8x( bufferSrc );
 
-    if( o.map || o.structure )
+    // if( o.map || o.structure ) // xxx
+    // if( o.mapComplexity )
+    // {
+    //   // let map = struct[ 'map' ] = { 0 : string, 1 : 1, 2 : true  }; xxx
+    //   // if( o.mapLength )
+    //   // xxx
+    //   debugger;
+    //   let map = struct[ 'map' ] = { 0 : string, 1 : 1, true : true  };
+    //   struct[ 'map.simple' ] = mapFor( map, [ 0, 1 << 25 ] );
+    // }
+
+    if( o.arrayComplexity )
+    struct[ 'array.simple' ] = _.longFill( [], 0, [ 0, o.arrayLength ] )
+
+    if( o.arrayComplexity >= 3 )
     {
-      let map = currentLevel[ 'map' ] = { 0 : string, 1 : 1, 2 : true  };
-      if( o.mapSize )
-      currentLevel[ 'map' ] = mapForSize( map, [ 0, 3 ] );
-    }
-
-    if( o.mapComplex || o.structure > 1 )
-    {
-      let map = currentLevel[ 'mapComplex' ] = { 0 : '1', 1 : { b : 2 }, 2 : [ 1, 2, 3 ] };
-      if( o.mapSize )
-      currentLevel[ 'mapComplex' ] = mapForSize( map, [ 0, 3 ] );
-    }
-
-    if( o.array || o.structure )
-    currentLevel[ 'array' ] = _.longFill( [], 0, [ 0, o.arraySize || o.fieldSize ] )
-    // currentLevel[ 'array' ] = _.longFillTimes( [], o.arraySize || o.fieldSize, 0 )
-
-    if( o.arrayComplex || o.structure > 1 )
-    {
-      let src = { a : '1', dir : { b : 2 }, c : [ 1, 2, 3 ] }
-      // currentLevel[ 'arrayComplex' ] = _.longFillTimes( [], o.arraySize || o.fieldSize, src )
-      currentLevel[ 'arrayComplex' ] = _.longFill( [], src, [ 0, o.arraySize || o.fieldSize ] )
-    }
-
-    if( o.recursion || o.structure > 2 )
-    {
-      currentLevel.recursion = currentLevel;
-    }
-
-    var srcMap = _.mapExtend( null, currentLevel );
-
-    /**/
-
-    for( var b = 0; b < o.breadth; b++ )
-    {
-      currentLevel[ 'breadth' + b ] = _.mapExtend( null, srcMap );
+      struct[ 'array.complex' ] = [];
+      for( let a = 0 ; a < o.arrayLength ; a++ )
+      struct[ 'array.complex' ][ a ] = structureMake( level+1 );
     }
 
     /*  */
 
-    if( depth < o.depth - 1 )
+    if( o.setComplexity >= 3 )
     {
-      depth += 1;
-      currentLevel[ 'depth' + depth ] = structureMake();
+      struct[ 'set' ] = new Set;
+      for( let m = 0 ; m < o.setLength ; m++ )
+      struct[ 'set' ].add( structureMake( level+1 ) );
     }
-
-    return currentLevel;
 
     /*  */
 
-    function mapForSize( src, range )
+    if( o.hashMapComplexity >= 4 )
+    {
+      struct[ 'hashmap' ] = new HashMap;
+      for( let m = 0 ; m < o.hashMapLength ; m++ )
+      struct[ 'hashmap' ].set( 'element' + m, structureMake( level+1 ) );
+    }
+
+    /*  */
+
+    if( o.mapComplexity )
+    {
+      // let map = struct[ 'mapComplex' ] = { 0 : '1', 1 : { b : 2 }, 2 : [ 1, 2, 3 ] };
+      // if( o.mapLength )
+      // struct[ 'map.complex' ] = mapFor( map, [ 0, 3 ] );
+      // xxx
+      struct[ 'map' ] = Object.create( null );
+      for( let m = 0 ; m < o.mapLength ; m++ )
+      struct[ 'map' ][ 'element' + m ] = structureMake( level+1 );
+    }
+
+    if( level < o.depth )
+    {
+      struct[ 'level' + ( level + 1 ) ] = structureMake( level+1 );
+    }
+
+    if( o.recursionComplexity >= 2 )
+    {
+      struct[ 'recursion.self' ] = struct;
+    }
+
+    if( o.recursionComplexity >= 3 && struct[ 'level' + ( level + 1 ) ] )
+    {
+      struct[ 'level' + ( level + 1 ) ][ 'recursion.super' ] = struct;
+    }
+
+    return struct;
+
+    /*  */
+
+    function mapFor( src, range )
     {
       let map = {};
-      for( var i = 0; i < o.mapSize; i++ )
+      for( var i = 0; i < o.mapLength; i++ )
       {
-        let k = _.numberRandomInt( range );
+        let k = _.intRandom( range );
         map[ i ] = src[ k ];
       }
       return map;
     }
   }
 
+  /* */
+
+  function from( complexity, min )
+  {
+    if( min === undefined )
+    return complexity;
+
+    if( complexity >= min )
+    return complexity;
+
+    return 0;
+  }
+
+/*
+
+  if( o.booleanComplexity || o.primitiveComplexity )
+  currentLevel[ 'booleanComplexity' ] = true;
+
+  if( o.numberComplexity || o.primitiveComplexity )
+  currentLevel[ 'numberComplexity' ] = 0;
+
+  if( o.numberSignedZeroComplexity || o.primitiveComplexity > 2 )
+  {
+    currentLevel[ '-0' ] = -0;
+    currentLevel[ '+0' ] = +0;
+  }
+
+  if( o.string || o.primitiveComplexity )
+  currentLevel[ 'string' ] = string;
+
+  if( o.nullComplexity || o.primitiveComplexity > 1 )
+  currentLevel[ 'null' ] = null;
+
+  if( o.numberInfinityComplexity || o.primitiveComplexity > 1 )
+  {
+    currentLevel[ '+numberInfinityComplexity' ] = +Infinity;
+    currentLevel[ '-numberInfinityComplexity' ] = -Infinity;
+  }
+
+  if( o.numberNanComplexity || o.primitiveComplexity > 1 )
+  currentLevel[ 'numberNanComplexity' ] = NaN;
+
+  if( o.undefinedComplexity || o.primitiveComplexity > 2 )
+  currentLevel[ 'undefined' ] = undefined;
+
+  if( o.dateComplexity || o.primitiveComplexity > 2 )
+  currentLevel[ 'dateComplexity' ] = new Date();
+
+  if( o.bigIntComplexity || o.primitiveComplexity > 2 )
+  if( typeof BigInt !== 'undefined' )
+  currentLevel[ 'bigInt' ] = BigInt( 1 );
+
+*/
+
 }
 
-diagnosticsStructureGenerate.defaults =
+diagnosticStructureGenerate.defaults =
 {
-  _pre : null,
-  depth : null,
-  breadth : null,
 
-  /**/
-
-  boolean : null,
-  number : null,
-  signedNumber : null,
-  string : null,
-  null : null,
-  infinity : null,
-  nan : null,
-  undefined : null,
-  date : null,
-  bigInt : null,
-
-  regexp : null,
-  regexpComplex : null,
-
-  bufferNode : null,
-  bufferRaw : null,
-  bufferBytes : null,
-
-  array : null,
-  arrayComplex : null,
-  map : null,
-  mapComplex : null,
+  structure : null,
 
   /*  */
 
-  primitive : null,
-  buffer : null,
-  structure : null,
+  depth : 1,
+  // breadth : 4,
+  stringSize : null,
+  bufferSize : null,
+  regexpSize : null, /* qqq : not used! */
+  defaultSize : 50,
+
+  arrayLength : null,
+  mapLength : null,
+  hashMapLength : null,
+  setLength : null,
+  defaultLength : 4,
 
   /* */
 
-  stringSize : null,
-  bufferSize : null,
-  regexpSize : null,
-  arraySize : null,
-  mapSize : null,
+  defaultComplexity : 2,
 
-  fieldSize : 50
+  primitiveComplexity : null,
+  nullComplexity : null,
+  undefinedComplexity : null,
+  booleanComplexity : null,
+  stringComplexity : null,
+  bigIntComplexity : null,
+  numberComplexity : null,
+  numberInfinityComplexity : null,
+  numberNanComplexity : null,
+  numberSignedZeroComplexity : null,
+
+  objectComplexity : null,
+  dateComplexity : null,
+  regexpComplexity : null,
+  bufferComplexity : null,
+  bufferNodeComplexity : null,
+  bufferRawComplexity : null,
+  bufferBytesComplexity : null,
+
+  containerComplexity : null,
+  recursionComplexity : null,
+  arrayComplexity : null,
+  mapComplexity : null,
+  setComplexity : null,
+  hashMapComplexity : null,
 
 }
 
@@ -1279,6 +932,8 @@ let ErrorAbort = _.error_functor( 'ErrorAbort' );
 // declare
 // --
 
+/* xxx : move into independent module */
+
 let error =
 {
   ErrorAbort,
@@ -1286,11 +941,6 @@ let error =
 
 let Extend =
 {
-
-  // diagnosticLocation,
-  // diagnosticStack,
-  // diagnosticStackRemoveBegin,
-  // diagnosticStackCondense,
 
   diagnosticCode,
   diagnosticBeep,
@@ -1303,7 +953,7 @@ let Extend =
   diagnosticEachLongType,
   diagnosticEachElementComparator,
 
-  diagnosticsStructureGenerate,
+  diagnosticStructureGenerate,
 
   // checker
 

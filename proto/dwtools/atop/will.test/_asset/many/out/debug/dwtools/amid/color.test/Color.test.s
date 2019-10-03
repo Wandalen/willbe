@@ -1,750 +1,872 @@
-( function _Files_read_test_s_( ) {
+( function _StarterMaker_s_() {
 
 'use strict';
+
+/**
+ * @file starter/StarterMaker.s.
+ */
 
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../Tools.s' );
+  // let _ = require( '../../Tools.s' );
+  // require( './light/StarterMaker.s' );
 
-  if( !_global_.wTools.FileProvider )
-  require( '../files/UseTop.s' );
+  let _ = wTools;
 
-  _.include( 'wTesting' );
+  _.include( 'wCopyable' );
+  _.include( 'wVerbal' );
+  _.include( 'wFiles' );
+  _.include( 'wTemplateTreeEnvironment' );
 
 }
 
 //
 
-var _ = _global_.wTools;
-var Parent = wTester;
+/**
+ * @classdesc Class to generate code for run-time.
+ * @param {Object} o Options map for constructor. {@link module:Tools/mid/Starter.wStarterMaker.Fields Options description }
+ * @class wStarterMaker
+ * @memberof module:Tools/mid/Starter
+*/
 
-//
-
-function onSuiteBegin()
+let _ = wTools;
+let Parent = null;
+let Self = function wStarterMaker( o )
 {
-  this.isBrowser = typeof module === 'undefined';
-
-  if( !this.isBrowser )
-  this.suitePath = _.path.pathDirTempOpen( _.path.join( __dirname, '../..' ), 'FilesRead' );
-  else
-  this.suitePath = _.path.current();
+  return _.workpiece.construct( Self, this, arguments );
 }
 
-//
-
-function onSuiteEnd()
-{
-  if( !this.isBrowser )
-  {
-    _.assert( _.strHas( this.suitePath, '.tmp' ) );
-    _.path.pathDirTempClose(  this.suitePath );
-  }
-}
-
-// --
-// read
-// --
-
-function filesReadOld( test )
-{
-  test.case = 'basic';
-
-  var files = _.fileProvider.filesGlob({ filePath : _.path.normalize( __dirname ) + '/**' });
-  var read = _.fileProvider.filesReadOld({ paths : files, preset : 'js' });
-
-  test.identical( read.errs, {} );
-  test.is( read.err === undefined );
-  test.is( _.arrayIs( read.read ) );
-  test.is( _.strIs( read.data ) );
-  test.is( read.data.indexOf( '======\n( function()' ) !== -1 );
-
-  //
-
-  var provider = _.fileProvider;
-  var testDir = _.path.join( test.context.suitePath, test.name );
-  var fileNames = [ 'a', 'b', 'c' ];
-
-  test.case = 'sync reading of files, all files are present';
-  var paths = fileNames.map( ( path ) =>
-  {
-    var p = _.path.join( testDir, path );
-    provider.fileWrite( p, path );
-    return p;
-  });
-  var result = provider.filesReadOld
-  ({
-    paths,
-    sync : 1,
-    throwing : 1,
-  });
-  test.identical( result.data, fileNames );
-  test.identical( result.errs, {} );
-  test.identical( result.err, undefined );
-
-  //
-
-  test.case = 'sync reading of files, not all files are present, throwing on';
-  var paths = fileNames.map( ( path ) =>
-  {
-    var p = _.path.join( testDir, path );
-    provider.fileWrite( p, path );
-    return p;
-  });
-  paths.push( paths[ 0 ] + '_' );
-  test.shouldThrowErrorSync( () =>
-  {
-    provider.filesReadOld
-    ({
-      paths,
-      sync : 1,
-      throwing : 1,
-    });
-  })
-
-  //
-
-  test.case = 'sync reading of files, not all files are present, throwing off';
-  var paths = fileNames.map( ( path ) =>
-  {
-    var p = _.path.join( testDir, path );
-    provider.fileWrite( p, path );
-    return p;
-  });
-  paths.push( paths[ 0 ] + '_' );
-  var result = provider.filesReadOld
-  ({
-    paths,
-    sync : 1,
-    throwing : 0,
-  });
-
-  var expectedData = fileNames.slice();
-  expectedData.push( null );
-  test.identical( result.data, expectedData );
-  test.is( _.errIs( result.errs[ paths.length - 1 ] ) );
-  test.is( _.errIs( result.err ) );
-
-  // logger.log( _.toStr( result, { levels : 99 } ) )
-}
+Self.shortName = 'StarterMaker';
 
 //
 
-// function filesTreeRead( test )
-// {
-//   var currentTestDir = _.path.join( test.context.suitePath, test.name );
-//   var provider = _.fileProvider;
-//   provider.safe = 1;
-//   var filesTreeReadFixedOptions =
-//   {
-//     recursive : 2,
-//     // relative : null,
-//     // filePath : null,
-//     // strict : 1,
-//     // ignoreNonexistent : 1,
-//     result : [],
-//     orderingExclusion : [],
-//     // sortingWithArray : null,
-//     upToken : '/',
-//     onFileTerminal : null,
-//     onFileDir : null,
-//   }
-
-//   var map =
-//   {
-//     includingTerminals : [ 0, 1 ],
-//     includingTransient : [ 0, 1 ],
-//     includingDirs : [ 0, 1 ],
-//     asFlatMap : [ 0, 1 ],
-//     readingTerminals : [ 0, 1 ]
-//   }
-
-//   var combinations = [];
-//   var keys = _.mapOwnKeys( map );
-
-//   function combine( i, o )
-//   {
-//     if( i === undefined )
-//     i = 0;
-
-//     if( o === undefined )
-//     o = {};
-
-//     var currentKey = keys[ i ];
-//     var values = map[ currentKey ];
-
-//     values.forEach( ( val ) =>
-//     {
-//       o[ currentKey ] = val;
-
-//       if( i + 1 < keys.length )
-//       combine( i + 1, o )
-//       else
-//       combinations.push( _.mapSupplement( {}, o ) )
-//     });
-//   }
-
-//   function flatMapFromTree( tree, currentPath, paths, o )
-//   {
-//     if( paths === undefined )
-//     {
-//       paths = Object.create( null );
-//     }
-
-//     if( o.includingDirs )
-//     if( !paths[ currentTestDir] )
-//     paths[ currentTestDir ] = Object.create( null );
-
-//     for( var k in tree )
-//     {
-//       if( _.objectIs( tree[ k ] ) )
-//       {
-//         if( o.includingDirs )
-//         paths[ _.path.resolve( currentPath, k ) ] = Object.create( null );
-
-//         flatMapFromTree( tree[ k ], _.path.join( currentPath, k ), paths, o );
-//       }
-//       else
-//       {
-//         if( o.includingTerminals )
-//         {
-//           var val = null;
-//           if( o.readingTerminals )
-//           val = tree[ k ];
-
-//           paths[ _.path.resolve( currentPath, k ) ] = val;
-//         }
-//       }
-//     }
-
-//     return paths;
-//   }
-
-//   function flatMapToTree( map, o )
-//   {
-//     var paths = _.mapOwnKeys( map );
-//     _.arrayRemoveElementOnce( paths, currentTestDir );
-//     var result = Object.create( null );
-//     var tree = new _.FileProvider.Extract({ filesTree : result })
-//     // result[ '.' ] = Object.create( null );
-//     // var inner = result[ '.' ];
-
-//     paths.forEach( ( p ) =>
-//     {
-//       var isTerminal = o.readingTerminals ? _.strIs( map[ p ] ) : map[ p ] === null;
-//       if( isTerminal && o.includingTerminals || o.includingDirs && !isTerminal )
-//       {
-//         var val = map[ p ];
-//         if( isTerminal && !o.readingTerminals )
-//         val = null;
-//       }
-
-//       tree.dirMakeForFile( '/' + _.path.relative( currentTestDir, p ) );
-
-//       _.select
-//       ({
-//         src : result,
-//         selector : _.path.relative( currentTestDir, p ),
-//         set : val,
-//         setting : 1,
-//         usingIndexedAccessToMap : 0
-//       });
-//     })
-
-//     return result;
-//   }
-
-//   //
-
-//   var filesTree =
-//   {
-//     a  :
-//     {
-//       b  :
-//       {
-//         c  :
-//         {
-//           d :
-//           {
-//             e :
-//             {
-//               e_a  : '1',
-//               e_b  : '2',
-//               e_c  : '3',
-//               e_d : {}
-//             }
-//           },
-//           d_a  : '4',
-//           d_b  : '5',
-//           d_c  : '6',
-//           d_d : {}
-//         },
-//         c_a  : '7',
-//         c_b  : '8',
-//         c_c  : '9',
-//         c_d : {}
-//       },
-//       b_a  : '0',
-//       b_b  : '1',
-//       b_c  : '2',
-//       b_d : {}
-//     },
-//     a_a  : '3',
-//     a_b  : '4',
-//     a_c  : '5',
-//     a_d : {}
-//   }
-
-//   provider.filesDelete( currentTestDir );
-
-//   _.FileProvider.Extract.readToProvider
-//   ({
-//     filesTree,
-//     dstPath : currentTestDir,
-//     dstProvider : provider
-//   })
-
-//   var n = 0;
-
-//   var testsInfo = [];
-
-//   combine();
-//   combinations.forEach( ( c ) =>
-//   {
-//     var info = _.mapSupplement( {}, c );
-//     info.number = ++n;
-//     test.case = _.toStr( info, { levels : 3 } )
-//     var checks = [];
-//     var options = _.mapSupplement( {}, c );
-//     _.mapSupplement( options, filesTreeReadFixedOptions );
-
-//     options.srcPath = currentTestDir;
-//     options.srcProvider = provider;
-
-//     var files = _.FileProvider.Extract.filesTreeRead( options );
-//     var expected = {};
-//     flatMapFromTree( filesTree, currentTestDir, expected, options );
-
-//     if( !options.asFlatMap )
-//     expected = flatMapToTree( expected, options );
-
-//     checks.push( test.identical( files, expected ) );
-
-//     info.passed = true;
-//     checks.forEach( ( check ) => { info.passed &= check; } )
-//     testsInfo.push( info );
-//   })
-
-//   console.log( _.toStr( testsInfo, { levels : 3 } ) )
-// }
-
-// filesTreeRead.timeOut = 30000;
-
-//
-
-// function filesTreeWrite( test )
-// {
-//   test.case = 'filesTreeWrite';
-
-//   var currentTestDir = _.path.join( test.context.suitePath, test.name );
-//   var provider = _.fileProvider;
-
-//   var fixedOptions =
-//   {
-//     filesTree : null,
-//     allowWrite : 1,
-//     allowDelete : 1,
-//     verbosity : 0,
-//   }
-
-//   var map =
-//   {
-//     sameTime : [ 0, 1 ],
-//     absolutePathForLink : [ 0, 1 ],
-//     breakingSoftLink : [ 0, 1 ],
-//     terminatingHardLinks : [ 0, 1 ],
-//   }
-
-//   var srcs =
-//   [
-//     {
-//       a  :
-//       {
-//         b  :
-//         {
-//           c  :
-//           {
-//             d :
-//             {
-//               e :
-//               {
-//                 e_a  : '1',
-//                 e_b  : '2',
-//                 e_c  : '3',
-//                 e_d : {}
-//               }
-//             },
-//             d_a  : '4',
-//             d_b  : '5',
-//             d_c  : '6',
-//             d_d : {}
-//           },
-//           c_a  : '7',
-//           c_b  : '8',
-//           c_c  : '9',
-//           c_d : {}
-//         },
-//         b_a  : '0',
-//         b_b  : '1',
-//         b_c  : '2',
-//         b_d : {}
-//       },
-//       a_a  : '3',
-//       a_b  : '4',
-//       a_c  : '5',
-//       a_d : {}
-//     }
-//   ]
-
-//   var combinations = [];
-//   var keys = _.mapOwnKeys( map );
-
-//   function combine( i, o )
-//   {
-//     if( i === undefined )
-//     i = 0;
-
-//     if( o === undefined )
-//     o = {};
-
-//     var currentKey = keys[ i ];
-//     var values = map[ currentKey ];
-
-//     values.forEach( ( val ) =>
-//     {
-//       o[ currentKey ] = val;
-
-//       if( i + 1 < keys.length )
-//       combine( i + 1, o )
-//       else
-//       combinations.push( _.mapSupplement( {}, o ) )
-//     });
-//   }
-
-
-//   var n = 0;
-
-//   var testsInfo = [];
-
-//   combine();
-//   srcs.forEach( ( tree ) =>
-//   {
-//     combinations.forEach( ( c ) =>
-//     {
-//       var info = _.mapSupplement( {}, c );
-//       info.number = ++n;
-//       test.case = _.toStr( info, { levels : 3 } )
-//       var checks = [];
-//       var options = _.mapSupplement( {}, c );
-//       _.mapSupplement( options, fixedOptions );
-
-//       provider.filesDelete( currentTestDir );
-//       options.dstPath = currentTestDir;
-//       options.filesTree = tree;
-//       options.dstProvider = provider;
-
-//       _.FileProvider.Extract.readToProvider( options );
-
-//       var got = _.FileProvider.Extract.filesTreeRead
-//       ({
-//         srcPath : currentTestDir,
-//         srcProvider : provider,
-//       });
-//       test.identical( got, tree );
-//     })
-//   })
-// }
-
-// filesTreeWrite.timeOut = 20000;
-
-//
-
-function readToProvider( test )
+function init( o )
 {
   let self = this;
 
-  var filesTree =
-  {
-    'file' : 'file',
-    'a' :
-    {
-      'b' :
-      {
-        'rlink' : [{ softLink : '../../../file' }],
-        'alink' : [{ softLink : '/file' }],
-        'hlink' : [{ hardLink : '/file' }]
-      }
-    }
-  }
-  var extract1 = new _.FileProvider.Extract({ filesTree });
+  _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  test.identical( extract1.fileRead( '/a/b/rlink' ), 'file' )
-  test.identical( extract1.fileRead( '/a/b/alink' ), 'file' )
-  test.identical( extract1.fileRead( '/a/b/hlink' ), 'file' )
+  self.logger = new _.Logger({ output : logger });
 
-  var dstProvider = new _.FileProvider.Extract();
-  extract1.readToProvider
-  ({
-    dstProvider,
-    dstPath : '/',
-    absolutePathForLink : 1
-  });
-  var expectedTree =
-  {
-    'file' : 'file',
-    'a' :
-    {
-      'b' :
-      {
-        'rlink' : [{ softLink : '/file' }],
-        'alink' : [{ softLink : '/file' }],
-        'hlink' : [{ hardLink : '/file' }]
-      }
-    }
-  }
+  _.workpiece.initFields( self );
+  Object.preventExtensions( self );
 
-  test.identical( dstProvider.filesTree, expectedTree );
-  test.identical( dstProvider.fileRead( '/a/b/rlink' ), 'file' )
-  test.identical( dstProvider.fileRead( '/a/b/alink' ), 'file' )
-  test.identical( dstProvider.fileRead( '/a/b/hlink' ), 'file' )
+  if( o )
+  self.copy( o );
 
 }
 
 //
 
-function fileConfigRead( test )
+
+/**
+ * @descriptionNeeded
+ * @function exec
+ * @memberof module:Tools/mid/Starter.wStarterMaker#
+*/
+
+function exec()
 {
-  let context = this;
-  let provider = context.provider || _.fileProvider;
-  let path = provider.path;
-  let routinePath = path.join( context.suitePath, 'routine-' + test.name );
-  let terminalPath = path.join( routinePath, 'terminal' );
 
-  //
+  _.assert( arguments.length === 0 );
 
-  test.case = 'no config'
-  provider.filesDelete( routinePath );
-  test.shouldThrowErrorSync( () => provider.fileConfigRead({ filePath : terminalPath, many : 'all' }) );
-  test.shouldThrowErrorSync( () => provider.fileConfigRead({ filePath : terminalPath, many : 'any', throwing : 1 }) );
-  test.mustNotThrowError( () => provider.fileConfigRead({ filePath : terminalPath, many : 'any', throwing : 0 }) );
+  let o = {};
+  let appArgs = _.appArgs();
+  let self = new this.Self( o );
 
-  //
+  return self;
+}
 
-  let src =
+//
+
+/**
+ * @summary Forms and checks fields of current instance.
+ * @function form
+ * @memberof module:Tools/mid/Starter.wStarterMaker#
+*/
+
+function form()
+{
+  let self = this;
+  let logger = self.logger;
+
+  _.assert( arguments.length === 0 );
+  _.assert( !self.formed );
+  _.assert( !!self.system );
+
+  self.formed = 1;
+
+  if( self.inPath === null )
+  self.inPath = self.outPath;
+  if( self.outPath === null )
+  self.outPath = self.inPath;
+
+  // self.inPath = self.env.resolve( self.inPath );
+  // self.outPath = self.env.resolve( self.outPath );
+  // self.toolsPath = self.env.resolve( self.toolsPath );
+  // self.initScriptPath = self.env.resolve( self.initScriptPath );
+
+  if( !self.env )
+  self.env = _.TemplateTreeEnvironment({ tree : self, path : _.uri });
+  self.env.pathsNormalize();
+
+  // /* !!! temp fix, should be replaced but fixing pathsNormalize */
+  // self.toolsPath = _.strReplaceAll( self.toolsPath, '//', '/' );
+
+  if( !self.system.providersWithProtocolMap.dst )
+  self.system.providerRegister( new _.FileProvider.Extract({ protocol : 'dst'/*, encoding : 'utf8'*/ }) );
+
+  _.assert( !!self.system );
+  _.assert( !!self.system.providersWithProtocolMap.src );
+  _.assert( !!self.system.providersWithProtocolMap.dst );
+
+  _.assert( _.strIs( self.inPath ) );
+  _.assert( _.strIs( self.outPath ) );
+  _.assert( _.strIs( self.toolsPath ) );
+  _.assert( _.strIs( self.initScriptPath ) );
+  _.assert( _.strIs( self.starterDirPath ) );
+  _.assert( _.strIs( self.starterScriptPath ) );
+  _.assert( _.strIs( self.rootPath ) );
+  _.assert( _.strIs( self.prefixPath ) );
+
+  logger.rbegin({ verbosity : -2 });
+  logger.log( 'Starter.paths :' );
+  logger.up();
+  logger.log( 'inPath :', self.inPath );
+  logger.log( 'outPath :', self.outPath );
+  logger.log( 'rootPath :', self.rootPath );
+  logger.log( 'initScriptPath :', self.initScriptPath );
+  logger.log( 'starterDirPath :', self.starterDirPath );
+  logger.log( 'starterScriptPath :', self.starterScriptPath );
+  logger.log( 'starterConfigPath :', self.starterConfigPath );
+  logger.log( 'toolsPath :', self.toolsPath );
+  logger.log( 'prefixPath :', self.prefixPath );
+  logger.down();
+  logger.rend({ verbosity : -2 });
+
+  return self;
+}
+
+//
+
+/**
+ * @summary Forms hub file provider and registers additional providers on it.
+ * @function fileProviderForm
+ * @memberof module:Tools/mid/Starter.wStarterMaker#
+*/
+
+function fileProviderForm()
+{
+  let self = this;
+
+  _.assert( arguments.length === 0 );
+
+  let srcFileProvider = new _.FileProvider.Extract({ protocol : 'src'  });
+  let dstFileProvider = new _.FileProvider.Extract({ protocol : 'dst'  });
+  let hdFileProvider = new _.FileProvider.HardDrive({});
+
+  self.system = self.system || new _.FileProvider.System
+  ({
+    verbosity : 2,
+    providers : [],
+  });
+
+  if( !self.system.providersWithProtocolMap.src )
+  self.system.providerRegister( new _.FileProvider.Extract({ protocol : 'src'  }) );
+
+  if( !self.system.providersWithProtocolMap.dst )
+  self.system.providerRegister( new _.FileProvider.Extract({ protocol : 'dst'  }) );
+
+  if( !self.system.providersWithProtocolMap.file )
+  self.system.providerRegister( new _.FileProvider.HardDrive({}) );
+
+  return self;
+}
+
+//
+
+/**
+ * @summary Reads source files from path `o.srcPath` to inner file provider.
+ * @param {Object} o Options map.
+ * @param {String} o.srcPath Path to directory with source files.
+ * @function fromHardDriveRead
+ * @memberof module:Tools/mid/Starter.wStarterMaker#
+*/
+
+function fromHardDriveRead( o )
+{
+  let self = this;
+  let srcFileProvider = self.system.providersWithProtocolMap.src;
+
+  if( _.strIs( arguments[ 0 ] ) )
+  o = { srcPath : arguments[ 0 ] }
+
+  // let protoPath = _.uri.join( 'file://', this.env.pathGet( '{{path/proto}}' ) );
+  // let stagingPath = _.uri.join( 'file://', this.env.pathGet( '{{path/staging}}' ) );
+
+  _.assert( arguments.length === 1 );
+  _.routineOptions( fromHardDriveRead, o );
+
+  self.system.verbosity = 1;
+  let srcLocalPath = _.uri.parse( o.srcPath ).longPath;
+
+  let reflect = self.system.filesReflector
+  ({
+    src : { prefixPath : o.srcPath, basePath : srcLocalPath },
+    dst : { prefixPath : 'src:///' },
+    filter :
+    {
+      ends : [ '.js', '.s', '.css', '.less', '.jslike' ],
+      maskAll : _.files.regexpMakeSafe(),
+      maskTransientAll : _.files.regexpMakeSafe()
+    },
+    linking : 'softLink',
+    mandatory : 1,
+  });
+
+  let reflected = reflect( '.' );
+
+}
+
+fromHardDriveRead.defaults =
+{
+  srcPath : null,
+}
+
+//
+
+/**
+ * @summary Writes source files from inner file provider to path `o.dstPath` on hard drive.
+ * @param {Object} o Options map.
+ * @param {String} o.dstPath Path where to write source files.
+ * @function toHardDriveWrite
+ * @memberof module:Tools/mid/Starter.wStarterMaker#
+*/
+
+function toHardDriveWrite( o )
+{
+  let self = this;
+
+  if( _.strIs( arguments[ 0 ] ) )
+  o = { dstPath : arguments[ 0 ] }
+
+  _.assert( arguments.length === 1 );
+  _.routineOptions( toHardDriveWrite, o );
+
+  let reflect = self.system.filesReflector
+  ({
+    src : { basePath : _.uri.join( 'dst://', '/' ), prefixPath : _.uri.join( 'dst://', '/' ) },
+    dst : { prefixPath : _.uri.join( 'file://', o.dstPath ), basePath : _.uri.join( 'file://', o.dstPath ) },
+    mandatory : 1,
+  });
+
+  let reflected = reflect( '.' );
+
+}
+
+toHardDriveWrite.defaults =
+{
+  dstPath : null,
+}
+
+//
+
+
+/**
+ * @summary Generates source code wrapper for a single file.
+ * @description Wrapper helps to load( require ) source file on a client side.
+ * @param {Object} o Options map.
+ * @param {String} o.prefixPath Prefix for file path
+ * @param {String} o.filePath Path to source file
+ * @param {String} o.dirPath Path to directory with source file
+ * @param {Boolean} o.running
+ * @function fixesFor
+ * @memberof module:Tools/mid/Starter.wStarterMaker#
+*/
+
+function fixesFor( o )
+{
+
+  _.routineOptions( fixesFor, arguments );
+  _.assert( arguments.length === 1 );
+  _.assert( _.strIs( o.filePath ) );
+
+  if( o.prefixPath )
+  o.filePath = o.prefixPath + o.filePath;
+  if( o.prefixPath && o.dirPath !== null )
+  o.dirPath = o.prefixPath + o.dirPath;
+
+  // if( o.prefixPath )
+  // o.rootPath = o.prefixPath + o.rootPath;
+
+  var result = Object.create( null );
+  var exts = _.path.exts( o.filePath );
+
+  if( o.running === null )
+  o.running = _.arrayHasAny( [ 'run' ], exts );
+
+  if( o.dirPath === null )
+  o.dirPath = _.path.dir( o.filePath );
+  // var filePath = _.path.normalize( _.path.reroot( o.rootPath, o.filePath ) );
+  var shortName = _.strVarNameFor( _.path.fullName( o.filePath ) );
+
+  result.prefix = `/* */ /* > ${o.filePath} */ `
+  result.prefix += `( function ${shortName}() { `; /**/
+  result.prefix += `var _naked = function ${shortName}_naked() { `; /**/
+
+  /* .. code .. */
+
+  result.postfix = '/* */\n';
+  result.postfix += `/* */ }\n`; /* end of _naked */
+
+  result.postfix +=
+`/* */
+/* */  var _filePath_ = '${o.filePath}';
+/* */  var _dirPath_ = '${o.dirPath}';
+/* */  var __filename = _filePath_;
+/* */  var __dirname = _dirPath_;
+/* */  var _scriptFile_, module, include, require;
+`
+
+  result.postfix +=
+`/* */
+/* */  var _preload = function ${shortName}_preload()
+/* */  {
+/* */    if( typeof _starter_ === 'undefined' )
+/* */    return;
+/* */    _scriptFile_ = new _starter_.ScriptFile({ filePath : _filePath_, dirPath : _dirPath_ });
+/* */    module = _scriptFile_;
+/* */    include = _scriptFile_.include;
+/* */    require = include;
+/* */    _starter_.scriptRewrite( _filePath_, _dirPath_, _naked );
+/* */    _starter_._scriptPreloadEnd( _filePath_ );
+/* */  }
+`
+
+  if( o.running )
+  result.postfix +=
+`/* */
+/* */  _naked();
+`
+  else
+  result.postfix +=
+`/* */
+/* */  if( typeof _starterScriptsToPreload === 'undefined' )
+/* */  _starterScriptsToPreload = Object.create( null )
+/* */
+/* */  if( typeof _starter_ !== 'undefined' )
+/* */  {
+/* */    _preload();
+/* */  }
+/* */  else
+/* */  {
+/* */    _starterScriptsToPreload[ __filename ] = _preload;
+/* */    _naked();
+/* */  }
+`
+
+  result.postfix += `/* */})();\n`; /* end of r */
+  result.postfix += `/* */ /* < ${o.filePath} */`;
+
+  return result;
+}
+
+fixesFor.defaults =
+{
+  prefixPath : '',
+  filePath : null,
+  dirPath : null,
+  running : null,
+}
+
+//
+
+/**
+ * @summary Makes files map and saves it to hard drive.
+ * @descriptionNeeded
+ * @function filesMapMake
+ * @memberof module:Tools/mid/Starter.wStarterMaker#
+*/
+
+function filesMapMake()
+{
+  let self = this;
+  let logger = self.logger;
+  let system = self.system;
+  let srcFileProvider = system.providersWithProtocolMap.src;
+  // let dstFileProvider = system.providersWithProtocolMap.dst;
+
+  _.assert( _.strIs( self.appName ) );
+  _.assert( arguments.length === 0 );
+
+  logger.rbegin({ verbosity : -2 });
+  logger.log( 'Making files map..' );
+  logger.rend({ verbosity : -2 });
+
+  let fmap = new _.FileProvider.Extract({ protocol : 'fmap' });
+  system.providerRegister( fmap );
+
+  /* */
+
+  debugger;
+  if( self.useFile === null && self.useFilePath )
+  self.useFile = self.system.fileRead
+  ({
+    filePath : self.useFilePath,
+    encoding : 'js.smart',
+    sync : 1,
+    resolvingSoftLink : 1,
+  });
+  debugger;
+  self.useFile = self.useFile || Object.create( null );
+  self.useFile.reflectMap = self.useFile.reflectMap || '**';
+
+  /* */
+
+  // debugger;
+  let reflect = self.system.filesReflector
+  ({
+    // reflectMap : self.useFile || '**',
+    dst :
+    {
+      prefixPath : _.uri.join( self.inPath, 'fmap://' ),
+      basePath : _.uri.join( self.inPath, 'fmap://' )
+    },
+    src :
+    {
+      prefixPath : _.uri.join(  self.inPath, 'src://', ),
+      basePath : _.uri.join(  self.inPath, 'src://', ),
+      recursive : 2,
+    },
+    linking : 'fileCopy',
+    resolvingSrcSoftLink : 0,
+    // recursive : 2,
+  });
+  // debugger;
+
+  debugger;
+  let found = reflect( self.useFile );
+  debugger;
+
+  if( self.offline )
   {
 
-    null : null,
-    number : 13,
-    string : 'something',
-    map : { a : '1', dir : { b : 2 }, c : [ 1,2,3 ] },
-    array : [ { a : '1', dir : { b : 2 }, c : [ 1,2,3 ] } ],
+    let found = self.system.filesFind
+    ({
+      filter :
+      {
+        filePath : 'fmap:///',
+        recursive : 2,
+      },
+      includingTerminals : 1,
+      includingTransient : 0,
+      resolvingSoftLink : 0,
+      onUp : onUp,
+    });
+
+    _.sure( !!found.length, 'none script found' );
+
   }
 
-  //
-
-  test.case = 'json, no ext';
-  provider.filesDelete( routinePath );
-  var filePath = path.changeExt( terminalPath, 'json' );
-  provider.fileWrite({ filePath, data : src, encoding : 'json.fine' });
-  var got = provider.fileConfigRead({ filePath : terminalPath });
-  test.identical( got, src );
-
-  test.case = 'json, with ext';
-  provider.filesDelete( routinePath );
-  var filePath = path.changeExt( terminalPath, 'json' );
-  provider.fileWrite({ filePath, data : src, encoding : 'json.fine' });
-  var got = provider.fileConfigRead({ filePath });
-  test.identical( got, src )
-
-  test.case = 'bson, no ext';
-  provider.filesDelete( routinePath );
-  var filePath = path.changeExt( terminalPath, 'bson' );
-  provider.fileWrite({ filePath, data : src, encoding : 'bson' });
-  var got = provider.fileConfigRead({ filePath : terminalPath });
-  test.identical( got, src );
-
-  test.case = 'bson, with ext';
-  provider.filesDelete( routinePath );
-  var filePath = path.changeExt( terminalPath, 'bson' );
-  provider.fileWrite({ filePath, data : src, encoding : 'bson' });
-  var got = provider.fileConfigRead({ filePath });
-  test.identical( got, src )
-
-  test.case = 'cson, no ext';
-  provider.filesDelete( routinePath );
-  var filePath = path.changeExt( terminalPath, 'coffee' );
-  provider.fileWrite({ filePath, data : src, encoding : 'coffee' });
-  var got = provider.fileConfigRead({ filePath : terminalPath });
-  test.identical( got, src );
-
-  test.case = 'cson, with ext';
-  provider.filesDelete( routinePath );
-  var filePath = path.changeExt( terminalPath, 'coffee' );
-  provider.fileWrite({ filePath, data : src, encoding : 'coffee' });
-  var got = provider.fileConfigRead({ filePath });
-  test.identical( got, src )
-
-  //
-
-  test.case = 'several configs';
-
-  var src1 =
-  {
-
-    null : null,
-    number : 13,
-    string : 'something',
-  }
-  var src2 =
-  {
-    map : { a : '1', dir : { b : 2 }, c : [ 1,2,3 ] },
-    array : [ { a : '1', dir : { b : 2 }, c : [ 1,2,3 ] } ],
-  }
-  provider.filesDelete( routinePath );
-  var filePath = path.changeExt( terminalPath, 'json' );
-  provider.fileWrite({ filePath, data : src1, encoding : 'json.fine' });
-  var filePath = path.changeExt( terminalPath, 'bson' );
-  provider.fileWrite({ filePath, data : src2, encoding : 'bson' });
-  var filePath = path.s.changeExt( terminalPath, [ 'json', 'bson' ] );
-  var got = provider.fileConfigRead({ filePath });
-  test.identical( got, src );
-
-  //
-
-  test.case = 'several configs, no ext';
-
-  var src1 =
-  {
-
-    null : null,
-    number : 13,
-    string : 'something',
-  }
-  var src2 =
-  {
-    map : { a : '1', dir : { b : 2 }, c : [ 1,2,3 ] },
-    array : [ { a : '1', dir : { b : 2 }, c : [ 1,2,3 ] } ],
-  }
-  provider.filesDelete( routinePath );
-  var filePath = path.changeExt( terminalPath, 'json' );
-  provider.fileWrite({ filePath, data : src1, encoding : 'json.fine' });
-  var filePath = path.changeExt( terminalPath, 'bson' );
-  provider.fileWrite({ filePath, data : src2, encoding : 'bson' });
-  var got = provider.fileConfigRead({ filePath : terminalPath });
-  var expected =
-  {
-    null : null,
-    number : 13,
-    string : 'something',
-    map : { a : '1', dir : { b : 2 }, c : [ 1,2,3 ] },
-    array : [ { a : '1', dir : { b : 2 }, c : [ 1,2,3 ] } ],
-  };
-  test.identical( got, expected );
-  test.shouldThrowErrorSync( () =>
-  {
-    provider.fileConfigRead({ filePath : [ terminalPath, terminalPath ] });
+  if( self.includePath )
+  self.system.softLinksRebase
+  ({
+    filePath : 'fmap:///',
+    oldPath : self.includePath,
+    newPath : 'file:///',
   })
 
+  // debugger;
+  system.fileWriteJs
+  ({
+    filePath : _.uri.join( 'dst://', self.outPath, self.appName + '.raw.filesmap.s' ),
+    prefix : 'FilesMap = \n',
+    data : fmap.filesTree,
+  });
+  // debugger;
+
+  // system.providerUnregister( fmap );
+  fmap.finit();
+  _.assert( system.providersWithProtocolMap.fmap === undefined );
+
+  /* */
+
+  function onUp( file, op )
+  {
+    let resolvedPath = system.pathResolveLinkFull( file.absoluteGlobal ).filePath;
+    let prefixToRemove = /^#\!\s*\/.+/;
+
+    if( self.offline && _.arrayHas( [ 's','js','ss' ], file.ext ) )
+    {
+
+      let fixes = self.fixesFor
+      ({
+        filePath : file.absolute,
+      });
+
+      let data = system.fileRead( resolvedPath );
+      data = _.strRemoveBegin( data,prefixToRemove );
+      data = fixes.prefix + data + fixes.postfix;
+      fmap._descriptorWrite( file.absolute, fmap._descriptorScriptMake( file.absolute, data ) );
+    }
+    else if( file.isSoftLink )
+    {
+      fmap.softLink
+      ({
+        srcPath : file.absolute,
+        dstPath : file.absolute,
+        allowingMissed : 1,
+      });
+    }
+
+    return file;
+  }
+
+}
+
+//
+
+/**
+ * @summary Prepares starter files and writes them to the hard drive.
+ * @descriptionNeeded
+ * @function starterMake
+ * @memberof module:Tools/mid/Starter.wStarterMaker#
+*/
+
+function starterMake()
+{
+  let self = this;
+  let requireCode = '';
+  let builtinMapCode = '';
+  let logger = self.logger;
+  let system = self.system;
+  let srcFileProvider = system.providersWithProtocolMap.src;
+  let dstFileProvider = system.providersWithProtocolMap.dst;
+
+  logger.rbegin({ verbosity : -2 });
+  logger.log( 'Making starter..' );
+  logger.rend({ verbosity : -2 });
+
+  _.assert( arguments.length === 0 );
+
+  let find = self.system.filesFinder
+  ({
+    includingTerminals : 1,
+    includingTransient : 0,
+    mandatory : 1,
+    onUp : onUpInliningToStarter,
+    filter :
+    {
+      filePath : _.uri.join( 'src://', self.toolsPath ),
+      recursive : 2,
+      ends : [ '.js','.s' ],
+    }
+  });
+
+  // debugger;
+  find( 'abase/l0' );
+  find( 'abase/l1' );
+  find( 'abase/l2' );
+  find( 'abase/l3' );
+  find( 'abase/l4' );
+  find( 'abase/l5' );
+  find( 'abase/l6' );
+  find( 'abase/l7' );
+  find( 'abase/l7_mixin' );
+  find( 'abase/l8' );
+  find( 'abase/l9/consequence' );
+  find( 'abase/l9/printer' );
+
+  find( 'amid/l5_mapper/TemplateTreeAresolver.s' );
+  find( 'amid/amixin/Verbal.s' );
+  find( 'amid/bclass/RegexpObject.s' );
+
+  find( 'amid/files/UseBase.s' );
+  find( 'amid/files/l1' );
+  find( 'amid/files/l2' );
+  find( 'amid/files/l3' );
+  find( 'amid/files/l5_provider/Extract.s' );
+  find( 'amid/files/l5_provider/HtmlDocument.js' );
+  find( 'amid/files/l5_provider/Http.js' );
+  find( 'amid/files/l7/System.s' );
+
+  _.sure( _.strIs( builtinMapCode ), 'None source script' );
+
+  starterWrite();
+  configWrite();
+  starterPreloadWrite();
+  starterStartWrite();
+
+  /* - */
+
+  function starterWrite()
+  {
+    let begin = _.fileProvider.fileRead( _.path.join( __dirname, './StarterInitBegin.raw.s' ) );
+    let end = _.fileProvider.fileRead( _.path.join( __dirname, './StarterInitEnd.raw.s' ) );
+
+    let fixes = self.fixesFor
+    ({
+      filePath : self.starterScriptPath,
+      dirPath : self.rootPath,
+      running : 1,
+    });
+
+    let code = fixes.prefix + begin + builtinMapCode + /*settingsCode +*/ requireCode + end + fixes.postfix;
+    code = '(function _StarterInit_s_(){\n' + code + '\n})();';
+    dstFileProvider.fileWrite( self.starterScriptPath, code );
+  }
+
+  /* - */
+
+  function configWrite()
+  {
+
+    let begin = _.fileProvider.fileRead( _.path.join( __dirname, './StarterConfigBegin.raw.s' ) );
+    let settingsCode =
+`
+_realGlobal._starter_.prefixPath = '${self.prefixPath}';
+_realGlobal._starter_.initScriptPath = '${self.initScriptPath}';
+_realGlobal._starter_.starterDirPath = '${self.starterDirPath}';
+Config.offline = ${_.toStr( !!self.offline )};
+`;
+
+    let code = begin + settingsCode;
+    dstFileProvider.fileWrite( self.starterConfigPath, code );
+
+  }
+
+  /* - */
+
+  function starterPreloadWrite()
+  {
+    let code = _.fileProvider.fileRead( _.path.join( __dirname, 'StarterPreloadEnd.raw.s' ) );
+    dstFileProvider.fileWrite( _.path.join( self.outPath, 'StarterPreloadEnd.run.s' ), code );
+    // srcFileProvider.fileWrite( _.path.join( self.outPath, 'StarterPreloadEnd.run.s' ), code );
+  }
+
+  /* - */
+
+  function starterStartWrite()
+  {
+    let code = _.fileProvider.fileRead( _.path.join( __dirname, './StarterStart.raw.s' ) );
+    dstFileProvider.fileWrite( _.path.join( self.outPath, 'StarterStart.run.s' ), code );
+  }
+
+  /* - */
+
+  function onUpInliningToStarter( file )
+  {
+    _.assert( file.isActual );
+
+    if( self.verbosity >= 3 )
+    logger.log( ' +', 'starter use', file.absolute );
+
+    let read = this.fileCodeRead( file.absolutePreferred );
+
+    builtinMapCode += read;
+
+    return file;
+  }
+
+  /* */
+
+  // function onUpInliningToFilesMap( file )
+  // {
+  //   _.assert( file.isActual );
   //
-
-  test.case = 'second config rewrites some properties of first';
-  var src1 =
-  {
-
-    null : null,
-    number : 13,
-    string : 'something',
-  }
-  var src2 =
-  {
-    null : 1,
-    number : 10,
-  }
-  provider.filesDelete( routinePath );
-  var filePath = path.changeExt( terminalPath, 'json' );
-  provider.fileWrite({ filePath, data : src1, encoding : 'json.fine' });
-  var filePath = path.changeExt( terminalPath, 'bson' );
-  provider.fileWrite({ filePath, data : src2, encoding : 'bson' });
-  var filePath = path.s.changeExt( terminalPath, [ 'json', 'bson' ] );
-  var got = provider.fileConfigRead({ filePath });
-  var expected =
-  {
-    null : 1,
-    number : 10,
-    string : 'something',
-  }
-  test.identical( got, expected );
-
+  //   debugger;
+  //   _.assert( 0 );
   //
+  //   if( self.verbosity >= 3 )
+  //   logger.log( ' +', 'starter use', file.absolute );
+  //
+  //   let filePath = `['` + file.absolute.split( '/' ).filter( ( e ) => e ? true : false ).join( `']['` ) + `']`;
+  //   let line = `_starter_._requireStarting( _starter_.module, '${file.absolute}' );\n`;
+  //
+  //   requireCode += line;
+  //
+  //   let fileCode = `FilesMap${filePath}[ 0 ].code`;
+  //   let line = `_starter_.modulesBuiltinMap[ '${file.absolute}' ] = { code : ${fileCode}, filePath : '${file.absolute}', dirPath : '${file.dir}', },\n`;
+  //
+  //   builtinMapCode += line;
+  //
+  //   return file;
+  // }
 
-  test.case = 'second config is empty';
-  var src1 =
+}
+
+//
+
+function _verbosityChange()
+{
+  let self = this;
+
+  let _verbosityForFileProvider = _.numberClamp( self.verbosity-2, 0, 9 );
+
+  if( self.system )
   {
-
-    null : null,
-    number : 13,
-    string : 'something',
+    let system = self.system;
+    let srcFileProvider = system.providersWithProtocolMap.src;
+    let dstFileProvider = system.providersWithProtocolMap.dst;
+    system.verbosity = _verbosityForFileProvider;
+    srcFileProvider.verbosity = _verbosityForFileProvider;
+    dstFileProvider.verbosity = _verbosityForFileProvider;
   }
-  var src2 =
+
+  if( self.logger )
   {
+    // self.logger.verbosity = self._verbosityForLogger();
+    self.logger.verbosity = self.verbosity;
+    self.logger.outputGray = self.coloring ? 0 : 1;
   }
-  provider.filesDelete( routinePath );
-  var filePath = path.changeExt( terminalPath, 'json' );
-  provider.fileWrite({ filePath, data : src1, encoding : 'json.fine' });
-  var filePath = path.changeExt( terminalPath, 'bson' );
-  provider.fileWrite({ filePath, data : src2, encoding : 'bson' });
-  var filePath = path.s.changeExt( terminalPath, [ 'json', 'bson' ] );
-  var got = provider.fileConfigRead({ filePath });
-  test.identical( got, src1 );
 
+}
+
+/**
+ * @descriptionNeeded
+ * @typedef {Object} Fields
+ * @property {String} inPath
+ * @property {String} outPath
+ * @property {String} appName
+ * @property {String} useFilePath
+ * @property {String} includePath
+
+ * @property {String} toolsPath='{{inPath}}/dwtools'
+ * @property {String} initScriptPath='{{outPath}}/index.s'
+ * @property {String} starterDirPath='{{outPath}}'
+ * @property {String} starterScriptPath='{{starterDirPath}}/StarterInit.run.s'
+ * @property {String} starterConfigPath='{{starterDirPath}}/{{appName}}.raw.starter.config.s'
+ * @property {String} rootPath='/'
+ * @property {String} prefixPath=''
+
+ * @property {Boolean} offline=0
+ * @property {Number} verbosity=2
+
+ * @memberof module:Tools/mid/Starter.wStarterMaker
+ */
+
+// --
+// relations
+// --
+
+let Composes =
+{
+
+  inPath : null,
+  outPath : null,
+  appName : null,
+  useFilePath : null,
+  includePath : null,
+
+  toolsPath : '{{inPath}}/dwtools',
+  initScriptPath : '{{outPath}}/index.s',
+  starterDirPath : '{{outPath}}',
+  starterScriptPath : '{{starterDirPath}}/StarterInit.run.s',
+  starterConfigPath : '{{starterDirPath}}/{{appName}}.raw.starter.config.s',
+  rootPath : '/',
+  prefixPath : '',
+
+  offline : 0,
+  verbosity : 2,
+
+}
+
+let Aggregates =
+{
+
+  useFile : null,
+
+}
+
+let Associates =
+{
+
+  system : null,
+  logger : null,
+
+}
+
+let Restricts =
+{
+  formed : 0,
+  env : null,
+}
+
+let Medials =
+{
+}
+
+let Statics =
+{
+  exec : exec,
+  fixesFor : fixesFor,
+}
+
+let Events =
+{
+}
+
+let Forbids =
+{
+  inliningScriptsToFilesMap : 'inliningScriptsToFilesMap',
+  srcFileProvider : 'srcFileProvider',
+  dstFileProvider : 'dstFileProvider',
 }
 
 // --
 // declare
 // --
 
-var Self =
+let Proto =
 {
 
-  name : 'Tools.mid.files.FilesRead',
-  silencing : 1,
-  // verbosity : 7,
+  init,
+  exec,
+  form,
 
-  onSuiteBegin,
-  onSuiteEnd,
+  fileProviderForm,
+  fromHardDriveRead,
+  toHardDriveWrite,
 
-  context :
-  {
-    suitePath : null,
-    isBrowser : null
-  },
+  fixesFor,
+  filesMapMake,
+  starterMake,
 
-  tests :
-  {
+  _verbosityChange,
 
-    filesReadOld,
-    // filesTreeRead,
-    // filesTreeWrite,
-    // readToProvider,
+  // relations
 
-    fileConfigRead, /* qqq : extend */
-
-  },
+  Composes,
+  Aggregates,
+  Associates,
+  Restricts,
+  Medials,
+  Statics,
+  Events,
+  Forbids,
 
 }
 
-Self = wTestSuite( Self )
-if( typeof module !== 'undefined' && !module.parent )
-wTester.test( Self.name );
+//
 
-} )( );
+_.classDeclare
+({
+  cls : Self,
+  parent : Parent,
+  extend : Proto,
+});
+
+_.Copyable.mixin( Self );
+_.Verbal.mixin( Self );
+
+//
+
+_global_[ Self.name ] = wTools[ Self.shortName ] = Self;
+if( typeof module !== 'undefined' )
+module[ 'exports' ] = Self;
+
+if( typeof module !== 'undefined' && !module.parent )
+Self.exec();
+
+})();

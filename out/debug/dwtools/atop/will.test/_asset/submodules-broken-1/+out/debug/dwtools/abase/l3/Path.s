@@ -1989,6 +1989,8 @@ function _relative( o )
     result = this._hereUpStr;
     else
     result = this._hereUpStr + result;
+    // if( !self.path.isDotted( result ) )
+    // result = this._hereUpStr + result;
   }
 
   /* checks if result is normalized */

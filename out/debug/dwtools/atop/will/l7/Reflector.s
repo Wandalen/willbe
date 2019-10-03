@@ -1416,7 +1416,7 @@ function filePathSet( src )
   if( !reflector.src && src === null )
   return src;
   _.assert( _.objectIs( reflector.src ), 'Reflector should have src to set filePath' );
-  reflector.src.filePath = reflector.dst.filePath = _.entityShallowClone( src );
+  reflector.src.filePath = reflector.dst.filePath = _.entityMake( src );
   return reflector.src.filePath;
 }
 

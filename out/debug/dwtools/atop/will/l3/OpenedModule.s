@@ -1730,58 +1730,83 @@ function modulesEach_body( o )
   let module = this;
   let will = module.will;
   let logger = will.logger;
-  let visitedModulesMap = Object.create( null );
-  let visitedModulesArray = [];
+  // let visitedModulesMap = Object.create( null );
+  // let visitedModulesArray = [];
 
   _.assertRoutineOptions( modulesEach, o );
 
-  var sys = new _.graph.AbstractGraphSystem
-  ({
-    onNodeNameGet : ( record ) => record.module ? record.module.qualifiedName : record.relation.qualifiedName,
-    onOutNodesFor : ( record ) =>
-    {
-      let result = [];
-      if( record.module )
-      for( let s in record.module.submoduleMap )
-      {
-        let record2 = recordFromRelation( record.module.submoduleMap[ s ] );
+  // var sys = new _.graph.AbstractGraphSystem
+  // ({
+  //   onNodeNameGet : recordName,
+  //   onOutNodesGet : recordSubmodules,
+  // });
 
-        if( record2.relation )
-        record2.opener = record2.relation.opener;
-        if( record2.opener )
-        record2.module = record2.opener.openedModule;
+  // let sys = will.graphSystem;
+  // let group = sys.nodesGroup();
 
-        result.push( record2 );
+  let graph = will.graphSystemMake({ withPeers : o.withPeers, nodesMap : o.nodesMap });
+  let group = graph.nodesGroup();
 
-        if( o.withPeers && record2.module && record2.module.peerModule )
-        {
-          result.push( recordFromModule( record2.module.peerModule ) );
-        }
+  // let nodes = [ recordFromModule( module ) ];
+  // if( o.withPeers && module.peerModule )
+  // nodes.push( recordFromModule( module.peerModule ) );
 
-      }
-      // logger.log( `list ${record.module ? record.module.absoluteName : record.relation.absoluteName} ${result.length}` );
-      return result;
-    }
-  });
-  var group = sys.nodesGroup();
-
-  let nodes = [ recordFromModule( module ) ];
+  let nodes = [ group.nodeFrom( module ) ];
   if( o.withPeers && module.peerModule )
-  nodes.push( recordFromModule( module.peerModule ) );
+  nodes.push( group.nodeFrom( module.peerModule ) );
 
-  let result = group.each
-  ({
-    nodes : nodes,
-    onUp : handleUp,
-    onDown : handleDown,
-    recursive : o.recursive,
-    withStem : o.withStem,
-  });
+  let o2 = _.mapOnly( o, group.each.defaults );
+  o2.roots = nodes;
+  o2.onUp = handleUp;
+  o2.onDown = handleDown;
+  let result = group.each( o2 );
+
+  // ({
+  //   roots : nodes,
+  //   onUp : handleUp,
+  //   onDown : handleDown,
+  //   recursive : o.recursive,
+  //   withStem : o.withStem,
+  // });
 
   if( o.outputFormat !== '/' )
   return result.map( ( record ) => outputFrom( record ) );
 
   return result;
+
+  /* */
+
+  // function recordName( record )
+  // {
+  //   return record.module ? record.module.qualifiedName : record.relation.qualifiedName;
+  // }
+  //
+  // /* */
+  //
+  // function recordSubmodules( record )
+  // {
+  //   let result = [];
+  //   if( record.module )
+  //   for( let s in record.module.submoduleMap )
+  //   {
+  //     let record2 = recordFromRelation( record.module.submoduleMap[ s ] );
+  //
+  //     if( record2.relation )
+  //     record2.opener = record2.relation.opener;
+  //     if( record2.opener )
+  //     record2.module = record2.opener.openedModule;
+  //
+  //     result.push( record2 );
+  //
+  //     if( o.withPeers && record2.module && record2.module.peerModule )
+  //     {
+  //       result.push( recordFromModule( record2.module.peerModule ) );
+  //     }
+  //
+  //   }
+  //   // logger.log( `list ${record.module ? record.module.absoluteName : record.relation.absoluteName} ${result.length}` );
+  //   return result;
+  // }
 
   /* */
 
@@ -1844,96 +1869,86 @@ function modulesEach_body( o )
 
   /* */
 
-  function recordFromRelation( relation )
-  {
-    let record;
-
-    // debugger;
-    if( relation.opener )
-    {
-      // if( visitedModulesMap[ relation.opener.commonPath ] )
-      // debugger;
-      record = visitedModulesMap[ relation.opener.commonPath ];
-    }
-    else
-    {
-      debugger;
-    }
-
-    if( !record )
-    {
-      record = Object.create( null );
-      record.relation = null;
-      record.opener = null;
-      record.module = null;
-      visitedModulesArray.push( record );
-      if( relation.opener )
-      visitedModulesMap[ relation.opener.commonPath ] = record;
-      // logger.log( `record for relation ${relation.absoluteName} was made` );
-    }
-    else
-    {
-      // logger.log( `record for relation ${relation.absoluteName} was found` );
-    }
-
-    if( relation.opener )
-    record.opener = relation.opener;
-
-    // if( record.relation && record.relation !== relation )
-    // debugger;
-
-    record.relation = relation;
-    return record;
-  }
-
-  /* */
-
-  function recordFromModule( module )
-  {
-    let record;
-
-    // debugger;
-    // if( visitedModulesMap[ module.commonPath ] )
-    // debugger;
-    record = visitedModulesMap[ module.commonPath ];
-
-    if( !record )
-    {
-      record = Object.create( null );
-      record.relation = null;
-      record.opener = null;
-      record.module = null;
-      visitedModulesArray.push( record );
-      visitedModulesMap[ module.commonPath ] = record;
-      // logger.log( `record for module ${module.absoluteName} was made` );
-    }
-    else
-    {
-      // logger.log( `record for module ${module.absoluteName} was found` );
-    }
-
-    _.assert( !record.module || record.module === module );
-    record.module = module;
-    return record;
-  }
+  // function recordFromRelation( relation )
+  // {
+  //   let record;
+  //
+  //   if( relation.opener )
+  //   {
+  //     record = visitedModulesMap[ relation.opener.commonPath ];
+  //   }
+  //   else
+  //   {
+  //     debugger;
+  //   }
+  //
+  //   if( !record )
+  //   {
+  //     // record = Object.create( null );
+  //     // record.relation = null;
+  //     // record.opener = null;
+  //     // record.module = null;
+  //     record = will.graphRecordFrom( relation );
+  //     visitedModulesArray.push( record );
+  //     if( relation.opener )
+  //     visitedModulesMap[ relation.opener.commonPath ] = record;
+  //   }
+  //   else
+  //   {
+  //   }
+  //
+  //   if( relation.opener )
+  //   record.opener = relation.opener;
+  //
+  //   record.relation = relation;
+  //   return record;
+  // }
+  //
+  // /* */
+  //
+  // function recordFromModule( module )
+  // {
+  //   let record;
+  //
+  //   record = visitedModulesMap[ module.commonPath ];
+  //
+  //   if( !record )
+  //   {
+  //     // record = Object.create( null );
+  //     // record.relation = null;
+  //     // record.opener = null;
+  //     // record.module = null;
+  //     record = will.graphRecordFrom( module );
+  //     visitedModulesArray.push( record );
+  //     visitedModulesMap[ module.commonPath ] = record;
+  //   }
+  //   else
+  //   {
+  //   }
+  //
+  //   _.assert( !record.module || record.module === module );
+  //   record.module = module;
+  //   return record;
+  // }
 
 }
 
-modulesEach_body.defaults =
-{
-  outputFormat : '*/module', /* / | * / module | * / relation */
-  onUp : null,
-  onDown : null,
-  recursive : 1,
-  withStem : 0,
-  withPeers : 0,
-  withOut : 1,
-  withIn : 1,
-  withOptional : 1,
-  withMandatory : 1,
-  withEnabled : 1,
-  withDisabled : 0,
-}
+var defaults = modulesEach_body.defaults = _.mapExtend( null, _.graph.AbstractNodesGroup.prototype.each.defaults );
+// var defaults = modulesEach_body.defaults = Object.create( null );
+
+defaults.outputFormat = '*/module'; /* / | * / module | * / relation */
+defaults.onUp = null;
+defaults.onDown = null;
+defaults.nodesMap = null;
+defaults.recursive = 1;
+defaults.withStem = 0;
+defaults.withPeers = 0;
+defaults.withOut = 1;
+defaults.withIn = 1;
+defaults.withOptional = 1;
+defaults.withMandatory = 1;
+defaults.withEnabled = 1;
+defaults.withDisabled = 0;
 
 let modulesEach = _.routineFromPreAndBody( modulesEach_pre, modulesEach_body );
 
@@ -3941,7 +3956,7 @@ function predefinedPathAssign_functor( fieldName, resourceName, relativizing )
     if( !module.will && !filePath )
     return filePath;
 
-    filePath = _.entityShallowClone( filePath );
+    filePath = _.entityMake( filePath );
 
     if( !module.pathResourceMap[ resourceName ] )
     {
@@ -4947,7 +4962,7 @@ function optionsForOpenerExport()
   let result = _.mapOnly( module, fields );
 
   result.isDownloaded = true;
-  result.willfilesArray = _.entityShallowClone( result.willfilesArray );
+  result.willfilesArray = _.entityMake( result.willfilesArray );
 
   return result;
 }
