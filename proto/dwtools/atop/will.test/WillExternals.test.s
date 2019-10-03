@@ -3709,7 +3709,7 @@ function cleanDry( test )
 
     debugger;
     var files = self.find( outPath );
-    test.gt( files.length, 20 ); 
+    test.gt( files.length, 20 );
     var files = wasFiles = self.find( submodulesPath );
     test.gt( files.length, 100 );
     debugger;
