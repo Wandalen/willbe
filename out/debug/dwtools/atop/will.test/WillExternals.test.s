@@ -2613,14 +2613,14 @@ function listSingleModule( test )
     test.case = 'resources list globs negative';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflector::predefined.debug.v1'  ) );
-    test.is( _.strHas( got.output, 'reflector::predefined.debug.v2'  ) );
+    test.is( !_.strHas( got.output, 'reflector::predefined.debug.v2'  ) );
     test.is( _.strHas( got.output, 'reflector::reflect.proto.debug' ) );
     test.is( _.strHas( got.output, 'step::reflect.proto.debug' ) );
     test.is( _.strHas( got.output, 'step::reflect.proto.debug.raw' ) );
     test.is( _.strHas( got.output, 'step::export.proto' ) );
     test.is( _.strHas( got.output, 'build::debug.compiled' ) );
     test.is( _.strHas( got.output, 'build::proto.export' ) );
-    test.identical( _.strCount( got.output, '::' ), 20 );
+    test.identical( _.strCount( got.output, '::' ), 22 );
 
     return null;
   })
@@ -2629,11 +2629,11 @@ function listSingleModule( test )
   shell({ execPath : '.resources.list *proto*' })
   .then( ( got ) =>
   {
-    test.case = 'resources list globs';
+    test.case = '.resources.list *proto*';
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
-    test.is( _.strHas( got.output, `. : .` ) );
+    // test.is( _.strHas( got.output, `. : .` ) );
 
     test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
     test.is( _.strHas( got.output, `files.reflect` ) );
@@ -2668,12 +2668,12 @@ function listSingleModule( test )
     test.is( _.strHas( got.output, 'path::proto'  ) );
 
     test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
-    test.is( _.strHas( got.output, `. : .` ) );
+    // test.is( _.strHas( got.output, `. : .` ) );
 
     test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
     test.is( _.strHas( got.output, `files.reflect` ) );
 
-    test.identical( _.strCount( got.output, '::' ), 10 );
+    test.identical( _.strCount( got.output, '::' ), 12 );
 
     return null;
   })
@@ -2691,7 +2691,7 @@ function listSingleModule( test )
     test.is( _.strHas( got.output, `step::export.proto` ) );
     test.is( _.strHas( got.output, `build::debug.compiled` ) );
     test.is( _.strHas( got.output, `build::proto.export` ) );
-    test.identical( _.strCount( got.output, '::' ), 18 );
+    test.identical( _.strCount( got.output, '::' ), 20 );
 
     return null;
   })
