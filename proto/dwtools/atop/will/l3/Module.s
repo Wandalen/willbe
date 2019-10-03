@@ -2879,7 +2879,7 @@ function versionsVerify()
 
 //
 
-let versionsAgree = _.routineFromPreAndBody( _submodulesDownload_pre, _submodulesDownload_body, 'versionsAgree' );
+let versionsAgree = _.routineFromPreAndBody( _subModulesDownload_pre, _subModulesDownload_body, 'versionsAgree' );
 versionsAgree.defaults.updating = 1;
 versionsAgree.defaults.agree = 1;
 
