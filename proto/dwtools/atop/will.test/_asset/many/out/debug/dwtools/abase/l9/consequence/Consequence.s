@@ -256,7 +256,7 @@ function is( src )
 
 //
 
-function isJoinedWithConsequence( src )
+function isJoinedWithConsequence( src ) /* xxx : deprecate */
 {
   _.assert( arguments.length === 1 );
   debugger;
@@ -2087,101 +2087,101 @@ orKeeping.having = Object.create( _or.having );
 
 //
 
-// /* xxx : deprecate */
-// let JoinedWithConsequence = Object.create( null );
-// JoinedWithConsequence.routineJoin = _.routineSeal;
-// JoinedWithConsequence.context = null;
-// JoinedWithConsequence.method = null;
-// JoinedWithConsequence.consequence = null;
-// JoinedWithConsequence.constructor = function JoinedWithConsequence()
-// {
-//   debugger;
-// };
+/* xxx : deprecate */
+let JoinedWithConsequence = Object.create( null );
+JoinedWithConsequence.routineJoin = _.routineSeal;
+JoinedWithConsequence.context = null;
+JoinedWithConsequence.method = null;
+JoinedWithConsequence.consequence = null;
+JoinedWithConsequence.constructor = function JoinedWithConsequence()
+{
+  debugger;
+};
+
 //
-// //
-//
-// function _prepareJoinedWithConsequence()
-// {
-//
-//   for( let r in Self.prototype ) ( function( r )
-//   {
-//     if( Self.prototype._Accessors[ r ] )
-//     return;
-//     let routine = Self.prototype[ r ];
-//     if( !routine.having || !routine.having.consequizing )
-//     return;
-//
-//     if( routine.having.andLike )
-//     JoinedWithConsequence[ r ] = function()
-//     {
-//       let args = arguments;
-//       let method = [];
-//       _.assert( arguments.length === 1, 'Expects single argument' );
-//       _.assert( _.longIs( args[ 0 ] ) );
-//       for( let i = 0 ; i < args[ 0 ].length ; i++ )
-//       {
-//         method.push( this.routineJoin( this.context, this.method, [ args[ 0 ][ i ] ] ) );
-//       }
-//       this.consequence[ r ]( method );
-//       return this;
-//     }
-//     else
-//     JoinedWithConsequence[ r ] = function()
-//     {
-//       let args = arguments;
-//       let method = this.routineJoin( this.context, this.method, args );
-//       this.consequence[ r ]( method );
-//       return this;
-//     }
-//
-//   })( r );
-//
-// }
+
+function _prepareJoinedWithConsequence()
+{
+
+  for( let r in Self.prototype ) ( function( r )
+  {
+    if( Self.prototype._Accessors[ r ] )
+    return;
+    let routine = Self.prototype[ r ];
+    if( !routine.having || !routine.having.consequizing )
+    return;
+
+    if( routine.having.andLike )
+    JoinedWithConsequence[ r ] = function()
+    {
+      let args = arguments;
+      let method = [];
+      _.assert( arguments.length === 1, 'Expects single argument' );
+      _.assert( _.longIs( args[ 0 ] ) );
+      for( let i = 0 ; i < args[ 0 ].length ; i++ )
+      {
+        method.push( this.routineJoin( this.context, this.method, [ args[ 0 ][ i ] ] ) );
+      }
+      this.consequence[ r ]( method );
+      return this;
+    }
+    else
+    JoinedWithConsequence[ r ] = function()
+    {
+      let args = arguments;
+      let method = this.routineJoin( this.context, this.method, args );
+      this.consequence[ r ]( method );
+      return this;
+    }
+
+  })( r );
+
+}
 
 // --
 // adapter
 // --
 
-// function _join( routineJoin, args )
-// {
-//   let self = this;
-//   let result = Object.create( JoinedWithConsequence );
+function _join( routineJoin, args )
+{
+  let self = this;
+  let result = Object.create( JoinedWithConsequence );
+
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+  _.assert( args.length === 1 || args.length === 2 );
+  _.assert( _.consequenceIs( this ) );
+
+  result.routineJoin = routineJoin;
+  result.consequence = self;
+
+  if( args[ 1 ] !== undefined )
+  {
+    result.context = args[ 0 ];
+    result.method = args[ 1 ];
+  }
+  else
+  {
+    result.method = args[ 0 ];
+  }
+
+  return result;
+}
+
 //
-//   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-//   _.assert( args.length === 1 || args.length === 2 );
-//   _.assert( _.consequenceIs( this ) );
+
+function join( context, method )
+{
+  let self = this;
+  return self._join( _.routineJoin, arguments );
+}
+
 //
-//   result.routineJoin = routineJoin;
-//   result.consequence = self;
-//
-//   if( args[ 1 ] !== undefined )
-//   {
-//     result.context = args[ 0 ];
-//     result.method = args[ 1 ];
-//   }
-//   else
-//   {
-//     result.method = args[ 0 ];
-//   }
-//
-//   return result;
-// }
-//
-// //
-//
-// function join( context, method )
-// {
-//   let self = this;
-//   return self._join( _.routineJoin, arguments );
-// }
-//
-// //
-//
-// function seal( context, method )
-// {
-//   let self = this;
-//   return self._join( _.routineSeal, arguments );
-// }
+
+function seal( context, method )
+{
+  let self = this;
+  return self._join( _.routineSeal, arguments );
+}
 
 //
 
@@ -4653,9 +4653,9 @@ let Extend =
 
   // adapter
 
-  // _join,
-  // join,
-  // seal,
+  _join, // xxx : deprecate
+  join, // xxx : deprecate
+  seal, // xxx : deprecate
   tolerantCallback,
 
   // resource
@@ -4787,7 +4787,7 @@ _.assert( _.routineIs( wConsequenceProxy.prototype.take ) );
 
 _.assert( wConsequenceProxy.shortName === 'Consequence' );
 
-// _prepareJoinedWithConsequence(); /* xxx : deprecate _prepareJoinedWithConsequence */
+_prepareJoinedWithConsequence(); /* xxx : deprecate _prepareJoinedWithConsequence */
 
 // _.assert( !Self.FieldsOfRelationsGroupsGet );
 // _.assert( !Self.prototype.FieldsOfRelationsGroupsGet );

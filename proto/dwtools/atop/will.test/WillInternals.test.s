@@ -129,7 +129,7 @@ function preCloneRepos( test )
   clone( 'PathBasic', '95b741c8820a6d6234f59f1fa549c6b59f2d5a5c' );
   clone( 'Procedure', '829ea81d342db66df60edf80c99687a1cd011a96' );
   clone( 'Proto', 'f4c04dbe078f3c00c84ff13edcc67478d320fddf' );
-  clone( 'Tools', 'e58dc6a1637603c2151840f5bfb5729eb71d4e34' );
+  clone( 'Tools', '8db8861e59d31a041ea9d4356728f3d646786134' );
   clone( 'UriBasic', 'df28c5245b2e01bcc0dbc9693bed070a58268e77' );
 
   ready
