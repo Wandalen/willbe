@@ -1058,6 +1058,206 @@ function dirMakeAct( o )
 
 _.routineExtend( dirMakeAct, Parent.prototype.dirMakeAct );
 
+//
+
+function fileLockAct( o )
+{
+  let self = this;
+
+  _.assert( !o.locking, 'not implemented' );
+  _.assert( !o.sharing || o.sharing === 'process', 'not implemented' );
+  _.assert( _.strIs( o.filePath ) );
+  _.assert( !o.waiting || o.timeOut >= 1000 );
+  _.assertRoutineOptions( fileLockAct, arguments );
+
+  let con = _.Consequence.Try( () =>
+  {
+    if( !self._descriptorRead( o.filePath ) )
+    throw _.err( 'File:', o.filePath, 'doesn\'t exist.' );
+
+    let lockFilePath = o.filePath + '.lock';
+
+    if( self.lockMap )
+    if( self.lockMap[ o.filePath ] )
+    if( self._descriptorRead( lockFilePath ) )
+    {
+      if( !o.sharing )
+      throw _.err( 'File', o.filePath, 'is already locked by current process' );
+
+      if( !o.waiting )
+      {
+        return true;
+      }
+      else if( o.sync )
+      {
+        throw _.err
+        ( 'File', o.filePath, 'is already locked by current process.',
+          'With option {-o.waiting-} enabled, lock will be waiting for itself.',
+          'Please use existing lock or execute method with {-o.sync-} set to 0.'
+        )
+      }
+    }
+
+    if( !o.waiting )
+    {
+      return lock();
+    }
+    else
+    {
+      let tries = o.timeOut / 1000;
+      let con = new _.Consequence();
+
+      lockTry();
+
+      function lockTry()
+      {
+        tries -= 1;
+        try
+        {
+          let result = lock();
+          con.take( result );
+        }
+        catch( err )
+        {
+          if( tries < 0 )
+          return con.error( err );
+
+          _.timeOut( 1000, () =>
+          {
+            lockTry();
+            return null;
+          })
+        }
+      }
+
+      return con;
+    }
+
+    /*  */
+
+    function lock()
+    {
+      let lockFileDescriptor = self._descriptorRead( lockFilePath );
+
+      if( lockFileDescriptor )
+      throw _.err( 'File:', o.filePath, 'is locked, but lock file is not associated with current extract instance.' );
+
+      self._descriptorWrite( lockFilePath, o.filePath );
+      return true;
+    }
+  })
+
+  con.then( ( got ) =>
+  {
+    if( self.lockMap === null )
+    self.lockMap = Object.create( null );
+
+    if( self.lockMap[ o.filePath ] === undefined )
+    self.lockMap[ o.filePath ] = 0;
+
+    self.lockMap[ o.filePath ] += 1;
+
+    return true;
+  })
+
+  if( o.sync )
+  return con.syncMaybe();
+
+  return con;
+}
+
+_.routineExtend( fileLockAct, Parent.prototype.fileLockAct );
+
+//
+
+function fileUnlockAct( o )
+{
+  let self = this;
+
+  _.assert( _.strIs( o.filePath ) );
+  _.assertRoutineOptions( fileUnlockAct, arguments );
+
+  let con = _.Consequence.Try( () =>
+  {
+    if( !self._descriptorRead( o.filePath ) )
+    throw _.err( 'File:', o.filePath, 'doesn\'t exist.' );
+
+    let lockFilePath = o.filePath + '.lock';
+    let lockFileDescriptor = self._descriptorRead( lockFilePath );
+
+    if( self.lockMap )
+    if( self.lockMap[ o.filePath ] !== undefined )
+    {
+      _.assert( self.lockMap[ o.filePath ] > 0 );
+
+      self.lockMap[ o.filePath ] -= 1;
+
+      if( self.lockMap[ o.filePath ] > 0 )
+      return true;
+
+      if( !lockFileDescriptor )
+      return true;
+
+      let con = self.fileDeleteAct({ filePath : lockFilePath, sync : o.sync });
+
+      if( o.sync )
+      return true;
+
+      return con;
+    }
+
+    if( lockFileDescriptor )
+    throw _.err( 'File:', o.filePath, 'is locked, but lock file is not associated with current extract instance.' );
+    else
+    throw _.err( 'File:', o.filePath, 'is not locked.' );
+  })
+
+  con.then( ( got ) =>
+  {
+    if( self.lockMap[ o.filePath ] === 0 )
+    {
+      delete self.lockMap[ o.filePath ];
+    }
+
+    return true;
+  })
+
+  if( o.sync )
+  return con.syncMaybe();
+
+  return con;
+}
+
+_.routineExtend( fileUnlockAct, Parent.prototype.fileUnlockAct );
+
+//
+
+function fileIsLockedAct( o )
+{
+  let self = this;
+
+  _.assertRoutineOptions( fileIsLockedAct, arguments );
+  _.assert( _.strIs( o.filePath ) );
+
+  let con = _.Consequence.Try( () =>
+  {
+    if( !self._descriptorRead( o.filePath ) )
+    throw _.err( 'File:', o.filePath, 'doesn\'t exist.' );
+
+    let lockFilePath = o.filePath + '.lock';
+    let lockFileDescriptor = self._descriptorRead( lockFilePath );
+    return !!lockFileDescriptor;
+  })
+
+  if( o.sync )
+  return con.syncMaybe();
+
+  return con;
+}
+
+_.routineExtend( fileIsLockedAct, Parent.prototype.fileIsLockedAct );
+
+
 // --
 // linking
 // --
@@ -2435,6 +2635,7 @@ let Associates =
 let Restricts =
 {
   extraStats : _.define.own( {} ),
+  lockMap : null
 }
 
 let Accessors =
@@ -2497,6 +2698,12 @@ let Proto =
   fileDeleteAct,
   dirMakeAct,
   streamWriteAct : null,
+
+  // locking
+
+  fileLockAct,
+  fileUnlockAct,
+  fileIsLockedAct,
 
   // linking
 

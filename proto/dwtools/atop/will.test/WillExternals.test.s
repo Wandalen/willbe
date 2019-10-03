@@ -2121,7 +2121,8 @@ function verbosityStepPrintName( test )
 
     test.identical( _.strCount( got.output, /Building .*module::verbosityStepPrintName \/ build::debug/ ), 1 );
     test.identical( _.strCount( got.output, /: .*reflector::reflect.file.*/ ), 0 );
-    test.identical( _.strCount( got.output, ' + reflector::reflect.file.* reflected 1 file(s) .* : .*out.* <- file in ' ), 1 );
+    test.identical( _.strCount( got.output, ' + reflector::reflect.file reflected 1 file(s)' ), 1 );
+    test.identical( _.strCount( got.output, '/verbosityStepPrintName/ : ./out <- ./file in' ), 1 );
     test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 1 );
     test.identical( _.strCount( got.output, /at.* .*verbosityStepPrintName/ ), 1 );
     test.identical( _.strCount( got.output, 'shell.step' ), 1 );
@@ -2787,7 +2788,7 @@ function listWithSubmodules( test )
 
   .then( ( got ) =>
   {
-    test.case = 'submodules list'
+    test.case = '.submodules.list'
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'submodule::Tools' ) );
     test.is( _.strHas( got.output, 'submodule::PathBasic' ) );
@@ -2895,7 +2896,7 @@ function listWithSubmodules( test )
   // })
 
   return ready;
-}
+} /* end of function listWithSubmodules */
 
 listWithSubmodules.timeOut = 200000;
 
@@ -3708,7 +3709,7 @@ function cleanDry( test )
 
     debugger;
     var files = self.find( outPath );
-    test.is( files.length > 25 );
+    test.gt( files.length, 20 ); 
     var files = wasFiles = self.find( submodulesPath );
     test.gt( files.length, 100 );
     debugger;

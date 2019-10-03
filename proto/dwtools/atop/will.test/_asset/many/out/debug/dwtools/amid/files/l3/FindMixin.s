@@ -656,6 +656,12 @@ let filesFindSingle = _.routineFromPreAndBody( filesFindSingle_pre, filesFindSin
  * @param {} o.withTransient=0
  * @param {} o.allowingMissed=0
  * @param {} o.allowingCycled=0
+ * @param {Boolean} o.revisiting=null Controls how visited files are processed. Possible values:
+ *  0 - visit and include each file once
+ *	1 - visit and include each file once, break from loop on first links cycle and continue search ignoring file at which cycle begins
+ *	2 - visit and include each file once, break from loop on first links cycle and continue search visiting file at which cycle begins
+ *	3 - don't keep records of visited files
+ *  Defaults: option o.revisiting in set to "1" if links resolving is enabled, otherwise default is "3".
  * @param {} o.resolvingSoftLink=0
  * @param {} o.resolvingTextLink=0
  * @param {} o.maskPreset='default.exclude'
@@ -2679,11 +2685,11 @@ function filesReflectEvaluate_body( o )
         /* both src and dst are terminals */
 
         if( o.writing && o.dstRewriting && o.dstRewritingOnlyPreserving )
-        if( !self.filesAreSame( record.src, record.dst, true ) )
+        if( !self.filesCanBeSame( record.src, record.dst, true ) )
         if( record.src.stat.size !== 0 || record.dst.stat.size !== 0 )
         {
           debugger;
-          let same = self.filesAreSame( record.src, record.dst, true );
+          let same = self.filesCanBeSame( record.src, record.dst, true );
           throw _.err
           (
             'Can\'t rewrite' + ' ' + 'terminal file ' + _.strQuote( record.dst.absolute ) + '\n' +
@@ -3034,7 +3040,7 @@ function filesReflectEvaluate_body( o )
 
     if( o.linking === 'fileCopy' )
     {
-      if( self.filesAreSame( record.dst, record.src, true ) )
+      if( self.filesCanBeSame( record.dst, record.src, true ) )
       return true;
     }
 
@@ -3230,7 +3236,7 @@ function filesReflectEvaluate_body( o )
       {
         if( result.src.isTerminal )
         {
-          if( !self.filesAreSame( result.src, record.src, true ) )
+          if( !self.filesCanBeSame( result.src, record.src, true ) )
           if( result.src.stat.size !== 0 || record.src.stat.size !== 0 )
           {
             debugger
@@ -3670,15 +3676,19 @@ function filesReflectSingle_body( o )
 
       if( ( !resolvingSrcSoftLink && self.usingSoftLink ) || ( !resolvingSrcTextLink && self.usingTextLink ) )
       {
-        srcPath = src.pathResolveLinkStep
+        let resolved = src.pathResolveLinkStep
         ({
           filePath : srcAbsolute,
           resolvingSoftLink : 1,
           resolvingTextLink : 1,
+          preservingRelative : 1,
+          relativeOriginalFile : 1,
           throwing : o.throwing,
           allowingMissed : o.allowingMissed,
           allowingCycled : o.allowingCycled,
         });
+
+        srcPath = resolved.filePath;
         srcAbsolute = path.join( srcAbsolute, srcPath );
       }
 
@@ -4009,10 +4019,19 @@ function filesReflect_pre( routine, args )
  * @param {Boolean} o.preservingTime=0
  * @param {Boolean} o.preservingSame=0
  * @param {} o.extral
+ * @param {Boolean} o.revisiting=null Controls how visited files are processed. Possible values:
+ *  0 - visit and include each file once
+ *	1 - visit and include each file once, break from loop on first links cycle and continue search ignoring file at which cycle begins
+ *	2 - visit and include each file once, break from loop on first links cycle and continue search visiting file at which cycle begins
+ *	3 - don't keep records of visited files
+ *  Defaults: option o.revisiting in set to "1" if links resolving is enabled, otherwise default is "3".
  * @param {Function} o.onUp
  * @param {Function} o.onDown
  * @param {Function} o.onDstName
- *
+ * @param {Boolean} o.rebasingLink=0 Controls link rebasing during copy. Possible values:
+ * 	0 - keep link as is, destination path will lead to source file
+ *	1 - rebase link, try to make destination file lead to other destination file if last was handled in same call of filesReflect
+ *	2 - rebase and resolve link, try to create copy of a file referenced by a link
  * @function filesReflect
  * @memberof module:Tools/mid/Files.wTools.FileProvider.wFileProviderFind#
  */
@@ -4830,6 +4849,7 @@ function filesDelete_body( o )
     }
 
     let late = [];
+    let deleteDirName = 'delete' + '-' + _.idWithDate();
     for( let f = o.result.length-1 ; f >= 0 ; f-- )
     {
       let record = o.result[ f ];
@@ -4838,7 +4858,7 @@ function filesDelete_body( o )
       if( record.absolute === '/' )
       continue;
 
-      let dstPath = path.join( o.tempPath, 'delete', record.relative );
+      let dstPath = path.join( o.tempPath, deleteDirName, record.relative );
       late.push( dstPath );
 
       debugger;

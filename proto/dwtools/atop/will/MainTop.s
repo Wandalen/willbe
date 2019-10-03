@@ -420,63 +420,72 @@ function _commandListLike( o )
   ready
   .then( () => will.openersCurrentEach( function( it )
   {
+    let ready2 = new _.Consequence().take( null );
 
-    will.readingEnd();
+    ready2.then( () => it.opener.openedModule.modulesUpform({ recursive : 2, all : 0, subModulesFormed : 1 }) )
 
-    let resources = null;
-    if( o.resourceKind )
+    ready2.then( () => will.readingEnd() );
+
+    ready2.then( () =>
     {
 
-      let resourceKindIsGlob = _.path.isGlob( o.resourceKind );
-      _.assert( e.request === undefined );
-      e.request = will.Resolver.strRequestParse( e.argument );
-
-      if( will.Resolver.selectorIs( e.request.subject ) )
+      let resources = null;
+      if( o.resourceKind )
       {
-        let splits = will.Resolver.selectorShortSplit
-        ({
-          selector : e.request.subject,
-          defaultResourceKind : o.resourceKind,
-        });
-        o.resourceKind = splits[ 0 ];
-        resourceKindIsGlob = _.path.isGlob( o.resourceKind );
+
+        let resourceKindIsGlob = _.path.isGlob( o.resourceKind );
+        _.assert( e.request === undefined );
+        e.request = will.Resolver.strRequestParse( e.argument );
+
+        if( will.Resolver.selectorIs( e.request.subject ) )
+        {
+          let splits = will.Resolver.selectorShortSplit
+          ({
+            selector : e.request.subject,
+            defaultResourceKind : o.resourceKind,
+          });
+          o.resourceKind = splits[ 0 ];
+          resourceKindIsGlob = _.path.isGlob( o.resourceKind );
+        }
+
+        if( resourceKindIsGlob && e.request.subject && !will.Resolver.selectorIs( e.request.subject ) )
+        {
+          e.request.subject = '*::' + e.request.subject;
+        }
+
+        let o2 =
+        {
+          selector : resourceKindIsGlob ? ( e.request.subject || '*::*' ) : ( e.request.subject || '*' ),
+          criterion : e.request.map,
+          defaultResourceKind : resourceKindIsGlob ? null : o.resourceKind,
+          prefixlessAction : resourceKindIsGlob ? 'throw' : 'default',
+          arrayWrapping : 1,
+          pathUnwrapping : resourceKindIsGlob ? 0 : 1,
+          pathResolving : 0,
+          mapValsUnwrapping : resourceKindIsGlob ? 0 : 1,
+          strictCriterion : 1,
+          currentExcluding : 0,
+        }
+
+        if( o.resourceKind === 'path' )
+        o2.mapValsUnwrapping = 0;
+
+        o2.criterion = _.mapExtend( null, o2.criterion );
+        // if( o2.criterion.predefined === undefined )
+        // o2.criterion.predefined = false;
+
+        // debugger;
+        resources = it.opener.openedModule.resolve( o2 );
+
+        if( _.arrayIs( resources ) )
+        resources = _.longOnce( resources );
+
       }
 
-      if( resourceKindIsGlob && e.request.subject && !will.Resolver.selectorIs( e.request.subject ) )
-      {
-        e.request.subject = '*::' + e.request.subject;
-      }
+      return o.onEach( it.opener, resources ) || null;
+    });
 
-      let o2 =
-      {
-        selector : resourceKindIsGlob ? ( e.request.subject || '*::*' ) : ( e.request.subject || '*' ),
-        criterion : e.request.map,
-        defaultResourceKind : resourceKindIsGlob ? null : o.resourceKind,
-        prefixlessAction : resourceKindIsGlob ? 'throw' : 'default',
-        arrayWrapping : 1,
-        pathUnwrapping : resourceKindIsGlob ? 0 : 1,
-        pathResolving : 0,
-        mapValsUnwrapping : resourceKindIsGlob ? 0 : 1,
-        strictCriterion : 1,
-        currentExcluding : 0,
-      }
-
-      if( o.resourceKind === 'path' )
-      o2.mapValsUnwrapping = 0;
-
-      o2.criterion = _.mapExtend( null, o2.criterion );
-      // if( o2.criterion.predefined === undefined )
-      // o2.criterion.predefined = false;
-
-      debugger;
-      resources = it.opener.openedModule.resolve( o2 );
-
-      if( _.arrayIs( resources ) )
-      resources = _.longOnce( resources );
-
-    }
-
-    return o.onEach( it.opener, resources ) || null;
+    return ready2;
   }))
   .finally( ( err, arg ) =>
   {

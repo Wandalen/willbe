@@ -469,6 +469,82 @@ defaults.verbosity = 0;
 
 //
 
+function versionsRemoteRetrive( o )
+{
+  let self = this;
+  let path = self.path;
+
+  _.routineOptions( versionsRemoteRetrive, o );
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.assert( _.strIs( o.localPath ) );
+  _.assert( !!self.system );
+
+  let ready = _.process.start
+  ({
+    execPath : 'git',
+    mode : 'spawn',
+    currentPath : o.localPath,
+    args :
+    [
+      'branch',
+        '-r',
+        '--no-abbrev',
+        '--format=%(refname:lstrip=3)'
+    ],
+    inputMirroring : 0,
+    outputPiping : 0,
+    outputCollecting : 1,
+  })
+
+  ready.finally( ( err, got ) =>
+  {
+    if( err )
+    throw _.err( 'Can\'t retrive remote versions. Reason:', err );
+
+    let result = _.strSplitNonPreserving({ src : got.output, delimeter : '\n' });
+    return result.slice( 1 );
+  })
+
+  return ready;
+}
+
+var defaults = versionsRemoteRetrive.defaults = Object.create( null );
+defaults.localPath = null;
+
+//
+
+function versionsPull( o )
+{
+  let self = this;
+  let path = self.path;
+
+  _.routineOptions( versionsPull, o );
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.assert( !!self.system );
+
+  return self.versionsRemoteRetrive({ localPath : o.localPath })
+  .then( ( versions ) =>
+  {
+    _.assert( _.arrayIs( versions ) && versions.length );
+
+    let ready = new _.Consequence().take( null );
+    let start = _.process.starter
+    ({
+      mode : 'spawn',
+      currentPath : o.localPath,
+      ready : ready
+    });
+    _.each( versions, ( version ) => start( `git checkout ${version} && git pull` ) );
+
+    return ready;
+  })
+}
+
+var defaults = versionsPull.defaults = Object.create( null );
+defaults.localPath = null;
+
+//
+
 /**
  * @summary Returns true if local copy of repository `o.localPath` is up to date with remote repository `o.remotePath`.
  * @param {Object} o Options map.
@@ -646,6 +722,129 @@ var defaults = isDownloaded.defaults = Object.create( null );
 defaults.localPath = null;
 defaults.verbosity = 0;
 
+//
+
+/**
+ * @summary Returns true if path `o.localPath` contains a git repository that was cloned from remote `o.remotePath`.
+ * @param {Object} o Options map.
+ * @param {String} o.localPath Local path to package.
+ * @param {String} o.remotePath Remote path to package.
+ * @param {Number} o.verbosity=0 Level of verbosity.
+ * @function isDownloadedFromRemote
+ * @memberof module:Tools/mid/Files.wTools.FileProvider.wFileProviderGit#
+ */
+
+function isDownloadedFromRemote( o )
+{
+  let self = this;
+  let path = self.path;
+
+  _.routineOptions( isDownloaded, o );
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.assert( !!self.system );
+  _.assert( _.strDefined( o.localPath ) );
+  _.assert( _.strDefined( o.remotePath ) );
+
+  let localProvider = self.system.providerForPath( o.localPath );
+  _.assert( localProvider instanceof _.FileProvider.HardDrive || localProvider.originalFileProvider instanceof _.FileProvider.HardDrive, 'Support only downloading on hard drive' );
+
+  let result = Object.create( null );
+  result.downloaded = true;
+  result.downloadedFromRemote = false;
+
+  if( !localProvider.fileExists( o.localPath ) )
+  {
+    result.downloaded = false;
+    return result;
+  }
+
+  let gitConfigExists = localProvider.fileExists( path.join( o.localPath, '.git' ) );
+
+  if( !gitConfigExists )
+  {
+    result.downloaded = false;
+    return result;
+  }
+
+  let con = new _.Consequence();
+  GitConfig( localProvider.path.nativize( o.localPath ), con.tolerantCallback() )
+  con.finally( ( err, config ) =>
+  {
+    if( err )
+    throw _.err( err );
+
+    let remoteVcsPath = self.pathParse( o.remotePath ).remoteVcsPath;
+    let originVcsPath = config.remote.origin.url;
+
+    _.sure( _.strDefined( remoteVcsPath ) );
+    _.sure( _.strDefined( originVcsPath ) );
+
+    result.remoteVcsPath = remoteVcsPath;
+    result.originVcsPath = originVcsPath;
+    result.downloadedFromRemote = originVcsPath === remoteVcsPath;
+
+    return result;
+  })
+  return con.deasync();
+}
+
+var defaults = isDownloaded.defaults = Object.create( null );
+defaults.localPath = null;
+defaults.remotePath = null;
+defaults.verbosity = 0;
+
+//
+
+function hasChanges( o )
+{
+  let self = this;
+
+  if( !_.mapIs( o ) )
+  o = { localPath : o }
+
+  _.routineOptions( hasChanges, o );
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.assert( !!self.system );
+  _.assert( _.strDefined( o.localPath ) );
+
+  let ready = _.Consequence.Try( () =>
+  {
+    if( !self.isDownloaded({ localPath : o.localPath }) )
+    throw _.err( 'Found no GIT repository at:', o.localPath );
+
+    return _.process.start
+    ({
+      execPath : 'git status',
+      currentPath : o.localPath,
+      mode : 'spawn',
+      sync : o.sync,
+      deasync : 0,
+      throwingExitCode : 0,
+      outputCollecting : 1,
+      verbosity : o.verbosity - 1,
+    });
+  })
+
+  ready.finally( ( err, got ) =>
+  {
+    if( err )
+    throw _.err( err, '\nFailed to check if repository has local changes' );
+    let localChanges = _.strHasAny( got.output, [ 'Changes to be committed', 'Changes not staged for commit' ] );
+    let localCommits = !_.strHas( got.output, 'Your branch is up to date' );
+    return localChanges || localCommits;
+  })
+
+  if( o.sync )
+  return ready.syncMaybe();
+
+  return ready;
+}
+
+var defaults = hasChanges.defaults = Object.create( null );
+defaults.localPath = null;
+defaults.verbosity = 0;
+defaults.sync = 1;
+
 // --
 // etc
 // --
@@ -821,14 +1020,25 @@ function filesReflectSingle_body( o )
   ready.ifNoErrorThen( ( arg ) =>
   {
     if( localChanges )
+    if( o.extra.stashing )
     shell( 'git stash' );
 
     ready.then( () => gitCheckout() )
 
     if( mergeIsNeeded && hashIsBranchName )
-    ready.then( () => gitMerge() )
+    {
+      if( localChanges && !o.extra.stashing )
+      {
+        let err = _.err( 'Failed to merge remote-tracking branch in repository at', _.strQuote( dstPath ), ', repository has local changes and stashing is disabled.' );
+        con.error( err );
+        throw err;
+      }
+
+      ready.then( () => gitMerge() )
+    }
 
     if( localChanges )
+    if( o.extra.stashing )
     ready.then( () => gitStashPop() )
 
     ready.finally( con );
@@ -865,20 +1075,21 @@ function filesReflectSingle_body( o )
 
   function gitCheckout()
   {
-    let o =
+    let shellOptions =
     {
       execPath : 'git checkout ' + parsed.hash,
       outputCollecting : 1,
       ready : null
     }
 
-    let con = shell( o );
+    let con = shell( shellOptions );
 
     con.finally( ( err, got ) =>
     {
       if( err )
       {
         if( localChanges )
+        if( o.extra.stashing )
         shell
         ({
           execPath : 'git stash pop',
@@ -888,7 +1099,7 @@ function filesReflectSingle_body( o )
           ready : null
         })
 
-        if( !_.strHasAny( o.output, [ 'fatal: reference', 'error: pathspec' ] ) )
+        if( !_.strHasAny( shellOptions.output, [ 'fatal: reference', 'error: pathspec' ] ) )
         throw _.err( err );
         _.errAttend( err );
         handleGitError( 'Failed to checkout, branch/commit: ' + _.strQuote( parsed.hash ) + ' doesn\'t exist in repository at ' + _.strQuote( dstPath ) );
@@ -987,6 +1198,7 @@ _.routineExtend( filesReflectSingle_body, _.FileProvider.Find.prototype.filesRef
 
 var extra = filesReflectSingle_body.extra = Object.create( null );
 extra.fetching = 1;
+extra.stashing = 1;
 
 var defaults = filesReflectSingle_body.defaults;
 let filesReflectSingle = _.routineFromPreAndBody( _.FileProvider.Find.prototype.filesReflectSingle.pre, filesReflectSingle_body );
@@ -1068,9 +1280,15 @@ let Proto =
   versionLocalRetrive,
   versionRemoteLatestRetrive,
   versionRemoteCurrentRetrive,
+  versionsRemoteRetrive,
+
+  versionsPull,
 
   isUpToDate,
   isDownloaded,
+  isDownloadedFromRemote,
+
+  hasChanges,
 
   // etc
 
