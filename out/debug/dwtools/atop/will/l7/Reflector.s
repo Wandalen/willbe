@@ -50,6 +50,7 @@ function MakeFor_body( o )
   let o3 = Object.create( null );
   o3.resource = Object.create( null );
   o3.resource.criterion = _.mapExtend( null, o.resource.criterion || {} );
+  // debugger;
   o3.resource.shell = o.resource.shell;
   o3.Importing = 1;
   o3.module = module;

@@ -7,7 +7,7 @@ submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/
   PathTools : git+https:///github.com/Wandalen/wPathTools.git/
-  a0 : group10/out/a0.will.out
+  a0 : group10/a0
 
 path :
 

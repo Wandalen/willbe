@@ -1731,9 +1731,9 @@ function modulesEach_body( o )
   let will = module.will;
   let logger = will.logger;
 
-  _.assert( !( !o.nodesMap ^ !o.visitedContainer ), 'Expects both nodesMap and visitedContainer or none' );
+  _.assert( !o.visitedContainer || !!o.recordMap, 'Expects recordMap if visitedContainer provided' );
 
-  let graph = will.graphSystemMake({ withPeers : o.withPeers, nodesMap : o.nodesMap });
+  let graph = will.graphSystemMake({ withPeers : o.withPeers, recordMap : o.recordMap });
   let group = graph.nodesGroup();
 
   let nodes = [ group.nodeFrom( module ) ];
@@ -1821,7 +1821,7 @@ var defaults = modulesEach_body.defaults = _.mapExtend( null, _.graph.AbstractNo
 defaults.outputFormat = '*/module'; /* / | * / module | * / relation */
 defaults.onUp = null;
 defaults.onDown = null;
-defaults.nodesMap = null;
+defaults.recordMap = null;
 defaults.recursive = 1;
 defaults.withStem = 0;
 defaults.withPeers = 0;
@@ -2008,8 +2008,18 @@ function rootModuleGet()
 function rootModuleSet( src )
 {
   let module = this;
+  let will = module.will;
+
   _.assert( src === null || src instanceof _.Will.OpenedModule );
+
   module[ rootModuleSymbol ] = src;
+
+  _.each( module.userArray, ( opener ) =>
+  {
+    if( opener instanceof _.Will.ModuleOpener )
+    opener[ rootModuleSymbol ] = src;
+  });
+
   return src;
 }
 
@@ -2026,6 +2036,78 @@ function superRelationsSet( src )
 
   return src;
 }
+
+//
+
+// function subModuleRegister( record )
+// {
+//   let module = this;
+//   let will = module.will;
+//
+//   if( _.mapIs( record ) )
+//   {
+//     record.will = will;
+//     record = will.ModuleRecord.From( record );
+//   }
+//
+//   _.assert( record instanceof will.ModuleRecord );
+//   _.assert( module.allSubModuleMap[ record.commonPath ] === record || module.allSubModuleMap[ record.commonPath ] === null );
+//   module.allSubModuleMap[ record.commonPath ] = record;
+//
+// }
+//
+// //
+//
+// function subModuleUnregister( record )
+// {
+//   let module = this;
+//   let will = module.will;
+//
+//   if( _.mapIs( record ) )
+//   {
+//     record.will = will;
+//     record = will.ModuleRecord.From( record );
+//   }
+//
+//   _.assert( record instanceof will.ModuleRecord );
+//   _.assert( module.allSubModuleMap[ record.commonPath ] === record );
+//   delete module.allSubModuleMap[ record.commonPath ];
+//
+// }
+//
+// //
+//
+// function superModuleRegister( record )
+// {
+//   let module = this;
+//   let will = module.will;
+//
+//   if( _.mapIs( record ) )
+//   {
+//     record.will = will;
+//     record = will.ModuleRecord.From( record );
+//   }
+//
+//   _.assert( record instanceof will.ModuleRecord );
+//   _.assert( module.allSuperModuleMap[ record.commonPath ] === record || module.allSuperModuleMap[ record.commonPath ] === null );
+//   module.allSuperModuleMap[ record.commonPath ] = record;
+//
+// }
+//
+// //
+//
+// function superModuleUnregister( record )
+// {
+//   let module = this;
+//   let will = module.will;
+//
+//   _.assert( _.mapIs( record ) ); /* xxx : check class */
+//
+//   _.assert( record instanceof will.ModuleRecord );
+//   _.assert( module.allSuperModuleMap[ record.commonPath ] === record );
+//   delete module.allSuperModuleMap[ record.commonPath ];
+//
+// }
 
 //
 

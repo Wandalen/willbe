@@ -130,11 +130,10 @@ function form3()
   _.assert( _.routineIs( step.stepRoutine ), () => step.qualifiedName + ' does not have {- stepRoutine -}. Failed to deduce it, try specifying "inherit" field explicitly' );
   _.assert( step.stepRoutine.stepOptions !== undefined, () => 'Field {- stepRoutine -} of ' + step.qualifiedName + ' deos not have defined {- stepOptions -}' );
 
-  // if( step.id === 154 )
-  // debugger;
-
   _.mapSupplement( step.opts, step.stepRoutine.stepOptions );
 
+  // if( step.id === 205 )
+  // debugger;
   if( step.opts && step.stepRoutine.stepOptions )
   {
     _.sureMapHasOnly( step.opts, step.stepRoutine.stepOptions, () => step.qualifiedName + ' should not have options' );
