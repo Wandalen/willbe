@@ -11432,23 +11432,28 @@ function stepWillbeVersionCheck( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'step-willbe-version-check' );
-  let routinePath = _.path.join( self.tempDir, test.name );
+  let routinePath = _.path.join( self.suitePath, test.name );
   let willbeRootPath = _.path.join( __dirname, '../../../..' );
 
   let assetDstPath = _.path.join( routinePath, 'asset' );
   let willbeDstPath = _.path.join( routinePath, 'willbe' );
 
+  let nodeModulesSrcPath = _.path.join( willbeRootPath, 'node_modules' );
+  let nodeModulesDstPath = _.path.join( willbeDstPath, 'node_modules' );
+
   _.fileProvider.filesReflect
   ({
     reflectMap :
     {
-      'proto' : 'proto',
+      'proto/dwtools/Tools.s' : 'proto/dwtools/Tools.s',
+      'proto/dwtools/atop/will' : 'proto/dwtools/atop/will',
       'package.json' : 'package.json',
     },
     src : { prefixPath : willbeRootPath },
     dst : { prefixPath : willbeDstPath },
   })
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : assetDstPath } })
+  _.fileProvider.softLink( nodeModulesDstPath, nodeModulesSrcPath );
 
   let execPath = _.path.nativize( _.path.join( willbeDstPath, 'proto/dwtools/atop/will/Exec' ) );
   let ready = new _.Consequence().take( null )
