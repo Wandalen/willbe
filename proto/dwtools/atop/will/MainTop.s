@@ -1711,10 +1711,18 @@ function commandVersionsAgree( e )
   _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
-  return will.openersCurrentEach( function( module )
-  {
-    return module.openedModule.versionsAgree({ dry : e.propertiesMap.dry });
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'versions agree',
+    onEach : handleEach,
+    commandRoutine : commandVersionsAgree,
   });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.versionsAgree({ dry : e.propertiesMap.dry });
+  }
 }
 
 commandVersionsVerify.commandProperties =

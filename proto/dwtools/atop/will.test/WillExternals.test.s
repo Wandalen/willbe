@@ -13003,13 +13003,13 @@ function versionsAgree( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'command-versions-agree' );
-  let routinePath = _.path.join( self.tempDir, test.name );
+  let routinePath = _.path.join( self.suitePath, test.name );
   let localModulePathSrc = _.path.join( routinePath, 'module' );
   let localModulePathDst = _.path.join( routinePath, '.module/local' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.sheller
+  let shell = _.process.starter
   ({
     execPath : 'node ' + execPath,
     currentPath : routinePath,
@@ -13018,14 +13018,14 @@ function versionsAgree( test )
     ready : ready,
   })
 
-  let shell2 = _.sheller
+  let shell2 = _.process.starter
   ({
     currentPath : localModulePathSrc,
     outputCollecting : 1,
     ready : ready,
   })
 
-  let shell3 = _.sheller
+  let shell3 = _.process.starter
   ({
     currentPath : localModulePathDst,
     outputCollecting : 1,
@@ -13058,7 +13058,7 @@ function versionsAgree( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were updated in/ ) );
     return null;
   })
 
@@ -13075,7 +13075,7 @@ function versionsAgree( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were updated in/ ) );
     return null;
   })
 
@@ -13092,7 +13092,7 @@ function versionsAgree( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were updated in/ ) );
     return null;
   })
   shell3( 'git status' )
@@ -13117,8 +13117,7 @@ function versionsAgree( test )
   {
     test.notIdentical( got.exitCode, 0 );
 
-    test.is( _.strHas( got.output, /Module .*module::submodules \/ module::local.* needs to be updated, but has local changes/ ) );
-    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.is( _.strHas( got.output, /Module .*submodule::local.* \/ .*module::local.* needs to be updated, but has local changes/ ) );
     return null;
   })
   shell3( 'git status' )
