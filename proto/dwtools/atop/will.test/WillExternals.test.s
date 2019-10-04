@@ -11507,7 +11507,7 @@ function stepSubmodulesAreUpdated( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'step-submodules-are-updated' );
-  let routinePath = _.path.join( self.tempDir, test.name );
+  let routinePath = _.path.join( self.suitePath, test.name );
   let localModulePath = _.path.join( routinePath, 'module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
@@ -11555,7 +11555,7 @@ function stepSubmodulesAreUpdated( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ 1\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
-    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of submodules are up to date/ ) );
+    test.is( _.strHas( got.output, / 1\/1 submodule\(s\) of .*module::submodules.* are up to date/ ) );
     return null;
   })
 
@@ -11573,7 +11573,7 @@ function stepSubmodulesAreUpdated( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ 1\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
-    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of submodules are up to date/ ) );
+    test.is( _.strHas( got.output, / 1\/1 submodule\(s\) of .*module::submodules.* are up to date/ ) );
     return null;
   })
 
@@ -11593,7 +11593,7 @@ function stepSubmodulesAreUpdated( test )
   {
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ 0\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
-    test.is( _.strHas( got.output, /Submodule .*local is not up to date/ ) );
+    test.is( _.strHas( got.output, / ! Submodule .*local is not up to date/ ) );
     return null;
   })
 

@@ -781,6 +781,8 @@ function stepRoutineSubmodulesAreUpdated( frame )
 
   let con = new _.Consequence().take( null );
 
+  logger.up();
+
   _.each( relations, ( relation ) =>
   {
     con.then( () =>
@@ -825,6 +827,8 @@ function stepRoutineSubmodulesAreUpdated( frame )
     throw _.errBrief( message );
     else
     logger.log( message );
+
+    logger.down();
 
     return allAreUpToDate;
   })
