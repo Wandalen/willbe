@@ -449,6 +449,12 @@ function find( o )
     if( openedModule )
     {
 
+      if( openedModule.rootModule !== opener.rootModule && !!opener.rootModule )
+      if( openedModule.rootModule === openedModule )
+      {
+        openedModule.rootModule = opener.rootModule;
+      }
+
       _.assert( openedModule.rootModule === opener.rootModule || opener.rootModule === null );
       _.assert( opener.openedModule === openedModule || opener.openedModule === null );
       opener.openedModule = openedModule;
@@ -941,7 +947,7 @@ function sharedFieldGet_functor( fieldName )
 
 //
 
-function sharedModuleSet_functor( fieldName )
+function sharedFieldSet_functor( fieldName )
 {
   let symbol = Symbol.for( fieldName );
 
@@ -954,7 +960,7 @@ function sharedModuleSet_functor( fieldName )
 
     opener[ symbol ] = src;
 
-    if( openedModule )
+    if( openedModule && openedModule[ fieldName ] !== src )
     openedModule[ fieldName ] = src;
 
     return src;
@@ -963,10 +969,10 @@ function sharedModuleSet_functor( fieldName )
 }
 
 let peerModuleGet = sharedFieldGet_functor( 'peerModule' );
-let peerModuleSet = sharedModuleSet_functor( 'peerModule' );
+let peerModuleSet = sharedFieldSet_functor( 'peerModule' );
 
 let rootModuleGet = sharedFieldGet_functor( 'rootModule' );
-let rootModuleSet = sharedModuleSet_functor( 'rootModule' );
+let rootModuleSet = sharedFieldSet_functor( 'rootModule' );
 
 //
 

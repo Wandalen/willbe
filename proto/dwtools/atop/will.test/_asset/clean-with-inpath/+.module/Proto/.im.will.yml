@@ -4,78 +4,8 @@ submodule :
   wTools :
     path : npm:///wTools
     enabled : 0 # submodule
-  wStringer :
-    path : npm:///wstringer
-    enabled : 0 # submodule
-  wStringsExtra :
-    path : npm:///wstringsextra
-    enabled : 0 # submodule
-  wConsequence :
-    path : npm:///wConsequence
-    enabled : 0 # submodule
-  wCopyable :
-    path : npm:///wCopyable
-    enabled : 0 # submodule
-  wGdfStrategy :
-    path : npm:///wgdfstrategy
-    enabled : 0 # submodule
-  wRoutineBasic :
-    path : npm:///wroutinebasic
-    enabled : 0 # submodule
-  wPathBasic :
-    path : npm:///wpathbasic
-    enabled : 0 # submodule
-  wPathTools :
-    path : npm:///wpathtools
-    enabled : 0 # submodule
-  wUriBasic :
-    path : npm:///wuribasic
-    enabled : 0 # submodule
-  wWebUriBasic :
-    path : npm:///wweburibasic
-    enabled : 0 # submodule
-  wAppBasic :
-    path : npm:///wappbasic
-    enabled : 0 # submodule
-  wFieldsStack :
-    path : npm:///wfieldsstack
-    enabled : 0 # submodule
-  wRegexpObject :
-    path : npm:///wRegexpObject
-    enabled : 0 # submodule
-  wSelector :
-    path : npm:///wselector
-    enabled : 0 # submodule
-  wVerbal :
-    path : npm:///wverbal
-    enabled : 0 # submodule
-  wLogger :
-    path : npm:///wLogger
-    enabled : 0 # submodule
-  ini :
-    path : npm:///ini
-    enabled : 0 # submodule
-  tar :
-    path : npm:///tar
-    enabled : 0 # submodule
-  gitconfiglocal :
-    path : npm:///gitconfiglocal
-    enabled : 0 # submodule
-  proper-lockfile :
-    path : npm:///proper-lockfile
-    enabled : 0 # submodule
-  wFiles :
+  wselectorextra :
     path : hd://.
-    enabled : 0 # submodule
-    criterion :
-      development : 1
-  wait-sync :
-    path : npm:///wait-sync
-    enabled : 0 # submodule
-    criterion :
-      development : 1
-  cli-table2 :
-    path : npm:///cli-table2#^0.2.0
     enabled : 0 # submodule
     criterion :
       development : 1
@@ -91,7 +21,6 @@ path :
   out : 'out'
   temp : 'path::out'
   proto : './proto'
-  export : '{path::export}/**'
   doc : './doc'
 
   out.raw.debug :
@@ -120,7 +49,7 @@ path :
       content : prime
 
   entry.proto.no.tests :
-    path : proto/dwtools/abase/l5/PathTools.s
+    path : proto/dwtools/abase/l6/SelectorExtra.s
     criterion :
       tests : 'no.tests'
   entry.proto.only.tests :
@@ -132,7 +61,7 @@ path :
   # npm.files : proto
 
   entry.out.raw.debug :
-    path : '{path::out.*=1}/source/dwtools/abase/l5/PathTools.s'
+    path : '{path::out.*=1}/source/dwtools/abase/l6/SelectorExtra.s'
     criterion :
       debug : [ debug, release ]
       raw : raw

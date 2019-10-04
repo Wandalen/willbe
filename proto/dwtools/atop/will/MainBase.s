@@ -790,7 +790,7 @@ function modulesFilter( modules, opts )
   let will = this;
   let visitedContainer = _.containerAdapter.from( new Set );
   let result = _.containerAdapter.from( new Array );
-  let nodesMap = Object.create( null );
+  let recordMap = Object.create( null );
 
   if( modules === null || modules === undefined )
   modules = will.modulesArray;
@@ -798,6 +798,8 @@ function modulesFilter( modules, opts )
   _.assert( _.longIs( modules ) );
   _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 );
   opts = _.routineOptions( modulesFilter, opts );
+
+  /* first make records for each module */
 
   _.each( modules, ( module ) =>
   {
@@ -807,12 +809,35 @@ function modulesFilter( modules, opts )
       withStem : 1,
       withPeers : 1,
       revisiting : 0,
+      recursive : 2,
       outputFormat : '/',
-      onUp : onUp1,
-      visitedContainer,
-      nodesMap,
+      recordMap,
     });
   });
+
+  /* then add in-roots of trees */
+
+  debugger;
+
+  _.each( modules, ( module ) =>
+  {
+    if( !module.isOut )
+    module.modulesEach
+    ({
+      withStem : 1,
+      withPeers : 1,
+      revisiting : 0,
+      recursive : 2,
+      outputFormat : '/',
+      onUp : onUp1,
+      recordMap,
+    });
+    console.log( '-' );
+  });
+
+  debugger;
+
+  /* add roots of what left */
 
   _.each( modules, ( module ) =>
   {
@@ -822,12 +847,29 @@ function modulesFilter( modules, opts )
       withStem : 1,
       withPeers : 1,
       revisiting : 0,
+      recursive : 2,
       outputFormat : '/',
       onUp : onUp2,
+      recordMap,
       visitedContainer,
-      nodesMap,
     });
   });
+
+  debugger;
+
+  /* add what left */
+
+  _.each( recordMap, ( r ) =>
+  {
+    if( !visitedContainer.has( r ) )
+    {
+      debugger;
+      result.append( r );
+      visitedContainer.append( r );
+    }
+  });
+
+  debugger;
 
   return result.original;
 
@@ -836,8 +878,28 @@ function modulesFilter( modules, opts )
   function onUp1( r, it )
   {
     let module = r.module || r.opener;
-    if( module && !module.isOut && it.level === 0 )
-    result.append( r );
+    console.log( 'onUp1', r.commonPath );
+    if( module && !module.isOut && it.level === 0 && !visitedContainer.has( r ) )
+    {
+      result.append( r );
+      visitedContainer.appendOnce( r );
+      if( r.peerModule )
+      debugger;
+      if( r.peerModule )
+      visitedContainer.appendOnce( group.nodeFrom( r.peerModule ) );
+    }
+    else if( it.level !== 0 )
+    {
+      visitedContainer.appendOnce( r );
+      if( r.peerModule )
+      debugger;
+      if( r.peerModule )
+      visitedContainer.appendOnce( group.nodeFrom( r.peerModule ) );
+    }
+    else
+    {
+      it.continueUp = false;
+    }
   }
 
   /* */
@@ -845,8 +907,35 @@ function modulesFilter( modules, opts )
   function onUp2( r, it )
   {
     debugger;
-    result.appendOnce( r );
+    if( it.level === 0 )
+    {
+      result.append( r );
+      debugger;
+      if( r.peerModule )
+      visitedContainer.appendOnce( group.nodeFrom( r.peerModule ) );
+    }
+    else if( it.level !== 0 )
+    {
+      if( r.peerModule )
+      debugger;
+      if( r.peerModule )
+      visitedContainer.appendOnce( group.nodeFrom( r.peerModule ) );
+    }
+    else
+    {
+      it.continueUp = false;
+    }
   }
+
+  // function onUp2( r, it )
+  // {
+  //   debugger;
+  //   // if( !visitedContainer.has( r ) )
+  //   {
+  //     result.appendOnce( r );
+  //     visitedContainer.append( r );
+  //   }
+  // }
 
 }
 
@@ -970,16 +1059,12 @@ function modulePathRegister( openedModule )
 function graphSystemMake( o )
 {
   let will = this;
-  let Record = { opener : null, module : null, relation : null, commonPath : null, object : null };
-  // let visitedModulesArray = []; /* xxx : remove */
+  // let Record = { opener : null, module : null, relation : null, commonPath : null, object : null }; /* xxx : make a class */
 
   o = _.routineOptions( graphSystemMake, arguments );
 
-  if( !o.nodesMap )
-  o.nodesMap = Object.create( null );
-
-  // if( !will.graphSystem )
-  // will.graphSystem = new _.graph.AbstractGraphSystem
+  if( !o.recordMap )
+  o.recordMap = Object.create( null );
 
   let sys = new _.graph.AbstractGraphSystem
   ({
@@ -990,31 +1075,6 @@ function graphSystemMake( o )
   });
 
   return sys;
-
-  // let group = will.graphGroup;
-  // if( group )
-  // return group;
-
-  // if( !will.graphSystem )
-  // will.graphSystem = new _.graph.AbstractGraphSystem
-  // ({
-  //   onNodeNameGet : moduleName,
-  //   onOutNodesGet : onOutNodesGet,
-  //   onInNodesGet : onInNodesGet,
-  // });
-
-  // group = will.graphGroup = sys.nodesGroup
-  // ({
-  //   onNodeNameGet : ( module ) => module.qualifiedName,
-  //   onOutNodesGet : onOutNodesGet,
-  //   onInNodesGet : onInNodesGet,
-  // });
-  //
-  // group.nodesAdd( will.modulesArray );
-
-  // debugger;
-  // logger.log( group.infoExport() );
-  // debugger;
 
   /* */
 
@@ -1029,11 +1089,14 @@ function graphSystemMake( o )
 
   function recordIs( r )
   {
-    if( !_.mapIs( r ) )
+    if( !r )
     return false;
-    if( r.module !== undefined && _.lengthOf( r ) === 5 )
-    return true;
-    return false;
+    return r instanceof _.Will.ModuleRecord;
+    // if( !_.mapIs( r ) )
+    // return false;
+    // if( r.module !== undefined && _.lengthOf( r ) === 5 )
+    // return true;
+    // return false;
   }
 
   /* */
@@ -1041,89 +1104,93 @@ function graphSystemMake( o )
   function recordFrom( r )
   {
     let result;
-    let made = false;
+    // let made = false;
 
     _.assert( arguments.length === 1 );
     _.assert( !!r );
 
-    if( _.mapIs( r ) )
-    {
-      // debugger;
-      _.assertMapHasOnly( r, Record  );
-      _.assertMapHasAll( r, Record );
-      result = r;
-    }
-    else if( r instanceof will.OpenedModule )
-    {
-      // if( o.nodesMap[ r.commonPath ] )
-      // debugger;
-      if( o.nodesMap[ r.commonPath ] )
-      result = o.nodesMap[ r.commonPath ];
-      else
-      result = make();
-      _.assert( !result.module || result.module === r );
-      result.module = r;
-    }
-    else if( r instanceof will.ModuleOpener )
-    {
-      debugger;
-      if( o.nodesMap[ r.commonPath ] )
-      result = o.nodesMap[ r.commonPath ];
-      else
-      result = make();
-      // _.assert( !result.opener || result.opener === r );
-      result.opener = r;
-    }
-    else if( r instanceof will.ModulesRelation )
-    {
-      if( o.nodesMap[ r.path ] )
-      debugger;
-      if( o.nodesMap[ r.path ] )
-      result = o.nodesMap[ r.path ];
-      else
-      result = make();
-      result.relation = r;
-    }
-    else _.assert( 0, `Not clear how to get graph record from ${_.strShort( r )}` );
+    if( !_.mapIs( r ) )
+    r = { object : r }
 
-    if( result.opener && result.opener.superRelation && !result.relation )
-    result.relation = result.opener.superRelation;
-    if( result.relation && result.relation.opener && !result.opener )
-    result.opener = result.relation.opener;
+    r.will = will;
+    r.recordMap = o.recordMap;
 
-    let commonPath;
-    if( result.module )
-    {
-      commonPath = result.module.commonPath;
-      result.object = result.module;
-    }
-    else if( result.opener )
-    {
-      commonPath = result.opener.commonPath;
-      result.object = result.opener;
-    }
-    else if( result.relation )
-    {
-      commonPath = result.relation.path;
-      result.object = result.relation;
-    }
-
-    _.assert( result.commonPath === null || result.commonPath === commonPath );
-    result.commonPath = commonPath;
-
-    _.assert( o.nodesMap[ commonPath ] === undefined || o.nodesMap[ commonPath ] === result );
-    o.nodesMap[ commonPath ] = result;
-
-    // logger.log( ( made ? 'made' : 'retrived' ) + ' record for ' + commonPath );
+    result = _.Will.ModuleRecord.From( r );
 
     return result;
 
-    function make()
-    {
-      let record = _.mapExtend( null, Record );
-      made = true;
-      return record;
-    }
+    // if( _.mapIs( r ) )
+    // {
+    //   _.assertMapHasOnly( r, Record  );
+    //   _.assertMapHasAll( r, Record );
+    //   result = r;
+    // }
+    // else if( r instanceof will.OpenedModule )
+    // {
+    //   if( o.recordMap[ r.commonPath ] )
+    //   result = o.recordMap[ r.commonPath ];
+    //   else
+    //   result = make();
+    //   _.assert( !result.module || result.module === r );
+    //   result.module = r;
+    // }
+    // else if( r instanceof will.ModuleOpener )
+    // {
+    //   debugger;
+    //   if( o.recordMap[ r.commonPath ] )
+    //   result = o.recordMap[ r.commonPath ];
+    //   else
+    //   result = make();
+    //   result.opener = r;
+    // }
+    // else if( r instanceof will.ModulesRelation )
+    // {
+    //   if( o.recordMap[ r.path ] )
+    //   debugger;
+    //   if( o.recordMap[ r.path ] )
+    //   result = o.recordMap[ r.path ];
+    //   else
+    //   result = make();
+    //   result.relation = r;
+    // }
+    // else _.assert( 0, `Not clear how to get graph record from ${_.strShort( r )}` );
+    //
+    // if( result.opener && result.opener.superRelation && !result.relation )
+    // result.relation = result.opener.superRelation;
+    // if( result.relation && result.relation.opener && !result.opener )
+    // result.opener = result.relation.opener;
+    //
+    // let commonPath;
+    // if( result.module )
+    // {
+    //   commonPath = result.module.commonPath;
+    //   result.object = result.module;
+    // }
+    // else if( result.opener )
+    // {
+    //   commonPath = result.opener.commonPath;
+    //   result.object = result.opener;
+    // }
+    // else if( result.relation )
+    // {
+    //   commonPath = result.relation.path;
+    //   result.object = result.relation;
+    // }
+    //
+    // _.assert( result.commonPath === null || result.commonPath === commonPath );
+    // result.commonPath = commonPath;
+    //
+    // _.assert( o.recordMap[ commonPath ] === undefined || o.recordMap[ commonPath ] === result );
+    // o.recordMap[ commonPath ] = result;
+    //
+    // return result;
+    //
+    // function make()
+    // {
+    //   let record = _.mapExtend( null, Record );
+    //   made = true;
+    //   return record;
+    // }
   }
 
   /* */
@@ -1143,6 +1210,11 @@ function graphSystemMake( o )
   function recordSubmodules( record )
   {
     let result = [];
+
+    // logger.log( 'recordSubmodules', record.commonPath );
+    if( _.strEnds( record.commonPath, 'group1/a' ) )
+    debugger;
+
     if( record.module )
     for( let s in record.module.submoduleMap )
     {
@@ -1189,7 +1261,7 @@ function graphSystemMake( o )
 
     if( relation.opener )
     {
-      record = o.nodesMap[ relation.opener.commonPath ];
+      record = o.recordMap[ relation.opener.commonPath ];
     }
     else
     {
@@ -1198,14 +1270,9 @@ function graphSystemMake( o )
 
     if( !record )
     {
-      // record = Object.create( null );
-      // record.relation = null;
-      // record.opener = null;
-      // record.module = null;
       record = recordFrom( relation );
-      // visitedModulesArray.push( record );
       if( relation.opener )
-      o.nodesMap[ relation.opener.commonPath ] = record;
+      o.recordMap[ relation.opener.commonPath ] = record;
     }
     else
     {
@@ -1224,17 +1291,12 @@ function graphSystemMake( o )
   {
     let record;
 
-    record = o.nodesMap[ module.commonPath ];
+    record = o.recordMap[ module.commonPath ];
 
     if( !record )
     {
-      // record = Object.create( null );
-      // record.relation = null;
-      // record.opener = null;
-      // record.module = null;
       record = recordFrom( module );
-      // visitedModulesArray.push( record );
-      o.nodesMap[ module.commonPath ] = record;
+      o.recordMap[ module.commonPath ] = record;
     }
     else
     {
@@ -1261,7 +1323,7 @@ function graphSystemMake( o )
 graphSystemMake.defaults =
 {
   withPeers : 1,
-  nodesMap : null,
+  recordMap : null,
 }
 
 //
@@ -1367,15 +1429,11 @@ function graphInfoExportAsTree( modules, opts )
   if( opts.onUp === null )
   opts.onUp = moduleUp;
 
-  modules = modules || will.modulesArray;
-  // modules = will.graphRecordsFrom( modules );
-
-  // let group = will.graphSystem.nodesGroup();
   let graph = will.graphSystemMake();
   let group = graph.nodesGroup();
 
+  modules = modules || will.modulesArray;
   modules = group.nodesFrom( modules );
-  // modules = group.rootsToAllReachable( modules );
 
   debugger;
   let info = group.rootsExportInfoTree( modules, opts );
@@ -2089,20 +2147,7 @@ let Associates =
   fileProvider : null,
   filesGraph : null,
   logger : null,
-
-  modulesArray : _.define.own([]),
-  moduleWithIdMap : _.define.own({}),
-  moduleWithCommonPathMap : _.define.own({}),
-  moduleWithNameMap : _.define.own({}),
   mainOpener : null,
-
-  openersArray : _.define.own([]),
-  openerModuleWithIdMap : _.define.own({}),
-  openersErrorsArray : _.define.own([]),
-
-  willfilesArray : _.define.own([]),
-  willfileWithCommonPathMap : _.define.own({}),
-  willfileWithFilePathPathMap : _.define.own({}),
 
 }
 
@@ -2110,10 +2155,21 @@ let Restricts =
 {
 
   formed : 0,
-  // graphGroup : null,
-  // graphSystem : null,
   willfilesReadBeginTime : null,
   willfilesReadEndTime : null,
+
+  recordMap : _.define.own({}),
+  modulesArray : _.define.own([]),
+  moduleWithIdMap : _.define.own({}),
+  moduleWithCommonPathMap : _.define.own({}),
+  moduleWithNameMap : _.define.own({}),
+  openersArray : _.define.own([]),
+  openerModuleWithIdMap : _.define.own({}),
+  openersErrorsArray : _.define.own([]),
+
+  willfilesArray : _.define.own([]),
+  willfileWithCommonPathMap : _.define.own({}),
+  willfileWithFilePathPathMap : _.define.own({}),
 
 }
 

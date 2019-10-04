@@ -6,6 +6,7 @@ about :
 
 submodule :
 
+  PathTools : git+https:///github.com/Wandalen/wPathTools.git/
   PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/
 
 path :
