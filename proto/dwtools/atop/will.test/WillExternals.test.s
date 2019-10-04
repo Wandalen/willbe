@@ -4447,7 +4447,7 @@ function exportSingle( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
-    test.is( _.strHas( got.output, /\+ Exported .*exported::proto.export.* with 2 files in/ ) );
+    test.is( _.strHas( got.output, 'Exported module::single / build::proto.export with 2 file(s) in') );
 
     var files = self.find( outDebugPath );
     test.identical( files, [ '.', './Single.s' ] );
@@ -4456,6 +4456,7 @@ function exportSingle( test )
 
     test.is( _.fileProvider.fileExists( outWillPath ) )
     var outfile = _.fileProvider.fileConfigRead( outWillPath );
+    outfile = outfile.module[ outfile.root[ 0 ] ];
 
     let reflector = outfile.reflector[ 'exported.files.proto.export' ];
     test.identical( reflector.src.basePath, '.' );
@@ -4484,7 +4485,7 @@ function exportSingle( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exported .*module::single \/ build::proto.export.* in/ ) );
     test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
-    test.is( _.strHas( got.output, / \+ Exported .*exported::proto\.export.* with 2 files/ ) );
+    test.is( _.strHas( got.output, 'Exported module::single / build::proto.export with 2 file(s) in' ) );
 
     var files = self.find( outDebugPath );
     test.identical( files, [ '.', './Single.s' ] );
@@ -4493,6 +4494,7 @@ function exportSingle( test )
 
     test.is( _.fileProvider.fileExists( outWillPath ) )
     var outfile = _.fileProvider.fileConfigRead( outWillPath );
+    outfile = outfile.module[ outfile.root[ 0 ] ];
 
     let reflector = outfile.reflector[ 'exported.files.proto.export' ];
     let expectedFilePath =
@@ -4555,7 +4557,7 @@ function exportItself( test )
     test.gt( files.length, 450 );
 
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
-    test.is( _.strHas( got.output, new RegExp( `\\+ Exported .*exported::export.* with ${files.length-2} files in` ) ) );
+    test.is( _.strHas( got.output, new RegExp( `\Exported .*exported::export.* with ${files.length-2} file\(s\) in` ) ) );
 
     return null;
   })
@@ -4962,9 +4964,9 @@ function exportToRoot( test )
   {
     test.case = '.export'
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /Exporting .+module::export-to-root \/ build::proto\.export.+/ ) );
+    test.is( _.strHas( got.output, /Exporting .*module::export-to-root \/ build::proto\.export.*/ ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
-    test.is( _.strHas( got.output, /Exported .+module::export-to-root \/ build::proto\.export.+ in/ ) );
+    test.is( _.strHas( got.output, /Exported .*module::export-to-root \/ build::proto\.export.* in/ ) );
     test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'export-to-root.out.will.yml' ) ) )
     return null;
   })
@@ -5014,7 +5016,7 @@ function exportMixed( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exporting .*module::UriBasic\.informal \/ build::export.*/ ) );
-    test.is( _.strHas( got.output, ' + reflector::download.* reflected' ) );
+    test.is( _.strHas( got.output, ' + reflector::download reflected' ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, /Exported .*module::UriBasic\.informal \/ build::export.* in/ ) );
     test.is( _.strHas( got.output, 'out/Proto.informal.out.will.yml' ) );
@@ -5033,6 +5035,7 @@ function exportMixed( test )
     test.identical( files, expected );
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/Proto.informal.out.will.yml' ) );
+    outfile = outfile.module[ 'Proto.informal.out' ];
 
     var expected =
     {
@@ -5046,7 +5049,7 @@ function exportMixed( test )
       {
         'src' :
         {
-          'filePath' : { '.' : '' },
+          'filePath' : { '**' : '' },
           'prefixPath' : '../.module/Proto/proto'
         },
         'criterion' : { 'export' : 1, 'default' : 1 },
@@ -5272,8 +5275,8 @@ function exportSecond( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, '+ Write out willfile' ), 2 );
-    test.identical( _.strCount( got.output, / \+ Exported .*exported::proto.export.* with 4 files in/ ), 1 );
-    test.identical( _.strCount( got.output, / \+ Exported .*exported::doc.export.* with 2 files in/ ), 1 );
+    test.identical( _.strCount( got.output, / Exported .*exported::proto.export.* with 4 file\(s\) in/ ), 1 );
+    test.identical( _.strCount( got.output, / Exported .*exported::doc.export.* with 2 file\(s\) in/ ), 1 );
 
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
 
@@ -5445,8 +5448,8 @@ function exportSecond( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, '+ Write out willfile' ), 2 );
-    test.identical( _.strCount( got.output, / \+ Exported .*exported::doc.export.* with 2 files in/ ), 1 );
-    test.identical( _.strCount( got.output, / \+ Exported .*exported::proto.export.* with 4 files in/ ), 1 );
+    test.identical( _.strCount( got.output, / Exported .*exported::doc.export.* with 2 file\(s\) in/ ), 1 );
+    test.identical( _.strCount( got.output, / Exported .*exported::proto.export.* with 4 file\(s\) in/ ), 1 );
 
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
 
@@ -5728,7 +5731,7 @@ function exportMultiple( test )
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js' ] );
     test.identical( got.exitCode, 0 );
 
-    test.is( _.strHas( got.output, / \+ Exported .*exported::export.debug.* with 2 files in/ ) );
+    test.is( _.strHas( got.output, / Exported .*exported::export.debug.* with 2 file\(s\) in/ ) );
     test.is( _.strHas( got.output, 'Read 2 willfile(s) in' ) );
     test.is( _.strHas( got.output, /Exported .*module::submodule \/ build::export.debug.*/ ) );
     test.is( _.strHas( got.output, 'Write out archive' ) );
@@ -5908,7 +5911,7 @@ function exportMultiple( test )
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
 
-    test.is( _.strHas( got.output, / \+ Exported .*exported::export\..* with 2 files in/ ) );
+    test.is( _.strHas( got.output, / Exported .*exported::export\..* with 2 file\(s\) in/ ) );
     test.is( _.strHas( got.output, 'Read 2 willfile(s) in' ) );
     test.is( _.strHas( got.output, /Exported .*module::submodule \/ build::export\..* in/ ) );
     test.is( _.strHas( got.output, 'Write out archive' ) );
@@ -6217,7 +6220,7 @@ function exportImportMultiple( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ Exported .*exported::export.debug.* with 2 files in/ ) );
+    test.is( _.strHas( got.output, / Exported .*exported::export.debug.* with 2 file\(s\) in/ ) );
 
     return null;
   })
@@ -6242,7 +6245,7 @@ function exportImportMultiple( test )
     var files = self.find( out2Path );
     test.identical( files, [ '.', './supermodule.out.tgs', './supermodule.out.will.yml', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ Exported .*exported::export\..* with 2 files in/ ) );
+    test.is( _.strHas( got.output, / Exported .*exported::export\..* with 2 file\(s\) in/ ) );
 
     return null;
   })
@@ -6313,7 +6316,7 @@ function exportImportMultiple( test )
     var files = self.find( out2Path );
     test.identical( files, [ '.', './supermodule.debug.out.tgs', './supermodule.out.tgs', './supermodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ Exported .*exported::export.debug.* with 2 files in/ ) );
+    test.is( _.strHas( got.output, / Exported .*exported::export.debug.* with 2 file\(s\) in/ ) );
 
     return null;
   })
@@ -8212,7 +8215,7 @@ function reflectNothingFromSubmodules( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
-    test.is( _.strHas( got.output, / \+ Exported .*exported::proto.export.* with 2 files in/ ) );
+    test.is( _.strHas( got.output, / Exported .*exported::proto.export.* with 2 file\(s\) in/ ) );
 
     var files = self.find( outDebugPath );
     test.identical( files, [ '.', './Single.s' ] );
