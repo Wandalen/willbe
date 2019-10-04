@@ -12858,13 +12858,13 @@ function versionsVerify( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'command-versions-verify' );
-  let routinePath = _.path.join( self.tempDir, test.name );
+  let routinePath = _.path.join( self.suitePath, test.name );
   let localModulePathSrc = _.path.join( routinePath, 'module' );
   let localModulePathDst = _.path.join( routinePath, '.module/local' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.sheller
+  let shell = _.process.starter
   ({
     execPath : 'node ' + execPath,
     currentPath : routinePath,
@@ -12873,14 +12873,14 @@ function versionsVerify( test )
     ready : ready,
   })
 
-  let shell2 = _.sheller
+  let shell2 = _.process.starter
   ({
     currentPath : localModulePathSrc,
     outputCollecting : 1,
     ready : ready,
   })
 
-  let shell3 = _.sheller
+  let shell3 = _.process.starter
   ({
     currentPath : localModulePathDst,
     outputCollecting : 1,
@@ -12914,7 +12914,7 @@ function versionsVerify( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Submodule .*local.* is not downloaded/ ) );
-    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were vefified in/ ) );
+    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
     return null;
   })
 
@@ -12932,7 +12932,7 @@ function versionsVerify( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were vefified in/ ) );
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
     return null;
   })
 
@@ -12949,7 +12949,7 @@ function versionsVerify( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were vefified in/ ) );
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
     return null;
   })
 
@@ -12968,7 +12968,7 @@ function versionsVerify( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were vefified in/ ) );
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
     return null;
   })
 
@@ -12988,7 +12988,7 @@ function versionsVerify( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Submodule .*local.* is on branch different from that is specified in will-file/ ) );
-    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were vefified in/ ) );
+    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
     return null;
   })
 

@@ -2887,6 +2887,9 @@ function versionsVerify()
 
   modules.forEach( ( r ) =>
   {
+    r.opener.preform();
+    r.opener.remoteForm();
+
     let verified = onEach( r );
     if( verified )
     verifiedNumber += 1;
@@ -2908,8 +2911,8 @@ function versionsVerify()
       return false;
     }
 
-    if( r.opener.formed < 2 )
-    r.opener.remoteForm();
+    // if( r.opener.formed < 2 )
+    // r.opener.remoteForm();
 
     _.assert
     (

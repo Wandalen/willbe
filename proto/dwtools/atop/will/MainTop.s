@@ -1683,10 +1683,18 @@ function commandVersionsVerify( e )
   _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
-  return will.openersCurrentEach( function( module )
-  {
-    return module.openedModule.versionsVerify();
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'versions verify',
+    onEach : handleEach,
+    commandRoutine : commandVersionsVerify,
   });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.versionsVerify();
+  }
 }
 
 commandVersionsVerify.commandProperties =
