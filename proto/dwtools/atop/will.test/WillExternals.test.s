@@ -13128,6 +13128,32 @@ function versionsAgree( test )
     return null;
   })
 
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'local is not up to date with remote, no local changes';
+    return null;
+  })
+
+  shell3( 'git reset --hard origin' )
+  shell2( 'git commit --allow-empty -m test2' )
+  shell( '.versions.agree' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were updated in/ ) );
+    return null;
+  })
+  shell3( 'git status' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Your branch is up to date/ ) );
+    return null;
+  })
+
   return ready;
 }
 
