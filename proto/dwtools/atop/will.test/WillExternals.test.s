@@ -7700,7 +7700,7 @@ function exportRewritesOutFile( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'export-rewrites-out-file' );
-  let routinePath = _.path.join( self.tempDir, test.name );
+  let routinePath = _.path.join( self.suitePath, test.name );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
   let outFilePath = _.path.join( routinePath, 'out/export-rewrites-out-file.out.will.yml' );
@@ -7736,7 +7736,8 @@ function exportRewritesOutFile( test )
     test.identical( got.exitCode, 0 );
     test.is( _.fileProvider.fileExists( outFilePath ) );
     let outFile = _.fileProvider.fileRead({ filePath : outFilePath, encoding : 'yaml' });
-    test.identical( _.mapKeys( outFile.build ), [ 'export1', 'export2' ] );
+    let build = outFile.module[ outFile.root[ 0 ] ].build;
+    test.identical( _.mapKeys( build ), [ 'export1', 'export2' ] );
     return null;
   })
 
@@ -7756,7 +7757,8 @@ function exportRewritesOutFile( test )
     test.identical( got.exitCode, 0 );
     test.is( _.fileProvider.fileExists( outFilePath ) );
     let outFile = _.fileProvider.fileRead({ filePath : outFilePath, encoding : 'yaml' });
-    test.identical( _.mapKeys( outFile.build ), [ 'export1' ] );
+    let build = outFile.module[ outFile.root[ 0 ] ].build;
+    test.identical( _.mapKeys( build ), [ 'export1' ] );
     return null;
   })
 
@@ -7776,7 +7778,8 @@ function exportRewritesOutFile( test )
     test.identical( got.exitCode, 0 );
     test.is( _.fileProvider.fileExists( outFilePath ) );
     let outFile = _.fileProvider.fileRead({ filePath : outFilePath, encoding : 'yaml' });
-    test.identical( _.mapKeys( outFile.build ), [ 'export1', 'export2' ] );
+    let build = outFile.module[ outFile.root[ 0 ] ].build;
+    test.identical( _.mapKeys( build ), [ 'export1', 'export2' ] );
     return null;
   })
 

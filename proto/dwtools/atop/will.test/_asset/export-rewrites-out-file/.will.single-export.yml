@@ -10,7 +10,7 @@ path :
   in : '.'
   out : 'out'
   temp : '*out*'
-  export1 : proto/One.s
+  export1 : '*proto/One.s*'
 
 step :
 
