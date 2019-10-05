@@ -7,17 +7,17 @@ if( typeof module !== 'undefined' )
 
   let _ = require( '../../Tools.s' );
 
-  _.include( 'wAppBasic' );
-  _.include( 'wCopyable' );
-  _.include( 'wVerbal' );
-  _.include( 'wLogger' );
-  _.include( 'wTemplateTreeEnvironment' );
-  _.include( 'wStager' );
-  // _.include( 'wGraph' );
-  _.include( 'wGraphBasic' );
-  // _.include( 'wGraphTools' );
   _.include( 'wSelector' );
   _.include( 'wResolver' );
+  _.include( 'wCopyable' );
+  _.include( 'wAppBasic' );
+  _.include( 'wLogger' );
+
+  _.include( 'wVerbal' );
+  _.include( 'wTemplateTreeEnvironment' );
+  _.include( 'wStager' );
+  _.include( 'wGraphBasic' );
+  _.include( 'wGitTools' );
 
   _.include( 'wFiles' );
   _.include( 'wFilesArchive' );

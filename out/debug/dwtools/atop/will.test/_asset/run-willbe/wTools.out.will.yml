@@ -920,7 +920,7 @@ module:
       local:
         criterion:
           predefined: 1
-        path: .
+        path: ./
       remote:
         criterion:
           predefined: 1

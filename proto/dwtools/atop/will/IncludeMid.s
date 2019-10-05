@@ -29,7 +29,7 @@ if( typeof module !== 'undefined' )
   require( './l7/Step.s' );
   require( './l7/ModulesRelation.s' );
 
-  require( './l7/GitHooks.s' );
+  // require( './l7/GitHooks.s' );
 }
 
 })();

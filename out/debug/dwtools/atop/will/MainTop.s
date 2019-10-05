@@ -1111,7 +1111,7 @@ function commandGitPreservingHardLinks( e )
     let tempPath = _.process.tempOpen({ sourceCode : sourceCode });
     try
     {
-      _.GitHooks.hookRegister
+      _.git.hookRegister
       ({
         filePath : tempPath,
         handlerName : 'post-merge.restoreHardLinks',
@@ -1131,7 +1131,7 @@ function commandGitPreservingHardLinks( e )
   }
   else
   {
-    _.GitHooks.hookUnregister
+    _.git.hookUnregister
     ({
       handlerName : 'post-merge.restoreHardLinks',
       force : 0,

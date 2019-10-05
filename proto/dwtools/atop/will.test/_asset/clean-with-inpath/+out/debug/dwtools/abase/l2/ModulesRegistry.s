@@ -417,6 +417,12 @@ let wGraphTools =
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.graph && !!_global.wTools.graph.GraphSystem },
 }
 
+let wGitTools =
+{
+  includeAny : includeAny( 'amid/l3/git/IncludeMid.s', 'wgittools' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.git },
+}
+
 // let wGraphLive =
 // {
 //   includeAny : includeAny( 'amid/l1/graphTools/IncludeLive', 'wgraphlive' ),
@@ -650,6 +656,8 @@ let Extend =
 
   wGraphBasic,
   wGraphTools,
+
+  wGitTools,
 
   wSchema,
   wScriptLauncher,

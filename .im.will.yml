@@ -28,6 +28,9 @@ submodule :
   wFilesArchive :
     path : npm:///wfilesarchive
     enabled : 0 # submodule
+  wGitTools :
+    path : npm:///wgittools
+    enabled : 0 # submodule
   wFilesEncoders :
     path : npm:///wfilesencoders
     enabled : 0 # submodule
