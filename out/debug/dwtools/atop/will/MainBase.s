@@ -95,8 +95,6 @@ function unform()
 
   /* begin */
 
-  // will.graphSystemUnform();
-
   /* end */
 
   will.formed = 0;
@@ -113,7 +111,6 @@ function form()
   return will;
 
   will.formAssociates();
-  // will.graphSystemMake();
 
   _.assert( arguments.length === 0 );
   _.assert( !will.formed );
@@ -785,7 +782,7 @@ function moduleAt( willfilesPath )
 
 //
 
-function modulesFilter( modules, opts )
+function modulesOnlyRoots( modules, o )
 {
   let will = this;
   let visitedContainer = _.containerAdapter.from( new Set );
@@ -797,7 +794,10 @@ function modulesFilter( modules, opts )
 
   _.assert( _.longIs( modules ) );
   _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 );
-  opts = _.routineOptions( modulesFilter, opts );
+  o = _.routineOptions( modulesOnlyRoots, o );
+
+  if( !o.nodesGroup )
+  o.nodesGroup = will.graphGroupMake({ withPeers : 1 });
 
   /* first make records for each module */
 
@@ -832,7 +832,7 @@ function modulesFilter( modules, opts )
       onUp : onUp1,
       recordMap,
     });
-    console.log( '-' );
+    // console.log( '-' );
   });
 
   debugger;
@@ -878,23 +878,25 @@ function modulesFilter( modules, opts )
   function onUp1( r, it )
   {
     let module = r.module || r.opener;
-    console.log( 'onUp1', r.commonPath );
+
+    // console.log( 'onUp1', r.remotePath || r.localPath, r.id ); debugger;
+
     if( module && !module.isOut && it.level === 0 && !visitedContainer.has( r ) )
     {
       result.append( r );
       visitedContainer.appendOnce( r );
+      // if( r.peerModule )
+      // debugger;
       if( r.peerModule )
-      debugger;
-      if( r.peerModule )
-      visitedContainer.appendOnce( group.nodeFrom( r.peerModule ) );
+      visitedContainer.appendOnce( o.nodesGroup.nodeFrom( r.peerModule ) );
     }
     else if( it.level !== 0 )
     {
       visitedContainer.appendOnce( r );
+      // if( r.peerModule )
+      // debugger;
       if( r.peerModule )
-      debugger;
-      if( r.peerModule )
-      visitedContainer.appendOnce( group.nodeFrom( r.peerModule ) );
+      visitedContainer.appendOnce( o.nodesGroup.nodeFrom( r.peerModule ) );
     }
     else
     {
@@ -927,20 +929,11 @@ function modulesFilter( modules, opts )
     }
   }
 
-  // function onUp2( r, it )
-  // {
-  //   debugger;
-  //   // if( !visitedContainer.has( r ) )
-  //   {
-  //     result.appendOnce( r );
-  //     visitedContainer.append( r );
-  //   }
-  // }
-
 }
 
-modulesFilter.defaults =
+modulesOnlyRoots.defaults =
 {
+  nodesGroup : null,
 }
 
 //
@@ -961,7 +954,6 @@ function moduleIdUnregister( openedModule )
   _.assert( _.arrayCountElement( _.mapVals( will.moduleWithIdMap ), openedModule ) === 0 );
   _.arrayRemoveOnceStrictly( will.modulesArray, openedModule );
 
-  // will.graphSystemUnform();
 }
 
 //
@@ -982,7 +974,6 @@ function moduleIdRegister( openedModule )
   _.assert( _.arrayCountElement( _.mapVals( will.moduleWithIdMap ), openedModule ) === 1 );
   _.arrayAppendOnceStrictly( will.modulesArray, openedModule );
 
-  // will.graphSystemUnform();
 }
 
 //
@@ -1037,31 +1028,13 @@ function modulePathRegister( openedModule )
 
 }
 
-// //
-//
-// function graphSystemUnform()
-// {
-//   let will = this;
-//
-//   // if( will.graphGroup )
-//   // {
-//   //   will.graphGroup.sys.finit();
-//   //   will.graphGroup = null;
-//   // }
-//
-//   if( will.graphSystem )
-//   will.graphSystem.finit();
-//
-// }
-
 //
 
-function graphSystemMake( o )
+function graphGroupMake( o )
 {
   let will = this;
-  // let Record = { opener : null, module : null, relation : null, commonPath : null, object : null }; /* xxx : make a class */
 
-  o = _.routineOptions( graphSystemMake, arguments );
+  o = _.routineOptions( graphGroupMake, arguments );
 
   if( !o.recordMap )
   o.recordMap = Object.create( null );
@@ -1073,8 +1046,9 @@ function graphSystemMake( o )
     onNodeNameGet : recordName,
     onOutNodesGet : recordSubmodules,
   });
+  let group = sys.nodesGroup();
 
-  return sys;
+  return group;
 
   /* */
 
@@ -1082,6 +1056,7 @@ function graphSystemMake( o )
   {
     if( record.module )
     return record.module.qualifiedName;
+    _.assert( !!record.relation );
     return record.relation.qualifiedName;
   }
 
@@ -1092,11 +1067,6 @@ function graphSystemMake( o )
     if( !r )
     return false;
     return r instanceof _.Will.ModuleRecord;
-    // if( !_.mapIs( r ) )
-    // return false;
-    // if( r.module !== undefined && _.lengthOf( r ) === 5 )
-    // return true;
-    // return false;
   }
 
   /* */
@@ -1104,7 +1074,6 @@ function graphSystemMake( o )
   function recordFrom( r )
   {
     let result;
-    // let made = false;
 
     _.assert( arguments.length === 1 );
     _.assert( !!r );
@@ -1114,106 +1083,18 @@ function graphSystemMake( o )
 
     r.will = will;
     r.recordMap = o.recordMap;
+    r.nodesGroup = group;
 
     result = _.Will.ModuleRecord.From( r );
 
     return result;
-
-    // if( _.mapIs( r ) )
-    // {
-    //   _.assertMapHasOnly( r, Record  );
-    //   _.assertMapHasAll( r, Record );
-    //   result = r;
-    // }
-    // else if( r instanceof will.OpenedModule )
-    // {
-    //   if( o.recordMap[ r.commonPath ] )
-    //   result = o.recordMap[ r.commonPath ];
-    //   else
-    //   result = make();
-    //   _.assert( !result.module || result.module === r );
-    //   result.module = r;
-    // }
-    // else if( r instanceof will.ModuleOpener )
-    // {
-    //   debugger;
-    //   if( o.recordMap[ r.commonPath ] )
-    //   result = o.recordMap[ r.commonPath ];
-    //   else
-    //   result = make();
-    //   result.opener = r;
-    // }
-    // else if( r instanceof will.ModulesRelation )
-    // {
-    //   if( o.recordMap[ r.path ] )
-    //   debugger;
-    //   if( o.recordMap[ r.path ] )
-    //   result = o.recordMap[ r.path ];
-    //   else
-    //   result = make();
-    //   result.relation = r;
-    // }
-    // else _.assert( 0, `Not clear how to get graph record from ${_.strShort( r )}` );
-    //
-    // if( result.opener && result.opener.superRelation && !result.relation )
-    // result.relation = result.opener.superRelation;
-    // if( result.relation && result.relation.opener && !result.opener )
-    // result.opener = result.relation.opener;
-    //
-    // let commonPath;
-    // if( result.module )
-    // {
-    //   commonPath = result.module.commonPath;
-    //   result.object = result.module;
-    // }
-    // else if( result.opener )
-    // {
-    //   commonPath = result.opener.commonPath;
-    //   result.object = result.opener;
-    // }
-    // else if( result.relation )
-    // {
-    //   commonPath = result.relation.path;
-    //   result.object = result.relation;
-    // }
-    //
-    // _.assert( result.commonPath === null || result.commonPath === commonPath );
-    // result.commonPath = commonPath;
-    //
-    // _.assert( o.recordMap[ commonPath ] === undefined || o.recordMap[ commonPath ] === result );
-    // o.recordMap[ commonPath ] = result;
-    //
-    // return result;
-    //
-    // function make()
-    // {
-    //   let record = _.mapExtend( null, Record );
-    //   made = true;
-    //   return record;
-    // }
   }
-
-  /* */
-
-  // function recordsFrom( records )
-  // {
-  //   let will = this;
-  //
-  //   _.assert( arguments.length === 1 )
-  //   let result = _.filter( records, ( record ) => will.graphRecordFrom( record ) );
-  //
-  //   return result;
-  // }
 
   /* */
 
   function recordSubmodules( record )
   {
     let result = [];
-
-    // logger.log( 'recordSubmodules', record.commonPath );
-    if( _.strEnds( record.commonPath, 'group1/a' ) )
-    debugger;
 
     if( record.module )
     for( let s in record.module.submoduleMap )
@@ -1228,30 +1109,13 @@ function graphSystemMake( o )
       result.push( record2 );
 
       if( o.withPeers && record2.module && record2.module.peerModule )
-      // if( record2.module && record2.module.peerModule )
       {
         result.push( recordFromModule( record2.module.peerModule ) );
       }
 
     }
-    // logger.log( `list ${record.module ? record.module.absoluteName : record.relation.absoluteName} ${result.length}` );
     return result;
   }
-
-  // function moduleName( module )
-  // {
-  //   return module.qualifiedName;
-  // }
-  //
-  // function onOutNodesGet( module )
-  // {
-  //   let result = module.submoduleMap ? _.mapVals( module.submoduleMap ) : [];
-  //   result = result.map( ( module ) => module.opener );
-  //   result = result.map( ( module ) => module ? module.openedModule : module );
-  //   result = result.filter( ( module ) => !!module );
-  //   result.forEach( ( module ) => _.assert( module instanceof will.OpenedModule, () => 'Not module ' + _.strType( module ) ) );
-  //   return result;
-  // }
 
   /* */
 
@@ -1269,14 +1133,7 @@ function graphSystemMake( o )
     }
 
     if( !record )
-    {
-      record = recordFrom( relation );
-      if( relation.opener )
-      o.recordMap[ relation.opener.commonPath ] = record;
-    }
-    else
-    {
-    }
+    record = recordFrom( relation );
 
     if( relation.opener )
     record.opener = relation.opener;
@@ -1294,13 +1151,7 @@ function graphSystemMake( o )
     record = o.recordMap[ module.commonPath ];
 
     if( !record )
-    {
-      record = recordFrom( module );
-      o.recordMap[ module.commonPath ] = record;
-    }
-    else
-    {
-    }
+    record = recordFrom( module );
 
     _.assert( !record.module || record.module === module );
     record.module = module;
@@ -1320,76 +1171,11 @@ function graphSystemMake( o )
 
 }
 
-graphSystemMake.defaults =
+graphGroupMake.defaults =
 {
   withPeers : 1,
   recordMap : null,
 }
-
-//
-// //
-//
-// function graphRecordFrom( r )
-// {
-//   let will = this;
-//   let result;
-//
-//   _.assert( arguments.length === 1 )
-//   _.assert( !!r );
-//
-//   debugger;
-//   if( _.mapIs( r ) )
-//   {
-//     _.assertMapHasOnly( r, { opener : null, module : null, relation : null } );
-//     _.assertMapHasAll( r, { opener : null, module : null, relation : null } );
-//     result = r;
-//   }
-//   else if( r instanceof will.OpenedModule )
-//   {
-//     result = make();
-//     result.module = r;
-//   }
-//   else if( r instanceof will.ModuleOpener )
-//   {
-//     result = make();
-//     result.opener = r;
-//   }
-//   else if( r instanceof will.ModulesRelation )
-//   {
-//     result = make();
-//     result.relation = r;
-//   }
-//   else _.assert( 0, `Not clear how to get graph record from ${_.strShort( r )}` );
-//
-//   debugger;
-//   if( result.opener && result.opener.superRelation && !result.relation )
-//   result.relation = result.opener.superRelation;
-//   if( result.relation && result.relation.opener && !result.opener )
-//   result.opener = result.relation.opener;
-//
-//   return result;
-//
-//   function make()
-//   {
-//     let record = Object.create( null );
-//     record.relation = null;
-//     record.opener = null;
-//     record.module = null;
-//     return record;
-//   }
-// }
-//
-// //
-//
-// function graphRecordsFrom( records )
-// {
-//   let will = this;
-//
-//   _.assert( arguments.length === 1 )
-//   let result = _.filter( records, ( record ) => will.graphRecordFrom( record ) );
-//
-//   return result;
-// }
 
 //
 
@@ -1399,44 +1185,42 @@ function graphTopologicalSort( modules )
 
   _.assert( arguments.length === 0 || arguments.length === 1 )
 
+  // let graph = will.graphGroupMake();
+  // let group = graph.nodesGroup();
+  let group = will.graphGroupMake();
+
   modules = modules || will.modulesArray;
-  // modules = will.graphRecordsFrom( modules );
-
-  // let group = will.graphSystem.nodesGroup();
-  let graph = will.graphSystemMake();
-  let group = graph.nodesGroup();
-
   modules = group.nodesFrom( modules );
   modules = group.rootsToAllReachable( modules );
 
-  // debugger;
   let sorted = group.topSort( modules );
-  // debugger;
 
   return sorted;
 }
 
 //
 
-function graphInfoExportAsTree( modules, opts )
+function graphInfoExportAsTree( modules, o )
 {
   let will = this;
 
   _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 )
-  opts = _.routineOptions( graphInfoExportAsTree, opts );
-  if( opts.onNodeName === null )
-  opts.onNodeName = moduleNameAndPath;
-  if( opts.onUp === null )
-  opts.onUp = moduleUp;
+  o = _.routineOptions( graphInfoExportAsTree, o );
+  if( o.onNodeName === null )
+  o.onNodeName = moduleNameAndPath;
+  if( o.onUp === null )
+  o.onUp = moduleUp;
 
-  let graph = will.graphSystemMake();
-  let group = graph.nodesGroup();
+  // let graph = will.graphGroupMake();
+  // let group = graph.nodesGroup();
+  let group = will.graphGroupMake();
 
   modules = modules || will.modulesArray;
   modules = group.nodesFrom( modules );
 
   debugger;
-  let info = group.rootsExportInfoTree( modules, opts );
+  let o2 = _.mapOnly( o, group.rootsExportInfoTree.defaults );
+  let info = group.rootsExportInfoTree( modules, o2 );
   debugger;
 
   return info;
@@ -1458,12 +1242,22 @@ function graphInfoExportAsTree( modules, opts )
 
   function moduleNameAndPath( r )
   {
-    return r.object.qualifiedName + ' - ' + _.color.strFormat( r.commonPath, 'path' );
+    let result = r.object.qualifiedName;
+    if( o.withLocalPath )
+    result += ` - path::local:=${_.color.strFormat( r.localPath, 'path' )}`;
+    if( o.withRemotePath && r.remotePath )
+    result += ` - path::remote:=${_.color.strFormat( r.remotePath, 'path' )}`;
+    return result;
+    // return r.object.qualifiedName + ' - local.path::' + _.color.strFormat( r.localPath, 'path' );
+    // return r.object.qualifiedName + ' - ' + _.color.strFormat( r.remotePath || r.localPath, 'path' );
   }
 
 }
 
-graphInfoExportAsTree.defaults = _.mapExtend( null, _.graph.AbstractNodesGroup.prototype.rootsExportInfoTree.defaults );
+var defaults = graphInfoExportAsTree.defaults = _.mapExtend( null, _.graph.AbstractNodesGroup.prototype.rootsExportInfoTree.defaults );
+
+defaults.withLocalPath = 0;
+defaults.withRemotePath = 0;
 
 // --
 // opener
@@ -2226,17 +2020,14 @@ let Extend =
   moduleEachAt,
   moduleWithAt,
   moduleAt,
-  modulesFilter,
+  modulesOnlyRoots,
 
   moduleIdUnregister,
   moduleIdRegister,
   modulePathUnregister,
   modulePathRegister,
 
-  // graphSystemUnform,
-  graphSystemMake,
-  // graphRecordFrom,
-  // graphRecordsFrom,
+  graphGroupMake,
   graphTopologicalSort,
   graphInfoExportAsTree,
 

@@ -628,9 +628,10 @@ function _commandTreeLike( o )
 
     ready2.then( () =>
     {
+      will.readingEnd();
       let it2 = _.mapExtend( null, o );
       // it2.modules = will.modulesArray;
-      it2.modules = will.modulesFilter();
+      it2.modules = will.modulesOnlyRoots();
       return o.onAll.call( will, it2 );
     });
 
@@ -1363,11 +1364,12 @@ function commandModulesTree( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
   let request = will.Resolver.strRequestParse( e.argument );
+  let propertiesMap = _.strStructureParse( e.argument );
 
   return will._commandTreeLike
   ({
     event : e,
-    name : 'which',
+    name : 'list tree of modules',
     onAll : handleAll,
     commandRoutine : commandModulesTree,
   });
@@ -1375,11 +1377,16 @@ function commandModulesTree( e )
   function handleAll( it )
   {
     let modules = it.modules;
-    logger.log( will.graphInfoExportAsTree( modules ) );
+    logger.log( will.graphInfoExportAsTree( modules, propertiesMap ) );
     return null;
   }
 
 }
+
+var defaults = commandModulesTree.commandProperties = Object.create( null );
+
+defaults.withLocalPath = 'Print local paths. Default is 0';
+defaults.withRemotePath = 'Print remote paths. Default is 0';
 
 //
 
@@ -1769,59 +1776,6 @@ var defaults = commandCleanRecursive.commandProperties = Object.create( commandC
 
 defaults.recursive = 'Recursive cleaning. 0 - only curremt module, 1 - current module and its submodules, 2 - current module and all submodules, direct and indirect. Default is recursive:2.';
 
-// function commandCleanRecursive( e )
-// {
-//   let will = this;
-//   let logger = will.logger;
-//   let ready = new _.Consequence().take( null );
-//
-//   let propertiesMap = _.strStructureParse( e.argument );
-//   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
-//   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
-//
-//   let dry = !!e.propertiesMap.dry;
-//   delete e.propertiesMap.dry;
-//
-//   if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
-//   e.propertiesMap.fast = !dry;
-//   e.propertiesMap.fast = 0;
-//
-//   will.openersCurrentEach( function( it )
-//   {
-//
-//     ready.then( () =>
-//     {
-//       return will.currentOpenerChange( it.opener );
-//     });
-//
-//     ready.then( () =>
-//     {
-//
-//       if( dry )
-//       return it.opener.openedModule.cleanWhatReport( e.propertiesMap );
-//       else
-//       return it.opener.openedModule.clean( e.propertiesMap );
-//
-//     });
-//
-//     ready.finally( ( err, arg ) =>
-//     {
-//       will.currentOpenerChange( null );
-//       if( err )
-//       throw _.err( err, `\nFailed to clean ${it.opener ? it.opener.commonPath : ''}` );
-//       return arg;
-//     });
-//
-//     return null;
-//   });
-//
-//   return ready;
-// }
-//
-// var defaults = commandCleanRecursive.commandProperties = Object.create( commandClean.commandProperties );
-//
-// defaults.recursive = 'Recursive cleaning. 0 - only curremt module, 1 - current module and its submodules, 2 - current module and all submodules, direct and indirect. Default is recursive:2.';
-
 //
 
 function commandBuild( e )
@@ -1851,63 +1805,6 @@ function commandBuild( e )
   }
 
 }
-
-// function commandBuild( e )
-// {
-//   let will = this;
-//   let logger = will.logger;
-//   let ready = new _.Consequence().take( null );
-//   let request = will.Resolver.strRequestParse( e.argument );
-//
-//   will._commandsBegin( commandBuild );
-//
-//   _.assert( will.currentOpener === null );
-//   if( will.currentOpeners === null )
-//   ready.then( () => will.openersFind() );
-//
-//   ready.then( () => will.openersCurrentEach( function( it )
-//   {
-//     let ready2 = new _.Consequence().take( null );
-//
-//     ready2.then( () =>
-//     {
-//       return will.currentOpenerChange( it.opener );
-//     });
-//
-//     ready2.then( () =>
-//     {
-//       return it.opener.openedModule.modulesExport
-//       ({
-//         name : request.subject,
-//         criterion : request.map,
-//         recursive : 0,
-//         kind : 'build',
-//       });
-//     });
-//
-//     ready2.finally( ( err, arg ) =>
-//     {
-//       debugger;
-//       will.currentOpenerChange( null );
-//       if( err )
-//       throw _.err( err, `\nFailed to build ${it.opener ? it.opener.commonPath : ''}` );
-//       return arg;
-//     });
-//
-//     return ready2;
-//   }))
-//   .finally( ( err, arg ) =>
-//   {
-//     will._commandsEnd( commandBuild );
-//     if( err )
-//     logger.log( _.errOnce( err ) );
-//     if( err )
-//     throw err;
-//     return arg;
-//   });
-//
-//   return ready;
-// }
 
 //
 
@@ -1939,63 +1836,6 @@ function commandExport( e )
 
 }
 
-// function commandExport( e )
-// {
-//   let will = this;
-//   let logger = will.logger;
-//   let ready = new _.Consequence().take( null );
-//   let request = will.Resolver.strRequestParse( e.argument );
-//
-//   will._commandsBegin( commandExport );
-//
-//   _.assert( will.currentOpener === null );
-//   if( will.currentOpeners === null )
-//   ready.then( () => will.openersFind() );
-//
-//   ready.then( () => will.openersCurrentEach( function( it )
-//   {
-//     let ready2 = new _.Consequence().take( null );
-//
-//     ready2.then( () =>
-//     {
-//       return will.currentOpenerChange( it.opener );
-//       // return it.opener.open({ all : 1 });
-//     });
-//
-//     ready2.then( () =>
-//     {
-//       return it.opener.openedModule.modulesExport
-//       ({
-//         name : request.subject,
-//         criterion : request.map,
-//         recursive : 0,
-//         kind : 'export',
-//       });
-//     });
-//
-//     ready2.finally( ( err, arg ) =>
-//     {
-//       will.currentOpenerChange( null );
-//       if( err )
-//       throw _.err( err, `\nFailed to export ${it.opener ? it.opener.commonPath : ''}` );
-//       return arg;
-//     });
-//
-//     return ready2;
-//   }))
-//   .finally( ( err, arg ) =>
-//   {
-//     will._commandsEnd( commandExport );
-//     if( err )
-//     logger.log( _.errOnce( err ) );
-//     if( err )
-//     throw err;
-//     return arg;
-//   });
-//
-//   return ready;
-// }
-
 //
 
 function commandExportRecursive( e )
@@ -2025,63 +1865,6 @@ function commandExportRecursive( e )
   }
 
 }
-
-// function commandExportRecursive( e )
-// {
-//   let will = this;
-//   let logger = will.logger;
-//   let ready = new _.Consequence().take( null );
-//   let request = will.Resolver.strRequestParse( e.argument );
-//
-//   will._commandsBegin( commandExportRecursive );
-//
-//   _.assert( will.currentOpener === null );
-//   if( will.currentOpeners === null )
-//   ready.then( () => will.openersFind() );
-//
-//   ready.then( () => will.openersCurrentEach( function( it )
-//   {
-//     let ready2 = new _.Consequence().take( null );
-//
-//     ready2.then( () =>
-//     {
-//       return will.currentOpenerChange( it.opener );
-//       // return it.opener.open({ all : 1 });
-//     });
-//
-//     ready2.then( () =>
-//     {
-//       return it.opener.openedModule.modulesExport
-//       ({
-//         name : request.subject,
-//         criterion : request.map,
-//         recursive : 2,
-//         kind : 'export',
-//       });
-//     });
-//
-//     ready2.finally( ( err, arg ) =>
-//     {
-//       will.currentOpenerChange( null );
-//       if( err )
-//       throw _.err( err, `\nFailed to export ${it.opener ? it.opener.commonPath : ''}` );
-//       return arg;
-//     });
-//
-//     return ready2;
-//   }))
-//   .finally( ( err, arg ) =>
-//   {
-//     will._commandsEnd( commandExportRecursive );
-//     if( err )
-//     logger.log( _.errOnce( err ) );
-//     if( err )
-//     throw err;
-//     return arg;
-//   });
-//
-//   return ready;
-// }
 
 // --
 // relations

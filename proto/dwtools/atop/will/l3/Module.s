@@ -51,6 +51,14 @@ function finit()
     }
 
     module.unform();
+
+    module.superRelations.forEach( ( relation ) =>
+    {
+      debugger;
+      _.assert( !relantion.finitedIs() );
+    });
+    module.superRelations.splice( 0, module.superRelations.length );
+
   }
   catch( err )
   {
@@ -163,17 +171,6 @@ function init( o )
   module._filePathChanged();
   module._nameChanged();
 
-  module.ready.tap( ( err, arg ) =>
-  {
-    if( err )
-    for( let u = 0 ; u < module.userArray.length ; u++ )
-    {
-      let opener = module.userArray[ u ];
-      _.assert( opener instanceof will.ModuleOpener );
-      opener.error = opener.error || err;
-    }
-  });
-
   if( will.verosity >= 5 )
   logger.log( module.qualifiedName, 'init' );
 
@@ -217,7 +214,15 @@ function openerMake()
 function releasedBy( user )
 {
   let module = this;
+
   _.arrayRemoveOnceStrictly( module.userArray, user );
+
+  if( user instanceof _.Will.ModuleOpener )
+  {
+    if( user.superRelation )
+    module.superRelationsRemove( user.superRelation );
+  }
+
   return true;
 }
 
@@ -227,7 +232,15 @@ function usedBy( user )
 {
   let module = this;
   let will = module.will;
+
   _.arrayAppendOnceStrictly( module.userArray, user );
+
+  if( user instanceof _.Will.ModuleOpener )
+  {
+    if( user.superRelation )
+    module.superRelationsAppend( user.superRelation );
+  }
+
   return module;
 }
 
@@ -422,7 +435,24 @@ function _preform()
 
   _.assert( arguments.length === 0 );
   _.assert( !!module.will );
-  _.assert( _.strsAreAll( module.willfilesPath ) || _.strIs( module.dirPath ), 'Expects willfilesPath or dirPath' );
+  // _.assert( _.strsAreAll( module.willfilesPath ) || _.strIs( module.dirPath ), 'Expects willfilesPath or dirPath' );
+
+  // logger.log( 'tap.on', module.id );
+  // if( module.id === 56 )
+  // debugger;
+  module.ready.tap( ( err, arg ) =>
+  {
+    // if( module.id === 56 )
+    // debugger;
+    // logger.log( 'tap.off', module.id );
+    if( err )
+    for( let u = 0 ; u < module.userArray.length ; u++ )
+    {
+      let opener = module.userArray[ u ];
+      _.assert( opener instanceof will.ModuleOpener );
+      opener.error = opener.error || err;
+    }
+  });
 
   if( module.pathResourceMap.in.path === null )
   module.pathResourceMap.in.path = '.';
@@ -441,6 +471,7 @@ function _preform()
   _.assert( module.dirPath === null || _.strDefined( module.dirPath ) );
   _.assert( !!module.willfilesPath || !!module.dirPath );
   _.assert( module.rootModule instanceof will.OpenedModule );
+  _.assert( _.strsAreAll( module.willfilesPath ) || _.strIs( module.dirPath ), 'Expects willfilesPath or dirPath' );
 
   /* */
 
@@ -1711,6 +1742,68 @@ moduleExport.defaults.kind = 'export';
 // batcher
 // --
 
+function recordFit_pre( routine, args )
+{
+  let module = this;
+
+  let record = args[ 0 ];
+  let opts = args[ 1 ];
+  opts = _.routineOptions( routine, opts );
+  _.assert( args.length === 2 );
+
+  return _.unrollFrom([ record, opts ]);
+}
+
+function recordFit_body( record, opts )
+{
+  let module = this;
+  let will = module.will;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 2 );
+
+  if( !opts.withOut && record.module )
+  if( record.module.isOut )
+  return false;
+
+  if( !opts.withIn && record.module )
+  if( !record.module.isOut )
+  return false;
+
+  if( !opts.withOptional )
+  if( !record.relation || record.relation.isOptional() )
+  return false;
+
+  if( !opts.withMandatory && record.relation )
+  if( !record.relation.isOptional() )
+  return false;
+
+  if( !opts.withEnabled && record.relation )
+  if( record.relation.enabled )
+  return false;
+
+  if( !opts.withDisabled && record.relation )
+  if( !record.relation.enabled )
+  return false;
+
+  return true;
+}
+
+var defaults = recordFit_body.defaults = Object.create( null );
+
+defaults.withStem = 0;
+defaults.withPeers = 0;
+defaults.withOut = 1;
+defaults.withIn = 1;
+defaults.withOptional = 1;
+defaults.withMandatory = 1;
+defaults.withEnabled = 1;
+defaults.withDisabled = 0;
+
+let recordFit = _.routineFromPreAndBody( recordFit_pre, recordFit_body );
+
+//
+
 function modulesEach_pre( routine, args )
 {
   let module = this;
@@ -1731,20 +1824,27 @@ function modulesEach_body( o )
   let will = module.will;
   let logger = will.logger;
 
-  _.assert( !o.visitedContainer || !!o.recordMap, 'Expects recordMap if visitedContainer provided' );
+  // _.assert( !o.visitedContainer || !!o.recordMap, 'Expects recordMap if visitedContainer provided' );
+  _.assert( !o.visitedContainer || !!o.nodesGroup, 'Expects nodesGroup if visitedContainer provided' );
 
-  let graph = will.graphSystemMake({ withPeers : o.withPeers, recordMap : o.recordMap });
-  let group = graph.nodesGroup();
+  // o.recordMap = o.recordMap || Object.create( null );
+  // let graph = will.graphGroupMake({ withPeers : o.withPeers, recordMap : o.recordMap });
+  // let group = graph.nodesGroup();
+  // o.nodesGroup = will.graphGroupMake({ withPeers : o.withPeers, recordMap : o.recordMap });
+  if( !o.nodesGroup )
+  o.nodesGroup = will.graphGroupMake({ withPeers : o.withPeers });
 
-  let nodes = [ group.nodeFrom( module ) ];
+  let nodes = [ o.nodesGroup.nodeFrom( module ) ];
   if( o.withPeers && module.peerModule )
-  nodes.push( group.nodeFrom( module.peerModule ) );
+  nodes.push( o.nodesGroup.nodeFrom( module.peerModule ) );
 
-  let o2 = _.mapOnly( o, group.each.defaults );
+  let fitOpts = _.mapOnly( o, module.recordFit.defaults );
+
+  let o2 = _.mapOnly( o, o.nodesGroup.each.defaults );
   o2.roots = nodes;
   o2.onUp = handleUp;
   o2.onDown = handleDown;
-  let result = group.each( o2 );
+  let result = o.nodesGroup.each( o2 );
 
   if( o.outputFormat !== '/' )
   return result.map( ( record ) => outputFrom( record ) );
@@ -1753,43 +1853,45 @@ function modulesEach_body( o )
 
   /* */
 
-  /* */
-
-  function isActual( record )
-  {
-    if( !o.withOut && record.module )
-    if( record.module.isOut )
-    return false;
-
-    if( !o.withIn && record.module )
-    if( !record.module.isOut )
-    return false;
-
-    if( !o.withOptional )
-    if( !record.relation || record.relation.isOptional() )
-    return false;
-
-    if( !o.withMandatory && record.relation )
-    if( !record.relation.isOptional() )
-    return false;
-
-    if( !o.withEnabled && record.relation )
-    if( record.relation.enabled )
-    return false;
-
-    if( !o.withDisabled && record.relation )
-    if( !record.relation.enabled )
-    return false;
-
-    return true;
-  }
+  // function isActual( record )
+  // {
+  //   if( !o.withOut && record.module )
+  //   if( record.module.isOut )
+  //   return false;
+  //
+  //   if( !o.withIn && record.module )
+  //   if( !record.module.isOut )
+  //   return false;
+  //
+  //   if( !o.withOptional )
+  //   if( !record.relation || record.relation.isOptional() )
+  //   return false;
+  //
+  //   if( !o.withMandatory && record.relation )
+  //   if( !record.relation.isOptional() )
+  //   return false;
+  //
+  //   if( !o.withEnabled && record.relation )
+  //   if( record.relation.enabled )
+  //   return false;
+  //
+  //   if( !o.withDisabled && record.relation )
+  //   if( !record.relation.enabled )
+  //   return false;
+  //
+  //   return true;
+  //
+  // }
 
   /* */
 
   function handleUp( record, it )
   {
 
-    it.continueNode = isActual( record );
+    // it.continueNode = isActual( record );
+    // debugger;
+    it.continueNode = module.recordFit( record, fitOpts );
+    // debugger;
 
     if( o.onUp )
     o.onUp.call( module, outputFrom( record ), it );
@@ -1816,21 +1918,23 @@ function modulesEach_body( o )
 
 }
 
-var defaults = modulesEach_body.defaults = _.mapExtend( null, _.graph.AbstractNodesGroup.prototype.each.defaults );
+var defaults = modulesEach_body.defaults = _.mapExtend( null, _.graph.AbstractNodesGroup.prototype.each.defaults, recordFit.defaults );
 
 defaults.outputFormat = '*/module'; /* / | * / module | * / relation */
 defaults.onUp = null;
 defaults.onDown = null;
-defaults.recordMap = null;
+// defaults.recordMap = null;
 defaults.recursive = 1;
-defaults.withStem = 0;
-defaults.withPeers = 0;
-defaults.withOut = 1;
-defaults.withIn = 1;
-defaults.withOptional = 1;
-defaults.withMandatory = 1;
-defaults.withEnabled = 1;
-defaults.withDisabled = 0;
+defaults.nodesGroup = null;
+
+// defaults.withStem = 0;
+// defaults.withPeers = 0;
+// defaults.withOut = 1;
+// defaults.withIn = 1;
+// defaults.withOptional = 1;
+// defaults.withMandatory = 1;
+// defaults.withEnabled = 1;
+// defaults.withDisabled = 0;
 
 let modulesEach = _.routineFromPreAndBody( modulesEach_pre, modulesEach_body );
 
@@ -1846,7 +1950,7 @@ function modulesEachDo( o )
   let modules;
   let con = new _.Consequence().take( null );
 
-  o = _.routineOptions( modulesEachDo, arguments );
+  o = _.routineOptions( modulesEachDo, arguments ); debugger;
 
   con.then( () =>
   {
@@ -1942,7 +2046,7 @@ function modulesBuild_body( o )
 
 }
 
-var defaults = modulesBuild_body.defaults = _.mapExtend( null, moduleBuild.defaults, modulesEach.defaults );
+var defaults = modulesBuild_body.defaults = _.mapExtend( null, moduleBuild.defaults, modulesEachDo.defaults );
 
 defaults.recursive = 0;
 defaults.withStem = 1;
@@ -1950,12 +2054,15 @@ defaults.withPeers = 0;
 defaults.withOut = 0;
 defaults.withIn = 1;
 
-delete defaults.outputFormat;
+// delete defaults.outputFormat;
+_.assert( defaults.outputFormat === undefined );
 
 let modulesBuild = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
 modulesBuild.defaults.kind = 'build';
+modulesBuild.defaults.downloading = 1;
 let modulesExport = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
 modulesExport.defaults.kind = 'export';
+modulesExport.defaults.downloading = 1;
 
 //
 
@@ -2011,6 +2118,12 @@ function rootModuleSet( src )
   let will = module.will;
 
   _.assert( src === null || src instanceof _.Will.OpenedModule );
+  _.assert( src === null || src.rootModule === src || src.rootModule === null );
+
+  let oldRootModule = module.rootModule;
+
+  if( oldRootModule === src )
+  return src;
 
   module[ rootModuleSymbol ] = src;
 
@@ -2019,6 +2132,21 @@ function rootModuleSet( src )
     if( opener instanceof _.Will.ModuleOpener )
     opener[ rootModuleSymbol ] = src;
   });
+
+  if( oldRootModule && src )
+  {
+    let modules = module.modulesEach({ outputFormat : '/' });
+    debugger;
+    modules.forEach( ( record ) =>
+    {
+      let module2 = record.module || record.opener;
+      if( module2 === null )
+      return;
+      debugger;
+      _.assert( module2.rootModule === oldRootModule || module2.rootModule === null );
+      module2.rootModule = src;
+    });
+  }
 
   return src;
 }
@@ -2033,6 +2161,46 @@ function superRelationsSet( src )
   _.assert( src === null || src.every( ( superRelation ) => superRelation instanceof _.Will.ModulesRelation ) );
 
   module[ superRelationsSymbol ] = src;
+
+  return src;
+}
+
+//
+
+function superRelationsAppend( src )
+{
+  let module = this;
+
+  if( _.arrayIs( src ) )
+  {
+    return _.map( src, ( src ) => module.supeRelationsAppend( src ) );
+  }
+
+  _.assert( src instanceof _.Will.ModulesRelation );
+
+  if( module[ superRelationsSymbol ] === null )
+  module[ superRelationsSymbol ] = [];
+
+  _.arrayAppendOnceStrictly( module[ superRelationsSymbol ], src );
+
+  return src;
+}
+
+//
+
+function superRelationsRemove( src )
+{
+  let module = this;
+
+  if( _.arrayIs( src ) )
+  {
+    return _.map( src, ( src ) => module.supeRelationsAppend( src ) );
+  }
+
+  _.assert( src instanceof _.Will.ModulesRelation );
+
+  if( module[ superRelationsSymbol ] )
+  _.arrayRemoveOnceStrictly( module[ superRelationsSymbol ], src );
 
   return src;
 }
@@ -2333,10 +2501,8 @@ function _subModulesDownload_body( o )
 
     remoteNumberWas = remoteNumber;
 
-    // for( let n in submoduleMap )
     modules.forEach( ( r ) =>
     {
-      // let submodule = submoduleMap[ n ];
 
       _.assert
       (
@@ -2344,7 +2510,6 @@ function _subModulesDownload_body( o )
         () => 'Submodule' + ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ) + ' was not opened or downloaded'
       );
 
-      // debugger;
       if( r.opener.formed < 2 )
       r.opener.remoteForm();
 
@@ -2359,7 +2524,6 @@ function _subModulesDownload_body( o )
       if( r.relation && !r.relation.enabled )
       return;
 
-      // debugger;
       con.then( () =>
       {
 
@@ -2369,8 +2533,6 @@ function _subModulesDownload_body( o )
         remoteNumber += 1;
 
         let o2 = _.mapOnly( o, r.opener._remoteDownload.defaults );
-        // let o2 = _.mapExtend( null, o );
-        // delete o2.downloadedMap;
         let result = _.Consequence.From( r.opener._remoteDownload( o2 ) );
         return result.then( ( arg ) =>
         {
@@ -2390,28 +2552,6 @@ function _subModulesDownload_body( o )
 
   }
 
-  /* */
-
-  // function downloadRecursive()
-  // {
-  //   let remoteNumberWas;
-  //
-  //   remoteNumberWas = remoteNumber;
-  //
-  //   for( let n in module.submoduleMap )
-  //   {
-  //     let submodule = module.submoduleMap[ n ];
-  //
-  //     if( !submodule.opener )
-  //     {
-  //       debugger;
-  //       submodule.form();
-  //     }
-  //
-  //   }
-  //
-  // }
-
 }
 
 var defaults = _subModulesDownload_body.defaults = _.mapExtend( null, modulesEach.defaults );
@@ -2422,14 +2562,174 @@ defaults.dry = 0;
 
 delete defaults.outputFormat;
 
-// {
-//   updating : 0,
-//   recursive : 0,
-//   dry : 0,
-//   downloadedMap : null,
-// }
-
 let _subModulesDownload = _.routineFromPreAndBody( _subModulesDownload_pre, _subModulesDownload_body );
+
+// function _subModulesDownload_pre( routine, args )
+// {
+//   let module = this;
+//
+//   _.assert( arguments.length === 2 );
+//   _.assert( args.length <= 2 );
+//
+//   let o;
+//   if( args[ 1 ] !== undefined )
+//   o = { name : args[ 0 ], criterion : args[ 1 ] }
+//   else
+//   o = args[ 0 ];
+//
+//   o = _.routineOptions( routine, o );
+//
+//   return o;
+// }
+//
+// function _subModulesDownload_body( o )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//   let downloadedNumber = 0;
+//   let remoteNumber = 0;
+//   let totalNumber = _.mapKeys( module.submoduleMap ).length;
+//   let time = _.timeNow();
+//   let con = new _.Consequence().take( null );
+//   let downloadedMap = Object.create( null );
+//
+//   _.assert( module.preformed > 0  );
+//   _.assert( arguments.length === 1 );
+//   _.assertRoutineOptions( _subModulesDownload_body, arguments );
+//
+//   logger.up();
+//
+//   let o2 = _.mapOnly( o, module.modulesEach );
+//   o2.outputFormat = '/';
+//   let modules = module.modulesEach( o2 );
+//   downloadAgain( modules );
+//
+//   con.finally( ( err, arg ) =>
+//   {
+//     logger.down();
+//     if( err )
+//     throw _.err( err, '\nFailed to', ( o.updating ? 'update' : 'download' ), 'submodules of', module.decoratedQualifiedName );
+//     logger.rbegin({ verbosity : -2 });
+//     if( o.dry )
+//     logger.log( ' + ' + downloadedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' will be ' + ( o.updating ? 'updated' : 'downloaded' ) );
+//     else
+//     logger.log( ' + ' + downloadedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' were ' + ( o.updating ? 'updated' : 'downloaded' ) + ' in ' + _.timeSpent( time ) );
+//     logger.rend({ verbosity : -2 });
+//     return arg;
+//   });
+//
+//   return con;
+//
+//   /* */
+//
+//   function downloadAgain( modules )
+//   {
+//     let remoteNumberWas;
+//
+//     _.assert( _.arrayIs( modules ) );
+//
+//     remoteNumberWas = remoteNumber;
+//
+//     // for( let n in submoduleMap )
+//     modules.forEach( ( r ) =>
+//     {
+//       // let submodule = submoduleMap[ n ];
+//
+//       _.assert
+//       (
+//         !!r.opener,
+//         () => 'Submodule' + ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ) + ' was not opened or downloaded'
+//       );
+//
+//       // debugger;
+//       if( r.opener.formed < 2 )
+//       r.opener.remoteForm();
+//
+//       _.assert
+//       (
+//         !!r.opener && r.opener.formed >= 2,
+//         () => 'Submodule' + ( r.opener ? r.opener.qualifiedName : n ) + ' was not preformed to download it'
+//       );
+//
+//       if( !r.opener.isRemote )
+//       return;
+//       if( r.relation && !r.relation.enabled )
+//       return;
+//
+//       // debugger;
+//       con.then( () =>
+//       {
+//
+//         if( downloadedMap[ r.opener.remotePath ] )
+//         return null;
+//
+//         remoteNumber += 1;
+//
+//         let o2 = _.mapOnly( o, r.opener._remoteDownload.defaults );
+//         // let o2 = _.mapExtend( null, o );
+//         // delete o2.downloadedMap;
+//         let result = _.Consequence.From( r.opener._remoteDownload( o2 ) );
+//         return result.then( ( arg ) =>
+//         {
+//           _.assert( _.boolIs( arg ) );
+//           _.assert( _.strIs( r.opener.remotePath ) );
+//           downloadedMap[ r.opener.remotePath ] = r.opener;
+//
+//           if( arg )
+//           downloadedNumber += 1;
+//
+//           return arg;
+//         });
+//
+//       });
+//
+//     });
+//
+//   }
+//
+//   /* */
+//
+//   // function downloadRecursive()
+//   // {
+//   //   let remoteNumberWas;
+//   //
+//   //   remoteNumberWas = remoteNumber;
+//   //
+//   //   for( let n in module.submoduleMap )
+//   //   {
+//   //     let submodule = module.submoduleMap[ n ];
+//   //
+//   //     if( !submodule.opener )
+//   //     {
+//   //       debugger;
+//   //       submodule.form();
+//   //     }
+//   //
+//   //   }
+//   //
+//   // }
+//
+// }
+//
+// var defaults = _subModulesDownload_body.defaults = _.mapExtend( null, modulesEach.defaults );
+//
+// defaults.withPeers = 0;
+// defaults.updating = 0;
+// defaults.dry = 0;
+//
+// delete defaults.outputFormat;
+//
+// // {
+// //   updating : 0,
+// //   recursive : 0,
+// //   dry : 0,
+// //   downloadedMap : null,
+// // }
+//
+// let _subModulesDownload = _.routineFromPreAndBody( _subModulesDownload_pre, _subModulesDownload_body );
 
 //
 
@@ -3971,7 +4271,6 @@ function _nameChanged()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let name = null;
-  let rootModule = module.rootModule;
 
   /* */
 
@@ -5796,6 +6095,7 @@ let Extend =
 
   // batcher
 
+  recordFit,
   modulesEach,
   modulesEachDo,
   modulesBuild,
@@ -5807,6 +6107,8 @@ let Extend =
   rootModuleGet,
   rootModuleSet,
   superRelationsSet,
+  superRelationsAppend,
+  superRelationsRemove,
 
   submodulesAreDownloaded,
   submodulesAllAreDownloaded,

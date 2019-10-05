@@ -26,27 +26,27 @@ Self.shortName = 'ModulesRelation';
 
 function finit( o )
 {
-  let submodule = this;
-  submodule.unform();
-  Parent.prototype.finit.apply( submodule, arguments );
+  let relation = this;
+  relation.unform();
+  Parent.prototype.finit.apply( relation, arguments );
 }
 
 //
 
 function init( o )
 {
-  let submodule = this;
-  Parent.prototype.init.apply( submodule, arguments );
-  return submodule;
+  let relation = this;
+  Parent.prototype.init.apply( relation, arguments );
+  return relation;
 }
 
 //
 
 function copy( o )
 {
-  let submodule = this;
+  let relation = this;
   _.assert( arguments.length === 1 );
-  return Parent.prototype.copy.call( submodule, o );
+  return Parent.prototype.copy.call( relation, o );
 }
 
 //
@@ -63,83 +63,86 @@ function ResouceDataFrom( o )
 
 function unform()
 {
-  let submodule = this;
-  let module = submodule.module;
+  let relation = this;
+  let module = relation.module;
 
-  if( submodule.opener )
+  if( relation.opener )
   {
-    let opener = submodule.opener;
-    _.assert( opener.superRelation === submodule );
+    let opener = relation.opener;
+    _.assert( opener.superRelation === relation );
     opener.superRelation = null;
-    submodule.opener = null;
+    relation.opener = null;
     opener.finit();
   }
 
-  return Parent.prototype.unform.call( submodule );
+  return Parent.prototype.unform.call( relation );
 }
 
 //
 
 function form1()
 {
-  let submodule = this;
+  let relation = this;
 
-  _.assert( !!submodule.module );
-  _.assert( !!submodule.module.rootModule );
+  _.assert( !!relation.module );
+  _.assert( !!relation.module.rootModule );
 
-  let module = submodule.module;
-  let rootModule = submodule.module.rootModule;
-  let willf = submodule.willf;
+  let module = relation.module;
+  let rootModule = relation.module.rootModule;
+  let willf = relation.willf;
   let will = rootModule.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
   _.assert( arguments.length === 0 );
-  _.assert( submodule.module instanceof will.OpenedModule );
+  _.assert( relation.module instanceof will.OpenedModule );
 
   /* */
 
-  submodule.opener = will.ModuleOpener
+  // if( relation.id === 323 )
+  // debugger;
+
+  relation.opener = will.ModuleOpener
   ({
     will : will,
-    aliasName : submodule.name,
-    willfilesPath : submodule.longPath,
-    superRelation : submodule,
+    aliasName : relation.name,
+    willfilesPath : relation.longPath,
+    superRelation : relation,
     rootModule : module.rootModule,
   });
 
-  submodule.opener = will.openerMake({ opener : submodule.opener });
+  relation.opener = will.openerMake({ opener : relation.opener });
 
   /* end */
 
-  Parent.prototype.form1.call( submodule );
-  return submodule;
+  Parent.prototype.form1.call( relation );
+  return relation;
 }
 
 //
 
 function form3()
 {
-  let submodule = this;
-  let module = submodule.module;
+  let relation = this;
+  let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let result = submodule;
+  let result = relation;
 
-  if( submodule.formed >= 3 )
+  if( relation.formed >= 3 )
   {
-    if( submodule.opener && !submodule.opener.isValid() )
+    if( relation.opener && !relation.opener.isValid() )
     {
       debugger;
-      // let opener = submodule.opener;
-      // submodule.opener = null;
+      // let opener = relation.opener;
+      // relation.opener = null;
       // opener.finit();
-      // submodule.opener.close();
-      // submodule.formed = 2;
-      submodule.close();
+      // relation.opener.close();
+      // relation.formed = 2;
+      relation.close();
     }
     else
     {
@@ -148,14 +151,14 @@ function form3()
   }
 
   _.assert( arguments.length === 0 );
-  _.assert( submodule.formed === 2 );
-  _.assert( _.strIs( submodule.path ), 'not tested' );
-  _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
+  _.assert( relation.formed === 2 );
+  _.assert( _.strIs( relation.path ), 'not tested' );
+  _.sure( _.strIs( relation.path ) || _.arrayIs( relation.path ), 'Path resource should have "path" field' );
 
   /* begin */
 
-  if( submodule.enabled )
-  result = submodule._openAct();
+  if( relation.enabled )
+  result = relation._openAct();
   else
   result = null;
 
@@ -163,15 +166,15 @@ function form3()
 
   result.finally( ( err, arg ) =>
   {
-    submodule.formed = 3;
+    relation.formed = 3;
 
     if( err )
     {
       // debugger;
-      // err = _.err( err, `\nFailed to open ${submodule.absoluteName}` );
+      // err = _.err( err, `\nFailed to open ${relation.absoluteName}` );
       err = _.err( err );
       // if( _.strHas( err.message, 'xxx' ) )
-      submodule.errorNotFound( err );
+      relation.errorNotFound( err );
       // else
       // throw err;
     }
@@ -188,62 +191,62 @@ function form3()
 
 function close()
 {
-  let submodule = this;
-  let module = submodule.module;
+  let relation = this;
+  let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
   let rootModule = module.rootModule;
 
-  submodule._wantedOpened = 0;
+  relation._wantedOpened = 0;
 
-  if( submodule.opener )
-  submodule.opener.close();
+  if( relation.opener )
+  relation.opener.close();
   else
-  submodule._closeEnd();
+  relation._closeEnd();
 
-  _.assert( submodule.formed <= 2 );
+  _.assert( relation.formed <= 2 );
 
-  return submodule;
+  return relation;
 }
 
 //
 
 function _closeEnd()
 {
-  let submodule = this;
-  let module = submodule.module;
+  let relation = this;
+  let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
   let rootModule = module.rootModule;
 
-  if( submodule.formed > 2 )
-  submodule.formed = 2;
+  if( relation.formed > 2 )
+  relation.formed = 2;
 
-  return submodule;
+  return relation;
 }
 
 //
 
 function _moduleAdoptEnd()
 {
-  let submodule = this;
-  let module = submodule.module;
+  let relation = this;
+  let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
   let rootModule = module.rootModule;
 
-  _.assert( submodule.formed < 3 );
-  _.assert( !!submodule.opener.openedModule );
+  _.assert( relation.formed < 3 );
+  _.assert( !!relation.opener.openedModule );
 
-  if( submodule.formed === 2 && submodule._wantedOpened )
+  if( relation.formed === 2 && relation._wantedOpened )
   {
-    submodule.formed = 3;
+    relation.formed = 3;
   }
   else
   {
@@ -256,8 +259,8 @@ function _moduleAdoptEnd()
 //
 // function open()
 // {
-//   let submodule = this;
-//   let module = submodule.module;
+//   let relation = this;
+//   let module = relation.module;
 //   let will = module.will;
 //   let fileProvider = will.fileProvider;
 //   let path = fileProvider.path;
@@ -265,17 +268,17 @@ function _moduleAdoptEnd()
 //   let rootModule = module.rootModule;
 //
 //   _.assert( arguments.length === 0 );
-//   _.assert( submodule.formed === 2 );
-//   _.assert( !!submodule.opener );
-//   _.assert( _.strIs( submodule.path ), 'not tested' );
-//   _.assert( !submodule.original );
-//   _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
+//   _.assert( relation.formed === 2 );
+//   _.assert( !!relation.opener );
+//   _.assert( _.strIs( relation.path ), 'not tested' );
+//   _.assert( !relation.original );
+//   _.sure( _.strIs( relation.path ) || _.arrayIs( relation.path ), 'Path resource should have "path" field' );
 //
-//   submodule._wantedOpened = 1;
+//   relation._wantedOpened = 1;
 //
-//   return submodule._openAct
+//   return relation._openAct
 //   ({
-//     longPath : submodule.longPath,
+//     longPath : relation.longPath,
 //   })
 //
 // }
@@ -284,8 +287,8 @@ function _moduleAdoptEnd()
 
 function _openAct( o )
 {
-  let submodule = this;
-  let module = submodule.module;
+  let relation = this;
+  let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -294,34 +297,34 @@ function _openAct( o )
 
   o = _.routineOptions( _openAct, arguments );
   _.assert( arguments.length === 0 || arguments.length === 1 );
-  _.assert( submodule.formed === 2 );
-  _.assert( !!submodule.opener );
-  _.assert( _.strIs( submodule.path ), 'not tested' );
-  _.assert( !submodule.original );
-  _.sure( _.strIs( submodule.path ) || _.arrayIs( submodule.path ), 'Path resource should have "path" field' );
+  _.assert( relation.formed === 2 );
+  _.assert( !!relation.opener );
+  _.assert( _.strIs( relation.path ), 'not tested' );
+  _.assert( !relation.original );
+  _.sure( _.strIs( relation.path ) || _.arrayIs( relation.path ), 'Path resource should have "path" field' );
 
   if( o.longPath === null )
-  o.longPath = submodule.longPath;
+  o.longPath = relation.longPath;
 
-  submodule._wantedOpened = 1;
+  relation._wantedOpened = 1;
 
-  if( submodule.opener.isOpened() )
+  if( relation.opener.isOpened() )
   {
-    _.assert( submodule.opener.formed === 4 );
-    _.assert( !!submodule.opener.willfilesPath );
-    return submodule.opener;
+    _.assert( relation.opener.formed === 4 );
+    _.assert( !!relation.opener.willfilesPath );
+    return relation.opener;
   }
 
-  submodule.opener.willfilesPath = o.longPath;
+  relation.opener.willfilesPath = o.longPath;
 
-  if( !submodule.enabled )
-  return submodule.opener;
+  if( !relation.enabled )
+  return relation.opener;
 
-  return submodule.opener.open({ throwing : 1 })
+  return relation.opener.open({ throwing : 1 })
   .finally( ( err, arg ) =>
   {
     if( err )
-    throw _.err( err, '\n', 'Failed to open', submodule.absoluteName );
+    throw _.err( err, '\n', 'Failed to open', relation.absoluteName );
     return arg;
   });
 }
@@ -337,19 +340,19 @@ _openAct.defaults =
 
 function isAvailableGet()
 {
-  let submodule = this;
-  let module = submodule.module;
+  let relation = this;
+  let module = relation.module;
 
-  if( !submodule.opener )
+  if( !relation.opener )
   return false;
 
-  if( !submodule.opener.isDownloaded )
+  if( !relation.opener.isDownloaded )
   return false;
 
-  if( !submodule.opener.isOpened() )
+  if( !relation.opener.isOpened() )
   return false;
 
-  if( !submodule.opener.isValid() )
+  if( !relation.opener.isValid() )
   return false;
 
   return true;
@@ -359,29 +362,29 @@ function isAvailableGet()
 
 function isDownloadedGet()
 {
-  let submodule = this;
-  let module = submodule.module;
+  let relation = this;
+  let module = relation.module;
 
-  if( !submodule.opener )
+  if( !relation.opener )
   return false;
 
-  return submodule.opener.isDownloaded;
+  return relation.opener.isDownloaded;
 }
 
 //
 
 function openerSet( opener )
 {
-  let submodule = this;
+  let relation = this;
 
-  if( opener === submodule[ openerSymbol ] )
+  if( opener === relation[ openerSymbol ] )
   return;
 
-  submodule[ openerSymbol ] = null;
+  relation[ openerSymbol ] = null;
 
   if( opener )
   {
-    submodule[ openerSymbol ] = opener;
+    relation[ openerSymbol ] = opener;
   }
 
 }
@@ -390,21 +393,21 @@ function openerSet( opener )
 
 function longPathGet()
 {
-  let submodule = this;
-  let module = submodule.module;
+  let relation = this;
+  let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  return path.join( module.inPath, submodule.path );
+  return path.join( module.inPath, relation.path );
 }
 
 //
 
 function pathSet( src )
 {
-  let submodule = this;
-  let module = submodule.module;
-  submodule[ pathSymbol ] = src;
+  let relation = this;
+  let module = relation.module;
+  relation[ pathSymbol ] = src;
   return src;
 }
 
@@ -412,18 +415,18 @@ function pathSet( src )
 
 function dataGet()
 {
-  let submodule = this;
-  let module = submodule.module;
-  return submodule[ dataSymbol ];
+  let relation = this;
+  let module = relation.module;
+  return relation[ dataSymbol ];
 }
 
 //
 
 function dataSet( src )
 {
-  let submodule = this;
-  let module = submodule.module;
-  submodule[ dataSymbol ] = src;
+  let relation = this;
+  let module = relation.module;
+  relation[ dataSymbol ] = src;
 }
 
 //
@@ -445,9 +448,9 @@ function moduleSet( src )
 
 function structureExport( o )
 {
-  let submodule = this;
-  let module = submodule.module;
-  let willf = submodule.willf;
+  let relation = this;
+  let module = relation.module;
+  let willf = relation.willf;
   let will = module.will;
   let rootModule = module.rootModule;
 
@@ -465,30 +468,30 @@ structureExport.defaults = Object.create( _.Will.Resource.prototype.structureExp
 
 function infoExport()
 {
-  let submodule = this;
-  let module = submodule.module;
+  let relation = this;
+  let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let resultMap = Parent.prototype.structureExport.call( submodule );
+  let resultMap = Parent.prototype.structureExport.call( relation );
   let tab = '  ';
 
-  if( submodule.opener )
+  if( relation.opener )
   {
-    let module2 = submodule.opener;
+    let module2 = relation.opener;
     resultMap.remote = module2.remotePath;
     resultMap.local = module2.localPath;
 
-    if( submodule.opener.openedModule )
+    if( relation.opener.openedModule )
     resultMap[ 'Exported builds' ] = _.toStr( _.mapKeys( module2.openedModule.exportedMap ) );
 
   }
 
-  resultMap.isDownloaded = submodule.isDownloaded;
-  resultMap.isAvailable = submodule.isAvailable;
+  resultMap.isDownloaded = relation.isDownloaded;
+  resultMap.isAvailable = relation.isAvailable;
 
-  let result = submodule._infoExport({ fields : resultMap });
+  let result = relation._infoExport({ fields : resultMap });
 
   return result;
 }
@@ -499,18 +502,18 @@ function infoExport()
 
 function isMandatory()
 {
-  let submodule = this;
-  let module = submodule.module;
+  let relation = this;
+  let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
-  if( !submodule.enabled )
+  if( !relation.enabled )
   return false;
-  if( submodule.criterion.dev )
+  if( relation.criterion.dev )
   return false;
-  if( submodule.criterion.optional )
+  if( relation.criterion.optional )
   return false;
 
   return true;
@@ -568,26 +571,33 @@ pathsRebase.defaults =
 
 function errorNotFound( err )
 {
-  let submodule = this;
-  let module = submodule.module;
+  let relation = this;
+  let module = relation.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
   if( will.verbosity >= 3 )
-  if( !submodule.module.rootModule || submodule.module.rootModule === submodule.module )
+  if( !relation.module.rootModule || relation.module.rootModule === relation.module )
   logger.error
   (
-      // ' ' + _.color.strFormat( '!', 'negative' ) + ' Failed to read ' + submodule.decoratedQualifiedName
-    ' ' + '!' + ' Failed to read ' + submodule.decoratedQualifiedName
+      // ' ' + _.color.strFormat( '!', 'negative' ) + ' Failed to read ' + relation.decoratedQualifiedName
+    ' ' + '!' + ' Failed to read ' + relation.decoratedQualifiedName
     + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading'
     // + '\n' + err.originalMessage
   );
 
+  // logger.log( _.errOnce( err ) ); // xxx
+
   err = _.err( err );
 
-  if( will.verbosity >= 5 || !submodule.opener || submodule.opener.isOpened() )
+  if( will.verbosity >= 2 )
+  if( !_.errIsBrief( err ) )
+  {
+    logger.log( _.errOnce( err ) );
+  }
+  else if( will.verbosity >= 5 || !relation.opener || relation.opener.isOpened() )
   {
     if( will.verbosity < 5 )
     err = _.errBrief( err );
@@ -673,7 +683,7 @@ let Statics =
 {
   ResouceDataFrom : ResouceDataFrom,
   MapName : 'submoduleMap',
-  KindName : 'submodule',
+  KindName : 'relation',
 }
 
 let Accessors =

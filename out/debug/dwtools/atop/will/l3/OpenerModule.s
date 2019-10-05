@@ -154,8 +154,8 @@ function optionsForModuleExport()
 
   let result = _.mapOnly( opener, Import );
 
-  if( opener.superRelation )
-  result.superRelations = [ opener.superRelation ]; // xxx
+  // if( opener.superRelation )
+  // result.superRelations = [ opener.superRelation ]; // xxx
 
   result.willfilesArray = _.entityMake( result.willfilesArray );
 
@@ -413,7 +413,6 @@ function find( o )
 
     /* */
 
-    // if( _.arrayHas( [ 'smart', 'strict' ], opener.searching ) )
     if( !openedModule || !openedModule.willfilesArray.length )
     {
 
@@ -434,9 +433,6 @@ function find( o )
 
     }
 
-    // if( openedModule && opener.isMain )
-    // openedModule.mainOpener = opener;
-
     /* */
 
     if( opener.error )
@@ -455,7 +451,7 @@ function find( o )
         openedModule.rootModule = opener.rootModule;
       }
 
-      _.assert( openedModule.rootModule === opener.rootModule || opener.rootModule === null );
+      // _.assert( openedModule.rootModule === opener.rootModule || opener.rootModule === null );
       _.assert( opener.openedModule === openedModule || opener.openedModule === null );
       opener.openedModule = openedModule;
 
@@ -471,14 +467,10 @@ function find( o )
 
       _.assert( opener.openedModule === null );
       let o2 = opener.optionsForModuleExport();
-      // debugger;
       openedModule = opener.openedModule = new will.OpenedModule( o2 );
-      // debugger;
       if( openedModule.rootModule === null )
       openedModule.rootModule = openedModule;
       openedModule.preform();
-
-      // opener.modulesAttachedOpen();
 
     }
 
@@ -972,7 +964,24 @@ let peerModuleGet = sharedFieldGet_functor( 'peerModule' );
 let peerModuleSet = sharedFieldSet_functor( 'peerModule' );
 
 let rootModuleGet = sharedFieldGet_functor( 'rootModule' );
-let rootModuleSet = sharedFieldSet_functor( 'rootModule' );
+// let rootModuleSet = sharedFieldSet_functor( 'rootModule' );
+
+// let rootModuleSymbol = Symbol.for( 'rootModule' );
+function rootModuleSet( src )
+{
+  let opener = this;
+  let openedModule = opener.openedModule;
+
+  _.assert( src === null || src instanceof _.Will.OpenedModule );
+  _.assert( src === null || src.rootModule === src || src.rootModule === null );
+
+  opener[ rootModuleSymbol ] = src;
+
+  if( openedModule && openedModule[ fieldName ] !== src )
+  openedModule[ fieldName ] = src;
+
+  return src;
+}
 
 //
 
@@ -992,7 +1001,18 @@ function superRelationSet( src )
   _.assert( src === null || src instanceof _.Will.ModulesRelation );
   _.assert( src === null || src.opener === null || src.opener === opener )
 
+  if( opener.openedModule && opener.superRelation )
+  {
+    opener.openedModule.superRelationsRemove( opener.superRelation );
+  }
+
   opener[ superRelationSymbol ] = src;
+
+  if( opener.openedModule && opener.superRelation )
+  {
+    opener.openedModule.superRelationsAppend( opener.superRelation );
+  }
+
   return src;
 }
 
@@ -1085,7 +1105,8 @@ function remoteForm()
   else
   {
     // opener.localPath = path.detrail( path.common( opener.willfilesPath ) );
-    opener.localPath = opener.dirPath;
+    // opener.localPath = opener.dirPath;
+    opener.localPath = opener.commonPath;
     opener.isDownloaded = true;
   }
 
@@ -1119,7 +1140,14 @@ function _remoteFormAct()
   let parsed = remoteProvider.pathParse( willfilesPath );
 
   opener.remotePath = willfilesPath;
-  opener.localPath = path.resolve( submodulesDir, opener.aliasName );
+  // debugger;
+  let relativePath = path.parse( path.relative( opener.dirPath, opener.commonPath ) ).longPath;
+  opener.localPath = path.resolve( submodulesDir, opener.aliasName, relativePath );
+  // debugger;
+  // opener.localPath = path.resolve( submodulesDir, opener.aliasName );
+  // debugger;
+  // opener.localCommonPath = path.resolve( submodulesDir, opener.aliasName, path.relative( opener.dirPath, opener.commonPath ) );
+  // debugger;
 
   let willfilesPath2 = path.resolve( opener.localPath, parsed.localVcsPath );
   opener._filePathChange( willfilesPath2 );
@@ -1381,6 +1409,7 @@ let commonPathGet = sharedFieldGet_functor( 'commonPath' );
 // let inPathGet = sharedFieldGet_functor( 'inPath' );
 // let outPathGet = sharedFieldGet_functor( 'outPath' );
 let localPathGet = sharedFieldGet_functor( 'localPath' );
+// let localCommonPathGet = sharedFieldGet_functor( 'localCommonPath' );
 let remotePathGet = sharedFieldGet_functor( 'remotePath' );
 // let willPathGet = sharedFieldGet_functor( 'willPath' );
 
@@ -1388,6 +1417,7 @@ let willfilesPathSet = sharedPathSet_functor( 'willfilesPath' );
 // let inPathSet = sharedPathSet_functor( 'inPath' );
 // let outPathSet = sharedPathSet_functor( 'outPath' );
 let localPathSet = sharedPathSet_functor( 'localPath' );
+// let localCommonPathSet = sharedPathSet_functor( 'localCommonPath' );
 let remotePathSet = sharedPathSet_functor( 'remotePath' );
 
 // --
@@ -1594,6 +1624,7 @@ let Composes =
   // inPath : null,
   // outPath : null,
   localPath : null,
+  // localCommonPath : null,
   remotePath : null,
 
   isRemote : null,
@@ -1672,6 +1703,7 @@ let Accessors =
   dirPath : { getter : dirPathGet, readOnly : 1 },
   commonPath : { getter : commonPathGet, readOnly : 1 },
   localPath : { getter : localPathGet, setter : localPathSet },
+  // localCommonPath : { getter : localCommonPathGet, setter : localCommonPathSet },
   remotePath : { getter : remotePathGet, setter : remotePathSet },
 
   name : { getter : nameGet, readOnly : 1 },
@@ -1772,6 +1804,7 @@ let Extend =
   // inPathGet,
   // outPathGet,
   localPathGet,
+  // localCommonPathGet,
   remotePathGet,
   // willPathGet,
 
@@ -1779,6 +1812,7 @@ let Extend =
   // inPathSet,
   // outPathSet,
   localPathSet,
+  // localCommonPathSet,
   remotePathSet,
 
   // name

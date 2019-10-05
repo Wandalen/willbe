@@ -41,6 +41,9 @@ function init( o )
   Object.preventExtensions( record );
   _.Will.ResourceCounter += 1;
   record.id = _.Will.ResourceCounter;
+  if( o )
+  record.copy( o );
+  return record;
 }
 
 //
@@ -50,38 +53,56 @@ function reform()
   let record = this;
   let will = record.will;
 
-  if( record.opener && record.opener.superRelation && !record.relation )
-  record.relation = record.opener.superRelation;
+  if( record.opener && record.opener.superRelation )
+  record.relationAppend( record.opener.superRelation );
   if( record.relation && record.relation.opener && !record.opener )
   record.opener = record.relation.opener;
 
-  let commonPath;
+  let localPath, remotePath;
   if( record.module )
   {
-    commonPath = record.module.commonPath;
+    localPath = record.module.localPath || record.module.commonPath;
+    remotePath = record.module.remotePath;
     record.object = record.module;
   }
   else if( record.opener )
   {
-    commonPath = record.opener.commonPath;
+    if( record.opener.formed < 2 )
+    record.opener.remoteForm();
+    _.assert( record.opener.formed >= 2 );
+    localPath = record.opener.localPath || record.opener.commonPath;
+    remotePath = record.opener.remotePath;
     record.object = record.opener;
   }
   else if( record.relation )
   {
-    commonPath = record.relation.path;
+    localPath = record.relation.path;
+    remotePath = record.relation.path;
     record.object = record.relation;
   }
 
-  // if( record.object.peerModule )
-  // record.peerModule = record.object.peerModule;
+  if( localPath && _.strHas( localPath, 'PathBasic' ) )
+  debugger;
 
-  _.assert( record.commonPath === null || record.commonPath === commonPath );
-  record.commonPath = commonPath;
+  _.assert( record.localPath === null || record.localPath === localPath );
+  record.localPath = localPath;
+  _.assert( record.remotePath === null || record.remotePath === remotePath );
+  record.remotePath = remotePath;
 
   if( record.recordMap )
   {
-    _.assert( record.recordMap[ commonPath ] === undefined || record.recordMap[ commonPath ] === record );
-    record.recordMap[ commonPath ] = record;
+    _.assert( record.recordMap[ localPath ] === undefined || record.recordMap[ localPath ] === record );
+    record.recordMap[ localPath ] = record;
+    if( remotePath )
+    {
+      _.assert( record.recordMap[ remotePath ] === undefined || record.recordMap[ remotePath ] === record );
+      record.recordMap[ remotePath ] = record;
+    }
+  }
+
+  if( record.nodesGroup )
+  {
+    record.nodesGroup._nodeAddOnce( record );
   }
 
   record.formed = 1;
@@ -94,73 +115,90 @@ function From( o )
 {
   let result;
   let made = false;
+  let will = o.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
 
   _.assert( arguments.length === 1 );
   _.assert( _.mapIs( o ) );
   _.assert( _.mapIs( o.recordMap ) );
+  _.assert( o.nodesGroup instanceof _.graph.AbstractNodesGroup );
 
   if( !o.object )
   o.object = o.module || o.opener || o.relation;
-
-  if( !o.recordMap )
-  o.recordMap = o.will.recordMap;
 
   if( o.object && o.object instanceof Self )
   {
     debugger;
     result = o.object;
-    delete o.object;
-    _.mapExtend( result, o );
   }
   else if( _.mapIs( o.object ) )
   {
     debugger;
-    // _.assertMapHasOnly( o.object, Record  );
-    // _.assertMapHasAll( o.object, Record );
-    // result = o.object;
     result = Self( o.object );
   }
   else if( o.object instanceof _.Will.OpenedModule )
   {
-    if( o.recordMap && o.recordMap[ o.object.commonPath ] )
-    result = o.recordMap[ o.object.commonPath ];
+    let localPath = o.object.localPath || o.object.commonPath;
+    let remotePath = o.object.remotePath;
+    if( o.recordMap && o.recordMap[ localPath ] )
+    result = o.recordMap[ localPath ];
+    else if( o.recordMap && remotePath && o.recordMap[ remotePath ] )
+    result = o.recordMap[ remotePath ];
     else
-    result = Self( o );
-    _.assert( !result.module || result.module === o.object );
-    result.module = o.object;
+    o.module = o.object;
   }
   else if( o.object instanceof _.Will.ModuleOpener )
   {
     debugger;
+    let localPath = o.object.localPath || o.object.commonPath;
+    let remotePath = o.object.remotePath;
     if( o.recordMap && o.recordMap[ o.object.commonPath ] )
     result = o.recordMap[ o.object.commonPath ];
+    else if( o.recordMap && remotePath && o.recordMap[ remotePath ] )
+    result = o.recordMap[ remotePath ];
     else
-    result = Self( o );
-    result.opener = o.object;
+    o.opener = o.object;
   }
   else if( o.object instanceof _.Will.ModulesRelation )
   {
-    if( o.recordMap && o.recordMap[ o.object.path ] )
-    debugger;
-    if( o.recordMap && o.recordMap[ o.object.path ] )
+    /* xxx : use localPath / remotePath after introducing it */
+    let localPath = o.object.path;
+    let remotePath = o.object.path;
+    if( localPath )
+    localPath = path.join( o.object.module.inPath, localPath );
+    if( remotePath )
+    remotePath = path.join( o.object.module.inPath, localPath );
+    if( o.recordMap && o.recordMap[ localPath ] )
     result = o.recordMap[ o.object.path ];
+    else if( o.recordMap && remotePath && o.recordMap[ remotePath ] )
+    result = o.recordMap[ remotePath ];
     else
-    result = Self( o );
-    result.relation = o.object;
+    o.relation = o.object;
+    if( result )
+    result.relationAppend( o.object );
   }
   else _.assert( 0, `Not clear how to get graph record from ${_.strShort( o.object )}` );
 
+  if( result )
+  {
+    delete o.object;
+    if( !o.recordMap )
+    delete o.recordMap;
+    _.mapExtend( result, o );
+  }
+
+  if( !o.recordMap )
+  o.recordMap = o.will.recordMap;
+  if( !result )
+  result = Self( o );
+
   result.reform();
 
+  _.assert( !!result.object );
+
   return result;
-
-  // function make()
-  // {
-  //   let record = _.mapExtend( null, Record );
-  //   made = true;
-  //   return record;
-  // }
-
 }
 
 //
@@ -169,8 +207,40 @@ function peerModuleGet()
 {
   let record = this;
   if( record.object )
-  record.object.peerModule;
+  return record.object.peerModule;
   return null;
+}
+
+//
+
+function relationAppend( relation )
+{
+  let record = this;
+
+  _.assert( relation instanceof _.Will.ModulesRelation );
+
+  if( !record.relation )
+  record.relation = relation;
+
+  _.arrayAppendOnce( record.relations, relation );
+
+}
+
+//
+
+function relationRemove( relation )
+{
+  let record = this;
+
+  _.assert( relation instanceof _.Will.ModulesRelation );
+  _.arrayRemoveOnce( record.relations, relation );
+
+  if( record.relation === relation )
+  record.relation = null;
+
+  if( !record.relation && record.relations.length )
+  record.relation = record.relations[ 0 ];
+
 }
 
 // --
@@ -188,15 +258,19 @@ let Aggregates =
 let Associates =
 {
 
-  commonPath : null,
+  // commonPath : null,
+  localPath : null,
+  remotePath : null,
   module : null,
   opener : null,
   relation : null,
+  relations : _.define.own([]),
   object : null,
   // peerModule : null,
 
   will : null,
   recordMap : null,
+  nodesGroup : null,
 
 }
 
@@ -220,6 +294,7 @@ let Statics =
 let Forbids =
 {
   recordsMap : 'recordsMap',
+  commonPath : 'commonPath',
 }
 
 let Accessors =
@@ -243,6 +318,8 @@ let Extend =
   From,
 
   peerModuleGet,
+  relationAppend,
+  relationRemove,
 
   // relation
 
@@ -263,6 +340,8 @@ _.classDeclare
   parent : Parent,
   extend : Extend,
 });
+
+_.Copyable.mixin( Self );
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = _global_.wTools;

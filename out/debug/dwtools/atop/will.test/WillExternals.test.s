@@ -2187,10 +2187,9 @@ shell.step
   return ready;
 } /* end of function verbosityStepPrintName */
 
-
 //
 
-function modulesWhichDotless( test )
+function modulesTreeDotless( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'two-dotless-single-exported' );
@@ -2226,19 +2225,19 @@ function modulesWhichDotless( test )
 
   .then( () =>
   {
-    test.case = '.imply v:1 ; .modules.tree'
+    test.case = '.imply v:1 ; .modules.tree withLocalPath:1';
     return null;
   })
 
-  shell({ execPath : '.imply v:1 ; .modules.tree' })
+  shell({ execPath : '.imply v:1 ; .modules.tree withLocalPath:1' })
 
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, '+-- module::' ), 2 );
-    test.identical( _.strCount( got.output, 'modulesWhichDotless/' ), 2 );
-    test.identical( _.strCount( got.output, 'modulesWhichDotless/sub' ), 1 );
+    test.identical( _.strCount( got.output, 'modulesTreeDotless/' ), 2 );
+    test.identical( _.strCount( got.output, 'modulesTreeDotless/sub' ), 1 );
 
     return null;
   })
@@ -2249,21 +2248,21 @@ function modulesWhichDotless( test )
 
   .then( () =>
   {
-    test.case = '.modules.tree'
+    test.case = '.modules.tree withLocalPath:1'
     _.fileProvider.filesDelete( outSuperDirPath );
     _.fileProvider.filesDelete( outSubDirPath );
     return null;
   })
 
-  shell({ execPath : '.modules.tree' })
+  shell({ execPath : '.modules.tree withLocalPath:1' })
 
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, '+-- module::' ), 2 );
-    test.identical( _.strCount( got.output, 'modulesWhichDotless/' ), 4 );
-    test.identical( _.strCount( got.output, 'modulesWhichDotless/sub' ), 2 );
+    test.identical( _.strCount( got.output, 'modulesTreeDotless/' ), 4 );
+    test.identical( _.strCount( got.output, 'modulesTreeDotless/sub' ), 2 );
 
     return null;
   })
@@ -2271,7 +2270,263 @@ function modulesWhichDotless( test )
   /* - */
 
   return ready;
-} /* end of function modulesWhichDotless */
+} /* end of function modulesTreeDotless */
+
+//
+
+function modulesTreeHierarchyRemote( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* - */
+
+  shell({ execPath : '.with * .modules.tree' })
+
+  .then( ( got ) =>
+  {
+    test.case = '.with * .modules.tree';
+    test.identical( got.exitCode, 0 );
+
+    let exp =
+`
+ +-- module::z
+   +-- module::a
+   | +-- module::Tools
+   | +-- module::PathTools
+   | +-- module::a0
+   |   +-- module::PathTools
+   |   +-- module::PathBasic
+   +-- module::b
+   | +-- module::PathTools
+   | +-- module::Proto
+   +-- module::c
+   | +-- module::a0
+   | | +-- module::PathTools
+   | | +-- module::PathBasic
+   | +-- module::UriBasic
+   +-- module::PathTools
+`
+    test.identical( _.strCount( got.output, exp ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::' ), 16 );
+    test.identical( _.strCount( got.output, 'module::z' ), 1 );
+    test.identical( _.strCount( got.output, 'module::a' ), 3 );
+    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
+    test.identical( _.strCount( got.output, 'module::b' ), 1 );
+    test.identical( _.strCount( got.output, 'module::c' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ execPath : '.with * .modules.tree withRemotePath:1' })
+
+  .then( ( got ) =>
+  {
+    test.case = '.with * .modules.tree withRemotePath:1';
+    test.identical( got.exitCode, 0 );
+
+    let exp =
+`
+ +-- module::z
+   +-- module::a
+   | +-- module::Tools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
+   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | +-- module::a0
+   |   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   |   +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   +-- module::b
+   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | +-- module::Proto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
+   +-- module::c
+   | +-- module::a0
+   | | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | | +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/
+   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+`
+    test.identical( _.strCount( got.output, exp ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::' ), 16 );
+    test.identical( _.strCount( got.output, 'module::z' ), 1 );
+    test.identical( _.strCount( got.output, 'module::a' ), 3 );
+    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
+    test.identical( _.strCount( got.output, 'module::b' ), 1 );
+    test.identical( _.strCount( got.output, 'module::c' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ execPath : '.with * .modules.tree withLocalPath:1' })
+
+  .then( ( got ) =>
+  {
+    test.case = '.with * .modules.tree withLocalPath:1';
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, '+-- module::' ), 16 );
+    test.identical( _.strCount( got.output, 'module::z' ), 1 );
+    test.identical( _.strCount( got.output, 'module::a' ), 3 );
+    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
+    test.identical( _.strCount( got.output, 'module::b' ), 1 );
+    test.identical( _.strCount( got.output, 'module::c' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ execPath : '.with ** .modules.tree' })
+
+  .then( ( got ) =>
+  {
+    test.case = '.with ** .modules.tree';
+    test.identical( got.exitCode, 0 );
+
+    let exp =
+`
+ +-- module::z
+   +-- module::a
+   | +-- module::Tools
+   | +-- module::PathTools
+   | +-- module::a0
+   |   +-- module::PathTools
+   |   +-- module::PathBasic
+   +-- module::b
+   | +-- module::PathTools
+   | +-- module::Proto
+   +-- module::c
+   | +-- module::a0
+   | | +-- module::PathTools
+   | | +-- module::PathBasic
+   | +-- module::UriBasic
+   +-- module::PathTools
+`
+    test.identical( _.strCount( got.output, exp ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::' ), 16 );
+    test.identical( _.strCount( got.output, 'module::z' ), 1 );
+    test.identical( _.strCount( got.output, 'module::a' ), 3 );
+    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
+    test.identical( _.strCount( got.output, 'module::b' ), 1 );
+    test.identical( _.strCount( got.output, 'module::c' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ execPath : '.with ** .modules.tree withRemotePath:1' })
+
+  .then( ( got ) =>
+  {
+    test.case = '.with ** .modules.tree withRemotePath:1';
+    test.identical( got.exitCode, 0 );
+
+    let exp =
+`
+ +-- module::z
+   +-- module::a
+   | +-- module::Tools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
+   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | +-- module::a0
+   |   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   |   +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   +-- module::b
+   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | +-- module::Proto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
+   +-- module::c
+   | +-- module::a0
+   | | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | | +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/
+   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+`
+    test.identical( _.strCount( got.output, exp ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::' ), 16 );
+    test.identical( _.strCount( got.output, 'module::z' ), 1 );
+    test.identical( _.strCount( got.output, 'module::a' ), 3 );
+    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
+    test.identical( _.strCount( got.output, 'module::b' ), 1 );
+    test.identical( _.strCount( got.output, 'module::c' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ execPath : '.with ** .modules.tree withLocalPath:1' })
+
+  .then( ( got ) =>
+  {
+    test.case = '.with ** .modules.tree withLocalPath:1';
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, '+-- module::' ), 16 );
+    test.identical( _.strCount( got.output, 'module::z' ), 1 );
+    test.identical( _.strCount( got.output, 'module::a' ), 3 );
+    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
+    test.identical( _.strCount( got.output, 'module::b' ), 1 );
+    test.identical( _.strCount( got.output, 'module::c' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function modulesTreeHierarchyRemote */
+
+modulesTreeHierarchyRemote.timeOut = 300000;
 
 //
 
@@ -12770,7 +13025,8 @@ var Self =
     verbositySet,
     verbosityStepDelete,
     verbosityStepPrintName,
-    modulesWhichDotless,
+    modulesTreeDotless,
+    modulesTreeHierarchyRemote,
 
     help,
     listSingleModule,
