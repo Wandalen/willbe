@@ -1199,14 +1199,68 @@ function _remoteDownload( o )
     _.assert( _.boolLike( downloading ) );
     downloading = !downloading;
 
+    /* changes for versions.argree begin*/
+
+    if( o.agree )
+    if( opener.isDownloaded )
+    if( opener.remoteHasChanges() )
+    {
+      /* if local repo has any changes and version is not agreed then throw error with invitation to commit changes first */
+      if( !opener.isUpToDate )
+      throw _.errBrief
+      (
+        'Module', opener.decoratedAbsoluteName, 'needs to be updated, but has local changes.',
+        '\nPlease push your local changes to remote or stash them and merge manually after update.'
+      );
+
+      /* if local repo has any changes and version is agreed then do nothing */
+      downloading = false;
+      return arg;
+    }
+
+    /* changes for versions.argree end*/
+
+    /*
+    // Vova: possible alternative for deleting old remote when its not valid
+
+    if( opener.isDownloaded )
+    {
+      let gitProvider = will.fileProvider.providerForPath( opener.remotePath );
+      let result = gitProvider.isDownloadedFromRemote
+      ({
+        localPath : opener.localPath,
+        remotePath : opener.remotePath
+      });
+      if( !result.downloadedFromRemote )
+      throw _.err
+      (
+        'Module', opener.decoratedAbsoluteName, 'is already downloaded, but has different origin url:',
+        _.strQuote( result.originVcsPath ), ', expected url:', _.strQuote( result.remoteVcsPath )
+      );
+
+      if( !opener.isValid() )
+      throw _.err( 'Module', opener.decoratedAbsoluteName, 'is already downloaded, but its broken:\n', _.errAttentionRequest( opener.error ) ); //Vova: this error needs more details
+    }
+    else if( fileProvider.fileExists( opener.localPath ) )
+    {
+      throw _.err
+      (
+        'Module', opener.decoratedAbsoluteName, 'is not downloaded, but local path:', _.strQuote( opener.localPath ), 'exits.',
+        'Rename/remove path:', _.strQuote( opener.localPath ), 'and try again.'
+      )
+    }
+    */
+
     /*
     delete old remote opener if it has a critical error or downloaded files are corrupted
     */
 
     if( !o.dry )
-    if( !opener.isValid() || !opener.isDownloaded )
     {
-      fileProvider.filesDelete({ filePath : opener.localPath, throwing : 0, sync : 1 });
+      if( !opener.isValid() || !opener.isDownloaded )
+      {
+        fileProvider.filesDelete({ filePath : opener.localPath, throwing : 0, sync : 1 });
+      }
     }
 
     return arg;
@@ -1286,6 +1340,7 @@ function _remoteDownload( o )
 _remoteDownload.defaults =
 {
   updating : 0,
+  agree : 0,
   dry : 0,
   opening : 1,
   recursive : 0,
@@ -1343,6 +1398,22 @@ function remoteLatestVersion()
   let remoteProvider = fileProvider.providerForPath( opener.commonPath );
   debugger;
   return remoteProvider.versionRemoteLatestRetrive( opener.localPath )
+}
+
+//
+
+function remoteHasChanges()
+{
+  let opener = this;
+  let will = opener.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( !!opener.willfilesPath || !!opener.dirPath );
+  _.assert( arguments.length === 0 );
+
+  let remoteProvider = fileProvider.providerForPath( opener.remotePath );
+  return remoteProvider.hasChanges( opener.localPath );
 }
 
 // --
@@ -1792,6 +1863,7 @@ let Extend =
   remoteUpgrade,
   remoteCurrentVersion,
   remoteLatestVersion,
+  remoteHasChanges,
 
   // path
 

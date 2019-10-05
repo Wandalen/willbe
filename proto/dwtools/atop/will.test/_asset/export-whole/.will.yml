@@ -1,6 +1,9 @@
+submodule :
+  export-whole : module/export-whole
+
 about :
 
-  name : "export-whole"
+  name : "import-whole"
   description : "Module for testing"
   version : "0.0.1"
   enabled : 1
@@ -8,21 +11,18 @@ about :
 path :
 
   in : '.'
-  out : '.'
+  out : 'out'
   temp : '*out*'
 
-step :
+reflector :
 
-  export.proto :
-
-    export : '{path::in}/**'
-    tar : 0
+  reflect.submodules :
+    inherit : submodule::*/exported::*=1/reflector::exported.files*=1
+    dst : path::out
 
 build :
-
-  proto.export :
+  debug :
     criterion :
       default : 1
-      export : 1
     steps :
-      - step::export.proto
+    - step::reflect.submodules

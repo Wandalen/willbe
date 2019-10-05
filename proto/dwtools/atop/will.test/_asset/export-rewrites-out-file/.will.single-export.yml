@@ -1,0 +1,27 @@
+about :
+
+  name : "export-rewrites-out-file"
+  description : "Module for testing"
+  version : "0.0.1"
+  enabled : 1
+
+path :
+
+  in : '.'
+  out : 'out'
+  temp : '*out*'
+  export1 : '*proto/One.s*'
+
+step :
+
+  export1 :
+    export : path::export1
+    tar : 0
+
+build :
+
+  export1 :
+    criterion :
+      export : 1
+    steps :
+      - step::export1

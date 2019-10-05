@@ -1,0 +1,28 @@
+about :
+
+  name : "local"
+  description : "Module for testing"
+  version : "0.0.1"
+  enabled : 1
+
+path :
+
+  in : '.'
+  out : 'out'
+  temp : '*out*'
+
+step :
+
+  export.proto :
+
+    export : '{path::in}/**'
+    tar : 0
+
+build :
+
+  proto.export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - step::export.proto

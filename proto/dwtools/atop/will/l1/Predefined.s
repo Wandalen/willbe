@@ -764,6 +764,84 @@ stepRoutineSubmodulesUpdate.stepOptions =
 
 //
 
+function stepRoutineSubmodulesAreUpdated( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let will = module.will;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 1 );
+  _.assert( !!module );
+
+  let relations = module.modulesEach({ outputFormat : '*/relation' });
+  let totalNumber = _.mapKeys( module.submoduleMap ).length;
+  let upToDateNumber = 0;
+
+  let con = new _.Consequence().take( null );
+
+  logger.up();
+
+  _.each( relations, ( relation ) =>
+  {
+    con.then( () =>
+    {
+      if( !isDownloaded() )
+      {
+        logger.error( ' ! Submodule ' + relation.opener.decoratedQualifiedName + ' is not downloaded!'  );
+        return false;
+      }
+
+      return relation.opener.remoteIsUpToDateUpdate()
+      .then( ( arg ) =>
+      {
+        if( !relation.opener.isUpToDate )
+        logger.error( ' ! Submodule ' + relation.opener.decoratedQualifiedName + ' is not up to date!'  );
+        else
+        upToDateNumber += 1;
+        return arg;
+      })
+    })
+
+    function isDownloaded()
+    {
+      if( !relation.opener )
+      return false;
+
+      _.assert( _.boolLike( relation.opener.isDownloaded ) );
+      return relation.opener.isDownloaded;
+    }
+  });
+
+  con.finally( ( err, got ) =>
+  {
+    if( err )
+    throw _.err( err, '\nFailed to check if modules are up to date' );
+
+    let message = upToDateNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' are up to date';
+
+    let allAreUpToDate = upToDateNumber === totalNumber;
+
+    if( !allAreUpToDate )
+    throw _.errBrief( message );
+    else
+    logger.log( message );
+
+    logger.down();
+
+    return allAreUpToDate;
+  })
+
+  return con;
+}
+
+stepRoutineSubmodulesAreUpdated.stepOptions =
+{
+}
+
+//
+
 function stepRoutineSubmodulesReload( frame )
 {
   let step = this;
@@ -864,6 +942,62 @@ stepRoutineExport.uniqueOptions =
   export : null,
 }
 
+//
+
+function stepRoutineWillbeIsUpToDate( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 1 );
+
+  /* */
+
+  let packageJson = require( '../../../../../package.json' );
+  let currentVersion = packageJson.version;
+
+  let ready = _.process.start
+  ({
+    execPath : 'npm view willbe version',
+    outputCollecting : 1,
+  });
+
+  ready.finally( ( err, result ) =>
+  {
+    if( err )
+    throw _.err( err, '\nFailed to check version of utility willbe' );
+
+    let latestVersion = _.strStrip( result.output );
+
+    if( latestVersion !== currentVersion )
+    {
+      debugger
+      throw _.errBrief
+      ( 'Utility willbe is out of date!',
+        '\nCurrent version:', currentVersion, '\nLatest:', latestVersion,
+        '\nPlease run: "npm r -g willbe && npm i -g willbe" to update.'
+      );
+    }
+
+    return true;
+  })
+
+  return ready;
+}
+
+stepRoutineWillbeIsUpToDate.stepOptions =
+{
+}
+
+stepRoutineWillbeIsUpToDate.uniqueOptions =
+{
+}
+
 // --
 // declare
 // --
@@ -886,11 +1020,14 @@ let Extend =
 
   stepRoutineSubmodulesDownload,
   stepRoutineSubmodulesUpdate,
+  stepRoutineSubmodulesAreUpdated,
   stepRoutineSubmodulesReload,
   stepRoutineSubmodulesClean,
 
   stepRoutineClean,
   stepRoutineExport,
+
+  stepRoutineWillbeIsUpToDate
 
 }
 

@@ -1,0 +1,19 @@
+
+submodule :
+
+  local : git+hd://./module/?out=out/local.out.will#master
+
+path :
+
+  temp : out
+  proto : './proto'
+  in : '.'
+  out : 'out'
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : './out/release'
+    criterion :
+      debug : 0

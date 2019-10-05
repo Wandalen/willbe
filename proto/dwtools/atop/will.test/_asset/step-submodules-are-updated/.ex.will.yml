@@ -1,0 +1,13 @@
+
+about :
+
+  name : "submodules"
+  description : "Module for testing"
+  version : "0.0.1"
+  enabled : 1
+  interpreters :
+  - nodejs >= 8.0.0
+  - chrome >= 60.0.0
+  - firefox >= 60.0.0
+  keywords :
+  - wTools

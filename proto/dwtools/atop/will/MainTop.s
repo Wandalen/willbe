@@ -729,6 +729,11 @@ function _commandsMake()
     'submodules fixate' :       { e : _.routineJoin( will, will.commandSubmodulesFixate ),            h : 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.' },
     'submodules upgrade' :      { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),           h : 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.' },
 
+    'versions download' :       { e : _.routineJoin( will, will.commandSubmodulesDownload ),          h : 'Download each submodule if such was not downloaded so far.' },
+    'versions update' :         { e : _.routineJoin( will, will.commandSubmodulesUpdate ),            h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
+    'versions verify' :         { e : _.routineJoin( will, will.commandVersionsVerify ),              h : 'Check whether each submodule is on branch which is specified in willfile' },
+    'versions agree' :          { e : _.routineJoin( will, will.commandVersionsAgree ),               h : 'Update each submodule, checking for available updates for each submodule. Does not change state of module if update is needed and module has local changes.' },
+
     'shell' :                   { e : _.routineJoin( will, will.commandShell ),                       h : 'Execute shell command on the module.' },
     'clean' :                   { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
     'clean recursive' :         { e : _.routineJoin( will, will.commandCleanRecursive ),              h : 'Clean modules recursively. Delete genrated artifacts, temp files and downloaded submodules.' },
@@ -738,6 +743,7 @@ function _commandsMake()
     'with' :                    { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
     'each' :                    { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
 
+    'git config preserving hard links' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ), h : 'Use "git config preserving hard links" to preserve hardlinks during "git pull".' }
   }
 
   let ca = _.CommandsAggregator
@@ -1087,6 +1093,82 @@ function commandEach( e )
 
   }
 
+}
+
+//
+
+function commandGitPreservingHardLinks( e )
+{
+  let will = this;
+  let ca = e.ca;
+  let logger = will.logger;
+
+  let enable = _.numberFrom( e.argument );
+
+  if( enable )
+  {
+    let sourceCode = '#!/usr/bin/env node\n' +  restoreHardLinks.toString() + '\nrestoreHardLinks()';
+    let tempPath = _.process.tempOpen({ sourceCode : sourceCode });
+    try
+    {
+      _.GitHooks.hookRegister
+      ({
+        filePath : tempPath,
+        handlerName : 'post-merge.restoreHardLinks',
+        hookName : 'post-merge',
+        throwing : 1,
+        rewriting : 0
+      })
+    }
+    catch( err )
+    {
+      throw err;
+    }
+    finally
+    {
+      _.process.tempClose({ filePath : tempPath });
+    }
+  }
+  else
+  {
+    _.GitHooks.hookUnregister
+    ({
+      handlerName : 'post-merge.restoreHardLinks',
+      force : 0,
+      throwing : 1
+    })
+  }
+
+  /*  */
+
+  function restoreHardLinks()
+  {
+    try
+    {
+      try
+      {
+        var _ = require( '../../proto/dwtools/Tools.s' );
+      }
+      catch( err )
+      {
+        var _ = require( 'wTools' );
+      }
+      _.include( 'wFilesArchive' );
+    }
+    catch( err )
+    {
+      console.log( 'Git post pull hook fails to preserve hardlinks due missing dependency.' );
+      return;
+    }
+
+    let provider = _.FileFilter.Archive();
+    provider.archive.basePath = _.path.join( __dirname, '../..' );
+    provider.archive.fileMapAutosaving = 0;
+    provider.archive.filesUpdate();
+    provider.archive.filesLinkSame({ consideringFileName : 0 });
+    provider.finit();
+    provider.archive.finit();
+  }
 }
 
 //
@@ -1600,6 +1682,63 @@ commandSubmodulesUpgrade.commandProperties =
 
 //
 
+function commandVersionsVerify( e )
+{
+  let will = this;
+
+  let propertiesMap = _.strStructureParse( e.argument );
+  _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'versions verify',
+    onEach : handleEach,
+    commandRoutine : commandVersionsVerify,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.versionsVerify();
+  }
+}
+
+commandVersionsVerify.commandProperties =
+{
+}
+
+//
+
+function commandVersionsAgree( e )
+{
+  let will = this;
+
+  let propertiesMap = _.strStructureParse( e.argument );
+  _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'versions agree',
+    onEach : handleEach,
+    commandRoutine : commandVersionsAgree,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.versionsAgree({ dry : e.propertiesMap.dry });
+  }
+}
+
+commandVersionsVerify.commandProperties =
+{
+  dry : 'Dry run without writing. Default is dry:0.',
+}
+
+//
+
 function commandShell( e )
 {
   let will = this;
@@ -1959,12 +2098,17 @@ let Extend =
   commandSubmodulesFixate,
   commandSubmodulesUpgrade,
 
+  commandVersionsVerify,
+  commandVersionsAgree,
+
   commandShell,
   commandClean,
   commandCleanRecursive,
   commandBuild,
   commandExport,
   commandExportRecursive,
+
+  commandGitPreservingHardLinks,
 
   // relation
 
