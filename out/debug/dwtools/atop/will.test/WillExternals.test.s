@@ -4702,7 +4702,7 @@ function exportSingle( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
-    test.is( _.strHas( got.output, /\+ Exported .*exported::proto.export.* with 2 files in/ ) );
+    test.is( _.strHas( got.output, 'Exported module::single / build::proto.export with 2 file(s) in') );
 
     var files = self.find( outDebugPath );
     test.identical( files, [ '.', './Single.s' ] );
@@ -4711,6 +4711,7 @@ function exportSingle( test )
 
     test.is( _.fileProvider.fileExists( outWillPath ) )
     var outfile = _.fileProvider.fileConfigRead( outWillPath );
+    outfile = outfile.module[ outfile.root[ 0 ] ];
 
     let reflector = outfile.reflector[ 'exported.files.proto.export' ];
     test.identical( reflector.src.basePath, '.' );
@@ -4739,7 +4740,7 @@ function exportSingle( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exported .*module::single \/ build::proto.export.* in/ ) );
     test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
-    test.is( _.strHas( got.output, / \+ Exported .*exported::proto\.export.* with 2 files/ ) );
+    test.is( _.strHas( got.output, 'Exported module::single / build::proto.export with 2 file(s) in' ) );
 
     var files = self.find( outDebugPath );
     test.identical( files, [ '.', './Single.s' ] );
@@ -4748,6 +4749,7 @@ function exportSingle( test )
 
     test.is( _.fileProvider.fileExists( outWillPath ) )
     var outfile = _.fileProvider.fileConfigRead( outWillPath );
+    outfile = outfile.module[ outfile.root[ 0 ] ];
 
     let reflector = outfile.reflector[ 'exported.files.proto.export' ];
     let expectedFilePath =
@@ -4810,7 +4812,7 @@ function exportItself( test )
     test.gt( files.length, 450 );
 
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
-    test.is( _.strHas( got.output, new RegExp( `\\+ Exported .*exported::export.* with ${files.length-2} files in` ) ) );
+    test.is( _.strHas( got.output, new RegExp( `\Exported .*exported::export.* with ${files.length-2} file\(s\) in` ) ) );
 
     return null;
   })
@@ -5217,9 +5219,9 @@ function exportToRoot( test )
   {
     test.case = '.export'
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /Exporting .+module::export-to-root \/ build::proto\.export.+/ ) );
+    test.is( _.strHas( got.output, /Exporting .*module::export-to-root \/ build::proto\.export.*/ ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
-    test.is( _.strHas( got.output, /Exported .+module::export-to-root \/ build::proto\.export.+ in/ ) );
+    test.is( _.strHas( got.output, /Exported .*module::export-to-root \/ build::proto\.export.* in/ ) );
     test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'export-to-root.out.will.yml' ) ) )
     return null;
   })
@@ -5269,7 +5271,7 @@ function exportMixed( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exporting .*module::UriBasic\.informal \/ build::export.*/ ) );
-    test.is( _.strHas( got.output, ' + reflector::download.* reflected' ) );
+    test.is( _.strHas( got.output, ' + reflector::download reflected' ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, /Exported .*module::UriBasic\.informal \/ build::export.* in/ ) );
     test.is( _.strHas( got.output, 'out/Proto.informal.out.will.yml' ) );
@@ -5288,6 +5290,7 @@ function exportMixed( test )
     test.identical( files, expected );
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/Proto.informal.out.will.yml' ) );
+    outfile = outfile.module[ 'Proto.informal.out' ];
 
     var expected =
     {
@@ -5301,7 +5304,7 @@ function exportMixed( test )
       {
         'src' :
         {
-          'filePath' : { '.' : '' },
+          'filePath' : { '**' : '' },
           'prefixPath' : '../.module/Proto/proto'
         },
         'criterion' : { 'export' : 1, 'default' : 1 },
@@ -5527,8 +5530,8 @@ function exportSecond( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, '+ Write out willfile' ), 2 );
-    test.identical( _.strCount( got.output, / \+ Exported .*exported::proto.export.* with 4 files in/ ), 1 );
-    test.identical( _.strCount( got.output, / \+ Exported .*exported::doc.export.* with 2 files in/ ), 1 );
+    test.identical( _.strCount( got.output, / Exported .*exported::proto.export.* with 4 file\(s\) in/ ), 1 );
+    test.identical( _.strCount( got.output, / Exported .*exported::doc.export.* with 2 file\(s\) in/ ), 1 );
 
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
 
@@ -5700,8 +5703,8 @@ function exportSecond( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, '+ Write out willfile' ), 2 );
-    test.identical( _.strCount( got.output, / \+ Exported .*exported::doc.export.* with 2 files in/ ), 1 );
-    test.identical( _.strCount( got.output, / \+ Exported .*exported::proto.export.* with 4 files in/ ), 1 );
+    test.identical( _.strCount( got.output, / Exported .*exported::doc.export.* with 2 file\(s\) in/ ), 1 );
+    test.identical( _.strCount( got.output, / Exported .*exported::proto.export.* with 4 file\(s\) in/ ), 1 );
 
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
 
@@ -5983,7 +5986,7 @@ function exportMultiple( test )
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js' ] );
     test.identical( got.exitCode, 0 );
 
-    test.is( _.strHas( got.output, / \+ Exported .*exported::export.debug.* with 2 files in/ ) );
+    test.is( _.strHas( got.output, / Exported .*exported::export.debug.* with 2 file\(s\) in/ ) );
     test.is( _.strHas( got.output, 'Read 2 willfile(s) in' ) );
     test.is( _.strHas( got.output, /Exported .*module::submodule \/ build::export.debug.*/ ) );
     test.is( _.strHas( got.output, 'Write out archive' ) );
@@ -6163,7 +6166,7 @@ function exportMultiple( test )
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
 
-    test.is( _.strHas( got.output, / \+ Exported .*exported::export\..* with 2 files in/ ) );
+    test.is( _.strHas( got.output, / Exported .*exported::export\..* with 2 file\(s\) in/ ) );
     test.is( _.strHas( got.output, 'Read 2 willfile(s) in' ) );
     test.is( _.strHas( got.output, /Exported .*module::submodule \/ build::export\..* in/ ) );
     test.is( _.strHas( got.output, 'Write out archive' ) );
@@ -6472,7 +6475,7 @@ function exportImportMultiple( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ Exported .*exported::export.debug.* with 2 files in/ ) );
+    test.is( _.strHas( got.output, / Exported .*exported::export.debug.* with 2 file\(s\) in/ ) );
 
     return null;
   })
@@ -6497,7 +6500,7 @@ function exportImportMultiple( test )
     var files = self.find( out2Path );
     test.identical( files, [ '.', './supermodule.out.tgs', './supermodule.out.will.yml', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ Exported .*exported::export\..* with 2 files in/ ) );
+    test.is( _.strHas( got.output, / Exported .*exported::export\..* with 2 file\(s\) in/ ) );
 
     return null;
   })
@@ -6568,7 +6571,7 @@ function exportImportMultiple( test )
     var files = self.find( out2Path );
     test.identical( files, [ '.', './supermodule.debug.out.tgs', './supermodule.out.tgs', './supermodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ Exported .*exported::export.debug.* with 2 files in/ ) );
+    test.is( _.strHas( got.output, / Exported .*exported::export.debug.* with 2 file\(s\) in/ ) );
 
     return null;
   })
@@ -7236,12 +7239,14 @@ function exportWholeModule( test )
     return null;
   })
 
-  shell({ execPath : '.export' })
+  shell({ execPath : '.with module/ .export' })
+  shell({ execPath : '.build' })
 
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'export-whole.out.will.yml' ) ) )
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './.will.yml', './proto', './proto/File1.s', './proto/dir', './proto/dir/File2.s' ] );
     return null;
   })
 
@@ -7949,6 +7954,102 @@ exportTracing.timeOut = 300000;
 
 //
 
+function exportRewritesOutFile( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-rewrites-out-file' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+  let outFilePath = _.path.join( routinePath, 'out/export-rewrites-out-file.out.will.yml' );
+  let willFilePath = _.path.join( routinePath, '.will.yml' );
+  let willSingleExportFilePath = _.path.join( routinePath, '.will.single-export.yml' );
+  let willCopyFilePath = _.path.join( routinePath, 'copy.will.yml' );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.fileCopy( willCopyFilePath, willFilePath );
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = 'export module with two exports'
+    return null;
+  })
+
+  shell({ execPath : '.export export1' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.fileExists( outFilePath ) );
+    let outFile = _.fileProvider.fileRead({ filePath : outFilePath, encoding : 'yaml' });
+    let build = outFile.module[ outFile.root[ 0 ] ].build;
+    test.identical( _.mapKeys( build ), [ 'export1', 'export2' ] );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'remove second export build then export again';
+    _.fileProvider.fileCopy( willFilePath, willSingleExportFilePath )
+    return null;
+  })
+
+  shell({ execPath : '.export export1' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.fileExists( outFilePath ) );
+    let outFile = _.fileProvider.fileRead({ filePath : outFilePath, encoding : 'yaml' });
+    let build = outFile.module[ outFile.root[ 0 ] ].build;
+    test.identical( _.mapKeys( build ), [ 'export1' ] );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'restore second export, then export again';
+    _.fileProvider.fileCopy( willFilePath, willCopyFilePath )
+    return null;
+  })
+
+  shell({ execPath : '.export export1' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.fileProvider.fileExists( outFilePath ) );
+    let outFile = _.fileProvider.fileRead({ filePath : outFilePath, encoding : 'yaml' });
+    let build = outFile.module[ outFile.root[ 0 ] ].build;
+    test.identical( _.mapKeys( build ), [ 'export1', 'export2' ] );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+exportRewritesOutFile.timeOut = 30000;
+
+//
+
 /*
   check there is no annoying information about lack of remote submodules of submodules
 */
@@ -8369,7 +8470,7 @@ function reflectNothingFromSubmodules( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
-    test.is( _.strHas( got.output, / \+ Exported .*exported::proto.export.* with 2 files in/ ) );
+    test.is( _.strHas( got.output, / Exported .*exported::proto.export.* with 2 file\(s\) in/ ) );
 
     var files = self.find( outDebugPath );
     test.identical( files, [ '.', './Single.s' ] );
@@ -10950,6 +11051,104 @@ submodulesDownloadUpdateDry.timeOut = 300000;
 
 //
 
+function submodulesDownloadSwitchBranch( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-update-switch-branch' );
+  let routinePath = _.path.join( self.tempDir, test.name );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let experimentModulePath = _.path.join( submodulesPath, 'experiment' );
+  let willfilePath = _.path.join( routinePath, '.will.yml' );
+
+  let ready = new _.Consequence().take( null )
+  let shell = _.sheller
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  ready
+  .then( () =>
+  {
+    test.case = 'download master branch';
+    return null;
+  })
+
+  shell({ execPath : '.submodules.download' })
+
+  .then( () =>
+  {
+    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
+    test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
+    return null;
+  })
+
+  .then( () =>
+  {
+    test.case = 'switch master to dev';
+    let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    willFile.submodule.experiment = _.strReplaceAll( willFile.submodule.experiment, '#master', '#dev' );
+    _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    return null;
+  })
+
+  shell({ execPath : '.submodules.download' })
+
+  .then( () =>
+  {
+    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
+    test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
+    return null;
+  })
+
+  .then( () =>
+  {
+    test.case = 'switch dev to detached state';
+    let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    willFile.submodule.experiment = _.strReplaceAll( willFile.submodule.experiment, '#dev', '#cfaa3c7782b9ff59cdcd28cb0f25d421e67f99ce' );
+    _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    return null;
+  })
+
+  shell({ execPath : '.submodules.download' })
+
+  .then( () =>
+  {
+    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
+    test.is( _.strHas( currentVersion, 'cfaa3c7782b9ff59cdcd28cb0f25d421e67f99ce' ) );
+    return null;
+  })
+
+  .then( () =>
+  {
+    test.case = 'switch detached state to master';
+    let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    willFile.submodule.experiment = _.strReplaceAll( willFile.submodule.experiment, '#cfaa3c7782b9ff59cdcd28cb0f25d421e67f99ce', '#master' );
+    _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    return null;
+  })
+
+  shell({ execPath : '.submodules.download' })
+
+  .then( () =>
+  {
+    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
+    test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
+    return null;
+  })
+
+  return ready;
+}
+
+submodulesDownloadSwitchBranch.timeOut = 300000;
+
+//
+
 /*
   Informal module has submodule willbe-experiment#master
   Supermodule has informal module and willbe-experiment#dev in submodules list
@@ -11484,6 +11683,182 @@ function stepSubmodulesDownload( test )
 }
 
 stepSubmodulesDownload.timeOut = 300000;
+
+//
+
+function stepWillbeVersionCheck( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-willbe-version-check' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let willbeRootPath = _.path.join( __dirname, '../../../..' );
+
+  let assetDstPath = _.path.join( routinePath, 'asset' );
+  let willbeDstPath = _.path.join( routinePath, 'willbe' );
+
+  let nodeModulesSrcPath = _.path.join( willbeRootPath, 'node_modules' );
+  let nodeModulesDstPath = _.path.join( willbeDstPath, 'node_modules' );
+
+  _.fileProvider.filesReflect
+  ({
+    reflectMap :
+    {
+      'proto/dwtools/Tools.s' : 'proto/dwtools/Tools.s',
+      'proto/dwtools/atop/will' : 'proto/dwtools/atop/will',
+      'package.json' : 'package.json',
+    },
+    src : { prefixPath : willbeRootPath },
+    dst : { prefixPath : willbeDstPath },
+  })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : assetDstPath } })
+  _.fileProvider.softLink( nodeModulesDstPath, nodeModulesSrcPath );
+
+  let execPath = _.path.nativize( _.path.join( willbeDstPath, 'proto/dwtools/atop/will/Exec' ) );
+  let ready = new _.Consequence().take( null )
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : assetDstPath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    verbosity : 3,
+    ready : ready
+  })
+
+  /* */
+
+  shell( '.build' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Built .+ \/ build::debug/ ) );
+    return null;
+  })
+
+  .then( ( ) =>
+  {
+    let packageJsonPath = _.path.join( willbeDstPath, 'package.json' );
+    let packageJson = _.fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
+    packageJson.version = '0.0.0';
+    _.fileProvider.fileWrite({ filePath : packageJsonPath, encoding : 'json', data : packageJson });
+    return null;
+  })
+
+  shell( '.build' )
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'npm r -g willbe && npm i -g willbe' ) );
+    test.is( _.strHas( got.output, /Failed .+ \/ step::willbe.version.check/ ) );
+    return null;
+  })
+
+  return ready;
+}
+
+stepWillbeVersionCheck.timeOut = 15000;
+
+//
+
+function stepSubmodulesAreUpdated( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-submodules-are-updated' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let localModulePath = _.path.join( routinePath, 'module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  let shell2 = _.process.starter
+  ({
+    currentPath : localModulePath,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  ready.then( () =>
+  {
+    test.case = 'setup';
+    return null;
+  })
+
+  shell( '.with ./module/ .export' )
+  shell2( 'git init' )
+  shell2( 'git add -fA .' )
+  shell2( 'git commit -m init' )
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'first build';
+    return null;
+  })
+
+  shell( '.build' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, / \+ 1\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.is( _.strHas( got.output, / 1\/1 submodule\(s\) of .*module::submodules.* are up to date/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'second build';
+    return null;
+  })
+
+  shell( '.build' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, / \+ 1\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.is( _.strHas( got.output, / 1\/1 submodule\(s\) of .*module::submodules.* are up to date/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'new commit on remote, try to build';
+    return null;
+  })
+
+  shell2( 'git commit --allow-empty -m test' )
+
+  shell( '.build' )
+
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, / \+ 0\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.is( _.strHas( got.output, / ! Submodule .*local is not up to date/ ) );
+    return null;
+  })
+
+  return ready;
+}
+
+stepSubmodulesAreUpdated.timeOut = 60000;
 
 //
 
@@ -12737,6 +13112,313 @@ fixateDetached.timeOut = 500000;
 
 //
 
+function versionsVerify( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'command-versions-verify' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let localModulePathSrc = _.path.join( routinePath, 'module' );
+  let localModulePathDst = _.path.join( routinePath, '.module/local' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  let shell2 = _.process.starter
+  ({
+    currentPath : localModulePathSrc,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  let shell3 = _.process.starter
+  ({
+    currentPath : localModulePathDst,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  ready.then( () =>
+  {
+    test.case = 'setup';
+    return null;
+  })
+
+  shell( '.with ./module/ .export' )
+  shell2( 'git init' )
+  shell2( 'git add -fA .' )
+  shell2( 'git commit -m init' )
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'verify not downloaded';
+    return null;
+  })
+
+  shell( '.versions.verify' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Submodule .*local.* is not downloaded/ ) );
+    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'first verify after download';
+    return null;
+  })
+
+  shell( '.submodules.download' )
+  shell( '.versions.verify' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'second verify';
+    return null;
+  })
+
+  shell( '.versions.verify' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'new commit on local copy, try to verify';
+    return null;
+  })
+
+  shell3( 'git commit --allow-empty -m test' )
+
+  shell( '.versions.verify' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'change branch';
+    return null;
+  })
+
+  shell3( 'git checkout -b testbranch' )
+
+  shell( '.versions.verify' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Submodule .*local.* is on branch different from that is specified in will-file/ ) );
+    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
+    return null;
+  })
+
+  return ready;
+}
+
+versionsVerify.timeOut = 60000;
+
+//
+
+function versionsAgree( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'command-versions-agree' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let localModulePathSrc = _.path.join( routinePath, 'module' );
+  let localModulePathDst = _.path.join( routinePath, '.module/local' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  let shell2 = _.process.starter
+  ({
+    currentPath : localModulePathSrc,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  let shell3 = _.process.starter
+  ({
+    currentPath : localModulePathDst,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  ready.then( () =>
+  {
+    test.case = 'setup';
+    return null;
+  })
+
+  shell( '.with ./module/ .export' )
+  shell2( 'git init' )
+  shell2( 'git add -fA .' )
+  shell2( 'git commit -m init' )
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'agree not downloaded';
+    return null;
+  })
+
+  shell( '.versions.agree' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were updated in/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'agree after download';
+    return null;
+  })
+
+  shell( '.versions.agree' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were updated in/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'local is up to date with remote but has local commit';
+    return null;
+  })
+
+  shell3( 'git commit --allow-empty -m test' )
+  shell( '.versions.agree' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were updated in/ ) );
+    return null;
+  })
+  shell3( 'git status' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Your branch is ahead of \'origin\/master\' by 1 commit/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'local is not up to date with remote but has local commit';
+    return null;
+  })
+
+  shell2( 'git commit --allow-empty -m test' )
+  shell( '.versions.agree' )
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, /Module .*submodule::local.* \/ .*module::local.* needs to be updated, but has local changes/ ) );
+    return null;
+  })
+  shell3( 'git status' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Your branch and \'origin\/master\' have diverged/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'local is not up to date with remote, no local changes';
+    return null;
+  })
+
+  shell3( 'git reset --hard origin' )
+  shell2( 'git commit --allow-empty -m test2' )
+  shell( '.versions.agree' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were updated in/ ) );
+    return null;
+  })
+  shell3( 'git status' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Your branch is up to date/ ) );
+    return null;
+  })
+
+  return ready;
+}
+
+versionsAgree.timeOut = 60000;
+
+//
+
 /*
   runWillbe checks if willbe can be terminated on early start from terminal when executed as child process using ExecUnrestricted script
 */
@@ -12824,12 +13506,12 @@ function runWillbe( test )
     })
   })
 
-  /* xxx */
+  /* */
 
   .then( () =>
   {
     test.case = 'Exec: terminate utility during heavy load of will files, should fail'
-    let o = { args : [ execPath, '.submodules.list' ], ready : null };
+    let o = { execPath : 'node', args : [ execPath, '.submodules.list' ], ready : null };
     let con = shell( o );
 
     o.process.stdout.on( 'data', ( data ) =>
@@ -12850,12 +13532,14 @@ function runWillbe( test )
     return test.shouldThrowErrorAsync( con )
     .then( () =>
     {
-      test.identical( o.exitCode, 0 );
-      test.is( _.strHas( o.output, 'wTools.out.will.yml' ) );
-      test.is( _.strHas( o.output, 'wLogger.out.will.yml' ) );
-      test.is( _.strHas( o.output, 'wLoggerToJs.out.will.yml' ) );
-      test.is( _.strHas( o.output, 'wConsequence.out.will.yml' ) );
-      test.is( _.strHas( o.output, 'wInstancing.out.will.yml' ) );
+      if( process.platform === 'win32' )
+      test.identical( o.exitCode, null );
+      else
+      test.identical( o.exitCode, 255 );
+      test.identical( o.exitSignal, 'SIGINT' );
+      test.is( _.strHas( o.output, 'module::runWillbe / submodule::Tools' ) );
+      test.is( _.strHas( o.output, 'module::runWillbe / submodule::Logger' ) );
+      test.is( _.strHas( o.output, 'module::runWillbe / submodule::LoggerToJs' ) );
       return null;
     })
 
@@ -13077,6 +13761,7 @@ var Self =
     exportDotless,
     exportDotlessSingle,
     exportTracing,
+    exportRewritesOutFile,
     // exportWithRemoteSubmodules, // xxx
     importPathLocal,
     importLocalRepo,
@@ -13110,14 +13795,20 @@ var Self =
     submodulesDownloadSingle,
     submodulesDownloadUpdate,
     submodulesDownloadUpdateDry,
+    submodulesDownloadSwitchBranch,
     // submodulesDownloadedUpdate, // qqq : not sure how to fix. please help to fix,
     submodulesUpdate,
     submodulesUpdateSwitchBranch,
     stepSubmodulesDownload,
+    stepWillbeVersionCheck,
+    stepSubmodulesAreUpdated,
     upgradeDryDetached,
     upgradeDetached,
     fixateDryDetached,
     fixateDetached,
+
+    versionsVerify,
+    versionsAgree
 
     // runWillbe, // qqq : help to fix, please
 
