@@ -812,12 +812,19 @@ function hasChanges( o )
     if( !self.isDownloaded({ localPath : o.localPath }) )
     throw _.err( 'Found no GIT repository at:', o.localPath );
 
+    let commands =
+    [
+      'git diff HEAD --quiet',
+      'git rev-list origin..HEAD --count',
+      'git status -sz'
+    ]
+
     return _.process.start
     ({
-      execPath : 'git status',
+      execPath : commands,
       currentPath : o.localPath,
       mode : 'spawn',
-      sync : o.sync,
+      sync : 0,
       deasync : 0,
       throwingExitCode : 0,
       outputCollecting : 1,
@@ -825,19 +832,50 @@ function hasChanges( o )
     });
   })
 
-  ready.finally( ( err, got ) =>
+  ready.then( ( got ) =>
   {
-    if( err )
+    if( got[ 0 ].exitCode === 1 /* diff */ )
+    return true;
+    if( _.numberFrom( got[ 1 ].output ) /* commits ahead */ )
+    return true;
+    if( _.strHas( got[ 2 ].output, '?' ) /* untracked files */ )
+    return true;
+
+    if( got[ 1 ].exitCode )
+    throw _.err( infoGet( got[ 1 ] ) );
+    if( got[ 2 ].exitCode )
+    throw _.err( infoGet( got[ 2 ] ) );
+
+    return false;
+
+    // let localChanges = _.strHasAny( got.output, [ 'Changes to be committed', 'Changes not staged for commit' ] );
+    // if( !localChanges )
+    // localChanges = !_.strHasAny( got.output, [ 'nothing to commit', 'working tree clean' ] )
+    // let localCommits = _.strHasAny( got.output, [ 'branch is ahead', 'have diverged' ] );
+    // return localChanges || localCommits;
+  })
+
+  ready.catch( ( err ) =>
+  {
     throw _.err( err, '\nFailed to check if repository has local changes' );
-    let localChanges = _.strHasAny( got.output, [ 'Changes to be committed', 'Changes not staged for commit' ] );
-    let localCommits = !_.strHas( got.output, 'Your branch is up to date' );
-    return localChanges || localCommits;
   })
 
   if( o.sync )
-  return ready.syncMaybe();
+  return ready.deasync();
 
   return ready;
+
+  /* */
+
+  function infoGet( o )
+  {
+    let result = '';
+    result += 'Process returned exit code' + o.exitCode + '\n';
+    result += 'Launched as ' + _.strQuote( o.fullExecPath ) + '\n';
+    result += 'Launched at ' + _.strQuote( o.currentPath ) + '\n';
+    result += '\n -> Output' + '\n' + ' -  ' + _.strIndentation( stderrOutput, ' -  ' ) + '\n -< Output';
+    return result;
+  }
 }
 
 var defaults = hasChanges.defaults = Object.create( null );
