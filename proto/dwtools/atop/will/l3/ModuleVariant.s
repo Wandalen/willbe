@@ -101,14 +101,10 @@ function reform()
 
   // variant.opener = variant.relation.opener;
   if( variant.module && !variant.opener )
-  _.any( variant.module.userArray, ( opener ) =>
+  _.each( variant.module.userArray, ( opener ) =>
   {
     if( opener instanceof _.Will.ModuleOpener )
-    {
-      variant.openerAdd( opener );
-      // variant.opener = opener;
-      // return true;
-    }
+    variant.openerAdd( opener );
   });
 
   let localPath, remotePath;
@@ -184,7 +180,7 @@ function reform()
 
 function From( o )
 {
-  let result;
+  let variant;
   let will = o.will;
   let variantMap = will.variantMap;
   let fileProvider = will.fileProvider;
@@ -196,22 +192,18 @@ function From( o )
   _.assert( arguments.length === 1 );
   _.assert( _.mapIs( o ) );
   _.assert( _.mapIs( variantMap ) );
-  // _.assert( o.nodesGroup instanceof _.graph.AbstractNodesGroup );
 
   if( !o.object )
   o.object = o.module || o.opener || o.relation;
 
-  // if( o.object && o.object.id === 38 )
-  // debugger;
-
   if( o.object && o.object instanceof Self )
   {
-    result = o.object;
+    variant = o.object;
   }
   else if( _.mapIs( o.object ) )
   {
     debugger;
-    result = Self( o.object );
+    variant = Self( o.object );
   }
   else if( o.object instanceof _.Will.OpenedModule )
   {
@@ -219,20 +211,19 @@ function From( o )
     let remotePath = o.object.remotePath
     o.module = o.object;
     if( variantMap && variantMap[ localPath ] )
-    result = variantMap[ localPath ];
+    variant = variantMap[ localPath ];
     else if( variantMap && remotePath && variantMap[ remotePath ] )
-    result = variantMap[ remotePath ];
+    variant = variantMap[ remotePath ];
   }
   else if( o.object instanceof _.Will.ModuleOpener )
   {
-    // debugger;
     let localPath = o.object.localPath || o.object.commonPath;
     let remotePath = o.object.remotePath;
     o.opener = o.object;
     if( variantMap && variantMap[ o.object.commonPath ] )
-    result = variantMap[ o.object.commonPath ];
+    variant = variantMap[ o.object.commonPath ];
     else if( variantMap && remotePath && variantMap[ remotePath ] )
-    result = variantMap[ remotePath ];
+    variant = variantMap[ remotePath ];
   }
   else if( o.object instanceof _.Will.ModulesRelation )
   {
@@ -245,9 +236,9 @@ function From( o )
     if( remotePath )
     remotePath = path.join( o.object.module.inPath, localPath );
     if( variantMap && variantMap[ localPath ] )
-    result = variantMap[ localPath ];
+    variant = variantMap[ localPath ];
     else if( variantMap && remotePath && variantMap[ remotePath ] )
-    result = variantMap[ remotePath ];
+    variant = variantMap[ remotePath ];
   }
   else _.assert( 0, `Not clear how to get graph variant from ${_.strShort( o.object )}` );
 
@@ -257,40 +248,46 @@ function From( o )
     () => `Relation should be formed to level 3 or higher, but ${o.relation.absoluteName} is not`
   )
 
-  if( result )
+  let variant2 = will.objectToVariantHash.get( o.object );
+  if( variant2 && variant2 !== variant )
   {
-    // _.assert( !variantMap || variantMap === result.variantMap );
+    _.assert( !!variant2.localPath );
+    _.assert( !!o.object.localPath );
+    _.assert( o.object.localPath !== variant2.localPath );
+    // debugger;
+    variant2.remove( o.object );
+  }
+
+  if( variant )
+  {
 
     if( o.module )
-    changed = result.add( o.module ) || changed;
+    changed = variant.add( o.module ) || changed;
     if( o.opener )
-    changed = result.add( o.opener ) || changed;
+    changed = variant.add( o.opener ) || changed;
     if( o.relation )
-    changed = result.add( o.relation ) || changed;
+    changed = variant.add( o.relation ) || changed;
 
-    // delete o.variantMap;
     delete o.object;
     delete o.module;
     delete o.opener;
     delete o.relation;
 
-    _.mapExtend( result, o );
+    _.mapExtend( variant, o );
   }
 
-  // if( !o.variantMap )
-  // o.variantMap = o.will.variantMap;
-  if( !result )
+  if( !variant )
   {
     made = true;
     changed = true;
-    result = Self( o );
+    variant = Self( o );
   }
 
-  result.reform();
+  variant.reform();
 
-  _.assert( !!result.object );
+  _.assert( !!variant.object );
 
-  return result;
+  return variant;
 }
 
 //
@@ -499,7 +496,7 @@ function moduleAdd( module )
   changed = _.arrayAppendedOnce( variant.modules, module ) > -1 || changed;
 
   let variant2 = will.objectToVariantHash.get( module );
-  _.assert( variant2 === variant || variant2 === undefined );
+  _.assert( variant2 === variant || variant2 === undefined, 'Module can belong only to one variant' );
   will.objectToVariantHash.set( module, variant );
 
   return changed;

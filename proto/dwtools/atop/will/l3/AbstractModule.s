@@ -251,74 +251,168 @@ function OutfilePathFor( outPath, name )
 
 function _filePathChange( willfilesPath )
 {
+  let module = this;
   let r = Object.create( null );
   r.willfilesPath = willfilesPath;
 
-  if( _.arrayIs( r.willfilesPath ) )
+  return module._filePathChanged1( r ).willfilesPath;
+
+  // if( _.arrayIs( r.willfilesPath ) )
+  // {
+  //   if( r.willfilesPath.length === 1 )
+  //   r.willfilesPath = r.willfilesPath[ 0 ];
+  //   else if( r.willfilesPath.length === 0 )
+  //   r.willfilesPath = null;
+  // }
+  //
+  // if( !this.will )
+  // return r;
+  //
+  // let module = this;
+  // let will = module.will;
+  // let fileProvider = will.fileProvider;
+  // let path = fileProvider.path;
+  // let logger = will.logger;
+  //
+  // if( r.willfilesPath )
+  // r.willfilesPath = path.s.normalizeTolerant( r.willfilesPath );
+  //
+  // r.dirPath = r.willfilesPath;
+  // if( _.arrayIs( r.dirPath ) )
+  // r.dirPath = r.dirPath[ 0 ];
+  // if( _.strIs( r.dirPath ) )
+  // r.dirPath = path.dirFirst( r.dirPath );
+  // if( r.dirPath === null )
+  // r.dirPath = module.dirPath;
+  // if( r.dirPath )
+  // r.dirPath = path.canonize( r.dirPath );
+  // r.isIdentical = willfilesPath === this.willfilesPath || _.entityIdentical( willfilesPath, this.willfilesPath );
+  //
+  // if( r.willfilesPath && r.willfilesPath.length )
+  // r.commonPath = module.CommonPathFor( r.willfilesPath );
+  // else
+  // r.commonPath = module.commonPath;
+  //
+  // _.assert( arguments.length === 1 );
+  // _.assert( r.dirPath === null || _.strDefined( r.dirPath ) );
+  // _.assert( r.dirPath === null || path.isAbsolute( r.dirPath ) );
+  // _.assert( r.dirPath === null || path.isNormalized( r.dirPath ) );
+  // _.assert( r.willfilesPath === null || path.s.allAreAbsolute( r.willfilesPath ) );
+  // _.assert
+  // (
+  //   !module.isPreformed() || _.strDefined( r.commonPath ),
+  //   () => `Each module requires commonPath, but ${module.absoluteName} does not have`
+  // );
+  //
+  // if( r.commonPath !== null )
+  // module[ fileNameSymbol ] = path.fullName( r.commonPath );
+  // module[ willfilesPathSymbol ] = r.willfilesPath;
+  //
+  // return r;
+}
+
+//
+
+function _filePathChanged1( o )
+{
+  let module = this;
+  return module._filePathChanged2( o );
+}
+
+_filePathChanged1.defaults =
+{
+  willfilesPath : null,
+  isIdentical : null,
+  dirPath : null,
+  commonPath : null,
+}
+
+//
+
+function _filePathChanged2( o )
+{
+  let module = this;
+
+  if( !o )
   {
-    if( r.willfilesPath.length === 1 )
-    r.willfilesPath = r.willfilesPath[ 0 ];
-    else if( r.willfilesPath.length === 0 )
-    r.willfilesPath = null;
+    o = Object.create( null );
+    // o.willfilesPath = willfilesPath;
+    o.willfilesPath = module.willfilesPath;
+    o.isIdentical = false;
+  }
+
+  _.routineOptions( _filePathChanged2, o );
+
+  if( _.arrayIs( o.willfilesPath ) )
+  {
+    if( o.willfilesPath.length === 1 )
+    o.willfilesPath = o.willfilesPath[ 0 ];
+    else if( o.willfilesPath.length === 0 )
+    o.willfilesPath = null;
   }
 
   if( !this.will )
-  return r;
+  return o;
 
-  let module = this;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
-  if( r.willfilesPath )
-  r.willfilesPath = path.s.normalizeTolerant( r.willfilesPath );
+  if( o.willfilesPath )
+  o.willfilesPath = path.s.normalizeTolerant( o.willfilesPath );
 
-  r.dirPath = r.willfilesPath;
-  if( _.arrayIs( r.dirPath ) )
-  r.dirPath = r.dirPath[ 0 ];
-  if( _.strIs( r.dirPath ) )
-  r.dirPath = path.dirFirst( r.dirPath );
-  if( r.dirPath === null )
-  r.dirPath = module.dirPath;
-  if( r.dirPath )
-  r.dirPath = path.canonize( r.dirPath );
-  r.isIdentical = willfilesPath === this.willfilesPath || _.entityIdentical( willfilesPath, this.willfilesPath );
+  o.dirPath = o.willfilesPath;
+  if( _.arrayIs( o.dirPath ) )
+  o.dirPath = o.dirPath[ 0 ];
+  if( _.strIs( o.dirPath ) )
+  o.dirPath = path.dirFirst( o.dirPath );
+  if( o.dirPath === null )
+  o.dirPath = module.dirPath;
+  if( o.dirPath )
+  o.dirPath = path.canonize( o.dirPath );
 
-  if( r.willfilesPath && r.willfilesPath.length )
-  r.commonPath = module.CommonPathFor( r.willfilesPath );
+  if( o.isIdentical === undefined || o.isIdentical === null )
+  o.isIdentical = o.willfilesPath === this.willfilesPath || _.entityIdentical( o.willfilesPath, this.willfilesPath );
+
+  if( o.willfilesPath && o.willfilesPath.length )
+  o.commonPath = module.CommonPathFor( o.willfilesPath );
   else
-  r.commonPath = module.commonPath;
+  o.commonPath = module.commonPath;
 
   _.assert( arguments.length === 1 );
-  _.assert( r.dirPath === null || _.strDefined( r.dirPath ) );
-  _.assert( r.dirPath === null || path.isAbsolute( r.dirPath ) );
-  _.assert( r.dirPath === null || path.isNormalized( r.dirPath ) );
-  _.assert( r.willfilesPath === null || path.s.allAreAbsolute( r.willfilesPath ) );
+  _.boolIs( o.isIdentical );
+  _.assert( o.dirPath === null || _.strDefined( o.dirPath ) );
+  _.assert( o.dirPath === null || path.isAbsolute( o.dirPath ) );
+  _.assert( o.dirPath === null || path.isNormalized( o.dirPath ) );
+  _.assert( o.willfilesPath === null || path.s.allAreAbsolute( o.willfilesPath ) );
   _.assert
   (
-    !module.isPreformed() || _.strDefined( r.commonPath ),
-    () => `Each module requires commpnPath, but ${module.absoluteName} does not have`
+    !module.isPreformed() || _.strDefined( o.commonPath ),
+    () => `Each module requires commonPath, but ${module.absoluteName} does not have`
   );
 
-  if( r.commonPath !== null )
-  module[ fileNameSymbol ] = path.fullName( r.commonPath );
-  module[ willfilesPathSymbol ] = r.willfilesPath;
+  if( o.commonPath !== null )
+  module[ fileNameSymbol ] = path.fullName( o.commonPath );
+  module[ willfilesPathSymbol ] = o.willfilesPath;
 
-  return r;
+  return o;
 }
+
+_filePathChanged2.defaults = _.mapExtend( null, _filePathChanged1.defaults );
 
 //
-
-function _filePathChanged()
-{
-  let module = this;
-
-  _.assert( arguments.length === 0 );
-
-  module._filePathChange( module.willfilesPath );
-
-}
+// //
+//
+// function _filePathChanged2()
+// {
+//   let module = this;
+//
+//   _.assert( arguments.length === 0 );
+//
+//   module._filePathChange( module.willfilesPath );
+//
+// }
 
 // --
 // name
@@ -704,7 +798,8 @@ let Extend =
   OutfilePathFor,
 
   _filePathChange,
-  _filePathChanged,
+  _filePathChanged1,
+  _filePathChanged2,
 
   // name
 

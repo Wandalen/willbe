@@ -342,7 +342,7 @@ function _performReadExported()
 
     if( !opener2.openedModule.isConsistent() )
     {
-      logger.log( _.errBrief( `Module ${opener2.absoluteName} was not consistent, re-exporting from scratch was required` ) );
+      logger.log( _.errBrief( `Module ${opener2.absoluteName} was not consistent, please export it` ) );
       return module2;
     }
 
