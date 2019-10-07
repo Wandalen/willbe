@@ -51,6 +51,99 @@ function init()
   module.id = _.Will.ResourceCounter;
 }
 
+// --
+// etc
+// --
+
+function isUsedManually( visited )
+{
+  let module = this;
+  let will = module.will;
+
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+
+  // if( !visited )
+  // debugger;
+  //
+  // visited = visited || [];
+  //
+  // if( _.arrayHas( visited, module ) )
+  // return false;
+  //
+  // let users = module.usersGet();
+  // users = _.arraySetBut( users, visited );
+  //
+  // if( !users.length )
+  // return false;
+  //
+  // let visited2 = visited.slice();
+  // visited2.push( module );
+  // let result = users.some( ( module2 ) => module2.isUsedManually( visited2 ) );
+  //
+  // // if( !result )
+  // // debugger;
+  //
+  // return result;
+
+  _.assert( arguments.length === 0 );
+
+  // return module.isUsed();
+
+  let found = [];
+  let sys = new _.graph.AbstractGraphSystem
+  ({
+    onNodeIs : nodeIs,
+    onNodeNameGet : nodeName,
+    onOutNodesGet : nodeOutNodes,
+  });
+  let group = sys.nodesGroup();
+
+  group.each({ roots : [ module ], onUp });
+
+  return found.length > 0;
+
+  /* */
+
+  function onUp( node )
+  {
+    if( node.isAuto )
+    return;
+    if( node === module )
+    return;
+    if( module instanceof _.Will.OpenedModule )
+    if( node instanceof _.Will.OpenedModule )
+    return;
+    found.push( node );
+  }
+
+  /* */
+
+  function nodeIs( node )
+  {
+    return _.instanceIs( node );
+  }
+
+  /* */
+
+  function nodeName( node )
+  {
+    return node.qualifiedName;
+  }
+
+  /* */
+
+  function nodeOutNodes( node )
+  {
+    // if( module instanceof _.Will.OpenedModule && node instanceof _.Will.OpenedModule )
+    // return [];
+    if( !node.usersGet )
+    return [];
+    _.assert( _.routineIs( node.usersGet ) )
+    return node.usersGet();
+  }
+
+}
+
 //
 
 function optionsFormingForward( o )
@@ -77,13 +170,6 @@ function optionsFormingForward( o )
 }
 
 optionsFormingForward.defaults = _.mapExtend( null, _.Will.UpformingDefaults );
-// {
-//   all : null,
-//   attachedWillfilesFormed : null,
-//   peerModulesFormed : null,
-//   subModulesFormed : null,
-//   resourcesFormed : null,
-// }
 
 // --
 // path
@@ -784,6 +870,10 @@ let Extend =
 
   finit,
   init,
+
+  // etc
+
+  isUsedManually,
   optionsFormingForward,
 
   // path
