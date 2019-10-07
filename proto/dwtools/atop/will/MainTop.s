@@ -524,24 +524,12 @@ function _commandBuildLike( o )
 
   will._commandsBegin( o.commandRoutine );
 
-  // if( will.currentOpener )
-  // {
-  //
-  //   ready
-  //   .then( () => forSingle({ opener : will.currentOpener }) )
-  //   .finally( end );
-  //
-  // }
-  // else
-  // {
-    // _.assert( will.currentOpener === null );
-    if( will.currentOpeners === null && will.currentOpener === null )
-    ready.then( () => will.openersFind() );
+  if( will.currentOpeners === null && will.currentOpener === null )
+  ready.then( () => will.openersFind() );
 
-    ready
-    .then( () => will.openersCurrentEach( forSingle ) )
-    .finally( end );
-  // }
+  ready
+  .then( () => will.openersCurrentEach( forSingle ) )
+  .finally( end );
 
   return ready;
 
@@ -673,7 +661,7 @@ function openersFind()
   _.assert( will.currentOpeners === null );
   _.assert( arguments.length === 0 );
 
-  return will.moduleWithAt({ selector : './', tracing : 1 })
+  return will.modulesFindWithAt({ selector : './', tracing : 1 })
   .finally( function( err, it )
   {
 
@@ -708,42 +696,43 @@ function _commandsMake()
   let commands =
   {
 
-    'help' :                    { e : _.routineJoin( will, will.commandHelp ),                        h : 'Get help.' },
-    'imply' :                   { e : _.routineJoin( will, will.commandImply ),                       h : 'Change state or imply value of a variable' },
+    'help' :                            { e : _.routineJoin( will, will.commandHelp ),                        h : 'Get help.' },
+    'imply' :                           { e : _.routineJoin( will, will.commandImply ),                       h : 'Change state or imply value of a variable' },
 
-    'resources list' :          { e : _.routineJoin( will, will.commandResourcesList ),               h : 'List information about resources of the current module.' },
-    'paths list' :              { e : _.routineJoin( will, will.commandPathsList ),                   h : 'List paths of the current module.' },
-    'submodules list' :         { e : _.routineJoin( will, will.commandSubmodulesList ),              h : 'List submodules of the current module.' },
-    'modules list' :            { e : _.routineJoin( will, will.commandModulesList ),                 h : 'List all modules.' },
-    'modules topological list' :{ e : _.routineJoin( will, will.commandModulesTopologicalList ),      h : 'List all modules topologically.' },
-    'modules tree' :            { e : _.routineJoin( will, will.commandModulesTree ),                h : 'List all found modules as a tree.' },
-    'reflectors list' :         { e : _.routineJoin( will, will.commandReflectorsList ),              h : 'List avaialable reflectors the current module.' },
-    'steps list' :              { e : _.routineJoin( will, will.commandStepsList ),                   h : 'List avaialable steps the current module.' },
-    'builds list' :             { e : _.routineJoin( will, will.commandBuildsList ),                  h : 'List avaialable builds the current module.' },
-    'exports list' :            { e : _.routineJoin( will, will.commandExportsList ),                 h : 'List avaialable exports the current module.' },
-    'about list' :              { e : _.routineJoin( will, will.commandAboutList ),                   h : 'List descriptive information about the current module.' },
+    'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList ),               h : 'List information about resources of the current module.' },
+    'paths list' :                      { e : _.routineJoin( will, will.commandPathsList ),                   h : 'List paths of the current module.' },
+    'submodules list' :                 { e : _.routineJoin( will, will.commandSubmodulesList ),              h : 'List submodules of the current module.' },
+    'modules list' :                    { e : _.routineJoin( will, will.commandModulesList ),                 h : 'List all modules.' },
+    'modules topological list' :        { e : _.routineJoin( will, will.commandModulesTopologicalList ),      h : 'List all modules topologically.' },
+    'modules tree' :                    { e : _.routineJoin( will, will.commandModulesTree ),                 h : 'List all found modules as a tree.' },
+    'reflectors list' :                 { e : _.routineJoin( will, will.commandReflectorsList ),              h : 'List avaialable reflectors the current module.' },
+    'steps list' :                      { e : _.routineJoin( will, will.commandStepsList ),                   h : 'List avaialable steps the current module.' },
+    'builds list' :                     { e : _.routineJoin( will, will.commandBuildsList ),                  h : 'List avaialable builds the current module.' },
+    'exports list' :                    { e : _.routineJoin( will, will.commandExportsList ),                 h : 'List avaialable exports the current module.' },
+    'about list' :                      { e : _.routineJoin( will, will.commandAboutList ),                   h : 'List descriptive information about the current module.' },
 
-    'submodules clean' :        { e : _.routineJoin( will, will.commandSubmodulesClean ),             h : 'Delete all downloaded submodules.' },
-    'submodules download' :     { e : _.routineJoin( will, will.commandSubmodulesDownload ),          h : 'Download each submodule if such was not downloaded so far.' },
-    'submodules update' :       { e : _.routineJoin( will, will.commandSubmodulesUpdate ),            h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
-    'submodules fixate' :       { e : _.routineJoin( will, will.commandSubmodulesFixate ),            h : 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.' },
-    'submodules upgrade' :      { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),           h : 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.' },
+    'submodules clean' :                { e : _.routineJoin( will, will.commandSubmodulesClean ),             h : 'Delete all downloaded submodules.' },
+    'submodules fixate' :               { e : _.routineJoin( will, will.commandSubmodulesFixate ),            h : 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.' },
+    'submodules upgrade' :              { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),           h : 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.' },
 
-    'versions download' :       { e : _.routineJoin( will, will.commandSubmodulesDownload ),          h : 'Download each submodule if such was not downloaded so far.' },
-    'versions update' :         { e : _.routineJoin( will, will.commandSubmodulesUpdate ),            h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
-    'versions verify' :         { e : _.routineJoin( will, will.commandVersionsVerify ),              h : 'Check whether each submodule is on branch which is specified in willfile' },
-    'versions agree' :          { e : _.routineJoin( will, will.commandVersionsAgree ),               h : 'Update each submodule, checking for available updates for each submodule. Does not change state of module if update is needed and module has local changes.' },
+    'submodules download' :             { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),          h : 'Download each submodule if such was not downloaded so far.' },
+    'submodules update' :               { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),            h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
+    'submodules versions download' :    { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),          h : 'Download each submodule if such was not downloaded so far.' },
+    'submodules versions update' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),            h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
+    'submodules versions verify' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsVerify ),    h : 'Check whether each submodule is on branch which is specified in willfile' },
+    'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree ),     h : 'Update each submodule, checking for available updates for each submodule. Does not change state of module if update is needed and module has local changes.' },
 
-    'shell' :                   { e : _.routineJoin( will, will.commandShell ),                       h : 'Execute shell command on the module.' },
-    'clean' :                   { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
-    'clean recursive' :         { e : _.routineJoin( will, will.commandCleanRecursive ),              h : 'Clean modules recursively. Delete genrated artifacts, temp files and downloaded submodules.' },
-    'build' :                   { e : _.routineJoin( will, will.commandBuild ),                       h : 'Build current module with spesified criterion.' },
-    'export' :                  { e : _.routineJoin( will, will.commandExport ),                      h : 'Export selected the module with spesified criterion. Save output to output willfile and archive.' },
-    'export recursive' :        { e : _.routineJoin( will, will.commandExportRecursive ),             h : 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.' },
-    'with' :                    { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
-    'each' :                    { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
+    'shell' :                           { e : _.routineJoin( will, will.commandShell ),                       h : 'Execute shell command on the module.' },
+    'clean' :                           { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
+    'build' :                           { e : _.routineJoin( will, will.commandBuild ),                       h : 'Build current module with spesified criterion.' },
+    'export' :                          { e : _.routineJoin( will, will.commandExport ),                      h : 'Export selected the module with spesified criterion. Save output to output willfile and archive.' },
+    'export recursive' :                { e : _.routineJoin( will, will.commandExportRecursive ),             h : 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.' },
+    'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
+    'each' :                            { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
 
-    'git config preserving hard links' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ), h : 'Use "git config preserving hard links" to preserve hardlinks during "git pull".' }
+    'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to preserve hardlinks during "git pull".' },
+    /* qqq : why not covered? */
+
   }
 
   let ca = _.CommandsAggregator
@@ -920,7 +909,7 @@ function commandWith( e )
   if( !isolated )
   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
 
-  return will.moduleWithAt({ selector : isolated.argument })
+  return will.modulesFindWithAt({ selector : isolated.argument })
   .then( function( it )
   {
 
@@ -980,7 +969,7 @@ function commandEach( e )
 
   _.assert( _.objectIs( isolated ), 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
 
-  let con = will.moduleEachAt
+  let con = will.modulesFindEachAt
   ({
     selector : isolated.argument,
     onBegin : handleBegin,
@@ -1483,97 +1472,6 @@ function commandSubmodulesClean( e )
 
 //
 
-function commandSubmodulesDownload( e )
-{
-  let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
-
-  let propertiesMap = _.strStructureParse( e.argument );
-  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
-  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
-
-  return will._commandBuildLike
-  ({
-    event : e,
-    name : 'download submodules',
-    onEach : handleEach,
-    commandRoutine : commandSubmodulesDownload,
-  });
-
-  function handleEach( it )
-  {
-    return it.opener.openedModule.subModulesDownload({ dry : e.propertiesMap.dry });
-  }
-
-}
-
-// {
-//   let will = this;
-//
-//   let propertiesMap = _.strStructureParse( e.argument );
-//   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
-//   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
-//
-//   return will.openersCurrentEach( function( it )
-//   {
-//     return it.opener.openedModule.subModulesDownload({ dry : e.propertiesMap.dry });
-//   });
-// }
-
-commandSubmodulesDownload.commandProperties =
-{
-  dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
-}
-
-//
-
-function commandSubmodulesUpdate( e )
-{
-  let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
-
-  let propertiesMap = _.strStructureParse( e.argument );
-  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
-  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
-
-  return will._commandBuildLike
-  ({
-    event : e,
-    name : 'update submodules',
-    onEach : handleEach,
-    commandRoutine : commandSubmodulesUpdate,
-  });
-
-  function handleEach( it )
-  {
-    return it.opener.openedModule.submodulesUpdate({ dry : e.propertiesMap.dry });
-  }
-
-}
-
-// {
-//   let will = this;
-//
-//   let propertiesMap = _.strStructureParse( e.argument );
-//   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
-//   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
-//
-//   return will.openersCurrentEach( function( it )
-//   {
-//     return it.opener.openedModule.submodulesUpdate({ dry : e.propertiesMap.dry });
-//   });
-//
-// }
-
-commandSubmodulesUpdate.commandProperties =
-{
-  dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
-}
-
-//
-
 function commandSubmodulesFixate( e )
 {
   let will = this;
@@ -1597,32 +1495,16 @@ function commandSubmodulesFixate( e )
 
   function handleEach( it )
   {
-    return it.opener.openedModule.submodulesFixate({ dry : e.propertiesMap.dry });
+    return it.opener.openedModule.submodulesFixate( _.mapExtend( null, e.propertiesMap ) );
   }
 
 }
-
-// {
-//   let will = this;
-//
-//   let propertiesMap = _.strStructureParse( e.argument );
-//   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
-//   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
-//
-//   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
-//   delete e.propertiesMap.negative;
-//
-//   return will.openersCurrentEach( function( it )
-//   {
-//     return it.opener.openedModule.submodulesFixate( e.propertiesMap );
-//   });
-//
-// }
 
 commandSubmodulesFixate.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
   negative : 'Reporting attempt of fixation with negative outcome. Default is negative:0.',
+  recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
 }
 
 //
@@ -1650,39 +1532,87 @@ function commandSubmodulesUpgrade( e )
 
   function handleEach( it )
   {
-    return it.opener.openedModule.submodulesFixate({ dry : e.propertiesMap.dry });
+    return it.opener.openedModule.submodulesFixate( _.mapExtend( null, e.propertiesMap ) );
   }
 
 }
-// {
-//   let will = this;
-//
-//   let propertiesMap = _.strStructureParse( e.argument );
-//   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
-//   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
-//
-//   _.assert( e.propertiesMap.upgrading === undefined, 'Unknown option upgrading' );
-//
-//   e.propertiesMap.upgrading = 1;
-//   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
-//   delete e.propertiesMap.negative;
-//
-//   return will.openersCurrentEach( function( it )
-//   {
-//     return it.opener.openedModule.submodulesFixate( e.propertiesMap );
-//   });
-//
-// }
 
 commandSubmodulesUpgrade.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
   negative : 'Reporting attempt of upgrade with negative outcome. Default is negative:0.',
+  recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
 }
 
 //
 
-function commandVersionsVerify( e )
+function commandSubmodulesVersionsDownload( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+
+  let propertiesMap = _.strStructureParse( e.argument );
+  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'download submodules',
+    onEach : handleEach,
+    commandRoutine : commandSubmodulesVersionsDownload,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.subModulesDownload( _.mapExtend( null, e.propertiesMap ) );
+  }
+
+}
+
+commandSubmodulesVersionsDownload.commandProperties =
+{
+  dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
+  recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
+}
+
+//
+
+function commandSubmodulesVersionsUpdate( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+
+  let propertiesMap = _.strStructureParse( e.argument );
+  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'update submodules',
+    onEach : handleEach,
+    commandRoutine : commandSubmodulesVersionsUpdate,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.subModulesUpdate( _.mapExtend( null, e.propertiesMap ) );
+  }
+
+}
+
+commandSubmodulesVersionsUpdate.commandProperties =
+{
+  dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
+  recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
+}
+
+//
+
+function commandSubmodulesVersionsVerify( e )
 {
   let will = this;
 
@@ -1693,24 +1623,25 @@ function commandVersionsVerify( e )
   return will._commandBuildLike
   ({
     event : e,
-    name : 'versions verify',
+    name : 'submodules versions verify',
     onEach : handleEach,
-    commandRoutine : commandVersionsVerify,
+    commandRoutine : commandSubmodulesVersionsVerify,
   });
 
   function handleEach( it )
   {
-    return it.opener.openedModule.versionsVerify();
+    return it.opener.openedModule.versionsVerify( _.mapExtend( null, e.propertiesMap ) );
   }
 }
 
-commandVersionsVerify.commandProperties =
+commandSubmodulesVersionsVerify.commandProperties =
 {
+  recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
 }
 
 //
 
-function commandVersionsAgree( e )
+function commandSubmodulesVersionsAgree( e )
 {
   let will = this;
 
@@ -1721,20 +1652,22 @@ function commandVersionsAgree( e )
   return will._commandBuildLike
   ({
     event : e,
-    name : 'versions agree',
+    name : 'submodules versions agree',
     onEach : handleEach,
-    commandRoutine : commandVersionsAgree,
+    commandRoutine : commandSubmodulesVersionsAgree,
   });
 
   function handleEach( it )
   {
-    return it.opener.openedModule.versionsAgree({ dry : e.propertiesMap.dry });
+    return it.opener.openedModule.versionsAgree( _.mapExtend( null, e.propertiesMap ) );
   }
+
 }
 
-commandVersionsVerify.commandProperties =
+commandSubmodulesVersionsVerify.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
+  recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
 }
 
 //
@@ -1811,9 +1744,9 @@ function commandShell( e )
 //     {
 //
 //       if( dry )
-//       return it.opener.openedModule.cleanWhatReport( e.propertiesMap );
+//       return it.opener.openedModule.cleanWhatReport( _.mapExtend( null, e.propertiesMap ) );
 //       else
-//       return it.opener.openedModule.clean( e.propertiesMap );
+//       return it.opener.openedModule.clean( _.mapExtend( null, e.propertiesMap ) );
 //
 //     });
 //
@@ -1859,9 +1792,9 @@ function commandClean( e )
   function handleEach( it )
   {
     if( dry )
-    return it.opener.openedModule.cleanWhatReport( e.propertiesMap );
+    return it.opener.openedModule.cleanWhatReport( _.mapExtend( null, e.propertiesMap ) );
     else
-    return it.opener.openedModule.clean( e.propertiesMap );
+    return it.opener.openedModule.clean( _.mapExtend( null, e.propertiesMap ) );
   }
 
 }
@@ -1872,48 +1805,49 @@ commandClean.commandProperties =
   cleaningSubmodules : 'Deleting directory ".module" dir with remote submodules. Default is cleaningSubmodules:1.',
   cleaningOut : 'Deleting generated out files. Default is cleaningOut:1.',
   cleaningTemp : 'Deleting module-specific temporary directory. Default is cleaningTemp:1.',
-  recursive : 'Recursive cleaning. 0 - only curremt module, 1 - current module and its submodules, 2 - current module and all submodules, direct and indirect. Default is recursive:0.',
+  recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
 }
 
+// //
 //
-
-function commandCleanRecursive( e )
-{
-  let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
-
-  let propertiesMap = _.strStructureParse( e.argument );
-  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
-  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
-  let dry = !!e.propertiesMap.dry;
-  delete e.propertiesMap.dry;
-  if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
-  e.propertiesMap.fast = !dry;
-  e.propertiesMap.fast = 0;
-
-  return will._commandBuildLike
-  ({
-    event : e,
-    name : 'clean',
-    onEach : handleEach,
-    commandRoutine : commandCleanRecursive,
-  });
-
-  function handleEach( it )
-  {
-    if( dry )
-    return it.opener.openedModule.cleanWhatReport( e.propertiesMap );
-    else
-    return it.opener.openedModule.clean( e.propertiesMap );
-  }
-
-}
-
-var defaults = commandCleanRecursive.commandProperties = Object.create( commandClean.commandProperties );
-
-defaults.recursive = 'Recursive cleaning. 0 - only curremt module, 1 - current module and its submodules, 2 - current module and all submodules, direct and indirect. Default is recursive:2.';
+// function commandCleanRecursive( e )
+// {
+//   let will = this;
+//   let logger = will.logger;
+//   let ready = new _.Consequence().take( null );
+//
+//   let propertiesMap = _.strStructureParse( e.argument );
+//   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+//   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
+//   let dry = !!e.propertiesMap.dry;
+//   delete e.propertiesMap.dry;
+//   if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
+//   e.propertiesMap.fast = !dry;
+//   e.propertiesMap.fast = 0;
+//
+//   return will._commandBuildLike
+//   ({
+//     event : e,
+//     name : 'clean',
+//     onEach : handleEach,
+//     commandRoutine : commandCleanRecursive,
+//   });
+//
+//   function handleEach( it )
+//   {
+//     debugger;
+//     if( dry )
+//     return it.opener.openedModule.cleanWhatReport( _.mapExtend( null, e.propertiesMap ) );
+//     else
+//     return it.opener.openedModule.clean( _.mapExtend( null, e.propertiesMap ) );
+//   }
+//
+// }
+//
+// var defaults = commandCleanRecursive.commandProperties = Object.create( commandClean.commandProperties );
+//
+// defaults.recursive = 'Recursive cleaning. 0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:2.';
 
 //
 
@@ -2071,7 +2005,6 @@ let Extend =
   _commandsBegin,
   _commandsEnd,
   errEncounter,
-  // errTooMany,
   currentOpenerChange,
 
   commandHelp,
@@ -2093,17 +2026,16 @@ let Extend =
   commandModulesTree,
 
   commandSubmodulesClean,
-  commandSubmodulesDownload,
-  commandSubmodulesUpdate,
   commandSubmodulesFixate,
   commandSubmodulesUpgrade,
-
-  commandVersionsVerify,
-  commandVersionsAgree,
+  commandSubmodulesVersionsDownload,
+  commandSubmodulesVersionsUpdate,
+  commandSubmodulesVersionsVerify,
+  commandSubmodulesVersionsAgree,
 
   commandShell,
   commandClean,
-  commandCleanRecursive,
+  // commandCleanRecursive,
   commandBuild,
   commandExport,
   commandExportRecursive,
