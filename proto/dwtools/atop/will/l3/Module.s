@@ -4494,12 +4494,11 @@ function cleanWhatReport( o )
   return textualReport;
 }
 
-cleanWhatReport.defaults = Object.create( cleanWhat.defaults );
-// cleanWhatReport.defaults = Object.create( null );
+var defaults = cleanWhatReport.defaults = Object.create( cleanWhat.defaults );
 
-cleanWhatReport.defaults.report = null;
-cleanWhatReport.defaults.explanation = ' . Clean will delete ';
-cleanWhatReport.defaults.spentTime = null
+defaults.report = null;
+defaults.explanation = ' . Clean will delete ';
+defaults.spentTime = null
 
 //
 
@@ -4514,9 +4513,17 @@ function clean( o )
 
   o = _.routineOptions( clean, arguments );
 
+  will.readingEnd();
+
+  if( o.dry )
+  {
+    let o2 = _.mapOnly( o, module.cleanWhatReport.defaults );
+    return module.cleanWhatReport( o2 );
+  }
+
   let o2 = _.mapExtend( null, o );
   delete o2.late;
-
+  delete o2.dry;
   let report = module.cleanWhat( o2 );
 
   _.assert( _.mapIs( report ) );
@@ -4547,7 +4554,7 @@ function clean( o )
 
   time = _.timeNow() - time;
 
-  let o3 = _.mapExtend( null, o );
+  let o3 = _.mapOnly( o, module.cleanWhatReport.defaults );
   o3.explanation = ' - Clean deleted ';
   o3.spentTime = time;
   o3.report = report;
@@ -4558,6 +4565,8 @@ function clean( o )
 }
 
 var defaults = clean.defaults = Object.create( cleanWhat.defaults );
+
+defaults.dry = 0;
 
 // --
 // resolver

@@ -90,9 +90,6 @@ function _verify()
   _.assert( exported.step instanceof will.Step );
   _.assert( exported.recursive === 0 || exported.recursive === 1 || exported.recursive === 2 );
   _.assert( exported.withIntegrated === 0 || exported.withIntegrated === 1 || exported.withIntegrated === 2 );
-  // _.assert( _.strDefined( exported.exportPath ) || _.arrayIs( exported.exportFiles ), () => exported.step.qualifiedName + ' should have option export, path to directory to export or reflector' );
-  // _.assert( _.strDefined( exported.exportPath ), () => exported.step.qualifiedName + ' should have option export, path to directory to export or reflector' );
-  // _.assert( exported.exportPath === null || exported.exportFiles === null );
   _.assert( _.boolLike( exported.tar ), 'Expects bool-like {- exported.tar -}' );
 
   _.sure( _.strDefined( module.dirPath ), 'Expects directory path of the module' );
@@ -114,7 +111,6 @@ function _performPrepare1( frame )
   let will = module.will;
   let build = module.buildMap[ exported.name ];
   let run = frame.run;
-  // let opts = frame.opts;
   let opts = frame.resource.opts;
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
@@ -127,15 +123,11 @@ function _performPrepare1( frame )
   _.assert( _.boolLike( opts.tar ) );
   _.assert( opts.export !== undefined );
 
-  // exported.tar = opts.tar === undefined || opts.tar;
   exported.tar = opts.tar;
   exported.step = step;
   exported.build = build;
   exported.criterion = _.mapExtend( null, build.criterion );
   exported.version = module.about.version;
-
-  // if( exported.recursive === null )
-  // exported.recursive = will.recursiveExport;
 
   if( exported.recursive === null )
   exported.recursive = run.recursive;
@@ -143,24 +135,6 @@ function _performPrepare1( frame )
   exported.withIntegrated = run.withIntegrated;
 
   exported.exportPath = opts.export;
-  // if( exported.exportPath === null )
-  // {
-  //
-  //   let exportFiles = module.pathOrReflectorResolve( 'export' );
-  //   if( exportFiles )
-  //   exported.exportPath = exportFiles.qualifiedName;
-  //
-  //   // exported.exportFiles = module.pathOrReflectorResolve( 'export' );
-  //   // exported.exportFiles = module.filesFromResource
-  //   // ({
-  //   //   selector : 'export',
-  //   //   prefixlessAction : 'pathOrReflector',
-  //   //   pathResolving : 'in',
-  //   //   globOnly : 1,
-  //   //   withDirs : 1,
-  //   // });
-  //
-  // }
 
   exported._verify();
 
@@ -211,7 +185,6 @@ function _performRecursive()
   if( !exported.recursive )
   return null;
 
-  // return module.submodulesPeersOpen({ throwing : 0, recursive : exported.recursive })
   return new _.Consequence().take( null )
   .then( () =>
   {
@@ -278,7 +251,6 @@ function _performPrepare2()
   let will = module.will;
   let logger = will.logger;
 
-  // _.assert( module.stager.stageStatePerformed( 'resourcesFormed' ), 'Resources should be formed' );
   _.assert
   (
       module.isFull({ all : { resourcesFormed : 0 } }) && module.isValid()
@@ -294,16 +266,6 @@ function _performPrepare2()
     if( exportFiles )
     exported.exportPath = exportFiles.qualifiedName;
 
-    // exported.exportFiles = module.pathOrReflectorResolve( 'export' );
-    // exported.exportFiles = module.filesFromResource
-    // ({
-    //   selector : 'export',
-    //   prefixlessAction : 'pathOrReflector',
-    //   pathResolving : 'in',
-    //   globOnly : 1,
-    //   withDirs : 1,
-    // });
-
   }
 
   /* */
@@ -314,18 +276,11 @@ function _performPrepare2()
     , () => exported.step.decoratedQualifiedName + ' should have defined path or reflector to export. Alternatively module could have defined path::export or reflecotr::export.'
   );
 
-  // _.sure
-  // (
-  //   !will.Resolver.selectorIsComposite( exported.exportPath )
-  //   , () => `${exported.step.decoratedQualifiedName} has composite export path ${_.color.strFormat( exported.exportPath, 'path' )}. Export path could be a selector, but only simple.`
-  // );
-
   for( let s in module.submoduleMap )
   {
 
     let submodule = module.submoduleMap[ s ];
     if( !submodule.opener || !submodule.opener.isOpened() || !submodule.opener.isValid() )
-    // if( !submodule.criterion.optional && !submodule.criterion.dev && submodule.enabled )
     if( submodule.isMandatory() )
     {
       debugger;
@@ -429,7 +384,6 @@ function _performReadExported()
         if( !_.errIsLogged( err ) )
         {
           logger.up( 2 );
-          // logger.log( _.errBrief( err ) );
           logger.log( err );
           logger.down( 2 );
         }
@@ -443,10 +397,9 @@ function _performReadExported()
     catch( err2 )
     {
       debugger;
-      // _.errLogOnce( err2 );
-      err = _.err( err );
-      logger.log( _.errOnce( err ) );
-      throw err;
+      err2 = _.err( err2 );
+      logger.log( _.errOnce( err2 ) );
+      throw err2;
     }
 
     if( err )
@@ -489,22 +442,12 @@ function _performExportedReflectors()
   let exp;
   let recursive = null;
 
-  // debugger;
-  // if( exported.exportPath )
-  // {
-    exp = module.pathResolve
-    ({
-      selector : exported.exportPath,
-      currentContext : step,
-      pathResolving : 'in',
-    });
-  // }
-  // else
-  // {
-  //   exp = exported.exportFiles;
-  //   recursive = 0;
-  //   _.assert( _.arrayIs( exp ) );
-  // }
+  exp = module.pathResolve
+  ({
+    selector : exported.exportPath,
+    currentContext : step,
+    pathResolving : 'in',
+  });
 
   /* */
 
@@ -867,7 +810,6 @@ let Aggregates =
 {
   name : null,
   exportPath : null,
-  // exportFiles : null,
 }
 
 let Associates =

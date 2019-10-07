@@ -1698,72 +1698,6 @@ function commandShell( e )
 
 }
 
-// function commandShell( e )
-// {
-//   let will = this;
-//
-//   return will.openersCurrentEach( function( it )
-//   {
-//     let logger = will.logger;
-//     return it.opener.openedModule.shell
-//     ({
-//       execPath : e.argument,
-//       currentPath : will.currentPath || it.opener.openedModule.dirPath,
-//     });
-//   });
-//
-// }
-
-//
-// function commandClean( e )
-// {
-//   let will = this;
-//   let logger = will.logger;
-//   let ready = new _.Consequence().take( null );
-//
-//   let propertiesMap = _.strStructureParse( e.argument );
-//   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
-//   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
-//
-//   let dry = !!e.propertiesMap.dry;
-//   delete e.propertiesMap.dry;
-//
-//   if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
-//   e.propertiesMap.fast = !dry;
-//   e.propertiesMap.fast = 0;
-//
-//   will.openersCurrentEach( function( it )
-//   {
-//
-//     ready.then( () =>
-//     {
-//       return will.currentOpenerChange( it.opener );
-//     });
-//
-//     ready.then( () =>
-//     {
-//
-//       if( dry )
-//       return it.opener.openedModule.cleanWhatReport( _.mapExtend( null, e.propertiesMap ) );
-//       else
-//       return it.opener.openedModule.clean( _.mapExtend( null, e.propertiesMap ) );
-//
-//     });
-//
-//     ready.finally( ( err, arg ) =>
-//     {
-//       will.currentOpenerChange( null );
-//       if( err )
-//       throw _.err( err, `\nFailed to clean ${it.opener ? it.opener.commonPath : ''}` );
-//       return arg;
-//     });
-//
-//     return null;
-//   });
-//
-//   return ready;
-// }
-
 //
 
 function commandClean( e )
@@ -1775,8 +1709,9 @@ function commandClean( e )
   let propertiesMap = _.strStructureParse( e.argument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
-  let dry = !!e.propertiesMap.dry;
-  delete e.propertiesMap.dry;
+  e.propertiesMap.dry = !!e.propertiesMap.dry;;
+  let dry = e.propertiesMap.dry;
+  // delete e.propertiesMap.dry;
   if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
   e.propertiesMap.fast = !dry;
   e.propertiesMap.fast = 0;
@@ -1791,9 +1726,9 @@ function commandClean( e )
 
   function handleEach( it )
   {
-    if( dry )
-    return it.opener.openedModule.cleanWhatReport( _.mapExtend( null, e.propertiesMap ) );
-    else
+    // if( dry )
+    // return it.opener.openedModule.cleanWhatReport( _.mapExtend( null, e.propertiesMap ) );
+    // else
     return it.opener.openedModule.clean( _.mapExtend( null, e.propertiesMap ) );
   }
 
@@ -1808,46 +1743,6 @@ commandClean.commandProperties =
   recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
 }
-
-// //
-//
-// function commandCleanRecursive( e )
-// {
-//   let will = this;
-//   let logger = will.logger;
-//   let ready = new _.Consequence().take( null );
-//
-//   let propertiesMap = _.strStructureParse( e.argument );
-//   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
-//   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
-//   let dry = !!e.propertiesMap.dry;
-//   delete e.propertiesMap.dry;
-//   if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
-//   e.propertiesMap.fast = !dry;
-//   e.propertiesMap.fast = 0;
-//
-//   return will._commandBuildLike
-//   ({
-//     event : e,
-//     name : 'clean',
-//     onEach : handleEach,
-//     commandRoutine : commandCleanRecursive,
-//   });
-//
-//   function handleEach( it )
-//   {
-//     debugger;
-//     if( dry )
-//     return it.opener.openedModule.cleanWhatReport( _.mapExtend( null, e.propertiesMap ) );
-//     else
-//     return it.opener.openedModule.clean( _.mapExtend( null, e.propertiesMap ) );
-//   }
-//
-// }
-//
-// var defaults = commandCleanRecursive.commandProperties = Object.create( commandClean.commandProperties );
-//
-// defaults.recursive = 'Recursive cleaning. 0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:2.';
 
 //
 
