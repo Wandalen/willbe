@@ -1464,10 +1464,19 @@ defaults.withRemotePath = 'Print remote paths. Default is 0';
 function commandSubmodulesClean( e )
 {
   let will = this;
-  return will.openersCurrentEach( function( it )
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'clean submodules',
+    onEach : handleEach,
+    commandRoutine : commandSubmodulesClean,
+  });
+
+  function handleEach( it )
   {
     return it.opener.openedModule.submodulesClean();
-  });
+  }
 }
 
 //
