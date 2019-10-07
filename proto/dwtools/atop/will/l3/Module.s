@@ -197,7 +197,7 @@ function init( o )
   if( module.willfilePath === null )
   module.willfilePath = _.select( module.willfilesArray, '*/filePath' );
 
-  module._filePathChanged();
+  module._filePathChanged2();
   module._nameChanged();
 
   if( will.verosity >= 5 )
@@ -1841,7 +1841,7 @@ function modulesEachDo( o )
   let modules;
   let con = new _.Consequence().take( null );
 
-  o = _.routineOptions( modulesEachDo, arguments );
+  o = _.routineOptions( modulesEachDo, arguments ); debugger;
 
   // con.then( () =>
   // {
@@ -1875,6 +1875,7 @@ function modulesEachDo( o )
   con.then( () =>
   {
     let con2 = new _.Consequence().take( null );
+    debugger;
     for( let m = modules.length-1 ; m >= 0 ; m-- ) ( function( r )
     {
       con2
@@ -1955,7 +1956,6 @@ defaults.withPeers = 0;
 defaults.withOut = 0;
 defaults.withIn = 1;
 
-// delete defaults.outputFormat;
 _.assert( defaults.outputFormat === undefined );
 
 let modulesBuild = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
@@ -3706,15 +3706,99 @@ pathsRebase.defaults =
   inPath : null,
 }
 
+// //
+//
+// function _filePathChange( willfilesPath )
+// {
+//
+//   if( !this.will )
+//   return willfilesPath;
+//
+//   let module = this;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//
+//   if( module.willfilesPath )
+//   will.modulePathUnregister( module );
+//
+//   _.assert( arguments.length === 1 );
+//
+//   let r = Parent.prototype._filePathChange.call( module, willfilesPath );
+//
+//   _.assert( _.boolIs( r.isIdentical ) );
+//
+//   module._dirPathAssign( r.dirPath );
+//
+//   if( r.willfilesPath !== null )
+//   {
+//     module._commonPathAssign( r.commonPath );
+//     if( module.isRemote === false )
+//     module._localPathAssign( r.commonPath );
+//     _.assert( module.commonPath === r.commonPath );
+//   }
+//
+//   if( !r.isIdentical )
+//   module.userArray.forEach( ( opener ) =>
+//   {
+//     if( opener instanceof _.Will.ModuleOpener )
+//     opener.
+//   });
+//
+//   module._peerChanged();
+//
+//   if( module.isPreformed() )
+//   if( !r.isIdentical )
+//   // if( module.willfilesPath )
+//   if( module.commonPath )
+//   {
+//     will.modulePathRegister( module );
+//     will.variantFrom( module );
+//   }
+//
+//   _.assert
+//   (
+//     !module.stager || !module.stager.stageStatePerformed( 'preformed' ) || _.strDefined( module.commonPath ),
+//     `Each module requires commpnPath, but ${module.absoluteName} does not have`
+//   );
+//
+//   return r.willfilesPath;
+// }
+
 //
 
-function _filePathChange( willfilesPath )
+function _filePathChanged1( o )
 {
+  let module = this;
+
+  o = module._filePathChanged2( o );
+
+  if( module.will )
+  if( !o.isIdentical )
+  module.userArray.forEach( ( opener ) =>
+  {
+    if( opener instanceof _.Will.ModuleOpener )
+    opener._filePathChanged2({ willfilesPath : o.willfilesPath });
+  });
+
+  return o;
+}
+
+_filePathChanged1.defaults = _.mapExtend( null, _.Will.AbstractModule.prototype._filePathChanged1.defaults );
+
+//
+
+function _filePathChanged2( o )
+{
+  let module = this;
+
+  // o = module._filePathChange( o );
 
   if( !this.will )
   return willfilesPath;
 
-  let module = this;
+  // let module = this;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -3723,24 +3807,34 @@ function _filePathChange( willfilesPath )
   if( module.willfilesPath )
   will.modulePathUnregister( module );
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  let r = Parent.prototype._filePathChange.call( module, willfilesPath );
+  o = Parent.prototype._filePathChanged2.call( module, o );
 
-  _.assert( _.boolIs( r.isIdentical ) );
+  _.assert( _.boolIs( o.isIdentical ) );
 
-  module._dirPathAssign( r.dirPath );
+  module._dirPathAssign( o.dirPath );
 
-  if( r.willfilesPath !== null )
+  if( o.willfilesPath !== null )
   {
-    module._commonPathAssign( r.commonPath );
-    _.assert( module.commonPath === r.commonPath );
+    module._commonPathAssign( o.commonPath );
+    if( module.isRemote === false )
+    module._localPathAssign( o.commonPath );
+    _.assert( module.commonPath === o.commonPath );
   }
+
+  // if( !o.isIdentical )
+  // module.userArray.forEach( ( opener ) =>
+  // {
+  //   // debugger;
+  //   if( opener instanceof _.Will.ModuleOpener )
+  //   opener._filePathChanged2({ willfilesPath : o.willfilesPath });
+  // });
 
   module._peerChanged();
 
   if( module.isPreformed() )
-  if( !r.isIdentical )
+  if( !o.isIdentical )
   // if( module.willfilesPath )
   if( module.commonPath )
   {
@@ -3754,20 +3848,10 @@ function _filePathChange( willfilesPath )
     `Each module requires commpnPath, but ${module.absoluteName} does not have`
   );
 
-  return r.willfilesPath;
+  return o;
 }
 
-// //
-//
-// function _filePathChanged()
-// {
-//   let module = this;
-//
-//   _.assert( arguments.length === 0 );
-//
-//   module._filePathChange( module.willfilesPath );
-//
-// }
+_filePathChanged2.defaults = _.mapExtend( null, _.Will.AbstractModule.prototype._filePathChanged2.defaults );
 
 //
 
@@ -3933,7 +4017,7 @@ function predefinedPathSet_functor( fieldName, resourceName )
     module[ assignMethodName ]( filePath );
 
     // if( !isIdentical )
-    // module._filePathChanged(); /* xxx : comment out */
+    // module._filePathChanged2(); /* xxx : comment out */
 
     // if( !isIdentical )
     // if( resourceName === 'remote' && filePath !== null )
@@ -3961,7 +4045,7 @@ function wilfilesPathSet_functor( fieldName, resourceName )
     module[ assignMethodName ]( filePath );
 
     if( !isIdentical )
-    module._filePathChanged();
+    module._filePathChanged1();
 
     // if( !isIdentical )
     // // if( resourceName === 'remote' && filePath !== null )
@@ -3989,7 +4073,7 @@ function remotePathSet_functor( fieldName, resourceName )
     module[ assignMethodName ]( filePath );
 
     if( !isIdentical )
-    module._filePathChanged();
+    module._filePathChanged2();
 
     if( !isIdentical )
     // if( resourceName === 'remote' && filePath !== null )
@@ -5971,7 +6055,9 @@ let Extend =
   pathsRelative,
   pathsRebase,
 
-  _filePathChange,
+  // _filePathChange,
+  _filePathChanged1,
+  _filePathChanged2,
   inPathGet,
   outPathGet,
   outfilePathGet,

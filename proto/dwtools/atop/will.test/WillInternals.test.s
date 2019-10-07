@@ -233,6 +233,12 @@ function openNamedFast( test )
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
 
+  will.prefer
+  ({
+    allOfMain : 0,
+    allOfSub : 0,
+  });
+
   var opener1 = will.openerMake({ willfilesPath : modulePath });
   let ready1 = opener1.open();
 
@@ -416,12 +422,21 @@ function openNamedForming( test )
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
 
+  will.prefer
+  ({
+    allOfMain : 0,
+    allOfSub : 0,
+    peerModulesFormedOfMain : 1,
+    peerModulesFormedOfSub : 1,
+  });
+
   let opener1 = will.openerMake({ willfilesPath : modulePath });
   let ready1 = opener1.open({ all : 1 });
 
   test.case = 'skipping of stages of module';
   var stager = opener1.openedModule.stager;
   test.identical( stager.stageStateSkipping( 'preformed' ), false );
+  // test.identical( stager.stageStateSkipping( 'picked' ), false );
   test.identical( stager.stageStateSkipping( 'opened' ), false );
   test.identical( stager.stageStateSkipping( 'attachedWillfilesFormed' ), false );
   test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), false );
@@ -435,6 +450,7 @@ function openNamedForming( test )
   test.case = 'skipping of stages of module';
   var stager = opener1.openedModule.stager;
   test.identical( stager.stageStateSkipping( 'preformed' ), false );
+  // test.identical( stager.stageStateSkipping( 'picked' ), false );
   test.identical( stager.stageStateSkipping( 'opened' ), false );
   test.identical( stager.stageStateSkipping( 'attachedWillfilesFormed' ), false );
   test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), false );
@@ -497,6 +513,7 @@ function openNamedForming( test )
     test.case = 'stages';
     var stager = opener1.openedModule.stager;
     test.identical( stager.stageStatePerformed( 'preformed' ), true );
+    // test.identical( stager.stageStatePerformed( 'picked' ), true );
     test.identical( stager.stageStatePerformed( 'opened' ), true );
     test.identical( stager.stageStatePerformed( 'attachedWillfilesFormed' ), true );
     test.identical( stager.stageStatePerformed( 'peerModulesFormed' ), true );
@@ -529,7 +546,6 @@ function openNamedForming( test )
 
     debugger;
     opener2.finit();
-    debugger;
 
     test.description = 'no garbage left';
     test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), [] );
@@ -701,6 +717,7 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
     test.case = 'skipping of stages of module';
     var stager = opener1.openedModule.stager;
     test.identical( stager.stageStateSkipping( 'preformed' ), false );
+    // test.identical( stager.stageStateSkipping( 'picked' ), false );
     test.identical( stager.stageStateSkipping( 'opened' ), false );
     test.identical( stager.stageStateSkipping( 'attachedWillfilesFormed' ), false );
     test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), true );
@@ -837,6 +854,7 @@ function openSkippingSubButAttachedWillfiles( test )
     test.case = 'skipping of stages of module';
     var stager = opener1.openedModule.stager;
     test.identical( stager.stageStateSkipping( 'preformed' ), false );
+    // test.identical( stager.stageStateSkipping( 'picked' ), false );
     test.identical( stager.stageStateSkipping( 'opened' ), false );
     test.identical( stager.stageStateSkipping( 'attachedWillfilesFormed' ), false );
     test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), false );
@@ -844,6 +862,7 @@ function openSkippingSubButAttachedWillfiles( test )
     test.identical( stager.stageStateSkipping( 'resourcesFormed' ), false );
     test.identical( stager.stageStateSkipping( 'formed' ), false );
     test.identical( stager.stageStatePerformed( 'preformed' ), true );
+    // test.identical( stager.stageStatePerformed( 'picked' ), true );
     test.identical( stager.stageStatePerformed( 'opened' ), true );
     test.identical( stager.stageStatePerformed( 'attachedWillfilesFormed' ), true );
     test.identical( stager.stageStatePerformed( 'peerModulesFormed' ), true );
@@ -854,6 +873,7 @@ function openSkippingSubButAttachedWillfiles( test )
     test.case = 'skipping of stages of module';
     var stager = will.moduleWithNameMap.Submodule.stager;
     test.identical( stager.stageStateSkipping( 'preformed' ), false );
+    // test.identical( stager.stageStateSkipping( 'picked' ), false );
     test.identical( stager.stageStateSkipping( 'opened' ), false );
     test.identical( stager.stageStateSkipping( 'attachedWillfilesFormed' ), false );
     test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), false );
@@ -862,6 +882,7 @@ function openSkippingSubButAttachedWillfiles( test )
     test.identical( stager.stageStateSkipping( 'formed' ), false );
 
     test.identical( stager.stageStatePerformed( 'preformed' ), true );
+    // test.identical( stager.stageStatePerformed( 'picked' ), true );
     test.identical( stager.stageStatePerformed( 'opened' ), true );
     test.identical( stager.stageStatePerformed( 'attachedWillfilesFormed' ), true );
     test.identical( stager.stageStatePerformed( 'peerModulesFormed' ), true );
@@ -1172,7 +1193,7 @@ function openOutNamed( test )
     test.identical( opener.qualifiedName, 'module::supermodule' );
     test.identical( opener.absoluteName, 'module::supermodule' );
     test.identical( opener.dirPath, abs( './super.out' ) );
-    test.identical( opener.localPath, abs( './super.out/supermodule.out' ) );
+    test.identical( opener.localPath, abs( './super.out/supermodule.out' ) ); debugger;
     test.identical( opener.willfilesPath, abs( './super.out/supermodule.out.will.yml' ) );
     test.identical( opener.commonPath, abs( 'super.out/supermodule.out' ) );
     test.identical( opener.fileName, 'supermodule.out' );
@@ -1181,7 +1202,7 @@ function openOutNamed( test )
     test.identical( opener.openedModule.qualifiedName, 'module::supermodule' );
     test.identical( opener.openedModule.absoluteName, 'module::supermodule' );
     test.identical( opener.openedModule.dirPath, abs( './super.out' ) );
-    test.identical( opener.openedModule.localPath, abs( './super.out' ) );
+    test.identical( opener.openedModule.localPath, abs( './super.out/supermodule.out' ) );
     test.identical( opener.openedModule.willfilesPath, abs( './super.out/supermodule.out.will.yml' ) );
     test.identical( opener.openedModule.commonPath, abs( 'super.out/supermodule.out' ) );
     test.identical( opener.openedModule.fileName, 'supermodule.out' );
@@ -1628,6 +1649,7 @@ function moduleClone( test )
     test.description = 'stages';
     var stager = module2.stager;
     test.identical( stager.stageStatePerformed( 'preformed' ), true );
+    // test.identical( stager.stageStatePerformed( 'picked' ), false );
     test.identical( stager.stageStatePerformed( 'opened' ), false );
     test.identical( stager.stageStatePerformed( 'attachedWillfilesFormed' ), false );
     test.identical( stager.stageStatePerformed( 'peerModulesFormed' ), false );

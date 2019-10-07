@@ -87,7 +87,7 @@ function unform()
     openedModule.finit();
   }
 
-  if( opener.id === 210 )
+  // if( opener.id === 210 )
   debugger;
   let variant = will.variantOf( opener );
   variant.remove( opener );
@@ -119,7 +119,8 @@ function preform()
 
   /* */
 
-  opener._filePathChanged();
+  debugger;
+  opener._filePathChanged1();
   will.openerRegister( opener );
   will._willfilesReadBegin();
 
@@ -1028,10 +1029,10 @@ function remoteForm()
 
   _.assert( opener.formed >= 1 );
 
-  // if( opener.id === 128 )
-  // debugger;
-
   opener.remoteIsUpdate();
+
+  // if( opener.id === 1 )
+  // debugger;
 
   if( opener.isRemote )
   {
@@ -1039,8 +1040,6 @@ function remoteForm()
   }
   else
   {
-    // opener.localPath = path.detrail( path.common( opener.willfilesPath ) );
-    // opener.localPath = opener.dirPath;
     opener.localPath = opener.commonPath;
     opener.isDownloaded = true;
   }
@@ -1500,37 +1499,102 @@ _remoteIsUpToDate.defaults =
 // path
 // --
 
-function _filePathChange( willfilesPath )
+// function _filePathChange( willfilesPath )
+// {
+//
+//   if( !this.will )
+//   return willfilesPath;
+//
+//   let opener = this;
+//   let will = opener.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//
+//   let r = Parent.prototype._filePathChange.call( opener, willfilesPath );
+//
+//   opener[ dirPathSymbol ] = r.dirPath;
+//
+//   if( r.commonPath )
+//   {
+//     opener[ commonPathSymbol ] = r.commonPath;
+//     if( opener.isRemote === false )
+//     opener[ localPathSymbol ] = r.commonPath;
+//   }
+//
+//   if( !r.isIdentical )
+//   if( opener.willfilesPath && opener.commonPath && opener.formed >= 2 )
+//   {
+//     will.variantFrom( opener );
+//   }
+//
+//   if( opener.openedModule )
+//   opener.openedModule._filePathChange( r.willfilesPath );
+//
+//   return r.willfilesPath;
+// }
+
+//
+
+function _filePathChanged1( o )
 {
+  let opener = this;
 
   if( !this.will )
-  return willfilesPath;
+  return o;
 
+  opener._filePathChanged2.call( opener, o );
+
+  if( opener.openedModule && !o.isIdentical )
+  debugger;
+  if( opener.openedModule && !o.isIdentical )
+  opener.openedModule._filePathChanged2({ willfilesPath : o.willfilesPath });
+
+  return o;
+}
+
+_filePathChanged1.defaults = _.mapExtend( null, _.Will.AbstractModule.prototype._filePathChanged1.defaults );
+
+//
+
+function _filePathChanged2( o )
+{
   let opener = this;
+
+  if( !this.will )
+  return o;
+
   let will = opener.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  let r = Parent.prototype._filePathChange.call( opener, willfilesPath );
+  o = Parent.prototype._filePathChanged2.call( opener, o );
 
-  opener[ dirPathSymbol ] = r.dirPath;
+  _.assert( _.boolIs( o.isIdentical ) );
 
-  if( r.commonPath )
+  opener[ dirPathSymbol ] = o.dirPath;
+
+  if( o.commonPath )
   {
-    opener[ commonPathSymbol ] = r.commonPath;
+    opener[ commonPathSymbol ] = o.commonPath;
+    if( opener.isRemote === false )
+    opener[ localPathSymbol ] = o.commonPath;
   }
 
-  if( !r.isIdentical )
+  if( !o.isIdentical )
   if( opener.willfilesPath && opener.commonPath && opener.formed >= 2 )
   {
     will.variantFrom( opener );
   }
 
-  if( opener.openedModule )
-  opener.openedModule._filePathChange( r.willfilesPath );
+  // if( opener.openedModule && !o.isIdentical )
+  // debugger;
+  // if( opener.openedModule && !o.isIdentical )
+  // opener.openedModule._filePathChanged2({ willfilesPath : o.willfilesPath });
 
-  return r.willfilesPath;
+  return o;
 }
+
+_filePathChanged2.defaults = _.mapExtend( null, _.Will.AbstractModule.prototype._filePathChanged2.defaults );
 
 //
 
@@ -1548,7 +1612,7 @@ function sharedPathSet_functor( fieldName )
     opener[ symbol ] = filePath;
 
     if( !isIdentical )
-    opener._filePathChanged();
+    opener._filePathChanged1();
 
     if( openedModule )
     openedModule[ fieldName ] = filePath;
@@ -1765,6 +1829,7 @@ let isOutSet = accessorSet_functor( 'isOut' );
 
 let dirPathSymbol = Symbol.for( 'dirPath' );
 let commonPathSymbol = Symbol.for( 'commonPath' );
+let localPathSymbol = Symbol.for( 'localPath' );
 let aliasNameSymbol = Symbol.for( 'aliasName' );
 let superRelationSymbol = Symbol.for( 'superRelation' );
 let rootModuleSymbol = Symbol.for( 'rootModule' );
@@ -1941,7 +2006,9 @@ let Extend =
 
   // path
 
-  _filePathChange,
+  _filePathChanged1,
+  _filePathChanged2,
+  // _filePathChange,
 
   willfilesPathGet,
   dirPathGet,
