@@ -29,6 +29,9 @@ function finit()
   let opener = this;
   let will = opener.will;
 
+  if( opener.id === 210 )
+  debugger;
+
   _.assert( !opener.finitedIs() );
 
   opener.unform();
@@ -84,10 +87,16 @@ function unform()
     openedModule.finit();
   }
 
+  if( opener.id === 210 )
+  debugger;
+  let variant = will.variantOf( opener );
+  variant.remove( opener );
+
+  opener.formed = 0;
+
   opener._willfilesRelease();
   will.openerUnregister( opener );
 
-  opener.formed = 0;
   return opener;
 }
 
@@ -229,30 +238,6 @@ function cloneExtending( o )
 // module
 // --
 
-// function moduleClone( module )
-// {
-//   let opener = this;
-//   let will = opener.will;
-//
-//   _.assert( !module.finitedIs() );
-//   _.assert( arguments.length === 1 );
-//   _.assert( module instanceof _.Will.OpenedModule );
-//
-//   opener.preform();
-//   opener.remoteForm();
-//
-//   let o2 = opener.optionsForModuleExport();
-//   let rootModule = o2.rootModule = opener.rootModule;
-//   let module2 = module.cloneExtending( o2 );
-//   opener.moduleAdopt( module2 );
-//   _.assert( rootModule === opener.rootModule );
-//   _.assert( rootModule === opener.openedModule.rootModule );
-//
-//   return module2;
-// }
-
-//
-
 function moduleAdopt( module )
 {
   let opener = this;
@@ -291,6 +276,9 @@ function openedModuleSet( module )
 
   if( opener.openedModule === module )
   return module ;
+
+  // if( opener.id === 128 )
+  // debugger;
 
   if( opener.openedModule )
   opener.openedModule.releasedBy( opener );
@@ -360,7 +348,6 @@ function close()
 
   if( module )
   {
-    debugger;
     module.close();
     _.assert( module.isUsedBy( opener ) );
     opener.openedModule = null;
@@ -451,15 +438,26 @@ function find( o )
         openedModule.rootModule = opener.rootModule;
       }
 
-      // _.assert( openedModule.rootModule === opener.rootModule || opener.rootModule === null );
-      _.assert( opener.openedModule === openedModule || opener.openedModule === null );
-      opener.openedModule = openedModule;
-
       _.assert( !opener.willfilesArray.length || !openedModule.willfilesArray.length || _.arraysAreIdentical( opener.willfilesArray, openedModule.willfilesArray ) );
       if( opener.willfilesArray.length )
       openedModule.willfilesArray = _.entityMake( opener.willfilesArray );
       else
       opener.willfilesArray = _.entityMake( openedModule.willfilesArray );
+
+      let o2 = opener.optionsForModuleExport();
+      for( let f in o2 )
+      {
+        if( o2[ f ] !== null && openedModule[ f ] === null )
+        {
+          if( f !== 'peerModule' )
+          debugger;
+          openedModule[ f ] = o2[ f ];
+        }
+      }
+
+      // _.assert( openedModule.rootModule === opener.rootModule || opener.rootModule === null );
+      _.assert( opener.openedModule === openedModule || opener.openedModule === null );
+      opener.openedModule = openedModule;
 
     }
     else
@@ -550,7 +548,7 @@ function open( o )
     if( !stager.stageStateEnded( 'opened' ) || rerun )
     {
 
-      stager.stageStatePausing( 'picked', 0 );
+      stager.stageStatePausing( 'opened', 0 );
 
       for( let s in skipping )
       {
@@ -988,7 +986,7 @@ function rootModuleSet( src )
 function superRelationGet()
 {
   let opener = this;
-  _.assert( opener[ superRelationSymbol ] === null || opener[ superRelationSymbol ] instanceof _.Will.ModulesRelation );
+  _.assert( opener[ superRelationSymbol ] === undefined || opener[ superRelationSymbol ] === null || opener[ superRelationSymbol ] instanceof _.Will.ModulesRelation );
   return opener[ superRelationSymbol ];
 }
 
@@ -1016,72 +1014,6 @@ function superRelationSet( src )
   return src;
 }
 
-// //
-//
-// function rootModuleGet()
-// {
-//   let opener = this;
-//   if( opener.openedModule )
-//   return opener.openedModule.rootModule;
-//   return opener[ rootModuleSymbol ];
-// }
-//
-// //
-//
-// function rootModuleSet( src )
-// {
-//   let opener = this;
-//   _.assert( src === null || src instanceof _.Will.OpenedModule );
-//   opener[ rootModuleSymbol ] = src;
-//   return src;
-// }
-//
-// //
-//
-// function submodulesAllAreDownloaded()
-// {
-//   let opener = this;
-//   let will = opener.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//
-//   _.assert( !opener.superRelation );
-//
-//   for( let n in opener.submoduleMap )
-//   {
-//     let submodule = opener.submoduleMap[ n ].opener;
-//     if( !submodule )
-//     return false;
-//     if( !submodule.isDownloaded )
-//     return false;
-//   }
-//
-//   return true;
-// }
-//
-// //
-//
-// function submodulesAllAreValid()
-// {
-//   let opener = this;
-//   let will = opener.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//
-//   _.assert( !opener.superRelation );
-//
-//   for( let n in opener.submoduleMap )
-//   {
-//     let submodule = opener.submoduleMap[ n ].opener;
-//     if( !submodule )
-//     continue;
-//     if( !submodule.isValid() )
-//     return false;
-//   }
-//
-//   return true;
-// }
-
 // --
 // remote
 // --
@@ -1095,6 +1027,9 @@ function remoteForm()
   let logger = will.logger;
 
   _.assert( opener.formed >= 1 );
+
+  // if( opener.id === 128 )
+  // debugger;
 
   opener.remoteIsUpdate();
 
@@ -1114,6 +1049,9 @@ function remoteForm()
 
   if( opener.formed < 2 )
   opener.formed = 2;
+
+  will.variantFrom( opener );
+
   return opener;
 }
 
@@ -1168,8 +1106,8 @@ function _remoteDownload( o )
   let path = fileProvider.path;
   let logger = will.logger;
   let time = _.timeNow();
-  let downloading = false;
-  let con = _.Consequence().take( null );
+  let downloading = null;
+  let ready = _.Consequence().take( null );
 
   _.routineOptions( _remoteDownload, o );
   _.assert( arguments.length === 1 );
@@ -1179,93 +1117,153 @@ function _remoteDownload( o )
   _.assert( _.strDefined( opener.remotePath ) );
   _.assert( _.strDefined( opener.localPath ) );
   _.assert( !!opener.superRelation );
+  _.assert( _.arrayHas( [ 'download', 'update', 'agree' ], o.mode ) );
 
-  return con
+  return ready
+  .then( () => opener._remoteIsUpToDate({ mode : o.mode }) )
+  .then( function( arg )
+  {
+
+    downloading = arg;
+    _.assert( _.boolIs( downloading ) );
+
+    if( !downloading )
+    return downloading;
+
+    if( o.mode === 'download' )
+    {
+
+      filesCheck();
+
+    }
+    else if( o.mode === 'update' )
+    {
+
+      originCheck();
+      localChangesCheck();
+
+    }
+    else if( o.mode === 'agree' )
+    {
+
+      originCheck();
+      localChangesCheck();
+      filesDelete();
+
+    }
+    else _.assert( 0 );
+
+    /*
+    should goes after ifs
+    */
+    opener.error = null;
+
+    return arg;
+  })
   .then( () =>
   {
-    if( o.updating )
-    return opener.remoteIsUpToDateUpdate();
-    else
-    return opener.remoteIsDownloadedUpdate();
+    return filesDownload();
   })
   .then( function( arg )
   {
 
-    // debugger;
-    if( o.updating )
-    downloading = opener.isUpToDate;
-    else
-    downloading = opener.isDownloaded;
-    _.assert( _.boolLike( downloading ) );
-    downloading = !downloading;
-
-    /* changes for versions.argree begin*/
-
-    if( o.agree )
-    if( opener.isDownloaded )
-    if( opener.remoteHasChanges() )
+    if( downloading && !o.dry )
     {
-      /* if local repo has any changes and version is not agreed then throw error with invitation to commit changes first */
-      if( !opener.isUpToDate )
-      throw _.errBrief
-      (
-        'Module', opener.decoratedAbsoluteName, 'needs to be updated, but has local changes.',
-        '\nPlease push your local changes to remote or stash them and merge manually after update.'
-      );
-
-      /* if local repo has any changes and version is agreed then do nothing */
-      downloading = false;
-      return arg;
+      opener.isDownloaded = true;
+      opener.isUpToDate = true;
     }
 
-    /* changes for versions.argree end*/
+    if( o.opening && !o.dry && downloading )
+    moduleOpen();
+    return null;
+  })
+  .finally( function( err, arg )
+  {
+    if( err )
+    throw _.err( err, '\nFailed to', o.mode, opener.decoratedAbsoluteName );
+    log();
+    return downloading;
+  });
+
+  /* */
+
+  function localChangesCheck()
+  {
 
     /*
-    // Vova: possible alternative for deleting old remote when its not valid
+    if local repo has any changes then throw error with invitation to commit changes first
+    */
 
     if( opener.isDownloaded )
+    if( opener.remoteHasLocalChanges() )
     {
-      let gitProvider = will.fileProvider.providerForPath( opener.remotePath );
-      let result = gitProvider.isDownloadedFromRemote
-      ({
-        localPath : opener.localPath,
-        remotePath : opener.remotePath
-      });
-      if( !result.downloadedFromRemote )
-      throw _.err
+      throw _.errBrief
       (
-        'Module', opener.decoratedAbsoluteName, 'is already downloaded, but has different origin url:',
-        _.strQuote( result.originVcsPath ), ', expected url:', _.strQuote( result.remoteVcsPath )
+        'Module at', opener.decoratedAbsoluteName, 'needs to be updated, but has local changes.',
+        '\nPlease push your local changes to remote or stash them and merge manually after update.'
       );
-
-      if( !opener.isValid() )
-      throw _.err( 'Module', opener.decoratedAbsoluteName, 'is already downloaded, but its broken:\n', _.errAttentionRequest( opener.error ) ); //Vova: this error needs more details
     }
-    else if( fileProvider.fileExists( opener.localPath ) )
+  }
+
+  /* */
+
+  function originCheck()
+  {
+    let gitProvider = will.fileProvider.providerForPath( opener.remotePath );
+    debugger;
+    let result = gitProvider.isDownloadedFromRemote
+    ({
+      localPath : opener.localPath,
+      remotePath : opener.remotePath
+    });
+    debugger;
+    if( !result.downloadedFromRemote )
+    throw _.err
+    (
+      'Module', opener.decoratedAbsoluteName, 'is already downloaded, but has different origin url:',
+      _.color.strFormat( result.originVcsPath, 'path' ), ', expected url:', _.color.strFormat( result.remoteVcsPath, 'path' )
+    );
+  }
+
+  /* */
+
+  function filesCheck()
+  {
+    if( fileProvider.fileExists( opener.localPath ) )
     {
       throw _.err
       (
-        'Module', opener.decoratedAbsoluteName, 'is not downloaded, but local path:', _.strQuote( opener.localPath ), 'exits.',
-        'Rename/remove path:', _.strQuote( opener.localPath ), 'and try again.'
+        'Module', opener.decoratedAbsoluteName, 'is not downloaded, but file at', _.color.strFormat( opener.localPath, 'path' ), 'exits.',
+        'Rename/remove path:', _.color.strFormat( opener.localPath, 'path' ), 'and try again.'
       )
     }
-    */
+
+  }
+
+  /* */
+
+  function filesDelete()
+  {
+    if( o.dry )
+    return null;
 
     /*
     delete old remote opener if it has a critical error or downloaded files are corrupted
     */
 
-    if( !o.dry )
+    if( downloading )
+    if( !opener.isValid() || !opener.isDownloaded )
     {
-      if( !opener.isValid() || !opener.isDownloaded )
-      {
-        fileProvider.filesDelete({ filePath : opener.localPath, throwing : 0, sync : 1 });
-      }
+      if( fileProvider.fileExists( opener.localPath ) )
+      debugger;
+      fileProvider.filesDelete({ filePath : opener.localPath, throwing : 0, sync : 1 });
     }
 
-    return arg;
-  })
-  .then( () =>
+  }
+
+  /* */
+
+  function filesDownload()
   {
 
     let o2 =
@@ -1279,68 +1277,64 @@ function _remoteDownload( o )
     return will.Predefined.filesReflect.call( fileProvider, o2 );
 
     return null;
-  })
-  .then( function( arg )
+  }
+
+  /* */
+
+  function moduleOpen()
   {
-    opener.isDownloaded = true;
-    if( downloading && !o.dry )
-    opener.isUpToDate = true;
-    if( o.opening && !o.dry && downloading )
-    {
 
-      // debugger;
-      let willf = opener.willfilesArray[ 0 ];
-      // if( willf )
-      // debugger;
-      opener.close();
-      _.assert( !_.arrayHas( will.willfilesArray, willf ) );
-      opener.find();
+    if( opener.openedModule )
+    debugger;
 
-      // opener.openedModule.stager.stageStatePausing( 'picked', 0 );
-      // opener.openedModule.stager.stageStateSkipping( 'peerModulesFormed', 1 );
-      // opener.openedModule.stager.stageStateSkipping( 'subModulesFormed', 1 );
-      // opener.openedModule.stager.stageStateSkipping( 'resourcesFormed', 1 );
-      // opener.openedModule.stager.tick();
+    let willf = opener.willfilesArray[ 0 ]; // xxx : check
+    opener.close();
+    _.assert( opener.error === null );
+    _.assert( !_.arrayHas( will.willfilesArray, willf ) );
+    opener.find();
 
-      // return opener.openedModule.ready
-      // .finallyGive( function( err, arg )
-      // {
-      //   this.take( err, arg );
-      // })
-      // .split();
+    return opener.open();
+  }
 
-      return opener.open();
-    }
-    return null;
-  })
-  .finally( function( err, arg )
+  /* */
+
+  function log()
   {
-    if( err )
-    throw _.err( err, '\nFailed to', ( o.updating ? 'update' : 'download' ), opener.decoratedAbsoluteName );
     if( will.verbosity >= 3 && downloading )
     {
       if( o.dry )
       {
         let remoteProvider = fileProvider.providerForPath( opener.remotePath );
         let version = remoteProvider.versionRemoteCurrentRetrive( opener.remotePath );
-        logger.log( ' + ' + opener.decoratedQualifiedName + ' will be ' + ( o.updating ? 'updated to' : 'downloaded' ) + ' version ' + _.color.strFormat( version, 'path' ) );
+        let phrase = '';
+        if( o.mode === 'update' )
+        phrase = ' to';
+        else if( o.mode === 'agree' )
+        phrase = ' with';
+        logger.log( ' + ' + opener.decoratedQualifiedName + ' will be ' + ( o.mode + phrase ) + ' version ' + _.color.strFormat( version, 'path' ) );
       }
       else
       {
         let remoteProvider = fileProvider.providerForPath( opener.remotePath );
         let version = remoteProvider.versionLocalRetrive( opener.localPath );
-        logger.log( ' + ' + opener.decoratedQualifiedName + ' was ' + ( o.updating ? 'updated to' : 'downloaded' ) + ' version ' + _.color.strFormat( version, 'path' ) + ' in ' + _.timeSpent( time ) );
+        let phrase = '';
+        if( o.mode === 'update' )
+        phrase = ' was updated to version ';
+        else if( o.mode === 'agree' )
+        phrase = ' was agreed with version ';
+        else if( o.mode === 'download' )
+        phrase = ' was downloaded version ';
+        logger.log( ' + ' + opener.decoratedQualifiedName + phrase + _.color.strFormat( version, 'path' ) + ' in ' + _.timeSpent( time ) );
       }
     }
-    return downloading;
-  });
+  }
 
+  /* */
 }
 
 _remoteDownload.defaults =
 {
-  updating : 0,
-  agree : 0,
+  mode : 'download',
   dry : 0,
   opening : 1,
   recursive : 0,
@@ -1366,54 +1360,140 @@ function remoteUpgrade()
 
 //
 
-function remoteCurrentVersion()
+// function remoteCurrentVersion()
+// {
+//   let opener = this;
+//   let will = opener.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//
+//   _.assert( !!opener.willfilesPath || !!opener.dirPath );
+//   _.assert( arguments.length === 0 );
+//
+//   debugger;
+//   let remoteProvider = fileProvider.providerForPath( opener.commonPath );
+//   debugger;
+//   return remoteProvider.versionLocalRetrive( opener.localPath );
+// }
+//
+// //
+//
+// function remoteLatestVersion()
+// {
+//   let opener = this;
+//   let will = opener.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//
+//   _.assert( !!opener.willfilesPath || !!opener.dirPath );
+//   _.assert( arguments.length === 0 );
+//
+//   debugger;
+//   let remoteProvider = fileProvider.providerForPath( opener.commonPath );
+//   debugger;
+//   return remoteProvider.versionRemoteLatestRetrive( opener.localPath )
+// }
+//
+// //
+//
+// function remoteHasLocalChanges()
+// {
+//   let opener = this;
+//   let will = opener.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//
+//   _.assert( !!opener.willfilesPath || !!opener.dirPath );
+//   _.assert( arguments.length === 0 );
+//
+//   let remoteProvider = fileProvider.providerForPath( opener.remotePath );
+//   return remoteProvider.hasChanges( opener.localPath );
+// }
+
+//
+
+function remoteIsDownloadedUpdate()
 {
-  let opener = this;
-  let will = opener.will;
+  let module = this;
+  let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.assert( !!opener.willfilesPath || !!opener.dirPath );
-  _.assert( arguments.length === 0 );
+  _.assert( _.strDefined( module.localPath ) );
+  _.assert( !!module.willfilesPath );
+  _.assert( module.isRemote === true );
 
-  debugger;
-  let remoteProvider = fileProvider.providerForPath( opener.commonPath );
-  debugger;
-  return remoteProvider.versionLocalRetrive( opener.localPath );
+  let remoteProvider = fileProvider.providerForPath( module.remotePath );
+  _.assert( !!remoteProvider.isVcs );
+
+  let result = remoteProvider.isDownloaded
+  ({
+    localPath : module.localPath,
+  });
+
+  _.assert( !_.consequenceIs( result ) );
+
+  if( !result )
+  return end( result );
+
+  return _.Consequence.From( result )
+  .finally( ( err, arg ) =>
+  {
+    end( arg );
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  /* */
+
+  function end( result )
+  {
+    module.isDownloaded = !!result;
+    return result;
+  }
+
 }
 
 //
 
-function remoteLatestVersion()
+function _remoteIsUpToDate( o )
 {
   let opener = this;
-  let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  let ready = _.Consequence().take( null );
 
-  _.assert( !!opener.willfilesPath || !!opener.dirPath );
-  _.assert( arguments.length === 0 );
+  ready
+  .then( () =>
+  {
+    if( o.mode === 'download' )
+    return opener.remoteIsDownloadedUpdate();
+    else if( o.mode === 'update' )
+    return opener.remoteIsUpToDateUpdate();
+    else if( o.mode === 'agree' )
+    return opener.remoteIsUpToDateUpdate();
+  })
+  .then( function()
+  {
+    let downloading = true;
 
-  debugger;
-  let remoteProvider = fileProvider.providerForPath( opener.commonPath );
-  debugger;
-  return remoteProvider.versionRemoteLatestRetrive( opener.localPath )
+    if( o.mode === 'download' )
+    downloading = opener.isDownloaded;
+    else if( o.mode === 'update' )
+    downloading = opener.isUpToDate;
+    else if( o.mode === 'agree' )
+    downloading = opener.isUpToDate;
+    _.assert( _.boolLike( downloading ) );
+    downloading = !downloading;
+
+    return downloading;
+  });
+
+  return ready;
 }
 
-//
-
-function remoteHasChanges()
+_remoteIsUpToDate.defaults =
 {
-  let opener = this;
-  let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  _.assert( !!opener.willfilesPath || !!opener.dirPath );
-  _.assert( arguments.length === 0 );
-
-  let remoteProvider = fileProvider.providerForPath( opener.remotePath );
-  return remoteProvider.hasChanges( opener.localPath );
+  mode : 'download',
 }
 
 // --
@@ -1440,6 +1520,12 @@ function _filePathChange( willfilesPath )
     opener[ commonPathSymbol ] = r.commonPath;
   }
 
+  if( !r.isIdentical )
+  if( opener.willfilesPath && opener.commonPath && opener.formed >= 2 )
+  {
+    will.variantFrom( opener );
+  }
+
   if( opener.openedModule )
   opener.openedModule._filePathChange( r.willfilesPath );
 
@@ -1456,13 +1542,12 @@ function sharedPathSet_functor( fieldName )
   {
     let opener = this;
     let openedModule = opener.openedModule;
+    let isIdentical = opener[ symbol ] === filePath || _.entityIdentical( opener[ symbol ], filePath );
 
     filePath = _.entityMake( filePath );
     opener[ symbol ] = filePath;
 
-    // if( fieldName === 'localPath' && filePath )
-    // debugger;
-
+    if( !isIdentical )
     opener._filePathChanged();
 
     if( openedModule )
@@ -1477,18 +1562,11 @@ function sharedPathSet_functor( fieldName )
 let willfilesPathGet = sharedFieldGet_functor( 'willfilesPath' );
 let dirPathGet = sharedFieldGet_functor( 'dirPath' );
 let commonPathGet = sharedFieldGet_functor( 'commonPath' );
-// let inPathGet = sharedFieldGet_functor( 'inPath' );
-// let outPathGet = sharedFieldGet_functor( 'outPath' );
 let localPathGet = sharedFieldGet_functor( 'localPath' );
-// let localCommonPathGet = sharedFieldGet_functor( 'localCommonPath' );
 let remotePathGet = sharedFieldGet_functor( 'remotePath' );
-// let willPathGet = sharedFieldGet_functor( 'willPath' );
 
 let willfilesPathSet = sharedPathSet_functor( 'willfilesPath' );
-// let inPathSet = sharedPathSet_functor( 'inPath' );
-// let outPathSet = sharedPathSet_functor( 'outPath' );
 let localPathSet = sharedPathSet_functor( 'localPath' );
-// let localCommonPathSet = sharedPathSet_functor( 'localCommonPath' );
 let remotePathSet = sharedPathSet_functor( 'remotePath' );
 
 // --
@@ -1547,7 +1625,7 @@ function absoluteNameGet()
   let opener = this;
   let superRelation = opener.superRelation;
   if( superRelation )
-  return superRelation.qualifiedName + ' / ' + opener.qualifiedName;
+  return superRelation.absoluteName + ' / ' + opener.qualifiedName;
   else
   return opener.qualifiedName;
 }
@@ -1577,6 +1655,9 @@ function errorSet( err )
   if( opener.error === err )
   return;
 
+  // if( err && opener.id === 301 )
+  // debugger;
+
   opener[ errorSymbol ] = err;
 
   // if( will && err )
@@ -1585,6 +1666,14 @@ function errorSet( err )
   will.openersErrorsArray.push({ err : err, opener : opener });
 
   return err;
+}
+
+//
+
+function isPreformed()
+{
+  let opener = this;
+  return opener.formed >= 1;
 }
 
 //
@@ -1663,12 +1752,10 @@ function accessorSet_functor( fieldName )
 }
 
 let isRemoteGet = accessorGet_functor( 'isRemote' );
-// let isDownloadedGet = accessorGet_functor( 'isDownloaded' );
 let isUpToDateGet = accessorGet_functor( 'isUpToDate' );
 let isOutGet = accessorGet_functor( 'isOut' );
 
 let isRemoteSet = accessorSet_functor( 'isRemote' );
-// let isDownloadedSet = accessorSet_functor( 'isDownloaded' );
 let isUpToDateSet = accessorSet_functor( 'isUpToDate' );
 let isOutSet = accessorSet_functor( 'isOut' );
 
@@ -1676,8 +1763,6 @@ let isOutSet = accessorSet_functor( 'isOut' );
 // relations
 // --
 
-// let outPathSymbol = Symbol.for( 'outPath' );
-// let inPathSymbol = Symbol.for( 'inPath' );
 let dirPathSymbol = Symbol.for( 'dirPath' );
 let commonPathSymbol = Symbol.for( 'commonPath' );
 let aliasNameSymbol = Symbol.for( 'aliasName' );
@@ -1692,10 +1777,7 @@ let Composes =
   aliasName : null,
 
   willfilesPath : null,
-  // inPath : null,
-  // outPath : null,
   localPath : null,
-  // localCommonPath : null,
   remotePath : null,
 
   isRemote : null,
@@ -1705,7 +1787,6 @@ let Composes =
   isMain : null,
 
   searching : 'strict', // 'smart', 'strict', 'exact'
-  // searching : 'smart',
 
 }
 
@@ -1815,11 +1896,8 @@ let Extend =
   clone,
   cloneExtending,
 
-  // [ Symbol.toStringTag ] : Object.prototype.toString,
-
   // module
 
-  // moduleClone,
   moduleAdopt,
   openedModuleSet,
   moduleUsePaths,
@@ -1851,9 +1929,6 @@ let Extend =
   superRelationGet,
   superRelationSet,
 
-  // submodulesAllAreDownloaded,
-  // submodulesAllAreValid,
-
   // remote
 
   remoteForm,
@@ -1861,9 +1936,8 @@ let Extend =
   _remoteDownload,
   remoteDownload,
   remoteUpgrade,
-  remoteCurrentVersion,
-  remoteLatestVersion,
-  remoteHasChanges,
+  remoteIsDownloadedUpdate,
+  _remoteIsUpToDate,
 
   // path
 
@@ -1873,18 +1947,11 @@ let Extend =
   dirPathGet,
   commonPathGet,
 
-  // inPathGet,
-  // outPathGet,
   localPathGet,
-  // localCommonPathGet,
   remotePathGet,
-  // willPathGet,
 
   willfilesPathSet,
-  // inPathSet,
-  // outPathSet,
   localPathSet,
-  // localCommonPathSet,
   remotePathSet,
 
   // name
@@ -1899,15 +1966,14 @@ let Extend =
 
   errorSet,
 
+  isPreformed,
   isMainGet,
   isMainSet,
   isRemoteGet,
-  // isDownloadedGet,
   isUpToDateGet,
   isOutGet,
 
   isRemoteSet,
-  // isDownloadedSet,
   isUpToDateSet,
   isOutSet,
 

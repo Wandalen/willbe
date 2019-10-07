@@ -76,14 +76,14 @@ function optionsFormingForward( o )
   return o;
 }
 
-optionsFormingForward.defaults =
-{
-  all : null,
-  attachedWillfilesFormed : null,
-  peerModulesFormed : null,
-  subModulesFormed : null,
-  resourcesFormed : null,
-}
+optionsFormingForward.defaults = _.mapExtend( null, _.Will.UpformingDefaults );
+// {
+//   all : null,
+//   attachedWillfilesFormed : null,
+//   peerModulesFormed : null,
+//   subModulesFormed : null,
+//   resourcesFormed : null,
+// }
 
 // --
 // path
@@ -281,21 +281,25 @@ function _filePathChange( willfilesPath )
   r.dirPath = path.dirFirst( r.dirPath );
   if( r.dirPath === null )
   r.dirPath = module.dirPath;
-  // if( r.dirPath && path.isGlobal( r.dirPath ) )
-  // debugger;
   if( r.dirPath )
   r.dirPath = path.canonize( r.dirPath );
-  // r.dirPath = path.canonizeTolerant( r.dirPath );
-  // if( r.willfilesPath )
-  // debugger;
+  r.isIdentical = willfilesPath === this.willfilesPath || _.entityIdentical( willfilesPath, this.willfilesPath );
 
+  if( r.willfilesPath && r.willfilesPath.length )
   r.commonPath = module.CommonPathFor( r.willfilesPath );
+  else
+  r.commonPath = module.commonPath;
 
   _.assert( arguments.length === 1 );
   _.assert( r.dirPath === null || _.strDefined( r.dirPath ) );
   _.assert( r.dirPath === null || path.isAbsolute( r.dirPath ) );
   _.assert( r.dirPath === null || path.isNormalized( r.dirPath ) );
   _.assert( r.willfilesPath === null || path.s.allAreAbsolute( r.willfilesPath ) );
+  _.assert
+  (
+    !module.isPreformed() || _.strDefined( r.commonPath ),
+    () => `Each module requires commpnPath, but ${module.absoluteName} does not have`
+  );
 
   if( r.commonPath !== null )
   module[ fileNameSymbol ] = path.fullName( r.commonPath );
@@ -383,7 +387,6 @@ function willfileUnregister( willf )
   let logger = will.logger;
 
   _.arrayRemoveElementOnceStrictly( module.willfilesArray, willf );
-  // _.arrayRemoveElementOnceStrictly( willf.openers, module );
 
   if( willf.role )
   {
@@ -491,51 +494,6 @@ function remoteIsUpdate()
 
 //
 
-function remoteIsDownloadedUpdate()
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  _.assert( _.strDefined( module.localPath ) );
-  _.assert( !!module.willfilesPath );
-  _.assert( module.isRemote === true );
-
-  let remoteProvider = fileProvider.providerForPath( module.remotePath );
-  _.assert( !!remoteProvider.isVcs );
-
-  let result = remoteProvider.isDownloaded
-  ({
-    localPath : module.localPath,
-  });
-
-  _.assert( !_.consequenceIs( result ) );
-
-  if( !result )
-  return end( result );
-
-  return _.Consequence.From( result )
-  .finally( ( err, arg ) =>
-  {
-    end( arg );
-    if( err )
-    throw err;
-    return arg;
-  });
-
-  /* */
-
-  function end( result )
-  {
-    module.isDownloaded = !!result;
-    return result;
-  }
-
-}
-
-//
-
 function remoteIsUpToDateUpdate()
 {
   let module = this;
@@ -615,6 +573,22 @@ function remoteLatestVersion()
   let remoteProvider = fileProvider.providerForPath( module.commonPath );
   debugger;
   return remoteProvider.versionRemoteLatestRetrive( module.localPath )
+}
+
+//
+
+function remoteHasLocalChanges()
+{
+  let opener = this;
+  let will = opener.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( !!opener.willfilesPath || !!opener.dirPath );
+  _.assert( arguments.length === 0 );
+
+  let remoteProvider = fileProvider.providerForPath( opener.remotePath );
+  return remoteProvider.hasLocalChanges( opener.localPath );
 }
 
 // --
@@ -749,11 +723,10 @@ let Extend =
   // remote
 
   remoteIsUpdate,
-  remoteIsDownloadedUpdate,
   remoteIsUpToDateUpdate,
-
   remoteCurrentVersion,
   remoteLatestVersion,
+  remoteHasLocalChanges,
 
   // relation
 
