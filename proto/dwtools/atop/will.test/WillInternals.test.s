@@ -422,7 +422,6 @@ function openNamedForming( test )
   test.case = 'skipping of stages of module';
   var stager = opener1.openedModule.stager;
   test.identical( stager.stageStateSkipping( 'preformed' ), false );
-  test.identical( stager.stageStateSkipping( 'picked' ), false );
   test.identical( stager.stageStateSkipping( 'opened' ), false );
   test.identical( stager.stageStateSkipping( 'attachedWillfilesFormed' ), false );
   test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), false );
@@ -436,7 +435,6 @@ function openNamedForming( test )
   test.case = 'skipping of stages of module';
   var stager = opener1.openedModule.stager;
   test.identical( stager.stageStateSkipping( 'preformed' ), false );
-  test.identical( stager.stageStateSkipping( 'picked' ), false );
   test.identical( stager.stageStateSkipping( 'opened' ), false );
   test.identical( stager.stageStateSkipping( 'attachedWillfilesFormed' ), false );
   test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), false );
@@ -499,7 +497,6 @@ function openNamedForming( test )
     test.case = 'stages';
     var stager = opener1.openedModule.stager;
     test.identical( stager.stageStatePerformed( 'preformed' ), true );
-    test.identical( stager.stageStatePerformed( 'picked' ), true );
     test.identical( stager.stageStatePerformed( 'opened' ), true );
     test.identical( stager.stageStatePerformed( 'attachedWillfilesFormed' ), true );
     test.identical( stager.stageStatePerformed( 'peerModulesFormed' ), true );
@@ -704,7 +701,6 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
     test.case = 'skipping of stages of module';
     var stager = opener1.openedModule.stager;
     test.identical( stager.stageStateSkipping( 'preformed' ), false );
-    test.identical( stager.stageStateSkipping( 'picked' ), false );
     test.identical( stager.stageStateSkipping( 'opened' ), false );
     test.identical( stager.stageStateSkipping( 'attachedWillfilesFormed' ), false );
     test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), true );
@@ -841,7 +837,6 @@ function openSkippingSubButAttachedWillfiles( test )
     test.case = 'skipping of stages of module';
     var stager = opener1.openedModule.stager;
     test.identical( stager.stageStateSkipping( 'preformed' ), false );
-    test.identical( stager.stageStateSkipping( 'picked' ), false );
     test.identical( stager.stageStateSkipping( 'opened' ), false );
     test.identical( stager.stageStateSkipping( 'attachedWillfilesFormed' ), false );
     test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), false );
@@ -849,7 +844,6 @@ function openSkippingSubButAttachedWillfiles( test )
     test.identical( stager.stageStateSkipping( 'resourcesFormed' ), false );
     test.identical( stager.stageStateSkipping( 'formed' ), false );
     test.identical( stager.stageStatePerformed( 'preformed' ), true );
-    test.identical( stager.stageStatePerformed( 'picked' ), true );
     test.identical( stager.stageStatePerformed( 'opened' ), true );
     test.identical( stager.stageStatePerformed( 'attachedWillfilesFormed' ), true );
     test.identical( stager.stageStatePerformed( 'peerModulesFormed' ), true );
@@ -860,7 +854,6 @@ function openSkippingSubButAttachedWillfiles( test )
     test.case = 'skipping of stages of module';
     var stager = will.moduleWithNameMap.Submodule.stager;
     test.identical( stager.stageStateSkipping( 'preformed' ), false );
-    test.identical( stager.stageStateSkipping( 'picked' ), false );
     test.identical( stager.stageStateSkipping( 'opened' ), false );
     test.identical( stager.stageStateSkipping( 'attachedWillfilesFormed' ), false );
     test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), false );
@@ -869,7 +862,6 @@ function openSkippingSubButAttachedWillfiles( test )
     test.identical( stager.stageStateSkipping( 'formed' ), false );
 
     test.identical( stager.stageStatePerformed( 'preformed' ), true );
-    test.identical( stager.stageStatePerformed( 'picked' ), true );
     test.identical( stager.stageStatePerformed( 'opened' ), true );
     test.identical( stager.stageStatePerformed( 'attachedWillfilesFormed' ), true );
     test.identical( stager.stageStatePerformed( 'peerModulesFormed' ), true );
@@ -1636,7 +1628,6 @@ function moduleClone( test )
     test.description = 'stages';
     var stager = module2.stager;
     test.identical( stager.stageStatePerformed( 'preformed' ), true );
-    test.identical( stager.stageStatePerformed( 'picked' ), false );
     test.identical( stager.stageStatePerformed( 'opened' ), false );
     test.identical( stager.stageStatePerformed( 'attachedWillfilesFormed' ), false );
     test.identical( stager.stageStatePerformed( 'peerModulesFormed' ), false );
