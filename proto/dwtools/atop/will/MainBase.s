@@ -1500,7 +1500,7 @@ function modulesDownload_body( o )
     if( !o.downloadedContainer.length && !o.loggingNoChanges )
     return;
 
-    let total = ( o.downloadedContainer.length + o.skipContainer.length ); debugger;
+    let total = ( o.downloadedContainer.length + o.skipContainer.length );
     logger.rbegin({ verbosity : -2 });
     let phrase = '';
     if( o.mode === 'update' )
@@ -1706,6 +1706,7 @@ function modulesUpform( o )
     visitedSet.add( variant );
 
     let o3 = _.mapOnly( o, variant.module.upform.defaults );
+    debugger;
     return variant.module.upform( o3 );
   }
 
@@ -1738,11 +1739,20 @@ function variantFrom( object )
   object = { object : object }
 
   object.will = will;
-  // object.variantMap = will.variantMap;
 
   let result = _.Will.ModuleVariant.From( object );
 
   return result;
+}
+
+//
+
+function variantsFrom( varaints )
+{
+  let will = this;
+  _.assert( arguments.length === 1 );
+  if( _.arrayLike( varaints ) )
+  return _.filter( varaints, ( variant ) => will.variantFrom( variant ) );
 }
 
 //
@@ -1813,22 +1823,6 @@ function graphGroupMake( o )
   function variantFrom( object )
   {
     return will.variantFrom( object );
-    // let result;
-    //
-    // _.assert( arguments.length === 1 );
-    // _.assert( !!variant );
-    //
-    // if( !_.mapIs( variant ) )
-    // variant = { object : variant }
-    //
-    // variant.will = will;
-    // // variant.variantMap = o.variantMap;
-    // variant.variantMap = will.variantMap;
-    // variant.nodesGroup = group;
-    //
-    // result = _.Will.ModuleVariant.From( variant );
-    //
-    // return result;
   }
 
   /* */
@@ -1841,11 +1835,6 @@ function graphGroupMake( o )
     for( let s in variant.module.submoduleMap )
     {
       let variant2 = variantFromRelation( variant.module.submoduleMap[ s ] );
-
-      // if( variant2.relation )
-      // variant2.opener = variant2.relation.opener;
-      // if( variant2.opener )
-      // variant2.module = variant2.opener.openedModule;
 
       result.push( variant2 );
 
@@ -2775,6 +2764,7 @@ let Extend =
   modulesUpform,
 
   variantFrom,
+  variantsFrom,
   variantOf,
 
   // graph

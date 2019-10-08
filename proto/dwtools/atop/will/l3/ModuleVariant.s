@@ -248,6 +248,9 @@ function From( o )
     () => `Relation should be formed to level 3 or higher, but ${o.relation.absoluteName} is not`
   )
 
+  // if( o.object.id === 305 )
+  // debugger;
+
   let variant2 = will.objectToVariantHash.get( o.object );
   if( variant2 && variant2 !== variant )
   {

@@ -663,6 +663,7 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
       allOfMain : 1,
       peerModulesFormedOfMain : 0,
       attachedWillfilesFormedOfSub : 1,
+      // peerModulesFormedOfSub : 0,
     });
 
     opener1 = will.openerMake({ willfilesPath : modulePath })
@@ -691,6 +692,7 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
       allOfMain : 1,
       peerModulesFormedOfMain : 0,
       attachedWillfilesFormedOfSub : 1,
+      // peerModulesFormedOfSub : 0,
     });
 
     opener1 = will.openerMake({ willfilesPath : modulePath })
@@ -746,7 +748,7 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
     test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
     test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
-    var exp = [ 'sub.out/sub.out', 'super' ];
+    var exp = [ 'sub.out/sub.out', 'sub', 'super' ];
     test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), exp );
     test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, exp.length );
     var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
@@ -805,6 +807,7 @@ function openSkippingSubButAttachedWillfiles( test )
     ({
       allOfMain : 1,
       attachedWillfilesFormedOfSub : 1,
+      subModulesFormedOfSub : 0,
     });
 
     opener1 = will.openerMake({ willfilesPath : modulePath })
@@ -828,7 +831,7 @@ function openSkippingSubButAttachedWillfiles( test )
     will.prefer
     ({
       allOfMain : 1,
-      attachedWillfilesFormedOfSub : 1,
+      subModulesFormedOfSub : 0,
     });
 
     opener1 = will.openerMake({ willfilesPath : modulePath })
@@ -898,7 +901,7 @@ function openSkippingSubButAttachedWillfiles( test )
     test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
     test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
-    var exp = [ 'super', 'sub.out/sub.out', 'sub.out/sub.out', 'super' ];
+    var exp = [ 'super', 'sub.out/sub.out', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub', 'super' ];
     test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), exp );
     test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, exp.length );
     var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'super.out/supermodule.out.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
@@ -913,7 +916,7 @@ function openSkippingSubButAttachedWillfiles( test )
     test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
     test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
-    var exp = [ 'sub.out/sub.out', 'sub.out/sub.out', 'super' ];
+    var exp = [ 'sub.out/sub.out', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub', 'super' ];
     test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), exp );
     test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, exp.length );
     var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'super.out/supermodule.out.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
@@ -1389,109 +1392,110 @@ function openerClone( test )
     return opener.open();
   })
 
-  ready.then( ( arg ) =>
-  {
-    test.case = 'clone';
-
-    test.description = 'paths of module';
-    test.identical( rel( opener.openedModule.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
-    test.identical( rel( opener.openedModule.dirPath ), '.' );
-    test.identical( rel( opener.openedModule.commonPath ), 'super' );
-    test.identical( rel( opener.openedModule.inPath ), '.' );
-    test.identical( rel( opener.openedModule.outPath ), 'super.out' );
-    test.identical( rel( opener.openedModule.localPath ), '.' );
-    test.identical( rel( opener.openedModule.remotePath ), null );
-    test.identical( opener.openedModule.willPath, path.join( __dirname, '../will/Exec' ) );
-
-    test.description = 'paths of original opener';
-    test.identical( rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
-    test.identical( rel( opener.dirPath ), '.' );
-    test.identical( rel( opener.commonPath ), 'super' );
-    test.identical( rel( opener.localPath ), '.' );
-    test.identical( rel( opener.remotePath ), null );
-
-    var opener2 = opener.clone();
-
-    test.description = 'elements';
-    test.identical( opener2.willfilesArray.length, 0 );
-    test.setsAreIdentical( _.mapKeys( opener2.willfileWithRoleMap ), [] );
-    test.is( !!opener.openedModule );
-    test.is( opener2.openedModule === null );
-
-    test.description = 'paths of original opener';
-    test.identical( rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
-    test.identical( rel( opener.dirPath ), '.' );
-    test.identical( rel( opener.commonPath ), 'super' );
-    test.identical( rel( opener.localPath ), '.' );
-    test.identical( rel( opener.remotePath ), null );
-
-    test.description = 'paths of opener2';
-    test.identical( rel( opener2.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
-    test.identical( rel( opener2.dirPath ), '.' );
-    test.identical( rel( opener2.commonPath ), 'super' );
-    test.identical( rel( opener2.localPath ), '.' );
-    test.identical( rel( opener2.remotePath ), null );
-
-    opener2.close();
-
-    test.description = 'elements';
-    test.identical( opener2.willfilesArray.length, 0 );
-    test.setsAreIdentical( _.mapKeys( opener2.willfileWithRoleMap ), [] );
-    test.is( !!opener.openedModule );
-    test.is( opener2.openedModule === null );
-
-    test.description = 'paths of original opener';
-    test.identical( rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
-    test.identical( rel( opener.dirPath ), '.' );
-    test.identical( rel( opener.commonPath ), 'super' );
-    test.identical( rel( opener.localPath ), '.' );
-    test.identical( rel( opener.remotePath ), null );
-
-    test.description = 'paths of opener2';
-    test.identical( rel( opener2.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
-    test.identical( rel( opener2.dirPath ), '.' );
-    test.identical( rel( opener2.commonPath ), 'super' );
-    test.identical( rel( opener2.localPath ), '.' );
-    test.identical( rel( opener2.remotePath ), null );
-
-    opener2.find();
-
-    test.case = 'compare elements';
-    test.is( opener.openedModule === opener2.openedModule );
-    test.identical( opener.qualifiedName, opener2.qualifiedName );
-    test.identical( opener.absoluteName, opener2.absoluteName );
-    test.is( opener.openedModule.about === opener2.openedModule.about );
-    test.is( opener.openedModule.pathMap === opener2.openedModule.pathMap );
-    test.identical( opener.openedModule.pathMap, opener2.openedModule.pathMap );
-    test.is( opener.willfilesArray !== opener2.willfilesArray );
-    test.is( opener.willfileWithRoleMap !== opener2.willfileWithRoleMap );
-
-    test.case = 'finit';
-    opener2.finit();
-    return null;
-  })
+  // ready.then( ( arg ) =>
+  // {
+  //   test.case = 'clone';
+  //
+  //   test.description = 'paths of module';
+  //   test.identical( rel( opener.openedModule.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
+  //   test.identical( rel( opener.openedModule.dirPath ), '.' );
+  //   test.identical( rel( opener.openedModule.commonPath ), 'super' );
+  //   test.identical( rel( opener.openedModule.inPath ), '.' );
+  //   test.identical( rel( opener.openedModule.outPath ), 'super.out' );
+  //   test.identical( rel( opener.openedModule.localPath ), 'super' );
+  //   test.identical( rel( opener.openedModule.remotePath ), null );
+  //   test.identical( opener.openedModule.willPath, path.join( __dirname, '../will/Exec' ) );
+  //
+  //   test.description = 'paths of original opener';
+  //   test.identical( rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
+  //   test.identical( rel( opener.dirPath ), '.' );
+  //   test.identical( rel( opener.commonPath ), 'super' );
+  //   test.identical( rel( opener.localPath ), 'super' );
+  //   test.identical( rel( opener.remotePath ), null );
+  //
+  //   var opener2 = opener.clone();
+  //
+  //   test.description = 'elements';
+  //   test.identical( opener2.willfilesArray.length, 0 );
+  //   test.setsAreIdentical( _.mapKeys( opener2.willfileWithRoleMap ), [] );
+  //   test.is( !!opener.openedModule );
+  //   test.is( opener2.openedModule === null );
+  //
+  //   test.description = 'paths of original opener';
+  //   test.identical( rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
+  //   test.identical( rel( opener.dirPath ), '.' );
+  //   test.identical( rel( opener.commonPath ), 'super' );
+  //   test.identical( rel( opener.localPath ), 'super' );
+  //   test.identical( rel( opener.remotePath ), null );
+  //
+  //   test.description = 'paths of opener2';
+  //   test.identical( rel( opener2.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
+  //   test.identical( rel( opener2.dirPath ), '.' );
+  //   test.identical( rel( opener2.commonPath ), 'super' );
+  //   test.identical( rel( opener2.localPath ), 'super' );
+  //   test.identical( rel( opener2.remotePath ), null );
+  //
+  //   opener2.close();
+  //
+  //   test.description = 'elements';
+  //   test.identical( opener2.willfilesArray.length, 0 );
+  //   test.setsAreIdentical( _.mapKeys( opener2.willfileWithRoleMap ), [] );
+  //   test.is( !!opener.openedModule );
+  //   test.is( opener2.openedModule === null );
+  //
+  //   test.description = 'paths of original opener';
+  //   test.identical( rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
+  //   test.identical( rel( opener.dirPath ), '.' );
+  //   test.identical( rel( opener.commonPath ), 'super' );
+  //   test.identical( rel( opener.localPath ), 'super' );
+  //   test.identical( rel( opener.remotePath ), null );
+  //
+  //   test.description = 'paths of opener2';
+  //   test.identical( rel( opener2.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
+  //   test.identical( rel( opener2.dirPath ), '.' );
+  //   test.identical( rel( opener2.commonPath ), 'super' );
+  //   test.identical( rel( opener2.localPath ), 'super' );
+  //   test.identical( rel( opener2.remotePath ), null );
+  //
+  //   opener2.find();
+  //
+  //   test.case = 'compare elements';
+  //   test.is( opener.openedModule === opener2.openedModule );
+  //   test.identical( opener.qualifiedName, opener2.qualifiedName );
+  //   test.identical( opener.absoluteName, opener2.absoluteName );
+  //   test.is( opener.openedModule.about === opener2.openedModule.about );
+  //   test.is( opener.openedModule.pathMap === opener2.openedModule.pathMap );
+  //   test.identical( opener.openedModule.pathMap, opener2.openedModule.pathMap );
+  //   test.is( opener.willfilesArray !== opener2.willfilesArray );
+  //   test.is( opener.willfileWithRoleMap !== opener2.willfileWithRoleMap );
+  //
+  //   test.case = 'finit';
+  //   opener2.finit();
+  //   return null;
+  // })
 
   ready.then( ( arg ) =>
   {
     test.case = 'clone extending';
 
-    test.description = 'paths of module';
-    test.identical( rel( opener.openedModule.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
-    test.identical( rel( opener.openedModule.dirPath ), '.' );
-    test.identical( rel( opener.openedModule.commonPath ), 'super' );
-    test.identical( rel( opener.openedModule.inPath ), '.' );
-    test.identical( rel( opener.openedModule.outPath ), 'super.out' );
-    test.identical( rel( opener.openedModule.localPath ), '.' );
-    test.identical( rel( opener.openedModule.remotePath ), null );
-    test.identical( opener.openedModule.willPath, path.join( __dirname, '../will/Exec' ) );
+    // test.description = 'paths of module';
+    // test.identical( rel( opener.openedModule.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
+    // test.identical( rel( opener.openedModule.dirPath ), '.' );
+    // test.identical( rel( opener.openedModule.commonPath ), 'super' );
+    // test.identical( rel( opener.openedModule.inPath ), '.' );
+    // test.identical( rel( opener.openedModule.outPath ), 'super.out' );
+    // test.identical( rel( opener.openedModule.localPath ), 'super' );
+    // test.identical( rel( opener.openedModule.remotePath ), null );
+    // test.identical( opener.openedModule.willPath, path.join( __dirname, '../will/Exec' ) );
+    //
+    // test.description = 'paths of original opener';
+    // test.identical( rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
+    // test.identical( rel( opener.dirPath ), '.' );
+    // test.identical( rel( opener.commonPath ), 'super' );
+    // test.identical( rel( opener.localPath ), 'super' );
+    // test.identical( rel( opener.remotePath ), null );
 
-    test.description = 'paths of original opener';
-    test.identical( rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
-    test.identical( rel( opener.dirPath ), '.' );
-    test.identical( rel( opener.commonPath ), 'super' );
-    test.identical( rel( opener.localPath ), '.' );
-    test.identical( rel( opener.remotePath ), null );
-
+    debugger;
     var opener2 = opener.cloneExtending({ willfilesPath : abs( 'sub' ) });
 
     test.description = 'elements';
@@ -1504,14 +1508,24 @@ function openerClone( test )
     test.identical( rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
     test.identical( rel( opener.dirPath ), '.' );
     test.identical( rel( opener.commonPath ), 'super' );
-    test.identical( rel( opener.localPath ), '.' );
+    test.identical( rel( opener.localPath ), 'super' );
     test.identical( rel( opener.remotePath ), null );
 
     test.description = 'paths of opener2';
     test.identical( rel( opener2.willfilesPath ), 'sub' );
     test.identical( rel( opener2.dirPath ), '.' );
     test.identical( rel( opener2.commonPath ), 'sub' );
-    test.identical( rel( opener2.localPath ), '.' );
+    test.identical( rel( opener2.localPath ), 'super' );
+    test.identical( rel( opener2.remotePath ), null );
+
+    opener2.preform();
+    opener2.remoteForm();
+
+    test.description = 'paths of opener2';
+    test.identical( rel( opener2.willfilesPath ), 'sub' );
+    test.identical( rel( opener2.dirPath ), '.' );
+    test.identical( rel( opener2.commonPath ), 'sub' );
+    test.identical( rel( opener2.localPath ), 'sub' );
     test.identical( rel( opener2.remotePath ), null );
 
     opener2.close();
@@ -1526,14 +1540,14 @@ function openerClone( test )
     test.identical( rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
     test.identical( rel( opener.dirPath ), '.' );
     test.identical( rel( opener.commonPath ), 'super' );
-    test.identical( rel( opener.localPath ), '.' );
+    test.identical( rel( opener.localPath ), 'super' );
     test.identical( rel( opener.remotePath ), null );
 
     test.description = 'paths of opener2';
     test.identical( rel( opener2.willfilesPath ), 'sub' );
     test.identical( rel( opener2.dirPath ), '.' );
     test.identical( rel( opener2.commonPath ), 'sub' );
-    test.identical( rel( opener2.localPath ), '.' );
+    test.identical( rel( opener2.localPath ), 'sub' );
     test.identical( rel( opener2.remotePath ), null );
 
     opener2.find();
@@ -1542,7 +1556,7 @@ function openerClone( test )
     test.identical( rel( opener2.willfilesPath ), [ 'sub.ex.will.yml', 'sub.im.will.yml' ] );
     test.identical( rel( opener2.dirPath ), '.' );
     test.identical( rel( opener2.commonPath ), 'sub' );
-    test.identical( rel( opener2.localPath ), '.' );
+    test.identical( rel( opener2.localPath ), 'sub' );
     test.identical( rel( opener2.remotePath ), null );
 
     test.case = 'compare elements';
@@ -1626,7 +1640,7 @@ function moduleClone( test )
     test.identical( rel( opener.openedModule.commonPath ), 'super' );
     test.identical( rel( opener.openedModule.inPath ), '.' );
     test.identical( rel( opener.openedModule.outPath ), 'super.out' );
-    test.identical( rel( opener.openedModule.localPath ), '.' );
+    test.identical( rel( opener.openedModule.localPath ), 'super' );
     test.identical( rel( opener.openedModule.remotePath ), null );
     test.identical( opener.openedModule.willPath, path.join( __dirname, '../will/Exec' ) );
 
@@ -1634,14 +1648,14 @@ function moduleClone( test )
     test.identical( rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
     test.identical( rel( opener.dirPath ), '.' );
     test.identical( rel( opener.commonPath ), 'super' );
-    test.identical( rel( opener.localPath ), '.' );
+    test.identical( rel( opener.localPath ), 'super' );
     test.identical( rel( opener.remotePath ), null );
 
     var module = opener.openedModule;
     var opener2 = opener.clone();
     opener2.close();
 
-    var module2 = opener.openedModule.cloneExtending({ willfilesPath : abs( 'super2.out/super.out.will.yml' ) });
+    var module2 = opener.openedModule.cloneExtending({ willfilesPath : abs( 'super2.out/super.out.will.yml' ), peerModule : null });
     module2.preform();
 
     mapsCheck( module, module2 )
@@ -1649,7 +1663,6 @@ function moduleClone( test )
     test.description = 'stages';
     var stager = module2.stager;
     test.identical( stager.stageStatePerformed( 'preformed' ), true );
-    // test.identical( stager.stageStatePerformed( 'picked' ), false );
     test.identical( stager.stageStatePerformed( 'opened' ), false );
     test.identical( stager.stageStatePerformed( 'attachedWillfilesFormed' ), false );
     test.identical( stager.stageStatePerformed( 'peerModulesFormed' ), false );
@@ -1663,24 +1676,26 @@ function moduleClone( test )
     test.identical( rel( module2.commonPath ), 'super2.out/super.out' );
     test.identical( rel( module2.inPath ), '.' );
     test.identical( rel( module2.outPath ), 'super.out' );
-    test.identical( rel( module2.localPath ), '.' );
+    test.identical( rel( module2.localPath ), 'super2.out/super.out' );
     test.identical( rel( module2.remotePath ), null );
     test.identical( module2.willPath, path.join( __dirname, '../will/Exec' ) );
 
+    debugger;
     opener2.moduleAdopt( module2 );
+    debugger;
 
     test.description = 'instances';
-    var exp = [ 'super', 'super2.out/super.out' ];
+    var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub', 'super2.out/super.out' ];
     test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
     test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
-    var exp = [ 'super', 'sub.out/sub.out', 'sub.out/sub.out', 'super2.out/super.out' ];
+    var exp = [ 'super', 'sub.out/sub.out', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub', 'sub.out/sub.out', 'super2.out/super.out' ];
     test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), exp );
     test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, exp.length );
-    var exp = [ 'super.ex.will.yml', 'super.im.will.yml' ];
+    var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'super.out/supermodule.out.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
     test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
     test.identical( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), exp );
-    var exp = [ 'super' ];
+    var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
     test.identical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), exp );
 
     test.description = 'elements';
@@ -1704,7 +1719,7 @@ function moduleClone( test )
     test.identical( rel( opener.openedModule.commonPath ), 'super' );
     test.identical( rel( opener.openedModule.inPath ), '.' );
     test.identical( rel( opener.openedModule.outPath ), 'super.out' );
-    test.identical( rel( opener.openedModule.localPath ), '.' );
+    test.identical( rel( opener.openedModule.localPath ), 'super' );
     test.identical( rel( opener.openedModule.remotePath ), null );
     test.identical( opener.openedModule.willPath, path.join( __dirname, '../will/Exec' ) );
 
@@ -1712,7 +1727,7 @@ function moduleClone( test )
     test.identical( rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
     test.identical( rel( opener.dirPath ), '.' );
     test.identical( rel( opener.commonPath ), 'super' );
-    test.identical( rel( opener.localPath ), '.' );
+    test.identical( rel( opener.localPath ), 'super' );
     test.identical( rel( opener.remotePath ), null );
 
     test.description = 'paths of module2';
@@ -1721,7 +1736,7 @@ function moduleClone( test )
     test.identical( rel( opener2.openedModule.commonPath ), 'super2.out/super.out' );
     test.identical( rel( opener2.openedModule.inPath ), '.' );
     test.identical( rel( opener2.openedModule.outPath ), 'super.out' );
-    test.identical( rel( opener2.openedModule.localPath ), '.' );
+    test.identical( rel( opener2.openedModule.localPath ), 'super2.out/super.out' );
     test.identical( rel( opener2.openedModule.remotePath ), null );
     test.identical( opener2.openedModule.willPath, path.join( __dirname, '../will/Exec' ) );
 
@@ -1729,23 +1744,25 @@ function moduleClone( test )
     test.identical( rel( opener2.willfilesPath ), 'super2.out/super.out.will.yml' );
     test.identical( rel( opener2.dirPath ), 'super2.out' );
     test.identical( rel( opener2.commonPath ), 'super2.out/super.out' );
-    test.identical( rel( opener2.localPath ), '.' );
+    test.identical( rel( opener2.localPath ), 'super2.out/super.out' );
     test.identical( rel( opener2.remotePath ), null );
 
+    debugger;
     opener2.close();
+    debugger;
 
     test.description = 'instances';
-    var exp = [ 'super' ];
+    var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
     test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
     test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
-    var exp = [ 'super', 'sub.out/sub.out', 'super2.out/super.out' ];
+    var exp = [ 'super', 'sub.out/sub.out', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub', 'super2.out/super.out' ];
     test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), exp );
     test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, exp.length );
-    var exp = [ 'super.ex.will.yml', 'super.im.will.yml' ];
+    var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'super.out/supermodule.out.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
     test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
     test.identical( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), exp );
-    var exp = [ 'super' ];
+    var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
     test.identical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), exp );
 
     test.description = 'elements';
@@ -1769,7 +1786,7 @@ function moduleClone( test )
     test.identical( rel( opener.openedModule.commonPath ), 'super' );
     test.identical( rel( opener.openedModule.inPath ), '.' );
     test.identical( rel( opener.openedModule.outPath ), 'super.out' );
-    test.identical( rel( opener.openedModule.localPath ), '.' );
+    test.identical( rel( opener.openedModule.localPath ), 'super' );
     test.identical( rel( opener.openedModule.remotePath ), null );
     test.identical( opener.openedModule.willPath, path.join( __dirname, '../will/Exec' ) );
 
@@ -1777,31 +1794,31 @@ function moduleClone( test )
     test.identical( rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
     test.identical( rel( opener.dirPath ), '.' );
     test.identical( rel( opener.commonPath ), 'super' );
-    test.identical( rel( opener.localPath ), '.' );
+    test.identical( rel( opener.localPath ), 'super' );
     test.identical( rel( opener.remotePath ), null );
 
     test.description = 'paths of opener2';
     test.identical( rel( opener2.willfilesPath ), 'super2.out/super.out.will.yml' );
     test.identical( rel( opener2.dirPath ), 'super2.out' );
     test.identical( rel( opener2.commonPath ), 'super2.out/super.out' );
-    test.identical( rel( opener2.localPath ), '.' );
+    test.identical( rel( opener2.localPath ), 'super2.out/super.out' );
     test.identical( rel( opener2.remotePath ), null );
 
     opener2.finit();
     opener.openedModule = null;
 
     test.description = 'instances';
-    var exp = [ 'super' ];
+    var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
     test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
     test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
-    var exp = [ 'super', 'sub.out/sub.out' ];
+    var exp = [ 'super', 'sub.out/sub.out', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
     test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), exp );
     test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, exp.length );
-    var exp = [ 'super.ex.will.yml', 'super.im.will.yml' ];
+    var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'super.out/supermodule.out.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
     test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
     test.identical( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), exp );
-    var exp = [ 'super' ];
+    var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
     test.identical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), exp );
 
     test.description = 'elements';
@@ -1813,7 +1830,7 @@ function moduleClone( test )
     test.is( !opener.finitedIs() );
     test.is( module2.finitedIs() );
     test.is( opener2.finitedIs() );
-    test.is( !module.isUsed() );
+    test.is( module.isUsed() );
     test.is( !opener.isUsed() );
     test.is( !module2.isUsed() );
     test.is( !opener2.isUsed() );
@@ -1822,14 +1839,14 @@ function moduleClone( test )
     test.identical( rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
     test.identical( rel( opener.dirPath ), '.' );
     test.identical( rel( opener.commonPath ), 'super' );
-    test.identical( rel( opener.localPath ), '.' );
+    test.identical( rel( opener.localPath ), 'super' );
     test.identical( rel( opener.remotePath ), null );
 
     test.description = 'paths of opener2';
     test.identical( rel( opener2.willfilesPath ), 'super2.out/super.out.will.yml' );
     test.identical( rel( opener2.dirPath ), 'super2.out' );
     test.identical( rel( opener2.commonPath ), 'super2.out/super.out' );
-    test.identical( rel( opener2.localPath ), '.' );
+    test.identical( rel( opener2.localPath ), 'super2.out/super.out' );
     test.identical( rel( opener2.remotePath ), null );
 
     test.case = 'finit';
@@ -2556,9 +2573,10 @@ function exportSuperIn( test )
   .then( () =>
   {
     let module = opener.openedModule;
-    let builds = module.exportsResolve({ criterion : { debug : 1 } });
-    let build = builds[ 0 ];
-    return build.perform();
+    // let builds = module.exportsResolve({ criterion : { debug : 1 } });
+    // let build = builds[ 0 ];
+    // return build.perform();
+    return module.moduleExport({ criterion : { debug : 1 } });
   })
 
   .finally( ( err, arg ) =>
@@ -2566,9 +2584,8 @@ function exportSuperIn( test )
     var module = opener.openedModule;
 
     test.is( _.errIs( err ) );
-    test.identical( _.strCount( err.message, 'Out-willfile of' ), 2 );
-    test.identical( _.strCount( err.message, 'module::supermodule / submodule::Submodule' ), 1 );
-    test.identical( _.strCount( err.message, 'is not opened or does not exist' ), 2 );
+    test.identical( _.strCount( err.message, 'Exporting is impossible because found no out-willfile' ), 1 );
+    test.identical( _.strCount( err.message, 'module::supermodule / relation::Submodule' ), 1 );
 
     test.description = 'files';
     var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
@@ -2581,14 +2598,20 @@ function exportSuperIn( test )
       './super.im.will.yml',
       './proto',
       './proto/File.debug.js',
-      './proto/File.release.js'
+      './proto/File.release.js',
+      './super.out',
+      './super.out/debug',
+      './super.out/debug/File.debug.js',
+      './super.out/debug/File.release.js'
     ]
     test.identical( files, exp );
 
     test.description = 'no error';
-    test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 0 );
+    test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 4 );
     will.openersErrorsRemoveAll();
     test.identical( will.openersErrorsArray.length, 0 );
+
+    debugger; return null; xxx
 
     module.finit();
     return null;
@@ -2632,9 +2655,8 @@ function exportSuperIn( test )
     var module = opener.openedModule;
 
     test.is( _.errIs( err ) );
-    test.identical( _.strCount( err.message, 'Out-willfile of' ), 2 );
-    test.identical( _.strCount( err.message, 'module::supermodule / submodule::Submodule' ), 1 );
-    test.identical( _.strCount( err.message, 'is not opened or does not exist' ), 2 );
+    test.identical( _.strCount( err.message, 'Exporting is impossible because found no out-willfile' ), 1 );
+    test.identical( _.strCount( err.message, 'module::supermodule / relation::Submodule' ), 1 );
 
     test.description = 'files';
     var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
@@ -2647,7 +2669,11 @@ function exportSuperIn( test )
       './super.im.will.yml',
       './proto',
       './proto/File.debug.js',
-      './proto/File.release.js'
+      './proto/File.release.js',
+      './super.out',
+      './super.out/debug',
+      './super.out/debug/File.debug.js',
+      './super.out/debug/File.release.js'
     ]
     test.identical( files, exp );
 
@@ -2773,10 +2799,6 @@ function exportSuperIn( test )
   .then( () =>
   {
     let module = opener.openedModule;
-    // let builds = module.exportsResolve({ criterion : { debug : 1 } });
-    // let build = builds[ 0 ];
-    // return build.perform();
-    debugger;
     return module.modulesExport({ criterion : { debug : 1 } });
   })
 
@@ -2870,32 +2892,6 @@ function exportSuperIn( test )
     let module = opener.openedModule;
     return module.modulesExport({ criterion : { debug : 1 }, recursive : 2 });
   })
-
-  // .then( () =>
-  // {
-  //   // let builds = opener.openedModule.exportsResolve({ criterion : { debug : 0 } });
-  //   // let build = builds[ 0 ];
-  //   // let run = new will.BuildRun
-  //   // ({
-  //   //   build,
-  //   //   recursive : 2,
-  //   //   withIntegrated : 2,
-  //   // });
-  //   // return build.perform({ run });
-  // })
-  //
-  // .then( () =>
-  // {
-  //   let builds = opener.openedModule.exportsResolve({ criterion : { debug : 1 } });
-  //   let build = builds[ 0 ];
-  //   let run = new will.BuildRun
-  //   ({
-  //     build,
-  //     recursive : 2,
-  //     withIntegrated : 2,
-  //   });
-  //   return build.perform({ run });
-  // })
 
   .then( ( arg ) =>
   {
@@ -4442,15 +4438,23 @@ function exportCourruptedSubmodulesDisabled( test )
     test.identical( commonPath, exp );
 
     test.case = 'modulesEach, withDisabled';
+    var got = opener.openedModule.modulesEach({ outputFormat : '/', withDisabled : 1 });
+    var exp =
+    [
+      '.module/Submodule1',
+      '.module/Submodule2',
+      '.module/Submodule3',
+    ];
+    var localPath = _.filter( got, ( e ) => e.localPath );
+    test.identical( localPath, abs( exp ) );
     var exp =
     [
       'git+https:///github.com/X1/X1.git#master',
       'git+https:///github.com/X2/X2.git#master',
       'git+https:///github.com/X3/X3.git#master',
     ];
-    var got = opener.openedModule.modulesEach({ outputFormat : '/', withDisabled : 1 });
-    var commonPath = _.filter( got, ( e ) => e.opener ? e.opener.commonPath : e.module.commonPath );
-    test.identical( commonPath, exp );
+    var remotePath = _.filter( got, ( e ) => e.remotePath );
+    test.identical( remotePath, exp ); debugger;
 
     let builds = module.exportsResolve({ criterion : { debug : 1 } });
     let build = builds[ 0 ];
@@ -6077,7 +6081,7 @@ function pathsResolve( test )
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
-      '.',
+      'super',
       null,
       null,
       rel( execPath ),
@@ -6107,7 +6111,7 @@ function pathsResolve( test )
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
-      '.',
+      'super',
       null,
       null,
       rel( execPath ),
@@ -6137,7 +6141,7 @@ function pathsResolve( test )
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
-      '.',
+      'super',
       null,
       null,
       rel( execPath ),
@@ -6345,7 +6349,7 @@ function pathsResolve( test )
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
-      '.',
+      'super',
       null,
       null,
       rel( execPath ),
@@ -6374,7 +6378,7 @@ function pathsResolve( test )
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
-      '.',
+      'super',
       null,
       null,
       rel( execPath ),
@@ -6403,7 +6407,7 @@ function pathsResolve( test )
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
-      '.',
+      'super',
       null,
       null,
       rel( execPath ),

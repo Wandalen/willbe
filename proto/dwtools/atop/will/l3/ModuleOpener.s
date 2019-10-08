@@ -83,12 +83,10 @@ function unform()
   {
     let openedModule = opener.openedModule;
     opener.openedModule = null;
-    if( !openedModule.isUsed() )
+    if( !openedModule.isUsedManually() )
     openedModule.finit();
   }
 
-  // if( opener.id === 210 )
-  debugger;
   let variant = will.variantOf( opener );
   variant.remove( opener );
 
@@ -119,7 +117,7 @@ function preform()
 
   /* */
 
-  debugger;
+  // debugger;
   opener._filePathChanged1();
   will.openerRegister( opener );
   will._willfilesReadBegin();
@@ -275,14 +273,23 @@ function openedModuleSet( module )
   _.assert( arguments.length === 1 );
   _.assert( module === null || module instanceof _.Will.OpenedModule )
 
+  // if( opener.id === 397 )
+  // debugger;
+
   if( opener.openedModule === module )
   return module ;
 
   // if( opener.id === 128 )
   // debugger;
 
+  // if( opener.superRelation && opener.openedModule )
+  // opener.openedModule.superRelationsRemove( opener.superRelation );
+
   if( opener.openedModule )
   opener.openedModule.releasedBy( opener );
+
+  // if( opener.superRelation && module )
+  // module.superRelationsAppend( opener.superRelation );
 
   if( module )
   {
@@ -693,6 +700,19 @@ function isUsed()
   return false;
 }
 
+//
+
+function usersGet()
+{
+  let opener = this;
+  let result = [];
+  if( opener.openedModule )
+  result.push( opener.openedModule );
+  if( opener.superRelation )
+  result.push( opener.superRelation );
+  return result;
+}
+
 // --
 // willfiles
 // --
@@ -996,9 +1016,15 @@ function superRelationGet()
 function superRelationSet( src )
 {
   let opener = this;
+  let will = opener.will;
 
   _.assert( src === null || src instanceof _.Will.ModulesRelation );
   _.assert( src === null || src.opener === null || src.opener === opener )
+
+  if( opener.id === 397 )
+  debugger;
+  // if( opener.openedModule && opener.openedModule.id === 60 )
+  // debugger;
 
   if( opener.openedModule && opener.superRelation )
   {
@@ -1030,9 +1056,6 @@ function remoteForm()
   _.assert( opener.formed >= 1 );
 
   opener.remoteIsUpdate();
-
-  // if( opener.id === 1 )
-  // debugger;
 
   if( opener.isRemote )
   {
@@ -1074,12 +1097,14 @@ function _remoteFormAct()
   _.assert( remoteProvider.isVcs && _.routineIs( remoteProvider.pathParse ), () => 'Seems file provider ' + remoteProvider.qualifiedName + ' does not have version control system features' );
 
   let submodulesDir = opener.superRelation.module.cloneDirPathGet();
+  debugger;
   let parsed = remoteProvider.pathParse( willfilesPath );
+  debugger;
 
   opener.remotePath = willfilesPath;
   // debugger;
-  let relativePath = path.parse( path.relative( opener.dirPath, opener.commonPath ) ).longPath;
-  opener.localPath = path.resolve( submodulesDir, opener.aliasName, relativePath );
+  // let relativePath = path.parse( path.relative( opener.dirPath, opener.commonPath ) ).longPath;
+  opener.localPath = path.resolve( submodulesDir, opener.aliasName, parsed.localVcsPath );
   // debugger;
   // opener.localPath = path.resolve( submodulesDir, opener.aliasName );
   // debugger;
@@ -1578,6 +1603,8 @@ function _filePathChanged2( o )
 
   if( o.commonPath )
   {
+    // if( opener[ commonPathSymbol ] !== o.commonPath )
+    // debugger;
     opener[ commonPathSymbol ] = o.commonPath;
     if( opener.isRemote === false )
     opener[ localPathSymbol ] = o.commonPath;
@@ -1853,6 +1880,7 @@ let Composes =
   isUpToDate : null,
   isOut : null,
   isMain : null,
+  isAuto : null,
 
   searching : 'strict', // 'smart', 'strict', 'exact'
 
@@ -1980,6 +2008,7 @@ let Extend =
   isOpened,
   isValid,
   isUsed,
+  usersGet,
 
   // willfile
 

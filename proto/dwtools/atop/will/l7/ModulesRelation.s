@@ -81,8 +81,10 @@ function unform()
 
   if( relation.formed )
   {
+    // if( relation.id === 305 )
     // debugger;
     let variant = will.variantOf( relation );
+    _.assert( !!variant );
     variant.remove( relation );
   }
 
@@ -118,11 +120,15 @@ function form1()
     willfilesPath : relation.longPath,
     superRelation : relation,
     rootModule : module.rootModule,
+    isAuto : 1,
   });
 
   relation.opener = will.openerMake({ opener : relation.opener });
   relation.opener.preform();
   relation.opener.remoteForm();
+
+  // if( relation.id === 305 )
+  // debugger;
 
   will.variantFrom( relation );
 
