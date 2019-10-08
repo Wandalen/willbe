@@ -767,8 +767,8 @@ function remoteHasLocalChanges()
   _.assert( !!opener.willfilesPath || !!opener.dirPath );
   _.assert( arguments.length === 0 );
 
-  let remoteProvider = fileProvider.providerForPath( opener.remotePath );
-  return remoteProvider.hasLocalChanges( opener.localPath );
+  // let remoteProvider = fileProvider.providerForPath( opener.remotePath );
+  return _.git.hasLocalChanges( opener.localPath );
 }
 
 // --
