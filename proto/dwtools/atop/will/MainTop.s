@@ -1095,69 +1095,9 @@ function commandGitPreservingHardLinks( e )
   let enable = _.numberFrom( e.argument );
 
   if( enable )
-  {
-    let sourceCode = '#!/usr/bin/env node\n' +  restoreHardLinks.toString() + '\nrestoreHardLinks()';
-    let tempPath = _.process.tempOpen({ sourceCode : sourceCode });
-    try
-    {
-      _.git.hookRegister
-      ({
-        filePath : tempPath,
-        handlerName : 'post-merge.restoreHardLinks',
-        hookName : 'post-merge',
-        throwing : 1,
-        rewriting : 0
-      })
-    }
-    catch( err )
-    {
-      throw err;
-    }
-    finally
-    {
-      _.process.tempClose({ filePath : tempPath });
-    }
-  }
+  _.git.hookPreservingHardLinksRegister();
   else
-  {
-    _.git.hookUnregister
-    ({
-      handlerName : 'post-merge.restoreHardLinks',
-      force : 0,
-      throwing : 1
-    })
-  }
-
-  /*  */
-
-  function restoreHardLinks()
-  {
-    try
-    {
-      try
-      {
-        var _ = require( '../../proto/dwtools/Tools.s' );
-      }
-      catch( err )
-      {
-        var _ = require( 'wTools' );
-      }
-      _.include( 'wFilesArchive' );
-    }
-    catch( err )
-    {
-      console.log( 'Git post pull hook fails to preserve hardlinks due missing dependency.' );
-      return;
-    }
-
-    let provider = _.FileFilter.Archive();
-    provider.archive.basePath = _.path.join( __dirname, '../..' );
-    provider.archive.fileMapAutosaving = 0;
-    provider.archive.filesUpdate();
-    provider.archive.filesLinkSame({ consideringFileName : 0 });
-    provider.finit();
-    provider.archive.finit();
-  }
+  _.git.hookPreservingHardLinksUnregister();
 }
 
 //
