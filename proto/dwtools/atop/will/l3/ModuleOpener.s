@@ -1136,7 +1136,8 @@ function _remoteDownload( o )
     }
     else if( o.mode === 'update' )
     {
-
+      //Vova: qqq Should throw error if not downloaded but opener.downloadPath exists
+      filesCheck();
       originCheck();
       localChangesCheck();
 
