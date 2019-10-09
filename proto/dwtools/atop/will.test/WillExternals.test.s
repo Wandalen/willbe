@@ -7212,6 +7212,7 @@ function exportInconsistent( test )
     test.identical( files, [ '.', './sub.out.will.yml' ] );
 
     var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    outfile = outfile.module[ 'sub.out' ];
     var exported = _.mapKeys( _.select( outfile, 'exported/*' ) );
     var exp = [ 'export.debug' ];
     test.setsAreIdentical( exported, exp );
@@ -7242,14 +7243,15 @@ function exportInconsistent( test )
     test.identical( files, [ '.', './sub.out.will.yml' ] );
 
     var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    outfile = outfile.module[ 'sub.out' ];
     var exported = _.mapKeys( _.select( outfile, 'exported/*' ) );
     var exp = [ 'export.' ];
     test.setsAreIdentical( exported, exp );
 
     test.identical( _.strCount( got.output, '. Read 2 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, '! Failed to read .' ), 1 );
-    test.identical( _.strCount( got.output, 'Failed to read willfile' ), 1 );
-    test.identical( _.strCount( got.output, 'Out-willfile is inconsistent with its in-willfiles' ), 1 );
+    test.identical( _.strCount( got.output, '! Inconsistent .' ), 2 );
+    test.identical( _.strCount( got.output, 'Failed to read willfile' ), 0 );
+    test.identical( _.strCount( got.output, 'Out-willfile is inconsistent with its in-willfiles' ), 0 );
     test.identical( _.strCount( got.output, /Exported .*module::sub \/ build::export.*/ ), 1 );
 
     return null;
