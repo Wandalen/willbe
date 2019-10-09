@@ -576,23 +576,30 @@ function _readLog( reading, failed )
   {
     let storagePath = _.color.strFormat( path.s.relative( _.arrayAs( willf.filePath ), willf.storagePath ), 'path' );
     for( let f = 0 ; f < filePath.length ; f++ )
-    if( failed === 2 )
-    logger.log( ` ! Inconsistent . ${filePath[ f ]} from ${storagePath[ f ]}` );
-    else if( failed )
-    logger.log( ` ! Failed to ${read} . ${filePath[ f ]} from ${storagePath[ f ]}` );
-    else
-    logger.log( ` . ${read} . ${filePath[ f ]} from ${storagePath[ f ]}` );
-
+    {
+      // if( failed )
+      // debugger;
+      if( failed === 2 )
+      logger.log( ` ! Inconsistent . ${filePath[ f ]} from ${storagePath[ f ]}` );
+      else if( failed )
+      logger.log( ` ! Failed to ${read} . ${filePath[ f ]} from ${storagePath[ f ]}` );
+      else
+      logger.log( ` . ${read} . ${filePath[ f ]} from ${storagePath[ f ]}` );
+    }
   }
   else
   {
     for( let f = 0 ; f < filePath.length ; f++ )
-    if( failed === 2 )
-    logger.log( ` ! Inconsistent . ${filePath[ f ]}` );
-    else if( failed )
-    logger.log( ` ! Failed to ${read} . ${filePath[ f ]}` );
-    else
-    logger.log( ` . ${read} . ${filePath[ f ]}` );
+    {
+      // if( failed )
+      // debugger;
+      if( failed === 2 )
+      logger.log( ` ! Inconsistent . ${filePath[ f ]}` );
+      else if( failed )
+      logger.log( ` ! Failed to ${read} . ${filePath[ f ]}` );
+      else
+      logger.log( ` . ${read} . ${filePath[ f ]}` );
+    }
   }
 
 }
@@ -1041,6 +1048,9 @@ function isConsistentWith( willf2, opening )
     let descriptor = willf.hashDescriptorOfFile( filePath );
     let hash1 = willf.hashFullFor( filePath );
     let hash2 = willf.HashFullFromDescriptor( descriptor );
+
+    if( !hash1 )
+    throw _.err( `${willf.filePath} does not have ${filePath}` );
 
     return hash1 === hash2;
   }

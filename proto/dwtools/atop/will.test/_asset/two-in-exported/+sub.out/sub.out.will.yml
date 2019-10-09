@@ -39,7 +39,7 @@ module:
       local:
         criterion:
           predefined: 1
-        path: .
+        path: sub.out
       remote:
         criterion:
           predefined: 1
@@ -314,7 +314,7 @@ module:
       local:
         criterion:
           predefined: 1
-        path: ..
+        path: ../sub
       remote:
         criterion:
           predefined: 1

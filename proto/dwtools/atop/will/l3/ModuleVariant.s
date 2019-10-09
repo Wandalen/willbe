@@ -194,7 +194,7 @@ function reform()
     if( variant.relation )
     _.assert( !variant.relation.finitedIs() );
 
-    _.assert( _.strDefined( localPath ), () => `${variant.object.absoluteName} does not have defined local path` );
+    _.assert( _.strDefined( localPath ) || _.strDefined( remotePath ), () => `${variant.object.absoluteName} does not have defined local path, neither remote path` );
     _.assert
     (
       !variant.opener || variant.opener.formed >= 2,
@@ -209,9 +209,12 @@ function reform()
   {
     if( will.variantMap )
     {
-      _.assert( will.variantMap[ localPath ] === undefined || will.variantMap[ localPath ] === variant );
-      _.assert( _.strDefined( localPath ) );
-      will.variantMap[ localPath ] = variant;
+      if( localPath )
+      {
+        _.assert( will.variantMap[ localPath ] === undefined || will.variantMap[ localPath ] === variant );
+        _.assert( _.strDefined( localPath ) );
+        will.variantMap[ localPath ] = variant;
+      }
       if( remotePath )
       {
         _.assert( will.variantMap[ remotePath ] === undefined || will.variantMap[ remotePath ] === variant );

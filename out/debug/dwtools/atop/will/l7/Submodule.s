@@ -65,6 +65,10 @@ function unform()
 {
   let relation = this;
   let module = relation.module;
+  let will = module.will;
+
+  if( !relation.formed )
+  return;
 
   if( relation.opener )
   {
@@ -73,6 +77,13 @@ function unform()
     opener.superRelation = null;
     relation.opener = null;
     opener.finit();
+  }
+
+  if( relation.formed )
+  {
+    let variant = will.variantOf( relation );
+    _.assert( !!variant );
+    variant.remove( relation );
   }
 
   return Parent.prototype.unform.call( relation );
@@ -100,9 +111,6 @@ function form1()
 
   /* */
 
-  // if( relation.id === 323 )
-  // debugger;
-
   relation.opener = will.ModuleOpener
   ({
     will : will,
@@ -110,9 +118,19 @@ function form1()
     willfilesPath : relation.longPath,
     superRelation : relation,
     rootModule : module.rootModule,
+    isAuto : 1,
   });
 
   relation.opener = will.openerMake({ opener : relation.opener });
+  relation.opener.preform();
+  // relation.opener.remoteForm();
+
+  _.assert( relation.opener.formed >= 2 );
+
+  // if( relation.id === 305 )
+  // debugger;
+
+  will.variantFrom( relation );
 
   /* end */
 
@@ -170,13 +188,8 @@ function form3()
 
     if( err )
     {
-      // debugger;
-      // err = _.err( err, `\nFailed to open ${relation.absoluteName}` );
       err = _.err( err );
-      // if( _.strHas( err.message, 'xxx' ) )
       relation.errorNotFound( err );
-      // else
-      // throw err;
     }
 
     return arg || null;
@@ -256,34 +269,6 @@ function _moduleAdoptEnd()
 }
 
 //
-//
-// function open()
-// {
-//   let relation = this;
-//   let module = relation.module;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//   let rootModule = module.rootModule;
-//
-//   _.assert( arguments.length === 0 );
-//   _.assert( relation.formed === 2 );
-//   _.assert( !!relation.opener );
-//   _.assert( _.strIs( relation.path ), 'not tested' );
-//   _.assert( !relation.original );
-//   _.sure( _.strIs( relation.path ) || _.arrayIs( relation.path ), 'Path resource should have "path" field' );
-//
-//   relation._wantedOpened = 1;
-//
-//   return relation._openAct
-//   ({
-//     longPath : relation.longPath,
-//   })
-//
-// }
-
-//
 
 function _openAct( o )
 {
@@ -323,6 +308,8 @@ function _openAct( o )
   return relation.opener.open({ throwing : 1 })
   .finally( ( err, arg ) =>
   {
+    // if( err )
+    // debugger;
     if( err )
     throw _.err( err, '\n', 'Failed to open', relation.absoluteName );
     return arg;
@@ -369,6 +356,52 @@ function isDownloadedGet()
   return false;
 
   return relation.opener.isDownloaded;
+}
+
+//
+
+function localPathGet()
+{
+  let relation = this;
+  let module = relation.module;
+
+  if( relation.opener )
+  {
+    _.assert( relation.opener.formed >= 2 );
+    return relation.opener.localPath;
+  }
+
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  if( path.isGlobal( relation.path ) )
+  return null;
+
+  return path.join( module.inPath, relation.path );
+}
+
+//
+
+function remotePathGet()
+{
+  let relation = this;
+  let module = relation.module;
+
+  if( relation.opener )
+  {
+    _.assert( relation.opener.formed >= 2 );
+    return relation.opener.remotePath;
+  }
+
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  if( !path.isGlobal( relation.path ) )
+  return null;
+
+  return path.join( module.inPath, relation.path );
 }
 
 //
@@ -690,6 +723,8 @@ let Accessors =
 {
   isAvailable : { getter : isAvailableGet, readOnly : 1 },
   isDownloaded : { getter : isDownloadedGet, readOnly : 1 },
+  localPath : { getter : localPathGet, readOnly : 1 },
+  remotePath : { getter : remotePathGet, readOnly : 1 },
   opener : { setter : openerSet },
   longPath : { getter : longPathGet },
   path : { setter : pathSet },
@@ -711,6 +746,7 @@ let Extend =
 
   // inter
 
+  finit,
   init,
   copy,
 
@@ -728,6 +764,8 @@ let Extend =
 
   isAvailableGet,
   isDownloadedGet,
+  localPathGet,
+  remotePathGet,
   openerSet,
   longPathGet,
   pathSet,
