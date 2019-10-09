@@ -5,7 +5,7 @@ about :
 
 submodule :
 
-  PathTools : git+https:///github.com/Wandalen/wPathTools.git/
+  PathTools : git+https:///github.com/Wandalen/wPathTools.git/out/wPathTools.out
   Proto : git+https:///github.com/Wandalen/wProto.git/
 
 path :

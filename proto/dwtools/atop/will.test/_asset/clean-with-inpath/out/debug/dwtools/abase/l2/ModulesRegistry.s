@@ -61,7 +61,7 @@ let wRoutineBasic =
 
 let wProto =
 {
-  includeAny : includeAny( 'abase/l3/Proto.s', 'wProto' ),
+  includeAny : includeAny( 'abase/l3_proto/Include.s', 'wProto' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.mixinDelcare },
 }
 

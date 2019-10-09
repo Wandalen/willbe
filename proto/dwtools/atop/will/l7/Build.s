@@ -350,7 +350,8 @@ function archiveFilePathFor()
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let inExportFile = module.willfileWithRoleMap.export || module.willfileWithRoleMap.single || module.willfileWithRoleMap.import;
-  let inFileDirPath = hd.path.dir( inExportFile.filePath )
+  // let inFileDirPath = hd.path.dir( inExportFile.filePath );
+  let inFileDirPath = inExportFile.dirPath;
 
   _.assert( arguments.length === 0 );
   _.assert( _.strDefined( build.name ), 'Build should have name' );

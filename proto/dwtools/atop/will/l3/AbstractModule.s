@@ -273,13 +273,6 @@ function PathToRole( filePath )
   return role;
 }
 
-// //
-//
-// function CommonPathFor( willfilesPath )
-// {
-//   return _.Will.CommonPathFor.apply( _.Will, arguments );
-// }
-
 //
 
 function CommonPathFor( willfilesPath )
@@ -303,7 +296,12 @@ function CommonPathFor( willfilesPath )
   //
   // common = common.replace( /(\.im|\.ex)$/, '' );
 
-  let common = willfilesPath.replace( /(\.)?((im|ex)\.)?(will\.)(out\.)?(\w+)?$/, '' );
+  let common = willfilesPath;
+
+  // common = common.replace( /(\.)?((im|ex)\.)?(will\.)(out\.)?(\w+)?$/, '' );
+  // debugger;
+  common = common.replace( /((\.|\/|^)(im|ex))?((\.|\/|^)will)(\.out)?(\.\w+)?$/, '' );
+  // debugger;
 
   if( _.strEnds( common, [ '/im', '/ex' ] ) )
   {
@@ -681,7 +679,7 @@ function remoteIsUpToDateUpdate()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.assert( _.strDefined( module.localPath ) );
+  _.assert( _.strDefined( module.downloadPath ) );
   _.assert( !!module.willfilesPath );
   _.assert( module.isRemote === true );
 
@@ -693,7 +691,7 @@ function remoteIsUpToDateUpdate()
   let result = remoteProvider.isUpToDate
   ({
     remotePath : module.remotePath,
-    localPath : module.localPath,
+    downloadPath : module.downloadPath,
     verbosity : will.verbosity - 3,
   });
 
@@ -734,7 +732,7 @@ function remoteCurrentVersion()
   debugger;
   let remoteProvider = fileProvider.providerForPath( module.commonPath );
   debugger;
-  return remoteProvider.versionLocalRetrive( module.localPath );
+  return remoteProvider.versionLocalRetrive( module.downloadPath );
 }
 
 //
@@ -752,7 +750,7 @@ function remoteLatestVersion()
   debugger;
   let remoteProvider = fileProvider.providerForPath( module.commonPath );
   debugger;
-  return remoteProvider.versionRemoteLatestRetrive( module.localPath )
+  return remoteProvider.versionRemoteLatestRetrive( module.downloadPath )
 }
 
 //
@@ -768,7 +766,7 @@ function remoteHasLocalChanges()
   _.assert( arguments.length === 0 );
 
   let remoteProvider = fileProvider.providerForPath( opener.remotePath );
-  return remoteProvider.hasLocalChanges( opener.localPath );
+  return remoteProvider.hasLocalChanges( opener.downloadPath );
 }
 
 // --

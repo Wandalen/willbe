@@ -81,8 +81,6 @@ function unform()
 
   if( relation.formed )
   {
-    // if( relation.id === 305 )
-    // debugger;
     let variant = will.variantOf( relation );
     _.assert( !!variant );
     variant.remove( relation );
@@ -125,7 +123,9 @@ function form1()
 
   relation.opener = will.openerMake({ opener : relation.opener });
   relation.opener.preform();
-  relation.opener.remoteForm();
+  // relation.opener.remoteForm();
+
+  _.assert( relation.opener.formed >= 2 );
 
   // if( relation.id === 305 )
   // debugger;
@@ -356,6 +356,52 @@ function isDownloadedGet()
   return false;
 
   return relation.opener.isDownloaded;
+}
+
+//
+
+function localPathGet()
+{
+  let relation = this;
+  let module = relation.module;
+
+  if( relation.opener )
+  {
+    _.assert( relation.opener.formed >= 2 );
+    return relation.opener.localPath;
+  }
+
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  if( path.isGlobal( relation.path ) )
+  return null;
+
+  return path.join( module.inPath, relation.path );
+}
+
+//
+
+function remotePathGet()
+{
+  let relation = this;
+  let module = relation.module;
+
+  if( relation.opener )
+  {
+    _.assert( relation.opener.formed >= 2 );
+    return relation.opener.remotePath;
+  }
+
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  if( !path.isGlobal( relation.path ) )
+  return null;
+
+  return path.join( module.inPath, relation.path );
 }
 
 //
@@ -677,6 +723,8 @@ let Accessors =
 {
   isAvailable : { getter : isAvailableGet, readOnly : 1 },
   isDownloaded : { getter : isDownloadedGet, readOnly : 1 },
+  localPath : { getter : localPathGet, readOnly : 1 },
+  remotePath : { getter : remotePathGet, readOnly : 1 },
   opener : { setter : openerSet },
   longPath : { getter : longPathGet },
   path : { setter : pathSet },
@@ -716,6 +764,8 @@ let Extend =
 
   isAvailableGet,
   isDownloadedGet,
+  localPathGet,
+  remotePathGet,
   openerSet,
   longPathGet,
   pathSet,

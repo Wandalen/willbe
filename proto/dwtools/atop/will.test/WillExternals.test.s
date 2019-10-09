@@ -11258,7 +11258,8 @@ function submodulesDownloadRecursive( test )
     test.identical( files, exp )
 
     test.identical( _.strCount( got.output, '! Failed to read' ), 0 );
-    test.identical( _.strCount( got.output, '+ 0/1 submodule(s) were downloaded' ), 5 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/1 submodule(s) were downloaded' ), 4 );
     test.identical( _.strCount( got.output, '+ 0/3 submodule(s) were downloaded' ), 2 );
     test.identical( _.strCount( got.output, '+ 0/5 submodule(s) were downloaded' ), 2 );
     test.identical( _.strCount( got.output, '+ 0/10 submodule(s) were downloaded' ), 1 );

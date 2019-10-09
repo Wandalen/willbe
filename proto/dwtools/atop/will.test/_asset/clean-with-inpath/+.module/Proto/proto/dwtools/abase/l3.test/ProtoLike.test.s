@@ -1,4 +1,4 @@
-( function _ProtoLike_test_s_( ) {
+( function _Like_test_s_( ) {
 
 'use strict';
 
@@ -11,8 +11,7 @@ if( typeof module !== 'undefined' )
 
   if( !_.isIncluded( 'wProto' ) )
   {
-    require( '../../abase/l3/Proto.s' );
-    require( '../../abase/l3/ProtoLike.s' );
+    require( '../../abase/l3_proto/Include.s' );
   }
 
 }

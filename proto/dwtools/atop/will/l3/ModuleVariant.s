@@ -39,6 +39,13 @@ function finit()
   _.assert( variant.relation === null );
   _.assert( variant.object === null );
 
+  if( variant.peer )
+  {
+    _.assert( variant.peer.peer === variant )
+    variant.peer.peer = null;
+    variant.peer = null;
+  }
+
   for( let v in will.variantMap )
   {
     if( will.variantMap[ v ] === variant )
@@ -62,11 +69,11 @@ function init( o )
   variant.copy( o );
 
   if( o.module )
-  variant.moduleAdd( o.module );
+  variant._moduleAdd( o.module );
   if( o.opener )
-  variant.openerAdd( o.opener );
+  variant._openerAdd( o.opener );
   if( o.relation )
-  variant.relationAdd( o.relation );
+  variant._relationAdd( o.relation );
   if( o.object )
   variant._add( o.object );
 
@@ -79,107 +86,156 @@ function reform()
 {
   let variant = this;
   let will = variant.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  variant.formed = -1;
 
   _.assert( !variant.finitedIs() );
 
   if( !variant.opener && !variant.module && !variant.relation )
   {
-    // debugger;
     variant.finit();
     return false;
   }
 
-  // if( variant.id === 58 )
-  // debugger;
-
-  if( variant.relation && variant.relation.opener && !variant.opener )
-  variant.openerAdd( variant.relation.opener );
-  if( variant.opener && variant.opener.openedModule )
-  variant.moduleAdd( variant.opener.openedModule );
-  if( variant.opener && variant.opener.superRelation )
-  variant.relationAdd( variant.opener.superRelation );
-
-  // variant.opener = variant.relation.opener;
-  if( variant.module && !variant.opener )
-  _.each( variant.module.userArray, ( opener ) =>
-  {
-    if( opener instanceof _.Will.ModuleOpener )
-    variant.openerAdd( opener );
-  });
+  associationsAdd();
 
   let localPath, remotePath;
-  if( variant.module )
-  {
-    localPath = variant.module.localPath || variant.module.commonPath;
-    remotePath = variant.module.remotePath;
-    variant.object = variant.module;
-  }
-  else if( variant.opener )
-  {
-    if( variant.opener.formed < 2 )
-    variant.opener.remoteForm();
-    _.assert( variant.opener.formed >= 2 );
-    localPath = variant.opener.localPath || variant.opener.commonPath;
-    remotePath = variant.opener.remotePath;
-    variant.object = variant.opener;
-  }
-  else if( variant.relation )
-  {
-    localPath = variant.relation.path;
-    remotePath = variant.relation.path;
-    variant.object = variant.relation;
-  }
-
+  objectFind();
+  [ localPath, remotePath ] = variant.PathsOf( variant.object );
   if( variant.localPath && localPath && variant.localPath !== localPath )
   {
+    /*
+    update of local path
+    */
     _.assert( will.variantMap[ localPath ] === undefined || will.variantMap[ localPath ] === variant );
     delete will.variantMap[ localPath ];
     variant.localPath = localPath;
   }
 
-  if( variant.module )
-  _.assert( !variant.module.finitedIs() );
-  if( variant.opener )
-  _.assert( !variant.opener.finitedIs() );
-  if( variant.relation )
-  _.assert( !variant.relation.finitedIs() );
-
-  _.assert( _.strDefined( localPath ), () => `${variant.object.absoluteName} does not have defined local path` );
-  _.assert
-  (
-    !variant.opener || variant.opener.formed >= 2,
-    () => `Opener should be formed to level 2 or higher, but ${variant.opener.absoluteName} is not`
-  )
-
-  _.assert( variant.localPath === null || variant.localPath === localPath );
+  _.assert( variant.localPath === null || localPath === null || variant.localPath === localPath );
   variant.localPath = localPath;
-  _.assert( variant.remotePath === null || variant.remotePath === remotePath );
+  _.assert( variant.remotePath === null || remotePath === null || variant.remotePath === remotePath );
   variant.remotePath = remotePath;
 
-  if( will.variantMap )
-  {
-    _.assert( will.variantMap[ localPath ] === undefined || will.variantMap[ localPath ] === variant );
-    will.variantMap[ localPath ] = variant;
-    if( remotePath )
-    {
-      _.assert( will.variantMap[ remotePath ] === undefined || will.variantMap[ remotePath ] === variant );
-      will.variantMap[ remotePath ] = variant;
-    }
-  }
+  register();
 
-  // if( variant.nodesGroup )
-  // {
-  //   variant.nodesGroup._nodeAddOnce( variant );
-  // }
+  peerForm();
 
   variant.formed = 1;
   return variant;
+
+  /* */
+
+  function objectFind()
+  {
+    if( variant.module )
+    {
+      variant.object = variant.module;
+    }
+    else if( variant.opener )
+    {
+      // if( variant.opener.formed < 2 )
+      // variant.opener.remoteForm();
+      // if( variant.opener.formed < 2 )
+      // variant.opener.preform();
+      _.assert( variant.opener.formed >= 2 );
+      variant.object = variant.opener;
+    }
+    else if( variant.relation )
+    {
+      variant.object = variant.relation;
+    }
+  }
+
+  /* */
+
+  function associationsAdd()
+  {
+    if( variant.relation && variant.relation.opener && !variant.opener )
+    variant._openerAdd( variant.relation.opener );
+    if( variant.opener && variant.opener.openedModule )
+    variant._moduleAdd( variant.opener.openedModule );
+    if( variant.opener && variant.opener.superRelation )
+    variant._relationAdd( variant.opener.superRelation );
+    if( variant.module && !variant.opener )
+    _.each( variant.module.userArray, ( opener ) =>
+    {
+      if( opener instanceof _.Will.ModuleOpener )
+      variant._openerAdd( opener );
+    });
+  }
+
+  /* */
+
+  function verify()
+  {
+
+    if( variant.module )
+    _.assert( !variant.module.finitedIs() );
+    if( variant.opener )
+    _.assert( !variant.opener.finitedIs() );
+    if( variant.relation )
+    _.assert( !variant.relation.finitedIs() );
+
+    _.assert( _.strDefined( localPath ), () => `${variant.object.absoluteName} does not have defined local path` );
+    _.assert
+    (
+      !variant.opener || variant.opener.formed >= 2,
+      () => `Opener should be formed to level 2 or higher, but ${variant.opener.absoluteName} is not`
+    )
+
+  }
+
+  /* */
+
+  function register()
+  {
+    if( will.variantMap )
+    {
+      _.assert( will.variantMap[ localPath ] === undefined || will.variantMap[ localPath ] === variant );
+      will.variantMap[ localPath ] = variant;
+      if( remotePath )
+      {
+        _.assert( will.variantMap[ remotePath ] === undefined || will.variantMap[ remotePath ] === variant );
+        will.variantMap[ remotePath ] = variant;
+      }
+    }
+  }
+
+  /* */
+
+  function peerForm()
+  {
+    let peerModule = variant.object.peerModule;
+
+    // _.assert( !!peerModule || !variant.peer )
+
+    if( !peerModule )
+    return;
+
+    if( variant.peer )
+    {
+      _.assert( variant.peer.peer === variant );
+      return variant.peer;
+    }
+
+    variant.peer = _.Will.ModuleVariant.From({ object : peerModule, will : will });
+
+    _.assert( variant.peer.peer === variant || variant.peer.peer === null );
+
+    variant.peer.peer = variant;
+
+  }
+
 }
 
 //
 
 function From( o )
 {
+  let cls = this;
   let variant;
   let will = o.will;
   let variantMap = will.variantMap;
@@ -205,79 +261,46 @@ function From( o )
     debugger;
     variant = Self( o.object );
   }
-  else if( o.object instanceof _.Will.OpenedModule )
+  else
   {
-    let localPath = o.object.localPath || o.object.commonPath;
-    let remotePath = o.object.remotePath
-    o.module = o.object;
-    if( variantMap && variantMap[ localPath ] )
-    variant = variantMap[ localPath ];
-    else if( variantMap && remotePath && variantMap[ remotePath ] )
-    variant = variantMap[ remotePath ];
+    variant = will.objectToVariantHash.get( o.object );
   }
-  else if( o.object instanceof _.Will.ModuleOpener )
+
+  // if( Config.debug )
+  if( variant )
   {
-    let localPath = o.object.localPath || o.object.commonPath;
-    let remotePath = o.object.remotePath;
-    o.opener = o.object;
-    if( variantMap && variantMap[ o.object.commonPath ] )
-    variant = variantMap[ o.object.commonPath ];
-    else if( variantMap && remotePath && variantMap[ remotePath ] )
-    variant = variantMap[ remotePath ];
+    let localPath, remotePath;
+    [ localPath, remotePath ] = variant.PathsOf( variant.object );
+
+    if( localPath !== variant.localPath )
+    changed = true;
+    if( remotePath !== variant.remotePath )
+    changed = true;
+
+    // _.assert( localPath === null || variant.localPath === null || variant.localPath === localPath );
+    _.assert( remotePath === null || variant.remotePath === null || variant.remotePath === remotePath );
   }
-  else if( o.object instanceof _.Will.ModulesRelation )
-  {
-    /* xxx : use localPath / remotePath after introducing it */
-    let localPath = o.object.path;
-    let remotePath = o.object.path;
-    o.relation = o.object;
-    if( localPath )
-    localPath = path.join( o.object.module.inPath, localPath );
-    if( remotePath )
-    remotePath = path.join( o.object.module.inPath, localPath );
-    if( variantMap && variantMap[ localPath ] )
-    variant = variantMap[ localPath ];
-    else if( variantMap && remotePath && variantMap[ remotePath ] )
-    variant = variantMap[ remotePath ];
-  }
-  else _.assert( 0, `Not clear how to get graph variant from ${_.strShort( o.object )}` );
+
+  if( !variant )
+  variantWithPath();
 
   _.assert
   (
     !o.relation || ( !!o.relation.opener && o.relation.opener.formed >= 2 ),
-    () => `Relation should be formed to level 3 or higher, but ${o.relation.absoluteName} is not`
+    () => `Opener should be formed to level 2 or higher, but opener of ${o.relation.absoluteName} is not`
   )
 
-  // if( o.object.id === 305 )
-  // debugger;
-
-  let variant2 = will.objectToVariantHash.get( o.object );
-  if( variant2 && variant2 !== variant )
-  {
-    _.assert( !!variant2.localPath );
-    _.assert( !!o.object.localPath );
-    _.assert( o.object.localPath !== variant2.localPath );
-    // debugger;
-    variant2.remove( o.object );
-  }
+  // let variant2 = will.objectToVariantHash.get( o.object );
+  // if( variant2 && variant2 !== variant )
+  // {
+  //   _.assert( !!variant2.localPath );
+  //   _.assert( !!o.object.localPath );
+  //   _.assert( o.object.localPath !== variant2.localPath );
+  //   variant2.remove( o.object );
+  // }
 
   if( variant )
-  {
-
-    if( o.module )
-    changed = variant.add( o.module ) || changed;
-    if( o.opener )
-    changed = variant.add( o.opener ) || changed;
-    if( o.relation )
-    changed = variant.add( o.relation ) || changed;
-
-    delete o.object;
-    delete o.module;
-    delete o.opener;
-    delete o.relation;
-
-    _.mapExtend( variant, o );
-  }
+  variantUpdate();
 
   if( !variant )
   {
@@ -286,11 +309,89 @@ function From( o )
     variant = Self( o );
   }
 
+  // if( changed ) /* xxx : switch on the optimization */
+  if( variant.formed !== -1 )
   variant.reform();
 
   _.assert( !!variant.object );
 
   return variant;
+
+  /* */
+
+  function variantUpdate()
+  {
+
+    if( o.object && o.object !== variant )
+    changed = variant._add( o.object ) || changed;
+    if( o.module )
+    changed = variant._add( o.module ) || changed;
+    if( o.opener )
+    changed = variant._add( o.opener ) || changed;
+    if( o.relation )
+    changed = variant._add( o.relation ) || changed;
+
+    delete o.object;
+    delete o.module;
+    delete o.opener;
+    delete o.relation;
+
+    for( let f in o )
+    {
+      if( variant[ f ] !== o[ f ] )
+      {
+        debugger;
+        _.assert( 0, 'not tested' );
+        variant[ f ] = o[ f ];
+        changed = true;
+      }
+    }
+
+  }
+
+  /* */
+
+  function variantWithPath()
+  {
+    let localPath, remotePath;
+
+    // if( o.object instanceof _.Will.OpenedModule )
+    // {
+    //   // localPath = o.object.localPath || o.object.commonPath;
+    //   // remotePath = o.object.remotePath
+    //   o.module = o.object;
+    // }
+    // else if( o.object instanceof _.Will.ModuleOpener )
+    // {
+    //   // localPath = o.object.localPath || o.object.commonPath;
+    //   // remotePath = o.object.remotePath;
+    //   o.opener = o.object;
+    // }
+    // else if( o.object instanceof _.Will.ModulesRelation )
+    // {
+    //   /* xxx : use localPath / remotePath after introducing it */
+    //   // localPath = o.object.localPath;
+    //   // remotePath = o.object.remotePath;
+    //   // debugger;
+    //   o.relation = o.object;
+    //   // if( localPath )
+    //   // localPath = path.join( o.object.module.inPath, localPath );
+    //   // if( remotePath )
+    //   // remotePath = path.join( o.object.module.inPath, localPath );
+    // }
+    // else _.assert( 0, `Not clear how to get graph variant from ${_.strShort( o.object )}` );
+
+    [ localPath, remotePath ] = cls.PathsOf( o.object );
+
+    if( variantMap && variantMap[ localPath ] )
+    variant = variantMap[ localPath ];
+    else if( variantMap && remotePath && variantMap[ remotePath ] )
+    variant = variantMap[ remotePath ];
+
+  }
+
+  /* */
+
 }
 
 //
@@ -305,44 +406,34 @@ function PathsOf( object )
   {
     let localPath = object.localPath;
     let remotePath = object.remotePath;
-    if( localPath )
     result.push( localPath );
-    if( remotePath )
     result.push( remotePath );
   }
   else if( object instanceof _.Will.OpenedModule )
   {
     let localPath = object.localPath || object.commonPath;
     let remotePath = object.remotePath;
-    if( localPath )
     result.push( localPath );
-    if( remotePath )
     result.push( remotePath );
   }
   else if( object instanceof _.Will.ModuleOpener )
   {
     let localPath = object.localPath || object.commonPath;
     let remotePath = object.remotePath;
-    if( localPath )
     result.push( localPath );
-    if( remotePath )
     result.push( remotePath );
   }
   else if( object instanceof _.Will.ModulesRelation )
   {
     let path = object.module.will.fileProvider.path;
-    let localPath = object.path;
-    let remotePath = object.path;
-    if( localPath )
-    {
-      localPath = path.join( object.module.inPath, localPath );
-      result.push( localPath );
-    }
-    if( remotePath )
-    {
-      remotePath = path.join( object.module.inPath, localPath );
-      result.push( remotePath );
-    }
+    let localPath = object.localPath;
+    let remotePath = object.remotePath;
+    // if( localPath )
+    // localPath = path.join( object.module.inPath, localPath );
+    // if( remotePath )
+    // remotePath = path.join( object.module.inPath, remotePath );
+    result.push( localPath );
+    result.push( remotePath );
   }
   else _.assert( 0 );
 
@@ -351,24 +442,122 @@ function PathsOf( object )
 
 //
 
-function peerModuleGet()
+function PathsOfAsMap( object )
 {
-  let variant = this;
-  if( variant.object )
-  return variant.object.peerModule;
-  return null;
+  let result = Object.create( null );
+
+  _.assert( !!object );
+
+  if( object instanceof Self )
+  {
+    result.localPath = object.localPath;
+    result.remotePath = object.remotePath;
+  }
+  else if( object instanceof _.Will.OpenedModule )
+  {
+    result.localPath = object.localPath || object.commonPath;
+    result.remotePath = object.remotePath;
+  }
+  else if( object instanceof _.Will.ModuleOpener )
+  {
+    result.localPath = object.localPath || object.commonPath;
+    result.remotePath = object.remotePath;
+  }
+  else if( object instanceof _.Will.ModulesRelation )
+  {
+    let path = object.module.will.fileProvider.path;
+    result.localPath = object.localPath;
+    result.remotePath = object.remotePath;
+    // if( result.localPath )
+    // result.localPath = path.join( object.module.inPath, result.localPath );
+    // if( remotePath )
+    // result.remotePath = path.join( object.module.inPath, result.remotePath );
+  }
+  else _.assert( 0 );
+
+  return result;
 }
 
 //
 
-function relationAdd( relation )
+function VariantFrom( will, object )
+{
+  let cls = this;
+
+  _.assert( arguments.length === 2 );
+  _.assert( !!object );
+
+  if( !_.mapIs( object ) )
+  object = { object : object }
+
+  object.will = will;
+
+  let result = cls.From( object );
+
+  return result;
+}
+
+//
+
+function VariantsFrom( will, varaints )
+{
+  let cls = this;
+  _.assert( arguments.length === 2 );
+  if( _.arrayLike( varaints ) )
+  return _.filter( varaints, ( variant ) => cls.VariantFrom( will, variant ) );
+  else
+  return will.VariantFrom( variant );
+}
+
+//
+
+function VariantOf( will, object )
+{
+  let cls = this;
+
+  _.assert( arguments.length === 2 );
+  _.assert( !!object );
+
+  if( object instanceof _.Will.ModuleVariant )
+  return object;
+
+  let paths = cls.PathsOf( object );
+  let variant = _.any( paths, ( path ) => will.variantMap[ path ] ) || null;
+  if( variant )
+  _.assert( _.all( paths, ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
+
+  return variant;
+}
+
+//
+
+function VariantsOf( will, varaints )
+{
+  let cls = this;
+  _.assert( arguments.length === 2 );
+  if( _.arrayLike( varaints ) )
+  return _.filter( varaints, ( variant ) => cls.VariantOf( will, variant ) );
+  else
+  return cls.VariantOf( will, variant );
+}
+
+// //
+//
+// function peerModuleGet()
+// {
+//   let variant = this;
+//   if( variant.object )
+//   return variant.object.peerModule;
+//   return null;
+// }
+
+//
+
+function _relationAdd( relation )
 {
   let variant = this;
   let will = variant.will;
   let changed = false;
-
-  // if( relation.id === 300 )
-  // debugger;
 
   _.assert( relation instanceof _.Will.ModulesRelation );
 
@@ -395,9 +584,6 @@ function relationRemove( relation )
   let will = variant.will;
   let changed = false;
 
-  // if( relation.id === 300 )
-  // debugger;
-
   _.assert( relation instanceof _.Will.ModulesRelation );
   _.arrayRemoveOnce( variant.relations, relation );
 
@@ -417,7 +603,7 @@ function relationRemove( relation )
 
 //
 
-function openerAdd( opener )
+function _openerAdd( opener )
 {
   let variant = this;
   let will = variant.will;
@@ -451,7 +637,7 @@ function openerRemove( opener )
   let will = variant.will;
   let changed = false;
 
-  if( opener.id === 210 )
+  if( variant.id === 210 )
   debugger;
 
   _.assert( opener instanceof _.Will.ModuleOpener );
@@ -474,19 +660,11 @@ function openerRemove( opener )
 
 //
 
-function moduleAdd( module )
+function _moduleAdd( module )
 {
   let variant = this;
   let will = variant.will;
   let changed = false;
-
-  // if( module.id === 131 || !module.willfilesPath )
-  // debugger;
-
-  // if( variant.id === 49 )
-  // debugger;
-  // if( module.id === 435 )
-  // debugger;
 
   _.assert( module instanceof _.Will.OpenedModule );
 
@@ -512,14 +690,6 @@ function moduleRemove( module )
   let variant = this;
   let will = variant.will;
   let changed = false;
-
-  // if( variant.id === 49 )
-  // debugger;
-  // if( module.id === 435 )
-  // debugger;
-
-  // if( module.id === 131 || !module.willfilesPath )
-  // debugger;
 
   _.assert( module instanceof _.Will.OpenedModule );
   _.assert( variant.module === module );
@@ -549,17 +719,17 @@ function _add( object )
 
   if( object instanceof _.Will.ModulesRelation )
   {
-    result = variant.relationAdd( object );
+    result = variant._relationAdd( object );
   }
   else if( object instanceof _.Will.OpenedModule )
   {
-    result = variant.moduleAdd( object );
+    result = variant._moduleAdd( object );
   }
   else if( object instanceof _.Will.ModuleOpener )
   {
-    result = variant.openerAdd( object );
+    result = variant._openerAdd( object );
   }
-  else _.assert( 0 );
+  else _.assert( 0, `Unknown type of object ${_.strType( object )}` );
 
   return result;
 }
@@ -580,9 +750,6 @@ function _remove( object )
 {
   let variant = this;
 
-  // if( variant.id === 58 )
-  // debugger;
-
   if( object instanceof _.Will.ModulesRelation )
   {
     variant.relationRemove( object );
@@ -597,9 +764,6 @@ function _remove( object )
   }
   else _.assert( 0 );
 
-  // if( variant.id === 58 )
-  // debugger;
-
 }
 
 //
@@ -611,13 +775,45 @@ function remove( object )
   return variant.reform();
 }
 
-//
+// --
+// export
+// --
+
+function infoExport()
+{
+  let result = '';
+  let variant = this;
+
+  if( variant.module )
+  {
+    result += variant.module.absoluteName + '\n';
+  }
+  if( variant.opener )
+  {
+    debugger;
+    result += 'Opener of ' + variant.opener.absoluteName + '\n';
+  }
+  if( variant.relation )
+  {
+    result += variant.relation.absoluteName + '\n';
+  }
+
+  if( variant.localPath )
+  result += `path::local : ${variant.localPath}`;
+  if( variant.remotePath )
+  result += `path::remote : ${variant.remotePath}`;
+
+  debugger;
+  return result;
+}
+
+// --
+// etc
+// --
 
 function moduleSet( module )
 {
   let variant = this;
-  // if( variant.id === 49 && !module )
-  // debugger;
   variant[ moduleSymbol ] = module;
   return module;
 }
@@ -630,6 +826,10 @@ let moduleSymbol = Symbol.for( 'module' );
 
 let Composes =
 {
+
+  localPath : null,
+  remotePath : null,
+
 }
 
 let Aggregates =
@@ -639,12 +839,7 @@ let Aggregates =
 let Associates =
 {
 
-  localPath : null,
-  remotePath : null,
-
   will : null,
-  // variantMap : null,
-  // nodesGroup : null,
 
 }
 
@@ -671,6 +866,7 @@ let Restricts =
   relation : null,
   relations : _.define.own([]),
   object : null,
+  peer : null,
 
 }
 
@@ -678,6 +874,11 @@ let Statics =
 {
   From,
   PathsOf,
+  PathsOfAsMap,
+  VariantFrom,
+  VariantsFrom,
+  VariantOf,
+  VariantsOf,
 }
 
 let Forbids =
@@ -691,7 +892,7 @@ let Forbids =
 let Accessors =
 {
   // module : { setter : moduleSet },
-  peerModule : { getter : peerModuleGet, readOnly : 1 },
+  // peerModule : { getter : peerModuleGet, readOnly : 1 },
 }
 
 // --
@@ -709,20 +910,31 @@ let Extend =
 
   From,
   PathsOf,
+  PathsOfAsMap,
+  VariantFrom,
+  VariantsFrom,
+  VariantOf,
+  VariantsOf,
 
-  peerModuleGet,
-
-  relationAdd,
+  _relationAdd,
   relationRemove,
-  openerAdd,
+  _openerAdd,
   openerRemove,
-  moduleAdd,
+  _moduleAdd,
   moduleRemove,
 
   _add,
   add,
   _remove,
   remove,
+
+  // export
+
+  infoExport,
+
+  // etc
+
+  moduleSet,
 
   // relation
 
