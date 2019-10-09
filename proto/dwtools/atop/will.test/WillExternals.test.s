@@ -3947,7 +3947,7 @@ function cleanDry( test )
 
   .then( ( got ) =>
   {
-    test.is( _.strHas( got.output, /2\/2 submodule\(s\) of .*module::submodules.* were updated in/ ) );
+    test.is( _.strHas( got.output, /2\/3 submodule\(s\) were updated in/ ) );
     var files = self.find( submodulesPath );
     test.gt( files.length, 100 );
     return null;
@@ -3959,7 +3959,7 @@ function cleanDry( test )
   })
   .then( ( got ) =>
   {
-    test.is( _.strHas( got.output, /0\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.is( _.strHas( got.output, /0\/3 submodule\(s\) were downloaded in/ ) );
     return got;
   })
 
