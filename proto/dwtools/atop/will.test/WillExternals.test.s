@@ -4821,7 +4821,7 @@ function exportItself( test )
     test.gt( files.length, 450 );
 
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
-    test.is( _.strHas( got.output, new RegExp( `\Exported .*exported::export.* with ${files.length-2} file\(s\) in` ) ) );
+    test.is( _.strHas( got.output, /Exported module::experiment \/ build::export with .* file\(s\) in/ ) );
 
     return null;
   })
