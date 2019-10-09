@@ -6724,11 +6724,16 @@ function exportBroken( test )
     test.is( _.strHas( got.output, 'out/submodule.out.will.yml' ) );
 
     var outfile = _.fileProvider.fileConfigRead( outWillPath );
+    outfile = outfile.module[ 'submodule.out' ];
+
     var exported =
     {
       'export.debug' :
       {
         version : '0.0.1',
+        recursive : 0,
+        withIntegrated : 2,
+        tar : 1,
         criterion :
         {
           default : 1,
@@ -6749,7 +6754,12 @@ function exportBroken( test )
     var exportedReflector =
     {
       'mandatory' : 1,
-      src : { filePath : { '.' : '' }, prefixPath : 'debug' },
+      src :
+      {
+        // filePath : { '.' : '' },
+        filePath : { '**' : '' },
+        prefixPath : 'debug'
+      },
       criterion :
       {
         default : 1,
