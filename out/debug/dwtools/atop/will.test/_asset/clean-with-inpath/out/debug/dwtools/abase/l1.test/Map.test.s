@@ -16,6 +16,18 @@ var _ = _global_.wTools;
 function mapIs( test )
 {
 
+  test.case = 'pure empty map';
+  var got = _.mapIs( Object.create( null ) );
+  var expected = true;
+  test.identical( got, expected );
+
+  test.case = 'pure map';
+  var src = Object.create( null );
+  src.x = 1;
+  var got = _.mapIs( src );
+  var expected = true;
+  test.identical( got, expected );
+
   test.case = 'an empty object';
   var got = _.mapIs( {} );
   var expected = true;
@@ -59,6 +71,12 @@ function mapIs( test )
   test.case = 'a string';
   var got = _.mapIs( Object.create( { a : 7 } ) );
   var expected = false;
+  test.identical( got, expected );
+
+  var sup = Object.create( null );
+  var sub = Object.create( sup );
+  var expected = false;
+  var got = _.mapIs( sub );
   test.identical( got, expected );
 
 }

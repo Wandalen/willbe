@@ -4471,7 +4471,7 @@ function exportCourruptedSubmodulesDisabled( test )
       'git+https:///github.com/X3/X3.git#master',
     ];
     var remotePath = _.filter( got, ( e ) => e.remotePath );
-    test.identical( remotePath, exp ); debugger;
+    test.identical( remotePath, exp );
 
     let builds = module.exportsResolve({ criterion : { debug : 1 } });
     let build = builds[ 0 ];
@@ -5899,7 +5899,7 @@ function superResolve( test )
       pathUnwrapping : 0,
       missingAction : 'undefine',
     });
-    test.identical( resolved.length, 16 );
+    test.identical( resolved.length, 17 );
 
     test.case = '*::*a*/qualifiedName';
     var resolved = opener.openedModule.resolve
@@ -5910,7 +5910,7 @@ function superResolve( test )
       mapValsUnwrapping : 1,
       missingAction : 'undefine',
     });
-    test.identical( resolved, [ 'path::module.original.willfiles', 'path::local', 'path::out.release', 'reflector::predefined.release.v1', 'reflector::predefined.release.v2', 'step::timelapse.begin', 'step::timelapse.end', 'step::files.transpile', 'step::npm.generate', 'step::submodules.download', 'step::submodules.update', 'step::submodules.are.updated', 'step::submodules.reload', 'step::submodules.clean', 'step::clean', 'build::release' ] );
+    test.identical( resolved, [ 'path::module.original.willfiles', 'path::module.download', 'path::local', 'path::out.release', 'reflector::predefined.release.v1', 'reflector::predefined.release.v2', 'step::timelapse.begin', 'step::timelapse.end', 'step::files.transpile', 'step::npm.generate', 'step::submodules.download', 'step::submodules.update', 'step::submodules.are.updated', 'step::submodules.reload', 'step::submodules.clean', 'step::clean', 'build::release' ] );
 
     test.case = '*';
     var resolved = opener.openedModule.resolve
@@ -6068,6 +6068,7 @@ function pathsResolve( test )
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
+      null,
       'super',
       null,
       null,
@@ -6098,6 +6099,7 @@ function pathsResolve( test )
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
+      null,
       'super',
       null,
       null,
@@ -6128,6 +6130,7 @@ function pathsResolve( test )
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
+      null,
       'super',
       null,
       null,
@@ -6158,6 +6161,7 @@ function pathsResolve( test )
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
+      null,
       'super',
       null,
       null,
@@ -6196,6 +6200,7 @@ function pathsResolve( test )
       'module.common' : abs( './super' ),
       'module.original.willfiles' : null,
       'local' : abs( './super' ),
+      'module.download' : null,
       'remote' : null,
       'current.remote' : null,
     }
@@ -6230,6 +6235,7 @@ function pathsResolve( test )
       'local' : 'super',
       'remote' : null,
       'current.remote' : null,
+      'module.download' : null,
       'module.peer.willfiles' : 'super.out/supermodule.out.will.yml',
     }
     var got = _.select( resolved, '*/path' );
@@ -6256,6 +6262,7 @@ function pathsResolve( test )
       'will' : rel( execPath ),
       'proto' : 'super.out/proto',
       'temp' : 'super.out/super.out',
+      'module.download' : null,
       'in' : 'super.out',
       'out' : 'super.out',
       'out.debug' : 'super.out/super.out/debug',
@@ -6279,6 +6286,7 @@ function pathsResolve( test )
       'module.peer.willfiles' : 'super.out/supermodule.out.will.yml',
       'module.dir' : '.',
       'module.common' : 'super',
+      'module.download' : null,
       'local' : 'super',
       'remote' : null,
       'current.remote' : null,
@@ -6308,6 +6316,7 @@ function pathsResolve( test )
       'module.peer.willfiles' : 'super.out/supermodule.out.will.yml',
       'module.dir' : '.',
       'module.common' : 'super',
+      'module.download' : null,
       'local' : 'super',
       'remote' : null,
       'current.remote' : null,
@@ -6337,6 +6346,7 @@ function pathsResolve( test )
       'module.peer.willfiles' : 'super.out/supermodule.out.will.yml',
       'module.dir' : '.',
       'module.common' : 'super',
+      'module.download' : null,
       'local' : 'super',
       'remote' : null,
       'current.remote' : null,
@@ -6366,6 +6376,7 @@ function pathsResolve( test )
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
+      null,
       'super',
       null,
       null,
@@ -6395,6 +6406,7 @@ function pathsResolve( test )
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
+      null,
       'super',
       null,
       null,
@@ -6424,6 +6436,7 @@ function pathsResolve( test )
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
+      null,
       'super',
       null,
       null,
@@ -8165,7 +8178,9 @@ function pathsResolveOutFileOfExports( test )
     if( err )
     throw err;
     test.is( err === undefined );
+    debugger;
     opener.finit();
+    debugger;
     return arg;
   });
 

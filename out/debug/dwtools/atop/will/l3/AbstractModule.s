@@ -51,6 +51,99 @@ function init()
   module.id = _.Will.ResourceCounter;
 }
 
+// --
+// etc
+// --
+
+function isUsedManually( visited )
+{
+  let module = this;
+  let will = module.will;
+
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+
+  // if( !visited )
+  // debugger;
+  //
+  // visited = visited || [];
+  //
+  // if( _.arrayHas( visited, module ) )
+  // return false;
+  //
+  // let users = module.usersGet();
+  // users = _.arraySetBut( users, visited );
+  //
+  // if( !users.length )
+  // return false;
+  //
+  // let visited2 = visited.slice();
+  // visited2.push( module );
+  // let result = users.some( ( module2 ) => module2.isUsedManually( visited2 ) );
+  //
+  // // if( !result )
+  // // debugger;
+  //
+  // return result;
+
+  _.assert( arguments.length === 0 );
+
+  // return module.isUsed();
+
+  let found = [];
+  let sys = new _.graph.AbstractGraphSystem
+  ({
+    onNodeIs : nodeIs,
+    onNodeNameGet : nodeName,
+    onOutNodesGet : nodeOutNodes,
+  });
+  let group = sys.nodesGroup();
+
+  group.each({ roots : [ module ], onUp });
+
+  return found.length > 0;
+
+  /* */
+
+  function onUp( node )
+  {
+    if( node.isAuto )
+    return;
+    if( node === module )
+    return;
+    if( module instanceof _.Will.OpenedModule )
+    if( node instanceof _.Will.OpenedModule )
+    return;
+    found.push( node );
+  }
+
+  /* */
+
+  function nodeIs( node )
+  {
+    return _.instanceIs( node );
+  }
+
+  /* */
+
+  function nodeName( node )
+  {
+    return node.qualifiedName;
+  }
+
+  /* */
+
+  function nodeOutNodes( node )
+  {
+    // if( module instanceof _.Will.OpenedModule && node instanceof _.Will.OpenedModule )
+    // return [];
+    if( !node.usersGet )
+    return [];
+    _.assert( _.routineIs( node.usersGet ) )
+    return node.usersGet();
+  }
+
+}
+
 //
 
 function optionsFormingForward( o )
@@ -76,14 +169,7 @@ function optionsFormingForward( o )
   return o;
 }
 
-optionsFormingForward.defaults =
-{
-  all : null,
-  attachedWillfilesFormed : null,
-  peerModulesFormed : null,
-  subModulesFormed : null,
-  resourcesFormed : null,
-}
+optionsFormingForward.defaults = _.mapExtend( null, _.Will.UpformingDefaults );
 
 // --
 // path
@@ -187,13 +273,6 @@ function PathToRole( filePath )
   return role;
 }
 
-// //
-//
-// function CommonPathFor( willfilesPath )
-// {
-//   return _.Will.CommonPathFor.apply( _.Will, arguments );
-// }
-
 //
 
 function CommonPathFor( willfilesPath )
@@ -217,13 +296,23 @@ function CommonPathFor( willfilesPath )
   //
   // common = common.replace( /(\.im|\.ex)$/, '' );
 
-  let common = willfilesPath.replace( /(\.)?((im|ex)\.)?(will\.)(out\.)?(\w+)?$/, '' );
+  let common = willfilesPath;
 
-  if( _.strEnds( common, [ '/im', '/ex' ] ) )
-  {
-    common = _.uri.trail( _.uri.dir( common ) );
-    _.assert( _.uri.isTrailed( common ) );
-  }
+  // common = common.replace( /(\.)?((im|ex)\.)?(will\.)(out\.)?(\w+)?$/, '' );
+  // debugger;
+
+  let common2 = common.replace( /((\.|\/|^)(im|ex))?((\.|\/|^)will)(\.out)?(\.\w+)?$/, '' );
+  let removed = _.strRemoveBegin( common, common2 );
+  // debugger;
+  if( removed[ 0 ] === '/' )
+  common2 = common2 + '/';
+  common = common2;
+
+  // if( _.strEnds( common, [ '/im', '/ex' ] ) )
+  // {
+  //   common = _.uri.trail( _.uri.dir( common ) );
+  //   _.assert( _.uri.isTrailed( common ) );
+  // }
 
   return common;
 }
@@ -251,70 +340,170 @@ function OutfilePathFor( outPath, name )
 
 function _filePathChange( willfilesPath )
 {
+  let module = this;
   let r = Object.create( null );
   r.willfilesPath = willfilesPath;
 
-  if( _.arrayIs( r.willfilesPath ) )
+  return module._filePathChanged1( r ).willfilesPath;
+
+  // if( _.arrayIs( r.willfilesPath ) )
+  // {
+  //   if( r.willfilesPath.length === 1 )
+  //   r.willfilesPath = r.willfilesPath[ 0 ];
+  //   else if( r.willfilesPath.length === 0 )
+  //   r.willfilesPath = null;
+  // }
+  //
+  // if( !this.will )
+  // return r;
+  //
+  // let module = this;
+  // let will = module.will;
+  // let fileProvider = will.fileProvider;
+  // let path = fileProvider.path;
+  // let logger = will.logger;
+  //
+  // if( r.willfilesPath )
+  // r.willfilesPath = path.s.normalizeTolerant( r.willfilesPath );
+  //
+  // r.dirPath = r.willfilesPath;
+  // if( _.arrayIs( r.dirPath ) )
+  // r.dirPath = r.dirPath[ 0 ];
+  // if( _.strIs( r.dirPath ) )
+  // r.dirPath = path.dirFirst( r.dirPath );
+  // if( r.dirPath === null )
+  // r.dirPath = module.dirPath;
+  // if( r.dirPath )
+  // r.dirPath = path.canonize( r.dirPath );
+  // r.isIdentical = willfilesPath === this.willfilesPath || _.entityIdentical( willfilesPath, this.willfilesPath );
+  //
+  // if( r.willfilesPath && r.willfilesPath.length )
+  // r.commonPath = module.CommonPathFor( r.willfilesPath );
+  // else
+  // r.commonPath = module.commonPath;
+  //
+  // _.assert( arguments.length === 1 );
+  // _.assert( r.dirPath === null || _.strDefined( r.dirPath ) );
+  // _.assert( r.dirPath === null || path.isAbsolute( r.dirPath ) );
+  // _.assert( r.dirPath === null || path.isNormalized( r.dirPath ) );
+  // _.assert( r.willfilesPath === null || path.s.allAreAbsolute( r.willfilesPath ) );
+  // _.assert
+  // (
+  //   !module.isPreformed() || _.strDefined( r.commonPath ),
+  //   () => `Each module requires commonPath, but ${module.absoluteName} does not have`
+  // );
+  //
+  // if( r.commonPath !== null )
+  // module[ fileNameSymbol ] = path.fullName( r.commonPath );
+  // module[ willfilesPathSymbol ] = r.willfilesPath;
+  //
+  // return r;
+}
+
+//
+
+function _filePathChanged1( o )
+{
+  let module = this;
+  return module._filePathChanged2( o );
+}
+
+_filePathChanged1.defaults =
+{
+  willfilesPath : null,
+  isIdentical : null,
+  dirPath : null,
+  commonPath : null,
+}
+
+//
+
+function _filePathChanged2( o )
+{
+  let module = this;
+
+  if( !o )
   {
-    if( r.willfilesPath.length === 1 )
-    r.willfilesPath = r.willfilesPath[ 0 ];
-    else if( r.willfilesPath.length === 0 )
-    r.willfilesPath = null;
+    o = Object.create( null );
+    o.willfilesPath = module.willfilesPath;
+    o.isIdentical = false;
+  }
+
+  _.routineOptions( _filePathChanged2, o );
+
+  if( _.arrayIs( o.willfilesPath ) )
+  {
+    if( o.willfilesPath.length === 1 )
+    o.willfilesPath = o.willfilesPath[ 0 ];
+    else if( o.willfilesPath.length === 0 )
+    o.willfilesPath = null;
   }
 
   if( !this.will )
-  return r;
+  return o;
 
-  let module = this;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
-  if( r.willfilesPath )
-  r.willfilesPath = path.s.normalizeTolerant( r.willfilesPath );
+  if( o.willfilesPath )
+  o.willfilesPath = path.s.normalizeTolerant( o.willfilesPath );
 
-  r.dirPath = r.willfilesPath;
-  if( _.arrayIs( r.dirPath ) )
-  r.dirPath = r.dirPath[ 0 ];
-  if( _.strIs( r.dirPath ) )
-  r.dirPath = path.dirFirst( r.dirPath );
-  if( r.dirPath === null )
-  r.dirPath = module.dirPath;
-  // if( r.dirPath && path.isGlobal( r.dirPath ) )
-  // debugger;
-  if( r.dirPath )
-  r.dirPath = path.canonize( r.dirPath );
-  // r.dirPath = path.canonizeTolerant( r.dirPath );
-  // if( r.willfilesPath )
+  o.dirPath = o.willfilesPath;
+  if( _.arrayIs( o.dirPath ) )
+  o.dirPath = o.dirPath[ 0 ];
+  if( _.strIs( o.dirPath ) )
+  o.dirPath = path.dirFirst( o.dirPath );
+  if( o.dirPath === null )
+  o.dirPath = module.dirPath;
+  if( o.dirPath )
+  o.dirPath = path.canonize( o.dirPath );
+
+  if( o.isIdentical === undefined || o.isIdentical === null )
+  o.isIdentical = o.willfilesPath === this.willfilesPath || _.entityIdentical( o.willfilesPath, this.willfilesPath );
+
+  // if( o.dirPath && _.strHas( o.dirPath, '/sub' ) )
   // debugger;
 
-  r.commonPath = module.CommonPathFor( r.willfilesPath );
+  if( o.willfilesPath && o.willfilesPath.length )
+  o.commonPath = module.CommonPathFor( o.willfilesPath );
+  else
+  o.commonPath = module.commonPath;
 
   _.assert( arguments.length === 1 );
-  _.assert( r.dirPath === null || _.strDefined( r.dirPath ) );
-  _.assert( r.dirPath === null || path.isAbsolute( r.dirPath ) );
-  _.assert( r.dirPath === null || path.isNormalized( r.dirPath ) );
-  _.assert( r.willfilesPath === null || path.s.allAreAbsolute( r.willfilesPath ) );
+  _.boolIs( o.isIdentical );
+  _.assert( o.dirPath === null || _.strDefined( o.dirPath ) );
+  _.assert( o.dirPath === null || path.isAbsolute( o.dirPath ) );
+  _.assert( o.dirPath === null || path.isNormalized( o.dirPath ) );
+  _.assert( o.willfilesPath === null || path.s.allAreAbsolute( o.willfilesPath ) );
+  _.assert
+  (
+    !module.isPreformed() || _.strDefined( o.commonPath ),
+    () => `Each module requires commonPath, but ${module.absoluteName} does not have`
+  );
 
-  if( r.commonPath !== null )
-  module[ fileNameSymbol ] = path.fullName( r.commonPath );
-  module[ willfilesPathSymbol ] = r.willfilesPath;
+  if( o.commonPath !== null )
+  module[ fileNameSymbol ] = path.fullName( o.commonPath );
+  module[ willfilesPathSymbol ] = o.willfilesPath;
 
-  return r;
+  return o;
 }
+
+_filePathChanged2.defaults = _.mapExtend( null, _filePathChanged1.defaults );
 
 //
-
-function _filePathChanged()
-{
-  let module = this;
-
-  _.assert( arguments.length === 0 );
-
-  module._filePathChange( module.willfilesPath );
-
-}
+// //
+//
+// function _filePathChanged2()
+// {
+//   let module = this;
+//
+//   _.assert( arguments.length === 0 );
+//
+//   module._filePathChange( module.willfilesPath );
+//
+// }
 
 // --
 // name
@@ -383,7 +572,6 @@ function willfileUnregister( willf )
   let logger = will.logger;
 
   _.arrayRemoveElementOnceStrictly( module.willfilesArray, willf );
-  // _.arrayRemoveElementOnceStrictly( willf.openers, module );
 
   if( willf.role )
   {
@@ -491,51 +679,6 @@ function remoteIsUpdate()
 
 //
 
-function remoteIsDownloadedUpdate()
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  _.assert( _.strDefined( module.localPath ) );
-  _.assert( !!module.willfilesPath );
-  _.assert( module.isRemote === true );
-
-  let remoteProvider = fileProvider.providerForPath( module.remotePath );
-  _.assert( !!remoteProvider.isVcs );
-
-  let result = remoteProvider.isDownloaded
-  ({
-    localPath : module.localPath,
-  });
-
-  _.assert( !_.consequenceIs( result ) );
-
-  if( !result )
-  return end( result );
-
-  return _.Consequence.From( result )
-  .finally( ( err, arg ) =>
-  {
-    end( arg );
-    if( err )
-    throw err;
-    return arg;
-  });
-
-  /* */
-
-  function end( result )
-  {
-    module.isDownloaded = !!result;
-    return result;
-  }
-
-}
-
-//
-
 function remoteIsUpToDateUpdate()
 {
   let module = this;
@@ -543,7 +686,7 @@ function remoteIsUpToDateUpdate()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.assert( _.strDefined( module.localPath ) );
+  _.assert( _.strDefined( module.downloadPath ) );
   _.assert( !!module.willfilesPath );
   _.assert( module.isRemote === true );
 
@@ -555,7 +698,7 @@ function remoteIsUpToDateUpdate()
   let result = remoteProvider.isUpToDate
   ({
     remotePath : module.remotePath,
-    localPath : module.localPath,
+    downloadPath : module.downloadPath,
     verbosity : will.verbosity - 3,
   });
 
@@ -596,7 +739,7 @@ function remoteCurrentVersion()
   debugger;
   let remoteProvider = fileProvider.providerForPath( module.commonPath );
   debugger;
-  return remoteProvider.versionLocalRetrive( module.localPath );
+  return remoteProvider.versionLocalRetrive( module.downloadPath );
 }
 
 //
@@ -614,7 +757,23 @@ function remoteLatestVersion()
   debugger;
   let remoteProvider = fileProvider.providerForPath( module.commonPath );
   debugger;
-  return remoteProvider.versionRemoteLatestRetrive( module.localPath )
+  return remoteProvider.versionRemoteLatestRetrive( module.downloadPath )
+}
+
+//
+
+function remoteHasLocalChanges()
+{
+  let opener = this;
+  let will = opener.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( !!opener.willfilesPath || !!opener.dirPath );
+  _.assert( arguments.length === 0 );
+
+  let remoteProvider = fileProvider.providerForPath( opener.remotePath );
+  return remoteProvider.hasLocalChanges( opener.downloadPath );
 }
 
 // --
@@ -716,6 +875,10 @@ let Extend =
 
   finit,
   init,
+
+  // etc
+
+  isUsedManually,
   optionsFormingForward,
 
   // path
@@ -730,7 +893,8 @@ let Extend =
   OutfilePathFor,
 
   _filePathChange,
-  _filePathChanged,
+  _filePathChanged1,
+  _filePathChanged2,
 
   // name
 
@@ -749,11 +913,10 @@ let Extend =
   // remote
 
   remoteIsUpdate,
-  remoteIsDownloadedUpdate,
   remoteIsUpToDateUpdate,
-
   remoteCurrentVersion,
   remoteLatestVersion,
+  remoteHasLocalChanges,
 
   // relation
 

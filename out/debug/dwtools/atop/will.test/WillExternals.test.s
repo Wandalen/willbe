@@ -11149,6 +11149,282 @@ submodulesDownloadSwitchBranch.timeOut = 300000;
 
 //
 
+function submodulesDownloadRecursive( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.with * .submodules.download recursive:2';
+    _.fileProvider.filesDelete( submodulesPath );
+    return null;
+  })
+
+  shell({ execPath : '.with * .submodules.download recursive:2' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathBasic', 'PathTools', 'Proto', 'Tools', 'UriBasic' ];
+    var files = _.fileProvider.dirRead( submodulesPath );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( got.output, '! Failed to read' ), 1 );
+    test.identical( _.strCount( got.output, '+ 5/10 submodule(s) were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 1 );
+
+    return null;
+  })
+
+  shell({ execPath : '.with * .submodules.download recursive:2' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathBasic', 'PathTools', 'Proto', 'Tools', 'UriBasic' ];
+    var files = _.fileProvider.dirRead( submodulesPath );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( got.output, '! Failed to read' ), 0 );
+    test.identical( _.strCount( got.output, '+ 0/10 submodule(s) were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.with ** .submodules.download recursive:2';
+    _.fileProvider.filesDelete( submodulesPath );
+    return null;
+  })
+
+  shell({ execPath : '.with ** .submodules.download recursive:2' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathBasic', 'PathTools', 'Proto', 'Tools', 'UriBasic' ];
+    var files = _.fileProvider.dirRead( submodulesPath );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( got.output, '! Failed to read' ), 1 );
+    test.identical( _.strCount( got.output, '+ 5/10 submodule(s) were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/5 submodule(s) were downloaded' ), 2 );
+    test.identical( _.strCount( got.output, '+ 0/3 submodule(s) were downloaded' ), 2 );
+    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 5 );
+
+    return null;
+  })
+
+  shell({ execPath : '.with ** .submodules.download recursive:2' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathBasic', 'PathTools', 'Proto', 'Tools', 'UriBasic' ];
+    var files = _.fileProvider.dirRead( submodulesPath );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( got.output, '! Failed to read' ), 0 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/1 submodule(s) were downloaded' ), 4 );
+    test.identical( _.strCount( got.output, '+ 0/3 submodule(s) were downloaded' ), 2 );
+    test.identical( _.strCount( got.output, '+ 0/5 submodule(s) were downloaded' ), 2 );
+    test.identical( _.strCount( got.output, '+ 0/10 submodule(s) were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 10 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.with * .submodules.download recursive:1';
+    _.fileProvider.filesDelete( submodulesPath );
+    return null;
+  })
+
+  shell({ execPath : '.with * .submodules.download recursive:1' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( submodulesPath );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( got.output, '! Failed to read' ), 1 );
+    test.identical( _.strCount( got.output, '+ 1/5 submodule(s) were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 1 );
+
+    return null;
+  })
+
+  shell({ execPath : '.with * .submodules.download recursive:1' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( submodulesPath );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( got.output, '! Failed to read' ), 0 );
+    test.identical( _.strCount( got.output, '+ 0/5 submodule(s) were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.with ** .submodules.download recursive:1';
+    _.fileProvider.filesDelete( submodulesPath );
+    return null;
+  })
+
+  shell({ execPath : '.with ** .submodules.download recursive:1' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathBasic', 'PathTools', 'Proto', 'Tools', 'UriBasic' ];
+    var files = _.fileProvider.dirRead( submodulesPath );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( got.output, '! Failed to read' ), 1 );
+    test.identical( _.strCount( got.output, '+ 1/5 submodule(s) were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 1/4 submodule(s) were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 1/3 submodule(s) were downloaded' ), 3 );
+    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 5 );
+
+    return null;
+  })
+
+  shell({ execPath : '.with ** .submodules.download recursive:1' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathBasic', 'PathTools', 'Proto', 'Tools', 'UriBasic' ];
+    var files = _.fileProvider.dirRead( submodulesPath );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( got.output, '! Failed to read' ), 0 );
+    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 10 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.with * .submodules.download recursive:0';
+    _.fileProvider.filesDelete( submodulesPath );
+    return null;
+  })
+
+  shell({ execPath : '.with * .submodules.download recursive:0' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( submodulesPath );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( got.output, '! Failed to read' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/1 submodule(s) were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.with ** .submodules.download recursive:0';
+    _.fileProvider.filesDelete( submodulesPath );
+    return null;
+  })
+
+  shell({ execPath : '.with ** .submodules.download recursive:0' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( submodulesPath );
+    test.identical( files, exp )
+
+    test.identical( _.strCount( got.output, '! Failed to read' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/1 submodule(s) were downloaded' ), 5 );
+    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 5 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function submodulesDownloadRecursive */
+
+submodulesDownloadRecursive.timeOut = 300000;
+
+//
+
 /*
   Informal module has submodule willbe-experiment#master
   Supermodule has informal module and willbe-experiment#dev in submodules list
@@ -11253,7 +11529,7 @@ function submodulesDownloadedUpdate( test )
 
 //
 
-function submodulesUpdate( test )
+function subModulesUpdate( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-update' );
@@ -11364,11 +11640,11 @@ function submodulesUpdate( test )
   return ready;
 }
 
-submodulesUpdate.timeOut = 300000;
+subModulesUpdate.timeOut = 300000;
 
 //
 
-function submodulesUpdateSwitchBranch( test )
+function subModulesUpdateSwitchBranch( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-update-switch-branch' );
@@ -11582,7 +11858,7 @@ function submodulesUpdateSwitchBranch( test )
   return ready;
 }
 
-submodulesUpdateSwitchBranch.timeOut = 300000;
+subModulesUpdateSwitchBranch.timeOut = 300000;
 
 //
 
@@ -13166,7 +13442,7 @@ function versionsVerify( test )
     return null;
   })
 
-  shell( '.versions.verify' )
+  shell( '.submodules.versions.verify' )
 
   .then( ( got ) =>
   {
@@ -13185,7 +13461,7 @@ function versionsVerify( test )
   })
 
   shell( '.submodules.download' )
-  shell( '.versions.verify' )
+  shell( '.submodules.versions.verify' )
 
   .then( ( got ) =>
   {
@@ -13202,7 +13478,7 @@ function versionsVerify( test )
     return null;
   })
 
-  shell( '.versions.verify' )
+  shell( '.submodules.versions.verify' )
 
   .then( ( got ) =>
   {
@@ -13221,7 +13497,7 @@ function versionsVerify( test )
 
   shell3( 'git commit --allow-empty -m test' )
 
-  shell( '.versions.verify' )
+  shell( '.submodules.versions.verify' )
 
   .then( ( got ) =>
   {
@@ -13240,7 +13516,7 @@ function versionsVerify( test )
 
   shell3( 'git checkout -b testbranch' )
 
-  shell( '.versions.verify' )
+  shell( '.submodules.versions.verify' )
 
   .then( ( got ) =>
   {
@@ -13311,7 +13587,7 @@ function versionsAgree( test )
     return null;
   })
 
-  shell( '.versions.agree' )
+  shell( '.submodules.versions.agree' )
 
   .then( ( got ) =>
   {
@@ -13328,7 +13604,7 @@ function versionsAgree( test )
     return null;
   })
 
-  shell( '.versions.agree' )
+  shell( '.submodules.versions.agree' )
 
   .then( ( got ) =>
   {
@@ -13346,7 +13622,7 @@ function versionsAgree( test )
   })
 
   shell3( 'git commit --allow-empty -m test' )
-  shell( '.versions.agree' )
+  shell( '.submodules.versions.agree' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -13370,7 +13646,7 @@ function versionsAgree( test )
   })
 
   shell2( 'git commit --allow-empty -m test' )
-  shell( '.versions.agree' )
+  shell( '.submodules.versions.agree' )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -13396,7 +13672,7 @@ function versionsAgree( test )
 
   shell3( 'git reset --hard origin' )
   shell2( 'git commit --allow-empty -m test2' )
-  shell( '.versions.agree' )
+  shell( '.submodules.versions.agree' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -13796,9 +14072,10 @@ var Self =
     submodulesDownloadUpdate,
     submodulesDownloadUpdateDry,
     submodulesDownloadSwitchBranch,
+    submodulesDownloadRecursive,
     // submodulesDownloadedUpdate, // qqq : not sure how to fix. please help to fix,
-    submodulesUpdate,
-    submodulesUpdateSwitchBranch,
+    subModulesUpdate,
+    subModulesUpdateSwitchBranch,
     stepSubmodulesDownload,
     stepWillbeVersionCheck,
     stepSubmodulesAreUpdated,

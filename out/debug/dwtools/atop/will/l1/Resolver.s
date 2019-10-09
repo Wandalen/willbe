@@ -210,7 +210,7 @@ function _statusPreUpdate()
     if( !module2 )
     debugger;
     if( !module2 ) /* yyy */
-    opener.openedModule;
+    module2 = opener.openedModule;
 
     if( !module2 )
     {

@@ -39,7 +39,7 @@ module:
       local:
         criterion:
           predefined: 1
-        path: .
+        path: sub.out
       remote:
         criterion:
           predefined: 1
@@ -64,22 +64,6 @@ module:
       temp:
         path:
           - .
-      exported.dir.export.debug:
-        criterion:
-          default: 1
-          debug: 1
-          raw: 1
-          export: 1
-        path: debug
-      exported.files.export.debug:
-        criterion:
-          default: 1
-          debug: 1
-          raw: 1
-          export: 1
-        path:
-          - debug
-          - debug/File.debug.js
       exported.dir.export.:
         criterion:
           default: 1
@@ -96,12 +80,31 @@ module:
         path:
           - release
           - release/File.release.js
+      exported.dir.export.debug:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+        path: debug
+      exported.files.export.debug:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+        path:
+          - debug
+          - debug/File.debug.js
     submodule: {}
     reflector:
       reflect.proto.:
         src:
           filePath:
             'path::proto': 'path::out.*=1'
+          prefixPath: ''
+        dst:
+          prefixPath: ''
         mandatory: 1
         criterion:
           debug: 0
@@ -111,39 +114,11 @@ module:
         src:
           filePath:
             'path::proto': 'path::out.*=1'
-          prefixPath: ''
-        dst:
-          prefixPath: ''
         mandatory: 1
         criterion:
           debug: 1
         inherit:
           - predefined.*
-      exported.export.debug:
-        src:
-          filePath:
-            '**': ''
-          prefixPath: debug
-        mandatory: 1
-        criterion:
-          default: 1
-          debug: 1
-          raw: 1
-          export: 1
-      exported.files.export.debug:
-        src:
-          filePath:
-            'path::exported.files.export.debug': ''
-          basePath: .
-          prefixPath: 'path::exported.dir.export.debug'
-          recursive: 0
-        recursive: 0
-        mandatory: 1
-        criterion:
-          default: 1
-          debug: 1
-          raw: 1
-          export: 1
       exported.export.:
         src:
           filePath:
@@ -167,6 +142,31 @@ module:
         criterion:
           default: 1
           debug: 0
+          raw: 1
+          export: 1
+      exported.export.debug:
+        src:
+          filePath:
+            '**': ''
+          prefixPath: debug
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+      exported.files.export.debug:
+        src:
+          filePath:
+            'path::exported.files.export.debug': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.export.debug'
+          recursive: 0
+        recursive: 0
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 1
           raw: 1
           export: 1
     step:
@@ -205,7 +205,6 @@ module:
       reflect.proto.raw:
         opts:
           reflector: 'reflector::reflect.proto.*=1'
-          verbosity: null
         criterion:
           debug: 0
           raw: 1
@@ -214,6 +213,7 @@ module:
       reflect.proto.debug.raw:
         opts:
           reflector: 'reflector::reflect.proto.*=1'
+          verbosity: null
         criterion:
           debug: 1
           raw: 1
@@ -253,20 +253,6 @@ module:
           debug: 0
           raw: 1
     exported:
-      export.:
-        version: 0.0.1
-        recursive: 0
-        withIntegrated: 2
-        tar: 0
-        exportedReflector: 'reflector::exported.export.'
-        exportedFilesReflector: 'reflector::exported.files.export.'
-        exportedDirPath: 'path::exported.dir.export.'
-        exportedFilesPath: 'path::exported.files.export.'
-        criterion:
-          default: 1
-          debug: 0
-          raw: 1
-          export: 1
       export.debug:
         version: 0.0.1
         recursive: 0
@@ -279,6 +265,20 @@ module:
         criterion:
           default: 1
           debug: 1
+          raw: 1
+          export: 1
+      export.:
+        version: 0.0.1
+        recursive: 0
+        withIntegrated: 2
+        tar: 0
+        exportedReflector: 'reflector::exported.export.'
+        exportedFilesReflector: 'reflector::exported.files.export.'
+        exportedDirPath: 'path::exported.dir.export.'
+        exportedFilesPath: 'path::exported.files.export.'
+        criterion:
+          default: 1
+          debug: 0
           raw: 1
           export: 1
     consistency:
@@ -314,7 +314,7 @@ module:
       local:
         criterion:
           predefined: 1
-        path: ..
+        path: ../sub
       remote:
         criterion:
           predefined: 1
@@ -339,22 +339,6 @@ module:
       temp:
         path:
           - ../sub.out
-      exported.dir.export.debug:
-        criterion:
-          default: 1
-          debug: 1
-          raw: 1
-          export: 1
-        path: ../sub.out/debug
-      exported.files.export.debug:
-        criterion:
-          default: 1
-          debug: 1
-          raw: 1
-          export: 1
-        path:
-          - ../sub.out/debug
-          - ../sub.out/debug/File.debug.js
       exported.dir.export.:
         criterion:
           default: 1
@@ -371,6 +355,22 @@ module:
         path:
           - ../sub.out/release
           - ../sub.out/release/File.release.js
+      exported.dir.export.debug:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+        path: ../sub.out/debug
+      exported.files.export.debug:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+        path:
+          - ../sub.out/debug
+          - ../sub.out/debug/File.debug.js
     submodule: {}
     reflector:
       reflect.proto.:
@@ -391,31 +391,6 @@ module:
           debug: 1
         inherit:
           - predefined.*
-      exported.export.debug:
-        src:
-          filePath:
-            '**': ''
-          prefixPath: ../sub.out/debug
-        mandatory: 1
-        criterion:
-          default: 1
-          debug: 1
-          raw: 1
-          export: 1
-      exported.files.export.debug:
-        src:
-          filePath:
-            'path::exported.files.export.debug': ''
-          basePath: .
-          prefixPath: 'path::exported.dir.export.debug'
-          recursive: 0
-        recursive: 0
-        mandatory: 1
-        criterion:
-          default: 1
-          debug: 1
-          raw: 1
-          export: 1
       exported.export.:
         src:
           filePath:
@@ -439,6 +414,31 @@ module:
         criterion:
           default: 1
           debug: 0
+          raw: 1
+          export: 1
+      exported.export.debug:
+        src:
+          filePath:
+            '**': ''
+          prefixPath: ../sub.out/debug
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+      exported.files.export.debug:
+        src:
+          filePath:
+            'path::exported.files.export.debug': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.export.debug'
+          recursive: 0
+        recursive: 0
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 1
           raw: 1
           export: 1
     step:
@@ -477,7 +477,6 @@ module:
       reflect.proto.raw:
         opts:
           reflector: 'reflector::reflect.proto.*=1'
-          verbosity: null
         criterion:
           debug: 0
           raw: 1
@@ -486,6 +485,7 @@ module:
       reflect.proto.debug.raw:
         opts:
           reflector: 'reflector::reflect.proto.*=1'
+          verbosity: null
         criterion:
           debug: 1
           raw: 1
@@ -525,20 +525,6 @@ module:
           debug: 0
           raw: 1
     exported:
-      export.:
-        version: 0.0.1
-        recursive: 0
-        withIntegrated: 2
-        tar: 0
-        exportedReflector: 'reflector::exported.export.'
-        exportedFilesReflector: 'reflector::exported.files.export.'
-        exportedDirPath: 'path::exported.dir.export.'
-        exportedFilesPath: 'path::exported.files.export.'
-        criterion:
-          default: 1
-          debug: 0
-          raw: 1
-          export: 1
       export.debug:
         version: 0.0.1
         recursive: 0
@@ -551,6 +537,20 @@ module:
         criterion:
           default: 1
           debug: 1
+          raw: 1
+          export: 1
+      export.:
+        version: 0.0.1
+        recursive: 0
+        withIntegrated: 2
+        tar: 0
+        exportedReflector: 'reflector::exported.export.'
+        exportedFilesReflector: 'reflector::exported.files.export.'
+        exportedDirPath: 'path::exported.dir.export.'
+        exportedFilesPath: 'path::exported.files.export.'
+        criterion:
+          default: 1
+          debug: 0
           raw: 1
           export: 1
     consistency:
