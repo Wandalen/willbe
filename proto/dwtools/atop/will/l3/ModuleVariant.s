@@ -109,17 +109,17 @@ function reform()
   objectFind();
   [ localPath, remotePath ] = variant.PathsOf( variant.object );
 
-  if( localPath )
-  if( !_.path.isTrailed( localPath ) )
-  if( variant.id === 46 )
-  debugger;
+  // if( localPath )
+  // if( !_.path.isTrailed( localPath ) )
+  // if( variant.id === 46 )
+  // debugger;
 
   if( variant.localPath && localPath && variant.localPath !== localPath )
   {
     /*
     update of local path
     */
-    debugger;
+    // debugger;
     _.assert( will.variantMap[ localPath ] === undefined || will.variantMap[ localPath ] === variant );
     delete will.variantMap[ localPath ];
     variant.localPath = localPath;

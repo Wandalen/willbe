@@ -4008,10 +4008,10 @@ function predefinedPathSet_functor( fieldName, resourceName )
     // let was = module[ fieldName ];
     // let isIdentical = was === filePath || _.entityIdentical( _.path.simplify( was ), _.path.simplify( filePath ) );
 
-    // if( fieldName === 'localPath' )
-    if( filePath )
-    if( _.strEnds( filePath, '/pathsResolveOutFileOfExports' ) )
-    debugger;
+    // // if( fieldName === 'localPath' )
+    // if( filePath )
+    // if( _.strEnds( filePath, '/pathsResolveOutFileOfExports' ) )
+    // debugger;
 
     _.assert( !!module[ assignMethodName ] );
     module[ assignMethodName ]( filePath );

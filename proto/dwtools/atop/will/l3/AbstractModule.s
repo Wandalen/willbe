@@ -308,8 +308,8 @@ function CommonPathFor( willfilesPath )
   common2 = common2 + '/';
   common = common2;
 
-  if( _.strEnds( common, '/pathsResolveOutFileOfExports' ) )
-  debugger;
+  // if( _.strEnds( common, '/pathsResolveOutFileOfExports' ) )
+  // debugger;
 
   // if( _.strEnds( common, [ '/im', '/ex' ] ) )
   // {
