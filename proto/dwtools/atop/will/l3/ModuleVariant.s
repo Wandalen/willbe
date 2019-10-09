@@ -93,6 +93,7 @@ function reform()
 
   _.assert( !variant.finitedIs() );
 
+  // finitedRemove();
   if( !variant.opener && !variant.module && !variant.relation )
   {
     variant.finit();
@@ -119,8 +120,8 @@ function reform()
   _.assert( variant.remotePath === null || remotePath === null || variant.remotePath === remotePath );
   variant.remotePath = remotePath;
 
+  verify();
   register();
-
   peerForm();
 
   variant.formed = 1;
@@ -136,10 +137,6 @@ function reform()
     }
     else if( variant.opener )
     {
-      // if( variant.opener.formed < 2 )
-      // variant.opener.remoteForm();
-      // if( variant.opener.formed < 2 )
-      // variant.opener.preform();
       _.assert( variant.opener.formed >= 2 );
       variant.object = variant.opener;
     }
@@ -165,6 +162,24 @@ function reform()
       if( opener instanceof _.Will.ModuleOpener )
       variant._openerAdd( opener );
     });
+  }
+
+  /* */
+
+  function finitedRemove()
+  {
+
+    if( variant.module && variant.module.finitedIs() )
+    debugger;
+    if( variant.module && variant.module.finitedIs() )
+    variant._remove( variant.module );
+    if( variant.opener && variant.opener.finitedIs() )
+    debugger;
+    if( variant.opener && variant.opener.finitedIs() )
+    variant._remove( variant.opener );
+    if( variant.relation && variant.relation.finitedIs() )
+    variant._remove( variant.relation );
+
   }
 
   /* */
@@ -195,10 +210,12 @@ function reform()
     if( will.variantMap )
     {
       _.assert( will.variantMap[ localPath ] === undefined || will.variantMap[ localPath ] === variant );
+      _.assert( _.strDefined( localPath ) );
       will.variantMap[ localPath ] = variant;
       if( remotePath )
       {
         _.assert( will.variantMap[ remotePath ] === undefined || will.variantMap[ remotePath ] === variant );
+        _.assert( _.strDefined( remotePath ) );
         will.variantMap[ remotePath ] = variant;
       }
     }
@@ -210,9 +227,10 @@ function reform()
   {
     let peerModule = variant.object.peerModule;
 
-    // _.assert( !!peerModule || !variant.peer )
-
     if( !peerModule )
+    return;
+
+    if( !peerModule.isPreformed() )
     return;
 
     if( variant.peer )
@@ -221,11 +239,19 @@ function reform()
       return variant.peer;
     }
 
+    _.assert( !variant.finitedIs() );
     variant.peer = _.Will.ModuleVariant.From({ object : peerModule, will : will });
-
+    _.assert( !variant.finitedIs() );
     _.assert( variant.peer.peer === variant || variant.peer.peer === null );
 
-    variant.peer.peer = variant;
+    if( variant.peer.finitedIs() )
+    {
+      variant.peer = null;
+    }
+    else
+    {
+      variant.peer.peer = variant;
+    }
 
   }
 
@@ -313,7 +339,7 @@ function From( o )
   if( variant.formed !== -1 )
   variant.reform();
 
-  _.assert( !!variant.object );
+  _.assert( !!variant.object || variant.finitedIs() );
 
   return variant;
 
@@ -668,6 +694,9 @@ function _moduleAdd( module )
 
   _.assert( module instanceof _.Will.OpenedModule );
 
+  if( module.id === 336 )
+  debugger;
+
   if( !variant.module )
   {
     variant.module = module;
@@ -690,6 +719,9 @@ function moduleRemove( module )
   let variant = this;
   let will = variant.will;
   let changed = false;
+
+  if( module.id === 336 )
+  debugger;
 
   _.assert( module instanceof _.Will.OpenedModule );
   _.assert( variant.module === module );

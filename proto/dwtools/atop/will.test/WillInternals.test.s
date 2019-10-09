@@ -4449,11 +4449,20 @@ function exportCourruptedSubmodulesDisabled( test )
     var got = opener.openedModule.modulesEach({ outputFormat : '/', withDisabled : 1 });
     var exp =
     [
+      '.module/Submodule1/',
+      '.module/Submodule2/',
+      '.module/Submodule3/',
+    ];
+    var localPath = _.filter( got, ( e ) => e.localPath );
+    test.identical( localPath, abs( exp ) );
+    var got = opener.openedModule.modulesEach({ outputFormat : '/', withDisabled : 1 });
+    var exp =
+    [
       '.module/Submodule1',
       '.module/Submodule2',
       '.module/Submodule3',
     ];
-    var localPath = _.filter( got, ( e ) => e.localPath );
+    var localPath = _.filter( got, ( e ) => e.opener.downloadPath );
     test.identical( localPath, abs( exp ) );
     var exp =
     [

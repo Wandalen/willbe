@@ -577,8 +577,8 @@ function _readLog( reading, failed )
     let storagePath = _.color.strFormat( path.s.relative( _.arrayAs( willf.filePath ), willf.storagePath ), 'path' );
     for( let f = 0 ; f < filePath.length ; f++ )
     {
-      if( failed )
-      debugger;
+      // if( failed )
+      // debugger;
       if( failed === 2 )
       logger.log( ` ! Inconsistent . ${filePath[ f ]} from ${storagePath[ f ]}` );
       else if( failed )
@@ -591,8 +591,8 @@ function _readLog( reading, failed )
   {
     for( let f = 0 ; f < filePath.length ; f++ )
     {
-      if( failed )
-      debugger;
+      // if( failed )
+      // debugger;
       if( failed === 2 )
       logger.log( ` ! Inconsistent . ${filePath[ f ]}` );
       else if( failed )

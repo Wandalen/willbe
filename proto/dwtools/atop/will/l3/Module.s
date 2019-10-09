@@ -34,6 +34,9 @@ function finit()
   if( will.verosity >= 5 )
   logger.log( module.qualifiedName, 'finit.begin' );
 
+  if( module.id === 336 )
+  debugger;
+
   _.assert( !module.finitedIs() );
 
   try
