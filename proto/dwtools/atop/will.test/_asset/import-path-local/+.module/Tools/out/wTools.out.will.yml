@@ -11,7 +11,9 @@ if( typeof module !== 'undefined' )
 var _global = _global_;
 var _ = _global_.wTools;
 
-//
+// --
+// tests
+// --
 
 function objectLike( t )
 {
@@ -73,6 +75,83 @@ function consequenceLike( test )
 
 //
 
+function isPrototypeOf( test )
+{
+
+  test.case = 'map';
+  var src = {};
+  var got = _.isPrototypeOf( src, src );
+  test.identical( got, true );
+  var got = _.isPrototypeOf( Object.prototype, src );
+  test.identical( got, true );
+  var got = _.isPrototypeOf( src, Object.prototype );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( src, {} );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( {}, src );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( src, Object.create( null ) );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( Object.create( null ), src );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( null, src );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( src, null );
+  test.identical( got, false );
+
+  test.case = 'pure map';
+  var src = Object.create( null );
+  var got = _.isPrototypeOf( src, src );
+  test.identical( got, true );
+  var got = _.isPrototypeOf( src, Object.prototype );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( Object.prototype, src );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( src, {} );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( {}, src );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( src, Object.create( null ) );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( Object.create( null ), src );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( null, src );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( src, null );
+  test.identical( got, false );
+
+  test.case = 'map chain';
+  var prototype = Object.create( null );
+  var src = Object.create( prototype );
+  var got = _.isPrototypeOf( src, src );
+  test.identical( got, true );
+  var got = _.isPrototypeOf( prototype, src );
+  test.identical( got, true );
+  var got = _.isPrototypeOf( src, prototype );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( src, Object.prototype );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( Object.prototype, src );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( src, {} );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( {}, src );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( src, Object.create( null ) );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( Object.create( null ), src );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( null, src );
+  test.identical( got, false );
+  var got = _.isPrototypeOf( src, null );
+  test.identical( got, false );
+
+}
+
+// --
+// declaration
+// --
+
 var Self =
 {
 
@@ -84,7 +163,8 @@ var Self =
 
     objectLike,
     promiseIs,
-    consequenceLike
+    consequenceLike,
+    isPrototypeOf,
 
   }
 

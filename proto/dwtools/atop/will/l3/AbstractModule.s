@@ -273,13 +273,6 @@ function PathToRole( filePath )
   return role;
 }
 
-// //
-//
-// function CommonPathFor( willfilesPath )
-// {
-//   return _.Will.CommonPathFor.apply( _.Will, arguments );
-// }
-
 //
 
 function CommonPathFor( willfilesPath )
@@ -303,13 +296,23 @@ function CommonPathFor( willfilesPath )
   //
   // common = common.replace( /(\.im|\.ex)$/, '' );
 
-  let common = willfilesPath.replace( /(\.)?((im|ex)\.)?(will\.)(out\.)?(\w+)?$/, '' );
+  let common = willfilesPath;
 
-  if( _.strEnds( common, [ '/im', '/ex' ] ) )
-  {
-    common = _.uri.trail( _.uri.dir( common ) );
-    _.assert( _.uri.isTrailed( common ) );
-  }
+  // common = common.replace( /(\.)?((im|ex)\.)?(will\.)(out\.)?(\w+)?$/, '' );
+  // debugger;
+
+  let common2 = common.replace( /((\.|\/|^)(im|ex))?((\.|\/|^)will)(\.out)?(\.\w+)?$/, '' );
+  let removed = _.strRemoveBegin( common, common2 );
+  // debugger;
+  if( removed[ 0 ] === '/' )
+  common2 = common2 + '/';
+  common = common2;
+
+  // if( _.strEnds( common, [ '/im', '/ex' ] ) )
+  // {
+  //   common = _.uri.trail( _.uri.dir( common ) );
+  //   _.assert( _.uri.isTrailed( common ) );
+  // }
 
   return common;
 }
@@ -422,7 +425,6 @@ function _filePathChanged2( o )
   if( !o )
   {
     o = Object.create( null );
-    // o.willfilesPath = willfilesPath;
     o.willfilesPath = module.willfilesPath;
     o.isIdentical = false;
   }
@@ -460,6 +462,9 @@ function _filePathChanged2( o )
 
   if( o.isIdentical === undefined || o.isIdentical === null )
   o.isIdentical = o.willfilesPath === this.willfilesPath || _.entityIdentical( o.willfilesPath, this.willfilesPath );
+
+  // if( o.dirPath && _.strHas( o.dirPath, '/sub' ) )
+  // debugger;
 
   if( o.willfilesPath && o.willfilesPath.length )
   o.commonPath = module.CommonPathFor( o.willfilesPath );
@@ -681,7 +686,7 @@ function remoteIsUpToDateUpdate()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.assert( _.strDefined( module.localPath ) );
+  _.assert( _.strDefined( module.downloadPath ) );
   _.assert( !!module.willfilesPath );
   _.assert( module.isRemote === true );
 
@@ -693,7 +698,7 @@ function remoteIsUpToDateUpdate()
   let result = remoteProvider.isUpToDate
   ({
     remotePath : module.remotePath,
-    localPath : module.localPath,
+    downloadPath : module.downloadPath,
     verbosity : will.verbosity - 3,
   });
 
@@ -734,7 +739,7 @@ function remoteCurrentVersion()
   debugger;
   let remoteProvider = fileProvider.providerForPath( module.commonPath );
   debugger;
-  return remoteProvider.versionLocalRetrive( module.localPath );
+  return remoteProvider.versionLocalRetrive( module.downloadPath );
 }
 
 //
@@ -752,7 +757,7 @@ function remoteLatestVersion()
   debugger;
   let remoteProvider = fileProvider.providerForPath( module.commonPath );
   debugger;
-  return remoteProvider.versionRemoteLatestRetrive( module.localPath )
+  return remoteProvider.versionRemoteLatestRetrive( module.downloadPath )
 }
 
 //
@@ -767,8 +772,8 @@ function remoteHasLocalChanges()
   _.assert( !!opener.willfilesPath || !!opener.dirPath );
   _.assert( arguments.length === 0 );
 
-  // let remoteProvider = fileProvider.providerForPath( opener.remotePath );
-  return _.git.hasLocalChanges( opener.localPath );
+  let remoteProvider = fileProvider.providerForPath( opener.remotePath );
+  return remoteProvider.hasLocalChanges( opener.downloadPath );
 }
 
 // --

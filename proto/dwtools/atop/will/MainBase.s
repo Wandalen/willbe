@@ -1215,8 +1215,10 @@ function _modulesDownload_body( o )
 
   if( !o.downloadedContainer )
   o.downloadedContainer = [];
-  if( !o.skipContainer )
-  o.skipContainer = [];
+  if( !o.localContainer )
+  o.localContainer = [];
+  if( !o.doneContainer )
+  o.doneContainer = [];
   if( !o.remoteContainer )
   o.remoteContainer = [];
 
@@ -1249,11 +1251,7 @@ function _modulesDownload_body( o )
         () => 'No object for' + ( variant.relation ? variant.relation.qualifiedName : '' ) + ''
       );
 
-      if( variant.object.isOut )
-      return null;
-      if( _.arrayHas( o.skipContainer, variant.object.localPath ) )
-      return null;
-      if( _.arrayHas( o.remoteContainer, variant.object.remotePath ) )
+      if( _.arrayHas( o.doneContainer, variant.object.localPath ) )
       return null;
 
       _.assert
@@ -1262,8 +1260,6 @@ function _modulesDownload_body( o )
         () => 'Submodule' + ( variant.relation ? variant.relation.qualifiedName : variant.module.qualifiedName ) + ' was not opened or downloaded'
       );
 
-      if( variant.opener.formed < 2 )
-      variant.opener.remoteForm();
       _.assert
       (
         !!variant.opener && variant.opener.formed >= 2,
@@ -1271,24 +1267,14 @@ function _modulesDownload_body( o )
       );
 
       if( !variant.object.isRemote )
-      return variantSkip( variant );
+      return variantLocalMaybe( variant );
       if( variant.relation && !variant.relation.enabled )
-      return variantSkip( variant );
+      return variantLocalMaybe( variant );
 
       ready2.then( () =>
       {
         return variantDownload( variant );
       });
-
-      // ready2.then( () => variantIsFresh( variant ) );
-      // ready2.then( ( ) =>
-      // {
-      //   _.assert( _.boolIs( isFresh ) )
-      //   if( isFresh )
-      //   return variantSkip( variant );
-      //   else
-      //   return variantDownload( variant );
-      // });
 
     });
 
@@ -1300,9 +1286,34 @@ function _modulesDownload_body( o )
   function variantDownload( variant )
   {
 
-    if( _.arrayHas( o.downloadedContainer, variant.opener.remotePath ) )
-    return null;
+    if( _.arrayHas( o.localContainer, variant.object.localPath ) || _.arrayHas( o.localContainer, variant.object.remotePath ) )
+    {
+      _.assert( 0, 'unexpected' );
+    }
+
+    if( _.arrayHas( o.doneContainer, variant.opener.remotePath ) )
+    return variantDone( variant );
+
+    if( variant.peer )
+    {
+      if( _.arrayHas( o.doneContainer, variant.peer.localPath ) )
+      {
+        debugger;
+        return variantDone( variant );
+      }
+      if( _.arrayHas( o.doneContainer, variant.peer.remotePath ) )
+      {
+        debugger;
+        return variantDone( variant );
+      }
+    }
+
     _.arrayAppendOnceStrictly( o.remoteContainer, variant.opener.remotePath );
+    variantDone( variant );
+    if( variant.peer )
+    {
+      variantDone( variant.peer );
+    }
 
     if( o.dry )
     {
@@ -1315,13 +1326,10 @@ function _modulesDownload_body( o )
       let r = _.Consequence.From( variant.opener._remoteDownload( o2 ) );
       return r.then( ( downloaded ) =>
       {
-        // debugger;
         _.assert( _.boolIs( downloaded ) );
         _.assert( _.strIs( variant.opener.remotePath ) );
         if( downloaded )
         _.arrayAppendOnceStrictly( o.downloadedContainer, variant.opener.remotePath );
-        else
-        variantSkip( variant );
         return downloaded;
       });
     }
@@ -1330,47 +1338,54 @@ function _modulesDownload_body( o )
 
   /* */
 
-  function variantSkip( variant )
+  function variantLocalMaybe( variant )
   {
-    if( !_.arrayHas( o.downloadedContainer, variant.opener.remotePath ) )
-    _.arrayAppendOnce( o.skipContainer, variant.opener.localPath );
+
+    if( variant.object.isRemote )
+    return null;
+    if( variant.peer && variant.peer.object && variant.peer.object.isRemote )
+    return null;
+
+    variantLocal( variant );
+  }
+
+  /* */
+
+  function variantLocal( variant )
+  {
+
+    if( variant.localPath && _.strHas( variant.localPath, '.module' ) )
+    debugger;
+
+    if( variant.peer )
+    {
+      if( _.arrayHas( o.doneContainer, variant.peer.remotePath ) )
+      return variantDone( variant );
+      if( _.arrayHas( o.doneContainer, variant.peer.localPath ) )
+      return variantDone( variant );
+    }
+
+    if( _.arrayHas( o.doneContainer, variant.opener.remotePath ) )
+    return null;
+    if( _.arrayHas( o.doneContainer, variant.opener.localPath ) )
+    return null;
+
+    _.assert( _.strIs( variant.localPath ) );
+    _.arrayAppendOnce( o.localContainer, variant.localPath );
+
     return null;
   }
 
   /* */
 
-  // function variantIsFresh( variant )
-  // {
-  //
-  //   _.assert( !variant.opener || variant.opener.formed >= 2 );
-  //   _.assert( !variant.opener || _.boolIs( variant.opener.isDownloaded ) );
-  //
-  //   if( o.mode === 'download' )
-  //   {
-  //     // variant.opener.remoteIsDownloadedUpdate();
-  //     let downloaded = !!variant.module;
-  //     if( !downloaded )
-  //     {
-  //       downloaded = variant.opener ? variant.opener.isDownloaded : false;
-  //     }
-  //     return _.Consequence().take( downloaded );
-  //   }
-  //   else if( o.mode === 'update' )
-  //   {
-  //     debugger;
-  //     variant.opener.remoteIsUpToDateUpdate();
-  //     _.assert( !variant.opener || _.boolIs( variant.opener.isUpToDate ) );
-  //     let updated = variant.opener ? variant.opener.isUpToDate : false;
-  //     return _.Consequence().take( updated );
-  //   }
-  //   else if( o.mode === 'agree' )
-  //   {
-  //     debugger;
-  //     _.assert( 0 );
-  //   }
-  //   else _.assert( 0 );
-  //
-  // }
+  function variantDone( variant )
+  {
+    if( variant.localPath )
+    _.arrayAppendOnce( o.doneContainer, variant.localPath );
+    if( variant.remotePath )
+    _.arrayAppendOnce( o.doneContainer, variant.remotePath );
+    return null;
+  }
 
   /* */
 
@@ -1383,8 +1398,9 @@ defaults.dry = 0;
 defaults.modules = null;
 
 defaults.downloadedContainer = null;
-defaults.skipContainer = null;
+defaults.localContainer = null;
 defaults.remoteContainer = null;
+defaults.doneContainer = null;
 
 let _modulesDownload = _.routineFromPreAndBody( _modulesDownload_pre, _modulesDownload_body );
 
@@ -1416,10 +1432,12 @@ function modulesDownload_body( o )
 
   if( !o.downloadedContainer )
   o.downloadedContainer = [];
-  if( !o.skipContainer )
-  o.skipContainer = [];
+  if( !o.localContainer )
+  o.localContainer = [];
   if( !o.remoteContainer )
   o.remoteContainer = [];
+  if( !o.doneContainer )
+  o.doneContainer = [];
 
   if( !o.nodesGroup )
   o.nodesGroup = will.graphGroupMake({ withPeers : 1 });
@@ -1500,7 +1518,7 @@ function modulesDownload_body( o )
     if( !o.downloadedContainer.length && !o.loggingNoChanges )
     return;
 
-    let total = ( o.downloadedContainer.length + o.skipContainer.length );
+    let total = ( o.remoteContainer.length + o.localContainer.length ); debugger;
     logger.rbegin({ verbosity : -2 });
     let phrase = '';
     if( o.mode === 'update' )
@@ -1536,14 +1554,7 @@ var defaults = modulesDownload_body.defaults = _.mapExtend
 defaults.loggingNoChanges = 1;
 defaults.recursive = 1;
 defaults.withStem = 1;
-// defaults.mode = 'download';
-// defaults.dry = 0;
-
 defaults.nodesGroup = null;
-// defaults.modules = null;
-// defaults.downloadedContainer = null;
-// defaults.skipContainer = null;
-// defaults.remoteContainer = null;
 
 delete defaults.withPeers;
 delete defaults.outputFormat;
@@ -1701,12 +1712,9 @@ function modulesUpform( o )
       , `\nLooked at ${variant.opener ? variant.opener.commonPath : variant.relation.path}`
     );
 
-    // logger.log( 'upform', variant.module.commonPath );
-
     visitedSet.add( variant );
 
     let o3 = _.mapOnly( o, variant.module.upform.defaults );
-    debugger;
     return variant.module.upform( o3 );
   }
 
@@ -1731,18 +1739,8 @@ delete defaults.onNode;
 function variantFrom( object )
 {
   let will = this;
-
   _.assert( arguments.length === 1 );
-  _.assert( !!object );
-
-  if( !_.mapIs( object ) )
-  object = { object : object }
-
-  object.will = will;
-
-  let result = _.Will.ModuleVariant.From( object );
-
-  return result;
+  return _.Will.ModuleVariant.VariantFrom( will, object );
 }
 
 //
@@ -1751,8 +1749,7 @@ function variantsFrom( varaints )
 {
   let will = this;
   _.assert( arguments.length === 1 );
-  if( _.arrayLike( varaints ) )
-  return _.filter( varaints, ( variant ) => will.variantFrom( variant ) );
+  return _.Will.ModuleVariant.VariantsFrom( will, varaints );
 }
 
 //
@@ -1760,19 +1757,17 @@ function variantsFrom( varaints )
 function variantOf( object )
 {
   let will = this;
-
   _.assert( arguments.length === 1 );
-  _.assert( !!object );
+  return _.Will.ModuleVariant.VariantOf( will, object );
+}
 
-  if( object instanceof _.Will.ModuleVariant )
-  return object;
+//
 
-  let paths = _.Will.ModuleVariant.PathsOf( object );
-  let variant = _.any( paths, ( path ) => will.variantMap[ path ] ) || null;
-  if( variant )
-  _.assert( _.all( paths, ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
-
-  return variant;
+function variantsOf( varaints )
+{
+  let will = this;
+  _.assert( arguments.length === 1 );
+  return _.Will.ModuleVariant.VariantsOf( will, object );
 }
 
 // --
@@ -1943,8 +1938,6 @@ function graphInfoExportAsTree( modules, o )
   if( o.onUp === null )
   o.onUp = variantUp;
 
-  // let graph = will.graphGroupMake();
-  // let group = graph.nodesGroup();
   let group = will.graphGroupMake();
 
   modules = modules || will.modulesArray;
@@ -2766,6 +2759,7 @@ let Extend =
   variantFrom,
   variantsFrom,
   variantOf,
+  variantsOf,
 
   // graph
 

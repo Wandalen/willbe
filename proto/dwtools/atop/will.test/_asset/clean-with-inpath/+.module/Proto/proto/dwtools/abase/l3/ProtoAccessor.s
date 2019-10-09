@@ -1,4 +1,4 @@
-( function _ProtoAccessor_s_() {
+( function _Accessor_s_() {
 
 'use strict';
 
@@ -110,18 +110,21 @@ function _propertyGetterSetterMake( o )
   _.assert( !!o.object );
   _.assertRoutineOptions( _propertyGetterSetterMake, o );
 
+  if( o.getterSetter )
+  _.assertMapHasOnly( o.getterSetter, { get : null, set : null, copy : null } );
+  o.getterSetter = unfunct( o.getterSetter );
+
   if( o.getterSetter && o.setter === null && o.getterSetter.set )
   o.setter = o.getterSetter.set;
   if( _.boolLike( o.setter ) )
   o.setter = !!o.setter;
+  o.setter = unfunct( o.setter );
 
   if( o.getterSetter && o.getter === null && o.getterSetter.get )
   o.getter = o.getterSetter.get;
   if( _.boolLike( o.getter ) )
   o.getter = !!o.getter;
-
-  if( o.getterSetter )
-  _.assertMapHasOnly( o.getterSetter, { get : null, set : null, copy : null } );
+  o.getter = unfunct( o.getter );
 
   if( o.getter )
   result.get = o.getter;
@@ -193,7 +196,6 @@ function _propertyGetterSetterMake( o )
 
   /* set */
 
-  // if( !result.set && !o.readOnly )
   if( !result.set && o.setter === null )
   result.set = function set( src )
   {
@@ -230,14 +232,26 @@ function _propertyGetterSetterMake( o )
 
   /* validation */
 
-  // _.assert( !result.set || !o.readOnly, () => 'read only, but setter for ' + _.strQuote( o.name ) + ' found in' + _.toStrShort( o.methods ) );
-  // _.assert( !!result.set || !!o.readOnly );
-
   _.assert( !result.set || o.setter !== false, () => 'Field ' + _.strQuote( o.name ) + ' is read only, but setter found in' + _.toStrShort( o.methods ) );
   _.assert( !!result.set || o.setter === false, () => 'Field ' + _.strQuote( o.name ) + ' is not read only, but setter not found in' + _.toStrShort( o.methods ) );
   _.assert( !!result.get );
 
   return result;
+
+  /* */
+
+  function unfunct( functor )
+  {
+    if( _.routineIs( functor ) && functor.rubrics && _.arrayHas( functor.rubrics, 'functor' ) )
+    {
+      if( functor.defaults && functor.defaults.fieldName !== undefined )
+      functor = functor({ fieldName : o.name });
+      else
+      functor = functor();
+    }
+    return functor;
+  }
+
 }
 
 _propertyGetterSetterMake.defaults =
@@ -246,7 +260,6 @@ _propertyGetterSetterMake.defaults =
   object : null,
   methods : null,
   preserveValues : 1,
-  // readOnly : 0,
   readOnlyProduct : 0,
   copy : null,
   setter : null,
@@ -570,7 +583,7 @@ function _declareAct( o )
       'not ' + forbiddenName,
     ].join( '' );
 
-    if( !_.prototypeIsStandard( o.object ) || ( _.prototypeIsStandard( o.object ) && !_.prototypeHasField( o.object, forbiddenName ) ) )
+    if( !_.prototypeIsStandard( o.object ) || !_.prototypeHasField( o.object, forbiddenName ) )
     _.accessor.forbid
     ({
       object : o.object,
@@ -589,87 +602,6 @@ var defaults = _declareAct.defaults = Object.create( AccessorDefaults );
 defaults.name = null;
 defaults.object = null;
 defaults.methods = null;
-
-//
-
-// function _declare( o )
-// {
-//
-//   _.assertRoutineOptions( _declare, arguments );
-//
-//   if( _.arrayLike( o.object ) )
-//   {
-//     _.each( o.object, ( object ) =>
-//     {
-//       let o2 = _.mapExtend( null, o );
-//       o2.object = object;
-//       _declare( o2 );
-//     });
-//     return;
-//   }
-//
-//   if( !o.methods )
-//   o.methods = o.object;
-//
-//   /* verification */
-//
-//   _.assert( !_.primitiveIs( o.object ) );
-//   _.assert( !_.primitiveIs( o.methods ) );
-//
-//   if( o.strict )
-//   {
-//
-//     let has =
-//     {
-//       constructor : 'constructor',
-//     }
-//
-//     _.assertMapOwnAll( o.object, has );
-//     _.accessor.forbid
-//     ({
-//       object : o.object,
-//       names : _.DefaultForbiddenNames,
-//       prime : 0,
-//       strict : 0,
-//     });
-//
-//   }
-//
-//   _.assert( _.objectLikeOrRoutine( o.object ), () => 'Expects object {-object-}, but got ' + _.toStrShort( o.object ) );
-//   _.assert( _.objectIs( o.names ), () => 'Expects object {-names-}, but got ' + _.toStrShort( o.names ) );
-//
-//   /* */
-//
-//   for( let n in o.names )
-//   {
-//
-//     let o2 = o.names[ n ];
-//
-//     _.assert( _.strIs( o2 ) || _.objectIs( o2 ) );
-//
-//     if( _.strIs( o2 ) )
-//     {
-//       _.assert( o2 === n, 'map for forbid should have same key and value' );
-//       o2 = _.mapExtend( null, o );
-//     }
-//     else
-//     {
-//       _.assertMapHasOnly( o2, _.accessor.AccessorDefaults );
-//       o2 = _.mapExtend( null, o, o2 );
-//       _.assert( !!o2.object );
-//     }
-//
-//     o2.name = n;
-//     delete o2.names;
-//
-//     _.accessor._declareAct( o2 );
-//
-//   }
-//
-// }
-//
-// var defaults = _declare.defaults = Object.create( _declareAct.defaults );
-// defaults.names = null;
 
 //
 
@@ -734,8 +666,6 @@ defaults.methods = null;
 function declare_body( o )
 {
 
-  // o = _declare_pre( declare, arguments );
-  // _.assertRoutineOptions( declare_body, arguments );
   _.assertRoutineOptions( declare_body, arguments );
 
   if( _.arrayLike( o.object ) )
@@ -786,7 +716,19 @@ function declare_body( o )
 
     let o2 = o.names[ n ];
 
-    _.assert( _.strIs( o2 ) || _.objectIs( o2 ) );
+    if( _.routineIs( o2 ) && o2.rubrics && _.arrayHas( o2.rubrics, 'functor' ) )
+    {
+      if( o2.defaults && o2.defaults.fieldName !== undefined )
+      o2 = o2({ fieldName : n });
+      else
+      o2 = o2();
+    }
+
+    _.assert
+    (
+        _.strIs( o2 ) || _.objectIs( o2 )
+      , () => `Expects accessor definition, but got ${ _.strType( o2 ) } for accessor ${ n }`
+    );
 
     if( _.strIs( o2 ) )
     {
@@ -807,10 +749,8 @@ function declare_body( o )
 
   }
 
-  // return _declare( o );
 }
 
-// declare_body.defaults = Object.create( _declare.defaults );
 var defaults = declare_body.defaults = Object.create( _declareAct.defaults );
 defaults.names = null;
 
@@ -1091,10 +1031,8 @@ function ownForbid( object, name )
  * @memberof module:Tools/base/Proto.wTools.accessor
  */
 
-// function readOnly_body( object, names )
 function readOnly_body( o )
 {
-  // let o = _declare_pre( readOnly, arguments );
   _.assertRoutineOptions( readOnly_body, arguments );
   _.assert( o.readOnly );
   return _.accessor.declare.body( o );
@@ -1773,6 +1711,127 @@ toElementGet_functor.defaults =
 
 //
 
+function toStructureGet_functor( o )
+{
+
+  // _.assert( 0, 'not tested' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.routineOptions( toStructureGet_functor, o );
+  _.assert( _.strDefined( o.fieldName ) );
+
+  let fieldName = o.fieldName;
+  let methods = Object.create( null );
+  let symbol = Symbol.for( fieldName );
+  // let helper;
+
+  return function toStructure()
+  {
+    let helper = this[ symbol ];
+    if( !helper )
+    {
+      helper = this[ symbol ] = proxyMake( this );
+    }
+    return helper;
+  }
+
+  /* */
+
+  function proxyMake( original )
+  {
+    let handlers =
+    {
+      get( original, fieldName, proxy )
+      {
+        return original[ fieldName ];
+      },
+      set( original, fieldName, value, proxy )
+      {
+        let method = methods[ fieldName ];
+        if( method )
+        return end();
+
+        let putName1 = '_' + fieldName + 'Put';
+        if( original[ putName1 ] )
+        {
+          method = methods[ fieldName ] = function put( value )
+          {
+            return this[ putName1 ]( value );
+          }
+          return end();
+        }
+
+        let putName2 = fieldName + 'Put';
+        if( original[ putName2 ] )
+        {
+          method = methods[ fieldName ] = function put( value )
+          {
+            return this[ putName2 ]( value );
+          }
+          return end();
+        }
+
+        debugger;
+
+        let symbol = Symbol.for( fieldName );
+        if( Object.hasOwnProperty.call( original, symbol ) )
+        {
+          method = methods[ fieldName ] = function put( value )
+          {
+            this[ symbol ] = value;
+          }
+          return end();
+        }
+
+        method = methods[ fieldName ] = function put( value )
+        {
+          this[ fieldName ] = value;
+        }
+        return end();
+
+        function end()
+        {
+          method.call( original, value );
+          return true;
+        }
+      },
+    };
+
+    let proxy = new Proxy( original, handlers );
+
+    // Object.defineProperty( proxy, 'original',
+    // {
+    //   original,
+    //   enumerable : false,
+    //   writable : false,
+    //   configurable : false,
+    // });
+
+    return proxy;
+  }
+
+}
+
+toStructureGet_functor.defaults =
+{
+  fieldName : null,
+}
+
+toStructureGet_functor.rubrics = [ 'accessor', 'getter', 'functor' ];
+
+// let GetterFunctor = _.complex
+// ({
+//   functor : null,
+//   '__call__' : _.define.OnCall( 'functor' ),
+// });
+//
+// let toStructureGet_functor = _.complex.instance( GetterFunctor );
+// toStructureGet_functor.functor = toStructureGet_functor;
+// _.assert( _.prototypeHasPrototype( toStructureGet_functor, GetterFunctor ) );
+// _.assert( _.routineIs( toStructureGet_functor ) );
+// _.assert( _.mapKeys( toStructureGet_functor ).length === 1 );
+
+//
+
 let toElementSuite = suiteMakerFrom_functor( toElementGet_functor, toElementSet_functor );
 
 // function toElement( o )
@@ -1929,7 +1988,8 @@ let aliasGetter_functor = _.routineFromPreAndBody( alias_pre, aliasGet_functor_b
 
 //
 
-let aliasSuite = suiteMakerFrom_functor( aliasGet_functor_body, aliasSet_functor );
+let aliasSuite = suiteMakerFrom_functor( aliasGetter_functor, aliasSet_functor );
+// let aliasSuite = suiteMakerFrom_functor( aliasGet_functor_body, aliasSet_functor );
 
 // --
 // fields
@@ -2006,6 +2066,7 @@ let Getter =
 
   alias : aliasGet_functor_body,
   toElement : toElementGet_functor,
+  toStructure : toStructureGet_functor,
 
 }
 

@@ -1,12 +1,9 @@
-( function _ProtoLike_s_() {
+( function _Like_s_() {
 
 'use strict';
 
 if( typeof module !== 'undefined' )
 {
-
-  // debugger;
-  // require( './Proto.s' );
 
 }
 
@@ -16,9 +13,6 @@ var _ObjectHasOwnProperty = Object.hasOwnProperty;
 var _nameFielded = _.nameFielded;
 
 _.assert( !_.construction )
-
-// if( _.construction )
-// return;
 
 //
 

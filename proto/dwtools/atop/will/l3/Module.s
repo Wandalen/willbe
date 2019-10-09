@@ -34,6 +34,9 @@ function finit()
   if( will.verosity >= 5 )
   logger.log( module.qualifiedName, 'finit.begin' );
 
+  if( module.id === 336 )
+  debugger;
+
   _.assert( !module.finitedIs() );
 
   try
@@ -331,6 +334,7 @@ function copy( o )
     inPath : null,
     outPath : null,
     localPath : null,
+    downloadPath : null,
     remotePath : null,
   }
 
@@ -596,6 +600,16 @@ function predefinedForm()
     importableFromIn : 0,
     importableFromOut : 0,
   });
+
+  path
+  ({
+    name : 'module.download',
+    path : null,
+    writable : 1,
+    exportable : 1,
+    importableFromIn : 1,
+    importableFromOut : 0,
+  })
 
   path
   ({
@@ -2879,8 +2893,8 @@ function versionsVerify()
 
   modules.forEach( ( r ) =>
   {
-    r.opener.preform();
-    r.opener.remoteForm();
+    r.opener.preform(); debugger;
+    // r.opener.remoteForm();
 
     let verified = onEach( r );
     if( verified )
@@ -2920,7 +2934,7 @@ function versionsVerify()
     let remoteProvider = fileProvider.providerForPath( r.opener.remotePath );
     let remoteParsed = remoteProvider.pathParse( r.opener.remotePath );
     let remoteVersion = remoteParsed.hash || 'master';
-    let localVersion = remoteProvider.versionLocalRetrive( r.opener.localPath );
+    let localVersion = remoteProvider.versionLocalRetrive( r.opener.downloadPath );
 
     let onSameVersion = remoteVersion === localVersion;
 
@@ -3277,7 +3291,7 @@ function _remoteChanged()
   {
     let remoteProvider = fileProvider.providerForPath( module.remotePath );
     _.assert( !!remoteProvider.isVcs );
-    let version = remoteProvider.versionLocalRetrive( module.localPath );
+    let version = remoteProvider.versionLocalRetrive( module.downloadPath );
     if( version )
     {
       let remotePath = _.uri.parseConsecutive( module.remotePath );
@@ -3658,7 +3672,7 @@ function pathsRebase( o )
   if( inPathResource.path === null )
   inPathResource.path = '.';
 
-  let localPathResource = module.resourceObtain( 'path', 'local' );
+  // let localPathResource = module.resourceObtain( 'path', 'local' );
   // if( localPathResource.path === null )
   // localPathResource.path = '.'; /* xxx : warkaround */
 
@@ -3679,8 +3693,10 @@ function pathsRebase( o )
     continue;
     if( p === 'module.dir' )
     continue;
-    if( p === 'local' )
+    if( p === 'module.download' )
     continue;
+    // if( p === 'local' )
+    // continue;
 
     resource.pathsRebase
     ({
@@ -3734,66 +3750,6 @@ pathsRebase.defaults =
   inPath : null,
 }
 
-// //
-//
-// function _filePathChange( willfilesPath )
-// {
-//
-//   if( !this.will )
-//   return willfilesPath;
-//
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   if( module.willfilesPath )
-//   will.modulePathUnregister( module );
-//
-//   _.assert( arguments.length === 1 );
-//
-//   let r = Parent.prototype._filePathChange.call( module, willfilesPath );
-//
-//   _.assert( _.boolIs( r.isIdentical ) );
-//
-//   module._dirPathAssign( r.dirPath );
-//
-//   if( r.willfilesPath !== null )
-//   {
-//     module._commonPathAssign( r.commonPath );
-//     if( module.isRemote === false )
-//     module._localPathAssign( r.commonPath );
-//     _.assert( module.commonPath === r.commonPath );
-//   }
-//
-//   if( !r.isIdentical )
-//   module.userArray.forEach( ( opener ) =>
-//   {
-//     if( opener instanceof _.Will.ModuleOpener )
-//     opener.
-//   });
-//
-//   module._peerChanged();
-//
-//   if( module.isPreformed() )
-//   if( !r.isIdentical )
-//   // if( module.willfilesPath )
-//   if( module.commonPath )
-//   {
-//     will.modulePathRegister( module );
-//     will.variantFrom( module );
-//   }
-//
-//   _.assert
-//   (
-//     !module.stager || !module.stager.stageStatePerformed( 'preformed' ) || _.strDefined( module.commonPath ),
-//     `Each module requires commpnPath, but ${module.absoluteName} does not have`
-//   );
-//
-//   return r.willfilesPath;
-// }
-
 //
 
 function _filePathChanged1( o )
@@ -3821,12 +3777,9 @@ function _filePathChanged2( o )
 {
   let module = this;
 
-  // o = module._filePathChange( o );
-
   if( !this.will )
   return willfilesPath;
 
-  // let module = this;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -3851,19 +3804,10 @@ function _filePathChanged2( o )
     _.assert( module.commonPath === o.commonPath );
   }
 
-  // if( !o.isIdentical )
-  // module.userArray.forEach( ( opener ) =>
-  // {
-  //   // debugger;
-  //   if( opener instanceof _.Will.ModuleOpener )
-  //   opener._filePathChanged2({ willfilesPath : o.willfilesPath });
-  // });
-
   module._peerChanged();
 
   if( module.isPreformed() )
   if( !o.isIdentical )
-  // if( module.willfilesPath )
   if( module.commonPath )
   {
     module._pathRegister();
@@ -3990,9 +3934,10 @@ function predefinedPathAssign_functor( fieldName, resourceName, relativizing )
 
     filePath = _.entityMake( filePath );
 
+    let was = module[ fieldName ];
     let isIdentical = false;
     if( fieldName === 'willfilesPath' )
-    isIdentical = module[ fieldName ] === filePath || _.entityIdentical( module[ fieldName ], filePath );
+    isIdentical = was === filePath || _.entityIdentical( _.path.simplify( was ), _.path.simplify( filePath ) );
 
     if( !module.pathResourceMap[ resourceName ] )
     {
@@ -4059,8 +4004,10 @@ function predefinedPathSet_functor( fieldName, resourceName )
   return function predefinedPathSet( filePath )
   {
     let module = this;
-    // let isIdentical = module[ fieldName ] === filePath || _.entityIdentical( module[ fieldName ], filePath );
+    // let was = module[ fieldName ];
+    // let isIdentical = was === filePath || _.entityIdentical( _.path.simplify( was ), _.path.simplify( filePath ) );
 
+    _.assert( !!module[ assignMethodName ] );
     module[ assignMethodName ]( filePath );
 
     // if( !isIdentical )
@@ -4087,7 +4034,8 @@ function wilfilesPathSet_functor( fieldName, resourceName )
   return function wilfilesPathSet( filePath )
   {
     let module = this;
-    let isIdentical = module[ fieldName ] === filePath || _.entityIdentical( module[ fieldName ], filePath );
+    let was = module[ fieldName ];
+    let isIdentical = was === filePath || _.entityIdentical( _.path.simplify( was ), _.path.simplify( filePath ) );
 
     module[ assignMethodName ]( filePath );
 
@@ -4115,7 +4063,8 @@ function remotePathSet_functor( fieldName, resourceName )
   return function remotePathSet( filePath )
   {
     let module = this;
-    let isIdentical = module[ fieldName ] === filePath || _.entityIdentical( module[ fieldName ], filePath );
+    let was = module[ fieldName ];
+    let isIdentical = was === filePath || _.entityIdentical( _.path.simplify( was ), _.path.simplify( filePath ) );
 
     module[ assignMethodName ]( filePath );
 
@@ -4137,6 +4086,7 @@ let willfilesPathGet = predefinedPathGet_functor( 'willfilesPath', 'module.willf
 let dirPathGet = predefinedPathGet_functor( 'dirPath', 'module.dir' );
 let commonPathGet = predefinedPathGet_functor( 'commonPath', 'module.common' );
 let localPathGet = predefinedPathGet_functor( 'localPath', 'local', 1 );
+let downloadPathGet = predefinedPathGet_functor( 'downloadPath', 'module.download', 1 );
 let remotePathGet = predefinedPathGet_functor( 'remotePath', 'remote' );
 let currentRemotePathGet = predefinedPathGet_functor( 'currentRemotePath', 'current.remote' );
 let willPathGet = predefinedPathGet_functor( 'willPath', 'will' );
@@ -4148,6 +4098,7 @@ let decoratedInPathGet = decoratedPathGet_functor( 'inPath' );
 let decoratedOutPathGet = decoratedPathGet_functor( 'outPath' );
 let decoratedDirPathGet = decoratedPathGet_functor( 'dirPath' );
 let decoratedCommonPathGet = decoratedPathGet_functor( 'commonPath' );
+let decoratedDownloadPathGet = decoratedPathGet_functor( 'downloadPath' );
 let decoratedLocalPathGet = decoratedPathGet_functor( 'localPath' );
 let decoratedRemotePathGet = decoratedPathGet_functor( 'remotePath' );
 let decoratedCurrentRemotePathGet = decoratedPathGet_functor( 'currentRemotePath' );
@@ -4161,6 +4112,7 @@ let _willfilesPathAssign = predefinedPathAssign_functor( 'willfilesPath', 'modul
 let _dirPathAssign = predefinedPathAssign_functor( 'dirPath', 'module.dir', 0 );
 let _commonPathAssign = predefinedPathAssign_functor( 'commonPath', 'module.common', 0 );
 let _localPathAssign = predefinedPathAssign_functor( 'localPath', 'local', 0 );
+let _downloadPathAssign = predefinedPathAssign_functor( 'downloadPath', 'module.download', 0 );
 let _remotePathAssign = predefinedPathAssign_functor( 'remotePath', 'remote', 0 );
 let _originalWillfilesPathAssign = predefinedPathAssign_functor( 'originalWillfilesPath', 'module.original.willfiles', 0 );
 let _peerWillfilesPathAssign = predefinedPathAssign_functor( 'peerWillfilesPath', 'module.peer.willfiles', 0 );
@@ -4169,6 +4121,7 @@ let inPathSet = predefinedPathSet_functor( 'inPath', 'in' );
 let outPathSet = predefinedPathSet_functor( 'outPath', 'out' );
 let willfilesPathSet = wilfilesPathSet_functor( 'willfilesPath', 'module.willfiles' );
 let localPathSet = predefinedPathSet_functor( 'localPath', 'local' );
+let downloadPathSet = predefinedPathSet_functor( 'downloadPath', 'module.download' );
 let remotePathSet = remotePathSet_functor( 'remotePath', 'remote' );
 
 // --
@@ -5057,6 +5010,7 @@ function optionsForOpenerExport()
 
     willfilesPath : null,
     localPath : null,
+    downloadPath : null,
     remotePath : null,
 
     isRemote : null,
@@ -5095,6 +5049,7 @@ function infoExport( o )
     fields.willfilesPath = module.willfilesPath;
     fields.remotePath = module.remotePath;
     fields.localPath = module.localPath;
+    fields.downloadPath = module.downloadPath;
 
     fields = module.pathsRelative( module.dirPath, fields );
 
@@ -5313,6 +5268,7 @@ function structureExportForModuleExport( o )
   o2.willfilesArray = [];
   o2.isOut = true;
   o2.peerModule = module;
+  o2.isAuto = 1;
 
   let opener2 = will.openerMake({ opener : o2, searching : 'exact' });
   _.assert( opener2.isOut === true );
@@ -5324,7 +5280,8 @@ function structureExportForModuleExport( o )
 
   opener2.rootModule = module.rootModule || module;
   opener2.original = module;
-  opener2.remoteForm();
+  opener2.preform();
+  // opener2.remoteForm();
 
   /* */
 
@@ -5342,7 +5299,6 @@ function structureExportForModuleExport( o )
   module2.pathsRebase({ inPath : module.outPath });
 
   _.assert( module2.dirPath === path.detrail( module.outPath ) );
-  // _.assert( module2.dirPath === module2.localPath );
   _.assert( module2.commonPath === module2.localPath );
   _.assert( module2.original === module );
   _.assert( module2.rootModule === module.rootModule );
@@ -5356,7 +5312,6 @@ function structureExportForModuleExport( o )
   _.assert( opener2.superRelation === null );
   _.assert( opener2.willfilesArray.length === 0 );
 
-  // module2.stager.stageStateSkipping( 'picked', 1 );
   module2.stager.stageStateSkipping( 'opened', 1 );
   module2.stager.stageStatePausing( 'opened', 0 );
   module2.stager.tick();
@@ -5377,9 +5332,9 @@ function structureExportForModuleExport( o )
   _.assert( !rootModuleStructure.path || !rootModuleStructure.path[ 'current.remote' ] );
   _.assert( !rootModuleStructure.path || !rootModuleStructure.path[ 'will' ] );
 
-  opener2.openedModule = null;
-  opener2.finit();
-  _.assert( !module2.finitedIs() )
+  // opener2.openedModule = null; // yyy
+  // opener2.finit();
+  // _.assert( !module2.finitedIs() )
 
   will.openersAdoptModule( module2 );
 
@@ -5597,16 +5552,8 @@ function resourceImport( o )
     let oldResource = module.resourceGet( o.srcResource.KindName, o.srcResource.name );
     if( oldResource )
     {
-      // debugger;
       let extra = oldResource.extraExport();
-      // debugger;
       _.mapExtend( resourceData, extra );
-
-      // resourceData.writable = oldResource.writable;
-      // resourceData.exportable = oldResource.exportable;
-      // resourceData.importableFromIn = oldResource.importableFromIn;
-      // resourceData.importableFromOut = oldResource.importableFromOut;
-
       oldResource.finit();
     }
   }
@@ -5615,8 +5562,6 @@ function resourceImport( o )
 
   resourceData.module = module;
   resourceData.name = module.resourceNameAllocate( o.srcResource.KindName, o.srcResource.name );
-
-  // logger.log( ` . importing ${o.srcResource.qualifiedName} as ${o.srcResource.KindName}::${resourceData.name}` ); debugger;
 
   let resource = new o.srcResource.Self( resourceData );
   resource.form1();
@@ -5803,10 +5748,10 @@ let Composes =
   inPath : null,
   outPath : null,
   localPath : null,
+  downloadPath : null,
   remotePath : null,
 
   isRemote : null,
-  // isDownloaded : null,
   isUpToDate : null,
   isOut : null,
 
@@ -5941,6 +5886,7 @@ let Accessors =
   inPath : { getter : inPathGet, setter : inPathSet },
   outPath : { getter : outPathGet, setter : outPathSet },
   localPath : { getter : localPathGet, setter : localPathSet },
+  downloadPath : { getter : downloadPathGet, setter : downloadPathSet },
   remotePath : { getter : remotePathGet, setter : remotePathSet },
   dirPath : { getter : dirPathGet, readOnly : 1 },
   commonPath : { getter : commonPathGet, readOnly : 1 },
@@ -5953,6 +5899,7 @@ let Accessors =
   decoratedInPath : { getter : decoratedInPathGet, readOnly : 1, },
   decoratedOutPath : { getter : decoratedOutPathGet, readOnly : 1, },
   decoratedLocalPath : { getter : decoratedLocalPathGet, readOnly : 1, },
+  decoratedDownloadPath : { getter : decoratedDownloadPathGet, readOnly : 1, },
   decoratedRemotePath : { getter : decoratedRemotePathGet, readOnly : 1, },
   decoratedDirPath : { getter : decoratedDirPathGet, readOnly : 1 },
   decoratedCommonPath : { getter : decoratedCommonPathGet, readOnly : 1 },
@@ -6139,6 +6086,7 @@ let Extend =
   _dirPathAssign,
   _commonPathAssign,
   _localPathAssign,
+  _downloadPathAssign,
   _remotePathAssign,
   _originalWillfilesPathAssign,
   _peerWillfilesPathAssign,

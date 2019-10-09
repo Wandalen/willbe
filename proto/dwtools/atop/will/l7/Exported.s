@@ -283,7 +283,6 @@ function _performPrepare2()
     if( !submodule.opener || !submodule.opener.isOpened() || !submodule.opener.isValid() )
     if( submodule.isMandatory() )
     {
-      debugger;
       if( submodule.opener && submodule.opener.error )
       logger.log( submodule.opener.error );
       throw _.errBrief( 'Exporting is impossible because ' + submodule.decoratedAbsoluteName + ' is not downloaded or not valid!' );

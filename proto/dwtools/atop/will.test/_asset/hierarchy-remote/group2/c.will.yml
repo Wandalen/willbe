@@ -6,7 +6,7 @@ about :
 submodule :
 
   a0 : ../group1/group10/a0
-  UriBasic : git+https:///github.com/Wandalen/wUriBasic.git/
+  UriBasic : git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out
 
 path :
 
