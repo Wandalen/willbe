@@ -1584,6 +1584,12 @@ function sharedFieldPut_functor( fieldName )
   return function put( val )
   {
     let opener = this;
+
+    // if( fieldName === 'commonPath' )
+    // if( _.strEnds( val, '/pathsResolveOutFileOfExports' ) )
+    // if( val && !_.path.isTrailed( val ) )
+    // debugger;
+
     opener[ symbol ] = val;
     return val;
   }
