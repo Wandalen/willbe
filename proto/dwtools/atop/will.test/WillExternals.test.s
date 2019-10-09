@@ -7087,13 +7087,14 @@ function exportCourruptedOutfileSyntax( test )
     test.identical( files, [ '.', './sub.out.will.yml' ] );
 
     var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    outfile = outfile.module[ 'sub.out' ]
     var exported = _.mapKeys( _.select( outfile, 'exported/*' ) );
     var exp = [ 'export.debug' ];
     test.setsAreIdentical( exported, exp );
 
     test.identical( _.strCount( got.output, '. Read 2 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, '! Failed to read .' ), 1 );
-    test.identical( _.strCount( got.output, 'Failed to read willfile' ), 1 );
+    test.identical( _.strCount( got.output, '! Failed to open .' ), 2 );
+    test.identical( _.strCount( got.output, 'Failed to open willfile' ), 1 );
     test.identical( _.strCount( got.output, 'Failed to format "string" by encoder yaml-string->structure' ), 1 );
     test.identical( _.strCount( got.output, /Exported .*module::sub \/ build::export.debug.*/ ), 1 );
 
