@@ -2734,7 +2734,7 @@ function listSingleModule( test )
     test.is( !_.strHas( got.output, `out : out` ) );
     test.is( !_.strHas( got.output, `out.debug : ./out/debug` ) );
     test.is( !_.strHas( got.output, `out.release : ./out/release` ) );
-    test.identical( _.strCount( got.output, ':' ), 10 );
+    test.identical( _.strCount( got.output, ':' ), 11 );
 
     return null;
   })
