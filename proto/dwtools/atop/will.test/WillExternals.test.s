@@ -5995,20 +5995,26 @@ function exportMultiple( test )
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js' ] );
     test.identical( got.exitCode, 0 );
 
-    test.is( _.strHas( got.output, / Exported .*exported::export.debug.* with 2 file\(s\) in/ ) );
     test.is( _.strHas( got.output, 'Read 2 willfile(s) in' ) );
-    test.is( _.strHas( got.output, /Exported .*module::submodule \/ build::export.debug.*/ ) );
+    test.is( _.strHas( got.output, /Exported module::submodule \/ build::export.debug with 2 file\(s\) in .*/ ) );
     test.is( _.strHas( got.output, 'Write out archive' ) );
     test.is( _.strHas( got.output, 'Write out willfile' ) );
     test.is( _.strHas( got.output, 'submodule.debug.out.tgs' ) );
     test.is( _.strHas( got.output, 'out/submodule.out.will.yml' ) );
 
     var outfile = _.fileProvider.fileConfigRead( outWillPath );
+
+    outfile = outfile.module[ 'submodule.out' ];
+
+    debugger
     var exported =
     {
       'export.debug' :
       {
         version : '0.0.1',
+        recursive : 0,
+        withIntegrated : 2,
+        tar : 1,
         criterion :
         {
           default : 1,
@@ -6028,7 +6034,8 @@ function exportMultiple( test )
 
     var exportedReflector =
     {
-      src : { filePath : { '.' : '' }, prefixPath : 'debug' },
+      // src : { filePath : { '.' : '' }, prefixPath : 'debug' },
+      src : { filePath : { '**' : '' }, prefixPath : 'debug' },
       mandatory : 1,
       criterion :
       {
@@ -6072,7 +6079,16 @@ function exportMultiple( test )
       },
       "module.original.willfiles" :
       {
-        "path" : [ "../.im.will.yml", "../.ex.will.yml" ],
+        "path" : [ "../.ex.will.yml", "../.im.will.yml" ],
+        "criterion" : { "predefined" : 1 }
+      },
+      "module.peer.willfiles" :
+      {
+        "path" : [ "../.ex.will.yml", "../.im.will.yml" ],
+        "criterion" : { "predefined" : 1 }
+      },
+      "module.download" :
+      {
         "criterion" : { "predefined" : 1 }
       },
       "module.common" :
@@ -6082,6 +6098,7 @@ function exportMultiple( test )
       },
       "local" :
       {
+        "path" : "submodule.out", //Vova: qqq why remote property doesn't have path like local?
         "criterion" : { "predefined" : 1 }
       },
       "remote" :
@@ -6175,9 +6192,8 @@ function exportMultiple( test )
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
 
-    test.is( _.strHas( got.output, / Exported .*exported::export\..* with 2 file\(s\) in/ ) );
-    test.is( _.strHas( got.output, 'Read 2 willfile(s) in' ) );
-    test.is( _.strHas( got.output, /Exported .*module::submodule \/ build::export\..* in/ ) );
+    test.is( _.strHas( got.output, 'Read 3 willfile(s) in' ) );
+    test.is( _.strHas( got.output, /Exported module::submodule \/ build::export. with 2 file\(s\) in .*/ ) );
     test.is( _.strHas( got.output, 'Write out archive' ) );
     test.is( _.strHas( got.output, 'Write out willfile' ) );
     test.is( _.strHas( got.output, 'submodule.out.tgs' ) );
@@ -6189,11 +6205,15 @@ function exportMultiple( test )
     test.is( !_.strHas( outfileData, _.path.nativize( _.path.join( routinePath, '../..' ) ) ) );
 
     var outfile = _.fileProvider.fileConfigRead( outWillPath );
+    outfile = outfile.module[ 'submodule.out' ]
     var exported =
     {
       'export.debug' :
       {
         version : '0.0.1',
+        recursive : 0,
+        withIntegrated : 2,
+        tar : 1,
         criterion :
         {
           default : 1,
@@ -6210,6 +6230,9 @@ function exportMultiple( test )
       'export.' :
       {
         version : '0.0.1',
+        recursive : 0,
+        withIntegrated : 2,
+        tar : 1,
         criterion :
         {
           default : 1,
@@ -6231,6 +6254,7 @@ function exportMultiple( test )
       'mandatory' : 1,
       'src' :
       {
+        'filePath' : { '**' : '' },
         'prefixPath' : 'debug',
       },
       criterion :
@@ -6249,7 +6273,8 @@ function exportMultiple( test )
       'mandatory' : 1,
       src :
       {
-        'filePath' : { '.' : '' },
+        // 'filePath' : { '.' : '' },
+        'filePath' : { '**' : '' },
         'prefixPath' : 'release'
       },
       criterion :
@@ -6316,7 +6341,16 @@ function exportMultiple( test )
       },
       "module.original.willfiles" :
       {
-        "path" : [ "../.im.will.yml", "../.ex.will.yml" ],
+        "path" : [ "../.ex.will.yml", "../.im.will.yml" ],
+        "criterion" : { "predefined" : 1 }
+      },
+      "module.peer.willfiles" :
+      {
+        "path" : [ "../.ex.will.yml", "../.im.will.yml" ],
+        "criterion" : { "predefined" : 1 }
+      },
+      "module.download" :
+      {
         "criterion" : { "predefined" : 1 }
       },
       "module.common" :
@@ -6326,6 +6360,7 @@ function exportMultiple( test )
       },
       "local" :
       {
+        "path" : "submodule.out", //Vova: qqq why remote property doesn't have path like local?
         "criterion" : { "predefined" : 1 }
       },
       "remote" :
