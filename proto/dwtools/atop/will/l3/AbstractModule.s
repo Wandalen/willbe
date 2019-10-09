@@ -300,14 +300,19 @@ function CommonPathFor( willfilesPath )
 
   // common = common.replace( /(\.)?((im|ex)\.)?(will\.)(out\.)?(\w+)?$/, '' );
   // debugger;
-  common = common.replace( /((\.|\/|^)(im|ex))?((\.|\/|^)will)(\.out)?(\.\w+)?$/, '' );
-  // debugger;
 
-  if( _.strEnds( common, [ '/im', '/ex' ] ) )
-  {
-    common = _.uri.trail( _.uri.dir( common ) );
-    _.assert( _.uri.isTrailed( common ) );
-  }
+  let common2 = common.replace( /((\.|\/|^)(im|ex))?((\.|\/|^)will)(\.out)?(\.\w+)?$/, '' );
+  let removed = _.strRemoveBegin( common, common2 );
+  // debugger;
+  if( removed[ 0 ] === '/' )
+  common2 = common2 + '/';
+  common = common2;
+
+  // if( _.strEnds( common, [ '/im', '/ex' ] ) )
+  // {
+  //   common = _.uri.trail( _.uri.dir( common ) );
+  //   _.assert( _.uri.isTrailed( common ) );
+  // }
 
   return common;
 }
@@ -420,7 +425,6 @@ function _filePathChanged2( o )
   if( !o )
   {
     o = Object.create( null );
-    // o.willfilesPath = willfilesPath;
     o.willfilesPath = module.willfilesPath;
     o.isIdentical = false;
   }
@@ -458,6 +462,9 @@ function _filePathChanged2( o )
 
   if( o.isIdentical === undefined || o.isIdentical === null )
   o.isIdentical = o.willfilesPath === this.willfilesPath || _.entityIdentical( o.willfilesPath, this.willfilesPath );
+
+  // if( o.dirPath && _.strHas( o.dirPath, '/sub' ) )
+  // debugger;
 
   if( o.willfilesPath && o.willfilesPath.length )
   o.commonPath = module.CommonPathFor( o.willfilesPath );

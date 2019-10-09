@@ -1030,6 +1030,7 @@ function _remoteForm()
   let logger = will.logger;
 
   _.assert( opener.formed >= 1 );
+
   // logger.log( '_remoteForm', opener.absoluteName ); debugger;
 
   opener.remoteIsUpdate();
