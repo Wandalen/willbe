@@ -3726,19 +3726,28 @@ function cleanBroken2( test )
 
   /* */
 
-  shell({ execPath : '.export' })
+  shell({ execPath : '.export', throwingExitCode : 0 })
   .then( ( got ) =>
   {
     test.case = '.export';
 
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
+    test.wil = 'update should throw error if submodule is not downloaded but download path exists'
+
+    test.notIdentical( got.exitCode, 0 );
+    test.is( !_.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
+    test.is( _.strHas( got.output, /Module module::submodules \/ opener::PathBasic is not downloaded, but file at .*/ ) );
+
+    // var files = self.find( outDebugPath );
+    // test.gt( files.length, 9 );
+
+    // var files = _.fileProvider.dirRead( outPath );
+    // test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
 
     var files = self.find( outDebugPath );
-    test.gt( files.length, 9 );
+    test.identical( files.length, 2 );
 
     var files = _.fileProvider.dirRead( outPath );
-    test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
+    test.identical( files, [ 'debug' ] );
 
     return null;
   })
