@@ -615,9 +615,9 @@ function predefinedForm()
   ({
     name : 'local',
     path : null,
-    writable : 1,
+    writable : 0, /* yyy */
     exportable : 1,
-    importableFromIn : 1,
+    importableFromIn : 0, /* yyy */
     importableFromOut : 0,
   })
 
@@ -4004,8 +4004,14 @@ function predefinedPathSet_functor( fieldName, resourceName )
   return function predefinedPathSet( filePath )
   {
     let module = this;
+
     // let was = module[ fieldName ];
     // let isIdentical = was === filePath || _.entityIdentical( _.path.simplify( was ), _.path.simplify( filePath ) );
+
+    // if( fieldName === 'localPath' )
+    if( filePath )
+    if( _.strEnds( filePath, '/pathsResolveOutFileOfExports' ) )
+    debugger;
 
     _.assert( !!module[ assignMethodName ] );
     module[ assignMethodName ]( filePath );
