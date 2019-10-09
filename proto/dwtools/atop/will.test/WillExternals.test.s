@@ -1634,12 +1634,12 @@ function verbositySet( test )
     test.is( _.strHas( got.output, '.imply verbosity:3 ; .build' ) );
     test.is( _.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
     test.is( _.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
-    test.is( _.strHas( got.output, 'Failed to read submodule::Tools' ) ); debugger;
-    test.is( _.strHas( got.output, 'Failed to read submodule::PathBasic' ) );
+    test.is( _.strHas( got.output, 'Failed to read relation::Tools' ) ); debugger;
+    test.is( _.strHas( got.output, 'Failed to read relation::PathBasic' ) );
     test.is( _.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
-    test.is( _.strHas( got.output, / \+ 2\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.is( _.strHas( got.output, / \+ 2\/3 submodule\(s\) were downloaded in/ ) );
     test.is( _.strHas( got.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
     test.is( _.strHas( got.output, ' + reflector::reflect.proto.debug reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, ' + reflector::reflect.submodules reflected' ) );
@@ -1661,12 +1661,12 @@ function verbositySet( test )
     test.is( _.strHas( got.output, '.imply verbosity:2 ; .build' ) );
     test.is( !_.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
     test.is( !_.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
-    test.is( !_.strHas( got.output, 'Failed to read submodule::Tools' ) );
-    test.is( !_.strHas( got.output, 'Failed to read submodule::PathBasic' ) );
+    test.is( !_.strHas( got.output, 'Failed to read relation::Tools' ) );
+    test.is( !_.strHas( got.output, 'Failed to read relation::PathBasic' ) );
     test.is( _.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
-    test.is( _.strHas( got.output, / \+ 2\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.is( _.strHas( got.output, / \+ 2\/3 submodule\(s\) were downloaded in/ ) );
     test.is( _.strHas( got.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
     test.is( _.strHas( got.output, ' + reflector::reflect.proto.debug reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, ' + reflector::reflect.submodules reflected' ) );
@@ -1688,12 +1688,12 @@ function verbositySet( test )
     test.is( _.strHas( got.output, '.imply verbosity:1 ; .build' ) );
     test.is( !_.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
     test.is( !_.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
-    test.is( !_.strHas( got.output, ' ! Failed to read submodule::Tools' ) );
-    test.is( !_.strHas( got.output, ' ! Failed to read submodule::PathBasic' ) );
+    test.is( !_.strHas( got.output, ' ! Failed to read relation::Tools' ) );
+    test.is( !_.strHas( got.output, ' ! Failed to read relation::PathBasic' ) );
     test.is( !_.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( !_.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
-    test.is( !_.strHas( got.output, / \+ 2\/2 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
+    test.is( !_.strHas( got.output, / \+ 2\/2 submodule\(s\) were downloaded in/ ) );
     test.is( !_.strHas( got.output, ' - Deleted' ) );
     test.is( !_.strHas( got.output, ' + reflect.proto.debug reflected 2 file(s) ' ) );
     test.is( !_.strHas( got.output, ' + reflect.submodules reflected' ) );
