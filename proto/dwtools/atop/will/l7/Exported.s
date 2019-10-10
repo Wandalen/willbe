@@ -322,7 +322,7 @@ function _performReadExported()
     searching : 'exact',
   }
 
-  let opener2 = will.openerMake({ opener : o2 })
+  let opener2 = will._openerMake({ opener : o2 })
 
   opener2.preform();
   opener2.find({ throwing : 0 });

@@ -308,8 +308,8 @@ function CommonPathFor( willfilesPath )
   common2 = common2 + '/';
   common = common2;
 
-  // if( _.strEnds( common, '/pathsResolveOutFileOfExports' ) )
-  // debugger;
+  if( _.strEnds( common, '/wTools.out.will' ) )
+  debugger;
 
   // if( _.strEnds( common, [ '/im', '/ex' ] ) )
   // {
@@ -341,66 +341,59 @@ function OutfilePathFor( outPath, name )
 
 //
 
-function _filePathChange( willfilesPath )
+function RemotePathAdjust( remotePath, relativePath )
+{
+
+  let remotePathParsed = _.uri.parseConsecutive( remotePath );
+
+  if( !remotePathParsed.query )
+  {
+    debugger;
+    return _.uri.join( remotePath, relativePath );
+  }
+
+  remotePathParsed.query = _.strWebQueryParse( remotePathParsed.query );
+
+  if( !remotePathParsed.query.out )
+  {
+    debugger;
+    return _.uri.join( remotePath, relativePath );
+  }
+
+  remotePathParsed.query.out = _.path.join( remotePathParsed.query.out, relativePath );
+
+  return _.uri.str( remotePathParsed );
+  // src1 = _.uri.parseConsecutive( src1 );
+  // src2 = _.uri.parseConsecutive( src2 );
+  //
+  // let query1 = src1.query ? _.strWebQueryParse( src1.query ) || { out : '.' };
+  // let query2 = src2.query ? _.strWebQueryParse( src2.query ) || { out : '.' };
+  //
+  // query1.out = query1.out || '.';
+  // query2.out = query2.out || '.';
+  //
+  // debugger;
+  // let outPath = _.path.join( query1.out, query2.out );
+  // debugger;
+  //
+  // query1.out = outPath;
+  // delete query2.out;
+  //
+  // src1 = _.uri.str( src1 );
+  // src2 = _.uri.str( src2 );
+  //
+  // debugger;
+  // return _.uri.join( src1, src2 );
+}
+
+//
+
+function _filePathSet( willfilesPath )
 {
   let module = this;
   let r = Object.create( null );
   r.willfilesPath = willfilesPath;
-
   return module._filePathChanged1( r ).willfilesPath;
-
-  // if( _.arrayIs( r.willfilesPath ) )
-  // {
-  //   if( r.willfilesPath.length === 1 )
-  //   r.willfilesPath = r.willfilesPath[ 0 ];
-  //   else if( r.willfilesPath.length === 0 )
-  //   r.willfilesPath = null;
-  // }
-  //
-  // if( !this.will )
-  // return r;
-  //
-  // let module = this;
-  // let will = module.will;
-  // let fileProvider = will.fileProvider;
-  // let path = fileProvider.path;
-  // let logger = will.logger;
-  //
-  // if( r.willfilesPath )
-  // r.willfilesPath = path.s.normalizeTolerant( r.willfilesPath );
-  //
-  // r.dirPath = r.willfilesPath;
-  // if( _.arrayIs( r.dirPath ) )
-  // r.dirPath = r.dirPath[ 0 ];
-  // if( _.strIs( r.dirPath ) )
-  // r.dirPath = path.dirFirst( r.dirPath );
-  // if( r.dirPath === null )
-  // r.dirPath = module.dirPath;
-  // if( r.dirPath )
-  // r.dirPath = path.canonize( r.dirPath );
-  // r.isIdentical = willfilesPath === this.willfilesPath || _.entityIdentical( willfilesPath, this.willfilesPath );
-  //
-  // if( r.willfilesPath && r.willfilesPath.length )
-  // r.commonPath = module.CommonPathFor( r.willfilesPath );
-  // else
-  // r.commonPath = module.commonPath;
-  //
-  // _.assert( arguments.length === 1 );
-  // _.assert( r.dirPath === null || _.strDefined( r.dirPath ) );
-  // _.assert( r.dirPath === null || path.isAbsolute( r.dirPath ) );
-  // _.assert( r.dirPath === null || path.isNormalized( r.dirPath ) );
-  // _.assert( r.willfilesPath === null || path.s.allAreAbsolute( r.willfilesPath ) );
-  // _.assert
-  // (
-  //   !module.isPreformed() || _.strDefined( r.commonPath ),
-  //   () => `Each module requires commonPath, but ${module.absoluteName} does not have`
-  // );
-  //
-  // if( r.commonPath !== null )
-  // module[ fileNameSymbol ] = path.fullName( r.commonPath );
-  // module[ willfilesPathSymbol ] = r.willfilesPath;
-  //
-  // return r;
 }
 
 //
@@ -414,8 +407,10 @@ function _filePathChanged1( o )
 _filePathChanged1.defaults =
 {
   willfilesPath : null,
+  exWillfilesPath : null,
   isIdentical : null,
   dirPath : null,
+  localPath : null,
   commonPath : null,
 }
 
@@ -429,8 +424,12 @@ function _filePathChanged2( o )
   {
     o = Object.create( null );
     o.willfilesPath = module.willfilesPath;
+    o.exWillfilesPath = _.unknown;
     o.isIdentical = false;
   }
+
+  if( !o.exWillfilesPath )
+  o.exWillfilesPath = module.willfilesPath;
 
   _.routineOptions( _filePathChanged2, o );
 
@@ -464,7 +463,7 @@ function _filePathChanged2( o )
   o.dirPath = path.canonize( o.dirPath );
 
   if( o.isIdentical === undefined || o.isIdentical === null )
-  o.isIdentical = o.willfilesPath === this.willfilesPath || _.entityIdentical( o.willfilesPath, this.willfilesPath );
+  o.isIdentical = o.willfilesPath === this.willfilesPath || _.entityIdentical( path.simplify( o.willfilesPath ), path.simplify( this.willfilesPath ) );
 
   // if( o.dirPath && _.strHas( o.dirPath, '/sub' ) )
   // debugger;
@@ -473,6 +472,7 @@ function _filePathChanged2( o )
   o.commonPath = module.CommonPathFor( o.willfilesPath );
   else
   o.commonPath = module.commonPath;
+  o.localPath = o.commonPath;
 
   _.assert( arguments.length === 1 );
   _.boolIs( o.isIdentical );
@@ -488,7 +488,44 @@ function _filePathChanged2( o )
 
   if( o.commonPath !== null )
   module[ fileNameSymbol ] = path.fullName( o.commonPath );
-  module[ willfilesPathSymbol ] = o.willfilesPath;
+  // module[ willfilesPathSymbol ] = o.willfilesPath;
+
+  will._pathChanged
+  ({
+    object : module,
+    fieldName : 'willfilesPath',
+    val : o.willfilesPath,
+    ex : o.exWillfilesPath,
+    isIdentical : o.isIdentical,
+    kind : 'set',
+  });
+
+  will._pathChanged
+  ({
+    object : module,
+    fieldName : 'dirPath',
+    val : o.dirPath,
+    ex : module.dirPath,
+    kind : 'set',
+  });
+
+  will._pathChanged
+  ({
+    object : module,
+    fieldName : 'commonPath',
+    val : o.commonPath,
+    ex : module.commonPath,
+    kind : 'set',
+  });
+
+  will._pathChanged
+  ({
+    object : module,
+    fieldName : 'localPath',
+    val : o.localPath,
+    ex : module.localPath,
+    kind : 'set',
+  });
 
   return o;
 }
@@ -504,7 +541,7 @@ _filePathChanged2.defaults = _.mapExtend( null, _filePathChanged1.defaults );
 //
 //   _.assert( arguments.length === 0 );
 //
-//   module._filePathChange( module.willfilesPath );
+//   module._filePathSet( module.willfilesPath );
 //
 // }
 
@@ -627,19 +664,19 @@ function willfileRegister( willf )
 
 function _willfilesRelease( willfilesArray )
 {
-  let opener = this;
-  let will = opener.will;
+  let module = this;
+  let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
-  willfilesArray = willfilesArray || opener.willfilesArray;
+  willfilesArray = willfilesArray || module.willfilesArray;
   willfilesArray = willfilesArray.slice();
 
   for( let i = willfilesArray.length-1 ; i >= 0 ; i-- )
   {
     let willf = willfilesArray[ i ];
-    opener.willfileUnregister( willf );
+    module.willfileUnregister( willf );
     _.assert( !willf.finitedIs() );
     if( !willf.isUsed() )
     willf.finit();
@@ -767,16 +804,16 @@ function remoteLatestVersion()
 
 function remoteHasLocalChanges()
 {
-  let opener = this;
-  let will = opener.will;
+  let module = this;
+  let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.assert( !!opener.willfilesPath || !!opener.dirPath );
+  _.assert( !!module.willfilesPath || !!module.dirPath );
   _.assert( arguments.length === 0 );
 
-  let remoteProvider = fileProvider.providerForPath( opener.remotePath );
-  return remoteProvider.hasLocalChanges( opener.downloadPath );
+  let remoteProvider = fileProvider.providerForPath( module.remotePath );
+  return remoteProvider.hasLocalChanges( module.downloadPath );
 }
 
 // --
@@ -828,6 +865,7 @@ let Statics =
   CommonPathFor,
   CloneDirPathFor,
   OutfilePathFor,
+  RemotePathAdjust,
 
 }
 
@@ -851,6 +889,7 @@ let Forbids =
   supermoduleSubmodule : 'supermoduleSubmodule',
   configName : 'configName',
   superModules : 'superModules',
+  willfilePath : 'willfilePath',
 
 }
 
@@ -894,8 +933,9 @@ let Extend =
   CommonPathFor,
   CloneDirPathFor,
   OutfilePathFor,
+  RemotePathAdjust,
 
-  _filePathChange,
+  _filePathSet,
   _filePathChanged1,
   _filePathChanged2,
 

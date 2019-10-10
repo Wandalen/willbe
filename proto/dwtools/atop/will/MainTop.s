@@ -126,7 +126,7 @@ function init( o )
 //       let opener = will.currentOpener;
 //       if( !opener )
 //       {
-//         opener = will.openerMake
+//         opener = will._openerMake
 //         ({
 //           willfilesPath : willfilesPath,
 //           isMain : 1,
@@ -305,7 +305,7 @@ _openersCurrentEach.defaults =
 //       let opener = will.currentOpener;
 //       if( !opener )
 //       {
-//         opener = will.openerMake
+//         opener = will._openerMake
 //         ({
 //           willfilesPath : willfilesPath,
 //           isMain : 1,
