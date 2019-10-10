@@ -320,6 +320,7 @@ function _performReadExported()
     original : module,
     rootModule : module.rootModule,
     searching : 'exact',
+    reason : 'export',
   }
 
   let opener2 = will._openerMake({ opener : o2 })
