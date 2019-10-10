@@ -52,37 +52,6 @@ function OnInstanceExists( o )
   o.resource.path = o.instance.path;
 
   o.Rewriting = 1;
-
-  // if( o.resource.name === 'local' )
-  // debugger;
-  //
-  // if( o.instance.path !== null )
-  // if( o.resource.name === 'local' && o.IsOut )
-  // debugger;
-  // // o.Importing = false;
-  //
-  // if( o.instance.path !== null )
-  // if( o.resource.name === 'module.willfiles' )
-  // debugger;
-  // // o.Importing = false;
-  //
-  // if( o.instance.path !== null )
-  // if( o.resource.name === 'module.dir' )
-  // debugger;
-  // // o.Importing = false;
-
-  // if( o.instance.path !== null )
-  // if( o.resource.name === 'local' && o.IsOut )
-  // o.resource.importable = false;
-  //
-  // if( o.instance.path !== null )
-  // if( o.resource.name === 'module.willfiles' )
-  // o.resource.importable = false;
-  //
-  // if( o.instance.path !== null )
-  // if( o.resource.name === 'module.dir' )
-  // o.resource.importable = false;
-
 }
 
 OnInstanceExists.defaults = Object.create( Parent.MakeForEachCriterion.defaults );
@@ -212,47 +181,6 @@ function form3()
   return resource;
 }
 
-//
-
-function _pathSet( src )
-{
-  let resource = this;
-  let module = resource.module;
-
-  _.assert( src === null || _.strIs( src ) || _.arrayLike( src ) );
-
-  if( _.arrayLike( src ) )
-  src = _.arraySlice( src );
-
-  // if( resource.name === 'module.original.willfiles' && src )
-  // debugger;
-
-  if( module && resource.name && !resource.original && src )
-  if( resource.name !== 'in' )
-  if( resource.criterion.predefined && !resource.writable )
-  {
-    // _.assert( !!module.pathResourceMap.in ); // xxx
-    let fileProvider = module.will.fileProvider;
-    let path = fileProvider.path;
-    src = path.s.join( module.inPath, src );
-  }
-
-  if( module && resource.name && !resource.original )
-  {
-    _.assert( resource.path === null || _.entityIdentical( module.pathMap[ resource.name ], resource.path ) );
-    delete module.pathMap[ resource.name ];
-  }
-
-  resource[ pathSymbol ] = src;
-
-  if( module && resource.name && !resource.original )
-  {
-    _.assert( module.pathMap[ resource.name ] === undefined );
-    module.pathMap[ resource.name ] = resource.path;
-  }
-
-}
-
 // --
 // exporter
 // --
@@ -357,6 +285,55 @@ pathsRebase.defaults =
   exInPath : null,
 }
 
+//
+
+function _pathSet( src )
+{
+  let resource = this;
+  let module = resource.module;
+  let ex = resource.path;
+
+  _.assert( src === null || _.strIs( src ) || _.arrayLike( src ) );
+
+  if( _.arrayLike( src ) )
+  src = _.arraySlice( src );
+
+  if( module && resource.name && !resource.original && src )
+  if( resource.name !== 'in' )
+  if( resource.criterion.predefined && !resource.writable )
+  {
+    let will = module.will;
+    let fileProvider = will.fileProvider;
+    let path = fileProvider.path;
+    src = path.s.join( module.inPath, src );
+  }
+
+  if( module && resource.name && !resource.original )
+  {
+    _.assert( resource.path === null || _.entityIdentical( module.pathMap[ resource.name ], resource.path ) );
+    delete module.pathMap[ resource.name ];
+  }
+
+  resource[ pathSymbol ] = src;
+
+  if( module && resource.name && !resource.original )
+  {
+    _.assert( module.pathMap[ resource.name ] === undefined );
+    module.pathMap[ resource.name ] = resource.path;
+  }
+
+  if( module )
+  module.will._pathChanged
+  ({
+    object : module,
+    fieldName : resource.name,
+    val : src,
+    ex,
+    kind : 'resource.set',
+  });
+
+}
+
 // --
 // relations
 // --
@@ -433,6 +410,7 @@ let Extend =
   // etc
 
   pathsRebase,
+  _pathSet,
 
   // relation
 
