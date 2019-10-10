@@ -70,7 +70,7 @@ function init( o )
   _.assert( opener.unwrappedModuleOpener !== undefined );
   _.assert( opener.openedModule !== undefined );
   _.assert( opener.original !== undefined );
-  _.assert( _.arrayHas( [ 'user', 'each', 'with', 'peer', 'sub', 'export' ], opener.reason ) );
+  _.assert( _.arrayHas( [ 'user', 'each', 'with', 'peer', 'sub', 'export' ], opener.reason ), 'Reason is not defined' );
 
   return opener;
 }
@@ -1056,11 +1056,11 @@ function _remoteForm()
 
   if( opener.peerModule && opener.remotePath === null && opener.peerModule.remotePath )
   {
-    debugger;
+    // debugger;
     opener._.downloadPath = opener.peerModule.downloadPath;
     opener._.remotePath = _.Will.OpenedModule.RemotePathAdjust( opener.peerModule.remotePath, path.relative( opener.peerModule.localPath, opener.localPath ) );
     // opener._.remotePath = path.join( opener.peerModule.remotePath, path.relative( opener.peerModule.localPath, opener.localPath ) );
-    debugger;
+    // debugger;
     /*
       xxx qqq :
         make it working for case when remote path is local

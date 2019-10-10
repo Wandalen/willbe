@@ -8966,49 +8966,53 @@ function submodulesDeleteAndDownload( test )
       var exp =
       [
         null,
-        'git+hd:///xxx/_repo/Tools?out=out/wTools.out.will#master',
-        'git+hd:///xxx/_repo/PathBasic?out=out/wPathBasic.out.will#master',
+        'git+hd://./_repo/Tools?out=out/wTools.out.will#master',
+        'git+hd://./_repo/PathBasic?out=out/wPathBasic.out.will#master',
         'npm:///wFiles',
         'npm:///wcloner',
         'npm:///wstringer',
         'npm:///wTesting',
-        null,
-        null,
+        null, /* xxx : should be not null */
+        'git+hd://./_repo/Tools?out:./#master',
         'npm:///wFiles',
         'npm:///wcloner',
         'npm:///wstringer',
         'npm:///wTesting',
-        null,
-        null
+        null, /* xxx : should be not null */
+        'git+hd://./_repo/PathBasic?out:./#master'
       ]
-      test.setsAreIdentical( _.select( will.openersArray, '*/remotePath' ), abs( exp ) );
+      var remotePath = _.select( will.openersArray, '*/remotePath' );
+      test.is( _.strHas( remotePath[ 1 ], '/_repo/Tools?out=out/wTools.out.will#master' ) );
+      test.is( _.strHas( remotePath[ 2 ], '/_repo/Tools?out=out/wTools.out.will#master' ) );
+      exp[ 1 ] = remotePath[ 1 ];
+      exp[ 2 ] = remotePath[ 2 ];
+      test.setsAreIdentical( remotePath, abs( exp ) );
+      debugger;
 
       will.openersArray.map( ( opener ) =>
       {
         logger.log( opener.absoluteName, '#' + opener.id, ' - ', opener.localPath, ' - ', opener.remotePath );
       });
 
-      debugger;
-
-      // test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, exp.length );
-      // var expected =
-      // [
-      //   '.will.yml',
-      //   '.module/Tools/out/wTools.out.will.yml',
-      //   '.module/PathBasic/out/wPathBasic.out.will.yml',
-      //   'npm:///wFiles',
-      //   'npm:///wcloner',
-      //   'npm:///wstringer',
-      //   'npm:///wTesting',
-      //   'hd://.module/Tools',
-      //   'npm:///wFiles',
-      //   'npm:///wcloner',
-      //   'npm:///wstringer',
-      //   'npm:///wTesting',
-      //   'hd://.module/Tools'
-      // ]
-      // var got = _.select( will.openersArray, '*/willfilesPath' )
-      // test.identical( got, abs( expected ) );
+      test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, exp.length );
+      var expected =
+      [
+        '.will.yml',
+        '.module/Tools/out/wTools.out.will.yml',
+        '.module/PathBasic/out/wPathBasic.out.will.yml',
+        'npm:///wFiles',
+        'npm:///wcloner',
+        'npm:///wstringer',
+        'npm:///wTesting',
+        'hd://.module/Tools',
+        'npm:///wFiles',
+        'npm:///wcloner',
+        'npm:///wstringer',
+        'npm:///wTesting',
+        'hd://.module/Tools'
+      ]
+      var got = _.select( will.openersArray, '*/willfilesPath' )
+      test.identical( got, abs( expected ) );
 
       opener.finit();
 
