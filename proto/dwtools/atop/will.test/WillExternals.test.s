@@ -3731,7 +3731,7 @@ function cleanBroken2( test )
   {
     test.case = '.export';
 
-    test.wil = 'update should throw error if submodule is not downloaded but download path exists'
+    test.will = 'update should throw error if submodule is not downloaded but download path exists'
 
     test.notIdentical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
