@@ -8539,7 +8539,7 @@ function reflectNothingFromSubmodules( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
-    test.is( _.strHas( got.output, / Exported .*exported::proto.export.* with 2 file\(s\) in/ ) );
+    test.is( _.strHas( got.output, /Exported module::reflect-nothing-from-submodules \/ build::proto.export with 2 file\(s\) in/ ) );
 
     var files = self.find( outDebugPath );
     test.identical( files, [ '.', './Single.s' ] );
@@ -8548,6 +8548,8 @@ function reflectNothingFromSubmodules( test )
 
     test.is( _.fileProvider.fileExists( outWillPath ) )
     var outfile = _.fileProvider.fileConfigRead( outWillPath );
+
+    outfile = outfile.module[ 'reflect-nothing-from-submodules.out' ]
 
     var reflector = outfile.reflector[ 'exported.files.proto.export' ];
     var expectedFilePath =
@@ -8585,8 +8587,10 @@ function reflectNothingFromSubmodules( test )
       {
         "src" :
         {
-          "filePath" : { "submodule::*/exported::*=1/path::exported.dir*=1" : "path::out.*=1" }
+          "filePath" : { "submodule::*/exported::*=1/path::exported.dir*=1" : "path::out.*=1" },
+          "prefixPath" : ''
         },
+        "dst" : { "prefixPath" : '' },
         "criterion" : { "debug" : 1 },
         "mandatory" : 1,
         "inherit" : [ "predefined.*" ]
@@ -8595,7 +8599,7 @@ function reflectNothingFromSubmodules( test )
       {
         "src" :
         {
-          "filePath" : { "." : "" },
+          "filePath" : { "**" : "" },
           "prefixPath" : "../proto"
         },
         "criterion" : { "default" : 1, "export" : 1 },
