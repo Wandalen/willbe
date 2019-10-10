@@ -18,7 +18,7 @@ reflector :
   reflect.submodules.0 :
     inherit : predefined.*
     filePath :
-      submodule::*/exported::*=1/path::exported.dir*=1 : path::out.*=1
+      submodule::*/exported::*=1/path::exported.files*=1 : path::out.*=1
     src :
       basePath : ".."
     criterion :
