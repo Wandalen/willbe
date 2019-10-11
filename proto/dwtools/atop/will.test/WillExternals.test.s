@@ -5315,13 +5315,12 @@ function exportMixed( test )
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/Proto.informal.out.will.yml' ) );
     outfile = outfile.module[ 'Proto.informal.out' ];
-
     var expected =
     {
       'download' :
       {
         'src' : { 'prefixPath' : 'path::remote', 'filePath' : { '.' : '.' } },
-        'dst' : { 'prefixPath' : 'path::local' },
+        'dst' : { 'prefixPath' : 'path::download' },
         'mandatory' : 1,
       },
       'exported.export' :
@@ -5349,63 +5348,75 @@ function exportMixed( test )
     {
       "module.willfiles" :
       {
-        "path" : "Proto.informal.out.will.yml",
-        "criterion" : { "predefined" : 1 }
-      },
-      "module.original.willfiles" :
-      {
-        "path" : "../module/Proto.informal.will.yml",
-        "criterion" : { "predefined" : 1 }
+        "criterion" : { "predefined" : 1 },
+        "path" : `Proto.informal.out.will.yml`
       },
       "module.common" :
       {
-        "path" : "Proto.informal.out",
+        "criterion" : { "predefined" : 1 },
+        "path" : `Proto.informal.out`
+      },
+      "module.original.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : `../module/Proto.informal.will.yml`
+      },
+      "module.peer.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : `../module/Proto.informal.will.yml`
+      },
+      "module.download" :
+      {
         "criterion" : { "predefined" : 1 }
       },
       "in" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : `.`
       },
       "out" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : `.`
       },
       "remote" :
       {
-        "path" : "git+https:///github.com/Wandalen/wProto.git",
         "criterion" : { "predefined" : 1 }
       },
-      "local" :
-      {
-        "path" : "../.module/Proto",
-        "criterion" : { "predefined" : 1 }
-      },
-      "export" : { "path" : "{path::local}/proto" },
+      "download" : { "path" : `../.module/Proto` },
+      "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
-        "path" : "../.module/Proto/proto",
-        "criterion" : { "default" : 1, "export" : 1 }
+        "criterion" : { "default" : 1, "export" : 1 },
+        "path" : `../.module/Proto/proto`
       },
       "exported.files.export" :
       {
+        "criterion" : { "default" : 1, "export" : 1 },
         "path" :
         [
-          "../.module/Proto/proto",
-          "../.module/Proto/proto/dwtools",
-          "../.module/Proto/proto/dwtools/Tools.s",
-          "../.module/Proto/proto/dwtools/abase",
-          "../.module/Proto/proto/dwtools/abase/l3",
-          "../.module/Proto/proto/dwtools/abase/l3/Proto.s",
-          "../.module/Proto/proto/dwtools/abase/l3/Proto0Workpiece.s",
-          "../.module/Proto/proto/dwtools/abase/l3/ProtoAccessor.s",
-          "../.module/Proto/proto/dwtools/abase/l3/ProtoLike.s",
-          "../.module/Proto/proto/dwtools/abase/l3.test",
-          "../.module/Proto/proto/dwtools/abase/l3.test/Proto.test.s",
-          "../.module/Proto/proto/dwtools/abase/l3.test/ProtoLike.test.s"
-        ],
-        "criterion" : { "default" : 1, "export" : 1 }
+          `../.module/Proto/proto`,
+          `../.module/Proto/proto/dwtools`,
+          `../.module/Proto/proto/dwtools/Tools.s`,
+          `../.module/Proto/proto/dwtools/abase`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/Include.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/l1`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/l1/Define.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/l1/Proto.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/l1/Workpiece.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/l3`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/l3/Accessor.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/l3/Class.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/l3/Complex.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/l3/Like.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto.test`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto.test/Class.test.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto.test/Complex.test.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto.test/Like.test.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto.test/Proto.test.s`
+        ]
       }
     }
     test.identical( outfile.path, expected );
@@ -5416,6 +5427,9 @@ function exportMixed( test )
       'export' :
       {
         'version' : '0.1.0',
+        'recursive' : 0,
+        'withIntegrated' : 2,
+        'tar' : 0,
         'criterion' : { 'default' : 1, 'export' : 1 },
         'exportedReflector' : 'reflector::exported.export',
         'exportedFilesReflector' : 'reflector::exported.files.export',
@@ -5434,7 +5448,7 @@ function exportMixed( test )
       },
       'download' :
       {
-        'opts' : { 'reflector' : 'reflector::download*' },
+        'opts' : { 'reflector' : 'reflector::download*', 'verbosity' : null },
         'inherit' : [ 'files.reflect' ]
       }
     }
@@ -5470,7 +5484,7 @@ function exportMixed( test )
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exporting .*module::UriBasic.informal.* \/ build::export/ ) );
-    test.is( _.strHas( got.output, ' + reflector::download.* reflected' ) );
+    test.is( _.strHas( got.output, /\+ reflector::download reflected .* file\(s\)/ ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, /Exported .*module::UriBasic.informal.* \/ build::export/ ) );
     test.is( _.strHas( got.output, 'out/Proto.informal.out.will.yml' ) );
@@ -5478,13 +5492,13 @@ function exportMixed( test )
     test.is( _.strHas( got.output, 'Reloading submodules' ) );
 
     test.is( _.strHas( got.output, /- .*step::delete.out.debug.* deleted 0 file\(s\), at/ ) );
-    test.is( _.strHas( got.output, ' + reflector::reflect.proto.debug.* reflected 2 file(s)' ) );
-    test.is( _.strHas( got.output, ' + reflector::reflect.submodules.* reflected' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto.debug reflected' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.submodules reflected' ) );
 
-    test.is( _.strHas( got.output, ' ! Failed to read submodule::Tools' ) );
-    test.is( _.strHas( got.output, ' ! Failed to read submodule::PathBasic' ) );
-    test.is( _.strHas( got.output, ' ! Failed to read submodule::UriBasic' ) );
-    test.is( _.strHas( got.output, ' ! Failed to read submodule::Proto' ) );
+    test.is( _.strHas( got.output, ' ! Failed to read relation::Tools' ) );
+    test.is( _.strHas( got.output, ' ! Failed to read relation::PathBasic' ) );
+    test.is( _.strHas( got.output, ' ! Failed to read relation::UriBasic' ) );
+    test.is( _.strHas( got.output, ' ! Failed to read relation::Proto' ) );
 
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/Proto.informal.out.will.yml' ) ) );
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/UriBasic.informal.out.will.yml' ) ) );
