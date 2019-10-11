@@ -175,6 +175,7 @@ function optionsForModuleExport()
 
     willfilesPath : null,
     localPath : null,
+    commonPath : null,
     downloadPath : null,
     remotePath : null,
 

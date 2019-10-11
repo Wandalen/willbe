@@ -294,12 +294,6 @@ function precopy1( o )
   if( o.rootModule !== undefined )
   module.rootModule = o.rootModule;
 
-  o = _.mapExtend( null, o );
-
-  delete o.superRelations;
-  delete o.original;
-  delete o.rootModule;
-
   return o;
 }
 
@@ -329,7 +323,9 @@ function precopy2( o )
   if( o.outPath !== undefined )
   module.outPath = o.outPath;
   if( o.localPath !== undefined )
-  module.localPath = o.localPath;
+  module._localPathPut( o.localPath );
+  if( o.commonPath !== undefined )
+  module._commonPathPut( o.commonPath );
   if( o.downloadPath !== undefined )
   module.downloadPath = o.downloadPath;
   if( o.remotePath !== undefined )
@@ -348,6 +344,7 @@ function precopy2( o )
   delete o.inPath;
   delete o.outPath;
   delete o.localPath;
+  delete o.commonPath;
   delete o.downloadPath;
   delete o.remotePath;
   delete o.willfilesPath;
@@ -362,9 +359,10 @@ function precopy( o )
 {
   let module = this;
 
-  module.precopy1( o );
-  module.precopy2( o );
+  o = module.precopy1( o );
+  o = module.precopy2( o );
 
+  return o;
 }
 
 //
