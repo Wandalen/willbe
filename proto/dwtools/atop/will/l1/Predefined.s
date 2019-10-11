@@ -950,48 +950,16 @@ function stepRoutineWillbeIsUpToDate( frame )
   let run = frame.run;
   let module = run.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
 
   _.assert( arguments.length === 1 );
 
-  /* */
-
-  let packageJson = require( '../../../../../package.json' );
-  let currentVersion = packageJson.version;
-
-  let ready = _.process.start
-  ({
-    execPath : 'npm view willbe version',
-    outputCollecting : 1,
-  });
-
-  ready.finally( ( err, result ) =>
-  {
-    if( err )
-    throw _.err( err, '\nFailed to check version of utility willbe' );
-
-    let latestVersion = _.strStrip( result.output );
-
-    if( latestVersion !== currentVersion )
-    {
-      debugger
-      throw _.errBrief
-      ( 'Utility willbe is out of date!',
-        '\nCurrent version:', currentVersion, '\nLatest:', latestVersion,
-        '\nPlease run: "npm r -g willbe && npm i -g willbe" to update.'
-      );
-    }
-
-    return true;
-  })
-
-  return ready;
+  return will.versionIsUpToDate( _.mapExtend( null, step.opts ) );
 }
 
 stepRoutineWillbeIsUpToDate.stepOptions =
 {
+  throwing : 1,
+  brief : 0
 }
 
 stepRoutineWillbeIsUpToDate.uniqueOptions =

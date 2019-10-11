@@ -8,15 +8,15 @@ path :
   in : ..
   out : .module
   remote : 'git+hd://../_repo/Proto'
-  local : '.module/Proto'
-  export : '{path::local}/proto/**'
+  download : '.module/Proto'
+  export : '{path::download}/proto/**'
   temp : out
 
 reflector :
 
   download :
     src : path::remote
-    dst : path::local
+    dst : path::download
 
 step :
 

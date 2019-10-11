@@ -698,6 +698,8 @@ function _commandsMake()
 
     'help' :                            { e : _.routineJoin( will, will.commandHelp ),                        h : 'Get help.' },
     'imply' :                           { e : _.routineJoin( will, will.commandImply ),                       h : 'Change state or imply value of a variable' },
+    'version' :                         { e : _.routineJoin( will, will.commandVersion ),                     h : 'Get current version.' },
+    'version check' :                   { e : _.routineJoin( will, will.commandVersionCheck ),                h : 'Check if current version is the latest.' },
 
     'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList ),               h : 'List information about resources of the current module.' },
     'paths list' :                      { e : _.routineJoin( will, will.commandPathsList ),                   h : 'List paths of the current module.' },
@@ -881,6 +883,35 @@ function commandImply( e )
     namesMap : namesMap,
   });
 
+}
+
+//
+
+function commandVersion( e )
+{
+  let will = this;
+  let ca = e.ca;
+  let logger = will.logger;
+  logger.log( 'Current version:', will.versionGet() );
+}
+
+//
+
+function commandVersionCheck( e )
+{
+  let will = this;
+  let ca = e.ca;
+  let logger = will.logger;
+
+  let propertiesMap = _.strStructureParse( e.argument );
+  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+
+  return will.versionIsUpToDate( propertiesMap );
+}
+
+commandVersionCheck.commandProperties =
+{
+  throwing : 'Throw an error if utility is not up to date. Default : 1'
 }
 
 //
@@ -1853,6 +1884,8 @@ let Extend =
 
   commandHelp,
   commandImply,
+  commandVersion,
+  commandVersionCheck,
   commandWith,
   commandEach,
 
