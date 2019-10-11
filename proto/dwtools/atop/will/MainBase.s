@@ -322,6 +322,66 @@ _pathChanged.defaults =
   kind : null,
 }
 
+//
+
+function versionGet()
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( arguments.length === 0 );
+
+  let packageJsonPath = path.join( __dirname, '../../../../package.json' );
+  let packageJson =  fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
+  return packageJson.version
+}
+
+//
+
+function versionIsUpToDate()
+{
+  let will = this;
+
+  _.assert( arguments.length === 0 );
+
+  let currentVersion = will.versionGet();
+
+  let ready = _.process.start
+  ({
+    execPath : 'npm view willbe version',
+    inputMirroring : 0,
+    outputPiping : 0,
+    outputCollecting : 1,
+  });
+
+  ready.finally( ( err, result ) =>
+  {
+    if( err )
+    throw _.err( err, '\nFailed to check version of utility willbe' );
+
+    let latestVersion = _.strStrip( result.output );
+
+    if( latestVersion !== currentVersion )
+    {
+      debugger
+      throw _.errBrief
+      ( 'Utility willbe is out of date!',
+        '\nCurrent version:', currentVersion, '\nLatest:', latestVersion,
+        '\nPlease run: "npm r -g willbe && npm i -g willbe" to update.'
+      );
+    }
+    else
+    {
+      logger.log( 'Utility willbe is up to date!' );
+    }
+
+    return true;
+  })
+
+  return ready;
+}
+
 // --
 // defaults
 // --
@@ -2813,6 +2873,8 @@ let Extend =
   vcsFor,
   resourcesInfoExport,
   _pathChanged,
+  versionGet,
+  versionIsUpToDate,
 
   // defaults
 
