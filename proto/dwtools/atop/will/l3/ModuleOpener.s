@@ -1189,7 +1189,8 @@ function _remoteDownload( o )
     }
     else if( o.mode === 'update' )
     {
-
+      //Vova: qqq Should throw error if not downloaded but opener.downloadPath exists
+      filesCheck();
       originCheck();
       localChangesCheck();
 
@@ -1260,6 +1261,9 @@ function _remoteDownload( o )
 
   function originCheck()
   {
+    if( !opener.isDownloaded )
+    return;
+
     let gitProvider = will.fileProvider.providerForPath( opener.remotePath );
     debugger;
     let result = gitProvider.isDownloadedFromRemote

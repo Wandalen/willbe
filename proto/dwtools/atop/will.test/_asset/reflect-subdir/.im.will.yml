@@ -8,7 +8,7 @@ path :
   in : '.'
   out : './out'
   out.debug :
-    path : './out/debug'
+    path : './out/debug/**'
   temp :
     - path::out
     - submodule.out.will.yml
