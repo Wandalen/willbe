@@ -14052,7 +14052,7 @@ var Self =
     withMixed,
     // eachMixed, // xxx : later
     withList,
-    // eachList,
+    // eachList, // xxx : later
     eachBrokenIll,
     eachBrokenNon,
     eachBrokenCommand,
@@ -14126,7 +14126,7 @@ var Self =
     reflectComposite,
     reflectRemoteGit,
     reflectRemoteHttp,
-    // reflectWithOptions, // qqq : please fix. related with path routines
+    reflectWithOptions,
     reflectWithSelectorInDstFilter,
     reflectSubmodulesWithCriterion,
     reflectSubmodulesWithPluralCriterionManualExport,
@@ -14149,7 +14149,7 @@ var Self =
     submodulesDownloadUpdateDry,
     submodulesDownloadSwitchBranch,
     submodulesDownloadRecursive,
-    // submodulesDownloadedUpdate, // qqq : not sure how to fix. please help to fix,
+    // submodulesDownloadedUpdate, // xxx : look later
     subModulesUpdate,
     subModulesUpdateSwitchBranch,
     stepSubmodulesDownload,
@@ -14165,7 +14165,7 @@ var Self =
 
     // runWillbe, // qqq : help to fix, please
 
-    // resourcesFormReflectorsExperiment, // qqq : complete?
+    // resourcesFormReflectorsExperiment, // qqq : done?
 
   }
 

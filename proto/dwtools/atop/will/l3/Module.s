@@ -5372,9 +5372,21 @@ function structureExportOut( o )
   o.dst = o.dst || Object.create( null );
   o.dst.format = will.Willfile.FormatVersion;
 
-  // debugger;
-  let modules = module.modulesEach({ withPeers : 1, withStem : 1, recursive : 2 });
-  // debugger;
+  debugger;
+  let variants = module.modulesEach({ withPeers : 1, withStem : 1, recursive : 2, outputFormat : '/' });
+  debugger;
+  let modules = variants.map( ( variant ) =>
+  {
+    if( variant.module )
+    throw _.err
+    (
+        `${variant.object.absoluteName} is not available. `
+      + `\nRemote path is ${variant.remotePath}`
+      + `\nLocal path is ${variant.localPath}`
+    );
+    return variant.module;
+  });
+  // let modules = _.select( variants, '*/module' );
   _.assert( modules.length >= 2 );
   module.structureExportModules( modules, o );
 
