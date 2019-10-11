@@ -8311,10 +8311,10 @@ function importLocalRepo( test )
   {
 
     var files = _.fileProvider.dirRead( modulePath );
-    test.identical( files, [ /* 'Proto', */ 'Proto.out.will.yml' ] );
+    test.identical( files, [ 'Proto', 'Proto.out.will.yml' ] );
 
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, /reflector::download reflected .* file\(s\) .*importLocalRepo : module\/Proto <- . in .*/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ reflector::download reflected .* file\(s\)/ ), 1 );
     test.identical( _.strCount( got.output, /Write out willfile .*\/.module\/Proto.out.will.yml/ ), 1 );
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( modulePath, 'Proto.out.will.yml' ) );
@@ -8322,29 +8322,38 @@ function importLocalRepo( test )
 
     var expectedReflector =
     {
-      'download' :
+      "download" :
       {
-        'src' : { 'filePath' : { '.' : '.' }, 'prefixPath' : 'path::remote' },
-        'dst' : { 'prefixPath' : 'path::local' },
-        'mandatory' : 1,
-      },
-      'exported.export' :
-      {
-        'src' :
+        "src" :
         {
-          // 'filePath' : { '.' : '' },
-          'filePath' : { '**' : '' },
-          'prefixPath' : '../module/Proto/proto'
+          "filePath" : { "." : `.` },
+          "prefixPath" : `path::remote`
         },
-        'criterion' : { 'default' : 1, 'export' : 1 },
-        'mandatory' : 1
+        "dst" : { "prefixPath" : `path::download` },
+        "mandatory" : 1
       },
-      'exported.files.export' :
+      "exported.export" :
       {
-        'src' : { 'filePath' : { 'path::exported.files.export' : '' }, 'basePath' : '.', 'prefixPath' : 'path::exported.dir.export', recursive : 0 },
-        'criterion' : { 'default' : 1, 'export' : 1 },
-        'recursive' : 0,
-        'mandatory' : 1
+        "src" :
+        {
+          "filePath" : { "**" : `` },
+          "prefixPath" : `Proto/proto`
+        },
+        "mandatory" : 1,
+        "criterion" : { "default" : 1, "export" : 1 }
+      },
+      "exported.files.export" :
+      {
+        "src" :
+        {
+          "filePath" : { "path::exported.files.export" : `` },
+          "basePath" : `.`,
+          "prefixPath" : `path::exported.dir.export`,
+          "recursive" : 0
+        },
+        "recursive" : 0,
+        "mandatory" : 1,
+        "criterion" : { "default" : 1, "export" : 1 }
       }
     }
     test.identical( outfile.reflector, expectedReflector );
@@ -8354,76 +8363,79 @@ function importLocalRepo( test )
       "module.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : "Proto.out.will.yml"
+        "path" : `Proto.out.will.yml`
       },
       "module.common" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : "Proto.out"
-      },
-      "local" :
-      {
-        "criterion" : { "predefined" : 1 },
-        "path" : "Proto.out"
+        "path" : `Proto.out`
       },
       "module.original.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : [ "../module/Proto.will.yml" ]
+        "path" : `../module/Proto.will.yml`
       },
       "module.peer.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : [ "../module/Proto.will.yml" ]
+        "path" : `../module/Proto.will.yml`
       },
       "module.download" :
       {
         "criterion" : { "predefined" : 1 }
       },
-      "remote" :
-      {
-        "path" : "git+hd://../../_repo/Proto",//Vova: path should be defined?
-        "criterion" : { "predefined" : 1 }
-      },
       "in" :
       {
         "criterion" : { "predefined" : 0 },
-        "path" : "."
+        "path" : `.`
       },
       "out" :
       {
         "criterion" : { "predefined" : 0 },
-        "path" : "."
+        "path" : `.`
       },
-      "export" : { "path" : "{path::local}/proto/**" },
-      "temp" : { "path" : "../out" },
+      "remote" :
+      {
+        "criterion" : { "predefined" : 1 }
+      },
+      "download" : { "path" : `Proto` },
+      "export" : { "path" : `{path::download}/proto/**` },
+      "temp" : { "path" : `../out` },
       "exported.dir.export" :
       {
         "criterion" : { "default" : 1, "export" : 1 },
-        "path" : "../module/Proto/proto"
+        "path" : `Proto/proto`
       },
       "exported.files.export" :
       {
         "criterion" : { "default" : 1, "export" : 1 },
         "path" :
         [
-          '../module/Proto/proto',
-          '../module/Proto/proto/dwtools',
-          '../module/Proto/proto/dwtools/Tools.s',
-          '../module/Proto/proto/dwtools/abase',
-          '../module/Proto/proto/dwtools/abase/l3',
-          '../module/Proto/proto/dwtools/abase/l3/Proto.s',
-          '../module/Proto/proto/dwtools/abase/l3/Proto0Workpiece.s',
-          '../module/Proto/proto/dwtools/abase/l3/ProtoAccessor.s',
-          '../module/Proto/proto/dwtools/abase/l3/ProtoLike.s',
-          '../module/Proto/proto/dwtools/abase/l3.test',
-          '../module/Proto/proto/dwtools/abase/l3.test/Proto.test.s',
-          '../module/Proto/proto/dwtools/abase/l3.test/ProtoLike.test.s'
+          `Proto/proto`,
+          `Proto/proto/dwtools`,
+          `Proto/proto/dwtools/Tools.s`,
+          `Proto/proto/dwtools/abase`,
+          `Proto/proto/dwtools/abase/l3_proto`,
+          `Proto/proto/dwtools/abase/l3_proto/Include.s`,
+          `Proto/proto/dwtools/abase/l3_proto/l1`,
+          `Proto/proto/dwtools/abase/l3_proto/l1/Define.s`,
+          `Proto/proto/dwtools/abase/l3_proto/l1/Proto.s`,
+          `Proto/proto/dwtools/abase/l3_proto/l1/Workpiece.s`,
+          `Proto/proto/dwtools/abase/l3_proto/l3`,
+          `Proto/proto/dwtools/abase/l3_proto/l3/Accessor.s`,
+          `Proto/proto/dwtools/abase/l3_proto/l3/Class.s`,
+          `Proto/proto/dwtools/abase/l3_proto/l3/Complex.s`,
+          `Proto/proto/dwtools/abase/l3_proto/l3/Like.s`,
+          `Proto/proto/dwtools/abase/l3_proto.test`,
+          `Proto/proto/dwtools/abase/l3_proto.test/Class.test.s`,
+          `Proto/proto/dwtools/abase/l3_proto.test/Complex.test.s`,
+          `Proto/proto/dwtools/abase/l3_proto.test/Like.test.s`,
+          `Proto/proto/dwtools/abase/l3_proto.test/Proto.test.s`
         ]
       }
     }
     test.identical( outfile.path, expectedPath );
-    // logger.log( _.toJson( outfile.path ) );
+    // logger.log( _.toJs( outfile.path ) );
 
     return null;
   })
