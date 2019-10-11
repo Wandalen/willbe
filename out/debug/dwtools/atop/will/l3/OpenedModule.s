@@ -317,11 +317,17 @@ function precopy2( o )
 
   if( o.isRemote !== undefined )
   module.isRemote = o.isRemote;
+  if( o.isOut !== undefined )
+  module.isOut = o.isOut;
 
   if( o.inPath !== undefined )
   module.inPath = o.inPath;
   if( o.outPath !== undefined )
   module.outPath = o.outPath;
+
+  if( o.pathResourceMap !== undefined )
+  module.pathResourceMap = o.pathResourceMap;
+
   if( o.localPath !== undefined )
   module._localPathPut( o.localPath );
   if( o.commonPath !== undefined )
@@ -332,8 +338,6 @@ function precopy2( o )
   module.remotePath = o.remotePath;
   if( o.willfilesPath !== undefined )
   module.willfilesPath = o.willfilesPath;
-  if( o.pathResourceMap !== undefined )
-  module.pathResourceMap = o.pathResourceMap;
 
   o = _.mapExtend( null, o );
 
@@ -341,6 +345,7 @@ function precopy2( o )
   // delete o.original;
   // delete o.rootModule;
   delete o.isRemote;
+  delete o.isOut;
   delete o.inPath;
   delete o.outPath;
   delete o.localPath;
@@ -694,8 +699,8 @@ function predefinedForm()
     path : null,
     writable : 1,
     exportable : 1,
-    importableFromIn : 0,
-    importableFromOut : 1,
+    importableFromIn : 1,
+    importableFromOut : 1, /* yyy */
   })
 
   path
@@ -3186,7 +3191,7 @@ function peerModuleOpen( o )
         }
         else
         {
-          if( !peerModule.isOut )
+          if( module.isOut )
           logger.log( _.errOnce( _.errBrief( err ) ) );
           _.errAttend( err );
         }
@@ -3229,6 +3234,8 @@ function _peerChanged()
   let module = this;
   let will = module.will;
 
+  // if( module.id === 140 )
+  // debugger;
   if( !will )
   return;
 
@@ -3366,7 +3373,7 @@ function _remoteChanged()
   /* */
 
   // if( module.isDownloaded && module.remotePath )
-  if( module.remotePath )
+  if( module.remotePath && module.downloadPath )
   {
     let remoteProvider = fileProvider.providerForPath( module.remotePath );
     _.assert( !!remoteProvider.isVcs );
@@ -5365,7 +5372,10 @@ function structureExportOut( o )
   o.dst = o.dst || Object.create( null );
   o.dst.format = will.Willfile.FormatVersion;
 
-  let modules = module.modulesEach({ withPeers : 1, withStem : 1, recursive : 2 })
+  // debugger;
+  let modules = module.modulesEach({ withPeers : 1, withStem : 1, recursive : 2 });
+  // debugger;
+  _.assert( modules.length >= 2 );
   module.structureExportModules( modules, o );
 
   return o.dst;
@@ -5385,7 +5395,6 @@ function structureExportForModuleExport( o )
   o = _.routineOptions( structureExportForModuleExport, arguments );
   _.assert( module.original === null );
 
-  // debugger;
   let moduleWas = will.moduleWithCommonPathMap[ module.CommonPathFor( o.willfilesPath ) ];
   if( moduleWas )
   {
@@ -5424,7 +5433,10 @@ function structureExportForModuleExport( o )
   let o3 = opener2.optionsForModuleExport();
   let rootModule = o3.rootModule = opener2.rootModule; /* xxx : remove rootModule? */
 
+  // debugger;
   let module2 = module.cloneExtending( o3 );
+  // debugger;
+
   _.assert( rootModule === opener2.rootModule );
   _.assert( rootModule === module2.rootModule );
   opener2.moduleAdopt( module2 );
@@ -5435,9 +5447,7 @@ function structureExportForModuleExport( o )
 
   /* */
 
-  debugger;
   module2.pathsRebase({ inPath : module.outPath, exInPath : module.inPath });
-  debugger;
 
   _.assert( module.outPath === module2.outPath );
   _.assert( module2.inPath === module2.outPath );
@@ -5464,9 +5474,12 @@ function structureExportForModuleExport( o )
   if( module2.ready.errorsCount() )
   module2.ready.sync();
 
+  // debugger;
   let structure = module2.structureExportOut();
+  // debugger;
   let rootModuleStructure = structure.module[ module2.fileName ];
 
+  _.assert( !!rootModuleStructure );
   _.assert( !rootModuleStructure.path || !!rootModuleStructure.path[ 'module.original.willfiles' ] );
   _.assert( !rootModuleStructure.path || !!rootModuleStructure.path[ 'module.peer.willfiles' ] );
   _.assert( !rootModuleStructure.path || !!rootModuleStructure.path[ 'module.willfiles' ] );
@@ -5499,6 +5512,7 @@ function structureExportForModuleExport( o )
     o2.searching = 'exact';
     o2.reason = 'export';
     o2.isAuto = 1;
+    o2.remotePath = null;
 
     let opener2 = will._openerMake({ opener : o2 });
     _.assert( opener2.isOut === true );
@@ -5597,6 +5611,8 @@ function structureExportModules( modules, op )
     delete op.dst.module[ relative ];
 
   });
+
+  _.assert( op.dst.root.length === 1, () => `Failed to find exactly one root, found ${op.dst.root.length}` );
 
   return op.dst;
 
@@ -6033,6 +6049,7 @@ let Forbids =
   isOutFile : 'isOutFile',
   picked : 'picked',
   pickedReady : 'pickedReady',
+  superRelation : 'superRelation',
 
 }
 

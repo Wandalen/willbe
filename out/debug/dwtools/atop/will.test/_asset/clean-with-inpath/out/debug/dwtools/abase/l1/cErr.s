@@ -56,7 +56,7 @@ function diagnosticCode( o )
         // if( _global._starter_ )
         // debugger;
         // if( _global._starter_ )
-        // _global._starter_.fileProvider.fileRead( _.weburi.parse( o.location.path ).localWebPath );
+        // _global._starter_.fileProvider.fileRead( _.weburi.parse( o.location.path ).downloadWebPath );
         // o.location.path = codeProvider.path.normalize( o.location.path );
         let filePath = codeProvider.path.normalize( o.location.path );
         if( codeProvider.path.isAbsolute( filePath ) )

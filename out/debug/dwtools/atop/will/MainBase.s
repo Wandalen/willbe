@@ -289,6 +289,13 @@ function _pathChanged( o )
   if( o.isIdential === null )
   o.isIdentical = o.ex === o.val || _.entityIdentical( o.val, o.ex );
 
+  // if( o.fieldName === 'remotePath' || o.fieldName === 'remote' )
+  // if( _.strIs( o.val ) && o.val )
+  // {
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
+  //   debugger;
+  // }
+
   // if( o.fieldName === 'willfilesPath' || o.fieldName === 'module.willfiles' )
   // if( _.strIs( o.val ) && _.strHas( o.val, 'wTools.out' ) )
   // {
@@ -320,6 +327,95 @@ _pathChanged.defaults =
   object : null,
   fieldName : null,
   kind : null,
+}
+
+//
+
+function versionGet()
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( arguments.length === 0 );
+
+  let packageJsonPath = path.join( __dirname, '../../../../package.json' );
+  let packageJson =  fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
+  return packageJson.version
+}
+
+//
+
+function versionIsUpToDate( o )
+{
+  let will = this;
+
+  _.assert( arguments.length === 1 );
+
+  _.routineOptions( versionIsUpToDate, o );
+
+  let currentVersion = will.versionGet();
+
+  let ready = _.process.start
+  ({
+    execPath : 'npm view willbe version',
+    inputMirroring : 0,
+    outputPiping : 0,
+    outputCollecting : 1,
+  });
+
+  ready.finally( ( err, result ) =>
+  {
+    if( err )
+    throw _.err( err, '\nFailed to check version of utility willbe' );
+
+    let latestVersion = _.strStrip( result.output );
+
+    if( latestVersion !== currentVersion )
+    {
+      let message =
+      [
+        '╔════════════════════════════════════════════════════════════╗',
+        '║ Utility willbe is out of date!                             ║',
+        `║ Current version: ${currentVersion}`,
+        `║ Latest: ${latestVersion}`,
+        '║ Please run: "npm r -g willbe && npm i -g willbe" to update.║',
+        '╚════════════════════════════════════════════════════════════╝'
+      ]
+
+      message[ 2 ] = message[ 2 ] + _.strDup( ' ', message[ 4 ].length - message[ 2 ].length - 1 ) + '║';
+      message[ 3 ] = message[ 3 ] + _.strDup( ' ', message[ 4 ].length - message[ 3 ].length - 1 ) + '║';
+
+      message = message.join( '\n' )
+
+      let coloredMessage = _.color.strBg( message, 'yellow' );
+
+      if( !o.throwing )
+      {
+        logger.log( coloredMessage );
+        return false;
+      }
+
+      if( o.brief )
+      throw _.errBrief( coloredMessage );
+      else
+      throw _.err( message );
+    }
+    else
+    {
+      logger.log( 'Utility willbe is up to date!' );
+    }
+
+    return true;
+  })
+
+  return ready;
+}
+
+versionIsUpToDate.defaults =
+{
+  throwing : 1,
+  brief : 1
 }
 
 // --
@@ -2028,7 +2124,7 @@ function graphInfoExportAsTree( modules, o )
 
   function variantNameAndPath( variant )
   {
-    let result = variant.object.qualifiedName;
+    let result = variant.object instanceof _.Will.ModuleOpener ? 'module::' + variant.opener.name : variant.object.qualifiedName;
     if( o.withLocalPath )
     result += ` - path::local:=${_.color.strFormat( variant.localPath, 'path' )}`;
     if( o.withRemotePath && variant.remotePath )
@@ -2813,6 +2909,8 @@ let Extend =
   vcsFor,
   resourcesInfoExport,
   _pathChanged,
+  versionGet,
+  versionIsUpToDate,
 
   // defaults
 

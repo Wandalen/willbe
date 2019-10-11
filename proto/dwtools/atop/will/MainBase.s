@@ -2124,7 +2124,7 @@ function graphInfoExportAsTree( modules, o )
 
   function variantNameAndPath( variant )
   {
-    let result = variant.object.qualifiedName;
+    let result = variant.object instanceof _.Will.ModuleOpener ? 'module::' + variant.opener.name : variant.object.qualifiedName;
     if( o.withLocalPath )
     result += ` - path::local:=${_.color.strFormat( variant.localPath, 'path' )}`;
     if( o.withRemotePath && variant.remotePath )

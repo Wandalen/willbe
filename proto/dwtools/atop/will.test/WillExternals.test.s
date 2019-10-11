@@ -2296,6 +2296,7 @@ function modulesTreeHierarchyRemote( test )
   })
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( submodulesPath );
 
   /* - */
 
@@ -2360,13 +2361,13 @@ function modulesTreeHierarchyRemote( test )
    |   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
    |   +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
    +-- module::b
-   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/out/wPathTools.out
    | +-- module::Proto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
    +-- module::c
    | +-- module::a0
    | | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
    | | +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
-   | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/
+   | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out
    +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
 `
     test.identical( _.strCount( got.output, exp ), 1 );
@@ -2472,13 +2473,13 @@ function modulesTreeHierarchyRemote( test )
    |   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
    |   +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
    +-- module::b
-   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/out/wPathTools.out
    | +-- module::Proto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
    +-- module::c
    | +-- module::a0
    | | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
    | | +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
-   | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/
+   | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out
    +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
 `
     test.identical( _.strCount( got.output, exp ), 1 );

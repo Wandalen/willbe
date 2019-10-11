@@ -346,7 +346,7 @@ function RemotePathAdjust( remotePath, relativePath )
 
   let remotePathParsed = _.uri.parseConsecutive( remotePath );
 
-  debugger;
+  // debugger;
   if( !remotePathParsed.query )
   {
     return _.uri.join( remotePath, relativePath );

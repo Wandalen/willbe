@@ -346,9 +346,9 @@ function RemotePathAdjust( remotePath, relativePath )
 
   let remotePathParsed = _.uri.parseConsecutive( remotePath );
 
+  // debugger;
   if( !remotePathParsed.query )
   {
-    debugger;
     return _.uri.join( remotePath, relativePath );
   }
 
@@ -700,6 +700,10 @@ function remoteIsUpdate()
 
   // if( module.isRemote !== null )
   // return end( module.isRemote );
+  // debugger;
+
+  if( !module.superRelation )
+  return end( false );
 
   let remotePath = module.remotePath ? path.common( module.remotePath ) : module.commonPath;
   let remoteProvider = fileProvider.providerForPath( remotePath );
