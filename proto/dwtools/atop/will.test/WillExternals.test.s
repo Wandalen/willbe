@@ -4932,54 +4932,58 @@ function exportInformal( test )
     test.identical( files, [ '.', './Proto.informal.out.will.yml' ] );
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( outPath, './Proto.informal.out.will.yml' ) );
+    outfile = outfile.module[ 'Proto.informal.out' ];
     var expected =
     {
       "module.willfiles" :
       {
-        "path" : "Proto.informal.out.will.yml",
-        "criterion" : { "predefined" : 1 }
-      },
-      "module.original.willfiles" :
-      {
-        "path" : "../module/Proto.informal.will.yml",
-        "criterion" : { "predefined" : 1 }
+        "criterion" : { "predefined" : 1 },
+        "path" : `Proto.informal.out.will.yml`
       },
       "module.common" :
       {
-        "path" : "Proto.informal.out",
+        "criterion" : { "predefined" : 1 },
+        "path" : `Proto.informal.out`
+      },
+      "module.original.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : `../module/Proto.informal.will.yml`
+      },
+      "module.peer.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : `../module/Proto.informal.will.yml`
+      },
+      "module.download" :
+      {
         "criterion" : { "predefined" : 1 }
       },
       "in" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : `.`
       },
       "out" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : `.`
       },
       "remote" :
       {
-        "path" : "git+https:///github.com/Wandalen/wProto.git",
         "criterion" : { "predefined" : 1 }
       },
-      "local" :
-      {
-        "path" : "../.module/Proto",
-        "criterion" : { "predefined" : 1 }
-      },
-      "export" : { "path" : "{path::local}/proto" },
+      "download" : { "path" : `../.module/Proto` },
+      "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
-        "path" : "../.module/Proto/proto",
-        "criterion" : { "default" : 1, "export" : 1 }
+        "criterion" : { "default" : 1, "export" : 1 },
+        "path" : `../.module/Proto/proto`
       }
     }
-    debugger;
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
-    test.identical( outfile.path.local.path, '../.module/Proto' );
+    test.identical( outfile.path.download.path, '../.module/Proto' );
     test.identical( outfile.path.remote.path, 'git+https:///github.com/Wandalen/wProto.git' );
     // logger.log( _.toJson( outfile.path ) );
 
@@ -5005,61 +5009,65 @@ function exportInformal( test )
     test.identical( files, [ '.', './Proto.informal.out.will.yml' ] );
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( outPath, './Proto.informal.out.will.yml' ) );
-
+    outfile = outfile.module[ 'Proto.informal.out' ];
     var expected =
     {
       "module.willfiles" :
       {
-        "path" : "Proto.informal.out.will.yml",
-        "criterion" : { "predefined" : 1 }
-      },
-      "module.original.willfiles" :
-      {
-        "path" : "../module/Proto.informal.will.yml",
-        "criterion" : { "predefined" : 1 }
+        "criterion" : { "predefined" : 1 },
+        "path" : `Proto.informal.out.will.yml`
       },
       "module.common" :
       {
-        "path" : "Proto.informal.out",
+        "criterion" : { "predefined" : 1 },
+        "path" : `Proto.informal.out`
+      },
+      "module.original.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : `../module/Proto.informal.will.yml`
+      },
+      "module.peer.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : `../module/Proto.informal.will.yml`
+      },
+      "module.download" :
+      {
         "criterion" : { "predefined" : 1 }
       },
       "in" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : `.`
       },
       "out" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : `.`
       },
       "remote" :
       {
-        "path" : "git+https:///github.com/Wandalen/wProto.git",
         "criterion" : { "predefined" : 1 }
       },
-      "local" :
-      {
-        "path" : "../.module/Proto",
-        "criterion" : { "predefined" : 1 }
-      },
-      "export" : { "path" : "{path::local}/proto" },
+      "download" : { "path" : `../.module/Proto` },
+      "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
-        "path" : "../.module/Proto/proto",
-        "criterion" : { "default" : 1, "export" : 1 }
+        "criterion" : { "default" : 1, "export" : 1 },
+        "path" : `../.module/Proto/proto`
       }
     }
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
-    test.identical( outfile.path.local.path, '../.module/Proto' );
+    test.identical( outfile.path.download.path, '../.module/Proto' );
     test.identical( outfile.path.remote.path, 'git+https:///github.com/Wandalen/wProto.git' );
     // logger.log( _.toJson( outfile.path ) );
 
     return null;
   })
 
-  /* - */
+  // /* - */
 
   ready
   .then( () =>
@@ -5079,60 +5087,65 @@ function exportInformal( test )
     test.identical( files, [ '.', './UriBasic.informal.out.will.yml' ] );
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( outPath, './UriBasic.informal.out.will.yml' ) );
+    outfile = outfile.module[ 'UriBasic.informal.out' ];
     var expected =
     {
       "module.willfiles" :
       {
-        "path" : "UriBasic.informal.out.will.yml",
-        "criterion" : { "predefined" : 1 }
-      },
-      "module.original.willfiles" :
-      {
-        "path" : "../module/UriBasic.informal.will.yml",
-        "criterion" : { "predefined" : 1 }
+        "criterion" : { "predefined" : 1 },
+        "path" : `UriBasic.informal.out.will.yml`
       },
       "module.common" :
       {
-        "path" : "UriBasic.informal.out",
+        "criterion" : { "predefined" : 1 },
+        "path" : `UriBasic.informal.out`
+      },
+      "module.original.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : `../module/UriBasic.informal.will.yml`
+      },
+      "module.peer.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : `../module/UriBasic.informal.will.yml`
+      },
+      "module.download" :
+      {
         "criterion" : { "predefined" : 1 }
       },
       "in" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : `.`
       },
       "out" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : `.`
       },
       "remote" :
       {
-        "path" : "npm:///wuribasic",
         "criterion" : { "predefined" : 1 }
       },
-      "local" :
-      {
-        "path" : "../.module/UriBasic",
-        "criterion" : { "predefined" : 1 }
-      },
-      "export" : { "path" : "{path::local}/proto" },
+      "download" : { "path" : `../.module/UriBasic` },
+      "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
-        "path" : "../.module/UriBasic/proto",
-        "criterion" : { "default" : 1, "export" : 1 }
-      }
+        "criterion" : { "default" : 1, "export" : 1 },
+        "path" : `../.module/UriBasic/proto`
+      },
     }
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
-    test.identical( outfile.path.local.path, '../.module/UriBasic' );
+    test.identical( outfile.path.download.path, '../.module/UriBasic' );
     test.identical( outfile.path.remote.path, 'npm:///wuribasic' );
     // logger.log( _.toJson( outfile.path ) );
 
     return null;
   })
 
-  /* - */
+  // /* - */
 
   return ready;
 }
