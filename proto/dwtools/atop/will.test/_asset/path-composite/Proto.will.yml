@@ -10,15 +10,15 @@ path :
   remote : 'git+hd://../_repo/Proto'
   # remote : 'git+https:///github.com/Wandalen/wProto.git'
   # git:///git@bitbucket.org:group/repo.git/out/Repo#master
-  local : '.module/Proto'
-  export : '{path::local}/proto/**'
+  download : '.module/Proto'
+  export : '{path::download}/proto/**'
   temp : out
 
 reflector :
 
   download :
     src : path::remote
-    dst : path::local
+    dst : path::download
 
 step :
 

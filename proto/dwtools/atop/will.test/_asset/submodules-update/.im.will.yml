@@ -3,7 +3,7 @@ submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will#0ce6c0f613ec76670cdcf4b3885843cf4298c000
   PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic.out.will#master
-  UriBasic : git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out.will#96a153b690d1dbc251881a70b14cc9e53d45918b
+  UriBasic : git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic#382707a813d7b0a369aad2689f39c166930f9d87
 
 path :
 

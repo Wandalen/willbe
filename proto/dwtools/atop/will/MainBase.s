@@ -603,11 +603,12 @@ function modulePathUnregister( openedModule )
 
   if( openedModule.commonPath )
   {
-    let registered = will.moduleWithCommonPathMap[ openedModule.commonPath ];
-    _.assert( _.strIs( openedModule.commonPath ) );
+    let registered = will.moduleWithCommonPathMap[ openedModule._registeredPath ];
+    _.assert( _.strIs( openedModule._registeredPath ) );
     // _.assert( registered === openedModule || !openedModule.isPreformed() );
     _.assert( registered === openedModule || registered === undefined );
-    delete will.moduleWithCommonPathMap[ openedModule.commonPath ];
+    delete will.moduleWithCommonPathMap[ openedModule._registeredPath ];
+    openedModule._registeredPath = null;
   }
 
   _.assert( _.arrayCountElement( _.mapVals( will.moduleWithCommonPathMap ), openedModule ) === 0 );

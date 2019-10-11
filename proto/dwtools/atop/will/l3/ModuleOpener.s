@@ -175,6 +175,7 @@ function optionsForModuleExport()
 
     willfilesPath : null,
     localPath : null,
+    commonPath : null,
     downloadPath : null,
     remotePath : null,
 
@@ -446,13 +447,11 @@ function find( o )
   {
 
     opener.preform();
-    // opener.remoteForm();
 
     _.assert( opener.formed >= 2 );
     if( opener.formed < 3 )
     opener.formed = 3;
 
-    // debugger;
     /*
       xxx : check
         import module
@@ -1513,8 +1512,8 @@ function _filePathChanged1( o )
   return o;
 
   _.assert( o.willfilesPath !== undefined ); // ttt
-  if( o.willfilesPath === opener.willfilesPath )
-  return;
+  // if( o.willfilesPath === opener.willfilesPath )
+  // return;
 
   o = opener._filePathChanged2( o );
 

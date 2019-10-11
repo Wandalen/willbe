@@ -111,7 +111,16 @@ function reform()
     /*
     update of local path
     */
-    _.assert( will.variantMap[ localPath ] === undefined || will.variantMap[ localPath ] === variant );
+
+    let variant2 = will.variantMap[ localPath ];
+    if( variant2 && variant2 !== variant )
+    {
+      debugger;
+      if( variant.mergeIn( variant2 ) )
+      return variant2;
+    }
+
+    _.assert( variant2 === undefined || variant2 === variant );
     delete will.variantMap[ localPath ];
     variant.localPath = localPath;
   }
@@ -259,6 +268,40 @@ function reform()
 
   }
 
+}
+
+//
+
+function mergeIn( variant2 )
+{
+  let variant = this;
+
+  _.assert( !variant.finitedIs() );
+  _.assert( !variant2.finitedIs() );
+
+  variant.relations.slice().forEach( ( object ) => move( object ) );
+  variant.openers.slice().forEach( ( object ) => move( object ) );
+  variant.modules.slice().forEach( ( object ) => move( object ) );
+
+  _.assert( !variant.finitedIs() );
+  _.assert( !variant2.finitedIs() );
+
+  variant.reform();
+  if( variant.finitedIs() )
+  return true;
+  return false;
+
+  function move( object )
+  {
+    let localPath, remotePath;
+    [ localPath, remotePath ] = variant.PathsOf( object );
+    if( ( localPath && localPath === variant2.localPath ) || ( remotePath && remotePath === variant2.remotePath ) )
+    {
+      variant._remove( object );
+      variant2._add( object );
+    }
+    return object;
+  }
 }
 
 //
@@ -548,13 +591,22 @@ function VariantOf( will, object )
   _.assert( arguments.length === 2 );
   _.assert( !!object );
 
+  // if( object.id === 275 )
+  // debugger;
+
   if( object instanceof _.Will.ModuleVariant )
   return object;
 
-  let paths = cls.PathsOf( object );
-  let variant = _.any( paths, ( path ) => will.variantMap[ path ] ) || null;
-  if( variant )
-  _.assert( _.all( paths, ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
+  let variant = will.objectToVariantHash.get( object );
+
+  if( Config.debug )
+  {
+    let paths = cls.PathsOf( object );
+    let variant2 = _.any( paths, ( path ) => will.variantMap[ path ] ) || null;
+    if( variant2 )
+    _.assert( _.all( paths, ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant2 ) );
+    _.assert( variant === variant2 );
+  }
 
   return variant;
 }
@@ -698,9 +750,6 @@ function _moduleAdd( module )
 
   _.assert( module instanceof _.Will.OpenedModule );
 
-  if( module.id === 336 )
-  debugger;
-
   if( !variant.module )
   {
     variant.module = module;
@@ -713,6 +762,10 @@ function _moduleAdd( module )
   _.assert( variant2 === variant || variant2 === undefined, 'Module can belong only to one variant' );
   will.objectToVariantHash.set( module, variant );
 
+  // if( changed )
+  // if( variant.id === 2 )
+  // debugger;
+
   return changed;
 }
 
@@ -724,8 +777,8 @@ function moduleRemove( module )
   let will = variant.will;
   let changed = false;
 
-  if( module.id === 336 )
-  debugger;
+  // if( variant.id === 2 )
+  // debugger;
 
   _.assert( module instanceof _.Will.OpenedModule );
   _.assert( variant.module === module );
@@ -820,18 +873,18 @@ function infoExport()
   let result = '';
   let variant = this;
 
+  result += `variant#${variant.id}\n`;
   if( variant.module )
   {
-    result += variant.module.absoluteName + '\n';
+    result += variant.module.absoluteName + ' #' + variant.module.id + '\n';
   }
   if( variant.opener )
   {
-    debugger;
-    result += 'Opener of ' + variant.opener.absoluteName + '\n';
+    result += variant.opener.absoluteName + ' #' + variant.opener.id + '\n';
   }
   if( variant.relation )
   {
-    result += variant.relation.absoluteName + '\n';
+    result += variant.relation.absoluteName + ' #' + variant.relation.id + '\n';
   }
 
   if( variant.localPath )
@@ -943,6 +996,7 @@ let Extend =
   finit,
   init,
   reform,
+  mergeIn,
 
   From,
   PathsOf,

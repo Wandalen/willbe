@@ -127,6 +127,8 @@ function form1()
 
   _.assert( relation.opener.formed >= 2 );
 
+  if( relation.id === 310 )
+  debugger;
   will.variantFrom( relation );
 
   /* end */
@@ -435,8 +437,14 @@ function pathSet( src )
   _.assert( !src || !relation.opener || relation.opener.formed < 3 );
 
   relation[ pathSymbol ] = src;
+
   if( relation.opener )
-  relation.opener.willfilesPath = src;
+  {
+    let will = module.will;
+    let fileProvider = will.fileProvider;
+    let path = fileProvider.path;
+    relation.opener.willfilesPath = path.join( module.inPath, src );
+  }
 
   return src;
 }

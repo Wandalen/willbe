@@ -114,7 +114,7 @@ function MakeForEachCriterion( o )
   catch( err )
   {
     debugger;
-    throw _.err( err, '\nCant form', Cls.KindName + '::' + o.name );
+    throw _.err( err, '\nCant form', Cls.KindName + '::' + o.resource.name );
   }
 
   /* */
@@ -193,6 +193,12 @@ function MakeForEachCriterion( o )
       let rewriting = !!o.Rewriting;
       let importing = !!o.Importing;
       let isOut = !!o.IsOut;
+
+      if( !isOut && importing && o.resource.name === 'local' && Cls.KindName === 'path' )
+      {
+        debugger;
+        throw _.err( 'Willfile should have no path::local' );
+      }
 
       if( o.resource.importableFromIn !== undefined && !o.resource.importableFromIn )
       if( importing && !isOut )

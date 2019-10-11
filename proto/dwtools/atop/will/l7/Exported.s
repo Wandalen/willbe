@@ -270,10 +270,10 @@ function _performPrepare2()
 
   /* */
 
-  _.sure
+  if( !_.strDefined( exported.exportPath ) )
+  throw _.errBrief
   (
-    _.strDefined( exported.exportPath )
-    , () => exported.step.decoratedQualifiedName + ' should have defined path or reflector to export. Alternatively module could have defined path::export or reflecotr::export.'
+    exported.step.decoratedQualifiedName + ' should have defined path or reflector to export. Alternatively module could have defined path::export or reflecotr::export.'
   );
 
   for( let s in module.submoduleMap )
@@ -598,10 +598,10 @@ function _performExportedFilesReflector()
 
   exported.exportedFilesPath.path = path.s.relative( module.inPath, exportedFilesPath );
 
-  _.sure
+  if( exported.exportedFilesPath.path.length === 0 )
+  throw _.errBrief
   (
-    exported.exportedFilesPath.path.length > 0,
-    () => 'No file found at ' + path.commonTextualReport( exported.srcFilter.filePath )
+    'No file found at ' + path.commonTextualReport( exported.srcFilter.filePath )
     + ', cant export ' + exported.build.name,
   );
 
