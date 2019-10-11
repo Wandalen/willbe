@@ -903,7 +903,15 @@ function commandVersionCheck( e )
   let ca = e.ca;
   let logger = will.logger;
 
-  return will.versionIsUpToDate();
+  let propertiesMap = _.strStructureParse( e.argument );
+  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+
+  return will.versionIsUpToDate( propertiesMap );
+}
+
+commandVersionCheck.commandProperties =
+{
+  throwing : 'Throw an error if utility is not up to date. Default : 1'
 }
 
 //

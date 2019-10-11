@@ -339,11 +339,13 @@ function versionGet()
 
 //
 
-function versionIsUpToDate()
+function versionIsUpToDate( o )
 {
   let will = this;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 1 );
+
+  _.routineOptions( versionIsUpToDate, o );
 
   let currentVersion = will.versionGet();
 
@@ -364,12 +366,33 @@ function versionIsUpToDate()
 
     if( latestVersion !== currentVersion )
     {
-      debugger
-      throw _.errBrief
-      ( 'Utility willbe is out of date!',
-        '\nCurrent version:', currentVersion, '\nLatest:', latestVersion,
-        '\nPlease run: "npm r -g willbe && npm i -g willbe" to update.'
-      );
+      let message =
+      [
+        '╔════════════════════════════════════════════════════════════╗',
+        '║ Utility willbe is out of date!                             ║',
+        `║ Current version: ${currentVersion}`,
+        `║ Latest: ${latestVersion}`,
+        '║ Please run: "npm r -g willbe && npm i -g willbe" to update.║',
+        '╚════════════════════════════════════════════════════════════╝'
+      ]
+
+      message[ 2 ] = message[ 2 ] + _.strDup( ' ', message[ 4 ].length - message[ 2 ].length - 1 ) + '║';
+      message[ 3 ] = message[ 3 ] + _.strDup( ' ', message[ 4 ].length - message[ 3 ].length - 1 ) + '║';
+
+      message = message.join( '\n' )
+
+      let coloredMessage = _.color.strBg( message, 'yellow' );
+
+      if( !o.throwing )
+      {
+        logger.log( coloredMessage );
+        return false;
+      }
+
+      if( o.brief )
+      throw _.errBrief( coloredMessage );
+      else
+      throw _.err( message );
     }
     else
     {
@@ -380,6 +403,12 @@ function versionIsUpToDate()
   })
 
   return ready;
+}
+
+versionIsUpToDate.defaults =
+{
+  throwing : 1,
+  brief : 1
 }
 
 // --

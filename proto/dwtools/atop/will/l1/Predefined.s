@@ -950,15 +950,16 @@ function stepRoutineWillbeIsUpToDate( frame )
   let run = frame.run;
   let module = run.module;
   let will = module.will;
-  let fileProvider = will.fileProvider;
 
   _.assert( arguments.length === 1 );
 
-  return will.versionIsUpToDate();
+  return will.versionIsUpToDate( _.mapExtend( null, step.opts ) );
 }
 
 stepRoutineWillbeIsUpToDate.stepOptions =
 {
+  throwing : 1,
+  brief : 0
 }
 
 stepRoutineWillbeIsUpToDate.uniqueOptions =
