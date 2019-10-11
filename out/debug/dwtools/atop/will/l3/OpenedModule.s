@@ -155,12 +155,9 @@ function init( o )
 
   module.pathResourceMap = module.pathResourceMap || Object.create( null );
 
-  Parent.prototype.init.apply( module, arguments );
+  Parent.prototype.init.call( module );
 
-  // if( module.id === 60 )
-  // debugger;
-
-  module.precopy( o );
+  module.precopy1( o );
 
   let will = o.will;
   let logger = will.logger;
@@ -177,18 +174,6 @@ function init( o )
     onEnd :             [ null,               null,                 null,                           null,                       null, /*module._willfilesReadEnd,*/ null,                       module._formEnd ],
   });
 
-  // /* xxx : remove stage picked */
-  // module.stager = new _.Stager
-  // ({
-  //   object :            module,
-  //   verbosity :         Math.max( Math.min( will.verbosity, will.verboseStaging ), will.verbosity - 6 ),
-  //   stageNames :        [ 'preformed',        'picked',             'opened',             'attachedWillfilesFormed',      'peerModulesFormed',        'subModulesFormed',                 'resourcesFormed',          'formed' ],
-  //   consequences :      [ 'preformReady',     'pickedReady',        'openedReady',        'attachedWillfilesFormReady',   'peerModulesFormReady',     'subModulesFormReady',              'resourcesFormReady',       'ready' ],
-  //   onPerform :         [ '_preform',         '_willfilesPicked',   '_willfilesOpen',     '_attachedWillfilesForm',       '_peerModulesForm',         '_subModulesForm',                  '_resourcesForm',           null ],
-  //   onBegin :           [ null,               null,                 null,                 null,                           null,                       null,                               null,                       null ],
-  //   onEnd :             [ null,               null,                 null,                 null,                           null,                       null, /*module._willfilesReadEnd,*/ null,                       module._formEnd ],
-  // });
-
   module.stager.stageStatePausing( 'opened', 1 );
   module.stager.stageStateSkipping( 'resourcesFormed', 1 );
 
@@ -199,34 +184,31 @@ function init( o )
   if( o )
   module.copy( o );
 
-  if( module.willfilePath === null )
-  module.willfilePath = _.select( module.willfilesArray, '*/filePath' );
+  // if( module.willfilesPath === null ) // xxx
+  // module.willfilesPath = _.select( module.willfilesArray, '*/filePath' );
 
-  module._filePathChanged2();
+  // module._filePathChanged2(); /* xxx */
   module._nameChanged();
 
   if( will.verosity >= 5 )
   logger.log( module.qualifiedName, 'init' );
 
-  // if( module.id === 55 )
-  // debugger;
-
 }
 
+// //
 //
-
-function openerMake()
-{
-  let module = this;
-  let will = module.will;
-
-  _.assert( arguments.length === 0 ); debugger; xxx
-
-  let o2 = module.optionsForOpenerExport();
-  let opener = will.openerMake({ opener : o2 });
-
-  return opener;
-}
+// function _openerMake()
+// {
+//   let module = this;
+//   let will = module.will;
+//
+//   _.assert( arguments.length === 0 ); debugger; xxx
+//
+//   let o2 = module.optionsForOpenerExport();
+//   let opener = will._openerMake({ opener : o2 });
+//
+//   return opener;
+// }
 
 //
 
@@ -296,24 +278,114 @@ function usersGet()
 
 //
 
-function precopy( o )
+function precopy1( o )
 {
   let module = this;
-
-  if( o.will )
-  module.will = o.will;
-
-  if( o.superRelations )
-  module.superRelations = o.superRelations;
-
-  if( o.original )
-  module.original = o.original;
 
   if( !module.rootModule && !o.rootModule )
   o.rootModule = module;
 
-  if( o.rootModule )
+  if( o.will !== undefined )
+  module.will = o.will;
+  if( o.superRelations !== undefined )
+  module.superRelations = o.superRelations;
+  if( o.original !== undefined )
+  module.original = o.original;
+  if( o.rootModule !== undefined )
   module.rootModule = o.rootModule;
+
+  return o;
+}
+
+//
+
+function precopy2( o )
+{
+  let module = this;
+
+  if( !module.rootModule && !o.rootModule )
+  o.rootModule = module;
+
+  if( o.will !== undefined )
+  module.will = o.will;
+  // if( o.superRelations !== undefined )
+  // module.superRelations = o.superRelations;
+  // if( o.original !== undefined )
+  // module.original = o.original;
+  // if( o.rootModule !== undefined )
+  // module.rootModule = o.rootModule;
+
+  if( o.isRemote !== undefined )
+  module.isRemote = o.isRemote;
+
+  if( o.inPath !== undefined )
+  module.inPath = o.inPath;
+  if( o.outPath !== undefined )
+  module.outPath = o.outPath;
+  if( o.localPath !== undefined )
+  module._localPathPut( o.localPath );
+  if( o.commonPath !== undefined )
+  module._commonPathPut( o.commonPath );
+  if( o.downloadPath !== undefined )
+  module.downloadPath = o.downloadPath;
+  if( o.remotePath !== undefined )
+  module.remotePath = o.remotePath;
+  if( o.willfilesPath !== undefined )
+  module.willfilesPath = o.willfilesPath;
+  if( o.pathResourceMap !== undefined )
+  module.pathResourceMap = o.pathResourceMap;
+
+  o = _.mapExtend( null, o );
+
+  // delete o.superRelations;
+  // delete o.original;
+  // delete o.rootModule;
+  delete o.isRemote;
+  delete o.inPath;
+  delete o.outPath;
+  delete o.localPath;
+  delete o.commonPath;
+  delete o.downloadPath;
+  delete o.remotePath;
+  delete o.willfilesPath;
+  delete o.pathResourceMap;
+
+  return o;
+}
+
+//
+
+function precopy( o )
+{
+  let module = this;
+
+  o = module.precopy1( o );
+  o = module.precopy2( o );
+
+  return o;
+}
+
+//
+
+function postcopy( o )
+{
+  let module = this;
+
+  let names = /* yyy */
+  {
+    // willfilesPath : null,
+    // inPath : null,
+    // outPath : null,
+    // localPath : null,
+    // downloadPath : null,
+    // remotePath : null,
+  }
+
+  for( let n in names )
+  {
+    if( o[ n ] !== undefined )
+    module[ n ] = o[ n ];
+  }
 
   return o;
 }
@@ -324,28 +396,22 @@ function copy( o )
 {
   let module = this;
 
-  module.precopy( o );
+  _.assert( arguments.length === 1 );
 
-  let result = _.Copyable.prototype.copy.apply( module, arguments );
+  o = module.precopy( o );
 
-  let names =
-  {
-    willfilesPath : null,
-    inPath : null,
-    outPath : null,
-    localPath : null,
-    downloadPath : null,
-    remotePath : null,
-  }
+  // let o2 = o;
+  // if( o.willfilesPath )
+  // {
+  //   o2 = _.mapExtend( null, o );
+  //   delete o2.willfilesPath;
+  // }
 
-  for( let n in names )
-  {
-    if( o[ n ] !== undefined )
-    module[ n ] = o[ n ];
-  }
+  let result = _.Copyable.prototype.copy.apply( module, [ o ] );
 
-  _.assert( result.currentRemotePath === module.currentRemotePath );
+  module.postcopy( o );
 
+  // _.assert( result.currentRemotePath === module.currentRemotePath );
   return result;
 }
 
@@ -490,6 +556,7 @@ function _preform()
   // debugger;
   will.moduleIdRegister( module );
   module._pathRegister();
+  module._remoteChanged();
   // debugger;
   // will.modulePathRegister( module );
   // will.variantFrom( module );
@@ -615,9 +682,9 @@ function predefinedForm()
   ({
     name : 'local',
     path : null,
-    writable : 1,
-    exportable : 1,
-    importableFromIn : 1,
+    writable : 0, /* yyy */
+    exportable : 0,
+    importableFromIn : 0, /* yyy */
     importableFromOut : 0,
   })
 
@@ -1780,7 +1847,7 @@ function moduleBuild_body( o )
   .then( () =>
   {
     _.assert( !module.isOut );
-    debugger;
+    // debugger;
     return module.modulesUpform({ all : 0, subModulesFormed : 1, peerModulesFormed : 1, recursive : 1 });
     // return module.upform({ all : 0, subModulesFormed : 1, peerModulesFormed : 1 });
     // return null;
@@ -2917,9 +2984,6 @@ function versionsVerify()
       return false;
     }
 
-    // if( r.opener.formed < 2 )
-    // r.opener.remoteForm();
-
     _.assert
     (
       !!r.opener && r.opener.formed >= 2,
@@ -3091,9 +3155,10 @@ function peerModuleOpen( o )
       peerModule : module,
       searching : 'exact',
       isAuto : 1,
+      reason : 'peer',
     }
 
-    let opener2 = will.openerMake
+    let opener2 = will._openerMake
     ({
       throwing : 0,
       opener : o2,
@@ -3116,9 +3181,15 @@ function peerModuleOpen( o )
         if( peerModule && !peerModule.isUsedManually() )
         peerModule.finit();
         if( o.throwing )
-        throw err;
+        {
+          throw err;
+        }
         else
-        _.errAttend( err );
+        {
+          if( !peerModule.isOut )
+          logger.log( _.errOnce( _.errBrief( err ) ) );
+          _.errAttend( err );
+        }
         return null;
       }
 
@@ -3164,15 +3235,15 @@ function _peerChanged()
   if( module.isOut )
   {
     let originalWillfilesPath = module.originalWillfilesPath;
-    module._peerWillfilesPathAssign( originalWillfilesPath );
+    module._peerWillfilesPathPut( originalWillfilesPath );
   }
   else
   {
     let outfilePath = null;
     if( module.about.name )
     outfilePath = module.outfilePathGet();
-    module._originalWillfilesPathAssign( null );
-    module._peerWillfilesPathAssign( outfilePath );
+    module._originalWillfilesPathPut( null );
+    module._peerWillfilesPathPut( outfilePath );
   }
 
 }
@@ -3280,9 +3351,17 @@ function _remoteChanged()
   let path = fileProvider.path;
   let logger = will.logger;
 
+  if( module.id === 101 )
+  debugger;
+
+  // if( !module.isPreformed() ) /* xxx */
+  // return;
+
   _.assert( !!module.pathResourceMap[ 'current.remote' ] );
 
   // logger.log( module.absoluteName, '_remoteChanged' ); debugger;
+
+  _.assert( module.commonPath === module.localPath );
 
   /* */
 
@@ -3676,12 +3755,20 @@ function pathsRebase( o )
   // if( localPathResource.path === null )
   // localPathResource.path = '.'; /* xxx : warkaround */
 
-  let inPath = path.canonize( o.inPath );
-  let exInPath = module.inPath;
-  let relative = path.relative( inPath, exInPath );
+  // let inPath = path.canonize( o.inPath );
+  // let exInPath = module.inPath;
+  o.inPath = path.canonize( o.inPath )
+  if( !o.exInPath )
+  o.exInPath = module.inPath;
+  o.exInPath = path.canonize( o.exInPath )
+  let relative = path.relative( o.inPath, o.exInPath );
 
-  if( inPath === exInPath )
-  return;
+  if( o.inPath === o.exInPath )
+  {
+    debugger;
+    module.inPath = o.inPath
+    return;
+  }
 
   /* path */
 
@@ -3701,16 +3788,16 @@ function pathsRebase( o )
     resource.pathsRebase
     ({
       relative : relative,
-      exInPath : exInPath,
-      inPath : inPath,
+      exInPath : o.exInPath,
+      inPath : o.inPath,
     });
 
   }
 
-  module.inPath = inPath;
+  module.inPath = o.inPath;
 
   _.assert( module.pathResourceMap[ inPathResource.name ] === inPathResource );
-  _.assert( module.inPath === inPath );
+  _.assert( module.inPath === o.inPath );
   _.assert( path.isRelative( module.pathResourceMap.in.path ) );
 
   /* submodule */
@@ -3722,8 +3809,8 @@ function pathsRebase( o )
     resource.pathsRebase
     ({
       relative : relative,
-      exInPath : exInPath,
-      inPath : inPath,
+      exInPath : o.exInPath,
+      inPath : o.inPath,
     });
 
   }
@@ -3737,8 +3824,8 @@ function pathsRebase( o )
     resource.pathsRebase
     ({
       relative : relative,
-      exInPath : exInPath,
-      inPath : inPath,
+      exInPath : o.exInPath,
+      inPath : o.inPath,
     });
 
   }
@@ -3748,6 +3835,7 @@ function pathsRebase( o )
 pathsRebase.defaults =
 {
   inPath : null,
+  exInPath : null,
 }
 
 //
@@ -3755,6 +3843,10 @@ pathsRebase.defaults =
 function _filePathChanged1( o )
 {
   let module = this;
+
+  _.assert( o.willfilesPath !== undefined ); // ttt
+  // if( o.willfilesPath === module.willfilesPath )
+  // return;
 
   o = module._filePathChanged2( o );
 
@@ -3785,34 +3877,52 @@ function _filePathChanged2( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  if( module.willfilesPath )
-  will.modulePathUnregister( module );
+  // ttt
+  // if( module.willfilesPath )
+  // will.modulePathUnregister( module );
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
   o = Parent.prototype._filePathChanged2.call( module, o );
 
   _.assert( _.boolIs( o.isIdentical ) );
+  _.assert( _.strIs( o.localPath ) );
+  _.assert( o.localPath === o.commonPath );
 
-  module._dirPathAssign( o.dirPath );
+  module._dirPathPut( o.dirPath );
 
   if( o.willfilesPath !== null )
   {
-    module._commonPathAssign( o.commonPath );
-    if( module.isRemote === false )
-    module._localPathAssign( o.commonPath );
-    _.assert( module.commonPath === o.commonPath );
+    module._commonPathPut( o.commonPath );
+    if( module.isRemote === false ) /* xxx */
+    {
+      module._localPathPut( o.localPath );
+      _.assert( module.localPath === o.localPath );
+      _.assert( module.localPath === module.commonPath );
+    }
   }
 
   module._peerChanged();
 
-  if( module.isPreformed() )
-  if( !o.isIdentical )
-  if( module.commonPath )
+  // ttt
+  // if( module.isPreformed() )
+  // if( !o.isIdentical )
+  // if( module.commonPath )
+  // {
+  //   module._pathRegister();
+  // }
+
+  module._willfilesPathPut( o.willfilesPath );
+
+  for( let s in module.submoduleMap )
   {
-    module._pathRegister();
+    debugger;
+    let relation = module.submoduleMap[ s ];
+    if( relation.formed )
+    will.variantFrom( relation );
   }
 
+  _.assert( module.localPath === module.commonPath || module.localPath === null );
   _.assert
   (
     !module.stager || !module.stager.stageStatePerformed( 'preformed' ) || _.strDefined( module.commonPath ),
@@ -3850,6 +3960,10 @@ function inPathGet()
 {
   let module = this;
   let will = module.will;
+
+  if( !will )
+  return null;
+
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let result = path.s.join( module.dirPath, ( module.pathMap.in || '.' ) );
@@ -3866,6 +3980,10 @@ function outPathGet()
 {
   let module = this;
   let will = module.will;
+
+  if( !will )
+  return null;
+
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   return path.s.join( module.dirPath, ( module.pathMap.in || '.' ), ( module.pathMap.out || '.' ) );
@@ -3922,22 +4040,23 @@ function predefinedPathGet_functor( fieldName, resourceName, absolutize )
 
 //
 
-function predefinedPathAssign_functor( fieldName, resourceName, relativizing )
+function predefinedPathPut_functor( fieldName, resourceName, relativizing )
 {
 
-  return function predefinedPathAssign( filePath )
+  return function predefinedPathPut( filePath )
   {
     let module = this;
+    let will = module.will;
 
-    if( !module.will && !filePath )
+    if( !will && !filePath )
     return filePath;
 
     filePath = _.entityMake( filePath );
 
-    let was = module[ fieldName ];
+    let ex = module[ fieldName ];
     let isIdentical = false;
-    if( fieldName === 'willfilesPath' )
-    isIdentical = was === filePath || _.entityIdentical( _.path.simplify( was ), _.path.simplify( filePath ) );
+    // if( fieldName === 'willfilesPath' )
+    isIdentical = ex === filePath || _.entityIdentical( _.path.simplify( ex ), _.path.simplify( filePath ) );
 
     if( !module.pathResourceMap[ resourceName ] )
     {
@@ -3953,16 +4072,39 @@ function predefinedPathAssign_functor( fieldName, resourceName, relativizing )
     {
       let basePath = module[ relativizing ];
       _.assert( basePath === null || _.strIs( basePath ) );
-
       if( filePath && basePath )
       filePath = module.pathsRelative( basePath, filePath );
-
     }
 
-    if( fieldName === 'willfilesPath' )
-    if( !isIdentical )
-    filePath = module._filePathChange( filePath );
+    // if( fieldName === 'willfilesPath' )
+    // if( !isIdentical )
+    // filePath = module._filePathSet( filePath );
+    // module.pathResourceMap[ resourceName ].path = filePath;
+
+    if( fieldName === 'localPath' || fieldName === 'remotePath' )
+    {
+      will.modulePathUnregister( module );
+    }
+
     module.pathResourceMap[ resourceName ].path = filePath;
+
+    if( fieldName === 'localPath' || fieldName === 'remotePath' )
+    if( module.isPreformed() )
+    if( module.commonPath )
+    {
+      module._pathRegister();
+    }
+
+    if( will )
+    will._pathChanged
+    ({
+      object : module,
+      fieldName : fieldName,
+      val : filePath,
+      ex,
+      isIdentical,
+      kind : 'put',
+    });
 
     return filePath;
   }
@@ -3996,7 +4138,7 @@ function decoratedPathGet_functor( fieldName )
 function predefinedPathSet_functor( fieldName, resourceName )
 {
 
-  let assignMethodName = '_' + fieldName + 'Assign';
+  let putName = '_' + fieldName + 'Put';
   _.assert( arguments.length === 2 );
   _.assert( resourceName !== 'remote' );
   _.assert( resourceName !== 'module.willfiles' );
@@ -4004,47 +4146,25 @@ function predefinedPathSet_functor( fieldName, resourceName )
   return function predefinedPathSet( filePath )
   {
     let module = this;
-    // let was = module[ fieldName ];
-    // let isIdentical = was === filePath || _.entityIdentical( _.path.simplify( was ), _.path.simplify( filePath ) );
+    let will = module.will;
+    let ex = module[ fieldName ];
 
-    _.assert( !!module[ assignMethodName ] );
-    module[ assignMethodName ]( filePath );
+    _.assert( !!module[ putName ] );
+    module[ putName ]( filePath );
 
-    // if( !isIdentical )
-    // module._filePathChanged2(); /* xxx : comment out */
+    // debugger;
+    // if( _.strIs( filePath ) && _.strEnds( filePath, '/wTools.out.will' ) )
+    // debugger;
 
-    // if( !isIdentical )
-    // if( resourceName === 'remote' && filePath !== null )
-    // module._remoteChanged();
-
-    return filePath;
-  }
-
-}
-
-//
-
-function wilfilesPathSet_functor( fieldName, resourceName )
-{
-
-  let assignMethodName = '_' + fieldName + 'Assign';
-  _.assert( arguments.length === 2 );
-  _.assert( resourceName === 'module.willfiles' );
-
-  return function wilfilesPathSet( filePath )
-  {
-    let module = this;
-    let was = module[ fieldName ];
-    let isIdentical = was === filePath || _.entityIdentical( _.path.simplify( was ), _.path.simplify( filePath ) );
-
-    module[ assignMethodName ]( filePath );
-
-    if( !isIdentical )
-    module._filePathChanged1();
-
-    // if( !isIdentical )
-    // // if( resourceName === 'remote' && filePath !== null )
-    // module._remoteChanged();
+    if( will )
+    will._pathChanged
+    ({
+      object : module,
+      fieldName : fieldName,
+      val : filePath,
+      ex,
+      kind : 'set',
+    });
 
     return filePath;
   }
@@ -4053,31 +4173,49 @@ function wilfilesPathSet_functor( fieldName, resourceName )
 
 //
 
-function remotePathSet_functor( fieldName, resourceName )
+function willfilesPathSet( filePath )
 {
+  let module = this;
 
-  let assignMethodName = '_' + fieldName + 'Assign';
-  _.assert( arguments.length === 2 );
-  _.assert( resourceName === 'remote' );
+  // module[ putName ]( filePath ); // yyy
 
-  return function remotePathSet( filePath )
-  {
-    let module = this;
-    let was = module[ fieldName ];
-    let isIdentical = was === filePath || _.entityIdentical( _.path.simplify( was ), _.path.simplify( filePath ) );
+  module._filePathChanged1
+  ({
+    willfilesPath : filePath,
+  });
 
-    module[ assignMethodName ]( filePath );
+  return filePath;
+}
 
-    if( !isIdentical )
-    module._filePathChanged2();
+//
 
-    if( !isIdentical )
-    // if( resourceName === 'remote' && filePath !== null )
-    module._remoteChanged();
+function remotePathSet( filePath )
+{
+  let module = this;
+  let will = module.will;
+  let ex = module.remotePath;
+  let isIdentical = ex === filePath || _.entityIdentical( _.path.simplify( ex ), _.path.simplify( filePath ) );
 
-    return filePath;
-  }
+  module._remotePathPut( filePath );
 
+  // if( !isIdentical )
+  // module._filePathChanged2();
+
+  if( !isIdentical )
+  module._remoteChanged();
+
+  if( will )
+  will._pathChanged
+  ({
+    object : module,
+    fieldName : 'remotePath',
+    val : filePath,
+    ex,
+    isIdentical,
+    kind : 'set',
+  });
+
+  return filePath;
 }
 
 //
@@ -4106,23 +4244,21 @@ let decoratedWillPathGet = decoratedPathGet_functor( 'willPath' );
 let decoratedOriginalWillfilesPathGet = decoratedPathGet_functor( 'originalWillfilesPath' );
 let decoratedPeerWillfilesPathGet = decoratedPathGet_functor( 'peerWillfilesPath' );
 
-let _inPathAssign = predefinedPathAssign_functor( 'inPath', 'in', 'dirPath', 0 );
-let _outPathAssign = predefinedPathAssign_functor( 'outPath', 'out', 'inPath', 0 );
-let _willfilesPathAssign = predefinedPathAssign_functor( 'willfilesPath', 'module.willfiles', 0 );
-let _dirPathAssign = predefinedPathAssign_functor( 'dirPath', 'module.dir', 0 );
-let _commonPathAssign = predefinedPathAssign_functor( 'commonPath', 'module.common', 0 );
-let _localPathAssign = predefinedPathAssign_functor( 'localPath', 'local', 0 );
-let _downloadPathAssign = predefinedPathAssign_functor( 'downloadPath', 'module.download', 0 );
-let _remotePathAssign = predefinedPathAssign_functor( 'remotePath', 'remote', 0 );
-let _originalWillfilesPathAssign = predefinedPathAssign_functor( 'originalWillfilesPath', 'module.original.willfiles', 0 );
-let _peerWillfilesPathAssign = predefinedPathAssign_functor( 'peerWillfilesPath', 'module.peer.willfiles', 0 );
+let _inPathPut = predefinedPathPut_functor( 'inPath', 'in', 'dirPath', 0 );
+let _outPathPut = predefinedPathPut_functor( 'outPath', 'out', 'inPath', 0 );
+let _willfilesPathPut = predefinedPathPut_functor( 'willfilesPath', 'module.willfiles', 0 );
+let _dirPathPut = predefinedPathPut_functor( 'dirPath', 'module.dir', 0 );
+let _commonPathPut = predefinedPathPut_functor( 'commonPath', 'module.common', 0 );
+let _localPathPut = predefinedPathPut_functor( 'localPath', 'local', 0 );
+let _downloadPathPut = predefinedPathPut_functor( 'downloadPath', 'module.download', 0 );
+let _remotePathPut = predefinedPathPut_functor( 'remotePath', 'remote', 0 );
+let _originalWillfilesPathPut = predefinedPathPut_functor( 'originalWillfilesPath', 'module.original.willfiles', 0 );
+let _peerWillfilesPathPut = predefinedPathPut_functor( 'peerWillfilesPath', 'module.peer.willfiles', 0 );
 
 let inPathSet = predefinedPathSet_functor( 'inPath', 'in' );
 let outPathSet = predefinedPathSet_functor( 'outPath', 'out' );
-let willfilesPathSet = wilfilesPathSet_functor( 'willfilesPath', 'module.willfiles' );
 let localPathSet = predefinedPathSet_functor( 'localPath', 'local' );
 let downloadPathSet = predefinedPathSet_functor( 'downloadPath', 'module.download' );
-let remotePathSet = remotePathSet_functor( 'remotePath', 'remote' );
 
 // --
 // name
@@ -4168,8 +4304,8 @@ function _nameChanged()
 
   /* */
 
-  // let _originalWillfilesPathAssign = predefinedPathAssign_functor( 'originalWillfilesPath', 'module.original.willfiles', 0 );
-  // let _peerWillfilesPathAssign = predefinedPathAssign_functor( 'peerWillfilesPath', 'module.peer.willfiles', 0 );
+  // let _originalWillfilesPathPut = predefinedPathPut_functor( 'originalWillfilesPath', 'module.original.willfiles', 0 );
+  // let _peerWillfilesPathPut = predefinedPathPut_functor( 'peerWillfilesPath', 'module.peer.willfiles', 0 );
 
   module._nameUnregister();
   module._nameRegister();
@@ -5249,6 +5385,7 @@ function structureExportForModuleExport( o )
   o = _.routineOptions( structureExportForModuleExport, arguments );
   _.assert( module.original === null );
 
+  // debugger;
   let moduleWas = will.moduleWithCommonPathMap[ module.CommonPathFor( o.willfilesPath ) ];
   if( moduleWas )
   {
@@ -5263,31 +5400,33 @@ function structureExportForModuleExport( o )
     moduleWas = null;
   }
 
-  let o2 = module.optionsForOpenerExport();
-  o2.willfilesPath = o.willfilesPath;
-  o2.willfilesArray = [];
-  o2.isOut = true;
-  o2.peerModule = module;
-  o2.isAuto = 1;
-
-  let opener2 = will.openerMake({ opener : o2, searching : 'exact' });
-  _.assert( opener2.isOut === true );
-  _.assert( opener2.superRelation === null );
-  _.assert( opener2.rootModule === null );
-  _.assert( opener2.openedModule === null );
-  _.assert( opener2.willfilesArray.length === 0 );
-  _.assert( opener2.peerModule === module );
-
-  opener2.rootModule = module.rootModule || module;
-  opener2.original = module;
-  opener2.preform();
-  // opener2.remoteForm();
+  let opener2 = openerMake();
 
   /* */
 
+  // debugger;
+  // opener2.find();
+  //
+  // if( opener2.error || !opener2.openedModule || !module.stager.stageStatePerformed( 'formed' ) )
+  // {
+  //   try
+  //   {
+  //     let module = opener2.module;
+  //     opener2.module = null;
+  //     opener2.close();
+  //   }
+  //   catch( err )
+  //   {
+  //     logger.log( _.errOnce( err ) );
+  //   }
+  // }
+
   let o3 = opener2.optionsForModuleExport();
   let rootModule = o3.rootModule = opener2.rootModule; /* xxx : remove rootModule? */
+
   let module2 = module.cloneExtending( o3 );
+  _.assert( rootModule === opener2.rootModule );
+  _.assert( rootModule === module2.rootModule );
   opener2.moduleAdopt( module2 );
   _.assert( rootModule === opener2.rootModule );
   _.assert( rootModule === opener2.openedModule.rootModule );
@@ -5296,8 +5435,12 @@ function structureExportForModuleExport( o )
 
   /* */
 
-  module2.pathsRebase({ inPath : module.outPath });
+  debugger;
+  module2.pathsRebase({ inPath : module.outPath, exInPath : module.inPath });
+  debugger;
 
+  _.assert( module.outPath === module2.outPath );
+  _.assert( module2.inPath === module2.outPath );
   _.assert( module2.dirPath === path.detrail( module.outPath ) );
   _.assert( module2.commonPath === module2.localPath );
   _.assert( module2.original === module );
@@ -5342,6 +5485,38 @@ function structureExportForModuleExport( o )
   module2.finit();
 
   return structure;
+
+  /* */
+
+  function openerMake()
+  {
+
+    let o2 = module.optionsForOpenerExport();
+    o2.willfilesPath = o.willfilesPath;
+    o2.willfilesArray = [];
+    o2.isOut = true;
+    o2.peerModule = module;
+    o2.searching = 'exact';
+    o2.reason = 'export';
+    o2.isAuto = 1;
+
+    let opener2 = will._openerMake({ opener : o2 });
+    _.assert( opener2.isOut === true );
+    _.assert( opener2.superRelation === null );
+    _.assert( opener2.rootModule === null );
+    _.assert( opener2.openedModule === null );
+    _.assert( opener2.willfilesArray.length === 0 );
+    _.assert( opener2.peerModule === module );
+
+    opener2.rootModule = module.rootModule || module;
+    opener2.original = module;
+    opener2.preform();
+
+    return opener2;
+  }
+
+  /* */
+
 }
 
 structureExportForModuleExport.defaults =
@@ -5745,8 +5920,8 @@ let Composes =
 {
 
   willfilesPath : null,
-  inPath : null,
-  outPath : null,
+  // inPath : null,
+  // outPath : null,
   localPath : null,
   downloadPath : null,
   remotePath : null,
@@ -5802,7 +5977,6 @@ let Restricts =
 
   predefinedFormed : 0,
   preformed : 0,
-  // picked : 0,
   opened : 0,
   attachedWillfilesFormed : 0,
   peerModulesFormed : 0,
@@ -5811,7 +5985,6 @@ let Restricts =
   formed : 0,
 
   preformReady : _.define.own( _.Consequence({ capacity : 1, tag : 'preformReady' }) ),
-  // pickedReady : _.define.own( _.Consequence({ capacity : 1, tag : 'pickedReady' }) ),
   openedReady : _.define.own( _.Consequence({ capacity : 1, tag : 'openedReady' }) ),
   attachedWillfilesFormReady : _.define.own( _.Consequence({ capacity : 1, tag : 'attachedWillfilesFormReady' }) ),
   peerModulesFormReady : _.define.own( _.Consequence({ capacity : 1, tag : 'peerModulesFormReady' }) ),
@@ -5922,14 +6095,17 @@ let Extend =
   finit,
   init,
 
-  openerMake,
+  // _openerMake,
   releasedBy,
   usedBy,
   isUsedBy,
   isUsed,
   usersGet,
 
+  precopy1,
+  precopy2,
   precopy,
+  postcopy,
   copy,
   clone,
   cloneExtending,
@@ -6049,7 +6225,6 @@ let Extend =
   pathsRelative,
   pathsRebase,
 
-  // _filePathChange,
   _filePathChanged1,
   _filePathChanged2,
   _pathRegister,
@@ -6080,16 +6255,16 @@ let Extend =
   decoratedOriginalWillfilesPathGet,
   decoratedPeerWillfilesPathGet,
 
-  _inPathAssign,
-  _outPathAssign,
-  _willfilesPathAssign,
-  _dirPathAssign,
-  _commonPathAssign,
-  _localPathAssign,
-  _downloadPathAssign,
-  _remotePathAssign,
-  _originalWillfilesPathAssign,
-  _peerWillfilesPathAssign,
+  _inPathPut,
+  _outPathPut,
+  _willfilesPathPut,
+  _dirPathPut,
+  _commonPathPut,
+  _localPathPut,
+  _downloadPathPut,
+  _remotePathPut,
+  _originalWillfilesPathPut,
+  _peerWillfilesPathPut,
 
   inPathSet,
   outPathSet,

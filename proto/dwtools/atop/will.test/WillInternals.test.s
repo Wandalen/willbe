@@ -2584,9 +2584,6 @@ function exportSuperIn( test )
   .then( () =>
   {
     let module = opener.openedModule;
-    // let builds = module.exportsResolve({ criterion : { debug : 1 } });
-    // let build = builds[ 0 ];
-    // return build.perform();
     return module.moduleExport({ criterion : { debug : 1 } });
   })
 
@@ -2687,7 +2684,7 @@ function exportSuperIn( test )
     test.identical( files, exp );
 
     test.description = '1st - attempt to open super.out on opening peer, 2nd - attempt to open super.out on opening peer';
-    test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 2 );
+    test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 4 );
     will.openersErrorsRemoveAll();
     test.identical( will.openersErrorsArray.length, 0 );
 

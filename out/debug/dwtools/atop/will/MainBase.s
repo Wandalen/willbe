@@ -274,6 +274,54 @@ resourcesInfoExport.defaults =
   stringing : 1,
 }
 
+//
+
+function _pathChanged( o )
+{
+  let will = this;
+  let logger = will.logger;
+
+  if( !Config.debug )
+  return;
+
+  o.ex = _.path.simplify( o.ex );
+  o.val = _.path.simplify( o.val );
+  if( o.isIdential === null )
+  o.isIdentical = o.ex === o.val || _.entityIdentical( o.val, o.ex );
+
+  // if( o.fieldName === 'willfilesPath' || o.fieldName === 'module.willfiles' )
+  // if( _.strIs( o.val ) && _.strHas( o.val, 'wTools.out' ) )
+  // {
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
+  //   // debugger;
+  // }
+
+  // if( o.fieldName === 'willfilesPath' || o.fieldName === 'module.willfiles' )
+  // {
+  //   logger.log( o.object.absoluteName, o.kind, o.fieldName, _.toStrNice( o.val ) );
+  //   debugger;
+  // }
+
+  // if( _.strIs( o.ex ) && _.strEnds( o.ex, '/wTools.out.will' ) )
+  // debugger;
+  // if( _.strIs( o.val ) && _.strEnds( o.val, '/wTools.out.will' ) )
+  // debugger;
+
+  // if( !o.isIdential )
+  // logger.log( o.object.absoluteName, o.kind, o.fieldName, _.toStrNice( o.val ) );
+
+}
+
+_pathChanged.defaults =
+{
+  val : null,
+  ex : null,
+  isIdentical : null,
+  object : null,
+  fieldName : null,
+  kind : null,
+}
+
 // --
 // defaults
 // --
@@ -555,11 +603,12 @@ function modulePathUnregister( openedModule )
 
   if( openedModule.commonPath )
   {
-    let registered = will.moduleWithCommonPathMap[ openedModule.commonPath ];
-    _.assert( _.strIs( openedModule.commonPath ) );
+    let registered = will.moduleWithCommonPathMap[ openedModule._registeredPath ];
+    _.assert( _.strIs( openedModule._registeredPath ) );
     // _.assert( registered === openedModule || !openedModule.isPreformed() );
     _.assert( registered === openedModule || registered === undefined );
-    delete will.moduleWithCommonPathMap[ openedModule.commonPath ];
+    delete will.moduleWithCommonPathMap[ openedModule._registeredPath ];
+    openedModule._registeredPath = null;
   }
 
   _.assert( _.arrayCountElement( _.mapVals( will.moduleWithCommonPathMap ), openedModule ) === 0 );
@@ -617,10 +666,14 @@ function modulesFindEachAt( o )
 
     debugger;
     if( !opener )
-    opener = will.openerMake
+    opener = will._openerMake
     ({
-      willfilesPath : path.trail( path.current() ),
-      searching : 'strict',
+      opener :
+      {
+        willfilesPath : path.trail( path.current() ),
+        searching : 'strict',
+        reason : 'each',
+      }
     });
     opener.find();
 
@@ -643,7 +696,7 @@ function modulesFindEachAt( o )
 
         debugger;
         let it2 = Object.create( null );
-        it2.currentOpener = opener.openerMake(); // zzz
+        it2.currentOpener = opener._openerMake(); // zzz
 
         if( _.arrayIs( it1.dst ) || _.strIs( it1.dst ) )
         it2.currentPath = it1.dst;
@@ -708,7 +761,7 @@ function modulesFindEachAt( o )
       }
 
       // debugger;
-      // let opener = will.openerMake
+      // let opener = will._openerMake
       // ({
       //   willfilesPath : file.absolute,
       //   searching : 'smart',
@@ -726,15 +779,19 @@ function modulesFindEachAt( o )
       willfilesPath = willfilesPath[ 0 ];
 
       // debugger;
-      let opener = will.openerMake
+      let opener = will._openerMake
       ({
-        willfilesPath : willfilesPath,
-        searching : 'exact',
+        opener :
+        {
+          willfilesPath : willfilesPath,
+          searching : 'exact',
+          reason : 'each',
+        }
       });
 
       opener.find();
 
-      // let opener = will.openerMake({ willfilesPath : file.absolute });
+      // let opener = will._openerMake({ willfilesPath : file.absolute });
       // opener.find();
       // let opener = will.ModuleOpener({ will : will, willfilesPath : file.absolute }).preform();
       // opener.find();
@@ -875,10 +932,14 @@ function modulesFindWithAt( o )
       willfilesPath = willfilesPath[ 0 ];
 
       // debugger;
-      let opener = will.openerMake
+      let opener = will._openerMake
       ({
-        willfilesPath : willfilesPath,
-        searching : 'exact',
+        opener :
+        {
+          willfilesPath : willfilesPath,
+          searching : 'exact',
+          reason : 'with',
+        }
       });
 
       opener.find();
@@ -1518,7 +1579,7 @@ function modulesDownload_body( o )
     if( !o.downloadedContainer.length && !o.loggingNoChanges )
     return;
 
-    let total = ( o.remoteContainer.length + o.localContainer.length ); debugger;
+    let total = ( o.remoteContainer.length + o.localContainer.length );
     logger.rbegin({ verbosity : -2 });
     let phrase = '';
     if( o.mode === 'update' )
@@ -1986,7 +2047,7 @@ defaults.withRemotePath = 0;
 // opener
 // --
 
-function openerMake_pre( routine, args )
+function _openerMake_pre( routine, args )
 {
   let module = this;
   let o = args[ 0 ];
@@ -2002,7 +2063,7 @@ function openerMake_pre( routine, args )
   return o;
 }
 
-function openerMake_body( o )
+function _openerMake_body( o )
 {
   let will = this.form();
   let fileProvider = will.fileProvider;
@@ -2011,18 +2072,19 @@ function openerMake_body( o )
   let madeOpener = null;
 
   _.assert( arguments.length === 1 );
-  _.assertRoutineOptions( openerMake_body, arguments );
+  _.assertRoutineOptions( _openerMake_body, arguments );
 
   try
   {
 
-    if( o.isMain === null )
-    {
-      if( will.mainOpener )
-      o.isMain = will.mainOpener === o.opener;
-      else
-      o.isMain = true;
-    }
+    // let isMain = o.opener.isMain;
+    // if( o.isMain === null )
+    // {
+    //   if( will.mainOpener )
+    //   o.isMain = will.mainOpener === o.opener;
+    //   else
+    //   o.isMain = true;
+    // }
 
     if( !o.opener )
     o.opener = o.opener || Object.create( null );
@@ -2044,13 +2106,12 @@ function openerMake_body( o )
     if( !o.opener.will )
     o.opener.will = will;
 
-    if( o.isMain !== null )
-    {
-      o.opener.isMain = !!o.isMain;
-    }
+    // if( o.isMain !== null )
+    // {
+    //   o.opener.isMain = !!o.isMain;
+    // }
 
     o.opener.preform()
-
 
     return o.opener;
   }
@@ -2078,19 +2139,39 @@ function openerMake_body( o )
   }
 }
 
-openerMake_body.defaults =
+_openerMake_body.defaults =
 {
 
   opener : null,
   throwing : 1,
 
-  willfilesPath : null, // xxx : remove later
-  isMain : null, // xxx : remove later
-  searching : null, // xxx : remove later
+  // willfilesPath : null,
+  // isMain : null, // xxx : remove later
+  // searching : null, // xxx : remove later
 
 }
 
-let openerMake = _.routineFromPreAndBody( openerMake_pre, openerMake_body );
+let _openerMake = _.routineFromPreAndBody( _openerMake_pre, _openerMake_body );
+
+//
+
+function openerMakeUser( o )
+{
+  let will = this;
+
+  o = _.routineOptions( openerMakeUser, arguments );
+  o.opener = o.opener || Object.create( null );
+  o.opener.reason = o.opener.reason || 'user';
+  if( o.willfilesPath )
+  o.opener.willfilesPath = o.willfilesPath;
+
+  delete o.willfilesPath;
+  return will._openerMake( o );
+}
+
+var defaults = openerMakeUser.defaults = Object.create( _openerMake.defaults );
+
+defaults.willfilesPath = null;
 
 //
 
@@ -2209,6 +2290,7 @@ function readingEnd()
   let logger = will.logger;
 
   _.assert( arguments.length === 0 );
+  _.assert( !!will.mainOpener );
 
   will._willfilesReadEnd( will.mainOpener ? will.mainOpener.openedModule : null );
 
@@ -2299,6 +2381,7 @@ function willfilesList( o )
   _.assert( arguments.length === 1 );
   _.assert( !!will.formed );
   _.assert( _.boolIs( o.recursive ) );
+  _.assert( !path.isGlobal( path.fromGlob( o.dirPath ) ), 'Expects local path' );
 
   if( !o.tracing )
   return findFor( o.dirPath );
@@ -2729,6 +2812,7 @@ let Extend =
   _verbosityChange,
   vcsFor,
   resourcesInfoExport,
+  _pathChanged,
 
   // defaults
 
@@ -2769,7 +2853,8 @@ let Extend =
 
   // opener
 
-  openerMake,
+  _openerMake,
+  openerMakeUser,
   openersAdoptModule,
   openerUnregister,
   openerRegister,

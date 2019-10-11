@@ -9,8 +9,8 @@ consistency:
     hash: a325f69b8a30ad02f91c7cb6e022b4d5
     size: 883
   ../sub.out/sub.out.will.yml: &ref_2
-    hash: 49628d4662ed9ec36ead2abc8a64abca
-    size: 12933
+    hash: e2a1309b0e126322af21e4b525c6694f
+    size: 12910
   ../sub.ex.will.yml: &ref_3
     hash: 868b5a57eaff621b4f9717b65569eabf
     size: 381
@@ -25,14 +25,20 @@ module:
       enabled: 1
       version: 0.0.1
     path:
-      module.willfiles:
-        criterion:
-          predefined: 1
-        path: supermodule.out.will.yml
       module.common:
         criterion:
           predefined: 1
         path: supermodule.out
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path: supermodule.out.will.yml
+      module.download:
+        criterion:
+          predefined: 1
+      remote:
+        criterion:
+          predefined: 1
       module.original.willfiles:
         criterion:
           predefined: 1
@@ -45,13 +51,6 @@ module:
         path:
           - ../super.ex.will.yml
           - ../super.im.will.yml
-      local:
-        criterion:
-          predefined: 1
-        path: supermodule.out
-      remote:
-        criterion:
-          predefined: 1
       proto:
         path: ../proto
       temp:
@@ -285,12 +284,16 @@ module:
       enabled: 1
       version: 0.0.1
     path:
-      module.willfiles:
+      module.download:
         criterion:
           predefined: 1
-        path:
-          - super.ex.will.yml
-          - super.im.will.yml
+      remote:
+        criterion:
+          predefined: 1
+      module.common:
+        criterion:
+          predefined: 1
+        path: super
       module.original.willfiles:
         criterion:
           predefined: 1
@@ -301,17 +304,12 @@ module:
         criterion:
           predefined: 1
         path: super.out/supermodule.out.will.yml
-      module.common:
+      module.willfiles:
         criterion:
           predefined: 1
-        path: super
-      local:
-        criterion:
-          predefined: 1
-        path: super
-      remote:
-        criterion:
-          predefined: 1
+        path:
+          - super.ex.will.yml
+          - super.im.will.yml
       proto:
         path: ./proto
       temp:
@@ -549,18 +547,20 @@ module:
       enabled: 1
       version: 0.0.1
     path:
-      module.willfiles:
+      module.download:
         criterion:
           predefined: 1
-        path: sub.out.will.yml
       module.common:
         criterion:
           predefined: 1
         path: sub.out
-      local:
+      module.willfiles:
         criterion:
           predefined: 1
-        path: sub.out
+        path: sub.out.will.yml
+      remote:
+        criterion:
+          predefined: 1
       module.original.willfiles:
         criterion:
           predefined: 1
@@ -573,9 +573,6 @@ module:
         path:
           - ../sub.ex.will.yml
           - ../sub.im.will.yml
-      remote:
-        criterion:
-          predefined: 1
       proto:
         path: ../proto
       in:
@@ -865,12 +862,13 @@ module:
       enabled: 1
       version: 0.0.1
     path:
-      module.willfiles:
+      remote:
         criterion:
           predefined: 1
-        path:
-          - ../sub.ex.will.yml
-          - ../sub.im.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: ../sub
       module.original.willfiles:
         criterion:
           predefined: 1
@@ -878,17 +876,15 @@ module:
         criterion:
           predefined: 1
         path: ../sub.out/sub.out.will.yml
-      module.common:
+      module.willfiles:
         criterion:
           predefined: 1
-        path: ../sub
-      remote:
+        path:
+          - ../sub.ex.will.yml
+          - ../sub.im.will.yml
+      module.download:
         criterion:
           predefined: 1
-      local:
-        criterion:
-          predefined: 1
-        path: ../sub
       proto:
         path: .
       in:
