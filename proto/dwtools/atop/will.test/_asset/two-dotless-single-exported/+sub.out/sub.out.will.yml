@@ -29,10 +29,9 @@ module:
         criterion:
           predefined: 1
         path: ../sub/will.yml
-      local:
+      module.download:
         criterion:
           predefined: 1
-        path: .
       remote:
         criterion:
           predefined: 1
@@ -276,7 +275,7 @@ module:
           export: 1
     consistency:
       ../sub/will.yml: *ref_0
-  ../sub/will.yml:
+  ../sub/:
     about:
       name: sub
       description: Module for testing
@@ -298,11 +297,10 @@ module:
       module.common:
         criterion:
           predefined: 1
-        path: ../sub/will.yml
-      local:
+        path: ../sub/
+      module.download:
         criterion:
           predefined: 1
-        path: ../sub
       remote:
         criterion:
           predefined: 1

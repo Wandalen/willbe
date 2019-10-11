@@ -29,10 +29,9 @@ module:
         criterion:
           predefined: 1
         path: ../sub/will.yml
-      local:
+      module.download:
         criterion:
           predefined: 1
-        path: .
       remote:
         criterion:
           predefined: 1
@@ -299,10 +298,9 @@ module:
         criterion:
           predefined: 1
         path: ../sub/
-      local:
+      module.download:
         criterion:
           predefined: 1
-        path: ../sub
       remote:
         criterion:
           predefined: 1

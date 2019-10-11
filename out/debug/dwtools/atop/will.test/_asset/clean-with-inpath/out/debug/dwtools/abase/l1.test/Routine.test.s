@@ -313,6 +313,13 @@ function constructorJoin( test )
   test.notIdentical( result.context, srcRoutine );
   test.is( result.context instanceof srcRoutine );
 
+  test.case = 'Array contructor, args = U8x buffer';
+  var got = _.constructorJoin( Array, new U8x( [ 1, 2, 3, 4 ] ) );
+  var expected = new got();
+  test.is( _.routineIs( got ) );
+  test.identical( expected, [ 1, 2, 3, 4] );
+  test.is( _.arrayIs( expected ) );
+
   if( !Config.debug )
   return;
 

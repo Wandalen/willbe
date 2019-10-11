@@ -6,8 +6,8 @@ consistency:
     hash: e8115abbb02ec04af6fdb366955c5521
     size: 2013
   ../.im.will.yml: &ref_1
-    hash: bc612b839555420e984d984b2d8a2039
-    size: 5087
+    hash: 080c8f06e6f29dfc75f4078b0b921fcd
+    size: 5195
 module:
   wTools.out:
     about:
@@ -44,20 +44,14 @@ module:
         test: wtest .run proto/**
         docgen: wdocgen .build proto
     path:
-      module.common:
-        criterion:
-          predefined: 1
-        path: wTools.out
       module.willfiles:
         criterion:
           predefined: 1
         path: wTools.out.will.yml
-      module.download:
+      module.common:
         criterion:
           predefined: 1
-      remote:
-        criterion:
-          predefined: 1
+        path: wTools.out
       module.original.willfiles:
         criterion:
           predefined: 1
@@ -70,6 +64,12 @@ module:
         path:
           - ../.ex.will.yml
           - ../.im.will.yml
+      module.download:
+        criterion:
+          predefined: 1
+      remote:
+        criterion:
+          predefined: 1
       repository:
         path: 'git+https:///github.com/Wandalen/wTools.git'
       bugtracker:
@@ -266,6 +266,12 @@ module:
           development: 1
       wTesting:
         path: 'npm:///wTesting'
+        autoExporting: 0
+        enabled: 0
+        criterion:
+          development: 1
+      wSelector:
+        path: 'npm:///wselector'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -896,16 +902,12 @@ module:
       npm.name: wtools.experiment
       npm.scripts: *ref_5
     path:
-      module.download:
+      module.willfiles:
         criterion:
           predefined: 1
-      remote:
-        criterion:
-          predefined: 1
-      module.common:
-        criterion:
-          predefined: 1
-        path: ./
+        path:
+          - .ex.will.yml
+          - .im.will.yml
       module.original.willfiles:
         criterion:
           predefined: 1
@@ -916,12 +918,16 @@ module:
         criterion:
           predefined: 1
         path: out/wTools.out.will.yml
-      module.willfiles:
+      module.common:
         criterion:
           predefined: 1
-        path:
-          - .ex.will.yml
-          - .im.will.yml
+        path: ./
+      module.download:
+        criterion:
+          predefined: 1
+      remote:
+        criterion:
+          predefined: 1
       repository:
         path: 'git+https:///github.com/Wandalen/wTools.git'
       bugtracker:
@@ -1118,6 +1124,12 @@ module:
           development: 1
       wTesting:
         path: 'npm:///wTesting'
+        autoExporting: 0
+        enabled: 0
+        criterion:
+          development: 1
+      wSelector:
+        path: 'npm:///wselector'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -1706,5 +1718,5 @@ module:
         hash: e8115abbb02ec04af6fdb366955c5521
         size: 2013
       ../.im.will.yml:
-        hash: bc612b839555420e984d984b2d8a2039
-        size: 5087
+        hash: 080c8f06e6f29dfc75f4078b0b921fcd
+        size: 5195

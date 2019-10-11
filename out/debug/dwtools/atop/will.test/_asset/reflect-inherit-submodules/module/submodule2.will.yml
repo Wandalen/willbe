@@ -6,7 +6,7 @@ about :
 path :
 
   out : '..'
-  export : 'proto/File2.s'
+  export : 'proto/File2.s*'
 
 step :
 

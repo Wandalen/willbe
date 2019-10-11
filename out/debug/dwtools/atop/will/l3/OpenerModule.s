@@ -1041,9 +1041,14 @@ function _remoteForm()
 
   opener.remoteIsUpdate();
 
-  if( opener.isRemote )
+  // if( opener.isRemote && !opener.superRelation )
+  // {
+  //   opener._remoteFormInformal();
+  // }
+  // else
+  if( opener.isRemote && opener.superRelation )
   {
-    opener._remoteFormAct();
+    opener._remoteFormFormal();
   }
   else
   {
@@ -1053,7 +1058,7 @@ function _remoteForm()
 
   _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
 
-  if( opener.peerModule && opener.remotePath === null && opener.peerModule.remotePath )
+  if( opener.peerModule && opener.remotePath === null && opener.peerModule.remotePath && opener.peerModule.isRemote )
   {
     // debugger;
     opener._.downloadPath = opener.peerModule.downloadPath;
@@ -1090,7 +1095,7 @@ function _remoteForm()
 //   let path = fileProvider.path;
 //   let logger = will.logger;
 //
-//   opener._remoteFormAct();
+//   opener._remoteFormInformal();
 //   opener._filePathSet( willfilesPath2 );
 //
 //   return opener;
@@ -1098,7 +1103,7 @@ function _remoteForm()
 
 //
 
-function _remoteFormAct()
+function _remoteFormFormal()
 {
   let opener = this;
   let will = opener.will;
@@ -1126,6 +1131,62 @@ function _remoteFormAct()
   let willfilesPath2 = path.resolve( submodulesDir, opener.aliasName, parsed.localVcsPath );
   opener._.localPath = opener.CommonPathFor( willfilesPath2 );
   opener._filePathChanged2({ willfilesPath : willfilesPath2 });
+
+  if( opener.peerModule )
+  debugger;
+  if( opener.peerModule && opener.peerModule.remotePath === null )
+  {
+    debugger;
+    _.assert( 0, 'not tested' );
+    _.assert( !!opener.peerModule.localPath );
+    _.assert( !!opener.peerModule.opener );
+    opener.peerModule.opener._.downloadPath = opener.downloadPath;
+    opener.peerModule.opener._.remotePath = path.join( opener.remotePath, path.relative( opener.localPath, opener.peerModule.localPath ) );
+  }
+
+  opener.remoteIsDownloadedUpdate();
+
+  _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
+
+  return opener;
+}
+
+//
+
+function _remoteFormInformal()
+{
+  let opener = this;
+  let will = opener.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let willfilesPath = opener.remotePath || opener.willfilesPath;
+
+  _.assert( opener.aliasName === null );
+  _.assert( opener.superRelation === null );
+  _.assert( _.strIs( willfilesPath ) );
+  _.assert( opener.formed <= 2 );
+  _.assert( opener.openedModule === null );
+
+  let remoteProvider = fileProvider.providerForPath( opener.remotePath || opener.commonPath );
+
+  _.assert( remoteProvider.isVcs && _.routineIs( remoteProvider.pathParse ), () => 'Seems file provider ' + remoteProvider.qualifiedName + ' does not have version control system features' );
+
+  // let submodulesDir = opener.superRelation.module.cloneDirPathGet();
+  // let parsed = remoteProvider.pathParse( willfilesPath );
+
+  if( !opener.downloadPath || !opener.remotePath )
+  {
+    debugger;
+    throw _.err( 'Module should have both path::download, path:remote defined either none' );
+  }
+
+  // opener._.remotePath = willfilesPath;
+  // opener._.downloadPath = path.resolve( submodulesDir, opener.aliasName );
+
+  // let willfilesPath2 = path.resolve( submodulesDir, opener.aliasName, parsed.localVcsPath );
+  // opener._.localPath = opener.CommonPathFor( willfilesPath2 );
+  // opener._filePathChanged2({ willfilesPath : willfilesPath2 });
 
   if( opener.peerModule )
   debugger;
@@ -1189,7 +1250,8 @@ function _remoteDownload( o )
     }
     else if( o.mode === 'update' )
     {
-
+      //Vova: qqq Should throw error if not downloaded but opener.downloadPath exists
+      filesCheck();
       originCheck();
       localChangesCheck();
 
@@ -1260,6 +1322,9 @@ function _remoteDownload( o )
 
   function originCheck()
   {
+    if( !opener.isDownloaded )
+    return;
+
     let gitProvider = will.fileProvider.providerForPath( opener.remotePath );
     debugger;
     let result = gitProvider.isDownloadedFromRemote
@@ -1726,8 +1791,8 @@ function errorSet( err )
 
   opener[ errorSymbol ] = err;
 
-  if( will && err )
-  debugger;
+  // if( will && err )
+  // debugger;
   if( will && err )
   will.openersErrorsArray.push({ err : err, opener : opener });
 
@@ -2015,7 +2080,8 @@ let Extend =
   // remote
 
   _remoteForm,
-  _remoteFormAct,
+  _remoteFormFormal,
+  _remoteFormInformal,
   _remoteDownload,
   remoteDownload,
   remoteUpgrade,

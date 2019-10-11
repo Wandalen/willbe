@@ -1,151 +1,95 @@
-format: willfile-1.0.0
-about:
-  name: submodule
-  enabled: 1
-  version: 0.0.1
-path:
-  module.willfiles:
-    path: submodule.out.will.yml
-    criterion:
-      predefined: 1
-  module.common:
-    path: submodule.out
-    criterion:
-      predefined: 1
-  in:
-    path: .
-    criterion:
-      predefined: 0
-  module.original.willfiles:
-    path: module/submodule.will.yml
-    criterion:
-      predefined: 1
-  local:
-    criterion:
-      predefined: 1
-  remote:
-    criterion:
-      predefined: 1
-  out:
-    path: .
-    criterion:
-      predefined: 0
-  exported.dir.export:
-    path: module/proto
-    criterion:
-      default: 1
-      export: 1
-  exported.files.export:
-    path:
-      - module/proto/File2.s
-    criterion:
-      default: 1
-      export: 1
-submodule: {}
-reflector:
-  reflect.proto:
-    src:
-      filePath:
-        proto/File2.s: null
-      basePath: proto
-    mandatory: 1
-  exported.files.export:
-    src:
-      filePath:
-        'path::exported.files.export': null
-      basePath: .
-      prefixPath: 'path::exported.dir.export'
-    recursive: 0
-    mandatory: 1
-step:
-  export.submodule:
-    opts:
-      export: 'reflector::reflect.proto'
-      tar: 0
-    inherit:
-      - module.export
-  reflect.proto:
-    opts:
-      reflector: 'reflector::reflect.proto*'
-    inherit:
-      - files.reflect
-build:
-  export:
-    criterion:
-      default: 1
-      export: 1
-    steps:
-      - export.submodule
-exported:
-  export:
-    version: 0.0.1
-    criterion:
-      default: 1
-      export: 1
-    exportedReflector: 'reflector::exported.export'
-    exportedFilesReflector: 'reflector::exported.files.export'
-    exportedDirPath: 'path::exported.dir.export'
-    exportedFilesPath: 'path::exported.files.export'
+format: outwillfile-2.0
+root:
+  - submodule.out
+consistency:
+  module/submodule.will.yml: &ref_0
+    hash: 9d098cfa2ba495c01fc8a9e074dc5eb8
+    size: 394
 module:
-  module/submodule:
+  submodule.out:
     about:
       name: submodule
       enabled: 1
       version: 0.0.1
     path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path: submodule.out.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: submodule.out
+      local:
+        criterion:
+          predefined: 1
+        path: submodule.out
       in:
-        path: .
         criterion:
           predefined: 0
-      module.willfiles:
-        path: submodule.will.yml
-        criterion:
-          predefined: 1
+        path: .
       module.original.willfiles:
-        path: submodule.will.yml
         criterion:
           predefined: 1
-      module.common:
-        path: submodule
+        path:
+          - module/submodule.will.yml
+      module.peer.willfiles:
         criterion:
           predefined: 1
-      local:
+        path:
+          - module/submodule.will.yml
+      module.download:
         criterion:
           predefined: 1
       remote:
         criterion:
           predefined: 1
       out:
-        path: ..
         criterion:
           predefined: 0
+        path: .
       exported.dir.export:
-        path: ./proto
         criterion:
           default: 1
           export: 1
+        path: module/proto
       exported.files.export:
-        path:
-          - proto/File2.s
         criterion:
           default: 1
           export: 1
+        path:
+          - module/proto/File2.s
     submodule: {}
     reflector:
       reflect.proto:
         src:
           filePath:
-            proto/File2.s: null
+            proto/File2.s: ''
           basePath: proto
+          prefixPath: ''
         mandatory: 1
+      exported.export:
+        src:
+          filePath:
+            .: ''
+          basePath: ..
+          prefixPath: module/proto/File2.s
+        mandatory: 1
+        criterion:
+          default: 1
+          export: 1
       exported.files.export:
         src:
           filePath:
-            'path::exported.files.export': null
+            'path::exported.files.export': ''
           basePath: .
           prefixPath: 'path::exported.dir.export'
+          recursive: 0
         recursive: 0
         mandatory: 1
+        criterion:
+          default: 1
+          export: 1
     step:
       export.submodule:
         opts:
@@ -160,19 +104,142 @@ module:
           - files.reflect
     build:
       export:
+        steps:
+          - export.submodule
         criterion:
           default: 1
           export: 1
-        steps:
-          - export.submodule
     exported:
       export:
         version: 0.0.1
-        criterion:
-          default: 1
-          export: 1
+        recursive: 0
+        withIntegrated: 2
+        tar: 0
         exportedReflector: 'reflector::exported.export'
         exportedFilesReflector: 'reflector::exported.files.export'
         exportedDirPath: 'path::exported.dir.export'
         exportedFilesPath: 'path::exported.files.export'
-  submodule.out: root
+        criterion:
+          default: 1
+          export: 1
+    consistency:
+      module/submodule.will.yml: *ref_0
+  module/submodule:
+    about:
+      name: submodule
+      enabled: 1
+      version: 0.0.1
+    path:
+      in:
+        criterion:
+          predefined: 0
+        path: .
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path:
+          - submodule.will.yml
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path:
+          - submodule.will.yml
+      module.peer.willfiles:
+        criterion:
+          predefined: 1
+        path: ../submodule.out.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: submodule
+      module.download:
+        criterion:
+          predefined: 1
+      local:
+        criterion:
+          predefined: 1
+        path: submodule
+      remote:
+        criterion:
+          predefined: 1
+      out:
+        criterion:
+          predefined: 0
+        path: ..
+      exported.dir.export:
+        criterion:
+          default: 1
+          export: 1
+        path: ./proto
+      exported.files.export:
+        criterion:
+          default: 1
+          export: 1
+        path:
+          - proto/File2.s
+    submodule: {}
+    reflector:
+      reflect.proto:
+        src:
+          filePath:
+            proto/File2.s: null
+          basePath: proto
+        mandatory: 1
+      exported.export:
+        src:
+          filePath:
+            .: ''
+          basePath: ..
+          prefixPath: proto/File2.s
+        mandatory: 1
+        criterion:
+          default: 1
+          export: 1
+      exported.files.export:
+        src:
+          filePath:
+            'path::exported.files.export': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.export'
+          recursive: 0
+        recursive: 0
+        mandatory: 1
+        criterion:
+          default: 1
+          export: 1
+    step:
+      export.submodule:
+        opts:
+          export: 'reflector::reflect.proto'
+          tar: 0
+        inherit:
+          - module.export
+      reflect.proto:
+        opts:
+          reflector: 'reflector::reflect.proto*'
+        inherit:
+          - files.reflect
+    build:
+      export:
+        steps:
+          - export.submodule
+        criterion:
+          default: 1
+          export: 1
+    exported:
+      export:
+        version: 0.0.1
+        recursive: 0
+        withIntegrated: 2
+        tar: 0
+        exportedReflector: 'reflector::exported.export'
+        exportedFilesReflector: 'reflector::exported.files.export'
+        exportedDirPath: 'path::exported.dir.export'
+        exportedFilesPath: 'path::exported.files.export'
+        criterion:
+          default: 1
+          export: 1
+    consistency:
+      module/submodule.will.yml:
+        hash: 9d098cfa2ba495c01fc8a9e074dc5eb8
+        size: 394

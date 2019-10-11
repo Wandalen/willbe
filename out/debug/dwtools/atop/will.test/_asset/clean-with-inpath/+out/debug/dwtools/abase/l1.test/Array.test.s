@@ -226,7 +226,7 @@ function longIs( test )
 {
 
   test.case = 'an empty array';
-  var got = _.longIs( [  ] );
+  var got = _.longIs( [] );
   var expected = true;
   test.identical( got, expected );
 
@@ -472,12 +472,12 @@ function _longMakeOfLength( test )
 {
 
   test.case = 'an empty array';
-  var got = _._longMakeOfLength( [  ], 0 );
-  var expected = [  ];
+  var got = _._longMakeOfLength( [], 0 );
+  var expected = [];
   test.identical( got, expected );
 
   test.case = 'length = 1';
-  var got = _._longMakeOfLength( [  ], 1 );
+  var got = _._longMakeOfLength( [], 1 );
   var expected = [ undefined ];
   test.identical( got, expected );
 
@@ -3753,13 +3753,13 @@ function longRepresent( test )
 {
 
   test.case = 'nothing';
-  var got = _.longRepresent( [  ], 0, 0 );
-  var expected = [  ];
+  var got = _.longRepresent( [], 0, 0 );
+  var expected = [];
   test.identical( got, expected );
 
   test.case = 'two arguments';
-  var got = _.longRepresent( [  ], 0 );
-  var expected = [  ];
+  var got = _.longRepresent( [], 0 );
+  var expected = [];
   test.identical( got, expected );
 
   test.case = 'full copy of an array';
@@ -4157,7 +4157,7 @@ function longDuplicate( test )
     numberOfDuplicatesPerElement : 1
   };
   var got = _.longDuplicate( options );
-  var expected = [ 'abc', 'def',  ];
+  var expected = [ 'abc', 'def', ];
   test.identical( got, expected );
 
   /* */
@@ -4171,7 +4171,7 @@ function longDuplicate( test )
     numberOfDuplicatesPerElement : 1
   };
   var got = _.longDuplicate( options );
-  var expected = [ 1, 2, 'abc', 'def',  ];
+  var expected = [ 1, 2, 'abc', 'def', ];
   test.identical( got, expected );
 
   /* */
@@ -4191,7 +4191,7 @@ function longDuplicate( test )
   var equal = true;
   for( var i = 0; i < expected.length; i++ )
   {
-    if( expected[ i ] !== got[ i ]  )
+    if( expected[ i ] !== got[ i ] )
     equal = false;
   }
   test.is( equal );
@@ -4229,7 +4229,7 @@ function longDuplicate( test )
   test.case = 'options.src is not provided or "undefined"';
   var options = {
     src : undefined,
-    result : [  ],
+    result : [],
     numberOfAtomsPerElement : 3,
     numberOfDuplicatesPerElement : 3
   };
@@ -4374,7 +4374,7 @@ function longMask( test )
 
   test.case = 'nothing';
   var got = _.longMask( [ 1, 2, 3, 4 ], [ undefined, null, 0, '' ] );
-  var expected = [  ];
+  var expected = [];
   test.identical( got, expected );
 
   test.case = 'adds last three values';
@@ -4420,7 +4420,7 @@ function longMask( test )
   test.case = 'both arrays are empty';
   test.shouldThrowErrorSync( function()
   {
-    _.longMask( [  ], [  ] );
+    _.longMask( [], [] );
   });
 
   test.case = 'length of the first array is not equal to the second array';
@@ -4533,7 +4533,6 @@ function longOnce( test )
 
     test.case = 'dst.length = 0';
     var dst = makeDst( [] );
-    debugger;
     var got = _.longOnce( dst );
     var expected = makeDst( [] );
     test.identical( got, expected );
@@ -4616,8 +4615,8 @@ function longSelectWithIndices( test )
 {
 
   test.case = 'nothing';
-  var got = _.longSelectWithIndices( [  ], [  ] );
-  var expected = [  ];
+  var got = _.longSelectWithIndices( [], [] );
+  var expected = [];
   test.identical( got, expected );
 
   test.case = 'certain elements';
@@ -4845,7 +4844,7 @@ function longPut( test )
 //   test.case = 'only one argument';
 //   test.shouldThrowErrorSync( function()
 //   {
-//     _.longFillTimes( [  ] );
+//     _.longFillTimes( [] );
 //   });
 //
 //   test.case = 'wrong argument type';
@@ -5128,12 +5127,12 @@ function longExtendScreening( test )
 {
 
   test.case = 'returns an empty array';
-  var got = _.longExtendScreening( [  ], [  ], [ 0, 1, 2 ], [ 3, 4 ], [ 5, 6 ] );
-  var expected = [  ];
+  var got = _.longExtendScreening( [], [], [ 0, 1, 2 ], [ 3, 4 ], [ 5, 6 ] );
+  var expected = [];
   test.identical( got, expected );
 
   test.case = 'returns the corresponding values by indexes of the first argument';
-  var got = _.longExtendScreening( [ 1, 2, 3 ], [  ], [ 0, 1, 2 ], [ 3, 4 ], [ 5, 6 ] );
+  var got = _.longExtendScreening( [ 1, 2, 3 ], [], [ 0, 1, 2 ], [ 3, 4 ], [ 5, 6 ] );
   var expected = [ 5, 6, 2 ];
   test.identical( got, expected );
 
@@ -5148,7 +5147,7 @@ function longExtendScreening( test )
   test.identical( got, expected );
 
   test.case = 'returns the second argument';
-  var got = _.longExtendScreening( [  ], [ 3, 'abc', 7, 13 ], [ 0, 1, 2 ], [ 3, 4 ], [ 'a', 6 ] );
+  var got = _.longExtendScreening( [], [ 3, 'abc', 7, 13 ], [ 0, 1, 2 ], [ 3, 4 ], [ 'a', 6 ] );
   var expected = [ 3, 'abc', 7, 13 ];
   test.identical( got, expected );
 
@@ -5328,7 +5327,7 @@ function constructorLikeArray( test )
 {
 
   test.case = 'an array';
-  var got = _.constructorLikeArray( [  ].constructor );
+  var got = _.constructorLikeArray( [].constructor );
   var expected = true;
   test.identical( got, expected );
 
@@ -5338,7 +5337,6 @@ function constructorLikeArray( test )
   test.identical( got, expected );
 
   test.case = 'raw array buffer';
-  debugger;
   var got = _.constructorLikeArray( new BufferRaw( 10 ).constructor );
   var expected = false;
   test.identical( got, expected );
@@ -5396,7 +5394,7 @@ function hasLength( test )
 {
 
   test.case = 'an empty array';
-  var got = _.hasLength( [  ] );
+  var got = _.hasLength( [] );
   var expected = true;
   test.identical( got, expected );
 
@@ -6341,7 +6339,6 @@ function arrayRandom( test )
 
   test.case = 'without length';
   var dst = [ 0, 0, 0 ];
-  debugger;
   var got = _.arrayRandom
   ({
     dst : dst,
@@ -6396,7 +6393,7 @@ function arrayFromRange( test )
 
   test.case = 'nothing';
   var got = _.arrayFromRange( [ 1, 1 ] );
-  var expected = [  ];
+  var expected = [];
   test.identical( got, expected );
 
   test.case = 'single not zero';
@@ -6455,13 +6452,13 @@ function arrayFromRange( test )
 function arrayAs( test )
 {
   test.case = 'an empty array';
-  var got = _.arrayAs( [  ] );
-  var expected = [  ];
+  var got = _.arrayAs( [] );
+  var expected = [];
   test.identical( got, expected );
 
   test.case = 'null';
   var got = _.arrayAs( null );
-  var expected = [  ];
+  var expected = [];
   test.identical( got, expected );
 
   test.case = 'array contains an object';
@@ -6492,7 +6489,7 @@ function arrayToMap( test )
 {
 
   test.case = 'an empty object';
-  var got = _.arrayToMap( [  ] );
+  var got = _.arrayToMap( [] );
   var expected = {  };
   test.identical( got, expected );
 
@@ -6541,7 +6538,7 @@ function arrayToStr( test )
 {
 
   test.case = 'nothing';
-  var got = _.arrayToStr( [  ] );
+  var got = _.arrayToStr( [] );
   var expected = "";
   test.identical( got, expected );
 
@@ -6597,12 +6594,12 @@ function arrayCompare( test )
 {
 
   test.case = 'empty arrays';
-  var got = _.arrayCompare( [  ], [  ] );
+  var got = _.arrayCompare( [], [] );
   var expected = 0;
   test.identical( got, expected );
 
   test.case = 'first array is empty';
-  var got = _.arrayCompare( [  ], [ 1, 2 ] );
+  var got = _.arrayCompare( [], [ 1, 2 ] );
   var expected = 0;
   test.identical( got, expected );
 
@@ -6669,7 +6666,7 @@ function arrayCompare( test )
   test.case = 'second array is empty';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayCompare( [ 1, 5 ], [  ] );
+    _.arrayCompare( [ 1, 5 ], [] );
   });
 
   test.case = 'length of the second array is less than first';
@@ -6685,7 +6682,7 @@ function arrayCompare( test )
 function arraysAreIdentical( test )
 {
   test.case = 'empty arrays';
-  var got = _.arraysAreIdentical( [  ], [  ] );
+  var got = _.arraysAreIdentical( [], [] );
   var expected = true;
   test.identical( got, expected );
 
@@ -7311,7 +7308,7 @@ function arraySlice( test )
     test.case = 'f = 0, l < 0';
     var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
     var got = _.arraySlice( src, 0, -2 );
-    var expected = [ 1, 2, 3,  ];
+    var expected = [ 1, 2, 3, ];
     test.identical( got, expected );
     test.is( got !== src );
 
@@ -8644,7 +8641,7 @@ function arrayLeftIndex( test )
 {
 
   test.case = 'nothing';
-  var got = _.arrayLeftIndex( [  ], 3 );
+  var got = _.arrayLeftIndex( [], 3 );
   var expected = -1;
   test.identical( got, expected );
 
@@ -8654,7 +8651,7 @@ function arrayLeftIndex( test )
   test.identical( got, expected );
 
   test.case = 'zero index';
-  var got = _.arrayLeftIndex( [ 1, 2, 3 ], 3, function( el, ins ) { return el < ins } );
+  var got = _.arrayLeftIndex( [ 1, 2, 3 ], 3, ( el, ins ) => el < ins );
   var expected = 0;
   test.identical( got, expected );
 
@@ -8664,7 +8661,7 @@ function arrayLeftIndex( test )
   test.identical( got, expected );
 
   test.case = 'nothing';
-  var got = _.arrayLeftIndex( [ 1, 2, 3 ], 3, function( el, ins ) { return el > ins } );
+  var got = _.arrayLeftIndex( [ 1, 2, 3 ], 3, ( el, ins ) => el > ins );
   var expected = -1;
   test.identical( got, expected );
 
@@ -8694,7 +8691,7 @@ function arrayLeftIndex( test )
   test.identical( got, expected );
 
   test.case = 'fromIndex + evaluator';
-  var got = _.arrayLeftIndex( [ 1, 1, 2, 2, 3, 3 ], 3, 2, function( el, ins ) { return el < ins } );
+  var got = _.arrayLeftIndex( [ 1, 1, 2, 2, 3, 3 ], 3, 2, ( el, ins ) => el < ins );
   var expected = 2;
   test.identical( got, expected );
 
@@ -8705,7 +8702,13 @@ function arrayLeftIndex( test )
   var expected = 2;
   test.identical( got, expected );
 
-  /**/
+  test.case = 'evaluator search first element of array';
+  var evaluator = ( e ) => e[ 0 ];
+  var got = _.arrayLeftIndex( [ 1, 2, 3, [ 2 ], 3, [ 4 ] ], [ 2 ], evaluator );
+  var expected = 3;
+  test.identical( got, expected );
+
+  /* - */
 
   if( !Config.debug )
   return;
@@ -8736,7 +8739,7 @@ function arrayRightIndex( test )
 {
 
   test.case = 'nothing';
-  var got = _.arrayRightIndex( [  ], 3 );
+  var got = _.arrayRightIndex( [], 3 );
   var expected = -1;
   test.identical( got, expected );
 
@@ -9229,7 +9232,7 @@ function arrayCountUnique( test )
 {
 
   test.case = 'nothing';
-  var got = _.arrayCountUnique( [  ] );
+  var got = _.arrayCountUnique( [] );
   var expected = 0;
   test.identical( got, expected );
 
@@ -9280,7 +9283,7 @@ function arrayCountUnique( test )
 // {
 //
 //   test.case = 'nothing';
-//   var got = _.arraySum( [  ] );
+//   var got = _.arraySum( [] );
 //   var expected = 0;
 //   test.identical( got, expected );
 //
@@ -10011,7 +10014,7 @@ function arrayPrependElementOnce( test )
 
   test.case = 'simple';
 
-  var dst = [ ];
+  var dst = [];
   var got = _.arrayPrependElementOnce( dst, 1 );
   test.identical( got, [ 1 ] );
   test.is( got === dst );
@@ -10499,7 +10502,7 @@ function arrayPrependArray( test )
 
   test.case = 'nothing';
   var got = _.arrayPrependArray( [], [] );
-  var expected = [  ];
+  var expected = [];
   test.identical( got, expected );
 
   test.case = 'simple';
@@ -10521,7 +10524,7 @@ function arrayPrependArray( test )
   test.case = 'mixed arguments types';
   var dst = [ 1 ];
   var got = _.arrayPrependArray( dst, [ 'a', 1, [ { a : 1 } ], { b : 2 } ] );
-  test.identical( dst, [  'a', 1, [ { a : 1 } ], { b : 2 }, 1  ] );
+  test.identical( dst, [  'a', 1, [ { a : 1 } ], { b : 2 }, 1 ] );
   test.is( got === dst );
 
   test.case = 'argument is undefined';
@@ -10603,7 +10606,7 @@ function arrayPrependArrayOnce( test )
   test.case = 'mixed arguments types';
   var dst = [ 1 ];
   var got = _.arrayPrependArrayOnce( dst, [ 'a', 1, [ { a : 1 } ], { b : 2 } ] );
-  test.identical( dst, [ 'a', [ { a : 1 } ], { b : 2 }, 1  ] );
+  test.identical( dst, [ 'a', [ { a : 1 } ], { b : 2 }, 1 ] );
   test.is( got === dst );
 
   test.case = 'argument is undefined';
@@ -10852,7 +10855,7 @@ function arrayPrependedArray( test )
   test.case = 'mixed arguments types';
   var dst = [ 1 ];
   var got = _.arrayPrependedArray( dst, [ 'a', 1, [ { a : 1 } ], { b : 2 } ] );
-  test.identical( dst, [ 'a', 1, [ { a : 1 } ], { b : 2 }, 1  ] );
+  test.identical( dst, [ 'a', 1, [ { a : 1 } ], { b : 2 }, 1 ] );
   test.identical( got, 4 );
 
   test.case = 'argument is undefined';
@@ -10935,7 +10938,7 @@ function arrayPrependedArrayOnce( test )
   test.case = 'mixed arguments types';
   var dst = [ 1 ];
   var got = _.arrayPrependedArrayOnce( dst, [ 'a', 1, [ { a : 1 } ], { b : 2 } ] );
-  test.identical( dst, [ 'a', [ { a : 1 } ], { b : 2 }, 1  ] );
+  test.identical( dst, [ 'a', [ { a : 1 } ], { b : 2 }, 1 ] );
   test.identical( got, 3 );
 
   test.case = 'argument is undefined';
@@ -11047,7 +11050,7 @@ function arrayPrependedArrayOnceStrictly( test )
   test.case = 'mixed arguments types';
   var dst = [ 1 ];
   var got = _.arrayPrependedArrayOnceStrictly( dst, [ 'a', 0, [ { a : 1 } ], { b : 2 } ] );
-  test.identical( dst, [ 'a', 0, [ { a : 1 } ], { b : 2 }, 1  ] );
+  test.identical( dst, [ 'a', 0, [ { a : 1 } ], { b : 2 }, 1 ] );
   test.identical( got, 4 );
 
   test.case = 'argument is undefined';
@@ -11165,7 +11168,7 @@ function arrayPrependArrays( test )
 
   test.case = 'nothing';
   var got = _.arrayPrependArrays( [], [] );
-  var expected = [  ];
+  var expected = [];
   test.identical( got, expected );
 
   test.case = 'simple';
@@ -11227,7 +11230,7 @@ function arrayPrependArrays( test )
 
   var dst = [ 1,2,3 ];
   var got = _.arrayPrependArrays( dst, [ 4,5,6 ] );
-  test.identical( dst, [ 6, 5, 4, 1, 2, 3  ] );
+  test.identical( dst, [ 6, 5, 4, 1, 2, 3 ] );
   test.is( got === dst );
 
   /**/
@@ -11342,7 +11345,7 @@ function arrayPrependArraysOnce( test )
 
   var dst = [ 1,2,3 ];
   var got = _.arrayPrependArraysOnce( dst, [ 4,5,6 ] );
-  test.identical( dst, [ 6, 5, 4, 1, 2, 3  ] );
+  test.identical( dst, [ 6, 5, 4, 1, 2, 3 ] );
   test.is( got === dst );
 
   test.case = 'onEqualize';
@@ -11493,7 +11496,7 @@ function arrayPrependArraysOnceStrictly( test )
   var dst = [ 1 ];
   var insArray = [ [ 'a' ], [ { a : 1 } ], { b : 2 } ];
   var got = _.arrayPrependArraysOnceStrictly( dst, insArray );
-  test.identical( dst, [ { b : 2 },{ a : 1 }, 'a', 1  ] );
+  test.identical( dst, [ { b : 2 },{ a : 1 }, 'a', 1 ] );
   test.is( got === dst );
 
   var dst = [ 0 ];
@@ -11516,7 +11519,7 @@ function arrayPrependArraysOnceStrictly( test )
 
   var dst = [ 1,2,3 ];
   var got = _.arrayPrependArraysOnceStrictly( dst, [ 4,5,6 ] );
-  test.identical( dst, [ 6, 5, 4, 1, 2, 3  ] );
+  test.identical( dst, [ 6, 5, 4, 1, 2, 3 ] );
   test.is( got === dst );
 
   var dst = [ 4, 5 ];
@@ -11674,7 +11677,7 @@ function arrayPrependedArrays( test )
   test.case = 'nothing';
   var dst = [];
   var got = _.arrayPrependedArrays( dst, [] );
-  var expected = [ ];
+  var expected = [];
   test.identical( dst, expected );
   test.identical( got, 0 );
 
@@ -11751,7 +11754,7 @@ function arrayPrependedArrays( test )
 
   var dst = [ 1,2,3 ];
   var got = _.arrayPrependedArrays( dst, [ 4,5,6 ] );
-  test.identical( dst, [ 6, 5, 4, 1, 2, 3  ] );
+  test.identical( dst, [ 6, 5, 4, 1, 2, 3 ] );
   test.identical( got, 3 );
 
   /**/
@@ -11837,7 +11840,7 @@ function arrayPrependedArraysOnce( test )
   test.case = 'mixed arguments types';
   var dst = [ 1 ];
   var got = _.arrayPrependedArraysOnce( dst, [ 'a', 1, [ { a : 1 } ], { b : 2 } ] );
-  test.identical( dst, [ { 'b' : 2 }, { 'a' : 1 }, 'a', 1  ] );
+  test.identical( dst, [ { 'b' : 2 }, { 'a' : 1 }, 'a', 1 ] );
   test.identical( got, 3 );
 
   var dst = [];
@@ -11858,7 +11861,7 @@ function arrayPrependedArraysOnce( test )
 
   var dst = [ 1,2,3 ];
   var got = _.arrayPrependedArraysOnce( dst, [ 4,5,6 ] );
-  test.identical( dst, [ 6, 5, 4, 1, 2, 3  ] );
+  test.identical( dst, [ 6, 5, 4, 1, 2, 3 ] );
   test.identical( got, 3 );
 
   test.case = 'onEqualize';
@@ -13245,8 +13248,8 @@ function arrayAppendedElementOnceStrictly( test )
 // {
 //
 //   test.case = 'nothing';
-//   var got = _.arrayAppendArray( [  ] );
-//   var expected = [  ];
+//   var got = _.arrayAppendArray( [] );
+//   var expected = [];
 //   test.identical( got, expected );
 //
 //   test.case = 'an argument';
@@ -13366,6 +13369,8 @@ function arrayAppendArray( test )
 
 function arrayAppendArrayOnce( test )
 {
+  test.case = 'dst - empty array, ins - number, evaluator returns first el of array'
+
   test.case = 'dstArray is null';
   var got = _.arrayAppendArrayOnce( null, [ 1 ] );
   test.identical( got, [ 1 ] );
@@ -13411,21 +13416,11 @@ function arrayAppendArrayOnce( test )
   test.identical( dst, [ 1, 'a', [ { a : 1 } ], { b : 2 } ] );
   test.is( got === dst );
 
-  test.case = 'argument is undefined';
-  var dst = [ 1 ];
-  test.shouldThrowErrorSync( function ()
-  {
-    _.arrayAppendArrayOnce( dst, undefined );
-  });
-  test.identical( dst, [ 1 ] );
-
   test.case = 'array has undefined';
   var dst = [ 1 ];
-  test.mustNotThrowError( function ()
-  {
-    _.arrayAppendArrayOnce( dst, [ undefined, 2 ] );
-  });
+  var got = _.arrayAppendArrayOnce( dst, [ undefined, 2 ] );
   test.identical( dst, [ 1, undefined, 2 ] );
+  test.is( got === dst );
 
   test.case = 'dst === src';
   var dst = [ 1,2,3 ];
@@ -13463,7 +13458,25 @@ function arrayAppendArrayOnce( test )
   test.identical( dst, [ 1,1,2,2,3,3,1,1,2,2,3,3 ] );
   test.identical( got, dst );
 
-  /**/
+  test.case = 'dst - empty array, ins - number, evaluator returns first el of array';
+  var dst = [];
+  var got = _.arrayAppendArrayOnce( dst, [ 0, [ 2 ], 5, { a : 0 } ], ( e ) => e[ 0 ] );
+  test.identical( dst, [ 0, [ 2 ] ] );
+  test.identical( got, dst );
+
+  test.case = 'dst - empty array, ins - number, evaluator returns first el of array';
+  var dst = [];
+  var got = _.arrayAppendArrayOnce( dst, [ 0, [ 2 ], 5, { a : 0 } ], ( e ) => e[ 0 ] !== undefined );
+  test.identical( dst, [ 0, [ 2 ] ] );
+  test.identical( got, dst );
+
+  test.case = 'dst - empty array, ins - number, evaluator returns first el of array';
+  var dst = [ [ 1 ], [ 3 ] ];
+  var got = _.arrayAppendArrayOnce( dst, [ 0, [ 2 ], 5, { a : 0 } ], ( e ) => e[ 0 ] );
+  test.identical( dst, [ [ 1 ], [ 3 ], 0, [ 2 ] ] );
+  test.identical( got, dst );
+
+  /* - */
 
   if( !Config.debug )
   return;
@@ -13486,11 +13499,16 @@ function arrayAppendArrayOnce( test )
     _.arrayAppendArrayOnce( [ 1, 2 ], 2 );
   });
 
-  // test.case = 'onEqualize is not a routine';
-  // test.shouldThrowErrorSync( function()
-  // {
-  //   _.arrayAppendArrayOnce( [ 1, 2 ], [ 2 ], 3 );
-  // });
+  test.shouldThrowErrorSync( function ()
+  {
+    _.arrayAppendArrayOnce( [ 1 ], undefined );
+  });
+
+  test.case = 'onEqualize is not a routine';
+  test.shouldThrowErrorSync( function()
+  {
+    _.arrayAppendArrayOnce( [ 1, 2 ], [ 2 ], 2, 'wrong' );
+  });
 
 }
 
@@ -14111,7 +14129,7 @@ function arrayAppendArrays( test )
 
   test.case = 'nothing';
   var got = _.arrayAppendArrays( [], [] );
-  var expected = [  ];
+  var expected = [];
   test.identical( got, expected );
 
   test.case = 'simple';
@@ -14565,7 +14583,7 @@ function arrayAppendedArrays( test )
   test.case = 'nothing';
   var dst = [];
   var got = _.arrayAppendedArrays( dst, [] );
-  var expected = [ ];
+  var expected = [];
   test.identical( dst, expected );
   test.identical( got, 0 );
 
@@ -15027,11 +15045,11 @@ function arrayRemove( test )
 
   var dst = [];
   var got = _.arrayRemove( dst, 1 );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
 
   var dst = [ 1 ];
   var got = _.arrayRemove( dst, 1 );
-  test.identical( dst, [  ] );
+  test.identical( dst, [] );
 
   var dst = [ 2, 2, 1 ];
   var got = _.arrayRemove( dst, 2 );
@@ -15043,7 +15061,7 @@ function arrayRemove( test )
 
   var dst = [ 1, 1, 1 ];
   var got = _.arrayRemove( dst, 1 );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
 
   var dst = [ 1, 1, 1 ];
   var got = _.arrayRemove( dst, [ 1 ] );
@@ -15105,7 +15123,7 @@ function arrayRemove( test )
     return a[ 0 ];
   }
   var got = _.arrayRemove( dst, [ 1 ], onEqualize );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
 
   test.case = 'equalizer 2 args';
 
@@ -15119,7 +15137,7 @@ function arrayRemove( test )
     return a;
   }
   var got = _.arrayRemove( dst, 1, onEqualize, onEqualize2 );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
 
   if( !Config.debug )
   return;
@@ -15334,12 +15352,12 @@ function arrayRemoved( test )
 
   var dst = [];
   var got = _.arrayRemoved( dst, 1 );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
   test.identical( got, 0 );
 
   var dst = [ 1 ];
   var got = _.arrayRemoved( dst, 1 );
-  test.identical( dst, [  ] );
+  test.identical( dst, [] );
   test.identical( got, 1 );
 
   var dst = [ 2, 2, 1 ];
@@ -15369,7 +15387,7 @@ function arrayRemoved( test )
 
   var dst = [ 1, 1, 1 ];
   var got = _.arrayRemoved( dst, 1 );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
   test.identical( got, 3 );
 
   var dst = [ 1, 1, 1 ];
@@ -15460,12 +15478,12 @@ function arrayRemovedOnce( test )
 
   var dst = [];
   var got = _.arrayRemovedOnce( dst, 1 );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
   test.identical( got, -1 );
 
   var dst = [ 1 ];
   var got = _.arrayRemovedOnce( dst, 1 );
-  test.identical( dst, [  ] );
+  test.identical( dst, [] );
   test.identical( got, 0 );
 
   var dst = [ 1, 2, 3 ];
@@ -15561,7 +15579,7 @@ function arrayRemovedOnceStrictly( test )
 
   var dst = [ 1 ];
   var got = _.arrayRemovedOnceStrictly( dst, 1 );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
   test.identical( got, 0 );
 
   var dst = [ 1, 2, 3 ];
@@ -15613,7 +15631,7 @@ function arrayRemovedOnceStrictly( test )
   test.case = 'Simple no match element';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayRemovedOnceStrictly( [ ], 1 );
+    _.arrayRemovedOnceStrictly( [], 1 );
   })
   test.shouldThrowErrorSync( function()
   {
@@ -15902,8 +15920,8 @@ function arrayRemoveElementOnce( test )
 // function arrayRemoveElementOnce( test ) {
 //
 //   test.case = 'nothing';
-//   var got = _.arrayRemoveElementOnce( [  ], 2 );
-//   var expected = [  ];
+//   var got = _.arrayRemoveElementOnce( [], 2 );
+//   var expected = [];
 //   test.identical( got, expected );
 //
 //   test.case = 'one element left';
@@ -16053,12 +16071,12 @@ function arrayRemovedElement( test )
 
   var dst = [];
   var got = _.arrayRemovedElement( dst, 1 );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
   test.identical( got, 0 );
 
   var dst = [ 1 ];
   var got = _.arrayRemovedElement( dst, 1 );
-  test.identical( dst, [  ] );
+  test.identical( dst, [] );
   test.identical( got, 1 );
 
   var dst = [ 2, 2, 1 ];
@@ -16088,7 +16106,7 @@ function arrayRemovedElement( test )
 
   var dst = [ 1, 1, 1 ];
   var got = _.arrayRemovedElement( dst, 1 );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
   test.identical( got, 3 );
 
   var dst = [ 1, 1, 1 ];
@@ -16207,12 +16225,12 @@ function arrayRemovedElementOnce( test )
 
   var dst = [];
   var got = _.arrayRemovedElementOnce( dst, 1 );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
   test.identical( got, -1 );
 
   var dst = [ 1 ];
   var got = _.arrayRemovedElementOnce( dst, 1 );
-  test.identical( dst, [  ] );
+  test.identical( dst, [] );
   test.identical( got, 0 );
 
   var dst = [ 1, 2, 3 ];
@@ -16360,7 +16378,7 @@ function arrayRemovedElementOnceStrictly( test )
   test.case = 'Simple no match element';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayRemovedElementOnceStrictly( [ ], 1 );
+    _.arrayRemovedElementOnceStrictly( [], 1 );
   })
   test.shouldThrowErrorSync( function()
   {
@@ -16431,12 +16449,12 @@ function arrayRemoveArray( test )
 
   var dst = [ 1, 1, 1 ];
   var got = _.arrayRemoveArray( dst, [ 1, 1 ] );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
   test.is( got === dst );
 
   var dst = [ 1, 1, 1 ];
   var got = _.arrayRemoveArray( dst, [ 1 ] );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
   test.is( got === dst );
 
   test.case = 'array has undefined';
@@ -16448,7 +16466,7 @@ function arrayRemoveArray( test )
   test.case = 'dstc === src';
   var dst = [ 1, 1, 1 ];
   var got = _.arrayRemoveArray( dst, dst );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
   test.is( got === dst );
 
   /**/
@@ -17077,7 +17095,7 @@ function arrayRemoveArrays( test )
 
   var dst = [ 1, 1, 1, 2, 2, 2 ];
   var got = _.arrayRemoveArrays( dst, [ [ 1 ], [ 2 ] ] );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
   test.is( got === dst );
 
   var dst = [ 1, 2, 3, 4, 5 ];
@@ -17113,19 +17131,19 @@ function arrayRemoveArrays( test )
   test.case = 'dst === ins';
   var dst = [ 1, 1, 1 ];
   var got = _.arrayRemoveArrays( dst, dst );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
   test.is( got === dst );
 
   test.case = 'dst === ins';
   var dst = [ 1, 1, 1 ];
   var got = _.arrayRemoveArrays( dst, [ dst ] );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
   test.is( got === dst );
 
   test.case = 'dst === ins';
   var dst = [ 1, 1, 1 ];
   var got = _.arrayRemoveArrays( dst, [ dst, dst ] );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
   test.is( got === dst );
 
   /**/
@@ -17257,7 +17275,7 @@ function arrayRemoveArraysOnce( test )
   test.case = 'equalizer 1 arg';
 
   var dst = [ { num : 1 }, { num : 2 }, { num : 3 } ];
-  var insArray = [ [ 3 ], 1  ];
+  var insArray = [ [ 3 ], 1 ];
   var got = _.arrayRemoveArraysOnce( dst, insArray, ( e ) => e.num, ( e ) => e )
   test.identical( got, [ { num : 2 } ] );
   test.is( got === dst );
@@ -17334,7 +17352,7 @@ function arrayRemoveArraysOnce( test )
   test.case = 'onEqualize is not a routine';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayRemoveArraysOnce( [  ], [ 1, 2, 3 ], [] )
+    _.arrayRemoveArraysOnce( [], [ 1, 2, 3 ], [] )
   });
 
   test.case = 'second arg is not longIs entity';
@@ -17357,13 +17375,13 @@ function arrayRemoveArraysOnceStrictly( test )
 
   var dst = [ 1, 2, 3 ];
   var got = _.arrayRemoveArraysOnceStrictly( dst, [ 1, 2, 3 ] );
-  test.identical( got, [ ] );
+  test.identical( got, [] );
   test.is( got === dst );
 
   var dst = [ 1, 2, 3, 4 ];
   var insArray = [ [ 1 ], [ 2 ], [ 3 ], [ 4 ] ];
   var got = _.arrayRemoveArraysOnceStrictly( dst, insArray );
-  test.identical( got, [ ] );
+  test.identical( got, [] );
   test.is( got === dst );
 
   var dst = [ 1, 2, 3, 4, 5 ];
@@ -17385,7 +17403,7 @@ function arrayRemoveArraysOnceStrictly( test )
   {
     return a.num === b.num;
   }
-  var insArray = [ [ { num : 3 } ], { num : 1 }  ]
+  var insArray = [ [ { num : 3 } ], { num : 1 } ]
   var got = _.arrayRemoveArraysOnceStrictly( dst, insArray, onEqualize )
   test.identical( got, [ { num : 2 } ] );
   test.is( got === dst );
@@ -17393,7 +17411,7 @@ function arrayRemoveArraysOnceStrictly( test )
   test.case = 'equalizer 1 arg';
 
   var dst = [ { num : 1 }, { num : 2 }, { num : 3 } ];
-  var insArray = [ [ 3 ], 1  ];
+  var insArray = [ [ 3 ], 1 ];
   var got = _.arrayRemoveArraysOnceStrictly( dst, insArray, ( e ) => e.num, ( e ) => e );
   test.identical( got, [ { num : 2 } ] );
   test.is( got === dst );
@@ -17813,13 +17831,13 @@ function arrayRemovedArraysOnceStrictly( test )
 
   var dst = [ 1, 2, 3 ];
   var got = _.arrayRemovedArraysOnceStrictly( dst, [ 1, 2, 3 ] );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
   test.identical( got, 3 );
 
   var dst = [ 1, 2, 3, 4 ];
   var insArray = [ [ 1 ], [ 2 ], [ 3 ], [ 4 ] ];
   var got = _.arrayRemovedArraysOnceStrictly( dst, insArray );
-  test.identical( dst, [ ] );
+  test.identical( dst, [] );
   test.identical( got, 4 );
 
   var dst = [ 1, 2, 3, 4, 5 ];
@@ -17841,7 +17859,7 @@ function arrayRemovedArraysOnceStrictly( test )
   {
     return a.num === b.num;
   }
-  var insArray = [ [ { num : 3 } ], { num : 1 }  ]
+  var insArray = [ [ { num : 3 } ], { num : 1 } ]
   var got = _.arrayRemovedArraysOnceStrictly( dst, insArray, onEqualize )
   test.identical( dst, [ { num : 2 } ] );
   test.identical( got, 2 );
@@ -17849,7 +17867,7 @@ function arrayRemovedArraysOnceStrictly( test )
   test.case = 'equalizer 1 arg';
 
   var dst = [ { num : 1 }, { num : 2 }, { num : 3 } ];
-  var insArray = [ [ 3 ], 1  ];
+  var insArray = [ [ 3 ], 1 ];
   var got = _.arrayRemovedArraysOnceStrictly( dst, insArray, ( e ) => e.num, ( e ) => e );
   test.identical( dst, [ { num : 2 } ] );
   test.identical( got, 2 );
@@ -18109,545 +18127,1708 @@ function arrayRemoveDuplicates( test )
 
 //
 
-function arrayFlattenCritical( test )
-{
-
-  test.case = 'array of the passed arguments';
-  var got = _.arrayFlatten( [], [ 'str', {}, [ 1, 2 ], 5, true ] );
-  var expected = [ 'str', {}, 1, 2, 5, true ];
-  test.identical( got, expected );
-
-  test.case = 'without undefined';
-  var got = _.arrayFlatten( [ 1, 2, 3 ], [ 13, 'abc', null ] );
-  var expected = [ 1, 2, 3, 13, 'abc', null ];
-  test.identical( got, expected );
-
-  // test.case = 'Args are not long';
-  // var got = _.arrayFlatten( [ 1, 2 ], 13, 'abc', {} );
-  // var expected = [ 1, 2, 13, 'abc', {} ];
-  // test.identical( got, expected );
-
-  test.case = 'undefined';
-  var got = _.arrayFlatten( [ 1, 2, 3 ], [ 13, 'abc', undefined, null ] );
-  var expected = [ 1, 2, 3, 13, 'abc', undefined, null ];
-  test.identical( got, expected );
-
-  test.case = 'second argument is number';
-  var got = _.arrayFlatten( [ 1, 2, 3 ], 13 );
-  var expected = [ 1, 2, 3, 13 ];
-  test.identical( got, expected );
-
-  test.case = 'second argument is map';
-  var got = _.arrayFlatten( [ 1, 2, 3 ], { k : 'e' } );
-  var expected = [ 1, 2, 3, { k : 'e' } ];
-  test.identical( got, expected );
-
-  test.case = 'bad arguments'; /* */
-
-  if( !Config.debug )
-  return;
-
-  test.shouldThrowErrorSync( () => _.arrayFlatten( undefined, [ 1, 2, 3 ] ) );
-  test.shouldThrowErrorSync( () => _.arrayFlatten( new U32x([ 1, 2, 3 ]), [ 1, 2, 3 ] ) );
-  test.shouldThrowErrorSync( () => _.arrayFlatten( [], [], [] ) );
-  test.shouldThrowErrorSync( () => _.arrayFlatten( [], 0, 1 ) );
-
-  // test.shouldThrowErrorSync( () => _.arrayFlatten( [], 13 ) );
-  // test.shouldThrowErrorSync( () => _.arrayFlatten( [], '13' ) );
-  // test.shouldThrowErrorSync( () => _.arrayFlatten( [], { k : 'e' } ) );
-  // test.shouldThrowErrorSync( () => _.arrayFlatten( [ 1, 2, 3 ], [ 13, 'abc', undefined, null ] ) );
-
-}
-
-//
-
 function arrayFlatten( test )
 {
-  test.case = 'make array flat, dst is empty';
+  test.open( 'single argument' );
 
+  test.case = 'flat array';
+  var got = _.arrayFlatten( [ 0, 1, 0, 1 ] )
+  var expected = [ 0, 1, 0, 1 ];
+  test.identical( got, expected );
+
+  test.case = 'level 2';
+  var got = _.arrayFlatten( [ [ 0 ], 0, 1, [ 0, 1 ] ] );
+  var expected = [ 0, 0, 1, 0, 1 ];
+  test.identical( got, expected );
+
+  test.case = 'level 3';
+  var got = _.arrayFlatten( [ [ [ 0 ] ] ] );
+  var expected = [ 0 ];
+  test.identical( got, expected );
+
+  test.case = 'from arrays level 5';
+  var src = [ [ [ [ [ 1 ] ] ] ] ];
+  var dst = [ src, src, src, src ];
+  var got = _.arrayFlatten( dst );
+  var expected = [ 1, 1, 1, 1 ];
+  test.identical( got, expected );
+
+  test.close( 'single argument' );
+
+  /* - */
+
+  test.case = 'dst - null, src - empty array';
   var got  = _.arrayFlatten( null, [] );
   test.identical( got, [] );
 
+  test.case = 'dst - empty array, src - empty array';
   var got  = _.arrayFlatten( [], [] );
   test.identical( got, [] );
 
+  test.case = 'dst - null, src - flat array';
   var got  = _.arrayFlatten( null, [ 1, 2, 3 ] );
   test.identical( got, [ 1, 2, 3 ] );
 
+  test.case = 'dst - empty array, src - flat array';
   var got  = _.arrayFlatten( [], [ 1, 2, 3 ] );
   test.identical( got, [ 1, 2, 3 ] );
 
-  var got  = _.arrayFlatten( [], [ [ 1 ], [ 2 ], [ 3 ]  ] );
+  var got = _.arrayFlatten( [], [ 'str', {}, [ 1, 2 ], 5, true ] );
+  test.identical( got, [ 'str', {}, 1, 2, 5, true ] );
+
+  var got = _.arrayFlatten( [ 1, 2, 3 ], [ 13, 'abc', null, undefined ] );
+  test.identical( got, [ 1, 2, 3, 13, 'abc', null, undefined ] );
+
+  test.case = 'dst - empty array, src - array, level 2';
+  var got  = _.arrayFlatten( [], [ [ 1 ], [ 2 ], [ 3 ] ] );
   test.identical( got, [ 1, 2, 3 ] );
 
-  var got  = _.arrayFlatten( [], [ [ 1, [ 2, [ 3 ] ] ]  ] );
+  test.case = 'dst - empty array, src - array, level 3';
+  var got  = _.arrayFlatten( [], [ [ 1, [ 2, [ 3 ] ] ] ] );
   test.identical( got, [ 1, 2, 3 ] );
 
-  var got  = _.arrayFlatten( [], [ [ [ [ [ 1 ] ] ] ] ]  );
+  test.case = 'dst - empty array, src - array, level 5';
+  var got  = _.arrayFlatten( [], [ [ [ [ [ 1 ] ] ] ] ] );
   test.identical( got, [ 1 ] );
 
-  // var got  = _.arrayFlatten( [], 1, 2, '3'  );
-  // test.identical( got, [ 1, 2, '3' ] );
-
-  test.case = 'make array flat, dst is not empty';
-
-  var got  = _.arrayFlatten( [ 1, 2, 3 ], [ 4 ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
-
+  test.case = 'dst - flat array, src - flat array';
   var got  = _.arrayFlatten( [ 1, 2, 3 ], [ 1, 2, 3 ] );
   test.identical( got, [ 1, 2, 3, 1, 2, 3 ] );
 
-  var got  = _.arrayFlatten( [ 1, 2, 3 ], [ [ 1 ], [ 2 ], [ 3 ]  ] );
+  test.case = 'dst - flat array, src - array, level 2';
+  var got  = _.arrayFlatten( [ 1, 2, 3 ], [ [ 1 ], [ 2 ], [ 3 ] ] );
   test.identical( got, [ 1, 2, 3, 1, 2, 3 ] );
 
-  var got  = _.arrayFlatten( [ 1, 2, 3 ], [ [ 1, [ 2, [ 3 ] ] ]  ] );
-  test.identical( got, [ 1, 2, 3, 1, 2, 3 ] );
-
-  var got  = _.arrayFlatten( [ 1 ], [ [ [ [ [ 1 ] ] ] ] ]  );
+  test.case = 'dst - flat array, src - array, level 5';
+  var got  = _.arrayFlatten( [ 1 ], [ [ [ [ [ 1 ] ] ] ] ] );
   test.identical( got, [ 1, 1 ] );
 
+  test.case = 'dst - empty array, src - number';
   var got = _.arrayFlatten( [], 1 );
   test.identical( got, [ 1 ] );
-  /*
-  var got  = _.arrayFlatten( [ 1 ], 2, 3 );
-  test.identical( got, [ 1, 2, 3 ] );
-  */
 
-  test.case = 'make array flat from multiple arrays as one arg';
+  test.case = 'dst - empty array, src - map';
+  var got = _.arrayFlatten( [ 1, 2, 3 ], { k : 'e' } );
+  test.identical( got, [ 1, 2, 3, { k : 'e' } ] );
 
-  var got  = _.arrayFlatten
-  (
-    [],
-    [
-      [ 1 ],
-      [ [ 2 ] ],
-      [ 3, [ [ [ 4 ] ] ] ]
-    ]
-  );
+  test.case = 'dst - empty array, src - array contains array with diff levels';
+  var got  = _.arrayFlatten( [], [ [ 1 ], [ [ 2 ] ], [ 3, [ [ [ 4 ] ] ] ] ] );
   test.identical( got, [ 1, 2, 3, 4 ] );
 
-  test.case = 'make array flat from different inputs -  null dstArray';
-
-  // var got  =  _.arrayFlatten( null, 'str', {}, [ 1, 2 ], 5, true );
-  // test.identical( got, [ 'str', {}, 1, 2, 5, true ] );
-
-  var got = _.arrayFlatten( [ 1, 1, 3, 3, [ 5, 5 ] ], 5 );
-  var expected = [ 1, 1, 3, 3, [ 5, 5 ], 5 ];
-  test.identical( got, expected );
-
+  test.case = 'dst - null, src - array, level 2';
   var got = _.arrayFlatten( null, [ 1, 1, 3, 3, [ 5, 5 ] ] );
   var expected = [ 1, 1, 3, 3, 5, 5 ];
   test.identical( got, expected );
 
-  var got = _.arrayFlatten( [ [ 0 ], [ [ -1, -2 ] ] ], [ 1, 1, 3, 3, [ 5, 5 ] ] );
-  var expected = [ [ 0 ], [ [ -1, -2 ] ], 1, 1, 3, 3, 5, 5 ];
-  test.identical( got, expected );
-
-  //
-
-  test.open( 'another criteria' );
-
-  test.open( 'single argument' ); //
-
-  var got = _.arrayFlatten( [ 0, 1, 2, 3 ] )
-  var expected = [ 0, 1, 2, 3 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlatten( [ 0, 1, 0, 1 ] )
-  var expected = [ 0, 1, 0, 1 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlatten( [ [ 0, 0 ], [ 1, 1 ] ] );
-  var expected = [ 0, 0, 1, 1 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlatten( [ [ 0 ], 0, 1, [ 0, 1 ] ] );
-  var expected = [ 0, 0, 1, 0, 1 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlatten( [ [ [ 0 ] ] ] );
-  var expected = [ 0 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlatten( [ 1, 1, 3, 3, [ 5, 5 ] ] );
-  var expected = [ 1, 1, 3, 3, 5, 5 ];
-  test.identical( got, expected );
-
-  test.close( 'single argument' ); //
-
-  test.open( 'two arguments' ); //
-
-  var got = _.arrayFlatten( [ 0, 1, 2, 3 ] )
-  var expected = [ 0, 1, 2, 3 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlatten( [ 0, 1, 0, 1 ] )
-  var expected = [ 0, 1, 0, 1 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlatten( [ [ 0, 0 ], [ 1, 1 ] ] );
-  var expected = [ 0, 0, 1, 1 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlatten( [ [ 0 ], 0, 1, [ 0, 1 ] ] );
-  var expected = [ 0, 0, 1, 0, 1 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlatten( [ [ [ 0 ] ] ] );
-  var expected = [ 0 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlatten( [ 1, 1, 3, 3, [ 5, 5 ] ] );
-  var expected = [ 1, 1, 3, 3, 5, 5 ];
-  test.identical( got, expected );
-
-  test.close( 'two arguments' ); //
-
-  test.close( 'another criteria' );
-
-  //
+  /* - */
 
   if( !Config.debug )
   return;
 
-  test.case = 'Empty';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlatten( );
-  });
-  /*
-  test.case = 'Undefined element ina array';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlatten( [], [ 1, undefined ] );
-  });
-  */
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlatten() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlatten( [], [ 1, 2, 3 ], [ 'extra' ] ) );
+
+  test.case = 'wrong type of dstArray';
+  test.shouldThrowErrorSync( () => _.arrayFlatten( undefined, [ 1, 2, 3 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayFlatten( new U32x([ 1, 2, 3 ]), [ 1, 2, 3 ] ) );
+}
+
+//
+
+function arrayFlattenSame( test )
+{
+  test.case = 'dst - empty array';
+  var dst = [];
+  var src = dst;
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, [] );
+
+  test.case = 'dst - flat array, src - flat array';
+  var dst = [ 1, 2, 3 ];
+  var src = dst;
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 2, 3, 1, 2, 3 ] );
+  test.identical( got, [ 1, 2, 3, 1, 2, 3 ] );
+
+  test.case = 'dst - array, level 2';
+  var dst = [ [ 1 ], [ 2 ], [ 3 ] ];
+  var src = dst;
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ 3 ], 1, 2, 3 ] );
+  test.identical( got, [ [ 1 ], [ 2 ], [ 3 ], 1, 2, 3 ] );
+
+  test.case = 'dst - array, level 3, src contains dst';
+  var dst = [ [ 1, [ 2, [ 3 ] ] ] ];
+  var src = [ dst, 4, 5 ];
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ [ 1, [ 2, [ 3 ] ] ], 1, 2, 3, 4, 5 ] );
+  test.identical( got, [ [ 1, [ 2, [ 3 ] ] ], 1, 2, 3, 4, 5 ] );
+
+  test.case = 'dst - array, level 5, src contains a few dst';
+  var dst = [ [ [ [ [ 1 ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ]
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ [ [ [ [ 1 ] ] ] ], 1, 1, 1, 1 ] );
+  test.identical( got, [ [ [ [ [ 1 ] ] ] ], 1, 1, 1, 1 ] );
+
+  /* - */
+
+  test.open( 'dst or src contains self' );
+
+  test.case = 'src push self';
+  var dst = [];
+  var src = [ 1, 2 ];
+  src.push( src );
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'src push self twice';
+  var dst = [];
+  var src = [ 1, 2 ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src - Set, add self';
+  var dst = [];
+  var src = new Set( [ 1, 2 ] );
+  src.add( src );
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src - Set, add self twice';
+  var dst = [];
+  var src = new Set( [ 1, [ 2 ] ] );
+  src.add( src );
+  src.add( src );
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst push self';
+  var dst = [ 1 ];
+  dst.push( dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst push self twice';
+  var dst = [ 1 ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst push self, src - Set';
+  var dst = [ 1 ];
+  dst.push( dst );
+  var src = new Set( [ 'str', { a : 2 } ] );
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 'str', { a : 2 } ] );
+  test.identical( got, [ 1, 'str', { a : 2 } ] );
+
+  test.case = 'dst push self twice, src - Set';
+  var dst = [ 1 ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = new Set( [ 'str', { a : 2 } ] );
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 'str', { a : 2 } ] );
+  test.identical( got, [ 1, 'str', { a : 2 } ] );
+
+  test.case = 'dst push self, dst === src';
+  var dst = [ 1 ];
+  dst.push( dst );
+  var src = dst;
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 1, 1 ] );
+  test.identical( got, [ 1, 1, 1 ] );
+
+  test.case = 'dst push self twice, dst === src';
+  var dst = [ 1 ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = dst;
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 1, 1, 1 ] );
+  test.identical( got, [ 1, 1, 1, 1 ] );
+
+  test.case = 'dst push self';
+  var dst = [ 1 ];
+  dst.push( dst );
+  var got  = _.arrayFlatten( dst );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.case = 'dst push self twice';
+  var dst = [ 1 ];
+  dst.push( dst );
+  dst.push( dst );
+  var got  = _.arrayFlatten( dst );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  /* */
+
+  test.case = 'src inserts self';
+  var dst = [];
+  var src = [ 1, 2 ];
+  src.splice( 1, 0, dst );
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'src inserts self twice';
+  var dst = [];
+  var src = [ 1, 2 ];
+  src.splice( 0, 0, dst );
+  src.splice( 2, 0, dst );
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst inserts self';
+  var dst = [ 1, 2 ];
+  dst.splice( 0, 0, dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 2, 2 ] );
+  test.identical( got, [ 1, 2, 2 ] );
+
+  test.case = 'dst inserts self twice';
+  var dst = [ 1, 2 ];
+  dst.splice( 0, 0, dst );
+  dst.splice( 2, 0, dst );
+  var src = [ 3 ];
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, [ 1, 2, 3 ] );
+
+  test.case = 'dst inserts self, dst === src';
+  var dst = [ 1 ];
+  dst.splice( 0, 0, dst );
+  var src = dst;
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 1, 1 ] );
+  test.identical( got, [ 1, 1, 1 ] );
+
+  test.case = 'dst inserts self twice, dst === src';
+  var dst = [ 1, 2 ];
+  dst.splice( 3, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = dst;
+  var got  = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 2, 1, 2, 1, 2 ] );
+  test.identical( got, [ 1, 2, 1, 2, 1, 2 ] );
+
+  test.case = 'dst inserts self';
+  var dst = [ 1 ];
+  dst.splice( 0, 0, dst );
+  var got  = _.arrayFlatten( dst );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.case = 'dst inserts self twice';
+  var dst = [ 1 ];
+  dst.splice( 0, 0, dst );
+  dst.splice( 2, 0, dst );
+  var got  = _.arrayFlatten( dst );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.close( 'dst or src contains self' );
+}
+
+//
+
+function arrayFlattenSets( test )
+{
+  test.open( 'dst - null' );
+
+  test.case = 'src - empty Set';
+  var dst = null;
+  var src = new Set();
+  var got = _.arrayFlatten( dst, src );
+  test.identical( got, [] );
+
+  test.case = 'src - flat Set';
+  var dst = null;
+  var src = new Set( [ 1, 2, 3 ] );
+  var got = _.arrayFlatten( dst, src );
+  test.identical( got, [ 1, 2, 3 ] );
+
+  test.case = 'src - Set, level 2';
+  var dst = null;
+  var src = new Set( [ 1, [ 'str' ], 3 ] );
+  var got = _.arrayFlatten( dst, src );
+  test.identical( got, [ 1, 'str', 3 ] );
+
+  test.case = 'src - Set, level 3';
+  var dst = null;
+  var src = new Set( [ 1, [ [ 'str' ], 3 ] ] );
+  var got = _.arrayFlatten( dst, src );
+  test.identical( got, [ 1, 'str', 3 ] );
+
+  test.case = 'src - Set, level 5';
+  var dst = null;
+  var src = new Set( [ [ [ 1, [ 'str' ], 3 ] ] ] );
+  var got = _.arrayFlatten( dst, src );
+  test.identical( got, [ 1, 'str', 3 ] );
+
+  test.case = 'src - Set from two array level 5';
+  var dst = null;
+  var src = new Set( [ [ [ [ 1, [ 'str' ], { a : 3 }, undefined ] ] ], [ [ [ 1, [ 'str' ], 3 ] ] ] ] );
+  var got = _.arrayFlatten( dst, src );
+  test.identical( got, [ 1, 'str', { a : 3 }, undefined,  1, 'str', 3 ] );
+
+  test.close( 'dst - null' );
+
+  /* - */
+
+  test.open( 'dst - empty array' );
+
+  test.case = 'src - empty Set';
+  var dst = [];
+  var src = new Set();
+  var got = _.arrayFlatten( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, [] );
+
+  test.case = 'src - flat Set';
+  var dst = [];
+  var src = new Set( [ 1, 2, 3 ] );
+  var got = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, [ 1, 2, 3 ] );
+
+  test.case = 'src - Set, level 2';
+  var dst = [];
+  var src = new Set( [ 1, [ 'str' ], 3 ] );
+  var got = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, [ 1, 'str', 3 ] );
+
+  test.case = 'src - Set, level 3';
+  var dst = [];
+  var src = new Set( [ 1, [ [ 'str' ], 3 ] ] );
+  var got = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, [ 1, 'str', 3 ] );
+
+  test.case = 'src - Set, level 5';
+  var dst = [];
+  var src = new Set( [ [ [ 1, [ 'str' ], 3 ] ] ] );
+  var got = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, [ 1, 'str', 3 ] );
+
+  test.case = 'src - Set from two array level 5';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ 'str' ], { a : 3 }, undefined ] ] ], [ [ [ 1, [ 'str' ], 3 ] ] ] ] );
+  var got = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, 'str', { a : 3 }, undefined,  1, 'str', 3 ] );
+  test.identical( got, [ 1, 'str', { a : 3 }, undefined,  1, 'str', 3 ] );
+
+  test.close( 'dst - empty array' );
+
+  /* - */
+
+  test.open( 'dst - array' );
+
+  test.case = 'src - empty Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set();
+  var got = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 } ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 } ] );
+
+  test.case = 'src - flat Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, 2, 3 ] );
+  var got = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 2, 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 1, 2, 3 ] );
+
+  test.case = 'src - Set, level 2';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, [ 'str' ], 3 ] );
+  var got = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 'str', 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 1, 'str', 3 ] );
+
+  test.case = 'src - Set, level 3';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, [ [ 'str' ], 3 ] ] );
+  var got = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 'str', 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 1, 'str', 3 ] );
+
+  test.case = 'src - Set, level 5';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ 1, [ 'str' ], 3 ] ] ] );
+  var got = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 'str', 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 1, 'str', 3 ] );
+
+  test.case = 'src - Set from two array level 5';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ [ 1, [ 'str' ], { a : 3 }, undefined ] ] ], [ [ [ 1, [ 'str' ], 3 ] ] ] ] );
+  var got = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 'str', { a : 3 }, undefined,  1, 'str', 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 1, 'str', { a : 3 }, undefined,  1, 'str', 3 ] );
+
+  test.case = 'src - Set from dst';
+  var dst = [ 1, [ undefined, [ 2 ], { a : 0 } ] ];
+  var src = new Set( dst );
+  var got = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, [ undefined, [ 2 ], { a : 0 } ], 1, undefined,  2, { a : 0 } ] );
+  test.identical( got, [ 1, [ undefined, [ 2 ], { a : 0 } ], 1, undefined,  2, { a : 0 } ] );
+
+  test.case = 'src - Set from two dst in container';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlatten( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, undefined,  2, { a : 0 }, 1, undefined,  2, { a : 0 }, 1, undefined,  2, { a : 0 } ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 1, undefined,  2, { a : 0 }, 1, undefined,  2, { a : 0 }, 1, undefined,  2, { a : 0 } ] );
+
+  test.close( 'dst - array' );
 }
 
 //
 
 function arrayFlattenOnce( test )
 {
-  test.case = 'make array flat, dst is empty';
-
-  var got  = _.arrayFlattenOnce( [], [] );
-  test.identical( got, [] );
-
-  var got  = _.arrayFlattenOnce( [], [ 1, 1, 2, 2, 3 , 3 ] );
-  test.identical( got, [ 1, 2, 3 ] );
-
-  var got  = _.arrayFlattenOnce( [], [ [ 1 ], [ 1 ], [ 2 ], [ 2 ], [ 3 ], [ 3 ]  ] );
-  test.identical( got, [ 1, 2, 3 ] );
-
-  var got  = _.arrayFlattenOnce( [], [ [ 1, 1, [ 2, 2, [ 3, 3 ] ] ]  ] );
-  test.identical( got, [ 1, 2, 3 ] );
-
-  var got  = _.arrayFlattenOnce( [], [ [ [ [ [ 1, 1, 1 ] ] ] ] ]  );
-  test.identical( got, [ 1 ] );
-
-  test.case = 'make array flat, dst is not empty';
-
-  var got  = _.arrayFlattenOnce( [ 1, 2, 3, 4 ], [ 4 ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
-
-  var got  = _.arrayFlattenOnce( [ 1, 2, 3 ], [ 1, 2, 3, [ [ 4 ] ] ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
-
-  var got  = _.arrayFlattenOnce( [ 1, 2, 3 ], [ [ 1 ], [ 2 ], [ 3 ], [ 4 ] ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
-
-  var got  = _.arrayFlattenOnce( [ 1, 2, 3 ], [ [ 1, [ 2, [ 3 ] ] ], 4 ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
-
-  var got  = _.arrayFlattenOnce( [ 1 ], [ [ [ [ [ 1, 1, 1 ] ] ] ] ]  );
-  test.identical( got, [ 1 ] );
-
-  test.case = 'make array flat from multiple arrays as one arg';
-
-  var got  = _.arrayFlattenOnce
-  (
-    [ 1, 4 ],
-    [
-      [ 1 ],
-      [ [ 2 ] ],
-      [ 3, [ [ [ 4 ] ] ] ]
-    ]
-  );
-  test.identical( got, [ 1, 4, 2, 3 ] );
-
-  test.case = 'onEqualize';
-  var got  = _.arrayFlattenOnce( [ 1, 2, 3, 4 ], [ 1, 4, 2, 5 ], function( a, b )
-  {
-    return  a === b;
-  });
-  test.identical( got, [ 1, 2, 3, 4, 5 ] );
-
-  debugger;
-  var got = _.arrayFlattenOnce( [], 1 );
-  test.identical( got, [ 1 ] );
-
-  var got = _.arrayFlattenOnce( [ 1, 1, 3, 3, [ 5, 5 ] ], 5 );
-  var expected = [ 1, 1, 3, 3, [ 5, 5 ], 5 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattenOnce( null, [ 1, 1, 3, 3, [ 5, 5 ] ] );
-  var expected = [ 1, 3, 5 ];
-  test.identical( got, expected );
-
-  //
-
   test.open( 'single argument' );
 
-  var got = _.arrayFlattenOnce( [ 0, 1, 2, 3 ] );
-  var expected = [ 0, 1, 2, 3 ];
-  test.identical( got, expected );
+  test.case = 'flat array, without duplicates';
+  var dst = [ 0, 1, 2, 3 ];
+  var got = _.arrayFlattenOnce( dst );
+  test.identical( dst, [ 0, 1, 2, 3 ] );
+  test.identical( got, [ 0, 1, 2, 3 ] );
 
-  var got = _.arrayFlattenOnce( [ 0, 1, 0, 1 ] );
-  var expected = [ 0, 1 ];
-  test.identical( got, expected );
+  test.case = 'flat array, duplicates';
+  var dst = [ 0, 1, 0, 1 ];
+  var got = _.arrayFlattenOnce( dst );
+  test.identical( dst, [ 0, 1 ] );
+  test.identical( got, [ 0, 1 ] );
 
-  var got = _.arrayFlattenOnce( [ [ 0, 0 ], [ 1, 1 ] ] );
-  var expected = [ 0, 1 ];
-  test.identical( got, expected );
+  test.case = 'array, level 2, duplicates';
+  var dst = [ [ 0, 0 ], [ 1, 1 ] ];
+  var got = _.arrayFlattenOnce( dst );
+  test.identical( dst, [ 0, 1 ] );
+  test.identical( got, [ 0, 1 ] );
 
-  var got = _.arrayFlattenOnce( [ [ 0 ], 0, 1, [ 0, 1 ] ] );
-  var expected = [ 0, 1 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattenOnce( [ 1, [ [ 0 ], 1 ], 1, 0 ] );
-  var expected = [ 1, 0 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattenOnce( [ 1, 1, 3, 3, [ 5, 5 ] ] );
-  var expected = [ 1, 3, 5 ];
-  test.identical( got, expected );
+  test.case = 'array with diff levels, duplicates';
+  var dst = [ 1, [ [ 0 ], 1 ], 1, 0 ];
+  var got = _.arrayFlattenOnce( dst );
+  test.identical( dst, [ 1, 0 ] );
+  test.identical( got, [ 1, 0 ] );
 
   test.close( 'single argument' );
+
+  /* - */
+
+  test.case = 'dst - empty array, src - number';
+  var dst = [];
+  var got = _.arrayFlattenOnce( dst, 2 );
+  test.identical( dst, [ 2 ] );
+  test.identical( got, [ 2 ] );
+
+  test.case = 'dst - empty array, src - empty array';
+  var dst = [];
+  var got = _.arrayFlattenOnce( dst, [] );
+  test.identical( dst, [] );
+  test.identical( got, [] );
+
+  test.case = 'dst - empty array, src - flat array, duplicates';
+  var dst = [];
+  var got = _.arrayFlattenOnce( dst, [ 1, 1, 2, 2, 3, 3 ] );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, [ 1, 2, 3 ] );
+
+  test.case = 'dst - empty array, src - array, level 2, duplicates';
+  var dst = [];
+  var got = _.arrayFlattenOnce( dst, [ [ 1 ], [ 1 ], [ 2 ], [ 2 ], [ 3 ], [ 3 ] ] );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, [ 1, 2, 3 ] );
+
+  test.case = 'dst - empty array, src - array, level 3, duplicates';
+  var dst = [];
+  var got = _.arrayFlattenOnce( dst, [ [ 1, 1, [ 2, 2, [ 3, 3 ] ] ] ] );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, [ 1, 2, 3 ] );
+
+  test.case = 'dst - empty array, src - array, level 5, duplicates';
+  var dst = [];
+  var got = _.arrayFlattenOnce( dst, [ [ [ [ [ 1, 1, 1 ] ] ] ] ] );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  /* */
+
+  test.case = 'dst - flat array, src - string';
+  var dst = [ 1, 2, 3 ];
+  var got = _.arrayFlattenOnce( dst, 'str' );
+  test.identical( dst, [ 1, 2, 3, 'str' ] );
+  test.identical( got, [ 1, 2, 3, 'str' ] );
+
+  test.case = 'dst - flat array, src - flat array, duplicates';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenOnce( dst, [ 4 ] );
+  test.identical( dst, [ 1, 2, 3, 4 ] );
+  test.identical( got, [ 1, 2, 3, 4 ] );
+
+  test.case = 'dst - flat array, src - array, level 2, duplicates';
+  var dst = [ 1, 2, 3 ];
+  var got = _.arrayFlattenOnce( dst, [ [ 1 ], [ 2 ], [ 3 ], [ 4 ] ] );
+  test.identical( dst, [ 1, 2, 3, 4 ] );
+  test.identical( got, [ 1, 2, 3, 4 ] );
+
+  test.case = 'dst - flat array, src - array, level 3, duplicates';
+  var dst = [ 1, 2, 3 ];
+  var got = _.arrayFlattenOnce( dst, [ 1, 2, 3, [ [ 4 ] ] ] );
+  test.identical( dst, [ 1, 2, 3, 4 ] );
+  test.identical( got, [ 1, 2, 3, 4 ] );
+
+  test.case = 'dst - flat array, src - array, level 5, duplicates';
+  var dst = [ 1 ];
+  var got = _.arrayFlattenOnce( dst, [ [ [ [ [ 1, 1, 1 ] ] ] ] ] );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.case = 'dst - array, level 2, src - flat array';
+  var dst = [ [ 1 ], [ 2 ], [ 3 ] ];
+  var got = _.arrayFlattenOnce( dst, [ 1, 2, 3 ] );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ 3 ], 1, 2, 3 ] );
+  test.identical( got, [ [ 1 ], [ 2 ], [ 3 ], 1, 2, 3 ] );
+
+  test.case = 'dst - flat array, src - array with diff level arrays, duplicates';
+  var dst = [ 1, 4 ];
+  var got  = _.arrayFlattenOnce( dst, [ [ 1 ], [ [ 2 ] ], [ 3, [ [ [ 4 ] ] ] ] ] );
+  test.identical( dst, [ 1, 4, 2, 3 ] );
+  test.identical( got, [ 1, 4, 2, 3 ] );
+
+  /* */
+
+  test.case = 'evaluator1';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenOnce( dst, [ 1, 4, 2, 5 ], ( e ) => e );
+  test.identical( dst, [ 1, 2, 3, 4, 5 ] );
+  test.identical( got, [ 1, 2, 3, 4, 5 ] );
+
+  test.case = 'evaluator1 and evaluator2';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenOnce( dst, [ 1, 4, 2, 5 ], ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, 2, 3, 4, 5 ] );
+  test.identical( got, [ 1, 2, 3, 4, 5 ] );
+
+  test.case = 'evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenOnce( dst, [ 1, 4, 2, 5 ], 1, ( e ) => e );
+  test.identical( dst, [ 1, 2, 3, 4, 1, 5 ] );
+  test.identical( got, [ 1, 2, 3, 4, 1, 5 ] );
+
+  test.case = 'equilizer';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenOnce( dst, [ 1, 4, 2, 5 ], ( a, b ) => a === b );
+  test.identical( dst, [ 1, 2, 3, 4, 5 ] );
+  test.identical( got, [ 1, 2, 3, 4, 5 ] );
+
+  /* - */
 
   if( !Config.debug )
   return;
 
-  test.case = 'not enough arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenOnce();
-  });
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlattenOnce() );
 
-  test.case = 'first is not longIs';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenOnce( 1, [ 1 ] );
-  });
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlattenOnce( [], [ 1 ], ( e ) => e, ( ins ) => ins, 'extra' ) );
 
-  test.case = 'onEqualize is not a routine';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenOnce( [], [ 1 ], [] );
-  });
+  test.case = 'dstArray is not array';
+  test.shouldThrowErrorSync( () => _.arrayFlattenOnce( 1, [ 1 ] ) );
+
+  test.case = 'evaluator1 is not a routine or a number';
+  test.shouldThrowErrorSync( () => _.arrayFlattenOnce( [], [ 1 ], [] ) );
+
+  test.case = 'evaluator2 is not a routine or a number';
+  test.shouldThrowErrorSync( () => _.arrayFlattenOnce( [], [ 1 ], ( e ) => e, [] ) );
+  test.shouldThrowErrorSync( () => _.arrayFlattenOnce( [], [ 1 ], 0, {} ) );
+}
+
+//
+
+function arrayFlattenOnceSame( test )
+{
+  test.case = 'dst - empty array';
+  var dst = [];
+  var src = dst;
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, [] );
+
+  test.case = 'dst - flat array, src - flat array, duplicates';
+  var dst = [ 1, 2, 3, 3, 3, 1 ];
+  var src = dst;
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, 2, 3, 3, 3, 1 ] );
+  test.identical( got, [ 1, 2, 3, 3, 3, 1 ] );
+
+  test.case = 'dst - array, level 2, no duplicates';
+  var dst = [ [ 1 ], [ 2 ], [ 3 ] ];
+  var src = dst;
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ 3 ], 1, 2, 3 ] );
+  test.identical( got, [ [ 1 ], [ 2 ], [ 3 ], 1, 2, 3 ] );
+
+  test.case = 'dst - array, level 3, src contains dst, duplicates';
+  var dst = [ [ 1, [ 2, [ 3 ] ] ] ];
+  var src = [ dst, 1, 2 ];
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ [ 1, [ 2, [ 3 ] ] ], 1, 2, 3 ] );
+  test.identical( got, [ [ 1, [ 2, [ 3 ] ] ], 1, 2, 3 ] );
+
+  /* - */
+
+  test.open( 'evaluators' );
+
+  test.case = 'src contains a few dst, duplicates, evaluator';
+  var dst = [ [ [ [ [ 1 ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenOnce( dst, src, ( e ) => e );
+  test.identical( dst, [ [ [ [ [ 1 ] ] ] ], 1 ] );
+  test.identical( got, [ [ [ [ [ 1 ] ] ] ], 1 ] );
+
+  test.case = 'src contains a few dst, duplicates, evaluator1 and evaluator2';
+  var dst = [ [ [ [ [ 1 ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenOnce( dst, src, ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ [ [ [ [ 1 ] ] ] ], 1 ] );
+  test.identical( got, [ [ [ [ [ 1 ] ] ] ], 1 ] );
+
+  test.case = 'src contains a few dst, duplicates, evaluator1 - fromIndex, evaluator2, duplicates';
+  var dst = [ 1, [ [ [ [ 1 ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenOnce( dst, src, 1, ( e ) => e );
+  test.identical( dst, [ 1, [ [ [ [ 1 ] ] ] ], 1 ] );
+  test.identical( got, [ 1, [ [ [ [ 1 ] ] ] ], 1 ] );
+
+  test.case = 'src contains a few dst, duplicates, equalizer';
+  var dst = [ [ [ [ [ 1 ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenOnce( dst, src, 1, ( e, ins ) => e === ins );
+  test.identical( dst, [ [ [ [ [ 1 ] ] ] ], 1 ] );
+  test.identical( got, [ [ [ [ [ 1 ] ] ] ], 1 ] );
+
+  test.close( 'evaluators' );
+
+  /* - */
+
+  test.open( 'dst or src contains self' );
+
+  test.case = 'dst - empty array, src push self';
+  var dst = [];
+  var src = [ 1, 2 ];
+  src.push( src );
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src push self twice';
+  var dst = [];
+  var src = [ 1, [ 2 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src - Set, add self';
+  var dst = [];
+  var src = new Set( [ 1, 2 ] );
+  src.add( src );
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src - Set, add self twice';
+  var dst = [];
+  var src = new Set( [ 1, [ 2 ] ] );
+  src.add( src );
+  src.add( src );
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - array level 2, push self, src - flat array';
+  var dst = [ 1, [ 2 ] ];
+  dst.push( dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, [ 1, [ 2 ], 2 ] );
+
+  test.case = 'dst - array level 2, push self twice, src - flat array, duplicates';
+  var dst = [ 1, [ 2, 3 ] ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = [ 1 ];
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, [ 2, 3 ] ] );
+  test.identical( got, [ 1, [ 2, 3 ] ] );
+
+  test.case = 'dst - flat array, push self, src - Set, duplicates';
+  var dst = [ 1, 2, 3 ];
+  dst.push( dst );
+  var src = new Set( [ 1, 2, 3 ] );
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, [ 1, 2, 3 ] );
+
+  test.case = 'dst - array, level 2, push self twice, src - Set, duplicates';
+  var dst = [ 1, [ 1 ] ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = new Set( [ 'str', { a : 2 }, 1 ] );
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, [ 1 ], 'str', { a : 2 } ] );
+  test.identical( got, [ 1, [ 1 ], 'str', { a : 2 } ] );
+
+  test.case = 'dst - array, level 2, push self, dst === src';
+  var dst = [ 1, [ 3 ], 2 ];
+  dst.push( dst );
+  var src = dst;
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, [ 3 ], 2, 3 ] );
+  test.identical( got, [ 1, [ 3 ], 2, 3 ] );
+
+  test.case = 'dst - array, level 2, push self twice, dst === src, duplicates';
+  var dst = [ 1, [ 1 ], 2 ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = dst;
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, [ 1 ], 2 ] );
+  test.identical( got, [ 1, [ 1 ], 2 ] );
+
+  test.case = 'dst = array, level 3, push self';
+  var dst = [ 1, [ 3, [ 2 ] ] ];
+  dst.push( dst );
+  var got  = _.arrayFlattenOnce( dst );
+  test.identical( dst, [ 1, 3, 2 ] );
+  test.identical( got, [ 1, 3, 2 ] );
+
+  test.case = 'dst - array, level 6, push self twice, duplicates';
+  var dst = [ [ [ [ [ [ 1, 1, 2 ] ] ] ] ] ];
+  dst.push( dst );
+  dst.push( dst );
+  var got  = _.arrayFlattenOnce( dst );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  /* */
+
+  test.case = 'dst - empty array, src inserts self';
+  var dst = [];
+  var src = [ 1, 2 ];
+  src.splice( 1, 0, src );
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src inserts self twice';
+  var dst = [];
+  var src = [ 1, [ 2 ] ];
+  src.splice( 0, 0, src );
+  src.splice( 2, 0, src );
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - array level 2, inserts self, src - flat array';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 0, 0, dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, [ 1, [ 2 ], 2 ] );
+
+  test.case = 'dst - array level 2, inserts self twice, src - flat array, duplicates';
+  var dst = [ 1, [ 2, 3 ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1 ];
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, [ 2, 3 ] ] );
+  test.identical( got, [ 1, [ 2, 3 ] ] );
+
+  test.case = 'dst - flat array, inserts self, src - Set, duplicates';
+  var dst = [ 1, 2, 3 ];
+  dst.splice( 1, 0, dst );
+  var src = new Set( [ 1, 2, 3 ] );
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, [ 1, 2, 3 ] );
+
+  test.case = 'dst - array, level 2, inserts self twice, src - Set, duplicates';
+  var dst = [ 1, [ 1 ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = new Set( [ 'str', { a : 2 }, 1 ] );
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, [ 1 ], 'str', { a : 2 } ] );
+  test.identical( got, [ 1, [ 1 ], 'str', { a : 2 } ] );
+
+  test.case = 'dst - array, level 2, inserts self, dst === src';
+  var dst = [ 1, [ 3 ], 2 ];
+  dst.splice( 1, 0, dst );
+  var src = dst;
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, [ 3 ], 2, 3 ] );
+  test.identical( got, [ 1, [ 3 ], 2, 3 ] );
+
+  test.case = 'dst - array, level 2, inserts self twice, dst === src, duplicates';
+  var dst = [ 1, [ 1 ], 2 ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = dst;
+  var got  = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, [ 1 ], 2 ] );
+  test.identical( got, [ 1, [ 1 ], 2 ] );
+
+  test.case = 'dst = array, level 3, inserts self';
+  var dst = [ 1, [ 3, [ 2 ] ] ];
+  dst.splice( 1, 0, dst );
+  var got  = _.arrayFlattenOnce( dst );
+  test.identical( dst, [ 1, 3, 2 ] );
+  test.identical( got, [ 1, 3, 2 ] );
+
+  test.case = 'dst - array, level 6, inserts self twice, duplicates';
+  var dst = [ [ [ [ [ [ 1, 1, 2 ] ] ] ] ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var got  = _.arrayFlattenOnce( dst );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.close( 'dst or src contains self' );
+
+  /* - */
+
+  test.open( 'dst or src contains self, evaluators' );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenOnce( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, [ 1, [ 2 ], 2 ] );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 and evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenOnce( dst, src, ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, [ 1, [ 2 ], 2 ] );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenOnce( dst, src, 2, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 1, 2 ] );
+  test.identical( got, [ 1, [ 2 ], 1, 2 ] );
+
+  test.case = 'dst - array, src push self twice, duplicates, equalizer';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenOnce( dst, src, ( e, ins ) => e === ins );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, [ 1, [ 2 ], 2 ] );
+
+  /* */
+
+  test.case = 'dst inserts self twice, duplicates, evaluator';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1, [ 2 ] ];
+  var got  = _.arrayFlattenOnce( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, [ 1, [ 2 ], 2 ] );
+
+  test.case = 'dst inserts self twice, duplicates, evaluator1 and evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1, [ 2 ] ];
+  var got  = _.arrayFlattenOnce( dst, src, ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, [ 1, [ 2 ], 2 ] );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1, [ 2 ] ];
+  var got  = _.arrayFlattenOnce( dst, src, 2, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 1, 2 ] );
+  test.identical( got, [ 1, [ 2 ], 1, 2 ] );
+
+  test.case = 'dst - array, src push self twice, duplicates, equalizer';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1, [ 2 ] ];
+  var got  = _.arrayFlattenOnce( dst, src, ( e, ins ) => e === ins );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, [ 1, [ 2 ], 2 ] );
+
+  test.close( 'dst or src contains self, evaluators' );
+}
+
+//
+
+function arrayFlattenOnceSets( test )
+{
+  test.open( 'dst - empty array' );
+
+  test.case = 'src - empty Set';
+  var dst = [];
+  var src = new Set();
+  var got = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, [] );
+
+  test.case = 'src - flat Set, duplicates';
+  var dst = [];
+  var src = new Set( [ 1, 1, 2, 3, 3, 1 ] );
+  var got = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, [ 1, 2, 3 ] );
+
+  test.case = 'src - Set, level 2, duplicates';
+  var dst = [];
+  var src = new Set( [ 1, [ [ 'str' ] ], [ [ 'str' ] ], 1, 3 ] );
+  var got = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, [ 1, 'str', 3 ] );
+
+  test.case = 'src - Set, level 3';
+  var dst = [];
+  var src = new Set( [ 1, [ [ [ 'str' ], 3 ] ] ] );
+  var got = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, [ 1, 'str', 3 ] );
+
+  test.case = 'src - Set, level 5, duplicates';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ [ 'str' ] ], 3 ] ] ], 1, 'str', 3, 3 ] );
+  var got = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, [ 1, 'str', 3 ] );
+
+  test.case = 'src - Set from two array level 5, duplicates';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ 'str' ], { a : 3 }, undefined ] ] ], [ [ [ 1, [ 'str' ], 3 ] ] ] ] );
+  var got = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, 'str', { a : 3 }, undefined, 3 ] );
+  test.identical( got, [ 1, 'str', { a : 3 }, undefined, 3 ] );
+
+  test.close( 'dst - empty array' );
+
+  /* - */
+
+  test.open( 'dst - array' );
+
+  test.case = 'src - empty Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set();
+  var got = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 } ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 } ] );
+
+  test.case = 'src - flat Set, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, 2, 3 ] );
+  var got = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2, 3 ] );
+
+  test.case = 'src - Set, level 2, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, [ [ 'str' ], 3 ] ] );
+  var got = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 'str', 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 'str', 3 ] );
+
+  test.case = 'src - Set, level 3, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, [ [ [ 'str' ] ], 3 ] ] );
+  var got = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 'str', 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 'str', 3 ] );
+
+  test.case = 'src - Set, level 5, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ 1, [ 'str' ], 3 ] ] ] );
+  var got = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 'str', 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 'str', 3 ] );
+
+  test.case = 'src - Set from two array level 5, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ [ 1, [ 'str' ], { a : 3 }, undefined ] ] ], [ [ [ 1, [ 'str' ], 3 ] ] ] ] );
+  var got = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 'str', { a : 3 }, 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 'str', { a : 3 }, 3 ] );
+
+  test.case = 'src - Set from dst';
+  var dst = [ 1, [ undefined, [ 2 ], { a : 0 } ] ];
+  var src = new Set( dst );
+  var got = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, [ undefined, [ 2 ], { a : 0 } ], undefined,  2, { a : 0 } ] );
+  test.identical( got, [ 1, [ undefined, [ 2 ], { a : 0 } ], undefined,  2, { a : 0 } ] );
+
+  test.case = 'src - Set from two dst in container';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+
+  test.close( 'dst - array' );
+
+  /* - */
+
+  test.open( 'dst - array, evaluators' );
+
+  test.case = 'src - Set from two dst in container, evaluator';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenOnce( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+
+  test.case = 'src - Set from two dst in container, evaluator1 and evaluator2';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenOnce( dst, src, ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+
+  test.case = 'src - Set from two dst in container, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenOnce( dst, src, 1, ( e ) => e );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 2 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 1, 2 ] );
+
+  test.case = 'src - Set from two dst in container, equalizer';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenOnce( dst, src, ( e, ins ) => e === ins );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+
+  test.close( 'dst - array, evaluators' );
 }
 
 //
 
 function arrayFlattenOnceStrictly( test )
 {
-  test.case = 'make array flat, dst is empty';
-
-  var got  = _.arrayFlattenOnceStrictly( [], [] );
-  test.identical( got, [] );
-
-  var dst = [];
-  var got = _.arrayFlattenOnceStrictly( dst, [ 1, 2, 3, 4 ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
-  test.identical( dst, got );
-
-  var dst = [];
-  var got = _.arrayFlattenOnceStrictly( dst, [ [ 1 ], [ 2 ], [ 3 ], [ 4 ]  ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
-  test.identical( dst, got );
-
-  var dst = [];
-  var got = _.arrayFlattenOnceStrictly( dst, [ [ 1, [ 2, [ 3 ], 4 ] ]  ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
-  test.identical( dst, got );
-
-  var dst = [];
-  var got = _.arrayFlattenOnceStrictly( dst, [ 1, [ 2, [ [ 3, [ 4 ] ] ] ] ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
-  test.identical( dst, got );
-
-  test.case = 'make array flat, dst is not empty';
-
-  var got  = _.arrayFlattenOnceStrictly( [ 1, 2, 3, 4 ], [ 5 ] );
-  test.identical( got, [ 1, 2, 3, 4, 5 ] );
-
-  var got  = _.arrayFlattenOnceStrictly( [ 1, 2, 3 ], [ [ [ 4 ] ] ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
-
-  var got  = _.arrayFlattenOnceStrictly( [ 1 ], [ [ [ [ [ 0, 2, 3 ] ] ] ] ]  );
-  test.identical( got, [ 1, 0, 2, 3 ] );
-
-  test.case = 'make array flat from multiple arrays as one arg';
-
-  var got  = _.arrayFlattenOnceStrictly
-  (
-    [ 1, 4 ],
-    [
-      [ [ 2 ] ],
-      [ 3, [ [ [ 5 ] ] ] ]
-    ]
-  );
-  test.identical( got, [ 1, 4, 2, 3, 5 ] );
-
-  test.case = 'onEqualize';
-  var got  = _.arrayFlattenOnceStrictly( [ 1, 2, 3, 4 ], [ 5 ], function( a, b )
-  {
-    return  a === b;
-  });
-  test.identical( got, [ 1, 2, 3, 4, 5 ] );
-
-  debugger;
-
-  test.case = 'dstArray has sub arrays';
-  var got = _.arrayFlattenOnceStrictly( [ 1, 3, [ 5 ] ], 6 );
-  var expected = [ 1, 3, [ 5 ], 6 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattenOnceStrictly( [ [ 1, [ 3, [ 5 ] ] ], 2 ], 6 );
-  var expected = [ [ 1, [ 3, [ 5 ] ] ], 2, 6 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattenOnceStrictly( [ 1, 3, [ 5 ] ], 5 );
-  var expected = [ 1, 3, [ 5 ], 5 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattenOnceStrictly( [], [ 1, 3, [ 5, 6 ] ] );
-  var expected = [ 1, 3, 5, 6 ];
-  test.identical( got, expected );
-
-  //
-
   test.open( 'single argument' );
 
+  test.case = 'flat array';
   var got = _.arrayFlattenOnceStrictly( [ 0, 1, 2, 3 ] );
   var expected = [ 0, 1, 2, 3 ];
   test.identical( got, expected );
 
-  var got = _.arrayFlattenOnceStrictly( [ 0, [ 1 ] ] );
-  var expected = [ 0, 1 ];
-  test.identical( got, expected );
-
+  test.case = 'level 2';
   var got = _.arrayFlattenOnceStrictly( [ [ 0 ], [ 1 ] ] );
   var expected = [ 0, 1 ];
   test.identical( got, expected );
 
-  var got = _.arrayFlattenOnceStrictly( [ [ 0 ], 1, 2, [ 3, 4 ] ] );
+  test.case = 'diff levels';
+  var got = _.arrayFlattenOnceStrictly( [ [ 0 ], 1, [ 2, [ 3, 4 ] ] ] );
   var expected = [ 0, 1, 2, 3, 4 ];
   test.identical( got, expected );
 
-  var got = _.arrayFlattenOnceStrictly( [ 0, [ [ 2 ], 1 ], 3, 4 ] );
+  var got = _.arrayFlattenOnceStrictly( [ 0, [ [ 1 ], 2 ], 3, 4 ] );
   var expected = [ 0, 1, 2, 3, 4 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattenOnceStrictly( [ 1, 3, [ 5, 7 ] ] );
-  var expected = [ 1, 3, 5, 7 ];
   test.identical( got, expected );
 
   test.close( 'single argument' );
 
-  //
+  /* - */
+
+  test.case = 'dst - empty array, src - string';
+  var dst = [];
+  var got = _.arrayFlattenOnceStrictly( dst, 'str' );
+  test.identical( dst, [ 'str' ] );
+  test.identical( got, [ 'str' ] );
+
+  test.case = 'dst - empty array, src - empty array';
+  var dst = [];
+  var got = _.arrayFlattenOnceStrictly( dst, [] );
+  test.identical( dst, [] );
+  test.identical( got, [] );
+
+  test.case = 'dst - empty array, src - flat array';
+  var dst = [];
+  var got = _.arrayFlattenOnceStrictly( dst, [ 1, 2, 3 ] );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, [ 1, 2, 3 ] );
+
+  test.case = 'dst - empty array, src - array, level 2';
+  var dst = [];
+  var got = _.arrayFlattenOnceStrictly( dst, [ [ 1 ], [ 2 ], 3 ] );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, [ 1, 2, 3 ] );
+
+  test.case = 'dst - empty array, src - array, level 4';
+  var dst = [];
+  var got = _.arrayFlattenOnceStrictly( dst, [ [ 1, [ 2, [ 3, 4 ] ] ] ] );
+  test.identical( dst, [ 1, 2, 3, 4 ] );
+  test.identical( got, [ 1, 2, 3, 4 ] );
+
+  test.case = 'dst - empty array, src - array, level 4';
+  var dst = [];
+  var got = _.arrayFlattenOnceStrictly( dst, [ [ [ [ [ 1 ] ] ] ] ] );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  /* */
+
+  test.case = 'dst - flat array, src - empty array';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenOnceStrictly( dst, [] );
+  test.identical( dst, [ 1, 2, 3, 4 ] );
+  test.identical( got, [ 1, 2, 3, 4 ] );
+
+  test.case = 'dst - flat array, src - array, level 3';
+  var dst = [ 1, 2, 3 ];
+  var got = _.arrayFlattenOnceStrictly( dst, [ [ [ 4 ] ] ] );
+  test.identical( dst, [ 1, 2, 3, 4 ] );
+  test.identical( got, [ 1, 2, 3, 4 ] );
+
+  test.case = 'dst - flat array, src - array, level 2';
+  var dst = [ 1, 2, 3 ];
+  var got = _.arrayFlattenOnceStrictly( dst, [ [ 4 ], [ 5 ], [ 6 ], [ 7 ] ] );
+  test.identical( dst, [ 1, 2, 3, 4, 5, 6, 7 ] );
+  test.identical( got, [ 1, 2, 3, 4, 5, 6, 7 ] );
+
+  test.case = 'dst - flat array, src - array, level 2';
+  var dst = [ -1, 0 ];
+  var got  = _.arrayFlattenOnceStrictly( dst, [ [ 1 ], [ [ 2 ] ], [ 3, [ [ [ 4 ] ] ] ] ] );
+  test.identical( dst, [ -1, 0, 1, 2, 3, 4 ] );
+  test.identical( got, [ -1, 0, 1, 2, 3, 4 ] );
+
+  test.case = 'dst - flat array, src - array, level 5';
+  var dst = [ 1 ];
+  var got = _.arrayFlattenOnceStrictly( dst, [ [ [ [ [ 2 ] ] ] ] ] );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - array, level 2, src - flat array';
+  var dst = [ [ 1 ], [ 2 ], [ 3 ] ];
+  var got = _.arrayFlattenOnceStrictly( dst, [ 4, 5, 6 ] );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ 3 ] , 4, 5, 6 ] );
+  test.identical( got, [ [ 1 ], [ 2 ], [ 3 ] , 4, 5, 6 ] );
+
+  test.case = 'dst - array, level 2, src - array, level 2';
+  var dst = [ [ 1 ], [ 2 ], [ 3 ] ];
+  var got = _.arrayFlattenOnceStrictly( dst, [  [ 1 ], [ 2 ], [ 3 ] ] );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ 3 ], 1, 2, 3 ] );
+  test.identical( got, [ [ 1 ], [ 2 ], [ 3 ], 1, 2, 3 ] );
+
+  test.case = 'dst - array, level 2, src - number';
+  var dst = [ 1, 3, [ 5 ] ];
+  var got = _.arrayFlattenOnceStrictly( dst, 5 );
+  var expected = [ 1, 3, [ 5 ], 5 ];
+  test.identical( dst, expected );
+  test.identical( got, [ 1, 3, [ 5 ], 5 ] );
+
+  /* */
+
+  test.case = 'dst - flat array, src - flat array, evaluator';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenOnceStrictly( dst, [ 5, 6, 7, 8 ], ( e ) => e );
+  test.identical( dst, [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
+  test.identical( got, [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
+
+  test.case = 'dst - flat array, src - flat array, evaluator1 and evaluator2';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenOnceStrictly( dst, [ 5, 6, 7, 8 ], ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
+  test.identical( got, [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
+
+  test.case = 'dst - flat array, src - flat array, evaluator1 - fromIndex, evaluator2, has duplicates';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenOnceStrictly( dst, [ 1, 2, 7, 8 ], 2, ( e ) => e );
+  test.identical( dst, [ 1, 2, 3, 4, 1, 2, 7, 8 ] );
+  test.identical( got, [ 1, 2, 3, 4, 1, 2, 7, 8 ] );
+
+  test.case = 'dst - flat array, src - flat array, equalizer';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenOnceStrictly( dst, [ 5, 6, 7, 8 ], ( a, b ) => a === b );
+  test.identical( dst, [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
+  test.identical( got, [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
+
+  /* - */
 
   if( !Config.debug )
   return;
 
-  test.case = 'not enough arguments';
-  test.shouldThrowErrorSync( function()
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlattenOnceStrictly() );
+
+  test.case = 'dstArray is not an array';
+  test.shouldThrowErrorSync( () => _.arrayFlattenOnceStrictly( 1, [ 1 ] ) );
+
+  test.case = 'evaluator1 is not a routine or a number';
+  test.shouldThrowErrorSync( () => _.arrayFlattenOnceStrictly( [], [ 1 ], [] ) );
+
+  test.case = 'duplicates in dstArray';
+  test.shouldThrowErrorSync( () => _.arrayFlattenOnceStrictly( [ 0, 0 ], [ 3, 4 ] ) );
+
+  test.case = 'duplicates in insArray';
+  test.shouldThrowErrorSync( () => _.arrayFlattenOnceStrictly( [], [ 1, 1, 2, 2, 3, 3 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayFlattenOnceStrictly( [], [ [ 1 ], [ 1 ], [ 2 ], [ 2 ], [ 3 ], [ 3 ] ] ) );
+  test.shouldThrowErrorSync( () => _.arrayFlattenOnceStrictly( [], [ [ 1, 1, [ 2, 2, [ 3, 3 ] ] ] ] ) );
+
+  test.case = 'insArray is undefined';
+  test.shouldThrowErrorSync( () => _.arrayFlattenOnceStrictly( [], undefined ) );
+
+  test.case = 'insArray has undefined';
+  test.shouldThrowErrorSync( () => _.arrayFlattenOnceStrictly( [], [ 1, [ undefined ] ] ) );
+
+}
+
+//
+
+function arrayFlattenOnceStrictlySame( test )
+{
+  test.case = 'dst - empty array';
+  var dst = [];
+  var src = dst;
+  var got  = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, [] );
+
+  test.case = 'dst - array, level 2, no duplicates';
+  var dst = [ [ 1 ], [ 2 ], [ 3 ] ];
+  var src = dst;
+  var got  = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ 3 ], 1, 2, 3 ] );
+  test.identical( got, [ [ 1 ], [ 2 ], [ 3 ], 1, 2, 3 ] );
+
+  test.case = 'dst - array, level 3, src contains dst';
+  var dst = [ [ 1, [ 2, [ 3 ] ] ] ];
+  var src = [ dst ];
+  var got  = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ [ 1, [ 2, [ 3 ] ] ], 1, 2, 3 ] );
+  test.identical( got, [ [ 1, [ 2, [ 3 ] ] ], 1, 2, 3 ] );
+
+  /* - */
+
+  test.open( 'evaluators' );
+
+  test.case = 'src contains a few dst, evaluator1 and evaluator2';
+  var dst = [ [ [ [ [ 1 ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenOnceStrictly( dst, src, ( e ) => e, ( ins ) => ins + 1 );
+  test.identical( dst, [ [ [ [ [ 1 ] ] ] ], 1, 1, 1, 1 ] );
+  test.identical( got, [ [ [ [ [ 1 ] ] ] ], 1, 1, 1, 1 ] );
+
+  test.case = 'src contains dst, duplicates, evaluator1 - fromIndex, evaluator2, duplicates';
+  var dst = [ [ [ [ [ 1 ] ] ] ] ];
+  var src = [ dst ];
+  var got  = _.arrayFlattenOnceStrictly( dst, src, 1, ( e ) => e );
+  test.identical( dst, [ [ [ [ [ 1 ] ] ] ], 1 ] );
+  test.identical( got, [ [ [ [ [ 1 ] ] ] ], 1 ] );
+
+  test.case = 'src contains a few dst, duplicates, equalizer';
+  var dst = [ [ [ [ [ 1 ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenOnceStrictly( dst, src, 1, ( e, ins ) => e === ins + 1 );
+  test.identical( dst, [ [ [ [ [ 1 ] ] ] ], 1, 1, 1, 1 ] );
+  test.identical( got, [ [ [ [ [ 1 ] ] ] ], 1, 1, 1, 1 ] );
+
+  test.close( 'evaluators' );
+
+  /* - */
+
+  test.open( 'dst or src contains self' );
+
+  test.case = 'dst - empty array, src push self';
+  var dst = [];
+  var src = [ 1, 2 ];
+  src.push( src );
+  var got  = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src push self twice';
+  var dst = [];
+  var src = [ 1, [ 2 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src - Set, add self';
+  var dst = [];
+  var src = new Set( [ 1, 2 ] );
+  src.add( src );
+  var got  = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src - Set, add self twice';
+  var dst = [];
+  var src = new Set( [ 1, [ 2 ] ] );
+  src.add( src );
+  src.add( src );
+  var got  = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - array level 2, push self, src - flat array';
+  var dst = [ 1, [ 2 ] ];
+  dst.push( dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, [ 1, [ 2 ], 2 ] );
+
+  test.case = 'dst - flat array, push self, src - Set';
+  var dst = [ 1, 2, 3 ];
+  dst.push( dst );
+  var src = new Set( [ 4, [ 5 ], 6 ] );
+  var got  = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2, 3, 4, 5, 6 ] );
+  test.identical( got, [ 1, 2, 3, 4, 5, 6 ] );
+
+  test.case = 'dst = array, level 3, push self';
+  var dst = [ 1, [ 3, [ 2 ] ] ];
+  dst.push( dst );
+  var got  = _.arrayFlattenOnceStrictly( dst );
+  test.identical( dst, [ 1, 3, 2 ] );
+  test.identical( got, [ 1, 3, 2 ] );
+
+  /* */
+
+  test.case = 'dst - empty array, src inserts self';
+  var dst = [];
+  var src = [ 1, 2 ];
+  src.splice( 1, 0, src );
+  var got  = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src inserts self twice';
+  var dst = [];
+  var src = [ 1, [ 2 ] ];
+  src.splice( 0, 0, src );
+  src.splice( 2, 0, src );
+  var got  = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - array level 2, inserts self, src - flat array';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 0, 0, dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, [ 1, [ 2 ], 2 ] );
+
+  test.case = 'dst - flat array, inserts self, src - Set';
+  var dst = [ 1, 2, 3 ];
+  dst.splice( 1, 0, dst );
+  var src = new Set( [ 4, [ [ 'str' ], 5 ] ] );
+  var got  = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2, 3, 4, 'str', 5 ] );
+  test.identical( got, [ 1, 2, 3, 4, 'str', 5 ] );
+
+  test.case = 'dst = array, level 3, inserts self';
+  var dst = [ 1, [ 3, [ 2 ] ] ];
+  dst.splice( 1, 0, dst );
+  var got  = _.arrayFlattenOnceStrictly( dst );
+  test.identical( dst, [ 1, 3, 2 ] );
+  test.identical( got, [ 1, 3, 2 ] );
+
+  test.close( 'dst or src contains self' );
+
+  /* - */
+
+  test.open( 'dst or src contains self, evaluators' );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 2, [ 3 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenOnceStrictly( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 2, 3 ] );
+  test.identical( got, [ 1, [ 2 ], 2, 3 ] );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 and evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenOnceStrictly( dst, src, ( e ) => e, ( ins ) => ins + 1 );
+  test.identical( dst, [ 1, [ 2 ], 1, 2 ] );
+  test.identical( got, [ 1, [ 2 ], 1, 2 ] );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenOnceStrictly( dst, src, 2, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 1, 2 ] );
+  test.identical( got, [ 1, [ 2 ], 1, 2 ] );
+
+  test.case = 'dst - array, src push self twice, duplicates, equalizer';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ null, [ 2 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenOnceStrictly( dst, src, ( e, ins ) => e === ins );
+  test.identical( dst, [ 1, [ 2 ], null, 2 ] );
+  test.identical( got, [ 1, [ 2 ], null, 2 ] );
+
+  /* */
+
+  test.case = 'dst inserts self, evaluator';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 1, 0, dst );
+  var src = [ 3, [ 2 ] ];
+  var got  = _.arrayFlattenOnceStrictly( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 3, 2 ] );
+  test.identical( got, [ 1, [ 2 ], 3, 2 ] );
+
+  test.case = 'dst inserts self, evaluator1 and evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 1, 0, dst );
+  var src = [ 1, [ 2 ] ];
+  var got  = _.arrayFlattenOnceStrictly( dst, src, ( e ) => e, ( ins ) => ins + 1 );
+  test.identical( dst, [ 1, [ 2 ], 1, 2 ] );
+  test.identical( got, [ 1, [ 2 ], 1, 2 ] );
+
+  test.case = 'dst - array, src push self, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 1, 0, dst );
+  var src = [ 1, [ 2 ] ];
+  var got  = _.arrayFlattenOnceStrictly( dst, src, 2, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 1, 2 ] );
+  test.identical( got, [ 1, [ 2 ], 1, 2 ] );
+
+  test.case = 'dst - array, src push self, equalizer';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 1, 0, dst );
+  var src = [ 1, [ 2 ] ];
+  var got  = _.arrayFlattenOnceStrictly( dst, src, ( e, ins ) => e === ins + 1 );
+  test.identical( dst, [ 1, [ 2 ], 1, 2 ] );
+  test.identical( got, [ 1, [ 2 ], 1, 2 ] );
+
+  test.close( 'dst or src contains self, evaluators' );
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'dst === src';
+  test.shouldThrowErrorSync( () =>
   {
-    _.arrayFlattenOnceStrictly();
+    var dst = [ 1, 2, 3 ];
+    var src = dst;
+    var got  = _.arrayFlattenOnceStrictly( dst, src );
   });
 
-  test.case = 'first is not longIs';
-  test.shouldThrowErrorSync( function()
+  test.case = 'src contains a few dst, simple evaluator';
+  test.shouldThrowErrorSync( () =>
   {
-    _.arrayFlattenOnceStrictly( 1, [ 1 ] );
+    var dst = [ [ [ [ [ 1 ] ] ] ] ];
+    var src = [ dst, dst, dst, dst ];
+    var got  = _.arrayFlattenOnceStrictly( dst, src, ( e ) => e );
   });
 
-  // test.case = 'second is not longIs';
-  // test.shouldThrowErrorSync( function()
-  // {
-  //   _.arrayFlattenOnceStrictly( [], 1 );
-
-  // });
-
-  test.case = 'onEqualize is not a routine';
-  test.shouldThrowErrorSync( function()
+  test.case = 'dst push self twice';
+  test.shouldThrowErrorSync( () =>
   {
-    _.arrayFlattenOnceStrictly( [], [ 1 ], [] );
+    var dst = [ [ [ [ [ 1 ] ] ] ] ];
+    dst.push( dst );
+    dst.push( dst );
+    var got  = _.arrayFlattenOnceStrictly( dst );
   });
+}
 
-  test.case = 'Elements must not be repeated';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenOnceStrictly( [], [ 1, 1, 2, 2, 3, 3 ] );
-  });
+//
 
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenOnceStrictly( [], [ [ 1 ], [ 1 ], [ 2 ], [ 2 ], [ 3 ], [ 3 ]  ] );
-  });
+function arrayFlattenOnceStrictlySets( test )
+{
+  test.open( 'dst - empty array' );
 
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenOnceStrictly( [], [ [ 1, 1, [ 2, 2, [ 3, 3 ] ] ]  ] );
-  });
+  test.case = 'src - empty Set';
+  var dst = [];
+  var src = new Set();
+  var got = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, [] );
 
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenOnceStrictly( [], [ [ [ [ [ 1, 1, 1 ] ] ] ] ]  );
-  });
+  test.case = 'src - flat Set';
+  var dst = [];
+  var src = new Set( [ 1, [ 'str' ], 2, 3, { a : 0 }, { a : 0 } ] );
+  var got = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', 2, 3, { a : 0 }, { a : 0 } ] );
+  test.identical( got, [ 1, 'str', 2, 3, { a : 0 }, { a : 0 } ] );
 
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenOnceStrictly( [ 0, 1, 2, 3 ], [ [ 4, [ 5, [ 6 ] ] ], 2 ] );
-  });
+  test.case = 'src - Set, level 2';
+  var dst = [];
+  var src = new Set( [ 1, [ [ 'str' ] ], 3 ] );
+  var got = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, [ 1, 'str', 3 ] );
 
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenOnceStrictly( [ 0 ], 0 );
-  });
+  test.case = 'src - Set, level 3';
+  var dst = [];
+  var src = new Set( [ 1, [ [ [ 'str' ], 3 ] ] ] );
+  var got = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, [ 1, 'str', 3 ] );
 
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenOnceStrictly( [ 0, 1, 2, 3 ], [ [ 4, [ 5, [ 0 ] ] ], 7 ] );
-  });
+  test.case = 'src - Set, level 5';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ [ 'str' ] ], 3 ] ] ], 2, 4, 6 ] );
+  var got = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', 3, 2, 4, 6 ] );
+  test.identical( got, [ 1, 'str', 3, 2, 4, 6 ] );
 
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenOnceStrictly( [ 0, 0 ] );
-  });
+  test.case = 'src - Set from two array level 5, duplicates';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ 'str' ], { a : 3 } ] ] ], [ [ [ 2, [ 'src' ], 4 ] ] ] ] );
+  var got = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', { a : 3 }, 2, 'src', 4 ] );
+  test.identical( got, [ 1, 'str', { a : 3 }, 2, 'src', 4 ] );
 
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenOnceStrictly( [ 0, 0, 1, 1 ] );
-  });
+  test.close( 'dst - empty array' );
 
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenOnceStrictly( [ 0, 0 ], 1 );
-  });
+  /* - */
 
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenOnceStrictly( [ 0, 0, 1, 1 ], 2 );
-  });
+  test.open( 'dst - array' );
 
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenOnceStrictly( [ 0, 0 ], [ 1, 2 ] );
-  });
+  test.case = 'src - empty Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set();
+  var got = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 } ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 } ] );
 
-  test.shouldThrowErrorSync( function()
+  test.case = 'src - flat Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 2, 3, 4 ] );
+  var got = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 3, 4 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2, 3, 4 ] );
+
+  test.case = 'src - Set, level 2';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 2, [ [ 'str' ], 3 ] ] );
+  var got = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str', 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str', 3 ] );
+
+  test.case = 'src - Set, level 3';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 2, [ [ [ 'str' ] ], 3 ] ] );
+  var got = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str', 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str', 3 ] );
+
+  test.case = 'src - Set, level 5';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ 2, [ 'str' ], 3 ] ] ] );
+  var got = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str', 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str', 3 ] );
+
+  test.case = 'src - Set from two array level 5';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ [ 2 ] ] ], [ [ [ [ 'str' ] ] ] ] ] );
+  var got = _.arrayFlattenOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str' ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str' ] );
+
+  test.close( 'dst - array' );
+
+  /* - */
+
+  test.open( 'dst - array, evaluators' );
+
+  test.case = 'src - Set, evaluator';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 2, 3 ] );
+  var got = _.arrayFlattenOnceStrictly( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2, 3 ] );
+
+  test.case = 'src - Set from dst, evaluator1 and evaluator2';
+  var dst = [ 1, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst ] );
+  var got = _.arrayFlattenOnceStrictly( dst, src, ( e ) => e, ( ins ) => ins + 1 );
+  test.identical( dst, [ 1, [ 2 ], { a : 0 }, 1, 2, { a : 0 } ] );
+  test.identical( got, [ 1, [ 2 ], { a : 0 }, 1, 2, { a : 0 } ] );
+
+  test.case = 'src - Set from dst, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst ] );
+  var got = _.arrayFlattenOnceStrictly( dst, src, 3, ( ins ) => ins );
+  test.identical( dst, [ 1, [ 2 ], { a : 0 }, 1, 2, { a : 0 } ] );
+  test.identical( got, [ 1, [ 2 ], { a : 0 }, 1, 2, { a : 0 } ] );
+
+  test.case = 'src - Set from dst, equalizer';
+  var dst = [ 1, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst ] );
+  var got = _.arrayFlattenOnceStrictly( dst, src, ( e, ins ) => e === ins + 1 );
+  test.identical( dst, [ 1, [ 2 ], { a : 0 }, 1, 2, { a : 0 } ] );
+  test.identical( got, [ 1, [ 2 ], { a : 0 }, 1, 2, { a : 0 } ] );
+
+  test.close( 'dst - array, evaluators' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'src - Set from dst';
+  test.shouldThrowErrorSync( () =>
   {
-     _.arrayFlattenOnceStrictly( [ 0, 0, 1, 1 ], [ 3, 4, [ 5, [ 6 ] ] ] );
+    var dst = [ 1, [ [ 2 ], { a : 0 } ] ];
+    var src = new Set( dst );
+    var got = _.arrayFlattenOnceStrictly( dst, src );
   });
 }
 
@@ -18655,947 +19836,3504 @@ function arrayFlattenOnceStrictly( test )
 
 function arrayFlattened( test )
 {
+  test.open( 'single argument' );
 
-  test.case = 'make array flat, dst is empty';
+  test.case = 'flat array';
+  var got = _.arrayFlattened( [ 0, 1, 2, 3 ] );
+  var expected = [ 0, 1, 2, 3 ];
+  test.identical( got, expected );
 
+  test.case = 'array, level 2';
+  var got = _.arrayFlattened( [ [ 0, 0 ], [ 1, 1 ] ] );
+  var expected = [ 0, 0, 1, 1 ];
+  test.identical( got, expected );
+
+  test.case = 'array, level 3';
+  var got = _.arrayFlattened( [ [ 0 ], 0, 1, [ [ 0 ], 1 ] ] );
+  var expected = [ 0, 0, 1, 0, 1 ];
+  test.identical( got, expected );
+
+  test.case = 'array, level 5';
+  var got = _.arrayFlattened( [ [ [ [ [ 0 ] ] ] ] ] );
+  var expected = [ 0 ];
+  test.identical( got, expected );
+
+  test.case = 'array from other arrays, level 5';
+  var src = [ [ [ [ [ 0 ] ] ] ] ];
+  var got = _.arrayFlattened( [ src, src, src, src ] );
+  var expected = [ 0, 0, 0, 0 ];
+  test.identical( got, expected );
+
+  test.close( 'single argument' );
+
+  /* - */
+
+  test.case = 'dst - empty array, src - empty array';
   var dst = [];
   var got  = _.arrayFlattened( dst, [] );
   test.identical( dst, [] );
   test.identical( got, 0 );
 
+  test.case = 'dst - empty array, src - flat array';
   var dst = [];
   var got  = _.arrayFlattened( dst, [ 1, 2, 3 ] );
   test.identical( dst, [ 1, 2, 3 ] );
   test.identical( got, 3 );
 
+  test.case = 'dst - empty array, src - array, level 2';
   var dst = [];
-  var got  = _.arrayFlattened( dst, [ [ 1 ], [ 2 ], [ 3 ]  ] );
+  var got  = _.arrayFlattened( dst, [ [ 1 ], [ 2 ], [ 3 ] ] );
   test.identical( dst, [ 1, 2, 3 ] );
   test.identical( got, 3 );
 
+  test.case = 'dst - empty array, src - array, level 3';
   var dst = [];
-  var got  = _.arrayFlattened( dst, [ [ 1, [ 2, [ 3 ] ] ]  ] );
+  var got  = _.arrayFlattened( dst, [ [ 1, [ 2, [ 3 ] ] ] ] );
   test.identical( dst, [ 1, 2, 3 ] );
   test.identical( got, 3 );
 
+  test.case = 'dst - empty array, src - array, level 5';
   var dst = [];
-  var got  = _.arrayFlattened( dst, [ [ [ [ [ 1 ] ] ] ] ]  );
+  var got  = _.arrayFlattened( dst, [ [ [ [ [ 1 ] ] ] ] ] );
   test.identical( dst, [ 1 ] );
   test.identical( got, 1 );
 
-  test.case = 'make array flat, dst is not empty';
+  test.case = 'dst - empty array, src - array from arrays level 5';
+  var src = [ [ [ [ [ 0 ] ] ] ] ];
+  var dst =[];
+  var got = _.arrayFlattened( dst, [ src, src, src, src ] );
+  var expected = [ 0, 0, 0, 0 ];
+  test.identical( dst, expected );
+  test.identical( got, 4 );
 
-  var dst = [ 1, 2, 3 ];
-  var got  = _.arrayFlattened( dst, [ 4 ] );
-  test.identical( dst, [ 1, 2, 3, 4 ] );
-  test.identical( got, 1 );
-
+  test.case = 'dst - flat array, src - flat array';
   var dst = [ 1, 2, 3 ];
   var got  = _.arrayFlattened( dst, [ 1, 2, 3 ] );
   test.identical( dst, [ 1, 2, 3, 1, 2, 3 ] );
   test.identical( got, 3 );
 
+  test.case = 'dst - flat array, src - array, level 2';
   var dst = [ 1, 2, 3 ];
-  var got = _.arrayFlattened( dst, [ [ 1 ], [ 2 ], [ 3 ]  ] );
+  var got = _.arrayFlattened( dst, [ [ 1 ], [ 2 ], [ 3 ] ] );
   test.identical( dst, [ 1, 2, 3, 1, 2, 3 ] );
   test.identical( got, 3 );
 
+  test.case = 'dst - flat array, src - array, level 3';
   var dst = [ 1, 2, 3 ];
-  var got = _.arrayFlattened( dst, [ [ 1, [ 2, [ 3 ] ] ]  ] );
+  var got = _.arrayFlattened( dst, [ [ 1, [ 2, [ 3 ] ] ] ] );
   test.identical( dst, [ 1, 2, 3, 1, 2, 3 ] );
   test.identical( got, 3 );
 
+  test.case = 'dst - array, src - array, level 5';
   var dst = [ 1 ];
-  var got = _.arrayFlattened( dst, [ [ [ [ [ 1 ] ] ] ] ]  );
-  test.identical( dst, [ 1, 1 ] );
-  test.identical( got, 1 );
+  var got = _.arrayFlattened( dst, [ [ [ [ [ 1 ] ] ] ], [ [ [ [ 1 ] ] ] ], [ [ [ [ 1 ] ] ] ] ] );
+  test.identical( dst, [ 1, 1, 1, 1 ] );
+  test.identical( got, 3 );
 
+  test.case = 'dst - array, level 2, src - flat array';
   var dst = [ 1, [ 2, 3 ] ];
   var got  = _.arrayFlattened( dst, [ 4 ] );
   test.identical( dst, [ 1, [ 2, 3 ], 4 ] );
   test.identical( got, 1 );
 
-  test.case = 'make array flat from multiple arrays as one arg';
-
+  test.case = 'dst - empty array, src - multiple arrays with diff levels';
   var dst = [];
-  var got = _.arrayFlattened
-  (
-    dst,
-    [
-      [ 1 ],
-      [ [ 2 ] ],
-      [ 3, [ [ [ 4 ] ] ] ]
-    ]
-  );
+  var got = _.arrayFlattened( dst, [ [ 1 ], [ [ 2 ] ], [ 3, [ [ [ 4 ] ] ] ] ] );
   test.identical( dst, [ 1, 2, 3, 4 ] );
   test.identical( got, 4 );
 
-  test.case = 'Second is not long';
-
+  test.case = 'dst - empty array, src - number';
   var dst = [];
   var got  = _.arrayFlattened( dst, 1 );
   test.identical( dst, [ 1 ] );
   test.identical( got, 1 );
 
-  // var dst = [];
-  // var got  = _.arrayFlattened( dst, 1, 2, '3' );
-  // test.identical( dst, [ 1, 2, '3' ] );
-  // test.identical( got, 3 );
-
+  test.case = 'dst - array, level 2, src - number';
   var dst = [ 1, 1, 3, 3, [ 5, 5 ] ];
   var got = _.arrayFlattened( dst, 5 );
   var expected = [ 1, 1, 3, 3, [ 5, 5 ], 5 ];
   test.identical( dst, expected );
   test.identical( got, 1 );
 
-  /* */
-
-  test.open( 'single argument' );
-
-  var got = _.arrayFlattened( [ 0, 1, 2, 3 ] );
-  var expected = [ 0, 1, 2, 3 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattened( [ 0, 1, 0, 1 ] );
-  var expected = [ 0, 1, 0, 1 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattened( [ [ 0, 0 ], [ 1, 1 ] ] );
-  var expected = [ 0, 0, 1, 1 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattened( [ [ 0 ], 0, 1, [ 0, 1 ] ] );
-  var expected = [ 0, 0, 1, 0, 1 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattened( [ [ [ 0 ] ] ] );
-  var expected = [ 0 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattened( [ 1, 1, 3, 3, [ 5, 5 ] ] );
-  var expected = [ 1, 1, 3, 3, 5, 5 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattened( [ 1, 1, 3, 3, [ 5, 5 ] ] );
-  var expected = [ 1, 1, 3, 3, 5, 5 ];
-  test.identical( got, expected );
-
-  test.close( 'single argument' );
+  /* - */
 
   if( !Config.debug )
   return;
 
-  test.case = 'not enough arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattened();
-  });
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlattened() );
 
-  test.case = 'first is not longIs';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattened( 1, [ 1 ] );
-  });
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlattened( [], [ 1 ], [ 'extra' ] ) );
 
+  test.case = 'dstArray is not arrayLike';
+  test.shouldThrowErrorSync( () => _.arrayFlattened( 1, [ 1 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayFlattened( new U8x( 2 ), [ 1 ] ) );
+}
+
+//
+
+function arrayFlattenedSame( test )
+{
+  test.case = 'dst - empty array';
+  var dst = [];
+  var src = dst;
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - flat array, src - flat array';
+  var dst = [ 1, 2, 3 ];
+  var src = dst;
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 2, 3, 1, 2, 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'dst - array, level 2';
+  var dst = [ [ 1 ], [ 2 ], [ 3 ] ];
+  var src = dst;
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ 3 ], 1, 2, 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'dst - array, level 3, src contains dst';
+  var dst = [ [ 1, [ 2, [ 3 ] ] ] ];
+  var src = [ dst, 4, 5 ];
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ [ 1, [ 2, [ 3 ] ] ], 1, 2, 3, 4, 5 ] );
+  test.identical( got, 5 );
+
+  test.case = 'dst - array, level 5, src contains a few dst';
+  var dst = [ [ [ [ [ 1 ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ [ [ [ [ 1 ] ] ] ], 1, 1, 1, 1 ] );
+  test.identical( got, 4 );
+
+  /* - */
+
+  test.open( 'dst or src contains self' );
+
+  test.case = 'src push self';
+  var dst = [];
+  var src = [ 1, 2 ];
+  src.push( src );
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src push self twice';
+  var dst = [];
+  var src = [ 1, 2 ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src - Set, add self';
+  var dst = [];
+  var src = new Set( [ 1, 2 ] );
+  src.add( src );
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src - Set, add self twice';
+  var dst = [];
+  var src = new Set( [ 1, [ 2 ] ] );
+  src.add( src );
+  src.add( src );
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst push self';
+  var dst = [ 1 ];
+  dst.push( dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst push self twice';
+  var dst = [ 1 ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst push self, src - Set';
+  var dst = [ 1 ];
+  dst.push( dst );
+  var src = new Set( [ 'str', { a : 2 } ] );
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 'str', { a : 2 } ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst push self twice, src - Set';
+  var dst = [ 1 ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = new Set( [ 'str', { a : 2 } ] );
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 'str', { a : 2 } ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst push self, dst === src';
+  var dst = [ 1 ];
+  dst.push( dst );
+  var src = dst;
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 1, 1 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst push self twice, dst === src';
+  var dst = [ 1 ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = dst;
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 1, 1, 1 ] );
+  test.identical( got, 3 );
+
+  test.case = 'dst push self';
+  var dst = [ 1 ];
+  dst.push( dst );
+  var got  = _.arrayFlattened( dst );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.case = 'dst push self twice';
+  var dst = [ 1 ];
+  dst.push( dst );
+  dst.push( dst );
+  var got  = _.arrayFlattened( dst );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  /* */
+
+  test.case = 'src inserts self';
+  var dst = [];
+  var src = [ 1, 2 ];
+  src.splice( 1, 0, dst );
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src inserts self twice';
+  var dst = [];
+  var src = [ 1, 2 ];
+  src.splice( 0, 0, dst );
+  src.splice( 2, 0, dst );
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst inserts self';
+  var dst = [ 1, 2 ];
+  dst.splice( 0, 0, dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 2, 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst inserts self twice';
+  var dst = [ 1, 2 ];
+  dst.splice( 0, 0, dst );
+  dst.splice( 2, 0, dst );
+  var src = [ 3 ];
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst inserts self, dst === src';
+  var dst = [ 1 ];
+  dst.splice( 0, 0, dst );
+  var src = dst;
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 1, 1 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst inserts self twice, dst === src';
+  var dst = [ 1, 2 ];
+  dst.splice( 3, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = dst;
+  var got  = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 2, 1, 2, 1, 2 ] );
+  test.identical( got, 4 );
+
+  test.case = 'dst inserts self';
+  var dst = [ 1 ];
+  dst.splice( 0, 0, dst );
+  var got  = _.arrayFlattened( dst );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.case = 'dst inserts self twice';
+  var dst = [ 1 ];
+  dst.splice( 0, 0, dst );
+  dst.splice( 2, 0, dst );
+  var got  = _.arrayFlattened( dst );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.close( 'dst or src contains self' );
+}
+
+//
+
+function arrayFlattenedSets( test )
+{
+  test.open( 'dst - empty array' );
+
+  test.case = 'src - empty Set';
+  var dst = [];
+  var src = new Set();
+  var got = _.arrayFlattened( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, 0 );
+
+  test.case = 'src - flat Set';
+  var dst = [];
+  var src = new Set( [ 1, 2, 3 ] );
+  var got = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 2';
+  var dst = [];
+  var src = new Set( [ 1, [ 'str' ], 3 ] );
+  var got = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 3';
+  var dst = [];
+  var src = new Set( [ 1, [ [ 'str' ], 3 ] ] );
+  var got = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 5';
+  var dst = [];
+  var src = new Set( [ [ [ 1, [ 'str' ], 3 ] ] ] );
+  var got = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set from two array level 5';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ 'str' ], { a : 3 }, undefined ] ] ], [ [ [ 1, [ 'str' ], 3 ] ] ] ] );
+  var got = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, 'str', { a : 3 }, undefined,  1, 'str', 3 ] );
+  test.identical( got, 7 );
+
+  test.close( 'dst - empty array' );
+
+  /* - */
+
+  test.open( 'dst - array' );
+
+  test.case = 'src - empty Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set();
+  var got = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 } ] );
+  test.identical( got, 0 );
+
+  test.case = 'src - flat Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, 2, 3 ] );
+  var got = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 2, 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 2';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, [ 'str' ], 3 ] );
+  var got = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 3';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, [ [ 'str' ], 3 ] ] );
+  var got = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 5';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ 1, [ 'str' ], 3 ] ] ] );
+  var got = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set from two array level 5';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ [ 1, [ 'str' ], { a : 3 }, undefined ] ] ], [ [ [ 1, [ 'str' ], 3 ] ] ] ] );
+  var got = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 'str', { a : 3 }, undefined,  1, 'str', 3 ] );
+  test.identical( got, 7 );
+
+  test.case = 'src - Set from dst';
+  var dst = [ 1, [ undefined, [ 2 ], { a : 0 } ] ];
+  var src = new Set( dst );
+  var got = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, [ undefined, [ 2 ], { a : 0 } ], 1, undefined,  2, { a : 0 } ] );
+  test.identical( got, 4 );
+
+  test.case = 'src - Set from two dst in container';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattened( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, undefined,  2, { a : 0 }, 1, undefined,  2, { a : 0 }, 1, undefined,  2, { a : 0 } ] );
+  test.identical( got, 12 );
+
+  test.close( 'dst - array' );
 }
 
 //
 
 function arrayFlattenedOnce( test )
 {
-  test.case = 'make array flat, dst is empty';
+  test.open( 'single argument' );
 
+  test.case = 'flat array, without duplicates';
+  var dst = [ 0, 1, 2, 3 ];
+  var got = _.arrayFlattenedOnce( dst );
+  test.identical( dst, [ 0, 1, 2, 3 ] );
+  test.identical( got, [ 0, 1, 2, 3 ] );
+
+  test.case = 'flat array, duplicates';
+  var dst = [ 0, 1, 0, 1 ];
+  var got = _.arrayFlattenedOnce( dst );
+  test.identical( dst, [ 0, 1 ] );
+  test.identical( got, [ 0, 1 ] );
+
+  test.case = 'array, level 2, duplicates';
+  var dst = [ [ 0, 0 ], [ 1, 1 ] ];
+  var got = _.arrayFlattenedOnce( dst );
+  test.identical( dst, [ 0, 1 ] );
+  test.identical( got, [ 0, 1 ] );
+
+  test.case = 'array with diff levels, duplicates';
+  var dst = [ 1, [ [ 0 ], 1 ], 1, 0 ];
+  var got = _.arrayFlattenedOnce( dst );
+  test.identical( dst, [ 1, 0 ] );
+  test.identical( got, [ 1, 0 ] );
+
+  test.close( 'single argument' );
+
+  /* - */
+
+  test.case = 'dst - empty array, src - number';
+  var dst = [];
+  var got = _.arrayFlattenedOnce( dst, 2 );
+  test.identical( dst, [ 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - empty array, src - empty array';
   var dst = [];
   var got = _.arrayFlattenedOnce( dst, [] );
   test.identical( dst, [] );
   test.identical( got, 0 );
 
+  test.case = 'dst - empty array, src - flat array, duplicates';
   var dst = [];
-  var got = _.arrayFlattenedOnce( dst, [ 1, 1, 2, 2, 3 , 3 ] );
+  var got = _.arrayFlattenedOnce( dst, [ 1, 1, 2, 2, 3, 3 ] );
   test.identical( dst, [ 1, 2, 3 ] );
   test.identical( got, 3 );
 
+  test.case = 'dst - empty array, src - array, level 2, duplicates';
   var dst = [];
-  var got = _.arrayFlattenedOnce( dst, [ [ 1 ], [ 1 ], [ 2 ], [ 2 ], [ 3 ], [ 3 ]  ] );
+  var got = _.arrayFlattenedOnce( dst, [ [ 1 ], [ 1 ], [ 2 ], [ 2 ], [ 3 ], [ 3 ] ] );
   test.identical( dst, [ 1, 2, 3 ] );
   test.identical( got, 3 );
 
+  test.case = 'dst - empty array, src - array, level 3, duplicates';
   var dst = [];
-  var got = _.arrayFlattenedOnce( dst, [ [ 1, 1, [ 2, 2, [ 3, 3 ] ] ]  ] );
+  var got = _.arrayFlattenedOnce( dst, [ [ 1, 1, [ 2, 2, [ 3, 3 ] ] ] ] );
   test.identical( dst, [ 1, 2, 3 ] );
   test.identical( got, 3 );
 
+  test.case = 'dst - empty array, src - array, level 5, duplicates';
   var dst = [];
-  var got = _.arrayFlattenedOnce( dst, [ [ [ [ [ 1, 1, 1 ] ] ] ] ]  );
+  var got = _.arrayFlattenedOnce( dst, [ [ [ [ [ 1, 1, 1 ] ] ] ] ] );
   test.identical( dst, [ 1 ] );
   test.identical( got, 1 );
 
-  test.case = 'make array flat, dst is not empty';
+  /* */
 
+  test.case = 'dst - flat array, src - string';
+  var dst = [ 1, 2, 3 ];
+  var got = _.arrayFlattenedOnce( dst, 'str' );
+  test.identical( dst, [ 1, 2, 3, 'str' ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - flat array, src - flat array, duplicates';
   var dst = [ 1, 2, 3, 4 ];
   var got = _.arrayFlattenedOnce( dst, [ 4 ] );
   test.identical( dst, [ 1, 2, 3, 4 ] );
   test.identical( got, 0 );
 
-  var dst = [ 1, 2, 3 ];
-  var got = _.arrayFlattenedOnce( dst, [ 1, 2, 3, [ [ 4 ] ] ] );
-  test.identical( dst, [ 1, 2, 3, 4 ] );
-  test.identical( got, 1 );
-
+  test.case = 'dst - flat array, src - array, level 2, duplicates';
   var dst = [ 1, 2, 3 ];
   var got = _.arrayFlattenedOnce( dst, [ [ 1 ], [ 2 ], [ 3 ], [ 4 ] ] );
   test.identical( dst, [ 1, 2, 3, 4 ] );
   test.identical( got, 1 );
 
+  test.case = 'dst - flat array, src - array, level 3, duplicates';
   var dst = [ 1, 2, 3 ];
-  var got = _.arrayFlattenedOnce( dst, [ [ 1, [ 2, [ 3 ] ] ], 4 ] );
+  var got = _.arrayFlattenedOnce( dst, [ 1, 2, 3, [ [ 4 ] ] ] );
   test.identical( dst, [ 1, 2, 3, 4 ] );
   test.identical( got, 1 );
 
+  test.case = 'dst - flat array, src - array, level 5, duplicates';
   var dst = [ 1 ];
-  var got = _.arrayFlattenedOnce( dst, [ [ [ [ [ 1, 1, 1 ] ] ] ] ]  );
+  var got = _.arrayFlattenedOnce( dst, [ [ [ [ [ 1, 1, 1 ] ] ] ] ] );
   test.identical( dst, [ 1 ] );
   test.identical( got, 0 );
 
-  test.case = 'dst contains some inner arrays';
-
+  test.case = 'dst - array, level 2, src - flat array';
   var dst = [ [ 1 ], [ 2 ], [ 3 ] ];
-  var got = _.arrayFlattenedOnce( dst, [ 1, 2, 3 ]  );
+  var got = _.arrayFlattenedOnce( dst, [ 1, 2, 3 ] );
   test.identical( dst, [ [ 1 ], [ 2 ], [ 3 ], 1, 2, 3 ] );
   test.identical( got, 3 );
 
-  var dst = [ [ 1 ], [ 2 ], [ 3 ] ];
-  var got = _.arrayFlattenedOnce( dst, [ 4, 5, 6 ]  );
-  test.identical( dst, [ [ 1 ], [ 2 ], [ 3 ], 4, 5, 6 ] );
-  test.identical( got, 3 );
-
-  test.case = 'make array flat from multiple arrays as one arg';
-
+  test.case = 'dst - flat array, src - array with diff level arrays, duplicates';
   var dst = [ 1, 4 ];
-  var got  = _.arrayFlattenedOnce
-  (
-    dst,
-    [
-      [ 1 ],
-      [ [ 2 ] ],
-      [ 3, [ [ [ 4 ] ] ] ]
-    ]
-  );
+  var got  = _.arrayFlattenedOnce( dst, [ [ 1 ], [ [ 2 ] ], [ 3, [ [ [ 4 ] ] ] ] ] );
   test.identical( dst, [ 1, 4, 2, 3 ] );
   test.identical( got, 2 );
 
-  test.case = 'onEqualize';
+  /* */
+
+  test.case = 'evaluator1';
   var dst = [ 1, 2, 3, 4 ];
-  var got = _.arrayFlattenedOnce( dst, [ 1, 4, 2, 5 ], function( a, b )
-  {
-    return  a === b;
-  });
+  var got = _.arrayFlattenedOnce( dst, [ 1, 4, 2, 5 ], ( e ) => e );
   test.identical( dst, [ 1, 2, 3, 4, 5 ] );
   test.identical( got, 1 );
 
-  //
-
-  test.open( 'single argument' );
-
-  var got = _.arrayFlattenedOnce( [ 0, 1, 2, 3 ] );
-  var expected = [ 0, 1, 2, 3 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattenedOnce( [ 0, 1, 0, 1 ] );
-  var expected = [ 0, 1 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattenedOnce( [ [ 0, 0 ], [ 1, 1 ] ] );
-  var expected = [ 0, 1 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattenedOnce( [ [ 0 ], 0, 1, [ 0, 1 ] ] );
-  var expected = [ 0, 1 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattenedOnce( [ 1, [ [ 0 ], 1 ], 1, 0 ] );
-  var expected = [ 1, 0 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattenedOnce( [ 1, 1, 3, 3, [ 5, 5 ] ] );
-  var expected = [ 1, 3, 5 ];
-  test.identical( got, expected );
-
-  test.close( 'single argument' );
-
-  /*
-  test.case = 'Second arg is not long';
-
-  var dst = [];
-  var got = _.arrayFlattenedOnce( dst, 2 );
-  test.identical( dst, [ undefined ] );
-  */
-  var dst = [];
-  var got = _.arrayFlattenedOnce( dst, 1 );
-  test.identical( dst, [ 1 ] );
+  test.case = 'evaluator1 and evaluator2';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenedOnce( dst, [ 1, 4, 2, 5 ], ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, 2, 3, 4, 5 ] );
   test.identical( got, 1 );
 
-  var dst = [ 1, 1, 3, 3, [ 5, 5 ] ];
-  var got = _.arrayFlattenedOnce( dst, 6 );
-  var expected = 1;
-  test.identical( dst, [ 1, 1, 3, 3, [ 5, 5 ], 6 ] );
-  test.identical( got, expected );
+  test.case = 'evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenedOnce( dst, [ 1, 4, 2, 5 ], 1, ( e ) => e );
+  test.identical( dst, [ 1, 2, 3, 4, 1, 5 ] );
+  test.identical( got, 2 );
+
+  test.case = 'equilizer';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenedOnce( dst, [ 1, 4, 2, 5 ], ( a, b ) => a === b );
+  test.identical( dst, [ 1, 2, 3, 4, 5 ] );
+  test.identical( got, 1 );
+
+  /* - */
 
   if( !Config.debug )
   return;
 
-  test.case = 'not enough arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedOnce();
-  });
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedOnce() );
 
-  test.case = 'first is not longIs';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedOnce( 1, [ 1 ] );
-  });
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedOnce( [], [ 1 ], ( e ) => e, ( ins ) => ins, 'extra' ) );
 
-/*
-test.case = 'Too many args';
-test.shouldThrowErrorSync( function()
+  test.case = 'dstArray is not array';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedOnce( 1, [ 1 ] ) );
+
+  test.case = 'evaluator1 is not a routine or a number';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedOnce( [], [ 1 ], [] ) );
+
+  test.case = 'evaluator2 is not a routine or a number';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedOnce( [], [ 1 ], ( e ) => e, [] ) );
+  test.shouldThrowErrorSync( () => _.arrayFlattenedOnce( [], [ 1 ], 0, {} ) );
+}
+
+//
+
+function arrayFlattenedOnceSame( test )
 {
-  _.arrayFlattenedOnce( [ 1 ], 2, 3  );
-});
-*/
+  test.case = 'dst - empty array';
+  var dst = [];
+  var src = dst;
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, 0 );
 
-  test.case = 'onEqualize is not a routine';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedOnce( [], [ 1 ], [] );
-  });
+  test.case = 'dst - flat array, src - flat array, duplicates';
+  var dst = [ 1, 2, 3, 3, 3, 1 ];
+  var src = dst;
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, 2, 3, 3, 3, 1 ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - array, level 2, no duplicates';
+  var dst = [ [ 1 ], [ 2 ], [ 3 ] ];
+  var src = dst;
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ 3 ], 1, 2, 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'dst - array, level 3, src contains dst, duplicates';
+  var dst = [ [ 1, [ 2, [ 3 ] ] ] ];
+  var src = [ dst, 1, 2 ];
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ [ 1, [ 2, [ 3 ] ] ], 1, 2, 3 ] );
+  test.identical( got, 3 );
+
+  /* - */
+
+  test.open( 'evaluators' );
+
+  test.case = 'src contains a few dst, duplicates, evaluator';
+  var dst = [ [ [ [ [ 1 ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenedOnce( dst, src, ( e ) => e );
+  test.identical( dst, [ [ [ [ [ 1 ] ] ] ], 1 ] );
+  test.identical( got, 1 );
+
+  test.case = 'src contains a few dst, duplicates, evaluator1 and evaluator2';
+  var dst = [ [ [ [ [ 1 ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenedOnce( dst, src, ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ [ [ [ [ 1 ] ] ] ], 1 ] );
+  test.identical( got, 1 );
+
+  test.case = 'src contains a few dst, duplicates, evaluator1 - fromIndex, evaluator2, duplicates';
+  var dst = [ 1, [ [ [ [ 1 ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenedOnce( dst, src, 1, ( e ) => e );
+  test.identical( dst, [ 1, [ [ [ [ 1 ] ] ] ], 1 ] );
+  test.identical( got, 1 );
+
+  test.case = 'src contains a few dst, duplicates, equalizer';
+  var dst = [ [ [ [ [ 1 ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenedOnce( dst, src, 1, ( e, ins ) => e === ins );
+  test.identical( dst, [ [ [ [ [ 1 ] ] ] ], 1 ] );
+  test.identical( got, 1 );
+
+  test.close( 'evaluators' );
+
+  /* - */
+
+  test.open( 'dst or src contains self' );
+
+  test.case = 'dst - empty array, src push self';
+  var dst = [];
+  var src = [ 1, 2 ];
+  src.push( src );
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src push self twice';
+  var dst = [];
+  var src = [ 1, [ 2 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src - Set, add self';
+  var dst = [];
+  var src = new Set( [ 1, 2 ] );
+  src.add( src );
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src - Set, add self twice';
+  var dst = [];
+  var src = new Set( [ 1, [ 2 ] ] );
+  src.add( src );
+  src.add( src );
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array level 2, push self, src - flat array';
+  var dst = [ 1, [ 2 ] ];
+  dst.push( dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - array level 2, push self twice, src - flat array, duplicates';
+  var dst = [ 1, [ 2, 3 ] ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = [ 1 ];
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, [ 2, 3 ] ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - flat array, push self, src - Set, duplicates';
+  var dst = [ 1, 2, 3 ];
+  dst.push( dst );
+  var src = new Set( [ 1, 2, 3 ] );
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - array, level 2, push self twice, src - Set, duplicates';
+  var dst = [ 1, [ 1 ] ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = new Set( [ 'str', { a : 2 }, 1 ] );
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, [ 1 ], 'str', { a : 2 } ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, level 2, push self, dst === src';
+  var dst = [ 1, [ 3 ], 2 ];
+  dst.push( dst );
+  var src = dst;
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, [ 3 ], 2, 3 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - array, level 2, push self twice, dst === src, duplicates';
+  var dst = [ 1, [ 1 ], 2 ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = dst;
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, [ 1 ], 2 ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst = array, level 3, push self';
+  var dst = [ 1, [ 3, [ 2 ] ] ];
+  dst.push( dst );
+  var got  = _.arrayFlattenedOnce( dst );
+  test.identical( dst, [ 1, 3, 2 ] );
+  test.identical( got, [ 1, 3, 2 ] );
+
+  test.case = 'dst - array, level 6, push self twice, duplicates';
+  var dst = [ [ [ [ [ [ 1, 1, 2 ] ] ] ] ] ];
+  dst.push( dst );
+  dst.push( dst );
+  var got  = _.arrayFlattenedOnce( dst );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  /* */
+
+  test.case = 'dst - empty array, src inserts self';
+  var dst = [];
+  var src = [ 1, 2 ];
+  src.splice( 1, 0, src );
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src inserts self twice';
+  var dst = [];
+  var src = [ 1, [ 2 ] ];
+  src.splice( 0, 0, src );
+  src.splice( 2, 0, src );
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array level 2, inserts self, src - flat array';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 0, 0, dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - array level 2, inserts self twice, src - flat array, duplicates';
+  var dst = [ 1, [ 2, 3 ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1 ];
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, [ 2, 3 ] ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - flat array, inserts self, src - Set, duplicates';
+  var dst = [ 1, 2, 3 ];
+  dst.splice( 1, 0, dst );
+  var src = new Set( [ 1, 2, 3 ] );
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - array, level 2, inserts self twice, src - Set, duplicates';
+  var dst = [ 1, [ 1 ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = new Set( [ 'str', { a : 2 }, 1 ] );
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, [ 1 ], 'str', { a : 2 } ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, level 2, inserts self, dst === src';
+  var dst = [ 1, [ 3 ], 2 ];
+  dst.splice( 1, 0, dst );
+  var src = dst;
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, [ 3 ], 2, 3 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - array, level 2, inserts self twice, dst === src, duplicates';
+  var dst = [ 1, [ 1 ], 2 ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = dst;
+  var got  = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, [ 1 ], 2 ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst = array, level 3, inserts self';
+  var dst = [ 1, [ 3, [ 2 ] ] ];
+  dst.splice( 1, 0, dst );
+  var got  = _.arrayFlattenedOnce( dst );
+  test.identical( dst, [ 1, 3, 2 ] );
+  test.identical( got, [ 1, 3, 2 ] );
+
+  test.case = 'dst - array, level 6, inserts self twice, duplicates';
+  var dst = [ [ [ [ [ [ 1, 1, 2 ] ] ] ] ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var got  = _.arrayFlattenedOnce( dst );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.close( 'dst or src contains self' );
+
+  /* - */
+
+  test.open( 'dst or src contains self, evaluators' );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedOnce( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 and evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedOnce( dst, src, ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedOnce( dst, src, 2, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, src push self twice, duplicates, equalizer';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedOnce( dst, src, ( e, ins ) => e === ins );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, 1 );
+
+  /* */
+
+  test.case = 'dst inserts self twice, duplicates, evaluator';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1, [ 2 ] ];
+  var got  = _.arrayFlattenedOnce( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst inserts self twice, duplicates, evaluator1 and evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1, [ 2 ] ];
+  var got  = _.arrayFlattenedOnce( dst, src, ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1, [ 2 ] ];
+  var got  = _.arrayFlattenedOnce( dst, src, 2, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, src push self twice, duplicates, equalizer';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1, [ 2 ] ];
+  var got  = _.arrayFlattenedOnce( dst, src, ( e, ins ) => e === ins );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, 1 );
+
+  test.close( 'dst or src contains self, evaluators' );
+}
+
+//
+
+function arrayFlattenedOnceSets( test )
+{
+  test.open( 'dst - empty array' );
+
+  test.case = 'src - empty Set';
+  var dst = [];
+  var src = new Set();
+  var got = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, 0 );
+
+  test.case = 'src - flat Set, duplicates';
+  var dst = [];
+  var src = new Set( [ 1, 1, 2, 3, 3, 1 ] );
+  var got = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 2, duplicates';
+  var dst = [];
+  var src = new Set( [ 1, [ [ 'str' ] ], [ [ 'str' ] ], 1, 3 ] );
+  var got = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 3';
+  var dst = [];
+  var src = new Set( [ 1, [ [ [ 'str' ], 3 ] ] ] );
+  var got = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 5, duplicates';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ [ 'str' ] ], 3 ] ] ], 1, 'str', 3, 3 ] );
+  var got = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set from two array level 5, duplicates';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ 'str' ], { a : 3 }, undefined ] ] ], [ [ [ 1, [ 'str' ], 3 ] ] ] ] );
+  var got = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, 'str', { a : 3 }, undefined, 3 ] );
+  test.identical( got, 5 );
+
+  test.close( 'dst - empty array' );
+
+  /* - */
+
+  test.open( 'dst - array' );
+
+  test.case = 'src - empty Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set();
+  var got = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 } ] );
+  test.identical( got, 0 );
+
+  test.case = 'src - flat Set, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, 2, 3 ] );
+  var got = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 3 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set, level 2, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, [ [ 'str' ], 3 ] ] );
+  var got = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 'str', 3 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set, level 3, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, [ [ [ 'str' ] ], 3 ] ] );
+  var got = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 'str', 3 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set, level 5, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ 1, [ 'str' ], 3 ] ] ] );
+  var got = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 'str', 3 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set from two array level 5, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ [ 1, [ 'str' ], { a : 3 }, undefined ] ] ], [ [ [ 1, [ 'str' ], 3 ] ] ] ] );
+  var got = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 'str', { a : 3 }, 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set from dst';
+  var dst = [ 1, [ undefined, [ 2 ], { a : 0 } ] ];
+  var src = new Set( dst );
+  var got = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, [ undefined, [ 2 ], { a : 0 } ], undefined,  2, { a : 0 } ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set from two dst in container';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+  test.identical( got, 1 );
+
+  test.close( 'dst - array' );
+
+  /* - */
+
+  test.open( 'dst - array, evaluators' );
+
+  test.case = 'src - Set from two dst in container, evaluator';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenedOnce( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'src - Set from two dst in container, evaluator1 and evaluator2';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenedOnce( dst, src, ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'src - Set from two dst in container, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenedOnce( dst, src, 1, ( e ) => e );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set from two dst in container, equalizer';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenedOnce( dst, src, ( e, ins ) => e === ins );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+  test.identical( got, 1 );
+
+  test.close( 'dst - array, evaluators' );
 }
 
 //
 
 function arrayFlattenedOnceStrictly( test )
 {
-  test.case = 'make array flat, dst is empty';
+  test.open( 'single argument' );
 
+  test.case = 'flat array';
+  var got = _.arrayFlattenedOnceStrictly( [ 0, 1, 2, 3 ] );
+  var expected = [ 0, 1, 2, 3 ];
+  test.identical( got, expected );
+
+  test.case = 'level 2';
+  var got = _.arrayFlattenedOnceStrictly( [ [ 0 ], [ 1 ] ] );
+  var expected = [ 0, 1 ];
+  test.identical( got, expected );
+
+  test.case = 'diff levels';
+  var got = _.arrayFlattenedOnceStrictly( [ [ 0 ], 1, [ 2, [ 3, 4 ] ] ] );
+  var expected = [ 0, 1, 2, 3, 4 ];
+  test.identical( got, expected );
+
+  var got = _.arrayFlattenedOnceStrictly( [ 0, [ [ 1 ], 2 ], 3, 4 ] );
+  var expected = [ 0, 1, 2, 3, 4 ];
+  test.identical( got, expected );
+
+  test.close( 'single argument' );
+
+  /* - */
+
+  test.case = 'dst - empty array, src - string';
+  var dst = [];
+  var got = _.arrayFlattenedOnceStrictly( dst, 'str' );
+  test.identical( dst, [ 'str' ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - empty array, src - empty array';
   var dst = [];
   var got = _.arrayFlattenedOnceStrictly( dst, [] );
   test.identical( dst, [] );
   test.identical( got, 0 );
 
+  test.case = 'dst - empty array, src - flat array';
   var dst = [];
   var got = _.arrayFlattenedOnceStrictly( dst, [ 1, 2, 3 ] );
   test.identical( dst, [ 1, 2, 3 ] );
   test.identical( got, 3 );
 
+  test.case = 'dst - empty array, src - array, level 2';
   var dst = [];
-  var got = _.arrayFlattenedOnceStrictly( dst, [ [ 1 ], [ 2 ], 3  ] );
+  var got = _.arrayFlattenedOnceStrictly( dst, [ [ 1 ], [ 2 ], 3 ] );
   test.identical( dst, [ 1, 2, 3 ] );
   test.identical( got, 3 );
 
+  test.case = 'dst - empty array, src - array, level 4';
   var dst = [];
-  var got = _.arrayFlattenedOnceStrictly( dst, [ [ 1, [ 2, [ 3, 4 ] ] ]  ] );
+  var got = _.arrayFlattenedOnceStrictly( dst, [ [ 1, [ 2, [ 3, 4 ] ] ] ] );
   test.identical( dst, [ 1, 2, 3, 4 ] );
   test.identical( got, 4 );
 
+  test.case = 'dst - empty array, src - array, level 4';
   var dst = [];
-  var got = _.arrayFlattenedOnceStrictly( dst, [ [ [ [ [ 1 ] ] ] ] ]  );
+  var got = _.arrayFlattenedOnceStrictly( dst, [ [ [ [ [ 1 ] ] ] ] ] );
   test.identical( dst, [ 1 ] );
   test.identical( got, 1 );
 
-  test.case = 'make array flat, dst is not empty';
+  /* */
 
+  test.case = 'dst - flat array, src - empty array';
   var dst = [ 1, 2, 3, 4 ];
-  var got = _.arrayFlattenedOnceStrictly( dst, [ ] );
+  var got = _.arrayFlattenedOnceStrictly( dst, [] );
   test.identical( dst, [ 1, 2, 3, 4 ] );
   test.identical( got, 0 );
 
+  test.case = 'dst - flat array, src - array, level 3';
   var dst = [ 1, 2, 3 ];
   var got = _.arrayFlattenedOnceStrictly( dst, [ [ [ 4 ] ] ] );
   test.identical( dst, [ 1, 2, 3, 4 ] );
   test.identical( got, 1 );
 
+  test.case = 'dst - flat array, src - array, level 2';
   var dst = [ 1, 2, 3 ];
   var got = _.arrayFlattenedOnceStrictly( dst, [ [ 4 ], [ 5 ], [ 6 ], [ 7 ] ] );
   test.identical( dst, [ 1, 2, 3, 4, 5, 6, 7 ] );
   test.identical( got, 4 );
 
-  var dst = [ 1, 2, 3 ];
-  var got = _.arrayFlattenedOnceStrictly( dst, [ [ 0, [ -1, [ -2 ] ] ], -3 ] );
-  test.identical( dst, [ 1, 2, 3, 0, -1, -2, -3 ] );
-  test.identical( got, 4 );
-
-  var dst = [ 1 ];
-  var got = _.arrayFlattenedOnceStrictly( dst, [ [ [ [ [ 2 ] ] ] ] ]  );
-  test.identical( dst, [ 1, 2 ] );
-  test.identical( got, 1 );
-
-  test.case = 'dst contains some inner arrays';
-
-  var dst = [ [ 1 ], [ 2 ], [ 3 ] ];
-  var got = _.arrayFlattenedOnceStrictly( dst, [  [ 1 ], [ 2 ], [ 3 ] ]  );
-  test.identical( dst, [ [ 1 ], [ 2 ], [ 3 ], 1, 2, 3 ] );
-  test.identical( got, 3 );
-
-  var dst = [ [ 1 ], [ 2 ], [ 3 ] ];
-  var got = _.arrayFlattenedOnceStrictly( dst, [ 4, 5, 6 ]  );
-  test.identical( dst, [ [ 1 ], [ 2 ], [ 3 ] , 4, 5, 6 ] );
-  test.identical( got, 3 );
-
-  test.case = 'make array flat from multiple arrays as one arg';
-
+  test.case = 'dst - flat array, src - array, level 2';
   var dst = [ -1, 0 ];
-  var got  = _.arrayFlattenedOnceStrictly
-  (
-    dst,
-    [
-      [ 1 ],
-      [ [ 2 ] ],
-      [ 3, [ [ [ 4 ] ] ] ]
-    ]
-  );
+  var got  = _.arrayFlattenedOnceStrictly( dst, [ [ 1 ], [ [ 2 ] ], [ 3, [ [ [ 4 ] ] ] ] ] );
   test.identical( dst, [ -1, 0, 1, 2, 3, 4 ] );
   test.identical( got, 4 );
 
-  test.case = 'onEqualize';
-  var dst = [ 1, 2, 3, 4 ];
-  var got = _.arrayFlattenedOnceStrictly( dst, [ 5, 6, 7, 8 ], function( a, b )
-  {
-    return  a === b;
-  });
-  test.identical( dst, [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
-  test.identical( got, 4 );
+  test.case = 'dst - flat array, src - array, level 5';
+  var dst = [ 1 ];
+  var got = _.arrayFlattenedOnceStrictly( dst, [ [ [ [ [ 2 ] ] ] ] ] );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 1 );
 
-  test.case = 'Second arg is not long';
+  test.case = 'dst - array, level 2, src - flat array';
+  var dst = [ [ 1 ], [ 2 ], [ 3 ] ];
+  var got = _.arrayFlattenedOnceStrictly( dst, [ 4, 5, 6 ] );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ 3 ] , 4, 5, 6 ] );
+  test.identical( got, 3 );
+
+  test.case = 'dst - array, level 2, src - array, level 2';
+  var dst = [ [ 1 ], [ 2 ], [ 3 ] ];
+  var got = _.arrayFlattenedOnceStrictly( dst, [  [ 1 ], [ 2 ], [ 3 ] ] );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ 3 ], 1, 2, 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'dst - array, level 2, src - number';
   var dst = [ 1, 3, [ 5 ] ];
   var got = _.arrayFlattenedOnceStrictly( dst, 5 );
   var expected = [ 1, 3, [ 5 ], 5 ];
   test.identical( dst, expected );
   test.identical( got, 1 );
 
-  var dst = [ 1, 3, [ 5 ] ];
-  var got = _.arrayFlattenedOnceStrictly( dst, 6 );
-  var expected = [ 1, 3, [ 5 ], 6 ];
-  test.identical( dst, expected );
-  test.identical( got, 1 );
+  /* */
 
-  //
+  test.case = 'dst - flat array, src - flat array, evaluator';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenedOnceStrictly( dst, [ 5, 6, 7, 8 ], ( e ) => e );
+  test.identical( dst, [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
+  test.identical( got, 4 );
 
-  test.open( 'single argument' );
+  test.case = 'dst - flat array, src - flat array, evaluator1 and evaluator2';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenedOnceStrictly( dst, [ 5, 6, 7, 8 ], ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
+  test.identical( got, 4 );
 
-  var got = _.arrayFlattenedOnceStrictly( [ 0, 1, 2, 3 ] );
-  var expected = [ 0, 1, 2, 3 ];
-  test.identical( got, expected );
+  test.case = 'dst - flat array, src - flat array, evaluator1 - fromIndex, evaluator2, has duplicates';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenedOnceStrictly( dst, [ 1, 2, 7, 8 ], 2, ( e ) => e );
+  test.identical( dst, [ 1, 2, 3, 4, 1, 2, 7, 8 ] );
+  test.identical( got, 4 );
 
-  var got = _.arrayFlattenedOnceStrictly( [ 0, [ 1 ] ] );
-  var expected = [ 0, 1 ];
-  test.identical( got, expected );
+  test.case = 'dst - flat array, src - flat array, equalizer';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenedOnceStrictly( dst, [ 5, 6, 7, 8 ], ( a, b ) => a === b );
+  test.identical( dst, [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
+  test.identical( got, 4 );
 
-  var got = _.arrayFlattenedOnceStrictly( [ [ 0 ], [ 1 ] ] );
-  var expected = [ 0, 1 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattenedOnceStrictly( [ [ 0 ], 1, 2, [ 3, 4 ] ] );
-  var expected = [ 0, 1, 2, 3, 4 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattenedOnceStrictly( [ 0, [ [ 1 ], 2 ], 3, 4 ] );
-  var expected = [ 0, 2, 1, 3, 4 ];
-  test.identical( got, expected );
-
-  var got = _.arrayFlattenedOnceStrictly( [ 1, 3,  [ 5, 7 ] ] );
-  var expected = [ 1, 3, 5, 7 ];
-  test.identical( got, expected );
-
-  test.close( 'single argument' );
-
-
-  test.case = 'Second arg is not long';
-
-  var dst = [];
-  var got = _.arrayFlattenedOnceStrictly( dst, 2 );
-  test.identical( dst, [ 2 ] );
-  test.identical( got, 1 );
+  /* - */
 
   if( !Config.debug )
   return;
 
-  test.case = 'not enough arguments';
-  test.shouldThrowErrorSync( function()
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedOnceStrictly() );
+
+  test.case = 'dstArray is not an array';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedOnceStrictly( 1, [ 1 ] ) );
+
+  test.case = 'evaluator1 is not a routine or a number';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedOnceStrictly( [], [ 1 ], [] ) );
+
+  test.case = 'duplicates in dstArray';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedOnceStrictly( [ 0, 0 ], [ 3, 4 ] ) );
+
+  test.case = 'duplicates in insArray';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedOnceStrictly( [], [ 1, 1, 2, 2, 3, 3 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayFlattenedOnceStrictly( [], [ [ 1 ], [ 1 ], [ 2 ], [ 2 ], [ 3 ], [ 3 ] ] ) );
+  test.shouldThrowErrorSync( () => _.arrayFlattenedOnceStrictly( [], [ [ 1, 1, [ 2, 2, [ 3, 3 ] ] ] ] ) );
+
+  test.case = 'insArray is undefined';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedOnceStrictly( [], undefined ) );
+
+  test.case = 'insArray has undefined';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedOnceStrictly( [], [ 1, [ undefined ] ] ) );
+}
+
+//
+
+function arrayFlattenedOnceStrictlySame( test )
+{
+  test.case = 'dst - empty array';
+  var dst = [];
+  var src = dst;
+  var got  = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - array, level 2, no duplicates';
+  var dst = [ [ 1 ], [ 2 ], [ 3 ] ];
+  var src = dst;
+  var got  = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ 3 ], 1, 2, 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'dst - array, level 3, src contains dst';
+  var dst = [ [ 1, [ 2, [ 3 ] ] ] ];
+  var src = [ dst ];
+  var got  = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ [ 1, [ 2, [ 3 ] ] ], 1, 2, 3 ] );
+  test.identical( got, 3 );
+
+  /* - */
+
+  test.open( 'evaluators' );
+
+  test.case = 'src contains a few dst, evaluator1 and evaluator2';
+  var dst = [ [ [ [ [ 1 ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenedOnceStrictly( dst, src, ( e ) => e, ( ins ) => ins + 1 );
+  test.identical( dst, [ [ [ [ [ 1 ] ] ] ], 1, 1, 1, 1 ] );
+  test.identical( got, 4 );
+
+  test.case = 'src contains dst, duplicates, evaluator1 - fromIndex, evaluator2, duplicates';
+  var dst = [ [ [ [ [ 1 ] ] ] ] ];
+  var src = [ dst ];
+  var got  = _.arrayFlattenedOnceStrictly( dst, src, 1, ( e ) => e );
+  test.identical( dst, [ [ [ [ [ 1 ] ] ] ], 1 ] );
+  test.identical( got, 1 );
+
+  test.case = 'src contains a few dst, duplicates, equalizer';
+  var dst = [ [ [ [ [ 1 ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenedOnceStrictly( dst, src, 1, ( e, ins ) => e === ins + 1 );
+  test.identical( dst, [ [ [ [ [ 1 ] ] ] ], 1, 1, 1, 1 ] );
+  test.identical( got, 4 );
+
+  test.close( 'evaluators' );
+
+  /* - */
+
+  test.open( 'dst or src contains self' );
+
+  test.case = 'dst - empty array, src push self';
+  var dst = [];
+  var src = [ 1, 2 ];
+  src.push( src );
+  var got  = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src push self twice';
+  var dst = [];
+  var src = [ 1, [ 2 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src - Set, add self';
+  var dst = [];
+  var src = new Set( [ 1, 2 ] );
+  src.add( src );
+  var got  = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src - Set, add self twice';
+  var dst = [];
+  var src = new Set( [ 1, [ 2 ] ] );
+  src.add( src );
+  src.add( src );
+  var got  = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array level 2, push self, src - flat array';
+  var dst = [ 1, [ 2 ] ];
+  dst.push( dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - flat array, push self, src - Set';
+  var dst = [ 1, 2, 3 ];
+  dst.push( dst );
+  var src = new Set( [ 4, [ 5 ], 6 ] );
+  var got  = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2, 3, 4, 5, 6 ] );
+  test.identical( got, 3 );
+
+  test.case = 'dst = array, level 3, push self';
+  var dst = [ 1, [ 3, [ 2 ] ] ];
+  dst.push( dst );
+  var got  = _.arrayFlattenedOnceStrictly( dst );
+  test.identical( dst, [ 1, 3, 2 ] );
+  test.identical( got, [ 1, 3, 2 ] );
+
+  /* */
+
+  test.case = 'dst - empty array, src inserts self';
+  var dst = [];
+  var src = [ 1, 2 ];
+  src.splice( 1, 0, src );
+  var got  = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src inserts self twice';
+  var dst = [];
+  var src = [ 1, [ 2 ] ];
+  src.splice( 0, 0, src );
+  src.splice( 2, 0, src );
+  var got  = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array level 2, inserts self, src - flat array';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 0, 0, dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - flat array, inserts self, src - Set';
+  var dst = [ 1, 2, 3 ];
+  dst.splice( 1, 0, dst );
+  var src = new Set( [ 4, [ [ 'str' ], 5 ] ] );
+  var got  = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2, 3, 4, 'str', 5 ] );
+  test.identical( got, 3 );
+
+  test.case = 'dst = array, level 3, inserts self';
+  var dst = [ 1, [ 3, [ 2 ] ] ];
+  dst.splice( 1, 0, dst );
+  var got  = _.arrayFlattenedOnceStrictly( dst );
+  test.identical( dst, [ 1, 3, 2 ] );
+  test.identical( got, [ 1, 3, 2 ] );
+
+  test.close( 'dst or src contains self' );
+
+  /* - */
+
+  test.open( 'dst or src contains self, evaluators' );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 2, [ 3 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedOnceStrictly( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 2, 3 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 and evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedOnceStrictly( dst, src, ( e ) => e, ( ins ) => ins + 1 );
+  test.identical( dst, [ 1, [ 2 ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedOnceStrictly( dst, src, 2, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, src push self twice, duplicates, equalizer';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ null, [ 2 ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedOnceStrictly( dst, src, ( e, ins ) => e === ins );
+  test.identical( dst, [ 1, [ 2 ], null, 2 ] );
+  test.identical( got, 2 );
+
+  /* */
+
+  test.case = 'dst inserts self, evaluator';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 1, 0, dst );
+  var src = [ 3, [ 2 ] ];
+  var got  = _.arrayFlattenedOnceStrictly( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 3, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst inserts self, evaluator1 and evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 1, 0, dst );
+  var src = [ 1, [ 2 ] ];
+  var got  = _.arrayFlattenedOnceStrictly( dst, src, ( e ) => e, ( ins ) => ins + 1 );
+  test.identical( dst, [ 1, [ 2 ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, src push self, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 1, 0, dst );
+  var src = [ 1, [ 2 ] ];
+  var got  = _.arrayFlattenedOnceStrictly( dst, src, 2, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, src push self, equalizer';
+  var dst = [ 1, [ 2 ] ];
+  dst.splice( 1, 0, dst );
+  var src = [ 1, [ 2 ] ];
+  var got  = _.arrayFlattenedOnceStrictly( dst, src, ( e, ins ) => e === ins + 1 );
+  test.identical( dst, [ 1, [ 2 ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.close( 'dst or src contains self, evaluators' );
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'dst === src';
+  test.shouldThrowErrorSync( () =>
   {
-    _.arrayFlattenedOnceStrictly();
+    var dst = [ 1, 2, 3 ];
+    var src = dst;
+    var got  = _.arrayFlattenedOnceStrictly( dst, src );
   });
 
-  test.case = 'first is not longIs';
-  test.shouldThrowErrorSync( function()
+  test.case = 'src contains a few dst, simple evaluator';
+  test.shouldThrowErrorSync( () =>
   {
-    _.arrayFlattenedOnceStrictly( 1, [ 1 ] );
+    var dst = [ [ [ [ [ 1 ] ] ] ] ];
+    var src = [ dst, dst, dst, dst ];
+    var got  = _.arrayFlattenedOnceStrictly( dst, src, ( e ) => e );
   });
 
-  test.case = 'onEqualize is not a routine';
-  test.shouldThrowErrorSync( function()
+  test.case = 'dst push self twice';
+  test.shouldThrowErrorSync( () =>
   {
-    _.arrayFlattenedOnceStrictly( [], [ 1 ], [] );
+    var dst = [ [ [ [ [ 1 ] ] ] ] ];
+    dst.push( dst );
+    dst.push( dst );
+    var got  = _.arrayFlattenedOnceStrictly( dst );
   });
+}
 
-  test.case = 'Elements must not be repeated';
-  test.shouldThrowErrorSync( function()
+//
+
+function arrayFlattenedOnceStrictlySets( test )
+{
+  test.open( 'dst - empty array' );
+
+  test.case = 'src - empty Set';
+  var dst = [];
+  var src = new Set();
+  var got = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, 0 );
+
+  test.case = 'src - flat Set';
+  var dst = [];
+  var src = new Set( [ 1, [ 'str' ], 2, 3, { a : 0 }, { a : 0 } ] );
+  var got = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', 2, 3, { a : 0 }, { a : 0 } ] );
+  test.identical( got, 6 );
+
+  test.case = 'src - Set, level 2';
+  var dst = [];
+  var src = new Set( [ 1, [ [ 'str' ] ], 3 ] );
+  var got = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 3';
+  var dst = [];
+  var src = new Set( [ 1, [ [ [ 'str' ], 3 ] ] ] );
+  var got = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 5';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ [ 'str' ] ], 3 ] ] ], 2, 4, 6 ] );
+  var got = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', 3, 2, 4, 6 ] );
+  test.identical( got, 6 );
+
+  test.case = 'src - Set from two array level 5, duplicates';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ 'str' ], { a : 3 } ] ] ], [ [ [ 2, [ 'src' ], 4 ] ] ] ] );
+  var got = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', { a : 3 }, 2, 'src', 4 ] );
+  test.identical( got, 6 );
+
+  test.close( 'dst - empty array' );
+
+  /* - */
+
+  test.open( 'dst - array' );
+
+  test.case = 'src - empty Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set();
+  var got = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 } ] );
+  test.identical( got, 0 );
+
+  test.case = 'src - flat Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 2, 3, 4 ] );
+  var got = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 3, 4 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 2';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 2, [ [ 'str' ], 3 ] ] );
+  var got = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 3';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 2, [ [ [ 'str' ] ], 3 ] ] );
+  var got = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 5';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ 2, [ 'str' ], 3 ] ] ] );
+  var got = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set from two array level 5';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ [ 2 ] ] ], [ [ [ [ 'str' ] ] ] ] ] );
+  var got = _.arrayFlattenedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str' ] );
+  test.identical( got, 2 );
+
+  test.close( 'dst - array' );
+
+  /* - */
+
+  test.open( 'dst - array, evaluators' );
+
+  test.case = 'src - Set, evaluator';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 2, 3 ] );
+  var got = _.arrayFlattenedOnceStrictly( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 3 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set from dst, evaluator1 and evaluator2';
+  var dst = [ 1, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst ] );
+  var got = _.arrayFlattenedOnceStrictly( dst, src, ( e ) => e, ( ins ) => ins + 1 );
+  test.identical( dst, [ 1, [ 2 ], { a : 0 }, 1, 2, { a : 0 } ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set from dst, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst ] );
+  var got = _.arrayFlattenedOnceStrictly( dst, src, 3, ( ins ) => ins );
+  test.identical( dst, [ 1, [ 2 ], { a : 0 }, 1, 2, { a : 0 } ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set from dst, equalizer';
+  var dst = [ 1, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst ] );
+  var got = _.arrayFlattenedOnceStrictly( dst, src, ( e, ins ) => e === ins + 1 );
+  test.identical( dst, [ 1, [ 2 ], { a : 0 }, 1, 2, { a : 0 } ] );
+  test.identical( got, 3 );
+
+  test.close( 'dst - array, evaluators' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'src - Set from dst';
+  test.shouldThrowErrorSync( () =>
   {
-    _.arrayFlattenedOnceStrictly( [], [ 1, 1, 2, 2, 3 , 3 ] );
+    var dst = [ 1, [ [ 2 ], { a : 0 } ] ];
+    var src = new Set( dst );
+    var got = _.arrayFlattenedOnceStrictly( dst, src );
   });
-
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedOnceStrictly( [], [ [ 1 ], [ 1 ], [ 2 ], [ 2 ], [ 3 ], [ 3 ]  ] );
-  });
-
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedOnceStrictly( [], [ [ 1, 1, [ 2, 2, [ 3, 3 ] ] ]  ] );
-  });
-
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedOnceStrictly( [], [ [ [ [ [ 1, 1, 1 ] ] ] ] ]  );
-  });
-
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenedOnceStrictly( [ 0, 1, 2, 3 ], [ [ 4, [ 5, [ 6 ] ] ], 2 ] );
-  });
-
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenedOnceStrictly( [ 0 ], 0 );
-  });
-
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenedOnceStrictly( [ 0, 1, 2, 3 ], [ [ 4, [ 5, [ 0 ] ] ], 7 ] );
-  });
-
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenedOnceStrictly( [ 0, 0 ] );
-  });
-
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenedOnceStrictly( [ 0, 0, 1, 1 ] );
-  });
-
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenedOnceStrictly( [ 0, 0 ], 1 );
-  });
-
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenedOnceStrictly( [ 0, 0, 1, 1 ], 2 );
-  });
-
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenedOnceStrictly( [ 0, 0 ], [ 1, 2 ] );
-  });
-
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenedOnceStrictly( [ 0, 0, 1, 1 ], [ 3, 4, [ 5, [ 6 ] ] ] );
-  });
-
 }
 
 //
 
 function arrayFlattenDefined( test )
 {
-  test.case = 'make array flat, dst is empty';
+  test.open( 'single argument' );
 
-  var got  = _.arrayFlattenDefined( [], [] );
+  test.case = 'flat array';
+  var got = _.arrayFlattenDefined( [ 0, 1, 2, 3 ] );
+  var expected = [ 0, 1, 2, 3 ];
+  test.identical( got, expected );
+
+  test.case = 'array, level 2';
+  var got = _.arrayFlattenDefined( [ [ 0, 0 ], [ 1, 1 ] ] );
+  var expected = [ 0, 0, 1, 1 ];
+  test.identical( got, expected );
+
+  test.case = 'array, level 3';
+  var got = _.arrayFlattenDefined( [ [ 0 ], 0, 1, [ [ 0 ], 1 ] ] );
+  var expected = [ 0, 0, 1, 0, 1 ];
+  test.identical( got, expected );
+
+  test.case = 'array, level 5';
+  var got = _.arrayFlattenDefined( [ [ [ [ [ 0 ] ] ] ] ] );
+  var expected = [ 0 ];
+  test.identical( got, expected );
+
+  test.case = 'array from other arrays, level 5';
+  var src = [ [ [ [ [ 0 ] ] ] ] ];
+  var got = _.arrayFlattenDefined( [ src, src, src, src ] );
+  var expected = [ 0, 0, 0, 0 ];
+  test.identical( got, expected );
+
+  test.case = 'array, level 5, has undefined';
+  var dst = [ undefined, [ undefined, [ undefined, [ undefined, [ 0 ] ] ] ] ];
+  var got = _.arrayFlattenDefined( dst );
+  var expected = [ 0 ];
+  test.identical( got, expected );
+
+  test.close( 'single argument' );
+
+  /* - */
+
+  test.case = 'dst - empty array, src - empty array';
+  var dst = [];
+  var got  = _.arrayFlattenDefined( dst, [] );
+  test.identical( dst, [] );
   test.identical( got, [] );
 
-  var got  = _.arrayFlattenDefined( [], [ 1, 2, 3 ] );
+  test.case = 'dst - empty array, src - flat array';
+  var dst = [];
+  var got  = _.arrayFlattenDefined( dst, [ 1, 2, undefined ] );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src - array, level 2';
+  var dst = [];
+  var got  = _.arrayFlattenDefined( dst, [ [ 1 ], [ 2 ], [ undefined ] ] );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src - array, level 3';
+  var dst = [];
+  var got  = _.arrayFlattenDefined( dst, [ [ 1, [ 2, [ undefined ] ] ] ] );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src - array, level 5';
+  var dst = [];
+  var got  = _.arrayFlattenDefined( dst, [ [ [ [ [ undefined ] ] ] ] ] );
+  test.identical( dst, [] );
+  test.identical( got, [] );
+
+  test.case = 'dst - empty array, src - array from arrays level 5';
+  var src = [ [ [ [ [ undefined ] ] ] ] ];
+  var dst =[];
+  var got = _.arrayFlattenDefined( dst, [ src, src, src, src ] );
+  test.identical( dst, [] );
+  test.identical( got, [] );
+
+  /* */
+
+  test.case = 'dst - null, src - empty array';
+  var dst = null;
+  var got  = _.arrayFlattenDefined( dst, [] );
+  test.identical( dst, null );
+  test.identical( got, [] );
+
+  test.case = 'dst - null, src - flat array';
+  var dst = null;
+  var got  = _.arrayFlattenDefined( dst, [ 1, 2, undefined ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - null, src - array, level 2';
+  var dst = null;
+  var got  = _.arrayFlattenDefined( dst, [ [ 1 ], [ 2 ], [ undefined ] ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - null, src - array, level 3';
+  var dst = null;
+  var got  = _.arrayFlattenDefined( dst, [ [ 1, [ 2, [ undefined ] ] ] ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - null, src - array, level 5';
+  var dst = null;
+  var got  = _.arrayFlattenDefined( dst, [ [ [ [ [ undefined ] ] ] ] ] );
+  test.identical( got, [] );
+
+  test.case = 'dst - null, src - array from arrays level 5';
+  var src = [ [ [ [ [ undefined ] ] ] ] ];
+  var dst = null;
+  var got = _.arrayFlattenDefined( dst, [ src, src, src, src ] );
+  test.identical( got, [] );
+
+  /* */
+
+  test.case = 'dst - flat array, src - flat array';
+  var dst = [ 1, undefined, 3 ];
+  var got  = _.arrayFlattenDefined( dst, [ 1, 2, undefined ] );
+  test.identical( dst, [ 1, undefined, 3, 1, 2 ] );
+  test.identical( got, [ 1, undefined, 3, 1, 2 ] );
+
+  test.case = 'dst - flat array, src - array, level 2';
+  var dst = [ 1, undefined, 3 ];
+  var got = _.arrayFlattenDefined( dst, [ [ 1 ], [ 2 ], [ undefined ] ] );
+  test.identical( dst, [ 1, undefined, 3, 1, 2 ] );
+  test.identical( got, [ 1, undefined, 3, 1, 2 ] );
+
+  test.case = 'dst - flat array, src - array, level 3';
+  var dst = [ 1, undefined, 3 ];
+  var got = _.arrayFlattenDefined( dst, [ [ 1, [ 2, [ undefined ] ] ] ] );
+  test.identical( dst, [ 1, undefined, 3, 1, 2 ] );
+  test.identical( got, [ 1, undefined, 3, 1, 2 ] );
+
+  test.case = 'dst - array, src - array, level 5';
+  var dst = [ 1 ];
+  var got = _.arrayFlattenDefined( dst, [ [ [ [ [ 1 ] ] ] ], [ [ [ [ 1 ] ] ] ], [ [ [ [ undefined ] ] ] ] ] );
+  test.identical( dst, [ 1, 1, 1 ] );
+  test.identical( got, [ 1, 1, 1 ] );
+
+  test.case = 'dst - array, level 2, src - flat array';
+  var dst = [ 1, [ 2, 3 ] ];
+  var got  = _.arrayFlattenDefined( dst, [ undefined ] );
+  test.identical( dst, [ 1, [ 2, 3 ] ] );
+  test.identical( got, [ 1, [ 2, 3 ] ] );
+
+  test.case = 'dst - empty array, src - multiple arrays with diff levels';
+  var dst = [];
+  var got = _.arrayFlattenDefined( dst, [ [ 1 ], [ [ 2 ] ], [ 3, [ [ [ undefined ] ] ] ] ] );
+  test.identical( dst, [ 1, 2, 3 ] );
   test.identical( got, [ 1, 2, 3 ] );
 
-  var got  = _.arrayFlattenDefined( [], [ [ 1 ], [ 2 ], [ 3 ]  ] );
-  test.identical( got, [ 1, 2, 3 ] );
-
-  var got  = _.arrayFlattenDefined( [], [ [ 1, [ 2, [ 3 ] ] ]  ] );
-  test.identical( got, [ 1, 2, 3 ] );
-
-  var got  = _.arrayFlattenDefined( [], [ [ [ [ [ 1 ] ] ] ] ]  );
+  test.case = 'dst - empty array, src - number';
+  var dst = [];
+  var got  = _.arrayFlattenDefined( dst, 1 );
+  test.identical( dst, [ 1 ] );
   test.identical( got, [ 1 ] );
 
-  var got  = _.arrayFlattenDefined( [], 1, 2, '3'  );
-  test.identical( got, [ 1, 2, '3' ] );
+  test.case = 'dst - array, level 2, src - number';
+  var dst = [ 1, 1, 3, 3, [ 5, 5 ] ];
+  var got = _.arrayFlattenDefined( dst, 5 );
+  var expected = [ 1, 1, 3, 3, [ 5, 5 ], 5 ];
+  test.identical( dst, expected );
+  test.identical( got, expected );
 
-  test.case = 'make array flat, dst is not empty';
-
-  var got  = _.arrayFlattenDefined( [ 1, 2, 3 ], [ 4 ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
-
-  var got  = _.arrayFlattenDefined( [ 1, 2, 3 ], [ 1, 2, 3 ] );
-  test.identical( got, [ 1, 2, 3, 1, 2, 3 ] );
-
-  var got  = _.arrayFlattenDefined( [ 1, 2, 3 ], [ [ 1 ], [ 2 ], [ 3 ] ] );
-  test.identical( got, [ 1, 2, 3, 1, 2, 3 ] );
-
-  var got  = _.arrayFlattenDefined( [ 1, 2, 3 ], [ [ 1, [ 2, [ 3 ] ] ] ] );
-  test.identical( got, [ 1, 2, 3, 1, 2, 3 ] );
-
-  var got  = _.arrayFlattenDefined( [ 1 ], [ [ [ [ [ 1 ] ] ] ] ]  );
-  test.identical( got, [ 1, 1 ] );
-
-  var got = _.arrayFlattenDefined( [], 1 );
-  test.identical( got, [ 1 ] );
-
-  test.case = 'make array flat from multiple arrays as one arg';
-
-  var got  = _.arrayFlattenDefined
-  (
-    [],
-    [
-      [ 1 ],
-      [ [ 2 ] ],
-      [ 3, [ [ [ 4 ] ] ] ]
-    ]
-  );
-  test.identical( got, [ 1, 2, 3, 4 ] );
-
-  test.case = 'make array flat from different inputs -  null dstArray';
-
-  var got  =  _.arrayFlattenDefined( null, 'str', {}, [ 1, 2 ], 5, true );
-  test.identical( got, [ 'str', {}, 1, 2, 5, true ] );
-
-  var got = _.arrayFlattenDefined( [ 1, 1, 3, 3, [ 5, 5 ] ], 5 );
-  test.identical( got, [ 1, 1, 3, 3, [ 5, 5 ], 5 ] );
-
-  var got = _.arrayFlattenDefined( null, [ 1, 1, 3, 3, [ 5, 5 ] ] );
-  test.identical( got, [ 1, 1, 3, 3, 5, 5 ] );
-
-  var got = _.arrayFlattenDefined( [ [ 0 ], [ [ -1, -2 ] ] ], [ 1, 1, 3, 3, [ 5, 5 ] ] );
-  test.identical( got, [ [ 0 ], [ [ -1, -2 ] ], 1, 1, 3, 3, 5, 5 ] );
-
-  //
-
-  test.case = 'single argument';
-
-  var got = _.arrayFlattenDefined( [ 0, 1, 2, 3 ] )
-  test.identical( got, [ 0, 1, 2, 3 ] );
-
-  var got = _.arrayFlattenDefined( [ [ 0, 0 ], [ 1, 1 ] ] );
-  test.identical( got, [ 0, 0, 1, 1 ] );
-
-  var got = _.arrayFlattenDefined( [ [ 0 ], 0, 1, [ 0, 1 ] ] );
-  test.identical( got, [ 0, 0, 1, 0, 1 ] );
-
-  var got = _.arrayFlattenDefined( [ [ [ 0 ] ] ] );
-  test.identical( got, [ 0 ] );
-
-  var got = _.arrayFlattenDefined( [ 1, 1, 3, 3, [ 5, 5 ] ] );
-  test.identical( got, [ 1, 1, 3, 3, 5, 5 ] );
-
-  //
+  /* - */
 
   if( !Config.debug )
   return;
 
-  test.case = 'Empty';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenDefined();
-  });
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlattenDefined() );
 
-  test.case = 'dstArray is not array';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenDefined( 1, [ 1 ] );
-  });
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlattenDefined( [], [ 1 ], [ 'extra' ] ) );
 
-  test.case = 'insArray is undefined';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenDefined( [ 1 ], undefined );
-  });
+  test.case = 'dstArray is not arrayLike';
+  test.shouldThrowErrorSync( () => _.arrayFlattenDefined( 1, [ 1 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayFlattenDefined( new U8x( 2 ), [ 1 ] ) );
+}
 
+//
+
+function arrayFlattenDefinedSame( test )
+{
+  test.case = 'dst - empty array';
+  var dst = [];
+  var src = dst;
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, [] );
+
+  test.case = 'dst - flat array, src - flat array';
+  var dst = [ 1, 2, undefined ];
+  var src = dst;
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, 2, undefined, 1, 2 ] );
+  test.identical( got, [ 1, 2, undefined, 1, 2 ] );
+
+  test.case = 'dst - array, level 2';
+  var dst = [ [ 1 ], [ 2 ], [ undefined ] ];
+  var src = dst;
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ undefined ], 1, 2 ] );
+  test.identical( got, [ [ 1 ], [ 2 ], [ undefined ], 1, 2 ] );
+
+  test.case = 'dst - array, level 3, src contains dst';
+  var dst = [ [ 1, [ 2, [ undefined ] ] ] ];
+  var src = [ dst, 4, 5 ];
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ [ 1, [ 2, [ undefined ] ] ], 1, 2, 4, 5 ] );
+  test.identical( got, [ [ 1, [ 2, [ undefined ] ] ], 1, 2, 4, 5 ] );
+
+  test.case = 'dst - array, level 5, src contains a few dst';
+  var dst = [ [ [ [ [ undefined ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ [ [ [ [ undefined ] ] ] ] ] );
+  test.identical( got, [ [ [ [ [ undefined ] ] ] ] ] );
+
+  /* - */
+
+  test.open( 'dst or src contains self' );
+
+  test.case = 'dst - null, src push self';
+  var dst = null;
+  var src = [ 1, undefined ];
+  src.push( src );
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( got, [ 1 ] );
+
+  test.case = 'src push self';
+  var dst = [];
+  var src = [ 1, undefined ];
+  src.push( src );
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.case = 'src push self twice';
+  var dst = [];
+  var src = [ 1, [ undefined ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.case = 'dst - empty array, src - Set, add self';
+  var dst = [];
+  var src = new Set( [ 1, [ undefined ] ] );
+  src.add( src );
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.case = 'dst - empty array, src - Set, add self twice';
+  var dst = [];
+  var src = new Set( [ 1, [ [ undefined ] ] ] );
+  src.add( src );
+  src.add( src );
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.case = 'dst push self';
+  var dst = [ 1, undefined ];
+  dst.push( dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, undefined, 2 ] );
+  test.identical( got, [ 1, undefined, 2 ] );
+
+  test.case = 'dst push self twice';
+  var dst = [ 1, undefined ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, undefined, 2 ] );
+  test.identical( got, [ 1, undefined, 2 ] );
+
+  test.case = 'dst push self, src - Set';
+  var dst = [ 1, undefined ];
+  dst.push( dst );
+  var src = new Set( [ 'str', { a : 2 } ] );
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, undefined, 'str', { a : 2 } ] );
+  test.identical( got, [ 1, undefined, 'str', { a : 2 } ] );
+
+  test.case = 'dst push self twice, src - Set';
+  var dst = [ 1, undefined ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = new Set( [ 'str', { a : 2 } ] );
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, undefined, 'str', { a : 2 } ] );
+  test.identical( got, [ 1, undefined, 'str', { a : 2 } ] );
+
+  test.case = 'dst push self, dst === src';
+  var dst = [ 1, undefined ];
+  dst.push( dst );
+  var src = dst;
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, undefined, 1, 1 ] );
+  test.identical( got, [ 1, undefined, 1, 1 ] );
+
+  test.case = 'dst push self twice, dst === src';
+  var dst = [ 1, undefined ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = dst;
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, undefined, 1, 1, 1 ] );
+  test.identical( got, [ 1, undefined, 1, 1, 1 ] );
+
+  test.case = 'dst push self';
+  var dst = [ 1, undefined ];
+  dst.push( dst );
+  var got  = _.arrayFlattenDefined( dst );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.case = 'dst push self twice';
+  var dst = [ 1, undefined, undefined ];
+  dst.push( dst );
+  dst.push( dst );
+  var got  = _.arrayFlattenDefined( dst );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  /* */
+
+  test.case = 'src inserts self';
+  var dst = [];
+  var src = [ 1, undefined ];
+  src.splice( 1, 0, dst );
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.case = 'src inserts self twice';
+  var dst = [];
+  var src = [ 1, 2, undefined ];
+  src.splice( 0, 0, dst );
+  src.splice( 2, 0, dst );
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst inserts self';
+  var dst = [ 1, 2, undefined ];
+  dst.splice( 0, 0, dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, 2, undefined, 2 ] );
+  test.identical( got, [ 1, 2, undefined, 2 ] );
+
+  test.case = 'dst inserts self twice';
+  var dst = [ 1, undefined ];
+  dst.splice( 0, 0, dst );
+  dst.splice( 2, 0, dst );
+  var src = [ 3 ];
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, undefined, 3 ] );
+  test.identical( got, [ 1, undefined, 3 ] );
+
+  test.case = 'dst inserts self, dst === src';
+  var dst = [ 1, undefined ];
+  dst.splice( 0, 0, dst );
+  var src = dst;
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, undefined, 1, 1 ] );
+  test.identical( got, [ 1, undefined, 1, 1 ] );
+
+  test.case = 'dst inserts self twice, dst === src';
+  var dst = [ 1, undefined ];
+  dst.splice( 3, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = dst;
+  var got  = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, undefined, 1, 1, 1 ] );
+  test.identical( got, [ 1, undefined, 1, 1, 1 ] );
+
+  test.case = 'dst inserts self';
+  var dst = [ 1, undefined ];
+  dst.splice( 0, 0, dst );
+  var got  = _.arrayFlattenDefined( dst );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.case = 'dst inserts self twice';
+  var dst = [ 1, undefined, [ undefined ] ];
+  dst.splice( 0, 0, dst );
+  dst.splice( 2, 0, dst );
+  var got  = _.arrayFlattenDefined( dst );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.close( 'dst or src contains self' );
+}
+
+//
+
+function arrayFlattenDefinedSets( test )
+{
+  test.open( 'dst - null' );
+
+  test.case = 'src - empty Set';
+  var dst = null;
+  var src = new Set();
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( got, [] );
+
+  test.case = 'src - flat Set';
+  var dst = null;
+  var src = new Set( [ 1, 2, undefined ] );
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'src - Set, level 2';
+  var dst = null;
+  var src = new Set( [ 1, [ undefined ], 3 ] );
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( got, [ 1, 3 ] );
+
+  test.case = 'src - Set, level 3';
+  var dst = null;
+  var src = new Set( [ 1, [ [ undefined ], 3 ] ] );
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( got, [ 1, 3 ] );
+
+  test.case = 'src - Set, level 5';
+  var dst = null;
+  var src = new Set( [ [ [ 1, [ undefined ], 3 ] ] ] );
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( got, [ 1, 3 ] );
+
+  test.case = 'src - Set from two array level 5';
+  var dst = null;
+  var src = new Set( [ [ [ [ 1, [ undefined ], { a : 3 }, undefined ] ] ], [ [ [ 1, [ undefined ], 3 ] ] ] ] );
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( got, [ 1, { a : 3 }, 1, 3 ] );
+
+  test.close( 'dst - null' );
+
+  /* - */
+
+  test.open( 'dst - empty array' );
+
+  test.case = 'src - empty Set';
+  var dst = [];
+  var src = new Set();
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, [] );
+
+  test.case = 'src - flat Set';
+  var dst = [];
+  var src = new Set( [ 1, 2, undefined ] );
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'src - Set, level 2';
+  var dst = [];
+  var src = new Set( [ 1, [ undefined ], 3 ] );
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, 3 ] );
+  test.identical( got, [ 1, 3 ] );
+
+  test.case = 'src - Set, level 3';
+  var dst = [];
+  var src = new Set( [ 1, [ [ undefined ], 3 ] ] );
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, 3 ] );
+  test.identical( got, [ 1, 3 ] );
+
+  test.case = 'src - Set, level 5';
+  var dst = [];
+  var src = new Set( [ [ [ 1, [ undefined ], 3 ] ] ] );
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, 3 ] );
+  test.identical( got, [ 1, 3 ] );
+
+  test.case = 'src - Set from two array level 5';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ undefined ], { a : 3 }, undefined ] ] ], [ [ [ 1, [ undefined ], 3 ] ] ] ] );
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, { a : 3 }, 1, 3 ] );
+  test.identical( got, [ 1, { a : 3 }, 1, 3 ] );
+
+  test.close( 'dst - empty array' );
+
+  /* - */
+
+  test.open( 'dst - array' );
+
+  test.case = 'src - empty Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set();
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 } ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 } ] );
+
+  test.case = 'src - flat Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, 2, undefined ] );
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 2 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 1, 2 ] );
+
+  test.case = 'src - Set, level 2';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, [ undefined ], 3 ] );
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 1, 3 ] );
+
+  test.case = 'src - Set, level 3';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, [ [ undefined, undefined ], 3 ] ] );
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 1, 3 ] );
+
+  test.case = 'src - Set, level 5';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ 1, [ undefined ], 3 ] ] ] );
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 1, 3 ] );
+
+  test.case = 'src - Set from two array level 5';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ [ 1, [ undefined ], { a : 3 }, undefined ] ] ], [ [ [ 1, [ undefined ], 3 ] ] ] ] );
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, { a : 3 },  1, 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 1, { a : 3 },  1, 3 ] );
+
+  test.case = 'src - Set from dst';
+  var dst = [ 1, [ undefined, [ 2 ], { a : 0 } ] ];
+  var src = new Set( dst );
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, [ undefined, [ 2 ], { a : 0 } ], 1,  2, { a : 0 } ] );
+  test.identical( got, [ 1, [ undefined, [ 2 ], { a : 0 } ], 1,  2, { a : 0 } ] );
+
+  test.case = 'src - Set from two dst in container';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenDefined( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1,  2, { a : 0 }, 1,  2, { a : 0 }, 1,  2, { a : 0 } ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 1,  2, { a : 0 }, 1,  2, { a : 0 }, 1,  2, { a : 0 } ] );
+
+  test.close( 'dst - array' );
 }
 
 //
 
 function arrayFlattenDefinedOnce( test )
 {
-  test.case = 'make array flat, dst is empty';
+  test.open( 'single argument' );
 
-  var got  = _.arrayFlattenDefinedOnce( [], [] );
+  test.case = 'flat array, without duplicates';
+  var dst = [ 0, 1, undefined, 3 ];
+  var got = _.arrayFlattenDefinedOnce( dst );
+  test.identical( dst, [ 0, 1, 3 ] );
+  test.identical( got, [ 0, 1, 3 ] );
+
+  test.case = 'flat array, duplicates';
+  var dst = [ 0, 1, 0, undefined, 1 ];
+  var got = _.arrayFlattenDefinedOnce( dst );
+  test.identical( dst, [ 0, 1 ] );
+  test.identical( got, [ 0, 1 ] );
+
+  test.case = 'array, level 2, duplicates';
+  var dst = [ [ 0, 0, undefined ], [ 1, 1, undefined ] ];
+  var got = _.arrayFlattenDefinedOnce( dst );
+  test.identical( dst, [ 0, 1 ] );
+  test.identical( got, [ 0, 1 ] );
+
+  test.case = 'array with diff levels, duplicates';
+  var dst = [ 1, undefined, [ [ 0, undefined ], 1, undefined ], 1, 0 ];
+  var got = _.arrayFlattenDefinedOnce( dst );
+  test.identical( dst, [ 1, 0 ] );
+  test.identical( got, [ 1, 0 ] );
+
+  test.close( 'single argument' );
+
+  /* - */
+
+  test.case = 'dst - null, src - undefined';
+  var dst = null;
+  var got = _.arrayFlattenDefinedOnce( dst, undefined );
   test.identical( got, [] );
 
-  var got  = _.arrayFlattenDefinedOnce( [], [ 1, 1, 2, 2, 3, 3, 3 ] );
+  test.case = 'dst - null, src - empty array';
+  var dst = null;
+  var got = _.arrayFlattenDefinedOnce( dst, [] );
+  test.identical( got, [] );
+
+  test.case = 'dst - null, src - flat array, duplicates';
+  var dst = null;
+  var got = _.arrayFlattenDefinedOnce( dst, [ 1, 1, 2, 2, undefined, 3, 3 ] );
   test.identical( got, [ 1, 2, 3 ] );
 
-  var got  = _.arrayFlattenDefinedOnce( [], [ [ 1 ], [ 1 ], [ 2 ], [ 2 ], [ 3 ], [ 3 ]  ] );
+  test.case = 'dst - null, src - array, level 2, duplicates';
+  var dst = null;
+  var got = _.arrayFlattenDefinedOnce( dst, [ [ 1 ], [ 1 ], [ undefined ], [ 2 ], [ 3 ], [ 3 ], [ undefined ] ] );
   test.identical( got, [ 1, 2, 3 ] );
 
-  var got  = _.arrayFlattenDefinedOnce( [], [ [ 1, 1, [ 2, 2, 2, [ 3, 3 ] ] ]  ] );
+  test.case = 'dst - null, src - array, level 3, duplicates';
+  var dst = null;
+  var got = _.arrayFlattenDefinedOnce( dst, [ [ 1, 1, undefined, [ 2, 2, undefined, [ 3, 3, undefined ] ] ] ] );
   test.identical( got, [ 1, 2, 3 ] );
 
-  var got  = _.arrayFlattenDefinedOnce( [], [ [ [ [ [ 1, 1, 1 ] ] ] ] ]  );
+  test.case = 'dst - null, src - array, level 5, duplicates';
+  var dst = null;
+  var got = _.arrayFlattenDefinedOnce( dst, [ undefined, [ [ [ [ 1, 1, undefined, 1 ] ] ] ] ] );
   test.identical( got, [ 1 ] );
 
-  test.case = 'make array flat, dst is not empty';
+  /* */
 
-  var got  = _.arrayFlattenDefinedOnce( [ 1, 2, 3, 4 ], [ 4, 2 ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
+  test.case = 'dst - empty array, src - undefined';
+  var dst = [];
+  var got = _.arrayFlattenDefinedOnce( dst, undefined );
+  test.identical( dst, [] );
+  test.identical( got, [] );
 
-  var got  = _.arrayFlattenDefinedOnce( [ 1, 2, 3 ], [ 1, 2, 3, [ [ 4 ] ] ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
+  test.case = 'dst - empty array, src - empty array';
+  var dst = [];
+  var got = _.arrayFlattenDefinedOnce( dst, [] );
+  test.identical( dst, [] );
+  test.identical( got, [] );
 
-  var got  = _.arrayFlattenDefinedOnce( [ 'a', 2, 3 ], [ [ 1 ], [ 4 ], [ 'a' ], [ 4 ] ] );
-  test.identical( got, [ 'a', 2, 3, 1, 4 ] );
+  test.case = 'dst - empty array, src - flat array, duplicates';
+  var dst = [];
+  var got = _.arrayFlattenDefinedOnce( dst, [ 1, 1, 2, 2, undefined, 3, 3 ] );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, [ 1, 2, 3 ] );
 
-  var got  = _.arrayFlattenDefinedOnce( [ 1, 2, 3 ], [ [ 1, [ 2, [ 3 ] ] ], 4 ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
+  test.case = 'dst - empty array, src - array, level 2, duplicates';
+  var dst = [];
+  var got = _.arrayFlattenDefinedOnce( dst, [ [ 1 ], [ 1 ], [ undefined ], [ 2 ], [ 3 ], [ 3 ], [ undefined ] ] );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, [ 1, 2, 3 ] );
 
-  var got  = _.arrayFlattenDefinedOnce( [ 1 ], [ [ [ [ [ 1, 1, 1 ] ] ] ] ]  );
+  test.case = 'dst - empty array, src - array, level 3, duplicates';
+  var dst = [];
+  var got = _.arrayFlattenDefinedOnce( dst, [ [ 1, 1, undefined, [ 2, 2, undefined, [ 3, 3, undefined ] ] ] ] );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, [ 1, 2, 3 ] );
+
+  test.case = 'dst - empty array, src - array, level 5, duplicates';
+  var dst = [];
+  var got = _.arrayFlattenDefinedOnce( dst, [ undefined, [ [ [ [ 1, 1, undefined, 1 ] ] ] ] ] );
+  test.identical( dst, [ 1 ] );
   test.identical( got, [ 1 ] );
 
-  test.case = 'make array flat from multiple arrays as one arg';
-  var got  = _.arrayFlattenDefinedOnce
-  (
-    [ 1, 4 ],
-    [
-      [ 1 ],
-      [ [ 2 ] ],
-      [ 3, [ [ [ 4 ] ] ] ]
-    ]
-  );
+  /* */
+
+  test.case = 'dst - flat array, src - string';
+  var dst = [ 1, undefined, 3 ];
+  var got = _.arrayFlattenDefinedOnce( dst, 'str' );
+  test.identical( dst, [ 1, undefined, 3, 'str' ] );
+  test.identical( got, [ 1, undefined, 3, 'str' ] );
+
+  test.case = 'dst - flat array, src - flat array, duplicates';
+  var dst = [ 1, undefined, 3, 4 ];
+  var got = _.arrayFlattenDefinedOnce( dst, [ 4 ] );
+  test.identical( dst, [ 1, undefined, 3, 4 ] );
+  test.identical( got, [ 1, undefined, 3, 4 ] );
+
+  test.case = 'dst - flat array, src - array, level 2, duplicates';
+  var dst = [ 1, undefined, 3 ];
+  var got = _.arrayFlattenDefinedOnce( dst, [ [ 1 ], [ 2 ], [ 3 ], [ 4 ], [ undefined ] ] );
+  test.identical( dst, [ 1, undefined, 3, 2, 4 ] );
+  test.identical( got, [ 1, undefined, 3, 2, 4 ] );
+
+  test.case = 'dst - flat array, src - array, level 3, duplicates';
+  var dst = [ 1, undefined, 3 ];
+  var got = _.arrayFlattenDefinedOnce( dst, [ 1, 2, 3, [ [ undefined ] ] ] );
+  test.identical( dst, [ 1, undefined, 3, 2 ] );
+  test.identical( got, [ 1, undefined, 3, 2 ] );
+
+  test.case = 'dst - flat array, src - array, level 5, duplicates';
+  var dst = [ 1 ];
+  var got = _.arrayFlattenDefinedOnce( dst, [ [ [ [ [ 1, 1, undefined, undefined, 1 ] ] ] ] ] );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.case = 'dst - array, level 2, src - flat array';
+  var dst = [ [ 1 ], [ 2, undefined ], [ 3 ] ];
+  var got = _.arrayFlattenDefinedOnce( dst, [ 1, 2, undefined, 3 ] );
+  test.identical( dst, [ [ 1 ], [ 2, undefined ], [ 3 ], 1, 2, 3 ] );
+  test.identical( got, [ [ 1 ], [ 2, undefined ], [ 3 ], 1, 2, 3 ] );
+
+  test.case = 'dst - flat array, src - array with diff level arrays, duplicates';
+  var dst = [ 1, 4 ];
+  var got  = _.arrayFlattenDefinedOnce( dst, [ [ 1 ], [ [ 2, undefined ] ], [ 3, [ [ [ 4 ] ] ] ] ] );
+  test.identical( dst, [ 1, 4, 2, 3 ] );
   test.identical( got, [ 1, 4, 2, 3 ] );
 
-  //
+  /* */
 
-  test.case = 'onEqualize';
-  var got  = _.arrayFlattenDefinedOnce( [ 1, 2, 3, 4 ], [ 1, 4, 2, 5 ], ( a, b ) =>  a === b );
+  test.case = 'evaluator1';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenDefinedOnce( dst, [ 1, 4, 2, 5, undefined ], ( e ) => e );
+  test.identical( dst, [ 1, 2, 3, 4, 5 ] );
   test.identical( got, [ 1, 2, 3, 4, 5 ] );
 
-  test.case = 'onEvaluate - one evaluator';
-  var got  = _.arrayFlattenDefinedOnce( [ 1, 2, 3, 4 ], [ 1, 4, 2, 5 ], ( a ) => a );
+  test.case = 'evaluator1 and evaluator2';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenDefinedOnce( dst, [ 1, 4, 2, 5, [ [ undefined ] ] ], ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, 2, 3, 4, 5 ] );
   test.identical( got, [ 1, 2, 3, 4, 5 ] );
 
-  test.case = 'onEvaluate - two evaluator';
+  test.case = 'evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenDefinedOnce( dst, [ 1, 4, 2, [ undefined ], 5 ], 1, ( e ) => e );
+  test.identical( dst, [ 1, 2, 3, 4, 1, 5 ] );
+  test.identical( got, [ 1, 2, 3, 4, 1, 5 ] );
 
-  var got  = _.arrayFlattenDefinedOnce( [ [ 1 ], [ 2 ], [ 3 ], [ 4 ] ], [ 1, 4, 2, 5 ], ( a ) => a[ 0 ], ( b ) => b );
-  test.identical( got, [ [ 1 ], [ 2 ], [ 3 ], [ 4 ], 5 ] );
+  test.case = 'equilizer';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenDefinedOnce( dst, [ 1, 4, 2, [ undefined ], 5 ], ( a, b ) => a === b );
+  test.identical( dst, [ 1, 2, 3, 4, 5 ] );
+  test.identical( got, [ 1, 2, 3, 4, 5 ] );
 
-  var got  = _.arrayFlattenDefinedOnce( [ [ 1 ], 5, [ 2 ], [ 3 ], [ 4 ] ], [ 1, 4, 2, 5, [ 6 ] ], ( a ) => a[ 0 ], ( b ) => b );
-  test.identical( got, [ [ 1 ], 5, [ 2 ], [ 3 ], [ 4 ], 5, 6 ] );
-
-  //
-
-  test.case = 'single argument';
-
-  var got = _.arrayFlattenDefinedOnce( [ 0, 1, 2, 3 ] );
-  test.identical( got, [ 0, 1, 2, 3 ] );
-
-  var got = _.arrayFlattenDefinedOnce( [ 0, 1, 0, 1 ] );
-  test.identical( got, [ 0, 1 ] );
-
-  var got = _.arrayFlattenDefinedOnce( [ [ 0, 0 ], [ 1, 1 ] ] );
-  test.identical( got, [ 0, 1 ] );
-
-  var got = _.arrayFlattenDefinedOnce( [ [ 0 ], 0, 1, [ 0, 1 ] ] );
-  test.identical( got, [ 0, 1 ] );
-
-  var got = _.arrayFlattenDefinedOnce( [ 1, [ [ 0 ], 1 ], 1, 0 ] );
-  test.identical( got, [ 1, 0 ] );
+  /* - */
 
   if( !Config.debug )
   return;
 
-  test.case = 'not enough arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenDefinedOnce();
-  });
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlattenDefinedOnce() );
 
-  test.case = 'too many arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenDefinedOnce( [], [ 1 ], ( a ) => a, ( a ) => a, ( a ) => a );
-  });
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlattenDefinedOnce( [], [ 1 ], ( e ) => e, ( ins ) => ins, 'extra' ) );
 
-  test.case = 'first is not longIs';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenDefinedOnce( 1, [ 1 ] );
-  });
+  test.case = 'dstArray is not array';
+  test.shouldThrowErrorSync( () => _.arrayFlattenDefinedOnce( 1, [ 1 ] ) );
 
-  test.case = 'onEqualize is not a routine';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenDefinedOnce( [], [ 1 ], [] );
-  });
+  test.case = 'evaluator1 is not a routine or a number';
+  test.shouldThrowErrorSync( () => _.arrayFlattenDefinedOnce( [], [ 1 ], [] ) );
+
+  test.case = 'evaluator2 is not a routine or a number';
+  test.shouldThrowErrorSync( () => _.arrayFlattenDefinedOnce( [], [ 1 ], ( e ) => e, [] ) );
+  test.shouldThrowErrorSync( () => _.arrayFlattenDefinedOnce( [], [ 1 ], 0, {} ) );
+}
+
+//
+
+function arrayFlattenDefinedOnceSame( test )
+{
+  test.case = 'dst - empty array';
+  var dst = [];
+  var src = dst;
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, [] );
+
+  test.case = 'dst - flat array, src - flat array, duplicates';
+  var dst = [ 1, 2, undefined, 3, undefined, 1 ];
+  var src = dst;
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2, undefined, 3, undefined, 1 ] );
+  test.identical( got, [ 1, 2, undefined, 3, undefined, 1 ] );
+
+  test.case = 'dst - array, level 2, no duplicates';
+  var dst = [ [ 1 ], [ 2 ], [ undefined ] ];
+  var src = dst;
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ undefined ], 1, 2 ] );
+  test.identical( got, [ [ 1 ], [ 2 ], [ undefined ], 1, 2 ] );
+
+  test.case = 'dst - array, level 3, src contains dst, duplicates';
+  var dst = [ [ 1, [ 2, [ undefined ] ] ] ];
+  var src = [ dst, 1, 2 ];
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ [ 1, [ 2, [ undefined ] ] ], 1, 2 ] );
+  test.identical( got, [ [ 1, [ 2, [ undefined ] ] ], 1, 2 ] );
+
+  /* - */
+
+  test.open( 'evaluators' );
+
+  test.case = 'src contains a few dst, duplicates, evaluator';
+  var dst = [ [ [ [ [ undefined ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenDefinedOnce( dst, src, ( e ) => e );
+  test.identical( dst, [ [ [ [ [ undefined ] ] ] ] ] );
+  test.identical( got, [ [ [ [ [ undefined ] ] ] ] ] );
+
+  test.case = 'src contains a few dst, duplicates, evaluator1 and evaluator2';
+  var dst = [ [ [ [ [ 1, undefined ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenDefinedOnce( dst, src, ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ [ [ [ [ 1, undefined ] ] ] ], 1 ] );
+  test.identical( got, [ [ [ [ [ 1, undefined ] ] ] ], 1 ] );
+
+  test.case = 'src contains a few dst, duplicates, evaluator1 - fromIndex, evaluator2, duplicates';
+  var dst = [ 1, [ [ [ [ 1, undefined ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenDefinedOnce( dst, src, 1, ( e ) => e );
+  test.identical( dst, [ 1, [ [ [ [ 1, undefined ] ] ] ], 1 ] );
+  test.identical( got, [ 1, [ [ [ [ 1, undefined ] ] ] ], 1 ] );
+
+  test.case = 'src contains a few dst, duplicates, equalizer';
+  var dst = [ [ [ [ [ 1, undefined ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenDefinedOnce( dst, src, 1, ( e, ins ) => e === ins );
+  test.identical( dst, [ [ [ [ [ 1, undefined ] ] ] ], 1 ] );
+  test.identical( got, [ [ [ [ [ 1, undefined ] ] ] ], 1 ] );
+
+  test.close( 'evaluators' );
+
+  /* - */
+
+  test.open( 'dst or src contains self' );
+
+  test.case = 'dst - empty array, src push self';
+  var dst = [];
+  var src = [ 1, 2, undefined ];
+  src.push( src );
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src push self twice';
+  var dst = [];
+  var src = [ 1, [ 2, undefined ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src - Set, add self';
+  var dst = [];
+  var src = new Set( [ 1, 2, undefined ] );
+  src.add( src );
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src - Set, add self twice';
+  var dst = [];
+  var src = new Set( [ 1, [ 2, undefined ] ] );
+  src.add( src );
+  src.add( src );
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - array level 2, push self, src - flat array';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.push( dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ 2, undefined ], 2 ] );
+  test.identical( got, [ 1, [ 2, undefined ], 2 ] );
+
+  test.case = 'dst - array level 2, push self twice, src - flat array, duplicates';
+  var dst = [ 1, undefined, [ 2, 3 ] ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = [ 1 ];
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2, 3 ] ] );
+  test.identical( got, [ 1, undefined, [ 2, 3 ] ] );
+
+  test.case = 'dst - flat array, push self, src - Set, duplicates';
+  var dst = [ 1, 2, 3, undefined ];
+  dst.push( dst );
+  var src = new Set( [ 1, 2, 3 ] );
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2, 3, undefined ] );
+  test.identical( got, [ 1, 2, 3, undefined ] );
+
+  test.case = 'dst - array, level 2, push self twice, src - Set, duplicates';
+  var dst = [ 1, [ 1, undefined ] ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = new Set( [ undefined, { a : 2 }, 1 ] );
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ 1, undefined ], { a : 2 } ] );
+  test.identical( got, [ 1, [ 1, undefined ], { a : 2 } ] );
+
+  test.case = 'dst - array, level 2, push self, dst === src';
+  var dst = [ 1, [ undefined ], 2 ];
+  dst.push( dst );
+  var src = dst;
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ undefined ], 2 ] );
+  test.identical( got, [ 1, [ undefined ], 2 ] );
+
+  test.case = 'dst - array, level 2, push self twice, dst === src, duplicates';
+  var dst = [ 1, [ undefined ], 2 ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = dst;
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ undefined ], 2 ] );
+  test.identical( got, [ 1, [ undefined ], 2 ] );
+
+  test.case = 'dst = array, level 3, push self';
+  var dst = [ 1, [ 3, [ undefined ] ] ];
+  dst.push( dst );
+  var got  = _.arrayFlattenDefinedOnce( dst );
+  test.identical( dst, [ 1, 3 ] );
+  test.identical( got, [ 1, 3 ] );
+
+  test.case = 'dst - array, level 6, push self twice, duplicates';
+  var dst = [ undefined, [ [ [ [ [ 1, 1, 2, undefined, undefined ] ] ] ] ] ];
+  dst.push( dst );
+  dst.push( dst );
+  var got  = _.arrayFlattenDefinedOnce( dst );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  /* */
+
+  test.case = 'dst - empty array, src inserts self';
+  var dst = [];
+  var src = [ 1, 2, undefined ];
+  src.splice( 1, 0, src );
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src inserts self twice';
+  var dst = [];
+  var src = [ 1, [ 2, undefined ] ];
+  src.splice( 0, 0, src );
+  src.splice( 2, 0, src );
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - array level 2, inserts self, src - flat array';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 0, 0, dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ 2, undefined ], 2 ] );
+  test.identical( got, [ 1, [ 2, undefined ], 2 ] );
+
+  test.case = 'dst - array level 2, inserts self twice, src - flat array, duplicates';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1 ];
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ 2, undefined ] ] );
+  test.identical( got, [ 1, [ 2, undefined ] ] );
+
+  test.case = 'dst - flat array, inserts self, src - Set, duplicates';
+  var dst = [ 1, 2, undefined ];
+  dst.splice( 1, 0, dst );
+  var src = new Set( [ 1, 2, 3 ] );
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2, undefined, 3 ] );
+  test.identical( got, [ 1, 2, undefined, 3 ] );
+
+  test.case = 'dst - array, level 2, inserts self twice, src - Set, duplicates';
+  var dst = [ 1, [ 1 ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = new Set( [ undefined, { a : 2 }, 'undefined' ] );
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ 1 ], { a : 2 }, 'undefined' ] );
+  test.identical( got, [ 1, [ 1 ], { a : 2 }, 'undefined' ] );
+
+  test.case = 'dst - array, level 2, inserts self, dst === src';
+  var dst = [ 1, [ undefined ], 2 ];
+  dst.splice( 1, 0, dst );
+  var src = dst;
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ undefined ], 2 ] );
+  test.identical( got, [ 1, [ undefined ], 2 ] );
+
+  test.case = 'dst - array, level 2, inserts self twice, dst === src, duplicates';
+  var dst = [ 1, [ undefined ], 2 ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = dst;
+  var got  = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ undefined ], 2 ] );
+  test.identical( got, [ 1, [ undefined ], 2 ] );
+
+  test.case = 'dst = array, level 3, inserts self';
+  var dst = [ 1, [ 3, [ 2, undefined ] ] ];
+  dst.splice( 1, 0, dst );
+  var got  = _.arrayFlattenDefinedOnce( dst );
+  test.identical( dst, [ 1, 3, 2 ] );
+  test.identical( got, [ 1, 3, 2 ] );
+
+  test.case = 'dst - array, level 6, inserts self twice, duplicates';
+  var dst = [ undefined, [ [ [ [ [ 1, 1, 2, undefined ] ] ] ] ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var got  = _.arrayFlattenDefinedOnce( dst );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.close( 'dst or src contains self' );
+
+  /* - */
+
+  test.open( 'dst or src contains self, evaluators' );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2, undefined ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenDefinedOnce( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, [ 1, [ 2 ], 2 ] );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 and evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2, [ undefined ] ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenDefinedOnce( dst, src, ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, [ 1, [ 2 ], 2 ] );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ 2, undefined ] ];
+  var src = [ 1, [ 2, undefined ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenDefinedOnce( dst, src, 2, ( e ) => e );
+  test.identical( dst, [ 1, [ 2, undefined ], 1, 2 ] );
+  test.identical( got, [ 1, [ 2, undefined ], 1, 2 ] );
+
+  test.case = 'dst - array, src push self twice, duplicates, equalizer';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2, undefined ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenDefinedOnce( dst, src, ( e, ins ) => e === ins );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, [ 1, [ 2 ], 2 ] );
+
+  /* */
+
+  test.case = 'dst inserts self twice, duplicates, evaluator';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1, [ 2 ] ];
+  var got  = _.arrayFlattenDefinedOnce( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, [ 2, undefined ], 2 ] );
+  test.identical( got, [ 1, [ 2, undefined ], 2 ] );
+
+  test.case = 'dst inserts self twice, duplicates, evaluator1 and evaluator2';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1, [ 2 ] ];
+  var got  = _.arrayFlattenDefinedOnce( dst, src, ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, [ 2, undefined ], 2 ] );
+  test.identical( got, [ 1, [ 2, undefined ], 2 ] );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1, [ 2, undefined ] ];
+  var got  = _.arrayFlattenDefinedOnce( dst, src, 2, ( e ) => e );
+  test.identical( dst, [ 1, [ 2, undefined ], 1, 2 ] );
+  test.identical( got, [ 1, [ 2, undefined ], 1, 2 ] );
+
+  test.case = 'dst - array, src push self twice, duplicates, equalizer';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1, [ 2, undefined, [ undefined ] ] ];
+  var got  = _.arrayFlattenDefinedOnce( dst, src, ( e, ins ) => e === ins );
+  test.identical( dst, [ 1, [ 2, undefined ], 2 ] );
+  test.identical( got, [ 1, [ 2, undefined ], 2 ] );
+
+  test.close( 'dst or src contains self, evaluators' );
+}
+
+//
+
+function arrayFlattenDefinedOnceSets( test )
+{
+  test.open( 'dst - empty array' );
+
+  test.case = 'src - empty Set';
+  var dst = [];
+  var src = new Set();
+  var got = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, [] );
+
+  test.case = 'src - flat Set, duplicates';
+  var dst = [];
+  var src = new Set( [ 1, undefined, 2, 3, 3, 1 ] );
+  var got = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, [ 1, 2, 3 ] );
+
+  test.case = 'src - Set, level 2, duplicates';
+  var dst = [];
+  var src = new Set( [ 1, [ [ 'str', undefined ] ], [ [ undefined ] ], 1, 3 ] );
+  var got = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, [ 1, 'str', 3 ] );
+
+  test.case = 'src - Set, level 3';
+  var dst = [];
+  var src = new Set( [ 1, [ [ [ 'str', undefined ], 3 ] ] ] );
+  var got = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, [ 1, 'str', 3 ] );
+
+  test.case = 'src - Set, level 5, duplicates';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ [ 'str', undefined ] ], 3 ] ] ], 1, 'str', 3, undefined, 3 ] );
+  var got = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, [ 1, 'str', 3 ] );
+
+  test.case = 'src - Set from two array level 5, duplicates';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ 'str', undefined ], { a : 3 }, undefined ] ] ], [ [ [ 1, [ 'str' ], 3 ] ] ] ] );
+  var got = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 'str', { a : 3 }, 3 ] );
+  test.identical( got, [ 1, 'str', { a : 3 }, 3 ] );
+
+  test.close( 'dst - empty array' );
+
+  /* - */
+
+  test.open( 'dst - array' );
+
+  test.case = 'src - empty Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set();
+  var got = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 } ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 } ] );
+
+  test.case = 'src - flat Set, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, undefined, 3 ] );
+  var got = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 3 ] );
+
+  test.case = 'src - Set, level 2, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, [ [ 'str', undefined ], 3, undefined ] ] );
+  var got = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 'str', 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 'str', 3 ] );
+
+  test.case = 'src - Set, level 3, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, [ [ [ 'str', undefined ] ], 3, undefined ] ] );
+  var got = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 'str', 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 'str', 3 ] );
+
+  test.case = 'src - Set, level 5, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ undefined, [ [ 1, [ 'str', undefined ], 3 ] ] ] );
+  var got = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 'str', 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 'str', 3 ] );
+
+  test.case = 'src - Set from two array level 5, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ [ 1, [ 'str', undefined ], { a : 3 }, undefined ] ] ], [ [ [ 1, [ 'str' ], 3 ] ] ] ] );
+  var got = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 'str', { a : 3 }, 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 'str', { a : 3 }, 3 ] );
+
+  test.case = 'src - Set from dst';
+  var dst = [ 1, [ undefined, [ 2 ], { a : 0 } ] ];
+  var src = new Set( dst );
+  var got = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ undefined, [ 2 ], { a : 0 } ], 2, { a : 0 } ] );
+  test.identical( got, [ 1, [ undefined, [ 2 ], { a : 0 } ], 2, { a : 0 } ] );
+
+  test.case = 'src - Set from two dst in container';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenDefinedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+
+  test.close( 'dst - array' );
+
+  /* - */
+
+  test.open( 'dst - array, evaluators' );
+
+  test.case = 'src - Set from two dst in container, evaluator';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenDefinedOnce( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+
+  test.case = 'src - Set from two dst in container, evaluator1 and evaluator2';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenDefinedOnce( dst, src, ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+
+  test.case = 'src - Set from two dst in container, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenDefinedOnce( dst, src, 1, ( e ) => e );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 2 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 1, 2 ] );
+
+  test.case = 'src - Set from two dst in container, equalizer';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenDefinedOnce( dst, src, ( e, ins ) => e === ins );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+
+  test.close( 'dst - array, evaluators' );
 }
 
 //
 
 function arrayFlattenDefinedOnceStrictly( test )
 {
-  test.case = 'make array flat, dst is empty';
+  test.open( 'single argument' );
 
-  var got  = _.arrayFlattenDefinedOnceStrictly( [], [] );
+  test.case = 'flat array';
+  var got = _.arrayFlattenDefinedOnceStrictly( [ 0, 1, 2, undefined ] );
+  var expected = [ 0, 1, 2 ];
+  test.identical( got, expected );
+
+  test.case = 'level 2';
+  var got = _.arrayFlattenDefinedOnceStrictly( [ [ 0 ], [ undefined ] ] );
+  var expected = [ 0 ];
+  test.identical( got, expected );
+
+  test.case = 'diff levels';
+  var got = _.arrayFlattenDefinedOnceStrictly( [ [ 0 ], 1, [ 2, [ 3, undefined ] ] ] );
+  var expected = [ 0, 1, 2, 3 ];
+  test.identical( got, expected );
+
+  var got = _.arrayFlattenDefinedOnceStrictly( [ 0, [ [ undefined ], 2 ], 3, 4 ] );
+  var expected = [ 0, 2, 3, 4 ];
+  test.identical( got, expected );
+
+  test.close( 'single argument' );
+
+  /* - */
+
+  test.case = 'dst - empty array, src - string';
+  var dst = [];
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, 'str' );
+  test.identical( dst, [ 'str' ] );
+  test.identical( got, [ 'str' ] );
+
+  test.case = 'dst - empty array, src - undefined';
+  var dst = [];
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, undefined );
+  test.identical( dst, [] );
   test.identical( got, [] );
 
-  var got = _.arrayFlattenDefinedOnceStrictly( [], [ 1, 2, 3, 4 ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
+  test.case = 'dst - empty array, src - empty array';
+  var dst = [];
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, [] );
+  test.identical( dst, [] );
+  test.identical( got, [] );
 
-  var got = _.arrayFlattenDefinedOnceStrictly( [], [ [ 1 ], [ 2 ], [ 3 ], [ 4 ] ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
+  test.case = 'dst - empty array, src - flat array';
+  var dst = [];
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, [ 1, 2, undefined ] );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
 
-  var got = _.arrayFlattenDefinedOnceStrictly( [], [ [ 1, [ 2, [ 3 ], 4 ] ] ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
+  test.case = 'dst - empty array, src - array, level 2';
+  var dst = [];
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, [ [ 1 ], [ undefined ], 3 ] );
+  test.identical( dst, [ 1, 3 ] );
+  test.identical( got, [ 1, 3 ] );
 
-  var got = _.arrayFlattenDefinedOnceStrictly( [], [ 1, [ 2, [ [ 3, [ 4 ] ] ] ] ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
+  test.case = 'dst - empty array, src - array, level 4';
+  var dst = [];
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, [ [ 1, [ 2, [ 3, undefined ] ] ] ] );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, [ 1, 2, 3 ] );
 
-  test.case = 'make array flat, dst is not empty';
+  test.case = 'dst - empty array, src - array, level 4';
+  var dst = [];
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, [ [ [ [ [ 1, undefined ] ] ] ] ] );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
 
-  var got  = _.arrayFlattenDefinedOnceStrictly( [ 1, 2, 3, 4 ], [ 5 ] );
-  test.identical( got, [ 1, 2, 3, 4, 5 ] );
+  /* */
 
-  var got  = _.arrayFlattenDefinedOnceStrictly( [ 1, 2, 3 ], [ [ [ 4 ] ] ] );
-  test.identical( got, [ 1, 2, 3, 4 ] );
+  test.case = 'dst - flat array, src - empty array';
+  var dst = [ 1, 2, 3, undefined ];
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, [] );
+  test.identical( dst, [ 1, 2, 3, undefined ] );
+  test.identical( got, [ 1, 2, 3, undefined ] );
 
-  var got  = _.arrayFlattenDefinedOnceStrictly( [ 1 ], [ [ [ [ [ 0, 2, 3 ] ] ] ] ] );
-  test.identical( got, [ 1, 0, 2, 3 ] );
+  test.case = 'dst - flat array, src - array, level 3';
+  var dst = [ 1, 2, undefined ];
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, [ [ [ undefined ] ] ] );
+  test.identical( dst, [ 1, 2, undefined ] );
+  test.identical( got, [ 1, 2, undefined ] );
 
-  test.case = 'make array flat from multiple arrays as one arg';
-  var got  = _.arrayFlattenDefinedOnceStrictly
-  (
-    [ 1, 4 ],
-    [
-      [ [ 2 ] ],
-      [ 3, [ [ [ 5 ] ] ] ]
-    ]
-  );
-  test.identical( got, [ 1, 4, 2, 3, 5 ] );
+  test.case = 'dst - flat array, src - array, level 2';
+  var dst = [ 1, 2, undefined ];
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, [ [ 4 ], [ 5 ], [ undefined ], [ 7 ] ] );
+  test.identical( dst, [ 1, 2, undefined, 4, 5, 7 ] );
+  test.identical( got, [ 1, 2, undefined, 4, 5, 7 ] );
 
-  //
+  test.case = 'dst - flat array, src - array, level 2';
+  var dst = [ -1, 0, undefined ];
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, [ [ 1 ], [ [ 2 ] ], [ 3, [ [ [ undefined ] ] ] ] ] );
+  test.identical( dst, [ -1, 0, undefined, 1, 2, 3 ] );
+  test.identical( got, [ -1, 0, undefined, 1, 2, 3 ] );
 
-  test.case = 'onEqualize';
-  var got  = _.arrayFlattenDefinedOnceStrictly( [ 1, 2, 3, 4 ], [ 5 ], function( a, b )
-  {
-    return  a === b;
-  });
-  test.identical( got, [ 1, 2, 3, 4, 5 ] );
+  test.case = 'dst - flat array, src - array, level 5';
+  var dst = [ 1, undefined ];
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, [ [ [ [ [ 2, undefined ] ] ] ] ] );
+  test.identical( dst, [ 1, undefined, 2 ] );
+  test.identical( got, [ 1, undefined, 2 ] );
 
-  test.case = 'onEvaluate - one evaluator';
-  var got  = _.arrayFlattenDefinedOnceStrictly( [ 1, 2, 3, 4 ], [ 5 ], ( a ) => a );
-  test.identical( got, [ 1, 2, 3, 4, 5 ] );
+  test.case = 'dst - array, level 2, src - flat array';
+  var dst = [ [ 1 ], [ 2 ], [ undefined ] ];
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, [ 4, 5, undefined ] );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ undefined ], 4, 5 ] );
+  test.identical( got, [ [ 1 ], [ 2 ], [ undefined ] , 4, 5 ] );
 
-  test.case = 'onEvaluate - two evaluators';
-  var got  = _.arrayFlattenDefinedOnceStrictly( [ 1, 2, 3, 4, 5 ], [ [ 5 ] ], ( a ) => a, ( b ) => b[ 0 ] );
-  test.identical( got, [ 1, 2, 3, 4, 5, 5 ] );
+  test.case = 'dst - array, level 2, src - array, level 2';
+  var dst = [ [ 1 ], [ 2 ], [ undefined ] ];
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, [ [ 1 ], [ 2 ], [ undefined ] ] );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ undefined ], 1, 2 ] );
+  test.identical( got, [ [ 1 ], [ 2 ], [ undefined ], 1, 2 ] );
 
-  //
+  test.case = 'dst - array, level 2, src - number';
+  var dst = [ 1, 3, [ 5, undefined ] ];
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, 5 );
+  test.identical( dst, [ 1, 3, [ 5, undefined ], 5 ] );
+  test.identical( got, [ 1, 3, [ 5, undefined ], 5 ] );
 
-  test.case = 'dstArray has sub arrays';
+  /* */
 
-  var got = _.arrayFlattenDefinedOnceStrictly( [ 1, 3, [ 5 ] ], 6 );
-  test.identical( got, [ 1, 3, [ 5 ], 6 ] );
+  test.case = 'dst - flat array, src - flat array, evaluator';
+  var dst = [ 1, 2, 3, undefined ];
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, [ 5, 6, 7, undefined ], ( e ) => e );
+  test.identical( dst, [ 1, 2, 3, undefined, 5, 6, 7 ] );
+  test.identical( got, [ 1, 2, 3, undefined, 5, 6, 7 ] );
 
-  var got = _.arrayFlattenDefinedOnceStrictly( [ [ 1, [ 3, [ 5 ] ] ], 2 ], 6 );
-  test.identical( got, [ [ 1, [ 3, [ 5 ] ] ], 2, 6 ] );
+  test.case = 'dst - flat array, src - flat array, evaluator1 and evaluator2';
+  var dst = [ 1, 2, 3, undefined ];
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, [ 5, 6, 7, undefined ], ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, 2, 3, undefined, 5, 6, 7 ] );
+  test.identical( got, [ 1, 2, 3, undefined, 5, 6, 7 ] );
 
-  test.case = 'single argument';
+  test.case = 'dst - flat array, src - flat array, evaluator1 - fromIndex, evaluator2, has duplicates';
+  var dst = [ 1, 2, 3, undefined ];
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, [ 1, 2, 7, undefined ], 2, ( e ) => e );
+  test.identical( dst, [ 1, 2, 3, undefined, 1, 2, 7 ] );
+  test.identical( got, [ 1, 2, 3, undefined, 1, 2, 7 ] );
 
-  var got = _.arrayFlattenDefinedOnceStrictly( [ 0, [ 1 ] ] );
-  test.identical( got, [ 0, 1 ] );
+  test.case = 'dst - flat array, src - flat array, equalizer';
+  var dst = [ 1, 2, 3, undefined ];
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, [ 5, 6, 7, undefined ], ( a, b ) => a === b );
+  test.identical( dst, [ 1, 2, 3, undefined, 5, 6, 7 ] );
+  test.identical( got, [ 1, 2, 3, undefined, 5, 6, 7 ] );
 
-  var got = _.arrayFlattenDefinedOnceStrictly( [ [ 0 ], [ 1 ] ] );
-  test.identical( got, [ 0, 1 ] );
-
-  var got = _.arrayFlattenDefinedOnceStrictly( [ [ 0 ], 1, 2, [ 3, 4 ] ] );
-  test.identical( got, [ 0, 1, 2, 3, 4 ] );
-
-  var got = _.arrayFlattenDefinedOnceStrictly( [ 0, [ [ 2 ], 1 ], 3, 4 ] );
-  test.identical( got, [ 0, 1, 2, 3, 4 ] );
-
-  var got = _.arrayFlattenDefinedOnceStrictly( [ 1, 3, [ 7, 5 ] ] );
-  test.identical( got, [ 1, 3, 7, 5 ] );
-
-  //
+  /* - */
 
   if( !Config.debug )
   return;
 
-  test.case = 'not enough arguments';
-  test.shouldThrowErrorSync( function()
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlattenDefinedOnceStrictly() );
+
+  test.case = 'dstArray is not an array';
+  test.shouldThrowErrorSync( () => _.arrayFlattenDefinedOnceStrictly( 1, [ 1 ] ) );
+
+  test.case = 'evaluator1 is not a routine or a number';
+  test.shouldThrowErrorSync( () => _.arrayFlattenDefinedOnceStrictly( [], [ 1 ], [] ) );
+
+  test.case = 'duplicates in dstArray';
+  test.shouldThrowErrorSync( () => _.arrayFlattenDefinedOnceStrictly( [ 0, 0 ], [ 3, 4 ] ) );
+
+  test.case = 'duplicates in insArray';
+  test.shouldThrowErrorSync( () => _.arrayFlattenDefinedOnceStrictly( [], [ 1, 1, 2, 2, 3, 3 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayFlattenDefinedOnceStrictly( [], [ [ 1 ], [ 1 ], [ 2 ], [ 2 ], [ 3 ], [ 3 ] ] ) );
+  test.shouldThrowErrorSync( () => _.arrayFlattenDefinedOnceStrictly( [], [ [ 1, 1, [ 2, 2, [ 3, 3 ] ] ] ] ) );
+}
+
+//
+
+function arrayFlattenDefinedOnceStrictlySame( test )
+{
+  test.case = 'dst - empty array';
+  var dst = [];
+  var src = dst;
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, [] );
+
+  test.case = 'dst - array, level 2, no duplicates';
+  var dst = [ [ 1 ], [ 2 ], [ undefined ] ];
+  var src = dst;
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ undefined ], 1, 2 ] );
+  test.identical( got, [ [ 1 ], [ 2 ], [ undefined ], 1, 2 ] );
+
+  test.case = 'dst - array, level 3, src contains dst';
+  var dst = [ [ 1, [ 2, [ undefined ] ] ] ];
+  var src = [ dst ];
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ [ 1, [ 2, [ undefined ] ] ], 1, 2 ] );
+  test.identical( got, [ [ 1, [ 2, [ undefined ] ] ], 1, 2 ] );
+
+  /* - */
+
+  test.open( 'evaluators' );
+
+  test.case = 'src contains a few dst, evaluator1 and evaluator2';
+  var dst = [ [ [ [ [ 1, undefined ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src, ( e ) => e, ( ins ) => ins + 1 );
+  test.identical( dst, [ [ [ [ [ 1, undefined ] ] ] ], 1, 1, 1, 1 ] );
+  test.identical( got, [ [ [ [ [ 1, undefined ] ] ] ], 1, 1, 1, 1 ] );
+
+  test.case = 'src contains dst, duplicates, evaluator1 - fromIndex, evaluator2, duplicates';
+  var dst = [ [ [ [ [ 1, undefined ] ] ] ] ];
+  var src = [ dst ];
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src, 1, ( e ) => e );
+  test.identical( dst, [ [ [ [ [ 1, undefined ] ] ] ], 1 ] );
+  test.identical( got, [ [ [ [ [ 1, undefined ] ] ] ], 1 ] );
+
+  test.case = 'src contains a few dst, duplicates, equalizer';
+  var dst = [ [ [ [ [ 1, undefined ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src, 1, ( e, ins ) => e === ins + 1 );
+  test.identical( dst, [ [ [ [ [ 1, undefined ] ] ] ], 1, 1, 1, 1 ] );
+  test.identical( got, [ [ [ [ [ 1, undefined ] ] ] ], 1, 1, 1, 1 ] );
+
+  test.close( 'evaluators' );
+
+  /* - */
+
+  test.open( 'dst or src contains self' );
+
+  test.case = 'dst - empty array, src push self';
+  var dst = [];
+  var src = [ 1, 2, undefined ];
+  src.push( src );
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src push self twice';
+  var dst = [];
+  var src = [ 1, [ 2, undefined ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src - Set, add self';
+  var dst = [];
+  var src = new Set( [ 1, 2, undefined ] );
+  src.add( src );
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src - Set, add self twice';
+  var dst = [];
+  var src = new Set( [ 1, [ 2, undefined ] ] );
+  src.add( src );
+  src.add( src );
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - array level 2, push self, src - flat array';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.push( dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, [ 2, undefined ], 2 ] );
+  test.identical( got, [ 1, [ 2, undefined ], 2 ] );
+
+  test.case = 'dst - flat array, push self, src - Set';
+  var dst = [ 1, 2, 3, undefined ];
+  dst.push( dst );
+  var src = new Set( [ 4, [ undefined ], 6 ] );
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2, 3, undefined, 4, 6 ] );
+  test.identical( got, [ 1, 2, 3, undefined, 4, 6 ] );
+
+  test.case = 'dst = array, level 3, push self';
+  var dst = [ 1, [ 3, [ undefined ] ] ];
+  dst.push( dst );
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst );
+  test.identical( dst, [ 1, 3 ] );
+  test.identical( got, [ 1, 3 ] );
+
+  /* */
+
+  test.case = 'dst - empty array, src inserts self';
+  var dst = [];
+  var src = [ 1, 2, undefined ];
+  src.splice( 1, 0, src );
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - empty array, src inserts self twice';
+  var dst = [];
+  var src = [ 1, [ 2, undefined ] ];
+  src.splice( 0, 0, src );
+  src.splice( 2, 0, src );
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.case = 'dst - array level 2, inserts self, src - flat array';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 0, 0, dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, [ 2, undefined ], 2 ] );
+  test.identical( got, [ 1, [ 2, undefined ], 2 ] );
+
+  test.case = 'dst - flat array, inserts self, src - Set';
+  var dst = [ 1, 2, 3, undefined ];
+  dst.splice( 1, 0, dst );
+  var src = new Set( [ 4, [ [ undefined ], 5 ] ] );
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2, 3, undefined, 4, 5 ] );
+  test.identical( got, [ 1, 2, 3, undefined, 4, 5 ] );
+
+  test.case = 'dst = array, level 3, inserts self';
+  var dst = [ 1, [ 3, [ undefined ] ] ];
+  dst.splice( 1, 0, dst );
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst );
+  test.identical( dst, [ 1, 3 ] );
+  test.identical( got, [ 1, 3 ] );
+
+  test.close( 'dst or src contains self' );
+
+  /* - */
+
+  test.open( 'dst or src contains self, evaluators' );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 2, [ 3, undefined ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 2, 3 ] );
+  test.identical( got, [ 1, [ 2 ], 2, 3 ] );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 and evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2, [ undefined ] ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src, ( e ) => e, ( ins ) => ins + 1 );
+  test.identical( dst, [ 1, [ 2 ], 1, 2 ] );
+  test.identical( got, [ 1, [ 2 ], 1, 2 ] );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2, undefined ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src, 2, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 1, 2 ] );
+  test.identical( got, [ 1, [ 2 ], 1, 2 ] );
+
+  test.case = 'dst - array, src push self twice, duplicates, equalizer';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ null, [ 2, [ undefined ] ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src, ( e, ins ) => e === ins );
+  test.identical( dst, [ 1, [ 2 ], null, 2 ] );
+  test.identical( got, [ 1, [ 2 ], null, 2 ] );
+
+  /* */
+
+  test.case = 'dst inserts self, evaluator';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 1, 0, dst );
+  var src = [ 3, [ 2, undefined ] ];
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, [ 2, undefined ], 3, 2 ] );
+  test.identical( got, [ 1, [ 2, undefined ], 3, 2 ] );
+
+  test.case = 'dst inserts self, evaluator1 and evaluator2';
+  var dst = [ 1, [ 2, [ undefined ] ] ];
+  dst.splice( 1, 0, dst );
+  var src = [ 1, [ 2, [ undefined ] ] ];
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src, ( e ) => e, ( ins ) => ins + 1 );
+  test.identical( dst, [ 1, [ 2, [ undefined ] ], 1, 2 ] );
+  test.identical( got, [ 1, [ 2, [ undefined ] ], 1, 2 ] );
+
+  test.case = 'dst - array, src push self, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 1, 0, dst );
+  var src = [ 1, [ 2, [ undefined ] ] ];
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src, 2, ( e ) => e );
+  test.identical( dst, [ 1, [ 2, undefined ], 1, 2 ] );
+  test.identical( got, [ 1, [ 2, undefined ], 1, 2 ] );
+
+  test.case = 'dst - array, src push self, equalizer';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 1, 0, dst );
+  var src = [ 1, [ 2, undefined ] ];
+  var got  = _.arrayFlattenDefinedOnceStrictly( dst, src, ( e, ins ) => e === ins + 1 );
+  test.identical( dst, [ 1, [ 2, undefined ], 1, 2 ] );
+  test.identical( got, [ 1, [ 2, undefined ], 1, 2 ] );
+
+  test.close( 'dst or src contains self, evaluators' );
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'dst === src';
+  test.shouldThrowErrorSync( () =>
   {
-    _.arrayFlattenDefinedOnceStrictly();
+    var dst = [ 1, 2, 3, undefined ];
+    var src = dst;
+    var got  = _.arrayFlattenDefinedOnceStrictly( dst, src );
   });
 
-  test.case = 'too many arguments';
-  test.shouldThrowErrorSync( function()
+  test.case = 'src contains a few dst, simple evaluator';
+  test.shouldThrowErrorSync( () =>
   {
-    _.arrayFlattenDefinedOnceStrictly( [], [ 1 ], ( a ) => a, ( b ) => b, ( c ) => c );
+    var dst = [ [ [ [ [ 1, undefined ] ] ] ] ];
+    var src = [ dst, dst, dst, dst ];
+    var got  = _.arrayFlattenDefinedOnceStrictly( dst, src, ( e ) => e );
   });
 
-  test.case = 'first is not longIs';
-  test.shouldThrowErrorSync( function()
+  test.case = 'dst push self twice';
+  test.shouldThrowErrorSync( () =>
   {
-    _.arrayFlattenDefinedOnceStrictly( 1, [ 1 ] );
+    var dst = [ [ [ [ [ 1, undefined ] ] ] ] ];
+    dst.push( dst );
+    dst.push( dst );
+    var got  = _.arrayFlattenDefinedOnceStrictly( dst );
   });
+}
 
-  test.case = 'onEqualize is not a routine';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenDefinedOnceStrictly( [], [ 1 ], [] );
-  });
+//
 
-  test.case = 'second evaluator is not a routine';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenDefinedOnceStrictly( [], [ 1 ], ( a ) => a, [] );
-  });
+function arrayFlattenDefinedOnceStrictlySets( test )
+{
+  test.open( 'dst - empty array' );
 
-  test.case = 'Elements must not be repeated';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenDefinedOnceStrictly( [], [ 1, 1, 2, 2, 3, 3 ] );
-  });
+  test.case = 'src - empty Set';
+  var dst = [];
+  var src = new Set();
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, [] );
 
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenDefinedOnceStrictly( [], [ [ 1 ], [ 1 ], [ 2 ], [ 2 ], [ 3 ], [ 3 ]  ] );
-  });
+  test.case = 'src - flat Set';
+  var dst = [];
+  var src = new Set( [ 1, [ 'str' ], 2, undefined, { a : 0 }, { a : 0 } ] );
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', 2, { a : 0 }, { a : 0 } ] );
+  test.identical( got, [ 1, 'str', 2, { a : 0 }, { a : 0 } ] );
 
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenDefinedOnceStrictly( [], [ [ 1, 1, [ 2, 2, [ 3, 3 ] ] ]  ] );
-  });
+  test.case = 'src - Set, level 2';
+  var dst = [];
+  var src = new Set( [ 1, [ [ 'str', undefined ] ], 3 ] );
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, [ 1, 'str', 3 ] );
 
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenDefinedOnceStrictly( [], [ [ [ [ [ 1, 1 ] ] ] ] ]  );
-  });
+  test.case = 'src - Set, level 3';
+  var dst = [];
+  var src = new Set( [ 1, [ [ [ 'str', undefined ], 3 ] ] ] );
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, [ 1, 'str', 3 ] );
 
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenDefinedOnceStrictly( [ 0, 1, 7, 6 ], [ [ 4, [ 5, [ 6 ] ] ], 2 ] );
-  });
+  test.case = 'src - Set, level 5';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ [ 'str', undefined ] ], 3 ] ] ], 2, 4, 6 ] );
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', 3, 2, 4, 6 ] );
+  test.identical( got, [ 1, 'str', 3, 2, 4, 6 ] );
 
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenDefinedOnceStrictly( [ 0 ], 0 );
-  });
+  test.case = 'src - Set from two array level 5, duplicates';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ 'str', undefined ], { a : 3 } ] ] ], [ [ [ 2, [ undefined ], 4 ] ] ] ] );
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', { a : 3 }, 2, 4 ] );
+  test.identical( got, [ 1, 'str', { a : 3 }, 2, 4 ] );
 
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenDefinedOnceStrictly( [ 0, 1, 2, 3 ], [ [ 4, [ 5, [ 0 ] ] ], 7 ] );
-  });
+  test.close( 'dst - empty array' );
 
-  test.shouldThrowErrorSync( function()
+  /* - */
+
+  test.open( 'dst - array' );
+
+  test.case = 'src - empty Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set();
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 } ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 } ] );
+
+  test.case = 'src - flat Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 2, 3, undefined ] );
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2, 3 ] );
+
+  test.case = 'src - Set, level 2';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 2, [ [ 'str', undefined ], 3 ] ] );
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str', 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str', 3 ] );
+
+  test.case = 'src - Set, level 3';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 2, [ [ [ 'str', undefined ] ], 3 ] ] );
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str', 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str', 3 ] );
+
+  test.case = 'src - Set, level 5';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ 2, [ 'str', undefined ], 3 ] ] ] );
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str', 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str', 3 ] );
+
+  test.case = 'src - Set from two array level 5';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ [ 2, undefined ] ] ], [ [ [ [ 'str', undefined ] ] ] ] ] );
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str' ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str' ] );
+
+  test.close( 'dst - array' );
+
+  /* - */
+
+  test.open( 'dst - array, evaluators' );
+
+  test.case = 'src - Set, evaluator';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 2, 3, undefined ] );
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 3 ] );
+  test.identical( got, [ 1, undefined, [ 2 ], { a : 0 }, 2, 3 ] );
+
+  test.case = 'src - Set from dst, evaluator1 and evaluator2';
+  var dst = [ 1, [ undefined ], { a : 0 } ];
+  var src = new Set( [ dst ] );
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, src, ( e ) => e, ( ins ) => ins + 1 );
+  test.identical( dst, [ 1, [ undefined ], { a : 0 }, 1, { a : 0 } ] );
+  test.identical( got, [ 1, [ undefined ], { a : 0 }, 1, { a : 0 } ] );
+
+  test.case = 'src - Set from dst, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ undefined ], { a : 0 } ];
+  var src = new Set( [ dst ] );
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, src, 3, ( ins ) => ins );
+  test.identical( dst, [ 1, [ undefined ], { a : 0 }, 1, { a : 0 } ] );
+  test.identical( got, [ 1, [ undefined ], { a : 0 }, 1, { a : 0 } ] );
+
+  test.case = 'src - Set from dst, equalizer';
+  var dst = [ 1, [ undefined ], { a : 0 } ];
+  var src = new Set( [ dst ] );
+  var got = _.arrayFlattenDefinedOnceStrictly( dst, src, ( e, ins ) => e === ins + 1 );
+  test.identical( dst, [ 1, [ undefined ], { a : 0 }, 1, { a : 0 } ] );
+  test.identical( got, [ 1, [ undefined ], { a : 0 }, 1, { a : 0 } ] );
+
+  test.close( 'dst - array, evaluators' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'src - Set from dst';
+  test.shouldThrowErrorSync( () =>
   {
-     _.arrayFlattenDefinedOnceStrictly( [ 0, 0, 1, 1 ], [ 3, 4, [ 5, [ 6 ] ] ] );
+    var dst = [ 1, [ [ undefined ], { a : 0 } ] ];
+    var src = new Set( dst );
+    var got = _.arrayFlattenDefinedOnceStrictly( dst, src );
   });
 }
 
@@ -19603,386 +23341,1698 @@ function arrayFlattenDefinedOnceStrictly( test )
 
 function arrayFlattenedDefined( test )
 {
-  test.case = 'make array flat, dst is empty';
+  test.open( 'single argument' );
 
-  var got  = _.arrayFlattenedDefined( [], [] );
+  test.case = 'flat array';
+  var got = _.arrayFlattenedDefined( [ 0, 1, 2, 3 ] );
+  var expected = [ 0, 1, 2, 3 ];
+  test.identical( got, expected );
+
+  test.case = 'array, level 2';
+  var got = _.arrayFlattenedDefined( [ [ 0, 0 ], [ 1, 1 ] ] );
+  var expected = [ 0, 0, 1, 1 ];
+  test.identical( got, expected );
+
+  test.case = 'array, level 3';
+  var got = _.arrayFlattenedDefined( [ [ 0 ], 0, 1, [ [ 0 ], 1 ] ] );
+  var expected = [ 0, 0, 1, 0, 1 ];
+  test.identical( got, expected );
+
+  test.case = 'array, level 5';
+  var got = _.arrayFlattenedDefined( [ [ [ [ [ 0 ] ] ] ] ] );
+  var expected = [ 0 ];
+  test.identical( got, expected );
+
+  test.case = 'array from other arrays, level 5';
+  var src = [ [ [ [ [ 0 ] ] ] ] ];
+  var got = _.arrayFlattenedDefined( [ src, src, src, src ] );
+  var expected = [ 0, 0, 0, 0 ];
+  test.identical( got, expected );
+
+  test.case = 'array, level 5, has undefined';
+  var dst = [ undefined, [ undefined, [ undefined, [ undefined, [ 0 ] ] ] ] ];
+  var got = _.arrayFlattenedDefined( dst );
+  var expected = [ 0 ];
+  test.identical( got, expected );
+
+  test.close( 'single argument' );
+
+  /* - */
+
+  test.case = 'dst - empty array, src - empty array';
+  var dst = [];
+  var got  = _.arrayFlattenedDefined( dst, [] );
+  test.identical( dst, [] );
   test.identical( got, 0 );
 
-  var got  = _.arrayFlattenedDefined( [], [ 1, 2, 3 ] );
+  test.case = 'dst - empty array, src - flat array';
+  var dst = [];
+  var got  = _.arrayFlattenedDefined( dst, [ 1, 2, undefined ] );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src - array, level 2';
+  var dst = [];
+  var got  = _.arrayFlattenedDefined( dst, [ [ 1 ], [ 2 ], [ undefined ] ] );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src - array, level 3';
+  var dst = [];
+  var got  = _.arrayFlattenedDefined( dst, [ [ 1, [ 2, [ undefined ] ] ] ] );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src - array, level 5';
+  var dst = [];
+  var got  = _.arrayFlattenedDefined( dst, [ [ [ [ [ undefined ] ] ] ] ] );
+  test.identical( dst, [] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - empty array, src - array from arrays level 5';
+  var src = [ [ [ [ [ undefined ] ] ] ] ];
+  var dst =[];
+  var got = _.arrayFlattenedDefined( dst, [ src, src, src, src ] );
+  var expected = [];
+  test.identical( dst, expected );
+  test.identical( got, 0 );
+
+  test.case = 'dst - flat array, src - flat array';
+  var dst = [ 1, undefined, 3 ];
+  var got  = _.arrayFlattenedDefined( dst, [ 1, 2, undefined ] );
+  test.identical( dst, [ 1, undefined, 3, 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - flat array, src - array, level 2';
+  var dst = [ 1, undefined, 3 ];
+  var got = _.arrayFlattenedDefined( dst, [ [ 1 ], [ 2 ], [ undefined ] ] );
+  test.identical( dst, [ 1, undefined, 3, 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - flat array, src - array, level 3';
+  var dst = [ 1, undefined, 3 ];
+  var got = _.arrayFlattenedDefined( dst, [ [ 1, [ 2, [ undefined ] ] ] ] );
+  test.identical( dst, [ 1, undefined, 3, 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, src - array, level 5';
+  var dst = [ 1 ];
+  var got = _.arrayFlattenedDefined( dst, [ [ [ [ [ 1 ] ] ] ], [ [ [ [ 1 ] ] ] ], [ [ [ [ undefined ] ] ] ] ] );
+  test.identical( dst, [ 1, 1, 1 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, level 2, src - flat array';
+  var dst = [ 1, [ 2, 3 ] ];
+  var got  = _.arrayFlattenedDefined( dst, [ undefined ] );
+  test.identical( dst, [ 1, [ 2, 3 ] ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - empty array, src - multiple arrays with diff levels';
+  var dst = [];
+  var got = _.arrayFlattenedDefined( dst, [ [ 1 ], [ [ 2 ] ], [ 3, [ [ [ undefined ] ] ] ] ] );
+  test.identical( dst, [ 1, 2, 3 ] );
   test.identical( got, 3 );
 
-  var got  = _.arrayFlattenedDefined( [], [ [ 1 ], [ 2 ], [ 3 ]  ] );
-  test.identical( got, 3 );
-
-  var got  = _.arrayFlattenedDefined( [], [ [ 1, [ 2, [ 3 ] ] ]  ] );
-  test.identical( got, 3 );
-
-  var got  = _.arrayFlattenedDefined( [], [ [ [ [ [ 1 ] ] ] ] ]  );
+  test.case = 'dst - empty array, src - number';
+  var dst = [];
+  var got  = _.arrayFlattenedDefined( dst, 1 );
+  test.identical( dst, [ 1 ] );
   test.identical( got, 1 );
 
-  var got  = _.arrayFlattenedDefined( [], 1, 2, '3'  );
-  test.identical( got, 3 );
-
-  test.case = 'make array flat, dst is not empty';
-
-  var got  = _.arrayFlattenedDefined( [ 1, 2, 3 ], [ 4 ] );
+  test.case = 'dst - array, level 2, src - number';
+  var dst = [ 1, 1, 3, 3, [ 5, 5 ] ];
+  var got = _.arrayFlattenedDefined( dst, 5 );
+  var expected = [ 1, 1, 3, 3, [ 5, 5 ], 5 ];
+  test.identical( dst, expected );
   test.identical( got, 1 );
 
-  var got  = _.arrayFlattenedDefined( [ 1, 2, 3 ], [ 1, 2, 3 ] );
-  test.identical( got, 3 );
-
-  var got  = _.arrayFlattenedDefined( [ 1, 2, 3 ], [ [ 1 ], [ 2 ], [ 3 ] ] );
-  test.identical( got, 3 );
-
-  var got  = _.arrayFlattenedDefined( [ 1, 2, 3 ], [ [ 1, [ 2, [ 3 ] ] ] ] );
-  test.identical( got, 3 );
-
-  var got  = _.arrayFlattenedDefined( [ 1 ], [ [ [ [ [ 1 ] ] ] ] ]  );
-  test.identical( got, 1 );
-
-  var got = _.arrayFlattenedDefined( [], 1 );
-  test.identical( got, 1 );
-
-  test.case = 'make array flat from multiple arrays as one arg';
-  var got  = _.arrayFlattenedDefined
-  (
-    [],
-    [
-      [ 1 ],
-      [ [ 2 ] ],
-      [ 3, [ [ [ 4 ] ] ] ]
-    ]
-  );
-  test.identical( got, 4 );
-
-  test.case = 'make array flat from different inputs';
-
-  var got = _.arrayFlattenedDefined( [ 1, 1, 3, 3, [ 5, 5 ] ], 5 );
-  test.identical( got, 1 );
-
-  var got = _.arrayFlattenedDefined( [ [ 0 ], [ [ -1, -2 ] ] ], [ 1, 1, 3, 3, [ 5, 5 ] ] );
-  test.identical( got, 6 );
-
-  //
-
-  test.case = 'single argument';
-
-  var got = _.arrayFlattenedDefined( [ 0, 1, 2, 3 ] )
-  test.identical( got, [ 0, 1, 2, 3 ] );
-
-  var got = _.arrayFlattenedDefined( [ [ 0, 0 ], [ 1, 1 ] ] );
-  test.identical( got, [ 0, 0, 1, 1 ] );
-
-  var got = _.arrayFlattenedDefined( [ [ 0 ], 0, 1, [ 0, 1 ] ] );
-  test.identical( got, [ 0, 0, 1, 0, 1 ] );
-
-  var got = _.arrayFlattenedDefined( [ [ [ 0 ] ] ] );
-  test.identical( got, [ 0 ] );
-
-  var got = _.arrayFlattenedDefined( [ 1, 1, 3, 3, [ 5, 5 ] ] );
-  test.identical( got, [ 1, 1, 3, 3, 5, 5 ] );
-
-  //
+  /* - */
 
   if( !Config.debug )
   return;
 
-  test.case = 'Empty';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedDefined();
-  });
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedDefined() );
 
-  test.case = 'dstArray is not array';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedDefined( 1, [ 1 ] );
-  });
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedDefined( [], [ 1 ], [ 'extra' ] ) );
 
-  test.case = 'insArray is undefined';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedDefined( [ 1 ], undefined );
-  });
+  test.case = 'dstArray is not arrayLike';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedDefined( 1, [ 1 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayFlattenedDefined( null, [ 1 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayFlattenedDefined( new U8x( 2 ), [ 1 ] ) );
+}
 
+//
+
+function arrayFlattenedDefinedSame( test )
+{
+  test.case = 'dst - empty array';
+  var dst = [];
+  var src = dst;
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - flat array, src - flat array';
+  var dst = [ 1, 2, undefined ];
+  var src = dst;
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, 2, undefined, 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, level 2';
+  var dst = [ [ 1 ], [ 2 ], [ undefined ] ];
+  var src = dst;
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ undefined ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, level 3, src contains dst';
+  var dst = [ [ 1, [ 2, [ undefined ] ] ] ];
+  var src = [ dst, 4, 5 ];
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ [ 1, [ 2, [ undefined ] ] ], 1, 2, 4, 5 ] );
+  test.identical( got, 4 );
+
+  test.case = 'dst - array, level 5, src contains a few dst';
+  var dst = [ [ [ [ [ undefined ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ [ [ [ [ undefined ] ] ] ] ] );
+  test.identical( got, 0 );
+
+  /* - */
+
+  test.open( 'dst or src contains self' );
+
+  test.case = 'src push self';
+  var dst = [];
+  var src = [ 1, undefined ];
+  src.push( src );
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, 1 );
+
+  test.case = 'src push self twice';
+  var dst = [];
+  var src = [ 1, [ undefined ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - empty array, src - Set, add self';
+  var dst = [];
+  var src = new Set( [ 1, [ undefined ] ] );
+  src.add( src );
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - empty array, src - Set, add self twice';
+  var dst = [];
+  var src = new Set( [ 1, [ [ undefined ] ] ] );
+  src.add( src );
+  src.add( src );
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst push self';
+  var dst = [ 1, undefined ];
+  dst.push( dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, undefined, 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst push self twice';
+  var dst = [ 1, undefined ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, undefined, 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst push self, src - Set';
+  var dst = [ 1, undefined ];
+  dst.push( dst );
+  var src = new Set( [ 'str', { a : 2 } ] );
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, undefined, 'str', { a : 2 } ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst push self twice, src - Set';
+  var dst = [ 1, undefined ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = new Set( [ 'str', { a : 2 } ] );
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, undefined, 'str', { a : 2 } ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst push self, dst === src';
+  var dst = [ 1, undefined ];
+  dst.push( dst );
+  var src = dst;
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, undefined, 1, 1 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst push self twice, dst === src';
+  var dst = [ 1, undefined ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = dst;
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, undefined, 1, 1, 1 ] );
+  test.identical( got, 3 );
+
+  test.case = 'dst push self';
+  var dst = [ 1, undefined ];
+  dst.push( dst );
+  var got  = _.arrayFlattenedDefined( dst );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.case = 'dst push self twice';
+  var dst = [ 1, undefined, undefined ];
+  dst.push( dst );
+  dst.push( dst );
+  var got  = _.arrayFlattenedDefined( dst );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  /* */
+
+  test.case = 'src inserts self';
+  var dst = [];
+  var src = [ 1, undefined ];
+  src.splice( 1, 0, dst );
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, 1 );
+
+  test.case = 'src inserts self twice';
+  var dst = [];
+  var src = [ 1, 2, undefined ];
+  src.splice( 0, 0, dst );
+  src.splice( 2, 0, dst );
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst inserts self';
+  var dst = [ 1, 2, undefined ];
+  dst.splice( 0, 0, dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, 2, undefined, 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst inserts self twice';
+  var dst = [ 1, undefined ];
+  dst.splice( 0, 0, dst );
+  dst.splice( 2, 0, dst );
+  var src = [ 3 ];
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, undefined, 3 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst inserts self, dst === src';
+  var dst = [ 1, undefined ];
+  dst.splice( 0, 0, dst );
+  var src = dst;
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, undefined, 1, 1 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst inserts self twice, dst === src';
+  var dst = [ 1, undefined ];
+  dst.splice( 3, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = dst;
+  var got  = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, undefined, 1, 1, 1 ] );
+  test.identical( got, 3 );
+
+  test.case = 'dst inserts self';
+  var dst = [ 1, undefined ];
+  dst.splice( 0, 0, dst );
+  var got  = _.arrayFlattenedDefined( dst );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.case = 'dst inserts self twice';
+  var dst = [ 1, undefined, [ undefined ] ];
+  dst.splice( 0, 0, dst );
+  dst.splice( 2, 0, dst );
+  var got  = _.arrayFlattenedDefined( dst );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, [ 1 ] );
+
+  test.close( 'dst or src contains self' );
+}
+
+//
+
+function arrayFlattenedDefinedSets( test )
+{
+  test.open( 'dst - empty array' );
+
+  test.case = 'src - empty Set';
+  var dst = [];
+  var src = new Set();
+  var got = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, 0 );
+
+  test.case = 'src - flat Set';
+  var dst = [];
+  var src = new Set( [ 1, 2, undefined ] );
+  var got = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set, level 2';
+  var dst = [];
+  var src = new Set( [ 1, [ undefined ], 3 ] );
+  var got = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, 3 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set, level 3';
+  var dst = [];
+  var src = new Set( [ 1, [ [ undefined ], 3 ] ] );
+  var got = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, 3 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set, level 5';
+  var dst = [];
+  var src = new Set( [ [ [ 1, [ undefined ], 3 ] ] ] );
+  var got = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, 3 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set from two array level 5';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ undefined ], { a : 3 }, undefined ] ] ], [ [ [ 1, [ undefined ], 3 ] ] ] ] );
+  var got = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, { a : 3 },  1, 3 ] );
+  test.identical( got, 4 );
+
+  test.close( 'dst - empty array' );
+
+  /* - */
+
+  test.open( 'dst - array' );
+
+  test.case = 'src - empty Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set();
+  var got = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 } ] );
+  test.identical( got, 0 );
+
+  test.case = 'src - flat Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, 2, undefined ] );
+  var got = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set, level 2';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, [ undefined ], 3 ] );
+  var got = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 3 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set, level 3';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, [ [ undefined, undefined ], 3 ] ] );
+  var got = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 3 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set, level 5';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ 1, [ undefined ], 3 ] ] ] );
+  var got = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 3 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set from two array level 5';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ [ 1, [ undefined ], { a : 3 }, undefined ] ] ], [ [ [ 1, [ undefined ], 3 ] ] ] ] );
+  var got = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, { a : 3 },  1, 3 ] );
+  test.identical( got, 4 );
+
+  test.case = 'src - Set from dst';
+  var dst = [ 1, [ undefined, [ 2 ], { a : 0 } ] ];
+  var src = new Set( dst );
+  var got = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, [ undefined, [ 2 ], { a : 0 } ], 1,  2, { a : 0 } ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set from two dst in container';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenedDefined( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1,  2, { a : 0 }, 1,  2, { a : 0 }, 1,  2, { a : 0 } ] );
+  test.identical( got, 9 );
+
+  test.close( 'dst - array' );
 }
 
 //
 
 function arrayFlattenedDefinedOnce( test )
 {
-  test.case = 'make array flat, dst is empty or null';
+  test.open( 'single argument' );
 
-  var got  = _.arrayFlattenedDefinedOnce( [], [] );
-  test.identical( got, 0 );
+  test.case = 'flat array, without duplicates';
+  var dst = [ 0, 1, undefined, 3 ];
+  var got = _.arrayFlattenedDefinedOnce( dst );
+  test.identical( dst, [ 0, 1, 3 ] );
+  test.identical( got, [ 0, 1, 3 ] );
 
-  var got  = _.arrayFlattenedDefinedOnce( [], [ 1, 1, 2, 2, 3, 3, 3 ] );
-  test.identical( got, 3 );
-
-  var got  = _.arrayFlattenedDefinedOnce( [], [ [ 1 ], [ 1 ], [ 2 ], [ 2 ], [ 3 ], [ 3 ]  ] );
-  test.identical( got, 3 );
-
-  var got  = _.arrayFlattenedDefinedOnce( [], [ [ 1, 1, [ 2, 2, 2, [ 3, 3 ] ] ]  ] );
-  test.identical( got, 3 );
-
-  var got  = _.arrayFlattenedDefinedOnce( [], [ [ [ [ [ 1, 1, 1 ] ] ] ] ]  );
-  test.identical( got, 1 );
-
-  test.case = 'make array flat, dst is not empty';
-
-  var got  = _.arrayFlattenedDefinedOnce( [ 1, 2, 3, 4 ], [ 4, 2 ] );
-  test.identical( got, 0 );
-
-  var got  = _.arrayFlattenedDefinedOnce( [ 1, 2, 3 ], [ 1, 2, 3, [ [ 4 ] ] ] );
-  test.identical( got, 1 );
-
-  var got  = _.arrayFlattenedDefinedOnce( [ 'a', 2, 3 ], [ [ 1 ], [ 4 ], [ 'a' ], [ 4 ] ] );
-  test.identical( got, 2 );
-
-  var got  = _.arrayFlattenedDefinedOnce( [ 1, 2, 3 ], [ [ 1, [ 2, [ 3 ] ] ], 4 ] );
-  test.identical( got, 1 );
-
-  var got  = _.arrayFlattenedDefinedOnce( [ 1 ], [ [ [ [ [ 1, 1, 1 ] ] ] ] ]  );
-  test.identical( got, 0 );
-
-  test.case = 'make array flat from multiple arrays as one arg';
-  var got  = _.arrayFlattenedDefinedOnce
-  (
-    [ 1, 4 ],
-    [
-      [ 1 ],
-      [ [ 2 ] ],
-      [ 3, [ [ [ 4 ] ] ] ]
-    ]
-  );
-  test.identical( got, 2 );
-
-  //
-
-  test.case = 'onEqualize';
-  var got  = _.arrayFlattenedDefinedOnce( [ 1, 2, 3, 4 ], [ 1, 4, 2, 5 ], ( a, b ) =>  a === b );
-  test.identical( got, 1 );
-
-  test.case = 'onEvaluate - one evaluator';
-  var got  = _.arrayFlattenedDefinedOnce( [ 1, 2, 3, 4 ], [ 1, 4, 2, 5 ], ( a ) => a );
-  test.identical( got, 1 );
-
-  test.case = 'onEvaluate - two evaluator';
-
-  var got  = _.arrayFlattenedDefinedOnce( [ [ 1 ], [ 2 ], [ 3 ], [ 4 ] ], [ 1, 4, 2, 5 ], ( a ) => a[ 0 ], ( b ) => b );
-  test.identical( got, 1 );
-
-  var got  = _.arrayFlattenedDefinedOnce( [ [ 1 ], 5, [ 2 ], [ 3 ], [ 4 ] ], [ 1, 4, 2, 5, [ 6 ] ], ( a ) => a[ 0 ], ( b ) => b );
-  test.identical( got, 2 );
-
-  //
-
-  test.case = 'single argument';
-
-  var got = _.arrayFlattenedDefinedOnce( [ 0, 1, 2, 3 ] );
-  test.identical( got, [ 0, 1, 2, 3 ] );
-
-  var got = _.arrayFlattenedDefinedOnce( [ 0, 1, 0, 1 ] );
+  test.case = 'flat array, duplicates';
+  var dst = [ 0, 1, 0, undefined, 1 ];
+  var got = _.arrayFlattenedDefinedOnce( dst );
+  test.identical( dst, [ 0, 1 ] );
   test.identical( got, [ 0, 1 ] );
 
-  var got = _.arrayFlattenedDefinedOnce( [ [ 0, 0 ], [ 1, 1 ] ] );
+  test.case = 'array, level 2, duplicates';
+  var dst = [ [ 0, 0, undefined ], [ 1, 1, undefined ] ];
+  var got = _.arrayFlattenedDefinedOnce( dst );
+  test.identical( dst, [ 0, 1 ] );
   test.identical( got, [ 0, 1 ] );
 
-  var got = _.arrayFlattenedDefinedOnce( [ [ 0 ], 0, 1, [ 0, 1 ] ] );
-  test.identical( got, [ 0, 1 ] );
-
-  var got = _.arrayFlattenedDefinedOnce( [ 1, [ [ 0 ], 1 ], 1, 0 ] );
+  test.case = 'array with diff levels, duplicates';
+  var dst = [ 1, undefined, [ [ 0, undefined ], 1, undefined ], 1, 0 ];
+  var got = _.arrayFlattenedDefinedOnce( dst );
+  test.identical( dst, [ 1, 0 ] );
   test.identical( got, [ 1, 0 ] );
+
+  test.close( 'single argument' );
+
+  /* - */
+
+  test.case = 'dst - empty array, src - undefined';
+  var dst = [];
+  var got = _.arrayFlattenedDefinedOnce( dst, undefined );
+  test.identical( dst, [] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - empty array, src - empty array';
+  var dst = [];
+  var got = _.arrayFlattenedDefinedOnce( dst, [] );
+  test.identical( dst, [] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - empty array, src - flat array, duplicates';
+  var dst = [];
+  var got = _.arrayFlattenedDefinedOnce( dst, [ 1, 1, 2, 2, undefined, 3, 3 ] );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'dst - empty array, src - array, level 2, duplicates';
+  var dst = [];
+  var got = _.arrayFlattenedDefinedOnce( dst, [ [ 1 ], [ 1 ], [ undefined ], [ 2 ], [ 3 ], [ 3 ], [ undefined ] ] );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'dst - empty array, src - array, level 3, duplicates';
+  var dst = [];
+  var got = _.arrayFlattenedDefinedOnce( dst, [ [ 1, 1, undefined, [ 2, 2, undefined, [ 3, 3, undefined ] ] ] ] );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'dst - empty array, src - array, level 5, duplicates';
+  var dst = [];
+  var got = _.arrayFlattenedDefinedOnce( dst, [ undefined, [ [ [ [ 1, 1, undefined, 1 ] ] ] ] ] );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, 1 );
+
+  /* */
+
+  test.case = 'dst - flat array, src - string';
+  var dst = [ 1, undefined, 3 ];
+  var got = _.arrayFlattenedDefinedOnce( dst, 'str' );
+  test.identical( dst, [ 1, undefined, 3, 'str' ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - flat array, src - flat array, duplicates';
+  var dst = [ 1, undefined, 3, 4 ];
+  var got = _.arrayFlattenedDefinedOnce( dst, [ 4 ] );
+  test.identical( dst, [ 1, undefined, 3, 4 ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - flat array, src - array, level 2, duplicates';
+  var dst = [ 1, undefined, 3 ];
+  var got = _.arrayFlattenedDefinedOnce( dst, [ [ 1 ], [ 2 ], [ 3 ], [ 4 ], [ undefined ] ] );
+  test.identical( dst, [ 1, undefined, 3, 2, 4 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - flat array, src - array, level 3, duplicates';
+  var dst = [ 1, undefined, 3 ];
+  var got = _.arrayFlattenedDefinedOnce( dst, [ 1, 2, 3, [ [ undefined ] ] ] );
+  test.identical( dst, [ 1, undefined, 3, 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - flat array, src - array, level 5, duplicates';
+  var dst = [ 1 ];
+  var got = _.arrayFlattenedDefinedOnce( dst, [ [ [ [ [ 1, 1, undefined, undefined, 1 ] ] ] ] ] );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - array, level 2, src - flat array';
+  var dst = [ [ 1 ], [ 2, undefined ], [ 3 ] ];
+  var got = _.arrayFlattenedDefinedOnce( dst, [ 1, 2, undefined, 3 ] );
+  test.identical( dst, [ [ 1 ], [ 2, undefined ], [ 3 ], 1, 2, 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'dst - flat array, src - array with diff level arrays, duplicates';
+  var dst = [ 1, 4 ];
+  var got  = _.arrayFlattenedDefinedOnce( dst, [ [ 1 ], [ [ 2, undefined ] ], [ 3, [ [ [ 4 ] ] ] ] ] );
+  test.identical( dst, [ 1, 4, 2, 3 ] );
+  test.identical( got, 2 );
+
+  /* */
+
+  test.case = 'evaluator1';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenedDefinedOnce( dst, [ 1, 4, 2, 5, undefined ], ( e ) => e );
+  test.identical( dst, [ 1, 2, 3, 4, 5 ] );
+  test.identical( got, 1 );
+
+  test.case = 'evaluator1 and evaluator2';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenedDefinedOnce( dst, [ 1, 4, 2, 5, [ [ undefined ] ] ], ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, 2, 3, 4, 5 ] );
+  test.identical( got, 1 );
+
+  test.case = 'evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenedDefinedOnce( dst, [ 1, 4, 2, [ undefined ], 5 ], 1, ( e ) => e );
+  test.identical( dst, [ 1, 2, 3, 4, 1, 5 ] );
+  test.identical( got, 2 );
+
+  test.case = 'equilizer';
+  var dst = [ 1, 2, 3, 4 ];
+  var got = _.arrayFlattenedDefinedOnce( dst, [ 1, 4, 2, [ undefined ], 5 ], ( a, b ) => a === b );
+  test.identical( dst, [ 1, 2, 3, 4, 5 ] );
+  test.identical( got, 1 );
+
+  /* - */
 
   if( !Config.debug )
   return;
 
-  test.case = 'not enough arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedDefinedOnce();
-  });
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedDefinedOnce() );
 
-  test.case = 'too many arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedDefinedOnce( [], [ 1 ], ( a ) => a, ( a ) => a, ( a ) => a );
-  });
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedDefinedOnce( [], [ 1 ], ( e ) => e, ( ins ) => ins, 'extra' ) );
 
-  test.case = 'first is not longIs';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedDefinedOnce( 1, [ 1 ] );
-  });
+  test.case = 'dstArray is not array';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedDefinedOnce( 1, [ 1 ] ) );
 
-  test.case = 'onEqualize is not a routine';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedDefinedOnce( [], [ 1 ], [] );
-  });
+  test.case = 'evaluator1 is not a routine or a number';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedDefinedOnce( [], [ 1 ], [] ) );
+
+  test.case = 'evaluator2 is not a routine or a number';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedDefinedOnce( [], [ 1 ], ( e ) => e, [] ) );
+  test.shouldThrowErrorSync( () => _.arrayFlattenedDefinedOnce( [], [ 1 ], 0, {} ) );
+}
+
+//
+
+function arrayFlattenedDefinedOnceSame( test )
+{
+  test.case = 'dst - empty array';
+  var dst = [];
+  var src = dst;
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - flat array, src - flat array, duplicates';
+  var dst = [ 1, 2, undefined, 3, undefined, 1 ];
+  var src = dst;
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2, undefined, 3, undefined, 1 ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - array, level 2, no duplicates';
+  var dst = [ [ 1 ], [ 2 ], [ undefined ] ];
+  var src = dst;
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ undefined ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, level 3, src contains dst, duplicates';
+  var dst = [ [ 1, [ 2, [ undefined ] ] ] ];
+  var src = [ dst, 1, 2 ];
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ [ 1, [ 2, [ undefined ] ] ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  /* - */
+
+  test.open( 'evaluators' );
+
+  test.case = 'src contains a few dst, duplicates, evaluator';
+  var dst = [ [ [ [ [ undefined ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenedDefinedOnce( dst, src, ( e ) => e );
+  test.identical( dst, [ [ [ [ [ undefined ] ] ] ] ] );
+  test.identical( got, 0 );
+
+  test.case = 'src contains a few dst, duplicates, evaluator1 and evaluator2';
+  var dst = [ [ [ [ [ 1, undefined ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenedDefinedOnce( dst, src, ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ [ [ [ [ 1, undefined ] ] ] ], 1 ] );
+  test.identical( got, 1 );
+
+  test.case = 'src contains a few dst, duplicates, evaluator1 - fromIndex, evaluator2, duplicates';
+  var dst = [ 1, [ [ [ [ 1, undefined ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenedDefinedOnce( dst, src, 1, ( e ) => e );
+  test.identical( dst, [ 1, [ [ [ [ 1, undefined ] ] ] ], 1 ] );
+  test.identical( got, 1 );
+
+  test.case = 'src contains a few dst, duplicates, equalizer';
+  var dst = [ [ [ [ [ 1, undefined ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenedDefinedOnce( dst, src, 1, ( e, ins ) => e === ins );
+  test.identical( dst, [ [ [ [ [ 1, undefined ] ] ] ], 1 ] );
+  test.identical( got, 1 );
+
+  test.close( 'evaluators' );
+
+  /* - */
+
+  test.open( 'dst or src contains self' );
+
+  test.case = 'dst - empty array, src push self';
+  var dst = [];
+  var src = [ 1, 2, undefined ];
+  src.push( src );
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src push self twice';
+  var dst = [];
+  var src = [ 1, [ 2, undefined ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src - Set, add self';
+  var dst = [];
+  var src = new Set( [ 1, 2, undefined ] );
+  src.add( src );
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src - Set, add self twice';
+  var dst = [];
+  var src = new Set( [ 1, [ 2, undefined ] ] );
+  src.add( src );
+  src.add( src );
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array level 2, push self, src - flat array';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.push( dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ 2, undefined ], 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - array level 2, push self twice, src - flat array, duplicates';
+  var dst = [ 1, undefined, [ 2, 3 ] ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = [ 1 ];
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2, 3 ] ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - flat array, push self, src - Set, duplicates';
+  var dst = [ 1, 2, 3, undefined ];
+  dst.push( dst );
+  var src = new Set( [ 1, 2, 3 ] );
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2, 3, undefined ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - array, level 2, push self twice, src - Set, duplicates';
+  var dst = [ 1, [ 1, undefined ] ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = new Set( [ undefined, { a : 2 }, 1 ] );
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ 1, undefined ], { a : 2 } ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - array, level 2, push self, dst === src';
+  var dst = [ 1, [ undefined ], 2 ];
+  dst.push( dst );
+  var src = dst;
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ undefined ], 2 ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - array, level 2, push self twice, dst === src, duplicates';
+  var dst = [ 1, [ undefined ], 2 ];
+  dst.push( dst );
+  dst.push( dst );
+  var src = dst;
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ undefined ], 2 ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst = array, level 3, push self';
+  var dst = [ 1, [ 3, [ undefined ] ] ];
+  dst.push( dst );
+  var got  = _.arrayFlattenedDefinedOnce( dst );
+  test.identical( dst, [ 1, 3 ] );
+  test.identical( got, [ 1, 3 ] );
+
+  test.case = 'dst - array, level 6, push self twice, duplicates';
+  var dst = [ undefined, [ [ [ [ [ 1, 1, 2, undefined, undefined ] ] ] ] ] ];
+  dst.push( dst );
+  dst.push( dst );
+  var got  = _.arrayFlattenedDefinedOnce( dst );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  /* */
+
+  test.case = 'dst - empty array, src inserts self';
+  var dst = [];
+  var src = [ 1, 2, undefined ];
+  src.splice( 1, 0, src );
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src inserts self twice';
+  var dst = [];
+  var src = [ 1, [ 2, undefined ] ];
+  src.splice( 0, 0, src );
+  src.splice( 2, 0, src );
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array level 2, inserts self, src - flat array';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 0, 0, dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ 2, undefined ], 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - array level 2, inserts self twice, src - flat array, duplicates';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1 ];
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ 2, undefined ] ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - flat array, inserts self, src - Set, duplicates';
+  var dst = [ 1, 2, undefined ];
+  dst.splice( 1, 0, dst );
+  var src = new Set( [ 1, 2, 3 ] );
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2, undefined, 3 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - array, level 2, inserts self twice, src - Set, duplicates';
+  var dst = [ 1, [ 1 ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = new Set( [ undefined, { a : 2 }, 'undefined' ] );
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ 1 ], { a : 2 }, 'undefined' ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, level 2, inserts self, dst === src';
+  var dst = [ 1, [ undefined ], 2 ];
+  dst.splice( 1, 0, dst );
+  var src = dst;
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ undefined ], 2 ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - array, level 2, inserts self twice, dst === src, duplicates';
+  var dst = [ 1, [ undefined ], 2 ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = dst;
+  var got  = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ undefined ], 2 ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst = array, level 3, inserts self';
+  var dst = [ 1, [ 3, [ 2, undefined ] ] ];
+  dst.splice( 1, 0, dst );
+  var got  = _.arrayFlattenedDefinedOnce( dst );
+  test.identical( dst, [ 1, 3, 2 ] );
+  test.identical( got, [ 1, 3, 2 ] );
+
+  test.case = 'dst - array, level 6, inserts self twice, duplicates';
+  var dst = [ undefined, [ [ [ [ [ 1, 1, 2, undefined ] ] ] ] ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var got  = _.arrayFlattenedDefinedOnce( dst );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, [ 1, 2 ] );
+
+  test.close( 'dst or src contains self' );
+
+  /* - */
+
+  test.open( 'dst or src contains self, evaluators' );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2, undefined ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedDefinedOnce( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 and evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2, [ undefined ] ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedDefinedOnce( dst, src, ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ 2, undefined ] ];
+  var src = [ 1, [ 2, undefined ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedDefinedOnce( dst, src, 2, ( e ) => e );
+  test.identical( dst, [ 1, [ 2, undefined ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, src push self twice, duplicates, equalizer';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2, undefined ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedDefinedOnce( dst, src, ( e, ins ) => e === ins );
+  test.identical( dst, [ 1, [ 2 ], 2 ] );
+  test.identical( got, 1 );
+
+  /* */
+
+  test.case = 'dst inserts self twice, duplicates, evaluator';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1, [ 2 ] ];
+  var got  = _.arrayFlattenedDefinedOnce( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, [ 2, undefined ], 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst inserts self twice, duplicates, evaluator1 and evaluator2';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1, [ 2 ] ];
+  var got  = _.arrayFlattenedDefinedOnce( dst, src, ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, [ 2, undefined ], 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1, [ 2, undefined ] ];
+  var got  = _.arrayFlattenedDefinedOnce( dst, src, 2, ( e ) => e );
+  test.identical( dst, [ 1, [ 2, undefined ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, src push self twice, duplicates, equalizer';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 1, 0, dst );
+  dst.splice( 0, 0, dst );
+  var src = [ 1, [ 2, undefined, [ undefined ] ] ];
+  var got  = _.arrayFlattenedDefinedOnce( dst, src, ( e, ins ) => e === ins );
+  test.identical( dst, [ 1, [ 2, undefined ], 2 ] );
+  test.identical( got, 1 );
+
+  test.close( 'dst or src contains self, evaluators' );
+}
+
+//
+
+function arrayFlattenedDefinedOnceSets( test )
+{
+  test.open( 'dst - empty array' );
+
+  test.case = 'src - empty Set';
+  var dst = [];
+  var src = new Set();
+  var got = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, 0 );
+
+  test.case = 'src - flat Set, duplicates';
+  var dst = [];
+  var src = new Set( [ 1, undefined, 2, 3, 3, 1 ] );
+  var got = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 2, 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 2, duplicates';
+  var dst = [];
+  var src = new Set( [ 1, [ [ 'str', undefined ] ], [ [ undefined ] ], 1, 3 ] );
+  var got = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 3';
+  var dst = [];
+  var src = new Set( [ 1, [ [ [ 'str', undefined ], 3 ] ] ] );
+  var got = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 5, duplicates';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ [ 'str', undefined ] ], 3 ] ] ], 1, 'str', 3, undefined, 3 ] );
+  var got = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set from two array level 5, duplicates';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ 'str', undefined ], { a : 3 }, undefined ] ] ], [ [ [ 1, [ 'str' ], 3 ] ] ] ] );
+  var got = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, 'str', { a : 3 }, 3 ] );
+  test.identical( got, 4 );
+
+  test.close( 'dst - empty array' );
+
+  /* - */
+
+  test.open( 'dst - array' );
+
+  test.case = 'src - empty Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set();
+  var got = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 } ] );
+  test.identical( got, 0 );
+
+  test.case = 'src - flat Set, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, undefined, 3 ] );
+  var got = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 3 ] );
+  test.identical( got, 1 );
+
+  test.case = 'src - Set, level 2, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, [ [ 'str', undefined ], 3, undefined ] ] );
+  var got = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 'str', 3 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set, level 3, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 1, [ [ [ 'str', undefined ] ], 3, undefined ] ] );
+  var got = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 'str', 3 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set, level 5, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ undefined, [ [ 1, [ 'str', undefined ], 3 ] ] ] );
+  var got = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 'str', 3 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set from two array level 5, duplicates';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ [ 1, [ 'str', undefined ], { a : 3 }, undefined ] ] ], [ [ [ 1, [ 'str' ], 3 ] ] ] ] );
+  var got = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 'str', { a : 3 }, 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set from dst';
+  var dst = [ 1, [ undefined, [ 2 ], { a : 0 } ] ];
+  var src = new Set( dst );
+  var got = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, [ undefined, [ 2 ], { a : 0 } ], 2, { a : 0 } ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set from two dst in container';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenedDefinedOnce( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+  test.identical( got, 1 );
+
+  test.close( 'dst - array' );
+
+  /* - */
+
+  test.open( 'dst - array, evaluators' );
+
+  test.case = 'src - Set from two dst in container, evaluator';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenedDefinedOnce( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'src - Set from two dst in container, evaluator1 and evaluator2';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenedDefinedOnce( dst, src, ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'src - Set from two dst in container, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenedDefinedOnce( dst, src, 1, ( e ) => e );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set from two dst in container, equalizer';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ dst, [ dst, dst ] ] );
+  var got = _.arrayFlattenedDefinedOnce( dst, src, ( e, ins ) => e === ins );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2 ] );
+  test.identical( got, 1 );
+
+  test.close( 'dst - array, evaluators' );
 }
 
 //
 
 function arrayFlattenedDefinedOnceStrictly( test )
 {
-  test.case = 'make array flat, dst is empty';
+  test.open( 'single argument' );
 
-  var got  = _.arrayFlattenedDefinedOnceStrictly( [], [] );
+  test.case = 'flat array';
+  var got = _.arrayFlattenedDefinedOnceStrictly( [ 0, 1, 2, undefined ] );
+  var expected = [ 0, 1, 2 ];
+  test.identical( got, expected );
+
+  test.case = 'level 2';
+  var got = _.arrayFlattenedDefinedOnceStrictly( [ [ 0 ], [ undefined ] ] );
+  var expected = [ 0 ];
+  test.identical( got, expected );
+
+  test.case = 'diff levels';
+  var got = _.arrayFlattenedDefinedOnceStrictly( [ [ 0 ], 1, [ 2, [ 3, undefined ] ] ] );
+  var expected = [ 0, 1, 2, 3 ];
+  test.identical( got, expected );
+
+  var got = _.arrayFlattenedDefinedOnceStrictly( [ 0, [ [ undefined ], 2 ], 3, 4 ] );
+  var expected = [ 0, 2, 3, 4 ];
+  test.identical( got, expected );
+
+  test.close( 'single argument' );
+
+  /* - */
+
+  test.case = 'dst - empty array, src - string';
+  var dst = [];
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, 'str' );
+  test.identical( dst, [ 'str' ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - empty array, src - undefined';
+  var dst = [];
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, undefined );
+  test.identical( dst, [] );
   test.identical( got, 0 );
 
-  var got = _.arrayFlattenedDefinedOnceStrictly( [], [ 1, 2, 3, 4 ] );
-  test.identical( got, 4 );
+  test.case = 'dst - empty array, src - empty array';
+  var dst = [];
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, [] );
+  test.identical( dst, [] );
+  test.identical( got, 0 );
 
-  var got = _.arrayFlattenedDefinedOnceStrictly( [], [ [ 1 ], [ 2 ], [ 3 ], [ 4 ] ] );
-  test.identical( got, 4 );
+  test.case = 'dst - empty array, src - flat array';
+  var dst = [];
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, [ 1, 2, undefined ] );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
 
-  var got = _.arrayFlattenedDefinedOnceStrictly( [], [ [ 1, [ 2, [ 3 ], 4 ] ] ] );
-  test.identical( got, 4 );
+  test.case = 'dst - empty array, src - array, level 2';
+  var dst = [];
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, [ [ 1 ], [ undefined ], 3 ] );
+  test.identical( dst, [ 1, 3 ] );
+  test.identical( got, 2 );
 
-  var got = _.arrayFlattenedDefinedOnceStrictly( [], [ 1, [ 2, [ [ 3, [ 4 ] ] ] ] ] );
-  test.identical( got, 4 );
-
-  test.case = 'make array flat, dst is not empty';
-
-  var got  = _.arrayFlattenedDefinedOnceStrictly( [ 1, 2, 3, 4 ], [ 5 ] );
-  test.identical( got, 1 );
-
-  var got  = _.arrayFlattenedDefinedOnceStrictly( [ 1, 2, 3 ], [ [ [ 4 ] ] ] );
-  test.identical( got, 1 );
-
-  var got  = _.arrayFlattenedDefinedOnceStrictly( [ 1 ], [ [ [ [ [ 0, 2, 3 ] ] ] ] ] );
+  test.case = 'dst - empty array, src - array, level 4';
+  var dst = [];
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, [ [ 1, [ 2, [ 3, undefined ] ] ] ] );
+  test.identical( dst, [ 1, 2, 3 ] );
   test.identical( got, 3 );
 
-  test.case = 'make array flat from multiple arrays as one arg';
-  var got  = _.arrayFlattenedDefinedOnceStrictly
-  (
-    [ 1, 4 ],
-    [
-      [ [ 2 ] ],
-      [ 3, [ [ [ 5 ] ] ] ]
-    ]
-  );
+  test.case = 'dst - empty array, src - array, level 4';
+  var dst = [];
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, [ [ [ [ [ 1, undefined ] ] ] ] ] );
+  test.identical( dst, [ 1 ] );
+  test.identical( got, 1 );
+
+  /* */
+
+  test.case = 'dst - flat array, src - empty array';
+  var dst = [ 1, 2, 3, undefined ];
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, [] );
+  test.identical( dst, [ 1, 2, 3, undefined ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - flat array, src - array, level 3';
+  var dst = [ 1, 2, undefined ];
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, [ [ [ undefined ] ] ] );
+  test.identical( dst, [ 1, 2, undefined ] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - flat array, src - array, level 2';
+  var dst = [ 1, 2, undefined ];
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, [ [ 4 ], [ 5 ], [ undefined ], [ 7 ] ] );
+  test.identical( dst, [ 1, 2, undefined, 4, 5, 7 ] );
   test.identical( got, 3 );
 
-  //
+  test.case = 'dst - flat array, src - array, level 2';
+  var dst = [ -1, 0, undefined ];
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, [ [ 1 ], [ [ 2 ] ], [ 3, [ [ [ undefined ] ] ] ] ] );
+  test.identical( dst, [ -1, 0, undefined, 1, 2, 3 ] );
+  test.identical( got, 3 );
 
-  test.case = 'onEqualize';
-  var got  = _.arrayFlattenedDefinedOnceStrictly( [ 1, 2, 3, 4 ], [ 5 ], function( a, b )
-  {
-    return  a === b;
-  });
+  test.case = 'dst - flat array, src - array, level 5';
+  var dst = [ 1, undefined ];
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, [ [ [ [ [ 2, undefined ] ] ] ] ] );
+  test.identical( dst, [ 1, undefined, 2 ] );
   test.identical( got, 1 );
 
-  test.case = 'onEvaluate - one evaluator';
-  var got  = _.arrayFlattenedDefinedOnceStrictly( [ 1, 2, 3, 4 ], [ 5 ], ( a ) => a );
+  test.case = 'dst - array, level 2, src - flat array';
+  var dst = [ [ 1 ], [ 2 ], [ undefined ] ];
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, [ 4, 5, undefined ] );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ undefined ] , 4, 5 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, level 2, src - array, level 2';
+  var dst = [ [ 1 ], [ 2 ], [ undefined ] ];
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, [  [ 1 ], [ 2 ], [ undefined ] ] );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ undefined ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, level 2, src - number';
+  var dst = [ 1, 3, [ 5, undefined ] ];
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, 5 );
+  var expected = [ 1, 3, [ 5, undefined ], 5 ];
+  test.identical( dst, expected );
   test.identical( got, 1 );
 
-  test.case = 'onEvaluate - two evaluators';
-  var got  = _.arrayFlattenedDefinedOnceStrictly( [ 1, 2, 3, 4, 5 ], [ [ 5 ] ], ( a ) => a, ( b ) => b[ 0 ] );
-  test.identical( got, 1 );
+  /* */
 
-  //
+  test.case = 'dst - flat array, src - flat array, evaluator';
+  var dst = [ 1, 2, 3, undefined ];
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, [ 5, 6, 7, undefined ], ( e ) => e );
+  test.identical( dst, [ 1, 2, 3, undefined, 5, 6, 7 ] );
+  test.identical( got, 3 );
 
-  test.case = 'dstArray has sub arrays';
+  test.case = 'dst - flat array, src - flat array, evaluator1 and evaluator2';
+  var dst = [ 1, 2, 3, undefined ];
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, [ 5, 6, 7, undefined ], ( e ) => e, ( ins ) => ins );
+  test.identical( dst, [ 1, 2, 3, undefined, 5, 6, 7 ] );
+  test.identical( got, 3 );
 
-  var got = _.arrayFlattenedDefinedOnceStrictly( [ 1, 3, [ 5 ] ], 6 );
-  test.identical( got, 1 );
+  test.case = 'dst - flat array, src - flat array, evaluator1 - fromIndex, evaluator2, has duplicates';
+  var dst = [ 1, 2, 3, undefined ];
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, [ 1, 2, 7, undefined ], 2, ( e ) => e );
+  test.identical( dst, [ 1, 2, 3, undefined, 1, 2, 7 ] );
+  test.identical( got, 3 );
 
-  var got = _.arrayFlattenedDefinedOnceStrictly( [ [ 1, [ 3, [ 5 ] ] ], 2 ], 6 );
-  test.identical( got, 1 );
+  test.case = 'dst - flat array, src - flat array, equalizer';
+  var dst = [ 1, 2, 3, undefined ];
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, [ 5, 6, 7, undefined ], ( a, b ) => a === b );
+  test.identical( dst, [ 1, 2, 3, undefined, 5, 6, 7 ] );
+  test.identical( got, 3 );
 
-  test.case = 'single argument';
-
-  var got = _.arrayFlattenedDefinedOnceStrictly( [ 0, [ 1 ] ] );
-  test.identical( got, [ 0, 1 ] );
-
-  var got = _.arrayFlattenedDefinedOnceStrictly( [ [ 0 ], [ 1 ] ] );
-  test.identical( got, [ 0, 1 ] );
-
-  var got = _.arrayFlattenedDefinedOnceStrictly( [ [ 0 ], 1, 2, [ 3, 4 ] ] );
-  test.identical( got, [ 0, 1, 2, 3, 4 ] );
-
-  var got = _.arrayFlattenedDefinedOnceStrictly( [ 0, [ [ 2 ], 1 ], 3, 4 ] );
-  test.identical( got, [ 0, 1, 2, 3, 4 ] );
-
-  var got = _.arrayFlattenedDefinedOnceStrictly( [ 1, 3, [ 7, 5 ] ] );
-  test.identical( got, [ 1, 3, 7, 5 ] );
-
-  //
+  /* - */
 
   if( !Config.debug )
   return;
 
-  test.case = 'not enough arguments';
-  test.shouldThrowErrorSync( function()
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedDefinedOnceStrictly() );
+
+  test.case = 'dstArray is not an array';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedDefinedOnceStrictly( 1, [ 1 ] ) );
+
+  test.case = 'evaluator1 is not a routine or a number';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedDefinedOnceStrictly( [], [ 1 ], [] ) );
+
+  test.case = 'duplicates in dstArray';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedDefinedOnceStrictly( [ 0, 0 ], [ 3, 4 ] ) );
+
+  test.case = 'duplicates in insArray';
+  test.shouldThrowErrorSync( () => _.arrayFlattenedDefinedOnceStrictly( [], [ 1, 1, 2, 2, 3, 3 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayFlattenedDefinedOnceStrictly( [], [ [ 1 ], [ 1 ], [ 2 ], [ 2 ], [ 3 ], [ 3 ] ] ) );
+  test.shouldThrowErrorSync( () => _.arrayFlattenedDefinedOnceStrictly( [], [ [ 1, 1, [ 2, 2, [ 3, 3 ] ] ] ] ) );
+}
+
+//
+
+function arrayFlattenedDefinedOnceStrictlySame( test )
+{
+  test.case = 'dst - empty array';
+  var dst = [];
+  var src = dst;
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, 0 );
+
+  test.case = 'dst - array, level 2, no duplicates';
+  var dst = [ [ 1 ], [ 2 ], [ undefined ] ];
+  var src = dst;
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ [ 1 ], [ 2 ], [ undefined ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, level 3, src contains dst';
+  var dst = [ [ 1, [ 2, [ undefined ] ] ] ];
+  var src = [ dst ];
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ [ 1, [ 2, [ undefined ] ] ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  /* - */
+
+  test.open( 'evaluators' );
+
+  test.case = 'src contains a few dst, evaluator1 and evaluator2';
+  var dst = [ [ [ [ [ 1, undefined ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src, ( e ) => e, ( ins ) => ins + 1 );
+  test.identical( dst, [ [ [ [ [ 1, undefined ] ] ] ], 1, 1, 1, 1 ] );
+  test.identical( got, 4 );
+
+  test.case = 'src contains dst, duplicates, evaluator1 - fromIndex, evaluator2, duplicates';
+  var dst = [ [ [ [ [ 1, undefined ] ] ] ] ];
+  var src = [ dst ];
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src, 1, ( e ) => e );
+  test.identical( dst, [ [ [ [ [ 1, undefined ] ] ] ], 1 ] );
+  test.identical( got, 1 );
+
+  test.case = 'src contains a few dst, duplicates, equalizer';
+  var dst = [ [ [ [ [ 1, undefined ] ] ] ] ];
+  var src = [ dst, dst, dst, dst ];
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src, 1, ( e, ins ) => e === ins + 1 );
+  test.identical( dst, [ [ [ [ [ 1, undefined ] ] ] ], 1, 1, 1, 1 ] );
+  test.identical( got, 4 );
+
+  test.close( 'evaluators' );
+
+  /* - */
+
+  test.open( 'dst or src contains self' );
+
+  test.case = 'dst - empty array, src push self';
+  var dst = [];
+  var src = [ 1, 2, undefined ];
+  src.push( src );
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src push self twice';
+  var dst = [];
+  var src = [ 1, [ 2, undefined ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src - Set, add self';
+  var dst = [];
+  var src = new Set( [ 1, 2, undefined ] );
+  src.add( src );
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src - Set, add self twice';
+  var dst = [];
+  var src = new Set( [ 1, [ 2, undefined ] ] );
+  src.add( src );
+  src.add( src );
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array level 2, push self, src - flat array';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.push( dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, [ 2, undefined ], 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - flat array, push self, src - Set';
+  var dst = [ 1, 2, 3, undefined ];
+  dst.push( dst );
+  var src = new Set( [ 4, [ undefined ], 6 ] );
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2, 3, undefined, 4, 6 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst = array, level 3, push self';
+  var dst = [ 1, [ 3, [ undefined ] ] ];
+  dst.push( dst );
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst );
+  test.identical( dst, [ 1, 3 ] );
+  test.identical( got, [ 1, 3 ] );
+
+  /* */
+
+  test.case = 'dst - empty array, src inserts self';
+  var dst = [];
+  var src = [ 1, 2, undefined ];
+  src.splice( 1, 0, src );
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - empty array, src inserts self twice';
+  var dst = [];
+  var src = [ 1, [ 2, undefined ] ];
+  src.splice( 0, 0, src );
+  src.splice( 2, 0, src );
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array level 2, inserts self, src - flat array';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 0, 0, dst );
+  var src = [ 2 ];
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, [ 2, undefined ], 2 ] );
+  test.identical( got, 1 );
+
+  test.case = 'dst - flat array, inserts self, src - Set';
+  var dst = [ 1, 2, 3, undefined ];
+  dst.splice( 1, 0, dst );
+  var src = new Set( [ 4, [ [ undefined ], 5 ] ] );
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 2, 3, undefined, 4, 5 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst = array, level 3, inserts self';
+  var dst = [ 1, [ 3, [ undefined ] ] ];
+  dst.splice( 1, 0, dst );
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst );
+  test.identical( dst, [ 1, 3 ] );
+  test.identical( got, [ 1, 3 ] );
+
+  test.close( 'dst or src contains self' );
+
+  /* - */
+
+  test.open( 'dst or src contains self, evaluators' );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 2, [ 3, undefined ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 2, 3 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 and evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2, [ undefined ] ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src, ( e ) => e, ( ins ) => ins + 1 );
+  test.identical( dst, [ 1, [ 2 ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, src push self twice, duplicates, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ 1, [ 2, undefined ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src, 2, ( e ) => e );
+  test.identical( dst, [ 1, [ 2 ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, src push self twice, duplicates, equalizer';
+  var dst = [ 1, [ 2 ] ];
+  var src = [ null, [ 2, [ undefined ] ] ];
+  src.push( src );
+  src.push( src );
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src, ( e, ins ) => e === ins );
+  test.identical( dst, [ 1, [ 2 ], null, 2 ] );
+  test.identical( got, 2 );
+
+  /* */
+
+  test.case = 'dst inserts self, evaluator';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 1, 0, dst );
+  var src = [ 3, [ 2, undefined ] ];
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, [ 2, undefined ], 3, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst inserts self, evaluator1 and evaluator2';
+  var dst = [ 1, [ 2, [ undefined ] ] ];
+  dst.splice( 1, 0, dst );
+  var src = [ 1, [ 2, [ undefined ] ] ];
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src, ( e ) => e, ( ins ) => ins + 1 );
+  test.identical( dst, [ 1, [ 2, [ undefined ] ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, src push self, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 1, 0, dst );
+  var src = [ 1, [ 2, [ undefined ] ] ];
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src, 2, ( e ) => e );
+  test.identical( dst, [ 1, [ 2, undefined ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.case = 'dst - array, src push self, equalizer';
+  var dst = [ 1, [ 2, undefined ] ];
+  dst.splice( 1, 0, dst );
+  var src = [ 1, [ 2, undefined ] ];
+  var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src, ( e, ins ) => e === ins + 1 );
+  test.identical( dst, [ 1, [ 2, undefined ], 1, 2 ] );
+  test.identical( got, 2 );
+
+  test.close( 'dst or src contains self, evaluators' );
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'dst === src';
+  test.shouldThrowErrorSync( () =>
   {
-    _.arrayFlattenedDefinedOnceStrictly();
+    var dst = [ 1, 2, 3, undefined ];
+    var src = dst;
+    var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src );
   });
 
-  test.case = 'too many arguments';
-  test.shouldThrowErrorSync( function()
+  test.case = 'src contains a few dst, simple evaluator';
+  test.shouldThrowErrorSync( () =>
   {
-    _.arrayFlattenedDefinedOnceStrictly( [], [ 1 ], ( a ) => a, ( b ) => b, ( c ) => c );
+    var dst = [ [ [ [ [ 1, undefined ] ] ] ] ];
+    var src = [ dst, dst, dst, dst ];
+    var got  = _.arrayFlattenedDefinedOnceStrictly( dst, src, ( e ) => e );
   });
 
-  test.case = 'first is not longIs';
-  test.shouldThrowErrorSync( function()
+  test.case = 'dst push self twice';
+  test.shouldThrowErrorSync( () =>
   {
-    _.arrayFlattenedDefinedOnceStrictly( 1, [ 1 ] );
+    var dst = [ [ [ [ [ 1, undefined ] ] ] ] ];
+    dst.push( dst );
+    dst.push( dst );
+    var got  = _.arrayFlattenedDefinedOnceStrictly( dst );
   });
+}
 
-  test.case = 'onEqualize is not a routine';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedDefinedOnceStrictly( [], [ 1 ], [] );
-  });
+//
 
-  test.case = 'second evaluator is not a routine';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedDefinedOnceStrictly( [], [ 1 ], ( a ) => a, [] );
-  });
+function arrayFlattenedDefinedOnceStrictlySets( test )
+{
+  test.open( 'dst - empty array' );
 
-  test.case = 'Elements must not be repeated';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedDefinedOnceStrictly( [], [ 1, 1, 2, 2, 3, 3 ] );
-  });
+  test.case = 'src - empty Set';
+  var dst = [];
+  var src = new Set();
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [] );
+  test.identical( got, 0 );
 
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedDefinedOnceStrictly( [], [ [ 1 ], [ 1 ], [ 2 ], [ 2 ], [ 3 ], [ 3 ]  ] );
-  });
+  test.case = 'src - flat Set';
+  var dst = [];
+  var src = new Set( [ 1, [ 'str' ], 2, undefined, { a : 0 }, { a : 0 } ] );
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', 2, { a : 0 }, { a : 0 } ] );
+  test.identical( got, 5 );
 
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedDefinedOnceStrictly( [], [ [ 1, 1, [ 2, 2, [ 3, 3 ] ] ]  ] );
-  });
+  test.case = 'src - Set, level 2';
+  var dst = [];
+  var src = new Set( [ 1, [ [ 'str', undefined ] ], 3 ] );
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, 3 );
 
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayFlattenedDefinedOnceStrictly( [], [ [ [ [ [ 1, 1 ] ] ] ] ]  );
-  });
+  test.case = 'src - Set, level 3';
+  var dst = [];
+  var src = new Set( [ 1, [ [ [ 'str', undefined ], 3 ] ] ] );
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', 3 ] );
+  test.identical( got, 3 );
 
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenedDefinedOnceStrictly( [ 0, 1, 7, 6 ], [ [ 4, [ 5, [ 6 ] ] ], 2 ] );
-  });
+  test.case = 'src - Set, level 5';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ [ 'str', undefined ] ], 3 ] ] ], 2, 4, 6 ] );
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', 3, 2, 4, 6 ] );
+  test.identical( got, 6 );
 
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenedDefinedOnceStrictly( [ 0 ], 0 );
-  });
+  test.case = 'src - Set from two array level 5, duplicates';
+  var dst = [];
+  var src = new Set( [ [ [ [ 1, [ 'str', undefined ], { a : 3 } ] ] ], [ [ [ 2, [ undefined ], 4 ] ] ] ] );
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, 'str', { a : 3 }, 2, 4 ] );
+  test.identical( got, 5 );
 
-  test.shouldThrowErrorSync( function()
-  {
-     _.arrayFlattenedDefinedOnceStrictly( [ 0, 1, 2, 3 ], [ [ 4, [ 5, [ 0 ] ] ], 7 ] );
-  });
+  test.close( 'dst - empty array' );
 
-  test.shouldThrowErrorSync( function()
+  /* - */
+
+  test.open( 'dst - array' );
+
+  test.case = 'src - empty Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set();
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 } ] );
+  test.identical( got, 0 );
+
+  test.case = 'src - flat Set';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 2, 3, undefined ] );
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 3 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set, level 2';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 2, [ [ 'str', undefined ], 3 ] ] );
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 3';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 2, [ [ [ 'str', undefined ] ], 3 ] ] );
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set, level 5';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ 2, [ 'str', undefined ], 3 ] ] ] );
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str', 3 ] );
+  test.identical( got, 3 );
+
+  test.case = 'src - Set from two array level 5';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ [ [ [ 2, undefined ] ] ], [ [ [ [ 'str', undefined ] ] ] ] ] );
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, src );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 'str' ] );
+  test.identical( got, 2 );
+
+  test.close( 'dst - array' );
+
+  /* - */
+
+  test.open( 'dst - array, evaluators' );
+
+  test.case = 'src - Set, evaluator';
+  var dst = [ 1, undefined, [ 2 ], { a : 0 } ];
+  var src = new Set( [ 2, 3, undefined ] );
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, src, ( e ) => e );
+  test.identical( dst, [ 1, undefined, [ 2 ], { a : 0 }, 2, 3 ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set from dst, evaluator1 and evaluator2';
+  var dst = [ 1, [ undefined ], { a : 0 } ];
+  var src = new Set( [ dst ] );
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, src, ( e ) => e, ( ins ) => ins + 1 );
+  test.identical( dst, [ 1, [ undefined ], { a : 0 }, 1, { a : 0 } ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set from dst, evaluator1 - fromIndex, evaluator2';
+  var dst = [ 1, [ undefined ], { a : 0 } ];
+  var src = new Set( [ dst ] );
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, src, 3, ( ins ) => ins );
+  test.identical( dst, [ 1, [ undefined ], { a : 0 }, 1, { a : 0 } ] );
+  test.identical( got, 2 );
+
+  test.case = 'src - Set from dst, equalizer';
+  var dst = [ 1, [ undefined ], { a : 0 } ];
+  var src = new Set( [ dst ] );
+  var got = _.arrayFlattenedDefinedOnceStrictly( dst, src, ( e, ins ) => e === ins + 1 );
+  test.identical( dst, [ 1, [ undefined ], { a : 0 }, 1, { a : 0 } ] );
+  test.identical( got, 2 );
+
+  test.close( 'dst - array, evaluators' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'src - Set from dst';
+  test.shouldThrowErrorSync( () =>
   {
-     _.arrayFlattenedDefinedOnceStrictly( [ 0, 0, 1, 1 ], [ 3, 4, [ 5, [ 6 ] ] ] );
+    var dst = [ 1, [ [ undefined ], { a : 0 } ] ];
+    var src = new Set( dst );
+    var got = _.arrayFlattenedDefinedOnceStrictly( dst, src );
   });
 }
 
@@ -20668,7 +25718,7 @@ function arrayReplaceElementOnce( test )
 {
 
   test.case = 'nothing';
-  var dst = [ ];
+  var dst = [];
   var got = _.arrayReplaceElementOnce( dst, 0, 0 );
   var expected = [];
   test.identical( got, expected );
@@ -20972,13 +26022,10 @@ function arrayReplacedElement2( test )
   });
 
   test.case = 'first arg is not longIs';
-  debugger;
   test.shouldThrowErrorSync( function()
   {
-    debugger;
     _.arrayReplacedElement( 1, 1, 1 );
   });
-  debugger;
 
   test.case = 'fourth argument is not a routine';
   test.shouldThrowErrorSync( function()
@@ -23294,22 +28341,22 @@ function arrayReplacedArraysOnceStrictly( test )
 
   var dst = [ 1, 0 ];
   var got = _.arrayReplacedArraysOnceStrictly( dst, [ [ 0, 1 ] ], [ [ 1, 0 ] ] );
-  test.identical( dst, [ 0, 1 ]  );
+  test.identical( dst, [ 0, 1 ] );
   test.identical( got, 2 );
 
   var dst = [ 'a', 'b', 'c' ];
   var got = _.arrayReplacedArraysOnceStrictly( dst, [ [ 'a', 'b' ] ], [ [ 'b', 'a' ] ] );
-  test.identical( dst, [ 'a', 'b', 'c'  ]  );
+  test.identical( dst, [ 'a', 'b', 'c' ] );
   test.identical( got, 2 );
 
   var dst = [ true, false, true, false ];
   var got = _.arrayReplacedArraysOnceStrictly( dst, [ [ true, false ] ], [ [ false, true ] ] );
-  test.identical( dst, [ true, false, true, false ]  );
+  test.identical( dst, [ true, false, true, false ] );
   test.identical( got, 2 );
 
   var dst = [ 0, 'a', true, 2, 'c', false, 'b', 1 ];
   var got = _.arrayReplacedArraysOnceStrictly( dst, [ [ 0, 1 ], [ 'a', 'b' ], [ true, false ] ], [ [ 1, 0 ], [ 'b', 'a' ], [ false, true ] ] );
-  test.identical( dst, [ 0, 'a', true, 2, 'c', false, 'b', 1 ]  );
+  test.identical( dst, [ 0, 'a', true, 2, 'c', false, 'b', 1 ] );
   test.identical( got, 6 );
 
   test.case = 'onEqualize'
@@ -23319,7 +28366,7 @@ function arrayReplacedArraysOnceStrictly( test )
     return a[ 0 ] === b;
   };
   var got = _.arrayReplacedArraysOnceStrictly( dst, [ [ 1 ] ], [ [ 0 ] ], onEqualize1 );
-  test.identical( dst, [ 0, [ 2 ], [ 3 ] ]  );
+  test.identical( dst, [ 0, [ 2 ], [ 3 ] ] );
   test.identical( got, 1 );
 
   test.case = 'onEqualize'
@@ -23923,7 +28970,7 @@ function arrayUpdate( test )
 {
 
   test.case = 'add a new element';
-  var got = _.arrayUpdate( [  ], 1, 1 );
+  var got = _.arrayUpdate( [], 1, 1 );
   var expected = 0;
   test.identical( got, expected );
 
@@ -24394,7 +29441,7 @@ function arraySetBut( test )
   [
     { src : [], but : [], expected : [] },
     { src : [ 1, 2, 3 ], but : [], expected : [ 1, 2, 3 ] },
-    { src : [], but : [ 1, 2, 3 ], expected : [ ] },
+    { src : [], but : [ 1, 2, 3 ], expected : [] },
     { src : [ 1, 1, 1 ], but : [ 1 ], expected : [] },
     { src : [ 1, 2, 3 ], but : [ 3, 2, 1 ], expected : [] },
     { src : [ 1, 2, 3 ], but : [ 3 ], expected : [ 1, 2 ] },
@@ -24625,8 +29672,8 @@ function arraySetIntersection( test )
   var cases =
   [
     { args : [ [] ], expected : [] },
-    { args : [ [ 1 ], [ ] ], expected : [] },
-    { args : [ [ ], [ 1 ] ], expected : [] },
+    { args : [ [ 1 ], [] ], expected : [] },
+    { args : [ [], [ 1 ] ], expected : [] },
     { args : [ [ 1 ], [ 2 ] ], expected : [] },
     { args : [ [ 1, 2, 3 ], [ 2 ] ], expected : [ 2 ] },
     { args : [ [ 1, 2, 3 ], [ 2 ], [ 1 ], [ 3 ] ], expected : [] },
@@ -25165,7 +30212,6 @@ function arraySetContainAny( test )
   test.case = 'bigger second argument';
   var a = [ 1, 3 ];
   var b = [ 1, 1, 1, 1 ];
-  debugger;
   var got = _.arraySetContainAny( a, b );
   var expected = true;
   test.identical( got, expected );
@@ -25312,10 +30358,10 @@ function arraySetContainAny( test )
     { args : [ [ 1, 2, 3 ], [ 0, 1 ], [ 9, 3 ] ], expected : true },
     { args : [ [ 1, 2, 3 ], [ 4 ], [ 3 ] ], expected : false },
     { args : [ [], [ 0 ], [ 4 ], [ 3 ] ], expected : true },
-    { args : [ [ 1, 2, 3 ], [ 4 ], [ 5 ]  ], expected : false },
-    { args : [ [ 0, 0, 0, 1 ], [ 5 ], [ 6 ], [ 2, 1 ]  ], expected : false },
-    { args : [ [ 1, 2, 3 ], [ 4 ], 1  ], error : true },
-    { args : [ 1, [ 4 ], 1  ], error : true },
+    { args : [ [ 1, 2, 3 ], [ 4 ], [ 5 ] ], expected : false },
+    { args : [ [ 0, 0, 0, 1 ], [ 5 ], [ 6 ], [ 2, 1 ] ], expected : false },
+    { args : [ [ 1, 2, 3 ], [ 4 ], 1 ], error : true },
+    { args : [ 1, [ 4 ], 1 ], error : true },
   ]
 
   for( var i = 0; i < cases.length; i++ )
@@ -25543,7 +30589,6 @@ function loggerProblemExperiment( test )
 
   */
 
-  debugger;
   test.case = 'ins as BufferNode';
   var expected = BufferNode.alloc( 5 );
   var expected = new BufferNode( 5 );
@@ -25553,152 +30598,7 @@ function loggerProblemExperiment( test )
   // test.identical( got.length, 5 );
   // test.identical( got, expected );
   test.identical( 1, 1 );
-  debugger;
-
 }
-
-//
-
-//--
-// unused, routine is not defined
-//--
-
-// qqq : this is bufferJoin
-//function arrayJoin( test )
-//{
-//  test.case = 'empty call';
-//  test.identical( _.arrayJoin(), null );
-//
-//  test.case = 'empty arrays';
-//  test.identical( _.arrayJoin( [], [] ), null );
-//
-//  test.case = 'simple';
-//
-//  var src = [ 1 ];
-//  var got = _.arrayJoin( src );
-//  var expected = src;
-//  test.identical( got, expected );
-//
-//  var src = [ 1 ];
-//  var got = _.arrayJoin( src, src );
-//  var expected = [ 1, 1 ];
-//  test.identical( got, expected );
-//
-//  test.case = 'array + typedArray';
-//  var got = _.arrayJoin( [ 1 ], new U8x( [ 1, 2 ] ) );
-//  var expected = [ 1, 1, 2 ];
-//  test.identical( got, expected );
-//
-//  var got = _.arrayJoin( new U8x( [ 1, 2 ] ), [ 1 ] );
-//  var expected = new U8x( [ 1, 2, 1 ] );
-//  test.identical( got, expected );
-//
-//  test.case = 'typedArray + typedArray';
-//  var got = _.arrayJoin( new U8x( [ 1, 2 ] ), new U8x( [ 1, 2 ] ) );
-//  var expected = new U8x( [ 1, 2, 1, 2 ] );
-//  test.identical( got, expected );
-//
-//  var got = _.arrayJoin( new U8x( [ 1, 2 ] ), new U16x( [ 1, 2 ] ) );
-//  var expected = new U8x( [ 1, 2, 1, 0, 2, 0 ] );
-//  test.identical( got, expected );
-//
-//  test.case = 'arrayBuffer + arrayBuffer';
-//  var src = new U8x( [ 1, 2 ] );
-//  var got = _.arrayJoin( src.buffer, src.buffer );
-//  test.is( _.bufferRawIs( got ) );
-//  var expected = new U8x( [ 1, 2, 1, 2 ] );
-//  test.identical( new U8x( got ), expected );
-//
-//  test.case = 'arrayBuffer + array';
-//  var src = new U8x( [ 1, 2 ] );
-//  var got = _.arrayJoin( src.buffer, [ 1, 2 ] );
-//  test.is( _.bufferRawIs( got ) );
-//  var expected = new U8x( [ 1, 2, 1, 2 ] );
-//  test.identical( new U8x( got ), expected );
-//
-//  test.case = 'arrayBuffer + typedArray';
-//  var src = new U8x( [ 1, 2 ] );
-//  var got = _.arrayJoin( src.buffer, src );
-//  test.is( _.bufferRawIs( got ) );
-//  var expected = new U8x( [ 1, 2, 1, 2 ] );
-//  test.identical( new U8x( got ), expected );
-//
-//  test.case = 'typedArray + arrayBuffer';
-//  var src = new U8x( [ 1, 2 ] );
-//  var got = _.arrayJoin( src, src.buffer );
-//  var expected = new U8x( [ 1, 2, 1, 2 ] );
-//  test.identical( got, expected );
-//
-//  test.case = 'typedArray + arrayBuffer + array';
-//  var src = new U8x( [ 1 ] );
-//  var got = _.arrayJoin( src, src.buffer, [ 1 ] );
-//  var expected = new U8x( [ 1, 1, 1 ] );
-//  test.identical( got, expected );
-//
-//  test.case = 'array + typedArray + arrayBuffer';
-//  var src = new U8x( [ 1 ] );
-//  var got = _.arrayJoin( [ 1 ], src, src.buffer );
-//  var expected = [ 1, 1, 1 ];
-//  test.identical( got, expected );
-//
-//  test.case = 'arrayBuffer + array + typedArray';
-//  var src = new U8x( [ 1 ] );
-//  var got = _.arrayJoin( src.buffer, [ 1 ], src  );
-//  test.is( _.bufferRawIs( got ) );
-//  var expected = new U8x( [ 1, 1, 1 ] );
-//  test.identical( new U8x( got ), expected );
-//
-//  if( Config.interpreter === 'njs' )
-//  {
-//    test.case = 'buffer';
-//    var got = _.arrayJoin( BufferNode.from( '1' ), [ 1 ] );
-//    var expected = BufferNode.from( [ 49, 1 ] );
-//    test.identical( got, expected );
-//
-//    test.case = 'buffer + arrayBuffer';
-//    var raw = new U8x( [ 1 ] ).buffer;
-//    var got = _.arrayJoin( BufferNode.from( '1' ), raw );
-//    var expected = BufferNode.from( [ 49, 1 ] );
-//    test.identical( got, expected );
-//
-//    test.case = 'buffer + typedArray';
-//    var typed = new U8x( [ 1 ] );
-//    var got = _.arrayJoin( BufferNode.from( '1' ), typed );
-//    var expected = BufferNode.from( [ 49, 1 ] );
-//    test.identical( got, expected );
-//
-//    test.case = 'buffer + typedArray + raw + array';
-//    var typed = new U8x( [ 1 ] );
-//    var got = _.arrayJoin( BufferNode.from( '1' ), typed, typed.buffer, [ 1 ] );
-//    var expected = BufferNode.from( [ 49, 1, 1, 1 ] );
-//    test.identical( got, expected );
-//
-//    test.case = 'typedArray + buffer + raw + array';
-//    var typed = new U8x( [ 1 ] );
-//    var got = _.arrayJoin( typed, BufferNode.from( '1' ), typed.buffer, [ 1 ] );
-//    var expected = new U8x( [ 1, 49, 1, 1 ] );
-//    test.identical( got, expected );
-//
-//    test.case = 'raw + typedArray + buffer + array';
-//    var typed = new U8x( [ 1 ] );
-//    var got = _.arrayJoin( typed.buffer, typed, BufferNode.from( '1' ), [ 1 ] );
-//    var expected = new U8x( [ 1, 1, 49, 1 ] );
-//    test.identical( new U8x( got ), expected );
-//
-//    test.case = 'array + raw + typedArray + buffer ';
-//    var typed = new U8x( [ 1 ] );
-//    var got = _.arrayJoin( [ 1 ], typed.buffer, typed, BufferNode.from( '1' )  );
-//    var expected = new U8x( [ 1, 1, 1, 49 ] );
-//    test.identical( new U8x( got ), expected );
-//  }
-//
-//  if( !Config.debug )
-//  return;
-//
-//  test.shouldThrowErrorSync( () => _.arrayJoin( [ 1 ], '1' ) );
-//  test.shouldThrowErrorSync( () => _.arrayJoin( [ 1 ], { byteLength : 5 } ) );
-//
-//}
 
 // --
 //
@@ -25719,9 +30619,11 @@ var Self =
     argumentsArrayMake,
     argumentsArrayFrom,
 
-    // long l0
+    // long l0/l3
 
     longIs,
+
+    // long, lo/l6
 
     longMake,
     _longMakeOfLength,
@@ -25742,7 +30644,7 @@ var Self =
     // longResize, // Dmytro : uncomment when it will be reimplemented
     longDuplicate,
 
-    // long l1
+    // long l0/l8
 
     longAreRepeatedProbe,
     longAllAreRepeated,
@@ -25751,7 +30653,7 @@ var Self =
 
     longMask,
 
-    longOnce, // Dmytro : uncomment when reimplemented
+    longOnce,
     longSelectWithIndices,
 
     // array manipulator
@@ -25923,44 +30825,43 @@ var Self =
     /* qqq : extend test coverage */
     /* qqq : extend implementation for sets */
 
-    arrayFlattenCritical,
     arrayFlatten,
+    arrayFlattenSame,
+    arrayFlattenSets,
     arrayFlattenOnce,
+    arrayFlattenOnceSame,
+    arrayFlattenOnceSets,
     arrayFlattenOnceStrictly,
+    arrayFlattenOnceStrictlySame,
+    arrayFlattenOnceStrictlySets,
     arrayFlattened,
+    arrayFlattenedSame,
+    arrayFlattenedSets,
     arrayFlattenedOnce,
+    arrayFlattenedOnceSame,
+    arrayFlattenedOnceSets,
     arrayFlattenedOnceStrictly,
-    // arrayFlattenSame,
-    // arrayFlattenOnceSame,
-    // arrayFlattenOnceStrictlySame,
-    // arrayFlattenedSame,
-    // arrayFlattenedOnceSame,
-    // arrayFlattenedOnceStrictlySame,
-    // arrayFlattenSets,
-    // arrayFlattenOnceSets,
-    // arrayFlattenOnceStrictlySets,
-    // arrayFlattenedSets,
-    // arrayFlattenedOnceSets,
-    // arrayFlattenedOnceStrictlySets,
+    arrayFlattenedOnceStrictlySame,
+    arrayFlattenedOnceStrictlySets,
 
     arrayFlattenDefined,
+    arrayFlattenDefinedSame,
+    arrayFlattenDefinedSets,
     arrayFlattenDefinedOnce,
+    arrayFlattenDefinedOnceSame,
+    arrayFlattenDefinedOnceSets,
     arrayFlattenDefinedOnceStrictly,
+    arrayFlattenDefinedOnceStrictlySame,
+    arrayFlattenDefinedOnceStrictlySets,
     arrayFlattenedDefined,
+    arrayFlattenedDefinedSame,
+    arrayFlattenedDefinedSets,
     arrayFlattenedDefinedOnce,
+    arrayFlattenedDefinedOnceSame,
+    arrayFlattenedDefinedOnceSets,
     arrayFlattenedDefinedOnceStrictly,
-    // arrayFlattenDefinedSame,
-    // arrayFlattenDefinedOnceSame,
-    // arrayFlattenDefinedOnceStrictlySame,
-    // arrayFlattenedDefinedSame,
-    // arrayFlattenedDefinedOnceSame,
-    // arrayFlattenedDefinedOnceStrictlySame,
-    // arrayFlattenDefinedSets,
-    // arrayFlattenDefinedOnceSets,
-    // arrayFlattenDefinedOnceStrictlySets,
-    // arrayFlattenedDefinedSets,
-    // arrayFlattenedDefinedOnceSets,
-    // arrayFlattenedDefinedOnceStrictlySets,
+    arrayFlattenedDefinedOnceStrictlySame,
+    arrayFlattenedDefinedOnceStrictlySets,
 
     // array replace
 
@@ -26012,10 +30913,6 @@ var Self =
     arraySetIdentical,
 
     loggerProblemExperiment,
-
-    // unused, routine is not defined
-
-    // arrayJoin,
 
   }
 

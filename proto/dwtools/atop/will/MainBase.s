@@ -289,6 +289,13 @@ function _pathChanged( o )
   if( o.isIdential === null )
   o.isIdentical = o.ex === o.val || _.entityIdentical( o.val, o.ex );
 
+  // if( o.fieldName === 'remotePath' || o.fieldName === 'remote' )
+  // if( _.strIs( o.val ) && o.val )
+  // {
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
+  //   debugger;
+  // }
+
   // if( o.fieldName === 'willfilesPath' || o.fieldName === 'module.willfiles' )
   // if( _.strIs( o.val ) && _.strHas( o.val, 'wTools.out' ) )
   // {

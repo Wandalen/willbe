@@ -4975,6 +4975,7 @@ function exportInformal( test )
         "criterion" : { "default" : 1, "export" : 1 }
       }
     }
+    debugger;
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
     test.identical( outfile.path.local.path, '../.module/Proto' );
