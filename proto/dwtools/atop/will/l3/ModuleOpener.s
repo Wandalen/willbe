@@ -1724,13 +1724,10 @@ function errorSet( err )
   if( opener.error === err )
   return;
 
-  // if( err && opener.id === 301 )
-  // debugger;
-
   opener[ errorSymbol ] = err;
 
-  // if( will && err )
-  // debugger;
+  if( will && err )
+  debugger;
   if( will && err )
   will.openersErrorsArray.push({ err : err, opener : opener });
 

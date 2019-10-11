@@ -118,18 +118,17 @@ function form1()
     willfilesPath : relation.longPath,
     superRelation : relation,
     rootModule : module.rootModule,
+    reason : 'sub',
     isAuto : 1,
   });
 
-  relation.opener = will.openerMake({ opener : relation.opener });
+  relation.opener = will._openerMake({ opener : relation.opener });
   relation.opener.preform();
-  // relation.opener.remoteForm();
 
   _.assert( relation.opener.formed >= 2 );
 
-  // if( relation.id === 305 )
-  // debugger;
-
+  if( relation.id === 310 )
+  debugger;
   will.variantFrom( relation );
 
   /* end */
@@ -155,11 +154,6 @@ function form3()
     if( relation.opener && !relation.opener.isValid() )
     {
       debugger;
-      // let opener = relation.opener;
-      // relation.opener = null;
-      // opener.finit();
-      // relation.opener.close();
-      // relation.formed = 2;
       relation.close();
     }
     else
@@ -295,12 +289,13 @@ function _openAct( o )
 
   if( relation.opener.isOpened() )
   {
-    _.assert( relation.opener.formed === 4 );
+    _.assert( relation.opener.formed === 5 );
     _.assert( !!relation.opener.willfilesPath );
     return relation.opener;
   }
 
-  relation.opener.willfilesPath = o.longPath;
+  _.assert( relation.opener.localPath === o.longPath || relation.opener.remotePath === o.longPath );
+  // relation.opener.willfilesPath = o.longPath;
 
   if( !relation.enabled )
   return relation.opener;
@@ -308,8 +303,6 @@ function _openAct( o )
   return relation.opener.open({ throwing : 1 })
   .finally( ( err, arg ) =>
   {
-    // if( err )
-    // debugger;
     if( err )
     throw _.err( err, '\n', 'Failed to open', relation.absoluteName );
     return arg;
@@ -440,7 +433,19 @@ function pathSet( src )
 {
   let relation = this;
   let module = relation.module;
+
+  _.assert( !src || !relation.opener || relation.opener.formed < 3 );
+
   relation[ pathSymbol ] = src;
+
+  if( relation.opener )
+  {
+    let will = module.will;
+    let fileProvider = will.fileProvider;
+    let path = fileProvider.path;
+    relation.opener.willfilesPath = path.join( module.inPath, src );
+  }
+
   return src;
 }
 
