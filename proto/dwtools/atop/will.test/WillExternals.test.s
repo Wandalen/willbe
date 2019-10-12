@@ -4932,54 +4932,58 @@ function exportInformal( test )
     test.identical( files, [ '.', './Proto.informal.out.will.yml' ] );
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( outPath, './Proto.informal.out.will.yml' ) );
+    outfile = outfile.module[ 'Proto.informal.out' ];
     var expected =
     {
       "module.willfiles" :
       {
-        "path" : "Proto.informal.out.will.yml",
-        "criterion" : { "predefined" : 1 }
-      },
-      "module.original.willfiles" :
-      {
-        "path" : "../module/Proto.informal.will.yml",
-        "criterion" : { "predefined" : 1 }
+        "criterion" : { "predefined" : 1 },
+        "path" : `Proto.informal.out.will.yml`
       },
       "module.common" :
       {
-        "path" : "Proto.informal.out",
+        "criterion" : { "predefined" : 1 },
+        "path" : `Proto.informal.out`
+      },
+      "module.original.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : `../module/Proto.informal.will.yml`
+      },
+      "module.peer.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : `../module/Proto.informal.will.yml`
+      },
+      "module.download" :
+      {
         "criterion" : { "predefined" : 1 }
       },
       "in" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : `.`
       },
       "out" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : `.`
       },
       "remote" :
       {
-        "path" : "git+https:///github.com/Wandalen/wProto.git",
         "criterion" : { "predefined" : 1 }
       },
-      "local" :
-      {
-        "path" : "../.module/Proto",
-        "criterion" : { "predefined" : 1 }
-      },
-      "export" : { "path" : "{path::local}/proto" },
+      "download" : { "path" : `../.module/Proto` },
+      "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
-        "path" : "../.module/Proto/proto",
-        "criterion" : { "default" : 1, "export" : 1 }
+        "criterion" : { "default" : 1, "export" : 1 },
+        "path" : `../.module/Proto/proto`
       }
     }
-    debugger;
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
-    test.identical( outfile.path.local.path, '../.module/Proto' );
+    test.identical( outfile.path.download.path, '../.module/Proto' );
     test.identical( outfile.path.remote.path, 'git+https:///github.com/Wandalen/wProto.git' );
     // logger.log( _.toJson( outfile.path ) );
 
@@ -5005,61 +5009,65 @@ function exportInformal( test )
     test.identical( files, [ '.', './Proto.informal.out.will.yml' ] );
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( outPath, './Proto.informal.out.will.yml' ) );
-
+    outfile = outfile.module[ 'Proto.informal.out' ];
     var expected =
     {
       "module.willfiles" :
       {
-        "path" : "Proto.informal.out.will.yml",
-        "criterion" : { "predefined" : 1 }
-      },
-      "module.original.willfiles" :
-      {
-        "path" : "../module/Proto.informal.will.yml",
-        "criterion" : { "predefined" : 1 }
+        "criterion" : { "predefined" : 1 },
+        "path" : `Proto.informal.out.will.yml`
       },
       "module.common" :
       {
-        "path" : "Proto.informal.out",
+        "criterion" : { "predefined" : 1 },
+        "path" : `Proto.informal.out`
+      },
+      "module.original.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : `../module/Proto.informal.will.yml`
+      },
+      "module.peer.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : `../module/Proto.informal.will.yml`
+      },
+      "module.download" :
+      {
         "criterion" : { "predefined" : 1 }
       },
       "in" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : `.`
       },
       "out" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : `.`
       },
       "remote" :
       {
-        "path" : "git+https:///github.com/Wandalen/wProto.git",
         "criterion" : { "predefined" : 1 }
       },
-      "local" :
-      {
-        "path" : "../.module/Proto",
-        "criterion" : { "predefined" : 1 }
-      },
-      "export" : { "path" : "{path::local}/proto" },
+      "download" : { "path" : `../.module/Proto` },
+      "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
-        "path" : "../.module/Proto/proto",
-        "criterion" : { "default" : 1, "export" : 1 }
+        "criterion" : { "default" : 1, "export" : 1 },
+        "path" : `../.module/Proto/proto`
       }
     }
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
-    test.identical( outfile.path.local.path, '../.module/Proto' );
+    test.identical( outfile.path.download.path, '../.module/Proto' );
     test.identical( outfile.path.remote.path, 'git+https:///github.com/Wandalen/wProto.git' );
     // logger.log( _.toJson( outfile.path ) );
 
     return null;
   })
 
-  /* - */
+  // /* - */
 
   ready
   .then( () =>
@@ -5079,60 +5087,65 @@ function exportInformal( test )
     test.identical( files, [ '.', './UriBasic.informal.out.will.yml' ] );
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( outPath, './UriBasic.informal.out.will.yml' ) );
+    outfile = outfile.module[ 'UriBasic.informal.out' ];
     var expected =
     {
       "module.willfiles" :
       {
-        "path" : "UriBasic.informal.out.will.yml",
-        "criterion" : { "predefined" : 1 }
-      },
-      "module.original.willfiles" :
-      {
-        "path" : "../module/UriBasic.informal.will.yml",
-        "criterion" : { "predefined" : 1 }
+        "criterion" : { "predefined" : 1 },
+        "path" : `UriBasic.informal.out.will.yml`
       },
       "module.common" :
       {
-        "path" : "UriBasic.informal.out",
+        "criterion" : { "predefined" : 1 },
+        "path" : `UriBasic.informal.out`
+      },
+      "module.original.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : `../module/UriBasic.informal.will.yml`
+      },
+      "module.peer.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : `../module/UriBasic.informal.will.yml`
+      },
+      "module.download" :
+      {
         "criterion" : { "predefined" : 1 }
       },
       "in" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : `.`
       },
       "out" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : `.`
       },
       "remote" :
       {
-        "path" : "npm:///wuribasic",
         "criterion" : { "predefined" : 1 }
       },
-      "local" :
-      {
-        "path" : "../.module/UriBasic",
-        "criterion" : { "predefined" : 1 }
-      },
-      "export" : { "path" : "{path::local}/proto" },
+      "download" : { "path" : `../.module/UriBasic` },
+      "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
-        "path" : "../.module/UriBasic/proto",
-        "criterion" : { "default" : 1, "export" : 1 }
-      }
+        "criterion" : { "default" : 1, "export" : 1 },
+        "path" : `../.module/UriBasic/proto`
+      },
     }
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
-    test.identical( outfile.path.local.path, '../.module/UriBasic' );
+    test.identical( outfile.path.download.path, '../.module/UriBasic' );
     test.identical( outfile.path.remote.path, 'npm:///wuribasic' );
     // logger.log( _.toJson( outfile.path ) );
 
     return null;
   })
 
-  /* - */
+  // /* - */
 
   return ready;
 }
@@ -5302,13 +5315,12 @@ function exportMixed( test )
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/Proto.informal.out.will.yml' ) );
     outfile = outfile.module[ 'Proto.informal.out' ];
-
     var expected =
     {
       'download' :
       {
         'src' : { 'prefixPath' : 'path::remote', 'filePath' : { '.' : '.' } },
-        'dst' : { 'prefixPath' : 'path::local' },
+        'dst' : { 'prefixPath' : 'path::download' },
         'mandatory' : 1,
       },
       'exported.export' :
@@ -5336,63 +5348,75 @@ function exportMixed( test )
     {
       "module.willfiles" :
       {
-        "path" : "Proto.informal.out.will.yml",
-        "criterion" : { "predefined" : 1 }
-      },
-      "module.original.willfiles" :
-      {
-        "path" : "../module/Proto.informal.will.yml",
-        "criterion" : { "predefined" : 1 }
+        "criterion" : { "predefined" : 1 },
+        "path" : `Proto.informal.out.will.yml`
       },
       "module.common" :
       {
-        "path" : "Proto.informal.out",
+        "criterion" : { "predefined" : 1 },
+        "path" : `Proto.informal.out`
+      },
+      "module.original.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : `../module/Proto.informal.will.yml`
+      },
+      "module.peer.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : `../module/Proto.informal.will.yml`
+      },
+      "module.download" :
+      {
         "criterion" : { "predefined" : 1 }
       },
       "in" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : `.`
       },
       "out" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : `.`
       },
       "remote" :
       {
-        "path" : "git+https:///github.com/Wandalen/wProto.git",
         "criterion" : { "predefined" : 1 }
       },
-      "local" :
-      {
-        "path" : "../.module/Proto",
-        "criterion" : { "predefined" : 1 }
-      },
-      "export" : { "path" : "{path::local}/proto" },
+      "download" : { "path" : `../.module/Proto` },
+      "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
-        "path" : "../.module/Proto/proto",
-        "criterion" : { "default" : 1, "export" : 1 }
+        "criterion" : { "default" : 1, "export" : 1 },
+        "path" : `../.module/Proto/proto`
       },
       "exported.files.export" :
       {
+        "criterion" : { "default" : 1, "export" : 1 },
         "path" :
         [
-          "../.module/Proto/proto",
-          "../.module/Proto/proto/dwtools",
-          "../.module/Proto/proto/dwtools/Tools.s",
-          "../.module/Proto/proto/dwtools/abase",
-          "../.module/Proto/proto/dwtools/abase/l3",
-          "../.module/Proto/proto/dwtools/abase/l3/Proto.s",
-          "../.module/Proto/proto/dwtools/abase/l3/Proto0Workpiece.s",
-          "../.module/Proto/proto/dwtools/abase/l3/ProtoAccessor.s",
-          "../.module/Proto/proto/dwtools/abase/l3/ProtoLike.s",
-          "../.module/Proto/proto/dwtools/abase/l3.test",
-          "../.module/Proto/proto/dwtools/abase/l3.test/Proto.test.s",
-          "../.module/Proto/proto/dwtools/abase/l3.test/ProtoLike.test.s"
-        ],
-        "criterion" : { "default" : 1, "export" : 1 }
+          `../.module/Proto/proto`,
+          `../.module/Proto/proto/dwtools`,
+          `../.module/Proto/proto/dwtools/Tools.s`,
+          `../.module/Proto/proto/dwtools/abase`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/Include.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/l1`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/l1/Define.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/l1/Proto.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/l1/Workpiece.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/l3`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/l3/Accessor.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/l3/Class.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/l3/Complex.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto/l3/Like.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto.test`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto.test/Class.test.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto.test/Complex.test.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto.test/Like.test.s`,
+          `../.module/Proto/proto/dwtools/abase/l3_proto.test/Proto.test.s`
+        ]
       }
     }
     test.identical( outfile.path, expected );
@@ -5403,6 +5427,9 @@ function exportMixed( test )
       'export' :
       {
         'version' : '0.1.0',
+        'recursive' : 0,
+        'withIntegrated' : 2,
+        'tar' : 0,
         'criterion' : { 'default' : 1, 'export' : 1 },
         'exportedReflector' : 'reflector::exported.export',
         'exportedFilesReflector' : 'reflector::exported.files.export',
@@ -5421,7 +5448,7 @@ function exportMixed( test )
       },
       'download' :
       {
-        'opts' : { 'reflector' : 'reflector::download*' },
+        'opts' : { 'reflector' : 'reflector::download*', 'verbosity' : null },
         'inherit' : [ 'files.reflect' ]
       }
     }
@@ -5457,7 +5484,7 @@ function exportMixed( test )
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exporting .*module::UriBasic.informal.* \/ build::export/ ) );
-    test.is( _.strHas( got.output, ' + reflector::download.* reflected' ) );
+    test.is( _.strHas( got.output, /\+ reflector::download reflected .* file\(s\)/ ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, /Exported .*module::UriBasic.informal.* \/ build::export/ ) );
     test.is( _.strHas( got.output, 'out/Proto.informal.out.will.yml' ) );
@@ -5465,13 +5492,13 @@ function exportMixed( test )
     test.is( _.strHas( got.output, 'Reloading submodules' ) );
 
     test.is( _.strHas( got.output, /- .*step::delete.out.debug.* deleted 0 file\(s\), at/ ) );
-    test.is( _.strHas( got.output, ' + reflector::reflect.proto.debug.* reflected 2 file(s)' ) );
-    test.is( _.strHas( got.output, ' + reflector::reflect.submodules.* reflected' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto.debug reflected' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.submodules reflected' ) );
 
-    test.is( _.strHas( got.output, ' ! Failed to read submodule::Tools' ) );
-    test.is( _.strHas( got.output, ' ! Failed to read submodule::PathBasic' ) );
-    test.is( _.strHas( got.output, ' ! Failed to read submodule::UriBasic' ) );
-    test.is( _.strHas( got.output, ' ! Failed to read submodule::Proto' ) );
+    test.is( _.strHas( got.output, ' ! Failed to read relation::Tools' ) );
+    test.is( _.strHas( got.output, ' ! Failed to read relation::PathBasic' ) );
+    test.is( _.strHas( got.output, ' ! Failed to read relation::UriBasic' ) );
+    test.is( _.strHas( got.output, ' ! Failed to read relation::Proto' ) );
 
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/Proto.informal.out.will.yml' ) ) );
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/UriBasic.informal.out.will.yml' ) ) );
@@ -6098,14 +6125,14 @@ function exportMultiple( test )
         "path" : "submodule.out",
         "criterion" : { "predefined" : 1 }
       },
-      "local" :
+      "download" :
       {
-        "path" : "submodule.out", //Vova: qqq why remote property doesn't have path like local?
+        "path" : "submodule.out",
         "criterion" : { "predefined" : 1 }
       },
       "remote" :
       {
-        "criterion" : { "predefined" : 1 }
+        "criterion" : { "predefined" : 1 }//Vova: qqq why remote property doesn't have path like download?
       },
       "proto" : { "path" : "../proto" },
       "temp" : { "path" : "." },
@@ -6360,7 +6387,7 @@ function exportMultiple( test )
         "path" : "submodule.out",
         "criterion" : { "predefined" : 1 }
       },
-      "local" :
+      "download" :
       {
         "path" : "submodule.out", //Vova: qqq why remote property doesn't have path like local?
         "criterion" : { "predefined" : 1 }
@@ -8284,10 +8311,10 @@ function importLocalRepo( test )
   {
 
     var files = _.fileProvider.dirRead( modulePath );
-    test.identical( files, [ /* 'Proto', */ 'Proto.out.will.yml' ] );
+    test.identical( files, [ 'Proto', 'Proto.out.will.yml' ] );
 
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, /reflector::download reflected .* file\(s\) .*importLocalRepo : module\/Proto <- . in .*/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ reflector::download reflected .* file\(s\)/ ), 1 );
     test.identical( _.strCount( got.output, /Write out willfile .*\/.module\/Proto.out.will.yml/ ), 1 );
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( modulePath, 'Proto.out.will.yml' ) );
@@ -8295,29 +8322,38 @@ function importLocalRepo( test )
 
     var expectedReflector =
     {
-      'download' :
+      "download" :
       {
-        'src' : { 'filePath' : { '.' : '.' }, 'prefixPath' : 'path::remote' },
-        'dst' : { 'prefixPath' : 'path::local' },
-        'mandatory' : 1,
-      },
-      'exported.export' :
-      {
-        'src' :
+        "src" :
         {
-          // 'filePath' : { '.' : '' },
-          'filePath' : { '**' : '' },
-          'prefixPath' : '../module/Proto/proto'
+          "filePath" : { "." : `.` },
+          "prefixPath" : `path::remote`
         },
-        'criterion' : { 'default' : 1, 'export' : 1 },
-        'mandatory' : 1
+        "dst" : { "prefixPath" : `path::download` },
+        "mandatory" : 1
       },
-      'exported.files.export' :
+      "exported.export" :
       {
-        'src' : { 'filePath' : { 'path::exported.files.export' : '' }, 'basePath' : '.', 'prefixPath' : 'path::exported.dir.export', recursive : 0 },
-        'criterion' : { 'default' : 1, 'export' : 1 },
-        'recursive' : 0,
-        'mandatory' : 1
+        "src" :
+        {
+          "filePath" : { "**" : `` },
+          "prefixPath" : `Proto/proto`
+        },
+        "mandatory" : 1,
+        "criterion" : { "default" : 1, "export" : 1 }
+      },
+      "exported.files.export" :
+      {
+        "src" :
+        {
+          "filePath" : { "path::exported.files.export" : `` },
+          "basePath" : `.`,
+          "prefixPath" : `path::exported.dir.export`,
+          "recursive" : 0
+        },
+        "recursive" : 0,
+        "mandatory" : 1,
+        "criterion" : { "default" : 1, "export" : 1 }
       }
     }
     test.identical( outfile.reflector, expectedReflector );
@@ -8327,76 +8363,79 @@ function importLocalRepo( test )
       "module.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : "Proto.out.will.yml"
+        "path" : `Proto.out.will.yml`
       },
       "module.common" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : "Proto.out"
-      },
-      "local" :
-      {
-        "criterion" : { "predefined" : 1 },
-        "path" : "Proto.out"
+        "path" : `Proto.out`
       },
       "module.original.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : [ "../module/Proto.will.yml" ]
+        "path" : `../module/Proto.will.yml`
       },
       "module.peer.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : [ "../module/Proto.will.yml" ]
+        "path" : `../module/Proto.will.yml`
       },
       "module.download" :
       {
         "criterion" : { "predefined" : 1 }
       },
-      "remote" :
-      {
-        "path" : "git+hd://../../_repo/Proto",//Vova: path should be defined?
-        "criterion" : { "predefined" : 1 }
-      },
       "in" :
       {
         "criterion" : { "predefined" : 0 },
-        "path" : "."
+        "path" : `.`
       },
       "out" :
       {
         "criterion" : { "predefined" : 0 },
-        "path" : "."
+        "path" : `.`
       },
-      "export" : { "path" : "{path::local}/proto/**" },
-      "temp" : { "path" : "../out" },
+      "remote" :
+      {
+        "criterion" : { "predefined" : 1 }
+      },
+      "download" : { "path" : `Proto` },
+      "export" : { "path" : `{path::download}/proto/**` },
+      "temp" : { "path" : `../out` },
       "exported.dir.export" :
       {
         "criterion" : { "default" : 1, "export" : 1 },
-        "path" : "../module/Proto/proto"
+        "path" : `Proto/proto`
       },
       "exported.files.export" :
       {
         "criterion" : { "default" : 1, "export" : 1 },
         "path" :
         [
-          '../module/Proto/proto',
-          '../module/Proto/proto/dwtools',
-          '../module/Proto/proto/dwtools/Tools.s',
-          '../module/Proto/proto/dwtools/abase',
-          '../module/Proto/proto/dwtools/abase/l3',
-          '../module/Proto/proto/dwtools/abase/l3/Proto.s',
-          '../module/Proto/proto/dwtools/abase/l3/Proto0Workpiece.s',
-          '../module/Proto/proto/dwtools/abase/l3/ProtoAccessor.s',
-          '../module/Proto/proto/dwtools/abase/l3/ProtoLike.s',
-          '../module/Proto/proto/dwtools/abase/l3.test',
-          '../module/Proto/proto/dwtools/abase/l3.test/Proto.test.s',
-          '../module/Proto/proto/dwtools/abase/l3.test/ProtoLike.test.s'
+          `Proto/proto`,
+          `Proto/proto/dwtools`,
+          `Proto/proto/dwtools/Tools.s`,
+          `Proto/proto/dwtools/abase`,
+          `Proto/proto/dwtools/abase/l3_proto`,
+          `Proto/proto/dwtools/abase/l3_proto/Include.s`,
+          `Proto/proto/dwtools/abase/l3_proto/l1`,
+          `Proto/proto/dwtools/abase/l3_proto/l1/Define.s`,
+          `Proto/proto/dwtools/abase/l3_proto/l1/Proto.s`,
+          `Proto/proto/dwtools/abase/l3_proto/l1/Workpiece.s`,
+          `Proto/proto/dwtools/abase/l3_proto/l3`,
+          `Proto/proto/dwtools/abase/l3_proto/l3/Accessor.s`,
+          `Proto/proto/dwtools/abase/l3_proto/l3/Class.s`,
+          `Proto/proto/dwtools/abase/l3_proto/l3/Complex.s`,
+          `Proto/proto/dwtools/abase/l3_proto/l3/Like.s`,
+          `Proto/proto/dwtools/abase/l3_proto.test`,
+          `Proto/proto/dwtools/abase/l3_proto.test/Class.test.s`,
+          `Proto/proto/dwtools/abase/l3_proto.test/Complex.test.s`,
+          `Proto/proto/dwtools/abase/l3_proto.test/Like.test.s`,
+          `Proto/proto/dwtools/abase/l3_proto.test/Proto.test.s`
         ]
       }
     }
     test.identical( outfile.path, expectedPath );
-    // logger.log( _.toJson( outfile.path ) );
+    // logger.log( _.toJs( outfile.path ) );
 
     return null;
   })

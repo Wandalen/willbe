@@ -5377,7 +5377,7 @@ function structureExportOut( o )
   debugger;
   let modules = variants.map( ( variant ) =>
   {
-    if( variant.module )
+    if( !variant.module )
     throw _.err
     (
         `${variant.object.absoluteName} is not available. `
