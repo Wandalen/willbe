@@ -1919,100 +1919,87 @@ defaults.nodesGroup = null;
 
 let modulesEach = _.routineFromPreAndBody( modulesEach_pre, modulesEach_body );
 
+// //
 //
-
-function modulesEachDo( o )
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let modules;
-  let con = new _.Consequence().take( null );
-
-  o = _.routineOptions( modulesEachDo, arguments );
-
-  // con.then( () =>
-  // {
-  //   if( !o.downloading )
-  //   return null;
-  //   return module.upform({ all : 0, subModulesFormed : 1 });
-  // });
-
-  con.then( () =>
-  {
-    if( !o.downloading )
-    return null;
-    return module.subModulesDownload({ recursive : o.recursive, loggingNoChanges : 0 });
-  });
-
-  con.then( () =>
-  {
-    if( !o.upforming )
-    return null;
-    return module.modulesUpform({ all : 0, subModulesFormed : 1, peerModulesFormed : 1 });
-  });
-
-  // con.then( () =>
-  // {
-  //   debugger;
-  //   return module.upform({ all : 0, subModulesFormed : 1 });
-  // });
-
-  con.then( () =>
-  {
-    let o2 = _.mapOnly( o, module.modulesEach.defaults );
-    o2.outputFormat = '/';
-    modules = module.modulesEach( o2 );
-    // debugger;
-    return modules;
-  });
-
-  con.then( () =>
-  {
-    let con2 = new _.Consequence().take( null );
-    // debugger;
-    for( let m = modules.length-1 ; m >= 0 ; m-- ) ( function( r )
-    {
-      con2
-      .then( () =>
-      {
-        // if( !r.module )
-        // debugger;
-        if( !r.module && o.allowingMissing )
-        return null;
-        if( !r.module )
-        throw _.err
-        (
-            `Cant ${o.actionName} ${module.absoluteName} because ${r.relation ? r.relation.absoluteName : r.opener.absoluteName} is not available.`
-          , `\nLooked at ${r.opener ? r.opener.commonPath : r.relation.path}`
-        );
-        return o.onEach( r, o );
-      })
-    })( modules[ m ] );
-
-    return con2;
-  });
-
-  return con;
-}
-
-var defaults = modulesEachDo.defaults = _.mapExtend( null, modulesEach.defaults );
-
-defaults.recursive = 0;
-defaults.withStem = 1;
-defaults.withPeers = 1;
-defaults.allowingMissing = 0;
-defaults.downloading = 0;
-defaults.upforming = 0;
-defaults.onEach = null;
-defaults.actionName = null;
-
-delete defaults.outputFormat;
-delete defaults.onUp;
-delete defaults.onDown;
-delete defaults.onNode;
+// function modulesEachDo( o )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//   let modules;
+//   let con = new _.Consequence().take( null );
+//
+//   o = _.routineOptions( modulesEachDo, arguments );
+//
+//   // con.then( () =>
+//   // {
+//   //   if( !o.downloading )
+//   //   return null;
+//   //   return module.subModulesDownload({ recursive : o.recursive, loggingNoChanges : 0 });
+//   // });
+//   //
+//   // con.then( () =>
+//   // {
+//   //   if( !o.upforming )
+//   //   return null;
+//   //   return module.modulesUpform({ all : 0, subModulesFormed : 1, peerModulesFormed : 1 });
+//   // });
+//
+//   con.then( () =>
+//   {
+//     let o2 = _.mapOnly( o, module.modulesEach.defaults );
+//     o2.outputFormat = '/';
+//     modules = module.modulesEach( o2 );
+//     // debugger;
+//     return modules;
+//   });
+//
+//   con.then( () =>
+//   {
+//     let con2 = new _.Consequence().take( null );
+//     // debugger;
+//     for( let m = modules.length-1 ; m >= 0 ; m-- ) ( function( r )
+//     {
+//       con2
+//       .then( () =>
+//       {
+//         // if( !r.module )
+//         // debugger;
+//         if( !r.module && o.allowingMissing )
+//         return null;
+//         if( !r.module )
+//         throw _.err
+//         (
+//             `Cant ${o.actionName} ${module.absoluteName} because ${r.relation ? r.relation.absoluteName : r.opener.absoluteName} is not available.`
+//           , `\nLooked at ${r.opener ? r.opener.commonPath : r.relation.path}`
+//         );
+//         return o.onEach( r, o );
+//       })
+//     })( modules[ m ] );
+//
+//     return con2;
+//   });
+//
+//   return con;
+// }
+//
+// var defaults = modulesEachDo.defaults = _.mapExtend( null, modulesEach.defaults );
+//
+// defaults.recursive = 0;
+// defaults.withStem = 1;
+// defaults.withPeers = 1;
+// defaults.allowingMissing = 0;
+// defaults.downloading = 0;
+// defaults.upforming = 0;
+// defaults.onEach = null;
+// defaults.actionName = null;
+//
+// delete defaults.outputFormat;
+// delete defaults.onUp;
+// delete defaults.onDown;
+// delete defaults.onNode;
 
 //
 
@@ -2029,12 +2016,56 @@ function modulesBuild_body( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+  let ready = new _.Consequence().take( null );
 
   o = _.routineOptions( modulesBuild_body, arguments );
-  let o2 = _.mapOnly( o, module.modulesEachDo.defaults );
-  o2.onEach = handleEach;
-  o2.actionName = o.kind;
-  return module.modulesEachDo( o2 );
+
+  ready.then( () =>
+  {
+    if( !o.downloading )
+    return null;
+    let o2 = _.mapOnly( o, will.modulesDownload.defaults );
+    o2.loggingNoChanges = 0;
+    o2.modules = [ module ];
+    if( o2.recursive === 0 )
+    o2.recursive = 1;
+    // debugger;
+    return will.modulesDownload( o2 );
+  })
+
+  ready.then( () =>
+  {
+    debugger;
+    if( !o.upforming )
+    return null;
+    let o2 = _.mapOnly( o, will.modulesUpform.defaults );
+    o2.modules = [ module ];
+    o2.all = 0;
+    o2.subModulesFormed = 1;
+    o2.peerModulesFormed = 1;
+    debugger;
+    return will.modulesUpform( o2 );
+  })
+
+  ready.then( () =>
+  {
+    let o2 = _.mapOnly( o, will.modulesFor.defaults );
+    o2.onEach = handleEach;
+    o2.modules = [ module ];
+    o2.left = 0;
+    return will.modulesFor( o2 );
+  })
+
+  ready.finally( ( err, arg ) =>
+  {
+    if( err )
+    debugger;
+    if( err )
+    throw _.err( err, `\nFailed to ${o.kind} ${module.absoluteName} at ${module.localPath}` );
+    return arg;
+  })
+
+  return ready;
 
   /* */
 
@@ -2046,14 +2077,15 @@ function modulesBuild_body( o )
 
 }
 
-var defaults = modulesBuild_body.defaults = _.mapExtend( null, moduleBuild.defaults, modulesEachDo.defaults );
+// var defaults = modulesBuild_body.defaults = _.mapExtend( null, moduleBuild.defaults, modulesEachDo.defaults );
+var defaults = modulesBuild_body.defaults = _.mapExtend( null, moduleBuild.defaults, _.Will.prototype.modulesFor.defaults );
 
 defaults.recursive = 0;
 defaults.withStem = 1;
 defaults.withPeers = 0;
 defaults.withOut = 0;
 defaults.withIn = 1;
-defaults.upforming = 0;
+defaults.upforming = 1;
 defaults.downloading = 1;
 
 _.assert( defaults.outputFormat === undefined );
@@ -2061,6 +2093,7 @@ _.assert( defaults.outputFormat === undefined );
 let modulesBuild = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
 modulesBuild.defaults.kind = 'build';
 modulesBuild.defaults.downloading = 1;
+
 let modulesExport = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
 modulesExport.defaults.kind = 'export';
 modulesExport.defaults.downloading = 1;
@@ -2079,41 +2112,7 @@ function modulesUpform( o )
 
   let o2 = _.mapExtend( null, o );
   o2.modules = [ module ];
-  // debugger;
   return will.modulesUpform( o2 );
-
-  // let o2 = _.mapOnly( o, module.modulesEachDo.defaults );
-  // delete o2.allowingMissing;
-  // o2.onEach = handleEach;
-  // o2.modules = [ module ];
-  // return will.modulesFor( o2 )
-  // .finally( ( err, arg ) =>
-  // {
-  //   if( err )
-  //   throw _.err( err, `\nFailed to upform module ${module.absoluteName}` );
-  //   return arg;
-  // });
-  //
-  // /* */
-  //
-  // function handleEach( variant, op )
-  // {
-  //
-  //   if( !variant.module && o.allowingMissing )
-  //   return null;
-  //   if( !variant.module )
-  //   debugger;
-  //   if( !variant.module )
-  //   throw _.err
-  //   (
-  //       `Cant upform ${module.absoluteName} because ${varaint.relation ? varaint.relation.absoluteName : varaint.opener.absoluteName} is not available.`
-  //     , `\nLooked at ${varaint.opener ? varaint.opener.commonPath : varaint.relation.path}`
-  //   );
-  //
-  //   let o3 = _.mapOnly( o, module.upform.defaults );
-  //   return variant.module.upform( o3 );
-  // }
-
 }
 
 var defaults = modulesUpform.defaults = _.mapExtend( null, upform.defaults, modulesEach.defaults );
@@ -2121,7 +2120,6 @@ var defaults = modulesUpform.defaults = _.mapExtend( null, upform.defaults, modu
 defaults.recursive = 2;
 defaults.withStem = 1;
 defaults.withPeers = 1;
-// defaults.downloading = 0;
 defaults.allowingMissing = 1;
 
 delete defaults.outputFormat;
@@ -5372,11 +5370,19 @@ function structureExportOut( o )
   o.dst = o.dst || Object.create( null );
   o.dst.format = will.Willfile.FormatVersion;
 
-  debugger;
-  let variants = module.modulesEach({ withPeers : 1, withStem : 1, recursive : 2, outputFormat : '/' });
-  debugger;
+  // debugger;
+  let variants = module.modulesEach
+  ({
+    withPeers : 1,
+    withStem : 1,
+    recursive : 2,
+    outputFormat : '/',
+  });
+  // debugger;
   let modules = variants.map( ( variant ) =>
   {
+    if( !variant.module )
+    debugger;
     if( !variant.module )
     throw _.err
     (
@@ -6184,7 +6190,7 @@ let Extend =
   // batcher
 
   modulesEach,
-  modulesEachDo,
+  // modulesEachDo,
   modulesBuild,
   modulesExport,
   modulesUpform,

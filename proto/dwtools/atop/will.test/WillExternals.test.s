@@ -8671,13 +8671,14 @@ function reflectGetPath( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'reflect-get-path' );
+  let repoPath = _.path.join( self.suitePath, '_repo' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, 'module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
-  let ready = new _.Consequence().take( null )
+  let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
   ({
@@ -8689,6 +8690,7 @@ function reflectGetPath( test )
   })
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
 
   /* - */
 
@@ -14081,82 +14083,82 @@ var Self =
   tests :
   {
 
-    preCloneRepos,
-    singleModuleWithSpaceTrivial,
-    make,
-    transpile,
-
-    openWith,
-    openEach,
-    withMixed,
-    // eachMixed, // xxx : later
-    withList,
-    // eachList, // xxx : later
-    eachBrokenIll,
-    eachBrokenNon,
-    eachBrokenCommand,
-    openExportClean,
-
-    verbositySet,
-    verbosityStepDelete,
-    verbosityStepPrintName,
-    modulesTreeDotless,
-    modulesTreeHierarchyRemote,
-
-    help,
-    listSingleModule,
-    listWithSubmodulesSimple,
-    listWithSubmodules,
-    listSteps,
-    // listComplexPaths, // xxx
-
-    clean,
-    cleanSingleModule,
-    cleanBroken1,
-    cleanBroken2,
-    cleanBrokenSubmodules,
-    cleanNoBuild,
-    cleanDry,
-    cleanSubmodules,
-    cleanMixed,
-    cleanWithInPath,
-    cleanRecursive, // xxx
-
-    buildSingleModule,
-    buildSingleStep,
-    buildSubmodules,
-    // buildDetached, // xxx : uncomment later
-
-    exportSingle,
-    exportItself,
-    exportNonExportable,
-    exportInformal,
-    exportWithReflector,
-    exportToRoot,
-    exportMixed,
-    exportSecond,
-    exportSubmodules,
-    exportMultiple,
-    exportImportMultiple,
-    exportBroken,
-    exportDoc,
-    exportImport,
-    exportBrokenNoreflector,
-    exportCourrputedOutfileUnknownSection,
-    exportCourruptedOutfileSyntax,
-    exportCourruptedSubmodulesDisabled,
-    exportInconsistent,
-    exportWholeModule,
-    exportRecursive,
-    exportRecursiveUsingSubmodule,
-    exportDotless,
-    exportDotlessSingle,
-    exportTracing,
-    exportRewritesOutFile,
-    // exportWithRemoteSubmodules, // xxx
-    importPathLocal,
-    importLocalRepo,
-    importOutWithDeletedSource,
+    // preCloneRepos,
+    // singleModuleWithSpaceTrivial,
+    // make,
+    // transpile,
+    //
+    // openWith,
+    // openEach,
+    // withMixed,
+    // // eachMixed, // xxx : later
+    // withList,
+    // // eachList, // xxx : later
+    // eachBrokenIll,
+    // eachBrokenNon,
+    // eachBrokenCommand,
+    // openExportClean,
+    //
+    // verbositySet,
+    // verbosityStepDelete,
+    // verbosityStepPrintName,
+    // modulesTreeDotless,
+    // modulesTreeHierarchyRemote,
+    //
+    // help,
+    // listSingleModule,
+    // listWithSubmodulesSimple,
+    // listWithSubmodules,
+    // listSteps,
+    // // listComplexPaths, // xxx
+    //
+    // clean,
+    // cleanSingleModule,
+    // cleanBroken1,
+    // cleanBroken2,
+    // cleanBrokenSubmodules,
+    // cleanNoBuild,
+    // cleanDry,
+    // cleanSubmodules,
+    // cleanMixed,
+    // cleanWithInPath,
+    // cleanRecursive, // xxx
+    //
+    // buildSingleModule,
+    // buildSingleStep,
+    // buildSubmodules,
+    // // buildDetached, // xxx : uncomment later
+    //
+    // exportSingle,
+    // exportItself,
+    // exportNonExportable,
+    // exportInformal,
+    // exportWithReflector,
+    // exportToRoot,
+    // exportMixed,
+    // exportSecond,
+    // exportSubmodules,
+    // exportMultiple,
+    // exportImportMultiple,
+    // exportBroken,
+    // exportDoc,
+    // exportImport,
+    // exportBrokenNoreflector,
+    // exportCourrputedOutfileUnknownSection,
+    // exportCourruptedOutfileSyntax,
+    // exportCourruptedSubmodulesDisabled,
+    // exportInconsistent,
+    // exportWholeModule,
+    // exportRecursive,
+    // exportRecursiveUsingSubmodule,
+    // exportDotless,
+    // exportDotlessSingle,
+    // exportTracing,
+    // exportRewritesOutFile,
+    // // exportWithRemoteSubmodules, // xxx
+    // importPathLocal,
+    // importLocalRepo,
+    // importOutWithDeletedSource,
 
     reflectNothingFromSubmodules,
     reflectGetPath,
@@ -14183,28 +14185,28 @@ var Self =
     functionPlatform,
     fucntionThisCriterion,
 
-    submodulesDownloadSingle,
-    submodulesDownloadUpdate,
-    submodulesDownloadUpdateDry,
-    submodulesDownloadSwitchBranch,
-    submodulesDownloadRecursive,
-    // submodulesDownloadedUpdate, // xxx : look later
-    subModulesUpdate,
-    subModulesUpdateSwitchBranch,
-    stepSubmodulesDownload,
-    stepWillbeVersionCheck,
-    stepSubmodulesAreUpdated,
-    upgradeDryDetached,
-    upgradeDetached,
-    fixateDryDetached,
-    fixateDetached,
-
-    versionsVerify,
-    versionsAgree
-
-    // runWillbe, // qqq : help to fix, please
-
-    // resourcesFormReflectorsExperiment, // qqq : done?
+    // submodulesDownloadSingle,
+    // submodulesDownloadUpdate,
+    // submodulesDownloadUpdateDry,
+    // submodulesDownloadSwitchBranch,
+    // submodulesDownloadRecursive,
+    // // submodulesDownloadedUpdate, // xxx : look later
+    // subModulesUpdate,
+    // subModulesUpdateSwitchBranch,
+    // stepSubmodulesDownload,
+    // stepWillbeVersionCheck,
+    // stepSubmodulesAreUpdated,
+    // upgradeDryDetached,
+    // upgradeDetached,
+    // fixateDryDetached,
+    // fixateDetached,
+    //
+    // versionsVerify,
+    // versionsAgree
+    //
+    // // runWillbe, // qqq : help to fix, please
+    //
+    // // resourcesFormReflectorsExperiment, // qqq : done?
 
   }
 

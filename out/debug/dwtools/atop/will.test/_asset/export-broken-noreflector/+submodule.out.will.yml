@@ -20,7 +20,7 @@ module:
         criterion:
           predefined: 1
         path: submodule.out
-      local:
+      download:
         criterion:
           predefined: 1
         path: submodule.out
@@ -155,7 +155,7 @@ module:
       module.download:
         criterion:
           predefined: 1
-      local:
+      download:
         criterion:
           predefined: 1
         path: submodule
