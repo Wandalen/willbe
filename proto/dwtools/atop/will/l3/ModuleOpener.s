@@ -1252,13 +1252,11 @@ function _remoteDownload( o )
   _.assert( !!opener.superRelation );
   _.assert( _.arrayHas( [ 'download', 'update', 'agree' ], o.mode ) );
 
-  debugger;
   return ready
   .then( () => opener._remoteIsUpToDate({ mode : o.mode }) )
   .then( function( arg )
   {
 
-    debugger;
     downloading = arg;
     _.assert( _.boolIs( downloading ) );
 

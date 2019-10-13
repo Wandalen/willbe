@@ -8743,15 +8743,22 @@ function reflectGetPath( test )
       './debug/dwtools',
       './debug/dwtools/Tools.s',
       './debug/dwtools/abase',
-      './debug/dwtools/abase/l3',
-      './debug/dwtools/abase/l3/PathBasic.s',
-      './debug/dwtools/abase/l3.test',
-      './debug/dwtools/abase/l3.test/PathBasic.test.html',
-      './debug/dwtools/abase/l3.test/PathBasic.test.s',
-      './debug/dwtools/abase/l4',
-      './debug/dwtools/abase/l4/PathsBasic.s',
-      './debug/dwtools/abase/l4.test',
-      './debug/dwtools/abase/l4.test/Paths.test.s'
+      './debug/dwtools/abase/l3_proto',
+      './debug/dwtools/abase/l3_proto/Include.s',
+      './debug/dwtools/abase/l3_proto/l1',
+      './debug/dwtools/abase/l3_proto/l1/Define.s',
+      './debug/dwtools/abase/l3_proto/l1/Proto.s',
+      './debug/dwtools/abase/l3_proto/l1/Workpiece.s',
+      './debug/dwtools/abase/l3_proto/l3',
+      './debug/dwtools/abase/l3_proto/l3/Accessor.s',
+      './debug/dwtools/abase/l3_proto/l3/Class.s',
+      './debug/dwtools/abase/l3_proto/l3/Complex.s',
+      './debug/dwtools/abase/l3_proto/l3/Like.s',
+      './debug/dwtools/abase/l3_proto.test',
+      './debug/dwtools/abase/l3_proto.test/Class.test.s',
+      './debug/dwtools/abase/l3_proto.test/Complex.test.s',
+      './debug/dwtools/abase/l3_proto.test/Like.test.s',
+      './debug/dwtools/abase/l3_proto.test/Proto.test.s'
     ]
     var files = self.find( outPath );
     test.gt( files.length, 13 );

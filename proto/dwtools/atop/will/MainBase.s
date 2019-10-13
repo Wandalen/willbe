@@ -1418,7 +1418,6 @@ function modulesFor_body( o )
     let o2 = _.mapOnly( o, will.modulesEach.defaults );
     o2.outputFormat = '/';
     o2.modules = variants;
-    debugger;
     return will.modulesEach( o2 );
   }
 
@@ -1588,11 +1587,11 @@ function _modulesDownload_body( o )
     else
     {
       let o2 = _.mapOnly( o, variant.opener._remoteDownload.defaults );
-      debugger;
+      // debugger;
       let r = _.Consequence.From( variant.opener._remoteDownload( o2 ) );
       return r.then( ( downloaded ) =>
       {
-        debugger;
+        // debugger;
         _.assert( _.boolIs( downloaded ) );
         _.assert( _.strIs( variant.opener.remotePath ) );
         if( downloaded )
