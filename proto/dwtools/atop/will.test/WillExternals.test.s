@@ -9512,7 +9512,7 @@ function reflectWithOptions( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, ' + reflector::reflect\.proto1.* reflected 3 file(s) .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in' ) );
+    test.is( _.strHas( got.output, / \+ reflector::reflect.proto1 reflected 3 file\(s\) .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
     var files = self.find( outPath );
     test.identical( files, [ '.', './debug', './debug/File.js', './debug/File.test.js' ] );
     return null;
@@ -9536,7 +9536,7 @@ function reflectWithOptions( test )
     test.identical( _.strCount( got.output, 'unhandled error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
     test.is( _.strHas( got.output, /Failed .*module::.+ \/ step::reflect\.proto2/ ) );
-    test.is( _.strHas( got.output, /Error\. No file moved : .+reflectWithOptions.* : .*out\/debug.* <- .*proto2.*/ ) );
+    test.is( _.strHas( got.output, /No file found at .+/ ) );
     var files = self.find( outPath );
     test.identical( files, [] );
     return null;
@@ -9556,7 +9556,7 @@ function reflectWithOptions( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, ' + reflector::reflect\.proto3.* reflected 0 file(s) .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in' ) );
+    test.is( _.strHas( got.output, / \+ reflector::reflect.proto3 reflected 0 file\(s\) .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
     var files = self.find( outPath );
     test.identical( files, [] );
     return null;
