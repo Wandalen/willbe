@@ -9399,7 +9399,7 @@ function reflectRemoteGit( test )
   {
     test.identical( arg.exitCode, 0 );
     var files = self.find( local1Path );
-    test.gt( files.length, 85 );
+    test.ge( files.length, 73 );
     return null;
   }
 
@@ -9410,11 +9410,11 @@ function reflectRemoteGit( test )
     test.identical( arg.exitCode, 0 );
 
     var files = self.find( local1Path );
-    test.gt( files.length, 85 );
+    test.ge( files.length, 73 );
     var files = self.find( local2Path );
-    test.gt( files.length, 70 );
+    test.ge( files.length, 70 );
     var files = self.find( local3Path );
-    test.gt( files.length, 75 );
+    test.ge( files.length, 75 );
 
     return null;
   }
