@@ -10728,7 +10728,7 @@ function functionPlatform( test )
     platform = 'osx'
 
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, ' + reflector::copy reflected 2 file(s) .*functionPlatform\/.* : .*out\/dir\..* <- proto in' ), 1 );
+    test.identical( _.strCount( got.output, /\+ reflector::copy reflected 2 file\(s\) .+functionPlatform.* : \.\/out\/dir.windows <- \.\/proto in .*/), 1 );
 
     var files = self.find( outPath );
 
