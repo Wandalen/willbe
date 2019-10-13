@@ -6,8 +6,8 @@ submodule :
 path :
 
   in : '.'
-  out : './out'
-  out.debug : './out/debug'
+  out : './out/*'
+  out.debug : './out/debug/*'
   temp :
     - out
     - submodule.out.will.yml
