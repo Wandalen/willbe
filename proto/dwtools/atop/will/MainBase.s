@@ -1418,6 +1418,7 @@ function modulesFor_body( o )
     let o2 = _.mapOnly( o, will.modulesEach.defaults );
     o2.outputFormat = '/';
     o2.modules = variants;
+    debugger;
     return will.modulesEach( o2 );
   }
 
@@ -1614,7 +1615,7 @@ function _modulesDownload_body( o )
     if( variant.object.root === variant.object )
     return null;
 
-    debugger;
+    // debugger;
     variantLocal( variant );
   }
 

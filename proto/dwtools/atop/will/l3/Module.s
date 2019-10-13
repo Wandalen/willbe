@@ -2029,26 +2029,24 @@ function modulesBuild_body( o )
     o2.modules = [ module ];
     if( o2.recursive === 0 )
     o2.recursive = 1;
-    // debugger;
     return will.modulesDownload( o2 );
   })
 
   ready.then( () =>
   {
-    debugger;
-    if( !o.upforming )
+    if( !o.upforming || o.downloading )
     return null;
     let o2 = _.mapOnly( o, will.modulesUpform.defaults );
     o2.modules = [ module ];
     o2.all = 0;
     o2.subModulesFormed = 1;
     o2.peerModulesFormed = 1;
-    debugger;
     return will.modulesUpform( o2 );
   })
 
   ready.then( () =>
   {
+    // debugger;
     let o2 = _.mapOnly( o, will.modulesFor.defaults );
     o2.onEach = handleEach;
     o2.modules = [ module ];
@@ -3169,10 +3167,12 @@ function peerModuleOpen( o )
 
     _.assert( opener2.peerModule === module );
 
+    // debugger;
     return opener2.open({ throwing : 1 })
     .finally( ( err, peerModule ) =>
     {
 
+      // debugger;
       peerModule = peerModule || opener2.openedModule || null;
       _.assert( peerModule === null || peerModule.peerModule === module );
 
@@ -3232,8 +3232,6 @@ function _peerChanged()
   let module = this;
   let will = module.will;
 
-  // if( module.id === 140 )
-  // debugger;
   if( !will )
   return;
 
