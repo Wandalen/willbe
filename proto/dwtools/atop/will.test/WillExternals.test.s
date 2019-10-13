@@ -9921,7 +9921,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, ' + reflector::reflect.proto1.* reflected 6 file(s)' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto1 reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug1.* <- .*proto.*/ ) );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug1', './out/debug1/File.js', './out/debug1/File.s', './out/debug1/File.test.js', './out/debug1/some.test', './out/debug1/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -9942,7 +9942,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, ' + reflector::reflect.proto2.* reflected 6 file(s)' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto2 reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './out/debug2/File.test.js', './out/debug2/some.test', './out/debug2/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -9963,7 +9963,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, ' + reflector::reflect.proto3.* reflected 6 file(s)' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto3 reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug1.* <- .*proto.*/ ) );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug1', './out/debug1/File.js', './out/debug1/File.s', './out/debug1/File.test.js', './out/debug1/some.test', './out/debug1/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -9984,7 +9984,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, ' + reflector::reflect.proto4.* reflected 6 file(s)' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto4 reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './out/debug2/File.test.js', './out/debug2/some.test', './out/debug2/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -10005,7 +10005,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, ' + reflector::reflect.proto5.* reflected 6 file(s)' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto5 reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './out/debug2/File.test.js', './out/debug2/some.test', './out/debug2/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -10026,7 +10026,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, ' + reflector::reflect\.not\.test\.only\.js\.v1.* reflected 6 file(s)' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.not.test.only.js.v1 reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out.* <- .*proto.*/ ) );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug1', './out/debug1/File.js', './out/debug1/File.s', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -10047,7 +10047,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, ' + reflector::reflect\.files1.* reflected 2 file(s) .*:.*out.*<-.*proto' ), 1 );
+    test.identical( _.strCount( got.output, / \+ reflector::reflect.files1 reflected 2 file\(s\) .*:.*out.*<-.*proto/ ), 1 );
     test.identical( _.strCount( got.output, /.*out.* <- .*proto.*/ ), 1 );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/File.js', './out/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -10068,7 +10068,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, ' + reflector::reflect\.files2.* reflected 2 file(s) .*:.*out.*<-.*proto' ), 1 );
+    test.identical( _.strCount( got.output, / \+ reflector::reflect.files2 reflected 2 file\(s\) .*:.*out.*<-.*proto/ ), 1 );
     test.identical( _.strCount( got.output, /.*out.* <- .*proto.*/ ), 1 );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/File.js', './out/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -10089,7 +10089,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, ' + reflector::reflect\.files3.* reflected 2 file(s) .*:.*out.*<-.*proto' ), 1 );
+    test.identical( _.strCount( got.output, / \+ reflector::reflect\.files3 reflected 2 file\(s\) .*:.*out.*<-.*proto/ ), 1 );
     test.identical( _.strCount( got.output, /.*out.* <- .*proto.*/ ), 1 );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/File.js', './out/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
